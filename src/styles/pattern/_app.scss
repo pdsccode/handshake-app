@@ -1,0 +1,14 @@
+.app {
+  max-width: 770px;
+  margin: 0 auto;
+  background-color: $app_background;
+  &::after {
+    content: '';
+    clear: both;
+    display: table;
+  }
+}
+
+.hidden {
+  display: none;
+}
