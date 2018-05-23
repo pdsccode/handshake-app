@@ -7,4 +7,7 @@ body {
   font-family: 'Roboto', sans-serif;
   color: $black;
   overflow-y: scroll;
+  background-color: $bg-gray;
 }
+
+@import "app";

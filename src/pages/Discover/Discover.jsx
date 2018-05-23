@@ -1,13 +1,11 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Button from '@/components/core/controls/Button';
 import { URL } from '@/config';
 import { Grid, Row, Col } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
 
-class Dashboard extends React.Component {
-  constructor(props) {
-    super(props);
-  }
+class DiscoverPage extends React.Component {
   render() {
     return (
       <Grid>
@@ -17,6 +15,7 @@ class Dashboard extends React.Component {
             <Button>aasdad1</Button>
             <Button>aasdad2</Button>
             <Button>aasdad3</Button>
+            <Link to={`${URL.HANDSHAKE_DISCOVER}/1`}>To detail</Link>
           </Col>
         </Row>
       </Grid>
@@ -24,4 +23,4 @@ class Dashboard extends React.Component {
   }
 }
 
-export default Dashboard;
+export default DiscoverPage;
