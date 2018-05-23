@@ -27,14 +27,12 @@ class MeRouter extends React.Component {
   }
 
   render() {
-    if (routerMap.filter(route => route.path === this.props?.location?.pathname).length) {
-      return (
-        <Switch>
-          {routerMap.map(route => <Route key={route.path} exact path={route.path} component={route.component} />)}
-        </Switch>
-      );
-    }
-    return <Page404 />;
+    return (
+      <Switch>
+        {routerMap.map(route => <Route key={route.path} exact path={route.path} component={route.component} />)}
+        <Page404 />
+      </Switch>
+    );
   }
 }
 

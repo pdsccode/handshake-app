@@ -8,7 +8,6 @@ class MainHeader extends React.Component {
   }
 
   render() {
-    console.log(this.props);
     return (
       <header className="header">
         <div className="title">{this.props.app.headerTitle}</div>
