@@ -1,18 +1,18 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Switch, BrowserRouter, Route, Redirect } from 'react-router-dom';
-import ScrollToTop from '@/components/App/ScrollToTop';
-import DynamicImport from '@/components/App/DynamicImport';
-import Loading from '@/pages/Loading';
-import { URL } from '@/config';
+import React from "react";
+import PropTypes from "prop-types";
+import { Switch, BrowserRouter, Route, Redirect } from "react-router-dom";
+import ScrollToTop from "@/components/App/ScrollToTop";
+import DynamicImport from "@/components/App/DynamicImport";
+import Loading from "@/pages/Loading";
+import { URL } from "@/config";
 
-import Layout from '@/components/Layout/Main';
+import Layout from "@/components/Layout/Main";
 
-import { addLocaleData, IntlProvider } from 'react-intl';
-import en from 'react-intl/locale-data/en';
-import fr from 'react-intl/locale-data/fr';
+import { addLocaleData, IntlProvider } from "react-intl";
+import en from "react-intl/locale-data/en";
+import fr from "react-intl/locale-data/fr";
 
-import messages from '@/locals';
+import messages from "@/locals";
 
 addLocaleData([...en, ...fr]);
 
@@ -28,17 +28,26 @@ class Router extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = { currentLocale: 'en' };
+    this.state = { currentLocale: "en" };
   }
 
   render() {
     return (
-      <IntlProvider locale={this.state.currentLocale} messages={messages[this.state.currentLocale]}>
+      <IntlProvider
+        locale={this.state.currentLocale}
+        messages={messages[this.state.currentLocale]}
+      >
         <BrowserRouter>
           <Layout {...this.props}>
             <ScrollToTop>
               <Switch>
-                <Route exact path={URL.INDEX} render={() => <Redirect to={{ pathname: URL.HANDSHAKE_DISCOVER }} />} />
+                <Route
+                  exact
+                  path={URL.INDEX}
+                  render={() => (
+                    <Redirect to={{ pathname: URL.HANDSHAKE_DISCOVER }} />
+                  )}
+                />
                 <Route path={URL.HANDSHAKE_ME} component={Me} />
                 <Route path={URL.HANDSHAKE_DISCOVER} component={Discover} />
                 <Route path={URL.HANDSHAKE_CHAT} component={Chat} />
