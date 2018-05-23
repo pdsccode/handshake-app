@@ -4,7 +4,11 @@
 @import "responsive";
 
 body {
-  font-family: 'Roboto', sans-serif;
+  font-family: motiva-sans, sans-serif;
+  font-style: normal;
+  font-weight: 200;
   color: $black;
-  overflow-y: scroll;
+  background-color: $bg-gray;
 }
+
+@import "app";

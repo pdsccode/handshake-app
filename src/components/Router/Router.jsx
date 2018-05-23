@@ -25,10 +25,6 @@ const Seed = (props) => (<DynamicImport loading={Loading} load={() => import('@/
 const Page404 = (props) => (<DynamicImport loading={Loading} load={() => import('@/pages/Error/Page404')}>{(Component) => <Component {...props} />}</DynamicImport>);
 
 class Router extends React.Component {
-  static propTypes = {
-    location: PropTypes.object,
-  }
-
   constructor(props) {
     super(props);
 
