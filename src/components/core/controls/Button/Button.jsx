@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import cn from 'classnames';
 import loading from '@/assets/images/loading.svg.raw';
+// style
+import './Button.scss';
 
 class Button extends React.Component {
   static propTypes = {
@@ -40,6 +42,7 @@ class Button extends React.Component {
         to={to || ''}
         className={cn(
           'btn',
+          'button',
           typeClass,
           className,
           `${block ? 'block' : ''}`,
