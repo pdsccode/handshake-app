@@ -1,5 +1,5 @@
 import React from 'react';
-import Button from '@/components/Button/Button';
+import Button from '@/components/core/controls/Button/Button';
 import { URL } from '@/config';
 import { Grid, Row, Col } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
