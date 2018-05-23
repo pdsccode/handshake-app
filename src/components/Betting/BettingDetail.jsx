@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import Input from '@/components/core/forms/Input/Input';
 //import FormRender from '@/components/core/forms/Form/FormRender';
-
+import Button from '@/components/core/controls/Button/Button';
 const regex = /\[.*?\]/g;
 const regexReplace = /\[|\]/g;
 
@@ -12,7 +12,7 @@ const regexReplace = /\[|\]/g;
 class BettingDetail extends React.Component {
     static propTypes = {
         item: PropTypes.object.isRequired,
-        
+        onClickSend:PropTypes.func
       }
     static defaultProps = {
         item: {
@@ -26,6 +26,12 @@ class BettingDetail extends React.Component {
         }
     
     }
+    constructor(props) {
+        super(props);
+        this.state = {
+            
+        };
+    }
     renderItem(field, index) {
         console.log('Field:', field);
         //var item = field.length > 0 ? field[0] : {}
@@ -34,16 +40,39 @@ class BettingDetail extends React.Component {
         console.log('item:', item);
         const {key, placeholder, type} = item;
         console.log('Key:', key);
-        return (
-            <div key={index}>
-            <div>
-                {placeholder}
-            </div>
-            <div>
-            <Input name={key}/>
-            </div>
-            </div>
-        );
+        console.log('Type:', type);
+        var itemRender =  (<div key={index}>
+        <div>
+            {placeholder}
+        </div>
+        <div>
+        <Input name={key}/>
+        </div>
+        </div>);
+        switch(type){
+            case 'date':
+            itemRender = (<div key={index}>
+                <div>
+                    {placeholder}
+                </div>
+                <div>
+                <Input name={key}/>
+                </div>
+                </div>);
+            break;
+            case 'number':
+            itemRender = (<div key={index}>
+                <div>
+                    {placeholder}
+                </div>
+                <div>
+                <Input name={key} type='number' min='1' defaultValue='1'/>
+                </div>
+                </div>);
+            break;
+
+        }
+        return itemRender;
     }
     get inputList(){
         const content = this.content;
@@ -56,6 +85,11 @@ class BettingDetail extends React.Component {
         const content = desc ? desc : '';
         return content;
     }
+    onClickSendButton(){
+        console.log('onClickSendButton');
+        let params = {}
+        this.props.onClickSend(params);
+    }
   render() {
       const inputList = this.inputList;
       console.log('Input List:', inputList);
@@ -64,6 +98,7 @@ class BettingDetail extends React.Component {
            {inputList.map((field, index)=>
               this.renderItem(field, index)
            )}
+           <Button onClick={()=> this.onClickSendButton()}>Sign & Send</Button>
         </div>
     );
   }
