@@ -7,7 +7,7 @@ import loading from '@/assets/images/icon/loading.svg.raw';
 // style
 import './Button.scss';
 
-class Button extends React.Component {
+class Button extends React.PureComponent {
   static propTypes = {
     children: PropTypes.any.isRequired,
     className: PropTypes.string,

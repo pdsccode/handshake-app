@@ -1,5 +1,6 @@
 import React from 'react';
 import Button from '@/components/core/controls/Button';
+import Error from '@/components/core/presentation/Error';
 import { URL } from '@/config';
 import { Grid, Row, Col } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
@@ -18,6 +19,9 @@ class Dashboard extends React.Component {
             <Button cssType="danger">Danger</Button>
             <Button cssType="success">Success</Button>
           </Col>
+        </Row>
+        <Row>
+          <Error isShow message="message error" />
         </Row>
       </Grid>
     );
