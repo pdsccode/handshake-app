@@ -1,3 +1,6 @@
+import { HANDSHAKE_API } from '@/config';
+import { createAPI } from '@/reducers/action';
+
 export const ACTIONS = {
   LOAD_DISCOVER: 'LOAD_DISCOVER',
   LOAD_DISCOVER_SUCCESS: 'LOAD_DISCOVER_SUCCESS',
@@ -7,9 +10,6 @@ export const ACTIONS = {
   INIT_HANDSHAKE_SUCCESS: 'INIT_HANDSHAKE_SUCCESS',
   INIT_HANDSHAKE_FAILED: 'INIT_HANDSHAKE_FAILED'
 };
-
-import { HANDSHAKE_API } from '@/config';
-import { createAPI } from '@/reducers/action';
 
 export const load = createAPI({
   API: HANDSHAKE_API.HANDSHAKE.LOAD,
