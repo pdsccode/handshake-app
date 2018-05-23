@@ -44,6 +44,7 @@ class Router extends React.Component {
                 <Route path={URL.HANDSHAKE_CHAT} component={Chat} />
                 <Route path={URL.HANDSHAKE_WALLET} component={Wallet} />
                 <Route path={URL.HANDSHAKE_CREATE} component={Create} />
+                <Route path={URL.HANDSHAKE_EXCHANGE} component={Exchange} />
                 <Route component={Page404} />
               </Switch>
             </ScrollToTop>
