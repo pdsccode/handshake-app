@@ -9,6 +9,9 @@ export const HANDSHAKE_API = {
     SHAKE: { path: 'handshake/shake', method: 'post' },
     INDUSTRIES: { path: 'handshake/industries', method: 'post' }
   },
+  EXCHANGE: {
+    LOAD_OFFERS: {path: '', method: 'get'}
+  }
 };
 
 // Client url
