@@ -23,13 +23,26 @@ function appReducter(state = {
   isWarning: false,
   overlay: false,
   headerTitle: CONSTANTS.APP.HEADER_DEFAULT,
+  headerBack: false,
 
 }, action) {
   switch (action.type) {
-    case APP_ACTION.SET_HEADER_TITLE:
+    case APP_ACTION.HEADER_TITLE_SET:
       return {
         ...state,
         headerTitle: action.payload,
+      };
+
+    case APP_ACTION.HEADER_BACK_SET:
+      return {
+        ...state,
+        headerBack: true,
+      };
+
+    case APP_ACTION.HEADER_BACK_CLICK:
+      return {
+        ...state,
+        headerBack: false,
       };
 
     case APP_ACTION.NETWORK_ERROR:
