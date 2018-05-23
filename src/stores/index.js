@@ -6,6 +6,7 @@ import authReducer from '@/reducers/auth';
 import exchangeReducer from '@/reducers/exchange';
 import thunk from 'redux-thunk';
 import reducers from '@/reducers';
+import {composeWithDevTools} from 'redux-devtools-extension/developmentOnly'
 
 const reducersApp = combineReducers({
   app: appReducer,
@@ -17,10 +18,11 @@ const reducersApp = combineReducers({
 
 const store = createStore(
   reducersApp,
+  composeWithDevTools(
   applyMiddleware(
     routerMiddleware(history),
     thunk,
-  )
+  )),
 );
 
 export default store;

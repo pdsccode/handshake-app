@@ -40,13 +40,15 @@ class Component extends React.Component {
     this.setState({ isNewCCOpen: !this.state.isNewCCOpen })
   }
   handleSubmit = (e) => {
-    e.preventDefault()
+    e.preventDefault();
+    const {handleSubmit} = this.props;
     const fakeValues = {
-      amount: 12341234,
-      total: 12341234,
-      cardNumber: 12341234,
-      cardExpiration: 12341234,
+      cc_number: '4111111111111111',
+      cc_expired: '11/21',
+      cc_cvc: '111',
     }
+
+    handleSubmit(fakeValues);
   }
   render() {
     const { isCCExisting = true } = this.props

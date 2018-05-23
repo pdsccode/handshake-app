@@ -7,10 +7,11 @@ export const HANDSHAKE_API = {
     LOAD: { path: 'handshake', method: 'post' },
     INIT: { path: 'handshake/init', method: 'post' },
     SHAKE: { path: 'handshake/shake', method: 'post' },
-    INDUSTRIES: { path: 'handshake/industries', method: 'post' }
+    INDUSTRIES: { path: 'handshake/industries', method: 'post' },
   },
   EXCHANGE: {
-    LOAD_OFFERS: {path: '', method: 'get'}
+    GET_CRYPTO_PRICE: {path: '/info/instant-buy/price', method: 'get'},
+    CREATE_CC_ORDER: {path: '/instant-buys', method: 'post'}
   }
 };
 
@@ -27,6 +28,7 @@ export const URL = {
 
   HANDSHAKE_DISCOVER: '/discover',
   HANDSHAKE_DISCOVER_INDEX: '/discover',
+  HANDSHAKE_DISCOVER_DETAIL: '/discover/:id',
 
   HANDSHAKE_CHAT: '/chat',
   HANDSHAKE_CHAT_INDEX: '/chat',

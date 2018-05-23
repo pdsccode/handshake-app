@@ -1,7 +1,7 @@
 module.exports = {
   "extends": ["airbnb", "plugin:react/recommended"],
   "parser": "babel-eslint",
-  "plugins": ["babel", "react", "prettier", "import"],
+  "plugins": ["react", "prettier", "import", "babel"],
   "env": {
     "node": true,
     "browser": true
@@ -21,6 +21,8 @@ module.exports = {
     "react/sort-comp": [2],
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
     "react/prefer-stateless-function": "off",
+    "react/forbid-prop-types": "off",
+    "jsx-a11y/anchor-is-valid": "off",
     "import/no-unresolved": "off", // TODO[1]:
     "import/extensions": "off" // TODO[1]:
   },

@@ -86,6 +86,7 @@
     "prettier": "1.11.1",
     "raw-loader": "github:webpack-contrib/raw-loader#80be65e7968915c0b5d0e47a5b9b59497bb82df9",
     "react-hot-loader": "^4.0.1",
+    "redux-devtools-extension": "^2.13.2",
     "sass-loader": "^6.0.7",
     "style-loader": "^0.20.3",
     "webpack": "^4.5.0",
