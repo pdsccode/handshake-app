@@ -11,7 +11,7 @@ class Exchange extends React.Component {
 
     this.state = {
       amount: 0,
-      // isNewCCOpen: false
+      isNewCCOpen: false
     }
   }
 
@@ -40,11 +40,12 @@ class Exchange extends React.Component {
 
     console.log('getCryptoPriceByAmount', data);
 
-    this.props.getCryptoPrice({data});
+    this.props.getCryptoPrice({data, successFn: () => { console.log('successFn')}, errorFn: () => { console.log('errorFn')}});
   }
 
   handleCreateCCOrder = (params) => {
-    const {cryptoPrice} = this.props;
+    // const {cryptoPrice} = this.props;
+    const cryptoPrice = {amount: '123', currency: 'BTC', fiat_amount: '1234567'};
     if (cryptoPrice) {
       const paramsObj = {
         amount: cryptoPrice.amount.trim(),
@@ -54,7 +55,7 @@ class Exchange extends React.Component {
         payment_method_data: params
       };
       // console.log('handleCreateCCOrder',paramsObj);
-      this.props.createCCOrder(paramsObj);
+      this.props.createCCOrder({data: paramsObj});
     }
   }
 
@@ -62,24 +63,25 @@ class Exchange extends React.Component {
   handleSubmit = (values) => {
     console.log('handleSubmit', values);
     // const {userProfile: {credit_card}, dispatch} = this.props;
-    //
-    // let cc = {};
-    //
-    // //Use existing credit card
-    // if (credit_card.cc_number.trim().length > 0 && !this.state.isNewCCOpen) {
-    //   cc = {token: "true"};
-    // } else {
-    //   const {cc_number, cc_expired, cc_cvc} = values;
-    //   cc = {
-    //     cc_num: cc_number && cc_number.trim(),
-    //     cvv: cc_cvc && cc_cvc.trim(),
-    //     expiration_date: cc_expired && cc_expired.trim(),
-    //     token: "",
-    //     save: "true"
-    //   };
-    // }
-    //
-    // // console.log('handleSubmit', cc);
+    const credit_card = {cc_number: ''};
+
+    let cc = {};
+
+    //Use existing credit card
+    if (credit_card.cc_number.trim().length > 0 && !this.state.isNewCCOpen) {
+      cc = {token: "true"};
+    } else {
+      const {cc_number, cc_expired, cc_cvc} = values;
+      cc = {
+        cc_num: cc_number && cc_number.trim(),
+        cvv: cc_cvc && cc_cvc.trim(),
+        expiration_date: cc_expired && cc_expired.trim(),
+        token: "",
+        save: "true"
+      };
+    }
+
+    console.log('handleSubmit', cc);
     this.handleCreateCCOrder(cc);
   }
 
@@ -97,7 +99,7 @@ class Exchange extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  auth: state.auth,
+  // cryptoPrice: state.exchange.cryptoPrice,
 });
 
 const mapDispatchToProps = {
