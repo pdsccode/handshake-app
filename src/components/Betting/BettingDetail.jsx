@@ -13,6 +13,9 @@ const regexReplacePlaceholder = /\[.*?\]/;
 class BettingDetail extends React.Component {
     static propTypes = {
         item: PropTypes.object.isRequired,
+        toAddress: PropTypes.string.isRequired,
+        isPublic: PropTypes.bool.isRequired,
+        industryId: PropTypes.number.isRequired,
         onClickSend:PropTypes.func
       }
     static defaultProps = {
@@ -92,7 +95,7 @@ class BettingDetail extends React.Component {
         //const listBlank = content ? content.match(regex) : [];
         //console.log('List Blank:', listBlank);
         console.log('Values:', values);
-        let params = {}
+        let extraParams = values;
         console.log('Before Content:', content);
 
         inputList.forEach(element => {
@@ -107,7 +110,17 @@ class BettingDetail extends React.Component {
               );
         });
         console.log('After Content:', content);
+
+        const {toAddress, isPublic, industryId} = this.props;
+
         //this.props.onClickSend(params);
+        const params = {
+            to_address: toAddress ? toAddress.trim() : '',
+            public: isPublic,
+            description: content,
+            industries_type: industryId,
+            //source: Platform.OS
+          };
     }
     changeText(key, text){
         console.log('Text:', text);
