@@ -14,9 +14,9 @@ class Dashboard extends React.Component {
         <Row>
           <Col xs={12}>
             <FormattedMessage id="HELLO" values={{ name: 'a' }} />
-            <Button>aasdad1</Button>
-            <Button>aasdad2</Button>
-            <Button>aasdad3</Button>
+            <Button>Primary</Button>
+            <Button cssType="danger">Danger</Button>
+            <Button cssType="success">Success</Button>
           </Col>
         </Row>
       </Grid>
