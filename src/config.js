@@ -33,6 +33,10 @@ export const URL = {
 
   HANDSHAKE_CREATE: '/create',
   HANDSHAKE_CREATE_INDEX: '/create',
+
+  HANDSHAKE_SEED: '/seed',
+  HANDSHAKE_SEED_INDEX: '/seed',
+  HANDSHAKE_SEED_DETAIL: '/seed/:slug',
 };
 
 export const HANDSHAKE_STATUS = {
