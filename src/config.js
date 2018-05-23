@@ -7,12 +7,7 @@ export const HANDSHAKE_API = {
     LOAD: { path: 'handshake', method: 'post' },
     INIT: { path: 'handshake/init', method: 'post' },
     SHAKE: { path: 'handshake/shake', method: 'post' },
-    INDUSTRIES: { path: 'handshake/industries', method: 'post' },
-    // CANCEL: { path: 'handshake/cancel', method: 'post' },
-    // INIT: { path: 'handshake/reject', method: 'post' },
-    // INIT: { path: 'handshake/accept', method: 'post' },
-    // INIT: { path: 'handshake/deliver', method: 'post' },
-    // INIT: { path: 'handshake/withdraw', method: 'post' },
+    INDUSTRIES: { path: 'handshake/industries', method: 'post' }
   },
 };
 

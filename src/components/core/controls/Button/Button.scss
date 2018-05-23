@@ -1,0 +1,13 @@
+// style
+@import './src/styles/style';
+
+.button {
+    color: $green;
+}
+
+
+@include respond(sm) {
+    .button {
+        color: $red;
+    }
+}

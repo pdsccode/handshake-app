@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Header from '@/components/Header/Header';
 import Navigation from '@/components/core/controls/Navigation/Navigation';
-import Footer from '@/components/Footer/Footer';
 
 class MainLayout extends React.Component {
   static propTypes = {
@@ -20,7 +19,6 @@ class MainLayout extends React.Component {
           {this.props.children}
         </div>
         <Navigation location={location} history={history} />
-        <Footer />
       </div>
     );
   }

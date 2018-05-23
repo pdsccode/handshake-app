@@ -1,5 +1,6 @@
 # Quick Overview
     ```handshake-mobile-apps
+    ├── assets
     ├── README.md
     ├── node_modules
     ├── package.json
@@ -8,6 +9,7 @@
     ├── yarn.lock
     ├── jsconfig.json
     ├── __tests__
+    ├── data (virtual data,...)
     └── src
         └── components
             └──core
