@@ -24,7 +24,7 @@ class SeedRouter extends React.Component {
 
   constructor(props) {
     super(props);
-    this.props.setHeaderTitle('Discover');
+    this.props.setHeaderTitle('Seed');
   }
 
   render() {

@@ -7,11 +7,12 @@ class SeedDetail extends React.Component {
     super(props);
   }
   render() {
+    const { match } = this.props;
     return (
       <Grid>
         <Row>
           <Col xs={12}>
-            Seed detail
+            Seed detail: {match.params.slug}
           </Col>
         </Row>
       </Grid>
