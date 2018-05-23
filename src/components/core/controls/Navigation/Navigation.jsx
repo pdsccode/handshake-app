@@ -55,11 +55,6 @@ class Navigation extends React.Component {
           </Link>
         </div>
         {this.renderItem({
-          uri: URL.HANDSHAKE_EXCHANGE_INDEX,
-          src: 'ic_chat',
-          text: 'Exchange',
-        })}
-        {this.renderItem({
           uri: URL.HANDSHAKE_CHAT_INDEX,
           src: 'ic_chat',
           text: 'Chat',
