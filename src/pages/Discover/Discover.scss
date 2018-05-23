@@ -1,0 +1,21 @@
+.feedWrapper {
+  margin-bottom: 23px;
+  &:last-child {
+    margin-bottom: 0;
+  }
+  .feed {
+    margin-bottom: 7px;
+    padding: 40px 25px 20px 25px;
+  }
+  .description {
+    font-size: 32px;
+    color: #FFFFFF;
+    letter-spacing: 0;
+  }
+  .email {
+    font-size: 16px;
+    color: #FFFFFF;
+    letter-spacing: 0;
+    text-align: left;
+  }
+}
