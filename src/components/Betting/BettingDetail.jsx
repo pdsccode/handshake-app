@@ -7,6 +7,7 @@ import Input from '@/components/core/forms/Input/Input';
 import Button from '@/components/core/controls/Button/Button';
 const regex = /\[.*?\]/g;
 const regexReplace = /\[|\]/g;
+const regexReplacePlaceholder = /\[.*?\]/;
 
 
 class BettingDetail extends React.Component {
@@ -29,7 +30,7 @@ class BettingDetail extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            
+            values: []
         };
     }
     renderItem(field, index) {
@@ -42,32 +43,30 @@ class BettingDetail extends React.Component {
         console.log('Key:', key);
         console.log('Type:', type);
         var itemRender =  (<div key={index}>
-        <div>
+        <label>
             {placeholder}
-        </div>
-        <div>
-        <Input name={key}/>
-        </div>
+            <Input name={key} onChange={(evt) => { this.changeText(key, evt.target.value)}}/>
+
+        </label>
+      
         </div>);
         switch(type){
             case 'date':
             itemRender = (<div key={index}>
-                <div>
+                <label>
                     {placeholder}
-                </div>
-                <div>
-                <Input name={key}/>
-                </div>
+                    <Input name={key} onChange={(evt) => { this.changeText(key, evt.target.value)}}/>
+
+                </label>
                 </div>);
             break;
             case 'number':
             itemRender = (<div key={index}>
-                <div>
+                <label>
                     {placeholder}
-                </div>
-                <div>
-                <Input name={key} type='number' min='1' defaultValue='1'/>
-                </div>
+                    <Input name={key} type='number' min='1' defaultValue='1' onChange={(evt) => { this.changeText(key, evt.target.value)}}/>
+                </label>
+            
                 </div>);
             break;
 
@@ -87,8 +86,36 @@ class BettingDetail extends React.Component {
     }
     onClickSendButton(){
         console.log('onClickSendButton');
+        const {values} = this.state;
+        var content = this.content;
+        const inputList = this.inputList;
+        //const listBlank = content ? content.match(regex) : [];
+        //console.log('List Blank:', listBlank);
+        console.log('Values:', values);
         let params = {}
-        this.props.onClickSend(params);
+        console.log('Before Content:', content);
+
+        inputList.forEach(element => {
+            const item = JSON.parse(element.replace(regexReplace, ''));
+            console.log('Element:', item);
+            const {key, placeholder, type} = item;
+            const valueInputItem = values[key];
+
+            content = content.replace(
+                regexReplacePlaceholder,
+                valueInputItem ? valueInputItem : ''
+              );
+        });
+        console.log('After Content:', content);
+        //this.props.onClickSend(params);
+    }
+    changeText(key, text){
+        console.log('Text:', text);
+        const {values} = this.state;
+        values[key] = text;
+        this.setState({
+            values
+        })
     }
   render() {
       const inputList = this.inputList;
