@@ -14,6 +14,9 @@ export const HANDSHAKE_API = {
     // INIT: { path: 'handshake/deliver', method: 'post' },
     // INIT: { path: 'handshake/withdraw', method: 'post' },
   },
+  EXCHANGE: {
+    LOAD_OFFERS: {path: '', method: 'get'}
+  }
 };
 
 // Client url
