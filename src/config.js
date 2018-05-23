@@ -38,6 +38,9 @@ export const URL = {
 
   HANDSHAKE_CREATE: '/create',
   HANDSHAKE_CREATE_INDEX: '/create',
+
+  HANDSHAKE_EXCHANGE: '/exchange',
+  HANDSHAKE_EXCHANGE_INDEX: '/exchange',
 };
 
 export const HANDSHAKE_STATUS = {

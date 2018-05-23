@@ -11,6 +11,7 @@ const Discover = (props) => (<DynamicImport loading={Loading} load={() => import
 const Chat = (props) => (<DynamicImport loading={Loading} load={() => import('@/pages/Discover')}>{(Component) => <Component {...props} />}</DynamicImport>);
 const Wallet = (props) => (<DynamicImport loading={Loading} load={() => import('@/pages/Discover')}>{(Component) => <Component {...props} />}</DynamicImport>);
 const Create = (props) => (<DynamicImport loading={Loading} load={() => import('@/pages/Discover')}>{(Component) => <Component {...props} />}</DynamicImport>);
+const Exchange = (props) => (<DynamicImport loading={Loading} load={() => import('@/pages/Discover')}>{(Component) => <Component {...props} />}</DynamicImport>);
 const Page404 = (props) => (<DynamicImport loading={Loading} load={() => import('@/pages/Error/Page404')}>{(Component) => <Component {...props} />}</DynamicImport>);
 
 const routerMap = [
@@ -19,6 +20,7 @@ const routerMap = [
   { path: URL.HANDSHAKE_CHAT, component: Chat },
   { path: URL.HANDSHAKE_WALLET, component: Wallet },
   { path: URL.HANDSHAKE_CREATE, component: Create },
+  { path: URL.HANDSHAKE_EXCHANGE, component: Exchange },
 ];
 
 class Router extends React.Component {
