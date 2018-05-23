@@ -19,10 +19,36 @@ $appWidth: 414px;
   left: 50%;
   transform: translateX(-50%);
   width: 100%;
+  .header-back-btn {
+    position: absolute;
+    left: 0;
+    top: 0;
+    padding: 12px;
+    height: $headerHeight;
+    svg {
+      g {
+        fill: $blue;
+      }
+    }
+    display: none;
+    &.visibled {
+      display: block;
+    }
+  }
   .title {
     line-height: $headerHeight;
     text-align: center;
     font-size: 24px;
     color: $text-black;
   }
+}
+
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: $appWidth;
 }
