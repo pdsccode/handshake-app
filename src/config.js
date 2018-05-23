@@ -16,7 +16,7 @@ export const HANDSHAKE_API = {
 
 // Client url
 export const URL = {
-  INDEX: '/'
+  INDEX: '/',
 
   AUTH_SIGN_IN: '/auth/sign-in',
   AUTH_SIGN_UP: '/auth/sign-up',
