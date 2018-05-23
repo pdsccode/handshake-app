@@ -31,12 +31,21 @@ class Router extends React.Component {
 
   render() {
     return (
-      <IntlProvider locale={this.state.currentLocale} messages={messages[this.state.currentLocale]}>
+      <IntlProvider
+        locale={this.state.currentLocale}
+        messages={messages[this.state.currentLocale]}
+      >
         <BrowserRouter>
           <Layout {...this.props}>
             <ScrollToTop>
               <Switch>
-                <Route exact path={URL.INDEX} render={() => <Redirect to={{ pathname: URL.HANDSHAKE_DISCOVER }} />} />
+                <Route
+                  exact
+                  path={URL.INDEX}
+                  render={() => (
+                    <Redirect to={{ pathname: URL.HANDSHAKE_DISCOVER }} />
+                  )}
+                />
                 <Route path={URL.HANDSHAKE_ME} component={Me} />
                 <Route path={URL.HANDSHAKE_DISCOVER} component={Discover} />
                 <Route path={URL.HANDSHAKE_CHAT} component={Chat} />
