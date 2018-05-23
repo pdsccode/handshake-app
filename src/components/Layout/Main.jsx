@@ -1,24 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Header from '@/components/Header/Header';
+import MainHeader from '@/components/Header/MainHeader';
 import Navigation from '@/components/core/controls/Navigation/Navigation';
 
 class MainLayout extends React.Component {
   static propTypes = {
     children: PropTypes.any.isRequired,
-    location: PropTypes.object,
-    history: PropTypes.object,
   }
 
   render() {
-    const { location, history } = this.props;
     return (
       <div className="app">
-        <Header />
+        <MainHeader />
         <div className="content">
           {this.props.children}
         </div>
-        <Navigation location={location} history={history} />
+        <Navigation />
       </div>
     );
   }

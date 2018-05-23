@@ -43,6 +43,7 @@ class Dashboard extends React.Component {
             <Button>Primary</Button>
             <Button cssType="danger">Danger</Button>
             <Button cssType="success">Success</Button>
+            <Link to={`${URL.HANDSHAKE_DISCOVER}/1`}>To detail</Link>
           </Col>
         </Row>
         <Row>
