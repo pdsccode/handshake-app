@@ -10,7 +10,8 @@ export const HANDSHAKE_API = {
     INDUSTRIES: { path: 'handshake/industries', method: 'post' }
   },
   EXCHANGE: {
-    LOAD_OFFERS: {path: '', method: 'get'}
+    GET_CRYPTO_PRICE: {path: '/info/instant-buy/price', method: 'get'},
+    CREATE_CC_ORDER: {path: '/instant-buys', method: 'post'}
   }
 };
 

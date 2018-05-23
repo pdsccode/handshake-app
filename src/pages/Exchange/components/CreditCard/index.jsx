@@ -9,13 +9,16 @@ class Component extends React.Component {
     super(props);
   }
   handleSubmit = (e) => {
-    e.preventDefault()
+    e.preventDefault();
+    const {handleSubmit} = this.props;
     const fakeValues = {
       amount: 12341234,
       total: 12341234,
       cardNumber: 12341234,
       cardExpiration: 12341234,
     }
+
+    handleSubmit(fakeValues);
   }
   render() {
     return (
