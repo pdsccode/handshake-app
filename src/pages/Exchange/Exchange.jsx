@@ -1,6 +1,7 @@
 import React from 'react';
 import { Grid, Row, Col } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
+import CreditCard from './components/CreditCard'
 
 class Exchange extends React.Component {
   constructor(props) {
@@ -11,7 +12,7 @@ class Exchange extends React.Component {
       <Grid>
         <Row>
           <Col xs={12}>
-            exchange
+            <CreditCard />
           </Col>
         </Row>
       </Grid>
