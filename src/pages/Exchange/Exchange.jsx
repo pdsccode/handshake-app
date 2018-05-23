@@ -88,9 +88,9 @@ class Exchange extends React.Component {
 
   render() {
     return (
-      <Grid>
-        <Row>
-          <Col xs={12}>
+      <div className='container'>
+        <div className='row'>
+          <div className='col'>
             <CreditCard handleSubmit={this.handleSubmit} />
             <Tabs
               activeIndex={1}
@@ -110,10 +110,19 @@ class Exchange extends React.Component {
                 },
               }}
             />
-          </Col>
-        </Row>
-      </Grid>
-    );
+          </div>
+        </div>
+      </div>
+    )
+    // return (
+    //   <Grid>
+    //     <Row>
+    //       <Col xs={12}>
+    //
+    //       </Col>
+    //     </Row>
+    //   </Grid>
+    // );
   }
 }
 

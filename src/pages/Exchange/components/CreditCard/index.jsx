@@ -125,66 +125,68 @@ class Component extends React.Component {
       </div>
     )
     return (
-      <div className="">
-        <Formik
-          initialValues={{ email: '', password: '' }}
-          onSubmit={(
-            values,
-            { setSubmitting, setErrors /* setValues and other goodies */ }
-          ) => {
-            console.log('valuess', values)
-          }}
-          render={(props) => (
-            <form onSubmit={props.handleSubmit}>
-              {
-                isCCExisting ? (
-                  <div className='form-group'>
-                    <label>{'cc:label.existingCC'}</label>
-                    <div className="input-group">
-                      <div className="input-group-prepend">
+      <div className="row1">
+        <div className='col1'>
+          <Formik
+            initialValues={{ email: '', password: '' }}
+            onSubmit={(
+              values,
+              { setSubmitting, setErrors /* setValues and other goodies */ }
+            ) => {
+              console.log('valuess', values)
+            }}
+            render={(props) => (
+              <form onSubmit={props.handleSubmit}>
+                {
+                  isCCExisting ? (
+                    <div className='form-group'>
+                      <label>{'cc:label.existingCC'}</label>
+                      <div className="input-group">
+                        <div className="input-group-prepend">
                   <span className="input-group-text bg-white">
                     <img width="26px" height="26px" src={'https://kbob.github.io/images/sample-3.jpg'} />
                   </span>
-                      </div>
-                      <input type="text" className="form-control bg-white border-left-0 border-right-0" value={`**** **** **** ${lastDigits}`} readOnly />
-                      <div className="input-group-append">
+                        </div>
+                        <input type="text" className="form-control bg-white border-left-0 border-right-0" value={`**** **** **** ${lastDigits}`} readOnly />
+                        <div className="input-group-append">
                   <span className="input-group-text bg-white">
                     <span className="badge badge-pill badge-success">&#10004;</span>
                   </span>
+                        </div>
+                      </div>
+                      <div className='card mt-3'>
+                        <div className='card-body'>
+                          <Field
+                            name="toggleCCOpen"
+                            component={
+                              ({ field: { onChange, value, name }, form: { setFieldValue } }) =>
+                                <button className="w-100 btn btn-light dropdown-toggle" type='button'
+                                        onClick={() => {
+                                          setFieldValue(name, !value)
+                                          this.handleToggleNewCC()
+                                        }}
+                                >
+                                  { 'cc:button.changeNewCredit' }
+                                </button>
+                            }
+                          />
+                          <Collapse isOpen={isNewCCOpen}>
+                            {newCCElement}
+                          </Collapse>
+                        </div>
                       </div>
                     </div>
-                    <div className='card mt-3'>
-                      <div className='card-body'>
-                        <Field
-                          name="toggleCCOpen"
-                          component={
-                            ({ field: { onChange, value, name }, form: { setFieldValue } }) =>
-                              <button className="w-100 btn btn-light dropdown-toggle" type='button'
-                                      onClick={() => {
-                                        setFieldValue(name, !value)
-                                        this.handleToggleNewCC()
-                                      }}
-                              >
-                                { 'cc:button.changeNewCredit' }
-                              </button>
-                          }
-                        />
-                        <Collapse isOpen={isNewCCOpen}>
-                          {newCCElement}
-                        </Collapse>
-                      </div>
+                  ) : (
+                    <div>
+                      {newCCElement}
                     </div>
-                  </div>
-                ) : (
-                  <div>
-                    {newCCElement}
-                  </div>
-                )
-              }
-              <button type="submit">Submit</button>
-            </form>
-          )}
-        />
+                  )
+                }
+                <button type="submit">Submit</button>
+              </form>
+            )}
+          />
+        </div>
       </div>
     )
   }
