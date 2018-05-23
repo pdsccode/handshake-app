@@ -4,6 +4,12 @@ import { FormattedMessage } from 'react-intl';
 import {connect} from "react-redux";
 import CreditCard from './components/CreditCard';
 import Tabs from './components/Tabs';
+import Feed from '@/components/core/presentation/Feed';
+import Button from '@/components/core/controls/Button';
+import { Formik, Field } from 'formik';
+import { fieldInput, fieldCleave, fieldDropdown } from './components/Form/customField'
+import validation, { required } from './components/Form/validation'
+
 import {getUserProfile, getCryptoPrice, createCCOrder, getUserCcLimit, getCcLimits} from '@/reducers/exchange/action';
 
 class Exchange extends React.Component {
@@ -87,12 +93,24 @@ class Exchange extends React.Component {
     this.handleCreateCCOrder(cc);
   }
 
+  handleFormSubmit = (values, { setSubmitting, setErrors }) => {
+    console.log('valuess', values)
+  }
+
   render() {
+    const allCryptoCurrencies = [
+      { name: 'ETH', text: 'ETH' },
+      { name: 'BTC', text: 'BTC' },
+      { name: 'LTC', text: 'LTC' },
+      { name: 'BCH', text: 'BCH' },
+    ]
+    const fiatCurrency = '$'
+    const total = 1000
+
     return (
       <div className='container'>
         <div className='row'>
           <div className='col'>
-            <CreditCard handleSubmit={this.handleSubmit} />
             <Tabs
               activeIndex={1}
               onClickTab={(tab) => console.log('tab', tab)}
@@ -100,7 +118,40 @@ class Exchange extends React.Component {
                 1: {
                   header: 'Buy',
                   element: (
-                    <div>Buy</div>
+                    <div>
+                      <Formik
+                        initialValues={{ amount: '' }}
+                        onSubmit={this.handleFormSubmit}
+                        render={(props) => (
+                          <form onSubmit={props.handleSubmit}>
+                            <Feed className="feed">
+                              <div className="form-group mx-2 pt-2 d-flex">
+                                <label className="col-form-label">Buy</label>
+                                <Field
+                                  name="amount"
+                                  component={fieldInput}
+                                  className="form-control d-inline-block mx-2"
+                                  // style={{ width: '40%' }}
+                                />
+                                <span className="d-inline-block ml-auto" style={{ width: '235px' }}>
+                                  <Field
+                                    name="currency"
+                                    component={fieldDropdown}
+                                    list={allCryptoCurrencies}
+                                    // defaultText={''}
+                                  />
+                                </span>
+                              </div>
+                              <div className="mx-2">
+                                <p>for {fiatCurrency}{total} using a credit card?</p>
+                              </div>
+                              <CreditCard handleSubmit={this.handleSubmit} isCCExisting={true} />
+                            </Feed>
+                            <Button block type="submit">Shake now</Button>
+                          </form>
+                        )}
+                      />
+                    </div>
                   )
                 },
                 2: {

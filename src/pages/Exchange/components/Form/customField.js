@@ -1,6 +1,7 @@
 import React from 'react'
 import cx from 'classnames'
 import Cleave from 'cleave.js/react';
+import { DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown} from 'reactstrap';
 
 const customField = (element) => ({
   field,
@@ -44,6 +45,40 @@ export const fieldCleave = customField(
         value={value}
         className={className}
       />
+    )
+  }
+)
+
+export const fieldDropdown = customField(
+  ({ onChange, value, list, defaultText = 'Select an item', name, setFieldValue }) => {
+    let txtSelectedItem = defaultText
+    const selectedItem = list.find(i => i.name === value)
+    if (selectedItem) {
+      txtSelectedItem = selectedItem.text
+    }
+    return (
+      <UncontrolledButtonDropdown
+        className='btn-block'
+      >
+        <DropdownToggle caret color="light" block>
+          {txtSelectedItem}
+        </DropdownToggle>
+        <DropdownMenu>
+          {
+            list.map((item, index) => {
+              const { name: itemValue, text } = item
+              return (
+                <DropdownItem
+                  key={index}
+                  onClick={() => setFieldValue(name, itemValue)}
+                >
+                  {text}
+                </DropdownItem>
+              )
+            })
+          }
+        </DropdownMenu>
+      </UncontrolledButtonDropdown>
     )
   }
 )

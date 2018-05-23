@@ -5,7 +5,7 @@ import { Grid, Row, Col } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
 import { Collapse, Button, CardBody, Card } from 'reactstrap';
 import { Formik, Field } from 'formik';
-import { fieldInput, fieldCleave } from '../Form/customField'
+import { fieldInput, fieldCleave, fieldDropdown } from '../Form/customField'
 import validation, { required } from '../Form/validation'
 
 const allCCTypes = {
@@ -51,13 +51,14 @@ class Component extends React.Component {
     handleSubmit(fakeValues);
   }
   render() {
-    const { isCCExisting = true } = this.props
+    const { isCCExisting } = this.props
     const { ccType, isNewCCOpen } = this.state
     const lastDigits = '1222'
+
     const newCCElement = (
-      <div className='mt-3'>
-        <div className="form-group">
-          <label>cc:label.cardNumber</label>
+      <div className={`bg-primary rounded-bottom p-2 ${!isCCExisting ? 'mb-2' : ''}`}>
+        <div className="d-flex">
+          <label className="col-form-label mr-auto" style={{ width: '100px' }}>Number</label>
           <div className='input-group'>
             <Field
               name="cc_number"
@@ -72,7 +73,7 @@ class Component extends React.Component {
               }
               propsCleave={{
                 // id: `card-number-${this.lastUniqueId()}`,
-                placeholder: 'cc:placeholder.cardNumber',
+                placeholder: 'Required',
                 options: {
                   creditCard: true,
                   onCreditCardTypeChanged: this.handleCCTypeChanged
@@ -85,15 +86,15 @@ class Component extends React.Component {
             />
           </div>
         </div>
-        <div className="form-row">
-          <div className="form-group col-6">
-            <label>{'cc:label.cardExpiry'}</label>
+        <div className="d-flex mt-2">
+          <label className="col-form-label mr-auto" style={{ width: '100px' }}>Expiry</label>
+          <div className='input-group'>
             <Field
               name="cc_expired"
               className='form-control'
               component={fieldCleave}
               propsCleave={{
-                placeholder: 'cc:placeholder.cardExpiry',
+                placeholder: 'MM/YY',
                 options: {blocks: [2, 2], delimiter: '/', numericOnly: true},
                 // type: "tel",
                 // id: `cart-date-${this.lastUniqueId()}`,
@@ -103,14 +104,16 @@ class Component extends React.Component {
               // validate={(!isCCExisting || isNewCCOpen) ? [required] : []}
             />
           </div>
-          <div className="form-group col-6">
-            <label>{'cc:label.cardCVC'}</label>
+        </div>
+        <div className="d-flex mt-2">
+          <label className="col-form-label mr-auto" style={{ width: '100px' }}>CVC</label>
+          <div className='input-group'>
             <Field
               name="cc_cvc"
               className='form-control'
               component={fieldCleave}
               propsCleave={{
-                placeholder: 'cc:placeholder.cardCVC',
+                placeholder: 'Security Code',
                 options: {blocks: [4], numericOnly: true},
                 type: "password",
                 // maxLength: "4",
@@ -127,65 +130,45 @@ class Component extends React.Component {
     return (
       <div className="row1">
         <div className='col1'>
-          <Formik
-            initialValues={{ email: '', password: '' }}
-            onSubmit={(
-              values,
-              { setSubmitting, setErrors /* setValues and other goodies */ }
-            ) => {
-              console.log('valuess', values)
-            }}
-            render={(props) => (
-              <form onSubmit={props.handleSubmit}>
-                {
-                  isCCExisting ? (
-                    <div className='form-group'>
-                      <label>{'cc:label.existingCC'}</label>
-                      <div className="input-group">
-                        <div className="input-group-prepend">
-                  <span className="input-group-text bg-white">
-                    <img width="26px" height="26px" src={'https://kbob.github.io/images/sample-3.jpg'} />
-                  </span>
-                        </div>
-                        <input type="text" className="form-control bg-white border-left-0 border-right-0" value={`**** **** **** ${lastDigits}`} readOnly />
-                        <div className="input-group-append">
-                  <span className="input-group-text bg-white">
-                    <span className="badge badge-pill badge-success">&#10004;</span>
-                  </span>
-                        </div>
-                      </div>
-                      <div className='card mt-3'>
-                        <div className='card-body'>
-                          <Field
-                            name="toggleCCOpen"
-                            component={
-                              ({ field: { onChange, value, name }, form: { setFieldValue } }) =>
-                                <button className="w-100 btn btn-light dropdown-toggle" type='button'
-                                        onClick={() => {
-                                          setFieldValue(name, !value)
-                                          this.handleToggleNewCC()
-                                        }}
-                                >
-                                  { 'cc:button.changeNewCredit' }
-                                </button>
-                            }
-                          />
-                          <Collapse isOpen={isNewCCOpen}>
-                            {newCCElement}
-                          </Collapse>
-                        </div>
-                      </div>
-                    </div>
-                  ) : (
-                    <div>
-                      {newCCElement}
-                    </div>
-                  )
-                }
-                <button type="submit">Submit</button>
-              </form>
-            )}
-          />
+          {
+            isCCExisting ? (
+              <div className='form-group'>
+                <div className="input-group">
+                  <div className="input-group-prepend">
+                    <span className="input-group-text bg-light rounded-0">
+                      <img width="26px" height="26px" src={'https://kbob.github.io/images/sample-3.jpg'} />
+                    </span>
+                  </div>
+                  <input type="text" className="form-control bg-light border-left-0 border-right-0" value={`**** **** **** ${lastDigits}`} readOnly />
+                  <div className="input-group-append">
+                    <span className="input-group-text bg-light rounded-0">
+                      <Field
+                        name="toggleCCOpen"
+                        component={
+                          ({ field: { onChange, value, name }, form: { setFieldValue } }) =>
+                            <button className="w-100 btn btn-link" type='button'
+                                    onClick={() => {
+                                      setFieldValue(name, !value)
+                                      this.handleToggleNewCC()
+                                    }}
+                            >
+                              Change&nbsp;{value ? 'v' : '>'}
+                            </button>
+                        }
+                      />
+                    </span>
+                  </div>
+                </div>
+                <Collapse isOpen={isNewCCOpen}>
+                  {newCCElement}
+                </Collapse>
+              </div>
+            ) : (
+              <div>
+                {newCCElement}
+              </div>
+            )
+          }
         </div>
       </div>
     )
