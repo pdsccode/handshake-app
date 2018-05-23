@@ -7,6 +7,7 @@ import { load } from '@/reducers/discover/action';
 // components
 import { Grid, Row, Col } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
+import { Link } from 'react-router-dom';
 import Button from '@/components/core/controls/Button';
 import Error from '@/components/core/presentation/Error';
 import Feed from '@/components/core/presentation/Feed';
@@ -38,24 +39,7 @@ class Dashboard extends React.Component {
     return (
       <Grid>
         <Row>
-          <Col xs={12}>
-            <FormattedMessage id="HELLO" values={{ name: 'a' }} />
-            <Button>Primary</Button>
-            <Button cssType="danger">Danger</Button>
-            <Button cssType="success">Success</Button>
-            <Link to={`${URL.HANDSHAKE_DISCOVER}/1`}>To detail</Link>
-          </Col>
-        </Row>
-        <Row>
-          <Error isShow message="message error" />
-        </Row>
-        <Row>
           {this.feedHtml}
-        </Row>
-        <Row>
-          <Modal>
-            <p>test modal</p>
-          </Modal>
         </Row>
       </Grid>
     );
