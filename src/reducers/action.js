@@ -4,11 +4,11 @@ import $http from '@/services/api';
 export const createAPI = ({
   API, INIT, SUCCESS, FAILED,
 }) => ({
-  token, data, id, more, successFn, errorFn,
+  token, data, id, more, successFn, errorFn, qs, headers,
 }) => (dispatch) => {
   dispatch({ type: INIT });
   dispatch({ type: APP_ACTION.CALLING });
-  $http(API, data, token, id).then((response) => {
+  $http(API, data, token, id, qs, headers).then((response) => {
     dispatch({ type: APP_ACTION.CALLED });
     dispatch({ type: SUCCESS, payload: response.data, ...more });
     if (successFn) successFn(response.data);
