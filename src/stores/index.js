@@ -20,7 +20,7 @@ const store = createStore(
   applyMiddleware(
     routerMiddleware(history),
     thunk,
-  )
+  ),
 );
 
 export default store;
