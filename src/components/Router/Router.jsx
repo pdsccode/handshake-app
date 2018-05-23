@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Switch, BrowserRouter, Route, Redirect } from 'react-router-dom';
 import ScrollToTop from '@/components/App/ScrollToTop';
 import DynamicImport from '@/components/App/DynamicImport';
