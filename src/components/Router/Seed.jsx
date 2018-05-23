@@ -1,9 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+
 import { Switch, Route } from 'react-router-dom';
 import DynamicImport from '@/components/App/DynamicImport';
 import Loading from '@/pages/Loading';
 import { URL } from '@/config';
+import { setHeaderTitle } from '@/reducers/app/action';
 
 const Seed = (props) => (<DynamicImport loading={Loading} load={() => import('@/pages/Seed/Seed')}>{(Component) => <Component {...props} />}</DynamicImport>);
 const SeedDetail = (props) => (<DynamicImport loading={Loading} load={() => import('@/pages/Seed/SeedDetail')}>{(Component) => <Component {...props} />}</DynamicImport>);
@@ -16,24 +19,22 @@ const routerMap = [
 
 class SeedRouter extends React.Component {
   static propTypes = {
-    location: PropTypes.object,
+    setHeaderTitle: PropTypes.func.isRequired,
   }
 
   constructor(props) {
     super(props);
+    this.props.setHeaderTitle('Discover');
   }
 
   render() {
-    if (routerMap.filter((route) => route.path === this.props?.location?.pathname).length) {
-      return (
-        <Switch>
-          {routerMap.map((route) => <Route key={route.path} exact path={route.path} component={route.component} />)}
-        </Switch>
-      );
-    } else {
-      return <Page404 />;
-    }
+    return (
+      <Switch>
+        {routerMap.map((route) => <Route key={route.path} exact path={route.path} component={route.component}/>)}
+        <Page404/>
+      </Switch>
+    );
   }
 }
 
-export default SeedRouter;
+export default connect(null, ({ setHeaderTitle }))(SeedRouter);
