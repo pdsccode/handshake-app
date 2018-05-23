@@ -1,7 +1,7 @@
-{
+module.exports = {
   "extends": ["airbnb", "plugin:react/recommended"],
   "parser": "babel-eslint",
-  "plugins": ["babel", "react", "prettier"],
+  "plugins": ["babel", "react", "prettier", "import"],
   "env": {
     "node": true,
     "browser": true
@@ -18,6 +18,13 @@
     ],
     "object-curly-spacing": ["error", "always"],
     "react/jsx-uses-vars": [2],
-    "react/sort-comp": [2]
+    "react/sort-comp": [2],
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+    "react/prefer-stateless-function": "off",
+    "import/no-unresolved": "off", // TODO[1]:
+    "import/extensions": "off" // TODO[1]:
+  },
+  "settings": {
+    // "import/resolver": "webpack" // TODO[1]:
   }
 }

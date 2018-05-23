@@ -23,8 +23,6 @@ const Wallet = (props) => (<DynamicImport loading={Loading} load={() => import('
 const Create = (props) => (<DynamicImport loading={Loading} load={() => import('@/components/Router/Create')}>{(Component) => <Component {...props} />}</DynamicImport>);
 const Page404 = (props) => (<DynamicImport loading={Loading} load={() => import('@/pages/Error/Page404')}>{(Component) => <Component {...props} />}</DynamicImport>);
 
-const Example = (props) => (<DynamicImport loading={Loading} load={() => import('@/pages/Example/Form')}>{(Component) => <Component {...props} />}</DynamicImport>);
-
 class Router extends React.Component {
   static propTypes = {
     location: PropTypes.object,
@@ -49,7 +47,6 @@ class Router extends React.Component {
                 <Route path={URL.HANDSHAKE_CHAT} component={Chat} />
                 <Route path={URL.HANDSHAKE_WALLET} component={Wallet} />
                 <Route path={URL.HANDSHAKE_CREATE} component={Create} />
-                <Route exact path='/example' component={Example} />
                 <Route component={Page404} />
               </Switch>
             </ScrollToTop>

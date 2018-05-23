@@ -3,4 +3,8 @@ yarn-error.log
 package-lock.json
 dist
 .DS_Store
+.env
+.env.production
+
+#Pycharm
 .idea/
