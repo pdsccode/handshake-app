@@ -3,6 +3,7 @@ import { Grid, Row, Col } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
 import {connect} from "react-redux";
 import CreditCard from './components/CreditCard';
+import Tabs from './components/Tabs';
 import {getCryptoPrice, createCCOrder} from '@/reducers/exchange/action';
 
 class Exchange extends React.Component {
@@ -90,7 +91,25 @@ class Exchange extends React.Component {
       <Grid>
         <Row>
           <Col xs={12}>
-            <CreditCard handleSubmit={this.handleSubmit}/>
+            <CreditCard handleSubmit={this.handleSubmit} />
+            <Tabs
+              activeIndex={1}
+              onClickTab={(tab) => console.log('tab', tab)}
+              data={{
+                1: {
+                  header: 'Buy',
+                  element: (
+                    <div>Buy</div>
+                  )
+                },
+                2: {
+                  header: 'Sell',
+                  element: (
+                    <div>Sell</div>
+                  )
+                },
+              }}
+            />
           </Col>
         </Row>
       </Grid>
