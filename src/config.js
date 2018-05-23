@@ -11,7 +11,10 @@ export const HANDSHAKE_API = {
   },
   EXCHANGE: {
     GET_CRYPTO_PRICE: {path: '/info/instant-buy/price', method: 'get'},
-    CREATE_CC_ORDER: {path: '/instant-buys', method: 'post'}
+    CREATE_CC_ORDER: {path: '/instant-buys', method: 'post'},
+    GET_USER_CC_LIMIT: {path: '/user/profile/cc-limit', method: 'get'},
+    GET_CC_LIMITS: {path: '/info/cc-limits', method: 'get'},
+    GET_USER_PROFILE: {path: '/user/profile/full', method: 'get'},
   }
 };
 

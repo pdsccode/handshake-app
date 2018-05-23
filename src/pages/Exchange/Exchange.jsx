@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 import {connect} from "react-redux";
 import CreditCard from './components/CreditCard';
 import Tabs from './components/Tabs';
-import {getCryptoPrice, createCCOrder} from '@/reducers/exchange/action';
+import {getUserProfile, getCryptoPrice, createCCOrder, getUserCcLimit, getCcLimits} from '@/reducers/exchange/action';
 
 class Exchange extends React.Component {
   constructor(props) {
@@ -17,14 +17,15 @@ class Exchange extends React.Component {
   }
 
   componentDidMount() {
-    // this.props.profileActions.getUserProfile({isFull: true});
+    this.props.getUserProfile({});
+    this.props.getCcLimits({});
 
     // this.props.dispatch(change('credit-card', 'amount', '1'));
     this.getCryptoPriceByAmount(0);
 
     this.intervalCountdown = setInterval(() => {
       this.getCryptoPriceByAmount(this.state.amount);
-    }, 5000);
+    }, 30000);
   }
 
   componentWillUnmount() {
@@ -131,8 +132,11 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = {
+  getUserProfile,
   getCryptoPrice,
   createCCOrder,
+  getUserCcLimit,
+  getCcLimits
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Exchange);
