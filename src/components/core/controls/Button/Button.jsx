@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import cn from 'classnames';
-import loading from '@/assets/images/loading.svg.raw';
+import loading from '@/assets/images/icon/loading.svg.raw';
 // style
 import './Button.scss';
 
