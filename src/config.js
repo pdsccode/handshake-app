@@ -44,6 +44,9 @@ export const URL = {
 
   HANDSHAKE_EXCHANGE: '/exchange',
   HANDSHAKE_EXCHANGE_INDEX: '/exchange',
+
+  HANDSHAKE_LIST: '/handshakes',
+  HANDSHAKE_LIST_INDEX: '/handshakes',
 };
 
 export const HANDSHAKE_STATUS = {
