@@ -2,14 +2,10 @@ import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 // service, constant
-import { URL } from '@/config';
 import { load } from '@/reducers/discover/action';
 // components
 import { Grid, Row, Col } from 'react-bootstrap';
-import { FormattedMessage } from 'react-intl';
-import { Link } from 'react-router-dom';
 import Button from '@/components/core/controls/Button';
-import Error from '@/components/core/presentation/Error';
 import Feed from '@/components/core/presentation/Feed';
 import SeedItem from './components/SeedItem';
 import Modal from '@/components/core/controls/Modal';
@@ -24,7 +20,6 @@ class Dashboard extends React.Component {
   }
 
   get feedHtml() {
-    console.log(handShakeList.data);
     return handShakeList.data.map(handShake => (
       <Col md={12} xs={12} key={handShake.id} className="feedWrapper">
         {
@@ -68,8 +63,4 @@ const mapDispatch = ({
   load
 });
 
-
-
-// export default Dashboard;
-// export default connect(null, ({ load }))(Dashboard);
 export default connect(mapState, mapDispatch)(Dashboard);
