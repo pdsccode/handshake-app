@@ -16,7 +16,7 @@ import { URL } from '@/config';
 import './Exchange.scss'
 
 import {getUserProfile, getCryptoPrice, createCCOrder,
-  getUserCcLimit, getCcLimits, getUserTransaction
+  getUserCcLimit, getCcLimits
 } from '@/reducers/exchange/action';
 
 class Exchange extends React.Component {
@@ -120,7 +120,7 @@ class Exchange extends React.Component {
 
   handleBuySuccess = () => {
     console.log('Go to handshake view');
-    this.props.history.push(URL.TRANSACTOIN_LIST);
+    this.props.history.push(URL.TRANSACTION_LIST);
   }
 
   handleCreateCCOrderFailed = (e) => {
@@ -275,7 +275,6 @@ const mapStateToProps = (state) => ({
   cryptoPrice: state.exchange.cryptoPrice,
   userCcLimit: state.exchange.userCcLimit,
   ccLimits: state.exchange.ccLimits,
-  userTransaction: state.exchange.userTransaction,
 });
 
 const mapDispatchToProps = {
@@ -284,7 +283,6 @@ const mapDispatchToProps = {
   createCCOrder,
   getUserCcLimit,
   getCcLimits,
-  getUserTransaction
 };
 
 export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(Exchange));
