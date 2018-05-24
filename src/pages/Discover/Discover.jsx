@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 // service, constant
@@ -11,6 +11,7 @@ import { Link } from 'react-router-dom';
 import Button from '@/components/core/controls/Button';
 import Error from '@/components/core/presentation/Error';
 import Feed from '@/components/core/presentation/Feed';
+import SeedItem from './components/SeedItem';
 import Modal from '@/components/core/controls/Modal';
 import { handShakeList } from '@/data/shake.js';
 // style
@@ -26,10 +27,18 @@ class Dashboard extends React.Component {
     console.log(handShakeList.data);
     return handShakeList.data.map(handShake => (
       <Col md={12} xs={12} key={handShake.id} className="feedWrapper">
-        <Feed className="feed">
-          <p className="description">{handShake.description}</p>
-          <p className="email">{handShake.from_email}</p>
-        </Feed>
+        {
+          handShake.type === 'seed' ? (
+            <Feed className="seedItem">
+              <SeedItem {...handShake} />
+            </Feed>
+          ) : (
+            <Feed className="feed">
+              <p className="description">{handShake.description}</p>
+              <p className="email">{handShake.from_email}</p>
+            </Feed>
+          )
+        }
         <Button block>Shake now</Button>
       </Col>
     ));

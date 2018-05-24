@@ -199,6 +199,15 @@ export const handShakeList = {
       "to_address": "0x5eE2A7BF750Ad8103F04ec62FAbE502e3e3f93B4",
       "to_email": "trong1@autonomous.nyc",
       "user_id_shaked": 3
+    },
+    {
+      type: 'seed',
+      name: 'Oscar SmartTrash',
+      shortDescription: 'Oscar is an AI powered recycling assistant, who\'s more than happy to sort out your trash for you.',
+      backerNum: 12,
+      fundedPercent: 76,
+      image: 'https://d81hjzk5ckbe4.cloudfront.net/qbNqO3UpVXcmEx2XF-XTi2CWmRM=/750x422/filters:quality(100)/https://d2q7nqismduvva.cloudfront.net/static/upload/images/project/galleries/8f840d9e4acc7fbfba1cf3c47dc196b2fa2b5a2e.jpg',
+      id: 123123
     }
   ],
   "page": 1,
