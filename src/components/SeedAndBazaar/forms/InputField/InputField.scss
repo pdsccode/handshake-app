@@ -1,2 +1,30 @@
 // style
 @import './../../../../../src/styles/style';
+
+.inputGroup {
+  input {
+    background: #FFFFFF;
+    border: rem-calc(1px) solid #E9E9E9;
+    border-radius: rem-calc(6px);
+    height: rem-calc(44px);
+    width: 100%;
+    font-size: rem-calc(16px);
+    letter-spacing: 0;
+    padding: rem-calc(13px 16px);
+    &::placeholder {
+      color: #C8C7CC;
+    }
+  }
+
+  .label {
+    font-size: rem-calc(16px);
+    font-weight: $light;
+    color: #494949;
+    letter-spacing: 0;
+    margin-bottom: rem-calc(9px);
+  }
+}
+
+.inputGroup + .inputGroup {
+  margin-top: rem-calc(31px);
+}

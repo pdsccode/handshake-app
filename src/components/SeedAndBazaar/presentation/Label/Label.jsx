@@ -9,7 +9,7 @@ class Label extends React.PureComponent {
   render() {
     const { className, children, ...props } = this.props;
     return (
-      <label className={`custom-control-label ${className || ''}`} {...props}>
+      <label className={`${className || ''}`} {...props}>
         {children}
       </label>
     );
