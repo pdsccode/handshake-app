@@ -138,11 +138,11 @@ class Component extends React.Component {
             isCCExisting ? (
               <div className='form-group'>
                 <div className="input-group">
-                  <div className="input-group-prepend">
-                    <span className="input-group-text bg-light rounded-0">
-                      <img width="26px" height="26px" src={imgCC} />
-                    </span>
-                  </div>
+                  {/*<div className="input-group-prepend">*/}
+                    {/*<span className="input-group-text bg-light rounded-0">*/}
+                      {/*<img width="26px" height="26px" src={imgCC} />*/}
+                    {/*</span>*/}
+                  {/*</div>*/}
                   <input type="text" className="form-control bg-light border-left-0 border-right-0" value={`**** **** **** ${lastDigits}`} readOnly />
                   <div className="input-group-append">
                     <span className="input-group-text bg-light rounded-0">
