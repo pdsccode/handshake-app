@@ -14,6 +14,7 @@ import validation, { required } from './components/Form/validation'
 import localStore from '@/services/localStore';
 import { URL } from '@/config';
 import './Exchange.scss'
+import { validate } from './validation'
 
 import {getUserProfile, getCryptoPrice, createCCOrder,
   getUserCcLimit, getCcLimits, getUserTransaction
@@ -176,6 +177,24 @@ class Exchange extends React.Component {
     this.setState({ isNewCCOpen: !this.state.isNewCCOpen })
   }
 
+  handleValidate = (values) => {
+    return validate(values, this.state, this.props)
+  }
+
+  // handleValidate = values => {
+  //   console.log('valuessv', values)
+  //   // same as above, but feel free to move this into a class method now.
+  //   let errors = {};
+  //   // if (!values.email) {
+  //   //   errors.email = 'Required';
+  //   // } else if (
+  //   //   !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)
+  //   // ) {
+  //   //   errors.email = 'Invalid email address';
+  //   // }
+  //   return errors;
+  // }
+
   render() {
     const {intl, userProfile, cryptoPrice} = this.props;
     const allCryptoCurrencies = [
@@ -201,6 +220,7 @@ class Exchange extends React.Component {
                     <div>
                       <Formik
                         initialValues={{ amount: '', currency: 'ETH' }}
+                        validate={this.handleValidate}
                         onSubmit={this.handleSubmit}
                         render={(props) => (
                           <form onSubmit={props.handleSubmit}>
@@ -218,18 +238,18 @@ class Exchange extends React.Component {
                                     placeholder={intl.formatMessage({id: 'amount'})}
                                   />
                                   <span className="d-inline-block ml-auto" style={{ width: '235px' }}>
-                                  <Field
-                                    name="currency"
-                                    component={fieldDropdown}
-                                    list={allCryptoCurrencies}
-                                    // defaultText={''}
-                                  />
-                                </span>
+                                    <Field
+                                      name="currency"
+                                      component={fieldDropdown}
+                                      list={allCryptoCurrencies}
+                                      // defaultText={''}
+                                    />
+                                  </span>
                                 </div>
                                 <div className="mx-2">
                                   <p>for {fiatCurrency}{total} using a credit card?</p>
                                 </div>
-                                <CreditCard handleSubmit={this.handleSubmit}
+                                <CreditCard
                                             isCCExisting={userProfile && userProfile.credit_card.cc_number.trim().length > 0}
                                             lastDigits={userProfile && userProfile.credit_card.cc_number}
                                             isNewCCOpen={this.state.isNewCCOpen} handleToggleNewCC={this.handleToggleNewCC}
