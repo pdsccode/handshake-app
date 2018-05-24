@@ -1,0 +1,27 @@
+.icon,
+.icon-selected {
+  width: 21px;
+  height: 21px;
+}
+.icon-selected {
+  svg {
+    g {
+      stroke: #1e4eff;
+    }
+  }
+}
+.text,
+.text-selected {
+  margin-top: 5px;
+  font-size: 0.9em;
+}
+.text {
+  color: #979797;
+}
+.text-selected {
+  color: #1e4eff;
+}
+.icon_add {
+  width: 45px;
+  height: 45px;
+}

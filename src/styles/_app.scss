@@ -1,0 +1,70 @@
+.app {
+  max-width: $app-width;
+  margin: 0 auto;
+  background-color: $white;
+  min-height: 100vh;
+  position: relative;
+  padding-top: $header-height;
+}
+
+.header {
+  max-width: $app-width;
+  height: $header-height;
+  background-color: rgba(248, 248, 248, 0.82);
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  .header-back-btn {
+    position: absolute;
+    left: 0;
+    top: 0;
+    padding: 12px;
+    height: $header-height;
+    svg {
+      g {
+        fill: $deep-blue;
+      }
+    }
+    display: none;
+    &.visibled {
+      display: block;
+    }
+  }
+  .title {
+    line-height: $header-height;
+    text-align: center;
+    font-size: 24px;
+    color: $text-black;
+  }
+}
+
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: $app-width;
+}
+
+.form-control-custom {
+  height: calc(2rem + 1px);
+  margin-bottom: -1px;
+  box-sizing: border-box;
+  background-color: transparent;
+  border: none;
+  border-bottom: 1px solid $lavender-gray;
+  outline: 0;
+  box-shadow: none;
+  border-radius: 0;
+  background-image: none;
+  &:focus {
+    height: calc(2rem + 1px);
+    margin-bottom: -1px;
+    border-color: $blue;
+    border-width: 2px;
+  }
+}

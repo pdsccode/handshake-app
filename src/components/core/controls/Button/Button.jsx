@@ -48,7 +48,7 @@ class Button extends React.PureComponent {
           'btn',
           typeClass,
           className,
-          `${block ? 'block' : ''}`,
+          `${block ? 'btn-block' : ''}`,
           `${small ? 'small' : ''}`,
           `${disabled ? 'disabled' : ''}`,
           `${this.props.app.isCalling && !immunity ? 'disabled' : ''}`

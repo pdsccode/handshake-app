@@ -8,4 +8,7 @@ body {
   font-style: normal;
   font-weight: 200;
   color: $black;
+  background-color: $bg-gray;
 }
+
+@import "app";

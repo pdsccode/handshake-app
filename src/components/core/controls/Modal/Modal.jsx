@@ -1,67 +1,58 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import cn from 'classnames';
-import loading from '@/assets/images/icon/loading.svg.raw';
+// component
+import Image from '@/components/core/presentation/Image';
 // style
-import './Button.scss';
+import './Modal.scss';
+import BackChevronSVG from '@/assets/images/icon/back-chevron.svg';
 
-class Button extends React.Component {
-  static propTypes = {
-    children: PropTypes.any.isRequired,
-    className: PropTypes.string,
-    type: PropTypes.string,
-    link: PropTypes.bool,
-    to: PropTypes.string,
-    block: PropTypes.bool,
-    small: PropTypes.bool,
-    onClick: PropTypes.func,
-    disabled: PropTypes.bool,
-    isSubmit: PropTypes.bool,
-    cssType: PropTypes.string,
-    app: PropTypes.object,
-    immunity: PropTypes.bool,
+class Modal extends React.Component {
+  constructor(props) {
+    super(props);
+    // bind
+    this.open = this.open.bind(this);
+    this.close = this.close.bind(this);
   }
 
-  typeClass(type) {
-    switch (type) {
-      case 'primary': return 'btn-primary';
-      case 'secondary': return 'btn-secondary';
-      default: return 'btn-primary';
-    }
+  open() {
+    this.modalRef && this.modalRef.classList.add('modal-custom-show');
   }
+
+  close() {
+    this.modalRef && this.modalRef.classList.remove('modal-custom-show');
+  }
+
+  componentDidMount() {
+    this.props.hasOwnProperty('onRef') && this.props.onRef(this);
+  }
+
+  componentWillUnmount() {
+    this.props.hasOwnProperty('onRef') && this.props.onRef(undefined);
+  }
+
 
   render() {
-    const { type, cssType, onClick, link, block, small, className, children, to, disabled = false, immunity = false } = this.props;
-    let typeClass = this.typeClass(cssType);
-    let Tag = link ? Link : 'button';
-
+    const { title, children } = this.props;
     return (
-      <Tag
-        to={to || ''}
-        className={cn(
-          'btn',
-          'button',
-          typeClass,
-          className,
-          `${block ? 'block' : ''}`,
-          `${small ? 'small' : ''}`,
-          `${disabled ? 'disabled' : ''}`,
-          `${this.props.app.isCalling && !immunity ? 'disabled' : ''}`
-        )}
-        type={type || ''}
-        onClick={onClick}
-        disabled={this.props.app.isCalling || disabled}
-      >
-        <span
-          className={`${this.props.app.isCalling && !immunity ? '': 'hidden'}`}
-          dangerouslySetInnerHTML={{ __html: loading }}
-        />
-        {this.props.app.isCalling && ! immunity ? '' : children}
-      </Tag>
+      <div className="modal" ref={modal => this.modalRef = modal}>
+        <div className="modal-custom-header">
+          <Image src={BackChevronSVG} onClick={this.close} alt="back"/>
+          {
+            title && (<p className="modal-custom-title">{title}</p>)
+          }
+        </div>
+        <div className="modal-custom-body">
+          {children}
+        </div>
+      </div>
     );
   }
 }
 
-export default connect((state) => ({ app: state.app }))(Button);
+Modal.propTypes = {
+  title: PropTypes.string,
+  children: PropTypes.node.isRequired,
+  onRef: PropTypes.func
+};
+
+export default Modal;

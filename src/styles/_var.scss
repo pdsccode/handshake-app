@@ -1,21 +1,46 @@
 // basic
 $white: #ffffff;
 $black: #2c2c2c;
-
-// pattern
-$green: #2dbe60;
-$green_active: #2eac5a;
-$green_hover: #2ab059;
-$gray: #788995;
-$gray_hover: #788995;
-$red: #ff0000;
-$app_background: #f6f8f9;
-$app_header_a: #1b2125;
-$border: #dde3e8;
-$input_hover: $gray;
-$hr: #dedede;
-$hr_disabled: #e4eaee;
-$tab_disabled: $gray;
-
-// auth pgae
-$logo_color: #7e7e7e;
+$bg-gray: #efefef;
+$text-black: #090909;
+$red: #f00;
+/*
+* Color Pallette
+* ======================================================================== */
+// main color
+$deep-blue: #1e4eff;
+// 5 Shades of Grey
+$baltic-sea: #3e3e3e;
+$steel: #666666;
+$oslo-gray: #8a8a8f;
+$lavender-gray: #c8c7cc;
+$athens-gray: #efeff4;
+$light-gray: #f9f9f9;
+// random colors
+$blue: #007aff;
+$maya-blue: #5ac8fa;
+$gossamer: #009688;
+$sunshade: #ff9500;
+$radical-red: #ff2d55;
+$emerald: #4cd964;
+$dark-orchid: #9c27b0;
+$red-orange: #ff3b30;
+$nation-blue: #5677fc;
+$portland-orange: #ff5722;
+/*
+* Dimension
+* ======================================================================== */
+$header-height: 45px;
+$app-width: 414px;
+/*
+* Font weight
+* ======================================================================== */
+$thin: 100;
+$extra-light: 200;
+$light: 300;
+$normal: 400;
+$medium: 500;
+$semi-bold: 600;
+$bold: 700;
+$extra-bold: 800;
+$black: 900;

@@ -8,6 +8,9 @@ export const APP_ACTION = {
   CLOSE_ALERT: 'CLOSE_ALERT',
   MODAL: 'MODAL',
   CLOSE_MODAL: 'CLOSE_MODAL',
+  HEADER_TITLE_SET: 'HEADER_TITLE_SET',
+  HEADER_BACK_SET: 'HEADER_BACK_SET',
+  HEADER_BACK_CLICK: 'HEADER_BACK_CLICK',
 };
 
 // Loading
@@ -15,10 +18,16 @@ export const showLoading = () => ({ type: APP_ACTION.LOADING });
 export const hideLoading = () => ({ type: APP_ACTION.LOADED });
 
 // Modal
-export const showModal = (modalContent) => ({
+export const showModal = modalContent => ({
   type: APP_ACTION.MODAL,
   modalContent,
 });
 export const hideModal = () => ({ type: APP_ACTION.CLOSE_MODAL });
 
 // Alert
+
+// Header
+export const setHeaderTitle = title => ({ type: APP_ACTION.HEADER_TITLE_SET, payload: title });
+export const setHeaderCanBack = () => ({ type: APP_ACTION.HEADER_BACK_SET });
+export const clickHeaderBack = () => ({ type: APP_ACTION.HEADER_BACK_CLICK });
+export const clearHeaderBack = () => ({ type: APP_ACTION.HEADER_BACK_CLICK });
