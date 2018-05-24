@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import Input from '@/components/core/forms/Input/Input';
 //import FormRender from '@/components/core/forms/Form/FormRender';
 import Button from '@/components/core/controls/Button/Button';
+import './BettingDetail.scss';
 const regex = /\[.*?\]/g;
 const regexReplace = /\[|\]/g;
 const regexReplacePlaceholder = /\[.*?\]/;
@@ -35,6 +36,39 @@ class BettingDetail extends React.Component {
             values: []
         };
     }
+    renderInput(item, index){
+        const {key, placeholder, type} = item;
+
+        return (
+            <label key={index} className="rowWapper">
+                {placeholder}
+                <Input className="form-control-custom"  name={key} onChange={(evt) => { this.changeText(key, evt.target.value)}}/>
+    
+            </label>
+          );
+    }
+    renderDate(item, index){
+        const {key, placeholder, type} = item;
+
+        return (
+            <label key={index} className="rowWapper">
+                {placeholder}
+                <Input className="form-control-custom"  name={key} onChange={(evt) => { this.changeText(key, evt.target.value)}}/>
+    
+            </label>
+          );
+    }
+    renderNumber(item, index){
+        const {key, placeholder, type} = item;
+
+        return (
+            <label key={index} className="rowWapper">
+                {placeholder}
+                <Input className="form-control-custom"  name={key} type='number' min='0.0001' defaultValue='1' onChange={(evt) => { this.changeText(key, evt.target.value)}}/>
+    
+            </label>
+          );
+    }
     renderItem(field, index) {
         console.log('Field:', field);
         //var item = field.length > 0 ? field[0] : {}
@@ -44,23 +78,10 @@ class BettingDetail extends React.Component {
         const {key, placeholder, type} = item;
         console.log('Key:', key);
         console.log('Type:', type);
-        var itemRender =  (<div key={index}>
-        <label>
-            {placeholder}
-            <Input className="form-control-custom"  name={key} onChange={(evt) => { this.changeText(key, evt.target.value)}}/>
-
-        </label>
-      
-        </div>);
+        var itemRender =  this.renderInput(item, index);
         switch(type){
             case 'date':
-            itemRender = (<div key={index}>
-                <label>
-                    {placeholder}
-                    <Input name={key} onChange={(evt) => { this.changeText(key, evt.target.value)}}/>
-
-                </label>
-                </div>);
+            itemRender = this.renderDate(item, index);
             break;
             case 'number':
             itemRender = (<div key={index}>
