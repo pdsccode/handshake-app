@@ -47,7 +47,7 @@ class BettingDetail extends React.Component {
         var itemRender =  (<div key={index}>
         <label>
             {placeholder}
-            <Input name={key} onChange={(evt) => { this.changeText(key, evt.target.value)}}/>
+            <Input className="form-control-custom"  name={key} onChange={(evt) => { this.changeText(key, evt.target.value)}}/>
 
         </label>
       

@@ -33,8 +33,6 @@ class Dashboard extends React.Component {
             <p className="description">{handShake.description}</p>
             <p className="email">{handShake.from_email}</p>
           </div>}
-          {/*<p className="description">{handShake.description}</p>
-        <p className="email">{handShake.from_email}</p>*/}
         </Feed>
         <Button block>Shake now</Button>
       </Col>
