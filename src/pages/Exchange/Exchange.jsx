@@ -23,11 +23,12 @@ class Exchange extends React.Component {
   }
 
   componentDidMount() {
-    this.props.getUserProfile({});
+    this.props.getUserProfile({headers: {'Custom-Uid': 'megalodon'}});
     this.props.getCcLimits({});
+    this.props.getUserCcLimit({headers: {'Custom-Uid': 'megalodon'}});
 
     // this.props.dispatch(change('credit-card', 'amount', '1'));
-    this.getCryptoPriceByAmount(0);
+    this.getCryptoPriceByAmount(1);
 
     this.intervalCountdown = setInterval(() => {
       this.getCryptoPriceByAmount(this.state.amount);
@@ -48,7 +49,7 @@ class Exchange extends React.Component {
 
     console.log('getCryptoPriceByAmount', data);
 
-    this.props.getCryptoPrice({data, successFn: () => { console.log('successFn')}, errorFn: () => { console.log('errorFn')}});
+    this.props.getCryptoPrice({qs: data});
   }
 
   handleCreateCCOrder = (params) => {
@@ -70,8 +71,7 @@ class Exchange extends React.Component {
 
   handleSubmit = (values) => {
     console.log('handleSubmit', values);
-    // const {userProfile: {credit_card}, dispatch} = this.props;
-    const credit_card = {cc_number: ''};
+    const {userProfile: {credit_card}} = this.props;
 
     let cc = {};
 
@@ -97,15 +97,28 @@ class Exchange extends React.Component {
     console.log('valuess', values)
   }
 
+  onAmountChange = (e) => {
+    const amount = e.target.value;
+    this.getCryptoPriceByAmount(amount);
+    this.setState({amount: amount}, () => {
+      // this.props.dispatch(change('cc-order'));
+    });
+  }
+
+  handleToggleNewCC = () => {
+    this.setState({ isNewCCOpen: !this.state.isNewCCOpen })
+  }
+
   render() {
+    const {userProfile, cryptoPrice} = this.props;
     const allCryptoCurrencies = [
       { name: 'ETH', text: 'ETH' },
       { name: 'BTC', text: 'BTC' },
       { name: 'LTC', text: 'LTC' },
       { name: 'BCH', text: 'BCH' },
-    ]
-    const fiatCurrency = '$'
-    const total = 1000
+    ];
+    const fiatCurrency = '$';
+    const total = cryptoPrice && cryptoPrice.fiat_amount;
 
     return (
       <div className='container'>
@@ -120,7 +133,7 @@ class Exchange extends React.Component {
                   element: (
                     <div>
                       <Formik
-                        initialValues={{ amount: '' }}
+                        initialValues={{ amount: '', currency: 'BTC' }}
                         onSubmit={this.handleFormSubmit}
                         render={(props) => (
                           <form onSubmit={props.handleSubmit}>
@@ -132,6 +145,7 @@ class Exchange extends React.Component {
                                   component={fieldInput}
                                   className="form-control d-inline-block mx-2"
                                   // style={{ width: '40%' }}
+                                  onChange={this.onAmountChange}
                                 />
                                 <span className="d-inline-block ml-auto" style={{ width: '235px' }}>
                                   <Field
@@ -145,7 +159,11 @@ class Exchange extends React.Component {
                               <div className="mx-2">
                                 <p>for {fiatCurrency}{total} using a credit card?</p>
                               </div>
-                              <CreditCard handleSubmit={this.handleSubmit} isCCExisting={true} />
+                              <CreditCard handleSubmit={this.handleSubmit}
+                                          isCCExisting={userProfile && userProfile.credit_card.cc_number.trim().length > 0}
+                                          lastDigits={userProfile && userProfile.credit_card.cc_number}
+                                          isNewCCOpen={this.state.isNewCCOpen} handleToggleNewCC={this.handleToggleNewCC}
+                              />
                             </Feed>
                             <Button block type="submit">Shake now</Button>
                           </form>
@@ -179,7 +197,8 @@ class Exchange extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  // cryptoPrice: state.exchange.cryptoPrice,
+  userProfile: state.exchange.userProfile,
+  cryptoPrice: state.exchange.cryptoPrice
 });
 
 const mapDispatchToProps = {
