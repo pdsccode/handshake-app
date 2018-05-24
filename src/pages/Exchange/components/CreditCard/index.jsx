@@ -44,17 +44,6 @@ class Component extends React.Component {
     this.setState({ ccType: type })
   }
 
-  handleSubmit = (e) => {
-    e.preventDefault();
-    const {handleSubmit} = this.props;
-    const fakeValues = {
-      cc_number: '4111111111111111',
-      cc_expired: '11/21',
-      cc_cvc: '111',
-    }
-
-    handleSubmit(fakeValues);
-  }
   render() {
     const { isCCExisting, lastDigits, isNewCCOpen, handleToggleNewCC } = this.props
     const { ccType } = this.state;
