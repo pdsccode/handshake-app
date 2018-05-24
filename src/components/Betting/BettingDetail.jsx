@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Input from '@/components/core/forms/Input/Input';
 import Button from '@/components/core/controls/Button/Button';
 import {Formik} from 'formik';
+require('react-datetime');
 
 import './css/BettingDetail.scss';
 const regex = /\[.*?\]/g;
