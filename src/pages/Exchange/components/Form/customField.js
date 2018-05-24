@@ -72,7 +72,7 @@ export const fieldDropdown = customField(
               return (
                 <DropdownItem
                   key={index}
-                  onClick={() => setFieldValue(name, itemValue)}
+                  onClick={(e) => { setFieldValue(name, itemValue); onChange(e) }}
                 >
                   {text}
                 </DropdownItem>

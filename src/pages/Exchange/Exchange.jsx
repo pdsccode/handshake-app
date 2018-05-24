@@ -17,7 +17,7 @@ import './Exchange.scss'
 import { validate } from './validation'
 
 import {getUserProfile, getCryptoPrice, createCCOrder,
-  getUserCcLimit, getCcLimits, getUserTransaction
+  getUserCcLimit, getCcLimits
 } from '@/reducers/exchange/action';
 
 class Exchange extends React.Component {
@@ -36,7 +36,7 @@ class Exchange extends React.Component {
     this.props.getUserProfile({headers: {'Custom-Uid': 'megalodon'}});
     this.props.getCcLimits({});
     this.props.getUserCcLimit({headers: {'Custom-Uid': 'megalodon'}});
-    this.props.getUserTransaction({headers: {'Custom-Uid': 'megalodon'}});
+    // this.props.getUserTransaction({headers: {'Custom-Uid': 'megalodon'}});
 
     // this.props.dispatch(change('credit-card', 'amount', '1'));
     this.getCryptoPriceByAmount(0);
@@ -121,7 +121,7 @@ class Exchange extends React.Component {
 
   handleBuySuccess = () => {
     console.log('Go to handshake view');
-    this.props.history.push(URL.TRANSACTOIN_LIST);
+    this.props.history.push(URL.TRANSACTION_LIST);
   }
 
   handleCreateCCOrderFailed = (e) => {
@@ -238,13 +238,15 @@ class Exchange extends React.Component {
                                     placeholder={intl.formatMessage({id: 'amount'})}
                                   />
                                   <span className="d-inline-block ml-auto" style={{ width: '235px' }}>
-                                    <Field
-                                      name="currency"
-                                      component={fieldDropdown}
-                                      list={allCryptoCurrencies}
-                                      // defaultText={''}
-                                    />
-                                  </span>
+                                  <Field
+                                    name="currency"
+                                    component={fieldDropdown}
+                                    list={allCryptoCurrencies}
+                                    onRef={div => this.currencyRef = div}
+                                    onChange={() => alert('test')}
+                                    // defaultText={''}
+                                  />
+                                </span>
                                 </div>
                                 <div className="mx-2">
                                   <p>for {fiatCurrency}{total} using a credit card?</p>
@@ -295,7 +297,6 @@ const mapStateToProps = (state) => ({
   cryptoPrice: state.exchange.cryptoPrice,
   userCcLimit: state.exchange.userCcLimit,
   ccLimits: state.exchange.ccLimits,
-  userTransaction: state.exchange.userTransaction,
 });
 
 const mapDispatchToProps = {
@@ -304,7 +305,6 @@ const mapDispatchToProps = {
   createCCOrder,
   getUserCcLimit,
   getCcLimits,
-  getUserTransaction
 };
 
 export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(Exchange));

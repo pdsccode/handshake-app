@@ -21,6 +21,7 @@ const Chat = (props) => (<DynamicImport loading={Loading} load={() => import('@/
 const Wallet = (props) => (<DynamicImport loading={Loading} load={() => import('@/components/Router/Wallet')}>{(Component) => <Component {...props} />}</DynamicImport>);
 const Create = (props) => (<DynamicImport loading={Loading} load={() => import('@/components/Router/Create')}>{(Component) => <Component {...props} />}</DynamicImport>);
 const Exchange = (props) => (<DynamicImport loading={Loading} load={() => import('@/components/Router/Exchange')}>{(Component) => <Component {...props} />}</DynamicImport>);
+const Transaction = (props) => (<DynamicImport loading={Loading} load={() => import('@/components/Router/Transaction')}>{(Component) => <Component {...props} />}</DynamicImport>);
 const Page404 = (props) => (<DynamicImport loading={Loading} load={() => import('@/pages/Error/Page404')}>{(Component) => <Component {...props} />}</DynamicImport>);
 
 class Router extends React.Component {
@@ -53,6 +54,7 @@ class Router extends React.Component {
                 <Route path={URL.HANDSHAKE_WALLET} component={Wallet} />
                 <Route path={URL.HANDSHAKE_CREATE} component={Create} />
                 <Route path={URL.HANDSHAKE_EXCHANGE} component={Exchange} />
+                <Route path={URL.TRANSACTION_LIST} component={Transaction} />
                 <Route component={Page404} />
               </Switch>
             </ScrollToTop>
