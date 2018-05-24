@@ -2,13 +2,19 @@
 
 @import "var";
 @import "responsive";
+@import "functions";
+
+html {
+  font-size: $font-size-base;
+}
 
 body {
-  font-family: motiva-sans, sans-serif;
+  font-family: $font-family-base;
   font-style: normal;
-  font-weight: 200;
+  font-weight: $extra-light;
   color: $black;
   background-color: $bg-gray;
 }
 
 @import "app";
+@import "forms/dropdown-input";

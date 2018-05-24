@@ -2,16 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 // service, constant
-import { URL } from '@/config';
 import { load } from '@/reducers/discover/action';
 // components
 import { Grid, Row, Col } from 'react-bootstrap';
-import { FormattedMessage } from 'react-intl';
-import { Link } from 'react-router-dom';
 import Button from '@/components/core/controls/Button';
-import Error from '@/components/core/presentation/Error';
 import Feed from '@/components/core/presentation/Feed';
-import Modal from '@/components/core/controls/Modal';
+import Category from '@/components/core/controls/Category';
 import { handShakeList } from '@/data/shake.js';
 // style
 import './Discover.scss';
@@ -23,9 +19,8 @@ class Dashboard extends React.Component {
   }
 
   get feedHtml() {
-    console.log(handShakeList.data);
     return handShakeList.data.map(handShake => (
-      <Col md={12} xs={12} key={handShake.id} className="feedWrapper">
+      <Col md={12} xs={12} key={handShake.id} className="feed-wrapper">
         <Feed className="feed">
           <p className="description">{handShake.description}</p>
           <p className="email">{handShake.from_email}</p>
@@ -38,6 +33,9 @@ class Dashboard extends React.Component {
   render() {
     return (
       <Grid>
+        <Row>
+          <Category className="category-wrapper" />
+        </Row>
         <Row>
           {this.feedHtml}
         </Row>
@@ -59,8 +57,4 @@ const mapDispatch = ({
   load
 });
 
-
-
-// export default Dashboard;
-// export default connect(null, ({ load }))(Dashboard);
 export default connect(mapState, mapDispatch)(Dashboard);

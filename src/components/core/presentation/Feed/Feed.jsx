@@ -13,7 +13,7 @@ class Feed extends React.PureComponent {
   render() {
     const { className, background, children, ...props } = this.props;
     const styleCss = {
-      backgroundColor: this.backgroundCss(background)
+      background: this.backgroundCss(background)
     };
     return (
       <div className={`feed ${className || ''}`} style={styleCss} {...props}>
