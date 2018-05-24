@@ -35,7 +35,7 @@ class Exchange extends React.Component {
     this.props.getUserProfile({headers: {'Custom-Uid': 'megalodon'}});
     this.props.getCcLimits({});
     this.props.getUserCcLimit({headers: {'Custom-Uid': 'megalodon'}});
-    this.props.getUserTransaction({headers: {'Custom-Uid': 'megalodon'}});
+    // this.props.getUserTransaction({headers: {'Custom-Uid': 'megalodon'}});
 
     // this.props.dispatch(change('credit-card', 'amount', '1'));
     this.getCryptoPriceByAmount(0);
@@ -222,6 +222,8 @@ class Exchange extends React.Component {
                                     name="currency"
                                     component={fieldDropdown}
                                     list={allCryptoCurrencies}
+                                    onRef={div => this.currencyRef = div}
+                                    onChange={() => alert('test')}
                                     // defaultText={''}
                                   />
                                 </span>
