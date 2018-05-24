@@ -1,12 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-// component
-import Image from '@/components/core/presentation/Image';
 // style
-import './Modal.scss';
-import BackChevronSVG from '@/assets/images/icon/back-chevron.svg';
+import './ModalDialog.scss';
 
-class Modal extends React.Component {
+class ModalDialog extends React.Component {
   constructor(props) {
     super(props);
     // bind
@@ -35,24 +32,28 @@ class Modal extends React.Component {
     const { title, children } = this.props;
     return (
       <div className="modal" ref={modal => this.modalRef = modal}>
-        <div className="modal-custom-header">
-          <Image src={BackChevronSVG} onClick={this.close} alt="back"/>
-          {
-            title && (<p className="modal-custom-title">{title}</p>)
-          }
-        </div>
-        <div className="modal-custom-body">
-          {children}
+        <div className="modal-backdrop show"/>
+        <div className="position" onClick={this.close}>
+          <div className="modal-dialog-content" onClick={e => e.stopPropagation()}>
+            <div className="modal-custom-header">
+              {
+                title && (<p className="modal-custom-title">{title}</p>)
+              }
+            </div>
+            <div className="modal-custom-body">
+              {children}
+            </div>
+          </div>
         </div>
       </div>
     );
   }
 }
 
-Modal.propTypes = {
+ModalDialog.propTypes = {
   title: PropTypes.string,
   children: PropTypes.node.isRequired,
   onRef: PropTypes.func
 };
 
-export default Modal;
+export default ModalDialog;
