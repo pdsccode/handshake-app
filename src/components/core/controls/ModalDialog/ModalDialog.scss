@@ -1,10 +1,10 @@
 @import './src/styles/var';
 
 .modal {
-  max-width: $appWidth;
+  max-width: $app-width;
   margin: 0 auto;
   .modal-backdrop {
-    max-width: $appWidth;
+    max-width: $app-width;
     margin: 0 auto;
     z-index: initial;
   }
