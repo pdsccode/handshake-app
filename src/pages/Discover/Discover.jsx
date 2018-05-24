@@ -13,6 +13,7 @@ import Error from '@/components/core/presentation/Error';
 import Feed from '@/components/core/presentation/Feed';
 import Modal from '@/components/core/controls/Modal';
 import { handShakeList } from '@/data/shake.js';
+import BetFeed from '@/components/Betting/BetFeed';
 // style
 import './Discover.scss';
 
@@ -27,8 +28,13 @@ class Dashboard extends React.Component {
     return handShakeList.data.map(handShake => (
       <Col md={12} xs={12} key={handShake.id} className="feedWrapper">
         <Feed className="feed">
-          <p className="description">{handShake.description}</p>
-          <p className="email">{handShake.from_email}</p>
+          {handShake.industries_type === 18 ?  <BetFeed item={handShake}/>: 
+            <div>
+            <p className="description">{handShake.description}</p>
+            <p className="email">{handShake.from_email}</p>
+          </div>}
+          {/*<p className="description">{handShake.description}</p>
+        <p className="email">{handShake.from_email}</p>*/}
         </Feed>
         <Button block>Shake now</Button>
       </Col>
