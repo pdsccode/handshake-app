@@ -200,7 +200,7 @@ class Exchange extends React.Component {
                         onSubmit={this.handleSubmit}
                         render={(props) => (
                           <form onSubmit={props.handleSubmit}>
-                            <Feed className="feed">
+                            <Feed className="feed" background="linear-gradient(-133deg, #006AFF 0%, #3AB4FB 100%)">
                               <div className="form-group mx-2 pt-2 d-flex">
                                 <label className="col-form-label">Buy</label>
                                 <Field
