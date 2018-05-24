@@ -1,10 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
 import Input from '@/components/core/forms/Input/Input';
 //import FormRender from '@/components/core/forms/Form/FormRender';
 import Button from '@/components/core/controls/Button/Button';
-import './BettingDetail.scss';
+import './css/BettingDetail.scss';
 const regex = /\[.*?\]/g;
 const regexReplace = /\[|\]/g;
 const regexReplacePlaceholder = /\[.*?\]/;
@@ -161,6 +160,7 @@ class BettingDetail extends React.Component {
               this.renderItem(field, index)
            )}
            <Button onClick={()=> this.onClickSendButton()}>Sign & Send</Button>
+           
         </div>
     );
   }

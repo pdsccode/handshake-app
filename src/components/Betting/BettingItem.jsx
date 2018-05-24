@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './BettingFeed.scss';
-class BetFeed extends React.Component {
+import './css/BettingItem.scss';
+class BetingItem extends React.Component {
     static propTypes = {
         item: PropTypes.object.isRequired,
       }
@@ -37,19 +37,17 @@ class BetFeed extends React.Component {
     render() {
         const {item} = this.props;
         const {description, from_email} = item;
-        console.log()
+        const bottomDes = `22 bettors against ${from_email}`;
         return (
             <div>
             <p className="description">{description}</p>
             <div className="bottomWrapper">
-            <div className="email">{from_email}</div>
-            <div className="email">22 betors</div>
-            <div className="email">8/10 ETH</div>
-
+                <div className="email">{bottomDes}</div>
+                <div className="email">80%</div>
             </div>
             </div>
         );
     }
 }
-export default BetFeed;
+export default BetingItem;
 

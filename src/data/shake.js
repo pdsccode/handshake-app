@@ -10,7 +10,7 @@ export const handShakeList = {
       "from_address": "0xe4bCf618Cf99dE4E3EceA3e6C9344Ffc7f304257",
       "from_email": "dascream@live.de",
       "hid": "452",
-      "id": 545,
+      "id": 455,
       "industries_type": 18,
       "public": 0,
       "signed_contract_file": null,
