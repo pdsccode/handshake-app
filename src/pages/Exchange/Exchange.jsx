@@ -1,6 +1,6 @@
 import React from 'react';
 import { Grid, Row, Col } from 'react-bootstrap';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import {connect} from "react-redux";
 import CreditCard from './components/CreditCard';
 import Tabs from './components/Tabs';
@@ -173,7 +173,7 @@ class Exchange extends React.Component {
   }
 
   render() {
-    const {userProfile, cryptoPrice} = this.props;
+    const {intl, userProfile, cryptoPrice} = this.props;
     const allCryptoCurrencies = [
       { name: 'ETH', text: 'ETH' },
       { name: 'BTC', text: 'BTC' },
@@ -211,6 +211,7 @@ class Exchange extends React.Component {
                                     // style={{ width: '40%' }}
                                     onChange={this.onAmountChange}
                                     onRef={div => this.amountRef = div}
+                                    placeholder={intl.formatMessage({id: 'amount'})}
                                   />
                                   <span className="d-inline-block ml-auto" style={{ width: '235px' }}>
                                   <Field
@@ -225,8 +226,7 @@ class Exchange extends React.Component {
                                   <p>for {fiatCurrency}{total} using a credit card?</p>
                                 </div>
                                 <CreditCard handleSubmit={this.handleSubmit}
-                                  // isCCExisting={userProfile && userProfile.credit_card.cc_number.trim().length > 0}
-                                            isCCExisting={true}
+                                            isCCExisting={userProfile && userProfile.credit_card.cc_number.trim().length > 0}
                                             lastDigits={userProfile && userProfile.credit_card.cc_number}
                                             isNewCCOpen={this.state.isNewCCOpen} handleToggleNewCC={this.handleToggleNewCC}
                                 />
@@ -281,4 +281,4 @@ const mapDispatchToProps = {
   getCcLimits
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Exchange);
+export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(Exchange));
