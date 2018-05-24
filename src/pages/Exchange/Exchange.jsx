@@ -201,17 +201,18 @@ class Exchange extends React.Component {
                         render={(props) => (
                           <form onSubmit={props.handleSubmit}>
                             <Feed className="feed" background="linear-gradient(-133deg, #006AFF 0%, #3AB4FB 100%)">
-                              <div className="form-group mx-2 pt-2 d-flex">
-                                <label className="col-form-label">Buy</label>
-                                <Field
-                                  name="amount"
-                                  component={fieldInput}
-                                  className="form-control-custom d-inline-block mx-2"
-                                  // style={{ width: '40%' }}
-                                  onChange={this.onAmountChange}
-                                  onRef={div => this.amountRef = div}
-                                />
-                                <span className="d-inline-block ml-auto" style={{ width: '235px' }}>
+                              <div style={{ color: 'white' }}>
+                                <div className="form-group mx-2 pt-2 d-flex">
+                                  <label className="col-form-label">Buy</label>
+                                  <Field
+                                    name="amount"
+                                    component={fieldInput}
+                                    className="form-control-custom d-inline-block mx-2"
+                                    // style={{ width: '40%' }}
+                                    onChange={this.onAmountChange}
+                                    onRef={div => this.amountRef = div}
+                                  />
+                                  <span className="d-inline-block ml-auto" style={{ width: '235px' }}>
                                   <Field
                                     name="currency"
                                     component={fieldDropdown}
@@ -219,15 +220,17 @@ class Exchange extends React.Component {
                                     // defaultText={''}
                                   />
                                 </span>
+                                </div>
+                                <div className="mx-2">
+                                  <p>for {fiatCurrency}{total} using a credit card?</p>
+                                </div>
+                                <CreditCard handleSubmit={this.handleSubmit}
+                                  // isCCExisting={userProfile && userProfile.credit_card.cc_number.trim().length > 0}
+                                            isCCExisting={true}
+                                            lastDigits={userProfile && userProfile.credit_card.cc_number}
+                                            isNewCCOpen={this.state.isNewCCOpen} handleToggleNewCC={this.handleToggleNewCC}
+                                />
                               </div>
-                              <div className="mx-2">
-                                <p>for {fiatCurrency}{total} using a credit card?</p>
-                              </div>
-                              <CreditCard handleSubmit={this.handleSubmit}
-                                          isCCExisting={userProfile && userProfile.credit_card.cc_number.trim().length > 0}
-                                          lastDigits={userProfile && userProfile.credit_card.cc_number}
-                                          isNewCCOpen={this.state.isNewCCOpen} handleToggleNewCC={this.handleToggleNewCC}
-                              />
                             </Feed>
                             <Button block type="submit">Shake now</Button>
                           </form>

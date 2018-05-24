@@ -6,7 +6,7 @@ import { FormattedMessage } from 'react-intl';
 import { Collapse, Button, CardBody, Card } from 'reactstrap';
 import { Formik, Field } from 'formik';
 
-// import imgCC from '@/assets/images/card/credit-card.svg';
+import imgCC from '@/assets/images/card/credit-card.svg';
 // import imgAmex from '@/assets/images/card/amex.svg';
 // import imgDiscover from '@/assets/images/card/discover.svg';
 // import imgMastercard from '@/assets/images/card/mastercard.svg';
@@ -49,7 +49,7 @@ class Component extends React.Component {
     const { ccType } = this.state;
 
     const newCCElement = (
-      <div className={`bg-primary rounded-bottom p-2 ${!isCCExisting ? 'mb-2' : ''}`}>
+      <div className={`rounded-bottom p-2 ${!isCCExisting ? 'mb-2' : ''}`}>
         <div className="d-flex">
           <label className="col-form-label mr-auto" style={{ width: '100px' }}>Number</label>
           <div className='input-group'>
@@ -126,31 +126,27 @@ class Component extends React.Component {
           {
             isCCExisting ? (
               <div className='form-group'>
-                <div className="input-group">
-                  {/*<div className="input-group-prepend">*/}
-                    {/*<span className="input-group-text bg-light rounded-0">*/}
-                      {/*<img width="26px" height="26px" src={imgCC} />*/}
-                    {/*</span>*/}
-                  {/*</div>*/}
-                  <input type="text" className="form-control bg-light border-left-0 border-right-0" value={`**** **** **** ${lastDigits}`} readOnly />
-                  <div className="input-group-append">
-                    <span className="input-group-text bg-light rounded-0">
-                      <Field
-                        name="toggleCCOpen"
-                        component={
-                          ({ field: { onChange, value, name }, form: { setFieldValue } }) =>
-                            <button className="w-100 btn btn-link" type='button'
-                                    onClick={() => {
-                                      setFieldValue(name, !value)
-                                      handleToggleNewCC()
-                                    }}
-                            >
-                              Change&nbsp;{value ? 'v' : '>'}
-                            </button>
-                        }
-                      />
-                    </span>
-                  </div>
+                <div className='d-flex' style={{ background: '#76b1ff', height: '52px', lineHeight: '52px' }}>
+                  <span>
+                    <img className='mx-2' width="26px" height="26px" src={imgCC} />
+                    <span>∗∗∗∗ ∗∗∗∗ ∗∗∗∗ {lastDigits}</span>
+                  </span>
+                  <span className="ml-auto" style={{ width: '120px' }}>
+                    <Field
+                      name="toggleCCOpen"
+                      component={
+                        ({ field: { onChange, value, name }, form: { setFieldValue } }) =>
+                          <button className="w-100 btn btn-link" type='button'
+                                  onClick={() => {
+                                    setFieldValue(name, !value)
+                                    handleToggleNewCC()
+                                  }}
+                          >
+                            Change&nbsp;{value ? 'v' : '>'}
+                          </button>
+                      }
+                    />
+                  </span>
                 </div>
                 <Collapse isOpen={isNewCCOpen}>
                   {newCCElement}
