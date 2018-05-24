@@ -23,7 +23,8 @@ class Exchange extends React.Component {
     this.state = {
       amount: 0,
       isNewCCOpen: false,
-      modalContent: ''
+      modalContent: '',
+      showCCScheme: false
     }
   }
 
@@ -54,8 +55,25 @@ class Exchange extends React.Component {
 
     console.log('getCryptoPriceByAmount', data);
 
-    this.props.getCryptoPrice({qs: data});
+    this.props.getCryptoPrice({qs: data,
+        successFn: this.handleGetCryptoPriceSuccess,
+        errorFn: this.handleGetCryptoPriceFailed
+      });
   }
+
+  handleGetCryptoPriceSuccess = (data) => {
+    console.log('handleGetCryptoPriceSuccess', data);
+    const {userCcLimit} = this.props;
+
+    if (userCcLimit.limit < userCcLimit.amount + data.fiat_amount) {
+      this.setState({showCCScheme: true});
+    }
+  }
+
+  handleGetCryptoPriceFailed = (e) => {
+    console.log('handleGetCryptoPriceFailed', e);
+  }
+
 
   handleCreateCCOrder = (params) => {
     const {cryptoPrice} = this.props;
@@ -247,7 +265,9 @@ class Exchange extends React.Component {
 
 const mapStateToProps = (state) => ({
   userProfile: state.exchange.userProfile,
-  cryptoPrice: state.exchange.cryptoPrice
+  cryptoPrice: state.exchange.cryptoPrice,
+  userCcLimit: state.exchange.userCcLimit,
+  ccLimits: state.exchange.ccLimits,
 });
 
 const mapDispatchToProps = {
