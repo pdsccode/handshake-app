@@ -15,6 +15,7 @@ export const HANDSHAKE_API = {
     GET_USER_CC_LIMIT: {path: '/user/profile/cc-limit', method: 'get'},
     GET_CC_LIMITS: {path: '/info/cc-limits', method: 'get'},
     GET_USER_PROFILE: {path: '/user/profile', method: 'get'},
+    GET_USER_TRANSACTION: {path: '/user/transactions', method: 'get'},
   }
 };
 
@@ -45,8 +46,8 @@ export const URL = {
   HANDSHAKE_EXCHANGE: '/exchange',
   HANDSHAKE_EXCHANGE_INDEX: '/exchange',
 
-  HANDSHAKE_LIST: '/handshakes',
-  HANDSHAKE_LIST_INDEX: '/handshakes',
+  TRANSACTOIN_LIST: '/handshakes',
+  TRANSACTION_LIST_INDEX: '/handshakes',
 };
 
 export const HANDSHAKE_STATUS = {

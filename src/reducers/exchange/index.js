@@ -15,6 +15,9 @@ function exchangeReducter(state = {}, action) {
     case EXCHANGE_ACTIONS.GET_USER_PROFILE_SUCCESS: {
       return {...state, userProfile: action.payload.data};
     }
+    case EXCHANGE_ACTIONS.GET_USER_TRANSACTION_SUCCESS: {
+      return {...state, userTransaction: action.payload};
+    }
     default:
       return state;
   }
