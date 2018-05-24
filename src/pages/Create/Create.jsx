@@ -2,6 +2,9 @@ import React from 'react';
 import { Grid, Row, Col } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
 import Creates, { maps as createMaps } from '@/components/Create';
+import Button from '@/components/core/controls/Button';
+import Modal from '@/components/core/controls/Modal';
+import CommentsContainer from '@/components/Comment/CommentsContainer';
 
 class Create extends React.Component {
   constructor(props) {
@@ -10,7 +13,6 @@ class Create extends React.Component {
     this.state = {
       seletedId: 0
     }
-
     this.change = ::this.change;
   }
 
@@ -35,7 +37,13 @@ class Create extends React.Component {
               </select>
             </div>
             <Creates id={this.state.seletedId} />
+            <Button block onClick={() => this.modalRef.open()}>Show comment modal</Button>
           </Col>
+        </Row>
+        <Row>
+          <Modal ref={(component) => { this.modalRef = component; }} title="comment">
+            <CommentsContainer />
+          </Modal>
         </Row>
       </Grid>
     );
