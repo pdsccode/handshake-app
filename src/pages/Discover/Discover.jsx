@@ -56,8 +56,11 @@ class Dashboard extends React.Component {
         <Row>
           {this.feedHtml}
         </Row>
-        <ModalDialog onRef={modal => this.modalBetRef = modal}>
-            <BettingShake remaining={10} odd={0.1}/>
+        <ModalDialog title="Make a bet"
+        onRef={modal => this.modalBetRef = modal}>
+            <BettingShake remaining={10} odd={0.1}
+            onCancelClick={()=> this.modalBetRef.close()}
+            onSubmitClick={()=> this.modalBetRef.close()}/>
            </ModalDialog>
       </Grid>
 
