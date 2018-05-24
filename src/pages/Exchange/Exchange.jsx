@@ -6,6 +6,7 @@ import CreditCard from './components/CreditCard';
 import Tabs from './components/Tabs';
 import Feed from '@/components/core/presentation/Feed';
 import Button from '@/components/core/controls/Button';
+import ModalDialog from '@/components/core/controls/ModalDialog';
 import { Formik, Field } from 'formik';
 import { fieldInput, fieldCleave, fieldDropdown } from './components/Form/customField'
 import validation, { required } from './components/Form/validation'
@@ -54,12 +55,16 @@ class Exchange extends React.Component {
 
   handleCreateCCOrder = (params) => {
     const {cryptoPrice} = this.props;
+    let address = localStorage.getItem('address');
+    address = '0x2a08a375e203a72f1A378827A3b66D2785A2F7D5';
+
     if (cryptoPrice) {
       const paramsObj = {
         amount: cryptoPrice.amount.trim(),
         currency: cryptoPrice.currency.trim(),
         fiat_amount: cryptoPrice.fiat_amount.trim(),
         fiat_currency: "USD",
+        address: address,
         payment_method_data: params
       };
       console.log('handleCreateCCOrder',paramsObj);
@@ -72,10 +77,12 @@ class Exchange extends React.Component {
 
   handleCreateCCOrderSuccess = (data) => {
     console.log('handleCreateCCOrderSuccess', data);
+    this.modalRef.open();
   }
 
   handleCreateCCOrderFailed = (e) => {
     console.log('handleCreateCCOrderFailed', e);
+    this.modalRef.open();
   }
 
 
@@ -187,6 +194,9 @@ class Exchange extends React.Component {
             />
           </div>
         </div>
+        <ModalDialog onRef={modal => this.modalRef = modal}>
+
+        </ModalDialog>
       </div>
     )
     // return (
