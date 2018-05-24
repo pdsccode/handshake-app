@@ -55,7 +55,7 @@ class Component extends React.Component {
           <div className='input-group'>
             <Field
               name="cc_number"
-              className='form-control-custom w-100'
+              className="form-control-custom form-control-custom-ex w-100"
               component={fieldCleave}
               // elementPrepend={
               //   <div className="input-group-prepend">
@@ -84,7 +84,7 @@ class Component extends React.Component {
           <div className='input-group'>
             <Field
               name="cc_expired"
-              className='form-control-custom w-100'
+              className='form-control-custom form-control-custom-ex w-100'
               component={fieldCleave}
               propsCleave={{
                 placeholder: 'MM/YY',
@@ -103,7 +103,7 @@ class Component extends React.Component {
           <div className='input-group'>
             <Field
               name="cc_cvc"
-              className='form-control-custom w-100'
+              className='form-control-custom form-control-custom-ex w-100'
               component={fieldCleave}
               propsCleave={{
                 placeholder: 'Security Code',

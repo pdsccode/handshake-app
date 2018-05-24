@@ -13,6 +13,7 @@ import { fieldInput, fieldCleave, fieldDropdown } from './components/Form/custom
 import validation, { required } from './components/Form/validation'
 import localStore from '@/services/localStore';
 import { URL } from '@/config';
+import './Exchange.scss'
 
 import {getUserProfile, getCryptoPrice, createCCOrder, getUserCcLimit, getCcLimits} from '@/reducers/exchange/action';
 
@@ -207,7 +208,7 @@ class Exchange extends React.Component {
                                   <Field
                                     name="amount"
                                     component={fieldInput}
-                                    className="form-control-custom d-inline-block mx-2"
+                                    className="form-control-custom form-control-custom-ex d-inline-block mx-2"
                                     // style={{ width: '40%' }}
                                     onChange={this.onAmountChange}
                                     onRef={div => this.amountRef = div}
