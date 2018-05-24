@@ -1,20 +1,61 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { Formik } from 'formik';
 
-// style
-import './SeedItem.scss';
-
-class SeedItem extends React.Component {
-
+class CreateSeedItem extends React.Component {
   render() {
     return (
-      <form>
-        <input type="text" placeholder="ProjectName" />
-        <input type="text" placeholder="crowdDate" />
-        <input type="text" placeholder="crowdDate" />
-      </form>
+      <div>
+        <h1>My Form</h1>
+        <p>This can be anywhere in your application</p>
+        <Formik
+          initialValues={{
+            email: '',
+            password: '',
+          }}
+          validate={values => {
+            // same as above, but feel free to move this into a class method now.
+            let errors = {};
+
+            return errors;
+          }}
+          onSubmit={(values, {setSubmitting, setErrors /* setValues and other goodies */}) => {
+            console.log("here");
+          }}
+          render={({
+                     values,
+                     errors,
+                     touched,
+                     handleChange,
+                     handleBlur,
+                     handleSubmit,
+                     isSubmitting,
+                   }) => (
+            <form onSubmit={handleSubmit}>
+              <input
+                type="email"
+                name="email"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.email}
+              />
+              {touched.email && errors.email && <div>{errors.email}</div>}
+              <input
+                type="password"
+                name="password"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.password}
+              />
+              {touched.password && errors.password && <div>{errors.password}</div>}
+              <button type="submit" disabled={isSubmitting}>
+                Submit
+              </button>
+            </form>
+          )}
+        />
+      </div>
     );
   }
 }
 
-export default SeedItem;
+export default CreateSeedItem;

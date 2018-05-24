@@ -1,6 +1,7 @@
 import React from 'react';
 import { Grid, Row, Col } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
+import CreateSeedItem from './components/CreateSeedItem';
 
 class Create extends React.Component {
   constructor(props) {
@@ -12,6 +13,7 @@ class Create extends React.Component {
         <Row>
           <Col xs={12}>
             create
+            <CreateSeedItem />
           </Col>
         </Row>
       </Grid>
