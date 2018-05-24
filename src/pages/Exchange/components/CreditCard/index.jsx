@@ -49,7 +49,7 @@ class Component extends React.Component {
     const { ccType } = this.state;
 
     const newCCElement = (
-      <div className={`rounded-bottom p-2 ${!isCCExisting ? 'mb-2' : ''}`}>
+      <div className={`rounded-bottom p-2 ${!isCCExisting ? 'mb-2' : ''}`} style={{ background: !isCCExisting ? '#76b1ff' : '' }}>
         <div className="d-flex">
           <label className="col-form-label mr-auto" style={{ width: '100px' }}>Number</label>
           <div className='input-group'>
