@@ -12,6 +12,7 @@ import { Formik, Field } from 'formik';
 import { fieldInput, fieldCleave, fieldDropdown } from './components/Form/customField'
 import validation, { required } from './components/Form/validation'
 import localStore from '@/services/localStore';
+import { URL } from '@/config';
 
 import {getUserProfile, getCryptoPrice, createCCOrder, getUserCcLimit, getCcLimits} from '@/reducers/exchange/action';
 
@@ -97,6 +98,7 @@ class Exchange extends React.Component {
 
   handleBuySuccess = () => {
     console.log('Go to handshake view');
+    this.props.history.push(URL.HANDSHAKE_LIST);
   }
 
   handleCreateCCOrderFailed = (e) => {
