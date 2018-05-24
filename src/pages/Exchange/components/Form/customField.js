@@ -41,7 +41,7 @@ export const fieldCleave = customField(
       <Cleave
         {...propsCleave}
         name={name}
-        onChange={(e) => setFieldValue(name, e.target.rawValue)}
+        onChange={(e) => setFieldValue(name, e.target.value)}
         onBlur={onBlur}
         onFocus={onFocus}
         value={value}
