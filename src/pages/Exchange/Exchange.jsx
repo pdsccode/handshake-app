@@ -132,14 +132,6 @@ class Exchange extends React.Component {
     const fiatCurrency = '$';
     const total = cryptoPrice && cryptoPrice.fiat_amount;
 
-    const ccLimits = [
-      { level: 1, limit: 1234123, duration: 2332 },
-      { level: 2, limit: 23323, duration: 22 },
-      { level: 3, limit: 4343, duration: 555 },
-    ]
-    const curStatus = 'verified'
-    const curLevel = 2
-
     let modalContent = null
     const type = 1
     if (type === 1) {
@@ -169,49 +161,6 @@ class Exchange extends React.Component {
                         render={(props) => (
                           <form onSubmit={props.handleSubmit}>
                             <Feed className="feed">
-                              <div>
-                                {
-                                  ccLimits && ccLimits.map((levelItem, index) => {
-                                    const { level, limit, duration } = levelItem
-                                    let classProgressBar = ''
-                                    let classLevelItem = ''
-                                    let itemStatus = curStatus
-                                    if (level < curLevel) {
-                                      classProgressBar = 'bg-success'
-                                      classLevelItem = 'text-success'
-                                      itemStatus = <span className="badge badge-pill badge-success">&#10004;</span>
-                                    } else if (level === curLevel) {
-                                      if (curStatus === 'declined') {
-                                        classProgressBar = 'bg-danger'
-                                        classLevelItem = 'text-danger'
-                                      } else {
-                                        classProgressBar = 'bg-success'
-                                        classLevelItem = 'text-success'
-                                      }
-                                    } else {
-                                      classProgressBar = 'bg-secondary'
-                                      itemStatus = <span>Required level {level - 1}</span>
-                                      classLevelItem = 'text-muted'
-                                    }
-
-                                    return (
-                                      <LevelItem key={index} className={`text-center ${classLevelItem}`}>
-                                        <div className="progress" style={{ height: '4px' }}>
-                                          <div
-                                            className={`progress-bar ${classProgressBar}`}
-                                            role="progressbar" style={{ width: '100%' }} aria-valuenow="100"
-                                            aria-valuemin="0" aria-valuemax="100"
-                                          />
-                                        </div>
-                                        <div>Level {level}</div>
-                                        <div><small className='text-uppercase'>{itemStatus}</small></div>
-                                        <div><small>Can buy up to {fiatCurrency}{limit}</small></div>
-                                        <div><small>Period: {duration} days</small></div>
-                                      </LevelItem>
-                                    )
-                                  })
-                                }
-                              </div>
                               <div className="form-group mx-2 pt-2 d-flex">
                                 <label className="col-form-label">Buy</label>
                                 <Field
