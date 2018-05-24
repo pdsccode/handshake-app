@@ -98,6 +98,7 @@ class Exchange extends React.Component {
   }
 
   onAmountChange = (e) => {
+    alert('test');
     const amount = e.target.value;
     this.getCryptoPriceByAmount(amount);
     this.setState({amount: amount}, () => {

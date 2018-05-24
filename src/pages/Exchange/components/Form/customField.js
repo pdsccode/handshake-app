@@ -20,7 +20,7 @@ const customField = (element) => ({
 
   const allElements = []
   if (elementPrepend) allElements.push(React.cloneElement(elementPrepend, { key: 0 }))
-  allElements.push(React.createElement(element, {...rest, ...field, setFieldValue, key: 1, className: cx(className, newClassName) }))
+  allElements.push(React.createElement(element, {...rest, ...field, onChange: (e) => { field.onChange(e), rest.onChange(e) }, setFieldValue, key: 1, className: cx(className, newClassName) }))
   if (elementAppend) allElements.push(React.cloneElement(elementAppend, { key: 4 }))
   allElements.push(
     touched[name] &&
