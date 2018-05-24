@@ -26,6 +26,7 @@ class Exchange extends React.Component {
 
     this.state = {
       amount: 0,
+      currency: 'ETH',
       isNewCCOpen: false,
       modalContent: '',
       showCCScheme: false
@@ -36,9 +37,7 @@ class Exchange extends React.Component {
     this.props.getUserProfile({headers: {'Custom-Uid': 'megalodon'}});
     this.props.getCcLimits({});
     this.props.getUserCcLimit({headers: {'Custom-Uid': 'megalodon'}});
-    // this.props.getUserTransaction({headers: {'Custom-Uid': 'megalodon'}});
 
-    // this.props.dispatch(change('credit-card', 'amount', '1'));
     this.getCryptoPriceByAmount(0);
 
     this.intervalCountdown = setInterval(() => {
@@ -53,12 +52,9 @@ class Exchange extends React.Component {
   }
 
   getCryptoPriceByAmount = (amount) => {
-    // const {app: {setting: {cryptoCurrency}}} = this.props;
-    const cryptoCurrency = 'ETH';
+    const cryptoCurrency = this.state.currency;
 
     var data = {amount: amount, currency: cryptoCurrency};
-
-    console.log('getCryptoPriceByAmount', data);
 
     this.props.getCryptoPrice({qs: data,
         successFn: this.handleGetCryptoPriceSuccess,
@@ -120,7 +116,6 @@ class Exchange extends React.Component {
   }
 
   handleBuySuccess = () => {
-    console.log('Go to handshake view');
     this.props.history.push(URL.TRANSACTION_LIST);
   }
 
@@ -139,7 +134,6 @@ class Exchange extends React.Component {
   handleBuyFailed = () => {
     this.modalRef.close();
   }
-
 
   handleSubmit = (values) => {
     console.log('handleSubmit', values);
@@ -170,6 +164,13 @@ class Exchange extends React.Component {
     this.getCryptoPriceByAmount(amount);
     this.setState({amount: amount}, () => {
       // this.props.dispatch(change('cc-order'));
+    });
+  }
+
+  onCurrencyChange = (e) => {
+    const currency = e.target.textContent || e.target.innerText;
+    this.setState({currency: currency}, () => {
+      this.getCryptoPriceByAmount(this.state.amount);
     });
   }
 
@@ -219,7 +220,7 @@ class Exchange extends React.Component {
                   element: (
                     <div>
                       <Formik
-                        initialValues={{ amount: '', currency: 'ETH' }}
+                        initialValues={{ amount: '', currency: this.state.currency }}
                         validate={this.handleValidate}
                         onSubmit={this.handleSubmit}
                         render={(props) => (
@@ -243,7 +244,7 @@ class Exchange extends React.Component {
                                     component={fieldDropdown}
                                     list={allCryptoCurrencies}
                                     onRef={div => this.currencyRef = div}
-                                    onChange={() => alert('test')}
+                                    onChange={this.onCurrencyChange}
                                     // defaultText={''}
                                   />
                                 </span>
