@@ -131,6 +131,17 @@ class Exchange extends React.Component {
     const fiatCurrency = '$';
     const total = cryptoPrice && cryptoPrice.fiat_amount;
 
+    let modalContent = null
+    const type = 1
+    if (type === 1) {
+      modalContent = (
+        <div>
+          Success cmnr
+          <Button onClick={() => console.log('OK')}>OK</Button>
+          <Button onClick={() => console.log('Cancel')}>Cancel</Button>
+        </div>
+      )
+    }
     return (
       <div className='container'>
         <div className='row'>
@@ -195,7 +206,7 @@ class Exchange extends React.Component {
           </div>
         </div>
         <ModalDialog onRef={modal => this.modalRef = modal}>
-
+          {modalContent}
         </ModalDialog>
       </div>
     )
