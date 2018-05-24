@@ -5,25 +5,33 @@ import { Grid, Row, Col } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
 import { Collapse, Button, CardBody, Card } from 'reactstrap';
 import { Formik, Field } from 'formik';
+
+import imgCC from '@/assets/images/card/credit-card.svg';
+import imgAmex from '@/assets/images/card/amex.svg';
+import imgDiscover from '@/assets/images/card/discover.svg';
+import imgMastercard from '@/assets/images/card/mastercard.svg';
+import imgVisa from '@/assets/images/card/visa.svg';
+
 import { fieldInput, fieldCleave, fieldDropdown } from '../Form/customField'
 import validation, { required } from '../Form/validation'
+
 
 const allCCTypes = {
   amex: {
     name: 'amex',
-    img: 'https://kbob.github.io/images/sample-1.jpg'
+    img: imgAmex
   },
   discover: {
     name: 'discover',
-    img: 'https://kbob.github.io/images/sample-2.jpg'
+    img: imgDiscover
   },
   mastercard: {
     name: 'mastercard',
-    img: 'https://kbob.github.io/images/sample-5.jpg'
+    img: imgMastercard
   },
   visa: {
     name: 'visa',
-    img: 'https://kbob.github.io/images/sample-4.jpg'
+    img: imgVisa
   },
 }
 
@@ -63,7 +71,7 @@ class Component extends React.Component {
               elementPrepend={
                 <div className="input-group-prepend">
                   <span className="input-group-text bg-white">
-                    <img width="26px" height="26px" src={(allCCTypes[ccType] && allCCTypes[ccType].img) || 'https://kbob.github.io/images/sample-3.jpg'} />
+                    <img width="26px" height="26px" src={(allCCTypes[ccType] && allCCTypes[ccType].img) || imgCC} />
                   </span>
                 </div>
               }
@@ -132,7 +140,7 @@ class Component extends React.Component {
                 <div className="input-group">
                   <div className="input-group-prepend">
                     <span className="input-group-text bg-light rounded-0">
-                      <img width="26px" height="26px" src={'https://kbob.github.io/images/sample-3.jpg'} />
+                      <img width="26px" height="26px" src={imgCC} />
                     </span>
                   </div>
                   <input type="text" className="form-control bg-light border-left-0 border-right-0" value={`**** **** **** ${lastDigits}`} readOnly />
