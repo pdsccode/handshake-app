@@ -6,34 +6,34 @@ import { FormattedMessage } from 'react-intl';
 import { Collapse, Button, CardBody, Card } from 'reactstrap';
 import { Formik, Field } from 'formik';
 
-import imgCC from '@/assets/images/card/credit-card.svg';
-import imgAmex from '@/assets/images/card/amex.svg';
-import imgDiscover from '@/assets/images/card/discover.svg';
-import imgMastercard from '@/assets/images/card/mastercard.svg';
-import imgVisa from '@/assets/images/card/visa.svg';
+// import imgCC from '@/assets/images/card/credit-card.svg';
+// import imgAmex from '@/assets/images/card/amex.svg';
+// import imgDiscover from '@/assets/images/card/discover.svg';
+// import imgMastercard from '@/assets/images/card/mastercard.svg';
+// import imgVisa from '@/assets/images/card/visa.svg';
 
 import { fieldInput, fieldCleave, fieldDropdown } from '../Form/customField'
 import validation, { required } from '../Form/validation'
 
 
-const allCCTypes = {
-  amex: {
-    name: 'amex',
-    img: imgAmex
-  },
-  discover: {
-    name: 'discover',
-    img: imgDiscover
-  },
-  mastercard: {
-    name: 'mastercard',
-    img: imgMastercard
-  },
-  visa: {
-    name: 'visa',
-    img: imgVisa
-  },
-}
+// const allCCTypes = {
+//   amex: {
+//     name: 'amex',
+//     img: imgAmex
+//   },
+//   discover: {
+//     name: 'discover',
+//     img: imgDiscover
+//   },
+//   mastercard: {
+//     name: 'mastercard',
+//     img: imgMastercard
+//   },
+//   visa: {
+//     name: 'visa',
+//     img: imgVisa
+//   },
+// }
 
 
 class Component extends React.Component {
@@ -66,15 +66,15 @@ class Component extends React.Component {
           <div className='input-group'>
             <Field
               name="cc_number"
-              className='form-control'
+              className='form-control-custom'
               component={fieldCleave}
-              elementPrepend={
-                <div className="input-group-prepend">
-                  <span className="input-group-text bg-white">
-                    <img width="26px" height="26px" src={(allCCTypes[ccType] && allCCTypes[ccType].img) || imgCC} />
-                  </span>
-                </div>
-              }
+              // elementPrepend={
+              //   <div className="input-group-prepend">
+              //     <span className="input-group-text bg-white">
+              //       <img width="26px" height="26px" src={(allCCTypes[ccType] && allCCTypes[ccType].img) || imgCC} />
+              //     </span>
+              //   </div>
+              // }
               propsCleave={{
                 // id: `card-number-${this.lastUniqueId()}`,
                 placeholder: 'Required',
@@ -95,7 +95,7 @@ class Component extends React.Component {
           <div className='input-group'>
             <Field
               name="cc_expired"
-              className='form-control'
+              className='form-control-custom'
               component={fieldCleave}
               propsCleave={{
                 placeholder: 'MM/YY',
@@ -114,7 +114,7 @@ class Component extends React.Component {
           <div className='input-group'>
             <Field
               name="cc_cvc"
-              className='form-control'
+              className='form-control-custom'
               component={fieldCleave}
               propsCleave={{
                 placeholder: 'Security Code',

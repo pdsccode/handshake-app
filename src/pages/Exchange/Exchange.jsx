@@ -147,7 +147,7 @@ class Exchange extends React.Component {
                                 <Field
                                   name="amount"
                                   component={fieldInput}
-                                  className="form-control d-inline-block mx-2"
+                                  className="form-control-custom d-inline-block mx-2"
                                   // style={{ width: '40%' }}
                                   onChange={this.onAmountChange}
                                   onRef={div => this.amountRef = div}
