@@ -29,7 +29,7 @@ class Dashboard extends React.Component {
       <Col md={12} xs={12} key={handShake.id} className="feedWrapper">
         {
           handShake.type === 'seed' ? (
-            <Feed className="seedItem">
+            <Feed className="seedItem" background="#FAFAFA">
               <SeedItem {...handShake} />
             </Feed>
           ) : (

@@ -39,6 +39,7 @@
     }
     .name {
       font-size: 26px;
+      font-weight: $medium;
       color: $text-black;
       letter-spacing: 0;
       line-height: 35px;
@@ -48,11 +49,13 @@
     .shortDescription {
       opacity: 0.8;
       font-size: 16px;
+      font-weight: $normal;
       color: #5A5A5A;
       line-height: 25px;
     }
     .bottomSeed {
       font-size: 16px;
+      font-weight: $light;
       color: $text-black;
       letter-spacing: 0;
       line-height: 33px;
