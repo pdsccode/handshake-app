@@ -1,3 +1,5 @@
+@import './src/styles/var';
+
 .feedWrapper {
   margin-bottom: 23px;
   &:last-child {
@@ -9,12 +11,17 @@
   }
   .description {
     font-size: 32px;
-    color: #FFFFFF;
+    color: $white;
     letter-spacing: 0;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
   }
   .email {
+    margin: 0;
     font-size: 16px;
-    color: #FFFFFF;
+    color: $white;
     letter-spacing: 0;
     text-align: left;
   }
