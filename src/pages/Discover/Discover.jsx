@@ -7,7 +7,7 @@ import { load } from '@/reducers/discover/action';
 import { Grid, Row, Col } from 'react-bootstrap';
 import Button from '@/components/core/controls/Button';
 import Feed from '@/components/core/presentation/Feed';
-import SeedItem from '../../components/SeedAndBazaar/presentation/SeedItem';
+import SeedItem from '@/components/SeedAndBazaar/presentation/SeedItem';
 import Modal from '@/components/core/controls/Modal';
 import { handShakeList } from '@/data/shake.js';
 // style
