@@ -121,6 +121,8 @@ class BettingDetail extends React.Component {
             industries_type: industryId,
             //source: Platform.OS
           };
+
+          
     }
     changeText(key, text){
         console.log('Text:', text);
