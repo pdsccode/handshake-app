@@ -34,14 +34,29 @@ $portland-orange: #ff5722;
 $header-height: 45px;
 $app-width: 414px;
 /*
+* Font base
+* ======================================================================== */
+$font-size-base:          16px !default;
+$font-family-base:        motiva-sans, sans-serif !default;
+/*
 * Font weight
 * ======================================================================== */
-$thin: 100;
-$extra-light: 200;
-$light: 300;
-$normal: 400;
-$medium: 500;
-$semi-bold: 600;
-$bold: 700;
-$extra-bold: 800;
-$black: 900;
+$thin: 100 !default;
+$extra-light: 200 !default;
+$light: 300 !default;
+$normal: 400 !default;
+$medium: 500 !default;
+$semi-bold: 600 !default;
+$bold: 700 !default;
+$extra-bold: 800 !default;
+$heavy: 900 !default;
+/*
+* Typography
+* ======================================================================== */
+$font-size-h1:            ($font-size-base * 1.75) !default;
+$font-size-h2:            ($font-size-base * 1.5) !default;
+$font-size-h3:            ($font-size-base * 1.375) !default;
+$font-size-h4:            ($font-size-base * 1.25) !default;
+$font-size-h5:            ($font-size-base * 1.125) !default;
+$font-size-h6:            ($font-size-base * 1.125) !default;
+$font-size-caption:       ($font-size-base * 0.875) !default;
