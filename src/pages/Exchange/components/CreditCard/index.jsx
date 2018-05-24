@@ -31,14 +31,11 @@ const allCCTypes = {
 class Component extends React.Component {
   state = {
     ccType: '',
-    isNewCCOpen: false
   }
   handleCCTypeChanged = (type) => {
     this.setState({ ccType: type })
   }
-  handleToggleNewCC = () => {
-    this.setState({ isNewCCOpen: !this.state.isNewCCOpen })
-  }
+
   handleSubmit = (e) => {
     e.preventDefault();
     const {handleSubmit} = this.props;
@@ -51,9 +48,8 @@ class Component extends React.Component {
     handleSubmit(fakeValues);
   }
   render() {
-    const { isCCExisting } = this.props
-    const { ccType, isNewCCOpen } = this.state
-    const lastDigits = '1222'
+    const { isCCExisting, lastDigits, isNewCCOpen, handleToggleNewCC } = this.props
+    const { ccType } = this.state;
 
     const newCCElement = (
       <div className={`bg-primary rounded-bottom p-2 ${!isCCExisting ? 'mb-2' : ''}`}>
@@ -149,7 +145,7 @@ class Component extends React.Component {
                             <button className="w-100 btn btn-link" type='button'
                                     onClick={() => {
                                       setFieldValue(name, !value)
-                                      this.handleToggleNewCC()
+                                      handleToggleNewCC()
                                     }}
                             >
                               Change&nbsp;{value ? 'v' : '>'}
