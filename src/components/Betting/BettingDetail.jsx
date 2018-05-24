@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Input from '@/components/core/forms/Input/Input';
-//import FormRender from '@/components/core/forms/Form/FormRender';
 import Button from '@/components/core/controls/Button/Button';
+import {Formik} from 'formik';
+
 import './css/BettingDetail.scss';
 const regex = /\[.*?\]/g;
 const regexReplace = /\[|\]/g;
@@ -34,40 +35,46 @@ class BettingDetail extends React.Component {
         this.state = {
             values: []
         };
+        this.onSubmit = this.onSubmit.bind(this);
+        this.validateForm = this.validateForm.bind(this);
+        this.renderForm = this.renderForm.bind(this);
+    }
+    onSubmit(values, {setSubmitting, setErrors /* setValues and other goodies */}) {
+        console.log("Submit");
+      }
+    validateForm(values) {
+    // same as above, but feel free to move this into a class method now.
+    let errors = {};
+    return errors;
     }
     renderInput(item, index){
         const {key, placeholder, type} = item;
-
+        var className = "form-control-custom input";
+        var plusClassName = key === "odd" ?  " oddInput" : '';
+        className = className +  plusClassName;
+        console.log('Classname: ', className);
         return (
-            <label key={index} className="rowWapper">
-                {placeholder}
-                <Input className="form-control-custom"  name={key} onChange={(evt) => { this.changeText(key, evt.target.value)}}/>
-    
-            </label>
+            <Input className={className}  name={key} onChange={(evt) => { this.changeText(key, evt.target.value)}}/>
+
           );
     }
     renderDate(item, index){
         const {key, placeholder, type} = item;
 
         return (
-            <label key={index} className="rowWapper">
-                {placeholder}
-                <Input className="form-control-custom"  name={key} onChange={(evt) => { this.changeText(key, evt.target.value)}}/>
-    
-            </label>
+            <Input className="form-control-custom input"  name={key} onChange={(evt) => { this.changeText(key, evt.target.value)}}/>
+
           );
     }
     renderNumber(item, index){
         const {key, placeholder, type} = item;
 
         return (
-            <label key={index} className="rowWapper">
-                {placeholder}
-                <Input className="form-control-custom"  name={key} type='number' min='0.0001' defaultValue='1' onChange={(evt) => { this.changeText(key, evt.target.value)}}/>
-    
-            </label>
+            <Input className="form-control-custom input"  name={key} type='number' min='0.0001' defaultValue='1' onChange={(evt) => { this.changeText(key, evt.target.value)}}/>
+
           );
     }
+  
     renderItem(field, index) {
         console.log('Field:', field);
         //var item = field.length > 0 ? field[0] : {}
@@ -77,23 +84,26 @@ class BettingDetail extends React.Component {
         const {key, placeholder, type} = item;
         console.log('Key:', key);
         console.log('Type:', type);
-        var itemRender =  this.renderInput(item, index);
+        var itemRender = this.renderInput(item, index);
         switch(type){
             case 'date':
             itemRender = this.renderDate(item, index);
             break;
             case 'number':
-            itemRender = (<div key={index}>
-                <label>
-                    {placeholder}
-                    <Input name={key} type='number' min='1' defaultValue='1' onChange={(evt) => { this.changeText(key, evt.target.value)}}/>
-                </label>
-            
-                </div>);
+            itemRender = this.renderNumber(item, index);
             break;
+            
 
         }
-        return itemRender;
+        
+        return (
+            <div key={index} className="rowWrapper">
+            <label className="label">{placeholder}</label>
+            {key === "odd" &&  <label className="oddLabel">{"1 : "}</label>
+        }
+            {itemRender}
+            </div>
+        );
     }
     get inputList(){
         const content = this.content;
@@ -151,17 +161,31 @@ class BettingDetail extends React.Component {
             values
         })
     }
-  render() {
-      const inputList = this.inputList;
+    renderForm({values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting}) {
+        const inputList = this.inputList;
       console.log('Input List:', inputList);
-    return (
-        <div>
-           {inputList.map((field, index)=>
+        return (
+            <form className="wrapper" onSubmit={handleSubmit}>         
+              {inputList.map((field, index)=>
               this.renderItem(field, index)
            )}
-           <Button onClick={()=> this.onClickSendButton()}>Sign & Send</Button>
+           <Button type="submit" block onClick={()=> this.onClickSendButton()}>Sign & Send</Button>
+
            
-        </div>
+           </form>
+        );
+    }
+  render() {
+      
+    return (
+        <Formik
+            initialValues={{
+              amount: 1,
+            }}
+            validate={this.validateForm}
+            onSubmit={this.onSubmit}
+            render={this.renderForm}
+          />
     );
   }
 }

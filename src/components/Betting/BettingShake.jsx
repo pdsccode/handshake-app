@@ -103,7 +103,7 @@ class BetingShake extends React.Component {
         const {odd} = this.props;
         const amount = value * odd;
         this.setState({
-            total: amount
+            total: amount.toFixed(4)
         })
     }
 }
