@@ -15,7 +15,9 @@ import localStore from '@/services/localStore';
 import { URL } from '@/config';
 import './Exchange.scss'
 
-import {getUserProfile, getCryptoPrice, createCCOrder, getUserCcLimit, getCcLimits} from '@/reducers/exchange/action';
+import {getUserProfile, getCryptoPrice, createCCOrder,
+  getUserCcLimit, getCcLimits, getUserTransaction
+} from '@/reducers/exchange/action';
 
 class Exchange extends React.Component {
   constructor(props) {
@@ -33,6 +35,7 @@ class Exchange extends React.Component {
     this.props.getUserProfile({headers: {'Custom-Uid': 'megalodon'}});
     this.props.getCcLimits({});
     this.props.getUserCcLimit({headers: {'Custom-Uid': 'megalodon'}});
+    this.props.getUserTransaction({headers: {'Custom-Uid': 'megalodon'}});
 
     // this.props.dispatch(change('credit-card', 'amount', '1'));
     this.getCryptoPriceByAmount(0);
@@ -117,7 +120,7 @@ class Exchange extends React.Component {
 
   handleBuySuccess = () => {
     console.log('Go to handshake view');
-    this.props.history.push(URL.HANDSHAKE_LIST);
+    this.props.history.push(URL.TRANSACTOIN_LIST);
   }
 
   handleCreateCCOrderFailed = (e) => {
@@ -272,6 +275,7 @@ const mapStateToProps = (state) => ({
   cryptoPrice: state.exchange.cryptoPrice,
   userCcLimit: state.exchange.userCcLimit,
   ccLimits: state.exchange.ccLimits,
+  userTransaction: state.exchange.userTransaction,
 });
 
 const mapDispatchToProps = {
@@ -279,7 +283,8 @@ const mapDispatchToProps = {
   getCryptoPrice,
   createCCOrder,
   getUserCcLimit,
-  getCcLimits
+  getCcLimits,
+  getUserTransaction
 };
 
 export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(Exchange));
