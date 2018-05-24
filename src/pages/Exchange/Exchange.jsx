@@ -98,7 +98,8 @@ class Exchange extends React.Component {
   }
 
   onAmountChange = (e) => {
-    alert('test');
+    // alert('test');
+    console.log(this.amountRef);
     const amount = e.target.value;
     this.getCryptoPriceByAmount(amount);
     this.setState({amount: amount}, () => {
@@ -147,6 +148,7 @@ class Exchange extends React.Component {
                                   className="form-control d-inline-block mx-2"
                                   // style={{ width: '40%' }}
                                   onChange={this.onAmountChange}
+                                  onRef={div => this.amountRef = div}
                                 />
                                 <span className="d-inline-block ml-auto" style={{ width: '235px' }}>
                                   <Field
