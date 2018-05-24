@@ -9,6 +9,7 @@ import Button from '@/components/core/controls/Button';
 import Feed from '@/components/core/presentation/Feed';
 import Modal from '@/components/core/controls/Modal';
 import ModalDialog from '@/components/core/controls/ModalDialog';
+import Category from '@/components/core/controls/Category';
 import { handShakeList } from '@/data/shake.js';
 import BettingItem from '@/components/Betting/BettingItem';
 import BettingShake from '@/components/Betting/BettingShake';
@@ -24,7 +25,7 @@ class Dashboard extends React.Component {
 
   get feedHtml() {
     return handShakeList.data.map(handShake => (
-      <Col md={12} xs={12} key={handShake.id} className="feedWrapper">
+      <Col md={12} xs={12} key={handShake.id} className="feed-wrapper">
         <Feed className="feed">
           {handShake.industries_type === 18 ?  <BettingItem item={handShake}/>:
             <div>
@@ -53,6 +54,9 @@ class Dashboard extends React.Component {
   render() {
     return (
       <Grid>
+        <Row>
+          <Category className="category-wrapper" />
+        </Row>
         <Row>
           {this.feedHtml}
         </Row>
