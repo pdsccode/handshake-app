@@ -2,7 +2,7 @@ import React from 'react';
 // import Button from '@/components/core/controls/Button/Button';
 // import { URL } from '@/config';
 import { Grid, Row, Col } from 'react-bootstrap';
-import { FormattedMessage } from 'react-intl';
+import {FormattedMessage, injectIntl} from 'react-intl';
 import { Collapse, Button, CardBody, Card } from 'reactstrap';
 import { Formik, Field } from 'formik';
 
@@ -14,6 +14,7 @@ import imgCC from '@/assets/images/card/credit-card.svg';
 
 import { fieldInput, fieldCleave, fieldDropdown } from '../Form/customField'
 import validation, { required } from '../Form/validation'
+import {connect} from "react-redux";
 
 
 // const allCCTypes = {
@@ -45,13 +46,14 @@ class Component extends React.Component {
   }
 
   render() {
-    const { isCCExisting, lastDigits, isNewCCOpen, handleToggleNewCC } = this.props
+    const {intl} = this.props;
+    const { isCCExisting, lastDigits, isNewCCOpen, handleToggleNewCC } = this.props;
     const { ccType } = this.state;
 
     const newCCElement = (
       <div className={`rounded-bottom p-2 ${!isCCExisting ? 'mb-2' : ''}`} style={{ background: !isCCExisting ? '#76b1ff' : '' }}>
         <div className="d-flex">
-          <label className="col-form-label mr-auto" style={{ width: '100px' }}>Number</label>
+          <label className="col-form-label mr-auto" style={{ width: '100px' }}><FormattedMessage id="ccNumber"/></label>
           <div className='input-group'>
             <Field
               name="cc_number"
@@ -66,7 +68,7 @@ class Component extends React.Component {
               // }
               propsCleave={{
                 // id: `card-number-${this.lastUniqueId()}`,
-                placeholder: 'Required',
+                placeholder: intl.formatMessage({id: 'required'}),
                 options: {
                   creditCard: true,
                   onCreditCardTypeChanged: this.handleCCTypeChanged
@@ -80,14 +82,14 @@ class Component extends React.Component {
           </div>
         </div>
         <div className="d-flex mt-2">
-          <label className="col-form-label mr-auto" style={{ width: '100px' }}>Expiry</label>
+          <label className="col-form-label mr-auto" style={{ width: '100px' }}><FormattedMessage id="ccExpiry"/></label>
           <div className='input-group'>
             <Field
               name="cc_expired"
               className='form-control-custom form-control-custom-ex w-100'
               component={fieldCleave}
               propsCleave={{
-                placeholder: 'MM/YY',
+                placeholder: intl.formatMessage({id: 'ccExpiryTemplate'}),
                 options: {blocks: [2, 2], delimiter: '/', numericOnly: true},
                 // type: "tel",
                 // id: `cart-date-${this.lastUniqueId()}`,
@@ -99,14 +101,14 @@ class Component extends React.Component {
           </div>
         </div>
         <div className="d-flex mt-2">
-          <label className="col-form-label mr-auto" style={{ width: '100px' }}>CVC</label>
+          <label className="col-form-label mr-auto" style={{ width: '100px' }}><FormattedMessage id="ccCVC"/></label>
           <div className='input-group'>
             <Field
               name="cc_cvc"
               className='form-control-custom form-control-custom-ex w-100'
               component={fieldCleave}
               propsCleave={{
-                placeholder: 'Security Code',
+                placeholder: intl.formatMessage({id: 'securityCode'}),
                 options: {blocks: [4], numericOnly: true},
                 type: "password",
                 // maxLength: "4",
@@ -142,7 +144,7 @@ class Component extends React.Component {
                                     handleToggleNewCC()
                                   }}
                           >
-                            Change&nbsp;{value ? 'v' : '>'}
+                            {intl.formatMessage({id: 'change'})}&nbsp;{value ? 'v' : '>'}
                           </button>
                       }
                     />
@@ -164,4 +166,4 @@ class Component extends React.Component {
   }
 }
 
-export default Component;
+export default injectIntl(Component);

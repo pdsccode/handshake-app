@@ -228,7 +228,7 @@ class Exchange extends React.Component {
                             <Feed className="feed" background="linear-gradient(-133deg, #006AFF 0%, #3AB4FB 100%)">
                               <div style={{ color: 'white' }}>
                                 <div className="form-group mx-2 pt-2 d-flex">
-                                  <label className="col-form-label">Buy</label>
+                                  <label className="col-form-label"><FormattedMessage id="buy"/></label>
                                   <Field
                                     name="amount"
                                     component={fieldInput}
@@ -250,7 +250,7 @@ class Exchange extends React.Component {
                                 </span>
                                 </div>
                                 <div className="mx-2">
-                                  <p>for {fiatCurrency}{total} using a credit card?</p>
+                                  <p><FormattedMessage id="askUsingCreditCard" values={{ fiatCurrency: fiatCurrency, total: total }} /></p>
                                 </div>
                                 <CreditCard
                                             isCCExisting={userProfile && userProfile.credit_card.cc_number.trim().length > 0}
@@ -259,7 +259,7 @@ class Exchange extends React.Component {
                                 />
                               </div>
                             </Feed>
-                            <Button block type="submit">Shake now</Button>
+                            <Button block type="submit"><FormattedMessage id="shakeNow"/></Button>
                           </form>
                         )}
                       />
