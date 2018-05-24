@@ -63,6 +63,11 @@ export class WalletModel {
         return new WalletModel(mnemonic, address, privateKey, coinType)
     }
 
+    // Get list wallet from store local:
+    static getMasterWallet(){
+        return localStore.get(WalletModel.KEY);           
+    }
+
     static log(data, key=WalletModel.KEY)
     {
         console.log('%c ' + '{0}: '.format(key), 'background: #222; color: #bada55', data)

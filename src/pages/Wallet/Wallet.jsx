@@ -10,7 +10,7 @@ class Wallet extends React.Component {
   }
   render() {
 
-    WalletModel.log(WalletModel.createMasterWallet());
+    WalletModel.log(WalletModel.getMasterWallet());
 
     return (
       <Grid>
