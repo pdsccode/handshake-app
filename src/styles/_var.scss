@@ -1,14 +1,40 @@
 // basic
 $white: #ffffff;
 $black: #2c2c2c;
-$bg-gray: #EFEFEF;
+$bg-gray: #efefef;
 $text-black: #090909;
 $red: #f00;
-$blue: #1E4EFF;
-// dimension
-$headerHeight: 45px;
-$appWidth: 414px;
-// font weight
+/*
+* Color Pallette
+* ======================================================================== */
+// main color
+$deep-blue: #1e4eff;
+// 5 Shades of Grey
+$baltic-sea: #3e3e3e;
+$steel: #666666;
+$oslo-gray: #8a8a8f;
+$lavender-gray: #c8c7cc;
+$athens-gray: #efeff4;
+$light-gray: #f9f9f9;
+// random colors
+$blue: #007aff;
+$maya-blue: #5ac8fa;
+$gossamer: #009688;
+$sunshade: #ff9500;
+$radical-red: #ff2d55;
+$emerald: #4cd964;
+$dark-orchid: #9c27b0;
+$red-orange: #ff3b30;
+$nation-blue: #5677fc;
+$portland-orange: #ff5722;
+/*
+* Dimension
+* ======================================================================== */
+$header-height: 45px;
+$app-width: 414px;
+/*
+* Font weight
+* ======================================================================== */
 $thin: 100;
 $extra-light: 200;
 $light: 300;
