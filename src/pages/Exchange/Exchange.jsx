@@ -11,6 +11,7 @@ import ModalDialog from '@/components/core/controls/ModalDialog';
 import { Formik, Field } from 'formik';
 import { fieldInput, fieldCleave, fieldDropdown } from './components/Form/customField'
 import validation, { required } from './components/Form/validation'
+import localStore from '@/services/localStore';
 
 import {getUserProfile, getCryptoPrice, createCCOrder, getUserCcLimit, getCcLimits} from '@/reducers/exchange/action';
 
@@ -20,7 +21,8 @@ class Exchange extends React.Component {
 
     this.state = {
       amount: 0,
-      isNewCCOpen: false
+      isNewCCOpen: false,
+      modalContent: ''
     }
   }
 
@@ -56,7 +58,7 @@ class Exchange extends React.Component {
 
   handleCreateCCOrder = (params) => {
     const {cryptoPrice} = this.props;
-    let address = localStorage.getItem('address');
+    let address = localStore.get('address');
     address = '0x2a08a375e203a72f1A378827A3b66D2785A2F7D5';
 
     if (cryptoPrice) {
@@ -78,12 +80,39 @@ class Exchange extends React.Component {
 
   handleCreateCCOrderSuccess = (data) => {
     console.log('handleCreateCCOrderSuccess', data);
-    this.modalRef.open();
+    this.setState({modalContent:
+        (<div>
+          <h1>Buy Success. Buy another?</h1>
+          <Button onClick={this.handleBuySuccess}>Cancel</Button>
+          <Button onClick={this.handleBuyAnother}>OK</Button>
+        </div>)
+    }, () => {
+      this.modalRef.open();
+    });
+  }
+
+  handleBuyAnother = () => {
+    this.modalRef.close();
+  }
+
+  handleBuySuccess = () => {
+    console.log('Go to handshake view');
   }
 
   handleCreateCCOrderFailed = (e) => {
     console.log('handleCreateCCOrderFailed', e);
-    this.modalRef.open();
+    this.setState({modalContent:
+        (<div>
+          <h1>Buy Failed</h1>
+          <Button onClick={this.handleBuyFailed}>OK</Button>
+        </div>)
+    }, () => {
+      this.modalRef.open();
+    });
+  }
+
+  handleBuyFailed = () => {
+    this.modalRef.close();
   }
 
 
@@ -99,9 +128,9 @@ class Exchange extends React.Component {
     } else {
       const {cc_number, cc_expired, cc_cvc} = values;
       cc = {
-        cc_num: cc_number && cc_number.trim(),
-        cvv: cc_cvc && cc_cvc.trim(),
-        expiration_date: cc_expired && cc_expired.trim(),
+        cc_num: cc_number && cc_number.trim().replace(/ /g, ''),
+        cvv: cc_cvc && cc_cvc.trim().replace(/ /g, ''),
+        expiration_date: cc_expired && cc_expired.trim().replace(/ /g, ''),
         token: "",
         save: "true"
       };
@@ -132,17 +161,8 @@ class Exchange extends React.Component {
     const fiatCurrency = '$';
     const total = cryptoPrice && cryptoPrice.fiat_amount;
 
-    let modalContent = null
-    const type = 1
-    if (type === 1) {
-      modalContent = (
-        <div>
-          Success cmnr
-          <Button onClick={() => console.log('OK')}>OK</Button>
-          <Button onClick={() => console.log('Cancel')}>Cancel</Button>
-        </div>
-      )
-    }
+    let modalContent = this.state.modalContent;
+
     return (
       <div className='container'>
         <div className='row'>
