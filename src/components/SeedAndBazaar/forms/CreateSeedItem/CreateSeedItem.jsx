@@ -1,5 +1,6 @@
 import React from 'react';
-import {Formik} from 'formik';
+import { Formik } from 'formik';
+import InputField from './../InputField';
 
 class CreateSeedItem extends React.Component {
   constructor(props) {
@@ -22,25 +23,20 @@ class CreateSeedItem extends React.Component {
   renderForm({values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting}) {
     return (
       <form onSubmit={handleSubmit}>
-        <input
-          type="email"
-          name="email"
-          onChange={handleChange}
-          onBlur={handleBlur}
-          value={values.email}
+        <InputField
+          id="project-name"
+          type="text"
+          label="Project name:"
+          placeHolder="E.g Oscar"
+          error={touched.projectName && errors.projectName}
         />
-        {touched.email && errors.email && <div>{errors.email}</div>}
-        <input
-          type="password"
-          name="password"
-          onChange={handleChange}
-          onBlur={handleBlur}
-          value={values.password}
+        <InputField
+          id="fund-goal"
+          type="text"
+          label="Funding goal"
+          placeHolder="1.05"
+          error={touched.projectName && errors.projectName}
         />
-        {touched.password && errors.password && <div>{errors.password}</div>}
-        <button type="submit" disabled={isSubmitting}>
-          Submit
-        </button>
       </form>
     );
   }
