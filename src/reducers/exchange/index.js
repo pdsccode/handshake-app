@@ -1,7 +1,7 @@
 import {EXCHANGE_ACTIONS} from './action';
 
 function exchangeReducter(state = {}, action) {
-  console.log('exchangeReducter', JSON.stringify(action));
+  // console.log('exchangeReducter', JSON.stringify(action));
   switch (action.type) {
     case EXCHANGE_ACTIONS.GET_CRYPTO_PRICE_SUCCESS: {
       return {...state, cryptoPrice: action.payload.data};

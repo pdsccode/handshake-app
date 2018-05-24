@@ -28,7 +28,7 @@ class Exchange extends React.Component {
     this.props.getUserCcLimit({headers: {'Custom-Uid': 'megalodon'}});
 
     // this.props.dispatch(change('credit-card', 'amount', '1'));
-    this.getCryptoPriceByAmount(1);
+    this.getCryptoPriceByAmount(0);
 
     this.intervalCountdown = setInterval(() => {
       this.getCryptoPriceByAmount(this.state.amount);
@@ -43,7 +43,7 @@ class Exchange extends React.Component {
 
   getCryptoPriceByAmount = (amount) => {
     // const {app: {setting: {cryptoCurrency}}} = this.props;
-    const cryptoCurrency = 'BTC';
+    const cryptoCurrency = 'ETH';
 
     var data = {amount: amount, currency: cryptoCurrency};
 
@@ -53,8 +53,7 @@ class Exchange extends React.Component {
   }
 
   handleCreateCCOrder = (params) => {
-    // const {cryptoPrice} = this.props;
-    const cryptoPrice = {amount: '123', currency: 'BTC', fiat_amount: '1234567'};
+    const {cryptoPrice} = this.props;
     if (cryptoPrice) {
       const paramsObj = {
         amount: cryptoPrice.amount.trim(),
@@ -63,9 +62,20 @@ class Exchange extends React.Component {
         fiat_currency: "USD",
         payment_method_data: params
       };
-      // console.log('handleCreateCCOrder',paramsObj);
-      this.props.createCCOrder({data: paramsObj});
+      console.log('handleCreateCCOrder',paramsObj);
+      this.props.createCCOrder({data: paramsObj, headers: {'Custom-Uid': 'megalodon'},
+        successFn: this.handleCreateCCOrderSuccess,
+        errorFn: this.handleCreateCCOrderFailed
+      });
     }
+  }
+
+  handleCreateCCOrderSuccess = (data) => {
+    console.log('handleCreateCCOrderSuccess', data);
+  }
+
+  handleCreateCCOrderFailed = (e) => {
+    console.log('handleCreateCCOrderFailed', e);
   }
 
 
@@ -89,17 +99,11 @@ class Exchange extends React.Component {
       };
     }
 
-    console.log('handleSubmit', cc);
+    // console.log('handleSubmit', cc);
     this.handleCreateCCOrder(cc);
   }
 
-  handleFormSubmit = (values, { setSubmitting, setErrors }) => {
-    console.log('valuess', values)
-  }
-
   onAmountChange = (e) => {
-    // alert('test');
-    console.log(this.amountRef);
     const amount = e.target.value;
     this.getCryptoPriceByAmount(amount);
     this.setState({amount: amount}, () => {
@@ -116,8 +120,6 @@ class Exchange extends React.Component {
     const allCryptoCurrencies = [
       { name: 'ETH', text: 'ETH' },
       { name: 'BTC', text: 'BTC' },
-      { name: 'LTC', text: 'LTC' },
-      { name: 'BCH', text: 'BCH' },
     ];
     const fiatCurrency = '$';
     const total = cryptoPrice && cryptoPrice.fiat_amount;
@@ -135,8 +137,8 @@ class Exchange extends React.Component {
                   element: (
                     <div>
                       <Formik
-                        initialValues={{ amount: '', currency: 'BTC' }}
-                        onSubmit={this.handleFormSubmit}
+                        initialValues={{ amount: '', currency: 'ETH' }}
+                        onSubmit={this.handleSubmit}
                         render={(props) => (
                           <form onSubmit={props.handleSubmit}>
                             <Feed className="feed">
