@@ -120,10 +120,11 @@ class Exchange extends React.Component {
   }
 
   handleCreateCCOrderFailed = (e) => {
-    console.log('handleCreateCCOrderFailed', e);
+    // console.log('handleCreateCCOrderFailed', JSON.stringify(e.response));
     this.setState({modalContent:
         (<div>
           <h1>Buy Failed</h1>
+          <span>{e.response?.data?.message}</span>
           <Button onClick={this.handleBuyFailed}>OK</Button>
         </div>)
     }, () => {
