@@ -1,0 +1,72 @@
+@import './src/styles/style';
+
+.feed-wrapper {
+  margin-bottom: 7px;
+  padding-left: 7px;
+  padding-right: 7px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+  .feed {
+    margin-bottom: 7px;
+    padding: rem-calc(10px 25px 10px 15px);
+    min-height: 120px;
+    border-radius: 6px;
+  }
+  
+  .name {
+    font-size: rem-calc(16px);
+    color: $white;
+    margin-bottom: 0;
+  }
+  .balance {
+    font-size: rem-calc(20px);
+    color: $white;
+    letter-spacing: 0;
+    font-weight: 300;    
+    margin-left: -3px;
+  }
+
+  .address {
+    margin: 0;
+    font-size: rem-calc(12px);
+    color: $white;
+    letter-spacing: 0;
+    text-align: left;
+    bottom: 15px;
+    position: absolute;
+  }
+  .more{
+    top: 12px;
+    right: 20px;
+    position: absolute;
+  }
+  .safe{
+    bottom: 16px;
+    right: 20px;
+    position: absolute;
+  }
+}
+
+.category-wrapper {
+  margin-bottom: rem-calc(42px);
+}
+.list{
+  margin-left: -7px;
+  margin-right: -7px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.col-sm-6 {
+    flex: 0 0 50%;
+    max-width: 50%;
+}
+
+.eth-wallet-bg {
+    background-image: url('../../assets/images/pages/wallet/Mask.svg');
+}
+.btc-wallet-bg {
+    background-image: url('../../assets/images/pages/wallet/Mask.svg');
+}
