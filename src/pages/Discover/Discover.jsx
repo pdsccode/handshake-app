@@ -7,6 +7,7 @@ import { load } from '@/reducers/discover/action';
 import { Grid, Row, Col } from 'react-bootstrap';
 import Button from '@/components/core/controls/Button';
 import Feed from '@/components/core/presentation/Feed';
+import Category from '@/components/core/controls/Category';
 import { handShakeList } from '@/data/shake.js';
 // style
 import './Discover.scss';
@@ -19,7 +20,7 @@ class Dashboard extends React.Component {
 
   get feedHtml() {
     return handShakeList.data.map(handShake => (
-      <Col md={12} xs={12} key={handShake.id} className="feedWrapper">
+      <Col md={12} xs={12} key={handShake.id} className="feed-wrapper">
         <Feed className="feed">
           <p className="description">{handShake.description}</p>
           <p className="email">{handShake.from_email}</p>
@@ -32,6 +33,9 @@ class Dashboard extends React.Component {
   render() {
     return (
       <Grid>
+        <Row>
+          <Category className="category-wrapper" />
+        </Row>
         <Row>
           {this.feedHtml}
         </Row>
