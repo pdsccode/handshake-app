@@ -65,7 +65,7 @@ export class BettingStatusHandler {
         
     }
 
-    static autoCloseItem(isOwner, eventDate){
+    static autosCloseItem(isOwner, eventDate){
         if(isOwner){
             //TODO: Close item
             var today = new Date()
