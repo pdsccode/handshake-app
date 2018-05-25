@@ -3,15 +3,15 @@ import PropTypes from 'prop-types';
 import Input from '@/components/core/forms/Input/Input';
 import Button from '@/components/core/controls/Button/Button';
 import {Formik} from 'formik';
-import DatePicker from '@/components/Betting/DatePicker';
+import DatePicker from '@/components/handshakes/betting/Create/DatePicker';
 
-import './css/BettingDetail.scss';
+import './Create.scss';
 const regex = /\[.*?\]/g;
 const regexReplace = /\[|\]/g;
 const regexReplacePlaceholder = /\[.*?\]/;
 
 
-class BettingDetail extends React.Component {
+class BettingCreate extends React.Component {
     static propTypes = {
         item: PropTypes.object.isRequired,
         toAddress: PropTypes.string.isRequired,
@@ -203,4 +203,5 @@ class BettingDetail extends React.Component {
   }
 }
 
-export default BettingDetail;
+export default BettingCreate;
+
