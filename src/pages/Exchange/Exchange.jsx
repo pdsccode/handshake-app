@@ -66,7 +66,7 @@ class Exchange extends React.Component {
 
     var data = {amount: amount, currency: cryptoCurrency};
 
-    this.props.getCryptoPrice({qs: data,
+    this.props.getCryptoPrice({PATH_URL: API_URL.EXCHANGE.GET_CRYPTO_PRICE, qs: data,
         successFn: this.handleGetCryptoPriceSuccess,
         errorFn: this.handleGetCryptoPriceFailed
       });
