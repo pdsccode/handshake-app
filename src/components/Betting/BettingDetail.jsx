@@ -69,8 +69,14 @@ class BettingDetail extends React.Component {
 
         return (
             <DatePicker
-              onChange={(error)=> console.log(error)}
-              closeOnSelect={true}
+              onChange={(selectedDate)=> console.log(selectedDate)}
+              inputProps={{
+                readOnly: true,
+                className: 'form-control-custom input',
+                ref: (component) => { this.datePickerRef = component; },
+              }}
+              defaultValue={new Date()}
+              closeOnSelect
             />
           );
     }
@@ -145,6 +151,7 @@ class BettingDetail extends React.Component {
               );
         });
         console.log('After Content:', content);
+        console.log("this", this.datePickerRef.value);
 
         const {toAddress, isPublic, industryId} = this.props;
 
