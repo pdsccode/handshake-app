@@ -63,10 +63,15 @@
     flex: 0 0 50%;
     max-width: 50%;
 }
-
 .eth-wallet-bg {
-    background-image: url('../../assets/images/pages/wallet/Mask.svg');
+    background-image: url('../../assets/images/pages/wallet/btc-wallet-bg.svg');
 }
 .btc-wallet-bg {
-    background-image: url('../../assets/images/pages/wallet/Mask.svg');
+    background-image: url('../../assets/images/pages/wallet/btc-wallet-bg.svg');
+}
+.testnet-wallet-bg {
+  background-image: url('../../assets/images/pages/wallet/testnet-wallet-bg.svg');
+}
+.xrp-wallet-bg {
+  background-image: url('../../assets/images/pages/wallet/xrp-wallet-bg.svg');
 }

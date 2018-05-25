@@ -24,7 +24,7 @@ var retrieveUtxos = function (address) {
         resolve(utxos);
       })
       .catch(function (err) {
-        reject(err);
+        reject(err); 
       });
 
   });
@@ -162,7 +162,9 @@ var transferBTC = function(privateKey, to, amount,network){
     bitcore.Networks.defaultNetwork = bitcore.Networks.testnet;
   }
 
-  var private = bitcore.HDPrivateKey(privateKey).privateKey.toString();
+  var _private = bitcore.HDPrivateKey(privateKey).privateKey.toString();
+
+  // console.log('_private', _private);
 
   var publicKey = bitcore.HDPublicKey(privateKey);
   var address = new bitcore.Address(publicKey.publicKey).toString();
@@ -194,7 +196,7 @@ var transferBTC = function(privateKey, to, amount,network){
         .change(address)
         .fee(data.fee)
         .to(to,Number(amount))
-        .sign(private);
+        .sign(_private);
 
 
 

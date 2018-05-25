@@ -11,6 +11,11 @@ export class WalletModel {
       this.address = address;
       this.privateKey = privateKey;
       this.coinType = coinType;
+      this.default = false;
+    }
+
+    setDefault(isDefault){
+        this.default = isDefault;
     }
 
     // Create an autonomous wallet:
@@ -22,6 +27,7 @@ export class WalletModel {
 
         // 1. create default eth wallet:
         var eth_wallet = WalletModel.createWallet(WalletModel.CoinType.Ether, mnemonic);
+        eth_wallet.setDefault(true)
 
         // 2. create btc for testnet:
         var btc_testnet_wallet = WalletModel.createWallet(WalletModel.CoinType.BitcoinTestnet, mnemonic);
