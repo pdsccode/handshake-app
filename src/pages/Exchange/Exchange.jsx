@@ -1,6 +1,7 @@
 import React from 'react';
 import { Grid, Row, Col } from 'react-bootstrap';
 import { FormattedMessage, injectIntl } from 'react-intl';
+import { Field, formValueSelector } from "redux-form";
 import {connect} from "react-redux";
 import CreditCard from './components/CreditCard';
 import Tabs from './components/Tabs';
@@ -8,13 +9,18 @@ import LevelItem from './components/LevelItem';
 import Feed from '@/components/core/presentation/Feed';
 import Button from '@/components/core/controls/Button';
 import ModalDialog from '@/components/core/controls/ModalDialog';
-import { Formik, Field } from 'formik';
-import { fieldInput, fieldCleave, fieldDropdown } from './components/Form/customField'
-import validation, { required } from './components/Form/validation'
 import localStore from '@/services/localStore';
 import { URL } from '@/config';
 import './Exchange.scss'
 import { validate } from './validation'
+
+import createForm from './components/Form/createForm'
+import { fieldInput, fieldCleave, fieldDropdown } from './components/Form/customField'
+import { required } from './components/Form/validation'
+
+const nameFormCreditCard = 'creditCard'
+const FormCreditCard = createForm({ propsReduxForm: { form: nameFormCreditCard } });
+const selectorFormCreditCard = formValueSelector(nameFormCreditCard)
 
 import {getUserProfile, getCryptoPrice, createCCOrder,
   getUserCcLimit, getCcLimits
@@ -30,7 +36,6 @@ class Exchange extends React.Component {
       isNewCCOpen: false,
       modalContent: '',
       showCCScheme: false,
-      showCC: false
     }
   }
 
@@ -163,7 +168,6 @@ class Exchange extends React.Component {
 
   onAmountChange = (e) => {
     const amount = e.target.value;
-    this.setState({ showCC: !!amount });
     this.getCryptoPriceByAmount(amount);
     this.setState({amount: amount}, () => {
       // this.props.dispatch(change('cc-order'));
@@ -200,8 +204,7 @@ class Exchange extends React.Component {
   // }
 
   render() {
-    const {intl, userProfile, cryptoPrice} = this.props;
-    const { showCC } = this.state;
+    const {intl, userProfile, cryptoPrice, amount} = this.props;
     const allCryptoCurrencies = [
       { name: 'ETH', text: 'ETH' },
       { name: 'BTC', text: 'BTC' },
@@ -223,56 +226,46 @@ class Exchange extends React.Component {
                   header: 'Buy',
                   element: (
                     <div>
-                      <Formik
-                        initialValues={{ amount: '', currency: this.state.currency }}
-                        validate={this.handleValidate}
-                        onSubmit={this.handleSubmit}
-                        render={(props) => (
-                          <form onSubmit={props.handleSubmit}>
-                            <Feed className="feed p-2 mb-2" background="linear-gradient(-133deg, #006AFF 0%, #3AB4FB 100%)">
-                              <div style={{ color: 'white' }}>
-                                <div className="form-group pt-2 d-flex">
-                                  <label className="col-form-label"><FormattedMessage id="buy"/></label>
-                                  <Field
-                                    name="amount"
-                                    component={fieldInput}
-                                    className="form-control-custom form-control-custom-ex d-inline-block mx-2"
-                                    // style={{ width: '40%' }}
-                                    onChange={this.onAmountChange}
-                                    onRef={div => this.amountRef = div}
-                                    placeholder={intl.formatMessage({id: 'amount'})}
-                                  />
-                                  <span className="d-inline-block ml-auto" style={{ width: '235px' }}>
-                                    <Field
-                                      name="currency"
-                                      component={fieldDropdown}
-                                      list={allCryptoCurrencies}
-                                      onRef={div => this.currencyRef = div}
-                                      onChange={this.onCurrencyChange}
-                                      // defaultText={''}
-                                    />
-                                  </span>
-                                </div>
-                                <div className="pb-2">
-                                  <span><FormattedMessage id="askUsingCreditCard" values={{ fiatCurrency: fiatCurrency, total: total }} /></span>
-                                </div>
-                                {
-                                  showCC && (
-                                    <CreditCard
-                                      isCCExisting={userProfile && userProfile.credit_card.cc_number.trim().length > 0}
-                                      lastDigits={userProfile && userProfile.credit_card.cc_number}
-                                      isNewCCOpen={this.state.isNewCCOpen}
-                                      handleToggleNewCC={this.handleToggleNewCC}
-                                    />
-                                  )
-                                }
-
+                      <FormCreditCard onSubmit={this.handleSubmit} validate={this.handleValidate}>
+                        <Feed className="feed p-2 mb-2" background="linear-gradient(-133deg, #006AFF 0%, #3AB4FB 100%)">
+                          <div style={{ color: 'white' }}>
+                            <div className="form-group pt-2 d-flex">
+                              <label className="col-form-label"><FormattedMessage id="buy"/></label>
+                              <div className="mx-2">
+                                <Field
+                                  name="amount"
+                                  validate={[required]}
+                                  component={fieldInput}
+                                  className="form-control-custom form-control-custom-ex d-inline-block"
+                                  placeholder={intl.formatMessage({id: 'amount'})}
+                                />
                               </div>
-                            </Feed>
-                            <Button block type="submit"><FormattedMessage id="shakeNow"/></Button>
-                          </form>
-                        )}
-                      />
+                              <span className="d-inline-block ml-auto" style={{ width: '235px' }}>
+                                <Field
+                                  name="currency"
+                                  component={fieldDropdown}
+                                  list={allCryptoCurrencies}
+                                  // defaultText={''}
+                                />
+                              </span>
+                            </div>
+                            <div className="pb-2">
+                              <span><FormattedMessage id="askUsingCreditCard" values={{ fiatCurrency: fiatCurrency, total: total }} /></span>
+                            </div>
+                            {
+                              amount && (
+                                <CreditCard
+                                  isCCExisting={userProfile && userProfile.credit_card.cc_number.trim().length > 0}
+                                  lastDigits={userProfile && userProfile.credit_card.cc_number}
+                                  isNewCCOpen={this.state.isNewCCOpen}
+                                  handleToggleNewCC={this.handleToggleNewCC}
+                                />
+                              )
+                            }
+                          </div>
+                        </Feed>
+                        <Button block type="submit"><FormattedMessage id="shakeNow"/></Button>
+                      </FormCreditCard>
                     </div>
                   )
                 },
@@ -308,6 +301,7 @@ const mapStateToProps = (state) => ({
   cryptoPrice: state.exchange.cryptoPrice,
   userCcLimit: state.exchange.userCcLimit,
   ccLimits: state.exchange.ccLimits,
+  amount: selectorFormCreditCard(state, 'amount')
 });
 
 const mapDispatchToProps = {

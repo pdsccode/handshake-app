@@ -4,8 +4,8 @@ import React from 'react';
 import { Grid, Row, Col } from 'react-bootstrap';
 import {FormattedMessage, injectIntl} from 'react-intl';
 import { Collapse, Button, CardBody, Card } from 'reactstrap';
-import { Formik, Field } from 'formik';
-import styled from 'styled-components'
+import styled from 'styled-components';
+import { Field } from "redux-form";
 
 import imgCC from '@/assets/images/card/credit-card.svg';
 // import imgAmex from '@/assets/images/card/amex.svg';
@@ -15,7 +15,7 @@ import imgCC from '@/assets/images/card/credit-card.svg';
 
 import { fieldInput, fieldCleave, fieldDropdown } from '../Form/customField'
 import validation, { required } from '../Form/validation'
-import {connect} from "react-redux";
+import { connect } from "react-redux";
 
 const heightOfTabsHeader = 0.5;
 
@@ -154,10 +154,10 @@ class Component extends React.Component {
                     <Field
                       name="toggleCCOpen"
                       component={
-                        ({ field: { onChange, value, name }, form: { setFieldValue } }) =>
+                        ({ input: { onChange, value } }) =>
                           <button className="w-100 btn btn-link" type='button'
                                   onClick={() => {
-                                    setFieldValue(name, !value)
+                                    onChange(!value)
                                     handleToggleNewCC()
                                   }}
                           >

@@ -1,5 +1,6 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { routerReducer, routerMiddleware } from 'react-router-redux';
+import { reducer as formReducer } from 'redux-form';
 import history from '@/services/history';
 import appReducer from '@/reducers/app';
 import authReducer from '@/reducers/auth';
@@ -13,6 +14,7 @@ const reducersApp = combineReducers({
   auth: authReducer,
   exchange: exchangeReducer,
   router: routerReducer,
+  form: formReducer,
   ...reducers,
 });
 
