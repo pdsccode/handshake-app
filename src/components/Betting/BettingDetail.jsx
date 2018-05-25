@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 import Input from '@/components/core/forms/Input/Input';
 import Button from '@/components/core/controls/Button/Button';
 import {Formik} from 'formik';
-import Datetime from 'react-datetime';
-//require('react-datetime');
+import DatePicker from '@/components/Betting/DatePicker';
 
 import './css/BettingDetail.scss';
 const regex = /\[.*?\]/g;
@@ -20,6 +19,7 @@ class BettingDetail extends React.Component {
         industryId: PropTypes.number.isRequired,
         onClickSend:PropTypes.func
       }
+
     static defaultProps = {
         item: {
             "backgroundColor": "#332F94",
@@ -34,7 +34,7 @@ class BettingDetail extends React.Component {
         isPublic: true,
         industryId: 18,
 
-    
+
     }
     constructor(props) {
         super(props);
@@ -68,9 +68,11 @@ class BettingDetail extends React.Component {
         const {key, placeholder, type} = item;
 
         return (
-            <Datetime inputProps={{ className:"form-control-custom input" }}
-            onChange={(error)=> console.log(error)}
-            closeOnSelect={true}/>
+            <DatePicker
+              onChange={(error)=> console.log(error)}
+              viewMode="month"
+              closeOnSelect={true}
+            />
           );
     }
     renderNumber(item, index){
@@ -81,7 +83,7 @@ class BettingDetail extends React.Component {
 
           );
     }
-  
+
     renderItem(field, index) {
         console.log('Field:', field);
         //var item = field.length > 0 ? field[0] : {}
@@ -99,10 +101,8 @@ class BettingDetail extends React.Component {
             case 'number':
             itemRender = this.renderNumber(item, index);
             break;
-            
-
         }
-        
+
         return (
             <div key={index} className="rowWrapper">
             <label className="label">{placeholder}</label>
@@ -158,7 +158,7 @@ class BettingDetail extends React.Component {
             //source: Platform.OS
           };
 
-          
+
     }
     changeText(key, text){
         console.log('Text:', text);
@@ -172,18 +172,18 @@ class BettingDetail extends React.Component {
         const inputList = this.inputList;
       console.log('Input List:', inputList);
         return (
-            <form className="wrapper" onSubmit={handleSubmit}>         
+            <form className="wrapper" onSubmit={handleSubmit}>
               {inputList.map((field, index)=>
               this.renderItem(field, index)
            )}
            <Button type="submit" block onClick={()=> this.onClickSendButton()}>Sign & Send</Button>
 
-           
+
            </form>
         );
     }
   render() {
-      
+
     return (
         <Formik
             initialValues={{
