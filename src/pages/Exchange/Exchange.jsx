@@ -13,8 +13,9 @@ import { fieldInput, fieldCleave, fieldDropdown } from './components/Form/custom
 import validation, { required } from './components/Form/validation'
 import localStore from '@/services/localStore';
 import { URL } from '@/config';
-import './Exchange.scss'
-import { validate } from './validation'
+import './Exchange.scss';
+import { validate } from './validation';
+import throttle from 'lodash/throttle';
 
 import {getUserProfile, getCryptoPrice, createCCOrder,
   getUserCcLimit, getCcLimits
@@ -31,7 +32,9 @@ class Exchange extends React.Component {
       modalContent: '',
       showCCScheme: false,
       showCC: false
-    }
+    };
+
+    this.getCryptoPriceByAmountThrottled = throttle(this.getCryptoPriceByAmount, 500);
   }
 
   componentDidMount() {
@@ -164,9 +167,9 @@ class Exchange extends React.Component {
   onAmountChange = (e) => {
     const amount = e.target.value;
     this.setState({ showCC: !!amount });
-    this.getCryptoPriceByAmount(amount);
+    // this.getCryptoPriceByAmount(amount);
     this.setState({amount: amount}, () => {
-      // this.props.dispatch(change('cc-order'));
+      this.getCryptoPriceByAmountThrottled(amount);
     });
   }
 
