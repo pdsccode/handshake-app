@@ -3,6 +3,7 @@ yarn-error.log
 package-lock.json
 dist
 .DS_Store
+.idea
 .env
 .env.production
 test_event.js
