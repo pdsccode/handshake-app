@@ -1,6 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './css/BettingItem.scss';
+
+export const BETTING_STATUS = Object.freeze(
+    { NOT_CREATE: -4, INITING: -1, INITED: 0, SHAKED: 1, CLOSED: 2, CANCELLED: 3, 
+    INITIATOR_WON: 4, BETOR_WON: 5, DRAW: 6, ACCEPTED: 7, REJECTED: 8, DONE: 9}
+);
+
 class BetingItem extends React.Component {
     static propTypes = {
         item: PropTypes.object.isRequired,
