@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import Input from '@/components/core/forms/Input/Input';
 import Button from '@/components/core/controls/Button/Button';
 import {Formik} from 'formik';
-require('react-datetime');
+import Datetime from 'react-datetime';
+//require('react-datetime');
 
 import './css/BettingDetail.scss';
 const regex = /\[.*?\]/g;
@@ -28,7 +29,11 @@ class BettingDetail extends React.Component {
             "name": "Bet",
             "order_id": 5,
             "public": 1
-        }
+        },
+        toAddress: "sa@autonomous.nyc",
+        isPublic: true,
+        industryId: 18,
+
     
     }
     constructor(props) {
@@ -63,8 +68,9 @@ class BettingDetail extends React.Component {
         const {key, placeholder, type} = item;
 
         return (
-            <Input className="form-control-custom input"  name={key} onChange={(evt) => { this.changeText(key, evt.target.value)}}/>
-
+            <Datetime inputProps={{ className:"form-control-custom input" }}
+            onChange={(error)=> console.log(error)}
+            closeOnSelect={true}/>
           );
     }
     renderNumber(item, index){

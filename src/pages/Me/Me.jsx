@@ -2,7 +2,6 @@ import React from 'react';
 import { URL } from '@/config';
 import { Grid, Row, Col } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
-import BettingDetail from '@/components/Betting/BettingDetail';
 class Me extends React.Component {
   constructor(props) {
     super(props);
@@ -12,7 +11,7 @@ class Me extends React.Component {
       <Grid>
         <Row>
           <Col xs={12}>
-          <BettingDetail/>
+          Me
           </Col>
         </Row>
       </Grid>
