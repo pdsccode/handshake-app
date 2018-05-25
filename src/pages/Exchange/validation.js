@@ -1,5 +1,5 @@
 // import { Trans } from 'react-i18next'
-import { required } from "./components/Form/validation";
+import { required } from "@/components/core/form/validation";
 
 export const validate = (values, state, props) => {
   // console.log('values111', values, state, props)

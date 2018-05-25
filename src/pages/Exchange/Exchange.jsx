@@ -15,9 +15,9 @@ import './Exchange.scss';
 import { validate } from './validation';
 import throttle from 'lodash/throttle';
 
-import createForm from './components/Form/createForm'
-import { fieldInput, fieldCleave, fieldDropdown } from './components/Form/customField'
-import { required } from './components/Form/validation'
+import createForm from '@/components/core/form/createForm'
+import { fieldInput, fieldCleave, fieldDropdown } from '@/components/core/form/customField'
+import { required } from '@/components/core/form/validation'
 
 const nameFormCreditCard = 'creditCard'
 const FormCreditCard = createForm({ propsReduxForm: { form: nameFormCreditCard,

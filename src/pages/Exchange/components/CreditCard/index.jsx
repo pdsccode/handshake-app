@@ -13,8 +13,8 @@ import imgCC from '@/assets/images/card/credit-card.svg';
 // import imgMastercard from '@/assets/images/card/mastercard.svg';
 // import imgVisa from '@/assets/images/card/visa.svg';
 
-import { fieldInput, fieldCleave, fieldDropdown } from '../Form/customField'
-import validation, { required } from '../Form/validation'
+import { fieldInput, fieldCleave, fieldDropdown } from '@/components/core/form/customField'
+import validation, { required } from '@/components/core/form/validation'
 import { connect } from "react-redux";
 
 const heightOfTabsHeader = 0.5;
