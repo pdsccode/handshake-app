@@ -13,13 +13,14 @@ import { URL } from '@/config';
 import { HANDSHAKE_ID } from '@/constants';
 import FeedPromise from '@/components/handshakes/promise/Feed';
 import FeedBetting from '@/components/handshakes/betting/Feed';
-import FeedExchange from '@/components/handshakes/exchange/Feed';
+import FeedExchange from '@/components/handshakes/exchange/Feed/ExchangeFeed';
 import FeedSeed from '@/components/handshakes/seed/Feed';
 
 import { ACTIONS, success } from '@/reducers/discover/action';
 
 // style
 import './Discover.scss';
+import CreditCardFeed from "@/components/handshakes/exchange/Feed/CreditCardFeed";
 
 const maps = {
   [HANDSHAKE_ID.PROMISE]: FeedPromise,
@@ -66,6 +67,11 @@ class DiscoverPage extends React.Component {
         <Row>
           <Col md={12} xs={6}>
             <Category className="category-wrapper" />
+          </Col>
+        </Row>
+        <Row>
+          <Col md={12} xs={6}>
+            <CreditCardFeed/>
           </Col>
         </Row>
         <Row>

@@ -3,9 +3,9 @@ import { Grid, Row, Col } from 'react-bootstrap';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Field, formValueSelector } from 'redux-form';
 import { connect } from 'react-redux';
-import CreditCard from './components/CreditCard';
-import Tabs from './components/Tabs';
-import LevelItem from './components/LevelItem';
+import CreditCard from '../../components/handshakes/exchange/components/CreditCard';
+import Tabs from '../../components/handshakes/exchange/components/Tabs';
+import LevelItem from '../../components/handshakes/exchange/components/LevelItem';
 import Feed from '@/components/core/presentation/Feed';
 import Button from '@/components/core/controls/Button';
 import ModalDialog from '@/components/core/controls/ModalDialog';
@@ -24,7 +24,7 @@ import {
   getUserCcLimit, getCcLimits,
 } from '@/reducers/exchange/action';
 import { API_URL } from '@/constants';
-import CreditCardFeed from '@/pages/Exchange/components/Feed/CreditCardFeed';
+import CreditCardFeed from "@/components/handshakes/exchange/Feed/CreditCardFeed";
 
 const nameFormCreditCard = 'creditCard';
 const FormCreditCard = createForm({
