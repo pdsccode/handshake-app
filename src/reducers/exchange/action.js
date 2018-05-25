@@ -1,3 +1,6 @@
+// import { BASE_API } from '@/config';
+import { createAPI } from '@/reducers/action';
+
 export const EXCHANGE_ACTIONS = {
   GET_CRYPTO_PRICE: 'GET_CRYPTO_PRICE',
 
@@ -11,9 +14,6 @@ export const EXCHANGE_ACTIONS = {
 
   GET_USER_TRANSACTION: 'GET_USER_TRANSACTION',
 };
-
-// import { BASE_API } from '@/config';
-import { createAPI } from '@/reducers/action';
 
 export const getCryptoPrice = createAPI({
   INIT: EXCHANGE_ACTIONS.GET_CRYPTO_PRICE,
@@ -38,5 +38,4 @@ export const getUserProfile = createAPI({
 export const getUserTransaction = createAPI({
   INIT: EXCHANGE_ACTIONS.GET_USER_TRANSACTION,
 });
-
 

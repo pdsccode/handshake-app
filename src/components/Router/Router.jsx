@@ -21,14 +21,14 @@ import messages from '@/locals';
 
 addLocaleData([...en, ...fr]);
 
-const Me = (props) => (<DynamicImport loading={Loading} load={() => import('@/components/Router/Me')}>{(Component) => <Component {...props} />}</DynamicImport>);
-const Discover = (props) => (<DynamicImport loading={Loading} load={() => import('@/components/Router/Discover')}>{(Component) => <Component {...props} />}</DynamicImport>);
-const Chat = (props) => (<DynamicImport loading={Loading} load={() => import('@/components/Router/Chat')}>{(Component) => <Component {...props} />}</DynamicImport>);
-const Wallet = (props) => (<DynamicImport loading={Loading} load={() => import('@/components/Router/Wallet')}>{(Component) => <Component {...props} />}</DynamicImport>);
-const Create = (props) => (<DynamicImport loading={Loading} load={() => import('@/components/Router/Create')}>{(Component) => <Component {...props} />}</DynamicImport>);
-const Exchange = (props) => (<DynamicImport loading={Loading} load={() => import('@/components/Router/Exchange')}>{(Component) => <Component {...props} />}</DynamicImport>);
-const Transaction = (props) => (<DynamicImport loading={Loading} load={() => import('@/components/Router/Transaction')}>{(Component) => <Component {...props} />}</DynamicImport>);
-const Page404 = (props) => (<DynamicImport loading={Loading} load={() => import('@/pages/Error/Page404')}>{(Component) => <Component {...props} />}</DynamicImport>);
+const Me = props => (<DynamicImport loading={Loading} load={() => import('@/components/Router/Me')}>{Component => <Component {...props} />}</DynamicImport>);
+const Discover = props => (<DynamicImport loading={Loading} load={() => import('@/components/Router/Discover')}>{Component => <Component {...props} />}</DynamicImport>);
+const Chat = props => (<DynamicImport loading={Loading} load={() => import('@/components/Router/Chat')}>{Component => <Component {...props} />}</DynamicImport>);
+const Wallet = props => (<DynamicImport loading={Loading} load={() => import('@/components/Router/Wallet')}>{Component => <Component {...props} />}</DynamicImport>);
+const Create = props => (<DynamicImport loading={Loading} load={() => import('@/components/Router/Create')}>{Component => <Component {...props} />}</DynamicImport>);
+const Exchange = props => (<DynamicImport loading={Loading} load={() => import('@/components/Router/Exchange')}>{Component => <Component {...props} />}</DynamicImport>);
+const Transaction = props => (<DynamicImport loading={Loading} load={() => import('@/components/Router/Transaction')}>{Component => <Component {...props} />}</DynamicImport>);
+const Page404 = props => (<DynamicImport loading={Loading} load={() => import('@/pages/Error/Page404')}>{Component => <Component {...props} />}</DynamicImport>);
 
 class Router extends React.Component {
   static propTypes = {
