@@ -11,8 +11,9 @@ import Button from '@/components/core/controls/Button';
 import ModalDialog from '@/components/core/controls/ModalDialog';
 import localStore from '@/services/localStore';
 import { URL } from '@/config';
-import './Exchange.scss'
-import { validate } from './validation'
+import './Exchange.scss';
+import { validate } from './validation';
+import throttle from 'lodash/throttle';
 
 import createForm from './components/Form/createForm'
 import { fieldInput, fieldCleave, fieldDropdown } from './components/Form/customField'
@@ -37,6 +38,7 @@ class Exchange extends React.Component {
       modalContent: '',
       showCCScheme: false,
     }
+    this.getCryptoPriceByAmountThrottled = throttle(this.getCryptoPriceByAmount, 500);
   }
 
   componentDidMount() {
@@ -170,7 +172,7 @@ class Exchange extends React.Component {
     const amount = e.target.value;
     this.getCryptoPriceByAmount(amount);
     this.setState({amount: amount}, () => {
-      // this.props.dispatch(change('cc-order'));
+      this.getCryptoPriceByAmountThrottled(amount);
     });
   }
 
