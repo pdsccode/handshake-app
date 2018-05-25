@@ -1,15 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './css/BettingItem.scss';
+import  {BettingStatusHandler} from './BettingStatusHandler.js';
 
-export const BETTING_STATUS = Object.freeze(
-    { NOT_CREATE: -4, INITING: -1, INITED: 0, SHAKED: 1, CLOSED: 2, CANCELLED: 3, 
-    INITIATOR_WON: 4, BETOR_WON: 5, DRAW: 6, ACCEPTED: 7, REJECTED: 8, DONE: 9}
-);
+
 
 class BetingItem extends React.Component {
     static propTypes = {
         item: PropTypes.object.isRequired,
+        isOwner: PropTypes.bool.isRequired,
       }
     static defaultProps = {
         item: {
@@ -31,7 +30,8 @@ class BetingItem extends React.Component {
             "to_address": "0x5eE2A7BF750Ad8103F04ec62FAbE502e3e3f93B4",
             "to_email": "trong1@autonomous.nyc",
             "user_id_shaked": 3
-          }
+          },
+        isOwner: true
 
     }
     constructor(props) {
@@ -40,12 +40,16 @@ class BetingItem extends React.Component {
             
         };
     }
+
     render() {
-        const {item} = this.props;
-        const {description, from_email} = item;
+        const {item, isOwner} = this.props;
+        const {description, from_email, status} = item;
         const bottomDes = `22 bettors against ${from_email}`;
+        const statusLabel = BettingStatusHandler.statusLabel(status, isOwner);
+        
         return (
             <div>
+            <p>{statusLabel.status}</p>
             <p className="description">{description}</p>
             <div className="bottomWrapper">
                 <div className="email">{bottomDes}</div>
