@@ -20,7 +20,8 @@ import { fieldInput, fieldCleave, fieldDropdown } from './components/Form/custom
 import { required } from './components/Form/validation'
 
 const nameFormCreditCard = 'creditCard'
-const FormCreditCard = createForm({ propsReduxForm: { form: nameFormCreditCard } });
+const FormCreditCard = createForm({ propsReduxForm: { form: nameFormCreditCard,
+    initialValues: { currency: 'ETH' } } });
 const selectorFormCreditCard = formValueSelector(nameFormCreditCard)
 
 import {getUserProfile, getCryptoPrice, createCCOrder,
@@ -176,9 +177,10 @@ class Exchange extends React.Component {
     });
   }
 
-  onCurrencyChange = (e) => {
-    const currency = e.target.textContent || e.target.innerText;
-    this.setState({currency: currency}, () => {
+  onCurrencyChange = (e, newValue) => {
+    console.log('onCurrencyChange', newValue);
+    // const currency = e.target.textContent || e.target.innerText;
+    this.setState({currency: newValue}, () => {
       this.getCryptoPriceByAmount(this.state.amount);
     });
   }
@@ -247,6 +249,7 @@ class Exchange extends React.Component {
                                   name="currency"
                                   component={fieldDropdown}
                                   list={allCryptoCurrencies}
+                                  onChange={this.onCurrencyChange}
                                   // defaultText={''}
                                 />
                               </span>
@@ -303,7 +306,8 @@ const mapStateToProps = (state) => ({
   cryptoPrice: state.exchange.cryptoPrice,
   userCcLimit: state.exchange.userCcLimit,
   ccLimits: state.exchange.ccLimits,
-  amount: selectorFormCreditCard(state, 'amount')
+  amount: selectorFormCreditCard(state, 'amount'),
+  currency: selectorFormCreditCard(state, 'currency'),
 });
 
 const mapDispatchToProps = {
