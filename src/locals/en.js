@@ -12,5 +12,7 @@ export default {
   required: 'Required',
   ccExpiryTemplate: 'MM/YY',
   securityCode: 'Security Code',
-  shakeNow: 'Shake Now'
+  shakeNow: 'Shake Now',
+  offerHandShakeContent: '{offerType} {amount} {currency} for ${total} in cash',
+  offerDistanceContent: '{offerType} is {distance} meters away',
 };

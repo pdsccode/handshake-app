@@ -9,8 +9,10 @@ import Button from '@/components/core/controls/Button';
 import Feed from '@/components/core/presentation/Feed';
 import Category from '@/components/core/controls/Category';
 import { handShakeList } from '@/data/shake.js';
+import { exchangeList } from '@/data/exchange.js';
 // style
 import './Discover.scss';
+import ExchangeFeed from "../Exchange/Feed/ExchangeFeed";
 
 
 class Dashboard extends React.Component {
@@ -18,16 +20,30 @@ class Dashboard extends React.Component {
     super(props);
   }
 
+  renderItem = (handshake) => {
+    let result = null;
+    switch (handshake.industries_type) {
+      case 5: {
+        result = (
+          <Col md={12} xs={12} key={handshake.id} className="feed-wrapper">
+            <Feed className="feed">
+              <ExchangeFeed handShake={handshake}/>
+            </Feed>
+            <Button block>Shake now</Button>
+          </Col>
+        );
+        break;
+      }
+      default: {
+        result = '';
+      }
+    }
+
+    return result;
+  }
+
   get feedHtml() {
-    return handShakeList.data.map(handShake => (
-      <Col md={12} xs={12} key={handShake.id} className="feed-wrapper">
-        <Feed className="feed">
-          <p className="description">{handShake.description}</p>
-          <p className="email">{handShake.from_email}</p>
-        </Feed>
-        <Button block>Shake now</Button>
-      </Col>
-    ));
+    return exchangeList.data.map(handshake => this.renderItem(handshake));
   }
 
   render() {
