@@ -117,3 +117,11 @@
     border-width: 2px;
   }
 }
+.has-error {
+  box-shadow: none !important;
+  border-color: #dc3545 !important;
+}
+.has-warning {
+  box-shadow: none !important;
+  border-color: #ffc107 !important;
+}
