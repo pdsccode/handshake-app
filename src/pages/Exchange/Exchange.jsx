@@ -27,6 +27,7 @@ const selectorFormCreditCard = formValueSelector(nameFormCreditCard)
 import {getUserProfile, getCryptoPrice, createCCOrder,
   getUserCcLimit, getCcLimits
 } from '@/reducers/exchange/action';
+import {API_URL} from "@/constants";
 
 class Exchange extends React.Component {
   constructor(props) {
@@ -43,9 +44,9 @@ class Exchange extends React.Component {
   }
 
   componentDidMount() {
-    this.props.getUserProfile({headers: {'Custom-Uid': 'megalodon'}});
-    this.props.getCcLimits({});
-    this.props.getUserCcLimit({headers: {'Custom-Uid': 'megalodon'}});
+    this.props.getUserProfile({PATH_URL: API_URL.EXCHANGE.GET_USER_PROFILE, headers: {'Custom-Uid': 'megalodon'}});
+    this.props.getCcLimits({PATH_URL: API_URL.EXCHANGE.GET_USER_CC_LIMIT});
+    this.props.getUserCcLimit({PATH_URL: API_URL.EXCHANGE.GET_USER_CC_LIMIT, headers: {'Custom-Uid': 'megalodon'}});
 
     this.getCryptoPriceByAmount(0);
 

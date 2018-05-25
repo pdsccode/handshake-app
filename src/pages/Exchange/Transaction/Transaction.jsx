@@ -1,15 +1,14 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 // service, constant
 import {getUserTransaction} from '@/reducers/exchange/action';
 // components
-import { Grid, Row, Col } from 'react-bootstrap';
-import Button from '@/components/core/controls/Button';
+import {Col, Grid, Row} from 'react-bootstrap';
 import Feed from '@/components/core/presentation/Feed';
-import { handShakeList } from '@/data/shake.js';
+import {handShakeList} from '@/data/shake.js';
 // style
 import './Transaction.scss';
+import {API_URL} from "@/constants";
 
 
 class Transaction extends React.Component {
@@ -18,7 +17,7 @@ class Transaction extends React.Component {
   }
 
   componentDidMount() {
-    this.props.getUserTransaction({headers: {'Custom-Uid': 'megalodon'}});
+    this.props.getUserTransaction({PATH_URL: API_URL.EXCHANGE.GET_USER_TRANSACTION, headers: {'Custom-Uid': 'megalodon'}});
   }
 
   feedHtml = () => {
