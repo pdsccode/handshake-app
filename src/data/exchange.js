@@ -20,7 +20,8 @@ export const exchangeList = {
       "to_username": "",
       "offer_handshake": "ibQ33AVWwTrMtYNHa9Wp",
       "created_at": "2018-05-24T07:30:46.754Z",
-      "updated_at": "0001-01-01T00:00:00Z"
+      "updated_at": "0001-01-01T00:00:00Z",
+      "industries_type": 5,
     },
     {
       "id": "OEEUIFx1d7QWosGh0MNP",

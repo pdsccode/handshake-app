@@ -25,12 +25,7 @@ class Dashboard extends React.Component {
     switch (handshake.industries_type) {
       case 5: {
         result = (
-          <Col md={12} xs={12} key={handshake.id} className="feed-wrapper">
-            <Feed className="feed">
-              <ExchangeFeed handShake={handshake}/>
-            </Feed>
-            <Button block>Shake now</Button>
-          </Col>
+          <ExchangeFeed handShake={handshake}/>
         );
         break;
       }
@@ -43,7 +38,14 @@ class Dashboard extends React.Component {
   }
 
   get feedHtml() {
-    return exchangeList.data.map(handshake => this.renderItem(handshake));
+    return exchangeList.data.map(handshake => (
+      <Col md={12} xs={12} key={handshake.id} className="feed-wrapper">
+        <Feed className="feed">
+          {this.renderItem(handshake)}
+        </Feed>
+        <Button block>Shake now</Button>
+      </Col>
+    ));
   }
 
   render() {
