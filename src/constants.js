@@ -25,9 +25,9 @@ export const API_URL = {
     BASE: 'cryptosign',
   },
   EXCHANGE: {
-    BASE: 'exchange'
+    BASE: 'exchange',
   },
   SEED: {
-    BASE: 'seed'
+    BASE: 'seed',
   },
 };

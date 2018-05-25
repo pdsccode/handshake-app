@@ -1,6 +1,6 @@
 export const BASE_API = {
   BASE_URL: process.env.BASE_URL,
-  TIMEOUT: 10000
+  TIMEOUT: 10000,
 };
 
 export const URL = {
