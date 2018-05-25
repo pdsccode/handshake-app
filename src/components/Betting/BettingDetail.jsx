@@ -70,7 +70,6 @@ class BettingDetail extends React.Component {
         return (
             <DatePicker
               onChange={(error)=> console.log(error)}
-              viewMode="month"
               closeOnSelect={true}
             />
           );
