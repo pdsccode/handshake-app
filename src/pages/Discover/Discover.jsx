@@ -9,6 +9,7 @@ import Button from '@/components/core/controls/Button';
 import Feed from '@/components/core/presentation/Feed';
 import Modal from '@/components/core/controls/Modal';
 import ModalDialog from '@/components/core/controls/ModalDialog';
+import SearchBarContainer from '@/components/core/controls/SearchBarContainer';
 import Category from '@/components/core/controls/Category';
 import { handShakeList } from '@/data/shake.js';
 import BettingItem from '@/components/Betting/BettingItem';
@@ -16,7 +17,6 @@ import BettingShake from '@/components/Betting/BettingShake';
 
 // style
 import './Discover.scss';
-
 
 class Dashboard extends React.Component {
   constructor(props) {
@@ -51,21 +51,37 @@ class Dashboard extends React.Component {
     }
   }
 
+  get searchBar() {
+    return (
+      <Col md={12} xs={12}>
+        <SearchBarContainer />
+      </Col>
+    );
+  }
+
+  get categoryBar() {
+    return  <Col md={12} xs={12}>
+    <Category className="category-wrapper" />
+      </Col>;
+  }
+
   render() {
     return (
       <Grid>
+        <Row>{this.searchBar}</Row>
         <Row>
-          <Category className="category-wrapper" />
+          {this.categoryBar}
         </Row>
-        <Row>
-          {this.feedHtml}
-        </Row>
+<<<<<<< HEAD
         <ModalDialog title="Make a bet"
         onRef={modal => this.modalBetRef = modal}>
             <BettingShake remaining={10} odd={0.1}
             onCancelClick={()=> this.modalBetRef.close()}
             onSubmitClick={()=> this.modalBetRef.close()}/>
            </ModalDialog>
+=======
+        <Row>{this.feedHtml}</Row>
+>>>>>>> develop
       </Grid>
 
     );
@@ -74,15 +90,17 @@ class Dashboard extends React.Component {
 
 Dashboard.propTypes = {
   discover: PropTypes.object,
-  load: PropTypes.func
+  load: PropTypes.func,
 };
 
-const mapState = (state) => ({
+const mapState = state => ({
   discover: state.discover,
 });
 
-const mapDispatch = ({
-  load
-});
+const mapDispatch = {
+  load,
+};
 
+// export default Dashboard;
+// export default connect(null, ({ load }))(Dashboard);
 export default connect(mapState, mapDispatch)(Dashboard);
