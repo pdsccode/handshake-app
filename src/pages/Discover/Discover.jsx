@@ -7,72 +7,97 @@ import { load } from '@/reducers/discover/action';
 import { Grid, Row, Col } from 'react-bootstrap';
 import Button from '@/components/core/controls/Button';
 import Feed from '@/components/core/presentation/Feed';
+import Modal from '@/components/core/controls/Modal';
+import ModalDialog from '@/components/core/controls/ModalDialog';
+import SearchBarContainer from '@/components/core/controls/SearchBarContainer';
 import Category from '@/components/core/controls/Category';
 import { handShakeList } from '@/data/shake.js';
-import { exchangeList } from '@/data/exchange.js';
+import BettingItem from '@/components/Betting/BettingItem';
+import BettingShake from '@/components/Betting/BettingShake';
+
 // style
 import './Discover.scss';
-import ExchangeFeed from "../Exchange/Feed/ExchangeFeed";
-
 
 class Dashboard extends React.Component {
   constructor(props) {
     super(props);
   }
 
-  renderItem = (handshake) => {
-    let result = null;
-    switch (handshake.industries_type) {
-      case 5: {
-        result = (
-          <ExchangeFeed handShake={handshake}/>
-        );
-        break;
-      }
-      default: {
-        result = '';
-      }
-    }
-
-    return result;
-  }
-
   get feedHtml() {
-    return exchangeList.data.map(handshake => (
-      <Col md={12} xs={12} key={handshake.id} className="feed-wrapper">
+    return handShakeList.data.map(handShake => (
+      <Col md={12} xs={12} key={handShake.id} className="feed-wrapper">
         <Feed className="feed">
-          {this.renderItem(handshake)}
+          {handShake.industries_type === 18 ?  <BettingItem item={handShake}/>:
+            <div>
+            <p className="description">{handShake.description}</p>
+            <p className="email">{handShake.from_email}</p>
+          </div>}
         </Feed>
-        <Button block>Shake now</Button>
+        <Button block onClick={()=> this.shakeItem(handShake)}>Shake now</Button>
+
       </Col>
     ));
+  }
+  shakeItem(item){
+    switch(item.industries_type){
+      case 18:
+      this.modalBetRef.open();
+
+      console.log('Shake Betting:', item);
+      break;
+      default:
+      console.log('Shake Item:', item);
+      break;
+    }
+  }
+
+  get searchBar() {
+    return (
+      <Col md={12} xs={12}>
+        <SearchBarContainer />
+      </Col>
+    );
+  }
+
+  get categoryBar() {
+    return  <Col md={12} xs={12}>
+    <Category className="category-wrapper" />
+      </Col>;
   }
 
   render() {
     return (
       <Grid>
+        <Row>{this.searchBar}</Row>
         <Row>
-          <Category className="category-wrapper" />
+          {this.categoryBar}
         </Row>
-        <Row>
-          {this.feedHtml}
-        </Row>
+        <ModalDialog title="Make a bet"
+        onRef={modal => this.modalBetRef = modal}>
+            <BettingShake remaining={10} odd={0.1}
+            onCancelClick={()=> this.modalBetRef.close()}
+            onSubmitClick={()=> this.modalBetRef.close()}/>
+           </ModalDialog>
+        <Row>{this.feedHtml}</Row>
       </Grid>
+
     );
   }
 }
 
 Dashboard.propTypes = {
   discover: PropTypes.object,
-  load: PropTypes.func
+  load: PropTypes.func,
 };
 
-const mapState = (state) => ({
+const mapState = state => ({
   discover: state.discover,
 });
 
-const mapDispatch = ({
-  load
-});
+const mapDispatch = {
+  load,
+};
 
+// export default Dashboard;
+// export default connect(null, ({ load }))(Dashboard);
 export default connect(mapState, mapDispatch)(Dashboard);
