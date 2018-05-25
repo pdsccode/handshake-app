@@ -17,11 +17,14 @@
 
     }
     .input{
-      height: rem-calc(34px);
+      height: rem-calc(50px);
       text-align: right;
       font-size: rem-calc(24px);
       margin-left: rem-calc(20px);
       width: rem-calc(200px);
+      &:focus {
+        box-shadow: none;
+      }
     }
     .oddInput {
         width: rem-calc(100px);
