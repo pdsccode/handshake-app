@@ -23,15 +23,34 @@ class Dashboard extends React.Component {
     super(props);
   }
 
+  renderItem = (handShake) => {
+    let result = null;
+    switch (handShake.industries_type) {
+      case 5: {
+        result = (
+          <BettingItem item={handShake}/>
+        );
+        break;
+      }
+      case 18: {
+        result = (
+          <BettingItem item={handShake}/>
+        );
+        break;
+      }
+      default: {
+        result = '';
+      }
+    }
+
+    return result;
+  }
+
   get feedHtml() {
     return handShakeList.data.map(handShake => (
       <Col md={12} xs={12} key={handShake.id} className="feed-wrapper">
         <Feed className="feed">
-          {handShake.industries_type === 18 ?  <BettingItem item={handShake}/>:
-            <div>
-            <p className="description">{handShake.description}</p>
-            <p className="email">{handShake.from_email}</p>
-          </div>}
+          {this.renderItem(handShake)}
         </Feed>
         <Button block onClick={()=> this.shakeItem(handShake)}>Shake now</Button>
 
