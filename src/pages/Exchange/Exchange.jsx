@@ -29,7 +29,8 @@ class Exchange extends React.Component {
       currency: 'ETH',
       isNewCCOpen: false,
       modalContent: '',
-      showCCScheme: false
+      showCCScheme: false,
+      showCC: false
     }
   }
 
@@ -161,6 +162,7 @@ class Exchange extends React.Component {
 
   onAmountChange = (e) => {
     const amount = e.target.value;
+    this.setState({ showCC: !!amount });
     this.getCryptoPriceByAmount(amount);
     this.setState({amount: amount}, () => {
       // this.props.dispatch(change('cc-order'));
@@ -198,6 +200,7 @@ class Exchange extends React.Component {
 
   render() {
     const {intl, userProfile, cryptoPrice} = this.props;
+    const { showCC } = this.state;
     const allCryptoCurrencies = [
       { name: 'ETH', text: 'ETH' },
       { name: 'BTC', text: 'BTC' },
@@ -252,11 +255,17 @@ class Exchange extends React.Component {
                                 <div className="mx-2">
                                   <p><FormattedMessage id="askUsingCreditCard" values={{ fiatCurrency: fiatCurrency, total: total }} /></p>
                                 </div>
-                                <CreditCard
-                                            isCCExisting={userProfile && userProfile.credit_card.cc_number.trim().length > 0}
-                                            lastDigits={userProfile && userProfile.credit_card.cc_number}
-                                            isNewCCOpen={this.state.isNewCCOpen} handleToggleNewCC={this.handleToggleNewCC}
-                                />
+                                {
+                                  showCC && (
+                                    <CreditCard
+                                      isCCExisting={userProfile && userProfile.credit_card.cc_number.trim().length > 0}
+                                      lastDigits={userProfile && userProfile.credit_card.cc_number}
+                                      isNewCCOpen={this.state.isNewCCOpen}
+                                      handleToggleNewCC={this.handleToggleNewCC}
+                                    />
+                                  )
+                                }
+
                               </div>
                             </Feed>
                             <Button block type="submit"><FormattedMessage id="shakeNow"/></Button>
