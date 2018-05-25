@@ -242,6 +242,7 @@ class Exchange extends React.Component {
                                   component={fieldInput}
                                   className="form-control-custom form-control-custom-ex d-inline-block"
                                   placeholder={intl.formatMessage({id: 'amount'})}
+                                  onChange={this.onAmountChange}
                                 />
                               </div>
                               <span className="d-inline-block ml-auto" style={{ width: '235px' }}>
