@@ -8,6 +8,8 @@ export const HANDSHAKE_ID = {
   EXCHANGE: 2,
   BETTING: 3,
   SEED: 4,
+  EXCHANGE_SELL: 5,
+  EXCHANGE_BUY: 6,
 };
 
 export const HANDSHAKE_ID_DEFAULT = 1;
