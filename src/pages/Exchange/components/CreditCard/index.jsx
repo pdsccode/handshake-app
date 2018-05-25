@@ -5,6 +5,7 @@ import { Grid, Row, Col } from 'react-bootstrap';
 import {FormattedMessage, injectIntl} from 'react-intl';
 import { Collapse, Button, CardBody, Card } from 'reactstrap';
 import { Formik, Field } from 'formik';
+import styled from 'styled-components'
 
 import imgCC from '@/assets/images/card/credit-card.svg';
 // import imgAmex from '@/assets/images/card/amex.svg';
@@ -15,6 +16,22 @@ import imgCC from '@/assets/images/card/credit-card.svg';
 import { fieldInput, fieldCleave, fieldDropdown } from '../Form/customField'
 import validation, { required } from '../Form/validation'
 import {connect} from "react-redux";
+
+const heightOfTabsHeader = 0.5;
+
+// trick to make background larger than its div
+const Wrapper = styled.div`
+  background: #76b1ff;
+
+  padding-left: ${heightOfTabsHeader}rem;
+  margin-left: -${heightOfTabsHeader}rem;
+  
+  padding-right: ${heightOfTabsHeader}rem;
+  margin-right: -${heightOfTabsHeader}rem;
+  
+  padding-bottom: ${heightOfTabsHeader}rem;
+  margin-bottom: -${heightOfTabsHeader}rem;
+`
 
 
 // const allCCTypes = {
@@ -51,7 +68,7 @@ class Component extends React.Component {
     const { ccType } = this.state;
 
     const newCCElement = (
-      <div className={`rounded-bottom p-2 ${!isCCExisting ? 'mb-2' : ''}`} style={{ background: !isCCExisting ? '#76b1ff' : '' }}>
+      <div className="pt-2">
         <div className="d-flex">
           <label className="col-form-label mr-auto" style={{ width: '100px' }}><FormattedMessage id="ccNumber"/></label>
           <div className='input-group'>
@@ -123,12 +140,12 @@ class Component extends React.Component {
       </div>
     )
     return (
-      <div className="row1">
+      <Wrapper className="rounded-bottom">
         <div className='col1'>
           {
             isCCExisting ? (
-              <div className='form-group'>
-                <div className='d-flex' style={{ background: '#76b1ff', height: '52px', lineHeight: '52px' }}>
+              <div>
+                <div className='d-flex' style={{ height: '52px', lineHeight: '52px' }}>
                   <span>
                     <img className='mx-2' width="26px" height="26px" src={imgCC} />
                     <span>∗∗∗∗ ∗∗∗∗ ∗∗∗∗ {lastDigits}</span>
@@ -161,7 +178,7 @@ class Component extends React.Component {
             )
           }
         </div>
-      </div>
+      </Wrapper>
     )
   }
 }

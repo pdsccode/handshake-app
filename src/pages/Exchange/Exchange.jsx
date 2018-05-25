@@ -229,9 +229,9 @@ class Exchange extends React.Component {
                         onSubmit={this.handleSubmit}
                         render={(props) => (
                           <form onSubmit={props.handleSubmit}>
-                            <Feed className="feed" background="linear-gradient(-133deg, #006AFF 0%, #3AB4FB 100%)">
+                            <Feed className="feed p-2 mb-2" background="linear-gradient(-133deg, #006AFF 0%, #3AB4FB 100%)">
                               <div style={{ color: 'white' }}>
-                                <div className="form-group mx-2 pt-2 d-flex">
+                                <div className="form-group pt-2 d-flex">
                                   <label className="col-form-label"><FormattedMessage id="buy"/></label>
                                   <Field
                                     name="amount"
@@ -243,18 +243,18 @@ class Exchange extends React.Component {
                                     placeholder={intl.formatMessage({id: 'amount'})}
                                   />
                                   <span className="d-inline-block ml-auto" style={{ width: '235px' }}>
-                                  <Field
-                                    name="currency"
-                                    component={fieldDropdown}
-                                    list={allCryptoCurrencies}
-                                    onRef={div => this.currencyRef = div}
-                                    onChange={this.onCurrencyChange}
-                                    // defaultText={''}
-                                  />
-                                </span>
+                                    <Field
+                                      name="currency"
+                                      component={fieldDropdown}
+                                      list={allCryptoCurrencies}
+                                      onRef={div => this.currencyRef = div}
+                                      onChange={this.onCurrencyChange}
+                                      // defaultText={''}
+                                    />
+                                  </span>
                                 </div>
-                                <div className="mx-2">
-                                  <p><FormattedMessage id="askUsingCreditCard" values={{ fiatCurrency: fiatCurrency, total: total }} /></p>
+                                <div className="pb-2">
+                                  <span><FormattedMessage id="askUsingCreditCard" values={{ fiatCurrency: fiatCurrency, total: total }} /></span>
                                 </div>
                                 {
                                   showCC && (
