@@ -24,6 +24,7 @@ class BetingShake extends React.Component {
       super(props);
       const { odd } = props;
       this.state = {
+        amount: defaultAmount,
         total: defaultAmount * odd,
       };
 
@@ -34,7 +35,8 @@ class BetingShake extends React.Component {
     }
     onSubmit(values, {setSubmitting, setErrors /* setValues and other goodies */}) {
         console.log("Submit");
-        this.props.onSubmitClick();
+        const {amount} = this.state;
+        this.props.onSubmitClick(amount);
       }
     onCancel(){
       console.log('Cancel')
@@ -58,11 +60,11 @@ class BetingShake extends React.Component {
                 <Input
                   className="form-control-custom input"
                   type='number'
-                  min='0.0001'
+                  //min='0.0001'
                   max={remaining}
                   name="amount"
                   defaultValue='1'
-                  onChange={(evt)=> this.updateTotal(evt.target.value)}
+                  onChange={(evt)=> this.updateTotal(parseInt(evt.target.value))}
                   onBlur={handleBlur}
                   //value={values.amount}
                 />
@@ -106,6 +108,7 @@ class BetingShake extends React.Component {
         const {odd} = this.props;
         const amount = value * odd;
         this.setState({
+            amount: value,
             total: amount.toFixed(4)
         })
     }
