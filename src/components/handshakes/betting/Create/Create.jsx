@@ -70,17 +70,20 @@ class BettingCreate extends React.PureComponent {
     let content = this.content;
     const inputList = this.inputList;
     let extraParams = values;
+    console.log('Before Content:', content);
 
     inputList.forEach(element => {
       const item = JSON.parse(element.replace(regexReplace, ''));
+      console.log('Element:', item);
       const {key, placeholder, type} = item;
-      const valueInputItem = values[key];
-
+      const valueInputItem = key === 'event_date' ? this.datePickerRef.value : values[key];
       content = content.replace(
         regexReplacePlaceholder,
         valueInputItem ? valueInputItem : ''
       );
     });
+    console.log('After Content:', content);
+    console.log("this", this.datePickerRef.value);
 
     const {toAddress, isPublic, industryId} = this.props;
 
