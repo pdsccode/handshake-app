@@ -2,14 +2,14 @@ import React from 'react';
 import {FormattedMessage, injectIntl} from 'react-intl';
 import {Field, formValueSelector} from "redux-form";
 import {connect} from "react-redux";
-import CreditCard from '@/pages/Exchange/components/CreditCard';
+import CreditCard from '@/components/handshakes/exchange/components/CreditCard';
 import Feed from '@/components/core/presentation/Feed';
 import Button from '@/components/core/controls/Button';
 import ModalDialog from '@/components/core/controls/ModalDialog';
 import localStore from '@/services/localStore';
 import {URL} from '@/config';
 import './CreditCardFeed.scss';
-import {validate} from '@/pages/Exchange/validation';
+import {validate} from '@/components/handshakes/exchange/Feed/validation';
 import throttle from 'lodash/throttle';
 import createForm from '@/components/core/form/createForm'
 import {fieldCleave, fieldDropdown, fieldInput} from '@/components/core/form/customField'
@@ -37,9 +37,9 @@ class CreditCardFeed extends React.Component {
   }
 
   componentDidMount() {
-    this.props.getUserProfile({PATH_URL: API_URL.EXCHANGE.GET_USER_PROFILE, headers: {'Custom-Uid': 'megalodon'}});
+    this.props.getUserProfile({PATH_URL: API_URL.EXCHANGE.GET_USER_PROFILE});
     this.props.getCcLimits({PATH_URL: API_URL.EXCHANGE.GET_USER_CC_LIMIT});
-    this.props.getUserCcLimit({PATH_URL: API_URL.EXCHANGE.GET_USER_CC_LIMIT, headers: {'Custom-Uid': 'megalodon'}});
+    this.props.getUserCcLimit({PATH_URL: API_URL.EXCHANGE.GET_USER_CC_LIMIT});
 
     this.getCryptoPriceByAmount(0);
 
@@ -94,7 +94,7 @@ class CreditCardFeed extends React.Component {
         payment_method_data: params
       };
       console.log('handleCreateCCOrder',paramsObj);
-      this.props.createCCOrder({data: paramsObj, headers: {'Custom-Uid': 'megalodon'},
+      this.props.createCCOrder({data: paramsObj,
         successFn: this.handleCreateCCOrderSuccess,
         errorFn: this.handleCreateCCOrderFailed
       });
