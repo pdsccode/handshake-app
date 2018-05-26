@@ -43,7 +43,7 @@ class WalletItem extends React.Component {
                 <p className="name">{wallet.title}</p>
                 <p className="balance"> {wallet.balance} {wallet.name} </p>
                 <img className="more" src={dontIcon} onClick={onMoreClick}/> 
-                <img className="safe" src={iconWarning} onClick={onWarningClick}/>          
+                <img className="safe" src={iconProtected} onClick={onWarningClick}/>          
                 <p className="address">{this.getShortAddres(wallet.address)}</p>
               </div>        
             </Col>
