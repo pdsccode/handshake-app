@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Route, Switch} from 'react-router-dom';
 import DynamicImport from '@/components/App/DynamicImport';
-import Loading from '@/pages/Loading';
+import Loading from '@/components/core/presentation/Loading';
 import {URL} from '@/config';
 
 const Transaction = (props) => (<DynamicImport loading={Loading} load={() => import('@/pages/Exchange/Transaction/Transaction')}>{(Component) => <Component {...props} />}</DynamicImport>);

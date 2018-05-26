@@ -4,8 +4,9 @@ import PropTypes from 'prop-types';
 import { Switch, BrowserRouter, Route, Redirect } from 'react-router-dom';
 import ScrollToTop from '@/components/App/ScrollToTop';
 import DynamicImport from '@/components/App/DynamicImport';
-import Loading from '@/pages/Loading';
+import Loading from '@/components/core/presentation/Loading';
 import { URL } from '@/config';
+
 
 import local from '@/services/localStore';
 import { APP } from '@/constants';
@@ -22,7 +23,7 @@ import messages from '@/locals';
 addLocaleData([...en, ...fr]);
 
 const Me = props => (<DynamicImport loading={Loading} load={() => import('@/components/Router/Me')}>{Component => <Component {...props} />}</DynamicImport>);
-const Discover = props => (<DynamicImport loading={Loading} load={() => import('@/components/Router/Discover')}>{Component => <Component {...props} />}</DynamicImport>);
+const Discover = props => (<DynamicImport loading={Loading} load={() => import('@/components/Router/Discover')}>{Component => <Component {...props} />}</DynamicImport>); 
 const Chat = props => (<DynamicImport loading={Loading} load={() => import('@/components/Router/Chat')}>{Component => <Component {...props} />}</DynamicImport>);
 const Wallet = props => (<DynamicImport loading={Loading} load={() => import('@/components/Router/Wallet')}>{Component => <Component {...props} />}</DynamicImport>);
 const Create = props => (<DynamicImport loading={Loading} load={() => import('@/components/Router/Create')}>{Component => <Component {...props} />}</DynamicImport>);
