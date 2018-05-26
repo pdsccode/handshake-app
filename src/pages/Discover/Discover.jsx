@@ -29,9 +29,13 @@ const maps = {
 class DiscoverPage extends React.Component {
   constructor(props) {
     super(props);
-
+    this.state = {
+      handshakeIdActive: '',
+    };
     this.props.loadDiscoverList({ PATH_URL: 'handshake', qs: { public: 0, chain_id: 4 } });
     this.props.success(handShakeList); // temp
+    // bind
+    this.clickCategoryItem = this.clickCategoryItem.bind(this);
   }
 
   get getHandshakeList() {
@@ -52,7 +56,29 @@ class DiscoverPage extends React.Component {
     this.props.history.push(`${URL.HANDSHAKE_DISCOVER}/${slug || ''}`);
   }
 
+  clickCategoryItem(category) {
+    const { id } = category;
+    switch (id) {
+      case HANDSHAKE_ID.BETTING:
+        // refresh list
+        break;
+      case HANDSHAKE_ID.SEED:
+        // refresh list
+        break;
+      case HANDSHAKE_ID.EXCHANGE:
+        // refresh list
+        break;
+      default:
+        // is promise
+    }
+    // set feed type activate
+    this.setState({
+      handshakeIdActive: id,
+    });
+  }
+
   render() {
+    const { handshakeIdActive } = this.state;
     return (
       <Grid>
         <Row>
@@ -62,9 +88,17 @@ class DiscoverPage extends React.Component {
         </Row>
         <Row>
           <Col md={12} xs={6}>
-            <Category className="category-wrapper" />
+            <Category className="category-wrapper" onItemClick={this.clickCategoryItem} />
           </Col>
         </Row>
+        {
+          handshakeIdActive === HANDSHAKE_ID.EXCHANGE && (
+            <Row className="text-center buy-sell-wrapper">
+              <Col md={6}><strong>Buy</strong></Col>
+              <Col md={6}><strong>Sell</strong></Col>
+            </Row>
+          )
+        }
         <Row>
           {this.getHandshakeList}
         </Row>
