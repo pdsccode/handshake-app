@@ -1,9 +1,13 @@
 
 import localStore from '@/services/localStore';
 var bip39 = require('bip39');
+import {Bitcoin} from '@/models/Bitcoin.1.js' 
+import {Ethereum} from '@/models/Ethereum.js' 
+
 export class WalletModel {      
     
     static CoinType = {"Ether": 60, "Bitcoin": 0, "BitcoinTestnet": 1}
+    
     static KEY = "wallets";
     
     constructor(mnemonic, address, privateKey, coinType) {
@@ -12,10 +16,25 @@ export class WalletModel {
       this.privateKey = privateKey;
       this.coinType = coinType;
       this.default = false;
+      this.balance = 0;
+      this.network = '';
+      this.name = '';
+      this.title = ''; 
+      this.protected = false;
     }
 
     setDefault(isDefault){
         this.default = isDefault;
+    }
+
+    setNetwork(network){
+        this.network = network;
+    }
+    setName(name){
+        this.name = name;
+    }
+    setTitle(title){
+        this.title = title;
     }
 
     // Create an autonomous wallet:
@@ -25,19 +44,34 @@ export class WalletModel {
         // var bip39 = require('bip39');
         // mnemonic = bip39.generateMnemonic(); //generates string
 
-        // 1. create default eth wallet:
-        var eth_wallet = WalletModel.createWallet(WalletModel.CoinType.Ether, mnemonic);
-        eth_wallet.setDefault(true)
+        // 1. create default eth Mainnet wallet:
+        let eth_mainnet_wallet = WalletModel.createWallet(WalletModel.CoinType.Ether, mnemonic);
+        eth_mainnet_wallet.setName("ETH")
+        eth_mainnet_wallet.setTitle("Ethereum")
+        eth_mainnet_wallet.setDefault(true)
+        eth_mainnet_wallet.setNetwork(Ethereum.Network.Mainnet)
 
-        // 2. create btc for testnet:
+        // 2. create default eth Rinkeby wallet:        
+        let eth_rinkeby_wallet = new WalletModel(eth_mainnet_wallet.mnemonic, eth_mainnet_wallet.address, eth_mainnet_wallet.privateKey, eth_mainnet_wallet.coinType);
+        eth_rinkeby_wallet.setName("ETH")
+        eth_rinkeby_wallet.setNetwork(Ethereum.Network.Rinkeby)
+        eth_rinkeby_wallet.setTitle("Rinkeby")
+
+        // 3. create btc for testnet:
         var btc_testnet_wallet = WalletModel.createWallet(WalletModel.CoinType.BitcoinTestnet, mnemonic);
+        btc_testnet_wallet.setName("BTC")
+        btc_testnet_wallet.setTitle("Testnet")
+        btc_testnet_wallet.setNetwork(Bitcoin.Network.Testnet)
 
-        // 3. create btc for main:
-        var btc_mainnet_wallet = WalletModel.createWallet(WalletModel.CoinType.Bitcoin, mnemonic);  
-        
+        // 4. create btc for main:
+        let btc_mainnet_wallet = WalletModel.createWallet(WalletModel.CoinType.Bitcoin, mnemonic);  
+        btc_mainnet_wallet.setName("BTC")
+        btc_mainnet_wallet.setTitle("Bitcoin")
+        btc_mainnet_wallet.setNetwork(Bitcoin.Network.Mainnet)
+
         // ...add some more
 
-        var masterWallet = [eth_wallet, btc_mainnet_wallet, btc_testnet_wallet];
+        let masterWallet = [eth_mainnet_wallet, eth_rinkeby_wallet, btc_mainnet_wallet, btc_testnet_wallet];
 
         // Save to local store:
         localStore.save(WalletModel.KEY, masterWallet);

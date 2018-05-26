@@ -16,7 +16,7 @@ export class Bitcoin {
       var response = await axios.get(url);      
       // console.log(response.data);
       if (response.status == 200){
-        return satoshi.toBitcoin(response.data);
+        return await satoshi.toBitcoin(response.data);
       }
       return false;      
     }
