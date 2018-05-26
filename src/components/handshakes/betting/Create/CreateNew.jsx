@@ -67,6 +67,7 @@ class BettingCreate extends React.PureComponent {
 
   onSubmit(values) {
     console.log("values", values);
+    let content = this.content;
     const inputList = this.inputList;
     let extraParams = values;
 
@@ -87,7 +88,7 @@ class BettingCreate extends React.PureComponent {
       to_address: toAddress ? toAddress.trim() : '',
       public: isPublic,
       //description: content,
-      description: JSON.stringify(extraParams),
+      // description: JSON.stringify(extraParams),
       industries_type: industryId,
       extraParams,
     };
@@ -215,10 +216,8 @@ class BettingCreate extends React.PureComponent {
   }
 }
 
-const mapState = state => ({});
-
 const mapDispatch = ({
   initHandshake,
 });
 
-export default connect(mapState, mapDispatch)(BettingCreate);
+export default connect(null, mapDispatch)(BettingCreate);
