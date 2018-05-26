@@ -119,9 +119,7 @@ class BettingCreate extends React.PureComponent {
 
   renderInput(item, index) {
     const {key, placeholder, type} = item;
-    let className = 'form-control-custom input';
-    const plusClassName = key === 'odd' ? ' oddInput' : '';
-    className += plusClassName;
+    const className = 'form-control-custom input';
     return (
       <Field
         component={fieldInput}
@@ -153,6 +151,7 @@ class BettingCreate extends React.PureComponent {
         }}
         defaultValue={new Date()}
         dateFormat="D/M/YYYY"
+        timeFormat={false}
         closeOnSelect
       />
     );
@@ -192,10 +191,11 @@ class BettingCreate extends React.PureComponent {
     }
 
     return (
-      <div key={index} className="rowWrapper">
+      <div key={index} className={`rowWrapper ${key === 'event_odds' ? 'oddField' : ''}`}>
         <label className="label">{label || placeholder}</label>
-        {key === 'event_odds' && <span className="oddLabel">1 : </span>}
-        {itemRender}
+        <div className={key === 'event_odds' ? 'oddInput' : ''}>
+          {itemRender}
+        </div>
       </div>
     );
   }
