@@ -143,6 +143,7 @@ class BettingCreate extends React.PureComponent {
         inputProps={{
           readOnly: true,
           className: 'form-control-custom input',
+          name: key,
           ref: (component) => {
             this.datePickerRef = component;
           },
