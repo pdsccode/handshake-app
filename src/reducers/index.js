@@ -1,5 +1,7 @@
 import discover from './discover';
+import auth from './auth';
 
 export default {
-  discover
+  auth,
+  discover,
 };

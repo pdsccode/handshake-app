@@ -6,6 +6,7 @@
   position: relative;
   padding-top: $header-height;
   padding-bottom: $footer-height;
+  overflow: hidden;
 }
 
 .header {
@@ -115,4 +116,12 @@
     border-color: $blue;
     border-width: 2px;
   }
+}
+.has-error {
+  box-shadow: none !important;
+  border-color: #dc3545 !important;
+}
+.has-warning {
+  box-shadow: none !important;
+  border-color: #ffc107 !important;
 }
