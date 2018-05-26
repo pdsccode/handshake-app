@@ -213,7 +213,7 @@ class CreditCardFeed extends React.Component {
     let modalContent = this.state.modalContent;
 
     return (
-      <div className='container'>
+      <div>
         <div className='row'>
           <div className='col'>
             <div>
