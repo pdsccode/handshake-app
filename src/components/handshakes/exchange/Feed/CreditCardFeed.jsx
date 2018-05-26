@@ -37,9 +37,9 @@ class CreditCardFeed extends React.Component {
   }
 
   componentDidMount() {
-    this.props.getUserProfile({PATH_URL: API_URL.EXCHANGE.GET_USER_PROFILE, headers: {'Custom-Uid': 'megalodon'}});
+    this.props.getUserProfile({PATH_URL: API_URL.EXCHANGE.GET_USER_PROFILE});
     this.props.getCcLimits({PATH_URL: API_URL.EXCHANGE.GET_USER_CC_LIMIT});
-    this.props.getUserCcLimit({PATH_URL: API_URL.EXCHANGE.GET_USER_CC_LIMIT, headers: {'Custom-Uid': 'megalodon'}});
+    this.props.getUserCcLimit({PATH_URL: API_URL.EXCHANGE.GET_USER_CC_LIMIT});
 
     this.getCryptoPriceByAmount(0);
 
@@ -94,7 +94,7 @@ class CreditCardFeed extends React.Component {
         payment_method_data: params
       };
       console.log('handleCreateCCOrder',paramsObj);
-      this.props.createCCOrder({data: paramsObj, headers: {'Custom-Uid': 'megalodon'},
+      this.props.createCCOrder({data: paramsObj,
         successFn: this.handleCreateCCOrderSuccess,
         errorFn: this.handleCreateCCOrderFailed
       });
