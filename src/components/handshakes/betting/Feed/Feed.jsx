@@ -13,7 +13,7 @@ const goal = 30;
 class FeedBetting extends React.Component {
   static propTypes = {
     item: PropTypes.object.isRequired,
-    userEmail: PropTypes.string.isRequired,
+    userEmail: PropTypes.string,
   }
 static defaultProps = {
     item: {
@@ -36,6 +36,7 @@ static defaultProps = {
         "to_email": "trong1@autonomous.nyc",
         "user_id_shaked": 3
       },
+      userEmail: 'trong@autonomous.nyc',
 
 }
 componentDidMount(){

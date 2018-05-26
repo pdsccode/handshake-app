@@ -47,12 +47,12 @@ export class BetStatusHandler {
             strAction = null;
             break;
             case BETTING_STATUS.INITIATOR_WON:
-            strStatus = isOwner ? null : BETTING_STATUS_LABEL.LOSE; //If payeee = Withdraw, else payer = "lose" show button "Withdraw"
-            strAction = isOwner ? BETTING_STATUS_LABEL.WITHDRAW : null;
+            // strStatus = isOwner ? null : BETTING_STATUS_LABEL.LOSE; //If payeee = Withdraw, else payer = "lose" show button "Withdraw"
+            // strAction = isOwner ? BETTING_STATUS_LABEL.WITHDRAW : null;
             break;
             case BETTING_STATUS.BETOR_WON: 
-            strStatus = isOwner ? BETTING_STATUS_LABEL.LOSE : null; // If payee = "lose", else payer = "withdraw"
-            strAction = isOwner ? null : BETTING_STATUS_LABEL.WITHDRAW;
+            // strStatus = isOwner ? BETTING_STATUS_LABEL.LOSE : null; // If payee = "lose", else payer = "withdraw"
+            // strAction = isOwner ? null : BETTING_STATUS_LABEL.WITHDRAW;
             break;
             case BETTING_STATUS.DRAW:
             strStatus = BETTING_STATUS_LABEL.WITHDRAW; // Both payee/payer = "withdraw"
