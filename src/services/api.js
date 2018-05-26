@@ -23,7 +23,7 @@ const $http = (url, data, id, qsObject, headersMore, method = 'GET') => {
   }
 
   if (token) {
-    headers.Authorization = `JWT ${token}`;
+    headers.Payload = token;
   }
 
   return axios.create({

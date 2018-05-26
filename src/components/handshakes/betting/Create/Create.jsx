@@ -4,6 +4,11 @@ import Input from '@/components/core/forms/Input/Input';
 import Button from '@/components/core/controls/Button/Button';
 import {Formik} from 'formik';
 import DatePicker from '@/components/handshakes/betting/Create/DatePicker';
+import { connect } from 'react-redux';
+// service, constant
+import { initHandshake } from '@/reducers/handshake/action';
+
+
 
 import './Create.scss';
 const regex = /\[.*?\]/g;
@@ -12,13 +17,14 @@ const regexReplacePlaceholder = /\[.*?\]/;
 
 
 class BettingCreate extends React.Component {
-  static propTypes = {
-    item: PropTypes.object.isRequired,
-    toAddress: PropTypes.string.isRequired,
-    isPublic: PropTypes.bool.isRequired,
-    industryId: PropTypes.number.isRequired,
-    onClickSend: PropTypes.func
-  }
+    static propTypes = {
+        item: PropTypes.object.isRequired,
+        toAddress: PropTypes.string.isRequired,
+        isPublic: PropTypes.bool.isRequired,
+        industryId: PropTypes.number.isRequired,
+        onClickSend:PropTypes.func,
+        initHandshake: PropTypes.func.isRequired,
+      }
 
   static defaultProps = {
     item: {
@@ -136,48 +142,52 @@ class BettingCreate extends React.Component {
     return content ? content.match(regex) : [];
   }
 
-  get content() {
-    const {item} = this.props;
-    const {desc} = item;
-    const content = desc ? desc : '';
-    return content;
-  }
+    get content(){
+        const {item} = this.props;
+        const {desc} = item;
+        const content = desc ? desc : '';
+        return content;
+    }
+    onClickSendButton(){
+        console.log('onClickSendButton');
+        const {values} = this.state;
+        var content = this.content;
+        const inputList = this.inputList;
+        //const listBlank = content ? content.match(regex) : [];
+        //console.log('List Blank:', listBlank);
+        console.log('Values:', values);
+        let extraParams = values;
+        console.log('Before Content:', content);
 
-  onClickSendButton() {
-    console.log('onClickSendButton');
-    const {values} = this.state;
-    var content = this.content;
-    const inputList = this.inputList;
-    //const listBlank = content ? content.match(regex) : [];
-    //console.log('List Blank:', listBlank);
-    console.log('Values:', values);
-    let extraParams = values;
-    console.log('Before Content:', content);
+        inputList.forEach(element => {
+            const item = JSON.parse(element.replace(regexReplace, ''));
+            console.log('Element:', item);
+            const {key, placeholder, type} = item;
+            const valueInputItem = values[key];
 
-    inputList.forEach(element => {
-      const item = JSON.parse(element.replace(regexReplace, ''));
-      console.log('Element:', item);
-      const {key, placeholder, type} = item;
-      const valueInputItem = values[key];
+            content = content.replace(
+                regexReplacePlaceholder,
+                valueInputItem ? valueInputItem : ''
+              );
+        });
+        console.log('After Content:', content);
+        console.log("this", this.datePickerRef.value);
 
-      content = content.replace(
-        regexReplacePlaceholder,
-        valueInputItem ? valueInputItem : ''
-      );
-    });
-    console.log('After Content:', content);
+        const {toAddress, isPublic, industryId} = this.props;
 
-    const {toAddress, isPublic, industryId} = this.props;
+        //this.props.onClickSend(params);
+        const params = {
+            to_address: toAddress ? toAddress.trim() : '',
+            public: isPublic,
+            //description: content,
+            description: JSON.stringify(extraParams),
+            industries_type: industryId,
+            extraParams
+            //source: Platform.OS
+          };
 
-    //this.props.onClickSend(params);
-    const params = {
-      to_address: toAddress ? toAddress.trim() : '',
-      public: isPublic,
-      description: content,
-      industries_type: industryId,
-      //source: Platform.OS
-    };
-
+          //Call API
+          this.props.initHandshake({ PATH_URL: 'handshake?public=0&chain_id=4' });
 
   }
 
@@ -219,5 +229,13 @@ class BettingCreate extends React.Component {
     );
   }
 }
+const mapState = state => ({
+  });
 
-export default BettingCreate;
+  const mapDispatch = ({
+    initHandshake
+  });
+
+export default connect(mapState, mapDispatch)(BettingCreate);
+
+
