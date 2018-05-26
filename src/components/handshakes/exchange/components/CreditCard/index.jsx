@@ -155,13 +155,13 @@ class Component extends React.Component {
                       name="toggleCCOpen"
                       component={
                         ({ input: { onChange, value } }) =>
-                          <button className="w-100 btn btn-link" type='button'
+                          <button className="w-100 btn btn-link text-white" type='button'
                                   onClick={() => {
                                     onChange(!value)
                                     handleToggleNewCC()
                                   }}
                           >
-                            {intl.formatMessage({id: 'change'})}&nbsp;{value ? 'v' : '>'}
+                            {intl.formatMessage({id: 'change'})}<span className="ml-2">{value ? '﹀' : '〉'}</span>
                           </button>
                       }
                     />
