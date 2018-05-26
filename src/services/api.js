@@ -28,7 +28,7 @@ const $http = (url, data, id, qsObject, headersMore, method = 'GET') => {
 
   return axios.create({
     timeout: BASE_API.TIMEOUT,
-    withCredentials: true,
+    // withCredentials: true,
     headers,
   })[method.toLocaleLowerCase()](`${url}${id ? `${id}/` : ''}${QS ? `?${QS}` : ''}`, data);
 };

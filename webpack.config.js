@@ -146,6 +146,7 @@ module.exports = function webpackConfig(env, argv) {
       plugins: [
         new CleanWebpackPlugin(['dist']),
         new webpack.DefinePlugin({
+          'process.env.ENV': `"${argv.mode}"`,
           'process.env.ROOT': `"${process.env.ROOT}"`,
           'process.env.BASE_URL': `"${process.env.BASE_URL}"`,
         }),
