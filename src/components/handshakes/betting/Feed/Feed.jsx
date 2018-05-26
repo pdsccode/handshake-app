@@ -47,7 +47,7 @@ constructor(props) {
     const {item, isOwner} = this.props;
         const {description, from_email, status} = item;
         const bottomDes = `22 bettors against ${from_email}`;
-        const statusLabel = StatusHandler.statusLabel(status, isOwner);
+        const statusLabel = StatusHandler.getStatusLabel(status, isOwner);
     return (
       <div>
         {/* Feed */}

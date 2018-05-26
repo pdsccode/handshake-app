@@ -4,6 +4,11 @@ import Input from '@/components/core/forms/Input/Input';
 import Button from '@/components/core/controls/Button/Button';
 import {Formik} from 'formik';
 import DatePicker from '@/components/handshakes/betting/Create/DatePicker';
+import { connect } from 'react-redux';
+// service, constant
+import { initHandshake } from '@/reducers/handshake/action';
+
+
 
 import './Create.scss';
 const regex = /\[.*?\]/g;
@@ -17,7 +22,8 @@ class BettingCreate extends React.Component {
         toAddress: PropTypes.string.isRequired,
         isPublic: PropTypes.bool.isRequired,
         industryId: PropTypes.number.isRequired,
-        onClickSend:PropTypes.func
+        onClickSend:PropTypes.func,
+        initHandshake: PropTypes.func.isRequired,
       }
 
     static defaultProps = {
@@ -138,7 +144,7 @@ class BettingCreate extends React.Component {
         console.log('Values:', values);
         let extraParams = values;
         console.log('Before Content:', content);
-
+        
         inputList.forEach(element => {
             const item = JSON.parse(element.replace(regexReplace, ''));
             console.log('Element:', item);
@@ -159,11 +165,15 @@ class BettingCreate extends React.Component {
         const params = {
             to_address: toAddress ? toAddress.trim() : '',
             public: isPublic,
-            description: content,
+            //description: content,
+            description: JSON.stringify(extraParams),
             industries_type: industryId,
+            extraParams
             //source: Platform.OS
           };
 
+          //Call API
+          this.props.initHandshake({ PATH_URL: 'handshake?public=0&chain_id=4' });
 
     }
     changeText(key, text){
@@ -202,6 +212,13 @@ class BettingCreate extends React.Component {
     );
   }
 }
+const mapState = state => ({
+  });
+  
+  const mapDispatch = ({
+    initHandshake
+  });
 
-export default BettingCreate;
+export default connect(mapState, mapDispatch)(BettingCreate);
+
 
