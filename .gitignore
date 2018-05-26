@@ -6,4 +6,5 @@ dist
 .idea
 .env
 .env.production
+.idea/
 test_event.js
