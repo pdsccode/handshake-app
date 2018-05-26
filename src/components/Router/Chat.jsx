@@ -8,7 +8,7 @@ import { URL } from '@/config';
 import { setHeaderTitle } from '@/reducers/app/action';
 
 const Chat = props => (<DynamicImport loading={Loading} load={() => import('@/pages/Chat/Chat')}>{Component => <Component {...props} />}</DynamicImport>);
-const Page404 = props => (<DynamicImport loading={Loading} load={() => import('@/pages/Error/Page404')}>{Component => <Component {...props} />}</DynamicImport>);
+const Page404 = props => (<DynamicImport isNotFound loading={Loading} load={() => import('@/pages/Error/Page404')}>{Component => <Component {...props} />}</DynamicImport>);
 
 const routerMap = [
   { path: URL.HANDSHAKE_CHAT_INDEX, component: Chat },

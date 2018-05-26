@@ -8,7 +8,7 @@ import { URL } from '@/config';
 import { setHeaderTitle } from '@/reducers/app/action';
 
 const Me = props => (<DynamicImport loading={Loading} load={() => import('@/pages/Me/Me')}>{Component => <Component {...props} />}</DynamicImport>);
-const Page404 = props => (<DynamicImport loading={Loading} load={() => import('@/pages/Error/Page404')}>{Component => <Component {...props} />}</DynamicImport>);
+const Page404 = props => (<DynamicImport isNotFound loading={Loading} load={() => import('@/pages/Error/Page404')}>{Component => <Component {...props} />}</DynamicImport>);
 
 const routerMap = [
   { path: URL.HANDSHAKE_ME_INDEX, component: Me },
@@ -16,7 +16,6 @@ const routerMap = [
 
 class MeRouter extends React.Component {
   static propTypes = {
-    location: PropTypes.object.isRequired,
     setHeaderTitle: PropTypes.func.isRequired,
   }
 
