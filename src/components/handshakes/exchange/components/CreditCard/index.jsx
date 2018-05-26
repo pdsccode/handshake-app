@@ -21,16 +21,16 @@ const heightOfTabsHeader = 0.5;
 
 // trick to make background larger than its div
 const Wrapper = styled.div`
-  background: #76b1ff;
+  background: #50af4f;
 
-  padding-left: ${heightOfTabsHeader}rem;
-  margin-left: -${heightOfTabsHeader}rem;
-  
-  padding-right: ${heightOfTabsHeader}rem;
-  margin-right: -${heightOfTabsHeader}rem;
-  
-  padding-bottom: ${heightOfTabsHeader}rem;
-  margin-bottom: -${heightOfTabsHeader}rem;
+  // padding-left: ${heightOfTabsHeader}rem;
+  // margin-left: -${heightOfTabsHeader}rem;
+  //
+  // padding-right: ${heightOfTabsHeader}rem;
+  // margin-right: -${heightOfTabsHeader}rem;
+  //
+  // padding-bottom: ${heightOfTabsHeader}rem;
+  // margin-bottom: -${heightOfTabsHeader}rem;
 `
 
 
@@ -140,12 +140,12 @@ class Component extends React.Component {
       </div>
     )
     return (
-      <Wrapper className="rounded-bottom">
+      <Wrapper className="rounded p-2">
         <div className='col1'>
           {
             isCCExisting ? (
               <div>
-                <div className='d-flex' style={{ height: '52px', lineHeight: '52px' }}>
+                <div className='d-flex' style={{ height: '36px', lineHeight: '36px' }}>
                   <span>
                     <img className='mx-2' width="26px" height="26px" src={imgCC} />
                     <span>∗∗∗∗ ∗∗∗∗ ∗∗∗∗ {lastDigits}</span>
