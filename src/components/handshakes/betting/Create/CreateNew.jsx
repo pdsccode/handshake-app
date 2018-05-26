@@ -121,7 +121,7 @@ class BettingCreate extends React.PureComponent {
     className += plusClassName;
     return (
       <Field
-        component="input"
+        component={fieldInput}
         type="text"
         placeholder={placeholder}
         className={className}
@@ -161,9 +161,9 @@ class BettingCreate extends React.PureComponent {
       <Field
         className="form-control-custom input"
         name={key}
-        component="input"
+        component={fieldInput}
         type="number"
-        min="0.0001"
+        // min="0.0001"
         placeholder={placeholder}
         onChange={(evt) => {
           this.changeText(key, evt.target.value)
@@ -199,11 +199,11 @@ class BettingCreate extends React.PureComponent {
   renderForm() {
     const inputList = this.inputList;
     return (
-      <BettingCreateForm className="wrapperBetting" handleSubmit={this.onSubmit} noValidate>
+      <BettingCreateForm className="wrapperBetting" onSubmit={this.onSubmit}>
         {inputList.map((field, index) =>
           this.renderItem(field, index)
         )}
-        <Button type="submit" block onClick={this.onSubmit}>Sign & Send</Button>
+        <Button type="submit" block>Sign & Send</Button>
       </BettingCreateForm>
     );
   }
