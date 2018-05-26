@@ -75,11 +75,11 @@ componentDidMount(){
         {/* Feed */}
         <Feed className="feed" handshakeId={this.props.id} onClick={this.props.onFeedClick}>
           <div className="wrapper">
-              {<p>Role: {`${role}`}</p>}
+              {/*<p>Role: {`${role}`}</p>}
               {statusLabel.status && <p>Status: {`${statusLabel.status}`}</p>}
               {<p>Date: {`${date}`}</p>}
               {<p>Bet: {`${goal}`}</p>}
-              {<p>Balance: {`${balance}`}</p>}
+    {<p>Balance: {`${balance}`}</p>*/}
 
               <p className="description">{description}</p>
               <div className="bottomWrapper">
