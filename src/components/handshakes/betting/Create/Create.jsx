@@ -152,6 +152,7 @@ class BettingCreate extends React.PureComponent {
           },
         }}
         defaultValue={new Date()}
+        dateFormat="D/M/YYYY"
         closeOnSelect
       />
     );

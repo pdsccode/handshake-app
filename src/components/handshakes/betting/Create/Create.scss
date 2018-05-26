@@ -14,6 +14,7 @@
     flex-shrink: 0;
     margin: 0;
     font-size: rem-calc(18px);
+    font-weight: $light;
     color: #353535;
     letter-spacing: 0;
     text-align: right;
@@ -30,10 +31,11 @@
     }
     &::placeholder {
       color: #C8C7CC;
+      font-weight: $light;
     }
   }
   .oddInput {
-    width: rem-calc(100px);
+    //width: rem-calc(100px);
 
   }
   .oddLabel {
