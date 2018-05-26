@@ -11,9 +11,9 @@ export const BETTING_STATUS_LABEL = Object.freeze(
     RESOLVING: 'Resolving'}
 );
 
-export class BettingStatusHandler {
+export class StatusHandler {
     
-    static statusLabel(status, isOwner){
+    static getStatusLabel(status, isOwner){
         //TO DO: Show combobox for use choose an option if evendate < today
         var strStatus = null;
         var strAction = null;
@@ -42,6 +42,8 @@ export class BettingStatusHandler {
             break;
             case BETTING_STATUS.REJECTED:
             strStatus = BETTING_STATUS_LABEL.RESOLVING;
+            break;
+            default: // Not show status
             break;
     
         }

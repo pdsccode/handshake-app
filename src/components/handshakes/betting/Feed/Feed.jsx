@@ -4,7 +4,7 @@ import Button from '@/components/core/controls/Button';
 import ModalDialog from '@/components/core/controls/ModalDialog';
 import Feed from '@/components/core/presentation/Feed';
 import BettingShake from './Shake';
-import  {BettingStatusHandler} from './BettingStatusHandler.js';
+import  {StatusHandler} from './StatusHandler.js';
 import './Feed.scss';
 
 
@@ -47,7 +47,7 @@ constructor(props) {
     const {item, isOwner} = this.props;
         const {description, from_email, status} = item;
         const bottomDes = `22 bettors against ${from_email}`;
-        const statusLabel = BettingStatusHandler.statusLabel(status, isOwner);
+        const statusLabel = StatusHandler.statusLabel(status, isOwner);
     return (
       <div>
         {/* Feed */}
