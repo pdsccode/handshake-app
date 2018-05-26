@@ -3,6 +3,7 @@ import {FormattedMessage, injectIntl} from 'react-intl';
 import {Field, formValueSelector} from "redux-form";
 import {connect} from "react-redux";
 import CreditCard from '@/components/handshakes/exchange/components/CreditCard';
+import LevelItem from '@/components/handshakes/exchange/components/LevelItem';
 import Feed from '@/components/core/presentation/Feed';
 import Button from '@/components/core/controls/Button';
 import ModalDialog from '@/components/core/controls/ModalDialog';
@@ -21,6 +22,8 @@ const nameFormCreditCard = 'creditCard'
 const FormCreditCard = createForm({ propsReduxForm: { form: nameFormCreditCard,
     initialValues: { currency: 'ETH' } } });
 const selectorFormCreditCard = formValueSelector(nameFormCreditCard)
+
+const mainColor = '#259B24'
 
 class CreditCardFeed extends React.Component {
   constructor(props) {
@@ -212,14 +215,42 @@ class CreditCardFeed extends React.Component {
 
     let modalContent = this.state.modalContent;
 
+    const levels = [
+      { name: '1', max: 500 },
+      { name: '2', max: 1000 },
+      { name: '3', max: 5000 },
+    ]
+    const curLevel = '2'
     return (
       <div>
         <div className='row'>
           <div className='col'>
             <div>
               <FormCreditCard onSubmit={this.handleSubmit} validate={this.handleValidate}>
-                <Feed className="feed p-2 mb-2" background="linear-gradient(-133deg, #006AFF 0%, #3AB4FB 100%)">
+                <Feed className="feed p-2 mb-2" background={mainColor}>
                   <div style={{ color: 'white' }}>
+                    <div>
+                      {
+                        levels.map((level, index) => {
+                          const { name, max } = level
+                          const isActive = curLevel === name
+                          return (
+                            <LevelItem key={index} style={{ marginLeft: index > 0 ? '8px' : '', opacity: isActive ? '' : 0.6 }}>
+                              <div>
+                                <span
+                                  className='rounded-circle bg-white badge'
+                                  style={{ color: mainColor, width: 18 }}
+                                >
+                                  {name}
+                                </span>
+                              </div>
+                              <div><small>Can buy up to {fiatCurrency}{max}</small></div>
+                            </LevelItem>
+                          )
+                        })
+                      }
+                      <hr className="my-2" />
+                    </div>
                     <div className="form-group pt-2 d-flex">
                       <label className="col-form-label"><FormattedMessage id="buy"/></label>
                       <div className="mx-2">
@@ -233,14 +264,14 @@ class CreditCardFeed extends React.Component {
                         />
                       </div>
                       <span className="d-inline-block ml-auto" style={{ width: '235px' }}>
-                                <Field
-                                  name="currency"
-                                  component={fieldDropdown}
-                                  list={allCryptoCurrencies}
-                                  onChange={this.onCurrencyChange}
-                                  // defaultText={''}
-                                />
-                              </span>
+                        <Field
+                          name="currency"
+                          component={fieldDropdown}
+                          list={allCryptoCurrencies}
+                          onChange={this.onCurrencyChange}
+                          // defaultText={''}
+                        />
+                      </span>
                     </div>
                     <div className="pb-2">
                       <span><FormattedMessage id="askUsingCreditCard" values={{ fiatCurrency: fiatCurrency, total: total }} /></span>
