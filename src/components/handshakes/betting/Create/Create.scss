@@ -6,13 +6,13 @@
   padding: rem-calc(10px 10px 10px 10px);
   .rowWrapper {
     align-items: center;
-    justify-content: flex-end;
+    justify-content: space-between;
     display: flex;
     margin: rem-calc(20px) auto;
-    width: 90%;
+    max-width: 19.75rem;
   }
   .label {
-    flex-shrink: 0;
+    flex-basis: 35%;
     margin: 0;
     font-size: rem-calc(18px);
     font-weight: $light;
@@ -28,6 +28,8 @@
     color: $text-black;
     letter-spacing: 0;
     line-height: rem-calc(34px);
+    padding-left: 0;
+    width: 100%;
     &:focus {
       box-shadow: none;
     }
@@ -37,16 +39,15 @@
     }
   }
   .oddField {
-    padding-left: rem-calc(10px);
+    padding-left: rem-calc(5px);
   }
   .oddInput {
     display: flex;
     &:before {
       content: "1 :";
       flex-shrink: 0;
-      position: relative;
-      flex-basis: 12%;
-      top: rem-calc(8px);
+      flex-basis: 13%;
+      align-self: center;
       font-size: rem-calc(24px);
       font-weight: $normal;
       color: $text-black;
@@ -56,6 +57,7 @@
     input {
       width: 100%;
       border: none;
+      padding-left: rem-calc(5px);
     }
   }
 }
