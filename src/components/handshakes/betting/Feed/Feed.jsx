@@ -1,11 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+
+// services, constants
+import  { BetStatusHandler, ROLE } from './StatusHandler.js';
+
+// components
+import Image from '@/components/core/presentation/Image';
 import Button from '@/components/core/controls/Button';
 import ModalDialog from '@/components/core/controls/ModalDialog';
 import Feed from '@/components/core/presentation/Feed';
 import BettingShake from './Shake';
-import  {BetStatusHandler, ROLE} from './StatusHandler.js';
+
+// css, icons
 import './Feed.scss';
+import chipIcon from '@/assets/images/icon/betting/chip.svg';
+import conferenceCallIcon from '@/assets/images/icon/betting/conference_call.svg';
+import ethereumIcon from '@/assets/images/icon/betting/ethereum.svg';
 
 const date = '2018-06-18';
 const eventDate = new Date(date);
@@ -95,19 +105,34 @@ class FeedBetting extends React.Component {
       <div>
         {/* Feed */}
         <Feed className="feed" handshakeId={this.props.id} onClick={this.props.onFeedClick}>
-          <div className="wrapper">
+          <div className="wrapperBettingFeed">
               {/*<p>Role: {`${role}`}</p>}
               {statusLabel.status && <p>Status: {`${statusLabel.status}`}</p>}
               {<p>Date: {`${date}`}</p>}
               {<p>Bet: {`${goal}`}</p>}
     {<p>Balance: {`${balance}`}</p>*/}
 
-              <p className="description">{description}</p>
-              <div className="bottomWrapper">
-                  <div className="email">{bottomDes}</div>
-                  <div className="email">80%</div>
+              <div className="description">
+                <p>Birth of the royal baby</p>
+                <p className="eventInfo">10 ETH that it is ginger</p>
+                <p className="odds">1:10</p>
               </div>
-          </div>
+              <hr/>
+              <div className="bottomWrapper">
+                <div>
+                  <Image src={conferenceCallIcon} alt="conference call icon" />
+                  <p className="content">22 <span>ninjas</span></p>
+                </div>
+                <div>
+                  <Image src={ethereumIcon} alt="ethereum icon" />
+                  <p className="content">10 ETH <span>pool</span></p>
+                </div>
+                <div>
+                  <Image src={chipIcon} alt="chip icon" />
+                  <p className="content">85% <span>filled</span></p>
+                </div>
+              </div>
+            </div>
         </Feed>
         {/* Shake */}
         {statusLabel.action && <Button block onClick={() => { this.modalBetRef.open(); }}>{statusLabel.action}</Button>}
