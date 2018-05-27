@@ -76,6 +76,7 @@ class Component extends React.Component {
                     component={fieldRadioButton}
                     list={EXCHANGE_ACTION}
                     color={mainColor}
+                    validate={[required]}
                   />
                 </div>
               </div>
@@ -87,6 +88,7 @@ class Component extends React.Component {
                     component={fieldRadioButton}
                     list={CRYPTO_CURRENCY}
                     color={mainColor}
+                    validate={[required]}
                   />
                 </div>
               </div>
@@ -97,6 +99,7 @@ class Component extends React.Component {
                   className="form-control-custom form-control-custom-ex w-100"
                   component={fieldInput}
                   onChange={this.onAmountChange}
+                  validate={[required]}
                 />
               </div>
               <div className="d-flex">
@@ -106,6 +109,7 @@ class Component extends React.Component {
                   className="form-control-custom form-control-custom-ex w-100"
                   component={fieldInput}
                   onChange={this.onPriceChange}
+                  validate={[required]}
                 />
               </div>
               <div className="d-flex">
@@ -123,6 +127,7 @@ class Component extends React.Component {
                   name="address"
                   className="form-control-custom form-control-custom-ex w-100"
                   component={fieldInput}
+                  validate={[required]}
                 />
               </div>
             </div>
