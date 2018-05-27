@@ -1,11 +1,24 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Input from '@/components/core/forms/Input/Input';
-import {Formik} from 'formik';
+import cn from 'classnames';
+
+// service, constant
+import createForm from '@/components/core/form/createForm';
+import { required } from '@/components/core/form/validation';
+import { Field } from "redux-form";
+
+// components
+import { InputField } from '@/components/handshakes/betting/form/customField';
 import Button from '@/components/core/controls/Button';
 
-
 import './Shake.scss';
+
+const nameFormBettingShake = 'bettingShakeForm';
+const BettingShakeForm = createForm({
+  propsReduxForm: {
+    form: nameFormBettingShake,
+  },
+});
 
 const defaultAmount = 1;
 
@@ -29,13 +42,13 @@ class BetingShake extends React.Component {
       total: defaultAmount * odd,
     };
 
-    this.onSubmit = this.onSubmit.bind(this);
-    this.onCancel = this.onCancel.bind(this);
-    this.validateForm = this.validateForm.bind(this);
-    this.renderForm = this.renderForm.bind(this);
+    this.onSubmit = ::this.onSubmit;
+    this.onCancel = ::this.onCancel;
+    this.renderInputField = ::this.renderInputField;
+    this.renderForm = ::this.renderForm;
   }
 
-  onSubmit(values, {setSubmitting, setErrors /* setValues and other goodies */}) {
+  onSubmit(values) {
     console.log("Submit");
     const {amount} = this.state;
     this.props.onSubmitClick(amount);
@@ -46,77 +59,111 @@ class BetingShake extends React.Component {
     this.props.onCancelClick();
   }
 
-  validateForm(values) {
-    // same as above, but feel free to move this into a class method now.
-    let errors = {};
-    return errors;
-  }
-
   updateTotal(value) {
     console.log('value:', value);
-    const {odd} = this.props;
-    const amount = value * odd;
-    this.setState({
-      amount: value,
-      total: amount.toFixed(4)
-    })
+    if (!!value) {
+      const { odd } = this.props;
+      const amount = value * odd;
+      this.setState({
+        amount: value,
+        total: amount.toFixed(4),
+      })
+    }
   }
 
-  renderForm({values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting}) {
-    const {total} = this.state;
-    const {remaining} = this.props;
+  renderInputField(props) {
+    const {
+      label,
+      className,
+      id,
+      cryptoCurrency = 'ETH',
+      isShowCurrency = true,
+      type = 'text',
+      value,
+      isInput = true,
+      ...newProps
+    } = props;
 
     return (
-      <form className="wrapper" onSubmit={handleSubmit}>
-        <div className="rowWrapper">
-          <label className="label">Betting amount</label>
-          <div className="amountInput">
-            <Input
-              className="form-control-custom input"
-              type='number'
-              //min='0.0001'
-              max={remaining}
-              name="amount"
-              defaultValue='1'
-              onChange={(evt) => this.updateTotal(parseInt(evt.target.value))}
-              onBlur={handleBlur}
-              //value={values.amount}
+      <div className="rowWrapper">
+        <label className="label" htmlFor={id}>{label}</label>
+        {
+          isInput ? (
+            <Field
+              component={InputField}
+              className={cn('form-control-custom input value', className || '')}
+              id={id}
+              type={type}
+              {...newProps}
             />
-            <label className="label remaining">/ {remaining} ETH</label>
-          </div>
-        </div>
-        {touched.amount && errors.amount && <div>{errors.amount}</div>}
-        <div className="line"/>
-        <div className="rowWrapper">
+          ) : (<div className={cn('value', className)}>{value}</div>)
+        }
+        {
+          isShowCurrency && <div className="cryptoCurrency">{cryptoCurrency}</div>
+        }
+      </div>
+    )
+  }
 
-          <label className="label">You will win</label>
-          <label className="total">{total} ETH</label>
-        </div>
+  renderForm() {
+    const { total } = this.state;
+    const { remaining, odd } = this.props;
+    const odds = `1 : ${odd}`;
 
-        <div className="rowWrapper">
-          <Button block className="cancelBtn" onClick={this.onCancel}
-          >
-            Cancel
-          </Button>
-          <Button type="submit" block className="submitBtn">
-            Submit
-          </Button>
-        </div>
-      </form>
+    const formFieldData = [
+      {
+        id: 'you_bet',
+        name: 'you_bet',
+        label: 'You bet',
+        key: 1,
+        defaultValue: '1',
+        onChange: (evt) => this.updateTotal(parseFloat(evt.target.value)),
+      },
+      {
+        id: 'at_odds',
+        name: 'at_odds',
+        label: 'At odds',
+        isInput: false,
+        value: odds,
+        className: 'atOdds',
+        isShowCurrency: false,
+        key: 2,
+      },
+      {
+        id: 'remaining',
+        name: 'remaining',
+        label: 'Remaining',
+        isInput: false,
+        value: remaining,
+        key: 3,
+      },
+    ];
+
+    const youCouldWinField = {
+      id: 'you_could_win',
+      name: 'you_could_win',
+      label: 'You could win',
+      className: 'total',
+      isInput: false,
+      value: total || 0,
+      readOnly: true,
+    };
+
+    return (
+      <BettingShakeForm className="wrapperBettingShake" onSubmit={this.onSubmit}>
+        {formFieldData.map(item => this.renderInputField(item))}
+        <hr className="line" />
+        {this.renderInputField(youCouldWinField)}
+
+        <Button type="submit" block className="btnOK">
+          OK
+        </Button>
+      </BettingShakeForm>
     );
   }
 
   render() {
-    const {remaining} = this.props;
-    const {total} = this.state;
-    return (<Formik
-      initialValues={{
-        amount: 1,
-      }}
-      validate={this.validateForm}
-      onSubmit={this.onSubmit}
-      render={this.renderForm}
-    />);
+    return this.renderForm();
   }
 }
 

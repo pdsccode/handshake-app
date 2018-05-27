@@ -30,7 +30,7 @@ const customField = element => ({
   return allElements;
 };
 
-export const fieldInput = customField('input');
+export const InputField = customField('input');
 export const fieldDropdown = customField(({
   onChange, value, list, defaultText = 'Select an item',
 }) => {

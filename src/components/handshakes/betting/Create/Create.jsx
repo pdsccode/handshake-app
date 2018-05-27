@@ -12,15 +12,15 @@ import { initHandshake } from '@/reducers/handshake/action';
 import Button from '@/components/core/controls/Button';
 import Input from '@/components/core/forms/Input/Input';
 import DatePicker from '@/components/handshakes/betting/Create/DatePicker';
-import { fieldInput } from './customField';
+import { InputField } from '../form/customField';
 
 // self
 import './Create.scss';
 
-const nameFormExchangeCreate = 'bettingCreate';
+const nameFormBettingCreate = 'bettingCreate';
 const BettingCreateForm = createForm({
   propsReduxForm: {
-    form: nameFormExchangeCreate,
+    form: nameFormBettingCreate,
   },
 });
 
@@ -132,7 +132,7 @@ class BettingCreate extends React.PureComponent {
     const className = 'form-control-custom input';
     return (
       <Field
-        component={fieldInput}
+        component={InputField}
         type="text"
         placeholder={placeholder}
         className={className}
@@ -143,7 +143,6 @@ class BettingCreate extends React.PureComponent {
           this.changeText(key, evt.target.value)
         }}
       />
-
     );
   }
 
@@ -176,7 +175,7 @@ class BettingCreate extends React.PureComponent {
       <Field
         className="form-control-custom input"
         name={key}
-        component={fieldInput}
+        component={InputField}
         type="number"
         // min="0.0001"
         placeholder={placeholder}
