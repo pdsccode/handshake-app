@@ -18,6 +18,8 @@ const FormExchangeCreate = createForm({
 });
 const selectorFormExchangeCreate = formValueSelector(nameFormExchangeCreate);
 
+const mainColor = '#007AFF'
+
 class Component extends React.Component {
   onAmountChange = (e) => {
     const amount = e.target.value;
@@ -59,15 +61,16 @@ class Component extends React.Component {
     return (
       <div>
         <FormExchangeCreate onSubmit={this.handleSubmit}>
-          <Feed className="feed p-2 mb-2" background="linear-gradient(-133deg, #006AFF 0%, #3AB4FB 100%)">
+          <Feed className="feed p-2 mb-2" background={mainColor}>
             <div style={{ color: 'white' }}>
-              <div className="d-flex">
+              <div className="d-flex mb-2">
                 <label className="col-form-label mr-auto" style={{ width: '100px' }}>I want to</label>
                 <div className='input-group'>
                   <Field
                     name="type"
                     component={fieldRadioButton}
                     list={listType}
+                    color={mainColor}
                   />
                 </div>
               </div>
@@ -78,6 +81,7 @@ class Component extends React.Component {
                     name="coin"
                     component={fieldRadioButton}
                     list={listCoin}
+                    color={mainColor}
                   />
                 </div>
               </div>
