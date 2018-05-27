@@ -7,9 +7,8 @@ import { load } from '@/reducers/discover/action';
 import { Grid, Row, Col } from 'react-bootstrap';
 import Button from '@/components/core/controls/Button';
 import { handShakeList } from '@/data/shake.js';
-import {WalletModel} from '@/models/Wallet' 
-import {Bitcoin} from '@/models/Bitcoin.1.js' 
-import {Ethereum} from '@/models/Ethereum.js' 
+import {MasterWallet} from '@/models/MasterWallet' 
+
 import dontIcon from '@/assets/images/icon/3-dot-icon.svg';
 import iconSafe from '@/assets/images/icon/icon-safe.svg';
 import iconWarning from '@/assets/images/icon/icon-warning.svg';
@@ -18,6 +17,7 @@ import WalletItem from './WalletItem';
 
 // style
 import './Wallet.scss';
+
 
 class Wallet extends React.Component {
   constructor(props) { 
@@ -32,17 +32,14 @@ class Wallet extends React.Component {
     };
   }
 
-  async componentDidMount() {
-    // WalletModel.createMasterWallet();
-  
-    var listWalletBalance = await this.getListBalace(); 
-  
-    let listMainWallet = [];
-    let listTestWallet = [];
+  splitWalletData(listWallet){
 
-    listWalletBalance.forEach(wallet => {
-      // is Mainnet
-      if ([Ethereum.Network.Mainnet, Bitcoin.Network.Mainnet].indexOf(wallet.network) > -1){
+    let listMainWallet = [];
+    let listTestWallet = [];    
+
+    listWallet.forEach(wallet => {
+      // is Mainnet            
+      if (wallet.network == MasterWallet.ListCoin[wallet.className].Network.Mainnet){
         listMainWallet.push(wallet);
       }
       else{
@@ -50,33 +47,31 @@ class Wallet extends React.Component {
         listTestWallet.push(wallet);
       }
     });
-    this.setState({isLoading: true, listMainWalletBalance: listMainWallet, listTestWalletBalance: listTestWallet});
     
+    this.setState({isLoading: true, listMainWalletBalance: listMainWallet, listTestWalletBalance: listTestWallet});       
+  }
+
+   async componentDidMount() {
+    
+    let listWallet = await MasterWallet.getMasterWallet();    
+    if (listWallet.length == 0){
+      listWallet = await MasterWallet.createMasterWallet();    
+    }
+  
+     await this.splitWalletData(listWallet)
+
+     await this.getListBalace();
   }
 
   async getListBalace() {
 
-    let listWallet = WalletModel.getMasterWallet();     
+    let listWallet = this.state.listMainWalletBalance.concat(this.state.listTestWalletBalance);
 
-    listWallet.forEach(async wallet => {      
-
-      if (wallet.coinType == WalletModel.CoinType.Ether){
-        // Get balance for 2 network: Mainnet + Rinkeby
-        for (var network in Ethereum.Network){                     
-          let ethereum = new Ethereum (Ethereum.Network[network]);
-          wallet.balance = await ethereum.getBalance(wallet.address);            
-        }
-        
-        // Get balance for bitcoin Mainnet + Testnet:
-        if ([WalletModel.CoinType.Bitcoin, WalletModel.CoinType.BitcoinTestnet].indexOf(wallet.coinType) > -1){
-          let btc = new Bitcoin (Bitcoin.Network[network]);
-          wallet.balance = await btc.getBalance(wallet.address);  
-          
-        }        
-        console.log("wallet address ", wallet.address);
-      }
-    });
-    return listWallet;
+    listWallet.forEach(async wallet => {
+      wallet.balance = await wallet.getBalance();      
+    });    
+    await this.splitWalletData(listWallet);
+    
 
     // var btcTestnet = new Bitcoin(Bitcoin.Network.Testnet);
     // var balance = await btcTestnet.getBalance("n1MZwXhWs1unyuG6qNbEZRZV4qjzd3ZMyz");
@@ -87,49 +82,40 @@ class Wallet extends React.Component {
     // console.log("ethRinkeby", balance);
   } 
 
-
-  get mainWalletBalanceHtml() {
-    return this.state.listMainWalletBalance.map(wallet => ( 
-      <WalletItem wallet={wallet} onMoreClick={() => this.onMoreClick(wallet)} onWarningClick={() => this.onWarningClick(wallet)} />
-    ));
-  }
-  get testWalletBalanceHtml() {
-    return this.state.listTestWalletBalance.map(wallet => ( 
-      <WalletItem wallet={wallet} onMoreClick={() => this.onMoreClick(wallet)} onWarningClick={() => this.onWarningClick(wallet)} />
-    ));
-  }
-
   onLinkClick (){
       alert("con ga");
   }
 
   onMoreClick = (wallet) => {
-    alert("onMoreClick ->" + wallet.address);
+    alert("onWarningClick ->" + wallet.balance);
   }
   onWarningClick = (wallet) => {
-    alert("onWarningClick ->" + wallet.address);
+    alert("onWarningClick ->" + wallet.balance);
   }
   
   render() {   
+    var listMainWalletBalance =  this.state.listMainWalletBalance.map( function(wallet, i) {
+      // var listMainWalletBalance = this.state.listMainWalletBalance.forEach(async wallet => {      
+      return <WalletItem wallet={wallet} onMoreClick={() => this.onMoreClick(wallet)} onWarningClick={() => this.onWarningClick(wallet)} />
+    })  
+    var conga = this.state.listTestWalletBalance;
+    var listTestWalletBalance = this.state.listTestWalletBalance.map( function(wallet, i)  {          
+      return <WalletItem wallet={wallet} onMoreClick={() => this.onMoreClick(wallet)} onWarningClick={() => this.onWarningClick(wallet)} />
+    })  
     
-    if (!this.state.isLoading){
-      return (<Grid></Grid>);
-    }
-
-    return (
-          
+    return (          
       <Grid>      
         <Row className="list">
           <Header title="Main net wallets" hasLink={true} linkTitle="+ Add new" onLinkClick={this.onLinkClick} />
         </Row>
-        <Row className="list">
-          {this.mainWalletBalanceHtml}
+        <Row className="list">          
+          {listMainWalletBalance}
         </Row>
         <Row className="list">
           <Header title="Test net wallet" hasLink={false} />
         </Row>
         <Row className="list">
-          {this.testWalletBalanceHtml}
+          {listTestWalletBalance}          
         </Row>
       </Grid>
     );

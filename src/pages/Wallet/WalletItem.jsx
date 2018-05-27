@@ -35,7 +35,9 @@ class WalletItem extends React.Component {
       }
     render(){ 
         const {wallet, onMoreClick, onWarningClick} =  this.props;   
-        const iconProtected = iconWarning ? wallet.protected : iconSafe;
+        const iconProtected = !wallet.protected ? iconWarning : iconSafe;
+        console.log(wallet);     
+        console.log("wallet balance ==> ", wallet.balance);   
         return  ( 
             <Col sm={6} md={6} xs={6} key={wallet.address} className="feed-wrapper">
               <div className={this.getBgClass(wallet)}>
@@ -44,7 +46,7 @@ class WalletItem extends React.Component {
                 <p className="balance"> {wallet.balance} {wallet.name} </p>
                 <img className="more" src={dontIcon} onClick={onMoreClick}/> 
                 <img className="safe" src={iconProtected} onClick={onWarningClick}/>          
-                <p className="address">{this.getShortAddres(wallet.address)}</p>
+                <p className="address">{wallet.getShortAddress()}</p>
               </div>        
             </Col>
           );
@@ -52,8 +54,8 @@ class WalletItem extends React.Component {
 }
     
 WalletItem.propTypes = {    
-    wallet: PropTypes.object, 
-    onMoreClick: PropTypes.func,
-    onWarningClick: PropTypes.func,
+    // wallet: PropTypes.object, 
+    // onMoreClick: PropTypes.func,
+    // onWarningClick: PropTypes.func,
 };
 export default WalletItem;

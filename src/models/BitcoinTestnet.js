@@ -2,11 +2,11 @@
 import axios from 'axios'
 import satoshi from 'satoshi-bitcoin';
 import { rule } from 'postcss';
-import {Wallet} from '@/models/Wallet.js' 
+import { Bitcoin } from '@/models/Bitcoin.1';
 
-export class Bitcoin extends Wallet{
+export class BitcoinTestnet extends Bitcoin{
     
-    static Network = {"Mainnet": 'https://insight.bitpay.com/api'}        
+    static Network = {"Testnet": "https://test-insight.bitpay.com/api"}        
 
     constructor() {   
       super();      
@@ -14,10 +14,6 @@ export class Bitcoin extends Wallet{
       this.name = 'BTC';
       this.title = 'Bitcoin';  
       this.className = "Bitcoin";        
-    }
-
-    getShortAddress(){
-      return this.address.replace(this.address.substr(12, 19), '...');
     }
 
     createAddressPrivatekey(){        
@@ -32,20 +28,9 @@ export class Bitcoin extends Wallet{
       let hdPrivateKey = new bitcore.HDPrivateKey(xpriv1);
       let hdPublicKey = hdPrivateKey.hdPublicKey;
     
-      let address = new bitcore.Address(hdPublicKey.publicKey, bitcore.Networks.livenet);
+      let address = new bitcore.Address(hdPublicKey.publicKey, bitcore.Networks.testnet);
       
       this.address = address.toString();
       this.privateKey = hdPrivateKey.xprivkey;        
   }
-      
-    async getBalance() {      
-      var url = this.network + '/addr/' + this.address + '/balance';        
-
-      var response = await axios.get(url);      
-      
-      if (response.status == 200){
-        return await satoshi.toBitcoin(response.data);
-      }
-      return false;      
-    }
 }
