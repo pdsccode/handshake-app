@@ -16,8 +16,7 @@ import createForm from '@/components/core/form/createForm'
 import {fieldCleave, fieldDropdown, fieldInput} from '@/components/core/form/customField'
 import {required} from '@/components/core/form/validation'
 import {createCCOrder, getCcLimits, getCryptoPrice, getUserCcLimit, getUserProfile} from '@/reducers/exchange/action';
-import {API_URL} from "@/constants";
-import {CRYPTO_CURRENCY, CRYPTO_CURRENCY_DEFAULT} from "@/constants";
+import {API_URL, CRYPTO_CURRENCY, CRYPTO_CURRENCY_DEFAULT} from "@/constants";
 
 const nameFormCreditCard = 'creditCard'
 const FormCreditCard = createForm({ propsReduxForm: { form: nameFormCreditCard,
@@ -305,7 +304,9 @@ class CreditCardFeed extends React.Component {
 
 const mapStateToProps = (state) => ({
   userProfile: state.exchange.userProfile,
-  cryptoPrice: state.exchange.cryptoPrice,
+  cryptoPrice: state.exchange.cryptoPrice || { amount: 123,
+    currency: 'ETH',
+    fiat_amount: 12345 },
   userCcLimit: state.exchange.userCcLimit || { level: '2', limit: 500 },
   ccLimits: state.exchange.ccLimits || [
     { level: '1', limit: 500 },
