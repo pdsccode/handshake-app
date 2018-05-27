@@ -43,6 +43,8 @@
   }
   .oddInput {
     display: flex;
+    flex-wrap: wrap;
+    width: 100%;
     &:before {
       content: "1 :";
       flex-shrink: 0;
@@ -55,7 +57,7 @@
       line-height: rem-calc(34px);
     }
     input {
-      width: 100%;
+      width: 80%;
       border: none;
       padding-left: rem-calc(5px);
     }
