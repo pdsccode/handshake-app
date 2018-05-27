@@ -36,10 +36,10 @@ class WalletItem extends React.Component {
     render(){ 
         const {wallet, onMoreClick, onWarningClick} =  this.props;   
         const iconProtected = !wallet.protected ? iconWarning : iconSafe;
-        console.log(wallet);     
+        console.log("wallet object ==> ",wallet);     
         console.log("wallet balance ==> ", wallet.balance);   
         return  ( 
-            <Col sm={6} md={6} xs={6} key={wallet.address} className="feed-wrapper">
+            <Col sm={6} md={6} xs={6} key={wallet.address+wallet.network} className="feed-wrapper">
               <div className={this.getBgClass(wallet)}>
                 
                 <p className="name">{wallet.title}</p>
@@ -54,8 +54,8 @@ class WalletItem extends React.Component {
 }
     
 WalletItem.propTypes = {    
-    // wallet: PropTypes.object, 
-    // onMoreClick: PropTypes.func,
-    // onWarningClick: PropTypes.func,
+    wallet: PropTypes.object, 
+    onMoreClick: PropTypes.func,
+    onWarningClick: PropTypes.func,
 };
 export default WalletItem;

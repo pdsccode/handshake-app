@@ -83,25 +83,28 @@ class Wallet extends React.Component {
   } 
 
   onLinkClick (){
-      alert("con ga");
+      alert("add new");
   }
 
   onMoreClick = (wallet) => {
-    alert("onWarningClick ->" + wallet.balance);
+    alert("onMoreClick ->" + wallet.address);
   }
   onWarningClick = (wallet) => {
-    alert("onWarningClick ->" + wallet.balance);
+    alert("onWarningClick ->" + wallet.address);
+  }
+
+  get listMainWalletBalance() {
+    return this.state.listMainWalletBalance.map((wallet) => {      
+      return <WalletItem wallet={wallet} onMoreClick={() => this.onMoreClick(wallet)} onWarningClick={() => this.onWarningClick(wallet)} />           
+    });
+  }
+  get listTestWalletBalance() {
+    return this.state.listTestWalletBalance.map((wallet) => {      
+      return <WalletItem wallet={wallet} onMoreClick={() => this.onMoreClick(wallet)} onWarningClick={() => this.onWarningClick(wallet)} />           
+    });
   }
   
   render() {   
-    var listMainWalletBalance =  this.state.listMainWalletBalance.map( function(wallet, i) {
-      // var listMainWalletBalance = this.state.listMainWalletBalance.forEach(async wallet => {      
-      return <WalletItem wallet={wallet} onMoreClick={() => this.onMoreClick(wallet)} onWarningClick={() => this.onWarningClick(wallet)} />
-    })  
-    var conga = this.state.listTestWalletBalance;
-    var listTestWalletBalance = this.state.listTestWalletBalance.map( function(wallet, i)  {          
-      return <WalletItem wallet={wallet} onMoreClick={() => this.onMoreClick(wallet)} onWarningClick={() => this.onWarningClick(wallet)} />
-    })  
     
     return (          
       <Grid>      
@@ -109,13 +112,13 @@ class Wallet extends React.Component {
           <Header title="Main net wallets" hasLink={true} linkTitle="+ Add new" onLinkClick={this.onLinkClick} />
         </Row>
         <Row className="list">          
-          {listMainWalletBalance}
+          {this.listMainWalletBalance}
         </Row>
         <Row className="list">
           <Header title="Test net wallet" hasLink={false} />
         </Row>
         <Row className="list">
-          {listTestWalletBalance}          
+          {this.listTestWalletBalance}          
         </Row>
       </Grid>
     );
