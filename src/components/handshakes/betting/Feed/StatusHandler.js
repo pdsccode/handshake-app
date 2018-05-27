@@ -19,7 +19,7 @@ export const ROLE = {
 
 export class BetStatusHandler {
     
-    static getStatusLabel(status, role){
+    static getStatusLabel(status, role, eventDate){
         //TO DO: Show combobox for use choose an option if evendate < today
         var strStatus = null;
         var strAction = null;
@@ -37,28 +37,32 @@ export class BetStatusHandler {
             case BETTING_STATUS.SHAKED:
             strStatus = null //Check if payee = '', else payer = '' and show button Shake
             strAction = (role === ROLE.PAYEE) ? BETTING_STATUS_LABEL.CLOSE :  BETTING_STATUS_LABEL.SHAKE;
+            //TO DO: current date > event date show options
             break;
             case BETTING_STATUS.CLOSED:
             strStatus = BETTING_STATUS_LABEL.WAITING_RESULT; //All users
             strAction = null;
+            //TO DO: current date > event date show options
             break;
             case BETTING_STATUS.CANCELLED:
             strStatus = BETTING_STATUS_LABEL.WAITING_RESULT; //All users
             strAction = null;
             break;
             case BETTING_STATUS.INITIATOR_WON:
-            // strStatus = isOwner ? null : BETTING_STATUS_LABEL.LOSE; //If payeee = Withdraw, else payer = "lose" show button "Withdraw"
-            // strAction = isOwner ? BETTING_STATUS_LABEL.WITHDRAW : null;
+            strStatus = (role === ROLE.PAYEE)? null : (role === ROLE.PAYER) ? BETTING_STATUS_LABEL.LOSE : BETTING_STATUS_LABEL.DONE; //If payeee = Withdraw, else payer = "lose" show button "Withdraw"
+            strAction = (role === ROLE.PAYEE) ? BETTING_STATUS_LABEL.WITHDRAW : null;
             break;
             case BETTING_STATUS.BETOR_WON: 
-            // strStatus = isOwner ? BETTING_STATUS_LABEL.LOSE : null; // If payee = "lose", else payer = "withdraw"
-            // strAction = isOwner ? null : BETTING_STATUS_LABEL.WITHDRAW;
+            strStatus = (role === ROLE.PAYEE) ? BETTING_STATUS_LABEL.LOSE : (role === ROLE.PAYER) ? null : BETTING_STATUS_LABEL.DONE; // If payee = "lose", else payer = "withdraw"
+            strAction = (role === ROLE.PAYEE) ? BETTING_STATUS_LABEL.WITHDRAW : null;
             break;
             case BETTING_STATUS.DRAW:
-            strStatus = BETTING_STATUS_LABEL.WITHDRAW; // Both payee/payer = "withdraw"
+            strStatus = (role === ROLE.GUEST) ? BETTING_STATUS_LABEL.DONE : null; // Both payee/payer = "withdraw"
+            strAction = (role !== ROLE.GUEST) ? BETTING_STATUS_LABEL.WITHDRAW : null; 
             break;
             case BETTING_STATUS.REJECTED:
             strStatus = BETTING_STATUS_LABEL.RESOLVING;
+            strAction = null;
             break;
             default: // Not show status
             break;
@@ -84,9 +88,9 @@ export class BetStatusHandler {
 
     }
     static shakeItem(role, eventDate, shakeAmount,goal,balance, item){
-        console.log('Shake Amount:',typeof shakeAmount);
-        console.log('Goal:', typeof goal);
-        console.log('Balance:',typeof balance);
+        console.log('Shake Amount:',shakeAmount);
+        console.log('Goal:', goal);
+        console.log('Balance:',balance);
         if (role === ROLE.PAYER || role === ROLE.GUEST){
             //handle shake item, for payee
             /*
@@ -99,12 +103,13 @@ export class BetStatusHandler {
                // Change item to status 
                let newItem = item;
                const newBalance = shakeAmount + balance;
-                console.log('New Balance:',typeof newBalance);
+                console.log('New Balance:',newBalance);
                if(newBalance < goal){
                 newItem.status = BETTING_STATUS.SHAKED;
                }else {
                    newItem.status = BETTING_STATUS.CLOSED;
                }
+               newItem.balance = newBalance;
                return newItem;
            }
         }
@@ -121,13 +126,17 @@ export class BetStatusHandler {
         }
     }
 
-    static closeItem(isOwner){
+    static closeItem(role, evendate, currentDate, item){
         /*
         User tap Close Bet button or auto Close
         */
-       if (isOwner){
+       if (role === ROLE.PAYEE){
             // TO DO: Change item to Close. Update status
+            let newItem = item;
+            newItem.status = BETTING_STATUS.CLOSED;
+            return newItem;
        }
+       return null;
     }
     static rejectItem(){
 

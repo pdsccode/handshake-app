@@ -14,6 +14,8 @@ class FeedBetting extends React.Component {
   static propTypes = {
     item: PropTypes.object.isRequired,
     userEmail: PropTypes.string,
+    balance: PropTypes.number,
+    updatedItem: PropTypes.func,
   }
 static defaultProps = {
     item: {
@@ -59,28 +61,28 @@ componentDidMount(){
       super(props);
     
       this.state = {
-          item: props.item,
+          item: null,
           role: ROLE.GUEST,
-          balance: 0,
       };
   }
   render() {
-    const {item,role, balance} = this.state;
-    const {description, from_email, status} = item;
+    const {role} = this.state;
+    const {item} = this.props;
+    const {description, from_email, status, balance} = item;
     const bottomDes = `22 bettors against ${from_email}`;
-    
-    const statusLabel = BetStatusHandler.getStatusLabel(status, role);
+    const remaining = goal - balance;
+    const statusLabel = BetStatusHandler.getStatusLabel(status, role, eventDate);
     console.log('Action:', statusLabel.action);
     return (
       <div>
         {/* Feed */}
         <Feed className="feed" handshakeId={this.props.id} onClick={this.props.onFeedClick}>
           <div className="wrapper">
-              {/*<p>Role: {`${role}`}</p>}
+              {<p>Role: {`${role}`}</p>}
               {statusLabel.status && <p>Status: {`${statusLabel.status}`}</p>}
               {<p>Date: {`${date}`}</p>}
               {<p>Bet: {`${goal}`}</p>}
-    {<p>Balance: {`${balance}`}</p>*/}
+              {<p>Balance: {`${balance}`}</p>}
 
               <p className="description">{description}</p>
               <div className="bottomWrapper">
@@ -94,7 +96,7 @@ componentDidMount(){
         {/* Modal */}
         <ModalDialog title="Make a bet" onRef={modal => this.modalBetRef = modal}>
           <BettingShake
-            remaining={10}
+            remaining={remaining}
             odd={0.1}
             onCancelClick={() => this.modalBetRef.close()}
             onSubmitClick={(amount) => this.submitShake(amount)}
@@ -105,14 +107,11 @@ componentDidMount(){
   }
   submitShake(amount){
     this.modalBetRef.close();
-    const {item, role, balance} = this.state;
+    const {role} = this.state;
+    const {item} = this.props;
+    const {balance} = item;
     let newItem = BetStatusHandler.shakeItem(role, eventDate, amount,goal,balance, item);
-    if(newItem){
-      this.setState({
-        item: newItem,
-        balance: balance + amount,
-      })
-    }
+    this.props.updatedItem(newItem);
     
   }
 }

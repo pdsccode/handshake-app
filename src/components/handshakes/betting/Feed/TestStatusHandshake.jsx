@@ -26,7 +26,8 @@ const handshake = {
     "term": 0,
     "to_address": "0x5eE2A7BF750Ad8103F04ec62FAbE502e3e3f93B4",
     "to_email": "trong1@autonomous.nyc",
-    "user_id_shaked": 3
+    "user_id_shaked": 3,
+    "balance": 0
 }
 class TestStatusHanshake extends React.Component {
   static propTypes = {
@@ -61,17 +62,22 @@ createHandshake(){
 
     }) 
 }
+updateItem(item){
+    this.setState({
+        item
+    })
+}
   render() {
     const {item} = this.state;
     return (
       <div>
       <Button  block onClick={()=> this.createHandshake()}>Create a Betting</Button>
       <label>Payee: {payeeEmail}</label>
-      {item && <FeedBetting item={item} userEmail={payeeEmail}/> }
+      {item && <FeedBetting item={item} userEmail={payeeEmail} updatedItem={(item)=> this.updateItem(item)}/> }
       <label>Payer: {payerEmail}</label>
-      {item && <FeedBetting item={item} userEmail={payerEmail}/> }
+      {item && <FeedBetting item={item} userEmail={payerEmail} updatedItem={(item)=> this.updateItem(item)}/> }
       <label>Guest: {guestEmail}</label>
-      {item && <FeedBetting item={item} userEmail={guestEmail}/> }
+      {item && <FeedBetting item={item} userEmail={guestEmail} updatedItem={(item)=> this.updateItem(item)}/> }
       </div>
     );
   }
