@@ -94,41 +94,42 @@ class Component extends React.Component {
               </div>
               <div className="d-flex">
                 <label className="col-form-label mr-auto" style={{ width: '100px' }}>Amount</label>
-                <Field
-                  name="amount"
-                  className="form-control-custom form-control-custom-ex w-100"
-                  component={fieldInput}
-                  onChange={this.onAmountChange}
-                  validate={[required]}
-                />
+                <div className="w-100">
+                  <Field
+                    name="amount"
+                    className="form-control-custom form-control-custom-ex w-100"
+                    component={fieldInput}
+                    onChange={this.onAmountChange}
+                    validate={[required]}
+                  />
+                </div>
               </div>
               <div className="d-flex">
                 <label className="col-form-label mr-auto" style={{ width: '100px' }}>Price({FIAT_CURRENCY_SYMBOL})</label>
-                <Field
-                  name="price"
-                  className="form-control-custom form-control-custom-ex w-100"
-                  component={fieldInput}
-                  onChange={this.onPriceChange}
-                  validate={[required]}
-                />
+                <div className="w-100">
+                  <Field
+                    name="price"
+                    className="form-control-custom form-control-custom-ex w-100"
+                    component={fieldInput}
+                    onChange={this.onPriceChange}
+                    validate={[required]}
+                  />
+                </div>
               </div>
               <div className="d-flex">
                 <label className="col-form-label mr-auto" style={{ width: '100px' }}>Total({FIAT_CURRENCY_SYMBOL})</label>
-                <input name="total" type="number" className="form-control-custom form-control-custom-ex w-100" value={totalAmount} readOnly />
-                {/*<Field*/}
-                  {/*name="total"*/}
-                  {/*className="form-control-custom form-control-custom-ex w-100" disabled value={totalAmount}*/}
-                  {/*component={fieldInput}*/}
-                {/*/>*/}
+                <span className="w-100 col-form-label">{totalAmount}</span>
               </div>
               <div className="d-flex">
                 <label className="col-form-label mr-auto" style={{ width: '100px' }}>Address</label>
-                <Field
-                  name="address"
-                  className="form-control-custom form-control-custom-ex w-100"
-                  component={fieldInput}
-                  validate={[required]}
-                />
+                <div className="w-100">
+                  <Field
+                    name="address"
+                    className="form-control-custom form-control-custom-ex w-100"
+                    component={fieldInput}
+                    validate={[required]}
+                  />
+                </div>
               </div>
             </div>
           </Feed>
