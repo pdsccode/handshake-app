@@ -264,8 +264,8 @@ class CreditCardFeed extends React.Component {
                           name="currency"
                           component={fieldRadioButton}
                           list={CRYPTO_CURRENCY}
+                          color={mainColor}
                           onChange={this.onCurrencyChange}
-                          // defaultText={''}
                         />
                       </span>
                     </div>
