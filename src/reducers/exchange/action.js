@@ -13,6 +13,12 @@ export const EXCHANGE_ACTIONS = {
   GET_USER_PROFILE: 'GET_USER_PROFILE',
 
   GET_USER_TRANSACTION: 'GET_USER_TRANSACTION',
+
+  CREATE_OFFER: 'CREATE_OFFER',
+  CLOSE_OFFER: 'CLOSE_OFFER',
+  SHAKE_OFFER: 'SHAKE_OFFER',
+  COMPLETE_SHAKE_OFFER: 'COMPLETE_SHAKE_OFFER',
+  CANCEL_SHAKE_OFFER: 'CANCEL_SHAKE_OFFER'
 };
 
 export const getCryptoPrice = createAPI({
@@ -38,4 +44,26 @@ export const getUserProfile = createAPI({
 export const getUserTransaction = createAPI({
   INIT: EXCHANGE_ACTIONS.GET_USER_TRANSACTION,
 });
+
+export const createOffer = createAPI({
+  INIT: EXCHANGE_ACTIONS.CREATE_OFFER,
+});
+
+export const closeOffer = createAPI({
+  INIT: EXCHANGE_ACTIONS.CREATE_OFFER,
+});
+
+export const shakeOffer = createAPI({
+  INIT: EXCHANGE_ACTIONS.SHAKE_OFFER,
+});
+
+export const completeShakeOffer = createAPI({
+  INIT: EXCHANGE_ACTIONS.COMPLETE_SHAKE_OFFER,
+});
+
+export const cancelShakeOffer = createAPI({
+  INIT: EXCHANGE_ACTIONS.CANCEL_SHAKE_OFFER,
+});
+
+
 

@@ -8,12 +8,19 @@ import {fieldCleave, fieldDropdown, fieldInput, fieldRadioButton} from '@/compon
 import {required} from '@/components/core/form/validation';
 import {Field, formValueSelector} from "redux-form";
 import {connect} from "react-redux";
+import {createOffer} from '@/reducers/exchange/action';
+import {API_URL} from "@/constants";
+import {
+  CRYPTO_CURRENCY, CRYPTO_CURRENCY_DEFAULT, EXCHANGE_ACTION,
+  EXCHANGE_ACTION_DEFAULT, FIAT_CURRENCY
+} from "@/constants";
+import {FIAT_CURRENCY_SYMBOL} from "../../../../constants";
 
 const nameFormExchangeCreate = 'exchangeCreate';
 const FormExchangeCreate = createForm({
   propsReduxForm: {
     form: nameFormExchangeCreate,
-    initialValues: { type: 1, },
+    initialValues: { type: EXCHANGE_ACTION_DEFAULT, currency: CRYPTO_CURRENCY_DEFAULT },
   },
 });
 const selectorFormExchangeCreate = formValueSelector(nameFormExchangeCreate);
@@ -23,7 +30,7 @@ const mainColor = '#007AFF'
 class Component extends React.Component {
   onAmountChange = (e) => {
     const amount = e.target.value;
-    console.log('onAmountChange', amount);
+    // console.log('onAmountChange', amount);
     // this.getCryptoPriceByAmount(amount);
     // this.setState({amount: amount}, () => {
     //   this.getCryptoPriceByAmountThrottled(amount);
@@ -32,31 +39,29 @@ class Component extends React.Component {
 
   onPriceChange = (e) => {
     const price = e.target.value;
-    console.log('onPriceChange', price);
+    // console.log('onPriceChange', price);
   }
 
   handleSubmit = (values) => {
-    console.log('valuessss', values);
     const {totalAmount} = this.props;
-    console.log('totalAmount', totalAmount);
+    console.log('valuessss', values);
+    const offer = {
+      min_amount: values.amount,
+      max_amount: values.amount,
+      currency: values.currency,
+      price: values.price,
+      price_currency: FIAT_CURRENCY,
+      total: totalAmount,
+      type: values.type,
+    };
+
+    console.log('handleSubmit', offer);
+
+    this.props.createOffer({ BASE_URL: API_URL.EXCHANGE.BASE, PATH_URL: API_URL.EXCHANGE.OFFER, data: offer, METHOD: 'POST' });
   }
 
   render() {
     const { totalAmount } = this.props;
-    console.log('render totalAmount', totalAmount);
-
-    const coin = 'ETH'
-    const amount = 0.0001
-    const price = '$1000'
-    const address = '81 E August'
-    const listType = [
-      { value: 1, text: 'Buy' },
-      { value: 2, text: 'Sell' },
-    ]
-    const listCoin = [
-      { value: 1, text: 'ETH' },
-      { value: 2, text: 'BTC' },
-    ]
 
     return (
       <div>
@@ -69,7 +74,7 @@ class Component extends React.Component {
                   <Field
                     name="type"
                     component={fieldRadioButton}
-                    list={listType}
+                    list={EXCHANGE_ACTION}
                     color={mainColor}
                   />
                 </div>
@@ -78,9 +83,9 @@ class Component extends React.Component {
                 <label className="col-form-label mr-auto" style={{ width: '100px' }}>Coin</label>
                 <div className='input-group'>
                   <Field
-                    name="coin"
+                    name="currency"
                     component={fieldRadioButton}
-                    list={listCoin}
+                    list={CRYPTO_CURRENCY}
                     color={mainColor}
                   />
                 </div>
@@ -95,7 +100,7 @@ class Component extends React.Component {
                 />
               </div>
               <div className="d-flex">
-                <label className="col-form-label mr-auto" style={{ width: '100px' }}>Price</label>
+                <label className="col-form-label mr-auto" style={{ width: '100px' }}>Price({FIAT_CURRENCY_SYMBOL})</label>
                 <Field
                   name="price"
                   className="form-control-custom form-control-custom-ex w-100"
@@ -104,7 +109,7 @@ class Component extends React.Component {
                 />
               </div>
               <div className="d-flex">
-                <label className="col-form-label mr-auto" style={{ width: '100px' }}>Total</label>
+                <label className="col-form-label mr-auto" style={{ width: '100px' }}>Total({FIAT_CURRENCY_SYMBOL})</label>
                 <input name="total" type="number" className="form-control-custom form-control-custom-ex w-100" value={totalAmount} readOnly />
                 {/*<Field*/}
                   {/*name="total"*/}
@@ -133,13 +138,12 @@ const mapStateToProps = (state) => {
   const amount = selectorFormExchangeCreate(state, 'amount');
   const price = selectorFormExchangeCreate(state, 'price');
   const totalAmount = amount * price;
-  console.log('mapStateToProps', amount);
-  console.log('mapStateToProps', price);
-  console.log('mapStateToProps', totalAmount);
+
   return { totalAmount };
 };
 
 const mapDispatchToProps = {
+  createOffer
 };
 
 export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(Component));
