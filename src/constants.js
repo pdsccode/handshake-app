@@ -31,6 +31,16 @@ export const CRYPTO_CURRENCY = [
 
 export const CRYPTO_CURRENCY_DEFAULT = 'ETH';
 
+export const EXCHANGE_ACTION = [
+  { value: 'buy', text: 'Buy' },
+  { value: 'sell', text: 'Sell' },
+];
+
+export const EXCHANGE_ACTION_DEFAULT = 'buy';
+
+export const FIAT_CURRENCY = 'USD';
+export const FIAT_CURRENCY_SYMBOL = '$';
+
 // path
 export const API_URL = {
   CRYPTOSIGN: {
@@ -44,6 +54,8 @@ export const API_URL = {
     GET_CC_LIMITS: 'info/cc-limits', // {path: '/info/cc-limits', method: 'get'},
     GET_USER_PROFILE: 'user/profile', // {path: '/user/profile', method: 'get'},
     GET_USER_TRANSACTION: 'user/transactions', // {path: '/user/transactions', method: 'get'},
+    OFFER: 'offers',
+    SHAKE: 'shake',
   },
   SEED: {
     BASE: 'seed',
