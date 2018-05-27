@@ -12,7 +12,7 @@ import { initHandshake } from '@/reducers/handshake/action';
 import Button from '@/components/core/controls/Button';
 import Input from '@/components/core/forms/Input/Input';
 import DatePicker from '@/components/handshakes/betting/Create/DatePicker';
-import { fieldInput, fieldCleave, fieldDropdown } from '@/components/core/form/customField';
+import { fieldInput } from './customField';
 
 // self
 import './Create.scss';
@@ -27,6 +27,16 @@ const BettingCreateForm = createForm({
 const regex = /\[.*?\]/g;
 const regexReplace = /\[|\]/g;
 const regexReplacePlaceholder = /\[.*?\]/;
+
+class ErrorBox extends React.PureComponent {
+  render() {
+    return (
+      <div className="text-danger">
+        {this.props.children}
+      </div>
+    );
+  }
+}
 
 class BettingCreate extends React.PureComponent {
   static propTypes = {
@@ -127,6 +137,8 @@ class BettingCreate extends React.PureComponent {
         placeholder={placeholder}
         className={className}
         name={key}
+        validate={[required]}
+        ErrorBox={ErrorBox}
         onChange={(evt) => {
           this.changeText(key, evt.target.value)
         }}
@@ -168,6 +180,8 @@ class BettingCreate extends React.PureComponent {
         type="number"
         // min="0.0001"
         placeholder={placeholder}
+        validate={[required]}
+        ErrorBox={ErrorBox}
         onChange={(evt) => {
           this.changeText(key, evt.target.value)
         }}
