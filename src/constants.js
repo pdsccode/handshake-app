@@ -12,7 +12,7 @@ export const HANDSHAKE_ID = {
   EXCHANGE_BUY: 6,
 };
 
-export const HANDSHAKE_ID_DEFAULT = 1;
+export const HANDSHAKE_ID_DEFAULT = 2;
 
 export const HANDSHAKE_NAME = {
   [HANDSHAKE_ID.PROMISE]: 'Promise',
@@ -20,6 +20,9 @@ export const HANDSHAKE_NAME = {
   [HANDSHAKE_ID.BETTING]: 'Betting',
   [HANDSHAKE_ID.SEED]: 'Seed',
 };
+
+export const PRICE_DECIMAL = 2;
+export const AMOUNT_DECIMAL = 6;
 
 // path
 export const API_URL = {

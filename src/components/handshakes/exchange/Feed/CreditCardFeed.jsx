@@ -40,9 +40,9 @@ class CreditCardFeed extends React.Component {
   }
 
   componentDidMount() {
-    this.props.getUserProfile({PATH_URL: API_URL.EXCHANGE.GET_USER_PROFILE});
-    this.props.getCcLimits({PATH_URL: API_URL.EXCHANGE.GET_USER_CC_LIMIT});
-    this.props.getUserCcLimit({PATH_URL: API_URL.EXCHANGE.GET_USER_CC_LIMIT});
+    this.props.getUserProfile({ BASE_URL: API_URL.EXCHANGE.BASE, PATH_URL: API_URL.EXCHANGE.GET_USER_PROFILE});
+    this.props.getCcLimits({ BASE_URL: API_URL.EXCHANGE.BASE, PATH_URL: API_URL.EXCHANGE.GET_USER_CC_LIMIT});
+    this.props.getUserCcLimit({ BASE_URL: API_URL.EXCHANGE.BASE, PATH_URL: API_URL.EXCHANGE.GET_USER_CC_LIMIT});
 
     this.getCryptoPriceByAmount(0);
 
@@ -313,7 +313,7 @@ class CreditCardFeed extends React.Component {
 const mapStateToProps = (state) => ({
   userProfile: state.exchange.userProfile,
   cryptoPrice: state.exchange.cryptoPrice,
-  userCcLimit: state.exchange.userCcLimit,
+  userCcLimit: state.exchange.userCreditCard,
   ccLimits: state.exchange.ccLimits,
   amount: selectorFormCreditCard(state, 'amount'),
   currency: selectorFormCreditCard(state, 'currency'),

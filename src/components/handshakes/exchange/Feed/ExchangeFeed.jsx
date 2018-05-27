@@ -5,6 +5,9 @@ import './ExchangeFeed.scss';
 import {FormattedMessage} from 'react-intl';
 import Feed from "@/components/core/presentation/Feed/Feed";
 import Button from "@/components/core/controls/Button/Button";
+import {BigNumber} from 'bignumber.js';
+import {AMOUNT_DECIMAL, PRICE_DECIMAL} from "@/constants";
+
 
 class ExchangeFeed extends React.PureComponent {
   BACKGROUND_COLORS = ['#0064ff','#ff00a2','#ff9b00', '#00ce7d'];
@@ -19,7 +22,7 @@ class ExchangeFeed extends React.PureComponent {
       <div>
         <Feed className="feed">
           <p className="description"><FormattedMessage id="offerHandShakeContent" values={{ offerType: type === 'buy' ? 'Buy': 'Sell',
-            amount: amount, currency: currency, total: fiat_amount
+            amount: new BigNumber(amount).toFormat(AMOUNT_DECIMAL), currency: currency, total: new BigNumber(fiat_amount).toFormat(PRICE_DECIMAL)
           }} /></p>
           <p className="email"></p>
           <p className="email"><FormattedMessage id="offerDistanceContent" values={{ offerType: type === 'buy' ? 'Buyer': 'Seller',

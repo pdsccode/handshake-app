@@ -1,26 +1,48 @@
 import React from 'react';
+import {injectIntl} from 'react-intl';
 import Feed from '@/components/core/presentation/Feed';
 import Button from '@/components/core/controls/Button';
 
 import createForm from '@/components/core/form/createForm';
-import { fieldInput, fieldCleave, fieldDropdown, fieldRadioButton } from '@/components/core/form/customField';
-import { required } from '@/components/core/form/validation';
-import { formValueSelector, Field } from "redux-form";
+import {fieldCleave, fieldDropdown, fieldInput, fieldRadioButton} from '@/components/core/form/customField';
+import {required} from '@/components/core/form/validation';
+import {Field, formValueSelector} from "redux-form";
+import {connect} from "react-redux";
 
 const nameFormExchangeCreate = 'exchangeCreate';
 const FormExchangeCreate = createForm({
   propsReduxForm: {
     form: nameFormExchangeCreate,
-    initialValues: { type: 1 },
+    initialValues: { type: 1, },
   },
 });
 const selectorFormExchangeCreate = formValueSelector(nameFormExchangeCreate);
 
-class NewComponent extends React.Component {
-  handleSubmit = (values) => {
-    console.log('valuessss', values)
+class Component extends React.Component {
+  onAmountChange = (e) => {
+    const amount = e.target.value;
+    console.log('onAmountChange', amount);
+    // this.getCryptoPriceByAmount(amount);
+    // this.setState({amount: amount}, () => {
+    //   this.getCryptoPriceByAmountThrottled(amount);
+    // });
   }
+
+  onPriceChange = (e) => {
+    const price = e.target.value;
+    console.log('onPriceChange', price);
+  }
+
+  handleSubmit = (values) => {
+    console.log('valuessss', values);
+    const {totalAmount} = this.props;
+    console.log('totalAmount', totalAmount);
+  }
+
   render() {
+    const { totalAmount } = this.props;
+    console.log('render totalAmount', totalAmount);
+
     const coin = 'ETH'
     const amount = 0.0001
     const price = '$1000'
@@ -33,6 +55,7 @@ class NewComponent extends React.Component {
       { value: 1, text: 'ETH' },
       { value: 2, text: 'BTC' },
     ]
+
     return (
       <div>
         <FormExchangeCreate onSubmit={this.handleSubmit}>
@@ -64,6 +87,7 @@ class NewComponent extends React.Component {
                   name="amount"
                   className="form-control-custom form-control-custom-ex w-100"
                   component={fieldInput}
+                  onChange={this.onAmountChange}
                 />
               </div>
               <div className="d-flex">
@@ -72,7 +96,17 @@ class NewComponent extends React.Component {
                   name="price"
                   className="form-control-custom form-control-custom-ex w-100"
                   component={fieldInput}
+                  onChange={this.onPriceChange}
                 />
+              </div>
+              <div className="d-flex">
+                <label className="col-form-label mr-auto" style={{ width: '100px' }}>Total</label>
+                <input name="total" type="number" className="form-control-custom form-control-custom-ex w-100" value={totalAmount} readOnly />
+                {/*<Field*/}
+                  {/*name="total"*/}
+                  {/*className="form-control-custom form-control-custom-ex w-100" disabled value={totalAmount}*/}
+                  {/*component={fieldInput}*/}
+                {/*/>*/}
               </div>
               <div className="d-flex">
                 <label className="col-form-label mr-auto" style={{ width: '100px' }}>Address</label>
@@ -91,4 +125,17 @@ class NewComponent extends React.Component {
   }
 }
 
-export default NewComponent;
+const mapStateToProps = (state) => {
+  const amount = selectorFormExchangeCreate(state, 'amount');
+  const price = selectorFormExchangeCreate(state, 'price');
+  const totalAmount = amount * price;
+  console.log('mapStateToProps', amount);
+  console.log('mapStateToProps', price);
+  console.log('mapStateToProps', totalAmount);
+  return { totalAmount };
+};
+
+const mapDispatchToProps = {
+};
+
+export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(Component));
