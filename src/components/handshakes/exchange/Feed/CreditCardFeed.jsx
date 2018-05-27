@@ -13,7 +13,7 @@ import './CreditCardFeed.scss';
 import {validate} from '@/components/handshakes/exchange/Feed/validation';
 import throttle from 'lodash/throttle';
 import createForm from '@/components/core/form/createForm'
-import {fieldCleave, fieldDropdown, fieldInput} from '@/components/core/form/customField'
+import {fieldCleave, fieldDropdown, fieldInput, fieldRadioButton} from '@/components/core/form/customField'
 import {required} from '@/components/core/form/validation'
 import {createCCOrder, getCcLimits, getCryptoPrice, getUserCcLimit, getUserProfile} from '@/reducers/exchange/action';
 import {API_URL, CRYPTO_CURRENCY, CRYPTO_CURRENCY_DEFAULT} from "@/constants";
@@ -262,7 +262,7 @@ class CreditCardFeed extends React.Component {
                       <span className="d-inline-block ml-auto" style={{ width: '235px' }}>
                         <Field
                           name="currency"
-                          component={fieldDropdown}
+                          component={fieldRadioButton}
                           list={CRYPTO_CURRENCY}
                           onChange={this.onCurrencyChange}
                           // defaultText={''}
