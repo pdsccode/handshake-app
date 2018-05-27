@@ -97,9 +97,13 @@ class CreditCardFeed extends React.Component {
         payment_method_data: params
       };
       console.log('handleCreateCCOrder',paramsObj);
-      this.props.createCCOrder({data: paramsObj,
+      this.props.createCCOrder({
+        BASE_URL: API_URL.EXCHANGE.BASE,
+        PATH_URL: API_URL.EXCHANGE.CREATE_CC_ORDER,
+        data: paramsObj,
+        METHOD: 'POST',
         successFn: this.handleCreateCCOrderSuccess,
-        errorFn: this.handleCreateCCOrderFailed
+        errorFn: this.handleCreateCCOrderFailed,
       });
     }
   }

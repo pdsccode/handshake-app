@@ -9,13 +9,17 @@ import {required} from '@/components/core/form/validation';
 import {Field, formValueSelector} from "redux-form";
 import {connect} from "react-redux";
 import {createOffer} from '@/reducers/exchange/action';
-import {API_URL} from "@/constants";
 import {
-  CRYPTO_CURRENCY, CRYPTO_CURRENCY_DEFAULT, EXCHANGE_ACTION,
-  EXCHANGE_ACTION_DEFAULT, FIAT_CURRENCY
+  API_URL,
+  CRYPTO_CURRENCY,
+  CRYPTO_CURRENCY_DEFAULT,
+  EXCHANGE_ACTION,
+  EXCHANGE_ACTION_DEFAULT,
+  FIAT_CURRENCY,
+  FIAT_CURRENCY_SYMBOL
 } from "@/constants";
-import {FIAT_CURRENCY_SYMBOL} from "../../../../constants";
 import '../styles.scss'
+import ModalDialog from "@/components/core/controls/ModalDialog/ModalDialog";
 
 const nameFormExchangeCreate = 'exchangeCreate';
 const FormExchangeCreate = createForm({
@@ -29,9 +33,17 @@ const selectorFormExchangeCreate = formValueSelector(nameFormExchangeCreate);
 const mainColor = '#007AFF'
 
 class Component extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      modalContent: '',
+    }
+  }
+
   onAmountChange = (e) => {
     const amount = e.target.value;
-    // console.log('onAmountChange', amount);
+    console.log('onAmountChange', amount);
     // this.getCryptoPriceByAmount(amount);
     // this.setState({amount: amount}, () => {
     //   this.getCryptoPriceByAmountThrottled(amount);
@@ -40,7 +52,7 @@ class Component extends React.Component {
 
   onPriceChange = (e) => {
     const price = e.target.value;
-    // console.log('onPriceChange', price);
+    console.log('onPriceChange', price);
   }
 
   handleSubmit = (values) => {
@@ -58,11 +70,59 @@ class Component extends React.Component {
 
     console.log('handleSubmit', offer);
 
-    this.props.createOffer({ BASE_URL: API_URL.EXCHANGE.BASE, PATH_URL: API_URL.EXCHANGE.OFFER, data: offer, METHOD: 'POST' });
+    this.props.createOffer({
+      BASE_URL: API_URL.EXCHANGE.BASE,
+      PATH_URL: API_URL.EXCHANGE.OFFER,
+      data: offer,
+      METHOD: 'POST',
+      successFn: this.handleCreateOfferSuccess,
+      errorFn: this.handleCreateOfferFailed,
+    });
+  }
+
+  handleCreateOfferSuccess = (data) => {
+    console.log('handleCreateCCOrderSuccess', data);
+    this.setState({modalContent:
+        (<div>
+          <h1>Buy Success. Buy another?</h1>
+          <Button onClick={this.handleBuySuccess}>Cancel</Button>
+          <Button onClick={this.handleBuyAnother}>OK</Button>
+        </div>)
+    }, () => {
+      this.modalRef.open();
+    });
+  }
+
+  handleBuyAnother = () => {
+    this.modalRef.close();
+  }
+
+  handleBuySuccess = () => {
+    this.modalRef.close();
+    // this.props.history.push(URL.TRANSACTION_LIST);
+  }
+
+  handleCreateOfferFailed = (e) => {
+    // console.log('handleCreateCCOrderFailed', JSON.stringify(e.response));
+    this.setState({modalContent:
+        (<div>
+          <h1>Buy Failed</h1>
+          <span>{e.response?.data?.message}</span>
+          <Button onClick={this.handleBuyFailed}>OK</Button>
+        </div>)
+    }, () => {
+      this.modalRef.open();
+    });
+  }
+
+  handleBuyFailed = () => {
+    this.modalRef.close();
   }
 
   render() {
     const { totalAmount } = this.props;
+
+    let modalContent = this.state.modalContent;
 
     return (
       <div>
@@ -136,6 +196,9 @@ class Component extends React.Component {
           </Feed>
           <Button block type="submit">Sign & send</Button>
         </FormExchangeCreate>
+        <ModalDialog onRef={modal => this.modalRef = modal}>
+          {modalContent}
+        </ModalDialog>
       </div>
     );
   }
@@ -144,7 +207,7 @@ class Component extends React.Component {
 const mapStateToProps = (state) => {
   const amount = selectorFormExchangeCreate(state, 'amount');
   const price = selectorFormExchangeCreate(state, 'price');
-  const totalAmount = amount * price;
+  const totalAmount = amount * price || 0;
 
   return { totalAmount };
 };
