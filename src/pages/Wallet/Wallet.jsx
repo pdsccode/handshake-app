@@ -53,10 +53,11 @@ class Wallet extends React.Component {
 
    async componentDidMount() {
     
-    let listWallet = await MasterWallet.getMasterWallet();    
-    if (listWallet.length == 0){
+    let listWallet = await MasterWallet.getMasterWallet();  
+    
+    if (listWallet == false){      
       listWallet = await MasterWallet.createMasterWallet();    
-    }
+    }    
   
      await this.splitWalletData(listWallet)
 

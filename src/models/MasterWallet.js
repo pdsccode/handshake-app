@@ -8,7 +8,7 @@ var bip39 = require('bip39');
 
 export class MasterWallet{
 
-    // list coin is supported, can add some more ...
+    // list coin is supported, can add some more Ripple ...
     static ListCoin = {Ethereum, Bitcoin, BitcoinTestnet};
     
     static KEY = "wallets";
@@ -43,7 +43,10 @@ export class MasterWallet{
     
     // Get list wallet from store local:
     static getMasterWallet(){
-        let wallets = localStore.get(MasterWallet.KEY);      
+        let wallets = localStore.get(MasterWallet.KEY);   
+        
+        if (wallets == false) return false;
+        
         let listWallet = [];     
         wallets.forEach(walletJson => {
                     
