@@ -81,19 +81,6 @@ class FeedBetting extends React.Component {
 
   }
 
-  submitShake(amount) {
-    this.modalBetRef.close();
-    const {item, role, balance} = this.state;
-    let newItem = BetStatusHandler.shakeItem(role, eventDate, amount, goal, balance, item);
-    if (newItem) {
-      this.setState({
-        item: newItem,
-        balance: balance + amount,
-      })
-    }
-
-  }
-
   render() {
     console.log("render here");
     const {role} = this.state;
@@ -152,6 +139,7 @@ class FeedBetting extends React.Component {
       </div>
     );
   }
+
   submitShake(amount){
     this.modalBetRef.close();
     const {role} = this.state;
@@ -161,7 +149,6 @@ class FeedBetting extends React.Component {
     this.props.updatedItem(newItem);
 
   }
-
 }
 
 export default FeedBetting;
