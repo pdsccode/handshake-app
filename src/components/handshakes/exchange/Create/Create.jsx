@@ -15,6 +15,7 @@ import {
   EXCHANGE_ACTION_DEFAULT, FIAT_CURRENCY
 } from "@/constants";
 import {FIAT_CURRENCY_SYMBOL} from "../../../../constants";
+import '../styles.scss'
 
 const nameFormExchangeCreate = 'exchangeCreate';
 const FormExchangeCreate = createForm({

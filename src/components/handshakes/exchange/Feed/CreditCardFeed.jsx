@@ -9,7 +9,7 @@ import Button from '@/components/core/controls/Button';
 import ModalDialog from '@/components/core/controls/ModalDialog';
 import localStore from '@/services/localStore';
 import {URL} from '@/config';
-import './CreditCardFeed.scss';
+import '../styles.scss';
 import {validate} from '@/components/handshakes/exchange/Feed/validation';
 import throttle from 'lodash/throttle';
 import createForm from '@/components/core/form/createForm'
