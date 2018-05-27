@@ -58,7 +58,6 @@ class FeedBetting extends React.Component {
       super(props);
 
       this.state = {
-          item: null,
           role: ROLE.GUEST,
       };
 
@@ -74,7 +73,6 @@ class FeedBetting extends React.Component {
       (userEmail === item.to_email) ? ROLE.PAYER : ROLE.GUEST;
     console.log('Role:', role);
     this.setState({
-      item,
       role
     });
   }
