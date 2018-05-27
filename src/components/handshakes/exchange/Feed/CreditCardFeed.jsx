@@ -221,28 +221,32 @@ class CreditCardFeed extends React.Component {
               <FormCreditCard onSubmit={this.handleSubmit} validate={this.handleValidate}>
                 <Feed className="feed p-2 mb-2" background={mainColor}>
                   <div style={{ color: 'white' }}>
-                    <div>
-                      {amount &&
-                      ccLimits.map((ccLimit, index) => {
-                          const { level, limit } = ccLimit
-                          const isActive = curLevel === level
-                          return (
-                            <LevelItem key={index} style={{ marginLeft: index > 0 ? '8px' : '', opacity: isActive ? '' : 0.6 }}>
-                              <div>
-                                <span
-                                  className='rounded-circle bg-white badge'
-                                  style={{ color: mainColor, width: 18 }}
-                                >
-                                  {level}
-                                </span>
-                              </div>
-                              <div><small>Can buy up to {fiatCurrency}{limit}</small></div>
-                            </LevelItem>
-                          )
-                        })
-                      }
-                      <hr className="my-2" />
-                    </div>
+                    {
+                      amount && (
+                        <div>
+                          {
+                            ccLimits.map((ccLimit, index) => {
+                              const { level, limit } = ccLimit
+                              const isActive = curLevel === level
+                              return (
+                                <LevelItem key={index} style={{ marginLeft: index > 0 ? '8px' : '', opacity: isActive ? '' : 0.6 }}>
+                                  <div>
+                                  <span
+                                    className='rounded-circle bg-white badge'
+                                    style={{ color: mainColor, width: 18 }}
+                                  >
+                                    {level}
+                                  </span>
+                                  </div>
+                                  <div><small>Can buy up to {fiatCurrency}{limit}</small></div>
+                                </LevelItem>
+                              )
+                            })
+                          }
+                          <hr className="my-2" />
+                        </div>
+                      )
+                    }
                     <div className="form-group pt-2 d-flex">
                       <label className="col-form-label"><FormattedMessage id="buy"/></label>
                       <div className="mx-2">
