@@ -17,10 +17,11 @@ import {fieldCleave, fieldDropdown, fieldInput} from '@/components/core/form/cus
 import {required} from '@/components/core/form/validation'
 import {createCCOrder, getCcLimits, getCryptoPrice, getUserCcLimit, getUserProfile} from '@/reducers/exchange/action';
 import {API_URL} from "@/constants";
+import {CRYPTO_CURRENCY, CRYPTO_CURRENCY_DEFAULT} from "@/constants";
 
 const nameFormCreditCard = 'creditCard'
 const FormCreditCard = createForm({ propsReduxForm: { form: nameFormCreditCard,
-    initialValues: { currency: 'ETH' } } });
+    initialValues: { currency: CRYPTO_CURRENCY_DEFAULT } } });
 const selectorFormCreditCard = formValueSelector(nameFormCreditCard)
 
 const mainColor = '#259B24'
@@ -31,7 +32,7 @@ class CreditCardFeed extends React.Component {
 
     this.state = {
       amount: 0,
-      currency: 'ETH',
+      currency: CRYPTO_CURRENCY_DEFAULT,
       isNewCCOpen: false,
       modalContent: '',
       showCCScheme: false,
@@ -41,7 +42,7 @@ class CreditCardFeed extends React.Component {
 
   componentDidMount() {
     this.props.getUserProfile({ BASE_URL: API_URL.EXCHANGE.BASE, PATH_URL: API_URL.EXCHANGE.GET_USER_PROFILE});
-    this.props.getCcLimits({ BASE_URL: API_URL.EXCHANGE.BASE, PATH_URL: API_URL.EXCHANGE.GET_USER_CC_LIMIT});
+    this.props.getCcLimits({ BASE_URL: API_URL.EXCHANGE.BASE, PATH_URL: API_URL.EXCHANGE.GET_CC_LIMITS});
     this.props.getUserCcLimit({ BASE_URL: API_URL.EXCHANGE.BASE, PATH_URL: API_URL.EXCHANGE.GET_USER_CC_LIMIT});
 
     this.getCryptoPriceByAmount(0);
@@ -205,22 +206,14 @@ class CreditCardFeed extends React.Component {
   // }
 
   render() {
-    const {intl, userProfile, cryptoPrice, amount} = this.props;
-    const allCryptoCurrencies = [
-      { name: 'ETH', text: 'ETH' },
-      { name: 'BTC', text: 'BTC' },
-    ];
+    const {intl, userProfile, cryptoPrice, amount, userCcLimit, ccLimits} = this.props;
+
     const fiatCurrency = '$';
     const total = cryptoPrice && cryptoPrice.fiat_amount;
 
     let modalContent = this.state.modalContent;
 
-    const levels = [
-      { name: '1', max: 500 },
-      { name: '2', max: 1000 },
-      { name: '3', max: 5000 },
-    ]
-    const curLevel = '2'
+    const curLevel = userCcLimit ? userCcLimit.level : 1;
     return (
       <div>
         <div className='row'>
@@ -230,10 +223,10 @@ class CreditCardFeed extends React.Component {
                 <Feed className="feed p-2 mb-2" background={mainColor}>
                   <div style={{ color: 'white' }}>
                     <div>
-                      {
-                        levels.map((level, index) => {
-                          const { name, max } = level
-                          const isActive = curLevel === name
+                      {amount &&
+                      ccLimits.map((ccLimit, index) => {
+                          const { level, limit } = ccLimit
+                          const isActive = curLevel === level
                           return (
                             <LevelItem key={index} style={{ marginLeft: index > 0 ? '8px' : '', opacity: isActive ? '' : 0.6 }}>
                               <div>
@@ -241,10 +234,10 @@ class CreditCardFeed extends React.Component {
                                   className='rounded-circle bg-white badge'
                                   style={{ color: mainColor, width: 18 }}
                                 >
-                                  {name}
+                                  {level}
                                 </span>
                               </div>
-                              <div><small>Can buy up to {fiatCurrency}{max}</small></div>
+                              <div><small>Can buy up to {fiatCurrency}{limit}</small></div>
                             </LevelItem>
                           )
                         })
@@ -267,7 +260,7 @@ class CreditCardFeed extends React.Component {
                         <Field
                           name="currency"
                           component={fieldDropdown}
-                          list={allCryptoCurrencies}
+                          list={CRYPTO_CURRENCY}
                           onChange={this.onCurrencyChange}
                           // defaultText={''}
                         />
@@ -313,8 +306,12 @@ class CreditCardFeed extends React.Component {
 const mapStateToProps = (state) => ({
   userProfile: state.exchange.userProfile,
   cryptoPrice: state.exchange.cryptoPrice,
-  userCcLimit: state.exchange.userCreditCard,
-  ccLimits: state.exchange.ccLimits,
+  userCcLimit: state.exchange.userCcLimit || { level: '2', limit: 500 },
+  ccLimits: state.exchange.ccLimits || [
+    { level: '1', limit: 500 },
+    { level: '2', limit: 1000 },
+    { level: '3', limit: 5000 },
+  ],
   amount: selectorFormCreditCard(state, 'amount'),
   currency: selectorFormCreditCard(state, 'currency'),
 });

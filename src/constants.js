@@ -24,6 +24,13 @@ export const HANDSHAKE_NAME = {
 export const PRICE_DECIMAL = 2;
 export const AMOUNT_DECIMAL = 6;
 
+export const CRYPTO_CURRENCY = [
+  { name: 'ETH', text: 'ETH' },
+  { name: 'BTC', text: 'BTC' },
+];
+
+export const CRYPTO_CURRENCY_DEFAULT = 'ETH';
+
 // path
 export const API_URL = {
   CRYPTOSIGN: {
