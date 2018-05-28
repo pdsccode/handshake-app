@@ -14,6 +14,9 @@ import iconSafe from '@/assets/images/icon/icon-safe.svg';
 import iconWarning from '@/assets/images/icon/icon-warning.svg';
 import Header from './Header'; 
 import WalletItem from './WalletItem'; 
+import ReactBottomsheet from 'react-bottomsheet'; 
+// var ReactBottomsheet = require('react-bottomsheet');
+
 
 // style
 import './Wallet.scss';
@@ -29,7 +32,9 @@ class Wallet extends React.Component {
       error: null,
       listMainWalletBalance: [],
       listTestWalletBalance: [],
-    };
+      bottomSheet: false,
+      listMenu: [],
+    };    
   }
 
   splitWalletData(listWallet){
@@ -93,12 +98,68 @@ class Wallet extends React.Component {
     // console.log("ethRinkeby", balance);
   } 
 
+  toggleBottomSheet () {
+    let obj = (this.state.bottomSheet) ? { 'bottomSheet': false } : { 'bottomSheet': true }
+    this.setState(obj)
+  }
+  
+  crateSheetMenu(wallet){
+    let obj = [];
+      obj.push({
+        title: 'Send',
+        handler: () => {
+          
+        }
+      })
+      obj.push({
+        title: 'Fill up',
+        handler: () => {
+          
+        }
+      })
+      obj.push({
+        title: 'Protected your coin',
+        handler: () => {
+          
+        }
+      })
+      obj.push({
+        title: 'Transaction history',
+        handler: () => {
+          
+        }
+      })
+      obj.push({
+        title: 'Copy address',
+        handler: () => {
+          
+        }
+      })
+      
+      obj.push({
+        title: 'Make it default ' + (wallet.default ? "✓ " : ""),
+        handler: () => {          
+          wallet.default = !wallet.default;    
+          this.toggleBottomSheet();      
+        }
+      })
+      obj.push({
+        title: 'Remove',
+        handler: () => {
+          
+        }
+      })
+      
+      return obj;
+  }
+
   onLinkClick (){
       alert("add new");
   }
 
   onMoreClick = (wallet) => {
-    alert("onMoreClick ->" + wallet.address);
+    this.setState({listMenu: this.crateSheetMenu(wallet)})
+    this.toggleBottomSheet();
   }
   onWarningClick = (wallet) => {
     alert("onWarningClick ->" + wallet.address);
@@ -117,8 +178,14 @@ class Wallet extends React.Component {
   
   render() {   
     
-    return (          
+    return (      
+      
       <Grid>      
+        <ReactBottomsheet
+          visible={this.state.bottomSheet}
+          onClose={this.toggleBottomSheet.bind(this)}
+          list={this.state.listMenu} />    
+        
         <Row className="list">
           <Header title="Main net wallets" hasLink={true} linkTitle="+ Add new" onLinkClick={this.onLinkClick} />
         </Row>
