@@ -9,7 +9,7 @@ import { URL } from '@/config';
 
 import local from '@/services/localStore';
 import { APP } from '@/constants';
-import { signUp } from '@/reducers/auth/action';
+import { signUp, setLogged } from '@/reducers/auth/action';
 
 import ScrollToTop from '@/components/App/ScrollToTop';
 import Layout from '@/components/Layout/Main';
@@ -23,7 +23,7 @@ import messages from '@/locals';
 addLocaleData([...en, ...fr]);
 
 const Me = props => (<DynamicImport loading={Loading} load={() => import('@/components/Router/Me')}>{Component => <Component {...props} />}</DynamicImport>);
-const Discover = props => (<DynamicImport loading={Loading} load={() => import('@/components/Router/Discover')}>{Component => <Component {...props} />}</DynamicImport>); 
+const Discover = props => (<DynamicImport loading={Loading} load={() => import('@/components/Router/Discover')}>{Component => <Component {...props} />}</DynamicImport>);
 const Chat = props => (<DynamicImport loading={Loading} load={() => import('@/components/Router/Chat')}>{Component => <Component {...props} />}</DynamicImport>);
 const Wallet = props => (<DynamicImport loading={Loading} load={() => import('@/components/Router/Wallet')}>{Component => <Component {...props} />}</DynamicImport>);
 const Create = props => (<DynamicImport loading={Loading} load={() => import('@/components/Router/Create')}>{Component => <Component {...props} />}</DynamicImport>);
@@ -34,20 +34,38 @@ const Page404 = props => (<DynamicImport isNotFound loading={Loading} load={() =
 class Router extends React.Component {
   static propTypes = {
     signUp: PropTypes.func.isRequired,
+    auth: PropTypes.object.isRequired,
+    setLogged: PropTypes.func.isRequired,
   }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.auth.isLogged !== prevState.isLogged) {
+      return { isLogged: nextProps.auth.isLogged };
+    }
+    return null;
+  }
+
   constructor(props) {
     super(props);
 
-    this.state = { currentLocale: 'en' };
+    this.state = {
+      currentLocale: 'en',
+      isLogged: this.props.auth.isLogged,
+    };
 
     const token = local.get(APP.TOKEN);
 
     if (!token) {
       this.props.signUp({ PATH_URL: 'user/sign-up', METHOD: 'POST' });
+    } else {
+      this.props.setLogged();
     }
   }
 
   render() {
+    if (!this.state.isLogged) {
+      return <Loading />;
+    }
     return (
       <IntlProvider locale={this.state.currentLocale} messages={messages[this.state.currentLocale]}>
         <BrowserRouter>
@@ -85,4 +103,4 @@ class Router extends React.Component {
   }
 }
 
-export default connect(null, ({ signUp }))(Router);
+export default connect(state => ({ auth: state.auth }), ({ signUp, setLogged }))(Router);
