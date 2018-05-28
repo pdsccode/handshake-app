@@ -9,7 +9,7 @@ import { API_URL } from '@/constants';
 // components
 import { Grid, Row, Col } from 'react-bootstrap';
 import CreateComment from '@/components/Comment/CreateComment';
-import ListComments from '@/components/Comment/ListComments';
+import CommentItem from '@/components/Comment/CommentItem';
 
 class Comment extends React.PureComponent {
   constructor(props) {
@@ -18,12 +18,13 @@ class Comment extends React.PureComponent {
   }
 
   render() {
-    console.log("this.props", this.props);
+    console.log("this.props.comment", this.props.comment);
+    const { list } = this.props.comment;
     return (
       <Grid>
         <Row>
           <Col md={12} xs={12}>
-            <ListComments />
+            {list.map((item) => <CommentItem key={item.id} {...item} />)}
             <CreateComment />
           </Col>
         </Row>
