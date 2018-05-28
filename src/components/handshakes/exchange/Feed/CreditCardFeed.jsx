@@ -258,12 +258,12 @@ class CreditCardFeed extends React.Component {
                           name="amount"
                           validate={[required]}
                           component={fieldInput}
-                          className="form-control-custom form-control-custom-ex d-inline-block"
+                          className="form-control-custom form-control-custom-ex d-inline-block w-100"
                           placeholder={intl.formatMessage({id: 'amount'})}
                           onChange={this.onAmountChange}
                         />
                       </div>
-                      <span className="d-inline-block ml-auto" style={{ width: '235px' }}>
+                      <span className="d-inline-block ml-auto" style={{ width: '254px' }}>
                         <Field
                           name="currency"
                           component={fieldRadioButton}
