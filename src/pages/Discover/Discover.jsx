@@ -80,6 +80,7 @@ class DiscoverPage extends React.Component {
 
   render() {
     const { handshakeIdActive } = this.state;
+
     return (
       <Grid>
         <Row>
@@ -102,7 +103,7 @@ class DiscoverPage extends React.Component {
         }
         <Row>
           <Col md={12} xs={6}>
-            <CreditCardFeed/>
+            <CreditCardFeed {...this.props}/>
           </Col>
         </Row>
         <Row>
