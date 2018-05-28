@@ -146,7 +146,8 @@ class Wallet extends React.Component {
         title: 'Make it default ' + (wallet.default ? "✓ " : ""),
         handler: () => {          
           wallet.default = !wallet.default;    
-          this.toggleBottomSheet();      
+          this.toggleBottomSheet(); 
+          MasterWallet.UpdateLocalStore(this.state.listMainWalletBalance.concat(this.state.listTestWalletBalance));     
         }
       })
       obj.push({

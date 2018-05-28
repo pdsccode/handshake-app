@@ -35,10 +35,14 @@ export class MasterWallet{
         }
 
         // Save to local store:
-        console.log("masterWallet", masterWallet);
-        localStore.save(MasterWallet.KEY, masterWallet);
+        MasterWallet.UpdateLocalStore(masterWallet);
 
         return masterWallet;
+    }
+
+    static UpdateLocalStore(masterWallet){
+        console.log("masterWallet saved: ", masterWallet);
+        localStore.save(MasterWallet.KEY, masterWallet);
     }
     
     // Get list wallet from store local:
