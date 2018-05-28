@@ -72,10 +72,10 @@ class CreditCardFeed extends React.Component {
   }
 
   handleGetCryptoPriceSuccess = (data) => {
-    console.log('handleGetCryptoPriceSuccess', data);
+    // console.log('handleGetCryptoPriceSuccess', data);
     const {userCcLimit} = this.props;
 
-    if (userCcLimit.limit < userCcLimit.amount + data.fiat_amount) {
+    if (userCcLimit && userCcLimit.limit < userCcLimit.amount + data.fiat_amount) {
       this.setState({showCCScheme: true});
     }
   }
