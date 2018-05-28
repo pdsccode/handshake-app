@@ -41,6 +41,13 @@ export const EXCHANGE_ACTION_DEFAULT = 'buy';
 export const FIAT_CURRENCY = 'USD';
 export const FIAT_CURRENCY_SYMBOL = '$';
 
+export const SELL_PRICE_TYPE = [
+  { value: 'fix', text: 'Fix' },
+  { value: 'flexible', text: 'Flexible' },
+];
+
+export const SELL_PRICE_TYPE_DEFAULT = 'fix';
+
 // path
 export const API_URL = {
   CRYPTOSIGN: {
@@ -53,6 +60,7 @@ export const API_URL = {
     GET_USER_CC_LIMIT: 'user/profile/cc-limit', // {path: '/user/profile/cc-limit', method: 'get'},
     GET_CC_LIMITS: 'info/cc-limits', // {path: '/info/cc-limits', method: 'get'},
     GET_USER_PROFILE: 'user/profile', // {path: '/user/profile', method: 'get'},
+    GET_OFFER_PRICE: 'info/crypto-quote', // {path: '/info/instant-buy/price', method: 'get'},
     GET_USER_TRANSACTION: 'user/transactions', // {path: '/user/transactions', method: 'get'},
     OFFER: 'offers',
     SHAKE: 'shake',

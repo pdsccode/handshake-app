@@ -12,6 +12,8 @@ export const EXCHANGE_ACTIONS = {
 
   GET_USER_PROFILE: 'GET_USER_PROFILE',
 
+  GET_OFFER_PRICE: 'GET_OFFER_PRICE',
+
   GET_USER_TRANSACTION: 'GET_USER_TRANSACTION',
 
   CREATE_OFFER: 'CREATE_OFFER',
@@ -39,6 +41,10 @@ export const getCcLimits = createAPI(
 
 export const getUserProfile = createAPI(
   EXCHANGE_ACTIONS.GET_USER_PROFILE
+);
+
+export const getOfferPrice = createAPI(
+  EXCHANGE_ACTIONS.GET_OFFER_PRICE
 );
 
 export const getUserTransaction = createAPI(

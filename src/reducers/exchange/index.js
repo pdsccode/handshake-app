@@ -3,6 +3,7 @@ import CcLimit from "@/models/CcLimit";
 import UserCcLimit from "@/models/UserCcLimit";
 import UserProfile from "@/models/UserProfile";
 import CryptoPrice from "@/models/CryptoPrice";
+import OfferPrice from "@/models/OfferPrice";
 
 function exchangeReducter(state = {}, action) {
   // console.log('exchangeReducter', JSON.stringify(action));
@@ -18,6 +19,9 @@ function exchangeReducter(state = {}, action) {
     }
     case `${EXCHANGE_ACTIONS.GET_USER_PROFILE}_SUCCESS`: {
       return { ...state, userProfile: UserProfile.userProfile(action.payload.data) };
+    }
+    case `${EXCHANGE_ACTIONS.GET_OFFER_PRICE}_SUCCESS`: {
+      return { ...state, offerPrice: OfferPrice.offerPrice(action.payload.data) };
     }
     case `${EXCHANGE_ACTIONS.GET_USER_TRANSACTION}_SUCCESS`: {
       return { ...state, userTransaction: action.payload };

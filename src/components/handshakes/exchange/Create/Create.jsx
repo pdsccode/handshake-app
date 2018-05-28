@@ -21,12 +21,14 @@ import {
 import '../styles.scss'
 import ModalDialog from "@/components/core/controls/ModalDialog/ModalDialog";
 import {BigNumber} from 'bignumber.js';
+import {SELL_PRICE_TYPE, SELL_PRICE_TYPE_DEFAULT} from "@/constants";
+import {getOfferPrice} from "@/reducers/exchange/action";
 
 const nameFormExchangeCreate = 'exchangeCreate';
 const FormExchangeCreate = createForm({
   propsReduxForm: {
     form: nameFormExchangeCreate,
-    initialValues: { type: EXCHANGE_ACTION_DEFAULT, currency: CRYPTO_CURRENCY_DEFAULT },
+    initialValues: { type: EXCHANGE_ACTION_DEFAULT, currency: CRYPTO_CURRENCY_DEFAULT, sellPriceType: SELL_PRICE_TYPE_DEFAULT  },
   },
 });
 const selectorFormExchangeCreate = formValueSelector(nameFormExchangeCreate);
@@ -39,7 +41,32 @@ class Component extends React.Component {
 
     this.state = {
       modalContent: '',
+      currency: CRYPTO_CURRENCY_DEFAULT,
     }
+  }
+
+  componentDidMount() {
+    // this.getCryptoPriceByAmount(0);
+    this.intervalCountdown = setInterval(() => {
+      const { amount } = this.props;
+      this.getCryptoPriceByAmount(amount);
+    }, 30000);
+  }
+
+  getCryptoPriceByAmount = (amount) => {
+    const cryptoCurrency = this.state.currency;
+    const { type } = this.props;
+    let fiat_currency = 'VND';
+
+    var data = {amount: amount, currency: cryptoCurrency,
+      type: type, fiat_currency: fiat_currency,
+    };
+
+    this.props.getOfferPrice({
+      BASE_URL: API_URL.EXCHANGE.BASE,
+      PATH_URL: API_URL.EXCHANGE.GET_OFFER_PRICE,
+      qs: data,
+    });
   }
 
   onAmountChange = (e) => {
@@ -56,18 +83,43 @@ class Component extends React.Component {
     console.log('onPriceChange', price);
   }
 
+  onSellPriceTypeChange = (e, newValue) => {
+    const { amount } = this.props;
+    // this.setState({currency: newValue}, () => {
+      this.getCryptoPriceByAmount(amount);
+    // });
+  }
+
+  onCurrencyChange = (e, newValue) => {
+    // console.log('onCurrencyChange', newValue);
+    // const currency = e.target.textContent || e.target.innerText;
+    const { amount } = this.props;
+    this.setState({currency: newValue}, () => {
+      this.getCryptoPriceByAmount(amount);
+    });
+  }
+
   handleSubmit = (values) => {
     const {intl, totalAmount} = this.props;
     console.log('valuessss', values);
+    const address = '';
+
     const offer = {
-      min_amount: values.amount,
-      max_amount: values.amount,
+      amount: values.amount,
+      price: values.type === 'sell' && values.sellPriceType === 'flexible' ? '0' : values.price,
+      percentage: values.type === 'sell' && values.sellPriceType === 'flexible' ? values.fee : '0',
       currency: values.currency,
-      price: values.price,
-      price_currency: FIAT_CURRENCY,
-      total: totalAmount,
       type: values.type,
+      contact_info: values.address,
+      contact_phone: '',
+      fiat_currency: 'VND',
     };
+
+    if (values.type === 'buy') {
+      offer.refund_address = '';
+    } else {
+      offer.user_address = '';
+    }
 
     console.log('handleSubmit', offer);
     const message = intl.formatMessage({ id: 'createOfferConfirm' }, {
@@ -101,18 +153,28 @@ class Component extends React.Component {
 
   createOffer = (offer) => {
     console.log('createOffer', offer);
-    this.props.createOffer({
-      BASE_URL: API_URL.EXCHANGE.BASE,
-      PATH_URL: API_URL.EXCHANGE.OFFER,
-      data: offer,
-      METHOD: 'POST',
-      successFn: this.handleCreateOfferSuccess,
-      errorFn: this.handleCreateOfferFailed,
-    });
+    const { currency } = this.props;
+
+    if (currency === 'BTC') {
+      this.props.createOffer({
+        BASE_URL: API_URL.EXCHANGE.BASE,
+        PATH_URL: API_URL.EXCHANGE.OFFER,
+        data: offer,
+        METHOD: 'POST',
+        successFn: this.handleCreateOfferSuccess,
+        errorFn: this.handleCreateOfferFailed,
+      });
+    } else {
+
+    }
   }
 
-
   handleCreateOfferSuccess = (data) => {
+    this.intervalClosePopup = setInterval(() => {
+      this.modalRef.close();
+      this.props.history.push(URL.HANDSHAKE_ME);
+    }, 3000);
+
     console.log('handleCreateCCOrderSuccess', data);
     this.setState({modalContent:
       (
@@ -122,8 +184,7 @@ class Component extends React.Component {
               <div>Create offer success</div>
             </div>
           </Feed>
-          <Button className="mt-2" block onClick={this.handleBuySuccess}>OK</Button>
-          <Button block className="btn btn-light" onClick={this.handleBuyAnother}>Create another</Button>
+          <Button block className="btn btn-secondary mt-2" onClick={this.handleBuySuccess}>Dismiss</Button>
         </div>
       )
     }, () => {
@@ -131,13 +192,11 @@ class Component extends React.Component {
     });
   }
 
-  handleBuyAnother = () => {
-    this.modalRef.close();
-  }
-
   handleBuySuccess = () => {
-    this.modalRef.close();
-    // this.props.history.push(URL.TRANSACTION_LIST);
+    if (this.intervalClosePopup) {
+      clearInterval(this.intervalClosePopup);
+    }
+    this.props.history.push(URL.HANDSHAKE_ME);
   }
 
   handleCreateOfferFailed = (e) => {
@@ -163,14 +222,12 @@ class Component extends React.Component {
   }
 
   render() {
-    const { totalAmount, type, sellPriceType } = this.props;
+    const { totalAmount, type, sellPriceType, offerPrice } = this.props;
 
     let modalContent = this.state.modalContent;
-    const sellPriceTypes = [
-      { value: '1', text: 'Fix' },
-      { value: '2', text: 'Flexible' },
-    ]
-    const sellPrice = 11234234;
+
+    console.log('offerPrice', offerPrice);
+
     return (
       <div>
         <FormExchangeCreate onSubmit={this.handleSubmit}>
@@ -197,6 +254,7 @@ class Component extends React.Component {
                     list={CRYPTO_CURRENCY}
                     color={mainColor}
                     validate={[required]}
+                    onChange={this.onCurrencyChange}
                   />
                 </div>
               </div>
@@ -221,14 +279,15 @@ class Component extends React.Component {
                         <Field
                           name="sellPriceType"
                           component={fieldRadioButton}
-                          list={sellPriceTypes}
+                          list={SELL_PRICE_TYPE}
                           color={mainColor}
                           validate={[required]}
+                          onChange={this.onSellPriceTypeChange}
                         />
                       </div>
                     </div>
                     {
-                      sellPriceType === '1' && (
+                      sellPriceType === 'flexible' && (
                         <div className="d-flex mt-2">
                           <label className="col-form-label mr-auto" style={{ width: '100px' }}>Fee (%)</label>
                           <div className='input-group'>
@@ -257,7 +316,7 @@ class Component extends React.Component {
               <div className="d-flex">
                 <label className="col-form-label mr-auto" style={{ width: '100px' }}>Price({FIAT_CURRENCY_SYMBOL})</label>
                 {
-                  type === 'buy' ? (
+                  type === 'buy' || sellPriceType === 'fix' ? (
                     <div className="w-100">
                       <Field
                         name="price"
@@ -268,7 +327,7 @@ class Component extends React.Component {
                       />
                     </div>
                   ) : (
-                    <span className="w-100 col-form-label">{sellPrice}</span>
+                    <span className="w-100 col-form-label">{(offerPrice && offerPrice.price) || 0}</span>
                   )
                 }
               </div>
@@ -301,16 +360,20 @@ class Component extends React.Component {
 
 const mapStateToProps = (state) => {
   const type = selectorFormExchangeCreate(state, 'type');
+  const currency = selectorFormExchangeCreate(state, 'currency');
   const sellPriceType = selectorFormExchangeCreate(state, 'sellPriceType');
-  const amount = selectorFormExchangeCreate(state, 'amount');
-  const price = selectorFormExchangeCreate(state, 'price');
+  const amount = selectorFormExchangeCreate(state, 'amount') || 0;
+  const price = selectorFormExchangeCreate(state, 'price') || 0;
   const totalAmount = amount * price || 0;
 
-  return { totalAmount, type, sellPriceType };
+  return { amount, currency, totalAmount, type, sellPriceType,
+    offerPrice: state.exchange.offerPrice,
+  };
 };
 
 const mapDispatchToProps = {
-  createOffer
+  createOffer,
+  getOfferPrice,
 };
 
 export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(Component));
