@@ -62,9 +62,12 @@ class CreditCardFeed extends React.Component {
 
     var data = {amount: amount, currency: cryptoCurrency};
 
-    this.props.getCryptoPrice({PATH_URL: API_URL.EXCHANGE.GET_CRYPTO_PRICE, qs: data,
-        successFn: this.handleGetCryptoPriceSuccess,
-        errorFn: this.handleGetCryptoPriceFailed
+    this.props.getCryptoPrice({
+      BASE_URL: API_URL.EXCHANGE.BASE,
+      PATH_URL: API_URL.EXCHANGE.GET_CRYPTO_PRICE,
+      qs: data,
+      successFn: this.handleGetCryptoPriceSuccess,
+      errorFn: this.handleGetCryptoPriceFailed,
       });
   }
 
@@ -111,11 +114,17 @@ class CreditCardFeed extends React.Component {
   handleCreateCCOrderSuccess = (data) => {
     console.log('handleCreateCCOrderSuccess', data);
     this.setState({modalContent:
-        (<div>
-          <h1>Buy Success. Buy another?</h1>
-          <Button onClick={this.handleBuySuccess}>Cancel</Button>
-          <Button onClick={this.handleBuyAnother}>OK</Button>
-        </div>)
+        (
+          <div className="py-2">
+            <Feed className="feed p-2" background="#259B24">
+              <div className="text-white d-flex align-items-center" style={{ minHeight: '75px' }}>
+                <h1>Buy Success. Buy another?</h1>
+              </div>
+            </Feed>
+            <Button className="mt-2" block onClick={this.handleBuyAnother}>Buy another</Button>
+            <Button block className="btn btn-light" onClick={this.handleBuySuccess}>Dismiss</Button>
+          </div>
+        )
     }, () => {
       this.modalRef.open();
     });
@@ -148,12 +157,12 @@ class CreditCardFeed extends React.Component {
 
   handleSubmit = (values) => {
     console.log('handleSubmit', values);
-    const {userProfile: {credit_card}} = this.props;
+    const {userProfile: {creditCard}} = this.props;
 
     let cc = {};
 
     //Use existing credit card
-    if (credit_card.cc_number.trim().length > 0 && !this.state.isNewCCOpen) {
+    if (creditCard.ccNumber.length > 0 && !this.state.isNewCCOpen) {
       cc = {token: "true"};
     } else {
       const {cc_number, cc_expired, cc_cvc} = values;
@@ -212,7 +221,8 @@ class CreditCardFeed extends React.Component {
     const {intl, userProfile, cryptoPrice, amount, userCcLimit, ccLimits} = this.props;
 
     const fiatCurrency = '$';
-    const total = cryptoPrice && cryptoPrice.fiat_amount;
+    const total = cryptoPrice && cryptoPrice.fiatAmount;
+    console.log('cryptoPrice', cryptoPrice);
 
     let modalContent = this.state.modalContent;
 
@@ -279,8 +289,8 @@ class CreditCardFeed extends React.Component {
                     {
                       amount && (
                         <CreditCard
-                          isCCExisting={userProfile && userProfile.credit_card.cc_number.trim().length > 0}
-                          lastDigits={userProfile && userProfile.credit_card.cc_number}
+                          isCCExisting={userProfile && userProfile.creditCard.ccNumber.length > 0}
+                          lastDigits={userProfile && userProfile.creditCard.ccNumber}
                           isNewCCOpen={this.state.isNewCCOpen}
                           handleToggleNewCC={this.handleToggleNewCC}
                         />
@@ -312,15 +322,9 @@ class CreditCardFeed extends React.Component {
 
 const mapStateToProps = (state) => ({
   userProfile: state.exchange.userProfile,
-  cryptoPrice: state.exchange.cryptoPrice || { amount: 123,
-    currency: 'ETH',
-    fiat_amount: 12345 },
-  userCcLimit: state.exchange.userCcLimit || { level: '2', limit: 500 },
-  ccLimits: state.exchange.ccLimits || [
-    { level: '1', limit: 500 },
-    { level: '2', limit: 1000 },
-    { level: '3', limit: 5000 },
-  ],
+  cryptoPrice: state.exchange.cryptoPrice,
+  userCcLimit: state.exchange.userCcLimit,
+  ccLimits: state.exchange.ccLimits || [],
   amount: selectorFormCreditCard(state, 'amount'),
   currency: selectorFormCreditCard(state, 'currency'),
 });
