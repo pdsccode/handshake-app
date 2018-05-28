@@ -83,11 +83,17 @@ class Component extends React.Component {
   handleCreateOfferSuccess = (data) => {
     console.log('handleCreateCCOrderSuccess', data);
     this.setState({modalContent:
-        (<div>
-          <h1>Buy Success. Buy another?</h1>
-          <Button onClick={this.handleBuySuccess}>Cancel</Button>
-          <Button onClick={this.handleBuyAnother}>OK</Button>
-        </div>)
+      (
+        <div className="py-2">
+          <Feed className="feed p-2" background="#259B24">
+            <div className="text-white d-flex align-items-center" style={{ minHeight: '75px' }}>
+              <div>You are about to buy 1 ETH for $1000</div>
+            </div>
+          </Feed>
+          <Button className="mt-2" block onClick={this.handleBuySuccess}>Confirm</Button>
+          <Button block className="btn btn-light" onClick={this.handleBuyAnother}>Not now</Button>
+        </div>
+      )
     }, () => {
       this.modalRef.open();
     });
