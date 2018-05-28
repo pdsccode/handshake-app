@@ -17,6 +17,7 @@ import {fieldCleave, fieldDropdown, fieldInput, fieldRadioButton} from '@/compon
 import {required} from '@/components/core/form/validation'
 import {createCCOrder, getCcLimits, getCryptoPrice, getUserCcLimit, getUserProfile} from '@/reducers/exchange/action';
 import {API_URL, CRYPTO_CURRENCY, CRYPTO_CURRENCY_DEFAULT} from "@/constants";
+import {FIAT_CURRENCY} from "@/constants";
 
 const nameFormCreditCard = 'creditCard'
 const FormCreditCard = createForm({ propsReduxForm: { form: nameFormCreditCard,
@@ -52,8 +53,8 @@ class CreditCardFeed extends React.Component {
   }
 
   componentWillUnmount() {
-    if (this.intervalCountdown) {
-      clearInterval(this.intervalCountdown);
+    if (this.intervalClosePopup) {
+      clearInterval(this.intervalClosePopup);
     }
   }
 
@@ -95,11 +96,11 @@ class CreditCardFeed extends React.Component {
         amount: cryptoPrice.amount.trim(),
         currency: cryptoPrice.currency.trim(),
         fiat_amount: cryptoPrice.fiatAmount.trim(),
-        fiat_currency: "USD",
+        fiat_currency: FIAT_CURRENCY,
         address: address,
         payment_method_data: params
       };
-      console.log('handleCreateCCOrder',paramsObj);
+      // console.log('handleCreateCCOrder',paramsObj);
       this.props.createCCOrder({
         BASE_URL: API_URL.EXCHANGE.BASE,
         PATH_URL: API_URL.EXCHANGE.CREATE_CC_ORDER,
@@ -112,7 +113,13 @@ class CreditCardFeed extends React.Component {
   }
 
   handleCreateCCOrderSuccess = (data) => {
-    console.log('handleCreateCCOrderSuccess', data);
+    // console.log('handleCreateCCOrderSuccess', data);
+
+    this.intervalClosePopup = setInterval(() => {
+      this.modalRef.close();
+      this.props.history.push(URL.HANDSHAKE_ME);
+    }, 3000);
+
     this.setState({modalContent:
         (
           <div className="py-2">
@@ -130,6 +137,9 @@ class CreditCardFeed extends React.Component {
   }
 
   handleBuySuccess = () => {
+    if (this.intervalCountdown) {
+      clearInterval(this.intervalCountdown);
+    }
     this.props.history.push(URL.HANDSHAKE_ME);
   }
 
@@ -156,7 +166,7 @@ class CreditCardFeed extends React.Component {
   }
 
   handleSubmit = (values) => {
-    console.log('handleSubmit', values);
+    // console.log('handleSubmit', values);
     const {userProfile: {creditCard}} = this.props;
 
     let cc = {};
@@ -188,7 +198,7 @@ class CreditCardFeed extends React.Component {
   }
 
   onCurrencyChange = (e, newValue) => {
-    console.log('onCurrencyChange', newValue);
+    // console.log('onCurrencyChange', newValue);
     // const currency = e.target.textContent || e.target.innerText;
     this.setState({currency: newValue}, () => {
       this.getCryptoPriceByAmount(this.state.amount);
