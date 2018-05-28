@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 // style
-import './ListComents.scss';
+import './ListComments.scss';
 
-class ListComents extends React.PureComponent {
+class ListComments extends React.PureComponent {
 
   render() {
     return (
@@ -14,7 +14,7 @@ class ListComents extends React.PureComponent {
   }
 }
 
-ListComents.propTypes = {
+ListComments.propTypes = {
 };
 
-export default ListComents;
+export default ListComments;
