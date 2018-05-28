@@ -18,6 +18,7 @@ import {required} from '@/components/core/form/validation'
 import {createCCOrder, getCcLimits, getCryptoPrice, getUserCcLimit, getUserProfile} from '@/reducers/exchange/action';
 import {API_URL, CRYPTO_CURRENCY, CRYPTO_CURRENCY_DEFAULT} from "@/constants";
 import {FIAT_CURRENCY} from "@/constants";
+import CryptoPrice from "@/models/CryptoPrice";
 
 const nameFormCreditCard = 'creditCard'
 const FormCreditCard = createForm({ propsReduxForm: { form: nameFormCreditCard,
@@ -74,9 +75,10 @@ class FeedCreditCard extends React.Component {
 
   handleGetCryptoPriceSuccess = (data) => {
     // console.log('handleGetCryptoPriceSuccess', data);
-    const {userCcLimit} = this.props;
+    const { userCcLimit } = this.props;
+    const cryptoPrice = CryptoPrice.cryptoPrice(data);
 
-    if (userCcLimit && userCcLimit.limit < userCcLimit.amount + data.fiat_amount) {
+    if (userCcLimit && userCcLimit.limit < userCcLimit.amount + cryptoPrice.fiatAmount) {
       this.setState({showCCScheme: true});
     }
   }
