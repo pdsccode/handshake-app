@@ -9178,6 +9178,13 @@ react-bootstrap@^0.32.1:
     uncontrollable "^4.1.0"
     warning "^3.0.0"
 
+react-bottomsheet@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/react-bottomsheet/-/react-bottomsheet-1.1.0.tgz#d315ce00354d9dd3778db0cd47691bb11d9c3f0c"
+  dependencies:
+    classnames "^2.2.5"
+    prop-types "^15.6.1"
+
 react-datetime@^2.14.0:
   version "2.14.0"
   resolved "https://registry.yarnpkg.com/react-datetime/-/react-datetime-2.14.0.tgz#c7859c5b765275d7980f1cca27c03a727ff9ccef"
