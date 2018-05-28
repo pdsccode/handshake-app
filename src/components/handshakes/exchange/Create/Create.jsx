@@ -150,7 +150,7 @@ class Component extends React.Component {
                 <div>Create offer failed</div>
               </div>
             </Feed>
-            <Button block className="btn btn-light" onClick={this.handleBuyFailed}>Dismiss</Button>
+            <Button block className="btn btn-secondary mt-2" onClick={this.handleBuyFailed}>Dismiss</Button>
           </div>
         )
     }, () => {
