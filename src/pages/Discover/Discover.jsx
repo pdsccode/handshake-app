@@ -3,14 +3,13 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 // service, constant
 import { loadDiscoverList, success } from '@/reducers/discover/action';
+import { handShakeList } from '@/data/shake.js';
+import { URL } from '@/config';
+import { HANDSHAKE_ID } from '@/constants';
 // components
 import { Grid, Row, Col } from 'react-bootstrap';
 import SearchBar from '@/components/core/controls/SearchBar';
 import Category from '@/components/core/controls/Category';
-import { handShakeList } from '@/data/shake.js';
-import { URL } from '@/config';
-
-import { HANDSHAKE_ID } from '@/constants';
 import FeedPromise from '@/components/handshakes/promise/Feed';
 import FeedBetting from '@/components/handshakes/betting/Feed';
 import FeedExchange from '@/components/handshakes/exchange/Feed/FeedExchange';
@@ -133,7 +132,6 @@ DiscoverPage.propTypes = {
 
 const mapState = state => ({
   discover: state.discover,
-  router: state.router,
 });
 
 const mapDispatch = ({
