@@ -13,12 +13,12 @@ import { URL } from '@/config';
 import { HANDSHAKE_ID } from '@/constants';
 import FeedPromise from '@/components/handshakes/promise/Feed';
 import FeedBetting from '@/components/handshakes/betting/Feed';
-import FeedExchange from '@/components/handshakes/exchange/Feed/ExchangeFeed';
+import FeedExchange from '@/components/handshakes/exchange/Feed/FeedExchange';
 import FeedSeed from '@/components/handshakes/seed/Feed';
 
 // style
 import './Discover.scss';
-import CreditCardFeed from "@/components/handshakes/exchange/Feed/CreditCardFeed";
+import FeedCreditCard from "@/components/handshakes/exchange/Feed/FeedCreditCard";
 
 const maps = {
   [HANDSHAKE_ID.PROMISE]: FeedPromise,
@@ -103,7 +103,7 @@ class DiscoverPage extends React.Component {
         }
         <Row>
           <Col md={12} xs={6}>
-            <CreditCardFeed {...this.props}/>
+            <FeedCreditCard {...this.props}/>
           </Col>
         </Row>
         <Row>

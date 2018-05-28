@@ -26,7 +26,7 @@ const selectorFormCreditCard = formValueSelector(nameFormCreditCard)
 
 const mainColor = '#259B24'
 
-class CreditCardFeed extends React.Component {
+class FeedCreditCard extends React.Component {
   constructor(props) {
     super(props);
 
@@ -346,4 +346,4 @@ const mapDispatchToProps = {
   getCcLimits,
 };
 
-export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(CreditCardFeed));
+export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(FeedCreditCard));

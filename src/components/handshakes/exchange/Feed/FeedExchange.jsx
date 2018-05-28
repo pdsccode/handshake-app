@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import iconLocation from '@/assets/images/icon/icons8-geo_fence.svg';
 // style
-import './ExchangeFeed.scss';
+import './FeedExchange.scss';
 import {FormattedMessage} from 'react-intl';
 import Feed from "@/components/core/presentation/Feed/Feed";
 import Button from "@/components/core/controls/Button/Button";
@@ -10,7 +10,7 @@ import {BigNumber} from 'bignumber.js';
 import {AMOUNT_DECIMAL, PRICE_DECIMAL} from "@/constants";
 
 
-class ExchangeFeed extends React.PureComponent {
+class FeedExchange extends React.PureComponent {
   render() {
     const {type, amount, currency, fiat_amount, ...props } = this.props;
     return (
@@ -40,9 +40,9 @@ class ExchangeFeed extends React.PureComponent {
   }
 }
 
-ExchangeFeed.propTypes = {
+FeedExchange.propTypes = {
   className: PropTypes.string,
   background: PropTypes.string,
 };
 
-export default ExchangeFeed;
+export default FeedExchange;

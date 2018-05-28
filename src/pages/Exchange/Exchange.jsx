@@ -11,7 +11,7 @@ import {required} from '@/components/core/form/validation';
 
 import {createCCOrder, getCcLimits, getCryptoPrice, getUserCcLimit, getUserProfile,} from '@/reducers/exchange/action';
 import {API_URL} from '@/constants';
-import CreditCardFeed from "@/components/handshakes/exchange/Feed/CreditCardFeed";
+import FeedCreditCard from "@/components/handshakes/exchange/Feed/FeedCreditCard";
 
 const nameFormCreditCard = 'creditCard';
 const FormCreditCard = createForm({
@@ -38,7 +38,7 @@ class Exchange extends React.Component {
       <div className="container">
         <div className="row">
           <div className="col">
-            <CreditCardFeed />
+            <FeedCreditCard />
           </div>
         </div>
       </div>
