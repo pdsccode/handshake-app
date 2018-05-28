@@ -7,25 +7,26 @@ import { load } from '@/reducers/discover/action';
 import { Grid, Row, Col } from 'react-bootstrap';
 import Button from '@/components/core/controls/Button';
 import { handShakeList } from '@/data/shake.js';
-import {MasterWallet} from '@/models/MasterWallet' 
+import {MasterWallet} from '@/models/MasterWallet'
 
 import dontIcon from '@/assets/images/icon/3-dot-icon.svg';
 import iconSafe from '@/assets/images/icon/icon-safe.svg';
 import iconWarning from '@/assets/images/icon/icon-warning.svg';
-import Header from './Header'; 
-import HeaderMore from './HeaderMore'; 
-import WalletItem from './WalletItem'; 
-import ReactBottomsheet from 'react-bottomsheet'; 
+import Header from './Header';
+import HeaderMore from './HeaderMore';
+import WalletItem from './WalletItem';
+import ReactBottomsheet from 'react-bottomsheet';
 // var ReactBottomsheet = require('react-bottomsheet');
 import { setHeaderRight } from '@/reducers/app/action';
 
 // style
 import './Wallet.scss';
+import { Bitcoin } from '@/models/Bitcoin.1';
 
 
 class Wallet extends React.Component {
-  constructor(props) { 
-    
+  constructor(props) {
+
     super(props);
     this.state = {
       data: {},
@@ -35,7 +36,7 @@ class Wallet extends React.Component {
       listTestWalletBalance: [],
       bottomSheet: false,
       listMenu: [],
-    };    
+    };
     this.props.setHeaderRight(this.headerRight());
   }
 
@@ -46,10 +47,10 @@ class Wallet extends React.Component {
   splitWalletData(listWallet){
 
     let listMainWallet = [];
-    let listTestWallet = [];    
+    let listTestWallet = [];
 
     listWallet.forEach(wallet => {
-      // is Mainnet            
+      // is Mainnet
       if (wallet.network == MasterWallet.ListCoin[wallet.className].Network.Mainnet){
         listMainWallet.push(wallet);
       }
@@ -58,18 +59,22 @@ class Wallet extends React.Component {
         listTestWallet.push(wallet);
       }
     });
-    
-    this.setState({isLoading: true, listMainWalletBalance: listMainWallet, listTestWalletBalance: listTestWallet});       
+
+    this.setState({isLoading: true, listMainWalletBalance: listMainWallet, listTestWalletBalance: listTestWallet});
   }
 
    async componentDidMount() {
-    
-    let listWallet = await MasterWallet.getMasterWallet();  
-    
-    if (listWallet == false){      
-      listWallet = await MasterWallet.createMasterWallet();    
-    }    
-  
+
+    let listWallet = await MasterWallet.getMasterWallet();
+
+    if (listWallet == false){
+      listWallet = await MasterWallet.createMasterWallet();
+    }
+     /*var btc = new Bitcoin();
+     var tx = await btc.transfer("tprv8ccSMiuz5MfvmYHzdMbz3pjn5uW3G8zxM975sv4MxSGkvAutv54raKHiinLsxW5E4UjyfVhCz6adExCmkt7GjC41cYxbNxt5ZqyJBdJmqPA","mrPJ6rBHpJGnsLK3JGfJQjdm5vkjeAb63M", 0.0001);
+
+     console.log(tx)*/
+
      await this.splitWalletData(listWallet)
 
      await this.getListBalace();
@@ -78,7 +83,7 @@ class Wallet extends React.Component {
   async getListBalace() {
 
     let listWallet = this.state.listMainWalletBalance.concat(this.state.listTestWalletBalance);
-    
+
     const pros = []
 
     listWallet.forEach(wallet => {
@@ -93,7 +98,7 @@ class Wallet extends React.Component {
     await Promise.all(pros);
 
     await this.splitWalletData(listWallet);
-    
+
 
     // var btcTestnet = new Bitcoin(Bitcoin.Network.Testnet);
     // var balance = await btcTestnet.getBalance("n1MZwXhWs1unyuG6qNbEZRZV4qjzd3ZMyz");
@@ -102,61 +107,61 @@ class Wallet extends React.Component {
     // var ethRinkeby = new Ethereum (Ethereum.Network.Rinkeby);
     // balance = await ethRinkeby.getBalance("0xe70adf9aE4d5F68E80A8E2C5EA3B916Dd49C6D87");
     // console.log("ethRinkeby", balance);
-  } 
+  }
 
   toggleBottomSheet () {
     let obj = (this.state.bottomSheet) ? { 'bottomSheet': false } : { 'bottomSheet': true }
     this.setState(obj)
   }
-  
+
   crateSheetMenuItem(wallet){
     let obj = [];
       obj.push({
         title: 'Send',
         handler: () => {
-          
+
         }
       })
       obj.push({
         title: 'Fill up',
         handler: () => {
-          
+
         }
       })
       obj.push({
         title: 'Protected your coin',
         handler: () => {
-          
+
         }
       })
       obj.push({
         title: 'Transaction history',
         handler: () => {
-          
+
         }
       })
       obj.push({
         title: 'Copy address',
         handler: () => {
-          
+
         }
       })
-      
+
       obj.push({
         title: 'Make it default ' + (wallet.default ? "✓ " : ""),
-        handler: () => {          
-          wallet.default = !wallet.default;    
-          this.toggleBottomSheet(); 
-          MasterWallet.UpdateLocalStore(this.state.listMainWalletBalance.concat(this.state.listTestWalletBalance));     
+        handler: () => {
+          wallet.default = !wallet.default;
+          this.toggleBottomSheet();
+          MasterWallet.UpdateLocalStore(this.state.listMainWalletBalance.concat(this.state.listTestWalletBalance));
         }
       })
       obj.push({
         title: 'Remove',
         handler: () => {
-          
+
         }
       })
-      
+
       return obj;
   }
 
@@ -164,20 +169,20 @@ class Wallet extends React.Component {
     let obj = [];
     obj.push({
       title: "Add new",
-      handler: () => {          
-        
+      handler: () => {
+
       }
     })
     obj.push({
       title: 'Export wallet',
       handler: () => {
-        
+
       }
     })
     obj.push({
       title: 'Restore wallet',
       handler: () => {
-        
+
       }
     })
     return obj;
@@ -186,7 +191,7 @@ class Wallet extends React.Component {
   onLinkClick = () =>{
     this.setState({listMenu: this.crateSheetMenuHeaderMore()})
     this.toggleBottomSheet();
-    
+
   }
 
   onMoreClick = (wallet) => {
@@ -198,37 +203,37 @@ class Wallet extends React.Component {
   }
 
   get listMainWalletBalance() {
-    return this.state.listMainWalletBalance.map((wallet) => {      
-      return <WalletItem wallet={wallet} onMoreClick={() => this.onMoreClick(wallet)} onWarningClick={() => this.onWarningClick(wallet)} />           
+    return this.state.listMainWalletBalance.map((wallet) => {
+      return <WalletItem wallet={wallet} onMoreClick={() => this.onMoreClick(wallet)} onWarningClick={() => this.onWarningClick(wallet)} />
     });
   }
   get listTestWalletBalance() {
-    return this.state.listTestWalletBalance.map((wallet) => {      
-      return <WalletItem wallet={wallet} onMoreClick={() => this.onMoreClick(wallet)} onWarningClick={() => this.onWarningClick(wallet)} />           
+    return this.state.listTestWalletBalance.map((wallet) => {
+      return <WalletItem wallet={wallet} onMoreClick={() => this.onMoreClick(wallet)} onWarningClick={() => this.onWarningClick(wallet)} />
     });
   }
-  
-  render() {   
-    
-    return (      
-      
-      <Grid>      
+
+  render() {
+
+    return (
+
+      <Grid>
         <ReactBottomsheet
           visible={this.state.bottomSheet}
           onClose={this.toggleBottomSheet.bind(this)}
-          list={this.state.listMenu} />    
-        
+          list={this.state.listMenu} />
+
         <Row className="list">
           <Header title="Main net wallets" hasLink={true} linkTitle="+ Add new" onLinkClick={this.onLinkClick} />
         </Row>
-        <Row className="list">          
+        <Row className="list">
           {this.listMainWalletBalance}
         </Row>
         <Row className="list">
           <Header title="Test net wallet" hasLink={false} />
         </Row>
         <Row className="list">
-          {this.listTestWalletBalance}          
+          {this.listTestWalletBalance}
         </Row>
       </Grid>
     );
