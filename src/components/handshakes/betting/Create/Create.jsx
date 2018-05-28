@@ -7,7 +7,8 @@ import createForm from '@/components/core/form/createForm';
 import { required } from '@/components/core/form/validation';
 import { Field } from "redux-form";
 import { initHandshake } from '@/reducers/handshake/action';
-
+import { HANDSHAKE_ID } from '@/constants';
+import {API_URL} from "@/constants";
 // components
 import Button from '@/components/core/controls/Button';
 import Input from '@/components/core/forms/Input/Input';
@@ -17,6 +18,10 @@ import { InputField } from '../form/customField';
 // self
 import './Create.scss';
 
+// import Handshake from '@/services/neuron/neuron-handshake';
+//import Neuron from '@/services/neuron';
+
+//let neuron = Neuron(4);
 const nameFormBettingCreate = 'bettingCreate';
 const BettingCreateForm = createForm({
   propsReduxForm: {
@@ -97,18 +102,7 @@ class BettingCreate extends React.PureComponent {
 
     const {toAddress, isPublic, industryId} = this.props;
 
-    const params = {
-      to_address: toAddress ? toAddress.trim() : '',
-      public: isPublic,
-      //description: content,
-      // description: JSON.stringify(extraParams),
-      industries_type: industryId,
-      extraParams,
-    };
-
-    //Call API
-    this.props.initHandshake({PATH_URL: 'handshake?public=0&chain_id=4'});
-
+    
   }
 
   get inputList() {
@@ -232,6 +226,51 @@ class BettingCreate extends React.PureComponent {
         {this.renderForm()}
       </div>
     );
+  }
+
+  //Service
+  initHandshake(fields){
+    const params = {
+      //to_address: toAddress ? toAddress.trim() : '',
+      //public: isPublic,
+      //description: content,
+      // description: JSON.stringify(extraParams),
+      //industries_type: industryId,
+      type: HANDSHAKE_ID.BETTING,
+      metadata: JSON.stringify(fields),
+    };
+
+    //Call API
+    const qs = {
+      chain_id: 4
+    }
+    
+    this.props.initHandshake({BASE_URL:API_URL.CRYPTOSIGN, PATH_URL: API_URL.CRYPTOSIGN.INIT_HANDSHAKE, METHOD:'POST', qs: data, data: params,
+    successFn: this.initHandshakeSuccess,
+    errorFn: this.handleGetCryptoPriceFailed
+  });
+    
+  }
+  initHandshakeSuccess = (data)=>{
+    console.log('initHandshakeSuccess': data);
+  }
+  initHandshakeFailed = (error) => {
+    console.log('initHandshakeFailed': error);
+  }
+
+  //Blockchain
+  initBet(){
+
+    let address = "0x54CD16578564b9952d645E92b9fa254f1feffee9";
+    let privateKey = "";
+    let amount = "30";
+    let value = "";
+    let term = "";
+    let deliveryDate = "";
+    let payee = "";
+    let offchain = "";
+    neuron.handshake.init(address, privateKey, amount, value, term, deliveryDate, payee, offchain);
+    
   }
 }
 

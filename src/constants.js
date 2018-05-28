@@ -25,6 +25,7 @@ export const HANDSHAKE_NAME = {
 export const API_URL = {
   CRYPTOSIGN: {
     BASE: 'cryptosign',
+    INIT_HANDSHAKE: 'handshake/init',
   },
   EXCHANGE: {
     BASE: 'https://stag-handshake.autonomous.ai/api/exchange',
@@ -38,4 +39,5 @@ export const API_URL = {
   SEED: {
     BASE: 'seed',
   },
+
 };
