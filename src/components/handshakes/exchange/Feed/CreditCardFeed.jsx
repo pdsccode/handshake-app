@@ -94,7 +94,7 @@ class CreditCardFeed extends React.Component {
       const paramsObj = {
         amount: cryptoPrice.amount.trim(),
         currency: cryptoPrice.currency.trim(),
-        fiat_amount: cryptoPrice.fiat_amount.trim(),
+        fiat_amount: cryptoPrice.fiatAmount.trim(),
         fiat_currency: "USD",
         address: address,
         payment_method_data: params
@@ -118,10 +118,9 @@ class CreditCardFeed extends React.Component {
           <div className="py-2">
             <Feed className="feed p-2" background="#259B24">
               <div className="text-white d-flex align-items-center" style={{ minHeight: '75px' }}>
-                <h1>Buy Success. Buy another?</h1>
+                <div>Buy success</div>
               </div>
             </Feed>
-            <Button className="mt-2" block onClick={this.handleBuyAnother}>Buy another</Button>
             <Button block className="btn btn-light" onClick={this.handleBuySuccess}>Dismiss</Button>
           </div>
         )
@@ -130,22 +129,23 @@ class CreditCardFeed extends React.Component {
     });
   }
 
-  handleBuyAnother = () => {
-    this.modalRef.close();
-  }
-
   handleBuySuccess = () => {
-    this.props.history.push(URL.TRANSACTION_LIST);
+    this.props.history.push(URL.HANDSHAKE_ME);
   }
 
   handleCreateCCOrderFailed = (e) => {
     // console.log('handleCreateCCOrderFailed', JSON.stringify(e.response));
     this.setState({modalContent:
-        (<div>
-          <h1>Buy Failed</h1>
-          <span>{e.response?.data?.message}</span>
-          <Button onClick={this.handleBuyFailed}>OK</Button>
-        </div>)
+        (
+          <div className="py-2">
+            <Feed className="feed p-2" background="#259B24">
+              <div className="text-white d-flex align-items-center" style={{ minHeight: '75px' }}>
+                <div>{e.response?.data?.message}</div>
+              </div>
+            </Feed>
+            <Button block className="btn btn-light" onClick={this.handleBuyFailed}>Dismiss</Button>
+          </div>
+        )
     }, () => {
       this.modalRef.open();
     });
@@ -222,7 +222,6 @@ class CreditCardFeed extends React.Component {
 
     const fiatCurrency = '$';
     const total = cryptoPrice && cryptoPrice.fiatAmount;
-    console.log('cryptoPrice', cryptoPrice);
 
     let modalContent = this.state.modalContent;
 
