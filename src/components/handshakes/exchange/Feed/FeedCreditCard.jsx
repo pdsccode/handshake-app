@@ -54,8 +54,8 @@ class FeedCreditCard extends React.Component {
   }
 
   componentWillUnmount() {
-    if (this.intervalClosePopup) {
-      clearInterval(this.intervalClosePopup);
+    if (this.intervalCountdown) {
+      clearInterval(this.intervalCountdown);
     }
   }
 
@@ -139,8 +139,8 @@ class FeedCreditCard extends React.Component {
   }
 
   handleBuySuccess = () => {
-    if (this.intervalCountdown) {
-      clearInterval(this.intervalCountdown);
+    if (this.intervalClosePopup) {
+      clearInterval(this.intervalClosePopup);
     }
     this.props.history.push(URL.HANDSHAKE_ME);
   }
