@@ -1,9 +1,13 @@
-// import application from './application';
-// import po from './po';
+import { reducer as form } from 'redux-form';
 import discover from './discover';
+import auth from './auth';
+import exchange from './exchange';
+import handshake from './handshake';
 
 export default {
-  // application,
-  // po,
-  discover
+  auth,
+  discover,
+  exchange,
+  form,
+  handshake,
 };

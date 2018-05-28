@@ -2,7 +2,7 @@ import React from 'react';
 import { URL } from '@/config';
 import { Grid, Row, Col } from 'react-bootstrap';
 import { FormattedMessage } from 'react-intl';
-
+import TestStatusHandshake from '@/components/handshakes/betting/Feed/TestStatusHandshake';
 class Me extends React.Component {
   constructor(props) {
     super(props);
@@ -12,7 +12,7 @@ class Me extends React.Component {
       <Grid>
         <Row>
           <Col xs={12}>
-            me
+          <TestStatusHandshake/>
           </Col>
         </Row>
       </Grid>

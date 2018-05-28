@@ -1,4 +1,4 @@
-import CONSTANTS from '@/constants';
+import { APP } from '@/constants';
 import { APP_ACTION } from './action';
 
 const close = {
@@ -22,8 +22,9 @@ function appReducter(state = {
   isError: false,
   isWarning: false,
   overlay: false,
-  headerTitle: CONSTANTS.APP.HEADER_DEFAULT,
+  headerTitle: APP.HEADER_DEFAULT,
   headerBack: false,
+  isNotFound: false,
 
 }, action) {
   switch (action.type) {
@@ -107,6 +108,19 @@ function appReducter(state = {
       return {
         ...state,
         ...close,
+      };
+
+
+    case APP_ACTION.NOT_FOUND_SET:
+      return {
+        ...state,
+        isNotFound: true,
+      };
+
+    case APP_ACTION.NOT_FOUND_REMOVE:
+      return {
+        ...state,
+        isNotFound: false,
       };
 
     default:
