@@ -20,6 +20,7 @@ import {
 } from "@/constants";
 import '../styles.scss'
 import ModalDialog from "@/components/core/controls/ModalDialog/ModalDialog";
+import {BigNumber} from 'bignumber.js';
 
 const nameFormExchangeCreate = 'exchangeCreate';
 const FormExchangeCreate = createForm({
@@ -56,7 +57,7 @@ class Component extends React.Component {
   }
 
   handleSubmit = (values) => {
-    const {totalAmount} = this.props;
+    const {intl, totalAmount} = this.props;
     console.log('valuessss', values);
     const offer = {
       min_amount: values.amount,
@@ -69,7 +70,37 @@ class Component extends React.Component {
     };
 
     console.log('handleSubmit', offer);
+    const message = intl.formatMessage({ id: 'createOfferConfirm' }, {
+      type: values.type === 'buy' ? 'Buy' : 'Sell',
+      amount: new BigNumber(values.amount).toFormat(6),
+      currency: values.currency,
+      currency_symbol: FIAT_CURRENCY_SYMBOL,
+      total: new BigNumber(totalAmount).toFormat(2),
+    });
 
+    this.setState({modalContent:
+        (
+          <div className="py-2">
+            <Feed className="feed p-2" background="#259B24">
+              <div className="text-white d-flex align-items-center" style={{ minHeight: '75px' }}>
+                <div>{message}</div>
+              </div>
+            </Feed>
+            <Button className="mt-2" block onClick={() => this.createOffer(offer)}>Confirm</Button>
+            <Button block className="btn btn-light" onClick={this.cancelCreateOffer}>Not now</Button>
+          </div>
+        )
+    }, () => {
+      this.modalRef.open();
+    });
+  }
+
+  cancelCreateOffer = () => {
+    this.modalRef.close();
+  }
+
+  createOffer = (offer) => {
+    console.log('createOffer', offer);
     this.props.createOffer({
       BASE_URL: API_URL.EXCHANGE.BASE,
       PATH_URL: API_URL.EXCHANGE.OFFER,
@@ -80,6 +111,7 @@ class Component extends React.Component {
     });
   }
 
+
   handleCreateOfferSuccess = (data) => {
     console.log('handleCreateCCOrderSuccess', data);
     this.setState({modalContent:
@@ -87,11 +119,11 @@ class Component extends React.Component {
         <div className="py-2">
           <Feed className="feed p-2" background="#259B24">
             <div className="text-white d-flex align-items-center" style={{ minHeight: '75px' }}>
-              <div>You are about to buy 1 ETH for $1000</div>
+              <div>Create offer success</div>
             </div>
           </Feed>
-          <Button className="mt-2" block onClick={this.handleBuySuccess}>Confirm</Button>
-          <Button block className="btn btn-light" onClick={this.handleBuyAnother}>Not now</Button>
+          <Button className="mt-2" block onClick={this.handleBuySuccess}>OK</Button>
+          <Button block className="btn btn-light" onClick={this.handleBuyAnother}>Create another</Button>
         </div>
       )
     }, () => {
@@ -111,11 +143,16 @@ class Component extends React.Component {
   handleCreateOfferFailed = (e) => {
     // console.log('handleCreateCCOrderFailed', JSON.stringify(e.response));
     this.setState({modalContent:
-        (<div>
-          <h1>Buy Failed</h1>
-          <span>{e.response?.data?.message}</span>
-          <Button onClick={this.handleBuyFailed}>OK</Button>
-        </div>)
+        (
+          <div className="py-2">
+            <Feed className="feed p-2" background="#259B24">
+              <div className="text-white d-flex align-items-center" style={{ minHeight: '75px' }}>
+                <div>Create offer failed</div>
+              </div>
+            </Feed>
+            <Button block className="btn btn-light" onClick={this.handleBuyFailed}>Dismiss</Button>
+          </div>
+        )
     }, () => {
       this.modalRef.open();
     });
