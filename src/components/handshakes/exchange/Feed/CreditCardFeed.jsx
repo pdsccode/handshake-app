@@ -121,7 +121,7 @@ class CreditCardFeed extends React.Component {
                 <div>Buy success</div>
               </div>
             </Feed>
-            <Button block className="btn btn-light" onClick={this.handleBuySuccess}>Dismiss</Button>
+            <Button block className="btn btn-secondary mt-2" onClick={this.handleBuySuccess}>Dismiss</Button>
           </div>
         )
     }, () => {
@@ -143,7 +143,7 @@ class CreditCardFeed extends React.Component {
                 <div>{e.response?.data?.message}</div>
               </div>
             </Feed>
-            <Button block className="btn btn-light" onClick={this.handleBuyFailed}>Dismiss</Button>
+            <Button block className="btn btn-secondary mt-2" onClick={this.handleBuyFailed}>Dismiss</Button>
           </div>
         )
     }, () => {
