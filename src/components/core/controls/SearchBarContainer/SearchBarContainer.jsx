@@ -2,23 +2,12 @@
  * SearchBarContainer Component.
  */
 import React from 'react';
-// import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Autosuggest from 'react-autosuggest';
-import s from './SearchBarContainer.scss';
-// import { getValueParamURLQueryByName } from '@services/helper';
-// import { logActionSearchInSearchBar } from '@services/logActionAutonomous';
-// import { quickSearchProducts } from '@services/model/Product';
-// import { HandleAjaxError } from '@services/handleError';
-
-// import ProductModel from '@models/Product';
-// import Cookies from 'js-cookie';
-
-// import Image from '@components/core/Html/Image';
-
-const SEARCH_ICON_SVG = require('@/assets/images/icon/ic_search.svg');
-// self
+// style
+import './SearchBarContainer.scss';
+import SEARCH_ICON_SVG from '@/assets/images/icon/ic_search.svg';
 
 class SearchBarContainer extends React.PureComponent {
   constructor(props) {
@@ -29,7 +18,7 @@ class SearchBarContainer extends React.PureComponent {
       suggestions: [],
       dirty: false,
     };
-    this._handleInputSearchChange = this._handleInputSearchChange.bind(this);
+    this.handleInputSearchChange = this.handleInputSearchChange.bind(this);
     this.getSuggestions = this.getSuggestions.bind(this);
     this.getSuggestionValue = this.getSuggestionValue.bind(this);
     this.onSuggestionsClearRequested = this.onSuggestionsClearRequested.bind(this);
@@ -37,21 +26,17 @@ class SearchBarContainer extends React.PureComponent {
     this.onSuggestionSelected = this.onSuggestionSelected.bind(this);
     this.onInputClick = this.onInputClick.bind(this);
   }
+  // variable
   theme = user => ({
-    container: `${s.root} hidden-sm`,
-    input: `${s.textField} ${user.status > 0 && s.fixWidthInput} text-left`,
-    suggestionsList: `list-group ${s.listGroup}`,
-    suggestion: `list-group-item ${s.listGroupItem}`,
-    suggestionHighlighted: s.suggestionHighlighted,
-    inputFocused: s.inputFocused,
-    containerOpen: s.containerOpen,
-    inputOpen: s.inputOpen,
+    container: 'search-bar-container',
+    input: '',
+    suggestionsList: `list-group`,
+    suggestion: `list-group-item`,
+    suggestionHighlighted: '',
+    inputFocused: '',
+    containerOpen: '',
+    inputOpen: '',
   });
-  set products(data) {
-    this.setState({
-      products: data,
-    });
-  }
 
   set value(value) {
     this.setState({
@@ -87,7 +72,7 @@ class SearchBarContainer extends React.PureComponent {
     return <span className={s.textBody}>{suggestion.product_name}</span>;
   }
 
-  _handleInputSearchChange(event, { newValue, method }) {
+  handleInputSearchChange(event, { newValue, method }) {
     this.value = newValue;
   }
 
@@ -130,29 +115,10 @@ class SearchBarContainer extends React.PureComponent {
         'Search product in search bar',
         `${data.suggestionValue}: ${this.state.value}`,
       );
-      // log action autonomous
-      try {
-        logActionSearchInSearchBar(this.state.value, data.suggestionValue);
-      } catch (e) {}
     }
   }
 
   onInputClick() {
-    // if (this.state.products.length === 0) {
-    //   const productList = quickSearchProducts();
-    //   productList.then((response) => {
-    //     HandleAjaxError(response, 'Get products fail!');
-    //     const products = response.data.data;
-    //     this.products = products;
-    //     this.value = '';
-    //     this.suggestions = this.getSuggestions('');
-    //     Cookies.set(
-    //       QUICK_SEARCH_PRODUCT,
-    //       ProductModel.quickSearchProducts(products),
-    //       { expires: 7 },
-    //     ); // default the time life 7 days
-    //   });
-    // }
   }
 
   componentWillMount() {
@@ -165,44 +131,19 @@ class SearchBarContainer extends React.PureComponent {
   }
 
   componentDidMount() {
-    // const productList = getProducts();
-    // productList.then(response => {
-    //   HandleAjaxError(response, "Get products fail!");
-    //   this.products = response.data.data;
-    // });
   }
+
   renderInputComponent = inputProps => (
-    <div className="inputContainer">
-      <img className="icon" src={SEARCH_ICON_SVG} />
+    <div className="input-container">
+      <img className="icon-search" src={SEARCH_ICON_SVG} />
       <input
-        className="searchInput"
+        className="search-input"
         onClick={this.onInputClick}
         {...inputProps}
       />
     </div>
   );
-  // render() {
-  //   const { value, suggestions } = this.state;
-
-  //   // Autosuggest will pass through all these props to the input.
-  //   const inputProps = {
-  //     placeholder: 'Type a programming language',
-  //     value,
-  //     onChange: this.onChange,
-  //   };
-
-  //   // Finally, render it!
-  //   return (
-  //     <Autosuggest
-  //       theme={this.theme}
-  //       renderInputComponent={this.renderInputComponent}
-  //       suggestions={suggestions}
-  //       onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
-  //       onSuggestionsClearRequested={this.onSuggestionsClearRequested}
-  //       inputProps={inputProps}
-  //     />
-  //   );
-  // }
+  
   render() {
     const { value, suggestions } = this.state;
     const { user } = this.props;
@@ -210,19 +151,19 @@ class SearchBarContainer extends React.PureComponent {
     const inputProps = {
       placeholder: 'Search',
       value,
-      className: 'searchInput',
-      onChange: this._handleInputSearchChange,
+      className: 'search-input',
+      onChange: this.handleInputSearchChange,
     };
 
     const theme = {
-      container: `${s.root} hidden-sm`,
-      input: `${s.textField} ${user.status > 0 && s.fixWidthInput} text-left`,
-      suggestionsList: `list-group ${s.listGroup}`,
-      suggestion: `list-group-item ${s.listGroupItem}`,
-      suggestionHighlighted: s.suggestionHighlighted,
-      inputFocused: s.inputFocused,
-      containerOpen: s.containerOpen,
-      inputOpen: s.inputOpen,
+      container: 'search-bar-container',
+      input: ``,
+      suggestionsList: `list-group`,
+      suggestion: `list-group-item`,
+      suggestionHighlighted: '',
+      inputFocused: '',
+      containerOpen: '',
+      inputOpen: '',
     };
     return (
       <Autosuggest
@@ -247,6 +188,7 @@ SearchBarContainer.propTypes = {
   productList: PropTypes.array,
   user: PropTypes.object.isRequired,
 };
+
 SearchBarContainer.defaultProps = {
   user: { status: 1 },
 };

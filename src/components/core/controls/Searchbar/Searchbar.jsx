@@ -7,7 +7,6 @@ import {
   FormControl,
 } from 'react-bootstrap';
 import './Searchbar.scss';
-import axios from 'axios';
 import Autosuggest from 'react-autosuggest';
 
 class Searchbar extends React.Component {
