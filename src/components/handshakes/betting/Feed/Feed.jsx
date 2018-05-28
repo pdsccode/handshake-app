@@ -107,7 +107,7 @@ class FeedBetting extends React.Component {
                 <p className="eventInfo">10 ETH that it is ginger</p>
                 <p className="odds">1:10</p>
               </div>
-              <hr/>
+              <hr className="line" />
               <div className="bottomWrapper">
                 <div>
                   <Image src={conferenceCallIcon} alt="conference call icon" />
