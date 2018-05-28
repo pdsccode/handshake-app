@@ -252,10 +252,10 @@ class BettingCreate extends React.PureComponent {
     
   }
   initHandshakeSuccess = (data)=>{
-    console.log('initHandshakeSuccess': data);
+    console.log('initHandshakeSuccess', data);
   }
   initHandshakeFailed = (error) => {
-    console.log('initHandshakeFailed': error);
+    console.log('initHandshakeFailed', error);
   }
 
   //Blockchain
