@@ -36,6 +36,7 @@ class DiscoverPage extends React.Component {
     this.props.success(handShakeList); // temp
     // bind
     this.clickCategoryItem = this.clickCategoryItem.bind(this);
+    this.searchChange = this.searchChange.bind(this);
   }
 
   get getHandshakeList() {
@@ -50,6 +51,10 @@ class DiscoverPage extends React.Component {
       }
       return null;
     });
+  }
+
+  searchChange() {
+    // TODO: search feed
   }
 
   clickFeedDetail(slug) {
@@ -83,7 +88,7 @@ class DiscoverPage extends React.Component {
       <Grid>
         <Row>
           <Col md={12} xs={12}>
-            <SearchBar />
+            <SearchBar onSuggestionSelected={this.searchChange} />
           </Col>
         </Row>
         <Row>

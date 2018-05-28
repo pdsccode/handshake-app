@@ -13,10 +13,11 @@ import dontIcon from '@/assets/images/icon/3-dot-icon.svg';
 import iconSafe from '@/assets/images/icon/icon-safe.svg';
 import iconWarning from '@/assets/images/icon/icon-warning.svg';
 import Header from './Header'; 
+import HeaderMore from './HeaderMore'; 
 import WalletItem from './WalletItem'; 
 import ReactBottomsheet from 'react-bottomsheet'; 
 // var ReactBottomsheet = require('react-bottomsheet');
-
+import { setHeaderRight } from '@/reducers/app/action';
 
 // style
 import './Wallet.scss';
@@ -35,6 +36,11 @@ class Wallet extends React.Component {
       bottomSheet: false,
       listMenu: [],
     };    
+    this.props.setHeaderRight(this.headerRight());
+  }
+
+  headerRight() {
+    return (<HeaderMore onHeaderMoreClick={this.onLinkClick} />);
   }
 
   splitWalletData(listWallet){
@@ -103,7 +109,7 @@ class Wallet extends React.Component {
     this.setState(obj)
   }
   
-  crateSheetMenu(wallet){
+  crateSheetMenuItem(wallet){
     let obj = [];
       obj.push({
         title: 'Send',
@@ -153,12 +159,37 @@ class Wallet extends React.Component {
       return obj;
   }
 
-  onLinkClick (){
-      alert("add new");
+  crateSheetMenuHeaderMore(){
+    let obj = [];
+    obj.push({
+      title: "Add new",
+      handler: () => {          
+        
+      }
+    })
+    obj.push({
+      title: 'Export wallet',
+      handler: () => {
+        
+      }
+    })
+    obj.push({
+      title: 'Restore wallet',
+      handler: () => {
+        
+      }
+    })
+    return obj;
+  }
+
+  onLinkClick = () =>{
+    this.setState({listMenu: this.crateSheetMenuHeaderMore()})
+    this.toggleBottomSheet();
+    
   }
 
   onMoreClick = (wallet) => {
-    this.setState({listMenu: this.crateSheetMenu(wallet)})
+    this.setState({listMenu: this.crateSheetMenuItem(wallet)})
     this.toggleBottomSheet();
   }
   onWarningClick = (wallet) => {
@@ -213,7 +244,7 @@ const mapState = (state) => ({
 });
 
 const mapDispatch = ({
-  
+  setHeaderRight
 });
 
 export default connect(mapState, mapDispatch)(Wallet);
