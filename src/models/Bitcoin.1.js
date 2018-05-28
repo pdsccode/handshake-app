@@ -33,9 +33,12 @@ export class Bitcoin extends Wallet{
       let hdPublicKey = hdPrivateKey.hdPublicKey;
     
       let address = new bitcore.Address(hdPublicKey.publicKey, bitcore.Networks.livenet);
+
+      var derived = hdPrivateKey.derive("m/{0}'".format(this.coinType));
+      var wif = derived.privateKey.toWIF();
       
       this.address = address.toString();
-      this.privateKey = hdPrivateKey.xprivkey;        
+      this.privateKey = derived.xprivkey;        
   }
       
     async getBalance() {      
