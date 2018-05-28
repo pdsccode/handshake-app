@@ -87,7 +87,7 @@ class Component extends React.Component {
               </div>
             </Feed>
             <Button className="mt-2" block onClick={() => this.createOffer(offer)}>Confirm</Button>
-            <Button block className="btn btn-light" onClick={this.cancelCreateOffer}>Not now</Button>
+            <Button block className="btn btn-secondary" onClick={this.cancelCreateOffer}>Not now</Button>
           </div>
         )
     }, () => {
