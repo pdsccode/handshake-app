@@ -67,10 +67,20 @@ class Wallet extends React.Component {
   async getListBalace() {
 
     let listWallet = this.state.listMainWalletBalance.concat(this.state.listTestWalletBalance);
+    
+    const pros = []
 
-    listWallet.forEach(async wallet => {
-      wallet.balance = await wallet.getBalance();      
-    });    
+    listWallet.forEach(wallet => {
+      pros.push(new Promise((resolve, reject) => {
+        wallet.getBalance().then(balance => {
+          wallet.balance = balance;
+          resolve(wallet);
+        })
+      }));
+    });
+
+    await Promise.all(pros);
+
     await this.splitWalletData(listWallet);
     
 

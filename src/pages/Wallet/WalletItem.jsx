@@ -36,8 +36,8 @@ class WalletItem extends React.Component {
     render(){ 
         const {wallet, onMoreClick, onWarningClick} =  this.props;   
         const iconProtected = !wallet.protected ? iconWarning : iconSafe;
-        console.log("wallet object ==> ",wallet);     
-        console.log("wallet balance ==> ", wallet.balance);   
+        console.log("wallet object ==> ",wallet, wallet.network);     
+        console.log(`wallet balance ==> ${wallet["balance"]} --- ${wallet['network']}`);   
         return  ( 
             <Col sm={6} md={6} xs={6} key={wallet.address+wallet.network} className="feed-wrapper">
               <div className={this.getBgClass(wallet)}>
