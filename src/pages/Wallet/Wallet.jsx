@@ -109,6 +109,7 @@ class Wallet extends React.Component {
     this.setState(obj)
   }
   
+  // create list menu of wallet item when click Show more ...
   crateSheetMenuItem(wallet){
     let obj = [];
       obj.push({
@@ -147,7 +148,9 @@ class Wallet extends React.Component {
         handler: () => {          
           wallet.default = !wallet.default;    
           this.toggleBottomSheet(); 
-          MasterWallet.UpdateLocalStore(this.state.listMainWalletBalance.concat(this.state.listTestWalletBalance));     
+          let lstWalletTemp = this.state.listMainWalletBalance.concat(this.state.listTestWalletBalance);
+          if (wallet.default) lstWalletTemp.forEach(wal => {if (wal != wallet){wal.default = false;}})          
+          MasterWallet.UpdateLocalStore(lstWalletTemp);     
         }
       })
       obj.push({
@@ -160,6 +163,7 @@ class Wallet extends React.Component {
       return obj;
   }
 
+  // Menu for Right header bar
   crateSheetMenuHeaderMore(){
     let obj = [];
     obj.push({

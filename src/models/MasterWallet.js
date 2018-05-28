@@ -21,7 +21,7 @@ export class MasterWallet{
         // var bip39 = require('bip39');
         // mnemonic = bip39.generateMnemonic(); //generates string        
         let masterWallet = []        
-        for (var k1 in MasterWallet.ListCoin){                
+        for (var k1 in MasterWallet.ListCoin){
             for (var k2 in MasterWallet.ListCoin[k1].Network){
                 // init a wallet:
                 let wallet = new MasterWallet.ListCoin[k1];
