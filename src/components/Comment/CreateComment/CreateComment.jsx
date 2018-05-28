@@ -3,11 +3,16 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 // services, constants
-import { createComment, loadCommentList } from '@/reducers/comment/action';
+import { createComment } from '@/reducers/comment/action';
 import { API_URL } from '@/constants';
 
-// style
+// components
+import Image from '@/components/core/presentation/Image';
+
+// style, icons
 import './CreateComment.scss';
+import createImageIcon from '@/assets/images/icon/comment/image.svg';
+import postCommentIcon from '@/assets/images/icon/comment/post-comment.svg';
 
 class CreateComment extends React.PureComponent {
   constructor(props) {
@@ -27,8 +32,9 @@ class CreateComment extends React.PureComponent {
   render() {
     return (
       <div className="createComment">
+        <Image src={createImageIcon} alt="create image icon" onClick={this.createComment} />
         <input type="text" placeholder="Aa" ref={(component) => { this.inputRef = component; }} />
-        <div onClick={this.createComment} role="button">create comment</div>
+        <Image src={postCommentIcon} alt="post comment icon" onClick={this.createComment} />
       </div>
     );
   }

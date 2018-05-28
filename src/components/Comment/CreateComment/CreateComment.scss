@@ -1,7 +1,10 @@
 @import './src/styles/style';
 
 .createComment {
+  display: flex;
+  justify-content: space-between;
   input {
+    max-width: 306px;
     background: #F7F7F7;
     border-radius: rem-calc(6px);
     box-shadow: none;
