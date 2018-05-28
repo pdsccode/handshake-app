@@ -163,10 +163,14 @@ class Component extends React.Component {
   }
 
   render() {
-    const { totalAmount } = this.props;
+    const { totalAmount, type, sellPriceType } = this.props;
 
     let modalContent = this.state.modalContent;
-
+    const sellPriceTypes = [
+      { value: '1', text: 'Fix' },
+      { value: '2', text: 'Flexible' },
+    ]
+    const sellPrice = 11234234;
     return (
       <div>
         <FormExchangeCreate onSubmit={this.handleSubmit}>
@@ -208,17 +212,65 @@ class Component extends React.Component {
                   />
                 </div>
               </div>
+              {
+                type === 'sell' && (
+                  <div>
+                    <div className="d-flex mt-2">
+                      <label className="col-form-label mr-auto" style={{ width: '100px' }}>Price type</label>
+                      <div className='input-group'>
+                        <Field
+                          name="sellPriceType"
+                          component={fieldRadioButton}
+                          list={sellPriceTypes}
+                          color={mainColor}
+                          validate={[required]}
+                        />
+                      </div>
+                    </div>
+                    {
+                      sellPriceType === '1' && (
+                        <div className="d-flex mt-2">
+                          <label className="col-form-label mr-auto" style={{ width: '100px' }}>Fee (%)</label>
+                          <div className='input-group'>
+                            <Field
+                              name="fee"
+                              className='form-control-custom form-control-custom-ex w-100'
+                              component={fieldCleave}
+                              propsCleave={{
+                                placeholder: 'percent',
+                                options: { numeral: true, numeralDecimalScale: 6, delimiter: '' },
+                                // type: "password",
+                                // maxLength: "4",
+                                // minLength: "3",
+                                // id: `cart-cvc-${this.lastUniqueId()}`,
+                                // htmlRef: input => this.ccCvcRef = input,
+                              }}
+                              // validate={(!isCCExisting || isNewCCOpen) ? [required] : []}
+                            />
+                          </div>
+                        </div>
+                      )
+                    }
+                  </div>
+                )
+              }
               <div className="d-flex">
                 <label className="col-form-label mr-auto" style={{ width: '100px' }}>Price({FIAT_CURRENCY_SYMBOL})</label>
-                <div className="w-100">
-                  <Field
-                    name="price"
-                    className="form-control-custom form-control-custom-ex w-100"
-                    component={fieldInput}
-                    onChange={this.onPriceChange}
-                    validate={[required]}
-                  />
-                </div>
+                {
+                  type === 'buy' ? (
+                    <div className="w-100">
+                      <Field
+                        name="price"
+                        className="form-control-custom form-control-custom-ex w-100"
+                        component={fieldInput}
+                        onChange={this.onPriceChange}
+                        validate={[required]}
+                      />
+                    </div>
+                  ) : (
+                    <span className="w-100 col-form-label">{sellPrice}</span>
+                  )
+                }
               </div>
               <div className="d-flex">
                 <label className="col-form-label mr-auto" style={{ width: '100px' }}>Total({FIAT_CURRENCY_SYMBOL})</label>
@@ -248,11 +300,13 @@ class Component extends React.Component {
 }
 
 const mapStateToProps = (state) => {
+  const type = selectorFormExchangeCreate(state, 'type');
+  const sellPriceType = selectorFormExchangeCreate(state, 'sellPriceType');
   const amount = selectorFormExchangeCreate(state, 'amount');
   const price = selectorFormExchangeCreate(state, 'price');
   const totalAmount = amount * price || 0;
 
-  return { totalAmount };
+  return { totalAmount, type, sellPriceType };
 };
 
 const mapDispatchToProps = {

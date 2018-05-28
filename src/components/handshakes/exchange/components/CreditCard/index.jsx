@@ -99,14 +99,14 @@ class Component extends React.Component {
           </div>
         </div>
         <div className="d-flex mt-2">
-          <label className="col-form-label mr-auto" style={{ width: '100px' }}><FormattedMessage id="ccExpiry"/></label>
+          <label className="col-form-label mr-auto" style={{ width: '100px' }}><FormattedMessage id="ccExpire"/></label>
           <div className='input-group'>
             <Field
               name="cc_expired"
               className='form-control-custom form-control-custom-ex w-100'
               component={fieldCleave}
               propsCleave={{
-                placeholder: intl.formatMessage({id: 'ccExpiryTemplate'}),
+                placeholder: intl.formatMessage({id: 'ccExpireTemplate'}),
                 options: {blocks: [2, 2], delimiter: '/', numericOnly: true},
                 // type: "tel",
                 // id: `cart-date-${this.lastUniqueId()}`,
@@ -127,7 +127,7 @@ class Component extends React.Component {
               propsCleave={{
                 placeholder: intl.formatMessage({id: 'securityCode'}),
                 options: {blocks: [4], numericOnly: true},
-                type: "password",
+                // type: "password",
                 // maxLength: "4",
                 // minLength: "3",
                 // id: `cart-cvc-${this.lastUniqueId()}`,
