@@ -15,4 +15,5 @@ export default {
   shakeNow: 'Shake Now',
   offerHandShakeContent: '{offerType} {amount} {currency} for ${total} in cash',
   offerDistanceContent: '{offerType} is {distance} meters away',
+  createOfferConfirm: 'You are about to {type} {amount} {currency} for {currency_symbol}{total}',
 };
