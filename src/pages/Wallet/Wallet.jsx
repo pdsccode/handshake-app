@@ -113,6 +113,15 @@ class Wallet extends React.Component {
     let obj = (this.state.bottomSheet) ? { 'bottomSheet': false } : { 'bottomSheet': true }
     this.setState(obj)
   }  
+
+  copyToClipboard =(text) => {
+    var textField = document.createElement('textarea')
+    textField.innerText = text
+    document.body.appendChild(textField)
+    textField.select()
+    document.execCommand('copy')
+    textField.remove()
+  }
   
   // create list menu of wallet item when click Show more ...
   crateSheetMenuItem(wallet){
@@ -144,7 +153,8 @@ class Wallet extends React.Component {
       obj.push({
         title: 'Copy address',
         handler: () => {
-
+          this.copyToClipboard(wallet.address);
+          this.toggleBottomSheet(); 
         }
       })
 
@@ -242,6 +252,7 @@ class Wallet extends React.Component {
       </Grid>
     );
   }
+
 }
 
 Wallet.propTypes = {
