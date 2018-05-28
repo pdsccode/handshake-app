@@ -34,7 +34,7 @@ class FeedExchange extends React.PureComponent {
               </div>
           </div>
         </Feed>
-        <Button block>Shake now</Button>
+        <Button block className="mt-2">Shake now</Button>
       </div>
     );
   }
