@@ -23,6 +23,7 @@ import ModalDialog from "@/components/core/controls/ModalDialog/ModalDialog";
 import {BigNumber} from 'bignumber.js';
 import {SELL_PRICE_TYPE, SELL_PRICE_TYPE_DEFAULT} from "@/constants";
 import {getOfferPrice} from "@/reducers/exchange/action";
+import {MasterWallet} from "@/models/MasterWallet";
 
 const nameFormExchangeCreate = 'exchangeCreate';
 const FormExchangeCreate = createForm({
@@ -42,15 +43,68 @@ class Component extends React.Component {
     this.state = {
       modalContent: '',
       currency: CRYPTO_CURRENCY_DEFAULT,
+
+      listMainWalletBalance: [],
+      listTestWalletBalance: [],
     }
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     // this.getCryptoPriceByAmount(0);
     this.intervalCountdown = setInterval(() => {
       const { amount } = this.props;
       this.getCryptoPriceByAmount(amount);
     }, 30000);
+
+    //Get wallet
+    let listWallet = await MasterWallet.getMasterWallet();
+
+    if (listWallet == false){
+      listWallet = await MasterWallet.createMasterWallet();
+    }
+
+    await this.splitWalletData(listWallet)
+
+    await this.getListBalance();
+  }
+
+  splitWalletData(listWallet){
+
+    let listMainWallet = [];
+    let listTestWallet = [];
+
+    listWallet.forEach(wallet => {
+      // is Mainnet
+      if (wallet.network == MasterWallet.ListCoin[wallet.className].Network.Mainnet){
+        listMainWallet.push(wallet);
+      }
+      else{
+        // is Testnet
+        listTestWallet.push(wallet);
+      }
+    });
+
+    this.setState({listMainWalletBalance: listMainWallet, listTestWalletBalance: listTestWallet});
+  }
+
+  async getListBalance() {
+
+    let listWallet = this.state.listMainWalletBalance.concat(this.state.listTestWalletBalance);
+
+    const pros = []
+
+    listWallet.forEach(wallet => {
+      pros.push(new Promise((resolve, reject) => {
+        wallet.getBalance().then(balance => {
+          wallet.balance = balance;
+          resolve(wallet);
+        })
+      }));
+    });
+
+    await Promise.all(pros);
+
+    await this.splitWalletData(listWallet);
   }
 
   getCryptoPriceByAmount = (amount) => {
@@ -101,8 +155,26 @@ class Component extends React.Component {
 
   handleSubmit = (values) => {
     const {intl, totalAmount} = this.props;
-    console.log('valuessss', values);
-    const address = '';
+    // console.log('valuessss', values);
+
+    let listWallet = [];
+    if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+      listWallet = this.state.listTestWalletBalance;
+    } else {
+      listWallet = this.state.listMainWalletBalance;
+    }
+
+    // console.log('listWallet', listWallet);
+
+    let address = '';
+    for (let i = 0; i < listWallet.length; i++) {
+      let wallet = listWallet[i];
+
+      if (wallet.name === values.currency) {
+        address = wallet.address;
+        break;
+      }
+    }
 
     const offer = {
       amount: values.amount,
@@ -116,9 +188,9 @@ class Component extends React.Component {
     };
 
     if (values.type === 'buy') {
-      offer.refund_address = '';
+      offer.refund_address = address;
     } else {
-      offer.user_address = '';
+      offer.user_address = address;
     }
 
     console.log('handleSubmit', offer);

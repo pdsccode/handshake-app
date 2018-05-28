@@ -19,6 +19,7 @@ import {createCCOrder, getCcLimits, getCryptoPrice, getUserCcLimit, getUserProfi
 import {API_URL, CRYPTO_CURRENCY, CRYPTO_CURRENCY_DEFAULT} from "@/constants";
 import {FIAT_CURRENCY} from "@/constants";
 import CryptoPrice from "@/models/CryptoPrice";
+import {MasterWallet} from "@/models/MasterWallet";
 
 const nameFormCreditCard = 'creditCard'
 const FormCreditCard = createForm({ propsReduxForm: { form: nameFormCreditCard,
@@ -37,11 +38,14 @@ class FeedCreditCard extends React.Component {
       isNewCCOpen: false,
       modalContent: '',
       showCCScheme: false,
+
+      listMainWalletBalance: [],
+      listTestWalletBalance: [],
     }
     this.getCryptoPriceByAmountThrottled = throttle(this.getCryptoPriceByAmount, 500);
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     this.props.getUserProfile({ BASE_URL: API_URL.EXCHANGE.BASE, PATH_URL: API_URL.EXCHANGE.GET_USER_PROFILE});
     this.props.getCcLimits({ BASE_URL: API_URL.EXCHANGE.BASE, PATH_URL: API_URL.EXCHANGE.GET_CC_LIMITS});
     this.props.getUserCcLimit({ BASE_URL: API_URL.EXCHANGE.BASE, PATH_URL: API_URL.EXCHANGE.GET_USER_CC_LIMIT});
@@ -51,6 +55,56 @@ class FeedCreditCard extends React.Component {
     this.intervalCountdown = setInterval(() => {
       this.getCryptoPriceByAmount(this.state.amount);
     }, 30000);
+
+    //Get wallet
+    let listWallet = await MasterWallet.getMasterWallet();
+
+    if (listWallet == false){
+      listWallet = await MasterWallet.createMasterWallet();
+    }
+
+    await this.splitWalletData(listWallet)
+
+    await this.getListBalance();
+  }
+
+  splitWalletData(listWallet){
+
+    let listMainWallet = [];
+    let listTestWallet = [];
+
+    listWallet.forEach(wallet => {
+      // is Mainnet
+      if (wallet.network == MasterWallet.ListCoin[wallet.className].Network.Mainnet){
+        listMainWallet.push(wallet);
+      }
+      else{
+        // is Testnet
+        listTestWallet.push(wallet);
+      }
+    });
+
+    this.setState({listMainWalletBalance: listMainWallet, listTestWalletBalance: listTestWallet});
+  }
+
+  async getListBalance() {
+
+    let listWallet = this.state.listMainWalletBalance.concat(this.state.listTestWalletBalance);
+
+    const pros = []
+
+    listWallet.forEach(wallet => {
+      pros.push(new Promise((resolve, reject) => {
+        wallet.getBalance().then(balance => {
+          wallet.balance = balance;
+          resolve(wallet);
+        })
+      }));
+    });
+
+    await Promise.all(pros);
+
+    await this.splitWalletData(listWallet);
   }
 
   componentWillUnmount() {
@@ -90,8 +144,23 @@ class FeedCreditCard extends React.Component {
 
   handleCreateCCOrder = (params) => {
     const {cryptoPrice} = this.props;
-    let address = localStore.get('address');
-    address = '0x2a08a375e203a72f1A378827A3b66D2785A2F7D5';
+
+    let listWallet = [];
+    if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+      listWallet = this.state.listTestWalletBalance;
+    } else {
+      listWallet = this.state.listMainWalletBalance;
+    }
+
+    let address = '';
+    for (let i = 0; i < listWallet.length; i++) {
+      let wallet = listWallet[i];
+
+      if (wallet.name === cryptoPrice.currency) {
+        address = wallet.address;
+        break;
+      }
+    }
 
     if (cryptoPrice) {
       const paramsObj = {
