@@ -39,7 +39,7 @@ export class Ethereum extends Wallet{
     }    
     
     async getBalance() {  
-        web3 = new Web3(new Web3.providers.HttpProvider(this.network));      
+        let web3 = new Web3(new Web3.providers.HttpProvider(this.network));      
         const balance = await web3.eth.getBalance(this.address);        
         return Web3.utils.fromWei(balance.toString());
       };
