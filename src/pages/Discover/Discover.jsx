@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { loadDiscoverList, success } from '@/reducers/discover/action';
 // components
 import { Grid, Row, Col } from 'react-bootstrap';
-import SearchBarContainer from '@/components/core/controls/SearchBarContainer';
+import SearchBar from '@/components/core/controls/SearchBar';
 import Category from '@/components/core/controls/Category';
 import { handShakeList } from '@/data/shake.js';
 import { URL } from '@/config';
@@ -84,7 +84,7 @@ class DiscoverPage extends React.Component {
       <Grid>
         <Row>
           <Col md={12} xs={12}>
-            <SearchBarContainer />
+            <SearchBar />
           </Col>
         </Row>
         <Row>
