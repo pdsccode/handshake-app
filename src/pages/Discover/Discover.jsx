@@ -19,6 +19,7 @@ import FeedSeed from '@/components/handshakes/seed/Feed';
 // style
 import './Discover.scss';
 import FeedCreditCard from "@/components/handshakes/exchange/Feed/FeedCreditCard";
+import Tabs from '@/components/handshakes/exchange/components/Tabs';
 
 const maps = {
   [HANDSHAKE_ID.PROMISE]: FeedPromise,
@@ -95,17 +96,21 @@ class DiscoverPage extends React.Component {
         </Row>
         {
           handshakeIdActive === HANDSHAKE_ID.EXCHANGE && (
-            <Row className="text-center buy-sell-wrapper">
-              <Col md={6}><strong>Buy</strong></Col>
-              <Col md={6}><strong>Sell</strong></Col>
-            </Row>
+            <div>
+              <Tabs
+                activeId={1}
+                onClickTab={(index) => console.log('indexx', index)}
+                list={[
+                  { id: 1, text: 'Buy' },
+                  { id: 2, text: 'Sell' },
+                ]}
+              />
+              <div className="feed-wrapper">
+                <FeedCreditCard {...this.props} />
+              </div>
+            </div>
           )
         }
-        <Row>
-          <Col md={12} xs={6}>
-            <FeedCreditCard {...this.props}/>
-          </Col>
-        </Row>
         <Row>
           {this.getHandshakeList}
         </Row>

@@ -1,14 +1,12 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import _keys from 'lodash/keys';
 
-const Header = styled.span.attrs({
-  className: 'text-center',
-})`
-  border-top: ${props => (props.active ? '3px solid #278AFF' : '')};
-  box-shadow: ${props => (props.active ? '0 -5px 6px 1px rgba(236,236,236,0.50)' : '')};
-  color: ${props => (props.active ? '' : '#B3B3B3')};
+const Wrapper = styled.div`
+  box-shadow: 0 0.125rem 0.25rem 0 rgba(203, 203, 203, 0.5);
+  margin-bottom: 10px;
+`
+const Tab = styled.span`
+  color: ${props => (props.active ? '#1E4EFF' : '#C8C7CC')};
   display: inline-block;
   padding: 10px;
   cursor: pointer;
@@ -17,32 +15,33 @@ const Header = styled.span.attrs({
 export class Component extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
   render() {
     const {
-      activeIndex, data, onClickTab, className,
+      activeId, list, onClickTab
     } = this.props;
-    const activeIndexInt = parseInt(activeIndex, 10);
+    const activeIdInt = parseInt(activeId, 10);
     return (
-      <div className={className}>
+      <Wrapper>
         {
-          _keys(data).map((key, index) => {
-            const tabKeyInt = parseInt(key, 10);
+          list.map((button, index) => {
+            const { id, text } = button
+            const idInt = parseInt(id, 10);
+            const isActive = idInt === activeIdInt
             return (
-              <Header
+              <Tab
                 key={index}
-                active={tabKeyInt === activeIndexInt}
-                onClick={() => onClickTab && onClickTab(tabKeyInt)}
+                className="text-center"
+                active={isActive}
+                onClick={() => onClickTab && onClickTab(idInt)}
                 style={{
-                  width: `${100 / _keys(data).length}%`,
+                  width: `${100 / list.length}%`,
                 }}
-
               >
-                {data[key].header}
-              </Header>
-            );
+                {text}
+              </Tab>
+            )
           })
         }
-        {data[activeIndexInt].element}
-      </div>
-    );
+      </Wrapper>
+    )
   }
 }
 
