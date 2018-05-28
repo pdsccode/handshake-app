@@ -18,10 +18,10 @@ import { InputField } from '../form/customField';
 // self
 import './Create.scss';
 
-// import Handshake from '@/services/neuron/neuron-handshake';
-//import Neuron from '@/services/neuron';
+import Neuron from '@/services/neuron';
 
-//let neuron = Neuron(4);
+const neuron = new Neuron(4);
+
 const nameFormBettingCreate = 'bettingCreate';
 const BettingCreateForm = createForm({
   propsReduxForm: {
@@ -98,11 +98,16 @@ class BettingCreate extends React.PureComponent {
       );
     });
     console.log('After Content:', content);
-    console.log("this", this.datePickerRef.value);
+    //console.log("this", this.datePickerRef.value);
 
-    const {toAddress, isPublic, industryId} = this.props;
-
-    
+    //const {toAddress, isPublic, industryId} = this.props;
+    const eventDate =  new Date(this.datePickerRef.value);
+    const escrow = values['event_bet'];
+    const event_odds = 1/parseInt(values['event_odds']);
+    console.log('Event Date: ', eventDate);
+    console.log('Escrow:', escrow);
+    console.log('Event Odds:', event_odds);
+    this.initBet(escrow, event_odds, eventDate);
   }
 
   get inputList() {
@@ -258,18 +263,48 @@ class BettingCreate extends React.PureComponent {
     console.log('initHandshakeFailed', error);
   }
 
-  //Blockchain
-  initBet(){
+  toUTF8Array(str) {
+    var utf8 = [];
+    for (var i=0; i < str.length; i++) {
+        var charcode = str.charCodeAt(i);
+        if (charcode < 0x80) utf8.push(charcode);
+        else if (charcode < 0x800) {
+            utf8.push(0xc0 | (charcode >> 6), 
+                      0x80 | (charcode & 0x3f));
+        }
+        else if (charcode < 0xd800 || charcode >= 0xe000) {
+            utf8.push(0xe0 | (charcode >> 12), 
+                      0x80 | ((charcode>>6) & 0x3f), 
+                      0x80 | (charcode & 0x3f));
+        }
+        // surrogate pair
+        else {
+            i++;
+            // UTF-16 encodes 0x10000-0x10FFFF by
+            // subtracting 0x10000 and splitting the
+            // 20 bits of 0x0-0xFFFFF into two halves
+            charcode = 0x10000 + (((charcode & 0x3ff)<<10)
+                      | (str.charCodeAt(i) & 0x3ff));
+            utf8.push(0xf0 | (charcode >>18), 
+                      0x80 | ((charcode>>12) & 0x3f), 
+                      0x80 | ((charcode>>6) & 0x3f), 
+                      0x80 | (charcode & 0x3f));
+        }
+    }
+    return utf8;
+}
 
-    let address = "0x54CD16578564b9952d645E92b9fa254f1feffee9";
-    let privateKey = "";
-    let amount = "30";
-    let value = "";
-    let term = "";
-    let deliveryDate = "";
-    let payee = "";
-    let offchain = "";
-    neuron.handshake.init(address, privateKey, amount, value, term, deliveryDate, payee, offchain);
+  //Blockchain
+  initBet(escrow, odd, eventDate){
+
+    const address = "0x54CD16578564b9952d645E92b9fa254f1feffee9";
+    const privateKey = "9bf73320e0bcfd7cdb1c0e99f334d689ef2b6921794f23a5bffd2a6bb9c7a3d4";
+    const acceptors = [];
+    const goal = escrow*odd;
+    const currentDate = new Date();
+    const deadline = (eventDate.getTime() / 1000 - currentDate.getTime() / 1000);
+    const offchain = 'abc1';
+    neuron.bettingHandshake.initBet(address, privateKey, acceptors, goal, escrow, deadline, offchain);
     
   }
 }

@@ -1,14 +1,16 @@
+import Neuron from '@/services/neuron';
+const neuron = new Neuron(4);
 
 export const BETTING_STATUS = 
     { NOT_CREATE: -4, INITING: -1, INITED: 0, SHAKED: 1, CLOSED: 2, CANCELLED: 3, 
     INITIATOR_WON: 4, BETOR_WON: 5, DRAW: 6, ACCEPTED: 7, REJECTED: 8, DONE: 9}
 
 
-const BETTING_STATUS_LABEL = 
+export const BETTING_STATUS_LABEL = 
     { INITING: 'Initing', 
     INITED: 'Inited', SHAKE: 'Shake', CLOSE: 'Close bet', CANCEL: 'Cancel', 
     WITHDRAW: 'Withdraw', 'WAITING_RESULT': 'Waiting Result', REJECT: 'Reject', LOSE: 'Lose',
-    RESOLVING: 'Resolving'}
+    RESOLVING: 'Resolving', PENDTING: 'Pendting'}
 
 
 export const ROLE = {
@@ -87,10 +89,18 @@ export class BetStatusHandler {
         return false;
 
     }
-    static shakeItem(role, eventDate, shakeAmount,goal,balance, item){
-        console.log('Shake Amount:',shakeAmount);
-        console.log('Goal:', goal);
-        console.log('Balance:',balance);
+    static initItem(escrow, odd, eventDate, offchain){
+        const address = "0x54CD16578564b9952d645E92b9fa254f1feffee9";
+        const privateKey = "9bf73320e0bcfd7cdb1c0e99f334d689ef2b6921794f23a5bffd2a6bb9c7a3d4";
+        const acceptors = [];
+        const goal = escrow*odd;
+        const currentDate = new Date();
+        const deadline = (eventDate.getTime() / 1000 - currentDate.getTime() / 1000);
+        neuron.bettingHandshake.initBet(address, privateKey, acceptors, goal, escrow, deadline, offchain);
+    }
+    static shakeItem(role, hid, state, balance, escrow){
+        console.log('Shake Amount:',escrow);
+        console.log('Balance:', balance);
         if (role === ROLE.PAYER || role === ROLE.GUEST){
             //handle shake item, for payee
             /*
@@ -98,6 +108,8 @@ export class BetStatusHandler {
             if date > event date, payee can't shake 
             User shake, deposit money into escrow. Return result
             */
+           //Testing
+           /*
            var today = new Date()
            if (today <= eventDate){
                // Change item to status 
@@ -112,6 +124,18 @@ export class BetStatusHandler {
                newItem.balance = newBalance;
                return newItem;
            }
+           */
+            const address = "0x54CD16578564b9952d645E92b9fa254f1feffee9";
+            const privateKey = "9bf73320e0bcfd7cdb1c0e99f334d689ef2b6921794f23a5bffd2a6bb9c7a3d4";
+            const acceptors = [];
+            const goal = escrow*odd;
+            const currentDate = new Date();
+            const deadline = (eventDate.getTime() / 1000 - currentDate.getTime() / 1000);
+            const offchain = 'abc1';
+            neuron.bettingHandshake.shake(address, privateKey,hid,state, balance, escrow, offchain);
+
+           
+
         }
         return null;
     }

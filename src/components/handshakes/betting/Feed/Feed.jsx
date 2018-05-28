@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 // services, constants
-import  { BetStatusHandler, ROLE } from './StatusHandler.js';
+import  { BetStatusHandler, ROLE, BETTING_STATUS_LABEL } from './StatusHandler.js';
 
 // components
 import Image from '@/components/core/presentation/Image';
@@ -125,8 +125,8 @@ class FeedBetting extends React.Component {
             </div>
         </Feed>
         {/* Shake */}
-        {statusLabel.action && <Button block onClick={() => { this.modalBetRef.open(); }}>{statusLabel.action}</Button>}
-        <Button block onClick={() => { this.modalBetRef.open(); }}>Shake betting now</Button>
+        {statusLabel.action && <Button block onClick={() => { this.clickButton(statusLabel.action); }}>{statusLabel.action}</Button>}
+        {/*<Button block onClick={() => { this.modalBetRef.open(); }}>Shake betting now</Button>*/}
         {/* Modal */}
         <ModalDialog title="Make a bet" onRef={modal => this.modalBetRef = modal}>
           <BettingShake
@@ -138,6 +138,28 @@ class FeedBetting extends React.Component {
         </ModalDialog>
       </div>
     );
+    
+  }
+  clickButton(title){
+    switch(title){
+      case BETTING_STATUS_LABEL.SHAKE: 
+        this.modalBetRef.open();
+        break;
+      
+      case BETTING_STATUS_LABEL.CLOSE: 
+        // TO DO: CLOSE BET
+        break;
+
+      case BETTING_STATUS_LABEL.WITHDRAW: 
+        // TO DO: WITHDRAW
+        break;
+
+      case BETTING_STATUS_LABEL.REJECT: 
+        // TO DO: WITHDRAW
+        break;
+
+    }
+    
   }
 
   submitShake(amount){
