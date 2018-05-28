@@ -7,8 +7,8 @@ class CreateComment extends React.PureComponent {
 
   render() {
     return (
-      <div>
-        create comment
+      <div className="createComment">
+        <input type="text" placeholder="Aa" />
       </div>
     );
   }

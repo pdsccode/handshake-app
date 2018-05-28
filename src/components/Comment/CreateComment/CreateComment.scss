@@ -1,5 +1,15 @@
-@import './../../../../src/styles/var';
+@import './src/styles/style';
 
 .createComment {
-  border-radius: 6px;
+  input {
+    background: #F7F7F7;
+    border-radius: rem-calc(6px);
+    box-shadow: none;
+    height: rem-calc(40px);
+    font-size: rem-calc(16px);
+    letter-spacing: 0;
+    &::placeholder {
+      color: #C8C7CC;
+    }
+  }
 }
