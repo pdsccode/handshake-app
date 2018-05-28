@@ -112,13 +112,9 @@ class Wallet extends React.Component {
   toggleBottomSheet () {
     let obj = (this.state.bottomSheet) ? { 'bottomSheet': false } : { 'bottomSheet': true }
     this.setState(obj)
-  }
-<<<<<<< HEAD
+  }  
   
   // create list menu of wallet item when click Show more ...
-=======
-
->>>>>>> 1fdd8787235ac89282c368c4480b0c10306932ab
   crateSheetMenuItem(wallet){
     let obj = [];
       obj.push({
