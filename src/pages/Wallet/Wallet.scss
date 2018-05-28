@@ -87,6 +87,22 @@
   display: flex;
   flex-wrap: wrap;
 }
+.bodyConfirm .left{
+  float: left;
+  width: 80px;
+}
+.bodyConfirm .right{
+  float: right;
+  width: 80px;
+}
+.bodyConfirm{
+  padding: 15px;
+  overflow: hidden;
+  margin: auto;
+  width: 70%;
+  margin-bottom: 5px;
+
+}
 
 .col-sm-6 {
     flex: 0 0 50%;

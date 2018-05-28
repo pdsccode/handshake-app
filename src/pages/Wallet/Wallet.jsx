@@ -22,6 +22,7 @@ import { setHeaderRight } from '@/reducers/app/action';
 // style
 import './Wallet.scss';
 import { Bitcoin } from '@/models/Bitcoin.1';
+import ModalDialog from '@/components/core/controls/ModalDialog';
 
 
 class Wallet extends React.Component {
@@ -36,12 +37,13 @@ class Wallet extends React.Component {
       listTestWalletBalance: [],
       bottomSheet: false,
       listMenu: [],
+      walletNeedRemove: null
     };
-    this.props.setHeaderRight(this.headerRight());
+    this.props.setHeaderRight(this.headerRight());    
   }
 
   headerRight() {
-    return (<HeaderMore onHeaderMoreClick={this.onLinkClick} />);
+    return (<HeaderMore onHeaderMoreClick={this.onIconRightHeaderClick} />);
   }
 
   splitWalletData(listWallet){
@@ -51,11 +53,11 @@ class Wallet extends React.Component {
 
     listWallet.forEach(wallet => {
       // is Mainnet
-      if (wallet.network == MasterWallet.ListCoin[wallet.className].Network.Mainnet){
+      if (wallet.network === MasterWallet.ListCoin[wallet.className].Network.Mainnet){        
         listMainWallet.push(wallet);
       }
       else{
-        // is Testnet
+        // is Testnet        
         listTestWallet.push(wallet);
       }
     });
@@ -163,19 +165,43 @@ class Wallet extends React.Component {
         handler: () => {          
           wallet.default = !wallet.default;    
           this.toggleBottomSheet(); 
+          // reset all wallet defaul:
           let lstWalletTemp = this.state.listMainWalletBalance.concat(this.state.listTestWalletBalance);
           if (wallet.default) lstWalletTemp.forEach(wal => {if (wal != wallet){wal.default = false;}})          
+          // Update wallet master from local store:
           MasterWallet.UpdateLocalStore(lstWalletTemp);
         }
       })
       obj.push({
         title: 'Remove',
         handler: () => {
-
+          this.setState({walletNeedRemove: wallet});          
+          this.modalBetRef.open();   
+          this.toggleBottomSheet();   
         }
       })
 
       return obj;
+  }
+
+  // Remove wallet function:
+  removeWallet = () =>{
+    let lstWalletTemp = this.state.listMainWalletBalance.concat(this.state.listTestWalletBalance);
+    var index = -1;
+    var walletTmp = this.state.walletNeedRemove;
+    if (walletTmp != null){
+        // Find index for this item:
+        lstWalletTemp.forEach(function (wal, i) {if (wal === walletTmp){index = i}});   
+        // Remove item:
+        if (index > -1) {
+          lstWalletTemp.splice(index, 1)
+          // Update wallet master from local store:
+          MasterWallet.UpdateLocalStore(lstWalletTemp);
+          this.splitWalletData(lstWalletTemp);
+        };       
+    }    
+    this.modalBetRef.close();     
+
   }
 
   // Menu for Right header bar
@@ -202,7 +228,7 @@ class Wallet extends React.Component {
     return obj;
   }
 
-  onLinkClick = () =>{
+  onIconRightHeaderClick = () =>{
     this.setState({listMenu: this.crateSheetMenuHeaderMore()})
     this.toggleBottomSheet();
 
@@ -236,6 +262,14 @@ class Wallet extends React.Component {
           visible={this.state.bottomSheet}
           onClose={this.toggleBottomSheet.bind(this)}
           list={this.state.listMenu} />
+        
+        <ModalDialog title="Confirm" onRef={modal => this.modalBetRef = modal}>
+          <div><span>Are you sure to want to remove this wallet?</span></div>
+          <div className='bodyConfirm'>
+            <Button className="left" type="primary" typeClass="primary" onClick={this.removeWallet} >Ok</Button>
+            <Button className="right" type="warning" typeClass="warning" onClick={() => { this.modalBetRef.close(); }}>Cancel</Button>
+          </div>
+        </ModalDialog>
 
         <Row className="list">
           <Header title="Main net wallets" hasLink={true} linkTitle="+ Add new" onLinkClick={this.onLinkClick} />
