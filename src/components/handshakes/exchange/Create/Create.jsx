@@ -238,7 +238,7 @@ class Component extends React.Component {
                               component={fieldCleave}
                               propsCleave={{
                                 placeholder: 'percent',
-                                options: { numeral: true, numeralDecimalScale: 6, delimiter: '' },
+                                options: { numeral: true, numeralDecimalScale: 1, delimiter: '' },
                                 // type: "password",
                                 // maxLength: "4",
                                 // minLength: "3",
