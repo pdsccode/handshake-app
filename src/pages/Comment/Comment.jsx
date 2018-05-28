@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 // services, constants
-import { loadCommentList, success } from '@/reducers/comment/action';
+import { loadCommentList } from '@/reducers/comment/action';
 import { API_URL } from '@/constants';
 
 // components
@@ -37,7 +37,6 @@ Comment.propTypes = {
   comment: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,
   loadCommentList: PropTypes.func.isRequired,
-  success: PropTypes.func.isRequired, // temp
 };
 
 const mapState = state => ({
@@ -47,7 +46,6 @@ const mapState = state => ({
 
 const mapDispatch = ({
   loadCommentList,
-  success, // temp
 });
 
 export default connect(mapState, mapDispatch)(Comment);

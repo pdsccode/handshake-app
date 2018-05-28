@@ -2,6 +2,7 @@ import Comment from '@/models/Comment';
 import { ACTIONS } from './action';
 
 const handleListPayload = payload => payload.data.items.map(comment => Comment.comment(comment));
+const handleCreateCommentPayload = payload => Comment.comment(payload.data);
 
 const commentReducer = (state = {
   list: [],
@@ -22,6 +23,23 @@ const commentReducer = (state = {
         list: handleListPayload(action.payload),
       };
     case `${ACTIONS.LOAD_COMMENTS}_FAILED`:
+      return {
+        ...state,
+        isFetching: false,
+      };
+    // create comment
+    case ACTIONS.CREATE_COMMENT:
+      return {
+        ...state,
+        isFetching: true,
+      };
+    case `${ACTIONS.CREATE_COMMENT}_SUCCESS`:
+      return {
+        ...state,
+        isFetching: false,
+        list: state.list.concat(handleCreateCommentPayload(action.payload)),
+      };
+    case `${ACTIONS.CREATE_COMMENT}_FAILED`:
       return {
         ...state,
         isFetching: false,
