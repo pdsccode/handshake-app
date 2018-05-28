@@ -1,24 +1,29 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+
+// services, constants
+import { loadCommentList, success } from '@/reducers/comment/action';
+import { API_URL } from '@/constants';
 
 // components
 import { Grid, Row, Col } from 'react-bootstrap';
 import CreateComment from '@/components/Comment/CreateComment';
-import ListComents from '@/components/Comment/ListComments';
+import ListComments from '@/components/Comment/ListComments';
 
 class Comment extends React.PureComponent {
   constructor(props) {
     super(props);
-    props.loadDiscoverList({ PATH_URL: 'handshake', qs: { public: 0, chain_id: 4 } });
+    props.loadCommentList({ PATH_URL: API_URL.COMMENT.LIST, qs: { object_type: 'test', object_id: 1 } });
   }
 
   render() {
-
+    console.log("this.props", this.props);
     return (
       <Grid>
         <Row>
           <Col md={12} xs={12}>
-            <ListComents />
+            <ListComments />
             <CreateComment />
           </Col>
         </Row>
@@ -28,20 +33,20 @@ class Comment extends React.PureComponent {
 }
 
 Comment.propTypes = {
-  discover: PropTypes.object.isRequired,
+  comment: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,
-  loadDiscoverList: PropTypes.func.isRequired,
+  loadCommentList: PropTypes.func.isRequired,
   success: PropTypes.func.isRequired, // temp
 };
 
 const mapState = state => ({
-  discover: state.discover,
+  comment: state.comment,
   router: state.router,
 });
 
 const mapDispatch = ({
-  loadDiscoverList,
+  loadCommentList,
   success, // temp
 });
 
-export default Comment;
+export default connect(mapState, mapDispatch)(Comment);

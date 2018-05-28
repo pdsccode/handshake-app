@@ -1,7 +1,7 @@
 import Comment from '@/models/Comment';
 import { ACTIONS } from './action';
 
-const handleListPayload = payload => payload.data.items.map(comment => comment.comment(comment));
+const handleListPayload = payload => payload.data.items.map(comment => Comment.comment(comment));
 
 const commentReducer = (state = {
   list: [],

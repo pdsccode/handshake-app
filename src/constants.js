@@ -38,4 +38,9 @@ export const API_URL = {
   SEED: {
     BASE: 'seed',
   },
+  COMMENT: {
+    BASE: 'https://stag-handshake.autonomous.ai/api/comment',
+    CREATE: 'comment/',
+    LIST: 'comment/list',
+  },
 };
