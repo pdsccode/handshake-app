@@ -19,7 +19,7 @@ export const BETTING_STATUS_LABEL =
     { INITING: 'Initing', 
     INITED: 'Inited', SHAKE: 'Shake', CLOSE: 'Close bet', CANCEL: 'Cancel', 
     WITHDRAW: 'Withdraw', 'WAITING_RESULT': 'Waiting Result', REJECT: 'Reject', LOSE: 'Lose',
-    RESOLVING: 'Resolving', PENDTING: 'Pendting'}
+    RESOLVING: 'Resolving', PENDTING: 'Pendting', IN_PROGRESS:'Progressing'}
 
 export const BETTING_OPTIONS = {
     INITIATOR_WON: 0, BETOR_WON: 1, DRAW: 2
@@ -49,6 +49,7 @@ export class BetHandshakeHandler {
         }
         if(status >= BETTING_STATUS.INITIATOR_WON && status <= BETTING_STATUS.DRAW){
             if(this.isAutoSetWinner(role, status, eventDate)){
+                console.log('there is a person choose result');
                 switch (status){
                     case BETTING_STATUS.INITIATOR_WON:
                     strStatus = (role === ROLE.PAYEE)? null : (role === ROLE.PAYER) ? BETTING_STATUS_LABEL.LOSE : BETTING_STATUS_LABEL.DONE; //If payeee = Withdraw, else payer = "lose" show button "Withdraw"
@@ -67,7 +68,9 @@ export class BetHandshakeHandler {
     
             }else {
                 //TO DO: if that is who click status change to peding
-                strAction = (role !== ROLE.PAYEE) ? BETTING_STATUS_LABEL.REJECT : null;
+                console.log('there is a person choose result');
+                strStatus = (role === ROLE.GUEST) ? BETTING_STATUS_LABEL.IN_PROGRESS : null;
+                strAction = (role !== ROLE.GUEST) ? BETTING_STATUS_LABEL.REJECT : null;
                 return {'status': strStatus, 'action': strAction, isShowOptions: false};
             }
         }

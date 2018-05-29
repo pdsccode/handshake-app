@@ -48,7 +48,7 @@ class DiscoverPage extends React.Component {
       if (FeedComponent) {
         return (
           <Col key={handshake.id} md={12} className="feed-wrapper">
-            <FeedComponent {...handshake} onFeedClick={() => this.clickFeedDetail(handshake.slug)} />
+            <FeedComponent firebaseUser={this.props.firebaseUser}  {... handshake} onFeedClick={() => this.clickFeedDetail(handshake.slug)} />
           </Col>
         );
       }

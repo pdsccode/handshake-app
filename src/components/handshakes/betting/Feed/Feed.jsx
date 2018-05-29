@@ -25,7 +25,7 @@ import conferenceCallIcon from '@/assets/images/icon/betting/conference_call.svg
 import ethereumIcon from '@/assets/images/icon/betting/ethereum.svg';
 import BettingHandshake from '@/services/neuron/neuron-bettinghandshake.js';
 
-const date = '2018-06-18';
+const date = '2018-05-28';
 const eventDate = new Date(date);
 const goal = 30;
 
@@ -62,24 +62,26 @@ class FeedBetting extends React.Component {
     const {initUserId, shakedUserIds, status, extraData} = item;
     console.log('Extra Data:', this.extraData);
     const profile = local.get(APP.AUTH_PROFILE);
-    console.log('Profile Id:', profile.id);
+    const token = local.get(APP.AUTH_TOKEN);
+    console.log('Token:', token);
+    console.log('Profile', profile);
     console.log('InitUserId:', initUserId);
     const isUserShake = this.isShakeUser(shakedUserIds, profile.id);
     console.log('Is User Shake:', isUserShake);
 
-    /*
-    const role = (profile.id === initUserId) ? ROLE.PAYEE :
+    
+    const role = (profile.id === 134) ? ROLE.PAYEE :
                 isUserShake ? ROLE.PAYER : ROLE.GUEST;
     console.log('Role:', role);
 
     this.setState({
       role
     });    
-    */
-   const hardCodeRole = ROLE.PAYEE;
-    const hardCodeStatus = 0;
+    
+   //const hardCodeRole = ROLE.PAYEE;
+    const hardCodeStatus = 5;
 
-    const result = BetHandshakeHandler.getStatusLabel(hardCodeStatus, hardCodeRole, eventDate)
+    const result = BetHandshakeHandler.getStatusLabel(hardCodeStatus, role, eventDate)
     console.log('Result:', result);
     if(result){
       this.updateStatus(result);
@@ -99,12 +101,21 @@ class FeedBetting extends React.Component {
     }
   }
   isShakeUser(shakeIds, userId){
+    console.log('User Id:', userId);
+    /*
     if(shakeIds){
+      
       if(shakeIds.indexOf(userId) > -1){
         return true;
 
       }
+      
     }
+    */
+    if(userId == 151){
+      return true;
+    }
+
     return false;
   }
   get balance(){
