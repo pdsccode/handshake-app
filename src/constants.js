@@ -1,6 +1,12 @@
 export const APP = {
   HEADER_DEFAULT: 'Handshake',
-  TOKEN: 'token',
+  // store
+  AUTH_TOKEN: 'auth_token',
+  AUTH_PROFILE: 'auth_profile',
+  WALLET_MASTER: 'wallet_master',
+  WALLET_CACHE: 'wallet_cache',
+  WALLET_DEFAULT: 'wallet_default',
+  WALLET_LIST: 'wallet_list',
 };
 
 export const HANDSHAKE_ID = {
