@@ -145,7 +145,7 @@ export class Bitcoin extends Wallet{
     }
     else{
       amount = amount - utxo.satoshis;
-      return findUtxos(utxos, pos+1, amount, result);
+      return this.findUtxos(utxos, pos+1, amount, result);
     }
   }
 
