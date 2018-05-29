@@ -135,11 +135,11 @@ class FeedExchange extends React.PureComponent {
   }
 
   render() {
-    const {init_user_id, location, state, status, type, extraData, ...props } = this.props;
+    const {init_user_id, location, state, status, extraData, ...props } = this.props;
 
     console.log('asfad', this.props);
     const offer = JSON.parse(extraData);
-    const {type, amount, currency, fiat_amount, fiat_currency} = offer;
+    const {type, amount, currency, fiat_amount, fiat_currency, contact_info} = offer;
 
     let modalContent = this.state.modalContent;
     return (
