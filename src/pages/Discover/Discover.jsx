@@ -2,20 +2,19 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 // service, constant
-import { loadDiscoverList, success } from '@/reducers/discover/action';
+import { loadDiscoverList } from '@/reducers/discover/action';
+import { URL } from '@/config';
+import { HANDSHAKE_ID, API_URL } from '@/constants';
 // components
 import { Grid, Row, Col } from 'react-bootstrap';
-import SearchBarContainer from '@/components/core/controls/SearchBarContainer';
+import SearchBar from '@/components/core/controls/SearchBar';
 import Category from '@/components/core/controls/Category';
-import { handShakeList } from '@/data/shake.js';
-import { URL } from '@/config';
-
-import { HANDSHAKE_ID } from '@/constants';
 import FeedPromise from '@/components/handshakes/promise/Feed';
 import FeedBetting from '@/components/handshakes/betting/Feed';
-import FeedExchange from '@/components/handshakes/exchange/Feed';
+import FeedExchange from '@/components/handshakes/exchange/Feed/FeedExchange';
 import FeedSeed from '@/components/handshakes/seed/Feed';
-
+import FeedCreditCard from '@/components/handshakes/exchange/Feed/FeedCreditCard';
+import Tabs from '@/components/handshakes/exchange/components/Tabs';
 // style
 import './Discover.scss';
 
@@ -32,15 +31,15 @@ class DiscoverPage extends React.Component {
     this.state = {
       handshakeIdActive: '',
     };
-    this.props.loadDiscoverList({ PATH_URL: 'handshake', qs: { public: 0, chain_id: 4 } });
-    this.props.success(handShakeList); // temp
+    this.props.loadDiscoverList({ PATH_URL: API_URL.DISCOVER.BASE });
     // bind
     this.clickCategoryItem = this.clickCategoryItem.bind(this);
+    this.searchChange = this.searchChange.bind(this);
   }
 
   get getHandshakeList() {
     return this.props.discover.list.map((handshake) => {
-      const FeedComponent = maps[handshake.industriesType];
+      const FeedComponent = maps[handshake.type];
       if (FeedComponent) {
         return (
           <Col key={handshake.id} md={12} className="feed-wrapper">
@@ -50,6 +49,10 @@ class DiscoverPage extends React.Component {
       }
       return null;
     });
+  }
+
+  searchChange() {
+    // TODO: search feed
   }
 
   clickFeedDetail(slug) {
@@ -79,11 +82,12 @@ class DiscoverPage extends React.Component {
 
   render() {
     const { handshakeIdActive } = this.state;
+
     return (
       <Grid>
         <Row>
           <Col md={12} xs={12}>
-            <SearchBarContainer />
+            <SearchBar onSuggestionSelected={this.searchChange} />
           </Col>
         </Row>
         <Row>
@@ -93,10 +97,19 @@ class DiscoverPage extends React.Component {
         </Row>
         {
           handshakeIdActive === HANDSHAKE_ID.EXCHANGE && (
-            <Row className="text-center buy-sell-wrapper">
-              <Col md={6}><strong>Buy</strong></Col>
-              <Col md={6}><strong>Sell</strong></Col>
-            </Row>
+            <div>
+              <Tabs
+                activeId={1}
+                onClickTab={(index) => console.log('indexx', index)}
+                list={[
+                  { id: 1, text: 'Buy' },
+                  { id: 2, text: 'Sell' },
+                ]}
+              />
+              <div className="feed-wrapper">
+                <FeedCreditCard {...this.props} />
+              </div>
+            </div>
           )
         }
         <Row>
@@ -111,17 +124,14 @@ DiscoverPage.propTypes = {
   discover: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,
   loadDiscoverList: PropTypes.func.isRequired,
-  success: PropTypes.func.isRequired, // temp
 };
 
 const mapState = state => ({
   discover: state.discover,
-  router: state.router,
 });
 
 const mapDispatch = ({
   loadDiscoverList,
-  success, // temp
 });
 
 export default connect(mapState, mapDispatch)(DiscoverPage);
