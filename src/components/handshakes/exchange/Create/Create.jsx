@@ -5,10 +5,10 @@ import Button from '@/components/core/controls/Button';
 
 import createForm from '@/components/core/form/createForm';
 import {fieldCleave, fieldDropdown, fieldInput, fieldRadioButton} from '@/components/core/form/customField';
-import { required, minValue, maxValue } from '@/components/core/form/validation';
+import {maxValue, minValue, required} from '@/components/core/form/validation';
 import {Field, formValueSelector} from "redux-form";
 import {connect} from "react-redux";
-import {createOffer} from '@/reducers/exchange/action';
+import {createOffer, getOfferPrice} from '@/reducers/exchange/action';
 import {
   API_URL,
   CRYPTO_CURRENCY,
@@ -16,16 +16,17 @@ import {
   EXCHANGE_ACTION,
   EXCHANGE_ACTION_DEFAULT,
   FIAT_CURRENCY,
-  FIAT_CURRENCY_SYMBOL
+  FIAT_CURRENCY_SYMBOL,
+  SELL_PRICE_TYPE,
+  SELL_PRICE_TYPE_DEFAULT
 } from "@/constants";
 import '../styles.scss'
 import ModalDialog from "@/components/core/controls/ModalDialog/ModalDialog";
 import {BigNumber} from 'bignumber.js';
-import {SELL_PRICE_TYPE, SELL_PRICE_TYPE_DEFAULT} from "@/constants";
-import {getOfferPrice} from "@/reducers/exchange/action";
 import {MasterWallet} from "@/models/MasterWallet";
 import axios from 'axios';
 import getSymbolFromCurrency from "currency-symbol-map";
+import {URL} from '@/config';
 
 const nameFormExchangeCreate = 'exchangeCreate';
 const FormExchangeCreate = createForm({
@@ -252,9 +253,8 @@ class Component extends React.Component {
   }
 
   handleCreateOfferSuccess = (data) => {
-    this.intervalClosePopup = setInterval(() => {
-      this.modalRef.close();
-      this.props.history.push(URL.HANDSHAKE_ME);
+    this.timeoutClosePopup = setTimeout(() => {
+      this.handleBuySuccess();
     }, 3000);
 
     console.log('handleCreateCCOrderSuccess', data);
@@ -275,9 +275,11 @@ class Component extends React.Component {
   }
 
   handleBuySuccess = () => {
-    if (this.intervalClosePopup) {
-      clearInterval(this.intervalClosePopup);
+    // console.log('handleBuySuccess');
+    if (this.timeoutClosePopup) {
+      clearTimeout(this.timeoutClosePopup);
     }
+    this.modalRef.close();
     this.props.history.push(URL.HANDSHAKE_ME);
   }
 
@@ -307,8 +309,6 @@ class Component extends React.Component {
     const { totalAmount, type, sellPriceType, offerPrice } = this.props;
 
     let modalContent = this.state.modalContent;
-
-    console.log('offerPrice', offerPrice);
 
     return (
       <div>
