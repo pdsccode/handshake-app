@@ -156,7 +156,7 @@ class FeedBetting extends React.Component {
                 <p className="eventInfo">{event_predict}</p>
                 <p className="odds">1:{event_odds}</p>
               </div>
-              <hr/>
+              <hr className="line" />
               <div className="bottomWrapper">
                 <div>
                   <Image src={conferenceCallIcon} alt="conference call icon" />
