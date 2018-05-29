@@ -1,5 +1,6 @@
 import Neuron from '@/services/neuron';
 import {MasterWallet} from '@/models/MasterWallet';
+import moment from 'moment';
 
 const neuron = new Neuron(4);
 const wallet = MasterWallet.getWalletDefault();
@@ -117,10 +118,9 @@ export class BetHandshakeHandler {
 
         const acceptors = [];
         const goal = escrow*odd;
-        const currentDate = new Date();
-        console.log('EventDate:', eventDate.getTime()/1000);
-        console.log('CurrentDate', currentDate.getTime()/1000);
-        const deadline = (eventDate.getTime() / 1000 - currentDate.getTime() / 1000);
+        const currentDate = moment();
+        const deadline = (eventDate.unix() / 1000 - currentDate.unix() / 1000);
+        console.log('Deadline:', deadline);
         const data = await neuron.bettingHandshake.initBet(address, privateKey, acceptors, goal, escrow, deadline, offchain);
         console.log('Init Betting:', data);
         return data;

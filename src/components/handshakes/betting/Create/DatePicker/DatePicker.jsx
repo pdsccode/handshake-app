@@ -24,8 +24,9 @@ class DatePicker extends React.PureComponent {
   onChangeDate(date){
     // this.setState({ selectedDate: date });
     this.selectedDate = date;
+    console.log('Date:', this.selectedDate);
     const { onChange } = this.props;
-    onChange && onChange();
+    onChange && onChange(date);
   }
 
   render() {

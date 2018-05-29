@@ -74,7 +74,7 @@ class BettingCreate extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      values: [],
+      values: {},
       address: null,
       privateKey: null,
     };
@@ -93,9 +93,10 @@ class BettingCreate extends React.PureComponent {
     })
   }
 
-  onSubmit(values) {
+  onSubmit(dict) {
+    const {address, privateKey, values} = this.state;
     console.log("values", values);
-    const {address, privateKey} = this.state;
+
     let content = this.content;
     const inputList = this.inputList;
     let extraParams = values;
@@ -162,8 +163,12 @@ class BettingCreate extends React.PureComponent {
     return (
       <DatePicker
         onChange={(selectedDate) => {
+          console.log('SelectedDate', selectedDate);
+          console.log('Key:', key);
           const {values} = this.state;
-          values[key] = selectedDate;
+          values[key] = selectedDate.format();
+          this.setState({values}, ()=>console.log(values));
+            
         }}
         inputProps={{
           readOnly: true,
@@ -276,13 +281,12 @@ class BettingCreate extends React.PureComponent {
     const escrow = values['event_bet'];
     const event_odds = 1/parseInt(values['event_odds']);
     console.log("eventDate", eventDate.format(), eventDate.unix());
-    console.log(eventDate.getTime()/1000)
     console.log('Event Date: ', eventDate);
     console.log('Escrow:', escrow);
     console.log('Event Odds:', event_odds);
 
     if(status){
-      //BetHandshakeHandler.initItem(escrow, event_odds,eventDate, offchain);
+      BetHandshakeHandler.initItem(escrow, event_odds,eventDate, offchain);
     }
 
   }
