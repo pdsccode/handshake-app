@@ -132,11 +132,11 @@ class FeedBetting extends React.Component {
         {/* Feed */}
         <Feed className="feed" handshakeId={this.props.id} onClick={this.props.onFeedClick}>
           <div className="wrapperBettingFeed">
-              {<p>Role: {`${role}`}</p>}
+              {/*<p>Role: {`${role}`}</p>}
               {statusLabel && <p>Status: {`${statusLabel}`}</p>}
               {<p>Date: {`${date}`}</p>}
               {<p>Bet: {`${goal}`}</p>}
-    {<p>Balance: {`${balance}`}</p>}
+    {<p>Balance: {`${balance}`}</p>*/}
 
               <div className="description">
                 <p>Birth of the royal baby</p>
@@ -182,6 +182,9 @@ class FeedBetting extends React.Component {
     //TO DO: Choose an option
   }
   clickActionButton(title){
+    const {role} = this.state;
+    const {item} = this.props;
+    const {hid} = item;
     switch(title){
       case BETTING_STATUS_LABEL.SHAKE: 
         this.modalBetRef.open();
@@ -189,17 +192,17 @@ class FeedBetting extends React.Component {
       
       case BETTING_STATUS_LABEL.CLOSE: 
         // TO DO: CLOSE BET
-        BetHandshakeHandler.closeItem("role", "hid", "state", "balance", "escrow", "offchain");
+        BetHandshakeHandler.closeItem(role, hid, "offchain");
         break;
 
       case BETTING_STATUS_LABEL.WITHDRAW: 
         // TO DO: WITHDRAW
-        BettingHandshake.withdraw("role", "hid", "offchain");
+        BettingHandshake.withdraw(role, hid, "offchain");
         break;
 
       case BETTING_STATUS_LABEL.REJECT: 
         // TO DO: REJECT
-        BettingHandshake.rejectItem("role", "hid", "offchain")
+        BettingHandshake.rejectItem(role, hid, "offchain")
         break;
 
     }
@@ -245,25 +248,25 @@ class FeedBetting extends React.Component {
   autoCancel(role,eventDate){
     BettingHandshake.autoCancel(role,eventDate, "state", "hid", "offchain");
   }
-  autoSetWinner(role,state, eventDate){
-    const {item} = this.props;
-    const {status} = item;
+  // autoSetWinner(role,state, eventDate){
+  //   const {item} = this.props;
+  //   const {status} = item;
 
-    const result = BetHandshakeHandler.getStatusLabel(status, role, eventDate)
-    if(result){
-      this.updateStatus(result);
-    }
+  //   const result = BetHandshakeHandler.getStatusLabel(status, role, eventDate)
+  //   if(result){
+  //     this.updateStatus(result);
+  //   }
     
-  }
+  // }
 
   submitShake(amount){
     this.modalBetRef.close();
     const {role} = this.state;
     const {item} = this.props;
-    const {balance} = item;
+    const {hid} = item;
     // let newItem = BetHandshakeHandler.shakeItem(role, eventDate, amount,goal,balance, item);
     // this.props.updatedItem(newItem);
-    BetHandshakeHandler.shakeItem(role, "hid", "state", "balance", "escrow", "offchain")
+    BetHandshakeHandler.shakeItem(role, hid, amount, "offchain")
 
   }
 }

@@ -51,122 +51,95 @@ export default class BettingHandshake {
     });
   };
  
-  shake = (address, privateKey, hid, state, balance, escrow, offchain) => {
+  shake = (address, privateKey, hid, amount, offchain) => {
     console.log('eth-contract-service shake', address, privateKey, hid);
-    const escrowValue = Web3.utils.toWei(escrow.toString(), 'ether');
-    const balanceValue = Web3.utils.toWei(balance.toString(), 'ether');
     const bytesOffchain = this.web3.utils.fromAscii(offchain);
 
     const payloadData = this.handshakeInstance.methods
-      .shake(hid, state, balanceValue, escrowValue, bytesOffchain)
+      .shake(hid,bytesOffchain)
       .encodeABI();
     return this.neuron.makeRawTransaction(address, privateKey, payloadData, {
-      value: escrowValue,
+      amount: amount,
       toAddress: configs.handshakeBettingAddress,
     });
   };
-  cancelBet = (address, privateKey, hid, state, balance, escrow, offchain) => {
+  cancelBet = (address, privateKey, hid, offchain) => {
     console.log(
       'eth-contract-service cancel',
       address,
       privateKey,
       hid,
-      state,
-      balance,
-      escrow,
       offchain,
     );
     const bytesOffchain = this.web3.utils.fromAscii(offchain);
-    const balanceValue = Web3.utils.toWei(balance.toString(), 'ether');
-    const escrowValue = Web3.utils.toWei(escrow.toString(), 'ether');
     const payloadData = this.handshakeInstance.methods
-      .cancelBet(hid, state, balanceValue, escrowValue, bytesOffchain)
+      .cancelBet(hid, state, bytesOffchain)
       .encodeABI();
     return this.neuron.makeRawTransaction(address, privateKey, payloadData, {
       //amount,
       toAddress: configs.handshakeBettingAddress,
     });
   };
-  closeBet = (address, privateKey, hid, state, balance, escrow, offchain) => {
+  closeBet = (address, privateKey, hid, offchain) => {
     console.log(
       'eth-contract-service cancel',
       address,
       privateKey,
       hid,
-      state,
-      balance,
-      escrow,
       offchain,
     );
     const bytesOffchain = this.web3.utils.fromAscii(offchain);
-    const balanceValue = Web3.utils.toWei(balance.toString(), 'ether');
-    const escrowValue = Web3.utils.toWei(escrow.toString(), 'ether');
     const payloadData = this.handshakeInstance.methods
-      .closeBet(hid, state, balanceValue, escrowValue, bytesOffchain)
+      .closeBet(hid, state, bytesOffchain)
       .encodeABI();
     return this.neuron.makeRawTransaction(address, privateKey, payloadData, {
       //amount,
       toAddress: configs.handshakeBettingAddress,
     });
   };
-  iniatorWon = (address, privateKey, hid, state, balance, escrow, offchain) => {
+  iniatorWon = (address, privateKey, hid, offchain) => {
     console.log(
       'eth-contract-service cancel',
       address,
       privateKey,
       hid,
-      state,
-      balance,
-      escrow,
       offchain,
     );
     const bytesOffchain = this.web3.utils.fromAscii(offchain);
-    const balanceValue = Web3.utils.toWei(balance.toString(), 'ether');
-    const escrowValue = Web3.utils.toWei(escrow.toString(), 'ether');
     const payloadData = this.handshakeInstance.methods
-      .initiatorWon(hid, state, balanceValue, escrowValue, bytesOffchain)
+      .initiatorWon(hid, state, bytesOffchain)
       .encodeABI();
     return this.neuron.makeRawTransaction(address, privateKey, payloadData, {
       //amount,
       toAddress: configs.handshakeBettingAddress,
     });
   };
-  betorWon = (address, privateKey, hid, state, balance, escrow, offchain) => {
+  betorWon = (address, privateKey, hid, offchain) => {
     console.log(
       'eth-contract-service cancel',
       address,
       privateKey,
       hid,
-      state,
-      balance,
-      escrow,
       offchain,
     );
     const bytesOffchain = this.web3.utils.fromAscii(offchain);
-    const balanceValue = Web3.utils.toWei(balance.toString(), 'ether');
-    const escrowValue = Web3.utils.toWei(escrow.toString(), 'ether');
     const payloadData = this.handshakeInstance.methods
-      .betorWon(hid, state, balanceValue, escrowValue, bytesOffchain)
+      .betorWon(hid, state, bytesOffchain)
       .encodeABI();
     return this.neuron.makeRawTransaction(address, privateKey, payloadData, {
       //amount,
       toAddress: configs.handshakeBettingAddress,
     });
   };
-  draw = (address, privateKey, hid, state, balance, escrow, offchain) => {
+  draw = (address, privateKey, hid, offchain) => {
     console.log(
       'eth-contract-service cancel',
       address,
       privateKey,
       hid,
-      state,
-      balance,
-      escrow,
       offchain,
     );
     const bytesOffchain = this.web3.utils.fromAscii(offchain);
-    const balanceValue = Web3.utils.toWei(balance.toString(), 'ether');
-    const escrowValue = Web3.utils.toWei(escrow.toString(), 'ether');
     const payloadData = this.handshakeInstance.methods
       .draw(hid, state, balanceValue, escrowValue, bytesOffchain)
       .encodeABI();
@@ -212,22 +185,18 @@ export default class BettingHandshake {
       toAddress: configs.handshakeBettingAddress,
     });
   };
-  setWinner = (address, privateKey, hid, state, balance, escrow, offchain) => {
+  setWinner = (address, privateKey, hid, result, offchain) => {
     console.log(
       'eth-contract-service cancel',
       address,
       privateKey,
       hid,
-      state,
-      balance,
-      escrow,
+      result,
       offchain,
     );
     const bytesOffchain = this.web3.utils.fromAscii(offchain);
-    const balanceValue = Web3.utils.toWei(balance.toString(), 'ether');
-    const escrowValue = Web3.utils.toWei(escrow.toString(), 'ether');
     const payloadData = this.handshakeInstance.methods
-      .setWinner(hid, state, balanceValue, escrowValue, bytesOffchain)
+      .setWinner(hid, state, result, bytesOffchain)
       .encodeABI();
     return this.neuron.makeRawTransaction(address, privateKey, payloadData, {
       //amount,

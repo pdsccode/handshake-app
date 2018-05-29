@@ -15,6 +15,7 @@ import Button from '@/components/core/controls/Button';
 import Input from '@/components/core/forms/Input/Input';
 import DatePicker from '@/components/handshakes/betting/Create/DatePicker';
 import { InputField } from '../form/customField';
+import {MasterWallet} from '@/models/MasterWallet';
 
 // self
 import './Create.scss';
@@ -72,7 +73,9 @@ class BettingCreate extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      values: []
+      values: [],
+      address: null,
+      privateKey: null,
     };
     this.onSubmit = ::this.onSubmit;
     this.renderInput = ::this.renderInput;
@@ -80,9 +83,18 @@ class BettingCreate extends React.PureComponent {
     this.renderForm = ::this.renderForm;
     this.renderNumber = ::this.renderNumber;
   }
+  componentDidMount(){
+    const wallet = MasterWallet.getWalletDefault();
+    console.log("Address, Private Key:", wallet.address, wallet.privateKey);
+    this.setState({
+      address: wallet.address,
+      privateKey: wallet.privateKey,
+    })
+  }
 
   onSubmit(values) {
     console.log("values", values);
+    const {address, privateKey} = this.state;
     let content = this.content;
     const inputList = this.inputList;
     let extraParams = values;
@@ -102,16 +114,9 @@ class BettingCreate extends React.PureComponent {
     //console.log("this", this.datePickerRef.value);
 
     //const {toAddress, isPublic, industryId} = this.props;
-    const eventDate =  new Date(this.datePickerRef.value);
-    const escrow = values['event_bet'];
-    const event_odds = 1/parseInt(values['event_odds']);
-    console.log('Event Date: ', eventDate);
-    console.log('Escrow:', escrow);
-    console.log('Event Odds:', event_odds);
-    const offchain = "abc"
-    //this.initBet(escrow, event_odds, eventDate);
-    //const result = await BetHandshakeHandler.initItem(escrow, event_odds,eventDate, offchain);
-    const fromAddress = "0x54CD16578564b9952d645E92b9fa254f1feffee9";
+    
+    //const fromAddress = "0x54CD16578564b9952d645E92b9fa254f1feffee9";
+    const fromAddress = address;
     this.initHandshake(extraParams, fromAddress);
   }
 
@@ -181,8 +186,8 @@ class BettingCreate extends React.PureComponent {
         name={key}
         component={InputField}
         type="number"
-        min="0.0001"
-        step="0.0002"
+        //min="0.0001"
+        //step="0.0002"
         placeholder={placeholder}
         validate={[required]}
         ErrorBox={ErrorBox}
@@ -240,13 +245,16 @@ class BettingCreate extends React.PureComponent {
 
   //Service
   initHandshake(fields, fromAddress){
+    const json = {"odds": "1.25"}
     const params = {
       //to_address: toAddress ? toAddress.trim() : '',
       //public: isPublic,
       //description: content,
       // description: JSON.stringify(extraParams),
       //industries_type: industryId,
-      type: HANDSHAKE_ID.BETTING,
+      type: `${HANDSHAKE_ID.BETTING}`,
+      //type: 3,
+      //extra_data: JSON.stringify(fields),
       extra_data: JSON.stringify(fields),
       from_address: fromAddress,
       chain_id: 4
@@ -261,6 +269,20 @@ class BettingCreate extends React.PureComponent {
   }
   initHandshakeSuccess = (data)=>{
     console.log('initHandshakeSuccess', data);
+    const {offchain, status} = data;
+    const {values} = this.state;
+    const eventDate =  new Date(this.datePickerRef.value);
+    const escrow = values['event_bet'];
+    const event_odds = 1/parseInt(values['event_odds']);
+
+    console.log('Event Date: ', eventDate);
+    console.log('Escrow:', escrow);
+    console.log('Event Odds:', event_odds);
+
+    if(status){
+      BetHandshakeHandler.initItem(escrow, event_odds,eventDate, offchain);
+    }
+
   }
   initHandshakeFailed = (error) => {
     console.log('initHandshakeFailed', error);

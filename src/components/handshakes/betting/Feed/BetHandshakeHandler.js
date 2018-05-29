@@ -1,5 +1,10 @@
 import Neuron from '@/services/neuron';
+import {MasterWallet} from '@/models/MasterWallet';
+
 const neuron = new Neuron(4);
+const wallet = MasterWallet.getWalletDefault();
+const address = wallet.address;
+const privateKey = wallet.privateKey;
 
 export const REJECT_WINDOWN_DAYS = 1;
 export const CANCEL_WINDOWN_DAYS = 3;
@@ -98,13 +103,15 @@ export class BetHandshakeHandler {
         return {'status': strStatus, 'action': strAction, isShowOptions: false};
     
     }
-    static controlStatus(isOwner, eventDate){
-
-    }
 
     static async initItem(escrow, odd, eventDate, offchain){
-        const address = "0x54CD16578564b9952d645E92b9fa254f1feffee9";
-        const privateKey = "9bf73320e0bcfd7cdb1c0e99f334d689ef2b6921794f23a5bffd2a6bb9c7a3d4";
+        //const address = "0x54CD16578564b9952d645E92b9fa254f1feffee9";
+        //const privateKey = "9bf73320e0bcfd7cdb1c0e99f334d689ef2b6921794f23a5bffd2a6bb9c7a3d4";
+
+        // const address = wallet.address;
+        // const privateKey = wallet.privateKey;
+        console.log("Address, PrivateKey:", address, privateKey);
+
         const acceptors = [];
         const goal = escrow*odd;
         const currentDate = new Date();
@@ -113,7 +120,7 @@ export class BetHandshakeHandler {
         console.log('Init Betting:', data);
         return data;
     }
-    static shakeItem(role, hid, state, balance, escrow, offchain){
+    static shakeItem(role, hid, amount, offchain){
         console.log('Shake Amount:',escrow);
         console.log('Balance:', balance);
         if (role === ROLE.PAYER || role === ROLE.GUEST){
@@ -140,9 +147,11 @@ export class BetHandshakeHandler {
                return newItem;
            }
            */
-            const address = "0x54CD16578564b9952d645E92b9fa254f1feffee9";
-            const privateKey = "9bf73320e0bcfd7cdb1c0e99f334d689ef2b6921794f23a5bffd2a6bb9c7a3d4";
-            neuron.bettingHandshake.shake(address, privateKey,hid,state, balance, escrow, offchain);
+            //const address = "0x54CD16578564b9952d645E92b9fa254f1feffee9";
+            //const privateKey = "9bf73320e0bcfd7cdb1c0e99f334d689ef2b6921794f23a5bffd2a6bb9c7a3d4";
+            // const address = wallet.address;
+            // const privateKey = wallet.privateKey;
+            neuron.bettingHandshake.shake(address, privateKey,hid,amount, offchain);
 
            
 
@@ -150,7 +159,7 @@ export class BetHandshakeHandler {
         return null;
     }
 
-    static closeItem(role, hid, state, balance, escrow, offchain){
+    static closeItem(role, hid, offchain){
         /*
         User tap Close Bet button or auto Close
         */
@@ -162,39 +171,40 @@ export class BetHandshakeHandler {
             newItem.status = BETTING_STATUS.CLOSED;
             return newItem;
             */
-           const address = "0x54CD16578564b9952d645E92b9fa254f1feffee9";
-           const privateKey = "9bf73320e0bcfd7cdb1c0e99f334d689ef2b6921794f23a5bffd2a6bb9c7a3d4";
-           neuron.bettingHandshake.closeBet(address, privateKey,hid,state, balance, escrow, offchain);
+        //    const address = "0x54CD16578564b9952d645E92b9fa254f1feffee9";
+        //    const privateKey = "9bf73320e0bcfd7cdb1c0e99f334d689ef2b6921794f23a5bffd2a6bb9c7a3d4";
+        
+           neuron.bettingHandshake.closeBet(address, privateKey,hid,offchain);
        }
        return null;
     }
     static rejectItem(role, hid, offchain){
-        const address = "0x54CD16578564b9952d645E92b9fa254f1feffee9";
-        const privateKey = "9bf73320e0bcfd7cdb1c0e99f334d689ef2b6921794f23a5bffd2a6bb9c7a3d4";
+        // const address = "0x54CD16578564b9952d645E92b9fa254f1feffee9";
+        // const privateKey = "9bf73320e0bcfd7cdb1c0e99f334d689ef2b6921794f23a5bffd2a6bb9c7a3d4";
         if (role !== ROLE.GUEST){
             neuron.bettingHandshake.reject(address, privateKey,hid,offchain);
 
         }
     }
-    static chooseWhoWin(option, role, hid, state, balance, escrow, offchain){
-        const address = "0x54CD16578564b9952d645E92b9fa254f1feffee9";
-        const privateKey = "9bf73320e0bcfd7cdb1c0e99f334d689ef2b6921794f23a5bffd2a6bb9c7a3d4";
+    static chooseWhoWin(option, role, hid, offchain){
+        // const address = "0x54CD16578564b9952d645E92b9fa254f1feffee9";
+        // const privateKey = "9bf73320e0bcfd7cdb1c0e99f334d689ef2b6921794f23a5bffd2a6bb9c7a3d4";
         switch(option){
             case BETTING_OPTIONS.BETOR_WON:
-            neuron.bettingHandshake.betorWon(address, privateKey,hid,state, balance, escrow, offchain);
+            neuron.bettingHandshake.betorWon(address, privateKey,hid,offchain);
             break;
             case BETTING_OPTIONS.INITIATOR_WON:
-            neuron.bettingHandshake.iniatorWon(address, privateKey,hid,state, balance, escrow, offchain);
+            neuron.bettingHandshake.iniatorWon(address, privateKey,hid,offchain);
             break;
             default://Draw
-            neuron.bettingHandshake.draw(address, privateKey,hid,state, balance, escrow, offchain);
+            neuron.bettingHandshake.draw(address, privateKey,hid,offchain);
 
         }
     }
     static withdraw(role, hid, offchain){
         if (role !== ROLE.GUEST){
-            const address = "0x54CD16578564b9952d645E92b9fa254f1feffee9";
-            const privateKey = "9bf73320e0bcfd7cdb1c0e99f334d689ef2b6921794f23a5bffd2a6bb9c7a3d4";
+            // const address = "0x54CD16578564b9952d645E92b9fa254f1feffee9";
+            // const privateKey = "9bf73320e0bcfd7cdb1c0e99f334d689ef2b6921794f23a5bffd2a6bb9c7a3d4";
             neuron.bettingHandshake.withdraw(address, privateKey,hid,offchain);
         }
     }
@@ -211,8 +221,8 @@ export class BetHandshakeHandler {
         return false;
     }
     static autoCancel(role,evendate, state, hid, offchain){
-        const address = "0x54CD16578564b9952d645E92b9fa254f1feffee9";
-            const privateKey = "9bf73320e0bcfd7cdb1c0e99f334d689ef2b6921794f23a5bffd2a6bb9c7a3d4";
+        // const address = "0x54CD16578564b9952d645E92b9fa254f1feffee9";
+        // const privateKey = "9bf73320e0bcfd7cdb1c0e99f334d689ef2b6921794f23a5bffd2a6bb9c7a3d4";
         if (role !== ROLE.GUEST){
             if(state === BETTING_STATUS.SHAKED || state === BETTING_STATUS.CLOSED){
                 var today = new Date()
