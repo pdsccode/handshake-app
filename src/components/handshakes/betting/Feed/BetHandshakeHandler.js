@@ -102,14 +102,16 @@ export class BetHandshakeHandler {
 
     }
 
-    static initItem(escrow, odd, eventDate, offchain){
+    static async initItem(escrow, odd, eventDate, offchain){
         const address = "0x54CD16578564b9952d645E92b9fa254f1feffee9";
         const privateKey = "9bf73320e0bcfd7cdb1c0e99f334d689ef2b6921794f23a5bffd2a6bb9c7a3d4";
         const acceptors = [];
         const goal = escrow*odd;
         const currentDate = new Date();
         const deadline = (eventDate.getTime() / 1000 - currentDate.getTime() / 1000);
-        neuron.bettingHandshake.initBet(address, privateKey, acceptors, goal, escrow, deadline, offchain);
+        const data = await neuron.bettingHandshake.initBet(address, privateKey, acceptors, goal, escrow, deadline, offchain);
+        console.log('Init Betting:', data);
+        return data;
     }
     static shakeItem(role, hid, state, balance, escrow, offchain){
         console.log('Shake Amount:',escrow);

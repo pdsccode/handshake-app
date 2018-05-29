@@ -7,7 +7,7 @@ const config = {
       basicHandshakeAddress: '',
       payableHandshakeAddress: '',
       groupHandshakeAddress: '',
-      handshakeBettingAddress: '0xfe4a99fa71dda3c0a7ad03c81bd5ed1128774973',
+      handshakeBettingAddress: '0x83a7ce297cdbfa6fa358cf6505e8b3f5ed5e23c0',
       blockchainNetwork: 'https://mainnet.infura.io/',
     },
     4: {
@@ -17,7 +17,7 @@ const config = {
       basicHandshakeAddress: '',
       payableHandshakeAddress: '',
       groupHandshakeAddress: '',
-      handshakeBettingAddress: '0xfe4a99fa71dda3c0a7ad03c81bd5ed1128774973',
+      handshakeBettingAddress: '0x83a7ce297cdbfa6fa358cf6505e8b3f5ed5e23c0',
       cryptosignOwnerAddress: '',
       cryptosignOwnerPrivateKey: '',
       blockchainNetwork: 'https://rinkeby.infura.io/',

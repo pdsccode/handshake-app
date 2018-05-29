@@ -17,9 +17,10 @@ export const createAPI = INIT => ({
   $http(url, data, id, qs, headers, METHOD).then((response) => {
     //
     dispatch({ type: APP_ACTION.CALLED });
-
+    
     dispatch({ type: `${INIT}_SUCCESS`, payload: response.data, ...more });
-
+    console.log('SuccessFn:', successFn);
+    console.log('Response Data:', response.data);
     if (successFn) successFn(response.data);
   }).catch((e) => {
     //

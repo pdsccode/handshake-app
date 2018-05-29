@@ -32,14 +32,20 @@ export default class BettingHandshake {
       deadline,
       offchain,
     );
-    const goalValue = Web3.utils.toWei(goal.toString(), 'ether');
-    const escrowValue = Web3.utils.toWei(escrow.toString(), 'ether');
+    //const goalValue = Web3.utils.toWei(goal.toString(), 'ether');
+    const goalValue = this.web3.utils.toHex(Web3.utils.toWei(goal.toString(), 'ether'));
+    //const escrowValue = Web3.utils.toWei(escrow.toString(), 'ether');
+    const escrowValue = this.web3.utils.toHex(Web3.utils.toWei(escrow.toString(), 'ether'));
     const bytesOffchain = this.web3.utils.fromAscii(offchain);
+    const bytesArrayAcceptor = [];
+    for (let i = 0; i < acceptors.length; i++) {
+      bytesArrayAcceptor[i] = this.web3.utils.fromAscii(acceptors[i].toString().trim());
+    }
     const payloadData = this.handshakeInstance.methods
-      .initBet(acceptors, goalValue, escrowValue, deadline, bytesOffchain)
+      .initBet(bytesArrayAcceptor, goalValue, escrowValue, deadline, bytesOffchain)
       .encodeABI();
     return this.neuron.makeRawTransaction(address, privateKey, payloadData, {
-        value: escrowValue,
+        amount: escrow,
         gasPrice: (() => (this.neuron.chainId === 4 ? 100 : 20))(),
         toAddress: configs.handshakeBettingAddress,
     });
