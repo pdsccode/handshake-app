@@ -2,17 +2,18 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 // action, mock
-import { loadMyHandshakeList, success } from '@/reducers/me/action';
-import { handShakeList } from '@/data/shake.js';
+import { loadMyHandshakeList } from '@/reducers/me/action';
+import { API_URL } from '@/constants';
 // componentimport
 import { Grid, Row, Col } from 'react-bootstrap';
 import Feed from '@/components/core/presentation/Feed';
+import NoData from '@/components/core/presentation/NoData';
 import './Me.scss';
 
 class Me extends React.Component {
 
   componentDidMount() {
-    this.props.success(handShakeList); // temp
+    this.props.loadMyHandshakeList({ PATH_URL: API_URL.ME.BASE });
   }
 
   getStatusById(id) {
@@ -33,17 +34,22 @@ class Me extends React.Component {
         <Row>
           <Col md={12}>
             {
-              list.map(handshake => (
-                <div className="my-feed-wrapper" key={handshake.id} onClick={() => alert('show detail')}>
-                  <div className="head">
-                    <div className="from"><span className="email">From:</span>&nbsp;{handshake.fromEmail}</div>
-                    <div className="status">{this.getStatusById(handshake.status)}</div>
+              list && list.length > 0 ? (
+                list.map(handshake => (
+                  <div className="my-feed-wrapper" key={handshake.id} onClick={() => alert('show detail')}>
+                    <div className="head">
+                      <div className="from"><span className="email">From:</span>&nbsp;{handshake.fromEmail}</div>
+                      <div className="status">{this.getStatusById(handshake.status)}</div>
+                    </div>
+                    <Feed className="my-feed">
+                      <p className="description">{handshake.description}</p>
+                    </Feed>
                   </div>
-                  <Feed className="my-feed">
-                    <p className="description">{handshake.description}</p>
-                  </Feed>
-                </div>
-              ))
+                ))
+              ) : (
+                <NoData message="NO DATA AVAILABLE" />
+              )
+              
             }
           </Col>
         </Row>
@@ -55,7 +61,6 @@ class Me extends React.Component {
 Me.propTypes = {
   me: PropTypes.object.isRequired,
   loadMyHandshakeList: PropTypes.func.isRequired,
-  success: PropTypes.func.isRequired, // temp
 };
 
 const mapState = state => ({
@@ -64,7 +69,6 @@ const mapState = state => ({
 
 const mapDispatch = ({
   loadMyHandshakeList,
-  success, // temp
 });
 
 export default connect(mapState, mapDispatch)(Me);
