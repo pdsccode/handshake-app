@@ -48,7 +48,7 @@ class DiscoverPage extends React.Component {
       if (FeedComponent) {
         return (
           <Col key={handshake.id} md={12} className="feed-wrapper">
-            <FeedComponent {...handshake} onFeedClick={() => this.clickFeedDetail(handshake.slug)} />
+            <FeedComponent {...handshake} onFeedClick={() => this.clickFeedDetail(handshake.id)} />
           </Col>
         );
       }
@@ -60,8 +60,8 @@ class DiscoverPage extends React.Component {
     // TODO: search feed
   }
 
-  clickFeedDetail(slug) {
-    this.props.history.push(`${URL.HANDSHAKE_DISCOVER}/${slug || ''}`);
+  clickFeedDetail(id) {
+    this.props.history.push(`${URL.HANDSHAKE_DISCOVER}/${id || ''}`);
   }
 
   clickCategoryItem(category) {

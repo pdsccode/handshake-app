@@ -83,6 +83,12 @@ export const API_URL = {
   ME: {
     BASE: 'handshake/me',
   },
+  HANDSHAKE: {
+    BASE: 'handshake', // id handshake
+    CREATE: 'handshake/create',
+    UPDATE: 'handshake/update',
+    DELETE: 'handshake/delete',
+  },
 };
 
 export const HANDSHAKE_STATUS = {
