@@ -62,7 +62,7 @@ class FeedBetting extends React.Component {
     const {initUserId, shakedUserIds, status, extraData} = item;
     console.log('Extra Data:', this.extraData);
     const profile = local.get(APP.AUTH_PROFILE);
-    console.log('Profile:', profile);
+    console.log('Profile Id:', profile.id);
     const isUserShake = this.isShakeUser(shakedUserIds, profile.id);
     console.log('Is User Shake:', isUserShake);
 
@@ -72,10 +72,11 @@ class FeedBetting extends React.Component {
 
     this.setState({
       role
-    });
-    
+    });    
+    const hardCodeStatus = 0;
 
-    const result = BetHandshakeHandler.getStatusLabel(status, role, eventDate)
+    const result = BetHandshakeHandler.getStatusLabel(hardCodeStatus, role, eventDate)
+    console.log('Result:', result);
     if(result){
       this.updateStatus(result);
     }
@@ -144,9 +145,9 @@ class FeedBetting extends React.Component {
         {/* Feed */}
         <Feed className="feed" handshakeId={this.props.id} onClick={this.props.onFeedClick}>
           <div className="wrapperBettingFeed">
-              {/*<p>Role: {`${role}`}</p>}
+              {<p>Role: {`${role}`}</p>}
               {statusLabel && <p>Status: {`${statusLabel}`}</p>}
-              {<p>Date: {`${date}`}</p>}
+              {/*<p>Date: {`${date}`}</p>}
               {<p>Bet: {`${goal}`}</p>}
     {<p>Balance: {`${balance}`}</p>*/}
 

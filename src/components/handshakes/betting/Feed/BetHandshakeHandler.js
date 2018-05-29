@@ -46,28 +46,31 @@ export class BetHandshakeHandler {
         if(this.isShowOptions(role,status, eventDate)){
             return {'status': strStatus, 'action': strAction, isShowOptions: true};
         }
-        if(this.isAutoSetWinner(role, status, eventDate)){
-            switch (status){
-                case BETTING_STATUS.INITIATOR_WON:
-                strStatus = (role === ROLE.PAYEE)? null : (role === ROLE.PAYER) ? BETTING_STATUS_LABEL.LOSE : BETTING_STATUS_LABEL.DONE; //If payeee = Withdraw, else payer = "lose" show button "Withdraw"
-                strAction = (role === ROLE.PAYEE) ? BETTING_STATUS_LABEL.WITHDRAW : null;
-                break;
-                case BETTING_STATUS.BETOR_WON: 
-                strStatus = (role === ROLE.PAYEE) ? BETTING_STATUS_LABEL.LOSE : (role === ROLE.PAYER) ? null : BETTING_STATUS_LABEL.DONE; // If payee = "lose", else payer = "withdraw"
-                strAction = (role === ROLE.PAYEE) ? BETTING_STATUS_LABEL.WITHDRAW : null;
-                break;
-                case BETTING_STATUS.DRAW:
-                strStatus = (role === ROLE.GUEST) ? BETTING_STATUS_LABEL.DONE : null; // Both payee/payer = "withdraw"
-                strAction = (role !== ROLE.GUEST) ? BETTING_STATUS_LABEL.WITHDRAW : null; 
-                break;
+        if(status >= BETTING_STATUS.INITIATOR_WON && status <= BETTING_STATUS.DRAW){
+            if(this.isAutoSetWinner(role, status, eventDate)){
+                switch (status){
+                    case BETTING_STATUS.INITIATOR_WON:
+                    strStatus = (role === ROLE.PAYEE)? null : (role === ROLE.PAYER) ? BETTING_STATUS_LABEL.LOSE : BETTING_STATUS_LABEL.DONE; //If payeee = Withdraw, else payer = "lose" show button "Withdraw"
+                    strAction = (role === ROLE.PAYEE) ? BETTING_STATUS_LABEL.WITHDRAW : null;
+                    break;
+                    case BETTING_STATUS.BETOR_WON: 
+                    strStatus = (role === ROLE.PAYEE) ? BETTING_STATUS_LABEL.LOSE : (role === ROLE.PAYER) ? null : BETTING_STATUS_LABEL.DONE; // If payee = "lose", else payer = "withdraw"
+                    strAction = (role === ROLE.PAYEE) ? BETTING_STATUS_LABEL.WITHDRAW : null;
+                    break;
+                    case BETTING_STATUS.DRAW:
+                    strStatus = (role === ROLE.GUEST) ? BETTING_STATUS_LABEL.DONE : null; // Both payee/payer = "withdraw"
+                    strAction = (role !== ROLE.GUEST) ? BETTING_STATUS_LABEL.WITHDRAW : null; 
+                    break;
+                }
+                return {'status': strStatus, 'action': strAction, isShowOptions: false};
+    
+            }else {
+                //TO DO: if that is who click status change to peding
+                strAction = (role !== ROLE.PAYEE) ? BETTING_STATUS_LABEL.REJECT : null;
+                return {'status': strStatus, 'action': strAction, isShowOptions: false};
             }
-            return {'status': strStatus, 'action': strAction, isShowOptions: false};
-
-        }else {
-            //TO DO: if that is who click status change to peding
-            strAction = (role !== ROLE.PAYEE) ? BETTING_STATUS_LABEL.REJECT : null;
-            return {'status': strStatus, 'action': strAction, isShowOptions: false};
         }
+        
 
         switch (status){
             case BETTING_STATUS.INITING:
