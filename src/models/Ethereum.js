@@ -11,8 +11,7 @@ export class Ethereum extends Wallet{
         this.coinType = 60;                
         this.name = 'ETH';
         this.title = 'Ethereum'; 
-        this.className = "Ethereum";   
-        this.default = true;         
+        this.className = "Ethereum";        
       }
 
       createAddressPrivatekey(){        

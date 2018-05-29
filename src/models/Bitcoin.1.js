@@ -8,7 +8,7 @@ var BigNumber = require('bignumber.js');
 
 export class Bitcoin extends Wallet{
 
-    static Network = {"Mainnet": 'https://test-insight.bitpay.com/api'}
+    static Network = {"Mainnet": 'https://insight.bitpay.com/api'}
 
     constructor() {
       super();
@@ -22,24 +22,36 @@ export class Bitcoin extends Wallet{
       return this.address.replace(this.address.substr(12, 19), '...');
     }
 
+    getNetwork(){
+      return bitcore.Networks.livenet;
+    }
+
     createAddressPrivatekey(){
 
+      let bitcore = require('bitcore-lib');
       let Mnemonic = require('bitcore-mnemonic');
+      
+      bitcore.Networks.defaultNetwork = this.getNetwork();      
 
-      let  code = new Mnemonic(this.mnemonic);
+      var code = null;
+      
+      if (this.mnemonic == ''){
+        code = new Mnemonic();
+        this.mnemonic = code.phrase;
+      }
+      else
+        code = new Mnemonic(this.mnemonic);
 
-      let xpriv1 = code.toHDPrivateKey();
+      let xpriv = code.toHDPrivateKey();
 
-      let hdPrivateKey = new bitcore.HDPrivateKey(xpriv1);
-      let hdPublicKey = hdPrivateKey.hdPublicKey;
+      let hdPrivateKey = new bitcore.HDPrivateKey(xpriv);
+      var derived = hdPrivateKey.derive("m/44'/{0}'/0'/0/0".format(this.coinType));
+      this.address = derived.privateKey.toAddress().toString();
 
-      let address = new bitcore.Address(hdPublicKey.publicKey, bitcore.Networks.livenet);
-
-      var derived = hdPrivateKey.derive("m/{0}'".format(this.coinType));
-      var wif = derived.privateKey.toWIF();
-
-      this.address = address.toString();
+      console.log(bitcore.Networks.defaultNetwork);
+            
       this.privateKey = derived.xprivkey;
+      //this.privateKey = derived1.keyPair.toWIF(); ? why don't use it?
   }
 
     async getBalance() {
@@ -62,7 +74,7 @@ export class Bitcoin extends Wallet{
       bitcore.Networks.defaultNetwork = bitcore.Networks.testnet;
     }
 
-    var prKey = bitcore.HDPrivateKey(privateKey).privateKey.toString();
+    //var prKey = bitcore.HDPrivateKey(privateKey).privateKey.toString();
 
     var pubKey = bitcore.HDPublicKey(privateKey);
 

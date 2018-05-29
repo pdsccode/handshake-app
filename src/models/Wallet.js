@@ -11,7 +11,8 @@ export class Wallet {
       this.name = '';
       this.title = ''; 
       this.protected = false;  
-      this.className = ''      
+      this.className = '' 
+      this.isReward = false;     
     }
 
     getShortAddress(){

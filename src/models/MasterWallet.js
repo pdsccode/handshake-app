@@ -11,6 +11,8 @@ export class MasterWallet{
     // list coin is supported, can add some more Ripple ...
     static ListCoin = {Ethereum, Bitcoin, BitcoinTestnet};
     
+    static ListCoinReward = {Ethereum, Bitcoin};
+    
     static KEY = "wallets";
 
     // Create an autonomous wallet:
@@ -24,7 +26,7 @@ export class MasterWallet{
         for (var k1 in MasterWallet.ListCoin){
             for (var k2 in MasterWallet.ListCoin[k1].Network){
                 // init a wallet:
-                let wallet = new MasterWallet.ListCoin[k1];
+                let wallet = new MasterWallet.ListCoin[k1]();
                 // set mnemonic, if not set then auto gen.
                 wallet.mnemonic = mnemonic;  
                 wallet.network = MasterWallet.ListCoin[k1].Network[k2];                           
@@ -34,6 +36,15 @@ export class MasterWallet{
             }            
         }
 
+        // For Reward wallet:
+        for (var k in MasterWallet.ListCoinReward){
+            let wallet = new MasterWallet.ListCoinReward[k]();
+            wallet.network = MasterWallet.ListCoinReward[k].Network.Mainnet;
+            wallet.createAddressPrivatekey();
+            wallet.isReward = true;
+            masterWallet.push(wallet);   
+        }
+                
         // Save to local store:
         MasterWallet.UpdateLocalStore(masterWallet);
 
@@ -66,6 +77,7 @@ export class MasterWallet{
             wallet.name = walletJson.name;
             wallet.title = walletJson.title;
             wallet.protected = walletJson.protected;
+            wallet.isReward = walletJson.isReward;                    
 
             listWallet.push(wallet);
         });
@@ -94,6 +106,7 @@ export class MasterWallet{
                     wallet.name = walletJson.name;
                     wallet.title = walletJson.title;
                     wallet.protected = walletJson.protected;
+                    wallet.isReward = walletJson.isReward;                    
                     throw BreakException;
                 }                                
             });

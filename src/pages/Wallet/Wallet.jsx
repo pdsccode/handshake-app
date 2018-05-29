@@ -35,6 +35,7 @@ class Wallet extends React.Component {
       error: null,
       listMainWalletBalance: [],
       listTestWalletBalance: [],
+      listRewardWalletBalance: [],
       bottomSheet: false,
       listMenu: [],
       walletNeedRemove: null
@@ -50,10 +51,15 @@ class Wallet extends React.Component {
 
     let listMainWallet = [];
     let listTestWallet = [];
+    let listRewardWallet = [];
 
     listWallet.forEach(wallet => {
+      // is reward wallet:
+      if (wallet.isReward){        
+        listRewardWallet.push(wallet);
+      }
       // is Mainnet
-      if (wallet.network === MasterWallet.ListCoin[wallet.className].Network.Mainnet){        
+      else if (wallet.network === MasterWallet.ListCoin[wallet.className].Network.Mainnet){        
         listMainWallet.push(wallet);
       }
       else{
@@ -62,12 +68,12 @@ class Wallet extends React.Component {
       }
     });
 
-    this.setState({isLoading: true, listMainWalletBalance: listMainWallet, listTestWalletBalance: listTestWallet});
+    this.setState({isLoading: true, listMainWalletBalance: listMainWallet, listTestWalletBalance: listTestWallet, listRewardWalletBalance: listRewardWallet});
   }
 
    async componentDidMount() {
 
-    console.log('getWalletDefault()', MasterWallet.getWalletDefault());
+    // console.log('getWalletDefault()', MasterWallet.getWalletDefault());
 
     let listWallet = await MasterWallet.getMasterWallet();
 
@@ -84,9 +90,13 @@ class Wallet extends React.Component {
      await this.getListBalace();
   }
 
+  getAllWallet(){
+    return this.state.listMainWalletBalance.concat(this.state.listTestWalletBalance).concat(this.state.listRewardWalletBalance);
+  }
+
   async getListBalace() {
 
-    let listWallet = this.state.listMainWalletBalance.concat(this.state.listTestWalletBalance);
+    let listWallet = this.getAllWallet();
 
     const pros = []
 
@@ -168,7 +178,7 @@ class Wallet extends React.Component {
           wallet.default = !wallet.default;    
           this.toggleBottomSheet(); 
           // reset all wallet defaul:
-          let lstWalletTemp = this.state.listMainWalletBalance.concat(this.state.listTestWalletBalance);
+          let lstWalletTemp = this.getAllWallet();
           if (wallet.default) lstWalletTemp.forEach(wal => {if (wal != wallet){wal.default = false;}})          
           // Update wallet master from local store:
           MasterWallet.UpdateLocalStore(lstWalletTemp);
@@ -188,7 +198,7 @@ class Wallet extends React.Component {
 
   // Remove wallet function:
   removeWallet = () =>{
-    let lstWalletTemp = this.state.listMainWalletBalance.concat(this.state.listTestWalletBalance);
+    let lstWalletTemp = this.getAllWallet();
     var index = -1;
     var walletTmp = this.state.walletNeedRemove;
     if (walletTmp != null){
@@ -216,13 +226,13 @@ class Wallet extends React.Component {
       }
     })
     obj.push({
-      title: 'Export wallet',
+      title: 'Export wallets',
       handler: () => {
 
       }
     })
     obj.push({
-      title: 'Restore wallet',
+      title: 'Restore wallets',
       handler: () => {
 
       }
@@ -255,6 +265,12 @@ class Wallet extends React.Component {
     });
   }
 
+  get listRewardWalletBalance(){
+    return this.state.listRewardWalletBalance.map((wallet) => {
+      return <WalletItem wallet={wallet} onMoreClick={() => this.onMoreClick(wallet)} onWarningClick={() => this.onWarningClick(wallet)} />
+    });
+  }
+
   render() {
 
     return (
@@ -265,26 +281,34 @@ class Wallet extends React.Component {
           onClose={this.toggleBottomSheet.bind(this)}
           list={this.state.listMenu} />
         
-        <ModalDialog title="Confirm" onRef={modal => this.modalBetRef = modal}>
+        <ModalDialog title="Confirmation" onRef={modal => this.modalBetRef = modal}>
           <div><span>Are you sure to want to remove this wallet?</span></div>
           <div className='bodyConfirm'>
-            <Button className="left" type="primary" cssType="primary" onClick={this.removeWallet} >Ok</Button>
-            <Button className="right" type="warning" cssType="warning" onClick={() => { this.modalBetRef.close(); }}>Cancel</Button>
+            <Button className="left" type="primary" cssType="primary" onClick={this.removeWallet} >Yes, remove</Button>
+            <Button className="right" type="warning" cssType="warning" onClick={() => { this.modalBetRef.close(); }}>No</Button>
           </div>
         </ModalDialog>
 
         <Row className="list">
-          <Header title="Main net wallets" hasLink={true} linkTitle="+ Add new" onLinkClick={this.onLinkClick} />
+          <Header title="Main net wallets" hasLink={false} linkTitle="+ Add new" onLinkClick={this.onLinkClick} />
         </Row>
         <Row className="list">
           {this.listMainWalletBalance}
         </Row>
         <Row className="list">
-          <Header title="Test net wallet" hasLink={false} />
+          <Header title="Test net wallets" hasLink={false} />
         </Row>
         <Row className="list">
           {this.listTestWalletBalance}
         </Row>
+
+        <Row className="list">
+          <Header title="Reward wallets" hasLink={false} />
+        </Row>
+        <Row className="list">
+          {this.listRewardWalletBalance}
+        </Row>
+
       </Grid>
     );
   }
