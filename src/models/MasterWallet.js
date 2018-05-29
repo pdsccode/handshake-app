@@ -21,7 +21,7 @@ export class MasterWallet{
         // let mnemonic = 'book trial moral hunt riot ranch yard trap tool horse good barely';
         
         var bip39 = require('bip39');        
-        mnemonic = bip39.generateMnemonic(); //generates string        
+        let mnemonic = bip39.generateMnemonic(); //generates string        
 
         let masterWallet = []        
         for (var k1 in MasterWallet.ListCoin){
