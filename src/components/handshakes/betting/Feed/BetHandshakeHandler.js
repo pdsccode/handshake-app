@@ -115,6 +115,8 @@ export class BetHandshakeHandler {
         const acceptors = [];
         const goal = escrow*odd;
         const currentDate = new Date();
+        console.log('EventDate:', eventDate.getTime()/1000);
+        console.log('CurrentDate', currentDate.getTime()/1000);
         const deadline = (eventDate.getTime() / 1000 - currentDate.getTime() / 1000);
         const data = await neuron.bettingHandshake.initBet(address, privateKey, acceptors, goal, escrow, deadline, offchain);
         console.log('Init Betting:', data);

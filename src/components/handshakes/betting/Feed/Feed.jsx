@@ -8,6 +8,9 @@ import  { BetHandshakeHandler, ROLE,
   BETTING_OPTIONS_NAME, 
   BETTING_OPTIONS} from './BetHandshakeHandler.js';
 
+import { APP } from '@/constants';
+import local from '@/services/localStore';
+
 // components
 import Image from '@/components/core/presentation/Image';
 import Button from '@/components/core/controls/Button';
@@ -30,33 +33,11 @@ const goal = 30;
 
 class FeedBetting extends React.Component {
   static propTypes = {
-    item: PropTypes.object.isRequired,
     userEmail: PropTypes.string,
     updatedItem: PropTypes.func,
   }
 
   static defaultProps = {
-    item: {
-      "contract_file": "QmNSDCSvXJwi34AUgW3pCK9jhP6HY611tb5gUfj4NS2VPp",
-      "contract_file_name": "1526386710_2bf702980869bb1a8b0aa0b4126be6f3_crypto.pdf",
-      "delivery_date": "Tue, 15 May 2018 12:18:28 GMT",
-      "description": "long promises trong to test deploy.",
-      "escrow_date": "Tue, 15 May 2018 12:18:28 GMT",
-      "from_address": "0xBf7ca460D4D2AE804ade14b2399E2A2d67964983",
-      "from_email": "pierre.neter@gmail.com",
-      "hid": "442",
-      "id": 530,
-      "industries_type": 1,
-      "public": 0,
-      "signed_contract_file": "QmUfXMJhL55Kt8XtiQBkJyuSNYyaWbqpyBYy26rkJUPL7p",
-      "source": "android",
-      "status": 4,
-      "term": 0,
-      "to_address": "0x5eE2A7BF750Ad8103F04ec62FAbE502e3e3f93B4",
-      "to_email": "trong1@autonomous.nyc",
-      "user_id_shaked": 3,
-      "balance": 0
-    },
     userEmail: 'trong@autonomous.nyc',
 
   };
@@ -76,17 +57,23 @@ class FeedBetting extends React.Component {
   }
 
   componentDidMount() {
-    const {userEmail, item} = this.props;
-    const {status} = item;
-    console.log('From email: ', item.from_email);
-    console.log('To Email:', item.to_email);
-    console.log('User Email:', userEmail);
-    const role = (userEmail === item.from_email) ? ROLE.PAYEE :
-      (userEmail === item.to_email) ? ROLE.PAYER : ROLE.GUEST;
+    console.log('Betting Feed:', this.props);
+    const item = this.props;
+    const {initUserId, shakedUserIds, status, extraData} = item;
+    console.log('Extra Data:', this.extraData);
+    const profile = local.get(APP.AUTH_PROFILE);
+    console.log('Profile:', profile);
+    const isUserShake = this.isShakeUser(shakedUserIds, profile.id);
+    console.log('Is User Shake:', isUserShake);
+
+    const role = (profile.id === initUserId) ? ROLE.PAYEE :
+                isUserShake ? ROLE.PAYER : ROLE.GUEST;
     console.log('Role:', role);
+
     this.setState({
       role
     });
+    
 
     const result = BetHandshakeHandler.getStatusLabel(status, role, eventDate)
     if(result){
@@ -96,6 +83,28 @@ class FeedBetting extends React.Component {
 
   componentWillReceiveProps(nextProps) {
 
+  }
+  get extraData(){
+    const {extraData} = this.props
+    try {
+      return JSON.parse(extraData);
+    }catch(e){
+      console.log(e);
+      return {}
+    }
+  }
+  isShakeUser(shakeIds, userId){
+    if(shakeIds){
+      if(shakeIds.indexOf(userId) > -1){
+        return true;
+
+      }
+    }
+    return false;
+  }
+  get balance(){
+    const {balance} = this.extraData;
+    return balance ? balance : 0;
   }
 
   get getOptionsId() {
@@ -121,11 +130,14 @@ class FeedBetting extends React.Component {
 
   render() {
     console.log("render here");
+    const {shakeCount} = this.props;
     const {role, statusAction, statusLabel, isShowOptions} = this.state;
-    const {item} = this.props;
-    const {description, from_email, status, balance} = item;
-    const bottomDes = `22 bettors against ${from_email}`;
-    const remaining = goal - balance;
+    const {event_name, event_predict, event_odds, event_bet, balance} = this.extraData;
+    //const extraData = JSON.parse(item.extraData); 
+    
+    //const {description, from_email, status, balance} = extraData;
+    // const bottomDes = `22 bettors against ${from_email}`;
+    const remaining = event_bet - this.balance;
 
     return (
       <div>
@@ -139,19 +151,19 @@ class FeedBetting extends React.Component {
     {<p>Balance: {`${balance}`}</p>*/}
 
               <div className="description">
-                <p>Birth of the royal baby</p>
-                <p className="eventInfo">10 ETH that it is ginger</p>
-                <p className="odds">1:10</p>
+                <p>{event_name}</p>
+                <p className="eventInfo">{event_predict}</p>
+                <p className="odds">1:{event_odds}</p>
               </div>
               <hr/>
               <div className="bottomWrapper">
                 <div>
                   <Image src={conferenceCallIcon} alt="conference call icon" />
-                  <p className="content">22 <span>ninjas</span></p>
+                  <p className="content">{shakeCount} <span>ninjas</span></p>
                 </div>
                 <div>
                   <Image src={ethereumIcon} alt="ethereum icon" />
-                  <p className="content">10 ETH <span>pool</span></p>
+                  <p className="content">{event_bet} ETH <span>pool</span></p>
                 </div>
                 <div>
                   <Image src={chipIcon} alt="chip icon" />
@@ -165,14 +177,14 @@ class FeedBetting extends React.Component {
         {statusAction && <Button block onClick={() => { this.clickActionButton(statusAction); }}>{statusAction}</Button>}
         {/*<Button block onClick={() => { this.modalBetRef.open(); }}>Shake betting now</Button>*/}
         {/* Modal */}
-        <ModalDialog title="Make a bet" onRef={modal => this.modalBetRef = modal}>
+        {<ModalDialog title="Make a bet" onRef={modal => this.modalBetRef = modal}>
           <BettingShake
             remaining={remaining}
             odd={0.1}
             onCancelClick={() => this.modalBetRef.close()}
             onSubmitClick={(amount) => this.submitShake(amount)}
           />
-        </ModalDialog>
+  </ModalDialog>}
       </div>
     );
     

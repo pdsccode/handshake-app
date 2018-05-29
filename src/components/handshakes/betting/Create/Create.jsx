@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import moment from 'moment';
 
 // service, constant
 import createForm from '@/components/core/form/createForm';
@@ -160,7 +161,10 @@ class BettingCreate extends React.PureComponent {
 
     return (
       <DatePicker
-        onChange={(selectedDate) => console.log(selectedDate)}
+        onChange={(selectedDate) => {
+          const {values} = this.state;
+          values[key] = selectedDate;
+        }}
         inputProps={{
           readOnly: true,
           className: 'form-control-custom input',
@@ -170,8 +174,8 @@ class BettingCreate extends React.PureComponent {
           },
         }}
         defaultValue={new Date()}
-        dateFormat="D/M/YYYY"
-        timeFormat={false}
+        dateFormat="D/M/YYYY HH:mm tt"
+        //timeFormat={false}
         closeOnSelect
       />
     );
@@ -245,14 +249,13 @@ class BettingCreate extends React.PureComponent {
 
   //Service
   initHandshake(fields, fromAddress){
-    const json = {"odds": "1.25"}
     const params = {
       //to_address: toAddress ? toAddress.trim() : '',
       //public: isPublic,
       //description: content,
       // description: JSON.stringify(extraParams),
       //industries_type: industryId,
-      type: `${HANDSHAKE_ID.BETTING}`,
+      type: HANDSHAKE_ID.BETTING,
       //type: 3,
       //extra_data: JSON.stringify(fields),
       extra_data: JSON.stringify(fields),
@@ -271,16 +274,17 @@ class BettingCreate extends React.PureComponent {
     console.log('initHandshakeSuccess', data);
     const {offchain, status} = data;
     const {values} = this.state;
-    const eventDate =  new Date(this.datePickerRef.value);
+    console.log(this.datePickerRef.value);
+    const eventDate = moment(this.datePickerRef.value);
     const escrow = values['event_bet'];
     const event_odds = 1/parseInt(values['event_odds']);
-
+    console.log(eventDate.getTime()/1000)
     console.log('Event Date: ', eventDate);
     console.log('Escrow:', escrow);
     console.log('Event Odds:', event_odds);
 
     if(status){
-      BetHandshakeHandler.initItem(escrow, event_odds,eventDate, offchain);
+      //BetHandshakeHandler.initItem(escrow, event_odds,eventDate, offchain);
     }
 
   }
