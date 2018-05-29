@@ -14,7 +14,7 @@ class FeedExchange extends React.PureComponent {
   render() {
     const {type, amount, currency, fiat_amount, ...props } = this.props;
     return (
-      <div className="feed-wrapper">
+      <div>
         <Feed className="feed p-2 text-white" background="#FF2D55">
           <h5>
             <FormattedMessage id="offerHandShakeContent" values={{ offerType: type === 'buy' ? 'Buy': 'Sell',

@@ -5,7 +5,7 @@ import Button from '@/components/core/controls/Button';
 
 import createForm from '@/components/core/form/createForm';
 import {fieldCleave, fieldDropdown, fieldInput, fieldRadioButton} from '@/components/core/form/customField';
-import {required} from '@/components/core/form/validation';
+import { required, minValue, maxValue } from '@/components/core/form/validation';
 import {Field, formValueSelector} from "redux-form";
 import {connect} from "react-redux";
 import {createOffer} from '@/reducers/exchange/action';
@@ -313,7 +313,7 @@ class Component extends React.Component {
     return (
       <div>
         <FormExchangeCreate onSubmit={this.handleSubmit}>
-          <Feed className="feed p-2 mb-2" background={mainColor}>
+          <Feed className="feed p-2 my-2" background={mainColor}>
             <div style={{ color: 'white' }}>
               <div className="d-flex mb-2">
                 <label className="col-form-label mr-auto" style={{ width: '100px' }}>I want to</label>
@@ -377,6 +377,7 @@ class Component extends React.Component {
                               name="fee"
                               className='form-control-custom form-control-custom-ex w-100'
                               component={fieldCleave}
+                              validate={[minValue(0), maxValue(15)]}
                               propsCleave={{
                                 placeholder: 'percent',
                                 options: { numeral: true, numeralDecimalScale: 1, delimiter: '' },
