@@ -115,7 +115,7 @@ class BettingCreate extends React.PureComponent {
     //console.log("this", this.datePickerRef.value);
 
     //const {toAddress, isPublic, industryId} = this.props;
-    
+
     //const fromAddress = "0x54CD16578564b9952d645E92b9fa254f1feffee9";
     const fromAddress = address;
     this.initHandshake(extraParams, fromAddress);
@@ -169,14 +169,12 @@ class BettingCreate extends React.PureComponent {
           readOnly: true,
           className: 'form-control-custom input',
           name: key,
-          ref: (component) => {
-            this.datePickerRef = component;
-          },
         }}
         defaultValue={new Date()}
-        dateFormat="D/M/YYYY HH:mm tt"
-        //timeFormat={false}
+        dateFormat="D/M/YYYY"
+        timeFormat="HH:mm"
         closeOnSelect
+        ref={(component) => {this.datePickerRef = component;}}
       />
     );
   }
@@ -263,21 +261,21 @@ class BettingCreate extends React.PureComponent {
       chain_id: 4
     };
 
-    
+
     this.props.initHandshake({PATH_URL: API_URL.CRYPTOSIGN.INIT_HANDSHAKE, METHOD:'POST', data: params,
     successFn: this.initHandshakeSuccess,
     errorFn: this.handleGetCryptoPriceFailed
   });
-    
+
   }
   initHandshakeSuccess = (data)=>{
     console.log('initHandshakeSuccess', data);
     const {offchain, status} = data;
     const {values} = this.state;
-    console.log(this.datePickerRef.value);
-    const eventDate = moment(this.datePickerRef.value);
+    const eventDate = this.datePickerRef.value;
     const escrow = values['event_bet'];
     const event_odds = 1/parseInt(values['event_odds']);
+    console.log("eventDate", eventDate.format(), eventDate.unix());
     console.log(eventDate.getTime()/1000)
     console.log('Event Date: ', eventDate);
     console.log('Escrow:', escrow);
@@ -306,7 +304,7 @@ class BettingCreate extends React.PureComponent {
     const offchain = 'abc1';
     const data = await neuron.bettingHandshake.initBet(address, privateKey, acceptors, goal, escrow, deadline, offchain);
     console.log('Init Betting:', data);
-    
+
   }*/
 }
 
