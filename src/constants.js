@@ -57,7 +57,8 @@ export const SELL_PRICE_TYPE_DEFAULT = 'fix';
 // path
 export const API_URL = {
   CRYPTOSIGN: {
-    BASE: 'cryptosign',
+    BASE: 'https://stag-handshake.autonomous.ai/api/cryptosign',
+    INIT_HANDSHAKE: 'cryptosign/handshake/init',
   },
   DISCOVER: {
     BASE: 'handshake/discover',
