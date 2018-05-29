@@ -1,6 +1,12 @@
 export const APP = {
   HEADER_DEFAULT: 'Handshake',
-  TOKEN: 'token',
+  // store
+  AUTH_TOKEN: 'auth_token',
+  AUTH_PROFILE: 'auth_profile',
+  WALLET_MASTER: 'wallet_master',
+  WALLET_CACHE: 'wallet_cache',
+  WALLET_DEFAULT: 'wallet_default',
+  WALLET_LIST: 'wallet_list',
 };
 
 export const HANDSHAKE_ID = {
@@ -51,7 +57,11 @@ export const SELL_PRICE_TYPE_DEFAULT = 'fix';
 // path
 export const API_URL = {
   CRYPTOSIGN: {
-    BASE: 'cryptosign',
+    BASE: 'https://stag-handshake.autonomous.ai/api/cryptosign',
+    INIT_HANDSHAKE: 'cryptosign/handshake/init',
+  },
+  DISCOVER: {
+    BASE: 'handshake/discover',
   },
   EXCHANGE: {
     BASE: 'https://stag-handshake.autonomous.ai/api/exchange',
@@ -68,4 +78,32 @@ export const API_URL = {
   SEED: {
     BASE: 'seed',
   },
+  ME: {
+    BASE: 'handshake/me',
+  },
+};
+
+export const HANDSHAKE_STATUS = {
+  INITED: 0,
+  SHAKED: 1,
+  ACCEPTED: 2,
+  REJECTED: 3,
+  DONE: 4,
+  CANCELLED: 5,
+  PENDING: -1,
+  TRANSACTION_FAILED: -2,
+  NEW: -3,
+  BLOCKCHAIN_PENDING: -4,
+};
+
+export const HANDSHAKE_STATUS_NAME = {
+  [HANDSHAKE_STATUS.INITED]: 'Inited',
+  [HANDSHAKE_STATUS.SHAKED]: 'Shaked',
+  [HANDSHAKE_STATUS.ACCEPTED]: 'Accepted',
+  [HANDSHAKE_STATUS.DONE]: 'Done',
+  [HANDSHAKE_STATUS.CANCELLED]: 'Cancelled',
+  [HANDSHAKE_STATUS.PENDING]: 'Pending',
+  [HANDSHAKE_STATUS.TRANSACTION_FAILED]: 'Transaction Failed',
+  [HANDSHAKE_STATUS.NEW]: 'New',
+  [HANDSHAKE_STATUS.BLOCKCHAIN_PENDING]: 'Blockchain Pending',
 };

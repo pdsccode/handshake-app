@@ -66,21 +66,9 @@ export class Bitcoin extends Wallet{
     }
 
 
-  async transfer(privateKey, to, amount){
-    var server = "https://test-insight.bitpay.com/api";
-    console.log("server:" + server);
+  async transfer(to, amount){    
 
-    if(server.toString().includes("test")){
-      bitcore.Networks.defaultNetwork = bitcore.Networks.testnet;
-    }
-
-    //var prKey = bitcore.HDPrivateKey(privateKey).privateKey.toString();
-
-    var pubKey = bitcore.HDPublicKey(privateKey);
-
-    var address = new bitcore.Address(pubKey.publicKey).toString();
-
-    console.log("transfered from address:" + address);
+    console.log("transfered from address:" + this.address);
 
     //each BTC can be split into 100,000,000 units. Each unit of bitcoin, or 0.00000001 bitcoin, is called a satoshi
     var amountBig = new BigNumber(amount.toString());
@@ -88,14 +76,16 @@ export class Bitcoin extends Wallet{
     amount = amountBig.times(satoShiRate).toString();
 
     var data = {};
-    var fee = await this.getFee(server, 4);
-    //console.log("fee:" + fee);
+    var fee = await this.getFee(this.network, 4);
+    
+    // console.log("fee:" + fee);
+    
     if(fee){
       data.fee = fee;
-      var utxos = await this.utxosForAmount(server, address,Number(amount));
-      //console.log("utxos:" + utxos);
-      if(utxos){
-        console.log(utxos);
+      var utxos = await this.utxosForAmount(this.network, this.address, Number(amount));      
+      
+      if(utxos){                
+        
         data.utxos = utxos;
 
         var transaction = new bitcore.Transaction()
@@ -107,17 +97,16 @@ export class Bitcoin extends Wallet{
 
         console.log(transaction);
         var rawTx = transaction.serialize();
-        var txHash = await this.sendRawTx(server,rawTx);
-        //console.log(txHash);
+        var txHash = await this.sendRawTx(this.network, rawTx);
+        // console.log(txHash);
         return txHash;
       }
     }
   }
 
-
-
-  async retrieveUtxos (server, address) {
-    var url = server +'/addr/' + address + '/utxo';
+  async retrieveUtxos () {
+    
+    var url = this.network +'/addr/' + this.address + '/utxo';
 
     var response = await axios.get(url);
     console.log(response);
@@ -128,15 +117,12 @@ export class Bitcoin extends Wallet{
         return b.satoshis - a.satoshis;
       });
       return utxos;
-
     }
     return false;
   }
 
-  async utxosForAmount(server, address, amount) {
-    var utxos = await this.retrieveUtxos(server, address);
-
-
+  async utxosForAmount(amount) {
+    var utxos = await this.retrieveUtxos(this.network, this.address);
     if (utxos && utxos.length > 0 ){
       var result = this.findUtxos(utxos, 0, amount, []);
       if(!result)
@@ -146,44 +132,38 @@ export class Bitcoin extends Wallet{
     return false;
   }
 
-  findUtxos (utxos, pos, amount , result) {
-      //console.log("findUtxos");
+  findUtxos (utxos, pos, amount , result) {      
     if(pos >= utxos.length)
       return null;
 
     var utxo = utxos[pos];
-    result.push(utxo);
-    //console.log("utxo.satoshis >= amount"+utxo.satoshis+":"+ amount);
+    result.push(utxo);    
 
-    if(utxo.satoshis >= amount){ //in case of enough money
+    //in case of enough money
+    if(utxo.satoshis >= amount){ 
       return result;
     }
     else{
       amount = amount - utxo.satoshis;
-
-      return findUtxos(utxos, pos+1, amount, result);
+      return this.findUtxos(utxos, pos+1, amount, result);
     }
   }
 
-  async getFee(server, blocks) {
-    var url = server +'/utils/estimatefee?nbBlocks=' + blocks;
+  async getFee(blocks) {
+    var url = this.network +'/utils/estimatefee?nbBlocks=' + blocks;
     var response = await axios.get(url);
 
     if (response.status == 200){
 
-      var txFee = bitcore.Unit.fromBTC(response.data[blocks]).toSatoshis();
-      //console.log("data.txFee:" + txFee);
-
+      var txFee = bitcore.Unit.fromBTC(response.data[blocks]).toSatoshis();      
       return txFee;
     }
     return false;
-
   }
 
-   async sendRawTx(server, rawTx) {
-     console.log("sendRawTx");
+   async sendRawTx(rawTx) {     
 
-     var txHash = await axios.post(server + '/tx/send', {
+     var txHash = await axios.post(this.network + '/tx/send', {
        rawtx: rawTx
      });
      if (txHash.status == 200) {
