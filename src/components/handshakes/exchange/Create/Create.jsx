@@ -38,6 +38,12 @@ const FormExchangeCreate = createForm({
 const selectorFormExchangeCreate = formValueSelector(nameFormExchangeCreate);
 
 const mainColor = '#007AFF'
+const validateFee = [
+  minValue(0),
+  maxValue(15),
+]
+const minValue01 = minValue(0.1)
+const minValue001 = minValue(0.01)
 
 class Component extends React.Component {
   constructor(props) {
@@ -306,7 +312,7 @@ class Component extends React.Component {
   }
 
   render() {
-    const { totalAmount, type, sellPriceType, offerPrice } = this.props;
+    const { totalAmount, type, sellPriceType, offerPrice, currency } = this.props;
 
     let modalContent = this.state.modalContent;
 
@@ -348,7 +354,7 @@ class Component extends React.Component {
                     className="form-control-custom form-control-custom-ex w-100"
                     component={fieldInput}
                     onChange={this.onAmountChange}
-                    validate={[required]}
+                    validate={[required, currency === 'BTC' ? minValue001 : minValue01]}
                   />
                 </div>
               </div>
@@ -377,7 +383,7 @@ class Component extends React.Component {
                               name="fee"
                               className='form-control-custom form-control-custom-ex w-100'
                               component={fieldCleave}
-                              validate={[minValue(0), maxValue(15)]}
+                              validate={validateFee}
                               propsCleave={{
                                 placeholder: 'percent',
                                 options: { numeral: true, numeralDecimalScale: 1, delimiter: '' },
