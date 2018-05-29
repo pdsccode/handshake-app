@@ -67,6 +67,8 @@ class Wallet extends React.Component {
 
    async componentDidMount() {
 
+    console.log('getWalletDefault()', MasterWallet.getWalletDefault());
+
     let listWallet = await MasterWallet.getMasterWallet();
 
     if (listWallet == false){
@@ -266,8 +268,8 @@ class Wallet extends React.Component {
         <ModalDialog title="Confirm" onRef={modal => this.modalBetRef = modal}>
           <div><span>Are you sure to want to remove this wallet?</span></div>
           <div className='bodyConfirm'>
-            <Button className="left" type="primary" typeClass="primary" onClick={this.removeWallet} >Ok</Button>
-            <Button className="right" type="warning" typeClass="warning" onClick={() => { this.modalBetRef.close(); }}>Cancel</Button>
+            <Button className="left" type="primary" cssType="primary" onClick={this.removeWallet} >Ok</Button>
+            <Button className="right" type="warning" cssType="warning" onClick={() => { this.modalBetRef.close(); }}>Cancel</Button>
           </div>
         </ModalDialog>
 

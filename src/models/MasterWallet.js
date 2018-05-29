@@ -73,6 +73,37 @@ export class MasterWallet{
         
     }
 
+    // Get list wallet from store local:
+    static getWalletDefault(){
+        let wallets = localStore.get(MasterWallet.KEY);   
+        
+        if (wallets == false) return false;
+        var wallet = false;
+        var BreakException = {};
+        try {
+            wallets.forEach(walletJson => {
+                if (walletJson.default){                
+                    wallet = new MasterWallet.ListCoin[walletJson.className]();             
+                    wallet.mnemonic = walletJson.mnemonic;
+                    wallet.address = walletJson.address;
+                    wallet.privateKey = walletJson.privateKey;
+                    wallet.coinType = walletJson.coinType;
+                    wallet.default = walletJson.default;
+                    wallet.balance = walletJson.balance;
+                    wallet.network = walletJson.network;
+                    wallet.name = walletJson.name;
+                    wallet.title = walletJson.title;
+                    wallet.protected = walletJson.protected;
+                    throw BreakException;
+                }                                
+            });
+        } catch (e) {
+            if (e !== BreakException) throw e;
+        }
+        return wallet;
+        
+    }
+
     static log(data, key=MasterWallet.KEY){
         console.log('%c ' + '{0}: '.format(key), 'background: #222; color: #bada55', data)
     }
