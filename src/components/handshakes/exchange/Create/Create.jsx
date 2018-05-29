@@ -1,14 +1,14 @@
 import React from 'react';
-import {injectIntl} from 'react-intl';
+import { injectIntl } from 'react-intl';
 import Feed from '@/components/core/presentation/Feed';
 import Button from '@/components/core/controls/Button';
 
 import createForm from '@/components/core/form/createForm';
-import {fieldCleave, fieldDropdown, fieldInput, fieldRadioButton} from '@/components/core/form/customField';
-import {maxValue, minValue, required} from '@/components/core/form/validation';
-import {Field, formValueSelector} from "redux-form";
-import {connect} from "react-redux";
-import {createOffer, getOfferPrice} from '@/reducers/exchange/action';
+import { fieldCleave, fieldDropdown, fieldInput, fieldRadioButton } from '@/components/core/form/customField';
+import { required, minValue, maxValue } from '@/components/core/form/validation';
+import { Field, formValueSelector } from 'redux-form';
+import { connect } from 'react-redux';
+import { createOffer } from '@/reducers/exchange/action';
 import {
   API_URL,
   CRYPTO_CURRENCY,
@@ -19,20 +19,20 @@ import {
   FIAT_CURRENCY_SYMBOL,
   SELL_PRICE_TYPE,
   SELL_PRICE_TYPE_DEFAULT
-} from "@/constants";
-import '../styles.scss'
-import ModalDialog from "@/components/core/controls/ModalDialog/ModalDialog";
-import {BigNumber} from 'bignumber.js';
-import {MasterWallet} from "@/models/MasterWallet";
+} from '@/constants';
+import '../styles.scss';
+import ModalDialog from '@/components/core/controls/ModalDialog/ModalDialog';
+import { BigNumber } from 'bignumber.js';
+import { getOfferPrice } from '@/reducers/exchange/action';
+import { MasterWallet } from '@/models/MasterWallet';
 import axios from 'axios';
-import getSymbolFromCurrency from "currency-symbol-map";
-import {URL} from '@/config';
+import getSymbolFromCurrency from 'currency-symbol-map';
 
 const nameFormExchangeCreate = 'exchangeCreate';
 const FormExchangeCreate = createForm({
   propsReduxForm: {
     form: nameFormExchangeCreate,
-    initialValues: { type: EXCHANGE_ACTION_DEFAULT, currency: CRYPTO_CURRENCY_DEFAULT, sellPriceType: SELL_PRICE_TYPE_DEFAULT  },
+    initialValues: { type: EXCHANGE_ACTION_DEFAULT, currency: CRYPTO_CURRENCY_DEFAULT, sellPriceType: SELL_PRICE_TYPE_DEFAULT },
   },
 });
 const selectorFormExchangeCreate = formValueSelector(nameFormExchangeCreate);
@@ -56,7 +56,7 @@ class Component extends React.Component {
       listMainWalletBalance: [],
       listTestWalletBalance: [],
       ipInfo: {},
-    }
+    };
   }
 
   async componentDidMount() {
@@ -66,55 +66,54 @@ class Component extends React.Component {
       this.getCryptoPriceByAmount(amount);
     }, 30000);
 
-    let ipInfo = await axios.get(`https://ipfind.co/me`, {params: {
-      auth: 'a59f33e5-0879-411a-908b-792359a0d6cc'
-    }});
+    const ipInfo = await axios.get(`https://ipfind.co/me`, {
+      params: {
+        auth: 'a59f33e5-0879-411a-908b-792359a0d6cc',
+      },
+    });
 
     this.setState({ ipInfo: ipInfo.data });
 
-    //Get wallet
+    // Get wallet
     let listWallet = await MasterWallet.getMasterWallet();
 
-    if (listWallet == false){
+    if (listWallet == false) {
       listWallet = await MasterWallet.createMasterWallet();
     }
 
-    await this.splitWalletData(listWallet)
+    await this.splitWalletData(listWallet);
 
     await this.getListBalance();
   }
 
-  splitWalletData(listWallet){
+  splitWalletData(listWallet) {
+    const listMainWallet = [];
+    const listTestWallet = [];
 
-    let listMainWallet = [];
-    let listTestWallet = [];
-
-    listWallet.forEach(wallet => {
+    listWallet.forEach((wallet) => {
       // is Mainnet
-      if (wallet.network == MasterWallet.ListCoin[wallet.className].Network.Mainnet){
+      if (wallet.network == MasterWallet.ListCoin[wallet.className].Network.Mainnet) {
         listMainWallet.push(wallet);
-      }
-      else{
+      } else {
         // is Testnet
         listTestWallet.push(wallet);
       }
     });
 
-    this.setState({listMainWalletBalance: listMainWallet, listTestWalletBalance: listTestWallet});
+    this.setState({ listMainWalletBalance: listMainWallet, listTestWalletBalance: listTestWallet });
   }
 
   async getListBalance() {
+    const listWallet = this.state.listMainWalletBalance.concat(this.state.listTestWalletBalance);
 
-    let listWallet = this.state.listMainWalletBalance.concat(this.state.listTestWalletBalance);
+    const pros = [];
 
-    const pros = []
-
-    listWallet.forEach(wallet => {
+    listWallet.forEach((wallet) => {
       pros.push(new Promise((resolve, reject) => {
-        wallet.getBalance().then(balance => {
+        wallet.getBalance().then((balance) => {
           wallet.balance = balance;
           resolve(wallet);
-        })
+        });
       }));
     });
 
@@ -126,10 +125,13 @@ class Component extends React.Component {
   getCryptoPriceByAmount = (amount) => {
     const cryptoCurrency = this.state.currency;
     const { type } = this.props;
-    let fiat_currency = this.state.ipInfo.currency;
+    const fiat_currency = this.state.ipInfo.currency;
 
-    var data = {amount: amount, currency: cryptoCurrency,
-      type: type, fiat_currency: fiat_currency,
+    let data = {
+      amount,
+      currency: cryptoCurrency,
+      type,
+      fiat_currency,
     };
 
     this.props.getOfferPrice({
@@ -156,7 +158,7 @@ class Component extends React.Component {
   onSellPriceTypeChange = (e, newValue) => {
     const { amount } = this.props;
     // this.setState({currency: newValue}, () => {
-      this.getCryptoPriceByAmount(amount);
+    this.getCryptoPriceByAmount(amount);
     // });
   }
 
@@ -164,13 +166,13 @@ class Component extends React.Component {
     // console.log('onCurrencyChange', newValue);
     // const currency = e.target.textContent || e.target.innerText;
     const { amount } = this.props;
-    this.setState({currency: newValue}, () => {
+    this.setState({ currency: newValue }, () => {
       this.getCryptoPriceByAmount(amount);
     });
   }
 
   handleSubmit = (values) => {
-    const {intl, totalAmount} = this.props;
+    const { intl, totalAmount } = this.props;
     const fiat_currency = this.state.ipInfo.currency;
     // console.log('valuessss', values);
 
@@ -185,7 +187,7 @@ class Component extends React.Component {
 
     let address = '';
     for (let i = 0; i < listWallet.length; i++) {
-      let wallet = listWallet[i];
+      const wallet = listWallet[i];
 
       if (wallet.name === values.currency) {
         address = wallet.address;
@@ -201,7 +203,7 @@ class Component extends React.Component {
       type: values.type,
       contact_info: values.address,
       contact_phone: '1234567890',
-      fiat_currency: fiat_currency,
+      fiat_currency,
     };
 
     if (values.type === 'buy') {
@@ -219,7 +221,8 @@ class Component extends React.Component {
       total: new BigNumber(totalAmount).toFormat(2),
     });
 
-    this.setState({modalContent:
+    this.setState({
+      modalContent:
         (
           <div className="py-2">
             <Feed className="feed p-2" background="#259B24">
@@ -230,7 +233,7 @@ class Component extends React.Component {
             <Button className="mt-2" block onClick={() => this.createOffer(offer)}>Confirm</Button>
             <Button block className="btn btn-secondary" onClick={this.cancelCreateOffer}>Not now</Button>
           </div>
-        )
+        ),
     }, () => {
       this.modalRef.open();
     });
@@ -259,12 +262,14 @@ class Component extends React.Component {
   }
 
   handleCreateOfferSuccess = (data) => {
-    this.timeoutClosePopup = setTimeout(() => {
-      this.handleBuySuccess();
+    this.intervalClosePopup = setInterval(() => {
+      this.modalRef.close();
+      this.props.history.push(URL.HANDSHAKE_ME);
     }, 3000);
 
     console.log('handleCreateCCOrderSuccess', data);
-    this.setState({modalContent:
+    this.setState({
+      modalContent:
       (
         <div className="py-2">
           <Feed className="feed p-2" background="#259B24">
@@ -274,24 +279,23 @@ class Component extends React.Component {
           </Feed>
           <Button block className="btn btn-secondary mt-2" onClick={this.handleBuySuccess}>Dismiss</Button>
         </div>
-      )
+      ),
     }, () => {
       this.modalRef.open();
     });
   }
 
   handleBuySuccess = () => {
-    // console.log('handleBuySuccess');
-    if (this.timeoutClosePopup) {
-      clearTimeout(this.timeoutClosePopup);
+    if (this.intervalClosePopup) {
+      clearInterval(this.intervalClosePopup);
     }
-    this.modalRef.close();
     this.props.history.push(URL.HANDSHAKE_ME);
   }
 
   handleCreateOfferFailed = (e) => {
     // console.log('handleCreateCCOrderFailed', JSON.stringify(e.response));
-    this.setState({modalContent:
+    this.setState({
+      modalContent:
         (
           <div className="py-2">
             <Feed className="feed p-2" background="#259B24">
@@ -301,7 +305,7 @@ class Component extends React.Component {
             </Feed>
             <Button block className="btn btn-secondary mt-2" onClick={this.handleBuyFailed}>Dismiss</Button>
           </div>
-        )
+        ),
     }, () => {
       this.modalRef.open();
     });
@@ -314,7 +318,7 @@ class Component extends React.Component {
   render() {
     const { totalAmount, type, sellPriceType, offerPrice, currency } = this.props;
 
-    let modalContent = this.state.modalContent;
+    const modalContent = this.state.modalContent;
 
     return (
       <div>

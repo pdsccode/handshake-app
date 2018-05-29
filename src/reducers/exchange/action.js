@@ -17,6 +17,8 @@ export const EXCHANGE_ACTIONS = {
   GET_USER_TRANSACTION: 'GET_USER_TRANSACTION',
 
   CREATE_OFFER: 'CREATE_OFFER',
+  GET_LIST_OFFERS: 'GET_LIST_OFFERS',
+  GET_OFFER: 'GET_OFFER',
   CLOSE_OFFER: 'CLOSE_OFFER',
   SHAKE_OFFER: 'SHAKE_OFFER',
   COMPLETE_SHAKE_OFFER: 'COMPLETE_SHAKE_OFFER',
@@ -55,19 +57,27 @@ export const createOffer = createAPI(
   EXCHANGE_ACTIONS.CREATE_OFFER
 );
 
-export const closeOffer = createAPI(
-  EXCHANGE_ACTIONS.CREATE_OFFER
-);
+export const getListOffers = createAPI(
+  EXCHANGE_ACTIONS.GET_LIST_OFFERS
+)
+
+export const getOffer = createAPI(
+  EXCHANGE_ACTIONS.GET_OFFER
+)
 
 export const shakeOffer = createAPI(
   EXCHANGE_ACTIONS.SHAKE_OFFER
 );
 
-export const completeShakeOffer = createAPI(
+export const closeOffer = createAPI(
+  EXCHANGE_ACTIONS.CREATE_OFFER
+);
+
+export const completeShakedOffer = createAPI(
   EXCHANGE_ACTIONS.COMPLETE_SHAKE_OFFER
 );
 
-export const cancelShakeOffer = createAPI(
+export const cancelShakedOffer = createAPI(
   EXCHANGE_ACTIONS.CANCEL_SHAKE_OFFER
 );
 
