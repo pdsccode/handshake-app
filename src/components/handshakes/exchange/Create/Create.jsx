@@ -27,6 +27,7 @@ import { getOfferPrice } from '@/reducers/exchange/action';
 import { MasterWallet } from '@/models/MasterWallet';
 import axios from 'axios';
 import getSymbolFromCurrency from 'currency-symbol-map';
+import {URL} from '@/config';
 
 const nameFormExchangeCreate = 'exchangeCreate';
 const FormExchangeCreate = createForm({
@@ -262,9 +263,8 @@ class Component extends React.Component {
   }
 
   handleCreateOfferSuccess = (data) => {
-    this.intervalClosePopup = setInterval(() => {
-      this.modalRef.close();
-      this.props.history.push(URL.HANDSHAKE_ME);
+    this.timeoutClosePopup = setTimeout(() => {
+      this.handleBuySuccess();
     }, 3000);
 
     console.log('handleCreateCCOrderSuccess', data);
@@ -286,9 +286,10 @@ class Component extends React.Component {
   }
 
   handleBuySuccess = () => {
-    if (this.intervalClosePopup) {
-      clearInterval(this.intervalClosePopup);
+    if (this.timeoutClosePopup) {
+      clearTimeout(this.timeoutClosePopup);
     }
+    this.modalRef.close();
     this.props.history.push(URL.HANDSHAKE_ME);
   }
 
