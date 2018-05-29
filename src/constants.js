@@ -59,6 +59,9 @@ export const API_URL = {
   CRYPTOSIGN: {
     BASE: 'cryptosign',
   },
+  DISCOVER: {
+    BASE: 'handshake/discover'
+  },
   EXCHANGE: {
     BASE: 'https://stag-handshake.autonomous.ai/api/exchange',
     GET_CRYPTO_PRICE: 'info/instant-buy/price', // {path: '/info/instant-buy/price', method: 'get'},
