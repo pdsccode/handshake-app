@@ -1,7 +1,7 @@
 import axios from 'axios'
 import satoshi from 'satoshi-bitcoin';
 import { rule } from 'postcss';
-import { Bitcoin } from '@/models/Bitcoin.1';
+import { Bitcoin } from '@/models/Bitcoin';
 
 export class BitcoinTestnet extends Bitcoin{
     

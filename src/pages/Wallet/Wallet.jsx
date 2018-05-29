@@ -21,7 +21,7 @@ import { setHeaderRight } from '@/reducers/app/action';
 
 // style
 import './Wallet.scss';
-import { Bitcoin } from '@/models/Bitcoin.1';
+import { Bitcoin } from '@/models/Bitcoin';
 import ModalDialog from '@/components/core/controls/ModalDialog';
 
 
