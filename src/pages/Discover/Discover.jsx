@@ -15,6 +15,7 @@ import FeedExchange from '@/components/handshakes/exchange/Feed/FeedExchange';
 import FeedSeed from '@/components/handshakes/seed/Feed';
 import FeedCreditCard from '@/components/handshakes/exchange/Feed/FeedCreditCard';
 import Tabs from '@/components/handshakes/exchange/components/Tabs';
+import {FIREBASE_PATH} from '@/constants';
 // style
 import './Discover.scss';
 
@@ -35,6 +36,10 @@ class DiscoverPage extends React.Component {
     // bind
     this.clickCategoryItem = this.clickCategoryItem.bind(this);
     this.searchChange = this.searchChange.bind(this);
+  }
+
+  componentWillReceiveProps(nextProps){
+    console.log(nextProps.firebaseUser);
   }
 
   get getHandshakeList() {
@@ -84,6 +89,7 @@ class DiscoverPage extends React.Component {
 
   render() {
     const { handshakeIdActive } = this.state;
+    
 
     return (
       <Grid className="discover">
@@ -130,6 +136,7 @@ DiscoverPage.propTypes = {
 
 const mapState = state => ({
   discover: state.discover,
+  firebaseUser: state.firebase.data,
 });
 
 const mapDispatch = ({
