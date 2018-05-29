@@ -10,7 +10,7 @@ import ModalDialog from '@/components/core/controls/ModalDialog';
 import localStore from '@/services/localStore';
 import {URL} from '@/config';
 import '../styles.scss';
-import {validate} from '@/components/handshakes/exchange/Feed/validation';
+import {validate} from '@/components/handshakes/exchange/validation';
 import throttle from 'lodash/throttle';
 import createForm from '@/components/core/form/createForm'
 import {fieldCleave, fieldDropdown, fieldInput, fieldRadioButton} from '@/components/core/form/customField'
@@ -346,6 +346,8 @@ class FeedCreditCard extends React.Component {
                       <div className="mx-2">
                         <Field
                           name="amount"
+                          type="number"
+                          step="any"
                           validate={[required]}
                           component={fieldInput}
                           className="form-control-custom form-control-custom-ex d-inline-block w-100"
