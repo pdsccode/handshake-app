@@ -193,14 +193,14 @@ class Component extends React.Component {
       currency: values.currency,
       type: values.type,
       contact_info: values.address,
-      contact_phone: '',
+      contact_phone: '1234567890',
       fiat_currency: fiat_currency,
     };
 
     if (values.type === 'buy') {
-      offer.refund_address = address;
-    } else {
       offer.user_address = address;
+    } else {
+      offer.refund_address = address;
     }
 
     console.log('handleSubmit', offer);
