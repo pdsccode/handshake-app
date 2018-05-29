@@ -15,6 +15,7 @@ import {
   cancelShakedOffer, closeOffer, completeShakedOffer, getListOffers, getOffer,
   shakeOffer
 } from "../../../../reducers/exchange/action";
+import getSymbolFromCurrency from 'currency-symbol-map';
 
 class FeedExchange extends React.PureComponent {
   constructor(props) {
@@ -26,47 +27,47 @@ class FeedExchange extends React.PureComponent {
   }
 
   componentDidMount() {
-    this.props.getListOffers({
-      BASE_URL: API_URL.EXCHANGE.BASE,
-      PATH_URL: API_URL.EXCHANGE.OFFERS,
-      successFn: this.handleGetListOffersSuccess,
-      errorFn: this.handleGetListOffersFailed,
-    });
-    this.props.getOffer({
-      BASE_URL: API_URL.EXCHANGE.BASE,
-      PATH_URL: API_URL.EXCHANGE.OFFERS,
-      successFn: this.handleGetOfferSuccess,
-      // errorFn: this.handleGetOfferFailed,
-      errorFn: this.handleGetListOffersFailed,
-    });
-    this.props.shakeOffer({
-      BASE_URL: API_URL.EXCHANGE.BASE,
-      PATH_URL: API_URL.EXCHANGE.OFFERS,
-      successFn: this.handleShakeOfferSuccess,
-      // errorFn: this.handleShakeOfferFailed,
-      errorFn: this.handleGetListOffersFailed,
-    });
-    this.props.closeOffer({
-      BASE_URL: API_URL.EXCHANGE.BASE,
-      PATH_URL: API_URL.EXCHANGE.OFFERS,
-      successFn: this.handleCloseOfferSuccess,
-      // errorFn: this.handleCloseOfferFailed,
-      errorFn: this.handleGetListOffersFailed,
-    });
-    this.props.completeShakedOffer({
-      BASE_URL: API_URL.EXCHANGE.BASE,
-      PATH_URL: API_URL.EXCHANGE.OFFERS,
-      successFn: this.handleCompleteShakedOfferSuccess,
-      // errorFn: this.handleCompleteShakedOfferFailed,
-      errorFn: this.handleGetListOffersFailed,
-    });
-    this.props.cancelShakedOffer({
-      BASE_URL: API_URL.EXCHANGE.BASE,
-      PATH_URL: API_URL.EXCHANGE.OFFERS,
-      successFn: this.handleCancelShakedOfferSuccess,
-      // errorFn: this.handleCancelShakedOfferFailed,
-      errorFn: this.handleGetListOffersFailed,
-    });
+    // this.props.getListOffers({
+    //   BASE_URL: API_URL.EXCHANGE.BASE,
+    //   PATH_URL: API_URL.EXCHANGE.OFFERS,
+    //   successFn: this.handleGetListOffersSuccess,
+    //   errorFn: this.handleGetListOffersFailed,
+    // });
+    // this.props.getOffer({
+    //   BASE_URL: API_URL.EXCHANGE.BASE,
+    //   PATH_URL: API_URL.EXCHANGE.OFFERS,
+    //   successFn: this.handleGetOfferSuccess,
+    //   // errorFn: this.handleGetOfferFailed,
+    //   errorFn: this.handleGetListOffersFailed,
+    // });
+    // this.props.shakeOffer({
+    //   BASE_URL: API_URL.EXCHANGE.BASE,
+    //   PATH_URL: API_URL.EXCHANGE.OFFERS,
+    //   successFn: this.handleShakeOfferSuccess,
+    //   // errorFn: this.handleShakeOfferFailed,
+    //   errorFn: this.handleGetListOffersFailed,
+    // });
+    // this.props.closeOffer({
+    //   BASE_URL: API_URL.EXCHANGE.BASE,
+    //   PATH_URL: API_URL.EXCHANGE.OFFERS,
+    //   successFn: this.handleCloseOfferSuccess,
+    //   // errorFn: this.handleCloseOfferFailed,
+    //   errorFn: this.handleGetListOffersFailed,
+    // });
+    // this.props.completeShakedOffer({
+    //   BASE_URL: API_URL.EXCHANGE.BASE,
+    //   PATH_URL: API_URL.EXCHANGE.OFFERS,
+    //   successFn: this.handleCompleteShakedOfferSuccess,
+    //   // errorFn: this.handleCompleteShakedOfferFailed,
+    //   errorFn: this.handleGetListOffersFailed,
+    // });
+    // this.props.cancelShakedOffer({
+    //   BASE_URL: API_URL.EXCHANGE.BASE,
+    //   PATH_URL: API_URL.EXCHANGE.OFFERS,
+    //   successFn: this.handleCancelShakedOfferSuccess,
+    //   // errorFn: this.handleCancelShakedOfferFailed,
+    //   errorFn: this.handleGetListOffersFailed,
+    // });
   }
 
   handleGetListOffersSuccess = (data) => {
@@ -134,14 +135,21 @@ class FeedExchange extends React.PureComponent {
   }
 
   render() {
-    const {type, amount, currency, fiat_amount, ...props } = this.props;
+    const {init_user_id, location, state, status, type, extraData, ...props } = this.props;
+
+    console.log('asfad', this.props);
+    const offer = JSON.parse(extraData);
+    const {type, amount, currency, fiat_amount, fiat_currency} = offer;
+
     let modalContent = this.state.modalContent;
     return (
       <div>
         <Feed className="feed p-2 text-white" background="#FF2D55">
           <h5>
             <FormattedMessage id="offerHandShakeContent" values={{ offerType: type === 'buy' ? 'Buy': 'Sell',
-            amount: new BigNumber(amount).toFormat(AMOUNT_DECIMAL), currency: currency, total: new BigNumber(fiat_amount).toFormat(PRICE_DECIMAL)
+            amount: new BigNumber(amount).toFormat(AMOUNT_DECIMAL), currency: currency,
+              currency_symbol: getSymbolFromCurrency(fiat_currency),
+              total: new BigNumber(fiat_amount || 0).toFormat(PRICE_DECIMAL)
             }}/>
           </h5>
           <div className="media">
