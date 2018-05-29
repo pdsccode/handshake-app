@@ -49,7 +49,7 @@ class Create extends React.Component {
         <Row>
           <Col md={12} xs={12}>
             <SearchBar suggestions={this.handShakeList} onSuggestionSelected={this.handshakeChange} />
-            <CreateComponent />
+            <CreateComponent {...this.props}/>
           </Col>
         </Row>
       </Grid>

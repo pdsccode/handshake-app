@@ -32,11 +32,13 @@ class DiscoverPage extends React.Component {
     super(props);
     this.state = {
       handshakeIdActive: '',
+      tabIndexActive: 1,
     };
     this.props.loadDiscoverList({ PATH_URL: 'handshake', qs: { public: 0, chain_id: 4 } });
     this.props.success(handShakeList); // temp
     // bind
     this.clickCategoryItem = this.clickCategoryItem.bind(this);
+    this.clickTabItem = this.clickTabItem.bind(this);
     this.searchChange = this.searchChange.bind(this);
   }
 
@@ -83,8 +85,15 @@ class DiscoverPage extends React.Component {
     });
   }
 
+  clickTabItem(index) {
+    this.setState({ tabIndexActive: index });
+
+    this.props.loadDiscoverList({ PATH_URL: 'handshake', qs: { public: 0, chain_id: 4 } });
+    this.props.success(handShakeList); // temp
+  }
+
   render() {
-    const { handshakeIdActive } = this.state;
+    const { handshakeIdActive, tabIndexActive } = this.state;
 
     return (
       <Grid>
@@ -102,16 +111,18 @@ class DiscoverPage extends React.Component {
           handshakeIdActive === HANDSHAKE_ID.EXCHANGE && (
             <div>
               <Tabs
-                activeId={1}
-                onClickTab={(index) => console.log('indexx', index)}
+                activeId={this.state.tabIndexActive}
+                onClickTab={this.clickTabItem}
                 list={[
                   { id: 1, text: 'Buy' },
                   { id: 2, text: 'Sell' },
                 ]}
               />
-              <div className="feed-wrapper">
-                <FeedCreditCard {...this.props} />
-              </div>
+              { tabIndexActive === 1 && (
+                <div className="feed-wrapper">
+                  <FeedCreditCard {...this.props} />
+                </div>)
+              }
             </div>
           )
         }

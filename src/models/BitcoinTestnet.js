@@ -13,7 +13,7 @@ export class BitcoinTestnet extends Bitcoin{
       this.coinType = 0;            
       this.name = 'BTC';
       this.title = 'Bitcoin';  
-      this.className = "Bitcoin";        
+      this.className = "BitcoinTestnet";        
     }
 
     createAddressPrivatekey(){        

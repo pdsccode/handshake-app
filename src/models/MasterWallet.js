@@ -21,7 +21,7 @@ export class MasterWallet{
         // var bip39 = require('bip39');
         // mnemonic = bip39.generateMnemonic(); //generates string        
         let masterWallet = []        
-        for (var k1 in MasterWallet.ListCoin){                
+        for (var k1 in MasterWallet.ListCoin){
             for (var k2 in MasterWallet.ListCoin[k1].Network){
                 // init a wallet:
                 let wallet = new MasterWallet.ListCoin[k1];
@@ -35,10 +35,14 @@ export class MasterWallet{
         }
 
         // Save to local store:
-        console.log("masterWallet", masterWallet);
-        localStore.save(MasterWallet.KEY, masterWallet);
+        MasterWallet.UpdateLocalStore(masterWallet);
 
         return masterWallet;
+    }
+
+    static UpdateLocalStore(masterWallet){
+        console.log("masterWallet saved: ", masterWallet);
+        localStore.save(MasterWallet.KEY, masterWallet);
     }
     
     // Get list wallet from store local:
@@ -66,6 +70,37 @@ export class MasterWallet{
             listWallet.push(wallet);
         });
         return listWallet;
+        
+    }
+
+    // Get list wallet from store local:
+    static getWalletDefault(){
+        let wallets = localStore.get(MasterWallet.KEY);   
+        
+        if (wallets == false) return false;
+        var wallet = false;
+        var BreakException = {};
+        try {
+            wallets.forEach(walletJson => {
+                if (walletJson.default){                
+                    wallet = new MasterWallet.ListCoin[walletJson.className]();             
+                    wallet.mnemonic = walletJson.mnemonic;
+                    wallet.address = walletJson.address;
+                    wallet.privateKey = walletJson.privateKey;
+                    wallet.coinType = walletJson.coinType;
+                    wallet.default = walletJson.default;
+                    wallet.balance = walletJson.balance;
+                    wallet.network = walletJson.network;
+                    wallet.name = walletJson.name;
+                    wallet.title = walletJson.title;
+                    wallet.protected = walletJson.protected;
+                    throw BreakException;
+                }                                
+            });
+        } catch (e) {
+            if (e !== BreakException) throw e;
+        }
+        return wallet;
         
     }
 
