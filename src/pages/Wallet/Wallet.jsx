@@ -32,11 +32,7 @@ import { Field } from "redux-form";
 import { initHandshake } from '@/reducers/handshake/action';
 
 const nameFormSendWallet = 'sendWallet';
-const SendWalletForm = createForm({
-  propsReduxForm: {
-    form: nameFormSendWallet,
-  },
-});
+const SendWalletForm = createForm({ propsReduxForm: { form: nameFormSendWallet }});
 
 class Wallet extends React.Component {
   constructor(props) {
@@ -51,8 +47,8 @@ class Wallet extends React.Component {
       listRewardWalletBalance: [],
       bottomSheet: false,
       listMenu: [],
-      walletNeedRemove: null,
-      walletSend: null
+      walletSelected: null,      
+      inputSendValue: '',
     };
     this.props.setHeaderRight(this.headerRight());    
   }
@@ -99,8 +95,10 @@ class Wallet extends React.Component {
 
      console.log(tx)*/
 
+     // fill data:
      await this.splitWalletData(listWallet)
 
+     // update balance for lst wallet:
      await this.getListBalace();
   }
 
@@ -157,11 +155,12 @@ class Wallet extends React.Component {
       obj.push({
         title: 'Send',
         handler: () => {
-          this.setState({walletSend: wallet});          
-          this.modalBetRef.open();   
+          this.setState({walletSelected: wallet});                    
           this.toggleBottomSheet();   
+          this.modalSendRef.open();              
         }
       })
+      
       obj.push({
         title: 'Fill up',
         handler: () => {
@@ -169,7 +168,7 @@ class Wallet extends React.Component {
         }
       })
       obj.push({
-        title: 'Protected your coin',
+        title: 'Protected this wallet',
         handler: () => {
 
         }
@@ -200,14 +199,15 @@ class Wallet extends React.Component {
           MasterWallet.UpdateLocalStore(lstWalletTemp);
         }
       })
-      obj.push({
-        title: 'Remove',
-        handler: () => {
-          this.setState({walletNeedRemove: wallet});          
-          this.modalBetRef.open();   
-          this.toggleBottomSheet();   
-        }
-      })
+      if (!wallet.isReward)
+        obj.push({
+          title: 'Remove',
+          handler: () => {
+            this.setState({walletSelected: wallet});          
+            this.modalBetRef.open();   
+            this.toggleBottomSheet();   
+          }
+        })
 
       return obj;
   }
@@ -216,7 +216,7 @@ class Wallet extends React.Component {
   removeWallet = () =>{
     let lstWalletTemp = this.getAllWallet();
     var index = -1;
-    var walletTmp = this.state.walletNeedRemove;
+    var walletTmp = this.state.walletSelected;
     if (walletTmp != null){
         // Find index for this item:
         lstWalletTemp.forEach(function (wal, i) {if (wal === walletTmp){index = i}});   
@@ -232,10 +232,29 @@ class Wallet extends React.Component {
 
   }
 
-  sendWallet = () =>{
-    
-    this.modalBetRef.close();     
+  sendCoin = () =>{
+    if (this.state.inputAddressAmountValue == '')
+      alert("Please input to address");
+    else if (this.state.inputSendAmountValue == '' || this.state.inputSendAmountValue == 0)
+      alert("Please input Amount value");
+    else{
+      
+    this.state.walletSelected.transfer(this.state.inputAddressAmountValue, this.state.inputSendAmountValue).then(success => {
+          alert(success);
+          this.modalSendRef.close();
+      })
+    }
+  }
 
+  updateSendAmountValue = (evt) => {
+    this.setState({
+      inputSendAmountValue: evt.target.value
+    });
+  }
+  updateSendAddressValue = (evt) => {
+    this.setState({
+      inputAddressAmountValue: evt.target.value
+    });
   }
 
   // Menu for Right header bar
@@ -310,13 +329,15 @@ class Wallet extends React.Component {
             <Button className="right" type="warning" cssType="warning" onClick={() => { this.modalBetRef.close(); }}>No</Button>
           </div>
         </ModalDialog>
-        <Modal title="Send" onRef={modal => this.modalBetRef = modal}>
-          <SendWalletForm className="sendwallet-wrapper" onSubmit={this.onSubmit}>
-            <Input name="to_ddress" placeholder="To address"></Input>
-            <Input name="amount" placeholder="Amount (BTC)" type="tel"></Input>
-            <Button type="submit" block={true}>Send</Button>
+        
+        <Modal title="Send" onRef={modal => this.modalSendRef = modal}>
+          <SendWalletForm className="sendwallet-wrapper" onSubmit={this.sendCoin}>
+            <Input name="to_ddress" placeholder="To address" onChange={evt => this.updateSendAddressValue(evt)}></Input>
+            <Input name="amount" placeholder={ this.state.walletSelected ? "Amount ({0})".format(this.state.walletSelected.name) : "Amount "} onChange={evt => this.updateSendAmountValue(evt)} type="tel"></Input>
+            <Button type="submit"  block={true}>Send</Button>
           </SendWalletForm>
         </Modal>
+
         <Row className="list">
           <Header title="Main net wallets" hasLink={false} linkTitle="+ Add new" onLinkClick={this.onLinkClick} />
         </Row>
