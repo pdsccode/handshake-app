@@ -8,6 +8,7 @@ import { Grid, Row, Col } from 'react-bootstrap';
 import Button from '@/components/core/controls/Button';
 import { handShakeList } from '@/data/shake.js';
 import {MasterWallet} from '@/models/MasterWallet'
+import Input from '@/components/core/forms/Input/Input';
 
 import dontIcon from '@/assets/images/icon/3-dot-icon.svg';
 import iconSafe from '@/assets/images/icon/icon-safe.svg';
@@ -23,7 +24,19 @@ import { setHeaderRight } from '@/reducers/app/action';
 import './Wallet.scss';
 import { Bitcoin } from '@/models/Bitcoin';
 import ModalDialog from '@/components/core/controls/ModalDialog';
+import Modal from '@/components/core/controls/Modal';
 
+import createForm from '@/components/core/form/createForm';
+import { required } from '@/components/core/form/validation';
+import { Field } from "redux-form";
+import { initHandshake } from '@/reducers/handshake/action';
+
+const nameFormSendWallet = 'sendWallet';
+const SendWalletForm = createForm({
+  propsReduxForm: {
+    form: nameFormSendWallet,
+  },
+});
 
 class Wallet extends React.Component {
   constructor(props) {
@@ -38,7 +51,8 @@ class Wallet extends React.Component {
       listRewardWalletBalance: [],
       bottomSheet: false,
       listMenu: [],
-      walletNeedRemove: null
+      walletNeedRemove: null,
+      walletSend: null
     };
     this.props.setHeaderRight(this.headerRight());    
   }
@@ -143,7 +157,9 @@ class Wallet extends React.Component {
       obj.push({
         title: 'Send',
         handler: () => {
-
+          this.setState({walletSend: wallet});          
+          this.modalBetRef.open();   
+          this.toggleBottomSheet();   
         }
       })
       obj.push({
@@ -212,6 +228,12 @@ class Wallet extends React.Component {
           this.splitWalletData(lstWalletTemp);
         };       
     }    
+    this.modalBetRef.close();     
+
+  }
+
+  sendWallet = () =>{
+    
     this.modalBetRef.close();     
 
   }
@@ -288,7 +310,13 @@ class Wallet extends React.Component {
             <Button className="right" type="warning" cssType="warning" onClick={() => { this.modalBetRef.close(); }}>No</Button>
           </div>
         </ModalDialog>
-
+        <Modal title="Send" onRef={modal => this.modalBetRef = modal}>
+          <SendWalletForm className="sendwallet-wrapper" onSubmit={this.onSubmit}>
+            <Input name="to_ddress" placeholder="To address"></Input>
+            <Input name="amount" placeholder="Amount (BTC)" type="number"></Input>
+            <Button type="submit" block={true}>Send</Button>
+          </SendWalletForm>
+        </Modal>
         <Row className="list">
           <Header title="Main net wallets" hasLink={false} linkTitle="+ Add new" onLinkClick={this.onLinkClick} />
         </Row>
