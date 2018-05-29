@@ -303,7 +303,7 @@ class Component extends React.Component {
     return (
       <div>
         <FormExchangeCreate onSubmit={this.handleSubmit}>
-          <Feed className="feed p-2 mb-2" background={mainColor}>
+          <Feed className="feed p-2 my-2" background={mainColor}>
             <div style={{ color: 'white' }}>
               <div className="d-flex mb-2">
                 <label className="col-form-label mr-auto" style={{ width: '100px' }}>I want to</label>
