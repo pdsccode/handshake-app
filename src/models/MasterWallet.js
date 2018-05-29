@@ -18,9 +18,11 @@ export class MasterWallet{
     static createMasterWallet(){        
 
         // let mnemonic = 'canal marble trend ordinary rookie until combine hire rescue cousin issue that';
-        let mnemonic = 'book trial moral hunt riot ranch yard trap tool horse good barely';
-        // var bip39 = require('bip39');
-        // mnemonic = bip39.generateMnemonic(); //generates string        
+        // let mnemonic = 'book trial moral hunt riot ranch yard trap tool horse good barely';
+        
+        var bip39 = require('bip39');        
+        mnemonic = bip39.generateMnemonic(); //generates string        
+
         let masterWallet = []        
         for (var k1 in MasterWallet.ListCoin){
             for (var k2 in MasterWallet.ListCoin[k1].Network){
