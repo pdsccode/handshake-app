@@ -1,11 +1,11 @@
 
 import localStore from '@/services/localStore';
-import {Bitcoin} from '@/models/Bitcoin.1.js' 
+import {Bitcoin} from '@/models/Bitcoin.js' 
 import {BitcoinTestnet} from '@/models/BitcoinTestnet.js' 
 import {Ethereum} from '@/models/Ethereum.js' 
 import {Wallet} from '@/models/Wallet.js' 
 var bip39 = require('bip39');
-
+list
 export class MasterWallet{
 
     // list coin is supported, can add some more Ripple ...
