@@ -24,6 +24,8 @@ import {BigNumber} from 'bignumber.js';
 import {SELL_PRICE_TYPE, SELL_PRICE_TYPE_DEFAULT} from "@/constants";
 import {getOfferPrice} from "@/reducers/exchange/action";
 import {MasterWallet} from "@/models/MasterWallet";
+import axios from 'axios';
+import getSymbolFromCurrency from "currency-symbol-map";
 
 const nameFormExchangeCreate = 'exchangeCreate';
 const FormExchangeCreate = createForm({
@@ -46,6 +48,7 @@ class Component extends React.Component {
 
       listMainWalletBalance: [],
       listTestWalletBalance: [],
+      ipInfo: {},
     }
   }
 
@@ -55,6 +58,12 @@ class Component extends React.Component {
       const { amount } = this.props;
       this.getCryptoPriceByAmount(amount);
     }, 30000);
+
+    let ipInfo = await axios.get(`https://ipfind.co/me`, {params: {
+      auth: 'a59f33e5-0879-411a-908b-792359a0d6cc'
+    }});
+
+    this.setState({ ipInfo: ipInfo.data });
 
     //Get wallet
     let listWallet = await MasterWallet.getMasterWallet();
@@ -110,7 +119,7 @@ class Component extends React.Component {
   getCryptoPriceByAmount = (amount) => {
     const cryptoCurrency = this.state.currency;
     const { type } = this.props;
-    let fiat_currency = 'VND';
+    let fiat_currency = this.state.ipInfo.currency;
 
     var data = {amount: amount, currency: cryptoCurrency,
       type: type, fiat_currency: fiat_currency,
@@ -155,6 +164,7 @@ class Component extends React.Component {
 
   handleSubmit = (values) => {
     const {intl, totalAmount} = this.props;
+    const fiat_currency = this.state.ipInfo.currency;
     // console.log('valuessss', values);
 
     let listWallet = [];
@@ -184,7 +194,7 @@ class Component extends React.Component {
       type: values.type,
       contact_info: values.address,
       contact_phone: '',
-      fiat_currency: 'VND',
+      fiat_currency: fiat_currency,
     };
 
     if (values.type === 'buy') {
@@ -198,7 +208,7 @@ class Component extends React.Component {
       type: values.type === 'buy' ? 'Buy' : 'Sell',
       amount: new BigNumber(values.amount).toFormat(6),
       currency: values.currency,
-      currency_symbol: FIAT_CURRENCY_SYMBOL,
+      currency_symbol: getSymbolFromCurrency(fiat_currency),
       total: new BigNumber(totalAmount).toFormat(2),
     });
 
