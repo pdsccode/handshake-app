@@ -84,7 +84,7 @@ class DiscoverPage extends React.Component {
     const { handshakeIdActive } = this.state;
 
     return (
-      <Grid>
+      <Grid className="discover">
         <Row>
           <Col md={12} xs={12}>
             <SearchBar onSuggestionSelected={this.searchChange} />
