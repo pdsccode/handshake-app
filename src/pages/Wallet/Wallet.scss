@@ -188,3 +188,13 @@
   -o-transform: translate3d(0px, 0px, 0);
   transform: translate3d(0px, 0px, 0);
 }
+
+.sendwallet-wrapper{
+  margin-bottom: 7px;
+  padding-left: 7px;
+  padding-right: 7px;
+  
+  input[type=text], input[type=number]{
+    margin-bottom: 10px;
+  }
+}

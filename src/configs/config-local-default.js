@@ -23,6 +23,13 @@ const config = {
       blockchainNetwork: 'https://rinkeby.infura.io/',
     },
   },
+  firebase: {
+    apiKey: '',
+    authDomain: '',
+    databaseURL: '',
+    storageBucket: '',
+    messagingSenderId: '',
+  },
 };
 
 export default config;
