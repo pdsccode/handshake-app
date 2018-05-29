@@ -152,7 +152,7 @@ class Wallet extends React.Component {
   }
   
   // create list menu of wallet item when click Show more ...
-  crateSheetMenuItem(wallet){
+  creatSheetMenuItem(wallet){
     let obj = [];
       obj.push({
         title: 'Send',
@@ -239,7 +239,7 @@ class Wallet extends React.Component {
   }
 
   // Menu for Right header bar
-  crateSheetMenuHeaderMore(){
+  creatSheetMenuHeaderMore(){
     let obj = [];
     obj.push({
       title: "Add new",
@@ -263,13 +263,13 @@ class Wallet extends React.Component {
   }
 
   onIconRightHeaderClick = () =>{
-    this.setState({listMenu: this.crateSheetMenuHeaderMore()})
+    this.setState({listMenu: this.creatSheetMenuHeaderMore()})
     this.toggleBottomSheet();
 
   }
 
   onMoreClick = (wallet) => {
-    this.setState({listMenu: this.crateSheetMenuItem(wallet)})
+    this.setState({listMenu: this.creatSheetMenuItem(wallet)})
     this.toggleBottomSheet();
   }
   onWarningClick = (wallet) => {
@@ -313,7 +313,7 @@ class Wallet extends React.Component {
         <Modal title="Send" onRef={modal => this.modalBetRef = modal}>
           <SendWalletForm className="sendwallet-wrapper" onSubmit={this.onSubmit}>
             <Input name="to_ddress" placeholder="To address"></Input>
-            <Input name="amount" placeholder="Amount (BTC)" type="number"></Input>
+            <Input name="amount" placeholder="Amount (BTC)" type="tel"></Input>
             <Button type="submit" block={true}>Send</Button>
           </SendWalletForm>
         </Modal>
