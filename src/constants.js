@@ -14,8 +14,6 @@ export const HANDSHAKE_ID = {
   EXCHANGE: 2,
   BETTING: 3,
   SEED: 4,
-  EXCHANGE_SELL: 5,
-  EXCHANGE_BUY: 6,
 };
 
 export const HANDSHAKE_ID_DEFAULT = 2;
@@ -73,8 +71,9 @@ export const API_URL = {
     GET_CC_LIMITS: 'info/cc-limits', // {path: '/info/cc-limits', method: 'get'},
     GET_USER_PROFILE: 'user/profile', // {path: '/user/profile', method: 'get'},
     GET_OFFER_PRICE: 'info/crypto-quote', // {path: '/info/instant-buy/price', method: 'get'},
+    GET_LIST_OFFER_PRICE: 'info/crypto-quotes', // {path: '/info/instant-buy/price', method: 'get'},
     GET_USER_TRANSACTION: 'user/transactions', // {path: '/user/transactions', method: 'get'},
-    OFFER: 'offers',
+    OFFERS: 'offers',
     SHAKE: 'shake',
   },
   SEED: {
@@ -82,6 +81,12 @@ export const API_URL = {
   },
   ME: {
     BASE: 'handshake/me',
+  },
+  HANDSHAKE: {
+    BASE: 'handshake', // id handshake
+    CREATE: 'handshake/create',
+    UPDATE: 'handshake/update',
+    DELETE: 'handshake/delete',
   },
 };
 

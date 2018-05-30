@@ -19,8 +19,11 @@ class Offer {
       userAddress: data.user_address || '',
       provider: data.provider || '',
       providerData: data.provider_data || '',
-      created_at: data.created_at || '',
-      updated_at: data.updated_at || '',
+      createdAt: data.created_at || '',
+      updatedAt: data.updated_at || '',
+
+      contactPhone: data.contact_phone || '',
+      percentage: data.percentage || ''
     };
   }
 }

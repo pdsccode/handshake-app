@@ -15,6 +15,7 @@
       opacity: 1;
     }
     & ~ button {
+      background-color: buttonface;
       opacity: 0.6;
     }
   }
