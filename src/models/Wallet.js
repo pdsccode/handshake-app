@@ -12,11 +12,15 @@ export class Wallet {
     this.title = ''; 
     this.protected = false;  
     this.className = '' 
-    this.isReward = false;     
+    this.isReward = false;  
+    this.chainId = -1;           
   }
 
   getShortAddress(){
     return this.address.replace(this.address.substr(12, 27), '...');
+  }
+  getNetwork(){
+    return "";
   }
   
 }
