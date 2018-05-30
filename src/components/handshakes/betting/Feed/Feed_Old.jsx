@@ -34,7 +34,7 @@ const goal = 30;
 
 
 
-class FeedBetting extends React.Component {
+class FeedBettingOld extends React.Component {
   static propTypes = {
     userEmail: PropTypes.string,
     updatedItem: PropTypes.func,
@@ -318,5 +318,5 @@ const mapState = state => ({
 });
 const mapDispatch = ({
 });
-export default connect(mapState, mapDispatch)(FeedBetting);
+export default connect(mapState, mapDispatch)(FeedBettingOld);
 
