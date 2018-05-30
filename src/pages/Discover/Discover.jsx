@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 // service, constant
 import { loadDiscoverList } from '@/reducers/discover/action';
+import { showAlert } from '@/reducers/app/action';
 import { HANDSHAKE_ID, API_URL } from '@/constants';
 import { URL } from '@/config';
 // components
@@ -117,6 +118,11 @@ class DiscoverPage extends React.Component {
   }
 
   clickCategoryItem(category) {
+    this.props.showAlert({
+      message: <p className="text-center">aaaaaaaa</p>,
+      timeOut: 10000000,
+      type: 'danger',
+    });
     const { id } = category;
     switch (id) {
       case HANDSHAKE_ID.BETTING:
