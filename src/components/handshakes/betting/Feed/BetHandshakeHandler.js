@@ -19,7 +19,7 @@ export const BETTING_STATUS_LABEL =
     { INITING: 'Initing', 
     INITED: 'Inited', SHAKE: 'Shake', CLOSE: 'Close bet', CANCEL: 'Cancel', 
     WITHDRAW: 'Withdraw', 'WAITING_RESULT': 'Waiting Result', REJECT: 'Reject', LOSE: 'Lose',
-    RESOLVING: 'Resolving', PENDTING: 'Pendting', IN_PROGRESS:'Progressing', EXPIRED: 'Expired'}
+    RESOLVING: 'Resolving', PENDING: 'Pending', IN_PROGRESS:'Progressing', EXPIRED: 'Expired'}
 
 export const BETTING_OPTIONS = {
     INITIATOR_WON: 0, BETOR_WON: 1, DRAW: 2
@@ -132,6 +132,9 @@ export class BetHandshakeHandler {
             strAction = (role !== ROLE.GUEST) ? BETTING_STATUS_LABEL.WITHDRAW : null;
             break;
             case BETTING_STATUS.REJECTED:
+            strStatus = BETTING_STATUS_LABEL.RESOLVING;
+            break;
+            case BETTING_STATUS.ACCEPTED:
             strStatus = BETTING_STATUS_LABEL.RESOLVING;
             break;
             default: // Not show status

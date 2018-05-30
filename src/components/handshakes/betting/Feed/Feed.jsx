@@ -82,7 +82,7 @@ class FeedBetting extends React.Component {
     });
 
    //const hardCodeRole = ROLE.PAYEE;
-    const hardCodeStatus = 5;
+    const hardCodeStatus = 0;
     const hardCodeShakeCount = 0; 
 
     const result = BetHandshakeHandler.getStatusLabel(hardCodeStatus, role, eventDate, hardCodeShakeCount)
