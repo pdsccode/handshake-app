@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 // action, mock
 import { loadMyHandshakeList } from '@/reducers/me/action';
-import { API_URL } from '@/constants';
+import { API_URL, HANDSHAKE_STATUS_NAME } from '@/constants';
 // componentimport
 import { Grid, Row, Col } from 'react-bootstrap';
 import Feed from '@/components/core/presentation/Feed';
@@ -14,17 +14,6 @@ class Me extends React.Component {
 
   componentDidMount() {
     this.props.loadMyHandshakeList({ PATH_URL: API_URL.ME.BASE });
-  }
-
-  getStatusById(id) {
-    switch (id) {
-      case 2:
-        return (<span className="done">Done</span>);
-      case 3:
-        return (<span className="new">New</span>);
-      default:
-        return (<span className="pending">Pending</span>);
-    }
   }
 
   render() {
@@ -39,7 +28,7 @@ class Me extends React.Component {
                   <div className="my-feed-wrapper" key={handshake.id} onClick={() => alert('show detail')}>
                     <div className="head">
                       <div className="from"><span className="email">From:</span>&nbsp;{handshake.fromEmail}</div>
-                      <div className="status">{this.getStatusById(handshake.status)}</div>
+                      <div className="status">{HANDSHAKE_STATUS_NAME[handshake.status || -1]}</div>
                     </div>
                     <Feed className="my-feed">
                       <p className="description">{handshake.description}</p>
@@ -49,7 +38,6 @@ class Me extends React.Component {
               ) : (
                 <NoData message="NO DATA AVAILABLE" />
               )
-              
             }
           </Col>
         </Row>

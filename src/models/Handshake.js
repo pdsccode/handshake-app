@@ -12,6 +12,8 @@ class Handshake {
       shakeCount: data.shake_count,
       viewCount: data.view_count,
       commentCount: data.comment_count,
+      initAt: data.init_at,
+      lastUpdateAt: data.last_update_at,
       extraData: data.extra_data,
     };
   }

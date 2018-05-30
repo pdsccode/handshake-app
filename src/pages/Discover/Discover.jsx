@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 // service, constant
-import {loadDiscoverList} from '@/reducers/discover/action';
-import {URL} from '@/config';
-import {API_URL, HANDSHAKE_ID} from '@/constants';
+import { loadDiscoverList } from '@/reducers/discover/action';
+import { HANDSHAKE_ID, API_URL } from '@/constants';
+import { URL } from '@/config';
 // components
-import {Col, Grid, Row} from 'react-bootstrap';
+import { Grid, Row, Col } from 'react-bootstrap';
 import SearchBar from '@/components/core/controls/SearchBar';
 import Category from '@/components/core/controls/Category';
 import FeedPromise from '@/components/handshakes/promise/Feed';
@@ -15,6 +15,7 @@ import FeedExchange from '@/components/handshakes/exchange/Feed/FeedExchange';
 import FeedSeed from '@/components/handshakes/seed/Feed';
 import FeedCreditCard from '@/components/handshakes/exchange/Feed/FeedCreditCard';
 import Tabs from '@/components/handshakes/exchange/components/Tabs';
+import {FIREBASE_PATH} from '@/constants';
 // style
 import './Discover.scss';
 import {getListOfferPrice} from "../../reducers/exchange/action";
@@ -38,6 +39,10 @@ class DiscoverPage extends React.Component {
     this.clickCategoryItem = this.clickCategoryItem.bind(this);
     this.clickTabItem = this.clickTabItem.bind(this);
     this.searchChange = this.searchChange.bind(this);
+  }
+
+  componentWillReceiveProps(nextProps){
+    console.log(nextProps.firebaseUser);
   }
 
   async componentDidMount() {
@@ -69,7 +74,7 @@ class DiscoverPage extends React.Component {
       if (FeedComponent) {
         return (
           <Col key={handshake.id} md={12} className="feed-wrapper">
-            <FeedComponent {...handshake} onFeedClick={() => { this.clickFeedDetail(handshake.slug); }} />
+            <FeedComponent {...handshake} onFeedClick={() => this.clickFeedDetail(handshake.id)} />
           </Col>
         );
       }
@@ -81,25 +86,27 @@ class DiscoverPage extends React.Component {
     // TODO: search feed
   }
 
-  clickFeedDetail(slug) {
-    this.props.history.push(`${URL.HANDSHAKE_DISCOVER}/${slug || ''}`);
+  clickFeedDetail(id) {
+    this.props.history.push(`${URL.HANDSHAKE_DISCOVER}/${id || ''}`);
   }
 
   clickCategoryItem(category) {
     const { id } = category;
     switch (id) {
       case HANDSHAKE_ID.BETTING:
-        // refresh list
+        // do something
         break;
       case HANDSHAKE_ID.SEED:
-        // refresh list
+        // do something
         break;
       case HANDSHAKE_ID.EXCHANGE:
-        // refresh list
+        // do something
         break;
       default:
         // is promise
     }
+    // filter list
+    this.props.loadDiscoverList({ PATH_URL: API_URL.DISCOVER.BASE, qs: { type: id } });
     // set feed type activate
     this.setState({
       handshakeIdActive: id,
@@ -163,6 +170,7 @@ DiscoverPage.propTypes = {
 
 const mapState = state => ({
   discover: state.discover,
+  firebaseUser: state.firebase.data,
 });
 
 const mapDispatch = ({

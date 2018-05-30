@@ -32,7 +32,9 @@ export const CRYPTO_CURRENCY = [
   { value: 'ETH', text: 'ETH' },
   { value: 'BTC', text: 'BTC' },
 ];
-
+export const FIREBASE_PATH = {
+  USERS: '/users',
+};
 export const CRYPTO_CURRENCY_DEFAULT = 'ETH';
 
 export const EXCHANGE_ACTION = [
@@ -80,4 +82,35 @@ export const API_URL = {
   ME: {
     BASE: 'handshake/me',
   },
+  HANDSHAKE: {
+    BASE: 'handshake', // id handshake
+    CREATE: 'handshake/create',
+    UPDATE: 'handshake/update',
+    DELETE: 'handshake/delete',
+  },
+};
+
+export const HANDSHAKE_STATUS = {
+  INITED: 0,
+  SHAKED: 1,
+  ACCEPTED: 2,
+  REJECTED: 3,
+  DONE: 4,
+  CANCELLED: 5,
+  PENDING: -1,
+  TRANSACTION_FAILED: -2,
+  NEW: -3,
+  BLOCKCHAIN_PENDING: -4,
+};
+
+export const HANDSHAKE_STATUS_NAME = {
+  [HANDSHAKE_STATUS.INITED]: 'Inited',
+  [HANDSHAKE_STATUS.SHAKED]: 'Shaked',
+  [HANDSHAKE_STATUS.ACCEPTED]: 'Accepted',
+  [HANDSHAKE_STATUS.DONE]: 'Done',
+  [HANDSHAKE_STATUS.CANCELLED]: 'Cancelled',
+  [HANDSHAKE_STATUS.PENDING]: 'Pending',
+  [HANDSHAKE_STATUS.TRANSACTION_FAILED]: 'Transaction Failed',
+  [HANDSHAKE_STATUS.NEW]: 'New',
+  [HANDSHAKE_STATUS.BLOCKCHAIN_PENDING]: 'Blockchain Pending',
 };
