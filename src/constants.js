@@ -1,5 +1,5 @@
 export const APP = {
-  HEADER_DEFAULT: 'Handshake',
+  HEADER_DEFAULT: '',
   // store
   AUTH_TOKEN: 'auth_token',
   AUTH_PROFILE: 'auth_profile',

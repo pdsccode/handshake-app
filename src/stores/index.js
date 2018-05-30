@@ -8,7 +8,7 @@ import thunk from 'redux-thunk';
 import reducers from '@/reducers';
 import { firebaseStateReducer, reactReduxFirebase } from 'react-redux-firebase';
 import configs from '@/configs';
-import firebase from 'firebase';
+import firebase from 'firebase/app';
 
 import { composeWithDevTools } from 'redux-devtools-extension/developmentOnly';
 

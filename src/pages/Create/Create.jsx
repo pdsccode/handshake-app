@@ -29,12 +29,10 @@ class Create extends React.Component {
   }
 
   get handShakeList() {
-    return Object.entries(HANDSHAKE_NAME).map(([key, value]) => {
-      return {
-        id: key,
-        name: value
-      };
-    });
+    return Object.entries(HANDSHAKE_NAME).map(([key, value]) => ({
+      id: key,
+      name: value,
+    }));
   }
 
   handshakeChange({ suggestion }) {
