@@ -4,7 +4,7 @@ import Feed from '@/components/core/presentation/Feed';
 import Button from '@/components/core/controls/Button';
 
 import createForm from '@/components/core/form/createForm';
-import { fieldCleave, fieldDropdown, fieldInput, fieldRadioButton } from '@/components/core/form/customField';
+import { fieldCleave, fieldDropdown, fieldInput, fieldRadioButton, fieldNumericInput } from '@/components/core/form/customField';
 import { required, minValue, maxValue } from '@/components/core/form/validation';
 import { Field, formValueSelector } from 'redux-form';
 import { connect } from 'react-redux';
@@ -40,8 +40,8 @@ const selectorFormExchangeCreate = formValueSelector(nameFormExchangeCreate);
 
 const mainColor = '#007AFF'
 const validateFee = [
-  minValue(0),
-  maxValue(15),
+  minValue(-50),
+  maxValue(50),
 ]
 const minValue01 = minValue(0.1)
 const minValue001 = minValue(0.01)
@@ -328,7 +328,7 @@ class Component extends React.Component {
           <Feed className="feed p-2 my-2" background={mainColor}>
             <div style={{ color: 'white' }}>
               <div className="d-flex mb-2">
-                <label className="col-form-label mr-auto" style={{ width: '100px' }}>I want to</label>
+                <label className="col-form-label mr-auto" style={{ width: '120px' }}>I want to</label>
                 <div className='input-group'>
                   <Field
                     name="type"
@@ -340,7 +340,7 @@ class Component extends React.Component {
                 </div>
               </div>
               <div className="d-flex">
-                <label className="col-form-label mr-auto" style={{ width: '100px' }}>Coin</label>
+                <label className="col-form-label mr-auto" style={{ width: '120px' }}>Coin</label>
                 <div className='input-group'>
                   <Field
                     name="currency"
@@ -352,8 +352,8 @@ class Component extends React.Component {
                   />
                 </div>
               </div>
-              <div className="d-flex">
-                <label className="col-form-label mr-auto" style={{ width: '100px' }}>Amount</label>
+              <div className="d-flex mt-2">
+                <label className="col-form-label mr-auto" style={{ width: '120px' }}>Amount*</label>
                 <div className="w-100">
                   <Field
                     name="amount"
@@ -364,52 +364,8 @@ class Component extends React.Component {
                   />
                 </div>
               </div>
-              {
-                type === 'sell' && (
-                  <div>
-                    <div className="d-flex mt-2">
-                      <label className="col-form-label mr-auto" style={{ width: '100px' }}>Price type</label>
-                      <div className='input-group'>
-                        <Field
-                          name="sellPriceType"
-                          component={fieldRadioButton}
-                          list={SELL_PRICE_TYPE}
-                          color={mainColor}
-                          validate={[required]}
-                          onChange={this.onSellPriceTypeChange}
-                        />
-                      </div>
-                    </div>
-                    {
-                      sellPriceType === 'flexible' && (
-                        <div className="d-flex mt-2">
-                          <label className="col-form-label mr-auto" style={{ width: '100px' }}>Fee (%)</label>
-                          <div className='input-group'>
-                            <Field
-                              name="fee"
-                              className='form-control-custom form-control-custom-ex w-100'
-                              component={fieldCleave}
-                              validate={validateFee}
-                              propsCleave={{
-                                placeholder: 'percent',
-                                options: { numeral: true, numeralDecimalScale: 1, delimiter: '' },
-                                // type: "password",
-                                // maxLength: "4",
-                                // minLength: "3",
-                                // id: `cart-cvc-${this.lastUniqueId()}`,
-                                // htmlRef: input => this.ccCvcRef = input,
-                              }}
-                              // validate={(!isCCExisting || isNewCCOpen) ? [required] : []}
-                            />
-                          </div>
-                        </div>
-                      )
-                    }
-                  </div>
-                )
-              }
               <div className="d-flex">
-                <label className="col-form-label mr-auto" style={{ width: '100px' }}>Price({FIAT_CURRENCY_SYMBOL})</label>
+                <label className="col-form-label mr-auto" style={{ width: '120px' }}>Price ({FIAT_CURRENCY_SYMBOL})*</label>
                 {
                   type === 'buy' || sellPriceType === 'fix' ? (
                     <div className="w-100">
@@ -426,12 +382,60 @@ class Component extends React.Component {
                   )
                 }
               </div>
+              {
+                type === 'sell' && (
+                  <div>
+                    <div className="d-flex mt-2">
+                      {/*<label className="col-form-label mr-auto" style={{ width: '120px' }} />*/}
+                      <div className='input-group justify-content-end'>
+                        <Field
+                          name="sellPriceType"
+                          component={fieldRadioButton}
+                          list={SELL_PRICE_TYPE}
+                          color={mainColor}
+                          validate={[required]}
+                          onChange={this.onSellPriceTypeChange}
+                        />
+                      </div>
+                    </div>
+                    {
+                      sellPriceType === 'flexible' && (
+                        <div className="d-flex mt-2">
+                          <label className="col-form-label mr-auto" style={{ width: '120px' }}>Customize price (%)</label>
+                          <div className='input-group align-items-center'>
+                            <Field
+                              name="customizePrice"
+                              // className='form-control-custom form-control-custom-ex w-100'
+                              component={fieldNumericInput}
+                              color={mainColor}
+                              validate={validateFee}
+                            />
+                          </div>
+                        </div>
+                      )
+                    }
+                    <div className="d-flex mt-2">
+                      <label className="col-form-label mr-auto" style={{ width: '120px' }}>Phone</label>
+                      <div className="w-100">
+                        <Field
+                          name="phone"
+                          className="form-control-custom form-control-custom-ex w-100"
+                          component={fieldInput}
+                          type="tel"
+                          placeholder="+74995926433"
+                          // validate={[required, currency === 'BTC' ? minValue001 : minValue01]}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                )
+              }
               <div className="d-flex">
-                <label className="col-form-label mr-auto" style={{ width: '100px' }}>Total({FIAT_CURRENCY_SYMBOL})</label>
+                <label className="col-form-label mr-auto" style={{ width: '120px' }}>Total ({FIAT_CURRENCY_SYMBOL})</label>
                 <span className="w-100 col-form-label">{totalAmount}</span>
               </div>
               <div className="d-flex">
-                <label className="col-form-label mr-auto" style={{ width: '100px' }}>Address</label>
+                <label className="col-form-label mr-auto" style={{ width: '120px' }}>Address*</label>
                 <div className="w-100">
                   <Field
                     name="address"
