@@ -2,10 +2,13 @@ import Neuron from '@/services/neuron';
 import {MasterWallet} from '@/models/MasterWallet';
 import moment from 'moment';
 
-const neuron = new Neuron(4);
 const wallet = MasterWallet.getWalletDefault();
+const chainId = wallet.chainId;
 const address = wallet.address;
 const privateKey = wallet.privateKey;
+
+const neuron = new Neuron(chainId);
+
 
 export const REJECT_WINDOWN_DAYS = 1;
 export const CANCEL_WINDOWN_DAYS = 3;

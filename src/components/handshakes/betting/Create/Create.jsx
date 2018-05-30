@@ -24,8 +24,10 @@ import {MasterWallet} from '@/models/MasterWallet';
 import './Create.scss';
 
 import Neuron from '@/services/neuron';
+const wallet = MasterWallet.getWalletDefault();
+const chainId = wallet.chainId;
 
-const neuron = new Neuron(4);
+const neuron = new Neuron(chainId);
 
 const nameFormBettingCreate = 'bettingCreate';
 const BettingCreateForm = createForm({
@@ -266,7 +268,7 @@ class BettingCreate extends React.PureComponent {
       //extra_data: JSON.stringify(fields),
       extra_data: JSON.stringify(fields),
       from_address: fromAddress,
-      chain_id: 4
+      chain_id: chainId,
     };
 
 
