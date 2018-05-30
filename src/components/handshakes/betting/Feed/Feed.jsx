@@ -106,7 +106,7 @@ class FeedBetting extends React.Component {
   }
   isShakeUser(shakeIds, userId){
     console.log('User Id:', userId);
-    /*
+    
     if(shakeIds){
 
       if(shakeIds.indexOf(userId) > -1){
@@ -115,10 +115,12 @@ class FeedBetting extends React.Component {
       }
 
     }
-    */
+    
+   /*
     if(userId == 151){
       return true;
     }
+    */
 
     return false;
   }
