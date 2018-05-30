@@ -15,7 +15,6 @@ import FeedExchange from '@/components/handshakes/exchange/Feed/FeedExchange';
 import FeedSeed from '@/components/handshakes/seed/Feed';
 import FeedCreditCard from '@/components/handshakes/exchange/Feed/FeedCreditCard';
 import Tabs from '@/components/handshakes/exchange/components/Tabs';
-import {FIREBASE_PATH} from '@/constants';
 // style
 import './Discover.scss';
 
@@ -38,10 +37,6 @@ class DiscoverPage extends React.Component {
     this.searchChange = this.searchChange.bind(this);
   }
 
-  componentWillReceiveProps(nextProps){
-    console.log(nextProps.firebaseUser);
-  }
-
   get getHandshakeList() {
     return this.props.discover.list.map((handshake) => {
       const FeedComponent = maps[handshake.type];
@@ -56,8 +51,11 @@ class DiscoverPage extends React.Component {
     });
   }
 
-  searchChange() {
-    // TODO: search feed
+  searchChange(query) {
+    clearTimeout(this.searchTimeOut);
+    this.searchTimeOut = setTimeout(() => {
+      this.props.loadDiscoverList({ PATH_URL: API_URL.DISCOVER.BASE, qs: { query: query.trim() } });
+    }, 500);
   }
 
   clickFeedDetail(id) {
@@ -95,7 +93,7 @@ class DiscoverPage extends React.Component {
       <Grid className="discover">
         <Row>
           <Col md={12} xs={12}>
-            <SearchBar onSuggestionSelected={this.searchChange} />
+            <SearchBar onSuggestionSelected={() => {}} onInputSearchChange={this.searchChange}/>
           </Col>
         </Row>
         <Row>
