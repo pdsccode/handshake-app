@@ -82,10 +82,10 @@ class FeedBetting extends React.Component {
     });
 
    //const hardCodeRole = ROLE.PAYEE;
-    const hardCodeStatus = 0;
+    const hardCodeStatus = 9;
     const hardCodeShakeCount = 0; 
 
-    const result = BetHandshakeHandler.getStatusLabel(hardCodeStatus, role, eventDate, hardCodeShakeCount)
+    const result = BetHandshakeHandler.getStatusLabel(status, role, eventDate, shakeCount)
     console.log('Result:', result);
     if(result){
       this.updateStatus(result);
@@ -164,9 +164,9 @@ class FeedBetting extends React.Component {
         {/* Feed */}
         <Feed className="feed" handshakeId={this.props.id} onClick={this.props.onFeedClick}>
           <div className="wrapperBettingFeed">
-              {<p>Role: {`${role}`}</p>}
+              {/*<p>Role: {`${role}`}</p>}
               {statusLabel && <p>Status: {`${statusLabel}`}</p>}
-              {/*<p>Date: {`${date}`}</p>}
+              {<p>Date: {`${date}`}</p>}
               {<p>Bet: {`${goal}`}</p>}
     {<p>Balance: {`${balance}`}</p>*/}
 
@@ -249,7 +249,7 @@ class FeedBetting extends React.Component {
       isShowOptions: result.isShowOptions,
     })
   }
-  receiveStatus(newState){
+  receiveStatus(newStatus){
     //TO DO: update item
     //TO DO:
     const {role} = this.state;
@@ -257,13 +257,13 @@ class FeedBetting extends React.Component {
     const {shakeCount} = item;
     //const statusLabel = BetHandshakeHandler.getStatusLabel(status, role, eventDate);
 
-    if(newState === BETTING_STATUS.SHAKED || newState === BETTING_STATUS.CLOSED){
-        const deadlineResult = (eventDate.getTime() / 1000 - currentDate.getTime() / 1000);
+    if(newStatus === BETTING_STATUS.SHAKED || newStatus === BETTING_STATUS.CLOSED){
+        const deadlineResult = (eventDate.unix() / 1000 - currentDate.unix() / 1000);
         setTimeout(function(){ //After a time change to inited
           this.autoShowResult(role,eventDate);
     }.bind(this),deadlineResult*1000);
-
-      const deadlineCancel = (eventDate.getTime() / 1000 - currentDate.getTime() / 1000) + CANCEL_WINDOWN_DAYS;
+      const deadlineCancelDate = BetHandshakeHandler.addDays(eventDate, CANCEL_WINDOWN_DAYS);
+      const deadlineCancel = (deadlineCancelDate.unix() / 1000 - currentDate.unix() / 1000);
       setTimeout(function(){ //After a time change to inited
         this.autoCancel(role, eventDate);
     }.bind(this),deadlineCancel*1000);
