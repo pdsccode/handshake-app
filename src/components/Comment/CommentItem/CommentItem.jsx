@@ -1,4 +1,8 @@
 import React from 'react';
+
+// components
+import Avatar from './../Avatar';
+
 // style
 import './CommentItem.scss';
 
@@ -10,9 +14,12 @@ class CommentItem extends React.PureComponent {
       userName = 'Peter Parker',
     } = this.props;
     return (
-      <div className="comment">
-        <p>{userName}</p>
-        <p>{comment}</p>
+      <div className="commentItem">
+        <div className="userInfo">
+          <Avatar />
+          <span className="userName">{userName}</span>
+        </div>
+        <p className="comment">{comment}</p>
       </div>
     );
   }

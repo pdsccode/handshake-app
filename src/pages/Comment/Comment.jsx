@@ -18,7 +18,6 @@ class Comment extends React.PureComponent {
   }
 
   render() {
-    console.log("this.props.comment", this.props.comment);
     const { list } = this.props.comment;
     return (
       <Grid>
