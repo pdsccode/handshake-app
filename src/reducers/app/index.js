@@ -1,6 +1,6 @@
+import local from '@/services/localStore';
 import { APP } from '@/constants';
 import { APP_ACTION } from './action';
-import local from '@/services/localStore';
 
 const close = {
   isError: false,
@@ -29,6 +29,10 @@ function appReducter(state = {
   headerRightContent: null,
   subscribe: local.get(APP.SUBSCRIBE),
   subscribeAsk: local.get(APP.SUBSCRIBE_ASK),
+  configAlert: {
+    isShow: false,
+    message: '',
+  },
 
 }, action) {
   switch (action.type) {
@@ -138,6 +142,18 @@ function appReducter(state = {
       return {
         ...state,
         headerRightContent: null,
+      };
+
+    case APP_ACTION.SHOW_ALERT:
+      return {
+        ...state,
+        configAlert: { ...action.payload },
+      };
+
+    case APP_ACTION.HIDE_ALERT:
+      return {
+        ...state,
+        configAlert: { ...action.payload },
       };
 
     default:

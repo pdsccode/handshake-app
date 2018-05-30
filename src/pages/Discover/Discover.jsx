@@ -15,6 +15,7 @@ import FeedExchange from '@/components/handshakes/exchange/Feed/FeedExchange';
 import FeedSeed from '@/components/handshakes/seed/Feed';
 import FeedCreditCard from '@/components/handshakes/exchange/Feed/FeedCreditCard';
 import Tabs from '@/components/handshakes/exchange/components/Tabs';
+import NoData from '@/components/core/presentation/NoData';
 // style
 import './Discover.scss';
 import { getListOfferPrice } from '../../reducers/exchange/action';
@@ -58,17 +59,21 @@ class DiscoverPage extends React.Component {
   }
 
   get getHandshakeList() {
-    return this.props.discover.list.map((handshake) => {
-      const FeedComponent = maps[handshake.type];
-      if (FeedComponent) {
-        return (
-          <Col key={handshake.id} md={12} className="feed-wrapper">
-            <FeedComponent {...handshake} onFeedClick={() => this.clickFeedDetail(handshake.id)} />
-          </Col>
-        );
-      }
-      return null;
-    });
+    const { list } = this.props.discover;
+    if (list && list.length > 0) {
+      return list.map((handshake) => {
+        const FeedComponent = maps[handshake.type];
+        if (FeedComponent) {
+          return (
+            <Col key={handshake.id} md={12} className="feed-wrapper">
+              <FeedComponent {...handshake} onFeedClick={() => this.clickFeedDetail(handshake.id)} />
+            </Col>
+          );
+        }
+      });
+    } else {
+      return <NoData message="NO DATA AVAILABLE" />;
+    }
   }
 
   getListOfferPrice = () => {
@@ -81,8 +86,12 @@ class DiscoverPage extends React.Component {
     });
   }
 
-  searchChange() {
-    // TODO: search feed
+  // TODO: search feed
+  searchChange(query) {
+    clearTimeout(this.searchTimeOut);
+    this.searchTimeOut = setTimeout(() => {
+      this.props.loadDiscoverList({ PATH_URL: API_URL.DISCOVER.BASE, qs: { query: query.trim() } });
+    }, 500);
   }
 
   clickFeedDetail(id) {
@@ -114,9 +123,7 @@ class DiscoverPage extends React.Component {
 
   clickTabItem(index) {
     this.setState({ tabIndexActive: index });
-
-    this.props.loadDiscoverList({ PATH_URL: 'handshake', qs: { public: 0, chain_id: 4 } });
-    this.props.success(handShakeList); // temp
+    this.props.loadDiscoverList({ PATH_URL: API_URL.DISCOVER.BASE, qs: { public: 0, chain_id: 4 } });
   }
 
   render() {
@@ -126,7 +133,7 @@ class DiscoverPage extends React.Component {
       <Grid className="discover">
         <Row>
           <Col md={12} xs={12}>
-            <SearchBar onSuggestionSelected={this.searchChange} />
+            <SearchBar onSuggestionSelected={() => {}} onInputSearchChange={this.searchChange}/>
           </Col>
         </Row>
         <Row>

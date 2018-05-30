@@ -190,11 +190,29 @@
 }
 
 .sendwallet-wrapper{
-  margin-bottom: 7px;
+  margin-top: 40px;
   padding-left: 7px;
   padding-right: 7px;
   
-  input[type=text], input[type=number]{
-    margin-bottom: 10px;
+  input[type=text], input[type=tel]{
+    margin-bottom: 15px;
+    font-size: 18px;
+    line-height: 22px;
+    border:1px solid #EFEFEF;
+    height: 54px;
+  }
+}
+
+.fillwallet-wrapper{
+  margin-top: 40px;
+  padding-left: 7px;
+  padding-right: 7px;
+  
+  input[type=text], input[type=tel]{
+    margin-bottom: 15px;
+    font-size: 18px;
+    line-height: 22px;
+    border:1px solid #EFEFEF;
+    height: 54px;
   }
 }
