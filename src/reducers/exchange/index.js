@@ -26,6 +26,12 @@ function exchangeReducter(state = {}, action) {
     case `${EXCHANGE_ACTIONS.GET_USER_TRANSACTION}_SUCCESS`: {
       return { ...state, userTransaction: action.payload };
     }
+    case `${EXCHANGE_ACTIONS.GET_LIST_OFFER_PRICE}_SUCCESS`: {
+      return { ...state, listOfferPrice: action.payload.data.map(offerPrice => OfferPrice.offerPrice(offerPrice)) };
+    }
+    case `${EXCHANGE_ACTIONS.GET_IP_INFORM}_SUCCESS`: {
+      return { ...state, ipInfo: action.payload.data };
+    }
     default:
       return state;
   }

@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 // service, constant
-import { loadDiscoverList } from '@/reducers/discover/action';
-import { URL } from '@/config';
-import { HANDSHAKE_ID, API_URL } from '@/constants';
+import {loadDiscoverList} from '@/reducers/discover/action';
+import {URL} from '@/config';
+import {API_URL, HANDSHAKE_ID} from '@/constants';
 // components
-import { Grid, Row, Col } from 'react-bootstrap';
+import {Col, Grid, Row} from 'react-bootstrap';
 import SearchBar from '@/components/core/controls/SearchBar';
 import Category from '@/components/core/controls/Category';
 import FeedPromise from '@/components/handshakes/promise/Feed';
@@ -17,6 +17,7 @@ import FeedCreditCard from '@/components/handshakes/exchange/Feed/FeedCreditCard
 import Tabs from '@/components/handshakes/exchange/components/Tabs';
 // style
 import './Discover.scss';
+import {getListOfferPrice} from "../../reducers/exchange/action";
 
 const maps = {
   [HANDSHAKE_ID.PROMISE]: FeedPromise,
@@ -37,6 +38,29 @@ class DiscoverPage extends React.Component {
     this.clickCategoryItem = this.clickCategoryItem.bind(this);
     this.clickTabItem = this.clickTabItem.bind(this);
     this.searchChange = this.searchChange.bind(this);
+  }
+
+  async componentDidMount() {
+    this.getListOfferPrice();
+    this.intervalCountdown = setInterval(() => {
+      this.getListOfferPrice();
+    }, 30000);
+  }
+
+  getListOfferPrice = () => {
+    this.props.getListOfferPrice({
+      BASE_URL: API_URL.EXCHANGE.BASE,
+      PATH_URL: API_URL.EXCHANGE.GET_LIST_OFFER_PRICE,
+      qs: {fiat_currency: 'VND'},
+      // successFn: this.handleGetPriceSuccess,
+      // errorFn: this.handleGetPriceFailed,
+    });
+  }
+
+  componentWillUnmount() {
+    if (this.intervalCountdown) {
+      clearInterval(this.intervalCountdown);
+    }
   }
 
   get getHandshakeList() {
@@ -117,7 +141,7 @@ class DiscoverPage extends React.Component {
               />
               { tabIndexActive === 1 && (
                 <div className="feed-wrapper">
-                  <FeedCreditCard {...this.props} />
+                  <FeedCreditCard {...this.props} ipInfo={this.state.ipInfo}/>
                 </div>)
               }
             </div>
@@ -143,6 +167,7 @@ const mapState = state => ({
 
 const mapDispatch = ({
   loadDiscoverList,
+  getListOfferPrice
 });
 
 export default connect(mapState, mapDispatch)(DiscoverPage);

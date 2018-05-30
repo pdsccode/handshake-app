@@ -245,11 +245,12 @@ class Component extends React.Component {
   }
 
   createOffer = (offer) => {
+    this.modalRef.close();
     console.log('createOffer', offer);
     const { currency } = this.props;
 
     if (currency === 'BTC') {
-      this.props.createOffer({
+      this.props.shakeOffer({
         BASE_URL: API_URL.EXCHANGE.BASE,
         PATH_URL: API_URL.EXCHANGE.OFFER,
         data: offer,

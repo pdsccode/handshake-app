@@ -69,6 +69,7 @@ export const API_URL = {
     GET_CC_LIMITS: 'info/cc-limits', // {path: '/info/cc-limits', method: 'get'},
     GET_USER_PROFILE: 'user/profile', // {path: '/user/profile', method: 'get'},
     GET_OFFER_PRICE: 'info/crypto-quote', // {path: '/info/instant-buy/price', method: 'get'},
+    GET_LIST_OFFER_PRICE: 'info/crypto-quotes', // {path: '/info/instant-buy/price', method: 'get'},
     GET_USER_TRANSACTION: 'user/transactions', // {path: '/user/transactions', method: 'get'},
     OFFERS: 'offers',
     SHAKE: 'shake',
