@@ -82,7 +82,8 @@ export class MasterWallet{
             wallet.name = walletJson.name;
             wallet.title = walletJson.title;
             wallet.protected = walletJson.protected;
-            wallet.isReward = walletJson.isReward;                    
+            wallet.isReward = walletJson.isReward;    
+            wallet.chainId = walletJson.chainId;                                    
 
             listWallet.push(wallet);
         });
@@ -112,6 +113,7 @@ export class MasterWallet{
                     wallet.title = walletJson.title;
                     wallet.protected = walletJson.protected;
                     wallet.isReward = walletJson.isReward;                    
+                    wallet.chainId = walletJson.chainId;                    
                     throw BreakException;
                 }                                
             });
