@@ -293,7 +293,7 @@ class BettingCreate extends React.PureComponent {
       const offchain = id;
       const result = await BetHandshakeHandler.initItem(escrow, event_odds,eventDate, offchain);
       if(result){
-          history.go(URL.HANDSHAKE_DISCOVER);
+          history.push(URL.HANDSHAKE_DISCOVER);
       }
     }
 
