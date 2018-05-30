@@ -153,7 +153,7 @@ class Component extends React.Component {
   getCryptoPriceByAmount = (amount) => {
     const cryptoCurrency = this.state.currency;
     const { type } = this.props;
-    const fiat_currency = this.state.ipInfo.currency;
+    const fiat_currency = 'VND';
 
     let data = {
       amount,
@@ -237,7 +237,7 @@ class Component extends React.Component {
     const offer = {
       amount: values.amount,
       price: values.type === 'sell' && values.sellPriceType === 'flexible' ? '0' : values.price,
-      percentage: values.type === 'sell' && values.sellPriceType === 'flexible' ? values.customizePrice : '0',
+      percentage: values.type === 'sell' && values.sellPriceType === 'flexible' ? values.customizePrice.toString() : '0',
       currency: values.currency,
       type: values.type,
       contact_info: values.address,

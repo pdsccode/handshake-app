@@ -191,7 +191,7 @@ class FeedExchange extends React.PureComponent {
     }
 
     let offerShake = {
-      fiat_amount: fiatAmount + '',
+      fiat_amount: fiatAmount.toString(),
       address: address
     };
 
