@@ -37,6 +37,10 @@ export class MasterWallet{
             }            
         }
 
+        // set item 1 is default
+        if (masterWallet.length > 0)
+            masterWallet[1].default = true;
+
         // For Reward wallet:
         for (var k in MasterWallet.ListCoinReward){
             let wallet = new MasterWallet.ListCoinReward[k]();
@@ -78,7 +82,8 @@ export class MasterWallet{
             wallet.name = walletJson.name;
             wallet.title = walletJson.title;
             wallet.protected = walletJson.protected;
-            wallet.isReward = walletJson.isReward;                    
+            wallet.isReward = walletJson.isReward;    
+            wallet.chainId = walletJson.chainId;                                    
 
             listWallet.push(wallet);
         });
@@ -108,6 +113,7 @@ export class MasterWallet{
                     wallet.title = walletJson.title;
                     wallet.protected = walletJson.protected;
                     wallet.isReward = walletJson.isReward;                    
+                    wallet.chainId = walletJson.chainId;                    
                     throw BreakException;
                 }                                
             });
