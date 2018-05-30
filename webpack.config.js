@@ -146,9 +146,10 @@ module.exports = function webpackConfig(env, argv) {
       plugins: [
         new CleanWebpackPlugin(['dist']),
         new webpack.DefinePlugin({
-          'process.env.ENV': `"${argv.mode}"`,
-          'process.env.ROOT': `"${process.env.ROOT}"`,
-          'process.env.BASE_URL': `"${process.env.BASE_URL}"`,
+          'process.env.ENV': JSON.stringify(argv.mode),
+          'process.env.ROOT': JSON.stringify(process.env.ROOT),
+          'process.env.BASE_URL': JSON.stringify(process.env.BASE_URL),
+          'process.env.isProduction': JSON.stringify(isProduction),
         }),
         new webpack.ProvidePlugin({
           $: 'jquery',

@@ -1,5 +1,6 @@
 import { APP } from '@/constants';
 import { APP_ACTION } from './action';
+import local from '@/services/localStore';
 
 const close = {
   isError: false,
@@ -26,6 +27,8 @@ function appReducter(state = {
   headerBack: false,
   isNotFound: false,
   headerRightContent: null,
+  subscribe: local.get(APP.SUBSCRIBE),
+  subscribeAsk: local.get(APP.SUBSCRIBE_ASK),
 
 }, action) {
   switch (action.type) {

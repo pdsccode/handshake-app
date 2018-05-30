@@ -7,6 +7,8 @@ export const APP = {
   WALLET_CACHE: 'wallet_cache',
   WALLET_DEFAULT: 'wallet_default',
   WALLET_LIST: 'wallet_list',
+  SUBSCRIBE: 'app_subscribe',
+  SUBSCRIBE_ASK: 'app_subscribe_ask',
 };
 
 export const HANDSHAKE_ID = {
