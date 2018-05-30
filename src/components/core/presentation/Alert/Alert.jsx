@@ -43,7 +43,6 @@ class Alert extends React.PureComponent {
   handleShowAlert(props) {
     const { configAlert } = props.app;
     const config = Object.assign({}, this.configDefault, configAlert);
-    console.log(11111, config);
     if (config.isShow) {
       setTimeout(() => {
         this.props.hideAlert();
