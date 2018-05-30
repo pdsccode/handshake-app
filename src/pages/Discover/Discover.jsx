@@ -15,8 +15,10 @@ import FeedExchange from '@/components/handshakes/exchange/Feed/FeedExchange';
 import FeedSeed from '@/components/handshakes/seed/Feed';
 import FeedCreditCard from '@/components/handshakes/exchange/Feed/FeedCreditCard';
 import Tabs from '@/components/handshakes/exchange/components/Tabs';
+import NoData from '@/components/core/presentation/NoData';
 // style
 import './Discover.scss';
+import {getListOfferPrice} from "../../reducers/exchange/action";
 
 const maps = {
   [HANDSHAKE_ID.PROMISE]: FeedPromise,
@@ -30,33 +32,69 @@ class DiscoverPage extends React.Component {
     super(props);
     this.state = {
       handshakeIdActive: '',
+      tabIndexActive: 1,
     };
     this.props.loadDiscoverList({ PATH_URL: API_URL.DISCOVER.BASE });
     // bind
     this.clickCategoryItem = this.clickCategoryItem.bind(this);
+    this.clickTabItem = this.clickTabItem.bind(this);
     this.searchChange = this.searchChange.bind(this);
   }
 
-  get getHandshakeList() {
-    return this.props.discover.list.map((handshake) => {
-      const FeedComponent = maps[handshake.type];
-      if (FeedComponent) {
-        return (
-          <Col key={handshake.id} md={12} className="feed-wrapper">
-            <FeedComponent {...handshake} onFeedClick={() => this.clickFeedDetail(handshake.slug)} />
-          </Col>
-        );
-      }
-      return null;
+  componentWillReceiveProps(nextProps){
+    console.log(nextProps.firebaseUser);
+  }
+
+  async componentDidMount() {
+    this.getListOfferPrice();
+    this.intervalCountdown = setInterval(() => {
+      this.getListOfferPrice();
+    }, 30000);
+  }
+
+  getListOfferPrice = () => {
+    this.props.getListOfferPrice({
+      BASE_URL: API_URL.EXCHANGE.BASE,
+      PATH_URL: API_URL.EXCHANGE.GET_LIST_OFFER_PRICE,
+      qs: {fiat_currency: 'VND'},
+      // successFn: this.handleGetPriceSuccess,
+      // errorFn: this.handleGetPriceFailed,
     });
   }
 
-  searchChange() {
-    // TODO: search feed
+  componentWillUnmount() {
+    if (this.intervalCountdown) {
+      clearInterval(this.intervalCountdown);
+    }
   }
 
-  clickFeedDetail(slug) {
-    this.props.history.push(`${URL.HANDSHAKE_DISCOVER}/${slug || ''}`);
+  get getHandshakeList() {
+    const { list } = this.props.discover;
+    if (list && list.length > 0) {
+      return list.map((handshake) => {
+        const FeedComponent = maps[handshake.type];
+        if (FeedComponent) {
+          return (
+            <Col key={handshake.id} md={12} className="feed-wrapper">
+              <FeedComponent {...handshake} onFeedClick={() => this.clickFeedDetail(handshake.id)} />
+            </Col>
+          );
+        }
+      });
+    } else {
+      return <NoData message="NO DATA AVAILABLE" />;
+    }
+  }
+
+  searchChange(query) {
+    clearTimeout(this.searchTimeOut);
+    this.searchTimeOut = setTimeout(() => {
+      this.props.loadDiscoverList({ PATH_URL: API_URL.DISCOVER.BASE, qs: { query: query.trim() } });
+    }, 500);
+  }
+
+  clickFeedDetail(id) {
+    this.props.history.push(`${URL.HANDSHAKE_DISCOVER}/${id || ''}`);
   }
 
   clickCategoryItem(category) {
@@ -82,14 +120,19 @@ class DiscoverPage extends React.Component {
     });
   }
 
+  clickTabItem(index) {
+    this.setState({ tabIndexActive: index });
+    this.props.loadDiscoverList({ PATH_URL: API_URL.DISCOVER.BASE, qs: { public: 0, chain_id: 4 } });
+  }
+
   render() {
-    const { handshakeIdActive } = this.state;
+    const { handshakeIdActive, tabIndexActive } = this.state;
 
     return (
       <Grid className="discover">
         <Row>
           <Col md={12} xs={12}>
-            <SearchBar onSuggestionSelected={this.searchChange} />
+            <SearchBar onSuggestionSelected={() => {}} onInputSearchChange={this.searchChange}/>
           </Col>
         </Row>
         <Row>
@@ -101,16 +144,18 @@ class DiscoverPage extends React.Component {
           handshakeIdActive === HANDSHAKE_ID.EXCHANGE && (
             <div>
               <Tabs
-                activeId={1}
-                onClickTab={(index) => console.log('indexx', index)}
+                activeId={this.state.tabIndexActive}
+                onClickTab={this.clickTabItem}
                 list={[
                   { id: 1, text: 'Buy' },
                   { id: 2, text: 'Sell' },
                 ]}
               />
-              <div className="feed-wrapper">
-                <FeedCreditCard {...this.props} />
-              </div>
+              { tabIndexActive === 1 && (
+                <div className="feed-wrapper">
+                  <FeedCreditCard {...this.props} ipInfo={this.state.ipInfo}/>
+                </div>)
+              }
             </div>
           )
         }
@@ -130,10 +175,12 @@ DiscoverPage.propTypes = {
 
 const mapState = state => ({
   discover: state.discover,
+  firebaseUser: state.firebase.data,
 });
 
 const mapDispatch = ({
   loadDiscoverList,
+  getListOfferPrice
 });
 
 export default connect(mapState, mapDispatch)(DiscoverPage);

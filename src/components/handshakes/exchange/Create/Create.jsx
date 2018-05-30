@@ -17,15 +17,17 @@ import {
   EXCHANGE_ACTION_DEFAULT,
   FIAT_CURRENCY,
   FIAT_CURRENCY_SYMBOL,
+  SELL_PRICE_TYPE,
+  SELL_PRICE_TYPE_DEFAULT
 } from '@/constants';
 import '../styles.scss';
 import ModalDialog from '@/components/core/controls/ModalDialog/ModalDialog';
 import { BigNumber } from 'bignumber.js';
-import { SELL_PRICE_TYPE, SELL_PRICE_TYPE_DEFAULT } from '@/constants';
 import { getOfferPrice } from '@/reducers/exchange/action';
 import { MasterWallet } from '@/models/MasterWallet';
 import axios from 'axios';
 import getSymbolFromCurrency from 'currency-symbol-map';
+import {URL} from '@/config';
 
 const nameFormExchangeCreate = 'exchangeCreate';
 const FormExchangeCreate = createForm({
@@ -36,7 +38,13 @@ const FormExchangeCreate = createForm({
 });
 const selectorFormExchangeCreate = formValueSelector(nameFormExchangeCreate);
 
-const mainColor = '#007AFF';
+const mainColor = '#007AFF'
+const validateFee = [
+  minValue(0),
+  maxValue(15),
+]
+const minValue01 = minValue(0.1)
+const minValue001 = minValue(0.01)
 
 class Component extends React.Component {
   constructor(props) {
@@ -237,11 +245,12 @@ class Component extends React.Component {
   }
 
   createOffer = (offer) => {
+    this.modalRef.close();
     console.log('createOffer', offer);
     const { currency } = this.props;
 
     if (currency === 'BTC') {
-      this.props.createOffer({
+      this.props.shakeOffer({
         BASE_URL: API_URL.EXCHANGE.BASE,
         PATH_URL: API_URL.EXCHANGE.OFFER,
         data: offer,
@@ -255,9 +264,8 @@ class Component extends React.Component {
   }
 
   handleCreateOfferSuccess = (data) => {
-    this.intervalClosePopup = setInterval(() => {
-      this.modalRef.close();
-      this.props.history.push(URL.HANDSHAKE_ME);
+    this.timeoutClosePopup = setTimeout(() => {
+      this.handleBuySuccess();
     }, 3000);
 
     console.log('handleCreateCCOrderSuccess', data);
@@ -279,9 +287,10 @@ class Component extends React.Component {
   }
 
   handleBuySuccess = () => {
-    if (this.intervalClosePopup) {
-      clearInterval(this.intervalClosePopup);
+    if (this.timeoutClosePopup) {
+      clearTimeout(this.timeoutClosePopup);
     }
+    this.modalRef.close();
     this.props.history.push(URL.HANDSHAKE_ME);
   }
 
@@ -309,13 +318,9 @@ class Component extends React.Component {
   }
 
   render() {
-    const {
-      totalAmount, type, sellPriceType, offerPrice
-    } = this.props;
+    const { totalAmount, type, sellPriceType, offerPrice, currency } = this.props;
 
     const modalContent = this.state.modalContent;
-
-    console.log('offerPrice', offerPrice);
 
     return (
       <div>
@@ -323,8 +328,8 @@ class Component extends React.Component {
           <Feed className="feed p-2 my-2" background={mainColor}>
             <div style={{ color: 'white' }}>
               <div className="d-flex mb-2">
-                <span className="col-form-label mr-auto" style={{ width: '100px' }}>I want to</span>
-                <div className="input-group">
+                <label className="col-form-label mr-auto" style={{ width: '100px' }}>I want to</label>
+                <div className='input-group'>
                   <Field
                     name="type"
                     component={fieldRadioButton}
@@ -335,8 +340,8 @@ class Component extends React.Component {
                 </div>
               </div>
               <div className="d-flex">
-                <span className="col-form-label mr-auto" style={{ width: '100px' }}>Coin</span>
-                <div className="input-group">
+                <label className="col-form-label mr-auto" style={{ width: '100px' }}>Coin</label>
+                <div className='input-group'>
                   <Field
                     name="currency"
                     component={fieldRadioButton}
@@ -348,14 +353,14 @@ class Component extends React.Component {
                 </div>
               </div>
               <div className="d-flex">
-                <span className="col-form-label mr-auto" style={{ width: '100px' }}>Amount</span>
+                <label className="col-form-label mr-auto" style={{ width: '100px' }}>Amount</label>
                 <div className="w-100">
                   <Field
                     name="amount"
                     className="form-control-custom form-control-custom-ex w-100"
                     component={fieldInput}
                     onChange={this.onAmountChange}
-                    validate={[required]}
+                    validate={[required, currency === 'BTC' ? minValue001 : minValue01]}
                   />
                 </div>
               </div>
@@ -363,8 +368,8 @@ class Component extends React.Component {
                 type === 'sell' && (
                   <div>
                     <div className="d-flex mt-2">
-                      <span className="col-form-label mr-auto" style={{ width: '100px' }}>Price type</span>
-                      <div className="input-group">
+                      <label className="col-form-label mr-auto" style={{ width: '100px' }}>Price type</label>
+                      <div className='input-group'>
                         <Field
                           name="sellPriceType"
                           component={fieldRadioButton}
@@ -378,13 +383,13 @@ class Component extends React.Component {
                     {
                       sellPriceType === 'flexible' && (
                         <div className="d-flex mt-2">
-                          <span className="col-form-label mr-auto" style={{ width: '100px' }}>Fee (%)</span>
-                          <div className="input-group">
+                          <label className="col-form-label mr-auto" style={{ width: '100px' }}>Fee (%)</label>
+                          <div className='input-group'>
                             <Field
                               name="fee"
-                              className="form-control-custom form-control-custom-ex w-100"
+                              className='form-control-custom form-control-custom-ex w-100'
                               component={fieldCleave}
-                              validate={[minValue(0), maxValue(15)]}
+                              validate={validateFee}
                               propsCleave={{
                                 placeholder: 'percent',
                                 options: { numeral: true, numeralDecimalScale: 1, delimiter: '' },
@@ -404,7 +409,7 @@ class Component extends React.Component {
                 )
               }
               <div className="d-flex">
-                <span className="col-form-label mr-auto" style={{ width: '100px' }}>Price({FIAT_CURRENCY_SYMBOL})</span>
+                <label className="col-form-label mr-auto" style={{ width: '100px' }}>Price({FIAT_CURRENCY_SYMBOL})</label>
                 {
                   type === 'buy' || sellPriceType === 'fix' ? (
                     <div className="w-100">
@@ -422,11 +427,11 @@ class Component extends React.Component {
                 }
               </div>
               <div className="d-flex">
-                <span className="col-form-label mr-auto" style={{ width: '100px' }}>Total({FIAT_CURRENCY_SYMBOL})</span>
+                <label className="col-form-label mr-auto" style={{ width: '100px' }}>Total({FIAT_CURRENCY_SYMBOL})</label>
                 <span className="w-100 col-form-label">{totalAmount}</span>
               </div>
               <div className="d-flex">
-                <span className="col-form-label mr-auto" style={{ width: '100px' }}>Address</span>
+                <label className="col-form-label mr-auto" style={{ width: '100px' }}>Address</label>
                 <div className="w-100">
                   <Field
                     name="address"
@@ -456,12 +461,7 @@ const mapStateToProps = (state) => {
   const price = selectorFormExchangeCreate(state, 'price') || 0;
   const totalAmount = amount * price || 0;
 
-  return {
-    amount,
-    currency,
-    totalAmount,
-    type,
-    sellPriceType,
+  return { amount, currency, totalAmount, type, sellPriceType,
     offerPrice: state.exchange.offerPrice,
   };
 };
