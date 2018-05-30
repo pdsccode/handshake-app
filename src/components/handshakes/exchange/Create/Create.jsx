@@ -250,7 +250,7 @@ class Component extends React.Component {
     const { currency } = this.props;
 
     if (currency === 'BTC') {
-      this.props.shakeOffer({
+      this.props.createOffer({
         BASE_URL: API_URL.EXCHANGE.BASE,
         PATH_URL: API_URL.EXCHANGE.OFFER,
         data: offer,
