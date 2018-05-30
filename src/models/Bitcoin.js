@@ -93,7 +93,7 @@ export class Bitcoin extends Wallet{
 
           var transaction = new bitcore.Transaction()
             .from(data.utxos)
-            .change(address)
+            .change(this.address)
             .fee(data.fee)
             .to(toAddress, Number(amountToSend))
             .sign(prKey);
@@ -107,7 +107,7 @@ export class Bitcoin extends Wallet{
           return txHash;
         }
         else{
-            //let message = "You don't have enough Satoshis to cover the miner fee.";            
+            //return "You don't have enough Satoshis to cover the miner fee.";            
         }
       }
     }
