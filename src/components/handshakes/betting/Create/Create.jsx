@@ -273,9 +273,9 @@ class BettingCreate extends React.PureComponent {
   });
 
   }
-  initHandshakeSuccess = (data)=>{
-    console.log('initHandshakeSuccess', data);
-    const {offchain, status} = data;
+  initHandshakeSuccess = (successData)=>{
+    console.log('initHandshakeSuccess', successData);
+    const {status, data} = successData
     const {values} = this.state;
     const eventDate = this.datePickerRef.value;
     const escrow = values['event_bet'];
@@ -286,6 +286,8 @@ class BettingCreate extends React.PureComponent {
     console.log('Event Odds:', event_odds);
 
     if(status){
+      const {id} = data;
+      const offchain = id;
       BetHandshakeHandler.initItem(escrow, event_odds,eventDate, offchain);
     }
 
