@@ -66,42 +66,55 @@ export class Bitcoin extends Wallet{
     }
 
 
-  async transfer(to, amount){    
+  async transfer(toAddress, amountToSend){    
 
-    console.log("transfered from address:" + this.address);
+    try{
+      console.log("transfered from address:" + this.address);
 
-    //each BTC can be split into 100,000,000 units. Each unit of bitcoin, or 0.00000001 bitcoin, is called a satoshi
-    var amountBig = new BigNumber(amount.toString());
-    var satoShiRate = new BigNumber('100000000');
-    amount = amountBig.times(satoShiRate).toString();
+      //each BTC can be split into 100,000,000 units. Each unit of bitcoin, or 0.00000001 bitcoin, is called a satoshi
+      var amountBig = new BigNumber(amountToSend.toString());
+      var satoShiRate = new BigNumber('100000000');
+      amountToSend = amountBig.times(satoShiRate).toString();
 
-    var data = {};
-    var fee = await this.getFee(this.network, 4);
-    
-    // console.log("fee:" + fee);
-    
-    if(fee){
-      data.fee = fee;
-      var utxos = await this.utxosForAmount(this.network, this.address, Number(amount));      
+      var data = {};
+      var fee = await this.getFee(4);
       
-      if(utxos){                
+      console.log("fee:" + fee);
+      
+      if(fee){
+        data.fee = fee;
+        var utxos = await this.utxosForAmount(this.network, this.address, Number(amountToSend));
         
-        data.utxos = utxos;
+        console.log("utxos", utxos);
+        
+        if(utxos){                
+          
+          data.utxos = utxos;
 
-        var transaction = new bitcore.Transaction()
-          .from(data.utxos)
-          .change(address)
-          .fee(data.fee)
-          .to(to,Number(amount))
-          .sign(prKey);
+          var transaction = new bitcore.Transaction()
+            .from(data.utxos)
+            .change(this.address)
+            .fee(data.fee)
+            .to(toAddress, Number(amountToSend))
+            .sign(prKey);
 
-        console.log(transaction);
-        var rawTx = transaction.serialize();
-        var txHash = await this.sendRawTx(this.network, rawTx);
-        // console.log(txHash);
-        return txHash;
+          console.log(transaction);
+          var rawTx = transaction.serialize();
+          var txHash = await this.sendRawTx(this.network, rawTx);
+          
+          console.log(txHash);
+
+          return txHash;
+        }
+        else{
+            //return "You don't have enough Satoshis to cover the miner fee.";            
+        }
       }
     }
+    catch (error) {
+      return error;
+    }
+    return false;
   }
 
   async retrieveUtxos () {
@@ -124,11 +137,12 @@ export class Bitcoin extends Wallet{
   async utxosForAmount(amount) {
     var utxos = await this.retrieveUtxos(this.network, this.address);
     if (utxos && utxos.length > 0 ){
-      var result = this.findUtxos(utxos, 0, amount, []);
+      var result = this.findUtxos(utxos, 0, amount, []);      
       if(!result)
         return reject({"error": "Insufficent Balance"});
       return result;
     }
+    console.log("utxosForAmount>>utxos", utxos);
     return false;
   }
 
