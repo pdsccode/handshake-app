@@ -27,7 +27,7 @@ import conferenceCallIcon from '@/assets/images/icon/betting/conference_call.svg
 import ethereumIcon from '@/assets/images/icon/betting/ethereum.svg';
 import BettingHandshake from '@/services/neuron/neuron-bettinghandshake.js';
 
-const date = '2018-05-28';
+const date = '2018-06-01';
 const eventDate = new Date(date);
 const goal = 30;
 
@@ -81,7 +81,7 @@ class FeedBetting extends React.Component {
     });    
     
    //const hardCodeRole = ROLE.PAYEE;
-    const hardCodeStatus = -1;
+    const hardCodeStatus = 2;
 
     const result = BetHandshakeHandler.getStatusLabel(hardCodeStatus, role, eventDate)
     console.log('Result:', result);

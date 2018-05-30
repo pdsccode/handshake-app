@@ -19,7 +19,7 @@ export const BETTING_STATUS_LABEL =
     { INITING: 'Initing', 
     INITED: 'Inited', SHAKE: 'Shake', CLOSE: 'Close bet', CANCEL: 'Cancel', 
     WITHDRAW: 'Withdraw', 'WAITING_RESULT': 'Waiting Result', REJECT: 'Reject', LOSE: 'Lose',
-    RESOLVING: 'Resolving', PENDTING: 'Pendting', IN_PROGRESS:'Progressing'}
+    RESOLVING: 'Resolving', PENDTING: 'Pendting', IN_PROGRESS:'Progressing', EXPIRED: 'Expired'}
 
 export const BETTING_OPTIONS = {
     INITIATOR_WON: 0, BETOR_WON: 1, DRAW: 2
@@ -40,13 +40,13 @@ export class BetHandshakeHandler {
         //TO DO: Show combobox for use choose an option if evendate < today
         var strStatus = null;
         var strAction = null;
+        var isShowOptions = false;
         var today  = new Date();
         console.log('Input Role:', role);
         console.log('Status:', status);
-
-        if(this.isShowOptions(role,status, eventDate)){
-            return {'status': strStatus, 'action': strAction, isShowOptions: true};
-        }
+        var today = new Date();
+        
+        
         if(status >= BETTING_STATUS.INITIATOR_WON && status <= BETTING_STATUS.DRAW){
             if(this.isAutoSetWinner(role, status, eventDate)){
                 console.log('there is a person choose result');
@@ -82,15 +82,30 @@ export class BetHandshakeHandler {
             strAction = null;
             break;
             case BETTING_STATUS.INITED:
-            strStatus = null //Check if payee = '', else payer = '' and show button Shake
-            strAction = (role === ROLE.PAYEE) ? BETTING_STATUS_LABEL.CLOSE :  BETTING_STATUS_LABEL.SHAKE;
+            console.log('Event Date:', eventDate);
+            console.log('Today: ', today);
+            console.log('Inited');
+            console.log('Event Date < Today:', (eventDate <= today) ? true : false);
+            strStatus = (role !== ROLE.PAYEE && eventDate < today) ? BETTING_STATUS_LABEL.EXPIRED : null; 
+            strAction = (role === ROLE.PAYEE) ? BETTING_STATUS_LABEL.CLOSE : (eventDate >= today) ?  BETTING_STATUS_LABEL.SHAKE : null;
+            
             break;
             case BETTING_STATUS.SHAKED:
-            strStatus = null //Check if payee = '', else payer = '' and show button Shake
-            strAction = (role === ROLE.PAYEE) ? BETTING_STATUS_LABEL.CLOSE :  BETTING_STATUS_LABEL.SHAKE;
+            if (today <= eventDate){
+                strStatus = null; //Check if payee = '', else payer = '' and show button Shake
+                strAction = (role === ROLE.PAYEE) ? BETTING_STATUS_LABEL.CLOSE :  BETTING_STATUS_LABEL.SHAKE;
+            }else {
+                if(role!== ROLE.GUEST){
+                    isShowOptions = true;
+                }else{
+                    strStatus = BETTING_STATUS_LABEL.IN_PROGRESS; //Check if payee = '', else payer = '' and show button Shake
+
+                }
+            }
+            
             break;
             case BETTING_STATUS.CLOSED:
-            strStatus = BETTING_STATUS_LABEL.WAITING_RESULT; //All users
+            strStatus = (role === ROLE.GUEST) ? BETTING_STATUS_LABEL.IN_PROGRESS : BETTING_STATUS_LABEL.WAITING_RESULT ; //All users
             break;
             case BETTING_STATUS.CANCELLED:
             strAction = (role !== ROLE.GUEST) ? BETTING_STATUS_LABEL.WITHDRAW : null;
@@ -107,7 +122,7 @@ export class BetHandshakeHandler {
         console.log('Output Status:', strStatus);
         console.log('Output Action:', strAction);
 
-        return {'status': strStatus, 'action': strAction, isShowOptions: false};
+        return {'status': strStatus, 'action': strAction, isShowOptions: isShowOptions};
     
     }
 

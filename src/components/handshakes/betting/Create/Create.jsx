@@ -2,15 +2,17 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import moment from 'moment';
+import history from '@/services/history';
 
 // service, constant
 import createForm from '@/components/core/form/createForm';
 import { required } from '@/components/core/form/validation';
 import { Field } from "redux-form";
 import { initHandshake } from '@/reducers/handshake/action';
-import { HANDSHAKE_ID } from '@/constants';
-import {API_URL} from "@/constants";
+import { HANDSHAKE_ID, API_URL } from '@/constants';
 import  { BetHandshakeHandler} from '@/components/handshakes/betting/Feed/BetHandshakeHandler.js';
+import { URL } from '@/config';
+
 // components
 import Button from '@/components/core/controls/Button';
 import Input from '@/components/core/forms/Input/Input';
@@ -85,6 +87,7 @@ class BettingCreate extends React.PureComponent {
     this.renderNumber = ::this.renderNumber;
   }
   componentDidMount(){
+    console.log('Betting Create Props:', this.props, history);
     const wallet = MasterWallet.getWalletDefault();
     console.log("Address, Private Key:", wallet.address, wallet.privateKey);
     this.setState({
@@ -273,7 +276,7 @@ class BettingCreate extends React.PureComponent {
   });
 
   }
-  initHandshakeSuccess = (successData)=>{
+   initHandshakeSuccess = async (successData)=>{
     console.log('initHandshakeSuccess', successData);
     const {status, data} = successData
     const {values} = this.state;
@@ -288,7 +291,10 @@ class BettingCreate extends React.PureComponent {
     if(status){
       const {id} = data;
       const offchain = id;
-      BetHandshakeHandler.initItem(escrow, event_odds,eventDate, offchain);
+      const result = await BetHandshakeHandler.initItem(escrow, event_odds,eventDate, offchain);
+      if(result){
+          history.go(URL.HANDSHAKE_DISCOVER);
+      }
     }
 
   }
