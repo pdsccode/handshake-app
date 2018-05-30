@@ -60,6 +60,15 @@ export class MasterWallet{
         console.log("masterWallet saved: ", masterWallet);
         localStore.save(MasterWallet.KEY, masterWallet);
     }
+
+    // Restore wallets:
+    static RestoreMasterWallet(masterWalletDataString){
+        // todo: need verify invalid data:
+        localStore.save(MasterWallet.KEY, masterWalletDataString);
+        let masterWallet = JSON.parse(masterWalletDataString);        
+        localStore.save(MasterWallet.KEY, masterWallet);
+        return masterWallet;
+    }
     
     // Get list wallet from store local:
     static getMasterWallet(){
