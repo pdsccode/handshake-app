@@ -334,8 +334,8 @@ class Wallet extends React.Component {
         <ModalDialog title="Confirmation" onRef={modal => this.modalBetRef = modal}>
           <div><span>Are you sure to want to remove this wallet?</span></div>
           <div className='bodyConfirm'>
-            <Button className="left" type="primary" cssType="primary" onClick={this.removeWallet} >Yes, remove</Button>
-            <Button className="right" type="warning" cssType="warning" onClick={() => { this.modalBetRef.close(); }}>No</Button>
+            <Button className="left" cssType="danger" onClick={this.removeWallet} >Yes</Button>
+            <Button className="right" cssType="info" onClick={() => { this.modalBetRef.close(); }}>No</Button>
           </div>
         </ModalDialog>
         
@@ -374,19 +374,20 @@ class Wallet extends React.Component {
         </Row>
         <Row className="list">
           {this.listMainWalletBalance}
-        </Row>
-        <Row className="list">
-          <Header title="Test net wallets" hasLink={false} />
-        </Row>
-        <Row className="list">
-          {this.listTestWalletBalance}
-        </Row>
+        </Row>        
 
         <Row className="list">
           <Header title="Reward wallets" hasLink={false} />
         </Row>
         <Row className="list">
           {this.listRewardWalletBalance}
+        </Row>
+
+        <Row className="list">
+          <Header title="Test net wallets" hasLink={false} />
+        </Row>
+        <Row className="list">
+          {this.listTestWalletBalance}
         </Row>
 
       </Grid>

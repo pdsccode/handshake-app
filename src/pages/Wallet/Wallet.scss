@@ -89,11 +89,15 @@
 }
 .bodyConfirm .left{
   float: left;
-  width: 80px;
+  width: auto;
+  padding-left: 30px;
+  padding-right: 30px;
 }
 .bodyConfirm .right{
   float: right;
-  width: 80px;
+  width: auto;
+  padding-left: 30px;
+  padding-right: 30px;
 }
 .bodyConfirm{
   padding: 15px;
