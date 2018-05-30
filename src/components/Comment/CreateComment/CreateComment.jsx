@@ -33,7 +33,7 @@ class CreateComment extends React.PureComponent {
     return (
       <div className="createComment">
         <Image src={createImageIcon} alt="create image icon" onClick={this.createComment} />
-        <input type="text" placeholder="Aa" ref={(component) => { this.inputRef = component; }} />
+        <textarea type="text" placeholder="Aa" ref={(component) => { this.inputRef = component; }} />
         <Image src={postCommentIcon} alt="post comment icon" onClick={this.createComment} />
       </div>
     );
