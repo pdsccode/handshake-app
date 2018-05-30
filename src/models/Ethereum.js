@@ -15,7 +15,7 @@ export class Ethereum extends Wallet{
         this.coinType = 60;                
         this.name = 'ETH';
         this.title = 'Ethereum'; 
-        this.className = "Ethereum";          
+        this.className = "Ethereum";         
       }
 
       createAddressPrivatekey(){        
@@ -39,7 +39,9 @@ export class Ethereum extends Wallet{
         let privateKey = addrNode._privateKey.toString('hex');
 
         this.address = address;
-        this.privateKey = privateKey;        
+        this.privateKey = privateKey;       
+        
+        this.chainId = this.network == Ethereum.Network.Mainnet ? 1 : 4
     }    
 
     getWeb3(){
@@ -80,7 +82,7 @@ export class Ethereum extends Wallet{
               "gas": 210000,
               "gasPrice": await web3.utils.toHex(parseInt(gasPrice)), // converts the gwei price to wei
               "nonce": nonce,
-              "chainId": this.network === Ethereum.Network.Mainnet ? 1 : 4
+              "chainId": this.chainId
             }
             console.log("send details: ", details);
 
@@ -92,12 +94,12 @@ export class Ethereum extends Wallet{
             const transactionId = web3.eth.sendSignedTransaction('0x' + serializedTransaction.toString('hex') )
 
             const url = '{0}/tx/{1}'.format(this.network, transactionId);
-            console.log(url)
+            console.log(url.toString())
 
-            return "Please allow for 30 seconds before transaction appears on Etherscan: {0}".format(url);
+            return "Please allow for 30 seconds before transaction appears on Etherscan";
           }
           else{
-            return "Do not have enought balance to send"
+            return "Do not have enought Wei to send"
           }
       } catch (error) {
         return error;
