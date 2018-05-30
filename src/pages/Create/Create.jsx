@@ -51,7 +51,7 @@ class Create extends React.Component {
           </Col>
         </Row>
         <Row>
-          <Col md={12} className="margin-top-32">
+          <Col md={12}>
             <CreateComponent />
           </Col>
         </Row>

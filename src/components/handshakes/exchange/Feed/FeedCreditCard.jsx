@@ -307,6 +307,9 @@ class FeedCreditCard extends React.Component {
     let modalContent = this.state.modalContent;
 
     const curLevel = userCcLimit ? userCcLimit.level : 1;
+
+    let newTo = 0
+
     return (
       <div>
         <div className='row'>
@@ -317,27 +320,32 @@ class FeedCreditCard extends React.Component {
                   <div style={{ color: 'white' }}>
                     {
                       amount && (
-                        <div>
+                        <div style={{ background: '#50af4f' }} className="pt-2 px-2 rounded mb-2">
                           {
                             ccLimits.map((ccLimit, index) => {
-                              const { level, limit } = ccLimit
+                              const { level, limit, duration } = ccLimit
                               const isActive = curLevel === level
+
+                              let text = ''
+                              let from = newTo + 1
+                              newTo += duration
+                              let to = newTo
+                              if (index === ccLimits.length - 1) {
+                                text = `Every ${duration} days`
+                              } else {
+                                text = `Day ${from}-${to}`
+                              }
+
                               return (
-                                <LevelItem key={index} style={{ marginLeft: index > 0 ? '8px' : '', opacity: isActive ? '' : 0.6 }}>
-                                  <div>
-                                  <span
-                                    className='rounded-circle bg-white badge'
-                                    style={{ color: mainColor, width: 18 }}
-                                  >
-                                    {level}
-                                  </span>
+                                <LevelItem key={index} style={{ margin: '0 8px 8px 0', opacity: isActive ? '' : 0.6 }}>
+                                  <div className="rounded p-1" style={{ lineHeight: 1.2, background: isActive ? '#FF3B30' : '#84c683' }}>
+                                    {text}
                                   </div>
-                                  <div><small>Can buy up to {fiatCurrency}{limit}</small></div>
+                                  <div><small>Up to {fiatCurrency}{limit}</small></div>
                                 </LevelItem>
                               )
                             })
                           }
-                          <hr className="my-2" />
                         </div>
                       )
                     }
