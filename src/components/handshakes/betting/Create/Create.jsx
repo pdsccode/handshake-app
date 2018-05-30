@@ -173,7 +173,7 @@ class BettingCreate extends React.PureComponent {
           const {values} = this.state;
           values[key] = selectedDate.format();
           this.setState({values}, ()=>console.log(values));
-            
+
         }}
         inputProps={{
           readOnly: true,
