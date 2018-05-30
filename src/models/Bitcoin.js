@@ -189,4 +189,16 @@ export class Bitcoin extends Wallet{
      }
       return false;
    }
+
+   async getTransactionHistory(){
+     //txs/?address=muU86kcQGfJUydQ9uZmfJwcDRb1H5PQuzr
+    let url = this.network +'/txs/?address=' + this.address;
+    let response = await axios.get(url);
+
+    if (response.status == 200){
+      console.log(response.data)
+      
+    }
+   }
+
 }

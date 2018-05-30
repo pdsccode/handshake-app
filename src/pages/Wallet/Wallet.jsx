@@ -422,8 +422,8 @@ class Wallet extends React.Component {
         <ModalDialog title="Confirmation" onRef={modal => this.modalBetRef = modal}>
           <div><span>Are you sure to want to remove this wallet?</span></div>
           <div className='bodyConfirm'>
-            <Button className="left" cssType="danger" onClick={this.removeWallet} >Yes</Button>
-            <Button className="right" cssType="info" onClick={() => { this.modalBetRef.close(); }}>No</Button>
+          <Button className="left" cssType="danger" onClick={this.removeWallet} >Yes</Button>
+            <Button className="right" cssType="secondary" onClick={() => { this.modalBetRef.close(); }}>Cancel</Button>
           </div>
         </ModalDialog>
         
