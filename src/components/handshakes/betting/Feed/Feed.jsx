@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
 // services, constants
 import  { BetHandshakeHandler, ROLE, 
@@ -10,6 +11,7 @@ import  { BetHandshakeHandler, ROLE,
 
 import { APP } from '@/constants';
 import local from '@/services/localStore';
+import {FIREBASE_PATH} from '@/constants';
 
 // components
 import Image from '@/components/core/presentation/Image';
@@ -70,7 +72,7 @@ class FeedBetting extends React.Component {
     console.log('Is User Shake:', isUserShake);
 
     
-    const role = (profile.id === 134) ? ROLE.PAYEE :
+    const role = (profile.id === initUserId) ? ROLE.PAYEE :
                 isUserShake ? ROLE.PAYER : ROLE.GUEST;
     console.log('Role:', role);
 
@@ -79,7 +81,7 @@ class FeedBetting extends React.Component {
     });    
     
    //const hardCodeRole = ROLE.PAYEE;
-    const hardCodeStatus = 5;
+    const hardCodeStatus = -1;
 
     const result = BetHandshakeHandler.getStatusLabel(hardCodeStatus, role, eventDate)
     console.log('Result:', result);
@@ -305,4 +307,10 @@ class FeedBetting extends React.Component {
   }
 }
 
-export default FeedBetting;
+const mapState = state => ({
+  firebaseUser: state.firebase.data,
+});
+const mapDispatch = ({
+});
+export default connect(mapState, mapDispatch)(FeedBetting);
+
