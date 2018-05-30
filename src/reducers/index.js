@@ -3,6 +3,7 @@ import discover from './discover';
 import auth from './auth';
 import exchange from './exchange';
 import handshake from './handshake';
+import me from './me';
 import comment from './comment';
 
 export default {
@@ -11,5 +12,6 @@ export default {
   exchange,
   form,
   handshake,
+  me,
   comment,
 };
