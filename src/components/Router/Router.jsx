@@ -17,7 +17,7 @@ import Layout from '@/components/Layout/Main';
 import { addLocaleData, IntlProvider } from 'react-intl';
 import en from 'react-intl/locale-data/en';
 import fr from 'react-intl/locale-data/fr';
-import { isLoaded, isEmpty, withFirebase } from 'react-redux-firebase';
+import { withFirebase } from 'react-redux-firebase';
 import messages from '@/locals';
 
 addLocaleData([...en, ...fr]);
@@ -101,7 +101,6 @@ class Router extends React.Component {
       return { isLogged: nextProps.auth.isLogged };
     }
     if (nextProps.auth.profileUpdatedAt !== prevState.profileUpdatedAt) {
-      console.log('subscribe id', nextProps.auth.profile.id);
       nextProps.firebase.unWatchEvent('value', `${FIREBASE_PATH.USERS}/${String(prevState.profile.id)}`);
       nextProps.firebase.watchEvent('value', `${FIREBASE_PATH.USERS}/${String(nextProps.auth.profile.id)}`);
       return { profile: nextProps.auth.profile, profileUpdatedAt: nextProps.auth.profileUpdatedAt };
@@ -120,8 +119,6 @@ class Router extends React.Component {
     };
 
     const token = local.get(APP.AUTH_TOKEN);
-
-    console.log(this.props);
 
     // AUTH
     if (!token) {
@@ -214,7 +211,7 @@ class Router extends React.Component {
 
 export default compose(
   withFirebase,
-  connect(state => ({ auth: state.auth, app: state.app, firebase: state.firebase }), {
+  connect(state => ({ auth: state.auth, app: state.app }), {
     signUp,
     fetchProfile,
   }),

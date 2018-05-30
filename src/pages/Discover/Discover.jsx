@@ -15,10 +15,9 @@ import FeedExchange from '@/components/handshakes/exchange/Feed/FeedExchange';
 import FeedSeed from '@/components/handshakes/seed/Feed';
 import FeedCreditCard from '@/components/handshakes/exchange/Feed/FeedCreditCard';
 import Tabs from '@/components/handshakes/exchange/components/Tabs';
-import {FIREBASE_PATH} from '@/constants';
 // style
 import './Discover.scss';
-import {getListOfferPrice} from "../../reducers/exchange/action";
+import { getListOfferPrice } from '../../reducers/exchange/action';
 
 const maps = {
   [HANDSHAKE_ID.PROMISE]: FeedPromise,
@@ -41,10 +40,6 @@ class DiscoverPage extends React.Component {
     this.searchChange = this.searchChange.bind(this);
   }
 
-  componentWillReceiveProps(nextProps){
-    console.log(nextProps.firebaseUser);
-  }
-
   async componentDidMount() {
     this.getListOfferPrice();
     this.intervalCountdown = setInterval(() => {
@@ -52,14 +47,8 @@ class DiscoverPage extends React.Component {
     }, 30000);
   }
 
-  getListOfferPrice = () => {
-    this.props.getListOfferPrice({
-      BASE_URL: API_URL.EXCHANGE.BASE,
-      PATH_URL: API_URL.EXCHANGE.GET_LIST_OFFER_PRICE,
-      qs: {fiat_currency: 'VND'},
-      // successFn: this.handleGetPriceSuccess,
-      // errorFn: this.handleGetPriceFailed,
-    });
+  componentWillReceiveProps(nextProps) {
+    console.log('firebaseUser', nextProps.firebaseUser);
   }
 
   componentWillUnmount() {
@@ -79,6 +68,16 @@ class DiscoverPage extends React.Component {
         );
       }
       return null;
+    });
+  }
+
+  getListOfferPrice = () => {
+    this.props.getListOfferPrice({
+      BASE_URL: API_URL.EXCHANGE.BASE,
+      PATH_URL: API_URL.EXCHANGE.GET_LIST_OFFER_PRICE,
+      qs: { fiat_currency: 'VND' },
+      // successFn: this.handleGetPriceSuccess,
+      // errorFn: this.handleGetPriceFailed,
     });
   }
 
@@ -148,7 +147,7 @@ class DiscoverPage extends React.Component {
               />
               { tabIndexActive === 1 && (
                 <div className="feed-wrapper">
-                  <FeedCreditCard {...this.props} ipInfo={this.state.ipInfo}/>
+                  <FeedCreditCard {...this.props} ipInfo={this.state.ipInfo} />
                 </div>)
               }
             </div>
@@ -175,7 +174,7 @@ const mapState = state => ({
 
 const mapDispatch = ({
   loadDiscoverList,
-  getListOfferPrice
+  getListOfferPrice,
 });
 
 export default connect(mapState, mapDispatch)(DiscoverPage);
