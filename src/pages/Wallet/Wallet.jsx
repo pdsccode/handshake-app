@@ -157,18 +157,21 @@ class Wallet extends React.Component {
       obj.push({
         title: 'Send',
         handler: () => {
-          this.setState({walletSelected: wallet});                    
-          this.toggleBottomSheet();   
-          this.modalSendRef.open();              
+          this.setState({walletSelected: wallet});
+          this.toggleBottomSheet();
+          this.modalSendRef.open();      
         }
       })
       
       obj.push({
         title: 'Fill up',
         handler: () => {
-
+          this.setState({walletSelected: wallet});
+          this.toggleBottomSheet();
+          this.modalFillRef.open();    
         }
       })
+
       obj.push({
         title: 'Protected this wallet',
         handler: () => {
@@ -246,6 +249,10 @@ class Wallet extends React.Component {
           this.modalSendRef.close();
       })
     }
+  }
+
+  fillWallet = () =>{
+
   }
 
   updateSendAmountValue = (evt) => {
@@ -334,9 +341,31 @@ class Wallet extends React.Component {
         
         <Modal title="Send" onRef={modal => this.modalSendRef = modal}>
           <SendWalletForm className="sendwallet-wrapper" onSubmit={this.sendCoin}>
-            <Input name="to_ddress" placeholder="To address" onChange={evt => this.updateSendAddressValue(evt)}></Input>
-            <Input name="amount" placeholder={ this.state.walletSelected ? "Amount ({0})".format(this.state.walletSelected.name) : "Amount "} onChange={evt => this.updateSendAmountValue(evt)} type="tel"></Input>
-            <Button type="submit"  block={true}>Send</Button>
+            <Input name="to_address" placeholder="To address" required
+              onChange={evt => this.updateSendAddressValue(evt)} 
+              Value={ this.state.walletSelected ? this.state.walletSelected.address : "" }
+              />
+            <Input name="amount" type="tel" required
+              placeholder={ this.state.walletSelected ? "Amount ({0})".format(this.state.walletSelected.name) : "Amount "} 
+              onChange={evt => this.updateSendAmountValue(evt)}
+              />
+            <Button type="submit" block={true}>Send</Button>
+          </SendWalletForm>
+        </Modal>
+
+        <Modal title="Fill up" onRef={modal => this.modalFillRef = modal}>
+          <SendWalletForm className="fillwallet-wrapper" onSubmit={this.fillWallet}>
+            <Input name="amount" type="tel" required
+              placeholder={ this.state.walletSelected ? "Amount ({0})".format(this.state.walletSelected.name) : "Amount "} 
+              onChange={evt => this.updateSendAmountValue(evt)}
+              />
+            <Input name="fillup" placeholder="Equal to (USD)" required
+              onChange={evt => this.updateSendAddressValue(evt)} 
+              />
+            <Input name="credit_card" placeholder="Credit card" required
+              onChange={evt => this.updateSendAddressValue(evt)}
+              />
+            <Button type="submit" block={true}>Send</Button>
           </SendWalletForm>
         </Modal>
 
