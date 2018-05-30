@@ -35,8 +35,13 @@ export const ROLE = {
   }
 
 export class BetHandshakeHandler {
-    
-    static getStatusLabel(status, role, eventDate){
+
+    static addDays(date, days) {
+        var result = new Date(date);
+        result.setDate(result.getDate() + days);
+        return result;
+      }
+    static getStatusLabel(status, role, eventDate, shakeCount){
         //TO DO: Show combobox for use choose an option if evendate < today
         var strStatus = null;
         var strAction = null;
@@ -46,21 +51,23 @@ export class BetHandshakeHandler {
         console.log('Status:', status);
         var today = new Date();
         
-        
         if(status >= BETTING_STATUS.INITIATOR_WON && status <= BETTING_STATUS.DRAW){
-            if(this.isAutoSetWinner(role, status, eventDate)){
-                console.log('there is a person choose result');
+            const windowRejectDate = this.addDays(eventDate,REJECT_WINDOWN_DAYS);
+            console.log('windowRejectDate:', windowRejectDate);
+
+            if(today > windowRejectDate){ // Qua ngày để reject, hiện kết quả lun
+                console.log('there is a person choose result, over window reject Date');
                 switch (status){
                     case BETTING_STATUS.INITIATOR_WON:
-                    strStatus = (role === ROLE.PAYEE)? null : (role === ROLE.PAYER) ? BETTING_STATUS_LABEL.LOSE : BETTING_STATUS_LABEL.DONE; //If payeee = Withdraw, else payer = "lose" show button "Withdraw"
+                    strStatus = (role === ROLE.PAYEE)? null : (role === ROLE.PAYER) ? BETTING_STATUS_LABEL.LOSE : BETTING_STATUS_LABEL.IN_PROGRESS; //If payeee = Withdraw, else payer = "lose" show button "Withdraw"
                     strAction = (role === ROLE.PAYEE) ? BETTING_STATUS_LABEL.WITHDRAW : null;
                     break;
                     case BETTING_STATUS.BETOR_WON: 
-                    strStatus = (role === ROLE.PAYEE) ? BETTING_STATUS_LABEL.LOSE : (role === ROLE.PAYER) ? null : BETTING_STATUS_LABEL.DONE; // If payee = "lose", else payer = "withdraw"
-                    strAction = (role === ROLE.PAYEE) ? BETTING_STATUS_LABEL.WITHDRAW : null;
+                    strStatus = (role === ROLE.PAYEE) ? BETTING_STATUS_LABEL.LOSE : (role === ROLE.PAYER) ? null : BETTING_STATUS_LABEL.IN_PROGRESS; // If payee = "lose", else payer = "withdraw"
+                    strAction = (role === ROLE.PAYER) ? BETTING_STATUS_LABEL.WITHDRAW : null;
                     break;
                     case BETTING_STATUS.DRAW:
-                    strStatus = (role === ROLE.GUEST) ? BETTING_STATUS_LABEL.DONE : null; // Both payee/payer = "withdraw"
+                    strStatus = (role === ROLE.GUEST) ? BETTING_STATUS_LABEL.IN_PROGRESS : null; // Both payee/payer = "withdraw"
                     strAction = (role !== ROLE.GUEST) ? BETTING_STATUS_LABEL.WITHDRAW : null; 
                     break;
                 }
@@ -105,9 +112,23 @@ export class BetHandshakeHandler {
             
             break;
             case BETTING_STATUS.CLOSED:
-            strStatus = (role === ROLE.GUEST) ? BETTING_STATUS_LABEL.IN_PROGRESS : BETTING_STATUS_LABEL.WAITING_RESULT ; //All users
+            if(shakeCount > 0){//SHAKE -> CLOSED -> there is a person shaked -> Waiting Result to indicate who win
+                if(today <=eventDate){
+                    strStatus = (role === ROLE.GUEST) ? BETTING_STATUS_LABEL.IN_PROGRESS : BETTING_STATUS_LABEL.WAITING_RESULT ; //payee & payer waiting result
+                }else { //If today > evenDay, payee & payer choose who wins, guest see IN PROGRESS
+                    if(role!== ROLE.GUEST){
+                        isShowOptions = true;
+                    }else{
+                        strStatus = BETTING_STATUS_LABEL.IN_PROGRESS; 
+                    }
+                }
+            }else { //INITED -> CLOSE // No one shake -> Payee can withdraw immediately. Not care eventDate
+                strStatus = (role !== ROLE.PAYEE) ? BETTING_STATUS_LABEL.IN_PROGRESS : null;
+                strAction = (role === ROLE.PAYEE) ? BETTING_STATUS_LABEL.WITHDRAW : null;
+            } 
             break;
             case BETTING_STATUS.CANCELLED:
+            strStatus = (role === ROLE.GUEST) ? BETTING_STATUS_LABEL.IN_PROGRESS : null;
             strAction = (role !== ROLE.GUEST) ? BETTING_STATUS_LABEL.WITHDRAW : null;
             break;
             case BETTING_STATUS.REJECTED:
@@ -231,9 +252,8 @@ export class BetHandshakeHandler {
             neuron.bettingHandshake.withdraw(address, privateKey,hid,offchain);
         }
     }
-    static isAutoSetWinner(role, state, eventDate){
+    static isAutoSetWinner(role, state, today, eventDate){
         if(role !== ROLE.GUEST){
-            var today = new Date()
             if (today > eventDate + REJECT_WINDOWN_DAYS){
                 //TO DO: change status and button action
                 if(state >= BETTING_STATUS.INITIATOR_WON && state <= BETTING_STATUS.DRAW){
@@ -256,21 +276,6 @@ export class BetHandshakeHandler {
             }
         }
 
-    }
-    static isShowOptions(role,state, eventDate){
-        if (role !== ROLE.GUEST){
-            if (state === BETTING_STATUS.SHAKED){
-                var today = new Date()
-                if (today > eventDate){
-                    //this.closeItem(role, hid, state, balance, escrow, offchain);
-                    //TO DO: show options result
-                    return true;
-                }   
-            }
-        }
-        
-       
-        return false;
     }
     
 }

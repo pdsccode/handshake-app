@@ -61,7 +61,7 @@ class FeedBetting extends React.Component {
   componentDidMount() {
     console.log('Betting Feed:', this.props);
     const item = this.props;
-    const {initUserId, shakedUserIds, status, extraData} = item;
+    const {initUserId, shakedUserIds, status, extraData, shakeCount} = item;
     console.log('Extra Data:', this.extraData);
     const profile = local.get(APP.AUTH_PROFILE);
     const token = local.get(APP.AUTH_TOKEN);
@@ -81,9 +81,10 @@ class FeedBetting extends React.Component {
     });    
     
    //const hardCodeRole = ROLE.PAYEE;
-    const hardCodeStatus = 2;
+    const hardCodeStatus = 5;
+    const hardCodeShakeCount = 0; 
 
-    const result = BetHandshakeHandler.getStatusLabel(hardCodeStatus, role, eventDate)
+    const result = BetHandshakeHandler.getStatusLabel(hardCodeStatus, role, eventDate, hardCodeShakeCount)
     console.log('Result:', result);
     if(result){
       this.updateStatus(result);
@@ -251,6 +252,8 @@ class FeedBetting extends React.Component {
     //TO DO: update item
     //TO DO:
     const {role} = this.state;
+    const item = this.props;
+    const {shakeCount} = item;
     //const statusLabel = BetHandshakeHandler.getStatusLabel(status, role, eventDate);
 
     if(newState === BETTING_STATUS.SHAKED || newState === BETTING_STATUS.CLOSED){
@@ -264,14 +267,14 @@ class FeedBetting extends React.Component {
         this.autoCancel(role, eventDate);
     }.bind(this),deadlineCancel*1000);
     }
-    const statusDict = BetHandshakeHandler.getStatusLabel(newState, role, eventDate);
+    const statusDict = BetHandshakeHandler.getStatusLabel(newState, role, eventDate, shakeCount);
     this.updateStatus(statusDict);
 
   }
   autoShowResult(role,eventDate){
-    const {item} = this.props;
-    const {status} = item;
-    const result = BetHandshakeHandler.getStatusLabel(status, role, eventDate)
+    const item = this.props;
+    const {status, shakeCount} = item;
+    const result = BetHandshakeHandler.getStatusLabel(status, role, eventDate, shakeCount)
     if(result){
       this.updateStatus(result);
     }
