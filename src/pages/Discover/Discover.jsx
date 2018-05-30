@@ -18,7 +18,7 @@ import Tabs from '@/components/handshakes/exchange/components/Tabs';
 import NoData from '@/components/core/presentation/NoData';
 // style
 import './Discover.scss';
-import {getListOfferPrice} from "../../reducers/exchange/action";
+import { getListOfferPrice } from '../../reducers/exchange/action';
 
 const maps = {
   [HANDSHAKE_ID.PROMISE]: FeedPromise,
@@ -94,6 +94,17 @@ class DiscoverPage extends React.Component {
     }
   }
 
+  getListOfferPrice = () => {
+    this.props.getListOfferPrice({
+      BASE_URL: API_URL.EXCHANGE.BASE,
+      PATH_URL: API_URL.EXCHANGE.GET_LIST_OFFER_PRICE,
+      qs: { fiat_currency: 'VND' },
+      // successFn: this.handleGetPriceSuccess,
+      // errorFn: this.handleGetPriceFailed,
+    });
+  }
+
+  // TODO: search feed
   searchChange(query) {
     clearTimeout(this.searchTimeOut);
     this.searchTimeOut = setTimeout(() => {
@@ -161,7 +172,7 @@ class DiscoverPage extends React.Component {
               />
               { tabIndexActive === 1 && (
                 <div className="feed-wrapper">
-                  <FeedCreditCard {...this.props} ipInfo={this.state.ipInfo}/>
+                  <FeedCreditCard {...this.props} ipInfo={this.state.ipInfo} />
                 </div>)
               }
             </div>
@@ -188,7 +199,7 @@ const mapState = state => ({
 
 const mapDispatch = ({
   loadDiscoverList,
-  getListOfferPrice
+  getListOfferPrice,
 });
 
 export default connect(mapState, mapDispatch)(DiscoverPage);
