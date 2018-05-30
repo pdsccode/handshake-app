@@ -10,6 +10,8 @@ import Feed from '@/components/core/presentation/Feed';
 import NoData from '@/components/core/presentation/NoData';
 import './Me.scss';
 
+import FeedBetting from '@/components/handshakes/betting/Feed';
+
 class Me extends React.Component {
 
   componentDidMount() {
@@ -23,6 +25,7 @@ class Me extends React.Component {
         <Row>
           <Col md={12}>
             {
+              /*
               list && list.length > 0 ? (
                 list.map(handshake => (
                   <div className="my-feed-wrapper" key={handshake.id} onClick={() => alert('show detail')}>
@@ -38,7 +41,8 @@ class Me extends React.Component {
               ) : (
                 <NoData message="NO DATA AVAILABLE" />
               )
-            }
+            */}
+            <FeedBetting/>
           </Col>
         </Row>
       </Grid>

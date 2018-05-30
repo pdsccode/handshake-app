@@ -27,7 +27,9 @@ import chipIcon from '@/assets/images/icon/betting/chip.svg';
 import conferenceCallIcon from '@/assets/images/icon/betting/conference_call.svg';
 import ethereumIcon from '@/assets/images/icon/betting/ethereum.svg';
 import BettingHandshake from '@/services/neuron/neuron-bettinghandshake.js';
+import Shake from '@/components/core/controls/Button';
 
+import GroupBook from './GroupBook';
 
 
 class FeedBetting extends React.Component {
@@ -65,20 +67,27 @@ class FeedBetting extends React.Component {
         {/* Feed */}
         <Feed className="feed" handshakeId={this.props.id} onClick={this.props.onFeedClick}>
           <div className="wrapperBettingFeed">
-              
+              <div className="item">
+              <GroupBook/>
+              <GroupBook/>
+              </div>
+              <div className="item">
+              <BettingShake/>
+
+              </div>
         </div>
         </Feed>
         {/* Shake */}
-        {statusAction && <Button block onClick={() => { this.clickActionButton(statusAction); }}>{statusAction}</Button>}
+        {/*statusAction && <Button block onClick={() => { this.clickActionButton(statusAction); }}>{statusAction}</Button>*/}
         {/* Modal */}
-        {<ModalDialog title="Make a bet" onRef={modal => this.modalBetRef = modal}>
+        {/*<ModalDialog title="Make a bet" onRef={modal => this.modalBetRef = modal}>
           <BettingShake
             remaining={remaining}
             odd={0.1}
             onCancelClick={() => this.modalBetRef.close()}
             onSubmitClick={(amount) => this.submitShake(amount)}
           />
-  </ModalDialog>}
+    </ModalDialog>*/}
       </div>
     );
 

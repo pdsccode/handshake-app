@@ -1,9 +1,9 @@
 @import './src/styles/style';
 
 .wrapperBettingShake {
-  padding: rem-calc(30px 10px 20px 10px);
+  padding: rem-calc(0px 0px 0px 0px);
   font-family: $font-family-base;
-  font-size: rem-calc(18px);
+  font-size: rem-calc(14px);
   .rowWrapper {
     display: flex;
     width: 100%;
@@ -39,7 +39,7 @@
     flex-shrink: 0;
     flex-basis: 40%;
     text-align: right;
-    font-size: rem-calc(18px);
+    font-size: rem-calc(14px);
     color: #666666;
     letter-spacing: 0;
     line-height: rem-calc(22px);
@@ -69,7 +69,7 @@
     }
   }
   .btnOK {
-    font-size: rem-calc(20px);
+    font-size: rem-calc(14px);
     color: #FFFFFF;
   }
 }

@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import "./Book.scss";
 class BetBook extends React.Component {
     static propTypes = {
         
@@ -18,7 +19,12 @@ class BetBook extends React.Component {
     
       }
     render(){
-        return (<div></div>);
+        return (
+            <div className="wrapperBettingBook">
+            <div className="oddText">2.3</div>
+            <div className="amountText">0.1528</div>
+            </div>
+        );
     }
 
 }

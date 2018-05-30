@@ -1,3 +1,3 @@
-import Book from './Shake';
+import Book from './Book';
 
 export default Book;
