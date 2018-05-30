@@ -320,7 +320,7 @@ class FeedCreditCard extends React.Component {
                   <div style={{ color: 'white' }}>
                     {
                       amount && (
-                        <div style={{ background: '#50af4f' }} className="p-2 rounded mb-2">
+                        <div style={{ background: '#50af4f' }} className="pt-2 px-2 rounded mb-2">
                           {
                             ccLimits.map((ccLimit, index) => {
                               const { level, limit, duration } = ccLimit
@@ -337,8 +337,8 @@ class FeedCreditCard extends React.Component {
                               }
 
                               return (
-                                <LevelItem key={index} style={{ marginLeft: index > 0 ? '8px' : '', opacity: isActive ? '' : 0.6 }}>
-                                  <div className="rounded p-1" style={{ height: 47, lineHeight: 1.2, background: isActive ? '#FF3B30' : '#84c683' }}>
+                                <LevelItem key={index} style={{ margin: '0 8px 8px 0', opacity: isActive ? '' : 0.6 }}>
+                                  <div className="rounded p-1" style={{ lineHeight: 1.2, background: isActive ? '#FF3B30' : '#84c683' }}>
                                     {text}
                                   </div>
                                   <div><small>Up to {fiatCurrency}{limit}</small></div>
