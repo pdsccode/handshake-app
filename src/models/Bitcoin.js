@@ -113,7 +113,7 @@ export class Bitcoin extends Wallet{
         }
         else{
           // need update error code:
-            return "You don't have enough Satoshis to cover the miner fee.";            
+            return "You don't have enough amount.";            
         }
       }
     }
