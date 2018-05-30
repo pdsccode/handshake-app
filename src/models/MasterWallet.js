@@ -37,6 +37,9 @@ export class MasterWallet{
             }            
         }
 
+        // set item 1 is default
+        masterWallet[1].default = true;
+
         // For Reward wallet:
         for (var k in MasterWallet.ListCoinReward){
             let wallet = new MasterWallet.ListCoinReward[k]();
