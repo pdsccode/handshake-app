@@ -134,11 +134,13 @@ export class BetHandshakeHandler {
             strStatus = (role === ROLE.GUEST) ? BETTING_STATUS_LABEL.IN_PROGRESS : null;
             strAction = (role !== ROLE.GUEST) ? BETTING_STATUS_LABEL.WITHDRAW : null;
             break;
-            case BETTING_STATUS.REJECTED:
+            case BETTING_STATUS.REJECTED: //There is a person click reject
             strStatus = BETTING_STATUS_LABEL.RESOLVING;
             break;
-            case BETTING_STATUS.ACCEPTED:
-            strStatus = BETTING_STATUS_LABEL.RESOLVING;
+            case BETTING_STATUS.ACCEPTED: 
+            //TO DO: chua biet xu ly, biet ai da rut tien. 
+            //Neu da rut tien: hien thi DONE, chua rut tien, hien thi WithDraw
+            
             break;
             default: // Not show status
             break;

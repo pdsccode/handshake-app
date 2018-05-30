@@ -172,7 +172,7 @@ class FeedBetting extends React.Component {
 
               <div className="description">
                 <p>{event_name}</p>
-                <p>{momment(event_date).format('D/M/YYYY HH:mm')}</p>
+                <p>{momment(event_date).format('M/D/YYYY HH:mm')}</p>
                 <p className="eventInfo">{event_predict}</p>
                 <p className="odds">1:{event_odds}</p>
               </div>

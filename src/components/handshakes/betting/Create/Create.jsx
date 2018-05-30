@@ -26,6 +26,7 @@ import './Create.scss';
 import Neuron from '@/services/neuron';
 const wallet = MasterWallet.getWalletDefault();
 const chainId = wallet.chainId;
+console.log('Chain Id:', chainId);
 
 const neuron = new Neuron(chainId);
 
@@ -270,7 +271,6 @@ class BettingCreate extends React.PureComponent {
       from_address: fromAddress,
       chain_id: chainId,
     };
-
 
     this.props.initHandshake({PATH_URL: API_URL.CRYPTOSIGN.INIT_HANDSHAKE, METHOD:'POST', data: params,
     successFn: this.initHandshakeSuccess,
