@@ -67,13 +67,13 @@ class Component extends React.Component {
       this.getCryptoPriceByAmount(amount);
     }, 30000);
 
-    const ipInfo = await axios.get(`https://ipfind.co/me`, {
-      params: {
-        auth: 'a59f33e5-0879-411a-908b-792359a0d6cc',
-      },
-    });
+    // const ipInfo = await axios.get(`https://ipfind.co/me`, {
+    //   params: {
+    //     auth: 'a59f33e5-0879-411a-908b-792359a0d6cc',
+    //   },
+    // });
 
-    this.setState({ ipInfo: ipInfo.data });
+    // this.setState({ ipInfo: ipInfo.data });
 
     // Get wallet
     let listWallet = await MasterWallet.getMasterWallet();
@@ -204,8 +204,10 @@ class Component extends React.Component {
       currency: values.currency,
       type: values.type,
       contact_info: values.address,
-      contact_phone: '1234567890',
-      fiat_currency,
+      contact_phone: values.phone,
+      fiat_currency: fiat_currency,
+      latitude: 10.786391,
+      longitude: 106.700074
     };
 
     if (values.type === 'buy') {
