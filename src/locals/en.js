@@ -15,7 +15,7 @@ export default {
   shakeNow: 'Shake Now',
   offerHandShakeContent: '{offerType} {amount} {currency} for {currency_symbol}{total} in cash',
   offerDistanceContent: '{offerType} is {distance} meters away',
-  transactonOfferInfo: 'Successful ({success}) / Failed (failed)',
+  transactonOfferInfo: 'Successful ({success}) / Failed ({failed})',
   createOfferConfirm: 'You are about to {type} {amount} {currency} for {currency_symbol}{total}',
   handshakeOfferConfirm: 'You are about to {type} {amount} {currency} for {currency_symbol}{total}',
   rejectOfferConfirm: 'Do you want to Reject this handshake? You will not be able to make transactions for 4 hours.',
