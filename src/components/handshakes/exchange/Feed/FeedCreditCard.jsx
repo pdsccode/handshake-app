@@ -194,7 +194,7 @@ class FeedCreditCard extends React.Component {
         (
           <div className="py-2">
             <Feed className="feed p-2" background="#259B24">
-              <div className="text-white d-flex align-items-center" style={{ minHeight: '75px' }}>
+              <div className="text-white d-flex align-items-center" style={{ minHeight: '50px' }}>
                 <div>Buy success</div>
               </div>
             </Feed>
@@ -228,7 +228,7 @@ class FeedCreditCard extends React.Component {
         (
           <div className="py-2">
             <Feed className="feed p-2" background="#259B24">
-              <div className="text-white d-flex align-items-center" style={{ minHeight: '75px' }}>
+              <div className="text-white d-flex align-items-center" style={{ minHeight: '50px' }}>
                 <div>{e.response?.data?.message}</div>
               </div>
             </Feed>
