@@ -113,7 +113,7 @@ class Button extends React.PureComponent {
         ref={(div) => { this.btnRef = div; return null; }}
       >
         {this.loading()}
-        {isLoading || (this.props.app.isCalling && !this.immunity()) ? '' : children}
+        {children}
       </Tag>
     );
   }

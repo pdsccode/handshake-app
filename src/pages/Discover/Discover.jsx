@@ -175,6 +175,10 @@ class DiscoverPage extends React.Component {
         <Row>
           {this.getHandshakeList}
         </Row>
+        <Row>
+          <Button block>Test button</Button>
+          <Button block isLoading>Test button</Button>
+        </Row>
       </Grid>
     );
   }
