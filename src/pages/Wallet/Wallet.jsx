@@ -69,8 +69,7 @@ class Wallet extends React.Component {
       inputSendValue: '',
       isShowFillWallet: false,
       walletsData: false,
-      isNewCCOpen: false,
-      currency: CRYPTO_CURRENCY_DEFAULT
+      isNewCCOpen: false
     };
     this.props.setHeaderRight(this.headerRight());    
   }
@@ -186,6 +185,7 @@ class Wallet extends React.Component {
         handler: () => {
           this.setState({walletSelected: wallet, isShowFillWallet: true});
           this.toggleBottomSheet();
+          this.modalFillRef.open();
         }
       })
 
@@ -384,18 +384,6 @@ class Wallet extends React.Component {
     });
   }
 
-  get showWalletFill(){
-    return this.state.isShowFillWallet ? 
-      <div className="container">
-        <div className="row">
-          <div className="col">
-            <FeedCreditCard />
-          </div>
-        </div>
-      </div>
-      : "";
-  }
-
   render() {
     const {intl, userProfile, cryptoPrice, amount, userCcLimit, ccLimits} = this.props;    
     return (
@@ -431,7 +419,9 @@ class Wallet extends React.Component {
           </SendWalletForm>
         </Modal>
 
-        {this.showWalletFill}
+        <Modal title="Fill up" onRef={modal => this.modalFillRef = modal}>
+          <FeedCreditCard buttonTitle="Send" />
+        </Modal>
 
         {/* Modal for Backup wallets : */}
         <ModalDialog title="Backup wallets" onRef={modal => this.modalBackupRef = modal}>
