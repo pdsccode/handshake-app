@@ -21,7 +21,6 @@ import HeaderMore from './HeaderMore';
 import WalletItem from './WalletItem';
 import WalletProtect from './WalletProtect';
 import FeedCreditCard from "@/components/handshakes/exchange/Feed/FeedCreditCard";
-import {createCCOrder, getCcLimits, getCryptoPrice, getUserCcLimit, getUserProfile,} from '@/reducers/exchange/action';
 import ReactBottomsheet from 'react-bottomsheet';
 // var ReactBottomsheet = require('react-bottomsheet');
 // var Blob = require('./Blob.js');
@@ -70,14 +69,14 @@ class Wallet extends React.Component {
       listRewardWalletBalance: [],
       bottomSheet: false,
       listMenu: [],
-      walletSelected: null,      
+      walletSelected: null,
       inputSendValue: '',
       isRestoreLoading: false,
       erroValueBackup: false,
       walletsData: false,
       isNewCCOpen: false
     };
-    this.props.setHeaderRight(this.headerRight());    
+    this.props.setHeaderRight(this.headerRight());
   }
 
   headerRight() {
@@ -92,15 +91,15 @@ class Wallet extends React.Component {
 
     listWallet.forEach(wallet => {
       // is reward wallet:
-      if (wallet.isReward){        
+      if (wallet.isReward){
         listRewardWallet.push(wallet);
       }
       // is Mainnet
-      else if (wallet.network === MasterWallet.ListCoin[wallet.className].Network.Mainnet){        
+      else if (wallet.network === MasterWallet.ListCoin[wallet.className].Network.Mainnet){
         listMainWallet.push(wallet);
       }
       else{
-        // is Testnet        
+        // is Testnet
         listTestWallet.push(wallet);
       }
     });
@@ -167,7 +166,7 @@ class Wallet extends React.Component {
   toggleBottomSheet () {
     let obj = (this.state.bottomSheet) ? { 'bottomSheet': false } : { 'bottomSheet': true }
     this.setState(obj)
-  }  
+  }
 
   copyToClipboard =(text) => {
     var textField = document.createElement('textarea')
@@ -177,7 +176,7 @@ class Wallet extends React.Component {
     document.execCommand('copy')
     textField.remove()
   }
-  
+
   // create list menu of wallet item when click Show more ...
   creatSheetMenuItem(wallet){
     let obj = [];
@@ -186,10 +185,10 @@ class Wallet extends React.Component {
         handler: () => {
           this.setState({walletSelected: wallet});
           this.toggleBottomSheet();
-          this.modalSendRef.open();      
+          this.modalSendRef.open();
         }
       })
-      
+
       obj.push({
         title: 'Fill up',
         handler: () => {
@@ -217,35 +216,33 @@ class Wallet extends React.Component {
       })
       obj.push({
         title: 'Copy address',
-        handler: () => {          
+        handler: () => {
           Clipboard.copy(wallet.address);
-          this.toggleBottomSheet(); 
+          this.toggleBottomSheet();
         }
       })
 
-      if (!wallet.isReward){
-        obj.push({
-          title: 'Make it default for {0} '.format(wallet.name) + (wallet.default ? "✓ " : ""),
-          handler: () => {          
-            wallet.default = !wallet.default;    
-            this.toggleBottomSheet(); 
-            // reset all wallet default:
-            let lstWalletTemp = this.getAllWallet();
-            if (wallet.default) lstWalletTemp.forEach(wal => {if (wal != wallet && wal.name == wallet.name){wal.default = false;}})          
-            // Update wallet master from local store:
-            MasterWallet.UpdateLocalStore(lstWalletTemp);
-          }
-        })
-        
-          obj.push({
-            title: 'Remove',
-            handler: () => {
-              this.setState({walletSelected: wallet});          
-              this.modalBetRef.open();   
-              this.toggleBottomSheet();   
-            }
-          })
+    obj.push({
+      title: 'Make it default ' + (wallet.default ? "✓ " : ""),
+      handler: () => {
+        wallet.default = !wallet.default;
+        this.toggleBottomSheet();
+        // reset all wallet defaul:
+        let lstWalletTemp = this.getAllWallet();
+        if (wallet.default) lstWalletTemp.forEach(wal => {if (wal != wallet){wal.default = false;}})
+        // Update wallet master from local store:
+        MasterWallet.UpdateLocalStore(lstWalletTemp);
+      }
+    })
+    if (!wallet.isReward)
+      obj.push({
+        title: 'Remove',
+        handler: () => {
+          this.setState({walletSelected: wallet});
+          this.modalBetRef.open();
+          this.toggleBottomSheet();
         }
+      })
 
       return obj;
   }
@@ -257,7 +254,7 @@ class Wallet extends React.Component {
     var walletTmp = this.state.walletSelected;
     if (walletTmp != null){
         // Find index for this item:
-        lstWalletTemp.forEach(function (wal, i) {if (wal === walletTmp){index = i}});   
+        lstWalletTemp.forEach(function (wal, i) {if (wal === walletTmp){index = i}});
         // Remove item:
         if (index > -1) {
           lstWalletTemp.splice(index, 1)
@@ -297,7 +294,7 @@ class Wallet extends React.Component {
     else if (this.state.inputSendAmountValue == '' || this.state.inputSendAmountValue == 0)
       alert("Please input Amount value");
     else{
-      
+
       this.state.walletSelected.transfer(this.state.inputAddressAmountValue, this.state.inputSendAmountValue).then(success => {
           alert(success);
           this.modalSendRef.close();
@@ -320,6 +317,7 @@ class Wallet extends React.Component {
       inputAddressAmountValue: evt.target.value
     });
   }  
+
   // Menu for Right header bar
   creatSheetMenuHeaderMore(){
     let obj = [];
@@ -336,6 +334,7 @@ class Wallet extends React.Component {
         this.modalBackupRef.open();
         this.setState({walletsData: this.getAllWallet()});
         this.toggleBottomSheet();        
+
       }
     })
     obj.push({
@@ -376,7 +375,7 @@ class Wallet extends React.Component {
   handleFocus = (e) => {
     e.currentTarget.select();
   }
-  
+
   handleClick = (e) => {
     this.refs.input.focus();
   }
@@ -414,7 +413,7 @@ class Wallet extends React.Component {
           visible={this.state.bottomSheet}
           onClose={this.toggleBottomSheet.bind(this)}
           list={this.state.listMenu} />
-        
+
         {/* ModalDialog for confirm remove wallet */}
         <ModalDialog title="Confirmation" onRef={modal => this.modalBetRef = modal}>
           <div><span>Are you sure to want to remove this wallet?</span></div>
@@ -428,10 +427,10 @@ class Wallet extends React.Component {
         <Modal title="Send" onRef={modal => this.modalSendRef = modal}>
           <SendWalletForm className="sendwallet-wrapper" onSubmit={this.sendCoin}>
             <Input name="to_address" placeholder="To address" required
-              onChange={evt => this.updateSendAddressValue(evt)}               
+              onChange={evt => this.updateSendAddressValue(evt)}
               />
             <Input name="amount" type="tel" required
-              placeholder={ this.state.walletSelected ? "Amount ({0})".format(this.state.walletSelected.name) : "Amount "} 
+              placeholder={ this.state.walletSelected ? "Amount ({0})".format(this.state.walletSelected.name) : "Amount "}
               onChange={evt => this.updateSendAmountValue(evt)}
               />
             <Button type="submit" block={true}>Send</Button>
@@ -455,7 +454,7 @@ class Wallet extends React.Component {
           <div className='bodyBackup'>
           <textarea readonly onClick={ this.handleChange } onFocus={ this.handleFocus }          
            value={ this.state.walletsData ? JSON.stringify(this.state.walletsData) : ''}/>
-          <Button className="button" cssType="danger" onClick={() => {Clipboard.copy(JSON.stringify(this.state.walletsData)); this.modalBackupRef.close(); }} >Copy it somewhere safe</Button>            
+          <Button className="button" cssType="danger" onClick={() => {Clipboard.copy(JSON.stringify(this.state.walletsData)); this.modalBackupRef.close(); }} >Copy it somewhere safe</Button>
           </div>
         </ModalDialog>
 
@@ -493,7 +492,7 @@ class Wallet extends React.Component {
         </Row>
         <Row className="list">
           {this.listMainWalletBalance}
-        </Row>        
+        </Row>
 
         <Row className="list">
           <Header title="Reward wallets" hasLink={false} />
@@ -530,11 +529,6 @@ const mapState = (state) => ({
 
 const mapDispatch = ({
   setHeaderRight,
-  getUserProfile,
-  getCryptoPrice,
-  createCCOrder,
-  getUserCcLimit,
-  getCcLimits,
 });
 
 

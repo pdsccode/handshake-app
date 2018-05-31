@@ -36,14 +36,14 @@ class Me extends React.Component {
         <Row>
           <Col md={12}>
             {
-              /*
+
               list && list.length > 0 ? (
                 list.map((handshake) => {
                   const FeedComponent = maps[handshake.type];
                   if (FeedComponent) {
                     return (
                       <Col key={handshake.id} md={12} className="feed-wrapper">
-                        <FeedComponent {...handshake} onFeedClick={() => this.clickFeedDetail(handshake.id)} />
+                        <FeedComponent {...handshake} {...this.props} onFeedClick={() => this.clickFeedDetail(handshake.id)} mode={'me'}/>
                       </Col>
                     );
                   }
@@ -62,7 +62,7 @@ class Me extends React.Component {
               ) : (
                 <NoData message="NO DATA AVAILABLE" />
               )
-            */}
+            }
           </Col>
         </Row>
       </Grid>

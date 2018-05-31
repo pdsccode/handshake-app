@@ -26,7 +26,6 @@ import './Feed.scss';
 import chipIcon from '@/assets/images/icon/betting/chip.svg';
 import conferenceCallIcon from '@/assets/images/icon/betting/conference_call.svg';
 import ethereumIcon from '@/assets/images/icon/betting/ethereum.svg';
-import BettingHandshake from '@/services/neuron/neuron-bettinghandshake.js';
 import Shake from '@/components/core/controls/Button';
 
 import GroupBook from './GroupBook';
@@ -52,6 +51,7 @@ class FeedBetting extends React.Component {
   }
 
   componentDidMount() {
+    console.log(this.props);
 
   }
 
@@ -59,19 +59,41 @@ class FeedBetting extends React.Component {
 
   }
 
+  get extraData(){
+    const {extraData} = this.props
+    console.log(extraData);
+    try {
+      return JSON.parse(extraData);
+    }catch(e){
+      console.log(e);
+      return {}
+    }
+  }
+
   render() {
 
+    const {event_name, event_predict, event_odds, event_bet,event_date, balance} = this.extraData;
 
     return (
       <div>
         {/* Feed */}
         <Feed className="feed" handshakeId={this.props.id} onClick={this.props.onFeedClick} background="white">
           <div className="wrapperBettingFeed">
-              
+            <div className="description">
+              <p>{event_name}</p>
+              <p className="eventInfo">{event_predict}</p>
+            </div>
+            <div className="bottomWrapper">
+              <p className="odds">1:{event_odds}</p>
+              <div className="item">
+              <Image src={ethereumIcon} alt="ethereum icon" />
+              <p className="content">{event_bet} ETH <span>pool</span></p>
+              </div>
+            </div>
           </div>
         </Feed>
         {/* Shake */}
-        {/*statusAction && <Button block onClick={() => { this.clickActionButton(statusAction); }}>{statusAction}</Button>*/}
+        {<Button block onClick={() => { this.clickActionButton(statusAction); }}>Shake</Button>}
         {/* Modal */}
         {/*<ModalDialog title="Make a bet" onRef={modal => this.modalBetRef = modal}>
           <BettingShake
@@ -89,7 +111,9 @@ class FeedBetting extends React.Component {
     console.log('Choose option:', value)
     //TO DO: Choose an option
   }
+  
   clickActionButton(title){
+    /*
     const {role} = this.state;
     const item = this.props;
     const {id, hid} = item;
@@ -101,20 +125,21 @@ class FeedBetting extends React.Component {
 
       case BETTING_STATUS_LABEL.CLOSE:
         // TO DO: CLOSE BET
-        BetHandshakeHandler.closeItem(role, hid, offchain);
+        //BetHandshakeHandler.closeItem(role, hid, offchain);
         break;
 
       case BETTING_STATUS_LABEL.WITHDRAW:
         // TO DO: WITHDRAW
-        BettingHandshake.withdraw(role, hid, offchain);
+        //BettingHandshake.withdraw(role, hid, offchain);
         break;
 
       case BETTING_STATUS_LABEL.REJECT:
         // TO DO: REJECT
-        BettingHandshake.rejectItem(role, hid, offchain);
+        //BettingHandshake.rejectItem(role, hid, offchain);
         break;
 
     }
+    */
 
   }
 }

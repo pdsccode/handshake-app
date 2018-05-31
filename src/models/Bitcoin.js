@@ -52,6 +52,9 @@ export class Bitcoin extends Wallet{
   }
 
     async getBalance() {
+
+      this.setDefaultNetwork();
+
       var url = this.network + '/addr/' + this.address + '/balance';
 
       var response = await axios.get(url);
@@ -86,7 +89,9 @@ export class Bitcoin extends Wallet{
       if(fee){
 
         data.fee = fee;
+
         var utxos = await this.utxosForAmount(Number(amountToSend) + Number(fee));
+        //var utxos = await this.utxosForAmount(Number(amountToSend));
 
         console.log("utxos", utxos);
 
