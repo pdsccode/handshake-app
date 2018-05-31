@@ -18,7 +18,7 @@ import Tabs from '@/components/handshakes/exchange/components/Tabs';
 import NoData from '@/components/core/presentation/NoData';
 // style
 import './Discover.scss';
-import { getListOfferPrice } from '../../reducers/exchange/action';
+import { getListOfferPrice } from '@/reducers/exchange/action';
 
 const maps = {
   [HANDSHAKE_ID.PROMISE]: FeedPromise,
@@ -34,28 +34,46 @@ class DiscoverPage extends React.Component {
       handshakeIdActive: '',
       tabIndexActive: 1,
     };
-    this.props.loadDiscoverList({ PATH_URL: API_URL.DISCOVER.BASE });
+    this.props.loadDiscoverList({ PATH_URL: API_URL.DISCOVER.BASE, qs: { location_p: {pt:'10.786391,106.700074',d: 5 } } });
     // bind
     this.clickCategoryItem = this.clickCategoryItem.bind(this);
     this.clickTabItem = this.clickTabItem.bind(this);
     this.searchChange = this.searchChange.bind(this);
   }
 
-  async componentDidMount() {
-    this.getListOfferPrice();
-    this.intervalCountdown = setInterval(() => {
-      this.getListOfferPrice();
-    }, 30000);
+  componentWillReceiveProps(nextProps){
+    console.log(nextProps.firebaseUser);
   }
 
-  componentWillReceiveProps(nextProps) {
-    console.log('firebaseUser', nextProps.firebaseUser);
+  async componentDidMount() {
+    this.getListOfferPrice();
+    // this.intervalCountdown = setInterval(() => {
+    //   this.getListOfferPrice();
+    // }, 30000);
+  }
+
+  getListOfferPrice = () => {
+    this.props.getListOfferPrice({
+      BASE_URL: API_URL.EXCHANGE.BASE,
+      PATH_URL: API_URL.EXCHANGE.GET_LIST_OFFER_PRICE,
+      qs: {fiat_currency: 'VND'},
+      successFn: this.handleGetPriceSuccess,
+      errorFn: this.handleGetPriceFailed,
+    });
+  }
+
+  handleGetPriceSuccess = () => {
+    this.props.loadDiscoverList({ PATH_URL: API_URL.DISCOVER.BASE, qs: { location_p: {pt:'10.786391,106.700074',d: 5 } } });
+  }
+
+  handleGetPriceFailed = () => {
+    this.props.loadDiscoverList({ PATH_URL: API_URL.DISCOVER.BASE, qs: { location_p: {pt:'10.786391,106.700074',d: 5 } } });
   }
 
   componentWillUnmount() {
-    if (this.intervalCountdown) {
-      clearInterval(this.intervalCountdown);
-    }
+    // if (this.intervalCountdown) {
+    //   clearInterval(this.intervalCountdown);
+    // }
   }
 
   get getHandshakeList() {
@@ -76,17 +94,6 @@ class DiscoverPage extends React.Component {
     }
   }
 
-  getListOfferPrice = () => {
-    this.props.getListOfferPrice({
-      BASE_URL: API_URL.EXCHANGE.BASE,
-      PATH_URL: API_URL.EXCHANGE.GET_LIST_OFFER_PRICE,
-      qs: { fiat_currency: 'VND' },
-      // successFn: this.handleGetPriceSuccess,
-      // errorFn: this.handleGetPriceFailed,
-    });
-  }
-
-  // TODO: search feed
   searchChange(query) {
     clearTimeout(this.searchTimeOut);
     this.searchTimeOut = setTimeout(() => {
@@ -99,6 +106,11 @@ class DiscoverPage extends React.Component {
   }
 
   clickCategoryItem(category) {
+    // this.props.showAlert({
+    //   message: <p className="text-center">aaaaaaaa</p>,
+    //   timeOut: 10000000,
+    //   type: 'danger',
+    // });
     const { id } = category;
     switch (id) {
       case HANDSHAKE_ID.BETTING:
@@ -154,7 +166,7 @@ class DiscoverPage extends React.Component {
               />
               { tabIndexActive === 1 && (
                 <div className="feed-wrapper">
-                  <FeedCreditCard {...this.props} ipInfo={this.state.ipInfo} />
+                  <FeedCreditCard {...this.props} ipInfo={this.state.ipInfo}/>
                 </div>)
               }
             </div>
@@ -181,7 +193,7 @@ const mapState = state => ({
 
 const mapDispatch = ({
   loadDiscoverList,
-  getListOfferPrice,
+  getListOfferPrice
 });
 
 export default connect(mapState, mapDispatch)(DiscoverPage);

@@ -1,14 +1,20 @@
 import React from 'react';
-import { injectIntl } from 'react-intl';
+import {FormattedMessage, injectIntl} from 'react-intl';
 import Feed from '@/components/core/presentation/Feed';
 import Button from '@/components/core/controls/Button';
 
 import createForm from '@/components/core/form/createForm';
-import { fieldCleave, fieldDropdown, fieldInput, fieldRadioButton } from '@/components/core/form/customField';
-import { required, minValue, maxValue } from '@/components/core/form/validation';
-import { Field, formValueSelector } from 'redux-form';
-import { connect } from 'react-redux';
-import { createOffer } from '@/reducers/exchange/action';
+import {
+  fieldCleave,
+  fieldDropdown,
+  fieldInput,
+  fieldNumericInput,
+  fieldRadioButton
+} from '@/components/core/form/customField';
+import {maxValue, minValue, required} from '@/components/core/form/validation';
+import {Field, formValueSelector} from 'redux-form';
+import {connect} from 'react-redux';
+import {createOffer, getOfferPrice} from '@/reducers/exchange/action';
 import {
   API_URL,
   CRYPTO_CURRENCY,
@@ -17,31 +23,31 @@ import {
   EXCHANGE_ACTION_DEFAULT,
   FIAT_CURRENCY,
   FIAT_CURRENCY_SYMBOL,
+  PRICE_DECIMAL,
   SELL_PRICE_TYPE,
   SELL_PRICE_TYPE_DEFAULT
 } from '@/constants';
 import '../styles.scss';
 import ModalDialog from '@/components/core/controls/ModalDialog/ModalDialog';
-import { BigNumber } from 'bignumber.js';
-import { getOfferPrice } from '@/reducers/exchange/action';
-import { MasterWallet } from '@/models/MasterWallet';
-import axios from 'axios';
+import {BigNumber} from 'bignumber.js';
+import {MasterWallet} from '@/models/MasterWallet';
 import getSymbolFromCurrency from 'currency-symbol-map';
 import {URL} from '@/config';
+import {showAlert} from '@/reducers/app/action';
 
 const nameFormExchangeCreate = 'exchangeCreate';
 const FormExchangeCreate = createForm({
   propsReduxForm: {
     form: nameFormExchangeCreate,
-    initialValues: { type: EXCHANGE_ACTION_DEFAULT, currency: CRYPTO_CURRENCY_DEFAULT, sellPriceType: SELL_PRICE_TYPE_DEFAULT },
+    initialValues: { type: EXCHANGE_ACTION_DEFAULT, currency: CRYPTO_CURRENCY_DEFAULT, sellPriceType: SELL_PRICE_TYPE_DEFAULT, customizePrice: 0 },
   },
 });
 const selectorFormExchangeCreate = formValueSelector(nameFormExchangeCreate);
 
 const mainColor = '#007AFF'
 const validateFee = [
-  minValue(0),
-  maxValue(15),
+  minValue(-50),
+  maxValue(50),
 ]
 const minValue01 = minValue(0.1)
 const minValue001 = minValue(0.01)
@@ -56,6 +62,7 @@ class Component extends React.Component {
 
       listMainWalletBalance: [],
       listTestWalletBalance: [],
+      listRewardWalletBalance: [],
       ipInfo: {},
     };
   }
@@ -67,13 +74,13 @@ class Component extends React.Component {
       this.getCryptoPriceByAmount(amount);
     }, 30000);
 
-    const ipInfo = await axios.get(`https://ipfind.co/me`, {
-      params: {
-        auth: 'a59f33e5-0879-411a-908b-792359a0d6cc',
-      },
-    });
+    // const ipInfo = await axios.get(`https://ipfind.co/me`, {
+    //   params: {
+    //     auth: 'a59f33e5-0879-411a-908b-792359a0d6cc',
+    //   },
+    // });
 
-    this.setState({ ipInfo: ipInfo.data });
+    // this.setState({ ipInfo: ipInfo.data });
 
     // Get wallet
     let listWallet = await MasterWallet.getMasterWallet();
@@ -87,46 +94,67 @@ class Component extends React.Component {
     await this.getListBalance();
   }
 
-  splitWalletData(listWallet) {
-    const listMainWallet = [];
-    const listTestWallet = [];
+  splitWalletData(listWallet){
 
-    listWallet.forEach((wallet) => {
+    let listMainWallet = [];
+    let listTestWallet = [];
+    let listRewardWallet = [];
+
+    listWallet.forEach(wallet => {
+      // is reward wallet:
+      if (wallet.isReward){
+        listRewardWallet.push(wallet);
+      }
       // is Mainnet
-      if (wallet.network == MasterWallet.ListCoin[wallet.className].Network.Mainnet) {
+      else if (wallet.network === MasterWallet.ListCoin[wallet.className].Network.Mainnet){
         listMainWallet.push(wallet);
-      } else {
+      }
+      else{
         // is Testnet
         listTestWallet.push(wallet);
       }
     });
 
-    this.setState({ listMainWalletBalance: listMainWallet, listTestWalletBalance: listTestWallet });
+    this.setState({listMainWalletBalance: listMainWallet, listTestWalletBalance: listTestWallet, listRewardWalletBalance: listRewardWallet});
+  }
+
+  getAllWallet(){
+    return this.state.listMainWalletBalance.concat(this.state.listTestWalletBalance).concat(this.state.listRewardWalletBalance);
   }
 
   async getListBalance() {
-    const listWallet = this.state.listMainWalletBalance.concat(this.state.listTestWalletBalance);
 
-    const pros = [];
+    let listWallet = this.getAllWallet();
 
-    listWallet.forEach((wallet) => {
+    const pros = []
+
+    listWallet.forEach(wallet => {
       pros.push(new Promise((resolve, reject) => {
-        wallet.getBalance().then((balance) => {
+        wallet.getBalance().then(balance => {
           wallet.balance = balance;
           resolve(wallet);
-        });
+        })
       }));
     });
 
     await Promise.all(pros);
 
     await this.splitWalletData(listWallet);
+
+
+    // var btcTestnet = new Bitcoin(Bitcoin.Network.Testnet);
+    // var balance = await btcTestnet.getBalance("n1MZwXhWs1unyuG6qNbEZRZV4qjzd3ZMyz");
+    // console.log("btcTestnet", balance);
+
+    // var ethRinkeby = new Ethereum (Ethereum.Network.Rinkeby);
+    // balance = await ethRinkeby.getBalance("0xe70adf9aE4d5F68E80A8E2C5EA3B916Dd49C6D87");
+    // console.log("ethRinkeby", balance);
   }
 
   getCryptoPriceByAmount = (amount) => {
     const cryptoCurrency = this.state.currency;
     const { type } = this.props;
-    const fiat_currency = this.state.ipInfo.currency;
+    const fiat_currency = 'VND';
 
     let data = {
       amount,
@@ -174,7 +202,8 @@ class Component extends React.Component {
 
   handleSubmit = (values) => {
     const { intl, totalAmount } = this.props;
-    const fiat_currency = this.state.ipInfo.currency;
+    // const fiat_currency = this.state.ipInfo.currency;
+    const fiat_currency = 'VND';
     // console.log('valuessss', values);
 
     let listWallet = [];
@@ -196,15 +225,27 @@ class Component extends React.Component {
       }
     }
 
+    let reward_address = '';
+    for (let i = 0; i < this.state.listRewardWalletBalance.length; i++) {
+      const wallet = this.state.listRewardWalletBalance[i];
+
+      if (wallet.name === values.currency) {
+        reward_address = wallet.address;
+        break;
+      }
+    }
+
     const offer = {
       amount: values.amount,
       price: values.type === 'sell' && values.sellPriceType === 'flexible' ? '0' : values.price,
-      percentage: values.type === 'sell' && values.sellPriceType === 'flexible' ? values.fee : '0',
+      percentage: values.type === 'sell' && values.sellPriceType === 'flexible' ? values.customizePrice.toString() : '0',
       currency: values.currency,
       type: values.type,
       contact_info: values.address,
-      contact_phone: '1234567890',
-      fiat_currency,
+      contact_phone: values.phone,
+      fiat_currency: fiat_currency,
+      latitude: 10.786391,
+      longitude: 106.700074
     };
 
     if (values.type === 'buy') {
@@ -212,6 +253,8 @@ class Component extends React.Component {
     } else {
       offer.refund_address = address;
     }
+
+    offer.reward_address = reward_address;
 
     console.log('handleSubmit', offer);
     const message = intl.formatMessage({ id: 'createOfferConfirm' }, {
@@ -249,73 +292,89 @@ class Component extends React.Component {
     console.log('createOffer', offer);
     const { currency } = this.props;
 
-    if (currency === 'BTC') {
-      this.props.shakeOffer({
+    // if (currency === 'BTC') {
+      this.props.createOffer({
         BASE_URL: API_URL.EXCHANGE.BASE,
-        PATH_URL: API_URL.EXCHANGE.OFFER,
+        PATH_URL: API_URL.EXCHANGE.OFFERS,
         data: offer,
         METHOD: 'POST',
         successFn: this.handleCreateOfferSuccess,
         errorFn: this.handleCreateOfferFailed,
       });
-    } else {
-
-    }
+    // } else {
+    //
+    // }
   }
 
   handleCreateOfferSuccess = (data) => {
-    this.timeoutClosePopup = setTimeout(() => {
-      this.handleBuySuccess();
-    }, 3000);
+    // this.props.history.push(URL.HANDSHAKE_ME);
 
-    console.log('handleCreateCCOrderSuccess', data);
-    this.setState({
-      modalContent:
-      (
-        <div className="py-2">
-          <Feed className="feed p-2" background="#259B24">
-            <div className="text-white d-flex align-items-center" style={{ minHeight: '75px' }}>
-              <div>Create offer success</div>
-            </div>
-          </Feed>
-          <Button block className="btn btn-secondary mt-2" onClick={this.handleBuySuccess}>Dismiss</Button>
-        </div>
-      ),
-    }, () => {
-      this.modalRef.open();
+    this.props.showAlert({
+      message: <div className="text-center"><FormattedMessage id="createOfferSuccessMassage"/></div>,
+      timeOut: 3000,
+      type: 'danger',
+      callBack: () => {
+        this.props.history.push(URL.HANDSHAKE_ME);
+      }
     });
+
+    // this.timeoutClosePopup = setTimeout(() => {
+    //   this.handleBuySuccess();
+    // }, 3000);
+    //
+    // console.log('handleCreateCCOrderSuccess', data);
+    // this.setState({
+    //   modalContent:
+    //   (
+    //     <div className="py-2">
+    //       <Feed className="feed p-2" background="#259B24">
+    //         <div className="text-white d-flex align-items-center" style={{ minHeight: '75px' }}>
+    //           <div>Create offer success</div>
+    //         </div>
+    //       </Feed>
+    //       <Button block className="btn btn-secondary mt-2" onClick={this.handleBuySuccess}>Dismiss</Button>
+    //     </div>
+    //   ),
+    // }, () => {
+    //   this.modalRef.open();
+    // });
   }
 
-  handleBuySuccess = () => {
-    if (this.timeoutClosePopup) {
-      clearTimeout(this.timeoutClosePopup);
-    }
-    this.modalRef.close();
-    this.props.history.push(URL.HANDSHAKE_ME);
-  }
+  // handleBuySuccess = () => {
+  //   if (this.timeoutClosePopup) {
+  //     clearTimeout(this.timeoutClosePopup);
+  //   }
+  //   this.modalRef.close();
+  //   this.props.history.push(URL.HANDSHAKE_ME);
+  // }
 
   handleCreateOfferFailed = (e) => {
-    // console.log('handleCreateCCOrderFailed', JSON.stringify(e.response));
-    this.setState({
-      modalContent:
-        (
-          <div className="py-2">
-            <Feed className="feed p-2" background="#259B24">
-              <div className="text-white d-flex align-items-center" style={{ minHeight: '75px' }}>
-                <div>Create offer failed</div>
-              </div>
-            </Feed>
-            <Button block className="btn btn-secondary mt-2" onClick={this.handleBuyFailed}>Dismiss</Button>
-          </div>
-        ),
-    }, () => {
-      this.modalRef.open();
+    this.props.showAlert({
+      message: <div className="text-center">{e.response?.data?.message}</div>,
+      timeOut: 3000,
+      type: 'danger',
     });
+    // console.log('handleCreateCCOrderFailed', JSON.stringify(e.response));
+    // this.setState({
+    //   modalContent:
+    //     (
+    //       <div className="py-2">
+    //         <Feed className="feed p-2" background="#259B24">
+    //           <div className="text-white d-flex align-items-center" style={{ minHeight: '75px' }}>
+    //             <div>Create offer failed</div>
+    //           </div>
+    //         </Feed>
+    //         <Button block className="btn btn-secondary mt-2" onClick={this.handleBuyFailed}>Dismiss</Button>
+    //       </div>
+    //     ),
+    // }, () => {
+    //   this.modalRef.open();
+    // });
   }
 
-  handleBuyFailed = () => {
-    this.modalRef.close();
-  }
+  // handleBuyFailed = () => {
+  //   this.modalRef.close();
+  // }
 
   render() {
     const { totalAmount, type, sellPriceType, offerPrice, currency } = this.props;
@@ -328,7 +387,7 @@ class Component extends React.Component {
           <Feed className="feed p-2 my-2" background={mainColor}>
             <div style={{ color: 'white' }}>
               <div className="d-flex mb-2">
-                <label className="col-form-label mr-auto" style={{ width: '100px' }}>I want to</label>
+                <label className="col-form-label mr-auto" style={{ width: '120px' }}>I want to</label>
                 <div className='input-group'>
                   <Field
                     name="type"
@@ -340,7 +399,7 @@ class Component extends React.Component {
                 </div>
               </div>
               <div className="d-flex">
-                <label className="col-form-label mr-auto" style={{ width: '100px' }}>Coin</label>
+                <label className="col-form-label mr-auto" style={{ width: '120px' }}>Coin</label>
                 <div className='input-group'>
                   <Field
                     name="currency"
@@ -352,8 +411,8 @@ class Component extends React.Component {
                   />
                 </div>
               </div>
-              <div className="d-flex">
-                <label className="col-form-label mr-auto" style={{ width: '100px' }}>Amount</label>
+              <div className="d-flex mt-2">
+                <label className="col-form-label mr-auto" style={{ width: '120px' }}>Amount*</label>
                 <div className="w-100">
                   <Field
                     name="amount"
@@ -364,54 +423,10 @@ class Component extends React.Component {
                   />
                 </div>
               </div>
-              {
-                type === 'sell' && (
-                  <div>
-                    <div className="d-flex mt-2">
-                      <label className="col-form-label mr-auto" style={{ width: '100px' }}>Price type</label>
-                      <div className='input-group'>
-                        <Field
-                          name="sellPriceType"
-                          component={fieldRadioButton}
-                          list={SELL_PRICE_TYPE}
-                          color={mainColor}
-                          validate={[required]}
-                          onChange={this.onSellPriceTypeChange}
-                        />
-                      </div>
-                    </div>
-                    {
-                      sellPriceType === 'flexible' && (
-                        <div className="d-flex mt-2">
-                          <label className="col-form-label mr-auto" style={{ width: '100px' }}>Fee (%)</label>
-                          <div className='input-group'>
-                            <Field
-                              name="fee"
-                              className='form-control-custom form-control-custom-ex w-100'
-                              component={fieldCleave}
-                              validate={validateFee}
-                              propsCleave={{
-                                placeholder: 'percent',
-                                options: { numeral: true, numeralDecimalScale: 1, delimiter: '' },
-                                // type: "password",
-                                // maxLength: "4",
-                                // minLength: "3",
-                                // id: `cart-cvc-${this.lastUniqueId()}`,
-                                // htmlRef: input => this.ccCvcRef = input,
-                              }}
-                              // validate={(!isCCExisting || isNewCCOpen) ? [required] : []}
-                            />
-                          </div>
-                        </div>
-                      )
-                    }
-                  </div>
-                )
-              }
               <div className="d-flex">
-                <label className="col-form-label mr-auto" style={{ width: '100px' }}>Price({FIAT_CURRENCY_SYMBOL})</label>
+                <label className="col-form-label mr-auto" style={{ width: '120px' }}>Price ({FIAT_CURRENCY_SYMBOL})*</label>
                 {
-                  type === 'buy' || sellPriceType === 'fix' ? (
+                  sellPriceType === 'fix' ? (
                     <div className="w-100">
                       <Field
                         name="price"
@@ -426,12 +441,56 @@ class Component extends React.Component {
                   )
                 }
               </div>
-              <div className="d-flex">
-                <label className="col-form-label mr-auto" style={{ width: '100px' }}>Total({FIAT_CURRENCY_SYMBOL})</label>
-                <span className="w-100 col-form-label">{totalAmount}</span>
+              <div>
+                <div className="d-flex mt-2">
+                  {/*<label className="col-form-label mr-auto" style={{ width: '120px' }} />*/}
+                  <div className='input-group justify-content-end'>
+                    <Field
+                      name="sellPriceType"
+                      component={fieldRadioButton}
+                      list={SELL_PRICE_TYPE}
+                      color={mainColor}
+                      validate={[required]}
+                      onChange={this.onSellPriceTypeChange}
+                    />
+                  </div>
+                </div>
+                {
+                  sellPriceType === 'flexible' && (
+                    <div className="d-flex mt-2">
+                      <label className="col-form-label mr-auto" style={{ width: '120px' }}>Customize price (%)</label>
+                      <div className='input-group align-items-center'>
+                        <Field
+                          name="customizePrice"
+                          // className='form-control-custom form-control-custom-ex w-100'
+                          component={fieldNumericInput}
+                          color={mainColor}
+                          validate={validateFee}
+                        />
+                      </div>
+                    </div>
+                  )
+                }
+                <div className="d-flex mt-2">
+                  <label className="col-form-label mr-auto" style={{ width: '120px' }}>Phone</label>
+                  <div className="w-100">
+                    <Field
+                      name="phone"
+                      className="form-control-custom form-control-custom-ex w-100"
+                      component={fieldInput}
+                      type="tel"
+                      placeholder="+74995926433"
+                      // validate={[required, currency === 'BTC' ? minValue001 : minValue01]}
+                    />
+                  </div>
+                </div>
               </div>
               <div className="d-flex">
-                <label className="col-form-label mr-auto" style={{ width: '100px' }}>Address</label>
+                <label className="col-form-label mr-auto" style={{ width: '120px' }}>Total ({FIAT_CURRENCY_SYMBOL})</label>
+                <span className="w-100 col-form-label">{new BigNumber(totalAmount).toFormat(PRICE_DECIMAL)}</span>
+              </div>
+              <div className="d-flex">
+                <label className="col-form-label mr-auto" style={{ width: '120px' }}>Address*</label>
                 <div className="w-100">
                   <Field
                     name="address"
@@ -459,16 +518,23 @@ const mapStateToProps = (state) => {
   const sellPriceType = selectorFormExchangeCreate(state, 'sellPriceType');
   const amount = selectorFormExchangeCreate(state, 'amount') || 0;
   const price = selectorFormExchangeCreate(state, 'price') || 0;
-  const totalAmount = amount * price || 0;
+  const totalAmount =  amount * price || 0;
 
   return { amount, currency, totalAmount, type, sellPriceType,
     offerPrice: state.exchange.offerPrice,
   };
 };
 
+// this.props.showAlert({
+//   message: <p className="text-center">aaaaaaaa</p>,
+//   timeOut: 10000000,
+//   type: 'danger',
+// });
+
 const mapDispatchToProps = {
   createOffer,
   getOfferPrice,
+  showAlert
 };
 
 export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(Component));
