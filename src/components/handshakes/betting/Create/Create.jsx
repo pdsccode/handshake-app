@@ -19,7 +19,7 @@ import Input from '@/components/core/forms/Input/Input';
 import DatePicker from '@/components/handshakes/betting/Create/DatePicker';
 import { InputField } from '../form/customField';
 import {MasterWallet} from '@/models/MasterWallet';
-
+import { BettingHandshake } from '@/services/neuron';
 // self
 import './Create.scss';
 
@@ -30,6 +30,7 @@ console.log('Chain Id:', chainId);
 
 const neuron = new Neuron(chainId);
 
+const bettinghandshake = new BettingHandshake(MasterWallet.getWalletDefault('ETH')?.chainId);
 const nameFormBettingCreate = 'bettingCreate';
 const BettingCreateForm = createForm({
   propsReduxForm: {
