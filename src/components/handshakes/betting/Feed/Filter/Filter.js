@@ -12,7 +12,7 @@ import GroupBook from './../GroupBook';
 
 import './Filter.scss';
 import { loadMatches } from '@/reducers/betting/action';
-
+import {BetHandshakeHandler, SIDE} from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
 
 const TAG = "BETTING_FILTER";
 class BettingFilter extends React.Component {
@@ -39,7 +39,66 @@ class BettingFilter extends React.Component {
                 "id": 1,
                 "outcomes": [
                     {
-                        "handshakes": [],
+                        "handshakes": [{
+                            id: 1,
+                            support: 1,
+                            odd: 2.3,
+                            amount: 0.1528
+                        },
+                        {
+                            id: 2,
+                            support: 1,
+                            odd: 2.3,
+                            amount: 0.1528
+                        },
+                        {
+                            id: 3,
+                            support: 1,
+                            odd: 2.3,
+                            amount: 0.1528
+                        },
+                        {
+                            id: 4,
+                            support: 1,
+                            odd: 2.3,
+                            amount: 0.1528
+                        },
+                        {
+                            id: 5,
+                            support: 1,
+                            odd: 2.3,
+                            amount: 0.1528
+                        },
+                        {
+                            id: 6,
+                            support: 2,
+                            odd: 2.3,
+                            amount: 0.1528
+                        },
+                        {
+                            id: 7,
+                            support: 2,
+                            odd: 2.3,
+                            amount: 0.1528
+                        },
+                        {
+                            id: 8,
+                            support: 2,
+                            odd: 2.3,
+                            amount: 0.1528
+                        },
+                        {
+                            id: 9,
+                            support: 2,
+                            odd: 2.3,
+                            amount: 0.1528
+                        },
+                        {
+                            id: 10,
+                            support: 2,
+                            odd: 2.3,
+                            amount: 0.1528
+                        }],
                         "id": 1,
                         "name": "Russia wins"
                     },
@@ -99,7 +158,30 @@ class BettingFilter extends React.Component {
         })
     }
     componentDidMount(){
-        this.props.loadMatches({PATH_URL: API_URL.CRYPTOSIGN.LOAD_MATCHES});
+        //this.props.loadMatches({PATH_URL: API_URL.CRYPTOSIGN.LOAD_MATCHES});
+    }
+
+    get foundMatch(){
+        const {selectedMatch, matches} = this.state;
+        if(selectedMatch){
+            return matches.find(function(element) {
+                return element.id  === selectedMatch.id;
+              });
+        }
+        return null;
+        
+    }
+
+    get foundOutcome(){
+        const {selectedOutcome} = this.state;
+        const foundMatch = this.foundMatch;
+        if(foundMatch && selectedOutcome){
+            const {outcomes} = foundMatch;
+            return outcomes.find(function(element) {
+                return element.id  === selectedOutcome.id;
+              });
+        }
+        return null;
     }
 
     get matchNames() {
@@ -109,9 +191,7 @@ class BettingFilter extends React.Component {
     get matchResults(){
         const {selectedMatch, matches} = this.state;
         if(selectedMatch){
-            const foundMatch = matches.find(function(element) {
-                return element.id  === selectedMatch.id;
-              });
+            const foundMatch = this.foundMatch;
             if (foundMatch){
                 const {outcomes} = foundMatch;
                 if(outcomes){
@@ -123,9 +203,26 @@ class BettingFilter extends React.Component {
         
         return [];
     }
-    get bookList(){
-        const {selectedMatch, matches} = this.state;
-
+    get bookListSupport(){
+        const {selectedMatch, matches, selectedOutcome} = this.state;
+        const foundOutcome = this.foundOutcome;
+        if(foundOutcome){
+            const {handshakes} = this.foundOutcome;
+            if(handshakes){
+                return handshakes.filter(item=>(item.support === SIDE.SUPPORT));
+            }
+        }
+        return [];
+    }
+    get bookListAgainst(){
+        const {selectedMatch, matches, selectedOutcome} = this.state;
+        const foundOutcome = this.foundOutcome;
+        if(foundOutcome){
+            const {handshakes} = this.foundOutcome;
+            if(handshakes){
+                return handshakes.filter(item=>(item.support === SIDE.AGAINST));
+            }
+        }
         return [];
     }
     render(){
@@ -145,8 +242,8 @@ class BettingFilter extends React.Component {
             
                 <div className="wrapperContainer">
                     <div className="item">
-                    <GroupBook amountColor="#FA6B49"/>
-                    <GroupBook amountColor="#8BF275"/>
+                    <GroupBook amountColor="#FA6B49" bookList={this.bookListSupport}/>
+                    <GroupBook amountColor="#8BF275" bookList={this.bookListAgainst}/>
                     </div>
                     <div className="item">
                     <BettingShake/>
