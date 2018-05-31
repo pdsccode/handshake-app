@@ -310,15 +310,13 @@ class Component extends React.Component {
     // this.props.history.push(URL.HANDSHAKE_ME);
 
     this.props.showAlert({
-      message: <div className="text-center">Create Offer success</div>,
+      message: <div className="text-center"><FormattedMessage id="createOfferSuccessMassage"/></div>,
       timeOut: 3000,
       type: 'danger',
+      callBack: () => {
+        this.props.history.push(URL.HANDSHAKE_ME);
+      }
     });
-
-    setTimeout(() => {
-      console.log('this.props', this.props);
-      this.props.history.push(URL.HANDSHAKE_ME);
-    }, 5000)
 
     // this.timeoutClosePopup = setTimeout(() => {
     //   this.handleBuySuccess();
