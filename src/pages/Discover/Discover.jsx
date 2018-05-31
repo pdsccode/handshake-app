@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 // service, constant
 import { loadDiscoverList } from '@/reducers/discover/action';
-import { showAlert } from '@/reducers/app/action';
 import { HANDSHAKE_ID, API_URL } from '@/constants';
 import { URL } from '@/config';
 // components
@@ -35,7 +34,7 @@ class DiscoverPage extends React.Component {
       handshakeIdActive: '',
       tabIndexActive: 1,
     };
-    // this.props.loadDiscoverList({ PATH_URL: API_URL.DISCOVER.BASE });
+    this.props.loadDiscoverList({ PATH_URL: API_URL.DISCOVER.BASE });
     // bind
     this.clickCategoryItem = this.clickCategoryItem.bind(this);
     this.clickTabItem = this.clickTabItem.bind(this);
@@ -95,7 +94,6 @@ class DiscoverPage extends React.Component {
     }
   }
 
-  // TODO: search feed
   searchChange(query) {
     clearTimeout(this.searchTimeOut);
     this.searchTimeOut = setTimeout(() => {
@@ -168,7 +166,7 @@ class DiscoverPage extends React.Component {
               />
               { tabIndexActive === 1 && (
                 <div className="feed-wrapper">
-                  <FeedCreditCard {...this.props} ipInfo={this.state.ipInfo} />
+                  <FeedCreditCard {...this.props} ipInfo={this.state.ipInfo}/>
                 </div>)
               }
             </div>
@@ -195,8 +193,7 @@ const mapState = state => ({
 
 const mapDispatch = ({
   loadDiscoverList,
-  getListOfferPrice,
-  showAlert
+  getListOfferPrice
 });
 
 export default connect(mapState, mapDispatch)(DiscoverPage);
