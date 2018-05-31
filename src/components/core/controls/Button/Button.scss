@@ -15,4 +15,12 @@ $secondary : #b7b7b7;
   .btn-secondary {
     color: $secondary;
   }
+  span {
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 10px;
+    svg {
+      display: block;
+    }
+  }
 }
