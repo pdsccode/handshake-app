@@ -14,19 +14,8 @@ export const REJECT_WINDOWN_DAYS = 1;
 export const CANCEL_WINDOWN_DAYS = 3;
 
 export const BETTING_STATUS = {
-  NOT_CREATE: -4,
-  INITING: -1,
-  INITED: 0,
-  SHAKED: 1,
-  CLOSED: 2,
-  CANCELLED: 3,
-  INITIATOR_WON: 4,
-  BETOR_WON: 5,
-  DRAW: 6,
-  ACCEPTED: 7,
-  REJECTED: 8,
-  DONE: 9,
-};
+    NOT_CREATE: -4, INITING: -1, INITED: 0, SHAKED: 1, CLOSED: 2, CANCELLED: 3,
+    INITIATOR_WON: 4, BETOR_WON: 5, DRAW: 6, ACCEPTED: 7, REJECTED: 8, DONE: 9};
 
 
 export const BETTING_STATUS_LABEL =
@@ -36,17 +25,17 @@ export const BETTING_STATUS_LABEL =
     RESOLVING: 'Resolving', PENDING: 'Pending', IN_PROGRESS:'Progressing', EXPIRED: 'Expired', DONE: 'Done'}
 
 export const BETTING_OPTIONS = {
-  INITIATOR_WON: 0, BETOR_WON: 1, DRAW: 2,
-};
+    INITIATOR_WON: 0, BETOR_WON: 1, DRAW: 2
+}
 
 export const BETTING_OPTIONS_NAME = {
-  [BETTING_OPTIONS.INITIATOR_WON]: 'Iniator Won', [BETTING_OPTIONS.BETOR_WON]: 'Betor Won', [BETTING_OPTIONS.DRAW]: 'Draw',
-};
+    [BETTING_OPTIONS.INITIATOR_WON]: "Iniator Won", [BETTING_OPTIONS.BETOR_WON]: "Betor Won", [BETTING_OPTIONS.DRAW]: "Draw"
+}
 export const ROLE = {
-  PAYEE: 0,
-  PAYER: 1,
-  GUEST: 2,
-};
+    PAYEE: 0,
+    PAYER: 1,
+    GUEST: 2
+  }
 
 export class BetHandshakeHandler {
 
@@ -56,14 +45,6 @@ export class BetHandshakeHandler {
         return result;
       }
     static getStatusLabel(status, role, eventDate, shakeCount){
-        //TO DO: Show combobox for use choose an option if evendate < today
-        var strStatus = null;
-        var strAction = null;
-        var isShowOptions = false;
-        var today  = new Date();
-        console.log('Input Role:', role);
-        console.log('Status:', status);
-        var today = new Date();
 
         if(status >= BETTING_STATUS.INITIATOR_WON && status <= BETTING_STATUS.DRAW){
             const windowRejectDate = this.addDays(eventDate,REJECT_WINDOWN_DAYS);
@@ -76,13 +57,6 @@ export class BetHandshakeHandler {
                     strStatus = (role === ROLE.PAYEE)? null : (role === ROLE.PAYER) ? BETTING_STATUS_LABEL.LOSE : BETTING_STATUS_LABEL.IN_PROGRESS; //If payeee = Withdraw, else payer = "lose" show button "Withdraw"
                     strAction = (role === ROLE.PAYEE) ? BETTING_STATUS_LABEL.WITHDRAW : null;
                     break;
-                    case BETTING_STATUS.BETOR_WON: 
-                    strStatus = (role === ROLE.PAYEE) ? BETTING_STATUS_LABEL.LOSE : (role === ROLE.PAYER) ? null : BETTING_STATUS_LABEL.IN_PROGRESS; // If payee = "lose", else payer = "withdraw"
-                    strAction = (role === ROLE.PAYER) ? BETTING_STATUS_LABEL.WITHDRAW : null;
-                    break;
-                    case BETTING_STATUS.DRAW:
-                    strStatus = (role === ROLE.GUEST) ? BETTING_STATUS_LABEL.IN_PROGRESS : null; // Both payee/payer = "withdraw"
-                    strAction = (role !== ROLE.GUEST) ? BETTING_STATUS_LABEL.WITHDRAW : null; 
                     case BETTING_STATUS.BETOR_WON:
                     strStatus = (role === ROLE.PAYEE) ? BETTING_STATUS_LABEL.LOSE : (role === ROLE.PAYER) ? null : BETTING_STATUS_LABEL.DONE; // If payee = "lose", else payer = "withdraw"
                     strAction = (role === ROLE.PAYEE) ? BETTING_STATUS_LABEL.WITHDRAW : null;
@@ -140,13 +114,13 @@ export class BetHandshakeHandler {
                     if(role!== ROLE.GUEST){
                         isShowOptions = true;
                     }else{
-                        strStatus = BETTING_STATUS_LABEL.IN_PROGRESS; 
+                        strStatus = BETTING_STATUS_LABEL.IN_PROGRESS;
                     }
                 }
             }else { //INITED -> CLOSE // No one shake -> Payee can withdraw immediately. Not care eventDate
                 strStatus = (role !== ROLE.PAYEE) ? BETTING_STATUS_LABEL.IN_PROGRESS : null;
                 strAction = (role === ROLE.PAYEE) ? BETTING_STATUS_LABEL.WITHDRAW : null;
-            } 
+            }
             break;
             case BETTING_STATUS.CANCELLED:
             strStatus = (role === ROLE.GUEST) ? BETTING_STATUS_LABEL.IN_PROGRESS : null;
@@ -155,10 +129,10 @@ export class BetHandshakeHandler {
             case BETTING_STATUS.REJECTED: //There is a person click reject
             strStatus = (role !== ROLE.GUEST) ? BETTING_STATUS_LABEL.RESOLVING: BETTING_STATUS_LABEL.IN_PROGRESS;
             break;
-            case BETTING_STATUS.ACCEPTED: 
-            //TO DO: chua biet xu ly, biet ai da rut tien. 
+            case BETTING_STATUS.ACCEPTED:
+            //TO DO: chua biet xu ly, biet ai da rut tien.
             //Neu da rut tien: hien thi DONE, chua rut tien, hien thi WithDraw
-            
+
             break;
             case BETTING_STATUS.DONE:
             strStatus = BETTING_STATUS_LABEL.DONE;
@@ -168,6 +142,9 @@ export class BetHandshakeHandler {
 
         }
 
+
+        console.log('Output Status:', strStatus);
+        console.log('Output Action:', strAction);
 
         return {'status': strStatus, 'action': strAction, isShowOptions: isShowOptions};
 
@@ -200,8 +177,8 @@ export class BetHandshakeHandler {
             if date > event date, payee can't shake
             User shake, deposit money into escrow. Return result
             */
-      // Testing
-      /*
+           //Testing
+           /*
            var today = new Date()
            if (today <= eventDate){
                // Change item to status
@@ -217,75 +194,79 @@ export class BetHandshakeHandler {
                return newItem;
            }
            */
-      // const address = "0x54CD16578564b9952d645E92b9fa254f1feffee9";
-      // const privateKey = "9bf73320e0bcfd7cdb1c0e99f334d689ef2b6921794f23a5bffd2a6bb9c7a3d4";
-      // const address = wallet.address;
-      // const privateKey = wallet.privateKey;
-      neuron.bettingHandshake.shake(address, privateKey, hid, amount, offchain);
-    }
-    return null;
-  }
+            //const address = "0x54CD16578564b9952d645E92b9fa254f1feffee9";
+            //const privateKey = "9bf73320e0bcfd7cdb1c0e99f334d689ef2b6921794f23a5bffd2a6bb9c7a3d4";
+            // const address = wallet.address;
+            // const privateKey = wallet.privateKey;
+            neuron.bettingHandshake.shake(address, privateKey,hid,amount, offchain);
 
-  static closeItem(role, hid, offchain) {
-    /*
+
+
+        }
+        return null;
+    }
+
+    static closeItem(role, hid, offchain){
+        /*
         User tap Close Bet button or auto Close
         */
-    if (role === ROLE.PAYEE) {
-      // TO DO: Change item to Close. Update status
-      // Testing
-      /*
+       if (role === ROLE.PAYEE){
+            // TO DO: Change item to Close. Update status
+            //Testing
+            /*
             let newItem = item;
             newItem.status = BETTING_STATUS.CLOSED;
             return newItem;
             */
-      //    const address = "0x54CD16578564b9952d645E92b9fa254f1feffee9";
-      //    const privateKey = "9bf73320e0bcfd7cdb1c0e99f334d689ef2b6921794f23a5bffd2a6bb9c7a3d4";
+        //    const address = "0x54CD16578564b9952d645E92b9fa254f1feffee9";
+        //    const privateKey = "9bf73320e0bcfd7cdb1c0e99f334d689ef2b6921794f23a5bffd2a6bb9c7a3d4";
 
-      neuron.bettingHandshake.closeBet(address, privateKey, hid, offchain);
+           neuron.bettingHandshake.closeBet(address, privateKey,hid,offchain);
+       }
+       return null;
     }
-    return null;
-  }
-  static rejectItem(role, hid, offchain) {
-    // const address = "0x54CD16578564b9952d645E92b9fa254f1feffee9";
-    // const privateKey = "9bf73320e0bcfd7cdb1c0e99f334d689ef2b6921794f23a5bffd2a6bb9c7a3d4";
-    if (role !== ROLE.GUEST) {
-      neuron.bettingHandshake.reject(address, privateKey, hid, offchain);
-    }
-  }
-  static chooseWhoWin(option, role, hid, offchain) {
-    // const address = "0x54CD16578564b9952d645E92b9fa254f1feffee9";
-    // const privateKey = "9bf73320e0bcfd7cdb1c0e99f334d689ef2b6921794f23a5bffd2a6bb9c7a3d4";
-    switch (option) {
-      case BETTING_OPTIONS.BETOR_WON:
-        neuron.bettingHandshake.betorWon(address, privateKey, hid, offchain);
-        break;
-      case BETTING_OPTIONS.INITIATOR_WON:
-        neuron.bettingHandshake.iniatorWon(address, privateKey, hid, offchain);
-        break;
-      default:// Draw
-        neuron.bettingHandshake.draw(address, privateKey, hid, offchain);
-    }
-  }
-  static withdraw(role, hid, offchain) {
-    if (role !== ROLE.GUEST) {
-      // const address = "0x54CD16578564b9952d645E92b9fa254f1feffee9";
-      // const privateKey = "9bf73320e0bcfd7cdb1c0e99f334d689ef2b6921794f23a5bffd2a6bb9c7a3d4";
-      neuron.bettingHandshake.withdraw(address, privateKey, hid, offchain);
-    }
-  }
+    static rejectItem(role, hid, offchain){
+        // const address = "0x54CD16578564b9952d645E92b9fa254f1feffee9";
+        // const privateKey = "9bf73320e0bcfd7cdb1c0e99f334d689ef2b6921794f23a5bffd2a6bb9c7a3d4";
+        if (role !== ROLE.GUEST){
+            neuron.bettingHandshake.reject(address, privateKey,hid,offchain);
 
-  static autoCancel(role, evendate, state, hid, offchain) {
-    // const address = "0x54CD16578564b9952d645E92b9fa254f1feffee9";
-    // const privateKey = "9bf73320e0bcfd7cdb1c0e99f334d689ef2b6921794f23a5bffd2a6bb9c7a3d4";
-        if (role !== ROLE.GUEST) {
-        if (state === BETTING_STATUS.SHAKED || state === BETTING_STATUS.CLOSED) {
-            const today = new Date();
-            if (today > evendate + CANCEL_WINDOWN_DAYS) {
-            neuron.bettingHandshake.cancelBet(address, privateKey, hid, offchain);
-            }
-        }
         }
     }
 
+    static chooseWhoWin(option, role, hid, offchain){
+        // const address = "0x54CD16578564b9952d645E92b9fa254f1feffee9";
+        // const privateKey = "9bf73320e0bcfd7cdb1c0e99f334d689ef2b6921794f23a5bffd2a6bb9c7a3d4";
+        switch(option){
+            case BETTING_OPTIONS.BETOR_WON:
+            neuron.bettingHandshake.betorWon(address, privateKey,hid,offchain);
+            break;
+            case BETTING_OPTIONS.INITIATOR_WON:
+            neuron.bettingHandshake.iniatorWon(address, privateKey,hid,offchain);
+            break;
+            default://Draw
+            neuron.bettingHandshake.draw(address, privateKey,hid,offchain);
+
+        }
+    }
+    static withdraw(role, hid, offchain){
+        if (role !== ROLE.GUEST){
+            // const address = "0x54CD16578564b9952d645E92b9fa254f1feffee9";
+            // const privateKey = "9bf73320e0bcfd7cdb1c0e99f334d689ef2b6921794f23a5bffd2a6bb9c7a3d4";
+            neuron.bettingHandshake.withdraw(address, privateKey,hid,offchain);
+        }
+    }
+
+    static autoCancel(role,evendate, state, hid, offchain){
+        // const address = "0x54CD16578564b9952d645E92b9fa254f1feffee9";
+        // const privateKey = "9bf73320e0bcfd7cdb1c0e99f334d689ef2b6921794f23a5bffd2a6bb9c7a3d4";
+        if (role !== ROLE.GUEST){
+            if(state === BETTING_STATUS.SHAKED || state === BETTING_STATUS.CLOSED){
+                var today = new Date()
+                if (today > evendate + CANCEL_WINDOWN_DAYS){
+                    neuron.bettingHandshake.cancelBet(address, privateKey,hid,offchain);
+                  }
+                }
+              }
+      }
 }
-
