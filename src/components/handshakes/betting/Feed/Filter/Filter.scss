@@ -4,7 +4,10 @@
   align-items: center;
 
   .dropDown {
-    margin: rem-calc(20px);
+    margin: rem-calc(0 0 20px);
+    .dropdown-custom {
+      margin: rem-calc(0 20px 0 0);
+    }
   }
   .wrapperContainer {
     display: flex;
@@ -13,9 +16,9 @@
 
   .item {
     //flex-grow: 1; /* default 0 */
-    flex-basis: 49.7%;
+    flex-basis: 50%;
     border: none;
-    padding: 0;
+    padding: rem-calc(1px);
   }
 
 }

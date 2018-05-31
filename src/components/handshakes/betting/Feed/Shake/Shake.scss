@@ -38,7 +38,7 @@
   }
   .amount + .cryptoCurrency {
     font-size: rem-calc(12px);
-    font-weight: $semi-bold;
+    font-weight: $medium;
     color: #FFFFFF;
     letter-spacing: 0;
     position: relative;
@@ -54,11 +54,12 @@
   .label {
     flex-shrink: 0;
     flex-basis: 100%;
-    font-size: rem-calc(14px);
-    color: #666666;
+    font-size: rem-calc(12px);
+    color: #fff;
     letter-spacing: 0;
     line-height: rem-calc(22px);
     margin: 0;
+    opacity: 0.66;
   }
   .value {
     //flex-basis: 20%;
