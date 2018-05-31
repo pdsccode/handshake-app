@@ -26,7 +26,16 @@ class CreateComment extends React.PureComponent {
   }
 
   createComment() {
-    const data = { comment: this.inputRef.value, object_type: 'test', object_id: 1 };
+    const { file } = this.state;
+    let data = {};
+    const rawData = { comment: this.inputRef.value, object_type: 'test', object_id: 1 };
+    if(!!file) {
+      data = new FormData();
+      data.append('request', JSON.stringify(rawData));
+      data.append('image', this.uploadImageRef.files[0]);
+    } else {
+      data = rawData;
+    }
     this.props.createComment({
       PATH_URL: API_URL.COMMENT.CREATE,
       METHOD: 'post',
@@ -65,7 +74,7 @@ class CreateComment extends React.PureComponent {
         }
         <div className="imageUpload">
           <label className="sr-only" htmlFor="image-upload">Image Upload</label>
-          <input onChange={this.handleImageChange} type="file" accept="image/*" id="image-upload" />
+          <input onChange={this.handleImageChange} type="file" accept="image/*" id="image-upload" ref={element => {this.uploadImageRef = element;}} />
           <Image src={createImageIcon} alt="create image icon" />
         </div>
         <textarea type="text" placeholder="Aa" ref={(component) => { this.inputRef = component; }} />

@@ -14,7 +14,7 @@ import CommentItem from '@/components/Comment/CommentItem';
 class Comment extends React.PureComponent {
   constructor(props) {
     super(props);
-    props.loadCommentList({ PATH_URL: API_URL.COMMENT.LIST, qs: { object_type: 'test', object_id: 1 } });
+    props.loadCommentList({ PATH_URL: API_URL.COMMENT.LIST, qs: { object_type: 'test', object_id: 1, page_size: 5 } });
   }
 
   render() {

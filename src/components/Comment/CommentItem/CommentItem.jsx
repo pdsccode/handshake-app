@@ -12,6 +12,7 @@ class CommentItem extends React.PureComponent {
     const {
       comment,
       userName = 'Peter Parker',
+      image,
     } = this.props;
     return (
       <div className="commentItem">
@@ -20,6 +21,9 @@ class CommentItem extends React.PureComponent {
           <span className="userName">{userName}</span>
         </div>
         <p className="comment">{comment}</p>
+        {
+          image && <img src={image} alt={comment} className="imageComment" />
+        }
       </div>
     );
   }

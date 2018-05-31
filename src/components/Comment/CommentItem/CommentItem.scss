@@ -18,6 +18,12 @@
     letter-spacing: 0;
     line-height: rem-calc(25px);
   }
+  .imageComment {
+    margin-top: rem-calc(16px);
+    max-width: 100%;
+    display: block;
+    height: auto;
+  }
 }
 
 .commentItem + .commentItem {
