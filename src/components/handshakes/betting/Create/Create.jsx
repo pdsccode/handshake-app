@@ -55,6 +55,7 @@ class ErrorBox extends React.PureComponent {
   }
 }
 
+const TAG = 'BETTING_CREATE';
 class BettingCreate extends React.PureComponent {
   static propTypes = {
     item: PropTypes.object.isRequired,
@@ -285,7 +286,7 @@ get matchResults(){
 
     //const fromAddress = "0x54CD16578564b9952d645E92b9fa254f1feffee9";
     const fromAddress = address;
-    //this.initHandshake(extraParams, fromAddress);
+    this.initHandshake(extraParams, fromAddress);
   }
 
   get inputList() {
@@ -405,12 +406,24 @@ get matchResults(){
           <Dropdown
             placeholder="Select a match"
             source={this.matchNames}
-            onItemSelected={(item) => this.setState({selectedMatch: item})}
+            onItemSelected={(item) => 
+              {
+                const {values} = this.state;
+                values["event_name"] = item.value;
+                this.setState({selectedMatch: item, values});
+                
+              }
+              }
           />
           {selectedMatch && <Dropdown
             placeholder="Select a prediction"
             source={this.matchResults}
-            onItemSelected={(item) => this.setState({selectedOutcome: item})}
+            onItemSelected={(item) => {
+              const {values} = this.state;
+              values["event_predict"] = item.value;
+              this.setState({selectedOutcome: item, values})
+              }
+            }
           />}
         </div>
 
@@ -433,6 +446,7 @@ get matchResults(){
 
   //Service
   initHandshake(fields, fromAddress){
+    const {selectedOutcome} = this.state;
     const params = {
       //to_address: toAddress ? toAddress.trim() : '',
       //public: isPublic,
@@ -442,10 +456,17 @@ get matchResults(){
       type: HANDSHAKE_ID.BETTING,
       //type: 3,
       //extra_data: JSON.stringify(fields),
+      is_private: 0,
+      outcome_id: selectedOutcome.id,
+      odds: fields['event_odds'],
+      amount: fields['event_bet'],
       extra_data: JSON.stringify(fields),
-      from_address: fromAddress,
-      chain_id: chainId,
+      currency: 'ETH',
+      side: SIDE.SUPPORT,
+      //from_address: fromAddress,
+      //chain_id: chainId,
     };
+    console.log(params);
 
     this.props.initHandshake({PATH_URL: API_URL.CRYPTOSIGN.INIT_HANDSHAKE, METHOD:'POST', data: params,
     successFn: this.initHandshakeSuccess,
@@ -455,24 +476,24 @@ get matchResults(){
   }
    initHandshakeSuccess = async (successData)=>{
     console.log('initHandshakeSuccess', successData);
+    
     const {status, data} = successData
-    const {values} = this.state;
-    const eventDate = this.datePickerRef.value;
-    const escrow = values['event_bet'];
+    const {values, selectedOutcome} = this.state;
+    const stake = values['event_bet'];
     const event_odds = 1/parseInt(values['event_odds']);
-    console.log("eventDate", eventDate.format(), eventDate.unix());
-    console.log('Event Date: ', eventDate);
-    console.log('Escrow:', escrow);
-    console.log('Event Odds:', event_odds);
+    const payout = stake * event_odds;
+    const hid = selectedOutcome.id;
+    const side = SIDE.SUPPORT;
 
     if(status){
       const {id} = data;
       const offchain = id;
-      const result = await BetHandshakeHandler.initItem(escrow, event_odds,eventDate, offchain);
+      const result = await bettinghandshake.initBet(hid, side,stake, payout, offchain);
       if(result){
           //history.go(URL.HANDSHAKE_DISCOVER);
       }
     }
+    
 
   }
   initHandshakeFailed = (error) => {
