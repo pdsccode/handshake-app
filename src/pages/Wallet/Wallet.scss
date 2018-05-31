@@ -303,5 +303,10 @@
   footer{
     margin:15px 30px;
   }
+
+  button:disabled{
+    background: Silver;
+    border-color:Silver;
+  }
 }
 

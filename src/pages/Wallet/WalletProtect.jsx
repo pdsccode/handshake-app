@@ -31,8 +31,6 @@ class WalletProtect extends React.Component {
 	}
   
   get showStep1() {
-    //console.log("Khoa");
-    //console.log(wallet);
     return this.state.step == 1 ?
     (
       <div class="protectwallet-wrapper" >
@@ -80,6 +78,15 @@ class WalletProtect extends React.Component {
     : "";
   }
 
+  finishProtectWallet= () => {
+    this.setState({step1_confirm: false, step: 1});
+    const { callbackSuccess } = this.props;
+
+    if (callbackSuccess) {
+      callbackSuccess();
+    }
+  }
+
   get showStep3() {
     return this.state.step == 3 ?
     (
@@ -97,7 +104,7 @@ class WalletProtect extends React.Component {
             <div class="btn btn-light">blouse</div>
           </div>
           <footer>
-            <Button block type="submit" >Verify your passsphrase</Button>
+            <Button block type="submit" onClick={this.finishProtectWallet} >Verify your passsphrase</Button>
           </footer>
         </div>
     )
