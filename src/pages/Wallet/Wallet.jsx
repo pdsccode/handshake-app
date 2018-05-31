@@ -13,7 +13,7 @@ import Input from '@/components/core/forms/Input/Input';
 import dontIcon from '@/assets/images/icon/3-dot-icon.svg';
 import iconSafe from '@/assets/images/icon/icon-safe.svg';
 import iconWarning from '@/assets/images/icon/icon-warning.svg';
-import iconChecked from '@/assets/images/icon/icon-check.png';
+//import iconChecked from '@/assets/images/icon/icon-check.png';
 import Header from './Header';
 import HeaderMore from './HeaderMore';
 import WalletItem from './WalletItem';
@@ -384,6 +384,10 @@ class Wallet extends React.Component {
     });
   }
 
+  afterWalletFill = () =>{
+    this.modalFillRef.close();
+  }
+
   render() {
     const {intl, userProfile, cryptoPrice, amount, userCcLimit, ccLimits} = this.props;    
     return (
@@ -420,7 +424,7 @@ class Wallet extends React.Component {
         </Modal>
 
         <Modal title="Fill up" onRef={modal => this.modalFillRef = modal}>
-          <FeedCreditCard buttonTitle="Send" />
+          <FeedCreditCard buttonTitle="Send" callbackSuccess={this.afterWalletFill} />
         </Modal>
 
         {/* Modal for Backup wallets : */}
