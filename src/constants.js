@@ -1,5 +1,5 @@
 export const APP = {
-  HEADER_DEFAULT: '',
+  HEADER_DEFAULT: 'Handshake',
   // store
   AUTH_TOKEN: 'auth_token',
   AUTH_PROFILE: 'auth_profile',
@@ -7,8 +7,6 @@ export const APP = {
   WALLET_CACHE: 'wallet_cache',
   WALLET_DEFAULT: 'wallet_default',
   WALLET_LIST: 'wallet_list',
-  SUBSCRIBE: 'app_subscribe',
-  SUBSCRIBE_ASK: 'app_subscribe_ask',
 };
 
 export const HANDSHAKE_ID = {
@@ -50,8 +48,8 @@ export const FIAT_CURRENCY = 'USD';
 export const FIAT_CURRENCY_SYMBOL = '$';
 
 export const SELL_PRICE_TYPE = [
-  { value: 'fix', text: 'Fix now' },
-  { value: 'flexible', text: 'Update on shake' },
+  { value: 'fix', text: 'Fix' },
+  { value: 'flexible', text: 'Flexible' },
 ];
 
 export const SELL_PRICE_TYPE_DEFAULT = 'fix';
@@ -77,7 +75,6 @@ export const API_URL = {
     GET_USER_TRANSACTION: 'user/transactions', // {path: '/user/transactions', method: 'get'},
     OFFERS: 'offers',
     SHAKE: 'shake',
-    WITHDRAW: 'withdraw',
   },
   SEED: {
     BASE: 'seed',
@@ -150,3 +147,5 @@ export const HANSHAKE_USER_NAME = {
   [HANDSHAKE_USER.OWNER]: 'OWNER',
   [HANDSHAKE_USER.SHAKED]: 'SHAKED',
 }
+
+

@@ -14,7 +14,7 @@ const $http = (url, data, id, qsObject, headersMore, method = 'GET') => {
   }
 
   const token = local.get(APP.AUTH_TOKEN);
-  const wallet = MasterWallet.getWalletDefault();
+  const wallet = MasterWallet.getWalletDefault('ETH');
 
   let headers = {
     'Content-Type': 'application/json',

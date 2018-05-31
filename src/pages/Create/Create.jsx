@@ -52,7 +52,7 @@ class Create extends React.Component {
         </Row>
         <Row>
           <Col md={12}>
-            <CreateComponent />
+            <CreateComponent {...this.props}/>
           </Col>
         </Row>
       </Grid>
