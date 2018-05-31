@@ -75,6 +75,7 @@ export const API_URL = {
     GET_USER_TRANSACTION: 'user/transactions', // {path: '/user/transactions', method: 'get'},
     OFFERS: 'offers',
     SHAKE: 'shake',
+    WITHDRAW: 'withdraw'
   },
   SEED: {
     BASE: 'seed',
