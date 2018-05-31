@@ -149,14 +149,23 @@ class BetingShake extends React.Component {
       readOnly: true,
     };
 
+    const amountField = {
+      id:'amount',
+      name: 'you',
+      label: 'amount',
+      className: 'amount',
+      placeHolder: '0.00',
+    };
+
     return (
       <BettingShakeForm className="wrapperBettingShake" onSubmit={this.onSubmit}>
-        {formFieldData.map(item => this.renderInputField(item))}
-        <hr className="line" />
-        {this.renderInputField(youCouldWinField)}
+        {/*{formFieldData.map(item => this.renderInputField(item))}*/}
+        {/*<hr className="line" />*/}
+        {/*{this.renderInputField(youCouldWinField)}*/}
+        {this.renderInputField(amountField)}
 
         <Button type="submit" block className="btnOK">
-          OK
+          Shake now
         </Button>
       </BettingShakeForm>
     );

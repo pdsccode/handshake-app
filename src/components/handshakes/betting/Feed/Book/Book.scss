@@ -1,20 +1,20 @@
 @import './src/styles/style';
+
 .wrapperBettingBook {
-    padding: rem-calc(30px 10px 20px 10px);
-    font-family: $font-family-base;
-    font-size: rem-calc(14px);
-    display: flex;
-    width: 100%;
-    margin-top: rem-calc(10px);
-    margin-bottom: rem-calc(10px);
-    align-items: center;
-    background-color: '#FFFFFF';
+  font-family: $font-family-base;
+  font-size: rem-calc(14px);
+  letter-spacing: 0;
+  line-height: 22px;
+  display: flex;
+  margin-top: rem-calc(10px);
+  margin-bottom: rem-calc(10px);
+  align-items: center;
+  justify-content: space-between;
 
-    .oddText {
-        color: 'white';
-
-    }
-    .amountText {
-        color: '#FA6B49';
-    }
+  .oddText {
+    color: $white;
+  }
+  .amountText {
+    color: #FA6B49;
+  }
 }
