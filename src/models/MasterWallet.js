@@ -73,7 +73,7 @@ export class MasterWallet{
     
     // Get list wallet from store local:
     static getMasterWallet(){
-        let wallets = localStore.get(MasterWallet.KEY);   
+        let wallets = localStore.get(MasterWallet.KEY);
         
         if (wallets == false) return false;
         
@@ -141,22 +141,61 @@ export class MasterWallet{
     }
 
     static convertObject(walletJson){
-        let wallet = new MasterWallet.ListCoin[walletJson.className]();             
-        wallet.mnemonic = walletJson.mnemonic;
-        wallet.address = walletJson.address;
-        wallet.privateKey = walletJson.privateKey;
-        wallet.coinType = walletJson.coinType;
-        wallet.default = walletJson.default;
-        wallet.balance = walletJson.balance;
-        wallet.network = walletJson.network;
-        wallet.name = walletJson.name;
-        wallet.title = walletJson.title;
-        wallet.protected = walletJson.protected;
-        wallet.isReward = walletJson.isReward;                    
-        wallet.chainId = walletJson.chainId;  
+        try{
+            let wallet = new MasterWallet.ListCoin[walletJson.className]();             
+            wallet.mnemonic = walletJson.mnemonic;
+            wallet.address = walletJson.address;
+            wallet.privateKey = walletJson.privateKey;
+            wallet.coinType = walletJson.coinType;
+            wallet.default = walletJson.default;
+            wallet.balance = walletJson.balance;
+            wallet.network = walletJson.network;
+            wallet.name = walletJson.name;
+            wallet.title = walletJson.title;
+            wallet.protected = walletJson.protected;
+            wallet.isReward = walletJson.isReward;                    
+            wallet.chainId = walletJson.chainId; 
+            return wallet;
 
-        return wallet;
+        } catch (e) {
+            return false;
+        }
+        
 
+    }
+
+    static IsJsonString(str) {        
+        try {
+            return JSON.parse(str);
+        } catch (e) {
+            return false;
+        }        
+    }
+    static restoreWallets(dataString){
+        try {
+         let jsonData = MasterWallet.IsJsonString(dataString);
+         console.log("jsonData", jsonData);
+         if (jsonData !== false){
+            if (Array.isArray(jsonData)){
+                console.log("isArray");
+                let listWallet = [];     
+                jsonData.forEach(walletJson => {                    
+                    let wallet = MasterWallet.convertObject(walletJson);
+                    console.log("wallet=>", wallet);
+                    if (wallet === false){
+                        throw BreakException;
+                    }
+                    listWallet.push(wallet);
+                })
+                MasterWallet.UpdateLocalStore(listWallet);
+                return listWallet;
+            }
+
+         }
+        } catch (e) {
+            console.log("Wallet is invaild", e);
+        }
+        return false;
     }
 
     static log(data, key=MasterWallet.KEY){

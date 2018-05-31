@@ -14,6 +14,8 @@ import dontIcon from '@/assets/images/icon/3-dot-icon.svg';
 import iconSafe from '@/assets/images/icon/icon-safe.svg';
 import iconWarning from '@/assets/images/icon/icon-warning.svg';
 // import iconChecked from '@/assets/images/icon/icon-check.png';
+import iconLoading from '@/assets/images/icon/loading.svg.raw';
+
 import Header from './Header';
 import HeaderMore from './HeaderMore';
 import WalletItem from './WalletItem';
@@ -67,6 +69,8 @@ class Wallet extends React.Component {
       listMenu: [],
       walletSelected: null,      
       inputSendValue: '',
+      isRestoreLoading: false,
+      erroValueBackup: false,
       isShowFillWallet: false,
       walletsData: false,
       isNewCCOpen: false
@@ -255,8 +259,29 @@ class Wallet extends React.Component {
         };       
     }    
     this.modalBetRef.close();     
-
   }
+
+  // Restore wallet:
+  restoreWallets = () =>{
+    if (this.state.hasOwnProperty('inputRestoreWalletValue')){
+        this.setState({isRestoreLoading: true, erroValueBackup: false});
+        if (this.state.inputRestoreWalletValue != ''){
+          let walletData = MasterWallet.restoreWallets(this.state.inputRestoreWalletValue);          
+          if (walletData !== false){            
+            this.splitWalletData(walletData);
+            this.modalRestoreRef.close();             
+          }
+        }
+        this.setState({isRestoreLoading: false});
+    }    
+    //alert('Invalid wallets');        
+    this.setState({erroValueBackup: true});
+  }
+  updateRestoreWalletValue = (evt) => {
+    this.setState({
+      inputRestoreWalletValue: evt.target.value
+    });
+  } 
 
   sendCoin = () =>{
     if (this.state.inputAddressAmountValue == '')
@@ -276,36 +301,13 @@ class Wallet extends React.Component {
     this.setState({
       inputSendAmountValue: evt.target.value
     });
-  }
+  }  
+  
   updateSendAddressValue = (evt) => {
     this.setState({
       inputAddressAmountValue: evt.target.value
     });
-  }
-  showFile(blob){
-    // It is necessary to create a new blob object with mime-type explicitly set
-    // otherwise only Chrome works like it should
-    var newBlob = new Blob(["xxxxx"], {type: "application/pdf"});
-   
-    // IE doesn't allow using a blob object directly as link href
-    // instead it is necessary to use msSaveOrOpenBlob
-    if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-      window.navigator.msSaveOrOpenBlob(newBlob);
-      return;
-    } 
-   
-    // For other browsers: 
-    // Create a link pointing to the ObjectURL containing the blob.
-    const data = window.URL.createObjectURL(newBlob);
-    var link = document.createElement('a');
-    link.href = data;
-    link.download="file.txt";
-    link.click();
-    setTimeout(function(){
-      // For Firefox it is necessary to delay revoking the ObjectURL
-      window.URL.revokeObjectURL(data)
-    , 100})
-  }
+  }  
   // Menu for Right header bar
   creatSheetMenuHeaderMore(){
     let obj = [];
@@ -321,25 +323,16 @@ class Wallet extends React.Component {
 
         this.modalBackupRef.open();
         this.setState({walletsData: this.getAllWallet()});
-        this.toggleBottomSheet();
-        // let blob = new Blob(JSON.stringify(this.getAllWallet()), {type: "text/plain;charset=utf-8"});
-
-        // var file = new File(["Hello, world!"], "hello world.txt", {type: "application/octet-stream"});
-        // saveAs(file);
-
-        // filesaver.saveAs(blob, "mastert-wallet.txt");        
-        // var fileDownload = require('js-file-download');
-        // fileDownload("xxxxxx", 'filename.csv');
-
-        // this.showFile('xxxx');
-
-        // window.open('data:attachment/jpg;charset=utf-8,' + encodeURI("xxxx"));
+        this.toggleBottomSheet();        
       }
     })
     obj.push({
       title: 'Restore wallets',
       handler: () => {
-
+        this.modalRestoreRef.open();        
+        this.toggleBottomSheet();     
+        this.setState({erroValueBackup: false}); 
+          
       }
     })
     return obj;
@@ -435,9 +428,24 @@ class Wallet extends React.Component {
         <ModalDialog title="Backup wallets" onRef={modal => this.modalBackupRef = modal}>
           <div className="bodyTitle">This data is the only way to restore your wallets. Save them somewhere safe and secret</div>
           <div className='bodyBackup'>
-          <textarea readonly onClick={ this.handleChange } onFocus={ this.handleFocus }
+          <textarea readonly onClick={ this.handleChange } onFocus={ this.handleFocus }          
            value={ this.state.walletsData ? JSON.stringify(this.state.walletsData) : ''}/>
           <Button className="button" cssType="danger" onClick={() => {Clipboard.copy(JSON.stringify(this.state.walletsData)); this.modalBackupRef.close(); }} >Copy it somewhere safe</Button>            
+          </div>
+        </ModalDialog>
+
+        {/* Modal for Restore wallets : */}
+        <ModalDialog title="Restore wallets" onRef={modal => this.modalRestoreRef = modal}>
+          <div className="bodyTitle">This data is the only way to restore your wallets.</div>
+          <div className='bodyBackup'>
+          <textarea required             
+            onFocus={  } 
+            className={this.state.erroValueBackup ? 'error' : ''}
+            onChange={evt => this.updateRestoreWalletValue(evt)}               
+          />
+          <Button isLoading={this.state.isRestoreLoading} className="button" cssType="danger" onClick={() => {this.restoreWallets()}} >                        
+            Restore now
+          </Button>
           </div>
         </ModalDialog>
 
