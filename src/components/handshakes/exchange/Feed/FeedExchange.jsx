@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import iconLocation from '@/assets/images/icon/icons8-geo_fence.svg';
+import iconTransaction from '@/assets/images/icon/icons8-transfer_between_users.svg';
 // style
 import './FeedExchange.scss';
 import {FormattedMessage, injectIntl} from 'react-intl';
@@ -625,7 +626,7 @@ class FeedExchange extends React.PureComponent {
           <span>userType: {userType}</span><br></br>
           <span>About</span><br></br>
           <div className="media">
-            <img className="mr-1" src={iconLocation} width={22}/>
+            <img className="mr-1" src={iconTransaction} width={20}/>
             <div className="media-body">
               <div>
                 <small>
@@ -637,7 +638,7 @@ class FeedExchange extends React.PureComponent {
             </div>
           </div>
           <div className="media">
-            <img className="mr-1" src={iconLocation} width={22}/>
+            <img className="mr-1" src={iconLocation} width={20}/>
             <div className="media-body">
               <div>
                 <small>
