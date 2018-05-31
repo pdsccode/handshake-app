@@ -113,31 +113,31 @@ class Wallet extends React.Component {
    async componentDidMount() {
 
     let listWallet = await MasterWallet.getMasterWallet();
+    console.log("listWallet", listWallet);
 
     // console.log("default", MasterWallet.getWalletDefault("ETH"))
 
     if (listWallet == false){
-      listWallet = await MasterWallet.createMasterWallet();
+        listWallet = await MasterWallet.createMasterWallet();
+        // fill data:
+        await this.splitWalletData(listWallet)
+    }
+    else{
+      this.splitWalletData(listWallet)
+      console.log('update balance for lst wallet');
+      await this.getListBalace(listWallet);
     }
      /*var btc = new Bitcoin();
      var tx = await btc.transfer("tprv8ccSMiuz5MfvmYHzdMbz3pjn5uW3G8zxM975sv4MxSGkvAutv54raKHiinLsxW5E4UjyfVhCz6adExCmkt7GjC41cYxbNxt5ZqyJBdJmqPA","mrPJ6rBHpJGnsLK3JGfJQjdm5vkjeAb63M", 0.0001);
 
-     console.log(tx)*/
-
-     // fill data:
-     await this.splitWalletData(listWallet)
-
-     // update balance for lst wallet:
-     await this.getListBalace();
+     console.log(tx)*/     
   }
 
   getAllWallet(){
     return this.state.listMainWalletBalance.concat(this.state.listTestWalletBalance).concat(this.state.listRewardWalletBalance);
   }
 
-  async getListBalace() {
-
-    let listWallet = this.getAllWallet();
+  async getListBalace(listWallet) {
 
     const pros = []
 
