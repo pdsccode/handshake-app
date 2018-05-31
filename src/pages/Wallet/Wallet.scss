@@ -36,6 +36,12 @@
     text-align: left;
     bottom: 12px;
     position: absolute;
+    cursor: pointer; 
+    img{
+      width: 16px;
+      margin-right: 6px;
+      margin-top: -3px;
+    }
   }
   .more{
     top: 12px;
@@ -49,6 +55,12 @@
     position: absolute;
     cursor: pointer; 
   }
+}
+
+.addressDivPopup{
+  margin-top: 20px;
+  margin-bottom: 10px;
+  font-size: 13px;
 }
 
 .headerBox{
@@ -119,7 +131,8 @@
 
 .bodyTitle{
   margin-left: 15px;
-  margin-right: 15px
+  margin-right: 15px;
+  margin-top: 15px;
 }
 
 .bodyBackup{
@@ -137,13 +150,15 @@
     textarea{
       width: 100%;
       height: 100px;
-      color: #6b6b6b;
-      
+      color: #6b6b6b;      
     }
     
 }
 .error {
   border-color: #d0021b;
+}
+.bodySahreAddress{
+  text-align: center;
 }
 
 .col-sm-6 {
