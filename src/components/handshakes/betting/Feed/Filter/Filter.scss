@@ -1,0 +1,14 @@
+@import './src/styles/style';
+
+.wrapperBettingFilter {
+  display: flex;
+  justify-content: space-between;
+
+  .item {
+    //flex-grow: 1; /* default 0 */
+    flex-basis: 49.7%;
+    border: none;
+    padding: 0;
+  }
+
+}

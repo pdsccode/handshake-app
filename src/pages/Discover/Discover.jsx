@@ -16,6 +16,8 @@ import FeedSeed from '@/components/handshakes/seed/Feed';
 import FeedCreditCard from '@/components/handshakes/exchange/Feed/FeedCreditCard';
 import Tabs from '@/components/handshakes/exchange/components/Tabs';
 import NoData from '@/components/core/presentation/NoData';
+import BettingFilter from '@/components/handshakes/betting/Feed/Filter'
+
 // style
 import './Discover.scss';
 import { getListOfferPrice } from '../../reducers/exchange/action';
@@ -168,8 +170,11 @@ class DiscoverPage extends React.Component {
             </div>
           )
         }
+        {handshakeIdActive === HANDSHAKE_ID.BETTING && 
+          <BettingFilter/>
+        }
         <Row>
-          {this.getHandshakeList}
+          {handshakeIdActive !== HANDSHAKE_ID.BETTING && this.getHandshakeList}
         </Row>
       </Grid>
     );

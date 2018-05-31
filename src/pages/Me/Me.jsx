@@ -11,7 +11,6 @@ import NoData from '@/components/core/presentation/NoData';
 import './Me.scss';
 
 import FeedBetting from '@/components/handshakes/betting/Feed';
-import BettingFilter from '@/components/handshakes/betting/Feed/Filter'
 class Me extends React.Component {
 
   componentDidMount() {
@@ -42,7 +41,6 @@ class Me extends React.Component {
                 <NoData message="NO DATA AVAILABLE" />
               )
             */}
-            <BettingFilter/>
           </Col>
         </Row>
       </Grid>

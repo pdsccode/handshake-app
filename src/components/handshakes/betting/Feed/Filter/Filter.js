@@ -5,7 +5,11 @@ import { connect } from 'react-redux';
 // service, constant
 import { API_URL } from '@/constants';
 
+// components
+import BettingShake from './../Shake';
+import GroupBook from './../GroupBook';
 
+import './Filter.scss';
 import { loadMatches } from '@/reducers/betting/action';
 
 
@@ -41,7 +45,15 @@ class BettingFilter extends React.Component {
     }
     render(){
         return (
-            <div>
+            <div className="wrapperBettingFilter">
+                <div className="item">
+                <GroupBook amountColor="#FA6B49" />
+                <GroupBook amountColor="#8BF275" />
+                </div>
+                <div className="item">
+                <BettingShake/>
+
+                </div>
             </div>
 
         );
