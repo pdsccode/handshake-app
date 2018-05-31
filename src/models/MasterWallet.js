@@ -103,6 +103,7 @@ export class MasterWallet{
 
     // Get list wallet from store local:
     static getWalletDefault(coinName=''){
+                
         let wallets = localStore.get(MasterWallet.KEY);   
         
         if (wallets == false) return false;
@@ -113,9 +114,8 @@ export class MasterWallet{
             if (coinName != ''){
                 var wallet = false;
                 wallets.forEach(walletJson => {
-                    if (wallet.default && wallet==walletJson.name){
-                        wallet = MasterWallet.convertObject(walletJson);
-                        throw BreakException;
+                    if (walletJson.default && coinName==walletJson.name){
+                        wallet = MasterWallet.convertObject(walletJson);                        
                     }
                 })
                 return wallet;

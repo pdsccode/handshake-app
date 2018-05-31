@@ -106,6 +106,8 @@ class Wallet extends React.Component {
 
     let listWallet = await MasterWallet.getMasterWallet();
 
+    // console.log("default", MasterWallet.getWalletDefault("ETH"))
+
     if (listWallet == false){
       listWallet = await MasterWallet.createMasterWallet();
     }
