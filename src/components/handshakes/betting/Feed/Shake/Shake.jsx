@@ -10,6 +10,7 @@ import { Field } from "redux-form";
 // components
 import { InputField } from '@/components/handshakes/betting/form/customField';
 import Button from '@/components/core/controls/Button';
+import Toggle from './../Toggle';
 
 import './Shake.scss';
 
@@ -51,7 +52,8 @@ class BetingShake extends React.Component {
   onSubmit(values) {
     console.log("Submit");
     const {amount} = this.state;
-    this.props.onSubmitClick(amount);
+    console.log("this.toggle", this.toggleRef.value);
+    // this.props.onSubmitClick(amount);
   }
 
   onCancel() {
@@ -150,19 +152,18 @@ class BetingShake extends React.Component {
     };
 
     const amountField = {
-      id:'amount',
+      id: 'amount',
       name: 'you',
-      label: 'amount',
+      label: 'Amount',
       className: 'amount',
-      placeHolder: '0.00',
+      placeholder: '0.00',
     };
 
     return (
       <BettingShakeForm className="wrapperBettingShake" onSubmit={this.onSubmit}>
-        {/*{formFieldData.map(item => this.renderInputField(item))}*/}
-        {/*<hr className="line" />*/}
-        {/*{this.renderInputField(youCouldWinField)}*/}
+        <p className="titleForm text-center text-capitalize">PLACE A BET</p>
         {this.renderInputField(amountField)}
+        <Toggle ref={(component) => {this.toggleRef = component}} />
 
         <Button type="submit" block className="btnOK">
           Shake now

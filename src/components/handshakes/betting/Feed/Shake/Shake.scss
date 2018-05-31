@@ -1,15 +1,17 @@
 @import './src/styles/style';
 
 .wrapperBettingShake {
+  padding: rem-calc(46px 12px);
   background: #3A444C;
   //box-shadow: 0 2px 4px 0 rgba(203,203,203,0.50);
   font-family: $font-family-base;
+  height: 100%;
   .rowWrapper {
     display: flex;
     flex-wrap: wrap;
     width: 100%;
     margin-top: rem-calc(20px);
-    margin-bottom: rem-calc(20px);
+    //margin-bottom: rem-calc(20px);
     //align-items: center;
     .btn-block + .btn-block {
       margin-top: 0;
@@ -26,7 +28,6 @@
     line-height: rem-calc(22px);
   }
   .input {
-    margin-left: rem-calc(10px);
     flex-basis: 100%;
     background: rgba(216,216,216,0.14);
     border: 2px solid rgba(255,255,255,0.15);
@@ -40,6 +41,9 @@
     font-weight: $semi-bold;
     color: #FFFFFF;
     letter-spacing: 0;
+    position: relative;
+    top: -26px;
+    left: 80%;
   }
   .input[readOnly] {
     border-bottom: none;
@@ -85,5 +89,14 @@
     font-size: rem-calc(16px);
     color: #FFFFFF;
     letter-spacing: 0;
+    margin-top: 20px;
+    border: none;
+  }
+  .titleForm {
+    opacity: 0.9;
+    font-size: rem-calc(16px);
+    color: #FFFFFF;
+    letter-spacing: 0;
+    margin-bottom: rem-calc(20px);
   }
 }
