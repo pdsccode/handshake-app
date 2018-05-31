@@ -22,6 +22,7 @@ import { InputField } from '../form/customField';
 import {MasterWallet} from '@/models/MasterWallet';
 import Dropdown from '@/components/core/controls/Dropdown';
 
+import { BettingHandshake } from '@/services/neuron';
 // self
 import './Create.scss';
 
@@ -32,6 +33,7 @@ console.log('Chain Id:', chainId);
 
 const neuron = new Neuron(chainId);
 
+const bettinghandshake = new BettingHandshake(MasterWallet.getWalletDefault('ETH')?.chainId);
 const nameFormBettingCreate = 'bettingCreate';
 const BettingCreateForm = createForm({
   propsReduxForm: {
@@ -221,7 +223,7 @@ class BettingCreate extends React.PureComponent {
 
     const {matches} = nextProps;
     console.log(`${TAG} Matches:`, matches);
-    
+
     this.setState({
         matches
     })
@@ -234,7 +236,7 @@ get foundMatch(){
         });
   }
   return null;
-  
+
 }
 
 get matchNames() {
@@ -250,10 +252,10 @@ get matchResults(){
           if(outcomes){
               return outcomes.map((item) => ({ id: item.id, value: item.name}));
           }
-      }  
+      }
   }
-  
-  
+
+
   return [];
 }
 
@@ -407,7 +409,7 @@ get matchResults(){
           />
           {selectedMatch && <Dropdown
             placeholder="Select a prediction"
-            source={this.matchResults} 
+            source={this.matchResults}
             onItemSelected={(item) => this.setState({selectedOutcome: item})}
           />}
         </div>
