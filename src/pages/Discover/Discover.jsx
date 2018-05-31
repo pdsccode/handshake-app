@@ -34,7 +34,7 @@ class DiscoverPage extends React.Component {
       handshakeIdActive: '',
       tabIndexActive: 1,
     };
-    this.props.loadDiscoverList({ PATH_URL: API_URL.DISCOVER.BASE });
+    this.props.loadDiscoverList({ PATH_URL: API_URL.DISCOVER.BASE, qs: { location_p: {pt:'10.786391,106.700074',d: 5 } } });
     // bind
     this.clickCategoryItem = this.clickCategoryItem.bind(this);
     this.clickTabItem = this.clickTabItem.bind(this);
@@ -63,11 +63,11 @@ class DiscoverPage extends React.Component {
   }
 
   handleGetPriceSuccess = () => {
-    this.props.loadDiscoverList({ PATH_URL: API_URL.DISCOVER.BASE });
+    this.props.loadDiscoverList({ PATH_URL: API_URL.DISCOVER.BASE, qs: { location_p: {pt:'10.786391,106.700074',d: 5 } } });
   }
 
   handleGetPriceFailed = () => {
-    this.props.loadDiscoverList({ PATH_URL: API_URL.DISCOVER.BASE });
+    this.props.loadDiscoverList({ PATH_URL: API_URL.DISCOVER.BASE, qs: { location_p: {pt:'10.786391,106.700074',d: 5 } } });
   }
 
   componentWillUnmount() {
