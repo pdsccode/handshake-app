@@ -23,6 +23,7 @@ class CreateComment extends React.PureComponent {
     };
     this.createComment = ::this.createComment;
     this.handleImageChange = ::this.handleImageChange;
+    this.deleteImage = ::this.deleteImage;
   }
 
   createComment() {
@@ -61,6 +62,14 @@ class CreateComment extends React.PureComponent {
     }
   };
 
+  deleteImage(e) {
+    e && e.preventDefault();
+    this.setState({
+      file: '',
+      imagePreviewUrl: '',
+    });
+  }
+
   render() {
     const { imagePreviewUrl } = this.state;
     return (
@@ -69,6 +78,7 @@ class CreateComment extends React.PureComponent {
           imagePreviewUrl && (
             <div className="preview">
               <img src={imagePreviewUrl} className="img-responsive" alt="preview image" />
+              <button onClick={this.deleteImage}>Delete</button>
             </div>
           )
         }
