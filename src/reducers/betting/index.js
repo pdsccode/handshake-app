@@ -3,6 +3,8 @@ import Handshake from '@/models/Handshake';
 import { BETTING_ACTIONS } from './action';
 import Match from '@/models/Match';
 
+const handleMatchListPayload = payload => payload.map(item => Match.match(item));
+
 const bettingReducter = (state = {
   matches: [],
   isFetching: false
@@ -18,7 +20,7 @@ const bettingReducter = (state = {
       return {
         ...state,
         isFetching: false,
-        matches: action.payload.data,
+        matches:  action.payload.data,
       };
     case `${BETTING_ACTIONS.LOAD_MATCHES}_FAILED`:
       return {

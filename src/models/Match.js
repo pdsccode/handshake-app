@@ -1,3 +1,5 @@
+const handleOutcomeListPayload = payload => payload.map(item => Match.match(item));
+
 class Match {
     static match(data) {
         return {
