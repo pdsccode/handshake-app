@@ -401,12 +401,9 @@ class Wallet extends React.Component {
     this.modalFillRef.close();
   }
 
-<<<<<<< HEAD
   afterWalletProtect = () =>{
     this.modalProtectRef.close();
   }
-=======
->>>>>>> 16d3402f3426c6baf4afe331fe4649d297421a5e
 
   render() {
     const {intl, userProfile, cryptoPrice, amount, userCcLimit, ccLimits} = this.props;
