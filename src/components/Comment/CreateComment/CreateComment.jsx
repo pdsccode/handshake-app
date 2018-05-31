@@ -17,7 +17,12 @@ import postCommentIcon from '@/assets/images/icon/comment/post-comment.svg';
 class CreateComment extends React.PureComponent {
   constructor(props) {
     super(props);
+    this.state = {
+      file: '',
+      imagePreviewUrl: '',
+    };
     this.createComment = ::this.createComment;
+    this.handleImageChange = ::this.handleImageChange;
   }
 
   createComment() {
@@ -29,10 +34,40 @@ class CreateComment extends React.PureComponent {
     });
   }
 
+  handleImageChange(e) {
+    e.preventDefault();
+
+    if(e.target.files && e.target.files[0]) {
+      const reader = new FileReader();
+      const file = e.target.files[0];
+
+      reader.onloadend = () => {
+        this.setState({
+          file: file,
+          imagePreviewUrl: reader.result,
+        });
+      };
+
+      reader.readAsDataURL(file);
+    }
+  };
+
   render() {
+    const { imagePreviewUrl } = this.state;
     return (
       <div className="createComment">
-        <Image src={createImageIcon} alt="create image icon" onClick={this.createComment} />
+        {
+          imagePreviewUrl && (
+            <div className="preview">
+              <img src={imagePreviewUrl} className="img-responsive" alt="preview image" />
+            </div>
+          )
+        }
+        <div className="imageUpload">
+          <label className="sr-only" htmlFor="image-upload">Image Upload</label>
+          <input onChange={this.handleImageChange} type="file" accept="image/*" id="image-upload" />
+          <Image src={createImageIcon} alt="create image icon" />
+        </div>
         <textarea type="text" placeholder="Aa" ref={(component) => { this.inputRef = component; }} />
         <Image src={postCommentIcon} alt="post comment icon" onClick={this.createComment} />
       </div>

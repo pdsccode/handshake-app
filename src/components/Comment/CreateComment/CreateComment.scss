@@ -3,6 +3,8 @@
 .createComment {
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
+  align-items: center;
   background: #FFFFFF;
   border-top: 1px solid #E5E5E5;
   margin-left: -15px;
@@ -29,6 +31,39 @@
     resize: inherit;
     &::placeholder {
       color: #C8C7CC;
+    }
+  }
+  .imageUpload {
+    position: relative;
+    background: var(--white);
+    border: 1px dashed var(--bleu-de-france);
+    border-radius: 5px;
+    text-align: center;
+
+    input {
+      position: absolute;
+      font-size: 60px;
+      top: 0;
+      right: 0;
+      height: 100%;
+      width: 100%;
+      text-indent: -9999px;
+      cursor: pointer;
+      opacity: 0;
+    }
+
+    span {
+      display: block;
+    }
+  }
+
+  .preview {
+    margin: 0 auto 10px;
+    width: 100%;
+    img {
+      margin: 0 auto;
+      width: 100px;
+      height: auto;
     }
   }
 }
