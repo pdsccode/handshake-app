@@ -24,6 +24,7 @@ class Alert extends React.PureComponent {
     message: '',
     timeOut: 5000,
     type: '',
+    callBack: () => {},
   };
 
   getTypeClass(type) {
@@ -46,6 +47,8 @@ class Alert extends React.PureComponent {
     if (config.isShow) {
       setTimeout(() => {
         this.props.hideAlert();
+        // call back
+        config.callBack();
       }, config.timeOut);
     }
     this.setState({ ...config });    

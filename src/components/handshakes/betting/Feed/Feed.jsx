@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 // services, constants
-import  { BetHandshakeHandler, ROLE, 
-  BETTING_STATUS_LABEL, BETTING_STATUS, 
+import  { BetHandshakeHandler, ROLE,
+  BETTING_STATUS_LABEL, BETTING_STATUS,
   REJECT_WINDOWN_DAYS, CANCEL_WINDOWN_DAYS,
-  BETTING_OPTIONS_NAME, 
+  BETTING_OPTIONS_NAME,
   BETTING_OPTIONS} from './BetHandshakeHandler.js';
 
 import { APP } from '@/constants';
@@ -61,25 +61,25 @@ class FeedBetting extends React.Component {
   componentDidMount() {
     console.log('Betting Feed:', this.props);
     const item = this.props;
-    const {initUserId, shakedUserIds, status, extraData} = item;
+    const {initUserId, shakeUserIds, status, extraData} = item;
     console.log('Extra Data:', this.extraData);
     const profile = local.get(APP.AUTH_PROFILE);
     const token = local.get(APP.AUTH_TOKEN);
     console.log('Token:', token);
     console.log('Profile', profile);
     console.log('InitUserId:', initUserId);
-    const isUserShake = this.isShakeUser(shakedUserIds, profile.id);
+    const isUserShake = this.isShakeUser(shakeUserIds, profile.id);
     console.log('Is User Shake:', isUserShake);
 
-    
+
     const role = (profile.id === initUserId) ? ROLE.PAYEE :
                 isUserShake ? ROLE.PAYER : ROLE.GUEST;
     console.log('Role:', role);
 
     this.setState({
       role
-    });    
-    
+    });
+
    //const hardCodeRole = ROLE.PAYEE;
     const hardCodeStatus = 2;
 
@@ -106,12 +106,12 @@ class FeedBetting extends React.Component {
     console.log('User Id:', userId);
     /*
     if(shakeIds){
-      
+
       if(shakeIds.indexOf(userId) > -1){
         return true;
 
       }
-      
+
     }
     */
     if(userId == 151){
@@ -151,8 +151,8 @@ class FeedBetting extends React.Component {
     const {shakeCount} = this.props;
     const {role, statusAction, statusLabel, isShowOptions} = this.state;
     const {event_name, event_predict, event_odds, event_bet,event_date, balance} = this.extraData;
-    //const extraData = JSON.parse(item.extraData); 
-    
+    //const extraData = JSON.parse(item.extraData);
+
     //const {description, from_email, status, balance} = extraData;
     // const bottomDes = `22 bettors against ${from_email}`;
     const remaining = event_bet - this.balance;
@@ -206,7 +206,7 @@ class FeedBetting extends React.Component {
   </ModalDialog>}
       </div>
     );
-    
+
   }
   changeOption(value){
     console.log('Choose option:', value)
@@ -218,27 +218,27 @@ class FeedBetting extends React.Component {
     const {id, hid} = item;
     const offchain = id;
     switch(title){
-      case BETTING_STATUS_LABEL.SHAKE: 
+      case BETTING_STATUS_LABEL.SHAKE:
         this.modalBetRef.open();
         break;
-      
-      case BETTING_STATUS_LABEL.CLOSE: 
+
+      case BETTING_STATUS_LABEL.CLOSE:
         // TO DO: CLOSE BET
         BetHandshakeHandler.closeItem(role, hid, offchain);
         break;
 
-      case BETTING_STATUS_LABEL.WITHDRAW: 
+      case BETTING_STATUS_LABEL.WITHDRAW:
         // TO DO: WITHDRAW
         BettingHandshake.withdraw(role, hid, offchain);
         break;
 
-      case BETTING_STATUS_LABEL.REJECT: 
+      case BETTING_STATUS_LABEL.REJECT:
         // TO DO: REJECT
         BettingHandshake.rejectItem(role, hid, offchain);
         break;
 
     }
-    
+
   }
   updateStatus(result){
     this.setState({
@@ -275,7 +275,7 @@ class FeedBetting extends React.Component {
     if(result){
       this.updateStatus(result);
     }
-    
+
   }
   autoCancel(role,eventDate){
     const item = this.props;
@@ -291,7 +291,7 @@ class FeedBetting extends React.Component {
   //   if(result){
   //     this.updateStatus(result);
   //   }
-    
+
   // }
 
   submitShake(amount){

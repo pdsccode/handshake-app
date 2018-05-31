@@ -13,12 +13,19 @@ import Input from '@/components/core/forms/Input/Input';
 import dontIcon from '@/assets/images/icon/3-dot-icon.svg';
 import iconSafe from '@/assets/images/icon/icon-safe.svg';
 import iconWarning from '@/assets/images/icon/icon-warning.svg';
+// import iconChecked from '@/assets/images/icon/icon-check.png';
 import Header from './Header';
 import HeaderMore from './HeaderMore';
 import WalletItem from './WalletItem';
+import FeedCreditCard from "@/components/handshakes/exchange/Feed/FeedCreditCard";
+import {createCCOrder, getCcLimits, getCryptoPrice, getUserCcLimit, getUserProfile,} from '@/reducers/exchange/action';
 import ReactBottomsheet from 'react-bottomsheet';
 // var ReactBottomsheet = require('react-bottomsheet');
+// var Blob = require('./Blob.js');
 import { setHeaderRight } from '@/reducers/app/action';
+
+// import filesaver from 'file-saver';
+
 
 // style
 import './Wallet.scss';
@@ -27,16 +34,23 @@ import ModalDialog from '@/components/core/controls/ModalDialog';
 import Modal from '@/components/core/controls/Modal';
 
 import createForm from '@/components/core/form/createForm';
+import {formValueSelector} from 'redux-form';
 import { required } from '@/components/core/form/validation';
 import { Field } from "redux-form";
 import { initHandshake } from '@/reducers/handshake/action';
+window.Clipboard = (function(window, document, navigator) { var textArea, copy; function isOS() { return navigator.userAgent.match(/ipad|iphone/i); } function createTextArea(text) { textArea = document.createElement('textArea'); textArea.value = text; document.body.appendChild(textArea); } function selectText() { var range, selection; if (isOS()) { range = document.createRange(); range.selectNodeContents(textArea); selection = window.getSelection(); selection.removeAllRanges(); selection.addRange(range); textArea.setSelectionRange(0, 999999); } else { textArea.select(); } } function copyToClipboard() { document.execCommand('copy'); document.body.removeChild(textArea); } copy = function(text) { createTextArea(text); selectText(); copyToClipboard(); }; return { copy: copy }; })(window, document, navigator);
 
 const nameFormSendWallet = 'sendWallet';
-const SendWalletForm = createForm({
+const SendWalletForm = createForm({ propsReduxForm: { form: nameFormSendWallet }});
+
+const nameFormCreditCard = 'creditCard';
+const FormCreditCard = createForm({
   propsReduxForm: {
-    form: nameFormSendWallet,
+    form: nameFormCreditCard,
+    initialValues: { currency: 'ETH' },
   },
 });
+const selectorFormCreditCard = formValueSelector(nameFormCreditCard);
 
 class Wallet extends React.Component {
   constructor(props) {
@@ -51,8 +65,11 @@ class Wallet extends React.Component {
       listRewardWalletBalance: [],
       bottomSheet: false,
       listMenu: [],
-      walletNeedRemove: null,
-      walletSend: null
+      walletSelected: null,      
+      inputSendValue: '',
+      isShowFillWallet: false,
+      walletsData: false,
+      isNewCCOpen: false
     };
     this.props.setHeaderRight(this.headerRight());    
   }
@@ -87,9 +104,9 @@ class Wallet extends React.Component {
 
    async componentDidMount() {
 
-    // console.log('getWalletDefault()', MasterWallet.getWalletDefault());
-
     let listWallet = await MasterWallet.getMasterWallet();
+
+    // console.log("default", MasterWallet.getWalletDefault("ETH"))
 
     if (listWallet == false){
       listWallet = await MasterWallet.createMasterWallet();
@@ -99,8 +116,10 @@ class Wallet extends React.Component {
 
      console.log(tx)*/
 
+     // fill data:
      await this.splitWalletData(listWallet)
 
+     // update balance for lst wallet:
      await this.getListBalace();
   }
 
@@ -152,24 +171,28 @@ class Wallet extends React.Component {
   }
   
   // create list menu of wallet item when click Show more ...
-  crateSheetMenuItem(wallet){
+  creatSheetMenuItem(wallet){
     let obj = [];
       obj.push({
         title: 'Send',
         handler: () => {
-          this.setState({walletSend: wallet});          
-          this.modalBetRef.open();   
-          this.toggleBottomSheet();   
+          this.setState({walletSelected: wallet});
+          this.toggleBottomSheet();
+          this.modalSendRef.open();      
         }
       })
+      
       obj.push({
         title: 'Fill up',
         handler: () => {
-
+          this.setState({walletSelected: wallet, isShowFillWallet: true});
+          this.toggleBottomSheet();
+          this.modalFillRef.open();
         }
       })
+
       obj.push({
-        title: 'Protected your coin',
+        title: 'Protected this wallet',
         handler: () => {
 
         }
@@ -182,32 +205,35 @@ class Wallet extends React.Component {
       })
       obj.push({
         title: 'Copy address',
-        handler: () => {
-          this.copyToClipboard(wallet.address);
+        handler: () => {          
+          Clipboard.copy(wallet.address);
           this.toggleBottomSheet(); 
         }
       })
 
-      obj.push({
-        title: 'Make it default ' + (wallet.default ? "✓ " : ""),
-        handler: () => {          
-          wallet.default = !wallet.default;    
-          this.toggleBottomSheet(); 
-          // reset all wallet defaul:
-          let lstWalletTemp = this.getAllWallet();
-          if (wallet.default) lstWalletTemp.forEach(wal => {if (wal != wallet){wal.default = false;}})          
-          // Update wallet master from local store:
-          MasterWallet.UpdateLocalStore(lstWalletTemp);
+      if (!wallet.isReward){
+        obj.push({
+          title: 'Make it default for {0} '.format(wallet.name) + (wallet.default ? "✓ " : ""),
+          handler: () => {          
+            wallet.default = !wallet.default;    
+            this.toggleBottomSheet(); 
+            // reset all wallet default:
+            let lstWalletTemp = this.getAllWallet();
+            if (wallet.default) lstWalletTemp.forEach(wal => {if (wal != wallet && wal.name == wallet.name){wal.default = false;}})          
+            // Update wallet master from local store:
+            MasterWallet.UpdateLocalStore(lstWalletTemp);
+          }
+        })
+        
+          obj.push({
+            title: 'Remove',
+            handler: () => {
+              this.setState({walletSelected: wallet});          
+              this.modalBetRef.open();   
+              this.toggleBottomSheet();   
+            }
+          })
         }
-      })
-      obj.push({
-        title: 'Remove',
-        handler: () => {
-          this.setState({walletNeedRemove: wallet});          
-          this.modalBetRef.open();   
-          this.toggleBottomSheet();   
-        }
-      })
 
       return obj;
   }
@@ -216,7 +242,7 @@ class Wallet extends React.Component {
   removeWallet = () =>{
     let lstWalletTemp = this.getAllWallet();
     var index = -1;
-    var walletTmp = this.state.walletNeedRemove;
+    var walletTmp = this.state.walletSelected;
     if (walletTmp != null){
         // Find index for this item:
         lstWalletTemp.forEach(function (wal, i) {if (wal === walletTmp){index = i}});   
@@ -232,14 +258,56 @@ class Wallet extends React.Component {
 
   }
 
-  sendWallet = () =>{
-    
-    this.modalBetRef.close();     
-
+  sendCoin = () =>{
+    if (this.state.inputAddressAmountValue == '')
+      alert("Please input to address");
+    else if (this.state.inputSendAmountValue == '' || this.state.inputSendAmountValue == 0)
+      alert("Please input Amount value");
+    else{
+      
+      this.state.walletSelected.transfer(this.state.inputAddressAmountValue, this.state.inputSendAmountValue).then(success => {
+          alert(success);
+          this.modalSendRef.close();
+      });
+    }
   }
 
+  updateSendAmountValue = (evt) => {
+    this.setState({
+      inputSendAmountValue: evt.target.value
+    });
+  }
+  updateSendAddressValue = (evt) => {
+    this.setState({
+      inputAddressAmountValue: evt.target.value
+    });
+  }
+  showFile(blob){
+    // It is necessary to create a new blob object with mime-type explicitly set
+    // otherwise only Chrome works like it should
+    var newBlob = new Blob(["xxxxx"], {type: "application/pdf"});
+   
+    // IE doesn't allow using a blob object directly as link href
+    // instead it is necessary to use msSaveOrOpenBlob
+    if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+      window.navigator.msSaveOrOpenBlob(newBlob);
+      return;
+    } 
+   
+    // For other browsers: 
+    // Create a link pointing to the ObjectURL containing the blob.
+    const data = window.URL.createObjectURL(newBlob);
+    var link = document.createElement('a');
+    link.href = data;
+    link.download="file.txt";
+    link.click();
+    setTimeout(function(){
+      // For Firefox it is necessary to delay revoking the ObjectURL
+      window.URL.revokeObjectURL(data)
+    , 100})
+  }
   // Menu for Right header bar
-  crateSheetMenuHeaderMore(){
+  creatSheetMenuHeaderMore(){
     let obj = [];
     obj.push({
       title: "Add new",
@@ -248,9 +316,24 @@ class Wallet extends React.Component {
       }
     })
     obj.push({
-      title: 'Export wallets',
+      title: 'Backup wallets',
       handler: () => {
 
+        this.modalBackupRef.open();
+        this.setState({walletsData: this.getAllWallet()});
+        this.toggleBottomSheet();
+        // let blob = new Blob(JSON.stringify(this.getAllWallet()), {type: "text/plain;charset=utf-8"});
+
+        // var file = new File(["Hello, world!"], "hello world.txt", {type: "application/octet-stream"});
+        // saveAs(file);
+
+        // filesaver.saveAs(blob, "mastert-wallet.txt");        
+        // var fileDownload = require('js-file-download');
+        // fileDownload("xxxxxx", 'filename.csv');
+
+        // this.showFile('xxxx');
+
+        // window.open('data:attachment/jpg;charset=utf-8,' + encodeURI("xxxx"));
       }
     })
     obj.push({
@@ -262,79 +345,122 @@ class Wallet extends React.Component {
     return obj;
   }
 
-  onIconRightHeaderClick = () =>{
-    this.setState({listMenu: this.crateSheetMenuHeaderMore()})
-    this.toggleBottomSheet();
+  handleToggleNewCC = () => {
+    this.setState({ isNewCCOpen: !this.state.isNewCCOpen })
+  }
 
+  onIconRightHeaderClick = () =>{
+    this.setState({listMenu: this.creatSheetMenuHeaderMore()})
+    this.toggleBottomSheet();
   }
 
   onMoreClick = (wallet) => {
-    this.setState({listMenu: this.crateSheetMenuItem(wallet)})
+    this.setState({listMenu: this.creatSheetMenuItem(wallet)})
     this.toggleBottomSheet();
   }
+
   onWarningClick = (wallet) => {
     alert("onWarningClick ->" + wallet.address);
   }
 
+  handleFocus = (e) => {
+    e.currentTarget.select();
+  }
+  
+  handleClick = (e) => {
+    this.refs.input.focus();
+  }
+
   get listMainWalletBalance() {
     return this.state.listMainWalletBalance.map((wallet) => {
-      return <WalletItem wallet={wallet} onMoreClick={() => this.onMoreClick(wallet)} onWarningClick={() => this.onWarningClick(wallet)} />
+      return <WalletItem key={wallet.address+wallet.network} wallet={wallet} onMoreClick={() => this.onMoreClick(wallet)} onWarningClick={() => this.onWarningClick(wallet)} />
     });
   }
   get listTestWalletBalance() {
     return this.state.listTestWalletBalance.map((wallet) => {
-      return <WalletItem wallet={wallet} onMoreClick={() => this.onMoreClick(wallet)} onWarningClick={() => this.onWarningClick(wallet)} />
+      return <WalletItem key={wallet.address+wallet.network} wallet={wallet} onMoreClick={() => this.onMoreClick(wallet)} onWarningClick={() => this.onWarningClick(wallet)} />
     });
   }
 
   get listRewardWalletBalance(){
     return this.state.listRewardWalletBalance.map((wallet) => {
-      return <WalletItem wallet={wallet} onMoreClick={() => this.onMoreClick(wallet)} onWarningClick={() => this.onWarningClick(wallet)} />
+      return <WalletItem key={wallet.address+wallet.network} wallet={wallet} onMoreClick={() => this.onMoreClick(wallet)} onWarningClick={() => this.onWarningClick(wallet)} />
     });
   }
 
-  render() {
+  afterWalletFill = () =>{
+    this.modalFillRef.close();
+  }
 
+  render() {
+    const {intl, userProfile, cryptoPrice, amount, userCcLimit, ccLimits} = this.props;    
     return (
 
       <Grid>
+        {/*<div className="messageBox"><img src={iconChecked}/><span>Copied</span></div>*/}
+        {/* Tooltim menu Bottom */ }
         <ReactBottomsheet
           visible={this.state.bottomSheet}
           onClose={this.toggleBottomSheet.bind(this)}
           list={this.state.listMenu} />
         
+        {/* ModalDialog for confirm remove wallet */}
         <ModalDialog title="Confirmation" onRef={modal => this.modalBetRef = modal}>
           <div><span>Are you sure to want to remove this wallet?</span></div>
           <div className='bodyConfirm'>
-            <Button className="left" type="primary" cssType="primary" onClick={this.removeWallet} >Yes, remove</Button>
-            <Button className="right" type="warning" cssType="warning" onClick={() => { this.modalBetRef.close(); }}>No</Button>
+          <Button className="left" cssType="danger" onClick={this.removeWallet} >Yes</Button>
+            <Button className="right" cssType="secondary" onClick={() => { this.modalBetRef.close(); }}>Cancel</Button>
           </div>
         </ModalDialog>
-        <Modal title="Send" onRef={modal => this.modalBetRef = modal}>
-          <SendWalletForm className="sendwallet-wrapper" onSubmit={this.onSubmit}>
-            <Input name="to_ddress" placeholder="To address"></Input>
-            <Input name="amount" placeholder="Amount (BTC)" type="number"></Input>
+
+        {/* ModalDialog for transfer coin */}
+        <Modal title="Send" onRef={modal => this.modalSendRef = modal}>
+          <SendWalletForm className="sendwallet-wrapper" onSubmit={this.sendCoin}>
+            <Input name="to_address" placeholder="To address" required
+              onChange={evt => this.updateSendAddressValue(evt)}               
+              />
+            <Input name="amount" type="tel" required
+              placeholder={ this.state.walletSelected ? "Amount ({0})".format(this.state.walletSelected.name) : "Amount "} 
+              onChange={evt => this.updateSendAmountValue(evt)}
+              />
             <Button type="submit" block={true}>Send</Button>
           </SendWalletForm>
         </Modal>
+
+        <Modal title="Fill up" onRef={modal => this.modalFillRef = modal}>
+          <FeedCreditCard buttonTitle="Send" callbackSuccess={this.afterWalletFill} />
+        </Modal>
+
+        {/* Modal for Backup wallets : */}
+        <ModalDialog title="Backup wallets" onRef={modal => this.modalBackupRef = modal}>
+          <div className="bodyTitle">This data is the only way to restore your wallets. Save them somewhere safe and secret</div>
+          <div className='bodyBackup'>
+          <textarea readonly onClick={ this.handleChange } onFocus={ this.handleFocus }
+           value={ this.state.walletsData ? JSON.stringify(this.state.walletsData) : ''}/>
+          <Button className="button" cssType="danger" onClick={() => {Clipboard.copy(JSON.stringify(this.state.walletsData)); this.modalBackupRef.close(); }} >Copy it somewhere safe</Button>            
+          </div>
+        </ModalDialog>
+
+        {/* Render list wallet: */}
         <Row className="list">
           <Header title="Main net wallets" hasLink={false} linkTitle="+ Add new" onLinkClick={this.onLinkClick} />
         </Row>
         <Row className="list">
           {this.listMainWalletBalance}
-        </Row>
-        <Row className="list">
-          <Header title="Test net wallets" hasLink={false} />
-        </Row>
-        <Row className="list">
-          {this.listTestWalletBalance}
-        </Row>
+        </Row>        
 
         <Row className="list">
           <Header title="Reward wallets" hasLink={false} />
         </Row>
         <Row className="list">
           {this.listRewardWalletBalance}
+        </Row>
+
+        <Row className="list">
+          <Header title="Test net wallets" hasLink={false} />
+        </Row>
+        <Row className="list">
+          {this.listTestWalletBalance}
         </Row>
 
       </Grid>
@@ -350,10 +476,20 @@ Wallet.propTypes = {
 
 const mapState = (state) => ({
   discover: state.discover,
+  userProfile: state.exchange.userProfile,
+  cryptoPrice: state.exchange.cryptoPrice,
+  userCcLimit: state.exchange.userCcLimit,
+  ccLimits: state.exchange.ccLimits
 });
 
 const mapDispatch = ({
-  setHeaderRight
+  setHeaderRight,
+  getUserProfile,
+  getCryptoPrice,
+  createCCOrder,
+  getUserCcLimit,
+  getCcLimits,
 });
+
 
 export default connect(mapState, mapDispatch)(Wallet);
