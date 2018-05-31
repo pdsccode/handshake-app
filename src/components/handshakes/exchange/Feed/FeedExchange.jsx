@@ -630,7 +630,7 @@ class FeedExchange extends React.PureComponent {
               <div>
                 <small>
                   <FormattedMessage id="transactonOfferInfo" values={{
-                    success: 60, failed: 30
+                    success: offer.success, failed: offer.failed
                   }}/>
                 </small>
               </div>
