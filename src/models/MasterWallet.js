@@ -5,6 +5,7 @@ import {BitcoinTestnet} from '@/models/BitcoinTestnet.js'
 import {Ethereum} from '@/models/Ethereum.js' 
 import {Wallet} from '@/models/Wallet.js' 
 var bip39 = require('bip39');
+
 export class MasterWallet{
 
     // list coin is supported, can add some more Ripple ...
@@ -19,8 +20,7 @@ export class MasterWallet{
 
         // let mnemonic = 'canal marble trend ordinary rookie until combine hire rescue cousin issue that';
         // let mnemonic = 'book trial moral hunt riot ranch yard trap tool horse good barely';
-        
-        var bip39 = require('bip39');        
+
         let mnemonic = bip39.generateMnemonic(); //generates string        
 
         let masterWallet = []        
@@ -54,6 +54,46 @@ export class MasterWallet{
         // Save to local store:
         MasterWallet.UpdateLocalStore(masterWallet);
 
+        return masterWallet;
+    }
+
+    // return list coin temp for create/import:
+    static getListCoinTemp(){
+        let tempWallet = []        
+        for (var k1 in MasterWallet.ListCoin){
+            for (var k2 in MasterWallet.ListCoin[k1].Network){
+                let wallet = new MasterWallet.ListCoin[k1]();
+                wallet.network = MasterWallet.ListCoin[k1].Network[k2];
+                tempWallet.push(wallet);   
+            }
+        }
+        if (tempWallet.length > 0) tempWallet[0].default = true;
+        return tempWallet;
+    }
+
+    // for create new wallets:
+    static createNewsallets(listCoinTemp, mnemonic){
+        console.log('mnemonic', mnemonic);
+        if (mnemonic == ''){            
+            mnemonic = bip39.generateMnemonic(); //generates string        
+        }
+        else{            
+            if(!bip39.validateMnemonic(mnemonic)){
+                console.log('validateMnemonic mnemonic', false);
+                return false;
+            }
+        }
+        let masterWallet = MasterWallet.getMasterWallet();
+        listCoinTemp.forEach(wallet => { 
+            if (wallet.default){
+                wallet.default = false;
+                wallet.mnemonic = mnemonic;              
+                //create address, private-key ...
+                wallet.createAddressPrivatekey();
+                masterWallet.push(wallet); 
+            }             
+        });
+        MasterWallet.UpdateLocalStore(masterWallet);
         return masterWallet;
     }
 

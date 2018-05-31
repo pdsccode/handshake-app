@@ -41,7 +41,8 @@ export class Ethereum extends Wallet{
         this.address = address;
         this.privateKey = privateKey;       
         
-        this.chainId = this.network == Ethereum.Network.Mainnet ? 1 : 4
+        this.chainId = this.network == Ethereum.Network.Mainnet ? 1 : 4                
+
     }    
 
     getWeb3(){

@@ -40,6 +40,7 @@ import {formValueSelector} from 'redux-form';
 import { required } from '@/components/core/form/validation';
 import { Field } from "redux-form";
 import { initHandshake } from '@/reducers/handshake/action';
+import CoinTemp from '@/pages/Wallet/CoinTemp';
 var QRCode = require('qrcode.react');
 
 window.Clipboard = (function(window, document, navigator) { var textArea, copy; function isOS() { return navigator.userAgent.match(/ipad|iphone/i); } function createTextArea(text) { textArea = document.createElement('textArea'); textArea.value = text; document.body.appendChild(textArea); } function selectText() { var range, selection; if (isOS()) { range = document.createRange(); range.selectNodeContents(textArea); selection = window.getSelection(); selection.removeAllRanges(); selection.addRange(range); textArea.setSelectionRange(0, 999999); } else { textArea.select(); } } function copyToClipboard() { document.execCommand('copy'); document.body.removeChild(textArea); } copy = function(text) { createTextArea(text); selectText(); copyToClipboard(); }; return { copy: copy }; })(window, document, navigator);
@@ -73,6 +74,10 @@ class Wallet extends React.Component {
       inputSendValue: '',
       isRestoreLoading: false,
       erroValueBackup: false,
+      listCoinTempToCreate: [],
+      countCheckCoinToCreate: 1,
+      walletKeyDefaultToCreate: 1,
+      input12PhraseValue: '',
       walletsData: false,
       isNewCCOpen: false
     };
@@ -222,30 +227,33 @@ class Wallet extends React.Component {
         }
       })
 
-    obj.push({
-      title: 'Make it default ' + (wallet.default ? "✓ " : ""),
-      handler: () => {
-        wallet.default = !wallet.default;
-        this.toggleBottomSheet();
-        // reset all wallet defaul:
-        let lstWalletTemp = this.getAllWallet();
-        if (wallet.default) lstWalletTemp.forEach(wal => {if (wal != wallet){wal.default = false;}})
-        // Update wallet master from local store:
-        MasterWallet.UpdateLocalStore(lstWalletTemp);
-      }
-    })
-    if (!wallet.isReward)
-      obj.push({
-        title: 'Remove',
-        handler: () => {
-          this.setState({walletSelected: wallet});
-          this.modalBetRef.open();
-          this.toggleBottomSheet();
+      if (!wallet.isReward){
+        obj.push({
+          title: 'Make it default for {0} '.format(wallet.name) + (wallet.default ? "✓ " : ""),
+          handler: () => {          
+            wallet.default = !wallet.default;    
+            this.toggleBottomSheet(); 
+            // reset all wallet default:
+            let lstWalletTemp = this.getAllWallet();
+            if (wallet.default) lstWalletTemp.forEach(wal => {if (wal != wallet && wal.name == wallet.name){wal.default = false;}})          
+            // Update wallet master from local store:
+            MasterWallet.UpdateLocalStore(lstWalletTemp);
+          }
+        })
+        
+          obj.push({
+            title: 'Remove',
+            handler: () => {
+              this.setState({walletSelected: wallet});          
+              this.modalBetRef.open();   
+              this.toggleBottomSheet();   
+            }
+          })
         }
-      })
 
       return obj;
-  }
+    }
+  
 
   // Remove wallet function:
   removeWallet = () =>{
@@ -323,8 +331,10 @@ class Wallet extends React.Component {
     let obj = [];
     obj.push({
       title: "Add new",
-      handler: () => {
-
+      handler: () => {        
+          this.setState({isRestoreLoading: false, countCheckCoinToCreate: 1, listCoinTempToCreate: MasterWallet.getListCoinTemp()});
+          this.modalCreateWalletRef.open();
+          this.toggleBottomSheet();
       }
     })
     obj.push({
@@ -347,6 +357,44 @@ class Wallet extends React.Component {
       }
     })
     return obj;
+  }
+
+  // on select type of wallet to create:
+  onSelectCoinClick = (wallet) =>{
+    let listCoinTemp =  this.state.listCoinTempToCreate;
+    
+    wallet.default = !wallet.default;          
+    let countCheckCoinToCreate = 0;
+    listCoinTemp.forEach(wal => { if (wal.default) countCheckCoinToCreate += 1;})
+    
+    this.setState({erroValueBackup: false,listCoinTempToCreate: listCoinTemp, countCheckCoinToCreate: countCheckCoinToCreate});
+  }
+
+  createNewWallets = () =>{
+    this.setState({isRestoreLoading: true, erroValueBackup: false});
+    let listCoinTemp =  this.state.listCoinTempToCreate;
+
+    let phrase = this.state.input12PhraseValue.trim();
+
+    let masterWallet = MasterWallet.createNewsallets(listCoinTemp, phrase);
+    if (masterWallet == false){
+      this.setState({isRestoreLoading: false, erroValueBackup: true});        
+    }
+    else{
+      this.splitWalletData(masterWallet);
+      this.modalCreateWalletRef.close();      
+    }    
+    
+  }
+  update12PhraseValue = (evt) => {
+    this.setState({
+      input12PhraseValue: evt.target.value
+    });
+  }  
+  updateWalletKeyDefaultValue = (evt) => {    
+    this.setState({
+      walletKeyDefaultToCreate: evt.target.value
+    });    
   }
 
   handleToggleNewCC = () => {
@@ -395,6 +443,13 @@ class Wallet extends React.Component {
     return this.state.listRewardWalletBalance.map((wallet) => {
       return <WalletItem key={wallet.address+wallet.network} wallet={wallet} onMoreClick={() => this.onMoreClick(wallet)} onWarningClick={() => this.onWarningClick(wallet)} onAddressClick={() => this.onAddressClick(wallet)} />
     });
+  }
+
+  get getListCoinTempForCreate(){
+    return this.state.listCoinTempToCreate.map((walletTemp) => {      
+      return <CoinTemp key={walletTemp.network} wallet={walletTemp} onClick={() => this.onSelectCoinClick(walletTemp)} />;
+    })
+
   }
 
   afterWalletFill = () =>{
@@ -449,17 +504,17 @@ class Wallet extends React.Component {
         </Modal>
 
         {/* Modal for Backup wallets : */}
-        <ModalDialog title="Backup wallets" onRef={modal => this.modalBackupRef = modal}>
+        <Modal title="Backup wallets" onRef={modal => this.modalBackupRef = modal}>
           <div className="bodyTitle">This data is the only way to restore your wallets. Save them somewhere safe and secret</div>
           <div className='bodyBackup'>
           <textarea readonly onClick={ this.handleChange } onFocus={ this.handleFocus }          
            value={ this.state.walletsData ? JSON.stringify(this.state.walletsData) : ''}/>
           <Button className="button" cssType="danger" onClick={() => {Clipboard.copy(JSON.stringify(this.state.walletsData)); this.modalBackupRef.close(); }} >Copy it somewhere safe</Button>
           </div>
-        </ModalDialog>
+        </Modal>
 
         {/* Modal for Restore wallets : */}
-        <ModalDialog title="Restore wallets" onRef={modal => this.modalRestoreRef = modal}>
+        <Modal title="Restore wallets" onRef={modal => this.modalRestoreRef = modal}>
           <div className="bodyTitle">This data is the only way to restore your wallets.</div>
           <div className='bodyBackup'>
           <textarea required                         
@@ -470,7 +525,7 @@ class Wallet extends React.Component {
             Restore now
           </Button>
           </div>
-        </ModalDialog>
+        </Modal>
 
         
         {/* Modal for Copy address : */}
@@ -485,6 +540,36 @@ class Wallet extends React.Component {
           </Button>
           </div>
         </ModalDialog>
+
+        {/* Modal for Create/Import wallet : */}
+        <Modal title="Create Wallet" onRef={modal => this.modalCreateWalletRef = modal}>
+        <Row className="list">
+          <Header title="Select coins" hasLink={false} />
+        </Row>
+          <Row className="list">
+            {this.getListCoinTempForCreate}
+          </Row>
+          <Row className="list">
+          <Header title="Wallet key" />
+          </Row>
+          <select onChange={evt => this.updateWalletKeyDefaultValue(evt)} className="selectWalletKey">
+            <option value="1">Random</option>
+            <option value="2">Specify recovery Phrase</option>            
+          </select>
+          { this.state.walletKeyDefaultToCreate == 2 ?
+            <Input name="phrase" placeholder="Type 12 words mnemonic" required
+            className={this.state.erroValueBackup ? 'input12Phrase error' : 'input12Phrase'} 
+                onChange={evt => this.update12PhraseValue(evt)}/>
+            : ""
+          }
+
+          <Button block isLoading={this.state.isRestoreLoading} disabled={this.state.countCheckCoinToCreate == 0 || (this.state.walletKeyDefaultToCreate == 2 && this.state.input12PhraseValue.trim().split(/\s+/g).length != 12) } className="button" cssType="success" onClick={() => {this.createNewWallets()}} >                        
+            Create
+          </Button>
+          <Header />
+          {/*<div className="linkImportWallet">I want to import coins</div>*/}
+          
+        </Modal>
 
         {/* Render list wallet: */}
         <Row className="list">

@@ -20,7 +20,16 @@ export class Wallet {
     return this.address.replace(this.address.substr(5, 31), '...');
   }
   getNetwork(){
-    return "";
+    return this.network;
   }
-  
+  getNetworkName (){
+    
+    for(var k in this.constructor.Network){
+        if (this.constructor.Network[k] == this.network) {
+          this.title = k;
+          return this.title;
+        }
+    }
+    return this.title;
+  }
 }
