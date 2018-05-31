@@ -22,6 +22,7 @@ class Button extends React.PureComponent {
     cssType: PropTypes.string,
     app: PropTypes.object,
     immunity: PropTypes.bool,
+    isLoading: PropTypes.bool,
   }
 
   static defaultProps = {
@@ -32,6 +33,46 @@ class Button extends React.PureComponent {
     small: false,
     link: false,
     onClick: () => {},
+    isLoading: false,
+  }
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      immunity: true,
+    };
+
+    this.loading = this.loading.bind(this);
+    this.immunity = this.immunity.bind(this);
+    this.onClick = this.onClick.bind(this);
+  }
+
+  onClick(e) {
+    if (e.target === this.btnRef) {
+      this.setState({ immunity: false });
+    }
+    this.props.onClick(e);
+  }
+
+  immunity() {
+    if (this.props.immunity) {
+      return true;
+    }
+    if (this.state.immunity) {
+      return true;
+    }
+    return false;
+  }
+
+  loading() {
+    if (this.props.isLoading) {
+      return <span dangerouslySetInnerHTML={{ __html: loading }} />;
+    }
+    if (this.props.app.isCalling && !this.immunity()) {
+      return <span dangerouslySetInnerHTML={{ __html: loading }} />;
+    }
+    return null;
   }
 
   typeClass(type) {
@@ -48,7 +89,7 @@ class Button extends React.PureComponent {
 
   render() {
     const {
-      type, cssType, onClick, link, block, small, className, children, to, disabled, immunity,
+      type, cssType, link, block, small, className, children, to, disabled, isLoading,
     } = this.props;
     const typeClass = this.typeClass(cssType);
     const Tag = link ? Link : 'button';
@@ -64,18 +105,15 @@ class Button extends React.PureComponent {
           `${block ? 'btn-block' : ''}`,
           `${small ? 'small' : ''}`,
           `${disabled ? 'disabled' : ''}`,
-          `${this.props.app.isCalling && !immunity ? 'disabled' : ''}`,
+          `${isLoading || (this.props.app.isCalling && !this.immunity()) ? 'disabled' : ''}`,
         )}
         type={type || ''}
-        onClick={onClick}
-        disabled={this.props.app.isCalling || disabled}
+        onClick={this.onClick}
+        disabled={isLoading || (this.props.app.isCalling && !this.immunity()) || disabled}
+        ref={(div) => { this.btnRef = div; return null; }}
       >
-        {
-          this.props.app.isCalling && !immunity && (
-            <span dangerouslySetInnerHTML={{ __html: loading }} />
-          )
-        }
-        {this.props.app.isCalling && !immunity ? '' : children}
+        {this.loading()}
+        {isLoading || (this.props.app.isCalling && !this.immunity()) ? '' : children}
       </Tag>
     );
   }
