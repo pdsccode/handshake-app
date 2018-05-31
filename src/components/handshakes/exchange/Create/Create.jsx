@@ -2,6 +2,7 @@ import React from 'react';
 import {FormattedMessage, injectIntl} from 'react-intl';
 import Feed from '@/components/core/presentation/Feed';
 import Button from '@/components/core/controls/Button';
+import axios from 'axios';
 
 import createForm from '@/components/core/form/createForm';
 import {
@@ -12,7 +13,8 @@ import {
   fieldRadioButton
 } from '@/components/core/form/customField';
 import {maxValue, minValue, required} from '@/components/core/form/validation';
-import {Field, formValueSelector} from 'redux-form';
+import {Field, formValueSelector, change } from 'redux-form';
+import { bindActionCreators } from 'redux';
 import {connect} from 'react-redux';
 import {createOffer, getOfferPrice} from '@/reducers/exchange/action';
 import {
@@ -68,6 +70,15 @@ class Component extends React.Component {
   }
 
   async componentDidMount() {
+    const { rfChange } = this.props
+    navigator.geolocation.getCurrentPosition((location) => {
+      const { coords: { latitude, longitude } } = location
+      axios.get(`http://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&sensor=true`).then((response) => {
+        const address = response.data.results[0].formatted_address
+        rfChange(nameFormExchangeCreate, 'address', address)
+      })
+    });
+
     // this.getCryptoPriceByAmount(0);
     this.intervalCountdown = setInterval(() => {
       const { amount } = this.props;
@@ -531,10 +542,11 @@ const mapStateToProps = (state) => {
 //   type: 'danger',
 // });
 
-const mapDispatchToProps = {
+const mapDispatchToProps = (dispatch) => ({
   createOffer,
   getOfferPrice,
-  showAlert
-};
+  showAlert,
+  rfChange: bindActionCreators(change, dispatch)
+});
 
 export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(Component));
