@@ -13,14 +13,10 @@ import Input from '@/components/core/forms/Input/Input';
 import dontIcon from '@/assets/images/icon/3-dot-icon.svg';
 import iconSafe from '@/assets/images/icon/icon-safe.svg';
 import iconWarning from '@/assets/images/icon/icon-warning.svg';
-<<<<<<< HEAD
-//import iconChecked from '@/assets/images/icon/icon-check.png';
-=======
-// import iconChecked from '@/assets/images/icon/icon-check.png';
->>>>>>> 972d9c5ddb307ff08237c396b333d49abc548fca
 import Header from './Header';
 import HeaderMore from './HeaderMore';
 import WalletItem from './WalletItem';
+import WalletProtect from './WalletProtect';
 import FeedCreditCard from "@/components/handshakes/exchange/Feed/FeedCreditCard";
 import {createCCOrder, getCcLimits, getCryptoPrice, getUserCcLimit, getUserProfile,} from '@/reducers/exchange/action';
 import ReactBottomsheet from 'react-bottomsheet';
@@ -71,7 +67,6 @@ class Wallet extends React.Component {
       listMenu: [],
       walletSelected: null,      
       inputSendValue: '',
-      isShowFillWallet: false,
       walletsData: false,
       isNewCCOpen: false
     };
@@ -187,7 +182,7 @@ class Wallet extends React.Component {
       obj.push({
         title: 'Fill up',
         handler: () => {
-          this.setState({walletSelected: wallet, isShowFillWallet: true});
+          this.setState({walletSelected: wallet});
           this.toggleBottomSheet();
           this.modalFillRef.open();
         }
@@ -196,13 +191,17 @@ class Wallet extends React.Component {
       obj.push({
         title: 'Protected this wallet',
         handler: () => {
-
+          this.setState({walletSelected: wallet});
+          this.toggleBottomSheet();
+          this.modalProtectRef.open();
         }
       })
       obj.push({
         title: 'Transaction history',
         handler: () => {
-
+          this.setState({walletSelected: wallet});
+          this.toggleBottomSheet();
+          this.modalFillRef.open();
         }
       })
       obj.push({
@@ -395,7 +394,7 @@ class Wallet extends React.Component {
   }
 
   render() {
-    const {intl, userProfile, cryptoPrice, amount, userCcLimit, ccLimits} = this.props;    
+    const {intl, userProfile, cryptoPrice, amount, userCcLimit, ccLimits} = this.props;
     return (
 
       <Grid>
@@ -430,7 +429,12 @@ class Wallet extends React.Component {
         </Modal>
 
         <Modal title="Fill up" onRef={modal => this.modalFillRef = modal}>
-          <FeedCreditCard buttonTitle="Send" callbackSuccess={this.afterWalletFill} />
+          <FeedCreditCard buttonTitle="Send" currencyWallet={ this.state.walletSelected ? this.state.walletSelected.name : ""} 
+            callbackSuccess={this.afterWalletFill} />
+        </Modal>
+
+        <Modal title="Protect your wallet" onRef={modal => this.modalProtectRef = modal}> 
+          <WalletProtect />
         </Modal>
 
         {/* Modal for Backup wallets : */}
