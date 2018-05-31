@@ -318,7 +318,7 @@ class FeedCreditCard extends React.Component {
 
   render() {
     const {intl, userProfile, cryptoPrice, amount, userCcLimit, ccLimits, buttonTitle} = this.props;
-
+    const { showCCScheme } = this.state;
     const fiatCurrency = '$';
     const total = cryptoPrice && cryptoPrice.fiatAmount;
 
@@ -337,7 +337,7 @@ class FeedCreditCard extends React.Component {
                 <Feed className="feed p-2 mb-2" background={mainColor}>
                   <div style={{ color: 'white' }}>
                     {
-                      amount && (
+                      showCCScheme && (
                         <div style={{ background: '#50af4f' }} className="pt-2 px-2 rounded mb-2">
                           {
                             ccLimits.map((ccLimit, index) => {
