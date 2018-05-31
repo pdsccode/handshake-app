@@ -21,19 +21,19 @@ export class Bitcoin extends Wallet{
       return this.address.replace(this.address.substr(12, 19), '...');
     }
 
-    setDefaultNetwork(){      
-      bitcore.Networks.defaultNetwork = bitcore.Networks.livenet; 
-      console.log("Bitcoin network: ", bitcore.Networks.defaultNetwork);     
+    setDefaultNetwork(){
+      bitcore.Networks.defaultNetwork = bitcore.Networks.livenet;
+      console.log("Bitcoin network: ", bitcore.Networks.defaultNetwork);
     }
 
     createAddressPrivatekey(){
 
       this.setDefaultNetwork();
-      
+
       let Mnemonic = require('bitcore-mnemonic');
-           
+
       var code = null;
-      
+
       if (this.mnemonic == ''){
         code = new Mnemonic();
         this.mnemonic = code.phrase;
@@ -41,17 +41,20 @@ export class Bitcoin extends Wallet{
       else
         code = new Mnemonic(this.mnemonic);
 
-      let xpriv = code.toHDPrivateKey();      
+      let xpriv = code.toHDPrivateKey();
 
       let hdPrivateKey = new bitcore.HDPrivateKey(xpriv);
       var derived = hdPrivateKey.derive("m/44'/{0}'/0'/0/0".format(this.coinType));
-      this.address = derived.privateKey.toAddress().toString();                        
+      this.address = derived.privateKey.toAddress().toString();
       this.privateKey  = derived.privateKey.toString();
       //this.xprivateKey = derived.xprivkey;
 
   }
 
     async getBalance() {
+
+      this.setDefaultNetwork();
+
       var url = this.network + '/addr/' + this.address + '/balance';
 
       var response = await axios.get(url);
@@ -63,8 +66,8 @@ export class Bitcoin extends Wallet{
     }
 
 
-  async transfer(toAddress, amountToSend){ 
-    
+  async transfer(toAddress, amountToSend){
+
     await this.setDefaultNetwork();
 
     console.log('bitcore.Networks.defaultNetwork', bitcore.Networks.defaultNetwork);
@@ -80,18 +83,18 @@ export class Bitcoin extends Wallet{
 
       var data = {};
       var fee = await this.getFee(4);
-      
+
       console.log("fee:", + fee);
-      
+
       if(fee){
-        
+
         data.fee = fee;
         var utxos = await this.utxosForAmount(Number(amountToSend));
-        
+
         console.log("utxos", utxos);
-        
-        if(utxos){                
-          
+
+        if(utxos){
+
           data.utxos = utxos;
           var fromAddress = this.address;
           var privateKey = this.privateKey;
@@ -105,14 +108,14 @@ export class Bitcoin extends Wallet{
           console.log("transaction", transaction);
           var rawTx = transaction.serialize();
           var txHash = await this.sendRawTx(rawTx);
-          
+
           console.log(txHash);
 
           return "Please allow for 30 seconds before transaction appears on blockchain";
         }
         else{
           // need update error code:
-            return "You don't have enough amount.";            
+            return "You don't have enough amount.";
         }
       }
     }
@@ -123,10 +126,10 @@ export class Bitcoin extends Wallet{
   }
 
   async retrieveUtxos () {
-    
+
     var url = this.network +'/addr/' + this.address + '/utxo';
 
-    var response = await axios.get(url);    
+    var response = await axios.get(url);
 
     if (response.status == 200){
       var utxos = response.data;
@@ -139,25 +142,25 @@ export class Bitcoin extends Wallet{
   }
 
   async utxosForAmount(amount) {
-    var utxos = await this.retrieveUtxos();    
+    var utxos = await this.retrieveUtxos();
     if (utxos && utxos.length > 0 ){
-      var result = this.findUtxos(utxos, 0, amount, []);        
+      var result = this.findUtxos(utxos, 0, amount, []);
       if(!result)
         return reject({"error": "Insufficent Balance"});
       return result;
-    }    
+    }
     return false;
   }
 
-  findUtxos (utxos, pos, amount , result) {      
+  findUtxos (utxos, pos, amount , result) {
     if(pos >= utxos.length)
       return null;
 
     var utxo = utxos[pos];
-    result.push(utxo);    
+    result.push(utxo);
 
     //in case of enough money
-    if(utxo.satoshis >= amount){ 
+    if(utxo.satoshis >= amount){
       return result;
     }
     else{
@@ -172,14 +175,14 @@ export class Bitcoin extends Wallet{
 
     if (response.status == 200){
 
-      var txFee = bitcore.Unit.fromBTC(response.data[blocks]).toSatoshis();      
+      var txFee = bitcore.Unit.fromBTC(response.data[blocks]).toSatoshis();
       return txFee;
     }
     return false;
   }
 
-   async sendRawTx(rawTx) {     
-   
+   async sendRawTx(rawTx) {
+
      var txHash = await axios.post(uri, {
        rawtx: rawTx
      });
@@ -196,7 +199,7 @@ export class Bitcoin extends Wallet{
 
     if (response.status == 200){
       console.log(response.data)
-      
+
     }
    }
 

@@ -13,13 +13,15 @@ import '../styles.scss';
 import {validate} from '@/components/handshakes/exchange/validation';
 import throttle from 'lodash/throttle';
 import createForm from '@/components/core/form/createForm'
+import { change } from 'redux-form'
 import {fieldCleave, fieldDropdown, fieldInput, fieldRadioButton} from '@/components/core/form/customField'
 import {required} from '@/components/core/form/validation'
-import {createCCOrder, getCcLimits, getCryptoPrice, getUserCcLimit, getUserProfile} from '@/reducers/exchange/action';
+import {createCCOrder, getCcLimits, getCryptoPrice, getUserCcLimit} from '@/reducers/exchange/action';
 import {API_URL, CRYPTO_CURRENCY, CRYPTO_CURRENCY_DEFAULT} from "@/constants";
 import {FIAT_CURRENCY} from "@/constants";
 import CryptoPrice from "@/models/CryptoPrice";
 import {MasterWallet} from "@/models/MasterWallet";
+import { bindActionCreators } from "redux";
 
 const nameFormCreditCard = 'creditCard'
 const FormCreditCard = createForm({ propsReduxForm: { form: nameFormCreditCard,
@@ -46,7 +48,11 @@ class FeedCreditCard extends React.Component {
   }
 
   async componentDidMount() {
-    this.props.getUserProfile({ BASE_URL: API_URL.EXCHANGE.BASE, PATH_URL: API_URL.EXCHANGE.GET_USER_PROFILE});
+    const { currencyForced, rfChange } = this.props
+    if (currencyForced) {
+      rfChange(nameFormCreditCard, 'currency', currencyForced)
+    }
+
     this.props.getCcLimits({ BASE_URL: API_URL.EXCHANGE.BASE, PATH_URL: API_URL.EXCHANGE.GET_CC_LIMITS});
     this.props.getUserCcLimit({ BASE_URL: API_URL.EXCHANGE.BASE, PATH_URL: API_URL.EXCHANGE.GET_USER_CC_LIMIT});
 
@@ -124,7 +130,7 @@ class FeedCreditCard extends React.Component {
       qs: data,
       successFn: this.handleGetCryptoPriceSuccess,
       errorFn: this.handleGetCryptoPriceFailed,
-      });
+    });
   }
 
   handleGetCryptoPriceSuccess = (data) => {
@@ -132,7 +138,7 @@ class FeedCreditCard extends React.Component {
     const { userCcLimit } = this.props;
     const cryptoPrice = CryptoPrice.cryptoPrice(data);
 
-    if (userCcLimit && userCcLimit.limit < userCcLimit.amount + cryptoPrice.fiatAmount) {
+    if (this.state.amount && userCcLimit && userCcLimit.limit < userCcLimit.amount + cryptoPrice.fiatAmount) {
       this.setState({showCCScheme: true});
     }
   }
@@ -143,7 +149,7 @@ class FeedCreditCard extends React.Component {
 
 
   handleCreateCCOrder = (params) => {
-    const {cryptoPrice} = this.props;
+    const {cryptoPrice, addressForced } = this.props;
 
     let listWallet = [];
     if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
@@ -153,12 +159,16 @@ class FeedCreditCard extends React.Component {
     }
 
     let address = '';
-    for (let i = 0; i < listWallet.length; i++) {
-      let wallet = listWallet[i];
+    if (addressForced) {
+      address = addressForced;
+    } else {
+      for (let i = 0; i < listWallet.length; i++) {
+        let wallet = listWallet[i];
 
-      if (wallet.name === cryptoPrice.currency) {
-        address = wallet.address;
-        break;
+        if (wallet.name === cryptoPrice.currency) {
+          address = wallet.address;
+          break;
+        }
       }
     }
 
@@ -194,7 +204,7 @@ class FeedCreditCard extends React.Component {
         (
           <div className="py-2">
             <Feed className="feed p-2" background="#259B24">
-              <div className="text-white d-flex align-items-center" style={{ minHeight: '75px' }}>
+              <div className="text-white d-flex align-items-center" style={{ minHeight: '50px' }}>
                 <div>Buy success</div>
               </div>
             </Feed>
@@ -227,7 +237,7 @@ class FeedCreditCard extends React.Component {
         (
           <div className="py-2">
             <Feed className="feed p-2" background="#259B24">
-              <div className="text-white d-flex align-items-center" style={{ minHeight: '75px' }}>
+              <div className="text-white d-flex align-items-center" style={{ minHeight: '50px' }}>
                 <div>{e.response?.data?.message}</div>
               </div>
             </Feed>
@@ -317,7 +327,7 @@ class FeedCreditCard extends React.Component {
   // }
 
   render() {
-    const {intl, userProfile, cryptoPrice, amount, userCcLimit, ccLimits, buttonTitle} = this.props;
+    const {intl, userProfile, cryptoPrice, amount, userCcLimit, ccLimits, buttonTitle, currencyForced } = this.props;
     const { showCCScheme } = this.state;
     const fiatCurrency = '$';
     const total = cryptoPrice && cryptoPrice.fiatAmount;
@@ -330,86 +340,82 @@ class FeedCreditCard extends React.Component {
 
     return (
       <div>
-        <div className='row'>
-          <div className='col'>
-            <div>
-              <FormCreditCard onSubmit={this.handleSubmit} validate={this.handleValidate}>
-                <Feed className="feed p-2 mb-2" background={mainColor}>
-                  <div style={{ color: 'white' }}>
-                    {
-                      showCCScheme && (
-                        <div style={{ background: '#50af4f' }} className="pt-2 px-2 rounded mb-2">
-                          {
-                            ccLimits.map((ccLimit, index) => {
-                              const { level, limit, duration } = ccLimit
-                              const isActive = curLevel === level
+        <div>
+          <FormCreditCard onSubmit={this.handleSubmit} validate={this.handleValidate}>
+            <Feed className="feed p-2 mb-2" background={mainColor}>
+              <div style={{ color: 'white' }}>
+                {
+                  showCCScheme && (
+                    <div style={{ background: '#50af4f' }} className="pt-2 px-2 rounded mb-2">
+                      {
+                        ccLimits.map((ccLimit, index) => {
+                          const { level, limit, duration } = ccLimit
+                          const isActive = curLevel === level
 
-                              let text = ''
-                              let from = newTo + 1
-                              newTo += duration
-                              let to = newTo
-                              if (index === ccLimits.length - 1) {
-                                text = `Every ${duration} days`
-                              } else {
-                                text = `Day ${from}-${to}`
-                              }
-
-                              return (
-                                <LevelItem key={index} style={{ margin: '0 8px 8px 0', opacity: isActive ? '' : 0.6 }}>
-                                  <div className="rounded p-1" style={{ lineHeight: 1.2, background: isActive ? '#FF3B30' : '#84c683' }}>
-                                    {text}
-                                  </div>
-                                  <div><small>Up to {fiatCurrency}{limit}</small></div>
-                                </LevelItem>
-                              )
-                            })
+                          let text = ''
+                          let from = newTo + 1
+                          newTo += duration
+                          let to = newTo
+                          if (index === ccLimits.length - 1) {
+                            text = `Every ${duration} days`
+                          } else {
+                            text = `Day ${from}-${to}`
                           }
-                        </div>
-                      )
-                    }
-                    <div className="form-group pt-2 d-flex">
-                      <label className="col-form-label"><FormattedMessage id="buy"/></label>
-                      <div className="mx-2">
-                        <Field
-                          name="amount"
-                          type="number"
-                          step="any"
-                          validate={[required]}
-                          component={fieldInput}
-                          className="form-control-custom form-control-custom-ex d-inline-block w-100"
-                          placeholder={intl.formatMessage({id: 'amount'})}
-                          onChange={this.onAmountChange}
-                        />
-                      </div>
-                      <span className="d-inline-block ml-auto" style={{ width: '368px' }}>
-                        <Field
-                          name="currency"
-                          component={fieldRadioButton}
-                          list={CRYPTO_CURRENCY}
-                          color={mainColor}
-                          onChange={this.onCurrencyChange}
-                        />
-                      </span>
+
+                          return (
+                            <LevelItem key={index} style={{ margin: '0 8px 8px 0', opacity: isActive ? '' : 0.6 }}>
+                              <div className="rounded p-1" style={{ lineHeight: 1.2, background: isActive ? '#FF3B30' : '#84c683' }}>
+                                {text}
+                              </div>
+                              <div><small>Up to {fiatCurrency}{limit}</small></div>
+                            </LevelItem>
+                          )
+                        })
+                      }
                     </div>
-                    <div className="pb-2">
-                      <span><FormattedMessage id="askUsingCreditCard" values={{ fiatCurrency: fiatCurrency, total: total }} /></span>
-                    </div>
-                    {
-                      amount && (
-                        <CreditCard
-                          isCCExisting={userProfile && userProfile.creditCard.ccNumber.length > 0}
-                          lastDigits={userProfile && userProfile.creditCard.ccNumber}
-                          isNewCCOpen={this.state.isNewCCOpen}
-                          handleToggleNewCC={this.handleToggleNewCC}
-                        />
-                      )
-                    }
+                  )
+                }
+                <div className="form-group pt-2 d-flex">
+                  <label className="col-form-label"><FormattedMessage id="buy"/></label>
+                  <div className="mx-2">
+                    <Field
+                      name="amount"
+                      type="number"
+                      step="any"
+                      validate={[required]}
+                      component={fieldInput}
+                      className="form-control-custom form-control-custom-ex d-inline-block w-100"
+                      placeholder={intl.formatMessage({id: 'amount'})}
+                      onChange={this.onAmountChange}
+                    />
                   </div>
-                </Feed>
-                <Button block type="submit">{buttonTitle && buttonTitle || <FormattedMessage id="shakeNow"/>} </Button>
-              </FormCreditCard>
-            </div>
-          </div>
+                  <span className="d-inline-block ml-auto" style={{ width: '368px' }}>
+                    <Field
+                      name="currency"
+                      component={fieldRadioButton}
+                      list={currencyForced ? CRYPTO_CURRENCY.filter(c => c.value === currencyForced) : CRYPTO_CURRENCY}
+                      color={mainColor}
+                      onChange={this.onCurrencyChange}
+                    />
+                  </span>
+                </div>
+                <div className="pb-2">
+                  <span><FormattedMessage id="askUsingCreditCard" values={{ fiatCurrency: fiatCurrency, total: total }} /></span>
+                </div>
+                {
+                  amount && (
+                    <CreditCard
+                      isCCExisting={userProfile && userProfile.creditCard.ccNumber.length > 0}
+                      lastDigits={userProfile && userProfile.creditCard.ccNumber}
+                      isNewCCOpen={this.state.isNewCCOpen}
+                      handleToggleNewCC={this.handleToggleNewCC}
+                    />
+                  )
+                }
+              </div>
+            </Feed>
+            <Button block type="submit">{buttonTitle && buttonTitle || <FormattedMessage id="shakeNow"/>} </Button>
+          </FormCreditCard>
         </div>
         <ModalDialog onRef={modal => this.modalRef = modal}>
           {modalContent}
@@ -437,12 +443,12 @@ const mapStateToProps = (state) => ({
   currency: selectorFormCreditCard(state, 'currency'),
 });
 
-const mapDispatchToProps = {
-  getUserProfile,
-  getCryptoPrice,
-  createCCOrder,
-  getUserCcLimit,
-  getCcLimits,
-};
+const mapDispatchToProps = (dispatch) => ({
+  getCryptoPrice: bindActionCreators(getCryptoPrice, dispatch),
+  createCCOrder: bindActionCreators(createCCOrder, dispatch),
+  getUserCcLimit: bindActionCreators(getUserCcLimit, dispatch),
+  getCcLimits: bindActionCreators(getCcLimits, dispatch),
+  rfChange: bindActionCreators(change, dispatch)
+});
 
 export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(FeedCreditCard));

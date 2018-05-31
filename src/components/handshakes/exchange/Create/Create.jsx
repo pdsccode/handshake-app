@@ -2,17 +2,20 @@ import React from 'react';
 import {FormattedMessage, injectIntl} from 'react-intl';
 import Feed from '@/components/core/presentation/Feed';
 import Button from '@/components/core/controls/Button';
+import axios from 'axios';
 
 import createForm from '@/components/core/form/createForm';
 import {
   fieldCleave,
   fieldDropdown,
   fieldInput,
+  fieldPhoneInput,
   fieldNumericInput,
   fieldRadioButton
 } from '@/components/core/form/customField';
 import {maxValue, minValue, required} from '@/components/core/form/validation';
-import {Field, formValueSelector} from 'redux-form';
+import {Field, formValueSelector, change } from 'redux-form';
+import { bindActionCreators } from 'redux';
 import {connect} from 'react-redux';
 import {createOffer, getOfferPrice} from '@/reducers/exchange/action';
 import {
@@ -63,11 +66,19 @@ class Component extends React.Component {
       listMainWalletBalance: [],
       listTestWalletBalance: [],
       listRewardWalletBalance: [],
-      ipInfo: {},
     };
   }
 
   async componentDidMount() {
+    const { rfChange } = this.props
+    navigator.geolocation.getCurrentPosition((location) => {
+      const { coords: { latitude, longitude } } = location
+      axios.get(`http://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&sensor=false`).then((response) => {
+        const address = response.data.results[0] && response.data.results[0].formatted_address
+        rfChange(nameFormExchangeCreate, 'address', address)
+      })
+    });
+
     // this.getCryptoPriceByAmount(0);
     this.intervalCountdown = setInterval(() => {
       const { amount } = this.props;
@@ -154,7 +165,7 @@ class Component extends React.Component {
   getCryptoPriceByAmount = (amount) => {
     const cryptoCurrency = this.state.currency;
     const { type } = this.props;
-    const fiat_currency = 'VND';
+    const {ipInfo: {currency: fiat_currency}} = this.props;
 
     let data = {
       amount,
@@ -203,7 +214,7 @@ class Component extends React.Component {
   handleSubmit = (values) => {
     const { intl, totalAmount } = this.props;
     // const fiat_currency = this.state.ipInfo.currency;
-    const fiat_currency = 'VND';
+    const {ipInfo: {currency: fiat_currency}} = this.props;
     // console.log('valuessss', values);
 
     let listWallet = [];
@@ -270,7 +281,7 @@ class Component extends React.Component {
         (
           <div className="py-2">
             <Feed className="feed p-2" background="#259B24">
-              <div className="text-white d-flex align-items-center" style={{ minHeight: '75px' }}>
+              <div className="text-white d-flex align-items-center" style={{ minHeight: '50px' }}>
                 <div>{message}</div>
               </div>
             </Feed>
@@ -310,7 +321,7 @@ class Component extends React.Component {
     // this.props.history.push(URL.HANDSHAKE_ME);
 
     this.props.showAlert({
-      message: <div className="text-center"><FormattedMessage id="createOfferSuccessMassage"/></div>,
+      message: <div className="text-center"><FormattedMessage id="createOfferSuccessMessage"/></div>,
       timeOut: 3000,
       type: 'danger',
       callBack: () => {
@@ -473,11 +484,11 @@ class Component extends React.Component {
                 }
                 <div className="d-flex mt-2">
                   <label className="col-form-label mr-auto" style={{ width: '120px' }}>Phone</label>
-                  <div className="w-100">
+                  <div className="input-group w-100">
                     <Field
                       name="phone"
                       className="form-control-custom form-control-custom-ex w-100"
-                      component={fieldInput}
+                      component={fieldPhoneInput}
                       type="tel"
                       placeholder="+74995926433"
                       // validate={[required, currency === 'BTC' ? minValue001 : minValue01]}
@@ -522,6 +533,7 @@ const mapStateToProps = (state) => {
 
   return { amount, currency, totalAmount, type, sellPriceType,
     offerPrice: state.exchange.offerPrice,
+    ipInfo: state.app.ipInfo
   };
 };
 
@@ -531,10 +543,12 @@ const mapStateToProps = (state) => {
 //   type: 'danger',
 // });
 
-const mapDispatchToProps = {
-  createOffer,
-  getOfferPrice,
-  showAlert
-};
+const mapDispatchToProps = (dispatch) => ({
+  createOffer: bindActionCreators(createOffer, dispatch),
+  getOfferPrice: bindActionCreators(getOfferPrice, dispatch),
+  showAlert: bindActionCreators(showAlert, dispatch),
+  rfChange: bindActionCreators(change, dispatch)
+});
+
 
 export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(Component));
