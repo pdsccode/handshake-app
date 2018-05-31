@@ -1,21 +1,24 @@
 @import './src/styles/style';
+
 .wrapperBettingFeed {
-    padding: rem-calc(30px 22px 36px 25px);
-    margin-bottom: rem-calc(16px);
-    display: flex;
+  display: flex;
+  justify-content: space-between;
 
-    .item {
-        flex-grow: 1; /* default 0 */
-      }
+  .item {
+    //flex-grow: 1; /* default 0 */
+    flex-basis: 49.7%;
+    border: none;
+    padding: 0;
+  }
 
-    .groupBook {
-        flex-grow: 1;
-        background-color: "black";
+  .groupBook {
+    //flex-grow: 1;
+    background-color: "black";
 
-    }
-    .shake {
-        flex-grow: 1;
-        background-color: "yellow";
+  }
+  .shake {
+    //flex-grow: 1;
+    background-color: "yellow";
 
-    }
+  }
 }

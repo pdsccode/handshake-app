@@ -34,7 +34,7 @@ import GroupBook from './GroupBook';
 
 class FeedBetting extends React.Component {
   static propTypes = {
-    
+
   }
 
   static defaultProps = {
@@ -45,14 +45,14 @@ class FeedBetting extends React.Component {
       super(props);
 
       this.state = {
-          
+
       };
 
 
   }
 
   componentDidMount() {
-   
+
   }
 
   componentWillReceiveProps(nextProps) {
@@ -60,16 +60,16 @@ class FeedBetting extends React.Component {
   }
 
   render() {
-    
+
 
     return (
       <div>
         {/* Feed */}
-        <Feed className="feed" handshakeId={this.props.id} onClick={this.props.onFeedClick}>
+        <Feed className="feed" handshakeId={this.props.id} onClick={this.props.onFeedClick} background="white">
           <div className="wrapperBettingFeed">
               <div className="item">
-              <GroupBook/>
-              <GroupBook/>
+              <GroupBook amountColor="#FA6B49" />
+              <GroupBook amountColor="#8BF275" />
               </div>
               <div className="item">
               <BettingShake/>
