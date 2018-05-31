@@ -21,7 +21,6 @@ import HeaderMore from './HeaderMore';
 import WalletItem from './WalletItem';
 import WalletProtect from './WalletProtect';
 import FeedCreditCard from "@/components/handshakes/exchange/Feed/FeedCreditCard";
-import {createCCOrder, getCcLimits, getCryptoPrice, getUserCcLimit, getUserProfile,} from '@/reducers/exchange/action';
 import ReactBottomsheet from 'react-bottomsheet';
 // var ReactBottomsheet = require('react-bottomsheet');
 // var Blob = require('./Blob.js');
@@ -41,6 +40,8 @@ import {formValueSelector} from 'redux-form';
 import { required } from '@/components/core/form/validation';
 import { Field } from "redux-form";
 import { initHandshake } from '@/reducers/handshake/action';
+var QRCode = require('qrcode.react');
+
 window.Clipboard = (function(window, document, navigator) { var textArea, copy; function isOS() { return navigator.userAgent.match(/ipad|iphone/i); } function createTextArea(text) { textArea = document.createElement('textArea'); textArea.value = text; document.body.appendChild(textArea); } function selectText() { var range, selection; if (isOS()) { range = document.createRange(); range.selectNodeContents(textArea); selection = window.getSelection(); selection.removeAllRanges(); selection.addRange(range); textArea.setSelectionRange(0, 999999); } else { textArea.select(); } } function copyToClipboard() { document.execCommand('copy'); document.body.removeChild(textArea); } copy = function(text) { createTextArea(text); selectText(); copyToClipboard(); }; return { copy: copy }; })(window, document, navigator);
 
 const nameFormSendWallet = 'sendWallet';
@@ -58,7 +59,7 @@ const selectorFormCreditCard = formValueSelector(nameFormCreditCard);
 class Wallet extends React.Component {
   constructor(props) {
 
-    super(props);
+    super(props);    
     this.state = {
       data: {},
       isLoading: false,
@@ -68,14 +69,14 @@ class Wallet extends React.Component {
       listRewardWalletBalance: [],
       bottomSheet: false,
       listMenu: [],
-      walletSelected: null,      
+      walletSelected: null,
       inputSendValue: '',
       isRestoreLoading: false,
       erroValueBackup: false,
       walletsData: false,
       isNewCCOpen: false
     };
-    this.props.setHeaderRight(this.headerRight());    
+    this.props.setHeaderRight(this.headerRight());
   }
 
   headerRight() {
@@ -90,50 +91,52 @@ class Wallet extends React.Component {
 
     listWallet.forEach(wallet => {
       // is reward wallet:
-      if (wallet.isReward){        
+      if (wallet.isReward){
         listRewardWallet.push(wallet);
       }
       // is Mainnet
-      else if (wallet.network === MasterWallet.ListCoin[wallet.className].Network.Mainnet){        
+      else if (wallet.network === MasterWallet.ListCoin[wallet.className].Network.Mainnet){
         listMainWallet.push(wallet);
       }
       else{
-        // is Testnet        
+        // is Testnet
         listTestWallet.push(wallet);
       }
     });
 
     this.setState({isLoading: true, listMainWalletBalance: listMainWallet, listTestWalletBalance: listTestWallet, listRewardWalletBalance: listRewardWallet});
   }
+  componentDidMount1(){
 
+  }
    async componentDidMount() {
 
     let listWallet = await MasterWallet.getMasterWallet();
+    console.log("listWallet", listWallet);
 
     // console.log("default", MasterWallet.getWalletDefault("ETH"))
 
     if (listWallet == false){
-      listWallet = await MasterWallet.createMasterWallet();
+        listWallet = await MasterWallet.createMasterWallet();
+        // fill data:
+        await this.splitWalletData(listWallet)
+    }
+    else{
+      this.splitWalletData(listWallet)
+      console.log('update balance for lst wallet');
+      await this.getListBalace(listWallet);
     }
      /*var btc = new Bitcoin();
      var tx = await btc.transfer("tprv8ccSMiuz5MfvmYHzdMbz3pjn5uW3G8zxM975sv4MxSGkvAutv54raKHiinLsxW5E4UjyfVhCz6adExCmkt7GjC41cYxbNxt5ZqyJBdJmqPA","mrPJ6rBHpJGnsLK3JGfJQjdm5vkjeAb63M", 0.0001);
 
-     console.log(tx)*/
-
-     // fill data:
-     await this.splitWalletData(listWallet)
-
-     // update balance for lst wallet:
-     await this.getListBalace();
+     console.log(tx)*/     
   }
 
   getAllWallet(){
     return this.state.listMainWalletBalance.concat(this.state.listTestWalletBalance).concat(this.state.listRewardWalletBalance);
   }
 
-  async getListBalace() {
-
-    let listWallet = this.getAllWallet();
+  async getListBalace(listWallet) {
 
     const pros = []
 
@@ -163,7 +166,7 @@ class Wallet extends React.Component {
   toggleBottomSheet () {
     let obj = (this.state.bottomSheet) ? { 'bottomSheet': false } : { 'bottomSheet': true }
     this.setState(obj)
-  }  
+  }
 
   copyToClipboard =(text) => {
     var textField = document.createElement('textarea')
@@ -173,7 +176,7 @@ class Wallet extends React.Component {
     document.execCommand('copy')
     textField.remove()
   }
-  
+
   // create list menu of wallet item when click Show more ...
   creatSheetMenuItem(wallet){
     let obj = [];
@@ -182,10 +185,10 @@ class Wallet extends React.Component {
         handler: () => {
           this.setState({walletSelected: wallet});
           this.toggleBottomSheet();
-          this.modalSendRef.open();      
+          this.modalSendRef.open();
         }
       })
-      
+
       obj.push({
         title: 'Fill up',
         handler: () => {
@@ -213,35 +216,33 @@ class Wallet extends React.Component {
       })
       obj.push({
         title: 'Copy address',
-        handler: () => {          
+        handler: () => {
           Clipboard.copy(wallet.address);
-          this.toggleBottomSheet(); 
+          this.toggleBottomSheet();
         }
       })
 
-      if (!wallet.isReward){
-        obj.push({
-          title: 'Make it default for {0} '.format(wallet.name) + (wallet.default ? "✓ " : ""),
-          handler: () => {          
-            wallet.default = !wallet.default;    
-            this.toggleBottomSheet(); 
-            // reset all wallet default:
-            let lstWalletTemp = this.getAllWallet();
-            if (wallet.default) lstWalletTemp.forEach(wal => {if (wal != wallet && wal.name == wallet.name){wal.default = false;}})          
-            // Update wallet master from local store:
-            MasterWallet.UpdateLocalStore(lstWalletTemp);
-          }
-        })
-        
-          obj.push({
-            title: 'Remove',
-            handler: () => {
-              this.setState({walletSelected: wallet});          
-              this.modalBetRef.open();   
-              this.toggleBottomSheet();   
-            }
-          })
+    obj.push({
+      title: 'Make it default ' + (wallet.default ? "✓ " : ""),
+      handler: () => {
+        wallet.default = !wallet.default;
+        this.toggleBottomSheet();
+        // reset all wallet defaul:
+        let lstWalletTemp = this.getAllWallet();
+        if (wallet.default) lstWalletTemp.forEach(wal => {if (wal != wallet){wal.default = false;}})
+        // Update wallet master from local store:
+        MasterWallet.UpdateLocalStore(lstWalletTemp);
+      }
+    })
+    if (!wallet.isReward)
+      obj.push({
+        title: 'Remove',
+        handler: () => {
+          this.setState({walletSelected: wallet});
+          this.modalBetRef.open();
+          this.toggleBottomSheet();
         }
+      })
 
       return obj;
   }
@@ -253,7 +254,7 @@ class Wallet extends React.Component {
     var walletTmp = this.state.walletSelected;
     if (walletTmp != null){
         // Find index for this item:
-        lstWalletTemp.forEach(function (wal, i) {if (wal === walletTmp){index = i}});   
+        lstWalletTemp.forEach(function (wal, i) {if (wal === walletTmp){index = i}});
         // Remove item:
         if (index > -1) {
           lstWalletTemp.splice(index, 1)
@@ -268,18 +269,18 @@ class Wallet extends React.Component {
   // Restore wallet:
   restoreWallets = () =>{
     if (this.state.hasOwnProperty('inputRestoreWalletValue')){
-        this.setState({isRestoreLoading: true, erroValueBackup: false});
+        this.setState({isRestoreLoading: true, erroValueBackup: false});        
         if (this.state.inputRestoreWalletValue != ''){
           let walletData = MasterWallet.restoreWallets(this.state.inputRestoreWalletValue);          
           if (walletData !== false){            
             this.splitWalletData(walletData);
+            this.setState({isRestoreLoading: false});
             this.modalRestoreRef.close();             
           }
-        }
-        this.setState({isRestoreLoading: false});
+        }        
     }    
-    //alert('Invalid wallets');        
-    this.setState({erroValueBackup: true});
+    //alert('Invalid wallets');            
+    this.setState({erroValueBackup: true, isRestoreLoading: false}); 
   }
   updateRestoreWalletValue = (evt) => {
     this.setState({
@@ -293,7 +294,7 @@ class Wallet extends React.Component {
     else if (this.state.inputSendAmountValue == '' || this.state.inputSendAmountValue == 0)
       alert("Please input Amount value");
     else{
-      
+
       this.state.walletSelected.transfer(this.state.inputAddressAmountValue, this.state.inputSendAmountValue).then(success => {
           alert(success);
           this.modalSendRef.close();
@@ -306,12 +307,17 @@ class Wallet extends React.Component {
       inputSendAmountValue: evt.target.value
     });
   }  
+  getPathPicture = (evt) => {
+    alert('evt.target.value' + evt.target.value);
+  } 
+
   
   updateSendAddressValue = (evt) => {
     this.setState({
       inputAddressAmountValue: evt.target.value
     });
   }  
+
   // Menu for Right header bar
   creatSheetMenuHeaderMore(){
     let obj = [];
@@ -328,6 +334,7 @@ class Wallet extends React.Component {
         this.modalBackupRef.open();
         this.setState({walletsData: this.getAllWallet()});
         this.toggleBottomSheet();        
+
       }
     })
     obj.push({
@@ -335,7 +342,7 @@ class Wallet extends React.Component {
       handler: () => {
         this.modalRestoreRef.open();        
         this.toggleBottomSheet();     
-        this.setState({erroValueBackup: false}); 
+        this.setState({erroValueBackup: false, isRestoreLoading: false}); 
           
       }
     })
@@ -360,28 +367,33 @@ class Wallet extends React.Component {
     alert("onWarningClick ->" + wallet.address);
   }
 
+  onAddressClick = (wallet) => {  
+    this.setState({walletSelected: wallet});            
+    this.modalShareAddressRef.open();
+  }
+  
   handleFocus = (e) => {
     e.currentTarget.select();
   }
-  
+
   handleClick = (e) => {
     this.refs.input.focus();
   }
 
   get listMainWalletBalance() {
     return this.state.listMainWalletBalance.map((wallet) => {
-      return <WalletItem key={wallet.address+wallet.network} wallet={wallet} onMoreClick={() => this.onMoreClick(wallet)} onWarningClick={() => this.onWarningClick(wallet)} />
+      return <WalletItem key={wallet.address+wallet.network} wallet={wallet} onMoreClick={() => this.onMoreClick(wallet)} onWarningClick={() => this.onWarningClick(wallet)} onAddressClick={() => this.onAddressClick(wallet)}  />
     });
   }
   get listTestWalletBalance() {
     return this.state.listTestWalletBalance.map((wallet) => {
-      return <WalletItem key={wallet.address+wallet.network} wallet={wallet} onMoreClick={() => this.onMoreClick(wallet)} onWarningClick={() => this.onWarningClick(wallet)} />
+      return <WalletItem key={wallet.address+wallet.network} wallet={wallet} onMoreClick={() => this.onMoreClick(wallet)} onWarningClick={() => this.onWarningClick(wallet)} onAddressClick={() => this.onAddressClick(wallet)} />
     });
   }
 
   get listRewardWalletBalance(){
     return this.state.listRewardWalletBalance.map((wallet) => {
-      return <WalletItem key={wallet.address+wallet.network} wallet={wallet} onMoreClick={() => this.onMoreClick(wallet)} onWarningClick={() => this.onWarningClick(wallet)} />
+      return <WalletItem key={wallet.address+wallet.network} wallet={wallet} onMoreClick={() => this.onMoreClick(wallet)} onWarningClick={() => this.onWarningClick(wallet)} onAddressClick={() => this.onAddressClick(wallet)} />
     });
   }
 
@@ -389,22 +401,25 @@ class Wallet extends React.Component {
     this.modalFillRef.close();
   }
 
+<<<<<<< HEAD
   afterWalletProtect = () =>{
     this.modalProtectRef.close();
   }
+=======
+>>>>>>> 16d3402f3426c6baf4afe331fe4649d297421a5e
 
   render() {
     const {intl, userProfile, cryptoPrice, amount, userCcLimit, ccLimits} = this.props;
     return (
 
-      <Grid>
+      <Grid>        
         {/*<div className="messageBox"><img src={iconChecked}/><span>Copied</span></div>*/}
         {/* Tooltim menu Bottom */ }
         <ReactBottomsheet
           visible={this.state.bottomSheet}
           onClose={this.toggleBottomSheet.bind(this)}
           list={this.state.listMenu} />
-        
+
         {/* ModalDialog for confirm remove wallet */}
         <ModalDialog title="Confirmation" onRef={modal => this.modalBetRef = modal}>
           <div><span>Are you sure to want to remove this wallet?</span></div>
@@ -418,10 +433,10 @@ class Wallet extends React.Component {
         <Modal title="Send" onRef={modal => this.modalSendRef = modal}>
           <SendWalletForm className="sendwallet-wrapper" onSubmit={this.sendCoin}>
             <Input name="to_address" placeholder="To address" required
-              onChange={evt => this.updateSendAddressValue(evt)}               
+              onChange={evt => this.updateSendAddressValue(evt)}
               />
             <Input name="amount" type="tel" required
-              placeholder={ this.state.walletSelected ? "Amount ({0})".format(this.state.walletSelected.name) : "Amount "} 
+              placeholder={ this.state.walletSelected ? "Amount ({0})".format(this.state.walletSelected.name) : "Amount "}
               onChange={evt => this.updateSendAmountValue(evt)}
               />
             <Button type="submit" block={true}>Send</Button>
@@ -445,7 +460,7 @@ class Wallet extends React.Component {
           <div className='bodyBackup'>
           <textarea readonly onClick={ this.handleChange } onFocus={ this.handleFocus }          
            value={ this.state.walletsData ? JSON.stringify(this.state.walletsData) : ''}/>
-          <Button className="button" cssType="danger" onClick={() => {Clipboard.copy(JSON.stringify(this.state.walletsData)); this.modalBackupRef.close(); }} >Copy it somewhere safe</Button>            
+          <Button className="button" cssType="danger" onClick={() => {Clipboard.copy(JSON.stringify(this.state.walletsData)); this.modalBackupRef.close(); }} >Copy it somewhere safe</Button>
           </div>
         </ModalDialog>
 
@@ -463,13 +478,27 @@ class Wallet extends React.Component {
           </div>
         </ModalDialog>
 
+        
+        {/* Modal for Copy address : */}
+        <ModalDialog title="Wallet Address" onRef={modal => this.modalShareAddressRef = modal}>
+          <div className="bodyTitle"><span>Share your public wallet address to receive { this.state.walletSelected ? this.state.walletSelected.name : ""} </span></div>
+          <div className={['bodyBackup bodySahreAddress']}>
+          
+          <QRCode value={ this.state.walletSelected ? this.state.walletSelected.address : ""} />
+          <div className="addressDivPopup">{ this.state.walletSelected ? this.state.walletSelected.address : ""}</div>
+          <Button className="button" cssType="success" onClick={() => {Clipboard.copy(JSON.stringify(this.state.walletsData));this.modalShareAddressRef.close()}} >                        
+            Copy
+          </Button>
+          </div>
+        </ModalDialog>
+
         {/* Render list wallet: */}
         <Row className="list">
           <Header title="Main net wallets" hasLink={false} linkTitle="+ Add new" onLinkClick={this.onLinkClick} />
         </Row>
         <Row className="list">
           {this.listMainWalletBalance}
-        </Row>        
+        </Row>
 
         <Row className="list">
           <Header title="Reward wallets" hasLink={false} />
@@ -506,11 +535,6 @@ const mapState = (state) => ({
 
 const mapDispatch = ({
   setHeaderRight,
-  getUserProfile,
-  getCryptoPrice,
-  createCCOrder,
-  getUserCcLimit,
-  getCcLimits,
 });
 
 
