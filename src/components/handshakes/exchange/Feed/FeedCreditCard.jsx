@@ -331,86 +331,82 @@ class FeedCreditCard extends React.Component {
 
     return (
       <div>
-        <div className='row'>
-          <div className='col'>
-            <div>
-              <FormCreditCard onSubmit={this.handleSubmit} validate={this.handleValidate}>
-                <Feed className="feed p-2 mb-2" background={mainColor}>
-                  <div style={{ color: 'white' }}>
-                    {
-                      showCCScheme && (
-                        <div style={{ background: '#50af4f' }} className="pt-2 px-2 rounded mb-2">
-                          {
-                            ccLimits.map((ccLimit, index) => {
-                              const { level, limit, duration } = ccLimit
-                              const isActive = curLevel === level
+        <div>
+          <FormCreditCard onSubmit={this.handleSubmit} validate={this.handleValidate}>
+            <Feed className="feed p-2 mb-2" background={mainColor}>
+              <div style={{ color: 'white' }}>
+                {
+                  showCCScheme && (
+                    <div style={{ background: '#50af4f' }} className="pt-2 px-2 rounded mb-2">
+                      {
+                        ccLimits.map((ccLimit, index) => {
+                          const { level, limit, duration } = ccLimit
+                          const isActive = curLevel === level
 
-                              let text = ''
-                              let from = newTo + 1
-                              newTo += duration
-                              let to = newTo
-                              if (index === ccLimits.length - 1) {
-                                text = `Every ${duration} days`
-                              } else {
-                                text = `Day ${from}-${to}`
-                              }
-
-                              return (
-                                <LevelItem key={index} style={{ margin: '0 8px 8px 0', opacity: isActive ? '' : 0.6 }}>
-                                  <div className="rounded p-1" style={{ lineHeight: 1.2, background: isActive ? '#FF3B30' : '#84c683' }}>
-                                    {text}
-                                  </div>
-                                  <div><small>Up to {fiatCurrency}{limit}</small></div>
-                                </LevelItem>
-                              )
-                            })
+                          let text = ''
+                          let from = newTo + 1
+                          newTo += duration
+                          let to = newTo
+                          if (index === ccLimits.length - 1) {
+                            text = `Every ${duration} days`
+                          } else {
+                            text = `Day ${from}-${to}`
                           }
-                        </div>
-                      )
-                    }
-                    <div className="form-group pt-2 d-flex">
-                      <label className="col-form-label"><FormattedMessage id="buy"/></label>
-                      <div className="mx-2">
-                        <Field
-                          name="amount"
-                          type="number"
-                          step="any"
-                          validate={[required]}
-                          component={fieldInput}
-                          className="form-control-custom form-control-custom-ex d-inline-block w-100"
-                          placeholder={intl.formatMessage({id: 'amount'})}
-                          onChange={this.onAmountChange}
-                        />
-                      </div>
-                      <span className="d-inline-block ml-auto" style={{ width: '368px' }}>
-                        <Field
-                          name="currency"
-                          component={fieldRadioButton}
-                          list={CRYPTO_CURRENCY}
-                          color={mainColor}
-                          onChange={this.onCurrencyChange}
-                        />
-                      </span>
+
+                          return (
+                            <LevelItem key={index} style={{ margin: '0 8px 8px 0', opacity: isActive ? '' : 0.6 }}>
+                              <div className="rounded p-1" style={{ lineHeight: 1.2, background: isActive ? '#FF3B30' : '#84c683' }}>
+                                {text}
+                              </div>
+                              <div><small>Up to {fiatCurrency}{limit}</small></div>
+                            </LevelItem>
+                          )
+                        })
+                      }
                     </div>
-                    <div className="pb-2">
-                      <span><FormattedMessage id="askUsingCreditCard" values={{ fiatCurrency: fiatCurrency, total: total }} /></span>
-                    </div>
-                    {
-                      amount && (
-                        <CreditCard
-                          isCCExisting={userProfile && userProfile.creditCard.ccNumber.length > 0}
-                          lastDigits={userProfile && userProfile.creditCard.ccNumber}
-                          isNewCCOpen={this.state.isNewCCOpen}
-                          handleToggleNewCC={this.handleToggleNewCC}
-                        />
-                      )
-                    }
+                  )
+                }
+                <div className="form-group pt-2 d-flex">
+                  <label className="col-form-label"><FormattedMessage id="buy"/></label>
+                  <div className="mx-2">
+                    <Field
+                      name="amount"
+                      type="number"
+                      step="any"
+                      validate={[required]}
+                      component={fieldInput}
+                      className="form-control-custom form-control-custom-ex d-inline-block w-100"
+                      placeholder={intl.formatMessage({id: 'amount'})}
+                      onChange={this.onAmountChange}
+                    />
                   </div>
-                </Feed>
-                <Button block type="submit">{buttonTitle && buttonTitle || <FormattedMessage id="shakeNow"/>} </Button>
-              </FormCreditCard>
-            </div>
-          </div>
+                  <span className="d-inline-block ml-auto" style={{ width: '368px' }}>
+                    <Field
+                      name="currency"
+                      component={fieldRadioButton}
+                      list={CRYPTO_CURRENCY}
+                      color={mainColor}
+                      onChange={this.onCurrencyChange}
+                    />
+                  </span>
+                </div>
+                <div className="pb-2">
+                  <span><FormattedMessage id="askUsingCreditCard" values={{ fiatCurrency: fiatCurrency, total: total }} /></span>
+                </div>
+                {
+                  amount && (
+                    <CreditCard
+                      isCCExisting={userProfile && userProfile.creditCard.ccNumber.length > 0}
+                      lastDigits={userProfile && userProfile.creditCard.ccNumber}
+                      isNewCCOpen={this.state.isNewCCOpen}
+                      handleToggleNewCC={this.handleToggleNewCC}
+                    />
+                  )
+                }
+              </div>
+            </Feed>
+            <Button block type="submit">{buttonTitle && buttonTitle || <FormattedMessage id="shakeNow"/>} </Button>
+          </FormCreditCard>
         </div>
         <ModalDialog onRef={modal => this.modalRef = modal}>
           {modalContent}

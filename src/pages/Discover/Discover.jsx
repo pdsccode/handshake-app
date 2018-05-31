@@ -155,21 +155,23 @@ class DiscoverPage extends React.Component {
         </Row>
         {
           handshakeIdActive === HANDSHAKE_ID.EXCHANGE && (
-            <div>
-              <Tabs
-                activeId={this.state.tabIndexActive}
-                onClickTab={this.clickTabItem}
-                list={[
-                  { id: 1, text: 'Buy' },
-                  { id: 2, text: 'Sell' },
-                ]}
-              />
-              { tabIndexActive === 1 && (
-                <div className="feed-wrapper">
-                  <FeedCreditCard {...this.props} ipInfo={this.state.ipInfo}/>
-                </div>)
-              }
-            </div>
+            <Row>
+              <Col md={12}>
+                <Tabs
+                  activeId={this.state.tabIndexActive}
+                  onClickTab={this.clickTabItem}
+                  list={[
+                    { id: 1, text: 'Buy' },
+                    { id: 2, text: 'Sell' },
+                  ]}
+                />
+                {
+                  tabIndexActive === 1 && (
+                    <FeedCreditCard {...this.props} ipInfo={this.state.ipInfo}/>
+                  )
+                }
+              </Col>
+            </Row>
           )
         }
         <Row>
