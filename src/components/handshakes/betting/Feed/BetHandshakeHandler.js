@@ -2,7 +2,7 @@ import Neuron from '@/services/neuron';
 import {MasterWallet} from '@/models/MasterWallet';
 import moment from 'moment';
 
-const wallet = MasterWallet.getWalletDefault();
+const wallet = MasterWallet.getWalletDefault('ETH');
 const chainId = wallet.chainId;
 const address = wallet.address;
 const privateKey = wallet.privateKey;
