@@ -19,6 +19,7 @@ import Input from '@/components/core/forms/Input/Input';
 import DatePicker from '@/components/handshakes/betting/Create/DatePicker';
 import { InputField } from '../form/customField';
 import {MasterWallet} from '@/models/MasterWallet';
+import Dropdown from '@/components/core/controls/Dropdown';
 
 // self
 import './Create.scss';
@@ -64,7 +65,7 @@ class BettingCreate extends React.PureComponent {
   static defaultProps = {
     item: {
       "backgroundColor": "#332F94",
-      "desc": "[{\"key\": \"event_name\", \"label\": \"Event\", \"placeholder\": \"event name\", \"type\": \"input\"}] [{\"key\": \"event_date\", \"label\": \"Date\", \"placeholder\": \"11/6/2018\", \"type\": \"date\"}] [{\"key\": \"event_predict\", \"label\": \"I predict\", \"placeholder\": \"Brazil will win\"}] [{\"key\": \"event_odds\", \"label\": \"Odds\", \"placeholder\": \"10\"}] [{\"key\": \"event_bet\", \"label\": \"Bet\", \"placeholder\": \"10 ETH\", \"type\": \"number\"}]",
+      "desc": "[{\"key\": \"event_odds\", \"label\": \"Odds\", \"placeholder\": \"10\"}] [{\"key\": \"event_bet\", \"label\": \"Bet\", \"placeholder\": \"10 ETH\", \"type\": \"number\"}]",
       "id": 18,
       "message": null,
       "name": "Bet",
@@ -240,9 +241,23 @@ class BettingCreate extends React.PureComponent {
     const inputList = this.inputList;
     return (
       <BettingCreateForm className="wrapperBetting" onSubmit={this.onSubmit}>
-        {inputList.map((field, index) =>
-          this.renderItem(field, index)
-        )}
+        <div className="dropDown">
+          <Dropdown
+            placeholder="Event name"
+            source={[]}
+            onItemSelected={(item) => console.log('something here')}
+          />
+          <Dropdown
+            placeholder="Set type"
+            source={[]}
+            onItemSelected={(item) => console.log('something here')}
+          />
+        </div>
+
+        <div className="formInput">
+          {inputList.map((field, index) => this.renderItem(field, index))}
+        </div>
+
         <Button type="submit" block>Sign & Send</Button>
       </BettingCreateForm>
     );
