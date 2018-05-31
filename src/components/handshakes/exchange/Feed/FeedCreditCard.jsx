@@ -213,10 +213,11 @@ class FeedCreditCard extends React.Component {
 
     const { callbackSuccess } = this.props;
 
+    this.modalRef.close();
+
     if (callbackSuccess) {
       callbackSuccess();
     } else {
-      this.modalRef.close();
       this.props.history.push(URL.HANDSHAKE_ME);
     }
   }
