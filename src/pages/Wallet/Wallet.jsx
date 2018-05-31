@@ -447,10 +447,9 @@ class Wallet extends React.Component {
         <ModalDialog title="Restore wallets" onRef={modal => this.modalRestoreRef = modal}>
           <div className="bodyTitle">This data is the only way to restore your wallets.</div>
           <div className='bodyBackup'>
-          <textarea required             
-            onFocus={  } 
-            className={this.state.erroValueBackup ? 'error' : ''}
-            onChange={evt => this.updateRestoreWalletValue(evt)}               
+          <textarea required                         
+            className={this.state.erroValueBackup ? 'error' : ''} 
+            onChange={evt => this.updateRestoreWalletValue(evt)}                 
           />
           <Button isLoading={this.state.isRestoreLoading} className="button" cssType="danger" onClick={() => {this.restoreWallets()}} >                        
             Restore now
