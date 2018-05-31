@@ -104,7 +104,7 @@ class FeedExchange extends React.PureComponent {
         (
           <div className="py-2">
             <Feed className="feed p-2" background="#259B24">
-              <div className="text-white d-flex align-items-center" style={{minHeight: '75px'}}>
+              <div className="text-white d-flex align-items-center" style={{minHeight: '50px'}}>
                 <div>{e.response?.data?.message}</div>
               </div>
             </Feed>
@@ -142,7 +142,7 @@ class FeedExchange extends React.PureComponent {
         (
           <div className="py-2">
             <Feed className="feed p-2" background="#259B24">
-              <div className="text-white d-flex align-items-center" style={{minHeight: '75px'}}>
+              <div className="text-white d-flex align-items-center" style={{minHeight: '50px'}}>
                 <div>{message}</div>
               </div>
             </Feed>
@@ -619,7 +619,7 @@ class FeedExchange extends React.PureComponent {
             </div>
           )
         }
-        <Feed className="feed p-2 text-white" background="#FF2D55">
+        <Feed className="feed p-2 text-white" background={`${mode === 'discover' ? '#FF2D55' : '#50E3C2'}`}>
           <div className="d-flex">
             <div>
               <h5>

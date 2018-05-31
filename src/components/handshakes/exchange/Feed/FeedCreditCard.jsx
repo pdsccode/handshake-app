@@ -124,7 +124,7 @@ class FeedCreditCard extends React.Component {
       qs: data,
       successFn: this.handleGetCryptoPriceSuccess,
       errorFn: this.handleGetCryptoPriceFailed,
-      });
+    });
   }
 
   handleGetCryptoPriceSuccess = (data) => {
@@ -132,7 +132,7 @@ class FeedCreditCard extends React.Component {
     const { userCcLimit } = this.props;
     const cryptoPrice = CryptoPrice.cryptoPrice(data);
 
-    if (userCcLimit && userCcLimit.limit < userCcLimit.amount + cryptoPrice.fiatAmount) {
+    if (this.state.amount && userCcLimit && userCcLimit.limit < userCcLimit.amount + cryptoPrice.fiatAmount) {
       this.setState({showCCScheme: true});
     }
   }
@@ -194,7 +194,7 @@ class FeedCreditCard extends React.Component {
         (
           <div className="py-2">
             <Feed className="feed p-2" background="#259B24">
-              <div className="text-white d-flex align-items-center" style={{ minHeight: '75px' }}>
+              <div className="text-white d-flex align-items-center" style={{ minHeight: '50px' }}>
                 <div>Buy success</div>
               </div>
             </Feed>
@@ -227,7 +227,7 @@ class FeedCreditCard extends React.Component {
         (
           <div className="py-2">
             <Feed className="feed p-2" background="#259B24">
-              <div className="text-white d-flex align-items-center" style={{ minHeight: '75px' }}>
+              <div className="text-white d-flex align-items-center" style={{ minHeight: '50px' }}>
                 <div>{e.response?.data?.message}</div>
               </div>
             </Feed>
