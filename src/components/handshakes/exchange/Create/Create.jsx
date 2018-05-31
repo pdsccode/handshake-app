@@ -543,10 +543,11 @@ const mapStateToProps = (state) => {
 // });
 
 const mapDispatchToProps = (dispatch) => ({
-  createOffer,
-  getOfferPrice,
-  showAlert,
+  createOffer: bindActionCreators(createOffer, dispatch),
+  getOfferPrice: bindActionCreators(getOfferPrice, dispatch),
+  showAlert: bindActionCreators(showAlert, dispatch),
   rfChange: bindActionCreators(change, dispatch)
 });
+
 
 export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(Component));
