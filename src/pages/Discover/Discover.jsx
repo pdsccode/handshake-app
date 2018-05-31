@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 // service, constant
 import { loadDiscoverList } from '@/reducers/discover/action';
+import { showAlert } from '@/reducers/app/action';
 import { HANDSHAKE_ID, API_URL } from '@/constants';
 import { URL } from '@/config';
 // components
@@ -34,28 +35,46 @@ class DiscoverPage extends React.Component {
       handshakeIdActive: '',
       tabIndexActive: 1,
     };
-    this.props.loadDiscoverList({ PATH_URL: API_URL.DISCOVER.BASE });
+    // this.props.loadDiscoverList({ PATH_URL: API_URL.DISCOVER.BASE });
     // bind
     this.clickCategoryItem = this.clickCategoryItem.bind(this);
     this.clickTabItem = this.clickTabItem.bind(this);
     this.searchChange = this.searchChange.bind(this);
   }
 
-  async componentDidMount() {
-    this.getListOfferPrice();
-    this.intervalCountdown = setInterval(() => {
-      this.getListOfferPrice();
-    }, 30000);
+  componentWillReceiveProps(nextProps){
+    console.log(nextProps.firebaseUser);
   }
 
-  componentWillReceiveProps(nextProps) {
-    console.log('firebaseUser', nextProps.firebaseUser);
+  async componentDidMount() {
+    this.getListOfferPrice();
+    // this.intervalCountdown = setInterval(() => {
+    //   this.getListOfferPrice();
+    // }, 30000);
+  }
+
+  getListOfferPrice = () => {
+    this.props.getListOfferPrice({
+      BASE_URL: API_URL.EXCHANGE.BASE,
+      PATH_URL: API_URL.EXCHANGE.GET_LIST_OFFER_PRICE,
+      qs: {fiat_currency: 'VND'},
+      successFn: this.handleGetPriceSuccess,
+      errorFn: this.handleGetPriceFailed,
+    });
+  }
+
+  handleGetPriceSuccess = () => {
+    this.props.loadDiscoverList({ PATH_URL: API_URL.DISCOVER.BASE });
+  }
+
+  handleGetPriceFailed = () => {
+    this.props.loadDiscoverList({ PATH_URL: API_URL.DISCOVER.BASE });
   }
 
   componentWillUnmount() {
-    if (this.intervalCountdown) {
-      clearInterval(this.intervalCountdown);
-    }
+    // if (this.intervalCountdown) {
+    //   clearInterval(this.intervalCountdown);
+    // }
   }
 
   get getHandshakeList() {
@@ -76,16 +95,6 @@ class DiscoverPage extends React.Component {
     }
   }
 
-  getListOfferPrice = () => {
-    this.props.getListOfferPrice({
-      BASE_URL: API_URL.EXCHANGE.BASE,
-      PATH_URL: API_URL.EXCHANGE.GET_LIST_OFFER_PRICE,
-      qs: { fiat_currency: 'VND' },
-      // successFn: this.handleGetPriceSuccess,
-      // errorFn: this.handleGetPriceFailed,
-    });
-  }
-
   // TODO: search feed
   searchChange(query) {
     clearTimeout(this.searchTimeOut);
@@ -99,6 +108,11 @@ class DiscoverPage extends React.Component {
   }
 
   clickCategoryItem(category) {
+    this.props.showAlert({
+      message: <p className="text-center">aaaaaaaa</p>,
+      timeOut: 10000000,
+      type: 'danger',
+    });
     const { id } = category;
     switch (id) {
       case HANDSHAKE_ID.BETTING:
