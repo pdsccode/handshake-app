@@ -425,12 +425,14 @@ class Wallet extends React.Component {
         </Modal>
 
         <Modal title="Fill up" onRef={modal => this.modalFillRef = modal}>
-          <FeedCreditCard buttonTitle="Send" currencyWallet={ this.state.walletSelected ? this.state.walletSelected.name : ""} 
-            callbackSuccess={this.afterWalletFill} />
+          <FeedCreditCard buttonTitle="Send" currencyForced={this.state.walletSelected ? this.state.walletSelected.name : ""} 
+            callbackSuccess={this.afterWalletFill}
+            addressForced={this.state.walletSelected ? this.state.walletSelected.address : ""}
+          />
         </Modal>
 
         <Modal title="Protect your wallet" onRef={modal => this.modalProtectRef = modal}> 
-          <WalletProtect />
+          <WalletProtect wallet={this.walletSelected} />
         </Modal>
 
         {/* Modal for Backup wallets : */}
