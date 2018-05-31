@@ -54,10 +54,11 @@ class DiscoverPage extends React.Component {
   }
 
   getListOfferPrice = () => {
+    const {ipInfo: {currency: fiat_currency}} = this.props;
     this.props.getListOfferPrice({
       BASE_URL: API_URL.EXCHANGE.BASE,
       PATH_URL: API_URL.EXCHANGE.GET_LIST_OFFER_PRICE,
-      qs: { fiat_currency: 'VND' },
+      qs: { fiat_currency: fiat_currency },
       successFn: this.handleGetPriceSuccess,
       errorFn: this.handleGetPriceFailed,
     });
@@ -195,6 +196,7 @@ DiscoverPage.propTypes = {
 const mapState = state => ({
   discover: state.discover,
   firebaseUser: state.firebase.data,
+  ipInfo: state.app.ipInfo
 });
 
 const mapDispatch = ({

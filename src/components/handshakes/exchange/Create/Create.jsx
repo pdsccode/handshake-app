@@ -165,7 +165,7 @@ class Component extends React.Component {
   getCryptoPriceByAmount = (amount) => {
     const cryptoCurrency = this.state.currency;
     const { type } = this.props;
-    const fiat_currency = 'VND';
+    const {ipInfo: {currency: fiat_currency}} = this.props;
 
     let data = {
       amount,
@@ -214,7 +214,7 @@ class Component extends React.Component {
   handleSubmit = (values) => {
     const { intl, totalAmount } = this.props;
     // const fiat_currency = this.state.ipInfo.currency;
-    const fiat_currency = 'VND';
+    const {ipInfo: {currency: fiat_currency}} = this.props;
     // console.log('valuessss', values);
 
     let listWallet = [];
@@ -533,6 +533,7 @@ const mapStateToProps = (state) => {
 
   return { amount, currency, totalAmount, type, sellPriceType,
     offerPrice: state.exchange.offerPrice,
+    ipInfo: state.app.ipInfo
   };
 };
 
