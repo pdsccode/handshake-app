@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { API_URL } from '@/constants';
 
 // components
+import Dropdown from '@/components/core/controls/Dropdown';
 import BettingShake from './../Shake';
 import GroupBook from './../GroupBook';
 
@@ -46,13 +47,30 @@ class BettingFilter extends React.Component {
     render(){
         return (
             <div className="wrapperBettingFilter">
-                <div className="item">
-                <GroupBook amountColor="#FA6B49" />
-                <GroupBook amountColor="#8BF275" />
-                </div>
-                <div className="item">
-                <BettingShake/>
+            <div className="dropDown">
+                <Dropdown placeholder="Select a match" source={[
+                    {id: 1, value: 'aaaaa'},
+                    {id: 2, value: 'bbbbb'},
+                    {id: 3, value: 'ccccc'},
+                ]} onItemSelected={(item) => console.log(1111, item)} />
+            </div>
+            <div className="dropDown">
+                <Dropdown placeholder="Select a outcome" source={[
+                    {id: 1, value: 'aaaaa'},
+                    {id: 2, value: 'bbbbb'},
+                    {id: 3, value: 'ccccc'},
+                ]} onItemSelected={(item) => console.log(1111, item)} />
+            </div>
+            
+                <div className="wrapperContainer">
+                    <div className="item">
+                    <GroupBook amountColor="#FA6B49" />
+                    <GroupBook amountColor="#8BF275" />
+                    </div>
+                    <div className="item">
+                    <BettingShake/>
 
+                    </div>
                 </div>
             </div>
 

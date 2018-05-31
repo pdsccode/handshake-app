@@ -1,8 +1,15 @@
 @import './src/styles/style';
 
 .wrapperBettingFilter {
-  display: flex;
-  justify-content: space-between;
+  align-items: center;
+
+  .dropDown {
+    margin: rem-calc(20px);
+  }
+  .wrapperContainer {
+    display: flex;
+    justify-content: space-between;
+  }
 
   .item {
     //flex-grow: 1; /* default 0 */
