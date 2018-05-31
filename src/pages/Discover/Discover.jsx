@@ -19,7 +19,7 @@ import Tabs from '@/components/handshakes/exchange/components/Tabs';
 import NoData from '@/components/core/presentation/NoData';
 // style
 import './Discover.scss';
-import { getListOfferPrice } from '../../reducers/exchange/action';
+import { getListOfferPrice } from '@/reducers/exchange/action';
 
 const maps = {
   [HANDSHAKE_ID.PROMISE]: FeedPromise,

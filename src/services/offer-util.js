@@ -14,13 +14,13 @@ export function getOfferPrice(listOfferPrice = [], type = '', currency = '' ) {
   return result;
 }
 
-export function getHandshakeUserType(initUserId, shakedUserIds = []) {
+export function getHandshakeUserType(initUserId, shakeUserIds = []) {
   const profile = local.get(APP.AUTH_PROFILE);
   const userId = profile.id;
 
   if (userId === initUserId) {
     return HANDSHAKE_USER.OWNER;
-  } else if (shakedUserIds.includes(userId)) {
+  } else if (shakeUserIds.includes(userId)) {
     return HANDSHAKE_USER.SHAKED;
   } else {
     return HANDSHAKE_USER.NORMAL;

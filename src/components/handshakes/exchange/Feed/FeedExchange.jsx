@@ -29,14 +29,14 @@ class FeedExchange extends React.PureComponent {
   constructor(props) {
     super(props);
 
-    const {initUserId, shakedUserIds, extraData} = props;
+    const {initUserId, shakeUserIds, extraData} = props;
     const offer = Offer.offer(JSON.parse(extraData));
 
     this.state = {
       modalContent: '',
       offer: offer,
       fiatAmount: 0,
-      userType: getHandshakeUserType(initUserId, shakedUserIds),
+      userType: getHandshakeUserType(initUserId, shakeUserIds),
 
       listMainWalletBalance: [],
       listTestWalletBalance: [],
@@ -93,14 +93,6 @@ class FeedExchange extends React.PureComponent {
     await Promise.all(pros);
 
     await this.splitWalletData(listWallet);
-  }
-
-  handleCompleteShakedOfferSuccess = (data) => {
-    console.log('data', data);
-  }
-
-  handleCancelShakedOfferSuccess = (data) => {
-    console.log('data', data);
   }
 
   handleActionFailed = (e) => {
@@ -596,7 +588,7 @@ class FeedExchange extends React.PureComponent {
 
 
   render() {
-    const {initUserId, shakedUserIds, location, state, status, ...props} = this.props;
+    const {initUserId, shakeUserIds, location, state, status, ...props} = this.props;
     const {offer, userType} = this.state;
     const {listOfferPrice} = this.props;
     // let geolocation = location.split(',');
@@ -610,7 +602,7 @@ class FeedExchange extends React.PureComponent {
 
     let modalContent = this.state.modalContent;
     let actionButtons = this.getActionButtons();
-    // let userType = getHandshakeUserType(initUserId, shakedUserIds);
+    // let userType = getHandshakeUserType(initUserId, shakeUserIds);
     return (
       <div>
         <Feed className="feed p-2 text-white" background="#FF2D55">
