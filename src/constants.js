@@ -7,6 +7,7 @@ export const APP = {
   WALLET_CACHE: 'wallet_cache',
   WALLET_DEFAULT: 'wallet_default',
   WALLET_LIST: 'wallet_list',
+  IP_INFO: 'ip_info',
 };
 
 export const HANDSHAKE_ID = {
@@ -76,7 +77,9 @@ export const API_URL = {
     GET_USER_TRANSACTION: 'user/transactions', // {path: '/user/transactions', method: 'get'},
     OFFERS: 'offers',
     SHAKE: 'shake',
-    WITHDRAW: 'withdraw'
+    WITHDRAW: 'withdraw',
+    IP_DOMAIN: 'https://ipfind.co/me',
+    IP_KEY: 'a59f33e5-0879-411a-908b-792359a0d6cc',
   },
   SEED: {
     BASE: 'seed',

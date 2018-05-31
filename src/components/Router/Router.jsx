@@ -20,6 +20,10 @@ import fr from 'react-intl/locale-data/fr';
 import { isLoaded, isEmpty, withFirebase } from 'react-redux-firebase';
 import { FIREBASE_PATH } from '@/constants';
 import messages from '@/locals';
+import axios from 'axios';
+import {API_URL} from "@/constants";
+import {setIpInfo} from "@/reducers/app/action";
+import {getUserProfile} from "../../reducers/exchange/action";
 
 addLocaleData([...en, ...fr]);
 
@@ -91,7 +95,7 @@ const Page404 = props => (
 let pathFirebaseWithUser ="";
 class Router extends React.Component {
   static propTypes = {
-    
+
     signUp: PropTypes.func.isRequired,
     fetchProfile: PropTypes.func.isRequired,
     auth: PropTypes.object.isRequired,
@@ -123,22 +127,39 @@ class Router extends React.Component {
 
     const token = local.get(APP.AUTH_TOKEN);
     // const profile = this.props.auth.profile || {};
-    
+
     // AUTH
     if (!token) {
       this.props.signUp({
         PATH_URL: 'user/sign-up',
         METHOD: 'POST',
         successFn: () => {
-          
+
           // this.props.firebase.set(FIREBASE_PATH.USERS, String(profile.id));
-          
+
           this.props.fetchProfile({ PATH_URL: 'user/profile' });
+          this.props.getUserProfile({ BASE_URL: API_URL.EXCHANGE.BASE, PATH_URL: API_URL.EXCHANGE.GET_USER_PROFILE});
         },
       });
     } else {
-      
+
       this.props.fetchProfile({ PATH_URL: 'user/profile' });
+      this.props.getUserProfile({ BASE_URL: API_URL.EXCHANGE.BASE, PATH_URL: API_URL.EXCHANGE.GET_USER_PROFILE});
+    }
+
+    const ip_info = local.get(APP.IP_INFO);
+    if (!ip_info) {
+      axios.get(API_URL.EXCHANGE.IP_DOMAIN, {
+        params: {
+          auth: API_URL.EXCHANGE.IP_KEY,
+        },
+      }).then((response) => {
+        // console.log('response', response.data);
+        this.props.setIpInfo(response.data);
+        local.save(APP.IP_INFO, response.data);
+      });
+    } else {
+      this.props.setIpInfo(ip_info);
     }
   }
 
@@ -223,5 +244,7 @@ export default compose(
   connect(state => ({ auth: state.auth }), {
     signUp,
     fetchProfile,
+    setIpInfo,
+    getUserProfile
   }),
 )(Router);

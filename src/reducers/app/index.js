@@ -153,7 +153,12 @@ function appReducter(state = {
         ...state,
         configAlert: { ...action.payload },
       };
-
+    case APP_ACTION.IP_INFO: {
+      return {
+        ...state,
+        ipInfo: action.payload
+      };
+    }
     default:
       return state;
   }
