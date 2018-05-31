@@ -23,6 +23,7 @@ import messages from '@/locals';
 import axios from 'axios';
 import {API_URL} from "@/constants";
 import {setIpInfo} from "@/reducers/app/action";
+import {getUserProfile} from "../../reducers/exchange/action";
 
 addLocaleData([...en, ...fr]);
 
@@ -137,11 +138,13 @@ class Router extends React.Component {
           // this.props.firebase.set(FIREBASE_PATH.USERS, String(profile.id));
 
           this.props.fetchProfile({ PATH_URL: 'user/profile' });
+          this.props.getUserProfile({ BASE_URL: API_URL.EXCHANGE.BASE, PATH_URL: API_URL.EXCHANGE.GET_USER_PROFILE});
         },
       });
     } else {
 
       this.props.fetchProfile({ PATH_URL: 'user/profile' });
+      this.props.getUserProfile({ BASE_URL: API_URL.EXCHANGE.BASE, PATH_URL: API_URL.EXCHANGE.GET_USER_PROFILE});
     }
 
     const ip_info = local.get(APP.IP_INFO);
@@ -241,6 +244,7 @@ export default compose(
   connect(state => ({ auth: state.auth }), {
     signUp,
     fetchProfile,
-    setIpInfo
+    setIpInfo,
+    getUserProfile
   }),
 )(Router);

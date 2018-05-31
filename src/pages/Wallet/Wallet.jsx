@@ -18,7 +18,6 @@ import Header from './Header';
 import HeaderMore from './HeaderMore';
 import WalletItem from './WalletItem';
 import FeedCreditCard from "@/components/handshakes/exchange/Feed/FeedCreditCard";
-import {createCCOrder, getCcLimits, getCryptoPrice, getUserCcLimit, getUserProfile,} from '@/reducers/exchange/action';
 import ReactBottomsheet from 'react-bottomsheet';
 // var ReactBottomsheet = require('react-bottomsheet');
 // var Blob = require('./Blob.js');
@@ -482,11 +481,6 @@ const mapState = (state) => ({
 
 const mapDispatch = ({
   setHeaderRight,
-  getUserProfile,
-  getCryptoPrice,
-  createCCOrder,
-  getUserCcLimit,
-  getCcLimits,
 });
 
 

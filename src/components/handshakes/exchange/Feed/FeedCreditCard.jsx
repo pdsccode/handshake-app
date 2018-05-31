@@ -16,7 +16,7 @@ import createForm from '@/components/core/form/createForm'
 import { change } from 'redux-form'
 import {fieldCleave, fieldDropdown, fieldInput, fieldRadioButton} from '@/components/core/form/customField'
 import {required} from '@/components/core/form/validation'
-import {createCCOrder, getCcLimits, getCryptoPrice, getUserCcLimit, getUserProfile} from '@/reducers/exchange/action';
+import {createCCOrder, getCcLimits, getCryptoPrice, getUserCcLimit} from '@/reducers/exchange/action';
 import {API_URL, CRYPTO_CURRENCY, CRYPTO_CURRENCY_DEFAULT} from "@/constants";
 import {FIAT_CURRENCY} from "@/constants";
 import CryptoPrice from "@/models/CryptoPrice";
@@ -53,7 +53,6 @@ class FeedCreditCard extends React.Component {
       rfChange(nameFormCreditCard, 'currency', currencyForced)
     }
 
-    this.props.getUserProfile({ BASE_URL: API_URL.EXCHANGE.BASE, PATH_URL: API_URL.EXCHANGE.GET_USER_PROFILE});
     this.props.getCcLimits({ BASE_URL: API_URL.EXCHANGE.BASE, PATH_URL: API_URL.EXCHANGE.GET_CC_LIMITS});
     this.props.getUserCcLimit({ BASE_URL: API_URL.EXCHANGE.BASE, PATH_URL: API_URL.EXCHANGE.GET_USER_CC_LIMIT});
 
@@ -445,7 +444,6 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  getUserProfile: bindActionCreators(getUserProfile, dispatch),
   getCryptoPrice: bindActionCreators(getCryptoPrice, dispatch),
   createCCOrder: bindActionCreators(createCCOrder, dispatch),
   getUserCcLimit: bindActionCreators(getUserCcLimit, dispatch),
