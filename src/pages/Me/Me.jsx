@@ -23,7 +23,6 @@ const maps = {
   [HANDSHAKE_ID.SEED]: FeedSeed,
 };
 
-import FeedBetting from '@/components/handshakes/betting/Feed';
 class Me extends React.Component {
 
   componentDidMount() {
