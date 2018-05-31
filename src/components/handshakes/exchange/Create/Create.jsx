@@ -321,7 +321,7 @@ class Component extends React.Component {
     // this.props.history.push(URL.HANDSHAKE_ME);
 
     this.props.showAlert({
-      message: <div className="text-center"><FormattedMessage id="createOfferSuccessMassage"/></div>,
+      message: <div className="text-center"><FormattedMessage id="createOfferSuccessMessage"/></div>,
       timeOut: 3000,
       type: 'danger',
       callBack: () => {

@@ -22,6 +22,10 @@ export default {
   completeOfferConfirm: 'Do you want to Complete this handshake?',
   withdrawOfferConfirm: 'Do you want to Withdraw this handshake?',
   cancelOfferConfirm: 'Do you want to Cancel this handshake?',
-  createOfferSuccessMassage: 'Create offer success',
-
+  createOfferSuccessMessage: 'Create offer success',
+  shakeOfferSuccessMessage: 'Shake offer success',
+  closeOfferSuccessMessage: 'Close offer success',
+  completeShakedfferSuccessMessage: 'Complete shaked offer success',
+  cancelShakedfferSuccessMessage: 'Cancel shaked offer success',
+  withdrawShakedfferSuccessMessage: 'Withdraw shaked offer success',
 };
