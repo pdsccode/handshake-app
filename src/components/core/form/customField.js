@@ -131,12 +131,16 @@ export const fieldPhoneInput = customField(({
   return (
     <span className="d-flex align-items-center">
       <span style={{ width: '100px'}} className="mr-auto">
-        <select className="w-100 text-white select-customized" onChange={(e) => onChange(`${e.target.value}-${phoneNumber}`)}>
+        <select
+          className="w-100 text-white select-customized"
+          onChange={(e) => onChange(`${e.target.value}-${phoneNumber}`)}
+          value={countryCode}
+        >
           {
             phoneCountryCodes.map((item, index) => {
               const { name, callingCode } = item
               return (
-                <option key={index} value={callingCode} selected={callingCode === countryCode}>+{callingCode}</option>
+                <option key={index} value={callingCode}>+{callingCode}</option>
               )
             })
           }

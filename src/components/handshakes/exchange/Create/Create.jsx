@@ -66,7 +66,6 @@ class Component extends React.Component {
       listMainWalletBalance: [],
       listTestWalletBalance: [],
       listRewardWalletBalance: [],
-      ipInfo: {},
     };
   }
 
@@ -74,8 +73,8 @@ class Component extends React.Component {
     const { rfChange } = this.props
     navigator.geolocation.getCurrentPosition((location) => {
       const { coords: { latitude, longitude } } = location
-      axios.get(`http://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&sensor=true`).then((response) => {
-        const address = response.data.results[0].formatted_address
+      axios.get(`http://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&sensor=false`).then((response) => {
+        const address = response.data.results[0] && response.data.results[0].formatted_address
         rfChange(nameFormExchangeCreate, 'address', address)
       })
     });
