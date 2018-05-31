@@ -108,11 +108,11 @@ class DiscoverPage extends React.Component {
   }
 
   clickCategoryItem(category) {
-    this.props.showAlert({
-      message: <p className="text-center">aaaaaaaa</p>,
-      timeOut: 10000000,
-      type: 'danger',
-    });
+    // this.props.showAlert({
+    //   message: <p className="text-center">aaaaaaaa</p>,
+    //   timeOut: 10000000,
+    //   type: 'danger',
+    // });
     const { id } = category;
     switch (id) {
       case HANDSHAKE_ID.BETTING:
@@ -196,6 +196,7 @@ const mapState = state => ({
 const mapDispatch = ({
   loadDiscoverList,
   getListOfferPrice,
+  showAlert
 });
 
 export default connect(mapState, mapDispatch)(DiscoverPage);
