@@ -3,11 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 // services, constants
-import  { BetHandshakeHandler, ROLE,
-  BETTING_STATUS_LABEL, BETTING_STATUS,
-  REJECT_WINDOWN_DAYS, CANCEL_WINDOWN_DAYS,
-  BETTING_OPTIONS_NAME,
-  BETTING_OPTIONS} from './BetHandshakeHandler.js';
+import  { BetHandshakeHandler} from './BetHandshakeHandler.js';
 import momment from 'moment';
 
 import { APP } from '@/constants';
