@@ -96,7 +96,7 @@ class Wallet extends React.Component {
 
    async componentDidMount() {
 
-    // console.log('getWalletDefault()', MasterWallet.getWalletDefault());
+    console.log('getWalletDefault()', MasterWallet.getWalletDefault());
     this.props.getUserProfile({ BASE_URL: API_URL.EXCHANGE.BASE, PATH_URL: API_URL.EXCHANGE.GET_USER_PROFILE});
     this.getCryptoPriceByAmount(0);
 
@@ -209,27 +209,29 @@ class Wallet extends React.Component {
         }
       })
 
-      obj.push({
-        title: 'Make it default ' + (wallet.default ? "✓ " : ""),
-        handler: () => {          
-          wallet.default = !wallet.default;    
-          this.toggleBottomSheet(); 
-          // reset all wallet defaul:
-          let lstWalletTemp = this.getAllWallet();
-          if (wallet.default) lstWalletTemp.forEach(wal => {if (wal != wallet){wal.default = false;}})          
-          // Update wallet master from local store:
-          MasterWallet.UpdateLocalStore(lstWalletTemp);
-        }
-      })
-      if (!wallet.isReward)
+      if (!wallet.isReward){
         obj.push({
-          title: 'Remove',
-          handler: () => {
-            this.setState({walletSelected: wallet});          
-            this.modalBetRef.open();   
-            this.toggleBottomSheet();   
+          title: 'Make it default for {0} '.format(wallet.name) + (wallet.default ? "✓ " : ""),
+          handler: () => {          
+            wallet.default = !wallet.default;    
+            this.toggleBottomSheet(); 
+            // reset all wallet default:
+            let lstWalletTemp = this.getAllWallet();
+            if (wallet.default) lstWalletTemp.forEach(wal => {if (wal != wallet && wal.name == wallet.name){wal.default = false;}})          
+            // Update wallet master from local store:
+            MasterWallet.UpdateLocalStore(lstWalletTemp);
           }
         })
+        
+          obj.push({
+            title: 'Remove',
+            handler: () => {
+              this.setState({walletSelected: wallet});          
+              this.modalBetRef.open();   
+              this.toggleBottomSheet();   
+            }
+          })
+        }
 
       return obj;
   }

@@ -53,6 +53,9 @@ export class Bitcoin extends Wallet{
   }
 
     async getBalance() {
+
+      this.setDefaultNetwork();
+
       var url = this.network + '/addr/' + this.address + '/balance';
 
       var response = await axios.get(url);

@@ -37,9 +37,10 @@ export class MasterWallet{
             }            
         }
 
-        // set item 1 is default
+        // set item 1,3 is default
         if (masterWallet.length > 0)
             masterWallet[1].default = true;
+            masterWallet[3].default = true;
 
         // For Reward wallet:
         for (var k in MasterWallet.ListCoinReward){
@@ -101,36 +102,61 @@ export class MasterWallet{
     }
 
     // Get list wallet from store local:
-    static getWalletDefault(){
+    static getWalletDefault(coinName=''){
         let wallets = localStore.get(MasterWallet.KEY);   
         
         if (wallets == false) return false;
-        var wallet = false;
+        
         var BreakException = {};
         try {
-            wallets.forEach(walletJson => {
-                if (walletJson.default){                
-                    wallet = new MasterWallet.ListCoin[walletJson.className]();             
-                    wallet.mnemonic = walletJson.mnemonic;
-                    wallet.address = walletJson.address;
-                    wallet.privateKey = walletJson.privateKey;
-                    wallet.coinType = walletJson.coinType;
-                    wallet.default = walletJson.default;
-                    wallet.balance = walletJson.balance;
-                    wallet.network = walletJson.network;
-                    wallet.name = walletJson.name;
-                    wallet.title = walletJson.title;
-                    wallet.protected = walletJson.protected;
-                    wallet.isReward = walletJson.isReward;                    
-                    wallet.chainId = walletJson.chainId;                    
-                    throw BreakException;
-                }                                
-            });
+
+            if (coinName != ''){
+                var wallet = false;
+                wallets.forEach(walletJson => {
+                    if (wallet.default && wallet==walletJson.name){
+                        wallet = MasterWallet.convertObject(walletJson);
+                        throw BreakException;
+                    }
+                })
+                return wallet;
+            }
+            else{
+                let lstDefault = {};
+                                
+                wallets.forEach(walletJson => {
+                    if (!lstDefault.hasOwnProperty(walletJson.name))
+                        lstDefault[walletJson.name] = null
+                    if (walletJson.default){                                       
+                        lstDefault[walletJson.name] = MasterWallet.convertObject(walletJson);
+                    }                                
+                });
+                return lstDefault;
+            }
+           
         } catch (e) {
             if (e !== BreakException) throw e;
         }
-        return wallet;
+        return false;
         
+    }
+
+    static convertObject(walletJson){
+        let wallet = new MasterWallet.ListCoin[walletJson.className]();             
+        wallet.mnemonic = walletJson.mnemonic;
+        wallet.address = walletJson.address;
+        wallet.privateKey = walletJson.privateKey;
+        wallet.coinType = walletJson.coinType;
+        wallet.default = walletJson.default;
+        wallet.balance = walletJson.balance;
+        wallet.network = walletJson.network;
+        wallet.name = walletJson.name;
+        wallet.title = walletJson.title;
+        wallet.protected = walletJson.protected;
+        wallet.isReward = walletJson.isReward;                    
+        wallet.chainId = walletJson.chainId;  
+
+        return wallet;
+
     }
 
     static log(data, key=MasterWallet.KEY){
