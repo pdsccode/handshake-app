@@ -31,9 +31,7 @@ const wallet = MasterWallet.getWalletDefault('ETH');
 const chainId = wallet.chainId;
 console.log('Chain Id:', chainId);
 
-const neuron = new Neuron(chainId);
-
-const bettinghandshake = new BettingHandshake(MasterWallet.getWalletDefault('ETH')?.chainId);
+const bettinghandshake = new BettingHandshake(chainId);
 const nameFormBettingCreate = 'bettingCreate';
 const BettingCreateForm = createForm({
   propsReduxForm: {

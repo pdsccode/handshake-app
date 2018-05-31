@@ -26,7 +26,6 @@ const defaultAmount = 1;
 class BetingShake extends React.Component {
   static propTypes = {
     remaining: PropTypes.number.isRequired,
-    odd: PropTypes.number.isRequired,
     onSubmitClick: PropTypes.func,
     onCancelClick: PropTypes.func,
   }
