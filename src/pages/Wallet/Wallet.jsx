@@ -456,6 +456,9 @@ class Wallet extends React.Component {
     this.modalFillRef.close();
   }
 
+  afterWalletProtect = () =>{
+    this.modalProtectRef.close();
+  }
 
   render() {
     const {intl, userProfile, cryptoPrice, amount, userCcLimit, ccLimits} = this.props;
@@ -500,7 +503,7 @@ class Wallet extends React.Component {
         </Modal>
 
         <Modal title="Protect your wallet" onRef={modal => this.modalProtectRef = modal}> 
-          <WalletProtect wallet={this.walletSelected} />
+          <WalletProtect wallet={this.walletSelected} callbackSuccess={this.afterWalletProtect} />
         </Modal>
 
         {/* Modal for Backup wallets : */}
