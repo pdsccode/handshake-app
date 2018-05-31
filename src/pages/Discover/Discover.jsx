@@ -72,9 +72,8 @@ class DiscoverPage extends React.Component {
           );
         }
       });
-    } else {
-      return <NoData message="NO DATA AVAILABLE" />;
     }
+    return <NoData message="NO DATA AVAILABLE" />;
   }
 
   getListOfferPrice = () => {
@@ -139,7 +138,7 @@ class DiscoverPage extends React.Component {
       <Grid className="discover">
         <Row>
           <Col md={12} xs={12}>
-            <SearchBar onSuggestionSelected={() => {}} onInputSearchChange={this.searchChange}/>
+            <SearchBar onSuggestionSelected={() => {}} onInputSearchChange={this.searchChange} />
           </Col>
         </Row>
         <Row>

@@ -7,10 +7,12 @@ const webpack = require('webpack');
 const merge = require('webpack-merge');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const ManifestPlugin = require('webpack-manifest-plugin');
+// const ManifestPlugin = require('webpack-manifest-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const PwaManifestPlugin = require('webpack-pwa-manifest');
+const OfflinePlugin = require('offline-plugin');
 
 const dotenv = require('dotenv');
 
@@ -30,6 +32,7 @@ const development = {
       disableDotRule: true,
     },
     hot: true,
+    host: '0.0.0.0',
   },
   module: {
     rules: [
@@ -123,7 +126,6 @@ const production = {
     ],
   },
   plugins: [
-    new ManifestPlugin(),
     new OptimizeCSSAssetsPlugin(),
     new MiniCssExtractPlugin({
       filename: 'css/[name].css',
@@ -139,15 +141,21 @@ module.exports = function webpackConfig(env, argv) {
   if (!isProduction) {
     dotenv.config();
   } else {
+    // PUBLIC_PATH =
     dotenv.config({ path: xPath('.env.production') });
   }
 
   return merge(
     {
+      entry: {
+        main: xPath('src/index.js'),
+        'app-sw': xPath('src/sw.js'),
+      },
       output: {
         filename: 'js/[name].js',
-        chunkFilename: 'js/[hash].[name].js',
+        chunkFilename: 'js/[hash].[name].chunk.js',
         publicPath: '/',
+        globalObject: 'this',
       },
       resolve: {
         alias: { '@': xPath('src') },
@@ -157,16 +165,17 @@ module.exports = function webpackConfig(env, argv) {
       plugins: [
         new CleanWebpackPlugin(['dist']),
         new webpack.DefinePlugin({
-          'process.env.ENV': JSON.stringify(argv.mode),
-          'process.env.ROOT': JSON.stringify(process.env.ROOT),
-          'process.env.BASE_URL': JSON.stringify(process.env.BASE_URL),
+          'process.env.NODE_ENV': JSON.stringify(argv.mode),
           'process.env.isProduction': JSON.stringify(isProduction),
+          'process.env.BASE_URL': JSON.stringify(process.env.BASE_URL),
+          'process.env.PUBLIC_URL': JSON.stringify(process.env.PUBLIC_URL),
         }),
         new webpack.ProvidePlugin({
           $: 'jquery',
           jQuery: 'jquery',
         }),
         new HtmlWebpackPlugin({
+          chunks: ['main', 'vendors~main'],
           minify: isProduction
             ? {
               collapseWhitespace: true,
@@ -177,6 +186,26 @@ module.exports = function webpackConfig(env, argv) {
           filename: 'index.html',
           template: xPath('src/templates/main.html'),
           favicon: xPath('src/assets/favicon.ico'),
+        }),
+        new PwaManifestPlugin({
+          name: 'Handshake',
+          short_name: 'Handshake',
+          description: '',
+          background_color: '#01579b',
+          theme_color: '#01579b',
+          'theme-color': '#01579b',
+          start_url: '/',
+          icons: [
+            {
+              src: xPath('src/assets/images/app/logo.png'),
+              sizes: [96, 128, 192, 256, 384, 512],
+              destination: path.join('assets', 'icons'),
+            },
+          ],
+        }),
+        new OfflinePlugin({
+          publicPath: process.env.PUBLIC_URL,
+          appShell: '/index.html',
         }),
       ],
       module: {

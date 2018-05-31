@@ -4,11 +4,12 @@
   "main": "",
   "private": true,
   "scripts": {
-    "start": "webpack-dev-server --mode development --host 0.0.0.0",
+    "start": "webpack-dev-server --mode development",
     "build": "webpack --mode production",
     "lint": "eslint --fix src/**",
     "test": "jest",
-    "serve": "npm run build && cd dist && hs"
+    "serve": "cd dist && ws --spa index.html --port 8080",
+    "ngrok": "ngrok http 8080 -host-header=localhost:8080"
   },
   "dependencies": {
     "@babel/runtime": "^7.0.0-beta.49",
@@ -37,8 +38,10 @@
     "ionicons": "^4.1.2",
     "jspdf": "^1.4.0",
     "jszip": "^3.1.5",
+    "local-web-server": "^2.5.2",
     "lodash": "^4.17.10",
     "moment": "^2.22.1",
+    "offline-plugin": "^5.0.3",
     "prop-types": "^15.6.1",
     "qs": "^6.5.2",
     "react": "^16.4.0",
@@ -110,13 +113,16 @@
     "prettier": "1.12.1",
     "raw-loader": "github:webpack-contrib/raw-loader#80be65e7968915c0b5d0e47a5b9b59497bb82df9",
     "sass-loader": "^7.0.1",
+    "serviceworker-webpack-plugin": "^0.2.3",
     "style-loader": "^0.21.0",
+    "sw-precache-webpack-plugin": "^0.11.5",
     "uglifyjs-webpack-plugin": "^1.2.5",
     "webpack": "^4.9.1",
     "webpack-cli": "^2.1.4",
     "webpack-dev-server": "^3.1.4",
     "webpack-manifest-plugin": "^2.0.3",
-    "webpack-merge": "^4.1.2"
+    "webpack-merge": "^4.1.2",
+    "webpack-pwa-manifest": "^3.6.2"
   },
   "engines": {
     "node": ">=8.10.0"
