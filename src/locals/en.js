@@ -7,7 +7,7 @@ export default {
   change: 'Change',
   ccNumber: 'Number',
   ccExpire: 'Expire',
-  ccCVC: 'CVC',
+  ccCVC: 'CVV',
 
   required: 'Required',
   ccExpireTemplate: 'MM/YY',
