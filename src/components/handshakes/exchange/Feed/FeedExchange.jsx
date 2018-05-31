@@ -621,11 +621,24 @@ class FeedExchange extends React.PureComponent {
               total: new BigNumber(fiatAmount).toFormat(PRICE_DECIMAL)
             }}/>
           </h5>
+          <span>status: {status}</span><br></br>
+          <span>userType: {userType}</span><br></br>
+          <span>About</span><br></br>
           <div className="media">
             <img className="mr-1" src={iconLocation} width={22}/>
             <div className="media-body">
-              <span>status: {status}</span><br></br>
-              <span>userType: {userType}</span>
+              <div>
+                <small>
+                  <FormattedMessage id="transactonOfferInfo" values={{
+                    success: 60, failed: 30
+                  }}/>
+                </small>
+              </div>
+            </div>
+          </div>
+          <div className="media">
+            <img className="mr-1" src={iconLocation} width={22}/>
+            <div className="media-body">
               <div>
                 <small>
                   <FormattedMessage id="offerDistanceContent" values={{
