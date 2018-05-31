@@ -14,6 +14,7 @@ export default class BettingHandshake extends BaseHandshake {
     privateKey,
     hid,
     side,
+    stake,
     payout,
     offchain,
   ) => {
@@ -24,6 +25,7 @@ export default class BettingHandshake extends BaseHandshake {
       privateKey,
       hid,
       side,
+      stake,
       payout,
       offchain,
     );
@@ -41,13 +43,13 @@ export default class BettingHandshake extends BaseHandshake {
       .encodeABI();
 
     return this.neuron.makeRawTransaction(address, privateKey, payloadData, {
-      amount: payout,
+      amount: stake,
       gasPrice: this.chainId === 4 ? 100 : 20,
       toAddress: this.contractAddress,
     });
   };
  
-  shake = (address, privateKey, hid, side, payout, maker, offchain) => {
+  shake = (address, privateKey, hid, side, stake, payout, maker, offchain) => {
     console.log('eth-contract-service shake', address, privateKey, hid);
     const payoutValue = Web3.utils.toWei(payout.toString(), 'ether');
     const bytesOffchain = this.web3.utils.fromAscii(offchain);
@@ -56,7 +58,7 @@ export default class BettingHandshake extends BaseHandshake {
       .shake(hid,side,payoutValue, maker, bytesOffchain)
       .encodeABI();
     return this.neuron.makeRawTransaction(address, privateKey, payloadData, {
-      amount: payout,
+      amount: stake,
       toAddress: this.contractAddress,
     });
   };
@@ -72,9 +74,12 @@ export default class BettingHandshake extends BaseHandshake {
       payout,
       offchain,
     );
+    const stakeValue = Web3.utils.toWei(stake.toString(), 'ether');
+    const payoutValue = Web3.utils.toWei(payout.toString(), 'ether');
+
     const bytesOffchain = this.web3.utils.fromAscii(offchain);
     const payloadData = this.handshakeInstance.methods
-      .uninit(hid, side, stake, payout, bytesOffchain)
+      .uninit(hid, side, stakeValue, payoutValue, bytesOffchain)
       .encodeABI();
     return this.neuron.makeRawTransaction(address, privateKey, payloadData, {
       // amount,
