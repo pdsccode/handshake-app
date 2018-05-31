@@ -130,8 +130,8 @@ export const fieldPhoneInput = customField(({
   const phoneNumber = splittedNumbers[1] || ''
   return (
     <span className="d-flex align-items-center">
-      <span style={{ width: '96px'}} className="mr-auto">
-        <select className="w-100 text-white" onChange={(e) => onChange(`${e.target.value}-${phoneNumber}`)}>
+      <span style={{ width: '100px'}} className="mr-auto">
+        <select className="w-100 text-white select-customized" onChange={(e) => onChange(`${e.target.value}-${phoneNumber}`)}>
           {
             phoneCountryCodes.map((item, index) => {
               const { name, callingCode } = item
