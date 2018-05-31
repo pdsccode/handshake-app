@@ -66,7 +66,7 @@ class BettingCreate extends React.PureComponent {
   static defaultProps = {
     item: {
       "backgroundColor": "#332F94",
-      "desc": "[{\"key\": \"event_odds\", \"label\": \"Odds\", \"placeholder\": \"10\"}] [{\"key\": \"event_bet\", \"label\": \"Bet\", \"placeholder\": \"10 ETH\", \"type\": \"number\"}]",
+      "desc": "[{\"key\": \"event_odds\", \"label\": \"Odds\", \"placeholder\": \"10\", \"className\": \"oddField\"}] [{\"key\": \"event_bet\", \"label\": \"Your bet\", \"placeholder\": \"\", \"type\": \"number\", \"className\": \"betField\"}]",
       "id": 18,
       "message": null,
       "name": "Bet",
@@ -371,7 +371,7 @@ get matchResults(){
 
   renderItem(field, index) {
     const item = JSON.parse(field.replace(regexReplace, ''));
-    const {key, placeholder, type, label} = item;
+    const {key, placeholder, type, label, className} = item;
     let itemRender = this.renderInput(item, index);
     switch (type) {
       case 'date':
@@ -385,7 +385,7 @@ get matchResults(){
     }
 
     return (
-      <div key={index} className={`rowWrapper ${key === 'event_odds' ? 'oddField' : ''}`}>
+      <div key={index} className={`rowWrapper ${className || ''}`}>
         <label className="label">{label || placeholder}</label>
         <div className={key === 'event_odds' ? 'oddInput' : ''}>
           {itemRender}

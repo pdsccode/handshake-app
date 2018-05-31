@@ -5,9 +5,12 @@
   font-size: rem-calc(18px);
   padding: rem-calc(10px 10px 10px 10px);
   .dropDown {
-    margin: rem-calc(0 0 20px);
+    margin: rem-calc(15px 0 20px);
     .dropdown-custom {
       margin: rem-calc(0 0 10px);
+      button {
+        background: inherit;
+      }
     }
   }
   .formInput {
@@ -21,10 +24,11 @@
     justify-content: space-between;
     display: flex;
     margin: rem-calc(20px) auto;
-    max-width: 19.75rem;
+    //max-width: 19.75rem;
   }
   .label {
-    flex-basis: 35%;
+    flex-basis: 38%;
+    flex-shrink: 0;
     margin: 0;
     font-size: rem-calc(18px);
     font-weight: $light;
@@ -34,14 +38,14 @@
     padding-right: rem-calc(20px);
   }
   .input {
-    height: rem-calc(50px);
+    height: rem-calc(40px);
     font-size: rem-calc(24px);
     font-weight: $normal;
     color: $text-black;
     letter-spacing: 0;
     line-height: rem-calc(34px);
     padding-left: 0;
-    width: 100%;
+    //width: 100%;
     &:focus {
       box-shadow: none;
     }
@@ -51,7 +55,7 @@
     }
   }
   .oddField {
-    padding-left: rem-calc(5px);
+    //padding-left: rem-calc(5px);
   }
   .oddInput {
     display: flex;
@@ -63,7 +67,7 @@
       flex-basis: 13%;
       align-self: center;
       font-size: rem-calc(24px);
-      font-weight: $normal;
+      font-weight: $semi-bold;
       color: $text-black;
       letter-spacing: 0;
       line-height: rem-calc(34px);
@@ -72,6 +76,42 @@
       width: 80%;
       border: none;
       padding-left: rem-calc(5px);
+      font-size: rem-calc(24px);
+      font-weight: $semi-bold;
+      letter-spacing: 0;
+      line-height: rem-calc(34px);
+      &::placeholder {
+        font-size: rem-calc(24px);
+        font-weight: $semi-bold;
+        color: #CED8F1;
+      }
+    }
+  }
+  .betField {
+    input {
+      width: rem-calc(87px);
+      border-bottom: 2px solid #CED8F1;
+      order: 1;
+    }
+    & > div {
+      display: flex;
+      flex-wrap:  wrap;
+      width: 100%;
+      &:after {
+        content: 'ETH';
+        font-size: rem-calc(24px);
+        font-weight: $semi-bold;
+        color: $text-black;
+        letter-spacing: 0;
+        line-height: rem-calc(34px);
+        margin-left: rem-calc(8px);
+        align-self: center;
+        order: 2;
+      }
+      div[class='text-danger'] {
+        width: 100%;
+        order: 3;
+      }
     }
   }
 }
