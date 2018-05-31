@@ -1,18 +1,13 @@
 import Web3 from 'web3';
-import configsBetting from '../../configs';
+import BaseHandshake from './BaseHandshake';
 
-const configs = configsBetting.network[4];
-export default class BettingHandshake {
-  constructor(_neuron) {
-    const web3 = _neuron.getWeb3();
-    const compiled = _neuron.getCompiled('BettingHandshake');
-    this.handshakeInstance = new web3.eth.Contract(
-      compiled.abi,
-      configs.handshakeBettingAddress,
-    );
-    console.log('Hanshake instance:', this.handshakeInstance);
-    this.neuron = _neuron;
-    this.web3 = web3;
+const TAG = 'BettingHandshake';
+export default class BettingHandshake extends BaseHandshake {
+  constructor(chainId) {
+    super(chainId);
+  }
+  get contractFileNameWithoutExtension() {
+    return 'BettingHandshake';
   }
   initBet = (
     address,
@@ -24,8 +19,8 @@ export default class BettingHandshake {
     offchain,
   ) => {
     console.log(
-      'eth-contract-service init contractAddress = ',
-      configs.handshakeBettingAddress,
+      TAG,
+      ' init = ',
       address,
       privateKey,
       goal,
@@ -33,35 +28,43 @@ export default class BettingHandshake {
       deadline,
       offchain,
     );
-    // const goalValue = Web3.utils.toWei(goal.toString(), 'ether');
-    const goalValue = this.web3.utils.toHex(Web3.utils.toWei(goal.toString(), 'ether'));
-    // const escrowValue = Web3.utils.toWei(escrow.toString(), 'ether');
-    const escrowValue = this.web3.utils.toHex(Web3.utils.toWei(escrow.toString(), 'ether'));
+    console.log(TAG, ' initBet ', this.contractAddress);
+    const goalValue = Web3.utils.toWei(goal.toString(), 'ether');
+    // const goalValue = this.web3.utils.toHex(Web3.utils.toWei(goal.toString(), 'ether'));
+    const escrowValue = Web3.utils.toWei(escrow.toString(), 'ether');
+    // const escrowValue = this.web3.utils.toHex(Web3.utils.toWei(escrow.toString(), 'ether'));
     const bytesOffchain = this.web3.utils.fromAscii(offchain);
     const bytesArrayAcceptor = [];
     for (let i = 0; i < acceptors.length; i++) {
       bytesArrayAcceptor[i] = this.web3.utils.fromAscii(acceptors[i].toString().trim());
     }
     const payloadData = this.handshakeInstance.methods
-      .initBet(bytesArrayAcceptor, goalValue, escrowValue, deadline, bytesOffchain)
+      .initBet(
+        bytesArrayAcceptor,
+        goalValue,
+        escrowValue,
+        deadline,
+        bytesOffchain,
+      )
       .encodeABI();
+
     return this.neuron.makeRawTransaction(address, privateKey, payloadData, {
       amount: escrow,
-      gasPrice: (() => (this.neuron.chainId === 4 ? 100 : 20))(),
-      toAddress: configs.handshakeBettingAddress,
+      gasPrice: this.chainId === 4 ? 100 : 20,
+      toAddress: this.contractAddress,
     });
   };
-
+ 
   shake = (address, privateKey, hid, amount, offchain) => {
     console.log('eth-contract-service shake', address, privateKey, hid);
     const bytesOffchain = this.web3.utils.fromAscii(offchain);
 
     const payloadData = this.handshakeInstance.methods
-      .shake(hid, bytesOffchain)
+      .shake(hid,bytesOffchain)
       .encodeABI();
     return this.neuron.makeRawTransaction(address, privateKey, payloadData, {
       amount,
-      toAddress: configs.handshakeBettingAddress,
+      toAddress: this.contractAddress,
     });
   };
   cancelBet = (address, privateKey, hid, offchain) => {
@@ -78,7 +81,7 @@ export default class BettingHandshake {
       .encodeABI();
     return this.neuron.makeRawTransaction(address, privateKey, payloadData, {
       // amount,
-      toAddress: configs.handshakeBettingAddress,
+      toAddress: this.contractAddress,
     });
   };
   closeBet = (address, privateKey, hid, offchain) => {
@@ -95,7 +98,7 @@ export default class BettingHandshake {
       .encodeABI();
     return this.neuron.makeRawTransaction(address, privateKey, payloadData, {
       // amount,
-      toAddress: configs.handshakeBettingAddress,
+      toAddress: this.contractAddress,
     });
   };
   iniatorWon = (address, privateKey, hid, offchain) => {
@@ -112,7 +115,7 @@ export default class BettingHandshake {
       .encodeABI();
     return this.neuron.makeRawTransaction(address, privateKey, payloadData, {
       // amount,
-      toAddress: configs.handshakeBettingAddress,
+      toAddress: this.configs.handshakeBettingAddress,
     });
   };
   betorWon = (address, privateKey, hid, offchain) => {
@@ -129,7 +132,7 @@ export default class BettingHandshake {
       .encodeABI();
     return this.neuron.makeRawTransaction(address, privateKey, payloadData, {
       // amount,
-      toAddress: configs.handshakeBettingAddress,
+      toAddress: this.contractAddressax,
     });
   };
   draw = (address, privateKey, hid, offchain) => {
@@ -146,10 +149,10 @@ export default class BettingHandshake {
       .encodeABI();
     return this.neuron.makeRawTransaction(address, privateKey, payloadData, {
       // amount,
-      toAddress: configs.handshakeBettingAddress,
+      toAddress: this.contractAddress,
     });
   };
-
+  
   withdraw = (address, privateKey, hid, offchain) => {
     console.log(
       'eth-contract-service withdraw',
@@ -165,7 +168,7 @@ export default class BettingHandshake {
       .encodeABI();
     return this.neuron.makeRawTransaction(address, privateKey, payloadData, {
       // amount,
-      toAddress: configs.handshakeBettingAddress,
+      toAddress: this.contractAddress,
     });
   };
   reject = (address, privateKey, hid, offchain) => {
@@ -183,7 +186,7 @@ export default class BettingHandshake {
       .encodeABI();
     return this.neuron.makeRawTransaction(address, privateKey, payloadData, {
       // amount,
-      toAddress: configs.handshakeBettingAddress,
+      toAddress: this.contractAddress,
     });
   };
   setWinner = (address, privateKey, hid, result, offchain) => {
@@ -201,7 +204,7 @@ export default class BettingHandshake {
       .encodeABI();
     return this.neuron.makeRawTransaction(address, privateKey, payloadData, {
       // amount,
-      toAddress: configs.handshakeBettingAddress,
+      toAddress: this.contractAddress,
     });
   };
 }
