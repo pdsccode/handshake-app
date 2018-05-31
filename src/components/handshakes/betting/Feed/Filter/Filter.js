@@ -235,7 +235,7 @@ class BettingFilter extends React.Component {
                 onItemSelected={(item) => this.setState({selectedMatch: item})} />
             </div>
             {selectedMatch && <div className="dropDown">
-                <Dropdown placeholder="Select a outcome" 
+                <Dropdown placeholder="Select a prediction" 
                 source={this.matchResults} 
                 onItemSelected={(item) => this.setState({selectedOutcome: item})} />
             </div>}
