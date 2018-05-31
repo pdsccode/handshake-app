@@ -13,11 +13,7 @@ import Input from '@/components/core/forms/Input/Input';
 import dontIcon from '@/assets/images/icon/3-dot-icon.svg';
 import iconSafe from '@/assets/images/icon/icon-safe.svg';
 import iconWarning from '@/assets/images/icon/icon-warning.svg';
-<<<<<<< HEAD
-//import iconChecked from '@/assets/images/icon/icon-check.png';
-=======
 // import iconChecked from '@/assets/images/icon/icon-check.png';
->>>>>>> 972d9c5ddb307ff08237c396b333d49abc548fca
 import Header from './Header';
 import HeaderMore from './HeaderMore';
 import WalletItem from './WalletItem';
