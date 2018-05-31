@@ -69,7 +69,7 @@ class FeedBettingOld extends React.Component {
     console.log('Token:', token);
     console.log('Profile', profile);
     console.log('InitUserId:', initUserId);
-    const isUserShake = this.isShakeUser(shakedUserIds, profile.id);
+    const isUserShake = this.isShakeUser(shakeUserIds, profile.id);
     console.log('Is User Shake:', isUserShake);
 
 
@@ -83,7 +83,7 @@ class FeedBettingOld extends React.Component {
 
    //const hardCodeRole = ROLE.PAYEE;
     const hardCodeStatus = 9;
-    const hardCodeShakeCount = 0; 
+    const hardCodeShakeCount = 0;
 
     const result = BetHandshakeHandler.getStatusLabel(status, role, eventDate, shakeCount)
     console.log('Result:', result);
@@ -106,7 +106,7 @@ class FeedBettingOld extends React.Component {
   }
   isShakeUser(shakeIds, userId){
     console.log('User Id:', userId);
-    
+
     if(shakeIds){
 
       if(shakeIds.indexOf(userId) > -1){
@@ -115,7 +115,7 @@ class FeedBettingOld extends React.Component {
       }
 
     }
-    
+
    /*
     if(userId == 151){
       return true;
@@ -319,4 +319,3 @@ const mapState = state => ({
 const mapDispatch = ({
 });
 export default connect(mapState, mapDispatch)(FeedBettingOld);
-

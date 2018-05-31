@@ -9,6 +9,19 @@ import { Grid, Row, Col } from 'react-bootstrap';
 import Feed from '@/components/core/presentation/Feed';
 import NoData from '@/components/core/presentation/NoData';
 import './Me.scss';
+import {HANDSHAKE_ID} from "../../constants";
+import FeedPromise from '@/components/handshakes/promise/Feed';
+import FeedBetting from '@/components/handshakes/betting/Feed';
+import FeedExchange from '@/components/handshakes/exchange/Feed/FeedExchange';
+import FeedSeed from '@/components/handshakes/seed/Feed';
+
+
+const maps = {
+  [HANDSHAKE_ID.PROMISE]: FeedPromise,
+  [HANDSHAKE_ID.BETTING]: FeedBetting,
+  [HANDSHAKE_ID.EXCHANGE]: FeedExchange,
+  [HANDSHAKE_ID.SEED]: FeedSeed,
+};
 
 import FeedBetting from '@/components/handshakes/betting/Feed';
 class Me extends React.Component {
@@ -26,17 +39,27 @@ class Me extends React.Component {
             {
               /*
               list && list.length > 0 ? (
-                list.map(handshake => (
-                  <div className="my-feed-wrapper" key={handshake.id} onClick={() => alert('show detail')}>
-                    <div className="head">
-                      <div className="from"><span className="email">From:</span>&nbsp;{handshake.fromEmail}</div>
-                      <div className="status">{HANDSHAKE_STATUS_NAME[handshake.status || -1]}</div>
-                    </div>
-                    <Feed className="my-feed">
-                      <p className="description">{handshake.description}</p>
-                    </Feed>
-                  </div>
-                ))
+                list.map((handshake) => {
+                  const FeedComponent = maps[handshake.type];
+                  if (FeedComponent) {
+                    return (
+                      <Col key={handshake.id} md={12} className="feed-wrapper">
+                        <FeedComponent {...handshake} onFeedClick={() => this.clickFeedDetail(handshake.id)} />
+                      </Col>
+                    );
+                  }
+                //   return (
+                //   <div className="my-feed-wrapper" key={handshake.id} onClick={() => alert('show detail')}>
+                //     <div className="head">
+                //       <div className="from"><span className="email">From:</span>&nbsp;{handshake.fromEmail}</div>
+                //       <div className="status">{HANDSHAKE_STATUS_NAME[handshake.status || -1]}</div>
+                //     </div>
+                //     <Feed className="my-feed">
+                //       <p className="description">{handshake.description}</p>
+                //     </Feed>
+                //   </div>
+                // )
+                })
               ) : (
                 <NoData message="NO DATA AVAILABLE" />
               )
