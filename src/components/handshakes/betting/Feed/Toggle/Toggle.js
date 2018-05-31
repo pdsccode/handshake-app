@@ -10,10 +10,18 @@ class Toggle extends React.Component {
       active: 1,
     };
     this.active = 1;
+    this.onActive = ::this.onActive;
   }
 
   get value() {
     return this.active;
+  }
+
+  onActive(item) {
+    this.setState({ active: item.id });
+    this.active = item.id;
+    const { onChange } = this.props;
+    onChange && onChange(item.id);
   }
 
   render() {
@@ -23,11 +31,7 @@ class Toggle extends React.Component {
       <div
         className={`itemToggle ${active === item.id ? 'active' : ''}`}
         key={item.id}
-        onClick={(e) => {
-          e && e.preventDefault();
-          this.setState({ active: item.id });
-          this.active = item.id;
-        }}
+        onClick={e => { e && e.preventDefault(); this.onActive(item); }}
       >
         {item.name}
       </div>

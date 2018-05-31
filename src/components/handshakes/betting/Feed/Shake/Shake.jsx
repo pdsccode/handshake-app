@@ -33,7 +33,7 @@ class BetingShake extends React.Component {
 
   static defaultProps = {
     remaining: 10
-  }
+  };
 
   constructor(props) {
     super(props);
@@ -41,12 +41,14 @@ class BetingShake extends React.Component {
     this.state = {
       amount: defaultAmount,
       total: defaultAmount * odd,
+      buttonClass: 'btnOK btnRed',
     };
 
     this.onSubmit = ::this.onSubmit;
     this.onCancel = ::this.onCancel;
     this.renderInputField = ::this.renderInputField;
     this.renderForm = ::this.renderForm;
+    this.onToggleChange = ::this.onToggleChange;
   }
 
   onSubmit(values) {
@@ -59,6 +61,10 @@ class BetingShake extends React.Component {
   onCancel() {
     console.log('Cancel')
     this.props.onCancelClick();
+  }
+
+  onToggleChange(id) {
+    this.setState({buttonClass: `btnOK ${id === 2 ? 'btnBlue' : 'btnRed' }`});
   }
 
   updateTotal(value) {
@@ -108,7 +114,7 @@ class BetingShake extends React.Component {
   }
 
   renderForm() {
-    const { total } = this.state;
+    const { total, buttonClass } = this.state;
     const { remaining, odd } = this.props;
     const odds = `1 : ${odd}`;
 
@@ -163,9 +169,9 @@ class BetingShake extends React.Component {
       <BettingShakeForm className="wrapperBettingShake" onSubmit={this.onSubmit}>
         <p className="titleForm text-center text-capitalize">PLACE A BET</p>
         {this.renderInputField(amountField)}
-        <Toggle ref={(component) => {this.toggleRef = component}} />
+        <Toggle ref={(component) => {this.toggleRef = component}} onChange={this.onToggleChange} />
 
-        <Button type="submit" block className="btnOK">
+        <Button type="submit" block className={buttonClass} style>
           Shake now
         </Button>
       </BettingShakeForm>
