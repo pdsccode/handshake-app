@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import iconLocation from '@/assets/images/icon/icons8-geo_fence.svg';
 import iconTransaction from '@/assets/images/icon/icons8-transfer_between_users.svg';
+import iconPhone from '@/assets/images/icon/icons8-phone.svg';
+import iconChat from '@/assets/images/icon/icons8-chat.svg';
 // style
 import './FeedExchange.scss';
 import {FormattedMessage, injectIntl} from 'react-intl';
@@ -588,7 +590,7 @@ class FeedExchange extends React.PureComponent {
 
 
   render() {
-    const {initUserId, shakeUserIds, location, state, status, ...props} = this.props;
+    const {initUserId, shakeUserIds, location, state, status, mode = 'discover', ...props} = this.props;
     const {offer, userType} = this.state;
     const {listOfferPrice} = this.props;
     // let geolocation = location.split(',');
@@ -603,42 +605,77 @@ class FeedExchange extends React.PureComponent {
     let modalContent = this.state.modalContent;
     let actionButtons = this.getActionButtons();
     // let userType = getHandshakeUserType(initUserId, shakeUserIds);
+    const email = 'abc@mail.com'
+    const statusText = 'Done'
+    const phone = '01234123498'
+    const address = '81 Beuallijfa w'
     return (
       <div>
+        {
+          mode === 'me' && (
+            <div>
+              <span style={{ color: '#C8C7CC' }}>From</span> <span style={{ color: '#666666' }}>{email}</span>
+              <span className="float-right" style={{ color: '#4CD964' }}>{statusText}</span>
+            </div>
+          )
+        }
         <Feed className="feed p-2 text-white" background="#FF2D55">
-          <h5>
-            <FormattedMessage id="offerHandShakeContent" values={{
-              offerType: offer.type === 'buy' ? 'Buy' : 'Sell',
-              amount: new BigNumber(offer.amount).toFormat(AMOUNT_DECIMAL), currency: offer.currency,
-              currency_symbol: getSymbolFromCurrency(offer.fiatCurrency),
-              total: new BigNumber(fiatAmount).toFormat(PRICE_DECIMAL)
-            }}/>
-          </h5>
+          <div className="d-flex">
+            <div>
+              <h5>
+                <FormattedMessage id="offerHandShakeContent" values={{
+                  offerType: offer.type === 'buy' ? 'Buy' : 'Sell',
+                  amount: new BigNumber(offer.amount).toFormat(AMOUNT_DECIMAL), currency: offer.currency,
+                  currency_symbol: getSymbolFromCurrency(offer.fiatCurrency),
+                  total: new BigNumber(fiatAmount).toFormat(PRICE_DECIMAL)
+                }}/>
+              </h5>
+            </div>
+            { mode === 'me' && (
+              <div className="ml-auto pl-2" style={{ width: '50px' }}><a href="#"><img src={iconChat} width='35px' /></a></div>
+            )}
+          </div>
           <span>status: {status}</span><br></br>
           <span>userType: {userType}</span><br></br>
-          <span>About</span><br></br>
-          <div className="media">
-            <img className="mr-1" src={iconTransaction} width={20}/>
-            <div className="media-body">
-              <div>
-                <small>
-                  <FormattedMessage id="transactonOfferInfo" values={{
-                    success: offer.success, failed: offer.failed
-                  }}/>
-                </small>
+          {
+            mode === 'discover' ? (
+              <div className="media mb-1">
+                <img className="mr-1" src={iconTransaction} width={20}/>
+                <div className="media-body">
+                  <div>
+                    <FormattedMessage id="transactonOfferInfo" values={{
+                      success: offer.success, failed: offer.failed
+                    }}/>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
+            ) : (
+              <div>
+                <div className="media mb-1">
+                  <img className="mr-1" src={iconPhone} width={20}/>
+                  <div className="media-body">
+                    <div>
+                      <a href={`tel:${phone}`} className="text-white">{phone}</a>
+                    </div>
+                  </div>
+                </div>
+                <div className="media">
+                  <img className="mr-1" src={iconLocation} width={20}/>
+                  <div className="media-body">
+                    <div>{address}</div>
+                  </div>
+                </div>
+              </div>
+            )
+          }
           <div className="media">
-            <img className="mr-1" src={iconLocation} width={20}/>
+            <img className="mr-1" src={mode === 'discover' ? iconLocation : ''} width={20} />
             <div className="media-body">
               <div>
-                <small>
-                  <FormattedMessage id="offerDistanceContent" values={{
-                    offerType: offer.type === 'buy' ? 'Buyer' : 'Seller',
-                    distance: 100
-                  }}/>
-                </small>
+                <FormattedMessage id="offerDistanceContent" values={{
+                  offerType: offer.type === 'buy' ? 'Buyer' : 'Seller',
+                  distance: 100
+                }}/>
               </div>
             </div>
           </div>
