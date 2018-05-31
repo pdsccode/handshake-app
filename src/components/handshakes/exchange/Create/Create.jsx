@@ -1,5 +1,5 @@
 import React from 'react';
-import {injectIntl} from 'react-intl';
+import {FormattedMessage, injectIntl} from 'react-intl';
 import Feed from '@/components/core/presentation/Feed';
 import Button from '@/components/core/controls/Button';
 
@@ -33,6 +33,7 @@ import {BigNumber} from 'bignumber.js';
 import {MasterWallet} from '@/models/MasterWallet';
 import getSymbolFromCurrency from 'currency-symbol-map';
 import {URL} from '@/config';
+import {showAlert} from '@/reducers/app/action';
 
 const nameFormExchangeCreate = 'exchangeCreate';
 const FormExchangeCreate = createForm({
@@ -291,7 +292,7 @@ class Component extends React.Component {
     console.log('createOffer', offer);
     const { currency } = this.props;
 
-    if (currency === 'BTC') {
+    // if (currency === 'BTC') {
       this.props.createOffer({
         BASE_URL: API_URL.EXCHANGE.BASE,
         PATH_URL: API_URL.EXCHANGE.OFFERS,
@@ -300,64 +301,82 @@ class Component extends React.Component {
         successFn: this.handleCreateOfferSuccess,
         errorFn: this.handleCreateOfferFailed,
       });
-    } else {
-
-    }
+    // } else {
+    //
+    // }
   }
 
   handleCreateOfferSuccess = (data) => {
-    this.timeoutClosePopup = setTimeout(() => {
-      this.handleBuySuccess();
-    }, 3000);
+    // this.props.history.push(URL.HANDSHAKE_ME);
 
-    console.log('handleCreateCCOrderSuccess', data);
-    this.setState({
-      modalContent:
-      (
-        <div className="py-2">
-          <Feed className="feed p-2" background="#259B24">
-            <div className="text-white d-flex align-items-center" style={{ minHeight: '75px' }}>
-              <div>Create offer success</div>
-            </div>
-          </Feed>
-          <Button block className="btn btn-secondary mt-2" onClick={this.handleBuySuccess}>Dismiss</Button>
-        </div>
-      ),
-    }, () => {
-      this.modalRef.open();
+    this.props.showAlert({
+      message: <div className="text-center">Create Offer success</div>,
+      timeOut: 3000,
+      type: 'danger',
     });
+
+    setTimeout(() => {
+      console.log('this.props', this.props);
+      this.props.history.push(URL.HANDSHAKE_ME);
+    }, 5000)
+
+    // this.timeoutClosePopup = setTimeout(() => {
+    //   this.handleBuySuccess();
+    // }, 3000);
+    //
+    // console.log('handleCreateCCOrderSuccess', data);
+    // this.setState({
+    //   modalContent:
+    //   (
+    //     <div className="py-2">
+    //       <Feed className="feed p-2" background="#259B24">
+    //         <div className="text-white d-flex align-items-center" style={{ minHeight: '75px' }}>
+    //           <div>Create offer success</div>
+    //         </div>
+    //       </Feed>
+    //       <Button block className="btn btn-secondary mt-2" onClick={this.handleBuySuccess}>Dismiss</Button>
+    //     </div>
+    //   ),
+    // }, () => {
+    //   this.modalRef.open();
+    // });
   }
 
-  handleBuySuccess = () => {
-    if (this.timeoutClosePopup) {
-      clearTimeout(this.timeoutClosePopup);
-    }
-    this.modalRef.close();
-    this.props.history.push(URL.HANDSHAKE_ME);
-  }
+  // handleBuySuccess = () => {
+  //   if (this.timeoutClosePopup) {
+  //     clearTimeout(this.timeoutClosePopup);
+  //   }
+  //   this.modalRef.close();
+  //   this.props.history.push(URL.HANDSHAKE_ME);
+  // }
 
   handleCreateOfferFailed = (e) => {
-    // console.log('handleCreateCCOrderFailed', JSON.stringify(e.response));
-    this.setState({
-      modalContent:
-        (
-          <div className="py-2">
-            <Feed className="feed p-2" background="#259B24">
-              <div className="text-white d-flex align-items-center" style={{ minHeight: '75px' }}>
-                <div>Create offer failed</div>
-              </div>
-            </Feed>
-            <Button block className="btn btn-secondary mt-2" onClick={this.handleBuyFailed}>Dismiss</Button>
-          </div>
-        ),
-    }, () => {
-      this.modalRef.open();
+    this.props.showAlert({
+      message: <div className="text-center">{e.response?.data?.message}</div>,
+      timeOut: 3000,
+      type: 'danger',
     });
+    // console.log('handleCreateCCOrderFailed', JSON.stringify(e.response));
+    // this.setState({
+    //   modalContent:
+    //     (
+    //       <div className="py-2">
+    //         <Feed className="feed p-2" background="#259B24">
+    //           <div className="text-white d-flex align-items-center" style={{ minHeight: '75px' }}>
+    //             <div>Create offer failed</div>
+    //           </div>
+    //         </Feed>
+    //         <Button block className="btn btn-secondary mt-2" onClick={this.handleBuyFailed}>Dismiss</Button>
+    //       </div>
+    //     ),
+    // }, () => {
+    //   this.modalRef.open();
+    // });
   }
 
-  handleBuyFailed = () => {
-    this.modalRef.close();
-  }
+  // handleBuyFailed = () => {
+  //   this.modalRef.close();
+  // }
 
   render() {
     const { totalAmount, type, sellPriceType, offerPrice, currency } = this.props;
@@ -508,9 +527,16 @@ const mapStateToProps = (state) => {
   };
 };
 
+// this.props.showAlert({
+//   message: <p className="text-center">aaaaaaaa</p>,
+//   timeOut: 10000000,
+//   type: 'danger',
+// });
+
 const mapDispatchToProps = {
   createOffer,
   getOfferPrice,
+  showAlert
 };
 
 export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(Component));

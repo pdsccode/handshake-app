@@ -22,5 +22,6 @@ export default {
   completeOfferConfirm: 'Do you want to Complete this handshake?',
   withdrawOfferConfirm: 'Do you want to Withdraw this handshake?',
   cancelOfferConfirm: 'Do you want to Cancel this handshake?',
+  createOfferSuccessMassage: 'Create offer success',
 
 };
