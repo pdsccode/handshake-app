@@ -36,6 +36,7 @@ class Me extends React.Component {
         <Row>
           <Col md={12}>
             {
+              /*
               list && list.length > 0 ? (
                 list.map((handshake) => {
                   const FeedComponent = maps[handshake.type];
@@ -61,7 +62,7 @@ class Me extends React.Component {
               ) : (
                 <NoData message="NO DATA AVAILABLE" />
               )
-            }
+            */}
           </Col>
         </Row>
       </Grid>
