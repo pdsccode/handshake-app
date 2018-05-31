@@ -13,7 +13,11 @@ import Input from '@/components/core/forms/Input/Input';
 import dontIcon from '@/assets/images/icon/3-dot-icon.svg';
 import iconSafe from '@/assets/images/icon/icon-safe.svg';
 import iconWarning from '@/assets/images/icon/icon-warning.svg';
+<<<<<<< HEAD
 //import iconChecked from '@/assets/images/icon/icon-check.png';
+=======
+// import iconChecked from '@/assets/images/icon/icon-check.png';
+>>>>>>> 972d9c5ddb307ff08237c396b333d49abc548fca
 import Header from './Header';
 import HeaderMore from './HeaderMore';
 import WalletItem from './WalletItem';
@@ -209,27 +213,29 @@ class Wallet extends React.Component {
         }
       })
 
-      obj.push({
-        title: 'Make it default ' + (wallet.default ? "✓ " : ""),
-        handler: () => {          
-          wallet.default = !wallet.default;    
-          this.toggleBottomSheet(); 
-          // reset all wallet defaul:
-          let lstWalletTemp = this.getAllWallet();
-          if (wallet.default) lstWalletTemp.forEach(wal => {if (wal != wallet){wal.default = false;}})          
-          // Update wallet master from local store:
-          MasterWallet.UpdateLocalStore(lstWalletTemp);
-        }
-      })
-      if (!wallet.isReward)
+      if (!wallet.isReward){
         obj.push({
-          title: 'Remove',
-          handler: () => {
-            this.setState({walletSelected: wallet});          
-            this.modalBetRef.open();   
-            this.toggleBottomSheet();   
+          title: 'Make it default for {0} '.format(wallet.name) + (wallet.default ? "✓ " : ""),
+          handler: () => {          
+            wallet.default = !wallet.default;    
+            this.toggleBottomSheet(); 
+            // reset all wallet default:
+            let lstWalletTemp = this.getAllWallet();
+            if (wallet.default) lstWalletTemp.forEach(wal => {if (wal != wallet && wal.name == wallet.name){wal.default = false;}})          
+            // Update wallet master from local store:
+            MasterWallet.UpdateLocalStore(lstWalletTemp);
           }
         })
+        
+          obj.push({
+            title: 'Remove',
+            handler: () => {
+              this.setState({walletSelected: wallet});          
+              this.modalBetRef.open();   
+              this.toggleBottomSheet();   
+            }
+          })
+        }
 
       return obj;
   }
