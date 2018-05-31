@@ -25,7 +25,7 @@ import Dropdown from '@/components/core/controls/Dropdown';
 import './Create.scss';
 
 import Neuron from '@/services/neuron';
-const wallet = MasterWallet.getWalletDefault();
+const wallet = MasterWallet.getWalletDefault('ETH');
 const chainId = wallet.chainId;
 console.log('Chain Id:', chainId);
 
@@ -92,8 +92,6 @@ class BettingCreate extends React.PureComponent {
   }
   componentDidMount(){
     console.log('Betting Create Props:', this.props, history);
-    const wallet = MasterWallet.getWalletDefault();
-    console.log("Address, Private Key:", wallet.address, wallet.privateKey);
     this.setState({
       address: wallet.address,
       privateKey: wallet.privateKey,

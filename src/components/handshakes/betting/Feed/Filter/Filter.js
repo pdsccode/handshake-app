@@ -83,7 +83,8 @@ class BettingFilter extends React.Component {
                 ]
             }
         ],
-        selectedMatch:null
+        selectedMatch:null,
+        selectedOutcome: null,
         };
     
         
@@ -98,7 +99,7 @@ class BettingFilter extends React.Component {
         })
     }
     componentDidMount(){
-        //this.props.loadMatches({PATH_URL: API_URL.CRYPTOSIGN.LOAD_MATCHES});
+        this.props.loadMatches({PATH_URL: API_URL.CRYPTOSIGN.LOAD_MATCHES});
     }
 
     get matchNames() {
@@ -111,7 +112,6 @@ class BettingFilter extends React.Component {
             const foundMatch = matches.find(function(element) {
                 return element.id  === selectedMatch.id;
               });
-            console.log(`${TAG} Found Match:`, foundMatch);
             if (foundMatch){
                 const {outcomes} = foundMatch;
                 if(outcomes){
@@ -121,6 +121,11 @@ class BettingFilter extends React.Component {
         }
         
         
+        return [];
+    }
+    get bookList(){
+        const {selectedMatch, matches} = this.state;
+
         return [];
     }
     render(){
@@ -133,13 +138,15 @@ class BettingFilter extends React.Component {
                 onItemSelected={(item) => this.setState({selectedMatch: item})} />
             </div>
             {selectedMatch && <div className="dropDown">
-                <Dropdown placeholder="Select a outcome" source={this.matchResults} onItemSelected={(item) => console.log(1111, item)} />
+                <Dropdown placeholder="Select a outcome" 
+                source={this.matchResults} 
+                onItemSelected={(item) => this.setState({selectedOutcome: item})} />
             </div>}
             
                 <div className="wrapperContainer">
                     <div className="item">
-                    <GroupBook amountColor="#FA6B49" />
-                    <GroupBook amountColor="#8BF275" />
+                    <GroupBook amountColor="#FA6B49"/>
+                    <GroupBook amountColor="#8BF275"/>
                     </div>
                     <div className="item">
                     <BettingShake/>

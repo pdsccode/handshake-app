@@ -23,7 +23,9 @@ class Offer {
       updatedAt: data.updated_at || '',
 
       contactPhone: data.contact_phone || '',
-      percentage: data.percentage || ''
+      percentage: data.percentage || '',
+      success: data.success || 0,
+      failed: data.failed || 0,
     };
   }
 }

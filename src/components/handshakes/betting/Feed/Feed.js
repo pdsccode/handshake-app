@@ -67,15 +67,8 @@ class FeedBetting extends React.Component {
         {/* Feed */}
         <Feed className="feed" handshakeId={this.props.id} onClick={this.props.onFeedClick} background="white">
           <div className="wrapperBettingFeed">
-              <div className="item">
-              <GroupBook amountColor="#FA6B49" />
-              <GroupBook amountColor="#8BF275" />
-              </div>
-              <div className="item">
-              <BettingShake/>
-
-              </div>
-        </div>
+              
+          </div>
         </Feed>
         {/* Shake */}
         {/*statusAction && <Button block onClick={() => { this.clickActionButton(statusAction); }}>{statusAction}</Button>*/}

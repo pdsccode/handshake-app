@@ -7,7 +7,7 @@ class Handshake {
       state: data.state,
       status: data.status,
       initUserId: data.init_user_id,
-      shakedUserIds: data.shaked_user_ids,
+      shakeUserIds: data.shake_user_ids,
       textSearch: data.text_search,
       shakeCount: data.shake_count,
       viewCount: data.view_count,
