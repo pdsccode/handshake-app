@@ -27,7 +27,63 @@ class BettingFilter extends React.Component {
         super(props);
         const {odd} = props;
         this.state = {
-          matchs: []
+          matches: [
+            {
+                "awayTeamCode": "",
+                "awayTeamFlag": "https://upload.wikimedia.org/wikipedia/commons/0/0d/Flag_of_Saudi_Arabia.svg",
+                "awayTeamName": "Saudi Arabia",
+                "date": 1528963200,
+                "homeTeamCode": "RUS",
+                "homeTeamFlag": "https://upload.wikimedia.org/wikipedia/commons/f/f3/Flag_of_Russia.svg",
+                "homeTeamName": "Russia",
+                "id": 1,
+                "outcomes": [
+                    {
+                        "handshakes": [],
+                        "id": 1,
+                        "name": "Russia wins"
+                    },
+                    {
+                        "handshakes": [],
+                        "id": 2,
+                        "name": "Saudi Arabia wins"
+                    },
+                    {
+                        "handshakes": [],
+                        "id": 3,
+                        "name": "Russia draws Saudi Arabia"
+                    }
+                ]
+            },
+            {
+                "awayTeamCode": "",
+                "awayTeamFlag": "https://upload.wikimedia.org/wikipedia/commons/f/fe/Flag_of_Uruguay.svg",
+                "awayTeamName": "Uruguay",
+                "date": 1529038800,
+                "homeTeamCode": "",
+                "homeTeamFlag": "https://upload.wikimedia.org/wikipedia/commons/f/fe/Flag_of_Egypt.svg",
+                "homeTeamName": "Egypt",
+                "id": 2,
+                "outcomes": [
+                    {
+                        "handshakes": [],
+                        "id": 7,
+                        "name": "Uruguay wins"
+                    },
+                    {
+                        "handshakes": [],
+                        "id": 8,
+                        "name": "Egypt wins"
+                    },
+                    {
+                        "handshakes": [],
+                        "id": 9,
+                        "name": "Uruguay draws Egypt"
+                    }
+                ]
+            }
+        ],
+        selectedMatch:null
         };
     
         
@@ -42,25 +98,43 @@ class BettingFilter extends React.Component {
         })
     }
     componentDidMount(){
-        this.props.loadMatches({PATH_URL: API_URL.CRYPTOSIGN.LOAD_MATCHES});
+        //this.props.loadMatches({PATH_URL: API_URL.CRYPTOSIGN.LOAD_MATCHES});
+    }
+
+    get matchNames() {
+        const {matches} = this.state;
+        return matches.map((item) => ({ id: item.id, value: `${item.awayTeamName} - ${item.homeTeamName}` }));
+    }
+    get matchResults(){
+        const {selectedMatch, matches} = this.state;
+        if(selectedMatch){
+            const foundMatch = matches.find(function(element) {
+                return element.id  === selectedMatch.id;
+              });
+            console.log(`${TAG} Found Match:`, foundMatch);
+            if (foundMatch){
+                const {outcomes} = foundMatch;
+                if(outcomes){
+                    return outcomes.map((item) => ({ id: item.id, value: item.name}));
+                }
+            }  
+        }
+        
+        
+        return [];
     }
     render(){
+        const {matches, selectedMatch} = this.state;
         return (
             <div className="wrapperBettingFilter">
             <div className="dropDown">
-                <Dropdown placeholder="Select a match" source={[
-                    {id: 1, value: 'aaaaa'},
-                    {id: 2, value: 'bbbbb'},
-                    {id: 3, value: 'ccccc'},
-                ]} onItemSelected={(item) => console.log(1111, item)} />
+                <Dropdown placeholder="Select a match" 
+                source={this.matchNames}
+                onItemSelected={(item) => this.setState({selectedMatch: item})} />
             </div>
-            <div className="dropDown">
-                <Dropdown placeholder="Select a outcome" source={[
-                    {id: 1, value: 'aaaaa'},
-                    {id: 2, value: 'bbbbb'},
-                    {id: 3, value: 'ccccc'},
-                ]} onItemSelected={(item) => console.log(1111, item)} />
-            </div>
+            {selectedMatch && <div className="dropDown">
+                <Dropdown placeholder="Select a outcome" source={this.matchResults} onItemSelected={(item) => console.log(1111, item)} />
+            </div>}
             
                 <div className="wrapperContainer">
                     <div className="item">
