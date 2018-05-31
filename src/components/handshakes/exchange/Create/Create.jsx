@@ -9,6 +9,7 @@ import {
   fieldCleave,
   fieldDropdown,
   fieldInput,
+  fieldPhoneInput,
   fieldNumericInput,
   fieldRadioButton
 } from '@/components/core/form/customField';
@@ -484,11 +485,11 @@ class Component extends React.Component {
                 }
                 <div className="d-flex mt-2">
                   <label className="col-form-label mr-auto" style={{ width: '120px' }}>Phone</label>
-                  <div className="w-100">
+                  <div className="input-group w-100">
                     <Field
                       name="phone"
                       className="form-control-custom form-control-custom-ex w-100"
-                      component={fieldInput}
+                      component={fieldPhoneInput}
                       type="tel"
                       placeholder="+74995926433"
                       // validate={[required, currency === 'BTC' ? minValue001 : minValue01]}
