@@ -1,7 +1,6 @@
 import Web3 from 'web3';
 import configsBetting from '../../configs';
-
-const configs = configsBetting.network[4];
+const configs =  configsBetting.network[4];
 export default class BettingHandshake {
   constructor(_neuron) {
     const web3 = _neuron.getWeb3();
@@ -10,7 +9,7 @@ export default class BettingHandshake {
       compiled.abi,
       configs.handshakeBettingAddress,
     );
-    console.log('Hanshake instance:', this.handshakeInstance);
+    console.log("Hanshake instance:", this.handshakeInstance);
     this.neuron = _neuron;
     this.web3 = web3;
   }
@@ -33,9 +32,9 @@ export default class BettingHandshake {
       deadline,
       offchain,
     );
-    // const goalValue = Web3.utils.toWei(goal.toString(), 'ether');
+    //const goalValue = Web3.utils.toWei(goal.toString(), 'ether');
     const goalValue = this.web3.utils.toHex(Web3.utils.toWei(goal.toString(), 'ether'));
-    // const escrowValue = Web3.utils.toWei(escrow.toString(), 'ether');
+    //const escrowValue = Web3.utils.toWei(escrow.toString(), 'ether');
     const escrowValue = this.web3.utils.toHex(Web3.utils.toWei(escrow.toString(), 'ether'));
     const bytesOffchain = this.web3.utils.fromAscii(offchain);
     const bytesArrayAcceptor = [];
@@ -46,21 +45,21 @@ export default class BettingHandshake {
       .initBet(bytesArrayAcceptor, goalValue, escrowValue, deadline, bytesOffchain)
       .encodeABI();
     return this.neuron.makeRawTransaction(address, privateKey, payloadData, {
-      amount: escrow,
-      gasPrice: (() => (this.neuron.chainId === 4 ? 100 : 20))(),
-      toAddress: configs.handshakeBettingAddress,
+        amount: escrow,
+        gasPrice: (() => (this.neuron.chainId === 4 ? 100 : 20))(),
+        toAddress: configs.handshakeBettingAddress,
     });
   };
-
+ 
   shake = (address, privateKey, hid, amount, offchain) => {
     console.log('eth-contract-service shake', address, privateKey, hid);
     const bytesOffchain = this.web3.utils.fromAscii(offchain);
 
     const payloadData = this.handshakeInstance.methods
-      .shake(hid, bytesOffchain)
+      .shake(hid,bytesOffchain)
       .encodeABI();
     return this.neuron.makeRawTransaction(address, privateKey, payloadData, {
-      amount,
+      amount: amount,
       toAddress: configs.handshakeBettingAddress,
     });
   };
@@ -77,7 +76,7 @@ export default class BettingHandshake {
       .cancelBet(hid, state, bytesOffchain)
       .encodeABI();
     return this.neuron.makeRawTransaction(address, privateKey, payloadData, {
-      // amount,
+      //amount,
       toAddress: configs.handshakeBettingAddress,
     });
   };
@@ -94,7 +93,7 @@ export default class BettingHandshake {
       .closeBet(hid, state, bytesOffchain)
       .encodeABI();
     return this.neuron.makeRawTransaction(address, privateKey, payloadData, {
-      // amount,
+      //amount,
       toAddress: configs.handshakeBettingAddress,
     });
   };
@@ -111,7 +110,7 @@ export default class BettingHandshake {
       .initiatorWon(hid, state, bytesOffchain)
       .encodeABI();
     return this.neuron.makeRawTransaction(address, privateKey, payloadData, {
-      // amount,
+      //amount,
       toAddress: configs.handshakeBettingAddress,
     });
   };
@@ -128,7 +127,7 @@ export default class BettingHandshake {
       .betorWon(hid, state, bytesOffchain)
       .encodeABI();
     return this.neuron.makeRawTransaction(address, privateKey, payloadData, {
-      // amount,
+      //amount,
       toAddress: configs.handshakeBettingAddress,
     });
   };
@@ -145,11 +144,11 @@ export default class BettingHandshake {
       .draw(hid, state, balanceValue, escrowValue, bytesOffchain)
       .encodeABI();
     return this.neuron.makeRawTransaction(address, privateKey, payloadData, {
-      // amount,
+      //amount,
       toAddress: configs.handshakeBettingAddress,
     });
   };
-
+  
   withdraw = (address, privateKey, hid, offchain) => {
     console.log(
       'eth-contract-service withdraw',
@@ -164,7 +163,7 @@ export default class BettingHandshake {
       .withdraw(hid, bytesOffchain)
       .encodeABI();
     return this.neuron.makeRawTransaction(address, privateKey, payloadData, {
-      // amount,
+      //amount,
       toAddress: configs.handshakeBettingAddress,
     });
   };
@@ -182,7 +181,7 @@ export default class BettingHandshake {
       .reject(hid, bytesOffchain)
       .encodeABI();
     return this.neuron.makeRawTransaction(address, privateKey, payloadData, {
-      // amount,
+      //amount,
       toAddress: configs.handshakeBettingAddress,
     });
   };
@@ -200,7 +199,7 @@ export default class BettingHandshake {
       .setWinner(hid, state, result, bytesOffchain)
       .encodeABI();
     return this.neuron.makeRawTransaction(address, privateKey, payloadData, {
-      // amount,
+      //amount,
       toAddress: configs.handshakeBettingAddress,
     });
   };

@@ -1,4 +1,3 @@
-import local from '@/services/localStore';
 import { APP } from '@/constants';
 import { APP_ACTION } from './action';
 
@@ -27,8 +26,6 @@ function appReducter(state = {
   headerBack: false,
   isNotFound: false,
   headerRightContent: null,
-  subscribe: local.get(APP.SUBSCRIBE),
-  subscribeAsk: local.get(APP.SUBSCRIBE_ASK),
   configAlert: {
     isShow: false,
     message: '',

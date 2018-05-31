@@ -17,6 +17,8 @@ import iconChecked from '@/assets/images/icon/icon-check.png';
 import Header from './Header';
 import HeaderMore from './HeaderMore';
 import WalletItem from './WalletItem';
+import FeedCreditCard from "@/components/handshakes/exchange/Feed/FeedCreditCard";
+import {createCCOrder, getCcLimits, getCryptoPrice, getUserCcLimit, getUserProfile,} from '@/reducers/exchange/action';
 import ReactBottomsheet from 'react-bottomsheet';
 // var ReactBottomsheet = require('react-bottomsheet');
 // var Blob = require('./Blob.js');
@@ -32,17 +34,23 @@ import ModalDialog from '@/components/core/controls/ModalDialog';
 import Modal from '@/components/core/controls/Modal';
 
 import createForm from '@/components/core/form/createForm';
+import {formValueSelector} from 'redux-form';
 import { required } from '@/components/core/form/validation';
 import { Field } from "redux-form";
 import { initHandshake } from '@/reducers/handshake/action';
-import CreditCard from '@/components/handshakes/exchange/components/CreditCard';
-import {createCCOrder, getCcLimits, getCryptoPrice, getUserCcLimit, getUserProfile} from '@/reducers/exchange/action';
-import {API_URL, CRYPTO_CURRENCY, CRYPTO_CURRENCY_DEFAULT} from "@/constants";
-import {FIAT_CURRENCY} from "@/constants";
 window.Clipboard = (function(window, document, navigator) { var textArea, copy; function isOS() { return navigator.userAgent.match(/ipad|iphone/i); } function createTextArea(text) { textArea = document.createElement('textArea'); textArea.value = text; document.body.appendChild(textArea); } function selectText() { var range, selection; if (isOS()) { range = document.createRange(); range.selectNodeContents(textArea); selection = window.getSelection(); selection.removeAllRanges(); selection.addRange(range); textArea.setSelectionRange(0, 999999); } else { textArea.select(); } } function copyToClipboard() { document.execCommand('copy'); document.body.removeChild(textArea); } copy = function(text) { createTextArea(text); selectText(); copyToClipboard(); }; return { copy: copy }; })(window, document, navigator);
 
 const nameFormSendWallet = 'sendWallet';
 const SendWalletForm = createForm({ propsReduxForm: { form: nameFormSendWallet }});
+
+const nameFormCreditCard = 'creditCard';
+const FormCreditCard = createForm({
+  propsReduxForm: {
+    form: nameFormCreditCard,
+    initialValues: { currency: 'ETH' },
+  },
+});
+const selectorFormCreditCard = formValueSelector(nameFormCreditCard);
 
 class Wallet extends React.Component {
   constructor(props) {
@@ -59,9 +67,9 @@ class Wallet extends React.Component {
       listMenu: [],
       walletSelected: null,      
       inputSendValue: '',
+      isShowFillWallet: false,
       walletsData: false,
-      isNewCCOpen: false,
-      currency: CRYPTO_CURRENCY_DEFAULT
+      isNewCCOpen: false
     };
     this.props.setHeaderRight(this.headerRight());    
   }
@@ -95,14 +103,6 @@ class Wallet extends React.Component {
   }
 
    async componentDidMount() {
-
-    console.log('getWalletDefault()', MasterWallet.getWalletDefault());
-    this.props.getUserProfile({ BASE_URL: API_URL.EXCHANGE.BASE, PATH_URL: API_URL.EXCHANGE.GET_USER_PROFILE});
-    this.getCryptoPriceByAmount(0);
-
-    this.intervalCountdown = setInterval(() => {
-      this.getCryptoPriceByAmount(this.state.amount);
-    }, 30000);
 
     let listWallet = await MasterWallet.getMasterWallet();
 
@@ -183,9 +183,9 @@ class Wallet extends React.Component {
       obj.push({
         title: 'Fill up',
         handler: () => {
-          this.setState({walletSelected: wallet});
+          this.setState({walletSelected: wallet, isShowFillWallet: true});
           this.toggleBottomSheet();
-          this.modalFillRef.open();    
+          this.modalFillRef.open();
         }
       })
 
@@ -263,86 +263,9 @@ class Wallet extends React.Component {
       alert("Please input Amount value");
     else{
       
-    this.state.walletSelected.transfer(this.state.inputAddressAmountValue, this.state.inputSendAmountValue).then(success => {
+      this.state.walletSelected.transfer(this.state.inputAddressAmountValue, this.state.inputSendAmountValue).then(success => {
           alert(success);
           this.modalSendRef.close();
-      })
-    }
-  }
-
-  getCryptoPriceByAmount = (amount) => {
-    const cryptoCurrency = this.state.currency;
-
-    var data = {amount: amount, currency: cryptoCurrency};
-
-    this.props.getCryptoPrice({
-      BASE_URL: API_URL.EXCHANGE.BASE,
-      PATH_URL: API_URL.EXCHANGE.GET_CRYPTO_PRICE,
-      qs: data,
-      successFn: this.handleGetCryptoPriceSuccess,
-      errorFn: this.handleGetCryptoPriceFailed,
-      });
-  }
-
-  fillWallet = (values) =>{
-    const {userProfile: {creditCard}} = this.props;
-
-    let cc = {};
-    //Use existing credit card
-    if (creditCard.ccNumber.length > 0 && !this.state.isNewCCOpen) {
-      cc = {token: "true"};
-    } else {
-      const {cc_number, cc_expired, cc_cvc} = values;
-      cc = {
-        cc_num: cc_number && cc_number.trim().replace(/ /g, ''),
-        cvv: cc_cvc && cc_cvc.trim().replace(/ /g, ''),
-        expiration_date: cc_expired && cc_expired.trim().replace(/ /g, ''),
-        token: "",
-        save: "true"
-      };
-    }
-
-    this.handleCreateCCOrder(cc);
-  }
-
-
-  handleCreateCCOrder = (params) => {
-    const {cryptoPrice} = this.props;
-
-    let listWallet = [];
-    if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
-      listWallet = this.state.listTestWalletBalance;
-    } else {
-      listWallet = this.state.listMainWalletBalance;
-    }
-
-    let address = '';
-    for (let i = 0; i < listWallet.length; i++) {
-      let wallet = listWallet[i];
-
-      if (wallet.name === cryptoPrice.currency) {
-        address = wallet.address;
-        break;
-      }
-    }
-
-    if (cryptoPrice) {
-      const paramsObj = {
-        amount: cryptoPrice.amount.trim(),
-        currency: cryptoPrice.currency.trim(),
-        fiat_amount: cryptoPrice.fiatAmount.trim(),
-        fiat_currency: FIAT_CURRENCY,
-        address: address,
-        payment_method_data: params
-      };
-      // console.log('handleCreateCCOrder',paramsObj);
-      this.props.createCCOrder({
-        BASE_URL: API_URL.EXCHANGE.BASE,
-        PATH_URL: API_URL.EXCHANGE.CREATE_CC_ORDER,
-        data: paramsObj,
-        METHOD: 'POST',
-        successFn: this.handleCreateCCOrderSuccess,
-        errorFn: this.handleCreateCCOrderFailed,
       });
     }
   }
@@ -427,13 +350,13 @@ class Wallet extends React.Component {
   onIconRightHeaderClick = () =>{
     this.setState({listMenu: this.creatSheetMenuHeaderMore()})
     this.toggleBottomSheet();
-
   }
 
   onMoreClick = (wallet) => {
     this.setState({listMenu: this.creatSheetMenuItem(wallet)})
     this.toggleBottomSheet();
   }
+
   onWarningClick = (wallet) => {
     alert("onWarningClick ->" + wallet.address);
   }
@@ -483,7 +406,7 @@ class Wallet extends React.Component {
             <Button className="right" cssType="secondary" onClick={() => { this.modalBetRef.close(); }}>Cancel</Button>
           </div>
         </ModalDialog>
-        
+
         {/* ModalDialog for transfer coin */}
         <Modal title="Send" onRef={modal => this.modalSendRef = modal}>
           <SendWalletForm className="sendwallet-wrapper" onSubmit={this.sendCoin}>
@@ -498,25 +421,8 @@ class Wallet extends React.Component {
           </SendWalletForm>
         </Modal>
 
-        {/* ModalDialog for Fill up */}
         <Modal title="Fill up" onRef={modal => this.modalFillRef = modal}>
-          <SendWalletForm className="fillwallet-wrapper" onSubmit={this.fillWallet}>
-            <Input name="amount" type="tel" required
-              placeholder={ this.state.walletSelected ? "Amount ({0})".format(this.state.walletSelected.name) : "Amount "} 
-              onChange={evt => this.updateSendAmountValue(evt)}
-              value={ this.state.walletSelected && this.state.walletSelected.balance > 0 ? this.state.walletSelected.balance : ""} 
-              />
-            <Input name="fillup" placeholder="Equal to (USD)" required
-              onChange={evt => this.updateSendAddressValue(evt)} 
-              />
-            <CreditCard background="#bbb"
-              isCCExisting={userProfile && userProfile.creditCard && userProfile.creditCard.ccNumber.length > 0}
-              lastDigits={userProfile && userProfile.creditCard && userProfile.creditCard.ccNumber}
-              isNewCCOpen={this.state.isNewCCOpen}
-              handleToggleNewCC={this.handleToggleNewCC}
-            />
-            <Button type="submit" block={true}>Send</Button>
-          </SendWalletForm>
+          <FeedCreditCard buttonTitle="Send" />
         </Modal>
 
         {/* Modal for Backup wallets : */}
@@ -566,13 +472,17 @@ const mapState = (state) => ({
   discover: state.discover,
   userProfile: state.exchange.userProfile,
   cryptoPrice: state.exchange.cryptoPrice,
+  userCcLimit: state.exchange.userCcLimit,
+  ccLimits: state.exchange.ccLimits
 });
 
 const mapDispatch = ({
   setHeaderRight,
   getUserProfile,
+  getCryptoPrice,
   createCCOrder,
-  getCryptoPrice
+  getUserCcLimit,
+  getCcLimits,
 });
 
 

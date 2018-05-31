@@ -116,7 +116,7 @@ export class Bitcoin extends Wallet{
         }
         else{
           // need update error code:
-            return "You don't have enough amount.";            
+            return "You don't have enough Satoshis to cover the miner fee.";            
         }
       }
     }
@@ -192,16 +192,4 @@ export class Bitcoin extends Wallet{
      }
       return false;
    }
-
-   async getTransactionHistory(){
-     //txs/?address=muU86kcQGfJUydQ9uZmfJwcDRb1H5PQuzr
-    let url = this.network +'/txs/?address=' + this.address;
-    let response = await axios.get(url);
-
-    if (response.status == 200){
-      console.log(response.data)
-      
-    }
-   }
-
 }
