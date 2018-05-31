@@ -33,6 +33,9 @@ import Offer from "@/models/Offer";
 import {MasterWallet} from "@/models/MasterWallet";
 import {getHandshakeUserType, getOfferPrice} from "@/services/offer-util";
 import {showAlert} from '@/reducers/app/action';
+import {HANDSHAKE_EXCHANGE_STATUS_NAME} from "@/constants";
+import {Link} from "react-router-dom";
+import { URL } from '@/config';
 
 class FeedExchange extends React.PureComponent {
   constructor(props) {
@@ -661,7 +664,7 @@ class FeedExchange extends React.PureComponent {
     let actionButtons = this.getActionButtons();
     // let userType = getHandshakeUserType(initUserId, shakeUserIds);
     const email = 'abc@mail.com'
-    const statusText = HANDSHAKE_STATUS_NAME[status || -1];
+    const statusText = HANDSHAKE_EXCHANGE_STATUS_NAME[status];
     const phone = offer.contactPhone;
     const address = offer.contactInfo;
     return (
@@ -687,7 +690,11 @@ class FeedExchange extends React.PureComponent {
               </h5>
             </div>
             { mode === 'me' && (
-              <div className="ml-auto pl-2" style={{ width: '50px' }}><a href="#"><img src={iconChat} width='35px' /></a></div>
+              <div className="ml-auto pl-2" style={{ width: '50px' }}>
+                <Link to={URL.HANDSHAKE_CHAT_INDEX}>
+                  <img src={iconChat} width='35px' />
+                </Link>
+              </div>
             )}
           </div>
           <span>status: {status}</span><br></br>
