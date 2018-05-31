@@ -99,7 +99,7 @@ class BettingFilter extends React.Component {
         })
     }
     componentDidMount(){
-        //this.props.loadMatches({PATH_URL: API_URL.CRYPTOSIGN.LOAD_MATCHES});
+        this.props.loadMatches({PATH_URL: API_URL.CRYPTOSIGN.LOAD_MATCHES});
     }
 
     get matchNames() {

@@ -1,4 +1,5 @@
-const handleOutcomeListPayload = payload => payload.map(item => Match.match(item));
+import Outcome from './Outcome';
+const handleOutcomeListPayload = payload => payload.map(item => Outcome.outcome(item));
 
 class Match {
     static match(data) {
@@ -11,6 +12,7 @@ class Match {
             homeTeamCode: data.homeTeamCode || '',
             homeTeamFlag: data.homeTeamFlag || '',
             homeTeamName: data.homeTeamName || '',
+            outcomes: handleOutcomeListPayload(data.outcomes) || '',
         };
     }
 }
