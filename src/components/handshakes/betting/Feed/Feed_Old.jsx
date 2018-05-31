@@ -8,6 +8,7 @@ import  { BetHandshakeHandler, ROLE,
   REJECT_WINDOWN_DAYS, CANCEL_WINDOWN_DAYS,
   BETTING_OPTIONS_NAME,
   BETTING_OPTIONS} from './BetHandshakeHandler.js';
+import momment from 'moment';
 
 import { APP } from '@/constants';
 import local from '@/services/localStore';
@@ -33,7 +34,7 @@ const goal = 30;
 
 
 
-class FeedBetting extends React.Component {
+class FeedBettingOld extends React.Component {
   static propTypes = {
     userEmail: PropTypes.string,
     updatedItem: PropTypes.func,
@@ -61,7 +62,7 @@ class FeedBetting extends React.Component {
   componentDidMount() {
     console.log('Betting Feed:', this.props);
     const item = this.props;
-    const {initUserId, shakeUserIds, status, extraData} = item;
+    const {initUserId, shakedUserIds, status, extraData, shakeCount} = item;
     console.log('Extra Data:', this.extraData);
     const profile = local.get(APP.AUTH_PROFILE);
     const token = local.get(APP.AUTH_TOKEN);
@@ -81,9 +82,10 @@ class FeedBetting extends React.Component {
     });
 
    //const hardCodeRole = ROLE.PAYEE;
-    const hardCodeStatus = 2;
+    const hardCodeStatus = 9;
+    const hardCodeShakeCount = 0;
 
-    const result = BetHandshakeHandler.getStatusLabel(hardCodeStatus, role, eventDate)
+    const result = BetHandshakeHandler.getStatusLabel(status, role, eventDate, shakeCount)
     console.log('Result:', result);
     if(result){
       this.updateStatus(result);
@@ -104,7 +106,7 @@ class FeedBetting extends React.Component {
   }
   isShakeUser(shakeIds, userId){
     console.log('User Id:', userId);
-    /*
+
     if(shakeIds){
 
       if(shakeIds.indexOf(userId) > -1){
@@ -113,10 +115,12 @@ class FeedBetting extends React.Component {
       }
 
     }
-    */
+
+   /*
     if(userId == 151){
       return true;
     }
+    */
 
     return false;
   }
@@ -162,15 +166,15 @@ class FeedBetting extends React.Component {
         {/* Feed */}
         <Feed className="feed" handshakeId={this.props.id} onClick={this.props.onFeedClick}>
           <div className="wrapperBettingFeed">
-              {<p>Role: {`${role}`}</p>}
+              {/*<p>Role: {`${role}`}</p>}
               {statusLabel && <p>Status: {`${statusLabel}`}</p>}
-              {/*<p>Date: {`${date}`}</p>}
+              {<p>Date: {`${date}`}</p>}
               {<p>Bet: {`${goal}`}</p>}
     {<p>Balance: {`${balance}`}</p>*/}
 
               <div className="description">
                 <p>{event_name}</p>
-                <p>{event_date}</p>
+                <p>{momment(event_date).format('M/D/YYYY HH:mm')}</p>
                 <p className="eventInfo">{event_predict}</p>
                 <p className="odds">1:{event_odds}</p>
               </div>
@@ -247,31 +251,33 @@ class FeedBetting extends React.Component {
       isShowOptions: result.isShowOptions,
     })
   }
-  receiveStatus(newState){
+  receiveStatus(newStatus){
     //TO DO: update item
     //TO DO:
     const {role} = this.state;
+    const item = this.props;
+    const {shakeCount} = item;
     //const statusLabel = BetHandshakeHandler.getStatusLabel(status, role, eventDate);
 
-    if(newState === BETTING_STATUS.SHAKED || newState === BETTING_STATUS.CLOSED){
-        const deadlineResult = (eventDate.getTime() / 1000 - currentDate.getTime() / 1000);
+    if(newStatus === BETTING_STATUS.SHAKED || newStatus === BETTING_STATUS.CLOSED){
+        const deadlineResult = (eventDate.unix() / 1000 - currentDate.unix() / 1000);
         setTimeout(function(){ //After a time change to inited
           this.autoShowResult(role,eventDate);
     }.bind(this),deadlineResult*1000);
-
-      const deadlineCancel = (eventDate.getTime() / 1000 - currentDate.getTime() / 1000) + CANCEL_WINDOWN_DAYS;
+      const deadlineCancelDate = BetHandshakeHandler.addDays(eventDate, CANCEL_WINDOWN_DAYS);
+      const deadlineCancel = (deadlineCancelDate.unix() / 1000 - currentDate.unix() / 1000);
       setTimeout(function(){ //After a time change to inited
         this.autoCancel(role, eventDate);
     }.bind(this),deadlineCancel*1000);
     }
-    const statusDict = BetHandshakeHandler.getStatusLabel(newState, role, eventDate);
+    const statusDict = BetHandshakeHandler.getStatusLabel(newState, role, eventDate, shakeCount);
     this.updateStatus(statusDict);
 
   }
   autoShowResult(role,eventDate){
-    const {item} = this.props;
-    const {status} = item;
-    const result = BetHandshakeHandler.getStatusLabel(status, role, eventDate)
+    const item = this.props;
+    const {status, shakeCount} = item;
+    const result = BetHandshakeHandler.getStatusLabel(status, role, eventDate, shakeCount)
     if(result){
       this.updateStatus(result);
     }
@@ -312,5 +318,4 @@ const mapState = state => ({
 });
 const mapDispatch = ({
 });
-export default connect(mapState, mapDispatch)(FeedBetting);
-
+export default connect(mapState, mapDispatch)(FeedBettingOld);
