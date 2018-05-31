@@ -3,7 +3,11 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 // services, constants
-import  { BetHandshakeHandler} from './BetHandshakeHandler.js';
+import  { BetHandshakeHandler, ROLE,
+  BETTING_STATUS_LABEL, BETTING_STATUS,
+  REJECT_WINDOWN_DAYS, CANCEL_WINDOWN_DAYS,
+  BETTING_OPTIONS_NAME,
+  BETTING_OPTIONS} from './BetHandshakeHandler.js';
 import momment from 'moment';
 
 import { APP } from '@/constants';
@@ -22,7 +26,6 @@ import './Feed.scss';
 import chipIcon from '@/assets/images/icon/betting/chip.svg';
 import conferenceCallIcon from '@/assets/images/icon/betting/conference_call.svg';
 import ethereumIcon from '@/assets/images/icon/betting/ethereum.svg';
-import BettingHandshake from '@/services/neuron/neuron-bettinghandshake.js';
 import Shake from '@/components/core/controls/Button';
 
 import GroupBook from './GroupBook';
@@ -85,7 +88,9 @@ class FeedBetting extends React.Component {
     console.log('Choose option:', value)
     //TO DO: Choose an option
   }
+  
   clickActionButton(title){
+    /*
     const {role} = this.state;
     const item = this.props;
     const {id, hid} = item;
@@ -97,20 +102,21 @@ class FeedBetting extends React.Component {
 
       case BETTING_STATUS_LABEL.CLOSE:
         // TO DO: CLOSE BET
-        BetHandshakeHandler.closeItem(role, hid, offchain);
+        //BetHandshakeHandler.closeItem(role, hid, offchain);
         break;
 
       case BETTING_STATUS_LABEL.WITHDRAW:
         // TO DO: WITHDRAW
-        BettingHandshake.withdraw(role, hid, offchain);
+        //BettingHandshake.withdraw(role, hid, offchain);
         break;
 
       case BETTING_STATUS_LABEL.REJECT:
         // TO DO: REJECT
-        BettingHandshake.rejectItem(role, hid, offchain);
+        //BettingHandshake.rejectItem(role, hid, offchain);
         break;
 
     }
+    */
 
   }
 }
