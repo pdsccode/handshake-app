@@ -1,6 +1,7 @@
 @import './src/styles/style';
 
 .commentItem {
+  margin-bottom: rem-calc(21px);
   .userInfo {
     margin-bottom: rem-calc(16px);
     .userName {
@@ -24,8 +25,4 @@
     display: block;
     height: auto;
   }
-}
-
-.commentItem + .commentItem {
-  margin-top: rem-calc(21px);
 }

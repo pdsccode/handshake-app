@@ -11,6 +11,9 @@ import { Grid, Row, Col } from 'react-bootstrap';
 import CreateComment from '@/components/Comment/CreateComment';
 import CommentItem from '@/components/Comment/CommentItem';
 
+// self
+import './Comment.scss';
+
 class Comment extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -23,7 +26,9 @@ class Comment extends React.PureComponent {
       <Grid>
         <Row>
           <Col md={12} xs={12}>
-            {list.map((item) => <CommentItem key={item.id} {...item} />)}
+            <div className="comments">
+              {list.map((item) => <CommentItem key={item.id} {...item} />)}
+            </div>
             <CreateComment />
           </Col>
         </Row>
