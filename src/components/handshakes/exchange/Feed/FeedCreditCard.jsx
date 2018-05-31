@@ -13,6 +13,7 @@ import '../styles.scss';
 import {validate} from '@/components/handshakes/exchange/validation';
 import throttle from 'lodash/throttle';
 import createForm from '@/components/core/form/createForm'
+import { change } from 'redux-form'
 import {fieldCleave, fieldDropdown, fieldInput, fieldRadioButton} from '@/components/core/form/customField'
 import {required} from '@/components/core/form/validation'
 import {createCCOrder, getCcLimits, getCryptoPrice, getUserCcLimit, getUserProfile} from '@/reducers/exchange/action';
@@ -20,6 +21,7 @@ import {API_URL, CRYPTO_CURRENCY, CRYPTO_CURRENCY_DEFAULT} from "@/constants";
 import {FIAT_CURRENCY} from "@/constants";
 import CryptoPrice from "@/models/CryptoPrice";
 import {MasterWallet} from "@/models/MasterWallet";
+import { bindActionCreators } from "redux";
 
 const nameFormCreditCard = 'creditCard'
 const FormCreditCard = createForm({ propsReduxForm: { form: nameFormCreditCard,
@@ -46,6 +48,11 @@ class FeedCreditCard extends React.Component {
   }
 
   async componentDidMount() {
+    const { currencyForced, rfChange } = this.props
+    if (currencyForced) {
+      rfChange(nameFormCreditCard, 'currency', currencyForced)
+    }
+
     this.props.getUserProfile({ BASE_URL: API_URL.EXCHANGE.BASE, PATH_URL: API_URL.EXCHANGE.GET_USER_PROFILE});
     this.props.getCcLimits({ BASE_URL: API_URL.EXCHANGE.BASE, PATH_URL: API_URL.EXCHANGE.GET_CC_LIMITS});
     this.props.getUserCcLimit({ BASE_URL: API_URL.EXCHANGE.BASE, PATH_URL: API_URL.EXCHANGE.GET_USER_CC_LIMIT});
@@ -143,7 +150,7 @@ class FeedCreditCard extends React.Component {
 
 
   handleCreateCCOrder = (params) => {
-    const {cryptoPrice} = this.props;
+    const {cryptoPrice, addressForced } = this.props;
 
     let listWallet = [];
     if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
@@ -153,12 +160,16 @@ class FeedCreditCard extends React.Component {
     }
 
     let address = '';
-    for (let i = 0; i < listWallet.length; i++) {
-      let wallet = listWallet[i];
+    if (addressForced) {
+      address = addressForced;
+    } else {
+      for (let i = 0; i < listWallet.length; i++) {
+        let wallet = listWallet[i];
 
-      if (wallet.name === cryptoPrice.currency) {
-        address = wallet.address;
-        break;
+        if (wallet.name === cryptoPrice.currency) {
+          address = wallet.address;
+          break;
+        }
       }
     }
 
@@ -317,7 +328,7 @@ class FeedCreditCard extends React.Component {
   // }
 
   render() {
-    const {intl, userProfile, cryptoPrice, amount, userCcLimit, ccLimits, buttonTitle} = this.props;
+    const {intl, userProfile, cryptoPrice, amount, userCcLimit, ccLimits, buttonTitle, currencyForced } = this.props;
     const { showCCScheme } = this.state;
     const fiatCurrency = '$';
     const total = cryptoPrice && cryptoPrice.fiatAmount;
@@ -383,7 +394,7 @@ class FeedCreditCard extends React.Component {
                     <Field
                       name="currency"
                       component={fieldRadioButton}
-                      list={CRYPTO_CURRENCY}
+                      list={currencyForced ? CRYPTO_CURRENCY.filter(c => c.value === currencyForced) : CRYPTO_CURRENCY}
                       color={mainColor}
                       onChange={this.onCurrencyChange}
                     />
@@ -433,12 +444,13 @@ const mapStateToProps = (state) => ({
   currency: selectorFormCreditCard(state, 'currency'),
 });
 
-const mapDispatchToProps = {
-  getUserProfile,
-  getCryptoPrice,
-  createCCOrder,
-  getUserCcLimit,
-  getCcLimits,
-};
+const mapDispatchToProps = (dispatch) => ({
+  getUserProfile: bindActionCreators(getUserProfile, dispatch),
+  getCryptoPrice: bindActionCreators(getCryptoPrice, dispatch),
+  createCCOrder: bindActionCreators(createCCOrder, dispatch),
+  getUserCcLimit: bindActionCreators(getUserCcLimit, dispatch),
+  getCcLimits: bindActionCreators(getCcLimits, dispatch),
+  rfChange: bindActionCreators(change, dispatch)
+});
 
 export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(FeedCreditCard));
