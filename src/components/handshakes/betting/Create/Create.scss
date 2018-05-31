@@ -4,6 +4,18 @@
   font-family: $font-family-base;
   font-size: rem-calc(18px);
   padding: rem-calc(10px 10px 10px 10px);
+  .dropDown {
+    margin: rem-calc(0 0 20px);
+    .dropdown-custom {
+      margin: rem-calc(0 0 10px);
+    }
+  }
+  .formInput {
+    background: #F8FAFF;
+    border-radius: rem-calc(6px);
+    padding: rem-calc(20px 0);
+    margin-bottom: rem-calc(28px);
+  }
   .rowWrapper {
     align-items: center;
     justify-content: space-between;
