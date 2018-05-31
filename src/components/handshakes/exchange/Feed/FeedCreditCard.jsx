@@ -124,7 +124,7 @@ class FeedCreditCard extends React.Component {
       qs: data,
       successFn: this.handleGetCryptoPriceSuccess,
       errorFn: this.handleGetCryptoPriceFailed,
-      });
+    });
   }
 
   handleGetCryptoPriceSuccess = (data) => {
@@ -132,7 +132,7 @@ class FeedCreditCard extends React.Component {
     const { userCcLimit } = this.props;
     const cryptoPrice = CryptoPrice.cryptoPrice(data);
 
-    if (userCcLimit && userCcLimit.limit < userCcLimit.amount + cryptoPrice.fiatAmount) {
+    if (this.state.amount && userCcLimit && userCcLimit.limit < userCcLimit.amount + cryptoPrice.fiatAmount) {
       this.setState({showCCScheme: true});
     }
   }
