@@ -29,9 +29,6 @@ export default class BettingHandshake extends BaseHandshake {
     );
     console.log(TAG, ' initBet ', this.contractAddress);
     const payoutValue = Web3.utils.toWei(payout.toString(), 'ether');
-    // const goalValue = this.web3.utils.toHex(Web3.utils.toWei(goal.toString(), 'ether'));
-    const escrowValue = Web3.utils.toWei(escrow.toString(), 'ether');
-    // const escrowValue = this.web3.utils.toHex(Web3.utils.toWei(escrow.toString(), 'ether'));
     const bytesOffchain = this.web3.utils.fromAscii(offchain);
 
     const payloadData = this.handshakeInstance.methods
@@ -77,13 +74,14 @@ export default class BettingHandshake extends BaseHandshake {
     );
     const bytesOffchain = this.web3.utils.fromAscii(offchain);
     const payloadData = this.handshakeInstance.methods
-      .uninit(hid, state, bytesOffchain)
+      .uninit(hid, side, stake, payout, bytesOffchain)
       .encodeABI();
     return this.neuron.makeRawTransaction(address, privateKey, payloadData, {
       // amount,
       toAddress: this.contractAddress,
     });
   };
+  /*
   closeBet = (address, privateKey, hid, offchain) => {
     console.log(
       'eth-contract-service cancel',
@@ -152,6 +150,7 @@ export default class BettingHandshake extends BaseHandshake {
       toAddress: this.contractAddress,
     });
   };
+  */
   
   withdraw = (address, privateKey, hid, offchain) => {
     console.log(
@@ -164,13 +163,14 @@ export default class BettingHandshake extends BaseHandshake {
     const bytesOffchain = this.web3.utils.fromAscii(offchain);
 
     const payloadData = this.handshakeInstance.methods
-      .withdraw(hid, bytesOffchain)
+      .collect(hid, bytesOffchain)
       .encodeABI();
     return this.neuron.makeRawTransaction(address, privateKey, payloadData, {
       // amount,
       toAddress: this.contractAddress,
     });
   };
+  /*
   reject = (address, privateKey, hid, offchain) => {
     console.log(
       'eth-contract-service reject',
@@ -207,4 +207,5 @@ export default class BettingHandshake extends BaseHandshake {
       toAddress: this.contractAddress,
     });
   };
+  */
 }
