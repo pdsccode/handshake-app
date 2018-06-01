@@ -163,6 +163,27 @@ class Component extends React.Component {
     // console.log('valuessss', values);
 
     const wallet = MasterWallet.getWalletDefault(values.currency);
+
+    if (values.type === 'sell') {
+      if (wallet.balance >= values.amount) {
+      } else {
+        this.props.showAlert({
+          message: <div className="text-center">
+            {intl.formatMessage({ id: 'notEnoughCoinInWallet' }, {
+              amount: new BigNumber(values.amount).toFormat(6),
+              currency: values.currency,
+            })}
+            </div>,
+          timeOut: 3000,
+          type: 'danger',
+          callBack: () => {
+          }
+        });
+
+        return;
+      }
+    }
+
     const address = wallet.address;
     const reward_address = address;
 
