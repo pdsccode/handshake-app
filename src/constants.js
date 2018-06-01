@@ -1,3 +1,5 @@
+import { BASE_API } from '@/config';
+
 export const APP = {
   HEADER_DEFAULT: 'Handshake',
   // store
@@ -58,7 +60,7 @@ export const SELL_PRICE_TYPE_DEFAULT = 'fix';
 // path
 export const API_URL = {
   CRYPTOSIGN: {
-    BASE: 'https://stag-handshake.autonomous.ai/api/cryptosign',
+    BASE: 'cryptosign',
     INIT_HANDSHAKE: 'cryptosign/handshake/init',
     SHAKE: 'cryptosign/handshake/shake',
     LOAD_MATCHES: 'cryptosign/match',
@@ -144,7 +146,7 @@ export const HANDSHAKE_EXCHANGE_STATUS_NAME = {
   [HANDSHAKE_EXCHANGE_STATUS.REJECTED]: 'rejected',
 };
 
-export const HANDSHAKE_USER  = {
+export const HANDSHAKE_USER = {
   NORMAL: 0,
   OWNER: 1,
   SHAKED: 2,
@@ -154,7 +156,7 @@ export const HANSHAKE_USER_NAME = {
   [HANDSHAKE_USER.NORMAL]: 'NORMAL',
   [HANDSHAKE_USER.OWNER]: 'OWNER',
   [HANDSHAKE_USER.SHAKED]: 'SHAKED',
-}
+};
 
 export const DEFAULT_FEE = {
   ETH: 0,
