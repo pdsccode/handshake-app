@@ -149,6 +149,7 @@ class Router extends React.Component {
           this.props.fetchProfile({ PATH_URL: 'user/profile' });          
           this.props.getUserProfile({ BASE_URL: API_URL.EXCHANGE.BASE, PATH_URL: API_URL.EXCHANGE.GET_USER_PROFILE});                    
           //this.props.authUpdate({ PATH_URL: 'user/profile', "data": {"reward_wallet_addresses": MasterWallet.getRewardWallet(MasterWallet.createMasterWallet())} });          
+
         },
       });
     } else {

@@ -15,6 +15,12 @@ class Handshake {
       initAt: data.init_at,
       lastUpdateAt: data.last_update_at,
       extraData: data.extra_data,
+      hid: data.hid || '',
+      fromAddress: data.from_address || '',
+      odds: data.odds || '',
+      outComeId: data.outcome_id || '',
+      side: data.side || '',
+      remainingAmount: data.remaining_amount || '',
       location: data.location
     };
   }
