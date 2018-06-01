@@ -1,0 +1,16 @@
+@import './src/styles/var';
+
+.mobile-tablet {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    width: $app-width;
+    height: 100vh;
+    margin: 0 auto;
+    color: $red;
+    p {
+        margin: 0;
+        font-size: 1.3rem;
+    }
+}
