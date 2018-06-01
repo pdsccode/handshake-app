@@ -12,14 +12,16 @@ class BetBook extends React.Component {
   }
 
   render() {
+    const {item} = this.props;
+    const {amount, odds} = item;
     const { amountColor } = this.props;
     const amountStyle = {
       color: amountColor,
     };
     return (
       <div className="wrapperBettingBook">
-        <div className="oddText">2.3</div>
-        <div className="amountText" style={amountStyle}>0.1528</div>
+        <div className="oddText">{odds}</div>
+        <div className="amountText" style={amountStyle}>{amount}</div>
       </div>
     );
   }

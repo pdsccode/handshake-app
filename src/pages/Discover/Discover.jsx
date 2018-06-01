@@ -94,7 +94,9 @@ class DiscoverPage extends React.Component {
         }
       });
     }
+
     return <NoData style={{ height: '50vh' }} />;
+
   }
 
   searchChange(query) {

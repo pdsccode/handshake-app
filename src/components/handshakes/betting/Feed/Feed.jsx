@@ -50,9 +50,9 @@ class FeedBetting extends React.Component {
   }
 
   get isMatch(){
-    const {shakers} = this.props;
-    if(shakers){
-      return shakers.length > 0 ? true : false;
+    const {shakeCount} = this.props;
+    if(shakeCount){
+      return shakeCount > 0 ? true : false;
 
     }
     return false;
@@ -133,11 +133,11 @@ class FeedBetting extends React.Component {
   }
   
   clickActionButton(title){
-    const {id, outcome_id, side, extraData} = item;
+    const {id, outcome_id, side, extraData, hid, odds} = item;
     const {event_bet, event_odds} = JSON.parse(extraData);
-    const hid = outcome_id;
+    //const hid = outcome_id;
     const stake = event_bet;
-    const payout = stake * event_odds;
+    const payout = stake * odds;
     const offchain = id;
     switch(title){
 
