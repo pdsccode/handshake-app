@@ -248,7 +248,6 @@ class Router extends React.Component {
   }
 }
 
-// export default connect(state => ({ auth: state.auth }), ({ signUp, fetchProfile }))(Router);
 export default compose(
   withFirebase,
   connect(state => ({ auth: state.auth }), {
