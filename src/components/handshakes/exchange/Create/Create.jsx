@@ -9,13 +9,13 @@ import {
   fieldCleave,
   fieldDropdown,
   fieldInput,
-  fieldPhoneInput,
   fieldNumericInput,
+  fieldPhoneInput,
   fieldRadioButton
 } from '@/components/core/form/customField';
 import {maxValue, minValue, required} from '@/components/core/form/validation';
-import {Field, formValueSelector, change } from 'redux-form';
-import { bindActionCreators } from 'redux';
+import {change, Field, formValueSelector} from 'redux-form';
+import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {createOffer, getOfferPrice} from '@/reducers/exchange/action';
 import {
@@ -38,6 +38,7 @@ import getSymbolFromCurrency from 'currency-symbol-map';
 import {URL} from '@/config';
 import {showAlert} from '@/reducers/app/action';
 import {MasterWallet} from "@/models/MasterWallet";
+import {DEFAULT_FEE} from "@/constants";
 
 const nameFormExchangeCreate = 'exchangeCreate';
 const FormExchangeCreate = createForm({
@@ -164,24 +165,21 @@ class Component extends React.Component {
 
     const wallet = MasterWallet.getWalletDefault(values.currency);
 
-    if (values.type === 'sell') {
-      if (wallet.balance >= values.amount) {
-      } else {
-        this.props.showAlert({
-          message: <div className="text-center">
-            {intl.formatMessage({ id: 'notEnoughCoinInWallet' }, {
-              amount: new BigNumber(values.amount).toFormat(6),
-              currency: values.currency,
-            })}
-            </div>,
-          timeOut: 3000,
-          type: 'danger',
-          callBack: () => {
-          }
-        });
+    if (values.type === 'sell' && wallet.balance < values.amount + DEFAULT_FEE[values.currency]) {
+      this.props.showAlert({
+        message: <div className="text-center">
+          {intl.formatMessage({ id: 'notEnoughCoinInWallet' }, {
+            amount: new BigNumber(values.amount).toFormat(6),
+            currency: values.currency,
+          })}
+          </div>,
+        timeOut: 3000,
+        type: 'danger',
+        callBack: () => {
+        }
+      });
 
-        return;
-      }
+      return;
     }
 
     const address = wallet.address;
