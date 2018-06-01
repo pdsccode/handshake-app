@@ -26,7 +26,6 @@ import { BettingHandshake } from '@/services/neuron';
 // self
 import './Create.scss';
 
-import Neuron from '@/services/neuron';
 const wallet = MasterWallet.getWalletDefault('ETH');
 const chainId = wallet.chainId;
 console.log('Chain Id:', chainId);
@@ -462,7 +461,7 @@ get matchResults(){
       currency: 'ETH',
       side: SIDE.SUPPORT,
       //from_address: fromAddress,
-      //chain_id: chainId,
+      chain_id: chainId,
     };
     console.log(params);
 
