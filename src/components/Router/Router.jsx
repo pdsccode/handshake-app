@@ -6,7 +6,7 @@ import { Switch, BrowserRouter, Route, Redirect } from 'react-router-dom';
 import DynamicImport from '@/components/App/DynamicImport';
 import Loading from '@/components/core/presentation/Loading';
 import { URL } from '@/config';
-import { APP } from '@/constants';
+import { APP, FIREBASE_PATH, API_URL } from '@/constants';
 
 import local from '@/services/localStore';
 import { signUp, fetchProfile, authUpdate } from '@/reducers/auth/action';
@@ -17,16 +17,12 @@ import Layout from '@/components/Layout/Main';
 import { addLocaleData, IntlProvider } from 'react-intl';
 import en from 'react-intl/locale-data/en';
 import fr from 'react-intl/locale-data/fr';
-import { isLoaded, isEmpty, withFirebase } from 'react-redux-firebase';
-import { FIREBASE_PATH } from '@/constants';
+import { withFirebase } from 'react-redux-firebase';
 import messages from '@/locals';
 import axios from 'axios';
-import {API_URL} from "@/constants";
-import {setIpInfo} from "@/reducers/app/action";
-import {getUserProfile} from "../../reducers/exchange/action";
-
-// temp:
-import {MasterWallet} from '@/models/MasterWallet'
+import { setIpInfo } from '@/reducers/app/action';
+import { getUserProfile } from '@/reducers/exchange/action';
+import { MasterWallet } from '@/models/MasterWallet';
 
 addLocaleData([...en, ...fr]);
 
@@ -95,35 +91,29 @@ const Page404 = props => (
     {Component => <Component {...props} />}
   </DynamicImport>
 );
-let pathFirebaseWithUser ="";
+
 class Router extends React.Component {
   static propTypes = {
-
     signUp: PropTypes.func.isRequired,
     fetchProfile: PropTypes.func.isRequired,
     auth: PropTypes.object.isRequired,
     authUpdate: PropTypes.func.isRequired,
+    setIpInfo: PropTypes.func.isRequired,
+    getUserProfile: PropTypes.func.isRequired,
+    firebase: PropTypes.object.isRequired,
+    // setSubscribed: PropTypes.func.isRequired,
   };
 
   static getDerivedStateFromProps(nextProps, prevState) {
     if (nextProps.auth.isLogged !== prevState.isLogged) {
       return { isLogged: nextProps.auth.isLogged };
     }
-    return null;
-  }
-
-  createMasterWallet(){
-    if (MasterWallet.getMasterWallet() == false)
-      return MasterWallet.createMasterWallet();
-  }
-
-  componentDidUpdate(prevProps,prevState){
-    if(prevProps&& JSON.stringify(prevProps.auth) !== JSON.stringify(this.props.auth)){
-      console.log(`componentDidUpdate begin ---`);
-
-      pathFirebaseWithUser = FIREBASE_PATH.USERS+'/'+String(this.props.auth?.profile?.id);
-      this.props.firebase?.watchEvent('value', pathFirebaseWithUser);
+    if (nextProps.auth.profileUpdatedAt !== prevState.profileUpdatedAt) {
+      nextProps.firebase.unWatchEvent('value', `${FIREBASE_PATH.USERS}/${String(prevState.profile.id)}`);
+      nextProps.firebase.watchEvent('value', `${FIREBASE_PATH.USERS}/${String(nextProps.auth.profile.id)}`);
+      return { profile: nextProps.auth.profile, profileUpdatedAt: nextProps.auth.profileUpdatedAt };
     }
+    return null;
   }
 
   constructor(props) {
@@ -132,10 +122,11 @@ class Router extends React.Component {
     this.state = {
       currentLocale: 'en',
       isLogged: this.props.auth.isLogged,
+      profile: this.props.auth.profile,
+      profileUpdatedAt: this.props.auth.profileUpdatedAt,
     };
 
     const token = local.get(APP.AUTH_TOKEN);
-    // const profile = this.props.auth.profile || {};
 
     // AUTH
     if (!token) {
@@ -143,24 +134,26 @@ class Router extends React.Component {
         PATH_URL: 'user/sign-up',
         METHOD: 'POST',
         successFn: () => {
-
-          // this.props.firebase.set(FIREBASE_PATH.USERS, String(profile.id));
-
           this.props.fetchProfile({ PATH_URL: 'user/profile' });
-          this.props.getUserProfile({ BASE_URL: API_URL.EXCHANGE.BASE, PATH_URL: API_URL.EXCHANGE.GET_USER_PROFILE});
-          //this.props.authUpdate({ PATH_URL: 'user/profile', "data": {"reward_wallet_addresses": MasterWallet.getRewardWallet(MasterWallet.createMasterWallet())} });
-
+          this.props.getUserProfile({ BASE_URL: API_URL.EXCHANGE.BASE, PATH_URL: API_URL.EXCHANGE.GET_USER_PROFILE });
         },
       });
     } else {
-
       this.props.fetchProfile({ PATH_URL: 'user/profile' });
-      this.props.getUserProfile({ BASE_URL: API_URL.EXCHANGE.BASE, PATH_URL: API_URL.EXCHANGE.GET_USER_PROFILE});
-      // this.props.authUpdate({ PATH_URL: 'user/profile', METHOD: 'POST', "data": {"reward_wallet_addresses": MasterWallet.getRewardWallet(MasterWallet.createMasterWallet())} });
+      this.props.getUserProfile({ BASE_URL: API_URL.EXCHANGE.BASE, PATH_URL: API_URL.EXCHANGE.GET_USER_PROFILE });
     }
 
-    const ip_info = local.get(APP.IP_INFO);
-    if (!ip_info) {
+    // const messaging = this.props.firebase.messaging();
+    // messaging
+    //   .requestPermission()
+    //   .then(() => messaging.getToken())
+    //   .then((notificationToken) => {
+    //     this.props.authUpdate({ PATH_URL: 'user/profile', data: { notificationToken } });
+    //     this.props.setSubscribed();
+    //   });
+
+    const ipInfo = local.get(APP.IP_INFO);
+    if (!ipInfo) {
       axios.get(API_URL.EXCHANGE.IP_DOMAIN, {
         params: {
           auth: API_URL.EXCHANGE.IP_KEY,
@@ -171,12 +164,19 @@ class Router extends React.Component {
         local.save(APP.IP_INFO, response.data);
       });
     } else {
-      this.props.setIpInfo(ip_info);
+      this.props.setIpInfo(ipInfo);
     }
   }
 
-  componentWillUnMount() {
-    this.props.firebase?.unWatchEvent('value',pathFirebaseWithUser);
+  componentWillUnmount() {
+    this.props.firebase.unWatchEvent('value', `${FIREBASE_PATH.USERS}/${String(this.state.profile.id)}`);
+  }
+
+  createMasterWallet() {
+    if (MasterWallet.getMasterWallet() === false) {
+      return MasterWallet.createMasterWallet();
+    }
+    return null;
   }
 
   render() {
