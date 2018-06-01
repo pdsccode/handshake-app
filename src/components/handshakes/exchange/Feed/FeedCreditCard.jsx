@@ -20,7 +20,7 @@ import {createCCOrder, getCcLimits, getCryptoPrice, getUserCcLimit} from '@/redu
 import {API_URL, CRYPTO_CURRENCY, CRYPTO_CURRENCY_DEFAULT} from "@/constants";
 import {FIAT_CURRENCY} from "@/constants";
 import CryptoPrice from "@/models/CryptoPrice";
-// import {MasterWallet} from "@/models/MasterWallet";
+import {MasterWallet} from "@/models/MasterWallet";
 import { bindActionCreators } from "redux";
 import {showAlert} from '@/reducers/app/action';
 

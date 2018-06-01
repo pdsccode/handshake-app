@@ -158,15 +158,16 @@ class Component extends React.Component {
     });
   }
 
-  handleSubmit = (values) => {
+  handleSubmit = async (values) => {
     const { intl, totalAmount, price } = this.props;
     // const fiat_currency = this.state.ipInfo.currency;
     const {ipInfo: {currency: fiat_currency}} = this.props;
     // console.log('valuessss', values);
 
     const wallet = MasterWallet.getWalletDefault(values.currency);
+    const balance = await wallet.getBalance();
 
-    if (values.type === 'sell' && wallet.balance < values.amount + DEFAULT_FEE[values.currency]) {
+    if (values.type === 'sell' && balance < values.amount + DEFAULT_FEE[values.currency]) {
       this.props.showAlert({
         message: <div className="text-center">
           {intl.formatMessage({ id: 'notEnoughCoinInWallet' }, {
@@ -184,7 +185,9 @@ class Component extends React.Component {
     }
 
     const address = wallet.address;
-    const reward_address = address;
+
+    const rewardWallet = MasterWallet.getRewardWalletDefault(values.currency);
+    const reward_address = rewardWallet.address;
 
     const offer = {
       amount: values.amount,
@@ -257,7 +260,7 @@ class Component extends React.Component {
     // }
   }
 
-  handleCreateOfferSuccess = (responseData) => {
+  handleCreateOfferSuccess = async (responseData) => {
     // const { currency } = this.props;
     const data = responseData.data;
 
@@ -272,23 +275,17 @@ class Component extends React.Component {
     console.log('wallet', wallet);
 
     if (currency === 'BTC') {
-      console.log('abc');
       wallet.transfer(data.system_address, data.amount).then(success => {
         console.log('transfer', success);
       });
     } else if (currency === 'ETH') {
-      console.log('def');
       const exchangeHandshake = new ExchangeHandshake(wallet.chainId);
-
-      console.log('exchangeHandshake', exchangeHandshake);
 
       let result = null;
       if (data.type === 'buy') {
-        console.log('1');
-        result = exchangeHandshake.init(wallet.address, wallet.address, data.amount, data.id);
+        result = await exchangeHandshake.init(wallet.address, wallet.address, data.amount, data.id);
       } else {
-        console.log('2');
-        result = exchangeHandshake.initByCoinOwner(wallet.address, wallet.address, data.amount, data.id);
+        result = await exchangeHandshake.initByCoinOwner(wallet.address, wallet.address, data.amount, data.id);
       }
 
       console.log('handleCreateOfferSuccess', result);
