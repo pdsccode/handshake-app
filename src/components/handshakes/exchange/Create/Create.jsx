@@ -158,7 +158,7 @@ class Component extends React.Component {
   }
 
   handleSubmit = (values) => {
-    const { intl, totalAmount } = this.props;
+    const { intl, totalAmount, price } = this.props;
     // const fiat_currency = this.state.ipInfo.currency;
     const {ipInfo: {currency: fiat_currency}} = this.props;
     // console.log('valuessss', values);
@@ -187,7 +187,7 @@ class Component extends React.Component {
 
     const offer = {
       amount: values.amount,
-      price: values.type === 'sell' && values.sellPriceType === 'flexible' ? '0' : values.price,
+      price: price,
       percentage: values.type === 'sell' && values.sellPriceType === 'flexible' ? values.customizePrice.toString() : '0',
       currency: values.currency,
       type: values.type,
@@ -448,15 +448,15 @@ const mapStateToProps = (state) => {
   const currency = selectorFormExchangeCreate(state, 'currency');
   const sellPriceType = selectorFormExchangeCreate(state, 'sellPriceType');
   const amount = selectorFormExchangeCreate(state, 'amount') || 0;
-  const price = selectorFormExchangeCreate(state, 'price') || 0;
   const customizePrice = selectorFormExchangeCreate(state, 'customizePrice') || 0;
 
   const offerPrice = state.exchange.offerPrice;
   let totalAmount =  amount * (offerPrice && offerPrice.price || 0) || 0;
   totalAmount += totalAmount * customizePrice / 100;
 
+  const price = offerPrice && offerPrice.price || 0;
 
-  return { amount, currency, totalAmount, type, sellPriceType,
+  return { amount, currency, totalAmount, type, sellPriceType, price,
     offerPrice: offerPrice,
     ipInfo: state.app.ipInfo,
     authProfile: state.auth.profile
