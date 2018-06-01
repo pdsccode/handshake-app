@@ -79,7 +79,7 @@ class Component extends React.Component {
   }
 
   async componentDidMount() {
-    const { ipInfo, rfChange } = this.props
+    const { ipInfo, rfChange, authProfile } = this.props
     navigator.geolocation.getCurrentPosition((location) => {
       const { coords: { latitude, longitude } } = location
       this.setAddressFromLatLng(latitude, longitude) // better precision
@@ -88,7 +88,7 @@ class Component extends React.Component {
     });
 
     // auto fill phone number from user profile
-    rfChange(nameFormExchangeCreate, 'phone', '7-129231234')
+    rfChange(nameFormExchangeCreate, 'phone', authProfile.phone || '')
 
     this.getCryptoPriceByAmount(0);
     this.intervalCountdown = setInterval(() => {
@@ -439,7 +439,8 @@ const mapStateToProps = (state) => {
 
   return { amount, currency, totalAmount, type, sellPriceType,
     offerPrice: offerPrice,
-    ipInfo: state.app.ipInfo
+    ipInfo: state.app.ipInfo,
+    authProfile: state.auth.profile
   };
 };
 
