@@ -18,6 +18,17 @@ class Comment extends React.PureComponent {
   constructor(props) {
     super(props);
     props.loadCommentList({ PATH_URL: API_URL.COMMENT.LIST, qs: { object_type: 'test', object_id: 1, page_size: 5 } });
+    this.scrollToBottom = ::this.scrollToBottom;
+  }
+
+  componentDidUpdate() {
+    this.scrollToBottom();
+  }
+
+  scrollToBottom() {
+    if(this.commentsRef) {
+      this.commentsRef.scrollIntoView({behavior: "instant", block: "end", inline: "nearest"});
+    }
   }
 
   render() {
@@ -26,10 +37,14 @@ class Comment extends React.PureComponent {
       <Grid>
         <Row>
           <Col md={12} xs={12}>
-            <div className="comments">
-              {list.map((item) => <CommentItem key={item.id} {...item} />)}
-            </div>
-            <CreateComment />
+            {
+              list.length > 0 && (
+                <div className="comments" ref={element => this.commentsRef = element}>
+                  {list.map((item) => <CommentItem key={item.id} {...item} />)}
+                </div>
+              )
+            }
+            <CreateComment onCreateCb={this.scrollToBottom} />
           </Col>
         </Row>
       </Grid>

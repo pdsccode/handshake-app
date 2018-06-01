@@ -1,7 +1,9 @@
 @import './src/styles/style';
 
 .comments {
-  div:last-child {
+  display: flex;
+  flex-direction: column;
+  & > div:last-child {
     margin-bottom: rem-calc(60px);
   }
 }

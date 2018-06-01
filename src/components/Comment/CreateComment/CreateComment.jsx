@@ -41,6 +41,7 @@ class CreateComment extends React.PureComponent {
       PATH_URL: API_URL.COMMENT.CREATE,
       METHOD: 'post',
       data,
+      successFn: () => this.props.onCreateCb(),
     });
   }
 
