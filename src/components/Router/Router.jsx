@@ -25,6 +25,9 @@ import {API_URL} from "@/constants";
 import {setIpInfo} from "@/reducers/app/action";
 import {getUserProfile} from "../../reducers/exchange/action";
 
+// temp:
+import {MasterWallet} from '@/models/MasterWallet'
+
 addLocaleData([...en, ...fr]);
 
 const MeRootRouter = props => (
@@ -108,6 +111,12 @@ class Router extends React.Component {
     return null;
   }
 
+  createMasterWallet(){
+    if (MasterWallet.getMasterWallet() == false){
+      MasterWallet.createMasterWallet();
+    }
+  }
+
   componentDidUpdate(prevProps,prevState){
     if(prevProps&& JSON.stringify(prevProps.auth) !== JSON.stringify(this.props.auth)){
       console.log(`componentDidUpdate begin ---`);
@@ -137,14 +146,16 @@ class Router extends React.Component {
 
           // this.props.firebase.set(FIREBASE_PATH.USERS, String(profile.id));
 
-          this.props.fetchProfile({ PATH_URL: 'user/profile' });
+          this.props.fetchProfile({ PATH_URL: 'user/profile' });          
           this.props.getUserProfile({ BASE_URL: API_URL.EXCHANGE.BASE, PATH_URL: API_URL.EXCHANGE.GET_USER_PROFILE});
+          this.createMasterWallet();
         },
       });
     } else {
 
       this.props.fetchProfile({ PATH_URL: 'user/profile' });
       this.props.getUserProfile({ BASE_URL: API_URL.EXCHANGE.BASE, PATH_URL: API_URL.EXCHANGE.GET_USER_PROFILE});
+      this.createMasterWallet();
     }
 
     const ip_info = local.get(APP.IP_INFO);

@@ -40,8 +40,8 @@ class Me extends React.Component {
                   const FeedComponent = maps[handshake.type];
                   if (FeedComponent) {
                     return (
-                      <Col key={handshake.id} md={12} className="feed-wrapper">
-                        <FeedComponent {...handshake} {...this.props} onFeedClick={() => this.clickFeedDetail(handshake.id)} mode={'me'} />
+                      <Col key={handshake.id} className="feed-wrapper">
+                        <FeedComponent {...handshake} history={this.props.history} onFeedClick={() => this.clickFeedDetail(handshake.id)} mode={'me'}/>
                       </Col>
                     );
                   }
