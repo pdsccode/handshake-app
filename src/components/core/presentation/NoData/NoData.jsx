@@ -8,9 +8,7 @@ class NoData extends React.PureComponent {
     const { className, message, ...props } = this.props;
     return (
       <div className={`no-data ${className || ''}`} {...props}>
-        {
-          message && (<p className="text">{message}</p>)
-        }
+          <p className="text">{ message || 'NO DATA AVAILABLE' }</p>
       </div>
     );
   }

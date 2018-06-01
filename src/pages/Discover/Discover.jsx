@@ -94,7 +94,7 @@ class DiscoverPage extends React.Component {
         }
       });
     }
-    return <NoData message="NO DATA AVAILABLE" style={{ height: '50vh' }} />;
+    return <NoData style={{ height: '50vh' }} />;
   }
 
   searchChange(query) {
