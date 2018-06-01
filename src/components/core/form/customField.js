@@ -154,7 +154,7 @@ export const fieldPhoneInput = customField(({
           }
         </select>
       </span>
-      <span><input type="tel" className="form-control-custom form-control-custom-ex w-100" value={phoneNumber} onChange={(e) => onChange(`${countryCode}-${e.target.value}`)} /></span>
+      <span className="ml-1"><input type="tel" className="form-control-custom form-control-custom-ex w-100" value={phoneNumber} onChange={(e) => onChange(`${countryCode}-${e.target.value}`)} /></span>
     </span>
   );
 })

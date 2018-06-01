@@ -398,7 +398,7 @@ class Component extends React.Component {
                 <label className="col-form-label mr-auto" style={{ width: '120px' }}>Total ({FIAT_CURRENCY_SYMBOL})</label>
                 <span className="w-100 col-form-label">{new BigNumber(totalAmount).toFormat(PRICE_DECIMAL)}</span>
               </div>
-              <div className="d-flex mt-2">
+              <div className="d-flex">
                 <label className="col-form-label mr-auto" style={{ width: '120px' }}>Phone</label>
                 <div className="input-group w-100">
                   <Field
@@ -411,7 +411,7 @@ class Component extends React.Component {
                   />
                 </div>
               </div>
-              <div className="d-flex">
+              <div className="d-flex mt-2">
                 <label className="col-form-label mr-auto" style={{ width: '120px' }}>Address*</label>
                 <div className="w-100">
                   <Field
