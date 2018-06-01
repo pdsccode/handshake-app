@@ -90,7 +90,7 @@ class Component extends React.Component {
     // auto fill phone number from user profile
     rfChange(nameFormExchangeCreate, 'phone', '7-129231234')
 
-    // this.getCryptoPriceByAmount(0);
+    this.getCryptoPriceByAmount(0);
     this.intervalCountdown = setInterval(() => {
       const { amount } = this.props;
       this.getCryptoPriceByAmount(amount);
@@ -106,13 +106,12 @@ class Component extends React.Component {
   }
 
   getCryptoPriceByAmount = (amount) => {
-    const cryptoCurrency = this.state.currency;
-    const { type } = this.props;
+    const { type, currency } = this.state;
     const {ipInfo: {currency: fiat_currency}} = this.props;
 
     let data = {
       amount,
-      currency: cryptoCurrency,
+      currency: currency,
       type,
       fiat_currency,
     };
@@ -431,10 +430,15 @@ const mapStateToProps = (state) => {
   const sellPriceType = selectorFormExchangeCreate(state, 'sellPriceType');
   const amount = selectorFormExchangeCreate(state, 'amount') || 0;
   const price = selectorFormExchangeCreate(state, 'price') || 0;
-  const totalAmount =  amount * price || 0;
+  const customizePrice = selectorFormExchangeCreate(state, 'customizePrice') || 0;
+
+  const offerPrice = state.exchange.offerPrice;
+  let totalAmount =  amount * (offerPrice && offerPrice.price || 0) || 0;
+  totalAmount += totalAmount * customizePrice / 100;
+
 
   return { amount, currency, totalAmount, type, sellPriceType,
-    offerPrice: state.exchange.offerPrice,
+    offerPrice: offerPrice,
     ipInfo: state.app.ipInfo
   };
 };
