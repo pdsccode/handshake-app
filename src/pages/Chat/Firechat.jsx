@@ -489,8 +489,8 @@ export class Firechat {
       const usernames = snapshot.val() || {};
       const usernamesUnique = {};
 
-      usernames.each((username) => {
-        usernames[username].each((session) => {
+      Object.keys(usernames).forEach((username) => {
+        Object.keys(usernames[username]).forEach((session) => {
           usernamesUnique[username] = usernames[username][session];
           return false;
         });
