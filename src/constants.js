@@ -60,6 +60,7 @@ export const API_URL = {
   CRYPTOSIGN: {
     BASE: 'https://stag-handshake.autonomous.ai/api/cryptosign',
     INIT_HANDSHAKE: 'cryptosign/handshake/init',
+    SHAKE: 'cryptosign/handshake/shake',
     LOAD_MATCHES: 'cryptosign/match',
   },
   DISCOVER: {

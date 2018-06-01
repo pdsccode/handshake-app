@@ -85,6 +85,8 @@ class BettingCreate extends React.PureComponent {
       values: {},
       address: null,
       privateKey: null,
+      matches: [],
+      /*
       matches: [
         {
             "awayTeamCode": "",
@@ -199,7 +201,7 @@ class BettingCreate extends React.PureComponent {
                 }
             ]
         }
-    ],
+    ],*/
     selectedMatch:null,
     selectedOutcome: null,
     };
@@ -219,7 +221,7 @@ class BettingCreate extends React.PureComponent {
 
   }
   componentWillReceiveProps(nextProps){
-
+    console.log('Receive Props: ', nextProps);
     const {matches} = nextProps;
     console.log(`${TAG} Matches:`, matches);
 
@@ -454,14 +456,13 @@ get matchResults(){
       type: HANDSHAKE_ID.BETTING,
       //type: 3,
       //extra_data: JSON.stringify(fields),
-      is_private: 0,
       outcome_id: selectedOutcome.id,
       odds: fields['event_odds'],
       amount: fields['event_bet'],
       extra_data: JSON.stringify(fields),
       currency: 'ETH',
       side: SIDE.SUPPORT,
-      //from_address: fromAddress,
+      from_address: fromAddress,
       chain_id: chainId,
     };
     console.log(params);
@@ -523,4 +524,4 @@ const mapDispatch = ({
   loadMatches,
 });
 
-export default connect(null, mapDispatch)(BettingCreate);
+export default connect(mapState, mapDispatch)(BettingCreate);
