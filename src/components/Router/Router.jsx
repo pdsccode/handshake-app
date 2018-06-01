@@ -102,7 +102,7 @@ class Router extends React.Component {
     signUp: PropTypes.func.isRequired,
     fetchProfile: PropTypes.func.isRequired,
     auth: PropTypes.object.isRequired,
-    authUpdate: PropTypes.object.isRequired,
+    authUpdate: PropTypes.func.isRequired,
   };
 
   static getDerivedStateFromProps(nextProps, prevState) {
