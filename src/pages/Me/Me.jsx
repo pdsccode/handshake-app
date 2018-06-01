@@ -42,7 +42,7 @@ class Me extends React.Component {
                   if (FeedComponent) {
                     return (
                       <Col key={handshake.id} md={12} className="feed-wrapper">
-                        <FeedComponent {...handshake} onFeedClick={() => this.clickFeedDetail(handshake.id)} />
+                        <FeedComponent {...handshake} {...this.props} onFeedClick={() => this.clickFeedDetail(handshake.id)} mode={'me'}/>
                       </Col>
                     );
                   }

@@ -1,0 +1,22 @@
+@import './src/styles/style';
+
+.toggleShakeBetting {
+  display: flex;
+  border-radius: 2px;
+  .itemToggle {
+    flex: 50%;
+    font-size: rem-calc(12px);
+    font-weight: $semi-bold;
+    color: #EFEFEF;
+    letter-spacing: 0;
+    line-height: rem-calc(22px);
+    background: #636B71;
+    padding: rem-calc(7px 15px);
+    &:hover {
+      cursor: pointer;
+    }
+  }
+  .active {
+    background: #8BF275;
+  }
+}

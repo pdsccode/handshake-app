@@ -9,8 +9,9 @@ import createForm from '@/components/core/form/createForm';
 import { required } from '@/components/core/form/validation';
 import { Field } from "redux-form";
 import { initHandshake } from '@/reducers/handshake/action';
+import { loadMatches } from '@/reducers/betting/action';
 import { HANDSHAKE_ID, API_URL } from '@/constants';
-import  { BetHandshakeHandler} from '@/components/handshakes/betting/Feed/BetHandshakeHandler.js';
+import  { BetHandshakeHandler, SIDE} from '@/components/handshakes/betting/Feed/BetHandshakeHandler.js';
 import { URL } from '@/config';
 
 // components
@@ -19,12 +20,18 @@ import Input from '@/components/core/forms/Input/Input';
 import DatePicker from '@/components/handshakes/betting/Create/DatePicker';
 import { InputField } from '../form/customField';
 import {MasterWallet} from '@/models/MasterWallet';
+import Dropdown from '@/components/core/controls/Dropdown';
+
 import { BettingHandshake } from '@/services/neuron';
 // self
 import './Create.scss';
 
+import Neuron from '@/services/neuron';
+const wallet = MasterWallet.getWalletDefault('ETH');
+const chainId = wallet.chainId;
+console.log('Chain Id:', chainId);
 
-const bettinghandshake = new BettingHandshake(MasterWallet.getWalletDefault('ETH')?.chainId);
+const bettinghandshake = new BettingHandshake(chainId);
 const nameFormBettingCreate = 'bettingCreate';
 const BettingCreateForm = createForm({
   propsReduxForm: {
@@ -46,6 +53,7 @@ class ErrorBox extends React.PureComponent {
   }
 }
 
+const TAG = 'BETTING_CREATE';
 class BettingCreate extends React.PureComponent {
   static propTypes = {
     item: PropTypes.object.isRequired,
@@ -59,7 +67,7 @@ class BettingCreate extends React.PureComponent {
   static defaultProps = {
     item: {
       "backgroundColor": "#332F94",
-      "desc": "[{\"key\": \"event_name\", \"label\": \"Event\", \"placeholder\": \"event name\", \"type\": \"input\"}] [{\"key\": \"event_date\", \"label\": \"Date\", \"placeholder\": \"11/6/2018\", \"type\": \"date\"}] [{\"key\": \"event_predict\", \"label\": \"I predict\", \"placeholder\": \"Brazil will win\"}] [{\"key\": \"event_odds\", \"label\": \"Odds\", \"placeholder\": \"10\"}] [{\"key\": \"event_bet\", \"label\": \"Bet\", \"placeholder\": \"10 ETH\", \"type\": \"number\"}]",
+      "desc": "[{\"key\": \"event_odds\", \"label\": \"Odds\", \"placeholder\": \"10\", \"className\": \"oddField\"}] [{\"key\": \"event_bet\", \"label\": \"Your bet\", \"placeholder\": \"\", \"type\": \"number\", \"className\": \"betField\"}]",
       "id": 18,
       "message": null,
       "name": "Bet",
@@ -77,6 +85,123 @@ class BettingCreate extends React.PureComponent {
       values: {},
       address: null,
       privateKey: null,
+      matches: [
+        {
+            "awayTeamCode": "",
+            "awayTeamFlag": "https://upload.wikimedia.org/wikipedia/commons/0/0d/Flag_of_Saudi_Arabia.svg",
+            "awayTeamName": "Saudi Arabia",
+            "date": 1528963200,
+            "homeTeamCode": "RUS",
+            "homeTeamFlag": "https://upload.wikimedia.org/wikipedia/commons/f/f3/Flag_of_Russia.svg",
+            "homeTeamName": "Russia",
+            "id": 1,
+            "outcomes": [
+                {
+                    "handshakes": [{
+                        id: 1,
+                        support: 1,
+                        odd: 2.3,
+                        amount: 0.1528
+                    },
+                    {
+                        id: 2,
+                        support: 1,
+                        odd: 2.3,
+                        amount: 0.1528
+                    },
+                    {
+                        id: 3,
+                        support: 1,
+                        odd: 2.3,
+                        amount: 0.1528
+                    },
+                    {
+                        id: 4,
+                        support: 1,
+                        odd: 2.3,
+                        amount: 0.1528
+                    },
+                    {
+                        id: 5,
+                        support: 1,
+                        odd: 2.3,
+                        amount: 0.1528
+                    },
+                    {
+                        id: 6,
+                        support: 2,
+                        odd: 2.3,
+                        amount: 0.1528
+                    },
+                    {
+                        id: 7,
+                        support: 2,
+                        odd: 2.3,
+                        amount: 0.1528
+                    },
+                    {
+                        id: 8,
+                        support: 2,
+                        odd: 2.3,
+                        amount: 0.1528
+                    },
+                    {
+                        id: 9,
+                        support: 2,
+                        odd: 2.3,
+                        amount: 0.1528
+                    },
+                    {
+                        id: 10,
+                        support: 2,
+                        odd: 2.3,
+                        amount: 0.1528
+                    }],
+                    "id": 1,
+                    "name": "Russia wins"
+                },
+                {
+                    "handshakes": [],
+                    "id": 2,
+                    "name": "Saudi Arabia wins"
+                },
+                {
+                    "handshakes": [],
+                    "id": 3,
+                    "name": "Russia draws Saudi Arabia"
+                }
+            ]
+        },
+        {
+            "awayTeamCode": "",
+            "awayTeamFlag": "https://upload.wikimedia.org/wikipedia/commons/f/fe/Flag_of_Uruguay.svg",
+            "awayTeamName": "Uruguay",
+            "date": 1529038800,
+            "homeTeamCode": "",
+            "homeTeamFlag": "https://upload.wikimedia.org/wikipedia/commons/f/fe/Flag_of_Egypt.svg",
+            "homeTeamName": "Egypt",
+            "id": 2,
+            "outcomes": [
+                {
+                    "handshakes": [],
+                    "id": 7,
+                    "name": "Uruguay wins"
+                },
+                {
+                    "handshakes": [],
+                    "id": 8,
+                    "name": "Egypt wins"
+                },
+                {
+                    "handshakes": [],
+                    "id": 9,
+                    "name": "Uruguay draws Egypt"
+                }
+            ]
+        }
+    ],
+    selectedMatch:null,
+    selectedOutcome: null,
     };
     this.onSubmit = ::this.onSubmit;
     this.renderInput = ::this.renderInput;
@@ -86,13 +211,52 @@ class BettingCreate extends React.PureComponent {
   }
   componentDidMount(){
     console.log('Betting Create Props:', this.props, history);
-    const wallet = MasterWallet.getWalletDefault();
-    console.log("Address, Private Key:", wallet.address, wallet.privateKey);
     this.setState({
       address: wallet.address,
       privateKey: wallet.privateKey,
     })
+    this.props.loadMatches({PATH_URL: API_URL.CRYPTOSIGN.LOAD_MATCHES});
+
   }
+  componentWillReceiveProps(nextProps){
+
+    const {matches} = nextProps;
+    console.log(`${TAG} Matches:`, matches);
+
+    this.setState({
+        matches
+    })
+}
+get foundMatch(){
+  const {selectedMatch, matches} = this.state;
+  if(selectedMatch){
+      return matches.find(function(element) {
+          return element.id  === selectedMatch.id;
+        });
+  }
+  return null;
+
+}
+
+get matchNames() {
+  const {matches} = this.state;
+  return matches.map((item) => ({ id: item.id, value: `${item.awayTeamName} - ${item.homeTeamName}` }));
+}
+get matchResults(){
+  const {selectedMatch, matches} = this.state;
+  if(selectedMatch){
+      const foundMatch = this.foundMatch;
+      if (foundMatch){
+          const {outcomes} = foundMatch;
+          if(outcomes){
+              return outcomes.map((item) => ({ id: item.id, value: item.name}));
+          }
+      }
+  }
+
+
+  return [];
+}
 
   onSubmit(dict) {
     const {address, privateKey, values} = this.state;
@@ -208,7 +372,7 @@ class BettingCreate extends React.PureComponent {
 
   renderItem(field, index) {
     const item = JSON.parse(field.replace(regexReplace, ''));
-    const {key, placeholder, type, label} = item;
+    const {key, placeholder, type, label, className} = item;
     let itemRender = this.renderInput(item, index);
     switch (type) {
       case 'date':
@@ -222,7 +386,7 @@ class BettingCreate extends React.PureComponent {
     }
 
     return (
-      <div key={index} className={`rowWrapper ${key === 'event_odds' ? 'oddField' : ''}`}>
+      <div key={index} className={`rowWrapper ${className || ''}`}>
         <label className="label">{label || placeholder}</label>
         <div className={key === 'event_odds' ? 'oddInput' : ''}>
           {itemRender}
@@ -233,11 +397,38 @@ class BettingCreate extends React.PureComponent {
 
   renderForm() {
     const inputList = this.inputList;
+    const {selectedMatch} = this.state;
     return (
       <BettingCreateForm className="wrapperBetting" onSubmit={this.onSubmit}>
-        {inputList.map((field, index) =>
-          this.renderItem(field, index)
-        )}
+        <div className="dropDown">
+          <Dropdown
+            placeholder="Select a match"
+            source={this.matchNames}
+            onItemSelected={(item) => 
+              {
+                const {values} = this.state;
+                values["event_name"] = item.value;
+                this.setState({selectedMatch: item, values});
+                
+              }
+              }
+          />
+          {selectedMatch && <Dropdown
+            placeholder="Select a prediction"
+            source={this.matchResults}
+            onItemSelected={(item) => {
+              const {values} = this.state;
+              values["event_predict"] = item.value;
+              this.setState({selectedOutcome: item, values})
+              }
+            }
+          />}
+        </div>
+
+        <div className="formInput">
+          {inputList.map((field, index) => this.renderItem(field, index))}
+        </div>
+
         <Button type="submit" block>Sign & Send</Button>
       </BettingCreateForm>
     );
@@ -253,6 +444,7 @@ class BettingCreate extends React.PureComponent {
 
   //Service
   initHandshake(fields, fromAddress){
+    const {selectedOutcome} = this.state;
     const params = {
       //to_address: toAddress ? toAddress.trim() : '',
       //public: isPublic,
@@ -262,11 +454,17 @@ class BettingCreate extends React.PureComponent {
       type: HANDSHAKE_ID.BETTING,
       //type: 3,
       //extra_data: JSON.stringify(fields),
+      is_private: 0,
+      outcome_id: selectedOutcome.id,
+      odds: fields['event_odds'],
+      amount: fields['event_bet'],
       extra_data: JSON.stringify(fields),
-      from_address: fromAddress,
-      chain_id: 4
+      currency: 'ETH',
+      side: SIDE.SUPPORT,
+      //from_address: fromAddress,
+      //chain_id: chainId,
     };
-
+    console.log(params);
 
     this.props.initHandshake({PATH_URL: API_URL.CRYPTOSIGN.INIT_HANDSHAKE, METHOD:'POST', data: params,
     successFn: this.initHandshakeSuccess,
@@ -276,24 +474,24 @@ class BettingCreate extends React.PureComponent {
   }
    initHandshakeSuccess = async (successData)=>{
     console.log('initHandshakeSuccess', successData);
+    
     const {status, data} = successData
-    const {values} = this.state;
-    const eventDate = this.datePickerRef.value;
-    const escrow = values['event_bet'];
+    const {values, selectedOutcome} = this.state;
+    const stake = values['event_bet'];
     const event_odds = 1/parseInt(values['event_odds']);
-    console.log("eventDate", eventDate.format(), eventDate.unix());
-    console.log('Event Date: ', eventDate);
-    console.log('Escrow:', escrow);
-    console.log('Event Odds:', event_odds);
+    const payout = stake * event_odds;
+    const hid = selectedOutcome.id;
+    const side = SIDE.SUPPORT;
 
     if(status){
       const {id} = data;
       const offchain = id;
-      const result = await BetHandshakeHandler.initItem(escrow, event_odds,eventDate, offchain);
+      const result = await bettinghandshake.initBet(hid, side,stake, payout, offchain);
       if(result){
-          history.push(URL.HANDSHAKE_DISCOVER);
+          //history.go(URL.HANDSHAKE_DISCOVER);
       }
     }
+    
 
   }
   initHandshakeFailed = (error) => {
@@ -317,9 +515,12 @@ class BettingCreate extends React.PureComponent {
 
   }*/
 }
-
+const mapState = state => ({
+  matches: state.betting.matches,
+});
 const mapDispatch = ({
   initHandshake,
+  loadMatches,
 });
 
 export default connect(null, mapDispatch)(BettingCreate);

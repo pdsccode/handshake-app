@@ -3,10 +3,23 @@
 .category {
   width: 100%;
   .slick-track {
+    width: 100% !important;
     padding: 10px 0;
+    .slick-slide {
+      min-width: 116px;
+      margin-right: 10px;
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+  .active {
+    background: #383d41 !important;
+    color: $white;
   }
   .category-item {
     display: flex !important;
+    justify-content: center;
     padding: rem-calc(6px 11px);
     background: $white;
     box-shadow: rem-calc(0 2px 4px 0) rgba(203, 203, 203, 0.50);

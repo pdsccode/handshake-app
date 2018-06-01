@@ -17,6 +17,8 @@ import FeedSeed from '@/components/handshakes/seed/Feed';
 import FeedCreditCard from '@/components/handshakes/exchange/Feed/FeedCreditCard';
 import Tabs from '@/components/handshakes/exchange/components/Tabs';
 import NoData from '@/components/core/presentation/NoData';
+import BettingFilter from '@/components/handshakes/betting/Feed/Filter'
+
 // style
 import './Discover.scss';
 import { getListOfferPrice } from '@/reducers/exchange/action';
@@ -54,10 +56,11 @@ class DiscoverPage extends React.Component {
   }
 
   getListOfferPrice = () => {
+    const {ipInfo: {currency: fiat_currency}} = this.props;
     this.props.getListOfferPrice({
       BASE_URL: API_URL.EXCHANGE.BASE,
       PATH_URL: API_URL.EXCHANGE.GET_LIST_OFFER_PRICE,
-      qs: { fiat_currency: 'VND' },
+      qs: { fiat_currency: fiat_currency },
       successFn: this.handleGetPriceSuccess,
       errorFn: this.handleGetPriceFailed,
     });
@@ -91,7 +94,7 @@ class DiscoverPage extends React.Component {
         }
       });
     }
-    return <NoData message="NO DATA AVAILABLE" />;
+    return <NoData message="NO DATA AVAILABLE" style={{ height: '50vh' }} />;
   }
 
   searchChange(query) {
@@ -155,25 +158,30 @@ class DiscoverPage extends React.Component {
         </Row>
         {
           handshakeIdActive === HANDSHAKE_ID.EXCHANGE && (
-            <div>
-              <Tabs
-                activeId={this.state.tabIndexActive}
-                onClickTab={this.clickTabItem}
-                list={[
-                  { id: 1, text: 'Buy' },
-                  { id: 2, text: 'Sell' },
-                ]}
-              />
-              { tabIndexActive === 1 && (
-                <div className="feed-wrapper">
-                  <FeedCreditCard {...this.props} ipInfo={this.state.ipInfo} />
-                </div>)
-              }
-            </div>
+            <Row>
+              <Col md={12}>
+                <Tabs
+                  activeId={this.state.tabIndexActive}
+                  onClickTab={this.clickTabItem}
+                  list={[
+                    { id: 1, text: 'Buy' },
+                    { id: 2, text: 'Sell' },
+                  ]}
+                />
+                {
+                  tabIndexActive === 1 && (
+                    <FeedCreditCard {...this.props} ipInfo={this.state.ipInfo}/>
+                  )
+                }
+              </Col>
+            </Row>
           )
         }
+        {handshakeIdActive === HANDSHAKE_ID.BETTING && 
+          <BettingFilter/>
+        }
         <Row>
-          {this.getHandshakeList}
+          {handshakeIdActive !== HANDSHAKE_ID.BETTING && this.getHandshakeList}
         </Row>
         <Row>
           <Button block>Test button</Button>
@@ -193,6 +201,7 @@ DiscoverPage.propTypes = {
 const mapState = state => ({
   discover: state.discover,
   firebaseUser: state.firebase.data,
+  ipInfo: state.app.ipInfo
 });
 
 const mapDispatch = ({
