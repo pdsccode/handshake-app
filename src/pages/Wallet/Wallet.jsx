@@ -203,14 +203,17 @@ class Wallet extends React.Component {
         }
       })
 
-      obj.push({
-        title: 'Protected this wallet',
-        handler: () => {
-          this.setState({walletSelected: wallet});
-          this.toggleBottomSheet();
-          this.modalProtectRef.open();
-        }
-      })
+      if(!wallet.protected){
+        obj.push({
+          title: 'Protected this wallet',
+          handler: () => {
+            this.setState({walletSelected: wallet});
+            this.toggleBottomSheet();
+            this.modalProtectRef.open();
+          }
+        })
+      }
+      
       obj.push({
         title: 'Transaction history',
         handler: () => {
@@ -412,7 +415,7 @@ class Wallet extends React.Component {
   }
 
   onWarningClick = (wallet) => {
-    alert("onWarningClick ->" + wallet.address);
+    //alert("onWarningClick ->" + wallet.address);
   }
 
   onAddressClick = (wallet) => {  
@@ -456,8 +459,14 @@ class Wallet extends React.Component {
     this.modalFillRef.close();
   }
 
-  afterWalletProtect = () =>{
+  successWalletProtect = (wallet) =>{
+
+    let lstWalletTemp = this.getAllWallet();
+    lstWalletTemp.forEach(wal => {if (wallet.mnemonic == wal.mnemonic){wal.protected = true;}})          
+    // Update wallet master from local store:
+    MasterWallet.UpdateLocalStore(lstWalletTemp);
     this.modalProtectRef.close();
+    this.splitWalletData(lstWalletTemp);
   }
 
   render() {
@@ -503,7 +512,7 @@ class Wallet extends React.Component {
         </Modal>
 
         <Modal title="Protect your wallet" onRef={modal => this.modalProtectRef = modal}> 
-          <WalletProtect wallet={this.walletSelected} callbackSuccess={this.afterWalletProtect} />
+          <WalletProtect wallet={this.state.walletSelected} callbackSuccess={() => {this.successWalletProtect(this.state.walletSelected)}} />
         </Modal>
 
         {/* Modal for Backup wallets : */}
@@ -538,7 +547,7 @@ class Wallet extends React.Component {
           
           <QRCode value={ this.state.walletSelected ? this.state.walletSelected.address : ""} />
           <div className="addressDivPopup">{ this.state.walletSelected ? this.state.walletSelected.address : ""}</div>
-          <Button className="button" cssType="success" onClick={() => {Clipboard.copy(JSON.stringify(this.state.walletSelected.address));this.modalShareAddressRef.close()}} >                        
+          <Button className="button" cssType="success" onClick={() => {Clipboard.copy(this.state.walletSelected.address);this.modalShareAddressRef.close()}} >                        
             Copy
           </Button>
           </div>
