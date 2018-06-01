@@ -24,6 +24,14 @@ class CreateComment extends React.PureComponent {
     this.createComment = ::this.createComment;
     this.handleImageChange = ::this.handleImageChange;
     this.deleteImage = ::this.deleteImage;
+    this.resetState = ::this.resetState;
+  }
+
+  resetState() {
+    this.setState({
+      file: '',
+      imagePreviewUrl: '',
+    });
   }
 
   createComment() {
@@ -41,7 +49,11 @@ class CreateComment extends React.PureComponent {
       PATH_URL: API_URL.COMMENT.CREATE,
       METHOD: 'post',
       data,
-      successFn: () => this.props.onCreateCb(),
+      successFn: () => {
+        this.props.onCreateCb();
+        this.resetState();
+        this.inputRef.value = '';
+      }
     });
   }
 
@@ -65,10 +77,7 @@ class CreateComment extends React.PureComponent {
 
   deleteImage(e) {
     e && e.preventDefault();
-    this.setState({
-      file: '',
-      imagePreviewUrl: '',
-    });
+    this.resetState();
   }
 
   render() {

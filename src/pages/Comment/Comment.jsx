@@ -27,7 +27,9 @@ class Comment extends React.PureComponent {
 
   scrollToBottom() {
     if(this.commentsRef) {
-      this.commentsRef.scrollIntoView({behavior: "instant", block: "end", inline: "nearest"});
+      this.commentsRef.scrollIntoView(false);
+      // this.commentsRef.scrollTop = this.commentsRef.scrollHeight;
+      // console.log(this.commentsRef.scrollHeight, this.commentsRef.scrollTop);
     }
   }
 
