@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 // services, constants
 import { loadCommentList } from '@/reducers/comment/action';
 import { API_URL } from '@/constants';
+import qs from 'qs';
 
 // components
 import { Grid, Row, Col } from 'react-bootstrap';
@@ -17,8 +18,18 @@ import './Comment.scss';
 class Comment extends React.PureComponent {
   constructor(props) {
     super(props);
-    props.loadCommentList({ PATH_URL: API_URL.COMMENT.LIST, qs: { object_type: 'test', object_id: 1, page_size: 5 } });
     this.scrollToBottom = ::this.scrollToBottom;
+  }
+
+  componentDidMount() {
+    const { router, loadCommentList } = this.props;
+     const queryObject = qs.parse(router.location.search.slice(1));
+    if(queryObject.object_id && queryObject.object_type) {
+      loadCommentList({
+        PATH_URL: API_URL.COMMENT.LIST,
+        qs: { object_type: queryObject.object_type, object_id: queryObject.object_id, page_size: 10 }
+      });
+    }
   }
 
   componentDidUpdate() {

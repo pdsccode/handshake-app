@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 // services, constants
 import { createComment } from '@/reducers/comment/action';
-import { API_URL } from '@/constants';
+import { API_URL, HANDSHAKE_ID } from '@/constants';
 
 // components
 import Image from '@/components/core/presentation/Image';
@@ -36,8 +36,9 @@ class CreateComment extends React.PureComponent {
 
   createComment() {
     const { file } = this.state;
+    const { objectId, objectType } = this.props;
     let data = {};
-    const rawData = { comment: this.inputRef.value, object_type: 'test', object_id: 1 };
+    const rawData = { comment: this.inputRef.value, object_type: objectType, object_id: objectId };
     if(!!file) {
       data = new FormData();
       data.append('request', JSON.stringify(rawData));
@@ -106,6 +107,13 @@ class CreateComment extends React.PureComponent {
 
 CreateComment.propTypes = {
   createComment: PropTypes.func.isRequired,
+  objectType: PropTypes.number,
+  objectId: PropTypes.string,
+};
+
+CreateComment.defaultProps = {
+  objectType: HANDSHAKE_ID.BETTING,
+  objectId: '1',
 };
 
 const mapDispatch = ({
