@@ -1,0 +1,13 @@
+@import './src/styles/style';
+
+.wrapperGroupBook {
+  padding: rem-calc(14px 20px);
+  background: #1F2B34;
+  .wrapperBettingBook + .wrapperBettingBook {
+    margin-top: rem-calc(4px);
+  }
+}
+
+.wrapperGroupBook + .wrapperGroupBook {
+  margin-top: rem-calc(2px);
+}

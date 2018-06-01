@@ -1,5 +1,5 @@
 export const APP = {
-  HEADER_DEFAULT: '',
+  HEADER_DEFAULT: 'Handshake',
   // store
   AUTH_TOKEN: 'auth_token',
   AUTH_PROFILE: 'auth_profile',
@@ -7,8 +7,7 @@ export const APP = {
   WALLET_CACHE: 'wallet_cache',
   WALLET_DEFAULT: 'wallet_default',
   WALLET_LIST: 'wallet_list',
-  SUBSCRIBE: 'app_subscribe',
-  SUBSCRIBE_ASK: 'app_subscribe_ask',
+  IP_INFO: 'ip_info',
 };
 
 export const HANDSHAKE_ID = {
@@ -50,8 +49,8 @@ export const FIAT_CURRENCY = 'USD';
 export const FIAT_CURRENCY_SYMBOL = '$';
 
 export const SELL_PRICE_TYPE = [
-  { value: 'fix', text: 'Fix' },
-  { value: 'flexible', text: 'Flexible' },
+  { value: 'fix', text: 'Fix now' },
+  { value: 'flexible', text: 'Update on shake' },
 ];
 
 export const SELL_PRICE_TYPE_DEFAULT = 'fix';
@@ -61,6 +60,8 @@ export const API_URL = {
   CRYPTOSIGN: {
     BASE: 'https://stag-handshake.autonomous.ai/api/cryptosign',
     INIT_HANDSHAKE: 'cryptosign/handshake/init',
+    SHAKE: 'cryptosign/handshake/shake',
+    LOAD_MATCHES: 'cryptosign/match',
   },
   DISCOVER: {
     BASE: 'handshake/discover',
@@ -77,6 +78,9 @@ export const API_URL = {
     GET_USER_TRANSACTION: 'user/transactions', // {path: '/user/transactions', method: 'get'},
     OFFERS: 'offers',
     SHAKE: 'shake',
+    WITHDRAW: 'withdraw',
+    IP_DOMAIN: 'https://ipfind.co/me',
+    IP_KEY: 'a59f33e5-0879-411a-908b-792359a0d6cc',
   },
   SEED: {
     BASE: 'seed',
@@ -116,3 +120,45 @@ export const HANDSHAKE_STATUS_NAME = {
   [HANDSHAKE_STATUS.NEW]: 'New',
   [HANDSHAKE_STATUS.BLOCKCHAIN_PENDING]: 'Blockchain Pending',
 };
+
+export const HANDSHAKE_EXCHANGE_STATUS = {
+  CREATED: 0,
+  ACTIVE: 1,
+  CLOSED: 2,
+  SHAKING: 3,
+  SHAKE: 4,
+  COMPLETED: 5,
+  WITHDRAW: 6,
+  REJECTED: 7,
+};
+
+export const HANDSHAKE_EXCHANGE_STATUS_NAME = {
+  [HANDSHAKE_EXCHANGE_STATUS.CREATED]: 'created',
+  [HANDSHAKE_EXCHANGE_STATUS.ACTIVE]: 'active',
+  [HANDSHAKE_EXCHANGE_STATUS.CLOSED]: 'closed',
+  [HANDSHAKE_EXCHANGE_STATUS.SHAKING]: 'shaking',
+  [HANDSHAKE_EXCHANGE_STATUS.SHAKE]: 'shake',
+  // [HANDSHAKE_EXCHANGE_STATUS.COMPLETING]: 'completing',
+  [HANDSHAKE_EXCHANGE_STATUS.COMPLETED]: 'completed',
+  [HANDSHAKE_EXCHANGE_STATUS.WITHDRAW]: 'withdraw',
+  [HANDSHAKE_EXCHANGE_STATUS.REJECTED]: 'rejected',
+};
+
+export const HANDSHAKE_USER  = {
+  NORMAL: 0,
+  OWNER: 1,
+  SHAKED: 2,
+};
+
+export const HANSHAKE_USER_NAME = {
+  [HANDSHAKE_USER.NORMAL]: 'NORMAL',
+  [HANDSHAKE_USER.OWNER]: 'OWNER',
+  [HANDSHAKE_USER.SHAKED]: 'SHAKED',
+}
+
+export const DEFAULT_FEE = {
+  ETH: 0,
+  BTC: 0,
+}
+
+

@@ -36,6 +36,12 @@
     text-align: left;
     bottom: 12px;
     position: absolute;
+    cursor: pointer; 
+    img{
+      width: 16px;
+      margin-right: 6px;
+      margin-top: -3px;
+    }
   }
   .more{
     top: 12px;
@@ -49,6 +55,12 @@
     position: absolute;
     cursor: pointer; 
   }
+}
+
+.addressDivPopup{
+  margin-top: 20px;
+  margin-bottom: 10px;
+  font-size: 13px;
 }
 
 .headerBox{
@@ -77,6 +89,18 @@
 .iconDefault{
   margin-left: 5px
 }
+.iconChecked {
+  margin: 10px;
+  margin-top: 12%;
+  margin-left: 35%;
+}
+
+.linkImportWallet{
+  text-align: center;
+  color: '8A8A8F';
+  cursor: pointer;
+  font-size: 18px;
+}
 
 .category-wrapper {
   margin-bottom: rem-calc(42px);
@@ -89,19 +113,71 @@
 }
 .bodyConfirm .left{
   float: left;
-  width: 80px;
+  width: auto;
+  padding-left: 30px;
+  padding-right: 30px;
 }
 .bodyConfirm .right{
   float: right;
-  width: 80px;
+  width: auto;
+  padding-left: 30px;
+  padding-right: 30px;
 }
 .bodyConfirm{
   padding: 15px;
   overflow: hidden;
   margin: auto;
-  width: 70%;
+  width: 90%;
   margin-bottom: 5px;
 
+}
+
+.messageBox{
+  background-color: #2ED573;
+  span{
+    color: #fff;
+  } 
+}
+
+.selectWalletKey{
+  width: 100%;
+  height: 40px;
+  margin-bottom: 30px
+}
+.input12Phrase{
+  margin-top: -10px;
+  margin-bottom: 20px;
+}
+.bodyTitle{
+  margin-left: 15px;
+  margin-right: 15px;
+  margin-top: 15px;
+}
+
+.bodyBackup{
+  padding: 15px;
+  overflow: hidden;
+  margin: auto;
+  width: 100%;
+  margin-bottom: 5px;
+    .button{
+      width: 100%;
+      padding-left: 30px;
+      padding-right: 30px;
+      margin-top: 15px;
+    }
+    textarea{
+      width: 100%;
+      height: 100px;
+      color: #6b6b6b;      
+    }
+    
+}
+.error {
+  border-color: #d0021b;
+}
+.bodySahreAddress{
+  text-align: center;
 }
 
 .col-sm-6 {
@@ -215,4 +291,56 @@
     border:1px solid #EFEFEF;
     height: 54px;
   }
+
+  .cEQDKd{
+    background: White !important;
+  }
+
+  .col-form-label{ line-height: 2.5;}
 }
+
+.protectwallet-wrapper{
+  margin-top:30px;
+  
+
+  .msg1, .msg2, .msg3{
+    font-size: 20px;
+    line-height: 24px;
+    margin-bottom: 30px;
+  }
+
+  .msg2{
+    color:#D8D8D8;
+  }
+
+  .link {
+    margin: 20px 0;
+    text-align:center;
+  }
+
+  .pass_phrase, .confirm_pass_phrase{
+    margin:10px;
+    padding: 10px;
+    background:#D8D8D8;
+    height: 152px;
+
+    div{
+      margin:10px;
+    }
+  }
+
+  input[type=checkbox] {
+    width: 30px;
+    padding: 10px;
+  }
+
+  footer{
+    margin:15px 30px;
+  }
+
+  button:disabled{
+    background: Silver;
+    border-color:Silver;
+  }
+}
+

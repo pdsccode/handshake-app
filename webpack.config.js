@@ -14,6 +14,7 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const PwaManifestPlugin = require('webpack-pwa-manifest');
 const OfflinePlugin = require('offline-plugin');
 
+
 const dotenv = require('dotenv');
 
 const stats = {
@@ -77,19 +78,9 @@ const development = {
 const production = {
   optimization: {
     minimize: true,
-    minimizer: [
-      new UglifyJsPlugin({
-        uglifyOptions: {
-          compress: {
-            drop_console: true,
-          },
-        },
-      }),
-    ],
     splitChunks: {
       chunks: 'all',
     },
-    noEmitOnErrors: true,
   },
   module: {
     rules: [

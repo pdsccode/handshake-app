@@ -1,4 +1,3 @@
-
 import axios from 'axios'
 import satoshi from 'satoshi-bitcoin';
 import { rule } from 'postcss';
@@ -19,12 +18,11 @@ export class Bitcoin extends Wallet{
     }
 
     getShortAddress(){
-      return this.address.replace(this.address.substr(12, 19), '...');
+      return this.address.replace(this.address.substr(5, 23), '...');
     }
 
     setDefaultNetwork(){
-      bitcore.Networks.defaultNetwork = bitcore.Networks.livenet;
-      console.log("Bitcoin network: ", bitcore.Networks.defaultNetwork);
+      bitcore.Networks.defaultNetwork = bitcore.Networks.livenet;      
     }
 
     createAddressPrivatekey(){
@@ -52,7 +50,10 @@ export class Bitcoin extends Wallet{
 
   }
 
-    async getBalance() {
+    async getBalance1() {
+
+      this.setDefaultNetwork();
+
       var url = this.network + '/addr/' + this.address + '/balance';
 
       var response = await axios.get(url);
@@ -87,7 +88,9 @@ export class Bitcoin extends Wallet{
       if(fee){
 
         data.fee = fee;
-        var utxos = await this.utxosForAmount(Number(amountToSend));
+
+        var utxos = await this.utxosForAmount(Number(amountToSend) + Number(fee));
+        //var utxos = await this.utxosForAmount(Number(amountToSend));
 
         console.log("utxos", utxos);
 
@@ -113,7 +116,7 @@ export class Bitcoin extends Wallet{
         }
         else{
           // need update error code:
-            return "You don't have enough Satoshis to cover the miner fee.";
+            return "You don't have enough amount.";
         }
       }
     }
@@ -144,7 +147,7 @@ export class Bitcoin extends Wallet{
     if (utxos && utxos.length > 0 ){
       var result = this.findUtxos(utxos, 0, amount, []);
       if(!result)
-        return reject({"error": "Insufficent Balance"});
+        return "Insufficent Balance";
       return result;
     }
     return false;
@@ -189,4 +192,16 @@ export class Bitcoin extends Wallet{
      }
       return false;
    }
+
+   async getTransactionHistory(){
+     //txs/?address=muU86kcQGfJUydQ9uZmfJwcDRb1H5PQuzr
+    let url = this.network +'/txs/?address=' + this.address;
+    let response = await axios.get(url);
+
+    if (response.status == 200){
+      console.log(response.data)
+
+    }
+   }
+
 }

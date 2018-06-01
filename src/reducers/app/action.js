@@ -1,7 +1,6 @@
 
 export const APP_ACTION = {
   NETWORK_ERROR: 'NETWORK_ERROR',
-  SERVER_RETURN_ERROR: 'SERVER_RETURN_ERROR',
   CALLING: 'CALLING',
   CALLED: 'CALLED',
   LOADING: 'LOADING',
@@ -19,6 +18,7 @@ export const APP_ACTION = {
   HEADER_RIGHT_REMOVE: 'HEADER_RIGHT_REMOVE',
   SHOW_ALERT: 'SHOW_ALERT',
   HIDE_ALERT: 'HIDE_ALERT',
+  IP_INFO: 'IP_INFO',
 };
 
 // Loading
@@ -45,3 +45,5 @@ export const setNotFound = () => ({ type: APP_ACTION.NOT_FOUND_SET });
 export const clearNotFound = () => ({ type: APP_ACTION.NOT_FOUND_REMOVE });
 export const setHeaderRight = data => ({ type: APP_ACTION.HEADER_RIGHT_SET, payload: data });
 export const clearHeaderRight = () => ({ type: APP_ACTION.HEADER_RIGHT_REMOVE });
+
+export const setIpInfo = data => ({ type: APP_ACTION.IP_INFO, payload: data });

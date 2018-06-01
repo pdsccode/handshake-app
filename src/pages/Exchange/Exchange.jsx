@@ -9,7 +9,6 @@ import createForm from '@/components/core/form/createForm';
 import {fieldCleave, fieldDropdown, fieldInput} from '@/components/core/form/customField';
 import {required} from '@/components/core/form/validation';
 
-import {createCCOrder, getCcLimits, getCryptoPrice, getUserCcLimit, getUserProfile,} from '@/reducers/exchange/action';
 import {API_URL} from '@/constants';
 import FeedCreditCard from "@/components/handshakes/exchange/Feed/FeedCreditCard";
 
@@ -56,20 +55,9 @@ class Exchange extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  userProfile: state.exchange.userProfile,
-  cryptoPrice: state.exchange.cryptoPrice,
-  userCcLimit: state.exchange.userCcLimit,
-  ccLimits: state.exchange.ccLimits,
-  amount: selectorFormCreditCard(state, 'amount'),
-  currency: selectorFormCreditCard(state, 'currency'),
 });
 
 const mapDispatchToProps = {
-  getUserProfile,
-  getCryptoPrice,
-  createCCOrder,
-  getUserCcLimit,
-  getCcLimits,
 };
 
 export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(Exchange));

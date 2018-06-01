@@ -1,8 +1,10 @@
 @import './src/styles/style';
 
 .wrapperBettingFeed {
+  margin-top: rem-calc(20px);
   padding: rem-calc(30px 22px 36px 25px);
   margin-bottom: rem-calc(16px);
+  background-color: black;
   .description {
     font-size: rem-calc(28px);
     color: #FFFFFF;
@@ -15,6 +17,7 @@
       margin-bottom: 0;
     }
   }
+  
   .line {
     opacity: 0.3;
     border-bottom: 1px solid #FFFFFF;
@@ -23,13 +26,23 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
+    .odds {
+      color: #FFFFFF;
+      font-size: rem-calc(20px);
+    }
     img {
       margin-bottom: rem-calc(11px);
+    }
+    .item {
+      display: flex;
+
     }
     .content {
       font-size: rem-calc(16px);
       color: #FFFFFF;
       letter-spacing: 0;
+      align-items: center;
+      justify-content: space-between;
       span {
         opacity: 0.8;
       }
