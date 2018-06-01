@@ -39,6 +39,7 @@ import {URL} from '@/config';
 import {showAlert} from '@/reducers/app/action';
 import {MasterWallet} from "@/models/MasterWallet";
 import {DEFAULT_FEE} from "@/constants";
+import { ExchangeHandshake } from '@/services/neuron';
 
 const nameFormExchangeCreate = 'exchangeCreate';
 const FormExchangeCreate = createForm({
@@ -256,17 +257,55 @@ class Component extends React.Component {
     // }
   }
 
-  handleCreateOfferSuccess = (data) => {
-    // this.props.history.push(URL.HANDSHAKE_ME);
+  handleCreateOfferSuccess = (responseData) => {
+    // const { currency } = this.props;
+    const data = responseData.data;
 
-    this.props.showAlert({
-      message: <div className="text-center"><FormattedMessage id="createOfferSuccessMessage"/></div>,
-      timeOut: 3000,
-      type: 'danger',
-      callBack: () => {
-        this.props.history.push(URL.HANDSHAKE_ME);
+    const currency = data.currency;
+
+    // this.props.history.push(URL.HANDSHAKE_ME);
+    console.log('handleCreateOfferSuccess', data);
+
+    const wallet = MasterWallet.getWalletDefault(currency);
+
+    console.log('data', data);
+    console.log('wallet', wallet);
+
+    if (currency === 'BTC') {
+      console.log('abc');
+      wallet.transfer(data.system_address, data.amount).then(success => {
+        console.log('transfer', success);
+      });
+    } else if (currency === 'ETH') {
+      console.log('def');
+      const exchangeHandshake = new ExchangeHandshake(wallet.chainId);
+
+      console.log('exchangeHandshake', exchangeHandshake);
+
+      let result = null;
+      if (data.type === 'buy') {
+        console.log('1');
+        result = exchangeHandshake.init(wallet.address, wallet.address, data.amount, data.id);
+      } else {
+        console.log('2');
+        result = exchangeHandshake.initByCoinOwner(wallet.address, wallet.address, data.amount, data.id);
       }
-    });
+
+      console.log('handleCreateOfferSuccess', result);
+    }
+    // this.state.walletSelected.transfer(this.state.inputAddressAmountValue, this.state.inputSendAmountValue).then(success => {
+    //   alert(success);
+    //   this.modalSendRef.close();
+    // });
+
+    // this.props.showAlert({
+    //   message: <div className="text-center"><FormattedMessage id="createOfferSuccessMessage"/></div>,
+    //   timeOut: 3000,
+    //   type: 'danger',
+    //   callBack: () => {
+    //     this.props.history.push(URL.HANDSHAKE_ME);
+    //   }
+    // });
 
     // this.timeoutClosePopup = setTimeout(() => {
     //   this.handleBuySuccess();
