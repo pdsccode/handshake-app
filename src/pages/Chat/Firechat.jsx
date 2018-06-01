@@ -29,9 +29,9 @@ export class Firechat {
 
     // Commonly-used Firebase references.
     this.userRef = null;
-    this.messageRef = this.firechatRef.child('room-messages');
-    this.roomRef = this.firechatRef.child('room-metadata');
-    this.usersOnlineRef = this.firechatRef.child('user-names-online');
+    this.messageRef = this.firechatRef.child('chat-room-messages');
+    this.roomRef = this.firechatRef.child('chat-room-metadata');
+    this.usersOnlineRef = this.firechatRef.child('chat-user-names-online');
 
     // Setup and establish default options.
     this.options = options || {};
@@ -79,12 +79,23 @@ export class Firechat {
     this.queuePresenceOperation(this.sessionRef, true, null);
 
     // Register our username in the public user listing.
-    const usernameRef = this.usersOnlineRef.child(this.userName.toLowerCase());
-    const usernameSessionRef = usernameRef.child(this.sessionId);
-    this.queuePresenceOperation(usernameSessionRef, {
-      id: this.userId,
+    const usernameRef = this.usersOnlineRef.child(this.userId);
+    this.queuePresenceOperation(usernameRef, {
       name: this.userName,
-    }, null);
+      shortName: this.userName.toLowerCase(),
+      sessionId: this.sessionId,
+      online: true,
+    }, {
+      name: this.userName,
+      shortName: this.userName.toLowerCase(),
+      sessionId: this.sessionId,
+      online: false
+    });
+    // const usernameSessionRef = usernameRef.child(this.sessionId);
+    // this.queuePresenceOperation(usernameSessionRef, {
+    //   id: this.userId,
+    //   name: this.userName,
+    // }, null);
 
     // Listen for state changes for the given user.
     this.userRef.on('value', this.onUpdateUser, this);
@@ -214,7 +225,7 @@ export class Firechat {
       if (user) {
         self.userId = userId.toString();
         self.userName = userName.toString();
-        self.userRef = self.firechatRef.child('users').child(self.userId);
+        self.userRef = self.firechatRef.child('chat-users').child(self.userId);
         self.sessionRef = self.userRef.child('sessions').push();
         self.sessionId = self.sessionRef.key;
 
@@ -296,7 +307,7 @@ export class Firechat {
         });
 
         // Set presence bit for the room and queue it for removal on disconnect.
-        const presenceRef = self.firechatRef.child('room-users').child(roomId).child(self.userId).child(self.sessionId);
+        const presenceRef = self.firechatRef.child('chat-room-users').child(roomId).child(self.userId).child(self.sessionId);
         self.queuePresenceOperation(presenceRef, {
           id: self.userId,
           name: self.userName,
@@ -326,7 +337,7 @@ export class Firechat {
 
   leaveRoom(roomId) {
     const self = this;
-    const userRoomRef = self.firechatRef.child('room-users').child(roomId);
+    const userRoomRef = self.firechatRef.child('chat-room-users').child(roomId);
 
     // Remove listener for new messages to this room.
     self.messageRef.child(roomId).off();
@@ -390,7 +401,7 @@ export class Firechat {
 
   sendInvite(userId, roomId) {
     const self = this;
-    const inviteRef = self.firechatRef.child('users').child(userId).child('invites').push();
+    const inviteRef = self.firechatRef.child('chat-users').child(userId).child('invites').push();
     inviteRef.set({
       id: inviteRef.key,
       fromUserId: self.userId,
@@ -464,7 +475,7 @@ export class Firechat {
   getUsersByRoom(...args) {
     const self = this;
     const roomId = args[0];
-    let query = self.firechatRef.child('room-users').child(roomId);
+    let query = self.firechatRef.child('chat-room-users').child(roomId);
     const cb = args[arguments.length - 1];
     let limit = null;
 
@@ -494,6 +505,7 @@ export class Firechat {
   getUsersByPrefix(prefix, startAt, endAt, limit, cb) {
     let query = this.usersOnlineRef;
     const prefixLower = prefix.toLowerCase();
+    query = query.orderByChild('shortName');
 
     if (startAt) {
       query = query.startAt(null, startAt);
@@ -509,24 +521,19 @@ export class Firechat {
       const usernames = snapshot.val() || {};
       const usernamesFiltered = {};
 
-      usernames.each((userNameKey) => {
-        const sessions = usernames[userNameKey];
-        let userName;
-        let userId;
+      Object.keys(usernames).forEach((userId) => {
+        const userInfo = usernames[userId];
+        let userName = userInfo.name;
+        let isOnline = userInfo.online;
 
-        sessions.each((sessionId) => {
-          userName = sessions[sessionId].name;
-          userId = sessions[sessionId].id;
-          return false;
-        });
-
-        if ((prefix.length > 0) && (userName.toLowerCase().indexOf(prefixLower) !== 0)) {
+        if (userId == this.user.id || (prefix.length > 0) && (userName.toLowerCase().indexOf(prefixLower) !== 0)) {
           return true;
         }
 
         usernamesFiltered[userName] = {
           name: userName,
           id: userId,
+          online: isOnline,
         };
 
         return true;

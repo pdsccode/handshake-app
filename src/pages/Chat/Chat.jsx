@@ -2,27 +2,21 @@ import React, { Component } from 'react';
 import 'react-chat-elements/dist/main.css';
 import { ChatList, MessageList, Input, Button } from 'react-chat-elements';
 import { Firechat } from './Firechat';
+import { setHeaderLeft } from '@/reducers/app/action';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import SearchBar from '@/components/core/controls/SearchBar';
 
 const moment = require('moment');
 const Identicon = require('identicon.js');
 const firebase = require('firebase');
+const md5 = require('md5');
 require('firebase/database');
 
 class Chat extends Component {
   constructor(props) {
     super(props);
     this.user = null;
-
-    const config = {
-      apiKey: 'AIzaSyDBZMfls5cTmY7coHYdJr7BoX98HTz_REQ',
-      authDomain: 'handshake-ce73c.firebaseapp.com',
-      databaseURL: 'https://handshake-ce73c.firebaseio.com',
-    };
-
-    if (!firebase.apps.length) {
-      firebase.initializeApp(config);
-    }
-
     // Get a reference to the Firebase Realtime Database
     const chatRef = firebase.database().ref();
 
@@ -46,39 +40,53 @@ class Chat extends Component {
       chatSource: {},
       chatDetail: null,
       currentMessage: '',
+      searchUserString: '',
+      searchUsers: [],
     };
 
     this.chatInputComponent = React.createRef();
+    this.maxUserSearchResult = 100;
 
     this.renderChatList = this.renderChatList.bind(this);
     this.renderChatDetail = this.renderChatDetail.bind(this);
     this.onChatItemClicked = this.onChatItemClicked.bind(this);
+    this.onSeachUserClicked = this.onSeachUserClicked.bind(this);
     this.sendMessage = this.sendMessage.bind(this);
+    this.onSearchUser = this.onSearchUser.bind(this);
+    this.onBackButtonClicked = this.onBackButtonClicked.bind(this);
+  }
+
+  renderBackButton() {
+    return (<a onClick={this.onBackButtonClicked} href='#'>&#x3C;</a>)
   }
 
   componentWillMount() {
     this.bindDataEvents();
   }
 
+  componentDidMount() {
+    console.log('componentDidMount');
+  }
+
+  componentDidUpdate() {
+    if (this.state.chatDetail) {
+      this.scrollToBottom();
+    }
+  }
+
+  onBackButtonClicked() {
+    this.setState({
+      chatDetail: null,
+    });
+    this.props.setHeaderLeft(null);
+  }
+
   onUpdateUser(user) {
     // Update our current user state and render latest user name.
     this.user = user;
-
-    // Update our interface to reflect which users are muted or not.
-    // const mutedUsers = this.user.muted || {};
-    // $('[data-event="firechat-user-mute-toggle"]').each(function(i, el) {
-    //   var userId = $(this).closest('[data-user-id]').data('user-id');
-    //   $(this).toggleClass('red', !!mutedUsers[userId]);
-    // });
-
-    // // Ensure that all messages from muted users are removed.
-    // for (var userId in mutedUsers) {
-    //   $('.message[data-user-id="' + userId + '"]').fadeOut();
-    // }
   }
 
   onEnterRoom(room) {
-    // this.attachTab(room.id, room.name);
     console.log('enter room', room);
     const { id: roomId } = room;
 
@@ -93,22 +101,15 @@ class Chat extends Component {
   }
 
   onLeaveRoom(roomId) {
-    // this.removeTab(roomId);
 
-    // Auto-enter rooms in the queue
-    // if ((this._roomQueue.length > 0)) {
-    //   this._chat.enterRoom(this._roomQueue.shift(roomId));
-    // }
   }
 
   onNewMessage(roomId, message) {
-    // console.log('onNewMessage', roomId, message);
+    console.log('new message', message);
     const {
       userId: fromUserId, name: fromUserName,
     } = message;
     const { chatSource } = this.state;
-
-    console.log(message, fromUserId, this.user.id, roomId);
 
     if (Object.prototype.hasOwnProperty.call(chatSource, roomId)) {
       const room = chatSource[roomId];
@@ -123,75 +124,92 @@ class Chat extends Component {
       });
     }
 
-    // var userId = message.userId;
-    // if (!this._user || !this._user.muted || !this._user.muted[userId]) {
-    //   this.showMessage(roomId, message);
-    // }
+    this.scrollToBottom();
   }
 
   onRemoveMessage(roomId, messageId) {
-    // this.removeMessage(roomId, messageId);
+
   }
 
   // Events related to chat invitations.
   onChatInvite(invitation) {
-    console.log('chat invitation', invitation);
     this.chat.acceptInvite(invitation.id);
-    // var self = this;
-    // var template = FirechatDefaultTemplates["templates/prompt-invitation.html"];
-    // var $prompt = this.prompt('Invite', template(invitation));
-    // $prompt.find('a.close').click(function() {
-    //   $prompt.remove();
-    //   self._chat.declineInvite(invitation.id);
-    //   return false;
-    // });
-
-    // $prompt.find('[data-toggle=accept]').click(function() {
-    //   $prompt.remove();
-    //   self._chat.acceptInvite(invitation.id);
-    //   return false;
-    // });
-
-    // $prompt.find('[data-toggle=decline]').click(function() {
-    //   $prompt.remove();
-    //   self._chat.declineInvite(invitation.id);
-    //   return false;
-    // });
   }
 
   onChatInviteResponse(invitation) {
-    console.log('onChatInviteResponse', invitation);
-    // if (!invitation.status) return;
+    console.log('new invitation response', invitation);
+    if (!invitation.status) return;
 
-    // var self = this,
-    //     template = FirechatDefaultTemplates["templates/prompt-invite-reply.html"],
-    //     $prompt;
+    this.chat.getRoom(invitation.roomId, (room) => {
+      room.messages = room.messages || [];
+      room.froms = {};
+      room.froms[invitation.fromUserId] = invitation.fromUserName;
+      room.froms[this.user.id] = this.user.name;
 
-    // if (invitation.status && invitation.status === 'accepted') {
-    //   $prompt = this.prompt('Accepted', template(invitation));
-    //   this._chat.getRoom(invitation.roomId, function(room) {
-    //     self.attachTab(invitation.roomId, room.name);
-    //   });
-    // } else {
-    //   $prompt = this.prompt('Declined', template(invitation));
-    // }
+      this.setState((prevState) => {
+        const prevChatSource = prevState.chatSource;
+        prevChatSource[invitation.roomId] = room;
+        return {
+          searchUsers: [],
+          chatSource: prevChatSource,
+        }
+      });
 
-    // $prompt.find('a.close').click(function() {
-    //   $prompt.remove();
-    //   return false;
-    // });
+      this.enterMessageRoom({
+        id: room.id,
+        avatar: this.getUserAvatar(invitation.fromUserId),
+        avatarFlexible: true,
+        // statusColor: 'lightgreen',
+        alt: invitation.fromUserName,
+        title: invitation.fromUserName,
+        date: new Date(),
+        subtitle: '',
+        unread: 0,
+        dateString: moment(new Date()).format('HH:mm'),
+        roomData: room,
+      });
+    });
   }
 
   onChatItemClicked(room) {
-    console.log(room);
+    console.log('onChatItemClicked', room);
+    this.enterMessageRoom(room);
+  }
+
+  onSeachUserClicked(user) {
+    const { id: userId, name: userName } = user.userData;
+    this.chat.createRoom([userName, this.user.name].join(','), 'private', (roomId) => {
+      console.log('created room', roomId);
+      this.chat.inviteUser(userId, roomId);
+      console.log(`invite user ${userName}-${userId} in to chat`);
+    });
+  }
+
+  onSearchUser(query) {
+    if (!query) {
+      this.setState({
+        searchUsers: [],
+      });
+      return;
+    }
+
+    this.chat.getUsersByPrefix(query, null, null, this.maxUserSearchResult, (userListFiltered) => {
+      console.log(userListFiltered);
+      this.setState({
+        searchUsers: userListFiltered,
+      })
+    });
+  }
+
+  enterMessageRoom(room) {
     this.setState({
       chatDetail: room,
       currentMessage: '',
     });
+    this.props.setHeaderLeft(this.renderBackButton());
   }
 
   setUser(userId, userName) {
-    console.log('setUser', userId, userName);
     const self = this;
 
     // Initialize data events
@@ -208,14 +226,15 @@ class Chat extends Component {
     Object.keys(chatSource).forEach((roomId) => {
       const room = chatSource[roomId];
       if (room.froms && room.messages && room.messages.length > 0) {
-        const fromNames = Object.keys(room.froms).filter(userId => (userId !== this.user.id)).map(userId => (room.froms[userId])).join(', ');
+        const fromNamesFiltered = Object.keys(room.froms).filter(userId => (userId !== this.user.id));
+        const fromNames = fromNamesFiltered.map(userId => (room.froms[userId])).join(', ');
+        const fromUserIds = fromNamesFiltered.map(userId => (userId)).join(',');
         const lastMessage = room.messages[room.messages.length - 1];
         const lastMessageTime = lastMessage.timestamp;
         const lastMessageContent = lastMessage.message;
-        const lastMessageUserId = lastMessage.userId;
         messages.push({
           id: room.id,
-          avatar: this.getUserAvatar(lastMessageUserId),
+          avatar: this.getUserAvatar(fromUserIds),
           avatarFlexible: true,
           // statusColor: 'lightgreen',
           alt: fromNames,
@@ -232,8 +251,36 @@ class Chat extends Component {
     return messages;
   }
 
+  getListSeachUsersSource(users) {
+    const usersData = [];
+    Object.keys(users).forEach((userName) => {
+      const user = users[userName];
+      const { online, name, id: userId } = user;
+
+      usersData.push({
+        id: userId,
+        avatar: this.getUserAvatar(userId),
+        avatarFlexible: true,
+        statusColor: online ? 'lightgreen' : false,
+        alt: name,
+        title: name,
+        subtitle: '',
+        unread: 0,
+        date: null,
+        dateString: '',
+        userData: user,
+      });
+    });
+
+    return usersData;
+  }
+
+  scrollToBottom() {
+    window.scrollTo(0, document.body.scrollHeight);
+  }
+
   getUserAvatar(userId) {
-    return `data:image/png;base64,${new Identicon(userId).toString()}`;
+    return `data:image/png;base64,${new Identicon(md5(userId)).toString()}`;
   }
 
   sendMessage() {
@@ -242,7 +289,7 @@ class Chat extends Component {
       const { id: roomId } = chatDetail;
       this.chat.sendMessage(roomId, currentMessage, null, () => {
         if (this.chatInputComponent) {
-          console.log(this.chatInputComponent.clear);
+          this.scrollToBottom();
           this.chatInputComponent.clear();
         }
       });
@@ -264,12 +311,18 @@ class Chat extends Component {
   }
 
   renderChatList() {
-    const chatSource = this.getLastMessages();
+    const { searchUsers } = this.state;
+    const isInSearchMode = Object.keys(searchUsers).length > 0;
+    const chatSource = isInSearchMode ? this.getListSeachUsersSource(searchUsers) : this.getLastMessages();
+
     return (
-      <ChatList
-        dataSource={chatSource}
-        onClick={this.onChatItemClicked}
-      />
+      <div>
+        <SearchBar onSuggestionSelected={() => { }} onInputSearchChange={this.onSearchUser} />
+        <ChatList
+          dataSource={chatSource}
+          onClick={isInSearchMode ? this.onSeachUserClicked : this.onChatItemClicked}
+        />
+      </div>
     );
   }
 
@@ -284,8 +337,8 @@ class Chat extends Component {
       prevUserId = userId;
 
       return {
-        avatar: this.getUserAvatar(message.userId),
-        position: message.userId !== this.user.id ? 'left' : 'right',
+        avatar: this.getUserAvatar(userId),
+        position: userId !== this.user.id ? 'left' : 'right',
         type: 'text',
         title: messageName,
         text: messageContent,
@@ -298,11 +351,19 @@ class Chat extends Component {
       <div>
         <MessageList
           dataSource={messageList}
+          toBottomHeight={'100%'}
         />
         <Input
           placeholder="Type a message..."
           multiline={false}
           ref={(ref) => { this.chatInputComponent = ref; }}
+          onKeyDown={(e) => {
+            if (e.keyCode == 13) {
+              this.sendMessage();
+              e.preventDefault();
+              return false;
+            }
+          }}
           onChange={(e) => { this.setState({ currentMessage: e.target.value }); }}
           rightButtons={
             <Button
@@ -335,4 +396,12 @@ class Chat extends Component {
   }
 }
 
-export default Chat;
+Chat.propTypes = {
+  discover: PropTypes.object,
+};
+
+const mapState = (state) => ({
+  discover: state.discover,
+});
+
+export default connect(mapState, ({ setHeaderLeft }))(Chat);

@@ -91,7 +91,7 @@ const Page404 = props => (
 let pathFirebaseWithUser ="";
 class Router extends React.Component {
   static propTypes = {
-    
+
     signUp: PropTypes.func.isRequired,
     fetchProfile: PropTypes.func.isRequired,
     auth: PropTypes.object.isRequired,
@@ -123,21 +123,21 @@ class Router extends React.Component {
 
     const token = local.get(APP.AUTH_TOKEN);
     // const profile = this.props.auth.profile || {};
-    
+
     // AUTH
     if (!token) {
       this.props.signUp({
         PATH_URL: 'user/sign-up',
         METHOD: 'POST',
         successFn: () => {
-          
+
           // this.props.firebase.set(FIREBASE_PATH.USERS, String(profile.id));
-          
+
           this.props.fetchProfile({ PATH_URL: 'user/profile' });
         },
       });
     } else {
-      
+
       this.props.fetchProfile({ PATH_URL: 'user/profile' });
     }
   }
