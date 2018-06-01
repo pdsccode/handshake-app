@@ -82,22 +82,22 @@ export class MasterWallet{
     }
 
     // for create new wallets:
-    static createNewsallets(listCoinTemp, mnemonic){        
+    static createNewsallets(listCoinTemp, mnemonic){
+        console.log('mnemonic', mnemonic);
         if (mnemonic == ''){            
             mnemonic = bip39.generateMnemonic(); //generates string        
         }
         else{            
-            if(!bip39.validateMnemonic(mnemonic)){                
+            if(!bip39.validateMnemonic(mnemonic)){
+                console.log('validateMnemonic mnemonic', false);
                 return false;
             }
         }
         let masterWallet = MasterWallet.getMasterWallet();
         listCoinTemp.forEach(wallet => { 
-            if (wallet.default){                
+            if (wallet.default){
                 wallet.default = false;
-                wallet.mnemonic = mnemonic;                    
-                wallet.title = wallet.constructor.name;          
-                
+                wallet.mnemonic = mnemonic;              
                 //create address, private-key ...
                 wallet.createAddressPrivatekey();
                 masterWallet.push(wallet); 
@@ -248,21 +248,12 @@ export class MasterWallet{
         return false;
     }
 
-    updateWalletMaster(reward_wallets){
+    static getRewardWallet(massterWallets){
         let reward_wallet_string = {};
-        reward_wallets.forEach(reward_wallet => {
-            reward_wallet_string[reward_wallet.name] = reward_wallet
-        });
-        reward_wallet_string = JSON.stringify(reward_wallet_string)
-        
-        console.log('call api update wallet rewall', response);       
-        axios.post(API_URL.EXCHANGE.GET_USER_PROFILE, {
-            params: {
-                reward_wallet_addresses: reward_wallet_string,
-            },
-          }).then((response) => {
-            console.log('response', response);            
-          });
+        massterWallets.forEach(reward_wallet => {
+            reward_wallet_string[reward_wallet.name] = {"address": reward_wallet.address, "name": reward_wallet.name, "network": reward_wallet.network}
+        });        
+        return JSON.stringify(reward_wallet_string);
     }
 
     static log(data, key=MasterWallet.KEY){

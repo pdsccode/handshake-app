@@ -16,8 +16,7 @@ export class BitcoinTestnet extends Bitcoin{
       this.className = "BitcoinTestnet";        
     }
     setDefaultNetwork(){
-      bitcore.Networks.defaultNetwork = bitcore.Networks.testnet;
-      console.log("BitcoinTestnet network: ", bitcore.Networks.defaultNetwork);
+      bitcore.Networks.defaultNetwork = bitcore.Networks.testnet;      
     }
 
 }
