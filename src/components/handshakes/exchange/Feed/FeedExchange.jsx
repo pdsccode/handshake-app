@@ -24,7 +24,6 @@ import {
   cancelShakedOffer,
   closeOffer,
   completeShakedOffer,
-  getListOfferPrice,
   shakeOffer,
   withdrawShakedOffer
 } from "@/reducers/exchange/action";
@@ -789,26 +788,35 @@ class FeedExchange extends React.PureComponent {
     const {initUserId, shakeUserIds, location, state, status, mode = 'discover', ipInfo: { latitude, longitude }, ...props} = this.props;
     const {offer, userType} = this.state;
     const {listOfferPrice} = this.props;
-    // let geolocation = location.split(',');
     let fiatAmount = 0;
     if (listOfferPrice) {
       let offerPrice = getOfferPrice(listOfferPrice, offer.type, offer.currency);
-      fiatAmount = offer.amount * offerPrice.price || 0;
-      fiatAmount = fiatAmount + fiatAmount * offer.percentage;
+      if (offerPrice) {
+        fiatAmount = offer.amount * offerPrice.price || 0;
+        fiatAmount = fiatAmount + fiatAmount * offer.percentage;
+      } else {
+        console.log('aaaa', offer.type, offer.currency);
+      }
     }
     this.setState({fiatAmount: fiatAmount});
 
     let modalContent = this.state.modalContent;
     let actionButtons = this.getActionButtons();
-    // let userType = getHandshakeUserType(initUserId, shakeUserIds);
+
     const email = 'abc@mail.com'
     const statusText = HANDSHAKE_EXCHANGE_STATUS_NAME[status];
     const phone = offer.contactPhone[0] === '+' ? offer.contactPhone : `+${offer.contactPhone}`; // prepend '+'
     const address = offer.contactInfo;
 
-    const latLng = location.split(',')
-    const distanceMeters = getDistanceFromLatLonInKm(latitude, longitude, latLng[0], latLng[1]) * 1000
-    const distanceMiles = distanceMeters * 0.000621371
+    let distanceMeters = 0;
+    let distanceMiles = 0;
+
+    if (location) {
+      const latLng = location.split(',')
+      distanceMeters = getDistanceFromLatLonInKm(latitude, longitude, latLng[0], latLng[1]) * 1000
+      distanceMiles = distanceMeters * 0.000621371
+    }
+
     return (
       <div>
         {
@@ -911,7 +919,6 @@ const mapDispatch = ({
   closeOffer,
   completeShakedOffer,
   cancelShakedOffer,
-  getListOfferPrice,
   withdrawShakedOffer,
   showAlert
 });
