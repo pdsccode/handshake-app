@@ -8,6 +8,8 @@ import styled from 'styled-components';
 import { Field } from "redux-form";
 
 import imgCC from '@/assets/images/card/credit-card.svg';
+import iconChevronRight from '@/assets/images/icon/chevron-right.svg';
+import iconChevronBottom from '@/assets/images/icon/chevron-bottom.svg';
 // import imgAmex from '@/assets/images/card/amex.svg';
 // import imgDiscover from '@/assets/images/card/discover.svg';
 // import imgMastercard from '@/assets/images/card/mastercard.svg';
@@ -19,18 +21,8 @@ import { connect } from "react-redux";
 
 const heightOfTabsHeader = 0.5;
 
-// trick to make background larger than its div
 const Wrapper = styled.div`
   background: #50af4f;
-
-  // padding-left: ${heightOfTabsHeader}rem;
-  // margin-left: -${heightOfTabsHeader}rem;
-  //
-  // padding-right: ${heightOfTabsHeader}rem;
-  // margin-right: -${heightOfTabsHeader}rem;
-  //
-  // padding-bottom: ${heightOfTabsHeader}rem;
-  // margin-bottom: -${heightOfTabsHeader}rem;
 `
 
 
@@ -161,7 +153,7 @@ class Component extends React.Component {
                                     handleToggleNewCC()
                                   }}
                           >
-                            {intl.formatMessage({id: 'change'})}<span className="ml-2">{value ? '﹀' : '〉'}</span>
+                            {intl.formatMessage({id: 'change'})}<span className="ml-2">{value ? <img src={iconChevronBottom} /> : <img src={iconChevronRight} />}</span>
                           </button>
                       }
                     />

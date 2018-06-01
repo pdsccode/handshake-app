@@ -3,6 +3,7 @@ import { DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown 
 import Cleave from 'cleave.js/react';
 import cx from 'classnames';
 import './styles.scss';
+import phoneCountryCodes from './country-calling-codes.min.json'
 
 const customField = element => ({
   input,
@@ -120,5 +121,42 @@ export const fieldCleave = customField(({
     className={className}
   />
 ));
+
+export const fieldPhoneInput = customField(({
+  onChange, onBlur, onFocus, value, propsCleave, className,
+}) => {
+  const splittedNumbers = value.split('-')
+  let countryCode = ''
+  let phoneNumber = ''
+  if (splittedNumbers.length === 1) {
+    countryCode = ''
+    phoneNumber = splittedNumbers[0]
+  } else {
+    countryCode = splittedNumbers[0]
+    phoneNumber = splittedNumbers[1] || ''
+  }
+  return (
+    <span className="d-flex align-items-center">
+      <span style={{ width: '100px'}} className="mr-auto">
+        <select
+          className="w-100 text-white select-customized"
+          onChange={(e) => onChange(`${e.target.value}-${phoneNumber}`)}
+          value={countryCode}
+        >
+          <option key={-1} value="">-----------</option>
+          {
+            phoneCountryCodes.map((item, index) => {
+              const { name, callingCode } = item
+              return (
+                <option key={index} value={callingCode}>+{callingCode}</option>
+              )
+            })
+          }
+        </select>
+      </span>
+      <span className="ml-1"><input type="tel" className="form-control-custom form-control-custom-ex w-100" value={phoneNumber} onChange={(e) => onChange(`${countryCode}-${e.target.value}`)} /></span>
+    </span>
+  );
+})
 
 export default customField;

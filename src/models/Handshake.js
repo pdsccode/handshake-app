@@ -15,6 +15,7 @@ class Handshake {
       initAt: data.init_at,
       lastUpdateAt: data.last_update_at,
       extraData: data.extra_data,
+      location: data.location
     };
   }
 }

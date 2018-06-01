@@ -6,6 +6,8 @@ import dontIcon from '@/assets/images/icon/3-dot-icon.svg';
 import iconSafe from '@/assets/images/icon/icon-safe.svg';
 import iconWarning from '@/assets/images/icon/icon-warning.svg';
 import iconChecked from '@/assets/images/icon/icon-checked.svg';
+import iconQRCode from '@/assets/images/icon/icon-qr-code.png';
+
 
 import PropTypes from 'prop-types';
 import './Wallet.scss';
@@ -35,7 +37,7 @@ class WalletItem extends React.Component {
         return  "feed " + bgClassName;
       }
     render(){ 
-        const {wallet, onMoreClick, onWarningClick} =  this.props;   
+        const {wallet, onMoreClick, onWarningClick, onAddressClick} =  this.props;   
         const iconProtected = !wallet.protected ? iconWarning : iconSafe;
         
         return  ( 
@@ -47,8 +49,9 @@ class WalletItem extends React.Component {
                 </div> 
                 <p className="balance"> {wallet.balance} {wallet.name} </p>
                 <img className="more" src={dontIcon} onClick={onMoreClick}/> 
-                <img className="safe" src={iconProtected} onClick={onWarningClick}/>          
-                <p className="address">{wallet.getShortAddress()}</p>
+                <img className="safe" src={iconProtected} onClick={onWarningClick}/>   
+
+                <div className="address" onClick={onAddressClick}><img src={iconQRCode} /> {wallet.getShortAddress()}</div>
               </div>        
             </Col>
           );
@@ -59,5 +62,6 @@ WalletItem.propTypes = {
     wallet: PropTypes.object, 
     onMoreClick: PropTypes.func,
     onWarningClick: PropTypes.func,
+    onAddressClick: PropTypes.func,
 };
 export default WalletItem;

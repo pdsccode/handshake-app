@@ -1,6 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import BrowserDetect from '@/services/browser-detect';
+// components
 import App from '@/components/App/App';
+import MobileOrTablet from '@/components/MobileOrTablet';
 
 if (!String.prototype.format) {
   String.prototype.format = function () {
@@ -13,8 +16,10 @@ if (!String.prototype.format) {
   };
 }
 
-// require('../testing/test_handshake_blockchain');
-// require('../testing/web3_test');
+let app = <App />;
+if (process.env.ENV === 'production') {
+  app = BrowserDetect.isDesktop ? <MobileOrTablet /> : <App />;
+}
 
-ReactDOM.render(<App />, document.getElementById(`${process.env.ROOT}`));
+ReactDOM.render(app, document.getElementById('app'));
 

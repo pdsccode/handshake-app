@@ -5,12 +5,10 @@ import './NoData.scss';
 
 class NoData extends React.PureComponent {
   render() {
-    const { className, message } = this.props;
+    const { className, message, ...props } = this.props;
     return (
-      <div className={`no-data ${className || ''}`}>
-        {
-          message && (<p className="text">{message}</p>)
-        }
+      <div className={`no-data ${className || ''}`} {...props}>
+          <p className="text">{ message || 'NO DATA AVAILABLE' }</p>
       </div>
     );
   }
