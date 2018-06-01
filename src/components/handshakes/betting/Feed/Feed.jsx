@@ -60,6 +60,7 @@ class FeedBetting extends React.Component {
 
   componentDidMount() {
     const {status, side} = this.props;
+
     console.log('Props:', this.props);
     console.log('Status:', status);
     const hardCodeStatus = 2;
@@ -90,27 +91,40 @@ class FeedBetting extends React.Component {
     }
   }
 
+  renderStatus = () => {
+    const {status = 2 } = this.props;
+    const text = "Match is ongoing...";
+    const textColor = status == 2?'white':'#35B371';
+    const backgroundColorWithStatus = status == 2? 'ffffff25' :'#00000030';
+    return <Button style={{backgroundColor:backgroundColorWithStatus , borderColor:'transparent',color:textColor}}  block disabled >{text}</Button>;
+  }
+
   render() {
-    const {actionTitle, isAction} = this.state;
+    const {actionTitle , isAction,side } = this.state;
+    const backgroundColor = side === SIDE.SUPPORT ? "#85D477":'#FB7753';
+    // const {actionTitle = "Match is ongoing...", isAction =true} = this.state;
+     /***
+     * side = SIDE.SUPPORT // SIDE.AGAINST ;ORGRANCE
+     *
+     */
     const {event_name, event_predict, event_odds, event_bet,event_date, balance} = this.extraData;
 
     return (
       <div>
         {/* Feed */}
         <Feed className="feed" handshakeId={this.props.id} onClick={this.props.onFeedClick} background="white">
-          <div className="wrapperBettingFeed">
+          <div className="wrapperBettingFeed" style={{backgroundColor:backgroundColor}}>
             <div className="description">
               <p>{event_name}</p>
               <p className="eventInfo">{event_predict}</p>
             </div>
             <div className="bottomWrapper">
-              <p className="odds">1:{event_odds}</p>
-              <div className="item">
-              <Image src={ethereumIcon} alt="ethereum icon" />
-              <p className="content">{event_bet} ETH <span>pool</span></p>
-              </div>
+              <span className="odds" >1:{event_odds}</span>
+              <span className="content"  >{event_bet} ETH</span>
             </div>
+            {this.renderStatus()}
           </div>
+
         </Feed>
         {/* Shake */}
         {actionTitle && <Button block disabled={!isAction} onClick={() => { this.clickActionButton(actionTitle); }}>{actionTitle}</Button>}
@@ -131,7 +145,7 @@ class FeedBetting extends React.Component {
     console.log('Choose option:', value)
     //TO DO: Choose an option
   }
-  
+
   clickActionButton(title){
     const {id, outcome_id, side, extraData, hid, odds} = item;
     const {event_bet, event_odds} = JSON.parse(extraData);
@@ -152,7 +166,7 @@ class FeedBetting extends React.Component {
         break;
 
     }
-    
+
 
   }
 }

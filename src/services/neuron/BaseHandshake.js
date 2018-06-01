@@ -14,7 +14,7 @@ export default class BaseHandshake {
     const compiled = this.neuron.getCompiled(this.contractFileNameWithoutExtension);
     this.handshakeInstance = new web3.eth.Contract(
       compiled.abi,
-      this.configs.handshakeBettingAddress,
+      this.contractAddress,
     );
     console.log('Hanshake instance:', this.handshakeInstance);
   }
