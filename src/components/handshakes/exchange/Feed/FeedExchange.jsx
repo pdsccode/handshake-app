@@ -51,62 +51,10 @@ class FeedExchange extends React.PureComponent {
       offer: offer,
       fiatAmount: 0,
       userType: getHandshakeUserType(initUserId, shakeUserIds),
-
-      listMainWalletBalance: [],
-      listTestWalletBalance: [],
     };
   }
 
-  async componentDidMount() {
-    //Get wallet
-    let listWallet = await MasterWallet.getMasterWallet();
-
-    if (listWallet == false) {
-      listWallet = await MasterWallet.createMasterWallet();
-    }
-
-    await this.splitWalletData(listWallet)
-
-    await this.getListBalance();
-  }
-
-  splitWalletData(listWallet) {
-
-    let listMainWallet = [];
-    let listTestWallet = [];
-
-    listWallet.forEach(wallet => {
-      // is Mainnet
-      if (wallet.network == MasterWallet.ListCoin[wallet.className].Network.Mainnet) {
-        listMainWallet.push(wallet);
-      }
-      else {
-        // is Testnet
-        listTestWallet.push(wallet);
-      }
-    });
-
-    this.setState({listMainWalletBalance: listMainWallet, listTestWalletBalance: listTestWallet});
-  }
-
-  async getListBalance() {
-
-    let listWallet = this.state.listMainWalletBalance.concat(this.state.listTestWalletBalance);
-
-    const pros = []
-
-    listWallet.forEach(wallet => {
-      pros.push(new Promise((resolve, reject) => {
-        wallet.getBalance().then(balance => {
-          wallet.balance = balance;
-          resolve(wallet);
-        })
-      }));
-    });
-
-    await Promise.all(pros);
-
-    await this.splitWalletData(listWallet);
+  componentDidMount() {
   }
 
   handleActionFailed = (e) => {
@@ -188,22 +136,8 @@ class FeedExchange extends React.PureComponent {
   handleShakeOffer = () => {
     const {offer, fiatAmount} = this.state;
 
-    let listWallet = [];
-    if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
-      listWallet = this.state.listTestWalletBalance;
-    } else {
-      listWallet = this.state.listMainWalletBalance;
-    }
-
-    let address = '';
-    for (let i = 0; i < listWallet.length; i++) {
-      let wallet = listWallet[i];
-
-      if (wallet.name === offer.currency) {
-        address = wallet.address;
-        break;
-      }
-    }
+    const wallet = MasterWallet.getWalletDefault(offer.currency);
+    const address = wallet.address;
 
     let offerShake = {
       fiat_amount: fiatAmount.toString(),
