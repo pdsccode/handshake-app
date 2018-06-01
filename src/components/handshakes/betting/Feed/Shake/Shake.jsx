@@ -8,8 +8,10 @@ import createForm from '@/components/core/form/createForm';
 import { required } from '@/components/core/form/validation';
 import { Field } from "redux-form";
 import { shakeItem } from '@/reducers/handshake/action';
-import {HANDSHAKE_ID, API_URL } from '@/constants';
+import {HANDSHAKE_ID, API_URL, APP } from '@/constants';
 import {MasterWallet} from '@/models/MasterWallet';
+import local from '@/services/localStore';
+import { BettingHandshake } from '@/services/neuron';
 
 // components
 import { InputField } from '@/components/handshakes/betting/form/customField';
@@ -22,6 +24,8 @@ import './Shake.scss';
 const wallet = MasterWallet.getWalletDefault('ETH');
 const chainId = wallet.chainId;
 
+const bettinghandshake = new BettingHandshake(chainId);
+
 const nameFormBettingShake = 'bettingShakeForm';
 const BettingShakeForm = createForm({
   propsReduxForm: {
@@ -33,7 +37,7 @@ const defaultAmount = 1;
 
 class BetingShake extends React.Component {
   static propTypes = {
-    outcomeId: PropTypes.number.isRequired,
+    outcomeId: PropTypes.number,
     onSubmitClick: PropTypes.func,
     onCancelClick: PropTypes.func,
   }
@@ -73,7 +77,7 @@ class BetingShake extends React.Component {
   }
 
   onToggleChange(id) {
-    this.setState({buttonClass: `btnOK ${id === 2 ? 'btnBlue' : 'btnRed' }`});
+    this.setState({buttonClass: `btnOK ${id === 1 ? 'btnBlue' : 'btnRed' }`});
   }
 
   updateTotal(value) {
@@ -180,16 +184,38 @@ class BetingShake extends React.Component {
         {this.renderInputField(amountField)}
         <Toggle ref={(component) => {this.toggleRef = component}} onChange={this.onToggleChange} />
 
-        <Button type="submit" block className={buttonClass} style>
+        <Button type="submit" block className={buttonClass}>
           Shake now
         </Button>
       </BettingShakeForm>
     );
   }
 
+  foundShakeItemList(list){
+    var shakerList = [];
+    const profile = local.get(APP.AUTH_PROFILE);
+    list.forEach(element => {
+      const {shakers, outcome_id, from_address} = element;
+      console.log('Shakers:', shakers);
+      var foundShakedItem = shakers.find(function(element) {
+        return element.shaker_id  === profile.id;
+      });
+      console.log('foundShakedItem:', foundShakedItem);
+      if(foundShakedItem){
+        foundShakedItem['outcome_id'] = outcome_id;
+        foundShakedItem['from_address'] = from_address;
+        shakerList.push(foundShakedItem);
+      }
+    });
+    return shakerList;
+  }
+
   render() {
     return this.renderForm();
   }
+
+
+
 
   shakeItem(amount, side){
       const {outcomeId} = this.props;
@@ -216,8 +242,29 @@ class BetingShake extends React.Component {
       errorFn: this.shakeItemFailed
     });
   }
+  async shakeContract(item){
+    const {amount,id, odds, side, outcome_id, from_address} = item;
+      const stake = amount;
+      const payout = stake * odds;
+      const offchain = `cryptosign_s${id}`;
+      const maker = from_address;
+      const hid = outcome_id;
+      const result = await bettinghandshake.shake(hid, side,stake, payout,maker, offchain);
+      if(result){
+          //history.go(URL.HANDSHAKE_DISCOVER);
+      }
+  }
   shakeItemSuccess = async (successData)=>{
     console.log('shakeItemSuccess', successData);
+    const {status, data} = successData
+    if(status){
+      const foundShakeList = this.foundShakeItemList(data);
+      console.log('foundShakeList:', foundShakeList);
+      foundShakeList.forEach(element => {
+        this.shakeContract(element);
+      });
+
+    }
   }
   shakeItemFailed = (error) => {
     console.log('shakeItemFailed', error);

@@ -16,8 +16,10 @@ export default class BettingHandshake extends BaseHandshake {
     return 'PredictionHandshake';
   }
   checkBalance = ()=> {
+    /*
     const balance = wallet.getBalance();
     return balance;
+    */
   }
   initBet = (
     hid,
@@ -59,7 +61,7 @@ export default class BettingHandshake extends BaseHandshake {
   };
  
   shake = (hid, side, stake, payout, maker, offchain) => {
-    console.log('eth-contract-service shake', address, privateKey, hid);
+    console.log('eth-contract-service shake', address, privateKey, hid, maker);
     const payoutValue = Web3.utils.toWei(payout.toString(), 'ether');
     const bytesOffchain = this.web3.utils.fromAscii(offchain);
 

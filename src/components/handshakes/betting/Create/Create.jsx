@@ -484,8 +484,7 @@ get matchResults(){
     const side = SIDE.SUPPORT;
 
     if(status){
-      const {id} = data;
-      const offchain = id;
+      const {offchain} = data;
       const result = await bettinghandshake.initBet(hid, side,stake, payout, offchain);
       if(result){
           //history.go(URL.HANDSHAKE_DISCOVER);

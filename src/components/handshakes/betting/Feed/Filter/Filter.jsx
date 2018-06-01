@@ -170,7 +170,7 @@ class BettingFilter extends React.Component {
         const {matches} = this.state;
         if(matches && matches.length > 0){
             const firstMatch = matches[0];
-            return { id: firstMatch.id, value: `${item.awayTeamName} - ${item.homeTeamName}` }
+            return { id: firstMatch.id, value: `${firstMatch.awayTeamName} - ${firstMatch.homeTeamName}` }
 
         }
         return null;
@@ -238,7 +238,7 @@ class BettingFilter extends React.Component {
             const {handshakes} = this.foundOutcome;
             console.log('support Handshakes:', handshakes);
             if(handshakes){
-                return handshakes.filter(item=>(item.side === SIDE.SUPPORT));
+                return handshakes.filter(item=>(item.side === SIDE.SUPPORT && item.status === 0));
             }
         }
         return [];
