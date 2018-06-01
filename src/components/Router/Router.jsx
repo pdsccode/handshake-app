@@ -146,7 +146,7 @@ class Router extends React.Component {
 
           // this.props.firebase.set(FIREBASE_PATH.USERS, String(profile.id));
 
-          this.props.fetchProfile({ PATH_URL: 'user/profile' });          
+          this.props.fetchProfile({ PATH_URL: 'user/profile' });
           this.props.getUserProfile({ BASE_URL: API_URL.EXCHANGE.BASE, PATH_URL: API_URL.EXCHANGE.GET_USER_PROFILE});
           this.createMasterWallet();
         },
