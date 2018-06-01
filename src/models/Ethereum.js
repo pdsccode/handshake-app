@@ -1,7 +1,9 @@
 
 const Web3 = require('web3');
 const EthereumTx = require('ethereumjs-tx')
-
+var hdkey = require('hdkey');
+var ethUtil = require('ethereumjs-util');
+var bip39 = require('bip39');          
 import {Wallet} from '@/models/Wallet.js' 
 
 const BN = Web3.utils.BN;
@@ -20,9 +22,7 @@ export class Ethereum extends Wallet{
 
       createAddressPrivatekey(){        
         
-        var hdkey = require('hdkey');
-        var ethUtil = require('ethereumjs-util');
-        var bip39 = require('bip39');          
+        let t0 = performance.now();        
 
         if (this.mnemonic == ''){              
             this.mnemonic = bip39.generateMnemonic(); //generates string
@@ -41,7 +41,11 @@ export class Ethereum extends Wallet{
         this.address = address;
         this.privateKey = privateKey;       
         
-        this.chainId = this.network == Ethereum.Network.Mainnet ? 1 : 4                
+        this.chainId = this.network == Ethereum.Network.Mainnet ? 1 : 4  
+        
+        let t1 = performance.now();
+        console.log("Call to createAddressPrivatekey for each Ether ("+address+") took " + (t1 - t0) + " milliseconds.")
+
 
     }    
 

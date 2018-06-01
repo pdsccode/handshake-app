@@ -547,7 +547,7 @@ class Wallet extends React.Component {
           
           <QRCode value={ this.state.walletSelected ? this.state.walletSelected.address : ""} />
           <div className="addressDivPopup">{ this.state.walletSelected ? this.state.walletSelected.address : ""}</div>
-          <Button className="button" cssType="success" onClick={() => {Clipboard.copy(JSON.stringify(this.state.walletsData));this.modalShareAddressRef.close()}} >                        
+          <Button className="button" cssType="success" onClick={() => {Clipboard.copy(this.state.walletSelected.address);this.modalShareAddressRef.close()}} >                        
             Copy
           </Button>
           </div>

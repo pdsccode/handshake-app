@@ -49,8 +49,8 @@ export const FIAT_CURRENCY = 'USD';
 export const FIAT_CURRENCY_SYMBOL = '$';
 
 export const SELL_PRICE_TYPE = [
-  { value: 'fix', text: 'Fix' },
-  { value: 'flexible', text: 'Flexible' },
+  { value: 'fix', text: 'Fix now' },
+  { value: 'flexible', text: 'Update on shake' },
 ];
 
 export const SELL_PRICE_TYPE_DEFAULT = 'fix';
@@ -60,6 +60,7 @@ export const API_URL = {
   CRYPTOSIGN: {
     BASE: 'https://stag-handshake.autonomous.ai/api/cryptosign',
     INIT_HANDSHAKE: 'cryptosign/handshake/init',
+    SHAKE: 'cryptosign/handshake/shake',
     LOAD_MATCHES: 'cryptosign/match',
   },
   DISCOVER: {
@@ -153,6 +154,11 @@ export const HANSHAKE_USER_NAME = {
   [HANDSHAKE_USER.NORMAL]: 'NORMAL',
   [HANDSHAKE_USER.OWNER]: 'OWNER',
   [HANDSHAKE_USER.SHAKED]: 'SHAKED',
+}
+
+export const DEFAULT_FEE = {
+  ETH: 0,
+  BTC: 0,
 }
 
 

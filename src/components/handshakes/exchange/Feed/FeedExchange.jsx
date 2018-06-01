@@ -36,6 +36,7 @@ import {showAlert} from '@/reducers/app/action';
 import {HANDSHAKE_EXCHANGE_STATUS_NAME} from "@/constants";
 import {Link} from "react-router-dom";
 import { URL } from '@/config';
+import { getDistanceFromLatLonInKm } from '../utils'
 
 class FeedExchange extends React.PureComponent {
   constructor(props) {
@@ -223,7 +224,7 @@ class FeedExchange extends React.PureComponent {
     this.props.showAlert({
       message: <div className="text-center"><FormattedMessage id="shakeOfferSuccessMessage"/></div>,
       timeOut: 3000,
-      type: 'danger',
+      type: 'success',
       callBack: () => {
         // this.props.history.push(URL.HANDSHAKE_ME);
       }
@@ -252,7 +253,7 @@ class FeedExchange extends React.PureComponent {
     this.props.showAlert({
       message: <div className="text-center"><FormattedMessage id="closeOfferSuccessMessage"/></div>,
       timeOut: 3000,
-      type: 'danger',
+      type: 'success',
       callBack: () => {
         // this.props.history.push(URL.HANDSHAKE_ME);
       }
@@ -282,7 +283,7 @@ class FeedExchange extends React.PureComponent {
     this.props.showAlert({
       message: <div className="text-center"><FormattedMessage id="completeShakedfferSuccessMessage"/></div>,
       timeOut: 3000,
-      type: 'danger',
+      type: 'success',
       callBack: () => {
         // this.props.history.push(URL.HANDSHAKE_ME);
       }
@@ -312,7 +313,7 @@ class FeedExchange extends React.PureComponent {
     this.props.showAlert({
       message: <div className="text-center"><FormattedMessage id="cancelShakedfferSuccessMessage"/></div>,
       timeOut: 3000,
-      type: 'danger',
+      type: 'success',
       callBack: () => {
         // this.props.history.push(URL.HANDSHAKE_ME);
       }
@@ -342,7 +343,7 @@ class FeedExchange extends React.PureComponent {
     this.props.showAlert({
       message: <div className="text-center"><FormattedMessage id="withdrawShakedfferSuccessMessage"/></div>,
       timeOut: 3000,
-      type: 'danger',
+      type: 'success',
       callBack: () => {
         // this.props.history.push(URL.HANDSHAKE_ME);
       }
@@ -648,7 +649,7 @@ class FeedExchange extends React.PureComponent {
 
 
   render() {
-    const {initUserId, shakeUserIds, location, state, status, mode = 'discover', ...props} = this.props;
+    const {initUserId, shakeUserIds, location, state, status, mode = 'discover', ipInfo: { latitude, longitude }, ...props} = this.props;
     const {offer, userType} = this.state;
     const {listOfferPrice} = this.props;
     // let geolocation = location.split(',');
@@ -665,8 +666,12 @@ class FeedExchange extends React.PureComponent {
     // let userType = getHandshakeUserType(initUserId, shakeUserIds);
     const email = 'abc@mail.com'
     const statusText = HANDSHAKE_EXCHANGE_STATUS_NAME[status];
-    const phone = offer.contactPhone;
+    const phone = offer.contactPhone[0] === '+' ? offer.contactPhone : `+${offer.contactPhone}`; // prepend '+'
     const address = offer.contactInfo;
+
+    const latLng = location.split(',')
+    const distanceMeters = getDistanceFromLatLonInKm(latitude, longitude, latLng[0], latLng[1]) * 1000
+    const distanceMiles = distanceMeters * 0.000621371
     return (
       <div>
         {
@@ -678,7 +683,7 @@ class FeedExchange extends React.PureComponent {
           )
         }
         <Feed className="feed p-2 text-white" background={`${mode === 'discover' ? '#FF2D55' : '#50E3C2'}`}>
-          <div className="d-flex">
+          <div className="d-flex mb-4">
             <div>
               <h5>
                 <FormattedMessage id="offerHandShakeContent" values={{
@@ -733,10 +738,11 @@ class FeedExchange extends React.PureComponent {
           <div className="media">
             <img className="mr-1" src={mode === 'discover' ? iconLocation : ''} width={20} />
             <div className="media-body">
-              <div>
+              <div style={{ fontSize: mode === 'me' ? '80%' : '' }}>
                 <FormattedMessage id="offerDistanceContent" values={{
-                  offerType: offer.type === 'buy' ? 'Buyer' : 'Seller',
-                  distance: 100
+                  // offerType: offer.type === 'buy' ? 'Buyer' : 'Seller',
+                  distanceMeters: distanceMeters.toFixed(0),
+                  distanceMiles: distanceMiles.toFixed(1),
                 }}/>
               </div>
             </div>
@@ -760,6 +766,7 @@ FeedExchange.propTypes = {
 const mapState = state => ({
   discover: state.discover,
   listOfferPrice: state.exchange.listOfferPrice,
+  ipInfo: state.app.ipInfo
 });
 
 const mapDispatch = ({

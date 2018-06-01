@@ -1,6 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import BrowserDetect from '@/services/browser-detect';
+// components
 import App from '@/components/App/App';
+import registerServiceWorker from '@/services/worker';
+import MobileOrTablet from '@/components/MobileOrTablet';
+
 
 if (!String.prototype.format) {
   String.prototype.format = function () {
@@ -13,8 +18,12 @@ if (!String.prototype.format) {
   };
 }
 
-// require('../testing/test_handshake_blockchain');
-// require('../testing/web3_test');
+let app = <App />;
+if (process.env.ENV === 'production') {
+  app = BrowserDetect.isDesktop ? <MobileOrTablet /> : <App />;
+}
 
-ReactDOM.render(<App />, document.getElementById('app'));
+ReactDOM.render(app, document.getElementById('app'));
 
+registerServiceWorker();
+require('offline-plugin/runtime').install();

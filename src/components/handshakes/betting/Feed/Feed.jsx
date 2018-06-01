@@ -3,11 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 // services, constants
-import  { BetHandshakeHandler, ROLE,
-  BETTING_STATUS_LABEL, BETTING_STATUS,
-  REJECT_WINDOWN_DAYS, CANCEL_WINDOWN_DAYS,
-  BETTING_OPTIONS_NAME,
-  BETTING_OPTIONS} from './BetHandshakeHandler.js';
+import  { BetHandshakeHandler, SIDE} from './BetHandshakeHandler.js';
 import momment from 'moment';
 
 import { APP } from '@/constants';
@@ -44,15 +40,39 @@ class FeedBetting extends React.Component {
       super(props);
 
       this.state = {
-
+        actionTitle: null,
+        isAction: false,
+        role: null,
+        isMatch: false,
       };
 
 
   }
 
-  componentDidMount() {
-    console.log(this.props);
+  get isMatch(){
+    const {shakeCount} = this.props;
+    if(shakeCount){
+      return shakeCount > 0 ? true : false;
 
+    }
+    return false;
+  }
+
+  componentDidMount() {
+    const {status, side} = this.props;
+    console.log('Props:', this.props);
+    console.log('Status:', status);
+    const hardCodeStatus = 2;
+    const role = side;
+    const isMatch = this.isMatch;
+    const result = BetHandshakeHandler.getStatusLabel(hardCodeStatus, role, isMatch);
+    const {title, isAction} = result;
+    this.setState({
+      actionTitle: title,
+      isAction,
+      role,
+      isMatch,
+    })
   }
 
   componentWillReceiveProps(nextProps) {
@@ -71,7 +91,7 @@ class FeedBetting extends React.Component {
   }
 
   render() {
-
+    const {actionTitle, isAction} = this.state;
     const {event_name, event_predict, event_odds, event_bet,event_date, balance} = this.extraData;
 
     return (
@@ -93,7 +113,7 @@ class FeedBetting extends React.Component {
           </div>
         </Feed>
         {/* Shake */}
-        {<Button block onClick={() => { this.clickActionButton(statusAction); }}>Shake</Button>}
+        {actionTitle && <Button block disabled={!isAction} onClick={() => { this.clickActionButton(actionTitle); }}>{actionTitle}</Button>}
         {/* Modal */}
         {/*<ModalDialog title="Make a bet" onRef={modal => this.modalBetRef = modal}>
           <BettingShake
@@ -113,33 +133,26 @@ class FeedBetting extends React.Component {
   }
   
   clickActionButton(title){
-    /*
-    const {role} = this.state;
-    const item = this.props;
-    const {id, hid} = item;
+    const {id, outcome_id, side, extraData, hid, odds} = item;
+    const {event_bet, event_odds} = JSON.parse(extraData);
+    //const hid = outcome_id;
+    const stake = event_bet;
+    const payout = stake * odds;
     const offchain = id;
     switch(title){
-      case BETTING_STATUS_LABEL.SHAKE:
-        this.modalBetRef.open();
-        break;
 
-      case BETTING_STATUS_LABEL.CLOSE:
+      case BETTING_STATUS_LABEL.CANCEL:
         // TO DO: CLOSE BET
-        //BetHandshakeHandler.closeItem(role, hid, offchain);
+        BettingShake.cancelBet(hid, side,stake,payout,offchain);
         break;
 
       case BETTING_STATUS_LABEL.WITHDRAW:
         // TO DO: WITHDRAW
-        //BettingHandshake.withdraw(role, hid, offchain);
-        break;
-
-      case BETTING_STATUS_LABEL.REJECT:
-        // TO DO: REJECT
-        //BettingHandshake.rejectItem(role, hid, offchain);
+        BettingHandshake.withdraw(hid, offchain);
         break;
 
     }
-    */
+    
 
   }
 }

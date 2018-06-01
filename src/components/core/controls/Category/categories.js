@@ -24,10 +24,11 @@ const CATEGORIES = [{
   priority: 2,
 },
 // {
+//   id: 99, // temp
 //   name: 'Bazaar',
 //   image: shoppingCartSVG,
 //   priority: 3
-// }
+// },
 ];
 
 export default CATEGORIES;

@@ -12,6 +12,7 @@ class Dropdown extends React.PureComponent {
     this.state = {
       text: props.placeholder,
       isShow: false,
+      idActive: -1,
     };
     // bind
     this.toogle = ::this.toogle;
@@ -19,7 +20,7 @@ class Dropdown extends React.PureComponent {
   }
 
   onItemSelected(item) {
-    this.setState({ text: item.value });
+    this.setState({ text: item.value, idActive: item.id });
     this.toogle();
     // call back
     this.props.hasOwnProperty('onItemSelected') && this.props.onItemSelected(item);
@@ -33,7 +34,7 @@ class Dropdown extends React.PureComponent {
 
   render() {
     const { className, source } = this.props;
-    const { text, isShow } = this.state;
+    const { text, isShow, idActive } = this.state;
     return (
       <div className={`dropdown dropdown-custom ${className || ''}`}>
         <button type="button" className={`btn ${isShow ? 'show' : ''}`} onClick={this.toogle}>
@@ -45,7 +46,7 @@ class Dropdown extends React.PureComponent {
             source.map(item => (
               <li 
                 key={item.id} 
-                className="dropdown-custom-item" 
+                className={`dropdown-custom-item ${idActive === item.id ? 'active': ''}`}
                 style={item.style || null}
                 onClick={ () => this.onItemSelected(item) }>
                 {item.value}

@@ -23,6 +23,9 @@ $gray: #ededed;
     border-bottom: 0;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
+    img {
+      transform: rotate(180deg);
+    }
   }
   .show {
     display: block;
@@ -40,6 +43,10 @@ $gray: #ededed;
     border-top-left-radius: 0;
     border-top-right-radius: 0;
     list-style-type: none;
+    .active {
+      color: #16181b;
+      background-color: #f8f9fa;
+    }
     .dropdown-custom-item {
       margin: rem-calc(0 21px);
       padding: 10px 0;

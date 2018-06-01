@@ -126,8 +126,15 @@ export const fieldPhoneInput = customField(({
   onChange, onBlur, onFocus, value, propsCleave, className,
 }) => {
   const splittedNumbers = value.split('-')
-  const countryCode = splittedNumbers[0]
-  const phoneNumber = splittedNumbers[1] || ''
+  let countryCode = ''
+  let phoneNumber = ''
+  if (splittedNumbers.length === 1) {
+    countryCode = ''
+    phoneNumber = splittedNumbers[0]
+  } else {
+    countryCode = splittedNumbers[0]
+    phoneNumber = splittedNumbers[1] || ''
+  }
   return (
     <span className="d-flex align-items-center">
       <span style={{ width: '100px'}} className="mr-auto">
@@ -136,6 +143,7 @@ export const fieldPhoneInput = customField(({
           onChange={(e) => onChange(`${e.target.value}-${phoneNumber}`)}
           value={countryCode}
         >
+          <option key={-1} value="">-----------</option>
           {
             phoneCountryCodes.map((item, index) => {
               const { name, callingCode } = item
@@ -146,7 +154,7 @@ export const fieldPhoneInput = customField(({
           }
         </select>
       </span>
-      <span><input type="tel" className="form-control-custom form-control-custom-ex w-100" value={phoneNumber} onChange={(e) => onChange(`${countryCode}-${e.target.value}`)} /></span>
+      <span className="ml-1"><input type="tel" className="form-control-custom form-control-custom-ex w-100" value={phoneNumber} onChange={(e) => onChange(`${countryCode}-${e.target.value}`)} /></span>
     </span>
   );
 })

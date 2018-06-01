@@ -14,7 +14,7 @@ export default {
   securityCode: 'Security Code',
   shakeNow: 'Shake Now',
   offerHandShakeContent: '{offerType} {amount} {currency} for {currency_symbol}{total} in cash',
-  offerDistanceContent: '{offerType} is {distance} meters away',
+  offerDistanceContent: '{distanceMeters} meters ({distanceMiles} miles) away',
   transactonOfferInfo: 'Successful ({success}) / Failed ({failed})',
   createOfferConfirm: 'You are about to {type} {amount} {currency} for {currency_symbol}{total}',
   handshakeOfferConfirm: 'You are about to {type} {amount} {currency} for {currency_symbol}{total}',
@@ -28,4 +28,6 @@ export default {
   completeShakedfferSuccessMessage: 'Complete shaked offer success',
   cancelShakedfferSuccessMessage: 'Cancel shaked offer success',
   withdrawShakedfferSuccessMessage: 'Withdraw shaked offer success',
+  buyUsingCreditCardSuccessMessge: 'Buy using Credit Card success',
+  notEnoughCoinInWallet: 'You only have {amount}({currency}) in default wallet {currency}. Please add more'
 };

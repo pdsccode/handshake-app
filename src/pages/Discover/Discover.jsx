@@ -88,13 +88,15 @@ class DiscoverPage extends React.Component {
         if (FeedComponent) {
           return (
             <Col key={handshake.id} md={12} className="feed-wrapper">
-              <FeedComponent {...handshake} onFeedClick={() => this.clickFeedDetail(handshake.id)} />
+              <FeedComponent {...handshake} history={this.props.history} onFeedClick={() => this.clickFeedDetail(handshake.id)} />
             </Col>
           );
         }
       });
     }
-    return <NoData message="NO DATA AVAILABLE" />;
+
+    return <NoData style={{ height: '50vh' }} />;
+
   }
 
   searchChange(query) {
@@ -170,14 +172,14 @@ class DiscoverPage extends React.Component {
                 />
                 {
                   tabIndexActive === 1 && (
-                    <FeedCreditCard {...this.props} ipInfo={this.state.ipInfo}/>
+                    <FeedCreditCard history={this.props.history}/>
                   )
                 }
               </Col>
             </Row>
           )
         }
-        {handshakeIdActive === HANDSHAKE_ID.BETTING && 
+        {handshakeIdActive === HANDSHAKE_ID.BETTING &&
           <BettingFilter/>
         }
         <Row>
@@ -201,7 +203,6 @@ DiscoverPage.propTypes = {
 const mapState = state => ({
   discover: state.discover,
   firebaseUser: state.firebase.data,
-  ipInfo: state.app.ipInfo
 });
 
 const mapDispatch = ({

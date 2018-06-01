@@ -4,6 +4,7 @@ import {Bitcoin} from '@/models/Bitcoin.js'
 import {BitcoinTestnet} from '@/models/BitcoinTestnet.js' 
 import {Ethereum} from '@/models/Ethereum.js' 
 import {Wallet} from '@/models/Wallet.js' 
+import { APP } from '@/constants';
 var bip39 = require('bip39');
 
 export class MasterWallet{
@@ -16,7 +17,10 @@ export class MasterWallet{
     static KEY = "wallets";
 
     // Create an autonomous wallet:
-    static createMasterWallet(){        
+    static createMasterWallet(){      
+        
+        var t0 = performance.now();
+
 
         // let mnemonic = 'canal marble trend ordinary rookie until combine hire rescue cousin issue that';
         // let mnemonic = 'book trial moral hunt riot ranch yard trap tool horse good barely';
@@ -43,8 +47,10 @@ export class MasterWallet{
             masterWallet[3].default = true;
 
         // For Reward wallet:
+        mnemonic = bip39.generateMnemonic();
         for (var k in MasterWallet.ListCoinReward){
             let wallet = new MasterWallet.ListCoinReward[k]();
+            wallet.mnemonic = mnemonic;
             wallet.network = MasterWallet.ListCoinReward[k].Network.Mainnet;
             wallet.createAddressPrivatekey();
             wallet.isReward = true;
@@ -52,7 +58,11 @@ export class MasterWallet{
         }
                 
         // Save to local store:
-        MasterWallet.UpdateLocalStore(masterWallet);
+        MasterWallet.UpdateLocalStore(masterWallet);    
+
+        var t1 = performance.now();
+
+        MasterWallet.log("Call to createMasterWallet took " + (t1 - t0) + " milliseconds.")
 
         return masterWallet;
     }
@@ -98,7 +108,7 @@ export class MasterWallet{
     }
 
     static UpdateLocalStore(masterWallet){
-        console.log("masterWallet saved: ", masterWallet);
+        console.log("masterWallet saved");
         localStore.save(MasterWallet.KEY, masterWallet);
     }
 
@@ -236,6 +246,14 @@ export class MasterWallet{
             console.log("Wallet is invaild", e);
         }
         return false;
+    }
+
+    static getRewardWallet(massterWallets){
+        let reward_wallet_string = {};
+        massterWallets.forEach(reward_wallet => {
+            reward_wallet_string[reward_wallet.name] = {"address": reward_wallet.address, "name": reward_wallet.name, "network": reward_wallet.network}
+        });        
+        return JSON.stringify(reward_wallet_string);
     }
 
     static log(data, key=MasterWallet.KEY){

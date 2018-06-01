@@ -17,13 +17,28 @@ const handshakeReducter = (state = {
         return {
             ...state,
             isFetching: false,
-            handshake: action.payload,
+            handshake: initHandshakePayload(action.payload.data),
           };
         case `${ACTIONS.INIT_HANDSHAKE}_FAILED`:
             return {
             ...state,
             isFetching: false,
             };
+        case ACTIONS.SHAKE:
+            return {
+                ...state,
+                isFetching: true,
+            };
+        case `${ACTIONS.SHAKE}_SUCCESS`:
+        return {
+            ...state,
+            isFetching: false,
+        };
+        case `${ACTIONS.SHAKE}_FAILED`:
+        return {
+            ...state,
+            isFetching: false,
+        };
         default:
         return state;
     }
