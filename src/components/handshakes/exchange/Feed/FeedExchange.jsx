@@ -678,7 +678,7 @@ class FeedExchange extends React.PureComponent {
           )
         }
         <Feed className="feed p-2 text-white" background={`${mode === 'discover' ? '#FF2D55' : '#50E3C2'}`}>
-          <div className="d-flex">
+          <div className="d-flex mb-4">
             <div>
               <h5>
                 <FormattedMessage id="offerHandShakeContent" values={{
