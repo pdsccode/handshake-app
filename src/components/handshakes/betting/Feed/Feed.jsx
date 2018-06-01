@@ -46,6 +46,7 @@ class FeedBetting extends React.Component {
 
       this.state = {
         actionTitle: null,
+        statusTitle: null,
         isAction: false,
         role: null,
         isMatch: false,
@@ -75,6 +76,7 @@ class FeedBetting extends React.Component {
     const {title, isAction} = result;
     this.setState({
       actionTitle: title,
+      statusTitle: result.status,
       isAction,
       role,
       isMatch,
@@ -97,11 +99,13 @@ class FeedBetting extends React.Component {
   }
 
   renderStatus = () => {
-    const {status = 2 } = this.props;
+    const {statusTitle} = this.state;
     const text = "Match is ongoing...";
-    const textColor = status == 2?'white':'#35B371';
-    const backgroundColorWithStatus = status == 2? 'ffffff25' :'#00000030';
-    return <Button style={{backgroundColor:backgroundColorWithStatus , borderColor:'transparent',color:textColor}}  block disabled >{text}</Button>;
+    //const textColor = status == 2?'white':'#35B371';
+    const textColor = 'white';
+    //const backgroundColorWithStatus = status == 2? 'ffffff25' :'#00000030';
+    const backgroundColorWithStatus = '#ffffff25';
+    return <Button style={{backgroundColor:backgroundColorWithStatus , borderColor:'transparent',color:textColor}}  block disabled >{statusTitle}</Button>;
   }
 
   render() {
