@@ -51,7 +51,7 @@ class DiscoverPage extends React.Component {
     this.searchChange = this.searchChange.bind(this);
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     this.getListOfferPrice();
     // this.intervalCountdown = setInterval(() => {
     //   this.getListOfferPrice();
