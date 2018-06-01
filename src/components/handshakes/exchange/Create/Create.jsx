@@ -476,22 +476,18 @@ class Component extends React.Component {
                     />
                   </div>
                 </div>
-                {
-                  sellPriceType === 'flexible' && (
-                    <div className="d-flex mt-2">
-                      <label className="col-form-label mr-auto" style={{ width: '120px' }}>Customize price (%)</label>
-                      <div className='input-group align-items-center'>
-                        <Field
-                          name="customizePrice"
-                          // className='form-control-custom form-control-custom-ex w-100'
-                          component={fieldNumericInput}
-                          color={mainColor}
-                          validate={validateFee}
-                        />
-                      </div>
-                    </div>
-                  )
-                }
+                <div className="d-flex mt-2">
+                  <label className="col-form-label mr-auto" style={{ width: '120px' }}>Customize price (%)</label>
+                  <div className='input-group align-items-center'>
+                    <Field
+                      name="customizePrice"
+                      // className='form-control-custom form-control-custom-ex w-100'
+                      component={fieldNumericInput}
+                      color={mainColor}
+                      validate={validateFee}
+                    />
+                  </div>
+                </div>
                 <div className="d-flex mt-2">
                   <label className="col-form-label mr-auto" style={{ width: '120px' }}>Phone</label>
                   <div className="input-group w-100">
