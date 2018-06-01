@@ -462,49 +462,47 @@ class Component extends React.Component {
                   )
                 }
               </div>
-              <div>
-                <div className="d-flex mt-2">
-                  {/*<label className="col-form-label mr-auto" style={{ width: '120px' }} />*/}
-                  <div className='input-group justify-content-end'>
-                    <Field
-                      name="sellPriceType"
-                      component={fieldRadioButton}
-                      list={SELL_PRICE_TYPE}
-                      color={mainColor}
-                      validate={[required]}
-                      onChange={this.onSellPriceTypeChange}
-                    />
-                  </div>
+              <div className="d-flex mt-2">
+                {/*<label className="col-form-label mr-auto" style={{ width: '120px' }} />*/}
+                <div className='input-group justify-content-end'>
+                  <Field
+                    name="sellPriceType"
+                    component={fieldRadioButton}
+                    list={SELL_PRICE_TYPE}
+                    color={mainColor}
+                    validate={[required]}
+                    onChange={this.onSellPriceTypeChange}
+                  />
                 </div>
-                <div className="d-flex mt-2">
-                  <label className="col-form-label mr-auto" style={{ width: '120px' }}>Customize price (%)</label>
-                  <div className='input-group align-items-center'>
-                    <Field
-                      name="customizePrice"
-                      // className='form-control-custom form-control-custom-ex w-100'
-                      component={fieldNumericInput}
-                      color={mainColor}
-                      validate={validateFee}
-                    />
-                  </div>
-                </div>
-                <div className="d-flex mt-2">
-                  <label className="col-form-label mr-auto" style={{ width: '120px' }}>Phone</label>
-                  <div className="input-group w-100">
-                    <Field
-                      name="phone"
-                      className="form-control-custom form-control-custom-ex w-100"
-                      component={fieldPhoneInput}
-                      type="tel"
-                      placeholder="+74995926433"
-                      // validate={[required, currency === 'BTC' ? minValue001 : minValue01]}
-                    />
-                  </div>
+              </div>
+              <div className="d-flex mt-2">
+                <label className="col-form-label mr-auto" style={{ width: '120px' }}>Customize price (%)</label>
+                <div className='input-group align-items-center'>
+                  <Field
+                    name="customizePrice"
+                    // className='form-control-custom form-control-custom-ex w-100'
+                    component={fieldNumericInput}
+                    color={mainColor}
+                    validate={validateFee}
+                  />
                 </div>
               </div>
               <div className="d-flex">
                 <label className="col-form-label mr-auto" style={{ width: '120px' }}>Total ({FIAT_CURRENCY_SYMBOL})</label>
                 <span className="w-100 col-form-label">{new BigNumber(totalAmount).toFormat(PRICE_DECIMAL)}</span>
+              </div>
+              <div className="d-flex mt-2">
+                <label className="col-form-label mr-auto" style={{ width: '120px' }}>Phone</label>
+                <div className="input-group w-100">
+                  <Field
+                    name="phone"
+                    className="form-control-custom form-control-custom-ex w-100"
+                    component={fieldPhoneInput}
+                    type="tel"
+                    placeholder="+74995926433"
+                    // validate={[required, currency === 'BTC' ? minValue001 : minValue01]}
+                  />
+                </div>
               </div>
               <div className="d-flex">
                 <label className="col-form-label mr-auto" style={{ width: '120px' }}>Address*</label>
