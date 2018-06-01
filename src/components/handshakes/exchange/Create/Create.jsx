@@ -37,6 +37,7 @@ import {BigNumber} from 'bignumber.js';
 import getSymbolFromCurrency from 'currency-symbol-map';
 import {URL} from '@/config';
 import {showAlert} from '@/reducers/app/action';
+import {MasterWallet} from "@/models/MasterWallet";
 
 const nameFormExchangeCreate = 'exchangeCreate';
 const FormExchangeCreate = createForm({
@@ -62,19 +63,18 @@ class Component extends React.Component {
     this.state = {
       modalContent: '',
       currency: CRYPTO_CURRENCY_DEFAULT,
-
-      listMainWalletBalance: [],
-      listTestWalletBalance: [],
-      listRewardWalletBalance: [],
+      lat: 0,
+      lng: 0
     };
   }
 
   setAddressFromLatLng = (lat, lng) => {
-    const { rfChange } = this.props
+    this.setState({lat: lat, lng: lng});
+    const { rfChange } = this.props;
     axios.get(`http://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&sensor=true`).then((response) => {
-      const address = response.data.results[0] && response.data.results[0].formatted_address
-      rfChange(nameFormExchangeCreate, 'address', address)
-    })
+      const address = response.data.results[0] && response.data.results[0].formatted_address;
+      rfChange(nameFormExchangeCreate, 'address', address);
+    });
   }
 
   async componentDidMount() {
@@ -102,74 +102,6 @@ class Component extends React.Component {
     // });
 
     // this.setState({ ipInfo: ipInfo.data });
-
-    // Get wallet
-    let listWallet = await MasterWallet.getMasterWallet();
-
-    if (listWallet == false) {
-      listWallet = await MasterWallet.createMasterWallet();
-    }
-
-    await this.splitWalletData(listWallet);
-
-    await this.getListBalance();
-  }
-
-  splitWalletData(listWallet){
-
-    let listMainWallet = [];
-    let listTestWallet = [];
-    let listRewardWallet = [];
-
-    listWallet.forEach(wallet => {
-      // is reward wallet:
-      if (wallet.isReward){
-        listRewardWallet.push(wallet);
-      }
-      // is Mainnet
-      else if (wallet.network === MasterWallet.ListCoin[wallet.className].Network.Mainnet){
-        listMainWallet.push(wallet);
-      }
-      else{
-        // is Testnet
-        listTestWallet.push(wallet);
-      }
-    });
-
-    this.setState({listMainWalletBalance: listMainWallet, listTestWalletBalance: listTestWallet, listRewardWalletBalance: listRewardWallet});
-  }
-
-  getAllWallet(){
-    return this.state.listMainWalletBalance.concat(this.state.listTestWalletBalance).concat(this.state.listRewardWalletBalance);
-  }
-
-  async getListBalance() {
-
-    let listWallet = this.getAllWallet();
-
-    const pros = []
-
-    listWallet.forEach(wallet => {
-      pros.push(new Promise((resolve, reject) => {
-        wallet.getBalance().then(balance => {
-          wallet.balance = balance;
-          resolve(wallet);
-        })
-      }));
-    });
-
-    await Promise.all(pros);
-
-    await this.splitWalletData(listWallet);
-
-
-    // var btcTestnet = new Bitcoin(Bitcoin.Network.Testnet);
-    // var balance = await btcTestnet.getBalance("n1MZwXhWs1unyuG6qNbEZRZV4qjzd3ZMyz");
-    // console.log("btcTestnet", balance);
-
-    // var ethRinkeby = new Ethereum (Ethereum.Network.Rinkeby);
-    // balance = await ethRinkeby.getBalance("0xe70adf9aE4d5F68E80A8E2C5EA3B916Dd49C6D87");
-    // console.log("ethRinkeby", balance);
   }
 
   getCryptoPriceByAmount = (amount) => {
@@ -227,34 +159,9 @@ class Component extends React.Component {
     const {ipInfo: {currency: fiat_currency}} = this.props;
     // console.log('valuessss', values);
 
-    let listWallet = [];
-    if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
-      listWallet = this.state.listTestWalletBalance;
-    } else {
-      listWallet = this.state.listMainWalletBalance;
-    }
-
-    // console.log('listWallet', listWallet);
-
-    let address = '';
-    for (let i = 0; i < listWallet.length; i++) {
-      const wallet = listWallet[i];
-
-      if (wallet.name === values.currency) {
-        address = wallet.address;
-        break;
-      }
-    }
-
-    let reward_address = '';
-    for (let i = 0; i < this.state.listRewardWalletBalance.length; i++) {
-      const wallet = this.state.listRewardWalletBalance[i];
-
-      if (wallet.name === values.currency) {
-        reward_address = wallet.address;
-        break;
-      }
-    }
+    const wallet = MasterWallet.getWalletDefault(values.currency);
+    const address = wallet.address;
+    const reward_address = address;
 
     const offer = {
       amount: values.amount,
@@ -265,8 +172,8 @@ class Component extends React.Component {
       contact_info: values.address,
       contact_phone: values.phone,
       fiat_currency: fiat_currency,
-      latitude: 10.786391,
-      longitude: 106.700074
+      latitude: this.state.lat,
+      longitude: this.state.lng
     };
 
     if (values.type === 'buy') {
