@@ -18,7 +18,7 @@ export class Bitcoin extends Wallet{
     }
 
     getShortAddress(){
-      return this.address.replace(this.address.substr(12, 19), '...');
+      return this.address.replace(this.address.substr(5, 23), '...');
     }
 
     setDefaultNetwork(){
@@ -89,7 +89,9 @@ export class Bitcoin extends Wallet{
       if(fee){
 
         data.fee = fee;
-        var utxos = await this.utxosForAmount(Number(amountToSend));
+
+        var utxos = await this.utxosForAmount(Number(amountToSend) + Number(fee));
+        //var utxos = await this.utxosForAmount(Number(amountToSend));
 
         console.log("utxos", utxos);
 
@@ -146,7 +148,7 @@ export class Bitcoin extends Wallet{
     if (utxos && utxos.length > 0 ){
       var result = this.findUtxos(utxos, 0, amount, []);
       if(!result)
-        return reject({"error": "Insufficent Balance"});
+        return "Insufficent Balance";
       return result;
     }
     return false;

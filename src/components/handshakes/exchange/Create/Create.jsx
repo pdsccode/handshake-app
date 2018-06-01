@@ -33,7 +33,7 @@ import {
 import '../styles.scss';
 import ModalDialog from '@/components/core/controls/ModalDialog/ModalDialog';
 import {BigNumber} from 'bignumber.js';
-import {MasterWallet} from '@/models/MasterWallet';
+// import {MasterWallet} from '@/models/MasterWallet';
 import getSymbolFromCurrency from 'currency-symbol-map';
 import {URL} from '@/config';
 import {showAlert} from '@/reducers/app/action';

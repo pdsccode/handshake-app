@@ -1,24 +1,58 @@
 @import './src/styles/style';
 
 .wrapperBettingFeed {
-  display: flex;
-  justify-content: space-between;
+  margin-top: rem-calc(20px);
+  padding: rem-calc(30px 22px 36px 25px);
+  margin-bottom: rem-calc(16px);
+  background-color: black;
+  .description {
+    font-size: rem-calc(28px);
+    color: #FFFFFF;
+    letter-spacing: 0;
+    line-height: rem-calc(36px);
+    .eventInfo, .odds {
+      font-size: rem-calc(20px);
+    }
+    p {
+      margin-bottom: 0;
+    }
+  }
+  
+  .line {
+    opacity: 0.3;
+    border-bottom: 1px solid #FFFFFF;
+  }
+  .bottomWrapper{
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    .odds {
+      color: #FFFFFF;
+      font-size: rem-calc(20px);
+    }
+    img {
+      margin-bottom: rem-calc(11px);
+    }
+    .item {
+      display: flex;
 
-  .item {
-    //flex-grow: 1; /* default 0 */
-    flex-basis: 49.7%;
-    border: none;
-    padding: 0;
+    }
+    .content {
+      font-size: rem-calc(16px);
+      color: #FFFFFF;
+      letter-spacing: 0;
+      align-items: center;
+      justify-content: space-between;
+      span {
+        opacity: 0.8;
+      }
+    }
   }
 
-  .groupBook {
-    //flex-grow: 1;
-    background-color: "black";
-
-  }
-  .shake {
-    //flex-grow: 1;
-    background-color: "yellow";
-
+  .email {
+    margin: 0;
+    color: $white;
+    letter-spacing: 0;
+    text-align: left;
   }
 }

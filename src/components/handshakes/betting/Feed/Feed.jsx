@@ -51,6 +51,7 @@ class FeedBetting extends React.Component {
   }
 
   componentDidMount() {
+    console.log(this.props);
 
   }
 
@@ -58,19 +59,41 @@ class FeedBetting extends React.Component {
 
   }
 
+  get extraData(){
+    const {extraData} = this.props
+    console.log(extraData);
+    try {
+      return JSON.parse(extraData);
+    }catch(e){
+      console.log(e);
+      return {}
+    }
+  }
+
   render() {
 
+    const {event_name, event_predict, event_odds, event_bet,event_date, balance} = this.extraData;
 
     return (
       <div>
         {/* Feed */}
         <Feed className="feed" handshakeId={this.props.id} onClick={this.props.onFeedClick} background="white">
           <div className="wrapperBettingFeed">
-              
+            <div className="description">
+              <p>{event_name}</p>
+              <p className="eventInfo">{event_predict}</p>
+            </div>
+            <div className="bottomWrapper">
+              <p className="odds">1:{event_odds}</p>
+              <div className="item">
+              <Image src={ethereumIcon} alt="ethereum icon" />
+              <p className="content">{event_bet} ETH <span>pool</span></p>
+              </div>
+            </div>
           </div>
         </Feed>
         {/* Shake */}
-        {/*statusAction && <Button block onClick={() => { this.clickActionButton(statusAction); }}>{statusAction}</Button>*/}
+        {<Button block onClick={() => { this.clickActionButton(statusAction); }}>Shake</Button>}
         {/* Modal */}
         {/*<ModalDialog title="Make a bet" onRef={modal => this.modalBetRef = modal}>
           <BettingShake
