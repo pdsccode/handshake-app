@@ -28,4 +28,5 @@ export default {
   completeShakedfferSuccessMessage: 'Complete shaked offer success',
   cancelShakedfferSuccessMessage: 'Cancel shaked offer success',
   withdrawShakedfferSuccessMessage: 'Withdraw shaked offer success',
+  buyUsingCreditCardSuccessMessge: 'Buy using Credit Card success'
 };

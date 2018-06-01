@@ -223,7 +223,7 @@ class FeedExchange extends React.PureComponent {
     this.props.showAlert({
       message: <div className="text-center"><FormattedMessage id="shakeOfferSuccessMessage"/></div>,
       timeOut: 3000,
-      type: 'danger',
+      type: 'success',
       callBack: () => {
         // this.props.history.push(URL.HANDSHAKE_ME);
       }
@@ -252,7 +252,7 @@ class FeedExchange extends React.PureComponent {
     this.props.showAlert({
       message: <div className="text-center"><FormattedMessage id="closeOfferSuccessMessage"/></div>,
       timeOut: 3000,
-      type: 'danger',
+      type: 'success',
       callBack: () => {
         // this.props.history.push(URL.HANDSHAKE_ME);
       }
@@ -282,7 +282,7 @@ class FeedExchange extends React.PureComponent {
     this.props.showAlert({
       message: <div className="text-center"><FormattedMessage id="completeShakedfferSuccessMessage"/></div>,
       timeOut: 3000,
-      type: 'danger',
+      type: 'success',
       callBack: () => {
         // this.props.history.push(URL.HANDSHAKE_ME);
       }
@@ -312,7 +312,7 @@ class FeedExchange extends React.PureComponent {
     this.props.showAlert({
       message: <div className="text-center"><FormattedMessage id="cancelShakedfferSuccessMessage"/></div>,
       timeOut: 3000,
-      type: 'danger',
+      type: 'success',
       callBack: () => {
         // this.props.history.push(URL.HANDSHAKE_ME);
       }
@@ -342,7 +342,7 @@ class FeedExchange extends React.PureComponent {
     this.props.showAlert({
       message: <div className="text-center"><FormattedMessage id="withdrawShakedfferSuccessMessage"/></div>,
       timeOut: 3000,
-      type: 'danger',
+      type: 'success',
       callBack: () => {
         // this.props.history.push(URL.HANDSHAKE_ME);
       }
