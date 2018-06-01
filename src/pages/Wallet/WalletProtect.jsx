@@ -23,17 +23,19 @@ class WalletProtect extends React.Component {
     super(props);
     this.state = {
       step1_confirm: false,
-      step: 1,
+      step: props.step,
       arr_random: [],
       arr_confirm: []
     };
+
+    console.log("constructor", this.state.step);
   }
 
 	async componentDidMount() {
     //reset state
 
-    const { description} = this.props;
-    this.setState({step1_confirm: false, step: 1, arr_confirm: []});
+    //this.setState({step1_confirm: false, step: 1, arr_confirm: []});
+    console.log(this.state.step);
 	}
   
   get showStep1() {
@@ -200,8 +202,14 @@ class WalletProtect extends React.Component {
     }
   }
 
+  openWalletProtect(){
+    alert('me');
+  }
+
 	render(){ 
-    
+    const { step} = this.props;
+    //this.setState({step: step});
+    console.log('step change', step)
 		return (
       <div>
         {this.showStep1}
@@ -219,7 +227,8 @@ class WalletProtect extends React.Component {
 }
 
 WalletProtect.propTypes = {    
-	wallet: PropTypes.object
+  wallet: PropTypes.object,
+  step: PropTypes.object
 };
 
 const mapState = (state) => ({

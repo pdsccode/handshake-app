@@ -79,7 +79,8 @@ class Wallet extends React.Component {
       walletKeyDefaultToCreate: 1,
       input12PhraseValue: '',
       walletsData: false,
-      isNewCCOpen: false
+      isNewCCOpen: false,
+      step: 1
     };
     this.props.setHeaderRight(this.headerRight());
   }
@@ -203,12 +204,13 @@ class Wallet extends React.Component {
         }
       })
 
-      if(!wallet.protected){
+      if(1==1 || !wallet.protected){
         obj.push({
           title: 'Protected this wallet',
           handler: () => {
             this.setState({walletSelected: wallet});
             this.toggleBottomSheet();
+            this.setState({step: 1});
             this.modalProtectRef.open();
           }
         })
@@ -462,7 +464,7 @@ class Wallet extends React.Component {
   successWalletProtect = (wallet) =>{
 
     let lstWalletTemp = this.getAllWallet();
-    lstWalletTemp.forEach(wal => {if (wallet.mnemonic == wal.mnemonic){wal.protected = true;}})          
+    lstWalletTemp.forEach(wal => {if (wallet.mnemonic == wal.mnemonic){wal.protected = false;}})          
     // Update wallet master from local store:
     MasterWallet.UpdateLocalStore(lstWalletTemp);
     this.modalProtectRef.close();
@@ -512,7 +514,7 @@ class Wallet extends React.Component {
         </Modal>
 
         <Modal title="Protect your wallet" onRef={modal => this.modalProtectRef = modal}> 
-          <WalletProtect wallet={this.state.walletSelected} callbackSuccess={() => {this.successWalletProtect(this.state.walletSelected)}} />
+          <WalletProtect wallet={this.state.walletSelected} step={this.state.step} callbackSuccess={() => {this.successWalletProtect(this.state.walletSelected)}} />
         </Modal>
 
         {/* Modal for Backup wallets : */}
