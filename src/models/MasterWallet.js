@@ -17,7 +17,7 @@ export class MasterWallet{
     static KEY = "wallets";
 
     // Create an autonomous wallet:
-    static createMasterWallet(){      
+    static createMasterWallets(){      
         
         var t0 = performance.now();
 
