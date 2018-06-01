@@ -59,7 +59,7 @@ class BetingShake extends React.Component {
     this.onCancel = ::this.onCancel;
     this.renderInputField = ::this.renderInputField;
     this.renderForm = ::this.renderForm;
-    this.onToggleChange = ::this.onToggleChange;
+    this.onToggleChan::this.onToggleChange;
   }
 
   onSubmit(values) {

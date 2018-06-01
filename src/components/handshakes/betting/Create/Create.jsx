@@ -21,6 +21,7 @@ import DatePicker from '@/components/handshakes/betting/Create/DatePicker';
 import { InputField } from '../form/customField';
 import {MasterWallet} from '@/models/MasterWallet';
 import Dropdown from '@/components/core/controls/Dropdown';
+import Toggle from '@/components/handshakes/betting/Feed/Toggle';
 
 import { BettingHandshake } from '@/services/neuron';
 // self
@@ -414,6 +415,7 @@ get matchResults(){
               }
               }
           />
+
           {selectedMatch && <Dropdown
             placeholder="Select a prediction"
             source={this.matchResults}
@@ -429,6 +431,8 @@ get matchResults(){
         <div className="formInput">
           {inputList.map((field, index) => this.renderItem(field, index))}
         </div>
+        <Toggle ref={(component) => {this.toggleRef = component}} onChange={this.onToggleChange} />
+
 
         <Button type="submit" block>Sign & Send</Button>
       </BettingCreateForm>
@@ -446,6 +450,7 @@ get matchResults(){
   //Service
   initHandshake(fields, fromAddress){
     const {selectedOutcome} = this.state;
+    const side = this.toggleRef.value;
     const params = {
       //to_address: toAddress ? toAddress.trim() : '',
       //public: isPublic,
@@ -460,16 +465,16 @@ get matchResults(){
       amount: fields['event_bet'],
       extra_data: JSON.stringify(fields),
       currency: 'ETH',
-      side: SIDE.SUPPORT,
+      side: side,
       from_address: fromAddress,
       chain_id: chainId,
     };
-    console.log(params);
+    console.log("Params:", params);
 
-    this.props.initHandshake({PATH_URL: API_URL.CRYPTOSIGN.INIT_HANDSHAKE, METHOD:'POST', data: params,
-    successFn: this.initHandshakeSuccess,
-    errorFn: this.handleGetCryptoPriceFailed
-  });
+  //   this.props.initHandshake({PATH_URL: API_URL.CRYPTOSIGN.INIT_HANDSHAKE, METHOD:'POST', data: params,
+  //   successFn: this.initHandshakeSuccess,
+  //   errorFn: this.handleGetCryptoPriceFailed
+  // });
 
   }
    initHandshakeSuccess = async (successData)=>{
