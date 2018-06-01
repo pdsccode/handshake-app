@@ -3,17 +3,16 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 // action, mock
 import { loadMyHandshakeList } from '@/reducers/me/action';
-import { API_URL, HANDSHAKE_STATUS_NAME } from '@/constants';
+import { API_URL, HANDSHAKE_STATUS_NAME, HANDSHAKE_ID } from '@/constants';
 // componentimport
 import { Grid, Row, Col } from 'react-bootstrap';
-import Feed from '@/components/core/presentation/Feed';
 import NoData from '@/components/core/presentation/NoData';
-import './Me.scss';
-import {HANDSHAKE_ID} from "../../constants";
 import FeedPromise from '@/components/handshakes/promise/Feed';
 import FeedBetting from '@/components/handshakes/betting/Feed';
 import FeedExchange from '@/components/handshakes/exchange/Feed/FeedExchange';
 import FeedSeed from '@/components/handshakes/seed/Feed';
+// style
+import './Me.scss';
 
 
 const maps = {
@@ -41,25 +40,14 @@ class Me extends React.Component {
                   const FeedComponent = maps[handshake.type];
                   if (FeedComponent) {
                     return (
-                      <Col key={handshake.id} md={12} className="feed-wrapper">
-                        <FeedComponent {...handshake} {...this.props} onFeedClick={() => this.clickFeedDetail(handshake.id)} mode={'me'}/>
+                      <Col key={handshake.id} className="feed-wrapper">
+                        <FeedComponent {...handshake} history={this.props.history} onFeedClick={() => this.clickFeedDetail(handshake.id)} mode={'me'}/>
                       </Col>
                     );
                   }
-                //   return (
-                //   <div className="my-feed-wrapper" key={handshake.id} onClick={() => alert('show detail')}>
-                //     <div className="head">
-                //       <div className="from"><span className="email">From:</span>&nbsp;{handshake.fromEmail}</div>
-                //       <div className="status">{HANDSHAKE_STATUS_NAME[handshake.status || -1]}</div>
-                //     </div>
-                //     <Feed className="my-feed">
-                //       <p className="description">{handshake.description}</p>
-                //     </Feed>
-                //   </div>
-                // )
                 })
               ) : (
-                <NoData message="NO DATA AVAILABLE" />
+                <NoData />
               )
             }
           </Col>

@@ -15,6 +15,10 @@ const authReducter = (state = {
     case `${ACTIONS.AUTH_FETCH}_SUCCESS`:
       local.save(APP.AUTH_PROFILE, action.payload.data);
       return { ...state, profile: action.payload.data, isLogged: true };
+
+    case `${ACTIONS.AUTH_UPDATE}_SUCCESS`:
+      local.save(APP.AUTH_PROFILE, action.payload.data);
+      return { ...state, profile: action.payload.data, isLogged: true };
     default:
       return state;
   }
