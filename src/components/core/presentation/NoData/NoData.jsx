@@ -5,9 +5,9 @@ import './NoData.scss';
 
 class NoData extends React.PureComponent {
   render() {
-    const { className, message } = this.props;
+    const { className, message, ...props } = this.props;
     return (
-      <div className={`no-data ${className || ''}`}>
+      <div className={`no-data ${className || ''}`} {...props}>
         {
           message && (<p className="text">{message}</p>)
         }

@@ -461,7 +461,7 @@ get matchResults(){
       currency: 'ETH',
       side: SIDE.SUPPORT,
       //from_address: fromAddress,
-      //chain_id: chainId,
+      chain_id: chainId,
     };
     console.log(params);
 
