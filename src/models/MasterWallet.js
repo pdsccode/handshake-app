@@ -82,22 +82,22 @@ export class MasterWallet{
     }
 
     // for create new wallets:
-    static createNewsallets(listCoinTemp, mnemonic){
-        console.log('mnemonic', mnemonic);
+    static createNewsallets(listCoinTemp, mnemonic){        
         if (mnemonic == ''){            
             mnemonic = bip39.generateMnemonic(); //generates string        
         }
         else{            
-            if(!bip39.validateMnemonic(mnemonic)){
-                console.log('validateMnemonic mnemonic', false);
+            if(!bip39.validateMnemonic(mnemonic)){                
                 return false;
             }
         }
         let masterWallet = MasterWallet.getMasterWallet();
         listCoinTemp.forEach(wallet => { 
-            if (wallet.default){
+            if (wallet.default){                
                 wallet.default = false;
-                wallet.mnemonic = mnemonic;              
+                wallet.mnemonic = mnemonic;                    
+                wallet.title = wallet.constructor.name;          
+                
                 //create address, private-key ...
                 wallet.createAddressPrivatekey();
                 masterWallet.push(wallet); 
