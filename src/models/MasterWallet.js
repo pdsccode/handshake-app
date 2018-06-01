@@ -17,7 +17,7 @@ export class MasterWallet{
     static KEY = "wallets";
 
     // Create an autonomous wallet:
-    static createMasterWallet(){
+    static createMasterWallets(){
 
         var t0 = performance.now();
 
@@ -190,6 +190,7 @@ export class MasterWallet{
 
     }
 
+  // Get list reward wallet from store local:
   static getRewardWalletDefault(coinName=''){
 
     let wallets = localStore.get(MasterWallet.KEY);
