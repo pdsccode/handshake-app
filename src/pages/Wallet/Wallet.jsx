@@ -123,7 +123,7 @@ class Wallet extends React.Component {
     // console.log("default", MasterWallet.getWalletDefault("ETH"))
 
     if (listWallet == false){
-        listWallet = await MasterWallet.createMasterWallet();
+        listWallet = await MasterWallet.createMasterWallets();
         // fill data:
         await this.splitWalletData(listWallet)
     }
