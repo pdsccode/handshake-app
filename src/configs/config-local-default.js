@@ -8,6 +8,7 @@ const config = {
       payableHandshakeAddress: '',
       groupHandshakeAddress: '',
       predictionHandshakeAddress: '0x8b4d252a89ae56af24fd9557e803e81b42b66929',
+      exchangeHandshakeAddress: '0x0cf1cf0bc5bb46aacf4e57068a8743fe24f49601',
       blockchainNetwork: 'https://mainnet.infura.io/',
     },
     4: {
@@ -18,12 +19,13 @@ const config = {
       payableHandshakeAddress: '',
       groupHandshakeAddress: '',
       predictionHandshakeAddress: '0x8b4d252a89ae56af24fd9557e803e81b42b66929',
+      exchangeHandshakeAddress: '0x0cf1cf0bc5bb46aacf4e57068a8743fe24f49601',
       cryptosignOwnerAddress: '',
       cryptosignOwnerPrivateKey: '',
       blockchainNetwork: 'https://rinkeby.infura.io/',
     },
   },
-  
+
   firebase: {
     /*
     apiKey: '',

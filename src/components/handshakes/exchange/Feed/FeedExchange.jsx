@@ -37,6 +37,7 @@ import {HANDSHAKE_EXCHANGE_STATUS_NAME} from "@/constants";
 import {Link} from "react-router-dom";
 import { URL } from '@/config';
 import { getDistanceFromLatLonInKm } from '../utils'
+import { ExchangeHandshake } from '@/services/neuron';
 
 class FeedExchange extends React.PureComponent {
   constructor(props) {
@@ -221,6 +222,8 @@ class FeedExchange extends React.PureComponent {
 
   handleShakeOfferSuccess = (data) => {
     // console.log('handleShakeOfferSuccess', data);
+    this.handleCallActionOnContract(data.data);
+
     this.props.showAlert({
       message: <div className="text-center"><FormattedMessage id="shakeOfferSuccessMessage"/></div>,
       timeOut: 3000,
@@ -250,6 +253,9 @@ class FeedExchange extends React.PureComponent {
 
   handleCloseOfferSuccess = (data) => {
     // console.log('data', data);
+
+    this.handleCallActionOnContract(data.data);
+
     this.props.showAlert({
       message: <div className="text-center"><FormattedMessage id="closeOfferSuccessMessage"/></div>,
       timeOut: 3000,
@@ -279,6 +285,16 @@ class FeedExchange extends React.PureComponent {
   }
 
   handleCompleteShakedOfferSuccess = (data) => {
+    const currency = data.currency;
+
+    const wallet = MasterWallet.getWalletDefault(currency);
+
+    const exchangeHandshake = new ExchangeHandshake(wallet.chainId);
+
+    let result = exchangeHandshake.accept(data.data.hid, data.data.id);
+
+    console.log('handleCompleteShakedOfferSuccess', result);
+
     // console.log('data', data);
     this.props.showAlert({
       message: <div className="text-center"><FormattedMessage id="completeShakedfferSuccessMessage"/></div>,
@@ -310,6 +326,24 @@ class FeedExchange extends React.PureComponent {
 
   handleCancelShakedOfferSuccess = (data) => {
     // console.log('data', data);
+    const {userType} = this.state;
+
+    const currency = data.currency;
+
+    const wallet = MasterWallet.getWalletDefault(currency);
+
+    const exchangeHandshake = new ExchangeHandshake(wallet.chainId);
+
+    let result = null;
+
+    if (data.type === 'buy' && userType === HANDSHAKE_USER.OWNER) {
+      result = exchangeHandshake.reject(data.data.hid, data.data.id);
+    } else {
+      result = exchangeHandshake.cancel(data.data.hid, data.data.id);
+    }
+
+    console.log('handleCancelShakedOfferSuccess', result);
+
     this.props.showAlert({
       message: <div className="text-center"><FormattedMessage id="cancelShakedfferSuccessMessage"/></div>,
       timeOut: 3000,
@@ -340,6 +374,9 @@ class FeedExchange extends React.PureComponent {
 
   handleWithdrawShakedOfferSuccess = (data) => {
     // console.log('data', data);
+
+    this.handleCallActionOnContract(data.data);
+
     this.props.showAlert({
       message: <div className="text-center"><FormattedMessage id="withdrawShakedfferSuccessMessage"/></div>,
       timeOut: 3000,
@@ -352,6 +389,172 @@ class FeedExchange extends React.PureComponent {
 
   handleWithdrawShakedOfferFailed = (e) => {
     this.handleActionFailed(e);
+  }
+
+  ////////////////////////
+  handleCallActionOnContract(data) {
+    const {status} = this.props;
+    const {offer, userType} = this.state;
+
+    const currency = data.currency;
+
+    const wallet = MasterWallet.getWalletDefault(currency);
+
+    const exchangeHandshake = new ExchangeHandshake(wallet.chainId);
+
+    switch (userType) {
+      case HANDSHAKE_USER.NORMAL: {
+        switch (status) {
+          // case HANDSHAKE_EXCHANGE_STATUS.CREATED: {
+          //   title = 'Shake Now';
+          //   break;
+          // }
+          case HANDSHAKE_EXCHANGE_STATUS.ACTIVE: {
+            const result = exchangeHandshake.shake(data.hid, data.id);
+
+            console.log('handleShakeOfferSuccess', result);
+
+            break;
+          }
+          // case HANDSHAKE_EXCHANGE_STATUS.CLOSED: {
+          //   title = 'Shake Now';
+          //   break;
+          // }
+          // case HANDSHAKE_EXCHANGE_STATUS.SHAKING: {
+          //   title = 'Shake Now';
+          //   break;
+          // }
+          // case HANDSHAKE_EXCHANGE_STATUS.SHAKE: {
+          //   title = 'Shake Now';
+          //   break;
+          // }
+          // case HANDSHAKE_EXCHANGE_STATUS.COMPLETED: {
+          //   title = 'Shake Now';
+          //   break;
+          // }
+          // case HANDSHAKE_EXCHANGE_STATUS.WITHDRAW: {
+          //   title = 'Shake Now';
+          //   break;
+          // }
+        }
+        break;
+      }
+      case HANDSHAKE_USER.SHAKED: {
+        switch (status) {
+          // case HANDSHAKE_EXCHANGE_STATUS.CREATED: {
+          //   break;
+          // }
+          // case HANDSHAKE_EXCHANGE_STATUS.ACTIVE: {
+          //   break;
+          // }
+          // case HANDSHAKE_EXCHANGE_STATUS.CLOSED: {
+          //   break;
+          // }
+          case HANDSHAKE_EXCHANGE_STATUS.SHAKING: {
+            break;
+          }
+          case HANDSHAKE_EXCHANGE_STATUS.SHAKE: {
+            // actionButtons = 'Reject'; // complete: nguoi nhan cash
+            message = intl.formatMessage({id: 'rejectOfferConfirm'}, {});
+            let message2 = intl.formatMessage({id: 'completeOfferConfirm'}, {});
+            actionButtons = (
+              <div>
+                <Button block className="mt-2" onClick={() => this.confirmShakeOffer(message, this.handleCancelShakedOffer)}>Reject</Button>
+                {offer.type === 'buy' &&
+                <Button block className="mt-2" onClick={() => this.confirmShakeOffer(message2, this.handleCompleteShakedOffer)}>Complete</Button>
+                }
+              </div>
+            );
+
+            break;
+          }
+          // case HANDSHAKE_EXCHANGE_STATUS.COMPLETING: {
+          //   title = 'Shake Now';
+          //   break;
+          // }
+          case HANDSHAKE_EXCHANGE_STATUS.COMPLETED: {
+            // actionButtons = 'Withdraw';
+            // nguoi co crypto se withdraw
+            if (offer.type === 'sell') {
+              const result = exchangeHandshake.withdraw(data.hid, data.id);
+
+              console.log('handleWithdrawShakedOfferSuccess', result);
+            }
+            break;
+          }
+          case HANDSHAKE_EXCHANGE_STATUS.WITHDRAW: {
+            // title = 'Withdraw';
+            // Ko lam dc gi
+            break;
+          }
+        }
+        break;
+      }
+      case HANDSHAKE_USER.OWNER: {
+        switch (status) {
+          case HANDSHAKE_EXCHANGE_STATUS.CREATED: {
+            // actionButtons = 'Cancel';
+            //call action cancel
+            const result = exchangeHandshake.close(data.hid, data.id);
+
+            console.log('handleCloseOfferSuccess', result);
+            break;
+          }
+          case HANDSHAKE_EXCHANGE_STATUS.ACTIVE: {
+            // actionButtons = 'Cancel';
+            //call action cancel
+            const result = exchangeHandshake.close(data.hid, data.id);
+
+            console.log('handleCloseOfferSuccess', result);
+            break;
+          }
+          case HANDSHAKE_EXCHANGE_STATUS.CLOSED: {
+            // title = 'Shake Now';
+            //Ko lam gi dc
+            break;
+          }
+          case HANDSHAKE_EXCHANGE_STATUS.SHAKING: {
+            // title = 'Shake Now';
+            //Ko lam gi dc
+            break;
+          }
+          case HANDSHAKE_EXCHANGE_STATUS.SHAKE: {
+            // actionButtons = 'Reject'; // complete: nguoi nhan cash
+            message = intl.formatMessage({id: 'rejectOfferConfirm'}, {});
+            let message2 = intl.formatMessage({id: 'completeOfferConfirm'}, {});
+            actionButtons = (
+              <div>
+                <Button block className="mt-2" onClick={() => this.confirmShakeOffer(message, this.handleCancelShakedOffer)}>Reject</Button>
+                {offer.type === 'sell' &&
+                <Button block className="mt-2" onClick={() => this.confirmShakeOffer(message2, this.handleCompleteShakedOffer)}>Complete</Button>
+                }
+              </div>
+            );
+            break;
+          }
+          // case HANDSHAKE_EXCHANGE_STATUS.COMPLETING: {
+          //   title = 'Shake Now';
+          //   break;
+          // }
+          case HANDSHAKE_EXCHANGE_STATUS.COMPLETED: {
+            // actionButtons = 'Withdraw';
+            // neu la nguoi buy coin thi dc withdraw
+            if (offer.type === 'buy') {
+              const result = exchangeHandshake.withdraw(data.hid, data.id);
+
+              console.log('handleWithdrawShakedOfferSuccess', result);
+            }
+            break;
+          }
+          case HANDSHAKE_EXCHANGE_STATUS.WITHDRAW: {
+            // title = 'Withdraw';
+            // Ko lam dc gi
+            break;
+          }
+        }
+        break;
+      }
+    }
   }
 
   ////////////////////////
