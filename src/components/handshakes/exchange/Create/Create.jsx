@@ -33,7 +33,7 @@ import {
 import '../styles.scss';
 import ModalDialog from '@/components/core/controls/ModalDialog/ModalDialog';
 import {BigNumber} from 'bignumber.js';
-import {MasterWallet} from '@/models/MasterWallet';
+// import {MasterWallet} from '@/models/MasterWallet';
 import getSymbolFromCurrency from 'currency-symbol-map';
 import {URL} from '@/config';
 import {showAlert} from '@/reducers/app/action';
@@ -69,15 +69,25 @@ class Component extends React.Component {
     };
   }
 
-  async componentDidMount() {
+  setAddressFromLatLng = (lat, lng) => {
     const { rfChange } = this.props
+    axios.get(`http://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&sensor=true`).then((response) => {
+      const address = response.data.results[0] && response.data.results[0].formatted_address
+      rfChange(nameFormExchangeCreate, 'address', address)
+    })
+  }
+
+  async componentDidMount() {
+    const { ipInfo, rfChange } = this.props
     navigator.geolocation.getCurrentPosition((location) => {
       const { coords: { latitude, longitude } } = location
-      axios.get(`http://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&sensor=false`).then((response) => {
-        const address = response.data.results[0] && response.data.results[0].formatted_address
-        rfChange(nameFormExchangeCreate, 'address', address)
-      })
+      this.setAddressFromLatLng(latitude, longitude) // better precision
+    }, () => {
+      this.setAddressFromLatLng(ipInfo.latitude, ipInfo.longitude) // fallback
     });
+
+    // auto fill phone number from user profile
+    rfChange(nameFormExchangeCreate, 'phone', '7-129231234')
 
     // this.getCryptoPriceByAmount(0);
     this.intervalCountdown = setInterval(() => {
