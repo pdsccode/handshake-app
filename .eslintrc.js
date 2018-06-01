@@ -18,6 +18,7 @@ module.exports = {
     ],
     "class-methods-use-this": "off",
     "object-curly-spacing": ["error", "always"],
+    "no-param-reassign": ["error", { "props": true, "ignorePropertyModificationsFor": ["registration"] }],
     "react/jsx-uses-vars": [2],
     "react/sort-comp": [2],
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
