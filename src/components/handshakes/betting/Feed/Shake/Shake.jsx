@@ -52,7 +52,7 @@ class BetingShake extends React.Component {
     this.state = {
       amount: defaultAmount,
       total: defaultAmount * odd,
-      buttonClass: 'btnOK btnRed',
+      buttonClass: 'btnOK btnBlue',
     };
 
     this.onSubmit = ::this.onSubmit;
@@ -77,7 +77,7 @@ class BetingShake extends React.Component {
   }
 
   onToggleChange(id) {
-    this.setState({buttonClass: `btnOK ${id === 2 ? 'btnBlue' : 'btnRed' }`});
+    this.setState({buttonClass: `btnOK ${id === 1 ? 'btnBlue' : 'btnRed' }`});
   }
 
   updateTotal(value) {
