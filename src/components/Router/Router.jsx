@@ -9,7 +9,7 @@ import { URL } from '@/config';
 import { APP } from '@/constants';
 
 import local from '@/services/localStore';
-import { signUp, fetchProfile } from '@/reducers/auth/action';
+import { signUp, fetchProfile, authUpdate } from '@/reducers/auth/action';
 
 import ScrollToTop from '@/components/App/ScrollToTop';
 import Layout from '@/components/Layout/Main';
@@ -102,6 +102,7 @@ class Router extends React.Component {
     signUp: PropTypes.func.isRequired,
     fetchProfile: PropTypes.func.isRequired,
     auth: PropTypes.object.isRequired,
+    authUpdate: PropTypes.object.isRequired,
   };
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -112,10 +113,8 @@ class Router extends React.Component {
   }
 
   createMasterWallet(){
-    if (MasterWallet.getMasterWallet() == false){
-      let listWallet = MasterWallet.createMasterWallet();
-      this.props.updateUser({ PATH_URL: 'user/profile' });
-    }
+    if (MasterWallet.getMasterWallet() == false)
+      return MasterWallet.createMasterWallet();
   }
 
   componentDidUpdate(prevProps,prevState){
@@ -148,14 +147,14 @@ class Router extends React.Component {
           // this.props.firebase.set(FIREBASE_PATH.USERS, String(profile.id));
 
           this.props.fetchProfile({ PATH_URL: 'user/profile' });
-          this.props.getUserProfile({ BASE_URL: API_URL.EXCHANGE.BASE, PATH_URL: API_URL.EXCHANGE.GET_USER_PROFILE });
-          this.createMasterWallet();
+          this.props.getUserProfile({ BASE_URL: API_URL.EXCHANGE.BASE, PATH_URL: API_URL.EXCHANGE.GET_USER_PROFILE});
+          //this.props.authUpdate({ PATH_URL: 'user/profile', "data": {"reward_wallet_addresses": MasterWallet.getRewardWallet(MasterWallet.createMasterWallet())} });
         },
       });
     } else {
       this.props.fetchProfile({ PATH_URL: 'user/profile' });
-      this.props.getUserProfile({ BASE_URL: API_URL.EXCHANGE.BASE, PATH_URL: API_URL.EXCHANGE.GET_USER_PROFILE });
-      this.createMasterWallet();
+      this.props.getUserProfile({ BASE_URL: API_URL.EXCHANGE.BASE, PATH_URL: API_URL.EXCHANGE.GET_USER_PROFILE});
+      // this.props.authUpdate({ PATH_URL: 'user/profile', METHOD: 'POST', "data": {"reward_wallet_addresses": MasterWallet.getRewardWallet(MasterWallet.createMasterWallet())} });
     }
 
     const ip_info = local.get(APP.IP_INFO);
@@ -256,6 +255,7 @@ export default compose(
     signUp,
     fetchProfile,
     setIpInfo,
-    getUserProfile
+    getUserProfile,
+    authUpdate,
   }),
 )(Router);
