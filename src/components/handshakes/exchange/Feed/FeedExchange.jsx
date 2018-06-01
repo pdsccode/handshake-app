@@ -339,7 +339,7 @@ class FeedExchange extends React.PureComponent {
     if (data.type === 'buy' && userType === HANDSHAKE_USER.OWNER) {
       result = exchangeHandshake.reject(data.data.hid, data.data.id);
     } else {
-      result = exchangeHandshake.cancel(data.data.hid, data.data.id);
+      result = exchangeHandshake.cancel(data.hid, data.data.id);
     }
 
     console.log('handleCancelShakedOfferSuccess', result);
@@ -905,8 +905,8 @@ class FeedExchange extends React.PureComponent {
               </div>
             )}
           </div>
-          <span>status: {status}</span><br></br>
-          <span>userType: {userType}</span><br></br>
+          {/*<span>status: {status}</span><br></br>*/}
+          {/*<span>userType: {userType}</span><br></br>*/}
           {
             mode === 'discover' ? (
               <div className="media mb-1">
