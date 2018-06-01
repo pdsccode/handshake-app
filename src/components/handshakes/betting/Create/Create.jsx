@@ -446,6 +446,13 @@ get matchResults(){
       </div>
     );
   }
+  isShakedBet(item){
+    const {shakers} = item;
+    if(shakers){
+      return shakers.length > 0 ? true : false;
+    }
+    return false;
+  }
 
   //Service
   initHandshake(fields, fromAddress){
@@ -471,10 +478,10 @@ get matchResults(){
     };
     console.log("Params:", params);
 
-  //   this.props.initHandshake({PATH_URL: API_URL.CRYPTOSIGN.INIT_HANDSHAKE, METHOD:'POST', data: params,
-  //   successFn: this.initHandshakeSuccess,
-  //   errorFn: this.handleGetCryptoPriceFailed
-  // });
+    this.props.initHandshake({PATH_URL: API_URL.CRYPTOSIGN.INIT_HANDSHAKE, METHOD:'POST', data: params,
+    successFn: this.initHandshakeSuccess,
+    errorFn: this.handleGetCryptoPriceFailed
+  });
 
   }
    initHandshakeSuccess = async (successData)=>{
@@ -490,10 +497,16 @@ get matchResults(){
 
     if(status){
       const {offchain} = data;
-      const result = await bettinghandshake.initBet(hid, side,stake, payout, offchain);
-      if(result){
-          //history.go(URL.HANDSHAKE_DISCOVER);
+      var result = null;
+      if(this.isShakedBet(data)){
+        result = await bettinghandshake.shake(hid, side,stake, payout,maker, offchain);
+      }else {
+        result = await bettinghandshake.initBet(hid, side,stake, payout, offchain);
       }
+      if(result){
+        //TO DO: redirect and show alert
+      }
+      
     }
     
 

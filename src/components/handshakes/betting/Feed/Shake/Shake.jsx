@@ -48,10 +48,10 @@ class BetingShake extends React.Component {
 
   constructor(props) {
     super(props);
-    const {odd} = props;
     this.state = {
       amount: defaultAmount,
-      total: defaultAmount * odd,
+      odds: 1,
+      total: defaultAmount,
       buttonClass: 'btnOK btnBlue',
     };
 
@@ -64,7 +64,7 @@ class BetingShake extends React.Component {
 
   onSubmit(values) {
     console.log("Submit");
-    const {amount} = this.state;
+    const {amount, odds} = this.state;
     console.log("this.toggle", this.toggleRef.value);
     // this.props.onSubmitClick(amount);
     const side = this.toggleRef.value;
@@ -177,11 +177,19 @@ class BetingShake extends React.Component {
       className: 'amount',
       placeholder: '0.00',
     };
+    const oddsField = {
+      id: 'odds',
+      name: 'you',
+      label: 'Odds',
+      className: 'amount',
+      placeholder: '0-0',
+    };
 
     return (
       <BettingShakeForm className="wrapperBettingShake" onSubmit={this.onSubmit}>
         <p className="titleForm text-center text-capitalize">PLACE A BET</p>
         {this.renderInputField(amountField)}
+        {this.renderInputField(oddsField)}
         <Toggle ref={(component) => {this.toggleRef = component}} onChange={this.onToggleChange} />
 
         <Button type="submit" block className={buttonClass}>
