@@ -288,7 +288,7 @@ class FeedCreditCard extends React.Component {
     let newTo = 0
 
     return (
-      <div>
+      <div className="mb-2">
         <div>
           <FormCreditCard onSubmit={this.handleSubmit} validate={this.handleValidate}>
             <Feed className="feed p-2 mb-2" background={mainColor}>
