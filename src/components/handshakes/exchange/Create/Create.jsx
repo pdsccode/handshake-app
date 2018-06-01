@@ -63,6 +63,7 @@ class Component extends React.Component {
     this.state = {
       modalContent: '',
       currency: CRYPTO_CURRENCY_DEFAULT,
+      type: 'buy',
       lat: 0,
       lng: 0
     };
@@ -93,7 +94,7 @@ class Component extends React.Component {
     this.intervalCountdown = setInterval(() => {
       const { amount } = this.props;
       this.getCryptoPriceByAmount(amount);
-    }, 30000);
+    }, 5 * 60000);
 
     // const ipInfo = await axios.get(`https://ipfind.co/me`, {
     //   params: {
@@ -132,9 +133,12 @@ class Component extends React.Component {
     // });
   }
 
-  onPriceChange = (e) => {
-    const price = e.target.value;
-    console.log('onPriceChange', price);
+  onTypeChange = (e, newValue) => {
+    const { amount } = this.props;
+
+    this.setState({ type: newValue }, () => {
+      this.getCryptoPriceByAmount(amount);
+    });
   }
 
   onSellPriceTypeChange = (e, newValue) => {
@@ -323,6 +327,7 @@ class Component extends React.Component {
                     list={EXCHANGE_ACTION}
                     color={mainColor}
                     validate={[required]}
+                    onChange={this.onTypeChange}
                   />
                 </div>
               </div>
@@ -353,21 +358,7 @@ class Component extends React.Component {
               </div>
               <div className="d-flex">
                 <label className="col-form-label mr-auto" style={{ width: '120px' }}>Price ({FIAT_CURRENCY_SYMBOL})*</label>
-                {
-                  sellPriceType === 'fix' ? (
-                    <div className="w-100">
-                      <Field
-                        name="price"
-                        className="form-control-custom form-control-custom-ex w-100"
-                        component={fieldInput}
-                        onChange={this.onPriceChange}
-                        validate={[required]}
-                      />
-                    </div>
-                  ) : (
-                    <span className="w-100 col-form-label">{(offerPrice && offerPrice.price) || 0}</span>
-                  )
-                }
+                <span className="w-100 col-form-label">{new BigNumber(offerPrice ? offerPrice.price : 0).toFormat(PRICE_DECIMAL)}</span>
               </div>
               <div className="d-flex mt-2">
                 {/*<label className="col-form-label mr-auto" style={{ width: '120px' }} />*/}
