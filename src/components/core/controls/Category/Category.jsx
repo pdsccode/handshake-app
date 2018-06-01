@@ -11,6 +11,9 @@ import CATEGORIES from './categories.js';
 class Category extends React.PureComponent {
   constructor(props) {
     super(props);
+    this.state = {
+      idActive: -1,
+    };
     // bind
     this.categoryClick.bind(this);
   }
@@ -20,14 +23,18 @@ class Category extends React.PureComponent {
     speed: 500,
     slidesToShow: 4,
     slidesToScroll: 3,
-    arrows: false
+    arrows: false,
   };
 
   get categoriesHtml() {
     const { categories } = this.props;
+    const { idActive } = this.state;
     const categoriesList = (categories && categories.length > 0) ? categories : CATEGORIES;
     return categoriesList.map((category, index) => (
-      <div className="category-item" key={index + 1} onClick={() => this.categoryClick(category)}>
+      <div 
+        key={index + 1}
+        className={`category-item ${category.id === idActive ? 'active': ''}`}
+        onClick={() => this.categoryClick(category)}>
         <Image src={category.image} alt={category.name} />
         <span>{category.name}</span>
       </div>
@@ -35,6 +42,9 @@ class Category extends React.PureComponent {
   }
 
   categoryClick(category) {
+    this.setState({
+      idActive: category.id
+    });
     this.props.hasOwnProperty('onItemClick') && this.props.onItemClick(category);
   }
 
