@@ -490,11 +490,11 @@ get matchResults(){
     const {status, data} = successData
     const {values, selectedOutcome} = this.state;
     const stake = values['event_bet'];
-    const event_odds = 1/parseInt(values['event_odds']);
+    const event_odds = values['event_odds'];
     const payout = stake * event_odds;
     const hid = selectedOutcome.id;
-    const side = SIDE.SUPPORT;
-
+    const {side} = data;
+    console.log('Side', side);
     if(status){
       const {offchain} = data;
       var result = null;
