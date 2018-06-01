@@ -17,7 +17,7 @@ const handshakeReducter = (state = {
         return {
             ...state,
             isFetching: false,
-            handshake: initHandshakePayload(action.payload.data),
+            handshake: action.payload,
           };
         case `${ACTIONS.INIT_HANDSHAKE}_FAILED`:
             return {

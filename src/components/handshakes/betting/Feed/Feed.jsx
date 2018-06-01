@@ -3,12 +3,15 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 // services, constants
-import  { BetHandshakeHandler, SIDE} from './BetHandshakeHandler.js';
+import  { BetHandshakeHandler, SIDE, BETTING_STATUS_LABEL} from './BetHandshakeHandler.js';
 import momment from 'moment';
+import {MasterWallet} from '@/models/MasterWallet';
 
 import { APP } from '@/constants';
 import local from '@/services/localStore';
 import {FIREBASE_PATH} from '@/constants';
+import { BettingHandshake } from '@/services/neuron';
+
 
 // components
 import Image from '@/components/core/presentation/Image';
@@ -26,7 +29,9 @@ import Shake from '@/components/core/controls/Button';
 
 import GroupBook from './GroupBook';
 
-
+const wallet = MasterWallet.getWalletDefault('ETH');
+const chainId = wallet.chainId;
+const bettinghandshake = new BettingHandshake(chainId);
 class FeedBetting extends React.Component {
   static propTypes = {
 
@@ -133,7 +138,7 @@ class FeedBetting extends React.Component {
   }
   
   clickActionButton(title){
-    const {id, outcome_id, side, extraData, hid, odds} = item;
+    const {id, outcome_id, side, extraData, hid, odds} = this.props;
     const {event_bet, event_odds} = JSON.parse(extraData);
     //const hid = outcome_id;
     const stake = event_bet;
@@ -143,12 +148,12 @@ class FeedBetting extends React.Component {
 
       case BETTING_STATUS_LABEL.CANCEL:
         // TO DO: CLOSE BET
-        BettingShake.cancelBet(hid, side,stake,payout,offchain);
+        bettinghandshake.cancelBet(hid, side,stake,payout,offchain);
         break;
 
       case BETTING_STATUS_LABEL.WITHDRAW:
         // TO DO: WITHDRAW
-        BettingHandshake.withdraw(hid, offchain);
+        bettinghandshake.withdraw(hid, offchain);
         break;
 
     }
