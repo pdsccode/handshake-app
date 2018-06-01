@@ -308,10 +308,14 @@ export class Firechat {
 
         // Set presence bit for the room and queue it for removal on disconnect.
         const presenceRef = self.firechatRef.child('chat-room-users').child(roomId).child(self.userId).child(self.sessionId);
-        self.queuePresenceOperation(presenceRef, {
+        presenceRef.set({
           id: self.userId,
           name: self.userName,
-        }, null);
+        });
+        // self.queuePresenceOperation(presenceRef, {
+        //   id: self.userId,
+        //   name: self.userName,
+        // }, null);
       }
 
       // Invoke our callbacks before we start listening for new messages.

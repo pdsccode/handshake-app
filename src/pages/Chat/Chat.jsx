@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import 'react-chat-elements/dist/main.css';
+import './Firechat.scss';
 import { ChatList, MessageList, Input, Button } from 'react-chat-elements';
 import { Firechat } from './Firechat';
-import { setHeaderLeft } from '@/reducers/app/action';
+import { setHeaderLeft, setHeaderTitle } from '@/reducers/app/action';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import SearchBar from '@/components/core/controls/SearchBar';
@@ -65,7 +65,7 @@ class Chat extends Component {
   }
 
   componentDidMount() {
-    console.log('componentDidMount');
+    // console.log('componentDidMount');
   }
 
   componentDidUpdate() {
@@ -84,10 +84,11 @@ class Chat extends Component {
   onUpdateUser(user) {
     // Update our current user state and render latest user name.
     this.user = user;
+    this.setCurrentUserName();
   }
 
   onEnterRoom(room) {
-    console.log('enter room', room);
+    // console.log('enter room', room);
     const { id: roomId } = room;
 
     this.chat.getUsersByRoom(roomId, (users) => {
@@ -95,6 +96,7 @@ class Chat extends Component {
       Object.keys(users).forEach((userId) => {
         room.froms[userId] = users[userId].name;
       });
+      console.log(room);
       this.setState((prevState) => {
         const prevChatSource = prevState.chatSource;
         prevChatSource[roomId] = room;
@@ -111,7 +113,7 @@ class Chat extends Component {
   }
 
   onNewMessage(roomId, message) {
-    console.log('new message', message);
+    // console.log('new message', message);
     const {
       userId: fromUserId, name: fromUserName,
     } = message;
@@ -141,7 +143,7 @@ class Chat extends Component {
   }
 
   onChatInviteResponse(invitation) {
-    console.log('new invitation response', invitation);
+    // console.log('new invitation response', invitation);
     if (!invitation.status) return;
 
     this.chat.getRoom(invitation.roomId, (room) => {
@@ -173,16 +175,16 @@ class Chat extends Component {
   }
 
   onChatItemClicked(room) {
-    console.log('onChatItemClicked', room);
+    // console.log('onChatItemClicked', room);
     this.enterMessageRoom(room);
   }
 
   onSeachUserClicked(user) {
     const { id: userId, name: userName } = user.userData;
     this.chat.createRoom([userName, this.user.name].join(','), 'private', (roomId) => {
-      console.log('created room', roomId);
+      // console.log('created room', roomId);
       this.chat.inviteUser(userId, roomId);
-      console.log(`invite user ${userName}-${userId} in to chat`);
+      // console.log(`invite user ${userName}-${userId} in to chat`);
     });
   }
 
@@ -195,7 +197,7 @@ class Chat extends Component {
     }
 
     this.chat.getUsersByPrefix(query, null, null, this.maxUserSearchResult, (userListFiltered) => {
-      console.log(userListFiltered);
+      // console.log(userListFiltered);
       this.setState({
         searchUsers: userListFiltered,
       })
@@ -207,7 +209,12 @@ class Chat extends Component {
       chatDetail: room,
       currentMessage: '',
     });
+    this.props.setHeaderTitle(Object.keys(room.roomData.froms).filter(userId => (userId !== this.user.id)).map(userId => (room.roomData.froms[userId])).join(', '));
     this.props.setHeaderLeft(this.renderBackButton());
+  }
+
+  setCurrentUserName() {
+    this.props.setHeaderTitle(this.user.name);
   }
 
   setUser(userId, userName) {
@@ -405,4 +412,4 @@ const mapState = (state) => ({
   discover: state.discover,
 });
 
-export default connect(mapState, ({ setHeaderLeft }))(Chat);
+export default connect(mapState, ({ setHeaderLeft, setHeaderTitle }))(Chat);
