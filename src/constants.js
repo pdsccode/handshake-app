@@ -155,4 +155,9 @@ export const HANSHAKE_USER_NAME = {
   [HANDSHAKE_USER.SHAKED]: 'SHAKED',
 }
 
+export const DEFAULT_FEE = {
+  ETH: 0,
+  BTC: 0,
+}
+
 

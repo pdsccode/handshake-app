@@ -9,13 +9,13 @@ import {
   fieldCleave,
   fieldDropdown,
   fieldInput,
-  fieldPhoneInput,
   fieldNumericInput,
+  fieldPhoneInput,
   fieldRadioButton
 } from '@/components/core/form/customField';
 import {maxValue, minValue, required} from '@/components/core/form/validation';
-import {Field, formValueSelector, change } from 'redux-form';
-import { bindActionCreators } from 'redux';
+import {change, Field, formValueSelector} from 'redux-form';
+import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {createOffer, getOfferPrice} from '@/reducers/exchange/action';
 import {
@@ -38,6 +38,7 @@ import getSymbolFromCurrency from 'currency-symbol-map';
 import {URL} from '@/config';
 import {showAlert} from '@/reducers/app/action';
 import {MasterWallet} from "@/models/MasterWallet";
+import {DEFAULT_FEE} from "@/constants";
 
 const nameFormExchangeCreate = 'exchangeCreate';
 const FormExchangeCreate = createForm({
@@ -157,31 +158,28 @@ class Component extends React.Component {
   }
 
   handleSubmit = (values) => {
-    const { intl, totalAmount } = this.props;
+    const { intl, totalAmount, price } = this.props;
     // const fiat_currency = this.state.ipInfo.currency;
     const {ipInfo: {currency: fiat_currency}} = this.props;
     // console.log('valuessss', values);
 
     const wallet = MasterWallet.getWalletDefault(values.currency);
 
-    if (values.type === 'sell') {
-      if (wallet.balance >= values.amount) {
-      } else {
-        this.props.showAlert({
-          message: <div className="text-center">
-            {intl.formatMessage({ id: 'notEnoughCoinInWallet' }, {
-              amount: new BigNumber(values.amount).toFormat(6),
-              currency: values.currency,
-            })}
-            </div>,
-          timeOut: 3000,
-          type: 'danger',
-          callBack: () => {
-          }
-        });
+    if (values.type === 'sell' && wallet.balance < values.amount + DEFAULT_FEE[values.currency]) {
+      this.props.showAlert({
+        message: <div className="text-center">
+          {intl.formatMessage({ id: 'notEnoughCoinInWallet' }, {
+            amount: new BigNumber(values.amount).toFormat(6),
+            currency: values.currency,
+          })}
+          </div>,
+        timeOut: 3000,
+        type: 'danger',
+        callBack: () => {
+        }
+      });
 
-        return;
-      }
+      return;
     }
 
     const address = wallet.address;
@@ -189,7 +187,7 @@ class Component extends React.Component {
 
     const offer = {
       amount: values.amount,
-      price: values.type === 'sell' && values.sellPriceType === 'flexible' ? '0' : values.price,
+      price: price,
       percentage: values.type === 'sell' && values.sellPriceType === 'flexible' ? values.customizePrice.toString() : '0',
       currency: values.currency,
       type: values.type,
@@ -450,15 +448,15 @@ const mapStateToProps = (state) => {
   const currency = selectorFormExchangeCreate(state, 'currency');
   const sellPriceType = selectorFormExchangeCreate(state, 'sellPriceType');
   const amount = selectorFormExchangeCreate(state, 'amount') || 0;
-  const price = selectorFormExchangeCreate(state, 'price') || 0;
   const customizePrice = selectorFormExchangeCreate(state, 'customizePrice') || 0;
 
   const offerPrice = state.exchange.offerPrice;
   let totalAmount =  amount * (offerPrice && offerPrice.price || 0) || 0;
   totalAmount += totalAmount * customizePrice / 100;
 
+  const price = offerPrice && offerPrice.price || 0;
 
-  return { amount, currency, totalAmount, type, sellPriceType,
+  return { amount, currency, totalAmount, type, sellPriceType, price,
     offerPrice: offerPrice,
     ipInfo: state.app.ipInfo,
     authProfile: state.auth.profile
