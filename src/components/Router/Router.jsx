@@ -102,7 +102,7 @@ class Router extends React.Component {
     signUp: PropTypes.func.isRequired,
     fetchProfile: PropTypes.func.isRequired,
     auth: PropTypes.object.isRequired,
-    authUpdate: PropTypes.object.isRequired,
+    authUpdate: PropTypes.func.isRequired,
   };
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -114,7 +114,7 @@ class Router extends React.Component {
 
   createMasterWallet(){
     if (MasterWallet.getMasterWallet() == false)
-      return MasterWallet.createMasterWallet();          
+      return MasterWallet.createMasterWallet();
   }
 
   componentDidUpdate(prevProps,prevState){
@@ -146,17 +146,17 @@ class Router extends React.Component {
 
           // this.props.firebase.set(FIREBASE_PATH.USERS, String(profile.id));
 
-          this.props.fetchProfile({ PATH_URL: 'user/profile' });          
-          this.props.getUserProfile({ BASE_URL: API_URL.EXCHANGE.BASE, PATH_URL: API_URL.EXCHANGE.GET_USER_PROFILE});                    
-          //this.props.authUpdate({ PATH_URL: 'user/profile', "data": {"reward_wallet_addresses": MasterWallet.getRewardWallet(MasterWallet.createMasterWallet())} });          
+          this.props.fetchProfile({ PATH_URL: 'user/profile' });
+          this.props.getUserProfile({ BASE_URL: API_URL.EXCHANGE.BASE, PATH_URL: API_URL.EXCHANGE.GET_USER_PROFILE});
+          //this.props.authUpdate({ PATH_URL: 'user/profile', "data": {"reward_wallet_addresses": MasterWallet.getRewardWallet(MasterWallet.createMasterWallet())} });
 
         },
       });
     } else {
 
       this.props.fetchProfile({ PATH_URL: 'user/profile' });
-      this.props.getUserProfile({ BASE_URL: API_URL.EXCHANGE.BASE, PATH_URL: API_URL.EXCHANGE.GET_USER_PROFILE});      
-      // this.props.authUpdate({ PATH_URL: 'user/profile', METHOD: 'POST', "data": {"reward_wallet_addresses": MasterWallet.getRewardWallet(MasterWallet.createMasterWallet())} });          
+      this.props.getUserProfile({ BASE_URL: API_URL.EXCHANGE.BASE, PATH_URL: API_URL.EXCHANGE.GET_USER_PROFILE});
+      // this.props.authUpdate({ PATH_URL: 'user/profile', METHOD: 'POST', "data": {"reward_wallet_addresses": MasterWallet.getRewardWallet(MasterWallet.createMasterWallet())} });
     }
 
     const ip_info = local.get(APP.IP_INFO);
@@ -250,7 +250,6 @@ class Router extends React.Component {
   }
 }
 
-// export default connect(state => ({ auth: state.auth }), ({ signUp, fetchProfile }))(Router);
 export default compose(
   withFirebase,
   connect(state => ({ auth: state.auth }), {

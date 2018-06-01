@@ -17,11 +17,11 @@ import FeedSeed from '@/components/handshakes/seed/Feed';
 import FeedCreditCard from '@/components/handshakes/exchange/Feed/FeedCreditCard';
 import Tabs from '@/components/handshakes/exchange/components/Tabs';
 import NoData from '@/components/core/presentation/NoData';
-import BettingFilter from '@/components/handshakes/betting/Feed/Filter'
+import BettingFilter from '@/components/handshakes/betting/Feed/Filter';
+import { getListOfferPrice } from '@/reducers/exchange/action';
 
 // style
 import './Discover.scss';
-import { getListOfferPrice } from '@/reducers/exchange/action';
 
 const maps = {
   [HANDSHAKE_ID.PROMISE]: FeedPromise,
@@ -31,6 +31,13 @@ const maps = {
 };
 
 class DiscoverPage extends React.Component {
+  static propTypes = {
+    discover: PropTypes.object.isRequired,
+    history: PropTypes.object.isRequired,
+    loadDiscoverList: PropTypes.func.isRequired,
+    getListOfferPrice: PropTypes.func.isRequired,
+  }
+
   constructor(props) {
     super(props);
     this.state = {
@@ -44,10 +51,6 @@ class DiscoverPage extends React.Component {
     this.searchChange = this.searchChange.bind(this);
   }
 
-  componentWillReceiveProps(nextProps) {
-    console.log(nextProps.firebaseUser);
-  }
-
   async componentDidMount() {
     this.getListOfferPrice();
     // this.intervalCountdown = setInterval(() => {
@@ -55,29 +58,8 @@ class DiscoverPage extends React.Component {
     // }, 30000);
   }
 
-  getListOfferPrice = () => {
-    const {ipInfo: {currency: fiat_currency}} = this.props;
-    this.props.getListOfferPrice({
-      BASE_URL: API_URL.EXCHANGE.BASE,
-      PATH_URL: API_URL.EXCHANGE.GET_LIST_OFFER_PRICE,
-      qs: { fiat_currency: fiat_currency },
-      successFn: this.handleGetPriceSuccess,
-      errorFn: this.handleGetPriceFailed,
-    });
-  }
-
-  handleGetPriceSuccess = () => {
-    this.props.loadDiscoverList({ PATH_URL: API_URL.DISCOVER.BASE, qs: { location_p: { pt: '10.786391,106.700074', d: 5 } } });
-  }
-
-  handleGetPriceFailed = () => {
-    this.props.loadDiscoverList({ PATH_URL: API_URL.DISCOVER.BASE, qs: { location_p: { pt: '10.786391,106.700074', d: 5 } } });
-  }
-
-  componentWillUnmount() {
-    // if (this.intervalCountdown) {
-    //   clearInterval(this.intervalCountdown);
-    // }
+  componentWillReceiveProps(nextProps) {
+    console.log(nextProps.firebaseUser);
   }
 
   get getHandshakeList() {
@@ -92,11 +74,29 @@ class DiscoverPage extends React.Component {
             </Col>
           );
         }
+        return null;
       });
     }
 
     return <NoData style={{ height: '50vh' }} />;
+  }
 
+  getListOfferPrice = () => {
+    this.props.getListOfferPrice({
+      BASE_URL: API_URL.EXCHANGE.BASE,
+      PATH_URL: API_URL.EXCHANGE.GET_LIST_OFFER_PRICE,
+      qs: { fiat_currency: this.props?.app?.ipInfo?.currency },
+      successFn: this.handleGetPriceSuccess,
+      errorFn: this.handleGetPriceFailed,
+    });
+  }
+
+  handleGetPriceSuccess = () => {
+    this.props.loadDiscoverList({ PATH_URL: API_URL.DISCOVER.BASE, qs: { location_p: { pt: '10.786391,106.700074', d: 5 } } });
+  }
+
+  handleGetPriceFailed = () => {
+    this.props.loadDiscoverList({ PATH_URL: API_URL.DISCOVER.BASE, qs: { location_p: { pt: '10.786391,106.700074', d: 5 } } });
   }
 
   searchChange(query) {
@@ -172,7 +172,7 @@ class DiscoverPage extends React.Component {
                 />
                 {
                   tabIndexActive === 1 && (
-                    <FeedCreditCard history={this.props.history}/>
+                    <FeedCreditCard history={this.props.history} />
                   )
                 }
               </Col>
@@ -180,29 +180,20 @@ class DiscoverPage extends React.Component {
           )
         }
         {handshakeIdActive === HANDSHAKE_ID.BETTING &&
-          <BettingFilter/>
+          <BettingFilter />
         }
         <Row>
           {handshakeIdActive !== HANDSHAKE_ID.BETTING && this.getHandshakeList}
-        </Row>
-        <Row>
-          <Button block>Test button</Button>
-          <Button block isLoading>Test button</Button>
         </Row>
       </Grid>
     );
   }
 }
 
-DiscoverPage.propTypes = {
-  discover: PropTypes.object.isRequired,
-  history: PropTypes.object.isRequired,
-  loadDiscoverList: PropTypes.func.isRequired,
-};
-
 const mapState = state => ({
   discover: state.discover,
   firebaseUser: state.firebase.data,
+  app: state.app,
 });
 
 const mapDispatch = ({
