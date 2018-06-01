@@ -22,8 +22,7 @@ export class Bitcoin extends Wallet{
     }
 
     setDefaultNetwork(){
-      bitcore.Networks.defaultNetwork = bitcore.Networks.livenet;
-      console.log("Bitcoin network: ", bitcore.Networks.defaultNetwork);
+      bitcore.Networks.defaultNetwork = bitcore.Networks.livenet;      
     }
 
     createAddressPrivatekey(){

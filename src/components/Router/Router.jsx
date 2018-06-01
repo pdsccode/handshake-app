@@ -9,7 +9,7 @@ import { URL } from '@/config';
 import { APP } from '@/constants';
 
 import local from '@/services/localStore';
-import { signUp, fetchProfile } from '@/reducers/auth/action';
+import { signUp, fetchProfile, authUpdate } from '@/reducers/auth/action';
 
 import ScrollToTop from '@/components/App/ScrollToTop';
 import Layout from '@/components/Layout/Main';
@@ -24,6 +24,9 @@ import axios from 'axios';
 import {API_URL} from "@/constants";
 import {setIpInfo} from "@/reducers/app/action";
 import {getUserProfile} from "../../reducers/exchange/action";
+
+// temp:
+import {MasterWallet} from '@/models/MasterWallet'
 
 addLocaleData([...en, ...fr]);
 
@@ -99,6 +102,7 @@ class Router extends React.Component {
     signUp: PropTypes.func.isRequired,
     fetchProfile: PropTypes.func.isRequired,
     auth: PropTypes.object.isRequired,
+    authUpdate: PropTypes.func.isRequired,
   };
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -106,6 +110,11 @@ class Router extends React.Component {
       return { isLogged: nextProps.auth.isLogged };
     }
     return null;
+  }
+
+  createMasterWallet(){
+    if (MasterWallet.getMasterWallet() == false)
+      return MasterWallet.createMasterWallet();
   }
 
   componentDidUpdate(prevProps,prevState){
@@ -139,12 +148,15 @@ class Router extends React.Component {
 
           this.props.fetchProfile({ PATH_URL: 'user/profile' });
           this.props.getUserProfile({ BASE_URL: API_URL.EXCHANGE.BASE, PATH_URL: API_URL.EXCHANGE.GET_USER_PROFILE});
+          //this.props.authUpdate({ PATH_URL: 'user/profile', "data": {"reward_wallet_addresses": MasterWallet.getRewardWallet(MasterWallet.createMasterWallet())} });
+
         },
       });
     } else {
 
       this.props.fetchProfile({ PATH_URL: 'user/profile' });
       this.props.getUserProfile({ BASE_URL: API_URL.EXCHANGE.BASE, PATH_URL: API_URL.EXCHANGE.GET_USER_PROFILE});
+      // this.props.authUpdate({ PATH_URL: 'user/profile', METHOD: 'POST', "data": {"reward_wallet_addresses": MasterWallet.getRewardWallet(MasterWallet.createMasterWallet())} });
     }
 
     const ip_info = local.get(APP.IP_INFO);
@@ -238,13 +250,13 @@ class Router extends React.Component {
   }
 }
 
-// export default connect(state => ({ auth: state.auth }), ({ signUp, fetchProfile }))(Router);
 export default compose(
   withFirebase,
   connect(state => ({ auth: state.auth }), {
     signUp,
     fetchProfile,
     setIpInfo,
-    getUserProfile
+    getUserProfile,
+    authUpdate,
   }),
 )(Router);
