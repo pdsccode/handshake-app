@@ -9,13 +9,13 @@ import {
   fieldCleave,
   fieldDropdown,
   fieldInput,
-  fieldPhoneInput,
   fieldNumericInput,
+  fieldPhoneInput,
   fieldRadioButton
 } from '@/components/core/form/customField';
 import {maxValue, minValue, required} from '@/components/core/form/validation';
-import {Field, formValueSelector, change } from 'redux-form';
-import { bindActionCreators } from 'redux';
+import {change, Field, formValueSelector} from 'redux-form';
+import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {createOffer, getOfferPrice} from '@/reducers/exchange/action';
 import {
@@ -37,6 +37,8 @@ import {BigNumber} from 'bignumber.js';
 import getSymbolFromCurrency from 'currency-symbol-map';
 import {URL} from '@/config';
 import {showAlert} from '@/reducers/app/action';
+import {MasterWallet} from "@/models/MasterWallet";
+import {DEFAULT_FEE} from "@/constants";
 
 const nameFormExchangeCreate = 'exchangeCreate';
 const FormExchangeCreate = createForm({
@@ -62,23 +64,23 @@ class Component extends React.Component {
     this.state = {
       modalContent: '',
       currency: CRYPTO_CURRENCY_DEFAULT,
-
-      listMainWalletBalance: [],
-      listTestWalletBalance: [],
-      listRewardWalletBalance: [],
+      type: 'buy',
+      lat: 0,
+      lng: 0
     };
   }
 
   setAddressFromLatLng = (lat, lng) => {
-    const { rfChange } = this.props
+    this.setState({lat: lat, lng: lng});
+    const { rfChange } = this.props;
     axios.get(`http://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&sensor=true`).then((response) => {
-      const address = response.data.results[0] && response.data.results[0].formatted_address
-      rfChange(nameFormExchangeCreate, 'address', address)
-    })
+      const address = response.data.results[0] && response.data.results[0].formatted_address;
+      rfChange(nameFormExchangeCreate, 'address', address);
+    });
   }
 
   async componentDidMount() {
-    const { ipInfo, rfChange } = this.props
+    const { ipInfo, rfChange, authProfile } = this.props
     navigator.geolocation.getCurrentPosition((location) => {
       const { coords: { latitude, longitude } } = location
       this.setAddressFromLatLng(latitude, longitude) // better precision
@@ -87,13 +89,13 @@ class Component extends React.Component {
     });
 
     // auto fill phone number from user profile
-    rfChange(nameFormExchangeCreate, 'phone', '7-129231234')
+    rfChange(nameFormExchangeCreate, 'phone', authProfile.phone || '')
 
-    // this.getCryptoPriceByAmount(0);
+    this.getCryptoPriceByAmount(0);
     this.intervalCountdown = setInterval(() => {
       const { amount } = this.props;
       this.getCryptoPriceByAmount(amount);
-    }, 30000);
+    }, 5 * 60000);
 
     // const ipInfo = await axios.get(`https://ipfind.co/me`, {
     //   params: {
@@ -102,84 +104,15 @@ class Component extends React.Component {
     // });
 
     // this.setState({ ipInfo: ipInfo.data });
-
-    // Get wallet
-    let listWallet = await MasterWallet.getMasterWallet();
-
-    if (listWallet == false) {
-      listWallet = await MasterWallet.createMasterWallet();
-    }
-
-    await this.splitWalletData(listWallet);
-
-    await this.getListBalance();
-  }
-
-  splitWalletData(listWallet){
-
-    let listMainWallet = [];
-    let listTestWallet = [];
-    let listRewardWallet = [];
-
-    listWallet.forEach(wallet => {
-      // is reward wallet:
-      if (wallet.isReward){
-        listRewardWallet.push(wallet);
-      }
-      // is Mainnet
-      else if (wallet.network === MasterWallet.ListCoin[wallet.className].Network.Mainnet){
-        listMainWallet.push(wallet);
-      }
-      else{
-        // is Testnet
-        listTestWallet.push(wallet);
-      }
-    });
-
-    this.setState({listMainWalletBalance: listMainWallet, listTestWalletBalance: listTestWallet, listRewardWalletBalance: listRewardWallet});
-  }
-
-  getAllWallet(){
-    return this.state.listMainWalletBalance.concat(this.state.listTestWalletBalance).concat(this.state.listRewardWalletBalance);
-  }
-
-  async getListBalance() {
-
-    let listWallet = this.getAllWallet();
-
-    const pros = []
-
-    listWallet.forEach(wallet => {
-      pros.push(new Promise((resolve, reject) => {
-        wallet.getBalance().then(balance => {
-          wallet.balance = balance;
-          resolve(wallet);
-        })
-      }));
-    });
-
-    await Promise.all(pros);
-
-    await this.splitWalletData(listWallet);
-
-
-    // var btcTestnet = new Bitcoin(Bitcoin.Network.Testnet);
-    // var balance = await btcTestnet.getBalance("n1MZwXhWs1unyuG6qNbEZRZV4qjzd3ZMyz");
-    // console.log("btcTestnet", balance);
-
-    // var ethRinkeby = new Ethereum (Ethereum.Network.Rinkeby);
-    // balance = await ethRinkeby.getBalance("0xe70adf9aE4d5F68E80A8E2C5EA3B916Dd49C6D87");
-    // console.log("ethRinkeby", balance);
   }
 
   getCryptoPriceByAmount = (amount) => {
-    const cryptoCurrency = this.state.currency;
-    const { type } = this.props;
+    const { type, currency } = this.state;
     const {ipInfo: {currency: fiat_currency}} = this.props;
 
     let data = {
       amount,
-      currency: cryptoCurrency,
+      currency: currency,
       type,
       fiat_currency,
     };
@@ -200,9 +133,12 @@ class Component extends React.Component {
     // });
   }
 
-  onPriceChange = (e) => {
-    const price = e.target.value;
-    console.log('onPriceChange', price);
+  onTypeChange = (e, newValue) => {
+    const { amount } = this.props;
+
+    this.setState({ type: newValue }, () => {
+      this.getCryptoPriceByAmount(amount);
+    });
   }
 
   onSellPriceTypeChange = (e, newValue) => {
@@ -222,51 +158,44 @@ class Component extends React.Component {
   }
 
   handleSubmit = (values) => {
-    const { intl, totalAmount } = this.props;
+    const { intl, totalAmount, price } = this.props;
     // const fiat_currency = this.state.ipInfo.currency;
     const {ipInfo: {currency: fiat_currency}} = this.props;
     // console.log('valuessss', values);
 
-    let listWallet = [];
-    if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
-      listWallet = this.state.listTestWalletBalance;
-    } else {
-      listWallet = this.state.listMainWalletBalance;
+    const wallet = MasterWallet.getWalletDefault(values.currency);
+
+    if (values.type === 'sell' && wallet.balance < values.amount + DEFAULT_FEE[values.currency]) {
+      this.props.showAlert({
+        message: <div className="text-center">
+          {intl.formatMessage({ id: 'notEnoughCoinInWallet' }, {
+            amount: new BigNumber(values.amount).toFormat(6),
+            currency: values.currency,
+          })}
+          </div>,
+        timeOut: 3000,
+        type: 'danger',
+        callBack: () => {
+        }
+      });
+
+      return;
     }
 
-    // console.log('listWallet', listWallet);
-
-    let address = '';
-    for (let i = 0; i < listWallet.length; i++) {
-      const wallet = listWallet[i];
-
-      if (wallet.name === values.currency) {
-        address = wallet.address;
-        break;
-      }
-    }
-
-    let reward_address = '';
-    for (let i = 0; i < this.state.listRewardWalletBalance.length; i++) {
-      const wallet = this.state.listRewardWalletBalance[i];
-
-      if (wallet.name === values.currency) {
-        reward_address = wallet.address;
-        break;
-      }
-    }
+    const address = wallet.address;
+    const reward_address = address;
 
     const offer = {
       amount: values.amount,
-      price: values.type === 'sell' && values.sellPriceType === 'flexible' ? '0' : values.price,
+      price: price,
       percentage: values.type === 'sell' && values.sellPriceType === 'flexible' ? values.customizePrice.toString() : '0',
       currency: values.currency,
       type: values.type,
       contact_info: values.address,
       contact_phone: values.phone,
       fiat_currency: fiat_currency,
-      latitude: 10.786391,
-      longitude: 106.700074
+      latitude: this.state.lat,
+      longitude: this.state.lng
     };
 
     if (values.type === 'buy') {
@@ -416,6 +345,7 @@ class Component extends React.Component {
                     list={EXCHANGE_ACTION}
                     color={mainColor}
                     validate={[required]}
+                    onChange={this.onTypeChange}
                   />
                 </div>
               </div>
@@ -446,64 +376,31 @@ class Component extends React.Component {
               </div>
               <div className="d-flex">
                 <label className="col-form-label mr-auto" style={{ width: '120px' }}>Price ({FIAT_CURRENCY_SYMBOL})*</label>
-                {
-                  sellPriceType === 'fix' ? (
-                    <div className="w-100">
-                      <Field
-                        name="price"
-                        className="form-control-custom form-control-custom-ex w-100"
-                        component={fieldInput}
-                        onChange={this.onPriceChange}
-                        validate={[required]}
-                      />
-                    </div>
-                  ) : (
-                    <span className="w-100 col-form-label">{(offerPrice && offerPrice.price) || 0}</span>
-                  )
-                }
+                <span className="w-100 col-form-label">{new BigNumber(offerPrice ? offerPrice.price : 0).toFormat(PRICE_DECIMAL)}</span>
               </div>
-              <div>
-                <div className="d-flex mt-2">
-                  {/*<label className="col-form-label mr-auto" style={{ width: '120px' }} />*/}
-                  <div className='input-group justify-content-end'>
-                    <Field
-                      name="sellPriceType"
-                      component={fieldRadioButton}
-                      list={SELL_PRICE_TYPE}
-                      color={mainColor}
-                      validate={[required]}
-                      onChange={this.onSellPriceTypeChange}
-                    />
-                  </div>
+              <div className="d-flex mt-2">
+                {/*<label className="col-form-label mr-auto" style={{ width: '120px' }} />*/}
+                <div className='input-group justify-content-end'>
+                  <Field
+                    name="sellPriceType"
+                    component={fieldRadioButton}
+                    list={SELL_PRICE_TYPE}
+                    color={mainColor}
+                    validate={[required]}
+                    onChange={this.onSellPriceTypeChange}
+                  />
                 </div>
-                {
-                  sellPriceType === 'flexible' && (
-                    <div className="d-flex mt-2">
-                      <label className="col-form-label mr-auto" style={{ width: '120px' }}>Customize price (%)</label>
-                      <div className='input-group align-items-center'>
-                        <Field
-                          name="customizePrice"
-                          // className='form-control-custom form-control-custom-ex w-100'
-                          component={fieldNumericInput}
-                          color={mainColor}
-                          validate={validateFee}
-                        />
-                      </div>
-                    </div>
-                  )
-                }
-                <div className="d-flex mt-2">
-                  <label className="col-form-label mr-auto" style={{ width: '120px' }}>Phone</label>
-                  <div className="input-group w-100">
-                    <Field
-                      name="phone"
-                      className="form-control-custom form-control-custom-ex w-100"
-                      component={fieldPhoneInput}
-                      type="tel"
-                      placeholder="+74995926433"
-                      // validate={[required, currency === 'BTC' ? minValue001 : minValue01]}
-                    />
-                  </div>
+              </div>
+              <div className="d-flex mt-2">
+                <label className="col-form-label mr-auto" style={{ width: '120px' }}>Customize price (%)</label>
+                <div className='input-group align-items-center'>
+                  <Field
+                    name="customizePrice"
+                    // className='form-control-custom form-control-custom-ex w-100'
+                    component={fieldNumericInput}
+                    color={mainColor}
+                    validate={validateFee}
+                  />
                 </div>
               </div>
               <div className="d-flex">
@@ -511,6 +408,19 @@ class Component extends React.Component {
                 <span className="w-100 col-form-label">{new BigNumber(totalAmount).toFormat(PRICE_DECIMAL)}</span>
               </div>
               <div className="d-flex">
+                <label className="col-form-label mr-auto" style={{ width: '120px' }}>Phone</label>
+                <div className="input-group w-100">
+                  <Field
+                    name="phone"
+                    className="form-control-custom form-control-custom-ex w-100"
+                    component={fieldPhoneInput}
+                    type="tel"
+                    placeholder="+74995926433"
+                    // validate={[required, currency === 'BTC' ? minValue001 : minValue01]}
+                  />
+                </div>
+              </div>
+              <div className="d-flex mt-2">
                 <label className="col-form-label mr-auto" style={{ width: '120px' }}>Address*</label>
                 <div className="w-100">
                   <Field
@@ -538,12 +448,18 @@ const mapStateToProps = (state) => {
   const currency = selectorFormExchangeCreate(state, 'currency');
   const sellPriceType = selectorFormExchangeCreate(state, 'sellPriceType');
   const amount = selectorFormExchangeCreate(state, 'amount') || 0;
-  const price = selectorFormExchangeCreate(state, 'price') || 0;
-  const totalAmount =  amount * price || 0;
+  const customizePrice = selectorFormExchangeCreate(state, 'customizePrice') || 0;
 
-  return { amount, currency, totalAmount, type, sellPriceType,
-    offerPrice: state.exchange.offerPrice,
-    ipInfo: state.app.ipInfo
+  const offerPrice = state.exchange.offerPrice;
+  let totalAmount =  amount * (offerPrice && offerPrice.price || 0) || 0;
+  totalAmount += totalAmount * customizePrice / 100;
+
+  const price = offerPrice && offerPrice.price || 0;
+
+  return { amount, currency, totalAmount, type, sellPriceType, price,
+    offerPrice: offerPrice,
+    ipInfo: state.app.ipInfo,
+    authProfile: state.auth.profile
   };
 };
 

@@ -21,6 +21,7 @@ class Handshake {
       outComeId: data.outcome_id || '',
       side: data.side || '',
       remainingAmount: data.remaining_amount || '',
+      location: data.location
     };
   }
 }
