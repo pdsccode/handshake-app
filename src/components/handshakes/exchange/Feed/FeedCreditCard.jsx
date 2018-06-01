@@ -22,6 +22,7 @@ import {FIAT_CURRENCY} from "@/constants";
 import CryptoPrice from "@/models/CryptoPrice";
 import {MasterWallet} from "@/models/MasterWallet";
 import { bindActionCreators } from "redux";
+import {showAlert} from '@/reducers/app/action';
 
 const nameFormCreditCard = 'creditCard'
 const FormCreditCard = createForm({ propsReduxForm: { form: nameFormCreditCard,
@@ -40,9 +41,6 @@ class FeedCreditCard extends React.Component {
       isNewCCOpen: false,
       modalContent: '',
       showCCScheme: false,
-
-      listMainWalletBalance: [],
-      listTestWalletBalance: [],
     }
     this.getCryptoPriceByAmountThrottled = throttle(this.getCryptoPriceByAmount, 500);
   }
@@ -61,56 +59,6 @@ class FeedCreditCard extends React.Component {
     this.intervalCountdown = setInterval(() => {
       this.getCryptoPriceByAmount(this.state.amount);
     }, 30000);
-
-    //Get wallet
-    let listWallet = await MasterWallet.getMasterWallet();
-
-    if (listWallet == false){
-      listWallet = await MasterWallet.createMasterWallet();
-    }
-
-    await this.splitWalletData(listWallet)
-
-    await this.getListBalance();
-  }
-
-  splitWalletData(listWallet){
-
-    let listMainWallet = [];
-    let listTestWallet = [];
-
-    listWallet.forEach(wallet => {
-      // is Mainnet
-      if (wallet.network == MasterWallet.ListCoin[wallet.className].Network.Mainnet){
-        listMainWallet.push(wallet);
-      }
-      else{
-        // is Testnet
-        listTestWallet.push(wallet);
-      }
-    });
-
-    this.setState({listMainWalletBalance: listMainWallet, listTestWalletBalance: listTestWallet});
-  }
-
-  async getListBalance() {
-
-    let listWallet = this.state.listMainWalletBalance.concat(this.state.listTestWalletBalance);
-
-    const pros = []
-
-    listWallet.forEach(wallet => {
-      pros.push(new Promise((resolve, reject) => {
-        wallet.getBalance().then(balance => {
-          wallet.balance = balance;
-          resolve(wallet);
-        })
-      }));
-    });
-
-    await Promise.all(pros);
-
-    await this.splitWalletData(listWallet);
   }
 
   componentWillUnmount() {
@@ -151,25 +99,12 @@ class FeedCreditCard extends React.Component {
   handleCreateCCOrder = (params) => {
     const {cryptoPrice, addressForced } = this.props;
 
-    let listWallet = [];
-    if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
-      listWallet = this.state.listTestWalletBalance;
-    } else {
-      listWallet = this.state.listMainWalletBalance;
-    }
-
     let address = '';
     if (addressForced) {
       address = addressForced;
     } else {
-      for (let i = 0; i < listWallet.length; i++) {
-        let wallet = listWallet[i];
-
-        if (wallet.name === cryptoPrice.currency) {
-          address = wallet.address;
-          break;
-        }
-      }
+      const wallet = MasterWallet.getWalletDefault(cryptoPrice.currency);
+      address = wallet.address;
     }
 
     if (cryptoPrice) {
@@ -196,33 +131,40 @@ class FeedCreditCard extends React.Component {
   handleCreateCCOrderSuccess = (data) => {
     // console.log('handleCreateCCOrderSuccess', data);
 
-    this.timeoutClosePopup = setTimeout(() => {
-      this.handleBuySuccess();
-    }, 3000);
+    // this.timeoutClosePopup = setTimeout(() => {
+    //   this.handleBuySuccess();
+    // }, 3000);
+    //
+    // this.setState({modalContent:
+    //     (
+    //       <div className="py-2">
+    //         <Feed className="feed p-2" background="#259B24">
+    //           <div className="text-white d-flex align-items-center" style={{ minHeight: '50px' }}>
+    //             <div>Buy success</div>
+    //           </div>
+    //         </Feed>
+    //         <Button block className="btn btn-secondary mt-2" onClick={this.handleBuySuccess}>Dismiss</Button>
+    //       </div>
+    //     )
+    // }, () => {
+    //   this.modalRef.open();
+    // });
 
-    this.setState({modalContent:
-        (
-          <div className="py-2">
-            <Feed className="feed p-2" background="#259B24">
-              <div className="text-white d-flex align-items-center" style={{ minHeight: '50px' }}>
-                <div>Buy success</div>
-              </div>
-            </Feed>
-            <Button block className="btn btn-secondary mt-2" onClick={this.handleBuySuccess}>Dismiss</Button>
-          </div>
-        )
-    }, () => {
-      this.modalRef.open();
+    this.props.showAlert({
+      message: <div className="text-center"><FormattedMessage id="buyUsingCreditCardSuccessMessge"/></div>,
+      timeOut: 3000,
+      type: 'success',
+      callBack: this.handleBuySuccess
     });
   }
 
   handleBuySuccess = () => {
-    if (this.timeoutClosePopup) {
-      clearTimeout(this.timeoutClosePopup);
-    }
+    // if (this.timeoutClosePopup) {
+    //   clearTimeout(this.timeoutClosePopup);
+    // }
 
     const { callbackSuccess } = this.props;
-    this.modalRef.close();
+    // this.modalRef.close();
 
     if (callbackSuccess) {
       callbackSuccess();
@@ -233,24 +175,31 @@ class FeedCreditCard extends React.Component {
 
   handleCreateCCOrderFailed = (e) => {
     // console.log('handleCreateCCOrderFailed', JSON.stringify(e.response));
-    this.setState({modalContent:
-        (
-          <div className="py-2">
-            <Feed className="feed p-2" background="#259B24">
-              <div className="text-white d-flex align-items-center" style={{ minHeight: '50px' }}>
-                <div>{e.response?.data?.message}</div>
-              </div>
-            </Feed>
-            <Button block className="btn btn-secondary mt-2" onClick={this.handleBuyFailed}>Dismiss</Button>
-          </div>
-        )
-    }, () => {
-      this.modalRef.open();
+    this.props.showAlert({
+      message: <div className="text-center">{e.response?.data?.message}</div>,
+      timeOut: 3000,
+      type: 'danger',
+      callBack: this.handleBuyFailed
     });
+
+    // this.setState({modalContent:
+    //     (
+    //       <div className="py-2">
+    //         <Feed className="feed p-2" background="#259B24">
+    //           <div className="text-white d-flex align-items-center" style={{ minHeight: '50px' }}>
+    //             <div>{e.response?.data?.message}</div>
+    //           </div>
+    //         </Feed>
+    //         <Button block className="btn btn-secondary mt-2" onClick={this.handleBuyFailed}>Dismiss</Button>
+    //       </div>
+    //     )
+    // }, () => {
+    //   this.modalRef.open();
+    // });
   }
 
   handleBuyFailed = () => {
-    this.modalRef.close();
+    // this.modalRef.close();
 
     const { callbackFailed } = this.props;
 
@@ -448,7 +397,8 @@ const mapDispatchToProps = (dispatch) => ({
   createCCOrder: bindActionCreators(createCCOrder, dispatch),
   getUserCcLimit: bindActionCreators(getUserCcLimit, dispatch),
   getCcLimits: bindActionCreators(getCcLimits, dispatch),
-  rfChange: bindActionCreators(change, dispatch)
+  rfChange: bindActionCreators(change, dispatch),
+  showAlert: bindActionCreators(showAlert, dispatch),
 });
 
 export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(FeedCreditCard));
