@@ -38,7 +38,8 @@ export default class ExchangeHandshake extends BaseHandshake {
       value,
       offchain,
     );
-    const payoutValue = Web3.utils.toWei(value.toString(), 'ether');
+
+    const payoutValue = Web3.utils.toHex(this.web3.utils.toWei(value.toString(), 'ether'));
     const bytesOffchain = this.web3.utils.fromAscii(offchain);
 
     const payloadData = this.handshakeInstance.methods
@@ -49,6 +50,9 @@ export default class ExchangeHandshake extends BaseHandshake {
         bytesOffchain,
       )
       .encodeABI();
+
+    console.log('address', address);
+    console.log('privateKey', privateKey);
 
     return this.neuron.makeRawTransaction(address, privateKey, payloadData, {
       amount: value,
@@ -69,7 +73,7 @@ export default class ExchangeHandshake extends BaseHandshake {
       value,
       offchain,
     );
-    const payoutValue = Web3.utils.toWei(value.toString(), 'ether');
+    const payoutValue = Web3.utils.toHex(this.web3.utils.toWei(value.toString(), 'ether'));
     const bytesOffchain = this.web3.utils.fromAscii(offchain);
 
     const payloadData = this.handshakeInstance.methods
