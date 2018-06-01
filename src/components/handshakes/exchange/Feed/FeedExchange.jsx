@@ -665,7 +665,7 @@ class FeedExchange extends React.PureComponent {
     // let userType = getHandshakeUserType(initUserId, shakeUserIds);
     const email = 'abc@mail.com'
     const statusText = HANDSHAKE_EXCHANGE_STATUS_NAME[status];
-    const phone = offer.contactPhone;
+    const phone = offer.contactPhone[0] === '+' ? offer.contactPhone : `+${offer.contactPhone}`; // prepend '+'
     const address = offer.contactInfo;
     return (
       <div>
