@@ -21,4 +21,7 @@
     line-height: rem-calc(21px);
     font-weight: $normal;
   }
+  .addAComment:hover, .numComments:hover {
+    cursor: pointer;
+  }
 }
