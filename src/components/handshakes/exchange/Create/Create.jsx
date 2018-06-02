@@ -414,7 +414,7 @@ class Component extends React.Component {
                 </div>
               </div>
               <div className="d-flex">
-                <label className="col-form-label mr-auto" style={{ width: '120px' }}>Price ({FIAT_CURRENCY_SYMBOL})*</label>
+                <label className="col-form-label mr-auto" style={{ width: '120px' }}>Price ({FIAT_CURRENCY_SYMBOL})</label>
                 <span className="w-100 col-form-label">{new BigNumber(offerPrice ? offerPrice.price : 0).toFormat(PRICE_DECIMAL)}</span>
               </div>
               <div className="d-flex mt-2">
