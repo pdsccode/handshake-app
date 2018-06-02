@@ -276,3 +276,5 @@ export class MasterWallet {
       console.log(`%c ${'{0}: '.format(key)}`, 'background: #222; color: #bada55', data);
     }
 }
+
+export default { MasterWallet };
