@@ -90,13 +90,19 @@ class Chat extends Component {
     console.log('enter room', room);
     const { id: roomId } = room;
 
-    this.setState((prevState) => {
-      const prevChatSource = prevState.chatSource;
-      prevChatSource[roomId] = room;
+    this.chat.getUsersByRoom(roomId, (users) => {
+      room.froms = {};
+      Object.keys(users).forEach((userId) => {
+        room.froms[userId] = users[userId].name;
+      });
+      this.setState((prevState) => {
+        const prevChatSource = prevState.chatSource;
+        prevChatSource[roomId] = room;
 
-      return {
-        chatSource: prevState.chatSource,
-      };
+        return {
+          chatSource: prevState.chatSource,
+        };
+      });
     });
   }
 
@@ -113,9 +119,7 @@ class Chat extends Component {
 
     if (Object.prototype.hasOwnProperty.call(chatSource, roomId)) {
       const room = chatSource[roomId];
-      room.froms = room.froms || {};
       room.messages = room.messages || [];
-      room.froms[fromUserId] = fromUserName;
       room.messages.push(message);
       chatSource[roomId] = room;
 
@@ -142,9 +146,6 @@ class Chat extends Component {
 
     this.chat.getRoom(invitation.roomId, (room) => {
       room.messages = room.messages || [];
-      room.froms = {};
-      room.froms[invitation.fromUserId] = invitation.fromUserName;
-      room.froms[this.user.id] = this.user.name;
 
       this.setState((prevState) => {
         const prevChatSource = prevState.chatSource;

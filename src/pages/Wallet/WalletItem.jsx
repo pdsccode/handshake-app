@@ -49,7 +49,7 @@ class WalletItem extends React.Component {
                 </div> 
                 <p className="balance"> {wallet.balance} {wallet.name} </p>
                 <img className="more" src={dontIcon} onClick={onMoreClick}/> 
-                <img className="safe" src={iconProtected} onClick={onWarningClick}/>   
+                <img className="safe" src={wallet.protected ? iconSafe : iconProtected} onClick={onWarningClick}/>   
 
                 <div className="address" onClick={onAddressClick}><img src={iconQRCode} /> {wallet.getShortAddress()}</div>
               </div>        

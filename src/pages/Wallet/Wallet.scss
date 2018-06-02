@@ -313,20 +313,19 @@
     color:#D8D8D8;
   }
 
-  .link {
-    margin: 20px 0;
-    text-align:center;
-  }
-
   .pass_phrase, .confirm_pass_phrase{
     margin:10px;
     padding: 10px;
     background:#D8D8D8;
-    height: 152px;
-
+    min-height: 152px;
+    text-align: center;
     div{
-      margin:10px;
+      margin:7px;
     }
+  }
+
+  .confirm_pass_phrase{
+    background: #e2e2e2;
   }
 
   input[type=checkbox] {
@@ -334,13 +333,31 @@
     padding: 10px;
   }
 
-  footer{
-    margin:15px 30px;
+  .footer{
+    height: 60px;
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 414px;
+    z-index: 2;
+    padding-left: 20px;
+    padding-right: 20px;
+    background: White;
   }
 
   button:disabled{
     background: Silver;
     border-color:Silver;
+  }
+
+  p.modal-custom-title{
+    font-size:18px;
+  }
+
+  .wrong-pass-phrase{
+    padding: 20px 10px !important;
   }
 }
 

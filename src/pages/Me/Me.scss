@@ -1,45 +1,81 @@
 @import './src/styles/style';
-.my-feed-wrapper {
-  margin-top: rem-calc(35px);
-  &:hover {
-    cursor: pointer;
-  }
-  .head {
+
+.me {
+  .update-profile {
     display: flex;
+    padding-bottom: rem-calc(11px);
     flex-wrap: wrap;
-    margin-bottom: rem-calc(15px);
-    .from {
-      width: 70%;
-      font-weight: $normal;
-      font-size: 1rem;
-      color: $steel;
-      .email {
+    align-items: center;
+    border-bottom: 1px solid #f0f0f0;
+    &:hover {
+      text-decoration: none;
+    }
+    .text {
+      margin-left: rem-calc(12px);
+      strong {
+        font-weight: $semi-bold;
+        font-size: 1rem;
+        color: $text-black;
+      }
+      p {
+        margin: 0;
+        opacity: 0.4;
+        font-weight: $semi-bold;
+        font-size: rem-calc(14px);
+        color: $text-black;
+      }
+    }
+    .arrow {
+      width: 24%;
+      text-align: right;
+      img {
+        vertical-align: baseline;
+        transform: rotate(-90deg);
+      }
+    }
+  }
+  .my-feed-wrapper {
+    margin-top: rem-calc(35px);
+    &:hover {
+      cursor: pointer;
+    }
+    .head {
+      display: flex;
+      flex-wrap: wrap;
+      margin-bottom: rem-calc(15px);
+      .from {
+        width: 70%;
         font-weight: $normal;
         font-size: 1rem;
-        color: $lavender-gray;
+        color: $steel;
+        .email {
+          font-weight: $normal;
+          font-size: 1rem;
+          color: $lavender-gray;
+        }
+      }
+      .status {
+        width: 30%;
+        text-align: right;
+        font-weight: $normal;
+        font-size: 1rem;
+        .pending {
+          color: $lavender-gray;
+        }
+        .done {
+          color: $emerald;
+        }
       }
     }
-    .status {
-      width: 30%;
-      text-align: right;
-      font-weight: $normal;
-      font-size: 1rem;
-      .pending {
-        color: $lavender-gray;
+    .my-feed {
+      padding: 23px;
+      .description {
+        margin: 0;
+        font-weight: $normal;
+        font-size: rem-calc(28px);
+        color: $white;
+        letter-spacing: 0.5px;
       }
-      .done {
-        color: $emerald;
-      }
-    }
-  }
-  .my-feed {
-    padding: 23px;
-    .description {
-      margin: 0;
-      font-weight: $normal;
-      font-size: rem-calc(28px);
-      color: $white;
-      letter-spacing: 0.5px;
     }
   }
 }

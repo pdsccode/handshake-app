@@ -1,0 +1,13 @@
+@import './src/styles/style';
+
+.profile {
+  .collapse-custom {
+    .head {
+      display: flex;
+      flex-wrap: wrap;
+      .label, .extend {
+        width: 50%;
+      }
+    }
+  }
+}
