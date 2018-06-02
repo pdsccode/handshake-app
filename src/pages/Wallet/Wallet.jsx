@@ -84,15 +84,13 @@ class Wallet extends React.Component {
       //Qrcode
       delay: 300,
       result: 'No result',
-      
       walletsData: false,
       isNewCCOpen: false,
-      step: 1
     };
     this.props.setHeaderRight(this.headerRight());
-    
+
     //For QRcode:
-    this.handleScan = this.handleScan.bind(this)  
+    this.handleScan = this.handleScan.bind(this)
 
   }
 
@@ -221,8 +219,6 @@ class Wallet extends React.Component {
           handler: () => {
             this.setState({walletSelected: wallet});
             this.toggleBottomSheet();
-            this.setState({step: 1});
-            //this.childProtectRef.onFirstCall();
             this.modalProtectRef.open();
           }
         })
@@ -494,7 +490,7 @@ class Wallet extends React.Component {
   handleError(err){
     console.log("error wc",err)
   }
-  renderScanQRCode = () =>{    
+  renderScanQRCode = () =>{
     return(
       <div>
         <QrReader
@@ -622,7 +618,7 @@ class Wallet extends React.Component {
           }
 
 
-          <Button block isLoading={this.state.isRestoreLoading} disabled={this.state.countCheckCoinToCreate == 0 || (this.state.walletKeyDefaultToCreate == 2 && this.state.input12PhraseValue.trim().split(/\s+/g).length != 12) } className="button button-wallet" cssType="primary" onClick={() => {this.createNewWallets()}} >                        
+          <Button block isLoading={this.state.isRestoreLoading} disabled={this.state.countCheckCoinToCreate == 0 || (this.state.walletKeyDefaultToCreate == 2 && this.state.input12PhraseValue.trim().split(/\s+/g).length != 12) } className="button button-wallet" cssType="primary" onClick={() => {this.createNewWallets()}} >
             Create wallet
           </Button>
           <Header />
@@ -631,7 +627,7 @@ class Wallet extends React.Component {
         </Modal>
 
         {/*QR code dialog*/}
-        {this.renderScanQRCode()}        
+        {this.renderScanQRCode()}
 
         {/* Render list wallet: */}
         <Row className="list">
