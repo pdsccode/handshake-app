@@ -184,3 +184,5 @@ export class Bitcoin extends Wallet {
       }
     }
 }
+
+export default { Bitcoin };

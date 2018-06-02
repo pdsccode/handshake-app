@@ -19,3 +19,5 @@ export class BitcoinTestnet extends Bitcoin {
       bitcore.Networks.defaultNetwork = bitcore.Networks.testnet;
     }
 }
+
+export default { BitcoinTestnet };
