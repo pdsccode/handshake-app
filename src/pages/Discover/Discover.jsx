@@ -21,6 +21,7 @@ import { getListOfferPrice } from '@/reducers/exchange/action';
 
 // style
 import './Discover.scss';
+import {DISCOVER_GET_HANDSHAKE_RADIUS} from "@/constants";
 
 const maps = {
   [HANDSHAKE_ID.PROMISE]: FeedPromise,
@@ -43,7 +44,7 @@ class DiscoverPage extends React.Component {
       handshakeIdActive: '',
       tabIndexActive: 1,
     };
-    this.props.loadDiscoverList({ PATH_URL: API_URL.DISCOVER.BASE, qs: { location_p: { pt: '10.786391,106.700074', d: 5 } } });
+    this.props.loadDiscoverList({ PATH_URL: API_URL.DISCOVER.BASE, qs: { location_p: { pt: '10.786391,106.700074', d: DISCOVER_GET_HANDSHAKE_RADIUS } } });
     // bind
     this.clickCategoryItem = this.clickCategoryItem.bind(this);
     this.clickTabItem = this.clickTabItem.bind(this);
@@ -91,11 +92,11 @@ class DiscoverPage extends React.Component {
   }
 
   handleGetPriceSuccess = () => {
-    this.props.loadDiscoverList({ PATH_URL: API_URL.DISCOVER.BASE, qs: { location_p: { pt: '10.786391,106.700074', d: 5 } } });
+    this.props.loadDiscoverList({ PATH_URL: API_URL.DISCOVER.BASE, qs: { location_p: { pt: '10.786391,106.700074', d: DISCOVER_GET_HANDSHAKE_RADIUS } } });
   }
 
   handleGetPriceFailed = () => {
-    this.props.loadDiscoverList({ PATH_URL: API_URL.DISCOVER.BASE, qs: { location_p: { pt: '10.786391,106.700074', d: 5 } } });
+    this.props.loadDiscoverList({ PATH_URL: API_URL.DISCOVER.BASE, qs: { location_p: { pt: '10.786391,106.700074', d: DISCOVER_GET_HANDSHAKE_RADIUS } } });
   }
 
   searchChange(query) {

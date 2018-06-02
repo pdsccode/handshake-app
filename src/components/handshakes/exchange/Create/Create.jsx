@@ -1,5 +1,5 @@
 import React from 'react';
-import {FormattedMessage, injectIntl} from 'react-intl';
+import {injectIntl} from 'react-intl';
 import Feed from '@/components/core/presentation/Feed';
 import Button from '@/components/core/controls/Button';
 import axios from 'axios';
@@ -22,8 +22,11 @@ import {
   API_URL,
   CRYPTO_CURRENCY,
   CRYPTO_CURRENCY_DEFAULT,
-  EXCHANGE_ACTION_LIST,
+  DEFAULT_FEE,
+  EXCHANGE_ACTION,
   EXCHANGE_ACTION_DEFAULT,
+  EXCHANGE_ACTION_LIST,
+  EXCHANGE_ACTION_NAME,
   FIAT_CURRENCY,
   FIAT_CURRENCY_SYMBOL,
   PRICE_DECIMAL,
@@ -38,9 +41,7 @@ import getSymbolFromCurrency from 'currency-symbol-map';
 import {URL} from '@/config';
 import {showAlert} from '@/reducers/app/action';
 import {MasterWallet} from "@/models/MasterWallet";
-import {DEFAULT_FEE} from "@/constants";
-import { ExchangeHandshake } from '@/services/neuron';
-import {EXCHANGE_ACTION_NAME} from "@/constants";
+import {ExchangeHandshake} from '@/services/neuron';
 
 const nameFormExchangeCreate = 'exchangeCreate';
 const FormExchangeCreate = createForm({
@@ -203,7 +204,7 @@ class Component extends React.Component {
       longitude: this.state.lng
     };
 
-    if (values.type === 'buy') {
+    if (values.type === EXCHANGE_ACTION.BUY) {
       offer.user_address = address;
     } else {
       offer.refund_address = address;
@@ -271,6 +272,7 @@ class Component extends React.Component {
     console.log('handleCreateOfferSuccess', data);
 
     const wallet = MasterWallet.getWalletDefault(currency);
+    const rewardWallet = MasterWallet.getRewardWalletDefault(values.currency);
 
     console.log('data', data);
     console.log('wallet', wallet);
@@ -283,10 +285,10 @@ class Component extends React.Component {
       const exchangeHandshake = new ExchangeHandshake(wallet.chainId);
 
       let result = null;
-      if (data.type === 'buy') {
-        result = await exchangeHandshake.init(wallet.address, wallet.address, data.amount, data.id);
+      if (data.type === EXCHANGE_ACTION.BUY) {
+        result = await exchangeHandshake.initByCashOwner(wallet.address, rewardWallet.address, data.amount, data.id);
       } else {
-        result = await exchangeHandshake.initByCoinOwner(wallet.address, wallet.address, data.amount, data.id);
+        result = await exchangeHandshake.initByCoinOwner(wallet.address, rewardWallet.address, data.amount, data.id);
       }
 
       console.log('handleCreateOfferSuccess', result);

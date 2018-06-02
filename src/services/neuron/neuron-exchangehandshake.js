@@ -29,10 +29,10 @@ export default class ExchangeHandshake extends BaseHandshake {
    * @param value funds required for this handshake
    * @param offchain record ID in offchain backend database
    */
-  init = (exchanger, adrFeeRefund, value, offchain) => {
+  initByCashOwner = (exchanger, adrFeeRefund, value, offchain) => {
     console.log(
       TAG,
-      ' init = ',
+      ' initByCashOwner = ',
       exchanger,
       adrFeeRefund,
       value,
@@ -43,7 +43,7 @@ export default class ExchangeHandshake extends BaseHandshake {
     const bytesOffchain = this.web3.utils.fromAscii(offchain);
 
     const payloadData = this.handshakeInstance.methods
-      .init(
+      .initByCashOwner(
         exchanger,
         adrFeeRefund,
         payoutValue,
@@ -55,7 +55,7 @@ export default class ExchangeHandshake extends BaseHandshake {
     console.log('privateKey', privateKey);
 
     return this.neuron.makeRawTransaction(address, privateKey, payloadData, {
-      amount: value,
+      // amount: value,
       gasPrice: this.chainId === 4 ? 100 : 20,
       toAddress: this.contractAddress,
     });
@@ -94,6 +94,12 @@ export default class ExchangeHandshake extends BaseHandshake {
 
   //shaker agree and make a handshake
   shake = (hid, offchain) => {
+    console.log(
+      TAG,
+      ' shake = ',
+      hid,
+      offchain,
+    );
     const bytesOffchain = this.web3.utils.fromAscii(offchain);
     const payloadData = this.handshakeInstance.methods
       .shake(
@@ -111,6 +117,12 @@ export default class ExchangeHandshake extends BaseHandshake {
 
   //CoinOwner accept transaction
   accept = (hid, offchain) => {
+    console.log(
+      TAG,
+      ' accept = ',
+      hid,
+      offchain,
+    );
     const bytesOffchain = this.web3.utils.fromAscii(offchain);
     const payloadData = this.handshakeInstance.methods
       .accept(
@@ -128,6 +140,12 @@ export default class ExchangeHandshake extends BaseHandshake {
 
   //CashOwner withdraw funds from a handshake
   withdraw = (hid, offchain) => {
+    console.log(
+      TAG,
+      ' withdraw = ',
+      hid,
+      offchain,
+    );
     const bytesOffchain = this.web3.utils.fromAscii(offchain);
     const payloadData = this.handshakeInstance.methods
       .withdraw(
@@ -145,6 +163,12 @@ export default class ExchangeHandshake extends BaseHandshake {
 
   //CashOwner reject the transaction
   reject = (hid, offchain) => {
+    console.log(
+      TAG,
+      ' reject = ',
+      hid,
+      offchain,
+    );
     const bytesOffchain = this.web3.utils.fromAscii(offchain);
     const payloadData = this.handshakeInstance.methods
       .reject(
@@ -162,6 +186,12 @@ export default class ExchangeHandshake extends BaseHandshake {
 
   //coinOwner cancel the handshake
   cancel = (hid, offchain) => {
+    console.log(
+      TAG,
+      ' cancel = ',
+      hid,
+      offchain,
+    );
     const bytesOffchain = this.web3.utils.fromAscii(offchain);
     const payloadData = this.handshakeInstance.methods
       .cancel(
@@ -177,8 +207,14 @@ export default class ExchangeHandshake extends BaseHandshake {
     });
   }
 
-  //coinOwner cancel the handshake
-  close = (hid, offchain) => {
+  //CashOwner close the transaction after init
+  closeByCashOwner = (hid, offchain) => {
+    console.log(
+      TAG,
+      ' closeByCashOwner = ',
+      hid,
+      offchain,
+    );
     const bytesOffchain = this.web3.utils.fromAscii(offchain);
     const payloadData = this.handshakeInstance.methods
       .close(
@@ -196,6 +232,11 @@ export default class ExchangeHandshake extends BaseHandshake {
 
   //get handshake stage by hid
   getState = (hid) => {
+    console.log(
+      TAG,
+      ' getState = ',
+      hid,
+    );
     const payloadData = this.handshakeInstance.methods
       .getState(
         hid,
