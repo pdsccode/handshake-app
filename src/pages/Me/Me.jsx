@@ -18,6 +18,7 @@ import Image from '@/components/core/presentation/Image';
 import AvatarSVG from '@/assets/images/icon/avatar.svg';
 import ExpandArrowSVG from '@/assets/images/icon/expand-arrow.svg';
 import './Me.scss';
+import { getListOfferPrice } from "@/reducers/exchange/action";
 
 
 const maps = {
@@ -30,7 +31,18 @@ const maps = {
 class Me extends React.Component {
 
   componentDidMount() {
+    this.getListOfferPrice();
     this.props.loadMyHandshakeList({ PATH_URL: API_URL.ME.BASE });
+  }
+
+  getListOfferPrice = () => {
+    this.props.getListOfferPrice({
+      BASE_URL: API_URL.EXCHANGE.BASE,
+      PATH_URL: API_URL.EXCHANGE.GET_LIST_OFFER_PRICE,
+      qs: { fiat_currency: this.props?.app?.ipInfo?.currency },
+      successFn: this.handleGetPriceSuccess,
+      errorFn: this.handleGetPriceFailed,
+    });
   }
 
   render() {
@@ -79,14 +91,17 @@ class Me extends React.Component {
 Me.propTypes = {
   me: PropTypes.object.isRequired,
   loadMyHandshakeList: PropTypes.func.isRequired,
+  getListOfferPrice: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({
   me: state.me,
+  app: state.app,
 });
 
 const mapDispatch = ({
   loadMyHandshakeList,
+  getListOfferPrice,
 });
 
 export default connect(mapState, mapDispatch)(Me);
