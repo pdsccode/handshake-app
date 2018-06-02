@@ -28,133 +28,17 @@ class BettingFilter extends React.Component {
         const {odd} = props;
         this.state = {
             matches: [],
-            /*
-          matches: [
-            {
-                "awayTeamCode": "",
-                "awayTeamFlag": "https://upload.wikimedia.org/wikipedia/commons/0/0d/Flag_of_Saudi_Arabia.svg",
-                "awayTeamName": "Saudi Arabia",
-                "date": 1528963200,
-                "homeTeamCode": "RUS",
-                "homeTeamFlag": "https://upload.wikimedia.org/wikipedia/commons/f/f3/Flag_of_Russia.svg",
-                "homeTeamName": "Russia",
-                "id": 1,
-                "outcomes": [
-                    {
-                        "handshakes": [{
-                            id: 1,
-                            support: 1,
-                            odd: 2.3,
-                            amount: 0.1528
-                        },
-                        {
-                            id: 2,
-                            support: 1,
-                            odd: 2.3,
-                            amount: 0.1528
-                        },
-                        {
-                            id: 3,
-                            support: 1,
-                            odd: 2.3,
-                            amount: 0.1528
-                        },
-                        {
-                            id: 4,
-                            support: 1,
-                            odd: 2.3,
-                            amount: 0.1528
-                        },
-                        {
-                            id: 5,
-                            support: 1,
-                            odd: 2.3,
-                            amount: 0.1528
-                        },
-                        {
-                            id: 6,
-                            support: 2,
-                            odd: 2.3,
-                            amount: 0.1528
-                        },
-                        {
-                            id: 7,
-                            support: 2,
-                            odd: 2.3,
-                            amount: 0.1528
-                        },
-                        {
-                            id: 8,
-                            support: 2,
-                            odd: 2.3,
-                            amount: 0.1528
-                        },
-                        {
-                            id: 9,
-                            support: 2,
-                            odd: 2.3,
-                            amount: 0.1528
-                        },
-                        {
-                            id: 10,
-                            support: 2,
-                            odd: 2.3,
-                            amount: 0.1528
-                        }],
-                        "id": 1,
-                        "name": "Russia wins"
-                    },
-                    {
-                        "handshakes": [],
-                        "id": 2,
-                        "name": "Saudi Arabia wins"
-                    },
-                    {
-                        "handshakes": [],
-                        "id": 3,
-                        "name": "Russia draws Saudi Arabia"
-                    }
-                ]
-            },
-            {
-                "awayTeamCode": "",
-                "awayTeamFlag": "https://upload.wikimedia.org/wikipedia/commons/f/fe/Flag_of_Uruguay.svg",
-                "awayTeamName": "Uruguay",
-                "date": 1529038800,
-                "homeTeamCode": "",
-                "homeTeamFlag": "https://upload.wikimedia.org/wikipedia/commons/f/fe/Flag_of_Egypt.svg",
-                "homeTeamName": "Egypt",
-                "id": 2,
-                "outcomes": [
-                    {
-                        "handshakes": [],
-                        "id": 7,
-                        "name": "Uruguay wins"
-                    },
-                    {
-                        "handshakes": [],
-                        "id": 8,
-                        "name": "Egypt wins"
-                    },
-                    {
-                        "handshakes": [],
-                        "id": 9,
-                        "name": "Uruguay draws Egypt"
-                    }
-                ]
-            }
-        ],*/
-        selectedMatch:null,
-        selectedOutcome: null,
-        support: null,
-        against: null,
+            selectedMatch:null,
+            selectedOutcome: null,
+            support: null,
+            against: null,
         };
     
         
       }
     componentWillReceiveProps(nextProps){
 
-        const {matches, supports, against} = nextProps;
+        const {matches, support, against} = nextProps;
         console.log(`${TAG} Matches:`, matches);
         const selectedMatch = this.defaultMatch;
         const selectedOutcome = this.defaultOutcome;
@@ -162,7 +46,7 @@ class BettingFilter extends React.Component {
             matches,
             selectedMatch,
             selectedOutcome,
-            supports,
+            support,
             against
         })
     }
@@ -170,26 +54,14 @@ class BettingFilter extends React.Component {
         this.props.loadMatches({PATH_URL: API_URL.CRYPTOSIGN.LOAD_MATCHES});
     }
 
-    get defaultMatchId(){
-        const {matches} = this.state;
-        if(matches && matches.length > 0){
-            const firstMatch = matches[0];
-            return firstMatch.id;
-
-        }
-        return -1;
+    get defaultMatch(){
+        const matchNames = this.matchNames;
+        return matchNames && matchNames.length > 0 ? matchNames[0] : null;
     }
 
-    get defaultOutcomeId(){
-        const {selectedMatch, matches} = this.state;
-        const foundMatch = this.foundMatch;
-        if (foundMatch){
-            const {outcomes} = foundMatch;
-            if(outcomes && outcomes.length > 0){
-                const firstOutcome = outcomes[0];
-                return firstOutcome.id;
-            }
-        } 
+    get defaultOutcome(){
+        const matchOutcomes = this.matchOutcomes;
+        return matchOutcomes && matchOutcomes.length > 0 ? matchOutcomes[0] : null;
     }
 
     get foundMatch(){
@@ -222,7 +94,7 @@ class BettingFilter extends React.Component {
         }
         return null;
     }
-    get matchResults(){
+    get matchOutcomes(){
         const {selectedMatch, matches} = this.state;
         if(selectedMatch){
             const foundMatch = this.foundMatch;
@@ -271,19 +143,29 @@ class BettingFilter extends React.Component {
     render(){
         const {matches, selectedMatch, selectedOutcome} = this.state;
         const outcomeId = (selectedOutcome && selectedOutcome.id) ? selectedOutcome.id : null;
+        const defaultMatchId = this.defaultMatch ? this.defaultMatch.id : null;
+        console.log("Default Match:", defaultMatchId);
+        console.log('Default Outcome:', defaultOutcome);
+        const defaultOutcome = this.defaultOutcome;
         return (
             <div className="wrapperBettingFilter">
             <div className="dropDown">
                 <Dropdown placeholder="Select a match" 
-                defaultId={this.defaultMatchId}
+                defaultId={defaultMatchId}
                 source={this.matchNames}
                 onItemSelected={(item) => this.setState({selectedMatch: item})} />
             </div>
             {selectedMatch && <div className="dropDown">
                 <Dropdown placeholder="Select a prediction" 
-                defaultId={this.defaultOutcomeId}
-                source={this.matchResults} 
-                onItemSelected={(item) => this.callGetHandshakes(item)} />
+                //defaultId={this.defaultOutcomeId}
+                source={this.matchOutcomes} 
+                onItemSelected={(item) => {
+                    /*this.callGetHandshakes(item)*/
+                    this.setState({
+                        selectedOutcome: item
+                    },() => this.callGetHandshakes(item))
+                } 
+                }/>
             </div>}
             
                 <div className="wrapperContainer">
@@ -301,17 +183,13 @@ class BettingFilter extends React.Component {
         );
     }
     callGetHandshakes(item){
-        console.log('')
         
-        this.setState({selectedOutcome: item}, ()=> {
-            const params = {
-                outcome_id: item.id,
-            }
-            this.props.loadHandshakes({PATH_URL: API_URL.CRYPTOSIGN.LOAD_HANDSHAKES, METHOD:'POST', data: params,
-            successFn: this.getHandshakeSuccess,
-            errorFn: this.getHandshakeFailed});
-
-        })
+        const params = {
+            outcome_id: item.id,
+        }
+        this.props.loadHandshakes({PATH_URL: API_URL.CRYPTOSIGN.LOAD_HANDSHAKES, METHOD:'POST', data: params,
+        successFn: this.getHandshakeSuccess,
+        errorFn: this.getHandshakeFailed});
     }
     getHandshakeSuccess = async (successData)=>{
         console.log('getHandshakeSuccess', successData);
