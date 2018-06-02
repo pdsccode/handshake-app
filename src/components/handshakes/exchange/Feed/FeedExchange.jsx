@@ -816,7 +816,7 @@ class FeedExchange extends React.PureComponent {
       distanceMeters = getDistanceFromLatLonInKm(latitude, longitude, latLng[0], latLng[1]) * 1000
       distanceMiles = distanceMeters * 0.000621371
     }
-
+    const isCreditCard = offer.feedType === 'instant'
     return (
       <div>
         {
@@ -839,7 +839,7 @@ class FeedExchange extends React.PureComponent {
                 }}/>
               </h5>
             </div>
-            { mode === 'me' && (
+            { mode === 'me' && !isCreditCard && (
               <div className="ml-auto pl-2" style={{ width: '50px' }}>
                 <Link to={URL.HANDSHAKE_CHAT_INDEX}>
                   <img src={iconChat} width='35px' />
@@ -862,36 +862,42 @@ class FeedExchange extends React.PureComponent {
                 </div>
               </div>
             ) : (
-              <div>
-                <div className="media mb-1">
-                  <img className="mr-1" src={iconPhone} width={20}/>
-                  <div className="media-body">
-                    <div>
-                      <a href={`tel:${phone}`} className="text-white">{phone}</a>
+              !isCreditCard && (
+                <div>
+                  <div className="media mb-1">
+                    <img className="mr-1" src={iconPhone} width={20}/>
+                    <div className="media-body">
+                      <div>
+                        <a href={`tel:${phone}`} className="text-white">{phone}</a>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="media">
+                    <img className="mr-1" src={iconLocation} width={20}/>
+                    <div className="media-body">
+                      <div>{address}</div>
                     </div>
                   </div>
                 </div>
-                <div className="media">
-                  <img className="mr-1" src={iconLocation} width={20}/>
-                  <div className="media-body">
-                    <div>{address}</div>
+              )
+            )
+          }
+          {
+            !isCreditCard && (
+              <div className="media">
+                <img className="mr-1" src={mode === 'discover' ? iconLocation : ''} width={20} />
+                <div className="media-body">
+                  <div style={{ fontSize: mode === 'me' ? '80%' : '' }}>
+                    <FormattedMessage id="offerDistanceContent" values={{
+                      // offerType: offer.type === 'buy' ? 'Buyer' : 'Seller',
+                      distanceMeters: distanceMeters.toFixed(0),
+                      distanceMiles: distanceMiles.toFixed(1),
+                    }}/>
                   </div>
                 </div>
               </div>
             )
           }
-          <div className="media">
-            <img className="mr-1" src={mode === 'discover' ? iconLocation : ''} width={20} />
-            <div className="media-body">
-              <div style={{ fontSize: mode === 'me' ? '80%' : '' }}>
-                <FormattedMessage id="offerDistanceContent" values={{
-                  // offerType: offer.type === 'buy' ? 'Buyer' : 'Seller',
-                  distanceMeters: distanceMeters.toFixed(0),
-                  distanceMiles: distanceMiles.toFixed(1),
-                }}/>
-              </div>
-            </div>
-          </div>
         </Feed>
         {/*<Button block className="mt-2" onClick={this.confirmShakeOffer}>{titleButton}</Button>*/}
         {actionButtons}
