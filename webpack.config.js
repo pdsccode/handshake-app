@@ -131,6 +131,10 @@ const production = {
       filename: 'css/[name].css',
       chunkFilename: 'css/[hash].[name].css',
     }),
+    new OfflinePlugin({
+      publicPath: process.env.PUBLIC_URL,
+      appShell: '/index.html',
+    }),
   ],
   performance: { hints: false },
 };
@@ -202,10 +206,6 @@ module.exports = function webpackConfig(env, argv) {
               destination: path.join('assets', 'icons'),
             },
           ],
-        }),
-        new OfflinePlugin({
-          publicPath: process.env.PUBLIC_URL,
-          appShell: '/index.html',
         }),
       ],
       module: {
