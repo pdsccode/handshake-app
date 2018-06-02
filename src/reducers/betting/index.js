@@ -22,7 +22,7 @@ const bettingReducter = (state = {
       return {
         ...state,
         isFetching: false,
-        matches:  action.payload.data,
+        matches: action.payload.data,
       };
     case `${BETTING_ACTIONS.LOAD_MATCHES}_FAILED`:
       return {

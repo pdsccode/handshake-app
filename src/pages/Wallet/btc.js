@@ -1,258 +1,234 @@
-var bitcore =  require('bitcore-lib');
-var requestPromise = require('request-promise');
-var bluebird = require('bluebird');
-var BigNumber = require('bignumber.js');
-var satoshi = require('satoshi-bitcoin')
+const bitcore = require('bitcore-lib');
+const requestPromise = require('request-promise');
+const bluebird = require('bluebird');
+const BigNumber = require('bignumber.js');
+const satoshi = require('satoshi-bitcoin');
 
 
 class Bitcoin {
-
   constructor(btcServer) {
     this.btcServer = btcServer;
   }
 
   getBalance(address) {
-    var server = this.btcServer;
-    return new bluebird.Promise(function (resolve, reject) {
-
-      var url = server + '/addr/' + address + '/balance';
+    const server = this.btcServer;
+    return new bluebird.Promise(((resolve, reject) => {
+      const url = `${server}/addr/${address}/balance`;
 
       requestPromise(url)
-        .then(function (balance) {
-          console.log("satoshi.toBitcoin(balance)", satoshi.toBitcoin(balance));
+        .then((balance) => {
+          console.log('satoshi.toBitcoin(balance)', satoshi.toBitcoin(balance));
           resolve(satoshi.toBitcoin(balance));
         })
-        .catch(function (err) {
-          //console.log("err:"+err);
+        .catch((err) => {
+          // console.log("err:"+err);
           reject(err);
         });
-
-    })
+    }));
   }
 
 
-  transfer(privateKey, to, amount){
-    var server = this.btcServer;
-    if(server.toString().includes("test")){
+  transfer(privateKey, to, amount) {
+    const server = this.btcServer;
+    if (server.toString().includes('test')) {
       bitcore.Networks.defaultNetwork = bitcore.Networks.testnet;
     }
 
-    var prKey = bitcore.HDPrivateKey(privateKey).privateKey.toString();
+    const prKey = bitcore.HDPrivateKey(privateKey).privateKey.toString();
 
-    var pubKey = bitcore.HDPublicKey(privateKey);
+    const pubKey = bitcore.HDPublicKey(privateKey);
 
-    var address = new bitcore.Address(pubKey.publicKey).toString();
+    const address = new bitcore.Address(pubKey.publicKey).toString();
 
     // return prKey;
 
-    //console.log("transfered from address:" + address);
+    // console.log("transfered from address:" + address);
 
-    //each BTC can be split into 100,000,000 units. Each unit of bitcoin, or 0.00000001 bitcoin, is called a satoshi
-    var amountBig = new BigNumber(amount.toString());
-    var satoShiRate = new BigNumber('100000000');
+    // each BTC can be split into 100,000,000 units. Each unit of bitcoin, or 0.00000001 bitcoin, is called a satoshi
+    const amountBig = new BigNumber(amount.toString());
+    const satoShiRate = new BigNumber('100000000');
     amount = amountBig.times(satoShiRate).toString();
 
-    var data = {};
+    const data = {};
 
-    utxosForAmount(server, address,Number(amount))
-      .then(function(utxos){
+    utxosForAmount(server, address, Number(amount))
+      .then((utxos) => {
         data.utxos = utxos;
 
         return getFee(server, 4);
       })
-      .then(function(fee){
-
+      .then((fee) => {
         data.fee = fee;
 
-        var transaction = new bitcore.Transaction()
+        const transaction = new bitcore.Transaction()
           .from(data.utxos)
           .change(address)
           .fee(data.fee)
-          .to(to,Number(amount))
+          .to(to, Number(amount))
           .sign(prKey);
 
-        //console.log(transaction);
-        var rawTx = transaction.serialize();
-        return sendRawTx(server,rawTx);
-
+        // console.log(transaction);
+        const rawTx = transaction.serialize();
+        return sendRawTx(server, rawTx);
       })
-      .then(function(txHash){
-        return txHash;
-        //console.log(txHash);
-      })
-      .catch(function(err){
-        //console.log(err);
-        return err;
-      });
-
+      .then(txHash =>
+        txHash,
+        // console.log(txHash);
+      )
+      .catch(err =>
+        // console.log(err);
+        err);
   }
-  transfer2(fromAddress, privateKey, to, amount){
-    var server = this.btcServer;
-    if(server.toString().includes("test")){
+  transfer2(fromAddress, privateKey, to, amount) {
+    const server = this.btcServer;
+    if (server.toString().includes('test')) {
       bitcore.Networks.defaultNetwork = bitcore.Networks.testnet;
     }
 
-   
-    console.log("transfered from address:" + fromAddress);
 
-    //each BTC can be split into 100,000,000 units. Each unit of bitcoin, or 0.00000001 bitcoin, is called a satoshi
-    var amountBig = new BigNumber(amount.toString());
-    var satoShiRate = new BigNumber('100000000');
+    console.log(`transfered from address:${fromAddress}`);
+
+    // each BTC can be split into 100,000,000 units. Each unit of bitcoin, or 0.00000001 bitcoin, is called a satoshi
+    const amountBig = new BigNumber(amount.toString());
+    const satoShiRate = new BigNumber('100000000');
     amount = amountBig.times(satoShiRate).toString();
 
-    var data = {};
+    const data = {};
 
     utxosForAmount(server, fromAddress, Number(amount))
-      .then(function(utxos){
+      .then((utxos) => {
         data.utxos = utxos;
 
         return getFee(server, 4);
       })
-      .then(function(fee){
-
+      .then((fee) => {
         data.fee = fee;
 
-        var transaction = new bitcore.Transaction()
+        const transaction = new bitcore.Transaction()
           .from(data.utxos)
           .change(fromAddress)
           .fee(data.fee)
           .to(to, Number(amount))
           .sign(privateKey);
 
-        //console.log(transaction);
-        var rawTx = transaction.serialize();
-        
-        return sendRawTx(server,rawTx);
+        // console.log(transaction);
+        const rawTx = transaction.serialize();
 
+        return sendRawTx(server, rawTx);
       })
-      .then(function(txHash){
-        return txHash;
-        //console.log(txHash);
-      })
-      .catch(function(err){
-        //console.log(err);
-        return err;
-      });
-
+      .then(txHash =>
+        txHash,
+        // console.log(txHash);
+      )
+      .catch(err =>
+        // console.log(err);
+        err);
   }
-
 }
 
 
-var retrieveUtxos = function (server, address) {
-
-  return new bluebird.Promise(function (resolve, reject) {
-
-    var url = server +'/addr/' + address + '/utxo';
+const retrieveUtxos = function (server, address) {
+  return new bluebird.Promise(((resolve, reject) => {
+    const url = `${server}/addr/${address}/utxo`;
     requestPromise(url)
-      .then(function (utxos) {
+      .then((utxos) => {
         utxos = JSON.parse(utxos);
-        utxos.sort(function(a, b) {
-          return b.satoshis - a.satoshis;
-        });
+        utxos.sort((a, b) => b.satoshis - a.satoshis);
         resolve(utxos);
       })
-      .catch(function (err) {
+      .catch((err) => {
         reject(err);
       });
-
-  });
-}
-
+  }));
+};
 
 
 var utxosForAmount = function (server, address, amount) {
-  return new bluebird.Promise(function (resolve, reject) {
+  return new bluebird.Promise(((resolve, reject) => {
     retrieveUtxos(server, address)
-      .then(function (utxos) {
-        console.log("utxos:"+JSON.stringify(utxos))
+      .then((utxos) => {
+        console.log(`utxos:${JSON.stringify(utxos)}`);
 
-        var result = findUtxos(utxos, 0, amount, []);
+        const result = findUtxos(utxos, 0, amount, []);
         console.log(result);
-        if(!result)
-          return reject({"error": "Insufficent Balance"});
+        if (!result) { return reject({ error: 'Insufficent Balance' }); }
 
         resolve(result);
       })
-      .catch(function (err) {
+      .catch((err) => {
         reject(err);
       });
-  });
-}
+  }));
+};
 
-var findUtxos = function (utxos, pos, amount , result) {
-  if(pos >= utxos.length)
-    return null;
+var findUtxos = function (utxos, pos, amount, result) {
+  if (pos >= utxos.length) { return null; }
 
-  var utxo = utxos[pos];
+  const utxo = utxos[pos];
   result.push(utxo);
-  //console.log("utxo.satoshis >= amount"+utxo.satoshis+":"+ amount);
+  // console.log("utxo.satoshis >= amount"+utxo.satoshis+":"+ amount);
 
-  if(utxo.satoshis >= amount){ //in case of enough money
+  if (utxo.satoshis >= amount) { // in case of enough money
     return result;
   }
-  else{
-    amount = amount - utxo.satoshis;
 
-    return findUtxos(utxos, pos+1, amount, result);
-  }
-}
+  amount -= utxo.satoshis;
+
+  return findUtxos(utxos, pos + 1, amount, result);
+};
 
 
 var getFee = function (server, blocks) {
-  return new bluebird.Promise(function (resolve, reject) {
-    var url = server +'/utils/estimatefee?nbBlocks='+blocks;
+  return new bluebird.Promise(((resolve, reject) => {
+    const url = `${server}/utils/estimatefee?nbBlocks=${blocks}`;
     requestPromise(url)
-      .then(function (fee) {
+      .then((fee) => {
         fee = JSON.parse(fee);
-        var txFee = bitcore.Unit.fromBTC(fee[blocks]).toSatoshis()
-        console.log("data.txFee"+txFee);
+        const txFee = bitcore.Unit.fromBTC(fee[blocks]).toSatoshis();
+        console.log(`data.txFee${txFee}`);
         resolve(txFee);
       })
-      .catch(function (err) {
+      .catch((err) => {
         reject(err);
       });
-  });
-}
+  }));
+};
 
 
 var sendRawTx = function (server, rawTx) {
+  console.log('rawTx', rawTx);
+  const uri = `${server}/tx/send`;
+  console.log('uri', uri);
 
-  console.log("rawTx", rawTx);
-  let uri = server + '/tx/send';
-  console.log("uri", uri);
-
-  return new bluebird.Promise(function (resolve, reject) {
-    var options = {
+  return new bluebird.Promise(((resolve, reject) => {
+    const options = {
       method: 'POST',
-      uri: uri,
+      uri,
       body: {
-        rawtx: rawTx
+        rawtx: rawTx,
       },
-      json: true // Automatically stringifies the body to JSON
+      json: true, // Automatically stringifies the body to JSON
     };
     requestPromise(options)
-      .then(function (data) {
+      .then((data) => {
         resolve(data);
-      }).catch(function (err) {
-      reject(err);
-    });
-  });
-}
+      }).catch((err) => {
+        reject(err);
+      });
+  }));
+};
 
 
-module.exports = Bitcoin
-
+module.exports = Bitcoin;
 
 
 const testnet = 'https://test-insight.bitpay.com/api';
 
-var btcTestnet = new Bitcoin(testnet);
+const btcTestnet = new Bitcoin(testnet);
 
 
-
-//var tx = btcTestnet.transfer("tprv8j91JifmvkdWmQgqQKbYsXXagNc2fvqtj7TWc7ZjDJVjz49tK5dWQnLZqwGSPE5h7mzKdpbPR9PJpQawSq2aA1Jebiaj2NqS6FVPvqx3yqS","n1S1ySUAGedc6RM4tYUbhSrZXdUfv8uvYT", 0.001);
-var tx2 = btcTestnet.transfer2("muU86kcQGfJUydQ9uZmfJwcDRb1H5PQuzr", "86591c463220271f2d61a19f076d84a2017f850f9643675e49f07dd733f99c2d","n1S1ySUAGedc6RM4tYUbhSrZXdUfv8uvYT", 0.000001);
+// var tx = btcTestnet.transfer("tprv8j91JifmvkdWmQgqQKbYsXXagNc2fvqtj7TWc7ZjDJVjz49tK5dWQnLZqwGSPE5h7mzKdpbPR9PJpQawSq2aA1Jebiaj2NqS6FVPvqx3yqS","n1S1ySUAGedc6RM4tYUbhSrZXdUfv8uvYT", 0.001);
+const tx2 = btcTestnet.transfer2('muU86kcQGfJUydQ9uZmfJwcDRb1H5PQuzr', '86591c463220271f2d61a19f076d84a2017f850f9643675e49f07dd733f99c2d', 'n1S1ySUAGedc6RM4tYUbhSrZXdUfv8uvYT', 0.000001);
 
 console.log(tx2);
 

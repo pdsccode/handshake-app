@@ -42,6 +42,7 @@ const handshakeReducter = (state = {
         default:
         return state;
     }
+
 };
 
 export default handshakeReducter;

@@ -1,15 +1,15 @@
 
 export const SIDE = {
-    GUEST: 0,
-    SUPPORT: 1,
-    AGAINST: 2
-}
+  GUEST: 0,
+  SUPPORT: 1,
+  AGAINST: 2,
+};
 
 export const BETTING_STATUS = {
-    INITED: -1, 
-    DRAW: 0, 
-    SUPPORT_WIN: 1, 
-    AGAINST_WIN: 2
+  INITED: -1,
+  DRAW: 0,
+  SUPPORT_WIN: 1,
+  AGAINST_WIN: 2,
 };
 
 export const BETTING_STATUS_LABEL =
@@ -54,6 +54,5 @@ export class BetHandshakeHandler {
             isAction = true;
         }
         return {"title": label, "isAction": isAction, "status": strStatus};
-
-    }
+  }
 }

@@ -162,6 +162,5 @@ export const HANSHAKE_USER_NAME = {
 export const DEFAULT_FEE = {
   ETH: 0,
   BTC: 0,
-}
-
+};
 
