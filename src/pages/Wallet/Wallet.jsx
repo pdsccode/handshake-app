@@ -15,6 +15,7 @@ import iconSafe from '@/assets/images/icon/icon-safe.svg';
 import iconWarning from '@/assets/images/icon/icon-warning.svg';
 // import iconChecked from '@/assets/images/icon/icon-check.png';
 import iconLoading from '@/assets/images/icon/loading.svg.raw';
+import iconQRCodeBlack from '@/assets/images/icon/qr-code-black.png';
 
 import Header from './Header';
 import HeaderMore from './HeaderMore';
@@ -25,6 +26,7 @@ import ReactBottomsheet from 'react-bottomsheet';
 // var ReactBottomsheet = require('react-bottomsheet');
 // var Blob = require('./Blob.js');
 import { setHeaderRight } from '@/reducers/app/action';
+import QrReader from 'react-qr-reader'
 
 // import filesaver from 'file-saver';
 
@@ -78,11 +80,19 @@ class Wallet extends React.Component {
       countCheckCoinToCreate: 1,
       walletKeyDefaultToCreate: 1,
       input12PhraseValue: '',
+      //Qrcode
+      delay: 300,
+      result: 'No result',
+      
       walletsData: false,
       isNewCCOpen: false,
       step: 1
     };
     this.props.setHeaderRight(this.headerRight());
+    
+    //For QRcode:
+    this.handleScan = this.handleScan.bind(this)  
+
   }
 
   headerRight() {
@@ -123,14 +133,14 @@ class Wallet extends React.Component {
     // console.log("default", MasterWallet.getWalletDefault("ETH"))
 
     if (listWallet == false){
-        listWallet = await MasterWallet.createMasterWallets();
+        // listWallet = await MasterWallet.createMasterWallets();
         // fill data:
-        await this.splitWalletData(listWallet)
+        // await this.splitWalletData(listWallet)
     }
     else{
       this.splitWalletData(listWallet)
       console.log('update balance for lst wallet');
-      await this.getListBalace(listWallet);
+      // await this.getListBalace(listWallet);
     }
      /*var btc = new Bitcoin();
      var tx = await btc.transfer("tprv8ccSMiuz5MfvmYHzdMbz3pjn5uW3G8zxM975sv4MxSGkvAutv54raKHiinLsxW5E4UjyfVhCz6adExCmkt7GjC41cYxbNxt5ZqyJBdJmqPA","mrPJ6rBHpJGnsLK3JGfJQjdm5vkjeAb63M", 0.0001);
@@ -471,6 +481,31 @@ class Wallet extends React.Component {
     this.splitWalletData(lstWalletTemp);
   }
 
+  // For Qrcode:
+  handleScan(data){
+    if(data){
+      this.setState({
+        result: data,
+      })
+    }
+  }
+  handleError(err){
+    console.log("error wc",err)
+  }
+  renderScanQRCode = () =>{    
+    return(
+      <div>
+        <QrReader
+          delay={this.state.delay}
+          onError={this.handleError}
+          onScan={this.handleScan}
+          style={{ width: '100%' }}
+          />
+        <p>{this.state.result}</p>
+      </div>
+    )
+  }
+
   render() {
     const {intl, userProfile, cryptoPrice, amount, userCcLimit, ccLimits} = this.props;
     return (
@@ -495,9 +530,12 @@ class Wallet extends React.Component {
         {/* ModalDialog for transfer coin */}
         <Modal title="Send" onRef={modal => this.modalSendRef = modal}>
           <SendWalletForm className="sendwallet-wrapper" onSubmit={this.sendCoin}>
-            <Input name="to_address" placeholder="To address" required
+          <div className="div-address-qr-code">
+            <Input name="to_address" placeholder="To address" required className="input-address-qr-code"
               onChange={evt => this.updateSendAddressValue(evt)}
-              />
+            />
+            <img onClick={() => { this.refs.qrReader.openImageDialog(); }} className="icon-qr-code-black" src={iconQRCodeBlack} />
+          </div>
             <Input name="amount" type="tel" required
               placeholder={ this.state.walletSelected ? "Amount ({0})".format(this.state.walletSelected.name) : "Amount "}
               onChange={evt => this.updateSendAmountValue(evt)}
@@ -577,13 +615,16 @@ class Wallet extends React.Component {
             : ""
           }
 
-          <Button block isLoading={this.state.isRestoreLoading} disabled={this.state.countCheckCoinToCreate == 0 || (this.state.walletKeyDefaultToCreate == 2 && this.state.input12PhraseValue.trim().split(/\s+/g).length != 12) } className="button" cssType="success" onClick={() => {this.createNewWallets()}} >                        
-            Create
+          <Button block isLoading={this.state.isRestoreLoading} disabled={this.state.countCheckCoinToCreate == 0 || (this.state.walletKeyDefaultToCreate == 2 && this.state.input12PhraseValue.trim().split(/\s+/g).length != 12) } className="button button-wallet" cssType="primary" onClick={() => {this.createNewWallets()}} >                        
+            Create wallet
           </Button>
           <Header />
           {/*<div className="linkImportWallet">I want to import coins</div>*/}
           
         </Modal>
+
+        {/*QR code dialog*/}
+        {this.renderScanQRCode()}        
 
         {/* Render list wallet: */}
         <Row className="list">
