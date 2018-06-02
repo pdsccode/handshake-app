@@ -20,7 +20,7 @@ import {connect} from 'react-redux';
 import {createOffer, getOfferPrice} from '@/reducers/exchange/action';
 import {
   API_URL,
-  CRYPTO_CURRENCY,
+  CRYPTO_CURRENCY_LIST,
   CRYPTO_CURRENCY_DEFAULT,
   DEFAULT_FEE,
   EXCHANGE_ACTION,
@@ -394,7 +394,7 @@ class Component extends React.Component {
                   <Field
                     name="currency"
                     component={fieldRadioButton}
-                    list={CRYPTO_CURRENCY}
+                    list={CRYPTO_CURRENCY_LIST}
                     color={mainColor}
                     validate={[required]}
                     onChange={this.onCurrencyChange}
