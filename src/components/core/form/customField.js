@@ -143,7 +143,7 @@ export const fieldPhoneInput = customField(({
           onChange={e => onChange(`${e.target.value}-${phoneNumber}`)}
           value={countryCode}
         >
-          <option key={-1} value="">-----------</option>
+          <option key={-1} value="">-------</option>
           {
             phoneCountryCodes.map((item, index) => {
               const { name, callingCode } = item;
