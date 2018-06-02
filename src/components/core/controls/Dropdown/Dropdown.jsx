@@ -32,6 +32,14 @@ class Dropdown extends React.PureComponent {
     }));
   }
 
+  componentDidMount() {
+    const { defaultId, source } = this.props;
+    if (defaultId && source && source.length > 0) {
+      const itemDefault = source.find(item => item.id === defaultId);
+      this.setState({ text: itemDefault.value, idActive: itemDefault.id });
+    }
+  }
+
   render() {
     const { className, source } = this.props;
     const { text, isShow, idActive } = this.state;
@@ -63,6 +71,7 @@ Dropdown.propTypes = {
   placeholder: PropTypes.string,
   className: PropTypes.string,
   onItemSelected: PropTypes.func,
+  defaultId: PropTypes.any,
   source: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.any,
     value: PropTypes.string,

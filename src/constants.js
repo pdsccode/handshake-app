@@ -64,6 +64,7 @@ export const API_URL = {
     INIT_HANDSHAKE: 'cryptosign/handshake/init',
     SHAKE: 'cryptosign/handshake/shake',
     LOAD_MATCHES: 'cryptosign/match',
+    LOAD_HANDSHAKES: 'cryptosign/handshake'
   },
   DISCOVER: {
     BASE: 'handshake/discover',
@@ -161,6 +162,5 @@ export const HANSHAKE_USER_NAME = {
 export const DEFAULT_FEE = {
   ETH: 0,
   BTC: 0,
-}
-
+};
 

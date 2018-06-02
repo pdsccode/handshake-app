@@ -8,7 +8,6 @@ import { URL } from '@/config';
 // components
 import { Grid, Row, Col } from 'react-bootstrap';
 import SearchBar from '@/components/core/controls/SearchBar';
-import Button from '@/components/core/controls/Button';
 import Category from '@/components/core/controls/Category';
 import FeedPromise from '@/components/handshakes/promise/Feed';
 import FeedBetting from '@/components/handshakes/betting/Feed';
@@ -25,7 +24,7 @@ import './Discover.scss';
 
 const maps = {
   [HANDSHAKE_ID.PROMISE]: FeedPromise,
-  [HANDSHAKE_ID.BETTING]: FeedBetting,
+  //[HANDSHAKE_ID.BETTING]: FeedBetting,
   [HANDSHAKE_ID.EXCHANGE]: FeedExchange,
   [HANDSHAKE_ID.SEED]: FeedSeed,
 };

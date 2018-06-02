@@ -7,7 +7,7 @@ import "./GroupBook.scss";
 
 class GroupBook extends React.Component {
     static propTypes = {
-        bookList: PropTypes.array.isRequired,
+        bookList: PropTypes.array,
         amountColor: PropTypes.string,
       }
     static defaultProps = {
@@ -30,7 +30,7 @@ class GroupBook extends React.Component {
         console.log('BookList:', bookList);
         return (
             <div className="wrapperGroupBook">
-            {bookList.map((item, index) =>
+            {bookList&& bookList.map((item, index) =>
                 <Book amountColor={amountColor} key={item.id} item={item}/>
               )}
             </div>

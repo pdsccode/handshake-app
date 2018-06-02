@@ -54,14 +54,14 @@ class BetingShake extends React.Component {
       buttonClass: 'btnOK btnBlue',
       isShowOdds: false,
       extraData: {},
-      
+
     };
 
     this.onSubmit = ::this.onSubmit;
     this.onCancel = ::this.onCancel;
     this.renderInputField = ::this.renderInputField;
     this.renderForm = ::this.renderForm;
-    this.onToggleChan::this.onToggleChange;
+    this.onToggleChange = ::this.onToggleChange;
   }
   componentDidMount(){
     const {extraData} = this.state;
@@ -336,6 +336,25 @@ class BetingShake extends React.Component {
 
   initHandshakeSuccess = async (successData)=>{
     console.log('initHandshakeSuccess', successData);
+    const {status, data} = successData
+    const {values, selectedOutcome} = this.state;
+    const stake = values['event_bet'];
+    const event_odds = values['event_odds'];
+    const payout = stake * event_odds;
+    const hid = selectedOutcome.id;
+    if(status && data){
+      const {offchain, side} = data;
+      var result = null;
+      if(this.isShakedBet(data)){
+        result = await bettinghandshake.shake(hid, side,stake, payout,maker, offchain);
+      }else {
+        result = await bettinghandshake.initBet(hid, side,stake, payout, offchain);
+      }
+      if(result){
+        //TO DO: redirect and show alert
+      }
+      
+    }
   }
   initHandshakeFailed = (error) => {
     console.log('initHandshakeFailed', error);

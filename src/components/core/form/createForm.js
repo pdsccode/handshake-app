@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { reduxForm } from 'redux-form';
 
 const Form = (props) => {
@@ -8,6 +9,12 @@ const Form = (props) => {
       {children}
     </form>
   );
+};
+
+Form.propTypes = {
+  children: PropTypes.any.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
+  className: PropTypes.string.isRequired,
 };
 
 export default ({ propsReduxForm }) => reduxForm(propsReduxForm)(Form);
