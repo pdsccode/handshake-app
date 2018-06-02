@@ -660,12 +660,12 @@ class FeedExchange extends React.PureComponent {
           case HANDSHAKE_EXCHANGE_STATUS.CREATED: {
             // actionButtons = 'Cancel';
             //call action cancel
-            message = intl.formatMessage({id: 'cancelOfferConfirm'}, {});
-            actionButtons = (
-              <div>
-                <Button block className="mt-2" onClick={() => this.confirmShakeOffer(message, this.handleCloseOffer)}>Cancel</Button>
-              </div>
-            );
+            // message = intl.formatMessage({id: 'cancelOfferConfirm'}, {});
+            // actionButtons = (
+            //   <div>
+            //     <Button block className="mt-2" onClick={() => this.confirmShakeOffer(message, this.handleCloseOffer)}>Cancel</Button>
+            //   </div>
+            // );
             break;
           }
           case HANDSHAKE_EXCHANGE_STATUS.ACTIVE: {
