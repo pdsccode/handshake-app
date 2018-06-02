@@ -1,4 +1,5 @@
 import MobileDetect from 'mobile-detect';
+
 let instance = null;
 
 
@@ -10,10 +11,10 @@ class BrowserDetect {
     }
     return instance;
   }
-  
+
   /**
    * check is mobile
-   * 
+   *
    * @readonly
    * @memberof BrowserDetect
    */
@@ -23,7 +24,7 @@ class BrowserDetect {
 
   /**
    * check is tablet
-   * 
+   *
    * @readonly
    * @memberof BrowserDetect
    */
@@ -33,7 +34,7 @@ class BrowserDetect {
 
   /**
    * check is desktop
-   * 
+   *
    * @readonly
    * @memberof BrowserDetect
    */

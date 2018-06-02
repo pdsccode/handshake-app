@@ -34,7 +34,7 @@ const config = {
     storageBucket: '',
     messagingSenderId: '',
     */
-   apiKey: 'AIzaSyAY_QJ_6ZmuYfNR_oM65a0JVvzIyMb-n9Q',
+    apiKey: 'AIzaSyAY_QJ_6ZmuYfNR_oM65a0JVvzIyMb-n9Q',
     authDomain: 'handshake-205007.firebaseapp.com',
     databaseURL: 'https://handshake-205007.firebaseio.com',
     projectId: 'handshake-205007',
