@@ -63,7 +63,7 @@ class Alert extends React.PureComponent {
     const tyleClassName = this.getTypeClass(type);
     if (!isShow) return null;
     return (
-      <div className={`alert alerts ${tyleClassName}`} role="alert">
+      <div className={`alert alerts animated ${tyleClassName} ${isShow && 'slideInDown'}`} role="alert">
         {message}
       </div>
     );

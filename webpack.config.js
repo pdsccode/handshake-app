@@ -78,9 +78,19 @@ const development = {
 const production = {
   optimization: {
     minimize: true,
+    minimizer: [
+      new UglifyJsPlugin({
+        uglifyOptions: {
+          compress: {
+            drop_console: true,
+          },
+        },
+      }),
+    ],
     splitChunks: {
       chunks: 'all',
     },
+    noEmitOnErrors: true,
   },
   module: {
     rules: [
@@ -121,6 +131,10 @@ const production = {
     new MiniCssExtractPlugin({
       filename: 'css/[name].css',
       chunkFilename: 'css/[hash].[name].css',
+    }),
+    new OfflinePlugin({
+      publicPath: process.env.PUBLIC_URL,
+      appShell: '/index.html',
     }),
   ],
   performance: { hints: false },
@@ -193,10 +207,6 @@ module.exports = function webpackConfig(env, argv) {
               destination: path.join('assets', 'icons'),
             },
           ],
-        }),
-        new OfflinePlugin({
-          publicPath: process.env.PUBLIC_URL,
-          appShell: '/index.html',
         }),
       ],
       module: {

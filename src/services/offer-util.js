@@ -1,10 +1,10 @@
 import local from '@/services/localStore';
-import {APP, HANDSHAKE_USER} from "../constants";
+import { APP, HANDSHAKE_USER } from '../constants';
 
-export function getOfferPrice(listOfferPrice = [], type = '', currency = '' ) {
+export function getOfferPrice(listOfferPrice = [], type = '', currency = '') {
   let result = null;
 
-  for (let offerPrice of listOfferPrice) {
+  for (const offerPrice of listOfferPrice) {
     if (offerPrice.type === type && offerPrice.currency === currency) {
       result = offerPrice;
       break;
@@ -22,9 +22,8 @@ export function getHandshakeUserType(initUserId, shakeUserIds = []) {
     return HANDSHAKE_USER.OWNER;
   } else if (shakeUserIds.includes(userId)) {
     return HANDSHAKE_USER.SHAKED;
-  } else {
-    return HANDSHAKE_USER.NORMAL;
   }
+  return HANDSHAKE_USER.NORMAL;
 }
 
 export default { getOfferPrice };

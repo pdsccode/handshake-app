@@ -207,3 +207,5 @@ export const exchangeList = {
   page: '2018-05-24T04:58:26.034Z',
   can_move: true,
 };
+
+export default { exchangeList };

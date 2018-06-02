@@ -1,19 +1,23 @@
-const local = {
-  save: (key, data) => {
+class LocalStore {
+  static save(key, data) {
     localStorage.setItem(key, JSON.stringify(data));
     return true;
-  },
-  get: (key) => {
+  }
+  static get(key) {
     const data = localStorage.getItem(key);
     if (data) {
+      if (data === 'undefined') {
+        LocalStore.remove(key);
+        return false;
+      }
       return JSON.parse(data);
     }
     return false;
-  },
-  remove: (key) => {
+  }
+  static remove(key) {
     localStorage.removeItem(key);
     return true;
-  },
-};
+  }
+}
 
-export default local;
+export default LocalStore;

@@ -20,7 +20,7 @@ import {createCCOrder, getCcLimits, getCryptoPrice, getUserCcLimit} from '@/redu
 import {API_URL, CRYPTO_CURRENCY, CRYPTO_CURRENCY_DEFAULT} from "@/constants";
 import {FIAT_CURRENCY} from "@/constants";
 import CryptoPrice from "@/models/CryptoPrice";
-// import {MasterWallet} from "@/models/MasterWallet";
+import {MasterWallet} from "@/models/MasterWallet";
 import { bindActionCreators } from "redux";
 import {showAlert} from '@/reducers/app/action';
 
@@ -288,7 +288,7 @@ class FeedCreditCard extends React.Component {
     let newTo = 0
 
     return (
-      <div>
+      <div className="mb-2">
         <div>
           <FormCreditCard onSubmit={this.handleSubmit} validate={this.handleValidate}>
             <Feed className="feed p-2 mb-2" background={mainColor}>
