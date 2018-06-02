@@ -8,7 +8,6 @@ import { URL } from '@/config';
 // components
 import { Grid, Row, Col } from 'react-bootstrap';
 import SearchBar from '@/components/core/controls/SearchBar';
-import Button from '@/components/core/controls/Button';
 import Category from '@/components/core/controls/Category';
 import FeedPromise from '@/components/handshakes/promise/Feed';
 import FeedBetting from '@/components/handshakes/betting/Feed';
