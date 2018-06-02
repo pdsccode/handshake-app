@@ -13,6 +13,9 @@ import {BigNumber} from 'bignumber.js';
 import {
   AMOUNT_DECIMAL,
   API_URL,
+  DEFAULT_FEE,
+  EXCHANGE_ACTION,
+  EXCHANGE_ACTION_NAME,
   EXCHANGE_FEED_TYPE,
   EXCHANGE_METHOD_PAYMENT,
   HANDSHAKE_EXCHANGE_CC_STATUS_NAME,
@@ -40,7 +43,6 @@ import {Link} from "react-router-dom";
 import {URL} from '@/config';
 import {getDistanceFromLatLonInKm} from '../utils'
 import {ExchangeHandshake} from '@/services/neuron';
-import {EXCHANGE_ACTION, EXCHANGE_ACTION_NAME} from "@/constants";
 
 class FeedExchange extends React.PureComponent {
   constructor(props) {
@@ -136,10 +138,30 @@ class FeedExchange extends React.PureComponent {
   }
 
   ////////////////////////
-  handleShakeOffer = () => {
+  handleShakeOffer = async () => {
+    const {intl} = this.props;
     const {offer, fiatAmount} = this.state;
 
     const wallet = MasterWallet.getWalletDefault(offer.currency);
+    const balance = await wallet.getBalance();
+
+    if (offer.type === EXCHANGE_ACTION.BUY && balance < offer.totalAmount + DEFAULT_FEE[offer.currency]) {
+      this.props.showAlert({
+        message: <div className="text-center">
+          {intl.formatMessage({ id: 'notEnoughCoinInWallet' }, {
+            amount: new BigNumber(balance).toFormat(6),
+            currency: offer.currency,
+          })}
+        </div>,
+        timeOut: 3000,
+        type: 'danger',
+        callBack: () => {
+        }
+      });
+
+      return;
+    }
+
     const address = wallet.address;
 
     let offerShake = {
@@ -159,7 +181,18 @@ class FeedExchange extends React.PureComponent {
 
   handleShakeOfferSuccess = (data) => {
     const { refreshPage } = this.props;
-    this.handleCallActionOnContract(data.data);
+
+    const { offer } = this.state;
+    if (offer.currency === 'ETH') {
+      this.handleCallActionOnContract(data.data);
+    } else if (offer.currency === 'BTC') {
+      if (offer.type === EXCHANGE_ACTION.BUY) {
+        const wallet = MasterWallet.getWalletDefault(offer.currency);
+        wallet.transfer(offer.systemAddress, offer.totalAmount).then(success => {
+          console.log('transfer', success);
+        });
+      }
+    }
 
     this.props.showAlert({
       message: <div className="text-center"><FormattedMessage id="shakeOfferSuccessMessage"/></div>,
