@@ -47,6 +47,7 @@ import CoinTemp from '@/pages/Wallet/CoinTemp';
 var QRCode = require('qrcode.react');
 
 window.Clipboard = (function(window, document, navigator) { var textArea, copy; function isOS() { return navigator.userAgent.match(/ipad|iphone/i); } function createTextArea(text) { textArea = document.createElement('textArea'); textArea.value = text; document.body.appendChild(textArea); } function selectText() { var range, selection; if (isOS()) { range = document.createRange(); range.selectNodeContents(textArea); selection = window.getSelection(); selection.removeAllRanges(); selection.addRange(range); textArea.setSelectionRange(0, 999999); } else { textArea.select(); } } function copyToClipboard() { document.execCommand('copy'); document.body.removeChild(textArea); } copy = function(text) { createTextArea(text); selectText(); copyToClipboard(); }; return { copy: copy }; })(window, document, navigator);
+var isIOs = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
 
 const nameFormSendWallet = 'sendWallet';
 const SendWalletForm = createForm({ propsReduxForm: { form: nameFormSendWallet }});
@@ -76,24 +77,22 @@ class Wallet extends React.Component {
       walletSelected: null,
       inputSendValue: '',
       isRestoreLoading: false,
+      inputRestoreWalletValue: '',
       erroValueBackup: false,
       listCoinTempToCreate: [],
       countCheckCoinToCreate: 1,
       walletKeyDefaultToCreate: 1,
       input12PhraseValue: '',
       //Qrcode
+      qrCodeOpen: false,
       delay: 300,
-      result: 'No result',
-      
+    
       walletsData: false,
       isNewCCOpen: false,
       step: 1
     };
     this.props.setHeaderRight(this.headerRight());
     
-    //For QRcode:
-    this.handleScan = this.handleScan.bind(this)  
-
   }
 
   headerRight() {
@@ -134,14 +133,14 @@ class Wallet extends React.Component {
     // console.log("default", MasterWallet.getWalletDefault("ETH"))
 
     if (listWallet == false){
-        // listWallet = await MasterWallet.createMasterWallets();
+        listWallet = await MasterWallet.createMasterWallets();
         // fill data:
-        // await this.splitWalletData(listWallet)
+        await this.splitWalletData(listWallet)
     }
     else{
       this.splitWalletData(listWallet)
       console.log('update balance for lst wallet');
-      // await this.getListBalace(listWallet);
+      await this.getListBalace(listWallet);
     }
      /*var btc = new Bitcoin();
      var tx = await btc.transfer("tprv8ccSMiuz5MfvmYHzdMbz3pjn5uW3G8zxM975sv4MxSGkvAutv54raKHiinLsxW5E4UjyfVhCz6adExCmkt7GjC41cYxbNxt5ZqyJBdJmqPA","mrPJ6rBHpJGnsLK3JGfJQjdm5vkjeAb63M", 0.0001);
@@ -200,7 +199,7 @@ class Wallet extends React.Component {
       obj.push({
         title: 'Send',
         handler: () => {
-          this.setState({walletSelected: wallet});
+          this.setState({walletSelected: wallet, inputAddressAmountValue: '', inputSendAmountValue: ''});
           this.toggleBottomSheet();
           this.modalSendRef.open();
         }
@@ -292,17 +291,17 @@ class Wallet extends React.Component {
 
   // Restore wallet:
   restoreWallets = () =>{
-    if (this.state.hasOwnProperty('inputRestoreWalletValue')){
-        this.setState({isRestoreLoading: true, erroValueBackup: false});
-        if (this.state.inputRestoreWalletValue != ''){
-          let walletData = MasterWallet.restoreWallets(this.state.inputRestoreWalletValue);
-          if (walletData !== false){
-            this.splitWalletData(walletData);
-            this.setState({isRestoreLoading: false});
-            this.modalRestoreRef.close();
-          }
+    
+      this.setState({isRestoreLoading: true, erroValueBackup: false});
+      if (this.state.inputRestoreWalletValue != ''){
+        let walletData = MasterWallet.restoreWallets(this.state.inputRestoreWalletValue);
+        if (walletData !== false){
+          this.splitWalletData(walletData);
+          this.setState({isRestoreLoading: false});
+          this.modalRestoreRef.close();
         }
-    }
+      }
+  
     //alert('Invalid wallets');
     this.setState({erroValueBackup: true, isRestoreLoading: false});
   }
@@ -368,7 +367,7 @@ class Wallet extends React.Component {
       handler: () => {
         this.modalRestoreRef.open();
         this.toggleBottomSheet();
-        this.setState({erroValueBackup: false, isRestoreLoading: false});
+        this.setState({erroValueBackup: false, isRestoreLoading: false, inputRestoreWalletValue: ''});
 
       }
     })
@@ -483,28 +482,41 @@ class Wallet extends React.Component {
   }
 
   // For Qrcode:
-  handleScan(data){
-    if(data){
+  handleScan=(data) =>{
+    if(data){      
       this.setState({
-        result: data,
-      })
+        inputAddressAmountValue: data,         
+      });   
+      this.modalScanQrCodeRef.close()   
     }
   }
   handleError(err){
     console.log("error wc",err)
   }
+  oncloseQrCode=()=>{        
+    this.setState({qrCodeOpen: false});    
+  }
+
+  openQrcode = () =>{    
+    this.setState({qrCodeOpen: true});  
+    this.modalScanQrCodeRef.open()
+  }
+  
   renderScanQRCode = () =>{    
+    
     return(
-      <div>
+      <Modal onClose={() => this.oncloseQrCode()} title="Scan QR code" onRef={modal => this.modalScanQrCodeRef = modal}>
+        {this.state.qrCodeOpen ? 
         <QrReader
           delay={this.state.delay}
-          onError={this.handleError}
-          onScan={this.handleScan}
-          style={{ width: '100%' }}
-          />
-        <p>{this.state.result}</p>
-      </div>
+          onScan={(data) => {this.handleScan(data)}}
+          onError={this.handleError}          
+          style={{ width: '100%', height: '100%' }}
+          />              
+        : ""}        
+      </Modal>
     )
+    
   }
 
   render() {
@@ -533,11 +545,13 @@ class Wallet extends React.Component {
           <SendWalletForm className="sendwallet-wrapper" onSubmit={this.sendCoin}>
           <div className="div-address-qr-code">
             <Input name="to_address" placeholder="To address" required className="input-address-qr-code"
+              type="text" value={this.state.inputAddressAmountValue}
               onChange={evt => this.updateSendAddressValue(evt)}
             />
-            <img onClick={() => { this.refs.qrReader.openImageDialog(); }} className="icon-qr-code-black" src={iconQRCodeBlack} />
+            {!isIOs ? <img onClick={() => { this.openQrcode() }} className="icon-qr-code-black" src={iconQRCodeBlack} /> : ""}
           </div>
             <Input name="amount" type="tel" required
+              value={this.state.inputSendAmountValue}
               placeholder={ this.state.walletSelected ? "Amount ({0})".format(this.state.walletSelected.name) : "Amount "}
               onChange={evt => this.updateSendAmountValue(evt)}
               />
@@ -575,6 +589,7 @@ class Wallet extends React.Component {
           <div className="bodyTitle">This data is the only way to restore your wallets.</div>
           <div className='bodyBackup'>
           <textarea required
+            value={this.state.inputRestoreWalletValue}
             className={this.state.erroValueBackup ? 'error' : ''}
             onChange={evt => this.updateRestoreWalletValue(evt)}
           />
