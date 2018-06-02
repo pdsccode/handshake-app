@@ -38,6 +38,7 @@
         border-radius: 6px;
         font-weight: $medium;
         font-size: rem-calc(18px);
+        color: $text-black;
       }
       .text {
         margin-bottom: rem-calc(10px);
@@ -53,6 +54,25 @@
         margin-bottom: rem-calc(33px);
         .country-code {
           width: 25%;
+          button {
+            width: 100%;
+            height: rem-calc(54px);
+            padding: 0 10px;
+            background: none;
+            border: 1px solid #efefef;
+            border-radius: 6px;
+            font-weight: $medium;
+            font-size: rem-calc(18px);
+            color: $text-black;
+          }
+          .dropdown-menu {
+            max-width: 350px;
+          }
+          .search-country {
+            width: 100%;
+            height: rem-calc(30px);
+            font-size: 1rem
+          }
         }
         .phone-number {
           width: 55%;
