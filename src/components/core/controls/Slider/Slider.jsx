@@ -15,9 +15,9 @@ class SimpleSlider extends React.PureComponent {
   }
 }
 
-SimpleSlider.propType = {
+SimpleSlider.propTypes = {
   settings: PropTypes.object.isRequired,
-  children: PropTypes.node.isRequired
-}
+  children: PropTypes.node.isRequired,
+};
 
 export default SimpleSlider;
