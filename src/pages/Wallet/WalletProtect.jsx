@@ -23,20 +23,19 @@ class WalletProtect extends React.Component {
     super(props);
     this.state = {
       step1_confirm: false,
-      step: props.step,
+      step: 1,
       arr_random: [],
       arr_confirm: []
     };
-
-    console.log("constructor", this.state.step);
   }
 
 	async componentDidMount() {
-    //reset state
 
-    //this.setState({step1_confirm: false, step: 1, arr_confirm: []});
-    console.log(this.state.step);
 	}
+
+  componentWillReceiveProps() {
+    this.setState({step1_confirm: false, step: 1, arr_confirm: []});
+  }
 
   get showStep1() {
     return this.state.step == 1 ?
@@ -202,10 +201,9 @@ class WalletProtect extends React.Component {
     }
   }
 
+
 	render(){
-    const { step} = this.props;
-    //this.setState({step: step});
-    console.log('step change', step)
+
 		return (
       <div>
         {this.showStep1}
