@@ -29,5 +29,5 @@ export default {
   cancelShakedfferSuccessMessage: 'Cancel shaked offer success',
   withdrawShakedfferSuccessMessage: 'Withdraw shaked offer success',
   buyUsingCreditCardSuccessMessge: 'Buy using Credit Card success',
-  notEnoughCoinInWallet: 'You only have {amount}({currency}) in default wallet {currency}. Please add more'
+  notEnoughCoinInWallet: 'You only have {amount}({currency}) in default wallet {currency}. Please add more',
 };

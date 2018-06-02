@@ -1,6 +1,6 @@
 import Web3 from 'web3';
 import BaseHandshake from './BaseHandshake';
-import {MasterWallet} from '@/models/MasterWallet';
+import { MasterWallet } from '@/models/MasterWallet';
 
 const wallet = MasterWallet.getWalletDefault('ETH');
 const address = wallet.address;
@@ -15,7 +15,7 @@ export default class BettingHandshake extends BaseHandshake {
   get contractFileNameWithoutExtension() {
     return 'PredictionHandshake';
   }
-  checkBalance = ()=> {
+  checkBalance = () => {
     const balance = wallet.getBalance();
     return balance;
   }
@@ -57,21 +57,21 @@ export default class BettingHandshake extends BaseHandshake {
       toAddress: this.contractAddress,
     });
   };
- 
+
   shake = (hid, side, stake, payout, maker, offchain) => {
     console.log('eth-contract-service shake', address, privateKey, hid);
     const payoutValue = Web3.utils.toWei(payout.toString(), 'ether');
     const bytesOffchain = this.web3.utils.fromAscii(offchain);
 
     const payloadData = this.handshakeInstance.methods
-      .shake(hid,side,payoutValue, maker, bytesOffchain)
+      .shake(hid, side, payoutValue, maker, bytesOffchain)
       .encodeABI();
     return this.neuron.makeRawTransaction(address, privateKey, payloadData, {
       amount: stake,
       toAddress: this.contractAddress,
     });
   };
-  //Cancel Bet when it isn't matched
+  // Cancel Bet when it isn't matched
   cancelBet = (hid, side, stake, payout, offchain) => {
     console.log(
       'eth-contract-service cancel',
@@ -165,7 +165,7 @@ export default class BettingHandshake extends BaseHandshake {
     });
   };
   */
-  
+
   withdraw = (hid, offchain) => {
     console.log(
       'eth-contract-service withdraw',

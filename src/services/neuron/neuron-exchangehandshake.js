@@ -1,6 +1,6 @@
 import Web3 from 'web3';
 import BaseHandshake from './BaseHandshake';
-import {MasterWallet} from '@/models/MasterWallet';
+import { MasterWallet } from '@/models/MasterWallet';
 
 const wallet = MasterWallet.getWalletDefault('ETH');
 const address = wallet.address;
@@ -92,7 +92,7 @@ export default class ExchangeHandshake extends BaseHandshake {
     });
   }
 
-  //shaker agree and make a handshake
+  // shaker agree and make a handshake
   shake = (hid, offchain) => {
     const bytesOffchain = this.web3.utils.fromAscii(offchain);
     const payloadData = this.handshakeInstance.methods
@@ -109,7 +109,7 @@ export default class ExchangeHandshake extends BaseHandshake {
     });
   }
 
-  //CoinOwner accept transaction
+  // CoinOwner accept transaction
   accept = (hid, offchain) => {
     const bytesOffchain = this.web3.utils.fromAscii(offchain);
     const payloadData = this.handshakeInstance.methods
@@ -126,7 +126,7 @@ export default class ExchangeHandshake extends BaseHandshake {
     });
   }
 
-  //CashOwner withdraw funds from a handshake
+  // CashOwner withdraw funds from a handshake
   withdraw = (hid, offchain) => {
     const bytesOffchain = this.web3.utils.fromAscii(offchain);
     const payloadData = this.handshakeInstance.methods
@@ -143,7 +143,7 @@ export default class ExchangeHandshake extends BaseHandshake {
     });
   }
 
-  //CashOwner reject the transaction
+  // CashOwner reject the transaction
   reject = (hid, offchain) => {
     const bytesOffchain = this.web3.utils.fromAscii(offchain);
     const payloadData = this.handshakeInstance.methods
@@ -160,7 +160,7 @@ export default class ExchangeHandshake extends BaseHandshake {
     });
   }
 
-  //coinOwner cancel the handshake
+  // coinOwner cancel the handshake
   cancel = (hid, offchain) => {
     const bytesOffchain = this.web3.utils.fromAscii(offchain);
     const payloadData = this.handshakeInstance.methods
@@ -177,7 +177,7 @@ export default class ExchangeHandshake extends BaseHandshake {
     });
   }
 
-  //coinOwner cancel the handshake
+  // coinOwner cancel the handshake
   close = (hid, offchain) => {
     const bytesOffchain = this.web3.utils.fromAscii(offchain);
     const payloadData = this.handshakeInstance.methods
@@ -194,12 +194,10 @@ export default class ExchangeHandshake extends BaseHandshake {
     });
   }
 
-  //get handshake stage by hid
+  // get handshake stage by hid
   getState = (hid) => {
     const payloadData = this.handshakeInstance.methods
-      .getState(
-        hid,
-      )
+      .getState(hid)
       .encodeABI();
 
     return this.neuron.makeRawTransaction(address, privateKey, payloadData, {

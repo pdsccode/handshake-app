@@ -1,19 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import "./Book.scss";
+import './Book.scss';
 
 class BetBook extends React.Component {
   constructor(props) {
     super(props);
-    const {odd} = props;
+    const { odd } = props;
     this.state = {};
-
   }
 
   render() {
-    const {item} = this.props;
-    const {amount, odds} = item;
+    const { item } = this.props;
+    const { amount, odds } = item;
     const { amountColor } = this.props;
     const amountStyle = {
       color: amountColor,

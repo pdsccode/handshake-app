@@ -149,7 +149,7 @@ export const HANDSHAKE_EXCHANGE_STATUS_NAME = {
   [HANDSHAKE_EXCHANGE_STATUS.REJECTED]: 'rejected',
 };
 
-export const HANDSHAKE_USER  = {
+export const HANDSHAKE_USER = {
   NORMAL: 0,
   OWNER: 1,
   SHAKED: 2,
@@ -159,11 +159,10 @@ export const HANSHAKE_USER_NAME = {
   [HANDSHAKE_USER.NORMAL]: 'NORMAL',
   [HANDSHAKE_USER.OWNER]: 'OWNER',
   [HANDSHAKE_USER.SHAKED]: 'SHAKED',
-}
+};
 
 export const DEFAULT_FEE = {
   ETH: 0,
   BTC: 0,
-}
-
+};
 
