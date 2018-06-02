@@ -29,6 +29,16 @@ export const HANDSHAKE_NAME = {
 export const PRICE_DECIMAL = 2;
 export const AMOUNT_DECIMAL = 6;
 
+export const CRYPTO_CURRENCY = {
+  ETH: 'ETH',
+  BTC: 'BTC',
+};
+
+export const CRYPTO_CURRENCY_NAME = {
+  [CRYPTO_CURRENCY.ETH]: 'ETH',
+  [CRYPTO_CURRENCY.BTC]: 'BTC',
+};
+
 export const CRYPTO_CURRENCY_LIST = [
   { value: 'ETH', text: 'ETH' },
   { value: 'BTC', text: 'BTC' },

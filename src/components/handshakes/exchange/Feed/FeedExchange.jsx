@@ -43,6 +43,7 @@ import {Link} from "react-router-dom";
 import {URL} from '@/config';
 import {getDistanceFromLatLonInKm} from '../utils'
 import {ExchangeHandshake} from '@/services/neuron';
+import {CRYPTO_CURRENCY} from "@/constants";
 
 class FeedExchange extends React.PureComponent {
   constructor(props) {
@@ -145,7 +146,8 @@ class FeedExchange extends React.PureComponent {
     const wallet = MasterWallet.getWalletDefault(offer.currency);
     const balance = await wallet.getBalance();
 
-    if (offer.type === EXCHANGE_ACTION.BUY && balance < offer.totalAmount + DEFAULT_FEE[offer.currency]) {
+    if ((offer.currency === CRYPTO_CURRENCY.ETH || (offer.type === EXCHANGE_ACTION.BUY && offer.currency === CRYPTO_CURRENCY.BTC))
+        && balance < offer.totalAmount + DEFAULT_FEE[offer.currency]) {
       this.props.showAlert({
         message: <div className="text-center">
           {intl.formatMessage({ id: 'notEnoughCoinInWallet' }, {
@@ -225,7 +227,12 @@ class FeedExchange extends React.PureComponent {
 
   handleCloseOfferSuccess = (data) => {
     const { refreshPage } = this.props;
-    this.handleCallActionOnContract(data.data);
+
+    const currency = data.data.currency;
+
+    if (currency === CRYPTO_CURRENCY.ETH) {
+      this.handleCallActionOnContract(data.data);
+    }
 
     this.props.showAlert({
       message: <div className="text-center"><FormattedMessage id="closeOfferSuccessMessage"/></div>,
@@ -257,18 +264,20 @@ class FeedExchange extends React.PureComponent {
     });
   }
 
-  handleCompleteShakedOfferSuccess = (data) => {
+  handleCompleteShakedOfferSuccess = async (data) => {
     const { refreshPage } = this.props;
 
-    const currency = data.currency;
+    const currency = data.data.currency;
 
-    const wallet = MasterWallet.getWalletDefault(currency);
+    if (currency === CRYPTO_CURRENCY.ETH) {
+      const wallet = MasterWallet.getWalletDefault(currency);
 
-    const exchangeHandshake = new ExchangeHandshake(wallet.chainId);
+      const exchangeHandshake = new ExchangeHandshake(wallet.chainId);
 
-    let result = exchangeHandshake.accept(data.data.hid, data.data.id);
+      let result = await exchangeHandshake.accept(data.data.hid, data.data.id);
 
-    console.log('handleCompleteShakedOfferSuccess', result);
+      console.log('handleCompleteShakedOfferSuccess', result);
+    }
 
     // console.log('data', data);
     this.props.showAlert({
@@ -305,21 +314,23 @@ class FeedExchange extends React.PureComponent {
     const { refreshPage } = this.props;
     const {userType} = this.state;
 
-    const currency = data.currency;
+    const currency = data.data.currency;
 
-    const wallet = MasterWallet.getWalletDefault(currency);
+    if (currency === CRYPTO_CURRENCY.ETH) {
+      const wallet = MasterWallet.getWalletDefault(currency);
 
-    const exchangeHandshake = new ExchangeHandshake(wallet.chainId);
+      const exchangeHandshake = new ExchangeHandshake(wallet.chainId);
 
-    let result = null;
+      let result = null;
 
-    if (data.type === EXCHANGE_ACTION.BUY && userType === HANDSHAKE_USER.OWNER) {
-      result = exchangeHandshake.reject(data.data.hid, data.data.id);
-    } else {
-      result = exchangeHandshake.cancel(data.hid, data.data.id);
+      if (data.type === EXCHANGE_ACTION.BUY && userType === HANDSHAKE_USER.OWNER) {
+        result = exchangeHandshake.reject(data.data.hid, data.data.id);
+      } else {
+        result = exchangeHandshake.cancel(data.hid, data.data.id);
+      }
+
+      console.log('handleCancelShakedOfferSuccess', result);
     }
-
-    console.log('handleCancelShakedOfferSuccess', result);
 
     this.props.showAlert({
       message: <div className="text-center"><FormattedMessage id="cancelShakedfferSuccessMessage"/></div>,
@@ -354,7 +365,11 @@ class FeedExchange extends React.PureComponent {
   handleWithdrawShakedOfferSuccess = (data) => {
     const { refreshPage } = this.props;
 
-    this.handleCallActionOnContract(data.data);
+    const currency = data.data.currency;
+
+    if (currency === CRYPTO_CURRENCY.ETH) {
+      this.handleCallActionOnContract(data.data);
+    }
 
     this.props.showAlert({
       message: <div className="text-center"><FormattedMessage id="withdrawShakedfferSuccessMessage"/></div>,
@@ -373,7 +388,7 @@ class FeedExchange extends React.PureComponent {
   }
 
   ////////////////////////
-  handleCallActionOnContract(data) {
+  handleCallActionOnContract = async (data) => {
     const {status} = this.props;
     const {offer, userType} = this.state;
 
@@ -391,7 +406,7 @@ class FeedExchange extends React.PureComponent {
           //   break;
           // }
           case HANDSHAKE_EXCHANGE_STATUS.ACTIVE: {
-            const result = exchangeHandshake.shake(data.hid, data.id);
+            const result = await exchangeHandshake.shake(data.hid, data.id);
 
             console.log('handleShakeOfferSuccess', result);
 
@@ -457,7 +472,7 @@ class FeedExchange extends React.PureComponent {
             // actionButtons = 'Withdraw';
             // nguoi co crypto se withdraw
             if (offer.type === EXCHANGE_ACTION.SELL) {
-              const result = exchangeHandshake.withdraw(data.hid, data.id);
+              const result = await exchangeHandshake.withdraw(data.hid, data.id);
 
               console.log('handleWithdrawShakedOfferSuccess', result);
             }
@@ -478,9 +493,9 @@ class FeedExchange extends React.PureComponent {
             //call action cancel
             let result = '';
             if (offer.type === EXCHANGE_ACTION.BUY) {
-              result = exchangeHandshake.closeByCashOwner(data.hid, data.id);
+              result = await exchangeHandshake.closeByCashOwner(data.hid, data.id);
             } else {
-              result = exchangeHandshake.cancel(data.hid, data.id);
+              result = await exchangeHandshake.cancel(data.hid, data.id);
             }
 
             console.log('handleCloseOfferSuccess', result);
@@ -491,9 +506,9 @@ class FeedExchange extends React.PureComponent {
             //call action cancel
             let result = '';
             if (offer.type === EXCHANGE_ACTION.BUY) {
-              result = exchangeHandshake.closeByCashOwner(data.hid, data.id);
+              result = await exchangeHandshake.closeByCashOwner(data.hid, data.id);
             } else {
-              result = exchangeHandshake.cancel(data.hid, data.id);
+              result = await exchangeHandshake.cancel(data.hid, data.id);
             }
 
             console.log('handleCloseOfferSuccess', result);
@@ -531,7 +546,7 @@ class FeedExchange extends React.PureComponent {
             // actionButtons = 'Withdraw';
             // neu la nguoi buy coin thi dc withdraw
             if (offer.type === EXCHANGE_ACTION.BUY) {
-              const result = exchangeHandshake.withdraw(data.hid, data.id);
+              const result = await exchangeHandshake.withdraw(data.hid, data.id);
 
               console.log('handleWithdrawShakedOfferSuccess', result);
             }
