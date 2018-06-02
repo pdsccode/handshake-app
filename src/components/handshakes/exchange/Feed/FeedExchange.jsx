@@ -158,7 +158,7 @@ class FeedExchange extends React.PureComponent {
   }
 
   handleShakeOfferSuccess = (data) => {
-    // console.log('handleShakeOfferSuccess', data);
+    const { refreshPage } = this.props;
     this.handleCallActionOnContract(data.data);
 
     this.props.showAlert({
@@ -166,7 +166,9 @@ class FeedExchange extends React.PureComponent {
       timeOut: 3000,
       type: 'success',
       callBack: () => {
-        // this.props.history.push(URL.HANDSHAKE_ME);
+        if (refreshPage) {
+          refreshPage();
+        }
       }
     });
   }
@@ -189,8 +191,7 @@ class FeedExchange extends React.PureComponent {
   }
 
   handleCloseOfferSuccess = (data) => {
-    // console.log('data', data);
-
+    const { refreshPage } = this.props;
     this.handleCallActionOnContract(data.data);
 
     this.props.showAlert({
@@ -198,7 +199,9 @@ class FeedExchange extends React.PureComponent {
       timeOut: 3000,
       type: 'success',
       callBack: () => {
-        // this.props.history.push(URL.HANDSHAKE_ME);
+        if (refreshPage) {
+          refreshPage();
+        }
       }
     });
   }
@@ -222,6 +225,8 @@ class FeedExchange extends React.PureComponent {
   }
 
   handleCompleteShakedOfferSuccess = (data) => {
+    const { refreshPage } = this.props;
+
     const currency = data.currency;
 
     const wallet = MasterWallet.getWalletDefault(currency);
@@ -238,7 +243,9 @@ class FeedExchange extends React.PureComponent {
       timeOut: 3000,
       type: 'success',
       callBack: () => {
-        // this.props.history.push(URL.HANDSHAKE_ME);
+        if (refreshPage) {
+          refreshPage();
+        }
       }
     });
   }
@@ -249,20 +256,20 @@ class FeedExchange extends React.PureComponent {
 
   ////////////////////////
 
-  handleCancelShakedOffer = () => {
+  handleRejectShakedOffer = () => {
     const {offer} = this.state;
 
     this.props.cancelShakedOffer({
       BASE_URL: API_URL.EXCHANGE.BASE,
       PATH_URL: API_URL.EXCHANGE.OFFERS + '/' + offer.id + '/' + API_URL.EXCHANGE.SHAKE,
       METHOD: 'DELETE',
-      successFn: this.handleCancelShakedOfferSuccess,
-      errorFn: this.handleCancelShakedOfferFailed,
+      successFn: this.handleRejectShakedOfferSuccess,
+      errorFn: this.handleRejectShakedOfferFailed,
     });
   }
 
-  handleCancelShakedOfferSuccess = (data) => {
-    // console.log('data', data);
+  handleRejectShakedOfferSuccess = (data) => {
+    const { refreshPage } = this.props;
     const {userType} = this.state;
 
     const currency = data.currency;
@@ -286,12 +293,14 @@ class FeedExchange extends React.PureComponent {
       timeOut: 3000,
       type: 'success',
       callBack: () => {
-        // this.props.history.push(URL.HANDSHAKE_ME);
+        if (refreshPage) {
+          refreshPage();
+        }
       }
     });
   }
 
-  handleCancelShakedOfferFailed = (e) => {
+  handleRejectShakedOfferFailed = (e) => {
     this.handleActionFailed(e);
   }
 
@@ -310,7 +319,7 @@ class FeedExchange extends React.PureComponent {
   }
 
   handleWithdrawShakedOfferSuccess = (data) => {
-    // console.log('data', data);
+    const { refreshPage } = this.props;
 
     this.handleCallActionOnContract(data.data);
 
@@ -319,7 +328,9 @@ class FeedExchange extends React.PureComponent {
       timeOut: 3000,
       type: 'success',
       callBack: () => {
-        // this.props.history.push(URL.HANDSHAKE_ME);
+        if (refreshPage) {
+          refreshPage();
+        }
       }
     });
   }
@@ -396,7 +407,7 @@ class FeedExchange extends React.PureComponent {
             let message2 = intl.formatMessage({id: 'completeOfferConfirm'}, {});
             actionButtons = (
               <div>
-                <Button block className="mt-2" onClick={() => this.confirmShakeOffer(message, this.handleCancelShakedOffer)}>Reject</Button>
+                <Button block className="mt-2" onClick={() => this.confirmShakeOffer(message, this.handleRejectShakedOffer)}>Reject</Button>
                 {offer.type === 'buy' &&
                 <Button block className="mt-2" onClick={() => this.confirmShakeOffer(message2, this.handleCompleteShakedOffer)}>Complete</Button>
                 }
@@ -610,7 +621,7 @@ class FeedExchange extends React.PureComponent {
             let message2 = intl.formatMessage({id: 'completeOfferConfirm'}, {});
             actionButtons = (
               <div>
-                <Button block className="mt-2" onClick={() => this.confirmShakeOffer(message, this.handleCancelShakedOffer)}>Reject</Button>
+                <Button block className="mt-2" onClick={() => this.confirmShakeOffer(message, this.handleRejectShakedOffer)}>Reject</Button>
                 {offer.type === 'buy' &&
                 <Button block className="mt-2" onClick={() => this.confirmShakeOffer(message2, this.handleCompleteShakedOffer)}>Complete</Button>
                 }
@@ -684,7 +695,7 @@ class FeedExchange extends React.PureComponent {
             let message2 = intl.formatMessage({id: 'completeOfferConfirm'}, {});
             actionButtons = (
               <div>
-                <Button block className="mt-2" onClick={() => this.confirmShakeOffer(message, this.handleCancelShakedOffer)}>Reject</Button>
+                <Button block className="mt-2" onClick={() => this.confirmShakeOffer(message, this.handleRejectShakedOffer)}>Reject</Button>
                 {offer.type === 'sell' &&
                 <Button block className="mt-2" onClick={() => this.confirmShakeOffer(message2, this.handleCompleteShakedOffer)}>Complete</Button>
                 }

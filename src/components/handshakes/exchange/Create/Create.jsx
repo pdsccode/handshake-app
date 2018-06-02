@@ -272,7 +272,7 @@ class Component extends React.Component {
     console.log('handleCreateOfferSuccess', data);
 
     const wallet = MasterWallet.getWalletDefault(currency);
-    const rewardWallet = MasterWallet.getRewardWalletDefault(values.currency);
+    const rewardWallet = MasterWallet.getRewardWalletDefault(currency);
 
     console.log('data', data);
     console.log('wallet', wallet);

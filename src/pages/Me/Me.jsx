@@ -32,7 +32,7 @@ class Me extends React.Component {
 
   componentDidMount() {
     this.getListOfferPrice();
-    this.props.loadMyHandshakeList({ PATH_URL: API_URL.ME.BASE });
+    this.loadMyHandshakeList();
   }
 
   getListOfferPrice = () => {
@@ -43,6 +43,10 @@ class Me extends React.Component {
       successFn: this.handleGetPriceSuccess,
       errorFn: this.handleGetPriceFailed,
     });
+  }
+
+  loadMyHandshakeList = () => {
+    this.props.loadMyHandshakeList({ PATH_URL: API_URL.ME.BASE });
   }
 
   render() {
@@ -72,7 +76,9 @@ class Me extends React.Component {
                   if (FeedComponent) {
                     return (
                       <Col key={handshake.id} className="feed-wrapper">
-                        <FeedComponent {...handshake} history={this.props.history} onFeedClick={() => this.clickFeedDetail(handshake.id)} mode={'me'}/>
+                        <FeedComponent {...handshake} history={this.props.history} onFeedClick={() => this.clickFeedDetail(handshake.id)} mode={'me'}
+                                       refreshPage={this.loadMyHandshakeList}
+                        />
                       </Col>
                     );
                   }
