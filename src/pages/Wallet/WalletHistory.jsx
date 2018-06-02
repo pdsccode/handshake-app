@@ -39,9 +39,9 @@ class WalletHistory extends React.Component {
 
     if(wallet){
       return (
-      <div class="card bg-light">
-        <div class="balance">{wallet.balance} {wallet.name}</div>
-        <div class="name">{wallet.name}</div>
+      <div id="hw-header" class="row">
+        <div class="name col-sm-8 p-1">{wallet.name}</div>
+        <div class="balance text-primary col-sm-4 p-1">{wallet.balance} {wallet.name}</div>
         <div class="address">{wallet.address}</div>
       </div>);
     }
