@@ -39,6 +39,7 @@ import {URL} from '@/config';
 import {showAlert} from '@/reducers/app/action';
 import {MasterWallet} from "@/models/MasterWallet";
 import {DEFAULT_FEE} from "@/constants";
+import { ExchangeHandshake } from '@/services/neuron';
 
 const nameFormExchangeCreate = 'exchangeCreate';
 const FormExchangeCreate = createForm({
@@ -157,15 +158,16 @@ class Component extends React.Component {
     });
   }
 
-  handleSubmit = (values) => {
+  handleSubmit = async (values) => {
     const { intl, totalAmount, price } = this.props;
     // const fiat_currency = this.state.ipInfo.currency;
     const {ipInfo: {currency: fiat_currency}} = this.props;
     // console.log('valuessss', values);
 
     const wallet = MasterWallet.getWalletDefault(values.currency);
+    const balance = await wallet.getBalance();
 
-    if (values.type === 'sell' && wallet.balance < values.amount + DEFAULT_FEE[values.currency]) {
+    if (values.type === 'sell' && balance < values.amount + DEFAULT_FEE[values.currency]) {
       this.props.showAlert({
         message: <div className="text-center">
           {intl.formatMessage({ id: 'notEnoughCoinInWallet' }, {
@@ -183,7 +185,9 @@ class Component extends React.Component {
     }
 
     const address = wallet.address;
-    const reward_address = address;
+
+    const rewardWallet = MasterWallet.getRewardWalletDefault(values.currency);
+    const reward_address = rewardWallet.address;
 
     const offer = {
       amount: values.amount,
@@ -256,17 +260,49 @@ class Component extends React.Component {
     // }
   }
 
-  handleCreateOfferSuccess = (data) => {
-    // this.props.history.push(URL.HANDSHAKE_ME);
+  handleCreateOfferSuccess = async (responseData) => {
+    // const { currency } = this.props;
+    const data = responseData.data;
 
-    this.props.showAlert({
-      message: <div className="text-center"><FormattedMessage id="createOfferSuccessMessage"/></div>,
-      timeOut: 3000,
-      type: 'danger',
-      callBack: () => {
-        this.props.history.push(URL.HANDSHAKE_ME);
+    const currency = data.currency;
+
+    // this.props.history.push(URL.HANDSHAKE_ME);
+    console.log('handleCreateOfferSuccess', data);
+
+    const wallet = MasterWallet.getWalletDefault(currency);
+
+    console.log('data', data);
+    console.log('wallet', wallet);
+
+    if (currency === 'BTC') {
+      wallet.transfer(data.system_address, data.amount).then(success => {
+        console.log('transfer', success);
+      });
+    } else if (currency === 'ETH') {
+      const exchangeHandshake = new ExchangeHandshake(wallet.chainId);
+
+      let result = null;
+      if (data.type === 'buy') {
+        result = await exchangeHandshake.init(wallet.address, wallet.address, data.amount, data.id);
+      } else {
+        result = await exchangeHandshake.initByCoinOwner(wallet.address, wallet.address, data.amount, data.id);
       }
-    });
+
+      console.log('handleCreateOfferSuccess', result);
+    }
+    // this.state.walletSelected.transfer(this.state.inputAddressAmountValue, this.state.inputSendAmountValue).then(success => {
+    //   alert(success);
+    //   this.modalSendRef.close();
+    // });
+
+    // this.props.showAlert({
+    //   message: <div className="text-center"><FormattedMessage id="createOfferSuccessMessage"/></div>,
+    //   timeOut: 3000,
+    //   type: 'danger',
+    //   callBack: () => {
+    //     this.props.history.push(URL.HANDSHAKE_ME);
+    //   }
+    // });
 
     // this.timeoutClosePopup = setTimeout(() => {
     //   this.handleBuySuccess();
