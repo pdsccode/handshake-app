@@ -25,7 +25,9 @@ class CreateComment extends React.PureComponent {
     this.handleImageChange = ::this.handleImageChange;
     this.deleteImage = ::this.deleteImage;
     this.resetState = ::this.resetState;
+    this.autoResizeTextArea = ::this.autoResizeTextArea;
   }
+  isInFirstRow = true;
 
   resetState() {
     this.setState({
@@ -38,7 +40,7 @@ class CreateComment extends React.PureComponent {
     const { file } = this.state;
     const { objectId, objectType } = this.props;
     let data = {};
-    const rawData = { comment: this.inputRef.value, object_type: objectType.toString(), object_id: parseInt(objectId) };
+    const rawData = { comment: this.textareaRef.value, object_type: objectType.toString(), object_id: parseInt(objectId) };
     if(!!file) {
       data = new FormData();
       data.append('request', JSON.stringify(rawData));
@@ -53,7 +55,8 @@ class CreateComment extends React.PureComponent {
       successFn: () => {
         this.props.onCreateCb();
         this.resetState();
-        this.inputRef.value = '';
+        this.textareaRef.value = '';
+        this.textareaRef.style.height = '40px';
       }
     });
   }
@@ -81,6 +84,25 @@ class CreateComment extends React.PureComponent {
     this.resetState();
   }
 
+  autoResizeTextArea() {
+    if (this.textareaRef) {
+      setTimeout(() => {
+        const offsetHeightIsLessThanScrollHeight = (this.textareaRef.offsetHeight + 10) < this.textareaRef.scrollHeight;
+        const isClearTextToFirstRow = this.textareaRef.value.length < 30;
+        if(!this.isInFirstRow || offsetHeightIsLessThanScrollHeight) {
+          if(this.isInFirstRow) this.isInFirstRow = false;
+          if(!this.isInFirstRow && isClearTextToFirstRow) {
+            this.isInFirstRow = true;
+            this.textareaRef.style.height = '40px';
+          } else {
+            this.textareaRef.style.height = 'auto';
+            this.textareaRef.style.height = `${this.textareaRef.scrollHeight}px`;
+          }
+        }
+      }, 0);
+    }
+  }
+
   render() {
     const { imagePreviewUrl } = this.state;
     return (
@@ -98,7 +120,12 @@ class CreateComment extends React.PureComponent {
           <input onChange={this.handleImageChange} type="file" accept="image/*" id="image-upload" ref={element => {this.uploadImageRef = element;}} />
           <Image src={createImageIcon} alt="create image icon" />
         </div>
-        <textarea type="text" placeholder="Aa" ref={(component) => { this.inputRef = component; }} />
+        <textarea
+          type="text"
+          placeholder="Aa"
+          ref={(component) => { this.textareaRef = component; }}
+          onKeyDown={this.autoResizeTextArea}
+        />
         <Image src={postCommentIcon} alt="post comment icon" onClick={this.createComment} />
       </div>
     );
