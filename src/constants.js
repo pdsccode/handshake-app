@@ -144,6 +144,18 @@ export const HANDSHAKE_EXCHANGE_STATUS_NAME = {
   [HANDSHAKE_EXCHANGE_STATUS.REJECTED]: 'rejected',
 };
 
+export const HANDSHAKE_EXCHANGE_CC_STATUS = {
+  PROCESSING: 0,
+  SUCCESS: 1,
+  CANCELLED: 2
+}
+
+export const HANDSHAKE_EXCHANGE_CC_STATUS_NAME = {
+  [HANDSHAKE_EXCHANGE_CC_STATUS.PROCESSING]: 'processing',
+  [HANDSHAKE_EXCHANGE_CC_STATUS.SUCCESS]: 'success',
+  [HANDSHAKE_EXCHANGE_CC_STATUS.CANCELLED]: 'cancelled'
+}
+
 export const HANDSHAKE_USER  = {
   NORMAL: 0,
   OWNER: 1,
@@ -161,4 +173,13 @@ export const DEFAULT_FEE = {
   BTC: 0,
 }
 
+export const EXCHANGE_FEED_TYPE = {
+  EXCHANGE: 'exchange',
+  INSTANT: 'instant',
+}
+
+export const EXCHANGE_METHOD_PAYMENT = {
+  [EXCHANGE_FEED_TYPE.EXCHANGE]: 'cash',
+  [EXCHANGE_FEED_TYPE.INSTANT]: 'credit card',
+}
 
