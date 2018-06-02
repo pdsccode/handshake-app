@@ -86,13 +86,10 @@ class Wallet extends React.Component {
       //Qrcode
       qrCodeOpen: false,
       delay: 300,
-    
       walletsData: false,
       isNewCCOpen: false,
-      step: 1
     };
     this.props.setHeaderRight(this.headerRight());
-    
   }
 
   headerRight() {
@@ -214,13 +211,12 @@ class Wallet extends React.Component {
         }
       })
 
-      if(1==1 || !wallet.protected){
+      if(!wallet.protected){
         obj.push({
           title: 'Protected this wallet',
           handler: () => {
             this.setState({walletSelected: wallet});
             this.toggleBottomSheet();
-            this.setState({step: 1});
             this.modalProtectRef.open();
           }
         })
@@ -493,6 +489,7 @@ class Wallet extends React.Component {
   handleError(err){
     console.log("error wc",err)
   }
+
   oncloseQrCode=()=>{        
     this.setState({qrCodeOpen: false});    
   }
@@ -502,8 +499,7 @@ class Wallet extends React.Component {
     this.modalScanQrCodeRef.open()
   }
   
-  renderScanQRCode = () =>{    
-    
+  renderScanQRCode = () =>{        
     return(
       <Modal onClose={() => this.oncloseQrCode()} title="Scan QR code" onRef={modal => this.modalScanQrCodeRef = modal}>
         {this.state.qrCodeOpen ? 
@@ -566,11 +562,11 @@ class Wallet extends React.Component {
           />
         </Modal>
 
-        <Modal title="Protect your wallet"  onRef={modal => this.modalProtectRef = modal}>
-          <WalletProtect wallet={this.state.walletSelected} step={this.state.step} callbackSuccess={() => {this.successWalletProtect(this.state.walletSelected)}} />
+        <Modal title="Protect your wallet" onRef={modal => this.modalProtectRef = modal}>
+          <WalletProtect wallet={this.state.walletSelected} callbackSuccess={() => {this.successWalletProtect(this.state.walletSelected)}} />
         </Modal>
 
-        <Modal title="History of transactions" className="historywallet-wrapper" onRef={modal => this.modalHistoryRef = modal}>
+        <Modal title="History of transactions" onRef={modal => this.modalHistoryRef = modal}>
           <WalletHistory wallet={this.state.walletSelected} />
         </Modal>
 
@@ -636,7 +632,7 @@ class Wallet extends React.Component {
           }
 
 
-          <Button block isLoading={this.state.isRestoreLoading} disabled={this.state.countCheckCoinToCreate == 0 || (this.state.walletKeyDefaultToCreate == 2 && this.state.input12PhraseValue.trim().split(/\s+/g).length != 12) } className="button button-wallet" cssType="primary" onClick={() => {this.createNewWallets()}} >                        
+          <Button block isLoading={this.state.isRestoreLoading} disabled={this.state.countCheckCoinToCreate == 0 || (this.state.walletKeyDefaultToCreate == 2 && this.state.input12PhraseValue.trim().split(/\s+/g).length != 12) } className="button button-wallet" cssType="primary" onClick={() => {this.createNewWallets()}} >
             Create wallet
           </Button>
           <Header />
@@ -645,7 +641,7 @@ class Wallet extends React.Component {
         </Modal>
 
         {/*QR code dialog*/}
-        {this.renderScanQRCode()}        
+        {this.renderScanQRCode()}
 
         {/* Render list wallet: */}
         <Row className="list">
