@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import history from '@/services/history';
-
 // service, constant
 import createForm from '@/components/core/form/createForm';
 import { required } from '@/components/core/form/validation';
@@ -67,7 +66,7 @@ class BettingCreate extends React.PureComponent {
   static defaultProps = {
     item: {
       "backgroundColor": "#332F94",
-      "desc": "[{\"key\": \"event_odds\", \"label\": \"Odds\", \"placeholder\": \"10\", \"className\": \"oddField\"}] [{\"key\": \"event_bet\", \"label\": \"Your bet\", \"placeholder\": \"\", \"type\": \"number\", \"className\": \"betField\"}]",
+      "desc": "[{\"key\": \"event_bet\",\"suffix\": \"ETH\",\"label\": \"Amount\", \"placeholder\": \"10\", \"type\": \"number\", \"className\": \"betField\"}] [{\"key\": \"event_odds\", \"label\": \"Odds\", \"placeholder\": \"10\",\"prefix\": \"1 -\", \"className\": \"oddField\"}]",
       "id": 18,
       "message": null,
       "name": "Bet",
@@ -305,11 +304,12 @@ get matchResults(){
     this.setState({values});
   }
 
-  renderInput(item, index) {
+  renderInput(item, index,style = {}) {
     const {key, placeholder, type} = item;
     const className = 'form-control-custom input';
     return (
       <Field
+        style={style}
         component={InputField}
         type="text"
         placeholder={placeholder}
@@ -351,13 +351,14 @@ get matchResults(){
     );
   }
 
-  renderNumber(item) {
+  renderNumber(item, style={}) {
     const {key, placeholder} = item;
 
     return (
       <Field
         className="form-control-custom input"
         name={key}
+        style={style}
         component={InputField}
         type="number"
         //min="0.0001"
@@ -372,29 +373,68 @@ get matchResults(){
     );
   }
 
-  renderItem(field, index) {
+  // renderItem(field, index) {
+  //   const item = JSON.parse(field.replace(regexReplace, ''));
+  //   const {key, placeholder, type, label, className,suffix,prefix} = item;
+  //   let itemRender = this.renderInput(item, index);
+  //   switch (type) {
+  //     case 'date':
+  //       itemRender = this.renderDate(item, index);
+  //       break;
+  //     case 'number':
+  //       itemRender = this.renderNumber(item,{width:'100%', paddingRight:40} );
+  //       break;
+  //     default:
+  //       itemRender = this.renderInput(item, index);
+  //   }
+
+  //   // return (
+  //   //       <Col className="col-6">
+  //   //         <Row><label>{label || placeholder}</label></Row>
+  //   //         <Row><Col>{itemRender}</Col></Row>
+  //   //       </Col>
+
+  //   //     );
+  //   return (
+  //     <Col className="col-6">
+  //         <Row><label>{label || placeholder}</label></Row>
+  //         <Row>
+  //           <Col  style={{position:'relative'}}>{prefix&&<label style={{backgroundColor:'green'}}>{prefix}</label>}{itemRender}{suffix&&<label style={{position:'absolute',right:0}}>{suffix}</label>}</Col>
+  //         </Row>
+  //     </Col>
+  //       );
+  // }
+  renderLabelForItem=(text,{marginLeft,marginRight})=>{
+    return text&&<label className="itemLabel" style={{display:'flex',color:'white',fontSize:16,marginLeft:marginLeft,marginRight:marginRight,alignItems:'center'}}>{text}</label>;
+  }
+   renderItem(field, index) {
     const item = JSON.parse(field.replace(regexReplace, ''));
-    const {key, placeholder, type, label, className} = item;
-    let itemRender = this.renderInput(item, index);
+    const {key, placeholder, type, label, className,suffix,prefix} = item;
+    let itemRender = null;//this.renderInput(item, index);
     switch (type) {
       case 'date':
         itemRender = this.renderDate(item, index);
         break;
       case 'number':
-        itemRender = this.renderNumber(item, index);
+        itemRender = this.renderNumber(item,{width:'100%',fontSize:16,color:'white'} );
         break;
       default:
-        itemRender = this.renderInput(item, index);
+        itemRender = this.renderInput(item, index,{width:'100%',fontSize:16,color:'white'} );
     }
 
     return (
-      <div key={index} className={`rowWrapper ${className || ''}`}>
-        <label className="label">{label || placeholder}</label>
-        <div className={key === 'event_odds' ? 'oddInput' : ''}>
-          {itemRender}
-        </div>
+      <div style={{display:'flex',flex:1,flexDirection:'column',marginTop:2,marginBottom:2}}>
+          <label style={{fontSize:13, color:'white'}}>{label || placeholder}</label>
+          <div style={{display:'flex',flex:1,flexDirection:'row',border:'1px solid #697076',padding:10}}>
+            {this.renderLabelForItem(prefix,{marginRight:10})}
+            <div style={{display:'flex',flex:1,flexDirection:'column',alignItems:'flex-start'}}>
+              {itemRender}
+            </div>
+            {this.renderLabelForItem(suffix,{marginLeft:10})}
+          </div>
+
       </div>
-    );
+        );
   }
 
   renderForm() {
@@ -406,12 +446,12 @@ get matchResults(){
           <Dropdown
             placeholder="Select a match"
             source={this.matchNames}
-            onItemSelected={(item) => 
+            onItemSelected={(item) =>
               {
                 const {values} = this.state;
                 values["event_name"] = item.value;
                 this.setState({selectedMatch: item, values});
-                
+
               }
               }
           />
@@ -428,10 +468,18 @@ get matchResults(){
           />}
         </div>
 
-        <div className="formInput">
+        {/*<Grid className="formInput">
+        <Row className="row-6">
           {inputList.map((field, index) => this.renderItem(field, index))}
+          </Row>
+        </Grid>
+          */}
+          <div className="formInput" style={{backgroundColor:'#3A444D',padding:10}}>
+            <div style={{display:'flex',flexDirection:'column',flex:1,marginBottom:10}}>
+              {inputList.map((field, index) => this.renderItem(field, index))}
+            </div>
+            <Toggle ref={(component) => {this.toggleRef = component}} onChange={this.onToggleChange} />
         </div>
-        <Toggle ref={(component) => {this.toggleRef = component}} onChange={this.onToggleChange} />
 
 
         <Button type="submit" block>Sign & Send</Button>
@@ -486,7 +534,7 @@ get matchResults(){
   }
    initHandshakeSuccess = async (successData)=>{
     console.log('initHandshakeSuccess', successData);
-    
+
     const {status, data} = successData
     const {values, selectedOutcome} = this.state;
     const stake = values['event_bet'];
@@ -505,9 +553,9 @@ get matchResults(){
       if(result){
         //TO DO: redirect and show alert
       }
-      
+
     }
-    
+
 
   }
   initHandshakeFailed = (error) => {
