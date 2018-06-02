@@ -108,12 +108,12 @@ class CreateComment extends React.PureComponent {
 CreateComment.propTypes = {
   createComment: PropTypes.func.isRequired,
   objectType: PropTypes.string,
-  objectId: PropTypes.number,
+  objectId: PropTypes.string,
 };
 
 CreateComment.defaultProps = {
   objectType: HANDSHAKE_ID.BETTING.toString(),
-  objectId: 1,
+  objectId: '1',
 };
 
 const mapDispatch = ({

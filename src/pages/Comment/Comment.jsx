@@ -23,41 +23,45 @@ class Comment extends React.PureComponent {
 
   componentDidMount() {
     const { router, loadCommentList } = this.props;
-     const queryObject = qs.parse(router.location.search.slice(1));
-    if(queryObject.object_id && queryObject.object_type) {
+    const queryObject = qs.parse(router.location.search.slice(1));
+    if(queryObject.objectId && queryObject.objectType) {
       loadCommentList({
         PATH_URL: API_URL.COMMENT.LIST,
-        qs: { object_type: queryObject.object_type, object_id: queryObject.object_id, page_size: 10 }
+        qs: { object_type: queryObject.objectType, object_id: queryObject.objectId, page_size: 10 },
       });
     }
-  }
-
-  componentDidUpdate() {
     this.scrollToBottom();
   }
 
+  componentDidUpdate() {
+    setTimeout(this.scrollToBottom, 300);
+  }
+
   scrollToBottom() {
-    if(this.commentsRef) {
-      this.commentsRef.scrollIntoView(false);
-      // this.commentsRef.scrollTop = this.commentsRef.scrollHeight;
-      // console.log(this.commentsRef.scrollHeight, this.commentsRef.scrollTop);
+    if(this.commentsRef && typeof window !== 'undefined') {
+      window.scrollTo({
+        top: this.commentsRef.scrollHeight,
+        behavior: 'smooth',
+      });
     }
   }
 
   render() {
     const { list } = this.props.comment;
+    const queryObject = qs.parse(this.props.router.location.search.slice(1));
     return (
       <Grid>
         <Row>
           <Col md={12} xs={12}>
             {
               list.length > 0 && (
-                <div className="comments" ref={element => this.commentsRef = element}>
+                <div className="comments" ref={element => this.commentsRef = element} id="listComments">
                   {list.map((item) => <CommentItem key={item.id} {...item} />)}
+                  <div className="lastCommentItem" />
                 </div>
               )
             }
-            <CreateComment onCreateCb={this.scrollToBottom} />
+            <CreateComment onCreateCb={this.scrollToBottom} {...queryObject} />
           </Col>
         </Row>
       </Grid>
