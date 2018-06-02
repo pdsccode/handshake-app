@@ -3,18 +3,18 @@ import { HANDSHAKE_ID, HANDSHAKE_NAME, HANDSHAKE_ID_DEFAULT } from '@/constants'
 // components
 import { Grid, Row, Col } from 'react-bootstrap';
 import SearchBar from '@/components/core/controls/SearchBar';
-import CreatePromise from '@/components/handshakes/promise/Create';
-import CreateBetting from '@/components/handshakes/betting/Create';
-import CreateExchange from '@/components/handshakes/exchange/Create';
-import CreateSeed from '@/components/handshakes/seed/Create';
+// import CreatePromise from '@/components/handshakes/promise/Create';
+// import CreateBetting from '@/components/handshakes/betting/Create';
+// import CreateExchange from '@/components/handshakes/exchange/Create';
+// import CreateSeed from '@/components/handshakes/seed/Create';
 // style
 import './Create.scss';
 
 const maps = {
-  [HANDSHAKE_ID.PROMISE]: CreatePromise,
-  [HANDSHAKE_ID.BETTING]: CreateBetting,
-  [HANDSHAKE_ID.EXCHANGE]: CreateExchange,
-  [HANDSHAKE_ID.SEED]: CreateSeed,
+  // [HANDSHAKE_ID.PROMISE]: CreatePromise,
+  // [HANDSHAKE_ID.BETTING]: CreateBetting,
+  // [HANDSHAKE_ID.EXCHANGE]: CreateExchange,
+  // [HANDSHAKE_ID.SEED]: CreateSeed,
 };
 
 class Create extends React.Component {
@@ -52,7 +52,7 @@ class Create extends React.Component {
         </Row>
         <Row>
           <Col md={12}>
-            <CreateComponent {...this.props}/>
+            {/* <CreateComponent {...this.props} /> */}
           </Col>
         </Row>
       </Grid>

@@ -17,19 +17,24 @@ export const createAPI = INIT => ({
   $http(url, data, id, qs, headers, METHOD).then((response) => {
     //
     console.log('Url, data:', url, data);
-    dispatch({ type: APP_ACTION.CALLED });
-
-    dispatch({ type: `${INIT}_SUCCESS`, payload: response.data, ...more });
     console.log('SuccessFn:', successFn);
     console.log('Response Data:', response.data);
-    if (successFn) successFn(response.data);
+
+    //
+    dispatch({ type: APP_ACTION.CALLED });
+
+    //
+    dispatch({ type: `${INIT}_SUCCESS`, payload: response.data, ...more });
+
+    if (response.data.status === 1) {
+      if (successFn) successFn(response.data);
+    } else if (errorFn) errorFn();
   }).catch((e) => {
     //
     dispatch({ type: APP_ACTION.CALLED });
 
-    if (e.message === 'Network Error') {
-      dispatch({ type: APP_ACTION.NETWORK_ERROR });
-    }
+    //
+    if (e.message === 'Network Error') { dispatch({ type: APP_ACTION.NETWORK_ERROR }); }
 
     //
     if (errorFn) errorFn(e);

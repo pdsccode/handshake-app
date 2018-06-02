@@ -7,17 +7,17 @@ import { setHeaderTitle } from '@/reducers/app/action';
 import { HANDSHAKE_ID, API_URL } from '@/constants';
 // components
 import { Grid, Row, Col } from 'react-bootstrap';
-import DetailPromise from '@/components/handshakes/promise/Detail';
-import DetailBetting from '@/components/handshakes/betting/Detail';
-import DetailExchange from '@/components/handshakes/exchange/Detail';
-import DetailSeed from '@/components/handshakes/seed/Detail';
+// import DetailPromise from '@/components/handshakes/promise/Detail';
+// import DetailBetting from '@/components/handshakes/betting/Detail';
+// import DetailExchange from '@/components/handshakes/exchange/Detail';
+// import DetailSeed from '@/components/handshakes/seed/Detail';
 import Loading from '@/components/core/presentation/Loading';
 
 const maps = {
-  [HANDSHAKE_ID.PROMISE]: DetailPromise,
-  [HANDSHAKE_ID.BETTING]: DetailBetting,
-  [HANDSHAKE_ID.EXCHANGE]: DetailExchange,
-  [HANDSHAKE_ID.SEED]: DetailSeed,
+  // [HANDSHAKE_ID.PROMISE]: DetailPromise,
+  // [HANDSHAKE_ID.BETTING]: DetailBetting,
+  // [HANDSHAKE_ID.EXCHANGE]: DetailExchange,
+  // [HANDSHAKE_ID.SEED]: DetailSeed,
 };
 
 class DiscoverDetailPage extends React.Component {
@@ -50,7 +50,7 @@ class DiscoverDetailPage extends React.Component {
     return (
       <Grid>
         <Row>
-          {this.getDetailPage}
+          {/* {this.getDetailPage} */}
         </Row>
       </Grid>
     );

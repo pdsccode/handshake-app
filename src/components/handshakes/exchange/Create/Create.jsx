@@ -1,23 +1,24 @@
 import React from 'react';
-import {FormattedMessage, injectIntl} from 'react-intl';
+import { injectIntl } from 'react-intl';
+import axios from 'axios';
+import getSymbolFromCurrency from 'currency-symbol-map';
+
 import Feed from '@/components/core/presentation/Feed';
 import Button from '@/components/core/controls/Button';
-import axios from 'axios';
-
 import createForm from '@/components/core/form/createForm';
 import {
-  fieldCleave,
-  fieldDropdown,
+  // fieldCleave,
+  // fieldDropdown,
   fieldInput,
   fieldNumericInput,
   fieldPhoneInput,
-  fieldRadioButton
+  fieldRadioButton,
 } from '@/components/core/form/customField';
-import {maxValue, minValue, required} from '@/components/core/form/validation';
-import {change, Field, formValueSelector} from 'redux-form';
-import {bindActionCreators} from 'redux';
-import {connect} from 'react-redux';
-import {createOffer, getOfferPrice} from '@/reducers/exchange/action';
+import { maxValue, minValue, required } from '@/components/core/form/validation';
+import { change, Field, formValueSelector } from 'redux-form';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import { createOffer, getOfferPrice } from '@/reducers/exchange/action';
 import {
   API_URL,
   CRYPTO_CURRENCY,
@@ -28,35 +29,39 @@ import {
   FIAT_CURRENCY_SYMBOL,
   PRICE_DECIMAL,
   SELL_PRICE_TYPE,
-  SELL_PRICE_TYPE_DEFAULT
+  SELL_PRICE_TYPE_DEFAULT,
+  DEFAULT_FEE,
 } from '@/constants';
-import '../styles.scss';
 import ModalDialog from '@/components/core/controls/ModalDialog/ModalDialog';
-import {BigNumber} from 'bignumber.js';
+import { BigNumber } from 'bignumber.js';
 // import {MasterWallet} from '@/models/MasterWallet';
-import getSymbolFromCurrency from 'currency-symbol-map';
-import {URL} from '@/config';
-import {showAlert} from '@/reducers/app/action';
-import {MasterWallet} from "@/models/MasterWallet";
-import {DEFAULT_FEE} from "@/constants";
-import { ExchangeHandshake } from '@/services/neuron';
+import { URL } from '@/config';
+import { showAlert } from '@/reducers/app/action';
+// import { MasterWallet } from '@/models/MasterWallet'; TODO-LONG
+// import { ExchangeHandshake } from '@/services/neuron'; TODO-LONG
+import '../styles.scss';
 
 const nameFormExchangeCreate = 'exchangeCreate';
 const FormExchangeCreate = createForm({
   propsReduxForm: {
     form: nameFormExchangeCreate,
-    initialValues: { type: EXCHANGE_ACTION_DEFAULT, currency: CRYPTO_CURRENCY_DEFAULT, sellPriceType: SELL_PRICE_TYPE_DEFAULT, customizePrice: 0 },
+    initialValues: {
+      type: EXCHANGE_ACTION_DEFAULT,
+      currency: CRYPTO_CURRENCY_DEFAULT,
+      sellPriceType: SELL_PRICE_TYPE_DEFAULT,
+      customizePrice: 0,
+    },
   },
 });
 const selectorFormExchangeCreate = formValueSelector(nameFormExchangeCreate);
 
-const mainColor = '#007AFF'
+const mainColor = '#007AFF';
 const validateFee = [
   minValue(-50),
   maxValue(50),
-]
-const minValue01 = minValue(0.1)
-const minValue001 = minValue(0.01)
+];
+const minValue01 = minValue(0.1);
+const minValue001 = minValue(0.01);
 
 class Component extends React.Component {
   constructor(props) {
@@ -67,30 +72,30 @@ class Component extends React.Component {
       currency: CRYPTO_CURRENCY_DEFAULT,
       type: 'buy',
       lat: 0,
-      lng: 0
+      lng: 0,
     };
   }
 
   setAddressFromLatLng = (lat, lng) => {
-    this.setState({lat: lat, lng: lng});
+    this.setState({ lat, lng });
     const { rfChange } = this.props;
-    axios.get(`http://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&sensor=true`).then((response) => {
+    axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&sensor=true`).then((response) => {
       const address = response.data.results[0] && response.data.results[0].formatted_address;
       rfChange(nameFormExchangeCreate, 'address', address);
     });
   }
 
   async componentDidMount() {
-    const { ipInfo, rfChange, authProfile } = this.props
+    const { ipInfo, rfChange, authProfile } = this.props;
     navigator.geolocation.getCurrentPosition((location) => {
-      const { coords: { latitude, longitude } } = location
-      this.setAddressFromLatLng(latitude, longitude) // better precision
+      const { coords: { latitude, longitude } } = location;
+      this.setAddressFromLatLng(latitude, longitude); // better precision
     }, () => {
-      this.setAddressFromLatLng(ipInfo.latitude, ipInfo.longitude) // fallback
+      this.setAddressFromLatLng(ipInfo.latitude, ipInfo.longitude); // fallback
     });
 
     // auto fill phone number from user profile
-    rfChange(nameFormExchangeCreate, 'phone', authProfile.phone || '')
+    rfChange(nameFormExchangeCreate, 'phone', authProfile.phone || '');
 
     this.getCryptoPriceByAmount(0);
     this.intervalCountdown = setInterval(() => {
@@ -109,11 +114,11 @@ class Component extends React.Component {
 
   getCryptoPriceByAmount = (amount) => {
     const { type, currency } = this.state;
-    const {ipInfo: {currency: fiat_currency}} = this.props;
+    const { ipInfo: { currency: fiat_currency } } = this.props;
 
-    let data = {
+    const data = {
       amount,
-      currency: currency,
+      currency,
       type,
       fiat_currency,
     };
@@ -161,7 +166,7 @@ class Component extends React.Component {
   handleSubmit = async (values) => {
     const { intl, totalAmount, price } = this.props;
     // const fiat_currency = this.state.ipInfo.currency;
-    const {ipInfo: {currency: fiat_currency}} = this.props;
+    const { ipInfo: { currency: fiat_currency } } = this.props;
     // console.log('valuessss', values);
 
     const wallet = MasterWallet.getWalletDefault(values.currency);
@@ -174,11 +179,11 @@ class Component extends React.Component {
             amount: new BigNumber(values.amount).toFormat(6),
             currency: values.currency,
           })}
-          </div>,
+                 </div>,
         timeOut: 3000,
         type: 'danger',
         callBack: () => {
-        }
+        },
       });
 
       return;
@@ -191,15 +196,15 @@ class Component extends React.Component {
 
     const offer = {
       amount: values.amount,
-      price: price,
+      price,
       percentage: values.type === 'sell' && values.sellPriceType === 'flexible' ? values.customizePrice.toString() : '0',
       currency: values.currency,
       type: values.type,
       contact_info: values.address,
       contact_phone: values.phone,
-      fiat_currency: fiat_currency,
+      fiat_currency,
       latitude: this.state.lat,
-      longitude: this.state.lng
+      longitude: this.state.lng,
     };
 
     if (values.type === 'buy') {
@@ -247,14 +252,14 @@ class Component extends React.Component {
     const { currency } = this.props;
 
     // if (currency === 'BTC') {
-      this.props.createOffer({
-        BASE_URL: API_URL.EXCHANGE.BASE,
-        PATH_URL: API_URL.EXCHANGE.OFFERS,
-        data: offer,
-        METHOD: 'POST',
-        successFn: this.handleCreateOfferSuccess,
-        errorFn: this.handleCreateOfferFailed,
-      });
+    this.props.createOffer({
+      BASE_URL: API_URL.EXCHANGE.BASE,
+      PATH_URL: API_URL.EXCHANGE.OFFERS,
+      data: offer,
+      METHOD: 'POST',
+      successFn: this.handleCreateOfferSuccess,
+      errorFn: this.handleCreateOfferFailed,
+    });
     // } else {
     //
     // }
@@ -262,20 +267,20 @@ class Component extends React.Component {
 
   handleCreateOfferSuccess = async (responseData) => {
     // const { currency } = this.props;
-    const data = responseData.data;
+    const { data } = responseData;
 
-    const currency = data.currency;
+    const { currency } = data;
 
     // this.props.history.push(URL.HANDSHAKE_ME);
     console.log('handleCreateOfferSuccess', data);
 
-    const wallet = MasterWallet.getWalletDefault(currency);
+    // const wallet = MasterWallet.getWalletDefault(currency); TODO-LONG
 
     console.log('data', data);
     console.log('wallet', wallet);
 
     if (currency === 'BTC') {
-      wallet.transfer(data.system_address, data.amount).then(success => {
+      wallet.transfer(data.system_address, data.amount).then((success) => {
         console.log('transfer', success);
       });
     } else if (currency === 'ETH') {
@@ -363,9 +368,11 @@ class Component extends React.Component {
   // }
 
   render() {
-    const { totalAmount, type, sellPriceType, offerPrice, currency } = this.props;
+    const {
+      totalAmount, type, sellPriceType, offerPrice, currency,
+    } = this.props;
 
-    const modalContent = this.state.modalContent;
+    const { modalContent } = this.state;
 
     return (
       <div>
@@ -374,7 +381,7 @@ class Component extends React.Component {
             <div style={{ color: 'white' }}>
               <div className="d-flex mb-2">
                 <label className="col-form-label mr-auto" style={{ width: '120px' }}>I want to</label>
-                <div className='input-group'>
+                <div className="input-group">
                   <Field
                     name="type"
                     component={fieldRadioButton}
@@ -387,7 +394,7 @@ class Component extends React.Component {
               </div>
               <div className="d-flex">
                 <label className="col-form-label mr-auto" style={{ width: '120px' }}>Coin</label>
-                <div className='input-group'>
+                <div className="input-group">
                   <Field
                     name="currency"
                     component={fieldRadioButton}
@@ -415,8 +422,8 @@ class Component extends React.Component {
                 <span className="w-100 col-form-label">{new BigNumber(offerPrice ? offerPrice.price : 0).toFormat(PRICE_DECIMAL)}</span>
               </div>
               <div className="d-flex mt-2">
-                {/*<label className="col-form-label mr-auto" style={{ width: '120px' }} />*/}
-                <div className='input-group justify-content-end'>
+                {/* <label className="col-form-label mr-auto" style={{ width: '120px' }} /> */}
+                <div className="input-group justify-content-end">
                   <Field
                     name="sellPriceType"
                     component={fieldRadioButton}
@@ -429,7 +436,7 @@ class Component extends React.Component {
               </div>
               <div className="d-flex mt-2">
                 <label className="col-form-label mr-auto" style={{ width: '120px' }}>Customize price (%)</label>
-                <div className='input-group align-items-center'>
+                <div className="input-group align-items-center">
                   <Field
                     name="customizePrice"
                     // className='form-control-custom form-control-custom-ex w-100'
@@ -471,7 +478,7 @@ class Component extends React.Component {
           </Feed>
           <Button block type="submit">Sign & send</Button>
         </FormExchangeCreate>
-        <ModalDialog onRef={modal => this.modalRef = modal}>
+        <ModalDialog onRef={(modal) => { this.modalRef = modal; return null; }}>
           {modalContent}
         </ModalDialog>
       </div>
@@ -486,16 +493,22 @@ const mapStateToProps = (state) => {
   const amount = selectorFormExchangeCreate(state, 'amount') || 0;
   const customizePrice = selectorFormExchangeCreate(state, 'customizePrice') || 0;
 
-  const offerPrice = state.exchange.offerPrice;
-  let totalAmount =  amount * (offerPrice && offerPrice.price || 0) || 0;
-  totalAmount += totalAmount * customizePrice / 100;
+  const { offerPrice } = state.exchange;
+  let totalAmount = amount * ((offerPrice && offerPrice.price) || 0) || 0;
+  totalAmount += (totalAmount * customizePrice) / 100;
 
-  const price = offerPrice && offerPrice.price || 0;
+  const price = (offerPrice && offerPrice.price) || 0;
 
-  return { amount, currency, totalAmount, type, sellPriceType, price,
-    offerPrice: offerPrice,
+  return {
+    amount,
+    currency,
+    totalAmount,
+    type,
+    sellPriceType,
+    price,
+    offerPrice,
     ipInfo: state.app.ipInfo,
-    authProfile: state.auth.profile
+    authProfile: state.auth.profile,
   };
 };
 
@@ -505,11 +518,11 @@ const mapStateToProps = (state) => {
 //   type: 'danger',
 // });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
   createOffer: bindActionCreators(createOffer, dispatch),
   getOfferPrice: bindActionCreators(getOfferPrice, dispatch),
   showAlert: bindActionCreators(showAlert, dispatch),
-  rfChange: bindActionCreators(change, dispatch)
+  rfChange: bindActionCreators(change, dispatch),
 });
 
 

@@ -7,7 +7,10 @@ module.exports = {
     "browser": true
   },
   "rules": {
+    "no-console": "off",
+    "no-alert": "off",
     "require-jsdoc": 0,
+    "jsx-a11y": "off",
     "max-len": "off",
     "quotes": [
       "error",

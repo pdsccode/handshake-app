@@ -1,9 +1,11 @@
 export const APP = {
   HEADER_DEFAULT: 'Handshake',
   // store
+  VERSION: 'app_version',
   AUTH_TOKEN: 'auth_token',
   AUTH_PROFILE: 'auth_profile',
   WALLET_MASTER: 'wallet_master',
+  WALLET_REWARD: 'wallet_reward',
   WALLET_CACHE: 'wallet_cache',
   WALLET_DEFAULT: 'wallet_default',
   WALLET_LIST: 'wallet_list',

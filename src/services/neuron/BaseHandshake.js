@@ -1,4 +1,4 @@
-import configs from '@/configs';
+import configs from '@/config';
 import Neuron from './index';
 import { camelCase } from 'lodash';
 

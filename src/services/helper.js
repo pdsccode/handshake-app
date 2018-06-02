@@ -1,3 +1,6 @@
+import { blockchainNetworks as blockchains } from '@/config';
+import Blockchain from '@/services/blockchain';
+
 /**
  * Here is write function use common
  * @class Helper
@@ -26,5 +29,16 @@ class Helper {
     };
   }
 }
+
+class Wallet {
+  static createBlockchainConnect(objectKey) {
+    return new Blockchain(blockchains[objectKey].type)
+      .connect(blockchains[objectKey].endpoint)
+      .setName(blockchains[objectKey].name)
+      .setUnit(blockchains[objectKey].unit);
+  }
+}
+
+Helper.Wallet = Wallet;
 
 export default Helper;

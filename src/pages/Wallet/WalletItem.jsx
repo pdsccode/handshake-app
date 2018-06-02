@@ -1,67 +1,97 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Col } from 'react-bootstrap';
-import {Bitcoin} from '@/models/Bitcoin.js' 
-import {Ethereum} from '@/models/Ethereum.js' 
+
 import dontIcon from '@/assets/images/icon/3-dot-icon.svg';
 import iconSafe from '@/assets/images/icon/icon-safe.svg';
 import iconWarning from '@/assets/images/icon/icon-warning.svg';
-import iconChecked from '@/assets/images/icon/icon-checked.svg';
-import iconQRCode from '@/assets/images/icon/icon-qr-code.png';
 
-
-import PropTypes from 'prop-types';
 import './Wallet.scss';
 
 class WalletItem extends React.Component {
+  static propTypes = {
+    wallet: PropTypes.object.isRequired,
+  }
 
-    getShortAddres(address){
-        return address.replace(address.substr(12, 27), '...');
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      wallet: this.props.wallet.action,
+      balance: 0,
+      isFetchedBalance: false,
+    };
+
+    this.getBgClass = ::this.getBgClass;
+  }
+
+  async componentWillMount() {
+    const balance = await this.state.wallet.getBalance();
+    this.setState({ balance, isFetchedBalance: true });
+  }
+
+  onMoreClick() {
+    alert('click more');
+  }
+
+  onWarningClick() {
+    alert('click warning');
+  }
+
+  getBgClass() {
+    const { blockchain } = this.state.wallet;
+
+    if (blockchain.isTest) {
+      return 'feed testnet-wallet-bg';
     }
 
-    getBgClass(wallet){
-        var bgClassName = 'testnet-wallet-bg';
-        if ([Ethereum.Network.Mainnet, Bitcoin.Network.Mainnet].indexOf(wallet.network) > -1){
-          switch(wallet.name) {
-            case 'ETH':
-                bgClassName = 'eth-wallet-bg';
-                break;
-            case 'BTC':
-                bgClassName = 'btc-wallet-bg';
-                break;
-            case 'XRP':
-                bgClassName = 'xrp-wallet-bg';
-            default:
-              bgClassName = 'testnet-wallet-bg';
-          }
-        }
-        return  "feed " + bgClassName;
-      }
-    render(){ 
-        const {wallet, onMoreClick, onWarningClick, onAddressClick} =  this.props;   
-        const iconProtected = !wallet.protected ? iconWarning : iconSafe;
-        
-        return  ( 
-            <Col sm={6} md={6} xs={6} key={wallet.address+wallet.network} className="feed-wrapper">
-              <div className={this.getBgClass(wallet)}>
-              
-                <div className="name">{wallet.title}
-                {wallet.default ? <img className="iconDefault" src={iconChecked}/> : ''}
-                </div> 
-                <p className="balance"> {wallet.balance} {wallet.name} </p>
-                <img className="more" src={dontIcon} onClick={onMoreClick}/> 
-                <img className="safe" src={wallet.protected ? iconSafe : iconProtected} onClick={onWarningClick}/>   
-
-                <div className="address" onClick={onAddressClick}><img src={iconQRCode} /> {wallet.getShortAddress()}</div>
-              </div>        
-            </Col>
-          );
+    if (blockchain.isBTC) {
+      return 'feed btc-wallet-bg';
     }
+
+    if (blockchain.isERC20) {
+      return 'feed eth-wallet-bg';
+    }
+
+    if (blockchain.isXRP) {
+      return 'feed xrp-wallet-bg';
+    }
+
+    return 'feed testnet-wallet-bg';
+  }
+
+  render() {
+    const { wallet, blockchain } = this.state.wallet;
+
+    const iconProtected = !wallet.isProtected ? iconWarning : iconSafe;
+    return (
+      <Col sm={6} md={6} xs={6} key={this.state.wallet.getAppKed()} className="feed-wrapper">
+        <div className={this.getBgClass()}>
+          <p className="name">{blockchain.name}</p>
+          <p className="balance">{(this.state.isFetchedBalance) ? this.state.balance : '...'} {blockchain.unit}</p>
+          <div
+            className="more"
+            role="button"
+            tabIndex="0"
+            onClick={this.onMoreClick}
+            onKeyDown={this.onMoreClick}
+          >
+            <img alt="" src={dontIcon} />
+          </div>
+          <div
+            className="safe"
+            role="button"
+            tabIndex="0"
+            onClick={this.onWarningClick}
+            onKeyDown={this.onWarningClick}
+          >
+            <img alt="" src={iconProtected} />
+          </div>
+          <p className="address">{this.state.wallet.getShortAddress()}</p>
+        </div>
+      </Col>
+    );
+  }
 }
-    
-WalletItem.propTypes = {    
-    wallet: PropTypes.object, 
-    onMoreClick: PropTypes.func,
-    onWarningClick: PropTypes.func,
-    onAddressClick: PropTypes.func,
-};
+
 export default WalletItem;

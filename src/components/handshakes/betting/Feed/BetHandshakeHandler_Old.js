@@ -1,5 +1,5 @@
 import Neuron from '@/services/neuron';
-import { MasterWallet } from '@/models/MasterWallet';
+// import { MasterWallet } from '@/models/MasterWallet';
 import moment from 'moment';
 
 const wallet = MasterWallet.getWalletDefault('ETH');

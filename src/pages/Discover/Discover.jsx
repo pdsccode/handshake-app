@@ -9,11 +9,13 @@ import { URL } from '@/config';
 import { Grid, Row, Col } from 'react-bootstrap';
 import SearchBar from '@/components/core/controls/SearchBar';
 import Category from '@/components/core/controls/Category';
-import FeedPromise from '@/components/handshakes/promise/Feed';
-import FeedBetting from '@/components/handshakes/betting/Feed';
-import FeedExchange from '@/components/handshakes/exchange/Feed/FeedExchange';
-import FeedSeed from '@/components/handshakes/seed/Feed';
-import FeedCreditCard from '@/components/handshakes/exchange/Feed/FeedCreditCard';
+
+// import FeedPromise from '@/components/handshakes/promise/Feed';
+// import FeedBetting from '@/components/handshakes/betting/Feed';
+// import FeedExchange from '@/components/handshakes/exchange/Feed/FeedExchange';
+// import FeedSeed from '@/components/handshakes/seed/Feed';
+// import FeedCreditCard from '@/components/handshakes/exchange/Feed/FeedCreditCard';
+
 import Tabs from '@/components/handshakes/exchange/components/Tabs';
 import NoData from '@/components/core/presentation/NoData';
 import BettingFilter from '@/components/handshakes/betting/Feed/Filter';
@@ -22,12 +24,12 @@ import { getListOfferPrice } from '@/reducers/exchange/action';
 // style
 import './Discover.scss';
 
-const maps = {
-  [HANDSHAKE_ID.PROMISE]: FeedPromise,
-  [HANDSHAKE_ID.BETTING]: FeedBetting,
-  [HANDSHAKE_ID.EXCHANGE]: FeedExchange,
-  [HANDSHAKE_ID.SEED]: FeedSeed,
-};
+// const maps = {
+//   [HANDSHAKE_ID.PROMISE]: FeedPromise,
+//   [HANDSHAKE_ID.BETTING]: FeedBetting,
+//   [HANDSHAKE_ID.EXCHANGE]: FeedExchange,
+//   [HANDSHAKE_ID.SEED]: FeedSeed,
+// };
 
 class DiscoverPage extends React.Component {
   static propTypes = {
@@ -69,7 +71,7 @@ class DiscoverPage extends React.Component {
         if (FeedComponent) {
           return (
             <Col key={handshake.id} md={12} className="feed-wrapper">
-              <FeedComponent {...handshake} history={this.props.history} onFeedClick={() => this.clickFeedDetail(handshake.id)} />
+              {/* <FeedComponent {...handshake} history={this.props.history} onFeedClick={() => this.clickFeedDetail(handshake.id)} /> */}
             </Col>
           );
         }
@@ -169,11 +171,11 @@ class DiscoverPage extends React.Component {
                     { id: 2, text: 'Sell' },
                   ]}
                 />
-                {
+                {/* {
                   tabIndexActive === 1 && (
                     <FeedCreditCard history={this.props.history} />
                   )
-                }
+                } */}
               </Col>
             </Row>
           )

@@ -1,35 +1,33 @@
-export class Wallet {
-  constructor() {
-    this.mnemonic = '';
-    this.address = '';
-    this.privateKey = '';
-    this.coinType = '';
-    this.default = false;
-    this.balance = 0;
-    this.network = '';
-    this.name = '';
-    this.title = '';
-    this.protected = false;
-    this.className = '';
-    this.isReward = false;
-    this.chainId = -1;
-  }
+import { blockchainNetworks as blockchains } from '@/config';
 
-  getShortAddress() {
-    return this.address.replace(this.address.substr(5, 31), '...');
-  }
-  getNetwork() {
-    return this.network;
-  }
-  getNetworkName() {
-    for (const k in this.constructor.Network) {
-      if (this.constructor.Network[k] == this.network) {
-        this.title = k;
-        return this.title;
-      }
+class Wallet {
+  static wallet(data) {
+    const newWallet = {
+      networkKey: data.networkKey || '',
+      endpoint: data.endpoint || '',
+      mnemonic: data.mnemonic || '',
+      isTest: data.isTest || false,
+      type: data.type || '',
+      name: data.name || '',
+      unit: data.unit || '',
+      privateKey: data.privateKey || '',
+      publicKey: data.publicKey || '',
+      address: data.address || '',
+      isDefault: data.isDefault || false,
+      isProtected: data.isProtected || false,
+      isReward: data.isReward || false,
+    };
+
+    if (newWallet.networkKey) {
+      newWallet.endpoint = blockchains[newWallet.networkKey].endpoint;
+      newWallet.type = blockchains[newWallet.networkKey].type;
+      newWallet.name = blockchains[newWallet.networkKey].name;
+      newWallet.unit = blockchains[newWallet.networkKey].unit;
+      newWallet.isTest = blockchains[newWallet.networkKey].isTest;
     }
-    return this.title;
+
+    return newWallet;
   }
 }
 
-export default { Wallet };
+export default Wallet;

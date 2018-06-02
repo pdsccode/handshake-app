@@ -6,11 +6,17 @@ class LocalStore {
   static get(key) {
     const data = localStorage.getItem(key);
     if (data) {
-      if (data === 'undefined') {
+      if (data === 'undefined' || data === 'null') {
         LocalStore.remove(key);
         return false;
       }
-      return JSON.parse(data);
+      try {
+        return JSON.parse(data);
+      } catch (e) {
+        LocalStore.save(`${key}.${Date.now()}`, data);
+        LocalStore.remove(key);
+        return false;
+      }
     }
     return false;
   }

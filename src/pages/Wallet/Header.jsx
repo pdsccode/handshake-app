@@ -42,7 +42,7 @@ class Header extends React.Component {
         <div className="headerBox">
           <span className="headerText">{title}</span>
           {this.renderLink()}
-        </div>      
+        </div>
     );
   }
 }
