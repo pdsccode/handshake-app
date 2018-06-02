@@ -17,9 +17,9 @@ export class MasterWallet {
     static KEY = 'wallets';
 
     // Create an autonomous wallet:
+
     static createMasterWallets() {
       const t0 = performance.now();
-
 
       // let mnemonic = 'canal marble trend ordinary rookie until combine hire rescue cousin issue that';
       // let mnemonic = 'book trial moral hunt riot ranch yard trap tool horse good barely';
