@@ -42,6 +42,7 @@ import {URL} from '@/config';
 import {showAlert} from '@/reducers/app/action';
 import {MasterWallet} from "@/models/MasterWallet";
 import {ExchangeHandshake} from '@/services/neuron';
+import phoneCountryCodes from '@/components/core/form/country-calling-codes.min.json';
 
 const nameFormExchangeCreate = 'exchangeCreate';
 const FormExchangeCreate = createForm({
@@ -92,7 +93,12 @@ class Component extends React.Component {
     });
 
     // auto fill phone number from user profile
-    rfChange(nameFormExchangeCreate, 'phone', authProfile.phone || '')
+    let detectedCountryCode = ''
+    const foundCountryPhone = phoneCountryCodes.find(i => i.code.toUpperCase() === ipInfo.country_code.toUpperCase())
+    if (foundCountryPhone) {
+      detectedCountryCode = foundCountryPhone.callingCode
+    }
+    rfChange(nameFormExchangeCreate, 'phone', authProfile.phone || `${detectedCountryCode}-`)
 
     this.getCryptoPriceByAmount(0);
     this.intervalCountdown = setInterval(() => {
@@ -376,7 +382,7 @@ class Component extends React.Component {
           <Feed className="feed p-2 my-2" background={mainColor}>
             <div style={{ color: 'white' }}>
               <div className="d-flex mb-2">
-                <label className="col-form-label mr-auto" style={{ width: '120px' }}>I want to</label>
+                <label className="col-form-label mr-auto" style={{ width: '190px' }}>I want to</label>
                 <div className='input-group'>
                   <Field
                     name="type"
@@ -389,7 +395,7 @@ class Component extends React.Component {
                 </div>
               </div>
               <div className="d-flex">
-                <label className="col-form-label mr-auto" style={{ width: '120px' }}>Coin</label>
+                <label className="col-form-label mr-auto" style={{ width: '190px' }}>Coin</label>
                 <div className='input-group'>
                   <Field
                     name="currency"
@@ -402,7 +408,7 @@ class Component extends React.Component {
                 </div>
               </div>
               <div className="d-flex mt-2">
-                <label className="col-form-label mr-auto" style={{ width: '120px' }}>Amount*</label>
+                <label className="col-form-label mr-auto" style={{ width: '190px' }}>Amount*</label>
                 <div className="w-100">
                   <Field
                     name="amount"
@@ -414,12 +420,12 @@ class Component extends React.Component {
                 </div>
               </div>
               <div className="d-flex">
-                <label className="col-form-label mr-auto" style={{ width: '120px' }}>Price ({FIAT_CURRENCY_SYMBOL})</label>
-                <span className="w-100 col-form-label">{new BigNumber(offerPrice ? offerPrice.price : 0).toFormat(PRICE_DECIMAL)}</span>
+                <label className="col-form-label mr-auto" style={{ width: '190px' }}>Price</label>
+                <span className="w-100 col-form-label">{new BigNumber(offerPrice ? offerPrice.price : 0).toFormat(PRICE_DECIMAL)} {FIAT_CURRENCY}</span>
               </div>
               <div className="d-flex mt-2">
-                {/*<label className="col-form-label mr-auto" style={{ width: '120px' }} />*/}
-                <div className='input-group justify-content-center'>
+                {/*<label className="col-form-label mr-auto" style={{ width: '190px' }} />*/}
+                <div className='input-group justify-content-end'>
                   <Field
                     name="sellPriceType"
                     component={fieldRadioButton}
@@ -431,23 +437,24 @@ class Component extends React.Component {
                 </div>
               </div>
               <div className="d-flex mt-2">
-                <label className="col-form-label mr-auto" style={{ width: '120px' }}>Customize price (%)</label>
+                <label className="col-form-label mr-auto" style={{ width: '190px' }}>Customize price</label>
                 <div className='input-group align-items-center'>
                   <Field
                     name="customizePrice"
                     // className='form-control-custom form-control-custom-ex w-100'
                     component={fieldNumericInput}
+                    suffix={'%'}
                     color={mainColor}
                     validate={validateFee}
                   />
                 </div>
               </div>
               <div className="d-flex">
-                <label className="col-form-label mr-auto" style={{ width: '120px' }}>Total ({FIAT_CURRENCY_SYMBOL})</label>
-                <span className="w-100 col-form-label">{new BigNumber(totalAmount).toFormat(PRICE_DECIMAL)}</span>
+                <label className="col-form-label mr-auto" style={{ width: '190px' }}>Total</label>
+                <span className="w-100 col-form-label">{new BigNumber(totalAmount).toFormat(PRICE_DECIMAL)} {FIAT_CURRENCY}</span>
               </div>
               <div className="d-flex">
-                <label className="col-form-label mr-auto" style={{ width: '120px' }}>Phone</label>
+                <label className="col-form-label mr-auto" style={{ width: '190px' }}>Phone</label>
                 <div className="input-group w-100">
                   <Field
                     name="phone"
@@ -460,7 +467,7 @@ class Component extends React.Component {
                 </div>
               </div>
               <div className="d-flex mt-2">
-                <label className="col-form-label mr-auto" style={{ width: '120px' }}>Address*</label>
+                <label className="col-form-label mr-auto" style={{ width: '190px' }}>Address*</label>
                 <div className="w-100">
                   <Field
                     name="address"

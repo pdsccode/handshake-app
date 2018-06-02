@@ -97,13 +97,15 @@ export const fieldRadioButton = customField(({
 ));
 
 export const fieldNumericInput = customField(({
-  onChange, value, list, name, color = '', step = 0.25,
+  onChange, value, list, name, color = '', step = 0.25, suffix
 }) => {
   const valueFloat = parseFloat(value || 0, 10);
   return (
     <span className="btn-group" role="group" style={{ color }}>
       <button type="button" className="btn bg-white" style={{ color, minWidth: '50px' }} onClick={() => onChange(valueFloat - step)}>-</button>
-      <span className="bg-light text-center" style={{ minWidth: '50px', lineHeight: '38px', opacity: 0.6 }}>{value}</span>
+      <span className="bg-light text-center" style={{ minWidth: '70px', lineHeight: '38px', opacity: 0.6 }}>
+        {value}{ suffix && <span>{suffix}</span>}
+      </span>
       <button type="button" className="btn bg-white" style={{ color, minWidth: '50px' }} onClick={() => onChange(valueFloat + step)}>+</button>
     </span>
   );
