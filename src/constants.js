@@ -38,12 +38,22 @@ export const FIREBASE_PATH = {
 };
 export const CRYPTO_CURRENCY_DEFAULT = 'ETH';
 
-export const EXCHANGE_ACTION = [
-  { value: 'buy', text: 'Buy' },
-  { value: 'sell', text: 'Sell' },
+export const EXCHANGE_ACTION = {
+  BUY: 'buy',
+  SELL: 'sell',
+};
+
+export const EXCHANGE_ACTION_NAME = {
+  [EXCHANGE_ACTION.BUY]: 'Buy',
+  [EXCHANGE_ACTION.SELL]: 'Sell',
+};
+
+export const EXCHANGE_ACTION_LIST = [
+  { value: EXCHANGE_ACTION.BUY, text: EXCHANGE_ACTION_NAME[EXCHANGE_ACTION.BUY] },
+  { value: EXCHANGE_ACTION.SELL, text: EXCHANGE_ACTION_NAME[EXCHANGE_ACTION.SELL] },
 ];
 
-export const EXCHANGE_ACTION_DEFAULT = 'buy';
+export const EXCHANGE_ACTION_DEFAULT = EXCHANGE_ACTION.BUY;
 
 export const FIAT_CURRENCY = 'USD';
 export const FIAT_CURRENCY_SYMBOL = '$';
@@ -182,4 +192,3 @@ export const EXCHANGE_METHOD_PAYMENT = {
   [EXCHANGE_FEED_TYPE.EXCHANGE]: 'cash',
   [EXCHANGE_FEED_TYPE.INSTANT]: 'credit card',
 }
-

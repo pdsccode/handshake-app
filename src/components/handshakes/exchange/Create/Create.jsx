@@ -22,7 +22,7 @@ import {
   API_URL,
   CRYPTO_CURRENCY,
   CRYPTO_CURRENCY_DEFAULT,
-  EXCHANGE_ACTION,
+  EXCHANGE_ACTION_LIST,
   EXCHANGE_ACTION_DEFAULT,
   FIAT_CURRENCY,
   FIAT_CURRENCY_SYMBOL,
@@ -40,6 +40,7 @@ import {showAlert} from '@/reducers/app/action';
 import {MasterWallet} from "@/models/MasterWallet";
 import {DEFAULT_FEE} from "@/constants";
 import { ExchangeHandshake } from '@/services/neuron';
+import {EXCHANGE_ACTION_NAME} from "@/constants";
 
 const nameFormExchangeCreate = 'exchangeCreate';
 const FormExchangeCreate = createForm({
@@ -212,7 +213,7 @@ class Component extends React.Component {
 
     console.log('handleSubmit', offer);
     const message = intl.formatMessage({ id: 'createOfferConfirm' }, {
-      type: values.type === 'buy' ? 'Buy' : 'Sell',
+      type: EXCHANGE_ACTION_NAME[values.type],
       amount: new BigNumber(values.amount).toFormat(6),
       currency: values.currency,
       currency_symbol: getSymbolFromCurrency(fiat_currency),
@@ -378,7 +379,7 @@ class Component extends React.Component {
                   <Field
                     name="type"
                     component={fieldRadioButton}
-                    list={EXCHANGE_ACTION}
+                    list={EXCHANGE_ACTION_LIST}
                     color={mainColor}
                     validate={[required]}
                     onChange={this.onTypeChange}
