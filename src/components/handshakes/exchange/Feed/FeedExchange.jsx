@@ -13,7 +13,11 @@ import {BigNumber} from 'bignumber.js';
 import {
   AMOUNT_DECIMAL,
   API_URL,
+  EXCHANGE_FEED_TYPE,
+  EXCHANGE_METHOD_PAYMENT,
+  HANDSHAKE_EXCHANGE_CC_STATUS_NAME,
   HANDSHAKE_EXCHANGE_STATUS,
+  HANDSHAKE_EXCHANGE_STATUS_NAME,
   HANDSHAKE_STATUS_NAME,
   HANDSHAKE_USER,
   PRICE_DECIMAL
@@ -32,11 +36,10 @@ import Offer from "@/models/Offer";
 import {MasterWallet} from "@/models/MasterWallet";
 import {getHandshakeUserType, getOfferPrice} from "@/services/offer-util";
 import {showAlert} from '@/reducers/app/action';
-import {HANDSHAKE_EXCHANGE_STATUS_NAME} from "@/constants";
 import {Link} from "react-router-dom";
-import { URL } from '@/config';
-import { getDistanceFromLatLonInKm } from '../utils'
-import { ExchangeHandshake } from '@/services/neuron';
+import {URL} from '@/config';
+import {getDistanceFromLatLonInKm} from '../utils'
+import {ExchangeHandshake} from '@/services/neuron';
 
 class FeedExchange extends React.PureComponent {
   constructor(props) {
@@ -785,26 +788,66 @@ class FeedExchange extends React.PureComponent {
 
 
   render() {
-    const {initUserId, shakeUserIds, location, state, status, mode = 'discover', ipInfo: { latitude, longitude }, ...props} = this.props;
+    const {intl, initUserId, shakeUserIds, location, state, status, mode = 'discover', ipInfo: { latitude, longitude }, ...props} = this.props;
     const {offer, userType} = this.state;
     const {listOfferPrice} = this.props;
     let fiatAmount = 0;
-    if (listOfferPrice) {
-      let offerPrice = getOfferPrice(listOfferPrice, offer.type, offer.currency);
-      if (offerPrice) {
-        fiatAmount = offer.amount * offerPrice.price || 0;
-        fiatAmount = fiatAmount + fiatAmount * offer.percentage;
-      } else {
-        console.log('aaaa', offer.type, offer.currency);
+
+    if (offer.fiatAmount) {
+      fiatAmount = offer.fiatAmount;
+    } else {
+      if (listOfferPrice) {
+        let offerPrice = getOfferPrice(listOfferPrice, offer.type, offer.currency);
+        if (offerPrice) {
+          fiatAmount = offer.amount * offerPrice.price || 0;
+          fiatAmount = fiatAmount + fiatAmount * offer.percentage;
+        } else {
+          console.log('aaaa', offer.type, offer.currency);
+        }
       }
+      this.setState({fiatAmount: fiatAmount});
     }
-    this.setState({fiatAmount: fiatAmount});
 
     let modalContent = this.state.modalContent;
-    let actionButtons = this.getActionButtons();
 
     const email = 'abc@mail.com'
-    const statusText = HANDSHAKE_EXCHANGE_STATUS_NAME[status];
+    let statusText = '';
+    let message = '';
+    let actionButtons = null;
+
+    switch (offer.feedType) {
+      case EXCHANGE_FEED_TYPE.EXCHANGE: {
+        statusText = HANDSHAKE_EXCHANGE_STATUS_NAME[status];
+
+        message = intl.formatMessage({ id: 'offerHandShakeContent' }, {
+          offerType: offer.type === 'buy' ? 'Buy' : 'Sell',
+          amount: new BigNumber(offer.amount).toFormat(AMOUNT_DECIMAL),
+          currency: offer.currency,
+          currency_symbol: getSymbolFromCurrency(offer.fiatCurrency),
+          total: new BigNumber(fiatAmount).toFormat(PRICE_DECIMAL),
+          payment_method: EXCHANGE_METHOD_PAYMENT[EXCHANGE_FEED_TYPE.EXCHANGE]
+        });
+
+        actionButtons = this.getActionButtons();
+        break;
+      }
+      case EXCHANGE_FEED_TYPE.INSTANT: {
+        statusText = HANDSHAKE_EXCHANGE_CC_STATUS_NAME[status];
+
+        message = intl.formatMessage({ id: 'offerHandShakeContent' }, {
+          offerType: offer.type === 'buy' ? 'Buy' : 'Sell',
+          amount: new BigNumber(offer.amount).toFormat(AMOUNT_DECIMAL),
+          currency: offer.currency,
+          currency_symbol: getSymbolFromCurrency(offer.fiatCurrency),
+          total: new BigNumber(fiatAmount).toFormat(PRICE_DECIMAL),
+          payment_method: EXCHANGE_METHOD_PAYMENT[EXCHANGE_FEED_TYPE.INSTANT]
+        });
+
+        actionButtons = null;
+        break;
+      }
+    }
+
     const phone = offer.contactPhone[0] === '+' ? offer.contactPhone : `+${offer.contactPhone}`; // prepend '+'
     const address = offer.contactInfo;
 
@@ -831,12 +874,7 @@ class FeedExchange extends React.PureComponent {
           <div className="d-flex mb-4">
             <div>
               <h5>
-                <FormattedMessage id="offerHandShakeContent" values={{
-                  offerType: offer.type === 'buy' ? 'Buy' : 'Sell',
-                  amount: new BigNumber(offer.amount).toFormat(AMOUNT_DECIMAL), currency: offer.currency,
-                  currency_symbol: getSymbolFromCurrency(offer.fiatCurrency),
-                  total: new BigNumber(fiatAmount).toFormat(PRICE_DECIMAL)
-                }}/>
+                {message}
               </h5>
             </div>
             { mode === 'me' && !isCreditCard && (

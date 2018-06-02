@@ -171,7 +171,7 @@ class Component extends React.Component {
       this.props.showAlert({
         message: <div className="text-center">
           {intl.formatMessage({ id: 'notEnoughCoinInWallet' }, {
-            amount: new BigNumber(values.amount).toFormat(6),
+            amount: new BigNumber(balance).toFormat(6),
             currency: values.currency,
           })}
           </div>,
