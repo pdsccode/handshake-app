@@ -328,10 +328,10 @@ class BetingShake extends React.Component {
     };
     console.log("Params:", params);
 
-    this.props.initHandshake({PATH_URL: API_URL.CRYPTOSIGN.INIT_HANDSHAKE, METHOD:'POST', data: params,
-    successFn: this.initHandshakeSuccess,
-    errorFn: this.handleGetCryptoPriceFailed
-  });
+  //   this.props.initHandshake({PATH_URL: API_URL.CRYPTOSIGN.INIT_HANDSHAKE, METHOD:'POST', data: params,
+  //   successFn: this.initHandshakeSuccess,
+  //   errorFn: this.handleGetCryptoPriceFailed
+  // });
   }
 
   initHandshakeSuccess = async (successData)=>{
