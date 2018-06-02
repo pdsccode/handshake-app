@@ -54,14 +54,14 @@ class BetingShake extends React.Component {
       buttonClass: 'btnOK btnBlue',
       isShowOdds: false,
       extraData: {},
-      
+
     };
 
     this.onSubmit = ::this.onSubmit;
     this.onCancel = ::this.onCancel;
     this.renderInputField = ::this.renderInputField;
     this.renderForm = ::this.renderForm;
-    this.onToggleChan::this.onToggleChange;
+    this.onToggleChange = ::this.onToggleChange;
   }
   componentDidMount(){
     const {extraData} = this.state;
