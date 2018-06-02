@@ -3,7 +3,9 @@ import ReactDOM from 'react-dom';
 import BrowserDetect from '@/services/browser-detect';
 // components
 import App from '@/components/App/App';
+import registerServiceWorker from '@/services/worker';
 import MobileOrTablet from '@/components/MobileOrTablet';
+
 
 if (!String.prototype.format) {
   String.prototype.format = function () {
@@ -23,3 +25,5 @@ if (process.env.ENV === 'production') {
 
 ReactDOM.render(app, document.getElementById('app'));
 
+registerServiceWorker();
+require('offline-plugin/runtime').install();

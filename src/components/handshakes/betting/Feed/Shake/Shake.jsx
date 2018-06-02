@@ -1,11 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import cn from 'classnames';
+import { connect } from 'react-redux';
 
 // service, constant
 import createForm from '@/components/core/form/createForm';
 import { required } from '@/components/core/form/validation';
 import { Field } from "redux-form";
+import { shakeItem } from '@/reducers/handshake/action';
+import {HANDSHAKE_ID, API_URL } from '@/constants';
+import {MasterWallet} from '@/models/MasterWallet';
 
 // components
 import { InputField } from '@/components/handshakes/betting/form/customField';
@@ -13,6 +17,10 @@ import Button from '@/components/core/controls/Button';
 import Toggle from './../Toggle';
 
 import './Shake.scss';
+
+
+const wallet = MasterWallet.getWalletDefault('ETH');
+const chainId = wallet.chainId;
 
 const nameFormBettingShake = 'bettingShakeForm';
 const BettingShakeForm = createForm({
@@ -25,13 +33,13 @@ const defaultAmount = 1;
 
 class BetingShake extends React.Component {
   static propTypes = {
-    remaining: PropTypes.number.isRequired,
+    outcomeId: PropTypes.number.isRequired,
     onSubmitClick: PropTypes.func,
     onCancelClick: PropTypes.func,
   }
 
   static defaultProps = {
-    remaining: 10
+    outcomeId: -1
   };
 
   constructor(props) {
@@ -55,6 +63,8 @@ class BetingShake extends React.Component {
     const {amount} = this.state;
     console.log("this.toggle", this.toggleRef.value);
     // this.props.onSubmitClick(amount);
+    const side = this.toggleRef.value;
+    this.shakeItem(amount, side);
   }
 
   onCancel() {
@@ -180,6 +190,40 @@ class BetingShake extends React.Component {
   render() {
     return this.renderForm();
   }
-}
 
-export default BetingShake;
+  shakeItem(amount, side){
+      const {outcomeId} = this.props;
+      const params = {
+        //to_address: toAddress ? toAddress.trim() : '',
+        //public: isPublic,
+        //description: content,
+        // description: JSON.stringify(extraParams),
+        //industries_type: industryId,
+        type: HANDSHAKE_ID.BETTING,
+        //type: 3,
+        //extra_data: JSON.stringify(fields),
+        outcome_id: outcomeId,
+        amount,
+        currency: 'ETH',
+        side,
+        chain_id: chainId,
+        from_address: wallet.address
+      };
+      console.log(params);
+
+      this.props.shakeItem({PATH_URL: API_URL.CRYPTOSIGN.SHAKE, METHOD:'POST', data: params,
+      successFn: this.shakeItemSuccess,
+      errorFn: this.shakeItemFailed
+    });
+  }
+  shakeItemSuccess = async (successData)=>{
+    console.log('shakeItemSuccess', successData);
+  }
+  shakeItemFailed = (error) => {
+    console.log('shakeItemFailed', error);
+  }
+}
+const mapDispatch = ({
+  shakeItem,
+});
+export default connect(null, mapDispatch)(BetingShake);

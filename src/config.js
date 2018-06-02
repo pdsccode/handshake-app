@@ -8,6 +8,7 @@ export const URL = {
 
   HANDSHAKE_ME: '/me',
   HANDSHAKE_ME_INDEX: '/me',
+  HANDSHAKE_ME_PROFILE: '/me/profile',
 
   HANDSHAKE_DISCOVER: '/discover',
   HANDSHAKE_DISCOVER_INDEX: '/discover',

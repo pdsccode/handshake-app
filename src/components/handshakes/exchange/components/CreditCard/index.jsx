@@ -140,7 +140,7 @@ class Component extends React.Component {
                 <div className='d-flex' style={{ height: '36px', lineHeight: '36px' }}>
                   <span>
                     <img className='mx-2' width="26px" height="26px" src={imgCC} />
-                    <span>∗∗∗∗ ∗∗∗∗ ∗∗∗∗ {lastDigits}</span>
+                    <span>∗∗∗∗∗∗ {lastDigits}</span>
                   </span>
                   <span className="ml-auto" style={{ width: '120px' }}>
                     <Field

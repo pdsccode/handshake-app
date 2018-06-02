@@ -50,7 +50,7 @@ export class Bitcoin extends Wallet{
 
   }
 
-    async getBalance1() {
+    async getBalance() {
 
       this.setDefaultNetwork();
 
