@@ -361,8 +361,35 @@
   .wrong-pass-phrase{
     padding: 20px 10px !important;
   }
-  .button-wallet{
-    background-color: #1abb9a;
+  
+}
+.button-wallet{   
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  left: 0;
+  border-radius: 0;
+  padding: 0.9625rem 0;
+}
+
+.div-address-qr-code{
+  position: relative;
+  margin-bottom: 15px;
+  font-size: 18px;
+  line-height: 22px;
+  border: 1px solid #EFEFEF;
+  overflow: hidden;
+  height: 54px;
+  .input-address-qr-code{
+    border: 0 !important;
+    margin: 0 !important;
+    padding-right: 60px;
+  }
+  .icon-qr-code-black{
+    width: 40px;
+    position: absolute;
+    top: 15px;
+    right: 10px;
   }
 }
 

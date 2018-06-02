@@ -4,6 +4,7 @@ import Tx from 'ethereumjs-tx';
 // import Token from './neuron-token';
 // import Handshake from './neuron-handshake';
 export { default as BettingHandshake } from './neuron-bettinghandshake';
+export { default as ExchangeHandshake } from './neuron-exchangehandshake';
 
 const BN = Web3.utils.BN;
 
