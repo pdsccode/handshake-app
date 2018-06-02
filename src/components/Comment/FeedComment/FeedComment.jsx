@@ -1,6 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import { Link } from 'react-router-dom';
+import { URL } from '@/config';
+
 // style
 import addAComment from '@/assets/images/icon/comment/add_a_comment.svg';
 import './FeedComment.scss';
@@ -8,15 +11,16 @@ import './FeedComment.scss';
 class FeedComment extends React.PureComponent {
 
   render() {
-    const { numComments } = this.props;
+    const { numComments, objectType, objectId } = this.props;
+    const commentLink = `${URL.COMMENTS_BY_SHAKE_INDEX}?objectType=${objectType}&objectId=${objectId}`;
     return (
       <div className="feedComment">
-        <div className="addAComment">
+        <Link className="addAComment" to={commentLink} title="add a comment">
           <img src={addAComment} alt="add a comment" /> <span>Add a comment</span>
-        </div>
-        <div className="numComments">
+        </Link>
+        <Link className="numComments" to={commentLink} title="numComments">
           {numComments} {numComments > 1 ? 'comments' : 'comment'}
-        </div>
+        </Link>
       </div>
     );
   }

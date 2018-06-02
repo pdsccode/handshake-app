@@ -282,7 +282,7 @@ class BettingFilter extends React.Component {
 
                     </div>
                 </div>
-              <FeedComment numComments={12} />
+              <FeedComment numComments={12} objectType={3} objectId={1231} />
             </div>
 
         );
