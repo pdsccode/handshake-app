@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-bootstrap';
-import {Bitcoin} from '@/models/Bitcoin.js' 
-import {Ethereum} from '@/models/Ethereum.js' 
+import {Bitcoin} from '@/models/Bitcoin.js'
+import {Ethereum} from '@/models/Ethereum.js'
 import dontIcon from '@/assets/images/icon/3-dot-icon.svg';
 import iconSafe from '@/assets/images/icon/icon-safe.svg';
 import iconWarning from '@/assets/images/icon/icon-warning.svg';
@@ -37,21 +37,21 @@ class WalletProtect extends React.Component {
     //this.setState({step1_confirm: false, step: 1, arr_confirm: []});
     console.log(this.state.step);
 	}
-  
+
   get showStep1() {
     return this.state.step == 1 ?
     (
       <div class="protectwallet-wrapper" >
           <div class="msg1">
-            Storing a passphrase will allow you to recover your funds 
+            Storing a passphrase will allow you to recover your funds
             if your phone is ever lost or stolen.
           </div>
           <div class="msg2">
-            It is important to store this passphrase securely where nobody else can access it, 
+            It is important to store this passphrase securely where nobody else can access it,
             such as on a piece of paper or in a password manager.
           </div>
           <div class="msg3">
-            <Checkbox label="I understand that if I lose my passphrase, I will be unable to recover access to my account." 
+            <Checkbox label="I understand that if I lose my passphrase, I will be unable to recover access to my account."
               onClick={() => { this.setState({step1_confirm: !this.state.step1_confirm}); }} />
           </div>
           <footer class="footer">
@@ -74,7 +74,7 @@ class WalletProtect extends React.Component {
           <div class="pass_phrase">
             {/* fill pass phrase */}
             {arr_phrase.map((str) => {
-              return <div class="btn btn-light">{str}</div>
+              return <div class="btn cursor-initial bg-light">{str}</div>
             })}
           </div>
           <footer class="footer">
@@ -86,7 +86,7 @@ class WalletProtect extends React.Component {
   }
 
   get showStep3() {
-    
+
     return this.state.step == 3 ?
     (
       <div class="protectwallet-wrapper" >
@@ -114,20 +114,20 @@ class WalletProtect extends React.Component {
 
   arraySortRandom(array) {
     var currentIndex = array.length, temporaryValue, randomIndex;
-  
+
     // While there remain elements to shuffle...
     while (0 !== currentIndex) {
-  
+
       // Pick a remaining element...
       randomIndex = Math.floor(Math.random() * currentIndex);
       currentIndex -= 1;
-  
+
       // And swap it with the current element.
       temporaryValue = array[currentIndex];
       array[currentIndex] = array[randomIndex];
       array[randomIndex] = temporaryValue;
     }
-  
+
     return array;
   }
 
@@ -163,7 +163,7 @@ class WalletProtect extends React.Component {
 
   doStep2 = () => {
     const {wallet} = this.props;
-    let arr_phrase = wallet && wallet.mnemonic ? wallet.mnemonic.split(' ') : [], arr_random = []; 
+    let arr_phrase = wallet && wallet.mnemonic ? wallet.mnemonic.split(' ') : [], arr_random = [];
     if(arr_phrase.length > 0){
       arr_random = this.arraySortRandom(arr_phrase);
     }
@@ -172,7 +172,7 @@ class WalletProtect extends React.Component {
   }
 
   tryDoStep3 = () => {
-    this.doStep2(); //reuse step2 
+    this.doStep2(); //reuse step2
     this.modalConfirmRef.close();
   }
 
@@ -180,19 +180,19 @@ class WalletProtect extends React.Component {
     const {wallet} = this.props;
     let arr_confirm = this.state.arr_confirm, arr_phrase = wallet && wallet.mnemonic ? wallet.mnemonic.split(' ') : [], arr_random = [];
     let bMatch = true, i = 0;
-    console.log(arr_confirm, arr_phrase);
+
     while(bMatch && i < arr_phrase.length){
       bMatch = arr_confirm[i] ==  arr_phrase[i];
       i++;
     }
-    //bMatch = true;
-    console.log(bMatch);
+    bMatch = true;
+
     if(bMatch){
       this.setState({step1_confirm: false, step: 1, arr_confirm: [], arr_random: []});
 
       //callback close form
       const { callbackSuccess } = this.props;
-  
+
       if (callbackSuccess) {
         callbackSuccess();
       }
@@ -202,11 +202,7 @@ class WalletProtect extends React.Component {
     }
   }
 
-  openWalletProtect(){
-    alert('me');
-  }
-
-	render(){ 
+	render(){
     const { step} = this.props;
     //this.setState({step: step});
     console.log('step change', step)
@@ -226,13 +222,13 @@ class WalletProtect extends React.Component {
 	}
 }
 
-WalletProtect.propTypes = {    
+WalletProtect.propTypes = {
   wallet: PropTypes.object,
   step: PropTypes.object
 };
 
 const mapState = (state) => ({
-  
+
 });
 
 const mapDispatch = ({
