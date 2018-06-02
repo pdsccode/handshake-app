@@ -370,7 +370,7 @@ class Component extends React.Component {
     return (
       <div>
         <FormExchangeCreate onSubmit={this.handleSubmit}>
-          <Feed className="feed my-2" background={mainColor}>
+          <Feed className="feed p-2 my-2" background={mainColor}>
             <div style={{ color: 'white' }}>
               <div className="d-flex mb-2">
                 <label className="col-form-label mr-auto" style={{ width: '120px' }}>I want to</label>
@@ -416,7 +416,7 @@ class Component extends React.Component {
               </div>
               <div className="d-flex mt-2">
                 {/*<label className="col-form-label mr-auto" style={{ width: '120px' }} />*/}
-                <div className='input-group justify-content-end'>
+                <div className='input-group justify-content-center'>
                   <Field
                     name="sellPriceType"
                     component={fieldRadioButton}
