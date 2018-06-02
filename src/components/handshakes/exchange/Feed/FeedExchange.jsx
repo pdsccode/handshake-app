@@ -273,7 +273,7 @@ class FeedExchange extends React.PureComponent {
 
     let result = null;
 
-    if (data.type === 'buy' && userType === HANDSHAKE_USER.OWNER) {
+    if (data.type === EXCHANGE_ACTION.BUY && userType === HANDSHAKE_USER.OWNER) {
       result = exchangeHandshake.reject(data.data.hid, data.data.id);
     } else {
       result = exchangeHandshake.cancel(data.hid, data.data.id);
@@ -412,7 +412,7 @@ class FeedExchange extends React.PureComponent {
           case HANDSHAKE_EXCHANGE_STATUS.COMPLETED: {
             // actionButtons = 'Withdraw';
             // nguoi co crypto se withdraw
-            if (offer.type === 'sell') {
+            if (offer.type === EXCHANGE_ACTION.SELL) {
               const result = exchangeHandshake.withdraw(data.hid, data.id);
 
               console.log('handleWithdrawShakedOfferSuccess', result);
@@ -432,7 +432,12 @@ class FeedExchange extends React.PureComponent {
           case HANDSHAKE_EXCHANGE_STATUS.CREATED: {
             // actionButtons = 'Cancel';
             //call action cancel
-            const result = exchangeHandshake.close(data.hid, data.id);
+            let result = '';
+            if (offer.type === EXCHANGE_ACTION.BUY) {
+              result = exchangeHandshake.closeByCashOwner(data.hid, data.id);
+            } else {
+              result = exchangeHandshake.cancel(data.hid, data.id);
+            }
 
             console.log('handleCloseOfferSuccess', result);
             break;
@@ -440,7 +445,12 @@ class FeedExchange extends React.PureComponent {
           case HANDSHAKE_EXCHANGE_STATUS.ACTIVE: {
             // actionButtons = 'Cancel';
             //call action cancel
-            const result = exchangeHandshake.close(data.hid, data.id);
+            let result = '';
+            if (offer.type === EXCHANGE_ACTION.BUY) {
+              result = exchangeHandshake.closeByCashOwner(data.hid, data.id);
+            } else {
+              result = exchangeHandshake.cancel(data.hid, data.id);
+            }
 
             console.log('handleCloseOfferSuccess', result);
             break;
@@ -457,16 +467,16 @@ class FeedExchange extends React.PureComponent {
           }
           case HANDSHAKE_EXCHANGE_STATUS.SHAKE: {
             // actionButtons = 'Reject'; // complete: nguoi nhan cash
-            message = intl.formatMessage({id: 'rejectOfferConfirm'}, {});
-            let message2 = intl.formatMessage({id: 'completeOfferConfirm'}, {});
-            actionButtons = (
-              <div>
-                <Button block className="mt-2" onClick={() => this.confirmShakeOffer(message, this.handleCancelShakedOffer)}>Reject</Button>
-                {offer.type === 'sell' &&
-                <Button block className="mt-2" onClick={() => this.confirmShakeOffer(message2, this.handleCompleteShakedOffer)}>Complete</Button>
-                }
-              </div>
-            );
+            // message = intl.formatMessage({id: 'rejectOfferConfirm'}, {});
+            // let message2 = intl.formatMessage({id: 'completeOfferConfirm'}, {});
+            // actionButtons = (
+            //   <div>
+            //     <Button block className="mt-2" onClick={() => this.confirmShakeOffer(message, this.handleCancelShakedOffer)}>Reject</Button>
+            //     {offer.type === 'sell' &&
+            //     <Button block className="mt-2" onClick={() => this.confirmShakeOffer(message2, this.handleCompleteShakedOffer)}>Complete</Button>
+            //     }
+            //   </div>
+            // );
             break;
           }
           // case HANDSHAKE_EXCHANGE_STATUS.COMPLETING: {
@@ -476,7 +486,7 @@ class FeedExchange extends React.PureComponent {
           case HANDSHAKE_EXCHANGE_STATUS.COMPLETED: {
             // actionButtons = 'Withdraw';
             // neu la nguoi buy coin thi dc withdraw
-            if (offer.type === 'buy') {
+            if (offer.type === EXCHANGE_ACTION.BUY) {
               const result = exchangeHandshake.withdraw(data.hid, data.id);
 
               console.log('handleWithdrawShakedOfferSuccess', result);
