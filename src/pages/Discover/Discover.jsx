@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 // service, constant
 import { loadDiscoverList } from '@/reducers/discover/action';
-import { HANDSHAKE_ID, API_URL } from '@/constants';
+import { HANDSHAKE_ID, API_URL, EXCHANGE_ACTION, EXCHANGE_ACTION_NAME } from '@/constants';
 import { URL } from '@/config';
 // components
 import { Grid, Row, Col } from 'react-bootstrap';
@@ -166,8 +166,8 @@ class DiscoverPage extends React.Component {
                     activeId={this.state.tabIndexActive}
                     onClickTab={this.clickTabItem}
                     list={[
-                      { id: 1, text: 'Buy' },
-                      { id: 2, text: 'Sell' },
+                      { id: 1, text: EXCHANGE_ACTION_NAME[EXCHANGE_ACTION.BUY] },
+                      { id: 2, text: EXCHANGE_ACTION_NAME[EXCHANGE_ACTION.SELL] },
                     ]}
                   />
                 </Col>

@@ -40,6 +40,7 @@ import {Link} from "react-router-dom";
 import {URL} from '@/config';
 import {getDistanceFromLatLonInKm} from '../utils'
 import {ExchangeHandshake} from '@/services/neuron';
+import {EXCHANGE_ACTION, EXCHANGE_ACTION_NAME} from "@/constants";
 
 class FeedExchange extends React.PureComponent {
   constructor(props) {
@@ -542,7 +543,7 @@ class FeedExchange extends React.PureComponent {
           // }
           case HANDSHAKE_EXCHANGE_STATUS.ACTIVE: {
             message = intl.formatMessage({id: 'handshakeOfferConfirm'}, {
-              type: offer.type === 'buy' ? 'Sell' : 'Buy',
+              type: offer.type === EXCHANGE_ACTION.BUY ? EXCHANGE_ACTION_NAME[EXCHANGE_ACTION.SELL] : EXCHANGE_ACTION_NAME[EXCHANGE_ACTION.BUY],
               amount: new BigNumber(offer.amount).toFormat(6),
               currency: offer.currency,
               currency_symbol: getSymbolFromCurrency(offer.fiatCurrency),
@@ -820,7 +821,7 @@ class FeedExchange extends React.PureComponent {
         statusText = HANDSHAKE_EXCHANGE_STATUS_NAME[status];
 
         message = intl.formatMessage({ id: 'offerHandShakeContent' }, {
-          offerType: offer.type === 'buy' ? 'Buy' : 'Sell',
+          offerType: EXCHANGE_ACTION_NAME[offer.type],
           amount: new BigNumber(offer.amount).toFormat(AMOUNT_DECIMAL),
           currency: offer.currency,
           currency_symbol: getSymbolFromCurrency(offer.fiatCurrency),
@@ -835,7 +836,7 @@ class FeedExchange extends React.PureComponent {
         statusText = HANDSHAKE_EXCHANGE_CC_STATUS_NAME[status];
 
         message = intl.formatMessage({ id: 'offerHandShakeContent' }, {
-          offerType: offer.type === 'buy' ? 'Buy' : 'Sell',
+          offerType: EXCHANGE_ACTION_NAME[offer.type],
           amount: new BigNumber(offer.amount).toFormat(AMOUNT_DECIMAL),
           currency: offer.currency,
           currency_symbol: getSymbolFromCurrency(offer.fiatCurrency),
