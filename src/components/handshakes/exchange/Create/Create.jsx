@@ -43,6 +43,7 @@ import {showAlert} from '@/reducers/app/action';
 import {MasterWallet} from "@/models/MasterWallet";
 import {ExchangeHandshake} from '@/services/neuron';
 import phoneCountryCodes from '@/components/core/form/country-calling-codes.min.json';
+import {CRYPTO_CURRENCY} from "@/constants";
 
 const nameFormExchangeCreate = 'exchangeCreate';
 const FormExchangeCreate = createForm({
@@ -175,7 +176,8 @@ class Component extends React.Component {
     const wallet = MasterWallet.getWalletDefault(values.currency);
     const balance = await wallet.getBalance();
 
-    if (values.type === 'sell' && balance < values.amount + DEFAULT_FEE[values.currency]) {
+    if ((values.currency === CRYPTO_CURRENCY.ETH || (values.type === EXCHANGE_ACTION.SELL && values.currency === CRYPTO_CURRENCY.BTC))
+      && balance < values.amount + DEFAULT_FEE[values.currency]) {
       this.props.showAlert({
         message: <div className="text-center">
           {intl.formatMessage({ id: 'notEnoughCoinInWallet' }, {

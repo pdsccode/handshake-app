@@ -98,7 +98,7 @@ class FeedExchange extends React.PureComponent {
   //   this.modalRef.close();
   // }
 
-  confirmShakeOffer = (message, actionConfirm) => {
+  confirmOfferAction = (message, actionConfirm) => {
     const {intl,} = this.props;
     const {offer, fiatAmount} = this.state;
     console.log('offer', offer);
@@ -181,13 +181,15 @@ class FeedExchange extends React.PureComponent {
     });
   }
 
-  handleShakeOfferSuccess = (data) => {
+  handleShakeOfferSuccess = (responseData) => {
     const { refreshPage } = this.props;
+    const { data } = responseData;
+    const { currency } = data;
 
     const { offer } = this.state;
-    if (offer.currency === 'ETH') {
-      this.handleCallActionOnContract(data.data);
-    } else if (offer.currency === 'BTC') {
+    if (currency === CRYPTO_CURRENCY.ETH) {
+      this.handleCallActionOnContract(data);
+    } else if (currency === CRYPTO_CURRENCY.BTC) {
       if (offer.type === EXCHANGE_ACTION.BUY) {
         const wallet = MasterWallet.getWalletDefault(offer.currency);
         wallet.transfer(offer.systemAddress, offer.totalAmount).then(success => {
@@ -225,13 +227,13 @@ class FeedExchange extends React.PureComponent {
     });
   }
 
-  handleCloseOfferSuccess = (data) => {
+  handleCloseOfferSuccess = (responseData) => {
     const { refreshPage } = this.props;
-
-    const currency = data.data.currency;
+    const { data } = responseData;
+    const { currency } = data;
 
     if (currency === CRYPTO_CURRENCY.ETH) {
-      this.handleCallActionOnContract(data.data);
+      this.handleCallActionOnContract(data);
     }
 
     this.props.showAlert({
@@ -264,17 +266,17 @@ class FeedExchange extends React.PureComponent {
     });
   }
 
-  handleCompleteShakedOfferSuccess = async (data) => {
+  handleCompleteShakedOfferSuccess = async (responseData) => {
     const { refreshPage } = this.props;
-
-    const currency = data.data.currency;
+    const { data } = responseData;
+    const { currency } = data;
 
     if (currency === CRYPTO_CURRENCY.ETH) {
       const wallet = MasterWallet.getWalletDefault(currency);
 
       const exchangeHandshake = new ExchangeHandshake(wallet.chainId);
 
-      let result = await exchangeHandshake.accept(data.data.hid, data.data.id);
+      let result = await exchangeHandshake.accept(data.hid, data.id);
 
       console.log('handleCompleteShakedOfferSuccess', result);
     }
@@ -310,11 +312,11 @@ class FeedExchange extends React.PureComponent {
     });
   }
 
-  handleRejectShakedOfferSuccess = (data) => {
+  handleRejectShakedOfferSuccess = async (responseData) => {
     const { refreshPage } = this.props;
-    const {userType} = this.state;
-
-    const currency = data.data.currency;
+    const { data } = responseData;
+    const { currency } = data;
+    const { userType } = this.state;
 
     if (currency === CRYPTO_CURRENCY.ETH) {
       const wallet = MasterWallet.getWalletDefault(currency);
@@ -323,10 +325,12 @@ class FeedExchange extends React.PureComponent {
 
       let result = null;
 
-      if (data.type === EXCHANGE_ACTION.BUY && userType === HANDSHAKE_USER.OWNER) {
-        result = exchangeHandshake.reject(data.data.hid, data.data.id);
+      if ((data.type === EXCHANGE_ACTION.BUY && userType === HANDSHAKE_USER.OWNER) ||
+        (data.type === EXCHANGE_ACTION.SELL && userType === HANDSHAKE_USER.SHAKED)
+      ) {
+        result = await exchangeHandshake.reject(data.hid, data.id);
       } else {
-        result = exchangeHandshake.cancel(data.hid, data.data.id);
+        result = await exchangeHandshake.cancel(data.hid, data.id);
       }
 
       console.log('handleCancelShakedOfferSuccess', result);
@@ -362,13 +366,13 @@ class FeedExchange extends React.PureComponent {
     });
   }
 
-  handleWithdrawShakedOfferSuccess = (data) => {
+  handleWithdrawShakedOfferSuccess = (responseData) => {
     const { refreshPage } = this.props;
-
-    const currency = data.data.currency;
+    const { data } = responseData;
+    const { currency } = data;
 
     if (currency === CRYPTO_CURRENCY.ETH) {
-      this.handleCallActionOnContract(data.data);
+      this.handleCallActionOnContract(data);
     }
 
     this.props.showAlert({
@@ -455,9 +459,9 @@ class FeedExchange extends React.PureComponent {
             let message2 = intl.formatMessage({id: 'completeOfferConfirm'}, {});
             actionButtons = (
               <div>
-                <Button block className="mt-2" onClick={() => this.confirmShakeOffer(message, this.handleRejectShakedOffer)}>Reject</Button>
+                <Button block className="mt-2" onClick={() => this.confirmOfferAction(message, this.handleRejectShakedOffer)}>Reject</Button>
                 {offer.type === 'buy' &&
-                <Button block className="mt-2" onClick={() => this.confirmShakeOffer(message2, this.handleCompleteShakedOffer)}>Complete</Button>
+                <Button block className="mt-2" onClick={() => this.confirmOfferAction(message2, this.handleCompleteShakedOffer)}>Complete</Button>
                 }
               </div>
             );
@@ -621,7 +625,7 @@ class FeedExchange extends React.PureComponent {
 
             actionButtons = (
               <div>
-                <Button block className="mt-2" onClick={() => this.confirmShakeOffer(message, this.handleShakeOffer)}>Shake Now</Button>
+                <Button block className="mt-2" onClick={() => this.confirmOfferAction(message, this.handleShakeOffer)}>Shake Now</Button>
               </div>
             );
             break;
@@ -669,9 +673,9 @@ class FeedExchange extends React.PureComponent {
             let message2 = intl.formatMessage({id: 'completeOfferConfirm'}, {});
             actionButtons = (
               <div>
-                <Button block className="mt-2" onClick={() => this.confirmShakeOffer(message, this.handleRejectShakedOffer)}>Reject</Button>
+                <Button block className="mt-2" onClick={() => this.confirmOfferAction(message, this.handleRejectShakedOffer)}>Reject</Button>
                 {offer.type === 'buy' &&
-                <Button block className="mt-2" onClick={() => this.confirmShakeOffer(message2, this.handleCompleteShakedOffer)}>Complete</Button>
+                <Button block className="mt-2" onClick={() => this.confirmOfferAction(message2, this.handleCompleteShakedOffer)}>Complete</Button>
                 }
               </div>
             );
@@ -689,7 +693,7 @@ class FeedExchange extends React.PureComponent {
               message = intl.formatMessage({id: 'withdrawOfferConfirm'}, {});
               actionButtons = (
                 <div>
-                  <Button block className="mt-2" onClick={() => this.confirmShakeOffer(message, this.handleWithdrawShakedOffer)}>Withdraw</Button>
+                  <Button block className="mt-2" onClick={() => this.confirmOfferAction(message, this.handleWithdrawShakedOffer)}>Withdraw</Button>
                 </div>
               );
             }
@@ -722,7 +726,7 @@ class FeedExchange extends React.PureComponent {
             message = intl.formatMessage({id: 'cancelOfferConfirm'}, {});
             actionButtons = (
               <div>
-                <Button block className="mt-2" onClick={() => this.confirmShakeOffer(message, this.handleCloseOffer)}>Cancel</Button>
+                <Button block className="mt-2" onClick={() => this.confirmOfferAction(message, this.handleCloseOffer)}>Cancel</Button>
               </div>
             );
             break;
@@ -743,9 +747,9 @@ class FeedExchange extends React.PureComponent {
             let message2 = intl.formatMessage({id: 'completeOfferConfirm'}, {});
             actionButtons = (
               <div>
-                <Button block className="mt-2" onClick={() => this.confirmShakeOffer(message, this.handleRejectShakedOffer)}>Reject</Button>
+                <Button block className="mt-2" onClick={() => this.confirmOfferAction(message, this.handleRejectShakedOffer)}>Reject</Button>
                 {offer.type === 'sell' &&
-                <Button block className="mt-2" onClick={() => this.confirmShakeOffer(message2, this.handleCompleteShakedOffer)}>Complete</Button>
+                <Button block className="mt-2" onClick={() => this.confirmOfferAction(message2, this.handleCompleteShakedOffer)}>Complete</Button>
                 }
               </div>
             );
@@ -761,7 +765,7 @@ class FeedExchange extends React.PureComponent {
             if (offer.type === 'buy') {
               actionButtons = (
                 <div>
-                  <Button block className="mt-2" onClick={() => this.confirmShakeOffer(message, this.handleWithdrawShakedOffer)}>Withdraw</Button>
+                  <Button block className="mt-2" onClick={() => this.confirmOfferAction(message, this.handleWithdrawShakedOffer)}>Withdraw</Button>
                 </div>
               );
             }
@@ -955,8 +959,8 @@ class FeedExchange extends React.PureComponent {
               </div>
             )}
           </div>
-          {/*<span>status: {status}</span><br></br>*/}
-          {/*<span>userType: {userType}</span><br></br>*/}
+          <span>status: {status}</span><br></br>
+          <span>userType: {userType}</span><br></br>
           {
             mode === 'discover' ? (
               <div className="media mb-1">

@@ -217,7 +217,7 @@ export default class ExchangeHandshake extends BaseHandshake {
     );
     const bytesOffchain = this.web3.utils.fromAscii(offchain);
     const payloadData = this.handshakeInstance.methods
-      .close(
+      .closeByCashOwner(
         hid,
         bytesOffchain,
       )
