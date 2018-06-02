@@ -493,14 +493,13 @@ get matchResults(){
     const event_odds = values['event_odds'];
     const payout = stake * event_odds;
     const hid = selectedOutcome.id;
-    const {side} = data;
-    console.log('Side', side);
-    if(status){
-      const {offchain} = data;
+    if(status && data){
+      const {offchain, side} = data;
       var result = null;
       if(this.isShakedBet(data)){
         result = await bettinghandshake.shake(hid, side,stake, payout,maker, offchain);
       }else {
+        console.log('Call Shake item');
         result = await bettinghandshake.initBet(hid, side,stake, payout, offchain);
       }
       if(result){

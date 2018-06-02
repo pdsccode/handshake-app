@@ -7,6 +7,8 @@ const handleMatchListPayload = payload => payload.map(item => Match.match(item))
 
 const bettingReducter = (state = {
   matches: [],
+  supports: [],
+  against: [],
   isFetching: false
 }, action) => {
   switch (action.type) {
@@ -26,6 +28,23 @@ const bettingReducter = (state = {
       return {
         ...state,
         isFetching: false,
+      };
+      case BETTING_ACTIONS.LOAD_HANDSHAKES:
+      return {
+        ...state,
+        isFetching: true,
+      };
+      case `${BETTING_ACTIONS.LOAD_HANDSHAKES}_SUCCESS`:
+      return {
+        ...state,
+        isFetching: true,
+        supports: action.payload.data.supports,
+        against: action.payload.data.against,
+      };
+      case `${BETTING_ACTIONS.LOAD_HANDSHAKES}_FAILED`:
+      return {
+        ...state,
+        isFetching: true,
       };
     default:
       return state;

@@ -11,7 +11,7 @@ import BettingShake from './../Shake';
 import GroupBook from './../GroupBook';
 
 import './Filter.scss';
-import { loadMatches } from '@/reducers/betting/action';
+import { loadMatches, loadHandshakes } from '@/reducers/betting/action';
 import {BetHandshakeHandler, SIDE} from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
 
 const TAG = "BETTING_FILTER";
@@ -146,44 +146,48 @@ class BettingFilter extends React.Component {
         ],*/
         selectedMatch:null,
         selectedOutcome: null,
+        support: null,
+        against: null,
         };
     
         
       }
     componentWillReceiveProps(nextProps){
 
-        const {matches} = nextProps;
+        const {matches, supports, against} = nextProps;
         console.log(`${TAG} Matches:`, matches);
         const selectedMatch = this.defaultMatch;
         const selectedOutcome = this.defaultOutcome;
         this.setState({
             matches,
             selectedMatch,
-            selectedOutcome
+            selectedOutcome,
+            supports,
+            against
         })
     }
     componentDidMount(){
         this.props.loadMatches({PATH_URL: API_URL.CRYPTOSIGN.LOAD_MATCHES});
     }
 
-    get defaultMatch(){
+    get defaultMatchId(){
         const {matches} = this.state;
         if(matches && matches.length > 0){
             const firstMatch = matches[0];
-            return { id: firstMatch.id, value: `${firstMatch.awayTeamName} - ${firstMatch.homeTeamName}` }
+            return firstMatch.id;
 
         }
-        return null;
+        return -1;
     }
 
-    get defaultOutcome(){
+    get defaultOutcomeId(){
         const {selectedMatch, matches} = this.state;
         const foundMatch = this.foundMatch;
         if (foundMatch){
             const {outcomes} = foundMatch;
             if(outcomes && outcomes.length > 0){
                 const firstOutcome = outcomes[0];
-                return { id: firstOutcome.id, value: firstOutcome.name};
+                return firstOutcome.id;
             }
         } 
     }
@@ -213,7 +217,10 @@ class BettingFilter extends React.Component {
 
     get matchNames() {
         const {matches} = this.state;
-        return matches.map((item) => ({ id: item.id, value: `${item.awayTeamName} - ${item.homeTeamName}` }));
+        if(matches){
+            return matches.map((item) => ({ id: item.id, value: `${item.awayTeamName} - ${item.homeTeamName}` }));
+        }
+        return null;
     }
     get matchResults(){
         const {selectedMatch, matches} = this.state;
@@ -231,7 +238,8 @@ class BettingFilter extends React.Component {
         return [];
     }
     get bookListSupport(){
-        const {selectedMatch, matches, selectedOutcome} = this.state;
+        const {support} = this.state;
+        /*
         const foundOutcome = this.foundOutcome;
         console.log('Found Outcome:', foundOutcome);
         if(foundOutcome){
@@ -242,9 +250,12 @@ class BettingFilter extends React.Component {
             }
         }
         return [];
+        */
+       return support;
     }
     get bookListAgainst(){
-        const {selectedMatch, matches, selectedOutcome} = this.state;
+        const {against} = this.state;
+        /*
         const foundOutcome = this.foundOutcome;
         if(foundOutcome){
             const {handshakes} = this.foundOutcome;
@@ -254,6 +265,8 @@ class BettingFilter extends React.Component {
             }
         }
         return [];
+        */
+       return against;
     }
     render(){
         const {matches, selectedMatch, selectedOutcome} = this.state;
@@ -262,13 +275,15 @@ class BettingFilter extends React.Component {
             <div className="wrapperBettingFilter">
             <div className="dropDown">
                 <Dropdown placeholder="Select a match" 
+                defaultId={this.defaultMatchId}
                 source={this.matchNames}
                 onItemSelected={(item) => this.setState({selectedMatch: item})} />
             </div>
             {selectedMatch && <div className="dropDown">
                 <Dropdown placeholder="Select a prediction" 
+                defaultId={this.defaultOutcomeId}
                 source={this.matchResults} 
-                onItemSelected={(item) => this.setState({selectedOutcome: item})} />
+                onItemSelected={(item) => this.callGetHandshakes(item)} />
             </div>}
             
                 <div className="wrapperContainer">
@@ -285,12 +300,43 @@ class BettingFilter extends React.Component {
 
         );
     }
+    callGetHandshakes(item){
+        console.log('')
+        
+        this.setState({selectedOutcome: item}, ()=> {
+            const params = {
+                outcome_id: item.id,
+            }
+            this.props.loadHandshakes({PATH_URL: API_URL.CRYPTOSIGN.LOAD_HANDSHAKES, METHOD:'POST', data: params,
+            successFn: this.getHandshakeSuccess,
+            errorFn: this.getHandshakeFailed});
+
+        })
+    }
+    getHandshakeSuccess = async (successData)=>{
+        console.log('getHandshakeSuccess', successData);
+        const {status, data} = successData;
+        if(status && data){
+            const {support, against} = data;
+            this.setState({
+                support,
+                against
+            })
+        }
+
+    }
+    getHandshakeFailed = (error) => {
+        console.log('getHandshakeFailed', error);
+      }
 }
 const mapState = state => ({
   matches: state.betting.matches,
+  supports: state.betting.supports,
+  against: state.betting.against,
 });
 const mapDispatch = ({
     loadMatches,
+    loadHandshakes,
   });
 export default connect(mapState, mapDispatch)(BettingFilter);
 
