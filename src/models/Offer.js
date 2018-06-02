@@ -26,6 +26,7 @@ class Offer {
       percentage: data.percentage || '',
       success: data.success || 0,
       failed: data.failed || 0,
+      feedType: data.feed_type || '',
     };
   }
 }
