@@ -20,6 +20,7 @@ class Modal extends React.Component {
 
   close() {
     this.modalRef && this.modalRef.classList.remove('modal-custom-show');
+    if (this.props.hasOwnProperty('onClose')) this.props.onClose();    
   }
 
   componentDidMount() {
@@ -52,7 +53,8 @@ class Modal extends React.Component {
 Modal.propTypes = {
   title: PropTypes.string,
   children: PropTypes.node.isRequired,
-  onRef: PropTypes.func
+  onRef: PropTypes.func,
+  onClose: PropTypes.func
 };
 
 export default Modal;

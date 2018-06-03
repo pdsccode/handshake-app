@@ -59,6 +59,7 @@ export class Ethereum extends Wallet {
     async transfer(toAddress, amountToSend) {
       try {
         console.log(`transfered from address:${this.address}`);
+        // if web3.utils.isAddress(address)
         // check amount:
         const web3 = new Web3(new Web3.providers.HttpProvider(this.network));
         let balance = await web3.eth.getBalance(this.address);
