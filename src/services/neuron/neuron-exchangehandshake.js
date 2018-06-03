@@ -93,11 +93,12 @@ export default class ExchangeHandshake extends BaseHandshake {
   }
 
   // shaker agree and make a handshake
-  shake = (hid, offchain) => {
+  shake = (hid, value, offchain) => {
     console.log(
       TAG,
       ' shake = ',
       hid,
+      value,
       offchain,
     );
     const bytesOffchain = this.web3.utils.fromAscii(offchain);
@@ -109,7 +110,7 @@ export default class ExchangeHandshake extends BaseHandshake {
       .encodeABI();
 
     return this.neuron.makeRawTransaction(address, privateKey, payloadData, {
-      // amount: value,
+      amount: value,
       gasPrice: this.chainId === 4 ? 100 : 20,
       toAddress: this.contractAddress,
     });

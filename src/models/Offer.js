@@ -27,6 +27,7 @@ class Offer {
       success: data.success || 0,
       failed: data.failed || 0,
       feedType: data.feed_type || '',
+      email: data.email || '',
     };
   }
 }

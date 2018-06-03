@@ -97,7 +97,8 @@ class FeedCreditCard extends React.Component {
 
 
   handleCreateCCOrder = (params) => {
-    const {cryptoPrice, addressForced } = this.props;
+    const {cryptoPrice, addressForced, authProfile } = this.props;
+
 
     let address = '';
     if (addressForced) {
@@ -114,6 +115,7 @@ class FeedCreditCard extends React.Component {
         fiat_amount: cryptoPrice.fiatAmount.trim(),
         fiat_currency: FIAT_CURRENCY,
         address: address,
+        email: authProfile.email,
         payment_method_data: params
       };
       // console.log('handleCreateCCOrder',paramsObj);
@@ -390,6 +392,7 @@ const mapStateToProps = (state) => ({
   ccLimits: state.exchange.ccLimits || [],
   amount: selectorFormCreditCard(state, 'amount'),
   currency: selectorFormCreditCard(state, 'currency'),
+  authProfile: state.auth.profile,
 });
 
 const mapDispatchToProps = (dispatch) => ({

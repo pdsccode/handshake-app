@@ -140,7 +140,7 @@ class FeedExchange extends React.PureComponent {
 
   ////////////////////////
   handleShakeOffer = async () => {
-    const {intl} = this.props;
+    const { intl, authProfile } = this.props;
     const {offer, fiatAmount} = this.state;
 
     const wallet = MasterWallet.getWalletDefault(offer.currency);
@@ -168,7 +168,8 @@ class FeedExchange extends React.PureComponent {
 
     let offerShake = {
       fiat_amount: fiatAmount.toString(),
-      address: address
+      address: address,
+      email: authProfile.email,
     };
 
     this.props.shakeOffer({
@@ -410,7 +411,11 @@ class FeedExchange extends React.PureComponent {
           //   break;
           // }
           case HANDSHAKE_EXCHANGE_STATUS.ACTIVE: {
-            const result = await exchangeHandshake.shake(data.hid, data.id);
+            let amount = 0;
+            if (offer.type === EXCHANGE_ACTION.BUY) {
+              amount = data.amount;
+            }
+            const result = await exchangeHandshake.shake(data.hid, amount, data.id);
 
             console.log('handleShakeOfferSuccess', result);
 
@@ -884,7 +889,7 @@ class FeedExchange extends React.PureComponent {
 
     let modalContent = this.state.modalContent;
 
-    const email = 'abc@mail.com'
+    const email = offer.email;
     let statusText = '';
     let message = '';
     let actionButtons = null;
@@ -1029,7 +1034,8 @@ FeedExchange.propTypes = {
 const mapState = state => ({
   discover: state.discover,
   listOfferPrice: state.exchange.listOfferPrice,
-  ipInfo: state.app.ipInfo
+  ipInfo: state.app.ipInfo,
+  authProfile: state.auth.profile,
 });
 
 const mapDispatch = ({

@@ -84,9 +84,9 @@ class Component extends React.Component {
     });
   }
 
-  async componentDidMount() {
-    const { ipInfo, rfChange, authProfile } = this.props
-    navigator.geolocation.getCurrentPosition((location) => {
+async componentDidMount() {
+  const { ipInfo, rfChange, authProfile } = this.props;
+  navigator.geolocation.getCurrentPosition((location) => {
       const { coords: { latitude, longitude } } = location
       this.setAddressFromLatLng(latitude, longitude) // better precision
     }, () => {
@@ -170,7 +170,7 @@ class Component extends React.Component {
   handleSubmit = async (values) => {
     const { intl, totalAmount, price } = this.props;
     // const fiat_currency = this.state.ipInfo.currency;
-    const {ipInfo: {currency: fiat_currency}} = this.props;
+    const {ipInfo: {currency: fiat_currency}, authProfile} = this.props;
     // console.log('valuessss', values);
 
     const wallet = MasterWallet.getWalletDefault(values.currency);
@@ -209,7 +209,8 @@ class Component extends React.Component {
       contact_phone: values.phone,
       fiat_currency: fiat_currency,
       latitude: this.state.lat,
-      longitude: this.state.lng
+      longitude: this.state.lng,
+      email: authProfile.email,
     };
 
     if (values.type === EXCHANGE_ACTION.BUY) {
