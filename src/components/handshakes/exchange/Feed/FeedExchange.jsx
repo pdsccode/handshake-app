@@ -13,6 +13,7 @@ import {BigNumber} from 'bignumber.js';
 import {
   AMOUNT_DECIMAL,
   API_URL,
+  CRYPTO_CURRENCY,
   DEFAULT_FEE,
   EXCHANGE_ACTION,
   EXCHANGE_ACTION_NAME,
@@ -43,7 +44,6 @@ import {Link} from "react-router-dom";
 import {URL} from '@/config';
 import {getDistanceFromLatLonInKm} from '../utils'
 import {ExchangeHandshake} from '@/services/neuron';
-import {CRYPTO_CURRENCY} from "@/constants";
 
 class FeedExchange extends React.PureComponent {
   constructor(props) {

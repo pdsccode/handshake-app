@@ -286,11 +286,11 @@ async componentDidMount() {
     console.log('data', data);
     console.log('wallet', wallet);
 
-    if (currency === 'BTC') {
+    if (currency === CRYPTO_CURRENCY.BTC) {
       wallet.transfer(data.system_address, data.amount).then(success => {
         console.log('transfer', success);
       });
-    } else if (currency === 'ETH') {
+    } else if (currency === CRYPTO_CURRENCY.ETH) {
       const exchangeHandshake = new ExchangeHandshake(wallet.chainId);
 
       let result = null;
@@ -418,7 +418,7 @@ async componentDidMount() {
                     className="form-control-custom form-control-custom-ex w-100"
                     component={fieldInput}
                     onChange={this.onAmountChange}
-                    validate={[required, currency === 'BTC' ? minValue001 : minValue01]}
+                    validate={[required, currency === CRYPTO_CURRENCY.BTC ? minValue001 : minValue01]}
                   />
                 </div>
               </div>

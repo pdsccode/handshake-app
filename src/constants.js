@@ -40,13 +40,13 @@ export const CRYPTO_CURRENCY_NAME = {
 };
 
 export const CRYPTO_CURRENCY_LIST = [
-  { value: 'ETH', text: 'ETH' },
-  { value: 'BTC', text: 'BTC' },
+  { value: CRYPTO_CURRENCY.ETH, text: CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.ETH] },
+  { value: CRYPTO_CURRENCY.BTC, text: CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.BTC] },
 ];
 export const FIREBASE_PATH = {
   USERS: '/users',
 };
-export const CRYPTO_CURRENCY_DEFAULT = 'ETH';
+export const CRYPTO_CURRENCY_DEFAULT = CRYPTO_CURRENCY.ETH;
 
 export const EXCHANGE_ACTION = {
   BUY: 'buy',
