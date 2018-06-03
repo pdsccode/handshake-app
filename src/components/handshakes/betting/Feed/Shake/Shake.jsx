@@ -221,24 +221,6 @@ class BetingShake extends React.Component {
     );
   }
 
-  foundShakeItemList(list){
-    var shakerList = [];
-    const profile = local.get(APP.AUTH_PROFILE);
-    list.forEach(element => {
-      const {shakers, outcome_id, from_address} = element;
-      console.log('Shakers:', shakers);
-      var foundShakedItem = shakers.find(function(element) {
-        return element.shaker_id  === profile.id;
-      });
-      console.log('foundShakedItem:', foundShakedItem);
-      if(foundShakedItem){
-        foundShakedItem['outcome_id'] = outcome_id;
-        foundShakedItem['from_address'] = from_address;
-        shakerList.push(foundShakedItem);
-      }
-    });
-    return shakerList;
-  }
 
   render() {
     return this.renderForm();
@@ -272,21 +254,10 @@ class BetingShake extends React.Component {
       errorFn: this.shakeItemFailed
     });
   }
-  async shakeContract(item){
-    const {amount,id, odds, side, outcome_id, from_address} = item;
-      const stake = amount;
-      const payout = stake * odds;
-      const offchain = `cryptosign_s${id}`;
-      const maker = from_address;
-      const hid = outcome_id;
-      const result = await bettinghandshake.shake(hid, side,stake, payout,maker, offchain);
-      if(result){
-          //history.go(URL.HANDSHAKE_DISCOVER);
-      }
-  }
+
   shakeItemSuccess = async (successData)=>{
     console.log('shakeItemSuccess', successData);
-    const {status, data, message} = successData
+    const {status, data, message} = successData;
     if(status){
       /*
       const foundShakeList = this.foundShakeItemList(data);
@@ -327,11 +298,11 @@ class BetingShake extends React.Component {
       //type: 3,
       //extra_data: JSON.stringify(fields),
       outcome_id: outcomeId,
-      odds: odds,
-      amount: amount,
+      odds:  parseFloat(odds),
+      amount: parseFloat(amount),
       extra_data: JSON.stringify(extraData),
       currency: 'ETH',
-      side: side,
+      side: parseInt(side),
       from_address: fromAddress,
       chain_id: chainId,
     };
@@ -346,11 +317,7 @@ class BetingShake extends React.Component {
   initHandshakeSuccess = async (successData)=>{
     console.log('initHandshakeSuccess', successData);
     const {status, data} = successData
-    const {values, selectedOutcome} = this.state;
-    const stake = values['event_bet'];
-    const event_odds = values['event_odds'];
-    const payout = stake * event_odds;
-    const hid = selectedOutcome.id;
+    
     if(status && data){
       /*
       const {offchain, side} = data;

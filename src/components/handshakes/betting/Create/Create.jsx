@@ -406,6 +406,7 @@ get matchResults(){
       //type: 3,
       //extra_data: JSON.stringify(fields),
       outcome_id: selectedOutcome.id,
+      //outcome_id: selectedOutcome.hid,
       //outcome_id: 10,
       odds: parseFloat(fields['event_odds']),
       amount: parseFloat(fields['event_bet']),
@@ -428,10 +429,11 @@ get matchResults(){
 
     const {status, data} = successData
     const {values, selectedOutcome} = this.state;
-    const stake = values['event_bet'];
-    const event_odds = values['event_odds'];
-    const payout = stake * event_odds;
-    const hid = selectedOutcome.id;
+    // const stake = values['event_bet'];
+    // const event_odds = values['event_odds'];
+    // const payout = stake * event_odds;
+    //const hid = selectedOutcome.id;
+    //const hid = selectedOutcome.hid;
     if(status && data){
       BetHandshakeHandler.controlShake(data);
 

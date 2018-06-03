@@ -105,7 +105,8 @@ export class BetHandshakeHandler {
       const stake = amount;
       const payout = stake * odds;
       const maker = from_address;
-      const hid = outcome_id;
+      //const hid = outcome_id;
+    console.log(`hid:`, hid);
     bettinghandshake.initBet(hid, side,stake, payout, offchain);
       
 
@@ -119,7 +120,7 @@ export class BetHandshakeHandler {
       const payout = stake * odds;
       const offchain = `cryptosign_s${id}`;
       const maker = from_address;
-      const hid = outcome_id;
+      //const hid = outcome_id;
       const result = await bettinghandshake.shake(hid, side,stake, payout,maker, offchain);
       if(result){
           

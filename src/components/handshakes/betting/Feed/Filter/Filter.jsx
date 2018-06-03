@@ -143,6 +143,7 @@ class BettingFilter extends React.Component {
     render(){
         const {matches, selectedMatch, selectedOutcome} = this.state;
         const outcomeId = (selectedOutcome && selectedOutcome.id) ? selectedOutcome.id : null;
+
         const defaultMatchId = this.defaultMatch ? this.defaultMatch.id : null;
         console.log("Default Match:", defaultMatchId);
         console.log('Default Outcome:', defaultOutcome);
