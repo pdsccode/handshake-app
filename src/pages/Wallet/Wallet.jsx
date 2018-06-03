@@ -15,16 +15,19 @@ import iconSafe from '@/assets/images/icon/icon-safe.svg';
 import iconWarning from '@/assets/images/icon/icon-warning.svg';
 // import iconChecked from '@/assets/images/icon/icon-check.png';
 import iconLoading from '@/assets/images/icon/loading.svg.raw';
+import iconQRCodeBlack from '@/assets/images/icon/qr-code-black.png';
 
 import Header from './Header';
 import HeaderMore from './HeaderMore';
 import WalletItem from './WalletItem';
 import WalletProtect from './WalletProtect';
+import WalletHistory from './WalletHistory';
 import FeedCreditCard from "@/components/handshakes/exchange/Feed/FeedCreditCard";
 import ReactBottomsheet from 'react-bottomsheet';
 // var ReactBottomsheet = require('react-bottomsheet');
 // var Blob = require('./Blob.js');
 import { setHeaderRight } from '@/reducers/app/action';
+import QrReader from 'react-qr-reader'
 
 // import filesaver from 'file-saver';
 
@@ -44,6 +47,7 @@ import CoinTemp from '@/pages/Wallet/CoinTemp';
 var QRCode = require('qrcode.react');
 
 window.Clipboard = (function(window, document, navigator) { var textArea, copy; function isOS() { return navigator.userAgent.match(/ipad|iphone/i); } function createTextArea(text) { textArea = document.createElement('textArea'); textArea.value = text; document.body.appendChild(textArea); } function selectText() { var range, selection; if (isOS()) { range = document.createRange(); range.selectNodeContents(textArea); selection = window.getSelection(); selection.removeAllRanges(); selection.addRange(range); textArea.setSelectionRange(0, 999999); } else { textArea.select(); } } function copyToClipboard() { document.execCommand('copy'); document.body.removeChild(textArea); } copy = function(text) { createTextArea(text); selectText(); copyToClipboard(); }; return { copy: copy }; })(window, document, navigator);
+var isIOs = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
 
 const nameFormSendWallet = 'sendWallet';
 const SendWalletForm = createForm({ propsReduxForm: { form: nameFormSendWallet }});
@@ -60,7 +64,7 @@ const selectorFormCreditCard = formValueSelector(nameFormCreditCard);
 class Wallet extends React.Component {
   constructor(props) {
 
-    super(props);    
+    super(props);
     this.state = {
       data: {},
       isLoading: false,
@@ -73,13 +77,17 @@ class Wallet extends React.Component {
       walletSelected: null,
       inputSendValue: '',
       isRestoreLoading: false,
+      inputRestoreWalletValue: '',
       erroValueBackup: false,
       listCoinTempToCreate: [],
       countCheckCoinToCreate: 1,
       walletKeyDefaultToCreate: 1,
       input12PhraseValue: '',
+      //Qrcode
+      qrCodeOpen: false,
+      delay: 300,
       walletsData: false,
-      isNewCCOpen: false
+      isNewCCOpen: false,
     };
     this.props.setHeaderRight(this.headerRight());
   }
@@ -134,7 +142,7 @@ class Wallet extends React.Component {
      /*var btc = new Bitcoin();
      var tx = await btc.transfer("tprv8ccSMiuz5MfvmYHzdMbz3pjn5uW3G8zxM975sv4MxSGkvAutv54raKHiinLsxW5E4UjyfVhCz6adExCmkt7GjC41cYxbNxt5ZqyJBdJmqPA","mrPJ6rBHpJGnsLK3JGfJQjdm5vkjeAb63M", 0.0001);
 
-     console.log(tx)*/     
+     console.log(tx)*/
   }
 
   getAllWallet(){
@@ -188,7 +196,7 @@ class Wallet extends React.Component {
       obj.push({
         title: 'Send',
         handler: () => {
-          this.setState({walletSelected: wallet});
+          this.setState({walletSelected: wallet, inputAddressAmountValue: '', inputSendAmountValue: ''});
           this.toggleBottomSheet();
           this.modalSendRef.open();
         }
@@ -213,13 +221,13 @@ class Wallet extends React.Component {
           }
         })
       }
-      
+
       obj.push({
         title: 'Transaction history',
         handler: () => {
           this.setState({walletSelected: wallet});
           this.toggleBottomSheet();
-          this.modalFillRef.open();
+          this.modalHistoryRef.open();
         }
       })
       obj.push({
@@ -233,30 +241,30 @@ class Wallet extends React.Component {
       if (!wallet.isReward){
         obj.push({
           title: 'Make it default for {0} '.format(wallet.name) + (wallet.default ? "✓ " : ""),
-          handler: () => {          
-            wallet.default = !wallet.default;    
-            this.toggleBottomSheet(); 
+          handler: () => {
+            wallet.default = !wallet.default;
+            this.toggleBottomSheet();
             // reset all wallet default:
             let lstWalletTemp = this.getAllWallet();
-            if (wallet.default) lstWalletTemp.forEach(wal => {if (wal != wallet && wal.name == wallet.name){wal.default = false;}})          
+            if (wallet.default) lstWalletTemp.forEach(wal => {if (wal != wallet && wal.name == wallet.name){wal.default = false;}})
             // Update wallet master from local store:
             MasterWallet.UpdateLocalStore(lstWalletTemp);
           }
         })
-        
+
           obj.push({
             title: 'Remove',
             handler: () => {
-              this.setState({walletSelected: wallet});          
-              this.modalBetRef.open();   
-              this.toggleBottomSheet();   
+              this.setState({walletSelected: wallet});
+              this.modalBetRef.open();
+              this.toggleBottomSheet();
             }
           })
         }
 
       return obj;
     }
-  
+
 
   // Remove wallet function:
   removeWallet = () =>{
@@ -272,32 +280,32 @@ class Wallet extends React.Component {
           // Update wallet master from local store:
           MasterWallet.UpdateLocalStore(lstWalletTemp);
           this.splitWalletData(lstWalletTemp);
-        };       
-    }    
-    this.modalBetRef.close();     
+        };
+    }
+    this.modalBetRef.close();
   }
 
   // Restore wallet:
   restoreWallets = () =>{
-    if (this.state.hasOwnProperty('inputRestoreWalletValue')){
-        this.setState({isRestoreLoading: true, erroValueBackup: false});        
-        if (this.state.inputRestoreWalletValue != ''){
-          let walletData = MasterWallet.restoreWallets(this.state.inputRestoreWalletValue);          
-          if (walletData !== false){            
-            this.splitWalletData(walletData);
-            this.setState({isRestoreLoading: false});
-            this.modalRestoreRef.close();             
-          }
-        }        
-    }    
-    //alert('Invalid wallets');            
-    this.setState({erroValueBackup: true, isRestoreLoading: false}); 
+    
+      this.setState({isRestoreLoading: true, erroValueBackup: false});
+      if (this.state.inputRestoreWalletValue != ''){
+        let walletData = MasterWallet.restoreWallets(this.state.inputRestoreWalletValue);
+        if (walletData !== false){
+          this.splitWalletData(walletData);
+          this.setState({isRestoreLoading: false});
+          this.modalRestoreRef.close();
+        }
+      }
+  
+    //alert('Invalid wallets');
+    this.setState({erroValueBackup: true, isRestoreLoading: false});
   }
   updateRestoreWalletValue = (evt) => {
     this.setState({
       inputRestoreWalletValue: evt.target.value
     });
-  } 
+  }
 
   sendCoin = () =>{
     if (this.state.inputAddressAmountValue == '')
@@ -317,24 +325,24 @@ class Wallet extends React.Component {
     this.setState({
       inputSendAmountValue: evt.target.value
     });
-  }  
+  }
   getPathPicture = (evt) => {
     alert('evt.target.value' + evt.target.value);
-  } 
+  }
 
-  
+
   updateSendAddressValue = (evt) => {
     this.setState({
       inputAddressAmountValue: evt.target.value
     });
-  }  
+  }
 
   // Menu for Right header bar
   creatSheetMenuHeaderMore(){
     let obj = [];
     obj.push({
       title: "Add new",
-      handler: () => {        
+      handler: () => {
           this.setState({isRestoreLoading: false, countCheckCoinToCreate: 1, listCoinTempToCreate: MasterWallet.getListCoinTemp()});
           this.modalCreateWalletRef.open();
           this.toggleBottomSheet();
@@ -346,17 +354,17 @@ class Wallet extends React.Component {
 
         this.modalBackupRef.open();
         this.setState({walletsData: this.getAllWallet()});
-        this.toggleBottomSheet();        
+        this.toggleBottomSheet();
 
       }
     })
     obj.push({
       title: 'Restore wallets',
       handler: () => {
-        this.modalRestoreRef.open();        
-        this.toggleBottomSheet();     
-        this.setState({erroValueBackup: false, isRestoreLoading: false}); 
-          
+        this.modalRestoreRef.open();
+        this.toggleBottomSheet();
+        this.setState({erroValueBackup: false, isRestoreLoading: false, inputRestoreWalletValue: ''});
+
       }
     })
     return obj;
@@ -365,11 +373,11 @@ class Wallet extends React.Component {
   // on select type of wallet to create:
   onSelectCoinClick = (wallet) =>{
     let listCoinTemp =  this.state.listCoinTempToCreate;
-    
-    wallet.default = !wallet.default;          
+
+    wallet.default = !wallet.default;
     let countCheckCoinToCreate = 0;
     listCoinTemp.forEach(wal => { if (wal.default) countCheckCoinToCreate += 1;})
-    
+
     this.setState({erroValueBackup: false,listCoinTempToCreate: listCoinTemp, countCheckCoinToCreate: countCheckCoinToCreate});
   }
 
@@ -381,23 +389,23 @@ class Wallet extends React.Component {
 
     let masterWallet = MasterWallet.createNewsallets(listCoinTemp, phrase);
     if (masterWallet == false){
-      this.setState({isRestoreLoading: false, erroValueBackup: true});        
+      this.setState({isRestoreLoading: false, erroValueBackup: true});
     }
     else{
       this.splitWalletData(masterWallet);
-      this.modalCreateWalletRef.close();      
-    }    
-    
+      this.modalCreateWalletRef.close();
+    }
+
   }
   update12PhraseValue = (evt) => {
     this.setState({
       input12PhraseValue: evt.target.value
     });
-  }  
-  updateWalletKeyDefaultValue = (evt) => {    
+  }
+  updateWalletKeyDefaultValue = (evt) => {
     this.setState({
       walletKeyDefaultToCreate: evt.target.value
-    });    
+    });
   }
 
   handleToggleNewCC = () => {
@@ -418,11 +426,11 @@ class Wallet extends React.Component {
     //alert("onWarningClick ->" + wallet.address);
   }
 
-  onAddressClick = (wallet) => {  
-    this.setState({walletSelected: wallet});            
+  onAddressClick = (wallet) => {
+    this.setState({walletSelected: wallet});
     this.modalShareAddressRef.open();
   }
-  
+
   handleFocus = (e) => {
     e.currentTarget.select();
   }
@@ -449,7 +457,7 @@ class Wallet extends React.Component {
   }
 
   get getListCoinTempForCreate(){
-    return this.state.listCoinTempToCreate.map((walletTemp) => {      
+    return this.state.listCoinTempToCreate.map((walletTemp) => {
       return <CoinTemp key={walletTemp.network} wallet={walletTemp} onClick={() => this.onSelectCoinClick(walletTemp)} />;
     })
 
@@ -462,18 +470,56 @@ class Wallet extends React.Component {
   successWalletProtect = (wallet) =>{
 
     let lstWalletTemp = this.getAllWallet();
-    lstWalletTemp.forEach(wal => {if (wallet.mnemonic == wal.mnemonic){wal.protected = true;}})          
+    lstWalletTemp.forEach(wal => {if (wallet.mnemonic == wal.mnemonic){wal.protected = false;}})
     // Update wallet master from local store:
     MasterWallet.UpdateLocalStore(lstWalletTemp);
     this.modalProtectRef.close();
     this.splitWalletData(lstWalletTemp);
   }
 
+  // For Qrcode:
+  handleScan=(data) =>{
+    if(data){      
+      this.setState({
+        inputAddressAmountValue: data,         
+      });   
+      this.modalScanQrCodeRef.close()   
+    }
+  }
+  handleError(err){
+    console.log("error wc",err)
+  }
+
+  oncloseQrCode=()=>{        
+    this.setState({qrCodeOpen: false});    
+  }
+
+  openQrcode = () =>{    
+    this.setState({qrCodeOpen: true});  
+    this.modalScanQrCodeRef.open()
+  }
+  
+  renderScanQRCode = () =>{        
+    return(
+      <Modal onClose={() => this.oncloseQrCode()} title="Scan QR code" onRef={modal => this.modalScanQrCodeRef = modal}>
+        {this.state.qrCodeOpen ? 
+        <QrReader
+          delay={this.state.delay}
+          onScan={(data) => {this.handleScan(data)}}
+          onError={this.handleError}          
+          style={{ width: '100%', height: '100%' }}
+          />              
+        : ""}        
+      </Modal>
+    )
+    
+  }
+
   render() {
     const {intl, userProfile, cryptoPrice, amount, userCcLimit, ccLimits} = this.props;
     return (
 
-      <Grid>        
+      <Grid>
         {/*<div className="messageBox"><img src={iconChecked}/><span>Copied</span></div>*/}
         {/* Tooltim menu Bottom */ }
         <ReactBottomsheet
@@ -493,10 +539,15 @@ class Wallet extends React.Component {
         {/* ModalDialog for transfer coin */}
         <Modal title="Send" onRef={modal => this.modalSendRef = modal}>
           <SendWalletForm className="sendwallet-wrapper" onSubmit={this.sendCoin}>
-            <Input name="to_address" placeholder="To address" required
+          <div className="div-address-qr-code">
+            <Input name="to_address" placeholder="To address" required className="input-address-qr-code"
+              type="text" value={this.state.inputAddressAmountValue}
               onChange={evt => this.updateSendAddressValue(evt)}
-              />
+            />
+            {!isIOs ? <img onClick={() => { this.openQrcode() }} className="icon-qr-code-black" src={iconQRCodeBlack} /> : ""}
+          </div>
             <Input name="amount" type="tel" required
+              value={this.state.inputSendAmountValue}
               placeholder={ this.state.walletSelected ? "Amount ({0})".format(this.state.walletSelected.name) : "Amount "}
               onChange={evt => this.updateSendAmountValue(evt)}
               />
@@ -505,21 +556,25 @@ class Wallet extends React.Component {
         </Modal>
 
         <Modal title="Fill up" onRef={modal => this.modalFillRef = modal}>
-          <FeedCreditCard buttonTitle="Send" currencyForced={this.state.walletSelected ? this.state.walletSelected.name : ""} 
+          <FeedCreditCard buttonTitle="Send" currencyForced={this.state.walletSelected ? this.state.walletSelected.name : ""}
             callbackSuccess={this.afterWalletFill}
             addressForced={this.state.walletSelected ? this.state.walletSelected.address : ""}
           />
         </Modal>
 
-        <Modal title="Protect your wallet" onRef={modal => this.modalProtectRef = modal}> 
+        <Modal title="Protect your wallet" onRef={modal => this.modalProtectRef = modal}>
           <WalletProtect wallet={this.state.walletSelected} callbackSuccess={() => {this.successWalletProtect(this.state.walletSelected)}} />
+        </Modal>
+
+        <Modal title="History of transactions" onRef={modal => this.modalHistoryRef = modal}>
+          <WalletHistory wallet={this.state.walletSelected} />
         </Modal>
 
         {/* Modal for Backup wallets : */}
         <Modal title="Backup wallets" onRef={modal => this.modalBackupRef = modal}>
           <div className="bodyTitle">This data is the only way to restore your wallets. Save them somewhere safe and secret</div>
           <div className='bodyBackup'>
-          <textarea readonly onClick={ this.handleChange } onFocus={ this.handleFocus }          
+          <textarea readonly onClick={ this.handleChange } onFocus={ this.handleFocus }
            value={ this.state.walletsData ? JSON.stringify(this.state.walletsData) : ''}/>
           <Button className="button" cssType="danger" onClick={() => {Clipboard.copy(JSON.stringify(this.state.walletsData)); this.modalBackupRef.close(); }} >Copy it somewhere safe</Button>
           </div>
@@ -529,25 +584,26 @@ class Wallet extends React.Component {
         <Modal title="Restore wallets" onRef={modal => this.modalRestoreRef = modal}>
           <div className="bodyTitle">This data is the only way to restore your wallets.</div>
           <div className='bodyBackup'>
-          <textarea required                         
-            className={this.state.erroValueBackup ? 'error' : ''} 
-            onChange={evt => this.updateRestoreWalletValue(evt)}                 
+          <textarea required
+            value={this.state.inputRestoreWalletValue}
+            className={this.state.erroValueBackup ? 'error' : ''}
+            onChange={evt => this.updateRestoreWalletValue(evt)}
           />
-          <Button isLoading={this.state.isRestoreLoading} className="button" cssType="danger" onClick={() => {this.restoreWallets()}} >                        
+          <Button isLoading={this.state.isRestoreLoading} className="button" cssType="danger" onClick={() => {this.restoreWallets()}} >
             Restore now
           </Button>
           </div>
         </Modal>
 
-        
+
         {/* Modal for Copy address : */}
         <ModalDialog title="Wallet Address" onRef={modal => this.modalShareAddressRef = modal}>
           <div className="bodyTitle"><span>Share your public wallet address to receive { this.state.walletSelected ? this.state.walletSelected.name : ""} </span></div>
           <div className={['bodyBackup bodySahreAddress']}>
-          
+
           <QRCode value={ this.state.walletSelected ? this.state.walletSelected.address : ""} />
           <div className="addressDivPopup">{ this.state.walletSelected ? this.state.walletSelected.address : ""}</div>
-          <Button className="button" cssType="success" onClick={() => {Clipboard.copy(this.state.walletSelected.address);this.modalShareAddressRef.close()}} >                        
+          <Button className="button" cssType="success" onClick={() => {Clipboard.copy(this.state.walletSelected.address);this.modalShareAddressRef.close()}} >
             Copy
           </Button>
           </div>
@@ -566,22 +622,26 @@ class Wallet extends React.Component {
           </Row>
           <select onChange={evt => this.updateWalletKeyDefaultValue(evt)} className="selectWalletKey">
             <option value="1">Random</option>
-            <option value="2">Specify recovery Phrase</option>            
+            <option value="2">Specify recovery Phrase</option>
           </select>
           { this.state.walletKeyDefaultToCreate == 2 ?
             <Input name="phrase" placeholder="Type 12 words mnemonic" required
-            className={this.state.erroValueBackup ? 'input12Phrase error' : 'input12Phrase'} 
+            className={this.state.erroValueBackup ? 'input12Phrase error' : 'input12Phrase'}
                 onChange={evt => this.update12PhraseValue(evt)}/>
             : ""
           }
 
-          <Button block isLoading={this.state.isRestoreLoading} disabled={this.state.countCheckCoinToCreate == 0 || (this.state.walletKeyDefaultToCreate == 2 && this.state.input12PhraseValue.trim().split(/\s+/g).length != 12) } className="button" cssType="success" onClick={() => {this.createNewWallets()}} >                        
-            Create
+
+          <Button block isLoading={this.state.isRestoreLoading} disabled={this.state.countCheckCoinToCreate == 0 || (this.state.walletKeyDefaultToCreate == 2 && this.state.input12PhraseValue.trim().split(/\s+/g).length != 12) } className="button button-wallet" cssType="primary" onClick={() => {this.createNewWallets()}} >
+            Create wallet
           </Button>
           <Header />
           {/*<div className="linkImportWallet">I want to import coins</div>*/}
-          
+
         </Modal>
+
+        {/*QR code dialog*/}
+        {this.renderScanQRCode()}
 
         {/* Render list wallet: */}
         <Row className="list">
