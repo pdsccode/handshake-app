@@ -19,6 +19,7 @@ import Button from '@/components/core/controls/Button';
 import Toggle from './../Toggle';
 
 import './Shake.scss';
+import { BetHandshakeHandler } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
 
 
 const wallet = MasterWallet.getWalletDefault('ETH');
@@ -71,20 +72,25 @@ class BetingShake extends React.Component {
     this.setState({extraData})
   }
 
-  onSubmit(values) {
+  async onSubmit(values) {
     console.log("Submit");
     const {isShowOdds} = this.state;
+    const {matchName, matchOutcome} = this.props;
     const amount = values.amount;
     const odds = values.odds;
     console.log("Amount, this.toggle", this.toggleRef.value);
     // this.props.onSubmitClick(amount);
     const side = this.toggleRef.value;
-    if(isShowOdds){
-      this.initHandshake(amount, odds);
-    }else {
-      this.shakeItem(amount, side);
-
+    const balance = await BetHandshakeHandler.getBalance();
+    if(matchName && matchOutcome && amount <= balance && amount > 0){
+      if(isShowOdds){
+        this.initHandshake(amount, odds);
+      }else {
+        this.shakeItem(amount, side);
+  
+      }
     }
+    
   }
 
   onCancel() {
@@ -188,17 +194,17 @@ class BetingShake extends React.Component {
 
     const amountField = {
       id: 'amount',
-      name: 'you',
+      name: 'amount',
       label: 'Amount',
       className: 'amount',
       placeholder: '0.00',
     };
     const oddsField = {
       id: 'odds',
-      name: 'you',
+      name: 'odds',
       label: 'Odds',
-      className: 'amount',
       placeholder: '0-0',
+      isShowCurrency: false
     };
 
     return (
@@ -282,11 +288,14 @@ class BetingShake extends React.Component {
     console.log('shakeItemSuccess', successData);
     const {status, data, message} = successData
     if(status){
+      /*
       const foundShakeList = this.foundShakeItemList(data);
       console.log('foundShakeList:', foundShakeList);
       foundShakeList.forEach(element => {
         this.shakeContract(element);
       });
+      */
+     BetHandshakeHandler.controlShake(data);
 
     }else {
       // TO DO: Show message, show odd field
@@ -328,10 +337,10 @@ class BetingShake extends React.Component {
     };
     console.log("Params:", params);
 
-  //   this.props.initHandshake({PATH_URL: API_URL.CRYPTOSIGN.INIT_HANDSHAKE, METHOD:'POST', data: params,
-  //   successFn: this.initHandshakeSuccess,
-  //   errorFn: this.handleGetCryptoPriceFailed
-  // });
+    this.props.initHandshake({PATH_URL: API_URL.CRYPTOSIGN.INIT_HANDSHAKE, METHOD:'POST', data: params,
+    successFn: this.initHandshakeSuccess,
+    errorFn: this.handleGetCryptoPriceFailed
+  });
   }
 
   initHandshakeSuccess = async (successData)=>{
@@ -343,8 +352,10 @@ class BetingShake extends React.Component {
     const payout = stake * event_odds;
     const hid = selectedOutcome.id;
     if(status && data){
+      /*
       const {offchain, side} = data;
       var result = null;
+
       if(this.isShakedBet(data)){
         result = await bettinghandshake.shake(hid, side,stake, payout,maker, offchain);
       }else {
@@ -353,6 +364,8 @@ class BetingShake extends React.Component {
       if(result){
         //TO DO: redirect and show alert
       }
+      */
+     BetHandshakeHandler.controlShake(data);
       
     }
   }

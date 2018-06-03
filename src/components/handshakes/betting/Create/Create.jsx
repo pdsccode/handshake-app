@@ -10,9 +10,10 @@ import { required } from '@/components/core/form/validation';
 import { Field } from "redux-form";
 import { initHandshake } from '@/reducers/handshake/action';
 import { loadMatches } from '@/reducers/betting/action';
-import { HANDSHAKE_ID, API_URL } from '@/constants';
+import { HANDSHAKE_ID, API_URL, APP } from '@/constants';
 import  { BetHandshakeHandler, SIDE} from '@/components/handshakes/betting/Feed/BetHandshakeHandler.js';
 import { URL } from '@/config';
+import local from '@/services/localStore';
 
 // components
 import Button from '@/components/core/controls/Button';
@@ -86,124 +87,9 @@ class BettingCreate extends React.PureComponent {
       address: null,
       privateKey: null,
       matches: [],
-      /*
-      matches: [
-        {
-            "awayTeamCode": "",
-            "awayTeamFlag": "https://upload.wikimedia.org/wikipedia/commons/0/0d/Flag_of_Saudi_Arabia.svg",
-            "awayTeamName": "Saudi Arabia",
-            "date": 1528963200,
-            "homeTeamCode": "RUS",
-            "homeTeamFlag": "https://upload.wikimedia.org/wikipedia/commons/f/f3/Flag_of_Russia.svg",
-            "homeTeamName": "Russia",
-            "id": 1,
-            "outcomes": [
-                {
-                    "handshakes": [{
-                        id: 1,
-                        support: 1,
-                        odd: 2.3,
-                        amount: 0.1528
-                    },
-                    {
-                        id: 2,
-                        support: 1,
-                        odd: 2.3,
-                        amount: 0.1528
-                    },
-                    {
-                        id: 3,
-                        support: 1,
-                        odd: 2.3,
-                        amount: 0.1528
-                    },
-                    {
-                        id: 4,
-                        support: 1,
-                        odd: 2.3,
-                        amount: 0.1528
-                    },
-                    {
-                        id: 5,
-                        support: 1,
-                        odd: 2.3,
-                        amount: 0.1528
-                    },
-                    {
-                        id: 6,
-                        support: 2,
-                        odd: 2.3,
-                        amount: 0.1528
-                    },
-                    {
-                        id: 7,
-                        support: 2,
-                        odd: 2.3,
-                        amount: 0.1528
-                    },
-                    {
-                        id: 8,
-                        support: 2,
-                        odd: 2.3,
-                        amount: 0.1528
-                    },
-                    {
-                        id: 9,
-                        support: 2,
-                        odd: 2.3,
-                        amount: 0.1528
-                    },
-                    {
-                        id: 10,
-                        support: 2,
-                        odd: 2.3,
-                        amount: 0.1528
-                    }],
-                    "id": 1,
-                    "name": "Russia wins"
-                },
-                {
-                    "handshakes": [],
-                    "id": 2,
-                    "name": "Saudi Arabia wins"
-                },
-                {
-                    "handshakes": [],
-                    "id": 3,
-                    "name": "Russia draws Saudi Arabia"
-                }
-            ]
-        },
-        {
-            "awayTeamCode": "",
-            "awayTeamFlag": "https://upload.wikimedia.org/wikipedia/commons/f/fe/Flag_of_Uruguay.svg",
-            "awayTeamName": "Uruguay",
-            "date": 1529038800,
-            "homeTeamCode": "",
-            "homeTeamFlag": "https://upload.wikimedia.org/wikipedia/commons/f/fe/Flag_of_Egypt.svg",
-            "homeTeamName": "Egypt",
-            "id": 2,
-            "outcomes": [
-                {
-                    "handshakes": [],
-                    "id": 7,
-                    "name": "Uruguay wins"
-                },
-                {
-                    "handshakes": [],
-                    "id": 8,
-                    "name": "Egypt wins"
-                },
-                {
-                    "handshakes": [],
-                    "id": 9,
-                    "name": "Uruguay draws Egypt"
-                }
-            ]
-        }
-    ],*/
-    selectedMatch:null,
-    selectedOutcome: null,
+      
+      selectedMatch:null,
+      selectedOutcome: null,
     };
     this.onSubmit = ::this.onSubmit;
     this.renderInput = ::this.renderInput;
@@ -260,8 +146,8 @@ get matchResults(){
   return [];
 }
 
-  onSubmit(dict) {
-    const {address, privateKey, values} = this.state;
+  async onSubmit(dict) {
+    const {address, privateKey, values, selectedMatch, selectedOutcome} = this.state;
     console.log("values", values);
 
     let content = this.content;
@@ -285,8 +171,15 @@ get matchResults(){
     //const {toAddress, isPublic, industryId} = this.props;
 
     //const fromAddress = "0x54CD16578564b9952d645E92b9fa254f1feffee9";
+    const balance = await BetHandshakeHandler.getBalance();
+    console.log('Event Bet:', dict.event_bet);
+  
     const fromAddress = address;
-    this.initHandshake(extraParams, fromAddress);
+
+    if(selectedMatch && selectedOutcome && dict.event_bet > 0 && dict.event_bet <= balance){
+      this.initHandshake(extraParams, fromAddress);
+
+    }
   }
 
   get inputList() {
@@ -446,13 +339,10 @@ get matchResults(){
       </div>
     );
   }
-  isShakedBet(item){
-    const {shakers} = item;
-    if(shakers){
-      return shakers.length > 0 ? true : false;
-    }
-    return false;
-  }
+
+
+
+
 
   //Service
   initHandshake(fields, fromAddress){
@@ -468,11 +358,12 @@ get matchResults(){
       //type: 3,
       //extra_data: JSON.stringify(fields),
       outcome_id: selectedOutcome.id,
-      odds: fields['event_odds'],
-      amount: fields['event_bet'],
+      //outcome_id: 10,
+      odds: parseFloat(fields['event_odds']),
+      amount: parseFloat(fields['event_bet']),
       extra_data: JSON.stringify(fields),
       currency: 'ETH',
-      side: side,
+      side: parseInt(side),
       from_address: fromAddress,
       chain_id: chainId,
     };
@@ -494,17 +385,23 @@ get matchResults(){
     const payout = stake * event_odds;
     const hid = selectedOutcome.id;
     if(status && data){
-      const {offchain, side} = data;
       var result = null;
-      if(this.isShakedBet(data)){
-        result = await bettinghandshake.shake(hid, side,stake, payout,maker, offchain);
-      }else {
+      /*
+      if(!this.isInitBet(data)){
         console.log('Call Shake item');
+        const foundShakeList = BetHandshakeHandler.foundShakeItemList(data);
+        console.log('foundShakeList:', foundShakeList);
+        foundShakeList.forEach(element => {
+          BetHandshakeHandler.shakeContract(element);
+        });
+      }else {
         result = await bettinghandshake.initBet(hid, side,stake, payout, offchain);
       }
       if(result){
         //TO DO: redirect and show alert
       }
+      */
+     BetHandshakeHandler.controlShake(data);
       
     }
     

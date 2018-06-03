@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
+import Web3 from 'web3';
 import './Book.scss';
+const BN = Web3.utils.BN;
 
 class BetBook extends React.Component {
   constructor(props) {
@@ -14,13 +15,16 @@ class BetBook extends React.Component {
     const { item } = this.props;
     const { amount, odds } = item;
     const { amountColor } = this.props;
+    console.log('OK_____ ',typeof amount);
+    const amountBN = new BN(amount);
+    console.log('OK_____ 11 ',amountBN.toString);
     const amountStyle = {
       color: amountColor,
     };
     return (
       <div className="wrapperBettingBook">
         <div className="oddText">{odds}</div>
-        <div className="amountText" style={amountStyle}>{amount}</div>
+        <div className="amountText" style={amountStyle}>{amountBN.toString()}</div>
       </div>
     );
   }

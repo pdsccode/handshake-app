@@ -72,8 +72,10 @@ class FeedBetting extends React.Component {
     const hardCodeStatus = 2;
     const role = side;
     const isMatch = this.isMatch;
-    const statusResult = BetHandshakeHandler.getStatusLabel(this.props.result, role, isMatch);
-    const {title, isAction} = result;
+    console.log('Is Match:', isMatch);
+    
+    const statusResult = BetHandshakeHandler.getStatusLabel(result, role, isMatch);
+    const {title, isAction} = statusResult;
     this.setState({
       actionTitle: title,
       statusTitle: statusResult.status,
@@ -81,6 +83,7 @@ class FeedBetting extends React.Component {
       role,
       isMatch,
     })
+    
   }
 
   componentWillReceiveProps(nextProps) {
@@ -89,7 +92,6 @@ class FeedBetting extends React.Component {
 
   get extraData(){
     const {extraData} = this.props
-    console.log(extraData);
     try {
       return JSON.parse(extraData);
     }catch(e){
@@ -156,12 +158,14 @@ class FeedBetting extends React.Component {
   }
 
   clickActionButton(title){
-    const {id, outcome_id, side, extraData, hid, odds} = this.props;
+    const {id, outComeId, side, extraData, amount, winValue} = this.props;
     const {event_bet, event_odds} = JSON.parse(extraData);
     //const hid = outcome_id;
-    const stake = event_bet;
-    const payout = stake * odds;
+    const stake = amount;
+    const payout = winValue;
     const offchain = id;
+    const hid = outComeId;
+    console.log('Hid:', outComeId);
     switch(title){
 
       case BETTING_STATUS_LABEL.CANCEL:

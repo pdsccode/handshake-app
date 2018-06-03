@@ -3,6 +3,8 @@
 .toggleShakeBetting {
   display: flex;
   border-radius: 2px;
+  margin-top: rem-calc(30px);
+
   .itemToggle {
     flex: 50%;
     font-size: rem-calc(12px);
