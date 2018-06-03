@@ -1,5 +1,5 @@
 import React from 'react';
-import {injectIntl} from 'react-intl';
+import {FormattedMessage, injectIntl} from 'react-intl';
 import Feed from '@/components/core/presentation/Feed';
 import Button from '@/components/core/controls/Button';
 import axios from 'axios';
@@ -307,14 +307,14 @@ async componentDidMount() {
     //   this.modalSendRef.close();
     // });
 
-    // this.props.showAlert({
-    //   message: <div className="text-center"><FormattedMessage id="createOfferSuccessMessage"/></div>,
-    //   timeOut: 3000,
-    //   type: 'danger',
-    //   callBack: () => {
-    //     this.props.history.push(URL.HANDSHAKE_ME);
-    //   }
-    // });
+    this.props.showAlert({
+      message: <div className="text-center"><FormattedMessage id="createOfferSuccessMessage"/></div>,
+      timeOut: 3000,
+      type: 'success',
+      callBack: () => {
+        this.props.history.push(URL.HANDSHAKE_ME);
+      }
+    });
 
     // this.timeoutClosePopup = setTimeout(() => {
     //   this.handleBuySuccess();
