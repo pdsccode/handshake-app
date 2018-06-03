@@ -52,11 +52,12 @@ class FeedExchange extends React.PureComponent {
     const {initUserId, shakeUserIds, extraData} = props;
     const offer = Offer.offer(JSON.parse(extraData));
 
+    this.userType = getHandshakeUserType(initUserId, shakeUserIds);
+    this.offer = offer;
+    this.fiatAmount = 0;
+
     this.state = {
       modalContent: '',
-      offer: offer,
-      fiatAmount: 0,
-      userType: getHandshakeUserType(initUserId, shakeUserIds),
     };
   }
 
@@ -100,8 +101,7 @@ class FeedExchange extends React.PureComponent {
 
   confirmOfferAction = (message, actionConfirm) => {
     const {intl,} = this.props;
-    const {offer, fiatAmount} = this.state;
-    console.log('offer', offer);
+    console.log('offer', this.offer);
 
     // const message = intl.formatMessage({ id: 'handshakeOfferConfirm' }, {
     //   type: offer.type === 'buy' ? 'Sell' : 'Buy',
@@ -141,7 +141,8 @@ class FeedExchange extends React.PureComponent {
   ////////////////////////
   handleShakeOffer = async () => {
     const { intl, authProfile } = this.props;
-    const {offer, fiatAmount} = this.state;
+    const offer = this.offer;
+    const fiatAmount = this.fiatAmount;
 
     const wallet = MasterWallet.getWalletDefault(offer.currency);
     const balance = await wallet.getBalance();
@@ -187,7 +188,7 @@ class FeedExchange extends React.PureComponent {
     const { data } = responseData;
     const { currency } = data;
 
-    const { offer } = this.state;
+    const offer = this.offer;
     if (currency === CRYPTO_CURRENCY.ETH) {
       this.handleCallActionOnContract(data);
     } else if (currency === CRYPTO_CURRENCY.BTC) {
@@ -218,7 +219,7 @@ class FeedExchange extends React.PureComponent {
   ////////////////////////
 
   handleCloseOffer = () => {
-    const {offer} = this.state;
+    const offer = this.offer;
     this.props.closeOffer({
       BASE_URL: API_URL.EXCHANGE.BASE,
       PATH_URL: API_URL.EXCHANGE.OFFERS + '/' + offer.id,
@@ -256,7 +257,7 @@ class FeedExchange extends React.PureComponent {
   ////////////////////////
 
   handleCompleteShakedOffer = () => {
-    const {offer} = this.state;
+    const offer = this.offer;
 
     this.props.completeShakedOffer({
       BASE_URL: API_URL.EXCHANGE.BASE,
@@ -302,7 +303,7 @@ class FeedExchange extends React.PureComponent {
   ////////////////////////
 
   handleRejectShakedOffer = () => {
-    const {offer} = this.state;
+    const offer = this.offer;
 
     this.props.cancelShakedOffer({
       BASE_URL: API_URL.EXCHANGE.BASE,
@@ -317,7 +318,6 @@ class FeedExchange extends React.PureComponent {
     const { refreshPage } = this.props;
     const { data } = responseData;
     const { currency } = data;
-    const { userType } = this.state;
 
     if (currency === CRYPTO_CURRENCY.ETH) {
       const wallet = MasterWallet.getWalletDefault(currency);
@@ -326,8 +326,8 @@ class FeedExchange extends React.PureComponent {
 
       let result = null;
 
-      if ((data.type === EXCHANGE_ACTION.BUY && userType === HANDSHAKE_USER.OWNER) ||
-        (data.type === EXCHANGE_ACTION.SELL && userType === HANDSHAKE_USER.SHAKED)
+      if ((data.type === EXCHANGE_ACTION.BUY && this.userType === HANDSHAKE_USER.OWNER) ||
+        (data.type === EXCHANGE_ACTION.SELL && this.userType === HANDSHAKE_USER.SHAKED)
       ) {
         result = await exchangeHandshake.reject(data.hid, data.id);
       } else {
@@ -356,7 +356,7 @@ class FeedExchange extends React.PureComponent {
   ////////////////////////
 
   handleWithdrawShakedOffer = () => {
-    const {offer} = this.state;
+    const offer = this.offer;
 
     this.props.cancelShakedOffer({
       BASE_URL: API_URL.EXCHANGE.BASE,
@@ -395,7 +395,7 @@ class FeedExchange extends React.PureComponent {
   ////////////////////////
   handleCallActionOnContract = async (data) => {
     const {status} = this.props;
-    const {offer, userType} = this.state;
+    const offer = this.offer;
 
     const currency = data.currency;
 
@@ -403,7 +403,7 @@ class FeedExchange extends React.PureComponent {
 
     const exchangeHandshake = new ExchangeHandshake(wallet.chainId);
 
-    switch (userType) {
+    switch (this.userType) {
       case HANDSHAKE_USER.NORMAL: {
         switch (status) {
           // case HANDSHAKE_EXCHANGE_STATUS.CREATED: {
@@ -465,7 +465,7 @@ class FeedExchange extends React.PureComponent {
             actionButtons = (
               <div>
                 <Button block className="mt-2" onClick={() => this.confirmOfferAction(message, this.handleRejectShakedOffer)}>Reject</Button>
-                {offer.type === 'buy' &&
+                {offer.type === EXCHANGE_ACTION.BUY &&
                 <Button block className="mt-2" onClick={() => this.confirmOfferAction(message2, this.handleCompleteShakedOffer)}>Complete</Button>
                 }
               </div>
@@ -577,7 +577,8 @@ class FeedExchange extends React.PureComponent {
 
   getActionButtons = () => {
     const {intl, status} = this.props;
-    const {offer, userType, fiatAmount} = this.state;
+    const offer = this.offer;
+    const fiatAmount = this.fiatAmount;
     let actionButtons = null;
     let message = '';
 
@@ -612,7 +613,7 @@ class FeedExchange extends React.PureComponent {
     //   cancel transaction co nguoi shaked roi se bi penanty
     //   phone lay tu profile va user co the edit trong man hinh tao offer
 
-    switch (userType) {
+    switch (this.userType) {
       case HANDSHAKE_USER.NORMAL: {
         switch (status) {
           // case HANDSHAKE_EXCHANGE_STATUS.CREATED: {
@@ -679,7 +680,7 @@ class FeedExchange extends React.PureComponent {
             actionButtons = (
               <div>
                 <Button block className="mt-2" onClick={() => this.confirmOfferAction(message, this.handleRejectShakedOffer)}>Reject</Button>
-                {offer.type === 'buy' &&
+                {offer.type === EXCHANGE_ACTION.BUY &&
                 <Button block className="mt-2" onClick={() => this.confirmOfferAction(message2, this.handleCompleteShakedOffer)}>Complete</Button>
                 }
               </div>
@@ -694,7 +695,7 @@ class FeedExchange extends React.PureComponent {
           case HANDSHAKE_EXCHANGE_STATUS.COMPLETED: {
             // actionButtons = 'Withdraw';
             // nguoi co crypto se withdraw
-            if (offer.type === 'sell') {
+            if (offer.type === EXCHANGE_ACTION.SELL) {
               message = intl.formatMessage({id: 'withdrawOfferConfirm'}, {});
               actionButtons = (
                 <div>
@@ -753,7 +754,7 @@ class FeedExchange extends React.PureComponent {
             actionButtons = (
               <div>
                 <Button block className="mt-2" onClick={() => this.confirmOfferAction(message, this.handleRejectShakedOffer)}>Reject</Button>
-                {offer.type === 'sell' &&
+                {offer.type === EXCHANGE_ACTION.SELL &&
                 <Button block className="mt-2" onClick={() => this.confirmOfferAction(message2, this.handleCompleteShakedOffer)}>Complete</Button>
                 }
               </div>
@@ -767,7 +768,7 @@ class FeedExchange extends React.PureComponent {
           case HANDSHAKE_EXCHANGE_STATUS.COMPLETED: {
             // actionButtons = 'Withdraw';
             // neu la nguoi buy coin thi dc withdraw
-            if (offer.type === 'buy') {
+            if (offer.type === EXCHANGE_ACTION.BUY) {
               actionButtons = (
                 <div>
                   <Button block className="mt-2" onClick={() => this.confirmOfferAction(message, this.handleWithdrawShakedOffer)}>Withdraw</Button>
@@ -868,7 +869,7 @@ class FeedExchange extends React.PureComponent {
 
   render() {
     const {intl, initUserId, shakeUserIds, location, state, status, mode = 'discover', ipInfo: { latitude, longitude }, ...props} = this.props;
-    const {offer, userType} = this.state;
+    const offer = this.offer;
     const {listOfferPrice} = this.props;
     let fiatAmount = 0;
 
@@ -884,7 +885,7 @@ class FeedExchange extends React.PureComponent {
           console.log('aaaa', offer.type, offer.currency);
         }
       }
-      this.setState({fiatAmount: fiatAmount});
+      this.fiatAmount = fiatAmount;
     }
 
     let modalContent = this.state.modalContent;
@@ -965,7 +966,7 @@ class FeedExchange extends React.PureComponent {
             )}
           </div>
           <span>status: {status}</span><br></br>
-          <span>userType: {userType}</span><br></br>
+          <span>userType: {this.userType}</span><br></br>
           {
             mode === 'discover' ? (
               <div className="media mb-1">
