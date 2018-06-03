@@ -51,6 +51,7 @@ class WalletProtect extends React.Component {
           </div>
           <div class="msg3">
             <Checkbox label="I understand that if I lose my passphrase, I will be unable to recover access to my account."
+              checked={this.state.step1_confirm}
               onClick={() => { this.setState({step1_confirm: !this.state.step1_confirm}); }} />
           </div>
           <footer class="footer">
