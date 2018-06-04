@@ -47,10 +47,10 @@ export class Bitcoin extends Wallet {
     }
 
     async getBalance() {
+
       this.setDefaultNetwork();
 
       const url = `${this.network}/addr/${this.address}/balance`;
-
       const response = await axios.get(url);
 
       if (response.status == 200) {
@@ -60,14 +60,28 @@ export class Bitcoin extends Wallet {
     }
 
 
-    async transfer(toAddress, amountToSend) {
-      await this.setDefaultNetwork();
-
-      console.log('bitcore.Networks.defaultNetwork', bitcore.Networks.defaultNetwork);
-      console.log('server', this.network);
-
+    async transfer(toAddress, amountToSend) {          
+      
       try {
+
+        if (!bitcore.Address.isValid(toAddress)){
+          return {"status": 0, "message": "Recipient address is invalid"};
+        }
+
         console.log(`transfered from address:${this.address}`);
+
+        // Check balance:
+        let balance = await this.getBalance();
+
+        console.log('bitcore.Networks.defaultNetwork', bitcore.Networks.defaultNetwork);
+        console.log('server', this.network);      
+
+
+        console.log('Your wallet balance is currently {0} ETH'.format(balance));
+
+        if (!balance || balance == 0 || balance <= amountToSend) {
+          return {"status": 0, "message": "Insufficient funds"};          
+        }
 
         // each BTC can be split into 100,000,000 units. Each unit of bitcoin, or 0.00000001 bitcoin, is called a satoshi
         const amountBig = new BigNumber(amountToSend.toString());
@@ -82,8 +96,7 @@ export class Bitcoin extends Wallet {
         if (fee) {
           data.fee = fee;
 
-          const utxos = await this.utxosForAmount(Number(amountToSend) + Number(fee));
-          // var utxos = await this.utxosForAmount(Number(amountToSend));
+          const utxos = await this.utxosForAmount(Number(amountToSend) + Number(fee));          
 
           console.log('utxos', utxos);
 
@@ -103,17 +116,19 @@ export class Bitcoin extends Wallet {
             const txHash = await this.sendRawTx(rawTx);
 
             console.log(txHash);
-
-            return 'Please allow for 30 seconds before transaction appears on blockchain';
+            
+            return {"status": 1, "message": "Please allow for 30 seconds before transaction appears blockchain"};
+          }
+          else{
+            return {"status": 0, "message": "Insufficient funds"};          
           }
 
-          // need update error code:
-          return 'You don\'t have enough amount.';
+          
         }
       } catch (error) {
-        return error;
+        return {"status": 0, "message": error};
       }
-      return false;
+      
     }
 
     async retrieveUtxos() {
@@ -165,6 +180,8 @@ export class Bitcoin extends Wallet {
     }
 
     async sendRawTx(rawTx) {
+      const uri = `${this.network}/tx/send`;
+      console.log('uri', uri);
       const txHash = await axios.post(uri, {
         rawtx: rawTx,
       });
@@ -178,10 +195,31 @@ export class Bitcoin extends Wallet {
       // txs/?address=muU86kcQGfJUydQ9uZmfJwcDRb1H5PQuzr
       const url = `${this.network}/txs/?address=${this.address}`;
       const response = await axios.get(url);
-
+      let result = [];
       if (response.status == 200) {
-        console.log(response.data);
+
+        if(response.data && response.data.txs){
+          console.log(response.data.txs);
+          for(let tran of response.data.txs){
+            let vin = tran.vin, vout = tran.vout;
+            for(let v of vin){
+              if(v.addr == this.address){
+
+              }
+            }
+
+            // for(let v of vout){
+            //   console.log(v);
+            // }
+          }
+          return response.data.txs;
+        }
+        else{
+          return false;
+        }
       }
+
+      return false;
     }
 }
 
