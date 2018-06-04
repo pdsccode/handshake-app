@@ -22,7 +22,7 @@ import { connect } from "react-redux";
 const heightOfTabsHeader = 0.5;
 
 const Wrapper = styled.div`
-  background: #50af4f;
+  background: rgb(255,255,255,0.2);
 `
 
 

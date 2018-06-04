@@ -1,3 +1,4 @@
+
 .radio-container {
   display: inline-block;
   position: relative;
@@ -11,11 +12,16 @@
     opacity: 0;
     cursor: pointer;
     &:checked ~ button {
-      background-color: #ffffff;
+      //background-color: #ffffff;
+      border: 2px solid transparent;
+      background-color: rgba(29,29,38,0.30);
       opacity: 1;
+      box-shadow: none;
     }
     & ~ button {
-      background-color: buttonface;
+      border: 2px solid rgba(29,29,38,0.30);
+      //background-color: buttonface;
+      background: transparent;
       opacity: 0.6;
     }
   }

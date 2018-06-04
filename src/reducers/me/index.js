@@ -1,5 +1,6 @@
 import Handshake from '@/models/Handshake';
-import { ACTIONS } from './action';
+import {ACTIONS} from './action';
+import {HANDSHAKE_EXCHANGE_CC_STATUS_VALUE, HANDSHAKE_EXCHANGE_STATUS_VALUE} from "@/constants";
 
 const handleListPayload = payload => payload.map(handshake => Handshake.handshake(handshake));
 
@@ -47,21 +48,27 @@ const meReducter = (state = {
         isFetching: false,
       };
     case ACTIONS.FIREBASE_DATA_CHANGE: {
-      console.log('ACTIONS.FIREBASE_DATA_CHANGE', action);
-
-      const listOfferStatus = action.payload.data;
+      const listOfferStatus = action.payload;
       let myList = state.list;
-      console.log('myList old', myList);
-      for (const offer of listOfferStatus) {
-          for (let handshake of myList) {
-          if (handshake.id.includes(offer.id)) {
-            handshake.status = offer.status;
+
+      Object.keys(listOfferStatus).forEach((offer_id) => {
+        const offer = listOfferStatus[offer_id];
+        for (let handshake of myList) {
+
+          let status = '';
+          if (offer.type === 'instant') {
+            status = HANDSHAKE_EXCHANGE_CC_STATUS_VALUE[offer.status];
+          } else if (offer.type === 'exchange') {
+            status = HANDSHAKE_EXCHANGE_STATUS_VALUE[offer.status];
+          }
+
+          if (handshake.id.includes(offer.id) && handshake.status !== status) {
+            handshake.status = status;
             break;
           }
         }
-      }
+      });
 
-      console.log('myList', myList);
       return {
         ...state,
         list: myList,
