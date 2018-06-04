@@ -4,6 +4,7 @@ import hdkey from 'hdkey';
 import BitcoreMnemonic from 'bitcore-mnemonic';
 import satoshi from 'satoshi-bitcoin';
 import EthUtil from 'ethereumjs-util';
+import Tx from 'ethereumjs-tx';
 import local from '@/services/localStore';
 import { APP } from '@/constants';
 
@@ -114,7 +115,10 @@ class Wallet {
     }
 
     if (this.isBTC) {
-      this.wallet.address = this.blockchain.connection.Address(this.wallet.publicKey, this.isTest ? this.blockchain.connection.Networks.testnet : this.blockchain.connection.Networks.mainnet).toString();
+      const BTCNetwork = this.isTest
+        ? this.blockchain.connection.Networks.testnet
+        : this.blockchain.connection.Networks.mainnet;
+      this.wallet.address = this.blockchain.connection.Address(this.wallet.publicKey, BTCNetwork).toString();
       this.wallet.publicKey = this.wallet.publicKey.toString('hex');
     }
 
@@ -170,6 +174,89 @@ class Wallet {
     }
     return '';
   }
+
+  handshake(type) {
+    const { contracts, contractFiles } = this.blockchain.connection.initObj;
+    if (contracts) {
+      const handshakeAddress = contracts[type];
+      if (handshakeAddress) {
+        this.currentHandshake = {
+          address: contracts[type],
+          type,
+          file: contractFiles[type],
+        };
+      }
+    }
+    return this;
+  }
+
+  handshakeFile() {
+    return require(`@/contracts/${this.currentHandshake.file}.json`); // eslint-disable-line
+  }
+
+  /* move to per handshake
+  init(params) {
+    if (this.isERC20) {
+      this.makeRawTransaction({ offchain: 'unknown' });
+    }
+    return { status: 0, message: 'is not ETH' };
+  }
+
+  shake(params) {
+    if (this.isERC20) {
+      this.makeRawTransaction({ offchain: 'unknown' });
+    }
+    return { status: 0, message: 'is not ETH' };
+  }
+
+  async makeRawTransaction(params, successFn, errorFn) {
+    const { connection } = this.blockchain;
+    const { BN } = connection.utils;
+    const nonce = await connection.eth.getTransactionCount(this.wallet.address);
+    let amount;
+    if (params.amount) {
+      amount = connection.utils.toHex(connection.utils.toWei(String(params.amount, 'ether')));
+    }
+
+    let gasPrice = new BN(await connection.eth.getGasPrice());
+    if (params.gasPrice) {
+      gasPrice = new BN(connection.utils.toWei(String(gasPrice), 'gwei'));
+    }
+
+    const balance = new BN(await connection.eth.getBalance(this.wallet.address));
+    const estimateGas = balance.div(gasPrice);
+    const limitedGas = 3000000;
+    const estimatedGas = Math.min(estimateGas, limitedGas);
+
+    const rawTx = {
+      nonce: connection.utils.toHex(nonce),
+      gasPrice: connection.utils.toHex(gasPrice),
+      gasLimit: limitedGas,
+      data: params.payload,
+      from: this.wallet.address,
+      chainId: this.blockchain.connection.initObj.chainId,
+      gas: estimatedGas,
+      to: this.currentHandshake.address,
+      value: amount,
+    };
+
+    const tx = new Tx(rawTx);
+    tx.sign(Buffer.from(this.wallet.privateKey, 'hex'));
+    const serializedTx = tx.serialize();
+    const rawTxHex = `0x${serializedTx.toString('hex')}`;
+
+    connection.eth.sendSignedTransaction(rawTxHex, (err, hash) => {
+      if (err) {
+        return errorFn({ e: err });
+      }
+      return successFn({
+        hash,
+        argumentsParams: params.argumentsParams,
+        payload: params.payload,
+      });
+    });
+  }
+  */
 }
 
 export default Wallet;

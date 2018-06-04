@@ -34,8 +34,11 @@ class Wallet {
   static createBlockchainConnect(objectKey) {
     return new Blockchain(blockchains[objectKey].type)
       .connect(blockchains[objectKey].endpoint)
+      .setInitObj(blockchains[objectKey])
       .setName(blockchains[objectKey].name)
-      .setUnit(blockchains[objectKey].unit);
+      .setUnit(blockchains[objectKey].unit)
+      .setTest(blockchains[objectKey].isTest)
+      .setChainId(blockchains[objectKey].chainId);
   }
 }
 

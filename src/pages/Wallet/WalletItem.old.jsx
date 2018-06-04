@@ -1,7 +1,7 @@
 import React from 'react';
 import { Col } from 'react-bootstrap';
-import {Bitcoin} from '@/models/Bitcoin.js' 
-import {Ethereum} from '@/models/Ethereum.js' 
+import {Bitcoin} from '@/models/Bitcoin.js'
+import {Ethereum} from '@/models/Ethereum.js'
 import dontIcon from '@/assets/images/icon/3-dot-icon.svg';
 import iconSafe from '@/assets/images/icon/icon-safe.svg';
 import iconWarning from '@/assets/images/icon/icon-warning.svg';
@@ -36,30 +36,30 @@ class WalletItem extends React.Component {
         }
         return  "feed " + bgClassName;
       }
-    render(){ 
-        const {wallet, onMoreClick, onWarningClick, onAddressClick} =  this.props;   
+    render(){
+        const {wallet, onMoreClick, onWarningClick, onAddressClick} =  this.props;
         const iconProtected = !wallet.protected ? iconWarning : iconSafe;
-        
-        return  ( 
+
+        return  (
             <Col sm={6} md={6} xs={6} key={wallet.address+wallet.network} className="feed-wrapper">
               <div className={this.getBgClass(wallet)}>
-              
+
                 <div className="name">{wallet.title}
                 {wallet.default ? <img className="iconDefault" src={iconChecked}/> : ''}
-                </div> 
+                </div>
                 <p className="balance"> {wallet.balance} {wallet.name} </p>
-                <img className="more" src={dontIcon} onClick={onMoreClick}/> 
-                <img className="safe" src={wallet.protected ? iconSafe : iconProtected} onClick={onWarningClick}/>   
+                <img className="more" src={dontIcon} onClick={onMoreClick}/>
+                <img className="safe" src={wallet.protected ? iconSafe : iconProtected} onClick={onWarningClick}/>
 
                 <div className="address" onClick={onAddressClick}><img src={iconQRCode} /> {wallet.getShortAddress()}</div>
-              </div>        
+              </div>
             </Col>
           );
     }
 }
-    
-WalletItem.propTypes = {    
-    wallet: PropTypes.object, 
+
+WalletItem.propTypes = {
+    wallet: PropTypes.object,
     onMoreClick: PropTypes.func,
     onWarningClick: PropTypes.func,
     onAddressClick: PropTypes.func,

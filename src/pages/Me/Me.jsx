@@ -9,16 +9,17 @@ import { URL } from '@/config';
 import { Link } from 'react-router-dom';
 import { Grid, Row, Col } from 'react-bootstrap';
 import NoData from '@/components/core/presentation/NoData';
+import Image from '@/components/core/presentation/Image';
+import { getListOfferPrice } from '@/reducers/exchange/action';
+// feed
 import FeedPromise from '@/components/handshakes/promise/Feed';
 import FeedBetting from '@/components/handshakes/betting/Feed';
 import FeedExchange from '@/components/handshakes/exchange/Feed/FeedExchange';
 import FeedSeed from '@/components/handshakes/seed/Feed';
-import Image from '@/components/core/presentation/Image';
 // style
 import AvatarSVG from '@/assets/images/icon/avatar.svg';
 import ExpandArrowSVG from '@/assets/images/icon/expand-arrow.svg';
 import './Me.scss';
-import { getListOfferPrice } from "@/reducers/exchange/action";
 
 
 const maps = {
@@ -29,6 +30,12 @@ const maps = {
 };
 
 class Me extends React.Component {
+  static propTypes = {
+    history: PropTypes.object.isRequired,
+    me: PropTypes.object.isRequired,
+    loadMyHandshakeList: PropTypes.func.isRequired,
+    getListOfferPrice: PropTypes.func.isRequired,
+  }
 
   componentDidMount() {
     this.getListOfferPrice();
@@ -72,10 +79,16 @@ class Me extends React.Component {
                   if (FeedComponent) {
                     return (
                       <Col key={handshake.id} className="feed-wrapper">
-                        <FeedComponent {...handshake} history={this.props.history} onFeedClick={() => this.clickFeedDetail(handshake.id)} mode={'me'}/>
+                        <FeedComponent
+                          {...handshake}
+                          history={this.props.history}
+                          onFeedClick={() => this.clickFeedDetail(handshake.id)}
+                          mode="me"
+                        />
                       </Col>
                     );
                   }
+                  return null;
                 })
               ) : (
                 <NoData />
@@ -87,12 +100,6 @@ class Me extends React.Component {
     );
   }
 }
-
-Me.propTypes = {
-  me: PropTypes.object.isRequired,
-  loadMyHandshakeList: PropTypes.func.isRequired,
-  getListOfferPrice: PropTypes.func.isRequired,
-};
 
 const mapState = state => ({
   me: state.me,

@@ -4,7 +4,6 @@ import { isEmpty, merge } from 'lodash';
 import local from '@/services/localStore';
 import { APP } from '@/constants';
 import { BASE_API } from '@/config';
-// import { MasterWallet } from '@/models/MasterWallet';
 
 const $http = (url, data, id, qsObject, headersMore, method = 'GET') => {
   let QS = '';
@@ -14,7 +13,6 @@ const $http = (url, data, id, qsObject, headersMore, method = 'GET') => {
   }
 
   const token = local.get(APP.AUTH_TOKEN);
-  // const wallet = MasterWallet.getWalletDefault('ETH');
 
   let headers = {
     'Content-Type': 'application/json',
@@ -34,7 +32,6 @@ const $http = (url, data, id, qsObject, headersMore, method = 'GET') => {
 
   return axios.create({
     timeout: BASE_API.TIMEOUT,
-    // withCredentials: true,
     headers,
   })[method.toLocaleLowerCase()](`${url}${id ? `${id}/` : ''}${QS ? `?${QS}` : ''}`, data);
 };

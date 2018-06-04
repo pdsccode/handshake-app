@@ -11,28 +11,21 @@ import { required } from '@/components/core/form/validation';
 import { initHandshake } from '@/reducers/handshake/action';
 import { loadMatches } from '@/reducers/betting/action';
 import { HANDSHAKE_ID, API_URL } from '@/constants';
-import { SIDE } from '@/components/handshakes/betting/Feed/BetHandshakeHandler.js';
+import { SIDE } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
 
 // components
 import Button from '@/components/core/controls/Button';
 import DatePicker from '@/components/handshakes/betting/Create/DatePicker';
-// import { MasterWallet } from '@/models/MasterWallet'; TODO-LONG
 import Dropdown from '@/components/core/controls/Dropdown';
-import { InputField } from '../form/customField';
 
-// import { BettingHandshake } from '@/services/neuron'; TODO-LONG
 // self
 import './Create.scss';
+import { InputField } from '../form/customField';
+import ErrorBox from './ErrorBox';
 
-const wallet = MasterWallet.getWalletDefault('ETH');
-const chainId = wallet.chainId;
-console.log('Chain Id:', chainId);
-
-const bettinghandshake = new BettingHandshake(chainId);
-const nameFormBettingCreate = 'bettingCreate';
 const BettingCreateForm = createForm({
   propsReduxForm: {
-    form: nameFormBettingCreate,
+    form: 'bettingCreate',
   },
 });
 
@@ -40,35 +33,26 @@ const regex = /\[.*?\]/g;
 const regexReplace = /\[|\]/g;
 const regexReplacePlaceholder = /\[.*?\]/;
 
-class ErrorBox extends React.PureComponent {
-  render() {
-    return (
-      <div className="text-danger">
-        {this.props.children}
-      </div>
-    );
-  }
-}
-
-const TAG = 'BETTING_CREATE';
-class BettingCreate extends React.PureComponent {
+class BettingCreate extends React.Component {
   static propTypes = {
-    item: PropTypes.object.isRequired,
-    toAddress: PropTypes.string.isRequired,
-    isPublic: PropTypes.bool.isRequired,
-    industryId: PropTypes.number.isRequired,
+    item: PropTypes.object,
+    toAddress: PropTypes.string,
+    isPublic: PropTypes.bool,
+    industryId: PropTypes.number,
     onClickSend: PropTypes.func,
     initHandshake: PropTypes.func.isRequired,
+    loadMatches: PropTypes.func.isRequired,
+    wallet: PropTypes.object.isRequired,
   }
 
   static defaultProps = {
     item: {
       backgroundColor: '#332F94',
-      'desc': '[{"key": "event_odds", "label": "Odds", "placeholder": "10", "className": "oddField"}] [{"key": "event_bet", "label": "Your bet", "placeholder": "", "type": "number", "className": "betField"}]',
-      'id': 18,
+      desc: '[{"key": "event_odds", "label": "Odds", "placeholder": "10", "className": "oddField"}] [{"key": "event_bet", "label": "Your bet", "placeholder": "", "type": "number", "className": "betField"}]',
+      id: 18,
       message: null,
-      'name': 'Bet',
-      'order_id': 5,
+      name: 'Bet',
+      order_id: 5,
       public: 1,
     },
     toAddress: 'sa@autonomous.nyc',
@@ -76,131 +60,24 @@ class BettingCreate extends React.PureComponent {
     industryId: 18,
   }
 
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.matches.length !== prevState.matches.length) {
+      return { matches: nextProps.matches };
+    }
+    if (nextProps.wallet.updatedAt !== prevState.wallet.updatedAt) {
+      return { wallet: nextProps.wallet };
+    }
+    return null;
+  }
+
   constructor(props) {
     super(props);
     this.state = {
       values: {},
-      address: null,
-      privateKey: null,
       matches: [],
-      /*
-      matches: [
-        {
-            "awayTeamCode": "",
-            "awayTeamFlag": "https://upload.wikimedia.org/wikipedia/commons/0/0d/Flag_of_Saudi_Arabia.svg",
-            "awayTeamName": "Saudi Arabia",
-            "date": 1528963200,
-            "homeTeamCode": "RUS",
-            "homeTeamFlag": "https://upload.wikimedia.org/wikipedia/commons/f/f3/Flag_of_Russia.svg",
-            "homeTeamName": "Russia",
-            "id": 1,
-            "outcomes": [
-                {
-                    "handshakes": [{
-                        id: 1,
-                        support: 1,
-                        odd: 2.3,
-                        amount: 0.1528
-                    },
-                    {
-                        id: 2,
-                        support: 1,
-                        odd: 2.3,
-                        amount: 0.1528
-                    },
-                    {
-                        id: 3,
-                        support: 1,
-                        odd: 2.3,
-                        amount: 0.1528
-                    },
-                    {
-                        id: 4,
-                        support: 1,
-                        odd: 2.3,
-                        amount: 0.1528
-                    },
-                    {
-                        id: 5,
-                        support: 1,
-                        odd: 2.3,
-                        amount: 0.1528
-                    },
-                    {
-                        id: 6,
-                        support: 2,
-                        odd: 2.3,
-                        amount: 0.1528
-                    },
-                    {
-                        id: 7,
-                        support: 2,
-                        odd: 2.3,
-                        amount: 0.1528
-                    },
-                    {
-                        id: 8,
-                        support: 2,
-                        odd: 2.3,
-                        amount: 0.1528
-                    },
-                    {
-                        id: 9,
-                        support: 2,
-                        odd: 2.3,
-                        amount: 0.1528
-                    },
-                    {
-                        id: 10,
-                        support: 2,
-                        odd: 2.3,
-                        amount: 0.1528
-                    }],
-                    "id": 1,
-                    "name": "Russia wins"
-                },
-                {
-                    "handshakes": [],
-                    "id": 2,
-                    "name": "Saudi Arabia wins"
-                },
-                {
-                    "handshakes": [],
-                    "id": 3,
-                    "name": "Russia draws Saudi Arabia"
-                }
-            ]
-        },
-        {
-            "awayTeamCode": "",
-            "awayTeamFlag": "https://upload.wikimedia.org/wikipedia/commons/f/fe/Flag_of_Uruguay.svg",
-            "awayTeamName": "Uruguay",
-            "date": 1529038800,
-            "homeTeamCode": "",
-            "homeTeamFlag": "https://upload.wikimedia.org/wikipedia/commons/f/fe/Flag_of_Egypt.svg",
-            "homeTeamName": "Egypt",
-            "id": 2,
-            "outcomes": [
-                {
-                    "handshakes": [],
-                    "id": 7,
-                    "name": "Uruguay wins"
-                },
-                {
-                    "handshakes": [],
-                    "id": 8,
-                    "name": "Egypt wins"
-                },
-                {
-                    "handshakes": [],
-                    "id": 9,
-                    "name": "Uruguay draws Egypt"
-                }
-            ]
-        }
-    ], */
       selectedMatch: null,
       selectedOutcome: null,
+      wallet: this.props.wallet,
     };
     this.onSubmit = ::this.onSubmit;
     this.renderInput = ::this.renderInput;
@@ -210,27 +87,35 @@ class BettingCreate extends React.PureComponent {
   }
   componentDidMount() {
     console.log('Betting Create Props:', this.props, history);
-    this.setState({
-      address: wallet.address,
-      privateKey: wallet.privateKey,
-    });
     this.props.loadMatches({ PATH_URL: API_URL.CRYPTOSIGN.LOAD_MATCHES });
   }
-  componentWillReceiveProps(nextProps) {
-    console.log('Receive Props: ', nextProps);
-    const { matches } = nextProps;
-    console.log(`${TAG} Matches:`, matches);
 
-    this.setState({
-      matches,
+  onSubmit() {
+    const { values } = this.state;
+    console.log('values', values);
+    let { content } = this;
+    const extraParams = values;
+    console.log('Before Content:', content);
+
+    this.inputList.forEach((element) => {
+      const item = JSON.parse(element.replace(regexReplace, ''));
+      console.log('Element:', item);
+      const { key } = item;
+      const valueInputItem = key === 'event_date' ? this.datePickerRef.value : values[key];
+      content = content.replace(
+        regexReplacePlaceholder,
+        valueInputItem || '',
+      );
     });
+    console.log('After Content:', content);
+    const wallet = this.state.wallet.powerful.defaultWallet('ETH');
+    this.initHandshake(extraParams, wallet.address, wallet.action.blockchain.chainId);
   }
+
   get foundMatch() {
     const { selectedMatch, matches } = this.state;
     if (selectedMatch) {
-      return matches.find((element) => {
-          return element.id  === selectedMatch.id;
-        });
+      return matches.find(element => element.id === selectedMatch.id);
     }
     return null;
   }
@@ -239,54 +124,22 @@ class BettingCreate extends React.PureComponent {
     const { matches } = this.state;
     return matches.map(item => ({ id: item.id, value: `${item.awayTeamName} - ${item.homeTeamName}` }));
   }
+
   get matchResults() {
-    const { selectedMatch, matches } = this.state;
+    const { selectedMatch } = this.state;
     if (selectedMatch) {
-      const foundMatch = this.foundMatch;
-      if (foundMatch) {
-        const { outcomes } = foundMatch;
+      if (this.foundMatch) {
+        const { outcomes } = this.foundMatch;
         if (outcomes) {
           return outcomes.map(item => ({ id: item.id, value: item.name }));
         }
       }
     }
-
-
     return [];
   }
 
-  onSubmit(dict) {
-    const { address, privateKey, values } = this.state;
-    console.log('values', values);
-
-    let content = this.content;
-    const inputList = this.inputList;
-    const extraParams = values;
-    console.log('Before Content:', content);
-
-    inputList.forEach((element) => {
-      const item = JSON.parse(element.replace(regexReplace, ''));
-      console.log('Element:', item);
-      const { key, placeholder, type } = item;
-      const valueInputItem = key === 'event_date' ? this.datePickerRef.value : values[key];
-      content = content.replace(
-        regexReplacePlaceholder,
-        valueInputItem || '',
-      );
-    });
-    console.log('After Content:', content);
-    // console.log("this", this.datePickerRef.value);
-
-    // const {toAddress, isPublic, industryId} = this.props;
-
-    // const fromAddress = "0x54CD16578564b9952d645E92b9fa254f1feffee9";
-    const fromAddress = address;
-    this.initHandshake(extraParams, fromAddress);
-  }
-
   get inputList() {
-    const content = this.content;
-    return content ? content.match(regex) : [];
+    return this.content ? this.content.match(regex) : [];
   }
 
   get content() {
@@ -300,8 +153,65 @@ class BettingCreate extends React.PureComponent {
     this.setState({ values });
   }
 
-  renderInput(item, index) {
-    const { key, placeholder, type } = item;
+  // Service
+  initHandshake(fields, fromAddress, chainId) {
+    const { selectedOutcome } = this.state;
+    const params = {
+      // to_address: toAddress ? toAddress.trim() : '',
+      // public: isPublic,
+      // description: content,
+      // description: JSON.stringify(extraParams),
+      // industries_type: industryId,
+      type: HANDSHAKE_ID.BETTING,
+      // type: 3,
+      // extra_data: JSON.stringify(fields),
+      outcome_id: selectedOutcome.id,
+      odds: fields.event_odds,
+      amount: fields.event_bet,
+      extra_data: JSON.stringify(fields),
+      currency: 'ETH',
+      side: SIDE.SUPPORT,
+      from_address: fromAddress,
+      chain_id: chainId,
+    };
+    console.log(params);
+
+    this.props.initHandshake({
+      PATH_URL: API_URL.CRYPTOSIGN.INIT_HANDSHAKE,
+      METHOD: 'POST',
+      data: params,
+      successFn: this.initHandshakeSuccess,
+      errorFn: this.handleGetCryptoPriceFailed,
+    });
+  }
+
+  initHandshakeSuccess = async (successData) => {
+    console.log('initHandshakeSuccess', successData);
+
+    const { status, data } = successData;
+    const { values, selectedOutcome } = this.state;
+    const stake = values.event_bet;
+    const eventOdds = 1 / parseInt(values.event_odds, 10);
+    const payout = stake * eventOdds;
+    const hid = selectedOutcome.id;
+    const side = SIDE.SUPPORT;
+
+    if (status) {
+      const { id } = data;
+      const offchain = id;
+      const result = await this.initBet(hid, side, stake, payout, offchain);
+      if (result) {
+        // history.go(URL.HANDSHAKE_DISCOVER);
+      }
+    }
+  }
+
+  initHandshakeFailed = (error) => {
+    console.log('initHandshakeFailed', error);
+  }
+
+  renderInput(item) {
+    const { key, placeholder } = item;
     const className = 'form-control-custom input';
     return (
       <Field
@@ -320,7 +230,7 @@ class BettingCreate extends React.PureComponent {
   }
 
   renderDate(item) {
-    const { key, placeholder, type } = item;
+    const { key } = item;
 
     return (
       <DatePicker
@@ -369,8 +279,8 @@ class BettingCreate extends React.PureComponent {
   renderItem(field, index) {
     const item = JSON.parse(field.replace(regexReplace, ''));
     const {
- key, placeholder, type, label, className
- } = item;
+      key, placeholder, type, label, className,
+    } = item;
     let itemRender = this.renderInput(item, index);
     switch (type) {
       case 'date':
@@ -385,7 +295,7 @@ class BettingCreate extends React.PureComponent {
 
     return (
       <div key={index} className={`rowWrapper ${className || ''}`}>
-        <label className="label">{label || placeholder}</label>
+        <span className="label">{label || placeholder}</span>
         <div className={key === 'event_odds' ? 'oddInput' : ''}>
           {itemRender}
         </div>
@@ -394,7 +304,6 @@ class BettingCreate extends React.PureComponent {
   }
 
   renderForm() {
-    const inputList = this.inputList;
     const { selectedMatch } = this.state;
     return (
       <BettingCreateForm className="wrapperBetting" onSubmit={this.onSubmit}>
@@ -402,8 +311,7 @@ class BettingCreate extends React.PureComponent {
           <Dropdown
             placeholder="Select a match"
             source={this.matchNames}
-            onItemSelected={(item) =>
-              {
+            onItemSelected={(item) => {
                 const { values } = this.state;
                 values.event_name = item.value;
                 this.setState({ selectedMatch: item, values });
@@ -423,10 +331,10 @@ class BettingCreate extends React.PureComponent {
         </div>
 
         <div className="formInput">
-          {inputList.map((field, index) => this.renderItem(field, index))}
+          {this.inputList.map((field, index) => this.renderItem(field, index))}
         </div>
 
-        <Button type="submit" block>Sign & Send</Button>
+        <Button type="submit" block>Sign &amp; Send</Button>
       </BettingCreateForm>
     );
   }
@@ -438,63 +346,6 @@ class BettingCreate extends React.PureComponent {
       </div>
     );
   }
-
-  // Service
-  initHandshake(fields, fromAddress) {
-    const { selectedOutcome } = this.state;
-    const params = {
-      // to_address: toAddress ? toAddress.trim() : '',
-      // public: isPublic,
-      // description: content,
-      // description: JSON.stringify(extraParams),
-      // industries_type: industryId,
-      type: HANDSHAKE_ID.BETTING,
-      // type: 3,
-      // extra_data: JSON.stringify(fields),
-      outcome_id: selectedOutcome.id,
-      odds: fields.event_odds,
-      amount: fields.event_bet,
-      extra_data: JSON.stringify(fields),
-      currency: 'ETH',
-      side: SIDE.SUPPORT,
-      from_address: fromAddress,
-      chain_id: chainId,
-    };
-    console.log(params);
-
-    this.props.initHandshake({
- PATH_URL: API_URL.CRYPTOSIGN.INIT_HANDSHAKE,
-METHOD: 'POST',
-data: params,
-      successFn: this.initHandshakeSuccess,
-      errorFn: this.handleGetCryptoPriceFailed,
-    });
-  }
-   initHandshakeSuccess = async (successData) => {
-     console.log('initHandshakeSuccess', successData);
-
-     const { status, data } = successData;
-     const { values, selectedOutcome } = this.state;
-     const stake = values.event_bet;
-     const event_odds = 1 / parseInt(values.event_odds);
-     const payout = stake * event_odds;
-     const hid = selectedOutcome.id;
-     const side = SIDE.SUPPORT;
-
-     if (status) {
-       const { id } = data;
-       const offchain = id;
-       const result = await bettinghandshake.initBet(hid, side, stake, payout, offchain);
-       if (result) {
-         // history.go(URL.HANDSHAKE_DISCOVER);
-       }
-     }
-   }
-  initHandshakeFailed = (error) => {
-    console.log('initHandshakeFailed', error);
-  }
-
-
   // Blockchain
   /*
   async initBet(escrow, odd, eventDate){
@@ -514,6 +365,7 @@ data: params,
 
 const mapState = state => ({
   matches: state.betting.matches,
+  wallet: state.wallet,
 });
 const mapDispatch = ({
   initHandshake,

@@ -37,30 +37,31 @@ export const createWalletAction = (wallet) => {
 
 const createWalletMasters = () => {
   let wallets = [
-    createWalletAction(WalletModel.wallet({
+    WalletModel.wallet({
       networkKey: 'rinkeby',
       mnemonic: walletMasterMnemonic,
       isDefault: true,
-    })),
-    createWalletAction(WalletModel.wallet({
+    }),
+    WalletModel.wallet({
       networkKey: 'rinkeby',
       mnemonic: walletRewardMnemonic,
       isReward: true,
-    })),
-    createWalletAction(WalletModel.wallet({
+    }),
+    WalletModel.wallet({
       networkKey: 'bitcoinTest',
       mnemonic: walletMasterMnemonic,
       isDefault: true,
-    })),
-    createWalletAction(WalletModel.wallet({
+    }),
+    WalletModel.wallet({
       networkKey: 'bitcoinTest',
       mnemonic: walletRewardMnemonic,
       isReward: true,
-    })),
+    }),
   ];
 
-  wallets = wallets.map(wallet => WalletModel.wallet(wallet));
   local.save(APP.WALLET_LIST, wallets);
+
+  wallets = wallets.map(wallet => createWalletAction(wallet));
 
   return wallets;
 };

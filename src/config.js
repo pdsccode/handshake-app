@@ -52,6 +52,11 @@ export const blockchainNetworks = {
       prediction: '0x8b4d252a89ae56af24fd9557e803e81b42b66929',
       exchange: '0xdb42bfb35f4bbc402ede625ff1f3717336fac1ab',
     },
+    contractFiles: {
+      basic: 'BasicHandshake',
+      prediction: 'PredictionHandshake',
+      exchange: 'ExchangeHandshake',
+    },
   },
   ethereum: {
     type:
@@ -64,6 +69,11 @@ export const blockchainNetworks = {
       basic: '',
       prediction: '',
       exchange: '',
+    },
+    contractFiles: {
+      basic: 'BasicHandshake',
+      prediction: 'PredictionHandshake',
+      exchange: 'ExchangeHandshake',
     },
   },
   bitcoin: {

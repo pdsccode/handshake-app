@@ -9,6 +9,12 @@ class Blockchain {
       case 'BTC': this.isBTC = true; break;
       default: throw Error('This type is not valid');
     }
+    this.initObj = {};
+    return this;
+  }
+
+  setInitObj(initObj) {
+    this.initObj = initObj;
     return this;
   }
 
@@ -38,6 +44,11 @@ class Blockchain {
 
   setUnit(unit) {
     this.unit = unit;
+    return this;
+  }
+
+  setChainId(chainId) {
+    this.chainId = chainId;
     return this;
   }
 }

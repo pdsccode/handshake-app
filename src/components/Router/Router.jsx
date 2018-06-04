@@ -95,19 +95,23 @@ const Page404 = props => (
 
 class Router extends React.Component {
   static propTypes = {
+    // app
     app: PropTypes.object.isRequired,
     auth: PropTypes.object.isRequired,
     wallet: PropTypes.object.isRequired,
 
+    // func
     signUp: PropTypes.func.isRequired,
     fetchProfile: PropTypes.func.isRequired,
     authUpdate: PropTypes.func.isRequired,
     setIpInfo: PropTypes.func.isRequired,
     getUserProfile: PropTypes.func.isRequired,
 
+    // wallet
     createWallets: PropTypes.func.isRequired,
     createWwalletsSucess: PropTypes.func.isRequired,
 
+    // firebase action
     firebase: PropTypes.object.isRequired,
   };
 
@@ -146,7 +150,7 @@ class Router extends React.Component {
   componentDidMount() {
     const token = local.get(APP.AUTH_TOKEN);
 
-    // AUTH
+    // auth
     if (!token) {
       this.props.signUp({
         PATH_URL: 'user/sign-up',
@@ -167,7 +171,10 @@ class Router extends React.Component {
   }
 
   authSuccess() {
+    // basic profile
     this.props.fetchProfile({ PATH_URL: 'user/profile' });
+
+    // exchange profile
     this.props.getUserProfile({
       BASE_URL: API_URL.EXCHANGE.BASE,
       PATH_URL: API_URL.EXCHANGE.GET_USER_PROFILE,
@@ -182,6 +189,7 @@ class Router extends React.Component {
         local.save(APP.IP_INFO, response.data);
       });
     }
+    // wallet handle
     if (!this.props.wallet.wallets.length) {
       this.setState({ loadingText: 'Creating your local wallets' });
       this.props.createWallets().then((wallets) => {
@@ -194,14 +202,13 @@ class Router extends React.Component {
   }
 
   notification() {
-    // const messaging = this.props.firebase.messaging();
-    // messaging
-    //   .requestPermission()
-    //   .then(() => messaging.getToken())
-    //   .then((notificationToken) => {
-    //     this.props.authUpdate({ PATH_URL: 'user/profile', data: { notificationToken } });
-    //     this.props.setSubscribed();
-    //   });
+    const messaging = this.props.firebase.messaging();
+    messaging
+      .requestPermission()
+      .then(() => messaging.getToken())
+      .then((notificationToken) => {
+        this.props.authUpdate({ PATH_URL: 'user/profile', data: { fcm_token: notificationToken } });
+      });
   }
 
   render() {
@@ -238,20 +245,23 @@ class Router extends React.Component {
                         <Redirect to={{ pathname: URL.HANDSHAKE_WALLET }} />
                       )}
                     />
-                    {/* <Route path={URL.HANDSHAKE_ME} component={MeRootRouter} />
+                    <Route
+                      path={URL.HANDSHAKE_ME}
+                      component={MeRootRouter}
+                    />
                     <Route
                       path={URL.HANDSHAKE_DISCOVER}
                       component={DiscoverRootRouter}
-                    /> */}
-                    {/* <Route
+                    />
+                    <Route
                       path={URL.HANDSHAKE_CHAT}
                       component={ChatRootRouter}
-                    /> */}
+                    />
                     <Route
                       path={URL.HANDSHAKE_WALLET}
                       component={WalletRootRouter}
                     />
-                    {/* <Route
+                    <Route
                       path={URL.HANDSHAKE_CREATE}
                       component={CreateRootRouter}
                     />
@@ -262,7 +272,7 @@ class Router extends React.Component {
                     <Route
                       path={URL.TRANSACTION_LIST}
                       component={TransactionRootRouter}
-                    /> */}
+                    />
                     <Route component={Page404} />
                   </Switch>
                 </ScrollToTop>

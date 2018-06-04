@@ -34,7 +34,7 @@ class WalletPage extends React.Component {
     return (
       <Grid>
         <Row className="list">
-          <Header title="main net wallets" />
+          <Header title="Main net wallets" />
         </Row>
         <Row className="list">
           {

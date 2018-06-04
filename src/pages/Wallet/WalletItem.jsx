@@ -5,6 +5,8 @@ import { Col } from 'react-bootstrap';
 import dontIcon from '@/assets/images/icon/3-dot-icon.svg';
 import iconSafe from '@/assets/images/icon/icon-safe.svg';
 import iconWarning from '@/assets/images/icon/icon-warning.svg';
+import iconChecked from '@/assets/images/icon/icon-checked.svg';
+import iconQRCode from '@/assets/images/icon/icon-qr-code.png';
 
 import './Wallet.scss';
 
@@ -23,6 +25,12 @@ class WalletItem extends React.Component {
     };
 
     this.getBgClass = ::this.getBgClass;
+    this.onMoreClickDo = ::this.onMoreClickDo;
+    this.onMoreClick = ::this.onMoreClick;
+    this.onWarningClickDo = ::this.onWarningClickDo;
+    this.onWarningClick = ::this.onWarningClick;
+    this.onAddressClickDo = ::this.onAddressClickDo;
+    this.onAddressClick = ::this.onAddressClick;
   }
 
   async componentWillMount() {
@@ -30,30 +38,64 @@ class WalletItem extends React.Component {
     this.setState({ balance, isFetchedBalance: true });
   }
 
-  onMoreClick() {
+  onMoreClickDo() {
     alert('click more');
   }
 
-  onWarningClick() {
+  onMoreClick(e) {
+    if (e.keyCode) {
+      if (e.keyCode === 13) {
+        this.onMoreClickDo();
+      }
+    } else {
+      this.onMoreClickDo();
+    }
+  }
+
+  onWarningClickDo() {
     alert('click warning');
   }
 
-  getBgClass() {
-    const { blockchain } = this.state.wallet;
+  onWarningClick(e) {
+    if (e.keyCode) {
+      if (e.keyCode === 13) {
+        this.onWarningClickDo();
+      }
+    } else {
+      this.onWarningClickDo();
+    }
+  }
 
-    if (blockchain.isTest) {
+  onAddressClickDo() {
+    alert('click warning');
+  }
+
+  onAddressClick(e) {
+    if (e.keyCode) {
+      if (e.keyCode === 13) {
+        this.onWarningClickDo();
+      }
+    } else {
+      this.onWarningClickDo();
+    }
+  }
+
+  getBgClass() {
+    const { wallet } = this.state.wallet;
+
+    if (wallet.isTest) {
       return 'feed testnet-wallet-bg';
     }
 
-    if (blockchain.isBTC) {
+    if (wallet.isBTC) {
       return 'feed btc-wallet-bg';
     }
 
-    if (blockchain.isERC20) {
+    if (wallet.isERC20) {
       return 'feed eth-wallet-bg';
     }
 
-    if (blockchain.isXRP) {
+    if (wallet.isXRP) {
       return 'feed xrp-wallet-bg';
     }
 
@@ -61,14 +103,21 @@ class WalletItem extends React.Component {
   }
 
   render() {
+    const { wallet: walletAction } = this.state;
     const { wallet, blockchain } = this.state.wallet;
 
     const iconProtected = !wallet.isProtected ? iconWarning : iconSafe;
+
     return (
-      <Col sm={6} md={6} xs={6} key={this.state.wallet.getAppKed()} className="feed-wrapper">
+      <Col sm={6} md={6} xs={6} key={walletAction.getAppKed()} className="feed-wrapper">
         <div className={this.getBgClass()}>
-          <p className="name">{blockchain.name}</p>
-          <p className="balance">{(this.state.isFetchedBalance) ? this.state.balance : '...'} {blockchain.unit}</p>
+          <p className="name">
+            {blockchain.name}
+            {wallet.isDefault ? <img className="iconDefault" src={iconChecked} alt="" /> : ''}
+          </p>
+          <p className="balance">
+            {(this.state.isFetchedBalance) ? this.state.balance : '...'} {blockchain.unit}
+          </p>
           <div
             className="more"
             role="button"
@@ -87,7 +136,15 @@ class WalletItem extends React.Component {
           >
             <img alt="" src={iconProtected} />
           </div>
-          <p className="address">{this.state.wallet.getShortAddress()}</p>
+          <span
+            className="address"
+            onClick={this.onAddressClick}
+            onKeyDown={this.onAddressClick}
+            role="link"
+            tabIndex="0"
+          >
+            <img src={iconQRCode} alt="" />{walletAction.getShortAddress()}
+          </span>
         </div>
       </Col>
     );

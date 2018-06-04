@@ -2,7 +2,9 @@ import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 import { routerReducer, routerMiddleware } from 'react-router-redux';
 import { firebaseReducer, reactReduxFirebase } from 'react-redux-firebase';
 import thunk from 'redux-thunk';
-import firebase from 'firebase';
+import firebase from 'firebase/app';
+import 'firebase/database';
+import 'firebase/messaging';
 
 import { composeWithDevTools } from 'redux-devtools-extension/developmentOnly';
 

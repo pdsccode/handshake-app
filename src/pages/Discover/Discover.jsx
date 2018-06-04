@@ -10,11 +10,11 @@ import { Grid, Row, Col } from 'react-bootstrap';
 import SearchBar from '@/components/core/controls/SearchBar';
 import Category from '@/components/core/controls/Category';
 
-// import FeedPromise from '@/components/handshakes/promise/Feed';
-// import FeedBetting from '@/components/handshakes/betting/Feed';
-// import FeedExchange from '@/components/handshakes/exchange/Feed/FeedExchange';
-// import FeedSeed from '@/components/handshakes/seed/Feed';
-// import FeedCreditCard from '@/components/handshakes/exchange/Feed/FeedCreditCard';
+import FeedPromise from '@/components/handshakes/promise/Feed';
+import FeedBetting from '@/components/handshakes/betting/Feed';
+import FeedExchange from '@/components/handshakes/exchange/Feed/FeedExchange';
+import FeedSeed from '@/components/handshakes/seed/Feed';
+import FeedCreditCard from '@/components/handshakes/exchange/Feed/FeedCreditCard';
 
 import Tabs from '@/components/handshakes/exchange/components/Tabs';
 import NoData from '@/components/core/presentation/NoData';
@@ -24,12 +24,12 @@ import { getListOfferPrice } from '@/reducers/exchange/action';
 // style
 import './Discover.scss';
 
-// const maps = {
-//   [HANDSHAKE_ID.PROMISE]: FeedPromise,
-//   [HANDSHAKE_ID.BETTING]: FeedBetting,
-//   [HANDSHAKE_ID.EXCHANGE]: FeedExchange,
-//   [HANDSHAKE_ID.SEED]: FeedSeed,
-// };
+const maps = {
+  [HANDSHAKE_ID.PROMISE]: FeedPromise,
+  [HANDSHAKE_ID.BETTING]: FeedBetting,
+  [HANDSHAKE_ID.EXCHANGE]: FeedExchange,
+  [HANDSHAKE_ID.SEED]: FeedSeed,
+};
 
 class DiscoverPage extends React.Component {
   static propTypes = {
@@ -45,7 +45,10 @@ class DiscoverPage extends React.Component {
       handshakeIdActive: '',
       tabIndexActive: 1,
     };
-    this.props.loadDiscoverList({ PATH_URL: API_URL.DISCOVER.BASE, qs: { location_p: { pt: '10.786391,106.700074', d: 5 } } });
+    this.props.loadDiscoverList({
+      PATH_URL: API_URL.DISCOVER.BASE,
+      qs: { location_p: { pt: '10.786391,106.700074', d: 5 }, chain_id: 4 },
+    });
     // bind
     this.clickCategoryItem = this.clickCategoryItem.bind(this);
     this.clickTabItem = this.clickTabItem.bind(this);
@@ -59,10 +62,6 @@ class DiscoverPage extends React.Component {
     // }, 30000);
   }
 
-  componentWillReceiveProps(nextProps) {
-    console.log(nextProps.firebaseUser);
-  }
-
   get getHandshakeList() {
     const { list } = this.props.discover;
     if (list && list.length > 0) {
@@ -71,7 +70,11 @@ class DiscoverPage extends React.Component {
         if (FeedComponent) {
           return (
             <Col key={handshake.id} md={12} className="feed-wrapper">
-              {/* <FeedComponent {...handshake} history={this.props.history} onFeedClick={() => this.clickFeedDetail(handshake.id)} /> */}
+              <FeedComponent
+                {...handshake}
+                history={this.props.history}
+                onFeedClick={() => this.clickFeedDetail(handshake.id)}
+              />
             </Col>
           );
         }
@@ -93,17 +96,29 @@ class DiscoverPage extends React.Component {
   }
 
   handleGetPriceSuccess = () => {
-    this.props.loadDiscoverList({ PATH_URL: API_URL.DISCOVER.BASE, qs: { location_p: { pt: '10.786391,106.700074', d: 5 } } });
+    this.props.loadDiscoverList({
+      PATH_URL: API_URL.DISCOVER.BASE,
+      qs: { location_p: { pt: '10.786391,106.700074', d: 5 } },
+      headers: { chainId: 4 },
+    });
   }
 
   handleGetPriceFailed = () => {
-    this.props.loadDiscoverList({ PATH_URL: API_URL.DISCOVER.BASE, qs: { location_p: { pt: '10.786391,106.700074', d: 5 } } });
+    this.props.loadDiscoverList({
+      PATH_URL: API_URL.DISCOVER.BASE,
+      qs: { location_p: { pt: '10.786391,106.700074', d: 5 } },
+      headers: { chainId: 4 },
+    });
   }
 
   searchChange(query) {
     clearTimeout(this.searchTimeOut);
     this.searchTimeOut = setTimeout(() => {
-      this.props.loadDiscoverList({ PATH_URL: API_URL.DISCOVER.BASE, qs: { query: query.trim() } });
+      this.props.loadDiscoverList({
+        PATH_URL: API_URL.DISCOVER.BASE,
+        qs: { query: query.trim() },
+        headers: { chainId: 4 },
+      });
     }, 500);
   }
 
@@ -132,7 +147,11 @@ class DiscoverPage extends React.Component {
         // is promise
     }
     // filter list
-    this.props.loadDiscoverList({ PATH_URL: API_URL.DISCOVER.BASE, qs: { type: id } });
+    this.props.loadDiscoverList({
+      PATH_URL: API_URL.DISCOVER.BASE,
+      qs: { type: id },
+      headers: { chainId: 4 },
+    });
     // set feed type activate
     this.setState({
       handshakeIdActive: id,
@@ -141,7 +160,11 @@ class DiscoverPage extends React.Component {
 
   clickTabItem(index) {
     this.setState({ tabIndexActive: index });
-    this.props.loadDiscoverList({ PATH_URL: API_URL.DISCOVER.BASE, qs: { public: 0, chain_id: 4 } });
+    this.props.loadDiscoverList({
+      PATH_URL: API_URL.DISCOVER.BASE,
+      qs: { public: 0 },
+      headers: { chainId: 4 },
+    });
   }
 
   render() {
@@ -171,11 +194,11 @@ class DiscoverPage extends React.Component {
                     { id: 2, text: 'Sell' },
                   ]}
                 />
-                {/* {
+                {
                   tabIndexActive === 1 && (
                     <FeedCreditCard history={this.props.history} />
                   )
-                } */}
+                }
               </Col>
             </Row>
           )
@@ -195,6 +218,7 @@ const mapState = state => ({
   discover: state.discover,
   firebaseUser: state.firebase.data,
   app: state.app,
+  wallet: state.wallet,
 });
 
 const mapDispatch = ({

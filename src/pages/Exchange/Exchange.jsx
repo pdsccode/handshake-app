@@ -1,16 +1,17 @@
 import React from 'react';
-import {injectIntl} from 'react-intl';
-import {formValueSelector} from 'redux-form';
-import {connect} from 'react-redux';
-import {URL} from '@/config';
-import './Exchange.scss';
+import { injectIntl } from 'react-intl';
+import { formValueSelector } from 'redux-form';
+import { connect } from 'react-redux';
+import { URL } from '@/config';
 
 import createForm from '@/components/core/form/createForm';
-import {fieldCleave, fieldDropdown, fieldInput} from '@/components/core/form/customField';
-import {required} from '@/components/core/form/validation';
+import { fieldCleave, fieldDropdown, fieldInput } from '@/components/core/form/customField';
+import { required } from '@/components/core/form/validation';
 
-import {API_URL} from '@/constants';
-import FeedCreditCard from "@/components/handshakes/exchange/Feed/FeedCreditCard";
+import { API_URL } from '@/constants';
+import FeedCreditCard from '@/components/handshakes/exchange/Feed/FeedCreditCard';
+
+import './Exchange.scss';
 
 const nameFormCreditCard = 'creditCard';
 const FormCreditCard = createForm({
