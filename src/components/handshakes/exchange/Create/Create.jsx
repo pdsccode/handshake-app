@@ -78,7 +78,7 @@ class Component extends React.Component {
   setAddressFromLatLng = (lat, lng) => {
     this.setState({lat: lat, lng: lng});
     const { rfChange } = this.props;
-    axios.get(`http://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&sensor=true`).then((response) => {
+    axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&sensor=true`).then((response) => {
       const address = response.data.results[0] && response.data.results[0].formatted_address;
       rfChange(nameFormExchangeCreate, 'address', address);
     });
