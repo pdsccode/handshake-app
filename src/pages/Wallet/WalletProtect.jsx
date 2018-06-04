@@ -1,12 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Grid, Row, Col } from 'react-bootstrap';
-import {Bitcoin} from '@/models/Bitcoin.js'
-import {Ethereum} from '@/models/Ethereum.js'
-import dontIcon from '@/assets/images/icon/3-dot-icon.svg';
-import iconSafe from '@/assets/images/icon/icon-safe.svg';
-import iconWarning from '@/assets/images/icon/icon-warning.svg';
-
 import PropTypes from 'prop-types';
 import './Wallet.scss';
 
@@ -14,7 +7,6 @@ import Button from '@/components/core/controls/Button';
 import Checkbox from '@/components/core/forms/Checkbox/Checkbox';
 import Modal from '@/components/core/controls/Modal';
 import ModalDialog from '@/components/core/controls/ModalDialog';
-import createForm from '@/components/core/form/createForm';
 import { differenceWith } from 'lodash';
 
 class WalletProtect extends React.Component {
@@ -23,9 +15,10 @@ class WalletProtect extends React.Component {
     super(props);
     this.state = {
       step1_confirm: false,
-      step: 1,
+      step: this.props.step,
       arr_random: [],
-      arr_confirm: []
+      arr_confirm: [],
+      active: this.props.active
     };
   }
 
@@ -34,7 +27,8 @@ class WalletProtect extends React.Component {
 	}
 
   componentWillReceiveProps() {
-    this.setState({step1_confirm: false, step: 1, arr_confirm: []});
+    if (!this.props.active)
+      this.setState({step1_confirm: false, step: this.props.step, arr_confirm: []});
   }
 
   get showStep1() {
@@ -63,7 +57,7 @@ class WalletProtect extends React.Component {
   }
 
   get showStep2() {
-    const {wallet} = this.props;
+    const {wallet, onCopy} = this.props;
     let arr_phrase  = wallet && wallet.mnemonic ? wallet.mnemonic.split(' ') : [];
     return this.state.step == 2 ?
     (
@@ -77,7 +71,9 @@ class WalletProtect extends React.Component {
               return <div class="btn cursor-initial bg-light">{str}</div>
             })}
           </div>
+          <div onClick={onCopy} className="pass-phrase-link-copy">Copy to clipboard</div>
           <footer class="footer">
+            
             <Button block type="submit" onClick={this.doStep2}>Verify your passsphrase</Button>
           </footer>
         </div>
@@ -222,8 +218,10 @@ class WalletProtect extends React.Component {
 }
 
 WalletProtect.propTypes = {
-  wallet: PropTypes.object,
-  step: PropTypes.object
+  wallet: PropTypes.any,
+  step: PropTypes.any,
+  active: PropTypes.bool,
+  onCopy: PropTypes.func
 };
 
 const mapState = (state) => ({
