@@ -45,6 +45,7 @@ import {ExchangeHandshake} from '@/services/neuron';
 import phoneCountryCodes from '@/components/core/form/country-calling-codes.min.json';
 import {CRYPTO_CURRENCY} from "@/constants";
 import _sample from 'lodash/sample'
+import { feedBackgroundColors } from "@/components/handshakes/exchange/config";
 
 const nameFormExchangeCreate = 'exchangeCreate';
 const FormExchangeCreate = createForm({
@@ -75,11 +76,7 @@ class Component extends React.Component {
       lat: 0,
       lng: 0
     };
-    this.mainColor = _sample([
-      'linear-gradient(45deg, #F6AB3E 0%, #8137F7 100%)',
-      'linear-gradient(45deg, #FBC79A 0%, #D73E68 100%)',
-      'linear-gradient(-135deg, #38B8F2 0%, #843CF6 100%)',
-    ])
+    this.mainColor = _sample(feedBackgroundColors)
   }
 
   setAddressFromLatLng = (lat, lng) => {
