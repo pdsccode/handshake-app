@@ -40,12 +40,12 @@ class BettingFilter extends React.Component {
 
         const {matches, support, against} = nextProps;
         console.log(`${TAG} Matches:`, matches);
-        const selectedMatch = this.defaultMatch;
-        const selectedOutcome = this.defaultOutcome;
+        // const selectedMatch = this.defaultMatch;
+        // const selectedOutcome = this.defaultOutcome;
         this.setState({
             matches,
-            selectedMatch,
-            selectedOutcome,
+            //selectedMatch,
+            //selectedOutcome,
             support,
             against
         })
@@ -142,8 +142,10 @@ class BettingFilter extends React.Component {
     }
     render(){
         const {matches, selectedMatch, selectedOutcome} = this.state;
+        console.log('Selected Outcome:', selectedOutcome);
         const outcomeId = (selectedOutcome && selectedOutcome.id) ? selectedOutcome.id : null;
         const outcomeHid = (selectedOutcome && selectedOutcome.hid) ? selectedOutcome.hid : null;
+        console.log('Outcome Hid:', outcomeHid);
         const defaultMatchId = this.defaultMatch ? this.defaultMatch.id : null;
         console.log("Default Match:", defaultMatchId);
         console.log('Default Outcome:', defaultOutcome);
