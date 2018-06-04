@@ -114,6 +114,11 @@ export const API_URL = {
     UPDATE: 'handshake/update',
     DELETE: 'handshake/delete',
   },
+  COMMENT: {
+    BASE: 'https://stag-handshake.autonomous.ai/api/comment',
+    CREATE: 'comment/',
+    LIST: 'comment/list',
+  },
 };
 
 export const HANDSHAKE_STATUS = {

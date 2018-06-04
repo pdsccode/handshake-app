@@ -17,7 +17,7 @@ import {BetHandshakeHandler, SIDE} from '@/components/handshakes/betting/Feed/Be
 const TAG = "BETTING_FILTER";
 class BettingFilter extends React.Component {
     static propTypes = {
-        
+
       }
 
     static defaultProps = {
@@ -147,8 +147,8 @@ class BettingFilter extends React.Component {
         selectedMatch:null,
         selectedOutcome: null,
         };
-    
-        
+
+
       }
     componentWillReceiveProps(nextProps){
 
@@ -185,7 +185,7 @@ class BettingFilter extends React.Component {
                 const firstOutcome = outcomes[0];
                 return { id: firstOutcome.id, value: firstOutcome.name};
             }
-        } 
+        }
     }
 
     get foundMatch(){
@@ -196,7 +196,7 @@ class BettingFilter extends React.Component {
               });
         }
         return null;
-        
+
     }
 
     get foundOutcome(){
@@ -224,10 +224,10 @@ class BettingFilter extends React.Component {
                 if(outcomes){
                     return outcomes.map((item) => ({ id: item.id, value: item.name}));
                 }
-            }  
+            }
         }
-        
-        
+
+
         return [];
     }
     get bookListSupport(){
@@ -261,16 +261,16 @@ class BettingFilter extends React.Component {
         return (
             <div className="wrapperBettingFilter">
             <div className="dropDown">
-                <Dropdown placeholder="Select a match" 
+                <Dropdown placeholder="Select a match"
                 source={this.matchNames}
                 onItemSelected={(item) => this.setState({selectedMatch: item})} />
             </div>
             {selectedMatch && <div className="dropDown">
-                <Dropdown placeholder="Select a prediction" 
-                source={this.matchResults} 
+                <Dropdown placeholder="Select a prediction"
+                source={this.matchResults}
                 onItemSelected={(item) => this.setState({selectedOutcome: item})} />
             </div>}
-            
+
                 <div className="wrapperContainer">
                     <div className="item">
                     <GroupBook amountColor="#FA6B49" bookList={this.bookListSupport}/>

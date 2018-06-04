@@ -28,4 +28,7 @@ export const URL = {
 
   TRANSACTION_LIST: '/transactions',
   TRANSACTION_LIST_INDEX: '/transactions',
+
+  COMMENTS_BY_SHAKE: '/comments',
+  COMMENTS_BY_SHAKE_INDEX: '/comments',
 };

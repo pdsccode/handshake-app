@@ -82,6 +82,14 @@ const TransactionRootRouter = props => (
     {Component => <Component {...props} />}
   </DynamicImport>
 );
+const CommentRootRouter = props => (
+  <DynamicImport
+    loading={Loading}
+    load={() => import('@/components/Router/Comment')}
+  >
+    {Component => <Component {...props} />}
+  </DynamicImport>
+);
 const Page404 = props => (
   <DynamicImport
     isNotFound
@@ -237,6 +245,10 @@ class Router extends React.Component {
                     <Route
                       path={URL.TRANSACTION_LIST}
                       component={TransactionRootRouter}
+                    />
+                    <Route
+                      path={URL.COMMENTS_BY_SHAKE}
+                      component={CommentRootRouter}
                     />
                     <Route component={Page404} />
                   </Switch>
