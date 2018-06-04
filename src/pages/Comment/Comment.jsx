@@ -22,8 +22,8 @@ class Comment extends React.PureComponent {
   }
 
   componentDidMount() {
-    const { router, loadCommentList } = this.props;
-    const queryObject = qs.parse(router.location.search.slice(1));
+    const { location, loadCommentList } = this.props;
+    const queryObject = qs.parse(location.search.slice(1));
     if(queryObject.objectId && queryObject.objectType) {
       loadCommentList({
         PATH_URL: API_URL.COMMENT.LIST,
@@ -61,7 +61,10 @@ class Comment extends React.PureComponent {
                 </div>
               )
             }
-            <CreateComment onCreateCb={this.scrollToBottom} {...queryObject} />
+            <CreateComment
+              onCreateCb={this.scrollToBottom}
+              {...queryObject}
+            />
           </Col>
         </Row>
       </Grid>

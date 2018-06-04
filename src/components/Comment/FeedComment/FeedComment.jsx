@@ -15,7 +15,7 @@ class FeedComment extends React.PureComponent {
     const commentLink = `${URL.COMMENTS_BY_SHAKE_INDEX}?objectType=${objectType}&objectId=${objectId}`;
     return (
       <div className="feedComment">
-        <Link className="addAComment" to={commentLink} title="add a comment">
+        <Link className="addAComment" to={`${commentLink}&addComment=true`} title="add a comment">
           <img src={addAComment} alt="add a comment" /> <span>Add a comment</span>
         </Link>
         {
