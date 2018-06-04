@@ -182,8 +182,8 @@ class FeedBetting extends React.Component {
 
   }
   uninitItem(id){
-    const url = API_URL.CRYPTOSIGN.UNINIT_HANDSHAKE.concat(id);
-    this.props.uninitItem({PATH_URL: url, METHOD:'POST', data: params,
+    const url = API_URL.CRYPTOSIGN.UNINIT_HANDSHAKE.concat(`/${id}`);
+    this.props.uninitItem({PATH_URL: url, METHOD:'POST',
     successFn: this.uninitHandshakeSuccess,
     errorFn: this.uninitHandshakeFailed
   });
@@ -204,8 +204,8 @@ class FeedBetting extends React.Component {
   }
 
   collect(id){
-    const url = API_URL.CRYPTOSIGN.COLLECT.concat(id);
-    this.props.collect({PATH_URL: url, METHOD:'POST', data: params,
+    const url = API_URL.CRYPTOSIGN.COLLECT.concat(`/${id}`);
+    this.props.collect({PATH_URL: url, METHOD:'POST',
     successFn: this.collectSuccess,
     errorFn: this.collectFailed
   });
@@ -227,8 +227,8 @@ class FeedBetting extends React.Component {
   }
 
   refund(id){
-    const url = API_URL.CRYPTOSIGN.REFUND.concat(id);
-    this.props.refund({PATH_URL: API_URL.CRYPTOSIGN.REFUND, METHOD:'POST', data: params,
+    const url = API_URL.CRYPTOSIGN.REFUND.concat(`/${id}`);
+    this.props.refund({PATH_URL: API_URL.CRYPTOSIGN.REFUND, METHOD:'POST',
     successFn: this.refundSuccess,
     errorFn: this.refundFailed
   });
@@ -244,7 +244,10 @@ class FeedBetting extends React.Component {
     console.log('refundFailed', error);
   }
 
-  rollback(id){
+  rollback(id, offchain){
+    const params = {
+      offchain
+    }
     const url = API_URL.CRYPTOSIGN.ROLLBACK.concat(id);
     this.props.rollback({PATH_URL: url, METHOD:'POST', data: params,
     successFn: this.rollbackSuccess,
