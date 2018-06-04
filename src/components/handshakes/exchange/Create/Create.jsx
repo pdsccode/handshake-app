@@ -44,6 +44,7 @@ import {MasterWallet} from "@/models/MasterWallet";
 import {ExchangeHandshake} from '@/services/neuron';
 import phoneCountryCodes from '@/components/core/form/country-calling-codes.min.json';
 import {CRYPTO_CURRENCY} from "@/constants";
+import _sample from 'lodash/sample'
 
 const nameFormExchangeCreate = 'exchangeCreate';
 const FormExchangeCreate = createForm({
@@ -54,7 +55,8 @@ const FormExchangeCreate = createForm({
 });
 const selectorFormExchangeCreate = formValueSelector(nameFormExchangeCreate);
 
-const mainColor = '#007AFF'
+const textColor = '#ffffff'
+const btnBg = 'rgba(29,29,38,0.30)'
 const validateFee = [
   minValue(-50),
   maxValue(50),
@@ -73,6 +75,11 @@ class Component extends React.Component {
       lat: 0,
       lng: 0
     };
+    this.mainColor = _sample([
+      'linear-gradient(45deg, #F6AB3E 0%, #8137F7 100%)',
+      'linear-gradient(45deg, #FBC79A 0%, #D73E68 100%)',
+      'linear-gradient(-135deg, #38B8F2 0%, #843CF6 100%)',
+    ])
   }
 
   setAddressFromLatLng = (lat, lng) => {
@@ -383,7 +390,7 @@ async componentDidMount() {
     return (
       <div>
         <FormExchangeCreate onSubmit={this.handleSubmit}>
-          <Feed className="feed p-2 my-2" background={mainColor}>
+          <Feed className="feed p-2 my-2" background={this.mainColor}>
             <div style={{ color: 'white' }}>
               <div className="d-flex mb-2">
                 <label className="col-form-label mr-auto" style={{ width: '190px' }}>I want to</label>
@@ -392,7 +399,7 @@ async componentDidMount() {
                     name="type"
                     component={fieldRadioButton}
                     list={EXCHANGE_ACTION_LIST}
-                    color={mainColor}
+                    color={textColor}
                     validate={[required]}
                     onChange={this.onTypeChange}
                   />
@@ -405,7 +412,7 @@ async componentDidMount() {
                     name="currency"
                     component={fieldRadioButton}
                     list={CRYPTO_CURRENCY_LIST}
-                    color={mainColor}
+                    color={textColor}
                     validate={[required]}
                     onChange={this.onCurrencyChange}
                   />
@@ -423,7 +430,7 @@ async componentDidMount() {
                   />
                 </div>
               </div>
-              <div className="d-flex">
+              <div className="d-flex mt-2">
                 <label className="col-form-label mr-auto" style={{ width: '190px' }}>Price</label>
                 <span className="w-100 col-form-label">{new BigNumber(offerPrice ? offerPrice.price : 0).toFormat(PRICE_DECIMAL)} {ipInfo.currency}/{currency}</span>
               </div>
@@ -434,30 +441,31 @@ async componentDidMount() {
                     name="sellPriceType"
                     component={fieldRadioButton}
                     list={SELL_PRICE_TYPE}
-                    color={mainColor}
+                    color={textColor}
                     validate={[required]}
                     onChange={this.onSellPriceTypeChange}
                   />
                 </div>
               </div>
-              <div className="d-flex mt-2">
+              <div className="d-flex mt-3">
                 <label className="col-form-label mr-auto" style={{ width: '190px' }}>Customize price</label>
                 <div className='input-group align-items-center'>
                   <Field
                     name="customizePrice"
                     // className='form-control-custom form-control-custom-ex w-100'
                     component={fieldNumericInput}
+                    btnBg={btnBg}
                     suffix={'%'}
-                    color={mainColor}
+                    color={textColor}
                     validate={validateFee}
                   />
                 </div>
               </div>
-              <div className="d-flex">
+              <div className="d-flex mt-2">
                 <label className="col-form-label mr-auto" style={{ width: '190px' }}>Total</label>
                 <span className="w-100 col-form-label">{new BigNumber(totalAmount).toFormat(PRICE_DECIMAL)} {ipInfo.currency}</span>
               </div>
-              <div className="d-flex">
+              <div className="d-flex mt-2">
                 <label className="col-form-label mr-auto" style={{ width: '190px' }}>Phone</label>
                 <div className="input-group w-100">
                   <Field
