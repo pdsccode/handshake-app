@@ -35,7 +35,7 @@ import {
   shakeOffer,
   withdrawShakedOffer
 } from "@/reducers/exchange/action";
-import getSymbolFromCurrency from 'currency-symbol-map';
+// import getSymbolFromCurrency from 'currency-symbol-map';
 import Offer from "@/models/Offer";
 import {MasterWallet} from "@/models/MasterWallet";
 import {getHandshakeUserType, getOfferPrice} from "@/services/offer-util";
@@ -683,7 +683,7 @@ class FeedExchange extends React.PureComponent {
               type: offer.type === EXCHANGE_ACTION.BUY ? EXCHANGE_ACTION_NAME[EXCHANGE_ACTION.SELL] : EXCHANGE_ACTION_NAME[EXCHANGE_ACTION.BUY],
               amount: new BigNumber(offer.amount).toFormat(6),
               currency: offer.currency,
-              currency_symbol: getSymbolFromCurrency(offer.fiatCurrency),
+              currency_symbol: offer.fiatCurrency,
               total: new BigNumber(fiatAmount).toFormat(2),
             });
 
@@ -961,7 +961,7 @@ class FeedExchange extends React.PureComponent {
           offerType: EXCHANGE_ACTION_NAME[offer.type],
           amount: new BigNumber(offer.amount).toFormat(AMOUNT_DECIMAL),
           currency: offer.currency,
-          currency_symbol: getSymbolFromCurrency(offer.fiatCurrency),
+          currency_symbol: offer.fiatCurrency,
           total: new BigNumber(fiatAmount).toFormat(PRICE_DECIMAL),
           payment_method: EXCHANGE_METHOD_PAYMENT[EXCHANGE_FEED_TYPE.EXCHANGE]
         });
@@ -976,7 +976,7 @@ class FeedExchange extends React.PureComponent {
           offerType: EXCHANGE_ACTION_NAME[offer.type],
           amount: new BigNumber(offer.amount).toFormat(AMOUNT_DECIMAL),
           currency: offer.currency,
-          currency_symbol: getSymbolFromCurrency(offer.fiatCurrency),
+          currency_symbol: offer.fiatCurrency,
           total: new BigNumber(fiatAmount).toFormat(PRICE_DECIMAL),
           payment_method: EXCHANGE_METHOD_PAYMENT[EXCHANGE_FEED_TYPE.INSTANT]
         });
