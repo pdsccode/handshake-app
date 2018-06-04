@@ -171,12 +171,14 @@ get matchResults(){
     //const {toAddress, isPublic, industryId} = this.props;
 
     //const fromAddress = "0x54CD16578564b9952d645E92b9fa254f1feffee9";
-    const balance = await BetHandshakeHandler.getBalance();
-    console.log('Event Bet:', dict.event_bet);
+    let balance = await BetHandshakeHandler.getBalance();
+    balance = parseFloat(balance);
+    const eventBet = parseFloat(dict.event_bet);
+    console.log('Event Bet:', eventBet);
 
     const fromAddress = address;
 
-    if(selectedMatch && selectedOutcome && dict.event_bet > 0 && dict.event_bet <= balance){
+    if(selectedMatch && selectedOutcome && eventBet > 0 && eventBet <= balance){
       this.initHandshake(extraParams, fromAddress);
 
     }else {
