@@ -1,4 +1,5 @@
 @import './src/styles/style';
+
 $gray: #ededed;
 .dropdown-custom {
   width: 100%;
@@ -47,15 +48,20 @@ $gray: #ededed;
       color: #16181b;
       background-color: #f8f9fa;
     }
+    li {
+      &:last-child {
+        span {
+          border-bottom: none;
+        }
+      }
+    }
     .dropdown-custom-item {
+      display: block;
       margin: rem-calc(0 21px);
       padding: 10px 0;
       font-size: 1rem;
       color: #000000;
       border-bottom: 1px solid $gray;
-      &:last-child {
-        border-bottom: none;
-      }
       &:hover {
         color: #16181b;
         background-color: #f8f9fa;
