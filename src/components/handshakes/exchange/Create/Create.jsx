@@ -175,7 +175,7 @@ async componentDidMount() {
 
     const wallet = MasterWallet.getWalletDefault(values.currency);
     const balance = await wallet.getBalance();
-    const fee = await wallet.getFee();
+    const fee = await wallet.getFee(4, true);
 
     if ((values.currency === CRYPTO_CURRENCY.ETH || (values.type === EXCHANGE_ACTION.SELL && values.currency === CRYPTO_CURRENCY.BTC))
       && balance < values.amount + fee) {
