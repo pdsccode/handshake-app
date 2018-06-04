@@ -101,10 +101,10 @@ class Wallet extends React.Component {
       callBack: () => {}
     });
   }
-  showToast(mst){  
+  showToast(mst){
     this.showAlert(mst, 'primary', 2000 );
   }
-  showError(mst){  
+  showError(mst){
     this.showAlert(mst, 'danger', 3000 );
   }
   showSuccess(mst){
@@ -214,7 +214,7 @@ class Wallet extends React.Component {
     let obj = [];
       obj.push({
         title: 'Send',
-        handler: () => {          
+        handler: () => {
           this.setState({isRestoreLoading: false, walletSelected: wallet, inputAddressAmountValue: '', inputSendAmountValue: ''});
           this.toggleBottomSheet();
           this.modalSendRef.open();
@@ -320,12 +320,7 @@ class Wallet extends React.Component {
           return;
         }
       }
-<<<<<<< HEAD
-
-    //alert('Invalid wallets');
-=======
     this.showError("Invalid wallets");
->>>>>>> 913372f701e2ab107ad6cb5195e6efed0691b967
     this.setState({erroValueBackup: true, isRestoreLoading: false});
   }
   updateRestoreWalletValue = (evt) => {
@@ -343,15 +338,15 @@ class Wallet extends React.Component {
       this.setState({isRestoreLoading: true});
       this.state.walletSelected.transfer(this.state.inputAddressAmountValue, this.state.inputSendAmountValue).then(success => {
           console.log(success);
-          this.setState({isRestoreLoading: false});            
+          this.setState({isRestoreLoading: false});
           if (success.hasOwnProperty('status')){
             if (success.status == 1){
               this.showSuccess(success.message);
-              this.modalSendRef.close();              
+              this.modalSendRef.close();
             }
             else{
               this.showError(success.message);
-            }            
+            }
           }
       });
     }
@@ -551,12 +546,8 @@ class Wallet extends React.Component {
           />
         : ""}
       </Modal>
-<<<<<<< HEAD
     )
 
-=======
-    )    
->>>>>>> 913372f701e2ab107ad6cb5195e6efed0691b967
   }
 
   render() {
