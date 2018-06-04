@@ -27,8 +27,9 @@ import ReactBottomsheet from 'react-bottomsheet';
 // var ReactBottomsheet = require('react-bottomsheet');
 // var Blob = require('./Blob.js');
 import { setHeaderRight } from '@/reducers/app/action';
-import QrReader from 'react-qr-reader'
-import {showAlert} from '@/reducers/app/action';
+import QrReader from 'react-qr-reader';
+import { showAlert } from '@/reducers/app/action';
+import { showLoading, hideLoading } from '@/reducers/app/action';
 
 // import filesaver from 'file-saver';
 
@@ -113,6 +114,12 @@ class Wallet extends React.Component {
   }
   showSuccess(mst){
     this.showAlert(mst, 'success', 4000, <img className="iconSuccessChecked" src={iconSuccessChecked} />);
+  }
+  showLoading(status){
+    this.props.showLoading({message: '',});
+  }
+  hideLoading(){
+   this.props.hideLoading();
   }
 
   headerRight() {
@@ -741,6 +748,8 @@ const mapState = (state) => ({
 const mapDispatch = ({
   setHeaderRight,
   showAlert,
+  showLoading,
+  hideLoading
 });
 
 
