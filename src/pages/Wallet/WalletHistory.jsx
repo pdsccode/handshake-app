@@ -25,20 +25,18 @@ class WalletHistory extends React.Component {
     };
   }
 
-	async componentDidMount() {
-
-  }
-
-  componentWillReceiveProps(){
-    this.setState({transactions: this.props.transactions});
+  componentDidUpdate(){
+    const {transactions} = this.props
+    if (transactions != this.state.transactions){        
+        this.setState({transactions: transactions});
+    }
   }
 
   get list_transaction() {
 
     const wallet = this.props.wallet;
-
-    //if(transactions){
-      console.log("list_transaction", this.state.transactions);
+    
+      console.log("list_transaction", this.props.transactions);
       return this.state.transactions.map((tran) => {
         let cssLabel = `label-${tran.is_sent ? "sent" : "received"}`,
         cssValue = `value-${tran.is_sent ? "sent" : "received"}`;
@@ -57,23 +55,22 @@ class WalletHistory extends React.Component {
 
         </div>)
       });
-
   }
 
-	render(){
-    const {wallet} = this.props;
-
+	render(){    
 		return (
       <div className="historywallet-wrapper">
-        {this.list_transaction}
+        {
+          this.list_transaction
+        }
       </div>
 		);
 	}
 }
 
 WalletHistory.propTypes = {
-  wallet: PropTypes.object,
-  transactions: PropTypes.array
+  wallet: PropTypes.any,
+  transactions: PropTypes.any
 };
 
 const mapState = (state) => ({

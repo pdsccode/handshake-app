@@ -91,8 +91,7 @@ class Wallet extends React.Component {
       walletsData: false,
       isNewCCOpen: false,
       stepProtected: 1,
-      activeProtected: false,
-      isWalletHistory: false,
+      activeProtected: false,      
       transactions: [],
     };
     this.props.setHeaderRight(this.headerRight());
@@ -255,12 +254,13 @@ class Wallet extends React.Component {
       obj.push({
         title: 'Transaction history',
         handler: () => {
+          this.setState({walletSelected: wallet, transactions: []});            
+          this.toggleBottomSheet();
           this.modalHistoryRef.open();
-          let dataHistory = wallet.getTransactionHistory().then(data => {
-            console.log("transactions wallet 1", data);
-            this.setState({walletSelected: wallet, isWalletHistory: true, transactions: data});
-            this.toggleBottomSheet();
-            console.log("transactions wallet 2", this.state.transactions);
+          this.showLoading();                    
+          let dataHistory = wallet.getTransactionHistory().then(data => {            
+            this.setState({walletSelected: wallet, transactions: data});                        
+            this.hideLoading();
           });
         }
       })
