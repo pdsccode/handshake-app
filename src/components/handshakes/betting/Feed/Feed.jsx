@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 // services, constants
-import  { BetHandshakeHandler, SIDE, BETTING_STATUS_LABEL} from './BetHandshakeHandler.js';
+import  { BetHandshakeHandler, SIDE, BETTING_STATUS_LABEL, ROLE} from './BetHandshakeHandler.js';
 import momment from 'moment';
 import {MasterWallet} from '@/models/MasterWallet';
 
@@ -65,19 +65,35 @@ class FeedBetting extends React.Component {
     return false;
   }
 
+  isShakeUser(shakeIds, userId){
+    console.log('User Id:', userId);
+
+    if(shakeIds){
+
+      if(shakeIds.indexOf(userId) > -1){
+        return true;
+
+      }
+
+    }
+  }
+
   componentDidMount() {
-    const {status, side, result} = this.props;
+    const {status, side, result, shakeUserIds} = this.props;
 
     console.log('Props:', this.props);
     console.log('Status:', status);
-    //const hardCodeStatus = 2;
-    const role = side;
+    const profile = local.get(APP.AUTH_PROFILE);
+    const isUserShake = this.isShakeUser(shakeUserIds, profile.id);
+    const role = isUserShake ? ROLE.SHAKER : ROLE.INITER;
     //const blockchainStatusHardcode = 0;
     const isMatch = this.isMatch;
     //const isMatch = true;
+    //const hardCodeStatus = 3;
+    //const hardCodeResult = 1;
     console.log('Is Match:', isMatch);
 
-    const statusResult = BetHandshakeHandler.getStatusLabel(status, result, role, isMatch);
+    const statusResult = BetHandshakeHandler.getStatusLabel(status, result, role,side, isMatch);
     const {title, isAction} = statusResult;
     this.setState({
       actionTitle: title,
@@ -121,6 +137,7 @@ class FeedBetting extends React.Component {
      * side = SIDE.SUPPORT // SIDE.AGAINST ;ORGRANCE
      *
      */
+    const {amount, odds} = this.props;
     const {event_name, event_predict, event_odds, event_bet,event_date, balance} = this.extraData;
     const { commentCount, id, type } = this.props;
 
@@ -137,8 +154,8 @@ class FeedBetting extends React.Component {
               <p className="eventInfo">{event_predict}</p>
             </div>
             <div className="bottomWrapper">
-              <span className="odds" >1:{event_odds}</span>
-              <span className="content"  >{event_bet} ETH</span>
+              <span className="odds" >1:{odds}</span>
+              <span className="content"  >{amount} ETH</span>
             </div>
             {this.renderStatus()}
         </Feed>
@@ -220,9 +237,10 @@ class FeedBetting extends React.Component {
 
   collectSuccess = async (successData)=>{
     console.log('collectSuccess', successData);
-    const {status, data} = successData
-    if(status && data){
-      const {hid, offchain} = data;
+    const {status} = successData
+    if(status){
+      const {hid, id} = this.props;
+      const offchain = id;
 
       bettinghandshake.withdraw(hid, offchain);
 
@@ -243,8 +261,11 @@ class FeedBetting extends React.Component {
 
   refundSuccess = async (successData)=>{
     console.log('refundSuccess', successData);
-    const {status, data} = successData
-    if(status && data){
+    const {status} = successData
+    if(status){
+      const {hid, id} = this.props;
+      const offchain = id;
+      bettinghandshake.refund(hid, offchain);
     }
   }
   refundFailed = (error) => {

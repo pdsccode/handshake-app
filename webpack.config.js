@@ -131,10 +131,6 @@ const production = {
       filename: 'css/[name].css',
       chunkFilename: 'css/[hash].[name].css',
     }),
-    new OfflinePlugin({
-      publicPath: process.env.PUBLIC_URL,
-      appShell: '/index.html',
-    }),
   ],
   performance: { hints: false },
 };

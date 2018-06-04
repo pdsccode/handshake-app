@@ -98,6 +98,25 @@ export default class BettingHandshake extends BaseHandshake {
       toAddress: this.contractAddress,
     });
   };
+  // Refund if ater 4 days no one withdraw
+  refund = (hid, offchain) => {
+    console.log(
+      'eth-contract-service cancel',
+      address,
+      privateKey,
+      hid,
+      offchain,
+    );
+
+    const bytesOffchain = this.web3.utils.fromAscii(offchain);
+    const payloadData = this.handshakeInstance.methods
+      .refund(hid, bytesOffchain)
+      .encodeABI();
+    return this.neuron.makeRawTransaction(address, privateKey, payloadData, {
+      //amount: stake,
+      toAddress: this.contractAddress,
+    });
+  };
   /*
   closeBet = (address, privateKey, hid, offchain) => {
     console.log(
