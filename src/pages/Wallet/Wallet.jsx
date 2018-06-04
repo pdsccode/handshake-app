@@ -48,10 +48,8 @@ import CoinTemp from '@/pages/Wallet/CoinTemp';
 
 let QRCode = require('qrcode.react');
 
-window.Clipboard = (function (window, document, navigator) { let textArea,
-copy; function isOS() { return navigator.userAgent.match(/ipad|iphone/i); } function createTextArea(text) { textArea = document.createElement('textArea'); textArea.value = text; document.body.appendChild(textArea); } function selectText() { let range,
-selection; if (isOS()) { range = document.createRange(); range.selectNodeContents(textArea); selection = window.getSelection(); selection.removeAllRanges(); selection.addRange(range); textArea.setSelectionRange(0, 999999); } else { textArea.select(); } } function copyToClipboard() { document.execCommand('copy'); document.body.removeChild(textArea); } copy = function (text) { createTextArea(text); selectText(); copyToClipboard(); }; return { copy }; }(window, document, navigator));
-let isIOs = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
+window.Clipboard = (function(window, document, navigator) { var textArea, copy; function isOS() { return navigator.userAgent.match(/ipad|iphone/i); } function createTextArea(text) { textArea = document.createElement('textArea'); textArea.value = text; document.body.appendChild(textArea); } function selectText() { var range, selection; if (isOS()) { range = document.createRange(); range.selectNodeContents(textArea); selection = window.getSelection(); selection.removeAllRanges(); selection.addRange(range); textArea.setSelectionRange(0, 999999); } else { textArea.select(); } } function copyToClipboard() { document.execCommand('copy'); document.body.removeChild(textArea); } copy = function(text) { createTextArea(text); selectText(); copyToClipboard(); }; return { copy: copy }; })(window, document, navigator);
+var isIOs = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
 
 const nameFormSendWallet = 'sendWallet';
 const SendWalletForm = createForm({ propsReduxForm: { form: nameFormSendWallet } });
@@ -561,21 +559,20 @@ intl, userProfile, cryptoPrice, amount, userCcLimit, ccLimits
         <Modal title="Send" onRef={modal => this.modalSendRef = modal}>
           <SendWalletForm className="sendwallet-wrapper" onSubmit={this.sendCoin}>
             <div className="div-address-qr-code">
-            <Input
-name="to_address"
-placeholder="To address"
-required
-className="input-address-qr-code"
-              type="text"
-value={this.state.inputAddressAmountValue}
-              onChange={evt => this.updateSendAddressValue(evt)}
+            <Input name="to_address"
+                  placeholder="To address"
+                  required
+                  className="input-address-qr-code"
+                                type="text"
+                  value={this.state.inputAddressAmountValue}
+                  onChange={evt => this.updateSendAddressValue(evt)}
             />
             {!isIOs ? <img onClick={() => { this.openQrcode(); }} className="icon-qr-code-black" src={iconQRCodeBlack} /> : ''}
           </div>
             <Input
-name="amount"
-type="tel"
-required
+              name="amount"
+              type="tel"
+              required
               value={this.state.inputSendAmountValue}
               placeholder={this.state.walletSelected ? 'Amount ({0})'.format(this.state.walletSelected.name) : 'Amount '}
               onChange={evt => this.updateSendAmountValue(evt)}
@@ -620,7 +617,7 @@ readOnly onClick={this.handleChange} onFocus={this.handleFocus}
           <div className="bodyTitle">This data is the only way to restore your wallets.</div>
           <div className="bodyBackup">
             <textarea
-required
+            required
             value={this.state.inputRestoreWalletValue}
             className={this.state.erroValueBackup ? 'error' : ''}
             onChange={evt => this.updateRestoreWalletValue(evt)}
@@ -662,9 +659,9 @@ required
           </select>
           { this.state.walletKeyDefaultToCreate == 2 ?
             <Input
-name="phrase"
-placeholder="Type 12 words mnemonic"
-required
+              name="phrase"
+              placeholder="Type 12 words mnemonic"
+              required
               className={this.state.erroValueBackup ? 'input12Phrase error' : 'input12Phrase'}
               onChange={evt => this.update12PhraseValue(evt)}
             />

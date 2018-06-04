@@ -11,8 +11,7 @@ const Wallet = props => (<DynamicImport loading={Loading} load={() => import('@/
 const Page404 = props => (<DynamicImport isNotFound loading={Loading} load={() => import('@/pages/Error/Page404')}>{Component => <Component {...props} />}</DynamicImport>);
 
 const routerMap = [
-  { path: URL.HANDSHAKE_WALLET_INDEX, component: Wallet },
-  { path: URL.HANDSHAKE_WALLET_HISTORY, component: WalletHistory },
+  { path: URL.HANDSHAKE_WALLET_INDEX, component: Wallet },  
 ];
 
 class WalletRouter extends React.Component {
