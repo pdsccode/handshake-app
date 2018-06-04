@@ -91,7 +91,7 @@ class Neuron {
       const estimateGas = balance.div(gasPrice);
       const limitedGas = 3000000;
 
-      const estimatedGas = Math.min(estimateGas, limitedGas);
+      const estimatedGas = await BN.min(estimateGas, limitedGas);
       const chainId = await web3.eth.net.getId();
       console.log('gasPrice->', parseInt(gasPrice));
       console.log('estimatedGas->', parseInt(estimatedGas));
