@@ -64,7 +64,11 @@ export const API_URL = {
     INIT_HANDSHAKE: 'cryptosign/handshake/init',
     SHAKE: 'cryptosign/handshake/shake',
     LOAD_MATCHES: 'cryptosign/match',
-    LOAD_HANDSHAKES: 'cryptosign/handshake'
+    LOAD_HANDSHAKES: 'cryptosign/handshake',
+    UNINIT_HANDSHAKE: 'cryptosign/handshake/uninit',
+    COLLECT: 'cryptosign/handshake/collect',
+    ROLLBACK: 'cryptosign/handshake/rollback',
+    REFUND: 'cryptosign/handshake/refund'
   },
   DISCOVER: {
     BASE: 'handshake/discover',

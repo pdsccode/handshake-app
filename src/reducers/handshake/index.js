@@ -39,6 +39,71 @@ const handshakeReducter = (state = {
             ...state,
             isFetching: false,
         };
+        case ACTIONS.UNINIT:
+        return {
+            ...state,
+            isFetching: false,
+        };
+        case `${ACTIONS.UNINIT}_SUCCESS`:
+        return {
+            ...state,
+            isFetching: false,
+        };
+        case `${ACTIONS.UNINIT}_FAILED`:
+        return {
+            ...state,
+            isFetching: false,
+        };
+        case ACTIONS.COLLECT:
+        return {
+            ...state,
+            isFetching: false,
+        };
+        case `${ACTIONS.COLLECT}_SUCCESS`:
+        return {
+            ...state,
+            isFetching: false,
+        };
+        case `${ACTIONS.COLLECT}_FAILED`:
+        return {
+            ...state,
+            isFetching: false,
+        };
+        case `${ACTIONS.COLLECT}_FAILED`:
+        return {
+            ...state,
+            isFetching: false,
+        };
+        case ACTIONS.REFUND:
+        return {
+            ...state,
+            isFetching: false,
+        };
+        case `${ACTIONS.REFUND}_SUCCESS`:
+        return {
+            ...state,
+            isFetching: false,
+        };
+        case `${ACTIONS.REFUND}_FAILED`:
+        return {
+            ...state,
+            isFetching: false,
+        };
+        case ACTIONS.ROLLBACK:
+        return {
+            ...state,
+            isFetching: false,
+        };
+        case `${ACTIONS.ROLLBACK}_SUCCESS`:
+        return {
+            ...state,
+            isFetching: false,
+        };
+        case `${ACTIONS.ROLLBACK}_FAILED`:
+        return {
+            ...state,
+            isFetching: false,
+        };
         default:
         return state;
     }
