@@ -375,8 +375,7 @@ async componentDidMount() {
   // }
 
   render() {
-    const { totalAmount, type, sellPriceType, offerPrice, currency } = this.props;
-
+    const { totalAmount, type, sellPriceType, offerPrice, currency, ipInfo } = this.props;
     const modalContent = this.state.modalContent;
 
     return (
@@ -424,7 +423,7 @@ async componentDidMount() {
               </div>
               <div className="d-flex">
                 <label className="col-form-label mr-auto" style={{ width: '190px' }}>Price</label>
-                <span className="w-100 col-form-label">{new BigNumber(offerPrice ? offerPrice.price : 0).toFormat(PRICE_DECIMAL)} {FIAT_CURRENCY}</span>
+                <span className="w-100 col-form-label">{new BigNumber(offerPrice ? offerPrice.price : 0).toFormat(PRICE_DECIMAL)} {ipInfo.currency}/{currency}</span>
               </div>
               <div className="d-flex mt-2">
                 {/*<label className="col-form-label mr-auto" style={{ width: '190px' }} />*/}
@@ -454,7 +453,7 @@ async componentDidMount() {
               </div>
               <div className="d-flex">
                 <label className="col-form-label mr-auto" style={{ width: '190px' }}>Total</label>
-                <span className="w-100 col-form-label">{new BigNumber(totalAmount).toFormat(PRICE_DECIMAL)} {FIAT_CURRENCY}</span>
+                <span className="w-100 col-form-label">{new BigNumber(totalAmount).toFormat(PRICE_DECIMAL)} {ipInfo.currency}</span>
               </div>
               <div className="d-flex">
                 <label className="col-form-label mr-auto" style={{ width: '190px' }}>Phone</label>

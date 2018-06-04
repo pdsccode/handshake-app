@@ -1,3 +1,5 @@
+import { BASE_API } from '@/config';
+
 export const APP = {
   HEADER_DEFAULT: 'Handshake',
   // store
@@ -78,10 +80,15 @@ export const SELL_PRICE_TYPE_DEFAULT = 'fix';
 // path
 export const API_URL = {
   CRYPTOSIGN: {
-    BASE: 'https://stag-handshake.autonomous.ai/api/cryptosign',
+    BASE: 'cryptosign',
     INIT_HANDSHAKE: 'cryptosign/handshake/init',
     SHAKE: 'cryptosign/handshake/shake',
     LOAD_MATCHES: 'cryptosign/match',
+    LOAD_HANDSHAKES: 'cryptosign/handshake',
+    UNINIT_HANDSHAKE: 'cryptosign/handshake/uninit',
+    COLLECT: 'cryptosign/handshake/collect',
+    ROLLBACK: 'cryptosign/handshake/rollback',
+    REFUND: 'cryptosign/handshake/refund'
   },
   DISCOVER: {
     BASE: 'handshake/discover',

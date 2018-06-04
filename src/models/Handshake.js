@@ -1,3 +1,5 @@
+const handleListPayload = payload => payload.map(handshake => Handshake.handshake(handshake));
+
 class Handshake {
   static handshake(data) {
     return {
@@ -22,6 +24,10 @@ class Handshake {
       side: data.side || '',
       remainingAmount: data.remaining_amount || '',
       location: data.location,
+      result: data.result || '',
+      shakers: data.shakers,
+      amount: data.amount || '',
+      winValue: data.win_value || '',
     };
   }
 }

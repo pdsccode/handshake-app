@@ -10,8 +10,8 @@
     display: flex;
     flex-wrap: wrap;
     width: 100%;
-    margin-top: rem-calc(20px);
-    //margin-bottom: rem-calc(20px);
+    //margin-top: rem-calc(20px);
+    margin-bottom: rem-calc(20px);
     //align-items: center;
     .btn-block + .btn-block {
       margin-top: 0;
@@ -36,13 +36,16 @@
     letter-spacing: 0;
     padding: 10px 11px;
   }
+  .amount {
+    margin-bottom: -35px;
+  }
   .amount + .cryptoCurrency {
     font-size: rem-calc(12px);
     font-weight: $medium;
     color: #FFFFFF;
     letter-spacing: 0;
     position: relative;
-    top: -26px;
+    top: 5px;
     left: 80%;
   }
   .input[readOnly] {
