@@ -46,6 +46,27 @@ const meReducter = (state = {
         ...state,
         isFetching: false,
       };
+    case ACTIONS.FIREBASE_DATA_CHANGE: {
+      console.log('ACTIONS.FIREBASE_DATA_CHANGE', action);
+
+      const listOfferStatus = action.payload.data;
+      let myList = state.list;
+      console.log('myList old', myList);
+      for (const offer of listOfferStatus) {
+          for (let handshake of myList) {
+          if (handshake.id.includes(offer.id)) {
+            handshake.status = offer.status;
+            break;
+          }
+        }
+      }
+
+      console.log('myList', myList);
+      return {
+        ...state,
+        list: myList,
+      };
+    }
 
     default:
       return state;
