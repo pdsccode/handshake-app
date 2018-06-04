@@ -581,7 +581,7 @@ class Wallet extends React.Component {
         {/* ModalDialog for confirm remove wallet */}
         <ModalDialog title="Confirmation" onRef={modal => this.modalBetRef = modal}>
           <div><span>Are you sure to want to remove this wallet?</span></div>
-          <div class='bodyConfirm'>
+          <div className='bodyConfirm'>
           <Button className="left" cssType="danger" onClick={this.removeWallet} >Yes</Button>
             <Button className="right" cssType="secondary" onClick={() => { this.modalBetRef.close(); }}>Cancel</Button>
           </div>
@@ -625,7 +625,7 @@ class Wallet extends React.Component {
         <Modal title="Backup wallets" onRef={modal => this.modalBackupRef = modal}>
           <div className="bodyTitle">This data is the only way to restore your wallets. Save them somewhere safe and secret</div>
           <div className='bodyBackup'>
-          <textarea readonly onClick={ this.handleChange } onFocus={ this.handleFocus }
+          <textarea readOnly onClick={ this.handleChange } onFocus={ this.handleFocus }
            value={ this.state.walletsData ? JSON.stringify(this.state.walletsData) : ''}/>
           <Button className="button" cssType="danger" onClick={() => {Clipboard.copy(JSON.stringify(this.state.walletsData)); this.modalBackupRef.close(); this.showToast('Copied to clipboard'); }} >Copy it somewhere safe</Button>
           </div>
