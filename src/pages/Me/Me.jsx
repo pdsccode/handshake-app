@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 // action, mock
-import { loadMyHandshakeList } from '@/reducers/me/action';
+import { fireBaseDataChange, loadMyHandshakeList } from '@/reducers/me/action';
 import { API_URL, HANDSHAKE_ID } from '@/constants';
 import { URL } from '@/config';
 // components
@@ -33,6 +33,13 @@ class Me extends React.Component {
   componentDidMount() {
     this.getListOfferPrice();
     this.loadMyHandshakeList();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (JSON.stringify(nextProps.firebaseUser) !== JSON.stringify(this.props.firebaseUser) &&
+      JSON.stringify(nextProps.firebaseUser.offers) !== JSON.stringify(nextProps.firebaseUser.offers)) {
+      this.props.fireBaseDataChange(nextProps.firebaseUser.offers);
+    }
   }
 
   getListOfferPrice = () => {
@@ -103,11 +110,13 @@ Me.propTypes = {
 const mapState = state => ({
   me: state.me,
   app: state.app,
+  firebaseUser: state.firebase.data,
 });
 
 const mapDispatch = ({
   loadMyHandshakeList,
   getListOfferPrice,
+  fireBaseDataChange,
 });
 
 export default connect(mapState, mapDispatch)(Me);
