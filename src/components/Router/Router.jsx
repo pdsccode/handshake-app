@@ -23,6 +23,7 @@ import axios from 'axios';
 import { setIpInfo } from '@/reducers/app/action';
 import { getUserProfile } from '@/reducers/exchange/action';
 import { MasterWallet } from '@/models/MasterWallet';
+import { createMasterWallets } from '@/reducers/wallet/action';
 
 addLocaleData([...en, ...fr]);
 
@@ -102,6 +103,7 @@ const Page404 = props => (
 
 class Router extends React.Component {
   static propTypes = {
+    app: PropTypes.object.isRequired,
     signUp: PropTypes.func.isRequired,
     fetchProfile: PropTypes.func.isRequired,
     auth: PropTypes.object.isRequired,
@@ -126,105 +128,108 @@ class Router extends React.Component {
   constructor(props) {
     super(props);
 
+    // State
     this.state = {
       currentLocale: 'en',
+      isLoading: true,
       isLogged: this.props.auth.isLogged,
       profile: this.props.auth.profile,
       profileUpdatedAt: this.props.auth.profileUpdatedAt,
+      loadingText: 'Loading application',
     };
 
+    this.authSuccess = ::this.authSuccess;
+    this.notification = ::this.notification;
+  }
+
+  async componentDidMount() {
     const token = local.get(APP.AUTH_TOKEN);
 
-    // AUTH
+    // auth
     if (!token) {
       this.props.signUp({
         PATH_URL: 'user/sign-up',
         METHOD: 'POST',
-        successFn: () => {
-          this.props.fetchProfile({ PATH_URL: 'user/profile' });
-          this.props.getUserProfile({ BASE_URL: API_URL.EXCHANGE.BASE, PATH_URL: API_URL.EXCHANGE.GET_USER_PROFILE });
+        successFn: async () => {
+          await this.authSuccess();
         },
       });
     } else {
-      this.props.fetchProfile({ PATH_URL: 'user/profile' });
-      this.props.getUserProfile({ BASE_URL: API_URL.EXCHANGE.BASE, PATH_URL: API_URL.EXCHANGE.GET_USER_PROFILE });
+      await this.authSuccess();
     }
 
-    try {
-      const messaging = this.props.firebase.messaging();
-      messaging
-        .requestPermission()
-        .then(() => messaging.getToken())
-        .then((notificationToken) => {
-          this.props.authUpdate({
-            PATH_URL: 'user/profile',
-            data: { fcm_token: notificationToken },
-            METHOD: 'POST',
-            headers: { 'Content-Type': '' },
-          });
-        });
-    } catch (e) {
-      console.log(e);
-    }
+    this.notification();
+  }
 
+  componentWillUnmount() {
+    this.props.firebase.unWatchEvent('value', `${FIREBASE_PATH.USERS}/${String(this.state.profile.id)}`);
+  }
 
-    const ipInfo = local.get(APP.IP_INFO);
-    if (!ipInfo) {
+  authSuccess() {
+    // basic profile
+    this.props.fetchProfile({ PATH_URL: 'user/profile' });
+
+    // exchange profile
+    this.props.getUserProfile({
+      BASE_URL: API_URL.EXCHANGE.BASE,
+      PATH_URL: API_URL.EXCHANGE.GET_USER_PROFILE,
+    });
+    if (!this.props.app.ipInfo) {
       axios.get(API_URL.EXCHANGE.IP_DOMAIN, {
         params: {
           auth: API_URL.EXCHANGE.IP_KEY,
         },
       }).then((response) => {
-        // console.log('response', response.data);
         this.props.setIpInfo(response.data);
         local.save(APP.IP_INFO, response.data);
       });
+    }
+    // wallet handle
+    let listWallet = MasterWallet.getMasterWallet();
+
+    if (listWallet === false) {
+      this.setState({ loadingText: 'Creating your local wallets' });
+      listWallet = createMasterWallets().then(() => {
+        this.setState({ isLoading: false, loadingText: '' });
+      });
     } else {
-      this.props.setIpInfo(ipInfo);
-    }
-
-    this.getIpInfo();
-    this.timeOutInterval = setInterval(() => {
-      this.getIpInfo();
-    }, 30 * 60 * 1000); //30'
-  }
-
-  getIpInfo = () => {
-    axios.get(API_URL.EXCHANGE.IP_DOMAIN, {
-      params: {
-        auth: API_URL.EXCHANGE.IP_KEY,
-      },
-    }).then((response) => {
-      // console.log('response', response.data);
-      this.props.setIpInfo(response.data);
-      local.save(APP.IP_INFO, response.data);
-    });
-  }
-
-  componentWillUnmount() {
-    this.props.firebase.unWatchEvent('value', `${FIREBASE_PATH.USERS}/${String(this.state.profile.id)}`);
-
-    if (this.timeOutInterval) {
-      clearInterval(this.timeOutInterval);
+      this.setState({ isLoading: false });
     }
   }
 
-  createMasterWallet() {
-    if (MasterWallet.getMasterWallet() === false) {
-      return MasterWallet.createMasterWallet();
+  notification() {
+    try {
+      const messaging = this.props.firebase.messaging();
+      messaging
+        .requestPermission()
+        .then(() => messaging.getToken())
+        .catch(e => console.log(e))
+        .then((notificationToken) => {
+          const params = new URLSearchParams();
+          params.append('fcm_token', notificationToken);
+          this.props.authUpdate({
+            PATH_URL: 'user/profile',
+            data: params,
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            METHOD: 'POST',
+          });
+        })
+        .catch(e => console.log(e));
+    } catch (e) {
+      console.log(e);
     }
-    return null;
   }
+
 
   render() {
-    if (!this.state.isLogged) {
+    if (!this.state.isLogged || this.state.isLoading) {
       return (
         <BrowserRouter>
           <Route
             path={URL.INDEX}
             render={props => (
               <Layout {...props}>
-                <Loading />
+                <Loading message={this.state.loadingText} />
               </Layout>
             )}
           />
@@ -293,7 +298,7 @@ class Router extends React.Component {
 
 export default compose(
   withFirebase,
-  connect(state => ({ auth: state.auth }), {
+  connect(state => ({ auth: state.auth, app: state.app }), {
     signUp,
     fetchProfile,
     setIpInfo,
