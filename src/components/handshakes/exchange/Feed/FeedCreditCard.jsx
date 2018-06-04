@@ -23,13 +23,15 @@ import CryptoPrice from "@/models/CryptoPrice";
 import {MasterWallet} from "@/models/MasterWallet";
 import { bindActionCreators } from "redux";
 import {showAlert} from '@/reducers/app/action';
+import _sample from "lodash/sample";
+import { feedBackgroundColors } from "@/components/handshakes/exchange/config";
 
 const nameFormCreditCard = 'creditCard'
 const FormCreditCard = createForm({ propsReduxForm: { form: nameFormCreditCard,
     initialValues: { currency: CRYPTO_CURRENCY_DEFAULT } } });
 const selectorFormCreditCard = formValueSelector(nameFormCreditCard)
 
-const mainColor = '#259B24'
+// const mainColor = '#259B24'
 
 class FeedCreditCard extends React.Component {
   constructor(props) {
@@ -43,6 +45,7 @@ class FeedCreditCard extends React.Component {
       showCCScheme: false,
     }
     this.getCryptoPriceByAmountThrottled = throttle(this.getCryptoPriceByAmount, 500);
+    this.mainColor = _sample(feedBackgroundColors)
   }
 
   async componentDidMount() {
@@ -293,11 +296,11 @@ class FeedCreditCard extends React.Component {
       <div className="mb-2">
         <div>
           <FormCreditCard onSubmit={this.handleSubmit} validate={this.handleValidate}>
-            <Feed className="feed p-2 mb-2" background={mainColor}>
+            <Feed className="feed p-2 mb-2" background={this.mainColor}>
               <div style={{ color: 'white' }}>
                 {
                   showCCScheme && (
-                    <div style={{ background: '#50af4f' }} className="pt-2 px-2 rounded mb-2">
+                    <div style={{ background: 'rgb(255,255,255,0.2)' }} className="pt-2 px-2 rounded mb-2">
                       {
                         ccLimits.map((ccLimit, index) => {
                           const { level, limit, duration } = ccLimit
@@ -315,7 +318,7 @@ class FeedCreditCard extends React.Component {
 
                           return (
                             <LevelItem key={index} style={{ margin: '0 8px 8px 0', opacity: isActive ? '' : 0.6 }}>
-                              <div className="rounded p-1" style={{ lineHeight: 1.2, background: isActive ? '#FF3B30' : '#84c683' }}>
+                              <div className="rounded p-1" style={{ lineHeight: 1.2, background: isActive ? '#FF3B30' : 'rgb(255,255,255,0.2)' }}>
                                 {text}
                               </div>
                               <div><small>Up to {fiatCurrency}{limit}</small></div>
@@ -345,7 +348,7 @@ class FeedCreditCard extends React.Component {
                       name="currency"
                       component={fieldRadioButton}
                       list={currencyForced ? CRYPTO_CURRENCY_LIST.filter(c => c.value === currencyForced) : CRYPTO_CURRENCY_LIST}
-                      color={mainColor}
+                      color={'#fff'}
                       onChange={this.onCurrencyChange}
                     />
                   </span>
