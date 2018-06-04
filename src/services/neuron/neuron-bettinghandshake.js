@@ -94,7 +94,7 @@ export default class BettingHandshake extends BaseHandshake {
       .uninit(hid, side, stakeValue, payoutValue, bytesOffchain)
       .encodeABI();
     return this.neuron.makeRawTransaction(address, privateKey, payloadData, {
-      // amount,
+      amount: stake,
       toAddress: this.contractAddress,
     });
   };
