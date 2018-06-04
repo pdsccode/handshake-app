@@ -50,11 +50,11 @@
 
 .rce-mbox {
   position: relative;
-  background: white;
+  background: #335FFF;
   border-radius: 5px;
-  box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, .2);
+  // box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, .2);
   border-top-left-radius: 0px;
-  margin-left: 20px;
+  margin-left: 65px;
   margin-right: 5px;
   margin-top: 3px;
   flex-direction: column;
@@ -62,6 +62,7 @@
   padding: 6px 9px 8px 9px;
   float: left;
   min-width: 140px;
+  color: white;
 }
 
 .rce-mbox-body {
@@ -89,7 +90,7 @@
 
 .rce-mbox-time {
   text-align: right;
-  color: rgba(0, 0, 0, 0.45);
+  color: rgba(255, 255, 255, 0.8);
   font-size: 12px;
   position: absolute;
   right: -4px;
@@ -125,6 +126,7 @@
 }
 
 .rce-mbox-right-notch {
+  display: none;
   position: absolute;
   right: -14px;
   top: 0px;
@@ -135,6 +137,7 @@
 }
 
 .rce-mbox-left-notch {
+  display: none;
   position: absolute;
   left: -14px;
   top: 0px;
@@ -170,6 +173,15 @@
 
 .rce-mbox-title > .rce-avatar-container {
   margin-right: 5px;
+  width: 35px!important;
+  height: 35px!important;
+  border-radius: 100%;
+  display: flex;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  margin-top: -5px;
+  margin-left: -59px;
 }
 .rce-mbox-photo {
   margin-top: -3px;
@@ -535,6 +547,7 @@
 .rce-container-mlist {
   position: relative;
   display: flex;
+  margin-bottom: 60px;
 }
 
 .rce-mlist {
@@ -583,18 +596,26 @@
 }
 .rce-container-input {
   display: flex;
-  min-width: 100%;
+  width: 100%;
+  max-width: 414px;
   box-sizing: border-box;
   flex-direction: row;
   background: #fff;
   align-items: center;
+  height: 60px;
+  padding: 10px 15px;
+  background: rgba(248, 248, 248, 0.95);
+  position: fixed;
+  margin-bottom: 60px;
+  bottom: 0px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.8)
 }
 
 .rce-input {
   flex: 1;
   height: 40px;
-  padding: 0 5px;
-  border: none;
+  padding: 0 20px;
+  border: 1px solid rgba(161,161,161,0.2);
   border-radius: 5px;
   color: #333;
   font-size: 14px;
@@ -611,7 +632,7 @@
 .rce-input-buttons {
   display: flex;
   flex-direction: row;
-  margin: 5px;
+  margin-left: 20px;
 }
 
 .rce-input-buttons > * {
@@ -998,4 +1019,48 @@
 
 .rce-popup-footer>* {
   margin-left: 5px;
+}
+
+.rce-search-input[type=search] {
+  outline: none;
+	-webkit-appearance: textfield;
+	-webkit-box-sizing: content-box;
+	background: transparent url('../../assets/images/icon/ic_btn_search.svg') no-repeat 15px center;
+	border: none;
+	padding: 9px 10px 9px 48px;
+  width: 0px;
+  position: relative;
+  left: -15px;
+  top: 0px;
+
+	-webkit-transition: all .5s;
+	-moz-transition: all .5s;
+	transition: all .5s;
+}
+
+.rce-search-input[type=search]:focus {
+	width: 356px;
+  background-color: #fff;
+}
+
+.rce-search-input:-moz-placeholder {
+	color: #999;
+}
+.rce-search-input::-webkit-input-placeholder {
+	color: #999;
+}
+
+.chat-container .no-data {
+  display: flex;
+  width: 100%;
+  height: 88vh;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.chat-container .no-data .text {
+  margin: 0px;
+  font-size: 20px;
+  color: #989898;
 }

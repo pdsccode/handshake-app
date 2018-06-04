@@ -243,10 +243,8 @@ export class Firechat {
 
   resumeSession() {
     const self = this;
-    console.log(this.userRef);
     this.userRef.child('rooms').once('value', (snapshot) => {
       const rooms = snapshot.val() || {};
-      console.log('resumeSession rooms', rooms);
       Object.keys(rooms).forEach((roomId) => {
         self.enterRoom(rooms[roomId].id);
       });
@@ -453,6 +451,7 @@ export class Firechat {
       self.userRef.child('invites').child(inviteId).update({
         status: 'accepted',
         toUserName: self.userName,
+        toUserId: self.userId,
       }, cb);
       return true;
     }, self);
