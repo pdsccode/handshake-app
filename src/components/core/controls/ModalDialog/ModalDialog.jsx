@@ -33,7 +33,7 @@ class ModalDialog extends React.Component {
   render() {
     const { title, children } = this.props;
     return (
-      <div className="modal" ref={modal => this.modalRef = modal}>
+      <div className="modal modal-dialog-custom" ref={modal => this.modalRef = modal}>
         <div className="modal-backdrop show"/>
         <div className="position" onClick={this.close}>
           <div 
