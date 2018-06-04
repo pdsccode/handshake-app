@@ -17,7 +17,7 @@ const $http = (url, data, id, qsObject, headersMore, method = 'GET') => {
   const wallet = MasterWallet.getWalletDefault('ETH');
 
   let headers = {
-    'Content-Type': 'application/json',
+    // 'Content-Type': 'application/json',
   };
 
   if (!isEmpty(headersMore)) {

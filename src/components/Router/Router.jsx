@@ -209,6 +209,7 @@ class Router extends React.Component {
             PATH_URL: 'user/profile',
             data: { fcm_token: notificationToken },
             headers: { 'Content-Type': '' },
+            METHOD: 'POST',
           });
         })
         .catch(e => console.log(e));
