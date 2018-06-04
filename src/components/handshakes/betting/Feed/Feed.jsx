@@ -75,7 +75,7 @@ class FeedBetting extends React.Component {
     const isMatch = this.isMatch;
     //const isMatch = true;
     console.log('Is Match:', isMatch);
-    
+
     const statusResult = BetHandshakeHandler.getStatusLabel(status, result, role, isMatch);
     const {title, isAction} = statusResult;
     this.setState({
@@ -85,7 +85,7 @@ class FeedBetting extends React.Component {
       role,
       isMatch,
     })
-    
+
   }
 
   componentWillReceiveProps(nextProps) {
@@ -125,8 +125,11 @@ class FeedBetting extends React.Component {
     return (
       <div>
         {/* Feed */}
-        <Feed className="feed" handshakeId={this.props.id} onClick={this.props.onFeedClick} background="white">
-          <div className="wrapperBettingFeed" style={{backgroundColor:backgroundColor}}>
+        <Feed
+          className="wrapperBettingFeed"
+          handshakeId={this.props.id}
+          onClick={this.props.onFeedClick}
+        >
             <div className="description">
               <p>{event_name}</p>
               <p className="eventInfo">{event_predict}</p>
@@ -136,8 +139,6 @@ class FeedBetting extends React.Component {
               <span className="content"  >{event_bet} ETH</span>
             </div>
             {this.renderStatus()}
-          </div>
-
         </Feed>
         {/* Shake */}
         {actionTitle && <Button block disabled={!isAction} onClick={() => { this.clickActionButton(actionTitle); }}>{actionTitle}</Button>}
@@ -161,7 +162,7 @@ class FeedBetting extends React.Component {
 
   clickActionButton(title){
     const {id} = this.props;
-    
+
     switch(title){
 
       case BETTING_STATUS_LABEL.CANCEL:
@@ -173,7 +174,7 @@ class FeedBetting extends React.Component {
         // TO DO: WITHDRAW
         this.collect(id);
         break;
-      case BETTING_STATUS_LABEL.REFUND: 
+      case BETTING_STATUS_LABEL.REFUND:
       this.refund(id);
       break;
 
@@ -216,7 +217,7 @@ class FeedBetting extends React.Component {
     const {status, data} = successData
     if(status && data){
       const {hid, offchain} = data;
-      
+
       bettinghandshake.withdraw(hid, offchain);
 
     }
