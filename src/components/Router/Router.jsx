@@ -205,10 +205,12 @@ class Router extends React.Component {
         .then(() => messaging.getToken())
         .catch(e => console.log(e))
         .then((notificationToken) => {
+          const params = new URLSearchParams();
+          params.append('fcm_token', notificationToken);
           this.props.authUpdate({
             PATH_URL: 'user/profile',
-            data: { fcm_token: notificationToken },
-            headers: { 'Content-Type': '' },
+            data: params,
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             METHOD: 'POST',
           });
         })
