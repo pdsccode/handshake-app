@@ -46,6 +46,7 @@ import {getDistanceFromLatLonInKm} from '../utils'
 import {ExchangeHandshake} from '@/services/neuron';
 import _sample from "lodash/sample";
 import { feedBackgroundColors } from "@/components/handshakes/exchange/config";
+import {updateOfferStatus} from "@/reducers/discover/action";
 
 class FeedExchange extends React.PureComponent {
   constructor(props) {
@@ -214,9 +215,7 @@ class FeedExchange extends React.PureComponent {
       timeOut: 3000,
       type: 'success',
       callBack: () => {
-        if (refreshPage) {
-          refreshPage();
-        }
+        this.props.updateOfferStatus({ [`exchange_${data.id}`]: data });
       }
     });
   }
@@ -265,9 +264,7 @@ class FeedExchange extends React.PureComponent {
       timeOut: 3000,
       type: 'success',
       callBack: () => {
-        if (refreshPage) {
-          refreshPage();
-        }
+        // this.props.fireBaseDataChange( { [`exchange_${data.id}`]: data });
       }
     });
   }
@@ -323,9 +320,9 @@ class FeedExchange extends React.PureComponent {
       timeOut: 3000,
       type: 'success',
       callBack: () => {
-        if (refreshPage) {
-          refreshPage();
-        }
+        // if (refreshPage) {
+        //   refreshPage();
+        // }
       }
     });
   }
@@ -388,9 +385,9 @@ class FeedExchange extends React.PureComponent {
       timeOut: 3000,
       type: 'success',
       callBack: () => {
-        if (refreshPage) {
-          refreshPage();
-        }
+        // if (refreshPage) {
+        //   refreshPage();
+        // }
       }
     });
   }
@@ -439,9 +436,9 @@ class FeedExchange extends React.PureComponent {
       timeOut: 3000,
       type: 'success',
       callBack: () => {
-        if (refreshPage) {
-          refreshPage();
-        }
+        // if (refreshPage) {
+        //   refreshPage();
+        // }
       }
     });
   }
@@ -827,6 +824,7 @@ class FeedExchange extends React.PureComponent {
             // actionButtons = 'Withdraw';
             // neu la nguoi buy coin thi dc withdraw
             if (offer.type === EXCHANGE_ACTION.BUY) {
+              message = intl.formatMessage({id: 'withdrawOfferConfirm'}, {});
               actionButtons = (
                 <div>
                   <Button block className="mt-2" onClick={() => this.confirmOfferAction(message, this.handleWithdrawShakedOffer)}>Withdraw</Button>
@@ -1107,7 +1105,8 @@ const mapDispatch = ({
   completeShakedOffer,
   cancelShakedOffer,
   withdrawShakedOffer,
-  showAlert
+  showAlert,
+  updateOfferStatus,
 });
 
 export default injectIntl(connect(mapState, mapDispatch)(FeedExchange));
