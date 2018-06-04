@@ -9,7 +9,6 @@ import { API_URL } from '@/constants';
 import Dropdown from '@/components/core/controls/Dropdown';
 import BettingShake from './../Shake';
 import GroupBook from './../GroupBook';
-import FeedComment from '@/components/Comment/FeedComment';
 
 import './Filter.scss';
 import { loadMatches } from '@/reducers/betting/action';
@@ -282,7 +281,6 @@ class BettingFilter extends React.Component {
 
                     </div>
                 </div>
-              <FeedComment numComments={12} objectType={3} objectId={1231} />
             </div>
 
         );
