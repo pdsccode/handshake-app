@@ -54,10 +54,10 @@ class BetingShake extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      buttonClass: 'btnOK btnBlue',
+      buttonClass: 'btnOK btnRed',
       isShowOdds: false,
       extraData: {},
-
+      
     };
 
     this.onSubmit = ::this.onSubmit;
@@ -67,13 +67,19 @@ class BetingShake extends React.Component {
     this.onToggleChange = ::this.onToggleChange;
   }
   componentDidMount(){
-    const {extraData} = this.state;
-    const {matchName, matchOutcome, outcomeHid} = this.props;
-    extraData["event_name"] = matchName;
-    extraData["event_predict"] = matchOutcome;
-    this.setState({extraData})
-    console.log('componentDidMount OutcomeHid:', outcomeHid);
+    console.log('Props:', this.props);
+    
   }
+  componentWillReceiveProps(nextProps){
+    // const {extraData} = this.state;
+    // const {matchName, matchOutcome, outcomeHid} = this.props;
+    // console.log("componentWillReceiveProps Props:", this.props);
+    // extraData["event_name"] = matchName;
+    // extraData["event_predict"] = matchOutcome;
+    // console.log('componentWillReceiveProps Extra Data: ', extraData);
+    // this.setState({extraData})
+  }
+
 
   async onSubmit(values) {
     console.log("Submit");
@@ -86,7 +92,8 @@ class BetingShake extends React.Component {
     const side = parseInt(this.toggleRef.value);
     const balance = await BetHandshakeHandler.getBalance();
     console.log('Amount:', amount);
-    //if(matchName && matchOutcome && amount <= balance && amount > 0){
+    console.log('Props:', this.props);
+    //if(matchName && matchOutcome && amount <= parseFloat(balance) && amount > 0){
       if(isShowOdds){
         this.initHandshake(amount, odds);
       }else {
@@ -103,7 +110,7 @@ class BetingShake extends React.Component {
   }
 
   onToggleChange(id) {
-    this.setState({buttonClass: `btnOK ${id === 1 ? 'btnBlue' : 'btnRed' }`});
+    this.setState({buttonClass: `btnOK ${id === 2 ? 'btnBlue' : 'btnRed' }`});
   }
 
   updateTotal(value) {
@@ -235,6 +242,16 @@ class BetingShake extends React.Component {
 
   shakeItem(amount, side){
       const {outcomeId} = this.props;
+      const {extraData} = this.state;
+      const {matchName, matchOutcome, outcomeHid} = this.props;
+      extraData["event_name"] = matchName;
+      extraData["event_predict"] = matchOutcome;
+      extraData["event_bet"] = amount;
+      this.setState({
+        extraData
+      })
+      console.log("Props:", this.props);
+
       const params = {
         //to_address: toAddress ? toAddress.trim() : '',
         //public: isPublic,
@@ -245,6 +262,7 @@ class BetingShake extends React.Component {
         //type: 3,
         //extra_data: JSON.stringify(fields),
         outcome_id: outcomeId,
+        extra_data: JSON.stringify(extraData),
         amount,
         currency: 'ETH',
         side,
@@ -284,6 +302,15 @@ class BetingShake extends React.Component {
       // TO DO: Show message, show odd field
       this.setState({
         isShowOdds: true,
+      }, ()=> {
+        const {message} = successData
+          this.props.showAlert({
+            message: <div className="text-center">{message}</div>,
+            timeOut: 3000,
+            type: 'danger',
+            callBack: () => {
+            }
+          });
       })
 
 
@@ -300,6 +327,7 @@ class BetingShake extends React.Component {
     const fromAddress = wallet.address;
     extraData["event_odds"] = odds;
     extraData["event_bet"] = amount;
+    console.log('Extra Data:', extraData);
     const params = {
       //to_address: toAddress ? toAddress.trim() : '',
       //public: isPublic,
