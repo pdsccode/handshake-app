@@ -12,28 +12,37 @@ const close = {
   overlay: false,
 };
 
+local.save(APP.VERSION, '0.0.1');
+
 function appReducter(state = {
+  version: local.get(APP.VERSION),
 
   isCalling: false,
   isLoading: false,
+
   isModal: false,
   isModalContent: null,
+
   isAlert: false,
   isAlertContent: null,
-  isError: false,
-  isWarning: false,
-  overlay: false,
-  headerTitle: APP.HEADER_DEFAULT,
-  headerBack: false,
-  isNotFound: false,
-  headerRightContent: null,
-  headerLeftContent: null,
-  subscribe: local.get(APP.SUBSCRIBE),
-  subscribeAsk: local.get(APP.SUBSCRIBE_ASK),
   configAlert: {
     isShow: false,
     message: '',
   },
+
+  isError: false,
+  isWarning: false,
+
+  overlay: false,
+
+  isNotFound: false,
+
+  headerTitle: APP.HEADER_DEFAULT,
+  headerBack: false,
+  headerRightContent: null,
+  headerLeftContent: null,
+
+  ipInfo: local.get(APP.IP_INFO),
 
 }, action) {
   switch (action.type) {
