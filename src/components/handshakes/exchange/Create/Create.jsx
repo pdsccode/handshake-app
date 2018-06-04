@@ -175,13 +175,15 @@ async componentDidMount() {
 
     const wallet = MasterWallet.getWalletDefault(values.currency);
     const balance = await wallet.getBalance();
+    const fee = await wallet.getFee();
 
     if ((values.currency === CRYPTO_CURRENCY.ETH || (values.type === EXCHANGE_ACTION.SELL && values.currency === CRYPTO_CURRENCY.BTC))
-      && balance < values.amount + DEFAULT_FEE[values.currency]) {
+      && balance < values.amount + fee) {
       this.props.showAlert({
         message: <div className="text-center">
           {intl.formatMessage({ id: 'notEnoughCoinInWallet' }, {
             amount: new BigNumber(balance).toFormat(6),
+            fee: fee,
             currency: values.currency,
           })}
           </div>,
