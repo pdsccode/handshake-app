@@ -3,12 +3,11 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 // service, constant
 import { loadDiscoverList } from '@/reducers/discover/action';
-import { HANDSHAKE_ID, API_URL } from '@/constants';
+import { API_URL, DISCOVER_GET_HANDSHAKE_RADIUS, EXCHANGE_ACTION, EXCHANGE_ACTION_NAME, HANDSHAKE_ID } from '@/constants';
 import { URL } from '@/config';
 // components
-import { Grid, Row, Col } from 'react-bootstrap';
+import { Col, Grid, Row } from 'react-bootstrap';
 import SearchBar from '@/components/core/controls/SearchBar';
-import Button from '@/components/core/controls/Button';
 import Category from '@/components/core/controls/Category';
 import FeedPromise from '@/components/handshakes/promise/Feed';
 import FeedBetting from '@/components/handshakes/betting/Feed';
@@ -19,7 +18,6 @@ import Tabs from '@/components/handshakes/exchange/components/Tabs';
 import NoData from '@/components/core/presentation/NoData';
 import BettingFilter from '@/components/handshakes/betting/Feed/Filter';
 import { getListOfferPrice } from '@/reducers/exchange/action';
-
 // style
 import './Discover.scss';
 
@@ -42,16 +40,17 @@ class DiscoverPage extends React.Component {
     super(props);
     this.state = {
       handshakeIdActive: '',
-      tabIndexActive: 1,
+      tabIndexActive: '',
+      query: '',
     };
-    this.props.loadDiscoverList({ PATH_URL: API_URL.DISCOVER.BASE, qs: { location_p: { pt: '10.786391,106.700074', d: 5 } } });
+    this.loadDiscoverList();
     // bind
     this.clickCategoryItem = this.clickCategoryItem.bind(this);
     this.clickTabItem = this.clickTabItem.bind(this);
     this.searchChange = this.searchChange.bind(this);
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     this.getListOfferPrice();
     // this.intervalCountdown = setInterval(() => {
     //   this.getListOfferPrice();
@@ -70,7 +69,9 @@ class DiscoverPage extends React.Component {
         if (FeedComponent) {
           return (
             <Col key={handshake.id} md={12} className="feed-wrapper">
-              <FeedComponent {...handshake} history={this.props.history} onFeedClick={() => this.clickFeedDetail(handshake.id)} />
+              <FeedComponent {...handshake} history={this.props.history} onFeedClick={() => this.clickFeedDetail(handshake.id)}
+                             refreshPage={this.loadDiscoverList}
+              />
             </Col>
           );
         }
@@ -92,17 +93,19 @@ class DiscoverPage extends React.Component {
   }
 
   handleGetPriceSuccess = () => {
-    this.props.loadDiscoverList({ PATH_URL: API_URL.DISCOVER.BASE, qs: { location_p: { pt: '10.786391,106.700074', d: 5 } } });
+    this.loadDiscoverList();
   }
 
   handleGetPriceFailed = () => {
-    this.props.loadDiscoverList({ PATH_URL: API_URL.DISCOVER.BASE, qs: { location_p: { pt: '10.786391,106.700074', d: 5 } } });
+    this.loadDiscoverList();
   }
 
   searchChange(query) {
     clearTimeout(this.searchTimeOut);
     this.searchTimeOut = setTimeout(() => {
-      this.props.loadDiscoverList({ PATH_URL: API_URL.DISCOVER.BASE, qs: { query: query.trim() } });
+      this.setState({ query: query }, () => {
+        this.loadDiscoverList();
+      });
     }, 500);
   }
 
@@ -117,6 +120,7 @@ class DiscoverPage extends React.Component {
     //   type: 'danger',
     // });
     const { id } = category;
+    let tabIndexActive = '';
     switch (id) {
       case HANDSHAKE_ID.BETTING:
         // do something
@@ -126,21 +130,46 @@ class DiscoverPage extends React.Component {
         break;
       case HANDSHAKE_ID.EXCHANGE:
         // do something
+        tabIndexActive = 1;
         break;
       default:
         // is promise
     }
     // filter list
-    this.props.loadDiscoverList({ PATH_URL: API_URL.DISCOVER.BASE, qs: { type: id } });
     // set feed type activate
     this.setState({
       handshakeIdActive: id,
+      tabIndexActive: tabIndexActive,
+    }, () => {
+      this.loadDiscoverList();
     });
   }
 
   clickTabItem(index) {
-    this.setState({ tabIndexActive: index });
-    this.props.loadDiscoverList({ PATH_URL: API_URL.DISCOVER.BASE, qs: { public: 0, chain_id: 4 } });
+    this.setState({ tabIndexActive: index }, () => {
+      this.loadDiscoverList();
+    });
+  }
+
+  loadDiscoverList = () => {
+    const { handshakeIdActive, tabIndexActive, query } = this.state;
+    let qs = { };
+
+    const pt = this.props?.app?.ipInfo?.latitude + ',' + this.props?.app?.ipInfo?.longitude;
+    qs.location_p = { pt: pt , d: DISCOVER_GET_HANDSHAKE_RADIUS };
+    if (handshakeIdActive) {
+      qs.type = handshakeIdActive;
+    }
+
+    if (tabIndexActive) {
+      qs.sub_type = tabIndexActive === 1 ? EXCHANGE_ACTION.BUY : EXCHANGE_ACTION.SELL;
+    }
+
+    if (query) {
+      qs.query = query;
+    }
+
+    this.props.loadDiscoverList({ PATH_URL: API_URL.DISCOVER.BASE, qs: qs });
   }
 
   render() {
@@ -160,23 +189,29 @@ class DiscoverPage extends React.Component {
         </Row>
         {
           handshakeIdActive === HANDSHAKE_ID.EXCHANGE && (
-            <Row>
-              <Col md={12}>
-                <Tabs
-                  activeId={this.state.tabIndexActive}
-                  onClickTab={this.clickTabItem}
-                  list={[
-                    { id: 1, text: 'Buy' },
-                    { id: 2, text: 'Sell' },
-                  ]}
-                />
-                {
-                  tabIndexActive === 1 && (
-                    <FeedCreditCard history={this.props.history} />
-                  )
-                }
-              </Col>
-            </Row>
+            <div>
+              <Row>
+                <Col md={12}>
+                  <Tabs
+                    activeId={this.state.tabIndexActive}
+                    onClickTab={this.clickTabItem}
+                    list={[
+                      { id: 1, text: EXCHANGE_ACTION_NAME[EXCHANGE_ACTION.BUY] },
+                      { id: 2, text: EXCHANGE_ACTION_NAME[EXCHANGE_ACTION.SELL] },
+                    ]}
+                  />
+                </Col>
+              </Row>
+              {
+                tabIndexActive === 1 && (
+                  <Row>
+                    <Col md={12} className="feed-wrapper">
+                      <FeedCreditCard history={this.props.history} />
+                    </Col>
+                  </Row>
+                )
+              }
+            </div>
           )
         }
         {handshakeIdActive === HANDSHAKE_ID.BETTING &&

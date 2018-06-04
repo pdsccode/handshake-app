@@ -1,14 +1,17 @@
 // import { Trans } from 'react-i18next'
-import { required, minValue } from '@/components/core/form/validation';
+import {minValue, required} from '@/components/core/form/validation';
+import {CRYPTO_CURRENCY} from "@/constants";
 
 export const validate = (values, state, props) => {
-  const { cc_number, cc_expired, cc_cvc, currency, amount } = values;
+  const {
+    cc_number, cc_expired, cc_cvc, currency, amount,
+  } = values;
   const errors = {};
   const { userProfile } = props;
   const { isNewCCOpen } = state;
   const isCCExisting = userProfile && userProfile.creditCard.ccNumber.length > 0;
 
-  errors.amount = minValue(currency === 'BTC' ? 0.01 : 0.1)(amount);
+  errors.amount = minValue(currency === CRYPTO_CURRENCY.BTC ? 0.01 : 0.1)(amount);
 
   if (!isCCExisting
     || (isNewCCOpen && `${cc_number || ''}${cc_expired || ''}${cc_cvc || ''}`)

@@ -8,6 +8,7 @@ const config = {
       payableHandshakeAddress: '',
       groupHandshakeAddress: '',
       predictionHandshakeAddress: '0x8b4d252a89ae56af24fd9557e803e81b42b66929',
+      exchangeHandshakeAddress: '0x585DFaaF693866726bDbac42EF90C6CDf3A06075',
       blockchainNetwork: 'https://mainnet.infura.io/',
     },
     4: {
@@ -18,12 +19,13 @@ const config = {
       payableHandshakeAddress: '',
       groupHandshakeAddress: '',
       predictionHandshakeAddress: '0x8b4d252a89ae56af24fd9557e803e81b42b66929',
+      exchangeHandshakeAddress: '0x585DFaaF693866726bDbac42EF90C6CDf3A06075',
       cryptosignOwnerAddress: '',
       cryptosignOwnerPrivateKey: '',
       blockchainNetwork: 'https://rinkeby.infura.io/',
     },
   },
-  
+
   firebase: {
     /*
     apiKey: '',
@@ -32,7 +34,7 @@ const config = {
     storageBucket: '',
     messagingSenderId: '',
     */
-   apiKey: 'AIzaSyAY_QJ_6ZmuYfNR_oM65a0JVvzIyMb-n9Q',
+    apiKey: 'AIzaSyAY_QJ_6ZmuYfNR_oM65a0JVvzIyMb-n9Q',
     authDomain: 'handshake-205007.firebaseapp.com',
     databaseURL: 'https://handshake-205007.firebaseio.com',
     projectId: 'handshake-205007',

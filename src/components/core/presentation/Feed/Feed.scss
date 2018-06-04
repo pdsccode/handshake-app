@@ -1,5 +1,6 @@
-@import './src/styles/var';
+@import './src/styles/style';
 
 .feed {
+    padding: rem-calc(24px);
     border-radius: 6px;
 }

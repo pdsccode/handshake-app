@@ -18,6 +18,7 @@ import Image from '@/components/core/presentation/Image';
 import AvatarSVG from '@/assets/images/icon/avatar.svg';
 import ExpandArrowSVG from '@/assets/images/icon/expand-arrow.svg';
 import './Me.scss';
+import { getListOfferPrice } from "@/reducers/exchange/action";
 
 
 const maps = {
@@ -30,6 +31,21 @@ const maps = {
 class Me extends React.Component {
 
   componentDidMount() {
+    this.getListOfferPrice();
+    this.loadMyHandshakeList();
+  }
+
+  getListOfferPrice = () => {
+    this.props.getListOfferPrice({
+      BASE_URL: API_URL.EXCHANGE.BASE,
+      PATH_URL: API_URL.EXCHANGE.GET_LIST_OFFER_PRICE,
+      qs: { fiat_currency: this.props?.app?.ipInfo?.currency },
+      successFn: this.handleGetPriceSuccess,
+      errorFn: this.handleGetPriceFailed,
+    });
+  }
+
+  loadMyHandshakeList = () => {
     this.props.loadMyHandshakeList({ PATH_URL: API_URL.ME.BASE });
   }
 
@@ -40,7 +56,7 @@ class Me extends React.Component {
         <Row>
           <Col md={12}>
             <Link className="update-profile" to={URL.HANDSHAKE_ME_PROFILE} title="profile">
-              <Image src={AvatarSVG} alt="avatar" />
+              <Image className="avatar" src={AvatarSVG} alt="avatar" />
               <div className="text">
                 <strong>My Profile</strong>
                 <p>Vertify your email, phone numbers</p>
@@ -60,7 +76,9 @@ class Me extends React.Component {
                   if (FeedComponent) {
                     return (
                       <Col key={handshake.id} className="feed-wrapper">
-                        <FeedComponent {...handshake} history={this.props.history} onFeedClick={() => this.clickFeedDetail(handshake.id)} mode={'me'}/>
+                        <FeedComponent {...handshake} history={this.props.history} onFeedClick={() => this.clickFeedDetail(handshake.id)} mode={'me'}
+                                       refreshPage={this.loadMyHandshakeList}
+                        />
                       </Col>
                     );
                   }
@@ -79,14 +97,17 @@ class Me extends React.Component {
 Me.propTypes = {
   me: PropTypes.object.isRequired,
   loadMyHandshakeList: PropTypes.func.isRequired,
+  getListOfferPrice: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({
   me: state.me,
+  app: state.app,
 });
 
 const mapDispatch = ({
   loadMyHandshakeList,
+  getListOfferPrice,
 });
 
 export default connect(mapState, mapDispatch)(Me);

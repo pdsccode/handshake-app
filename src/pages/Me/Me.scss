@@ -10,8 +10,12 @@
     &:hover {
       text-decoration: none;
     }
+    .avatar {
+      width: 15%;
+    }
     .text {
-      margin-left: rem-calc(12px);
+      width: 75%;
+      padding-left: rem-calc(12px);
       strong {
         font-weight: $semi-bold;
         font-size: 1rem;
@@ -26,7 +30,7 @@
       }
     }
     .arrow {
-      width: 24%;
+      width: 10%;
       text-align: right;
       img {
         vertical-align: baseline;
@@ -34,48 +38,10 @@
       }
     }
   }
-  .my-feed-wrapper {
+  .feed-wrapper {
     margin-top: rem-calc(35px);
     &:hover {
       cursor: pointer;
-    }
-    .head {
-      display: flex;
-      flex-wrap: wrap;
-      margin-bottom: rem-calc(15px);
-      .from {
-        width: 70%;
-        font-weight: $normal;
-        font-size: 1rem;
-        color: $steel;
-        .email {
-          font-weight: $normal;
-          font-size: 1rem;
-          color: $lavender-gray;
-        }
-      }
-      .status {
-        width: 30%;
-        text-align: right;
-        font-weight: $normal;
-        font-size: 1rem;
-        .pending {
-          color: $lavender-gray;
-        }
-        .done {
-          color: $emerald;
-        }
-      }
-    }
-    .my-feed {
-      padding: 23px;
-      .description {
-        margin: 0;
-        font-weight: $normal;
-        font-size: rem-calc(28px);
-        color: $white;
-        letter-spacing: 0.5px;
-      }
     }
   }
 }
