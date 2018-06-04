@@ -174,10 +174,31 @@ class Router extends React.Component {
     } else {
       this.props.setIpInfo(ipInfo);
     }
+
+    this.getIpInfo();
+    this.timeOutInterval = setInterval(() => {
+      this.getIpInfo();
+    }, 30 * 60 * 1000); //30'
+  }
+
+  getIpInfo = () => {
+    axios.get(API_URL.EXCHANGE.IP_DOMAIN, {
+      params: {
+        auth: API_URL.EXCHANGE.IP_KEY,
+      },
+    }).then((response) => {
+      // console.log('response', response.data);
+      this.props.setIpInfo(response.data);
+      local.save(APP.IP_INFO, response.data);
+    });
   }
 
   componentWillUnmount() {
     this.props.firebase.unWatchEvent('value', `${FIREBASE_PATH.USERS}/${String(this.state.profile.id)}`);
+
+    if (this.timeOutInterval) {
+      clearInterval(this.timeOutInterval);
+    }
   }
 
   createMasterWallet() {
