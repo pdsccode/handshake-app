@@ -202,7 +202,7 @@ async componentDidMount() {
     const offer = {
       amount: values.amount,
       price: price,
-      percentage: values.type === 'sell' && values.sellPriceType === 'flexible' ? values.customizePrice.toString() : '0',
+      percentage: values.customizePrice.toString(),
       currency: values.currency,
       type: values.type,
       contact_info: values.address,
