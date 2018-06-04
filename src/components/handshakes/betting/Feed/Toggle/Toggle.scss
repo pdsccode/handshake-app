@@ -1,22 +1,31 @@
-@import './src/styles/style';
+@import "./src/styles/style";
 
 .toggleShakeBetting {
   display: flex;
   border-radius: 2px;
+  margin-top: rem-calc(30px);
+
   .itemToggle {
     flex: 50%;
+    text-align: center;
     font-size: rem-calc(12px);
     font-weight: $semi-bold;
-    color: #EFEFEF;
+    color: #efefef;
     letter-spacing: 0;
     line-height: rem-calc(22px);
-    background: #636B71;
+    background: #636b71;
     padding: rem-calc(7px 15px);
     &:hover {
       cursor: pointer;
     }
   }
   .active {
-    background: #8BF275;
+    background: #8bf275;
+  }
+  .btnRed {
+    background: #fa6b49;
+  }
+  .btnBlue {
+    background: #8bf275;
   }
 }

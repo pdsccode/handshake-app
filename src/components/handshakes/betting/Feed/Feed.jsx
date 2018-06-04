@@ -3,12 +3,15 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 // services, constants
-import  { BetHandshakeHandler, SIDE} from './BetHandshakeHandler.js';
+import  { BetHandshakeHandler, SIDE, BETTING_STATUS_LABEL} from './BetHandshakeHandler.js';
 import momment from 'moment';
+import {MasterWallet} from '@/models/MasterWallet';
 
-import { APP } from '@/constants';
 import local from '@/services/localStore';
-import {FIREBASE_PATH} from '@/constants';
+import {FIREBASE_PATH, HANDSHAKE_ID, API_URL, APP} from '@/constants';
+import { BettingHandshake } from '@/services/neuron';
+import { uninitItem, collect, refund, rollback } from '@/reducers/handshake/action';
+
 
 // components
 import Image from '@/components/core/presentation/Image';
@@ -26,7 +29,9 @@ import Shake from '@/components/core/controls/Button';
 
 import GroupBook from './GroupBook';
 
-
+const wallet = MasterWallet.getWalletDefault('ETH');
+const chainId = wallet.chainId;
+const bettinghandshake = new BettingHandshake(chainId);
 class FeedBetting extends React.Component {
   static propTypes = {
 
@@ -41,6 +46,7 @@ class FeedBetting extends React.Component {
 
       this.state = {
         actionTitle: null,
+        statusTitle: null,
         isAction: false,
         role: null,
         isMatch: false,
@@ -59,20 +65,27 @@ class FeedBetting extends React.Component {
   }
 
   componentDidMount() {
-    const {status, side} = this.props;
+    const {status, side, result} = this.props;
+
     console.log('Props:', this.props);
     console.log('Status:', status);
-    const hardCodeStatus = 2;
+    //const hardCodeStatus = 2;
     const role = side;
+    //const blockchainStatusHardcode = 0;
     const isMatch = this.isMatch;
-    const result = BetHandshakeHandler.getStatusLabel(hardCodeStatus, role, isMatch);
-    const {title, isAction} = result;
+    //const isMatch = true;
+    console.log('Is Match:', isMatch);
+    
+    const statusResult = BetHandshakeHandler.getStatusLabel(status, result, role, isMatch);
+    const {title, isAction} = statusResult;
     this.setState({
       actionTitle: title,
+      statusTitle: statusResult.status,
       isAction,
       role,
       isMatch,
     })
+    
   }
 
   componentWillReceiveProps(nextProps) {
@@ -81,7 +94,6 @@ class FeedBetting extends React.Component {
 
   get extraData(){
     const {extraData} = this.props
-    console.log(extraData);
     try {
       return JSON.parse(extraData);
     }catch(e){
@@ -90,27 +102,42 @@ class FeedBetting extends React.Component {
     }
   }
 
+  renderStatus = () => {
+    const {statusTitle} = this.state;
+    const text = "Match is ongoing...";
+    //const textColor = status == 2?'white':'#35B371';
+    const textColor = 'white';
+    //const backgroundColorWithStatus = status == 2? 'ffffff25' :'#00000030';
+    const backgroundColorWithStatus = '#ffffff25';
+    return <Button style={{backgroundColor:backgroundColorWithStatus , borderColor:'transparent',color:textColor}}  block disabled >{statusTitle}</Button>;
+  }
+
   render() {
-    const {actionTitle, isAction} = this.state;
+    const {actionTitle , isAction,side } = this.state;
+    const backgroundColor = side === SIDE.SUPPORT ? "#85D477":'#FB7753';
+    // const {actionTitle = "Match is ongoing...", isAction =true} = this.state;
+     /***
+     * side = SIDE.SUPPORT // SIDE.AGAINST ;ORGRANCE
+     *
+     */
     const {event_name, event_predict, event_odds, event_bet,event_date, balance} = this.extraData;
 
     return (
       <div>
         {/* Feed */}
         <Feed className="feed" handshakeId={this.props.id} onClick={this.props.onFeedClick} background="white">
-          <div className="wrapperBettingFeed">
+          <div className="wrapperBettingFeed" style={{backgroundColor:backgroundColor}}>
             <div className="description">
               <p>{event_name}</p>
               <p className="eventInfo">{event_predict}</p>
             </div>
             <div className="bottomWrapper">
-              <p className="odds">1:{event_odds}</p>
-              <div className="item">
-              <Image src={ethereumIcon} alt="ethereum icon" />
-              <p className="content">{event_bet} ETH <span>pool</span></p>
-              </div>
+              <span className="odds" >1:{event_odds}</span>
+              <span className="content"  >{event_bet} ETH</span>
             </div>
+            {this.renderStatus()}
           </div>
+
         </Feed>
         {/* Shake */}
         {actionTitle && <Button block disabled={!isAction} onClick={() => { this.clickActionButton(actionTitle); }}>{actionTitle}</Button>}
@@ -131,29 +158,107 @@ class FeedBetting extends React.Component {
     console.log('Choose option:', value)
     //TO DO: Choose an option
   }
-  
+
   clickActionButton(title){
-    const {id, outcome_id, side, extraData, hid, odds} = item;
-    const {event_bet, event_odds} = JSON.parse(extraData);
-    //const hid = outcome_id;
-    const stake = event_bet;
-    const payout = stake * odds;
-    const offchain = id;
+    const {id} = this.props;
+    
     switch(title){
 
       case BETTING_STATUS_LABEL.CANCEL:
         // TO DO: CLOSE BET
-        BettingShake.cancelBet(hid, side,stake,payout,offchain);
+        this.uninitItem(id);
         break;
 
       case BETTING_STATUS_LABEL.WITHDRAW:
         // TO DO: WITHDRAW
-        BettingHandshake.withdraw(hid, offchain);
+        this.collect(id);
         break;
+      case BETTING_STATUS_LABEL.REFUND: 
+      this.refund(id);
+      break;
 
     }
-    
 
+
+  }
+  uninitItem(id){
+    const url = API_URL.CRYPTOSIGN.UNINIT_HANDSHAKE.concat(`/${id}`);
+    this.props.uninitItem({PATH_URL: url, METHOD:'POST',
+    successFn: this.uninitHandshakeSuccess,
+    errorFn: this.uninitHandshakeFailed
+  });
+  }
+  uninitHandshakeSuccess= async (successData)=>{
+    console.log("uninitHandshakeSuccess", successData);
+    const {status, data} = successData
+    if(status && data){
+      const {hid, side, amount, odds, offchain} = data;
+      const stake = amount;
+      const payout = stake * odds;
+      bettinghandshake.cancelBet(hid, side, stake, payout, offchain);
+
+    }
+  }
+  uninitHandshakeFailed = (error) => {
+    console.log('uninitHandshakeFailed', error);
+  }
+
+  collect(id){
+    const url = API_URL.CRYPTOSIGN.COLLECT.concat(`/${id}`);
+    this.props.collect({PATH_URL: url, METHOD:'POST',
+    successFn: this.collectSuccess,
+    errorFn: this.collectFailed
+  });
+  }
+
+  collectSuccess = async (successData)=>{
+    console.log('collectSuccess', successData);
+    const {status, data} = successData
+    if(status && data){
+      const {hid, offchain} = data;
+      
+      bettinghandshake.withdraw(hid, offchain);
+
+    }
+  }
+  collectFailed = (error) => {
+    console.log('collectFailed', error);
+
+  }
+
+  refund(id){
+    const url = API_URL.CRYPTOSIGN.REFUND.concat(`/${id}`);
+    this.props.refund({PATH_URL: API_URL.CRYPTOSIGN.REFUND, METHOD:'POST',
+    successFn: this.refundSuccess,
+    errorFn: this.refundFailed
+  });
+  }
+
+  refundSuccess = async (successData)=>{
+    console.log('refundSuccess', successData);
+    const {status, data} = successData
+    if(status && data){
+    }
+  }
+  refundFailed = (error) => {
+    console.log('refundFailed', error);
+  }
+
+  rollback(id, offchain){
+    const params = {
+      offchain
+    }
+    const url = API_URL.CRYPTOSIGN.ROLLBACK.concat(id);
+    this.props.rollback({PATH_URL: url, METHOD:'POST', data: params,
+    successFn: this.rollbackSuccess,
+    errorFn: this.rollbackFailed
+  });
+  }
+  rollbackSuccess = async (successData)=>{
+    console.log('rollbackSuccess', successData);
+  }
+  rollbackFailed = (error) => {
+    console.log('rollbackFailed', error);
   }
 }
 
@@ -161,6 +266,10 @@ const mapState = state => ({
   firebaseUser: state.firebase.data,
 });
 const mapDispatch = ({
+  uninitItem,
+  collect,
+  refund,
+  rollback
 });
 export default connect(mapState, mapDispatch)(FeedBetting);
 

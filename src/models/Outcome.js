@@ -6,6 +6,7 @@ const handleOutcomeListPayload = payload => payload.map(item => Handshake.handsh
 class Outcome {
   static outcome(data) {
     return {
+      hid: data.hid || '',
       id: data.id || '',
       name: data.name || '',
       handshakes: handleOutcomeListPayload(data.handshakes) || '',
