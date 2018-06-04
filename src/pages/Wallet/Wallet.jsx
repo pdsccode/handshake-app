@@ -13,7 +13,7 @@ import Input from '@/components/core/forms/Input/Input';
 import dontIcon from '@/assets/images/icon/3-dot-icon.svg';
 import iconSafe from '@/assets/images/icon/icon-safe.svg';
 import iconWarning from '@/assets/images/icon/icon-warning.svg';
-// import iconChecked from '@/assets/images/icon/icon-check.png';
+import iconSuccessChecked from '@/assets/images/icon/icon-checked-green.svg';
 import iconLoading from '@/assets/images/icon/loading.svg.raw';
 import iconQRCodeBlack from '@/assets/images/icon/qr-code-black.png';
 
@@ -89,13 +89,15 @@ class Wallet extends React.Component {
       delay: 300,
       walletsData: false,
       isNewCCOpen: false,
+      stepProtected: 1,
+      activeProtected: false,
     };
     this.props.setHeaderRight(this.headerRight());
   }
 
-  showAlert(msg, type='success', timeOut=3000){
+  showAlert(msg, type='success', timeOut=3000, icon=''){
     this.props.showAlert({
-      message: <div className="textCenter">{msg}</div>,
+      message: <div className="textCenter">{icon}{msg}</div>,
       timeOut: timeOut,
       type: type,
       callBack: () => {}
@@ -108,7 +110,7 @@ class Wallet extends React.Component {
     this.showAlert(mst, 'danger', 3000 );
   }
   showSuccess(mst){
-    this.showAlert(mst, 'success', 5000 );
+    this.showAlert(mst, 'success', 4000, <img className="iconSuccessChecked" src={iconSuccessChecked} />);
   }
 
   headerRight() {
@@ -234,7 +236,7 @@ class Wallet extends React.Component {
         obj.push({
           title: 'Protected this wallet',
           handler: () => {
-            this.setState({walletSelected: wallet});
+            this.setState({walletSelected: wallet, stepProtected: 1, activeProtected: true});
             this.toggleBottomSheet();
             this.modalProtectRef.open();
           }
@@ -316,7 +318,7 @@ class Wallet extends React.Component {
           this.splitWalletData(walletData);
           this.setState({isRestoreLoading: false});
           this.modalRestoreRef.close();
-          this.showAlert("Restore wallet successfully.");
+          this.showSuccess("Your Wallet restore success");
           return;
         }
       }
@@ -457,8 +459,14 @@ class Wallet extends React.Component {
     this.toggleBottomSheet();
   }
 
-  onWarningClick = (wallet) => {
-    //alert("onWarningClick ->" + wallet.address);
+  onWarningClick = (wallet) => {    
+    if (!wallet.protected){
+      this.setState({walletSelected: wallet, stepProtected: 1, activeProtected: true});      
+      this.modalProtectRef.open();
+    }
+    else{
+
+    }
   }
 
   onAddressClick = (wallet) => {
@@ -500,6 +508,14 @@ class Wallet extends React.Component {
 
   afterWalletFill = () =>{
     this.modalFillRef.close();
+  }
+
+  closeProtected = () => {
+    this.setState({activeProtected: false});
+  }
+  onCopyProtected = () => {
+    Clipboard.copy(this.state.walletSelected.mnemonic);
+    this.showToast("Copied to clipboard");
   }
 
   successWalletProtect = (wallet) =>{
@@ -555,7 +571,7 @@ class Wallet extends React.Component {
     return (
 
       <Grid>
-        {/*<div className="messageBox"><img src={iconChecked}/><span>Copied</span></div>*/}
+        
         {/* Tooltim menu Bottom */ }
         <ReactBottomsheet
           visible={this.state.bottomSheet}
@@ -597,8 +613,8 @@ class Wallet extends React.Component {
           />
         </Modal>
 
-        <Modal title="Protect your wallet" onRef={modal => this.modalProtectRef = modal}>
-          <WalletProtect wallet={this.state.walletSelected} callbackSuccess={() => {this.successWalletProtect(this.state.walletSelected)}} />
+        <Modal title="Protect your wallet" onClose={this.closeProtected}  onRef={modal => this.modalProtectRef = modal}>
+          <WalletProtect onCopy={this.onCopyProtected} step={this.state.stepProtected} active={this.state.activeProtected} wallet={this.state.walletSelected} callbackSuccess={() => {this.successWalletProtect(this.state.walletSelected)}} />
         </Modal>
 
         <Modal title="History of transactions" onRef={modal => this.modalHistoryRef = modal}>
