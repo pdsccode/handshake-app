@@ -7,7 +7,6 @@ const webpack = require('webpack');
 const merge = require('webpack-merge');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-// const ManifestPlugin = require('webpack-manifest-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
@@ -132,10 +131,6 @@ const production = {
       filename: 'css/[name].css',
       chunkFilename: 'css/[hash].[name].css',
     }),
-    new OfflinePlugin({
-      publicPath: process.env.PUBLIC_URL,
-      appShell: '/index.html',
-    }),
   ],
   performance: { hints: false },
 };
@@ -146,7 +141,6 @@ module.exports = function webpackConfig(env, argv) {
   if (!isProduction) {
     dotenv.config();
   } else {
-    // PUBLIC_PATH =
     dotenv.config({ path: xPath('.env.production') });
   }
 
@@ -155,10 +149,11 @@ module.exports = function webpackConfig(env, argv) {
       entry: {
         main: xPath('src/index.js'),
         'app-sw': xPath('src/sw.js'),
+        'firebase-messaging-sw': xPath('src/sw-fcm.js'),
       },
       output: {
-        filename: 'js/[name].js',
-        chunkFilename: 'js/[hash].[name].chunk.js',
+        filename: '[name].js',
+        chunkFilename: '[hash].[name].chunk.js',
         publicPath: '/',
         globalObject: 'this',
       },
