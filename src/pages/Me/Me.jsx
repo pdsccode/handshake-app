@@ -36,9 +36,12 @@ class Me extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (JSON.stringify(nextProps.firebaseUser) !== JSON.stringify(this.props.firebaseUser) &&
-      JSON.stringify(nextProps.firebaseUser.offers) !== JSON.stringify(nextProps.firebaseUser.offers)) {
-      this.props.fireBaseDataChange(nextProps.firebaseUser.offers);
+    if (JSON.stringify(nextProps.firebaseUser) !== JSON.stringify(this.props.firebaseUser) && this.props.firebaseUser.users) {
+      let nextUser = nextProps.firebaseUser.users[this.props.auth?.profile?.id];
+      let prevUser = this.props.firebaseUser.users[this.props.auth?.profile?.id];
+      if (JSON.stringify(nextUser.offers) !== JSON.stringify(prevUser.offers)) {
+        this.props.fireBaseDataChange(nextUser.offers);
+      }
     }
   }
 
@@ -110,6 +113,7 @@ Me.propTypes = {
 const mapState = state => ({
   me: state.me,
   app: state.app,
+  auth: state.auth,
   firebaseUser: state.firebase.data,
 });
 
