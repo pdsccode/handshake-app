@@ -36,7 +36,9 @@ class WalletHistory extends React.Component {
 
     const wallet = this.props.wallet;
     
-      console.log("list_transaction", this.props.transactions);
+    if (this.state.transactions.length==0)
+      return <div className="history-no-trans">No transactions yet</div>;
+        
       return this.state.transactions.map((tran) => {
         let cssLabel = `label-${tran.is_sent ? "sent" : "received"}`,
         cssValue = `value-${tran.is_sent ? "sent" : "received"}`;
