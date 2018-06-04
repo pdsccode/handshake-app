@@ -68,13 +68,16 @@ class BetingShake extends React.Component {
   }
   componentDidMount(){
     console.log('Props:', this.props);
-    const {extraData} = this.state;
-    const {matchName, matchOutcome, outcomeHid} = this.props;
-    extraData["event_name"] = matchName;
-    extraData["event_predict"] = matchOutcome;
-  
-    this.setState({extraData})
-    console.log('componentDidMount OutcomeHid:', outcomeHid);
+    
+  }
+  componentWillReceiveProps(nextProps){
+    // const {extraData} = this.state;
+    // const {matchName, matchOutcome, outcomeHid} = this.props;
+    // console.log("componentWillReceiveProps Props:", this.props);
+    // extraData["event_name"] = matchName;
+    // extraData["event_predict"] = matchOutcome;
+    // console.log('componentWillReceiveProps Extra Data: ', extraData);
+    // this.setState({extraData})
   }
 
 
@@ -239,6 +242,16 @@ class BetingShake extends React.Component {
 
   shakeItem(amount, side){
       const {outcomeId} = this.props;
+      const {extraData} = this.state;
+      const {matchName, matchOutcome, outcomeHid} = this.props;
+      extraData["event_name"] = matchName;
+      extraData["event_predict"] = matchOutcome;
+      extraData["event_bet"] = amount;
+      this.setState({
+        extraData
+      })
+      console.log("Props:", this.props);
+
       const params = {
         //to_address: toAddress ? toAddress.trim() : '',
         //public: isPublic,
@@ -249,6 +262,7 @@ class BetingShake extends React.Component {
         //type: 3,
         //extra_data: JSON.stringify(fields),
         outcome_id: outcomeId,
+        extra_data: JSON.stringify(extraData),
         amount,
         currency: 'ETH',
         side,
@@ -313,6 +327,7 @@ class BetingShake extends React.Component {
     const fromAddress = wallet.address;
     extraData["event_odds"] = odds;
     extraData["event_bet"] = amount;
+    console.log('Extra Data:', extraData);
     const params = {
       //to_address: toAddress ? toAddress.trim() : '',
       //public: isPublic,
