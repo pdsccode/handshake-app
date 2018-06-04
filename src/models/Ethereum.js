@@ -11,6 +11,7 @@ const BN = Web3.utils.BN;
 
 export class Ethereum extends Wallet {
     static Network = { Mainnet: 'https://mainnet.infura.io/', Rinkeby: 'https://rinkeby.infura.io/' }
+    static API = { Mainnet: 'https://api-rinkeby.etherscan.io/api', Rinkeby: 'https://api-rinkeby.etherscan.io/api' }
 
     constructor() {
       super();
@@ -116,7 +117,8 @@ export class Ethereum extends Wallet {
 
     async getTransactionHistory() {
       const API_KEY = '';
-      const url = `https://api-rinkeby.etherscan.io/api?module=account&action=txlist&address=${this.address}&startblock=0&endblock=99999999&page=1&offset=10&sort=desc&apikey=${API_KEY}`;
+      // const url = `https://api-rinkeby.etherscan.io/api?module=account&action=txlist&address=${this.address}&startblock=0&endblock=99999999&page=1&offset=10&sort=desc&apikey=${API_KEY}`;
+      const url =this.constructor.API[this.getNetworkName()] + `?module=account&action=txlist&address=${this.address}&startblock=0&endblock=99999999&page=1&offset=10&sort=desc&apikey=${API_KEY}`;      
       const response = await axios.get(url);
       if (response.status == 200) {
         let result = [];
