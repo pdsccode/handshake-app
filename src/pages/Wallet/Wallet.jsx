@@ -246,10 +246,12 @@ class Wallet extends React.Component {
 
       obj.push({
         title: 'Transaction history',
-        handler: () => {
-          this.setState({walletSelected: wallet, isWalletHistory: true});
-          this.toggleBottomSheet();
+        handler: async () => {
           this.modalHistoryRef.open();
+          let dataHistory = wallet.getTransactionHistory().then(data => {
+            this.setState({walletSelected: wallet, isWalletHistory: true, transactions: data});
+            this.toggleBottomSheet();
+          });
         }
       })
       obj.push({
@@ -618,11 +620,11 @@ class Wallet extends React.Component {
           <WalletProtect onCopy={this.onCopyProtected} step={this.state.stepProtected} active={this.state.activeProtected} wallet={this.state.walletSelected} callbackSuccess={() => {this.successWalletProtect(this.state.walletSelected)}} />
         </Modal>
 
-        {this.state.isWalletHistory ?
+
         <Modal title="History of transactions" onRef={modal => this.modalHistoryRef = modal}>
-          <WalletHistory wallet={this.state.walletSelected} />
+          <WalletHistory wallet={this.state.walletSelected} transactions={this.state.transactions} />
         </Modal>
-        : ""}
+
 
         {/* Modal for Backup wallets : */}
         <Modal title="Backup wallets" onRef={modal => this.modalBackupRef = modal}>
