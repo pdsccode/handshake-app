@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { URL } from '@/config';
 
 // style
-import addAComment from '@/assets/images/icon/comment/add_a_comment.svg';
+import addAComment from '@/assets/images/icon/comment/add-a-comment.svg';
 import './FeedComment.scss';
 
 class FeedComment extends React.PureComponent {
