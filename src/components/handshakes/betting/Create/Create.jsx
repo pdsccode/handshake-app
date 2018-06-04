@@ -137,7 +137,7 @@ get matchResults(){
       if (foundMatch){
           const {outcomes} = foundMatch;
           if(outcomes){
-              return outcomes.map((item) => ({ id: item.id, value: item.name, hid: item.id}));
+              return outcomes.map((item) => ({ id: item.id, value: item.name, hid: item.hid}));
           }
       }
   }
@@ -171,12 +171,14 @@ get matchResults(){
     //const {toAddress, isPublic, industryId} = this.props;
 
     //const fromAddress = "0x54CD16578564b9952d645E92b9fa254f1feffee9";
-    const balance = await BetHandshakeHandler.getBalance();
-    console.log('Event Bet:', dict.event_bet);
+    let balance = await BetHandshakeHandler.getBalance();
+    balance = parseFloat(balance);
+    const eventBet = parseFloat(dict.event_bet);
+    console.log('Event Bet:', eventBet);
 
     const fromAddress = address;
 
-    if(selectedMatch && selectedOutcome && dict.event_bet > 0 && dict.event_bet <= balance){
+    if(selectedMatch && selectedOutcome && eventBet > 0 && eventBet <= balance){
       this.initHandshake(extraParams, fromAddress);
 
     }else {
@@ -262,7 +264,7 @@ get matchResults(){
         name={key}
         style={style}
         component={InputField}
-        type="number"
+        type="text"
         //min="0.0001"
         //step="0.0002"
         placeholder={placeholder}
@@ -426,6 +428,8 @@ get matchResults(){
       chain_id: chainId,
     };
     console.log("Params:", params);
+    const hid = selectedOutcome.hid;
+    console.log('Hid when init:', hid);
 
     this.props.initHandshake({PATH_URL: API_URL.CRYPTOSIGN.INIT_HANDSHAKE, METHOD:'POST', data: params,
     successFn: this.initHandshakeSuccess,

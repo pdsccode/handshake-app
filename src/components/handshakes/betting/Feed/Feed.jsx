@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 // services, constants
-import  { BetHandshakeHandler, SIDE, BETTING_STATUS_LABEL} from './BetHandshakeHandler.js';
+import  { BetHandshakeHandler, SIDE, BETTING_STATUS_LABEL, ROLE} from './BetHandshakeHandler.js';
 import momment from 'moment';
 import {MasterWallet} from '@/models/MasterWallet';
 
@@ -18,6 +18,7 @@ import Image from '@/components/core/presentation/Image';
 import Button from '@/components/core/controls/Button';
 import ModalDialog from '@/components/core/controls/ModalDialog';
 import Feed from '@/components/core/presentation/Feed';
+import FeedComponent from '@/components/Comment/FeedComment';
 import BettingShake from './Shake';
 
 // css, icons
@@ -64,19 +65,35 @@ class FeedBetting extends React.Component {
     return false;
   }
 
+  isShakeUser(shakeIds, userId){
+    console.log('User Id:', userId);
+
+    if(shakeIds){
+
+      if(shakeIds.indexOf(userId) > -1){
+        return true;
+
+      }
+
+    }
+  }
+
   componentDidMount() {
-    const {status, side, result} = this.props;
+    const {status, side, result, shakeUserIds} = this.props;
 
     console.log('Props:', this.props);
     console.log('Status:', status);
-    //const hardCodeStatus = 2;
-    const role = side;
+    const profile = local.get(APP.AUTH_PROFILE);
+    const isUserShake = this.isShakeUser(shakeUserIds, profile.id);
+    const role = isUserShake ? ROLE.SHAKER : ROLE.INITER;
     //const blockchainStatusHardcode = 0;
     const isMatch = this.isMatch;
     //const isMatch = true;
+    //const hardCodeStatus = 3;
+    //const hardCodeResult = 1;
     console.log('Is Match:', isMatch);
-    
-    const statusResult = BetHandshakeHandler.getStatusLabel(status, result, role, isMatch);
+
+    const statusResult = BetHandshakeHandler.getStatusLabel(status, result, role,side, isMatch);
     const {title, isAction} = statusResult;
     this.setState({
       actionTitle: title,
@@ -85,7 +102,7 @@ class FeedBetting extends React.Component {
       role,
       isMatch,
     })
-    
+
   }
 
   componentWillReceiveProps(nextProps) {
@@ -120,25 +137,30 @@ class FeedBetting extends React.Component {
      * side = SIDE.SUPPORT // SIDE.AGAINST ;ORGRANCE
      *
      */
+    const {amount, odds} = this.props;
     const {event_name, event_predict, event_odds, event_bet,event_date, balance} = this.extraData;
+    const { commentCount, id, type } = this.props;
 
     return (
       <div>
         {/* Feed */}
-        <Feed className="feed" handshakeId={this.props.id} onClick={this.props.onFeedClick} background="white">
-          <div className="wrapperBettingFeed" style={{backgroundColor:backgroundColor}}>
+        <Feed
+          className="wrapperBettingFeed"
+          handshakeId={this.props.id}
+          onClick={this.props.onFeedClick}
+        >
             <div className="description">
               <p>{event_name}</p>
               <p className="eventInfo">{event_predict}</p>
             </div>
             <div className="bottomWrapper">
-              <span className="odds" >1:{event_odds}</span>
-              <span className="content"  >{event_bet} ETH</span>
+              <span className="odds" >1:{odds}</span>
+              <span className="content"  >{amount} ETH</span>
             </div>
             {this.renderStatus()}
-          </div>
-
         </Feed>
+        {/* Feed Comment */}
+        <FeedComponent commentCount={commentCount} objectId={id.split('_')[1].slice(1)} objectType={type} />
         {/* Shake */}
         {actionTitle && <Button block disabled={!isAction} onClick={() => { this.clickActionButton(actionTitle); }}>{actionTitle}</Button>}
         {/* Modal */}
@@ -161,20 +183,22 @@ class FeedBetting extends React.Component {
 
   clickActionButton(title){
     const {id} = this.props;
-    
+    const realId = BetHandshakeHandler.getId(id);
+    console.log('realId:', realId);
+
     switch(title){
 
       case BETTING_STATUS_LABEL.CANCEL:
         // TO DO: CLOSE BET
-        this.uninitItem(id);
+        this.uninitItem(realId);
         break;
 
       case BETTING_STATUS_LABEL.WITHDRAW:
         // TO DO: WITHDRAW
-        this.collect(id);
+        this.collect(realId);
         break;
-      case BETTING_STATUS_LABEL.REFUND: 
-      this.refund(id);
+      case BETTING_STATUS_LABEL.REFUND:
+      this.refund(realId);
       break;
 
     }
@@ -213,10 +237,11 @@ class FeedBetting extends React.Component {
 
   collectSuccess = async (successData)=>{
     console.log('collectSuccess', successData);
-    const {status, data} = successData
-    if(status && data){
-      const {hid, offchain} = data;
-      
+    const {status} = successData
+    if(status){
+      const {hid, id} = this.props;
+      const offchain = id;
+
       bettinghandshake.withdraw(hid, offchain);
 
     }
@@ -236,8 +261,11 @@ class FeedBetting extends React.Component {
 
   refundSuccess = async (successData)=>{
     console.log('refundSuccess', successData);
-    const {status, data} = successData
-    if(status && data){
+    const {status} = successData
+    if(status){
+      const {hid, id} = this.props;
+      const offchain = id;
+      bettinghandshake.refund(hid, offchain);
     }
   }
   refundFailed = (error) => {
@@ -272,4 +300,3 @@ const mapDispatch = ({
   rollback
 });
 export default connect(mapState, mapDispatch)(FeedBetting);
-

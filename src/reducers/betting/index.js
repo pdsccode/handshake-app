@@ -38,7 +38,7 @@ const bettingReducter = (state = {
       return {
         ...state,
         isFetching: true,
-        supports: action.payload.data.supports,
+        supports: action.payload.data.support,
         against: action.payload.data.against,
       };
       case `${BETTING_ACTIONS.LOAD_HANDSHAKES}_FAILED`:
