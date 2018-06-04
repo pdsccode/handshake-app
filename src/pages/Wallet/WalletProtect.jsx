@@ -185,7 +185,7 @@ class WalletProtect extends React.Component {
       bMatch = arr_confirm[i] ==  arr_phrase[i];
       i++;
     }
-    bMatch = true;//open for test
+
 
     if(bMatch){
       this.setState({step1_confirm: false, step: 1, arr_confirm: [], arr_random: []});

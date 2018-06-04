@@ -51,7 +51,7 @@ var isIOs = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
 
 const nameFormSendWallet = 'sendWallet';
 const SendWalletForm = createForm({ propsReduxForm: { form: nameFormSendWallet }});
-
+ 
 const nameFormCreditCard = 'creditCard';
 const FormCreditCard = createForm({
   propsReduxForm: {
@@ -84,7 +84,7 @@ class Wallet extends React.Component {
       walletKeyDefaultToCreate: 1,
       input12PhraseValue: '',
       //Qrcode
-      qrCodeOpen: false,
+      qrCodeOpen: false, 
       delay: 300,
       walletsData: false,
       isNewCCOpen: false,
@@ -287,7 +287,7 @@ class Wallet extends React.Component {
 
   // Restore wallet:
   restoreWallets = () =>{
-    
+
       this.setState({isRestoreLoading: true, erroValueBackup: false});
       if (this.state.inputRestoreWalletValue != ''){
         let walletData = MasterWallet.restoreWallets(this.state.inputRestoreWalletValue);
@@ -297,7 +297,7 @@ class Wallet extends React.Component {
           this.modalRestoreRef.close();
         }
       }
-  
+
     //alert('Invalid wallets');
     this.setState({erroValueBackup: true, isRestoreLoading: false});
   }
@@ -470,7 +470,7 @@ class Wallet extends React.Component {
   successWalletProtect = (wallet) =>{
 
     let lstWalletTemp = this.getAllWallet();
-    lstWalletTemp.forEach(wal => {if (wallet.mnemonic == wal.mnemonic){wal.protected = false;}})
+    lstWalletTemp.forEach(wal => {if (wallet.mnemonic == wal.mnemonic){wal.protected = true;}})
     // Update wallet master from local store:
     MasterWallet.UpdateLocalStore(lstWalletTemp);
     this.modalProtectRef.close();
@@ -479,40 +479,40 @@ class Wallet extends React.Component {
 
   // For Qrcode:
   handleScan=(data) =>{
-    if(data){      
+    if(data){
       this.setState({
-        inputAddressAmountValue: data,         
-      });   
-      this.modalScanQrCodeRef.close()   
+        inputAddressAmountValue: data,
+      });
+      this.modalScanQrCodeRef.close()
     }
   }
   handleError(err){
     console.log("error wc",err)
   }
 
-  oncloseQrCode=()=>{        
-    this.setState({qrCodeOpen: false});    
+  oncloseQrCode=()=>{
+    this.setState({qrCodeOpen: false});
   }
 
-  openQrcode = () =>{    
-    this.setState({qrCodeOpen: true});  
+  openQrcode = () =>{
+    this.setState({qrCodeOpen: true});
     this.modalScanQrCodeRef.open()
   }
-  
-  renderScanQRCode = () =>{        
+
+  renderScanQRCode = () =>{
     return(
       <Modal onClose={() => this.oncloseQrCode()} title="Scan QR code" onRef={modal => this.modalScanQrCodeRef = modal}>
-        {this.state.qrCodeOpen ? 
+        {this.state.qrCodeOpen ?
         <QrReader
           delay={this.state.delay}
           onScan={(data) => {this.handleScan(data)}}
-          onError={this.handleError}          
+          onError={this.handleError}
           style={{ width: '100%', height: '100%' }}
-          />              
-        : ""}        
+          />
+        : ""}
       </Modal>
     )
-    
+
   }
 
   render() {
@@ -530,7 +530,7 @@ class Wallet extends React.Component {
         {/* ModalDialog for confirm remove wallet */}
         <ModalDialog title="Confirmation" onRef={modal => this.modalBetRef = modal}>
           <div><span>Are you sure to want to remove this wallet?</span></div>
-          <div className='bodyConfirm'>
+          <div class='bodyConfirm'>
           <Button className="left" cssType="danger" onClick={this.removeWallet} >Yes</Button>
             <Button className="right" cssType="secondary" onClick={() => { this.modalBetRef.close(); }}>Cancel</Button>
           </div>
