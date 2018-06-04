@@ -44,6 +44,8 @@ import {Link} from "react-router-dom";
 import {URL} from '@/config';
 import {getDistanceFromLatLonInKm} from '../utils'
 import {ExchangeHandshake} from '@/services/neuron';
+import _sample from "lodash/sample";
+import { feedBackgroundColors } from "@/components/handshakes/exchange/config";
 
 class FeedExchange extends React.PureComponent {
   constructor(props) {
@@ -59,6 +61,7 @@ class FeedExchange extends React.PureComponent {
     this.state = {
       modalContent: '',
     };
+    this.mainColor = _sample(feedBackgroundColors)
   }
 
   componentDidMount() {
@@ -146,21 +149,11 @@ class FeedExchange extends React.PureComponent {
 
     const wallet = MasterWallet.getWalletDefault(offer.currency);
     const balance = await wallet.getBalance();
+    const fee = await wallet.getFee(4, true);
 
     if ((offer.currency === CRYPTO_CURRENCY.ETH || (offer.type === EXCHANGE_ACTION.BUY && offer.currency === CRYPTO_CURRENCY.BTC))
-        && balance < offer.totalAmount + DEFAULT_FEE[offer.currency]) {
-      this.props.showAlert({
-        message: <div className="text-center">
-          {intl.formatMessage({ id: 'notEnoughCoinInWallet' }, {
-            amount: new BigNumber(balance).toFormat(6),
-            currency: offer.currency,
-          })}
-        </div>,
-        timeOut: 3000,
-        type: 'danger',
-        callBack: () => {
-        }
-      });
+        && balance < offer.totalAmount + fee) {
+      this.showNotEnoughCoinAlert(balance, fee, offer.currency);
 
       return;
     }
@@ -180,6 +173,22 @@ class FeedExchange extends React.PureComponent {
       data: offerShake,
       successFn: this.handleShakeOfferSuccess,
       errorFn: this.handleShakeOfferFailed,
+    });
+  }
+
+  showNotEnoughCoinAlert = (balance, fee, currency) => {
+    this.props.showAlert({
+      message: <div className="text-center">
+        {intl.formatMessage({ id: 'notEnoughCoinInWallet' }, {
+          amount: new BigNumber(balance).toFormat(6),
+          fee: fee,
+          currency: currency,
+        })}
+      </div>,
+      timeOut: 3000,
+      type: 'danger',
+      callBack: () => {
+      }
     });
   }
 
@@ -218,8 +227,21 @@ class FeedExchange extends React.PureComponent {
 
   ////////////////////////
 
-  handleCloseOffer = () => {
+  handleCloseOffer = async () => {
     const offer = this.offer;
+
+    if (offer.currency === CRYPTO_CURRENCY.ETH) {
+      const wallet = MasterWallet.getWalletDefault(offer.currency);
+      const balance = await wallet.getBalance();
+      const fee = await wallet.getFee();
+
+      if (balance < offer.totalAmount + fee) {
+        this.showNotEnoughCoinAlert(balance, fee, offer.currency);
+
+        return;
+      }
+    }
+
     this.props.closeOffer({
       BASE_URL: API_URL.EXCHANGE.BASE,
       PATH_URL: API_URL.EXCHANGE.OFFERS + '/' + offer.id,
@@ -256,8 +278,20 @@ class FeedExchange extends React.PureComponent {
 
   ////////////////////////
 
-  handleCompleteShakedOffer = () => {
+  handleCompleteShakedOffer = async () => {
     const offer = this.offer;
+
+    if (offer.currency === CRYPTO_CURRENCY.ETH) {
+      const wallet = MasterWallet.getWalletDefault(offer.currency);
+      const balance = await wallet.getBalance();
+      const fee = await wallet.getFee();
+
+      if (balance < offer.totalAmount + fee) {
+        this.showNotEnoughCoinAlert(balance, fee, offer.currency);
+
+        return;
+      }
+    }
 
     this.props.completeShakedOffer({
       BASE_URL: API_URL.EXCHANGE.BASE,
@@ -302,8 +336,20 @@ class FeedExchange extends React.PureComponent {
 
   ////////////////////////
 
-  handleRejectShakedOffer = () => {
+  handleRejectShakedOffer = async () => {
     const offer = this.offer;
+
+    if (offer.currency === CRYPTO_CURRENCY.ETH) {
+      const wallet = MasterWallet.getWalletDefault(offer.currency);
+      const balance = await wallet.getBalance();
+      const fee = await wallet.getFee();
+
+      if (balance < offer.totalAmount + fee) {
+        this.showNotEnoughCoinAlert(balance, fee, offer.currency);
+
+        return;
+      }
+    }
 
     this.props.cancelShakedOffer({
       BASE_URL: API_URL.EXCHANGE.BASE,
@@ -355,8 +401,20 @@ class FeedExchange extends React.PureComponent {
 
   ////////////////////////
 
-  handleWithdrawShakedOffer = () => {
+  handleWithdrawShakedOffer = async () => {
     const offer = this.offer;
+
+    if (offer.currency === CRYPTO_CURRENCY.ETH) {
+      const wallet = MasterWallet.getWalletDefault(offer.currency);
+      const balance = await wallet.getBalance();
+      const fee = await wallet.getFee();
+
+      if (balance < offer.totalAmount + fee) {
+        this.showNotEnoughCoinAlert(balance, fee, offer.currency);
+
+        return;
+      }
+    }
 
     this.props.cancelShakedOffer({
       BASE_URL: API_URL.EXCHANGE.BASE,
@@ -413,7 +471,7 @@ class FeedExchange extends React.PureComponent {
           case HANDSHAKE_EXCHANGE_STATUS.ACTIVE: {
             let amount = 0;
             if (offer.type === EXCHANGE_ACTION.BUY) {
-              amount = data.amount;
+              amount = data.totalAmount;
             }
             const result = await exchangeHandshake.shake(data.hid, amount, data.id);
 
@@ -950,7 +1008,11 @@ class FeedExchange extends React.PureComponent {
             </div>
           )
         }
-        <Feed className="feed text-white" background={`${mode === 'discover' ? '#FF2D55' : '#50E3C2'}`}>
+        <Feed
+          className="feed text-white"
+          // background={`${mode === 'discover' ? '#FF2D55' : '#50E3C2'}`}
+          background={this.mainColor}
+        >
           <div className="d-flex mb-4">
             <div>
               <h5>
@@ -965,8 +1027,8 @@ class FeedExchange extends React.PureComponent {
               </div>
             )}
           </div>
-          <span>status: {status}</span><br></br>
-          <span>userType: {this.userType}</span><br></br>
+          {/*<span>status: {status}</span><br></br>*/}
+          {/*<span>userType: {this.userType}</span><br></br>*/}
           {
             mode === 'discover' ? (
               <div className="media mb-1">

@@ -14,7 +14,7 @@ const Form = (props) => {
 Form.propTypes = {
   children: PropTypes.any.isRequired,
   handleSubmit: PropTypes.func.isRequired,
-  className: PropTypes.string.isRequired,
+  className: PropTypes.string,
 };
 
 export default ({ propsReduxForm }) => reduxForm(propsReduxForm)(Form);

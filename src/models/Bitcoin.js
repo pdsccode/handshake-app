@@ -169,12 +169,17 @@ export class Bitcoin extends Wallet {
       return this.findUtxos(utxos, pos + 1, amount, result);
     }
 
-    async getFee(blocks) {
+    async getFee(blocks = 4, toBTC) {
       const url = `${this.network}/utils/estimatefee?nbBlocks=${blocks}`;
       const response = await axios.get(url);
 
-      if (response.status == 200) {
-        const txFee = bitcore.Unit.fromBTC(response.data[blocks]).toSatoshis();
+      if (response.status === 200) {
+        let txFee = '';
+        if (toBTC) {
+          txFee = bitcore.Unit.fromBTC(response.data[blocks]).toBTC();
+        } else {
+          txFee = bitcore.Unit.fromBTC(response.data[blocks]).toSatoshis();
+        }
         return txFee;
       }
       return false;
