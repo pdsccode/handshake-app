@@ -413,7 +413,7 @@ class FeedExchange extends React.PureComponent {
           case HANDSHAKE_EXCHANGE_STATUS.ACTIVE: {
             let amount = 0;
             if (offer.type === EXCHANGE_ACTION.BUY) {
-              amount = data.amount;
+              amount = data.totalAmount;
             }
             const result = await exchangeHandshake.shake(data.hid, amount, data.id);
 
