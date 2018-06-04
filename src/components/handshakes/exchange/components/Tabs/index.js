@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 const Wrapper = styled.div`
   box-shadow: 0 0.125rem 0.25rem 0 rgba(203, 203, 203, 0.5);
-  margin-bottom: 10px;
+  margin-bottom: 23px;
 `;
 const Tab = styled.span`
   color: ${props => (props.active ? '#1E4EFF' : '#C8C7CC')};

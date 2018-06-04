@@ -29,21 +29,41 @@ export const HANDSHAKE_NAME = {
 export const PRICE_DECIMAL = 2;
 export const AMOUNT_DECIMAL = 6;
 
-export const CRYPTO_CURRENCY = [
-  { value: 'ETH', text: 'ETH' },
-  { value: 'BTC', text: 'BTC' },
+export const CRYPTO_CURRENCY = {
+  ETH: 'ETH',
+  BTC: 'BTC',
+};
+
+export const CRYPTO_CURRENCY_NAME = {
+  [CRYPTO_CURRENCY.ETH]: 'ETH',
+  [CRYPTO_CURRENCY.BTC]: 'BTC',
+};
+
+export const CRYPTO_CURRENCY_LIST = [
+  { value: CRYPTO_CURRENCY.ETH, text: CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.ETH] },
+  { value: CRYPTO_CURRENCY.BTC, text: CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.BTC] },
 ];
 export const FIREBASE_PATH = {
   USERS: '/users',
 };
-export const CRYPTO_CURRENCY_DEFAULT = 'ETH';
+export const CRYPTO_CURRENCY_DEFAULT = CRYPTO_CURRENCY.ETH;
 
-export const EXCHANGE_ACTION = [
-  { value: 'buy', text: 'Buy' },
-  { value: 'sell', text: 'Sell' },
+export const EXCHANGE_ACTION = {
+  BUY: 'buy',
+  SELL: 'sell',
+};
+
+export const EXCHANGE_ACTION_NAME = {
+  [EXCHANGE_ACTION.BUY]: 'Buy',
+  [EXCHANGE_ACTION.SELL]: 'Sell',
+};
+
+export const EXCHANGE_ACTION_LIST = [
+  { value: EXCHANGE_ACTION.BUY, text: EXCHANGE_ACTION_NAME[EXCHANGE_ACTION.BUY] },
+  { value: EXCHANGE_ACTION.SELL, text: EXCHANGE_ACTION_NAME[EXCHANGE_ACTION.SELL] },
 ];
 
-export const EXCHANGE_ACTION_DEFAULT = 'buy';
+export const EXCHANGE_ACTION_DEFAULT = EXCHANGE_ACTION.BUY;
 
 export const FIAT_CURRENCY = 'USD';
 export const FIAT_CURRENCY_SYMBOL = '$';
@@ -122,29 +142,48 @@ export const HANDSHAKE_STATUS_NAME = {
 };
 
 export const HANDSHAKE_EXCHANGE_STATUS = {
-  CREATED: 0,
-  ACTIVE: 1,
-  CLOSED: 2,
-  SHAKING: 3,
-  SHAKE: 4,
-  COMPLETED: 5,
-  WITHDRAW: 6,
-  REJECTED: 7,
+  CREATED:     0,
+  ACTIVE:      1,
+  CLOSING:     2,
+  CLOSED:      3,
+  SHAKING:     4,
+  SHAKE:       5,
+  COMPLETING:  6,
+  COMPLETED:   7,
+  WITHDRAWING: 8,
+  WITHDRAW:    9,
+  REJECTING:   10,
+  REJECTED:    11,
 };
 
 export const HANDSHAKE_EXCHANGE_STATUS_NAME = {
   [HANDSHAKE_EXCHANGE_STATUS.CREATED]: 'created',
   [HANDSHAKE_EXCHANGE_STATUS.ACTIVE]: 'active',
+  [HANDSHAKE_EXCHANGE_STATUS.CLOSING]: 'closing',
   [HANDSHAKE_EXCHANGE_STATUS.CLOSED]: 'closed',
   [HANDSHAKE_EXCHANGE_STATUS.SHAKING]: 'shaking',
   [HANDSHAKE_EXCHANGE_STATUS.SHAKE]: 'shake',
-  // [HANDSHAKE_EXCHANGE_STATUS.COMPLETING]: 'completing',
+  [HANDSHAKE_EXCHANGE_STATUS.COMPLETING]: 'completing',
   [HANDSHAKE_EXCHANGE_STATUS.COMPLETED]: 'completed',
+  [HANDSHAKE_EXCHANGE_STATUS.WITHDRAWING]: 'withdrawing',
   [HANDSHAKE_EXCHANGE_STATUS.WITHDRAW]: 'withdraw',
+  [HANDSHAKE_EXCHANGE_STATUS.REJECTING]: 'rejecting',
   [HANDSHAKE_EXCHANGE_STATUS.REJECTED]: 'rejected',
 };
 
-export const HANDSHAKE_USER = {
+export const HANDSHAKE_EXCHANGE_CC_STATUS = {
+  PROCESSING: 0,
+  SUCCESS: 1,
+  CANCELLED: 2
+};
+
+export const HANDSHAKE_EXCHANGE_CC_STATUS_NAME = {
+  [HANDSHAKE_EXCHANGE_CC_STATUS.PROCESSING]: 'processing',
+  [HANDSHAKE_EXCHANGE_CC_STATUS.SUCCESS]: 'success',
+  [HANDSHAKE_EXCHANGE_CC_STATUS.CANCELLED]: 'cancelled'
+};
+
+export const HANDSHAKE_USER  = {
   NORMAL: 0,
   OWNER: 1,
   SHAKED: 2,
@@ -161,3 +200,14 @@ export const DEFAULT_FEE = {
   BTC: 0,
 };
 
+export const EXCHANGE_FEED_TYPE = {
+  EXCHANGE: 'exchange',
+  INSTANT: 'instant',
+};
+
+export const EXCHANGE_METHOD_PAYMENT = {
+  [EXCHANGE_FEED_TYPE.EXCHANGE]: 'cash',
+  [EXCHANGE_FEED_TYPE.INSTANT]: 'credit card',
+};
+
+export const DISCOVER_GET_HANDSHAKE_RADIUS = 20;

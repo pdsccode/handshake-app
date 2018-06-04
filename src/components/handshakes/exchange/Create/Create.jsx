@@ -20,10 +20,13 @@ import {connect} from 'react-redux';
 import {createOffer, getOfferPrice} from '@/reducers/exchange/action';
 import {
   API_URL,
-  CRYPTO_CURRENCY,
+  CRYPTO_CURRENCY_LIST,
   CRYPTO_CURRENCY_DEFAULT,
+  DEFAULT_FEE,
   EXCHANGE_ACTION,
   EXCHANGE_ACTION_DEFAULT,
+  EXCHANGE_ACTION_LIST,
+  EXCHANGE_ACTION_NAME,
   FIAT_CURRENCY,
   FIAT_CURRENCY_SYMBOL,
   PRICE_DECIMAL,
@@ -38,8 +41,9 @@ import getSymbolFromCurrency from 'currency-symbol-map';
 import {URL} from '@/config';
 import {showAlert} from '@/reducers/app/action';
 import {MasterWallet} from "@/models/MasterWallet";
-import {DEFAULT_FEE} from "@/constants";
-import { ExchangeHandshake } from '@/services/neuron';
+import {ExchangeHandshake} from '@/services/neuron';
+import phoneCountryCodes from '@/components/core/form/country-calling-codes.min.json';
+import {CRYPTO_CURRENCY} from "@/constants";
 
 const nameFormExchangeCreate = 'exchangeCreate';
 const FormExchangeCreate = createForm({
@@ -80,9 +84,9 @@ class Component extends React.Component {
     });
   }
 
-  async componentDidMount() {
-    const { ipInfo, rfChange, authProfile } = this.props
-    navigator.geolocation.getCurrentPosition((location) => {
+async componentDidMount() {
+  const { ipInfo, rfChange, authProfile } = this.props;
+  navigator.geolocation.getCurrentPosition((location) => {
       const { coords: { latitude, longitude } } = location
       this.setAddressFromLatLng(latitude, longitude) // better precision
     }, () => {
@@ -90,7 +94,12 @@ class Component extends React.Component {
     });
 
     // auto fill phone number from user profile
-    rfChange(nameFormExchangeCreate, 'phone', authProfile.phone || '')
+    let detectedCountryCode = ''
+    const foundCountryPhone = phoneCountryCodes.find(i => i.code.toUpperCase() === ipInfo.country_code.toUpperCase())
+    if (foundCountryPhone) {
+      detectedCountryCode = foundCountryPhone.callingCode
+    }
+    rfChange(nameFormExchangeCreate, 'phone', authProfile.phone || `${detectedCountryCode}-`)
 
     this.getCryptoPriceByAmount(0);
     this.intervalCountdown = setInterval(() => {
@@ -161,17 +170,18 @@ class Component extends React.Component {
   handleSubmit = async (values) => {
     const { intl, totalAmount, price } = this.props;
     // const fiat_currency = this.state.ipInfo.currency;
-    const {ipInfo: {currency: fiat_currency}} = this.props;
+    const {ipInfo: {currency: fiat_currency}, authProfile} = this.props;
     // console.log('valuessss', values);
 
     const wallet = MasterWallet.getWalletDefault(values.currency);
     const balance = await wallet.getBalance();
 
-    if (values.type === 'sell' && balance < values.amount + DEFAULT_FEE[values.currency]) {
+    if ((values.currency === CRYPTO_CURRENCY.ETH || (values.type === EXCHANGE_ACTION.SELL && values.currency === CRYPTO_CURRENCY.BTC))
+      && balance < values.amount + DEFAULT_FEE[values.currency]) {
       this.props.showAlert({
         message: <div className="text-center">
           {intl.formatMessage({ id: 'notEnoughCoinInWallet' }, {
-            amount: new BigNumber(values.amount).toFormat(6),
+            amount: new BigNumber(balance).toFormat(6),
             currency: values.currency,
           })}
           </div>,
@@ -199,10 +209,11 @@ class Component extends React.Component {
       contact_phone: values.phone,
       fiat_currency: fiat_currency,
       latitude: this.state.lat,
-      longitude: this.state.lng
+      longitude: this.state.lng,
+      email: authProfile.email,
     };
 
-    if (values.type === 'buy') {
+    if (values.type === EXCHANGE_ACTION.BUY) {
       offer.user_address = address;
     } else {
       offer.refund_address = address;
@@ -212,7 +223,7 @@ class Component extends React.Component {
 
     console.log('handleSubmit', offer);
     const message = intl.formatMessage({ id: 'createOfferConfirm' }, {
-      type: values.type === 'buy' ? 'Buy' : 'Sell',
+      type: EXCHANGE_ACTION_NAME[values.type],
       amount: new BigNumber(values.amount).toFormat(6),
       currency: values.currency,
       currency_symbol: getSymbolFromCurrency(fiat_currency),
@@ -270,22 +281,23 @@ class Component extends React.Component {
     console.log('handleCreateOfferSuccess', data);
 
     const wallet = MasterWallet.getWalletDefault(currency);
+    const rewardWallet = MasterWallet.getRewardWalletDefault(currency);
 
     console.log('data', data);
     console.log('wallet', wallet);
 
-    if (currency === 'BTC') {
+    if (currency === CRYPTO_CURRENCY.BTC) {
       wallet.transfer(data.system_address, data.amount).then(success => {
         console.log('transfer', success);
       });
-    } else if (currency === 'ETH') {
+    } else if (currency === CRYPTO_CURRENCY.ETH) {
       const exchangeHandshake = new ExchangeHandshake(wallet.chainId);
 
       let result = null;
-      if (data.type === 'buy') {
-        result = await exchangeHandshake.init(wallet.address, wallet.address, data.amount, data.id);
+      if (data.type === EXCHANGE_ACTION.BUY) {
+        result = await exchangeHandshake.initByCashOwner(wallet.address, rewardWallet.address, data.amount, data.id);
       } else {
-        result = await exchangeHandshake.initByCoinOwner(wallet.address, wallet.address, data.amount, data.id);
+        result = await exchangeHandshake.initByCoinOwner(wallet.address, rewardWallet.address, data.amount, data.id);
       }
 
       console.log('handleCreateOfferSuccess', result);
@@ -295,14 +307,14 @@ class Component extends React.Component {
     //   this.modalSendRef.close();
     // });
 
-    // this.props.showAlert({
-    //   message: <div className="text-center"><FormattedMessage id="createOfferSuccessMessage"/></div>,
-    //   timeOut: 3000,
-    //   type: 'danger',
-    //   callBack: () => {
-    //     this.props.history.push(URL.HANDSHAKE_ME);
-    //   }
-    // });
+    this.props.showAlert({
+      message: <div className="text-center"><FormattedMessage id="createOfferSuccessMessage"/></div>,
+      timeOut: 3000,
+      type: 'success',
+      callBack: () => {
+        this.props.history.push(URL.HANDSHAKE_ME);
+      }
+    });
 
     // this.timeoutClosePopup = setTimeout(() => {
     //   this.handleBuySuccess();
@@ -373,12 +385,12 @@ class Component extends React.Component {
           <Feed className="feed p-2 my-2" background={mainColor}>
             <div style={{ color: 'white' }}>
               <div className="d-flex mb-2">
-                <label className="col-form-label mr-auto" style={{ width: '120px' }}>I want to</label>
+                <label className="col-form-label mr-auto" style={{ width: '190px' }}>I want to</label>
                 <div className='input-group'>
                   <Field
                     name="type"
                     component={fieldRadioButton}
-                    list={EXCHANGE_ACTION}
+                    list={EXCHANGE_ACTION_LIST}
                     color={mainColor}
                     validate={[required]}
                     onChange={this.onTypeChange}
@@ -386,12 +398,12 @@ class Component extends React.Component {
                 </div>
               </div>
               <div className="d-flex">
-                <label className="col-form-label mr-auto" style={{ width: '120px' }}>Coin</label>
+                <label className="col-form-label mr-auto" style={{ width: '190px' }}>Coin</label>
                 <div className='input-group'>
                   <Field
                     name="currency"
                     component={fieldRadioButton}
-                    list={CRYPTO_CURRENCY}
+                    list={CRYPTO_CURRENCY_LIST}
                     color={mainColor}
                     validate={[required]}
                     onChange={this.onCurrencyChange}
@@ -399,23 +411,23 @@ class Component extends React.Component {
                 </div>
               </div>
               <div className="d-flex mt-2">
-                <label className="col-form-label mr-auto" style={{ width: '120px' }}>Amount*</label>
+                <label className="col-form-label mr-auto" style={{ width: '190px' }}>Amount*</label>
                 <div className="w-100">
                   <Field
                     name="amount"
                     className="form-control-custom form-control-custom-ex w-100"
                     component={fieldInput}
                     onChange={this.onAmountChange}
-                    validate={[required, currency === 'BTC' ? minValue001 : minValue01]}
+                    validate={[required, currency === CRYPTO_CURRENCY.BTC ? minValue001 : minValue01]}
                   />
                 </div>
               </div>
               <div className="d-flex">
-                <label className="col-form-label mr-auto" style={{ width: '120px' }}>Price ({FIAT_CURRENCY_SYMBOL})*</label>
-                <span className="w-100 col-form-label">{new BigNumber(offerPrice ? offerPrice.price : 0).toFormat(PRICE_DECIMAL)}</span>
+                <label className="col-form-label mr-auto" style={{ width: '190px' }}>Price</label>
+                <span className="w-100 col-form-label">{new BigNumber(offerPrice ? offerPrice.price : 0).toFormat(PRICE_DECIMAL)} {FIAT_CURRENCY}</span>
               </div>
               <div className="d-flex mt-2">
-                {/*<label className="col-form-label mr-auto" style={{ width: '120px' }} />*/}
+                {/*<label className="col-form-label mr-auto" style={{ width: '190px' }} />*/}
                 <div className='input-group justify-content-end'>
                   <Field
                     name="sellPriceType"
@@ -428,23 +440,24 @@ class Component extends React.Component {
                 </div>
               </div>
               <div className="d-flex mt-2">
-                <label className="col-form-label mr-auto" style={{ width: '120px' }}>Customize price (%)</label>
+                <label className="col-form-label mr-auto" style={{ width: '190px' }}>Customize price</label>
                 <div className='input-group align-items-center'>
                   <Field
                     name="customizePrice"
                     // className='form-control-custom form-control-custom-ex w-100'
                     component={fieldNumericInput}
+                    suffix={'%'}
                     color={mainColor}
                     validate={validateFee}
                   />
                 </div>
               </div>
               <div className="d-flex">
-                <label className="col-form-label mr-auto" style={{ width: '120px' }}>Total ({FIAT_CURRENCY_SYMBOL})</label>
-                <span className="w-100 col-form-label">{new BigNumber(totalAmount).toFormat(PRICE_DECIMAL)}</span>
+                <label className="col-form-label mr-auto" style={{ width: '190px' }}>Total</label>
+                <span className="w-100 col-form-label">{new BigNumber(totalAmount).toFormat(PRICE_DECIMAL)} {FIAT_CURRENCY}</span>
               </div>
               <div className="d-flex">
-                <label className="col-form-label mr-auto" style={{ width: '120px' }}>Phone</label>
+                <label className="col-form-label mr-auto" style={{ width: '190px' }}>Phone</label>
                 <div className="input-group w-100">
                   <Field
                     name="phone"
@@ -457,7 +470,7 @@ class Component extends React.Component {
                 </div>
               </div>
               <div className="d-flex mt-2">
-                <label className="col-form-label mr-auto" style={{ width: '120px' }}>Address*</label>
+                <label className="col-form-label mr-auto" style={{ width: '190px' }}>Address*</label>
                 <div className="w-100">
                   <Field
                     name="address"

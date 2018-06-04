@@ -25,6 +25,9 @@
 }
 
 .select-customized {
+  -webkit-appearance: none;
+  -moz-appearance:    none;
+  appearance:         none;
   outline: none;
   height: calc(2rem + 1px);
   border: none;
