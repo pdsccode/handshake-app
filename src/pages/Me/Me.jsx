@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 // action, mock
-import { loadMyHandshakeList } from '@/reducers/me/action';
+import { fireBaseDataChange, loadMyHandshakeList } from '@/reducers/me/action';
 import { API_URL, HANDSHAKE_ID } from '@/constants';
 import { URL } from '@/config';
 // components
@@ -32,7 +32,14 @@ class Me extends React.Component {
 
   componentDidMount() {
     this.getListOfferPrice();
-    this.props.loadMyHandshakeList({ PATH_URL: API_URL.ME.BASE });
+    this.loadMyHandshakeList();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (JSON.stringify(nextProps.firebaseUser) !== JSON.stringify(this.props.firebaseUser) &&
+      JSON.stringify(nextProps.firebaseUser.offers) !== JSON.stringify(nextProps.firebaseUser.offers)) {
+      this.props.fireBaseDataChange(nextProps.firebaseUser.offers);
+    }
   }
 
   getListOfferPrice = () => {
@@ -45,6 +52,10 @@ class Me extends React.Component {
     });
   }
 
+  loadMyHandshakeList = () => {
+    this.props.loadMyHandshakeList({ PATH_URL: API_URL.ME.BASE });
+  }
+
   render() {
     const { list } = this.props.me;
     return (
@@ -52,7 +63,7 @@ class Me extends React.Component {
         <Row>
           <Col md={12}>
             <Link className="update-profile" to={URL.HANDSHAKE_ME_PROFILE} title="profile">
-              <Image src={AvatarSVG} alt="avatar" />
+              <Image className="avatar" src={AvatarSVG} alt="avatar" />
               <div className="text">
                 <strong>My Profile</strong>
                 <p>Vertify your email, phone numbers</p>
@@ -72,7 +83,9 @@ class Me extends React.Component {
                   if (FeedComponent) {
                     return (
                       <Col key={handshake.id} className="feed-wrapper">
-                        <FeedComponent {...handshake} history={this.props.history} onFeedClick={() => this.clickFeedDetail(handshake.id)} mode={'me'}/>
+                        <FeedComponent {...handshake} history={this.props.history} onFeedClick={() => this.clickFeedDetail(handshake.id)} mode={'me'}
+                                       refreshPage={this.loadMyHandshakeList}
+                        />
                       </Col>
                     );
                   }
@@ -97,11 +110,13 @@ Me.propTypes = {
 const mapState = state => ({
   me: state.me,
   app: state.app,
+  firebaseUser: state.firebase.data,
 });
 
 const mapDispatch = ({
   loadMyHandshakeList,
   getListOfferPrice,
+  fireBaseDataChange,
 });
 
 export default connect(mapState, mapDispatch)(Me);

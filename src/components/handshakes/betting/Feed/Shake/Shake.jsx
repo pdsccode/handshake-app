@@ -7,20 +7,26 @@ import { connect } from 'react-redux';
 import createForm from '@/components/core/form/createForm';
 import { required } from '@/components/core/form/validation';
 import { Field } from "redux-form";
-import { shakeItem } from '@/reducers/handshake/action';
-import {HANDSHAKE_ID, API_URL } from '@/constants';
+import { shakeItem, initHandshake, } from '@/reducers/handshake/action';
+import {HANDSHAKE_ID, API_URL, APP } from '@/constants';
 import {MasterWallet} from '@/models/MasterWallet';
+import local from '@/services/localStore';
+import { BettingHandshake } from '@/services/neuron';
 
 // components
 import { InputField } from '@/components/handshakes/betting/form/customField';
 import Button from '@/components/core/controls/Button';
 import Toggle from './../Toggle';
+import {showAlert} from '@/reducers/app/action';
 
 import './Shake.scss';
+import { BetHandshakeHandler } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
 
 
 const wallet = MasterWallet.getWalletDefault('ETH');
 const chainId = wallet.chainId;
+
+const bettinghandshake = new BettingHandshake(chainId);
 
 const nameFormBettingShake = 'bettingShakeForm';
 const BettingShakeForm = createForm({
@@ -33,7 +39,10 @@ const defaultAmount = 1;
 
 class BetingShake extends React.Component {
   static propTypes = {
-    outcomeId: PropTypes.number.isRequired,
+    outcomeId: PropTypes.number,
+    outcomeHid: PropTypes.number,
+    matchName: PropTypes.string,
+    matchOutcome: PropTypes.string,
     onSubmitClick: PropTypes.func,
     onCancelClick: PropTypes.func,
   }
@@ -44,11 +53,11 @@ class BetingShake extends React.Component {
 
   constructor(props) {
     super(props);
-    const {odd} = props;
     this.state = {
-      amount: defaultAmount,
-      total: defaultAmount * odd,
-      buttonClass: 'btnOK btnRed',
+      buttonClass: 'btnOK btnBlue',
+      isShowOdds: true,
+      extraData: {},
+
     };
 
     this.onSubmit = ::this.onSubmit;
@@ -57,14 +66,35 @@ class BetingShake extends React.Component {
     this.renderForm = ::this.renderForm;
     this.onToggleChange = ::this.onToggleChange;
   }
+  componentDidMount(){
+    const {extraData} = this.state;
+    const {matchName, matchOutcome, outcomeHid} = this.props;
+    extraData["event_name"] = matchName;
+    extraData["event_predict"] = matchOutcome;
+    this.setState({extraData})
+    console.log('componentDidMount OutcomeHid:', outcomeHid);
+  }
 
-  onSubmit(values) {
+  async onSubmit(values) {
     console.log("Submit");
-    const {amount} = this.state;
-    console.log("this.toggle", this.toggleRef.value);
+    const {isShowOdds} = this.state;
+    const {matchName, matchOutcome} = this.props;
+    const amount = parseFloat(values.amount);
+    const odds = parseFloat(values.odds);
+    console.log("Amount, this.toggle", this.toggleRef.value);
     // this.props.onSubmitClick(amount);
-    const side = this.toggleRef.value;
-    this.shakeItem(amount, side);
+    const side = parseInt(this.toggleRef.value);
+    const balance = await BetHandshakeHandler.getBalance();
+    console.log('Amount:', amount);
+    //if(matchName && matchOutcome && amount <= balance && amount > 0){
+      if(isShowOdds){
+        this.initHandshake(amount, odds);
+      }else {
+        this.shakeItem(amount, side);
+  
+      }
+    //}
+    
   }
 
   onCancel() {
@@ -73,7 +103,7 @@ class BetingShake extends React.Component {
   }
 
   onToggleChange(id) {
-    this.setState({buttonClass: `btnOK ${id === 2 ? 'btnBlue' : 'btnRed' }`});
+    this.setState({buttonClass: `btnOK ${id === 1 ? 'btnBlue' : 'btnRed' }`});
   }
 
   updateTotal(value) {
@@ -123,7 +153,7 @@ class BetingShake extends React.Component {
   }
 
   renderForm() {
-    const { total, buttonClass } = this.state;
+    const { total, buttonClass, isShowOdds } = this.state;
     const { remaining, odd } = this.props;
     const odds = `1 : ${odd}`;
 
@@ -168,28 +198,40 @@ class BetingShake extends React.Component {
 
     const amountField = {
       id: 'amount',
-      name: 'you',
+      name: 'amount',
       label: 'Amount',
       className: 'amount',
       placeholder: '0.00',
+    };
+    const oddsField = {
+      id: 'odds',
+      name: 'odds',
+      label: 'Odds',
+      placeholder: '0-0',
+      isShowCurrency: false
     };
 
     return (
       <BettingShakeForm className="wrapperBettingShake" onSubmit={this.onSubmit}>
         <p className="titleForm text-center text-capitalize">PLACE A BET</p>
         {this.renderInputField(amountField)}
+        {isShowOdds && this.renderInputField(oddsField)}
         <Toggle ref={(component) => {this.toggleRef = component}} onChange={this.onToggleChange} />
 
-        <Button type="submit" block className={buttonClass} style>
+        <Button type="submit" block className={buttonClass}>
           Shake now
         </Button>
       </BettingShakeForm>
     );
   }
 
+
   render() {
     return this.renderForm();
   }
+
+
+
 
   shakeItem(amount, side){
       const {outcomeId} = this.props;
@@ -216,14 +258,111 @@ class BetingShake extends React.Component {
       errorFn: this.shakeItemFailed
     });
   }
+
   shakeItemSuccess = async (successData)=>{
     console.log('shakeItemSuccess', successData);
+    const {status, data, message} = successData;
+    if(status){
+      /*
+      const foundShakeList = this.foundShakeItemList(data);
+      console.log('foundShakeList:', foundShakeList);
+      foundShakeList.forEach(element => {
+        this.shakeContract(element);
+      });
+      */
+     const {outcomeHid} = this.props;
+     BetHandshakeHandler.controlShake(data, outcomeHid);
+     this.props.showAlert({
+      message: <div className="text-center">Create a bet successfully</div>,
+      timeOut: 3000,
+      type: 'danger',
+      callBack: () => {
+      }
+    });
+
+    }else {
+      // TO DO: Show message, show odd field
+      this.setState({
+        isShowOdds: true,
+      })
+
+
+    }
   }
   shakeItemFailed = (error) => {
     console.log('shakeItemFailed', error);
   }
+
+  initHandshake(amount, odds){
+    const {outcomeId} = this.props;
+    const {extraData} = this.state;
+    const side = this.toggleRef.value;
+    const fromAddress = wallet.address;
+    extraData["event_odds"] = odds;
+    extraData["event_bet"] = amount;
+    const params = {
+      //to_address: toAddress ? toAddress.trim() : '',
+      //public: isPublic,
+      //description: content,
+      // description: JSON.stringify(extraParams),
+      //industries_type: industryId,
+      type: HANDSHAKE_ID.BETTING,
+      //type: 3,
+      //extra_data: JSON.stringify(fields),
+      outcome_id: outcomeId,
+      odds:  parseFloat(odds),
+      amount: parseFloat(amount),
+      extra_data: JSON.stringify(extraData),
+      currency: 'ETH',
+      side: parseInt(side),
+      from_address: fromAddress,
+      chain_id: chainId,
+    };
+    console.log("Params:", params);
+
+    this.props.initHandshake({PATH_URL: API_URL.CRYPTOSIGN.INIT_HANDSHAKE, METHOD:'POST', data: params,
+    successFn: this.initHandshakeSuccess,
+    errorFn: this.handleGetCryptoPriceFailed
+  });
+  }
+
+  initHandshakeSuccess = async (successData)=>{
+    console.log('initHandshakeSuccess', successData);
+    const {status, data} = successData
+    
+    if(status && data){
+      /*
+      const {offchain, side} = data;
+      var result = null;
+
+      if(this.isShakedBet(data)){
+        result = await bettinghandshake.shake(hid, side,stake, payout,maker, offchain);
+      }else {
+        result = await bettinghandshake.initBet(hid, side,stake, payout, offchain);
+      }
+      if(result){
+        //TO DO: redirect and show alert
+      }
+      */     
+     const {outcomeHid} = this.props;
+      console.log('OutcomeHid:', outcomeHid);
+     BetHandshakeHandler.controlShake(data, outcomeHid);
+     this.props.showAlert({
+      message: <div className="text-center">Create a bet successfully</div>,
+      timeOut: 3000,
+      type: 'danger',
+      callBack: () => {
+      }
+    });
+    }
+  }
+  initHandshakeFailed = (error) => {
+    console.log('initHandshakeFailed', error);
+  }
 }
 const mapDispatch = ({
+  initHandshake,
   shakeItem,
+  showAlert
 });
 export default connect(null, mapDispatch)(BetingShake);

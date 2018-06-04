@@ -28,4 +28,16 @@ export const URL = {
 
   TRANSACTION_LIST: '/transactions',
   TRANSACTION_LIST_INDEX: '/transactions',
+
+  COMMENTS_BY_SHAKE: '/comments',
+  COMMENTS_BY_SHAKE_INDEX: '/comments',
+};
+
+export const firebase = {
+  apiKey: 'AIzaSyAY_QJ_6ZmuYfNR_oM65a0JVvzIyMb-n9Q',
+  authDomain: 'handshake-205007.firebaseapp.com',
+  databaseURL: 'https://handshake-205007.firebaseio.com',
+  projectId: 'handshake-205007',
+  storageBucket: 'handshake-205007.appspot.com',
+  messagingSenderId: '852789708485',
 };
