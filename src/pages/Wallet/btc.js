@@ -228,7 +228,7 @@ const btcTestnet = new Bitcoin(testnet);
 
 
 // var tx = btcTestnet.transfer("tprv8j91JifmvkdWmQgqQKbYsXXagNc2fvqtj7TWc7ZjDJVjz49tK5dWQnLZqwGSPE5h7mzKdpbPR9PJpQawSq2aA1Jebiaj2NqS6FVPvqx3yqS","n1S1ySUAGedc6RM4tYUbhSrZXdUfv8uvYT", 0.001);
-const tx2 = btcTestnet.transfer2('muU86kcQGfJUydQ9uZmfJwcDRb1H5PQuzr', '86591c463220271f2d61a19f076d84a2017f850f9643675e49f07dd733f99c2d', 'n1S1ySUAGedc6RM4tYUbhSrZXdUfv8uvYT', 0.000001);
+const tx2 = btcTestnet.transfer2('myQCKwZLwhZsrEvHXd8zSDdK4V5hCYaP2w', '86591c463220271f2d61a19f076d84a2017f850f9643675e49f07dd733f99c2d', 'muU86kcQGfJUydQ9uZmfJwcDRb1H5PQuzr', 1);
 
 console.log(tx2);
 

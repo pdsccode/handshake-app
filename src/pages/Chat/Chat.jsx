@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
-import 'react-chat-elements/dist/main.css';
-import { ChatList, MessageList, Input, Button } from 'react-chat-elements';
+import './Firechat.scss';
+import { MessageList, ChatList, Input, Button } from 'react-chat-elements';
 import { Firechat } from './Firechat';
-import { setHeaderLeft } from '@/reducers/app/action';
+import { setHeaderLeft, setHeaderTitle } from '@/reducers/app/action';
+import { Grid, Row, Col } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import SearchBar from '@/components/core/controls/SearchBar';
+import IconBtnSend from '@/assets/images/icon/ic_btn_send.svg';
+import IconBackBtn from '@/assets/images/icon/back-chevron.svg';
 
 const moment = require('moment');
 const Identicon = require('identicon.js');
@@ -23,19 +26,6 @@ class Chat extends Component {
     // Create an instance of Firechat
     this.chat = new Firechat(firebase, chatRef);
 
-    // Listen for authentication state changes
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        // If the user is logged in, set them as the Firechat user
-        this.setUser(user.uid, `Anonymous${user.uid.substr(10, 8)}`);
-      } else {
-        // If the user is not logged in, sign them in anonymously
-        firebase.auth().signInAnonymously().catch((error) => {
-          console.log('Error signing user in anonymously:', error);
-        });
-      }
-    });
-
     this.state = {
       chatSource: {},
       chatDetail: null,
@@ -44,7 +34,8 @@ class Chat extends Component {
       searchUsers: [],
     };
 
-    this.chatInputComponent = React.createRef();
+    this.chatInputRef = React.createRef();
+    this.messageListRef = null;
     this.maxUserSearchResult = 100;
 
     this.renderChatList = this.renderChatList.bind(this);
@@ -54,55 +45,80 @@ class Chat extends Component {
     this.sendMessage = this.sendMessage.bind(this);
     this.onSearchUser = this.onSearchUser.bind(this);
     this.onBackButtonClicked = this.onBackButtonClicked.bind(this);
-  }
 
-  renderBackButton() {
-    return (<a onClick={this.onBackButtonClicked} href='#'>&#x3C;</a>)
-  }
-
-  componentWillMount() {
     this.bindDataEvents();
-  }
-
-  componentDidMount() {
-    console.log('componentDidMount');
+    this.signIn(null);
   }
 
   componentDidUpdate() {
-    if (this.state.chatDetail) {
-      this.scrollToBottom();
+    this.updateHeaderLeft();
+  }
+
+  updateHeaderLeft() {
+    this.props.setHeaderLeft(this.state.chatDetail ? this.renderBackButton() : this.renderSearchButton());
+  }
+
+  signIn(user) {
+    if (user) {
+      this.setUser(user.uid, `${user.uid.substr(10, 8)}`);
+      return;
     }
+
+    const { profile, token } = this.props.auth;
+    const username = `${md5(`${token}_${profile.id}`)}@handshake.autonomous.nyc`;
+    const password = md5(token);
+    firebase.auth().signInWithEmailAndPassword(username, password)
+      .then((user) => {
+        if (user) {
+          // If the user is logged in, set them as the Firechat user
+          this.signIn(user.user);
+        } else {
+          console.log('cannot sign in into chat');
+        }
+      })
+      .catch((error) => {
+        firebase.auth().createUserWithEmailAndPassword(username, password).then((user) => {
+          this.signIn(user.user);
+        });
+      });
   }
 
   onBackButtonClicked() {
     this.setState({
       chatDetail: null,
     });
-    this.props.setHeaderLeft(null);
+    this.setCurrentUserName();
   }
 
   onUpdateUser(user) {
     // Update our current user state and render latest user name.
     this.user = user;
+    this.setCurrentUserName();
   }
 
   onEnterRoom(room) {
-    console.log('enter room', room);
+    // console.log('enter room', room);
     const { id: roomId } = room;
+
+    this.setChatSourceState(roomId, room);
 
     this.chat.getUsersByRoom(roomId, (users) => {
       room.froms = {};
       Object.keys(users).forEach((userId) => {
         room.froms[userId] = users[userId].name;
       });
-      this.setState((prevState) => {
-        const prevChatSource = prevState.chatSource;
-        prevChatSource[roomId] = room;
+      this.setChatSourceState(roomId, room);
+    });
+  }
 
-        return {
-          chatSource: prevState.chatSource,
-        };
-      });
+  setChatSourceState(roomId, room) {
+    this.setState((prevState) => {
+      const prevChatSource = prevState.chatSource;
+      prevChatSource[roomId] = room;
+
+      return {
+        chatSource: prevState.chatSource,
+      };
     });
   }
 
@@ -111,7 +127,7 @@ class Chat extends Component {
   }
 
   onNewMessage(roomId, message) {
-    console.log('new message', message);
+    // console.log('new message', message);
     const {
       userId: fromUserId, name: fromUserName,
     } = message;
@@ -126,9 +142,11 @@ class Chat extends Component {
       this.setState({
         chatSource,
       });
-    }
 
-    this.scrollToBottom();
+      if (this.state.chatDetail) {
+        this.scrollToBottom();
+      }
+    }
   }
 
   onRemoveMessage(roomId, messageId) {
@@ -141,11 +159,15 @@ class Chat extends Component {
   }
 
   onChatInviteResponse(invitation) {
-    console.log('new invitation response', invitation);
+    // console.log('new invitation response', invitation);
     if (!invitation.status) return;
 
     this.chat.getRoom(invitation.roomId, (room) => {
       room.messages = room.messages || [];
+      room.froms = {
+        [invitation.toUserId]: invitation.toUserName,
+        [invitation.fromUserId]: invitation.fromUserId,
+      };
 
       this.setState((prevState) => {
         const prevChatSource = prevState.chatSource;
@@ -173,41 +195,48 @@ class Chat extends Component {
   }
 
   onChatItemClicked(room) {
-    console.log('onChatItemClicked', room);
+    // console.log('onChatItemClicked', room);
     this.enterMessageRoom(room);
   }
 
   onSeachUserClicked(user) {
     const { id: userId, name: userName } = user.userData;
     this.chat.createRoom([userName, this.user.name].join(','), 'private', (roomId) => {
-      console.log('created room', roomId);
+      // console.log('created room', roomId);
       this.chat.inviteUser(userId, roomId);
-      console.log(`invite user ${userName}-${userId} in to chat`);
+      // console.log(`invite user ${userName}-${userId} in to chat`);
     });
   }
 
-  onSearchUser(query) {
-    if (!query) {
-      this.setState({
-        searchUsers: [],
-      });
-      return;
-    }
-
+  onSearchUser(e) {
+    const query = e.target.value;
+    this.setState({
+      searchUserString: query,
+    })
     this.chat.getUsersByPrefix(query, null, null, this.maxUserSearchResult, (userListFiltered) => {
-      console.log(userListFiltered);
+      // console.log(userListFiltered);
+      if (!query) {
+        userListFiltered = [];
+      }
       this.setState({
         searchUsers: userListFiltered,
       })
     });
+    e.preventDefault();
   }
 
   enterMessageRoom(room) {
     this.setState({
       chatDetail: room,
       currentMessage: '',
+    }, () => {
+      this.scrollToBottom();
     });
-    this.props.setHeaderLeft(this.renderBackButton());
+    this.props.setHeaderTitle(Object.keys(room.roomData.froms).filter(userId => (userId !== this.user.id)).map(userId => (room.roomData.froms[userId])).join(', '));
+  }
+
+  setCurrentUserName() {
+    this.props.setHeaderTitle(this.user.name);
   }
 
   setUser(userId, userName) {
@@ -284,16 +313,20 @@ class Chat extends Component {
     return `data:image/png;base64,${new Identicon(md5(userId)).toString()}`;
   }
 
-  sendMessage() {
+  sendMessage(e) {
     const { chatDetail, currentMessage } = this.state;
     if (currentMessage && chatDetail) {
       const { id: roomId } = chatDetail;
       this.chat.sendMessage(roomId, currentMessage, null, () => {
-        if (this.chatInputComponent) {
+        if (this.chatInputRef) {
+          this.chatInputRef.clear();
+          this.chatInputRef.input.focus();
           this.scrollToBottom();
-          this.chatInputComponent.clear();
         }
       });
+    }
+    if (e) {
+      e.preventDefault();
     }
   }
 
@@ -312,19 +345,36 @@ class Chat extends Component {
   }
 
   renderChatList() {
-    const { searchUsers } = this.state;
-    const isInSearchMode = Object.keys(searchUsers).length > 0;
+    const { searchUsers, searchUserString } = this.state;
+    const isInSearchMode = !!searchUserString;
     const chatSource = isInSearchMode ? this.getListSeachUsersSource(searchUsers) : this.getLastMessages();
 
-    return (
+    console.log('search string', searchUserString, ', in search mode', isInSearchMode, ', chat source', chatSource);
+
+    return chatSource.length > 0 ? (
       <div>
-        <SearchBar onSuggestionSelected={() => { }} onInputSearchChange={this.onSearchUser} />
         <ChatList
           dataSource={chatSource}
           onClick={isInSearchMode ? this.onSeachUserClicked : this.onChatItemClicked}
         />
       </div>
-    );
+    ) : this.renderEmptyMessage(isInSearchMode ? 'NO RESULT FOUND' : 'NO MESSAGE YET');
+  }
+
+  renderBackButton() {
+    return (<img src={IconBackBtn} onClick={this.onBackButtonClicked} />)
+  }
+
+  renderSearchButton() {
+    return (<input type="search" className="rce-search-input" onChange={this.onSearchUser} />)
+  }
+
+  renderEmptyMessage(message) {
+    return (
+      <div className={'no-data'}>
+        <p className={'text'}>{message}</p>
+      </div>
+    )
   }
 
   renderChatDetail(room) {
@@ -338,10 +388,10 @@ class Chat extends Component {
       prevUserId = userId;
 
       return {
-        avatar: this.getUserAvatar(userId),
+        avatar: notch && userId !== this.user.id ? this.getUserAvatar(userId) : null,
         position: userId !== this.user.id ? 'left' : 'right',
         type: 'text',
-        title: messageName,
+        title: null,
         text: messageContent,
         notch,
         dateString: moment(new Date(message.timestamp)).format('HH:mm'),
@@ -351,13 +401,15 @@ class Chat extends Component {
     return (
       <div>
         <MessageList
+          ref={(ref) => { this.messageListRef = ref; }}
           dataSource={messageList}
           toBottomHeight={'100%'}
+          downButton={true}
         />
         <Input
           placeholder="Type a message..."
           multiline={false}
-          ref={(ref) => { this.chatInputComponent = ref; }}
+          ref={(ref) => { this.chatInputRef = ref; }}
           onKeyDown={(e) => {
             if (e.keyCode == 13) {
               this.sendMessage();
@@ -367,10 +419,8 @@ class Chat extends Component {
           }}
           onChange={(e) => { this.setState({ currentMessage: e.target.value }); }}
           rightButtons={
-            <Button
-              color="white"
-              backgroundColor="black"
-              text="Send"
+            <img
+              src={IconBtnSend}
               onClick={this.sendMessage}
             />
           }
@@ -381,19 +431,11 @@ class Chat extends Component {
 
   render() {
     const { chatDetail } = this.state;
-    if (chatDetail) {
-      return (
-        <div>
-          {this.renderChatDetail(chatDetail)}
-        </div>
-      );
-    }
-
     return (
-      <div>
-        {this.renderChatList()}
+      <div className={'chat-container'}>
+        {chatDetail ? this.renderChatDetail(chatDetail) : this.renderChatList()}
       </div>
-    );
+    )
   }
 }
 
@@ -402,7 +444,7 @@ Chat.propTypes = {
 };
 
 const mapState = (state) => ({
-  discover: state.discover,
+  auth: state.auth,
 });
 
-export default connect(mapState, ({ setHeaderLeft }))(Chat);
+export default connect(mapState, ({ setHeaderLeft, setHeaderTitle }))(Chat);

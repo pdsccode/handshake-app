@@ -58,7 +58,7 @@ class DiscoverPage extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps.firebaseUser);
+    console.log('firebase', nextProps.firebaseUser);
   }
 
   get getHandshakeList() {
