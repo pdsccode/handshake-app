@@ -24,7 +24,7 @@ export const APP_ACTION = {
 };
 
 // Loading
-export const showLoading = () => ({ type: APP_ACTION.LOADING });
+export const showLoading = config => ({ type: APP_ACTION.LOADING, payload: {...config} });
 export const hideLoading = () => ({ type: APP_ACTION.LOADED });
 
 // Modal

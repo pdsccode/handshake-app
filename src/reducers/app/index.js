@@ -90,11 +90,13 @@ function appReducter(state = {
       return {
         ...state,
         isLoading: true,
+        configLoading: { ...action.payload },
       };
     case APP_ACTION.LOADED:
       return {
         ...state,
         isLoading: false,
+        configLoading: {},
       };
 
 
