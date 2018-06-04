@@ -11,16 +11,20 @@ import './FeedComment.scss';
 class FeedComment extends React.PureComponent {
 
   render() {
-    const { numComments, objectType, objectId } = this.props;
+    const { commentCount, objectType, objectId } = this.props;
     const commentLink = `${URL.COMMENTS_BY_SHAKE_INDEX}?objectType=${objectType}&objectId=${objectId}`;
     return (
       <div className="feedComment">
         <Link className="addAComment" to={commentLink} title="add a comment">
           <img src={addAComment} alt="add a comment" /> <span>Add a comment</span>
         </Link>
-        <Link className="numComments" to={commentLink} title="numComments">
-          {numComments} {numComments > 1 ? 'comments' : 'comment'}
-        </Link>
+        {
+          commentCount > 0 && (
+            <Link className="numComments" to={commentLink} title="numComments">
+              {commentCount} {commentCount > 1 ? 'comments' : 'comment'}
+            </Link>
+          )
+        }
       </div>
     );
   }

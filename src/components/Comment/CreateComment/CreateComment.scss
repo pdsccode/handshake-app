@@ -60,7 +60,12 @@
   .preview {
     margin: 0 auto 10px;
     width: 100%;
-    img {
+    img:first-child {
+      position: relative;
+      left: 60%;
+      top: 10px;
+    }
+    img:last-child {
       margin: 0 auto;
       width: 100px;
       height: auto;

@@ -13,6 +13,7 @@ import Image from '@/components/core/presentation/Image';
 import './CreateComment.scss';
 import createImageIcon from '@/assets/images/icon/comment/image.svg';
 import postCommentIcon from '@/assets/images/icon/comment/post-comment.svg';
+import deleteIcon from '@/assets/images/icon/comment/delete-icon.svg';
 
 class CreateComment extends React.PureComponent {
   constructor(props) {
@@ -110,8 +111,8 @@ class CreateComment extends React.PureComponent {
         {
           imagePreviewUrl && (
             <div className="preview">
+              <img src={deleteIcon} alt="delete icon" onClick={this.deleteImage} />
               <img src={imagePreviewUrl} className="img-responsive" alt="preview image" />
-              <button onClick={this.deleteImage}>Delete</button>
             </div>
           )
         }
