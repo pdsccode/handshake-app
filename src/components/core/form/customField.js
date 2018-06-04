@@ -103,7 +103,7 @@ export const fieldNumericInput = customField(({
   return (
     <span className="btn-group" role="group" style={{ color }}>
       <button type="button" className="btn" style={{ color, minWidth: '50px', background: btnBg }} onClick={() => onChange(valueFloat - step)}>-</button>
-      <span className="text-center" style={{ minWidth: '70px', lineHeight: '38px', opacity: 0.6, borderTop: '2px solid', borderBottom: '2px solid', borderColor: btnBg }}>
+      <span className="text-center" style={{ minWidth: '70px', lineHeight: '38px', borderTop: '2px solid', borderBottom: '2px solid', borderColor: btnBg }}>
         {value}{ suffix && <span>{suffix}</span>}
       </span>
       <button type="button" className="btn" style={{ color, minWidth: '50px', background: btnBg }} onClick={() => onChange(valueFloat + step)}>+</button>
