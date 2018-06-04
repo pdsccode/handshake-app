@@ -109,7 +109,6 @@ class Router extends React.Component {
     setIpInfo: PropTypes.func.isRequired,
     getUserProfile: PropTypes.func.isRequired,
     firebase: PropTypes.object.isRequired,
-    // setSubscribed: PropTypes.func.isRequired,
   };
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -151,14 +150,13 @@ class Router extends React.Component {
       this.props.getUserProfile({ BASE_URL: API_URL.EXCHANGE.BASE, PATH_URL: API_URL.EXCHANGE.GET_USER_PROFILE });
     }
 
-    // const messaging = this.props.firebase.messaging();
-    // messaging
-    //   .requestPermission()
-    //   .then(() => messaging.getToken())
-    //   .then((notificationToken) => {
-    //     this.props.authUpdate({ PATH_URL: 'user/profile', data: { notificationToken } });
-    //     this.props.setSubscribed();
-    //   });
+    const messaging = this.props.firebase.messaging();
+    messaging
+      .requestPermission()
+      .then(() => messaging.getToken())
+      .then((notificationToken) => {
+        this.props.authUpdate({ PATH_URL: 'user/profile', data: { fcm_token: notificationToken } });
+      });
 
     const ipInfo = local.get(APP.IP_INFO);
     if (!ipInfo) {
