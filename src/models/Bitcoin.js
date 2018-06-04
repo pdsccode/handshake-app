@@ -50,7 +50,6 @@ export class Bitcoin extends Wallet {
       this.setDefaultNetwork();
 
       const url = `${this.network}/addr/${this.address}/balance`;
-
       const response = await axios.get(url);
 
       if (response.status == 200) {
@@ -178,10 +177,31 @@ export class Bitcoin extends Wallet {
       // txs/?address=muU86kcQGfJUydQ9uZmfJwcDRb1H5PQuzr
       const url = `${this.network}/txs/?address=${this.address}`;
       const response = await axios.get(url);
-
+      let result = [];
       if (response.status == 200) {
-        console.log(response.data);
+
+        if(response.data && response.data.txs){
+          console.log(response.data.txs);
+          for(let tran of response.data.txs){
+            let vin = tran.vin, vout = tran.vout;
+            for(let v of vin){
+              if(v.addr == this.address){
+
+              }
+            }
+
+            // for(let v of vout){
+            //   console.log(v);
+            // }
+          }
+          return response.data.txs;
+        }
+        else{
+          return false;
+        }
       }
+
+      return false;
     }
 }
 
