@@ -163,6 +163,10 @@ class Router extends React.Component {
 
   componentWillUnmount() {
     this.props.firebase.unWatchEvent('value', `${FIREBASE_PATH.USERS}/${String(this.state.profile.id)}`);
+
+    if (this.timeOutInterval) {
+      clearInterval(this.timeOutInterval);
+    }
   }
 
   authSuccess() {
@@ -174,16 +178,12 @@ class Router extends React.Component {
       BASE_URL: API_URL.EXCHANGE.BASE,
       PATH_URL: API_URL.EXCHANGE.GET_USER_PROFILE,
     });
-    if (!this.props.app.ipInfo) {
-      axios.get(API_URL.EXCHANGE.IP_DOMAIN, {
-        params: {
-          auth: API_URL.EXCHANGE.IP_KEY,
-        },
-      }).then((response) => {
-        this.props.setIpInfo(response.data);
-        local.save(APP.IP_INFO, response.data);
-      });
-    }
+
+    this.getIpInfo();
+    this.timeOutInterval = setInterval(() => {
+      this.getIpInfo();
+    }, 30 * 60 * 1000); //30'
+
     // wallet handle
     let listWallet = MasterWallet.getMasterWallet();
 
@@ -218,6 +218,18 @@ class Router extends React.Component {
     } catch (e) {
       console.log(e);
     }
+  }
+
+  getIpInfo = () => {
+    axios.get(API_URL.EXCHANGE.IP_DOMAIN, {
+      params: {
+        auth: API_URL.EXCHANGE.IP_KEY,
+      },
+    }).then((response) => {
+      // console.log('response', response.data);
+      this.props.setIpInfo(response.data);
+      local.save(APP.IP_INFO, response.data);
+    });
   }
 
 
