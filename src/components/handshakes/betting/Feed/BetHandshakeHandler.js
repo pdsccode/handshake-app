@@ -39,7 +39,9 @@ export const BETTING_STATUS = {
 
 export const BETTING_STATUS_LABEL =
     {  INITING: 'Your bet is initing...',  CANCEL: 'Cancel', "LOSE": 'Sorry, you lost', "WIN": 'Congrats, you won!','DONE': 'Completed',
-    WITHDRAW: 'Withdraw', 'WAITING_RESULT': 'Match is ongoing', 'REFUND': 'Refund', CANCELLED: 'The bet is cancelled', REFUNDED: 'You got the refund'}
+    WITHDRAW: 'Withdraw', 
+    "CANCELLING": 'Your bet is cancelling...',
+    'WAITING_RESULT': 'Match is ongoing', 'REFUND': 'Refund', CANCELLED: 'The bet is cancelled', REFUNDED: 'Please got the refund', REFUND: 'Refund'}
 
 export class BetHandshakeHandler {
     static getStatusLabel(blockchainStatus, resultStatus, role, side, isMatch){
@@ -57,10 +59,11 @@ export class BetHandshakeHandler {
           isAction = false;
         }else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_REFUND){
           strStatus = BETTING_STATUS_LABEL.REFUNDED;
-          isAction = false;
+          label = BETTING_STATUS_LABEL.REFUND;
+          isAction = true;
         }else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_BLOCKCHAIN_PENDING){
           //TO DO: scan txhash and rollback after a few minutes
-          strStatus = "Waiting...";
+          strStatus = BETTING_STATUS_LABEL.CANCELLING;
           isAction = false;
         }else if(!isMatch && role === ROLE.INITER){
             label = BETTING_STATUS_LABEL.CANCEL;

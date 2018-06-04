@@ -82,13 +82,14 @@ class FeedBetting extends React.Component {
 
     console.log('Props:', this.props);
     console.log('Status:', status);
-    //const hardCodeStatus = 2;
     const profile = local.get(APP.AUTH_PROFILE);
     const isUserShake = this.isShakeUser(shakeUserIds, profile.id);
     const role = isUserShake ? ROLE.SHAKER : ROLE.INITER;
     //const blockchainStatusHardcode = 0;
     const isMatch = this.isMatch;
     //const isMatch = true;
+    //const hardCodeStatus = 3;
+    //const hardCodeResult = 1;
     console.log('Is Match:', isMatch);
 
     const statusResult = BetHandshakeHandler.getStatusLabel(status, result, role,side, isMatch);
@@ -232,9 +233,10 @@ class FeedBetting extends React.Component {
 
   collectSuccess = async (successData)=>{
     console.log('collectSuccess', successData);
-    const {status, data} = successData
-    if(status && data){
-      const {hid, offchain} = data;
+    const {status} = successData
+    if(status){
+      const {hid, id} = this.props;
+      const offchain = id;
 
       bettinghandshake.withdraw(hid, offchain);
 
@@ -255,8 +257,11 @@ class FeedBetting extends React.Component {
 
   refundSuccess = async (successData)=>{
     console.log('refundSuccess', successData);
-    const {status, data} = successData
-    if(status && data){
+    const {status} = successData
+    if(status){
+      const {hid, id} = this.props;
+      const offchain = id;
+      bettinghandshake.refund(hid, offchain);
     }
   }
   refundFailed = (error) => {
