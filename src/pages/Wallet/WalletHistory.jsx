@@ -16,43 +16,36 @@ import ModalDialog from '@/components/core/controls/ModalDialog';
 import createForm from '@/components/core/form/createForm';
 import { differenceWith } from 'lodash';
 
-const testnet = 'https://test-insight.bitpay.com/api';
-var btcTestnet = new Bitcoin(testnet);
-
 class WalletHistory extends React.Component {
 	constructor(props) {
 
     super(props);
     this.state = {
-
+      transactions: this.props.transactions
     };
   }
 
 	async componentDidMount() {
-    const {wallet} = this.props;
-    console.log("wallet", wallet);
-    if(wallet){
-      //wallet.address = "muU86kcQGfJUydQ9uZmfJwcDRb1H5PQuzr"; //testing
 
-    }
   }
 
-  async componentWillReceiveProps(){
-
+  componentWillReceiveProps(){
+    this.setState({transactions: this.props.transactions});
   }
 
   get list_transaction() {
 
-    const {wallet, transactions} = this.props;
+    const wallet = this.props.wallet;
 
-    if(wallet && transactions){
-      return transactions.map((tran) => {
+    //if(transactions){
+      console.log("list_transaction", this.state.transactions);
+      return this.state.transactions.map((tran) => {
         let cssLabel = `label-${tran.is_sent ? "sent" : "received"}`,
         cssValue = `value-${tran.is_sent ? "sent" : "received"}`;
 
         return (
-        <div className="row">
-        <div className="col3">
+        <div key={tran.transaction_date} className="row">
+          <div className="col3">
             <div className="time">{tran.transaction_relative_time}</div>
             <div className={cssValue}>{tran.is_sent ? "-" : ""} {Number(tran.value)} {wallet.name}</div>
           </div>
@@ -64,9 +57,7 @@ class WalletHistory extends React.Component {
 
         </div>)
       });
-    }
-    else
-      return "";
+
   }
 
 	render(){
@@ -82,7 +73,7 @@ class WalletHistory extends React.Component {
 
 WalletHistory.propTypes = {
   wallet: PropTypes.object,
-  transactions: PropTypes.object
+  transactions: PropTypes.array
 };
 
 const mapState = (state) => ({
