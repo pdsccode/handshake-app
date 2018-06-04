@@ -85,6 +85,7 @@ class SearchBar extends React.PureComponent {
 
   resetSearch() {
     this.value = '';
+    this.props.hasOwnProperty('onInputSearchChange') && this.props.onInputSearchChange('');
   }
 
   onSuggestionSelected(e, { suggestion }) {
