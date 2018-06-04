@@ -7,7 +7,7 @@ import { Grid, Row, Col } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import SearchBar from '@/components/core/controls/SearchBar';
-import IconBtnSend from '@/assets/images/icon/ic_btn_send.svg';
+import IconBtnSend from '@/assets/images/icon/ic-btn-send.svg';
 import IconBackBtn from '@/assets/images/icon/back-chevron.svg';
 
 const moment = require('moment');
@@ -50,7 +50,7 @@ class Chat extends Component {
     this.signIn(null);
   }
 
-  componentDidUpdate() {
+  componentDidMount() {
     this.updateHeaderLeft();
   }
 
@@ -86,6 +86,8 @@ class Chat extends Component {
   onBackButtonClicked() {
     this.setState({
       chatDetail: null,
+    }, () => {
+      this.updateHeaderLeft();
     });
     this.setCurrentUserName();
   }
@@ -231,6 +233,7 @@ class Chat extends Component {
       currentMessage: '',
     }, () => {
       this.scrollToBottom();
+      this.updateHeaderLeft();
     });
     this.props.setHeaderTitle(Object.keys(room.roomData.froms).filter(userId => (userId !== this.user.id)).map(userId => (room.roomData.froms[userId])).join(', '));
   }
@@ -348,8 +351,6 @@ class Chat extends Component {
     const { searchUsers, searchUserString } = this.state;
     const isInSearchMode = !!searchUserString;
     const chatSource = isInSearchMode ? this.getListSeachUsersSource(searchUsers) : this.getLastMessages();
-
-    console.log('search string', searchUserString, ', in search mode', isInSearchMode, ', chat source', chatSource);
 
     return chatSource.length > 0 ? (
       <div>
