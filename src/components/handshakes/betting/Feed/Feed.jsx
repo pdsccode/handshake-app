@@ -158,13 +158,13 @@ class FeedBetting extends React.Component {
   }
 
   clickActionButton(title){
-    const {id, outComeId, side, extraData, amount, winValue} = this.props;
+    const {id, outComeId, side, extraData, amount, winValue, hid} = this.props;
     const {event_bet, event_odds} = JSON.parse(extraData);
     //const hid = outcome_id;
     const stake = amount;
     const payout = winValue;
     const offchain = id;
-    const hid = outComeId;
+    //const hid = outComeId;
     console.log('Hid:', outComeId);
     switch(title){
 

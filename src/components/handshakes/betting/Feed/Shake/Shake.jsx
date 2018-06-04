@@ -17,6 +17,7 @@ import { BettingHandshake } from '@/services/neuron';
 import { InputField } from '@/components/handshakes/betting/form/customField';
 import Button from '@/components/core/controls/Button';
 import Toggle from './../Toggle';
+import {showAlert} from '@/reducers/app/action';
 
 import './Shake.scss';
 import { BetHandshakeHandler } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
@@ -39,6 +40,7 @@ const defaultAmount = 1;
 class BetingShake extends React.Component {
   static propTypes = {
     outcomeId: PropTypes.number,
+    outcomeHid: PropTypes.number,
     matchName: PropTypes.string,
     matchOutcome: PropTypes.string,
     onSubmitClick: PropTypes.func,
@@ -53,7 +55,7 @@ class BetingShake extends React.Component {
     super(props);
     this.state = {
       buttonClass: 'btnOK btnBlue',
-      isShowOdds: false,
+      isShowOdds: true,
       extraData: {},
 
     };
@@ -66,30 +68,32 @@ class BetingShake extends React.Component {
   }
   componentDidMount(){
     const {extraData} = this.state;
-    const {matchName, matchOutcome} = this.props;
+    const {matchName, matchOutcome, outcomeHid} = this.props;
     extraData["event_name"] = matchName;
     extraData["event_predict"] = matchOutcome;
     this.setState({extraData})
+    console.log('componentDidMount OutcomeHid:', outcomeHid);
   }
 
   async onSubmit(values) {
     console.log("Submit");
     const {isShowOdds} = this.state;
     const {matchName, matchOutcome} = this.props;
-    const amount = values.amount;
-    const odds = values.odds;
+    const amount = parseFloat(values.amount);
+    const odds = parseFloat(values.odds);
     console.log("Amount, this.toggle", this.toggleRef.value);
     // this.props.onSubmitClick(amount);
-    const side = this.toggleRef.value;
+    const side = parseInt(this.toggleRef.value);
     const balance = await BetHandshakeHandler.getBalance();
-    if(matchName && matchOutcome && amount <= balance && amount > 0){
+    console.log('Amount:', amount);
+    //if(matchName && matchOutcome && amount <= balance && amount > 0){
       if(isShowOdds){
         this.initHandshake(amount, odds);
       }else {
         this.shakeItem(amount, side);
   
       }
-    }
+    //}
     
   }
 
@@ -266,7 +270,15 @@ class BetingShake extends React.Component {
         this.shakeContract(element);
       });
       */
-     BetHandshakeHandler.controlShake(data);
+     const {outcomeHid} = this.props;
+     BetHandshakeHandler.controlShake(data, outcomeHid);
+     this.props.showAlert({
+      message: <div className="text-center">Create a bet successfully</div>,
+      timeOut: 3000,
+      type: 'danger',
+      callBack: () => {
+      }
+    });
 
     }else {
       // TO DO: Show message, show odd field
@@ -331,9 +343,17 @@ class BetingShake extends React.Component {
       if(result){
         //TO DO: redirect and show alert
       }
-      */
-     BetHandshakeHandler.controlShake(data);
-      
+      */     
+     const {outcomeHid} = this.props;
+      console.log('OutcomeHid:', outcomeHid);
+     BetHandshakeHandler.controlShake(data, outcomeHid);
+     this.props.showAlert({
+      message: <div className="text-center">Create a bet successfully</div>,
+      timeOut: 3000,
+      type: 'danger',
+      callBack: () => {
+      }
+    });
     }
   }
   initHandshakeFailed = (error) => {
@@ -343,5 +363,6 @@ class BetingShake extends React.Component {
 const mapDispatch = ({
   initHandshake,
   shakeItem,
+  showAlert
 });
 export default connect(null, mapDispatch)(BetingShake);

@@ -15,16 +15,17 @@ class BetBook extends React.Component {
     const { item } = this.props;
     const { amount, odds } = item;
     const { amountColor } = this.props;
-    console.log('OK_____ ',typeof amount);
-    const amountBN = new BN(amount);
-    console.log('OK_____ 11 ',amountBN.toString);
+    //console.log('OK_____ ',typeof amount);
+    //const amountBN = new BN(amount);
+    //console.log('OK_____ 11 ',amountBN.toString);
     const amountStyle = {
       color: amountColor,
     };
+    console.log()
     return (
       <div className="wrapperBettingBook">
         <div className="oddText">{odds}</div>
-        <div className="amountText" style={amountStyle}>{amountBN.toString()}</div>
+        <div className="amountText" style={amountStyle}>{parseFloat(amount).toFixed(6)}</div>
       </div>
     );
   }

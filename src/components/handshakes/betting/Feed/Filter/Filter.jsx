@@ -101,7 +101,7 @@ class BettingFilter extends React.Component {
             if (foundMatch){
                 const {outcomes} = foundMatch;
                 if(outcomes){
-                    return outcomes.map((item) => ({ id: item.id, value: item.name}));
+                    return outcomes.map((item) => ({ id: item.id, value: item.name, hid: item.hid}));
                 }
             }  
         }
@@ -143,7 +143,7 @@ class BettingFilter extends React.Component {
     render(){
         const {matches, selectedMatch, selectedOutcome} = this.state;
         const outcomeId = (selectedOutcome && selectedOutcome.id) ? selectedOutcome.id : null;
-
+        const outcomeHid = (selectedOutcome && selectedOutcome.hid) ? selectedOutcome.hid : null;
         const defaultMatchId = this.defaultMatch ? this.defaultMatch.id : null;
         console.log("Default Match:", defaultMatchId);
         console.log('Default Outcome:', defaultOutcome);
@@ -175,7 +175,7 @@ class BettingFilter extends React.Component {
                     <GroupBook amountColor="#8BF275" bookList={this.bookListAgainst}/>
                     </div>
                     <div className="item">
-                    {<BettingShake outcomeId={outcomeId}/>}
+                    {<BettingShake outcomeId={outcomeId} outcomeHid={outcomeHid}/>}
 
                     </div>
                 </div>

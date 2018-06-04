@@ -98,7 +98,7 @@ export class BetHandshakeHandler {
     }
     return false;
   }
-  static addContract(item){
+  static addContract(item, hid){
     console.log('initContract:', item);
     
     const {amount,id, odds, side, outcome_id, from_address, offchain} = item;
@@ -112,7 +112,7 @@ export class BetHandshakeHandler {
 
   }
 
-  static async shakeContract(item){
+  static async shakeContract(item, hid){
     console.log('shakeContract:', item);
 
     const {amount,id, odds, side, outcome_id, from_address} = item;
@@ -126,7 +126,7 @@ export class BetHandshakeHandler {
           
       }
   }
-  static async controlShake(list){
+  static async controlShake(list, hid){
     var result = null;
     
     list.forEach(element => {
@@ -134,11 +134,11 @@ export class BetHandshakeHandler {
        const isInitBet = BetHandshakeHandler.isInitBet(element)
        console.log("isInitBet:", isInitBet);
       if(isInitBet){
-        this.addContract(element);
+        this.addContract(element, hid);
       }else {
         const foundShakeList = BetHandshakeHandler.foundShakeItemList(element);
         foundShakeList.forEach(element => {
-          this.shakeContract(element);
+          this.shakeContract(element, hid);
         });
 
       }

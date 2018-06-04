@@ -22,6 +22,7 @@ import { InputField } from '../form/customField';
 import {MasterWallet} from '@/models/MasterWallet';
 import Dropdown from '@/components/core/controls/Dropdown';
 import Toggle from '@/components/handshakes/betting/Feed/Toggle';
+import {showAlert} from '@/reducers/app/action';
 
 import { BettingHandshake } from '@/services/neuron';
 // self
@@ -136,7 +137,7 @@ get matchResults(){
       if (foundMatch){
           const {outcomes} = foundMatch;
           if(outcomes){
-              return outcomes.map((item) => ({ id: item.id, value: item.name}));
+              return outcomes.map((item) => ({ id: item.id, value: item.name, hid: item.id}));
           }
       }
   }
@@ -433,10 +434,16 @@ get matchResults(){
     // const event_odds = values['event_odds'];
     // const payout = stake * event_odds;
     //const hid = selectedOutcome.id;
-    //const hid = selectedOutcome.hid;
+    const hid = selectedOutcome.hid;
     if(status && data){
-      BetHandshakeHandler.controlShake(data);
-
+      BetHandshakeHandler.controlShake(data, hid);
+      this.props.showAlert({
+        message: <div className="text-center">Create a bet successfully</div>,
+        timeOut: 3000,
+        type: 'danger',
+        callBack: () => {
+        }
+      });
     }
 
 
@@ -468,6 +475,8 @@ const mapState = state => ({
 const mapDispatch = ({
   initHandshake,
   loadMatches,
+  showAlert
+
 });
 
 export default connect(mapState, mapDispatch)(BettingCreate);
