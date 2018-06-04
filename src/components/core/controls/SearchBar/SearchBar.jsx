@@ -14,7 +14,7 @@ class SearchBar extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      value: '',
+      value: props.inputSearchDefault || '',
       suggestions: props.suggestions,
       isShow: false,
     };
@@ -161,6 +161,7 @@ SearchBar.propTypes = {
   onSuggestionsClearRequested: PropTypes.func,
   getSuggestionValue: PropTypes.func,
   onInputSearchChange: PropTypes.func,
+  inputSearchDefault: PropTypes.string,
 };
 
 SearchBar.defaultProps = {
