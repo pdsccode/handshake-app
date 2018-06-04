@@ -243,10 +243,8 @@ export class Firechat {
 
   resumeSession() {
     const self = this;
-    console.log(this.userRef);
     this.userRef.child('rooms').once('value', (snapshot) => {
       const rooms = snapshot.val() || {};
-      console.log('resumeSession rooms', rooms);
       Object.keys(rooms).forEach((roomId) => {
         self.enterRoom(rooms[roomId].id);
       });
@@ -308,10 +306,14 @@ export class Firechat {
 
         // Set presence bit for the room and queue it for removal on disconnect.
         const presenceRef = self.firechatRef.child('chat-room-users').child(roomId).child(self.userId).child(self.sessionId);
-        self.queuePresenceOperation(presenceRef, {
+        presenceRef.set({
           id: self.userId,
           name: self.userName,
-        }, null);
+        });
+        // self.queuePresenceOperation(presenceRef, {
+        //   id: self.userId,
+        //   name: self.userName,
+        // }, null);
       }
 
       // Invoke our callbacks before we start listening for new messages.
@@ -449,6 +451,7 @@ export class Firechat {
       self.userRef.child('invites').child(inviteId).update({
         status: 'accepted',
         toUserName: self.userName,
+        toUserId: self.userId,
       }, cb);
       return true;
     }, self);
