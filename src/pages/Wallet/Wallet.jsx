@@ -28,6 +28,7 @@ import ReactBottomsheet from 'react-bottomsheet';
 // var Blob = require('./Blob.js');
 import { setHeaderRight } from '@/reducers/app/action';
 import QrReader from 'react-qr-reader'
+import {showAlert} from '@/reducers/app/action';
 
 // import filesaver from 'file-saver';
 
@@ -90,6 +91,24 @@ class Wallet extends React.Component {
       isNewCCOpen: false,
     };
     this.props.setHeaderRight(this.headerRight());
+  }
+
+  showAlert(msg, type='success', timeOut=3000){
+    this.props.showAlert({
+      message: <div className="textCenter">{msg}</div>,
+      timeOut: timeOut,
+      type: type,
+      callBack: () => {}
+    });
+  }
+  showToast(mst){  
+    this.showAlert(mst, 'primary', 2000 );
+  }
+  showError(mst){  
+    this.showAlert(mst, 'danger', 3000 );
+  }
+  showSuccess(mst){
+    this.showAlert(mst, 'success', 5000 );
   }
 
   headerRight() {
@@ -195,8 +214,8 @@ class Wallet extends React.Component {
     let obj = [];
       obj.push({
         title: 'Send',
-        handler: () => {
-          this.setState({walletSelected: wallet, inputAddressAmountValue: '', inputSendAmountValue: ''});
+        handler: () => {          
+          this.setState({isRestoreLoading: false, walletSelected: wallet, inputAddressAmountValue: '', inputSendAmountValue: ''});
           this.toggleBottomSheet();
           this.modalSendRef.open();
         }
@@ -235,6 +254,7 @@ class Wallet extends React.Component {
         handler: () => {
           Clipboard.copy(wallet.address);
           this.toggleBottomSheet();
+          this.showToast('Copied to clipboard');
         }
       })
 
@@ -292,13 +312,20 @@ class Wallet extends React.Component {
       if (this.state.inputRestoreWalletValue != ''){
         let walletData = MasterWallet.restoreWallets(this.state.inputRestoreWalletValue);
         if (walletData !== false){
+          this.getListBalace(walletData);
           this.splitWalletData(walletData);
           this.setState({isRestoreLoading: false});
           this.modalRestoreRef.close();
+          this.showAlert("Restore wallet successfully.");
+          return;
         }
       }
+<<<<<<< HEAD
 
     //alert('Invalid wallets');
+=======
+    this.showError("Invalid wallets");
+>>>>>>> 913372f701e2ab107ad6cb5195e6efed0691b967
     this.setState({erroValueBackup: true, isRestoreLoading: false});
   }
   updateRestoreWalletValue = (evt) => {
@@ -313,10 +340,19 @@ class Wallet extends React.Component {
     else if (this.state.inputSendAmountValue == '' || this.state.inputSendAmountValue == 0)
       alert("Please input Amount value");
     else{
-
+      this.setState({isRestoreLoading: true});
       this.state.walletSelected.transfer(this.state.inputAddressAmountValue, this.state.inputSendAmountValue).then(success => {
-          alert(success);
-          this.modalSendRef.close();
+          console.log(success);
+          this.setState({isRestoreLoading: false});            
+          if (success.hasOwnProperty('status')){
+            if (success.status == 1){
+              this.showSuccess(success.message);
+              this.modalSendRef.close();              
+            }
+            else{
+              this.showError(success.message);
+            }            
+          }
       });
     }
   }
@@ -341,7 +377,7 @@ class Wallet extends React.Component {
   creatSheetMenuHeaderMore(){
     let obj = [];
     obj.push({
-      title: "Add new",
+      title: "Add new / Import",
       handler: () => {
           this.setState({isRestoreLoading: false, countCheckCoinToCreate: 1, listCoinTempToCreate: MasterWallet.getListCoinTemp()});
           this.modalCreateWalletRef.open();
@@ -392,6 +428,10 @@ class Wallet extends React.Component {
       this.setState({isRestoreLoading: false, erroValueBackup: true});
     }
     else{
+      if (phrase != ''){
+        // need get balance
+        this.getListBalace(masterWallet);
+      }
       this.splitWalletData(masterWallet);
       this.modalCreateWalletRef.close();
     }
@@ -511,8 +551,12 @@ class Wallet extends React.Component {
           />
         : ""}
       </Modal>
+<<<<<<< HEAD
     )
 
+=======
+    )    
+>>>>>>> 913372f701e2ab107ad6cb5195e6efed0691b967
   }
 
   render() {
@@ -551,7 +595,7 @@ class Wallet extends React.Component {
               placeholder={ this.state.walletSelected ? "Amount ({0})".format(this.state.walletSelected.name) : "Amount "}
               onChange={evt => this.updateSendAmountValue(evt)}
               />
-            <Button type="submit" block={true}>Send</Button>
+            <Button isLoading={this.state.isRestoreLoading}  type="submit" block={true}>Send</Button>
           </SendWalletForm>
         </Modal>
 
@@ -576,7 +620,7 @@ class Wallet extends React.Component {
           <div className='bodyBackup'>
           <textarea readonly onClick={ this.handleChange } onFocus={ this.handleFocus }
            value={ this.state.walletsData ? JSON.stringify(this.state.walletsData) : ''}/>
-          <Button className="button" cssType="danger" onClick={() => {Clipboard.copy(JSON.stringify(this.state.walletsData)); this.modalBackupRef.close(); }} >Copy it somewhere safe</Button>
+          <Button className="button" cssType="danger" onClick={() => {Clipboard.copy(JSON.stringify(this.state.walletsData)); this.modalBackupRef.close(); this.showToast('Copied to clipboard'); }} >Copy it somewhere safe</Button>
           </div>
         </Modal>
 
@@ -603,7 +647,7 @@ class Wallet extends React.Component {
 
           <QRCode value={ this.state.walletSelected ? this.state.walletSelected.address : ""} />
           <div className="addressDivPopup">{ this.state.walletSelected ? this.state.walletSelected.address : ""}</div>
-          <Button className="button" cssType="success" onClick={() => {Clipboard.copy(this.state.walletSelected.address);this.modalShareAddressRef.close()}} >
+          <Button className="button" cssType="success" onClick={() => {Clipboard.copy(this.state.walletSelected.address);this.modalShareAddressRef.close(); this.showToast('Copied to clipboard');}} >
             Copy
           </Button>
           </div>
@@ -671,11 +715,6 @@ class Wallet extends React.Component {
 
 }
 
-Wallet.propTypes = {
-  discover: PropTypes.object,
-  load: PropTypes.func
-};
-
 const mapState = (state) => ({
   discover: state.discover,
   userProfile: state.exchange.userProfile,
@@ -686,6 +725,7 @@ const mapState = (state) => ({
 
 const mapDispatch = ({
   setHeaderRight,
+  showAlert,
 });
 
 
