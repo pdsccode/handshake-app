@@ -179,6 +179,14 @@ get matchResults(){
     if(selectedMatch && selectedOutcome && dict.event_bet > 0 && dict.event_bet <= balance){
       this.initHandshake(extraParams, fromAddress);
 
+    }else {
+      this.props.showAlert({
+        message: <div className="text-center">Please choose match</div>,
+        timeOut: 3000,
+        type: 'danger',
+        callBack: () => {
+        }
+      });
     }
   }
 
