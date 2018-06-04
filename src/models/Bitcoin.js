@@ -3,6 +3,7 @@ import satoshi from 'satoshi-bitcoin';
 import { rule } from 'postcss';
 import { Wallet } from '@/models/Wallet.js';
 
+const moment = require('moment');
 const bitcore = require('bitcore-lib');
 const BigNumber = require('bignumber.js');
 
@@ -60,8 +61,8 @@ export class Bitcoin extends Wallet {
     }
 
 
-    async transfer(toAddress, amountToSend) {          
-      
+    async transfer(toAddress, amountToSend) {
+
       try {
 
         if (!bitcore.Address.isValid(toAddress)){
@@ -74,13 +75,13 @@ export class Bitcoin extends Wallet {
         let balance = await this.getBalance();
 
         console.log('bitcore.Networks.defaultNetwork', bitcore.Networks.defaultNetwork);
-        console.log('server', this.network);      
+        console.log('server', this.network);
 
 
         console.log('Your wallet balance is currently {0} ETH'.format(balance));
 
         if (!balance || balance == 0 || balance <= amountToSend) {
-          return {"status": 0, "message": "Insufficient funds"};          
+          return {"status": 0, "message": "Insufficient funds"};
         }
 
         // each BTC can be split into 100,000,000 units. Each unit of bitcoin, or 0.00000001 bitcoin, is called a satoshi
@@ -96,7 +97,7 @@ export class Bitcoin extends Wallet {
         if (fee) {
           data.fee = fee;
 
-          const utxos = await this.utxosForAmount(Number(amountToSend) + Number(fee));          
+          const utxos = await this.utxosForAmount(Number(amountToSend) + Number(fee));
 
           console.log('utxos', utxos);
 
@@ -116,19 +117,19 @@ export class Bitcoin extends Wallet {
             const txHash = await this.sendRawTx(rawTx);
 
             console.log(txHash);
-            
+
             return {"status": 1, "message": "Please allow for 30 seconds before transaction appears blockchain"};
           }
           else{
-            return {"status": 0, "message": "Insufficient funds"};          
+            return {"status": 0, "message": "Insufficient funds"};
           }
 
-          
+
         }
       } catch (error) {
         return {"status": 0, "message": error};
       }
-      
+
     }
 
     async retrieveUtxos() {
@@ -204,20 +205,45 @@ export class Bitcoin extends Wallet {
       if (response.status == 200) {
 
         if(response.data && response.data.txs){
-          console.log(response.data.txs);
+          //console.log(response.data.txs);
           for(let tran of response.data.txs){
-            let vin = tran.vin, vout = tran.vout;
-            for(let v of vin){
-              if(v.addr == this.address){
+            let vin = tran.vin, vout = tran.vout,
+            is_send = false, value = 0,
+            transaction_date = new Date(tran.blocktime*1000);
 
+            //check transactions are send
+            for(let tin of vin){
+              if(tin.addr == this.address){
+                is_send = true;
+
+                for(let tout of vout){
+                  if(tout.scriptPubKey.addresses.join(" ").indexOf(this.address) < 0){
+                    value += tout.value;
+                  }
+                }
+
+                break;
               }
             }
 
-            // for(let v of vout){
-            //   console.log(v);
-            // }
+            //check transactions are receive
+            if(!is_send){
+              for(let tout of vout){
+                if(tout.scriptPubKey.addresses.join(" ").indexOf(this.address) >= 0){
+                  value += tout.value;
+                  break;
+                }
+              }
+            }
+
+            result.push({
+              value: value,
+              transaction_date: transaction_date,
+              transaction_relative_time:  moment(transaction_date).fromNow(),
+              is_send: is_send});
           }
-          return response.data.txs;
+
+          return result;
         }
         else{
           return false;
