@@ -1,4 +1,4 @@
-
+import axios from 'axios';
 import { Wallet } from '@/models/Wallet.js';
 
 const Web3 = require('web3');
@@ -6,11 +6,12 @@ const EthereumTx = require('ethereumjs-tx');
 const hdkey = require('hdkey');
 const ethUtil = require('ethereumjs-util');
 const bip39 = require('bip39');
-
+const moment = require('moment');
 const BN = Web3.utils.BN;
 
 export class Ethereum extends Wallet {
     static Network = { Mainnet: 'https://mainnet.infura.io/', Rinkeby: 'https://rinkeby.infura.io/' }
+    static API = { Mainnet: 'https://api-rinkeby.etherscan.io/api', Rinkeby: 'https://api-rinkeby.etherscan.io/api' }
 
     constructor() {
       super();
@@ -57,11 +58,11 @@ export class Ethereum extends Wallet {
     }
 
     async transfer(toAddress, amountToSend) {
-      try {                
-        
+      try {
+
         console.log(`transfered from address:${this.address}`);
-        
-        
+
+
         const web3 = new Web3(new Web3.providers.HttpProvider(this.network));
 
         if (!web3.utils.isAddress(toAddress)){
@@ -74,7 +75,7 @@ export class Ethereum extends Wallet {
         console.log('Your wallet balance is currently {0} ETH'.format(balance));
 
         if (balance == 0 || balance <= amountToSend) {
-          return {"status": 0, "message": "Insufficient funds"};          
+          return {"status": 0, "message": "Insufficient funds"};
         }
 
         const gasPrice = new BN(await web3.eth.getGasPrice());
@@ -108,10 +109,34 @@ export class Ethereum extends Wallet {
         console.log("url", url);
 
         return {"status": 1, "message": "Please allow for 30 seconds before transaction appears etherscan.io"};
-        
+
       } catch (error) {
           return {"status": 0, "message": error};
       }
+    }
+
+    async getTransactionHistory() {
+      const API_KEY = '';
+      // const url = `https://api-rinkeby.etherscan.io/api?module=account&action=txlist&address=${this.address}&startblock=0&endblock=99999999&page=1&offset=10&sort=desc&apikey=${API_KEY}`;
+      const url =this.constructor.API[this.getNetworkName()] + `?module=account&action=txlist&address=${this.address}&startblock=0&endblock=99999999&page=1&offset=10&sort=desc&apikey=${API_KEY}`;      
+      const response = await axios.get(url);
+      if (response.status == 200) {
+        let result = [];
+        for(let tran of response.data.result){
+
+          let value = Number(tran.value / 10000000000000000000),
+          transaction_date = new Date(tran.timeStamp*1000),
+          is_sent = tran.from.toLowerCase() == this.address.toLowerCase();
+          result.push({
+            value: value,
+            transaction_date: transaction_date,
+            transaction_relative_time:  moment(transaction_date).fromNow(),
+            is_sent: is_sent});
+        }
+
+        return result;
+      }
+      return false;
     }
 }
 

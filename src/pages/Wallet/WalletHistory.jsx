@@ -3,9 +3,8 @@ import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-bootstrap';
 import {Bitcoin} from '@/models/Bitcoin.js'
 import {Ethereum} from '@/models/Ethereum.js'
-import dontIcon from '@/assets/images/icon/3-dot-icon.svg';
-import iconSafe from '@/assets/images/icon/icon-safe.svg';
-import iconWarning from '@/assets/images/icon/icon-warning.svg';
+import iconSent from '@/assets/images/icon/icon-sent.svg';
+import iconReceived from '@/assets/images/icon/icon-received.svg';
 
 import PropTypes from 'prop-types';
 import './Wallet.scss';
@@ -17,84 +16,63 @@ import ModalDialog from '@/components/core/controls/ModalDialog';
 import createForm from '@/components/core/form/createForm';
 import { differenceWith } from 'lodash';
 
-const testnet = 'https://test-insight.bitpay.com/api';
-var btcTestnet = new Bitcoin(testnet);
-
 class WalletHistory extends React.Component {
 	constructor(props) {
 
     super(props);
     this.state = {
-      transactions: [],
+      transactions: this.props.transactions
     };
   }
 
-	async componentDidMount() {
-    const {wallet} = this.props;
-    console.log("componentDidMount", wallet);
-    if(wallet){
-      wallet.address = "muU86kcQGfJUydQ9uZmfJwcDRb1H5PQuzr"; //testing
-      this.setState({transactions: await wallet.getTransactionHistory()});
-      console.log("transactions1", transactions);
+  componentDidUpdate(){
+    const {transactions} = this.props
+    if (transactions != this.state.transactions){        
+        this.setState({transactions: transactions});
     }
-	}
-
-  get show_header() {
-    const {wallet} = this.props;
-
-    if(wallet){
-      return (
-      <div id="hw-header" className="row">
-        <div className="name col-sm-8 p-1">{wallet.name}</div>
-        <div className="balance text-primary col-sm-4 p-1">{wallet.balance} {wallet.name}</div>
-        <div className="address">{wallet.address}</div>
-      </div>);
-    }
-    else
-      return "";
   }
-
 
   get list_transaction() {
-    const {wallet} = this.props;
-    if(wallet){
 
+    const wallet = this.props.wallet;
+    
+    if (this.state.transactions.length==0)
+      return <div className="history-no-trans">No transactions yet</div>;
+        
       return this.state.transactions.map((tran) => {
-        return
-        <div className="card bg-light">
-          <div className="balance">{wallet.balance} {wallet.name}</div>
-          <div className="name">{wallet.name}</div>
-          <div className="address">{wallet.address}</div>
-        </div>
-      });
+        let cssLabel = `label-${tran.is_sent ? "sent" : "received"}`,
+        cssValue = `value-${tran.is_sent ? "sent" : "received"}`;
 
-      return this.state.transactions.map((tran) => {
-        return
-        <div className="card bg-light">
-          <div className="balance">{wallet.balance} {wallet.name}</div>
-          <div className="name">{wallet.name}</div>
-          <div className="address">{wallet.address}</div>
-        </div>
+        return (
+        <div key={tran.transaction_date} className="row">
+          <div className="col3">
+            <div className="time">{tran.transaction_relative_time}</div>
+            <div className={cssValue}>{tran.is_sent ? "-" : ""} {Number(tran.value)} {wallet.name}</div>
+          </div>
+          <div className="col1"><img className="iconDollar" src={tran.is_sent ? iconSent : iconReceived} /></div>
+          <div className="col2 address">
+            <div className={cssLabel}>{tran.is_sent ? "Sent" : "Received"}</div>
+            <div className="">{wallet.getShortAddress()}</div>
+          </div>
+
+        </div>)
       });
-    }
-    else
-      return "";
   }
 
-	render(){
-    const {wallet} = this.props;
-
+	render(){    
 		return (
-      <div class="historywallet-wrapper">
-        {this.show_header}
-        {this.list_transaction}
+      <div className="historywallet-wrapper">
+        {
+          this.list_transaction
+        }
       </div>
 		);
 	}
 }
 
 WalletHistory.propTypes = {
-  wallet: PropTypes.object
+  wallet: PropTypes.any,
+  transactions: PropTypes.any
 };
 
 const mapState = (state) => ({

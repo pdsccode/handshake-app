@@ -203,17 +203,18 @@ export class Bitcoin extends Wallet {
           //console.log(response.data.txs);
           for(let tran of response.data.txs){
             let vin = tran.vin, vout = tran.vout,
-            is_send = false, value = 0,
+            is_sent = false, value = 0,
             transaction_date = new Date(tran.blocktime*1000);
 
             //check transactions are send
             for(let tin of vin){
-              if(tin.addr == this.address){
-                is_send = true;
+              if(tin.addr.toLowerCase() == this.address.toLowerCase()){
+                is_sent = true;
 
                 for(let tout of vout){
-                  if(tout.scriptPubKey.addresses.join(" ").indexOf(this.address) < 0){
-                    value += tout.value;
+                  let tout_addresses = tout.scriptPubKey.addresses.join(" ").toLowerCase();
+                  if(tout_addresses.indexOf(this.address.toLowerCase()) < 0){
+                    value += Number(tout.value);
                   }
                 }
 
@@ -222,9 +223,10 @@ export class Bitcoin extends Wallet {
             }
 
             //check transactions are receive
-            if(!is_send){
+            if(!is_sent){
               for(let tout of vout){
-                if(tout.scriptPubKey.addresses.join(" ").indexOf(this.address) >= 0){
+                let tout_addresses = tout.scriptPubKey.addresses.join(" ").toLowerCase();
+                if(tout_addresses.indexOf(this.address.toLowerCase()) >= 0){
                   value += tout.value;
                   break;
                 }
@@ -235,7 +237,7 @@ export class Bitcoin extends Wallet {
               value: value,
               transaction_date: transaction_date,
               transaction_relative_time:  moment(transaction_date).fromNow(),
-              is_send: is_send});
+              is_sent: is_sent});
           }
 
           return result;

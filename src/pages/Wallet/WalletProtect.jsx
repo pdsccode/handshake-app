@@ -34,21 +34,21 @@ class WalletProtect extends React.Component {
   get showStep1() {
     return this.state.step == 1 ?
     (
-      <div class="protectwallet-wrapper" >
-          <div class="msg1">
+      <div className="protectwallet-wrapper" >
+          <div className="msg1">
             Storing a passphrase will allow you to recover your funds
             if your phone is ever lost or stolen.
           </div>
-          <div class="msg2">
+          <div className="msg2">
             It is important to store this passphrase securely where nobody else can access it,
             such as on a piece of paper or in a password manager.
           </div>
-          <div class="msg3">
-            <Checkbox label="I understand that if I lose my passphrase, I will be unable to recover access to my account."
+          <div className="msg3">
+            <Checkbox name="checkBoxProtected" label="I understand that if I lose my passphrase, I will be unable to recover access to my account."
               checked={this.state.step1_confirm}
               onClick={() => { this.setState({step1_confirm: !this.state.step1_confirm}); }} />
           </div>
-          <footer class="footer">
+          <footer className="footer">
             <Button block disabled={!this.state.step1_confirm} type="submit" onClick={this.doStep1}>Continue</Button>
           </footer>
         </div>
@@ -61,18 +61,18 @@ class WalletProtect extends React.Component {
     let arr_phrase  = wallet && wallet.mnemonic ? wallet.mnemonic.split(' ') : [];
     return this.state.step == 2 ?
     (
-      <div class="protectwallet-wrapper" >
-          <div class="msg1">
+      <div className="protectwallet-wrapper" >
+          <div className="msg1">
             Carefully write down the words. Don’t email it or screenshot it.
           </div>
-          <div class="pass_phrase">
+          <div className="pass_phrase">
             {/* fill pass phrase */}
             {arr_phrase.map((str) => {
-              return <div class="btn cursor-initial bg-light">{str}</div>
+              return <div key={str} className="btn cursor-initial bg-light">{str}</div>
             })}
           </div>
           <div onClick={onCopy} className="pass-phrase-link-copy">Copy to clipboard</div>
-          <footer class="footer">
+          <footer className="footer">
             
             <Button block type="submit" onClick={this.doStep2}>Verify your passsphrase</Button>
           </footer>
@@ -85,22 +85,22 @@ class WalletProtect extends React.Component {
 
     return this.state.step == 3 ?
     (
-      <div class="protectwallet-wrapper" >
-          <div class="msg1">
+      <div className="protectwallet-wrapper" >
+          <div className="msg1">
             Tap the words to put them next to each other in the correct order.
           </div>
-          <div class="confirm_pass_phrase">
+          <div className="confirm_pass_phrase">
             {this.state.arr_confirm.map((str) => {
-              return <div class="btn btn-light" onClick={() => this.pickPassPhrase(str, false)}>{str}</div>
+              return <div className="btn btn-light" onClick={() => this.pickPassPhrase(str, false)}>{str}</div>
             })}
           </div>
-          <div class="pass_phrase">
+          <div className="pass_phrase">
             {/* fill pass phrase */}
             {this.state.arr_random.map((str) => {
-              return <div class="btn btn-light" onClick={() => this.pickPassPhrase(str, true)}>{str}</div>
+              return <div className="btn btn-light" onClick={() => this.pickPassPhrase(str, true)}>{str}</div>
             })}
           </div>
-          <footer class="footer">
+          <footer className="footer">
             <Button block type="submit" onClick={this.doStep3} >Verify your passsphrase</Button>
           </footer>
         </div>
@@ -207,9 +207,9 @@ class WalletProtect extends React.Component {
         {this.showStep2}
         {this.showStep3}
         <ModalDialog title="Not correct" onRef={modal => this.modalConfirmRef = modal}>
-          <div class="wrong-pass-phrase">The ordered of words you typed is not correct. Please try again.</div>
-          <div class="text-center p-3 ">
-            <button class="btn-block text-primary p-2" onClick={this.tryDoStep3} >Try again</button>
+          <div className="wrong-pass-phrase">The ordered of words you typed is not correct. Please try again.</div>
+          <div className="text-center p-3 ">
+            <button className="btn-block text-primary p-2" onClick={this.tryDoStep3} >Try again</button>
           </div>
         </ModalDialog>
       </div>
