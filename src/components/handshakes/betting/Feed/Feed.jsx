@@ -162,20 +162,22 @@ class FeedBetting extends React.Component {
 
   clickActionButton(title){
     const {id} = this.props;
+    const realId = BetHandshakeHandler.getId(id);
+    console.log('realId:', realId);
 
     switch(title){
 
       case BETTING_STATUS_LABEL.CANCEL:
         // TO DO: CLOSE BET
-        this.uninitItem(id);
+        this.uninitItem(realId);
         break;
 
       case BETTING_STATUS_LABEL.WITHDRAW:
         // TO DO: WITHDRAW
-        this.collect(id);
+        this.collect(realId);
         break;
       case BETTING_STATUS_LABEL.REFUND:
-      this.refund(id);
+      this.refund(realId);
       break;
 
     }
@@ -273,4 +275,3 @@ const mapDispatch = ({
   rollback
 });
 export default connect(mapState, mapDispatch)(FeedBetting);
-

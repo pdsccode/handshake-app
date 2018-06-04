@@ -55,7 +55,7 @@ class BetingShake extends React.Component {
     super(props);
     this.state = {
       buttonClass: 'btnOK btnBlue',
-      isShowOdds: true,
+      isShowOdds: false,
       extraData: {},
 
     };

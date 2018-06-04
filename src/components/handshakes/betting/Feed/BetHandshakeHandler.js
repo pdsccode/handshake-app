@@ -55,7 +55,8 @@ export class BetHandshakeHandler {
           isAction = false;
         }else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_BLOCKCHAIN_PENDING){
           //TO DO: scan txhash and rollback after a few minutes
-
+          strStatus = "Waiting...";
+          isAction = false;
         }else if(!isMatch && role !== SIDE.GUEST){
             label = BETTING_STATUS_LABEL.CANCEL;
             strStatus = BETTING_STATUS_LABEL.WAITING_RESULT;
@@ -85,6 +86,20 @@ export class BetHandshakeHandler {
             isAction = true;
         }
         return {"title": label, "isAction": isAction, "status": strStatus};
+  }
+
+  static getId(idOffchain){
+    const array = idOffchain.split("_");
+    if(array.length > 1){
+      const secondItem = array[1];
+      if(secondItem){
+        const strId = secondItem.substring(1);
+        console.log(strId);
+        return parseInt(strId);
+
+      }
+    }
+
   }
 
   static async getBalance(){

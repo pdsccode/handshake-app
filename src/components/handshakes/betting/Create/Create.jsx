@@ -137,7 +137,7 @@ get matchResults(){
       if (foundMatch){
           const {outcomes} = foundMatch;
           if(outcomes){
-              return outcomes.map((item) => ({ id: item.id, value: item.name, hid: item.id}));
+              return outcomes.map((item) => ({ id: item.id, value: item.name, hid: item.hid}));
           }
       }
   }
@@ -428,6 +428,8 @@ get matchResults(){
       chain_id: chainId,
     };
     console.log("Params:", params);
+    const hid = selectedOutcome.hid;
+    console.log('Hid when init:', hid);
 
     this.props.initHandshake({PATH_URL: API_URL.CRYPTOSIGN.INIT_HANDSHAKE, METHOD:'POST', data: params,
     successFn: this.initHandshakeSuccess,
