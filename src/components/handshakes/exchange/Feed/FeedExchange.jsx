@@ -146,6 +146,7 @@ class FeedExchange extends React.PureComponent {
 
     const wallet = MasterWallet.getWalletDefault(offer.currency);
     const balance = await wallet.getBalance();
+    const fee = await wallet.getFee();
 
     if ((offer.currency === CRYPTO_CURRENCY.ETH || (offer.type === EXCHANGE_ACTION.BUY && offer.currency === CRYPTO_CURRENCY.BTC))
         && balance < offer.totalAmount + DEFAULT_FEE[offer.currency]) {
@@ -153,6 +154,7 @@ class FeedExchange extends React.PureComponent {
         message: <div className="text-center">
           {intl.formatMessage({ id: 'notEnoughCoinInWallet' }, {
             amount: new BigNumber(balance).toFormat(6),
+            fee: fee,
             currency: offer.currency,
           })}
         </div>,
