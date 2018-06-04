@@ -111,7 +111,7 @@ export class BetHandshakeHandler {
   static foundShakeItemList(dict){
     var shakerList = [];
     const profile = local.get(APP.AUTH_PROFILE);
-    const {shakers, outcome_id, from_address} = element;
+    const {shakers, outcome_id, from_address} = dict;
       console.log('Shakers:', shakers);
       var foundShakedItem = shakers.find(function(element) {
         return element.shaker_id  === profile.id;

@@ -264,7 +264,7 @@ get matchResults(){
         name={key}
         style={style}
         component={InputField}
-        type="number"
+        type="text"
         //min="0.0001"
         //step="0.0002"
         placeholder={placeholder}

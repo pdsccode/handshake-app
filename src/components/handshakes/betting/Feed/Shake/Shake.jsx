@@ -54,10 +54,10 @@ class BetingShake extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      buttonClass: 'btnOK btnBlue',
+      buttonClass: 'btnOK btnRed',
       isShowOdds: false,
       extraData: {},
-
+      
     };
 
     this.onSubmit = ::this.onSubmit;
@@ -67,13 +67,16 @@ class BetingShake extends React.Component {
     this.onToggleChange = ::this.onToggleChange;
   }
   componentDidMount(){
+    console.log('Props:', this.props);
     const {extraData} = this.state;
     const {matchName, matchOutcome, outcomeHid} = this.props;
     extraData["event_name"] = matchName;
     extraData["event_predict"] = matchOutcome;
+  
     this.setState({extraData})
     console.log('componentDidMount OutcomeHid:', outcomeHid);
   }
+
 
   async onSubmit(values) {
     console.log("Submit");
@@ -86,7 +89,8 @@ class BetingShake extends React.Component {
     const side = parseInt(this.toggleRef.value);
     const balance = await BetHandshakeHandler.getBalance();
     console.log('Amount:', amount);
-    //if(matchName && matchOutcome && amount <= balance && amount > 0){
+    console.log('Props:', this.props);
+    //if(matchName && matchOutcome && amount <= parseFloat(balance) && amount > 0){
       if(isShowOdds){
         this.initHandshake(amount, odds);
       }else {
@@ -103,7 +107,7 @@ class BetingShake extends React.Component {
   }
 
   onToggleChange(id) {
-    this.setState({buttonClass: `btnOK ${id === 1 ? 'btnBlue' : 'btnRed' }`});
+    this.setState({buttonClass: `btnOK ${id === 2 ? 'btnBlue' : 'btnRed' }`});
   }
 
   updateTotal(value) {
@@ -284,6 +288,15 @@ class BetingShake extends React.Component {
       // TO DO: Show message, show odd field
       this.setState({
         isShowOdds: true,
+      }, ()=> {
+        const {message} = successData
+          this.props.showAlert({
+            message: <div className="text-center">{message}</div>,
+            timeOut: 3000,
+            type: 'danger',
+            callBack: () => {
+            }
+          });
       })
 
 

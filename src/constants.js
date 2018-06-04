@@ -107,7 +107,7 @@ export const API_URL = {
     SHAKE: 'shake',
     WITHDRAW: 'withdraw',
     IP_DOMAIN: 'https://ipfind.co/me',
-    IP_KEY: 'a59f33e5-0879-411a-908b-792359a0d6cc',
+    IP_KEY: 'beffb953-d0b0-4743-b439-366fcad0d47f',
   },
   SEED: {
     BASE: 'seed',
