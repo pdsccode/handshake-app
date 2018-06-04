@@ -967,8 +967,8 @@ class FeedExchange extends React.PureComponent {
               </div>
             )}
           </div>
-          <span>status: {status}</span><br></br>
-          <span>userType: {this.userType}</span><br></br>
+          {/*<span>status: {status}</span><br></br>*/}
+          {/*<span>userType: {this.userType}</span><br></br>*/}
           {
             mode === 'discover' ? (
               <div className="media mb-1">
