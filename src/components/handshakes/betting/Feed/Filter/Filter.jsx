@@ -17,7 +17,7 @@ import {BetHandshakeHandler, SIDE} from '@/components/handshakes/betting/Feed/Be
 const TAG = "BETTING_FILTER";
 class BettingFilter extends React.Component {
     static propTypes = {
-        
+
       }
 
     static defaultProps = {
@@ -33,8 +33,8 @@ class BettingFilter extends React.Component {
             support: null,
             against: null,
         };
-    
-        
+
+
       }
     componentWillReceiveProps(nextProps){
 
@@ -72,7 +72,7 @@ class BettingFilter extends React.Component {
               });
         }
         return null;
-        
+
     }
 
     get foundOutcome(){
@@ -103,10 +103,10 @@ class BettingFilter extends React.Component {
                 if(outcomes){
                     return outcomes.map((item) => ({ id: item.id, value: item.name, hid: item.hid}));
                 }
-            }  
+            }
         }
-        
-        
+
+
         return [];
     }
     get bookListSupport(){
@@ -151,24 +151,24 @@ class BettingFilter extends React.Component {
         return (
             <div className="wrapperBettingFilter">
             <div className="dropDown">
-                <Dropdown placeholder="Select a match" 
+                <Dropdown placeholder="Select a match"
                 defaultId={defaultMatchId}
                 source={this.matchNames}
                 onItemSelected={(item) => this.setState({selectedMatch: item})} />
             </div>
             {selectedMatch && <div className="dropDown">
-                <Dropdown placeholder="Select a prediction" 
+                <Dropdown placeholder="Select a prediction"
                 //defaultId={this.defaultOutcomeId}
-                source={this.matchOutcomes} 
+                source={this.matchOutcomes}
                 onItemSelected={(item) => {
                     /*this.callGetHandshakes(item)*/
                     this.setState({
                         selectedOutcome: item
                     },() => this.callGetHandshakes(item))
-                } 
+                }
                 }/>
             </div>}
-            
+
                 <div className="wrapperContainer">
                     <div className="item">
                     <GroupBook amountColor="#FA6B49" bookList={this.bookListSupport}/>
@@ -184,7 +184,7 @@ class BettingFilter extends React.Component {
         );
     }
     callGetHandshakes(item){
-        
+
         const params = {
             outcome_id: item.id,
         }
@@ -218,4 +218,3 @@ const mapDispatch = ({
     loadHandshakes,
   });
 export default connect(mapState, mapDispatch)(BettingFilter);
-

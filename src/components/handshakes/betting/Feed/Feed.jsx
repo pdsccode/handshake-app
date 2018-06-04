@@ -7,10 +7,10 @@ import  { BetHandshakeHandler, SIDE, BETTING_STATUS_LABEL} from './BetHandshakeH
 import momment from 'moment';
 import {MasterWallet} from '@/models/MasterWallet';
 
-import { APP } from '@/constants';
 import local from '@/services/localStore';
-import {FIREBASE_PATH} from '@/constants';
+import {FIREBASE_PATH, HANDSHAKE_ID, API_URL, APP} from '@/constants';
 import { BettingHandshake } from '@/services/neuron';
+import { uninitItem, collect, refund, rollback } from '@/reducers/handshake/action';
 
 
 // components
@@ -69,12 +69,14 @@ class FeedBetting extends React.Component {
 
     console.log('Props:', this.props);
     console.log('Status:', status);
-    const hardCodeStatus = 2;
+    //const hardCodeStatus = 2;
     const role = side;
+    //const blockchainStatusHardcode = 0;
     const isMatch = this.isMatch;
+    //const isMatch = true;
     console.log('Is Match:', isMatch);
     
-    const statusResult = BetHandshakeHandler.getStatusLabel(result, role, isMatch);
+    const statusResult = BetHandshakeHandler.getStatusLabel(status, result, role, isMatch);
     const {title, isAction} = statusResult;
     this.setState({
       actionTitle: title,
@@ -158,29 +160,102 @@ class FeedBetting extends React.Component {
   }
 
   clickActionButton(title){
-    const {id, outComeId, side, extraData, amount, winValue, hid} = this.props;
-    const {event_bet, event_odds} = JSON.parse(extraData);
-    //const hid = outcome_id;
-    const stake = amount;
-    const payout = winValue;
-    const offchain = id;
-    //const hid = outComeId;
-    console.log('Hid:', outComeId);
+    const {id} = this.props;
+    
     switch(title){
 
       case BETTING_STATUS_LABEL.CANCEL:
         // TO DO: CLOSE BET
-        bettinghandshake.cancelBet(hid, side,stake,payout,offchain);
+        this.uninitItem(id);
         break;
 
       case BETTING_STATUS_LABEL.WITHDRAW:
         // TO DO: WITHDRAW
-        bettinghandshake.withdraw(hid, offchain);
+        this.collect(id);
         break;
+      case BETTING_STATUS_LABEL.REFUND: 
+      this.refund(id);
+      break;
 
     }
 
 
+  }
+  uninitItem(id){
+    const url = API_URL.CRYPTOSIGN.UNINIT_HANDSHAKE.concat(id);
+    this.props.uninitItem({PATH_URL: url, METHOD:'POST', data: params,
+    successFn: this.uninitHandshakeSuccess,
+    errorFn: this.uninitHandshakeFailed
+  });
+  }
+  uninitHandshakeSuccess= async (successData)=>{
+    console.log("uninitHandshakeSuccess", successData);
+    const {status, data} = successData
+    if(status && data){
+      const {hid, side, amount, odds, offchain} = data;
+      const stake = amount;
+      const payout = stake * odds;
+      bettinghandshake.cancelBet(hid, side, stake, payout, offchain);
+
+    }
+  }
+  uninitHandshakeFailed = (error) => {
+    console.log('uninitHandshakeFailed', error);
+  }
+
+  collect(id){
+    const url = API_URL.CRYPTOSIGN.COLLECT.concat(id);
+    this.props.collect({PATH_URL: url, METHOD:'POST', data: params,
+    successFn: this.collectSuccess,
+    errorFn: this.collectFailed
+  });
+  }
+
+  collectSuccess = async (successData)=>{
+    console.log('collectSuccess', successData);
+    const {status, data} = successData
+    if(status && data){
+      const {hid, offchain} = data;
+      
+      bettinghandshake.withdraw(hid, offchain);
+
+    }
+  }
+  collectFailed = (error) => {
+    console.log('collectFailed', error);
+
+  }
+
+  refund(id){
+    const url = API_URL.CRYPTOSIGN.REFUND.concat(id);
+    this.props.refund({PATH_URL: API_URL.CRYPTOSIGN.REFUND, METHOD:'POST', data: params,
+    successFn: this.refundSuccess,
+    errorFn: this.refundFailed
+  });
+  }
+
+  refundSuccess = async (successData)=>{
+    console.log('refundSuccess', successData);
+    const {status, data} = successData
+    if(status && data){
+    }
+  }
+  refundFailed = (error) => {
+    console.log('refundFailed', error);
+  }
+
+  rollback(id){
+    const url = API_URL.CRYPTOSIGN.ROLLBACK.concat(id);
+    this.props.rollback({PATH_URL: url, METHOD:'POST', data: params,
+    successFn: this.rollbackSuccess,
+    errorFn: this.rollbackFailed
+  });
+  }
+  rollbackSuccess = async (successData)=>{
+    console.log('rollbackSuccess', successData);
+  }
+  rollbackFailed = (error) => {
+    console.log('rollbackFailed', error);
   }
 }
 
@@ -188,6 +263,10 @@ const mapState = state => ({
   firebaseUser: state.firebase.data,
 });
 const mapDispatch = ({
+  uninitItem,
+  collect,
+  refund,
+  rollback
 });
 export default connect(mapState, mapDispatch)(FeedBetting);
 

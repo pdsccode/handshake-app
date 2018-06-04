@@ -5,6 +5,7 @@ import exchange from './exchange';
 import handshake from './handshake';
 import betting from './betting';
 import me from './me';
+import comment from './comment';
 
 export default {
   auth,
@@ -14,4 +15,5 @@ export default {
   handshake,
   me,
   betting,
+  comment,
 };
