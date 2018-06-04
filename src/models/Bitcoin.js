@@ -208,11 +208,12 @@ export class Bitcoin extends Wallet {
 
             //check transactions are send
             for(let tin of vin){
-              if(tin.addr == this.address){
+              if(tin.addr.toLowerCase() == this.address.toLowerCase()){
                 is_sent = true;
 
                 for(let tout of vout){
-                  if(tout.scriptPubKey.addresses.join(" ").indexOf(this.address) < 0){
+                  let tout_addresses = tout.scriptPubKey.addresses.join(" ").toLowerCase();
+                  if(tout_addresses.indexOf(this.address.toLowerCase()) < 0){
                     value += Number(tout.value);
                   }
                 }
@@ -224,7 +225,8 @@ export class Bitcoin extends Wallet {
             //check transactions are receive
             if(!is_sent){
               for(let tout of vout){
-                if(tout.scriptPubKey.addresses.join(" ").indexOf(this.address) >= 0){
+                let tout_addresses = tout.scriptPubKey.addresses.join(" ").toLowerCase();
+                if(tout_addresses.indexOf(this.address.toLowerCase()) >= 0){
                   value += tout.value;
                   break;
                 }

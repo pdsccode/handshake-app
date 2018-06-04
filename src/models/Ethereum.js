@@ -6,7 +6,7 @@ const EthereumTx = require('ethereumjs-tx');
 const hdkey = require('hdkey');
 const ethUtil = require('ethereumjs-util');
 const bip39 = require('bip39');
-
+const moment = require('moment');
 const BN = Web3.utils.BN;
 
 export class Ethereum extends Wallet {
@@ -115,13 +115,24 @@ export class Ethereum extends Wallet {
     }
 
     async getTransactionHistory() {
-      const API_KEY = 'AVBIHJUF3G4ZY2CHZI6F4RVBFWC3A3EIVB';
-      const url = `https://api-rinkeby.etherscan.io/api?module=transaction&action=gettxreceiptstatus&txhash=${this.address}&apikey=${API_KEY}`;
+      const API_KEY = '';
+      const url = `https://api-rinkeby.etherscan.io/api?module=account&action=txlist&address=${this.address}&startblock=0&endblock=99999999&page=1&offset=10&sort=desc&apikey=${API_KEY}`;
       const response = await axios.get(url);
-      console.log(url);
       if (response.status == 200) {
-        console.log(response.data);
-        return response.data;
+        let result = [];
+        for(let tran of response.data.result){
+
+          let value = Number(tran.value / 10000000000000000000),
+          transaction_date = new Date(tran.timeStamp*1000),
+          is_sent = tran.from.toLowerCase() == this.address.toLowerCase();
+          result.push({
+            value: value,
+            transaction_date: transaction_date,
+            transaction_relative_time:  moment(transaction_date).fromNow(),
+            is_sent: is_sent});
+        }
+
+        return result;
       }
       return false;
     }
