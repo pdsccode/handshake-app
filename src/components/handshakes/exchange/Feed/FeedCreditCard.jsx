@@ -17,7 +17,7 @@ import { change } from 'redux-form'
 import {fieldCleave, fieldDropdown, fieldInput, fieldRadioButton} from '@/components/core/form/customField'
 import {required} from '@/components/core/form/validation'
 import {createCCOrder, getCcLimits, getCryptoPrice, getUserCcLimit} from '@/reducers/exchange/action';
-import {API_URL, CRYPTO_CURRENCY, CRYPTO_CURRENCY_DEFAULT} from "@/constants";
+import {API_URL, CRYPTO_CURRENCY_LIST, CRYPTO_CURRENCY_DEFAULT} from "@/constants";
 import {FIAT_CURRENCY} from "@/constants";
 import CryptoPrice from "@/models/CryptoPrice";
 import {MasterWallet} from "@/models/MasterWallet";
@@ -97,7 +97,8 @@ class FeedCreditCard extends React.Component {
 
 
   handleCreateCCOrder = (params) => {
-    const {cryptoPrice, addressForced } = this.props;
+    const {cryptoPrice, addressForced, authProfile } = this.props;
+
 
     let address = '';
     if (addressForced) {
@@ -114,6 +115,7 @@ class FeedCreditCard extends React.Component {
         fiat_amount: cryptoPrice.fiatAmount.trim(),
         fiat_currency: FIAT_CURRENCY,
         address: address,
+        email: authProfile.email,
         payment_method_data: params
       };
       // console.log('handleCreateCCOrder',paramsObj);
@@ -342,7 +344,7 @@ class FeedCreditCard extends React.Component {
                     <Field
                       name="currency"
                       component={fieldRadioButton}
-                      list={currencyForced ? CRYPTO_CURRENCY.filter(c => c.value === currencyForced) : CRYPTO_CURRENCY}
+                      list={currencyForced ? CRYPTO_CURRENCY_LIST.filter(c => c.value === currencyForced) : CRYPTO_CURRENCY_LIST}
                       color={mainColor}
                       onChange={this.onCurrencyChange}
                     />
@@ -390,6 +392,7 @@ const mapStateToProps = (state) => ({
   ccLimits: state.exchange.ccLimits || [],
   amount: selectorFormCreditCard(state, 'amount'),
   currency: selectorFormCreditCard(state, 'currency'),
+  authProfile: state.auth.profile,
 });
 
 const mapDispatchToProps = (dispatch) => ({
