@@ -87,6 +87,20 @@ export class BetHandshakeHandler {
         return {"title": label, "isAction": isAction, "status": strStatus};
   }
 
+  static getId(idOffchain){
+    const array = idOffchain.split("_");
+    if(array.length > 1){
+      const secondItem = array[1];
+      if(secondItem){
+        const strId = str.replace(/s/m, '');
+        console.log(strId);
+        return parseInt(strId);
+
+      }
+    }
+
+  }
+
   static async getBalance(){
     const balance =  await wallet.getBalance();
     console.log('Balance:', balance);
