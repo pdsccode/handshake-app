@@ -44,6 +44,8 @@ import {Link} from "react-router-dom";
 import {URL} from '@/config';
 import {getDistanceFromLatLonInKm} from '../utils'
 import {ExchangeHandshake} from '@/services/neuron';
+import _sample from "lodash/sample";
+import { feedBackgroundColors } from "@/components/handshakes/exchange/config";
 
 class FeedExchange extends React.PureComponent {
   constructor(props) {
@@ -59,6 +61,7 @@ class FeedExchange extends React.PureComponent {
     this.state = {
       modalContent: '',
     };
+    this.mainColor = _sample(feedBackgroundColors)
   }
 
   componentDidMount() {
@@ -1005,7 +1008,11 @@ class FeedExchange extends React.PureComponent {
             </div>
           )
         }
-        <Feed className="feed text-white" background={`${mode === 'discover' ? '#FF2D55' : '#50E3C2'}`}>
+        <Feed
+          className="feed text-white"
+          // background={`${mode === 'discover' ? '#FF2D55' : '#50E3C2'}`}
+          background={this.mainColor}
+        >
           <div className="d-flex mb-4">
             <div>
               <h5>
