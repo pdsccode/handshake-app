@@ -8,10 +8,12 @@ import { URL } from '@/config';
 import { setHeaderTitle } from '@/reducers/app/action';
 
 const Wallet = props => (<DynamicImport loading={Loading} load={() => import('@/pages/Wallet/Wallet')}>{Component => <Component {...props} />}</DynamicImport>);
+const WalletHistory = props => (<DynamicImport loading={Loading} load={() => import('@/pages/Wallet/WalletHistory')}>{Component => <Component {...props} />}</DynamicImport>);
 const Page404 = props => (<DynamicImport isNotFound loading={Loading} load={() => import('@/pages/Error/Page404')}>{Component => <Component {...props} />}</DynamicImport>);
 
 const routerMap = [
   { path: URL.HANDSHAKE_WALLET_INDEX, component: Wallet },
+  { path: URL.HANDSHAKE_WALLET_HISTORY, component: WalletHistory },
 ];
 
 class WalletRouter extends React.Component {

@@ -74,7 +74,7 @@ class WalletHistory extends React.Component {
     const {wallet} = this.props;
 
 		return (
-      <div class="historywallet-wrapper">
+      <div className="historywallet-wrapper">
         {this.show_header}
         {this.list_transaction}
       </div>

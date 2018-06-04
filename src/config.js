@@ -19,6 +19,7 @@ export const URL = {
 
   HANDSHAKE_WALLET: '/wallet',
   HANDSHAKE_WALLET_INDEX: '/wallet',
+  HANDSHAKE_WALLET_HISTORY: '/wallet/history',
 
   HANDSHAKE_CREATE: '/create',
   HANDSHAKE_CREATE_INDEX: '/create',
