@@ -56,7 +56,7 @@ class Me extends React.Component {
         <Row>
           <Col md={12}>
             <Link className="update-profile" to={URL.HANDSHAKE_ME_PROFILE} title="profile">
-              <Image src={AvatarSVG} alt="avatar" />
+              <Image className="avatar" src={AvatarSVG} alt="avatar" />
               <div className="text">
                 <strong>My Profile</strong>
                 <p>Vertify your email, phone numbers</p>
