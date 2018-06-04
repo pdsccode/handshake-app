@@ -22,7 +22,7 @@
     margin-bottom: 0;
   }
   .balance {
-    font-size: rem-calc(20px);
+    font-size: rem-calc(16px);
     color: $white;
     letter-spacing: 0;
     font-weight: 300;
@@ -398,6 +398,9 @@
     right: 10px;
     opacity: 0.6;
   }
+}
+.textCenter{
+  text-align: center;
 }
 
 .historywallet-wrapper{
