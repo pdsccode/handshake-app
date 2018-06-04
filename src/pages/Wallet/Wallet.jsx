@@ -91,6 +91,7 @@ class Wallet extends React.Component {
       isNewCCOpen: false,
       stepProtected: 1,
       activeProtected: false,
+      isWalletHistory: false
     };
     this.props.setHeaderRight(this.headerRight());
   }
@@ -246,7 +247,7 @@ class Wallet extends React.Component {
       obj.push({
         title: 'Transaction history',
         handler: () => {
-          this.setState({walletSelected: wallet});
+          this.setState({walletSelected: wallet, isWalletHistory: true});
           this.toggleBottomSheet();
           this.modalHistoryRef.open();
         }
@@ -459,9 +460,9 @@ class Wallet extends React.Component {
     this.toggleBottomSheet();
   }
 
-  onWarningClick = (wallet) => {    
+  onWarningClick = (wallet) => {
     if (!wallet.protected){
-      this.setState({walletSelected: wallet, stepProtected: 1, activeProtected: true});      
+      this.setState({walletSelected: wallet, stepProtected: 1, activeProtected: true});
       this.modalProtectRef.open();
     }
     else{
@@ -571,7 +572,7 @@ class Wallet extends React.Component {
     return (
 
       <Grid>
-        
+
         {/* Tooltim menu Bottom */ }
         <ReactBottomsheet
           visible={this.state.bottomSheet}
@@ -617,9 +618,11 @@ class Wallet extends React.Component {
           <WalletProtect onCopy={this.onCopyProtected} step={this.state.stepProtected} active={this.state.activeProtected} wallet={this.state.walletSelected} callbackSuccess={() => {this.successWalletProtect(this.state.walletSelected)}} />
         </Modal>
 
+        {this.state.isWalletHistory ?
         <Modal title="History of transactions" onRef={modal => this.modalHistoryRef = modal}>
           <WalletHistory wallet={this.state.walletSelected} />
         </Modal>
+        : ""}
 
         {/* Modal for Backup wallets : */}
         <Modal title="Backup wallets" onRef={modal => this.modalBackupRef = modal}>

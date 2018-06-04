@@ -31,13 +31,17 @@ class WalletHistory extends React.Component {
 
 	async componentDidMount() {
     const {wallet} = this.props;
-    console.log("componentDidMount", wallet);
+    console.log("wallet", wallet);
     if(wallet){
-      wallet.address = "muU86kcQGfJUydQ9uZmfJwcDRb1H5PQuzr"; //testing
+      //wallet.address = "muU86kcQGfJUydQ9uZmfJwcDRb1H5PQuzr"; //testing
       this.setState({transactions: await wallet.getTransactionHistory()});
-      console.log("transactions1", transactions);
+      console.log("transactions1", this.state.transactions);
     }
-	}
+  }
+
+  async componentWillReceiveProps(){
+
+  }
 
   get show_header() {
     const {wallet} = this.props;
@@ -56,29 +60,14 @@ class WalletHistory extends React.Component {
 
 
   get list_transaction() {
-    const {wallet} = this.props;
-    if(wallet){
-
-      return this.state.transactions.map((tran) => {
-        return
-        <div className="card bg-light">
-          <div className="balance">{wallet.balance} {wallet.name}</div>
-          <div className="name">{wallet.name}</div>
-          <div className="address">{wallet.address}</div>
-        </div>
-      });
-
-      return this.state.transactions.map((tran) => {
-        return
-        <div className="card bg-light">
-          <div className="balance">{wallet.balance} {wallet.name}</div>
-          <div className="name">{wallet.name}</div>
-          <div className="address">{wallet.address}</div>
-        </div>
-      });
-    }
-    else
-      return "";
+    return this.state.transactions.map((tran) => {
+      return
+      <div className="card bg-light">
+        <div className="balance"></div>
+        <div className="name">{tran.transaction_relative_time}</div>
+        <div className="address">{tran.value}</div>
+      </div>
+    });
   }
 
 	render(){

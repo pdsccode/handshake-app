@@ -1,4 +1,4 @@
-
+import axios from 'axios';
 import { Wallet } from '@/models/Wallet.js';
 
 const Web3 = require('web3');
@@ -57,11 +57,11 @@ export class Ethereum extends Wallet {
     }
 
     async transfer(toAddress, amountToSend) {
-      try {                
-        
+      try {
+
         console.log(`transfered from address:${this.address}`);
-        
-        
+
+
         const web3 = new Web3(new Web3.providers.HttpProvider(this.network));
 
         if (!web3.utils.isAddress(toAddress)){
@@ -74,7 +74,7 @@ export class Ethereum extends Wallet {
         console.log('Your wallet balance is currently {0} ETH'.format(balance));
 
         if (balance == 0 || balance <= amountToSend) {
-          return {"status": 0, "message": "Insufficient funds"};          
+          return {"status": 0, "message": "Insufficient funds"};
         }
 
         const gasPrice = new BN(await web3.eth.getGasPrice());
@@ -108,10 +108,22 @@ export class Ethereum extends Wallet {
         console.log("url", url);
 
         return {"status": 1, "message": "Please allow for 30 seconds before transaction appears etherscan.io"};
-        
+
       } catch (error) {
           return {"status": 0, "message": error};
       }
+    }
+
+    async getTransactionHistory() {
+      const API_KEY = 'AVBIHJUF3G4ZY2CHZI6F4RVBFWC3A3EIVB';
+      const url = `https://api-rinkeby.etherscan.io/api?module=transaction&action=gettxreceiptstatus&txhash=${this.address}&apikey=${API_KEY}`;
+      const response = await axios.get(url);
+      console.log(url);
+      if (response.status == 200) {
+        console.log(response.data);
+        return response.data;
+      }
+      return false;
     }
 }
 
