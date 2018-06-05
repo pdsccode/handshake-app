@@ -321,10 +321,18 @@
         padding: 15px 30px;
       }
     }
+    .countdownBlock {
+      .btnTelegram {
+        width: 100%;
+      }
+      .registerEmail {
+        width: 100%;
+      }
+    }
   }
 }
 
-@include respond(sm) {
+@media (max-width: 767px) {
   .root {
     .mainContent {
       padding: 20px;
@@ -426,6 +434,7 @@
         font-size: 18px;
         color: #FFFFFF;
         letter-spacing: 0;
+        width: 100%;
         background-image: linear-gradient(-269deg, #7740FF 0%, #1E4EFF 100%);
         padding: 17px 10px;
         img {
