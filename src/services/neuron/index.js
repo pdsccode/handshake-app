@@ -50,6 +50,8 @@ class Neuron {
     const compiled = require(`../../contracts/${contractName}.json`);
     return compiled;
   };
+
+  getGasPriceDefaultWithEthUnit = async () => Web3.utils.fromWei(await this.web3.eth.getGasPrice());
   /**
    *
    * @param {string} address
@@ -106,7 +108,7 @@ class Neuron {
         gas: estimatedGas,
         to: toAddress,
         value: amount
-          ? web3.utils.toHex(web3.utils.toWei(String(amount, 'ether')))
+          ? web3.utils.toHex(web3.utils.toWei(String(amount), 'ether'))
           : undefined,
       };
 
