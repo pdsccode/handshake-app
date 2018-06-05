@@ -276,7 +276,7 @@ class Wallet extends React.Component {
 
       if (!wallet.isReward){
         obj.push({
-          title: 'Set as default {0} wallet'.format(wallet.name) + (wallet.default ? "✓ " : ""),
+          title: 'Set as default {0} wallet '.format(wallet.name) + (wallet.default ? "✓ " : ""),
           handler: () => {
             wallet.default = !wallet.default;
             this.toggleBottomSheet();
@@ -607,7 +607,7 @@ class Wallet extends React.Component {
         </ModalDialog>
 
         {/* ModalDialog for transfer coin */}
-        <Modal title="Send" onRef={modal => this.modalSendRef = modal}>
+        <Modal title="Transfer" onRef={modal => this.modalSendRef = modal}>
           <SendWalletForm className="sendwallet-wrapper" onSubmit={this.sendCoin}>
           <div className="div-address-qr-code">
             <Input name="to_address" placeholder="To address" required className="input-address-qr-code"
