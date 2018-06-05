@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 // action, mock
-import { fireBaseDataChange, loadMyHandshakeList } from '@/reducers/me/action';
+import { fireBaseExchangeDataChange, loadMyHandshakeList } from '@/reducers/me/action';
 import { API_URL, HANDSHAKE_ID } from '@/constants';
 import { URL } from '@/config';
 // components
@@ -40,7 +40,7 @@ class Me extends React.Component {
       let nextUser = nextProps.firebaseUser.users[this.props.auth?.profile?.id];
       let prevUser = this.props.firebaseUser.users[this.props.auth?.profile?.id];
       if (JSON.stringify(nextUser.offers) !== JSON.stringify(prevUser.offers)) {
-        this.props.fireBaseDataChange(nextUser.offers);
+        this.props.fireBaseExchangeDataChange(nextUser.offers);
       }
     }
   }
@@ -129,7 +129,7 @@ const mapState = state => ({
 const mapDispatch = ({
   loadMyHandshakeList,
   getListOfferPrice,
-  fireBaseDataChange,
+  fireBaseExchangeDataChange,
 });
 
 export default connect(mapState, mapDispatch)(Me);

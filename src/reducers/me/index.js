@@ -47,7 +47,7 @@ const meReducter = (state = {
         ...state,
         isFetching: false,
       };
-    case ACTIONS.FIREBASE_DATA_CHANGE: {
+    case ACTIONS.FIREBASE_EXCHANGE_DATA_CHANGE: {
       const listOfferStatus = action.payload;
       let myList = state.list;
 
