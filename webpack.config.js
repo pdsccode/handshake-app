@@ -85,15 +85,15 @@ module.exports = function webpackConfig(env, argv) {
   const production = {
     optimization: {
       minimize: true,
-      // minimizer: [
-      //   new UglifyJsPlugin({
-      //     uglifyOptions: {
-      //       compress: {
-      //         drop_console: true,
-      //       },
-      //     },
-      //   }),
-      // ],
+      minimizer: [
+        new UglifyJsPlugin({
+          uglifyOptions: {
+            compress: {
+              drop_console: true,
+            },
+          },
+        }),
+      ],
       splitChunks: {
         chunks: 'all',
       },
