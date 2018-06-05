@@ -39,6 +39,7 @@ class Me extends React.Component {
     if (JSON.stringify(nextProps.firebaseUser) !== JSON.stringify(this.props.firebaseUser) && this.props.firebaseUser.users) {
       let nextUser = nextProps.firebaseUser.users[this.props.auth?.profile?.id];
       let prevUser = this.props.firebaseUser.users[this.props.auth?.profile?.id];
+      console.log("Firebase Data Sa test:", nextUser);
       if (JSON.stringify(nextUser.offers) !== JSON.stringify(prevUser.offers)) {
         this.props.fireBaseExchangeDataChange(nextUser.offers);
       }
