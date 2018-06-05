@@ -101,7 +101,7 @@ export class Bitcoin extends Wallet {
 
           console.log('utxos', utxos);
 
-          if (utxos) {
+          if (utxos != false) {
             data.utxos = utxos;
             const fromAddress = this.address;
             const privateKey = this.privateKey;
@@ -150,7 +150,7 @@ export class Bitcoin extends Wallet {
       const utxos = await this.retrieveUtxos();
       if (utxos && utxos.length > 0) {
         const result = this.findUtxos(utxos, 0, amount, []);
-        if (!result) return {"status": 0, "message": "Insufficient funds"};
+        if (!result) return false;
         return result;
       }
       return false;
