@@ -84,7 +84,6 @@ class DiscoverPage extends React.Component {
 
   getListOfferPrice = () => {
     this.props.getListOfferPrice({
-      BASE_URL: API_URL.EXCHANGE.BASE,
       PATH_URL: API_URL.EXCHANGE.GET_LIST_OFFER_PRICE,
       qs: { fiat_currency: this.props?.app?.ipInfo?.currency },
       successFn: this.handleGetPriceSuccess,
