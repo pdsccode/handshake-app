@@ -47,19 +47,23 @@ class Comment extends React.PureComponent {
   }
 
   render() {
-    const { list } = this.props.comment;
+    const { list,  isFetching } = this.props.comment;
     const queryObject = qs.parse(this.props.router.location.search.slice(1));
     return (
       <Grid>
         <Row>
           <Col md={12} xs={12}>
             {
-              list.length > 0 && (
+              list.length > 0 ? (
                 <div className="comments" ref={element => this.commentsRef = element} id="listComments">
                   {list.map((item) => <CommentItem key={item.id} {...item} />)}
                   <div className="lastCommentItem" />
                 </div>
-              )
+              ) : !isFetching ? (
+                <div className="noData">
+                  <p className="text">No comment yet</p>
+                </div>
+              ) : null
             }
             <CreateComment
               onCreateCb={this.scrollToBottom}
