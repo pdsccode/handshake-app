@@ -40,14 +40,11 @@ class CreateComment extends React.PureComponent {
   createComment() {
     const { file } = this.state;
     const { objectId, objectType } = this.props;
-    let data = {};
     const rawData = { comment: this.textareaRef.value, object_type: objectType.toString(), object_id: objectId };
+    const data = new FormData();
+    data.append('request', JSON.stringify(rawData));
     if(!!file) {
-      data = new FormData();
-      data.append('request', JSON.stringify(rawData));
       data.append('image', this.uploadImageRef.files[0]);
-    } else {
-      data = rawData;
     }
     this.props.createComment({
       PATH_URL: API_URL.COMMENT.CREATE,
@@ -106,6 +103,7 @@ class CreateComment extends React.PureComponent {
 
   render() {
     const { imagePreviewUrl } = this.state;
+    const { addComment } = this.props;
     return (
       <div className="createComment">
         {
@@ -125,6 +123,7 @@ class CreateComment extends React.PureComponent {
           type="text"
           placeholder="Aa"
           ref={(component) => { this.textareaRef = component; }}
+          autoFocus={addComment === 'true'}
           onKeyDown={this.autoResizeTextArea}
         />
         <Image src={postCommentIcon} alt="post comment icon" onClick={this.createComment} />
