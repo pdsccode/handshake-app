@@ -39,6 +39,7 @@ import './Wallet.scss';
 import { Bitcoin } from '@/models/Bitcoin';
 import ModalDialog from '@/components/core/controls/ModalDialog';
 import Modal from '@/components/core/controls/Modal';
+import Dropdown from '@/components/core/controls/Dropdown';
 
 import createForm from '@/components/core/form/createForm';
 import {formValueSelector} from 'redux-form';
@@ -350,7 +351,11 @@ class Wallet extends React.Component {
     else if (this.state.inputSendAmountValue == '' || this.state.inputSendAmountValue == 0)
       alert("Please input Amount value");
     else{
-      this.setState({isRestoreLoading: true});
+      this.modalConfirmSendRef.open();      
+    }
+  }
+  submitSendCoin=()=>{
+    this.setState({isRestoreLoading: true});
       this.state.walletSelected.transfer(this.state.inputAddressAmountValue, this.state.inputSendAmountValue).then(success => {
           console.log(success);
           this.setState({isRestoreLoading: false});
@@ -364,7 +369,6 @@ class Wallet extends React.Component {
             }
           }
       });
-    }
   }
 
   updateSendAmountValue = (evt) => {
@@ -594,7 +598,7 @@ class Wallet extends React.Component {
 
         {/* ModalDialog for confirm remove wallet */}
         <ModalDialog title="Confirmation" onRef={modal => this.modalBetRef = modal}>
-          <div><span>Are you sure to want to remove this wallet?</span></div>
+          <div className="bodyConfirm"><span>Are you sure to want to remove this wallet?</span></div>
           <div className='bodyConfirm'>
           <Button className="left" cssType="danger" onClick={this.removeWallet} >Yes</Button>
             <Button className="right" cssType="secondary" onClick={() => { this.modalBetRef.close(); }}>Cancel</Button>
@@ -620,8 +624,17 @@ class Wallet extends React.Component {
           </SendWalletForm>
         </Modal>
 
+        {/*Dialog confirm transfer coin*/}        
+        <ModalDialog title="Confirmation" onRef={modal => this.modalConfirmSendRef = modal}>
+          <div className="bodyConfirm"><span>Are you sure you want to send out {this.state.inputSendAmountValue}?</span></div>          
+          <div className='bodyConfirm'>
+          <Button className="left" cssType="danger" onClick={this.submitSendCoin} >Yes</Button>
+            <Button className="right" cssType="secondary" onClick={() => { this.modalConfirmSendRef.close(); }}>Cancel</Button>
+          </div>
+        </ModalDialog>
+
         <Modal title="Fill up" onRef={modal => this.modalFillRef = modal}>
-          <FeedCreditCard buttonTitle="Send" currencyForced={this.state.walletSelected ? this.state.walletSelected.name : ""}
+          <FeedCreditCard buttonTitle="Fill Up" currencyForced={this.state.walletSelected ? this.state.walletSelected.name : ""}
             callbackSuccess={this.afterWalletFill}
             addressForced={this.state.walletSelected ? this.state.walletSelected.address : ""}
           />
@@ -687,16 +700,27 @@ class Wallet extends React.Component {
           <Row className="list">
           <Header title="Wallet key" />
           </Row>
-          <select onChange={evt => this.updateWalletKeyDefaultValue(evt)} className="selectWalletKey">
-            <option value="1">Random</option>
-            <option value="2">Specify recovery Phrase</option>
-          </select>
+          <div className="wallet-create-footer">
+          <Dropdown className="dropdown-wallet"
+            placeholder="Wallet key"
+            defaultId={1}
+            source={[{"id": 1, "value": "Random"}, {"id": 2, "value": "Specify recovery Phrase"}]}
+            onItemSelected={(item) =>
+                {                
+                  this.setState({
+                    walletKeyDefaultToCreate: item.id
+                  });                
+                }
+              }
+          />
+
           { this.state.walletKeyDefaultToCreate == 2 ?
             <Input name="phrase" placeholder="Type 12 words mnemonic" required
             className={this.state.erroValueBackup ? 'input12Phrase error' : 'input12Phrase'}
                 onChange={evt => this.update12PhraseValue(evt)}/>
             : ""
           }
+          </div>
 
 
           <Button block isLoading={this.state.isRestoreLoading} disabled={this.state.countCheckCoinToCreate == 0 || (this.state.walletKeyDefaultToCreate == 2 && this.state.input12PhraseValue.trim().split(/\s+/g).length != 12) } className="button button-wallet" cssType="primary" onClick={() => {this.createNewWallets()}} >

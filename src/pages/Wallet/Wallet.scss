@@ -117,12 +117,14 @@
   width: auto;
   padding-left: 30px;
   padding-right: 30px;
+  min-width: 125px;
 }
 .bodyConfirm .right{
   float: right;
   width: auto;
   padding-left: 30px;
   padding-right: 30px;
+  min-width: 125px;
 }
 .bodyConfirm{
   padding: 15px;
@@ -145,9 +147,10 @@
   height: 40px;
   margin-bottom: 30px
 }
-.input12Phrase{
-  margin-top: -10px;
+.input12Phrase{  
   margin-bottom: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 .bodyTitle{
   margin-left: 15px;
@@ -408,6 +411,13 @@
 .textCenter{
   text-align: center;
 }
+.dropdown-wallet{
+  margin: 0!important;
+  margin-bottom: 25px!important;
+}
+.wallet-create-footer{
+  padding-bottom: 130px;
+}
 .iconSuccessChecked{
   margin-bottom: 1px;
   margin-right: 5px;
@@ -475,4 +485,5 @@
     text-align: center;
     margin-top: 25px;
   }
+  
 }
