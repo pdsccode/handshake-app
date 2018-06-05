@@ -736,7 +736,7 @@ class Wallet extends React.Component {
 
         {/* Render list wallet: */}
         <Row className="list">
-          <Header title="Main net wallets" hasLink={false} linkTitle="+ Add new" onLinkClick={this.onLinkClick} />
+          <Header title="Mainnet wallets" hasLink={false} linkTitle="+ Add new" onLinkClick={this.onLinkClick} />
         </Row>
         <Row className="list">
           {this.listMainWalletBalance}
@@ -750,7 +750,7 @@ class Wallet extends React.Component {
         </Row>
 
         <Row className="list">
-          <Header title="Test net wallets" hasLink={false} />
+          <Header title="Testnet wallets" hasLink={false} />
         </Row>
         <Row className="list">
           {this.listTestWalletBalance}
