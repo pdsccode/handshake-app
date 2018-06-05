@@ -452,7 +452,7 @@ class FeedExchange extends React.PureComponent {
 
   ////////////////////////
   handleCallActionOnContract = async (data) => {
-    const {status} = this.props;
+    const {intl, status} = this.props;
     const offer = this.offer;
 
     const currency = data.currency;
