@@ -133,6 +133,7 @@ const mapDispatch = ({
   loadMyHandshakeList,
   getListOfferPrice,
   fireBaseExchangeDataChange,
+  fireBaseBettingChange
 });
 
 export default connect(mapState, mapDispatch)(Me);

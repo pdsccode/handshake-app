@@ -9,10 +9,15 @@ import { BetHandshakeHandler, SIDE } from '@/components/handshakes/betting/Feed/
 import Dropdown from '@/components/core/controls/Dropdown';
 import BettingShake from './../Shake';
 import GroupBook from './../GroupBook';
+import ShareSocial from '@/components/core/presentation/ShareSocial';
 // style
 import './Filter.scss';
 
 const TAG = "BETTING_FILTER";
+const SELECTING_DEFAULT = {
+    id: '',
+    value: '',
+};
 class BettingFilter extends React.Component {
     static propTypes = {
 
@@ -69,7 +74,7 @@ class BettingFilter extends React.Component {
 
     get defaultOutcome() {
         const matchOutcomes = this.matchOutcomes;
-        console.log('defaultOutcome matchOutcomes: ', matchOutcomes);
+        //console.log('defaultOutcome matchOutcomes: ', matchOutcomes);
         const { outComeId } = this.props;
         if (matchOutcomes && matchOutcomes.length > 0) {
             const itemDefault = matchOutcomes.find(item => item.id === outComeId);
@@ -111,7 +116,7 @@ class BettingFilter extends React.Component {
     }
     get matchOutcomes(){
         const {selectedMatch, matches} = this.state;
-        console.log('matchOutcomes selectedMatch:', selectedMatch);
+        //console.log('matchOutcomes selectedMatch:', selectedMatch);
         if(selectedMatch){
             const foundMatch = this.foundMatch;
             if (foundMatch){
@@ -158,11 +163,22 @@ class BettingFilter extends React.Component {
        return against;
     }
 
+    getInfoShare(selectedMatch, selectedOutcome) {
+        console.log(1111, selectedMatch);
+        console.log(2222, selectedOutcome);
+        return {
+            title: `Bet against more ninjas! I put a bet on ${selectedMatch.value}. ${selectedOutcome.value}! Put your coin where your mouth is. shake.ninja`,
+            shareUrl: `${location.origin}/discover/${encodeURI(selectedMatch.value)}?match=${selectedMatch.id}&out_come=${selectedOutcome.id}`,
+        };
+    }
+
     render(){
         const {matches} = this.state;
-        const selectedOutcome = this.outcomeDropDown ? this.outcomeDropDown.itemSelecting : null;
-        const selectedMatch = this.outcomeDropDown?  this.matchDropDown.itemSelecting : null;
+        const selectedOutcome = this.outcomeDropDown ? this.outcomeDropDown.itemSelecting : SELECTING_DEFAULT;
+        const selectedMatch = this.outcomeDropDown?  this.matchDropDown.itemSelecting : SELECTING_DEFAULT;
         console.log('Selected Outcome:', selectedOutcome);
+        console.log('Selected Match:', selectedOutcome);
+
 
         const outcomeId = (selectedOutcome && selectedOutcome.id >=0) ? selectedOutcome.id : null;
         const outcomeHid = (selectedOutcome && selectedOutcome.hid >=0) ? selectedOutcome.hid : null;
@@ -175,7 +191,9 @@ class BettingFilter extends React.Component {
         // console.log('Default Outcome:', defaultOutcome);
         const defaultOutcomeId = this.defaultOutcome ? this.defaultOutcome.id : null;
         console.log('Source Outcome:', this.matchOutcomes);
-        console.log('defaultOutcomeId:', defaultOutcomeId);
+
+        const shareInfo = this.getInfoShare(selectedMatch, selectedOutcome);
+        console.log(3333, shareInfo);
         return (
             <div className="wrapperBettingFilter">
             <div className="dropDown">
@@ -201,6 +219,12 @@ class BettingFilter extends React.Component {
                     },() => this.callGetHandshakes(item))
                 }
                 }
+                />
+            </div>
+            <div>
+                <ShareSocial
+                    title={shareInfo.title}
+                    shareUrl={shareInfo.shareUrl}
                 />
             </div>
 

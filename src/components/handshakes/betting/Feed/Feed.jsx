@@ -196,7 +196,7 @@ class FeedBetting extends React.Component {
 
       case BETTING_STATUS_LABEL.WITHDRAW:
         // TO DO: WITHDRAW
-        this.collect(realId);
+        this.collect(id);
         break;
       case BETTING_STATUS_LABEL.REFUND:
       this.refund(realId);
@@ -229,8 +229,10 @@ class FeedBetting extends React.Component {
   }
 
   collect(id){
-    const url = API_URL.CRYPTOSIGN.COLLECT.concat(`/${id}`);
-    this.props.collect({PATH_URL: url, METHOD:'POST',
+    let params = {
+      offchain: id
+    }
+    this.props.collect({PATH_URL: API_URL.CRYPTOSIGN.COLLECT, METHOD:'POST',data: params,
     successFn: this.collectSuccess,
     errorFn: this.collectFailed
   });
