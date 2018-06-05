@@ -82,6 +82,7 @@ class Wallet extends React.Component {
       isRestoreLoading: false,
       inputRestoreWalletValue: '',
       erroValueBackup: false,
+      // tranfer:
       listCoinTempToCreate: [],
       countCheckCoinToCreate: 1,
       walletKeyDefaultToCreate: 1,
@@ -93,7 +94,7 @@ class Wallet extends React.Component {
       isNewCCOpen: false,
       stepProtected: 1,
       activeProtected: false,
-      transactions: [],
+      transactions: [],      
     };
     this.props.setHeaderRight(this.headerRight());
   }
@@ -704,7 +705,7 @@ class Wallet extends React.Component {
           <div className="wallet-create-footer">
           <Dropdown className="dropdown-wallet"
             placeholder="Wallet key"
-            defaultId={1}
+            defaultId={this.state.walletKeySelected}
             source={[{"id": 1, "value": "Random"}, {"id": 2, "value": "Specify recovery Phrase"}]}
             onItemSelected={(item) =>
                 {
