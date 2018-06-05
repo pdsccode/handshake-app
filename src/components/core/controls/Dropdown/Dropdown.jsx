@@ -42,6 +42,7 @@ class Dropdown extends React.PureComponent {
     if (defaultId && source && source.length > 0 && idActive !== defaultId) {
       const itemDefault = source.find(item => item.id === defaultId);
       this.setState({ text: itemDefault.value, idActive: itemDefault.id });
+      this.itemSelecting = itemDefault;
     }
   }
 
