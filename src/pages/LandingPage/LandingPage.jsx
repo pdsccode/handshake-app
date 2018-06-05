@@ -3,6 +3,8 @@
  */
 import React from 'react';
 // service
+import axios from 'axios';
+import qs from 'qs';
 
 // style
 import './LandingPage.scss';
@@ -16,7 +18,9 @@ class Handshake extends React.Component {
   constructor(props) {
     super(props);
     this.injectFontPage = this.injectFontPage.bind(this);
+    this.submitEmail = this.submitEmail.bind(this);
   }
+  productId = 1296;
 
   componentDidMount() {
     if (window.addEventListener)
@@ -28,6 +32,49 @@ class Handshake extends React.Component {
 
   componentWillReceiveProps() {
     this.injectFontPage();
+  }
+
+  submitEmail(e) {
+    e.preventDefault();
+    // this.errorBoxRef.close();
+    const emailValue = this.emailRef.value.trim();
+    // validation email
+    // if (!emailValue) {
+    //   // empty
+    //   this.errorBoxRef.open();
+    //   this.setState({messageError: 'Email is empty.'});
+    //   return;
+    // }
+    // if (!ValidationUtil.isEmail(emailValue)) {
+    //   // invalid
+    //   // this.errorBoxRef.open();
+    //   // this.setState({messageError: 'Email is invalid.'});
+    //   return;
+    // }
+
+    // const ref = Helper.getValueParamURLQueryByName('ref') || '';
+    const params = {
+      ref: '',
+      email: emailValue,
+      has_options: 1,
+    };
+
+    // ga('send', 'event', 'ShakeNinja', 'submit register email');
+    const backOrder = axios({
+      method: 'post',
+      url: `https://dev.autonomous.ai/api-v2/order-api/order/back-order/${this.productId}?${qs.stringify(params)}`,
+      data: {},
+    });
+    backOrder.then((backOrderResult) => {
+      // if (backOrderResult.data.status > 0) {
+      //   console.log("")
+      // } else {
+      //
+      // }
+      console.log("backOrder", backOrderResult);
+    }).catch(error => {
+      console.log("here", error);
+    });
   }
 
   injectFontPage() {
@@ -90,6 +137,19 @@ class Handshake extends React.Component {
                   <img src={telegramAppIcon} alt="telegram app icon" />
                   <span>Join the conversation on telegram</span>
                 </a>
+                <form className="registerEmail" onSubmit={this.submitEmail}>
+                  <input
+                    className="email"
+                    name="email"
+                    type="text"
+                    id="email-1"
+                    placeholder="Enter your email"
+                    ref={input => this.emailRef = input}
+                  />
+                  <button className="btnSubmit" onClick={this.submitEmail}>
+                    <span>Join mailing list</span>
+                  </button>
+                </form>
               </div>
             </div>
           </div>
