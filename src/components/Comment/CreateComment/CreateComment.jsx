@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { createComment } from '@/reducers/comment/action';
 import { showAlert } from '@/reducers/app/action';
 import { API_URL, HANDSHAKE_ID } from '@/constants';
+import {MasterWallet} from '@/models/MasterWallet';
 
 // components
 import Image from '@/components/core/presentation/Image';
@@ -15,6 +16,8 @@ import './CreateComment.scss';
 import createImageIcon from '@/assets/images/icon/comment/image.svg';
 import postCommentIcon from '@/assets/images/icon/comment/post-comment.svg';
 import deleteIcon from '@/assets/images/icon/comment/delete-icon.svg';
+
+const wallet = MasterWallet.getWalletDefault('ETH');
 
 class CreateComment extends React.PureComponent {
   constructor(props) {
@@ -50,7 +53,12 @@ class CreateComment extends React.PureComponent {
       return;
     }
     const { objectId, objectType } = this.props;
-    const rawData = { comment: this.textareaRef.value, object_type: objectType.toString(), object_id: objectId };
+    const rawData = {
+      comment: this.textareaRef.value,
+      object_type: objectType.toString(),
+      object_id: objectId,
+      address: wallet.address,
+    };
     const data = new FormData();
     data.append('request', JSON.stringify(rawData));
     if(!!file) {
