@@ -1,5 +1,5 @@
-import devConstants from './constants.development';
-import prodConstants from './constants.production';
+const devConstants = require('./constants.development');
+const prodConstants = require('./constants.production');
 
 const finalConstants = process.env.isProduction ? prodConstants : devConstants;
-export default finalConstants;
+module.exports = finalConstants;
