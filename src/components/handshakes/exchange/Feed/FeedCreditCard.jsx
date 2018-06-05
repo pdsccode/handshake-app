@@ -219,6 +219,21 @@ class FeedCreditCard extends React.Component {
 
   handleSubmit = (values) => {
     const { handleSubmit } = this.props;
+    const { userCcLimit, cryptoPrice } = this.props;
+
+    const amoutWillUse = new BigNumber(userCcLimit.amount).plus(new BigNumber(cryptoPrice.fiatAmount)).toNumber();
+
+    if (this.state.amount && userCcLimit && userCcLimit.limit < amoutWillUse) {
+      this.props.showAlert({
+        message: <div className="text-center"><FormattedMessage id="overCCLimit" values={{ currency: FIAT_CURRENCY_SYMBOL, limit: formatMoney(userCcLimit.limit), amount: formatMoney(userCcLimit.amount) }}/></div>,
+        timeOut: 3000,
+        type: 'danger',
+        // callBack: this.handleBuySuccess
+      });
+
+      return;
+    }
+
     if (handleSubmit) {
       handleSubmit(values);
     } else {
