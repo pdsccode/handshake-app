@@ -135,6 +135,7 @@ class Handshake extends React.Component {
   render() {
     return (
       <div className="root">
+        <Alert />
         <div className="banner">
           <div className={`container mainContent`}>
             <div className={`row rowEqHeight`}>
