@@ -16,7 +16,7 @@
   }
   .mainContent {
     padding: 50px 0 54px;
-    .header {
+    .headerLandingpage {
       align-items: center;
       margin-bottom: 30px;
       display: flex;
@@ -61,7 +61,7 @@
       -webkit-text-fill-color: transparent;
       font-family: azo-sans-web, sans-serif;
       font-style: normal;
-      font-weight: var(--semi-bold);
+      font-weight: $semi-bold;
       font-size: 40px;
       /*color: #56DF3F;*/
       letter-spacing: 0;
@@ -88,7 +88,7 @@
     .btnTelegram {
       font-family: azo-sans-web, sans-serif;
       font-style: normal;
-      font-weight: var(--medium);
+      font-weight: $medium;
       /*background: #1E4EFF;*/
       border-radius: 4px;
       font-size: 24px;
@@ -115,10 +115,10 @@
       line-height: 32px;
       .orange {
         color: #F46A48;
-        font-weight: var(--medium);
+        font-weight: $medium;
       }
       strong {
-        font-weight: var(--medium);
+        font-weight: $medium;
       }
     }
   }
@@ -134,7 +134,7 @@
       margin-bottom: 23px;
       font-family: azo-sans-web, sans-serif;
       font-style: normal;
-      font-weight: var(--semi-bold);
+      font-weight: $semi-bold;
       span {
         /*color: #CF3D00;*/
         background: linear-gradient(-179deg, #CF3D00 0%, #F46A48 100%);
@@ -166,7 +166,7 @@
       line-height: 54px;
       font-family: azo-sans-web, sans-serif;
       font-style: normal;
-      font-weight: var(--semi-bold);
+      font-weight: $semi-bold;
       margin-bottom: 23px;
     }
     .countDownSubTitle {
@@ -192,7 +192,7 @@
     .btnTelegram {
       font-family: azo-sans-web, sans-serif;
       font-style: normal;
-      font-weight: var(--medium);
+      font-weight: $medium;
       border-radius: 4px;
       font-size: 24px;
       color: #FFFFFF;
@@ -235,7 +235,7 @@
   .root {
     .mainContent {
       padding: 20px;
-      .header {
+      .headerLandingpage {
         margin-bottom: 30px;
         & > img {
           width: 38px;
@@ -328,7 +328,7 @@
       .btnTelegram {
         font-family: azo-sans-web, sans-serif;
         font-style: normal;
-        font-weight: var(--medium);
+        font-weight: $medium;
         border-radius: 4px;
         font-size: 18px;
         color: #FFFFFF;
@@ -357,7 +357,7 @@
 @media (max-width: 375px) {
   .root {
     .mainContent {
-      .header {
+      .headerLandingpage {
         margin-bottom: 30px;
         & > img {
           width: 35px;

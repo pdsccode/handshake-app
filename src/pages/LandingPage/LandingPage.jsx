@@ -59,7 +59,7 @@ class Handshake extends React.Component {
                 </div>
               </div>
               <div className="col-md-6 col-sm-12 col-xs-12">
-                <div className="header">
+                <div className="headerLandingpage">
                   <img src={ninjaIcon} alt="ninja icon" />
                   <div>
                     <img src={shakeNinjaText} alt="ninja text icon" />
