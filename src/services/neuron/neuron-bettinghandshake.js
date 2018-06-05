@@ -6,26 +6,25 @@ const wallet = MasterWallet.getWalletDefault('ETH');
 const address = wallet.address;
 const privateKey = wallet.privateKey;
 console.log('Address, PrivateKey:', address, privateKey);
-
+const gasPrice = wallet.chainId === 4 ? 100 : 20;
 const TAG = 'BettingHandshake';
 export default class BettingHandshake extends BaseHandshake {
   constructor(chainId) {
     super(chainId);
+
+    // // / test
+    // this.neuron.caculateEstimatGasWithEthUnit(address).then((gas) => {
+    //   console.log(TAG, ' contructor -- gas = ', gas.toString());
+    // });
   }
   get contractFileNameWithoutExtension() {
     return 'PredictionHandshake';
   }
-  checkBalance = () => {
-    const balance = wallet.getBalance();
-    return balance;
+  async getEstimateGas(){
+    const estimateGas = await this.neuron.caculateEstimatGasWithEthUnit(address, gasPrice);
+    return estimateGas;
   }
-  initBet = (
-    hid,
-    side,
-    stake,
-    payout,
-    offchain,
-  ) => {
+  initBet = async (hid, side, stake, payout, offchain) => {
     console.log(
       TAG,
       ' init = ',
@@ -42,24 +41,24 @@ export default class BettingHandshake extends BaseHandshake {
     const bytesOffchain = this.web3.utils.fromAscii(offchain);
 
     const payloadData = this.handshakeInstance.methods
-      .init(
-        hid,
-        side,
-        payoutValue,
-        bytesOffchain,
-      )
+      .init(hid, side, payoutValue, bytesOffchain)
       .encodeABI();
 
-
-    return this.neuron.makeRawTransaction(address, privateKey, payloadData, {
-      amount: stake,
-      gasPrice: this.chainId === 4 ? 100 : 20,
-      toAddress: this.contractAddress,
-    });
+    const dataBlockChain = await this.neuron.makeRawTransaction(
+      address,
+      privateKey,
+      payloadData,
+      {
+        amount: stake,
+        gasPrice: gasPrice,
+        toAddress: this.contractAddress,
+      },
+    );
+    return dataBlockChain;
   };
 
   shake = (hid, side, stake, payout, maker, offchain) => {
-    console.log('eth-contract-service shake', address, privateKey, hid);
+    console.log('eth-contract-service shake', address, privateKey, hid, maker);
     const payoutValue = Web3.utils.toWei(payout.toString(), 'ether');
     const bytesOffchain = this.web3.utils.fromAscii(offchain);
 
@@ -91,7 +90,26 @@ export default class BettingHandshake extends BaseHandshake {
       .uninit(hid, side, stakeValue, payoutValue, bytesOffchain)
       .encodeABI();
     return this.neuron.makeRawTransaction(address, privateKey, payloadData, {
-      // amount,
+      // amount: stake,
+      toAddress: this.contractAddress,
+    });
+  };
+  // Refund if ater 4 days no one withdraw
+  refund = (hid, offchain) => {
+    console.log(
+      'eth-contract-service cancel',
+      address,
+      privateKey,
+      hid,
+      offchain,
+    );
+
+    const bytesOffchain = this.web3.utils.fromAscii(offchain);
+    const payloadData = this.handshakeInstance.methods
+      .refund(hid, bytesOffchain)
+      .encodeABI();
+    return this.neuron.makeRawTransaction(address, privateKey, payloadData, {
+      // amount: stake,
       toAddress: this.contractAddress,
     });
   };

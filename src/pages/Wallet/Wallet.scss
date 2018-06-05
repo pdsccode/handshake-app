@@ -22,7 +22,7 @@
     margin-bottom: 0;
   }
   .balance {
-    font-size: rem-calc(20px);
+    font-size: rem-calc(16px);
     color: $white;
     letter-spacing: 0;
     font-weight: 300;
@@ -54,6 +54,7 @@
     right: 12px;
     position: absolute;
     cursor: pointer;
+    opacity: 0.7;
   }
 }
 
@@ -116,12 +117,14 @@
   width: auto;
   padding-left: 30px;
   padding-right: 30px;
+  min-width: 125px;
 }
 .bodyConfirm .right{
   float: right;
   width: auto;
   padding-left: 30px;
   padding-right: 30px;
+  min-width: 125px;
 }
 .bodyConfirm{
   padding: 15px;
@@ -144,9 +147,10 @@
   height: 40px;
   margin-bottom: 30px
 }
-.input12Phrase{
-  margin-top: -10px;
+.input12Phrase{  
   margin-bottom: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 .bodyTitle{
   margin-left: 15px;
@@ -301,8 +305,8 @@
 
 .protectwallet-wrapper{
   margin-top:30px;
-
-
+  font-weight: 300;
+  padding-bottom: 100px;
   .msg1, .msg2, .msg3{
     font-size: 20px;
     line-height: 30px;
@@ -310,7 +314,7 @@
   }
 
   .msg2{
-    color:#D8D8D8;
+    color:#9a9a9a;
     font-size: 16px;
     line-height: 25px;
   }
@@ -327,9 +331,16 @@
     background:#D8D8D8;
     min-height: 152px;
     text-align: center;
+    margin-top:25px;
     div{
       margin:7px;
     }
+  }
+  .pass-phrase-link-copy{
+    text-align: center;
+    color: #1E4EFF;
+    cursor: pointer;
+    margin-top: 25px;
   }
 
   .confirm_pass_phrase{
@@ -363,13 +374,11 @@
   p.modal-custom-title{
     font-size:18px;
   }
-
-  .wrong-pass-phrase{
-    padding: 20px 10px !important;
-  }
-  
 }
-.button-wallet{   
+.wrong-pass-phrase{
+  padding: 20px 10px !important;
+}
+.button-wallet{
   position: fixed;
   bottom: 0;
   width: 100%;
@@ -399,25 +408,85 @@
     opacity: 0.6;
   }
 }
+.textCenter{
+  text-align: center;
+}
+.dropdown-wallet{
+  margin: 0!important;
+  margin-bottom: 25px!important;
+}
+.wallet-create-footer{
+  padding-bottom: 130px;
+}
+.iconSuccessChecked{
+  margin-bottom: 1px;
+  margin-right: 5px;
+}
 
 .historywallet-wrapper{
-  #hw-header{
-    width: 160px;
-    background: #D8D8D8;
-    border-radius: 5px;
-    right: 0;
+  padding-bottom: 70px;
+  font-weight: 300;
+
+  .row{
+    flex-wrap:nowrap !important;
+    display: block;
+    border: solid 1px #ECECEC;
+    margin: 10px 0px;
+    padding: 20px 0px;
+    border-radius: 6px;
   }
 
-  .name {
-    font-size: 20px;
+  .label-sent{
+    color:#1E4EFF;
+    font-size: 16px;
+    padding-bottom: 7px;
   }
 
-  .balance {
-    font-size:12px;
-    float: right;
+  .label-received{
+    color:#4CD964;
+    font-size: 16px;
+    padding-bottom: 7px;
   }
 
   .address{
-    font-size:12px;
+    color:#8A8A8F;
+    font-size: 14px;
   }
+
+  .time{
+    color:#8A8A8F;
+    font-size: 14px;
+    padding-bottom: 7px;
+  }
+
+  .value-sent{
+    font-size: 16px;
+    color:#FF2D55;
+  }
+
+  .value-received{
+    font-size: 16px;
+    color:#4CD964;
+  }
+
+  .col3{
+    width:auto;
+    float: right;
+    text-align: right;
+    padding-right: 15px;
+  }
+  .col2{width:180px;}
+  .col1{
+    width:60px;
+    padding: 10px 10px 0px 15px;
+    float: left;
+  }
+  .history-no-trans{
+    text-align: center;
+    margin-top: 25px;
+  }
+  
+}
+.bottom-sheet-wrapper{
+  z-index: 2000;
 }

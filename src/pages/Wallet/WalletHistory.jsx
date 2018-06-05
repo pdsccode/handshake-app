@@ -3,9 +3,8 @@ import { connect } from 'react-redux';
 import { Grid, Row, Col } from 'react-bootstrap';
 import {Bitcoin} from '@/models/Bitcoin.js'
 import {Ethereum} from '@/models/Ethereum.js'
-import dontIcon from '@/assets/images/icon/3-dot-icon.svg';
-import iconSafe from '@/assets/images/icon/icon-safe.svg';
-import iconWarning from '@/assets/images/icon/icon-warning.svg';
+import iconSent from '@/assets/images/icon/icon-sent.svg';
+import iconReceived from '@/assets/images/icon/icon-received.svg';
 
 import PropTypes from 'prop-types';
 import './Wallet.scss';
@@ -22,63 +21,58 @@ class WalletHistory extends React.Component {
 
     super(props);
     this.state = {
+      transactions: this.props.transactions
     };
-
-    console.log("constructor", this.state.step);
   }
 
-	async componentDidMount() {
-    //reset state
-
-    //this.setState({step1_confirm: false, step: 1, arr_confirm: []});
-    console.log(this.state.step);
-	}
-
-  get show_header() {
-    const {wallet} = this.props;
-
-    if(wallet){
-      return (
-      <div id="hw-header" class="row">
-        <div class="name col-sm-8 p-1">{wallet.name}</div>
-        <div class="balance text-primary col-sm-4 p-1">{wallet.balance} {wallet.name}</div>
-        <div class="address">{wallet.address}</div>
-      </div>);
+  componentDidUpdate(){
+    const {transactions} = this.props
+    if (transactions != this.state.transactions){        
+        this.setState({transactions: transactions});
     }
-    else
-      return "";
   }
-
 
   get list_transaction() {
-    const {wallet} = this.props;
 
-    if(wallet){
-      return (
-      <div class="card bg-light">
-        <div class="balance">{wallet.balance} {wallet.name}</div>
-        <div class="name">{wallet.name}</div>
-        <div class="address">{wallet.address}</div>
-      </div>);
-    }
-    else
-      return "";
+    const wallet = this.props.wallet;
+    
+    if (this.state.transactions.length==0)
+      return <div className="history-no-trans">No transactions yet</div>;
+        
+      return this.state.transactions.map((tran) => {
+        let cssLabel = `label-${tran.is_sent ? "sent" : "received"}`,
+        cssValue = `value-${tran.is_sent ? "sent" : "received"}`;
+
+        return (
+        <div key={tran.transaction_date} className="row">
+          <div className="col3">
+            <div className="time">{tran.transaction_relative_time}</div>
+            <div className={cssValue}>{tran.is_sent ? "-" : ""} {Number(tran.value)} {wallet.name}</div>
+          </div>
+          <div className="col1"><img className="iconDollar" src={tran.is_sent ? iconSent : iconReceived} /></div>
+          <div className="col2 address">
+            <div className={cssLabel}>{tran.is_sent ? "Sent" : "Received"}</div>
+            <div className="">{wallet.getShortAddress()}</div>
+          </div>
+
+        </div>)
+      });
   }
 
-	render(){
-    const {wallet} = this.props;
-
+	render(){    
 		return (
-      <div class="historywallet-wrapper">
-        {this.show_header}
-        {this.list_transaction}
+      <div className="historywallet-wrapper">
+        {
+          this.list_transaction
+        }
       </div>
 		);
 	}
 }
 
 WalletHistory.propTypes = {
-  wallet: PropTypes.object
+  wallet: PropTypes.any,
+  transactions: PropTypes.any
 };
 
 const mapState = (state) => ({

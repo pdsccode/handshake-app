@@ -1,5 +1,8 @@
 @import './src/styles/var';
 
+.modal-dialog-custom {
+  background-color: transparent !important;
+}
 .modal {
   max-width: $app-width;
   margin: 0 auto;

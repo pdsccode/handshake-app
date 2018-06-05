@@ -1,37 +1,5 @@
-export const BASE_API = {
-  BASE_URL: process.env.BASE_URL,
-  TIMEOUT: 10000,
-};
+const devConfig = require('./config.development');
+const prodConfig = require('./config.production');
 
-export const URL = {
-  INDEX: '/',
-
-  HANDSHAKE_ME: '/me',
-  HANDSHAKE_ME_INDEX: '/me',
-  HANDSHAKE_ME_PROFILE: '/me/profile',
-
-  HANDSHAKE_DISCOVER: '/discover',
-  HANDSHAKE_DISCOVER_INDEX: '/discover',
-  HANDSHAKE_DISCOVER_DETAIL: '/discover/:id',
-
-  HANDSHAKE_CHAT: '/chat',
-  HANDSHAKE_CHAT_INDEX: '/chat',
-
-  HANDSHAKE_WALLET: '/wallet',
-  HANDSHAKE_WALLET_INDEX: '/wallet',
-
-  HANDSHAKE_CREATE: '/create',
-  HANDSHAKE_CREATE_INDEX: '/create',
-
-  HANDSHAKE_EXCHANGE: '/exchange',
-  HANDSHAKE_EXCHANGE_INDEX: '/exchange',
-
-  TRANSACTION_LIST: '/transactions',
-  TRANSACTION_LIST_INDEX: '/transactions',
-
-  COMMENTS_BY_SHAKE: '/comments',
-  COMMENTS_BY_SHAKE_INDEX: '/comments',
-
-  LANDING_PAGE_SHURIKEN: '/shuriken',
-  LANDING_PAGE_SHURIKEN_INDEX: '/shuriken',
-};
+const finalConfig = process.env.isProduction ? prodConfig : devConfig;
+module.exports = finalConfig;

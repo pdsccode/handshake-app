@@ -7,9 +7,10 @@ const config = {
       basicHandshakeAddress: '',
       payableHandshakeAddress: '',
       groupHandshakeAddress: '',
-      predictionHandshakeAddress: '0x8b4d252a89ae56af24fd9557e803e81b42b66929',
-      exchangeHandshakeAddress: '0x585DFaaF693866726bDbac42EF90C6CDf3A06075',
+      predictionHandshakeAddress: '0x1559c2bd15f7eb6fa3e3146a752dbcaebdf58852',
+      exchangeHandshakeAddress: '0xa646028608fb23b61e5128c77b2409d06a295f4d',
       blockchainNetwork: 'https://mainnet.infura.io/',
+      apikeyEtherscan: 'AVBIHJUF3G4ZY2CHZI6F4RVBFWC3A3EIVB'
     },
     4: {
       multiSigAuthAddress: '',
@@ -18,11 +19,12 @@ const config = {
       basicHandshakeAddress: '0x4c621cfd5496b2077eb1c5b0308e2ea72358191b',
       payableHandshakeAddress: '',
       groupHandshakeAddress: '',
-      predictionHandshakeAddress: '0x8b4d252a89ae56af24fd9557e803e81b42b66929',
-      exchangeHandshakeAddress: '0x585DFaaF693866726bDbac42EF90C6CDf3A06075',
+      predictionHandshakeAddress: '0x1559c2bd15f7eb6fa3e3146a752dbcaebdf58852',
+      exchangeHandshakeAddress: '0xa646028608fb23b61e5128c77b2409d06a295f4d',
       cryptosignOwnerAddress: '',
       cryptosignOwnerPrivateKey: '',
       blockchainNetwork: 'https://rinkeby.infura.io/',
+      apikeyEtherscan: 'AVBIHJUF3G4ZY2CHZI6F4RVBFWC3A3EIVB'
     },
   },
 

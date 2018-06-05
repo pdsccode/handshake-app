@@ -23,7 +23,7 @@ class Button extends React.PureComponent {
     app: PropTypes.object,
     immunity: PropTypes.bool,
     isLoading: PropTypes.bool,
-  }
+  };
 
   static defaultProps = {
     disabled: false,
@@ -34,7 +34,7 @@ class Button extends React.PureComponent {
     link: false,
     onClick: () => {},
     isLoading: false,
-  }
+  };
 
   constructor(props) {
     super(props);
@@ -77,19 +77,36 @@ class Button extends React.PureComponent {
 
   typeClass(type) {
     switch (type) {
-      case 'primary': return 'btn-primary';
-      case 'secondary': return 'btn-secondary';
-      case 'success': return 'btn-success';
-      case 'danger': return 'btn-danger';
-      case 'warning': return 'btn-warning';
-      case 'info': return 'btn-info';
-      default: return 'btn-primary';
+      case 'primary':
+        return 'btn-primary';
+      case 'secondary':
+        return 'btn-secondary';
+      case 'success':
+        return 'btn-success';
+      case 'danger':
+        return 'btn-danger';
+      case 'warning':
+        return 'btn-warning';
+      case 'info':
+        return 'btn-info';
+      default:
+        return 'btn-primary';
     }
   }
 
   render() {
     const {
-      type, cssType, link, block, small, className, children, to, disabled, isLoading,
+      type,
+      cssType,
+      link,
+      block,
+      small,
+      className,
+      children,
+      to,
+      disabled,
+      isLoading,
+      style,
     } = this.props;
     const typeClass = this.typeClass(cssType);
     const Tag = link ? Link : 'button';
@@ -105,12 +122,24 @@ class Button extends React.PureComponent {
           `${block ? 'btn-block' : ''}`,
           `${small ? 'small' : ''}`,
           `${disabled ? 'disabled' : ''}`,
-          `${isLoading || (this.props.app.isCalling && !this.immunity()) ? 'disabled' : ''}`,
+          `${
+            isLoading || (this.props.app.isCalling && !this.immunity())
+              ? 'disabled'
+              : ''
+          }`,
         )}
+        style={style}
         type={type || ''}
         onClick={this.onClick}
-        disabled={isLoading || (this.props.app.isCalling && !this.immunity()) || disabled}
-        ref={(div) => { this.btnRef = div; return null; }}
+        disabled={
+          isLoading ||
+          (this.props.app.isCalling && !this.immunity()) ||
+          disabled
+        }
+        ref={(div) => {
+          this.btnRef = div;
+          return null;
+        }}
       >
         {this.loading()}
         {children}

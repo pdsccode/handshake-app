@@ -3,6 +3,7 @@ import satoshi from 'satoshi-bitcoin';
 import { rule } from 'postcss';
 import { Wallet } from '@/models/Wallet.js';
 
+const moment = require('moment');
 const bitcore = require('bitcore-lib');
 const BigNumber = require('bignumber.js');
 
@@ -18,7 +19,7 @@ export class Bitcoin extends Wallet {
     }
 
     getShortAddress() {
-      return this.address.replace(this.address.substr(5, 23), '...');
+      return this.address.replace(this.address.substr(5, 24), '...');
     }
 
     setDefaultNetwork() {
@@ -47,10 +48,10 @@ export class Bitcoin extends Wallet {
     }
 
     async getBalance() {
+
       this.setDefaultNetwork();
 
       const url = `${this.network}/addr/${this.address}/balance`;
-
       const response = await axios.get(url);
 
       if (response.status == 200) {
@@ -61,13 +62,29 @@ export class Bitcoin extends Wallet {
 
 
     async transfer(toAddress, amountToSend) {
-      await this.setDefaultNetwork();
 
-      console.log('bitcore.Networks.defaultNetwork', bitcore.Networks.defaultNetwork);
-      console.log('server', this.network);
+      let insufficientMsg = "You have insufficient coin to make the transfer. Please top up and try again."
 
       try {
+
+        if (!bitcore.Address.isValid(toAddress)){
+          return {"status": 0, "message": "Please enter a valid receiving address."};
+        }
+
         console.log(`transfered from address:${this.address}`);
+
+        // Check balance:
+        let balance = await this.getBalance();
+
+        console.log('bitcore.Networks.defaultNetwork', bitcore.Networks.defaultNetwork);
+        console.log('server', this.network);
+
+
+        console.log('Your wallet balance is currently {0} ETH'.format(balance));
+
+        if (!balance || balance == 0 || balance <= amountToSend) {
+          return {"status": 0, "message": insufficientMsg};
+        }
 
         // each BTC can be split into 100,000,000 units. Each unit of bitcoin, or 0.00000001 bitcoin, is called a satoshi
         const amountBig = new BigNumber(amountToSend.toString());
@@ -83,11 +100,10 @@ export class Bitcoin extends Wallet {
           data.fee = fee;
 
           const utxos = await this.utxosForAmount(Number(amountToSend) + Number(fee));
-          // var utxos = await this.utxosForAmount(Number(amountToSend));
 
           console.log('utxos', utxos);
 
-          if (utxos) {
+          if (utxos != false) {
             data.utxos = utxos;
             const fromAddress = this.address;
             const privateKey = this.privateKey;
@@ -104,16 +120,19 @@ export class Bitcoin extends Wallet {
 
             console.log(txHash);
 
-            return 'Please allow for 30 seconds before transaction appears on blockchain';
+            return {"status": 1, "message": "Your transaction will appear on blockchain in about 30 seconds."};
+          }
+          else{
+            return {"status": 0, "message": insufficientMsg};
           }
 
-          // need update error code:
-          return 'You don\'t have enough amount.';
+
         }
       } catch (error) {
-        return error;
+        // return {"status": 0, "message": error};
+        return {"status": 0, "message": "Insufficient funds"};
       }
-      return false;
+
     }
 
     async retrieveUtxos() {
@@ -133,7 +152,7 @@ export class Bitcoin extends Wallet {
       const utxos = await this.retrieveUtxos();
       if (utxos && utxos.length > 0) {
         const result = this.findUtxos(utxos, 0, amount, []);
-        if (!result) { return 'Insufficent Balance'; }
+        if (!result) return false;
         return result;
       }
       return false;
@@ -153,18 +172,25 @@ export class Bitcoin extends Wallet {
       return this.findUtxos(utxos, pos + 1, amount, result);
     }
 
-    async getFee(blocks) {
+    async getFee(blocks = 4, toBTC) {
       const url = `${this.network}/utils/estimatefee?nbBlocks=${blocks}`;
       const response = await axios.get(url);
 
-      if (response.status == 200) {
-        const txFee = bitcore.Unit.fromBTC(response.data[blocks]).toSatoshis();
+      if (response.status === 200) {
+        let txFee = '';
+        if (toBTC) {
+          txFee = bitcore.Unit.fromBTC(response.data[blocks]).toBTC();
+        } else {
+          txFee = bitcore.Unit.fromBTC(response.data[blocks]).toSatoshis();
+        }
         return txFee;
       }
       return false;
     }
 
     async sendRawTx(rawTx) {
+      const uri = `${this.network}/tx/send`;
+      console.log('uri', uri);
       const txHash = await axios.post(uri, {
         rawtx: rawTx,
       });
@@ -178,10 +204,58 @@ export class Bitcoin extends Wallet {
       // txs/?address=muU86kcQGfJUydQ9uZmfJwcDRb1H5PQuzr
       const url = `${this.network}/txs/?address=${this.address}`;
       const response = await axios.get(url);
-
+      let result = [];
       if (response.status == 200) {
-        console.log(response.data);
+
+        if(response.data && response.data.txs){
+          //console.log(response.data.txs);
+          for(let tran of response.data.txs){
+            let vin = tran.vin, vout = tran.vout,
+            is_sent = false, value = 0,
+            transaction_date = new Date(tran.blocktime*1000);
+
+            //check transactions are send
+            for(let tin of vin){
+              if(tin.addr.toLowerCase() == this.address.toLowerCase()){
+                is_sent = true;
+
+                for(let tout of vout){
+                  let tout_addresses = tout.scriptPubKey.addresses.join(" ").toLowerCase();
+                  if(tout_addresses.indexOf(this.address.toLowerCase()) < 0){
+                    value += Number(tout.value);
+                  }
+                }
+
+                break;
+              }
+            }
+
+            //check transactions are receive
+            if(!is_sent){
+              for(let tout of vout){
+                let tout_addresses = tout.scriptPubKey.addresses.join(" ").toLowerCase();
+                if(tout_addresses.indexOf(this.address.toLowerCase()) >= 0){
+                  value += tout.value;
+                  break;
+                }
+              }
+            }
+
+            result.push({
+              value: value,
+              transaction_date: transaction_date,
+              transaction_relative_time:  moment(transaction_date).fromNow(),
+              is_sent: is_sent});
+          }
+
+          return result;
+        }
+        else{
+          return false;
+        }
       }
+
+      return false;
     }
 }
 

@@ -17,9 +17,13 @@ class Dropdown extends React.PureComponent {
     // bind
     this.toogle = ::this.toogle;
     this.onItemSelected = ::this.onItemSelected;
+    this.setDefaultItem = ::this.setDefaultItem;
   }
+  // will store item selecting
+  itemSelecting = {};
 
   onItemSelected(item) {
+    this.itemSelecting = item;
     this.setState({ text: item.value, idActive: item.id });
     this.toogle();
     // call back
@@ -32,12 +36,30 @@ class Dropdown extends React.PureComponent {
     }));
   }
 
-  componentDidMount() {
-    const { defaultId, source } = this.props;
-    if (defaultId && source && source.length > 0) {
+  setDefaultItem(nextProps=null) {
+    const { defaultId, source } = nextProps ? nextProps : this.props;
+    const { idActive } = this.state;
+    if (defaultId && source && source.length > 0 && idActive !== defaultId) {
       const itemDefault = source.find(item => item.id === defaultId);
       this.setState({ text: itemDefault.value, idActive: itemDefault.id });
+      this.itemSelecting = itemDefault;
+      // call back
+      this.props.hasOwnProperty('afterSetDefault') && this.props.afterSetDefault(itemDefault);
     }
+  }
+
+  componentDidMount() {
+    const { defaultId, source } = this.props;
+    this.setDefaultItem();
+    this.props.hasOwnProperty('onRef') && this.props.onRef(this);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setDefaultItem(nextProps);
+  }
+
+  componentWillUnmount() {
+    this.props.hasOwnProperty('onRef') && this.props.onRef(undefined);
   }
 
   render() {
@@ -54,10 +76,10 @@ class Dropdown extends React.PureComponent {
             source.map(item => (
               <li 
                 key={item.id} 
-                className={`dropdown-custom-item ${idActive === item.id ? 'active': ''}`}
+                className={`${idActive === item.id ? 'active': ''}`}
                 style={item.style || null}
                 onClick={ () => this.onItemSelected(item) }>
-                {item.value}
+                <span className="dropdown-custom-item">{item.value}</span>
               </li>
             ))
           }
@@ -69,6 +91,7 @@ class Dropdown extends React.PureComponent {
 
 Dropdown.propTypes = {
   placeholder: PropTypes.string,
+  onRef: PropTypes.func,
   className: PropTypes.string,
   onItemSelected: PropTypes.func,
   defaultId: PropTypes.any,
@@ -77,6 +100,7 @@ Dropdown.propTypes = {
     value: PropTypes.string,
     style: PropTypes.object,
   })).isRequired,
+  afterSetDefault: PropTypes.func,
 };
 
 export default Dropdown;

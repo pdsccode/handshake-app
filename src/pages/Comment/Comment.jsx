@@ -22,8 +22,8 @@ class Comment extends React.PureComponent {
   }
 
   componentDidMount() {
-    const { router, loadCommentList } = this.props;
-    const queryObject = qs.parse(router.location.search.slice(1));
+    const { location, loadCommentList } = this.props;
+    const queryObject = qs.parse(location.search.slice(1));
     if(queryObject.objectId && queryObject.objectType) {
       loadCommentList({
         PATH_URL: API_URL.COMMENT.LIST,
@@ -47,21 +47,28 @@ class Comment extends React.PureComponent {
   }
 
   render() {
-    const { list } = this.props.comment;
-    const queryObject = qs.parse(this.props.router.location.search.slice(1));
+    const { list,  isFetching } = this.props.comment;
+    const queryObject = qs.parse(this.props.location.search.slice(1));
     return (
       <Grid>
         <Row>
           <Col md={12} xs={12}>
             {
-              list.length > 0 && (
+              list.length > 0 ? (
                 <div className="comments" ref={element => this.commentsRef = element} id="listComments">
                   {list.map((item) => <CommentItem key={item.id} {...item} />)}
                   <div className="lastCommentItem" />
                 </div>
-              )
+              ) : !isFetching ? (
+                <div className="noData">
+                  <p className="text">No comment yet</p>
+                </div>
+              ) : null
             }
-            <CreateComment onCreateCb={this.scrollToBottom} {...queryObject} />
+            <CreateComment
+              onCreateCb={this.scrollToBottom}
+              {...queryObject}
+            />
           </Col>
         </Row>
       </Grid>

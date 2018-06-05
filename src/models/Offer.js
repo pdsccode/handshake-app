@@ -28,6 +28,7 @@ class Offer {
       failed: data.failed || 0,
       feedType: data.feed_type || '',
       email: data.email || '',
+      feePercentage: data.fee_percentage || '',
     };
   }
 }

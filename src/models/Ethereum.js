@@ -1,16 +1,18 @@
-
+import axios from 'axios';
 import { Wallet } from '@/models/Wallet.js';
+import configs from '@/configs';
 
 const Web3 = require('web3');
 const EthereumTx = require('ethereumjs-tx');
 const hdkey = require('hdkey');
 const ethUtil = require('ethereumjs-util');
 const bip39 = require('bip39');
-
+const moment = require('moment');
 const BN = Web3.utils.BN;
 
 export class Ethereum extends Wallet {
     static Network = { Mainnet: 'https://mainnet.infura.io/', Rinkeby: 'https://rinkeby.infura.io/' }
+    static API = { Mainnet: 'https://api-rinkeby.etherscan.io/api', Rinkeby: 'https://api-rinkeby.etherscan.io/api' }
 
     constructor() {
       super();
@@ -56,55 +58,103 @@ export class Ethereum extends Wallet {
       return Web3.utils.fromWei(balance.toString());
     }
 
+  async getFee() {
+    const web3 = new Web3(new Web3.providers.HttpProvider(this.network));
+    const gasPrice = new BN(await web3.eth.getGasPrice());
+
+    const limitedGas = new BN(3000000);
+
+    const estimatedGas = limitedGas.mul(gasPrice);
+
+    // console.log('getFee, gasPrice', gasPrice.toString());
+    // console.log('getFee, estimateGas', estimatedGas.toString());
+
+    return Web3.utils.fromWei(estimatedGas);
+  }
+
     async transfer(toAddress, amountToSend) {
+
+      let insufficientMsg = "You have insufficient coin to make the transfer. Please top up and try again."
+
       try {
+
         console.log(`transfered from address:${this.address}`);
-        // if web3.utils.isAddress(address)
-        // check amount:
+
+
         const web3 = new Web3(new Web3.providers.HttpProvider(this.network));
+
+        if (!web3.utils.isAddress(toAddress)){
+            return {"status": 0, "message": "Please enter a valid receiving address."};
+        }
+        // check amount:
         let balance = await web3.eth.getBalance(this.address);
         balance = await Web3.utils.fromWei(balance.toString());
 
         console.log('Your wallet balance is currently {0} ETH'.format(balance));
 
-        if (balance > 0 && balance > amountToSend) {
-          const gasPrice = new BN(await web3.eth.getGasPrice());
-
-          console.log('Current ETH Gas Prices (in GWEI): {0}'.format(gasPrice));
-
-          const nonce = await web3.eth.getTransactionCount(this.address);
-
-          const value = web3.utils.toHex(web3.utils.toWei(amountToSend.toString(), 'ether'));
-
-          console.log('Value to send: {0}'.format(value));
-
-          const details = {
-            to: toAddress,
-            value,
-            gas: 210000,
-            gasPrice: await web3.utils.toHex(parseInt(gasPrice)), // converts the gwei price to wei
-            nonce,
-            chainId: this.chainId,
-          };
-          console.log('send details: ', details);
-
-          const transaction = new EthereumTx(details);
-          transaction.sign(Buffer.from(this.privateKey, 'hex'));
-          const serializedTransaction = transaction.serialize();
-          const addr = transaction.from.toString('hex');
-          console.log('Based on your private key, your wallet address is', addr);
-          const transactionId = web3.eth.sendSignedTransaction(`0x${serializedTransaction.toString('hex')}`);
-
-          const url = '{0}/tx/{1}'.format(this.network, transactionId);
-          console.log(url.toString());
-
-          return 'Please allow for 30 seconds before transaction appears on Etherscan';
+        if (balance == 0 || balance <= amountToSend) {
+          return {"status": 0, "message": insufficientMsg};
         }
 
-        return 'Do not have enought Wei to send';
+        const gasPrice = new BN(await web3.eth.getGasPrice());
+
+        console.log('Current ETH Gas Prices (in GWEI): {0}'.format(gasPrice));
+
+        const nonce = await web3.eth.getTransactionCount(this.address);
+
+        const value = web3.utils.toHex(web3.utils.toWei(amountToSend.toString(), 'ether'));
+
+        console.log('Value to send: {0}'.format(value));
+
+        const details = {
+          to: toAddress,
+          value,
+          gas: 210000,
+          gasPrice: await web3.utils.toHex(parseInt(gasPrice)), // converts the gwei price to wei
+          nonce,
+          chainId: this.chainId,
+        };
+        console.log('send details: ', details);
+
+        const transaction = new EthereumTx(details);
+        transaction.sign(Buffer.from(this.privateKey, 'hex'));
+        const serializedTransaction = transaction.serialize();
+        const addr = transaction.from.toString('hex');
+        console.log('Based on your private key, your wallet address is', addr);
+        const transactionId = web3.eth.sendSignedTransaction(`0x${serializedTransaction.toString('hex')}`);
+        console.log("transactionId:", transactionId);
+        const url = '{0}/tx/{1}'.format(this.network, transactionId);
+        console.log("url", url);
+
+        return {"status": 1, "message": "Your transaction will appear on etherscan.io in about 30 seconds."};
+
       } catch (error) {
-        return error;
+          //return {"status": 0, "message": error};
+          return {"status": 0, "message": insufficientMsg};
       }
+    }
+
+    async getTransactionHistory() {
+      const API_KEY = configs.network[4].apikeyEtherscan;
+      const url =this.constructor.API[this.getNetworkName()] + `?module=account&action=txlist&address=${this.address}&startblock=0&endblock=99999999&page=1&offset=10&sort=desc&apikey=${API_KEY}`;
+      const response = await axios.get(url);
+      if (response.status == 200) {
+        let result = [];
+        for(let tran of response.data.result){
+
+          let value = Number(tran.value / 10000000000000000000),
+          transaction_date = new Date(tran.timeStamp*1000),
+          is_sent = tran.from.toLowerCase() == this.address.toLowerCase();
+          result.push({
+            value: value,
+            transaction_date: transaction_date,
+            transaction_relative_time:  moment(transaction_date).fromNow(),
+            is_sent: is_sent});
+        }
+
+        return result;
+      }
+      return false;
     }
 }
 

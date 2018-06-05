@@ -1,5 +1,6 @@
 import Handshake from '@/models/Handshake';
-import { ACTIONS } from './action';
+import {ACTIONS} from './action';
+import {HANDSHAKE_EXCHANGE_CC_STATUS_VALUE, HANDSHAKE_EXCHANGE_STATUS_VALUE} from "@/constants";
 
 const handleListPayload = payload => payload.map(handshake => Handshake.handshake(handshake));
 
@@ -46,6 +47,54 @@ const meReducter = (state = {
         ...state,
         isFetching: false,
       };
+    case ACTIONS.FIREBASE_EXCHANGE_DATA_CHANGE: {
+      const listOfferStatus = action.payload;
+      let myList = state.list;
+
+      Object.keys(listOfferStatus).forEach((offer_id) => {
+        const offer = listOfferStatus[offer_id];
+        for (let handshake of myList) {
+
+          let status = '';
+          if (offer.type === 'instant') {
+            status = HANDSHAKE_EXCHANGE_CC_STATUS_VALUE[offer.status];
+          } else if (offer.type === 'exchange') {
+            status = HANDSHAKE_EXCHANGE_STATUS_VALUE[offer.status];
+          }
+
+          if (handshake.id.includes(offer.id) && handshake.status !== status) {
+            handshake.status = status;
+            break;
+          }
+        }
+      });
+
+      return {
+        ...state,
+        list: myList,
+      };
+    }
+   
+
+    case ACTIONS.FIREBASE_BETTING_DATA_CHANGE: {
+      const listBettingStatus = action.payload;
+      const myList = state.list;
+    
+
+      listBettingStatus.forEach(element => {
+        const {id, status, result} = element;
+        const handshakeItem = myList.find(item => item.id === id);
+        handshakeItem.status = status;
+        handshakeItem.result = result;
+        //TO DO: delete record after update status 
+
+      });
+
+      return {
+        ...state,
+        list: myList,
+      };
+    }
 
     default:
       return state;

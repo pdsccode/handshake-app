@@ -29,21 +29,24 @@ import {
   EXCHANGE_ACTION_NAME,
   FIAT_CURRENCY,
   FIAT_CURRENCY_SYMBOL,
-  PRICE_DECIMAL,
   SELL_PRICE_TYPE,
-  SELL_PRICE_TYPE_DEFAULT
+  SELL_PRICE_TYPE_DEFAULT,
 } from '@/constants';
 import '../styles.scss';
 import ModalDialog from '@/components/core/controls/ModalDialog/ModalDialog';
-import {BigNumber} from 'bignumber.js';
 // import {MasterWallet} from '@/models/MasterWallet';
 import getSymbolFromCurrency from 'currency-symbol-map';
 import {URL} from '@/config';
 import {showAlert} from '@/reducers/app/action';
 import {MasterWallet} from "@/models/MasterWallet";
 import {ExchangeHandshake} from '@/services/neuron';
-import phoneCountryCodes from '@/components/core/form/country-calling-codes.min.json';
+// import phoneCountryCodes from '@/components/core/form/country-calling-codes.min.json';
+import COUNTRIES from '@/data/country-dial-codes.js';
+
 import {CRYPTO_CURRENCY} from "@/constants";
+import _sample from 'lodash/sample'
+import { feedBackgroundColors } from "@/components/handshakes/exchange/config";
+import {formatAmountCurrency, formatMoney} from "@/services/offer-util";
 
 const nameFormExchangeCreate = 'exchangeCreate';
 const FormExchangeCreate = createForm({
@@ -54,7 +57,8 @@ const FormExchangeCreate = createForm({
 });
 const selectorFormExchangeCreate = formValueSelector(nameFormExchangeCreate);
 
-const mainColor = '#007AFF'
+const textColor = '#ffffff'
+const btnBg = 'rgba(29,29,38,0.30)'
 const validateFee = [
   minValue(-50),
   maxValue(50),
@@ -73,12 +77,14 @@ class Component extends React.Component {
       lat: 0,
       lng: 0
     };
+    // this.mainColor = _sample(feedBackgroundColors)
+    this.mainColor = '#1F2B34'
   }
 
   setAddressFromLatLng = (lat, lng) => {
     this.setState({lat: lat, lng: lng});
     const { rfChange } = this.props;
-    axios.get(`http://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&sensor=true`).then((response) => {
+    axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&sensor=true`).then((response) => {
       const address = response.data.results[0] && response.data.results[0].formatted_address;
       rfChange(nameFormExchangeCreate, 'address', address);
     });
@@ -95,9 +101,9 @@ async componentDidMount() {
 
     // auto fill phone number from user profile
     let detectedCountryCode = ''
-    const foundCountryPhone = phoneCountryCodes.find(i => i.code.toUpperCase() === ipInfo.country_code.toUpperCase())
+    const foundCountryPhone = COUNTRIES.find(i => i.code.toUpperCase() === ipInfo.country_code.toUpperCase())
     if (foundCountryPhone) {
-      detectedCountryCode = foundCountryPhone.callingCode
+      detectedCountryCode = foundCountryPhone.dialCode
     }
     rfChange(nameFormExchangeCreate, 'phone', authProfile.phone || `${detectedCountryCode}-`)
 
@@ -128,7 +134,6 @@ async componentDidMount() {
     };
 
     this.props.getOfferPrice({
-      BASE_URL: API_URL.EXCHANGE.BASE,
       PATH_URL: API_URL.EXCHANGE.GET_OFFER_PRICE,
       qs: data,
     });
@@ -175,13 +180,20 @@ async componentDidMount() {
 
     const wallet = MasterWallet.getWalletDefault(values.currency);
     const balance = await wallet.getBalance();
+    const fee = await wallet.getFee(4, true);
+    let amount = values.amount;
+
+    if (values.currency === CRYPTO_CURRENCY.ETH && values.type === EXCHANGE_ACTION.BUY) {
+      amount = 0;
+    }
 
     if ((values.currency === CRYPTO_CURRENCY.ETH || (values.type === EXCHANGE_ACTION.SELL && values.currency === CRYPTO_CURRENCY.BTC))
-      && balance < values.amount + DEFAULT_FEE[values.currency]) {
+      && balance < amount + fee) {
       this.props.showAlert({
         message: <div className="text-center">
           {intl.formatMessage({ id: 'notEnoughCoinInWallet' }, {
-            amount: new BigNumber(balance).toFormat(6),
+            amount: formatAmountCurrency(balance),
+            fee: formatAmountCurrency(fee),
             currency: values.currency,
           })}
           </div>,
@@ -202,7 +214,7 @@ async componentDidMount() {
     const offer = {
       amount: values.amount,
       price: price,
-      percentage: values.type === 'sell' && values.sellPriceType === 'flexible' ? values.customizePrice.toString() : '0',
+      percentage: values.customizePrice.toString(),
       currency: values.currency,
       type: values.type,
       contact_info: values.address,
@@ -224,10 +236,10 @@ async componentDidMount() {
     console.log('handleSubmit', offer);
     const message = intl.formatMessage({ id: 'createOfferConfirm' }, {
       type: EXCHANGE_ACTION_NAME[values.type],
-      amount: new BigNumber(values.amount).toFormat(6),
+      amount: formatAmountCurrency(values.amount),
       currency: values.currency,
       currency_symbol: getSymbolFromCurrency(fiat_currency),
-      total: new BigNumber(totalAmount).toFormat(2),
+      total: formatMoney(totalAmount),
     });
 
     this.setState({
@@ -259,7 +271,6 @@ async componentDidMount() {
 
     // if (currency === 'BTC') {
       this.props.createOffer({
-        BASE_URL: API_URL.EXCHANGE.BASE,
         PATH_URL: API_URL.EXCHANGE.OFFERS,
         data: offer,
         METHOD: 'POST',
@@ -375,108 +386,123 @@ async componentDidMount() {
   // }
 
   render() {
-    const { totalAmount, type, sellPriceType, offerPrice, currency } = this.props;
-
+    const { totalAmount, type, sellPriceType, offerPrice, currency, ipInfo } = this.props;
     const modalContent = this.state.modalContent;
 
     return (
       <div>
         <FormExchangeCreate onSubmit={this.handleSubmit}>
-          <Feed className="feed p-2 my-2" background={mainColor}>
-            <div style={{ color: 'white' }}>
-              <div className="d-flex mb-2">
-                <label className="col-form-label mr-auto" style={{ width: '190px' }}>I want to</label>
+          <Feed className="feed my-2 p-0" background={this.mainColor}>
+            <div style={{ color: 'white', padding: '20px' }}>
+              <div className="d-flex mb-4">
+                <label className="col-form-label mr-auto" style={{ width: '190px', fontWeight: 'bold'  }}>I want to</label>
                 <div className='input-group'>
                   <Field
                     name="type"
+                    // containerClass="radio-container-old"
                     component={fieldRadioButton}
                     list={EXCHANGE_ACTION_LIST}
-                    color={mainColor}
+                    color={textColor}
                     validate={[required]}
                     onChange={this.onTypeChange}
                   />
                 </div>
               </div>
               <div className="d-flex">
-                <label className="col-form-label mr-auto" style={{ width: '190px' }}>Coin</label>
+                <label className="col-form-label mr-auto label-create" style={{ width: '190px' }}>Coin</label>
                 <div className='input-group'>
                   <Field
                     name="currency"
                     component={fieldRadioButton}
                     list={CRYPTO_CURRENCY_LIST}
-                    color={mainColor}
+                    color={textColor}
                     validate={[required]}
                     onChange={this.onCurrencyChange}
                   />
                 </div>
               </div>
+              <hr className="hrLine" />
+
               <div className="d-flex mt-2">
-                <label className="col-form-label mr-auto" style={{ width: '190px' }}>Amount*</label>
+                <label className="col-form-label mr-auto label-create" style={{ width: '220px' }}>Amount*</label>
                 <div className="w-100">
                   <Field
                     name="amount"
-                    className="form-control-custom form-control-custom-ex w-100"
+                    className="form-control-custom form-control-custom-ex w-100 input-no-border"
                     component={fieldInput}
+                    placeholder="0.001"
                     onChange={this.onAmountChange}
                     validate={[required, currency === CRYPTO_CURRENCY.BTC ? minValue001 : minValue01]}
                   />
                 </div>
               </div>
-              <div className="d-flex">
-                <label className="col-form-label mr-auto" style={{ width: '190px' }}>Price</label>
-                <span className="w-100 col-form-label">{new BigNumber(offerPrice ? offerPrice.price : 0).toFormat(PRICE_DECIMAL)} {FIAT_CURRENCY}</span>
-              </div>
+              <hr className="hrLine" />
+
               <div className="d-flex mt-2">
-                {/*<label className="col-form-label mr-auto" style={{ width: '190px' }} />*/}
-                <div className='input-group justify-content-end'>
+                <label className="col-form-label mr-auto label-create" style={{ width: '220px' }}>Price</label>
+                <span className="w-100 col-form-label">{ formatMoney(offerPrice ? offerPrice.price : 0) } {ipInfo.currency}/{currency}</span>
+              </div>
+
+              <div className="d-flex mt-2">
+                {/*<label className="col-form-label mr-auto" style={{ width: '220px' }} />*/}
+                <div className='input-group justify-content-start' style={{ paddingLeft: '20px' }}>
                   <Field
                     name="sellPriceType"
                     component={fieldRadioButton}
                     list={SELL_PRICE_TYPE}
-                    color={mainColor}
+                    color={textColor}
                     validate={[required]}
                     onChange={this.onSellPriceTypeChange}
                   />
                 </div>
               </div>
-              <div className="d-flex mt-2">
-                <label className="col-form-label mr-auto" style={{ width: '190px' }}>Customize price</label>
+              <hr className="hrLine" />
+
+              <div className="d-flex py-1">
+                <label className="col-form-label mr-auto label-create" style={{ width: '220px' }}>Customize price</label>
                 <div className='input-group align-items-center'>
                   <Field
                     name="customizePrice"
                     // className='form-control-custom form-control-custom-ex w-100'
                     component={fieldNumericInput}
+                    btnBg={btnBg}
                     suffix={'%'}
-                    color={mainColor}
+                    color={textColor}
                     validate={validateFee}
                   />
                 </div>
               </div>
-              <div className="d-flex">
-                <label className="col-form-label mr-auto" style={{ width: '190px' }}>Total</label>
-                <span className="w-100 col-form-label">{new BigNumber(totalAmount).toFormat(PRICE_DECIMAL)} {FIAT_CURRENCY}</span>
+              <hr className="hrLine" />
+
+              <div className="d-flex mt-2">
+                <label className="col-form-label mr-auto label-create" style={{ width: '220px' }}>Total</label>
+                <span className="w-100 col-form-label">{ formatMoney(totalAmount) } {ipInfo.currency}</span>
               </div>
-              <div className="d-flex">
-                <label className="col-form-label mr-auto" style={{ width: '190px' }}>Phone</label>
+              <hr className="hrLine" />
+              <div className="d-flex mt-2">
+                <label className="col-form-label mr-auto label-create" style={{ width: '220px' }}>Phone</label>
                 <div className="input-group w-100">
                   <Field
                     name="phone"
-                    className="form-control-custom form-control-custom-ex w-100"
+                    className="form-control-custom form-control-custom-ex w-100 input-no-border"
                     component={fieldPhoneInput}
                     type="tel"
-                    placeholder="+74995926433"
+                    placeholder="4995926433"
                     // validate={[required, currency === 'BTC' ? minValue001 : minValue01]}
                   />
                 </div>
               </div>
+              <hr className="hrLine" />
+
               <div className="d-flex mt-2">
-                <label className="col-form-label mr-auto" style={{ width: '190px' }}>Address*</label>
+                <label className="col-form-label mr-auto label-create" style={{ width: '220px' }}>Address*</label>
                 <div className="w-100">
                   <Field
                     name="address"
-                    className="form-control-custom form-control-custom-ex w-100"
+                    className="form-control-custom form-control-custom-ex w-100 input-no-border"
                     component={fieldInput}
                     validate={[required]}
+                    placeholder="81 E. Augusta Ave. Salinas"
                   />
                 </div>
               </div>

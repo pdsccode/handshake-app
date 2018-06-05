@@ -24,7 +24,7 @@ export const APP_ACTION = {
 };
 
 // Loading
-export const showLoading = () => ({ type: APP_ACTION.LOADING });
+export const showLoading = config => ({ type: APP_ACTION.LOADING, payload: {...config} });
 export const hideLoading = () => ({ type: APP_ACTION.LOADED });
 
 // Modal
@@ -50,3 +50,6 @@ export const clearHeaderRight = () => ({ type: APP_ACTION.HEADER_RIGHT_REMOVE })
 export const setHeaderLeft = data => ({ type: APP_ACTION.HEADER_LEFT_SET, payload: data });
 export const clearHeaderLeft = () => ({ type: APP_ACTION.HEADER_LEFT_REMOVE });
 export const setIpInfo = data => ({ type: APP_ACTION.IP_INFO, payload: data });
+export const scrollToBottom = () => {
+  window.scrollTo(0, document.body.scrollHeight);
+};

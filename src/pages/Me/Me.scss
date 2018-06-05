@@ -10,8 +10,12 @@
     &:hover {
       text-decoration: none;
     }
+    .avatar {
+      width: 15%;
+    }
     .text {
-      margin-left: rem-calc(12px);
+      width: 75%;
+      padding-left: rem-calc(12px);
       strong {
         font-weight: $semi-bold;
         font-size: 1rem;
@@ -26,7 +30,7 @@
       }
     }
     .arrow {
-      width: 24%;
+      width: 10%;
       text-align: right;
       img {
         vertical-align: baseline;
