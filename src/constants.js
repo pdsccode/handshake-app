@@ -103,7 +103,7 @@ export const API_URL = {
     BASE: 'handshake/discover',
   },
   EXCHANGE: {
-    BASE: 'https://stag-handshake.autonomous.ai/api/exchange',
+    BASE: 'https://ninja.autonomous.ai/api/exchange',
     GET_CRYPTO_PRICE: 'info/instant-buy/price', // {path: '/info/instant-buy/price', method: 'get'},
     CREATE_CC_ORDER: 'instant-buys', // {path: '/instant-buys', method: 'post'},
     GET_USER_CC_LIMIT: 'user/profile/cc-limit', // {path: '/user/profile/cc-limit', method: 'get'},
