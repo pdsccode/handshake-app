@@ -348,7 +348,7 @@ class FeedCreditCard extends React.Component {
                 }
                 <div className="form-group pt-2 d-flex">
                   <label className="col-form-label headline"><h4><FormattedMessage id="buy"/></h4></label>
-                  <div className="mx-2 pt-1">
+                  <div className="mx-2">
                     <Field
                       name="amount"
                       // type="number"
@@ -361,6 +361,7 @@ class FeedCreditCard extends React.Component {
                         style: {
                           fontSize: '26px',
                           fontWeight: '600',
+                          height: '44px'
                         }
                       }}
                       className="form-control-custom form-control-custom-ex d-inline-block w-100"
