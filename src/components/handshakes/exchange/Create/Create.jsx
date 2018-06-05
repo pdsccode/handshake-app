@@ -134,7 +134,6 @@ async componentDidMount() {
     };
 
     this.props.getOfferPrice({
-      BASE_URL: API_URL.EXCHANGE.BASE,
       PATH_URL: API_URL.EXCHANGE.GET_OFFER_PRICE,
       qs: data,
     });
@@ -272,7 +271,6 @@ async componentDidMount() {
 
     // if (currency === 'BTC') {
       this.props.createOffer({
-        BASE_URL: API_URL.EXCHANGE.BASE,
         PATH_URL: API_URL.EXCHANGE.OFFERS,
         data: offer,
         METHOD: 'POST',
