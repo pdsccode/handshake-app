@@ -184,7 +184,7 @@ get matchResults(){
     const fromAddress = address;
     if(selectedMatch && selectedOutcome){
       if(eventBet > 0){
-        if(eventBet <= balance){
+        if((eventBet + estimatedGas) <= balance){
           this.initHandshake(extraParams, fromAddress);
         }else {
           this.props.showAlert({

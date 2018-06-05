@@ -21,6 +21,7 @@ class Dropdown extends React.PureComponent {
   }
   // will store item selecting
   itemSelecting = {};
+  isDirtyDefault = false;
 
   onItemSelected(item) {
     this.itemSelecting = item;
@@ -39,10 +40,11 @@ class Dropdown extends React.PureComponent {
   setDefaultItem(nextProps=null) {
     const { defaultId, source } = nextProps ? nextProps : this.props;
     const { idActive } = this.state;
-    if (defaultId && source && source.length > 0 && idActive !== defaultId) {
+    if (!this.isDirtyDefault && defaultId && source && source.length > 0 && idActive !== defaultId) {
       const itemDefault = source.find(item => item.id === defaultId);
       this.setState({ text: itemDefault.value, idActive: itemDefault.id });
       this.itemSelecting = itemDefault;
+      this.isDirtyDefault = true;
       // call back
       this.props.hasOwnProperty('afterSetDefault') && this.props.afterSetDefault(itemDefault);
     }
