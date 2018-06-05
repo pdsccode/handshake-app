@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 
 // services, constants
 import { createComment } from '@/reducers/comment/action';
+import { showAlert } from '@/reducers/app/action';
 import { API_URL, HANDSHAKE_ID } from '@/constants';
 
 // components
@@ -39,6 +40,15 @@ class CreateComment extends React.PureComponent {
 
   createComment() {
     const { file } = this.state;
+    if(!this.textareaRef || !this.textareaRef.value) {
+      this.props.showAlert({
+        message: <div className="text-center">Please type something</div>,
+        timeOut: 3000,
+        type: 'danger',
+        callBack: () => {}
+      });
+      return;
+    }
     const { objectId, objectType } = this.props;
     const rawData = { comment: this.textareaRef.value, object_type: objectType.toString(), object_id: objectId };
     const data = new FormData();
@@ -134,6 +144,7 @@ class CreateComment extends React.PureComponent {
 
 CreateComment.propTypes = {
   createComment: PropTypes.func.isRequired,
+  showAlert: PropTypes.func.isRequired,
   objectType: PropTypes.string,
   objectId: PropTypes.string,
 };
@@ -145,6 +156,7 @@ CreateComment.defaultProps = {
 
 const mapDispatch = ({
   createComment,
+  showAlert,
 });
 
 export default connect(null, mapDispatch)(CreateComment);
