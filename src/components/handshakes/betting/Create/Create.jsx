@@ -176,6 +176,8 @@ get matchResults(){
     //const fromAddress = "0x54CD16578564b9952d645E92b9fa254f1feffee9";
     let balance = await BetHandshakeHandler.getBalance();
     balance = parseFloat(balance);
+    const estimatedGas = bettinghandshake.getEstimateGas();
+    
     const eventBet = parseFloat(dict.event_bet);
     console.log('Event Bet:', eventBet);
 
