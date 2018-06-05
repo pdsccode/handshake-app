@@ -167,6 +167,7 @@
         background-image: linear-gradient(-269deg, #7740FF 0%, #1E4EFF 100%);
         border-radius: 4px;
         padding: 8px 24px;
+        border: none;
       }
     }
   }
@@ -290,6 +291,7 @@
         background-image: linear-gradient(-269deg, #7740FF 0%, #1E4EFF 100%);
         border-radius: 4px;
         padding: 8px 24px;
+        border: none;
       }
     }
   }
@@ -365,13 +367,21 @@
       }
       .btnTelegram {
         font-size: 18px;
-        padding: 18px 30px;
+        padding: 18px;
         img {
           height: 30px;
           width: 30px;
           margin-right: 9px;
           position: relative;
           top: -3px;
+        }
+      }
+      .registerEmail {
+        .btnSubmit {
+          width: 100%;
+          position: inherit;
+          margin-top: 10px;
+          border: none;
         }
       }
       .telegramDescription {
@@ -444,6 +454,12 @@
       }
       .registerEmail {
         width: 100%;
+        .btnSubmit {
+          width: 100%;
+          position: inherit;
+          margin-top: 10px;
+          border: none;
+        }
       }
     }
   }
@@ -481,9 +497,17 @@
       }
       .btnTelegram {
         font-size: 15px;
-        padding: 18px 30px;
+        padding: 15px;
         img {
           margin-right: 5px;
+        }
+      }
+      .registerEmail {
+        .btnSubmit {
+          width: 100%;
+          position: inherit;
+          margin-top: 10px;
+          border: none;
         }
       }
     }
@@ -491,6 +515,14 @@
       .btnTelegram {
         font-size: 12px;
         padding: 17px 8px;
+      }
+      .registerEmail {
+        .btnSubmit {
+          width: 100%;
+          position: inherit;
+          margin-top: 10px;
+          border: none;
+        }
       }
     }
   }
