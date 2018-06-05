@@ -338,7 +338,7 @@ class FeedCreditCard extends React.Component {
                               <div className="rounded p-1" style={{ lineHeight: 1.2, background: isActive ? '#FF3B30' : 'rgb(255,255,255,0.2)' }}>
                                 {text}
                               </div>
-                              <div><small>Up to {fiatCurrency}{limit}</small></div>
+                              <div className="p-1"><small>Up to {fiatCurrency}{limit}</small></div>
                             </LevelItem>
                           )
                         })
@@ -348,7 +348,7 @@ class FeedCreditCard extends React.Component {
                 }
                 <div className="form-group pt-2 d-flex">
                   <label className="col-form-label headline"><h4><FormattedMessage id="buy"/></h4></label>
-                  <div className="mx-2 pt-1">
+                  <div className="mx-2">
                     <Field
                       name="amount"
                       // type="number"
@@ -361,6 +361,7 @@ class FeedCreditCard extends React.Component {
                         style: {
                           fontSize: '26px',
                           fontWeight: '600',
+                          height: '44px'
                         }
                       }}
                       className="form-control-custom form-control-custom-ex d-inline-block w-100"

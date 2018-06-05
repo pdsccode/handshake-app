@@ -187,6 +187,10 @@ async componentDidMount() {
       amount = 0;
     }
 
+    console.log('balance', balance);
+    console.log('amount', amount);
+    console.log('fee', fee);
+
     if ((values.currency === CRYPTO_CURRENCY.ETH || (values.type === EXCHANGE_ACTION.SELL && values.currency === CRYPTO_CURRENCY.BTC))
       && balance < amount + fee) {
       this.props.showAlert({
