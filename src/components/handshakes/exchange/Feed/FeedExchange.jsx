@@ -23,6 +23,8 @@ import {
   HANDSHAKE_STATUS_NAME,
   HANDSHAKE_USER,
   APP_USER_NAME,
+  EXCHANGE_ACTION_PAST_NAME,
+  EXCHANGE_ACTION_PRESENT_NAME,
 } from "@/constants";
 import ModalDialog from "@/components/core/controls/ModalDialog";
 import {connect} from "react-redux";
@@ -962,28 +964,58 @@ class FeedExchange extends React.PureComponent {
       case EXCHANGE_FEED_TYPE.EXCHANGE: {
         statusText = HANDSHAKE_EXCHANGE_STATUS_NAME[status];
 
-        message = intl.formatMessage({ id: 'offerHandShakeContent' }, {
-          offerType: EXCHANGE_ACTION_NAME[offer.type],
-          amount: formatAmountCurrency(offer.amount),
-          currency: offer.currency,
-          currency_symbol: offer.fiatCurrency,
-          total: formatMoney(fiatAmount),
-          payment_method: EXCHANGE_METHOD_PAYMENT[EXCHANGE_FEED_TYPE.EXCHANGE]
-        });
+        let offerType = '';
+        if (mode === 'me') {
+          switch (this.userType) {
+            case HANDSHAKE_USER.SHAKED: {
+              if (offer.type === EXCHANGE_ACTION.BUY) {
+                offerType = EXCHANGE_ACTION_PAST_NAME[EXCHANGE_ACTION.SELL];
+              } else if (offer.type === EXCHANGE_ACTION.SELL) {
+                offerType = EXCHANGE_ACTION_PAST_NAME[EXCHANGE_ACTION.BUY];
+              }
+            }
+            case HANDSHAKE_USER.OWNER: {
+              if (status === HANDSHAKE_EXCHANGE_STATUS.CREATED ||
+                status === HANDSHAKE_EXCHANGE_STATUS.ACTIVE) {
+                offerType = EXCHANGE_ACTION_PRESENT_NAME[offer.type];
+              } else {
+                offerType = EXCHANGE_ACTION_PAST_NAME[offer.type];
+              }
+            }
+          }
+
+          message = intl.formatMessage({ id: 'offerHandShakeContentMe' }, {
+            offerType: offerType,
+            amount: formatAmountCurrency(offer.amount),
+            currency: offer.currency,
+            currency_symbol: offer.fiatCurrency,
+            total: formatMoney(fiatAmount),
+            fee: offer.feePercentage,
+          });
+        } else {
+          message = intl.formatMessage({ id: 'offerHandShakeContent' }, {
+            offerType: EXCHANGE_ACTION_NAME[offer.type],
+            amount: formatAmountCurrency(offer.amount),
+            currency: offer.currency,
+            currency_symbol: offer.fiatCurrency,
+            total: formatMoney(fiatAmount),
+            payment_method: EXCHANGE_METHOD_PAYMENT[EXCHANGE_FEED_TYPE.EXCHANGE]
+          });
+        }
 
         actionButtons = this.getActionButtons();
         break;
       }
       case EXCHANGE_FEED_TYPE.INSTANT: {
         statusText = HANDSHAKE_EXCHANGE_CC_STATUS_NAME[status];
-
-        message = intl.formatMessage({ id: 'offerHandShakeContent' }, {
-          offerType: EXCHANGE_ACTION_NAME[offer.type],
+        message = intl.formatMessage({ id: 'instantOfferHandShakeContent' }, {
+          just: ' ',
+          offerType: EXCHANGE_ACTION_PAST_NAME[offer.type],
           amount: formatAmountCurrency(offer.amount),
           currency: offer.currency,
           currency_symbol: offer.fiatCurrency,
           total: formatMoney(fiatAmount),
-          payment_method: EXCHANGE_METHOD_PAYMENT[EXCHANGE_FEED_TYPE.INSTANT]
+          fee: offer.feePercentage,
         });
 
         actionButtons = null;

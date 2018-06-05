@@ -14,6 +14,8 @@ export default {
   securityCode: 'Security Code',
   shakeNow: 'Shake Now',
   offerHandShakeContent: '{offerType} {amount} {currency} for {total} {currency_symbol} in {payment_method}',
+  offerHandShakeContentMe: 'You {offerType} {amount} {currency} for {total} {currency_symbol} - fee {fee}%',
+  instantOfferHandShakeContent: 'You{just}{offerType} {amount} {currency} for {total} {currency_symbol} on your credit card - fee {fee}%',
   offerDistanceContent: '{distanceKm} km ({distanceMiles} miles) away',
   transactonOfferInfo: 'Successful ({success}) / Failed ({failed})',
   createOfferConfirm: 'You are about to {type} {amount} {currency} for {currency_symbol}{total}',
