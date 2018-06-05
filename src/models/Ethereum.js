@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { Wallet } from '@/models/Wallet.js';
+import configs from '@/configs';
 
 const Web3 = require('web3');
 const EthereumTx = require('ethereumjs-tx');
@@ -116,9 +117,8 @@ export class Ethereum extends Wallet {
     }
 
     async getTransactionHistory() {
-      const API_KEY = '';
-      // const url = `https://api-rinkeby.etherscan.io/api?module=account&action=txlist&address=${this.address}&startblock=0&endblock=99999999&page=1&offset=10&sort=desc&apikey=${API_KEY}`;
-      const url =this.constructor.API[this.getNetworkName()] + `?module=account&action=txlist&address=${this.address}&startblock=0&endblock=99999999&page=1&offset=10&sort=desc&apikey=${API_KEY}`;      
+      const API_KEY = configs.network[4].apikeyEtherscan;
+      const url =this.constructor.API[this.getNetworkName()] + `?module=account&action=txlist&address=${this.address}&startblock=0&endblock=99999999&page=1&offset=10&sort=desc&apikey=${API_KEY}`;
       const response = await axios.get(url);
       if (response.status == 200) {
         let result = [];
