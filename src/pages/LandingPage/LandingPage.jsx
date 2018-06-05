@@ -2,9 +2,12 @@
  * Handshake component.
  */
 import React from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 // service
 import axios from 'axios';
 import qs from 'qs';
+import { showAlert } from '@/reducers/app/action';
 
 // style
 import './LandingPage.scss';
@@ -13,6 +16,7 @@ import telegramAppIcon from '@/assets/images/icon/landingpage/telegram_app.svg';
 import blockchainDescriptionImage from '@/assets/images/icon/landingpage/chart-discount-time.svg';
 import shakeNinjaText from '@/assets/images/icon/landingpage/shakeninjatext.svg';
 import arrowsRightIcon from '@/assets/images/icon/landingpage/arrows_long_right.svg';
+import Alert from '@/components/core/presentation/Alert';
 
 const inputRefOne = 'emailRef';
 const inputRefTwo = 'emailRefTwo';
@@ -23,6 +27,8 @@ class Handshake extends React.Component {
     this.injectFontPage = this.injectFontPage.bind(this);
     this.submitEmail = this.submitEmail.bind(this);
     this.renderInputForm = this.renderInputForm.bind(this);
+    this.showAlertMessage = this.showAlertMessage.bind(this);
+    this.isEmail = this.isEmail.bind(this);
   }
   productId = 1296;
 
@@ -38,22 +44,34 @@ class Handshake extends React.Component {
     this.injectFontPage();
   }
 
+  showAlertMessage({ message, type = 'danger' }) {
+    this.props.showAlert({
+      message: <div className="text-center">{message}</div>,
+      timeOut: 3000,
+      type,
+      callBack: () => {
+      },
+    });
+  }
+
+  isEmail(email = '') {
+    const RE_EMAIL = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return RE_EMAIL.test(email);
+  }
+
   submitEmail(inputRef) {
-    // this.errorBoxRef.close();
+    console.log("inputRef", inputRef);
     const emailValue = this[inputRef].value.trim();
+    console.log("inputRef", inputRef);
     // validation email
-    // if (!emailValue) {
-    //   // empty
-    //   this.errorBoxRef.open();
-    //   this.setState({messageError: 'Email is empty.'});
-    //   return;
-    // }
-    // if (!ValidationUtil.isEmail(emailValue)) {
-    //   // invalid
-    //   // this.errorBoxRef.open();
-    //   // this.setState({messageError: 'Email is invalid.'});
-    //   return;
-    // }
+    if (!emailValue) {
+      this.showAlertMessage({message: 'Email is empty!'});
+      return;
+    }
+    if (!this.isEmail(emailValue)) {
+      this.showAlertMessage({ message: 'Email is invalid.' });
+      return;
+    }
 
     // const ref = Helper.getValueParamURLQueryByName('ref') || '';
     const params = {
@@ -69,14 +87,13 @@ class Handshake extends React.Component {
       data: {},
     });
     backOrder.then((backOrderResult) => {
-      // if (backOrderResult.data.status > 0) {
-      //   console.log("")
-      // } else {
-      //
-      // }
-      console.log("backOrder", backOrderResult);
+      if (backOrderResult.data.status > 0) {
+        this.showAlertMessage({message: 'Success!', type: 'success'});
+      } else {
+        this.showAlertMessage({message: backOrderResult.data.message});
+      }
     }).catch(error => {
-      console.log("here", error);
+      this.showAlertMessage({message: error});
     });
   }
 
@@ -214,4 +231,14 @@ class Handshake extends React.Component {
   }
 }
 
-export default Handshake;
+
+Handshake.propTypes = {
+  showAlert: PropTypes.func.isRequired,
+};
+
+
+const mapDispatch = ({
+  showAlert,
+});
+
+export default connect(null, mapDispatch)(Handshake);
