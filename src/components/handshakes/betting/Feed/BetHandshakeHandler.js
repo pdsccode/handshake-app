@@ -158,7 +158,9 @@ export class BetHandshakeHandler {
     const maker = from_address;
     // const hid = outcome_id;
     console.log(`hid:`, hid);
-    await bettinghandshake.initBet(hid, side, stake, payout, offchain);
+    const dataBlockchain = await bettinghandshake.initBet(hid, side, stake, payout, offchain);
+    console.log('dataBlockchain:',dataBlockchain);
+    return dataBlockchain;
   };
 
   static async shakeContract(item, hid) {
