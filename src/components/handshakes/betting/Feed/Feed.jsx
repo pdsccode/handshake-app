@@ -67,6 +67,7 @@ class FeedBetting extends React.Component {
 
   isShakeUser(shakeIds, userId){
     console.log('User Id:', userId);
+    console.log('ShakeIds:', shakeIds);
 
     if(shakeIds){
 
