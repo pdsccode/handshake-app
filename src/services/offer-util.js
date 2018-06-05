@@ -1,5 +1,6 @@
 import local from '@/services/localStore';
-import { APP, HANDSHAKE_USER } from '../constants';
+import {AMOUNT_DECIMAL, APP, HANDSHAKE_USER, PRICE_DECIMAL} from '@/constants';
+import {BigNumber} from "bignumber.js";
 
 export function getOfferPrice(listOfferPrice = [], type = '', currency = '') {
   let result = null;
@@ -24,6 +25,14 @@ export function getHandshakeUserType(initUserId, shakeUserIds = []) {
     return HANDSHAKE_USER.SHAKED;
   }
   return HANDSHAKE_USER.NORMAL;
+}
+
+export function formatMoney(price = 0) {
+  return new BigNumber(price).toFormat(PRICE_DECIMAL);
+}
+
+export function formatAmountCurrency(amount = 0) {
+  return new BigNumber(amount).toFormat(AMOUNT_DECIMAL);
 }
 
 export default { getOfferPrice };

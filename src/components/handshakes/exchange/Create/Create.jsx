@@ -29,14 +29,11 @@ import {
   EXCHANGE_ACTION_NAME,
   FIAT_CURRENCY,
   FIAT_CURRENCY_SYMBOL,
-  PRICE_DECIMAL,
   SELL_PRICE_TYPE,
   SELL_PRICE_TYPE_DEFAULT,
-  AMOUNT_DECIMAL
 } from '@/constants';
 import '../styles.scss';
 import ModalDialog from '@/components/core/controls/ModalDialog/ModalDialog';
-import {BigNumber} from 'bignumber.js';
 // import {MasterWallet} from '@/models/MasterWallet';
 import getSymbolFromCurrency from 'currency-symbol-map';
 import {URL} from '@/config';
@@ -47,6 +44,7 @@ import phoneCountryCodes from '@/components/core/form/country-calling-codes.min.
 import {CRYPTO_CURRENCY} from "@/constants";
 import _sample from 'lodash/sample'
 import { feedBackgroundColors } from "@/components/handshakes/exchange/config";
+import {formatAmountCurrency, formatMoney} from "@/services/offer-util";
 
 const nameFormExchangeCreate = 'exchangeCreate';
 const FormExchangeCreate = createForm({
@@ -192,8 +190,8 @@ async componentDidMount() {
       this.props.showAlert({
         message: <div className="text-center">
           {intl.formatMessage({ id: 'notEnoughCoinInWallet' }, {
-            amount: new BigNumber(balance).toFormat(AMOUNT_DECIMAL),
-            fee: fee,
+            amount: formatAmountCurrency(balance),
+            fee: formatAmountCurrency(fee),
             currency: values.currency,
           })}
           </div>,
@@ -236,10 +234,10 @@ async componentDidMount() {
     console.log('handleSubmit', offer);
     const message = intl.formatMessage({ id: 'createOfferConfirm' }, {
       type: EXCHANGE_ACTION_NAME[values.type],
-      amount: new BigNumber(values.amount).toFormat(AMOUNT_DECIMAL),
+      amount: formatAmountCurrency(values.amount),
       currency: values.currency,
       currency_symbol: getSymbolFromCurrency(fiat_currency),
-      total: new BigNumber(totalAmount).toFormat(PRICE_DECIMAL),
+      total: formatMoney(totalAmount),
     });
 
     this.setState({
@@ -435,7 +433,7 @@ async componentDidMount() {
               </div>
               <div className="d-flex mt-2">
                 <label className="col-form-label mr-auto" style={{ width: '190px' }}>Price</label>
-                <span className="w-100 col-form-label">{new BigNumber(offerPrice ? offerPrice.price : 0).toFormat(PRICE_DECIMAL)} {ipInfo.currency}/{currency}</span>
+                <span className="w-100 col-form-label">{ formatMoney(offerPrice ? offerPrice.price : 0) } {ipInfo.currency}/{currency}</span>
               </div>
               <div className="d-flex mt-2">
                 {/*<label className="col-form-label mr-auto" style={{ width: '190px' }} />*/}
@@ -466,7 +464,7 @@ async componentDidMount() {
               </div>
               <div className="d-flex mt-2">
                 <label className="col-form-label mr-auto" style={{ width: '190px' }}>Total</label>
-                <span className="w-100 col-form-label">{new BigNumber(totalAmount).toFormat(PRICE_DECIMAL)} {ipInfo.currency}</span>
+                <span className="w-100 col-form-label">{ formatMoney(totalAmount) } {ipInfo.currency}</span>
               </div>
               <div className="d-flex mt-2">
                 <label className="col-form-label mr-auto" style={{ width: '190px' }}>Phone</label>

@@ -9,9 +9,7 @@ import './FeedExchange.scss';
 import {FormattedMessage, injectIntl} from 'react-intl';
 import Feed from "@/components/core/presentation/Feed/Feed";
 import Button from "@/components/core/controls/Button/Button";
-import {BigNumber} from 'bignumber.js';
 import {
-  AMOUNT_DECIMAL,
   API_URL,
   CRYPTO_CURRENCY,
   DEFAULT_FEE,
@@ -24,7 +22,6 @@ import {
   HANDSHAKE_EXCHANGE_STATUS_NAME,
   HANDSHAKE_STATUS_NAME,
   HANDSHAKE_USER,
-  PRICE_DECIMAL
 } from "@/constants";
 import ModalDialog from "@/components/core/controls/ModalDialog";
 import {connect} from "react-redux";
@@ -47,6 +44,7 @@ import {ExchangeHandshake} from '@/services/neuron';
 import _sample from "lodash/sample";
 import { feedBackgroundColors } from "@/components/handshakes/exchange/config";
 import {updateOfferStatus} from "@/reducers/discover/action";
+import {formatAmountCurrency, formatMoney} from "@/services/offer-util";
 
 class FeedExchange extends React.PureComponent {
   constructor(props) {
@@ -181,8 +179,8 @@ class FeedExchange extends React.PureComponent {
     this.props.showAlert({
       message: <div className="text-center">
         {intl.formatMessage({ id: 'notEnoughCoinInWallet' }, {
-          amount: new BigNumber(balance).toFormat(AMOUNT_DECIMAL),
-          fee: fee,
+          amount: formatAmountCurrency(balance),
+          fee: formatAmountCurrency(fee),
           currency: currency,
         })}
       </div>,
@@ -679,10 +677,10 @@ class FeedExchange extends React.PureComponent {
           case HANDSHAKE_EXCHANGE_STATUS.ACTIVE: {
             message = intl.formatMessage({id: 'handshakeOfferConfirm'}, {
               type: offer.type === EXCHANGE_ACTION.BUY ? EXCHANGE_ACTION_NAME[EXCHANGE_ACTION.SELL] : EXCHANGE_ACTION_NAME[EXCHANGE_ACTION.BUY],
-              amount: new BigNumber(offer.amount).toFormat(AMOUNT_DECIMAL),
+              amount: formatAmountCurrency(offer.amount),
               currency: offer.currency,
               currency_symbol: offer.fiatCurrency,
-              total: new BigNumber(fiatAmount).toFormat(PRICE_DECIMAL),
+              total: formatMoney(fiatAmount),
             });
 
             actionButtons = (
@@ -958,10 +956,10 @@ class FeedExchange extends React.PureComponent {
 
         message = intl.formatMessage({ id: 'offerHandShakeContent' }, {
           offerType: EXCHANGE_ACTION_NAME[offer.type],
-          amount: new BigNumber(offer.amount).toFormat(AMOUNT_DECIMAL),
+          amount: formatAmountCurrency(offer.amount),
           currency: offer.currency,
           currency_symbol: offer.fiatCurrency,
-          total: new BigNumber(fiatAmount).toFormat(PRICE_DECIMAL),
+          total: formatMoney(fiatAmount),
           payment_method: EXCHANGE_METHOD_PAYMENT[EXCHANGE_FEED_TYPE.EXCHANGE]
         });
 
@@ -973,10 +971,10 @@ class FeedExchange extends React.PureComponent {
 
         message = intl.formatMessage({ id: 'offerHandShakeContent' }, {
           offerType: EXCHANGE_ACTION_NAME[offer.type],
-          amount: new BigNumber(offer.amount).toFormat(AMOUNT_DECIMAL),
+          amount: formatAmountCurrency(offer.amount),
           currency: offer.currency,
           currency_symbol: offer.fiatCurrency,
-          total: new BigNumber(fiatAmount).toFormat(PRICE_DECIMAL),
+          total: formatMoney(fiatAmount),
           payment_method: EXCHANGE_METHOD_PAYMENT[EXCHANGE_FEED_TYPE.INSTANT]
         });
 
