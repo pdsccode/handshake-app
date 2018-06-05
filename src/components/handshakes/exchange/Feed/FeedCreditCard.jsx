@@ -25,6 +25,7 @@ import { bindActionCreators } from "redux";
 import {showAlert} from '@/reducers/app/action';
 import _sample from "lodash/sample";
 import { feedBackgroundColors } from "@/components/handshakes/exchange/config";
+import {BigNumber} from 'bignumber.js';
 
 const nameFormCreditCard = 'creditCard'
 const FormCreditCard = createForm({ propsReduxForm: { form: nameFormCreditCard,
@@ -357,7 +358,7 @@ class FeedCreditCard extends React.Component {
                   </span>
                 </div>
                 <div className="pb-2">
-                  <span><FormattedMessage id="askUsingCreditCard" values={{ fiatCurrency: fiatCurrency, total: total }} /></span>
+                  <span><FormattedMessage id="askUsingCreditCard" values={{ fiatCurrency: fiatCurrency, total: new BigNumber(total).toFormat(2) }} /></span>
                 </div>
                 {
                   amount && (
