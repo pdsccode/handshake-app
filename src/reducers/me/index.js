@@ -86,7 +86,7 @@ const meReducter = (state = {
         const handshakeItem = myList.find(item => item.id === id);
         handshakeItem.status = status;
         handshakeItem.result = result;
-        //TO DO: delete after update status
+        //TO DO: delete record after update status 
 
       });
 
