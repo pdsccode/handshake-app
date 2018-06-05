@@ -1089,7 +1089,7 @@ class FeedExchange extends React.PureComponent {
                         <img className="mr-2" src={iconPhone} width={20}/>
                         <div className="media-body">
                           <div>
-                            <a href={`tel:${phone}`} className="text-white">{phone}</a>
+                            <a href={`tel:${phone.replace(/-/g, '')}`} className="text-white">{phone}</a>
                           </div>
                         </div>
                       </div>
