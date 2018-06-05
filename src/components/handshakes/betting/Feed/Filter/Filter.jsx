@@ -69,6 +69,7 @@ class BettingFilter extends React.Component {
 
     get defaultOutcome() {
         const matchOutcomes = this.matchOutcomes;
+        console.log('defaultOutcome matchOutcomes: ', matchOutcomes);
         const { outComeId } = this.props;
         if (matchOutcomes && matchOutcomes.length > 0) {
             const itemDefault = matchOutcomes.find(item => item.id === outComeId);
@@ -110,9 +111,11 @@ class BettingFilter extends React.Component {
     }
     get matchOutcomes(){
         const {selectedMatch, matches} = this.state;
+        console.log('matchOutcomes selectedMatch:', selectedMatch);
         if(selectedMatch){
             const foundMatch = this.foundMatch;
             if (foundMatch){
+                
                 const {outcomes} = foundMatch;
                 if(outcomes){
                     return outcomes.map((item) => ({ id: item.id, value: item.name, hid: item.hid}));
@@ -171,6 +174,8 @@ class BettingFilter extends React.Component {
         // console.log("Default Match:", defaultMatchId);
         // console.log('Default Outcome:', defaultOutcome);
         const defaultOutcomeId = this.defaultOutcome ? this.defaultOutcome.id : null;
+        console.log('Source Outcome:', this.matchOutcomes);
+        console.log('defaultOutcomeId:', defaultOutcomeId);
         return (
             <div className="wrapperBettingFilter">
             <div className="dropDown">
@@ -178,20 +183,25 @@ class BettingFilter extends React.Component {
                 onRef={match => this.matchDropDown = match}
                 defaultId={defaultMatchId}
                 source={this.matchNames}
+                afterSetDefault={(item)=>this.setState({selectedMatch: item})}
                 onItemSelected={(item) => this.setState({selectedMatch: item})} />
             </div>
             <div className="dropDown">
                 <Dropdown placeholder="Select a prediction"
                 onRef={match => this.outcomeDropDown = match}
-                defaultId={this.defaultOutcomeId}
+                defaultId={defaultOutcomeId}
                 source={this.matchOutcomes}
+                afterSetDefault={item =>  this.setState({
+                    selectedOutcome: item
+                },() => this.callGetHandshakes(item))}
                 onItemSelected={(item) => {
                     /*this.callGetHandshakes(item)*/
                     this.setState({
                         selectedOutcome: item
                     },() => this.callGetHandshakes(item))
                 }
-                }/>
+                }
+                />
             </div>
 
                 <div className="wrapperContainer">
