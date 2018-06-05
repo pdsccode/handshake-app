@@ -26,7 +26,7 @@ class MeRouter extends React.Component {
   constructor(props) {
     super(props);
 
-    this.props.setHeaderTitle('My handshakes');
+    this.props.setHeaderTitle('My Shakes');
     this.props.clearHeaderRight();
     this.props.clearHeaderLeft();
   }

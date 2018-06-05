@@ -68,7 +68,7 @@ class BettingCreate extends React.PureComponent {
   static defaultProps = {
     item: {
       "backgroundColor": "#332F94",
-      "desc": "[{\"key\": \"event_bet\",\"suffix\": \"ETH\",\"label\": \"Amount\", \"placeholder\": \"10\", \"type\": \"number\", \"className\": \"betField\"}] [{\"key\": \"event_odds\", \"label\": \"Odds\", \"placeholder\": \"10\",\"prefix\": \"1 -\", \"className\": \"oddField\"}]",
+      "desc": "[{\"key\": \"event_bet\",\"suffix\": \"ETH\",\"label\": \"Amount\", \"placeholder\": \"10\", \"type\": \"number\", \"className\": \"betField\"}] [{\"key\": \"event_odds\", \"label\": \"Odds\", \"placeholder\": \"10\",\"prefix\": \"1 -\", \"className\": \"oddField\", \"type\": \"number\"}]",
       "id": 18,
       "message": null,
       "name": "Bet",
@@ -264,7 +264,7 @@ get matchResults(){
         name={key}
         style={style}
         component={InputField}
-        type="text"
+        type="tel"
         //min="0.0001"
         //step="0.0002"
         placeholder={placeholder}
