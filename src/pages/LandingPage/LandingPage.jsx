@@ -14,11 +14,15 @@ import blockchainDescriptionImage from '@/assets/images/icon/landingpage/chart-d
 import shakeNinjaText from '@/assets/images/icon/landingpage/shakeninjatext.svg';
 import arrowsRightIcon from '@/assets/images/icon/landingpage/arrows_long_right.svg';
 
+const inputRefOne = 'emailRef';
+const inputRefTwo = 'emailRefTwo';
+
 class Handshake extends React.Component {
   constructor(props) {
     super(props);
     this.injectFontPage = this.injectFontPage.bind(this);
     this.submitEmail = this.submitEmail.bind(this);
+    this.renderInputForm = this.renderInputForm.bind(this);
   }
   productId = 1296;
 
@@ -34,10 +38,9 @@ class Handshake extends React.Component {
     this.injectFontPage();
   }
 
-  submitEmail(e) {
-    e.preventDefault();
+  submitEmail(inputRef) {
     // this.errorBoxRef.close();
-    const emailValue = this.emailRef.value.trim();
+    const emailValue = this[inputRef].value.trim();
     // validation email
     // if (!emailValue) {
     //   // empty
@@ -94,6 +97,24 @@ class Handshake extends React.Component {
     }
   }
 
+  renderInputForm({id, onSubmit, refName}) {
+    return (
+      <form className="registerEmail" onSubmit={onSubmit}>
+        <input
+          className="email"
+          name="email"
+          type="text"
+          id={id}
+          placeholder="Enter your email"
+          ref={input => this[refName] = input}
+        />
+        <button className="btnSubmit" onClick={onSubmit}>
+          <span>Join mailing list</span>
+        </button>
+      </form>
+    )
+  }
+
   render() {
     return (
       <div className="root">
@@ -137,19 +158,17 @@ class Handshake extends React.Component {
                   <img src={telegramAppIcon} alt="telegram app icon" />
                   <span>Join the conversation on telegram</span>
                 </a>
-                <form className="registerEmail" onSubmit={this.submitEmail}>
-                  <input
-                    className="email"
-                    name="email"
-                    type="text"
-                    id="email-1"
-                    placeholder="Enter your email"
-                    ref={input => this.emailRef = input}
-                  />
-                  <button className="btnSubmit" onClick={this.submitEmail}>
-                    <span>Join mailing list</span>
-                  </button>
-                </form>
+                <div className="or text-center">- or -</div>
+                {
+                  this.renderInputForm({
+                    id: 'email-1',
+                    onSubmit: (e) => {
+                      e && e.preventDefault();
+                      this.submitEmail(inputRefOne);
+                    },
+                    refName: inputRefOne,
+                  })
+                }
               </div>
             </div>
           </div>
@@ -177,6 +196,16 @@ class Handshake extends React.Component {
                 <img src={telegramAppIcon} alt="telegram app icon" />
                 <span>Join Telegram channel</span>
               </a>
+              {
+                this.renderInputForm({
+                  id: 'email-2',
+                  onSubmit: (e) => {
+                    e && e.preventDefault();
+                    this.submitEmail(inputRefTwo);
+                  },
+                  refName: inputRefTwo,
+                })
+              }
             </div>
           </div>
         </div>
