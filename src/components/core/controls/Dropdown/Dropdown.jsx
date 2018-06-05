@@ -17,6 +17,7 @@ class Dropdown extends React.PureComponent {
     // bind
     this.toogle = ::this.toogle;
     this.onItemSelected = ::this.onItemSelected;
+    this.setDefaultItem = ::this.setDefaultItem;
   }
 
   onItemSelected(item) {
@@ -32,12 +33,22 @@ class Dropdown extends React.PureComponent {
     }));
   }
 
-  componentDidMount() {
-    const { defaultId, source } = this.props;
-    if (defaultId && source && source.length > 0) {
+  setDefaultItem(nextProps=null) {
+    const { defaultId, source } = nextProps ? nextProps : this.props;
+    const { idActive } = this.state;
+    if (defaultId && source && source.length > 0 && idActive !== defaultId) {
       const itemDefault = source.find(item => item.id === defaultId);
       this.setState({ text: itemDefault.value, idActive: itemDefault.id });
     }
+  }
+
+  componentDidMount() {
+    const { defaultId, source } = this.props;
+    this.setDefaultItem();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setDefaultItem(nextProps);
   }
 
   render() {

@@ -5,24 +5,28 @@ import { Switch, Route } from 'react-router-dom';
 import DynamicImport from '@/components/App/DynamicImport';
 import Loading from '@/components/core/presentation/Loading';
 import { URL } from '@/config';
-import { setHeaderTitle } from '@/reducers/app/action';
+import { setHeaderTitle, clearHeaderLeft, clearHeaderRight } from '@/reducers/app/action';
 
 const Wallet = props => (<DynamicImport loading={Loading} load={() => import('@/pages/Wallet/Wallet')}>{Component => <Component {...props} />}</DynamicImport>);
 const Page404 = props => (<DynamicImport isNotFound loading={Loading} load={() => import('@/pages/Error/Page404')}>{Component => <Component {...props} />}</DynamicImport>);
 
 const routerMap = [
-  { path: URL.HANDSHAKE_WALLET_INDEX, component: Wallet },  
+  { path: URL.HANDSHAKE_WALLET_INDEX, component: Wallet },
 ];
 
 class WalletRouter extends React.Component {
   static propTypes = {
     setHeaderTitle: PropTypes.func.isRequired,
+    clearHeaderLeft: PropTypes.func.isRequired,
+    clearHeaderRight: PropTypes.func.isRequired,
   }
 
   constructor(props) {
     super(props);
 
     this.props.setHeaderTitle('Wallet');
+    this.props.clearHeaderRight();
+    this.props.clearHeaderLeft();
   }
 
   render() {
@@ -35,4 +39,4 @@ class WalletRouter extends React.Component {
   }
 }
 
-export default connect(null, ({ setHeaderTitle }))(WalletRouter);
+export default connect(null, ({ setHeaderTitle, clearHeaderRight, clearHeaderLeft }))(WalletRouter);

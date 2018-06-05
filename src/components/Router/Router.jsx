@@ -21,10 +21,9 @@ import { withFirebase } from 'react-redux-firebase';
 import messages from '@/locals';
 import axios from 'axios';
 import { setIpInfo } from '@/reducers/app/action';
-import { getUserProfile } from '@/reducers/exchange/action';
+import { getUserProfile, getListOfferPrice } from '@/reducers/exchange/action';
 import { MasterWallet } from '@/models/MasterWallet';
 import { createMasterWallets } from '@/reducers/wallet/action';
-import {getListOfferPrice} from "@/reducers/exchange/action";
 
 addLocaleData([...en, ...fr]);
 
@@ -112,6 +111,7 @@ class Router extends React.Component {
     setIpInfo: PropTypes.func.isRequired,
     getUserProfile: PropTypes.func.isRequired,
     firebase: PropTypes.object.isRequired,
+    getListOfferPrice: PropTypes.func.isRequired,
   };
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -174,6 +174,30 @@ class Router extends React.Component {
     }
   }
 
+
+  getListOfferPrice = () => {
+    this.props.getListOfferPrice({
+      BASE_URL: API_URL.EXCHANGE.BASE,
+      PATH_URL: API_URL.EXCHANGE.GET_LIST_OFFER_PRICE,
+      qs: { fiat_currency: this.props?.app?.ipInfo?.currency },
+      successFn: this.handleGetPriceSuccess,
+      errorFn: this.handleGetPriceFailed,
+    });
+  }
+
+
+  getIpInfo = () => {
+    axios.get(API_URL.EXCHANGE.IP_DOMAIN, {
+      params: {
+        auth: API_URL.EXCHANGE.IP_KEY,
+      },
+    }).then((response) => {
+      // console.log('response', response.data);
+      this.props.setIpInfo(response.data);
+      local.save(APP.IP_INFO, response.data);
+    });
+  }
+
   authSuccess() {
     // basic profile
     this.props.fetchProfile({ PATH_URL: 'user/profile' });
@@ -184,17 +208,17 @@ class Router extends React.Component {
       PATH_URL: API_URL.EXCHANGE.GET_USER_PROFILE,
     });
 
-    //GET IP INFO
+    // GET IP INFO
     this.getIpInfo();
     this.timeOutInterval = setInterval(() => {
       this.getIpInfo();
-    }, 30 * 60 * 1000); //30'
+    }, 30 * 60 * 1000); // 30'
 
-    //GET PRICE
+    // GET PRICE
     this.getListOfferPrice();
     this.timeOutGetPrice = setInterval(() => {
       this.getListOfferPrice();
-    }, 5 * 60 * 1000); //30'
+    }, 5 * 60 * 1000); // 30'
 
     // wallet handle
     let listWallet = MasterWallet.getMasterWallet();
@@ -230,28 +254,6 @@ class Router extends React.Component {
     } catch (e) {
       console.log(e);
     }
-  }
-
-  getIpInfo = () => {
-    axios.get(API_URL.EXCHANGE.IP_DOMAIN, {
-      params: {
-        auth: API_URL.EXCHANGE.IP_KEY,
-      },
-    }).then((response) => {
-      // console.log('response', response.data);
-      this.props.setIpInfo(response.data);
-      local.save(APP.IP_INFO, response.data);
-    });
-  }
-
-  getListOfferPrice = () => {
-    this.props.getListOfferPrice({
-      BASE_URL: API_URL.EXCHANGE.BASE,
-      PATH_URL: API_URL.EXCHANGE.GET_LIST_OFFER_PRICE,
-      qs: { fiat_currency: this.props?.app?.ipInfo?.currency },
-      successFn: this.handleGetPriceSuccess,
-      errorFn: this.handleGetPriceFailed,
-    });
   }
 
   render() {
@@ -337,6 +339,6 @@ export default compose(
     setIpInfo,
     getUserProfile,
     authUpdate,
-    getListOfferPrice
+    getListOfferPrice,
   }),
 )(Router);
