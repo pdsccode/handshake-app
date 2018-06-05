@@ -40,7 +40,7 @@ class CreateComment extends React.PureComponent {
 
   createComment() {
     const { file } = this.state;
-    if(!file || !this.textareaRef || !this.textareaRef.value) {
+    if(!this.textareaRef || !this.textareaRef.value) {
       this.props.showAlert({
         message: <div className="text-center">Please type something</div>,
         timeOut: 3000,
