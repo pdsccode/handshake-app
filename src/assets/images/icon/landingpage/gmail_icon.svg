@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="44px" height="44px" viewBox="0 0 44 44" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+    <title>Group 9</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-Copy" transform="translate(-849.000000, -74.000000)">
+            <g id="Group-9" transform="translate(850.000000, 75.000000)">
+                <g id="Group-7-Copy" stroke="#F95559" stroke-width="2">
+                    <circle id="Oval-Copy-2" cx="21" cy="21" r="21"></circle>
+                </g>
+                <g id="icons8-gmail" transform="translate(11.000000, 14.000000)" fill="#F95559" fill-rule="nonzero" stroke="#FFFFFF" stroke-width="0.5">
+                    <path d="M2,0 C0.894531,0 0,0.894531 0,2 L0,14 C0,15.105469 0.894531,16 2,16 L18,16 C19.105469,16 20,15.105469 20,14 L20,2 C20,0.894531 19.105469,0 18,0 L2,0 Z M3,2 L17,2 L17,2.03125 L10,7 L3,2.03125 L3,2 Z M3,5.03125 L10,10 L17,5.03125 L17,14 L3,14 L3,5.03125 Z" id="Shape"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

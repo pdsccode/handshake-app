@@ -1,0 +1,391 @@
+@import './src/styles/style';
+
+.root {
+  height: 100%;
+  background: url('../../assets/images/icon/landingpage/banner.svg') no-repeat;
+  background-size: cover;
+  .banner {
+
+  }
+  .rowEqHeight {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    align-items: center;
+  }
+  .mainContent {
+    padding: 50px 0 54px;
+    .header {
+      align-items: center;
+      margin-bottom: 30px;
+      display: flex;
+      & > img {
+        margin-right: 20px;
+        height: 60px;
+        position: relative;
+        top: -8px;
+      }
+      & > div {
+        img {
+          width: 170px;
+          margin-bottom: 5px;
+        }
+        p {
+          font-family: azo-sans-web, sans-serif;
+          font-style: normal;
+          opacity: 0.9;
+          font-size: 18px;
+          color: #FFFFFF;
+          letter-spacing: 0.98px;
+        }
+      }
+    }
+    .appScreen {
+      width: 374px;
+      height: 663px;
+      margin: 0 auto;
+      background: url('../../assets/images/icon/landingpage/app_screen.svg');
+    }
+    .appScreenVideo {
+      width: 293px;
+      height: 101%;
+      position: relative;
+      left: 19.31%;
+      top: 7px;
+    }
+    h1 {
+      /* Bet against your fel: */
+      background: linear-gradient(-180deg, #B3D6AA 0%, #25FF00 93%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-family: azo-sans-web, sans-serif;
+      font-style: normal;
+      font-weight: var(--semi-bold);
+      font-size: 40px;
+      /*color: #56DF3F;*/
+      letter-spacing: 0;
+      margin-bottom: 30px;
+      margin-top: 0;
+      line-height: 54px;
+      .blue {
+        color: #7ACE6C;
+      }
+      .white {
+        color: #fff;
+      }
+    }
+    .subTitle {
+      font-family: azo-sans-web, sans-serif;
+      font-style: normal;
+      font-size: 18px;
+      color: #FFFFFF;
+      letter-spacing: 0;
+      line-height: 32px;
+      margin-bottom: 15px;
+      width: 98%;
+    }
+    .btnTelegram {
+      font-family: azo-sans-web, sans-serif;
+      font-style: normal;
+      font-weight: var(--medium);
+      /*background: #1E4EFF;*/
+      border-radius: 4px;
+      font-size: 24px;
+      color: #FFFFFF;
+      letter-spacing: 0;
+      background-image: linear-gradient(-269deg, #7740FF 0%, #1E4EFF 100%);
+      padding: 18px 93px;
+      img {
+        margin-right: 9px;
+        position: relative;
+        top: -3px;
+      }
+      &:hover {
+        text-decoration: none;
+      }
+    }
+    .telegramDescription {
+      font-family: azo-sans-web, sans-serif;
+      font-style: normal;
+      margin-bottom: 47px;
+      font-size: 18px;
+      color: #FFFFFF;
+      letter-spacing: 0;
+      line-height: 32px;
+      .orange {
+        color: #F46A48;
+        font-weight: var(--medium);
+      }
+      strong {
+        font-weight: var(--medium);
+      }
+    }
+  }
+  .blockChainContent {
+    max-width: 1026px;
+    margin-top: 30px;
+    margin-bottom: 50px;
+    h3 {
+      font-size: 40px;
+      color: #FFFFFF;
+      letter-spacing: 0;
+      line-height: 54px;
+      margin-bottom: 23px;
+      font-family: azo-sans-web, sans-serif;
+      font-style: normal;
+      font-weight: var(--semi-bold);
+      span {
+        /*color: #CF3D00;*/
+        background: linear-gradient(-179deg, #CF3D00 0%, #F46A48 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+    }
+    p {
+      font-size: 20px;
+      letter-spacing: 0;
+      line-height: 32px;
+      width: 70%;
+      margin: 0 auto 115px;
+      font-family: azo-sans-web, sans-serif;
+      font-style: normal;
+      color: #FFFFFF;
+      .green {
+        color: #56DF3F;
+      }
+    }
+  }
+  .countdownBlock {
+    margin-top: 126px;
+    margin-bottom: 280px;
+    h3 {
+      font-size: 40px;
+      color: #FFFFFF;
+      letter-spacing: 0;
+      line-height: 54px;
+      font-family: azo-sans-web, sans-serif;
+      font-style: normal;
+      font-weight: var(--semi-bold);
+      margin-bottom: 23px;
+    }
+    .countDownSubTitle {
+      font-family: azo-sans-web, sans-serif;
+      font-style: normal;
+      font-size: 20px;
+      color: #FFFFFF;
+      letter-spacing: 0;
+      line-height: 32px;
+      margin-bottom: 70px;
+    }
+    .countDown {
+      margin-bottom: 80px;
+    }
+    .countDownTitle {
+      font-family: azo-sans-web, sans-serif;
+      font-style: normal;
+      font-size: 22px;
+      color: #FFFFFF;
+      letter-spacing: 0;
+      margin-bottom: 16px;
+    }
+    .btnTelegram {
+      font-family: azo-sans-web, sans-serif;
+      font-style: normal;
+      font-weight: var(--medium);
+      border-radius: 4px;
+      font-size: 24px;
+      color: #FFFFFF;
+      letter-spacing: 0;
+      background-image: linear-gradient(-269deg, #7740FF 0%, #1E4EFF 100%);
+      padding: 17px 40px;
+      img {
+        margin-right: 20px;
+        position: relative;
+        top: -3px;
+      }
+      &:hover {
+        text-decoration: none;
+      }
+    }
+  }
+}
+
+@media (min-width: 1000px) and (max-width: 1680px) {
+  .root {
+    .mainContent {
+      .appScreen {
+        /*max-width: 400px;*/
+      }
+    }
+  }
+}
+
+@media (min-width: 767px) and (max-width: 1200px) {
+  .root {
+    .mainContent {
+      .btnTelegram {
+        padding: 15px 30px;
+      }
+    }
+  }
+}
+
+@media (max-width: 767px) {
+  .root {
+    .mainContent {
+      padding: 20px;
+      .header {
+        margin-bottom: 30px;
+        & > img {
+          width: 38px;
+          margin-right: 9px;
+          top: -6px;
+        }
+        & > div {
+          img {
+            width: 90px;
+          }
+          p {
+            font-size: 12px;
+          }
+        }
+      }
+      h1 {
+        font-size: 30px;
+        margin-bottom: 15px;
+        line-height: 42px;
+      }
+      .subTitle {
+        font-size: 16px;
+        line-height: 27px;
+        margin-bottom: 20px;
+        width: 100%;
+      }
+      .btnTelegram {
+        font-size: 18px;
+        padding: 18px 30px;
+        img {
+          height: 30px;
+          width: 30px;
+          margin-right: 9px;
+          position: relative;
+          top: -3px;
+        }
+      }
+      .telegramDescription {
+        font-size: 16px;
+        letter-spacing: 0;
+        line-height: 27px;
+        margin-bottom: 40px;
+      }
+    }
+    .blockChainContent {
+      margin-top: 20px;
+      margin-bottom: 20px;
+      h3 {
+        font-size: 30px;
+        line-height: 42px;
+        margin-bottom: 10px;
+        span {
+          background: initial;
+          color: #F46A48 !important;
+          -webkit-text-fill-color: unset;
+          -webkit-background-clip: unset;
+        }
+      }
+      p {
+        font-size: 18px;
+        line-height: 27px;
+        margin-bottom: 40px;
+        width: 100%;
+      }
+    }
+    .countdownBlock {
+      margin-top: 60px;
+      margin-bottom: 140px;
+      h3 {
+        font-size: 30px;
+        line-height: 42px;
+        margin-bottom: 10px;
+      }
+      .countDownSubTitle {
+        font-size: 18px;
+        color: #FFFFFF;
+        letter-spacing: 0;
+        line-height: 27px;
+        margin-bottom: 50px;
+      }
+      .countDown {
+        margin-bottom: 60px;
+      }
+      .countDownTitle {
+        font-size: 18px;
+        color: #FFFFFF;
+        letter-spacing: 0;
+        margin-bottom: 16px;
+      }
+      .btnTelegram {
+        font-family: azo-sans-web, sans-serif;
+        font-style: normal;
+        font-weight: var(--medium);
+        border-radius: 4px;
+        font-size: 18px;
+        color: #FFFFFF;
+        letter-spacing: 0;
+        background-image: linear-gradient(-269deg, #7740FF 0%, #1E4EFF 100%);
+        padding: 17px 10px;
+        img {
+          margin-right: 9px;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 500px) {
+  .root {
+    .countdownBlock {
+      .btnTelegram {
+        font-size: 16px;
+        padding: 17px 8px;
+      }
+    }
+  }
+}
+
+@media (max-width: 375px) {
+  .root {
+    .mainContent {
+      .header {
+        margin-bottom: 30px;
+        & > img {
+          width: 35px;
+          margin-right: 9px;
+          top: -4px;
+        }
+        & > div {
+          img {
+            width: 80px;
+          }
+          p {
+            font-size: 10px;
+          }
+        }
+      }
+      .btnTelegram {
+        font-size: 15px;
+        padding: 18px 30px;
+        img {
+          margin-right: 5px;
+        }
+      }
+    }
+    .countdownBlock {
+      .btnTelegram {
+        font-size: 12px;
+        padding: 17px 8px;
+      }
+    }
+  }
+}
