@@ -334,7 +334,7 @@ class FeedCreditCard extends React.Component {
                   )
                 }
                 <div className="form-group pt-2 d-flex">
-                  <label className="col-form-label"><h4><FormattedMessage id="buy"/></h4></label>
+                  <label className="col-form-label headline"><h4><FormattedMessage id="buy"/></h4></label>
                   <div className="mx-2 pt-1">
                     <Field
                       name="amount"
@@ -343,8 +343,12 @@ class FeedCreditCard extends React.Component {
                       validate={[required]}
                       component={fieldCleave}
                       propsCleave={{
-                        placeholder: intl.formatMessage({id: 'amount'}),
-                        options: { numeral: true, delimiter: '' },
+                        placeholder: intl.formatMessage({ id: 'amount' }),
+                        options: { numeral: true, delimiter: '', numeralDecimalScale: 8 },
+                        style: {
+                          fontSize: '26px',
+                          fontWeight: '600',
+                        }
                       }}
                       className="form-control-custom form-control-custom-ex d-inline-block w-100"
                       onChange={this.onAmountChange}
@@ -361,7 +365,7 @@ class FeedCreditCard extends React.Component {
                   </span>
                 </div>
                 <div className="pb-2">
-                  <span><FormattedMessage id="askUsingCreditCard" values={{ fiatCurrency: fiatCurrency, total: formatMoney(total) }} /></span>
+                  <h4 className="headline"><FormattedMessage id="askUsingCreditCard" values={{ fiatCurrency: fiatCurrency, total: formatMoney(total) }} /></h4>
                 </div>
                 {
                   amount && (
