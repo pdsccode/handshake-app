@@ -1,52 +1,62 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+// services
+import { setHeaderTitle } from '@/reducers/app/action';
 // components
-import Button from '@/components/core/controls/Button';
-import Image from '@/components/core/presentation/Image';
+import BettingFilter from '@/components/handshakes/betting/Feed/Filter';
 // style
-import versusSVG from '@/assets/images/icon/betting/versus.svg';
 import './Detail.scss';
 
 class BettingDetail extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      match: -1,
+      outCome: -1,
+    };
+    // set header
+    props.setHeaderTitle('Detail');
+  }
+
+  parseQueryString() {
+    let str = window.location.search;
+    let objURL = {};
+
+    str.replace(
+      new RegExp('([^?=&]+)(=([^&]*))?', 'g'),
+      ( $0, $1, $2, $3 ) => {
+        objURL[$1] = $3;
+      }
+    );
+    return objURL;
+  }
+
+  componentDidMount() {
+    // init data
+    const { match, out_come:outCome } = this.parseQueryString();
+    this.setState({
+      match: parseInt(match),
+      outCome: parseInt(outCome),
+    });
   }
 
   render() {
+    const { match, outCome } = this.state;
     return (
       <div className="beeting-detail">
-        <div className="info">
-          <div className="head">
-            <div className="ninjas">
-              <p>2 ninjas</p>
-              <p>10 ETH</p>
-            </div>
-            <div className="versus">
-              <Image src={versusSVG} alt="versus"/>
-              <p>vs</p>
-            </div>
-            <div className="ninjas">
-              <p>7 ninjas</p>
-              <p>10 ETH</p>
-            </div>
-          </div>
-          <hr className="line"/>
-          <div className="content">
-            <p className="title">Brazil vs Argentina</p>
-            <time className="font-size-20">9/7/2018</time>
-            <p className="font-size-20">10 ETH that Brazil wins</p>
-            <p>
-              <span>1:10</span>&nbsp;&nbsp;&nbsp;&nbsp;<span>0 +1</span>
-            </p>
-          </div>
-        </div>
-        <div className="btn-shake">
-          <Button block>Shake now</Button>
-        </div>
+        <BettingFilter matchId={match} outComeId={outCome} />
       </div>
     );
   }
 }
 
-export default BettingDetail;
+BettingDetail.propType = {
+  setHeaderTitle: PropTypes.func,
+};
+
+const mapDispatch = ({
+  setHeaderTitle,
+});
+
+export default connect(null, mapDispatch)(BettingDetail);
