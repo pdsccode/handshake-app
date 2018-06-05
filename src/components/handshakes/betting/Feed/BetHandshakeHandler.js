@@ -10,6 +10,14 @@ console.log('Chain Id:', chainId);
 
 const bettinghandshake = new BettingHandshake(chainId);
 
+export const MESSAGE = {
+  CREATE_BET_SUCCESSFUL: "Create a bet successfully.",
+  NOT_ENOUGH_BALANCE: "Your wallet isn't enough.",
+  CHOOSE_MATCH: "Please choose match and outcome",
+  ODD_LARGE_THAN: "Odds should be larger than 1",
+  AMOUNT_VALID: "Amount should be larger than 0",
+}
+
 export const BET_BLOCKCHAIN_STATUS = {
     STATUS_PENDING: -1,
     STATUS_INITED: 0,
@@ -123,6 +131,9 @@ export class BetHandshakeHandler {
     const balance =  await wallet.getBalance();
     console.log('Balance:', balance);
     return balance;
+  }
+  static async getEstimateGas(){
+
   }
 
   static foundShakeItemList(dict){
