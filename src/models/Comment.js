@@ -7,6 +7,7 @@ class Comment {
       comment: data.comment,
       image: data.image,
       status: data.status,
+      address: data.address,
     };
   }
 }

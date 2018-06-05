@@ -8,6 +8,7 @@ export default {
   ccNumber: 'Number',
   ccExpire: 'Expire',
   ccCVC: 'CVV',
+  overCCLimit: 'Your limit is {currency}{limit}. You have already used {currency}{amount} ',
 
   required: 'Required',
   ccExpireTemplate: 'MM/YY',

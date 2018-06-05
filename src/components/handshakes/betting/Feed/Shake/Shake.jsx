@@ -20,7 +20,7 @@ import Toggle from './../Toggle';
 import {showAlert} from '@/reducers/app/action';
 
 import './Shake.scss';
-import { BetHandshakeHandler } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
+import { BetHandshakeHandler, MESSAGE } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
 
 
 const wallet = MasterWallet.getWalletDefault('ETH');
@@ -79,6 +79,7 @@ class BetingShake extends React.Component {
     // console.log('componentWillReceiveProps Extra Data: ', extraData);
     // this.setState({extraData})
   }
+ 
 
 
   async onSubmit(values) {
@@ -93,15 +94,52 @@ class BetingShake extends React.Component {
     const balance = await BetHandshakeHandler.getBalance();
     console.log('Amount:', amount);
     console.log('Props:', this.props);
-    //if(matchName && matchOutcome && amount <= parseFloat(balance) && amount > 0){
-      if(isShowOdds){
-        this.initHandshake(amount, odds);
-      }else {
-        this.shakeItem(amount, side);
-  
-      }
-    //}
+    var message = null;
     
+
+    
+    if(matchName && matchOutcome){
+        if(amount > 0){
+          if(amount <= parseFloat(balance)){
+            if(isShowOdds){
+              if(odds >=1){
+                this.initHandshake(amount, odds);
+              }else {
+                message = MESSAGE.ODD_LARGE_THAN;
+              }
+            }else {
+              this.shakeItem(amount, side);
+        
+            }
+          }else {
+            message = MESSAGE.NOT_ENOUGH_BALANCE;
+          }
+        }else {
+          message = MESSAGE.AMOUNT_VALID;
+        }
+    }else {
+      message = MESSAGE.CHOOSE_MATCH;
+    }
+    
+  
+    //if(matchName && matchOutcome && amount <= parseFloat(balance) && amount > 0){
+      // if(isShowOdds){
+      //   this.initHandshake(amount, odds);
+      // }else {
+      //   this.shakeItem(amount, side);
+  
+      // }
+    //}
+    if(message){
+      this.props.showAlert({
+        message: <div className="text-center">{message}</div>,
+        timeOut: 3000,
+        type: 'danger',
+        callBack: () => {
+        }
+      });
+    }
+
   }
 
   onCancel() {
@@ -293,7 +331,7 @@ class BetingShake extends React.Component {
      const {outcomeHid} = this.props;
      BetHandshakeHandler.controlShake(data, outcomeHid);
      this.props.showAlert({
-      message: <div className="text-center">Create a bet successfully</div>,
+      message: <div className="text-center">{MESSAGE.CREATE_BET_SUCCESSFUL}</div>,
       timeOut: 3000,
       type: 'danger',
       callBack: () => {
@@ -378,7 +416,7 @@ class BetingShake extends React.Component {
       console.log('OutcomeHid:', outcomeHid);
      BetHandshakeHandler.controlShake(data, outcomeHid);
      this.props.showAlert({
-      message: <div className="text-center">Create a bet successfully</div>,
+      message: <div className="text-center">{MESSAGE.CREATE_BET_SUCCESSFUL}</div>,
       timeOut: 3000,
       type: 'danger',
       callBack: () => {
