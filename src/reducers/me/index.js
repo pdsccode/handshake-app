@@ -47,7 +47,7 @@ const meReducter = (state = {
         ...state,
         isFetching: false,
       };
-    case ACTIONS.FIREBASE_DATA_CHANGE: {
+    case ACTIONS.FIREBASE_EXCHANGE_DATA_CHANGE: {
       const listOfferStatus = action.payload;
       let myList = state.list;
 
@@ -67,6 +67,27 @@ const meReducter = (state = {
             break;
           }
         }
+      });
+
+      return {
+        ...state,
+        list: myList,
+      };
+    }
+   
+
+    case ACTIONS.FIREBASE_BETTING_DATA_CHANGE: {
+      const listBettingStatus = action.payload;
+      const myList = state.list;
+    
+
+      listBettingStatus.forEach(element => {
+        const {id, status, result} = element;
+        const handshakeItem = myList.find(item => item.id === id);
+        handshakeItem.status = status;
+        handshakeItem.result = result;
+        //TO DO: delete record after update status 
+
       });
 
       return {

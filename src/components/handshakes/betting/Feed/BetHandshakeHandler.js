@@ -11,14 +11,15 @@ console.log('Chain Id:', chainId);
 const bettinghandshake = new BettingHandshake(chainId);
 
 export const BET_BLOCKCHAIN_STATUS = {
-  STATUS_PENDING: -1,
-  STATUS_INITED: 0,
-  STATUS_MAKER_UNINITED: 1,
-  STATUS_SHAKER_SHAKED: 2,
-  STATUS_REFUND: 3,
-  STATUS_DONE: 4,
-  STATUS_BLOCKCHAIN_PENDING: -4,
-};
+    STATUS_PENDING: -1,
+    STATUS_INITED: 0,
+    STATUS_MAKER_UNINITED: 1,
+    STATUS_SHAKER_SHAKED: 2,
+    STATUS_REFUNDING: 3,
+    STATUS_REFUND: 4,
+    STATUS_DONE: 5,
+    STATUS_BLOCKCHAIN_PENDING: -4,
+}
 
 export const ROLE = {
   INITER: 1,
@@ -37,92 +38,70 @@ export const BETTING_STATUS = {
   AGAINST_WIN: 2,
 };
 
-export const BETTING_STATUS_LABEL = {
-  INITING: 'Your bet is initing...',
-  CANCEL: 'Cancel',
-  LOSE: 'Sorry, you lost',
-  WIN: 'Congrats, you won!',
-  DONE: 'Completed',
-  WITHDRAW: 'Withdraw',
-  CANCELLING: 'Your bet is cancelling...',
-  WAITING_RESULT: 'Match is ongoing',
-  REFUND: 'Refund',
-  CANCELLED: 'The bet is cancelled',
-  REFUNDED: 'Please got the refund',
-  REFUND: 'Refund',
-};
+export const BETTING_STATUS_LABEL =
+    {  INITING: 'Your bet is initing...',  CANCEL: 'Cancel', "LOSE": 'Sorry, you lost', "WIN": 'Congrats, you won!','DONE': 'Completed',
+    WITHDRAW: 'Withdraw', 
+    CANCELLING: 'Your bet is cancelling...',
+    WAITING_RESULT: 'Match is ongoing', 
+    REFUND: 'Refund', 
+    CANCELLED: 'The bet is cancelled', 
+    REFUNDING: 'Please get the refund', 
+    REFUNDED: 'You got refund'}
 
 export class BetHandshakeHandler {
-  static getStatusLabel(blockchainStatus, resultStatus, role, side, isMatch) {
-    let label = null;
-    let strStatus = null;
-    let isAction = false;
-    console.log('Role:', role);
-    console.log('isMatch:', isMatch);
-    console.log('Blockchain status:', blockchainStatus);
-    if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_PENDING) {
-      strStatus = BETTING_STATUS_LABEL.INITING;
-      isAction = false;
-    } else if (
-      blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINITED
-    ) {
-      strStatus = BETTING_STATUS_LABEL.CANCELLED;
-      isAction = false;
-    } else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_REFUND) {
-      strStatus = BETTING_STATUS_LABEL.REFUNDED;
-      label = BETTING_STATUS_LABEL.REFUND;
-      isAction = true;
-    } else if (
-      blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_BLOCKCHAIN_PENDING
-    ) {
-      // TO DO: scan txhash and rollback after a few minutes
-      strStatus = BETTING_STATUS_LABEL.CANCELLING;
-      isAction = false;
-    } else if (!isMatch && role === ROLE.INITER) {
-      label = BETTING_STATUS_LABEL.CANCEL;
-      strStatus = BETTING_STATUS_LABEL.WAITING_RESULT;
-      isAction = true;
-    } else if (isMatch && resultStatus === BETTING_STATUS.DRAW) {
-      label = BETTING_STATUS_LABEL.WITHDRAW;
-      strStatus = BETTING_STATUS_LABEL.WIN;
-      isAction = true;
-    } else if (
-      isMatch &&
-      resultStatus === BETTING_STATUS.SUPPORT_WIN &&
-      side === SIDE.SUPPORT
-    ) {
-      label = BETTING_STATUS_LABEL.WITHDRAW;
-      strStatus = BETTING_STATUS_LABEL.WIN;
-      isAction = true;
-    } else if (
-      isMatch &&
-      resultStatus === BETTING_STATUS.SUPPORT_WIN &&
-      side === SIDE.AGAINST
-    ) {
-      // label = BETTING_STATUS_LABEL.LOSE;
-      strStatus = BETTING_STATUS_LABEL.LOSE;
-      isAction = false;
-    } else if (
-      isMatch &&
-      resultStatus === BETTING_STATUS.AGAINST_WIN &&
-      side === SIDE.SUPPORT
-    ) {
-      // label = BETTING_STATUS_LABEL.LOSE;
-      strStatus = BETTING_STATUS_LABEL.LOSE;
-      isAction = false;
-    } else if (
-      isMatch &&
-      resultStatus === BETTING_STATUS.AGAINST_WIN &&
-      side === SIDE.AGAINST
-    ) {
-      label = BETTING_STATUS_LABEL.WITHDRAW;
-      strStatus = BETTING_STATUS_LABEL.WIN;
-      isAction = true;
-    } else if (isMatch) {
-      strStatus = BETTING_STATUS_LABEL.WAITING_RESULT;
-      isAction = false;
-    }
-    return { title: label, isAction, status: strStatus };
+    static getStatusLabel(blockchainStatus, resultStatus, role, side, isMatch){
+        var label = null;
+        var strStatus = null;
+        var isAction = false;
+        console.log('Role:', role);
+        console.log('isMatch:', isMatch);
+        console.log('Blockchain status:', blockchainStatus);
+        if(blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_PENDING){
+          strStatus = BETTING_STATUS_LABEL.INITING;
+          isAction = false;
+        }else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINITED){
+          strStatus = BETTING_STATUS_LABEL.CANCELLED;
+          isAction = false;
+        }else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_REFUNDING){
+          strStatus = BETTING_STATUS_LABEL.REFUNDING;
+          label = BETTING_STATUS_LABEL.REFUND;
+          isAction = true;
+        }else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_REFUND){
+          strStatus = BETTING_STATUS_LABEL.REFUNDED;
+          isAction = false;
+        }else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_BLOCKCHAIN_PENDING){
+          //TO DO: scan txhash and rollback after a few minutes
+          strStatus = BETTING_STATUS_LABEL.CANCELLING;
+          isAction = false;
+        }else if(!isMatch && role === ROLE.INITER){
+            label = BETTING_STATUS_LABEL.CANCEL;
+            strStatus = BETTING_STATUS_LABEL.WAITING_RESULT;
+            isAction = true;
+        }else if(isMatch && resultStatus === BETTING_STATUS.DRAW){
+            label = BETTING_STATUS_LABEL.WITHDRAW;
+            strStatus = BETTING_STATUS_LABEL.WIN;
+            isAction = true;
+        }else if(isMatch && resultStatus === BETTING_STATUS.SUPPORT_WIN && side === SIDE.SUPPORT){
+            label = BETTING_STATUS_LABEL.WITHDRAW;
+            strStatus = BETTING_STATUS_LABEL.WIN;
+            isAction = true;
+        }else if(isMatch && resultStatus === BETTING_STATUS.SUPPORT_WIN && side === SIDE.AGAINST){
+            //label = BETTING_STATUS_LABEL.LOSE;
+            strStatus = BETTING_STATUS_LABEL.LOSE;
+            isAction = false;
+        }else if(isMatch && resultStatus === BETTING_STATUS.AGAINST_WIN && side === SIDE.SUPPORT){
+            //label = BETTING_STATUS_LABEL.LOSE;
+            strStatus = BETTING_STATUS_LABEL.LOSE;
+            isAction = false;
+        }else if(isMatch && resultStatus === BETTING_STATUS.AGAINST_WIN && side === SIDE.AGAINST){
+            label = BETTING_STATUS_LABEL.WITHDRAW;
+            strStatus = BETTING_STATUS_LABEL.WIN;
+            isAction = true;
+        }else if(isMatch){
+          strStatus = BETTING_STATUS_LABEL.WAITING_RESULT;
+          isAction = false;
+      }
+        return {"title": label, "isAction": isAction, "status": strStatus};
   }
 
   static getId(idOffchain) {
@@ -132,6 +111,7 @@ export class BetHandshakeHandler {
       if (secondItem) {
         const strId = secondItem.substring(1);
         console.log(strId);
+        console.log(secondItem);
         return parseInt(strId);
       }
     }

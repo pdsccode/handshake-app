@@ -9,9 +9,7 @@ import './FeedExchange.scss';
 import {FormattedMessage, injectIntl} from 'react-intl';
 import Feed from "@/components/core/presentation/Feed/Feed";
 import Button from "@/components/core/controls/Button/Button";
-import {BigNumber} from 'bignumber.js';
 import {
-  AMOUNT_DECIMAL,
   API_URL,
   CRYPTO_CURRENCY,
   DEFAULT_FEE,
@@ -24,7 +22,7 @@ import {
   HANDSHAKE_EXCHANGE_STATUS_NAME,
   HANDSHAKE_STATUS_NAME,
   HANDSHAKE_USER,
-  PRICE_DECIMAL
+  APP_USER_NAME,
 } from "@/constants";
 import ModalDialog from "@/components/core/controls/ModalDialog";
 import {connect} from "react-redux";
@@ -47,6 +45,7 @@ import {ExchangeHandshake} from '@/services/neuron';
 import _sample from "lodash/sample";
 import { feedBackgroundColors } from "@/components/handshakes/exchange/config";
 import {updateOfferStatus} from "@/reducers/discover/action";
+import {formatAmountCurrency, formatMoney} from "@/services/offer-util";
 
 class FeedExchange extends React.PureComponent {
   constructor(props) {
@@ -181,8 +180,8 @@ class FeedExchange extends React.PureComponent {
     this.props.showAlert({
       message: <div className="text-center">
         {intl.formatMessage({ id: 'notEnoughCoinInWallet' }, {
-          amount: new BigNumber(balance).toFormat(6),
-          fee: fee,
+          amount: formatAmountCurrency(balance),
+          fee: formatAmountCurrency(fee),
           currency: currency,
         })}
       </div>,
@@ -215,7 +214,8 @@ class FeedExchange extends React.PureComponent {
       timeOut: 3000,
       type: 'success',
       callBack: () => {
-        this.props.updateOfferStatus({ [`exchange_${data.id}`]: data });
+        // this.props.updateOfferStatus({ [`exchange_${data.id}`]: data });
+        this.props.history.push(URL.HANDSHAKE_ME);
       }
     });
   }
@@ -468,7 +468,7 @@ class FeedExchange extends React.PureComponent {
           case HANDSHAKE_EXCHANGE_STATUS.ACTIVE: {
             let amount = 0;
             if (offer.type === EXCHANGE_ACTION.BUY) {
-              amount = data.totalAmount;
+              amount = data.total_amount;
             }
             const result = await exchangeHandshake.shake(data.hid, amount, data.id);
 
@@ -678,10 +678,10 @@ class FeedExchange extends React.PureComponent {
           case HANDSHAKE_EXCHANGE_STATUS.ACTIVE: {
             message = intl.formatMessage({id: 'handshakeOfferConfirm'}, {
               type: offer.type === EXCHANGE_ACTION.BUY ? EXCHANGE_ACTION_NAME[EXCHANGE_ACTION.SELL] : EXCHANGE_ACTION_NAME[EXCHANGE_ACTION.BUY],
-              amount: new BigNumber(offer.amount).toFormat(6),
+              amount: formatAmountCurrency(offer.amount),
               currency: offer.currency,
               currency_symbol: offer.fiatCurrency,
-              total: new BigNumber(fiatAmount).toFormat(2),
+              total: formatMoney(fiatAmount),
             });
 
             actionButtons = (
@@ -946,7 +946,14 @@ class FeedExchange extends React.PureComponent {
 
     let modalContent = this.state.modalContent;
 
-    const email = offer.email;
+    let email = '';
+    if (offer.feedType === EXCHANGE_FEED_TYPE.EXCHANGE) {
+      email = offer.email ? offer : offer.contactPhone ? offer.contactPhone : offer.contactInfo;
+    } else if (offer.feedType === EXCHANGE_FEED_TYPE.INSTANT) {
+      email = APP_USER_NAME;
+    }
+
+
     let statusText = '';
     let message = '';
     let actionButtons = null;
@@ -957,10 +964,10 @@ class FeedExchange extends React.PureComponent {
 
         message = intl.formatMessage({ id: 'offerHandShakeContent' }, {
           offerType: EXCHANGE_ACTION_NAME[offer.type],
-          amount: new BigNumber(offer.amount).toFormat(AMOUNT_DECIMAL),
+          amount: formatAmountCurrency(offer.amount),
           currency: offer.currency,
           currency_symbol: offer.fiatCurrency,
-          total: new BigNumber(fiatAmount).toFormat(PRICE_DECIMAL),
+          total: formatMoney(fiatAmount),
           payment_method: EXCHANGE_METHOD_PAYMENT[EXCHANGE_FEED_TYPE.EXCHANGE]
         });
 
@@ -972,10 +979,10 @@ class FeedExchange extends React.PureComponent {
 
         message = intl.formatMessage({ id: 'offerHandShakeContent' }, {
           offerType: EXCHANGE_ACTION_NAME[offer.type],
-          amount: new BigNumber(offer.amount).toFormat(AMOUNT_DECIMAL),
+          amount: formatAmountCurrency(offer.amount),
           currency: offer.currency,
           currency_symbol: offer.fiatCurrency,
-          total: new BigNumber(fiatAmount).toFormat(PRICE_DECIMAL),
+          total: formatMoney(fiatAmount),
           payment_method: EXCHANGE_METHOD_PAYMENT[EXCHANGE_FEED_TYPE.INSTANT]
         });
 
@@ -984,16 +991,16 @@ class FeedExchange extends React.PureComponent {
       }
     }
 
-    const phone = offer.contactPhone[0] === '+' ? offer.contactPhone : `+${offer.contactPhone}`; // prepend '+'
+    const phone = offer.contactPhone;
     const address = offer.contactInfo;
 
-    let distanceMeters = 0;
+    let distanceKm = 0;
     let distanceMiles = 0;
 
     if (location) {
       const latLng = location.split(',')
-      distanceMeters = getDistanceFromLatLonInKm(latitude, longitude, latLng[0], latLng[1]) * 1000
-      distanceMiles = distanceMeters * 0.000621371
+      distanceKm = getDistanceFromLatLonInKm(latitude, longitude, latLng[0], latLng[1])
+      distanceMiles = distanceKm * 0.621371
     }
     const isCreditCard = offer.feedType === 'instant'
     return (
@@ -1030,7 +1037,7 @@ class FeedExchange extends React.PureComponent {
           {
             mode === 'discover' ? (
               <div className="media mb-1">
-                <img className="mr-1" src={iconTransaction} width={20}/>
+                <img className="mr-2" src={iconTransaction} width={20}/>
                 <div className="media-body">
                   <div>
                     <FormattedMessage id="transactonOfferInfo" values={{
@@ -1042,16 +1049,20 @@ class FeedExchange extends React.PureComponent {
             ) : (
               !isCreditCard && (
                 <div>
-                  <div className="media mb-1">
-                    <img className="mr-1" src={iconPhone} width={20}/>
-                    <div className="media-body">
-                      <div>
-                        <a href={`tel:${phone}`} className="text-white">{phone}</a>
+                  {
+                    phone.split('-')[1] !== '' && ( // no phone number
+                      <div className="media mb-1">
+                        <img className="mr-2" src={iconPhone} width={20}/>
+                        <div className="media-body">
+                          <div>
+                            <a href={`tel:${phone}`} className="text-white">{phone}</a>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
+                    )
+                  }
                   <div className="media">
-                    <img className="mr-1" src={iconLocation} width={20}/>
+                    <img className="mr-2" src={iconLocation} width={20}/>
                     <div className="media-body">
                       <div>{address}</div>
                     </div>
@@ -1063,12 +1074,12 @@ class FeedExchange extends React.PureComponent {
           {
             !isCreditCard && (
               <div className="media">
-                <img className="mr-1" src={mode === 'discover' ? iconLocation : ''} width={20} />
+                <img className="mr-2" src={mode === 'discover' ? iconLocation : ''} width={20} />
                 <div className="media-body">
                   <div style={{ fontSize: mode === 'me' ? '80%' : '' }}>
                     <FormattedMessage id="offerDistanceContent" values={{
                       // offerType: offer.type === 'buy' ? 'Buyer' : 'Seller',
-                      distanceMeters: distanceMeters.toFixed(0),
+                      distanceKm: distanceKm.toFixed(3),
                       distanceMiles: distanceMiles.toFixed(1),
                     }}/>
                   </div>

@@ -17,7 +17,7 @@ import { change } from 'redux-form'
 import {fieldCleave, fieldDropdown, fieldInput, fieldRadioButton} from '@/components/core/form/customField'
 import {required} from '@/components/core/form/validation'
 import {createCCOrder, getCcLimits, getCryptoPrice, getUserCcLimit} from '@/reducers/exchange/action';
-import {API_URL, CRYPTO_CURRENCY_LIST, CRYPTO_CURRENCY_DEFAULT} from "@/constants";
+import {API_URL, CRYPTO_CURRENCY_LIST, CRYPTO_CURRENCY_DEFAULT, FIAT_CURRENCY_SYMBOL} from "@/constants";
 import {FIAT_CURRENCY} from "@/constants";
 import CryptoPrice from "@/models/CryptoPrice";
 import {MasterWallet} from "@/models/MasterWallet";
@@ -25,6 +25,8 @@ import { bindActionCreators } from "redux";
 import {showAlert} from '@/reducers/app/action';
 import _sample from "lodash/sample";
 import { feedBackgroundColors } from "@/components/handshakes/exchange/config";
+import {formatMoney} from "@/services/offer-util";
+import {BigNumber} from "bignumber.js";
 
 const nameFormCreditCard = 'creditCard'
 const FormCreditCard = createForm({ propsReduxForm: { form: nameFormCreditCard,
@@ -84,12 +86,14 @@ class FeedCreditCard extends React.Component {
     });
   }
 
-  handleGetCryptoPriceSuccess = (data) => {
+  handleGetCryptoPriceSuccess = (responseData) => {
     // console.log('handleGetCryptoPriceSuccess', data);
     const { userCcLimit } = this.props;
-    const cryptoPrice = CryptoPrice.cryptoPrice(data);
+    const cryptoPrice = CryptoPrice.cryptoPrice(responseData.data);
 
-    if (this.state.amount && userCcLimit && userCcLimit.limit < userCcLimit.amount + cryptoPrice.fiatAmount) {
+    const amoutWillUse = new BigNumber(userCcLimit.amount).plus(new BigNumber(cryptoPrice.fiatAmount)).toNumber();
+
+    if (this.state.amount && userCcLimit && userCcLimit.limit < amoutWillUse) {
       this.setState({showCCScheme: true});
     }
   }
@@ -242,10 +246,10 @@ class FeedCreditCard extends React.Component {
     }
   }
 
-  onAmountChange = (e) => {
-    const amount = e.target.value;
+  onAmountChange = (e, amount) => {
+    // const amount = e.target.value;
     this.getCryptoPriceByAmount(amount);
-    this.setState({amount: amount}, () => {
+    this.setState({amount}, () => {
       this.getCryptoPriceByAmountThrottled(amount);
     });
   }
@@ -283,7 +287,7 @@ class FeedCreditCard extends React.Component {
   render() {
     const {intl, userProfile, cryptoPrice, amount, userCcLimit, ccLimits, buttonTitle, currencyForced } = this.props;
     const { showCCScheme } = this.state;
-    const fiatCurrency = '$';
+    const fiatCurrency = FIAT_CURRENCY_SYMBOL;
     const total = cryptoPrice && cryptoPrice.fiatAmount;
 
     let modalContent = this.state.modalContent;
@@ -334,12 +338,15 @@ class FeedCreditCard extends React.Component {
                   <div className="mx-2">
                     <Field
                       name="amount"
-                      type="number"
-                      step="any"
+                      // type="number"
+                      // step="any"
                       validate={[required]}
-                      component={fieldInput}
+                      component={fieldCleave}
+                      propsCleave={{
+                        placeholder: intl.formatMessage({id: 'amount'}),
+                        options: { numeral: true, delimiter: '' },
+                      }}
                       className="form-control-custom form-control-custom-ex d-inline-block w-100"
-                      placeholder={intl.formatMessage({id: 'amount'})}
                       onChange={this.onAmountChange}
                     />
                   </div>
@@ -354,7 +361,7 @@ class FeedCreditCard extends React.Component {
                   </span>
                 </div>
                 <div className="pb-2">
-                  <span><FormattedMessage id="askUsingCreditCard" values={{ fiatCurrency: fiatCurrency, total: total }} /></span>
+                  <span><FormattedMessage id="askUsingCreditCard" values={{ fiatCurrency: fiatCurrency, total: formatMoney(total) }} /></span>
                 </div>
                 {
                   amount && (

@@ -15,14 +15,13 @@ export default class BettingHandshake extends BaseHandshake {
   get contractFileNameWithoutExtension() {
     return 'PredictionHandshake';
   }
-  checkBalance = () => {
-    /*
-  checkBalance = () => {
-    const balance = wallet.getBalance();
-    return balance;
-    */
-  };
-  initBet = async (hid, side, stake, payout, offchain) => {
+  initBet = (
+    hid,
+    side,
+    stake,
+    payout,
+    offchain,
+  ) => {
     console.log(
       TAG,
       ' init = ',

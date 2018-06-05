@@ -1,8 +1,7 @@
-import { BASE_API } from '@/config';
-
 export const APP = {
   HEADER_DEFAULT: 'Handshake',
   // store
+  VERSION: 'app_version',
   AUTH_TOKEN: 'auth_token',
   AUTH_PROFILE: 'auth_profile',
   WALLET_MASTER: 'wallet_master',
@@ -88,7 +87,7 @@ export const API_URL = {
     UNINIT_HANDSHAKE: 'cryptosign/handshake/uninit',
     COLLECT: 'cryptosign/handshake/collect',
     ROLLBACK: 'cryptosign/handshake/rollback',
-    REFUND: 'cryptosign/handshake/refund'
+    REFUND: 'cryptosign/handshake/refund',
   },
   DISCOVER: {
     BASE: 'handshake/discover',
@@ -154,18 +153,18 @@ export const HANDSHAKE_STATUS_NAME = {
 };
 
 export const HANDSHAKE_EXCHANGE_STATUS = {
-  CREATED:     0,
-  ACTIVE:      1,
-  CLOSING:     2,
-  CLOSED:      3,
-  SHAKING:     4,
-  SHAKE:       5,
-  COMPLETING:  6,
-  COMPLETED:   7,
+  CREATED: 0,
+  ACTIVE: 1,
+  CLOSING: 2,
+  CLOSED: 3,
+  SHAKING: 4,
+  SHAKE: 5,
+  COMPLETING: 6,
+  COMPLETED: 7,
   WITHDRAWING: 8,
-  WITHDRAW:    9,
-  REJECTING:   10,
-  REJECTED:    11,
+  WITHDRAW: 9,
+  REJECTING: 10,
+  REJECTED: 11,
 };
 
 export const HANDSHAKE_EXCHANGE_STATUS_NAME = {
@@ -201,22 +200,22 @@ export const HANDSHAKE_EXCHANGE_STATUS_VALUE = {
 export const HANDSHAKE_EXCHANGE_CC_STATUS = {
   PROCESSING: 0,
   SUCCESS: 1,
-  CANCELLED: 2
+  CANCELLED: 2,
 };
 
 export const HANDSHAKE_EXCHANGE_CC_STATUS_NAME = {
   [HANDSHAKE_EXCHANGE_CC_STATUS.PROCESSING]: 'processing',
   [HANDSHAKE_EXCHANGE_CC_STATUS.SUCCESS]: 'success',
-  [HANDSHAKE_EXCHANGE_CC_STATUS.CANCELLED]: 'cancelled'
+  [HANDSHAKE_EXCHANGE_CC_STATUS.CANCELLED]: 'cancelled',
 };
 
 export const HANDSHAKE_EXCHANGE_CC_STATUS_VALUE = {
   processing: HANDSHAKE_EXCHANGE_CC_STATUS.PROCESSING,
   success: HANDSHAKE_EXCHANGE_CC_STATUS.SUCCESS,
-  cancelled: HANDSHAKE_EXCHANGE_CC_STATUS.CANCELLED
-}
+  cancelled: HANDSHAKE_EXCHANGE_CC_STATUS.CANCELLED,
+};
 
-export const HANDSHAKE_USER  = {
+export const HANDSHAKE_USER = {
   NORMAL: 0,
   OWNER: 1,
   SHAKED: 2,
@@ -244,3 +243,5 @@ export const EXCHANGE_METHOD_PAYMENT = {
 };
 
 export const DISCOVER_GET_HANDSHAKE_RADIUS = 20;
+
+export const APP_USER_NAME = 'Ninja';
