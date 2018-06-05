@@ -43,6 +43,8 @@ class Dropdown extends React.PureComponent {
       const itemDefault = source.find(item => item.id === defaultId);
       this.setState({ text: itemDefault.value, idActive: itemDefault.id });
       this.itemSelecting = itemDefault;
+      // call back
+      this.props.hasOwnProperty('afterSetDefault') && this.props.afterSetDefault(itemDefault);
     }
   }
 
@@ -98,6 +100,7 @@ Dropdown.propTypes = {
     value: PropTypes.string,
     style: PropTypes.object,
   })).isRequired,
+  afterSetDefault: PropTypes.func,
 };
 
 export default Dropdown;
