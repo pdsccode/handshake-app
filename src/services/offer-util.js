@@ -32,7 +32,8 @@ export function formatMoney(price = 0) {
 }
 
 export function formatAmountCurrency(amount = 0) {
-  return new BigNumber(amount).toFormat(AMOUNT_DECIMAL);
+  return amount.toString();
+  // return new BigNumber(amount).toFormat(AMOUNT_DECIMAL);
 }
 
 export default { getOfferPrice };
