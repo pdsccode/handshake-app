@@ -85,15 +85,15 @@ module.exports = function webpackConfig(env, argv) {
   const production = {
     optimization: {
       minimize: true,
-      minimizer: [
-        new UglifyJsPlugin({
-          uglifyOptions: {
-            compress: {
-              drop_console: true,
-            },
-          },
-        }),
-      ],
+      // minimizer: [
+      //   new UglifyJsPlugin({
+      //     uglifyOptions: {
+      //       compress: {
+      //         drop_console: true,
+      //       },
+      //     },
+      //   }),
+      // ],
       splitChunks: {
         chunks: 'all',
       },
@@ -140,10 +140,10 @@ module.exports = function webpackConfig(env, argv) {
         filename: 'css/[name].css',
         chunkFilename: 'css/[hash].[name].css',
       }),
-      new OfflinePlugin({
-        appShell: '/',
-        publicPath: `${process.env.PUBLIC_URL}/`,
-      }),
+      // new OfflinePlugin({
+      //   appShell: '/',
+      //   publicPath: `${process.env.PUBLIC_URL}`,
+      // }),
     ],
     performance: { hints: false },
   };

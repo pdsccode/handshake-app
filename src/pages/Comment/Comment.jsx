@@ -48,7 +48,7 @@ class Comment extends React.PureComponent {
 
   render() {
     const { list,  isFetching } = this.props.comment;
-    const queryObject = qs.parse(this.props.router.location.search.slice(1));
+    const queryObject = qs.parse(this.props.location.search.slice(1));
     return (
       <Grid>
         <Row>
