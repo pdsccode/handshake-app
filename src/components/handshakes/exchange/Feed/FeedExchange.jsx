@@ -22,6 +22,7 @@ import {
   HANDSHAKE_EXCHANGE_STATUS_NAME,
   HANDSHAKE_STATUS_NAME,
   HANDSHAKE_USER,
+  APP_USER_NAME,
 } from "@/constants";
 import ModalDialog from "@/components/core/controls/ModalDialog";
 import {connect} from "react-redux";
@@ -945,7 +946,14 @@ class FeedExchange extends React.PureComponent {
 
     let modalContent = this.state.modalContent;
 
-    const email = offer.email;
+    let email = '';
+    if (offer.feedType === EXCHANGE_FEED_TYPE.EXCHANGE) {
+      email = offer.email ? offer : offer.contactPhone ? offer.contactPhone : offer.contactInfo;
+    } else if (offer.feedType === EXCHANGE_FEED_TYPE.INSTANT) {
+      email = APP_USER_NAME;
+    }
+
+
     let statusText = '';
     let message = '';
     let actionButtons = null;
