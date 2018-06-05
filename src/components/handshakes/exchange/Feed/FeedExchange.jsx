@@ -48,6 +48,7 @@ import _sample from "lodash/sample";
 import { feedBackgroundColors } from "@/components/handshakes/exchange/config";
 import {updateOfferStatus} from "@/reducers/discover/action";
 import {formatAmountCurrency, formatMoney} from "@/services/offer-util";
+import {BigNumber} from "bignumber.js";
 
 class FeedExchange extends React.PureComponent {
   constructor(props) {
@@ -154,8 +155,7 @@ class FeedExchange extends React.PureComponent {
     const fee = await wallet.getFee(4, true);
 
     if ((offer.currency === CRYPTO_CURRENCY.ETH || (offer.type === EXCHANGE_ACTION.BUY && offer.currency === CRYPTO_CURRENCY.BTC))
-        && balance < offer.totalAmount + fee) {
-      this.showNotEnoughCoinAlert(balance, fee, offer.currency);
+        && this.showNotEnoughCoinAlert(balance, offer.totalAmount, fee, offer.currency)) {
 
       return;
     }
@@ -177,21 +177,31 @@ class FeedExchange extends React.PureComponent {
     });
   }
 
-  showNotEnoughCoinAlert = (balance, fee, currency) => {
-    const { intl } = this.props;
-    this.props.showAlert({
-      message: <div className="text-center">
-        {intl.formatMessage({ id: 'notEnoughCoinInWallet' }, {
-          amount: formatAmountCurrency(balance),
-          fee: formatAmountCurrency(fee),
-          currency: currency,
-        })}
-      </div>,
-      timeOut: 3000,
-      type: 'danger',
-      callBack: () => {
-      }
-    });
+  showNotEnoughCoinAlert = (balance, amount, fee, currency) => {
+    const bnBalance = new BigNumber(balance);
+    const bnAmount = new BigNumber(amount);
+    const bnFee = new BigNumber(fee);
+
+    const condition = bnBalance.isLessThan(bnAmount.plus(bnFee));
+
+    if (condition) {
+      const { intl } = this.props;
+      this.props.showAlert({
+        message: <div className="text-center">
+          {intl.formatMessage({ id: 'notEnoughCoinInWallet' }, {
+            amount: formatAmountCurrency(balance),
+            fee: formatAmountCurrency(fee),
+            currency: currency,
+          })}
+        </div>,
+        timeOut: 3000,
+        type: 'danger',
+        callBack: () => {
+        }
+      });
+    }
+
+    return condition;
   }
 
   handleShakeOfferSuccess = (responseData) => {
@@ -236,9 +246,7 @@ class FeedExchange extends React.PureComponent {
       const balance = await wallet.getBalance();
       const fee = await wallet.getFee();
 
-      if (balance < offer.totalAmount + fee) {
-        this.showNotEnoughCoinAlert(balance, fee, offer.currency);
-
+      if (this.showNotEnoughCoinAlert(balance, offer.totalAmount, fee, offer.currency)) {
         return;
       }
     }
@@ -284,9 +292,7 @@ class FeedExchange extends React.PureComponent {
       const balance = await wallet.getBalance();
       const fee = await wallet.getFee();
 
-      if (balance < offer.totalAmount + fee) {
-        this.showNotEnoughCoinAlert(balance, fee, offer.currency);
-
+      if (this.showNotEnoughCoinAlert(balance, offer.totalAmount, fee, offer.currency)) {
         return;
       }
     }
@@ -341,9 +347,7 @@ class FeedExchange extends React.PureComponent {
       const balance = await wallet.getBalance();
       const fee = await wallet.getFee();
 
-      if (balance < offer.totalAmount + fee) {
-        this.showNotEnoughCoinAlert(balance, fee, offer.currency);
-
+      if (this.showNotEnoughCoinAlert(balance, offer.totalAmount, fee, offer.currency)) {
         return;
       }
     }
@@ -405,9 +409,7 @@ class FeedExchange extends React.PureComponent {
       const balance = await wallet.getBalance();
       const fee = await wallet.getFee();
 
-      if (balance < offer.totalAmount + fee) {
-        this.showNotEnoughCoinAlert(balance, fee, offer.currency);
-
+      if (this.showNotEnoughCoinAlert(balance, offer.totalAmount, fee, offer.currency)) {
         return;
       }
     }
