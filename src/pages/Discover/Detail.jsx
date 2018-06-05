@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 // constants, actions
 import { loadDiscoverDetail } from '@/reducers/discover/action';
-import { setHeaderTitle } from '@/reducers/app/action';
 import { HANDSHAKE_ID, API_URL } from '@/constants';
 // components
 import { Grid, Row, Col } from 'react-bootstrap';
@@ -27,8 +26,6 @@ class DiscoverDetailPage extends React.Component {
     this.state = {
       id: props.match.params.id
     };
-
-    props.setHeaderTitle('Detail');
   }
 
   componentDidMount() {
@@ -59,7 +56,7 @@ class DiscoverDetailPage extends React.Component {
 
 DiscoverDetailPage.propType = {
   loadDiscoverDetail: PropTypes.func,
-  setHeaderTitle: PropTypes.func,
+  // setHeaderTitle: PropTypes.func,
 };
 
 const mapState = state => ({
@@ -68,7 +65,7 @@ const mapState = state => ({
 
 const mapDispatch = ({
   loadDiscoverDetail,
-  setHeaderTitle,
+  // setHeaderTitle,
 });
 
 export default connect(mapState, mapDispatch)(DiscoverDetailPage);

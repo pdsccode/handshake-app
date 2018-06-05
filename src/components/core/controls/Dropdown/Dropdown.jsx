@@ -19,8 +19,11 @@ class Dropdown extends React.PureComponent {
     this.onItemSelected = ::this.onItemSelected;
     this.setDefaultItem = ::this.setDefaultItem;
   }
+  // will store item selecting
+  itemSelecting = {};
 
   onItemSelected(item) {
+    this.itemSelecting = item;
     this.setState({ text: item.value, idActive: item.id });
     this.toogle();
     // call back
@@ -45,10 +48,15 @@ class Dropdown extends React.PureComponent {
   componentDidMount() {
     const { defaultId, source } = this.props;
     this.setDefaultItem();
+    this.props.hasOwnProperty('onRef') && this.props.onRef(this);
   }
 
   componentWillReceiveProps(nextProps) {
     this.setDefaultItem(nextProps);
+  }
+
+  componentWillUnmount() {
+    this.props.hasOwnProperty('onRef') && this.props.onRef(undefined);
   }
 
   render() {
@@ -80,6 +88,7 @@ class Dropdown extends React.PureComponent {
 
 Dropdown.propTypes = {
   placeholder: PropTypes.string,
+  onRef: PropTypes.func,
   className: PropTypes.string,
   onItemSelected: PropTypes.func,
   defaultId: PropTypes.any,
