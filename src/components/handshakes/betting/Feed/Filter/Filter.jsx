@@ -164,8 +164,6 @@ class BettingFilter extends React.Component {
     }
 
     getInfoShare(selectedMatch, selectedOutcome) {
-        console.log(1111, selectedMatch);
-        console.log(2222, selectedOutcome);
         return {
             title: `Bet against more ninjas! I put a bet on ${selectedMatch.value}. ${selectedOutcome.value}! Put your coin where your mouth is. shake.ninja`,
             shareUrl: `${location.origin}/discover/${encodeURI(selectedMatch.value)}?match=${selectedMatch.id}&out_come=${selectedOutcome.id}`,
@@ -190,10 +188,8 @@ class BettingFilter extends React.Component {
         // console.log("Default Match:", defaultMatchId);
         // console.log('Default Outcome:', defaultOutcome);
         const defaultOutcomeId = this.defaultOutcome ? this.defaultOutcome.id : null;
-        console.log('Source Outcome:', this.matchOutcomes);
-
         const shareInfo = this.getInfoShare(selectedMatch, selectedOutcome);
-        console.log(3333, shareInfo);
+
         return (
             <div className="wrapperBettingFilter">
             <div className="dropDown">
@@ -221,8 +217,10 @@ class BettingFilter extends React.Component {
                 }
                 />
             </div>
-            <div>
+            <div className="share-block">
+                <p className="text">The more people, the merrier</p>
                 <ShareSocial
+                    className="share"
                     title={shareInfo.title}
                     shareUrl={shareInfo.shareUrl}
                 />

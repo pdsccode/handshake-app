@@ -16,7 +16,7 @@ class BettingDetail extends React.Component {
       outCome: -1,
     };
     // set header
-    props.setHeaderTitle('Detail');
+    props.setHeaderTitle(props.slug || 'Detail');
   }
 
   parseQueryString() {
