@@ -83,7 +83,7 @@ class Handshake extends React.Component {
     // ga('send', 'event', 'ShakeNinja', 'submit register email');
     const backOrder = axios({
       method: 'post',
-      url: `https://dev.autonomous.ai/api-v2/order-api/order/back-order/${this.productId}?${qs.stringify(params)}`,
+      url: `https://www.autonomous.ai/api-v2/order-api/order/back-order/${this.productId}?${qs.stringify(params)}`,
       data: {},
     });
     backOrder.then((backOrderResult) => {
