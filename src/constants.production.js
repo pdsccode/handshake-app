@@ -131,7 +131,7 @@ export const API_URL = {
     DELETE: 'handshake/delete',
   },
   COMMENT: {
-    BASE: 'https://stag-handshake.autonomous.ai/api/comment',
+    BASE: 'https://shake.ninja/api/comment',
     CREATE: 'comment/',
     LIST: 'comment/list',
   },
