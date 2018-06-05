@@ -11,11 +11,11 @@ console.log('Chain Id:', chainId);
 const bettinghandshake = new BettingHandshake(chainId);
 
 export const MESSAGE = {
-  CREATE_BET_SUCCESSFUL: "Create a bet successfully.",
-  NOT_ENOUGH_BALANCE: "Your wallet isn't enough.",
+  CREATE_BET_SUCCESSFUL: "Success! You placed a bet.",
+  NOT_ENOUGH_BALANCE: "Sorry, you do not have enough coin to place this bet. Please top up.",
   CHOOSE_MATCH: "Please choose match and outcome",
-  ODD_LARGE_THAN: "Odds should be larger than 1",
-  AMOUNT_VALID: "Amount should be larger than 0",
+  ODD_LARGE_THAN: "Please enter odds of 1 or greater.",
+  AMOUNT_VALID: "Please place a bet larger than 0.",
 }
 
 export const BET_BLOCKCHAIN_STATUS = {
@@ -47,14 +47,16 @@ export const BETTING_STATUS = {
 };
 
 export const BETTING_STATUS_LABEL =
-    {  INITING: 'Your bet is initing...',  CANCEL: 'Cancel', "LOSE": 'Sorry, you lost', "WIN": 'Congrats, you won!','DONE': 'Completed',
-    WITHDRAW: 'Withdraw', 
-    CANCELLING: 'Your bet is cancelling...',
-    WAITING_RESULT: 'Match is ongoing', 
-    REFUND: 'Refund', 
-    CANCELLED: 'The bet is cancelled', 
-    REFUNDING: 'Please get the refund', 
-    REFUNDED: 'You got refund'}
+    {  INITING: 'Your bet is being placed', 
+    CANCEL: 'Cancel this bet', "LOSE": 'Better luck next time.', 
+    "WIN": `You're a winner!`,'DONE': 'Completed',
+    WITHDRAW: 'Withdraw winnings', 
+    CANCELLING: 'Your bet is being cancelled.',
+    WAITING_RESULT: 'Match has not yet begun', 
+    REFUND: 'Refund your bet', 
+    CANCELLED: 'Your bet was cancelled.', 
+    REFUNDING: 'Your coin is being refunded to you.', 
+    REFUNDED: 'Your coin has been refunded.'}
 
 export class BetHandshakeHandler {
     static getStatusLabel(blockchainStatus, resultStatus, role, side, isMatch){

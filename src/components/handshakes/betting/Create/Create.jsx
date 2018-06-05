@@ -406,7 +406,7 @@ get matchResults(){
         </div>
 
 
-        <Button type="submit" block>Sign & Send</Button>
+        <Button type="submit" block>Shake and Send</Button>
       </BettingCreateForm>
     );
   }
