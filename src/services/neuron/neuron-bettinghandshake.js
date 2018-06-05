@@ -6,14 +6,23 @@ const wallet = MasterWallet.getWalletDefault('ETH');
 const address = wallet.address;
 const privateKey = wallet.privateKey;
 console.log('Address, PrivateKey:', address, privateKey);
-
+const gasPrice = wallet.chainId === 4 ? 100 : 20;
 const TAG = 'BettingHandshake';
 export default class BettingHandshake extends BaseHandshake {
   constructor(chainId) {
     super(chainId);
+
+    // // / test
+    // this.neuron.caculateEstimatGasWithEthUnit(address).then((gas) => {
+    //   console.log(TAG, ' contructor -- gas = ', gas.toString());
+    // });
   }
   get contractFileNameWithoutExtension() {
     return 'PredictionHandshake';
+  }
+  async getEstimateGas(){
+    const estimateGas = await this.neuron.caculateEstimatGasWithEthUnit(address, gasPrice);
+    return estimateGas;
   }
   initBet = async (hid, side, stake, payout, offchain) => {
     console.log(
@@ -41,7 +50,7 @@ export default class BettingHandshake extends BaseHandshake {
       payloadData,
       {
         amount: stake,
-        gasPrice: this.chainId === 4 ? 100 : 20,
+        gasPrice: gasPrice,
         toAddress: this.contractAddress,
       },
     );
