@@ -56,8 +56,8 @@ class FeedCreditCard extends React.Component {
       rfChange(nameFormCreditCard, 'currency', currencyForced)
     }
 
-    this.props.getCcLimits({ BASE_URL: API_URL.EXCHANGE.BASE, PATH_URL: API_URL.EXCHANGE.GET_CC_LIMITS});
-    this.props.getUserCcLimit({ BASE_URL: API_URL.EXCHANGE.BASE, PATH_URL: API_URL.EXCHANGE.GET_USER_CC_LIMIT});
+    this.props.getCcLimits({ PATH_URL: API_URL.EXCHANGE.GET_CC_LIMITS});
+    this.props.getUserCcLimit({ PATH_URL: API_URL.EXCHANGE.GET_USER_CC_LIMIT});
 
     this.getCryptoPriceByAmount(0);
 
@@ -78,7 +78,6 @@ class FeedCreditCard extends React.Component {
     var data = {amount: amount, currency: cryptoCurrency};
 
     this.props.getCryptoPrice({
-      BASE_URL: API_URL.EXCHANGE.BASE,
       PATH_URL: API_URL.EXCHANGE.GET_CRYPTO_PRICE,
       qs: data,
       successFn: this.handleGetCryptoPriceSuccess,
@@ -127,7 +126,6 @@ class FeedCreditCard extends React.Component {
       };
       // console.log('handleCreateCCOrder',paramsObj);
       this.props.createCCOrder({
-        BASE_URL: API_URL.EXCHANGE.BASE,
         PATH_URL: API_URL.EXCHANGE.CREATE_CC_ORDER,
         data: paramsObj,
         METHOD: 'POST',
