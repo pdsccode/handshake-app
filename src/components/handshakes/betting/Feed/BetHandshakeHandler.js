@@ -1,4 +1,4 @@
-import {MasterWallet} from '@/models/MasterWallet';
+import { MasterWallet } from '@/models/MasterWallet';
 import { BettingHandshake } from '@/services/neuron';
 import { APP } from '@/constants';
 
@@ -104,107 +104,108 @@ export class BetHandshakeHandler {
         return {"title": label, "isAction": isAction, "status": strStatus};
   }
 
-  static getId(idOffchain){
-    const array = idOffchain.split("_");
-    if(array.length > 1){
+  static getId(idOffchain) {
+    const array = idOffchain.split('_');
+    if (array.length > 1) {
       const secondItem = array[1];
-      if(secondItem){
+      if (secondItem) {
         const strId = secondItem.substring(1);
         console.log(strId);
         console.log(secondItem);
         return parseInt(strId);
-
       }
     }
-
   }
 
-  static async getBalance(){
-    const balance =  await wallet.getBalance();
+  static async getBalance() {
+    const balance = await wallet.getBalance();
     console.log('Balance:', balance);
     return balance;
   }
 
-  static foundShakeItemList(dict){
-    var shakerList = [];
+  static foundShakeItemList(dict) {
+    const shakerList = [];
     const profile = local.get(APP.AUTH_PROFILE);
-    const {shakers, outcome_id, from_address} = dict;
-      console.log('Shakers:', shakers);
-      var foundShakedItem = shakers.find(function(element) {
-        return element.shaker_id  === profile.id;
-      });
-      console.log('foundShakedItem:', foundShakedItem);
-      if(foundShakedItem){
-        foundShakedItem['outcome_id'] = outcome_id;
-        foundShakedItem['from_address'] = from_address;
-        shakerList.push(foundShakedItem);
-      }
+    const { shakers, outcome_id, from_address } = dict;
+    console.log('Shakers:', shakers);
+    const foundShakedItem = shakers.find(element => element.shaker_id === profile.id);
+    console.log('foundShakedItem:', foundShakedItem);
+    if (foundShakedItem) {
+      foundShakedItem.outcome_id = outcome_id;
+      foundShakedItem.from_address = from_address;
+      shakerList.push(foundShakedItem);
+    }
     return shakerList;
   }
 
-  static isInitBet(dict){
+  static isInitBet(dict) {
     const profile = local.get(APP.AUTH_PROFILE);
-    const {user_id} = dict;
-    if(user_id && profile.id === user_id){
+    const { user_id } = dict;
+    if (user_id && profile.id === user_id) {
       return true;
     }
     return false;
   }
-  static addContract(item, hid){
+  static addContract = async (item, hid) => {
     console.log('initContract:', item);
-    
-    const {amount,id, odds, side, outcome_id, from_address, offchain} = item;
-      const stake = amount;
-      //const payout = stake * odds;
-      const payout = Math.round(stake * odds*10**18)/10**18;
-      const maker = from_address;
-      //const hid = outcome_id;
+
+    const {
+      amount, id, odds, side, outcome_id, from_address, offchain,
+    } = item;
+    const stake = amount;
+    // const payout = stake * odds;
+    const payout = Math.round(stake * odds * 10 ** 18) / 10 ** 18;
+    const maker = from_address;
+    // const hid = outcome_id;
     console.log(`hid:`, hid);
-    bettinghandshake.initBet(hid, side,stake, payout, offchain);
-      
+    const dataBlockchain = await bettinghandshake.initBet(hid, side, stake, payout, offchain);
+    console.log('dataBlockchain:',dataBlockchain);
+    return dataBlockchain;
+  };
 
-  }
-
-  static async shakeContract(item, hid){
+  static async shakeContract(item, hid) {
     console.log('shakeContract:', item);
 
-    const {amount,id, odds, side, outcome_id, from_address} = item;
-      const stake = amount;
-      //const payout = stake * odds;
-      const payout = Math.round(stake * odds*10**18)/10**18;
-      const offchain = `cryptosign_s${id}`;
-      const maker = from_address;
-      //const hid = outcome_id;
-      const result = await bettinghandshake.shake(hid, side,stake, payout,maker, offchain);
-      if(result){
-          
-      }
+    const {
+      amount, id, odds, side, outcome_id, from_address,
+    } = item;
+    const stake = amount;
+    // const payout = stake * odds;
+    const payout = Math.round(stake * odds * 10 ** 18) / 10 ** 18;
+    const offchain = `cryptosign_s${id}`;
+    const maker = from_address;
+    // const hid = outcome_id;
+    const result = await bettinghandshake.shake(
+      hid,
+      side,
+      stake,
+      payout,
+      maker,
+      offchain,
+    );
+    if (result) {
+    }
   }
-  static async controlShake(list, hid){
-    var result = null;
-    
-    list.forEach(element => {
-       console.log('Element:', element);
-       const isInitBet = BetHandshakeHandler.isInitBet(element)
-       console.log("isInitBet:", isInitBet);
-      if(isInitBet){
-        this.addContract(element, hid);
-      }else {
+  static controlShake = async (list, hid) => {
+    const result = null;
+    const dataList = async (element) => {
+      console.log('Element:', element);
+      const isInitBet = BetHandshakeHandler.isInitBet(element);
+      console.log('isInitBet:', isInitBet);
+      if (isInitBet) {
+        await BetHandshakeHandler.addContract(element, hid);
+      } else {
         const foundShakeList = BetHandshakeHandler.foundShakeItemList(element);
-        foundShakeList.forEach(element => {
+        foundShakeList.forEach((element) => {
           this.shakeContract(element, hid);
         });
-
       }
-      
-    });
-  }
+    };
+    list.forEach(dataList);
+  };
 
-
-
-  static async initContract(hid, side, stake, payout, offchain){
-    result = await bettinghandshake.initBet(hid, side,stake, payout, offchain);
+  static async initContract(hid, side, stake, payout, offchain) {
+    result = await bettinghandshake.initBet(hid, side, stake, payout, offchain);
     return result;
   }
-
 }
