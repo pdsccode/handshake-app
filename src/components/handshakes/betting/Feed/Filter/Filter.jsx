@@ -235,7 +235,7 @@ class BettingFilter extends React.Component {
                     {<BettingShake 
                         matchName={matchName}
                         matchOutcome={matchOutcome}
-                        outcomeId={outcomeId} outcomeHid={outcomeHid}/>}
+                        outcomeId={parseInt(outcomeId)} outcomeHid={parseInt(outcomeHid)}/>}
 
                     </div>
                 </div>
