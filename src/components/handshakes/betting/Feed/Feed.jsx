@@ -161,7 +161,7 @@ class FeedBetting extends React.Component {
             {this.renderStatus()}
         </Feed>
         {/* Feed Comment */}
-        {/*<FeedComponent commentCount={commentCount} objectId={id} objectType={type} />*/}
+        <FeedComponent commentCount={commentCount} objectId={id} objectType={type} />
         {/* Shake */}
         {actionTitle && <Button block disabled={!isAction} onClick={() => { this.clickActionButton(actionTitle); }}>{actionTitle}</Button>}
         {/* Modal */}

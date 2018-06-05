@@ -41,7 +41,7 @@ class CreateComment extends React.PureComponent {
     const { file } = this.state;
     const { objectId, objectType } = this.props;
     let data = {};
-    const rawData = { comment: this.textareaRef.value, object_type: objectType.toString(), object_id: parseInt(objectId) };
+    const rawData = { comment: this.textareaRef.value, object_type: objectType.toString(), object_id: objectId };
     if(!!file) {
       data = new FormData();
       data.append('request', JSON.stringify(rawData));
