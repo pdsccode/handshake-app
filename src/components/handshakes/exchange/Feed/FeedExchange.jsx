@@ -179,6 +179,7 @@ class FeedExchange extends React.PureComponent {
   }
 
   showNotEnoughCoinAlert = (balance, fee, currency) => {
+    const { intl } = this.props;
     this.props.showAlert({
       message: <div className="text-center">
         {intl.formatMessage({ id: 'notEnoughCoinInWallet' }, {
@@ -451,7 +452,7 @@ class FeedExchange extends React.PureComponent {
 
   ////////////////////////
   handleCallActionOnContract = async (data) => {
-    const {status} = this.props;
+    const {intl, status} = this.props;
     const offer = this.offer;
 
     const currency = data.currency;
@@ -926,7 +927,7 @@ class FeedExchange extends React.PureComponent {
 
 
   render() {
-    const {intl, initUserId, shakeUserIds, location, state, status, mode = 'discover', ipInfo: { latitude, longitude }, ...props} = this.props;
+    const {intl, initUserId, shakeUserIds, location, state, status, mode = 'discover', ipInfo: { latitude, longitude }, initAt, ...props} = this.props;
     const offer = this.offer;
     const {listOfferPrice} = this.props;
     let fiatAmount = 0;
@@ -1008,8 +1009,16 @@ class FeedExchange extends React.PureComponent {
       }
       case EXCHANGE_FEED_TYPE.INSTANT: {
         statusText = HANDSHAKE_EXCHANGE_CC_STATUS_NAME[status];
+        let just = ' ';
+
+        var hours = Math.abs(Date.now() - (initAt * 1000)) / 36e5;
+
+        if (hours < 4) {
+          just = ' just ';
+        }
+
         message = intl.formatMessage({ id: 'instantOfferHandShakeContent' }, {
-          just: ' ',
+          just: just,
           offerType: EXCHANGE_ACTION_PAST_NAME[offer.type],
           amount: formatAmountCurrency(offer.amount),
           currency: offer.currency,
