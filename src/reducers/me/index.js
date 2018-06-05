@@ -79,6 +79,7 @@ const meReducter = (state = {
     case ACTIONS.FIREBASE_BETTING_DATA_CHANGE: {
       const listBettingStatus = action.payload;
       const myList = state.list;
+    
 
       listBettingStatus.forEach(element => {
         const {id, status, result} = element;
