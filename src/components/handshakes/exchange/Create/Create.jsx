@@ -40,7 +40,9 @@ import {URL} from '@/config';
 import {showAlert} from '@/reducers/app/action';
 import {MasterWallet} from "@/models/MasterWallet";
 import {ExchangeHandshake} from '@/services/neuron';
-import phoneCountryCodes from '@/components/core/form/country-calling-codes.min.json';
+// import phoneCountryCodes from '@/components/core/form/country-calling-codes.min.json';
+import COUNTRIES from '@/data/country-dial-codes.js';
+
 import {CRYPTO_CURRENCY} from "@/constants";
 import _sample from 'lodash/sample'
 import { feedBackgroundColors } from "@/components/handshakes/exchange/config";
@@ -98,9 +100,9 @@ async componentDidMount() {
 
     // auto fill phone number from user profile
     let detectedCountryCode = ''
-    const foundCountryPhone = phoneCountryCodes.find(i => i.code.toUpperCase() === ipInfo.country_code.toUpperCase())
+    const foundCountryPhone = COUNTRIES.find(i => i.code.toUpperCase() === ipInfo.country_code.toUpperCase())
     if (foundCountryPhone) {
-      detectedCountryCode = foundCountryPhone.callingCode
+      detectedCountryCode = foundCountryPhone.dialCode
     }
     rfChange(nameFormExchangeCreate, 'phone', authProfile.phone || `${detectedCountryCode}-`)
 
