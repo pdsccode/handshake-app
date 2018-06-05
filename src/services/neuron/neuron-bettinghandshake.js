@@ -11,6 +11,11 @@ const TAG = 'BettingHandshake';
 export default class BettingHandshake extends BaseHandshake {
   constructor(chainId) {
     super(chainId);
+
+    // // / test
+    // this.neuron.caculateEstimatGasWithEthUnit(address).then((gas) => {
+    //   console.log(TAG, ' contructor -- gas = ', gas.toString());
+    // });
   }
   get contractFileNameWithoutExtension() {
     return 'PredictionHandshake';
