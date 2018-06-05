@@ -327,7 +327,7 @@ get matchResults(){
     }
 
     return (
-      <div style={{display:'flex',flex:1,flexDirection:'column',marginTop:2,marginBottom:2}}>
+      <div style={{display:'flex',flex:1,flexDirection:'column',marginTop:2,marginBottom:2}} key={index + 1} >
           <label style={{fontSize:13, color:'white'}}>{label || placeholder}</label>
           <div style={{display:'flex',flex:1,flexDirection:'row',border:'1px solid #697076',padding:10}}>
             {this.renderLabelForItem(prefix,{marginRight:10})}
