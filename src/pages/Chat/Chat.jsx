@@ -37,6 +37,7 @@ class Chat extends Component {
     this.chatInputRef = React.createRef();
     this.messageListRef = null;
     this.maxUserSearchResult = 100;
+    this.inChatTab = true;
 
     this.renderChatList = this.renderChatList.bind(this);
     this.renderChatDetail = this.renderChatDetail.bind(this);
@@ -53,6 +54,11 @@ class Chat extends Component {
   componentDidMount() {
     this.updateHeaderLeft();
   }
+
+  componentWillUnmount() {
+    this.inChatTab = false;
+  }
+
 
   updateHeaderLeft() {
     this.props.setHeaderLeft(this.state.chatDetail ? this.renderBackButton() : this.renderSearchButton());
@@ -239,7 +245,9 @@ class Chat extends Component {
   }
 
   setCurrentUserName() {
-    this.props.setHeaderTitle(this.user.name);
+    if (this.inChatTab) {
+      this.props.setHeaderTitle(this.user.name);
+    }
   }
 
   setUser(userId, userName) {
