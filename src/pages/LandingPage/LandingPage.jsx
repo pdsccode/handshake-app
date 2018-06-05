@@ -8,8 +8,9 @@ import React from 'react';
 import './LandingPage.scss';
 import ninjaIcon from '@/assets/images/icon/landingpage/ninja.svg';
 import telegramAppIcon from '@/assets/images/icon/landingpage/telegram_app.svg';
-import blockchainDescriptionImage from '@/assets/images/icon/landingpage/blockchain_description_image.svg';
+import blockchainDescriptionImage from '@/assets/images/icon/landingpage/chart-discount-time.svg';
 import shakeNinjaText from '@/assets/images/icon/landingpage/shakeninjatext.svg';
+import arrowsRightIcon from '@/assets/images/icon/landingpage/arrows_long_right.svg';
 
 class Handshake extends React.Component {
   constructor(props) {
@@ -63,20 +64,29 @@ class Handshake extends React.Component {
                   <img src={ninjaIcon} alt="ninja icon" />
                   <div>
                     <img src={shakeNinjaText} alt="ninja text icon" />
-                    <p>DECENTRALIZED BETTING EXCHANGE</p>
+                    <p>ANONYMOUS PEER-TO-PEER BETTING EXCHANGE</p>
                   </div>
                 </div>
-                <h1>Bet against your <br /> fellow ninjas.</h1>
-                <p className="subTitle">Create your own odds and bet directly with anyone who thinks you’re wrong. No bookies, books, or ridiculous margins. Win cryptocurrencies.</p>
+                <h1>Meet Shuriken, the native coin of the Ninja network.</h1>
+                <p className="subTitle">
+                  You can use Shuriken to pay for any fees on the Ninja network such as betting fees, exchange fees, and market creation fees.
+                  <br/>
+                  <br/>
+                  <br/>
+                  Paying with Shuriken allows you to slash fees and unlock the best rates.
+                </p>
+                <a>
+                  <span>Read the whitepaper</span>
+                  <img src={arrowsRightIcon} alt="arrow right icon"/>
+                </a>
                 <p className="telegramDescription">
-                  <strong>As a ninja,</strong> <span className="orange">you are 100% anonymous</span>. <br />
-                  No downloads. No sign ups.
+                  Coming soon.  To receive updates on token sales and airdrops:
                 </p>
                 <a href="https://t.me/joinchat/H5Rflk6xD7xpo81BDbuOww" target="_blank" className="btnTelegram" onClick={
-                  () => { ga('send', 'event', 'ShakeNinja', 'Click button Join our secret channel'); }}
+                  () => { ga('send', 'event', 'ShakeNinja', 'Click button Join the conversation on telegram'); }}
                 >
                   <img src={telegramAppIcon} alt="telegram app icon" />
-                  <span>Join our secret channel</span>
+                  <span>Join the conversation on telegram</span>
                 </a>
               </div>
             </div>
@@ -84,31 +94,30 @@ class Handshake extends React.Component {
         </div>
         <div className={`container text-center blockChainContent`}>
           <div className="row">
-            <div className="col-md-12 col-sm-12 col-xs-12">
-              <h3>Built on <span>blockchain technologies</span></h3>
-              <p>Shake Ninja is a decentralized prediction exchange that runs smart contracts, ensuring that all agreements happen exactly as agreed. In short: <span className="green">no fraud, no cheating, no flakes.</span></p>
+            <div className="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+              <h3>Slash fees.</h3>
+              <p>Early adopters of Shuriken will benefit from large discounts on all the network fees. 2018 users will
+                receive a 100% discount and play completely free. Preferred pricing will end in 2023. Shuriken is an
+                ERC20 token and tradable on the blockchain. There will only be 100 million Shurikens. Ninja’s oath.</p>
+            </div>
+            <div className="col-lg-6 col-md-12 col-sm-12 col-xs-12">
               <img src={blockchainDescriptionImage} alt="block chain description image" className="img-fluid" />
             </div>
           </div>
         </div>
-        {/*<div className={`container text-center countdownBlock`}>*/}
-          {/*<div className="row">*/}
-            {/*<div className="col-md-12 col-sm-12 col-xs-12">*/}
-              {/*<h3>Find your perfect match</h3>*/}
-              {/*<p className="countDownSubTitle">Shake on the blockchain, Shake like a Ninja. Kick off the first game and snap up the best pools.</p>*/}
-              {/*<div className={`countDown text-center`}>*/}
-                {/*<p className="countDownTitle">Shake Ninja is live on the testnet.</p>*/}
-                {/*<CountdownTimer endDate={moment('06/06/2018 23:59:59', 'DD/MM/YYYY hh:mm:ss')} afterCountFinish={() => {}} />*/}
-              {/*</div>*/}
-              {/*<a href="https://t.me/joinchat/H5Rflk6xD7xpo81BDbuOww" target="_blank" className="btnTelegram" onClick={*/}
-                {/*() => { ga('send', 'event', 'ShakeNinja', 'Click button Join the nobody network of everybody'); }*/}
-              {/*}>*/}
-                {/*<img src={telegramAppIcon} alt="telegram app icon" />*/}
-                {/*<span>Join the nobody network of everybody</span>*/}
-              {/*</a>*/}
-            {/*</div>*/}
-          {/*</div>*/}
-        {/*</div>*/}
+        <div className={`container text-center countdownBlock`}>
+          <div className="row">
+            <div className="col-md-12 col-sm-12 col-xs-12">
+              <h3>Get Shuriken. Play for free.</h3>
+              <a href="https://t.me/joinchat/H5Rflk6xD7xpo81BDbuOww" target="_blank" className="btnTelegram" onClick={
+                () => { ga('send', 'event', 'ShakeNinja', 'Click button Join the nobody network of everybody'); }
+              }>
+                <img src={telegramAppIcon} alt="telegram app icon" />
+                <span>Join Telegram channel</span>
+              </a>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
