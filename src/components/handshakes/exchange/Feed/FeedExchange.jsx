@@ -169,7 +169,6 @@ class FeedExchange extends React.PureComponent {
     };
 
     this.props.shakeOffer({
-      BASE_URL: API_URL.EXCHANGE.BASE,
       PATH_URL: API_URL.EXCHANGE.OFFERS + '/' + offer.id,
       METHOD: 'POST',
       data: offerShake,
@@ -245,7 +244,6 @@ class FeedExchange extends React.PureComponent {
     }
 
     this.props.closeOffer({
-      BASE_URL: API_URL.EXCHANGE.BASE,
       PATH_URL: API_URL.EXCHANGE.OFFERS + '/' + offer.id,
       METHOD: 'DELETE',
       successFn: this.handleCloseOfferSuccess,
@@ -294,7 +292,6 @@ class FeedExchange extends React.PureComponent {
     }
 
     this.props.completeShakedOffer({
-      BASE_URL: API_URL.EXCHANGE.BASE,
       PATH_URL: API_URL.EXCHANGE.OFFERS + '/' + offer.id + '/' + API_URL.EXCHANGE.SHAKE,
       METHOD: 'POST',
       successFn: this.handleCompleteShakedOfferSuccess,
@@ -352,7 +349,6 @@ class FeedExchange extends React.PureComponent {
     }
 
     this.props.cancelShakedOffer({
-      BASE_URL: API_URL.EXCHANGE.BASE,
       PATH_URL: API_URL.EXCHANGE.OFFERS + '/' + offer.id + '/' + API_URL.EXCHANGE.SHAKE,
       METHOD: 'DELETE',
       successFn: this.handleRejectShakedOfferSuccess,
@@ -417,7 +413,6 @@ class FeedExchange extends React.PureComponent {
     }
 
     this.props.cancelShakedOffer({
-      BASE_URL: API_URL.EXCHANGE.BASE,
       PATH_URL: API_URL.EXCHANGE.OFFERS + '/' + offer.id + '/' + API_URL.EXCHANGE.WITHDRAW,
       METHOD: 'POST',
       successFn: this.handleWithdrawShakedOfferSuccess,
