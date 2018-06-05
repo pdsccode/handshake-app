@@ -215,7 +215,8 @@ class FeedExchange extends React.PureComponent {
       timeOut: 3000,
       type: 'success',
       callBack: () => {
-        this.props.updateOfferStatus({ [`exchange_${data.id}`]: data });
+        // this.props.updateOfferStatus({ [`exchange_${data.id}`]: data });
+        this.props.history.push(URL.HANDSHAKE_ME);
       }
     });
   }
@@ -468,7 +469,7 @@ class FeedExchange extends React.PureComponent {
           case HANDSHAKE_EXCHANGE_STATUS.ACTIVE: {
             let amount = 0;
             if (offer.type === EXCHANGE_ACTION.BUY) {
-              amount = data.totalAmount;
+              amount = data.total_amount;
             }
             const result = await exchangeHandshake.shake(data.hid, amount, data.id);
 
