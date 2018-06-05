@@ -74,6 +74,27 @@ const meReducter = (state = {
         list: myList,
       };
     }
+   
+
+    case ACTIONS.FIREBASE_BETTING_DATA_CHANGE: {
+      const listBettingStatus = action.payload;
+      const myList = state.list;
+    
+
+      listBettingStatus.forEach(element => {
+        const {id, status, result} = element;
+        const handshakeItem = myList.find(item => item.id === id);
+        handshakeItem.status = status;
+        handshakeItem.result = result;
+        //TO DO: delete record after update status 
+
+      });
+
+      return {
+        ...state,
+        list: myList,
+      };
+    }
 
     default:
       return state;
