@@ -396,11 +396,12 @@ async componentDidMount() {
         <FormExchangeCreate onSubmit={this.handleSubmit}>
           <Feed className="feed my-2 p-0" background={this.mainColor}>
             <div style={{ color: 'white', padding: '20px' }}>
-              <div className="d-flex mb-2">
-                <label className="col-form-label mr-auto" style={{ width: '190px' }}>I want to</label>
+              <div className="d-flex mb-4">
+                <label className="col-form-label mr-auto" style={{ width: '190px', fontWeight: 'bold'  }}>I want to</label>
                 <div className='input-group'>
                   <Field
                     name="type"
+                    // containerClass="radio-container-old"
                     component={fieldRadioButton}
                     list={EXCHANGE_ACTION_LIST}
                     color={textColor}
@@ -409,9 +410,8 @@ async componentDidMount() {
                   />
                 </div>
               </div>
-              <hr className="hrLine" />
               <div className="d-flex">
-                <label className="col-form-label mr-auto" style={{ width: '190px' }}>Coin</label>
+                <label className="col-form-label mr-auto label-create" style={{ width: '190px' }}>Coin</label>
                 <div className='input-group'>
                   <Field
                     name="currency"
@@ -426,7 +426,7 @@ async componentDidMount() {
               <hr className="hrLine" />
 
               <div className="d-flex mt-2">
-                <label className="col-form-label mr-auto" style={{ width: '220px' }}>Amount*</label>
+                <label className="col-form-label mr-auto label-create" style={{ width: '220px' }}>Amount*</label>
                 <div className="w-100">
                   <Field
                     name="amount"
@@ -441,13 +441,13 @@ async componentDidMount() {
               <hr className="hrLine" />
 
               <div className="d-flex mt-2">
-                <label className="col-form-label mr-auto" style={{ width: '220px' }}>Price</label>
+                <label className="col-form-label mr-auto label-create" style={{ width: '220px' }}>Price</label>
                 <span className="w-100 col-form-label">{ formatMoney(offerPrice ? offerPrice.price : 0) } {ipInfo.currency}/{currency}</span>
               </div>
 
               <div className="d-flex mt-2">
                 {/*<label className="col-form-label mr-auto" style={{ width: '220px' }} />*/}
-                <div className='input-group justify-content-end'>
+                <div className='input-group justify-content-start' style={{ paddingLeft: '20px' }}>
                   <Field
                     name="sellPriceType"
                     component={fieldRadioButton}
@@ -460,8 +460,8 @@ async componentDidMount() {
               </div>
               <hr className="hrLine" />
 
-              <div className="d-flex">
-                <label className="col-form-label mr-auto" style={{ width: '220px' }}>Customize price</label>
+              <div className="d-flex py-1">
+                <label className="col-form-label mr-auto label-create" style={{ width: '220px' }}>Customize price</label>
                 <div className='input-group align-items-center'>
                   <Field
                     name="customizePrice"
@@ -477,11 +477,12 @@ async componentDidMount() {
               <hr className="hrLine" />
 
               <div className="d-flex mt-2">
-                <label className="col-form-label mr-auto" style={{ width: '220px' }}>Total</label>
+                <label className="col-form-label mr-auto label-create" style={{ width: '220px' }}>Total</label>
                 <span className="w-100 col-form-label">{ formatMoney(totalAmount) } {ipInfo.currency}</span>
               </div>
+              <hr className="hrLine" />
               <div className="d-flex mt-2">
-                <label className="col-form-label mr-auto" style={{ width: '220px' }}>Phone</label>
+                <label className="col-form-label mr-auto label-create" style={{ width: '220px' }}>Phone</label>
                 <div className="input-group w-100">
                   <Field
                     name="phone"
@@ -496,7 +497,7 @@ async componentDidMount() {
               <hr className="hrLine" />
 
               <div className="d-flex mt-2">
-                <label className="col-form-label mr-auto" style={{ width: '220px' }}>Address*</label>
+                <label className="col-form-label mr-auto label-create" style={{ width: '220px' }}>Address*</label>
                 <div className="w-100">
                   <Field
                     name="address"

@@ -369,7 +369,7 @@ class FeedCreditCard extends React.Component {
                       onChange={this.onAmountChange}
                     />
                   </div>
-                  <span className="d-inline-block ml-auto" style={{ maxWidth: '368px', minWidth: '126px' }}>
+                  <span className="d-inline-block ml-auto" style={{ maxWidth: '368px', minWidth: '128px' }}>
                     <Field
                       name="currency"
                       containerClass="radio-container-old"
