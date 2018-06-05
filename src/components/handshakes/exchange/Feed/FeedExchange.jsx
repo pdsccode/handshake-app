@@ -179,6 +179,7 @@ class FeedExchange extends React.PureComponent {
   }
 
   showNotEnoughCoinAlert = (balance, fee, currency) => {
+    const { intl } = this.props;
     this.props.showAlert({
       message: <div className="text-center">
         {intl.formatMessage({ id: 'notEnoughCoinInWallet' }, {
