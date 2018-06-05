@@ -22,7 +22,7 @@ class WalletProtect extends React.Component {
     };
   }
 
-	async componentDidMount() {
+	async componentDidmount() {
 
 	}
 
@@ -91,13 +91,13 @@ class WalletProtect extends React.Component {
           </div>
           <div className="confirm_pass_phrase">
             {this.state.arr_confirm.map((str) => {
-              return <div className="btn btn-light" onClick={() => this.pickPassPhrase(str, false)}>{str}</div>
+              return <div key={str}  className="btn btn-light" onClick={() => this.pickPassPhrase(str, false)}>{str}</div>
             })}
           </div>
           <div className="pass_phrase">
             {/* fill pass phrase */}
             {this.state.arr_random.map((str) => {
-              return <div className="btn btn-light" onClick={() => this.pickPassPhrase(str, true)}>{str}</div>
+              return <div key={str}  className="btn btn-light" onClick={() => this.pickPassPhrase(str, true)}>{str}</div>
             })}
           </div>
           <footer className="footer">
