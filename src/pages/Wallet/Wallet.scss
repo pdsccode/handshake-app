@@ -302,7 +302,7 @@
 
 .protectwallet-wrapper{
   margin-top:30px;
-
+  font-weight: 300;
 
   .msg1, .msg2, .msg3{
     font-size: 20px;
@@ -415,6 +415,8 @@
 
 .historywallet-wrapper{
   padding-bottom: 70px;
+  font-weight: 300;
+
   .row{
     flex-wrap:nowrap !important;
     display: block;

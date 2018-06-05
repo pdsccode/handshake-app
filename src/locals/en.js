@@ -14,7 +14,7 @@ export default {
   securityCode: 'Security Code',
   shakeNow: 'Shake Now',
   offerHandShakeContent: '{offerType} {amount} {currency} for {total} {currency_symbol} in {payment_method}',
-  offerDistanceContent: '{distanceMeters} meters ({distanceMiles} miles) away',
+  offerDistanceContent: '{distanceKm} km ({distanceMiles} miles) away',
   transactonOfferInfo: 'Successful ({success}) / Failed ({failed})',
   createOfferConfirm: 'You are about to {type} {amount} {currency} for {currency_symbol}{total}',
   handshakeOfferConfirm: 'You are about to {type} {amount} {currency} for {currency_symbol}{total}',

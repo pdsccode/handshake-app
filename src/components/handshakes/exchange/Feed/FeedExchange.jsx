@@ -986,13 +986,13 @@ class FeedExchange extends React.PureComponent {
     const phone = offer.contactPhone[0] === '+' ? offer.contactPhone : `+${offer.contactPhone}`; // prepend '+'
     const address = offer.contactInfo;
 
-    let distanceMeters = 0;
+    let distanceKm = 0;
     let distanceMiles = 0;
 
     if (location) {
       const latLng = location.split(',')
-      distanceMeters = getDistanceFromLatLonInKm(latitude, longitude, latLng[0], latLng[1]) * 1000
-      distanceMiles = distanceMeters * 0.000621371
+      distanceKm = getDistanceFromLatLonInKm(latitude, longitude, latLng[0], latLng[1])
+      distanceMiles = distanceKm * 0.621371
     }
     const isCreditCard = offer.feedType === 'instant'
     return (
@@ -1029,7 +1029,7 @@ class FeedExchange extends React.PureComponent {
           {
             mode === 'discover' ? (
               <div className="media mb-1">
-                <img className="mr-1" src={iconTransaction} width={20}/>
+                <img className="mr-2" src={iconTransaction} width={20}/>
                 <div className="media-body">
                   <div>
                     <FormattedMessage id="transactonOfferInfo" values={{
@@ -1044,7 +1044,7 @@ class FeedExchange extends React.PureComponent {
                   {
                     phone.split('-')[1] !== '' && ( // no phone number
                       <div className="media mb-1">
-                        <img className="mr-1" src={iconPhone} width={20}/>
+                        <img className="mr-2" src={iconPhone} width={20}/>
                         <div className="media-body">
                           <div>
                             <a href={`tel:${phone}`} className="text-white">{phone}</a>
@@ -1054,7 +1054,7 @@ class FeedExchange extends React.PureComponent {
                     )
                   }
                   <div className="media">
-                    <img className="mr-1" src={iconLocation} width={20}/>
+                    <img className="mr-2" src={iconLocation} width={20}/>
                     <div className="media-body">
                       <div>{address}</div>
                     </div>
@@ -1066,12 +1066,12 @@ class FeedExchange extends React.PureComponent {
           {
             !isCreditCard && (
               <div className="media">
-                <img className="mr-1" src={mode === 'discover' ? iconLocation : ''} width={20} />
+                <img className="mr-2" src={mode === 'discover' ? iconLocation : ''} width={20} />
                 <div className="media-body">
                   <div style={{ fontSize: mode === 'me' ? '80%' : '' }}>
                     <FormattedMessage id="offerDistanceContent" values={{
                       // offerType: offer.type === 'buy' ? 'Buyer' : 'Seller',
-                      distanceMeters: distanceMeters.toFixed(0),
+                      distanceKm: distanceKm.toFixed(3),
                       distanceMiles: distanceMiles.toFixed(1),
                     }}/>
                   </div>
