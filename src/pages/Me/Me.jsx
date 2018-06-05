@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 // action, mock
-import { fireBaseDataChange, loadMyHandshakeList, fireBaseBettingChange } from '@/reducers/me/action';
+import { fireBaseExchangeDataChange, loadMyHandshakeList, fireBaseBettingChange } from '@/reducers/me/action';
 import { API_URL, HANDSHAKE_ID } from '@/constants';
 import { URL } from '@/config';
 // components
@@ -32,7 +32,7 @@ class Me extends React.Component {
 
   componentDidMount() {
     this.getListOfferPrice();
-    this.loadMyHandshakeList();
+    // this.loadMyHandshakeList();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -40,7 +40,7 @@ class Me extends React.Component {
       let nextUser = nextProps.firebaseUser.users[this.props.auth?.profile?.id];
       let prevUser = this.props.firebaseUser.users[this.props.auth?.profile?.id];
       if (JSON.stringify(nextUser.offers) !== JSON.stringify(prevUser.offers)) {
-        this.props.fireBaseDataChange(nextUser.offers);
+        this.props.fireBaseExchangeDataChange(nextUser.offers);
       }
       else if(JSON.stringify(nextUser.betting) !== JSON.stringify(prevUser.betting)){
         this.props.fireBaseBettingChange(nextUser.betting);
@@ -57,6 +57,15 @@ class Me extends React.Component {
       errorFn: this.handleGetPriceFailed,
     });
   }
+
+  handleGetPriceSuccess = () => {
+    this.loadMyHandshakeList();
+  }
+
+  handleGetPriceFailed = () => {
+    this.loadMyHandshakeList();
+  }
+
 
   loadMyHandshakeList = () => {
     this.props.loadMyHandshakeList({ PATH_URL: API_URL.ME.BASE });
@@ -123,7 +132,7 @@ const mapState = state => ({
 const mapDispatch = ({
   loadMyHandshakeList,
   getListOfferPrice,
-  fireBaseDataChange,
+  fireBaseExchangeDataChange,
 });
 
 export default connect(mapState, mapDispatch)(Me);
