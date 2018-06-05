@@ -156,12 +156,16 @@ class BettingFilter extends React.Component {
     }
 
     render(){
-        const {matches, selectedMatch, selectedOutcome} = this.state;
+        const {matches} = this.state;
+        const selectedOutcome = this.outcomeDropDown ? this.outcomeDropDown.itemSelecting : null;
+        const selectedMatch = this.outcomeDropDown?  this.matchDropDown.itemSelecting : null;
         console.log('Selected Outcome:', selectedOutcome);
+
         const outcomeId = (selectedOutcome && selectedOutcome.id >=0) ? selectedOutcome.id : null;
         const outcomeHid = (selectedOutcome && selectedOutcome.hid >=0) ? selectedOutcome.hid : null;
         const matchName = (selectedMatch && selectedMatch.value) ? selectedMatch.value : null;
         const matchOutcome = (selectedOutcome && selectedOutcome.value) ? selectedOutcome.value : null;
+         
         console.log('Outcome Hid:', outcomeHid);
         const defaultMatchId = this.defaultMatch ? this.defaultMatch.id : null;
         // console.log("Default Match:", defaultMatchId);
@@ -176,8 +180,9 @@ class BettingFilter extends React.Component {
                 source={this.matchNames}
                 onItemSelected={(item) => this.setState({selectedMatch: item})} />
             </div>
-            {selectedMatch && <div className="dropDown">
+            <div className="dropDown">
                 <Dropdown placeholder="Select a prediction"
+                onRef={match => this.outcomeDropDown = match}
                 defaultId={this.defaultOutcomeId}
                 source={this.matchOutcomes}
                 onItemSelected={(item) => {
@@ -187,7 +192,7 @@ class BettingFilter extends React.Component {
                     },() => this.callGetHandshakes(item))
                 }
                 }/>
-            </div>}
+            </div>
 
                 <div className="wrapperContainer">
                     <div className="item">
