@@ -3,7 +3,8 @@ import { DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown 
 import Cleave from 'cleave.js/react';
 import cx from 'classnames';
 import './styles.scss';
-import phoneCountryCodes from './country-calling-codes.min.json';
+// import phoneCountryCodes from './country-calling-codes.min.json';
+import COUNTRIES from '@/data/country-dial-codes.js';
 
 const customField = element => ({
   input,
@@ -147,10 +148,10 @@ export const fieldPhoneInput = customField(({
         >
           <option key={-1} value="">-------</option>
           {
-            phoneCountryCodes.map((item, index) => {
-              const { name, callingCode } = item;
+            COUNTRIES.map((item, index) => {
+              const { dialCode } = item;
               return (
-                <option key={index} value={callingCode}>+{callingCode}</option>
+                <option key={index} value={dialCode}>{dialCode}</option>
               );
             })
           }
