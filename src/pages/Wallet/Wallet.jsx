@@ -678,7 +678,7 @@ class Wallet extends React.Component {
 
 
         {/* Modal for Copy address : */}
-        <ModalDialog title="Wallet Address" onRef={modal => this.modalShareAddressRef = modal}>
+        <ModalDialog title="Wallet address" onRef={modal => this.modalShareAddressRef = modal}>
           <div className="bodyTitle"><span>Share your public wallet address to receive { this.state.walletSelected ? this.state.walletSelected.name : ""} </span></div>
           <div className={['bodyBackup bodySahreAddress']}>
 
