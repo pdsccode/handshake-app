@@ -17,7 +17,7 @@ import { change } from 'redux-form'
 import {fieldCleave, fieldDropdown, fieldInput, fieldRadioButton} from '@/components/core/form/customField'
 import {required} from '@/components/core/form/validation'
 import {createCCOrder, getCcLimits, getCryptoPrice, getUserCcLimit} from '@/reducers/exchange/action';
-import {API_URL, CRYPTO_CURRENCY_LIST, CRYPTO_CURRENCY_DEFAULT, } from "@/constants";
+import {API_URL, CRYPTO_CURRENCY_LIST, CRYPTO_CURRENCY_DEFAULT, FIAT_CURRENCY_SYMBOL} from "@/constants";
 import {FIAT_CURRENCY} from "@/constants";
 import CryptoPrice from "@/models/CryptoPrice";
 import {MasterWallet} from "@/models/MasterWallet";
@@ -26,6 +26,7 @@ import {showAlert} from '@/reducers/app/action';
 import _sample from "lodash/sample";
 import { feedBackgroundColors } from "@/components/handshakes/exchange/config";
 import {formatMoney} from "@/services/offer-util";
+import {BigNumber} from "bignumber.js";
 
 const nameFormCreditCard = 'creditCard'
 const FormCreditCard = createForm({ propsReduxForm: { form: nameFormCreditCard,
@@ -85,12 +86,14 @@ class FeedCreditCard extends React.Component {
     });
   }
 
-  handleGetCryptoPriceSuccess = (data) => {
+  handleGetCryptoPriceSuccess = (responseData) => {
     // console.log('handleGetCryptoPriceSuccess', data);
     const { userCcLimit } = this.props;
-    const cryptoPrice = CryptoPrice.cryptoPrice(data);
+    const cryptoPrice = CryptoPrice.cryptoPrice(responseData.data);
 
-    if (this.state.amount && userCcLimit && userCcLimit.limit < userCcLimit.amount + cryptoPrice.fiatAmount) {
+    const amoutWillUse = new BigNumber(userCcLimit.amount).plus(new BigNumber(cryptoPrice.fiatAmount)).toNumber();
+
+    if (this.state.amount && userCcLimit && userCcLimit.limit < amoutWillUse) {
       this.setState({showCCScheme: true});
     }
   }
@@ -284,7 +287,7 @@ class FeedCreditCard extends React.Component {
   render() {
     const {intl, userProfile, cryptoPrice, amount, userCcLimit, ccLimits, buttonTitle, currencyForced } = this.props;
     const { showCCScheme } = this.state;
-    const fiatCurrency = '$';
+    const fiatCurrency = FIAT_CURRENCY_SYMBOL;
     const total = cryptoPrice && cryptoPrice.fiatAmount;
 
     let modalContent = this.state.modalContent;
