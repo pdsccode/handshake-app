@@ -163,6 +163,8 @@ class Handshake extends React.Component {
                 <a
                   className="readTheWhitePaper"
                   href="https://medium.com/@ninjadotorg/shakeninja-bex-1c938f18b3e8"
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
                   <span>Read the whitepaper</span>
                   <img src={arrowsRightIcon} alt="arrow right icon" />
@@ -170,7 +172,7 @@ class Handshake extends React.Component {
                 <p className="telegramDescription">
                   Coming soon.  To receive updates on token sales and airdrops:
                 </p>
-                <a href="https://t.me/joinchat/H5Rflk6xD7xpo81BDbuOww" target="_blank" className="btnTelegram">
+                <a href="https://t.me/joinchat/H5Rflk6xD7xpo81BDbuOww" target="_blank" rel="noopener noreferrer" className="btnTelegram">
                   <img src={telegramAppIcon} alt="telegram app icon" />
                   <span>Join the conversation on telegram</span>
                 </a>
