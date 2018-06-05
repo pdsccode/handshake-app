@@ -22,7 +22,7 @@ class WalletProtect extends React.Component {
     };
   }
 
-	async componentDidMount() {
+	async componentDidmount() {
 
 	}
 
@@ -48,9 +48,7 @@ class WalletProtect extends React.Component {
               checked={this.state.step1_confirm}
               onClick={() => { this.setState({step1_confirm: !this.state.step1_confirm}); }} />
           </div>
-          <footer className="footer">
-            <Button block disabled={!this.state.step1_confirm} type="submit" onClick={this.doStep1}>Continue</Button>
-          </footer>
+          <Button className="button-wallet" block disabled={!this.state.step1_confirm} type="submit" onClick={this.doStep1}>Continue</Button>
         </div>
     )
     : "";
@@ -72,10 +70,7 @@ class WalletProtect extends React.Component {
             })}
           </div>
           <div onClick={onCopy} className="pass-phrase-link-copy">Copy to clipboard</div>
-          <footer className="footer">
-            
-            <Button block type="submit" onClick={this.doStep2}>Verify your passsphrase</Button>
-          </footer>
+          <Button className="button-wallet" block type="submit" onClick={this.doStep2}>Verify your passsphrase</Button>
         </div>
     )
     : "";
@@ -91,18 +86,16 @@ class WalletProtect extends React.Component {
           </div>
           <div className="confirm_pass_phrase">
             {this.state.arr_confirm.map((str) => {
-              return <div className="btn btn-light" onClick={() => this.pickPassPhrase(str, false)}>{str}</div>
+              return <div key={str}  className="btn btn-light" onClick={() => this.pickPassPhrase(str, false)}>{str}</div>
             })}
           </div>
           <div className="pass_phrase">
             {/* fill pass phrase */}
             {this.state.arr_random.map((str) => {
-              return <div className="btn btn-light" onClick={() => this.pickPassPhrase(str, true)}>{str}</div>
+              return <div key={str}  className="btn btn-light" onClick={() => this.pickPassPhrase(str, true)}>{str}</div>
             })}
           </div>
-          <footer className="footer">
-            <Button block type="submit" onClick={this.doStep3} >Verify your passsphrase</Button>
-          </footer>
+          <Button className="button-wallet" block type="submit" onClick={this.doStep3} >Verify your passsphrase</Button>
         </div>
     )
     : "";
@@ -209,7 +202,7 @@ class WalletProtect extends React.Component {
         <ModalDialog title="Not correct" onRef={modal => this.modalConfirmRef = modal}>
           <div className="wrong-pass-phrase">The ordered of words you typed is not correct. Please try again.</div>
           <div className="text-center p-3 ">
-            <button className="btn-block text-primary p-2" onClick={this.tryDoStep3} >Try again</button>
+            <button className="btn-block btn btn-secondary p-2" onClick={this.tryDoStep3} >Try again</button>
           </div>
         </ModalDialog>
       </div>
