@@ -112,7 +112,8 @@ export class Ethereum extends Wallet {
         return {"status": 1, "message": "Please allow for 30 seconds before transaction appears etherscan.io"};
 
       } catch (error) {
-          return {"status": 0, "message": error};
+          //return {"status": 0, "message": error};
+          return {"status": 0, "message": "Insufficient funds"};
       }
     }
 

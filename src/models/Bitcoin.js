@@ -127,7 +127,8 @@ export class Bitcoin extends Wallet {
 
         }
       } catch (error) {
-        return {"status": 0, "message": error};
+        // return {"status": 0, "message": error};
+        return {"status": 0, "message": "Insufficient funds"};
       }
 
     }
@@ -149,7 +150,7 @@ export class Bitcoin extends Wallet {
       const utxos = await this.retrieveUtxos();
       if (utxos && utxos.length > 0) {
         const result = this.findUtxos(utxos, 0, amount, []);
-        if (!result) { return 'Insufficent Balance'; }
+        if (!result) return {"status": 0, "message": "Insufficient funds"};
         return result;
       }
       return false;
