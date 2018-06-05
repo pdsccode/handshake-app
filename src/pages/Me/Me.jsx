@@ -81,7 +81,7 @@ class Me extends React.Component {
               <Image className="avatar" src={AvatarSVG} alt="avatar" />
               <div className="text">
                 <strong>My Profile</strong>
-                <p>Vertify your email, phone numbers</p>
+                <p>Verify your email address and phone numbers.</p>
               </div>
               <div className="arrow">
                 <Image src={ExpandArrowSVG} alt="arrow" />
@@ -106,7 +106,7 @@ class Me extends React.Component {
                   }
                 })
               ) : (
-                <NoData />
+                <NoData message="Create a Shake to get started!" />
               )
             }
           </Col>

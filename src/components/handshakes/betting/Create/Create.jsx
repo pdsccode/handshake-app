@@ -10,7 +10,7 @@ import { Field } from "redux-form";
 import { initHandshake } from '@/reducers/handshake/action';
 import { loadMatches } from '@/reducers/betting/action';
 import { HANDSHAKE_ID, API_URL, APP } from '@/constants';
-import  { BetHandshakeHandler, SIDE} from '@/components/handshakes/betting/Feed/BetHandshakeHandler.js';
+import  { BetHandshakeHandler, SIDE, MESSAGE} from '@/components/handshakes/betting/Feed/BetHandshakeHandler.js';
 import { URL } from '@/config';
 import local from '@/services/localStore';
 
@@ -44,6 +44,9 @@ const regex = /\[.*?\]/g;
 const regexReplace = /\[|\]/g;
 const regexReplacePlaceholder = /\[.*?\]/;
 
+
+
+
 class ErrorBox extends React.PureComponent {
   render() {
     return (
@@ -68,7 +71,7 @@ class BettingCreate extends React.PureComponent {
   static defaultProps = {
     item: {
       "backgroundColor": "#332F94",
-      "desc": "[{\"key\": \"event_bet\",\"suffix\": \"ETH\",\"label\": \"Amount\", \"placeholder\": \"10\", \"type\": \"number\", \"className\": \"betField\"}] [{\"key\": \"event_odds\", \"label\": \"Odds\", \"placeholder\": \"10\",\"prefix\": \"1 -\", \"className\": \"oddField\"}]",
+      "desc": "[{\"key\": \"event_bet\",\"suffix\": \"ETH\",\"label\": \"Amount\", \"placeholder\": \"10\", \"type\": \"number\", \"className\": \"betField\"}] [{\"key\": \"event_odds\", \"label\": \"Odds\", \"placeholder\": \"10\",\"prefix\": \"1 -\", \"className\": \"oddField\", \"type\": \"number\"}]",
       "id": 18,
       "message": null,
       "name": "Bet",
@@ -177,19 +180,36 @@ get matchResults(){
     console.log('Event Bet:', eventBet);
 
     const fromAddress = address;
-
-    if(selectedMatch && selectedOutcome && eventBet > 0 && eventBet <= balance){
-      this.initHandshake(extraParams, fromAddress);
-
+    if(selectedMatch && selectedOutcome){
+      if(eventBet > 0){
+        if(eventBet <= balance){
+          this.initHandshake(extraParams, fromAddress);
+        }else {
+          this.props.showAlert({
+            message: <div className="text-center">{MESSAGE.NOT_ENOUGH_BALANCE}</div>,
+            timeOut: 3000,
+            type: 'danger',
+            callBack: () => {
+            }
+          });
+        }
+      }
     }else {
       this.props.showAlert({
-        message: <div className="text-center">Please choose match</div>,
+        message: <div className="text-center">{MESSAGE.CHOOSE_MATCH}</div>,
         timeOut: 3000,
         type: 'danger',
         callBack: () => {
         }
       });
     }
+
+    // if(selectedMatch && selectedOutcome && eventBet > 0 && eventBet <= balance){
+    //   this.initHandshake(extraParams, fromAddress);
+
+    // }else {
+      
+    // }
   }
 
   get inputList() {
@@ -264,7 +284,7 @@ get matchResults(){
         name={key}
         style={style}
         component={InputField}
-        type="text"
+        type="tel"
         //min="0.0001"
         //step="0.0002"
         placeholder={placeholder}
@@ -386,7 +406,7 @@ get matchResults(){
         </div>
 
 
-        <Button type="submit" block>Sign & Send</Button>
+        <Button type="submit" block>Shake and Send</Button>
       </BettingCreateForm>
     );
   }
@@ -450,7 +470,7 @@ get matchResults(){
     if(status && data){
       BetHandshakeHandler.controlShake(data, hid);
       this.props.showAlert({
-        message: <div className="text-center">Create a bet successfully</div>,
+        message: <div className="text-center">{MESSAGE.CREATE_BET_SUCCESSFUL}</div>,
         timeOut: 3000,
         type: 'danger',
         callBack: () => {
