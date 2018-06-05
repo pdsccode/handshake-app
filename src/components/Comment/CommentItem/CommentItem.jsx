@@ -5,13 +5,14 @@ import Avatar from './../Avatar';
 
 // style
 import './CommentItem.scss';
+import {APP_USER_NAME} from "@/constants";
 
 class CommentItem extends React.PureComponent {
 
   render() {
     const {
       comment,
-      userName = 'Ninja',
+      userName = APP_USER_NAME,
       image,
       userId,
     } = this.props;
