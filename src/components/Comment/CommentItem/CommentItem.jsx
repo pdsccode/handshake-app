@@ -12,16 +12,14 @@ class CommentItem extends React.PureComponent {
   render() {
     const {
       comment,
-      userName = APP_USER_NAME,
       image,
-      userId,
+      address,
     } = this.props;
-    const showNinjaPosition = (index) => index >= 100 ? index : index >= 10 ? `0${index}` : `00${index}`;
     return (
       <div className="commentItem">
         <div className="userInfo">
           <Avatar />
-          <span className="userName">{userName} {showNinjaPosition(userId)}</span>
+          <span className="userName">{address ? address.replace(address.substr(5, 32), '...') : ''}</span>
         </div>
         <p className="comment">{comment}</p>
         {
