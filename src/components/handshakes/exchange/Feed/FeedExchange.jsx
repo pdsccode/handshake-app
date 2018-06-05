@@ -181,7 +181,7 @@ class FeedExchange extends React.PureComponent {
     this.props.showAlert({
       message: <div className="text-center">
         {intl.formatMessage({ id: 'notEnoughCoinInWallet' }, {
-          amount: new BigNumber(balance).toFormat(6),
+          amount: new BigNumber(balance).toFormat(AMOUNT_DECIMAL),
           fee: fee,
           currency: currency,
         })}
@@ -679,10 +679,10 @@ class FeedExchange extends React.PureComponent {
           case HANDSHAKE_EXCHANGE_STATUS.ACTIVE: {
             message = intl.formatMessage({id: 'handshakeOfferConfirm'}, {
               type: offer.type === EXCHANGE_ACTION.BUY ? EXCHANGE_ACTION_NAME[EXCHANGE_ACTION.SELL] : EXCHANGE_ACTION_NAME[EXCHANGE_ACTION.BUY],
-              amount: new BigNumber(offer.amount).toFormat(6),
+              amount: new BigNumber(offer.amount).toFormat(AMOUNT_DECIMAL),
               currency: offer.currency,
               currency_symbol: offer.fiatCurrency,
-              total: new BigNumber(fiatAmount).toFormat(2),
+              total: new BigNumber(fiatAmount).toFormat(PRICE_DECIMAL),
             });
 
             actionButtons = (

@@ -31,7 +31,8 @@ import {
   FIAT_CURRENCY_SYMBOL,
   PRICE_DECIMAL,
   SELL_PRICE_TYPE,
-  SELL_PRICE_TYPE_DEFAULT
+  SELL_PRICE_TYPE_DEFAULT,
+  AMOUNT_DECIMAL
 } from '@/constants';
 import '../styles.scss';
 import ModalDialog from '@/components/core/controls/ModalDialog/ModalDialog';
@@ -191,7 +192,7 @@ async componentDidMount() {
       this.props.showAlert({
         message: <div className="text-center">
           {intl.formatMessage({ id: 'notEnoughCoinInWallet' }, {
-            amount: new BigNumber(balance).toFormat(6),
+            amount: new BigNumber(balance).toFormat(AMOUNT_DECIMAL),
             fee: fee,
             currency: values.currency,
           })}
@@ -235,10 +236,10 @@ async componentDidMount() {
     console.log('handleSubmit', offer);
     const message = intl.formatMessage({ id: 'createOfferConfirm' }, {
       type: EXCHANGE_ACTION_NAME[values.type],
-      amount: new BigNumber(values.amount).toFormat(6),
+      amount: new BigNumber(values.amount).toFormat(AMOUNT_DECIMAL),
       currency: values.currency,
       currency_symbol: getSymbolFromCurrency(fiat_currency),
-      total: new BigNumber(totalAmount).toFormat(2),
+      total: new BigNumber(totalAmount).toFormat(PRICE_DECIMAL),
     });
 
     this.setState({
