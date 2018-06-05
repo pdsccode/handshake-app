@@ -67,17 +67,19 @@ class Handshake extends React.Component {
                     <p>ANONYMOUS PEER-TO-PEER BETTING EXCHANGE</p>
                   </div>
                 </div>
-                <h1>Meet Shuriken, the native coin of the Ninja network.</h1>
+                <h1>Meet <span className="blue">Shuriken</span>, the native coin of the Ninja network.</h1>
                 <p className="subTitle">
                   You can use Shuriken to pay for any fees on the Ninja network such as betting fees, exchange fees, and market creation fees.
                   <br/>
                   <br/>
-                  <br/>
                   Paying with Shuriken allows you to slash fees and unlock the best rates.
                 </p>
-                <a>
+                <a
+                  className="readTheWhitePaper"
+                  href="https://medium.com/@ninjadotorg/shakeninja-bex-1c938f18b3e8"
+                >
                   <span>Read the whitepaper</span>
-                  <img src={arrowsRightIcon} alt="arrow right icon"/>
+                  <img src={arrowsRightIcon} alt="arrow right icon" />
                 </a>
                 <p className="telegramDescription">
                   Coming soon.  To receive updates on token sales and airdrops:
@@ -92,12 +94,12 @@ class Handshake extends React.Component {
             </div>
           </div>
         </div>
-        <div className={`container text-center blockChainContent`}>
+        <div className={`container blockChainContent`}>
           <div className="row">
             <div className="col-lg-6 col-md-12 col-sm-12 col-xs-12">
               <h3>Slash fees.</h3>
-              <p>Early adopters of Shuriken will benefit from large discounts on all the network fees. 2018 users will
-                receive a 100% discount and play completely free. Preferred pricing will end in 2023. Shuriken is an
+              <p className="text-left">Early adopters of Shuriken will benefit from large discounts on all the network fees. 2018 users will
+                receive a <span className="green">100% discount and play completely free</span>. Preferred pricing will end in 2023. Shuriken is an
                 ERC20 token and tradable on the blockchain. There will only be 100 million Shurikens. Ninja’s oath.</p>
             </div>
             <div className="col-lg-6 col-md-12 col-sm-12 col-xs-12">

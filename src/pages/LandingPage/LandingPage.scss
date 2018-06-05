@@ -35,9 +35,9 @@
           font-family: azo-sans-web, sans-serif;
           font-style: normal;
           opacity: 0.9;
-          font-size: 18px;
+          font-size: 14px;
           color: #FFFFFF;
-          letter-spacing: 0.98px;
+          letter-spacing: 0.76px;
         }
       }
     }
@@ -55,47 +55,52 @@
       top: 7px;
     }
     h1 {
-      /* Bet against your fel: */
-      background: linear-gradient(-180deg, #B3D6AA 0%, #25FF00 93%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
       font-family: azo-sans-web, sans-serif;
       font-style: normal;
       font-weight: $semi-bold;
-      font-size: 40px;
-      /*color: #56DF3F;*/
+      font-size: 30px;
       letter-spacing: 0;
       margin-bottom: 30px;
       margin-top: 0;
-      line-height: 54px;
+      line-height: 44px;
+      color: #FFFFFF;
       .blue {
-        color: #7ACE6C;
-      }
-      .white {
-        color: #fff;
+        color: #5EEE44;
       }
     }
     .subTitle {
       font-family: azo-sans-web, sans-serif;
       font-style: normal;
-      font-size: 18px;
+      font-size: 17px;
       color: #FFFFFF;
       letter-spacing: 0;
-      line-height: 32px;
+      line-height: 25px;
       margin-bottom: 15px;
       width: 98%;
+    }
+    .readTheWhitePaper {
+      font-family: azo-sans-web, sans-serif;
+      font-style: normal;
+      font-size: 14px;
+      color: #5EEE44;
+      letter-spacing: 0;
+      span {
+        text-decoration: underline;
+      }
+      img {
+        margin-left: 8px;
+      }
     }
     .btnTelegram {
       font-family: azo-sans-web, sans-serif;
       font-style: normal;
       font-weight: $medium;
-      /*background: #1E4EFF;*/
       border-radius: 4px;
-      font-size: 24px;
       color: #FFFFFF;
       letter-spacing: 0;
+      font-size: 20px;
       background-image: linear-gradient(-269deg, #7740FF 0%, #1E4EFF 100%);
-      padding: 18px 93px;
+      padding: 18px 60px;
       img {
         margin-right: 9px;
         position: relative;
@@ -108,11 +113,12 @@
     .telegramDescription {
       font-family: azo-sans-web, sans-serif;
       font-style: normal;
-      margin-bottom: 47px;
-      font-size: 18px;
+      margin-bottom: 12px;
+      margin-top: 62px;
+      font-size: 14px;
       color: #FFFFFF;
       letter-spacing: 0;
-      line-height: 32px;
+      line-height: 27px;
       .orange {
         color: #F46A48;
         font-weight: $medium;
@@ -127,32 +133,24 @@
     margin-top: 30px;
     margin-bottom: 50px;
     h3 {
-      font-size: 40px;
-      color: #FFFFFF;
+      font-size: 32px;
       letter-spacing: 0;
-      line-height: 54px;
-      margin-bottom: 23px;
+      margin-bottom: 33px;
       font-family: azo-sans-web, sans-serif;
       font-style: normal;
       font-weight: $semi-bold;
-      span {
-        /*color: #CF3D00;*/
-        background: linear-gradient(-179deg, #CF3D00 0%, #F46A48 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-      }
+      color: #5EEE44;
     }
     p {
-      font-size: 20px;
+      font-size: 18px;
       letter-spacing: 0;
-      line-height: 32px;
+      line-height: 34px;
       width: 70%;
-      margin: 0 auto 115px;
       font-family: azo-sans-web, sans-serif;
       font-style: normal;
       color: #FFFFFF;
       .green {
-        color: #56DF3F;
+        color: #5EEE44;
       }
     }
   }
