@@ -24,6 +24,7 @@ import { setIpInfo } from '@/reducers/app/action';
 import { getUserProfile } from '@/reducers/exchange/action';
 import { MasterWallet } from '@/models/MasterWallet';
 import { createMasterWallets } from '@/reducers/wallet/action';
+import {getListOfferPrice} from "@/reducers/exchange/action";
 
 addLocaleData([...en, ...fr]);
 
@@ -167,6 +168,10 @@ class Router extends React.Component {
     if (this.timeOutInterval) {
       clearInterval(this.timeOutInterval);
     }
+
+    if (this.timeOutGetPrice) {
+      clearInterval(this.timeOutGetPrice);
+    }
   }
 
   authSuccess() {
@@ -179,10 +184,17 @@ class Router extends React.Component {
       PATH_URL: API_URL.EXCHANGE.GET_USER_PROFILE,
     });
 
+    //GET IP INFO
     this.getIpInfo();
     this.timeOutInterval = setInterval(() => {
       this.getIpInfo();
     }, 30 * 60 * 1000); //30'
+
+    //GET PRICE
+    this.getListOfferPrice();
+    this.timeOutGetPrice = setInterval(() => {
+      this.getListOfferPrice();
+    }, 5 * 60 * 1000); //30'
 
     // wallet handle
     let listWallet = MasterWallet.getMasterWallet();
@@ -232,6 +244,15 @@ class Router extends React.Component {
     });
   }
 
+  getListOfferPrice = () => {
+    this.props.getListOfferPrice({
+      BASE_URL: API_URL.EXCHANGE.BASE,
+      PATH_URL: API_URL.EXCHANGE.GET_LIST_OFFER_PRICE,
+      qs: { fiat_currency: this.props?.app?.ipInfo?.currency },
+      successFn: this.handleGetPriceSuccess,
+      errorFn: this.handleGetPriceFailed,
+    });
+  }
 
   render() {
     if (!this.state.isLogged || this.state.isLoading) {
@@ -316,5 +337,6 @@ export default compose(
     setIpInfo,
     getUserProfile,
     authUpdate,
+    getListOfferPrice
   }),
 )(Router);

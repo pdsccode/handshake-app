@@ -32,7 +32,7 @@ class Me extends React.Component {
 
   componentDidMount() {
     this.getListOfferPrice();
-    this.loadMyHandshakeList();
+    // this.loadMyHandshakeList();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -54,6 +54,15 @@ class Me extends React.Component {
       errorFn: this.handleGetPriceFailed,
     });
   }
+
+  handleGetPriceSuccess = () => {
+    this.loadMyHandshakeList();
+  }
+
+  handleGetPriceFailed = () => {
+    this.loadMyHandshakeList();
+  }
+
 
   loadMyHandshakeList = () => {
     this.props.loadMyHandshakeList({ PATH_URL: API_URL.ME.BASE });

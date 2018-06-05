@@ -43,7 +43,7 @@ class DiscoverPage extends React.Component {
       tabIndexActive: '',
       query: '',
     };
-    this.loadDiscoverList();
+    // this.loadDiscoverList();
     // bind
     this.clickCategoryItem = this.clickCategoryItem.bind(this);
     this.clickTabItem = this.clickTabItem.bind(this);
