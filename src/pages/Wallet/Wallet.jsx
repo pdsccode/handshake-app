@@ -155,7 +155,7 @@ class Wallet extends React.Component {
    async componentDidMount() {
 
     let listWallet = await MasterWallet.getMasterWallet();
-    console.log("listWallet", listWallet);
+    //console.log("listWallet", listWallet);
 
     // console.log("default", MasterWallet.getWalletDefault("ETH"))
 
@@ -166,7 +166,7 @@ class Wallet extends React.Component {
     }
     else{
       this.splitWalletData(listWallet)
-      console.log('update balance for lst wallet');
+      //console.log('update balance for lst wallet');
       await this.getListBalace(listWallet);
     }
      /*var btc = new Bitcoin();
@@ -351,13 +351,13 @@ class Wallet extends React.Component {
     else if (this.state.inputSendAmountValue == '' || this.state.inputSendAmountValue == 0)
       alert("Please input Amount value");
     else{
-      this.modalConfirmSendRef.open();      
+      this.modalConfirmSendRef.open();
     }
   }
   submitSendCoin=()=>{
     this.setState({isRestoreLoading: true});
       this.state.walletSelected.transfer(this.state.inputAddressAmountValue, this.state.inputSendAmountValue).then(success => {
-          console.log(success);
+          //console.log(success);
           this.setState({isRestoreLoading: false});
           if (success.hasOwnProperty('status')){
             if (success.status == 1){
@@ -624,9 +624,9 @@ class Wallet extends React.Component {
           </SendWalletForm>
         </Modal>
 
-        {/*Dialog confirm transfer coin*/}        
+        {/*Dialog confirm transfer coin*/}
         <ModalDialog title="Confirmation" onRef={modal => this.modalConfirmSendRef = modal}>
-          <div className="bodyConfirm"><span>Are you sure you want to send out {this.state.inputSendAmountValue}?</span></div>          
+          <div className="bodyConfirm"><span>Are you sure you want to send out {this.state.inputSendAmountValue} {this.state.walletSelected ? this.state.walletSelected.name : ""}?</span></div>
           <div className='bodyConfirm'>
           <Button className="left" cssType="danger" onClick={this.submitSendCoin} >Yes</Button>
             <Button className="right" cssType="secondary" onClick={() => { this.modalConfirmSendRef.close(); }}>Cancel</Button>
@@ -706,10 +706,10 @@ class Wallet extends React.Component {
             defaultId={1}
             source={[{"id": 1, "value": "Random"}, {"id": 2, "value": "Specify recovery Phrase"}]}
             onItemSelected={(item) =>
-                {                
+                {
                   this.setState({
                     walletKeyDefaultToCreate: item.id
-                  });                
+                  });
                 }
               }
           />
