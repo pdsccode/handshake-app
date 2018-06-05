@@ -107,7 +107,7 @@ class FeedBetting extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-
+   
   }
 
   get extraData(){

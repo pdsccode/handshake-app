@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 // action, mock
-import { fireBaseDataChange, loadMyHandshakeList } from '@/reducers/me/action';
+import { fireBaseDataChange, loadMyHandshakeList, fireBaseBettingChange } from '@/reducers/me/action';
 import { API_URL, HANDSHAKE_ID } from '@/constants';
 import { URL } from '@/config';
 // components
@@ -41,6 +41,9 @@ class Me extends React.Component {
       let prevUser = this.props.firebaseUser.users[this.props.auth?.profile?.id];
       if (JSON.stringify(nextUser.offers) !== JSON.stringify(prevUser.offers)) {
         this.props.fireBaseDataChange(nextUser.offers);
+      }
+      else if(JSON.stringify(nextUser.betting) !== JSON.stringify(prevUser.betting)){
+        this.props.fireBaseBettingChange(nextUser.betting);
       }
     }
   }
