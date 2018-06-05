@@ -170,7 +170,7 @@ class Handshake extends React.Component {
                   Coming soon.  To receive updates on token sales and airdrops:
                 </p>
                 <a href="https://t.me/joinchat/H5Rflk6xD7xpo81BDbuOww" target="_blank" className="btnTelegram" onClick={
-                  () => { ga('send', 'event', 'ShakeNinja', 'Click button Join the conversation on telegram'); }}
+                  () => { //ga('send', 'event', 'ShakeNinja', 'Click button Join the conversation on telegram'); }}
                 >
                   <img src={telegramAppIcon} alt="telegram app icon" />
                   <span>Join the conversation on telegram</span>
@@ -208,7 +208,7 @@ class Handshake extends React.Component {
             <div className="col-md-12 col-sm-12 col-xs-12">
               <h3>Get Shuriken. Play for free.</h3>
               <a href="https://t.me/joinchat/H5Rflk6xD7xpo81BDbuOww" target="_blank" className="btnTelegram" onClick={
-                () => { ga('send', 'event', 'ShakeNinja', 'Click button Join the nobody network of everybody'); }
+                () => { //ga('send', 'event', 'ShakeNinja', 'Click button Join the nobody network of everybody'); }
               }>
                 <img src={telegramAppIcon} alt="telegram app icon" />
                 <span>Join Telegram channel</span>
