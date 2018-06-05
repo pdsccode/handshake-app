@@ -140,10 +140,10 @@ module.exports = function webpackConfig(env, argv) {
         filename: 'css/[name].css',
         chunkFilename: 'css/[hash].[name].css',
       }),
-      new OfflinePlugin({
-        appShell: '/',
-        publicPath: `${process.env.PUBLIC_URL}/`,
-      }),
+      // new OfflinePlugin({
+      //   appShell: '/',
+      //   publicPath: `${process.env.PUBLIC_URL}`,
+      // }),
     ],
     performance: { hints: false },
   };

@@ -77,7 +77,8 @@ class Component extends React.Component {
       lat: 0,
       lng: 0
     };
-    this.mainColor = _sample(feedBackgroundColors)
+    // this.mainColor = _sample(feedBackgroundColors)
+    this.mainColor = '#1F2B34'
   }
 
   setAddressFromLatLng = (lat, lng) => {
@@ -393,13 +394,14 @@ async componentDidMount() {
     return (
       <div>
         <FormExchangeCreate onSubmit={this.handleSubmit}>
-          <Feed className="feed p-2 my-2" background={this.mainColor}>
-            <div style={{ color: 'white' }}>
-              <div className="d-flex mb-2">
-                <label className="col-form-label mr-auto" style={{ width: '190px' }}>I want to</label>
+          <Feed className="feed my-2 p-0" background={this.mainColor}>
+            <div style={{ color: 'white', padding: '20px' }}>
+              <div className="d-flex mb-4">
+                <label className="col-form-label mr-auto" style={{ width: '190px', fontWeight: 'bold'  }}>I want to</label>
                 <div className='input-group'>
                   <Field
                     name="type"
+                    // containerClass="radio-container-old"
                     component={fieldRadioButton}
                     list={EXCHANGE_ACTION_LIST}
                     color={textColor}
@@ -409,7 +411,7 @@ async componentDidMount() {
                 </div>
               </div>
               <div className="d-flex">
-                <label className="col-form-label mr-auto" style={{ width: '190px' }}>Coin</label>
+                <label className="col-form-label mr-auto label-create" style={{ width: '190px' }}>Coin</label>
                 <div className='input-group'>
                   <Field
                     name="currency"
@@ -421,25 +423,31 @@ async componentDidMount() {
                   />
                 </div>
               </div>
+              <hr className="hrLine" />
+
               <div className="d-flex mt-2">
-                <label className="col-form-label mr-auto" style={{ width: '190px' }}>Amount*</label>
+                <label className="col-form-label mr-auto label-create" style={{ width: '220px' }}>Amount*</label>
                 <div className="w-100">
                   <Field
                     name="amount"
-                    className="form-control-custom form-control-custom-ex w-100"
+                    className="form-control-custom form-control-custom-ex w-100 input-no-border"
                     component={fieldInput}
+                    placeholder="0.001"
                     onChange={this.onAmountChange}
                     validate={[required, currency === CRYPTO_CURRENCY.BTC ? minValue001 : minValue01]}
                   />
                 </div>
               </div>
+              <hr className="hrLine" />
+
               <div className="d-flex mt-2">
-                <label className="col-form-label mr-auto" style={{ width: '190px' }}>Price</label>
+                <label className="col-form-label mr-auto label-create" style={{ width: '220px' }}>Price</label>
                 <span className="w-100 col-form-label">{ formatMoney(offerPrice ? offerPrice.price : 0) } {ipInfo.currency}/{currency}</span>
               </div>
+
               <div className="d-flex mt-2">
-                {/*<label className="col-form-label mr-auto" style={{ width: '190px' }} />*/}
-                <div className='input-group justify-content-end'>
+                {/*<label className="col-form-label mr-auto" style={{ width: '220px' }} />*/}
+                <div className='input-group justify-content-start' style={{ paddingLeft: '20px' }}>
                   <Field
                     name="sellPriceType"
                     component={fieldRadioButton}
@@ -450,8 +458,10 @@ async componentDidMount() {
                   />
                 </div>
               </div>
-              <div className="d-flex mt-3">
-                <label className="col-form-label mr-auto" style={{ width: '190px' }}>Customize price</label>
+              <hr className="hrLine" />
+
+              <div className="d-flex py-1">
+                <label className="col-form-label mr-auto label-create" style={{ width: '220px' }}>Customize price</label>
                 <div className='input-group align-items-center'>
                   <Field
                     name="customizePrice"
@@ -464,31 +474,37 @@ async componentDidMount() {
                   />
                 </div>
               </div>
+              <hr className="hrLine" />
+
               <div className="d-flex mt-2">
-                <label className="col-form-label mr-auto" style={{ width: '190px' }}>Total</label>
+                <label className="col-form-label mr-auto label-create" style={{ width: '220px' }}>Total</label>
                 <span className="w-100 col-form-label">{ formatMoney(totalAmount) } {ipInfo.currency}</span>
               </div>
+              <hr className="hrLine" />
               <div className="d-flex mt-2">
-                <label className="col-form-label mr-auto" style={{ width: '190px' }}>Phone</label>
+                <label className="col-form-label mr-auto label-create" style={{ width: '220px' }}>Phone</label>
                 <div className="input-group w-100">
                   <Field
                     name="phone"
-                    className="form-control-custom form-control-custom-ex w-100"
+                    className="form-control-custom form-control-custom-ex w-100 input-no-border"
                     component={fieldPhoneInput}
                     type="tel"
-                    placeholder="+74995926433"
+                    placeholder="4995926433"
                     // validate={[required, currency === 'BTC' ? minValue001 : minValue01]}
                   />
                 </div>
               </div>
+              <hr className="hrLine" />
+
               <div className="d-flex mt-2">
-                <label className="col-form-label mr-auto" style={{ width: '190px' }}>Address*</label>
+                <label className="col-form-label mr-auto label-create" style={{ width: '220px' }}>Address*</label>
                 <div className="w-100">
                   <Field
                     name="address"
-                    className="form-control-custom form-control-custom-ex w-100"
+                    className="form-control-custom form-control-custom-ex w-100 input-no-border"
                     component={fieldInput}
                     validate={[required]}
+                    placeholder="81 E. Augusta Ave. Salinas"
                   />
                 </div>
               </div>

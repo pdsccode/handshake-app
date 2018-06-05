@@ -155,7 +155,7 @@ class Wallet extends React.Component {
    async componentDidMount() {
 
     let listWallet = await MasterWallet.getMasterWallet();
-    console.log("listWallet", listWallet);
+    //console.log("listWallet", listWallet);
 
     // console.log("default", MasterWallet.getWalletDefault("ETH"))
 
@@ -166,7 +166,7 @@ class Wallet extends React.Component {
     }
     else{
       this.splitWalletData(listWallet)
-      console.log('update balance for lst wallet');
+      //console.log('update balance for lst wallet');
       await this.getListBalace(listWallet);
     }
      /*var btc = new Bitcoin();
@@ -224,7 +224,7 @@ class Wallet extends React.Component {
   creatSheetMenuItem(wallet){
     let obj = [];
       obj.push({
-        title: 'Send',
+        title: 'Transfer',
         handler: () => {
           this.setState({isRestoreLoading: false, walletSelected: wallet, inputAddressAmountValue: '', inputSendAmountValue: ''});
           this.toggleBottomSheet();
@@ -233,7 +233,7 @@ class Wallet extends React.Component {
       })
 
       obj.push({
-        title: 'Fill up',
+        title: 'Add coins',
         handler: () => {
           this.setState({walletSelected: wallet});
           this.toggleBottomSheet();
@@ -243,7 +243,7 @@ class Wallet extends React.Component {
 
       if(!wallet.protected){
         obj.push({
-          title: 'Protected this wallet',
+          title: 'Secure this wallet',
           handler: () => {
             this.setState({walletSelected: wallet, stepProtected: 1, activeProtected: true});
             this.toggleBottomSheet();
@@ -276,7 +276,7 @@ class Wallet extends React.Component {
 
       if (!wallet.isReward){
         obj.push({
-          title: 'Make it default for {0} '.format(wallet.name) + (wallet.default ? "✓ " : ""),
+          title: 'Set as default {0} wallet '.format(wallet.name) + (wallet.default ? "✓ " : ""),
           handler: () => {
             wallet.default = !wallet.default;
             this.toggleBottomSheet();
@@ -351,13 +351,14 @@ class Wallet extends React.Component {
     else if (this.state.inputSendAmountValue == '' || this.state.inputSendAmountValue == 0)
       alert("Please input Amount value");
     else{
-      this.modalConfirmSendRef.open();      
+      this.modalConfirmSendRef.open();
     }
   }
   submitSendCoin=()=>{
     this.setState({isRestoreLoading: true});
+    this.modalConfirmSendRef.close();
       this.state.walletSelected.transfer(this.state.inputAddressAmountValue, this.state.inputSendAmountValue).then(success => {
-          console.log(success);
+          //console.log(success);
           this.setState({isRestoreLoading: false});
           if (success.hasOwnProperty('status')){
             if (success.status == 1){
@@ -543,7 +544,7 @@ class Wallet extends React.Component {
     MasterWallet.UpdateLocalStore(lstWalletTemp);
     this.modalProtectRef.close();
     this.splitWalletData(lstWalletTemp);
-    this.showSuccess("Your wallet is protected");
+    this.showSuccess("Your wallet is secured");
   }
 
   // For Qrcode:
@@ -606,7 +607,7 @@ class Wallet extends React.Component {
         </ModalDialog>
 
         {/* ModalDialog for transfer coin */}
-        <Modal title="Send" onRef={modal => this.modalSendRef = modal}>
+        <Modal title="Transfer" onRef={modal => this.modalSendRef = modal}>
           <SendWalletForm className="sendwallet-wrapper" onSubmit={this.sendCoin}>
           <div className="div-address-qr-code">
             <Input name="to_address" placeholder="To address" required className="input-address-qr-code"
@@ -624,23 +625,23 @@ class Wallet extends React.Component {
           </SendWalletForm>
         </Modal>
 
-        {/*Dialog confirm transfer coin*/}        
+        {/*Dialog confirm transfer coin*/}
         <ModalDialog title="Confirmation" onRef={modal => this.modalConfirmSendRef = modal}>
-          <div className="bodyConfirm"><span>Are you sure you want to send out {this.state.inputSendAmountValue}?</span></div>          
+          <div className="bodyConfirm"><span>Are you sure you want to send out {this.state.inputSendAmountValue} {this.state.walletSelected ? this.state.walletSelected.name : ""}?</span></div>
           <div className='bodyConfirm'>
           <Button className="left" cssType="danger" onClick={this.submitSendCoin} >Yes</Button>
             <Button className="right" cssType="secondary" onClick={() => { this.modalConfirmSendRef.close(); }}>Cancel</Button>
           </div>
         </ModalDialog>
 
-        <Modal title="Fill up" onRef={modal => this.modalFillRef = modal}>
-          <FeedCreditCard buttonTitle="Fill Up" currencyForced={this.state.walletSelected ? this.state.walletSelected.name : ""}
+        <Modal title="Add coins" onRef={modal => this.modalFillRef = modal}>
+          <FeedCreditCard buttonTitle="Add coins" currencyForced={this.state.walletSelected ? this.state.walletSelected.name : ""}
             callbackSuccess={this.afterWalletFill}
             addressForced={this.state.walletSelected ? this.state.walletSelected.address : ""}
           />
         </Modal>
 
-        <Modal title="Protect your wallet" onClose={this.closeProtected}  onRef={modal => this.modalProtectRef = modal}>
+        <Modal title="Secure this wallet" onClose={this.closeProtected}  onRef={modal => this.modalProtectRef = modal}>
           <WalletProtect onCopy={this.onCopyProtected} step={this.state.stepProtected} active={this.state.activeProtected} wallet={this.state.walletSelected} callbackSuccess={() => {this.successWalletProtect(this.state.walletSelected)}} />
         </Modal>
 
@@ -706,10 +707,10 @@ class Wallet extends React.Component {
             defaultId={1}
             source={[{"id": 1, "value": "Random"}, {"id": 2, "value": "Specify recovery Phrase"}]}
             onItemSelected={(item) =>
-                {                
+                {
                   this.setState({
                     walletKeyDefaultToCreate: item.id
-                  });                
+                  });
                 }
               }
           />
@@ -736,7 +737,7 @@ class Wallet extends React.Component {
 
         {/* Render list wallet: */}
         <Row className="list">
-          <Header title="Main net wallets" hasLink={false} linkTitle="+ Add new" onLinkClick={this.onLinkClick} />
+          <Header title="Mainnet wallets" hasLink={false} linkTitle="+ Add new" onLinkClick={this.onLinkClick} />
         </Row>
         <Row className="list">
           {this.listMainWalletBalance}
@@ -750,7 +751,7 @@ class Wallet extends React.Component {
         </Row>
 
         <Row className="list">
-          <Header title="Test net wallets" hasLink={false} />
+          <Header title="Testnet wallets" hasLink={false} />
         </Row>
         <Row className="list">
           {this.listTestWalletBalance}

@@ -247,13 +247,15 @@ class BetingShake extends React.Component {
       label: 'Amount',
       className: 'amount',
       placeholder: '0.00',
+      type: 'tel',
     };
     const oddsField = {
       id: 'odds',
       name: 'odds',
       label: 'Odds',
       placeholder: '0-0',
-      isShowCurrency: false
+      isShowCurrency: false,
+      type: 'tel',
     };
 
     return (

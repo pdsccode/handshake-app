@@ -23,7 +23,7 @@ export const HANDSHAKE_ID_DEFAULT = 3;
 export const HANDSHAKE_NAME = {
   // [HANDSHAKE_ID.PROMISE]: 'Promise',
   [HANDSHAKE_ID.EXCHANGE]: 'Exchange',
-  [HANDSHAKE_ID.BETTING]: 'Betting',
+  [HANDSHAKE_ID.BETTING]: 'Bet',
   // [HANDSHAKE_ID.SEED]: 'Seed',
 };
 
@@ -57,6 +57,16 @@ export const EXCHANGE_ACTION = {
 export const EXCHANGE_ACTION_NAME = {
   [EXCHANGE_ACTION.BUY]: 'Buy',
   [EXCHANGE_ACTION.SELL]: 'Sell',
+};
+
+export const EXCHANGE_ACTION_PAST_NAME = {
+  [EXCHANGE_ACTION.BUY]: 'bought',
+  [EXCHANGE_ACTION.SELL]: 'sold',
+};
+
+export const EXCHANGE_ACTION_PRESENT_NAME = {
+  [EXCHANGE_ACTION.BUY]: 'buy',
+  [EXCHANGE_ACTION.SELL]: 'sell',
 };
 
 export const EXCHANGE_ACTION_LIST = [
