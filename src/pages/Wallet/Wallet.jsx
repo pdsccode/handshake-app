@@ -91,7 +91,7 @@ class Wallet extends React.Component {
       walletsData: false,
       isNewCCOpen: false,
       stepProtected: 1,
-      activeProtected: false,      
+      activeProtected: false,
       transactions: [],
     };
     this.props.setHeaderRight(this.headerRight());
@@ -254,12 +254,12 @@ class Wallet extends React.Component {
       obj.push({
         title: 'Transaction history',
         handler: () => {
-          this.setState({walletSelected: wallet, transactions: []});            
+          this.setState({walletSelected: wallet, transactions: []});
           this.toggleBottomSheet();
           this.modalHistoryRef.open();
-          this.showLoading();                    
-          let dataHistory = wallet.getTransactionHistory().then(data => {            
-            this.setState({walletSelected: wallet, transactions: data});                        
+          this.showLoading();
+          let dataHistory = wallet.getTransactionHistory().then(data => {
+            this.setState({walletSelected: wallet, transactions: data});
             this.hideLoading();
           });
         }
@@ -539,6 +539,7 @@ class Wallet extends React.Component {
     MasterWallet.UpdateLocalStore(lstWalletTemp);
     this.modalProtectRef.close();
     this.splitWalletData(lstWalletTemp);
+    this.showSuccess("Your wallet is protected");
   }
 
   // For Qrcode:
