@@ -983,7 +983,7 @@ class FeedExchange extends React.PureComponent {
       }
     }
 
-    const phone = offer.contactPhone[0] === '+' ? offer.contactPhone : `+${offer.contactPhone}`; // prepend '+'
+    const phone = offer.contactPhone;
     const address = offer.contactInfo;
 
     let distanceKm = 0;
