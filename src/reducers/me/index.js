@@ -80,15 +80,16 @@ const meReducter = (state = {
       const listBettingStatus = action.payload;
       const myList = state.list;
     
-
-      listBettingStatus.forEach(element => {
-        const {id, status, result} = element;
+      Object.keys(listBettingStatus).forEach((key) => {
+        const element = listBettingStatus[key];
+        const {id, status_i, result_i} = element;
         const handshakeItem = myList.find(item => item.id === id);
-        handshakeItem.status = status;
-        handshakeItem.result = result;
+        handshakeItem.status = status_i;
+        handshakeItem.result = result_i;
         //TO DO: delete record after update status 
-
+        
       });
+      
 
       return {
         ...state,

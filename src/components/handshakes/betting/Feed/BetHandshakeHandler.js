@@ -72,12 +72,11 @@ export class BetHandshakeHandler {
         }else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINITED){
           strStatus = BETTING_STATUS_LABEL.CANCELLED;
           isAction = false;
-        }else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_REFUNDING){
-          strStatus = BETTING_STATUS_LABEL.REFUNDING;
-          label = BETTING_STATUS_LABEL.REFUND;
-          isAction = true;
-        }else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_REFUND){
-          strStatus = BETTING_STATUS_LABEL.REFUNDED;
+        }else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_DONE&&resultStatus === BETTING_STATUS.SUPPORT_WIN && side === SIDE.SUPPORT){
+          strStatus = BETTING_STATUS_LABEL.WIN;
+          isAction = false;
+        }else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_DONE&&resultStatus === BETTING_STATUS.SUPPORT_WIN && side === SIDE.AGAINST){
+          strStatus = BETTING_STATUS_LABEL.WIN;
           isAction = false;
         }else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_BLOCKCHAIN_PENDING){
           //TO DO: scan txhash and rollback after a few minutes
@@ -88,8 +87,8 @@ export class BetHandshakeHandler {
             strStatus = BETTING_STATUS_LABEL.WAITING_RESULT;
             isAction = true;
         }else if(isMatch && resultStatus === BETTING_STATUS.DRAW){
-            label = BETTING_STATUS_LABEL.WITHDRAW;
-            strStatus = BETTING_STATUS_LABEL.WIN;
+            label = BETTING_STATUS_LABEL.REFUND;
+            strStatus = BETTING_STATUS_LABEL.REFUNDING;
             isAction = true;
         }else if(isMatch && resultStatus === BETTING_STATUS.SUPPORT_WIN && side === SIDE.SUPPORT){
             label = BETTING_STATUS_LABEL.WITHDRAW;
