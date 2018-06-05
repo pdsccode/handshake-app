@@ -111,6 +111,7 @@ export class BetHandshakeHandler {
       if(secondItem){
         const strId = secondItem.substring(1);
         console.log(strId);
+        console.log(secondItem);
         return parseInt(strId);
 
       }
