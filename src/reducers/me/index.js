@@ -78,20 +78,17 @@ const meReducter = (state = {
 
     case ACTIONS.FIREBASE_BETTING_DATA_CHANGE: {
       const listBettingStatus = action.payload;
-      let myList = state.list;
+      const myList = state.list;
 
-      Object.keys(listBettingStatus).forEach((itemId) => {
-        const offer = listOfferStatus[offer_id];
-        for (let handshake of myList) {
+      listBettingStatus.forEach(element => {
+        const {id, status, result} = element;
+        const handshakeItem = myList.find(item => item.id === id);
+        handshakeItem.status = status;
+        handshakeItem.result = result;
+        //TO DO: delete after update status
 
-          let status = '';
-          if (handshake.id.includes(offer.id) && handshake.status !== status) {
-            handshake.status = status;
-            break;
-          }
-          //TO DO: delete after update status
-        }
       });
+
       return {
         ...state,
         list: myList,
