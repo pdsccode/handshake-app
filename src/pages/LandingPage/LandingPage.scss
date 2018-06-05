@@ -231,7 +231,7 @@
   }
 }
 
-@media (max-width: 767px) {
+@include respond(sm) {
   .root {
     .mainContent {
       padding: 20px;

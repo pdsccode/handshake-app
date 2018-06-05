@@ -52,13 +52,13 @@ class Handshake extends React.Component {
         <div className="banner">
           <div className={`container mainContent`}>
             <div className={`row rowEqHeight`}>
-              <div className="col-md-6 hidden-sm hidden-xs">
-                {/*<img src={appScreenIcon} alt="app screen" className={`img-responsive ${s.appScreen}`} />*/}
+              <div className="col-lg-6 col-md-12 d-none d-lg-block">
+                {/*<img src={appScreenIcon} alt="app screen" className={`img-fluid ${s.appScreen}`} />*/}
                 <div className="appScreen">
                    {/*<video src={appScreenVideo} autoPlay="autoplay" loop="loop" muted="muted" className={s.appScreenVideo} />*/}
                 </div>
               </div>
-              <div className="col-md-6 col-sm-12 col-xs-12">
+              <div className="col-lg-6 col-md-12 col-sm-12 col-xs-12">
                 <div className="headerLandingpage">
                   <img src={ninjaIcon} alt="ninja icon" />
                   <div>
@@ -87,7 +87,7 @@ class Handshake extends React.Component {
             <div className="col-md-12 col-sm-12 col-xs-12">
               <h3>Built on <span>blockchain technologies</span></h3>
               <p>Shake Ninja is a decentralized prediction exchange that runs smart contracts, ensuring that all agreements happen exactly as agreed. In short: <span className="green">no fraud, no cheating, no flakes.</span></p>
-              <img src={blockchainDescriptionImage} alt="block chain description image" className="img-responsive" />
+              <img src={blockchainDescriptionImage} alt="block chain description image" className="img-fluid" />
             </div>
           </div>
         </div>
