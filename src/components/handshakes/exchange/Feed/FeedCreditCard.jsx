@@ -25,6 +25,7 @@ import { bindActionCreators } from "redux";
 import {showAlert} from '@/reducers/app/action';
 import _sample from "lodash/sample";
 import { feedBackgroundColors } from "@/components/handshakes/exchange/config";
+import {BigNumber} from 'bignumber.js';
 
 const nameFormCreditCard = 'creditCard'
 const FormCreditCard = createForm({ propsReduxForm: { form: nameFormCreditCard,
@@ -242,10 +243,10 @@ class FeedCreditCard extends React.Component {
     }
   }
 
-  onAmountChange = (e) => {
-    const amount = e.target.value;
+  onAmountChange = (e, amount) => {
+    // const amount = e.target.value;
     this.getCryptoPriceByAmount(amount);
-    this.setState({amount: amount}, () => {
+    this.setState({amount}, () => {
       this.getCryptoPriceByAmountThrottled(amount);
     });
   }
@@ -334,12 +335,15 @@ class FeedCreditCard extends React.Component {
                   <div className="mx-2">
                     <Field
                       name="amount"
-                      type="number"
-                      step="any"
+                      // type="number"
+                      // step="any"
                       validate={[required]}
-                      component={fieldInput}
+                      component={fieldCleave}
+                      propsCleave={{
+                        placeholder: intl.formatMessage({id: 'amount'}),
+                        options: { numeral: true, delimiter: '' },
+                      }}
                       className="form-control-custom form-control-custom-ex d-inline-block w-100"
-                      placeholder={intl.formatMessage({id: 'amount'})}
                       onChange={this.onAmountChange}
                     />
                   </div>
@@ -354,7 +358,7 @@ class FeedCreditCard extends React.Component {
                   </span>
                 </div>
                 <div className="pb-2">
-                  <span><FormattedMessage id="askUsingCreditCard" values={{ fiatCurrency: fiatCurrency, total: total }} /></span>
+                  <span><FormattedMessage id="askUsingCreditCard" values={{ fiatCurrency: fiatCurrency, total: new BigNumber(total).toFormat(2) }} /></span>
                 </div>
                 {
                   amount && (
