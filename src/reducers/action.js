@@ -19,11 +19,13 @@ export const createAPI = INIT => ({
     dispatch({ type: APP_ACTION.CALLED });
 
     //
-    dispatch({ type: `${INIT}_SUCCESS`, payload: response.data, ...more });
-
     if (response.data.status === 1) {
+      dispatch({ type: `${INIT}_SUCCESS`, payload: response.data, ...more });
       if (successFn) successFn(response.data);
-    } else if (errorFn) errorFn();
+    } else {
+      dispatch({ type: `${INIT}_FAILED` });
+      if (errorFn) errorFn();
+    }
   }).catch((e) => {
     //
     dispatch({ type: APP_ACTION.CALLED });

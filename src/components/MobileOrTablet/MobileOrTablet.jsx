@@ -13,7 +13,7 @@ class MobileOrTablet extends React.PureComponent {
         <div className="right">  
           <p className="title">Hey Ninja.</p>
           <p className="sub-title">We like to stay on the move</p>
-          <p>Ditch the desktop and check out us on mobile!</p>
+          <p>Ditch the desktop and check us out mobile!</p>
         </div>
       </div>
     );
