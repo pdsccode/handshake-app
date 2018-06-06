@@ -52,6 +52,7 @@ export const BETTING_STATUS_LABEL =
     "WIN": `You're a winner!`,'DONE': 'Completed',
     WITHDRAW: 'Withdraw winnings', 
     CANCELLING: 'Your bet is being cancelled.',
+    PROGRESSING: "Your bet is progressing.",
     WAITING_RESULT: 'Match has not yet begun', 
     REFUND: 'Refund your bet', 
     CANCELLED: 'Your bet was cancelled.', 
@@ -80,7 +81,7 @@ export class BetHandshakeHandler {
           isAction = false;
         }else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_BLOCKCHAIN_PENDING){
           //TO DO: scan txhash and rollback after a few minutes
-          strStatus = BETTING_STATUS_LABEL.CANCELLING;
+          strStatus = BETTING_STATUS_LABEL.PROGRESSING;
           isAction = false;
         }else if(!isMatch && role === ROLE.INITER){
             label = BETTING_STATUS_LABEL.CANCEL;
@@ -130,9 +131,6 @@ export class BetHandshakeHandler {
     const balance = await wallet.getBalance();
     console.log('Balance:', balance);
     return balance;
-  }
-  static async getEstimateGas(){
-
   }
 
   static foundShakeItemList(dict) {
@@ -209,7 +207,7 @@ export class BetHandshakeHandler {
       } else {
         const foundShakeList = BetHandshakeHandler.foundShakeItemList(element);
         foundShakeList.forEach((element) => {
-          this.shakeContract(element, hid);
+          BetHandshakeHandler.shakeContract(element, hid);
         });
       }
     };

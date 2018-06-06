@@ -53,7 +53,7 @@ class Helper {
         newWindow.focus();
       }
     }
-  };
+  }
 }
 
 export default Helper;

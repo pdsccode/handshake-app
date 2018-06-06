@@ -78,8 +78,7 @@ class FeedBetting extends React.Component {
 
     }
   }
-
-  componentDidMount() {
+  handleStatus(){
     const {status, side, result, shakeUserIds} = this.props;
 
     console.log('Props:', this.props);
@@ -91,7 +90,7 @@ class FeedBetting extends React.Component {
     const isMatch = this.isMatch;
     //const isMatch = true;
     //const hardCodeStatus = 3;
-    //const hardCodeResult = 1;
+    const hardCodeResult = 1;
     console.log('Is Match:', isMatch);
 
     const statusResult = BetHandshakeHandler.getStatusLabel(status, result, role,side, isMatch);
@@ -103,11 +102,16 @@ class FeedBetting extends React.Component {
       role,
       isMatch,
     })
+  }
+
+  componentDidMount() {
+    this.handleStatus();
 
   }
 
   componentWillReceiveProps(nextProps) {
-   
+    console.log('Feeding Next Props:', nextProps);
+    this.handleStatus();
   }
 
   get extraData(){
