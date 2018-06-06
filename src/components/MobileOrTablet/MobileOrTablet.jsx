@@ -1,7 +1,7 @@
 import React from 'react';
 // style
 import onlyMobileTabletSVG from '@/assets/images/ninja/only-mobile-tablet.svg';
-import arrowsRightIcon from '@/assets/images/icon/landingpage/arrows_long_right.svg';
+import arrowsRightIcon from '@/assets/images/ninja/arrows-right-blue.svg';
 import './MobileOrTablet.scss';
 
 class MobileOrTablet extends React.PureComponent {
