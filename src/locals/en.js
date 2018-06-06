@@ -3,7 +3,7 @@ export default {
   buy: 'Buy',
   sell: 'Sell',
   amount: 'Amount',
-  askUsingCreditCard: 'for {fiatCurrency}{total} using card?',
+  askUsingCreditCard: 'for {total} {fiatCurrency} using card?',
   change: 'Change',
   ccNumber: 'Number',
   ccExpire: 'Expire',
