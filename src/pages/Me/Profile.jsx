@@ -100,7 +100,7 @@ class Profile extends React.Component {
                 </div>
               </div>
               <div className={`content ${this.state.phoneCollapse ? '' : 'd-none'}`}>
-                <p className="text">In order to protect the security of your account, please add your phone number.</p>
+                <p className="text">We only send humans rewards. Please verify your phone number.</p>
                 <p className="text">Enter phone number</p>
                 <NumberPhoneForm onSubmit={this.verifyPhone}>
                   <div className="phone-block">
@@ -139,7 +139,7 @@ class Profile extends React.Component {
                     />
                     <Button className="send-btn">Send</Button>
                   </div>
-                  <p className="text">Enter vertiifycation code to your phone</p>
+                  <p className="text">Enter verification code sent to your phone</p>
                   <Field
                     name="sms-code"
                     className="form-control-custom form-control-custom-ex w-100"
@@ -148,7 +148,7 @@ class Profile extends React.Component {
                       options: { blocks: [4], numericOnly: true },
                     }}
                   />
-                  <Button className="submit-btn">Vertify your number</Button>
+                  <Button className="submit-btn">Verify your number</Button>
                 </NumberPhoneForm>
               </div>
             </div>
@@ -167,7 +167,7 @@ class Profile extends React.Component {
                 </div>
               </div>
               <div className={`content ${this.state.emailCollapse ? '' : 'd-none'}`}>
-                <p className="text">In order to protect the security of your account, please add your email.</p>
+                <p className="text">Prefer to receive notifications and updates via email?</p>
                 <p className="text">Enter your email</p>
                 <EmailForm onSubmit={this.verifyEmail}>
                   <Field
@@ -175,7 +175,7 @@ class Profile extends React.Component {
                     className="form-control-custom form-control-custom-ex w-100"
                     component={fieldCleave}
                   />
-                  <Button className="submit-btn">Vertify your email</Button>
+                  <Button className="submit-btn">Verify your email</Button>
                 </EmailForm>
               </div>
             </div>
@@ -194,11 +194,12 @@ class Profile extends React.Component {
 }
 
 Profile.propTypes = {
+  auth: PropTypes.object,
   setHeaderTitle: PropTypes.func,
 };
 
 const mapState = state => ({
-
+  auth: state.auth
 });
 
 const mapDispatch = ({
