@@ -17,6 +17,7 @@ import ModalDialog from '@/components/core/controls/ModalDialog';
 import ExpandArrowSVG from '@/assets/images/icon/expand-arrow.svg';
 import CheckedSVG from '@/assets/images/icon/checked.svg';
 import { success } from '@/reducers/comment/action';
+import { chatInstance } from '@/pages/Chat/Chat';
 
 import './Profile.scss';
 
@@ -113,6 +114,7 @@ class Profile extends React.Component {
                   timeOut: 3000,
                   type: 'success',
                 });
+                chatInstance.updateUserName(values.username);
               },
             });
           } else {
