@@ -73,6 +73,9 @@ export class BetHandshakeHandler {
         }else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINITED){
           strStatus = BETTING_STATUS_LABEL.CANCELLED;
           isAction = false;
+        }else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_REFUND){
+          strStatus = BETTING_STATUS_LABEL.REFUNDED;
+          isAction = false;
         }else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_DONE&&resultStatus === BETTING_STATUS.SUPPORT_WIN && side === SIDE.SUPPORT){
           strStatus = BETTING_STATUS_LABEL.WIN;
           isAction = false;
@@ -169,7 +172,6 @@ export class BetHandshakeHandler {
     // const hid = outcome_id;
     console.log(`hid:`, hid);
     const dataBlockchain = await bettinghandshake.initBet(hid, side, stake, payout, offchain);
-    console.log('dataBlockchain:',dataBlockchain);
     return dataBlockchain;
   };
 
@@ -193,8 +195,7 @@ export class BetHandshakeHandler {
       maker,
       offchain,
     );
-    if (result) {
-    }
+    return result;
   }
   static controlShake = async (list, hid) => {
     const result = null;
@@ -206,9 +207,20 @@ export class BetHandshakeHandler {
         await BetHandshakeHandler.addContract(element, hid);
       } else {
         const foundShakeList = BetHandshakeHandler.foundShakeItemList(element);
-        foundShakeList.forEach((element) => {
-          BetHandshakeHandler.shakeContract(element, hid);
-        });
+        for (var i = 0; i< foundShakeList.length; i++){
+          (function (i) {
+            if(i==0){
+              BetHandshakeHandler.shakeContract(element, hid);   
+
+            }else { //Delay from i=1
+              setTimeout(function () {
+                BetHandshakeHandler.shakeContract(element, hid);   
+              }, 8000*i);
+            }
+            
+          })(i);
+        }
+              
       }
     };
     list.forEach(dataList);
