@@ -4,7 +4,7 @@ import { ACTIONS } from './action';
 
 const authReducter = (state = {
   token: local.get(APP.AUTH_TOKEN),
-  profile: local.get(APP.AUTH_PROFILE),
+  profile: local.get(APP.AUTH_PROFILE) || {},
   isLogged: false,
   profileUpdatedAt: Date.now(),
 }, action) => {

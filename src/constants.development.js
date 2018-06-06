@@ -79,11 +79,6 @@ export const EXCHANGE_ACTION_DEFAULT = EXCHANGE_ACTION.BUY;
 export const FIAT_CURRENCY = 'USD';
 export const FIAT_CURRENCY_SYMBOL = '$';
 
-export const SELL_PRICE_TYPE = [
-  { value: 'fix', text: 'Fix now' },
-  { value: 'flexible', text: 'Update on shake' },
-];
-
 export const SELL_PRICE_TYPE_DEFAULT = 'fix';
 
 // path

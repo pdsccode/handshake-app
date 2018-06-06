@@ -61,6 +61,13 @@ const meReducter = (
       const listOfferStatus = action.payload;
       const myList = state.list;
 
+      const userProfile = action.profile;
+      const rootPathFirebase = `${FIREBASE_PATH.USERS}/${String(userProfile.id || -1)}`;
+      const firebaseExchange = firebase
+      ?.database()
+      ?.ref(rootPathFirebase)
+      ?.child('offers');
+
       Object.keys(listOfferStatus).forEach((offer_id) => {
         const offer = listOfferStatus[offer_id];
         for (const handshake of myList) {
@@ -77,6 +84,8 @@ const meReducter = (
           }
         }
       });
+
+      firebaseExchange?.remove();
 
       return {
         ...state,
