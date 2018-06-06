@@ -91,6 +91,14 @@ const CommentRootRouter = props => (
     {Component => <Component {...props} />}
   </DynamicImport>
 );
+const LandingPageRootRouter = props => (
+  <DynamicImport
+    loading={Loading}
+    load={() => import('@/components/Router/LandingPage')}
+  >
+    {Component => <Component {...props} />}
+  </DynamicImport>
+);
 const Page404 = props => (
   <DynamicImport
     isNotFound
@@ -277,51 +285,61 @@ class Router extends React.Component {
         <BrowserRouter>
           <Route
             path={URL.INDEX}
-            render={props => (
-              <Layout {...props}>
-                <ScrollToTop>
+            render={props =>
+              props.location.pathname === URL.LANDING_PAGE_SHURIKEN ? (
                   <Switch>
                     <Route
-                      exact
-                      path={URL.INDEX}
-                      render={() => (
-                        <Redirect to={{ pathname: URL.HANDSHAKE_DISCOVER }} />
-                      )}
-                    />
-                    <Route path={URL.HANDSHAKE_ME} component={MeRootRouter} />
-                    <Route
-                      path={URL.HANDSHAKE_DISCOVER}
-                      component={DiscoverRootRouter}
-                    />
-                    <Route
-                      path={URL.HANDSHAKE_CHAT}
-                      component={ChatRootRouter}
-                    />
-                    <Route
-                      path={URL.HANDSHAKE_WALLET}
-                      component={WalletRootRouter}
-                    />
-                    <Route
-                      path={URL.HANDSHAKE_CREATE}
-                      component={CreateRootRouter}
-                    />
-                    <Route
-                      path={URL.HANDSHAKE_EXCHANGE}
-                      component={ExchangeRootRouter}
-                    />
-                    <Route
-                      path={URL.TRANSACTION_LIST}
-                      component={TransactionRootRouter}
-                    />
-                    <Route
-                      path={URL.COMMENTS_BY_SHAKE}
-                      component={CommentRootRouter}
+                      path={URL.LANDING_PAGE_SHURIKEN}
+                      component={LandingPageRootRouter}
                     />
                     <Route component={Page404} />
                   </Switch>
-                </ScrollToTop>
-              </Layout>
-            )}
+              ) : (
+                <Layout {...props}>
+                  <ScrollToTop>
+                    <Switch>
+                      <Route
+                        exact
+                        path={URL.INDEX}
+                        render={() => (
+                          <Redirect to={{pathname: URL.HANDSHAKE_DISCOVER}}/>
+                        )}
+                      />
+                      <Route path={URL.HANDSHAKE_ME} component={MeRootRouter}/>
+                      <Route
+                        path={URL.HANDSHAKE_DISCOVER}
+                        component={DiscoverRootRouter}
+                      />
+                      <Route
+                        path={URL.HANDSHAKE_CHAT}
+                        component={ChatRootRouter}
+                      />
+                      <Route
+                        path={URL.HANDSHAKE_WALLET}
+                        component={WalletRootRouter}
+                      />
+                      <Route
+                        path={URL.HANDSHAKE_CREATE}
+                        component={CreateRootRouter}
+                      />
+                      <Route
+                        path={URL.HANDSHAKE_EXCHANGE}
+                        component={ExchangeRootRouter}
+                      />
+                      <Route
+                        path={URL.TRANSACTION_LIST}
+                        component={TransactionRootRouter}
+                      />
+                      <Route
+                        path={URL.COMMENTS_BY_SHAKE}
+                        component={CommentRootRouter}
+                      />
+                      <Route component={Page404} />
+                    </Switch>
+                  </ScrollToTop>
+                </Layout>
+              )
+            }
           />
         </BrowserRouter>
       </IntlProvider>

@@ -48,6 +48,7 @@ import _sample from "lodash/sample";
 import { feedBackgroundColors } from "@/components/handshakes/exchange/config";
 import {updateOfferStatus} from "@/reducers/discover/action";
 import {formatAmountCurrency, formatMoney} from "@/services/offer-util";
+import {BigNumber} from "bignumber.js";
 
 class FeedExchange extends React.PureComponent {
   constructor(props) {
@@ -154,8 +155,7 @@ class FeedExchange extends React.PureComponent {
     const fee = await wallet.getFee(4, true);
 
     if ((offer.currency === CRYPTO_CURRENCY.ETH || (offer.type === EXCHANGE_ACTION.BUY && offer.currency === CRYPTO_CURRENCY.BTC))
-        && balance < offer.totalAmount + fee) {
-      this.showNotEnoughCoinAlert(balance, fee, offer.currency);
+        && this.showNotEnoughCoinAlert(balance, offer.totalAmount, fee, offer.currency)) {
 
       return;
     }
@@ -177,21 +177,31 @@ class FeedExchange extends React.PureComponent {
     });
   }
 
-  showNotEnoughCoinAlert = (balance, fee, currency) => {
-    const { intl } = this.props;
-    this.props.showAlert({
-      message: <div className="text-center">
-        {intl.formatMessage({ id: 'notEnoughCoinInWallet' }, {
-          amount: formatAmountCurrency(balance),
-          fee: formatAmountCurrency(fee),
-          currency: currency,
-        })}
-      </div>,
-      timeOut: 3000,
-      type: 'danger',
-      callBack: () => {
-      }
-    });
+  showNotEnoughCoinAlert = (balance, amount, fee, currency) => {
+    const bnBalance = new BigNumber(balance);
+    const bnAmount = new BigNumber(amount);
+    const bnFee = new BigNumber(fee);
+
+    const condition = bnBalance.isLessThan(bnAmount.plus(bnFee));
+
+    if (condition) {
+      const { intl } = this.props;
+      this.props.showAlert({
+        message: <div className="text-center">
+          {intl.formatMessage({ id: 'notEnoughCoinInWallet' }, {
+            amount: formatAmountCurrency(balance),
+            fee: formatAmountCurrency(fee),
+            currency: currency,
+          })}
+        </div>,
+        timeOut: 3000,
+        type: 'danger',
+        callBack: () => {
+        }
+      });
+    }
+
+    return condition;
   }
 
   handleShakeOfferSuccess = (responseData) => {
@@ -236,9 +246,7 @@ class FeedExchange extends React.PureComponent {
       const balance = await wallet.getBalance();
       const fee = await wallet.getFee();
 
-      if (balance < offer.totalAmount + fee) {
-        this.showNotEnoughCoinAlert(balance, fee, offer.currency);
-
+      if (this.showNotEnoughCoinAlert(balance, offer.totalAmount, fee, offer.currency)) {
         return;
       }
     }
@@ -284,9 +292,7 @@ class FeedExchange extends React.PureComponent {
       const balance = await wallet.getBalance();
       const fee = await wallet.getFee();
 
-      if (balance < offer.totalAmount + fee) {
-        this.showNotEnoughCoinAlert(balance, fee, offer.currency);
-
+      if (this.showNotEnoughCoinAlert(balance, offer.totalAmount, fee, offer.currency)) {
         return;
       }
     }
@@ -341,9 +347,7 @@ class FeedExchange extends React.PureComponent {
       const balance = await wallet.getBalance();
       const fee = await wallet.getFee();
 
-      if (balance < offer.totalAmount + fee) {
-        this.showNotEnoughCoinAlert(balance, fee, offer.currency);
-
+      if (this.showNotEnoughCoinAlert(balance, offer.totalAmount, fee, offer.currency)) {
         return;
       }
     }
@@ -405,9 +409,7 @@ class FeedExchange extends React.PureComponent {
       const balance = await wallet.getBalance();
       const fee = await wallet.getFee();
 
-      if (balance < offer.totalAmount + fee) {
-        this.showNotEnoughCoinAlert(balance, fee, offer.currency);
-
+      if (this.showNotEnoughCoinAlert(balance, offer.totalAmount, fee, offer.currency)) {
         return;
       }
     }
@@ -955,6 +957,7 @@ class FeedExchange extends React.PureComponent {
     let statusText = '';
     let message = '';
     let actionButtons = null;
+    let from = '';
 
     switch (offer.feedType) {
       case EXCHANGE_FEED_TYPE.EXCHANGE: {
@@ -962,35 +965,87 @@ class FeedExchange extends React.PureComponent {
 
         let offerType = '';
         if (mode === 'me') {
-          switch (this.userType) {
-            case HANDSHAKE_USER.SHAKED: {
-              if (offer.type === EXCHANGE_ACTION.BUY) {
-                offerType = EXCHANGE_ACTION_PAST_NAME[EXCHANGE_ACTION.SELL];
-              } else if (offer.type === EXCHANGE_ACTION.SELL) {
-                offerType = EXCHANGE_ACTION_PAST_NAME[EXCHANGE_ACTION.BUY];
+          switch (status) {
+            case HANDSHAKE_EXCHANGE_STATUS.SHAKING:
+            case HANDSHAKE_EXCHANGE_STATUS.SHAKE:
+            case HANDSHAKE_EXCHANGE_STATUS.COMPLETING:
+            case HANDSHAKE_EXCHANGE_STATUS.COMPLETED:
+            case HANDSHAKE_EXCHANGE_STATUS.WITHDRAWING:
+            case HANDSHAKE_EXCHANGE_STATUS.WITHDRAW: {
+              switch (this.userType) {
+                case HANDSHAKE_USER.SHAKED: {
+                  from = 'With';
+                  if (offer.type === EXCHANGE_ACTION.BUY) {
+                    offerType = EXCHANGE_ACTION_PAST_NAME[EXCHANGE_ACTION.SELL];
+                  } else if (offer.type === EXCHANGE_ACTION.SELL) {
+                    offerType = EXCHANGE_ACTION_PAST_NAME[EXCHANGE_ACTION.BUY];
+                  }
+                  break;
+                }
+                case HANDSHAKE_USER.OWNER: {
+                  from = 'From';
+
+                  offerType = EXCHANGE_ACTION_PAST_NAME[offer.type];
+                  break;
+                }
               }
+
+              // offerType = EXCHANGE_ACTION_PAST_NAME[offer.type];
+              message = intl.formatMessage({ id: 'offerHandShakeContentMeDone' }, {
+                offerType: offerType,
+                amount: formatAmountCurrency(offer.amount),
+                currency: offer.currency,
+                currency_symbol: offer.fiatCurrency,
+                total: formatMoney(fiatAmount),
+                fee: offer.feePercentage,
+                payment_method: EXCHANGE_METHOD_PAYMENT[EXCHANGE_FEED_TYPE.EXCHANGE],
+              });
+              break;
             }
-            case HANDSHAKE_USER.OWNER: {
-              if (status === HANDSHAKE_EXCHANGE_STATUS.CREATED ||
-                status === HANDSHAKE_EXCHANGE_STATUS.ACTIVE) {
-                offerType = EXCHANGE_ACTION_PRESENT_NAME[offer.type];
-              } else {
-                offerType = EXCHANGE_ACTION_PAST_NAME[offer.type];
+            default: {
+              switch (this.userType) {
+                case HANDSHAKE_USER.SHAKED: {
+                  from = 'With';
+                  if (offer.type === EXCHANGE_ACTION.BUY) {
+                    offerType = EXCHANGE_ACTION_PRESENT_NAME[EXCHANGE_ACTION.SELL];
+                  } else if (offer.type === EXCHANGE_ACTION.SELL) {
+                    offerType = EXCHANGE_ACTION_PRESENT_NAME[EXCHANGE_ACTION.BUY];
+                  }
+                  break;
+                }
+                case HANDSHAKE_USER.OWNER: {
+                  from = 'From';
+
+                  offerType = EXCHANGE_ACTION_PRESENT_NAME[offer.type];
+
+                  break;
+                }
               }
+
+              message = intl.formatMessage({ id: 'offerHandShakeContentMe' }, {
+                offerType: offerType,
+                amount: formatAmountCurrency(offer.amount),
+                currency: offer.currency,
+                currency_symbol: offer.fiatCurrency,
+                total: formatMoney(fiatAmount),
+                fee: offer.feePercentage,
+                payment_method: EXCHANGE_METHOD_PAYMENT[EXCHANGE_FEED_TYPE.EXCHANGE],
+              });
+              break;
             }
           }
 
-          message = intl.formatMessage({ id: 'offerHandShakeContentMe' }, {
-            offerType: offerType,
-            amount: formatAmountCurrency(offer.amount),
-            currency: offer.currency,
-            currency_symbol: offer.fiatCurrency,
-            total: formatMoney(fiatAmount),
-            fee: offer.feePercentage,
-          });
+          // message = intl.formatMessage({ id: 'offerHandShakeContentMe' }, {
+          //   offerType: offerType,
+          //   amount: formatAmountCurrency(offer.amount),
+          //   currency: offer.currency,
+          //   currency_symbol: offer.fiatCurrency,
+          //   total: formatMoney(fiatAmount),
+          //   fee: offer.feePercentage,
+          // });
         } else {
           message = intl.formatMessage({ id: 'offerHandShakeContent' }, {
-            offerType: EXCHANGE_ACTION_NAME[offer.type],
+            offerType: offer.type === EXCHANGE_ACTION.BUY ? EXCHANGE_ACTION_NAME[EXCHANGE_ACTION.SELL] : EXCHANGE_ACTION_NAME[EXCHANGE_ACTION.BUY],
             amount: formatAmountCurrency(offer.amount),
             currency: offer.currency,
             currency_symbol: offer.fiatCurrency,
@@ -1003,6 +1058,7 @@ class FeedExchange extends React.PureComponent {
         break;
       }
       case EXCHANGE_FEED_TYPE.INSTANT: {
+        from = 'From';
         statusText = HANDSHAKE_EXCHANGE_CC_STATUS_NAME[status];
         let just = ' ';
 
@@ -1014,7 +1070,7 @@ class FeedExchange extends React.PureComponent {
 
         message = intl.formatMessage({ id: 'instantOfferHandShakeContent' }, {
           just: just,
-          offerType: EXCHANGE_ACTION_PAST_NAME[offer.type],
+          offerType: 'bought',
           amount: formatAmountCurrency(offer.amount),
           currency: offer.currency,
           currency_symbol: offer.fiatCurrency,
@@ -1044,7 +1100,7 @@ class FeedExchange extends React.PureComponent {
         {
           mode === 'me' && (
             <div>
-              <span style={{ color: '#C8C7CC' }}>From</span> <span style={{ color: '#666666' }}>{email}</span>
+              <span style={{ color: '#C8C7CC' }}>{from}</span> <span style={{ color: '#666666' }}>{email}</span>
               <span className="float-right" style={{ color: '#4CD964' }}>{statusText}</span>
             </div>
           )
@@ -1089,7 +1145,7 @@ class FeedExchange extends React.PureComponent {
                         <img className="mr-2" src={iconPhone} width={20}/>
                         <div className="media-body">
                           <div>
-                            <a href={`tel:${phone}`} className="text-white">{phone}</a>
+                            <a href={`tel:${phone.replace(/-/g, '')}`} className="text-white">{phone}</a>
                           </div>
                         </div>
                       </div>

@@ -51,7 +51,29 @@ class Neuron {
     return compiled;
   };
 
-  getGasPriceDefaultWithEthUnit = async () => Web3.utils.fromWei(await this.web3.eth.getGasPrice());
+  getGasPriceDefaultWithEthUnit = async () =>
+    Web3.utils.fromWei(await this.web3.eth.getGasPrice());
+
+  caculateEstimatGasWithEthUnit = async (address, gasPrice = undefined) => {
+    gasPrice = new BN(gasPrice
+      ? Web3.utils.toWei(String(gasPrice), 'gwei')
+      : await this.web3.eth.getGasPrice());
+    // console.log('caculateEstimatGasWithEthUnit gasPrice = ', String(gasPrice));
+    const balance = new BN(await this.web3.eth.getBalance(address));
+    const estimateGas = balance.div(gasPrice);
+    // console.log(
+    //   'caculateEstimatGasWithEthUnit estiGas = ',
+    //   String(estimateGas),
+    // );
+    const limitedGas = 3000000;
+
+    const estimatedGas = Math.min(estimateGas.toNumber(), limitedGas);
+    // console.log(
+    //   'caculateEstimatGasWithEthUnit estimatedGas = ',
+    //   String(estimatedGas),
+    // );
+    return Web3.utils.fromWei(String(estimatedGas * gasPrice));
+  };
   /**
    *
    * @param {string} address

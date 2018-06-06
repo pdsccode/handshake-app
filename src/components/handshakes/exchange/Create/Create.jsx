@@ -47,6 +47,7 @@ import {CRYPTO_CURRENCY} from "@/constants";
 import _sample from 'lodash/sample'
 import { feedBackgroundColors } from "@/components/handshakes/exchange/config";
 import {formatAmountCurrency, formatMoney} from "@/services/offer-util";
+import {BigNumber} from "bignumber.js";
 
 const nameFormExchangeCreate = 'exchangeCreate';
 const FormExchangeCreate = createForm({
@@ -179,16 +180,18 @@ async componentDidMount() {
     // console.log('valuessss', values);
 
     const wallet = MasterWallet.getWalletDefault(values.currency);
-    const balance = await wallet.getBalance();
-    const fee = await wallet.getFee(4, true);
-    let amount = values.amount;
+    const balance = new BigNumber(await wallet.getBalance());
+    const fee = new BigNumber(await wallet.getFee(4, true));
+    let amount = new BigNumber(values.amount);
 
     if (values.currency === CRYPTO_CURRENCY.ETH && values.type === EXCHANGE_ACTION.BUY) {
-      amount = 0;
+      amount = new BigNumber(0);
     }
 
+    let condition = balance.isLessThan(amount.plus(fee));
+
     if ((values.currency === CRYPTO_CURRENCY.ETH || (values.type === EXCHANGE_ACTION.SELL && values.currency === CRYPTO_CURRENCY.BTC))
-      && balance < amount + fee) {
+      && condition) {
       this.props.showAlert({
         message: <div className="text-center">
           {intl.formatMessage({ id: 'notEnoughCoinInWallet' }, {
@@ -238,7 +241,7 @@ async componentDidMount() {
       type: EXCHANGE_ACTION_NAME[values.type],
       amount: formatAmountCurrency(values.amount),
       currency: values.currency,
-      currency_symbol: getSymbolFromCurrency(fiat_currency),
+      currency_symbol: fiat_currency,
       total: formatMoney(totalAmount),
     });
 

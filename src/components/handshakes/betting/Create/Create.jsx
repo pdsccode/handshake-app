@@ -176,13 +176,18 @@ get matchResults(){
     //const fromAddress = "0x54CD16578564b9952d645E92b9fa254f1feffee9";
     let balance = await BetHandshakeHandler.getBalance();
     balance = parseFloat(balance);
+    const estimatedGas = await bettinghandshake.getEstimateGas();
+    console.log('Estimate Gas:', estimatedGas);
     const eventBet = parseFloat(dict.event_bet);
     console.log('Event Bet:', eventBet);
+    const total = eventBet + parseFloat(estimatedGas);
+    console.log("Total:", total);
 
     const fromAddress = address;
+    
     if(selectedMatch && selectedOutcome){
       if(eventBet > 0){
-        if(eventBet <= balance){
+        if(total <= balance){
           this.initHandshake(extraParams, fromAddress);
         }else {
           this.props.showAlert({
@@ -203,6 +208,7 @@ get matchResults(){
         }
       });
     }
+    
 
     // if(selectedMatch && selectedOutcome && eventBet > 0 && eventBet <= balance){
     //   this.initHandshake(extraParams, fromAddress);

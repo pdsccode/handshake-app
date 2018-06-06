@@ -78,8 +78,7 @@ class FeedBetting extends React.Component {
 
     }
   }
-
-  componentDidMount() {
+  handleStatus(){
     const {status, side, result, shakeUserIds} = this.props;
 
     console.log('Props:', this.props);
@@ -87,11 +86,10 @@ class FeedBetting extends React.Component {
     const profile = local.get(APP.AUTH_PROFILE);
     const isUserShake = this.isShakeUser(shakeUserIds, profile.id);
     const role = isUserShake ? ROLE.SHAKER : ROLE.INITER;
-    //const blockchainStatusHardcode = 0;
+    //const blockchainStatusHardcode = 5;
     const isMatch = this.isMatch;
     //const isMatch = true;
-    //const hardCodeStatus = 3;
-    //const hardCodeResult = 1;
+    //const hardCodeResult = 2;
     console.log('Is Match:', isMatch);
 
     const statusResult = BetHandshakeHandler.getStatusLabel(status, result, role,side, isMatch);
@@ -103,11 +101,16 @@ class FeedBetting extends React.Component {
       role,
       isMatch,
     })
+  }
+
+  componentDidMount() {
+    this.handleStatus();
 
   }
 
   componentWillReceiveProps(nextProps) {
-   
+    console.log('Feeding Next Props:', nextProps);
+    this.handleStatus();
   }
 
   get extraData(){
@@ -196,7 +199,7 @@ class FeedBetting extends React.Component {
 
       case BETTING_STATUS_LABEL.WITHDRAW:
         // TO DO: WITHDRAW
-        this.collect(realId);
+        this.collect(id);
         break;
       case BETTING_STATUS_LABEL.REFUND:
       this.refund(realId);
@@ -229,8 +232,10 @@ class FeedBetting extends React.Component {
   }
 
   collect(id){
-    const url = API_URL.CRYPTOSIGN.COLLECT.concat(`/${id}`);
-    this.props.collect({PATH_URL: url, METHOD:'POST',
+    let params = {
+      offchain: id
+    }
+    this.props.collect({PATH_URL: API_URL.CRYPTOSIGN.COLLECT, METHOD:'POST',data: params,
     successFn: this.collectSuccess,
     errorFn: this.collectFailed
   });
