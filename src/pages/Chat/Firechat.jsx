@@ -89,7 +89,7 @@ export class Firechat {
       name: this.userName,
       shortName: this.userName.toLowerCase(),
       sessionId: this.sessionId,
-      online: false
+      online: false,
     });
     // const usernameSessionRef = usernameRef.child(this.sessionId);
     // this.queuePresenceOperation(usernameSessionRef, {
@@ -255,29 +255,29 @@ export class Firechat {
     this.addEventCallback(eventType, cb);
   }
 
-  createRoom(roomName, roomType, callback) {
+  createRoom(roomId, callback) {
     const self = this;
-    const newRoomRef = this.roomRef.push();
+    const newRoomRef = this.roomRef.child(roomId);
 
     const newRoom = {
       id: newRoomRef.key,
-      name: roomName,
-      type: roomType || 'public',
+      name: roomId,
       createdByUserId: this.userId,
       createdAt: this.firebaseInstance.database.ServerValue.TIMESTAMP,
     };
 
-    if (roomType === 'private') {
-      newRoom.authorizedUsers = {};
-      newRoom.authorizedUsers[this.userId] = true;
-    }
+    newRoom.authorizedUsers = {};
+    newRoom.authorizedUsers[this.userId] = {
+      name: this.userName,
+      allowed: true,
+    };
 
     newRoomRef.set(newRoom, (error) => {
       if (!error) {
         self.enterRoom(newRoomRef.key);
       }
       if (callback) {
-        callback(newRoomRef.key);
+        callback(newRoom);
       }
     });
   }
@@ -285,7 +285,12 @@ export class Firechat {
   enterRoom(roomId) {
     const self = this;
     self.getRoom(roomId, (room) => {
-      const { name: roomName, createdByUserId, createdAt } = room;
+      if (!room) {
+        return;
+      }
+      const {
+        name: roomName, createdByUserId, createdAt, authorizedUsers,
+      } = room;
 
       if (!roomId || !roomName) return;
 
@@ -305,11 +310,16 @@ export class Firechat {
         });
 
         // Set presence bit for the room and queue it for removal on disconnect.
-        const presenceRef = self.firechatRef.child('chat-room-users').child(roomId).child(self.userId).child(self.sessionId);
-        presenceRef.set({
-          id: self.userId,
+        // const presenceRef = self.firechatRef.child('chat-room-users').child(roomId).child(self.userId).child(self.sessionId);
+        // presenceRef.set({
+        //   id: self.userId,
+        //   name: self.userName,
+        // });
+        self.roomRef.child(roomId).child('authorizedUsers').child(self.userId).update({
           name: self.userName,
         });
+
+        authorizedUsers[self.userId].name = self.userName;
         // self.queuePresenceOperation(presenceRef, {
         //   id: self.userId,
         //   name: self.userName,
@@ -318,7 +328,7 @@ export class Firechat {
 
       // Invoke our callbacks before we start listening for new messages.
       self.onEnterRoom({
-        id: roomId, name: roomName, createdByUserId, createdAt,
+        id: roomId, name: roomName, createdByUserId, createdAt, authorizedUsers,
       });
 
       // Setup message listeners
@@ -416,7 +426,7 @@ export class Firechat {
   }
 
   // Invite a user to a specific chat room.
-  inviteUser(userId, roomId) {
+  inviteUser(userId, userName, roomId) {
     const self = this;
 
     if (!self.user) {
@@ -425,16 +435,15 @@ export class Firechat {
     }
 
     self.getRoom(roomId, (room) => {
-      if (room.type === 'private') {
-        const authorizedUserRef = self.roomRef.child(roomId).child('authorizedUsers');
-        authorizedUserRef.child(userId).set(true, (error) => {
-          if (!error) {
-            self.sendInvite(userId, roomId);
-          }
-        });
-      } else {
-        self.sendInvite(userId, roomId);
-      }
+      const authorizedUserRef = self.roomRef.child(roomId).child('authorizedUsers');
+      authorizedUserRef.child(userId).set({
+        name: userName,
+        allowed: true,
+      }, (error) => {
+        if (!error) {
+          self.sendInvite(userId, roomId);
+        }
+      });
     });
   }
 
@@ -526,10 +535,10 @@ export class Firechat {
 
       Object.keys(usernames).forEach((userId) => {
         const userInfo = usernames[userId];
-        let userName = userInfo.name;
-        let isOnline = userInfo.online;
+        const userName = userInfo.name;
+        const isOnline = userInfo.online;
 
-        if (userId == this.user.id || (prefix.length > 0) && (userName.toLowerCase().indexOf(prefixLower) !== 0)) {
+        if ((this.user && userId === this.user.id) || ((prefix.length > 0) && (userName.toLowerCase().indexOf(prefixLower) !== 0))) {
           return true;
         }
 

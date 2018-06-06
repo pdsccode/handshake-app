@@ -29,7 +29,6 @@ const maps = {
 };
 
 class Me extends React.Component {
-
   componentDidMount() {
     this.getListOfferPrice();
     // this.loadMyHandshakeList();
@@ -82,7 +81,7 @@ class Me extends React.Component {
               <Image className="avatar" src={AvatarSVG} alt="avatar" />
               <div className="text">
                 <strong>My Profile</strong>
-                <p>Verify your email address and phone numbers.</p>
+                <p>Username and verify your email address and phone numbers.</p>
               </div>
               <div className="arrow">
                 <Image src={ExpandArrowSVG} alt="arrow" />

@@ -165,7 +165,7 @@ class BettingFilter extends React.Component {
 
     getInfoShare(selectedMatch, selectedOutcome) {
         return {
-            title: `Bet against more ninjas! I put a bet on ${selectedMatch.value}. ${selectedOutcome.value}! Put your coin where your mouth is. shake.ninja`,
+            title: `I put a bet on ${selectedMatch.value}. ${selectedOutcome.value}! Put your coin where your mouth is.`,
             shareUrl: `${location.origin}/discover/${encodeURI(selectedMatch.value)}?match=${selectedMatch.id}&out_come=${selectedOutcome.id}`,
         };
     }
@@ -218,7 +218,7 @@ class BettingFilter extends React.Component {
                 />
             </div>
             <div className="share-block">
-                <p className="text">The more people, the merrier</p>
+                <p className="text">Bet against more ninjas!</p>
                 <ShareSocial
                     className="share"
                     title={shareInfo.title}
