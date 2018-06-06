@@ -5,7 +5,7 @@ import { Route, Switch } from 'react-router-dom';
 import DynamicImport from '@/components/App/DynamicImport';
 import Loading from '@/components/core/presentation/Loading';
 import { URL } from '@/config';
-import { setHeaderTitle, clearHeaderRight, clearHeaderLeft } from '@/reducers/app/action';
+import { setHeaderTitle, clearHeaderRight, clearHeaderLeft, showHeader } from '@/reducers/app/action';
 
 const Transaction = props => (<DynamicImport loading={Loading} load={() => import('@/pages/Exchange/Transaction/Transaction')}>{Component => <Component {...props} />}</DynamicImport>);
 const Page404 = props => (<DynamicImport isNotFound loading={Loading} load={() => import('@/pages/Error/Page404')}>{Component => <Component {...props} />}</DynamicImport>);
@@ -19,6 +19,7 @@ class TransactionRouter extends React.Component {
     clearHeaderRight: PropTypes.func.isRequired,
     setHeaderTitle: PropTypes.func.isRequired,
     clearHeaderLeft: PropTypes.func.isRequired,
+    showHeader: PropTypes.func.isRequired,
   }
 
   constructor(props) {
@@ -27,6 +28,7 @@ class TransactionRouter extends React.Component {
     this.props.setHeaderTitle('Transactions');
     this.props.clearHeaderRight();
     this.props.clearHeaderLeft();
+    this.props.showHeader();
   }
 
   render() {
@@ -39,4 +41,6 @@ class TransactionRouter extends React.Component {
   }
 }
 
-export default connect(null, ({ setHeaderTitle, clearHeaderRight, clearHeaderLeft }))(TransactionRouter);
+export default connect(null, ({
+  setHeaderTitle, clearHeaderRight, clearHeaderLeft, showHeader,
+}))(TransactionRouter);

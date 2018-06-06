@@ -27,14 +27,19 @@ const EmailForm = createForm({
     form: 'EmailForm',
   },
 });
+const UsernameForm = createForm({
+  propsReduxForm: {
+    form: 'UsernameForm',
+  },
+});
 
 class Profile extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = {
       countries: COUNTRIES,
       countryCode: COUNTRIES[0], // default is US
+      usernameCollapse: false,
       phoneCollapse: false,
       emailCollapse: false,
       isShowCountryCode: false,
@@ -46,6 +51,9 @@ class Profile extends React.Component {
     this.filterCountries = ::this.filterCountries;
 
     props.setHeaderTitle('My Profile');
+  }
+
+  addUsername() {
   }
 
   verifyPhone() {
@@ -80,10 +88,40 @@ class Profile extends React.Component {
         <Row>
           <Col md={12}>
             <div className="collapse-custom">
-              <div className="head" onClick={() => this.setState(state => ({phoneCollapse: !state.phoneCollapse}))}>
+              <div
+                className="head"
+                onClick={() => this.setState(state => ({
+                usernameCollapse: !state.usernameCollapse,
+              }))}
+              >
+                <p className="label">Username</p>
+                <div className="extend">
+                  <Image className={this.state.usernameCollapse ? 'rotate' : ''} src={ExpandArrowSVG} alt="arrow" />
+                </div>
+              </div>
+              <div className={`content ${this.state.usernameCollapse ? '' : 'd-none'}`}>
+                <p className="text">Enter your username</p>
+                <UsernameForm onSubmit={this.addUsername}>
+                  <div className="phone-block">
+                    <Field
+                      name="phone-number"
+                      className="form-control-custom form-control-custom-ex w-100"
+                      component={fieldCleave}
+                    />
+                    <Button className="submit-btn" block>Save</Button>
+                  </div>
+                </UsernameForm>
+              </div>
+            </div>
+          </Col>
+        </Row>
+        <Row>
+          <Col md={12}>
+            <div className="collapse-custom">
+              <div className="head" onClick={() => this.setState(state => ({ phoneCollapse: !state.phoneCollapse }))}>
                 <p className="label">Phone Number</p>
                 <div className="extend">
-                  <Image className={this.state.phoneCollapse ? 'rotate' : ''} src={ExpandArrowSVG} alt="arrow"/>
+                  <Image className={this.state.phoneCollapse ? 'rotate' : ''} src={ExpandArrowSVG} alt="arrow" />
                 </div>
               </div>
               <div className={`content ${this.state.phoneCollapse ? '' : 'd-none'}`}>
@@ -92,10 +130,11 @@ class Profile extends React.Component {
                 <NumberPhoneForm onSubmit={this.verifyPhone}>
                   <div className="phone-block">
                     <div className="dropdown country-code">
-                      <button 
+                      <button
                         className="btn btn-secondary dropdown-toggle"
-                        onClick={() => this.setState(state => ({isShowCountryCode: !state.isShowCountryCode}))}
-                        type="button">
+                        onClick={() => this.setState(state => ({ isShowCountryCode: !state.isShowCountryCode }))}
+                        type="button"
+                      >
                         {countryCode.dialCode}
                       </button>
                       <div className={`dropdown-menu ${this.state.isShowCountryCode ? 'show' : ''}`}>
@@ -104,10 +143,10 @@ class Profile extends React.Component {
                         </div>
                         {
                           countries.map(country => (
-                            <div 
+                            <div
                               key={country.code}
                               className="dropdown-item"
-                              onClick={ () => this.selectPhoneRegionCode(country) }
+                              onClick={() => this.selectPhoneRegionCode(country)}
                             >
                               {country.flag}{country.name}&nbsp;({country.dialCode})
                             </div>
@@ -116,11 +155,11 @@ class Profile extends React.Component {
                       </div>
                     </div>
                     <Field
-                      name="phone-number" 
-                      className='form-control-custom form-control-custom-ex phone-number'
+                      name="phone-number"
+                      className="form-control-custom form-control-custom-ex phone-number"
                       component={fieldCleave}
                       propsCleave={{
-                        options: { blocks: [4, 4, 4], delimiter: '-', numericOnly: true, },
+                        options: { blocks: [4, 4, 4], delimiter: '-', numericOnly: true },
                       }}
                     />
                     <Button className="send-btn">Send</Button>
@@ -128,7 +167,7 @@ class Profile extends React.Component {
                   <p className="text">Enter vertiifycation code to your phone</p>
                   <Field
                     name="sms-code"
-                    className='form-control-custom form-control-custom-ex w-100'
+                    className="form-control-custom form-control-custom-ex w-100"
                     component={fieldCleave}
                     propsCleave={{
                       options: { blocks: [4], numericOnly: true },
@@ -143,10 +182,10 @@ class Profile extends React.Component {
         <Row>
           <Col md={12}>
             <div className="collapse-custom">
-              <div className="head" onClick={() => this.setState(state => ({emailCollapse: !state.emailCollapse}))}>
+              <div className="head" onClick={() => this.setState(state => ({ emailCollapse: !state.emailCollapse }))}>
                 <p className="label">Email Verification</p>
                 <div className="extend">
-                  <Image className={this.state.emailCollapse ? 'rotate' : ''} src={ExpandArrowSVG} alt="arrow"/>
+                  <Image className={this.state.emailCollapse ? 'rotate' : ''} src={ExpandArrowSVG} alt="arrow" />
                 </div>
               </div>
               <div className={`content ${this.state.emailCollapse ? '' : 'd-none'}`}>
@@ -154,8 +193,8 @@ class Profile extends React.Component {
                 <p className="text">Enter your email</p>
                 <EmailForm onSubmit={this.verifyEmail}>
                   <Field
-                    name="phone-number" 
-                    className='form-control-custom form-control-custom-ex w-100'
+                    name="phone-number"
+                    className="form-control-custom form-control-custom-ex w-100"
                     component={fieldCleave}
                   />
                   <Button className="submit-btn">Vertify your email</Button>

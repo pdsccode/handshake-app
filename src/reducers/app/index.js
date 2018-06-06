@@ -41,6 +41,7 @@ function appReducter(state = {
   headerBack: false,
   headerRightContent: null,
   headerLeftContent: null,
+  showHeader: false,
 
   ipInfo: local.get(APP.IP_INFO),
 
@@ -168,6 +169,18 @@ function appReducter(state = {
         headerLeftContent: null,
       };
 
+    case APP_ACTION.HEADER_SHOW:
+      return {
+        ...state,
+        showHeader: true,
+      };
+
+    case APP_ACTION.HEADER_HIDE:
+      return {
+        ...state,
+        showHeader: false,
+      };
+
     case APP_ACTION.SHOW_ALERT:
       return {
         ...state,
@@ -185,6 +198,7 @@ function appReducter(state = {
         ipInfo: action.payload,
       };
     }
+
     default:
       return state;
   }

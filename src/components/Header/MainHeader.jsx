@@ -30,32 +30,35 @@ class MainHeader extends React.Component {
   }
 
   render() {
-    return (
-      <header className="header">
-        {
-          this.props.app.headerLeftContent
-          ? (
-            <div className="header-left">
-              {this.props.app.headerLeftContent}
-            </div>
-          )
-          : (
-            <div
-              tabIndex={0}
-              role="button"
-              className={`header-back-btn ${this.props.app.headerBack ? 'visibled' : ''}`}
-              onClick={this.back}
-              onKeyDown={this.back}
-              dangerouslySetInnerHTML={{ __html: backBtn }}
-            />
-          )
-        }
-        <div className="title">{this.props.app.headerTitle}</div>
-        <div className="header-right">
-          {this.props.app.headerRightContent}
-        </div>
-      </header>
-    );
+    if (this.props.app.showHeader) {
+      return (
+        <header className="header">
+          {
+            this.props.app.headerLeftContent
+            ? (
+              <div className="header-left">
+                {this.props.app.headerLeftContent}
+              </div>
+            )
+            : (
+              <div
+                tabIndex={0}
+                role="button"
+                className={`header-back-btn ${this.props.app.headerBack ? 'visibled' : ''}`}
+                onClick={this.back}
+                onKeyDown={this.back}
+                dangerouslySetInnerHTML={{ __html: backBtn }}
+              />
+            )
+          }
+          <div className="title">{this.props.app.headerTitle}</div>
+          <div className="header-right">
+            {this.props.app.headerRightContent}
+          </div>
+        </header>
+      );
+    }
+    return null;
   }
 }
 
