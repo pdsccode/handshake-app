@@ -1007,6 +1007,7 @@ class FeedExchange extends React.PureComponent {
     let actionButtons = null;
     let from = '';
     let showChat = false;
+    let chatUsername = '';
     let buyerSeller = this.getBuyerSeller();
 
     switch (offer.feedType) {
@@ -1096,6 +1097,20 @@ class FeedExchange extends React.PureComponent {
             }
             default: {
               showChat = true;
+
+              switch (this.userType) {
+                case HANDSHAKE_USER.NORMAL: {
+                  break;
+                }
+                case HANDSHAKE_USER.SHAKED: {
+                  chatUsername = offer.username;
+                  break;
+                }
+                case HANDSHAKE_USER.OWNER: {
+                  chatUsername = offer.toUsername;
+                  break;
+                }
+              }
             }
           }
 
@@ -1180,7 +1195,7 @@ class FeedExchange extends React.PureComponent {
             </div>
             { mode === 'me' && !isCreditCard && showChat && (
               <div className="ml-auto pl-2" style={{ width: '50px' }}>
-                <Link to={URL.HANDSHAKE_CHAT_INDEX}>
+                <Link to={`${URL.HANDSHAKE_CHAT_INDEX}/${chatUsername}`}>
                   <img src={iconChat} width='35px' />
                 </Link>
               </div>
