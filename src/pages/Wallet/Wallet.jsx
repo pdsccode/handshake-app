@@ -244,7 +244,7 @@ class Wallet extends React.Component {
       })      
 
       obj.push({
-        title: 'Top up coins',
+        title: 'Buy coins',
         handler: () => {
           this.setState({walletSelected: wallet});
           this.toggleBottomSheet();
@@ -721,7 +721,7 @@ class Wallet extends React.Component {
 
             <div className="link-request-custom-amount" onClick={ () => {this.modalCustomAmountRef.open(); this.setState({inputSendAmountValue: ""});}}>Request Specific amount -></div>
 
-            <Button className="button" cssType="success" onClick={() => {Clipboard.copy(this.state.walletSelected.address);this.modalShareAddressRef.close(); this.showToast('Wallet address copied to clipboard.');}} >
+            <Button className="button" cssType="primary" onClick={() => {Clipboard.copy(this.state.walletSelected.address);this.modalShareAddressRef.close(); this.showToast('Wallet address copied to clipboard.');}} >
               Copy to share
             </Button>
             </div>
@@ -744,13 +744,14 @@ class Wallet extends React.Component {
               <InputGroup>
                   <InputGroupAddon addonType="prepend">Amount</InputGroupAddon>
                   <Input2 
-                  placeholder={ this.state.walletSelected ? "{0}".format(this.state.walletSelected.name) : ""}
+                  placeholder={ this.state.walletSelected ? "0 {0}".format(this.state.walletSelected.name) : ""}
+                  type={isIOs ? "number" : "tel"}
                   value={this.state.inputSendAmountValue} onChange={evt => this.updateSendAmountValue(evt)}/>
                 </InputGroup>
 
               
             </div>
-            <Button className="button" cssType="success" onClick={() => {this.modalCustomAmountRef.close(); this.modalShareAddressRef.close() }} >
+            <Button className="button" cssType="primary" onClick={() => {this.modalCustomAmountRef.close(); this.modalShareAddressRef.close() }} >
               Done
             </Button>
             </div>
