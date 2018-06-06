@@ -32,6 +32,12 @@ const $http = (url, data, id, qsObject, headersMore, method = 'GET') => {
     headers.ChainId = wallet.chainId;
   }
 
+  const profile = local.get(APP.AUTH_PROFILE);
+
+  if (profile && profile.fcm_token) {
+    headers['Fcm-Token'] = profile.fcm_token;
+  }
+
   return axios.create({
     timeout: BASE_API.TIMEOUT,
     // withCredentials: true,

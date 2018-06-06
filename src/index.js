@@ -3,6 +3,9 @@ import ReactDOM from 'react-dom';
 // components
 import App from '@/components/App/App';
 import registerServiceWorker from '@/services/worker';
+import * as OfflinePluginRuntime from 'offline-plugin/runtime';
+
+OfflinePluginRuntime.install();
 
 if (!String.prototype.format) {
   String.prototype.format = function () {
@@ -18,6 +21,4 @@ if (!String.prototype.format) {
 if (window.caches) window.caches.keys().then(keyList => Promise.all(keyList.map(key => window.caches.delete(key))));
 
 ReactDOM.render(<App />, document.getElementById('app'));
-
 registerServiceWorker();
-require('offline-plugin/runtime').install();
