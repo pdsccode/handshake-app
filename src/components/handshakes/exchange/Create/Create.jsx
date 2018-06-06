@@ -29,7 +29,6 @@ import {
   EXCHANGE_ACTION_NAME,
   FIAT_CURRENCY,
   FIAT_CURRENCY_SYMBOL,
-  SELL_PRICE_TYPE,
   SELL_PRICE_TYPE_DEFAULT,
 } from '@/constants';
 import '../styles.scss';
@@ -466,11 +465,14 @@ async componentDidMount() {
 
               <div className="d-flex mt-2">
                 {/*<label className="col-form-label mr-auto" style={{ width: '220px' }} />*/}
-                <div className='input-group justify-content-start' style={{ paddingLeft: '20px' }}>
+                <div className='input-group justify-content-start'>
                   <Field
                     name="sellPriceType"
                     component={fieldRadioButton}
-                    list={SELL_PRICE_TYPE}
+                    list={[
+                      { value: 'fix', text: 'Lock this price' },
+                      { value: 'flexible', text: `${EXCHANGE_ACTION_NAME[type]} at market price` },
+                    ]}
                     color={textColor}
                     validate={[required]}
                     onChange={this.onSellPriceTypeChange}
