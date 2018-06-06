@@ -255,3 +255,8 @@ export const EXCHANGE_METHOD_PAYMENT = {
 export const DISCOVER_GET_HANDSHAKE_RADIUS = 20;
 
 export const APP_USER_NAME = 'Ninja';
+
+export const MIN_AMOUNT = {
+  [CRYPTO_CURRENCY.ETH] : 0.1,
+  [CRYPTO_CURRENCY.BTC] : 0.01,
+}
