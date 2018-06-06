@@ -37,8 +37,8 @@ class Me extends React.Component {
   componentWillReceiveProps(nextProps) {
     console.log(TAG," componentWillReceiveProps begin ", nextProps.firebaseUser);
     if (nextProps.firebaseUser && JSON.stringify(nextProps.firebaseUser) !== JSON.stringify(this.props.firebaseUser)) {
-      let nextUser = nextProps.firebaseUser?.users?[this.props.auth?.profile?.id];
-      let prevUser = this.props.firebaseUser?.users?[this.props.auth?.profile?.id];
+      let nextUser = nextProps?.firebaseUser?.users[this.props.auth?.profile?.id];
+      let prevUser = this.props?.firebaseUser?.users[this.props.auth?.profile?.id];
       console.log("Firebase Data Sa test:", nextUser);
       if (JSON.stringify(nextUser.offers) !== JSON.stringify(prevUser.offers)) {
         this.props.fireBaseExchangeDataChange(nextUser.offers);
