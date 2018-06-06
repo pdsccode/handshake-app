@@ -1147,7 +1147,7 @@ class FeedExchange extends React.PureComponent {
         >
           <div className="d-flex mb-4">
             <div>
-              <h4 style={{ lineHeight: '1.4' }}>{message}</h4>
+              <h4 style={{ lineHeight: '1.4' }} className="headline">{message}</h4>
             </div>
             { mode === 'me' && !isCreditCard && showChat && (
               <div className="ml-auto pl-2" style={{ width: '50px' }}>
