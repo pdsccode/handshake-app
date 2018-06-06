@@ -67,12 +67,12 @@ export const fieldDropdown = customField(({
 });
 
 export const fieldRadioButton = customField(({
-  onChange, value, list, name, color = '', containerClass = 'radio-container'
+  onChange, value, list, name, color = '', containerClass = 'radio-container', styleButton = {}
 }) => (
   <span>
     {
         list.map((item, index) => {
-          const { value: itemValue, text } = item;
+          const { value: itemValue, text, icon } = item;
           const isChecked = itemValue === value;
           return (
             <div key={index} className={containerClass}>
@@ -86,11 +86,11 @@ export const fieldRadioButton = customField(({
                 type="button"
                 className="btn"
                 onClick={() => onChange(itemValue)}
-                style={{ color, minWidth: '58px' }}
+                style={{ color, minWidth: '58px', ...styleButton }}
               >
                 {/*<span style={{ fontSize: '28px' }}>&sdot;</span> */}
                 {
-                  !containerClass.includes('old') && (<span>&#x25cf;&nbsp;</span>)
+                  !containerClass.includes('old') && (<span>{icon || <span>&#x25cf;</span>}&nbsp;</span>)
                 }
                 {text}
               </button>
