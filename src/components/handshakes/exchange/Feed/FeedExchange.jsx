@@ -25,6 +25,7 @@ import {
   APP_USER_NAME,
   EXCHANGE_ACTION_PAST_NAME,
   EXCHANGE_ACTION_PRESENT_NAME,
+  EXCHANGE_ACTION_PERSON
 } from "@/constants";
 import ModalDialog from "@/components/core/controls/ModalDialog";
 import {connect} from "react-redux";
@@ -1157,6 +1158,7 @@ class FeedExchange extends React.PureComponent {
               </div>
             )}
           </div>
+          <div className="mb-2">About </div>
           {/*<span>status: {status}</span><br></br>*/}
           {/*<span>userType: {this.userType}</span><br></br>*/}
           {
@@ -1204,7 +1206,7 @@ class FeedExchange extends React.PureComponent {
                   <div style={{ fontSize: mode === 'me' ? '80%' : '' }}>
                     <FormattedMessage id="offerDistanceContent" values={{
                       // offerType: offer.type === 'buy' ? 'Buyer' : 'Seller',
-                      distanceKm: distanceKm.toFixed(3),
+                      distanceKm: distanceKm > 1 || distanceMiles === 0 ? distanceKm.toFixed(0) : distanceKm.toFixed(3),
                       distanceMiles: distanceMiles.toFixed(1),
                     }}/>
                   </div>
