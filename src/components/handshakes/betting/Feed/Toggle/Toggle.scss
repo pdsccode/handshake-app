@@ -14,7 +14,8 @@
     letter-spacing: 0;
     line-height: rem-calc(22px);
     background: #636b71;
-    padding: rem-calc(7px 15px);
+    padding: rem-calc(7px);
+    width: 50%;
     &:hover {
       cursor: pointer;
     }
