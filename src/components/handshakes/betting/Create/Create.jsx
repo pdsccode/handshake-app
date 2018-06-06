@@ -433,7 +433,6 @@ get matchResults(){
     };
     console.log("Params:", params);
     const hid = selectedOutcome.hid;
-    console.log('Hid when init:', hid);
 
     this.props.initHandshake({PATH_URL: API_URL.CRYPTOSIGN.INIT_HANDSHAKE, METHOD:'POST', data: params,
     successFn: this.initHandshakeSuccess,
