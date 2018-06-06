@@ -2,7 +2,7 @@ export default {
   HELLO: 'hello {name}',
   buy: 'Buy',
   sell: 'Sell',
-  amount: 'Amount',
+  amount: 'amount',
   askUsingCreditCard: 'for {total} {fiatCurrency} using card?',
   change: 'Change',
   ccNumber: 'Number',
