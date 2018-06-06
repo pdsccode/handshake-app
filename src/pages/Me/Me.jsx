@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 // action, mock
-import { fireBaseDataChange, loadMyHandshakeList } from '@/reducers/me/action';
+import { fireBaseExchangeDataChange, loadMyHandshakeList, fireBaseBettingChange } from '@/reducers/me/action';
 import { API_URL, HANDSHAKE_ID } from '@/constants';
 import { URL } from '@/config';
 // components
@@ -20,7 +20,7 @@ import ExpandArrowSVG from '@/assets/images/icon/expand-arrow.svg';
 import './Me.scss';
 import { getListOfferPrice } from "@/reducers/exchange/action";
 
-
+const TAG = "Me";
 const maps = {
   [HANDSHAKE_ID.PROMISE]: FeedPromise,
   [HANDSHAKE_ID.BETTING]: FeedBetting,
@@ -29,28 +29,43 @@ const maps = {
 };
 
 class Me extends React.Component {
-
   componentDidMount() {
     this.getListOfferPrice();
-    this.loadMyHandshakeList();
+    // this.loadMyHandshakeList();
   }
 
   componentWillReceiveProps(nextProps) {
-    if (JSON.stringify(nextProps.firebaseUser) !== JSON.stringify(this.props.firebaseUser) &&
-      JSON.stringify(nextProps.firebaseUser.offers) !== JSON.stringify(nextProps.firebaseUser.offers)) {
-      this.props.fireBaseDataChange(nextProps.firebaseUser.offers);
+    console.log(TAG," componentWillReceiveProps begin ", nextProps.firebaseUser);
+    if (nextProps.firebaseUser && JSON.stringify(nextProps.firebaseUser) !== JSON.stringify(this.props.firebaseUser)) {
+      let nextUser = nextProps.firebaseUser.users[this.props.auth?.profile?.id];
+      let prevUser = this.props.firebaseUser.users[this.props.auth?.profile?.id];
+      console.log("Firebase Data Sa test:", nextUser);
+      if (JSON.stringify(nextUser.offers) !== JSON.stringify(prevUser.offers)) {
+        this.props.fireBaseExchangeDataChange(nextUser.offers);
+      }else if(nextUser.betting && JSON.stringify(nextUser.betting) !== JSON.stringify(prevUser.betting)){
+        console.log(TAG," componentWillReceiveProps begin -- betting ");
+        this.props.fireBaseBettingChange(nextUser.betting);
+      }
     }
   }
 
   getListOfferPrice = () => {
     this.props.getListOfferPrice({
-      BASE_URL: API_URL.EXCHANGE.BASE,
       PATH_URL: API_URL.EXCHANGE.GET_LIST_OFFER_PRICE,
       qs: { fiat_currency: this.props?.app?.ipInfo?.currency },
       successFn: this.handleGetPriceSuccess,
       errorFn: this.handleGetPriceFailed,
     });
   }
+
+  handleGetPriceSuccess = () => {
+    this.loadMyHandshakeList();
+  }
+
+  handleGetPriceFailed = () => {
+    this.loadMyHandshakeList();
+  }
+
 
   loadMyHandshakeList = () => {
     this.props.loadMyHandshakeList({ PATH_URL: API_URL.ME.BASE });
@@ -65,8 +80,8 @@ class Me extends React.Component {
             <Link className="update-profile" to={URL.HANDSHAKE_ME_PROFILE} title="profile">
               <Image className="avatar" src={AvatarSVG} alt="avatar" />
               <div className="text">
-                <strong>My Profile</strong>
-                <p>Vertify your email, phone numbers</p>
+                <strong>The face behind the mask</strong>
+                <p>You, glorious you</p>
               </div>
               <div className="arrow">
                 <Image src={ExpandArrowSVG} alt="arrow" />
@@ -91,7 +106,7 @@ class Me extends React.Component {
                   }
                 })
               ) : (
-                <NoData />
+                <NoData message="Create a Shake to get started!" />
               )
             }
           </Col>
@@ -110,13 +125,15 @@ Me.propTypes = {
 const mapState = state => ({
   me: state.me,
   app: state.app,
+  auth: state.auth,
   firebaseUser: state.firebase.data,
 });
 
 const mapDispatch = ({
   loadMyHandshakeList,
   getListOfferPrice,
-  fireBaseDataChange,
+  fireBaseExchangeDataChange,
+  fireBaseBettingChange
 });
 
 export default connect(mapState, mapDispatch)(Me);

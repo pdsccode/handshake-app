@@ -53,8 +53,8 @@
   background: #335FFF;
   border-radius: 15px;
   // box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, .2);
-  border-top-left-radius: 0px;
-  margin-left: 65px;
+  border-top-left-radius: 5px;
+  margin-left: 60px;
   margin-right: 5px;
   margin-top: 3px;
   flex-direction: column;
@@ -75,8 +75,8 @@
 .rce-mbox.rce-mbox-right {
   float: right;
   margin-left: 5px;
-  margin-right: 20px;
-  border-top-right-radius: 0px;
+  margin-right: 15px;
+  border-top-right-radius: 5px;
   border-top-left-radius: 15px;
 }
 
@@ -802,43 +802,43 @@
 }
 
 .rce-dropdown.dropdown-show{
-  animation: dropdown-scaling 0.2s ease forwards;
+  // animation: dropdown-scaling 0.2s ease forwards;
   display: flex;
 }
 
-@keyframes dropdown-scaling {
-  0% {
-      opacity: 0;
-  }
-  50% {
-      opacity: 0.5;
-      transform: scale(1.1);
-  }
-  100% {
-      opacity: 1;
-      transform: scale(1);
-  }
-}
+// @keyframes dropdown-scaling {
+//   0% {
+//       opacity: 0;
+//   }
+//   50% {
+//       opacity: 0.5;
+//       transform: scale(1.1);
+//   }
+//   100% {
+//       opacity: 1;
+//       transform: scale(1);
+//   }
+// }
 
 .rce-dropdown.dropdown-hide{
-  animation: dropdown-reverse-scaling 0.2s ease forwards;
+  // animation: dropdown-reverse-scaling 0.2s ease forwards;
   display: flex;
 }
 
-@keyframes dropdown-reverse-scaling {
-  0% {
-      opacity: 1;
-      transform: scale(1);
-  }
-  50% {
-      opacity: 0.5;
-      transform: scale(1.1);
-  }
-  100% {
-      opacity: 0;
-      transform: scale(0);
-  }
-}
+// @keyframes dropdown-reverse-scaling {
+//   0% {
+//       opacity: 1;
+//       transform: scale(1);
+//   }
+//   50% {
+//       opacity: 0.5;
+//       transform: scale(1.1);
+//   }
+//   100% {
+//       opacity: 0;
+//       transform: scale(0);
+//   }
+// }
 
 .rce-dropdown-open__nortwest {
   transform-origin: left top;
@@ -902,17 +902,17 @@
 .rce-dropdown.fade {
   opacity: 0;
   transform: scale(1);
-  animation: dropdown-fade 0.5s ease forwards;
+  // animation: dropdown-fade 0.5s ease forwards;
 }
 
-@keyframes dropdown-fade {
-  0% {
-      opacity: 0;
-  }
-  100% {
-      opacity: 1;
-  }
-}
+// @keyframes dropdown-fade {
+//   0% {
+//       opacity: 0;
+//   }
+//   100% {
+//       opacity: 1;
+//   }
+// }
 .rce-sbar {
   display: flex;
   flex-direction: column;
@@ -972,24 +972,24 @@
   flex-direction: column;
   align-items: stretch;
   justify-content: flex-start;
-  animation: popup-scaling 0.4s ease forwards;
+  // animation: popup-scaling 0.4s ease forwards;
   box-sizing: border-box;
 }
 
-@keyframes popup-scaling {
-  0% {
-      transform: scale(0);
-      opacity: 0;
-  }
-  50% {
-      transform: scale(1.2);
-      opacity: 0.5;
-  }
-  100% {
-      transform: scale(1);
-      opacity: 1;
-  }
-}
+// @keyframes popup-scaling {
+//   0% {
+//       transform: scale(0);
+//       opacity: 0;
+//   }
+//   50% {
+//       transform: scale(1.2);
+//       opacity: 0.5;
+//   }
+//   100% {
+//       transform: scale(1);
+//       opacity: 1;
+//   }
+// }
 
 .rce-popup-header {
   padding: 18px 8px;
@@ -1025,8 +1025,6 @@
 
 .rce-search-input[type=search] {
   outline: none;
-	-webkit-appearance: textfield;
-	-webkit-box-sizing: content-box;
 	background: transparent url('../../assets/images/icon/ic-btn-search.svg') no-repeat 15px center;
 	border: none;
 	padding: 9px 10px 9px 48px;
@@ -1034,6 +1032,9 @@
   position: relative;
   left: -15px;
   top: 0px;
+  color: #2c2c2c;
+  font-weight: 400;
+  font-size: 1rem;
 
 	-webkit-transition: all .5s;
 	-moz-transition: all .5s;
@@ -1041,28 +1042,13 @@
 }
 
 .rce-search-input[type=search]:focus {
-	width: 356px;
+	width: 414px;
   background-color: #fff;
 }
 
 .rce-search-input:-moz-placeholder {
-	color: #999;
+	opacity: 0.37;
 }
 .rce-search-input::-webkit-input-placeholder {
-	color: #999;
-}
-
-.chat-container .no-data {
-  display: flex;
-  width: 100%;
-  height: 88vh;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-}
-
-.chat-container .no-data .text {
-  margin: 0px;
-  font-size: 20px;
-  color: #989898;
+	opacity: 0.37;
 }

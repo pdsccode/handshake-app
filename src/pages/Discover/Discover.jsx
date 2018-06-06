@@ -43,7 +43,7 @@ class DiscoverPage extends React.Component {
       tabIndexActive: '',
       query: '',
     };
-    this.loadDiscoverList();
+    // this.loadDiscoverList();
     // bind
     this.clickCategoryItem = this.clickCategoryItem.bind(this);
     this.clickTabItem = this.clickTabItem.bind(this);
@@ -84,7 +84,6 @@ class DiscoverPage extends React.Component {
 
   getListOfferPrice = () => {
     this.props.getListOfferPrice({
-      BASE_URL: API_URL.EXCHANGE.BASE,
       PATH_URL: API_URL.EXCHANGE.GET_LIST_OFFER_PRICE,
       qs: { fiat_currency: this.props?.app?.ipInfo?.currency },
       successFn: this.handleGetPriceSuccess,
@@ -162,7 +161,7 @@ class DiscoverPage extends React.Component {
     }
 
     if (tabIndexActive) {
-      qs.sub_type = tabIndexActive === 1 ? EXCHANGE_ACTION.BUY : EXCHANGE_ACTION.SELL;
+      qs.custom_query = `offer_feed_type_s:exchange AND offer_type_s:${tabIndexActive === 1 ? EXCHANGE_ACTION.SELL : EXCHANGE_ACTION.BUY}`;
     }
 
     if (query) {

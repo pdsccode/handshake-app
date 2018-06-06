@@ -22,7 +22,7 @@ import { connect } from "react-redux";
 const heightOfTabsHeader = 0.5;
 
 const Wrapper = styled.div`
-  background: #50af4f;
+  background: rgb(255,255,255,0.2);
 `
 
 
@@ -77,7 +77,7 @@ class Component extends React.Component {
               // }
               propsCleave={{
                 // id: `card-number-${this.lastUniqueId()}`,
-                placeholder: intl.formatMessage({id: 'required'}),
+                placeholder: '4111 1111 1111 1111',
                 options: {
                   creditCard: true,
                   onCreditCardTypeChanged: this.handleCCTypeChanged

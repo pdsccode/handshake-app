@@ -31,7 +31,7 @@ class GroupBook extends React.Component {
         return (
             <div className="wrapperGroupBook">
             {bookList&& bookList.map((item, index) =>
-                <Book key={index} amountColor={amountColor} key={item.id} item={item}/>
+                <Book key={index} amountColor={amountColor} item={item} />
               )}
             </div>
         );

@@ -3,7 +3,8 @@ import { DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown 
 import Cleave from 'cleave.js/react';
 import cx from 'classnames';
 import './styles.scss';
-import phoneCountryCodes from './country-calling-codes.min.json';
+// import phoneCountryCodes from './country-calling-codes.min.json';
+import SelectCountryCode from './components/SelectCountryCode';
 
 const customField = element => ({
   input,
@@ -66,7 +67,7 @@ export const fieldDropdown = customField(({
 });
 
 export const fieldRadioButton = customField(({
-  onChange, value, list, name, color = '',
+  onChange, value, list, name, color = '', containerClass = 'radio-container'
 }) => (
   <span>
     {
@@ -74,7 +75,7 @@ export const fieldRadioButton = customField(({
           const { value: itemValue, text } = item;
           const isChecked = itemValue === value;
           return (
-            <div key={index} className="radio-container">
+            <div key={index} className={containerClass}>
               <input
                 type="radio"
                 name={name}
@@ -87,6 +88,10 @@ export const fieldRadioButton = customField(({
                 onClick={() => onChange(itemValue)}
                 style={{ color, minWidth: '58px' }}
               >
+                {/*<span style={{ fontSize: '28px' }}>&sdot;</span> */}
+                {
+                  !containerClass.includes('old') && (<span>&#x25cf;&nbsp;</span>)
+                }
                 {text}
               </button>
             </div>
@@ -97,16 +102,18 @@ export const fieldRadioButton = customField(({
 ));
 
 export const fieldNumericInput = customField(({
-  onChange, value, list, name, color = '', step = 0.25, suffix
+  onChange, value, list, name, color = '', step = 0.25, suffix, btnBg = ''
 }) => {
   const valueFloat = parseFloat(value || 0, 10);
   return (
     <span className="btn-group" role="group" style={{ color }}>
-      <button type="button" className="btn bg-white" style={{ color, minWidth: '50px' }} onClick={() => onChange(valueFloat - step)}>-</button>
-      <span className="bg-light text-center" style={{ minWidth: '70px', lineHeight: '38px', opacity: 0.6 }}>
+      <button type="button" className="btn numeric-input" style={{ color }} onClick={() => onChange(valueFloat - step)}>-</button>
+
+      <span className="text-center" style={{ minWidth: '70px', lineHeight: '30px' }}>
         {value}{ suffix && <span>{suffix}</span>}
       </span>
-      <button type="button" className="btn bg-white" style={{ color, minWidth: '50px' }} onClick={() => onChange(valueFloat + step)}>+</button>
+
+      <button type="button" className="btn numeric-input" style={{ color }} onClick={() => onChange(valueFloat + step)}>+</button>
     </span>
   );
 });
@@ -125,7 +132,7 @@ export const fieldCleave = customField(({
 ));
 
 export const fieldPhoneInput = customField(({
-  onChange, onBlur, onFocus, value, propsCleave, className,
+  onChange, onBlur, onFocus, value, propsCleave, className, placeholder
 }) => {
   const splittedNumbers = value.split('-');
   let countryCode = '';
@@ -139,24 +146,10 @@ export const fieldPhoneInput = customField(({
   }
   return (
     <span className="d-flex align-items-center">
-      <span style={{ width: '100px' }} className="mr-auto">
-        <select
-          className="w-100 text-white select-customized"
-          onChange={e => onChange(`${e.target.value}-${phoneNumber}`)}
-          value={countryCode}
-        >
-          <option key={-1} value="">-------</option>
-          {
-            phoneCountryCodes.map((item, index) => {
-              const { name, callingCode } = item;
-              return (
-                <option key={index} value={callingCode}>+{callingCode}</option>
-              );
-            })
-          }
-        </select>
+      <span style={{ width: '110px' }} className="mr-auto">
+        <SelectCountryCode countryCode={countryCode} onChange={newCountryCode => onChange(`${newCountryCode}-${phoneNumber}`)} />
       </span>
-      <span className="ml-1"><input type="tel" className="form-control-custom form-control-custom-ex w-100" value={phoneNumber} onChange={e => onChange(`${countryCode}-${e.target.value}`)} /></span>
+      <span className="ml-1"><input type="tel" placeholder={placeholder} className="form-control-custom form-control-custom-ex w-100 input-no-border" value={phoneNumber} onChange={e => onChange(`${countryCode}-${e.target.value}`)} /></span>
     </span>
   );
 });

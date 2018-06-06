@@ -20,7 +20,7 @@ import Toggle from './../Toggle';
 import {showAlert} from '@/reducers/app/action';
 
 import './Shake.scss';
-import { BetHandshakeHandler } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
+import { BetHandshakeHandler, MESSAGE } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
 
 
 const wallet = MasterWallet.getWalletDefault('ETH');
@@ -54,8 +54,8 @@ class BetingShake extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      buttonClass: 'btnOK btnBlue',
-      isShowOdds: true,
+      buttonClass: 'btnOK btnRed',
+      isShowOdds: false,
       extraData: {},
 
     };
@@ -67,13 +67,20 @@ class BetingShake extends React.Component {
     this.onToggleChange = ::this.onToggleChange;
   }
   componentDidMount(){
-    const {extraData} = this.state;
-    const {matchName, matchOutcome, outcomeHid} = this.props;
-    extraData["event_name"] = matchName;
-    extraData["event_predict"] = matchOutcome;
-    this.setState({extraData})
-    console.log('componentDidMount OutcomeHid:', outcomeHid);
+
   }
+  componentWillReceiveProps(nextProps){
+    // const {extraData} = this.state;
+    // const {matchName, matchOutcome, outcomeHid} = this.props;
+    // console.log("componentWillReceiveProps Props:", this.props);
+    // extraData["event_name"] = matchName;
+    // extraData["event_predict"] = matchOutcome;
+    // console.log('componentWillReceiveProps Extra Data: ', extraData);
+    // this.setState({extraData})
+
+  }
+
+
 
   async onSubmit(values) {
     console.log("Submit");
@@ -85,16 +92,58 @@ class BetingShake extends React.Component {
     // this.props.onSubmitClick(amount);
     const side = parseInt(this.toggleRef.value);
     const balance = await BetHandshakeHandler.getBalance();
+    const estimatedGas = await bettinghandshake.getEstimateGas();
+    const total = amount + parseFloat(estimatedGas);
+
     console.log('Amount:', amount);
-    //if(matchName && matchOutcome && amount <= balance && amount > 0){
-      if(isShowOdds){
-        this.initHandshake(amount, odds);
-      }else {
-        this.shakeItem(amount, side);
-  
-      }
+    console.log('Props:', this.props);
+    var message = null;
+
+
+
+    if(matchName && matchOutcome){
+        if(amount > 0){
+          if(total <= parseFloat(balance)){
+            if(isShowOdds){
+              if(odds >=1){
+                this.initHandshake(amount, odds);
+              }else {
+                message = MESSAGE.ODD_LARGE_THAN;
+              }
+            }else {
+              this.shakeItem(amount, side);
+
+            }
+          }else {
+            message = MESSAGE.NOT_ENOUGH_BALANCE;
+          }
+        }else {
+          message = MESSAGE.AMOUNT_VALID;
+        }
+    }else {
+      message = MESSAGE.CHOOSE_MATCH;
+    }
+
+
+
+    //if(matchName && matchOutcome && amount <= parseFloat(balance) && amount > 0){
+      // if(isShowOdds){
+      //   this.initHandshake(amount, odds);
+      // }else {
+      //   this.shakeItem(amount, side);
+
+      // }
     //}
-    
+    if(message){
+      this.props.showAlert({
+        message: <div className="text-center">{message}</div>,
+        timeOut: 3000,
+        type: 'danger',
+        callBack: () => {
+        }
+      });
+    }
+
   }
 
   onCancel() {
@@ -103,7 +152,7 @@ class BetingShake extends React.Component {
   }
 
   onToggleChange(id) {
-    this.setState({buttonClass: `btnOK ${id === 1 ? 'btnBlue' : 'btnRed' }`});
+    this.setState({buttonClass: `btnOK ${id === 2 ? 'btnBlue' : 'btnRed' }`});
   }
 
   updateTotal(value) {
@@ -202,24 +251,26 @@ class BetingShake extends React.Component {
       label: 'Amount',
       className: 'amount',
       placeholder: '0.00',
+      type: 'tel',
     };
     const oddsField = {
       id: 'odds',
       name: 'odds',
       label: 'Odds',
       placeholder: '0-0',
-      isShowCurrency: false
+      isShowCurrency: false,
+      type: 'tel',
     };
 
     return (
       <BettingShakeForm className="wrapperBettingShake" onSubmit={this.onSubmit}>
-        <p className="titleForm text-center text-capitalize">PLACE A BET</p>
+        <p className="titleForm text-center text-capitalize">Bet on the outcome</p>
+        <Toggle ref={(component) => {this.toggleRef = component}} onChange={this.onToggleChange} />
         {this.renderInputField(amountField)}
         {isShowOdds && this.renderInputField(oddsField)}
-        <Toggle ref={(component) => {this.toggleRef = component}} onChange={this.onToggleChange} />
 
         <Button type="submit" block className={buttonClass}>
-          Shake now
+          Shake
         </Button>
       </BettingShakeForm>
     );
@@ -235,6 +286,16 @@ class BetingShake extends React.Component {
 
   shakeItem(amount, side){
       const {outcomeId} = this.props;
+      const {extraData} = this.state;
+      const {matchName, matchOutcome, outcomeHid} = this.props;
+      extraData["event_name"] = matchName;
+      extraData["event_predict"] = matchOutcome;
+      extraData["event_bet"] = amount;
+      this.setState({
+        extraData
+      })
+      console.log("Props:", this.props);
+
       const params = {
         //to_address: toAddress ? toAddress.trim() : '',
         //public: isPublic,
@@ -245,6 +306,7 @@ class BetingShake extends React.Component {
         //type: 3,
         //extra_data: JSON.stringify(fields),
         outcome_id: outcomeId,
+        extra_data: JSON.stringify(extraData),
         amount,
         currency: 'ETH',
         side,
@@ -273,7 +335,7 @@ class BetingShake extends React.Component {
      const {outcomeHid} = this.props;
      BetHandshakeHandler.controlShake(data, outcomeHid);
      this.props.showAlert({
-      message: <div className="text-center">Create a bet successfully</div>,
+      message: <div className="text-center">{MESSAGE.CREATE_BET_SUCCESSFUL}</div>,
       timeOut: 3000,
       type: 'danger',
       callBack: () => {
@@ -284,13 +346,38 @@ class BetingShake extends React.Component {
       // TO DO: Show message, show odd field
       this.setState({
         isShowOdds: true,
+      }, ()=> {
+        const {message} = successData
+          this.props.showAlert({
+            message: <div className="text-center">{message}</div>,
+            timeOut: 3000,
+            type: 'danger',
+            callBack: () => {
+            }
+          });
       })
 
 
     }
   }
-  shakeItemFailed = (error) => {
-    console.log('shakeItemFailed', error);
+  shakeItemFailed = (errorData) => {
+    console.log('shakeItemFailed', errorData);
+    const {status} = errorData;
+    if(status === 0){
+      this.setState({
+        isShowOdds: true,
+      }, ()=> {
+        const {message} = errorData
+          this.props.showAlert({
+            message: <div className="text-center">{message}</div>,
+            timeOut: 3000,
+            type: 'danger',
+            callBack: () => {
+            }
+          });
+      })
+    }
+   
   }
 
   initHandshake(amount, odds){
@@ -300,6 +387,7 @@ class BetingShake extends React.Component {
     const fromAddress = wallet.address;
     extraData["event_odds"] = odds;
     extraData["event_bet"] = amount;
+    console.log('Extra Data:', extraData);
     const params = {
       //to_address: toAddress ? toAddress.trim() : '',
       //public: isPublic,
@@ -329,7 +417,7 @@ class BetingShake extends React.Component {
   initHandshakeSuccess = async (successData)=>{
     console.log('initHandshakeSuccess', successData);
     const {status, data} = successData
-    
+
     if(status && data){
       /*
       const {offchain, side} = data;
@@ -343,12 +431,12 @@ class BetingShake extends React.Component {
       if(result){
         //TO DO: redirect and show alert
       }
-      */     
+      */
      const {outcomeHid} = this.props;
       console.log('OutcomeHid:', outcomeHid);
      BetHandshakeHandler.controlShake(data, outcomeHid);
      this.props.showAlert({
-      message: <div className="text-center">Create a bet successfully</div>,
+      message: <div className="text-center">{MESSAGE.CREATE_BET_SUCCESSFUL}</div>,
       timeOut: 3000,
       type: 'danger',
       callBack: () => {

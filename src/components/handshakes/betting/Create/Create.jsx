@@ -10,7 +10,7 @@ import { Field } from "redux-form";
 import { initHandshake } from '@/reducers/handshake/action';
 import { loadMatches } from '@/reducers/betting/action';
 import { HANDSHAKE_ID, API_URL, APP } from '@/constants';
-import  { BetHandshakeHandler, SIDE} from '@/components/handshakes/betting/Feed/BetHandshakeHandler.js';
+import  { BetHandshakeHandler, SIDE, MESSAGE} from '@/components/handshakes/betting/Feed/BetHandshakeHandler.js';
 import { URL } from '@/config';
 import local from '@/services/localStore';
 
@@ -44,6 +44,9 @@ const regex = /\[.*?\]/g;
 const regexReplace = /\[|\]/g;
 const regexReplacePlaceholder = /\[.*?\]/;
 
+
+
+
 class ErrorBox extends React.PureComponent {
   render() {
     return (
@@ -68,7 +71,7 @@ class BettingCreate extends React.PureComponent {
   static defaultProps = {
     item: {
       "backgroundColor": "#332F94",
-      "desc": "[{\"key\": \"event_bet\",\"suffix\": \"ETH\",\"label\": \"Amount\", \"placeholder\": \"10\", \"type\": \"number\", \"className\": \"betField\"}] [{\"key\": \"event_odds\", \"label\": \"Odds\", \"placeholder\": \"10\",\"prefix\": \"1 -\", \"className\": \"oddField\"}]",
+      "desc": "[{\"key\": \"event_bet\",\"suffix\": \"ETH\",\"label\": \"Amount\", \"placeholder\": \"10\", \"type\": \"number\", \"className\": \"amount\"}] [{\"key\": \"event_odds\", \"label\": \"Odds\", \"placeholder\": \"10\",\"prefix\": \"1 -\", \"className\": \"atOdds\", \"type\": \"number\"}]",
       "id": 18,
       "message": null,
       "name": "Bet",
@@ -90,12 +93,14 @@ class BettingCreate extends React.PureComponent {
 
       selectedMatch:null,
       selectedOutcome: null,
+      buttonClass: 'btnRed',
     };
     this.onSubmit = ::this.onSubmit;
     this.renderInput = ::this.renderInput;
     this.renderDate = ::this.renderDate;
     this.renderForm = ::this.renderForm;
     this.renderNumber = ::this.renderNumber;
+    this.onToggleChange = ::this.onToggleChange;
   }
   componentDidMount(){
     console.log('Betting Create Props:', this.props, history);
@@ -137,7 +142,7 @@ get matchResults(){
       if (foundMatch){
           const {outcomes} = foundMatch;
           if(outcomes){
-              return outcomes.map((item) => ({ id: item.id, value: item.name, hid: item.id}));
+              return outcomes.map((item) => ({ id: item.id, value: item.name, hid: item.hid}));
           }
       }
   }
@@ -171,23 +176,48 @@ get matchResults(){
     //const {toAddress, isPublic, industryId} = this.props;
 
     //const fromAddress = "0x54CD16578564b9952d645E92b9fa254f1feffee9";
-    const balance = await BetHandshakeHandler.getBalance();
-    console.log('Event Bet:', dict.event_bet);
+    let balance = await BetHandshakeHandler.getBalance();
+    balance = parseFloat(balance);
+    const estimatedGas = await bettinghandshake.getEstimateGas();
+    console.log('Estimate Gas:', estimatedGas);
+    const eventBet = parseFloat(dict.event_bet);
+    console.log('Event Bet:', eventBet);
+    const total = eventBet + parseFloat(estimatedGas);
+    console.log("Total:", total);
 
     const fromAddress = address;
 
-    if(selectedMatch && selectedOutcome && dict.event_bet > 0 && dict.event_bet <= balance){
-      this.initHandshake(extraParams, fromAddress);
-
+    if(selectedMatch && selectedOutcome){
+      if(eventBet > 0){
+        if(total <= balance){
+          this.initHandshake(extraParams, fromAddress);
+        }else {
+          this.props.showAlert({
+            message: <div className="text-center">{MESSAGE.NOT_ENOUGH_BALANCE}</div>,
+            timeOut: 3000,
+            type: 'danger',
+            callBack: () => {
+            }
+          });
+        }
+      }
     }else {
       this.props.showAlert({
-        message: <div className="text-center">Please choose match</div>,
+        message: <div className="text-center">{MESSAGE.CHOOSE_MATCH}</div>,
         timeOut: 3000,
         type: 'danger',
         callBack: () => {
         }
       });
     }
+
+
+    // if(selectedMatch && selectedOutcome && eventBet > 0 && eventBet <= balance){
+    //   this.initHandshake(extraParams, fromAddress);
+
+    // }else {
+
+    // }
   }
 
   get inputList() {
@@ -206,19 +236,24 @@ get matchResults(){
     this.setState({values});
   }
 
+  onToggleChange(id) {
+    this.setState({buttonClass: `${id === 2 ? 'btnBlue' : 'btnRed' }`});
+  }
+
   renderInput(item, index,style = {}) {
     const {key, placeholder, type} = item;
-    const className = 'form-control-custom input';
+    const className = 'amount';
     return (
       <Field
-        style={style}
+        //style={style}
         component={InputField}
         type="text"
         placeholder={placeholder}
-        className={className}
+        //className={className}
+        className={cn('form-control-custom input', className || '')}
         name={key}
         validate={[required]}
-        ErrorBox={ErrorBox}
+        //ErrorBox={ErrorBox}
         onChange={(evt) => {
           this.changeText(key, evt.target.value)
         }}
@@ -262,7 +297,7 @@ get matchResults(){
         name={key}
         style={style}
         component={InputField}
-        type="number"
+        type="tel"
         //min="0.0001"
         //step="0.0002"
         placeholder={placeholder}
@@ -275,37 +310,6 @@ get matchResults(){
     );
   }
 
-  // renderItem(field, index) {
-  //   const item = JSON.parse(field.replace(regexReplace, ''));
-  //   const {key, placeholder, type, label, className,suffix,prefix} = item;
-  //   let itemRender = this.renderInput(item, index);
-  //   switch (type) {
-  //     case 'date':
-  //       itemRender = this.renderDate(item, index);
-  //       break;
-  //     case 'number':
-  //       itemRender = this.renderNumber(item,{width:'100%', paddingRight:40} );
-  //       break;
-  //     default:
-  //       itemRender = this.renderInput(item, index);
-  //   }
-
-  //   // return (
-  //   //       <Col className="col-6">
-  //   //         <Row><label>{label || placeholder}</label></Row>
-  //   //         <Row><Col>{itemRender}</Col></Row>
-  //   //       </Col>
-
-  //   //     );
-  //   return (
-  //     <Col className="col-6">
-  //         <Row><label>{label || placeholder}</label></Row>
-  //         <Row>
-  //           <Col  style={{position:'relative'}}>{prefix&&<label style={{backgroundColor:'green'}}>{prefix}</label>}{itemRender}{suffix&&<label style={{position:'absolute',right:0}}>{suffix}</label>}</Col>
-  //         </Row>
-  //     </Col>
-  //       );
-  // }
   renderLabelForItem=(text,{marginLeft,marginRight})=>{
     return text&&<label className="itemLabel" style={{display:'flex',color:'white',fontSize:16,marginLeft:marginLeft,marginRight:marginRight,alignItems:'center'}}>{text}</label>;
   }
@@ -325,15 +329,13 @@ get matchResults(){
     }
 
     return (
-      <div style={{display:'flex',flex:1,flexDirection:'column',marginTop:2,marginBottom:2}}>
+      <div className="rowWrapper" key={index + 1} >
           <label style={{fontSize:13, color:'white'}}>{label || placeholder}</label>
-          <div style={{display:'flex',flex:1,flexDirection:'row',border:'1px solid #697076',padding:10}}>
-            {this.renderLabelForItem(prefix,{marginRight:10})}
-            <div style={{display:'flex',flex:1,flexDirection:'column',alignItems:'flex-start'}}>
-              {itemRender}
-            </div>
-            {this.renderLabelForItem(suffix,{marginLeft:10})}
-          </div>
+            {itemRender}
+            {
+              suffix && <div className="cryptoCurrency">{suffix}</div>
+
+            }
 
       </div>
         );
@@ -341,7 +343,7 @@ get matchResults(){
 
   renderForm() {
     const inputList = this.inputList;
-    const {selectedMatch} = this.state;
+    const { selectedMatch, buttonClass } = this.state;
     return (
       <BettingCreateForm className="wrapperBetting" onSubmit={this.onSubmit}>
         <div className="dropDown">
@@ -376,15 +378,19 @@ get matchResults(){
           </Row>
         </Grid>
           */}
-          <div className="formInput" style={{backgroundColor:'#3A444D',padding:10}}>
+          <div className="formInput" style={{backgroundColor:'#3A444D'}}>
+            <Toggle
+              ref={(component) =>
+              {this.toggleRef = component}}
+              onChange={this.onToggleChange}
+            />
             <div style={{display:'flex',flexDirection:'column',flex:1,marginBottom:10}}>
               {inputList.map((field, index) => this.renderItem(field, index))}
             </div>
-            <Toggle ref={(component) => {this.toggleRef = component}} onChange={this.onToggleChange} />
         </div>
 
 
-        <Button type="submit" block>Sign & Send</Button>
+        <Button type="submit" block className={buttonClass}>Shake and Send</Button>
       </BettingCreateForm>
     );
   }
@@ -426,6 +432,8 @@ get matchResults(){
       chain_id: chainId,
     };
     console.log("Params:", params);
+    const hid = selectedOutcome.hid;
+    console.log('Hid when init:', hid);
 
     this.props.initHandshake({PATH_URL: API_URL.CRYPTOSIGN.INIT_HANDSHAKE, METHOD:'POST', data: params,
     successFn: this.initHandshakeSuccess,
@@ -446,7 +454,7 @@ get matchResults(){
     if(status && data){
       BetHandshakeHandler.controlShake(data, hid);
       this.props.showAlert({
-        message: <div className="text-center">Create a bet successfully</div>,
+        message: <div className="text-center">{MESSAGE.CREATE_BET_SUCCESSFUL}</div>,
         timeOut: 3000,
         type: 'danger',
         callBack: () => {
@@ -460,22 +468,6 @@ get matchResults(){
     console.log('initHandshakeFailed', error);
   }
 
-
-  //Blockchain
-  /*
-  async initBet(escrow, odd, eventDate){
-
-    const address = "0x54CD16578564b9952d645E92b9fa254f1feffee9";
-    const privateKey = "9bf73320e0bcfd7cdb1c0e99f334d689ef2b6921794f23a5bffd2a6bb9c7a3d4";
-    const acceptors = [];
-    const goal = escrow*odd;
-    const currentDate = new Date();
-    const deadline = (eventDate.getTime() / 1000 - currentDate.getTime() / 1000);
-    const offchain = 'abc1';
-    const data = await neuron.bettingHandshake.initBet(address, privateKey, acceptors, goal, escrow, deadline, offchain);
-    console.log('Init Betting:', data);
-
-  }*/
 }
 const mapState = state => ({
   matches: state.betting.matches,

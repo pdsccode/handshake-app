@@ -17,19 +17,24 @@ import { change } from 'redux-form'
 import {fieldCleave, fieldDropdown, fieldInput, fieldRadioButton} from '@/components/core/form/customField'
 import {required} from '@/components/core/form/validation'
 import {createCCOrder, getCcLimits, getCryptoPrice, getUserCcLimit} from '@/reducers/exchange/action';
-import {API_URL, CRYPTO_CURRENCY_LIST, CRYPTO_CURRENCY_DEFAULT} from "@/constants";
+import {API_URL, CRYPTO_CURRENCY_LIST, CRYPTO_CURRENCY_DEFAULT, FIAT_CURRENCY_SYMBOL} from "@/constants";
 import {FIAT_CURRENCY} from "@/constants";
 import CryptoPrice from "@/models/CryptoPrice";
 import {MasterWallet} from "@/models/MasterWallet";
 import { bindActionCreators } from "redux";
 import {showAlert} from '@/reducers/app/action';
+import _sample from "lodash/sample";
+import { feedBackgroundColors } from "@/components/handshakes/exchange/config";
+import {formatMoney} from "@/services/offer-util";
+import {BigNumber} from "bignumber.js";
+import { showLoading, hideLoading } from '@/reducers/app/action';
 
 const nameFormCreditCard = 'creditCard'
 const FormCreditCard = createForm({ propsReduxForm: { form: nameFormCreditCard,
     initialValues: { currency: CRYPTO_CURRENCY_DEFAULT } } });
 const selectorFormCreditCard = formValueSelector(nameFormCreditCard)
 
-const mainColor = '#259B24'
+// const mainColor = '#259B24'
 
 class FeedCreditCard extends React.Component {
   constructor(props) {
@@ -43,6 +48,7 @@ class FeedCreditCard extends React.Component {
       showCCScheme: false,
     }
     this.getCryptoPriceByAmountThrottled = throttle(this.getCryptoPriceByAmount, 500);
+    this.mainColor = _sample(feedBackgroundColors)
   }
 
   async componentDidMount() {
@@ -51,8 +57,8 @@ class FeedCreditCard extends React.Component {
       rfChange(nameFormCreditCard, 'currency', currencyForced)
     }
 
-    this.props.getCcLimits({ BASE_URL: API_URL.EXCHANGE.BASE, PATH_URL: API_URL.EXCHANGE.GET_CC_LIMITS});
-    this.props.getUserCcLimit({ BASE_URL: API_URL.EXCHANGE.BASE, PATH_URL: API_URL.EXCHANGE.GET_USER_CC_LIMIT});
+    this.props.getCcLimits({ PATH_URL: API_URL.EXCHANGE.GET_CC_LIMITS});
+    this.props.getUserCcLimit({ PATH_URL: API_URL.EXCHANGE.GET_USER_CC_LIMIT});
 
     this.getCryptoPriceByAmount(0);
 
@@ -67,13 +73,20 @@ class FeedCreditCard extends React.Component {
     }
   }
 
+  showLoading = () => {
+    this.props.showLoading({message: '',});
+  }
+
+  hideLoading = () => {
+    this.props.hideLoading();
+  }
+
   getCryptoPriceByAmount = (amount) => {
     const cryptoCurrency = this.state.currency;
 
     var data = {amount: amount, currency: cryptoCurrency};
 
     this.props.getCryptoPrice({
-      BASE_URL: API_URL.EXCHANGE.BASE,
       PATH_URL: API_URL.EXCHANGE.GET_CRYPTO_PRICE,
       qs: data,
       successFn: this.handleGetCryptoPriceSuccess,
@@ -81,13 +94,17 @@ class FeedCreditCard extends React.Component {
     });
   }
 
-  handleGetCryptoPriceSuccess = (data) => {
+  handleGetCryptoPriceSuccess = (responseData) => {
     // console.log('handleGetCryptoPriceSuccess', data);
     const { userCcLimit } = this.props;
-    const cryptoPrice = CryptoPrice.cryptoPrice(data);
+    const cryptoPrice = CryptoPrice.cryptoPrice(responseData.data);
 
-    if (this.state.amount && userCcLimit && userCcLimit.limit < userCcLimit.amount + cryptoPrice.fiatAmount) {
+    const amoutWillUse = new BigNumber(userCcLimit.amount).plus(new BigNumber(cryptoPrice.fiatAmount)).toNumber();
+
+    if (this.state.amount && userCcLimit && userCcLimit.limit < amoutWillUse) {
       this.setState({showCCScheme: true});
+    } else {
+      this.setState({showCCScheme: false});
     }
   }
 
@@ -120,7 +137,6 @@ class FeedCreditCard extends React.Component {
       };
       // console.log('handleCreateCCOrder',paramsObj);
       this.props.createCCOrder({
-        BASE_URL: API_URL.EXCHANGE.BASE,
         PATH_URL: API_URL.EXCHANGE.CREATE_CC_ORDER,
         data: paramsObj,
         METHOD: 'POST',
@@ -131,6 +147,7 @@ class FeedCreditCard extends React.Component {
   }
 
   handleCreateCCOrderSuccess = (data) => {
+    this.hideLoading();
     // console.log('handleCreateCCOrderSuccess', data);
 
     // this.timeoutClosePopup = setTimeout(() => {
@@ -154,7 +171,7 @@ class FeedCreditCard extends React.Component {
 
     this.props.showAlert({
       message: <div className="text-center"><FormattedMessage id="buyUsingCreditCardSuccessMessge"/></div>,
-      timeOut: 3000,
+      timeOut: 2000,
       type: 'success',
       callBack: this.handleBuySuccess
     });
@@ -176,6 +193,8 @@ class FeedCreditCard extends React.Component {
   }
 
   handleCreateCCOrderFailed = (e) => {
+    this.hideLoading();
+
     // console.log('handleCreateCCOrderFailed', JSON.stringify(e.response));
     this.props.showAlert({
       message: <div className="text-center">{e.response?.data?.message}</div>,
@@ -212,6 +231,23 @@ class FeedCreditCard extends React.Component {
 
   handleSubmit = (values) => {
     const { handleSubmit } = this.props;
+    const { userCcLimit, cryptoPrice } = this.props;
+
+    const amoutWillUse = new BigNumber(userCcLimit.amount).plus(new BigNumber(cryptoPrice.fiatAmount)).toNumber();
+
+    if (this.state.amount && userCcLimit && userCcLimit.limit < amoutWillUse) {
+      this.props.showAlert({
+        message: <div className="text-center"><FormattedMessage id="overCCLimit" values={{ currency: FIAT_CURRENCY_SYMBOL, limit: formatMoney(userCcLimit.limit), amount: formatMoney(userCcLimit.amount) }}/></div>,
+        timeOut: 3000,
+        type: 'danger',
+        // callBack: this.handleBuySuccess
+      });
+
+      return;
+    }
+
+    this.showLoading();
+
     if (handleSubmit) {
       handleSubmit(values);
     } else {
@@ -239,10 +275,10 @@ class FeedCreditCard extends React.Component {
     }
   }
 
-  onAmountChange = (e) => {
-    const amount = e.target.value;
+  onAmountChange = (e, amount) => {
+    // const amount = e.target.value;
     this.getCryptoPriceByAmount(amount);
-    this.setState({amount: amount}, () => {
+    this.setState({amount}, () => {
       this.getCryptoPriceByAmountThrottled(amount);
     });
   }
@@ -280,7 +316,7 @@ class FeedCreditCard extends React.Component {
   render() {
     const {intl, userProfile, cryptoPrice, amount, userCcLimit, ccLimits, buttonTitle, currencyForced } = this.props;
     const { showCCScheme } = this.state;
-    const fiatCurrency = '$';
+    const fiatCurrency = FIAT_CURRENCY_SYMBOL;
     const total = cryptoPrice && cryptoPrice.fiatAmount;
 
     let modalContent = this.state.modalContent;
@@ -293,11 +329,11 @@ class FeedCreditCard extends React.Component {
       <div className="mb-2">
         <div>
           <FormCreditCard onSubmit={this.handleSubmit} validate={this.handleValidate}>
-            <Feed className="feed p-2 mb-2" background={mainColor}>
+            <Feed className="feed p-2 mb-2" background={this.mainColor}>
               <div style={{ color: 'white' }}>
                 {
                   showCCScheme && (
-                    <div style={{ background: '#50af4f' }} className="pt-2 px-2 rounded mb-2">
+                    <div style={{ background: 'rgb(255,255,255,0.2)' }} className="pt-2 px-2 rounded mb-2">
                       {
                         ccLimits.map((ccLimit, index) => {
                           const { level, limit, duration } = ccLimit
@@ -315,10 +351,10 @@ class FeedCreditCard extends React.Component {
 
                           return (
                             <LevelItem key={index} style={{ margin: '0 8px 8px 0', opacity: isActive ? '' : 0.6 }}>
-                              <div className="rounded p-1" style={{ lineHeight: 1.2, background: isActive ? '#FF3B30' : '#84c683' }}>
+                              <div className="rounded p-1" style={{ lineHeight: 1.2, background: isActive ? '#FF3B30' : 'rgb(255,255,255,0.2)' }}>
                                 {text}
                               </div>
-                              <div><small>Up to {fiatCurrency}{limit}</small></div>
+                              <div className="p-1"><small>{fiatCurrency}{limit} limit</small></div>
                             </LevelItem>
                           )
                         })
@@ -327,31 +363,40 @@ class FeedCreditCard extends React.Component {
                   )
                 }
                 <div className="form-group pt-2 d-flex">
-                  <label className="col-form-label"><FormattedMessage id="buy"/></label>
+                  <label className="col-form-label headline"><h4><FormattedMessage id="buy"/></h4></label>
                   <div className="mx-2">
                     <Field
                       name="amount"
-                      type="number"
-                      step="any"
+                      // type="number"
+                      // step="any"
                       validate={[required]}
-                      component={fieldInput}
+                      component={fieldCleave}
+                      propsCleave={{
+                        placeholder: intl.formatMessage({ id: 'amount' }),
+                        options: { numeral: true, delimiter: '', numeralDecimalScale: 8 },
+                        style: {
+                          fontSize: '26px',
+                          fontWeight: '600',
+                          height: '44px'
+                        }
+                      }}
                       className="form-control-custom form-control-custom-ex d-inline-block w-100"
-                      placeholder={intl.formatMessage({id: 'amount'})}
                       onChange={this.onAmountChange}
                     />
                   </div>
-                  <span className="d-inline-block ml-auto" style={{ width: '368px' }}>
+                  <span className="d-inline-block ml-auto" style={{ maxWidth: '368px', minWidth: '128px' }}>
                     <Field
                       name="currency"
+                      containerClass="radio-container-old"
                       component={fieldRadioButton}
                       list={currencyForced ? CRYPTO_CURRENCY_LIST.filter(c => c.value === currencyForced) : CRYPTO_CURRENCY_LIST}
-                      color={mainColor}
+                      color={'#fff'}
                       onChange={this.onCurrencyChange}
                     />
                   </span>
                 </div>
                 <div className="pb-2">
-                  <span><FormattedMessage id="askUsingCreditCard" values={{ fiatCurrency: fiatCurrency, total: total }} /></span>
+                  <h4 className="headline"><FormattedMessage id="askUsingCreditCard" values={{ fiatCurrency: FIAT_CURRENCY, total: formatMoney(total) }} /></h4>
                 </div>
                 {
                   amount && (
@@ -402,6 +447,8 @@ const mapDispatchToProps = (dispatch) => ({
   getCcLimits: bindActionCreators(getCcLimits, dispatch),
   rfChange: bindActionCreators(change, dispatch),
   showAlert: bindActionCreators(showAlert, dispatch),
+  showLoading: bindActionCreators(showLoading, dispatch),
+  hideLoading: bindActionCreators(hideLoading, dispatch),
 });
 
 export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(FeedCreditCard));

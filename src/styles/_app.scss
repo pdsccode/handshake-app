@@ -7,6 +7,9 @@
   padding-top: $header-height + 10px;
   padding-bottom: $footer-height + 10px;
   overflow: hidden;
+  &.hide-header {
+    padding-top: 10px;
+  }
 }
 
 .header {
@@ -154,4 +157,19 @@
 .has-warning {
   box-shadow: none !important;
   border-color: #ffc107 !important;
+}
+
+.no-data {
+  display: block;
+  width: 100%;
+  height: calc(100vh - 125px);
+  position: relative;
+  .text {
+    display: block;
+    width: 100%;
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+  }
 }

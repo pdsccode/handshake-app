@@ -5,7 +5,7 @@ import { Switch, Route } from 'react-router-dom';
 import DynamicImport from '@/components/App/DynamicImport';
 import Loading from '@/components/core/presentation/Loading';
 import { URL } from '@/config';
-import { setHeaderTitle, clearHeaderRight } from '@/reducers/app/action';
+import { setHeaderTitle, clearHeaderRight, clearHeaderLeft, hideHeader } from '@/reducers/app/action';
 
 const Me = props => (<DynamicImport loading={Loading} load={() => import('@/pages/Me/Me')}>{Component => <Component {...props} />}</DynamicImport>);
 const MeProfile = props => (<DynamicImport loading={Loading} load={() => import('@/pages/Me/Profile')}>{Component => <Component {...props} />}</DynamicImport>);
@@ -20,14 +20,17 @@ class MeRouter extends React.Component {
   static propTypes = {
     clearHeaderRight: PropTypes.func.isRequired,
     setHeaderTitle: PropTypes.func.isRequired,
+    clearHeaderLeft: PropTypes.func.isRequired,
+    hideHeader: PropTypes.func.isRequired,
   }
 
   constructor(props) {
     super(props);
 
-    this.props.setHeaderTitle('My handshakes');
+    this.props.setHeaderTitle('My Handshakes');
     this.props.clearHeaderRight();
-
+    this.props.clearHeaderLeft();
+    this.props.hideHeader();
   }
 
   render() {
@@ -40,5 +43,7 @@ class MeRouter extends React.Component {
   }
 }
 
-export default connect(null, ({ setHeaderTitle, clearHeaderRight }))(MeRouter);
+export default connect(null, ({
+  setHeaderTitle, clearHeaderRight, clearHeaderLeft, hideHeader,
+}))(MeRouter);
 

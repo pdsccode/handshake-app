@@ -58,6 +58,20 @@ export class Ethereum extends Wallet {
       return Web3.utils.fromWei(balance.toString());
     }
 
+  async getFee() {
+    const web3 = new Web3(new Web3.providers.HttpProvider(this.network));
+    const gasPrice = new BN(await web3.eth.getGasPrice());
+
+    const limitedGas = new BN(3000000);
+
+    const estimatedGas = limitedGas.mul(gasPrice);
+
+    // console.log('getFee, gasPrice', gasPrice.toString());
+    // console.log('getFee, estimateGas', estimatedGas.toString());
+
+    return Web3.utils.fromWei(estimatedGas);
+  }
+
     async transfer(toAddress, amountToSend) {
 
       let insufficientMsg = "You have insufficient coin to make the transfer. Please top up and try again."

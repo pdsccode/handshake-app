@@ -50,6 +50,30 @@ class Neuron {
     const compiled = require(`../../contracts/${contractName}.json`);
     return compiled;
   };
+
+  getGasPriceDefaultWithEthUnit = async () =>
+    Web3.utils.fromWei(await this.web3.eth.getGasPrice());
+
+  caculateEstimatGasWithEthUnit = async (address, gasPrice = undefined) => {
+    gasPrice = new BN(gasPrice
+      ? Web3.utils.toWei(String(gasPrice), 'gwei')
+      : await this.web3.eth.getGasPrice());
+    // console.log('caculateEstimatGasWithEthUnit gasPrice = ', String(gasPrice));
+    const balance = new BN(await this.web3.eth.getBalance(address));
+    const estimateGas = balance.div(gasPrice);
+    // console.log(
+    //   'caculateEstimatGasWithEthUnit estiGas = ',
+    //   String(estimateGas),
+    // );
+    const limitedGas = 3000000;
+
+    const estimatedGas = Math.min(estimateGas.toNumber(), limitedGas);
+    // console.log(
+    //   'caculateEstimatGasWithEthUnit estimatedGas = ',
+    //   String(estimatedGas),
+    // );
+    return Web3.utils.fromWei(String(estimatedGas * gasPrice));
+  };
   /**
    *
    * @param {string} address
@@ -91,7 +115,7 @@ class Neuron {
       const estimateGas = balance.div(gasPrice);
       const limitedGas = 3000000;
 
-      const estimatedGas = Math.min(estimateGas, limitedGas);
+      const estimatedGas = await BN.min(estimateGas, limitedGas);
       const chainId = await web3.eth.net.getId();
       console.log('gasPrice->', parseInt(gasPrice));
       console.log('estimatedGas->', parseInt(estimatedGas));
@@ -106,7 +130,7 @@ class Neuron {
         gas: estimatedGas,
         to: toAddress,
         value: amount
-          ? web3.utils.toHex(web3.utils.toWei(String(amount, 'ether')))
+          ? web3.utils.toHex(web3.utils.toWei(String(amount), 'ether'))
           : undefined,
       };
 

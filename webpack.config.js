@@ -7,133 +7,13 @@ const webpack = require('webpack');
 const merge = require('webpack-merge');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+// const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const PwaManifestPlugin = require('webpack-pwa-manifest');
-const OfflinePlugin = require('offline-plugin');
-
+// const OfflinePlugin = require('offline-plugin');
 
 const dotenv = require('dotenv');
-
-const stats = {
-  modules: false,
-  children: false,
-  chunks: false,
-};
-
-const development = {
-  plugins: [new webpack.HotModuleReplacementPlugin()],
-  devServer: {
-    watchContentBase: true,
-    stats,
-    publicPath: '/',
-    historyApiFallback: {
-      disableDotRule: true,
-    },
-    hot: true,
-    host: '0.0.0.0',
-  },
-  module: {
-    rules: [
-      {
-        test: /\.css$/,
-        use: [
-          {
-            loader: 'style-loader',
-          },
-          {
-            loader: 'css-loader',
-            options: {
-              importLoaders: 1,
-            },
-          },
-        ],
-      },
-      {
-        test: /\.scss$/,
-        use: [
-          {
-            loader: 'style-loader',
-          },
-          {
-            loader: 'css-loader',
-            options: {
-              importLoaders: 1,
-            },
-          },
-          {
-            loader: 'postcss-loader',
-          },
-          {
-            loader: 'sass-loader',
-          },
-        ],
-      },
-    ],
-  },
-};
-
-const production = {
-  optimization: {
-    minimize: true,
-    minimizer: [
-      new UglifyJsPlugin({
-        uglifyOptions: {
-          compress: {
-            drop_console: true,
-          },
-        },
-      }),
-    ],
-    splitChunks: {
-      chunks: 'all',
-    },
-    noEmitOnErrors: true,
-  },
-  module: {
-    rules: [
-      {
-        test: /\.css$/,
-        use: [
-          MiniCssExtractPlugin.loader,
-          {
-            loader: 'css-loader',
-            options: {
-              importLoaders: 1,
-            },
-          },
-        ],
-      },
-      {
-        test: /\.scss$/,
-        use: [
-          MiniCssExtractPlugin.loader,
-          {
-            loader: 'css-loader',
-            options: {
-              importLoaders: 1,
-            },
-          },
-          {
-            loader: 'postcss-loader',
-          },
-          {
-            loader: 'sass-loader',
-          },
-        ],
-      },
-    ],
-  },
-  plugins: [
-    new OptimizeCSSAssetsPlugin(),
-    new MiniCssExtractPlugin({
-      filename: 'css/[name].css',
-      chunkFilename: 'css/[hash].[name].css',
-    }),
-  ],
-  performance: { hints: false },
-};
 
 module.exports = function webpackConfig(env, argv) {
   const isProduction = argv.mode === 'production';
@@ -144,7 +24,131 @@ module.exports = function webpackConfig(env, argv) {
     dotenv.config({ path: xPath('.env.production') });
   }
 
-  return merge(
+  const stats = {
+    modules: false,
+    children: false,
+    chunks: false,
+  };
+
+  const development = {
+    plugins: [new webpack.HotModuleReplacementPlugin()],
+    devServer: {
+      watchContentBase: true,
+      stats,
+      publicPath: '/',
+      historyApiFallback: {
+        disableDotRule: true,
+      },
+      hot: true,
+      host: '0.0.0.0',
+    },
+    module: {
+      rules: [
+        {
+          test: /\.css$/,
+          use: [
+            {
+              loader: 'style-loader',
+            },
+            {
+              loader: 'css-loader',
+              options: {
+                importLoaders: 1,
+              },
+            },
+          ],
+        },
+        {
+          test: /\.scss$/,
+          use: [
+            {
+              loader: 'style-loader',
+            },
+            {
+              loader: 'css-loader',
+              options: {
+                importLoaders: 1,
+              },
+            },
+            {
+              loader: 'postcss-loader',
+            },
+            {
+              loader: 'sass-loader',
+            },
+          ],
+        },
+      ],
+    },
+  };
+
+  const production = {
+    optimization: {
+      minimize: true,
+      minimizer: [
+        new UglifyJsPlugin({
+          uglifyOptions: {
+            compress: {
+              drop_console: true,
+            },
+          },
+        }),
+      ],
+      splitChunks: {
+        chunks: 'all',
+      },
+      noEmitOnErrors: true,
+    },
+    module: {
+      rules: [
+        {
+          test: /\.css$/,
+          use: [
+            MiniCssExtractPlugin.loader,
+            {
+              loader: 'css-loader',
+              options: {
+                importLoaders: 1,
+              },
+            },
+          ],
+        },
+        {
+          test: /\.scss$/,
+          use: [
+            MiniCssExtractPlugin.loader,
+            {
+              loader: 'css-loader',
+              options: {
+                importLoaders: 1,
+              },
+            },
+            {
+              loader: 'postcss-loader',
+            },
+            {
+              loader: 'sass-loader',
+            },
+          ],
+        },
+      ],
+    },
+    plugins: [
+      new CleanWebpackPlugin(['dist']),
+      // new OptimizeCSSAssetsPlugin(),
+      new MiniCssExtractPlugin({
+        filename: 'css/[name].css',
+        chunkFilename: 'css/[hash].[name].css',
+      }),
+      // new OfflinePlugin({
+      //   appShell: '/',
+      //   publicPath: `${process.env.PUBLIC_URL}`,
+      // }),
+    ],
+    performance: { hints: false },
+  };
+
+  const finalConfig = merge(
     {
       entry: {
         main: xPath('src/index.js'),
@@ -163,7 +167,6 @@ module.exports = function webpackConfig(env, argv) {
         modules: [xPath('node_modules')],
       },
       plugins: [
-        new CleanWebpackPlugin(['dist']),
         new webpack.DefinePlugin({
           'process.env.NODE_ENV': JSON.stringify(argv.mode),
           'process.env.isProduction': JSON.stringify(isProduction),
@@ -259,4 +262,6 @@ module.exports = function webpackConfig(env, argv) {
     },
     isProduction ? production : development,
   );
+
+  return finalConfig;
 };
