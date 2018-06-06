@@ -86,11 +86,11 @@ export class Firechat {
       sessionId: this.sessionId,
       online: true,
     }, {
-      name: this.userName,
-      shortName: this.userName.toLowerCase(),
-      sessionId: this.sessionId,
-      online: false,
-    });
+        name: this.userName,
+        shortName: this.userName.toLowerCase(),
+        sessionId: this.sessionId,
+        online: false,
+      });
     // const usernameSessionRef = usernameRef.child(this.sessionId);
     // this.queuePresenceOperation(usernameSessionRef, {
     //   id: this.userId,
@@ -551,9 +551,33 @@ export class Firechat {
         return true;
       });
 
-      setTimeout(() => {
-        cb(usernamesFiltered);
-      }, 0);
+      if (cb) {
+        setTimeout(() => {
+          cb(usernamesFiltered);
+        }, 0);
+      }
+    });
+  }
+
+  getUserById(userCode, callback) {
+    const userCodeLowercase = userCode.toLowerCase();
+    this.usersOnlineRef.orderByChild('shortName').equalTo(userCodeLowercase).once('value', (snapshot) => {
+      const users = snapshot.val() || {};
+      let foundUser = null;
+
+      Object.keys(users).forEach((userId) => {
+        const userInfo = users[userId];
+
+        if (userInfo.shortName === userCodeLowercase) {
+          foundUser = userInfo;
+          foundUser.id = userId;
+          return false;
+        }
+      });
+
+      if (callback) {
+        callback(foundUser);
+      }
     });
   }
 
@@ -562,6 +586,27 @@ export class Firechat {
     this.roomRef.child(roomId).once('value', (snapshot) => {
       callback(snapshot.val());
     });
+  }
+
+  updateUserName(userName, roomId) {
+    if (this.userRef) {
+      this.userRef.update({
+        name: userName,
+      });
+    }
+
+    if (this.userId) {
+      this.usersOnlineRef.child(this.userId).update({
+        name: userName,
+        shortName: userName.toLowerCase(),
+      });
+
+      if (roomId) {
+        this.roomRef.child(roomId).child('authorizedUsers').child(this.userId).update({
+          name: userName,
+        });
+      }
+    }
   }
 
   warn(msg) {

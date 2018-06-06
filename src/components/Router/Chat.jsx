@@ -12,6 +12,7 @@ const Page404 = props => (<DynamicImport isNotFound loading={Loading} load={() =
 
 const routerMap = [
   { path: URL.HANDSHAKE_CHAT_INDEX, component: Chat },
+  { path: URL.HANDSHAKE_CHAT_DETAIL, component: Chat },
 ];
 
 class ChatRouter extends React.Component {
