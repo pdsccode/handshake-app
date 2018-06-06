@@ -980,11 +980,13 @@ class FeedExchange extends React.PureComponent {
                   } else if (offer.type === EXCHANGE_ACTION.SELL) {
                     offerType = EXCHANGE_ACTION_PAST_NAME[EXCHANGE_ACTION.BUY];
                   }
+                  break;
                 }
                 case HANDSHAKE_USER.OWNER: {
                   from = 'From';
 
                   offerType = EXCHANGE_ACTION_PAST_NAME[offer.type];
+                  break;
                 }
               }
 
@@ -1009,11 +1011,14 @@ class FeedExchange extends React.PureComponent {
                   } else if (offer.type === EXCHANGE_ACTION.SELL) {
                     offerType = EXCHANGE_ACTION_PRESENT_NAME[EXCHANGE_ACTION.BUY];
                   }
+                  break;
                 }
                 case HANDSHAKE_USER.OWNER: {
                   from = 'From';
 
                   offerType = EXCHANGE_ACTION_PRESENT_NAME[offer.type];
+
+                  break;
                 }
               }
 
