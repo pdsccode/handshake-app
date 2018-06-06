@@ -66,40 +66,56 @@ export const fieldDropdown = customField(({
   );
 });
 
+// type = tab|radio-big|default
 export const fieldRadioButton = customField(({
-  onChange, value, list, name, color = '', containerClass = 'radio-container', styleButton = {}
-}) => (
-  <span>
+  onChange, value, list, name, color = '', styleButton = {}, type
+}) => {
+  let containerClass = '';
+  let isTab = false;
+  switch (type) {
+    case 'tab':
+      containerClass = 'tab';
+      isTab = true;
+      break;
+    case 'radio-big':
+      containerClass = 'big';
+      break;
+    default:
+      containerClass = 'default';
+  }
+  return (
+    <span style={{ width: isTab ? '100%' : '' }}>
     {
-        list.map((item, index) => {
-          const { value: itemValue, text, icon } = item;
-          const isChecked = itemValue === value;
-          return (
-            <div key={index} className={containerClass}>
-              <input
-                type="radio"
-                name={name}
-                checked={isChecked}
-                readOnly
-              />
-              <button
-                type="button"
-                className="btn"
-                onClick={() => onChange(itemValue)}
-                style={{ color, minWidth: '58px', ...styleButton }}
-              >
-                {/*<span style={{ fontSize: '28px' }}>&sdot;</span> */}
-                {
-                  !containerClass.includes('old') && (<span>{icon || <span>&#x25cf;</span>}&nbsp;</span>)
-                }
-                {text}
-              </button>
-            </div>
-          );
-        })
-      }
-  </span>
-));
+      list.map((item, index) => {
+        const { value: itemValue, text, icon } = item;
+        const isChecked = itemValue === value;
+        return (
+          <div key={index} className={cx('radio-container', containerClass)} style={isTab ? { width: `${100 / list.length}%` } : {}}>
+            <input
+              type="radio"
+              name={name}
+              checked={isChecked}
+              readOnly
+            />
+            <button
+              type="button"
+              className="btn"
+              onClick={() => onChange(itemValue)}
+              style={{ color, minWidth: '58px', ...styleButton }}
+            >
+              {/*<span style={{ fontSize: '28px' }}>&sdot;</span> */}
+              {
+                !['radio-big', 'tab'].includes(type) && (<span>{icon || <span>&#x25cf;</span>}&nbsp;</span>)
+              }
+              {text}
+            </button>
+          </div>
+        );
+      })
+    }
+    </span>
+  )
+});
 
 export const fieldNumericInput = customField(({
   onChange, value, list, name, color = '', step = 0.25, suffix, btnBg = ''

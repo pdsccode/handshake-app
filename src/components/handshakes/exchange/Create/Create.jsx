@@ -127,13 +127,12 @@ class Component extends React.Component {
           <Feed className="feed my-2 p-0" background={this.mainColor}>
             <div style={{ color: "white", padding: "20px" }}>
               <div className="d-flex mb-4">
-                <label className="col-form-label mr-auto" style={{ width: "190px", fontWeight: "bold" }}>I want
-                  to</label>
                 <div className='input-group'>
                   <Field
                     name="type"
                     // containerClass="radio-container-old"
                     component={fieldRadioButton}
+                    type="tab"
                     list={EXCHANGE_ACTION_LIST}
                     color={textColor}
                     validate={[required]}

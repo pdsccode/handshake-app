@@ -387,7 +387,8 @@ class FeedCreditCard extends React.Component {
                   <span className="d-inline-block ml-auto" style={{ maxWidth: '368px', minWidth: '128px' }}>
                     <Field
                       name="currency"
-                      containerClass="radio-container-old"
+                      type="radio-big"
+                      // containerClass="radio-container-old"
                       component={fieldRadioButton}
                       list={currencyForced ? CRYPTO_CURRENCY_LIST.filter(c => c.value === currencyForced) : CRYPTO_CURRENCY_LIST}
                       color={'#fff'}
