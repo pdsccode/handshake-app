@@ -82,7 +82,7 @@ class Chat extends Component {
     const { id: roomId, authorizedUsers } = room;
     const { chatSource } = this.state;
 
-    if(Object.prototype.hasOwnProperty.call(chatSource, roomId)) {
+    if (Object.prototype.hasOwnProperty.call(chatSource, roomId)) {
       room.froms = chatSource[roomId].froms;
     }
     room.froms = room.froms || {};
@@ -469,7 +469,16 @@ class Chat extends Component {
   }
 
   renderSearchButton() {
-    return (<input ref={(ref) => { this.searchBtnRef = ref; }} type="search" className="rce-search-input" onChange={this.onSearchUser} onBlur={() => { setTimeout(() => { this.clearSearch() }, 100); }} />)
+    return (
+      <input
+        ref={(ref) => { this.searchBtnRef = ref; }}
+        type="search"
+        className="rce-search-input"
+        onChange={this.onSearchUser}
+        onBlur={() => { setTimeout(() => { this.clearSearch() }, 100); }}
+        placeholder='Search for your fellow ninjas by their code name'
+      />
+    )
   }
 
   renderEmptyMessage(message) {

@@ -24,6 +24,8 @@ import { setIpInfo } from '@/reducers/app/action';
 import { getUserProfile, getListOfferPrice } from '@/reducers/exchange/action';
 import { MasterWallet } from '@/models/MasterWallet';
 import { createMasterWallets } from '@/reducers/wallet/action';
+import MobileOrTablet from '@/components/MobileOrTablet';
+import BrowserDetect from '@/services/browser-detect';
 
 addLocaleData([...en, ...fr]);
 
@@ -263,16 +265,18 @@ class Router extends React.Component {
   }
 
   render() {
+    if (window.location.pathname === URL.LANDING_PAGE_SHURIKEN) return <LandingPageRootRouter />;
+    if (BrowserDetect.isDesktop && process.env.isProduction) return <MobileOrTablet />;
     if (!this.state.isLogged || this.state.isLoading) {
       return (
         <BrowserRouter>
           <Route
             path={URL.INDEX}
-            render={props => (
-              <Layout {...props}>
+            render={loadingProps => (
+              <Layout {...loadingProps}>
                 <Loading message={this.state.loadingText} />
               </Layout>
-            )}
+              )}
           />
         </BrowserRouter>
       );
@@ -286,15 +290,7 @@ class Router extends React.Component {
           <Route
             path={URL.INDEX}
             render={props =>
-              props.location.pathname === URL.LANDING_PAGE_SHURIKEN ? (
-                  <Switch>
-                    <Route
-                      path={URL.LANDING_PAGE_SHURIKEN}
-                      component={LandingPageRootRouter}
-                    />
-                    <Route component={Page404} />
-                  </Switch>
-              ) : (
+              (
                 <Layout {...props}>
                   <ScrollToTop>
                     <Switch>
@@ -302,10 +298,10 @@ class Router extends React.Component {
                         exact
                         path={URL.INDEX}
                         render={() => (
-                          <Redirect to={{pathname: URL.HANDSHAKE_DISCOVER}}/>
+                          <Redirect to={{ pathname: URL.HANDSHAKE_DISCOVER }} />
                         )}
                       />
-                      <Route path={URL.HANDSHAKE_ME} component={MeRootRouter}/>
+                      <Route path={URL.HANDSHAKE_ME} component={MeRootRouter} />
                       <Route
                         path={URL.HANDSHAKE_DISCOVER}
                         component={DiscoverRootRouter}

@@ -16,7 +16,7 @@ export default class BaseHandshake {
       compiled.abi,
       this.contractAddress,
     );
-    console.log('Hanshake instance:', this.handshakeInstance);
+    //console.log('Hanshake instance:', this.handshakeInstance);
   }
 
   get contractAddress() {
