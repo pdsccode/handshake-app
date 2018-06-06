@@ -12,7 +12,7 @@ const bettinghandshake = new BettingHandshake(chainId);
 
 export const MESSAGE = {
   CREATE_BET_SUCCESSFUL: "Success! You placed a bet.",
-  NOT_ENOUGH_BALANCE: "Sorry, you do not have enough coin to place this bet. Please top up.",
+  NOT_ENOUGH_BALANCE: "Go to wallet to request free ETH",
   CHOOSE_MATCH: "Please choose match and outcome",
   ODD_LARGE_THAN: "Please enter odds of 1 or greater.",
   AMOUNT_VALID: "Please place a bet larger than 0.",
