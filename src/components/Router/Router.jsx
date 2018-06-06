@@ -266,7 +266,7 @@ class Router extends React.Component {
 
   render() {
     if (window.location.pathname === URL.LANDING_PAGE_SHURIKEN) return <LandingPageRootRouter />;
-    if (BrowserDetect.isDesktop) return <MobileOrTablet />;
+    if (BrowserDetect.isDesktop && process.env.isProduction) return <MobileOrTablet />;
     if (!this.state.isLogged || this.state.isLoading) {
       return (
         <BrowserRouter>
