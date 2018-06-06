@@ -81,7 +81,12 @@ class Profile extends React.Component {
           <Col md={12}>
             <div className="collapse-custom">
               <div className="head" onClick={() => this.setState(state => ({phoneCollapse: !state.phoneCollapse}))}>
-                <p className="label">Phone Number</p>
+                <p className="label">
+                  Phone Number
+                  <span>
+                    To send you free ETH sometimes, we’ll need your phone number to verify that you are not a robot. This is optional.
+                  </span>
+                </p>
                 <div className="extend">
                   <Image className={this.state.phoneCollapse ? 'rotate' : ''} src={ExpandArrowSVG} alt="arrow"/>
                 </div>
@@ -144,7 +149,10 @@ class Profile extends React.Component {
           <Col md={12}>
             <div className="collapse-custom">
               <div className="head" onClick={() => this.setState(state => ({emailCollapse: !state.emailCollapse}))}>
-                <p className="label">Email Verification</p>
+                <p className="label">
+                  Email Verification
+                  <span>You may prefer to receive updates and notifications via email. This is also optional.</span>
+                </p>
                 <div className="extend">
                   <Image className={this.state.emailCollapse ? 'rotate' : ''} src={ExpandArrowSVG} alt="arrow"/>
                 </div>

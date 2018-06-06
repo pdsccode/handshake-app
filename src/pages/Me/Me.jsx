@@ -82,8 +82,8 @@ class Me extends React.Component {
             <Link className="update-profile" to={URL.HANDSHAKE_ME_PROFILE} title="profile">
               <Image className="avatar" src={AvatarSVG} alt="avatar" />
               <div className="text">
-                <strong>My Profile</strong>
-                <p>Verify your email address and phone numbers.</p>
+                <strong>The face behind the mask</strong>
+                <p>You, glorious you</p>
               </div>
               <div className="arrow">
                 <Image src={ExpandArrowSVG} alt="arrow" />
