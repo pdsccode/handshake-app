@@ -7,6 +7,9 @@
   padding-top: $header-height + 10px;
   padding-bottom: $footer-height + 10px;
   overflow: hidden;
+  &.hide-header {
+    padding-top: 10px;
+  }
 }
 
 .header {

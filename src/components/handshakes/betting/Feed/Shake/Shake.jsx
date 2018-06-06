@@ -264,10 +264,10 @@ class BetingShake extends React.Component {
 
     return (
       <BettingShakeForm className="wrapperBettingShake" onSubmit={this.onSubmit}>
-        <p className="titleForm text-center text-capitalize">PLACE A BET</p>
+        <p className="titleForm text-center text-capitalize">Bet on the outcome</p>
+        <Toggle ref={(component) => {this.toggleRef = component}} onChange={this.onToggleChange} />
         {this.renderInputField(amountField)}
         {isShowOdds && this.renderInputField(oddsField)}
-        <Toggle ref={(component) => {this.toggleRef = component}} onChange={this.onToggleChange} />
 
         <Button type="submit" block className={buttonClass}>
           Shake

@@ -354,7 +354,7 @@ class FeedCreditCard extends React.Component {
                               <div className="rounded p-1" style={{ lineHeight: 1.2, background: isActive ? '#FF3B30' : 'rgb(255,255,255,0.2)' }}>
                                 {text}
                               </div>
-                              <div className="p-1"><small>Up to {fiatCurrency}{limit}</small></div>
+                              <div className="p-1"><small>{fiatCurrency}{limit} limit</small></div>
                             </LevelItem>
                           )
                         })

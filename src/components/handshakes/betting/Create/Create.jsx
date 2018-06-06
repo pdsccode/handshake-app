@@ -71,7 +71,7 @@ class BettingCreate extends React.PureComponent {
   static defaultProps = {
     item: {
       "backgroundColor": "#332F94",
-      "desc": "[{\"key\": \"event_bet\",\"suffix\": \"ETH\",\"label\": \"Amount\", \"placeholder\": \"10\", \"type\": \"number\", \"className\": \"betField\"}] [{\"key\": \"event_odds\", \"label\": \"Odds\", \"placeholder\": \"10\",\"prefix\": \"1 -\", \"className\": \"oddField\", \"type\": \"number\"}]",
+      "desc": "[{\"key\": \"event_bet\",\"suffix\": \"ETH\",\"label\": \"Amount\", \"placeholder\": \"10\", \"type\": \"number\", \"className\": \"amount\"}] [{\"key\": \"event_odds\", \"label\": \"Odds\", \"placeholder\": \"10\",\"prefix\": \"1 -\", \"className\": \"atOdds\", \"type\": \"number\"}]",
       "id": 18,
       "message": null,
       "name": "Bet",
@@ -93,12 +93,14 @@ class BettingCreate extends React.PureComponent {
 
       selectedMatch:null,
       selectedOutcome: null,
+      buttonClass: 'btnRed',
     };
     this.onSubmit = ::this.onSubmit;
     this.renderInput = ::this.renderInput;
     this.renderDate = ::this.renderDate;
     this.renderForm = ::this.renderForm;
     this.renderNumber = ::this.renderNumber;
+    this.onToggleChange = ::this.onToggleChange;
   }
   componentDidMount(){
     console.log('Betting Create Props:', this.props, history);
@@ -184,7 +186,7 @@ get matchResults(){
     console.log("Total:", total);
 
     const fromAddress = address;
-    
+
     if(selectedMatch && selectedOutcome){
       if(eventBet > 0){
         if(total <= balance){
@@ -208,13 +210,13 @@ get matchResults(){
         }
       });
     }
-    
+
 
     // if(selectedMatch && selectedOutcome && eventBet > 0 && eventBet <= balance){
     //   this.initHandshake(extraParams, fromAddress);
 
     // }else {
-      
+
     // }
   }
 
@@ -234,19 +236,24 @@ get matchResults(){
     this.setState({values});
   }
 
+  onToggleChange(id) {
+    this.setState({buttonClass: `${id === 2 ? 'btnBlue' : 'btnRed' }`});
+  }
+
   renderInput(item, index,style = {}) {
     const {key, placeholder, type} = item;
-    const className = 'form-control-custom input';
+    const className = 'amount';
     return (
       <Field
-        style={style}
+        //style={style}
         component={InputField}
         type="text"
         placeholder={placeholder}
-        className={className}
+        //className={className}
+        className={cn('form-control-custom input', className || '')}
         name={key}
         validate={[required]}
-        ErrorBox={ErrorBox}
+        //ErrorBox={ErrorBox}
         onChange={(evt) => {
           this.changeText(key, evt.target.value)
         }}
@@ -353,15 +360,13 @@ get matchResults(){
     }
 
     return (
-      <div style={{display:'flex',flex:1,flexDirection:'column',marginTop:2,marginBottom:2}} key={index + 1} >
+      <div className="rowWrapper" key={index + 1} >
           <label style={{fontSize:13, color:'white'}}>{label || placeholder}</label>
-          <div style={{display:'flex',flex:1,flexDirection:'row',border:'1px solid #697076',padding:10}}>
-            {this.renderLabelForItem(prefix,{marginRight:10})}
-            <div style={{display:'flex',flex:1,flexDirection:'column',alignItems:'flex-start'}}>
-              {itemRender}
-            </div>
-            {this.renderLabelForItem(suffix,{marginLeft:10})}
-          </div>
+            {itemRender}
+            {
+              suffix && <div className="cryptoCurrency">{suffix}</div>
+
+            }
 
       </div>
         );
@@ -369,7 +374,7 @@ get matchResults(){
 
   renderForm() {
     const inputList = this.inputList;
-    const {selectedMatch} = this.state;
+    const { selectedMatch, buttonClass } = this.state;
     return (
       <BettingCreateForm className="wrapperBetting" onSubmit={this.onSubmit}>
         <div className="dropDown">
@@ -404,15 +409,19 @@ get matchResults(){
           </Row>
         </Grid>
           */}
-          <div className="formInput" style={{backgroundColor:'#3A444D',padding:10}}>
+          <div className="formInput" style={{backgroundColor:'#3A444D'}}>
+            <Toggle
+              ref={(component) =>
+              {this.toggleRef = component}}
+              onChange={this.onToggleChange}
+            />
             <div style={{display:'flex',flexDirection:'column',flex:1,marginBottom:10}}>
               {inputList.map((field, index) => this.renderItem(field, index))}
             </div>
-            <Toggle ref={(component) => {this.toggleRef = component}} onChange={this.onToggleChange} />
         </div>
 
 
-        <Button type="submit" block>Shake and Send</Button>
+        <Button type="submit" block className={buttonClass}>Shake and Send</Button>
       </BettingCreateForm>
     );
   }
