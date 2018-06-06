@@ -95,7 +95,7 @@ class Wallet extends React.Component {
       isNewCCOpen: false,
       stepProtected: 1,
       activeProtected: false,
-      transactions: [],      
+      transactions: [],
     };
     this.props.setHeaderRight(this.headerRight());
   }
@@ -233,6 +233,14 @@ class Wallet extends React.Component {
           this.modalSendRef.open();
         }
       })
+      obj.push({
+        title: 'Receive',
+        handler: () => {          
+          this.setState({walletSelected: wallet});
+          this.toggleBottomSheet();
+          this.modalShareAddressRef.open();
+        }
+      })      
 
       obj.push({
         title: 'Top up coins',
@@ -590,176 +598,177 @@ class Wallet extends React.Component {
   render() {
     const {intl, userProfile, cryptoPrice, amount, userCcLimit, ccLimits} = this.props;
     return (
+      <div className="wallet-page">
+        <Grid>
 
-      <Grid>
+          {/* Tooltim menu Bottom */ }
+          <ReactBottomsheet
+            visible={this.state.bottomSheet}
+            onClose={this.toggleBottomSheet.bind(this)}
+            list={this.state.listMenu} />
 
-        {/* Tooltim menu Bottom */ }
-        <ReactBottomsheet
-          visible={this.state.bottomSheet}
-          onClose={this.toggleBottomSheet.bind(this)}
-          list={this.state.listMenu} />
+          {/* ModalDialog for confirm remove wallet */}
+          <ModalDialog title="Confirmation" onRef={modal => this.modalBetRef = modal}>
+            <div className="bodyConfirm"><span>Are you sure to want to remove this wallet?</span></div>
+            <div className='bodyConfirm'>
+            <Button className="left" cssType="danger" onClick={this.removeWallet} >Yes</Button>
+              <Button className="right" cssType="secondary" onClick={() => { this.modalBetRef.close(); }}>Cancel</Button>
+            </div>
+          </ModalDialog>          
 
-        {/* ModalDialog for confirm remove wallet */}
-        <ModalDialog title="Confirmation" onRef={modal => this.modalBetRef = modal}>
-          <div className="bodyConfirm"><span>Are you sure to want to remove this wallet?</span></div>
-          <div className='bodyConfirm'>
-          <Button className="left" cssType="danger" onClick={this.removeWallet} >Yes</Button>
-            <Button className="right" cssType="secondary" onClick={() => { this.modalBetRef.close(); }}>Cancel</Button>
-          </div>
-        </ModalDialog>
-
-        {/* ModalDialog for transfer coin */}
-        <Modal title="Transfer" onRef={modal => this.modalSendRef = modal}>
-          <SendWalletForm className="sendwallet-wrapper" onSubmit={this.sendCoin}>
-          <div className="div-address-qr-code">
-            <Input name="to_address" placeholder="Receiving address" required className="input-address-qr-code"
-              type="text" value={this.state.inputAddressAmountValue}
-              onChange={evt => this.updateSendAddressValue(evt)}
-            />
-            {!isIOs ? <img onClick={() => { this.openQrcode() }} className="icon-qr-code-black" src={iconQRCodeBlack} /> : ""}
-          </div>
-            <Input name="amount" type="tel" required
-              value={this.state.inputSendAmountValue}
-              placeholder={ this.state.walletSelected ? "Amount ({0})".format(this.state.walletSelected.name) : "Amount "}
-              onChange={evt => this.updateSendAmountValue(evt)}
+          {/* ModalDialog for transfer coin */}
+          <Modal title="Transfer" onRef={modal => this.modalSendRef = modal}>
+            <SendWalletForm className="sendwallet-wrapper" onSubmit={this.sendCoin}>
+            <div className="div-address-qr-code">
+              <Input name="to_address" placeholder="Receiving address" required className="input-address-qr-code"
+                type="text" value={this.state.inputAddressAmountValue}
+                onChange={evt => this.updateSendAddressValue(evt)}
               />
-            <Button isLoading={this.state.isRestoreLoading}  type="submit" block={true}>Transfer</Button>
-          </SendWalletForm>
-        </Modal>
+              {!isIOs ? <img onClick={() => { this.openQrcode() }} className="icon-qr-code-black" src={iconQRCodeBlack} /> : ""}
+            </div>
+              <Input name="amount" type={isIOs ? "number" : "tel"} required
+                value={this.state.inputSendAmountValue}
+                placeholder={ this.state.walletSelected ? "Amount ({0})".format(this.state.walletSelected.name) : "Amount "}
+                onChange={evt => this.updateSendAmountValue(evt)}
+                />
+              <Button isLoading={this.state.isRestoreLoading}  type="submit" block={true}>Transfer</Button>
+            </SendWalletForm>
+          </Modal>
 
-        {/*Dialog confirm transfer coin*/}
-        <ModalDialog title="Confirmation" onRef={modal => this.modalConfirmSendRef = modal}>
-          <div className="bodyConfirm"><span>Are you sure you want to transfer out {this.state.inputSendAmountValue} {this.state.walletSelected ? this.state.walletSelected.name : ""}?</span></div>
-          <div className='bodyConfirm'>
-          <Button className="left" cssType="danger" onClick={this.submitSendCoin} >Confirm</Button>
-            <Button className="right" cssType="secondary" onClick={() => { this.modalConfirmSendRef.close(); }}>Cancel</Button>
-          </div>
-        </ModalDialog>
+          {/*Dialog confirm transfer coin*/}
+          <ModalDialog title="Confirmation" onRef={modal => this.modalConfirmSendRef = modal}>
+            <div className="bodyConfirm"><span>Are you sure you want to transfer out {this.state.inputSendAmountValue} {this.state.walletSelected ? this.state.walletSelected.name : ""}?</span></div>
+            <div className='bodyConfirm'>
+            <Button className="left" cssType="danger" onClick={this.submitSendCoin} >Confirm</Button>
+              <Button className="right" cssType="secondary" onClick={() => { this.modalConfirmSendRef.close(); }}>Cancel</Button>
+            </div>
+          </ModalDialog>
 
-        <Modal title="Top up coins" onRef={modal => this.modalFillRef = modal}>
-          <FeedCreditCard buttonTitle="Top up coins" currencyForced={this.state.walletSelected ? this.state.walletSelected.name : ""}
-            callbackSuccess={this.afterWalletFill}
-            addressForced={this.state.walletSelected ? this.state.walletSelected.address : ""}
-          />
-        </Modal>
+          <Modal title="Top up coins" onRef={modal => this.modalFillRef = modal}>
+            <FeedCreditCard buttonTitle="Top up coins" currencyForced={this.state.walletSelected ? this.state.walletSelected.name : ""}
+              callbackSuccess={this.afterWalletFill}
+              addressForced={this.state.walletSelected ? this.state.walletSelected.address : ""}
+            />
+          </Modal>
 
-        <Modal title="Secure your wallet" onClose={this.closeProtected}  onRef={modal => this.modalProtectRef = modal}>
-          <WalletProtect onCopy={this.onCopyProtected} step={this.state.stepProtected} active={this.state.activeProtected} wallet={this.state.walletSelected} callbackSuccess={() => {this.successWalletProtect(this.state.walletSelected)}} />
-        </Modal>
-
-
-        <Modal title="Transaction history" onRef={modal => this.modalHistoryRef = modal}>
-          <WalletHistory wallet={this.state.walletSelected} transactions={this.state.transactions} />
-        </Modal>
-
-
-        {/* Modal for Backup wallets : */}
-        <Modal title="Backup wallets" onRef={modal => this.modalBackupRef = modal}>
-          <div className="bodyTitle">This data is the only way to restore your wallets. Keep it secret, keep it safe.</div>
-          <div className='bodyBackup'>
-          <textarea readOnly onClick={ this.handleChange } onFocus={ this.handleFocus }
-           value={ this.state.walletsData ? JSON.stringify(this.state.walletsData) : ''}/>
-          <Button className="button" cssType="danger" onClick={() => {Clipboard.copy(JSON.stringify(this.state.walletsData)); this.modalBackupRef.close(); this.showToast('Recovery data copied to clipboard.'); }} >Copy it somewhere safe</Button>
-          </div>
-        </Modal>
-
-        {/* Modal for Restore wallets : */}
-        <Modal title="Restore wallets" onRef={modal => this.modalRestoreRef = modal}>
-          <div className="bodyTitle">Please enter your top secret recovery data to restore your wallet.</div>
-          <div className='bodyBackup'>
-          <textarea required
-            value={this.state.inputRestoreWalletValue}
-            className={this.state.erroValueBackup ? 'error' : ''}
-            onChange={evt => this.updateRestoreWalletValue(evt)}
-          />
-          <Button isLoading={this.state.isRestoreLoading} className="button" cssType="danger" onClick={() => {this.restoreWallets()}} >
-            Restore now
-          </Button>
-          </div>
-        </Modal>
+          <Modal title="Secure your wallet" onClose={this.closeProtected}  onRef={modal => this.modalProtectRef = modal}>
+            <WalletProtect onCopy={this.onCopyProtected} step={this.state.stepProtected} active={this.state.activeProtected} wallet={this.state.walletSelected} callbackSuccess={() => {this.successWalletProtect(this.state.walletSelected)}} />
+          </Modal>
 
 
-        {/* Modal for Copy address : */}
-        <ModalDialog title="Wallet address" onRef={modal => this.modalShareAddressRef = modal}>
-          <div className="bodyTitle"><span>Share your public wallet address to receive { this.state.walletSelected ? this.state.walletSelected.name : ""} </span></div>
-          <div className={['bodyBackup bodySahreAddress']}>
+          <Modal title="Transaction history" onRef={modal => this.modalHistoryRef = modal}>
+            <WalletHistory wallet={this.state.walletSelected} transactions={this.state.transactions} />
+          </Modal>
 
-          <QRCode value={ this.state.walletSelected ? this.state.walletSelected.address : ""} />
-          <div className="addressDivPopup">{ this.state.walletSelected ? this.state.walletSelected.address : ""}</div>
-          <Button className="button" cssType="success" onClick={() => {Clipboard.copy(this.state.walletSelected.address);this.modalShareAddressRef.close(); this.showToast('Wallet address copied to clipboard.');}} >
-            Copy to share
-          </Button>
-          </div>
-        </ModalDialog>
 
-        {/* Modal for Create/Import wallet : */}
-        <Modal title="Create new wallet" onRef={modal => this.modalCreateWalletRef = modal}>
-        <Row className="list">
-          <Header title="Select coins" hasLink={false} />
-        </Row>
+          {/* Modal for Backup wallets : */}
+          <Modal title="Backup wallets" onRef={modal => this.modalBackupRef = modal}>
+            <div className="bodyTitle">This data is the only way to restore your wallets. Keep it secret, keep it safe.</div>
+            <div className='bodyBackup'>
+            <textarea readOnly onClick={ this.handleChange } onFocus={ this.handleFocus }
+            value={ this.state.walletsData ? JSON.stringify(this.state.walletsData) : ''}/>
+            <Button className="button" cssType="danger" onClick={() => {Clipboard.copy(JSON.stringify(this.state.walletsData)); this.modalBackupRef.close(); this.showToast('Recovery data copied to clipboard.'); }} >Copy it somewhere safe</Button>
+            </div>
+          </Modal>
+
+          {/* Modal for Restore wallets : */}
+          <Modal title="Restore wallets" onRef={modal => this.modalRestoreRef = modal}>
+            <div className="bodyTitle">Please enter your top secret recovery data to restore your wallet.</div>
+            <div className='bodyBackup'>
+            <textarea required
+              value={this.state.inputRestoreWalletValue}
+              className={this.state.erroValueBackup ? 'error' : ''}
+              onChange={evt => this.updateRestoreWalletValue(evt)}
+            />
+            <Button isLoading={this.state.isRestoreLoading} className="button" cssType="danger" onClick={() => {this.restoreWallets()}} >
+              Restore now
+            </Button>
+            </div>
+          </Modal>
+
+
+          {/* Modal for Copy address : */}
+          <ModalDialog title="Wallet address" onRef={modal => this.modalShareAddressRef = modal}>
+            <div className="bodyTitle"><span>Share your public wallet address to receive { this.state.walletSelected ? this.state.walletSelected.name : ""} </span></div>
+            <div className={['bodyBackup bodySahreAddress']}>
+
+            <QRCode value={ this.state.walletSelected ? this.state.walletSelected.address : ""} />
+            <div className="addressDivPopup">{ this.state.walletSelected ? this.state.walletSelected.address : ""}</div>
+            <Button className="button" cssType="success" onClick={() => {Clipboard.copy(this.state.walletSelected.address);this.modalShareAddressRef.close(); this.showToast('Wallet address copied to clipboard.');}} >
+              Copy to share
+            </Button>
+            </div>
+          </ModalDialog>
+
+          {/* Modal for Create/Import wallet : */}
+          <Modal title="Create new wallet" onRef={modal => this.modalCreateWalletRef = modal}>
           <Row className="list">
-            {this.getListCoinTempForCreate}
+            <Header title="Select coins" hasLink={false} />
           </Row>
-          <Row className="list">
-          <Header title="Wallet key" />
-          </Row>
-          <div className="wallet-create-footer">
-          <Dropdown className="dropdown-wallet"
-            placeholder="Wallet key"
-            defaultId={this.state.walletKeySelected}
-            source={[{"id": 1, "value": "Random"}, {"id": 2, "value": "Specify recovery Phrase"}]}
-            onItemSelected={(item) =>
-                {
-                  this.setState({
-                    walletKeyDefaultToCreate: item.id
-                  });
+            <Row className="list">
+              {this.getListCoinTempForCreate}
+            </Row>
+            <Row className="list">
+            <Header title="Wallet key" />
+            </Row>
+            <div className="wallet-create-footer">
+            <Dropdown className="dropdown-wallet"
+              placeholder="Wallet key"
+              defaultId={this.state.walletKeySelected}
+              source={[{"id": 1, "value": "Random"}, {"id": 2, "value": "Specify recovery Phrase"}]}
+              onItemSelected={(item) =>
+                  {
+                    this.setState({
+                      walletKeyDefaultToCreate: item.id
+                    });
+                  }
                 }
-              }
-          />
+            />
 
-          { this.state.walletKeyDefaultToCreate == 2 ?
-            <Input name="phrase" placeholder="Type your 12 secret recovery words." required
-            className={this.state.erroValueBackup ? 'input12Phrase error' : 'input12Phrase'}
-                onChange={evt => this.update12PhraseValue(evt)}/>
-            : ""
-          }
-          </div>
+            { this.state.walletKeyDefaultToCreate == 2 ?
+              <Input name="phrase" placeholder="Type your 12 secret recovery words." required
+              className={this.state.erroValueBackup ? 'input12Phrase error' : 'input12Phrase'}
+                  onChange={evt => this.update12PhraseValue(evt)}/>
+              : ""
+            }
+            </div>
 
 
-          <Button block isLoading={this.state.isRestoreLoading} disabled={this.state.countCheckCoinToCreate == 0 || (this.state.walletKeyDefaultToCreate == 2 && this.state.input12PhraseValue.trim().split(/\s+/g).length != 12) } className="button button-wallet" cssType="primary" onClick={() => {this.createNewWallets()}} >
-            Create wallet
-          </Button>
-          <Header />
-          {/*<div className="linkImportWallet">I want to import coins</div>*/}
+            <Button block isLoading={this.state.isRestoreLoading} disabled={this.state.countCheckCoinToCreate == 0 || (this.state.walletKeyDefaultToCreate == 2 && this.state.input12PhraseValue.trim().split(/\s+/g).length != 12) } className="button button-wallet" cssType="primary" onClick={() => {this.createNewWallets()}} >
+              Create wallet
+            </Button>
+            <Header />
+            {/*<div className="linkImportWallet">I want to import coins</div>*/}
 
-        </Modal>
+          </Modal>
 
-        {/*QR code dialog*/}
-        {this.renderScanQRCode()}
+          {/*QR code dialog*/}
+          {this.renderScanQRCode()}
 
-        {/* Render list wallet: */}
-        <Row className="list">
-          <Header title="Mainnet wallets" hasLink={false} linkTitle="+ Add new" onLinkClick={this.onLinkClick} />
-        </Row>
-        <Row className="list">
-          {this.listMainWalletBalance}
-        </Row>
+          {/* Render list wallet: */}
+          <Row className="list">
+            <Header title="Mainnet wallets" hasLink={false} linkTitle="+ Add new" onLinkClick={this.onLinkClick} />
+          </Row>
+          <Row className="list">
+            {this.listMainWalletBalance}
+          </Row>
 
-        <Row className="list">
-          <Header title="Reward wallets" hasLink={false} />
-        </Row>
-        <Row className="list">
-          {this.listRewardWalletBalance}
-        </Row>
+          <Row className="list">
+            <Header title="Reward wallets" hasLink={false} />
+          </Row>
+          <Row className="list">
+            {this.listRewardWalletBalance}
+          </Row>
 
-        <Row className="list">
-          <Header title="Testnet wallets" hasLink={false} />
-        </Row>
-        <Row className="list">
-          {this.listTestWalletBalance}
-        </Row>
+          <Row className="list">
+            <Header title="Testnet wallets" hasLink={false} />
+          </Row>
+          <Row className="list">
+            {this.listTestWalletBalance}
+          </Row>
 
-      </Grid>
+        </Grid>
+      </div>
     );
   }
 
