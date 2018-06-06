@@ -1,16 +1,27 @@
-@import './src/styles/var';
-
+@import './src/styles/style';
 .mobile-tablet {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    width: $app-width;
-    height: 100vh;
-    margin: 0 auto;
-    color: $red;
-    p {
-        margin: 0;
-        font-size: 1.3rem;
+  display: flex;
+  align-items: center;
+  height: 100vh;
+  margin: 0 auto;
+  p {
+    margin: 0;
+    font-weight: $semi-bold;
+    font-size: rem-calc(36px);
+    color: #282828;
+    letter-spacing: 0;
+  }
+  
+  .right {
+    padding-left: 10%;
+    .title {
+      font-size: rem-calc(60px);
+      color: #ff3939;
     }
+    .sub-title {
+        margin-bottom: rem-calc(40px);
+      font-size: rem-calc(48px);
+      color: #36b0c1;
+    }
+  }
 }
