@@ -153,12 +153,19 @@ export class BetHandshakeHandler {
   }
 
   static isInitBet(dict) {
+    /*
     const profile = local.get(APP.AUTH_PROFILE);
     const { user_id } = dict;
     if (user_id && profile.id === user_id) {
       return true;
     }
     return false;
+    */
+   const {shakers} = dict;
+   if(shakers.length == 0){
+     return true
+   }
+   return false;
   }
   static addContract = async (item, hid) => {
     console.log('initContract, hid:', item, hid);
@@ -198,33 +205,68 @@ export class BetHandshakeHandler {
     );
     return result;
   }
-  static timemoutShake(shakedItem, i, hid){
-    setTimeout(function () {
-      console.log("Time out:", i);
-      BetHandshakeHandler.shakeContract(shakedItem, hid);   
+  // static timemoutShake(shakedItem, i, hid){
+  //   setTimeout(function () {
+  //     console.log("Time out:", i);
+  //     BetHandshakeHandler.shakeContract(shakedItem, hid);   
 
-    }, 15000*i); 
-  }
-  static controlShake = async (list, hid) => {
-    const result = null;
-    const dataList = async (element) => {
-      console.log('Element:', element);
+  //   }, 15000*i); 
+  // }
+  static handleContract(element, hid, i){
+    setTimeout(function () {
+      console.log("Time out:");
       const {offchain} = element;
       const isInitBet = BetHandshakeHandler.isInitBet(element);
       console.log('isInitBet:', isInitBet);
       if (isInitBet) {
-        await BetHandshakeHandler.addContract(element, hid);
+        BetHandshakeHandler.addContract(element, hid);
       } else {
         const foundShakeList = BetHandshakeHandler.foundShakeItemList(element, offchain);
         console.log("Found shake List:", foundShakeList);
         for (var i = 0; i< foundShakeList.length; i++){
-          const shakedItem = foundShakeList[i];    
+          const shakedItem = foundShakeList[i];  
+          BetHandshakeHandler.shakeContract(shakedItem, hid);   
+
+        }
+              
+      }   
+
+    }, 15000*i); 
+    
+  }
+  static controlShake = async (list, hid) => {
+    const result = null;
+/*
+    const dataList = async (element) => {
+      console.log('Element:', element);
+      const isInitBet = BetHandshakeHandler.isInitBet(element);
+      console.log('isInitBet:', isInitBet);
+      
+      if (isInitBet) {
+        BetHandshakeHandler.addContract(element, hid);
+      } else {
+        const foundShakeList = BetHandshakeHandler.foundShakeItemList(element, offchain);
+        console.log("Found shake List:", foundShakeList);
+        for (var i = 0; i< foundShakeList.length; i++){
+          const shakedItem = foundShakeList[i];  
           BetHandshakeHandler.timemoutShake(shakedItem, i, hid);
         }
               
       }
+      
+     BetHandshakeHandler.handleContract(element, hid, i);
+
     };
     list.forEach(dataList);
+    */
+
+    for (var i = 0; i< list.length ; i++){
+      const element = list[i];
+      console.log('Element:', element);
+      
+      BetHandshakeHandler.handleContract(element, hid, i);
+
+    }
   };
 
   static async initContract(hid, side, stake, payout, offchain) {
