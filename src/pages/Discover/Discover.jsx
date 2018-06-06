@@ -161,7 +161,7 @@ class DiscoverPage extends React.Component {
     }
 
     if (tabIndexActive) {
-      qs.custom_query = `offer_feed_type_s:exchange AND offer_type_s:${tabIndexActive === 1 ? EXCHANGE_ACTION.BUY : EXCHANGE_ACTION.SELL}`;
+      qs.custom_query = `offer_feed_type_s:exchange AND offer_type_s:${tabIndexActive === 1 ? EXCHANGE_ACTION.SELL : EXCHANGE_ACTION.BUY}`;
     }
 
     if (query) {
