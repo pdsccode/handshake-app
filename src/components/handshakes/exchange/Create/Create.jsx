@@ -105,7 +105,7 @@ async componentDidMount() {
     if (foundCountryPhone) {
       detectedCountryCode = foundCountryPhone.dialCode
     }
-    rfChange(nameFormExchangeCreate, 'phone', authProfile ? authProfile.phone : `${detectedCountryCode}-`)
+    rfChange(nameFormExchangeCreate, 'phone', authProfile.phone || `${detectedCountryCode}-`)
 
     this.getCryptoPriceByAmount(0);
     this.intervalCountdown = setInterval(() => {
