@@ -360,16 +360,14 @@ class BetingShake extends React.Component {
 
     }
   }
-  shakeItemFailed = (error) => {
-    console.log('shakeItemFailed', error);
-    console.log('Error:', error);
-    const {status} = error;
+  shakeItemFailed = (errorData) => {
+    console.log('shakeItemFailed', errorData);
+    const {status} = errorData;
     if(status === 0){
-      const {message} = error;
       this.setState({
         isShowOdds: true,
       }, ()=> {
-        const {message} = successData
+        const {message} = errorData
           this.props.showAlert({
             message: <div className="text-center">{message}</div>,
             timeOut: 3000,
