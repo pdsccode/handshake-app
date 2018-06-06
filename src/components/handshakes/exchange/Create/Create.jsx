@@ -223,6 +223,13 @@ async componentDidMount() {
     const rewardWallet = MasterWallet.getRewardWalletDefault(values.currency);
     const reward_address = rewardWallet.address;
 
+    let phones = values.phone.trim().split('-');
+
+    let phone = '';
+    if (phones.length > 1) {
+      phone = phones[1].length > 0 ? values.phone : '';
+    }
+
     const offer = {
       amount: values.amount,
       price: price,
@@ -230,7 +237,7 @@ async componentDidMount() {
       currency: values.currency,
       type: values.type,
       contact_info: values.address,
-      contact_phone: values.phone,
+      contact_phone: phone,
       fiat_currency: fiat_currency,
       latitude: this.state.lat,
       longitude: this.state.lng,
