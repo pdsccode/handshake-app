@@ -569,6 +569,10 @@ class Wallet extends React.Component {
     this.showSuccess("Your wallet has been secured!");
   }
 
+  getETHFree(){
+    window.open("https://www.rinkeby.io/#faucet", "_blank");
+  }
+
   // For Qrcode:
   handleScan=(data) =>{
     if(data){
@@ -760,11 +764,11 @@ class Wallet extends React.Component {
 
           {/* Render list wallet: */}
           <Row className="list">
-            <Header title="Mainnet wallets" hasLink={false} linkTitle="+ Add new" onLinkClick={this.onLinkClick} />
+            <Header title="Testnet wallets" hasLink={true} linkTitle="Request free ETH" onLinkClick={this.getETHFree} />
           </Row>
           <Row className="list">
-            {this.listMainWalletBalance}
-          </Row>
+            {this.listTestWalletBalance}
+          </Row>          
 
           <Row className="list">
             <Header title="Reward wallets" hasLink={false} />
@@ -774,10 +778,10 @@ class Wallet extends React.Component {
           </Row>
 
           <Row className="list">
-            <Header title="Testnet wallets" hasLink={false} />
+            <Header title="Mainnet wallets" hasLink={false} linkTitle="+ Add new" onLinkClick={this.onLinkClick} />
           </Row>
           <Row className="list">
-            {this.listTestWalletBalance}
+            {this.listMainWalletBalance}
           </Row>
 
         </Grid>
