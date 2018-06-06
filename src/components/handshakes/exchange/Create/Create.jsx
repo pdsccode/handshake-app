@@ -121,6 +121,7 @@ class Component extends React.Component {
     const { totalAmount, type, sellPriceType, offerPrice, ipInfo } = this.props;
     const modalContent = this.state.modalContent;
     const currency = "ETH";
+    const hasFilled1Coin = true;
     return (
       <div>
         <FormExchangeCreate onSubmit={this.handleSubmit}>
@@ -205,51 +206,58 @@ class Component extends React.Component {
                 </div>
               </div>
 
-              <hr className="hrLine"/>
+              {
+                hasFilled1Coin && (
+                  <div>
+                    <hr className="hrLine"/>
 
-              <div className="d-flex">
-                <label className="col-form-label mr-auto label-create">Name shop</label>
-                <div className='input-group'>
-                  <Field
-                    name="nameShop"
-                    className="form-control-custom form-control-custom-ex w-100 input-no-border"
-                    component={fieldInput}
-                    placeholder={'Apple store'}
-                    // onChange={this.onAmountChange}
-                    validate={[required]}
-                  />
-                </div>
-              </div>
+                    <div className="d-flex">
+                      <label className="col-form-label mr-auto label-create">Name shop</label>
+                      <div className='input-group'>
+                        <Field
+                          name="nameShop"
+                          className="form-control-custom form-control-custom-ex w-100 input-no-border"
+                          component={fieldInput}
+                          placeholder={'Apple store'}
+                          // onChange={this.onAmountChange}
+                          validate={[required]}
+                        />
+                      </div>
+                    </div>
 
-              <hr className="hrLine"/>
+                    <hr className="hrLine"/>
 
-              <div className="d-flex mt-2">
-                <label className="col-form-label mr-auto label-create">Phone</label>
-                <div className="input-group w-100">
-                  <Field
-                    name="phone"
-                    className="form-control-custom form-control-custom-ex w-100 input-no-border"
-                    component={fieldPhoneInput}
-                    type="tel"
-                    placeholder="4995926433"
-                    // validate={[required, currency === 'BTC' ? minValue001 : minValue01]}
-                  />
-                </div>
-              </div>
-              <hr className="hrLine"/>
+                    <div className="d-flex mt-2">
+                      <label className="col-form-label mr-auto label-create">Phone</label>
+                      <div className="input-group w-100">
+                        <Field
+                          name="phone"
+                          className="form-control-custom form-control-custom-ex w-100 input-no-border"
+                          component={fieldPhoneInput}
+                          type="tel"
+                          placeholder="4995926433"
+                          // validate={[required, currency === 'BTC' ? minValue001 : minValue01]}
+                        />
+                      </div>
+                    </div>
+                    <hr className="hrLine"/>
 
-              <div className="d-flex mt-2">
-                <label className="col-form-label mr-auto label-create">Address*</label>
-                <div className="w-100">
-                  <Field
-                    name="address"
-                    className="form-control-custom form-control-custom-ex w-100 input-no-border"
-                    component={fieldInput}
-                    validate={[required]}
-                    placeholder="81 E. Augusta Ave. Salinas"
-                  />
-                </div>
-              </div>
+                    <div className="d-flex mt-2">
+                      <label className="col-form-label mr-auto label-create">Address*</label>
+                      <div className="w-100">
+                        <Field
+                          name="address"
+                          className="form-control-custom form-control-custom-ex w-100 input-no-border"
+                          component={fieldInput}
+                          validate={[required]}
+                          placeholder="81 E. Augusta Ave. Salinas"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                )
+              }
+
             </div>
           </Feed>
           <Button block type="submit">Initiate</Button>
