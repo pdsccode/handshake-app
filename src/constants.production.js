@@ -27,7 +27,7 @@ export const HANDSHAKE_NAME = {
   // [HANDSHAKE_ID.SEED]: 'Seed',
 };
 
-export const PRICE_DECIMAL = 2;
+export const PRICE_DECIMAL = 0;
 export const AMOUNT_DECIMAL = 6;
 
 export const CRYPTO_CURRENCY = {
