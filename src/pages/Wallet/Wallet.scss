@@ -147,7 +147,7 @@
   height: 40px;
   margin-bottom: 30px
 }
-.input12Phrase{  
+.input12Phrase{
   margin-bottom: 20px;
   padding-top: 10px;
   padding-bottom: 10px;
@@ -274,7 +274,7 @@
   padding-left: 7px;
   padding-right: 7px;
 
-  input[type=text], input[type=tel]{
+  input[type=text], input[type=tel], input[type=number]{
     margin-bottom: 15px;
     font-size: 18px;
     line-height: 22px;
@@ -485,7 +485,7 @@
     text-align: center;
     margin-top: 25px;
   }
-  
+
 }
 .bottom-sheet-wrapper{
   z-index: 2000;

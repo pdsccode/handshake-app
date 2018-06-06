@@ -94,7 +94,7 @@ class Wallet extends React.Component {
       isNewCCOpen: false,
       stepProtected: 1,
       activeProtected: false,
-      transactions: [],      
+      transactions: [],
     };
     this.props.setHeaderRight(this.headerRight());
   }
@@ -617,7 +617,7 @@ class Wallet extends React.Component {
             />
             {!isIOs ? <img onClick={() => { this.openQrcode() }} className="icon-qr-code-black" src={iconQRCodeBlack} /> : ""}
           </div>
-            <Input name="amount" type="tel" required
+            <Input name="amount" type={isIOs ? "number" : "tel"} required
               value={this.state.inputSendAmountValue}
               placeholder={ this.state.walletSelected ? "Amount ({0})".format(this.state.walletSelected.name) : "Amount "}
               onChange={evt => this.updateSendAmountValue(evt)}
