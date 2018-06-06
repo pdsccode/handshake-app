@@ -1052,18 +1052,3 @@
 .rce-search-input::-webkit-input-placeholder {
 	color: #999;
 }
-
-.chat-container .no-data {
-  display: flex;
-  width: 100%;
-  height: 88vh;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-}
-
-.chat-container .no-data .text {
-  margin: 0px;
-  font-size: 20px;
-  color: #989898;
-}
