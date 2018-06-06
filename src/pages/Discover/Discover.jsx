@@ -175,11 +175,11 @@ class DiscoverPage extends React.Component {
 
     return (
       <Grid className="discover">
-        <Row className="search-bar-wrapper">
+        {/* <Row className="search-bar-wrapper">
           <Col md={12} xs={12}>
             <SearchBar onSuggestionSelected={() => {}} onInputSearchChange={this.searchChange} />
           </Col>
-        </Row>
+        </Row> */}
         {/* <Row>
           <Col md={12} xs={6}>
             <Category 
