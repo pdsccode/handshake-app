@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import isEqual from 'lodash/isEqual';
 // component
 import Image from '@/components/core/presentation/Image';
 // style
@@ -39,6 +40,9 @@ class Dropdown extends React.PureComponent {
 
   setDefaultItem(nextProps=null) {
     const { defaultId, source } = nextProps ? nextProps : this.props;
+    if (nextProps && !isEqual(nextProps.source, this.props.source)) {
+      this.isDirtyDefault = false;
+    }
     const { idActive } = this.state;
     if (!this.isDirtyDefault && defaultId && source && source.length > 0 && idActive !== defaultId) {
       const itemDefault = source.find(item => item.id === defaultId);

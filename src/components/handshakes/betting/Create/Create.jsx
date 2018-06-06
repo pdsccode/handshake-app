@@ -112,7 +112,7 @@ class BettingCreate extends React.PureComponent {
 
   }
   componentWillReceiveProps(nextProps){
-    console.log('Receive Props: ', nextProps);
+    //console.log('Receive Props: ', nextProps);
     const {matches} = nextProps;
     console.log(`${TAG} Matches:`, matches);
 
