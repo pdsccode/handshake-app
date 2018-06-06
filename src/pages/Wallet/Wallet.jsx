@@ -30,6 +30,7 @@ import { setHeaderRight } from '@/reducers/app/action';
 import QrReader from 'react-qr-reader';
 import { showAlert } from '@/reducers/app/action';
 import { showLoading, hideLoading } from '@/reducers/app/action';
+import { Input as Input2, InputGroup, InputGroupAddon } from 'reactstrap';
 
 // import filesaver from 'file-saver';
 
@@ -243,7 +244,7 @@ class Wallet extends React.Component {
       })      
 
       obj.push({
-        title: 'Top up coins',
+        title: 'Buy coins',
         handler: () => {
           this.setState({walletSelected: wallet});
           this.toggleBottomSheet();
@@ -569,12 +570,22 @@ class Wallet extends React.Component {
     this.showSuccess("Your wallet has been secured!");
   }
 
+  getETHFree(){
+    window.open("https://www.rinkeby.io/#faucet", "_blank");
+  }
+
   // For Qrcode:
   handleScan=(data) =>{
     if(data){
-      this.setState({
-        inputAddressAmountValue: data,
+      let value = data.split(',');
+      this.setState({        
+        inputAddressAmountValue: value[0],
       });
+      if (value.length == 2){
+        this.setState({        
+          inputSendAmountValue: value[1],
+        });
+      }
       this.modalScanQrCodeRef.close()
     }
   }
@@ -621,10 +632,10 @@ class Wallet extends React.Component {
             list={this.state.listMenu} />
 
           {/* ModalDialog for confirm remove wallet */}
-          <ModalDialog title="Confirmation" onRef={modal => this.modalBetRef = modal}>
-            <div className="bodyConfirm"><span>Are you sure to want to remove this wallet?</span></div>
+          <ModalDialog title="Are you sure?" onRef={modal => this.modalBetRef = modal}>
+            <div className="bodyConfirm"><span>This will permanently delete your wallet.</span></div>
             <div className='bodyConfirm'>
-            <Button className="left" cssType="danger" onClick={this.removeWallet} >Yes</Button>
+            <Button className="left" cssType="danger" onClick={this.removeWallet} >Yes, remove</Button>
               <Button className="right" cssType="secondary" onClick={() => { this.modalBetRef.close(); }}>Cancel</Button>
             </div>
           </ModalDialog>          
@@ -701,17 +712,50 @@ class Wallet extends React.Component {
 
 
           {/* Modal for Copy address : */}
-          <ModalDialog title="Wallet address" onRef={modal => this.modalShareAddressRef = modal}>
+          <Modal title="Wallet address" onRef={modal => this.modalShareAddressRef = modal}>
             <div className="bodyTitle"><span>Share your public wallet address to receive { this.state.walletSelected ? this.state.walletSelected.name : ""} </span></div>
             <div className={['bodyBackup bodySahreAddress']}>
 
             <QRCode value={ this.state.walletSelected ? this.state.walletSelected.address : ""} />
             <div className="addressDivPopup">{ this.state.walletSelected ? this.state.walletSelected.address : ""}</div>
-            <Button className="button" cssType="success" onClick={() => {Clipboard.copy(this.state.walletSelected.address);this.modalShareAddressRef.close(); this.showToast('Wallet address copied to clipboard.');}} >
+
+            <div className="link-request-custom-amount" onClick={ () => {this.modalCustomAmountRef.open(); this.setState({inputSendAmountValue: ""});}}>Request Specific amount -></div>
+
+            <Button className="button" cssType="primary" onClick={() => {Clipboard.copy(this.state.walletSelected.address);this.modalShareAddressRef.close(); this.showToast('Wallet address copied to clipboard.');}} >
               Copy to share
             </Button>
             </div>
-          </ModalDialog>
+          </Modal>
+
+          {/* Modal for Custom amount : */}
+          <Modal title="Custom Amount" onRef={modal => this.modalCustomAmountRef = modal}>            
+            <div className={['bodyBackup bodySahreAddress']}>
+
+            <QRCode value={ (this.state.walletSelected ? this.state.walletSelected.address : "") + (this.state.inputSendAmountValue != '' ? (",")+this.state.inputSendAmountValue : '')} />
+            <div className="addressDivPopup">            
+                <InputGroup>
+                  <InputGroupAddon addonType="prepend">Address</InputGroupAddon>
+                  <Input2 disabled                   
+                  value={ this.state.walletSelected ? this.state.walletSelected.address : ""} />
+                </InputGroup>
+
+              <br />
+
+              <InputGroup>
+                  <InputGroupAddon addonType="prepend">Amount</InputGroupAddon>
+                  <Input2 
+                  placeholder={ this.state.walletSelected ? "0 {0}".format(this.state.walletSelected.name) : ""}
+                  type={isIOs ? "number" : "tel"}
+                  value={this.state.inputSendAmountValue} onChange={evt => this.updateSendAmountValue(evt)}/>
+                </InputGroup>
+
+              
+            </div>
+            <Button className="button" cssType="primary" onClick={() => {this.modalCustomAmountRef.close(); this.modalShareAddressRef.close() }} >
+              Done
+            </Button>
+            </div>
+          </Modal>
 
           {/* Modal for Create/Import wallet : */}
           <Modal title="Create new wallet" onRef={modal => this.modalCreateWalletRef = modal}>
@@ -760,11 +804,11 @@ class Wallet extends React.Component {
 
           {/* Render list wallet: */}
           <Row className="list">
-            <Header title="Mainnet wallets" hasLink={false} linkTitle="+ Add new" onLinkClick={this.onLinkClick} />
+            <Header title="Testnet wallets" hasLink={true} linkTitle="Request free ETH" onLinkClick={this.getETHFree} />
           </Row>
           <Row className="list">
-            {this.listMainWalletBalance}
-          </Row>
+            {this.listTestWalletBalance}
+          </Row>          
 
           <Row className="list">
             <Header title="Reward wallets" hasLink={false} />
@@ -774,10 +818,10 @@ class Wallet extends React.Component {
           </Row>
 
           <Row className="list">
-            <Header title="Testnet wallets" hasLink={false} />
+            <Header title="Mainnet wallets" hasLink={false} linkTitle="+ Add new" onLinkClick={this.onLinkClick} />
           </Row>
           <Row className="list">
-            {this.listTestWalletBalance}
+            {this.listMainWalletBalance}
           </Row>
 
         </Grid>

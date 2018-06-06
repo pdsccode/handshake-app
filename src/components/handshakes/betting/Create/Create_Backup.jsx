@@ -208,7 +208,7 @@ class BettingCreate extends React.Component {
         {inputList.map((field, index) =>
           this.renderItem(field, index)
         )}
-        <Button type="submit" block onClick={() => this.onClickSendButton()}>Sign & Send</Button>
+        <Button type="submit" block onClick={() => this.onClickSendButton()}>Initiate</Button>
 
 
       </form>

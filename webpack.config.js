@@ -7,11 +7,11 @@ const webpack = require('webpack');
 const merge = require('webpack-merge');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-// const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const PwaManifestPlugin = require('webpack-pwa-manifest');
-// const OfflinePlugin = require('offline-plugin');
+const OfflinePlugin = require('offline-plugin');
 
 const dotenv = require('dotenv');
 
@@ -135,15 +135,14 @@ module.exports = function webpackConfig(env, argv) {
     },
     plugins: [
       new CleanWebpackPlugin(['dist']),
-      // new OptimizeCSSAssetsPlugin(),
+      new OptimizeCSSAssetsPlugin(),
       new MiniCssExtractPlugin({
         filename: 'css/[name].css',
         chunkFilename: 'css/[hash].[name].css',
       }),
-      // new OfflinePlugin({
-      //   appShell: '/',
-      //   publicPath: `${process.env.PUBLIC_URL}`,
-      // }),
+      new OfflinePlugin({
+        appShell: '/',
+      }),
     ],
     performance: { hints: false },
   };
@@ -191,16 +190,16 @@ module.exports = function webpackConfig(env, argv) {
           favicon: xPath('src/assets/favicon.ico'),
         }),
         new PwaManifestPlugin({
-          name: 'Handshake',
-          short_name: 'Handshake',
+          name: 'Ninja',
+          short_name: 'Ninja',
           description: '',
-          background_color: '#01579b',
-          theme_color: '#01579b',
-          'theme-color': '#01579b',
+          background_color: '#1A1919',
+          theme_color: '#1A1919',
+          'theme-color': '#1A1919',
           start_url: '/',
           icons: [
             {
-              src: xPath('src/assets/images/app/logo.png'),
+              src: xPath('src/assets/images/logo.png'),
               sizes: [96, 128, 192, 256, 384, 512],
               destination: path.join('assets', 'icons'),
             },

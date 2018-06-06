@@ -12,7 +12,7 @@ const bettinghandshake = new BettingHandshake(chainId);
 
 export const MESSAGE = {
   CREATE_BET_SUCCESSFUL: "Success! You placed a bet.",
-  NOT_ENOUGH_BALANCE: "Sorry, you do not have enough coin to place this bet. Please top up.",
+  NOT_ENOUGH_BALANCE: "Go to wallet to request free ETH",
   CHOOSE_MATCH: "Please choose match and outcome",
   ODD_LARGE_THAN: "Please enter odds of 1 or greater.",
   AMOUNT_VALID: "Please place a bet larger than 0.",
@@ -160,7 +160,7 @@ export class BetHandshakeHandler {
     return false;
   }
   static addContract = async (item, hid) => {
-    console.log('initContract:', item);
+    console.log('initContract, hid:', item, hid);
 
     const {
       amount, id, odds, side, outcome_id, from_address, offchain,
@@ -170,13 +170,12 @@ export class BetHandshakeHandler {
     const payout = Math.round(stake * odds * 10 ** 18) / 10 ** 18;
     const maker = from_address;
     // const hid = outcome_id;
-    console.log(`hid:`, hid);
     const dataBlockchain = await bettinghandshake.initBet(hid, side, stake, payout, offchain);
     return dataBlockchain;
   };
 
   static async shakeContract(item, hid) {
-    console.log('shakeContract:', item);
+    console.log('shakeContract, hid:', item, hid);
 
     const {
       amount, id, odds, side, outcome_id, from_address,
@@ -185,6 +184,7 @@ export class BetHandshakeHandler {
     // const payout = stake * odds;
     const payout = Math.round(stake * odds * 10 ** 18) / 10 ** 18;
     const offchain = `cryptosign_s${id}`;
+    console.log('offchain:', offchain);
     const maker = from_address;
     // const hid = outcome_id;
     const result = await bettinghandshake.shake(

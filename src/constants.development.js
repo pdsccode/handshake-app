@@ -69,6 +69,11 @@ export const EXCHANGE_ACTION_PRESENT_NAME = {
   [EXCHANGE_ACTION.SELL]: 'Selling',
 };
 
+export const EXCHANGE_ACTION_PERSON = {
+  [EXCHANGE_ACTION.BUY]: 'buyer',
+  [EXCHANGE_ACTION.SELL]: 'seller',
+};
+
 export const EXCHANGE_ACTION_LIST = [
   { value: EXCHANGE_ACTION.BUY, text: EXCHANGE_ACTION_NAME[EXCHANGE_ACTION.BUY] },
   { value: EXCHANGE_ACTION.SELL, text: EXCHANGE_ACTION_NAME[EXCHANGE_ACTION.SELL] },
@@ -78,11 +83,6 @@ export const EXCHANGE_ACTION_DEFAULT = EXCHANGE_ACTION.BUY;
 
 export const FIAT_CURRENCY = 'USD';
 export const FIAT_CURRENCY_SYMBOL = '$';
-
-export const SELL_PRICE_TYPE = [
-  { value: 'fix', text: 'Fix now' },
-  { value: 'flexible', text: 'Update on shake' },
-];
 
 export const SELL_PRICE_TYPE_DEFAULT = 'fix';
 

@@ -19,7 +19,10 @@ export const fireBaseBettingChange = data => (dispatch, getState) =>
     payload: data,
     profile: getState().auth.profile,
   });
-export const fireBaseExchangeDataChange = data => ({
-  type: ACTIONS.FIREBASE_EXCHANGE_DATA_CHANGE,
-  payload: data,
-});
+
+export const fireBaseExchangeDataChange = data => (dispatch, getState) =>
+  dispatch({
+    type: ACTIONS.FIREBASE_EXCHANGE_DATA_CHANGE,
+    payload: data,
+    profile: getState().auth.profile,
+  });
