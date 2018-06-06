@@ -588,7 +588,9 @@ export class Firechat {
     });
   }
 
-  updateUserName(userName, roomId) {
+  updateUserName(userName) {
+    const self = this;
+
     if (this.userRef) {
       this.userRef.update({
         name: userName,
@@ -601,11 +603,23 @@ export class Firechat {
         shortName: userName.toLowerCase(),
       });
 
-      if (roomId) {
-        this.roomRef.child(roomId).child('authorizedUsers').child(this.userId).update({
-          name: userName,
+      setTimeout(() => {
+        self.getRoomList((rooms) => {
+          const updateValues = {};
+          Object.keys(rooms).forEach((roomId) => {
+            const room = rooms[roomId];
+            if (Object.prototype.hasOwnProperty.call(room.authorizedUsers, self.userId)) {
+              updateValues[`/${roomId}/authorizedUsers/${self.userId}`] = {
+                name: userName,
+              };
+            }
+          });
+
+          if (updateValues) {
+            self.roomRef.update(updateValues);
+          }
         });
-      }
+      }, 0);
     }
   }
 

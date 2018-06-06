@@ -17,6 +17,7 @@ const md5 = require('md5');
 require('firebase/database');
 // Get a reference to the Firebase Realtime Database
 const chatRef = firebase.database().ref();
+let isInitialized = false;
 
 // Create an instance of Firechat
 export const chatInstance = new Firechat(firebase, chatRef);
@@ -64,7 +65,7 @@ class Chat extends Component {
   }
 
   onBackButtonClicked() {
-    this.setState({
+    this.setCustomState({
       chatDetail: null,
     }, () => {
       this.updateHeaderLeft();
@@ -95,7 +96,6 @@ class Chat extends Component {
       room.froms[userId] = authorizedUsers[userId].name;
     });
     this.setChatSourceState(roomId, room);
-    this.updateCurrentUserName(this.user.name, roomId);
   }
 
   onLeaveRoom(roomId) {
@@ -125,7 +125,7 @@ class Chat extends Component {
         chatDetail.roomData = room;
       }
 
-      this.setState({
+      this.setCustomState({
         chatSource,
         chatDetail,
       }, () => {
@@ -158,7 +158,7 @@ class Chat extends Component {
       room.froms = room.froms || {};
       room.froms[invitation.fromUserId] = invitation.fromUserName;
 
-      this.setState((prevState) => {
+      this.setCustomState((prevState) => {
         const prevChatSource = prevState.chatSource;
         prevChatSource[invitation.roomId] = room;
         return {
@@ -176,7 +176,7 @@ class Chat extends Component {
         room.froms[invitation.toUserId] = invitation.toUserName;
         room.froms[invitation.fromUserId] = invitation.fromUserName;
 
-        this.setState((prevState) => {
+        this.setCustomState((prevState) => {
           const prevChatSource = prevState.chatSource;
           prevChatSource[invitation.roomId] = room;
           return {
@@ -200,7 +200,7 @@ class Chat extends Component {
 
   onSearchUser(e) {
     const query = e.target.value;
-    this.setState({
+    this.setCustomState({
       searchUserString: query,
     })
     chatInstance.getUsersByPrefix(query, null, null, this.maxUserSearchResult, (userListFiltered) => {
@@ -208,7 +208,7 @@ class Chat extends Component {
       if (!query) {
         userListFiltered = [];
       }
-      this.setState({
+      this.setCustomState({
         searchUsers: userListFiltered,
       })
     });
@@ -310,6 +310,14 @@ class Chat extends Component {
     // Initialize data events
     chatInstance.setUser(userId, userName, (user) => {
       self.user = user;
+
+      const historyState = this.loadDataFromLocalStorage();
+      if (historyState && isInitialized) {
+        this.setCustomState(historyState);
+      }
+
+      isInitialized = true;
+
       chatInstance.resumeSession();
       this.updateCurrentUserName(userName);
 
@@ -324,7 +332,7 @@ class Chat extends Component {
   }
 
   setChatSourceState(roomId, room) {
-    this.setState((prevState) => {
+    this.setCustomState((prevState) => {
       const prevChatSource = prevState.chatSource;
       prevChatSource[roomId] = room;
 
@@ -332,6 +340,25 @@ class Chat extends Component {
         chatSource: prevState.chatSource,
       };
     });
+  }
+
+  setCustomState(state, cb) {
+    this.setState(state, () => {
+      if (cb) {
+        setTimeout(() => {
+          this.saveCurrentDataToLocalStorage();
+        }, 0);
+        cb();
+      }
+    });
+  }
+
+  loadDataFromLocalStorage() {
+    return JSON.parse(localStorage.getItem('chat_data'));
+  }
+
+  saveCurrentDataToLocalStorage() {
+    localStorage.setItem('chat_data', JSON.stringify(this.state));
   }
 
   mixString(textOne, textTwo) {
@@ -393,7 +420,7 @@ class Chat extends Component {
   clearSearch() {
     if (this.searchBtnRef) {
       this.searchBtnRef.value = '';
-      this.setState({
+      this.setCustomState({
         searchUserString: '',
         searchUsers: [],
       })
@@ -401,7 +428,7 @@ class Chat extends Component {
   }
 
   enterMessageRoom(room) {
-    this.setState({
+    this.setCustomState({
       chatDetail: room,
       currentMessage: '',
     }, () => {
@@ -450,7 +477,7 @@ class Chat extends Component {
 
         console.log('enterRoom', roomId, 'room data', room);
 
-        this.setState((prevState) => {
+        this.setCustomState((prevState) => {
           const prevChatSource = prevState.chatSource;
           prevChatSource[roomId] = room;
           return {
@@ -561,7 +588,7 @@ class Chat extends Component {
               return false;
             }
           }}
-          onChange={(e) => { this.setState({ currentMessage: e.target.value }); }}
+          onChange={(e) => { this.setCustomState({ currentMessage: e.target.value }); }}
           rightButtons={
             <img
               src={IconBtnSend}
