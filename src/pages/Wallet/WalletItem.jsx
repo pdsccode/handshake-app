@@ -6,7 +6,7 @@ import dontIcon from '@/assets/images/icon/3-dot-icon.svg';
 import iconSafe from '@/assets/images/icon/icon-safe.svg';
 import iconWarning from '@/assets/images/icon/icon-warning.svg';
 import iconChecked from '@/assets/images/icon/icon-checked.svg';
-import iconQRCode from '@/assets/images/icon/icon-qr-code.png';
+import iconQRCode from '@/assets/images/icon/icon-qr-code.svg';
 
 
 import PropTypes from 'prop-types';
