@@ -43,13 +43,12 @@ import {ExchangeHandshake} from '@/services/neuron';
 // import phoneCountryCodes from '@/components/core/form/country-calling-codes.min.json';
 import COUNTRIES from '@/data/country-dial-codes.js';
 
-import {CRYPTO_CURRENCY} from "@/constants";
+import {CRYPTO_CURRENCY, MIN_AMOUNT} from "@/constants";
 import _sample from 'lodash/sample'
 import { feedBackgroundColors } from "@/components/handshakes/exchange/config";
 import {formatAmountCurrency, formatMoney} from "@/services/offer-util";
 import {BigNumber} from "bignumber.js";
 import { showLoading, hideLoading } from '@/reducers/app/action';
-
 const nameFormExchangeCreate = 'exchangeCreate';
 const FormExchangeCreate = createForm({
   propsReduxForm: {
@@ -452,7 +451,7 @@ async componentDidMount() {
                     name="amount"
                     className="form-control-custom form-control-custom-ex w-100 input-no-border"
                     component={fieldInput}
-                    placeholder="0.001"
+                    placeholder={MIN_AMOUNT[currency]}
                     onChange={this.onAmountChange}
                     validate={[required, currency === CRYPTO_CURRENCY.BTC ? minValue001 : minValue01]}
                   />
@@ -461,8 +460,8 @@ async componentDidMount() {
               <hr className="hrLine" />
 
               <div className="d-flex mt-2">
-                <label className="col-form-label mr-auto label-create" style={{ width: '220px' }}>Price</label>
-                <span className="w-100 col-form-label">{ formatMoney(offerPrice ? offerPrice.price : 0) } {ipInfo.currency}/{currency}</span>
+                <label className="col-form-label mr-auto label-create" style={{ width: '220px' }}>Price/{currency}</label>
+                <span className="w-100 col-form-label">{ formatMoney(offerPrice ? offerPrice.price : 0) } {ipInfo.currency}</span>
               </div>
 
               <div className="d-flex mt-2">
