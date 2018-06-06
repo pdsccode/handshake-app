@@ -57,7 +57,6 @@ class Comment extends React.PureComponent {
               list.length > 0 ? (
                 <div className="comments" ref={element => this.commentsRef = element} id="listComments">
                   {list.map((item) => <CommentItem key={item.id} {...item} />)}
-                  <div className="lastCommentItem" />
                 </div>
               ) : !isFetching ? (
                 <div className="noData">
