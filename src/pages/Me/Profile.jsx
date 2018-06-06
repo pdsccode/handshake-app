@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 // services
 import createForm from '@/components/core/form/createForm';
 import { setHeaderTitle } from '@/reducers/app/action';
+import { verifyPhone, submitPhone, verifyEmail, submitEmail, authUpdate } from '@/reducers/auth/action';
 import COUNTRIES from '@/data/country-dial-codes.js';
 // components
 import { Grid, Row, Col } from 'react-bootstrap';
@@ -43,25 +44,111 @@ class Profile extends React.Component {
       phoneCollapse: false,
       emailCollapse: false,
       isShowCountryCode: false,
+      phoneStart: false,
+      emailStart: false,
+      phone: '',
+      email: '',
+      sms: '',
+      successMessage: '',
     };
     // bind
-    this.verifyPhone = ::this.verifyPhone;
-    this.verifyEmail = ::this.verifyEmail;
+    this.onSubmitVerifyPhone = ::this.onSubmitVerifyPhone;
+    this.onSubmitVerifyEmail = ::this.onSubmitVerifyEmail;
     this.selectPhoneRegionCode = ::this.selectPhoneRegionCode;
     this.filterCountries = ::this.filterCountries;
+    this.onTextFieldChange = ::this.onTextFieldChange;
 
     props.setHeaderTitle('My Profile');
+  }
+
+  componentDidMount() {
+    const { auth } = this.props;
+    console.log(auth);
+    if (auth && auth.isLogged) {
+      console.log({ phone: auth.profile.phone, email: auth.profile.email });
+      this.setState((state) => (Object.assign({}, state, { phone: auth.profile.phone, email: auth.profile.email })), () => {
+        console.log(this.state);
+      })
+    }
+  }
+
+  updateProfile(data = {}) {
+    return new Promise((resolve, reject) => {
+      const params = new URLSearchParams();
+      for (var k in data) {
+        params.append(k, data[k]);
+      }
+      authUpdate({
+        PATH_URL: 'user/profile',
+        data: params,
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        METHOD: 'POST',
+        successFn: async (data) => {
+          resolve(data);
+        },
+        errorFn: async (data) => {
+          reject(data);
+          console.log('fail', data);
+        }
+      });
+    });
   }
 
   addUsername() {
   }
 
-  verifyPhone() {
-    this.modalVerifyRef.open();
+  onSubmitVerifyPhone() {
+    const { verifyPhone, submitPhone, authUpdate} = this.props;
+    const { countryCode, phone, phoneStart, sms } = this.state;
+    if (phoneStart !== phone) {
+      console.log('onSubmitVerifyPhone start', countryCode, phone);
+      verifyPhone({
+        PATH_URL: `user/verification/phone/start?country=${countryCode.dialCode.replace('+', '')}&phone=${phone}`,
+        METHOD: 'POST',
+        successFn: async () => {
+          this.setState(() => ({ phoneStart: phone }));
+        },
+        errorFn: async () => {
+          console.log('fail', data);
+        }
+      });
+    } else {
+      console.log('onSubmitVerifyPhone submit', countryCode, phone, sms);
+      submitPhone({
+        PATH_URL: `user/verification/phone/check?country=${countryCode.dialCode.replace('+', '')}&phone=${phone}&code=${sms}`,
+        METHOD: 'POST',
+        successFn: async (data) => {
+          try { 
+            await this.updateProfile({phone:phone});
+            this.setState(() => ({ successMessage: 'Your phone number is verified', phoneStart: false }), () => {
+              this.modalVerifyRef.open();
+            })
+          } catch (e) {
+            console.log('update profile failed.');
+            this.setState(() => ({ successMessage: '', phoneStart: false }))
+          }
+        },
+        errorFn: async (data) => {
+          console.log('fail', data);
+        }
+      });
+    }
   }
 
-  verifyEmail() {
-    this.modalVerifyRef.open();
+  onSubmitVerifyEmail() {
+    const { verifyEmail, submitEmail, authUpdate } = this.props;
+    const { email } = this.state;
+    console.log('onSubmitVerifyPhone', email);
+    verifyEmail({
+      PATH_URL: `user/verification/email/start?email=${email}`,
+      METHOD: 'POST',
+      successFn: async (data) => {
+        console.log(data);
+      },
+      errorFn: async (data) => {
+        console.log(data);
+      }
+    });
   }
 
   selectPhoneRegionCode(country) {
@@ -81,8 +168,13 @@ class Profile extends React.Component {
     }, 200);
   }
 
+  onTextFieldChange(name, value) {
+    this.setState(() => ({ [name]: value }));
+  }
+
   render() {
-    const { countryCode, countries } = this.state;
+    const { countryCode, countries, phone, sms, email } = this.state;
+    console.log('re-render?', email, sms, phone);
     return (
       <Grid className="profile">
         <Row>
@@ -102,7 +194,7 @@ class Profile extends React.Component {
               <div className={`content ${this.state.phoneCollapse ? '' : 'd-none'}`}>
                 <p className="text">We only send humans rewards. Please verify your phone number.</p>
                 <p className="text">Enter phone number</p>
-                <NumberPhoneForm onSubmit={this.verifyPhone}>
+                <NumberPhoneForm onSubmit={this.onSubmitVerifyPhone}>
                   <div className="phone-block">
                     <div className="dropdown country-code">
                       <button
@@ -130,23 +222,30 @@ class Profile extends React.Component {
                       </div>
                     </div>
                     <Field
-                      name="phone-number"
+                      name="phone"
                       className="form-control-custom form-control-custom-ex phone-number"
                       component={fieldCleave}
                       propsCleave={{
                         options: { blocks: [4, 4, 4], delimiter: '-', numericOnly: true },
+                      }}
+                      onChange={(evt, value, unknown, name) => {
+                        this.onTextFieldChange(name, value);
                       }}
                     />
                     <Button className="send-btn">Send</Button>
                   </div>
                   <p className="text">Enter verification code sent to your phone</p>
                   <Field
-                    name="sms-code"
+                    name="sms"
                     className="form-control-custom form-control-custom-ex w-100"
                     component={fieldCleave}
                     propsCleave={{
-                      options: { blocks: [4], numericOnly: true },
+                      options: { blocks: [6], numericOnly: true },
                     }}
+                    onChange={(evt, value, unknown, name) => {
+                      this.onTextFieldChange(name, value);
+                    }}
+                    value={sms}
                   />
                   <Button className="submit-btn">Verify your number</Button>
                 </NumberPhoneForm>
@@ -169,11 +268,15 @@ class Profile extends React.Component {
               <div className={`content ${this.state.emailCollapse ? '' : 'd-none'}`}>
                 <p className="text">Prefer to receive notifications and updates via email?</p>
                 <p className="text">Enter your email</p>
-                <EmailForm onSubmit={this.verifyEmail}>
+                <EmailForm onSubmit={this.onSubmitVerifyEmail}>
                   <Field
-                    name="phone-number"
+                    name="email"
                     className="form-control-custom form-control-custom-ex w-100"
                     component={fieldCleave}
+                    onChange={(evt, value, unknown, name) => {
+                      this.onTextFieldChange(name, value);
+                    }}
+                    value={email}
                   />
                   <Button className="submit-btn">Verify your email</Button>
                 </EmailForm>
@@ -185,7 +288,7 @@ class Profile extends React.Component {
           <div className="modal-verify">
             <Image src={CheckedSVG} alt="checked" />
             <p>Successed!</p>
-            <p>Your authentication phone number is verified</p>
+            <p>{ this.state.successMessage ? this.state.successMessage : 'Your authentication is verified' }</p>
           </div>
         </ModalDialog>
       </Grid>
@@ -202,8 +305,13 @@ const mapState = state => ({
   auth: state.auth
 });
 
-const mapDispatch = ({
+const mapDispatch = {
   setHeaderTitle,
-});
+  verifyPhone,
+  submitPhone,
+  verifyEmail,
+  submitEmail,
+  authUpdate,
+};
 
 export default connect(mapState, mapDispatch)(Profile);
