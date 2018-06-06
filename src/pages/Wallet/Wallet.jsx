@@ -625,10 +625,10 @@ class Wallet extends React.Component {
             list={this.state.listMenu} />
 
           {/* ModalDialog for confirm remove wallet */}
-          <ModalDialog title="Confirmation" onRef={modal => this.modalBetRef = modal}>
-            <div className="bodyConfirm"><span>Are you sure to want to remove this wallet?</span></div>
+          <ModalDialog title="Are you sure?" onRef={modal => this.modalBetRef = modal}>
+            <div className="bodyConfirm"><span>This will permanently delete your wallet.</span></div>
             <div className='bodyConfirm'>
-            <Button className="left" cssType="danger" onClick={this.removeWallet} >Yes</Button>
+            <Button className="left" cssType="danger" onClick={this.removeWallet} >Yes, remove</Button>
               <Button className="right" cssType="secondary" onClick={() => { this.modalBetRef.close(); }}>Cancel</Button>
             </div>
           </ModalDialog>          
