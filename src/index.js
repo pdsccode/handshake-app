@@ -2,10 +2,17 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 // components
 import App from '@/components/App/App';
-import registerServiceWorker from '@/services/worker';
-import * as OfflinePluginRuntime from 'offline-plugin/runtime';
+// import registerServiceWorker from '@/services/worker';
+import * as OfflinePlugin from 'offline-plugin/runtime';
 
-OfflinePluginRuntime.install();
+OfflinePlugin.install({
+  onUpdateReady() {
+    OfflinePlugin.applyUpdate();
+  },
+  onUpdated() {
+    window.location.reload();
+  },
+});
 
 if (!String.prototype.format) {
   String.prototype.format = function () {
@@ -18,7 +25,7 @@ if (!String.prototype.format) {
   };
 }
 
-if (window.caches) window.caches.keys().then(keyList => Promise.all(keyList.map(key => window.caches.delete(key))));
+// if (window.caches) window.caches.keys().then(keyList => Promise.all(keyList.map(key => window.caches.delete(key))));
 
 ReactDOM.render(<App />, document.getElementById('app'));
-registerServiceWorker();
+// registerServiceWorker();

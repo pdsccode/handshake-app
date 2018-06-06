@@ -1,6 +1,6 @@
 import React from 'react';
 // style
-import onlyMobileTabletSVG from '@/assets/images/only-mobile-tablet/only-mobile-tablet.svg';
+import onlyMobileTabletSVG from '@/assets/images/ninja/only-mobile-tablet.svg';
 import './MobileOrTablet.scss';
 
 class MobileOrTablet extends React.PureComponent {
