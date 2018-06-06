@@ -32,7 +32,7 @@ class Header extends React.Component {
     const { hasLink, title, linkTitle, onLinkClick } = this.props;
     if (!hasLink) return "";
     return (
-      <span onClick={onLinkClick} className="headerLink">{linkTitle}</span>
+      <div onClick={onLinkClick} className="headerLink">{linkTitle}</div>
     );
   }
 
@@ -42,7 +42,7 @@ class Header extends React.Component {
         <div className="headerBox">
           <span className="headerText">{title}</span>
           {this.renderLink()}
-        </div>      
+        </div>
     );
   }
 }

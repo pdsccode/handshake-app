@@ -79,13 +79,15 @@
   letter-spacing: 0;
 }
 .headerLink{
-  font-family: Helvetica;
-  font-size: 16px;
-  color: #1E4EFF;
+  font-size: 13px;
+  background: #007bff;
   letter-spacing: 0;
   cursor: pointer;
   float: right;
   margin-top: 5px;
+  color: white;
+  padding: 3px 10px;
+  border-radius: 4px;
 }
 .iconDefault{
   margin-left: 5px
