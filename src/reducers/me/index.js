@@ -91,7 +91,6 @@ const meReducter = (state = {
             handshake.status = status_i;
             handshake.result = result_i;
             break;
-            console.log('New handshake:', handshake);
           }
          
         }
@@ -101,7 +100,6 @@ const meReducter = (state = {
         // //TO DO: delete record after update status 
         
       });
-      console.log("My List:", myList);
       
 
       return {
