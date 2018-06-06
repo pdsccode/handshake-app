@@ -81,9 +81,9 @@ class SelectCountryCode extends React.Component {
                   }
                 </div>
               </div>
-              <div className="mt-2">
+              <div className="mt-2 d-flex">
                 <input type="text" value={strFilterCountry} className="form-control-custom form-control-custom-ex input-no-border" placeholder="Filter" onChange={this.handleFilterChange}/>
-                <button onClick={this.toggleShowSelect} className="text-white btn btn-link float-right">Close</button>
+                <button onClick={this.toggleShowSelect} className="text-white btn btn-link ml-auto btn-close">Close</button>
               </div>
             </div>
           )
