@@ -136,12 +136,13 @@ export class BetHandshakeHandler {
     return balance;
   }
 
-  static foundShakeItemList(dict) {
+  static foundShakeItemList(dict, offchain) {
     const shakerList = [];
     const profile = local.get(APP.AUTH_PROFILE);
     const { shakers, outcome_id, from_address } = dict;
     console.log('Shakers:', shakers);
-    const foundShakedItem = shakers.find(element => element.shaker_id === profile.id);
+    const idOffchain = BetHandshakeHandler.getId(offchain);
+    const foundShakedItem = shakers.find(element => element.shaker_id === profile.id && element.id === idOffchain);
     console.log('foundShakedItem:', foundShakedItem);
     if (foundShakedItem) {
       foundShakedItem.outcome_id = outcome_id;
@@ -197,28 +198,28 @@ export class BetHandshakeHandler {
     );
     return result;
   }
+  static timemoutShake(shakedItem, i, hid){
+    setTimeout(function () {
+      console.log("Time out:", i);
+      BetHandshakeHandler.shakeContract(shakedItem, hid);   
+
+    }, 15000*i); 
+  }
   static controlShake = async (list, hid) => {
     const result = null;
     const dataList = async (element) => {
       console.log('Element:', element);
+      const {offchain} = element;
       const isInitBet = BetHandshakeHandler.isInitBet(element);
       console.log('isInitBet:', isInitBet);
       if (isInitBet) {
         await BetHandshakeHandler.addContract(element, hid);
       } else {
-        const foundShakeList = BetHandshakeHandler.foundShakeItemList(element);
+        const foundShakeList = BetHandshakeHandler.foundShakeItemList(element, offchain);
+        console.log("Found shake List:", foundShakeList);
         for (var i = 0; i< foundShakeList.length; i++){
-          (function (i) {
-            if(i==0){
-              BetHandshakeHandler.shakeContract(element, hid);   
-
-            }else { //Delay from i=1
-              setTimeout(function () {
-                BetHandshakeHandler.shakeContract(element, hid);   
-              }, 8000*i);
-            }
-            
-          })(i);
+          const shakedItem = foundShakeList[i];    
+          BetHandshakeHandler.timemoutShake(shakedItem, i, hid);
         }
               
       }
