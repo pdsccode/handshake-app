@@ -569,6 +569,10 @@ class Wallet extends React.Component {
     this.showSuccess("Your wallet has been secured!");
   }
 
+  getETHFree(){
+    window.open("https://www.rinkeby.io/#faucet", "_blank");
+  }
+
   // For Qrcode:
   handleScan=(data) =>{
     if(data){
@@ -621,10 +625,10 @@ class Wallet extends React.Component {
             list={this.state.listMenu} />
 
           {/* ModalDialog for confirm remove wallet */}
-          <ModalDialog title="Confirmation" onRef={modal => this.modalBetRef = modal}>
-            <div className="bodyConfirm"><span>Are you sure to want to remove this wallet?</span></div>
+          <ModalDialog title="Are you sure?" onRef={modal => this.modalBetRef = modal}>
+            <div className="bodyConfirm"><span>This will permanently delete your wallet.</span></div>
             <div className='bodyConfirm'>
-            <Button className="left" cssType="danger" onClick={this.removeWallet} >Yes</Button>
+            <Button className="left" cssType="danger" onClick={this.removeWallet} >Yes, remove</Button>
               <Button className="right" cssType="secondary" onClick={() => { this.modalBetRef.close(); }}>Cancel</Button>
             </div>
           </ModalDialog>          
@@ -760,11 +764,11 @@ class Wallet extends React.Component {
 
           {/* Render list wallet: */}
           <Row className="list">
-            <Header title="Mainnet wallets" hasLink={false} linkTitle="+ Add new" onLinkClick={this.onLinkClick} />
+            <Header title="Testnet wallets" hasLink={true} linkTitle="Request free ETH" onLinkClick={this.getETHFree} />
           </Row>
           <Row className="list">
-            {this.listMainWalletBalance}
-          </Row>
+            {this.listTestWalletBalance}
+          </Row>          
 
           <Row className="list">
             <Header title="Reward wallets" hasLink={false} />
@@ -774,10 +778,10 @@ class Wallet extends React.Component {
           </Row>
 
           <Row className="list">
-            <Header title="Testnet wallets" hasLink={false} />
+            <Header title="Mainnet wallets" hasLink={false} linkTitle="+ Add new" onLinkClick={this.onLinkClick} />
           </Row>
           <Row className="list">
-            {this.listTestWalletBalance}
+            {this.listMainWalletBalance}
           </Row>
 
         </Grid>

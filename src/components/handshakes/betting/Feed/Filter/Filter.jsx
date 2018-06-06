@@ -189,7 +189,8 @@ class BettingFilter extends React.Component {
         // console.log('Default Outcome:', defaultOutcome);
         const defaultOutcomeId = this.defaultOutcome ? this.defaultOutcome.id : null;
         const shareInfo = this.getInfoShare(selectedMatch, selectedOutcome);
-
+        console.log('defaultOutcomeId:', defaultOutcomeId);
+        console.log('Source Outcome:', this.matchOutcomes);
         return (
             <div className="wrapperBettingFilter">
             <div className="dropDown">
