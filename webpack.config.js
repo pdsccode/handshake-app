@@ -142,6 +142,8 @@ module.exports = function webpackConfig(env, argv) {
       }),
       new OfflinePlugin({
         appShell: '/',
+        responseStrategy: 'network-first',
+        autoUpdate: true,
       }),
     ],
     performance: { hints: false },

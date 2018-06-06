@@ -22,7 +22,7 @@ export const HANDSHAKE_ID_DEFAULT = 3;
 
 export const HANDSHAKE_NAME = {
   // [HANDSHAKE_ID.PROMISE]: 'Promise',
-  [HANDSHAKE_ID.EXCHANGE]: 'Exchange',
+  // [HANDSHAKE_ID.EXCHANGE]: 'Exchange',
   [HANDSHAKE_ID.BETTING]: 'Bet',
   // [HANDSHAKE_ID.SEED]: 'Seed',
 };

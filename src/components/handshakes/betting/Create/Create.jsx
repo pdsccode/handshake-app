@@ -323,7 +323,7 @@ get defaultOutcome() {
         name={key}
         style={style}
         component={InputField}
-        type="tel"
+        type="text"
         //min="0.0001"
         //step="0.0002"
         placeholder={placeholder}
@@ -493,8 +493,9 @@ get defaultOutcome() {
       this.props.showAlert({
         message: <div className="text-center">{MESSAGE.CREATE_BET_SUCCESSFUL}</div>,
         timeOut: 3000,
-        type: 'danger',
+        type: 'success',
         callBack: () => {
+          this.props.history.push(URL.HANDSHAKE_ME);
         }
       });
     }

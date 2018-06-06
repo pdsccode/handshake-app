@@ -1,6 +1,6 @@
 import React from 'react';
 // style
-import onlyMobileTabletSVG from '@/assets/images/only-mobile-tablet/only-mobile-tablet.svg';
+import onlyMobileTabletSVG from '@/assets/images/ninja/only-mobile-tablet.svg';
 import arrowsRightIcon from '@/assets/images/icon/landingpage/arrows_long_right.svg';
 import './MobileOrTablet.scss';
 
