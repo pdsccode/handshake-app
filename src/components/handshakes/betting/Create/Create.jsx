@@ -135,7 +135,7 @@ get matchNames() {
   const {matches} = this.state;
   return matches.map((item) => ({ id: item.id, value: `${item.awayTeamName} - ${item.homeTeamName}` }));
 }
-get matchResults(){
+get matchOutcomes(){
   const {selectedMatch, matches} = this.state;
   if(selectedMatch){
       const foundMatch = this.foundMatch;
@@ -149,6 +149,32 @@ get matchResults(){
 
 
   return [];
+}
+get defaultMatch() {
+  const matchNames = this.matchNames;
+  const { matchId } = this.props;
+  if (matchNames && matchNames.length > 0) {
+      const itemDefault = matchNames.find(item => item.id === matchId);
+      return itemDefault || matchNames[0];
+      // if (itemDefault) {
+      //     return itemDefault;
+      // } else {
+      //     return matchNames[0];
+      // }
+  }
+  return null;
+}
+
+get defaultOutcome() {
+  const matchOutcomes = this.matchOutcomes;
+  //console.log('defaultOutcome matchOutcomes: ', matchOutcomes);
+  const { outComeId } = this.props;
+  if (matchOutcomes && matchOutcomes.length > 0) {
+      const itemDefault = matchOutcomes.find(item => item.id === outComeId);
+      return itemDefault || matchOutcomes[0];
+  }
+  return null;
+  // return matchOutcomes && matchOutcomes.length > 0 ? matchOutcomes[0] : null;
 }
 
   async onSubmit(dict) {
@@ -186,6 +212,7 @@ get matchResults(){
     console.log("Total:", total);
 
     const fromAddress = address;
+    console.log('Match, Outcome:', selectedMatch, selectedOutcome);
 
     if(selectedMatch && selectedOutcome){
       if(eventBet > 0){
@@ -344,11 +371,16 @@ get matchResults(){
   renderForm() {
     const inputList = this.inputList;
     const { selectedMatch, buttonClass } = this.state;
+    const defaultMatchId = this.defaultMatch ? this.defaultMatch.id : null;
+    const defaultOutcomeId = this.defaultOutcome ? this.defaultOutcome.id : null;
+
     return (
       <BettingCreateForm className="wrapperBetting" onSubmit={this.onSubmit}>
         <div className="dropDown">
           <Dropdown
-            placeholder="Select a match"
+            placeholder="Select an event"
+            defaultId={defaultMatchId}
+            afterSetDefault={(item)=>this.setState({selectedMatch: item})}
             source={this.matchNames}
             onItemSelected={(item) =>
               {
@@ -361,8 +393,15 @@ get matchResults(){
           />
 
           {selectedMatch && <Dropdown
-            placeholder="Select a prediction"
-            source={this.matchResults}
+            placeholder="Select an outcome"
+            defaultId={defaultOutcomeId}
+            source={this.matchOutcomes}
+            afterSetDefault={(item)=> {
+              const {values} = this.state;
+              values["event_predict"] = item.value;
+              this.setState({selectedOutcome: item, values})
+              
+            }}
             onItemSelected={(item) => {
               const {values} = this.state;
               values["event_predict"] = item.value;
