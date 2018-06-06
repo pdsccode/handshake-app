@@ -54,6 +54,15 @@ class Neuron {
   getGasPriceDefaultWithEthUnit = async () =>
     Web3.utils.fromWei(await this.web3.eth.getGasPrice());
 
+  getEstimateGas = async (payloadData, toAddress = undefined) => {
+    const estimateGasData = {
+      data: payloadData,
+      to: toAddress,
+    };
+
+    const estimatedGas = await this.web3.eth.estimateGas(estimateGasData);
+    return estimatedGas;
+  };
   caculateEstimatGasWithEthUnit = async (address, gasPrice = undefined) => {
     gasPrice = new BN(gasPrice
       ? Web3.utils.toWei(String(gasPrice), 'gwei')
@@ -109,29 +118,29 @@ class Neuron {
       //   gasPrice = new BN(Web3.utils.toWei(_options.gasPrice.toString(), 'gwei'));
       // }
 
-      const nonce = await web3.eth.getTransactionCount(address);
+      let nonce = await web3.eth.getTransactionCount(address);
+      nonce = nonce.toString(16);
       const balance = new BN(await web3.eth.getBalance(address));
 
       const estimateGas = balance.div(gasPrice);
-      const limitedGas = 3000000;
-
+      const limitedGas = 3000000;//await this.getEstimateGas(payloadData, address);
       const estimatedGas = await BN.min(estimateGas, limitedGas);
+
       const chainId = await web3.eth.net.getId();
       console.log('gasPrice->', parseInt(gasPrice));
-      console.log('estimatedGas->', parseInt(estimatedGas));
+      console.log('estimatedGas->', String(estimatedGas));
+      console.log('limitedGas->', String(limitedGas));
       console.log('chainid ->', chainId);
       const rawTx = {
-        nonce: web3.utils.toHex(nonce),
+        // nonce: web3.utils.toHex(nonce),
+        nonce: `0x${nonce}`,
         gasPrice: web3.utils.toHex(gasPrice),
-        gasLimit: limitedGas,
+        gasLimit: estimatedGas,
         data: payloadData,
         from: address,
         chainId,
-        gas: estimatedGas,
+        // gas: estimatedGas,
         to: toAddress,
-        value: amount
-          ? web3.utils.toHex(web3.utils.toWei(String(amount), 'ether'))
-          : undefined,
       };
 
       // if (_options.toAddress) {
@@ -142,6 +151,9 @@ class Neuron {
       // }
       console.log('rawTx->', rawTx);
       const tx = new Tx(rawTx);
+      if (amount) {
+        tx.value = Web3.utils.toHex(web3.utils.toWei(String(amount), 'ether'));
+      }
       tx.sign(Buffer.from(privateKey, 'hex'));
 
       const serializedTx = tx.serialize();

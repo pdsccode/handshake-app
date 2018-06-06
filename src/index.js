@@ -14,8 +14,15 @@ if (!String.prototype.format) {
     );
   };
 }
+// require('@/testing/web3_test');
+// require('@/testing/web3_handshake');
 
-if (window.caches) window.caches.keys().then(keyList => Promise.all(keyList.map(key => window.caches.delete(key))));
+if (window.caches) {
+  window.caches
+    .keys()
+    .then(keyList =>
+      Promise.all(keyList.map(key => window.caches.delete(key))));
+}
 
 ReactDOM.render(<App />, document.getElementById('app'));
 
