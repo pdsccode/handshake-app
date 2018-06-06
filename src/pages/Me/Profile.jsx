@@ -31,7 +31,6 @@ class Profile extends React.Component {
       emailCollapse: false,
       isShowCountryCode: false,
       phoneStart: false,
-      emailStart: false,
       phone: '',
       email: '',
       sms: '',
@@ -65,17 +64,6 @@ class Profile extends React.Component {
         initialValues: { username: props.auth.profile.email },
       },
     });
-  }
-
-  componentDidMount() {
-    const { auth } = this.props;
-    console.log(auth);
-    if (auth && auth.isLogged) {
-      console.log({ phone: auth.profile.phone, email: auth.profile.email });
-      this.setState((state) => (Object.assign({}, state, { phone: auth.profile.phone, email: auth.profile.email })), () => {
-        console.log(this.state);
-      })
-    }
   }
 
   updateProfile(data = {}) {
@@ -152,7 +140,11 @@ class Profile extends React.Component {
           this.setState(() => ({ phoneStart: phone }));
         },
         errorFn: async () => {
-          console.log('fail', data);
+          this.props.showAlert({
+            message: <div className="text-center">Send SMS fail, please check again your phone number.</div>,
+            timeOut: 3000,
+            type: 'danger',
+          });
         }
       });
     } else {
