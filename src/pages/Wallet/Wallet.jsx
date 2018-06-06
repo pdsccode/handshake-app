@@ -226,7 +226,7 @@ class Wallet extends React.Component {
   creatSheetMenuItem(wallet){
     let obj = [];
       obj.push({
-        title: 'Transfer',
+        title: 'Transfer coins',
         handler: () => {
           this.setState({isRestoreLoading: false, walletSelected: wallet, inputAddressAmountValue: '', inputSendAmountValue: ''});
           this.toggleBottomSheet();
@@ -234,7 +234,7 @@ class Wallet extends React.Component {
         }
       })
       obj.push({
-        title: 'Receive',
+        title: 'Receive coins',
         handler: () => {          
           this.setState({walletSelected: wallet});
           this.toggleBottomSheet();
@@ -263,7 +263,7 @@ class Wallet extends React.Component {
       }
 
       obj.push({
-        title: 'Transaction history',
+        title: 'View transaction history',
         handler: () => {
           this.setState({walletSelected: wallet, transactions: []});
           this.toggleBottomSheet();
@@ -276,7 +276,7 @@ class Wallet extends React.Component {
         }
       })
       obj.push({
-        title: 'Copy address',
+        title: 'Copy address to clipboard',
         handler: () => {
           Clipboard.copy(wallet.address);
           this.toggleBottomSheet();
@@ -307,6 +307,12 @@ class Wallet extends React.Component {
             }
           })
         }
+        obj.push({
+          title: "Cancel",
+          handler: () => {          
+              this.toggleBottomSheet();
+          }
+        })
 
       return obj;
     }
@@ -426,6 +432,12 @@ class Wallet extends React.Component {
         this.toggleBottomSheet();
         this.setState({erroValueBackup: false, isRestoreLoading: false, inputRestoreWalletValue: ''});
 
+      }
+    })
+    obj.push({
+      title: "Cancel",
+      handler: () => {          
+          this.toggleBottomSheet();
       }
     })
     return obj;
@@ -604,6 +616,7 @@ class Wallet extends React.Component {
           {/* Tooltim menu Bottom */ }
           <ReactBottomsheet
             visible={this.state.bottomSheet}
+            appendCancelBtn={false}
             onClose={this.toggleBottomSheet.bind(this)}
             list={this.state.listMenu} />
 
@@ -617,7 +630,7 @@ class Wallet extends React.Component {
           </ModalDialog>          
 
           {/* ModalDialog for transfer coin */}
-          <Modal title="Transfer" onRef={modal => this.modalSendRef = modal}>
+          <Modal title="Transfer coins" onRef={modal => this.modalSendRef = modal}>
             <SendWalletForm className="sendwallet-wrapper" onSubmit={this.sendCoin}>
             <div className="div-address-qr-code">
               <Input name="to_address" placeholder="Receiving address" required className="input-address-qr-code"
@@ -644,8 +657,8 @@ class Wallet extends React.Component {
             </div>
           </ModalDialog>
 
-          <Modal title="Top up coins" onRef={modal => this.modalFillRef = modal}>
-            <FeedCreditCard buttonTitle="Top up coins" currencyForced={this.state.walletSelected ? this.state.walletSelected.name : ""}
+          <Modal title="Buy coins" onRef={modal => this.modalFillRef = modal}>
+            <FeedCreditCard buttonTitle="Buy coins" currencyForced={this.state.walletSelected ? this.state.walletSelected.name : ""}
               callbackSuccess={this.afterWalletFill}
               addressForced={this.state.walletSelected ? this.state.walletSelected.address : ""}
             />
