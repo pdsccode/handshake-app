@@ -57,14 +57,14 @@ class DiscoverPage extends React.Component {
   componentWillReceiveProps(nextProps) {
     console.log('firebase', nextProps.firebaseUser);
     // set active betting
-    if (this.state.handshakeIdActive === -1) {
-      if (this.props.discover.list.length < 1) {
-        this.setState({
-          handshakeIdActive: HANDSHAKE_ID.BETTING
-        });
-        this.categoryRef.idActive = HANDSHAKE_ID.BETTING;
-      }
-    }
+    // if (this.state.handshakeIdActive === -1) {
+    //   if (this.props.discover.list.length < 1) {
+    //     this.setState({
+    //       handshakeIdActive: HANDSHAKE_ID.BETTING
+    //     });
+    //     this.categoryRef.idActive = HANDSHAKE_ID.BETTING;
+    //   }
+    // }
   }
 
   get getHandshakeList() {
