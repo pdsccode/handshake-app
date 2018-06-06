@@ -207,7 +207,6 @@ get defaultOutcome() {
     const estimatedGas = await bettinghandshake.getEstimateGas();
     console.log('Estimate Gas:', estimatedGas);
     const eventBet = parseFloat(dict.event_bet);
-    console.log('Event Bet:', eventBet);
     const total = eventBet + parseFloat(estimatedGas);
     console.log("Total:", total);
 
