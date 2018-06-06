@@ -9,8 +9,10 @@ class NoData extends React.PureComponent {
     const { className, message, ...props } = this.props;
     return (
       <div className={`no-data ${className || ''}`} {...props}>
-        <img className="ninja img-fluid" src={nodataNinjaSVG} alt="nodata ninja" />
-        <p className="text">{ message || 'NO DATA AVAILABLE' }</p>
+        <div>
+          <img className="img-fluid img" src={nodataNinjaSVG} alt="nodata ninja" />
+          <p className="text">{ message || 'NO DATA AVAILABLE' }</p>
+        </div>
       </div>
     );
   }
