@@ -56,7 +56,7 @@ Toggle.defaultProps = {
     },
     {
       id: 2,
-      name: 'AGAINST',
+      name: 'OPPOSE',
     },
   ],
 };
