@@ -134,6 +134,7 @@ export const API_URL = {
     BASE: 'https://stag-handshake.autonomous.ai/api/comment',
     CREATE: 'comment/',
     LIST: 'comment/list',
+    GET_COMMENT_COUNT: 'comment/count',
   },
 };
 
