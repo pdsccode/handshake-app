@@ -706,7 +706,7 @@ class FeedExchange extends React.PureComponent {
 
             actionButtons = (
               <div>
-                <Button block className="mt-2" onClick={() => this.confirmOfferAction(message, this.handleShakeOffer)}>Shake Now</Button>
+                <Button block className="mt-2" onClick={() => this.confirmOfferAction(message, this.handleShakeOffer)}>Shake</Button>
               </div>
             );
             break;

@@ -57,7 +57,7 @@ class BetingShake extends React.Component {
       buttonClass: 'btnOK btnRed',
       isShowOdds: false,
       extraData: {},
-      
+
     };
 
     this.onSubmit = ::this.onSubmit;
@@ -67,7 +67,7 @@ class BetingShake extends React.Component {
     this.onToggleChange = ::this.onToggleChange;
   }
   componentDidMount(){
-    
+
   }
   componentWillReceiveProps(nextProps){
     // const {extraData} = this.state;
@@ -79,7 +79,7 @@ class BetingShake extends React.Component {
     // this.setState({extraData})
 
   }
- 
+
 
 
   async onSubmit(values) {
@@ -98,9 +98,9 @@ class BetingShake extends React.Component {
     console.log('Amount:', amount);
     console.log('Props:', this.props);
     var message = null;
-    
 
-      
+
+
     if(matchName && matchOutcome){
         if(amount > 0){
           if(total <= parseFloat(balance)){
@@ -112,7 +112,7 @@ class BetingShake extends React.Component {
               }
             }else {
               this.shakeItem(amount, side);
-        
+
             }
           }else {
             message = MESSAGE.NOT_ENOUGH_BALANCE;
@@ -123,15 +123,15 @@ class BetingShake extends React.Component {
     }else {
       message = MESSAGE.CHOOSE_MATCH;
     }
-    
-    
-  
+
+
+
     //if(matchName && matchOutcome && amount <= parseFloat(balance) && amount > 0){
       // if(isShowOdds){
       //   this.initHandshake(amount, odds);
       // }else {
       //   this.shakeItem(amount, side);
-  
+
       // }
     //}
     if(message){
@@ -270,7 +270,7 @@ class BetingShake extends React.Component {
         <Toggle ref={(component) => {this.toggleRef = component}} onChange={this.onToggleChange} />
 
         <Button type="submit" block className={buttonClass}>
-          Shake now
+          Shake
         </Button>
       </BettingShakeForm>
     );
@@ -401,7 +401,7 @@ class BetingShake extends React.Component {
   initHandshakeSuccess = async (successData)=>{
     console.log('initHandshakeSuccess', successData);
     const {status, data} = successData
-    
+
     if(status && data){
       /*
       const {offchain, side} = data;
@@ -415,7 +415,7 @@ class BetingShake extends React.Component {
       if(result){
         //TO DO: redirect and show alert
       }
-      */     
+      */
      const {outcomeHid} = this.props;
       console.log('OutcomeHid:', outcomeHid);
      BetHandshakeHandler.controlShake(data, outcomeHid);
