@@ -143,4 +143,16 @@
   .text-danger {
     font-size: rem-calc(12px);
   }
+
+  .text-danger + .cryptoCurrency {
+    left: 74%;
+  }
+  .btnRed {
+    background: #FA6B49;
+    border: none;
+  }
+  .btnBlue {
+    background: #8BF275;
+    border: none;
+  }
 }
