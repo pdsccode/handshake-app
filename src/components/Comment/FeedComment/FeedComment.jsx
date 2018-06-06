@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { URL, BASE_API } from '@/config';
 import { API_URL } from '@/constants';
 import $http from '@/services/api';
+import Helper from '@/services/helper';
 
 // style
 import addAComment from '@/assets/images/icon/comment/add-a-comment.svg';
@@ -25,6 +26,7 @@ class FeedComment extends React.PureComponent {
 
   componentWillReceiveProps(nextProps) {
     if(nextProps.objectId !== this.props.objectId) {
+      this.setState({ commentCount: 0 });
       this.getCommentCount(nextProps);
     }
   }
@@ -32,7 +34,8 @@ class FeedComment extends React.PureComponent {
   getCommentCount(props) {
     const { objectId } = props;
     if (objectId) {
-      const url = `${BASE_API.BASE_URL}/${API_URL.COMMENT.GET_COMMENT_COUNT}?object_id=${objectId}`;
+      const fullObjectId = Helper.getObjectIdOfComment({ id: objectId });
+      const url = `${BASE_API.BASE_URL}/${API_URL.COMMENT.GET_COMMENT_COUNT}?object_id=${fullObjectId}`;
       const getCommentCountPromise = $http(url, '', '', '', '', 'get');
       getCommentCountPromise.then((response) => {
         const { status, data } = response.data;
