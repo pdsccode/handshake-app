@@ -27,6 +27,7 @@ import _sample from "lodash/sample";
 import { feedBackgroundColors } from "@/components/handshakes/exchange/config";
 import {formatMoney} from "@/services/offer-util";
 import {BigNumber} from "bignumber.js";
+import { showLoading, hideLoading } from '@/reducers/app/action';
 
 const nameFormCreditCard = 'creditCard'
 const FormCreditCard = createForm({ propsReduxForm: { form: nameFormCreditCard,
@@ -72,6 +73,14 @@ class FeedCreditCard extends React.Component {
     }
   }
 
+  showLoading = () => {
+    this.props.showLoading({message: '',});
+  }
+
+  hideLoading = () => {
+    this.props.hideLoading();
+  }
+
   getCryptoPriceByAmount = (amount) => {
     const cryptoCurrency = this.state.currency;
 
@@ -94,6 +103,8 @@ class FeedCreditCard extends React.Component {
 
     if (this.state.amount && userCcLimit && userCcLimit.limit < amoutWillUse) {
       this.setState({showCCScheme: true});
+    } else {
+      this.setState({showCCScheme: false});
     }
   }
 
@@ -136,6 +147,7 @@ class FeedCreditCard extends React.Component {
   }
 
   handleCreateCCOrderSuccess = (data) => {
+    this.hideLoading();
     // console.log('handleCreateCCOrderSuccess', data);
 
     // this.timeoutClosePopup = setTimeout(() => {
@@ -159,7 +171,7 @@ class FeedCreditCard extends React.Component {
 
     this.props.showAlert({
       message: <div className="text-center"><FormattedMessage id="buyUsingCreditCardSuccessMessge"/></div>,
-      timeOut: 3000,
+      timeOut: 2000,
       type: 'success',
       callBack: this.handleBuySuccess
     });
@@ -181,6 +193,8 @@ class FeedCreditCard extends React.Component {
   }
 
   handleCreateCCOrderFailed = (e) => {
+    this.hideLoading();
+
     // console.log('handleCreateCCOrderFailed', JSON.stringify(e.response));
     this.props.showAlert({
       message: <div className="text-center">{e.response?.data?.message}</div>,
@@ -231,6 +245,8 @@ class FeedCreditCard extends React.Component {
 
       return;
     }
+
+    this.showLoading();
 
     if (handleSubmit) {
       handleSubmit(values);
@@ -338,7 +354,7 @@ class FeedCreditCard extends React.Component {
                               <div className="rounded p-1" style={{ lineHeight: 1.2, background: isActive ? '#FF3B30' : 'rgb(255,255,255,0.2)' }}>
                                 {text}
                               </div>
-                              <div><small>Up to {fiatCurrency}{limit}</small></div>
+                              <div className="p-1"><small>Up to {fiatCurrency}{limit}</small></div>
                             </LevelItem>
                           )
                         })
@@ -348,7 +364,7 @@ class FeedCreditCard extends React.Component {
                 }
                 <div className="form-group pt-2 d-flex">
                   <label className="col-form-label headline"><h4><FormattedMessage id="buy"/></h4></label>
-                  <div className="mx-2 pt-1">
+                  <div className="mx-2">
                     <Field
                       name="amount"
                       // type="number"
@@ -361,6 +377,7 @@ class FeedCreditCard extends React.Component {
                         style: {
                           fontSize: '26px',
                           fontWeight: '600',
+                          height: '44px'
                         }
                       }}
                       className="form-control-custom form-control-custom-ex d-inline-block w-100"
@@ -379,7 +396,7 @@ class FeedCreditCard extends React.Component {
                   </span>
                 </div>
                 <div className="pb-2">
-                  <h4 className="headline"><FormattedMessage id="askUsingCreditCard" values={{ fiatCurrency: fiatCurrency, total: formatMoney(total) }} /></h4>
+                  <h4 className="headline"><FormattedMessage id="askUsingCreditCard" values={{ fiatCurrency: FIAT_CURRENCY, total: formatMoney(total) }} /></h4>
                 </div>
                 {
                   amount && (
@@ -430,6 +447,8 @@ const mapDispatchToProps = (dispatch) => ({
   getCcLimits: bindActionCreators(getCcLimits, dispatch),
   rfChange: bindActionCreators(change, dispatch),
   showAlert: bindActionCreators(showAlert, dispatch),
+  showLoading: bindActionCreators(showLoading, dispatch),
+  hideLoading: bindActionCreators(hideLoading, dispatch),
 });
 
 export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(FeedCreditCard));

@@ -44,4 +44,7 @@
       cursor: pointer;
     }
   }
+  .no-data {
+    height: calc(100vh - 125px - 78px);
+  }
 }

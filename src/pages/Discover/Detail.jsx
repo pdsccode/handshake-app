@@ -24,7 +24,7 @@ class DiscoverDetailPage extends React.Component {
     super(props);
 
     this.state = {
-      id: props.match.params.id
+      slug: props.match.params.slug
     };
   }
 
@@ -37,7 +37,7 @@ class DiscoverDetailPage extends React.Component {
     const { detail } = this.props.discover;
     if (detail && detail.type) {
       const DetailComponent = maps[detail.type];
-      return <DetailComponent {...detail} />;
+      return <DetailComponent {...detail} slug={this.state.slug} />;
     }
   }
 

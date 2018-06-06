@@ -10,7 +10,7 @@ class NewComponent extends React.Component {
           <p className="description">{this.props.description}</p>
           <p className="email">{this.props.from_email}</p>
         </Feed>
-        <Button block>Shake now</Button>
+        <Button block>Shake</Button>
       </div>
     );
   }

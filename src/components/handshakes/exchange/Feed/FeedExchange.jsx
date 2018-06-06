@@ -48,6 +48,8 @@ import _sample from "lodash/sample";
 import { feedBackgroundColors } from "@/components/handshakes/exchange/config";
 import {updateOfferStatus} from "@/reducers/discover/action";
 import {formatAmountCurrency, formatMoney} from "@/services/offer-util";
+import {BigNumber} from "bignumber.js";
+import { showLoading, hideLoading } from '@/reducers/app/action';
 
 class FeedExchange extends React.PureComponent {
   constructor(props) {
@@ -69,7 +71,16 @@ class FeedExchange extends React.PureComponent {
   componentDidMount() {
   }
 
+  showLoading = () => {
+    this.props.showLoading({message: '',});
+  }
+
+  hideLoading = () => {
+    this.props.hideLoading();
+  }
+
   handleActionFailed = (e) => {
+    this.hideLoading();
     // console.log('e', e);
     this.props.showAlert({
       message: <div className="text-center">{e.response?.data?.message}</div>,
@@ -143,6 +154,33 @@ class FeedExchange extends React.PureComponent {
     this.modalRef.close();
   }
 
+  showNotEnoughCoinAlert = (balance, amount, fee, currency) => {
+    const bnBalance = new BigNumber(balance);
+    const bnAmount = new BigNumber(amount);
+    const bnFee = new BigNumber(fee);
+
+    const condition = bnBalance.isLessThan(bnAmount.plus(bnFee));
+
+    if (condition) {
+      const { intl } = this.props;
+      this.props.showAlert({
+        message: <div className="text-center">
+          {intl.formatMessage({ id: 'notEnoughCoinInWallet' }, {
+            amount: formatAmountCurrency(balance),
+            fee: formatAmountCurrency(fee),
+            currency: currency,
+          })}
+        </div>,
+        timeOut: 3000,
+        type: 'danger',
+        callBack: () => {
+        }
+      });
+    }
+
+    return condition;
+  }
+
   ////////////////////////
   handleShakeOffer = async () => {
     const { intl, authProfile } = this.props;
@@ -154,8 +192,7 @@ class FeedExchange extends React.PureComponent {
     const fee = await wallet.getFee(4, true);
 
     if ((offer.currency === CRYPTO_CURRENCY.ETH || (offer.type === EXCHANGE_ACTION.BUY && offer.currency === CRYPTO_CURRENCY.BTC))
-        && balance < offer.totalAmount + fee) {
-      this.showNotEnoughCoinAlert(balance, fee, offer.currency);
+      && this.showNotEnoughCoinAlert(balance, offer.totalAmount, fee, offer.currency)) {
 
       return;
     }
@@ -168,29 +205,13 @@ class FeedExchange extends React.PureComponent {
       email: authProfile.email,
     };
 
+    this.showLoading();
     this.props.shakeOffer({
       PATH_URL: API_URL.EXCHANGE.OFFERS + '/' + offer.id,
       METHOD: 'POST',
       data: offerShake,
       successFn: this.handleShakeOfferSuccess,
       errorFn: this.handleShakeOfferFailed,
-    });
-  }
-
-  showNotEnoughCoinAlert = (balance, fee, currency) => {
-    const { intl } = this.props;
-    this.props.showAlert({
-      message: <div className="text-center">
-        {intl.formatMessage({ id: 'notEnoughCoinInWallet' }, {
-          amount: formatAmountCurrency(balance),
-          fee: formatAmountCurrency(fee),
-          currency: currency,
-        })}
-      </div>,
-      timeOut: 3000,
-      type: 'danger',
-      callBack: () => {
-      }
     });
   }
 
@@ -211,9 +232,10 @@ class FeedExchange extends React.PureComponent {
       }
     }
 
+    this.hideLoading();
     this.props.showAlert({
       message: <div className="text-center"><FormattedMessage id="shakeOfferSuccessMessage"/></div>,
-      timeOut: 3000,
+      timeOut: 2000,
       type: 'success',
       callBack: () => {
         // this.props.updateOfferStatus({ [`exchange_${data.id}`]: data });
@@ -236,13 +258,12 @@ class FeedExchange extends React.PureComponent {
       const balance = await wallet.getBalance();
       const fee = await wallet.getFee();
 
-      if (balance < offer.totalAmount + fee) {
-        this.showNotEnoughCoinAlert(balance, fee, offer.currency);
-
+      if (this.showNotEnoughCoinAlert(balance, offer.totalAmount, fee, offer.currency)) {
         return;
       }
     }
 
+    this.showLoading();
     this.props.closeOffer({
       PATH_URL: API_URL.EXCHANGE.OFFERS + '/' + offer.id,
       METHOD: 'DELETE',
@@ -260,9 +281,10 @@ class FeedExchange extends React.PureComponent {
       this.handleCallActionOnContract(data);
     }
 
+    this.hideLoading();
     this.props.showAlert({
       message: <div className="text-center"><FormattedMessage id="closeOfferSuccessMessage"/></div>,
-      timeOut: 3000,
+      timeOut: 2000,
       type: 'success',
       callBack: () => {
         // this.props.fireBaseDataChange( { [`exchange_${data.id}`]: data });
@@ -284,13 +306,12 @@ class FeedExchange extends React.PureComponent {
       const balance = await wallet.getBalance();
       const fee = await wallet.getFee();
 
-      if (balance < offer.totalAmount + fee) {
-        this.showNotEnoughCoinAlert(balance, fee, offer.currency);
-
+      if (this.showNotEnoughCoinAlert(balance, offer.totalAmount, fee, offer.currency)) {
         return;
       }
     }
 
+    this.showLoading();
     this.props.completeShakedOffer({
       PATH_URL: API_URL.EXCHANGE.OFFERS + '/' + offer.id + '/' + API_URL.EXCHANGE.SHAKE,
       METHOD: 'POST',
@@ -315,9 +336,10 @@ class FeedExchange extends React.PureComponent {
     }
 
     // console.log('data', data);
+    this.hideLoading();
     this.props.showAlert({
       message: <div className="text-center"><FormattedMessage id="completeShakedfferSuccessMessage"/></div>,
-      timeOut: 3000,
+      timeOut: 2000,
       type: 'success',
       callBack: () => {
         // if (refreshPage) {
@@ -341,13 +363,12 @@ class FeedExchange extends React.PureComponent {
       const balance = await wallet.getBalance();
       const fee = await wallet.getFee();
 
-      if (balance < offer.totalAmount + fee) {
-        this.showNotEnoughCoinAlert(balance, fee, offer.currency);
-
+      if (this.showNotEnoughCoinAlert(balance, offer.totalAmount, fee, offer.currency)) {
         return;
       }
     }
 
+    this.showLoading();
     this.props.cancelShakedOffer({
       PATH_URL: API_URL.EXCHANGE.OFFERS + '/' + offer.id + '/' + API_URL.EXCHANGE.SHAKE,
       METHOD: 'DELETE',
@@ -379,9 +400,10 @@ class FeedExchange extends React.PureComponent {
       console.log('handleCancelShakedOfferSuccess', result);
     }
 
+    this.hideLoading();
     this.props.showAlert({
       message: <div className="text-center"><FormattedMessage id="cancelShakedfferSuccessMessage"/></div>,
-      timeOut: 3000,
+      timeOut: 2000,
       type: 'success',
       callBack: () => {
         // if (refreshPage) {
@@ -405,13 +427,12 @@ class FeedExchange extends React.PureComponent {
       const balance = await wallet.getBalance();
       const fee = await wallet.getFee();
 
-      if (balance < offer.totalAmount + fee) {
-        this.showNotEnoughCoinAlert(balance, fee, offer.currency);
-
+      if (this.showNotEnoughCoinAlert(balance, offer.totalAmount, fee, offer.currency)) {
         return;
       }
     }
 
+    this.showLoading();
     this.props.cancelShakedOffer({
       PATH_URL: API_URL.EXCHANGE.OFFERS + '/' + offer.id + '/' + API_URL.EXCHANGE.WITHDRAW,
       METHOD: 'POST',
@@ -429,9 +450,10 @@ class FeedExchange extends React.PureComponent {
       this.handleCallActionOnContract(data);
     }
 
+    this.hideLoading();
     this.props.showAlert({
       message: <div className="text-center"><FormattedMessage id="withdrawShakedfferSuccessMessage"/></div>,
-      timeOut: 3000,
+      timeOut: 2000,
       type: 'success',
       callBack: () => {
         // if (refreshPage) {
@@ -684,7 +706,7 @@ class FeedExchange extends React.PureComponent {
 
             actionButtons = (
               <div>
-                <Button block className="mt-2" onClick={() => this.confirmOfferAction(message, this.handleShakeOffer)}>Shake Now</Button>
+                <Button block className="mt-2" onClick={() => this.confirmOfferAction(message, this.handleShakeOffer)}>Shake</Button>
               </div>
             );
             break;
@@ -934,7 +956,7 @@ class FeedExchange extends React.PureComponent {
         let offerPrice = getOfferPrice(listOfferPrice, offer.type, offer.currency);
         if (offerPrice) {
           fiatAmount = offer.amount * offerPrice.price || 0;
-          fiatAmount = fiatAmount + fiatAmount * offer.percentage;
+          fiatAmount = fiatAmount + fiatAmount * offer.percentage / 100;
         } else {
           console.log('aaaa', offer.type, offer.currency);
         }
@@ -955,6 +977,8 @@ class FeedExchange extends React.PureComponent {
     let statusText = '';
     let message = '';
     let actionButtons = null;
+    let from = '';
+    let showChat = false;
 
     switch (offer.feedType) {
       case EXCHANGE_FEED_TYPE.EXCHANGE: {
@@ -962,35 +986,101 @@ class FeedExchange extends React.PureComponent {
 
         let offerType = '';
         if (mode === 'me') {
-          switch (this.userType) {
-            case HANDSHAKE_USER.SHAKED: {
-              if (offer.type === EXCHANGE_ACTION.BUY) {
-                offerType = EXCHANGE_ACTION_PAST_NAME[EXCHANGE_ACTION.SELL];
-              } else if (offer.type === EXCHANGE_ACTION.SELL) {
-                offerType = EXCHANGE_ACTION_PAST_NAME[EXCHANGE_ACTION.BUY];
+          switch (status) {
+            case HANDSHAKE_EXCHANGE_STATUS.SHAKING:
+            case HANDSHAKE_EXCHANGE_STATUS.SHAKE:
+            case HANDSHAKE_EXCHANGE_STATUS.COMPLETING:
+            case HANDSHAKE_EXCHANGE_STATUS.COMPLETED:
+            case HANDSHAKE_EXCHANGE_STATUS.WITHDRAWING:
+            case HANDSHAKE_EXCHANGE_STATUS.WITHDRAW: {
+              switch (this.userType) {
+                case HANDSHAKE_USER.SHAKED: {
+                  from = 'With';
+                  if (offer.type === EXCHANGE_ACTION.BUY) {
+                    offerType = EXCHANGE_ACTION_PAST_NAME[EXCHANGE_ACTION.SELL];
+                  } else if (offer.type === EXCHANGE_ACTION.SELL) {
+                    offerType = EXCHANGE_ACTION_PAST_NAME[EXCHANGE_ACTION.BUY];
+                  }
+                  break;
+                }
+                case HANDSHAKE_USER.OWNER: {
+                  from = 'From';
+
+                  offerType = EXCHANGE_ACTION_PAST_NAME[offer.type];
+                  break;
+                }
               }
+
+              // offerType = EXCHANGE_ACTION_PAST_NAME[offer.type];
+              message = intl.formatMessage({ id: 'offerHandShakeContentMeDone' }, {
+                offerType: offerType,
+                amount: formatAmountCurrency(offer.amount),
+                currency: offer.currency,
+                currency_symbol: offer.fiatCurrency,
+                total: formatMoney(fiatAmount),
+                fee: offer.feePercentage,
+                payment_method: EXCHANGE_METHOD_PAYMENT[EXCHANGE_FEED_TYPE.EXCHANGE],
+              });
+              break;
             }
-            case HANDSHAKE_USER.OWNER: {
-              if (status === HANDSHAKE_EXCHANGE_STATUS.CREATED ||
-                status === HANDSHAKE_EXCHANGE_STATUS.ACTIVE) {
-                offerType = EXCHANGE_ACTION_PRESENT_NAME[offer.type];
-              } else {
-                offerType = EXCHANGE_ACTION_PAST_NAME[offer.type];
+            default: {
+              switch (this.userType) {
+                case HANDSHAKE_USER.SHAKED: {
+                  from = 'With';
+                  if (offer.type === EXCHANGE_ACTION.BUY) {
+                    offerType = EXCHANGE_ACTION_PRESENT_NAME[EXCHANGE_ACTION.SELL];
+                  } else if (offer.type === EXCHANGE_ACTION.SELL) {
+                    offerType = EXCHANGE_ACTION_PRESENT_NAME[EXCHANGE_ACTION.BUY];
+                  }
+                  break;
+                }
+                case HANDSHAKE_USER.OWNER: {
+                  from = 'From';
+
+                  offerType = EXCHANGE_ACTION_PRESENT_NAME[offer.type];
+
+                  break;
+                }
               }
+
+              message = intl.formatMessage({ id: 'offerHandShakeContentMe' }, {
+                offerType: offerType,
+                amount: formatAmountCurrency(offer.amount),
+                currency: offer.currency,
+                currency_symbol: offer.fiatCurrency,
+                total: formatMoney(fiatAmount),
+                fee: offer.feePercentage,
+                payment_method: EXCHANGE_METHOD_PAYMENT[EXCHANGE_FEED_TYPE.EXCHANGE],
+              });
+              break;
             }
           }
 
-          message = intl.formatMessage({ id: 'offerHandShakeContentMe' }, {
-            offerType: offerType,
-            amount: formatAmountCurrency(offer.amount),
-            currency: offer.currency,
-            currency_symbol: offer.fiatCurrency,
-            total: formatMoney(fiatAmount),
-            fee: offer.feePercentage,
-          });
+          //Check show chat
+          switch (status) {
+            case HANDSHAKE_EXCHANGE_STATUS.CREATED:
+            case HANDSHAKE_EXCHANGE_STATUS.ACTIVE:
+            case HANDSHAKE_EXCHANGE_STATUS.CLOSING:
+            case HANDSHAKE_EXCHANGE_STATUS.CLOSED: {
+              showChat = false;
+              break;
+            }
+            default: {
+              showChat = true;
+            }
+          }
+
+          // message = intl.formatMessage({ id: 'offerHandShakeContentMe' }, {
+          //   offerType: offerType,
+          //   amount: formatAmountCurrency(offer.amount),
+          //   currency: offer.currency,
+          //   currency_symbol: offer.fiatCurrency,
+          //   total: formatMoney(fiatAmount),
+          //   fee: offer.feePercentage,
+          // });
         } else {
           message = intl.formatMessage({ id: 'offerHandShakeContent' }, {
-            offerType: EXCHANGE_ACTION_NAME[offer.type],
+            offerType: offer.type === EXCHANGE_ACTION.BUY ? EXCHANGE_ACTION_NAME[EXCHANGE_ACTION.SELL] : EXCHANGE_ACTION_NAME[EXCHANGE_ACTION.BUY],
             amount: formatAmountCurrency(offer.amount),
             currency: offer.currency,
             currency_symbol: offer.fiatCurrency,
@@ -1003,6 +1093,7 @@ class FeedExchange extends React.PureComponent {
         break;
       }
       case EXCHANGE_FEED_TYPE.INSTANT: {
+        from = 'From';
         statusText = HANDSHAKE_EXCHANGE_CC_STATUS_NAME[status];
         let just = ' ';
 
@@ -1014,7 +1105,7 @@ class FeedExchange extends React.PureComponent {
 
         message = intl.formatMessage({ id: 'instantOfferHandShakeContent' }, {
           just: just,
-          offerType: EXCHANGE_ACTION_PAST_NAME[offer.type],
+          offerType: 'bought',
           amount: formatAmountCurrency(offer.amount),
           currency: offer.currency,
           currency_symbol: offer.fiatCurrency,
@@ -1044,7 +1135,7 @@ class FeedExchange extends React.PureComponent {
         {
           mode === 'me' && (
             <div>
-              <span style={{ color: '#C8C7CC' }}>From</span> <span style={{ color: '#666666' }}>{email}</span>
+              <span style={{ color: '#C8C7CC' }}>{from}</span> <span style={{ color: '#666666' }}>{email}</span>
               <span className="float-right" style={{ color: '#4CD964' }}>{statusText}</span>
             </div>
           )
@@ -1058,7 +1149,7 @@ class FeedExchange extends React.PureComponent {
             <div>
               <h4 style={{ lineHeight: '1.4' }}>{message}</h4>
             </div>
-            { mode === 'me' && !isCreditCard && (
+            { mode === 'me' && !isCreditCard && showChat && (
               <div className="ml-auto pl-2" style={{ width: '50px' }}>
                 <Link to={URL.HANDSHAKE_CHAT_INDEX}>
                   <img src={iconChat} width='35px' />
@@ -1084,12 +1175,12 @@ class FeedExchange extends React.PureComponent {
               !isCreditCard && (
                 <div>
                   {
-                    phone.split('-')[1] !== '' && ( // no phone number
+                    phone && phone.split('-')[1] !== '' && ( // no phone number
                       <div className="media mb-1">
                         <img className="mr-2" src={iconPhone} width={20}/>
                         <div className="media-body">
                           <div>
-                            <a href={`tel:${phone}`} className="text-white">{phone}</a>
+                            <a href={`tel:${phone.replace(/-/g, '')}`} className="text-white">{phone}</a>
                           </div>
                         </div>
                       </div>
@@ -1152,6 +1243,8 @@ const mapDispatch = ({
   withdrawShakedOffer,
   showAlert,
   updateOfferStatus,
+  showLoading,
+  hideLoading,
 });
 
 export default injectIntl(connect(mapState, mapDispatch)(FeedExchange));

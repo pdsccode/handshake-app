@@ -27,7 +27,7 @@ export const HANDSHAKE_NAME = {
   // [HANDSHAKE_ID.SEED]: 'Seed',
 };
 
-export const PRICE_DECIMAL = 2;
+export const PRICE_DECIMAL = 0;
 export const AMOUNT_DECIMAL = 6;
 
 export const CRYPTO_CURRENCY = {
@@ -60,13 +60,13 @@ export const EXCHANGE_ACTION_NAME = {
 };
 
 export const EXCHANGE_ACTION_PAST_NAME = {
-  [EXCHANGE_ACTION.BUY]: 'bought',
-  [EXCHANGE_ACTION.SELL]: 'sold',
+  [EXCHANGE_ACTION.BUY]: 'Bought',
+  [EXCHANGE_ACTION.SELL]: 'Sold',
 };
 
 export const EXCHANGE_ACTION_PRESENT_NAME = {
-  [EXCHANGE_ACTION.BUY]: 'buy',
-  [EXCHANGE_ACTION.SELL]: 'sell',
+  [EXCHANGE_ACTION.BUY]: 'Buying',
+  [EXCHANGE_ACTION.SELL]: 'Selling',
 };
 
 export const EXCHANGE_ACTION_LIST = [
@@ -113,8 +113,8 @@ export const API_URL = {
     GET_LIST_OFFER_PRICE: 'exchange/info/crypto-quotes', // {path: '/info/instant-buy/price', method: 'get'},
     GET_USER_TRANSACTION: 'exchange/user/transactions', // {path: '/user/transactions', method: 'get'},
     OFFERS: 'exchange/offers',
-    SHAKE: 'exchange/shake',
-    WITHDRAW: 'exchange/withdraw',
+    SHAKE: 'shake',
+    WITHDRAW: 'withdraw',
     IP_DOMAIN: 'https://ipfind.co/me',
     IP_KEY: 'beffb953-d0b0-4743-b439-366fcad0d47f',
   },
@@ -255,3 +255,8 @@ export const EXCHANGE_METHOD_PAYMENT = {
 export const DISCOVER_GET_HANDSHAKE_RADIUS = 20;
 
 export const APP_USER_NAME = 'Ninja';
+
+export const MIN_AMOUNT = {
+  [CRYPTO_CURRENCY.ETH] : 0.1,
+  [CRYPTO_CURRENCY.BTC] : 0.01,
+}

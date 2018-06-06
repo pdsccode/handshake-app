@@ -4,7 +4,7 @@ import Cleave from 'cleave.js/react';
 import cx from 'classnames';
 import './styles.scss';
 // import phoneCountryCodes from './country-calling-codes.min.json';
-import COUNTRIES from '@/data/country-dial-codes.js';
+import SelectCountryCode from './components/SelectCountryCode';
 
 const customField = element => ({
   input,
@@ -146,22 +146,8 @@ export const fieldPhoneInput = customField(({
   }
   return (
     <span className="d-flex align-items-center">
-      <span style={{ width: '100px' }} className="mr-auto">
-        <select
-          className="w-100 text-white select-customized input-no-border"
-          onChange={e => onChange(`${e.target.value}-${phoneNumber}`)}
-          value={countryCode}
-        >
-          <option key={-1} value="">-------</option>
-          {
-            COUNTRIES.map((item, index) => {
-              const { dialCode } = item;
-              return (
-                <option key={index} value={dialCode}>{dialCode}</option>
-              );
-            })
-          }
-        </select>
+      <span style={{ width: '110px' }} className="mr-auto">
+        <SelectCountryCode countryCode={countryCode} onChange={newCountryCode => onChange(`${newCountryCode}-${phoneNumber}`)} />
       </span>
       <span className="ml-1"><input type="tel" placeholder={placeholder} className="form-control-custom form-control-custom-ex w-100 input-no-border" value={phoneNumber} onChange={e => onChange(`${countryCode}-${e.target.value}`)} /></span>
     </span>

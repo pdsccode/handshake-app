@@ -66,6 +66,7 @@ $font-size-caption:       ($font-size-base * 0.875) !default;
 * ======================================================================== */
 $z-index: 1050 !default; // default of boostrap
 $z-index-loading-full-screen: $z-index + 1;
+$z-index-alert: $z-index + 2;
 /*
 * Utilities
 * ======================================================================== */

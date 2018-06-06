@@ -12,7 +12,7 @@ export const URL = {
 
   HANDSHAKE_DISCOVER: '/discover',
   HANDSHAKE_DISCOVER_INDEX: '/discover',
-  HANDSHAKE_DISCOVER_DETAIL: '/discover/:id',
+  HANDSHAKE_DISCOVER_DETAIL: '/discover/:slug',
 
   HANDSHAKE_CHAT: '/chat',
   HANDSHAKE_CHAT_INDEX: '/chat',
@@ -31,6 +31,9 @@ export const URL = {
 
   COMMENTS_BY_SHAKE: '/comments',
   COMMENTS_BY_SHAKE_INDEX: '/comments',
+
+  LANDING_PAGE_SHURIKEN: '/shuriken',
+  LANDING_PAGE_SHURIKEN_INDEX: '/shuriken',
 };
 
 export const firebase = {

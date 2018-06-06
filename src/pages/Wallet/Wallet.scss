@@ -38,9 +38,9 @@
     position: absolute;
     cursor: pointer;
     img{
-      width: 16px;
+      // width: 16px;
       margin-right: 6px;
-      margin-top: -3px;
+      margin-top: -6px;
     }
   }
   .more{
@@ -50,7 +50,7 @@
     cursor: pointer;
   }
   .safe{
-    bottom: 12px;
+    bottom: 13px;
     right: 12px;
     position: absolute;
     cursor: pointer;
@@ -147,7 +147,7 @@
   height: 40px;
   margin-bottom: 30px
 }
-.input12Phrase{  
+.input12Phrase{
   margin-bottom: 20px;
   padding-top: 10px;
   padding-bottom: 10px;
@@ -274,7 +274,7 @@
   padding-left: 7px;
   padding-right: 7px;
 
-  input[type=text], input[type=tel]{
+  input[type=text], input[type=tel], input[type=number]{
     margin-bottom: 15px;
     font-size: 18px;
     line-height: 22px;
@@ -301,6 +301,12 @@
   }
 
   .col-form-label{ line-height: 2.5;}
+}
+.wallet-page{
+  button:disabled{
+    background: Silver;
+    border-color:Silver;
+  }
 }
 
 .protectwallet-wrapper{
@@ -365,12 +371,6 @@
     padding-right: 20px;
     background: White;
   }
-
-  button:disabled{
-    background: Silver;
-    border-color:Silver;
-  }
-
   p.modal-custom-title{
     font-size:18px;
   }
@@ -485,7 +485,7 @@
     text-align: center;
     margin-top: 25px;
   }
-  
+
 }
 .bottom-sheet-wrapper{
   z-index: 2000;
