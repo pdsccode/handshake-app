@@ -24,10 +24,10 @@ class Comment extends React.PureComponent {
   componentDidMount() {
     const { location, loadCommentList } = this.props;
     const queryObject = qs.parse(location.search.slice(1));
-    if(queryObject.objectId && queryObject.objectType) {
+    if(queryObject.objectId) {
       loadCommentList({
         PATH_URL: API_URL.COMMENT.LIST,
-        qs: { object_type: queryObject.objectType, object_id: queryObject.objectId, page_size: 10 },
+        qs: { object_id: queryObject.objectId },
       });
     }
     this.scrollToBottom();

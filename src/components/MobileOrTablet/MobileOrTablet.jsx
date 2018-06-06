@@ -10,9 +10,9 @@ class MobileOrTablet extends React.PureComponent {
         <div className="left">
           <img className="img-fluid" src={onlyMobileTabletSVG} alt="ninja" />
         </div>
-        <div className="right">  
+        <div className="right">
           <p className="title">Hey Ninja.</p>
-          <p className="sub-title">We like to stay on the move</p>
+          <p className="sub-title">We like to stay on the move.</p>
           <p>Ditch the desktop and check us out mobile!</p>
         </div>
       </div>

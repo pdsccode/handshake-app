@@ -18,7 +18,6 @@ import Image from '@/components/core/presentation/Image';
 import Button from '@/components/core/controls/Button';
 import ModalDialog from '@/components/core/controls/ModalDialog';
 import Feed from '@/components/core/presentation/Feed';
-import FeedComponent from '@/components/Comment/FeedComment';
 import BettingShake from './Shake';
 
 // css, icons
@@ -164,8 +163,6 @@ class FeedBetting extends React.Component {
             </div>
             {this.renderStatus()}
         </Feed>
-        {/* Feed Comment */}
-        <FeedComponent commentCount={commentCount} objectId={id} objectType={type} />
         {/* Shake */}
         {actionTitle && <Button block disabled={!isAction} onClick={() => { this.clickActionButton(actionTitle); }}>{actionTitle}</Button>}
         {/* Modal */}

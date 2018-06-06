@@ -10,6 +10,7 @@ import Dropdown from '@/components/core/controls/Dropdown';
 import BettingShake from './../Shake';
 import GroupBook from './../GroupBook';
 import ShareSocial from '@/components/core/presentation/ShareSocial';
+import FeedComponent from '@/components/Comment/FeedComment';
 // style
 import './Filter.scss';
 
@@ -120,7 +121,7 @@ class BettingFilter extends React.Component {
         if(selectedMatch){
             const foundMatch = this.foundMatch;
             if (foundMatch){
-                
+
                 const {outcomes} = foundMatch;
                 if(outcomes){
                     return outcomes.map((item) => ({ id: item.id, value: item.name, hid: item.hid}));
@@ -182,8 +183,9 @@ class BettingFilter extends React.Component {
         const outcomeHid = (selectedOutcome && selectedOutcome.hid >=0) ? selectedOutcome.hid : null;
         const matchName = (selectedMatch && selectedMatch.value) ? selectedMatch.value : null;
         const matchOutcome = (selectedOutcome && selectedOutcome.value) ? selectedOutcome.value : null;
-         
+
         console.log('Outcome Hid:', outcomeHid);
+        console.log("Outcome id", outcomeId);
         const defaultMatchId = this.defaultMatch ? this.defaultMatch.id : null;
         // console.log("Default Match:", defaultMatchId);
         // console.log('Default Outcome:', defaultOutcome);
@@ -232,15 +234,16 @@ class BettingFilter extends React.Component {
                     <GroupBook amountColor="#8BF275" bookList={this.bookListAgainst}/>
                     </div>
                     <div className="item">
-                    {<BettingShake 
+                    {<BettingShake
                         matchName={matchName}
                         matchOutcome={matchOutcome}
                         outcomeId={parseInt(outcomeId)} outcomeHid={parseInt(outcomeHid)}/>}
 
                     </div>
                 </div>
+                {/* Feed Comment */}
+                <FeedComponent objectId={outcomeId} />
             </div>
-
         );
     }
     callGetHandshakes(item){
