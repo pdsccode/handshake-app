@@ -146,7 +146,7 @@ export const fieldPhoneInput = customField(({
   }
   return (
     <span className="d-flex align-items-center">
-      <span style={{ width: '100px' }} className="mr-auto">
+      <span style={{ width: '110px' }} className="mr-auto">
         <SelectCountryCode countryCode={countryCode} onChange={newCountryCode => onChange(`${newCountryCode}-${phoneNumber}`)} />
       </span>
       <span className="ml-1"><input type="tel" placeholder={placeholder} className="form-control-custom form-control-custom-ex w-100 input-no-border" value={phoneNumber} onChange={e => onChange(`${countryCode}-${e.target.value}`)} /></span>

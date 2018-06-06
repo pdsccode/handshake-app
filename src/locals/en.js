@@ -13,7 +13,7 @@ export default {
   required: 'Required',
   ccExpireTemplate: 'MM/YY',
   securityCode: 'Security Code',
-  shakeNow: 'Shake Now',
+  shakeNow: 'Shake',
   offerHandShakeContent: '{offerType} {amount} {currency} for {total} {currency_symbol} in {payment_method}?',
   offerHandShakeContentMe: '{offerType} {amount} {currency} for {total} {currency_symbol} ({payment_method})',
   offerHandShakeContentMeDone: '{offerType} {amount} {currency} for {total} {currency_symbol} ({payment_method}) with a fee of {fee}%',
