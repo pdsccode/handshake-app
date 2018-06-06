@@ -211,7 +211,7 @@ class Component extends React.Component {
                 <label className="col-form-label mr-auto label-create">Name shop</label>
                 <div className='input-group'>
                   <Field
-                    name="amountSell"
+                    name="nameShop"
                     className="form-control-custom form-control-custom-ex w-100 input-no-border"
                     component={fieldInput}
                     placeholder={'Apple store'}
