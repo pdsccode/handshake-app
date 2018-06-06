@@ -155,7 +155,7 @@ class Wallet extends React.Component {
    async componentDidMount() {
 
     let listWallet = await MasterWallet.getMasterWallet();
-    console.log("listWallet", listWallet);
+    //console.log("listWallet", listWallet);
 
     // console.log("default", MasterWallet.getWalletDefault("ETH"))
 
@@ -166,7 +166,7 @@ class Wallet extends React.Component {
     }
     else{
       this.splitWalletData(listWallet)
-      console.log('update balance for lst wallet');
+      //console.log('update balance for lst wallet');
       await this.getListBalace(listWallet);
     }
      /*var btc = new Bitcoin();
@@ -224,7 +224,7 @@ class Wallet extends React.Component {
   creatSheetMenuItem(wallet){
     let obj = [];
       obj.push({
-        title: 'Send',
+        title: 'Transfer',
         handler: () => {
           this.setState({isRestoreLoading: false, walletSelected: wallet, inputAddressAmountValue: '', inputSendAmountValue: ''});
           this.toggleBottomSheet();
@@ -233,7 +233,7 @@ class Wallet extends React.Component {
       })
 
       obj.push({
-        title: 'Fill up',
+        title: 'Top up coins',
         handler: () => {
           this.setState({walletSelected: wallet});
           this.toggleBottomSheet();
@@ -243,7 +243,7 @@ class Wallet extends React.Component {
 
       if(!wallet.protected){
         obj.push({
-          title: 'Protected this wallet',
+          title: 'Secure this wallet',
           handler: () => {
             this.setState({walletSelected: wallet, stepProtected: 1, activeProtected: true});
             this.toggleBottomSheet();
@@ -276,7 +276,7 @@ class Wallet extends React.Component {
 
       if (!wallet.isReward){
         obj.push({
-          title: 'Make it default for {0} '.format(wallet.name) + (wallet.default ? "✓ " : ""),
+          title: 'Set as default {0} wallet '.format(wallet.name) + (wallet.default ? "✓ " : ""),
           handler: () => {
             wallet.default = !wallet.default;
             this.toggleBottomSheet();
@@ -351,13 +351,14 @@ class Wallet extends React.Component {
     else if (this.state.inputSendAmountValue == '' || this.state.inputSendAmountValue == 0)
       alert("Please input Amount value");
     else{
-      this.modalConfirmSendRef.open();      
+      this.modalConfirmSendRef.open();
     }
   }
   submitSendCoin=()=>{
     this.setState({isRestoreLoading: true});
+    this.modalConfirmSendRef.close();
       this.state.walletSelected.transfer(this.state.inputAddressAmountValue, this.state.inputSendAmountValue).then(success => {
-          console.log(success);
+          //console.log(success);
           this.setState({isRestoreLoading: false});
           if (success.hasOwnProperty('status')){
             if (success.status == 1){
@@ -543,7 +544,7 @@ class Wallet extends React.Component {
     MasterWallet.UpdateLocalStore(lstWalletTemp);
     this.modalProtectRef.close();
     this.splitWalletData(lstWalletTemp);
-    this.showSuccess("Your wallet is protected");
+    this.showSuccess("Your wallet has been secured!");
   }
 
   // For Qrcode:
@@ -606,10 +607,10 @@ class Wallet extends React.Component {
         </ModalDialog>
 
         {/* ModalDialog for transfer coin */}
-        <Modal title="Send" onRef={modal => this.modalSendRef = modal}>
+        <Modal title="Transfer" onRef={modal => this.modalSendRef = modal}>
           <SendWalletForm className="sendwallet-wrapper" onSubmit={this.sendCoin}>
           <div className="div-address-qr-code">
-            <Input name="to_address" placeholder="To address" required className="input-address-qr-code"
+            <Input name="to_address" placeholder="Receiving address" required className="input-address-qr-code"
               type="text" value={this.state.inputAddressAmountValue}
               onChange={evt => this.updateSendAddressValue(evt)}
             />
@@ -620,49 +621,49 @@ class Wallet extends React.Component {
               placeholder={ this.state.walletSelected ? "Amount ({0})".format(this.state.walletSelected.name) : "Amount "}
               onChange={evt => this.updateSendAmountValue(evt)}
               />
-            <Button isLoading={this.state.isRestoreLoading}  type="submit" block={true}>Send</Button>
+            <Button isLoading={this.state.isRestoreLoading}  type="submit" block={true}>Transfer</Button>
           </SendWalletForm>
         </Modal>
 
-        {/*Dialog confirm transfer coin*/}        
+        {/*Dialog confirm transfer coin*/}
         <ModalDialog title="Confirmation" onRef={modal => this.modalConfirmSendRef = modal}>
-          <div className="bodyConfirm"><span>Are you sure you want to send out {this.state.inputSendAmountValue}?</span></div>          
+          <div className="bodyConfirm"><span>Are you sure you want to transfer out {this.state.inputSendAmountValue} {this.state.walletSelected ? this.state.walletSelected.name : ""}?</span></div>
           <div className='bodyConfirm'>
-          <Button className="left" cssType="danger" onClick={this.submitSendCoin} >Yes</Button>
+          <Button className="left" cssType="danger" onClick={this.submitSendCoin} >Confirm</Button>
             <Button className="right" cssType="secondary" onClick={() => { this.modalConfirmSendRef.close(); }}>Cancel</Button>
           </div>
         </ModalDialog>
 
-        <Modal title="Fill up" onRef={modal => this.modalFillRef = modal}>
-          <FeedCreditCard buttonTitle="Fill Up" currencyForced={this.state.walletSelected ? this.state.walletSelected.name : ""}
+        <Modal title="Top up coins" onRef={modal => this.modalFillRef = modal}>
+          <FeedCreditCard buttonTitle="Top up coins" currencyForced={this.state.walletSelected ? this.state.walletSelected.name : ""}
             callbackSuccess={this.afterWalletFill}
             addressForced={this.state.walletSelected ? this.state.walletSelected.address : ""}
           />
         </Modal>
 
-        <Modal title="Protect your wallet" onClose={this.closeProtected}  onRef={modal => this.modalProtectRef = modal}>
+        <Modal title="Secure your wallet" onClose={this.closeProtected}  onRef={modal => this.modalProtectRef = modal}>
           <WalletProtect onCopy={this.onCopyProtected} step={this.state.stepProtected} active={this.state.activeProtected} wallet={this.state.walletSelected} callbackSuccess={() => {this.successWalletProtect(this.state.walletSelected)}} />
         </Modal>
 
 
-        <Modal title="History of transactions" onRef={modal => this.modalHistoryRef = modal}>
+        <Modal title="Transaction history" onRef={modal => this.modalHistoryRef = modal}>
           <WalletHistory wallet={this.state.walletSelected} transactions={this.state.transactions} />
         </Modal>
 
 
         {/* Modal for Backup wallets : */}
         <Modal title="Backup wallets" onRef={modal => this.modalBackupRef = modal}>
-          <div className="bodyTitle">This data is the only way to restore your wallets. Save them somewhere safe and secret</div>
+          <div className="bodyTitle">This data is the only way to restore your wallets. Keep it secret, keep it safe.</div>
           <div className='bodyBackup'>
           <textarea readOnly onClick={ this.handleChange } onFocus={ this.handleFocus }
            value={ this.state.walletsData ? JSON.stringify(this.state.walletsData) : ''}/>
-          <Button className="button" cssType="danger" onClick={() => {Clipboard.copy(JSON.stringify(this.state.walletsData)); this.modalBackupRef.close(); this.showToast('Copied to clipboard'); }} >Copy it somewhere safe</Button>
+          <Button className="button" cssType="danger" onClick={() => {Clipboard.copy(JSON.stringify(this.state.walletsData)); this.modalBackupRef.close(); this.showToast('Recovery data copied to clipboard.'); }} >Copy it somewhere safe</Button>
           </div>
         </Modal>
 
         {/* Modal for Restore wallets : */}
         <Modal title="Restore wallets" onRef={modal => this.modalRestoreRef = modal}>
-          <div className="bodyTitle">This data is the only way to restore your wallets.</div>
+          <div className="bodyTitle">Please enter your top secret recovery data to restore your wallet.</div>
           <div className='bodyBackup'>
           <textarea required
             value={this.state.inputRestoreWalletValue}
@@ -677,20 +678,20 @@ class Wallet extends React.Component {
 
 
         {/* Modal for Copy address : */}
-        <ModalDialog title="Wallet Address" onRef={modal => this.modalShareAddressRef = modal}>
+        <ModalDialog title="Wallet address" onRef={modal => this.modalShareAddressRef = modal}>
           <div className="bodyTitle"><span>Share your public wallet address to receive { this.state.walletSelected ? this.state.walletSelected.name : ""} </span></div>
           <div className={['bodyBackup bodySahreAddress']}>
 
           <QRCode value={ this.state.walletSelected ? this.state.walletSelected.address : ""} />
           <div className="addressDivPopup">{ this.state.walletSelected ? this.state.walletSelected.address : ""}</div>
-          <Button className="button" cssType="success" onClick={() => {Clipboard.copy(this.state.walletSelected.address);this.modalShareAddressRef.close(); this.showToast('Copied to clipboard');}} >
-            Copy
+          <Button className="button" cssType="success" onClick={() => {Clipboard.copy(this.state.walletSelected.address);this.modalShareAddressRef.close(); this.showToast('Wallet address copied to clipboard.');}} >
+            Copy to share
           </Button>
           </div>
         </ModalDialog>
 
         {/* Modal for Create/Import wallet : */}
-        <Modal title="Create Wallet" onRef={modal => this.modalCreateWalletRef = modal}>
+        <Modal title="Create new wallet" onRef={modal => this.modalCreateWalletRef = modal}>
         <Row className="list">
           <Header title="Select coins" hasLink={false} />
         </Row>
@@ -706,16 +707,16 @@ class Wallet extends React.Component {
             defaultId={1}
             source={[{"id": 1, "value": "Random"}, {"id": 2, "value": "Specify recovery Phrase"}]}
             onItemSelected={(item) =>
-                {                
+                {
                   this.setState({
                     walletKeyDefaultToCreate: item.id
-                  });                
+                  });
                 }
               }
           />
 
           { this.state.walletKeyDefaultToCreate == 2 ?
-            <Input name="phrase" placeholder="Type 12 words mnemonic" required
+            <Input name="phrase" placeholder="Type your 12 secret recovery words." required
             className={this.state.erroValueBackup ? 'input12Phrase error' : 'input12Phrase'}
                 onChange={evt => this.update12PhraseValue(evt)}/>
             : ""
@@ -736,7 +737,7 @@ class Wallet extends React.Component {
 
         {/* Render list wallet: */}
         <Row className="list">
-          <Header title="Main net wallets" hasLink={false} linkTitle="+ Add new" onLinkClick={this.onLinkClick} />
+          <Header title="Mainnet wallets" hasLink={false} linkTitle="+ Add new" onLinkClick={this.onLinkClick} />
         </Row>
         <Row className="list">
           {this.listMainWalletBalance}
@@ -750,7 +751,7 @@ class Wallet extends React.Component {
         </Row>
 
         <Row className="list">
-          <Header title="Test net wallets" hasLink={false} />
+          <Header title="Testnet wallets" hasLink={false} />
         </Row>
         <Row className="list">
           {this.listTestWalletBalance}

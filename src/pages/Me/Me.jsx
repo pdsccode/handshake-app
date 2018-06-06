@@ -40,6 +40,7 @@ class Me extends React.Component {
     if (JSON.stringify(nextProps.firebaseUser) !== JSON.stringify(this.props.firebaseUser) && this.props.firebaseUser.users) {
       let nextUser = nextProps.firebaseUser.users[this.props.auth?.profile?.id];
       let prevUser = this.props.firebaseUser.users[this.props.auth?.profile?.id];
+      console.log("Firebase Data Sa test:", nextUser);
       if (JSON.stringify(nextUser.offers) !== JSON.stringify(prevUser.offers)) {
         this.props.fireBaseExchangeDataChange(nextUser.offers);
       }
@@ -52,7 +53,6 @@ class Me extends React.Component {
 
   getListOfferPrice = () => {
     this.props.getListOfferPrice({
-      BASE_URL: API_URL.EXCHANGE.BASE,
       PATH_URL: API_URL.EXCHANGE.GET_LIST_OFFER_PRICE,
       qs: { fiat_currency: this.props?.app?.ipInfo?.currency },
       successFn: this.handleGetPriceSuccess,
@@ -83,7 +83,7 @@ class Me extends React.Component {
               <Image className="avatar" src={AvatarSVG} alt="avatar" />
               <div className="text">
                 <strong>My Profile</strong>
-                <p>Vertify your email, phone numbers</p>
+                <p>Verify your email address and phone numbers.</p>
               </div>
               <div className="arrow">
                 <Image src={ExpandArrowSVG} alt="arrow" />
@@ -108,7 +108,7 @@ class Me extends React.Component {
                   }
                 })
               ) : (
-                <NoData />
+                <NoData message="Create a Shake to get started!" />
               )
             }
           </Col>
@@ -135,6 +135,7 @@ const mapDispatch = ({
   loadMyHandshakeList,
   getListOfferPrice,
   fireBaseExchangeDataChange,
+  fireBaseBettingChange
 });
 
 export default connect(mapState, mapDispatch)(Me);

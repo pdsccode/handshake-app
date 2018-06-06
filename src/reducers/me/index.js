@@ -1,6 +1,7 @@
 import Handshake from '@/models/Handshake';
 import {ACTIONS} from './action';
 import {HANDSHAKE_EXCHANGE_CC_STATUS_VALUE, HANDSHAKE_EXCHANGE_STATUS_VALUE} from "@/constants";
+const firebase = require('firebase');
 
 const handleListPayload = payload => payload.map(handshake => Handshake.handshake(handshake));
 
@@ -78,17 +79,30 @@ const meReducter = (state = {
 
     case ACTIONS.FIREBASE_BETTING_DATA_CHANGE: {
       const listBettingStatus = action.payload;
-      const myList = state.list;
+      let myList = state.list;
     
-
-      listBettingStatus.forEach(element => {
-        const {id, status, result} = element;
-        const handshakeItem = myList.find(item => item.id === id);
-        handshakeItem.status = status;
-        handshakeItem.result = result;
-        //TO DO: delete record after update status 
-
+      Object.keys(listBettingStatus).forEach((key) => {
+        const element = listBettingStatus[key];
+        const {id, status_i, result_i} = element;
+        console.log('New id, status, result:', id, status_i, result_i);
+        for (let handshake of myList) {
+          if (handshake.id === id) {
+            console.log('Found handshake', handshake);
+            handshake.status = status_i;
+            handshake.result = result_i;
+            break;
+            console.log('New handshake:', handshake);
+          }
+         
+        }
+        // const handshakeItem = myList.find(item => item.id === id);
+        // handshakeItem.status = status_i;
+        // handshakeItem.result = result_i;
+        // //TO DO: delete record after update status 
+        
       });
+      console.log("My List:", myList);
+      
 
       return {
         ...state,

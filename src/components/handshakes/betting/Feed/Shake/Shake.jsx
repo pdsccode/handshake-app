@@ -67,7 +67,6 @@ class BetingShake extends React.Component {
     this.onToggleChange = ::this.onToggleChange;
   }
   componentDidMount(){
-    console.log('Props:', this.props);
     
   }
   componentWillReceiveProps(nextProps){
@@ -78,6 +77,7 @@ class BetingShake extends React.Component {
     // extraData["event_predict"] = matchOutcome;
     // console.log('componentWillReceiveProps Extra Data: ', extraData);
     // this.setState({extraData})
+
   }
  
 
@@ -92,15 +92,18 @@ class BetingShake extends React.Component {
     // this.props.onSubmitClick(amount);
     const side = parseInt(this.toggleRef.value);
     const balance = await BetHandshakeHandler.getBalance();
+    const estimatedGas = await bettinghandshake.getEstimateGas();
+    const total = amount + parseFloat(estimatedGas);
+
     console.log('Amount:', amount);
     console.log('Props:', this.props);
     var message = null;
     
 
-    
+      
     if(matchName && matchOutcome){
         if(amount > 0){
-          if(amount <= parseFloat(balance)){
+          if(total <= parseFloat(balance)){
             if(isShowOdds){
               if(odds >=1){
                 this.initHandshake(amount, odds);
@@ -120,6 +123,7 @@ class BetingShake extends React.Component {
     }else {
       message = MESSAGE.CHOOSE_MATCH;
     }
+    
     
   
     //if(matchName && matchOutcome && amount <= parseFloat(balance) && amount > 0){
@@ -247,13 +251,15 @@ class BetingShake extends React.Component {
       label: 'Amount',
       className: 'amount',
       placeholder: '0.00',
+      type: 'tel',
     };
     const oddsField = {
       id: 'odds',
       name: 'odds',
       label: 'Odds',
       placeholder: '0-0',
-      isShowCurrency: false
+      isShowCurrency: false,
+      type: 'tel',
     };
 
     return (

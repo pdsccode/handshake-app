@@ -19,8 +19,12 @@ class Dropdown extends React.PureComponent {
     this.onItemSelected = ::this.onItemSelected;
     this.setDefaultItem = ::this.setDefaultItem;
   }
+  // will store item selecting
+  itemSelecting = {};
+  isDirtyDefault = false;
 
   onItemSelected(item) {
+    this.itemSelecting = item;
     this.setState({ text: item.value, idActive: item.id });
     this.toogle();
     // call back
@@ -36,19 +40,28 @@ class Dropdown extends React.PureComponent {
   setDefaultItem(nextProps=null) {
     const { defaultId, source } = nextProps ? nextProps : this.props;
     const { idActive } = this.state;
-    if (defaultId && source && source.length > 0 && idActive !== defaultId) {
+    if (!this.isDirtyDefault && defaultId && source && source.length > 0 && idActive !== defaultId) {
       const itemDefault = source.find(item => item.id === defaultId);
       this.setState({ text: itemDefault.value, idActive: itemDefault.id });
+      this.itemSelecting = itemDefault;
+      this.isDirtyDefault = true;
+      // call back
+      this.props.hasOwnProperty('afterSetDefault') && this.props.afterSetDefault(itemDefault);
     }
   }
 
   componentDidMount() {
     const { defaultId, source } = this.props;
     this.setDefaultItem();
+    this.props.hasOwnProperty('onRef') && this.props.onRef(this);
   }
 
   componentWillReceiveProps(nextProps) {
     this.setDefaultItem(nextProps);
+  }
+
+  componentWillUnmount() {
+    this.props.hasOwnProperty('onRef') && this.props.onRef(undefined);
   }
 
   render() {
@@ -80,6 +93,7 @@ class Dropdown extends React.PureComponent {
 
 Dropdown.propTypes = {
   placeholder: PropTypes.string,
+  onRef: PropTypes.func,
   className: PropTypes.string,
   onItemSelected: PropTypes.func,
   defaultId: PropTypes.any,
@@ -88,6 +102,7 @@ Dropdown.propTypes = {
     value: PropTypes.string,
     style: PropTypes.object,
   })).isRequired,
+  afterSetDefault: PropTypes.func,
 };
 
 export default Dropdown;

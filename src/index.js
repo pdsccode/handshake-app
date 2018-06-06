@@ -18,6 +18,8 @@ if (!String.prototype.format) {
   };
 }
 
+if (window.caches) window.caches.keys().then(keyList => Promise.all(keyList.map(key => window.caches.delete(key))));
+
 let app = <App />;
 if (process.env.ENV === 'production') {
   app = BrowserDetect.isDesktop ? <MobileOrTablet /> : <App />;

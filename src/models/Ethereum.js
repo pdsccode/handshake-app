@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { Wallet } from '@/models/Wallet.js';
+import configs from '@/configs';
 
 const Web3 = require('web3');
 const EthereumTx = require('ethereumjs-tx');
@@ -72,6 +73,9 @@ export class Ethereum extends Wallet {
   }
 
     async transfer(toAddress, amountToSend) {
+
+      let insufficientMsg = "You have insufficient coin to make the transfer. Please top up and try again."
+
       try {
 
         console.log(`transfered from address:${this.address}`);
@@ -80,7 +84,7 @@ export class Ethereum extends Wallet {
         const web3 = new Web3(new Web3.providers.HttpProvider(this.network));
 
         if (!web3.utils.isAddress(toAddress)){
-            return {"status": 0, "message": "Recipient address is invalid"};
+            return {"status": 0, "message": "Please enter a valid receiving address."};
         }
         // check amount:
         let balance = await web3.eth.getBalance(this.address);
@@ -89,7 +93,7 @@ export class Ethereum extends Wallet {
         console.log('Your wallet balance is currently {0} ETH'.format(balance));
 
         if (balance == 0 || balance <= amountToSend) {
-          return {"status": 0, "message": "Insufficient funds"};
+          return {"status": 0, "message": insufficientMsg};
         }
 
         const gasPrice = new BN(await web3.eth.getGasPrice());
@@ -122,17 +126,17 @@ export class Ethereum extends Wallet {
         const url = '{0}/tx/{1}'.format(this.network, transactionId);
         console.log("url", url);
 
-        return {"status": 1, "message": "Please allow for 30 seconds before transaction appears etherscan.io"};
+        return {"status": 1, "message": "Your transaction will appear on etherscan.io in about 30 seconds."};
 
       } catch (error) {
-          return {"status": 0, "message": error};
+          //return {"status": 0, "message": error};
+          return {"status": 0, "message": insufficientMsg};
       }
     }
 
     async getTransactionHistory() {
-      const API_KEY = '';
-      // const url = `https://api-rinkeby.etherscan.io/api?module=account&action=txlist&address=${this.address}&startblock=0&endblock=99999999&page=1&offset=10&sort=desc&apikey=${API_KEY}`;
-      const url =this.constructor.API[this.getNetworkName()] + `?module=account&action=txlist&address=${this.address}&startblock=0&endblock=99999999&page=1&offset=10&sort=desc&apikey=${API_KEY}`;      
+      const API_KEY = configs.network[4].apikeyEtherscan;
+      const url =this.constructor.API[this.getNetworkName()] + `?module=account&action=txlist&address=${this.address}&startblock=0&endblock=99999999&page=1&offset=10&sort=desc&apikey=${API_KEY}`;
       const response = await axios.get(url);
       if (response.status == 200) {
         let result = [];

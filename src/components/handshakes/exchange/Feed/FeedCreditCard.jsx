@@ -56,8 +56,8 @@ class FeedCreditCard extends React.Component {
       rfChange(nameFormCreditCard, 'currency', currencyForced)
     }
 
-    this.props.getCcLimits({ BASE_URL: API_URL.EXCHANGE.BASE, PATH_URL: API_URL.EXCHANGE.GET_CC_LIMITS});
-    this.props.getUserCcLimit({ BASE_URL: API_URL.EXCHANGE.BASE, PATH_URL: API_URL.EXCHANGE.GET_USER_CC_LIMIT});
+    this.props.getCcLimits({ PATH_URL: API_URL.EXCHANGE.GET_CC_LIMITS});
+    this.props.getUserCcLimit({ PATH_URL: API_URL.EXCHANGE.GET_USER_CC_LIMIT});
 
     this.getCryptoPriceByAmount(0);
 
@@ -78,7 +78,6 @@ class FeedCreditCard extends React.Component {
     var data = {amount: amount, currency: cryptoCurrency};
 
     this.props.getCryptoPrice({
-      BASE_URL: API_URL.EXCHANGE.BASE,
       PATH_URL: API_URL.EXCHANGE.GET_CRYPTO_PRICE,
       qs: data,
       successFn: this.handleGetCryptoPriceSuccess,
@@ -127,7 +126,6 @@ class FeedCreditCard extends React.Component {
       };
       // console.log('handleCreateCCOrder',paramsObj);
       this.props.createCCOrder({
-        BASE_URL: API_URL.EXCHANGE.BASE,
         PATH_URL: API_URL.EXCHANGE.CREATE_CC_ORDER,
         data: paramsObj,
         METHOD: 'POST',
@@ -219,6 +217,21 @@ class FeedCreditCard extends React.Component {
 
   handleSubmit = (values) => {
     const { handleSubmit } = this.props;
+    const { userCcLimit, cryptoPrice } = this.props;
+
+    const amoutWillUse = new BigNumber(userCcLimit.amount).plus(new BigNumber(cryptoPrice.fiatAmount)).toNumber();
+
+    if (this.state.amount && userCcLimit && userCcLimit.limit < amoutWillUse) {
+      this.props.showAlert({
+        message: <div className="text-center"><FormattedMessage id="overCCLimit" values={{ currency: FIAT_CURRENCY_SYMBOL, limit: formatMoney(userCcLimit.limit), amount: formatMoney(userCcLimit.amount) }}/></div>,
+        timeOut: 3000,
+        type: 'danger',
+        // callBack: this.handleBuySuccess
+      });
+
+      return;
+    }
+
     if (handleSubmit) {
       handleSubmit(values);
     } else {
@@ -334,8 +347,8 @@ class FeedCreditCard extends React.Component {
                   )
                 }
                 <div className="form-group pt-2 d-flex">
-                  <label className="col-form-label"><FormattedMessage id="buy"/></label>
-                  <div className="mx-2">
+                  <label className="col-form-label headline"><h4><FormattedMessage id="buy"/></h4></label>
+                  <div className="mx-2 pt-1">
                     <Field
                       name="amount"
                       // type="number"
@@ -343,16 +356,21 @@ class FeedCreditCard extends React.Component {
                       validate={[required]}
                       component={fieldCleave}
                       propsCleave={{
-                        placeholder: intl.formatMessage({id: 'amount'}),
-                        options: { numeral: true, delimiter: '' },
+                        placeholder: intl.formatMessage({ id: 'amount' }),
+                        options: { numeral: true, delimiter: '', numeralDecimalScale: 8 },
+                        style: {
+                          fontSize: '26px',
+                          fontWeight: '600',
+                        }
                       }}
                       className="form-control-custom form-control-custom-ex d-inline-block w-100"
                       onChange={this.onAmountChange}
                     />
                   </div>
-                  <span className="d-inline-block ml-auto" style={{ width: '368px' }}>
+                  <span className="d-inline-block ml-auto" style={{ maxWidth: '368px', minWidth: '128px' }}>
                     <Field
                       name="currency"
+                      containerClass="radio-container-old"
                       component={fieldRadioButton}
                       list={currencyForced ? CRYPTO_CURRENCY_LIST.filter(c => c.value === currencyForced) : CRYPTO_CURRENCY_LIST}
                       color={'#fff'}
@@ -361,7 +379,7 @@ class FeedCreditCard extends React.Component {
                   </span>
                 </div>
                 <div className="pb-2">
-                  <span><FormattedMessage id="askUsingCreditCard" values={{ fiatCurrency: fiatCurrency, total: formatMoney(total) }} /></span>
+                  <h4 className="headline"><FormattedMessage id="askUsingCreditCard" values={{ fiatCurrency: fiatCurrency, total: formatMoney(total) }} /></h4>
                 </div>
                 {
                   amount && (

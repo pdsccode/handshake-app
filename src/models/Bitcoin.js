@@ -63,10 +63,12 @@ export class Bitcoin extends Wallet {
 
     async transfer(toAddress, amountToSend) {
 
+      let insufficientMsg = "You have insufficient coin to make the transfer. Please top up and try again."
+
       try {
 
         if (!bitcore.Address.isValid(toAddress)){
-          return {"status": 0, "message": "Recipient address is invalid"};
+          return {"status": 0, "message": "Please enter a valid receiving address."};
         }
 
         console.log(`transfered from address:${this.address}`);
@@ -81,7 +83,7 @@ export class Bitcoin extends Wallet {
         console.log('Your wallet balance is currently {0} ETH'.format(balance));
 
         if (!balance || balance == 0 || balance <= amountToSend) {
-          return {"status": 0, "message": "Insufficient funds"};
+          return {"status": 0, "message": insufficientMsg};
         }
 
         // each BTC can be split into 100,000,000 units. Each unit of bitcoin, or 0.00000001 bitcoin, is called a satoshi
@@ -101,7 +103,7 @@ export class Bitcoin extends Wallet {
 
           console.log('utxos', utxos);
 
-          if (utxos) {
+          if (utxos != false) {
             data.utxos = utxos;
             const fromAddress = this.address;
             const privateKey = this.privateKey;
@@ -118,16 +120,17 @@ export class Bitcoin extends Wallet {
 
             console.log(txHash);
 
-            return {"status": 1, "message": "Please allow for 30 seconds before transaction appears blockchain"};
+            return {"status": 1, "message": "Your transaction will appear on blockchain in about 30 seconds."};
           }
           else{
-            return {"status": 0, "message": "Insufficient funds"};
+            return {"status": 0, "message": insufficientMsg};
           }
 
 
         }
       } catch (error) {
-        return {"status": 0, "message": error};
+        // return {"status": 0, "message": error};
+        return {"status": 0, "message": "Insufficient funds"};
       }
 
     }
@@ -149,7 +152,7 @@ export class Bitcoin extends Wallet {
       const utxos = await this.retrieveUtxos();
       if (utxos && utxos.length > 0) {
         const result = this.findUtxos(utxos, 0, amount, []);
-        if (!result) { return 'Insufficent Balance'; }
+        if (!result) return false;
         return result;
       }
       return false;

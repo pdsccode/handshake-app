@@ -36,15 +36,13 @@ class WalletProtect extends React.Component {
     (
       <div className="protectwallet-wrapper" >
           <div className="msg1">
-            Storing a passphrase will allow you to recover your funds
-            if your phone is ever lost or stolen.
+          This passphrase will allow you to recover your funds if your phone is ever lost or stolen.
           </div>
           <div className="msg2">
-            It is important to store this passphrase securely where nobody else can access it,
-            such as on a piece of paper or in a password manager.
+          Please make sure nobody has access to your passphrase. You can use a password manager or write it down and hide it under your mattress.
           </div>
           <div className="msg3">
-            <Checkbox name="checkBoxProtected" label="I understand that if I lose my passphrase, I will be unable to recover access to my account."
+            <Checkbox name="checkBoxProtected" label="I understand that if I lose my passphrase, I lose access to my account."
               checked={this.state.step1_confirm}
               onClick={() => { this.setState({step1_confirm: !this.state.step1_confirm}); }} />
           </div>
@@ -61,7 +59,7 @@ class WalletProtect extends React.Component {
     (
       <div className="protectwallet-wrapper" >
           <div className="msg1">
-            Carefully write down the words. Don’t email it or screenshot it.
+            Record these words carefully. Don't email it or screenshot it.
           </div>
           <div className="pass_phrase">
             {/* fill pass phrase */}
@@ -82,7 +80,7 @@ class WalletProtect extends React.Component {
     (
       <div className="protectwallet-wrapper" >
           <div className="msg1">
-            Tap the words to put them next to each other in the correct order.
+          Tap to put these words in the correct order.
           </div>
           <div className="confirm_pass_phrase">
             {this.state.arr_confirm.map((str) => {
@@ -199,10 +197,10 @@ class WalletProtect extends React.Component {
         {this.showStep1}
         {this.showStep2}
         {this.showStep3}
-        <ModalDialog title="Not correct" onRef={modal => this.modalConfirmRef = modal}>
-          <div className="wrong-pass-phrase">The ordered of words you typed is not correct. Please try again.</div>
+        <ModalDialog title="Try again" onRef={modal => this.modalConfirmRef = modal}>
+          <div className="wrong-pass-phrase">These words are in the wrong order. Please try again.</div>
           <div className="text-center p-3 ">
-            <button className="btn-block btn btn-secondary p-2" onClick={this.tryDoStep3} >Try again</button>
+            <button className="btn-block btn btn-secondary p-2" onClick={this.tryDoStep3} >OK</button>
           </div>
         </ModalDialog>
       </div>

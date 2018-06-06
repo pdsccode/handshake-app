@@ -71,7 +71,7 @@ class BettingCreate extends React.PureComponent {
   static defaultProps = {
     item: {
       "backgroundColor": "#332F94",
-      "desc": "[{\"key\": \"event_bet\",\"suffix\": \"ETH\",\"label\": \"Amount\", \"placeholder\": \"10\", \"type\": \"number\", \"className\": \"betField\"}] [{\"key\": \"event_odds\", \"label\": \"Odds\", \"placeholder\": \"10\",\"prefix\": \"1 -\", \"className\": \"oddField\"}]",
+      "desc": "[{\"key\": \"event_bet\",\"suffix\": \"ETH\",\"label\": \"Amount\", \"placeholder\": \"10\", \"type\": \"number\", \"className\": \"betField\"}] [{\"key\": \"event_odds\", \"label\": \"Odds\", \"placeholder\": \"10\",\"prefix\": \"1 -\", \"className\": \"oddField\", \"type\": \"number\"}]",
       "id": 18,
       "message": null,
       "name": "Bet",
@@ -176,13 +176,18 @@ get matchResults(){
     //const fromAddress = "0x54CD16578564b9952d645E92b9fa254f1feffee9";
     let balance = await BetHandshakeHandler.getBalance();
     balance = parseFloat(balance);
+    const estimatedGas = await bettinghandshake.getEstimateGas();
+    console.log('Estimate Gas:', estimatedGas);
     const eventBet = parseFloat(dict.event_bet);
     console.log('Event Bet:', eventBet);
+    const total = eventBet + parseFloat(estimatedGas);
+    console.log("Total:", total);
 
     const fromAddress = address;
+    
     if(selectedMatch && selectedOutcome){
       if(eventBet > 0){
-        if(eventBet <= balance){
+        if(total <= balance){
           this.initHandshake(extraParams, fromAddress);
         }else {
           this.props.showAlert({
@@ -203,6 +208,7 @@ get matchResults(){
         }
       });
     }
+    
 
     // if(selectedMatch && selectedOutcome && eventBet > 0 && eventBet <= balance){
     //   this.initHandshake(extraParams, fromAddress);
@@ -284,7 +290,7 @@ get matchResults(){
         name={key}
         style={style}
         component={InputField}
-        type="text"
+        type="tel"
         //min="0.0001"
         //step="0.0002"
         placeholder={placeholder}
