@@ -66,6 +66,11 @@ class Profile extends React.Component {
     });
   }
 
+  componentDidMount() {
+    // todo verify email with link
+    console.log(window.location.href);
+  }
+
   updateProfile(data = {}) {
     return new Promise((resolve, reject) => {
       const params = new URLSearchParams();
