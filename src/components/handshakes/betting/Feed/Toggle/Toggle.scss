@@ -19,6 +19,9 @@
     &:hover {
       cursor: pointer;
     }
+    @media (max-width: 350px) {
+      font-size: rem-calc(10px);
+    }
   }
   .active {
     background: #8bf275;
