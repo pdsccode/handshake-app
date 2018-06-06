@@ -10,16 +10,19 @@
       &:hover {
         cursor: pointer;
       }
-      .label,
-      .extend {
-        width: 50%;
-      }
       .label {
+        width: 90%;
         margin: 0;
         font-size: rem-calc(18px);
         color: $text-black;
+        span {
+          display: block;
+          font-size: rem-calc(14px);
+          color: $oslo-gray;
+        }
       }
       .extend {
+        width: 10%;
         text-align: right;
         img {
           transform: rotate(-90deg);

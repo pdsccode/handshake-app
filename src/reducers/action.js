@@ -23,7 +23,7 @@ export const createAPI = INIT => ({
       dispatch({ type: `${INIT}_SUCCESS`, payload: response.data, ...more });
       if (successFn) successFn(response.data);
     } else {
-      dispatch({ type: `${INIT}_FAILED` });
+      dispatch({ type: `${INIT}_FAILED`, payload: response.data });
       if (errorFn) errorFn();
     }
   }).catch((e) => {

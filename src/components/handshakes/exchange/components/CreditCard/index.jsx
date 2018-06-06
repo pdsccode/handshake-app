@@ -77,7 +77,7 @@ class Component extends React.Component {
               // }
               propsCleave={{
                 // id: `card-number-${this.lastUniqueId()}`,
-                placeholder: intl.formatMessage({id: 'required'}),
+                placeholder: '4111 1111 1111 1111',
                 options: {
                   creditCard: true,
                   onCreditCardTypeChanged: this.handleCCTypeChanged
