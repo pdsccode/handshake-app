@@ -744,7 +744,7 @@ class Wallet extends React.Component {
               <InputGroup>
                   <InputGroupAddon addonType="prepend">Amount</InputGroupAddon>
                   <Input2 
-                  placeholder={ this.state.walletSelected ? "({0})".format(this.state.walletSelected.name) : ""}
+                  placeholder={ this.state.walletSelected ? "{0}".format(this.state.walletSelected.name) : ""}
                   value={this.state.inputSendAmountValue} onChange={evt => this.updateSendAmountValue(evt)}/>
                 </InputGroup>
 
