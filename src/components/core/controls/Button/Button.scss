@@ -9,12 +9,6 @@ $secondary : #b7b7b7;
   color: $white;
   letter-spacing: 0;
   text-align: center;
-  .btn-primary {
-    color: $deep-blue;
-  }
-  .btn-secondary {
-    color: $secondary;
-  }
   span {
     display: inline-block;
     vertical-align: middle;
@@ -23,4 +17,15 @@ $secondary : #b7b7b7;
       display: block;
     }
   }
+}
+
+.btn-primary {
+  background-color: $titan-black;
+  &:hover {
+    background-color: $titan-black;
+    opacity: 0.8;
+  }
+}
+.btn-secondary {
+  background-color: $secondary;
 }
