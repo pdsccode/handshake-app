@@ -1157,7 +1157,7 @@ class FeedExchange extends React.PureComponent {
       distanceKm = getDistanceFromLatLonInKm(latitude, longitude, latLng[0], latLng[1])
       distanceMiles = distanceKm * 0.621371
     }
-    const isCreditCard = offer.feedType === 'instant'
+    const isCreditCard = offer.feedType === EXCHANGE_FEED_TYPE.INSTANT;
     return (
       <div>
         {
@@ -1185,7 +1185,7 @@ class FeedExchange extends React.PureComponent {
               </div>
             )}
           </div>
-          <div className="mb-2">About {buyerSeller}</div>
+          {!isCreditCard && (<div className="mb-2">About {buyerSeller}</div>)}
           {/*<span>status: {status}</span><br></br>*/}
           {/*<span>userType: {this.userType}</span><br></br>*/}
           {
