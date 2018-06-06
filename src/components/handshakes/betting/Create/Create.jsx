@@ -310,37 +310,6 @@ get matchResults(){
     );
   }
 
-  // renderItem(field, index) {
-  //   const item = JSON.parse(field.replace(regexReplace, ''));
-  //   const {key, placeholder, type, label, className,suffix,prefix} = item;
-  //   let itemRender = this.renderInput(item, index);
-  //   switch (type) {
-  //     case 'date':
-  //       itemRender = this.renderDate(item, index);
-  //       break;
-  //     case 'number':
-  //       itemRender = this.renderNumber(item,{width:'100%', paddingRight:40} );
-  //       break;
-  //     default:
-  //       itemRender = this.renderInput(item, index);
-  //   }
-
-  //   // return (
-  //   //       <Col className="col-6">
-  //   //         <Row><label>{label || placeholder}</label></Row>
-  //   //         <Row><Col>{itemRender}</Col></Row>
-  //   //       </Col>
-
-  //   //     );
-  //   return (
-  //     <Col className="col-6">
-  //         <Row><label>{label || placeholder}</label></Row>
-  //         <Row>
-  //           <Col  style={{position:'relative'}}>{prefix&&<label style={{backgroundColor:'green'}}>{prefix}</label>}{itemRender}{suffix&&<label style={{position:'absolute',right:0}}>{suffix}</label>}</Col>
-  //         </Row>
-  //     </Col>
-  //       );
-  // }
   renderLabelForItem=(text,{marginLeft,marginRight})=>{
     return text&&<label className="itemLabel" style={{display:'flex',color:'white',fontSize:16,marginLeft:marginLeft,marginRight:marginRight,alignItems:'center'}}>{text}</label>;
   }
@@ -499,22 +468,6 @@ get matchResults(){
     console.log('initHandshakeFailed', error);
   }
 
-
-  //Blockchain
-  /*
-  async initBet(escrow, odd, eventDate){
-
-    const address = "0x54CD16578564b9952d645E92b9fa254f1feffee9";
-    const privateKey = "9bf73320e0bcfd7cdb1c0e99f334d689ef2b6921794f23a5bffd2a6bb9c7a3d4";
-    const acceptors = [];
-    const goal = escrow*odd;
-    const currentDate = new Date();
-    const deadline = (eventDate.getTime() / 1000 - currentDate.getTime() / 1000);
-    const offchain = 'abc1';
-    const data = await neuron.bettingHandshake.initBet(address, privateKey, acceptors, goal, escrow, deadline, offchain);
-    console.log('Init Betting:', data);
-
-  }*/
 }
 const mapState = state => ({
   matches: state.betting.matches,

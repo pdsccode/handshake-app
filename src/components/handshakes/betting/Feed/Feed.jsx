@@ -128,9 +128,10 @@ class FeedBetting extends React.Component {
     const text = "Match is ongoing...";
     //const textColor = status == 2?'white':'#35B371';
     const textColor = 'white';
+    const label = statusTitle ? statusTitle : '';
     //const backgroundColorWithStatus = status == 2? 'ffffff25' :'#00000030';
     const backgroundColorWithStatus = '#ffffff25';
-    return <Button style={{backgroundColor:backgroundColorWithStatus , borderColor:'transparent',color:textColor}}  block disabled >{statusTitle}</Button>;
+    return <Button style={{backgroundColor:backgroundColorWithStatus , borderColor:'transparent',color:textColor}}  block disabled >{label}</Button>;
   }
 
   render() {
