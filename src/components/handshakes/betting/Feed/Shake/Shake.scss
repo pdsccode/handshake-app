@@ -34,7 +34,8 @@
     font-size: rem-calc(14px);
     color: #C8C7CC;
     letter-spacing: 0;
-    padding: 10px 11px;
+    padding: rem-calc(10px 11px);
+    width: 100%;
   }
   .amount {
     margin-bottom: -35px;
