@@ -142,7 +142,6 @@ module.exports = function webpackConfig(env, argv) {
       }),
       new OfflinePlugin({
         appShell: '/',
-        publicPath: `${process.env.PUBLIC_URL}`,
       }),
     ],
     performance: { hints: false },
