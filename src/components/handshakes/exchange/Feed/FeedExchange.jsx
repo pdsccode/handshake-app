@@ -1207,7 +1207,7 @@ class FeedExchange extends React.PureComponent {
                     <FormattedMessage id="offerDistanceContent" values={{
                       // offerType: offer.type === 'buy' ? 'Buyer' : 'Seller',
                       distanceKm: distanceKm > 1 || distanceMiles === 0 ? distanceKm.toFixed(0) : distanceKm.toFixed(3),
-                      distanceMiles: distanceMiles.toFixed(1),
+                      distanceMiles: distanceMiles === 0 ? distanceKm.toFixed(0) : distanceMiles.toFixed(1),
                     }}/>
                   </div>
                 </div>
