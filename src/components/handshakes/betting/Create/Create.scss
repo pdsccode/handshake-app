@@ -17,12 +17,13 @@
     display: flex;
     flex-wrap: wrap;
     width: 100%;
-    //margin-top: rem-calc(20px);
-    margin-bottom: rem-calc(20px);
-    //align-items: center;
+    margin-top: rem-calc(20px);
     .btn-block + .btn-block {
       margin-top: 0;
     }
+  }
+  .rowWrapper +  .rowWrapper {
+    margin-top: 0;
   }
 
   .formInput {
@@ -31,7 +32,7 @@
     padding: rem-calc(20px 0);
     margin-bottom: rem-calc(28px);
   }
- 
+
   .label {
     flex-shrink: 0;
     flex-basis: 100%;
@@ -80,6 +81,13 @@
     color: #000000;
     letter-spacing: 0;
     line-height: rem-calc(22px);
+  }
+  .cryptoCurrency {
+    position: relative;
+    top: -26.5px;
+    left: 88%;
+    font-weight: $normal;
+    color: #FFFFFF;
   }
   .oddField {
     //padding-left: rem-calc(5px);

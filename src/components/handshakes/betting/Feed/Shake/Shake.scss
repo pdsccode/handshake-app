@@ -10,13 +10,16 @@
     display: flex;
     flex-wrap: wrap;
     width: 100%;
-    //margin-top: rem-calc(20px);
-    margin-bottom: rem-calc(20px);
-    //align-items: center;
+    margin-top: rem-calc(10px);
     .btn-block + .btn-block {
       margin-top: 0;
     }
   }
+
+  .rowWrapper + .rowWrapper {
+    margin-top: rem-calc(20px);
+  }
+
   .line {
     opacity: 0.17;
     border-bottom: 1px solid #979797;;
@@ -94,7 +97,7 @@
     font-size: rem-calc(16px);
     color: #FFFFFF;
     letter-spacing: 0;
-    margin-top: 20px;
+    margin-top: rem-calc(20px);
     border: none;
   }
   .btnRed {
