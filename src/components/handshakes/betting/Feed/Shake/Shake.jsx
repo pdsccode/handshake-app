@@ -101,6 +101,7 @@ class BetingShake extends React.Component {
 
 
 
+    
     if(matchName && matchOutcome){
         if(amount > 0){
           if(total <= parseFloat(balance)){
@@ -124,16 +125,6 @@ class BetingShake extends React.Component {
       message = MESSAGE.CHOOSE_MATCH;
     }
 
-
-
-    //if(matchName && matchOutcome && amount <= parseFloat(balance) && amount > 0){
-      // if(isShowOdds){
-      //   this.initHandshake(amount, odds);
-      // }else {
-      //   this.shakeItem(amount, side);
-
-      // }
-    //}
     if(message){
       this.props.showAlert({
         message: <div className="text-center">{message}</div>,
