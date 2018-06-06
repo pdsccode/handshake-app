@@ -1185,7 +1185,7 @@ class FeedExchange extends React.PureComponent {
               </div>
             )}
           </div>
-          <div className="mb-2">About </div>
+          <div className="mb-2">About {buyerSeller}</div>
           {/*<span>status: {status}</span><br></br>*/}
           {/*<span>userType: {this.userType}</span><br></br>*/}
           {
