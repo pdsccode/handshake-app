@@ -94,6 +94,8 @@ class FeedCreditCard extends React.Component {
 
     if (this.state.amount && userCcLimit && userCcLimit.limit < amoutWillUse) {
       this.setState({showCCScheme: true});
+    } else {
+      this.setState({showCCScheme: false});
     }
   }
 
@@ -380,7 +382,7 @@ class FeedCreditCard extends React.Component {
                   </span>
                 </div>
                 <div className="pb-2">
-                  <h4 className="headline"><FormattedMessage id="askUsingCreditCard" values={{ fiatCurrency: fiatCurrency, total: formatMoney(total) }} /></h4>
+                  <h4 className="headline"><FormattedMessage id="askUsingCreditCard" values={{ fiatCurrency: FIAT_CURRENCY, total: formatMoney(total) }} /></h4>
                 </div>
                 {
                   amount && (
