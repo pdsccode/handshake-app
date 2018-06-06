@@ -57,6 +57,9 @@ const FormExchangeCreate = createForm({
 });
 const selectorFormExchangeCreate = formValueSelector(nameFormExchangeCreate);
 
+import iconLock from '@/assets/images/icon/lock.png';
+import iconUnlock from '@/assets/images/icon/unlock.png';
+
 const textColor = '#ffffff'
 const btnBg = 'rgba(29,29,38,0.30)'
 const validateFee = [
@@ -470,9 +473,12 @@ async componentDidMount() {
                     name="sellPriceType"
                     component={fieldRadioButton}
                     list={[
-                      { value: 'fix', text: 'Lock this price' },
-                      { value: 'flexible', text: `${EXCHANGE_ACTION_NAME[type]} at market price` },
+                      { value: 'fix', text: 'Lock this price', icon: <img src={iconLock} width={20} /> },
+                      { value: 'flexible', text: `${EXCHANGE_ACTION_NAME[type]} at market price`, icon: <img src={iconUnlock} width={20} /> },
                     ]}
+                    styleButton={{
+                      fontSize: '12px'
+                    }}
                     color={textColor}
                     validate={[required]}
                     onChange={this.onSellPriceTypeChange}
