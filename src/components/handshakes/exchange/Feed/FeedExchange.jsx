@@ -203,7 +203,8 @@ class FeedExchange extends React.PureComponent {
     let offerShake = {
       fiat_amount: fiatAmount.toString(),
       address: address,
-      email: authProfile.email,
+      email: authProfile.email || '',
+      username: authProfile.username || '',
     };
 
     this.showLoading();

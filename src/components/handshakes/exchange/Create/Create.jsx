@@ -242,7 +242,8 @@ async componentDidMount() {
       fiat_currency: fiat_currency,
       latitude: this.state.lat,
       longitude: this.state.lng,
-      email: authProfile ? authProfile.email : '',
+      email: authProfile.email || '',
+      username: authProfile.username || '',
     };
 
     if (values.type === EXCHANGE_ACTION.BUY) {
