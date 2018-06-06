@@ -10,6 +10,7 @@ $red: #f00;
 * ======================================================================== */
 // main color
 $deep-blue: #1e4eff;
+$titan-black: #000000;
 // 5 Shades of Grey
 $baltic-sea: #3e3e3e;
 $steel: #666666;
@@ -33,6 +34,7 @@ $portland-orange: #ff5722;
 * ======================================================================== */
 $header-height: 45px;
 $app-width: 414px;
+$footer-height: 60px;
 /*
 * Font base
 * ======================================================================== */
@@ -60,3 +62,13 @@ $font-size-h4:            ($font-size-base * 1.25) !default;
 $font-size-h5:            ($font-size-base * 1.125) !default;
 $font-size-h6:            ($font-size-base * 1.125) !default;
 $font-size-caption:       ($font-size-base * 0.875) !default;
+/*
+* Utilities
+* ======================================================================== */
+$z-index: 1050 !default; // default of boostrap
+$z-index-loading-full-screen: $z-index + 1;
+$z-index-alert: $z-index + 2;
+/*
+* Utilities
+* ======================================================================== */
+$animation-duration: 0.5s;

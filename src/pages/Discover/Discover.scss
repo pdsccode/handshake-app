@@ -1,70 +1,16 @@
 @import './src/styles/style';
 
-.feedWrapper {
-  margin-bottom: 23px;
-  &:last-child {
-    margin-bottom: 73px;
+.discover {
+  .feed-wrapper {
+    margin-bottom:  rem-calc(23px);
   }
-  .feed {
-    margin-bottom: 7px;
-    padding: rem-calc(40px 25px 20px 25px);
+  .category-wrapper {
+    margin-bottom: rem-calc(11px);
   }
-  .description {
-    font-size: rem-calc(32px);
-    color: $white;
-    letter-spacing: 0;
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-line-clamp: 5;
-    -webkit-box-orient: vertical;
+  .buy-sell-wrapper {
+    margin-bottom: rem-calc(15px);
   }
-  .email {
-    margin: 0;
-    font-size: rem-calc(16px);
-    color: $white;
-    letter-spacing: 0;
-    text-align: left;
-  }
-  .seedItem {
-    padding: 0;
-    width: 100%;
-    img {
-      width: 100%;
-      border-top-left-radius: 6px;
-      border-top-right-radius: 6px;
-    }
-    .seedContent {
-      padding: 19px 22px;
-      background: #FAFAFA;
-    }
-    .name {
-      font-size: 26px;
-      font-weight: $medium;
-      color: $text-black;
-      letter-spacing: 0;
-      line-height: 35px;
-      padding: 0;
-      margin: 0 0 16px;
-    }
-    .shortDescription {
-      opacity: 0.8;
-      font-size: 16px;
-      font-weight: $normal;
-      color: #5A5A5A;
-      line-height: 25px;
-    }
-    .bottomSeed {
-      font-size: 16px;
-      font-weight: $light;
-      color: $text-black;
-      letter-spacing: 0;
-      line-height: 33px;
-      .backerNum {
-        margin-right: 15px;
-      }
-      .fundedAmount {
-        color: #7ED321;
-      }
-    }
+  .search-bar-wrapper {
+    margin-bottom: rem-calc(15px);
   }
 }

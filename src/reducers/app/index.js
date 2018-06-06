@@ -1,4 +1,5 @@
-import CONSTANTS from '@/constants';
+import local from '@/services/localStore';
+import { APP } from '@/constants';
 import { APP_ACTION } from './action';
 
 const close = {
@@ -11,19 +12,38 @@ const close = {
   overlay: false,
 };
 
+local.save(APP.VERSION, '0.0.1');
+
 function appReducter(state = {
+  version: local.get(APP.VERSION),
 
   isCalling: false,
   isLoading: false,
+
   isModal: false,
   isModalContent: null,
+
   isAlert: false,
   isAlertContent: null,
+  configAlert: {
+    isShow: false,
+    message: '',
+  },
+
   isError: false,
   isWarning: false,
+
   overlay: false,
-  headerTitle: CONSTANTS.APP.HEADER_DEFAULT,
+
+  isNotFound: false,
+
+  headerTitle: APP.HEADER_DEFAULT,
   headerBack: false,
+  headerRightContent: null,
+  headerLeftContent: null,
+  showHeader: false,
+
+  ipInfo: local.get(APP.IP_INFO),
 
 }, action) {
   switch (action.type) {
@@ -71,11 +91,13 @@ function appReducter(state = {
       return {
         ...state,
         isLoading: true,
+        configLoading: { ...action.payload },
       };
     case APP_ACTION.LOADED:
       return {
         ...state,
         isLoading: false,
+        configLoading: {},
       };
 
 
@@ -108,6 +130,74 @@ function appReducter(state = {
         ...state,
         ...close,
       };
+
+
+    case APP_ACTION.NOT_FOUND_SET:
+      return {
+        ...state,
+        isNotFound: true,
+      };
+
+    case APP_ACTION.NOT_FOUND_REMOVE:
+      return {
+        ...state,
+        isNotFound: false,
+      };
+
+
+    case APP_ACTION.HEADER_RIGHT_SET:
+      return {
+        ...state,
+        headerRightContent: action.payload,
+      };
+
+    case APP_ACTION.HEADER_RIGHT_REMOVE:
+      return {
+        ...state,
+        headerRightContent: null,
+      };
+
+    case APP_ACTION.HEADER_LEFT_SET:
+      return {
+        ...state,
+        headerLeftContent: action.payload,
+      };
+
+    case APP_ACTION.HEADER_LEFT_REMOVE:
+      return {
+        ...state,
+        headerLeftContent: null,
+      };
+
+    case APP_ACTION.HEADER_SHOW:
+      return {
+        ...state,
+        showHeader: true,
+      };
+
+    case APP_ACTION.HEADER_HIDE:
+      return {
+        ...state,
+        showHeader: false,
+      };
+
+    case APP_ACTION.SHOW_ALERT:
+      return {
+        ...state,
+        configAlert: { ...action.payload },
+      };
+
+    case APP_ACTION.HIDE_ALERT:
+      return {
+        ...state,
+        configAlert: { ...action.payload },
+      };
+    case APP_ACTION.IP_INFO: {
+      return {
+        ...state,
+        ipInfo: action.payload,
+      };
+    }
 
     default:
       return state;

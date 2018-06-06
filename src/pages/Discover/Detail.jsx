@@ -1,21 +1,71 @@
 import React from 'react';
-import Button from '@/components/core/controls/Button';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+// constants, actions
+import { loadDiscoverDetail } from '@/reducers/discover/action';
+import { HANDSHAKE_ID, API_URL } from '@/constants';
+// components
 import { Grid, Row, Col } from 'react-bootstrap';
-import { FormattedMessage } from 'react-intl';
+import DetailPromise from '@/components/handshakes/promise/Detail';
+import DetailBetting from '@/components/handshakes/betting/Detail';
+import DetailExchange from '@/components/handshakes/exchange/Detail';
+import DetailSeed from '@/components/handshakes/seed/Detail';
+import Loading from '@/components/core/presentation/Loading';
+
+const maps = {
+  [HANDSHAKE_ID.PROMISE]: DetailPromise,
+  [HANDSHAKE_ID.BETTING]: DetailBetting,
+  [HANDSHAKE_ID.EXCHANGE]: DetailExchange,
+  [HANDSHAKE_ID.SEED]: DetailSeed,
+};
 
 class DiscoverDetailPage extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      slug: props.match.params.slug
+    };
+  }
+
+  componentDidMount() {
+    // load handshake detail
+    this.props.loadDiscoverDetail({ PATH_URL: `${API_URL.HANDSHAKE.BASE}/${this.state.id}` });
+  }
+
+  get getDetailPage() {
+    const { detail } = this.props.discover;
+    if (detail && detail.type) {
+      const DetailComponent = maps[detail.type];
+      return <DetailComponent {...detail} slug={this.state.slug} />;
+    }
+  }
+
   render() {
+    const { isFetching } = this.props.discover;
+    if (isFetching) return <Loading />;
     return (
       <Grid>
         <Row>
-          <Col xs={12}>
-            <div><FormattedMessage id="HELLO" values={{ name: 'b' }} /></div>
-            params: {this.props.match.params.id}
-          </Col>
+          {this.getDetailPage}
         </Row>
       </Grid>
     );
   }
 }
 
-export default DiscoverDetailPage;
+DiscoverDetailPage.propType = {
+  loadDiscoverDetail: PropTypes.func,
+  // setHeaderTitle: PropTypes.func,
+};
+
+const mapState = state => ({
+  discover: state.discover,
+});
+
+const mapDispatch = ({
+  loadDiscoverDetail,
+  // setHeaderTitle,
+});
+
+export default connect(mapState, mapDispatch)(DiscoverDetailPage);

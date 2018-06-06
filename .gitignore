@@ -3,8 +3,11 @@ yarn-error.log
 package-lock.json
 dist
 .DS_Store
+.idea
 .env
 .env.production
-
-#Pycharm
+testing
 .idea/
+config.production.js
+constants.production.js
+

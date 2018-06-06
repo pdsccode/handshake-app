@@ -1,0 +1,45 @@
+@import './src/styles/style';
+
+.wrapperBettingFilter {
+  align-items: center;
+
+  .dropDown {
+    margin: rem-calc(0 0 10px);
+    .dropdown-custom {
+      margin: rem-calc(0 20px 0 0);
+    }
+  }
+  .wrapperContainer {
+    display: flex;
+    justify-content: space-between;
+  }
+  .share-block {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0.0625rem;
+    margin-top: rem-calc(20px);
+    padding: rem-calc(10px 0);
+    background: #333c43;
+    color: $white;
+    .text {
+      width: 60%;
+      margin: 0;
+      font-size: 1rem;
+      font-weight: $normal;
+      text-align: center;
+    }
+    .share {
+      width: 40%;
+      display: inline-block;
+      text-align: right;
+    }
+  }
+
+  .item {
+    //flex-grow: 1; /* default 0 */
+    flex-basis: 50%;
+    width: 50%;
+    border: none;
+    padding: rem-calc(1px);
+  }
+}

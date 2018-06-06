@@ -3,12 +3,12 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Switch, Route } from 'react-router-dom';
 import DynamicImport from '@/components/App/DynamicImport';
-import Loading from '@/pages/Loading';
+import Loading from '@/components/core/presentation/Loading';
 import { URL } from '@/config';
-import { setHeaderTitle } from '@/reducers/app/action';
+import { setHeaderTitle, clearHeaderLeft, clearHeaderRight, showHeader } from '@/reducers/app/action';
 
 const Wallet = props => (<DynamicImport loading={Loading} load={() => import('@/pages/Wallet/Wallet')}>{Component => <Component {...props} />}</DynamicImport>);
-const Page404 = props => (<DynamicImport loading={Loading} load={() => import('@/pages/Error/Page404')}>{Component => <Component {...props} />}</DynamicImport>);
+const Page404 = props => (<DynamicImport isNotFound loading={Loading} load={() => import('@/pages/Error/Page404')}>{Component => <Component {...props} />}</DynamicImport>);
 
 const routerMap = [
   { path: URL.HANDSHAKE_WALLET_INDEX, component: Wallet },
@@ -17,12 +17,18 @@ const routerMap = [
 class WalletRouter extends React.Component {
   static propTypes = {
     setHeaderTitle: PropTypes.func.isRequired,
+    clearHeaderLeft: PropTypes.func.isRequired,
+    clearHeaderRight: PropTypes.func.isRequired,
+    showHeader: PropTypes.func.isRequired,
   }
 
   constructor(props) {
     super(props);
 
-    this.props.setHeaderTitle('Wallet');
+    this.props.setHeaderTitle('My wallets');
+    this.props.clearHeaderRight();
+    this.props.clearHeaderLeft();
+    this.props.showHeader();
   }
 
   render() {
@@ -35,4 +41,6 @@ class WalletRouter extends React.Component {
   }
 }
 
-export default connect(null, ({ setHeaderTitle }))(WalletRouter);
+export default connect(null, ({
+  setHeaderTitle, clearHeaderRight, clearHeaderLeft, showHeader,
+}))(WalletRouter);

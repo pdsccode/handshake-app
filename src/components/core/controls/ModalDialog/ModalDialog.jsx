@@ -13,10 +13,12 @@ class ModalDialog extends React.Component {
 
   open() {
     this.modalRef && this.modalRef.classList.add('modal-custom-show');
+    this.contentRef && this.contentRef.classList.add('zoomIn');
   }
 
   close() {
     this.modalRef && this.modalRef.classList.remove('modal-custom-show');
+    this.contentRef && this.contentRef.classList.remove('zoomIn');
   }
 
   componentDidMount() {
@@ -31,15 +33,21 @@ class ModalDialog extends React.Component {
   render() {
     const { title, children } = this.props;
     return (
-      <div className="modal" ref={modal => this.modalRef = modal}>
+      <div className="modal modal-dialog-custom" ref={modal => this.modalRef = modal}>
         <div className="modal-backdrop show"/>
         <div className="position" onClick={this.close}>
-          <div className="modal-dialog-content" onClick={e => e.stopPropagation()}>
-            <div className="modal-custom-header">
-              {
-                title && (<p className="modal-custom-title">{title}</p>)
-              }
-            </div>
+          <div 
+            className="modal-dialog-content animated"
+            onClick={e => e.stopPropagation()}
+            ref={content => this.contentRef = content}
+          >
+            {
+              title && (
+              <div className="modal-custom-header">
+                <p className="modal-custom-title">{title}</p>
+              </div>
+              )
+            }
             <div className="modal-custom-body">
               {children}
             </div>

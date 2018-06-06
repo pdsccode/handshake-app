@@ -7,134 +7,160 @@ const webpack = require('webpack');
 const merge = require('webpack-merge');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const ManifestPlugin = require('webpack-manifest-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const PwaManifestPlugin = require('webpack-pwa-manifest');
+const OfflinePlugin = require('offline-plugin');
 
-const stats = {
-  modules: false,
-  children: false,
-  chunks: false,
-};
-
-const development = {
-  plugins: [new webpack.HotModuleReplacementPlugin()],
-  devServer: {
-    watchContentBase: true,
-    stats,
-    publicPath: '/',
-    historyApiFallback: {
-      disableDotRule: true,
-    },
-    hot: true,
-  },
-  module: {
-    rules: [
-      {
-        test: /\.css$/,
-        use: [
-          {
-            loader: 'style-loader',
-          },
-          {
-            loader: 'css-loader',
-            options: {
-              importLoaders: 1,
-            },
-          },
-        ],
-      },
-      {
-        test: /\.scss$/,
-        use: [
-          {
-            loader: 'style-loader',
-          },
-          {
-            loader: 'css-loader',
-            options: {
-              importLoaders: 1,
-            },
-          },
-          {
-            loader: 'postcss-loader',
-          },
-          {
-            loader: 'sass-loader',
-          },
-        ],
-      },
-    ],
-  },
-};
-
-const production = {
-  optimization: {
-    minimize: true,
-    splitChunks: {
-      chunks: 'all',
-    },
-  },
-  module: {
-    rules: [
-      {
-        test: /\.css$/,
-        use: [
-          MiniCssExtractPlugin.loader,
-          {
-            loader: 'css-loader',
-            options: {
-              importLoaders: 1,
-            },
-          },
-        ],
-      },
-      {
-        test: /\.scss$/,
-        use: [
-          MiniCssExtractPlugin.loader,
-          {
-            loader: 'css-loader',
-            options: {
-              importLoaders: 1,
-            },
-          },
-          {
-            loader: 'postcss-loader',
-          },
-          {
-            loader: 'sass-loader',
-          },
-        ],
-      },
-    ],
-  },
-  plugins: [
-    new ManifestPlugin(),
-    new OptimizeCSSAssetsPlugin(),
-    new MiniCssExtractPlugin({
-      filename: 'css/[name].css',
-      chunkFilename: 'css/[hash].[name].css',
-    }),
-  ],
-  performance: { hints: false },
-};
+const dotenv = require('dotenv');
 
 module.exports = function webpackConfig(env, argv) {
   const isProduction = argv.mode === 'production';
 
   if (!isProduction) {
-    require('dotenv').config();
+    dotenv.config();
   } else {
-    require('dotenv').config({ path: xPath('.env.production') });
+    dotenv.config({ path: xPath('.env.production') });
   }
 
-  return merge(
+  const stats = {
+    modules: false,
+    children: false,
+    chunks: false,
+  };
+
+  const development = {
+    plugins: [new webpack.HotModuleReplacementPlugin()],
+    devServer: {
+      watchContentBase: true,
+      stats,
+      publicPath: '/',
+      historyApiFallback: {
+        disableDotRule: true,
+      },
+      hot: true,
+      host: '0.0.0.0',
+    },
+    module: {
+      rules: [
+        {
+          test: /\.css$/,
+          use: [
+            {
+              loader: 'style-loader',
+            },
+            {
+              loader: 'css-loader',
+              options: {
+                importLoaders: 1,
+              },
+            },
+          ],
+        },
+        {
+          test: /\.scss$/,
+          use: [
+            {
+              loader: 'style-loader',
+            },
+            {
+              loader: 'css-loader',
+              options: {
+                importLoaders: 1,
+              },
+            },
+            {
+              loader: 'postcss-loader',
+            },
+            {
+              loader: 'sass-loader',
+            },
+          ],
+        },
+      ],
+    },
+  };
+
+  const production = {
+    optimization: {
+      minimize: true,
+      minimizer: [
+        new UglifyJsPlugin({
+          uglifyOptions: {
+            compress: {
+              drop_console: true,
+            },
+          },
+        }),
+      ],
+      splitChunks: {
+        chunks: 'all',
+      },
+      noEmitOnErrors: true,
+    },
+    module: {
+      rules: [
+        {
+          test: /\.css$/,
+          use: [
+            MiniCssExtractPlugin.loader,
+            {
+              loader: 'css-loader',
+              options: {
+                importLoaders: 1,
+              },
+            },
+          ],
+        },
+        {
+          test: /\.scss$/,
+          use: [
+            MiniCssExtractPlugin.loader,
+            {
+              loader: 'css-loader',
+              options: {
+                importLoaders: 1,
+              },
+            },
+            {
+              loader: 'postcss-loader',
+            },
+            {
+              loader: 'sass-loader',
+            },
+          ],
+        },
+      ],
+    },
+    plugins: [
+      new CleanWebpackPlugin(['dist']),
+      new OptimizeCSSAssetsPlugin(),
+      new MiniCssExtractPlugin({
+        filename: 'css/[name].css',
+        chunkFilename: 'css/[hash].[name].css',
+      }),
+      new OfflinePlugin({
+        appShell: '/',
+        responseStrategy: 'network-first',
+        autoUpdate: true,
+      }),
+    ],
+    performance: { hints: false },
+  };
+
+  const finalConfig = merge(
     {
+      entry: {
+        main: xPath('src/index.js'),
+        'app-sw': xPath('src/sw.js'),
+        'firebase-messaging-sw': xPath('src/sw-fcm.js'),
+      },
       output: {
-        filename: 'js/[name].js',
-        chunkFilename: 'js/[hash].[name].js',
+        filename: '[name].js',
+        chunkFilename: '[hash].[name].chunk.js',
         publicPath: '/',
+        globalObject: 'this',
       },
       resolve: {
         alias: { '@': xPath('src') },
@@ -142,12 +168,18 @@ module.exports = function webpackConfig(env, argv) {
         modules: [xPath('node_modules')],
       },
       plugins: [
-        new CleanWebpackPlugin(['dist']),
         new webpack.DefinePlugin({
-          'process.env.ROOT': `"${process.env.ROOT}"`,
-          'process.env.BASE_URL': `"${process.env.BASE_URL}"`,
+          'process.env.NODE_ENV': JSON.stringify(argv.mode),
+          'process.env.isProduction': JSON.stringify(isProduction),
+          'process.env.BASE_URL': JSON.stringify(process.env.BASE_URL),
+          'process.env.PUBLIC_URL': JSON.stringify(process.env.PUBLIC_URL),
+        }),
+        new webpack.ProvidePlugin({
+          $: 'jquery',
+          jQuery: 'jquery',
         }),
         new HtmlWebpackPlugin({
+          chunks: ['main', 'vendors~main'],
           minify: isProduction
             ? {
               collapseWhitespace: true,
@@ -158,6 +190,22 @@ module.exports = function webpackConfig(env, argv) {
           filename: 'index.html',
           template: xPath('src/templates/main.html'),
           favicon: xPath('src/assets/favicon.ico'),
+        }),
+        new PwaManifestPlugin({
+          name: 'Ninja',
+          short_name: 'Ninja',
+          description: '',
+          background_color: '#1A1919',
+          theme_color: '#1A1919',
+          'theme-color': '#1A1919',
+          start_url: '/',
+          icons: [
+            {
+              src: xPath('src/assets/images/logo.png'),
+              sizes: [96, 128, 192, 256, 384, 512],
+              destination: path.join('assets', 'icons'),
+            },
+          ],
         }),
       ],
       module: {
@@ -215,4 +263,6 @@ module.exports = function webpackConfig(env, argv) {
     },
     isProduction ? production : development,
   );
+
+  return finalConfig;
 };

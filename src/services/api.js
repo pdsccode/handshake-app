@@ -1,17 +1,23 @@
 import axios from 'axios';
-import { HANDSHAKE_API } from '@/config';
 import qs from 'qs';
 import { isEmpty, merge } from 'lodash';
+import local from '@/services/localStore';
+import { APP } from '@/constants';
+import { BASE_API } from '@/config';
+import { MasterWallet } from '@/models/MasterWallet';
 
-const $http = (api, data, token = '', id, qsObject, headersMore) => {
+const $http = (url, data, id, qsObject, headersMore, method = 'GET') => {
   let QS = '';
 
   if (!isEmpty(qsObject)) {
     QS = qs.stringify(qsObject);
   }
 
+  const token = local.get(APP.AUTH_TOKEN);
+  const wallet = MasterWallet.getWalletDefault('ETH');
+
   let headers = {
-    'Content-Type': 'application/json',
+    // 'Content-Type': 'application/json',
   };
 
   if (!isEmpty(headersMore)) {
@@ -19,14 +25,24 @@ const $http = (api, data, token = '', id, qsObject, headersMore) => {
   }
 
   if (token) {
-    headers.Authorization = `JWT ${token}`;
+    headers.Payload = token;
   }
+
+  if (wallet && wallet.chainId) {
+    headers.ChainId = wallet.chainId;
+  }
+
+  const profile = local.get(APP.AUTH_PROFILE);
+
+  if (profile && profile.fcm_token) {
+    headers['Fcm-Token'] = profile.fcm_token;
+  }
+
   return axios.create({
-    baseURL: HANDSHAKE_API.BASE_URL,
-    timeout: HANDSHAKE_API.TIMEOUT,
-    withCredentials: true,
+    timeout: BASE_API.TIMEOUT,
+    // withCredentials: true,
     headers,
-  })[api.method](`${api.path}${id ? `${id}/` : ''}${QS ? `?${QS}` : ''}`, data);
+  })[method.toLocaleLowerCase()](`${url}${id ? `${id}/` : ''}${QS ? `?${QS}` : ''}`, data);
 };
 
 export default $http;

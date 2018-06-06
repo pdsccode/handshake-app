@@ -1,19 +1,62 @@
 import React from 'react';
+import { HANDSHAKE_ID, HANDSHAKE_NAME, HANDSHAKE_ID_DEFAULT } from '@/constants';
+// components
 import { Grid, Row, Col } from 'react-bootstrap';
-import { FormattedMessage } from 'react-intl';
-import CreateSeedItem from '@/components/SeedAndBazaar/forms/CreateSeedItem';
+import SearchBar from '@/components/core/controls/SearchBar';
+import CreatePromise from '@/components/handshakes/promise/Create';
+import CreateBetting from '@/components/handshakes/betting/Create';
+import CreateExchange from '@/components/handshakes/exchange/Create';
+import CreateSeed from '@/components/handshakes/seed/Create';
+// style
+import './Create.scss';
+
+const maps = {
+  [HANDSHAKE_ID.PROMISE]: CreatePromise,
+  [HANDSHAKE_ID.BETTING]: CreateBetting,
+  [HANDSHAKE_ID.EXCHANGE]: CreateExchange,
+  [HANDSHAKE_ID.SEED]: CreateSeed,
+};
 
 class Create extends React.Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      seletedId: HANDSHAKE_ID_DEFAULT,
+    };
+    // bind
+    this.handshakeChange = this.handshakeChange.bind(this);
   }
+
+  get handShakeList() {
+    return Object.entries(HANDSHAKE_NAME).map(([key, value]) => ({
+      id: key,
+      name: value,
+    }));
+  }
+
+  handshakeChange({ suggestion }) {
+    const { id } = suggestion;
+    this.setState({ seletedId: id });
+  }
+
   render() {
+    const CreateComponent = maps[this.state.seletedId];
+
     return (
-      <Grid>
+      <Grid className="create">
         <Row>
-          <Col xs={12}>
-            create
-            <CreateSeedItem />
+          <Col md={12}>
+            <SearchBar
+              suggestions={this.handShakeList}
+              onSuggestionSelected={this.handshakeChange}
+              inputSearchDefault={HANDSHAKE_NAME[HANDSHAKE_ID_DEFAULT]}
+            />
+          </Col>
+        </Row>
+        <Row>
+          <Col md={12} className="margin-top-20">
+            <CreateComponent {...this.props} />
           </Col>
         </Row>
       </Grid>

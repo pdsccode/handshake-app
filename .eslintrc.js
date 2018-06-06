@@ -16,13 +16,18 @@ module.exports = {
         "allowTemplateLiterals": true
       }
     ],
+    "class-methods-use-this": "off",
     "object-curly-spacing": ["error", "always"],
+    "no-param-reassign": ["error", { "props": true, "ignorePropertyModificationsFor": ["registration"] }],
     "react/jsx-uses-vars": [2],
     "react/sort-comp": [2],
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
     "react/prefer-stateless-function": "off",
     "react/forbid-prop-types": "off",
+    "react/no-danger": "off",
     "jsx-a11y/anchor-is-valid": "off",
+    "jsx-a11y/click-events-have-key-events": "off",
+    "jsx-a11y/no-static-element-interactions": "off",
     "import/no-unresolved": "off", // TODO[1]:
     "import/extensions": "off" // TODO[1]:
   },
