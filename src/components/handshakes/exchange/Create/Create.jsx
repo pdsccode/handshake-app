@@ -43,11 +43,12 @@ import {ExchangeHandshake} from '@/services/neuron';
 // import phoneCountryCodes from '@/components/core/form/country-calling-codes.min.json';
 import COUNTRIES from '@/data/country-dial-codes.js';
 
-import {CRYPTO_CURRENCY} from "@/constants";
+import {CRYPTO_CURRENCY, MIN_AMOUNT} from "@/constants";
 import _sample from 'lodash/sample'
 import { feedBackgroundColors } from "@/components/handshakes/exchange/config";
 import {formatAmountCurrency, formatMoney} from "@/services/offer-util";
-
+import {BigNumber} from "bignumber.js";
+import { showLoading, hideLoading } from '@/reducers/app/action';
 const nameFormExchangeCreate = 'exchangeCreate';
 const FormExchangeCreate = createForm({
   propsReduxForm: {
@@ -122,6 +123,14 @@ async componentDidMount() {
     // this.setState({ ipInfo: ipInfo.data });
   }
 
+  showLoading = () => {
+    this.props.showLoading({message: '',});
+  }
+
+  hideLoading = () => {
+    this.props.hideLoading();
+  }
+
   getCryptoPriceByAmount = (amount) => {
     const { type, currency } = this.state;
     const {ipInfo: {currency: fiat_currency}} = this.props;
@@ -179,16 +188,18 @@ async componentDidMount() {
     // console.log('valuessss', values);
 
     const wallet = MasterWallet.getWalletDefault(values.currency);
-    const balance = await wallet.getBalance();
-    const fee = await wallet.getFee(4, true);
-    let amount = values.amount;
+    const balance = new BigNumber(await wallet.getBalance());
+    const fee = new BigNumber(await wallet.getFee(4, true));
+    let amount = new BigNumber(values.amount);
 
     if (values.currency === CRYPTO_CURRENCY.ETH && values.type === EXCHANGE_ACTION.BUY) {
-      amount = 0;
+      amount = new BigNumber(0);
     }
 
+    let condition = balance.isLessThan(amount.plus(fee));
+
     if ((values.currency === CRYPTO_CURRENCY.ETH || (values.type === EXCHANGE_ACTION.SELL && values.currency === CRYPTO_CURRENCY.BTC))
-      && balance < amount + fee) {
+      && condition) {
       this.props.showAlert({
         message: <div className="text-center">
           {intl.formatMessage({ id: 'notEnoughCoinInWallet' }, {
@@ -211,6 +222,13 @@ async componentDidMount() {
     const rewardWallet = MasterWallet.getRewardWalletDefault(values.currency);
     const reward_address = rewardWallet.address;
 
+    let phones = values.phone.trim().split('-');
+
+    let phone = '';
+    if (phones.length > 1) {
+      phone = phones[1].length > 0 ? values.phone : '';
+    }
+
     const offer = {
       amount: values.amount,
       price: price,
@@ -218,7 +236,7 @@ async componentDidMount() {
       currency: values.currency,
       type: values.type,
       contact_info: values.address,
-      contact_phone: values.phone,
+      contact_phone: phone,
       fiat_currency: fiat_currency,
       latitude: this.state.lat,
       longitude: this.state.lng,
@@ -238,7 +256,7 @@ async componentDidMount() {
       type: EXCHANGE_ACTION_NAME[values.type],
       amount: formatAmountCurrency(values.amount),
       currency: values.currency,
-      currency_symbol: getSymbolFromCurrency(fiat_currency),
+      currency_symbol: fiat_currency,
       total: formatMoney(totalAmount),
     });
 
@@ -270,6 +288,7 @@ async componentDidMount() {
     const { currency } = this.props;
 
     // if (currency === 'BTC') {
+    this.showLoading();
       this.props.createOffer({
         PATH_URL: API_URL.EXCHANGE.OFFERS,
         data: offer,
@@ -318,9 +337,10 @@ async componentDidMount() {
     //   this.modalSendRef.close();
     // });
 
+    this.hideLoading();
     this.props.showAlert({
       message: <div className="text-center"><FormattedMessage id="createOfferSuccessMessage"/></div>,
-      timeOut: 3000,
+      timeOut: 2000,
       type: 'success',
       callBack: () => {
         this.props.history.push(URL.HANDSHAKE_ME);
@@ -358,6 +378,7 @@ async componentDidMount() {
   // }
 
   handleCreateOfferFailed = (e) => {
+    this.hideLoading();
     this.props.showAlert({
       message: <div className="text-center">{e.response?.data?.message}</div>,
       timeOut: 3000,
@@ -430,7 +451,7 @@ async componentDidMount() {
                     name="amount"
                     className="form-control-custom form-control-custom-ex w-100 input-no-border"
                     component={fieldInput}
-                    placeholder="0.001"
+                    placeholder={MIN_AMOUNT[currency]}
                     onChange={this.onAmountChange}
                     validate={[required, currency === CRYPTO_CURRENCY.BTC ? minValue001 : minValue01]}
                   />
@@ -439,8 +460,8 @@ async componentDidMount() {
               <hr className="hrLine" />
 
               <div className="d-flex mt-2">
-                <label className="col-form-label mr-auto label-create" style={{ width: '220px' }}>Price</label>
-                <span className="w-100 col-form-label">{ formatMoney(offerPrice ? offerPrice.price : 0) } {ipInfo.currency}/{currency}</span>
+                <label className="col-form-label mr-auto label-create" style={{ width: '220px' }}>Price/{currency}</label>
+                <span className="w-100 col-form-label">{ formatMoney(offerPrice ? offerPrice.price : 0) } {ipInfo.currency}</span>
               </div>
 
               <div className="d-flex mt-2">
@@ -548,7 +569,9 @@ const mapDispatchToProps = (dispatch) => ({
   createOffer: bindActionCreators(createOffer, dispatch),
   getOfferPrice: bindActionCreators(getOfferPrice, dispatch),
   showAlert: bindActionCreators(showAlert, dispatch),
-  rfChange: bindActionCreators(change, dispatch)
+  rfChange: bindActionCreators(change, dispatch),
+  showLoading: bindActionCreators(showLoading, dispatch),
+  hideLoading: bindActionCreators(hideLoading, dispatch),
 });
 
 

@@ -17,6 +17,6 @@ class NoData extends React.PureComponent {
 NoData.propTypes = {
   className: PropTypes.string,
   message: PropTypes.string,
-}
+};
 
 export default NoData;

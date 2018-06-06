@@ -13,6 +13,26 @@
     display: flex;
     justify-content: space-between;
   }
+  .share-block {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0.0625rem;
+    padding: rem-calc(10px 0);
+    background: #333c43;
+    color: $white;
+    .text {
+      width: 60%;
+      margin: 0;
+      font-size: 1rem;
+      font-weight: $normal;
+      text-align: center;
+    }
+    .share {
+      width: 40%;
+      display: inline-block;
+      text-align: right;
+    }
+  }
 
   .item {
     //flex-grow: 1; /* default 0 */
