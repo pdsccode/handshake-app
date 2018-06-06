@@ -244,7 +244,7 @@ class Wallet extends React.Component {
       })      
 
       obj.push({
-        title: 'Top up coins',
+        title: 'Buy coins',
         handler: () => {
           this.setState({walletSelected: wallet});
           this.toggleBottomSheet();
