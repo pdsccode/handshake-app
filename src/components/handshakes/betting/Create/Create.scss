@@ -29,7 +29,7 @@
   .formInput {
     background: #f8faff;
     border-radius: rem-calc(6px);
-    padding: rem-calc(20px 0);
+    padding: 0.3rem 1.25rem 1rem;
     margin-bottom: rem-calc(28px);
   }
 
@@ -87,6 +87,7 @@
     top: -26.5px;
     left: 88%;
     font-weight: $normal;
+    font-size: 0.75rem;
     color: #FFFFFF;
   }
   .oddField {
@@ -138,5 +139,8 @@
     font-size: rem-calc(18px);
     color: #D0021B;
     letter-spacing: 0;
+  }
+  .text-danger {
+    font-size: rem-calc(12px);
   }
 }

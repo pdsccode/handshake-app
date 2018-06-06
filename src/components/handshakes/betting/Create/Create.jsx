@@ -403,7 +403,7 @@ get matchResults(){
           </Row>
         </Grid>
           */}
-          <div className="formInput" style={{backgroundColor:'#3A444D',padding:10}}>
+          <div className="formInput" style={{backgroundColor:'#3A444D'}}>
             <Toggle ref={(component) => {this.toggleRef = component}} onChange={this.onToggleChange} />
             <div style={{display:'flex',flexDirection:'column',flex:1,marginBottom:10}}>
               {inputList.map((field, index) => this.renderItem(field, index))}
