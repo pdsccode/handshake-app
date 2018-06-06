@@ -21,4 +21,4 @@ if (!String.prototype.format) {
 if (window.caches) window.caches.keys().then(keyList => Promise.all(keyList.map(key => window.caches.delete(key))));
 
 ReactDOM.render(<App />, document.getElementById('app'));
-registerServiceWorker();
+// registerServiceWorker();
