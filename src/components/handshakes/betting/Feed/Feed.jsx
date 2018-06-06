@@ -86,11 +86,10 @@ class FeedBetting extends React.Component {
     const profile = local.get(APP.AUTH_PROFILE);
     const isUserShake = this.isShakeUser(shakeUserIds, profile.id);
     const role = isUserShake ? ROLE.SHAKER : ROLE.INITER;
-    //const blockchainStatusHardcode = 0;
+    //const blockchainStatusHardcode = 5;
     const isMatch = this.isMatch;
     //const isMatch = true;
-    //const hardCodeStatus = 3;
-    const hardCodeResult = 1;
+    //const hardCodeResult = 2;
     console.log('Is Match:', isMatch);
 
     const statusResult = BetHandshakeHandler.getStatusLabel(status, result, role,side, isMatch);
