@@ -20,7 +20,7 @@ import ExpandArrowSVG from '@/assets/images/icon/expand-arrow.svg';
 import './Me.scss';
 import { getListOfferPrice } from "@/reducers/exchange/action";
 
-
+const TAG = "Me";
 const maps = {
   [HANDSHAKE_ID.PROMISE]: FeedPromise,
   [HANDSHAKE_ID.BETTING]: FeedBetting,
@@ -36,6 +36,7 @@ class Me extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    console.log(TAG," componentWillReceiveProps begin ", nextProps.firebaseUser);
     if (JSON.stringify(nextProps.firebaseUser) !== JSON.stringify(this.props.firebaseUser) && this.props.firebaseUser.users) {
       let nextUser = nextProps.firebaseUser.users[this.props.auth?.profile?.id];
       let prevUser = this.props.firebaseUser.users[this.props.auth?.profile?.id];
@@ -44,6 +45,7 @@ class Me extends React.Component {
         this.props.fireBaseExchangeDataChange(nextUser.offers);
       }
       else if(JSON.stringify(nextUser.betting) !== JSON.stringify(prevUser.betting)){
+        console.log(TAG," componentWillReceiveProps begin -- betting ");
         this.props.fireBaseBettingChange(nextUser.betting);
       }
     }
