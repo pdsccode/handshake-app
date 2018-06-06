@@ -29,7 +29,6 @@ const maps = {
 };
 
 class Me extends React.Component {
-
   componentDidMount() {
     this.getListOfferPrice();
     // this.loadMyHandshakeList();
@@ -37,14 +36,13 @@ class Me extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     console.log(TAG," componentWillReceiveProps begin ", nextProps.firebaseUser);
-    if (JSON.stringify(nextProps.firebaseUser) !== JSON.stringify(this.props.firebaseUser) && this.props.firebaseUser.users) {
+    if (nextProps.firebaseUser && JSON.stringify(nextProps.firebaseUser) !== JSON.stringify(this.props.firebaseUser)) {
       let nextUser = nextProps.firebaseUser.users[this.props.auth?.profile?.id];
       let prevUser = this.props.firebaseUser.users[this.props.auth?.profile?.id];
       console.log("Firebase Data Sa test:", nextUser);
       if (JSON.stringify(nextUser.offers) !== JSON.stringify(prevUser.offers)) {
         this.props.fireBaseExchangeDataChange(nextUser.offers);
-      }
-      else if(JSON.stringify(nextUser.betting) !== JSON.stringify(prevUser.betting)){
+      }else if(nextUser.betting && JSON.stringify(nextUser.betting) !== JSON.stringify(prevUser.betting)){
         console.log(TAG," componentWillReceiveProps begin -- betting ");
         this.props.fireBaseBettingChange(nextUser.betting);
       }
@@ -83,7 +81,7 @@ class Me extends React.Component {
               <Image className="avatar" src={AvatarSVG} alt="avatar" />
               <div className="text">
                 <strong>My Profile</strong>
-                <p>Verify your email address and phone numbers.</p>
+                <p>Username and verify your email address and phone numbers.</p>
               </div>
               <div className="arrow">
                 <Image src={ExpandArrowSVG} alt="arrow" />

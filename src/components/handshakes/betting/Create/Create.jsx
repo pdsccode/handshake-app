@@ -71,7 +71,7 @@ class BettingCreate extends React.PureComponent {
   static defaultProps = {
     item: {
       "backgroundColor": "#332F94",
-      "desc": "[{\"key\": \"event_bet\",\"suffix\": \"ETH\",\"label\": \"Amount\", \"placeholder\": \"10\", \"type\": \"number\", \"className\": \"betField\"}] [{\"key\": \"event_odds\", \"label\": \"Odds\", \"placeholder\": \"10\",\"prefix\": \"1 -\", \"className\": \"oddField\", \"type\": \"number\"}]",
+      "desc": "[{\"key\": \"event_bet\",\"suffix\": \"ETH\",\"label\": \"Amount\", \"placeholder\": \"10\", \"type\": \"number\", \"className\": \"amount\"}] [{\"key\": \"event_odds\", \"label\": \"Odds\", \"placeholder\": \"10\",\"prefix\": \"1 -\", \"className\": \"atOdds\", \"type\": \"number\"}]",
       "id": 18,
       "message": null,
       "name": "Bet",
@@ -236,17 +236,18 @@ get matchResults(){
 
   renderInput(item, index,style = {}) {
     const {key, placeholder, type} = item;
-    const className = 'form-control-custom input';
+    const className = 'amount';
     return (
       <Field
-        style={style}
+        //style={style}
         component={InputField}
         type="text"
         placeholder={placeholder}
-        className={className}
+        //className={className}
+        className={cn('form-control-custom input', className || '')}
         name={key}
         validate={[required]}
-        ErrorBox={ErrorBox}
+        //ErrorBox={ErrorBox}
         onChange={(evt) => {
           this.changeText(key, evt.target.value)
         }}
@@ -353,15 +354,13 @@ get matchResults(){
     }
 
     return (
-      <div style={{display:'flex',flex:1,flexDirection:'column',marginTop:2,marginBottom:2}} key={index + 1} >
+      <div className="rowWrapper" key={index + 1} >
           <label style={{fontSize:13, color:'white'}}>{label || placeholder}</label>
-          <div style={{display:'flex',flex:1,flexDirection:'row',border:'1px solid #697076',padding:10}}>
-            {this.renderLabelForItem(prefix,{marginRight:10})}
-            <div style={{display:'flex',flex:1,flexDirection:'column',alignItems:'flex-start'}}>
-              {itemRender}
-            </div>
-            {this.renderLabelForItem(suffix,{marginLeft:10})}
-          </div>
+            {itemRender}
+            {
+              suffix && <div className="cryptoCurrency">{suffix}</div>
+              
+            }
 
       </div>
         );

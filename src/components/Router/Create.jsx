@@ -5,7 +5,7 @@ import { Switch, Route } from 'react-router-dom';
 import DynamicImport from '@/components/App/DynamicImport';
 import Loading from '@/components/core/presentation/Loading';
 import { URL } from '@/config';
-import { setHeaderTitle, setHeaderCanBack, clearHeaderRight, clearHeaderLeft } from '@/reducers/app/action';
+import { setHeaderTitle, setHeaderCanBack, clearHeaderRight, clearHeaderLeft, showHeader } from '@/reducers/app/action';
 
 const Create = props => (<DynamicImport loading={Loading} load={() => import('@/pages/Create/Create')}>{Component => <Component {...props} />}</DynamicImport>);
 const Page404 = props => (<DynamicImport isNotFound loading={Loading} load={() => import('@/pages/Error/Page404')}>{Component => <Component {...props} />}</DynamicImport>);
@@ -20,7 +20,7 @@ class CreateRouter extends React.Component {
     setHeaderCanBack: PropTypes.func.isRequired,
     clearHeaderRight: PropTypes.func.isRequired,
     clearHeaderLeft: PropTypes.func.isRequired,
-
+    showHeader: PropTypes.func.isRequired,
   }
 
   constructor(props) {
@@ -29,6 +29,7 @@ class CreateRouter extends React.Component {
     this.props.setHeaderTitle('Extend a Shake');
     this.props.clearHeaderRight();
     this.props.clearHeaderLeft();
+    this.props.showHeader();
   }
 
   render() {
@@ -42,6 +43,6 @@ class CreateRouter extends React.Component {
 }
 
 export default connect(null, ({
-  setHeaderTitle, setHeaderCanBack, clearHeaderRight, clearHeaderLeft,
+  setHeaderTitle, setHeaderCanBack, clearHeaderRight, clearHeaderLeft, showHeader,
 }))(CreateRouter);
 

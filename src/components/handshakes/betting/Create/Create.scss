@@ -13,35 +13,41 @@
       }
     }
   }
+  .rowWrapper {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    //margin-top: rem-calc(20px);
+    margin-bottom: rem-calc(20px);
+    //align-items: center;
+    .btn-block + .btn-block {
+      margin-top: 0;
+    }
+  }
+
   .formInput {
     background: #f8faff;
     border-radius: rem-calc(6px);
     padding: rem-calc(20px 0);
     margin-bottom: rem-calc(28px);
   }
-  .rowWrapper {
-    align-items: center;
-    justify-content: space-between;
-    display: flex;
-    margin: rem-calc(20px) auto;
-    //max-width: 19.75rem;
-  }
+ 
   .label {
-    flex-basis: 38%;
     flex-shrink: 0;
-    margin: 0;
-    font-size: rem-calc(18px);
-    font-weight: $light;
-    color: #353535;
+    flex-basis: 100%;
+    font-size: rem-calc(12px);
+    color: #fff;
     letter-spacing: 0;
-    text-align: right;
-    padding-right: rem-calc(20px);
+    line-height: rem-calc(22px);
+    margin: 0;
+    opacity: 0.66;
   }
   .itemLabel {
     height: rem-calc(40px);
     line-height: rem-calc(34px);
   }
   .input {
+    /*
     height: rem-calc(40px);
     font-size: rem-calc(24px);
     font-weight: $normal;
@@ -57,6 +63,23 @@
       color: #c8c7cc;
       font-weight: $light;
     }
+    */
+    flex-basis: 100%;
+    background: rgba(216,216,216,0.14);
+    border: 2px solid rgba(255,255,255,0.15);
+    font-size: rem-calc(14px);
+    color: #C8C7CC;
+    letter-spacing: 0;
+    padding: 10px 11px;
+  }
+  .input[readOnly] {
+    border-bottom: none;
+  }
+  .cryptoCurrency, .input {
+    font-size: rem-calc(18px);
+    color: #000000;
+    letter-spacing: 0;
+    line-height: rem-calc(22px);
   }
   .oddField {
     //padding-left: rem-calc(5px);
@@ -91,31 +114,21 @@
       }
     }
   }
-  .betField {
-    input {
-      width: rem-calc(87px);
-      border-bottom: 2px solid #ced8f1;
-      order: 1;
-    }
-    & > div {
-      display: flex;
-      flex-wrap: wrap;
-      width: 100%;
-      &:after {
-        content: "ETH";
-        font-size: rem-calc(24px);
-        font-weight: $semi-bold;
-        color: $text-black;
-        letter-spacing: 0;
-        line-height: rem-calc(34px);
-        margin-left: rem-calc(8px);
-        align-self: center;
-        order: 2;
-      }
-      div[class="text-danger"] {
-        width: 100%;
-        order: 3;
-      }
-    }
+  .amount {
+    margin-bottom: -35px;
+  }
+  .amount + .cryptoCurrency {
+    font-size: rem-calc(12px);
+    font-weight: $medium;
+    color: #FFFFFF;
+    letter-spacing: 0;
+    position: relative;
+    top: 5px;
+    left: 80%;
+  }
+  .atOdds {
+    font-size: rem-calc(18px);
+    color: #D0021B;
+    letter-spacing: 0;
   }
 }
