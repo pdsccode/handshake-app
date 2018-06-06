@@ -39,12 +39,12 @@
     }
   }
   .feed-wrapper {
-    margin-top: rem-calc(35px);
+    margin-top: rem-calc(45px);
     &:hover {
       cursor: pointer;
     }
   }
   .no-data {
-    height: calc(100vh - 125px - 78px);
+    height: calc(100vh - 75px - 78px);
   }
 }

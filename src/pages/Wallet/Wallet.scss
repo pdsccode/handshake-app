@@ -79,13 +79,15 @@
   letter-spacing: 0;
 }
 .headerLink{
-  font-family: Helvetica;
-  font-size: 16px;
-  color: #1E4EFF;
+  font-size: 13px;
+  background: #007bff;
   letter-spacing: 0;
   cursor: pointer;
   float: right;
   margin-top: 5px;
+  color: white;
+  padding: 3px 10px;
+  border-radius: 4px;
 }
 .iconDefault{
   margin-left: 5px
@@ -130,7 +132,7 @@
   padding: 15px;
   overflow: hidden;
   margin: auto;
-  width: 90%;
+  width: 100%;
   margin-bottom: 5px;
 
 }
@@ -489,4 +491,9 @@
 }
 .bottom-sheet-wrapper{
   z-index: 2000;
+}
+.link-request-custom-amount{
+  cursor: pointer;
+  color: #1E4EFF;
+  margin: 10px;
 }

@@ -25,6 +25,7 @@ import {
   APP_USER_NAME,
   EXCHANGE_ACTION_PAST_NAME,
   EXCHANGE_ACTION_PRESENT_NAME,
+  EXCHANGE_ACTION_PERSON
 } from "@/constants";
 import ModalDialog from "@/components/core/controls/ModalDialog";
 import {connect} from "react-redux";
@@ -942,6 +943,32 @@ class FeedExchange extends React.PureComponent {
     return actionButtons;
   }
 
+  getBuyerSeller = () => {
+    const offer = this.offer;
+    let result = '';
+
+    switch (this.userType) {
+      case HANDSHAKE_USER.NORMAL: {
+        result = EXCHANGE_ACTION_PERSON[offer.type];
+        break;
+      }
+      case HANDSHAKE_USER.SHAKED: {
+        if (offer.type === EXCHANGE_ACTION.BUY) {
+          result = EXCHANGE_ACTION_PERSON[offer.SELL];
+        } else {
+          result = EXCHANGE_ACTION_PERSON[offer.BUY];
+        }
+        break;
+      }
+      case HANDSHAKE_USER.OWNER: {
+        result = EXCHANGE_ACTION_PERSON[offer.type];
+        break;
+      }
+    }
+
+    return result;
+  }
+
 
   render() {
     const {intl, initUserId, shakeUserIds, location, state, status, mode = 'discover', ipInfo: { latitude, longitude }, initAt, ...props} = this.props;
@@ -979,6 +1006,7 @@ class FeedExchange extends React.PureComponent {
     let actionButtons = null;
     let from = '';
     let showChat = false;
+    let buyerSeller = this.getBuyerSeller();
 
     switch (offer.feedType) {
       case EXCHANGE_FEED_TYPE.EXCHANGE: {
@@ -1129,7 +1157,7 @@ class FeedExchange extends React.PureComponent {
       distanceKm = getDistanceFromLatLonInKm(latitude, longitude, latLng[0], latLng[1])
       distanceMiles = distanceKm * 0.621371
     }
-    const isCreditCard = offer.feedType === 'instant'
+    const isCreditCard = offer.feedType === EXCHANGE_FEED_TYPE.INSTANT;
     return (
       <div>
         {
@@ -1151,12 +1179,14 @@ class FeedExchange extends React.PureComponent {
             </div>
             { mode === 'me' && !isCreditCard && showChat && (
               <div className="ml-auto pl-2" style={{ width: '50px' }}>
-                <Link to={URL.HANDSHAKE_CHAT_INDEX}>
+              {/* to-do chat link */}
+                <Link to={`${URL.HANDSHAKE_CHAT_INDEX}`}>
                   <img src={iconChat} width='35px' />
                 </Link>
               </div>
             )}
           </div>
+          {!isCreditCard && (<div className="mb-2">About {buyerSeller}</div>)}
           {/*<span>status: {status}</span><br></br>*/}
           {/*<span>userType: {this.userType}</span><br></br>*/}
           {
@@ -1204,8 +1234,8 @@ class FeedExchange extends React.PureComponent {
                   <div style={{ fontSize: mode === 'me' ? '80%' : '' }}>
                     <FormattedMessage id="offerDistanceContent" values={{
                       // offerType: offer.type === 'buy' ? 'Buyer' : 'Seller',
-                      distanceKm: distanceKm.toFixed(3),
-                      distanceMiles: distanceMiles.toFixed(1),
+                      distanceKm: distanceKm > 1 || distanceMiles === 0 ? distanceKm.toFixed(0) : distanceKm.toFixed(3),
+                      distanceMiles: distanceMiles === 0 ? distanceKm.toFixed(0) : distanceMiles.toFixed(1),
                     }}/>
                   </div>
                 </div>

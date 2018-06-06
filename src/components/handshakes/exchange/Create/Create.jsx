@@ -29,7 +29,6 @@ import {
   EXCHANGE_ACTION_NAME,
   FIAT_CURRENCY,
   FIAT_CURRENCY_SYMBOL,
-  SELL_PRICE_TYPE,
   SELL_PRICE_TYPE_DEFAULT,
 } from '@/constants';
 import '../styles.scss';
@@ -57,6 +56,9 @@ const FormExchangeCreate = createForm({
   },
 });
 const selectorFormExchangeCreate = formValueSelector(nameFormExchangeCreate);
+
+import iconLock from '@/assets/images/icon/lock.png';
+import iconUnlock from '@/assets/images/icon/unlock.png';
 
 const textColor = '#ffffff'
 const btnBg = 'rgba(29,29,38,0.30)'
@@ -106,7 +108,7 @@ async componentDidMount() {
     if (foundCountryPhone) {
       detectedCountryCode = foundCountryPhone.dialCode
     }
-    rfChange(nameFormExchangeCreate, 'phone', authProfile ? authProfile.phone : `${detectedCountryCode}-`)
+    rfChange(nameFormExchangeCreate, 'phone', authProfile.phone || `${detectedCountryCode}-`)
 
     this.getCryptoPriceByAmount(0);
     this.intervalCountdown = setInterval(() => {
@@ -240,7 +242,7 @@ async componentDidMount() {
       fiat_currency: fiat_currency,
       latitude: this.state.lat,
       longitude: this.state.lng,
-      email: authProfile.email,
+      email: authProfile ? authProfile.email : '',
     };
 
     if (values.type === EXCHANGE_ACTION.BUY) {
@@ -466,11 +468,17 @@ async componentDidMount() {
 
               <div className="d-flex mt-2">
                 {/*<label className="col-form-label mr-auto" style={{ width: '220px' }} />*/}
-                <div className='input-group justify-content-start' style={{ paddingLeft: '20px' }}>
+                <div className='input-group justify-content-start'>
                   <Field
                     name="sellPriceType"
                     component={fieldRadioButton}
-                    list={SELL_PRICE_TYPE}
+                    list={[
+                      { value: 'fix', text: 'Lock this price', icon: <img src={iconLock} width={20} /> },
+                      { value: 'flexible', text: `${EXCHANGE_ACTION_NAME[type]} at market price`, icon: <img src={iconUnlock} width={20} /> },
+                    ]}
+                    styleButton={{
+                      fontSize: '12px'
+                    }}
                     color={textColor}
                     validate={[required]}
                     onChange={this.onSellPriceTypeChange}
@@ -480,7 +488,7 @@ async componentDidMount() {
               <hr className="hrLine" />
 
               <div className="d-flex py-1">
-                <label className="col-form-label mr-auto label-create" style={{ width: '220px' }}>Customize price</label>
+                <label className="col-form-label mr-auto label-create" style={{ width: '220px' }}>Your percentage</label>
                 <div className='input-group align-items-center'>
                   <Field
                     name="customizePrice"
@@ -529,7 +537,7 @@ async componentDidMount() {
               </div>
             </div>
           </Feed>
-          <Button block type="submit">Sign & send</Button>
+          <Button block type="submit">Initiate</Button>
         </FormExchangeCreate>
         <ModalDialog onRef={modal => this.modalRef = modal}>
           {modalContent}

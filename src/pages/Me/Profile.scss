@@ -70,6 +70,8 @@
           }
           .dropdown-menu {
             max-width: 350px;
+            max-height: 300px;
+            overflow-y: auto;
           }
           .search-country {
             width: 100%;
