@@ -103,7 +103,6 @@ const meReducter = (
             handshake.status = status_i;
             handshake.result = result_i;
             break;
-            console.log('New handshake:', handshake);
           }
         }
         // const handshakeItem = myList.find(item => item.id === id);
@@ -112,7 +111,6 @@ const meReducter = (
         // //TO DO: delete record after update status
       });
       firebaseBetting?.remove();
-      console.log('My List:', myList);
 
       return {
         ...state,
