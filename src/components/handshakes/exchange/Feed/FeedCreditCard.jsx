@@ -132,7 +132,7 @@ class FeedCreditCard extends React.Component {
         fiat_amount: cryptoPrice.fiatAmount.trim(),
         fiat_currency: FIAT_CURRENCY,
         address: address,
-        email: authProfile.email,
+        email: authProfile ? authProfile.email : '',
         payment_method_data: params
       };
       // console.log('handleCreateCCOrder',paramsObj);
