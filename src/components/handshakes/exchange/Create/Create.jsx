@@ -48,6 +48,7 @@ import _sample from 'lodash/sample'
 import { feedBackgroundColors } from "@/components/handshakes/exchange/config";
 import {formatAmountCurrency, formatMoney} from "@/services/offer-util";
 import {BigNumber} from "bignumber.js";
+import { showLoading, hideLoading } from '@/reducers/app/action';
 
 const nameFormExchangeCreate = 'exchangeCreate';
 const FormExchangeCreate = createForm({
@@ -121,6 +122,14 @@ async componentDidMount() {
     // });
 
     // this.setState({ ipInfo: ipInfo.data });
+  }
+
+  showLoading = () => {
+    this.props.showLoading({message: '',});
+  }
+
+  hideLoading = () => {
+    this.props.hideLoading();
   }
 
   getCryptoPriceByAmount = (amount) => {
@@ -273,6 +282,7 @@ async componentDidMount() {
     const { currency } = this.props;
 
     // if (currency === 'BTC') {
+    this.showLoading();
       this.props.createOffer({
         PATH_URL: API_URL.EXCHANGE.OFFERS,
         data: offer,
@@ -321,9 +331,10 @@ async componentDidMount() {
     //   this.modalSendRef.close();
     // });
 
+    this.hideLoading();
     this.props.showAlert({
       message: <div className="text-center"><FormattedMessage id="createOfferSuccessMessage"/></div>,
-      timeOut: 3000,
+      timeOut: 2000,
       type: 'success',
       callBack: () => {
         this.props.history.push(URL.HANDSHAKE_ME);
@@ -361,6 +372,7 @@ async componentDidMount() {
   // }
 
   handleCreateOfferFailed = (e) => {
+    this.hideLoading();
     this.props.showAlert({
       message: <div className="text-center">{e.response?.data?.message}</div>,
       timeOut: 3000,
@@ -551,7 +563,9 @@ const mapDispatchToProps = (dispatch) => ({
   createOffer: bindActionCreators(createOffer, dispatch),
   getOfferPrice: bindActionCreators(getOfferPrice, dispatch),
   showAlert: bindActionCreators(showAlert, dispatch),
-  rfChange: bindActionCreators(change, dispatch)
+  rfChange: bindActionCreators(change, dispatch),
+  showLoading: bindActionCreators(showLoading, dispatch),
+  hideLoading: bindActionCreators(hideLoading, dispatch),
 });
 
 
