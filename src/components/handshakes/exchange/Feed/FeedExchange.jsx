@@ -936,7 +936,7 @@ class FeedExchange extends React.PureComponent {
         let offerPrice = getOfferPrice(listOfferPrice, offer.type, offer.currency);
         if (offerPrice) {
           fiatAmount = offer.amount * offerPrice.price || 0;
-          fiatAmount = fiatAmount + fiatAmount * offer.percentage;
+          fiatAmount = fiatAmount + fiatAmount * offer.percentage / 100;
         } else {
           console.log('aaaa', offer.type, offer.currency);
         }
