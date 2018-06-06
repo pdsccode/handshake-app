@@ -978,6 +978,7 @@ class FeedExchange extends React.PureComponent {
     let message = '';
     let actionButtons = null;
     let from = '';
+    let showChat = false;
 
     switch (offer.feedType) {
       case EXCHANGE_FEED_TYPE.EXCHANGE: {
@@ -1052,6 +1053,20 @@ class FeedExchange extends React.PureComponent {
                 payment_method: EXCHANGE_METHOD_PAYMENT[EXCHANGE_FEED_TYPE.EXCHANGE],
               });
               break;
+            }
+          }
+
+          //Check show chat
+          switch (status) {
+            case HANDSHAKE_EXCHANGE_STATUS.CREATED:
+            case HANDSHAKE_EXCHANGE_STATUS.ACTIVE:
+            case HANDSHAKE_EXCHANGE_STATUS.CLOSING:
+            case HANDSHAKE_EXCHANGE_STATUS.CLOSED: {
+              showChat = false;
+              break;
+            }
+            default: {
+              showChat = true;
             }
           }
 
@@ -1134,7 +1149,7 @@ class FeedExchange extends React.PureComponent {
             <div>
               <h4 style={{ lineHeight: '1.4' }}>{message}</h4>
             </div>
-            { mode === 'me' && !isCreditCard && (
+            { mode === 'me' && !isCreditCard && showChat && (
               <div className="ml-auto pl-2" style={{ width: '50px' }}>
                 <Link to={URL.HANDSHAKE_CHAT_INDEX}>
                   <img src={iconChat} width='35px' />
@@ -1160,7 +1175,7 @@ class FeedExchange extends React.PureComponent {
               !isCreditCard && (
                 <div>
                   {
-                    phone.split('-')[1] !== '' && ( // no phone number
+                    phone && phone.split('-')[1] !== '' && ( // no phone number
                       <div className="media mb-1">
                         <img className="mr-2" src={iconPhone} width={20}/>
                         <div className="media-body">
