@@ -480,7 +480,7 @@ async componentDidMount() {
               <hr className="hrLine" />
 
               <div className="d-flex py-1">
-                <label className="col-form-label mr-auto label-create" style={{ width: '220px' }}>Customize price</label>
+                <label className="col-form-label mr-auto label-create" style={{ width: '220px' }}>Your percentage</label>
                 <div className='input-group align-items-center'>
                   <Field
                     name="customizePrice"
@@ -529,7 +529,7 @@ async componentDidMount() {
               </div>
             </div>
           </Feed>
-          <Button block type="submit">Sign & send</Button>
+          <Button block type="submit">Initiate</Button>
         </FormExchangeCreate>
         <ModalDialog onRef={modal => this.modalRef = modal}>
           {modalContent}
