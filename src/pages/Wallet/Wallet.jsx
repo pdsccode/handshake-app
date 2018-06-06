@@ -30,6 +30,7 @@ import { setHeaderRight } from '@/reducers/app/action';
 import QrReader from 'react-qr-reader';
 import { showAlert } from '@/reducers/app/action';
 import { showLoading, hideLoading } from '@/reducers/app/action';
+import { Input as Input2, InputGroup, InputGroupAddon } from 'reactstrap';
 
 // import filesaver from 'file-saver';
 
@@ -576,9 +577,15 @@ class Wallet extends React.Component {
   // For Qrcode:
   handleScan=(data) =>{
     if(data){
-      this.setState({
-        inputAddressAmountValue: data,
+      let value = data.split(',');
+      this.setState({        
+        inputAddressAmountValue: value[0],
       });
+      if (value.length == 2){
+        this.setState({        
+          inputSendAmountValue: value[1],
+        });
+      }
       this.modalScanQrCodeRef.close()
     }
   }
@@ -705,17 +712,49 @@ class Wallet extends React.Component {
 
 
           {/* Modal for Copy address : */}
-          <ModalDialog title="Wallet address" onRef={modal => this.modalShareAddressRef = modal}>
+          <Modal title="Wallet address" onRef={modal => this.modalShareAddressRef = modal}>
             <div className="bodyTitle"><span>Share your public wallet address to receive { this.state.walletSelected ? this.state.walletSelected.name : ""} </span></div>
             <div className={['bodyBackup bodySahreAddress']}>
 
             <QRCode value={ this.state.walletSelected ? this.state.walletSelected.address : ""} />
             <div className="addressDivPopup">{ this.state.walletSelected ? this.state.walletSelected.address : ""}</div>
+
+            <div className="link-request-custom-amount" onClick={ () => {this.modalCustomAmountRef.open()}}>Request Specific amount -></div>
+
             <Button className="button" cssType="success" onClick={() => {Clipboard.copy(this.state.walletSelected.address);this.modalShareAddressRef.close(); this.showToast('Wallet address copied to clipboard.');}} >
               Copy to share
             </Button>
             </div>
-          </ModalDialog>
+          </Modal>
+
+          {/* Modal for Custom amount : */}
+          <Modal title="Custom Amount" onRef={modal => this.modalCustomAmountRef = modal}>            
+            <div className={['bodyBackup bodySahreAddress']}>
+
+            <QRCode value={ (this.state.walletSelected ? this.state.walletSelected.address : "") + (this.state.inputSendAmountValue != '' ? (",")+this.state.inputSendAmountValue : '')} />
+            <div className="addressDivPopup">            
+                <InputGroup>
+                  <InputGroupAddon addonType="prepend">Address</InputGroupAddon>
+                  <Input2 disabled                   
+                  value={ this.state.walletSelected ? this.state.walletSelected.address : ""} />
+                </InputGroup>
+
+              <br />
+
+              <InputGroup>
+                  <InputGroupAddon addonType="prepend">Amount</InputGroupAddon>
+                  <Input2 
+                  placeholder={ this.state.walletSelected ? "({0})".format(this.state.walletSelected.name) : ""}
+                  value={this.state.inputSendAmountValue} onChange={evt => this.updateSendAmountValue(evt)}/>
+                </InputGroup>
+
+              
+            </div>
+            <Button className="button" cssType="success" onClick={() => {this.modalCustomAmountRef.close(); this.modalShareAddressRef.close() }} >
+              Done
+            </Button>
+            </div>
+          </Modal>
 
           {/* Modal for Create/Import wallet : */}
           <Modal title="Create new wallet" onRef={modal => this.modalCreateWalletRef = modal}>
