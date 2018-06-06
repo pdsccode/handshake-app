@@ -943,6 +943,32 @@ class FeedExchange extends React.PureComponent {
     return actionButtons;
   }
 
+  getBuyerSeller = () => {
+    const offer = this.offer;
+    let result = '';
+
+    switch (this.userType) {
+      case HANDSHAKE_USER.NORMAL: {
+        result = EXCHANGE_ACTION_PERSON[offer.type];
+        break;
+      }
+      case HANDSHAKE_USER.SHAKED: {
+        if (offer.type === EXCHANGE_ACTION.BUY) {
+          result = EXCHANGE_ACTION_PERSON[offer.SELL];
+        } else {
+          result = EXCHANGE_ACTION_PERSON[offer.BUY];
+        }
+        break;
+      }
+      case HANDSHAKE_USER.OWNER: {
+        result = EXCHANGE_ACTION_PERSON[offer.type];
+        break;
+      }
+    }
+
+    return result;
+  }
+
 
   render() {
     const {intl, initUserId, shakeUserIds, location, state, status, mode = 'discover', ipInfo: { latitude, longitude }, initAt, ...props} = this.props;
@@ -980,6 +1006,7 @@ class FeedExchange extends React.PureComponent {
     let actionButtons = null;
     let from = '';
     let showChat = false;
+    let buyerSeller = this.getBuyerSeller();
 
     switch (offer.feedType) {
       case EXCHANGE_FEED_TYPE.EXCHANGE: {
