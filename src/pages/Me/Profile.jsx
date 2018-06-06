@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 // services
 import createForm from '@/components/core/form/createForm';
-import { setHeaderTitle } from '@/reducers/app/action';
+import { setHeaderTitle, showAlert } from '@/reducers/app/action';
+import { checkUsernameExist, authUpdate } from '@/reducers/auth/action';
 import COUNTRIES from '@/data/country-dial-codes.js';
 // components
 import { Grid, Row, Col } from 'react-bootstrap';
@@ -15,6 +16,8 @@ import ModalDialog from '@/components/core/controls/ModalDialog';
 // style
 import ExpandArrowSVG from '@/assets/images/icon/expand-arrow.svg';
 import CheckedSVG from '@/assets/images/icon/checked.svg';
+import { success } from '@/reducers/comment/action';
+
 import './Profile.scss';
 
 const NumberPhoneForm = createForm({
@@ -25,11 +28,6 @@ const NumberPhoneForm = createForm({
 const EmailForm = createForm({
   propsReduxForm: {
     form: 'EmailForm',
-  },
-});
-const UsernameForm = createForm({
-  propsReduxForm: {
-    form: 'UsernameForm',
   },
 });
 
@@ -49,11 +47,56 @@ class Profile extends React.Component {
     this.verifyEmail = ::this.verifyEmail;
     this.selectPhoneRegionCode = ::this.selectPhoneRegionCode;
     this.filterCountries = ::this.filterCountries;
+    this.addUsername = ::this.addUsername;
 
     props.setHeaderTitle('My Profile');
+
+    this.UsernameForm = createForm({
+      propsReduxForm: {
+        form: 'UsernameForm',
+        initialValues: { username: props.auth.profile.username },
+      },
+    });
   }
 
-  addUsername() {
+  addUsername(values) {
+    if (values.username) {
+      this.props.checkUsernameExist({
+        PATH_URL: 'user/username-exist',
+        qs: { username: values.username },
+        successFn: (res) => {
+          if (!res.data) {
+            const params = new URLSearchParams();
+            params.append('username', values.username);
+            this.props.authUpdate({
+              PATH_URL: 'user/profile',
+              data: params,
+              headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+              METHOD: 'POST',
+              successFn: () => {
+                this.props.showAlert({
+                  message: <div className="text-center">Updated your username</div>,
+                  timeOut: 3000,
+                  type: 'success',
+                });
+              },
+            });
+          } else {
+            this.props.showAlert({
+              message: <div className="text-center">This username has exist</div>,
+              timeOut: 3000,
+              type: 'danger',
+            });
+          }
+        },
+      });
+    } else {
+      this.props.showAlert({
+        message: <div className="text-center">Username is required</div>,
+        timeOut: 3000,
+        type: 'danger',
+      });
+    }
   }
 
   verifyPhone() {
@@ -83,12 +126,45 @@ class Profile extends React.Component {
 
   render() {
     const { countryCode, countries } = this.state;
+    const { UsernameForm } = this;
     return (
       <Grid className="profile">
         <Row>
           <Col md={12}>
             <div className="collapse-custom">
-              <div className="head" onClick={() => this.setState(state => ({phoneCollapse: !state.phoneCollapse}))}>
+              <div
+                className="head"
+                onClick={
+                  () => this.setState(state => ({
+                    usernameCollapse: !state.usernameCollapse,
+                  }))
+                }
+              >
+                <p className="label">
+                  Username
+                </p>
+                <div className="extend">
+                  <Image className={this.state.phoneCollapse ? 'rotate' : ''} src={ExpandArrowSVG} alt="arrow" />
+                </div>
+              </div>
+              <div className={`content ${this.state.usernameCollapse ? '' : 'd-none'}`}>
+                <p className="text">Enter username</p>
+                <UsernameForm onSubmit={this.addUsername}>
+                  <Field
+                    name="username"
+                    className="form-control-custom form-control-custom-ex w-100"
+                    component={fieldCleave}
+                  />
+                  <Button className="submit-btn">Save your username</Button>
+                </UsernameForm>
+              </div>
+            </div>
+          </Col>
+        </Row>
+        <Row>
+          <Col md={12}>
+            <div className="collapse-custom">
+              <div className="head" onClick={() => this.setState(state => ({ phoneCollapse: !state.phoneCollapse }))}>
                 <p className="label">
                   Phone Number
                   <span>
@@ -157,7 +233,7 @@ class Profile extends React.Component {
         <Row>
           <Col md={12}>
             <div className="collapse-custom">
-              <div className="head" onClick={() => this.setState(state => ({emailCollapse: !state.emailCollapse}))}>
+              <div className="head" onClick={() => this.setState(state => ({ emailCollapse: !state.emailCollapse }))}>
                 <p className="label">
                   Email Verification
                   <span>You may prefer to receive updates and notifications via email. This is also optional.</span>
@@ -194,16 +270,22 @@ class Profile extends React.Component {
 }
 
 Profile.propTypes = {
-  auth: PropTypes.object,
-  setHeaderTitle: PropTypes.func,
+  showAlert: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired,
+  setHeaderTitle: PropTypes.func.isRequired,
+  checkUsernameExist: PropTypes.func.isRequired,
+  authUpdate: PropTypes.func.isRequired,
 };
 
 const mapState = state => ({
-  auth: state.auth
+  auth: state.auth,
 });
 
 const mapDispatch = ({
+  showAlert,
   setHeaderTitle,
+  checkUsernameExist,
+  authUpdate,
 });
 
 export default connect(mapState, mapDispatch)(Profile);
