@@ -114,6 +114,10 @@ export const API_URL = {
     SHAKE: 'shake',
     WITHDRAW: 'withdraw',
     IP_DOMAIN: 'https://ipfind.co/me',
+
+    //Store
+    OFFER_STORES: 'exchange/offer-stores',
+    SHAKES: 'shakes',
   },
   SEED: {
     BASE: 'seed',
