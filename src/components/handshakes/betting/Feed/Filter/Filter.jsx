@@ -206,7 +206,6 @@ class BettingFilter extends React.Component {
         const shareInfo = this.getInfoShare(selectedMatch, selectedOutcome);
         const marketFee = (selectedMatch && selectedMatch.marketFee >= 0) ? selectedMatch.marketFee : null;
         const marketOdds = (selectedOutcome && selectedOutcome.marketOdds) ? selectedOutcome.marketOdds : null;
-        const percenFee = 3;
         const commentNo = 5;
         console.log('defaultOutcomeId:', defaultOutcomeId);
         console.log('Market Fee:', marketFee);
@@ -252,6 +251,10 @@ class BettingFilter extends React.Component {
 
                 <div className="wrapperContainer">
                     <div className="item">
+                        <div className="titleBox">
+                            <div>Amount (ETH)</div>
+                            <div>Odds</div>
+                        </div>
                     <GroupBook amountColor="#FA6B49" bookList={this.bookListSupport}/>
                     <GroupBook amountColor="#8BF275" bookList={this.bookListAgainst}/>
                     </div>

@@ -39,6 +39,7 @@
     letter-spacing: 0;
     padding: rem-calc(10px 11px);
     width: 100%;
+    text-align: right;
   }
   .amount {
     margin-bottom: -35px;
@@ -50,7 +51,16 @@
     letter-spacing: 0;
     position: relative;
     top: 6px;
-    left: 78%;
+    left: 8%;
+  }
+  .odds + .cryptoCurrency {
+    font-size: rem-calc(12px);
+    font-weight: $medium;
+    color: #FFFFFF;
+    letter-spacing: 0;
+    position: relative;
+    bottom: 26px;
+    left: 8%;
   }
   .input[readOnly] {
     border-bottom: none;
@@ -109,9 +119,10 @@
   }
   .titleForm {
     opacity: 0.9;
-    font-size: rem-calc(14px);
+    font-size: rem-calc(16px);
     color: #FFFFFF;
     letter-spacing: 0;
+    font-weight: bold;
     margin-bottom: rem-calc(20px);
   }
 }

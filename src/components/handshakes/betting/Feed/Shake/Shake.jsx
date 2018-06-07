@@ -88,13 +88,15 @@ class BetingShake extends React.Component {
     // console.log('componentWillReceiveProps Extra Data: ', extraData);
     // this.setState({extraData})
     console.log('Shake Props:', nextProps);
-    if(nextProps.marketOdds !== this.props.marketOdds){
+    if(nextProps.marketOdds !== this.props.marketOdds && nextProps.marketOdds > 0){
       console.log('Render componentWillReceiveProps Shake');
+      console.log('Market Odds:', nextProps.marketOdds);
+      
       const BettingShakeForm = createForm({
         propsReduxForm: {
           form: nameFormBettingShake,
           initialValues: {
-            odds: nextProps.marketOdds
+            odds:  parseFloat(nextProps.marketOdds)
           },
           enableReinitialize : true
         },
@@ -102,6 +104,7 @@ class BetingShake extends React.Component {
       this.setState({
         BettingShakeForm
       })
+      
     }
     
     
@@ -283,6 +286,7 @@ class BetingShake extends React.Component {
       id: 'odds',
       name: 'odds',
       label: 'Odds',
+      className: 'odds',
       placeholder: '2.0',
       value: 3.0,
       defaultValue: 3.0,
@@ -294,7 +298,7 @@ class BetingShake extends React.Component {
     console.log('BettingShakeForm:', BettingShakeForm);
     return (
       <BettingShakeForm  odds={marketOdds}  className="wrapperBettingShake" onSubmit={this.onSubmit}>
-        <p className="titleForm text-center">Bet on the outcome</p>
+        <p className="titleForm text-center">BET ON THE OUTCOME</p>
         <Toggle ref={(component) => {this.toggleRef = component}} onChange={this.onToggleChange} />
         {this.renderInputField(amountField)}
         {isShowOdds && this.renderInputField(oddsField)}
