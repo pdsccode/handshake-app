@@ -144,11 +144,17 @@ export class Ethereum extends Wallet {
 
           let value = Number(tran.value / 10000000000000000000),
           transaction_date = new Date(tran.timeStamp*1000),
+          addresses = [],
           is_sent = tran.from.toLowerCase() == this.address.toLowerCase();
+
+          if(is_sent) addresses.push(tran.to.replace(tran.to.substr(5, 32), '...'));
+          else addresses.push(tran.from.replace(tran.from.substr(5, 32), '...'));
+
           result.push({
             value: value,
             transaction_date: transaction_date,
             transaction_relative_time:  moment(transaction_date).fromNow(),
+            addresses: addresses,
             is_sent: is_sent});
         }
 
