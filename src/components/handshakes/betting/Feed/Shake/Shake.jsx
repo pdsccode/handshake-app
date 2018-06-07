@@ -55,7 +55,7 @@ class BetingShake extends React.Component {
     super(props);
     this.state = {
       buttonClass: 'btnOK btnRed',
-      isShowOdds: false,
+      isShowOdds: true,
       extraData: {},
 
     };
@@ -112,7 +112,8 @@ class BetingShake extends React.Component {
                 message = MESSAGE.ODD_LARGE_THAN;
               }
             }else {
-              this.shakeItem(amount, side);
+              //LOGIC new nerver use shake item
+              //this.shakeItem(amount, side);
 
             }
           }else {
@@ -248,7 +249,7 @@ class BetingShake extends React.Component {
       id: 'odds',
       name: 'odds',
       label: 'Odds',
-      placeholder: '0-0',
+      placeholder: '2.0',
       isShowCurrency: false,
       type: 'tel',
     };
@@ -335,6 +336,7 @@ class BetingShake extends React.Component {
 
     }else {
       // TO DO: Show message, show odd field
+      /*
       this.setState({
         isShowOdds: true,
       }, ()=> {
@@ -347,7 +349,16 @@ class BetingShake extends React.Component {
             }
           });
       })
+      */
 
+     const {message} = successData
+     this.props.showAlert({
+       message: <div className="text-center">{message}</div>,
+       timeOut: 3000,
+       type: 'danger',
+       callBack: () => {
+       }
+     });
 
     }
   }
@@ -372,10 +383,12 @@ class BetingShake extends React.Component {
   }
 
   initHandshake(amount, odds){
-    const {outcomeId} = this.props;
+    const {outcomeId, matchName, matchOutcome} = this.props;
     const {extraData} = this.state;
     const side = this.toggleRef.value;
     const fromAddress = wallet.address;
+    extraData["event_name"] = matchName;
+    extraData["event_predict"] = matchOutcome;
     extraData["event_odds"] = odds;
     extraData["event_bet"] = amount;
     console.log('Extra Data:', extraData);
