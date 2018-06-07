@@ -37,4 +37,9 @@ export default {
 
   createOfferStoreConfirm: 'Do you want to create offer Buy {amountBuy} {currency} - Sell {amountSell} {currency}?',
   notEnoughCoinInWalletStores: 'You only have {amount}({currency}) in default wallet {currency}. Fee ~ {fee}({currency}). Please add more',
+  addOfferItemSuccessMassage: 'Add offer item success',
+  deleteOfferItemSuccessMassage: 'Delete offer item success',
+  shakeOfferItemSuccessMassage: 'Shake offer item success',
+  rejectOfferItemSuccessMassage: 'Reject offer item success',
+  completeOfferItemSuccessMassage: 'Complete offer item success',
 };
