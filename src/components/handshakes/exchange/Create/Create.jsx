@@ -42,14 +42,7 @@ import {ExchangeHandshake} from "@/services/neuron";
 import COUNTRIES from "@/data/country-dial-codes.js";
 import {feedBackgroundColors} from "@/components/handshakes/exchange/config";
 import {formatAmountCurrency, formatMoney} from "@/services/offer-util";
-import {
-  addOfferItem,
-  completeOfferItem,
-  createOfferStores,
-  deleteOfferItem,
-  rejectOfferItem,
-  shakeOfferItem
-} from "@/reducers/exchange/action";
+import {createOfferStores,} from "@/reducers/exchange/action";
 import {BigNumber} from "bignumber.js/bignumber";
 
 const nameFormExchangeCreate = "exchangeCreate";
@@ -497,11 +490,5 @@ const mapDispatchToProps = (dispatch) => ({
   hideLoading: bindActionCreators(hideLoading, dispatch),
 
   createOfferStores: bindActionCreators(createOfferStores, dispatch),
-  addOfferItem: bindActionCreators(addOfferItem, dispatch),
-  deleteOfferItem: bindActionCreators(deleteOfferItem, dispatch),
-  shakeOfferItem: bindActionCreators(shakeOfferItem, dispatch),
-  rejectOfferItem: bindActionCreators(rejectOfferItem, dispatch),
-  completeOfferItem: bindActionCreators(completeOfferItem, dispatch),
-
 });
 export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(Component));
