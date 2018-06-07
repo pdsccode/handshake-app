@@ -19,7 +19,7 @@ export class Bitcoin extends Wallet {
     }
 
     getShortAddress() {
-      return this.address.replace(this.address.substr(5, 24), '...');
+      return this.address.replace(this.address.substr(4, 26), '...');
     }
 
     setDefaultNetwork() {
