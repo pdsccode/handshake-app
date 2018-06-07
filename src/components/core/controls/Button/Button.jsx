@@ -23,6 +23,7 @@ class Button extends React.PureComponent {
     app: PropTypes.object,
     immunity: PropTypes.bool,
     isLoading: PropTypes.bool,
+    style: PropTypes.any,
   };
 
   static defaultProps = {
@@ -34,6 +35,7 @@ class Button extends React.PureComponent {
     link: false,
     onClick: () => {},
     isLoading: false,
+    style: {},
   };
 
   constructor(props) {
@@ -56,10 +58,10 @@ class Button extends React.PureComponent {
   }
 
   immunity() {
-    if (this.props.immunity) {
-      return true;
+    if (!this.state.immunity) {
+      return false;
     }
-    if (this.state.immunity) {
+    if (this.props.immunity) {
       return true;
     }
     return false;
@@ -110,6 +112,8 @@ class Button extends React.PureComponent {
     } = this.props;
     const typeClass = this.typeClass(cssType);
     const Tag = link ? Link : 'button';
+
+    console.log(this.immunity());
 
     return (
       <Tag

@@ -132,18 +132,6 @@ class Router extends React.Component {
     getListOfferPrice: PropTypes.func.isRequired,
   };
 
-  static getDerivedStateFromProps(nextProps, prevState) {
-    if (nextProps.auth.isLogged !== prevState.isLogged) {
-      return { isLogged: nextProps.auth.isLogged };
-    }
-    if (nextProps.auth.profileUpdatedAt !== prevState.profileUpdatedAt) {
-      nextProps.firebase.unWatchEvent('value', `${FIREBASE_PATH.USERS}/${String(prevState.profile?.id)}`);
-      nextProps.firebase.watchEvent('value', `${FIREBASE_PATH.USERS}/${String(nextProps.auth.profile?.id)}`);
-      return { profile: nextProps.auth.profile, profileUpdatedAt: nextProps.auth.profileUpdatedAt };
-    }
-    return null;
-  }
-
   constructor(props) {
     super(props);
 
@@ -159,6 +147,18 @@ class Router extends React.Component {
 
     this.authSuccess = ::this.authSuccess;
     this.notification = ::this.notification;
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.auth.isLogged !== prevState.isLogged) {
+      return { isLogged: nextProps.auth.isLogged };
+    }
+    if (nextProps.auth.profileUpdatedAt !== prevState.profileUpdatedAt) {
+      nextProps.firebase.unWatchEvent('value', `${FIREBASE_PATH.USERS}/${String(prevState.profile?.id)}`);
+      nextProps.firebase.watchEvent('value', `${FIREBASE_PATH.USERS}/${String(nextProps.auth.profile?.id)}`);
+      return { profile: nextProps.auth.profile, profileUpdatedAt: nextProps.auth.profileUpdatedAt };
+    }
+    return null;
   }
 
   async componentDidMount() {
