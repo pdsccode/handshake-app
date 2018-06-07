@@ -111,7 +111,7 @@ class BettingFilter extends React.Component {
     get matchNames() {
         const {matches} = this.state;
         if(matches){
-            return matches.map((item) => ({ id: item.id, value: `${item.awayTeamName} - ${item.homeTeamName}` }));
+            return matches.map((item) => ({ id: item.id, value: `${item.homeTeamName} - ${item.awayTeamName}` }));
         }
         return null;
     }
@@ -255,6 +255,9 @@ class BettingFilter extends React.Component {
         this.props.loadHandshakes({PATH_URL: API_URL.CRYPTOSIGN.LOAD_HANDSHAKES, METHOD:'POST', data: params,
         successFn: this.getHandshakeSuccess,
         errorFn: this.getHandshakeFailed});
+        if(typeof window !== 'undefined') {
+          window.isGotDefaultOutCome = true;
+        }
     }
     getHandshakeSuccess = async (successData)=>{
         console.log('getHandshakeSuccess', successData);
