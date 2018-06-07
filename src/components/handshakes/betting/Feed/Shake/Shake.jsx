@@ -101,7 +101,7 @@ class BetingShake extends React.Component {
 
 
 
-    
+
     if(matchName && matchOutcome){
         if(amount > 0){
           if(total <= parseFloat(balance)){
@@ -255,7 +255,7 @@ class BetingShake extends React.Component {
 
     return (
       <BettingShakeForm className="wrapperBettingShake" onSubmit={this.onSubmit}>
-        <p className="titleForm text-center text-capitalize">Bet on the outcome</p>
+        <p className="titleForm text-center">Bet on the outcome</p>
         <Toggle ref={(component) => {this.toggleRef = component}} onChange={this.onToggleChange} />
         {this.renderInputField(amountField)}
         {isShowOdds && this.renderInputField(oddsField)}
@@ -368,7 +368,7 @@ class BetingShake extends React.Component {
           });
       })
     }
-   
+
   }
 
   initHandshake(amount, odds){
