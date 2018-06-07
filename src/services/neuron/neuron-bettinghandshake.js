@@ -20,8 +20,11 @@ export default class BettingHandshake extends BaseHandshake {
   get contractFileNameWithoutExtension() {
     return process.env.isProduction ? 'PredictionHandshake' : 'PredictionHandshakeDev';
   }
-  async getEstimateGas(){
-    const estimateGas = await this.neuron.caculateEstimatGasWithEthUnit(address, gasPrice);
+  async getEstimateGas() {
+    const estimateGas = await this.neuron.caculateEstimatGasWithEthUnit(
+      address,
+      gasPrice,
+    );
     return estimateGas;
   }
   initBet = async (hid, side, stake, payout, offchain) => {
@@ -36,21 +39,27 @@ export default class BettingHandshake extends BaseHandshake {
       payout,
       offchain,
     );
-    console.log(TAG, ' initBet ', this.contractAddress);
+    // hid = 0;
+    // side = 1;
+    // hid = 1;
+    // side = 1;
+    // payout = 0.5;
+    // offchain = 'cryptosign_m562';
+    console.log(TAG, ' initBet payout : ', payout, ' hid = ', hid);
     const payoutValue = Web3.utils.toWei(payout.toString(), 'ether');
-    const bytesOffchain = this.web3.utils.fromAscii(offchain);
+    const bytesOffchain = this.web3.utils.asciiToHex(offchain);
 
     const payloadData = this.handshakeInstance.methods
       .init(hid, side, payoutValue, bytesOffchain)
       .encodeABI();
 
-    const dataBlockChain = await this.neuron.makeRawTransaction(
+    const dataBlockChain = await this.neuron.sendRawTransaction(
       address,
       privateKey,
       payloadData,
       {
         amount: stake,
-        gasPrice: gasPrice,
+        gasPrice,
         toAddress: this.contractAddress,
       },
     );
@@ -66,11 +75,15 @@ export default class BettingHandshake extends BaseHandshake {
     const payloadData = this.handshakeInstance.methods
       .shake(hid, side, payoutValue, maker, bytesOffchain)
       .encodeABI();
-    console.log('Stake value:', stake);
-    const dataBlockChain = await this.neuron.makeRawTransaction(address, privateKey, payloadData, {
-      amount: stake,
-      toAddress: this.contractAddress,
-    });
+    const dataBlockChain = await this.neuron.sendRawTransaction(
+      address,
+      privateKey,
+      payloadData,
+      {
+        amount: stake,
+        toAddress: this.contractAddress,
+      },
+    );
     console.log('Data Blockchain:', dataBlockChain);
 
     return dataBlockChain;
@@ -94,10 +107,15 @@ export default class BettingHandshake extends BaseHandshake {
     const payloadData = this.handshakeInstance.methods
       .uninit(hid, side, stakeValue, payoutValue, bytesOffchain)
       .encodeABI();
-    const dataBlockChain = await this.neuron.makeRawTransaction(address, privateKey, payloadData, {
-      // amount: stake,
-      toAddress: this.contractAddress,
-    });
+    const dataBlockChain = await this.neuron.makeRawTransaction(
+      address,
+      privateKey,
+      payloadData,
+      {
+        // amount: stake,
+        toAddress: this.contractAddress,
+      },
+    );
     console.log('Data Blockchain:', dataBlockChain);
 
     return dataBlockChain;
@@ -116,13 +134,17 @@ export default class BettingHandshake extends BaseHandshake {
     const payloadData = this.handshakeInstance.methods
       .refund(hid, bytesOffchain)
       .encodeABI();
-    const dataBlockChain = await this.neuron.makeRawTransaction(address, privateKey, payloadData, {
-      // amount: stake,
-      toAddress: this.contractAddress,
-    });
+    const dataBlockChain = await this.neuron.makeRawTransaction(
+      address,
+      privateKey,
+      payloadData,
+      {
+        // amount: stake,
+        toAddress: this.contractAddress,
+      },
+    );
     console.log('Data Blockchain:', dataBlockChain);
     return dataBlockChain;
-
   };
 
   withdraw = async (hid, offchain) => {
@@ -138,13 +160,17 @@ export default class BettingHandshake extends BaseHandshake {
     const payloadData = this.handshakeInstance.methods
       .collect(hid, bytesOffchain)
       .encodeABI();
-    const dataBlockChain = await this.neuron.makeRawTransaction(address, privateKey, payloadData, {
-      // amount,
-      toAddress: this.contractAddress,
-    });
+    const dataBlockChain = await this.neuron.makeRawTransaction(
+      address,
+      privateKey,
+      payloadData,
+      {
+        // amount,
+        toAddress: this.contractAddress,
+      },
+    );
     console.log('Data Blockchain:', dataBlockChain);
 
     return dataBlockChain;
   };
-
 }
