@@ -121,7 +121,7 @@ module.exports = function webpackConfig(env, argv) {
     ...envConfig,
   };
 
-  if (isProduction && fs.existsSync(xPath('env.production.js'))) {
+  if (isProduction && fs.existsSync(xPath('.env.production.js'))) {
     appEnvConfig = { ...appEnvConfig, ...require('./.env.production.js') }; // eslint-disable-line
   }
 
