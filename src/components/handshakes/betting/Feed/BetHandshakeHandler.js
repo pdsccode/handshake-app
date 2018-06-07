@@ -11,6 +11,7 @@ console.log('Chain Id:', chainId);
 const bettinghandshake = new BettingHandshake(chainId);
 
 export const MESSAGE = {
+  BET_PROGRESSING: "Your bet is creating. Please wait",
   CREATE_BET_SUCCESSFUL: "Success! You placed a bet.",
   NOT_ENOUGH_BALANCE: "Go to wallet to request free ETH",
   CHOOSE_MATCH: "Please choose match and outcome",
