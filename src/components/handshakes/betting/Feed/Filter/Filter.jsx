@@ -206,7 +206,6 @@ class BettingFilter extends React.Component {
         const shareInfo = this.getInfoShare(selectedMatch, selectedOutcome);
         const marketFee = (selectedMatch && selectedMatch.marketFee >= 0) ? selectedMatch.marketFee : null;
         const marketOdds = (selectedOutcome && selectedOutcome.marketOdds) ? selectedOutcome.marketOdds : null;
-        const commentNo = 5;
         console.log('defaultOutcomeId:', defaultOutcomeId);
         console.log('Market Fee:', marketFee);
         console.log('Market Odds:', marketOdds);
@@ -256,7 +255,7 @@ class BettingFilter extends React.Component {
             </div>
             {<TopInfo marketTotal={parseFloat(tradedVolum)}
                     percentFee={marketFee}
-                    commentNo={commentNo}/>}
+                    objectId={outcomeId} />}
 
 
                 <div className="wrapperContainer">
@@ -272,7 +271,7 @@ class BettingFilter extends React.Component {
                     {<BettingShake
                         matchName={matchName}
                         matchOutcome={matchOutcome}
-                        outcomeId={parseInt(outcomeId)} 
+                        outcomeId={parseInt(outcomeId)}
                         outcomeHid={parseInt(outcomeHid)}
                         marketOdds={parseFloat(marketOdds)}/>}
 
