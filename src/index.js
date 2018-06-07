@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+
 // components
 import App from '@/components/App/App';
 import * as OfflinePlugin from 'offline-plugin/runtime';

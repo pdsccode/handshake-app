@@ -226,7 +226,9 @@ class Profile extends React.Component {
   }
 
   render() {
-    const { countryCode, countries, phone, sms, email } = this.state;
+    const {
+      countryCode, countries, phone, sms, email,
+    } = this.state;
     const { UsernameForm, NumberPhoneForm, EmailForm } = this;
     console.log('re-render?', email, sms, phone);
     return (

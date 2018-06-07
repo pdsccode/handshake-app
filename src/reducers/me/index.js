@@ -1,12 +1,13 @@
 import Handshake from '@/models/Handshake';
-import { ACTIONS } from './action';
 import {
   HANDSHAKE_EXCHANGE_CC_STATUS_VALUE,
   HANDSHAKE_EXCHANGE_STATUS_VALUE,
   FIREBASE_PATH,
 } from '@/constants';
-
-const firebase = require('firebase');
+import firebase from 'firebase/app';
+import 'firebase/database';
+import 'firebase/messaging';
+import { ACTIONS } from './action';
 
 const handleListPayload = payload =>
   payload.map(handshake => Handshake.handshake(handshake));
