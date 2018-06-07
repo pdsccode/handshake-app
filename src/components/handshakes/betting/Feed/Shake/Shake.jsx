@@ -206,7 +206,7 @@ class BetingShake extends React.Component {
               className={cn('form-control-custom input value', className || '')}
               id={id}
               type={type}
-              value={value}
+              //value={value}
               {...newProps}
               onChange= {()=> {
                 if (id === 'odds'){
@@ -291,6 +291,7 @@ class BetingShake extends React.Component {
       type: 'tel',
     };
     const {BettingShakeForm} = this.state;
+    console.log('BettingShakeForm:', BettingShakeForm);
     return (
       <BettingShakeForm  odds={marketOdds}  className="wrapperBettingShake" onSubmit={this.onSubmit}>
         <p className="titleForm text-center">Bet on the outcome</p>
