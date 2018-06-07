@@ -8,7 +8,7 @@ import Feed from '@/components/core/presentation/Feed';
 import Button from '@/components/core/controls/Button';
 import ModalDialog from '@/components/core/controls/ModalDialog';
 import localStore from '@/services/localStore';
-import {URL} from '@/config';
+import {URL} from '@/constants';
 import '../styles.scss';
 import {validate} from '@/components/handshakes/exchange/validation';
 import throttle from 'lodash/throttle';

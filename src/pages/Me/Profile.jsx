@@ -36,6 +36,7 @@ class Profile extends React.Component {
       email: '',
       sms: '',
       successMessage: '',
+      isShowVerificationCode: false,
     };
     // bind
     this.onSubmitVerifyPhone = ::this.onSubmitVerifyPhone;
@@ -45,7 +46,7 @@ class Profile extends React.Component {
     this.onTextFieldChange = ::this.onTextFieldChange;
     this.addUsername = ::this.addUsername;
 
-    props.setHeaderTitle('My Profile');
+    // props.setHeaderTitle('My Profile');
 
     this.UsernameForm = createForm({
       propsReduxForm: {
@@ -67,18 +68,13 @@ class Profile extends React.Component {
     });
   }
 
-  componentDidMount() {
-    // todo verify email with link
-    console.log(window.location.href);
-  }
-
   updateProfile(data = {}) {
     return new Promise((resolve, reject) => {
       const params = new URLSearchParams();
       for (var k in data) {
         params.append(k, data[k]);
       }
-      authUpdate({
+      this.props.authUpdate({
         PATH_URL: 'user/profile',
         data: params,
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -139,12 +135,16 @@ class Profile extends React.Component {
     const { verifyPhone, submitPhone, authUpdate} = this.props;
     const { countryCode, phone, phoneStart, sms } = this.state;
     if (phoneStart !== phone) {
-      console.log('onSubmitVerifyPhone start', countryCode, phone);
       verifyPhone({
         PATH_URL: `user/verification/phone/start?country=${countryCode.dialCode.replace('+', '')}&phone=${phone}`,
         METHOD: 'POST',
         successFn: async () => {
-          this.setState(() => ({ phoneStart: phone }));
+          this.setState(() => ({ phoneStart: phone, isShowVerificationCode: true }));
+          this.props.showAlert({
+            message: <div className="text-center">Enter the code you receive via SMS</div>,
+            timeOut: 3000,
+            type: 'success',
+          });
         },
         errorFn: async () => {
           this.props.showAlert({
@@ -160,18 +160,21 @@ class Profile extends React.Component {
         PATH_URL: `user/verification/phone/check?country=${countryCode.dialCode.replace('+', '')}&phone=${phone}&code=${sms}`,
         METHOD: 'POST',
         successFn: async (data) => {
-          try { 
-            await this.updateProfile({phone:phone});
-            this.setState(() => ({ successMessage: 'Your phone number is verified', phoneStart: false }), () => {
-              this.modalVerifyRef.open();
-            })
+          try {
+            await this.updateProfile({ phone:phone });
+            this.setState(() => ({ successMessage: 'Your phone number is verified', phoneStart: false, isShowVerificationCode: false }));
+            this.modalVerifyRef.open();
           } catch (e) {
-            console.log('update profile failed.');
-            this.setState(() => ({ successMessage: '', phoneStart: false }))
+            this.setState(() => ({ successMessage: '', phoneStart: false }));
+            this.modalVerifyRef.open();
           }
         },
         errorFn: async (data) => {
-          console.log('fail', data);
+          this.props.showAlert({
+            message: <div className="text-center">{data.message}</div>,
+            timeOut: 3000,
+            type: 'danger',
+          });
         }
       });
     }
@@ -180,15 +183,23 @@ class Profile extends React.Component {
   onSubmitVerifyEmail() {
     const { verifyEmail, submitEmail, authUpdate } = this.props;
     const { email } = this.state;
-    console.log('onSubmitVerifyPhone', email);
     verifyEmail({
       PATH_URL: `user/verification/email/start?email=${email}`,
       METHOD: 'POST',
       successFn: async (data) => {
-        console.log(data);
+        this.setState({ emailCollapse: false });
+        this.props.showAlert({
+          message: <div className="text-center">{data.message}</div>,
+          timeOut: 3000,
+          type: 'success',
+        });
       },
       errorFn: async (data) => {
-        console.log(data);
+        this.props.showAlert({
+          message: <div className="text-center">{data.message}</div>,
+          timeOut: 3000,
+          type: 'danger',
+        });
       }
     });
   }
@@ -215,7 +226,9 @@ class Profile extends React.Component {
   }
 
   render() {
-    const { countryCode, countries, phone, sms, email } = this.state;
+    const {
+      countryCode, countries, phone, sms, email,
+    } = this.state;
     const { UsernameForm, NumberPhoneForm, EmailForm } = this;
     console.log('re-render?', email, sms, phone);
     return (
@@ -235,7 +248,7 @@ class Profile extends React.Component {
                   Username
                 </p>
                 <div className="extend">
-                  <Image className={this.state.phoneCollapse ? 'rotate' : ''} src={ExpandArrowSVG} alt="arrow" />
+                  <Image className={this.state.usernameCollapse ? 'rotate' : ''} src={ExpandArrowSVG} alt="arrow" />
                 </div>
               </div>
               <div className={`content ${this.state.usernameCollapse ? '' : 'd-none'}`}>
@@ -246,7 +259,7 @@ class Profile extends React.Component {
                     className="form-control-custom form-control-custom-ex w-100"
                     component={fieldCleave}
                   />
-                  <Button className="submit-btn">Save your username</Button>
+                  <Button className="submit-btn">Save</Button>
                 </UsernameForm>
               </div>
             </div>
@@ -309,20 +322,22 @@ class Profile extends React.Component {
                     />
                     <Button className="send-btn">Send</Button>
                   </div>
-                  <p className="text">Enter verification code sent to your phone</p>
-                  <Field
-                    name="sms"
-                    className="form-control-custom form-control-custom-ex w-100"
-                    component={fieldCleave}
-                    propsCleave={{
-                      options: { blocks: [6], numericOnly: true },
-                    }}
-                    onChange={(evt, value, unknown, name) => {
-                      this.onTextFieldChange(name, value);
-                    }}
-                    value={sms}
-                  />
-                  <Button className="submit-btn">Verify your number</Button>
+                  <div className={this.state.isShowVerificationCode ? '' : 'd-none'}>
+                    <p className="text">Enter verification code sent to your phone</p>
+                    <Field
+                      name="sms"
+                      className="form-control-custom form-control-custom-ex w-100"
+                      component={fieldCleave}
+                      propsCleave={{
+                        options: { blocks: [6], numericOnly: true },
+                      }}
+                      onChange={(evt, value, unknown, name) => {
+                        this.onTextFieldChange(name, value);
+                      }}
+                      value={sms}
+                    />
+                    <Button className="submit-btn">Verify your number</Button>
+                  </div>
                 </NumberPhoneForm>
               </div>
             </div>

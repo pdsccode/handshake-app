@@ -1,6 +1,7 @@
 import { APP } from '@/constants';
 import local from '@/services/localStore';
 import { ACTIONS } from './action';
+import Auth from '@/models/Auth';
 
 const authReducter = (state = {
   token: local.get(APP.AUTH_TOKEN),
@@ -16,13 +17,13 @@ const authReducter = (state = {
     case `${ACTIONS.AUTH_FETCH}_SUCCESS`:
       local.save(APP.AUTH_PROFILE, action.payload.data);
       return {
-        ...state, profile: action.payload.data, isLogged: true, profileUpdatedAt: Date.now(),
+        ...state, profile: Auth.profile(action.payload.data), isLogged: true, profileUpdatedAt: Date.now(),
       };
 
     case `${ACTIONS.AUTH_UPDATE}_SUCCESS`:
       local.save(APP.AUTH_PROFILE, action.payload.data);
       return {
-        ...state, profile: action.payload.data, isLogged: true, profileUpdatedAt: Date.now(),
+        ...state, profile: Auth.profile(action.payload.data), isLogged: true, profileUpdatedAt: Date.now(),
       };
     default:
       return state;

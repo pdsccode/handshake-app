@@ -30,7 +30,7 @@ class DiscoverDetailPage extends React.Component {
 
   componentDidMount() {
     // load handshake detail
-    this.props.loadDiscoverDetail({ PATH_URL: `${API_URL.HANDSHAKE.BASE}/${this.state.id}` });
+    this.props.loadDiscoverDetail({ PATH_URL: `${API_URL.HANDSHAKE.INDEX}/${this.state.id}` });
   }
 
   get getDetailPage() {

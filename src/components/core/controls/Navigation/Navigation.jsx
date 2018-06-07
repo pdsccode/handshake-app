@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { URL } from '@/config';
+import { URL } from '@/constants';
 import { clearHeaderBack } from '@/reducers/app/action';
 import meIcon from '@/assets/images/navigation/ic_private.svg.raw';
 import discoverIcon from '@/assets/images/navigation/ic_discover.svg.raw';

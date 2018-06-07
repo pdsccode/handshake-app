@@ -5,30 +5,25 @@ import { Switch, Route } from 'react-router-dom';
 import DynamicImport from '@/components/App/DynamicImport';
 import Loading from '@/components/core/presentation/Loading';
 import { URL } from '@/constants';
-import { setHeaderTitle, clearHeaderLeft, clearHeaderRight, showHeader } from '@/reducers/app/action';
+import { setHeaderTitle, setHeaderCanBack } from '@/reducers/app/action';
 
-const Wallet = props => (<DynamicImport loading={Loading} load={() => import('@/pages/Wallet/Wallet')}>{Component => <Component {...props} />}</DynamicImport>);
+const FAQ = props => (<DynamicImport loading={Loading} load={() => import('@/pages/FAQ/FAQ')}>{Component => <Component {...props} />}</DynamicImport>);
 const Page404 = props => (<DynamicImport isNotFound loading={Loading} load={() => import('@/pages/Error/Page404')}>{Component => <Component {...props} />}</DynamicImport>);
 
 const routerMap = [
-  { path: URL.HANDSHAKE_WALLET_INDEX, component: Wallet },
+  { path: URL.FAQ, component: FAQ },
 ];
 
-class WalletRouter extends React.Component {
+class LandingPageRouter extends React.Component {
   static propTypes = {
     setHeaderTitle: PropTypes.func.isRequired,
-    clearHeaderLeft: PropTypes.func.isRequired,
-    clearHeaderRight: PropTypes.func.isRequired,
-    showHeader: PropTypes.func.isRequired,
-  }
+    setHeaderCanBack: PropTypes.func.isRequired,
+  };
 
   constructor(props) {
     super(props);
-
-    this.props.setHeaderTitle('My wallets');
-    this.props.clearHeaderRight();
-    this.props.clearHeaderLeft();
-    this.props.showHeader();
+    this.props.setHeaderCanBack();
+    this.props.setHeaderTitle('FAQ');
   }
 
   render() {
@@ -41,6 +36,5 @@ class WalletRouter extends React.Component {
   }
 }
 
-export default connect(null, ({
-  setHeaderTitle, clearHeaderRight, clearHeaderLeft, showHeader,
-}))(WalletRouter);
+export default connect(null, ({ setHeaderTitle, setHeaderCanBack }))(LandingPageRouter);
+
