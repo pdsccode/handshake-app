@@ -1,40 +1,69 @@
 @import './src/styles/style';
+
+.app {
+  background: #161616;
+}
+
 .mobile-tablet {
   display: flex;
   align-items: center;
   height: 100vh;
   margin: 0 auto;
-  p {
-    margin: 0;
-    font-weight: $semi-bold;
-    font-size: rem-calc(36px);
-    color: #282828;
-    letter-spacing: 0;
-  }
-
-  .right {
-    padding-left: 10%;
-    .title {
-      font-size: rem-calc(60px);
-      color: #ff3939;
-    }
-    .sub-title {
-        margin-bottom: rem-calc(40px);
-      font-size: rem-calc(48px);
-      color: #36b0c1;
-    }
-  }
-  .readTheWhitePaper {
-    display: block;
-    margin-top: rem-calc(20px);
+  font-family: anonymous-pro, monospace;
+  font-style: normal;
+  .chooseLanguage {
     font-size: rem-calc(16px);
-    color: blue;
-    letter-spacing: 0;
-    span {
-      text-decoration: underline;
+    color: #FFFFFF;
+    text-align: center;
+    countryActive {
+      //border-bottom: ;
     }
-    img {
-      margin-left: 8px;
+  }
+  .imageHeader {
+    min-width: 400px;
+  }
+  h1 {
+    font-size: rem-calc(22px);
+    color: #BCBCBC;
+    letter-spacing: 0;
+    text-align: center;
+    margin-bottom: rem-calc(78px);
+    font-weight: $normal;
+  }
+  p {
+    font-size: rem-calc(22px);
+    font-weight: $semi-bold;
+    color: #BCBCBC;
+    letter-spacing: 0;
+    text-align: center;
+    line-height: rem-calc(34px);
+    margin-bottom: rem-calc(84px);
+    .website {
+      color: #7491F1;
+    }
+    .whiteColor {
+      color: #fff;
+    }
+  }
+  ul {
+    font-size: rem-calc(22px);
+    color: #FFFFFF;
+    letter-spacing: 0;
+    list-style: none;
+    width: 40%;
+    margin: 0 auto;
+    li {
+      img {
+        width: rem-calc(21px);
+        height: rem-calc(21px);
+      }
+      a {
+        color: #FFFF00;
+        text-decoration: underline;
+      }
+    }
+    li + li {
+      margin-top: rem-calc(16px);
     }
   }
 }
