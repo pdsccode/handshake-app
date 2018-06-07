@@ -71,26 +71,40 @@ export const fieldRadioButton = customField(({
   onChange, value, list, name, color = '', styleButton = {}, type
 }) => {
   let containerClass = '';
-  let isTab = false;
+  let fullWidth = false;
+  let hasPrefixIcon = false;
   switch (type) {
     case 'tab':
       containerClass = 'tab';
-      isTab = true;
+      fullWidth = true;
+      hasPrefixIcon = false;
+      break;
+    case 'tab-1':
+      containerClass = 'tab-1';
+      hasPrefixIcon = false;
+      fullWidth = true;
+      break;
+    case 'tab-2':
+      containerClass = 'tab-2';
+      fullWidth = true;
+      hasPrefixIcon = true;
       break;
     case 'radio-big':
       containerClass = 'big';
+      hasPrefixIcon = false;
       break;
     default:
+      hasPrefixIcon = true;
       containerClass = 'default';
   }
   return (
-    <span style={{ width: isTab ? '100%' : '' }}>
+    <span style={{ width: fullWidth ? '100%' : '' }}>
     {
       list.map((item, index) => {
         const { value: itemValue, text, icon } = item;
         const isChecked = itemValue === value;
         return (
-          <div key={index} className={cx('radio-container', containerClass)} style={isTab ? { width: `${100 / list.length}%` } : {}}>
+          <div key={index} className={cx('radio-container', containerClass)} style={fullWidth ? { width: `${100 / list.length}%` } : {}}>
             <input
               type="radio"
               name={name}
@@ -105,7 +119,7 @@ export const fieldRadioButton = customField(({
             >
               {/*<span style={{ fontSize: '28px' }}>&sdot;</span> */}
               {
-                !['radio-big', 'tab'].includes(type) && (<span>{icon || <span>&#x25cf;</span>}&nbsp;</span>)
+                hasPrefixIcon && (<span>{icon || <span>&#x25cf;</span>}&nbsp;</span>)
               }
               {text}
             </button>

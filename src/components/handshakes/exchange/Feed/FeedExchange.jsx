@@ -31,6 +31,7 @@ import {
 } from "@/constants";
 import ModalDialog from "@/components/core/controls/ModalDialog";
 import {connect} from "react-redux";
+import ShakeDetail from '../components/ShakeDetail';
 import {
   cancelShakedOffer,
   closeOffer,
@@ -44,7 +45,7 @@ import {MasterWallet} from "@/models/MasterWallet";
 import {getHandshakeUserType, getOfferPrice} from "@/services/offer-util";
 import {showAlert} from '@/reducers/app/action';
 import {Link} from "react-router-dom";
-import {URL} from '@/config';
+// import {URL} from '@/config';
 import {getDistanceFromLatLonInKm} from '../utils'
 import {ExchangeHandshake} from '@/services/neuron';
 import _sample from "lodash/sample";
@@ -58,6 +59,10 @@ class FeedExchange extends React.PureComponent {
   constructor(props) {
     super(props);
     this.mainColor = 'linear-gradient(-180deg, rgba(0,0,0,0.50) 0%, #303030 0%, #000000 100%)'
+  }
+
+  handleOnShake = () => {
+    this.modalRef.open();
   }
   render() {
     const nameShop = 'CryptoWorkshop'
@@ -110,7 +115,10 @@ class FeedExchange extends React.PureComponent {
             </tbody>
           </table>
         </Feed>
-        <Button block className="mt-2">Shake</Button>
+        <Button block className="mt-2" onClick={this.handleOnShake}>Shake</Button>
+        <ModalDialog onRef={modal => this.modalRef = modal} className="dialog-shake-detail">
+          <ShakeDetail />
+        </ModalDialog>
       </div>
     );
   }

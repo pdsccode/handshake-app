@@ -39,6 +39,48 @@
     }
   }
 
+  &.tab-1 {
+    text-align: center;
+    input {
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+      &:checked ~ button {
+        color: #ffffff;
+        border-bottom: 2px solid #ffffff;
+        box-shadow: none;
+      }
+      & ~ button {
+        color: #798187;
+        width: 100%;
+        border-radius: 0;
+        border-bottom: 2px solid #798187;
+        //border: none;
+        background: transparent;
+        //opacity: 0.3;
+      }
+    }
+  }
+  &.tab-2 {
+    text-align: center;
+    input {
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+      &:checked ~ button {
+        color: #ffffff;
+        box-shadow: none;
+        background: #0E1011;
+      }
+      & ~ button {
+        background: #5a626a;
+        color: #b9b9be;
+        width: 100%;
+        border-radius: 0;
+      }
+    }
+  }
+
   &.big {
     input {
       position: absolute;

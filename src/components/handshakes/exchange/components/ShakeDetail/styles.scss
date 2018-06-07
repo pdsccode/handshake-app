@@ -1,0 +1,30 @@
+.shake-detail {
+  //background: grey;
+  .text {
+    color: #9a9ea2;
+  }
+  .input {
+    color: #c5c4c9;
+    width: 100%;
+    padding: 0 50px 0 10px;
+    background: #5a626a;
+    border: 2px solid #6f767d;
+    outline: none;
+    line-height: 34px;
+  }
+  .append-text {
+    position: absolute;
+    right: 10px;
+    top: 8px;
+    color: #e1e1e3;
+  }
+  .hl {
+    background-color: #5c626a;
+    margin: 10px 0;
+  }
+  .text-total {
+    font-size: 14px;
+    color: #FFFFFF;
+    letter-spacing: 0;
+  }
+}
