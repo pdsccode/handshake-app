@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import moment from 'moment';
+
 // service, constant
 import { API_URL } from '@/constants';
 import { loadMatches, loadHandshakes } from '@/reducers/betting/action';
@@ -11,6 +13,7 @@ import BettingShake from './../Shake';
 import GroupBook from './../GroupBook';
 import ShareSocial from '@/components/core/presentation/ShareSocial';
 import FeedComponent from '@/components/Comment/FeedComment';
+import TopInfo from './../TopInfo';
 // style
 import './Filter.scss';
 
@@ -107,11 +110,18 @@ class BettingFilter extends React.Component {
         }
         return null;
     }
+    getStringDate(date){
+        console.log('Date:', date);
+        var formattedDate = moment(new Date(date)).format('MMM DD: HH.mm');
+        console.log('Formated date:', formattedDate);
+        return formattedDate;
+
+    }
 
     get matchNames() {
         const {matches} = this.state;
         if(matches){
-            return matches.map((item) => ({ id: item.id, value: `${item.homeTeamName} - ${item.awayTeamName}` }));
+            return matches.map((item) => ({ id: item.id, value: `${item.homeTeamName} vs ${item.awayTeamName} (${this.getStringDate(item.date)})`  }));
         }
         return null;
     }
@@ -228,6 +238,7 @@ class BettingFilter extends React.Component {
                     shareUrl={shareInfo.shareUrl}
                 />
             </div>
+            {/*<TopInfo/>*/}
 
                 <div className="wrapperContainer">
                     <div className="item">

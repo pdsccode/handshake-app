@@ -71,7 +71,7 @@ class BettingCreate extends React.PureComponent {
   static defaultProps = {
     item: {
       "backgroundColor": "#332F94",
-      "desc": "[{\"key\": \"event_bet\",\"suffix\": \"ETH\",\"label\": \"Amount\", \"placeholder\": \"10\", \"type\": \"number\", \"className\": \"amount\"}] [{\"key\": \"event_odds\", \"label\": \"Odds\", \"placeholder\": \"10\",\"prefix\": \"1 -\", \"className\": \"atOdds\", \"type\": \"number\"}]",
+      "desc": "[{\"key\": \"event_bet\",\"suffix\": \"ETH\",\"label\": \"Amount\", \"placeholder\": \"0.00\", \"type\": \"number\", \"className\": \"amount\"}] [{\"key\": \"event_odds\", \"label\": \"Odds\", \"placeholder\": \"2.0\",\"prefix\": \"1 -\", \"className\": \"atOdds\", \"type\": \"number\"}]",
       "id": 18,
       "message": null,
       "name": "Bet",
@@ -120,6 +120,11 @@ class BettingCreate extends React.PureComponent {
         matches
     })
 }
+getStringDate(date){
+  var formattedDate = moment(date).format('MMM DD: HH.mm');
+  return formattedDate;
+
+}
 get foundMatch(){
   const {selectedMatch, matches} = this.state;
   if(selectedMatch){
@@ -133,7 +138,7 @@ get foundMatch(){
 
 get matchNames() {
   const {matches} = this.state;
-  return matches.map((item) => ({ id: item.id, value: `${item.homeTeamName} - ${item.awayTeamName}` }));
+  return matches.map((item) => ({ id: item.id, value: `${item.homeTeamName} - ${item.awayTeamName} (${this.getStringDate(item.date)})` }));
 }
 get matchOutcomes(){
   const {selectedMatch, matches} = this.state;
