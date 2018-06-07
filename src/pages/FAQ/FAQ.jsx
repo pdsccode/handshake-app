@@ -156,7 +156,7 @@ class FAQ extends React.Component {
           <div className="col-lg-12 col-md-12 col-xs-12">
             <div className="headerPage">
               <img src={ninjaIcon} alt="shuriken icon" />
-              <span><span className="yellow">Decentralized</span> Betting Exchange</span>
+              <span><span className="yellow">Decentralized</span> Prediction Exchange</span>
             </div>
           </div>
           <div className="col-lg-12">
