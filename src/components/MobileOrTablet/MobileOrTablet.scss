@@ -11,7 +11,7 @@
     color: #282828;
     letter-spacing: 0;
   }
-  
+
   .right {
     padding-left: 10%;
     .title {
@@ -22,6 +22,19 @@
         margin-bottom: rem-calc(40px);
       font-size: rem-calc(48px);
       color: #36b0c1;
+    }
+  }
+  .readTheWhitePaper {
+    display: block;
+    margin-top: rem-calc(20px);
+    font-size: rem-calc(16px);
+    color: blue;
+    letter-spacing: 0;
+    span {
+      text-decoration: underline;
+    }
+    img {
+      margin-left: 8px;
     }
   }
 }
