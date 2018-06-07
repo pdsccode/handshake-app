@@ -13,6 +13,9 @@
     display: flex;
     justify-content: space-between;
   }
+
+ 
+ 
   .share-block {
     display: flex;
     flex-wrap: wrap;
@@ -35,10 +38,24 @@
   }
 
   .item {
-    //flex-grow: 1; /* default 0 */
     flex-basis: 50%;
     width: 50%;
     border: none;
     padding: rem-calc(1px);
+  }
+
+  .item:first-child {
+    display: flex;
+    flex-direction: column;
+  }
+  .titleBox {
+    display: flex;
+    background-color: #1F2B34;;
+    color: #5a6166;
+    font-size: rem-calc(13px);
+    justify-content: space-between;
+    letter-spacing: 0;
+    padding: rem-calc(14px 20px);
+
   }
 }
