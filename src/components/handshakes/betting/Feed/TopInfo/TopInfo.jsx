@@ -11,8 +11,6 @@ class TopInfo extends React.Component {
       }
     
       static defaultProps = {
-        marketFee: 512,
-        percentFee: 2,
         commentNo: 3
       };
     constructor(props) {
@@ -22,11 +20,12 @@ class TopInfo extends React.Component {
         
     }
     render() {
-        const {marketFee, percentFee, commentNo} = this.props;
+        const {marketTotal, percentFee, commentNo} = this.props;
+        console.log(this.props);
         return (
             <div className="wrapperTopInfoContainer">
                 <div className="boxInfo">
-                    <div className="number">{marketFee} ETH</div>
+                    <div className="number">{marketTotal} ETH</div>
                     <div className="des">Traded volume</div>
                 </div>
                 <div className="boxInfo">

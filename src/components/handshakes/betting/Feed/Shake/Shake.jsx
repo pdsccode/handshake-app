@@ -48,24 +48,28 @@ class BetingShake extends React.Component {
     outcomeId: -1
   };
 
+  
+
   constructor(props) {
     super(props);
+
+    const BettingShakeForm = createForm({
+      propsReduxForm: {
+        form: nameFormBettingShake,
+        
+        enableReinitialize : true
+      },
+    });
+
     this.state = {
       buttonClass: 'btnOK btnRed',
       isShowOdds: true,
       extraData: {},
       isChangeOdds: false,
+      BettingShakeForm
       
     };
-    this.BettingShakeForm = createForm({
-      propsReduxForm: {
-        form: nameFormBettingShake,
-        initialValues: {
-          odds: props.marketOdds
-        },
-        enableReinitialize : true
-      },
-    });
+    
 
     this.onSubmit = ::this.onSubmit;
     this.onCancel = ::this.onCancel;
@@ -84,10 +88,9 @@ class BetingShake extends React.Component {
     // console.log('componentWillReceiveProps Extra Data: ', extraData);
     // this.setState({extraData})
     console.log('Shake Props:', nextProps);
-    /*
     if(nextProps.marketOdds !== this.props.marketOdds){
       console.log('Render componentWillReceiveProps Shake');
-      this.BettingShakeForm = createForm({
+      const BettingShakeForm = createForm({
         propsReduxForm: {
           form: nameFormBettingShake,
           initialValues: {
@@ -96,8 +99,11 @@ class BetingShake extends React.Component {
           enableReinitialize : true
         },
       });
+      this.setState({
+        BettingShakeForm
+      })
     }
-    */
+    
     
 
   }
@@ -284,7 +290,7 @@ class BetingShake extends React.Component {
       isShowInfoText: true,
       type: 'tel',
     };
-    const {BettingShakeForm} = this;
+    const {BettingShakeForm} = this.state;
     return (
       <BettingShakeForm  odds={marketOdds}  className="wrapperBettingShake" onSubmit={this.onSubmit}>
         <p className="titleForm text-center">Bet on the outcome</p>

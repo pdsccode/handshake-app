@@ -246,7 +246,7 @@ class BettingFilter extends React.Component {
                     shareUrl={shareInfo.shareUrl}
                 />
             </div>
-            {<TopInfo marketTotal={tradedVolum}
+            {<TopInfo marketTotal={parseFloat(tradedVolum)}
                     percentFee={marketFee}
                     commentNo={commentNo}/>}
 
