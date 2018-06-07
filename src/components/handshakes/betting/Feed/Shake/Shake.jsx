@@ -29,11 +29,7 @@ const chainId = wallet.chainId;
 const bettinghandshake = new BettingHandshake(chainId);
 
 const nameFormBettingShake = 'bettingShakeForm';
-const BettingShakeForm = createForm({
-  propsReduxForm: {
-    form: nameFormBettingShake,
-  },
-});
+
 
 const defaultAmount = 1;
 
@@ -59,7 +55,17 @@ class BetingShake extends React.Component {
       isShowOdds: true,
       extraData: {},
       isChangeOdds: false,
+      
     };
+    this.BettingShakeForm = createForm({
+      propsReduxForm: {
+        form: nameFormBettingShake,
+        initialValues: {
+          odds: props.marketOdds
+        },
+        enableReinitialize : true
+      },
+    });
 
     this.onSubmit = ::this.onSubmit;
     this.onCancel = ::this.onCancel;
@@ -78,6 +84,21 @@ class BetingShake extends React.Component {
     // console.log('componentWillReceiveProps Extra Data: ', extraData);
     // this.setState({extraData})
     console.log('Shake Props:', nextProps);
+    /*
+    if(nextProps.marketOdds !== this.props.marketOdds){
+      console.log('Render componentWillReceiveProps Shake');
+      this.BettingShakeForm = createForm({
+        propsReduxForm: {
+          form: nameFormBettingShake,
+          initialValues: {
+            odds: nextProps.marketOdds
+          },
+          enableReinitialize : true
+        },
+      });
+    }
+    */
+    
 
   }
 
@@ -201,10 +222,10 @@ class BetingShake extends React.Component {
 
   renderForm() {
     const { total, buttonClass, isShowOdds } = this.state;
-    const { remaining, odd } = this.props;
-    const odds = `1 : ${odd}`;
-
+    const { marketOdds } = this.props;
+    /*
     const formFieldData = [
+      
       {
         id: 'you_bet',
         name: 'you_bet',
@@ -232,6 +253,7 @@ class BetingShake extends React.Component {
         key: 3,
       },
     ];
+    */
 
     const youCouldWinField = {
       id: 'you_could_win',
@@ -262,9 +284,9 @@ class BetingShake extends React.Component {
       isShowInfoText: true,
       type: 'tel',
     };
-
+    const {BettingShakeForm} = this;
     return (
-      <BettingShakeForm className="wrapperBettingShake" onSubmit={this.onSubmit}>
+      <BettingShakeForm  odds={marketOdds}  className="wrapperBettingShake" onSubmit={this.onSubmit}>
         <p className="titleForm text-center">Bet on the outcome</p>
         <Toggle ref={(component) => {this.toggleRef = component}} onChange={this.onToggleChange} />
         {this.renderInputField(amountField)}

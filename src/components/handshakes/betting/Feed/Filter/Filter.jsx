@@ -185,6 +185,7 @@ class BettingFilter extends React.Component {
 
     render(){
         const {matches} = this.state;
+        const {tradedVolum} = this.props;
         const selectedOutcome = this.outcomeDropDown ? this.outcomeDropDown.itemSelecting : SELECTING_DEFAULT;
         const selectedMatch = this.outcomeDropDown?  this.matchDropDown.itemSelecting : SELECTING_DEFAULT;
         console.log('Selected Outcome:', selectedOutcome);
@@ -205,6 +206,8 @@ class BettingFilter extends React.Component {
         const shareInfo = this.getInfoShare(selectedMatch, selectedOutcome);
         const marketFee = (selectedMatch && selectedMatch.marketFee >= 0) ? selectedMatch.marketFee : null;
         const marketOdds = (selectedOutcome && selectedOutcome.marketOdds) ? selectedOutcome.marketOdds : null;
+        const percenFee = 3;
+        const commentNo = 5;
         console.log('defaultOutcomeId:', defaultOutcomeId);
         console.log('Market Fee:', marketFee);
         console.log('Market Odds:', marketOdds);
@@ -243,7 +246,9 @@ class BettingFilter extends React.Component {
                     shareUrl={shareInfo.shareUrl}
                 />
             </div>
-            {/*<TopInfo/>*/}
+            {<TopInfo marketTotal={tradedVolum}
+                    percentFee={marketFee}
+                    commentNo={commentNo}/>}
 
                 <div className="wrapperContainer">
                     <div className="item">
@@ -303,6 +308,7 @@ const mapState = state => ({
   matches: state.betting.matches,
   supports: state.betting.supports,
   against: state.betting.against,
+  tradedVolum: state.betting.tradedVolum,
 });
 
 const mapDispatch = ({

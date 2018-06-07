@@ -3,12 +3,20 @@
 
  .wrapperTopInfoContainer{
     display: flex;   
-    flex-wrap: wrap;
-    
+    //flex-wrap: wrap;
+    justify-content: space-between
   }
   .boxInfo {
-    background-color: blue; 
-    margin-left: 10 px;
+    background-color: #1a3d7a;
+    margin-left: rem-calc(10px);
     color: white;
+    padding: rem-calc(10px);
+    .number {
+        font-size: rem-calc(14px);
+        font-weight: bold
+    }
+    .des {
+        font-size: rem-calc(13px);
 
+    }
   }
