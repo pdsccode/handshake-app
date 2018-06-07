@@ -34,4 +34,7 @@ export default {
   withdrawShakedfferSuccessMessage: 'Withdraw shaked offer success',
   buyUsingCreditCardSuccessMessge: 'Buy using Card success',
   notEnoughCoinInWallet: 'You only have {amount}({currency}) in default wallet {currency}. Fee ~ {fee}({currency}). Please add more',
+
+  createOfferStoreConfirm: 'Do you want to create offer Buy {amountBuy} {currency} - Sell {amountSell} {currency}?',
+  notEnoughCoinInWalletStores: 'You only have {amount}({currency}) in default wallet {currency}. Fee ~ {fee}({currency}). Please add more',
 };
