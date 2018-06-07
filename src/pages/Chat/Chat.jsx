@@ -313,7 +313,9 @@ class Chat extends Component {
 
       const historyState = this.loadDataFromLocalStorage();
       if (historyState && isInitialized) {
-        this.setCustomState(historyState);
+        this.setCustomState(historyState, () => {
+          this.updateHeaderLeft();
+        });
       }
 
       isInitialized = true;
@@ -518,7 +520,7 @@ class Chat extends Component {
           onClick={isInSearchMode ? this.onSearchUserClicked : this.onChatItemClicked}
         />
       </div>
-    ) : this.renderEmptyMessage(isInSearchMode ? 'NO RESULT FOUND' : 'NO MESSAGE YET');
+    ) : this.renderEmptyMessage(isInSearchMode ? 'The Ninja you are looking for is not here. Perhaps you have their name wrong.' : 'NO MESSAGE YET');
   }
 
   renderBackButton() {
