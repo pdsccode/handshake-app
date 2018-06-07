@@ -7,11 +7,12 @@ export { default as BettingHandshake } from './neuron-bettinghandshake';
 export { default as ExchangeHandshake } from './neuron-exchangehandshake';
 
 const BN = Web3.utils.BN;
-
+const TAG = 'Neuron';
 class Neuron {
   constructor(chainId = 4) {
     this.chainId = chainId || 4;
     this.getWeb3();
+    this.lastResultNonce = -1;
     this.instance = {};
     // this.handshake = new Handshake(this);
     // this.bettingHandshake = new BettingHandshake(this);
@@ -38,7 +39,13 @@ class Neuron {
   };
   getNonce = async (accountAddress) => {
     const web3 = this.getWeb3();
-    const nonce = await web3.eth.getTransactionCount(accountAddress);
+    const nonce = await web3.eth.getTransactionCount(accountAddress,(error,result)=>{
+      console.log(TAG," getNonce error" ,error, " result = ",result);
+    }).then(_nonce=>{
+      console.log(TAG," getNonce 0000-- ", _nonce);
+      this.lastResultNonce = this.lastResultNonce == _nonce ? _nonce +1 :_nonce;
+      return this.lastResultNonce;
+    });
     return nonce;
   };
   /**
@@ -203,7 +210,7 @@ class Neuron {
     console.log('chainid ->', chainId);
     console.log('makeRawTransaction', payloadData);
     return this.getNonce(address).then((_nonce) => {
-      const nonce = _nonce + 1;
+      const nonce = _nonce ;
       const rawTx = {
         nonce: web3.utils.toHex(nonce),
         // nonce: `0x${nonce}`,
@@ -226,7 +233,11 @@ class Neuron {
       return web3.eth
         .sendSignedTransaction(rawTxHex)
         .on('transactionHash', (hash) => {
-          console.log(hash);
+          console.log(
+            TAG,
+            ' sendRawTransaction sendSignedTransaction hash = ',
+            hash,
+          );
           return {
             hash,
             payload: payloadData,
