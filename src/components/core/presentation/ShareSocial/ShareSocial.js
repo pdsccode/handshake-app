@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 // service
+import $http from '@/services/api';
 import Helper from '@/services/helper';
 import { showAlert } from '@/reducers/app/action';
 // style
@@ -34,13 +35,23 @@ class ShareSocial extends PureComponent {
     ];
   }
 
-  clickShare(e, shareType) {
+  converToShortLink(longUrl) {
+    const url = `https://www.googleapis.com/urlshortener/v1/url?key=${process.env.GOOGLE_API_KEY}`;
+    const data = {
+      longUrl,
+    };
+    return $http(url, data, null, null, null, 'POST');
+  }
+
+  async clickShare(e, shareType) {
     e.stopPropagation();
     const { title, shareUrl } = this.props;
+    const { data } = await this.converToShortLink(shareUrl);
+    const shortLink = data.id;
     let rawUrlShare = '';
     switch(shareType) {
       case 'TWITTER':
-        rawUrlShare = `http://twitter.com/intent/tweet?status=${title}+${shareUrl}`;
+        rawUrlShare = `http://twitter.com/intent/tweet?status=${title}+${shortLink}`;
         break;
       // case 'LINKEDIN':
       //   rawUrlShare = `https://www.linkedin.com/shareArticle?mini=true&url=${shareUrl}&summary=${title}&source=LinkedIn`;
@@ -48,7 +59,7 @@ class ShareSocial extends PureComponent {
       case 'COPY':
         // TODO: Short link
         // copy to clip board
-        Clipboard.copy(shareUrl);
+        Clipboard.copy(shortLink);
         // show alert
         this.props.showAlert({
           message: <div className="text-center">Copied to clipboard!</div>,
@@ -58,7 +69,7 @@ class ShareSocial extends PureComponent {
         return;
       default:
         // facebook
-        rawUrlShare = `https://www.facebook.com/sharer/sharer.php?u=${shareUrl}&amp;title=${title}`;
+        rawUrlShare = `https://www.facebook.com/sharer/sharer.php?u=${shortLink}&amp;title=${title}`;
         break;
     }
     
