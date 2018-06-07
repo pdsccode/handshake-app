@@ -1,6 +1,6 @@
 import { APP_ACTION } from '@/reducers/app/action';
 import $http from '@/services/api';
-import { BASE_API } from '@/config';
+import { BASE_API } from '@/constants';
 
 
 export const createAPI = INIT => ({

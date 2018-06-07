@@ -21,9 +21,14 @@ $secondary : #b7b7b7;
 
 .btn-primary {
   background-color: $titan-black;
+  border-color: $titan-black;
   &:hover {
     background-color: $titan-black;
+    border-color: $titan-black;
     opacity: 0.8;
+  }
+  &:focus {
+    box-shadow: none;
   }
 }
 .btn-secondary {

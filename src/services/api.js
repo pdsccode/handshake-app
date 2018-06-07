@@ -2,8 +2,7 @@ import axios from 'axios';
 import qs from 'qs';
 import { isEmpty, merge } from 'lodash';
 import local from '@/services/localStore';
-import { APP } from '@/constants';
-import { BASE_API } from '@/config';
+import { APP, BASE_API } from '@/constants';
 import { MasterWallet } from '@/models/MasterWallet';
 
 const $http = (url, data, id, qsObject, headersMore, method = 'GET') => {

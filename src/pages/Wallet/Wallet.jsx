@@ -2,13 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 // service, constant
-import { load } from '@/reducers/discover/action';
-// components
 import { Grid, Row, Col } from 'react-bootstrap';
+// components
+import { load } from '@/reducers/discover/action';
 import Button from '@/components/core/controls/Button';
 import { handShakeList } from '@/data/shake.js';
-import {MasterWallet} from '@/models/MasterWallet'
+import { MasterWallet } from '@/models/MasterWallet';
 import Input from '@/components/core/forms/Input/Input';
+import { StringHelper } from '@/services/helper';
 
 import {
   fieldCleave,
@@ -26,8 +27,6 @@ import Modal from '@/components/core/controls/Modal';
 import Dropdown from '@/components/core/controls/Dropdown';
 import createForm from '@/components/core/form/createForm';
 
-
-
 import dontIcon from '@/assets/images/icon/3-dot-icon.svg';
 import iconSafe from '@/assets/images/icon/icon-safe.svg';
 import iconWarning from '@/assets/images/icon/icon-warning.svg';
@@ -40,7 +39,7 @@ import HeaderMore from './HeaderMore';
 import WalletItem from './WalletItem';
 import WalletProtect from './WalletProtect';
 import WalletHistory from './WalletHistory';
-import FeedCreditCard from "@/components/handshakes/exchange/Feed/FeedCreditCard";
+import FeedCreditCard from '@/components/handshakes/exchange/Feed/FeedCreditCard';
 import ReactBottomsheet from 'react-bottomsheet';
 // var ReactBottomsheet = require('react-bottomsheet');
 // var Blob = require('./Blob.js');
@@ -58,11 +57,18 @@ import './Wallet.scss';
 import { Bitcoin } from '@/models/Bitcoin';
 import { initHandshake } from '@/reducers/handshake/action';
 import CoinTemp from '@/pages/Wallet/CoinTemp';
-var QRCode = require('qrcode.react');
 
-window.Clipboard = (function(window, document, navigator) { var textArea, copy; function isOS() { return navigator.userAgent.match(/ipad|iphone/i); } function createTextArea(text) { textArea = document.createElement('textArea'); textArea.value = text; document.body.appendChild(textArea); } function selectText() { var range, selection; if (isOS()) { range = document.createRange(); range.selectNodeContents(textArea); selection = window.getSelection(); selection.removeAllRanges(); selection.addRange(range); textArea.setSelectionRange(0, 999999); } else { textArea.select(); } } function copyToClipboard() { document.execCommand('copy'); document.body.removeChild(textArea); } copy = function(text) { createTextArea(text); selectText(); copyToClipboard(); }; return { copy: copy }; })(window, document, navigator);
+const QRCode = require('qrcode.react');
 
-var isIOs = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
+window.Clipboard = (function (window, document, navigator) {
+  let textArea,
+    copy; function isOS() { return navigator.userAgent.match(/ipad|iphone/i); } function createTextArea(text) { textArea = document.createElement('textArea'); textArea.value = text; document.body.appendChild(textArea); } function selectText() {
+    let range,
+      selection; if (isOS()) { range = document.createRange(); range.selectNodeContents(textArea); selection = window.getSelection(); selection.removeAllRanges(); selection.addRange(range); textArea.setSelectionRange(0, 999999); } else { textArea.select(); }
+  } function copyToClipboard() { document.execCommand('copy'); document.body.removeChild(textArea); } copy = function (text) { createTextArea(text); selectText(); copyToClipboard(); }; return { copy };
+}(window, document, navigator));
+
+const isIOs = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
 
 const nameFormSendWallet = 'sendWallet';
 const SendWalletForm = createForm({ propsReduxForm: { form: nameFormSendWallet, enableReinitialize: true, clearSubmitErrors: true}});
@@ -80,7 +86,6 @@ const amountValid = value => (value && isNaN(value) ? 'Invalid amount' : undefin
 
 class Wallet extends React.Component {
   constructor(props) {
-
     super(props);
     this.state = {
       data: {},
@@ -101,8 +106,8 @@ class Wallet extends React.Component {
       countCheckCoinToCreate: 1,
       walletKeyDefaultToCreate: 1,
       input12PhraseValue: '',
-      //Qrcode
-      qrCodeOpen: false, 
+      // Qrcode
+      qrCodeOpen: false,
       delay: 300,
       walletsData: false,
       isNewCCOpen: false,
@@ -113,97 +118,94 @@ class Wallet extends React.Component {
     this.props.setHeaderRight(this.headerRight());
   }
 
-  showAlert(msg, type='success', timeOut=3000, icon=''){
+  showAlert(msg, type = 'success', timeOut = 3000, icon = '') {
     this.props.showAlert({
       message: <div className="textCenter">{icon}{msg}</div>,
-      timeOut: timeOut,
-      type: type,
-      callBack: () => {}
+      timeOut,
+      type,
+      callBack: () => {},
     });
   }
-  showToast(mst){
-    this.showAlert(mst, 'primary', 2000 );
+  showToast(mst) {
+    this.showAlert(mst, 'primary', 2000);
   }
-  showError(mst){
-    this.showAlert(mst, 'danger', 3000 );
+  showError(mst) {
+    this.showAlert(mst, 'danger', 3000);
   }
-  showSuccess(mst){
+  showSuccess(mst) {
     this.showAlert(mst, 'success', 4000, <img className="iconSuccessChecked" src={iconSuccessChecked} />);
   }
-  showLoading(status){
-    this.props.showLoading({message: '',});
+  showLoading(status) {
+    this.props.showLoading({ message: '' });
   }
-  hideLoading(){
-   this.props.hideLoading();
+  hideLoading() {
+    this.props.hideLoading();
   }
 
   headerRight() {
     return (<HeaderMore onHeaderMoreClick={this.onIconRightHeaderClick} />);
   }
 
-  splitWalletData(listWallet){
+  splitWalletData(listWallet) {
+    const listMainWallet = [];
+    const listTestWallet = [];
+    const listRewardWallet = [];
 
-    let listMainWallet = [];
-    let listTestWallet = [];
-    let listRewardWallet = [];
-
-    listWallet.forEach(wallet => {
+    listWallet.forEach((wallet) => {
       // is reward wallet:
-      if (wallet.isReward){
+      if (wallet.isReward) {
         listRewardWallet.push(wallet);
       }
       // is Mainnet
-      else if (wallet.network === MasterWallet.ListCoin[wallet.className].Network.Mainnet){
+      else if (wallet.network === MasterWallet.ListCoin[wallet.className].Network.Mainnet) {
         listMainWallet.push(wallet);
-      }
-      else{
+      } else {
         // is Testnet
         listTestWallet.push(wallet);
       }
     });
 
-    this.setState({isLoading: true, listMainWalletBalance: listMainWallet, listTestWalletBalance: listTestWallet, listRewardWalletBalance: listRewardWallet});
+    this.setState({
+      isLoading: true, listMainWalletBalance: listMainWallet, listTestWalletBalance: listTestWallet, listRewardWalletBalance: listRewardWallet,
+    });
   }
-  componentDidMount1(){
+  componentDidMount1() {
 
   }
-   async componentDidMount() {
-
+  async componentDidMount() {
     let listWallet = await MasterWallet.getMasterWallet();
-    //console.log("listWallet", listWallet);
+    // console.log("listWallet", listWallet);
 
     // console.log("default", MasterWallet.getWalletDefault("ETH"))
 
-    if (listWallet == false){
-        listWallet = await MasterWallet.createMasterWallets();
-        // fill data:
-        await this.splitWalletData(listWallet)
-    }
-    else{
-      this.splitWalletData(listWallet)
-      //console.log('update balance for lst wallet');
+    if (listWallet == false) {
+      listWallet = await MasterWallet.createMasterWallets();
+      // fill data:
+      await this.splitWalletData(listWallet);
+    } else {
+      this.splitWalletData(listWallet);
+      // console.log('update balance for lst wallet');
       await this.getListBalace(listWallet);
     }
-     /*var btc = new Bitcoin();
+    /* var btc = new Bitcoin();
      var tx = await btc.transfer("tprv8ccSMiuz5MfvmYHzdMbz3pjn5uW3G8zxM975sv4MxSGkvAutv54raKHiinLsxW5E4UjyfVhCz6adExCmkt7GjC41cYxbNxt5ZqyJBdJmqPA","mrPJ6rBHpJGnsLK3JGfJQjdm5vkjeAb63M", 0.0001);
 
-     console.log(tx)*/
+     console.log(tx) */
   }
 
-  getAllWallet(){
+  getAllWallet() {
     return this.state.listMainWalletBalance.concat(this.state.listTestWalletBalance).concat(this.state.listRewardWalletBalance);
   }
 
   async getListBalace(listWallet) {
+    const pros = [];
 
-    const pros = []
-
-    listWallet.forEach(wallet => {
+    listWallet.forEach((wallet) => {
       pros.push(new Promise((resolve, reject) => {
-        wallet.getBalance().then(balance => {
+        wallet.getBalance().then((balance) => {
           wallet.balance = balance;
           resolve(wallet);
-        })
+        });
       }));
     });
 
@@ -221,18 +223,18 @@ class Wallet extends React.Component {
     // console.log("ethRinkeby", balance);
   }
 
-  toggleBottomSheet () {
-    let obj = (this.state.bottomSheet) ? { 'bottomSheet': false } : { 'bottomSheet': true }
-    this.setState(obj)
+  toggleBottomSheet() {
+    const obj = (this.state.bottomSheet) ? { bottomSheet: false } : { bottomSheet: true };
+    this.setState(obj);
   }
 
   copyToClipboard =(text) => {
-    var textField = document.createElement('textarea')
-    textField.innerText = text
-    document.body.appendChild(textField)
-    textField.select()
-    document.execCommand('copy')
-    textField.remove()
+    const textField = document.createElement('textarea');
+    textField.innerText = text;
+    document.body.appendChild(textField);
+    textField.select();
+    document.execCommand('copy');
+    textField.remove();
   }
 
   // create list menu of wallet item when click Show more ...
@@ -242,65 +244,89 @@ class Wallet extends React.Component {
         title: 'Transfer coins',
         handler: () => {
 
-          wallet.getBalance().then(result=>{      
+          wallet.getBalance().then(result=>{
             wallet.balance = result;
             this.setState({walletSelected: wallet});
           });
 
           // clear form:
-          this.props.clearFields(nameFormSendWallet, false, false, "to_address", "amount");                               
+          this.props.clearFields(nameFormSendWallet, false, false, "to_address", "amount");
           this.setState({isRestoreLoading: false, walletSelected: wallet, inputAddressAmountValue: '', inputSendAmountValue: ''}, () => {});
           this.toggleBottomSheet();
-          this.modalSendRef.open();          
+          this.modalSendRef.open();
 
         }
       })
       obj.push({
         title: 'Receive coins',
-        handler: () => {          
+        handler: () => {
           this.setState({walletSelected: wallet});
           this.toggleBottomSheet();
           this.modalShareAddressRef.open();
         }
-      })      
-
-      obj.push({
-        title: 'Buy coins',
-        handler: () => {
-          this.setState({walletSelected: wallet});
-          this.toggleBottomSheet();
-          this.modalFillRef.open();
-        }
       })
 
-      if(!wallet.protected){
-        obj.push({
-          title: 'Secure this wallet',
-          handler: () => {
-            this.setState({walletSelected: wallet, stepProtected: 1, activeProtected: true});
-            this.toggleBottomSheet();
-            this.modalProtectRef.open();
-          }
-        })
-      }
+    obj.push({
+      title: 'Buy coins',
+      handler: () => {
+        this.setState({ walletSelected: wallet });
+        this.toggleBottomSheet();
+        this.modalFillRef.open();
+      },
+    });
+
+    if (!wallet.protected) {
+      obj.push({
+        title: 'Secure this wallet',
+        handler: () => {
+          this.setState({ walletSelected: wallet, stepProtected: 1, activeProtected: true });
+          this.toggleBottomSheet();
+          this.modalProtectRef.open();
+        },
+      });
+    }
+
+    obj.push({
+      title: 'View transaction history',
+      handler: () => {
+        this.setState({ walletSelected: wallet, transactions: [] });
+        this.toggleBottomSheet();
+        this.modalHistoryRef.open();
+        this.showLoading();
+        const dataHistory = wallet.getTransactionHistory().then((data) => {
+          this.setState({ walletSelected: wallet, transactions: data });
+          this.hideLoading();
+        });
+      },
+    });
+    obj.push({
+      title: 'Copy address to clipboard',
+      handler: () => {
+        Clipboard.copy(wallet.address);
+        this.toggleBottomSheet();
+        this.showToast('Copied to clipboard');
+      },
+    });
+
+    if (!wallet.isReward) {
+      obj.push({
+        title: `${StringHelper.format('Set as default {0} wallet ', wallet.name)}${wallet.default ? '✓ ' : ''}`,
+        handler: () => {
+          wallet.default = !wallet.default;
+          this.toggleBottomSheet();
+          // reset all wallet default:
+          const lstWalletTemp = this.getAllWallet();
+          if (wallet.default) lstWalletTemp.forEach((wal) => { if (wal != wallet && wal.name == wallet.name) { wal.default = false; } });
+          // Update wallet master from local store:
+          MasterWallet.UpdateLocalStore(lstWalletTemp);
+        },
+      });
 
       obj.push({
-        title: 'View transaction history',
+        title: 'Remove',
         handler: () => {
-          this.setState({walletSelected: wallet, transactions: []});
-          this.toggleBottomSheet();
-          this.modalHistoryRef.open();
-          this.showLoading();
-          let dataHistory = wallet.getTransactionHistory().then(data => {
-            this.setState({walletSelected: wallet, transactions: data});
-            this.hideLoading();
-          });
-        }
-      })
-      obj.push({
-        title: 'Copy address to clipboard',
-        handler: () => {
-          Clipboard.copy(wallet.address);
+          this.setState({ walletSelected: wallet });
+          this.modalBetRef.open();
           this.toggleBottomSheet();
           this.showToast('Wallet address copied to clipboard.');
         }
@@ -308,7 +334,7 @@ class Wallet extends React.Component {
 
       if (!wallet.isReward){
         obj.push({
-          title: 'Set as default {0} wallet '.format(wallet.name) + (wallet.default ? "✓ " : ""),
+          title: StringHelper.format('Set as default {0} wallet ', wallet.name) + (wallet.default ? "✓ " : ""),
           handler: () => {
             wallet.default = !wallet.default;
             this.toggleBottomSheet();
@@ -331,70 +357,74 @@ class Wallet extends React.Component {
         }
         obj.push({
           title: "Cancel",
-          handler: () => {          
+          handler: () => {
               this.toggleBottomSheet();
           }
         })
 
       return obj;
     }
+    obj.push({
+      title: 'Cancel',
+      handler: () => {
+        this.toggleBottomSheet();
+      },
+    });
+
+    return obj;
+  }
 
 
   // Remove wallet function:
-  removeWallet = () =>{
-    let lstWalletTemp = this.getAllWallet();
-    var index = -1;
-    var walletTmp = this.state.walletSelected;
-    if (walletTmp != null){
-        // Find index for this item:
-        lstWalletTemp.forEach(function (wal, i) {if (wal === walletTmp){index = i}});
-        // Remove item:
-        if (index > -1) {
-          lstWalletTemp.splice(index, 1)
-          // Update wallet master from local store:
-          MasterWallet.UpdateLocalStore(lstWalletTemp);
-          this.splitWalletData(lstWalletTemp);
-        };
+  removeWallet = () => {
+    const lstWalletTemp = this.getAllWallet();
+    let index = -1;
+    const walletTmp = this.state.walletSelected;
+    if (walletTmp != null) {
+      // Find index for this item:
+      lstWalletTemp.forEach((wal, i) => { if (wal === walletTmp) { index = i; } });
+      // Remove item:
+      if (index > -1) {
+        lstWalletTemp.splice(index, 1);
+        // Update wallet master from local store:
+        MasterWallet.UpdateLocalStore(lstWalletTemp);
+        this.splitWalletData(lstWalletTemp);
+      }
     }
     this.modalBetRef.close();
   }
 
   // Restore wallet:
-  restoreWallets = () =>{
-
-      this.setState({isRestoreLoading: true, erroValueBackup: false});
-      if (this.state.inputRestoreWalletValue != ''){
-        let walletData = MasterWallet.restoreWallets(this.state.inputRestoreWalletValue);
-        if (walletData !== false){
-          this.getListBalace(walletData);
-          this.splitWalletData(walletData);
-          this.setState({isRestoreLoading: false});
-          this.modalRestoreRef.close();
-          this.showSuccess("Your Wallet restore success");
-          return;
-        }
+  restoreWallets = () => {
+    this.setState({ isRestoreLoading: true, erroValueBackup: false });
+    if (this.state.inputRestoreWalletValue != '') {
+      const walletData = MasterWallet.restoreWallets(this.state.inputRestoreWalletValue);
+      if (walletData !== false) {
+        this.getListBalace(walletData);
+        this.splitWalletData(walletData);
+        this.setState({ isRestoreLoading: false });
+        this.modalRestoreRef.close();
+        this.showSuccess('Your Wallet restore success');
+        return;
       }
-    this.showError("Invalid wallets");
-    this.setState({erroValueBackup: true, isRestoreLoading: false});
+    }
+    this.showError('Invalid wallets');
+    this.setState({ erroValueBackup: true, isRestoreLoading: false });
   }
   updateRestoreWalletValue = (evt) => {
     this.setState({
-      inputRestoreWalletValue: evt.target.value
+      inputRestoreWalletValue: evt.target.value,
     });
   }
 
-  sendCoin = () =>{
-    if (this.state.inputAddressAmountValue == '')
-      alert("Please input to address");
-    else if (this.state.inputSendAmountValue == '' || this.state.inputSendAmountValue == 0)
-      alert("Please input Amount value");
-    else{
+  sendCoin = () => {
+    if (this.state.inputAddressAmountValue == '') { alert('Please input to address'); } else if (this.state.inputSendAmountValue == '' || this.state.inputSendAmountValue == 0) { alert('Please input Amount value'); } else {
       this.modalConfirmSendRef.open();
     }
   }
 
-  autoCheckBalance(fromAddress, toAddress){ 
-      this.checkBalanceSend = 0;   
+  autoCheckBalance(fromAddress, toAddress){
+      this.checkBalanceSend = 0;
       this.timeOutCheckBalance = setInterval(() => {
         console.log("check balance for sent ...");
         this.checkBalanceSend += 1;
@@ -420,28 +450,28 @@ class Wallet extends React.Component {
           }
         })
 
-        
+
         if (this.checkBalanceSend >= 5){
           clearInterval(this.timeOutCheckBalance);
         }
       }, 10000);
-    
+
   }
 
-  invalidateTransferCoins = (value) => {        
+  invalidateTransferCoins = (value) => {
       let errors = {};
-      if (this.state.walletSelected){                
+      if (this.state.walletSelected){
         // check address:
-        let result = this.state.walletSelected.checkAddressValid(value['to_address']);        
+        let result = this.state.walletSelected.checkAddressValid(value['to_address']);
         if (result !== true)
             errors.to_address = result;
-        // check amount:            
+        // check amount:
         if (parseFloat(this.state.walletSelected.balance) <= parseFloat(value['amount']))
           errors.amount = `Insufficient balance: ${this.state.walletSelected.balance} ${this.state.walletSelected.name}`
       }
-      return errors      
+      return errors
     }
-  
+
   submitSendCoin=()=>{
     this.setState({isRestoreLoading: true});
     this.modalConfirmSendRef.close();
@@ -464,127 +494,121 @@ class Wallet extends React.Component {
 
   updateSendAmountValue = (evt) => {
     this.setState({
-      inputSendAmountValue: evt.target.value
+      inputSendAmountValue: evt.target.value,
     });
   }
   getPathPicture = (evt) => {
-    alert('evt.target.value' + evt.target.value);
+    alert(`evt.target.value${evt.target.value}`);
   }
 
 
   updateSendAddressValue = (evt) => {
     this.setState({
-      inputAddressAmountValue: evt.target.value
+      inputAddressAmountValue: evt.target.value,
     });
   }
 
   // Menu for Right header bar
-  creatSheetMenuHeaderMore(){
-    let obj = [];
+  creatSheetMenuHeaderMore() {
+    const obj = [];
     obj.push({
-      title: "Add new / Import",
+      title: 'Add new / Import',
       handler: () => {
-          this.setState({isRestoreLoading: false, countCheckCoinToCreate: 1, listCoinTempToCreate: MasterWallet.getListCoinTemp()});
-          this.modalCreateWalletRef.open();
-          this.toggleBottomSheet();
-      }
-    })
+        this.setState({ isRestoreLoading: false, countCheckCoinToCreate: 1, listCoinTempToCreate: MasterWallet.getListCoinTemp() });
+        this.modalCreateWalletRef.open();
+        this.toggleBottomSheet();
+      },
+    });
     obj.push({
       title: 'Backup wallets',
       handler: () => {
-
         this.modalBackupRef.open();
-        this.setState({walletsData: this.getAllWallet()});
+        this.setState({ walletsData: this.getAllWallet() });
         this.toggleBottomSheet();
-
-      }
-    })
+      },
+    });
     obj.push({
       title: 'Restore wallets',
       handler: () => {
         this.modalRestoreRef.open();
         this.toggleBottomSheet();
-        this.setState({erroValueBackup: false, isRestoreLoading: false, inputRestoreWalletValue: ''});
-
-      }
-    })
+        this.setState({ erroValueBackup: false, isRestoreLoading: false, inputRestoreWalletValue: '' });
+      },
+    });
     obj.push({
-      title: "Cancel",
-      handler: () => {          
-          this.toggleBottomSheet();
-      }
-    })
+      title: 'Cancel',
+      handler: () => {
+        this.toggleBottomSheet();
+      },
+    });
     return obj;
   }
 
   // on select type of wallet to create:
-  onSelectCoinClick = (wallet) =>{
-    let listCoinTemp =  this.state.listCoinTempToCreate;
+  onSelectCoinClick = (wallet) => {
+    const listCoinTemp = this.state.listCoinTempToCreate;
 
     wallet.default = !wallet.default;
     let countCheckCoinToCreate = 0;
-    listCoinTemp.forEach(wal => { if (wal.default) countCheckCoinToCreate += 1;})
+    listCoinTemp.forEach((wal) => { if (wal.default) countCheckCoinToCreate += 1; });
 
-    this.setState({erroValueBackup: false,listCoinTempToCreate: listCoinTemp, countCheckCoinToCreate: countCheckCoinToCreate});
+    this.setState({ erroValueBackup: false, listCoinTempToCreate: listCoinTemp, countCheckCoinToCreate });
   }
 
-  createNewWallets = () =>{
-    this.setState({isRestoreLoading: true, erroValueBackup: false});
-    let listCoinTemp =  this.state.listCoinTempToCreate;
+  createNewWallets = () => {
+    this.setState({ isRestoreLoading: true, erroValueBackup: false });
+    const listCoinTemp = this.state.listCoinTempToCreate;
 
-    let phrase = this.state.input12PhraseValue.trim();
+    const phrase = this.state.input12PhraseValue.trim();
 
-    let masterWallet = MasterWallet.createNewsallets(listCoinTemp, phrase);
-    if (masterWallet == false){
-      this.setState({isRestoreLoading: false, erroValueBackup: true});
-    }
-    else{
-      if (phrase != ''){
+    const masterWallet = MasterWallet.createNewsallets(listCoinTemp, phrase);
+    if (masterWallet == false) {
+      this.setState({ isRestoreLoading: false, erroValueBackup: true });
+    } else {
+      if (phrase != '') {
         // need get balance
         this.getListBalace(masterWallet);
       }
       this.splitWalletData(masterWallet);
       this.modalCreateWalletRef.close();
     }
-
   }
   update12PhraseValue = (evt) => {
     this.setState({
-      input12PhraseValue: evt.target.value
+      input12PhraseValue: evt.target.value,
     });
   }
   updateWalletKeyDefaultValue = (evt) => {
     this.setState({
-      walletKeyDefaultToCreate: evt.target.value
+      walletKeyDefaultToCreate: evt.target.value,
     });
   }
 
   handleToggleNewCC = () => {
-    this.setState({ isNewCCOpen: !this.state.isNewCCOpen })
+    this.setState({ isNewCCOpen: !this.state.isNewCCOpen });
   }
 
-  onIconRightHeaderClick = () =>{
-    this.setState({listMenu: this.creatSheetMenuHeaderMore()})
+  onIconRightHeaderClick = () => {
+    this.setState({ listMenu: this.creatSheetMenuHeaderMore() });
     this.toggleBottomSheet();
   }
 
   onMoreClick = (wallet) => {
-    this.setState({listMenu: this.creatSheetMenuItem(wallet)})
+    this.setState({ listMenu: this.creatSheetMenuItem(wallet) });
     this.toggleBottomSheet();
   }
 
   onWarningClick = (wallet) => {
-    if (!wallet.protected){
-      this.setState({walletSelected: wallet, stepProtected: 1, activeProtected: true});
+    if (!wallet.protected) {
+      this.setState({ walletSelected: wallet, stepProtected: 1, activeProtected: true });
       this.modalProtectRef.open();
-    }
-    else{
+    } else {
 
     }
   }
 
   onAddressClick = (wallet) => {
-    this.setState({walletSelected: wallet});
+    this.setState({ walletSelected: wallet });
     this.modalShareAddressRef.open();
   }
 
@@ -597,103 +621,90 @@ class Wallet extends React.Component {
   }
 
   get listMainWalletBalance() {
-    return this.state.listMainWalletBalance.map((wallet) => {
-      return <WalletItem key={wallet.address+wallet.network} wallet={wallet} onMoreClick={() => this.onMoreClick(wallet)} onWarningClick={() => this.onWarningClick(wallet)} onAddressClick={() => this.onAddressClick(wallet)}  />
-    });
+    return this.state.listMainWalletBalance.map(wallet => <WalletItem key={wallet.address + wallet.network} wallet={wallet} onMoreClick={() => this.onMoreClick(wallet)} onWarningClick={() => this.onWarningClick(wallet)} onAddressClick={() => this.onAddressClick(wallet)} />);
   }
   get listTestWalletBalance() {
-    return this.state.listTestWalletBalance.map((wallet) => {
-      return <WalletItem key={wallet.address+wallet.network} wallet={wallet} onMoreClick={() => this.onMoreClick(wallet)} onWarningClick={() => this.onWarningClick(wallet)} onAddressClick={() => this.onAddressClick(wallet)} />
-    });
+    return this.state.listTestWalletBalance.map(wallet => <WalletItem key={wallet.address + wallet.network} wallet={wallet} onMoreClick={() => this.onMoreClick(wallet)} onWarningClick={() => this.onWarningClick(wallet)} onAddressClick={() => this.onAddressClick(wallet)} />);
   }
 
-  get listRewardWalletBalance(){
-    return this.state.listRewardWalletBalance.map((wallet) => {
-      return <WalletItem key={wallet.address+wallet.network} wallet={wallet} onMoreClick={() => this.onMoreClick(wallet)} onWarningClick={() => this.onWarningClick(wallet)} onAddressClick={() => this.onAddressClick(wallet)} />
-    });
+  get listRewardWalletBalance() {
+    return this.state.listRewardWalletBalance.map(wallet => <WalletItem key={wallet.address + wallet.network} wallet={wallet} onMoreClick={() => this.onMoreClick(wallet)} onWarningClick={() => this.onWarningClick(wallet)} onAddressClick={() => this.onAddressClick(wallet)} />);
   }
 
-  get getListCoinTempForCreate(){
-    return this.state.listCoinTempToCreate.map((walletTemp) => {
-      return <CoinTemp key={walletTemp.network} wallet={walletTemp} onClick={() => this.onSelectCoinClick(walletTemp)} />;
-    })
-
+  get getListCoinTempForCreate() {
+    return this.state.listCoinTempToCreate.map(walletTemp => <CoinTemp key={walletTemp.network} wallet={walletTemp} onClick={() => this.onSelectCoinClick(walletTemp)} />);
   }
 
-  afterWalletFill = () =>{
+  afterWalletFill = () => {
     this.modalFillRef.close();
   }
 
   closeProtected = () => {
-    this.setState({activeProtected: false});
+    this.setState({ activeProtected: false });
   }
   onCopyProtected = () => {
     Clipboard.copy(this.state.walletSelected.mnemonic);
-    this.showToast("Copied to clipboard");
+    this.showToast('Copied to clipboard');
   }
 
-  successWalletProtect = (wallet) =>{
-
-    let lstWalletTemp = this.getAllWallet();
-    lstWalletTemp.forEach(wal => {if (wallet.mnemonic == wal.mnemonic){wal.protected = true;}})
+  successWalletProtect = (wallet) => {
+    const lstWalletTemp = this.getAllWallet();
+    lstWalletTemp.forEach((wal) => { if (wallet.mnemonic == wal.mnemonic) { wal.protected = true; } });
     // Update wallet master from local store:
     MasterWallet.UpdateLocalStore(lstWalletTemp);
     this.modalProtectRef.close();
     this.splitWalletData(lstWalletTemp);
-    this.showSuccess("Your wallet has been secured!");
+    this.showSuccess('Your wallet has been secured!');
   }
 
-  getETHFree(){
-    window.open("https://www.rinkeby.io/#faucet", "_blank");
+  getETHFree() {
+    window.open('https://www.rinkeby.io/#faucet', '_blank');
   }
 
   // For Qrcode:
   handleScan=(data) =>{
-    
+
     if(data){
       let value = data.split(',');
-      this.setState({        
+      this.setState({
         inputAddressAmountValue: value[0],
       });
       this.props.change(nameFormSendWallet, 'to_address', value[0]);
-      
+
       if (value.length == 2){
-        this.setState({        
+        this.setState({
           inputSendAmountValue: value[1],
         });
         this.props.change(nameFormSendWallet, 'amount', value[1]);
       }
-      this.modalScanQrCodeRef.close()
+      this.modalScanQrCodeRef.close();
     }
   }
-  handleError(err){
-    console.log("error wc",err)
+  handleError(err) {
+    console.log('error wc', err);
   }
 
-  oncloseQrCode=()=>{
-    this.setState({qrCodeOpen: false});
+  oncloseQrCode=() => {
+    this.setState({ qrCodeOpen: false });
   }
 
-  openQrcode = () =>{
-    this.setState({qrCodeOpen: true});
-    this.modalScanQrCodeRef.open()
+  openQrcode = () => {
+    this.setState({ qrCodeOpen: true });
+    this.modalScanQrCodeRef.open();
   }
 
-  renderScanQRCode = () =>{
-    return(
-      <Modal onClose={() => this.oncloseQrCode()} title="Scan QR code" onRef={modal => this.modalScanQrCodeRef = modal}>
-        {this.state.qrCodeOpen ?
+  renderScanQRCode = () => (
+    <Modal onClose={() => this.oncloseQrCode()} title="Scan QR code" onRef={modal => this.modalScanQrCodeRef = modal}>
+      {this.state.qrCodeOpen ?
         <QrReader
           delay={this.state.delay}
-          onScan={(data) => {this.handleScan(data)}}
+          onScan={(data) => { this.handleScan(data); }}
           onError={this.handleError}
           style={{ width: '100%', height: '100%' }}
-          />
-        : ""}
-      </Modal>
-    )
-
-  }
+        />
+        : ''}
+    </Modal>
+  )
 
   render() {
     const {intl, cryptoPrice, amount, userCcLimit, ccLimits} = this.props;
@@ -706,30 +717,31 @@ class Wallet extends React.Component {
             visible={this.state.bottomSheet}
             appendCancelBtn={false}
             onClose={this.toggleBottomSheet.bind(this)}
-            list={this.state.listMenu} />
+            list={this.state.listMenu}
+          />
 
           {/* ModalDialog for confirm remove wallet */}
           <ModalDialog title="Are you sure?" onRef={modal => this.modalBetRef = modal}>
             <div className="bodyConfirm"><span>This will permanently delete your wallet.</span></div>
-            <div className='bodyConfirm'>
-            <Button className="left" cssType="danger" onClick={this.removeWallet} >Yes, remove</Button>
+            <div className="bodyConfirm">
+              <Button className="left" cssType="danger" onClick={this.removeWallet} >Yes, remove</Button>
               <Button className="right" cssType="secondary" onClick={() => { this.modalBetRef.close(); }}>Cancel</Button>
             </div>
-          </ModalDialog>          
+          </ModalDialog>
 
           {/* ModalDialog for transfer coin */}
           <Modal title="Transfer coins" onRef={modal => this.modalSendRef = modal}>
             <SendWalletForm className="sendwallet-wrapper" onSubmit={this.sendCoin} validate={this.invalidateTransferCoins}>
             <p className="labelText">Receiving address</p>
-            <div className="div-address-qr-code">   
+            <div className="div-address-qr-code">
 
               <Field
                     name="to_address"
                     type="text"
                     className="form-control input-address-qr-code"
                     placeholder="Specify receiving..."
-                    component={fieldInput}   
-                    value={this.state.inputAddressAmountValue}                                 
+                    component={fieldInput}
+                    value={this.state.inputAddressAmountValue}
                     onChange={evt => this.updateSendAddressValue(evt)}
                     validate={[required]}
                   />
@@ -740,7 +752,7 @@ class Wallet extends React.Component {
               /> */}
               {!isIOs ? <img onClick={() => { this.openQrcode() }} className="icon-qr-code-black" src={iconQRCodeBlack} /> : ""}
             </div>
-            <p className="labelText">{ this.state.walletSelected ? "Amount ({0})".format(this.state.walletSelected.name) : "Amount "}</p>
+            <p className="labelText">{ this.state.walletSelected ? StringHelper.format("Amount ({0})", this.state.walletSelected.name) : "Amount "}</p>
               {/* <Input name="amount" type={isIOs ? "number" : "tel"} required
                 value={this.state.inputSendAmountValue}
                 placeholder="0.0"
@@ -749,40 +761,42 @@ class Wallet extends React.Component {
 
               <Field
                     name="amount"
-                    type={isIOs ? "number" : "tel"} 
+                    type={isIOs ? "number" : "tel"}
                     className="form-control"
                     component={fieldInput}
                     value={this.state.inputSendAmountValue}
                     onChange={evt => this.updateSendAmountValue(evt)}
-                    placeholder={"0.0"}                    
+                    placeholder={"0.0"}
                     validate={[required, amountValid]}
                     // validate={[required, amountValid, balanceValid(this.state.walletSelected ? this.state.walletSelected.balance : "", this.state.walletSelected ? this.state.walletSelected.name : "")]}
                   />
 
-                  <label className='label-balance'>Your balance: { this.state.walletSelected ? "{0} {1}".format(this.state.walletSelected.balance, this.state.walletSelected.name) : ""}</label>
+                  <label className='label-balance'>Your balance: { this.state.walletSelected ? StringHelper.format("{0} {1}", this.state.walletSelected.balance, this.state.walletSelected.name) : ""}</label>
 
               <Button className="button-wallet" isLoading={this.state.isRestoreLoading}  type="submit" block={true}>Transfer</Button>
             </SendWalletForm>
           </Modal>
 
-          {/*Dialog confirm transfer coin*/}
+          {/* Dialog confirm transfer coin */}
           <ModalDialog title="Confirmation" onRef={modal => this.modalConfirmSendRef = modal}>
-            <div className="bodyConfirm"><span>Are you sure you want to transfer out {this.state.inputSendAmountValue} {this.state.walletSelected ? this.state.walletSelected.name : ""}?</span></div>
-            <div className='bodyConfirm'>
-            <Button className="left" cssType="danger" onClick={this.submitSendCoin} >Confirm</Button>
+            <div className="bodyConfirm"><span>Are you sure you want to transfer out {this.state.inputSendAmountValue} {this.state.walletSelected ? this.state.walletSelected.name : ''}?</span></div>
+            <div className="bodyConfirm">
+              <Button className="left" cssType="danger" onClick={this.submitSendCoin} >Confirm</Button>
               <Button className="right" cssType="secondary" onClick={() => { this.modalConfirmSendRef.close(); }}>Cancel</Button>
             </div>
           </ModalDialog>
 
           <Modal title="Buy coins" onRef={modal => this.modalFillRef = modal}>
-            <FeedCreditCard buttonTitle="Buy coins" currencyForced={this.state.walletSelected ? this.state.walletSelected.name : ""}
+            <FeedCreditCard
+              buttonTitle="Buy coins"
+              currencyForced={this.state.walletSelected ? this.state.walletSelected.name : ''}
               callbackSuccess={this.afterWalletFill}
-              addressForced={this.state.walletSelected ? this.state.walletSelected.address : ""}
+              addressForced={this.state.walletSelected ? this.state.walletSelected.address : ''}
             />
           </Modal>
 
-          <Modal title="Secure your wallet" onClose={this.closeProtected}  onRef={modal => this.modalProtectRef = modal}>
-            <WalletProtect onCopy={this.onCopyProtected} step={this.state.stepProtected} active={this.state.activeProtected} wallet={this.state.walletSelected} callbackSuccess={() => {this.successWalletProtect(this.state.walletSelected)}} />
+          <Modal title="Secure your wallet" onClose={this.closeProtected} onRef={modal => this.modalProtectRef = modal}>
+            <WalletProtect onCopy={this.onCopyProtected} step={this.state.stepProtected} active={this.state.activeProtected} wallet={this.state.walletSelected} callbackSuccess={() => { this.successWalletProtect(this.state.walletSelected); }} />
           </Modal>
 
 
@@ -794,128 +808,139 @@ class Wallet extends React.Component {
           {/* Modal for Backup wallets : */}
           <Modal title="Backup wallets" onRef={modal => this.modalBackupRef = modal}>
             <div className="bodyTitle">This data is the only way to restore your wallets. Keep it secret, keep it safe.</div>
-            <div className='bodyBackup'>
-            <textarea readOnly onClick={ this.handleChange } onFocus={ this.handleFocus }
-            value={ this.state.walletsData ? JSON.stringify(this.state.walletsData) : ''}/>
-            <Button className="button" cssType="danger" onClick={() => {Clipboard.copy(JSON.stringify(this.state.walletsData)); this.modalBackupRef.close(); this.showToast('Recovery data copied to clipboard.'); }} >Copy it somewhere safe</Button>
+            <div className="bodyBackup">
+              <textarea
+                readOnly
+                onClick={this.handleChange}
+                onFocus={this.handleFocus}
+                value={this.state.walletsData ? JSON.stringify(this.state.walletsData) : ''}
+              />
+              <Button className="button" cssType="danger" onClick={() => { Clipboard.copy(JSON.stringify(this.state.walletsData)); this.modalBackupRef.close(); this.showToast('Recovery data copied to clipboard.'); }} >Copy it somewhere safe</Button>
             </div>
           </Modal>
 
           {/* Modal for Restore wallets : */}
           <Modal title="Restore wallets" onRef={modal => this.modalRestoreRef = modal}>
             <div className="bodyTitle">Please enter your top secret recovery data to restore your wallet.</div>
-            <div className='bodyBackup'>
-            <textarea required
-              value={this.state.inputRestoreWalletValue}
-              className={this.state.erroValueBackup ? 'error' : ''}
-              onChange={evt => this.updateRestoreWalletValue(evt)}
-            />
-            <Button isLoading={this.state.isRestoreLoading} className="button" cssType="danger" onClick={() => {this.restoreWallets()}} >
+            <div className="bodyBackup">
+              <textarea
+                required
+                value={this.state.inputRestoreWalletValue}
+                className={this.state.erroValueBackup ? 'error' : ''}
+                onChange={evt => this.updateRestoreWalletValue(evt)}
+              />
+              <Button isLoading={this.state.isRestoreLoading} className="button" cssType="danger" onClick={() => { this.restoreWallets(); }} >
               Restore now
-            </Button>
+              </Button>
             </div>
           </Modal>
 
 
           {/* Modal for Copy address : */}
           <Modal title="Wallet address" onRef={modal => this.modalShareAddressRef = modal}>
-            <div className="bodyTitle"><span>Share your public wallet address to receive { this.state.walletSelected ? this.state.walletSelected.name : ""} </span></div>
+            <div className="bodyTitle"><span>Share your public wallet address to receive { this.state.walletSelected ? this.state.walletSelected.name : ''} </span></div>
             <div className={['bodyBackup bodySahreAddress']}>
 
-            <QRCode value={ this.state.walletSelected ? this.state.walletSelected.address : ""} />
-            <div className="addressDivPopup">{ this.state.walletSelected ? this.state.walletSelected.address : ""}</div>
+              <QRCode value={this.state.walletSelected ? this.state.walletSelected.address : ''} />
+              <div className="addressDivPopup">{ this.state.walletSelected ? this.state.walletSelected.address : ''}</div>
 
-            <div className="link-request-custom-amount" onClick={ () => {this.modalCustomAmountRef.open(); this.setState({inputSendAmountValue: ""});}}>Request Specific amount ➔</div>
+              <div className="link-request-custom-amount" onClick={() => { this.modalCustomAmountRef.open(); this.setState({ inputSendAmountValue: '' }); }}>Request Specific amount ➔</div>
 
-            <Button className="button" cssType="primary" onClick={() => {Clipboard.copy(this.state.walletSelected.address);this.modalShareAddressRef.close(); this.showToast('Wallet address copied to clipboard.');}} >
+              <Button className="button" cssType="primary" onClick={() => { Clipboard.copy(this.state.walletSelected.address); this.modalShareAddressRef.close(); this.showToast('Wallet address copied to clipboard.'); }} >
               Copy to share
-            </Button>
+              </Button>
             </div>
           </Modal>
 
           {/* Modal for Custom amount : */}
-          <Modal title="Custom Amount" onRef={modal => this.modalCustomAmountRef = modal}>            
+          <Modal title="Custom Amount" onRef={modal => this.modalCustomAmountRef = modal}>
             <div className={['bodyBackup bodySahreAddress']}>
 
-            <QRCode value={ (this.state.walletSelected ? this.state.walletSelected.address : "") + (this.state.inputSendAmountValue != '' ? (",")+this.state.inputSendAmountValue : '')} />
-            <div className="addressDivPopup">            
+              <QRCode value={(this.state.walletSelected ? this.state.walletSelected.address : '') + (this.state.inputSendAmountValue != '' ? `,${this.state.inputSendAmountValue}` : '')} />
+              <div className="addressDivPopup">
                 <InputGroup>
                   <InputGroupAddon addonType="prepend">Address</InputGroupAddon>
-                  <Input2 disabled                   
-                  value={ this.state.walletSelected ? this.state.walletSelected.address : ""} />
+                  <Input2
+                    disabled
+                    value={this.state.walletSelected ? this.state.walletSelected.address : ''}
+                  />
                 </InputGroup>
 
-              <br />
+                <br />
 
-              <InputGroup>
+                <InputGroup>
                   <InputGroupAddon addonType="prepend">Amount</InputGroupAddon>
-                  <Input2 
+                  <Input2
                   placeholder="Specify amount ..."
                   type={isIOs ? "number" : "tel"}
                   value={this.state.inputSendAmountValue} onChange={evt => this.updateSendAmountValue(evt)}/>
-                  <InputGroupAddon addonType="append">{ this.state.walletSelected ? "{0}".format(this.state.walletSelected.name) : ""}</InputGroupAddon>
+                  <InputGroupAddon addonType="append">{ this.state.walletSelected ? StringHelper.format("{0}", this.state.walletSelected.name) : ""}</InputGroupAddon>
                 </InputGroup>
 
-              
-            </div>
-            <Button className="button" cssType="primary" onClick={() => {this.modalCustomAmountRef.close(); this.modalShareAddressRef.close() }} >
+
+              </div>
+              <Button className="button" cssType="primary" onClick={() => { this.modalCustomAmountRef.close(); this.modalShareAddressRef.close(); }} >
               Done
-            </Button>
+              </Button>
             </div>
           </Modal>
 
           {/* Modal for Create/Import wallet : */}
           <Modal title="Create new wallet" onRef={modal => this.modalCreateWalletRef = modal}>
-          <Row className="list">
-            <Header title="Select coins" hasLink={false} />
-          </Row>
+            <Row className="list">
+              <Header title="Select coins" hasLink={false} />
+            </Row>
             <Row className="list">
               {this.getListCoinTempForCreate}
             </Row>
             <Row className="list">
-            <Header title="Wallet key" />
+              <Header title="Wallet key" />
             </Row>
             <div className="wallet-create-footer">
-            <Dropdown className="dropdown-wallet"
-              placeholder="Wallet key"
-              defaultId={this.state.walletKeySelected}
-              source={[{"id": 1, "value": "Random"}, {"id": 2, "value": "Specify recovery Phrase"}]}
-              onItemSelected={(item) =>
-                  {
+              <Dropdown
+                className="dropdown-wallet"
+                placeholder="Wallet key"
+                defaultId={this.state.walletKeySelected}
+                source={[{ id: 1, value: 'Random' }, { id: 2, value: 'Specify recovery Phrase' }]}
+                onItemSelected={(item) => {
                     this.setState({
-                      walletKeyDefaultToCreate: item.id
+                      walletKeyDefaultToCreate: item.id,
                     });
                   }
                 }
-            />
+              />
 
-            { this.state.walletKeyDefaultToCreate == 2 ?
-              <Input name="phrase" placeholder="Type your 12 secret recovery words." required
-              className={this.state.erroValueBackup ? 'input12Phrase error' : 'input12Phrase'}
-                  onChange={evt => this.update12PhraseValue(evt)}/>
-              : ""
+              { this.state.walletKeyDefaultToCreate == 2 ?
+                <Input
+                  name="phrase"
+                  placeholder="Type your 12 secret recovery words."
+                  required
+                  className={this.state.erroValueBackup ? 'input12Phrase error' : 'input12Phrase'}
+                  onChange={evt => this.update12PhraseValue(evt)}
+                />
+              : ''
             }
             </div>
 
 
-            <Button block isLoading={this.state.isRestoreLoading} disabled={this.state.countCheckCoinToCreate == 0 || (this.state.walletKeyDefaultToCreate == 2 && this.state.input12PhraseValue.trim().split(/\s+/g).length != 12) } className="button button-wallet" cssType="primary" onClick={() => {this.createNewWallets()}} >
+            <Button block isLoading={this.state.isRestoreLoading} disabled={this.state.countCheckCoinToCreate == 0 || (this.state.walletKeyDefaultToCreate == 2 && this.state.input12PhraseValue.trim().split(/\s+/g).length != 12)} className="button button-wallet" cssType="primary" onClick={() => { this.createNewWallets(); }} >
               Create wallet
             </Button>
             <Header />
-            {/*<div className="linkImportWallet">I want to import coins</div>*/}
+            {/* <div className="linkImportWallet">I want to import coins</div> */}
 
           </Modal>
 
-          {/*QR code dialog*/}
+          {/* QR code dialog */}
           {this.renderScanQRCode()}
 
           {/* Render list wallet: */}
           <Row className="list">
-            <Header title="Testnet wallets" hasLink={true} linkTitle="Request free ETH" onLinkClick={this.getETHFree} />
+            <Header title="Testnet wallets" hasLink linkTitle="Request free ETH" onLinkClick={this.getETHFree} />
           </Row>
           <Row className="list">
             {this.listTestWalletBalance}
-          </Row>          
+          </Row>
 
           <Row className="list">
             <Header title="Reward wallets" hasLink={false} />
@@ -935,13 +960,12 @@ class Wallet extends React.Component {
       </div>
     );
   }
-
 }
 
-const mapState = (state) => ({  
+const mapState = (state) => ({
   cryptoPrice: state.exchange.cryptoPrice,
   userCcLimit: state.exchange.userCcLimit,
-  ccLimits: state.exchange.ccLimits,  
+  ccLimits: state.exchange.ccLimits,
 });
 
 const mapDispatch = ({
@@ -950,7 +974,7 @@ const mapDispatch = ({
   showLoading,
   hideLoading,
   change,
-  clearFields,  
+  clearFields,
 });
 
 
