@@ -7,6 +7,10 @@
   .wrapperBettingBook + .wrapperBettingBook {
     margin-top: rem-calc(4px);
   }
+
+  .noData {
+    color: #fff;
+  }
 }
 
 .wrapperGroupBook + .wrapperGroupBook {
