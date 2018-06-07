@@ -313,7 +313,9 @@ class Chat extends Component {
 
       const historyState = this.loadDataFromLocalStorage();
       if (historyState && isInitialized) {
-        this.setCustomState(historyState);
+        this.setCustomState(historyState, () => {
+          this.updateHeaderLeft();
+        });
       }
 
       isInitialized = true;
