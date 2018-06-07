@@ -160,7 +160,7 @@ class Profile extends React.Component {
         PATH_URL: `user/verification/phone/check?country=${countryCode.dialCode.replace('+', '')}&phone=${phone}&code=${sms}`,
         METHOD: 'POST',
         successFn: async (data) => {
-          try { 
+          try {
             await this.updateProfile({phone:phone});
             this.setState(() => ({ successMessage: 'Your phone number is verified', phoneStart: false }), () => {
               this.modalVerifyRef.open();
@@ -215,7 +215,9 @@ class Profile extends React.Component {
   }
 
   render() {
-    const { countryCode, countries, phone, sms, email } = this.state;
+    const {
+      countryCode, countries, phone, sms, email,
+    } = this.state;
     const { UsernameForm, NumberPhoneForm, EmailForm } = this;
     console.log('re-render?', email, sms, phone);
     return (
@@ -235,7 +237,7 @@ class Profile extends React.Component {
                   Username
                 </p>
                 <div className="extend">
-                  <Image className={this.state.phoneCollapse ? 'rotate' : ''} src={ExpandArrowSVG} alt="arrow" />
+                  <Image className={this.state.usernameCollapse ? 'rotate' : ''} src={ExpandArrowSVG} alt="arrow" />
                 </div>
               </div>
               <div className={`content ${this.state.usernameCollapse ? '' : 'd-none'}`}>

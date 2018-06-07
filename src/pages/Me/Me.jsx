@@ -3,12 +3,12 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 // action, mock
 import { fireBaseExchangeDataChange, loadMyHandshakeList, fireBaseBettingChange } from '@/reducers/me/action';
-import { API_URL, HANDSHAKE_ID } from '@/constants';
-import { URL } from '@/constants';
+import { API_URL, HANDSHAKE_ID, URL } from '@/constants';
 // components
 import { Link } from 'react-router-dom';
 import { Grid, Row, Col } from 'react-bootstrap';
 import NoData from '@/components/core/presentation/NoData';
+import { getListOfferPrice } from '@/reducers/exchange/action';
 import FeedPromise from '@/components/handshakes/promise/Feed';
 import FeedBetting from '@/components/handshakes/betting/Feed';
 import FeedExchange from '@/components/handshakes/exchange/Feed/FeedExchange';
@@ -18,9 +18,7 @@ import Image from '@/components/core/presentation/Image';
 import AvatarSVG from '@/assets/images/icon/avatar.svg';
 import ExpandArrowSVG from '@/assets/images/icon/expand-arrow.svg';
 import './Me.scss';
-import { getListOfferPrice } from "@/reducers/exchange/action";
 
-const TAG = "Me";
 const maps = {
   [HANDSHAKE_ID.PROMISE]: FeedPromise,
   [HANDSHAKE_ID.BETTING]: FeedBetting,
@@ -97,8 +95,12 @@ class Me extends React.Component {
                   if (FeedComponent) {
                     return (
                       <Col key={handshake.id} className="feed-wrapper">
-                        <FeedComponent {...handshake} history={this.props.history} onFeedClick={() => {}} mode={'me'}
-                                       refreshPage={this.loadMyHandshakeList}
+                        <FeedComponent
+                          {...handshake}
+                          history={this.props.history}
+                          onFeedClick={() => {}}
+                          mode="me"
+                          refreshPage={this.loadMyHandshakeList}
                         />
                       </Col>
                     );
@@ -133,7 +135,7 @@ const mapDispatch = ({
   loadMyHandshakeList,
   getListOfferPrice,
   fireBaseExchangeDataChange,
-  fireBaseBettingChange
+  fireBaseBettingChange,
 });
 
 export default connect(mapState, mapDispatch)(Me);
