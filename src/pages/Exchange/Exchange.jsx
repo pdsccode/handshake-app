@@ -2,7 +2,7 @@ import React from 'react';
 import {injectIntl} from 'react-intl';
 import {formValueSelector} from 'redux-form';
 import {connect} from 'react-redux';
-import {URL} from '@/config';
+import {URL} from '@/constants';
 import './Exchange.scss';
 
 import createForm from '@/components/core/form/createForm';

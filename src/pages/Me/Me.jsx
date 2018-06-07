@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 // action, mock
 import { fireBaseExchangeDataChange, loadMyHandshakeList, fireBaseBettingChange } from '@/reducers/me/action';
 import { API_URL, HANDSHAKE_ID } from '@/constants';
-import { URL } from '@/config';
+import { URL } from '@/constants';
 // components
 import { Link } from 'react-router-dom';
 import { Grid, Row, Col } from 'react-bootstrap';
