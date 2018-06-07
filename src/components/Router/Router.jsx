@@ -101,6 +101,14 @@ const LandingPageRootRouter = props => (
     {Component => <Component {...props} />}
   </DynamicImport>
 );
+const FAQRootRouter = props => (
+  <DynamicImport
+    loading={Loading}
+    load={() => import('@/components/Router/FAQ')}
+  >
+    {Component => <Component {...props} />}
+  </DynamicImport>
+);
 const Page404 = props => (
   <DynamicImport
     isNotFound
@@ -266,6 +274,7 @@ class Router extends React.Component {
 
   render() {
     if (window.location.pathname === URL.LANDING_PAGE_SHURIKEN) return <LandingPageRootRouter />;
+    if (window.location.pathname === URL.FAQ) return <FAQRootRouter />;
     if (BrowserDetect.isDesktop && process.env.isProduction) return <MobileOrTablet />;
     if (!this.state.isLogged || this.state.isLoading) {
       return (

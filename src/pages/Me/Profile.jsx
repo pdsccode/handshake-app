@@ -28,7 +28,7 @@ class Profile extends React.Component {
   static propTypes = {
     showAlert: PropTypes.func.isRequired,
     auth: PropTypes.object.isRequired,
-    setHeaderTitle: PropTypes.func.isRequired,
+    // setHeaderTitle: PropTypes.func.isRequired,
     checkUsernameExist: PropTypes.func.isRequired,
     authUpdate: PropTypes.func.isRequired,
     submitPhone: PropTypes.func.isRequired,
@@ -50,6 +50,7 @@ class Profile extends React.Component {
       email: '',
       sms: '',
       successMessage: '',
+      isShowVerificationCode: false,
     };
     // bind
     this.onSubmitVerifyPhone = ::this.onSubmitVerifyPhone;
@@ -63,8 +64,6 @@ class Profile extends React.Component {
       const selectedCountry = COUNTRIES.filter(country => country.dialCode === props.auth.profile.phone.substr(0, props.auth.profile.phone.indexOf(' ')))[0];
       this.state.countryCode = selectedCountry;
     }
-
-    props.setHeaderTitle('My Profile');
 
     this.UsernameForm = createForm({
       propsReduxForm: {
@@ -292,7 +291,7 @@ class Profile extends React.Component {
                     className="form-control-custom form-control-custom-ex w-100"
                     component={fieldCleave}
                   />
-                  <Button className="submit-btn">Save your username</Button>
+                  <Button className="submit-btn">Save</Button>
                 </UsernameForm>
               </div>
             </div>
@@ -355,20 +354,22 @@ class Profile extends React.Component {
                     />
                     <Button className="send-btn">Send</Button>
                   </div>
-                  <p className="text">Enter verification code sent to your phone</p>
-                  <Field
-                    name="sms"
-                    className="form-control-custom form-control-custom-ex w-100"
-                    component={fieldCleave}
-                    propsCleave={{
-                      options: { blocks: [6], numericOnly: true },
-                    }}
-                    onChange={(evt, value, unknown, name) => {
-                      this.onTextFieldChange(name, value);
-                    }}
-                    value={sms}
-                  />
-                  <Button className="submit-btn">Verify your number</Button>
+                  <div className={this.state.isShowVerificationCode ? '' : 'd-none'}>
+                    <p className="text">Enter verification code sent to your phone</p>
+                    <Field
+                      name="sms"
+                      className="form-control-custom form-control-custom-ex w-100"
+                      component={fieldCleave}
+                      propsCleave={{
+                        options: { blocks: [6], numericOnly: true },
+                      }}
+                      onChange={(evt, value, unknown, name) => {
+                        this.onTextFieldChange(name, value);
+                      }}
+                      value={sms}
+                    />
+                    <Button className="submit-btn">Verify your number</Button>
+                  </div>
                 </NumberPhoneForm>
               </div>
             </div>
