@@ -10,4 +10,9 @@ module.exports = {
     messagingSenderId: '',
   },
   ipfindKey: '',
+  social: {
+    trackingId: '',
+    facebookPixelId: '',
+    isUseSocial: false,
+  },
 };

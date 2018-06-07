@@ -152,6 +152,7 @@ module.exports = function webpackConfig(env, argv) {
           jQuery: 'jquery',
         }),
         new HtmlWebpackPlugin({
+          inject: false,
           chunks: ['main', 'vendors~main'],
           minify: isProduction
             ? {
@@ -161,8 +162,12 @@ module.exports = function webpackConfig(env, argv) {
             }
             : null,
           filename: 'index.html',
-          template: xPath('src/templates/main.html'),
+          template: xPath('src/templates/main.ejs'),
           favicon: xPath('src/assets/favicon.ico'),
+          social: {
+            googleAnalyticId: appEnvConfig.social.googleAnalyticId,
+            facebookPixelId: appEnvConfig.social.facebookPixelId,
+          },
         }),
         new PwaManifestPlugin({
           name: 'Ninja',
