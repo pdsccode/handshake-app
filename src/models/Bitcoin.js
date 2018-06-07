@@ -220,6 +220,7 @@ export class Bitcoin extends Wallet {
           for(let tran of response.data.txs){
             let vin = tran.vin, vout = tran.vout,
             is_sent = false, value = 0,
+            addresses = [],
             transaction_date = new Date(tran.blocktime*1000);
 
             //check transactions are send
@@ -231,6 +232,7 @@ export class Bitcoin extends Wallet {
                   let tout_addresses = tout.scriptPubKey.addresses.join(" ").toLowerCase();
                   if(tout_addresses.indexOf(this.address.toLowerCase()) < 0){
                     value += Number(tout.value);
+                    addresses.push(tout_addresses.replace(tout_addresses.substr(5, 24), '...'));
                   }
                 }
 
@@ -244,7 +246,9 @@ export class Bitcoin extends Wallet {
                 let tout_addresses = tout.scriptPubKey.addresses.join(" ").toLowerCase();
                 if(tout_addresses.indexOf(this.address.toLowerCase()) >= 0){
                   value += tout.value;
-                  break;
+                }
+                else{
+                  addresses.push(tout_addresses.replace(tout_addresses.substr(5, 24), '...'));
                 }
               }
             }
@@ -252,6 +256,7 @@ export class Bitcoin extends Wallet {
             result.push({
               value: value,
               transaction_date: transaction_date,
+              addresses: addresses,
               transaction_relative_time:  moment(transaction_date).fromNow(),
               is_sent: is_sent});
           }
