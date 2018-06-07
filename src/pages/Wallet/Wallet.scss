@@ -183,6 +183,9 @@
 }
 .bodySahreAddress{
   text-align: center;
+  .input-group{
+    height: 50px;
+  }
 }
 
 .col-sm-6 {
@@ -271,13 +274,25 @@
 }
 
 .sendwallet-wrapper{
-  margin-top: 40px;
+  margin-top: 20px;
   padding-left: 7px;
   padding-right: 7px;
 
+  .text-danger{
+    font-size: 14px;
+    
+  }
+  
+  .label-balance{
+    margin-top: 9px;
+    color: #7b7b7b;
+    font-size: 14px;
+    display: block;
+  }
+
   input[type=text], input[type=tel], input[type=number]{
-    margin-bottom: 15px;
-    font-size: 18px;
+    margin-bottom: 5px;
+    font-size: 16px;
     line-height: 22px;
     border:1px solid #EFEFEF;
     height: 54px;
@@ -309,7 +324,10 @@
     border-color:Silver;
   }
 }
-
+.labelText{
+  margin-bottom: 10px;
+  font-weight: 400;
+}
 .protectwallet-wrapper{
   margin-top:30px;
   font-weight: 300;
@@ -393,11 +411,11 @@
   margin-bottom: 15px;
   font-size: 18px;
   line-height: 22px;
-  border: 1px solid #EFEFEF;
-  overflow: hidden;
-  height: 54px;
+  // border: 1px solid #EFEFEF;
+  // overflow: hidden;
+  // height: 54px;
   .input-address-qr-code{
-    border: 0 !important;
+    // border: 0 !important;
     margin: 0 !important;
     padding-right: 60px;
   }

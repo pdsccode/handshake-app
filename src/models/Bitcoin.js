@@ -60,6 +60,14 @@ export class Bitcoin extends Wallet {
       return false;
     }
 
+    checkAddressValid(toAddress){
+      
+      if (!bitcore.Address.isValid(toAddress)){
+          return "You can only send tokens to Bitcoin address";
+      }
+      else return true;    
+    }
+
 
     async transfer(toAddress, amountToSend) {
 

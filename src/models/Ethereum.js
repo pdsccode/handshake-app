@@ -53,9 +53,11 @@ export class Ethereum extends Wallet {
     }
 
     async getBalance() {
-      const web3 = this.getWeb3();
-      const balance = await web3.eth.getBalance(this.address);
-      return Web3.utils.fromWei(balance.toString());
+      try{
+        const web3 = this.getWeb3();
+        const balance = await web3.eth.getBalance(this.address);
+        return Web3.utils.fromWei(balance.toString());
+      } catch (error) { return 0}
     }
 
   async getFee() {
@@ -70,6 +72,14 @@ export class Ethereum extends Wallet {
     // console.log('getFee, estimateGas', estimatedGas.toString());
 
     return Web3.utils.fromWei(estimatedGas);
+  }
+
+  checkAddressValid(toAddress){
+    const web3 = new Web3(new Web3.providers.HttpProvider(this.network));
+    if (!web3.utils.isAddress(toAddress)){
+        return "You can only send tokens to Ethereum address";
+    }
+    else return true;    
   }
 
     async transfer(toAddress, amountToSend) {
