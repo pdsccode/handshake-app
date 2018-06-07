@@ -57,6 +57,7 @@ class BetingShake extends React.Component {
       buttonClass: 'btnOK btnRed',
       isShowOdds: true,
       extraData: {},
+      marketOdds: 2.0
 
     };
 
@@ -250,6 +251,7 @@ class BetingShake extends React.Component {
       name: 'odds',
       label: 'Odds',
       placeholder: '2.0',
+      defaultValue: 3.0,
       isShowCurrency: false,
       type: 'tel',
     };
