@@ -212,6 +212,14 @@ class BettingFilter extends React.Component {
         console.log('Market Odds:', marketOdds);
         return (
             <div className="wrapperBettingFilter">
+            <div className="share-block">
+                <p className="text">Bet against more ninjas!</p>
+                <ShareSocial
+                    className="share"
+                    title={shareInfo.title}
+                    shareUrl={shareInfo.shareUrl}
+                />
+            </div>
             <div className="dropDown">
                 <Dropdown placeholder="Select an event"
                 onRef={match => this.matchDropDown = match}
@@ -237,6 +245,7 @@ class BettingFilter extends React.Component {
                 }
                 />
             </div>
+
             <div className="share-block">
                 <p className="text">Bet against more ninjas!</p>
                 <ShareSocial
@@ -248,6 +257,7 @@ class BettingFilter extends React.Component {
             {<TopInfo marketTotal={parseFloat(tradedVolum)}
                     percentFee={marketFee}
                     commentNo={commentNo}/>}
+
 
                 <div className="wrapperContainer">
                     <div className="item">

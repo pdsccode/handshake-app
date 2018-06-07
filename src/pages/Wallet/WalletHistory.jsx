@@ -27,7 +27,7 @@ class WalletHistory extends React.Component {
 
   componentDidUpdate(){
     const {transactions} = this.props
-    if (transactions != this.state.transactions){        
+    if (transactions != this.state.transactions){
         this.setState({transactions: transactions});
     }
   }
@@ -35,14 +35,13 @@ class WalletHistory extends React.Component {
   get list_transaction() {
 
     const wallet = this.props.wallet;
-    
+
     if (this.state.transactions.length==0)
       return <div className="history-no-trans">No transactions yet</div>;
-        
+
       return this.state.transactions.map((tran) => {
         let cssLabel = `label-${tran.is_sent ? "sent" : "received"}`,
         cssValue = `value-${tran.is_sent ? "sent" : "received"}`;
-
         return (
         <div key={tran.transaction_date} className="row">
           <div className="col3">
@@ -52,20 +51,24 @@ class WalletHistory extends React.Component {
           <div className="col1"><img className="iconDollar" src={tran.is_sent ? iconSent : iconReceived} /></div>
           <div className="col2 address">
             <div className={cssLabel}>{tran.is_sent ? "Sent" : "Received"}</div>
-            <div className="">{wallet.getShortAddress()}</div>
+            {
+              tran.addresses.map((addr) => {
+                return <div key={addr}>{addr}</div>
+              })
+            }
           </div>
 
         </div>)
       });
   }
 
-	render(){    
+	render(){
 		return (
+    <div>
       <div className="historywallet-wrapper">
-        {
-          this.list_transaction
-        }
+        {this.list_transaction}
       </div>
+    </div>
 		);
 	}
 }

@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { Wallet } from '@/models/Wallet.js';
 import configs from '@/configs';
+import { StringHelper } from '@/services/helper';
 
 const Web3 = require('web3');
 const EthereumTx = require('ethereumjs-tx');
@@ -32,7 +33,7 @@ export class Ethereum extends Wallet {
       const root = hdkey.fromMasterSeed(seed);
 
       // Create address for eth ...
-      const addrNode = root.derive(('m/44\'/{0}\'/0\'/0/0').format(this.coinType));
+      const addrNode = root.derive(StringHelper.format('m/44\'/{0}\'/0\'/0/0', this.coinType));
 
       const pubKey = ethUtil.privateToPublic(addrNode._privateKey);
       const addr = ethUtil.publicToAddress(pubKey).toString('hex');
@@ -53,9 +54,11 @@ export class Ethereum extends Wallet {
     }
 
     async getBalance() {
-      const web3 = this.getWeb3();
-      const balance = await web3.eth.getBalance(this.address);
-      return Web3.utils.fromWei(balance.toString());
+      try{
+        const web3 = this.getWeb3();
+        const balance = await web3.eth.getBalance(this.address);
+        return Web3.utils.fromWei(balance.toString());
+      } catch (error) { return 0}
     }
 
   async getFee() {
@@ -70,6 +73,14 @@ export class Ethereum extends Wallet {
     // console.log('getFee, estimateGas', estimatedGas.toString());
 
     return Web3.utils.fromWei(estimatedGas);
+  }
+
+  checkAddressValid(toAddress){
+    const web3 = new Web3(new Web3.providers.HttpProvider(this.network));
+    if (!web3.utils.isAddress(toAddress)){
+        return "You can only send tokens to Ethereum address";
+    }
+    else return true;    
   }
 
     async transfer(toAddress, amountToSend) {
@@ -90,7 +101,7 @@ export class Ethereum extends Wallet {
         let balance = await web3.eth.getBalance(this.address);
         balance = await Web3.utils.fromWei(balance.toString());
 
-        console.log('Your wallet balance is currently {0} ETH'.format(balance));
+        console.log(StringHelper.format('Your wallet balance is currently {0} ETH', balance));
 
         if (balance == 0 || balance <= amountToSend) {
           return {"status": 0, "message": insufficientMsg};
@@ -98,13 +109,13 @@ export class Ethereum extends Wallet {
 
         const gasPrice = new BN(await web3.eth.getGasPrice());
 
-        console.log('Current ETH Gas Prices (in GWEI): {0}'.format(gasPrice));
+        console.log(StringHelper.format('Current ETH Gas Prices (in GWEI): {0}', gasPrice));
 
         const nonce = await web3.eth.getTransactionCount(this.address);
 
         const value = web3.utils.toHex(web3.utils.toWei(amountToSend.toString(), 'ether'));
 
-        console.log('Value to send: {0}'.format(value));
+        console.log(StringHelper.format('Value to send: {0}', value));
 
         const details = {
           to: toAddress,
@@ -123,7 +134,7 @@ export class Ethereum extends Wallet {
         console.log('Based on your private key, your wallet address is', addr);
         const transactionId = web3.eth.sendSignedTransaction(`0x${serializedTransaction.toString('hex')}`);
         console.log("transactionId:", transactionId);
-        const url = '{0}/tx/{1}'.format(this.network, transactionId);
+        const url = StringHelper.format('{0}/tx/{1}', this.network, transactionId);
         console.log("url", url);
 
         return {"status": 1, "message": "Your transaction will appear on etherscan.io in about 30 seconds."};
@@ -144,11 +155,17 @@ export class Ethereum extends Wallet {
 
           let value = Number(tran.value / 10000000000000000000),
           transaction_date = new Date(tran.timeStamp*1000),
+          addresses = [],
           is_sent = tran.from.toLowerCase() == this.address.toLowerCase();
+
+          if(is_sent) addresses.push(tran.to.replace(tran.to.substr(5, 32), '...'));
+          else addresses.push(tran.from.replace(tran.from.substr(5, 32), '...'));
+
           result.push({
             value: value,
             transaction_date: transaction_date,
             transaction_relative_time:  moment(transaction_date).fromNow(),
+            addresses: addresses,
             is_sent: is_sent});
         }
 

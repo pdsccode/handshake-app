@@ -16,7 +16,7 @@ export class Wallet {
   }
 
   getShortAddress() {
-    return this.address.replace(this.address.substr(5, 32), '...');
+    return this.address.replace(this.address.substr(4, 34), '...');
   }
   getNetwork() {
     return this.network;
