@@ -255,6 +255,9 @@ class BettingFilter extends React.Component {
         this.props.loadHandshakes({PATH_URL: API_URL.CRYPTOSIGN.LOAD_HANDSHAKES, METHOD:'POST', data: params,
         successFn: this.getHandshakeSuccess,
         errorFn: this.getHandshakeFailed});
+        if(typeof window !== 'undefined') {
+          window.isGotDefaultOutCome = true;
+        }
     }
     getHandshakeSuccess = async (successData)=>{
         console.log('getHandshakeSuccess', successData);
