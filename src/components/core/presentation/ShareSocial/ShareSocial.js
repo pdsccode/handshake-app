@@ -5,11 +5,10 @@ import { connect } from 'react-redux';
 import Helper from '@/services/helper';
 import { showAlert } from '@/reducers/app/action';
 // style
-import CopyLink from '@/assets/images/icon/copy-link.svg';
+import CopyLink from '@/assets/images/share/link.svg';
+import FacebookSVG from '@/assets/images/share/facebook.svg';
+import TwitterSVG from '@/assets/images/share/twitter.svg';
 import './ShareSocial.scss';
-const FacebookSVG = 'https://d2q7nqismduvva.cloudfront.net/static/images/icon-svg/common/share/facebook.svg';
-// const LinkedinSVG = 'https://d2q7nqismduvva.cloudfront.net/static/images/icon-svg/common/share/linkedin.svg';
-const TwitterSVG = 'https://d2q7nqismduvva.cloudfront.net/static/images/icon-svg/common/share/twitter.svg';
 const Clipboard = (function(window, document, navigator) { var textArea, copy; function isOS() { return navigator.userAgent.match(/ipad|iphone/i); } function createTextArea(text) { textArea = document.createElement('textArea'); textArea.value = text; document.body.appendChild(textArea); } function selectText() { var range, selection; if (isOS()) { range = document.createRange(); range.selectNodeContents(textArea); selection = window.getSelection(); selection.removeAllRanges(); selection.addRange(range); textArea.setSelectionRange(0, 999999); } else { textArea.select(); } } function copyToClipboard() { document.execCommand('copy'); document.body.removeChild(textArea); } copy = function(text) { createTextArea(text); selectText(); copyToClipboard(); }; return { copy: copy }; })(window, document, navigator);
 
 
