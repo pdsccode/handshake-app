@@ -298,5 +298,8 @@ export const URL = {
 
   LANDING_PAGE_SHURIKEN: '/shuriken',
   LANDING_PAGE_SHURIKEN_INDEX: '/shuriken',
+
+  FAQ: '/faq',
+  FAQ_INDEX: '/faq',
 };
 
