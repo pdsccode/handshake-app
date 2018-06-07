@@ -120,6 +120,11 @@ class BettingCreate extends React.PureComponent {
         matches
     })
 }
+getStringDate(date){
+  var formattedDate = moment(date).format('MMM DD: HH.mm');
+  return formattedDate;
+
+}
 get foundMatch(){
   const {selectedMatch, matches} = this.state;
   if(selectedMatch){
@@ -133,7 +138,7 @@ get foundMatch(){
 
 get matchNames() {
   const {matches} = this.state;
-  return matches.map((item) => ({ id: item.id, value: `${item.homeTeamName} - ${item.awayTeamName}` }));
+  return matches.map((item) => ({ id: item.id, value: `${item.homeTeamName} - ${item.awayTeamName} (${this.getStringDate(item.date)})` }));
 }
 get matchOutcomes(){
   const {selectedMatch, matches} = this.state;

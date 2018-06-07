@@ -1,0 +1,14 @@
+@import './src/styles/style';
+
+
+ .wrapperTopInfoContainer{
+    display: flex;   
+    flex-wrap: wrap;
+    
+  }
+  .boxInfo {
+    background-color: blue; 
+    margin-left: 10 px;
+    color: white;
+
+  }
