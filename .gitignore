@@ -5,7 +5,6 @@ dist
 .DS_Store
 .idea
 .env.js
-.env.production.js
-.env.production.*.js
+.env.*.js
 testing
 .idea/

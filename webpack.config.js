@@ -1,4 +1,5 @@
 const path = require('path');
+const fs = require('fs');
 
 const xPath = filepath => path.resolve(__dirname, filepath);
 
@@ -120,7 +121,7 @@ module.exports = function webpackConfig(env, argv) {
     ...envConfig,
   };
 
-  if (isProduction) {
+  if (isProduction && fs.existsSync(xPath('env.production.js'))) {
     appEnvConfig = { ...appEnvConfig, ...require('./.env.production.js') }; // eslint-disable-line
   }
 
