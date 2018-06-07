@@ -246,14 +246,6 @@ class BettingFilter extends React.Component {
                 />
             </div>
 
-            <div className="share-block">
-                <p className="text">Bet against more ninjas!</p>
-                <ShareSocial
-                    className="share"
-                    title={shareInfo.title}
-                    shareUrl={shareInfo.shareUrl}
-                />
-            </div>
             {<TopInfo marketTotal={parseFloat(tradedVolum)}
                     percentFee={marketFee}
                     commentNo={commentNo}/>}
@@ -272,7 +264,7 @@ class BettingFilter extends React.Component {
                     {<BettingShake
                         matchName={matchName}
                         matchOutcome={matchOutcome}
-                        outcomeId={parseInt(outcomeId)} 
+                        outcomeId={parseInt(outcomeId)}
                         outcomeHid={parseInt(outcomeHid)}
                         marketOdds={parseFloat(marketOdds)}/>}
 
