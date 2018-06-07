@@ -68,12 +68,14 @@ class FeedExchange extends React.PureComponent {
     return (
       <div className="feed-exchange">
         <Feed
-          className="feed text-white"
+          className="feed"
           background={this.mainColor}
         >
-          <div>{nameShop}</div>
-          <div>Successful ({success}) - Failed ({fail})</div>
-          <div>{distance}</div>
+          <div className="info">
+            <div className="name-shop">{nameShop}</div>
+            <div className="transaction">Successful ({success}) - Failed ({fail})</div>
+            <div className="distance">{distance}</div>
+          </div>
           <table className="table-ex">
             <thead>
               <tr>
@@ -107,14 +109,8 @@ class FeedExchange extends React.PureComponent {
               </tr>
             </tbody>
           </table>
-
-          <div className="media">
-            <img className="mr-2" src={iconEthereum} width={20} />
-            <div className="media-body">
-              <div>ABC</div>
-            </div>
-          </div>
         </Feed>
+        <Button block className="mt-2">Shake</Button>
       </div>
     );
   }

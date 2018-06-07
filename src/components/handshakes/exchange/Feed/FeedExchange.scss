@@ -5,6 +5,26 @@
 }
 
 .feed-exchange {
+  .info {
+    text-align: center;
+    margin-bottom: 20px;
+    .name-shop {
+      font-size: 18px;
+      color: #FFFFFF;
+      letter-spacing: 0.32px;
+    }
+    .transaction {
+      font-size: 14px;
+      color: #FFFFFF;
+      letter-spacing: 0;
+      line-height: 25px;
+    }
+    .distance {
+      opacity: 0.6;
+      font-size: 14px;
+      color: #FFFFFF;
+    }
+  }
   .table-ex {
     width: 100%;
     .image {
