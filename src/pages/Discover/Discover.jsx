@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 // service, constant
 import { loadDiscoverList } from '@/reducers/discover/action';
 import { API_URL, DISCOVER_GET_HANDSHAKE_RADIUS, EXCHANGE_ACTION, EXCHANGE_ACTION_NAME, HANDSHAKE_ID } from '@/constants';
-import { URL } from '@/config';
+import { URL } from '@/constants';
 // components
 import { Col, Grid, Row } from 'react-bootstrap';
 import SearchBar from '@/components/core/controls/SearchBar';
@@ -23,7 +23,7 @@ import './Discover.scss';
 
 const maps = {
   [HANDSHAKE_ID.PROMISE]: FeedPromise,
-  //[HANDSHAKE_ID.BETTING]: FeedBetting,
+  // [HANDSHAKE_ID.BETTING]: FeedBetting,
   [HANDSHAKE_ID.EXCHANGE]: FeedExchange,
   [HANDSHAKE_ID.SEED]: FeedSeed,
 };
@@ -75,8 +75,11 @@ class DiscoverPage extends React.Component {
         if (FeedComponent) {
           return (
             <Col key={handshake.id} md={12} className="feed-wrapper">
-              <FeedComponent {...handshake} history={this.props.history} onFeedClick={() => this.clickFeedDetail(handshake.id)}
-                             refreshPage={this.loadDiscoverList}
+              <FeedComponent
+                {...handshake}
+                history={this.props.history}
+                onFeedClick={() => this.clickFeedDetail(handshake.id)}
+                refreshPage={this.loadDiscoverList}
               />
             </Col>
           );
@@ -107,7 +110,7 @@ class DiscoverPage extends React.Component {
   searchChange(query) {
     clearTimeout(this.searchTimeOut);
     this.searchTimeOut = setTimeout(() => {
-      this.setState({ query: query }, () => {
+      this.setState({ query }, () => {
         this.loadDiscoverList();
       });
     }, 500);
@@ -137,7 +140,7 @@ class DiscoverPage extends React.Component {
     // set feed type activate
     this.setState({
       handshakeIdActive: id,
-      tabIndexActive: tabIndexActive,
+      tabIndexActive,
     }, () => {
       this.loadDiscoverList();
     });
@@ -151,10 +154,10 @@ class DiscoverPage extends React.Component {
 
   loadDiscoverList = () => {
     const { handshakeIdActive, tabIndexActive, query } = this.state;
-    let qs = { };
+    const qs = { };
 
-    const pt = this.props?.app?.ipInfo?.latitude + ',' + this.props?.app?.ipInfo?.longitude;
-    qs.location_p = { pt: pt , d: DISCOVER_GET_HANDSHAKE_RADIUS };
+    const pt = `${this.props?.app?.ipInfo?.latitude  },${  this.props?.app?.ipInfo?.longitude}`;
+    qs.location_p = { pt, d: DISCOVER_GET_HANDSHAKE_RADIUS };
     if (handshakeIdActive) {
       qs.type = handshakeIdActive;
     }
@@ -167,7 +170,7 @@ class DiscoverPage extends React.Component {
       qs.query = query;
     }
 
-    this.props.loadDiscoverList({ PATH_URL: API_URL.DISCOVER.BASE, qs: qs });
+    this.props.loadDiscoverList({ PATH_URL: API_URL.DISCOVER.INDEX, qs });
   }
 
   render() {
@@ -182,7 +185,7 @@ class DiscoverPage extends React.Component {
         </Row> */}
         {/* <Row>
           <Col md={12} xs={6}>
-            <Category 
+            <Category
               className="category-wrapper"
               onRef={category => this.categoryRef = category}
               onItemClick={this.clickCategoryItem}

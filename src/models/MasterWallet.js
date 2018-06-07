@@ -5,6 +5,7 @@ import { BitcoinTestnet } from '@/models/BitcoinTestnet.js';
 import { Ethereum } from '@/models/Ethereum.js';
 import { Wallet } from '@/models/Wallet.js';
 import { APP } from '@/constants';
+import { StringHelper } from '@/services/helper';
 
 const bip39 = require('bip39');
 
@@ -273,7 +274,7 @@ export class MasterWallet {
     }
 
     static log(data, key = MasterWallet.KEY) {
-      console.log(`%c ${'{0}: '.format(key)}`, 'background: #222; color: #bada55', data);
+      console.log(`%c ${StringHelper.format('{0}: ', key)}`, 'background: #222; color: #bada55', data);
     }
 }
 

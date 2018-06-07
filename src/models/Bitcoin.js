@@ -1,7 +1,7 @@
 import axios from 'axios';
 import satoshi from 'satoshi-bitcoin';
-import { rule } from 'postcss';
-import { Wallet } from '@/models/Wallet.js';
+import { StringHelper } from '@/services/helper';
+import { Wallet } from '@/models/Wallet';
 
 const moment = require('moment');
 const bitcore = require('bitcore-lib');
@@ -41,7 +41,7 @@ export class Bitcoin extends Wallet {
       const xpriv = code.toHDPrivateKey();
 
       const hdPrivateKey = new bitcore.HDPrivateKey(xpriv);
-      const derived = hdPrivateKey.derive('m/44\'/{0}\'/0\'/0/0'.format(this.coinType));
+      const derived = hdPrivateKey.derive(StringHelper.format('m/44\'/{0}\'/0\'/0/0', this.coinType));
       this.address = derived.privateKey.toAddress().toString();
       this.privateKey = derived.privateKey.toString();
       // this.xprivateKey = derived.xprivkey;
@@ -80,7 +80,7 @@ export class Bitcoin extends Wallet {
         console.log('server', this.network);
 
 
-        console.log('Your wallet balance is currently {0} ETH'.format(balance));
+        console.log(StringHelper.format('Your wallet balance is currently {0} ETH', balance));
 
         if (!balance || balance == 0 || balance <= amountToSend) {
           return {"status": 0, "message": insufficientMsg};

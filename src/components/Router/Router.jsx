@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { Switch, BrowserRouter, Route, Redirect } from 'react-router-dom';
 import DynamicImport from '@/components/App/DynamicImport';
 import Loading from '@/components/core/presentation/Loading';
-import { URL } from '@/config';
+import { URL } from '@/constants';
 import { APP, FIREBASE_PATH, API_URL } from '@/constants';
 
 import local from '@/services/localStore';
@@ -198,7 +198,7 @@ class Router extends React.Component {
   getIpInfo = () => {
     axios.get(API_URL.EXCHANGE.IP_DOMAIN, {
       params: {
-        auth: API_URL.EXCHANGE.IP_KEY,
+        auth: process.env.ipfindKey,
       },
     }).then((response) => {
       // console.log('response', response.data);

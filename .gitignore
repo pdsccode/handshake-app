@@ -4,10 +4,8 @@ package-lock.json
 dist
 .DS_Store
 .idea
-.env
-.env.production
+.env.js
+.env.production.js
+.env.production.*.js
 testing
 .idea/
-config.production.js
-constants.production.js
-
