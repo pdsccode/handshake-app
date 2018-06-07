@@ -82,10 +82,10 @@ class Dropdown extends React.PureComponent {
             source.map(item => (
               <li 
                 key={item.id} 
-                className={`${idActive === item.id ? 'active': ''}`}
+                className={`dropdown-custom-item ${idActive === item.id ? 'active': ''}`}
                 style={item.style || null}
                 onClick={ () => this.onItemSelected(item) }>
-                <span className="dropdown-custom-item">{item.value}</span>
+                {item.value}
               </li>
             ))
           }

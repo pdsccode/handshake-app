@@ -259,7 +259,7 @@ class Profile extends React.Component {
                     className="form-control-custom form-control-custom-ex w-100"
                     component={fieldCleave}
                   />
-                  <Button className="submit-btn">Save your username</Button>
+                  <Button className="submit-btn">Save</Button>
                 </UsernameForm>
               </div>
             </div>
