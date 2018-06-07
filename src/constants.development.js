@@ -22,7 +22,7 @@ export const HANDSHAKE_ID_DEFAULT = 3;
 
 export const HANDSHAKE_NAME = {
   // [HANDSHAKE_ID.PROMISE]: 'Promise',
-  [HANDSHAKE_ID.EXCHANGE]: 'Exchange',
+  // [HANDSHAKE_ID.EXCHANGE]: 'Exchange',
   [HANDSHAKE_ID.BETTING]: 'Bet',
   // [HANDSHAKE_ID.SEED]: 'Seed',
 };
@@ -134,6 +134,7 @@ export const API_URL = {
     BASE: 'https://stag-handshake.autonomous.ai/api/comment',
     CREATE: 'comment/',
     LIST: 'comment/list',
+    GET_COMMENT_COUNT: 'comment/count',
   },
 };
 

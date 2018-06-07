@@ -15,16 +15,18 @@ const Identicon = require('identicon.js');
 const firebase = require('firebase');
 const md5 = require('md5');
 require('firebase/database');
+// Get a reference to the Firebase Realtime Database
+const chatRef = firebase.database().ref();
+let isInitialized = false;
+
+// Create an instance of Firechat
+export const chatInstance = new Firechat(firebase, chatRef);
 
 class Chat extends Component {
   constructor(props) {
     super(props);
-    this.user = null;
-    // Get a reference to the Firebase Realtime Database
-    const chatRef = firebase.database().ref();
 
-    // Create an instance of Firechat
-    this.chat = new Firechat(firebase, chatRef);
+    this.user = null;
 
     this.state = {
       chatSource: {},
@@ -48,6 +50,8 @@ class Chat extends Component {
     this.onSearchUser = this.onSearchUser.bind(this);
     this.onBackButtonClicked = this.onBackButtonClicked.bind(this);
 
+    this.chatTo = props.match.params.username;
+
     this.bindDataEvents();
     this.signIn(null);
   }
@@ -61,7 +65,7 @@ class Chat extends Component {
   }
 
   onBackButtonClicked() {
-    this.setState({
+    this.setCustomState({
       chatDetail: null,
     }, () => {
       this.updateHeaderLeft();
@@ -71,6 +75,7 @@ class Chat extends Component {
 
   onUpdateUser(user) {
     // Update our current user state and render latest user name.
+    console.log('update user', user);
     this.user = user;
     if (!this.state.chatDetail) {
       this.setCurrentUserName();
@@ -107,8 +112,11 @@ class Chat extends Component {
     if (Object.prototype.hasOwnProperty.call(chatSource, roomId)) {
       const room = chatSource[roomId];
       console.log('new message', roomId, 'room', room);
-      room.froms = room.froms || {};
-      room.froms[fromUserId] = fromUserName;
+      // room.froms = room.froms || {};
+      // room.froms[fromUserId] = fromUserName;
+      if (Object.prototype.hasOwnProperty.call(room.froms, fromUserId) && room.froms[fromUserId]) {
+        message.name = room.froms[fromUserId];
+      }
       room.messages = room.messages || [];
       room.messages.push(message);
       chatSource[roomId] = room;
@@ -117,7 +125,7 @@ class Chat extends Component {
         chatDetail.roomData = room;
       }
 
-      this.setState({
+      this.setCustomState({
         chatSource,
         chatDetail,
       }, () => {
@@ -136,7 +144,7 @@ class Chat extends Component {
 
   // Events related to chat invitations.
   onChatInvite(invitation) {
-    this.chat.acceptInvite(invitation.id);
+    chatInstance.acceptInvite(invitation.id);
   }
 
   onChatInviteResponse(invitation) {
@@ -150,7 +158,7 @@ class Chat extends Component {
       room.froms = room.froms || {};
       room.froms[invitation.fromUserId] = invitation.fromUserName;
 
-      this.setState((prevState) => {
+      this.setCustomState((prevState) => {
         const prevChatSource = prevState.chatSource;
         prevChatSource[invitation.roomId] = room;
         return {
@@ -162,13 +170,13 @@ class Chat extends Component {
 
       this.enterMessageRoom(this.generateMessageRoomData(room.id, invitation.fromUserId, invitation.fromUserName, room));
     } else {
-      this.chat.getRoom(invitation.roomId, (room) => {
+      chatInstance.getRoom(invitation.roomId, (room) => {
         room.messages = room.messages || [];
         room.froms = room.froms || {};
         room.froms[invitation.toUserId] = invitation.toUserName;
         room.froms[invitation.fromUserId] = invitation.fromUserName;
 
-        this.setState((prevState) => {
+        this.setCustomState((prevState) => {
           const prevChatSource = prevState.chatSource;
           prevChatSource[invitation.roomId] = room;
           return {
@@ -187,47 +195,20 @@ class Chat extends Component {
   }
 
   onSearchUserClicked(user) {
-    const { id: userId, name: userName } = user.userData;
-    const roomId = md5(this.mixString(userId, this.user.id));
-    if (Object.prototype.hasOwnProperty.call(this.state.chatSource, roomId)) {
-      this.enterMessageRoom(this.generateMessageRoomData(roomId, userId, userName, this.state.chatSource[roomId]));
-    } else {
-      this.chat.createRoom(roomId, (room) => {
-        this.chat.inviteUser(userId, userName, roomId);
-        room.messages = room.messages || [];
-        room.froms = {
-          [userId]: userName,
-          [this.user.id]: this.user.name,
-        };
-
-        console.log('enterRoom', roomId, 'room data', room);
-
-        this.setState((prevState) => {
-          const prevChatSource = prevState.chatSource;
-          prevChatSource[roomId] = room;
-          return {
-            searchUsers: [],
-            chatSource: prevChatSource,
-          }
-        }, () => {
-          console.log('onsearchuser click roomId', roomId, 'chatsource', JSON.parse(JSON.stringify(this.state.chatSource)));
-          this.enterMessageRoom(this.generateMessageRoomData(roomId, userId, userName, room));
-        });
-      });
-    }
+    this.chatWithUser(user.userData);
   }
 
   onSearchUser(e) {
     const query = e.target.value;
-    this.setState({
+    this.setCustomState({
       searchUserString: query,
     })
-    this.chat.getUsersByPrefix(query, null, null, this.maxUserSearchResult, (userListFiltered) => {
+    chatInstance.getUsersByPrefix(query, null, null, this.maxUserSearchResult, (userListFiltered) => {
       // console.log(userListFiltered);
       if (!query) {
         userListFiltered = [];
       }
-      this.setState({
+      this.setCustomState({
         searchUsers: userListFiltered,
       })
     });
@@ -310,6 +291,12 @@ class Chat extends Component {
     };
   }
 
+  updateCurrentUserName(userName, roomId) {
+    if (chatInstance) {
+      chatInstance.updateUserName(userName, roomId);
+    }
+  }
+
   setCurrentUserName() {
     console.log('set current user name');
     if (this.isInChatTab) {
@@ -321,14 +308,31 @@ class Chat extends Component {
     const self = this;
 
     // Initialize data events
-    self.chat.setUser(userId, userName, (user) => {
+    chatInstance.setUser(userId, userName, (user) => {
       self.user = user;
-      self.chat.resumeSession();
+
+      const historyState = this.loadDataFromLocalStorage();
+      if (historyState && isInitialized) {
+        this.setCustomState(historyState);
+      }
+
+      isInitialized = true;
+
+      chatInstance.resumeSession();
+      this.updateCurrentUserName(userName);
+
+      if (this.chatTo) {
+        chatInstance.getUserById(this.chatTo, (user) => {
+          if (user) {
+            this.chatWithUser(user);
+          }
+        });
+      }
     });
   }
 
   setChatSourceState(roomId, room) {
-    this.setState((prevState) => {
+    this.setCustomState((prevState) => {
       const prevChatSource = prevState.chatSource;
       prevChatSource[roomId] = room;
 
@@ -336,6 +340,25 @@ class Chat extends Component {
         chatSource: prevState.chatSource,
       };
     });
+  }
+
+  setCustomState(state, cb) {
+    this.setState(state, () => {
+      if (cb) {
+        setTimeout(() => {
+          this.saveCurrentDataToLocalStorage();
+        }, 0);
+        cb();
+      }
+    });
+  }
+
+  loadDataFromLocalStorage() {
+    return JSON.parse(localStorage.getItem('chat_data'));
+  }
+
+  saveCurrentDataToLocalStorage() {
+    localStorage.setItem('chat_data', JSON.stringify(this.state));
   }
 
   mixString(textOne, textTwo) {
@@ -357,7 +380,9 @@ class Chat extends Component {
 
   signIn(user) {
     if (user) {
-      this.setUser(user.uid, `${user.uid.substr(10, 8)}`);
+      const { profile } = this.props.auth;
+      const userName = profile ? profile.username : `${user.uid.substr(10, 8)}`;
+      this.setUser(user.uid, userName);
       return;
     }
 
@@ -395,7 +420,7 @@ class Chat extends Component {
   clearSearch() {
     if (this.searchBtnRef) {
       this.searchBtnRef.value = '';
-      this.setState({
+      this.setCustomState({
         searchUserString: '',
         searchUsers: [],
       })
@@ -403,7 +428,7 @@ class Chat extends Component {
   }
 
   enterMessageRoom(room) {
-    this.setState({
+    this.setCustomState({
       chatDetail: room,
       currentMessage: '',
     }, () => {
@@ -422,7 +447,7 @@ class Chat extends Component {
     const { chatDetail, currentMessage } = this.state;
     if (currentMessage && chatDetail) {
       const { id: roomId } = chatDetail;
-      this.chat.sendMessage(roomId, currentMessage, null, () => {
+      chatInstance.sendMessage(roomId, currentMessage, null, () => {
         if (this.chatInputRef) {
           this.chatInputRef.clear();
           this.chatInputRef.input.focus();
@@ -435,18 +460,50 @@ class Chat extends Component {
     }
   }
 
+  chatWithUser(user) {
+    const { id: userId, name: userName } = user;
+    const roomId = md5(this.mixString(userId, this.user.id));
+
+    if (Object.prototype.hasOwnProperty.call(this.state.chatSource, roomId)) {
+      this.enterMessageRoom(this.generateMessageRoomData(roomId, userId, userName, this.state.chatSource[roomId]));
+    } else {
+      chatInstance.createRoom(roomId, (room) => {
+        chatInstance.inviteUser(userId, userName, roomId);
+        room.messages = room.messages || [];
+        room.froms = {
+          [userId]: userName,
+          [this.user.id]: this.user.name,
+        };
+
+        console.log('enterRoom', roomId, 'room data', room);
+
+        this.setCustomState((prevState) => {
+          const prevChatSource = prevState.chatSource;
+          prevChatSource[roomId] = room;
+          return {
+            searchUsers: [],
+            chatSource: prevChatSource,
+          }
+        }, () => {
+          console.log('onsearchuser click roomId', roomId, 'chatsource', JSON.parse(JSON.stringify(this.state.chatSource)));
+          this.enterMessageRoom(this.generateMessageRoomData(roomId, userId, userName, room));
+        });
+      });
+    }
+  }
+
   bindDataEvents() {
-    this.chat.on('user-update', this.onUpdateUser.bind(this));
+    chatInstance.on('user-update', this.onUpdateUser.bind(this));
 
     // Bind events for new messages, enter / leaving rooms, and user metadata.
-    this.chat.on('room-enter', this.onEnterRoom.bind(this));
-    this.chat.on('room-exit', this.onLeaveRoom.bind(this));
-    this.chat.on('message-add', this.onNewMessage.bind(this));
-    this.chat.on('message-remove', this.onRemoveMessage.bind(this));
+    chatInstance.on('room-enter', this.onEnterRoom.bind(this));
+    chatInstance.on('room-exit', this.onLeaveRoom.bind(this));
+    chatInstance.on('message-add', this.onNewMessage.bind(this));
+    chatInstance.on('message-remove', this.onRemoveMessage.bind(this));
 
     // Bind events related to chat invitations.
-    this.chat.on('room-invite', this.onChatInvite.bind(this));
-    this.chat.on('room-invite-response', this.onChatInviteResponse.bind(this));
+    chatInstance.on('room-invite', this.onChatInvite.bind(this));
+    chatInstance.on('room-invite-response', this.onChatInviteResponse.bind(this));
   }
 
   renderChatList() {
@@ -531,7 +588,7 @@ class Chat extends Component {
               return false;
             }
           }}
-          onChange={(e) => { this.setState({ currentMessage: e.target.value }); }}
+          onChange={(e) => { this.setCustomState({ currentMessage: e.target.value }); }}
           rightButtons={
             <img
               src={IconBtnSend}

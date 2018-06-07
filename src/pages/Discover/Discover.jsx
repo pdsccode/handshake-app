@@ -8,13 +8,13 @@ import { URL } from '@/config';
 // components
 import { Col, Grid, Row } from 'react-bootstrap';
 import SearchBar from '@/components/core/controls/SearchBar';
-import Category from '@/components/core/controls/Category';
+// import Category from '@/components/core/controls/Category';
 import FeedPromise from '@/components/handshakes/promise/Feed';
 // import FeedBetting from '@/components/handshakes/betting/Feed';
 import FeedExchange from '@/components/handshakes/exchange/Feed/FeedExchange';
 import FeedSeed from '@/components/handshakes/seed/Feed';
-import FeedCreditCard from '@/components/handshakes/exchange/Feed/FeedCreditCard';
-import Tabs from '@/components/handshakes/exchange/components/Tabs';
+// import FeedCreditCard from '@/components/handshakes/exchange/Feed/FeedCreditCard';
+// import Tabs from '@/components/handshakes/exchange/components/Tabs';
 import NoData from '@/components/core/presentation/NoData';
 import BettingFilter from '@/components/handshakes/betting/Feed/Filter';
 import { getListOfferPrice } from '@/reducers/exchange/action';
@@ -39,7 +39,7 @@ class DiscoverPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      handshakeIdActive: -1,
+      handshakeIdActive: HANDSHAKE_ID.BETTING, // default show bet
       tabIndexActive: '',
       query: '',
     };
@@ -175,12 +175,12 @@ class DiscoverPage extends React.Component {
 
     return (
       <Grid className="discover">
-        <Row>
+        {/* <Row className="search-bar-wrapper">
           <Col md={12} xs={12}>
             <SearchBar onSuggestionSelected={() => {}} onInputSearchChange={this.searchChange} />
           </Col>
-        </Row>
-        <Row>
+        </Row> */}
+        {/* <Row>
           <Col md={12} xs={6}>
             <Category 
               className="category-wrapper"
@@ -188,8 +188,8 @@ class DiscoverPage extends React.Component {
               onItemClick={this.clickCategoryItem}
             />
           </Col>
-        </Row>
-        {
+        </Row> */}
+        {/* {
           handshakeIdActive === HANDSHAKE_ID.EXCHANGE && (
             <div>
               <Row>
@@ -215,13 +215,13 @@ class DiscoverPage extends React.Component {
               }
             </div>
           )
-        }
+        } */}
         {handshakeIdActive === HANDSHAKE_ID.BETTING &&
           <BettingFilter />
         }
-        <Row>
+        {/* <Row>
           {handshakeIdActive !== HANDSHAKE_ID.BETTING && this.getHandshakeList}
-        </Row>
+        </Row> */}
       </Grid>
     );
   }

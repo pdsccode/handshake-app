@@ -173,7 +173,7 @@ class Router extends React.Component {
   }
 
   componentWillUnmount() {
-    this.props.firebase.unWatchEvent('value', `${FIREBASE_PATH.USERS}/${String(this.state.profile.id)}`);
+    this.props.firebase.unWatchEvent('value', `${FIREBASE_PATH.USERS}/${String(this.state.profile?.id)}`);
 
     if (this.timeOutInterval) {
       clearInterval(this.timeOutInterval);

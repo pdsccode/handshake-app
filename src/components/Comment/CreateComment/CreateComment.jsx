@@ -7,6 +7,7 @@ import { createComment } from '@/reducers/comment/action';
 import { showAlert } from '@/reducers/app/action';
 import { API_URL, HANDSHAKE_ID } from '@/constants';
 import {MasterWallet} from '@/models/MasterWallet';
+import Helper from '@/services/helper';
 
 // components
 import Image from '@/components/core/presentation/Image';
@@ -52,11 +53,10 @@ class CreateComment extends React.PureComponent {
       });
       return;
     }
-    const { objectId, objectType } = this.props;
+    const { objectId } = this.props;
     const rawData = {
       comment: this.textareaRef.value,
-      object_type: objectType.toString(),
-      object_id: objectId,
+      object_id: Helper.getObjectIdOfComment({ id: objectId }),
       address: wallet.address,
     };
     const data = new FormData();

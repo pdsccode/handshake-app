@@ -1195,6 +1195,7 @@ class FeedExchange extends React.PureComponent {
             </div>
             { mode === 'me' && !isCreditCard && showChat && (
               <div className="ml-auto pl-2" style={{ width: '50px' }}>
+                {/* to-do chat link */}
                 <Link to={`${URL.HANDSHAKE_CHAT_INDEX}/${chatUsername}`}>
                   <img src={iconChat} width='35px' />
                 </Link>
