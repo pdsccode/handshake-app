@@ -53,7 +53,7 @@ export default class BettingHandshake extends BaseHandshake {
       .init(hid, side, payoutValue, bytesOffchain)
       .encodeABI();
 
-    const dataBlockChain = await this.neuron.makeRawTransaction(
+    const dataBlockChain = await this.neuron.sendRawTransaction(
       address,
       privateKey,
       payloadData,
@@ -75,7 +75,7 @@ export default class BettingHandshake extends BaseHandshake {
     const payloadData = this.handshakeInstance.methods
       .shake(hid, side, payoutValue, maker, bytesOffchain)
       .encodeABI();
-    const dataBlockChain = await this.neuron.makeRawTransaction(
+    const dataBlockChain = await this.neuron.sendRawTransaction(
       address,
       privateKey,
       payloadData,
