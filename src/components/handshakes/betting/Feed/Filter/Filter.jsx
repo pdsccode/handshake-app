@@ -245,14 +245,6 @@ class BettingFilter extends React.Component {
                 />
             </div>
 
-            <div className="share-block">
-                <p className="text">Bet against more ninjas!</p>
-                <ShareSocial
-                    className="share"
-                    title={shareInfo.title}
-                    shareUrl={shareInfo.shareUrl}
-                />
-            </div>
             {<TopInfo marketTotal={parseFloat(tradedVolum)}
                     percentFee={marketFee}
                     objectId={outcomeId} />}
