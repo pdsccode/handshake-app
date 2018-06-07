@@ -111,7 +111,7 @@ class BettingFilter extends React.Component {
     get matchNames() {
         const {matches} = this.state;
         if(matches){
-            return matches.map((item) => ({ id: item.id, value: `${item.awayTeamName} - ${item.homeTeamName}` }));
+            return matches.map((item) => ({ id: item.id, value: `${item.homeTeamName} - ${item.awayTeamName}` }));
         }
         return null;
     }

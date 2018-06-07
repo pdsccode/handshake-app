@@ -133,7 +133,7 @@ get foundMatch(){
 
 get matchNames() {
   const {matches} = this.state;
-  return matches.map((item) => ({ id: item.id, value: `${item.awayTeamName} - ${item.homeTeamName}` }));
+  return matches.map((item) => ({ id: item.id, value: `${item.homeTeamName} - ${item.awayTeamName}` }));
 }
 get matchOutcomes(){
   const {selectedMatch, matches} = this.state;
@@ -379,7 +379,11 @@ get defaultOutcome() {
           <Dropdown
             placeholder="Select an event"
             defaultId={defaultMatchId}
-            afterSetDefault={(item)=>this.setState({selectedMatch: item})}
+            afterSetDefault={(item)=>{
+              const {values} = this.state;
+              values["event_name"] = item.value;
+              this.setState({selectedMatch: item, values})
+            }}
             source={this.matchNames}
             onItemSelected={(item) =>
               {
