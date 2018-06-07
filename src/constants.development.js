@@ -22,7 +22,7 @@ export const HANDSHAKE_ID_DEFAULT = 3;
 
 export const HANDSHAKE_NAME = {
   // [HANDSHAKE_ID.PROMISE]: 'Promise',
-  // [HANDSHAKE_ID.EXCHANGE]: 'Exchange',
+  [HANDSHAKE_ID.EXCHANGE]: 'Exchange',
   [HANDSHAKE_ID.BETTING]: 'Bet',
   // [HANDSHAKE_ID.SEED]: 'Seed',
 };
@@ -44,6 +44,7 @@ export const CRYPTO_CURRENCY_LIST = [
   { value: CRYPTO_CURRENCY.ETH, text: CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.ETH] },
   { value: CRYPTO_CURRENCY.BTC, text: CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.BTC] },
 ];
+
 export const FIREBASE_PATH = {
   USERS: '/users',
 };
@@ -117,6 +118,10 @@ export const API_URL = {
     WITHDRAW: 'withdraw',
     IP_DOMAIN: 'https://ipfind.co/me',
     IP_KEY: 'beffb953-d0b0-4743-b439-366fcad0d47f',
+
+    //Store
+    OFFER_STORES: 'exchange/offer-stores',
+    SHAKES: 'shakes',
   },
   SEED: {
     BASE: 'seed',
