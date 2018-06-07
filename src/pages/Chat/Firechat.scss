@@ -50,7 +50,7 @@
 
 .rce-mbox {
   position: relative;
-  background: #335FFF;
+  background: #F1F0F0;
   border-radius: 15px;
   // box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, .2);
   border-top-left-radius: 5px;
@@ -62,7 +62,7 @@
   padding: 8px 13px;
   float: left;
   min-width: 140px;
-  color: white;
+  color: #0D0925;
   max-width: 70%;
 }
 
@@ -78,6 +78,8 @@
   margin-right: 15px;
   border-top-right-radius: 5px;
   border-top-left-radius: 15px;
+  background: #335FFF;
+  color: white;
 }
 
 .rce-mbox-text {
@@ -91,11 +93,15 @@
 
 .rce-mbox-time {
   text-align: right;
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(13, 9, 37, 0.8);
   font-size: 12px;
   position: absolute;
   right: -4px;
   bottom: -5px;
+}
+
+.rce-mbox.rce-mbox-right .rce-mbox-time {
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .rce-mbox-time.non-copiable:before {
