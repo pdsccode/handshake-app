@@ -138,7 +138,9 @@ get foundMatch(){
 
 get matchNames() {
   const {matches} = this.state;
-  return matches.map((item) => ({ id: item.id, value: `${item.homeTeamName} - ${item.awayTeamName} (${this.getStringDate(item.date)})` }));
+  //return matches.map((item) => ({ id: item.id, value: `${item.homeTeamName} - ${item.awayTeamName} (${this.getStringDate(item.date)})` }));
+  return matches.map((item) => ({ id: item.id, value: `${item.name} (${this.getStringDate(item.date)})`, marketFee: item.market_fee }));
+
 }
 get matchOutcomes(){
   const {selectedMatch, matches} = this.state;
@@ -147,7 +149,9 @@ get matchOutcomes(){
       if (foundMatch){
           const {outcomes} = foundMatch;
           if(outcomes){
-              return outcomes.map((item) => ({ id: item.id, value: item.name, hid: item.hid}));
+              //return outcomes.map((item) => ({ id: item.id, value: item.name, hid: item.hid}));
+              return outcomes.map((item) => ({ id: item.id, value: `${item.name} (Odds:${parseFloat(item.market_odds).toFixed(2)})`, hid: item.hid, marketOdds: item.market_odds}));
+
           }
       }
   }
@@ -274,6 +278,7 @@ get defaultOutcome() {
   renderInput(item, index,style = {}) {
     const {key, placeholder, type} = item;
     const className = 'amount';
+    
     return (
       <Field
         //style={style}
@@ -348,6 +353,10 @@ get defaultOutcome() {
     const item = JSON.parse(field.replace(regexReplace, ''));
     const {key, placeholder, type, label, className,suffix,prefix} = item;
     let itemRender = null;//this.renderInput(item, index);
+    const {selectedOutcome} = this.state;
+    console.log('Selected Outcome:', selectedOutcome);
+    const marketOdds = (selectedOutcome && selectedOutcome.marketOdds) ? selectedOutcome.marketOdds : 0; 
+    console.log('Market Odds:', marketOdds);
     switch (type) {
       case 'date':
         itemRender = this.renderDate(item, index);

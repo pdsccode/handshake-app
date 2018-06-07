@@ -43,6 +43,7 @@ class BetingShake extends React.Component {
     outcomeHid: PropTypes.number,
     matchName: PropTypes.string,
     matchOutcome: PropTypes.string,
+    marketOdds: PropTypes.number,
     onSubmitClick: PropTypes.func,
     onCancelClick: PropTypes.func,
   }
@@ -57,8 +58,7 @@ class BetingShake extends React.Component {
       buttonClass: 'btnOK btnRed',
       isShowOdds: true,
       extraData: {},
-      marketOdds: 2.0
-
+      isChangeOdds: false,
     };
 
     this.onSubmit = ::this.onSubmit;
@@ -68,7 +68,6 @@ class BetingShake extends React.Component {
     this.onToggleChange = ::this.onToggleChange;
   }
   componentDidMount(){
-
   }
   componentWillReceiveProps(nextProps){
     // const {extraData} = this.state;
@@ -78,6 +77,7 @@ class BetingShake extends React.Component {
     // extraData["event_predict"] = matchOutcome;
     // console.log('componentWillReceiveProps Extra Data: ', extraData);
     // this.setState({extraData})
+    console.log('Shake Props:', nextProps);
 
   }
 
@@ -89,19 +89,13 @@ class BetingShake extends React.Component {
     const {matchName, matchOutcome} = this.props;
     const amount = parseFloat(values.amount);
     const odds = parseFloat(values.odds);
-    console.log("Amount, this.toggle", this.toggleRef.value);
+    console.log("Amount, Side, Odds", amount, this.toggleRef.value, odds);
     // this.props.onSubmitClick(amount);
     const side = parseInt(this.toggleRef.value);
     const balance = await BetHandshakeHandler.getBalance();
     const estimatedGas = await bettinghandshake.getEstimateGas();
     const total = amount + parseFloat(estimatedGas);
-
-    console.log('Amount:', amount);
-    console.log('Props:', this.props);
     var message = null;
-
-
-
 
     if(matchName && matchOutcome){
         if(amount > 0){
@@ -165,13 +159,15 @@ class BetingShake extends React.Component {
       label,
       className,
       id,
-      cryptoCurrency = 'ETH',
-      isShowCurrency = true,
+      infoText = 'ETH',
+      isShowInfoText = true,
       type = 'text',
       value,
+      defaultValue,
       isInput = true,
       ...newProps
     } = props;
+    console.log('Input value:', props.value);
 
     return (
       <div className="rowWrapper">
@@ -183,12 +179,21 @@ class BetingShake extends React.Component {
               className={cn('form-control-custom input value', className || '')}
               id={id}
               type={type}
+              value={value}
               {...newProps}
+              onChange= {()=> {
+                if (id === 'odds'){
+                  console.log('Change Odds');
+                  this.setState({
+                    isChangeOdds: true
+                  })
+                }
+              }}
             />
           ) : (<div className={cn('value', className)}>{value}</div>)
         }
         {
-          isShowCurrency && <div className="cryptoCurrency">{cryptoCurrency}</div>
+          isShowInfoText && <div className="cryptoCurrency">{infoText}</div>
         }
       </div>
     )
@@ -251,8 +256,10 @@ class BetingShake extends React.Component {
       name: 'odds',
       label: 'Odds',
       placeholder: '2.0',
+      value: 3.0,
       defaultValue: 3.0,
-      isShowCurrency: false,
+      infoText: this.state.isChangeOdds ? 'Your Odds' : 'Market Odds',
+      isShowInfoText: true,
       type: 'tel',
     };
 

@@ -232,7 +232,7 @@ export class BetHandshakeHandler {
               
       }   
 
-    }, 15000*i); 
+    }, 3000*i); 
     
   }
   static controlShake = async (list, hid) => {

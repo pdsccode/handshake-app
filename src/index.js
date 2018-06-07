@@ -24,7 +24,7 @@ if (!String.prototype.format) {
     );
   };
 }
-require('@/testing/web3_test');
+//require('@/testing/web3_test');
 // require('@/testing/web3_handshake');
 
 if (window.caches) {

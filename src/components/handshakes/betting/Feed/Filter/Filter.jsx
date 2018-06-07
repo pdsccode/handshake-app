@@ -45,7 +45,7 @@ class BettingFilter extends React.Component {
       }
     componentWillReceiveProps(nextProps) {
 
-        const {matches, support, against} = nextProps;
+        const {matches, support, against, } = nextProps;
         console.log(`${TAG} Matches:`, matches);
         // const selectedMatch = this.defaultMatch;
         // const selectedOutcome = this.defaultOutcome;
@@ -111,9 +111,9 @@ class BettingFilter extends React.Component {
         return null;
     }
     getStringDate(date){
-        console.log('Date:', date);
+        //console.log('Date:', date);
         var formattedDate = moment(new Date(date)).format('MMM DD: HH.mm');
-        console.log('Formated date:', formattedDate);
+        //console.log('Formated date:', formattedDate);
         return formattedDate;
 
     }
@@ -121,7 +121,9 @@ class BettingFilter extends React.Component {
     get matchNames() {
         const {matches} = this.state;
         if(matches){
-            return matches.map((item) => ({ id: item.id, value: `${item.homeTeamName} vs ${item.awayTeamName} (${this.getStringDate(item.date)})`  }));
+            //return matches.map((item) => ({ id: item.id, value: `${item.homeTeamName} vs ${item.awayTeamName} (${this.getStringDate(item.date)})`  }));
+            return matches.map((item) => ({ id: item.id, value: `${item.name} (${this.getStringDate(item.date)})`, marketFee: item.market_fee }));
+
         }
         return null;
     }
@@ -134,7 +136,7 @@ class BettingFilter extends React.Component {
 
                 const {outcomes} = foundMatch;
                 if(outcomes){
-                    return outcomes.map((item) => ({ id: item.id, value: item.name, hid: item.hid}));
+                    return outcomes.map((item) => ({ id: item.id, value: `${item.name} (Odds:${parseFloat(item.market_odds).toFixed(2)})`, hid: item.hid, marketOdds: item.market_odds}));
                 }
             }
         }
@@ -186,7 +188,7 @@ class BettingFilter extends React.Component {
         const selectedOutcome = this.outcomeDropDown ? this.outcomeDropDown.itemSelecting : SELECTING_DEFAULT;
         const selectedMatch = this.outcomeDropDown?  this.matchDropDown.itemSelecting : SELECTING_DEFAULT;
         console.log('Selected Outcome:', selectedOutcome);
-        console.log('Selected Match:', selectedOutcome);
+        console.log('Selected Match:', selectedMatch);
 
 
         const outcomeId = (selectedOutcome && selectedOutcome.id >=0) ? selectedOutcome.id : null;
@@ -201,8 +203,11 @@ class BettingFilter extends React.Component {
         // console.log('Default Outcome:', defaultOutcome);
         const defaultOutcomeId = this.defaultOutcome ? this.defaultOutcome.id : null;
         const shareInfo = this.getInfoShare(selectedMatch, selectedOutcome);
+        const marketFee = (selectedMatch && selectedMatch.marketFee >= 0) ? selectedMatch.marketFee : null;
+        const marketOdds = (selectedOutcome && selectedOutcome.marketOdds) ? selectedOutcome.marketOdds : null;
         console.log('defaultOutcomeId:', defaultOutcomeId);
-        console.log('Source Outcome:', this.matchOutcomes);
+        console.log('Market Fee:', marketFee);
+        console.log('Market Odds:', marketOdds);
         return (
             <div className="wrapperBettingFilter">
             <div className="dropDown">
@@ -249,7 +254,9 @@ class BettingFilter extends React.Component {
                     {<BettingShake
                         matchName={matchName}
                         matchOutcome={matchOutcome}
-                        outcomeId={parseInt(outcomeId)} outcomeHid={parseInt(outcomeHid)}/>}
+                        outcomeId={parseInt(outcomeId)} 
+                        outcomeHid={parseInt(outcomeHid)}
+                        marketOdds={parseFloat(marketOdds)}/>}
 
                     </div>
                 </div>
