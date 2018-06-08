@@ -18,7 +18,8 @@ export default class BettingHandshake extends BaseHandshake {
     // });
   }
   get contractFileNameWithoutExtension() {
-    return process.env.isProduction ? 'PredictionHandshake' : 'PredictionHandshakeDev';
+    // return process.env.isProduction ? 'PredictionHandshake' : 'PredictionHandshakeDev';
+    return process.env.PredictionHandshakeFileName;
   }
   async getEstimateGas() {
     const estimateGas = await this.neuron.caculateEstimatGasWithEthUnit(
