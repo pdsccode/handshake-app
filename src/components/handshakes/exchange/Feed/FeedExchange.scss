@@ -9,11 +9,13 @@
     text-align: center;
     margin-bottom: 20px;
     .name-shop {
+      font-weight: 500;
       font-size: 18px;
       color: #FFFFFF;
       letter-spacing: 0.32px;
     }
     .transaction {
+      font-weight: 400;
       font-size: 14px;
       color: #FFFFFF;
       letter-spacing: 0;
@@ -21,6 +23,7 @@
     }
     .distance {
       opacity: 0.6;
+      font-weight: 400;
       font-size: 14px;
       color: #FFFFFF;
     }
@@ -51,9 +54,10 @@
       }
     }
     .header-text {
+      font-weight: 500;
       font-size: 16px;
+      color: #FF3B3B;
       letter-spacing: 0.29px;
-      font-weight: normal;
     }
     .buy-color {
       color: #00FFC6;
@@ -62,12 +66,15 @@
       color: #FF3B3B;
     }
     .price-number {
+      font-weight: 900;
       font-size: 24px;
+      color: #FF3B3B;
       letter-spacing: 0.43px;
       line-height: 32px;
     }
     .currency {
       opacity: 0.8;
+      font-weight: 500;
       font-size: 14px;
       color: #FFFFFF;
       letter-spacing: 0.25px;

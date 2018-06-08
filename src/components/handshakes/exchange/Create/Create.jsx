@@ -433,7 +433,7 @@ class Component extends React.Component {
                     <hr className="hrLine"/>
 
                     <div className="d-flex">
-                      <label className="col-form-label mr-auto label-create"><span className="align-middle">Name shop</span></label>
+                      <label className="col-form-label mr-auto label-create"><span className="align-middle">Name shop*</span></label>
                       <div className='input-group'>
                         <Field
                           name="nameShop"
