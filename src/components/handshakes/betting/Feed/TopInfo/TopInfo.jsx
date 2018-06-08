@@ -64,7 +64,7 @@ class TopInfo extends React.Component {
       <div className="wrapperTopInfoContainer">
         <div className="boxInfo" onClick={() => this.modalTradedVolumeRef.open()}>
           <div className="number">{marketTotal === 0 ? marketTotal : marketTotal.toFixed(3)} ETH</div>
-          <div className="des">Total stakes</div>
+          <div className="des">Market volume</div>
         </div>
         <div className="boxInfo" onClick={() => this.modalWiningFeeRef.open()}>
           <div className="number">{percentFee}%</div>
@@ -74,18 +74,18 @@ class TopInfo extends React.Component {
           (commentNo > 0 || !this.isFirstCallCommmentCount) ? (
             <Link className="boxInfo" to={commentLink}>
               <div className="number">{commentNo}</div>
-              <div className="des">Comment{commentNo > 0 ? 's' : ''}</div>
+              <div className="des">Comment{(commentNo === 0 || commentNo > 1) ? 's' : ''}</div>
             </Link>
           ) : (
             <Link className="boxInfo" to={addCommentLink}>
               {/*<div className="des">Say something</div>*/}
               <div className="number">0</div>
-              <div className="des">Comment</div>
+              <div className="des">Comments</div>
             </Link>
           )
         }
-        <ModalDialog className="modal-info" title="Total stakes" onRef={modal => this.modalTradedVolumeRef = modal}>
-          <p>The total stake of this prediction is the current amount wagered by all participating ninjas.</p>
+        <ModalDialog className="modal-info" title="Market volume" onRef={modal => this.modalTradedVolumeRef = modal}>
+          <p>The market volume of this prediction is the current amount wagered by all participating ninjas.</p>
         </ModalDialog>
         <ModalDialog className="modal-info" title="Market fee" onRef={modal => this.modalWiningFeeRef = modal}>
           <p>The Ninja that created this prediction is free to set his own fees.</p>
