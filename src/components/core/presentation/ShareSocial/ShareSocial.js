@@ -108,9 +108,10 @@ class ShareSocial extends PureComponent {
           });
         } else {
           this.props.showAlert({
-            message: <div className="text-center">Copied to clipboard fail!</div>,
-            timeOut: 3000,
+            message: <div className="text-center">Copied to clipboard fail! <p style={{ margin: 0 }}>{shortLink}</p></div>,
+            timeOut: 10000,
             type: 'danger',
+            isShowClose: true,
           });
         }
         return;
