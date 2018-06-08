@@ -46,8 +46,8 @@ class Profile extends React.Component {
       emailCollapse: false,
       isShowCountryCode: false,
       phoneStart: false,
-      phone: '',
-      email: '',
+      phone: props.auth.profile.phone,
+      email: props.auth.profile.email,
       sms: '',
       successMessage: '',
       isShowVerificationCode: false,
@@ -140,7 +140,7 @@ class Profile extends React.Component {
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             METHOD: 'POST',
             successFn: () => {
-              this.setState({ isShowVerificationCode: false, });
+              this.setState({ isShowVerificationCode: false });
               this.props.showAlert({
                 message: <div className="text-center">Added your phone number</div>,
                 timeOut: 3000,
@@ -268,7 +268,7 @@ class Profile extends React.Component {
 
   render() {
     const {
-      countryCode, countries, sms, email,
+      countryCode, countries, sms, email, phone,
     } = this.state;
     const { UsernameForm, NumberPhoneForm, EmailForm } = this;
     return (
@@ -316,6 +316,7 @@ class Profile extends React.Component {
                   </span>
                 </p>
                 <div className="extend">
+                  <span className="badge badge-success">{ phone ? 'Verified' : '' }</span>
                   <Image className={this.state.phoneCollapse ? 'rotate' : ''} src={ExpandArrowSVG} alt="arrow" />
                 </div>
               </div>
@@ -392,6 +393,7 @@ class Profile extends React.Component {
                   <span>You may prefer to receive updates and notifications via email. This is also optional.</span>
                 </p>
                 <div className="extend">
+                  <span className="badge badge-success">{ email ? 'Verified' : '' }</span>
                   <Image className={this.state.emailCollapse ? 'rotate' : ''} src={ExpandArrowSVG} alt="arrow" />
                 </div>
               </div>
