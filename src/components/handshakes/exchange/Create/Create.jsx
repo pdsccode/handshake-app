@@ -2,7 +2,7 @@ import React from "react";
 import {injectIntl} from "react-intl";
 import Feed from "@/components/core/presentation/Feed";
 import Button from "@/components/core/controls/Button";
-
+import './styles.scss'
 import createForm from "@/components/core/form/createForm";
 import {
   fieldCleave,
@@ -325,7 +325,7 @@ class Component extends React.Component {
               </div>
 
               <div className="d-flex">
-                <label className="col-form-label mr-auto label-create">Amount buy</label>
+                <label className="col-form-label mr-auto label-create"><span className="align-middle">Amount buy</span></label>
                 <div className='input-group'>
                   <Field
                     name="amountBuy"
@@ -341,7 +341,7 @@ class Component extends React.Component {
               <hr className="hrLine"/>
 
               <div className="d-flex">
-                <label className="col-form-label mr-auto label-create">Amount sell</label>
+                <label className="col-form-label mr-auto label-create"><span className="align-middle">Amount sell</span></label>
                 <div className='input-group'>
                   <Field
                     name="amountSell"
@@ -357,7 +357,7 @@ class Component extends React.Component {
               <hr className="hrLine"/>
 
               <div className="d-flex py-1">
-                <label className="col-form-label mr-auto label-create">Customize price buy</label>
+                <label className="col-form-label mr-auto label-create"><span className="align-middle">Customize price buy</span></label>
                 <div className='input-group align-items-center'>
                   <Field
                     name="customizePriceBuy"
@@ -374,7 +374,7 @@ class Component extends React.Component {
               <hr className="hrLine"/>
 
               <div className="d-flex py-1">
-                <label className="col-form-label mr-auto label-create">Customize price sell</label>
+                <label className="col-form-label mr-auto label-create"><span className="align-middle">Customize price sell</span></label>
                 <div className='input-group align-items-center'>
                   <Field
                     name="customizePriceSell"
@@ -394,7 +394,7 @@ class Component extends React.Component {
                     <hr className="hrLine"/>
 
                     <div className="d-flex">
-                      <label className="col-form-label mr-auto label-create">Name shop</label>
+                      <label className="col-form-label mr-auto label-create"><span className="align-middle">Name shop</span></label>
                       <div className='input-group'>
                         <Field
                           name="nameShop"
@@ -410,7 +410,7 @@ class Component extends React.Component {
                     <hr className="hrLine"/>
 
                     <div className="d-flex mt-2">
-                      <label className="col-form-label mr-auto label-create">Phone</label>
+                      <label className="col-form-label mr-auto label-create"><span className="align-middle">Phone</span></label>
                       <div className="input-group w-100">
                         <Field
                           name="phone"
@@ -425,7 +425,7 @@ class Component extends React.Component {
                     <hr className="hrLine"/>
 
                     <div className="d-flex mt-2">
-                      <label className="col-form-label mr-auto label-create">Address*</label>
+                      <label className="col-form-label mr-auto label-create"><span className="align-middle">Address*</span></label>
                       <div className="w-100">
                         <Field
                           name="address"
