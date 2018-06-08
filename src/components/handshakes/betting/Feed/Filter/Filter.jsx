@@ -62,7 +62,7 @@ class BettingFilter extends React.Component {
     }
     get defaultSupportOdds(){
         const {support} = this.state;
-        return support && support.length > 0 ? support[0].odds : 0;
+        return support && support.length > 0 ? support[support.length-1].odds : 0;
     }
 
     get defaultAgainstOdds(){
