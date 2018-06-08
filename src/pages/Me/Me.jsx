@@ -11,7 +11,7 @@ import NoData from '@/components/core/presentation/NoData';
 import { getListOfferPrice } from '@/reducers/exchange/action';
 import FeedPromise from '@/components/handshakes/promise/Feed';
 import FeedBetting from '@/components/handshakes/betting/Feed';
-import FeedExchange from '@/components/handshakes/exchange/Feed/FeedExchange';
+import FeedExchange from '@/components/handshakes/exchange/Feed/FeedMe';
 import FeedSeed from '@/components/handshakes/seed/Feed';
 import Image from '@/components/core/presentation/Image';
 // style
