@@ -92,6 +92,7 @@ class BettingCreate extends React.PureComponent {
       matches: [],
       isChangeOdds: false,
       oddValue: 0,
+      winValue: 0,
       selectedMatch:null,
       selectedOutcome: null,
       buttonClass: 'btnRed',
@@ -300,6 +301,12 @@ get defaultOutcome() {
         isChangeOdds: true
       })
     }
+    const amount = values["event_bet"];
+    const odds = values['event_odds'];
+    const total = amount * odds;
+    this.setState({
+      winValue: total || 0
+    })
   }
 
   onToggleChange(id) {
@@ -490,7 +497,7 @@ get defaultOutcome() {
             <div style={{display:'flex',flexDirection:'column',flex:1,marginBottom:10}}>
               {inputList.map((field, index) => this.renderItem(field, index))}
             </div>
-            <div style={{color: 'white', fontSize: 13}}>Amount you could win: 0.00</div>
+            <div style={{color: 'white', fontSize: 13}}>Amount you could win: {this.state.winValue}</div>
         </div>
 
 

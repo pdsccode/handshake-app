@@ -69,7 +69,9 @@ class BetingShake extends React.Component {
       extraData: {},
       isChangeOdds: false,
       marketOdds: 0,
-      oddValue: 0
+      oddValue: 0,
+      amountValue: 0,
+      winValue: 0
       //BettingShakeForm
 
     };
@@ -176,16 +178,12 @@ class BetingShake extends React.Component {
 
   }
 
-  updateTotal(value) {
-    console.log('value:', value);
-    if (!!value) {
-      const { odd } = this.props;
-      const amount = value * odd;
+  updateTotal() {
+    const {oddValue, amountValue} = this.state;
+    const total = oddValue * amountValue;
       this.setState({
-        amount: value,
-        total: amount.toFixed(4),
+        winValue: total.toFixed(4),
       })
-    }
   }
 
   renderInputField(props) {
@@ -223,7 +221,11 @@ class BetingShake extends React.Component {
                   this.setState({
                     oddValue: evt.target.value,
                     isChangeOdds: true
-                  })
+                  }, ()=> this.updateTotal())
+                }else {
+                  this.setState ({
+                    amountValue: evt.target.value
+                  }, ()=> this.updateTotal())
                 }
               }}
             />
@@ -309,7 +311,7 @@ class BetingShake extends React.Component {
         <Toggle ref={(component) => {this.toggleRef = component}} onChange={this.onToggleChange} />
         {this.renderInputField(amountField)}
         {isShowOdds && this.renderInputField(oddsField)}
-         <div style={{color: 'white', fontSize: '0.75rem'}}>Possible winnings: 0.00</div>
+         <div style={{color: 'white', fontSize: '0.75rem'}}>Possible winnings: {this.state.winValue}</div>
 
         <Button type="submit" block className={buttonClass}>
           Go
