@@ -152,7 +152,6 @@ module.exports = function webpackConfig(env, argv) {
           jQuery: 'jquery',
         }),
         new HtmlWebpackPlugin({
-          inject: false,
           chunks: ['main', 'vendors~main'],
           minify: isProduction
             ? {

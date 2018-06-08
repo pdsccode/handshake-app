@@ -11,8 +11,8 @@ module.exports = {
   },
   ipfindKey: '',
   social: {
-    trackingId: '',
-    facebookPixelId: '',
     isUseSocial: false,
+    googleAnalyticId: '',
+    facebookPixelId: '',
   },
 };
