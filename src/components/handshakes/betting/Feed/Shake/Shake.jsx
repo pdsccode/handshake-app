@@ -378,7 +378,7 @@ class BetingShake extends React.Component {
      this.props.showAlert({
       message: <div className="text-center">{MESSAGE.CREATE_BET_SUCCESSFUL}</div>,
       timeOut: 3000,
-      type: 'danger',
+      type: 'success',
       callBack: () => {
       }
     });
