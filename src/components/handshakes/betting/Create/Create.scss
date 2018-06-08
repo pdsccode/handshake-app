@@ -92,7 +92,7 @@
   }
   .cryptoCurrencyamount {
     position: relative;
-    top: -26.5px;
+    top: -24.5px;
     left: 88%;
     font-weight: $normal;
     font-size: 0.75rem;
@@ -100,7 +100,7 @@
   }
   .cryptoCurrencyatOdds {
     position: relative;
-    top: -26.5px;
+    top: -24.5px;
     left: 73%;
     font-weight: $normal;
     font-size: 0.75rem;
@@ -163,6 +163,15 @@
   .text-danger + .cryptoCurrency {
     left: 74%;
   }
+
+  .text-danger +  .cryptoCurrencyamount {
+    left: 72%;
+  }
+
+  .text-danger + .cryptoCurrencyatOdds {
+    left: 68%;
+  }
+
   .btnRed {
     background: #FA6B49;
     border: none;
