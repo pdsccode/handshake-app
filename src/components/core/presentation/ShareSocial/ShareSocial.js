@@ -12,7 +12,6 @@ import TwitterSVG from '@/assets/images/share/twitter.svg';
 import './ShareSocial.scss';
 const Clipboard = (function(window, document, navigator) { var textArea, copy; function isOS() { return navigator.userAgent.match(/ipad|iphone/i); } function createTextArea(text) { textArea = document.createElement('textArea'); textArea.value = text; document.body.appendChild(textArea); } function selectText() { var range, selection; if (isOS()) { range = document.createRange(); range.selectNodeContents(textArea); selection = window.getSelection(); selection.removeAllRanges(); selection.addRange(range); textArea.setSelectionRange(0, 999999); } else { textArea.select(); } } function copyToClipboard() { document.execCommand('copy'); document.body.removeChild(textArea); } copy = function(text) { createTextArea(text); selectText(); copyToClipboard(); }; return { copy: copy }; })(window, document, navigator);
 
-
 class ShareSocial extends PureComponent {
   constructor(props) {
     super(props);
@@ -28,10 +27,6 @@ class ShareSocial extends PureComponent {
       img: CopyLink,
       title: 'COPY'
     }
-    // {
-    //   img: LinkedinSVG,
-    //   title: 'LINKEDIN'
-    // }
     ];
   }
 
@@ -46,18 +41,20 @@ class ShareSocial extends PureComponent {
   async clickShare(e, shareType) {
     e.stopPropagation();
     const { title, shareUrl } = this.props;
-    const { data } = await this.converToShortLink(shareUrl);
-    const shortLink = data.id;
     let rawUrlShare = '';
+    let shortLink = '';
+    try {
+      const { data } = await this.converToShortLink(shareUrl);
+      shortLink = data.id;
+    } catch (error) {
+      shortLink = shareUrl;
+    }
+
     switch(shareType) {
       case 'TWITTER':
         rawUrlShare = `http://twitter.com/intent/tweet?status=${title}+${shortLink}`;
         break;
-      // case 'LINKEDIN':
-      //   rawUrlShare = `https://www.linkedin.com/shareArticle?mini=true&url=${shareUrl}&summary=${title}&source=LinkedIn`;
-      //   break;
       case 'COPY':
-        // TODO: Short link
         // copy to clip board
         Clipboard.copy(shortLink);
         // show alert
@@ -72,7 +69,6 @@ class ShareSocial extends PureComponent {
         rawUrlShare = `https://www.facebook.com/sharer/sharer.php?u=${shortLink}&amp;title=${title}`;
         break;
     }
-    
     Helper.popupCenter(rawUrlShare, 'facebook', 670, 340);
   }
  
