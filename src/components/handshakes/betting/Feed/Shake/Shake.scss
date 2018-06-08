@@ -51,6 +51,9 @@
     position: relative;
     top: 6px;
     left: 80%;
+    @media (max-width: 330px) {
+      left: 77%;
+    }
   }
   .odds + .cryptoCurrency {
     font-size: rem-calc(12px);
@@ -59,7 +62,13 @@
     letter-spacing: 0;
     position: relative;
     bottom: 26px;
-    left: 46%;
+    left: 50%;
+    @media (max-width: 375px) {
+      left: 44%;
+    }
+    @media (max-width: 330px) {
+      left: 35%;
+    }
   }
   .input[readOnly] {
     border-bottom: none;
