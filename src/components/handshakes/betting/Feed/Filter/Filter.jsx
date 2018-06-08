@@ -62,7 +62,7 @@ class BettingFilter extends React.Component {
     }
     get defaultSupportOdds(){
         const {support} = this.state;
-        return support && support.length > 0 ? support[0].odds : 0;
+        return support && support.length > 0 ? support[support.length-1].odds : 0;
     }
 
     get defaultAgainstOdds(){
@@ -131,7 +131,7 @@ class BettingFilter extends React.Component {
         const {matches} = this.state;
         if(matches){
             //return matches.map((item) => ({ id: item.id, value: `${item.homeTeamName} vs ${item.awayTeamName} (${this.getStringDate(item.date)})`  }));
-            return matches.map((item) => ({ id: item.id, value: `Event: ${item.name} (${this.getStringDate(item.date)})`, marketFee: item.market_fee }));
+            return matches.map((item) => ({ id: item.id, value: `${item.name}`, marketFee: item.market_fee }));
 
         }
         return null;
@@ -145,7 +145,7 @@ class BettingFilter extends React.Component {
 
                 const {outcomes} = foundMatch;
                 if(outcomes){
-                    return outcomes.map((item) => ({ id: item.id, value: `Outcome: ${item.name} (Odds:${parseFloat(item.market_odds).toFixed(2)})`, hid: item.hid, marketOdds: item.market_odds}));
+                    return outcomes.map((item) => ({ id: item.id, value: `Outcome: ${item.name} (Odds: ${parseFloat(item.market_odds).toFixed(2)})`, hid: item.hid, marketOdds: item.market_odds}));
                 }
             }
         }
