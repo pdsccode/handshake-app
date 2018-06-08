@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 // component
 import Image from '@/components/core/presentation/Image';
-import loadingSVG from '@/assets/images/icon/loading.svg';
+import loadingSVG from '@/assets/images/icon/loading.gif';
 // style
 import './Loading.scss';
 

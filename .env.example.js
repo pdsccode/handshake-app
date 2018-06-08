@@ -10,4 +10,10 @@ module.exports = {
     messagingSenderId: '',
   },
   ipfindKey: '',
+  social: {
+    isUseSocial: false,
+    googleAnalyticId: '',
+    facebookPixelId: '',
+  },
+  PredictionHandshakeFileName: ''
 };

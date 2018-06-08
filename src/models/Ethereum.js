@@ -80,7 +80,7 @@ export class Ethereum extends Wallet {
     if (!web3.utils.isAddress(toAddress)){
         return "You can only send tokens to Ethereum address";
     }
-    else return true;    
+    else return true;
   }
 
     async transfer(toAddress, amountToSend) {
@@ -145,6 +145,39 @@ export class Ethereum extends Wallet {
       }
     }
 
+    async getTransactionDetail(txhash) {
+      const API_KEY = configs.network[4].apikeyEtherscan;
+      const url =this.constructor.API[this.getNetworkName()] + `?module=proxy&action=eth_getTransactionByHash&txhash=${txhash}&apikey=${API_KEY}`;
+      const response = await axios.get(url);
+
+      const web3 = new Web3(new Web3.providers.HttpProvider(this.network));
+
+      if (response.status == 200) {
+        let detail = response.data.result, result = {};
+        result = {
+          header: {
+            value: Number(web3.utils.hexToNumber(detail.value) / 10000000000000000000),
+            coin: "ETH",
+            confirmations: web3.utils.hexToNumber(detail.transactionIndex),
+            is_sent: this.address.toLowerCase() == detail.from.toLowerCase(),
+          },
+          body: {
+            hash: detail.hash,
+            block: web3.utils.hexToNumber(detail.blockNumber),
+            gas: web3.utils.hexToNumber(detail.gas),
+            gas_price: Number(web3.utils.hexToNumber(detail.gasPrice) / 10000000000000000000).toFixed(web3.utils.hexToNumberString(detail.gasPrice).length) + " ETH",
+            from: detail.from,
+            to: detail.to,
+            nouce: web3.utils.hexToNumber(detail.nouce),
+            data: detail.input
+          }
+        };
+        return result;
+      }
+
+      return false;
+    }
+
     async getTransactionHistory() {
       const API_KEY = configs.network[4].apikeyEtherscan;
       const url =this.constructor.API[this.getNetworkName()] + `?module=account&action=txlist&address=${this.address}&startblock=0&endblock=99999999&page=1&offset=10&sort=desc&apikey=${API_KEY}`;
@@ -152,27 +185,28 @@ export class Ethereum extends Wallet {
       if (response.status == 200) {
         let result = [];
         for(let tran of response.data.result){
-
           let value = Number(tran.value / 10000000000000000000),
-          transaction_date = new Date(tran.timeStamp*1000),
-          addresses = [],
+          transaction_date = new Date(tran.timeStamp*1000),addresses = [],
           is_sent = tran.from.toLowerCase() == this.address.toLowerCase();
+          if(is_sent) this.address = tran.to;
+          else this.address = tran.from;
 
-          if(is_sent) addresses.push(tran.to.replace(tran.to.substr(5, 32), '...'));
-          else addresses.push(tran.from.replace(tran.from.substr(5, 32), '...'));
-
+          addresses.push(this.getShortAddress());
           result.push({
             value: value,
+            transaction_no: tran.hash,
             transaction_date: transaction_date,
             transaction_relative_time:  moment(transaction_date).fromNow(),
             addresses: addresses,
+            time_stamp: tran.timeStamp ,
             is_sent: is_sent});
         }
 
         return result;
       }
-      return false;
+      return [];
     }
+
 }
 
 export default { Ethereum };

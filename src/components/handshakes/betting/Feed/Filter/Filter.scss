@@ -51,11 +51,10 @@
   .titleBox {
     display: flex;
     background-color: #1F2B34;;
-    color: #5a6166;
-    font-size: rem-calc(13px);
+    color: $white;
+    font-size: rem-calc(12px);
     justify-content: space-between;
     letter-spacing: 0;
-    padding: rem-calc(14px 20px);
-
+    padding: rem-calc(14px 10px);
   }
 }

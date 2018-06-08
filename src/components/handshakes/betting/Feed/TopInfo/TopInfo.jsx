@@ -5,7 +5,8 @@ import { connect } from 'react-redux';
 import { getCommentCountById } from '@/reducers/comment/action';
 import { API_URL, URL } from '@/constants';
 import Helper from '@/services/helper';
-
+// components
+import ModalDialog from '@/components/core/controls/ModalDialog';
 import { Link } from 'react-router-dom';
 
 import './TopInfo.scss';
@@ -61,26 +62,35 @@ class TopInfo extends React.Component {
     const addCommentLink = `${commentLink}&addComment=true`;
     return (
       <div className="wrapperTopInfoContainer">
-        <div className="boxInfo">
+        <div className="boxInfo" onClick={() => this.modalTradedVolumeRef.open()}>
           <div className="number">{marketTotal} ETH</div>
-          <div className="des">Traded volume</div>
+          <div className="des">Total stakes</div>
         </div>
-        <div className="boxInfo">
+        <div className="boxInfo" onClick={() => this.modalWiningFeeRef.open()}>
           <div className="number">{percentFee}%</div>
-          <div className="des">Wining fee</div>
+          <div className="des">Market fee</div>
         </div>
         {
           (commentNo > 0 || !this.isFirstCallCommmentCount) ? (
             <Link className="boxInfo" to={commentLink}>
               <div className="number">{commentNo}</div>
-              <div className="des">comments</div>
+              <div className="des">Comment{commentNo > 0 ? 's' : ''}</div>
             </Link>
           ) : (
             <Link className="boxInfo" to={addCommentLink}>
-              <div className="des">Add <br/> a comment</div>
+              {/*<div className="des">Say something</div>*/}
+              <div className="number">0</div>
+              <div className="des">Comment</div>
             </Link>
           )
         }
+        <ModalDialog className="modal-info" title="Total stakes" onRef={modal => this.modalTradedVolumeRef = modal}>
+          <p>The total stake of this prediction is the current amount wagered by all participating ninjas.</p>
+        </ModalDialog>
+        <ModalDialog className="modal-info" title="Market fee" onRef={modal => this.modalWiningFeeRef = modal}>
+          <p>The Ninja that created this prediction is free to set his own fees.</p>
+          <p>It will be a percentage of the total amount wagered by all participating ninjas.</p>
+        </ModalDialog>
       </div>
     );
   }
