@@ -45,7 +45,7 @@ import {MasterWallet} from "@/models/MasterWallet";
 import {getHandshakeUserType, getOfferPrice} from "@/services/offer-util";
 import {showAlert} from '@/reducers/app/action';
 import {Link} from "react-router-dom";
-// import {URL} from '@/config';
+import {URL} from '@/constants';
 import {getDistanceFromLatLonInKm} from '../utils'
 import {ExchangeHandshake} from '@/services/neuron';
 import _sample from "lodash/sample";
@@ -58,12 +58,325 @@ import { showLoading, hideLoading } from '@/reducers/app/action';
 class FeedExchange extends React.PureComponent {
   constructor(props) {
     super(props);
+
+    // const { extraData } = props;
+    // const offer = Offer.offer(JSON.parse(extraData));
+    // this.offer = offer;
+    this.state = {
+      modalContent: '',
+    };
+
     this.mainColor = 'linear-gradient(-180deg, rgba(0,0,0,0.50) 0%, #303030 0%, #000000 100%)'
   }
 
   handleOnShake = () => {
     this.modalRef.open();
   }
+
+  addOfferItem = () => {
+    const { offer } = this.props;
+    const offerItem = {
+      currency: '',
+      sell_amount: '',
+      sell_percentage: '',
+      buy_amount: '',
+      buy_percentage: '',
+      user_address: '',
+      reward_address: '',
+    };
+
+    this.showLoading();
+    this.props.addOfferItem({
+      PATH_URL: `${API_URL.EXCHANGE.OFFER_STORES}/${offer.id}`,
+      METHOD: 'POST',
+      data: offerShake,
+      successFn: this.handleAddOfferItemSuccess,
+      errorFn: this.handleAddOfferItemFailed,
+    });
+  }
+
+  handleAddOfferItemSuccess = (responseData) => {
+    const { intl } = this.props;
+    const { data } = responseData;
+    const { currency } = data;
+
+    // const offer = this.offer;
+    // if (currency === CRYPTO_CURRENCY.ETH) {
+    //   this.handleCallActionOnContract(data);
+    // } else if (currency === CRYPTO_CURRENCY.BTC) {
+    //   if (offer.type === EXCHANGE_ACTION.BUY) {
+    //     const wallet = MasterWallet.getWalletDefault(offer.currency);
+    //     wallet.transfer(offer.systemAddress, offer.totalAmount).then(success => {
+    //       console.log('transfer', success);
+    //     });
+    //   }
+    // }
+
+    this.hideLoading();
+    const message = intl.formatMessage({ id: 'addOfferItemSuccessMassage' }, {
+      // offerType: offerType,
+      // amount: formatAmountCurrency(offer.amount),
+      // currency: offer.currency,
+      // currency_symbol: offer.fiatCurrency,
+      // total: formatMoney(fiatAmount),
+      // fee: offer.feePercentage,
+      // payment_method: EXCHANGE_METHOD_PAYMENT[EXCHANGE_FEED_TYPE.EXCHANGE],
+    });
+
+    this.props.showAlert({
+      message: <div className="text-center">{message}</div>,
+      timeOut: 2000,
+      type: 'success',
+      callBack: () => {
+        // this.props.updateOfferStatus({ [`exchange_${data.id}`]: data });
+        // this.props.history.push(URL.HANDSHAKE_ME);
+      },
+    });
+  }
+
+  handleAddOfferItemFailed = (e) => {
+    this.handleActionFailed(e);
+  }
+
+  ////////////////////////
+
+  deleteOfferItem = () => {
+    const { offer } = this.props;
+
+    this.showLoading();
+    this.props.deleteOfferItem({
+      PATH_URL: `${API_URL.EXCHANGE.OFFER_STORES}/${offer.id}`,
+      METHOD: 'DELETE',
+      qs: { currency: CRYPTO_CURRENCY.ETH},
+      successFn: this.handleDeleteOfferItemSuccess,
+      errorFn: this.handleDeleteOfferItemFailed,
+    });
+  }
+
+  handleDeleteOfferItemSuccess = (responseData) => {
+    const { intl } = this.props;
+    const { data } = responseData;
+    const { currency } = data;
+
+    // const offer = this.offer;
+    // if (currency === CRYPTO_CURRENCY.ETH) {
+    //   this.handleCallActionOnContract(data);
+    // } else if (currency === CRYPTO_CURRENCY.BTC) {
+    //   if (offer.type === EXCHANGE_ACTION.BUY) {
+    //     const wallet = MasterWallet.getWalletDefault(offer.currency);
+    //     wallet.transfer(offer.systemAddress, offer.totalAmount).then(success => {
+    //       console.log('transfer', success);
+    //     });
+    //   }
+    // }
+
+    this.hideLoading();
+    const message = intl.formatMessage({ id: 'deleteOfferItemSuccessMassage' }, {
+      // offerType: offerType,
+      // amount: formatAmountCurrency(offer.amount),
+      // currency: offer.currency,
+      // currency_symbol: offer.fiatCurrency,
+      // total: formatMoney(fiatAmount),
+      // fee: offer.feePercentage,
+      // payment_method: EXCHANGE_METHOD_PAYMENT[EXCHANGE_FEED_TYPE.EXCHANGE],
+    });
+
+    this.props.showAlert({
+      message: <div className="text-center">{message}</div>,
+      timeOut: 2000,
+      type: 'success',
+      callBack: () => {
+        // this.props.updateOfferStatus({ [`exchange_${data.id}`]: data });
+        // this.props.history.push(URL.HANDSHAKE_ME);
+      },
+    });
+  }
+
+  handleDeleteOfferItemFailed = (e) => {
+    this.handleActionFailed(e);
+  }
+
+  ////////////////////////
+
+  shakeOfferItem = () => {
+    const { offer } = this.props;
+
+    const offerItem = {
+      type: 'buy',
+      currency: 'ETH',
+      amount: '',
+      username: '',
+      email: '',
+      contact_phone: '',
+      user_address: '',
+    };
+
+    this.showLoading();
+    this.props.shakeOfferItem({
+      PATH_URL: `${API_URL.EXCHANGE.OFFER_STORES}/${offer.id}/${API_URL.EXCHANGE.SHAKES}`,
+      METHOD: 'POST',
+      successFn: this.handleShakeOfferItemSuccess,
+      errorFn: this.handleShakeOfferItemFailed,
+    });
+  }
+
+  handleShakeOfferItemSuccess = (responseData) => {
+    const { intl } = this.props;
+    const { data } = responseData;
+    const { currency } = data;
+
+    // const offer = this.offer;
+    // if (currency === CRYPTO_CURRENCY.ETH) {
+    //   this.handleCallActionOnContract(data);
+    // } else if (currency === CRYPTO_CURRENCY.BTC) {
+    //   if (offer.type === EXCHANGE_ACTION.BUY) {
+    //     const wallet = MasterWallet.getWalletDefault(offer.currency);
+    //     wallet.transfer(offer.systemAddress, offer.totalAmount).then(success => {
+    //       console.log('transfer', success);
+    //     });
+    //   }
+    // }
+
+    this.hideLoading();
+    const message = intl.formatMessage({ id: 'shakeOfferItemSuccessMassage' }, {
+      // offerType: offerType,
+      // amount: formatAmountCurrency(offer.amount),
+      // currency: offer.currency,
+      // currency_symbol: offer.fiatCurrency,
+      // total: formatMoney(fiatAmount),
+      // fee: offer.feePercentage,
+      // payment_method: EXCHANGE_METHOD_PAYMENT[EXCHANGE_FEED_TYPE.EXCHANGE],
+    });
+
+    this.props.showAlert({
+      message: <div className="text-center">{message}</div>,
+      timeOut: 2000,
+      type: 'success',
+      callBack: () => {
+        // this.props.updateOfferStatus({ [`exchange_${data.id}`]: data });
+        // this.props.history.push(URL.HANDSHAKE_ME);
+      },
+    });
+  }
+
+  handleShakeOfferItemFailed = (e) => {
+    this.handleActionFailed(e);
+  }
+
+  ////////////////////////
+
+  rejectOfferItem = () => {
+    const { offer, shake } = this.props;
+
+    this.showLoading();
+    this.props.rejectOfferItem({
+      PATH_URL: `${API_URL.EXCHANGE.OFFER_STORES}/${offer.id}/${API_URL.EXCHANGE.SHAKES}/${shake.id}`,
+      METHOD: 'DELETE',
+      successFn: this.handleRejectOfferItemSuccess,
+      errorFn: this.handleRejectOfferItemFailed,
+    });
+  }
+
+  handleRejectOfferItemSuccess = (responseData) => {
+    const { intl } = this.props;
+    const { data } = responseData;
+    const { currency } = data;
+
+    // const offer = this.offer;
+    // if (currency === CRYPTO_CURRENCY.ETH) {
+    //   this.handleCallActionOnContract(data);
+    // } else if (currency === CRYPTO_CURRENCY.BTC) {
+    //   if (offer.type === EXCHANGE_ACTION.BUY) {
+    //     const wallet = MasterWallet.getWalletDefault(offer.currency);
+    //     wallet.transfer(offer.systemAddress, offer.totalAmount).then(success => {
+    //       console.log('transfer', success);
+    //     });
+    //   }
+    // }
+
+    this.hideLoading();
+    const message = intl.formatMessage({ id: 'rejectOfferItemSuccessMassage' }, {
+      // offerType: offerType,
+      // amount: formatAmountCurrency(offer.amount),
+      // currency: offer.currency,
+      // currency_symbol: offer.fiatCurrency,
+      // total: formatMoney(fiatAmount),
+      // fee: offer.feePercentage,
+      // payment_method: EXCHANGE_METHOD_PAYMENT[EXCHANGE_FEED_TYPE.EXCHANGE],
+    });
+
+    this.props.showAlert({
+      message: <div className="text-center">{message}</div>,
+      timeOut: 2000,
+      type: 'success',
+      callBack: () => {
+        // this.props.updateOfferStatus({ [`exchange_${data.id}`]: data });
+        // this.props.history.push(URL.HANDSHAKE_ME);
+      },
+    });
+  }
+
+  handleRejectOfferItemFailed = (e) => {
+    this.handleActionFailed(e);
+  }
+
+  ////////////////////////
+
+  completeOfferItem = () => {
+    const { offer, shake } = this.props;
+
+    this.showLoading();
+    this.props.completeOfferItem({
+      PATH_URL: `${API_URL.EXCHANGE.OFFER_STORES}/${offer.id}/${API_URL.EXCHANGE.SHAKES}/${shake.id}`,
+      METHOD: 'POST',
+      successFn: this.handleCompleteOfferItemSuccess,
+      errorFn: this.handleCompleteOfferItemFailed,
+    });
+  }
+
+  handleCompleteOfferItemSuccess = (responseData) => {
+    const { intl } = this.props;
+    const { data } = responseData;
+    const { currency } = data;
+
+    // const offer = this.offer;
+    // if (currency === CRYPTO_CURRENCY.ETH) {
+    //   this.handleCallActionOnContract(data);
+    // } else if (currency === CRYPTO_CURRENCY.BTC) {
+    //   if (offer.type === EXCHANGE_ACTION.BUY) {
+    //     const wallet = MasterWallet.getWalletDefault(offer.currency);
+    //     wallet.transfer(offer.systemAddress, offer.totalAmount).then(success => {
+    //       console.log('transfer', success);
+    //     });
+    //   }
+    // }
+
+    this.hideLoading();
+    const message = intl.formatMessage({ id: 'completeOfferItemSuccessMassage' }, {
+      // offerType: offerType,
+      // amount: formatAmountCurrency(offer.amount),
+      // currency: offer.currency,
+      // currency_symbol: offer.fiatCurrency,
+      // total: formatMoney(fiatAmount),
+      // fee: offer.feePercentage,
+      // payment_method: EXCHANGE_METHOD_PAYMENT[EXCHANGE_FEED_TYPE.EXCHANGE],
+    });
+
+    this.props.showAlert({
+      message: <div className="text-center">{message}</div>,
+      timeOut: 2000,
+      type: 'success',
+      callBack: () => {
+        // this.props.updateOfferStatus({ [`exchange_${data.id}`]: data });
+        // this.props.history.push(URL.HANDSHAKE_ME);
+      },
+    });
+  }
+
+  handleCompleteOfferItemFailed = (e) => {
+    this.handleActionFailed(e);
+  }
+
   render() {
     const nameShop = 'CryptoWorkshop'
     const currency = 'USD'

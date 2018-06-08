@@ -34,7 +34,7 @@ import {
 import "../styles.scss";
 import ModalDialog from "@/components/core/controls/ModalDialog/ModalDialog";
 // import {MasterWallet} from '@/models/MasterWallet';
-import {URL} from "@/config";
+import {URL} from "@/constants";
 import {hideLoading, showAlert, showLoading} from "@/reducers/app/action";
 import {MasterWallet} from "@/models/MasterWallet";
 import {ExchangeHandshake} from "@/services/neuron";

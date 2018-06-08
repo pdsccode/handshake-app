@@ -192,7 +192,7 @@ class DiscoverPage extends React.Component {
             />
           </Col>
         </Row> */}
-        {/* {
+        {/*{
           handshakeIdActive === HANDSHAKE_ID.EXCHANGE && (
             <div>
               <Row>
@@ -211,17 +211,24 @@ class DiscoverPage extends React.Component {
                 tabIndexActive === 1 && (
                   <Row>
                     <Col md={12} className="feed-wrapper">
-                      <FeedCreditCard history={this.props.history} />
+                      <FeedExchange history={this.props.history} />
                     </Col>
                   </Row>
                 )
               }
             </div>
           )
-        } */}
+        }
         {handshakeIdActive === HANDSHAKE_ID.BETTING &&
           <BettingFilter />
-        }
+        }*/}
+        <div>
+          <Row>
+            <Col md={12} className="feed-wrapper">
+              <FeedExchange history={this.props.history} />
+            </Col>
+          </Row>
+        </div>
         {/* <Row>
           {handshakeIdActive !== HANDSHAKE_ID.BETTING && this.getHandshakeList}
         </Row> */}
