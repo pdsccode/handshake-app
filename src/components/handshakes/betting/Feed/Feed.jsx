@@ -144,6 +144,9 @@ class FeedBetting extends React.Component {
     const {amount, odds, winValue} = this.props;
     const {event_name, event_predict, event_odds, event_bet,event_date, balance} = this.extraData;
     const { commentCount, id, type } = this.props;
+    const realEventName = event_name.slice(7).split('(');
+    const matchName = realEventName[0];
+    const matchDate = `(${realEventName[1]}`;
 
     return (
       <div>
@@ -154,14 +157,16 @@ class FeedBetting extends React.Component {
           onClick={this.props.onFeedClick}
         >
             <div className="description">
-              <p>{event_name}</p>
-              <p className="eventInfo">{event_predict}</p>
+              <p className="eventName">
+                {matchName} <span className="matchDate">{matchDate}</span>
+              </p>
+              <p className="eventInfo">{event_predict.slice(8)}</p>
             </div>
             <div className="bottomWrapper">
               <span className="odds" >1:{odds}</span>
-              <span className="content"  >{amount} ETH</span>
+              <span className="content">{amount} ETH</span>
             </div>
-            <span>Possible Win {winValue}</span>
+            <div className="possibleWin">Possible win {winValue} ETH</div>
 
             {this.renderStatus()}
         </Feed>
