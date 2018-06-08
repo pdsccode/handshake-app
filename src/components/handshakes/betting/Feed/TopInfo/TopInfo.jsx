@@ -78,7 +78,9 @@ class TopInfo extends React.Component {
             </Link>
           ) : (
             <Link className="boxInfo" to={addCommentLink}>
-              <div className="des">Say something</div>
+              {/*<div className="des">Say something</div>*/}
+              <div className="number">0</div>
+              <div className="des">Comment</div>
             </Link>
           )
         }
