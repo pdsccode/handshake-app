@@ -520,7 +520,7 @@ class Chat extends Component {
           onClick={isInSearchMode ? this.onSearchUserClicked : this.onChatItemClicked}
         />
       </div>
-    ) : this.renderEmptyMessage(isInSearchMode ? 'The Ninja you are looking for is not here. Perhaps you have their name wrong.' : 'NO MESSAGE YET');
+    ) : this.renderEmptyMessage(isInSearchMode ? 'The Ninja you are looking for is not here. Perhaps you have their name wrong.' : 'Chat to your fellow ninjas. Your secrets are safe.');
   }
 
   renderBackButton() {
@@ -535,7 +535,7 @@ class Chat extends Component {
         className="rce-search-input"
         onChange={this.onSearchUser}
         onBlur={() => { setTimeout(() => { this.clearSearch(); }, 100); }}
-        placeholder="Search for your fellow ninjas by their code name"
+        placeholder="Enter a ninja’s name or alias."
       />
     );
   }
