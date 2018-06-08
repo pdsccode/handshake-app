@@ -53,6 +53,8 @@ class Button extends React.PureComponent {
   onClick(e) {
     if (e.target === this.btnRef) {
       this.setState({ immunity: false });
+    } else {
+      this.setState({ immunity: true });
     }
     this.props.onClick(e);
   }
