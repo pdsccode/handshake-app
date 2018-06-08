@@ -63,7 +63,7 @@ class TopInfo extends React.Component {
     return (
       <div className="wrapperTopInfoContainer">
         <div className="boxInfo" onClick={() => this.modalTradedVolumeRef.open()}>
-          <div className="number">{marketTotal} ETH</div>
+          <div className="number">{marketTotal === 0 ? marketTotal : marketTotal.toFixed(3)} ETH</div>
           <div className="des">Total stakes</div>
         </div>
         <div className="boxInfo" onClick={() => this.modalWiningFeeRef.open()}>
@@ -78,7 +78,9 @@ class TopInfo extends React.Component {
             </Link>
           ) : (
             <Link className="boxInfo" to={addCommentLink}>
-              <div className="des">Say something</div>
+              {/*<div className="des">Say something</div>*/}
+              <div className="number">0</div>
+              <div className="des">Comment</div>
             </Link>
           )
         }

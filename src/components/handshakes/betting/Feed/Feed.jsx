@@ -11,6 +11,7 @@ import local from '@/services/localStore';
 import {FIREBASE_PATH, HANDSHAKE_ID, API_URL, APP} from '@/constants';
 import { BettingHandshake } from '@/services/neuron';
 import { uninitItem, collect, refund, rollback } from '@/reducers/handshake/action';
+import { loadMyHandshakeList} from '@/reducers/me/action';
 
 
 // components
@@ -56,9 +57,9 @@ class FeedBetting extends React.Component {
   }
 
   get isMatch(){
-    const {shakeCount} = this.props;
-    if(shakeCount){
-      return shakeCount > 0 ? true : false;
+    const {shakeUserIds} = this.props;
+    if(shakeUserIds){
+      return shakeUserIds.length > 0 ? true : false;
 
     }
     return false;
@@ -144,7 +145,7 @@ class FeedBetting extends React.Component {
     const {amount, odds, winValue} = this.props;
     const {event_name, event_predict, event_odds, event_bet,event_date, balance} = this.extraData;
     const { commentCount, id, type } = this.props;
-    const realEventName = event_name.slice(7).split('(');
+    const realEventName = event_name ? event_name.slice(7).split('(') : ['', ''];
     const matchName = realEventName[0];
     const matchDate = `(${realEventName[1]}`;
 
@@ -163,7 +164,7 @@ class FeedBetting extends React.Component {
               <p className="eventInfo">{event_predict.slice(8)}</p>
             </div>
             <div className="bottomWrapper">
-              <span className="odds" >1:{odds}</span>
+              <span className="odds" >{odds.toFixed(2)}</span>
               <span className="content">{amount} ETH</span>
             </div>
             <div className="possibleWin">Possible win {winValue} ETH</div>
@@ -211,8 +212,12 @@ class FeedBetting extends React.Component {
       break;
 
     }
+    this.loadMyHandshakeList();
 
 
+  }
+  loadMyHandshakeList = () => {
+    this.props.loadMyHandshakeList({ PATH_URL: API_URL.ME.BASE });
   }
   uninitItem(id){
     const url = API_URL.CRYPTOSIGN.UNINIT_HANDSHAKE.concat(`/${id}`);
@@ -305,6 +310,7 @@ const mapState = state => ({
   firebaseUser: state.firebase.data,
 });
 const mapDispatch = ({
+  loadMyHandshakeList,
   uninitItem,
   collect,
   refund,

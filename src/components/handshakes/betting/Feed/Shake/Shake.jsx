@@ -95,7 +95,7 @@ class BetingShake extends React.Component {
     console.log('Shake nextProps: ',nextProps );
     const marketOdds = this.toggleRef.value === SIDE.SUPPORT ? marketSupportOdds : marketAgainstOdds;
     this.setState({
-      oddValue: parseFloat(marketOdds).toFixed(1)
+      oddValue: parseFloat(marketOdds).toFixed(2)
     })
   }
 
@@ -169,7 +169,7 @@ class BetingShake extends React.Component {
 
     if(!isChangeOdds){
       this.setState({
-        oddValue: parseFloat(marketOdds).toFixed(1)
+        oddValue: parseFloat(marketOdds).toFixed(2)
       })
     }
     this.setState({buttonClass: `btnOK ${id === 2 ? 'btnBlue' : 'btnRed' }`});
