@@ -64,7 +64,7 @@ class Navigation extends React.Component {
           </li>
           <li className={cn(this.checkSelected(URL.HANDSHAKE_CHAT_INDEX))}>
             <Link to={URL.HANDSHAKE_CHAT_INDEX} onClick={this.props.clearHeaderBack}>
-              <div dangerouslySetInnerHTML={{ __html: chatIcon }} />
+              <div className="chat-icon" dangerouslySetInnerHTML={{ __html: chatIcon }} />
               <span>Chat</span>
             </Link>
           </li>
