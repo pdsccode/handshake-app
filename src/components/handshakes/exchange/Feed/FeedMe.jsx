@@ -86,7 +86,7 @@ class FeedMe extends React.PureComponent {
             </div>
           </div>
 
-          <div className="mb-2 name-shop">{nameShop}</div>
+          <div className="mb-1 name-shop">{nameShop}</div>
           {/*
           {
             phone && phone.split('-')[1] !== '' && ( // no phone number
