@@ -85,16 +85,18 @@ class ShareSocial extends PureComponent {
     e.stopPropagation();
     const { title, shareUrl } = this.props;
     let rawUrlShare = '';
-    let shortLink = '';
-    try {
-      const { data } = await this.converToShortLink(shareUrl);
-      shortLink = data.id;
-    } catch (error) {
-      shortLink = shareUrl;
-    }
+    let shortLink = shareUrl;
 
     switch(shareType) {
       case 'TWITTER':
+        if (!Helper.broswer.isSafari) {
+          try {
+            const { data } = await this.converToShortLink(shareUrl);
+            shortLink = data.id;
+          } catch (error) {
+            console.log(error);
+          }
+        }
         rawUrlShare = `http://twitter.com/intent/tweet?status=${title}+${shortLink}`;
         break;
       case 'COPY':
