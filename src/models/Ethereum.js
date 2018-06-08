@@ -156,7 +156,7 @@ export class Ethereum extends Wallet {
         let detail = response.data.result, result = {};
         result = {
           header: {
-            value: Number(web3.utils.hexToNumber(detail.value) / 10000000000000000000),
+            value: Number(web3.utils.hexToNumber(detail.value) / 1000000000000000000),
             coin: "ETH",
             confirmations: web3.utils.hexToNumber(detail.transactionIndex),
             is_sent: this.address.toLowerCase() == detail.from.toLowerCase(),
@@ -165,7 +165,7 @@ export class Ethereum extends Wallet {
             hash: detail.hash,
             block: web3.utils.hexToNumber(detail.blockNumber),
             gas: web3.utils.hexToNumber(detail.gas),
-            gas_price: Number(web3.utils.hexToNumber(detail.gasPrice) / 10000000000000000000).toFixed(web3.utils.hexToNumberString(detail.gasPrice).length) + " ETH",
+            gas_price: Number(web3.utils.hexToNumber(detail.gasPrice) / 1000000000000000000).toFixed(web3.utils.hexToNumberString(detail.gasPrice).length) + " ETH",
             from: detail.from,
             to: detail.to,
             nouce: web3.utils.hexToNumber(detail.nouce),
@@ -180,18 +180,18 @@ export class Ethereum extends Wallet {
 
     async getTransactionHistory() {
       const API_KEY = configs.network[4].apikeyEtherscan;
-      const url =this.constructor.API[this.getNetworkName()] + `?module=account&action=txlist&address=${this.address}&startblock=0&endblock=99999999&page=1&offset=10&sort=desc&apikey=${API_KEY}`;
+      const url =this.constructor.API[this.getNetworkName()] + `?module=account&action=txlist&address=${this.address}&startblock=0&endblock=99999999&page=1&offset=20&sort=desc&apikey=${API_KEY}`;
       const response = await axios.get(url);
       if (response.status == 200) {
         let result = [];
         for(let tran of response.data.result){
-          let value = Number(tran.value / 10000000000000000000),
+          let value = Number(tran.value / 1000000000000000000),
           transaction_date = new Date(tran.timeStamp*1000),addresses = [],
           is_sent = tran.from.toLowerCase() == this.address.toLowerCase();
-          if(is_sent) this.address = tran.to;
-          else this.address = tran.from;
-
-          addresses.push(this.getShortAddress());
+          let ethTmp = new Ethereum();
+          ethTmp.address = tran.from;
+          if(is_sent) ethTmp.address = tran.to;
+          addresses.push(ethTmp.getShortAddress());
           result.push({
             value: value,
             transaction_no: tran.hash,

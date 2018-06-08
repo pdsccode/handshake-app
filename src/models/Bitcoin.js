@@ -241,7 +241,9 @@ export class Bitcoin extends Wallet {
                   let tout_addresses = tout.scriptPubKey.addresses.join(" ").toLowerCase();
                   if(tout_addresses.indexOf(this.address.toLowerCase()) < 0){
                     value += Number(tout.value);
-                    addresses.push(tout_addresses.replace(tout_addresses.substr(5, 24), '...'));
+                    let bitcoin = new Bitcoin();
+                    bitcoin.address = tout_addresses;
+                    addresses.push(bitcoin.getShortAddress());
                   }
                 }
 
@@ -257,7 +259,9 @@ export class Bitcoin extends Wallet {
                   value += tout.value;
                 }
                 else{
-                  addresses.push(tout_addresses.replace(tout_addresses.substr(5, 24), '...'));
+                  let bitcoin = new Bitcoin();
+                    bitcoin.address = tout_addresses;
+                    addresses.push(bitcoin.getShortAddress());                  
                 }
               }
             }
