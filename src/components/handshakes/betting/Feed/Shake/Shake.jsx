@@ -123,7 +123,7 @@ class BetingShake extends React.Component {
         if(amount > 0){
           if(total <= parseFloat(balance)){
             if(isShowOdds){
-              if(odds >=1){
+              if(odds >1){
                 this.initHandshake(amount, odds);
               }else {
                 message = MESSAGE.ODD_LARGE_THAN;
@@ -491,7 +491,7 @@ class BetingShake extends React.Component {
      this.props.showAlert({
       message: <div className="text-center">{MESSAGE.CREATE_BET_SUCCESSFUL}</div>,
       timeOut: 3000,
-      type: 'danger',
+      type: 'success',
       callBack: () => {
       }
     });
