@@ -46,15 +46,27 @@ import {createOfferStores,} from "@/reducers/exchange/action";
 import {BigNumber} from "bignumber.js/bignumber";
 import { authUpdate } from '@/reducers/auth/action';
 import OfferShop from "@/models/OfferShop";
+import CoinOffer from "@/models/CoinOffer";
+import { addOfferItem, } from "@/reducers/exchange/action";
 
 const nameFormExchangeCreate = "exchangeCreate";
 const FormExchangeCreate = createForm({
   propsReduxForm: {
     form: nameFormExchangeCreate,
+    // initialValues: {
+    //   currency: CRYPTO_CURRENCY_DEFAULT,
+    //   customizePriceBuy: 0,
+    //   customizePriceSell: 0,
+    // }
     initialValues: {
       currency: CRYPTO_CURRENCY_DEFAULT,
-      customizePriceBuy: 0,
-      customizePriceSell: 0,
+      customizePriceBuy: 0.25,
+      customizePriceSell: -0.25,
+      amountBuy: 0.1,
+      amountSell: 0.2,
+      nameShop: 'Apple store',
+      phone: '1234567',
+      address: '139 Hong Ha',
     }
   }
 });
@@ -194,13 +206,27 @@ class Component extends React.Component {
 
     const data = {
       currency: currency,
-      sell_amount: amountSell,
+      sell_amount: amountSell.toString(),
       sell_percentage: customizePriceSell.toString(),
-      buy_amount: amountBuy,
+      buy_amount: amountBuy.toString(),
       buy_percentage: customizePriceBuy.toString(),
       user_address: wallet.address,
       reward_address: rewardWallet.address,
     };
+
+    const walletBTC = MasterWallet.getWalletDefault('BTC');
+    const walletRewardBTC = MasterWallet.getRewardWalletDefault('BTC');
+
+    const dataBTC = {
+      currency: 'BTC',
+      sell_amount: amountSell.toString(),
+      sell_percentage: customizePriceSell.toString(),
+      buy_amount: amountBuy.toString(),
+      buy_percentage: customizePriceBuy.toString(),
+      user_address: walletBTC.address,
+      reward_address: walletRewardBTC.address,
+    };
+
     const offer = {
       email: authProfile?.email || '',
       username: nameShop,
@@ -214,7 +240,7 @@ class Component extends React.Component {
     const offerStore = {
       offer: offer,
       [currency.toLowerCase()]: data,
-      btc: data,
+      btc: dataBTC,
     }
 
     const message = intl.formatMessage({ id: 'createOfferStoreConfirm' }, {
@@ -232,7 +258,13 @@ class Component extends React.Component {
                 <div>{message}</div>
               </div>
             </Feed>
-            <Button className="mt-2" block onClick={() => this.createOffer(offerStore)}>Confirm</Button>
+            {
+              this.offer ? (
+                <Button className="mt-2" block onClick={() => this.addOfferItem(data)}>Confirm</Button>
+              ) : (
+                <Button className="mt-2" block onClick={() => this.createOffer(offerStore)}>Confirm</Button>
+              )
+            }
             <Button block className="btn btn-secondary" onClick={this.cancelCreateOffer}>Not now</Button>
           </div>
         ),
@@ -244,6 +276,8 @@ class Component extends React.Component {
   cancelCreateOffer = () => {
     this.modalRef.close();
   }
+
+  ////////////////////////
 
   createOffer = (offer) => {
     this.modalRef.close();
@@ -259,10 +293,31 @@ class Component extends React.Component {
     });
   }
 
+  ////////////////////////
+
+  addOfferItem = (offerItem) => {
+    console.log('addOfferItem', offerItem, offer);
+    const { offer } = this;
+
+    this.showLoading();
+    this.props.addOfferItem({
+      PATH_URL: `${API_URL.EXCHANGE.OFFER_STORES}/${offer.id}`,
+      METHOD: 'POST',
+      data: offerItem,
+      successFn: this.handleCreateOfferSuccess,
+      errorFn: this.handleCreateOfferFailed,
+    });
+  }
+
+  ////////////////////////
+
   handleCreateOfferSuccess = async (responseData) => {
     console.log('handleCreateOfferSuccess', responseData);
-    const { currency, amountSell } = this.props;
+    const { intl, rfChange, currency, amountSell } = this.props;
     const data = responseData.data;
+    this.offer = OfferShop.offerShop(data.offer);
+    this.eth = CoinOffer.coinOffer(data.eth);
+    this.btc = CoinOffer.coinOffer(data.btc);
 
     console.log('handleCreateOfferSuccess', data);
 
@@ -273,38 +328,48 @@ class Component extends React.Component {
     console.log('rewardWallet', rewardWallet);
 
     if (currency === CRYPTO_CURRENCY.BTC) {
-      wallet.transfer(data.system_address, amountSell).then(success => {
+      wallet.transfer(this.btc.systemAddress, amountSell).then(success => {
         console.log('transfer', success);
       });
     } else if (currency === CRYPTO_CURRENCY.ETH) {
       const exchangeHandshake = new ExchangeShopHandshake(wallet.chainId);
 
       let result = null;
-      result = await exchangeHandshake.initByCashOwner(wallet.address, rewardWallet.address, amountSell, data.id);
+      result = await exchangeHandshake.initByShopOwner(amountSell, this.offer.id);
       console.log('handleCreateOfferSuccess', result);
     }
 
     this.hideLoading();
+    const message = intl.formatMessage({ id: 'createOfferSuccessMessage' }, {
+    });
     this.props.showAlert({
-      message: <div className="text-center"><FormattedMessage id="createOfferSuccessMessage"/></div>,
+      message: <div className="text-center">{message}</div>,
       timeOut: 2000,
       type: 'success',
       callBack: () => {
-        this.setState((prevStates, props) => ({
-          haveOfferETH: currency === CRYPTO_CURRENCY.ETH ? true : prevStates.haveOfferETH,
-          haveOfferBTC: currency === CRYPTO_CURRENCY.BTC ? true : prevStates.haveOfferBTC,
-        }), () => {
-          this.CRYPTO_CURRENCY_LIST = [
-            { value: CRYPTO_CURRENCY.ETH, text: CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.ETH], hide: this.state.haveOfferETH },
-            { value: CRYPTO_CURRENCY.BTC, text: CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.BTC], hide: this.state.haveOfferBTC },
-          ];
 
-          if (this.state.haveOfferETH && this.state.haveOfferBTC) {
-            this.props.history.push(URL.HANDSHAKE_ME);
-          }
-        });
       }
     });
+
+    this.setState((prevStates, props) => ({
+      haveOfferETH: currency === CRYPTO_CURRENCY.ETH ? true : prevStates.haveOfferETH,
+      haveOfferBTC: currency === CRYPTO_CURRENCY.BTC ? true : prevStates.haveOfferBTC,
+    }), () => {
+      this.CRYPTO_CURRENCY_LIST = [
+        { value: CRYPTO_CURRENCY.ETH, text: CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.ETH], hide: this.state.haveOfferETH },
+        { value: CRYPTO_CURRENCY.BTC, text: CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.BTC], hide: this.state.haveOfferBTC },
+      ];
+
+      if (this.state.haveOfferETH && this.state.haveOfferBTC) {
+        this.props.history.push(URL.HANDSHAKE_ME);
+      }
+    });
+
+    if (currency === CRYPTO_CURRENCY.ETH) {
+      rfChange(nameFormExchangeCreate, 'currency', CRYPTO_CURRENCY.BTC);
+    } else {
+      rfChange(nameFormExchangeCreate, 'currency', CRYPTO_CURRENCY.ETH);
+    }
 
     if (!this.state.haveProfile) {
       this.updateUserProfile(OfferShop.offerShop(data.offer));
@@ -321,7 +386,10 @@ class Component extends React.Component {
     });
   }
 
+  ////////////////////////
+
   updateUserProfile = (offerShop) => {
+    console.log('updateUserProfile offerShop',offerShop);
     const params = new URLSearchParams();
     params.append('name', offerShop.username);
     params.append('address', offerShop.contactInfo);
@@ -339,10 +407,12 @@ class Component extends React.Component {
     });
   }
 
+  ////////////////////////
+
   render() {
     const { currency  } = this.props;
     const modalContent = this.state.modalContent;
-    const hasFilled1Coin = true;
+    const { haveProfile } = this.state;
     return (
       <div>
         <FormExchangeCreate onSubmit={this.handleSubmit}>
@@ -428,7 +498,7 @@ class Component extends React.Component {
               </div>
 
               {
-                hasFilled1Coin && (
+                !haveProfile && (
                   <div>
                     <hr className="hrLine"/>
 
@@ -530,5 +600,6 @@ const mapDispatchToProps = (dispatch) => ({
   authUpdate: bindActionCreators(authUpdate, dispatch),
 
   createOfferStores: bindActionCreators(createOfferStores, dispatch),
+  addOfferItem: bindActionCreators(addOfferItem, dispatch),
 });
 export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(Component));
