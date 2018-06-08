@@ -13,7 +13,8 @@ class Alert extends React.PureComponent {
     this.state = {
       isShow: false,
       message: '',
-      type: ''
+      type: '',
+      isShowClose: false,
     };
     // bind
     this.handleShowAlert = ::this.handleShowAlert;
@@ -24,6 +25,7 @@ class Alert extends React.PureComponent {
     message: '',
     timeOut: 5000,
     type: '',
+    isShowClose: false,
     callBack: () => {},
   };
 
@@ -59,11 +61,18 @@ class Alert extends React.PureComponent {
   }
 
   render() {
-    const { isShow, type, message } = this.state;
+    const { isShow, type, message, isShowClose } = this.state;
     const tyleClassName = this.getTypeClass(type);
     if (!isShow) return null;
     return (
       <div className={`alert alerts animated ${tyleClassName} ${isShow && 'slideInDown'}`} role="alert">
+        {
+          isShowClose && (
+            <button type="button" className="close" onClick={() => this.setState({ isShow: false })}>
+              <span>&times;</span>
+            </button>
+          )
+        }
         {message}
       </div>
     );
@@ -73,6 +82,7 @@ class Alert extends React.PureComponent {
 Alert.propTypes = {
   app: PropTypes.object,
   hideAlert: PropTypes.func,
+  isShowClose: PropTypes.bool,
 };
 
 const mapState = state => ({

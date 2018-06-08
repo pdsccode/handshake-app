@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+
 // components
 import App from '@/components/App/App';
 import * as OfflinePlugin from 'offline-plugin/runtime';
@@ -21,5 +22,7 @@ if (process.env.TURN_OFF_CACHE && window.caches) {
     .keys()
     .then(keyList => Promise.all(keyList.map(key => window.caches.delete(key))));
 }
+//require('@/testing/web3_test');
+// require('@/testing/web3_handshake');
 
 ReactDOM.render(<App />, document.getElementById('app'));

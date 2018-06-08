@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import moment from 'moment';
+
 // service, constant
 import { API_URL } from '@/constants';
 import { loadMatches, loadHandshakes } from '@/reducers/betting/action';
@@ -11,6 +13,7 @@ import BettingShake from './../Shake';
 import GroupBook from './../GroupBook';
 import ShareSocial from '@/components/core/presentation/ShareSocial';
 import FeedComponent from '@/components/Comment/FeedComment';
+import TopInfo from './../TopInfo';
 // style
 import './Filter.scss';
 
@@ -42,7 +45,7 @@ class BettingFilter extends React.Component {
       }
     componentWillReceiveProps(nextProps) {
 
-        const {matches, support, against} = nextProps;
+        const {matches, support, against, } = nextProps;
         console.log(`${TAG} Matches:`, matches);
         // const selectedMatch = this.defaultMatch;
         // const selectedOutcome = this.defaultOutcome;
@@ -56,6 +59,15 @@ class BettingFilter extends React.Component {
     }
     componentDidMount(){
         this.props.loadMatches({PATH_URL: API_URL.CRYPTOSIGN.LOAD_MATCHES});
+    }
+    get defaultSupportOdds(){
+        const {support} = this.state;
+        return support && support.length > 0 ? support[0].odds : 0;
+    }
+
+    get defaultAgainstOdds(){
+        const {against} = this.state;
+        return against && against.length > 0 ? against[0].odds : 0;
     }
 
     get defaultMatch() {
@@ -107,11 +119,20 @@ class BettingFilter extends React.Component {
         }
         return null;
     }
+    getStringDate(date){
+        //console.log('Date:', date);
+        var formattedDate = moment(new Date(date)).format('MMM DD: HH.mm');
+        //console.log('Formated date:', formattedDate);
+        return formattedDate;
+
+    }
 
     get matchNames() {
         const {matches} = this.state;
         if(matches){
-            return matches.map((item) => ({ id: item.id, value: `${item.awayTeamName} - ${item.homeTeamName}` }));
+            //return matches.map((item) => ({ id: item.id, value: `${item.homeTeamName} vs ${item.awayTeamName} (${this.getStringDate(item.date)})`  }));
+            return matches.map((item) => ({ id: item.id, value: `Event: ${item.name} (${this.getStringDate(item.date)})`, marketFee: item.market_fee }));
+
         }
         return null;
     }
@@ -124,7 +145,7 @@ class BettingFilter extends React.Component {
 
                 const {outcomes} = foundMatch;
                 if(outcomes){
-                    return outcomes.map((item) => ({ id: item.id, value: item.name, hid: item.hid}));
+                    return outcomes.map((item) => ({ id: item.id, value: `Outcome: ${item.name} (Odds:${parseFloat(item.market_odds).toFixed(2)})`, hid: item.hid, marketOdds: item.market_odds}));
                 }
             }
         }
@@ -173,10 +194,11 @@ class BettingFilter extends React.Component {
 
     render(){
         const {matches} = this.state;
+        const {tradedVolum} = this.props;
         const selectedOutcome = this.outcomeDropDown ? this.outcomeDropDown.itemSelecting : SELECTING_DEFAULT;
         const selectedMatch = this.outcomeDropDown?  this.matchDropDown.itemSelecting : SELECTING_DEFAULT;
         console.log('Selected Outcome:', selectedOutcome);
-        console.log('Selected Match:', selectedOutcome);
+        console.log('Selected Match:', selectedMatch);
 
 
         const outcomeId = (selectedOutcome && selectedOutcome.id >=0) ? selectedOutcome.id : null;
@@ -191,10 +213,19 @@ class BettingFilter extends React.Component {
         // console.log('Default Outcome:', defaultOutcome);
         const defaultOutcomeId = this.defaultOutcome ? this.defaultOutcome.id : null;
         const shareInfo = this.getInfoShare(selectedMatch, selectedOutcome);
+        const marketFee = (selectedMatch && selectedMatch.marketFee >= 0) ? selectedMatch.marketFee : null;
         console.log('defaultOutcomeId:', defaultOutcomeId);
-        console.log('Source Outcome:', this.matchOutcomes);
+        console.log('Market Fee:', marketFee);
         return (
             <div className="wrapperBettingFilter">
+            <div className="share-block">
+                <p className="text">Bet against more ninjas!</p>
+                <ShareSocial
+                    className="share"
+                    title={shareInfo.title}
+                    shareUrl={shareInfo.shareUrl}
+                />
+            </div>
             <div className="dropDown">
                 <Dropdown placeholder="Select an event"
                 onRef={match => this.matchDropDown = match}
@@ -220,17 +251,18 @@ class BettingFilter extends React.Component {
                 }
                 />
             </div>
-            <div className="share-block">
-                <p className="text">Bet against more ninjas!</p>
-                <ShareSocial
-                    className="share"
-                    title={shareInfo.title}
-                    shareUrl={shareInfo.shareUrl}
-                />
-            </div>
+
+            {<TopInfo marketTotal={parseFloat(tradedVolum)}
+                    percentFee={marketFee}
+                    objectId={outcomeId} />}
+
 
                 <div className="wrapperContainer">
                     <div className="item">
+                        <div className="titleBox">
+                            <div>Stake(ETH)</div>
+                            <div>Price(Odds)</div>
+                        </div>
                     <GroupBook amountColor="#FA6B49" bookList={this.bookListSupport}/>
                     <GroupBook amountColor="#8BF275" bookList={this.bookListAgainst}/>
                     </div>
@@ -238,12 +270,13 @@ class BettingFilter extends React.Component {
                     {<BettingShake
                         matchName={matchName}
                         matchOutcome={matchOutcome}
-                        outcomeId={parseInt(outcomeId)} outcomeHid={parseInt(outcomeHid)}/>}
+                        outcomeId={parseInt(outcomeId)}
+                        outcomeHid={parseInt(outcomeHid)}
+                        marketSupportOdds={parseFloat(this.defaultSupportOdds)}
+                        marketAgainstOdds={parseFloat(this.defaultAgainstOdds)}/>}
 
                     </div>
                 </div>
-                {/* Feed Comment */}
-                <FeedComponent objectId={outcomeId} />
             </div>
         );
     }
@@ -255,6 +288,9 @@ class BettingFilter extends React.Component {
         this.props.loadHandshakes({PATH_URL: API_URL.CRYPTOSIGN.LOAD_HANDSHAKES, METHOD:'POST', data: params,
         successFn: this.getHandshakeSuccess,
         errorFn: this.getHandshakeFailed});
+        if(typeof window !== 'undefined') {
+          window.isGotDefaultOutCome = true;
+        }
     }
     getHandshakeSuccess = async (successData)=>{
         console.log('getHandshakeSuccess', successData);
@@ -282,6 +318,7 @@ const mapState = state => ({
   matches: state.betting.matches,
   supports: state.betting.supports,
   against: state.betting.against,
+  tradedVolum: state.betting.tradedVolum,
 });
 
 const mapDispatch = ({

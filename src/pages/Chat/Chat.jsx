@@ -7,6 +7,7 @@ import moment from 'moment';
 import Identicon from 'identicon.js';
 import firebase from 'firebase/app';
 import 'firebase/database';
+import 'firebase/auth';
 
 import { setHeaderLeft, setHeaderTitle } from '@/reducers/app/action';
 import IconBtnSend from '@/assets/images/icon/ic-btn-send.svg';

@@ -9,6 +9,7 @@ export const APP = {
   WALLET_DEFAULT: 'wallet_default',
   WALLET_LIST: 'wallet_list',
   IP_INFO: 'ip_info',
+  EMAIL_NEED_VERIFY: 'email_need_verify',
 };
 
 export const HANDSHAKE_ID = {
@@ -272,6 +273,7 @@ export const URL = {
   HANDSHAKE_ME: '/me',
   HANDSHAKE_ME_INDEX: '/me',
   HANDSHAKE_ME_PROFILE: '/me/profile',
+  HANDSHAKE_ME_VERIRY_EMAIL: '/me/verify/email',
 
   HANDSHAKE_DISCOVER: '/discover',
   HANDSHAKE_DISCOVER_INDEX: '/discover',
@@ -298,5 +300,8 @@ export const URL = {
 
   LANDING_PAGE_SHURIKEN: '/shuriken',
   LANDING_PAGE_SHURIKEN_INDEX: '/shuriken',
+
+  FAQ: '/faq',
+  FAQ_INDEX: '/faq',
 };
 

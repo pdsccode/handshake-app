@@ -7,11 +7,12 @@ export { default as BettingHandshake } from './neuron-bettinghandshake';
 export { default as ExchangeHandshake } from './neuron-exchangehandshake';
 
 const BN = Web3.utils.BN;
-
+const TAG = 'Neuron';
 class Neuron {
   constructor(chainId = 4) {
     this.chainId = chainId || 4;
     this.getWeb3();
+    this.lastResultNonce = -1;
     this.instance = {};
     // this.handshake = new Handshake(this);
     // this.bettingHandshake = new BettingHandshake(this);
@@ -38,7 +39,13 @@ class Neuron {
   };
   getNonce = async (accountAddress) => {
     const web3 = this.getWeb3();
-    const nonce = await web3.eth.getTransactionCount(accountAddress);
+    const nonce = await web3.eth.getTransactionCount(accountAddress,(error,result)=>{
+      console.log(TAG," getNonce error" ,error, " result = ",result);
+    }).then(_nonce=>{
+      console.log(TAG," getNonce 0000-- ", _nonce);
+      this.lastResultNonce = this.lastResultNonce == _nonce ? _nonce +1 :_nonce;
+      return this.lastResultNonce;
+    });
     return nonce;
   };
   /**
@@ -54,6 +61,15 @@ class Neuron {
   getGasPriceDefaultWithEthUnit = async () =>
     Web3.utils.fromWei(await this.web3.eth.getGasPrice());
 
+  getEstimateGas = async (payloadData, toAddress = undefined) => {
+    const estimateGasData = {
+      data: payloadData,
+      to: toAddress,
+    };
+
+    const estimatedGas = await this.web3.eth.estimateGas(estimateGasData);
+    return estimatedGas;
+  };
   caculateEstimatGasWithEthUnit = async (address, gasPrice = undefined) => {
     gasPrice = new BN(gasPrice
       ? Web3.utils.toWei(String(gasPrice), 'gwei')
@@ -109,29 +125,29 @@ class Neuron {
       //   gasPrice = new BN(Web3.utils.toWei(_options.gasPrice.toString(), 'gwei'));
       // }
 
-      const nonce = await web3.eth.getTransactionCount(address);
+      let nonce = await web3.eth.getTransactionCount(address);
+      nonce = nonce.toString(16);
       const balance = new BN(await web3.eth.getBalance(address));
 
       const estimateGas = balance.div(gasPrice);
-      const limitedGas = 3000000;
-
+      const limitedGas = 3000000; // await this.getEstimateGas(payloadData, address);
       const estimatedGas = await BN.min(estimateGas, limitedGas);
+
       const chainId = await web3.eth.net.getId();
       console.log('gasPrice->', parseInt(gasPrice));
-      console.log('estimatedGas->', parseInt(estimatedGas));
+      console.log('estimatedGas->', String(estimatedGas));
+      console.log('limitedGas->', String(limitedGas));
       console.log('chainid ->', chainId);
       const rawTx = {
-        nonce: web3.utils.toHex(nonce),
+        // nonce: web3.utils.toHex(nonce),
+        nonce: `0x${nonce}`,
         gasPrice: web3.utils.toHex(gasPrice),
-        gasLimit: limitedGas,
+        gasLimit: estimatedGas,
         data: payloadData,
         from: address,
         chainId,
-        gas: estimatedGas,
+        // gas: estimatedGas,
         to: toAddress,
-        value: amount
-          ? web3.utils.toHex(web3.utils.toWei(String(amount), 'ether'))
-          : undefined,
       };
 
       // if (_options.toAddress) {
@@ -142,6 +158,9 @@ class Neuron {
       // }
       console.log('rawTx->', rawTx);
       const tx = new Tx(rawTx);
+      if (amount) {
+        tx.value = Web3.utils.toHex(web3.utils.toWei(String(amount), 'ether'));
+      }
       tx.sign(Buffer.from(privateKey, 'hex'));
 
       const serializedTx = tx.serialize();
@@ -163,6 +182,90 @@ class Neuron {
         });
       });
     });
+
+  sendRawTransaction = async (
+    address,
+    privateKey = '',
+    payloadData,
+    {
+      toAddress, amount, gasPrice, argumentsParams,
+    },
+  ) => {
+    const web3 = this.getWeb3();
+    if (privateKey.startsWith('0x')) {
+      privateKey = privateKey.substr(2);
+    }
+    // let gasPrice = new BN();
+    gasPrice = new BN(gasPrice
+      ? Web3.utils.toWei(String(gasPrice), 'gwei')
+      : await web3.eth.getGasPrice());
+    const balance = new BN(await web3.eth.getBalance(address));
+    const estimateGas = balance.div(gasPrice);
+    const limitedGas = 3000000;
+    const estimatedGas = await BN.min(estimateGas, limitedGas);
+    const chainId = await web3.eth.net.getId();
+    console.log('gasPrice->', parseInt(gasPrice));
+    console.log('estimatedGas->', String(estimatedGas));
+    console.log('limitedGas->', String(limitedGas));
+    console.log('chainid ->', chainId);
+    console.log('makeRawTransaction', payloadData);
+    return this.getNonce(address).then((_nonce) => {
+      const nonce = _nonce ;
+      const rawTx = {
+        nonce: web3.utils.toHex(nonce),
+        // nonce: `0x${nonce}`,
+        gasPrice: web3.utils.toHex(gasPrice),
+        gasLimit: estimatedGas,
+        data: payloadData,
+        from: address,
+        chainId,
+        // gas: estimatedGas,
+        to: toAddress,
+      };
+      console.log('rawTx->', rawTx);
+      const tx = new Tx(rawTx);
+      if (amount) {
+        tx.value = Web3.utils.toHex(web3.utils.toWei(String(amount), 'ether'));
+      }
+      tx.sign(Buffer.from(privateKey, 'hex'));
+      const serializedTx = tx.serialize();
+      const rawTxHex = `0x${serializedTx.toString('hex')}`;
+      return web3.eth
+        .sendSignedTransaction(rawTxHex)
+        .on('transactionHash', (hash) => {
+          console.log(
+            TAG,
+            ' sendRawTransaction sendSignedTransaction hash = ',
+            hash,
+          );
+          return {
+            hash,
+            payload: payloadData,
+            fromAddress: address,
+            toAddress: toAddress || '',
+            amount: amount || 0,
+            arguments: argumentsParams || {},
+          };
+        })
+        .on('error', error => error);
+      //   web3.eth.sendSignedTransaction(rawTxHex)
+      //   .on('transactionHash', (hash)=>{
+      //     console.log(hash);
+      //     return {
+      //             hash,
+      //             payload: payloadData,
+      //             fromAddress: address,
+      //             toAddress: toAddress || '',
+      //             amount: amount || 0,
+      //             arguments: argumentsParams || {},
+      //           };
+      //         }
+      // })
+      //   .on('error', (error)=>{
+      //     return error;
+      //   });
+    });
+  };
   makeRawTransfer = (address, privateKey, options) => {
     console.log('makeRawTransfer', address, privateKey, options);
     return new Promise(async (resolve, reject) => {

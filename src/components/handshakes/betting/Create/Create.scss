@@ -90,6 +90,22 @@
     font-size: 0.75rem;
     color: #FFFFFF;
   }
+  .cryptoCurrencyamount {
+    position: relative;
+    top: -24.5px;
+    left: 88%;
+    font-weight: $normal;
+    font-size: 0.75rem;
+    color: #FFFFFF;
+  }
+  .cryptoCurrencyatOdds {
+    position: relative;
+    top: -24.5px;
+    left: 73%;
+    font-weight: $normal;
+    font-size: 0.75rem;
+    color: #FFFFFF;
+  }
   .oddField {
     //padding-left: rem-calc(5px);
   }
@@ -147,12 +163,27 @@
   .text-danger + .cryptoCurrency {
     left: 74%;
   }
+
+  .text-danger +  .cryptoCurrencyamount {
+    left: 72%;
+  }
+
+  .text-danger + .cryptoCurrencyatOdds {
+    left: 68%;
+  }
+
   .btnRed {
-    background: #FA6B49;
+    background: #fa6b49;
     border: none;
+    &:active {
+      background-color: #fa6b49;
+    }
   }
   .btnBlue {
-    background: #8BF275;
+    background: #8bf275;
     border: none;
+    &:active {
+      background-color: #8bf275;
+    }
   }
 }

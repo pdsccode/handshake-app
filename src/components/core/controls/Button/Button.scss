@@ -17,6 +17,9 @@ $secondary : #b7b7b7;
       display: block;
     }
   }
+  &:focus {
+    box-shadow: none;
+  }
 }
 
 .btn-primary {
@@ -30,4 +33,9 @@ $secondary : #b7b7b7;
 }
 .btn-secondary {
   background-color: $secondary;
+  &:hover {
+    background-color: $secondary;
+    border-color: $secondary;
+    opacity: 0.8;
+  }
 }
