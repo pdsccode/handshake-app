@@ -163,7 +163,7 @@ class FeedBetting extends React.Component {
               <p className="eventInfo">{side === 1 ? `Support: ` : 'Oppose: '}{event_predict.slice(8)}</p>
             </div>
             <div className="bottomWrapper">
-              <span className="content">{amount.toFixed(4)} ETH</span>
+              <span className="content">{amount.toFixed(4)} ETH </span>
               <span className="odds" >{odds.toFixed(2)}</span>
             </div>
             <div className="possibleWin">Possible winnings: {winValue.toFixed(4)} ETH</div>
