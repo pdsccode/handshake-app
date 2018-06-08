@@ -54,7 +54,7 @@ export const BETTING_STATUS_LABEL =
     WITHDRAW: 'Withdraw winnings', 
     CANCELLING: 'Your bet is being cancelled.',
     PROGRESSING: "Your bet is progressing.",
-    WAITING_RESULT: 'Match has not yet begun', 
+    WAITING_RESULT: 'Waiting for the outcome', 
     REFUND: 'Refund your bet', 
     CANCELLED: 'Your bet was cancelled.', 
     REFUNDING: 'Your coin is being refunded to you.', 
