@@ -20,7 +20,7 @@ import Toggle from './../Toggle';
 import {showAlert} from '@/reducers/app/action';
 
 import './Shake.scss';
-import { BetHandshakeHandler, MESSAGE } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
+import { BetHandshakeHandler, MESSAGE, SIDE } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
 import { Form } from 'reactstrap';
 
 
@@ -40,7 +40,8 @@ class BetingShake extends React.Component {
     outcomeHid: PropTypes.number,
     matchName: PropTypes.string,
     matchOutcome: PropTypes.string,
-    marketOdds: PropTypes.number,
+    marketSupportOdds: PropTypes.number,
+    marketAgainstOdds: PropTypes.number,
     onSubmitClick: PropTypes.func,
     onCancelClick: PropTypes.func,
   }
@@ -67,6 +68,7 @@ class BetingShake extends React.Component {
       isShowOdds: true,
       extraData: {},
       isChangeOdds: false,
+      marketOdds: 0,
       oddValue: 0
       //BettingShakeForm
 
@@ -89,37 +91,12 @@ class BetingShake extends React.Component {
     // extraData["event_predict"] = matchOutcome;
     // console.log('componentWillReceiveProps Extra Data: ', extraData);
     // this.setState({extraData})
-    console.log('Shake Props:', nextProps);
-
-    if(nextProps.marketOdds !== this.props.marketOdds && nextProps.marketOdds > 0){
-
-      console.log('Render componentWillReceiveProps Shake');
-      console.log('Market Odds:', nextProps.marketOdds);
-      /*
-      const BettingShakeForm = createForm({
-        propsReduxForm: {
-          form: nameFormBettingShake,
-          initialValues: {
-            odds:  parseFloat(nextProps.marketOdds)
-          },
-          enableReinitialize : true
-        },
-      });
-      this.setState({
-        BettingShakeForm
-      })
-      */
-     //this.refs.inputOdds.value = nextProps.marketOdds;
-     const {marketOdds} = nextProps;
-      this.setState({
-        oddValue: parseFloat(marketOdds).toFixed(1)
-      })
-
-
-    }
-
-
-
+    const {marketSupportOdds, marketAgainstOdds} = nextProps;
+    console.log('Shake nextProps: ',nextProps );
+    const marketOdds = this.toggleRef.value === SIDE.SUPPORT ? marketSupportOdds : marketAgainstOdds;
+    this.setState({
+      oddValue: parseFloat(marketOdds).toFixed(1)
+    })
   }
 
 
@@ -186,7 +163,17 @@ class BetingShake extends React.Component {
   }
 
   onToggleChange(id) {
+    const {isChangeOdds} = this.state;
+    const {marketAgainstOdds, marketSupportOdds} = this.props;
+    const marketOdds = this.toggleRef.value === SIDE.SUPPORT ? marketSupportOdds : marketAgainstOdds;
+
+    if(!isChangeOdds){
+      this.setState({
+        oddValue: parseFloat(marketOdds).toFixed(1)
+      })
+    }
     this.setState({buttonClass: `btnOK ${id === 2 ? 'btnBlue' : 'btnRed' }`});
+
   }
 
   updateTotal(value) {
