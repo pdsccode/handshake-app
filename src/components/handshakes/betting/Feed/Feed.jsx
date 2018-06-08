@@ -141,7 +141,7 @@ class FeedBetting extends React.Component {
      * side = SIDE.SUPPORT // SIDE.AGAINST ;ORGRANCE
      *
      */
-    const {amount, odds} = this.props;
+    const {amount, odds, winValue} = this.props;
     const {event_name, event_predict, event_odds, event_bet,event_date, balance} = this.extraData;
     const { commentCount, id, type } = this.props;
 
@@ -161,6 +161,8 @@ class FeedBetting extends React.Component {
               <span className="odds" >1:{odds}</span>
               <span className="content"  >{amount} ETH</span>
             </div>
+            <span>Possible Win {winValue}</span>
+
             {this.renderStatus()}
         </Feed>
         {/* Shake */}
