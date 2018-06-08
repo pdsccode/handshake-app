@@ -225,7 +225,7 @@ class DiscoverPage extends React.Component {
         <Row>
           <Col md={12}>
             <dl className="faq">
-              <dt>Price/Odds</dt>
+              <dt>(Price/Odds)</dt>
               <dd>
                 Ninja uses <strong>decimal odds</strong>.  A winning bet at 1.75 would return a total of 1.75 ETH for every ETH staked. An even money bet is expressed as 2.00.
               </dd>
@@ -241,7 +241,7 @@ class DiscoverPage extends React.Component {
               <dd>
                 You can bet with the market odds, which will likely be matched immediately with existing orders on the order book, or set your own odds, which will likely go on the order book to wait for a matching order.
               </dd>
-              <dt>Total stakes</dt>
+              <dt>Market volume</dt>
               <dd>
                 The total volume of bets on this outcome.
               </dd>

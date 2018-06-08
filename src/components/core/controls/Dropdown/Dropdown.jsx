@@ -82,11 +82,11 @@ class Dropdown extends React.PureComponent {
         <ul className={`dropdown-custom-menu ${isShow ? 'show' : 'hide'}`}>
           {
             source.map(item => (
-              <li 
-                key={item.id} 
-                className={`dropdown-custom-item ${idActive === item.id ? 'active': ''}`}
+              <li
+                key={item.id}
+                className={`dropdown-custom-item ${idActive === item.id ? 'active': ''} ${item.className ? item.className : ''}`}
                 style={item.style || null}
-                onClick={ () => this.onItemSelected(item) }>
+                onClick={ () => !item.disableClick ? this.onItemSelected(item) : '' }>
                 {item.value}
               </li>
             ))

@@ -87,7 +87,7 @@ export class BetHandshakeHandler {
           //TO DO: scan txhash and rollback after a few minutes
           strStatus = BETTING_STATUS_LABEL.PROGRESSING;
           isAction = false;
-        }else if(!isMatch && role === ROLE.INITER){
+        }else if(!isMatch && role === ROLE.INITER && blockchainStatus !== BET_BLOCKCHAIN_STATUS.STATUS_SHAKER_SHAKED){
             label = BETTING_STATUS_LABEL.CANCEL;
             strStatus = BETTING_STATUS_LABEL.WAITING_RESULT;
             isAction = true;
@@ -111,7 +111,7 @@ export class BetHandshakeHandler {
             label = BETTING_STATUS_LABEL.WITHDRAW;
             strStatus = BETTING_STATUS_LABEL.WIN;
             isAction = true;
-        }else if(isMatch){
+        }else if(isMatch || blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_SHAKER_SHAKED){
           strStatus = BETTING_STATUS_LABEL.WAITING_RESULT;
           isAction = false;
       }

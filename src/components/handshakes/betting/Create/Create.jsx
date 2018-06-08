@@ -140,8 +140,16 @@ get foundMatch(){
 get matchNames() {
   const {matches} = this.state;
   //return matches.map((item) => ({ id: item.id, value: `${item.homeTeamName} - ${item.awayTeamName} (${this.getStringDate(item.date)})` }));
-  return matches.map((item) => ({ id: item.id, value: `${item.name} (${this.getStringDate(item.date)})`, marketFee: item.market_fee }));
-
+  const mathNamesList = matches.map((item) => ({ id: item.id, value: `Event: ${item.name} (${this.getStringDate(item.date)})`, marketFee: item.market_fee }));
+  return [
+    ...mathNamesList,
+    {
+      id: -1,
+      value: 'COMING SOON: Create your own event',
+      className: 'disable',
+      disableClick: true,
+    }
+  ]
 }
 get matchOutcomes(){
   const {selectedMatch, matches} = this.state;
@@ -482,10 +490,11 @@ get defaultOutcome() {
             <div style={{display:'flex',flexDirection:'column',flex:1,marginBottom:10}}>
               {inputList.map((field, index) => this.renderItem(field, index))}
             </div>
+            <div style={{color: 'white', fontSize: 13}}>Amount you could win: 0.00</div>
         </div>
 
 
-        <Button type="submit" block className={buttonClass}>Initiate</Button>
+        <Button type="submit" block className={buttonClass}>Go</Button>
       </form>
     );
   }

@@ -130,9 +130,16 @@ class BettingFilter extends React.Component {
     get matchNames() {
         const {matches} = this.state;
         if(matches){
-            //return matches.map((item) => ({ id: item.id, value: `${item.homeTeamName} vs ${item.awayTeamName} (${this.getStringDate(item.date)})`  }));
-            return matches.map((item) => ({ id: item.id, value: `${item.name} (${this.getStringDate(item.date)})`, marketFee: item.market_fee }));
-
+          const mathNamesList = matches.map((item) => ({ id: item.id, value: `Event: ${item.name} (${this.getStringDate(item.date)})`, marketFee: item.market_fee }));
+          return [
+            ...mathNamesList,
+            {
+              id: -1,
+              value: 'COMING SOON: Create your own event',
+              className: 'disable',
+              disableClick: true,
+            }
+          ]
         }
         return null;
     }
@@ -260,8 +267,8 @@ class BettingFilter extends React.Component {
                 <div className="wrapperContainer">
                     <div className="item">
                         <div className="titleBox">
-                            <div>Stake(ETH)</div>
-                            <div>Price(Odds)</div>
+                            <div>Pool (ETH)</div>
+                            <div>Price (ODDS)</div>
                         </div>
                     <GroupBook amountColor="#FA6B49" bookList={this.bookListSupport}/>
                     <GroupBook amountColor="#8BF275" bookList={this.bookListAgainst}/>

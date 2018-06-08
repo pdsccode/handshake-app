@@ -309,9 +309,10 @@ class BetingShake extends React.Component {
         <Toggle ref={(component) => {this.toggleRef = component}} onChange={this.onToggleChange} />
         {this.renderInputField(amountField)}
         {isShowOdds && this.renderInputField(oddsField)}
+         <div style={{color: 'white', fontSize: '0.75rem'}}>Possible winnings: 0.00</div>
 
         <Button type="submit" block className={buttonClass}>
-          Shake
+          Go
         </Button>
       </form>
     );
