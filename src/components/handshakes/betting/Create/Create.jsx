@@ -231,7 +231,7 @@ get defaultOutcome() {
     if(selectedMatch && selectedOutcome){
       if(eventBet > 0){
         if(total <= balance){
-          if(odds >= 1){
+          if(odds > 1){
             this.initHandshake(extraParams, fromAddress);
           }else {
             message = MESSAGE.ODD_LARGE_THAN;
@@ -485,7 +485,7 @@ get defaultOutcome() {
         </div>
 
 
-        <Button type="submit" block className={buttonClass}>Shake and Send</Button>
+        <Button type="submit" block className={buttonClass}>Initiate</Button>
       </form>
     );
   }
@@ -526,7 +526,7 @@ get defaultOutcome() {
       from_address: fromAddress,
       chain_id: chainId,
     };
-    console.log("Params:", params);
+    console.log("Go to Params:", params);
     const hid = selectedOutcome.hid;
 
     this.props.initHandshake({PATH_URL: API_URL.CRYPTOSIGN.INIT_HANDSHAKE, METHOD:'POST', data: params,
