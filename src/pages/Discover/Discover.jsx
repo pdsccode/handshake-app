@@ -135,7 +135,7 @@ class DiscoverPage extends React.Component {
         tabIndexActive = 1;
         break;
       default:
-        // is promise
+      // is promise
     }
     // set feed type activate
     this.setState({
@@ -192,7 +192,7 @@ class DiscoverPage extends React.Component {
             />
           </Col>
         </Row> */}
-        {/*{
+        {/* {
           handshakeIdActive === HANDSHAKE_ID.EXCHANGE && (
             <div>
               <Row>
@@ -211,24 +211,17 @@ class DiscoverPage extends React.Component {
                 tabIndexActive === 1 && (
                   <Row>
                     <Col md={12} className="feed-wrapper">
-                      <FeedExchange history={this.props.history} />
+                      <FeedCreditCard history={this.props.history} />
                     </Col>
                   </Row>
                 )
               }
             </div>
           )
-        }
+        } */}
         {handshakeIdActive === HANDSHAKE_ID.BETTING &&
-          <BettingFilter />
-        }*/}
-        <div>
-          <Row>
-            <Col md={12} className="feed-wrapper">
-              <FeedExchange history={this.props.history} />
-            </Col>
-          </Row>
-        </div>
+        <BettingFilter />
+        }
         {/* <Row>
           {handshakeIdActive !== HANDSHAKE_ID.BETTING && this.getHandshakeList}
         </Row> */}
