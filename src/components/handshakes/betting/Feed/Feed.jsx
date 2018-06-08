@@ -11,6 +11,7 @@ import local from '@/services/localStore';
 import {FIREBASE_PATH, HANDSHAKE_ID, API_URL, APP} from '@/constants';
 import { BettingHandshake } from '@/services/neuron';
 import { uninitItem, collect, refund, rollback } from '@/reducers/handshake/action';
+import { loadMyHandshakeList} from '@/reducers/me/action';
 
 
 // components
@@ -56,9 +57,9 @@ class FeedBetting extends React.Component {
   }
 
   get isMatch(){
-    const {shakeCount} = this.props;
-    if(shakeCount){
-      return shakeCount > 0 ? true : false;
+    const {shakeUserIds} = this.props;
+    if(shakeUserIds){
+      return shakeUserIds.length > 0 ? true : false;
 
     }
     return false;
@@ -211,8 +212,12 @@ class FeedBetting extends React.Component {
       break;
 
     }
+    this.loadMyHandshakeList();
 
 
+  }
+  loadMyHandshakeList = () => {
+    this.props.loadMyHandshakeList({ PATH_URL: API_URL.ME.BASE });
   }
   uninitItem(id){
     const url = API_URL.CRYPTOSIGN.UNINIT_HANDSHAKE.concat(`/${id}`);
@@ -305,6 +310,7 @@ const mapState = state => ({
   firebaseUser: state.firebase.data,
 });
 const mapDispatch = ({
+  loadMyHandshakeList,
   uninitItem,
   collect,
   refund,
