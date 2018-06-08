@@ -296,6 +296,7 @@ class Component extends React.Component {
   ////////////////////////
 
   addOfferItem = (offerItem) => {
+    this.modalRef.close();
     console.log('addOfferItem', offerItem, offer);
     const { offer } = this;
 
