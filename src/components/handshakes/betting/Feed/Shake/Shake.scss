@@ -70,6 +70,15 @@
       left: 35%;
     }
   }
+  .yourOdds +  .cryptoCurrency {
+    left: 59%;
+    @media (max-width: 375px) {
+      left: 56%;
+    }
+    @media (max-width: 330px) {
+      left: 47%;
+    }
+  }
   .input[readOnly] {
     border-bottom: none;
   }
