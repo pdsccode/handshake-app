@@ -2,8 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { Link } from 'react-router-dom';
-import { URL, BASE_API } from '@/config';
-import { API_URL } from '@/constants';
+import { URL, BASE_API, API_URL } from '@/constants';
 import $http from '@/services/api';
 import Helper from '@/services/helper';
 

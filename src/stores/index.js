@@ -8,13 +8,12 @@ import 'firebase/messaging';
 
 import { composeWithDevTools } from 'redux-devtools-extension/developmentOnly';
 
-import { firebase as firebaseConfig } from '@/config';
 import history from '@/services/history';
 import appReducer from '@/reducers/app';
 import authReducer from '@/reducers/auth';
 import reducers from '@/reducers';
 
-firebase.initializeApp(firebaseConfig);
+firebase.initializeApp(process.env.firebase);
 
 const AppReducers = combineReducers({
   app: appReducer,
@@ -25,7 +24,7 @@ const AppReducers = combineReducers({
 });
 
 const createStoreWithFirebase = compose(
-  reactReduxFirebase(firebase, firebaseConfig),
+  reactReduxFirebase(firebase, process.env.firebase),
   composeWithDevTools(applyMiddleware(routerMiddleware(history), thunk)),
 )(createStore);
 

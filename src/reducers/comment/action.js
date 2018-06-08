@@ -1,4 +1,4 @@
-import { BASE_API } from '@/config';
+import { BASE_API } from '@/constants';
 import { createAPI } from '@/reducers/action';
 
 export const ACTIONS = {

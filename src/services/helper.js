@@ -61,9 +61,21 @@ class Helper {
    * @param id
    * @returns {string}
    */
-  static getObjectIdOfComment({prefix='outcome_id', id}) {
+  static getObjectIdOfComment({ prefix = 'outcome_id', id }) {
     return `${prefix}_${id}`;
   }
 }
+
+export class StringHelper {
+  static format(str, ...args) {
+    return str.replace(
+      /{(\d+)}/g,
+      (match, number) =>
+        (typeof args[number] !== 'undefined' ? args[number] : match),
+    );
+  }
+}
+
+Helper.StringHelper = StringHelper;
 
 export default Helper;

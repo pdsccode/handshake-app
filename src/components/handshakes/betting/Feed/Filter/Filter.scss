@@ -13,13 +13,15 @@
     display: flex;
     justify-content: space-between;
   }
+
+ 
+ 
   .share-block {
     display: flex;
     flex-wrap: wrap;
-    margin: 0.0625rem;
-    margin-top: rem-calc(20px);
-    padding: rem-calc(10px 0);
-    background: #333c43;
+    margin-bottom: rem-calc(18px);
+    padding: rem-calc(8px 0);
+    background-image: linear-gradient(90deg, #2456fb 0%, #1f2b34 100%);
     color: $white;
     .text {
       width: 60%;
@@ -36,10 +38,24 @@
   }
 
   .item {
-    //flex-grow: 1; /* default 0 */
     flex-basis: 50%;
     width: 50%;
     border: none;
     padding: rem-calc(1px);
+  }
+
+  .item:first-child {
+    display: flex;
+    flex-direction: column;
+  }
+  .titleBox {
+    display: flex;
+    background-color: #1F2B34;;
+    color: #5a6166;
+    font-size: rem-calc(13px);
+    justify-content: space-between;
+    letter-spacing: 0;
+    padding: rem-calc(14px 20px);
+
   }
 }

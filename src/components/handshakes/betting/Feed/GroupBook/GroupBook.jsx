@@ -6,35 +6,32 @@ import Book from './../Book';
 import "./GroupBook.scss";
 
 class GroupBook extends React.Component {
-    static propTypes = {
-        bookList: PropTypes.array,
-        amountColor: PropTypes.string,
-      }
-    static defaultProps = {
-      amountColor: '#FA6B49',
-    }
+  static propTypes = {
+    bookList: PropTypes.array,
+    amountColor: PropTypes.string,
+  }
+  static defaultProps = {
+    amountColor: '#FA6B49',
+  }
 
 
-    constructor(props) {
-        super(props);
-        const {odd} = props;
-        this.state = {
+  constructor(props) {
+    super(props);
+  }
 
-        };
-
-
-      }
-
-    render(){
-        const {bookList, amountColor} = this.props;
-        console.log('BookList:', bookList);
-        return (
-            <div className="wrapperGroupBook">
-            {bookList&& bookList.map((item, index) =>
-                <Book key={index} amountColor={amountColor} item={item} />
-              )}
-            </div>
-        );
-    }
+  render() {
+    const {bookList, amountColor} = this.props;
+    const isGotDefaultOutCome = typeof window !== 'undefined' && window.isGotDefaultOutCome;
+    return (
+      <div className="wrapperGroupBook">
+        {
+          (bookList && bookList.length > 0) ?
+            bookList.map((item, index) => <Book key={index} amountColor={amountColor} item={item} />) :
+            isGotDefaultOutCome ? <div className="noData">Stake a bet on new territory.</div> : ''
+        }
+      </div>
+    );
+  }
 }
+
 export default GroupBook;

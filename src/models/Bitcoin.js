@@ -1,7 +1,7 @@
 import axios from 'axios';
 import satoshi from 'satoshi-bitcoin';
-import { rule } from 'postcss';
-import { Wallet } from '@/models/Wallet.js';
+import { StringHelper } from '@/services/helper';
+import { Wallet } from '@/models/Wallet';
 
 const moment = require('moment');
 const bitcore = require('bitcore-lib');
@@ -19,7 +19,7 @@ export class Bitcoin extends Wallet {
     }
 
     getShortAddress() {
-      return this.address.replace(this.address.substr(5, 24), '...');
+      return this.address.replace(this.address.substr(4, 26), '...');
     }
 
     setDefaultNetwork() {
@@ -41,7 +41,7 @@ export class Bitcoin extends Wallet {
       const xpriv = code.toHDPrivateKey();
 
       const hdPrivateKey = new bitcore.HDPrivateKey(xpriv);
-      const derived = hdPrivateKey.derive('m/44\'/{0}\'/0\'/0/0'.format(this.coinType));
+      const derived = hdPrivateKey.derive(StringHelper.format('m/44\'/{0}\'/0\'/0/0', this.coinType));
       this.address = derived.privateKey.toAddress().toString();
       this.privateKey = derived.privateKey.toString();
       // this.xprivateKey = derived.xprivkey;
@@ -58,6 +58,14 @@ export class Bitcoin extends Wallet {
         return await satoshi.toBitcoin(response.data);
       }
       return false;
+    }
+
+    checkAddressValid(toAddress){
+      
+      if (!bitcore.Address.isValid(toAddress)){
+          return "You can only send tokens to Bitcoin address";
+      }
+      else return true;    
     }
 
 
@@ -80,7 +88,7 @@ export class Bitcoin extends Wallet {
         console.log('server', this.network);
 
 
-        console.log('Your wallet balance is currently {0} ETH'.format(balance));
+        console.log(StringHelper.format('Your wallet balance is currently {0} ETH', balance));
 
         if (!balance || balance == 0 || balance <= amountToSend) {
           return {"status": 0, "message": insufficientMsg};

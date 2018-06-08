@@ -5,11 +5,11 @@ import PropTypes from 'prop-types';
 import { Switch, BrowserRouter, Route, Redirect } from 'react-router-dom';
 import DynamicImport from '@/components/App/DynamicImport';
 import Loading from '@/components/core/presentation/Loading';
-import { URL } from '@/config';
+import { URL } from '@/constants';
 import { APP, FIREBASE_PATH, API_URL } from '@/constants';
 
 import local from '@/services/localStore';
-import { signUp, fetchProfile, authUpdate } from '@/reducers/auth/action';
+import { signUp, fetchProfile, authUpdate, getFreeETH } from '@/reducers/auth/action';
 
 import ScrollToTop from '@/components/App/ScrollToTop';
 import Layout from '@/components/Layout/Main';
@@ -101,6 +101,14 @@ const LandingPageRootRouter = props => (
     {Component => <Component {...props} />}
   </DynamicImport>
 );
+const FAQRootRouter = props => (
+  <DynamicImport
+    loading={Loading}
+    load={() => import('@/components/Router/FAQ')}
+  >
+    {Component => <Component {...props} />}
+  </DynamicImport>
+);
 const Page404 = props => (
   <DynamicImport
     isNotFound
@@ -122,19 +130,8 @@ class Router extends React.Component {
     getUserProfile: PropTypes.func.isRequired,
     firebase: PropTypes.object.isRequired,
     getListOfferPrice: PropTypes.func.isRequired,
+    getFreeETH: PropTypes.func.isRequired,
   };
-
-  static getDerivedStateFromProps(nextProps, prevState) {
-    if (nextProps.auth.isLogged !== prevState.isLogged) {
-      return { isLogged: nextProps.auth.isLogged };
-    }
-    if (nextProps.auth.profileUpdatedAt !== prevState.profileUpdatedAt) {
-      nextProps.firebase.unWatchEvent('value', `${FIREBASE_PATH.USERS}/${String(prevState.profile?.id)}`);
-      nextProps.firebase.watchEvent('value', `${FIREBASE_PATH.USERS}/${String(nextProps.auth.profile?.id)}`);
-      return { profile: nextProps.auth.profile, profileUpdatedAt: nextProps.auth.profileUpdatedAt };
-    }
-    return null;
-  }
 
   constructor(props) {
     super(props);
@@ -151,6 +148,18 @@ class Router extends React.Component {
 
     this.authSuccess = ::this.authSuccess;
     this.notification = ::this.notification;
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.auth.isLogged !== prevState.isLogged) {
+      return { isLogged: nextProps.auth.isLogged };
+    }
+    if (nextProps.auth.profileUpdatedAt !== prevState.profileUpdatedAt) {
+      nextProps.firebase.unWatchEvent('value', `${FIREBASE_PATH.USERS}/${String(prevState.profile?.id)}`);
+      nextProps.firebase.watchEvent('value', `${FIREBASE_PATH.USERS}/${String(nextProps.auth.profile?.id)}`);
+      return { profile: nextProps.auth.profile, profileUpdatedAt: nextProps.auth.profileUpdatedAt };
+    }
+    return null;
   }
 
   async componentDidMount() {
@@ -198,7 +207,7 @@ class Router extends React.Component {
   getIpInfo = () => {
     axios.get(API_URL.EXCHANGE.IP_DOMAIN, {
       params: {
-        auth: API_URL.EXCHANGE.IP_KEY,
+        auth: process.env.ipfindKey,
       },
     }).then((response) => {
       // console.log('response', response.data);
@@ -233,8 +242,16 @@ class Router extends React.Component {
 
     if (listWallet === false) {
       this.setState({ loadingText: 'Creating your local wallets' });
-      listWallet = createMasterWallets().then(() => {
-        this.setState({ isLoading: false, loadingText: '' });
+      listWallet = createMasterWallets().then(() => {        
+        
+        this.setState({ loadingText: 'Please be patient. We are gathering ETH for you.' });
+        let wallet = MasterWallet.getWalletDefault('ETH');        
+        this.props.getFreeETH({
+          PATH_URL: '/user/free-rinkeby-eth?address=' + wallet.address,          
+          METHOD: 'POST',
+          successFn: (response) => {this.setState({ isLoading: false, loadingText: '' });},
+          errorFn: (error) => {this.setState({ isLoading: false, loadingText: '' });}
+        });                
       });
     } else {
       this.setState({ isLoading: false });
@@ -266,6 +283,7 @@ class Router extends React.Component {
 
   render() {
     if (window.location.pathname === URL.LANDING_PAGE_SHURIKEN) return <LandingPageRootRouter />;
+    if (window.location.pathname === URL.FAQ) return <FAQRootRouter />;
     if (BrowserDetect.isDesktop && process.env.isProduction) return <MobileOrTablet />;
     if (!this.state.isLogged || this.state.isLoading) {
       return (
@@ -352,5 +370,6 @@ export default compose(
     getUserProfile,
     authUpdate,
     getListOfferPrice,
+    getFreeETH,
   }),
 )(Router);

@@ -1,9 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+
 // components
 import App from '@/components/App/App';
-// import registerServiceWorker from '@/services/worker';
 import * as OfflinePlugin from 'offline-plugin/runtime';
+// import registerServiceWorker from '@/services/worker';
 
 OfflinePlugin.install({
   onUpdateReady() {
@@ -13,19 +14,15 @@ OfflinePlugin.install({
     window.location.reload();
   },
 });
+// registerServiceWorker();
 
-if (!String.prototype.format) {
-  String.prototype.format = function () {
-    const args = arguments;
-    return this.replace(
-      /{(\d+)}/g,
-      (match, number) =>
-        (typeof args[number] !== 'undefined' ? args[number] : match),
-    );
-  };
+// clear cache mode on:
+if (process.env.TURN_OFF_CACHE && window.caches) {
+  window.caches
+    .keys()
+    .then(keyList => Promise.all(keyList.map(key => window.caches.delete(key))));
 }
-
-// if (window.caches) window.caches.keys().then(keyList => Promise.all(keyList.map(key => window.caches.delete(key))));
+//require('@/testing/web3_test');
+// require('@/testing/web3_handshake');
 
 ReactDOM.render(<App />, document.getElementById('app'));
-// registerServiceWorker();

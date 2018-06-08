@@ -1,4 +1,5 @@
 const path = require('path');
+const fs = require('fs');
 
 const xPath = filepath => path.resolve(__dirname, filepath);
 
@@ -13,16 +14,11 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const PwaManifestPlugin = require('webpack-pwa-manifest');
 const OfflinePlugin = require('offline-plugin');
 
-const dotenv = require('dotenv');
+// configs
+const envConfig = require('./.env.js');
 
 module.exports = function webpackConfig(env, argv) {
   const isProduction = argv.mode === 'production';
-
-  if (!isProduction) {
-    dotenv.config();
-  } else {
-    dotenv.config({ path: xPath('.env.production') });
-  }
 
   const stats = {
     modules: false,
@@ -47,35 +43,18 @@ module.exports = function webpackConfig(env, argv) {
         {
           test: /\.css$/,
           use: [
-            {
-              loader: 'style-loader',
-            },
-            {
-              loader: 'css-loader',
-              options: {
-                importLoaders: 1,
-              },
-            },
+            'style-loader',
+            'css-loader',
+            'postcss-loader',
           ],
         },
         {
           test: /\.scss$/,
           use: [
-            {
-              loader: 'style-loader',
-            },
-            {
-              loader: 'css-loader',
-              options: {
-                importLoaders: 1,
-              },
-            },
-            {
-              loader: 'postcss-loader',
-            },
-            {
-              loader: 'sass-loader',
-            },
+            'style-loader',
+            'css-loader',
+            'postcss-loader',
+            'sass-loader',
           ],
         },
       ],
@@ -105,30 +84,17 @@ module.exports = function webpackConfig(env, argv) {
           test: /\.css$/,
           use: [
             MiniCssExtractPlugin.loader,
-            {
-              loader: 'css-loader',
-              options: {
-                importLoaders: 1,
-              },
-            },
+            'css-loader',
+            'postcss-loader',
           ],
         },
         {
           test: /\.scss$/,
           use: [
             MiniCssExtractPlugin.loader,
-            {
-              loader: 'css-loader',
-              options: {
-                importLoaders: 1,
-              },
-            },
-            {
-              loader: 'postcss-loader',
-            },
-            {
-              loader: 'sass-loader',
-            },
+            'css-loader',
+            'postcss-loader',
+            'sass-loader',
           ],
         },
       ],
@@ -148,6 +114,16 @@ module.exports = function webpackConfig(env, argv) {
     ],
     performance: { hints: false },
   };
+
+  let appEnvConfig = {
+    NODE_ENV: argv.mode,
+    isProduction,
+    ...envConfig,
+  };
+
+  if (isProduction && fs.existsSync(xPath('.env.production.js'))) {
+    appEnvConfig = { ...appEnvConfig, ...require('./.env.production.js') }; // eslint-disable-line
+  }
 
   const finalConfig = merge(
     {
@@ -169,10 +145,7 @@ module.exports = function webpackConfig(env, argv) {
       },
       plugins: [
         new webpack.DefinePlugin({
-          'process.env.NODE_ENV': JSON.stringify(argv.mode),
-          'process.env.isProduction': JSON.stringify(isProduction),
-          'process.env.BASE_URL': JSON.stringify(process.env.BASE_URL),
-          'process.env.PUBLIC_URL': JSON.stringify(process.env.PUBLIC_URL),
+          'process.env': JSON.stringify(appEnvConfig),
         }),
         new webpack.ProvidePlugin({
           $: 'jquery',
@@ -189,7 +162,7 @@ module.exports = function webpackConfig(env, argv) {
             : null,
           filename: 'index.html',
           template: xPath('src/templates/main.html'),
-          favicon: xPath('src/assets/favicon.ico'),
+          favicon: xPath('src/assets/favicon.png'),
         }),
         new PwaManifestPlugin({
           name: 'Ninja',
