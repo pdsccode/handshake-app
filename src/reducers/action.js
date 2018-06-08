@@ -7,6 +7,7 @@ export const createAPI = INIT => ({
   BASE_URL = BASE_API.BASE_URL, PATH_URL, data, id, more, successFn, errorFn, qs, headers, METHOD,
 }) => (dispatch) => {
   //
+  console.log('app calling api');
   dispatch({ type: APP_ACTION.CALLING });
 
   //
@@ -16,6 +17,7 @@ export const createAPI = INIT => ({
 
   $http(url, data, id, qs, headers, METHOD).then((response) => {
     //
+    console.log('app called api');
     dispatch({ type: APP_ACTION.CALLED });
 
     //

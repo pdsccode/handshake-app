@@ -316,7 +316,7 @@ class Profile extends React.Component {
                   </span>
                 </p>
                 <div className="extend">
-                  <span className="badge badge-success">{ phone ? 'Verified' : '' }</span>
+                  <span className="badge badge-success">{ this.props.auth.profile.phone ? 'Verified' : '' }</span>
                   <Image className={this.state.phoneCollapse ? 'rotate' : ''} src={ExpandArrowSVG} alt="arrow" />
                 </div>
               </div>
@@ -393,7 +393,7 @@ class Profile extends React.Component {
                   <span>You may prefer to receive updates and notifications via email. This is also optional.</span>
                 </p>
                 <div className="extend">
-                  <span className="badge badge-success">{ email ? 'Verified' : '' }</span>
+                  <span className="badge badge-success">{ this.props.auth.profile.email ? 'Verified' : '' }</span>
                   <Image className={this.state.emailCollapse ? 'rotate' : ''} src={ExpandArrowSVG} alt="arrow" />
                 </div>
               </div>
