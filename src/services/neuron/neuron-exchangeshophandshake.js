@@ -179,13 +179,13 @@ export default class ExchangeShopHandshake extends BaseHandshake {
   }
 
   // CoinOwner accept transaction
-  accept = (hid, offchain) => {
+  finish = (hid, offchain) => {
     console.log(TAG, ' accept = ', hid, offchain);
 
     const bytesOffchain = this.web3.utils.fromAscii(offchain);
 
     const payloadData = this.handshakeInstance.methods
-      .accept(
+      .finish(
         hid,
         bytesOffchain,
       )
