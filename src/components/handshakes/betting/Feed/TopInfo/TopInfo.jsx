@@ -64,7 +64,7 @@ class TopInfo extends React.Component {
       <div className="wrapperTopInfoContainer">
         <div className="boxInfo" onClick={() => this.modalTradedVolumeRef.open()}>
           <div className="number">{marketTotal} ETH</div>
-          <div className="des">Total stake</div>
+          <div className="des">Total stakes</div>
         </div>
         <div className="boxInfo" onClick={() => this.modalWiningFeeRef.open()}>
           <div className="number">{percentFee}%</div>
@@ -82,7 +82,7 @@ class TopInfo extends React.Component {
             </Link>
           )
         }
-        <ModalDialog className="modal-info" title="Total stake" onRef={modal => this.modalTradedVolumeRef = modal}>
+        <ModalDialog className="modal-info" title="Total stakes" onRef={modal => this.modalTradedVolumeRef = modal}>
           <p>The total stake of this prediction is the current amount wagered by all participating ninjas.</p>
         </ModalDialog>
         <ModalDialog className="modal-info" title="Market fee" onRef={modal => this.modalWiningFeeRef = modal}>

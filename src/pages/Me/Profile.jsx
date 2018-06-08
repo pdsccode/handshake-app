@@ -285,14 +285,14 @@ class Profile extends React.Component {
                 }
               >
                 <p className="label">
-                  Username
+                  Alias
                 </p>
                 <div className="extend">
                   <Image className={this.state.usernameCollapse ? 'rotate' : ''} src={ExpandArrowSVG} alt="arrow" />
                 </div>
               </div>
               <div className={`content ${this.state.usernameCollapse ? '' : 'd-none'}`}>
-                <p className="text">Enter username</p>
+                <p className="text">What do they call you?</p>
                 <UsernameForm onSubmit={this.addUsername}>
                   <Field
                     name="username"

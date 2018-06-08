@@ -109,7 +109,7 @@ class ShareSocial extends PureComponent {
         } else {
           this.props.showAlert({
             message: <div className="text-center">Copy to clipboard fail! <p style={{ margin: 0 }}>{shortLink}</p></div>,
-            timeOut: 10000,
+            timeOut: 20000,
             type: 'danger',
             isShowClose: true,
           });
