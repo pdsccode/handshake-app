@@ -289,7 +289,7 @@ class BetingShake extends React.Component {
       label: 'Amount',
       className: 'amount',
       placeholder: '0.00',
-      type: 'tel',
+      type: 'text',
     };
     let oddsField = {
       id: 'odds',
@@ -301,7 +301,7 @@ class BetingShake extends React.Component {
       defaultValue: marketOdds,
       infoText: isChangeOdds ? 'Your Odds' : 'Market Odds',
       isShowInfoText: true,
-      type: 'tel',
+      type: 'text',
     };
     // const {BettingShakeForm} = this.state;
     // console.log('BettingShakeForm:', BettingShakeForm);
