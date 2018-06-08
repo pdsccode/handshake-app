@@ -12,46 +12,44 @@ import TwitterSVG from '@/assets/images/share/twitter.svg';
 import './ShareSocial.scss';
 
 const Clipboard = (function (window, document, navigator) {
-  let textArea,
-      copy;
+  let textArea, copy;
 
   function isOS() {
-      return navigator.userAgent.match(/ipad|iphone/i);
+    return navigator.userAgent.match(/ipad|iphone/i);
   }
 
   function createTextArea(text) {
-      textArea = document.createElement('textArea');
-      textArea.value = text;
-      document.body.appendChild(textArea);
+    textArea = document.createElement('textArea');
+    textArea.value = text;
+    document.body.insertBefore(textArea, document.body.firstChild);
   }
 
   function selectText() {
-      let range,
-          selection;
-      if (isOS()) {
-          range = document.createRange();
-          range.selectNodeContents(textArea);
-          selection = window.getSelection();
-          selection.removeAllRanges();
-          selection.addRange(range);
-          textArea.setSelectionRange(0, 999999);
-      } else {
-          textArea.select();
-      }
+    let range, selection;
+    if (isOS()) {
+      range = document.createRange();
+      range.selectNodeContents(textArea);
+      selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(range);
+      textArea.setSelectionRange(0, 999999);
+    } else {
+      textArea.select();
+    }
   }
 
   function copyToClipboard() {
-      const execCommand =  document.execCommand('copy');
-      document.body.removeChild(textArea);
-      return execCommand;
+    const execCommand =  document.execCommand('copy');
+    document.body.removeChild(textArea);
+    return execCommand;
   }
   copy = function (text) {
-      createTextArea(text);
-      selectText();
-      return copyToClipboard();
+    createTextArea(text);
+    selectText();
+    return copyToClipboard();
   };
   return {
-      copy
+    copy
   };
 }(window, document, navigator));
 
