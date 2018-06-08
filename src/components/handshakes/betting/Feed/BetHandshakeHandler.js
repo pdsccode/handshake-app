@@ -154,17 +154,16 @@ export class BetHandshakeHandler {
   }
 
   static isInitBet(dict) {
-    /*
+    
+   const {shakers} = dict;
+   if(shakers.length == 0){
+     
     const profile = local.get(APP.AUTH_PROFILE);
+    console.log('User Profile Id:', profile.id);
     const { user_id } = dict;
     if (user_id && profile.id === user_id) {
       return true;
     }
-    return false;
-    */
-   const {shakers} = dict;
-   if(shakers.length == 0){
-     return true
    }
    return false;
   }

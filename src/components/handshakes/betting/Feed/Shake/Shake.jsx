@@ -112,7 +112,7 @@ class BetingShake extends React.Component {
      //this.refs.inputOdds.value = nextProps.marketOdds;
      const {marketOdds} = nextProps;
       this.setState({
-        oddValue: parseFloat(marketOdds).toFixed(4)
+        oddValue: parseFloat(marketOdds).toFixed(1)
       })
 
       
