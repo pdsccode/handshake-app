@@ -105,6 +105,12 @@
     font-weight: $normal;
     font-size: 0.75rem;
     color: #FFFFFF;
+    @media (max-width: 375px) {
+      left: 71%;
+    }
+    @media (max-width: 330px) {
+      left: 65%;
+    }
   }
   .oddField {
     //padding-left: rem-calc(5px);
