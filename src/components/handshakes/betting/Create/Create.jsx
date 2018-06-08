@@ -296,7 +296,7 @@ get defaultOutcome() {
     if (key === 'event_odds'){
       console.log('Change Odds');
       this.setState({
-        oddValue: parseFloat(text).toFixed(2),
+        oddValue: text,
         isChangeOdds: true
       })
     }

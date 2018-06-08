@@ -21,14 +21,14 @@ class Button extends React.PureComponent {
     isSubmit: PropTypes.bool,
     cssType: PropTypes.string,
     app: PropTypes.object,
-    immunity: PropTypes.bool,
+    immunity: PropTypes.any,
     isLoading: PropTypes.bool,
     style: PropTypes.any,
   };
 
   static defaultProps = {
     disabled: false,
-    immunity: true,
+    immunity: null,
     block: false,
     to: '',
     small: false,
@@ -41,39 +41,47 @@ class Button extends React.PureComponent {
   constructor(props) {
     super(props);
 
-    this.state = {
-      immunity: true,
-    };
-
     this.loading = this.loading.bind(this);
-    this.immunity = this.immunity.bind(this);
+    this.getImmunity = this.getImmunity.bind(this);
     this.onClick = this.onClick.bind(this);
+
+    this.immunity = true;
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (!nextProps.app.isCalling) {
+      this.immunity = true;
+    }
+    return null;
   }
 
   onClick(e) {
+    console.log('clicked');
     if (e.target === this.btnRef) {
-      this.setState({ immunity: false });
+      console.log('set immunity false');
+      this.immunity = false;
     } else {
-      this.setState({ immunity: true });
+      this.immunity = true;
     }
     this.props.onClick(e);
   }
 
-  immunity() {
-    if (!this.state.immunity) {
+  getImmunity() {
+    console.log('state imunity', this.immunity);
+    if (this.props.immunity !== null) {
+      return this.props.immunity;
+    }
+    if (!this.immunity) {
       return false;
     }
-    if (this.props.immunity) {
-      return true;
-    }
-    return false;
+    return true;
   }
 
   loading() {
     if (this.props.isLoading) {
       return <span dangerouslySetInnerHTML={{ __html: loading }} />;
     }
-    if (this.props.app.isCalling && !this.immunity()) {
+    if (this.props.app.isCalling && !this.getImmunity()) {
       return <span dangerouslySetInnerHTML={{ __html: loading }} />;
     }
     return null;
@@ -115,7 +123,7 @@ class Button extends React.PureComponent {
     const typeClass = this.typeClass(cssType);
     const Tag = link ? Link : 'button';
 
-    console.log(this.immunity());
+    console.log('immunity', this.getImmunity());
 
     return (
       <Tag
@@ -129,7 +137,7 @@ class Button extends React.PureComponent {
           `${small ? 'small' : ''}`,
           `${disabled ? 'disabled' : ''}`,
           `${
-            isLoading || (this.props.app.isCalling && !this.immunity())
+            isLoading || (this.props.app.isCalling && !this.getImmunity())
               ? 'disabled'
               : ''
           }`,
@@ -139,7 +147,7 @@ class Button extends React.PureComponent {
         onClick={this.onClick}
         disabled={
           isLoading ||
-          (this.props.app.isCalling && !this.immunity()) ||
+          (this.props.app.isCalling && !this.getImmunity()) ||
           disabled
         }
         ref={(div) => {

@@ -12,6 +12,7 @@ import 'firebase/auth';
 import { setHeaderLeft, setHeaderTitle } from '@/reducers/app/action';
 import IconBtnSend from '@/assets/images/icon/ic-btn-send.svg';
 import IconBackBtn from '@/assets/images/icon/back-chevron.svg';
+import IconAvatar from '@/assets/images/icon/avatar.svg';
 
 import { Firechat } from './Firechat';
 import './Firechat.scss';
@@ -273,7 +274,8 @@ class Chat extends Component {
   }
 
   getUserAvatar(userId) {
-    return `data:image/png;base64,${new Identicon(md5(userId)).toString()}`;
+    // return `data:image/png;base64,${new Identicon(md5(userId)).toString()}`;
+    return IconAvatar;
   }
 
   generateMessageRoomData(roomId, userId, userName, room) {
