@@ -15,4 +15,5 @@ module.exports = {
     googleAnalyticId: '',
     facebookPixelId: '',
   },
+  PredictionHandshakeFileName: ''
 };

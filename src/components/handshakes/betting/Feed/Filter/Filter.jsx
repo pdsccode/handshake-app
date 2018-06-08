@@ -260,7 +260,7 @@ class BettingFilter extends React.Component {
                 <div className="wrapperContainer">
                     <div className="item">
                         <div className="titleBox">
-                            <div>Pool(ETH)</div>
+                            <div>Stake(ETH)</div>
                             <div>Price(Odds)</div>
                         </div>
                     <GroupBook amountColor="#FA6B49" bookList={this.bookListSupport}/>
