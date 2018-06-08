@@ -162,7 +162,7 @@ module.exports = function webpackConfig(env, argv) {
             : null,
           filename: 'index.html',
           template: xPath('src/templates/main.html'),
-          favicon: xPath('src/assets/favicon.ico'),
+          favicon: xPath('src/assets/favicon.png'),
         }),
         new PwaManifestPlugin({
           name: 'Ninja',

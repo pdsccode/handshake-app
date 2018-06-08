@@ -71,7 +71,7 @@ class BettingCreate extends React.PureComponent {
   static defaultProps = {
     item: {
       "backgroundColor": "#332F94",
-      "desc": "[{\"key\": \"event_bet\",\"suffix\": \"ETH\",\"label\": \"Amount\", \"placeholder\": \"10\", \"type\": \"number\", \"className\": \"amount\"}] [{\"key\": \"event_odds\", \"label\": \"Odds\", \"placeholder\": \"10\",\"prefix\": \"1 -\", \"className\": \"atOdds\", \"type\": \"number\"}]",
+      "desc": "[{\"key\": \"event_bet\",\"suffix\": \"ETH\",\"label\": \"Amount\", \"placeholder\": \"0.00\", \"type\": \"number\", \"className\": \"amount\"}] [{\"key\": \"event_odds\", \"label\": \"Odds\", \"placeholder\": \"2.0\",\"prefix\": \"1 -\", \"className\": \"atOdds\", \"type\": \"number\"}]",
       "id": 18,
       "message": null,
       "name": "Bet",
@@ -90,7 +90,7 @@ class BettingCreate extends React.PureComponent {
       address: null,
       privateKey: null,
       matches: [],
-
+      isChangeOdds: false,
       selectedMatch:null,
       selectedOutcome: null,
       buttonClass: 'btnRed',
@@ -120,6 +120,11 @@ class BettingCreate extends React.PureComponent {
         matches
     })
 }
+getStringDate(date){
+  var formattedDate = moment(date).format('MMM DD: HH.mm');
+  return formattedDate;
+
+}
 get foundMatch(){
   const {selectedMatch, matches} = this.state;
   if(selectedMatch){
@@ -133,7 +138,9 @@ get foundMatch(){
 
 get matchNames() {
   const {matches} = this.state;
-  return matches.map((item) => ({ id: item.id, value: `${item.awayTeamName} - ${item.homeTeamName}` }));
+  //return matches.map((item) => ({ id: item.id, value: `${item.homeTeamName} - ${item.awayTeamName} (${this.getStringDate(item.date)})` }));
+  return matches.map((item) => ({ id: item.id, value: `${item.name} (${this.getStringDate(item.date)})`, marketFee: item.market_fee }));
+
 }
 get matchOutcomes(){
   const {selectedMatch, matches} = this.state;
@@ -142,7 +149,9 @@ get matchOutcomes(){
       if (foundMatch){
           const {outcomes} = foundMatch;
           if(outcomes){
-              return outcomes.map((item) => ({ id: item.id, value: item.name, hid: item.hid}));
+              //return outcomes.map((item) => ({ id: item.id, value: item.name, hid: item.hid}));
+              return outcomes.map((item) => ({ id: item.id, value: `${item.name} (Odds:${parseFloat(item.market_odds).toFixed(2)})`, hid: item.hid, marketOdds: item.market_odds}));
+
           }
       }
   }
@@ -267,8 +276,9 @@ get defaultOutcome() {
   }
 
   renderInput(item, index,style = {}) {
-    const {key, placeholder, type} = item;
-    const className = 'amount';
+    const {key, placeholder, type, className} = item;
+    //const className = 'amount';
+    console.log('Item:', item);
     return (
       <Field
         //style={style}
@@ -341,8 +351,16 @@ get defaultOutcome() {
   }
    renderItem(field, index) {
     const item = JSON.parse(field.replace(regexReplace, ''));
-    const {key, placeholder, type, label, className,suffix,prefix} = item;
+    const {key, placeholder, type, label, className,prefix} = item;
     let itemRender = null;//this.renderInput(item, index);
+    const {selectedOutcome} = this.state;
+    let suffix = item.suffix;
+    if(item.key === "event_odds"){
+      suffix = this.state.isChangeOdds ? "Your Odds" : "Market Odds";
+    }
+    console.log('Selected Outcome:', selectedOutcome);
+    const marketOdds = (selectedOutcome && selectedOutcome.marketOdds) ? selectedOutcome.marketOdds : 0; 
+    console.log('Market Odds:', marketOdds);
     switch (type) {
       case 'date':
         itemRender = this.renderDate(item, index);
@@ -353,13 +371,13 @@ get defaultOutcome() {
       default:
         itemRender = this.renderInput(item, index,{width:'100%',fontSize:16,color:'white'} );
     }
-
+    const classNameSuffix = `cryptoCurrency${item.className}`;
     return (
       <div className="rowWrapper" key={index + 1} >
           <label style={{fontSize:13, color:'white'}}>{label || placeholder}</label>
             {itemRender}
             {
-              suffix && <div className="cryptoCurrency">{suffix}</div>
+              suffix && <div className={classNameSuffix}>{suffix}</div>
 
             }
 
@@ -379,7 +397,11 @@ get defaultOutcome() {
           <Dropdown
             placeholder="Select an event"
             defaultId={defaultMatchId}
-            afterSetDefault={(item)=>this.setState({selectedMatch: item})}
+            afterSetDefault={(item)=>{
+              const {values} = this.state;
+              values["event_name"] = item.value;
+              this.setState({selectedMatch: item, values})
+            }}
             source={this.matchNames}
             onItemSelected={(item) =>
               {
