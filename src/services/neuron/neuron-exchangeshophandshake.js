@@ -14,7 +14,7 @@ export default class ExchangeShopHandshake extends BaseHandshake {
   }
 
   get contractFileNameWithoutExtension() {
-    return 'ExchangeShopHandshake';
+    return 'ExchangeShop';
   }
 
   checkBalance = () => {
@@ -27,16 +27,14 @@ export default class ExchangeShopHandshake extends BaseHandshake {
    * @param value funds required for this handshake
    * @param offchain record ID in offchain backend database
    */
-  initByShopOwner = (hid, shopOwner, value, offchain) => {
-    console.log(TAG, ' initByShopOwner = ', hid, shopOwner, value, offchain);
+  initByShopOwner = (value, offchain) => {
+    console.log(TAG, ' initByShopOwner = ', value, offchain);
 
     const payoutValue = Web3.utils.toHex(this.web3.utils.toWei(value.toString(), 'ether'));
     const bytesOffchain = this.web3.utils.fromAscii(offchain);
 
     const payloadData = this.handshakeInstance.methods
       .initByShopOwner(
-        hid,
-        shopOwner,
         payoutValue,
         bytesOffchain,
       )
