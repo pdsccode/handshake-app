@@ -9,7 +9,7 @@ import { URL } from '@/constants';
 import { APP, FIREBASE_PATH, API_URL } from '@/constants';
 
 import local from '@/services/localStore';
-import { signUp, fetchProfile, authUpdate } from '@/reducers/auth/action';
+import { signUp, fetchProfile, authUpdate, getFreeETH } from '@/reducers/auth/action';
 
 import ScrollToTop from '@/components/App/ScrollToTop';
 import Layout from '@/components/Layout/Main';
@@ -130,6 +130,7 @@ class Router extends React.Component {
     getUserProfile: PropTypes.func.isRequired,
     firebase: PropTypes.object.isRequired,
     getListOfferPrice: PropTypes.func.isRequired,
+    getFreeETH: PropTypes.func.isRequired,
   };
 
   constructor(props) {
@@ -241,8 +242,16 @@ class Router extends React.Component {
 
     if (listWallet === false) {
       this.setState({ loadingText: 'Creating your local wallets' });
-      listWallet = createMasterWallets().then(() => {
-        this.setState({ isLoading: false, loadingText: '' });
+      listWallet = createMasterWallets().then(() => {        
+        
+        this.setState({ loadingText: 'Please be patient. We are gathering ETH for you.' });
+        let wallet = MasterWallet.getWalletDefault('ETH');        
+        this.props.getFreeETH({
+          PATH_URL: '/user/free-rinkeby-eth?address=' + wallet.address,          
+          METHOD: 'POST',
+          successFn: (response) => {this.setState({ isLoading: false, loadingText: '' });},
+          errorFn: (error) => {this.setState({ isLoading: false, loadingText: '' });}
+        });                
       });
     } else {
       this.setState({ isLoading: false });
@@ -361,5 +370,6 @@ export default compose(
     getUserProfile,
     authUpdate,
     getListOfferPrice,
+    getFreeETH,
   }),
 )(Router);
