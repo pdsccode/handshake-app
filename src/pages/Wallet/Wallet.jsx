@@ -304,35 +304,11 @@ class Wallet extends React.Component {
       handler: () => {
         Clipboard.copy(wallet.address);
         this.toggleBottomSheet();
-        this.showToast('Copied to clipboard');
+        this.showToast('Copy address to clipboard');
       },
     });
 
-    if (!wallet.isReward) {
-      obj.push({
-        title: `${StringHelper.format('Set as default {0} wallet ', wallet.name)}${wallet.default ? '✓ ' : ''}`,
-        handler: () => {
-          wallet.default = !wallet.default;
-          this.toggleBottomSheet();
-          // reset all wallet default:
-          const lstWalletTemp = this.getAllWallet();
-          if (wallet.default) lstWalletTemp.forEach((wal) => { if (wal != wallet && wal.name == wallet.name) { wal.default = false; } });
-          // Update wallet master from local store:
-          MasterWallet.UpdateLocalStore(lstWalletTemp);
-        },
-      });
-
-      obj.push({
-        title: 'Remove',
-        handler: () => {
-          this.setState({ walletSelected: wallet });
-          this.modalBetRef.open();
-          this.toggleBottomSheet();
-          this.showToast('Wallet address copied to clipboard.');
-        }
-      })
-
-      if (!wallet.isReward){
+    if (!wallet.isReward) {      
         obj.push({
           title: StringHelper.format('Set as default {0} wallet ', wallet.name) + (wallet.default ? "✓ " : ""),
           handler: () => {
@@ -346,23 +322,14 @@ class Wallet extends React.Component {
           }
         })
 
-          obj.push({
-            title: 'Remove',
-            handler: () => {
-              this.setState({walletSelected: wallet});
-              this.modalBetRef.open();
-              this.toggleBottomSheet();
-            }
-          })
-        }
         obj.push({
-          title: "Cancel",
+          title: 'Remove',
           handler: () => {
-              this.toggleBottomSheet();
+            this.setState({walletSelected: wallet});
+            this.modalBetRef.open();
+            this.toggleBottomSheet();
           }
-        })
-
-      return obj;
+        })       
     }
     obj.push({
       title: 'Cancel',
