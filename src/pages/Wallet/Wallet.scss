@@ -505,6 +505,15 @@
     margin-top: 25px;
   }
 
+  .unconfirmation{
+    background: #dc606c;
+    color:white;
+    border-radius: 4px;
+    font-size: 12px;
+    text-align: center;
+    width: 80px;
+    float: right;
+  }
 }
 .bottom-sheet-wrapper{
   z-index: 2000;
@@ -513,4 +522,55 @@
   cursor: pointer;
   color: #1E4EFF;
   margin: 10px;
+}
+
+
+.transaction-detail-wrapper{
+  margin-top: 20px;
+
+  .col2{
+    width:auto;
+    font-size: 16px;
+    span{
+      font-size: 14px;
+      color:#6c757d;
+    }
+  }
+  .col1{
+    width:60px;
+    padding: 5px 0px 10px 0px;
+    float: left;
+  }
+
+  .confirmation{
+    border-top:solid 2px #1E4EFF;
+    clear: both;
+    margin: 15px 0px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    border-bottom:solid 1px #ECECEC;
+
+    span{
+      font-size: 14px;
+    }
+  }
+
+  .body{
+    padding-bottom: 10px;
+    clear: both;
+
+    .value{
+      width:auto;
+      min-height: 30px;
+      word-wrap: break-word;
+    }
+
+    .key{
+      width:80px;
+      float: left;
+      color:#6c757d;
+      min-height: 30px;
+    }
+  }
+
 }
