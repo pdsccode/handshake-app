@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 // style
-import avatarPlaceHolder from '@/assets/images/icon/comment/ninja.svg';
+import avatarPlaceHolder from '@/assets/images/icon/avatar.svg';
 import './Avatar.scss';
 
 class Avatar extends React.PureComponent {

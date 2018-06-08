@@ -2,7 +2,7 @@
 
 .wrapperBettingFeed {
   margin-top: rem-calc(20px);
-  padding: rem-calc(30px 22px 36px 25px);
+  padding: rem-calc(20px) !important;
   margin-bottom: rem-calc(16px);
   background-color: transparent;
   .description {
@@ -10,12 +10,24 @@
     color: #ffffff;
     letter-spacing: 0;
     line-height: rem-calc(36px);
+    font-weight: $bold;
+    margin-bottom: rem-calc(15px);
     .eventInfo,
     .odds {
       font-size: rem-calc(20px);
     }
     p {
       margin-bottom: 0;
+    }
+    .eventInfo {
+      font-weight: $medium;
+    }
+    .eventName {
+      margin-bottom: rem-calc(15px);
+      .matchDate {
+        font-weight: $light;
+        font-size: rem-calc(20px);
+      }
     }
   }
 
@@ -27,7 +39,8 @@
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    margin-bottom: 10px;
+    margin-top: rem-calc(-16px);
+    margin-bottom: rem-calc(16px);
     .odds {
       color: #ffffff;
       margin-right: 20px;
@@ -49,6 +62,12 @@
         opacity: 0.8;
       }
     }
+  }
+  .possibleWin {
+    font-size: rem-calc(20px);
+    font-weight: $medium;
+    color: #ffffff;
+    margin-bottom: rem-calc(24px);
   }
 
   .email {
