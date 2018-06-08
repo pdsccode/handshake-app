@@ -140,7 +140,7 @@ get foundMatch(){
 get matchNames() {
   const {matches} = this.state;
   //return matches.map((item) => ({ id: item.id, value: `${item.homeTeamName} - ${item.awayTeamName} (${this.getStringDate(item.date)})` }));
-  return matches.map((item) => ({ id: item.id, value: `${item.name} (${this.getStringDate(item.date)})`, marketFee: item.market_fee }));
+  return matches.map((item) => ({ id: item.id, value: `Event: ${item.name} (${this.getStringDate(item.date)})`, marketFee: item.market_fee }));
 
 }
 get matchOutcomes(){
@@ -151,7 +151,7 @@ get matchOutcomes(){
           const {outcomes} = foundMatch;
           if(outcomes){
               //return outcomes.map((item) => ({ id: item.id, value: item.name, hid: item.hid}));
-              return outcomes.map((item) => ({ id: item.id, value: `${item.name} (Odds:${parseFloat(item.market_odds).toFixed(2)})`, hid: item.hid, marketOdds: item.market_odds}));
+              return outcomes.map((item) => ({ id: item.id, value: `Outcome: ${item.name} (Odds:${parseFloat(item.market_odds).toFixed(2)})`, hid: item.hid, marketOdds: item.market_odds}));
 
           }
       }
@@ -241,7 +241,7 @@ get defaultOutcome() {
           message = MESSAGE.NOT_ENOUGH_BALANCE;
 
         }
-          
+
       }else {
         message = MESSAGE.AMOUNT_VALID;
 
@@ -260,7 +260,7 @@ get defaultOutcome() {
         }
       });
     }
-    
+
 
 
     // if(selectedMatch && selectedOutcome && eventBet > 0 && eventBet <= balance){
@@ -387,7 +387,7 @@ get defaultOutcome() {
     if(item.key === "event_odds"){
       suffix = this.state.isChangeOdds ? "Your Odds" : "Market Odds";
     }
-    
+
     switch (type) {
       case 'date':
         itemRender = this.renderDate(item, index);
@@ -418,7 +418,7 @@ get defaultOutcome() {
     const defaultMatchId = this.defaultMatch ? this.defaultMatch.id : null;
     const defaultOutcomeId = this.defaultOutcome ? this.defaultOutcome.id : null;
     // console.log('Selected Outcome:', selectedOutcome);
-    // const marketOdds = (selectedOutcome && selectedOutcome.marketOdds) ? selectedOutcome.marketOdds : 0; 
+    // const marketOdds = (selectedOutcome && selectedOutcome.marketOdds) ? selectedOutcome.marketOdds : 0;
     // console.log('Market Odds:', marketOdds);
     return (
       <form className="wrapperBetting" onSubmit={this.onSubmit}>
@@ -453,7 +453,7 @@ get defaultOutcome() {
               values["event_predict"] = item.value;
               values["event_odds"] = item.marketOdds;
               this.setState({selectedOutcome: item, values})
-              
+
             }}
             onItemSelected={(item) => {
               console.log('Selected outcome:', item);
