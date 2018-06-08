@@ -107,7 +107,7 @@ class Profile extends React.Component {
         },
         METHOD: 'POST',
         successFn: () => {
-          this.setState(() => ({ phoneStart: phone }));
+          this.setState(() => ({ phoneStart: phone, isShowVerificationCode: true }));
           this.props.showAlert({
             message: <div className="text-center">Sent verify OTP code to your phone</div>,
             timeOut: 3000,
@@ -140,6 +140,7 @@ class Profile extends React.Component {
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             METHOD: 'POST',
             successFn: () => {
+              this.setState({ isShowVerificationCode: false, });
               this.props.showAlert({
                 message: <div className="text-center">Added your phone number</div>,
                 timeOut: 3000,
@@ -153,6 +154,13 @@ class Profile extends React.Component {
                 type: 'danger',
               });
             },
+          });
+        },
+        errorFn: () => {
+          this.props.showAlert({
+            message: <div className="text-center">Verify your phone number failed</div>,
+            timeOut: 3000,
+            type: 'danger',
           });
         },
       });
