@@ -101,7 +101,8 @@ export const fieldRadioButton = customField(({
     <span style={{ width: fullWidth ? '100%' : '' }}>
     {
       list.map((item, index) => {
-        const { value: itemValue, text, icon } = item;
+        const { value: itemValue, text, icon, hide } = item;
+        if (hide) return null;
         const isChecked = itemValue === value;
         return (
           <div key={index} className={cx('radio-container', containerClass)} style={fullWidth ? { width: `${100 / list.length}%` } : {}}>
