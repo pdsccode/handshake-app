@@ -903,7 +903,7 @@ class Wallet extends React.Component {
 
           {/* Render list wallet: */}
           <Row className="list">
-            <Header title="Testnet wallets" hasLink={false} linkTitle="Request free ETH" onLinkClick={this.getETHFree} />
+            <Header title="Testnet wallets" hasLink linkTitle="Request free ETH" onLinkClick={this.getETHFree} />
           </Row>
           <Row className="list">
             {this.listTestWalletBalance}
