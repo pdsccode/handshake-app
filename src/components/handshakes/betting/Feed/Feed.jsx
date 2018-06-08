@@ -135,14 +135,13 @@ class FeedBetting extends React.Component {
   }
 
   render() {
-    const {actionTitle , isAction,side } = this.state;
-    const backgroundColor = side === SIDE.SUPPORT ? "#85D477":'#FB7753';
+    const {actionTitle , isAction } = this.state;
     // const {actionTitle = "Match is ongoing...", isAction =true} = this.state;
      /***
      * side = SIDE.SUPPORT // SIDE.AGAINST ;ORGRANCE
      *
      */
-    const {amount, odds, winValue} = this.props;
+    const {amount, odds, winValue, side } = this.props;
     const {event_name, event_predict, event_odds, event_bet,event_date, balance} = this.extraData;
     const { commentCount, id, type } = this.props;
     // const realEventName = event_name ? event_name.slice(7).split('(') : ['', ''];
@@ -161,11 +160,11 @@ class FeedBetting extends React.Component {
               <p className="eventName">
                 {event_name}
               </p>
-              <p className="eventInfo">{event_predict}</p>
+              <p className="eventInfo">{side === 1 ? `Support: ` : 'Oppose: '}{event_predict.slice(8)}</p>
             </div>
             <div className="bottomWrapper">
-              <span className="odds" >{odds.toFixed(2)}</span>
               <span className="content">{amount.toFixed(4)} ETH</span>
+              <span className="odds" >{odds.toFixed(2)}</span>
             </div>
             <div className="possibleWin">Possible winnings: {winValue.toFixed(4)} ETH</div>
 
