@@ -54,14 +54,71 @@ import {updateOfferStatus} from "@/reducers/discover/action";
 import {formatAmountCurrency, formatMoney} from "@/services/offer-util";
 import {BigNumber} from "bignumber.js";
 import { showLoading, hideLoading } from '@/reducers/app/action';
+import { shakeOfferItem } from "@/reducers/exchange/action";
+import CoinOffer from "@/models/CoinOffer";
+import OfferShop from "@/models/OfferShop";
 
 class FeedExchange extends React.PureComponent {
   constructor(props) {
     super(props);
 
     // const { extraData } = props;
-    // const offer = Offer.offer(JSON.parse(extraData));
-    // this.offer = offer;
+    const extraData = {
+      "btc": {
+        "currency": "BTC",
+        "sell_amount_min": "",
+        "sell_amount": "0",
+        "sell_balance": "",
+        "sell_percentage": "5",
+        "buy_amount_min": "",
+        "buy_amount": "0",
+        "buy_balance": "",
+        "buy_percentage": "5",
+        "system_address": "",
+        "user_address": "xxx",
+        "reward_address": "xxx"
+      },
+      "eth": {
+        "currency": "ETH",
+        "sell_amount_min": "",
+        "sell_amount": "0",
+        "sell_balance": "",
+        "sell_percentage": "5",
+        "buy_amount_min": "",
+        "buy_amount": "0",
+        "buy_balance": "",
+        "buy_percentage": "5",
+        "system_address": "",
+        "user_address": "xxx",
+        "reward_address": "xxx"
+      },
+      "offer": {
+        "id": "",
+        "hid": 0,
+        "item_flags": null,
+        "status": "",
+        "username": "abc",
+        "email": "abc@mail.com",
+        "language": "",
+        "contact_phone": "",
+        "contact_info": "",
+        "longitude": 0,
+        "latitude": 0,
+        "fiat_currency": "VND",
+        "transaction_count": {
+          "currency": "",
+          "success": 0,
+          "failed": 0
+        }
+      }
+    };
+
+    this.offer = OfferShop.offerShop(extraData.offer);
+    this.eth = CoinOffer.coinOffer(extraData.eth);
+    this.btc = CoinOffer.coinOffer(extraData.btc);
+
+    console.log('extraData', this.offer, this.eth, this.btc);
+
     this.state = {
       modalContent: '',
     };
@@ -73,128 +130,6 @@ class FeedExchange extends React.PureComponent {
     this.modalRef.open();
   }
 
-  addOfferItem = () => {
-    const { offer } = this.props;
-    const offerItem = {
-      currency: '',
-      sell_amount: '',
-      sell_percentage: '',
-      buy_amount: '',
-      buy_percentage: '',
-      user_address: '',
-      reward_address: '',
-    };
-
-    this.showLoading();
-    this.props.addOfferItem({
-      PATH_URL: `${API_URL.EXCHANGE.OFFER_STORES}/${offer.id}`,
-      METHOD: 'POST',
-      data: offerShake,
-      successFn: this.handleAddOfferItemSuccess,
-      errorFn: this.handleAddOfferItemFailed,
-    });
-  }
-
-  handleAddOfferItemSuccess = (responseData) => {
-    const { intl } = this.props;
-    const { data } = responseData;
-    const { currency } = data;
-
-    // const offer = this.offer;
-    // if (currency === CRYPTO_CURRENCY.ETH) {
-    //   this.handleCallActionOnContract(data);
-    // } else if (currency === CRYPTO_CURRENCY.BTC) {
-    //   if (offer.type === EXCHANGE_ACTION.BUY) {
-    //     const wallet = MasterWallet.getWalletDefault(offer.currency);
-    //     wallet.transfer(offer.systemAddress, offer.totalAmount).then(success => {
-    //       console.log('transfer', success);
-    //     });
-    //   }
-    // }
-
-    this.hideLoading();
-    const message = intl.formatMessage({ id: 'addOfferItemSuccessMassage' }, {
-      // offerType: offerType,
-      // amount: formatAmountCurrency(offer.amount),
-      // currency: offer.currency,
-      // currency_symbol: offer.fiatCurrency,
-      // total: formatMoney(fiatAmount),
-      // fee: offer.feePercentage,
-      // payment_method: EXCHANGE_METHOD_PAYMENT[EXCHANGE_FEED_TYPE.EXCHANGE],
-    });
-
-    this.props.showAlert({
-      message: <div className="text-center">{message}</div>,
-      timeOut: 2000,
-      type: 'success',
-      callBack: () => {
-        // this.props.updateOfferStatus({ [`exchange_${data.id}`]: data });
-        // this.props.history.push(URL.HANDSHAKE_ME);
-      },
-    });
-  }
-
-  handleAddOfferItemFailed = (e) => {
-    this.handleActionFailed(e);
-  }
-
-  ////////////////////////
-
-  deleteOfferItem = () => {
-    const { offer } = this.props;
-
-    this.showLoading();
-    this.props.deleteOfferItem({
-      PATH_URL: `${API_URL.EXCHANGE.OFFER_STORES}/${offer.id}`,
-      METHOD: 'DELETE',
-      qs: { currency: CRYPTO_CURRENCY.ETH},
-      successFn: this.handleDeleteOfferItemSuccess,
-      errorFn: this.handleDeleteOfferItemFailed,
-    });
-  }
-
-  handleDeleteOfferItemSuccess = (responseData) => {
-    const { intl } = this.props;
-    const { data } = responseData;
-    const { currency } = data;
-
-    // const offer = this.offer;
-    // if (currency === CRYPTO_CURRENCY.ETH) {
-    //   this.handleCallActionOnContract(data);
-    // } else if (currency === CRYPTO_CURRENCY.BTC) {
-    //   if (offer.type === EXCHANGE_ACTION.BUY) {
-    //     const wallet = MasterWallet.getWalletDefault(offer.currency);
-    //     wallet.transfer(offer.systemAddress, offer.totalAmount).then(success => {
-    //       console.log('transfer', success);
-    //     });
-    //   }
-    // }
-
-    this.hideLoading();
-    const message = intl.formatMessage({ id: 'deleteOfferItemSuccessMassage' }, {
-      // offerType: offerType,
-      // amount: formatAmountCurrency(offer.amount),
-      // currency: offer.currency,
-      // currency_symbol: offer.fiatCurrency,
-      // total: formatMoney(fiatAmount),
-      // fee: offer.feePercentage,
-      // payment_method: EXCHANGE_METHOD_PAYMENT[EXCHANGE_FEED_TYPE.EXCHANGE],
-    });
-
-    this.props.showAlert({
-      message: <div className="text-center">{message}</div>,
-      timeOut: 2000,
-      type: 'success',
-      callBack: () => {
-        // this.props.updateOfferStatus({ [`exchange_${data.id}`]: data });
-        // this.props.history.push(URL.HANDSHAKE_ME);
-      },
-    });
-  }
-
-  handleDeleteOfferItemFailed = (e) => {
-    this.handleActionFailed(e);
-  }
 
   ////////////////////////
 
@@ -263,126 +198,59 @@ class FeedExchange extends React.PureComponent {
     this.handleActionFailed(e);
   }
 
-  ////////////////////////
+  getOfferDistance = () => {
+    const { intl,  ipInfo: { latitude, longitude } } = this.props;
+    let distanceKm = 0;
+    let distanceMiles = 0;
 
-  rejectOfferItem = () => {
-    const { offer, shake } = this.props;
+    console.log('getOfferDistance', latitude, longitude, this.offer.latitude, this.offer.longitude);
 
-    this.showLoading();
-    this.props.rejectOfferItem({
-      PATH_URL: `${API_URL.EXCHANGE.OFFER_STORES}/${offer.id}/${API_URL.EXCHANGE.SHAKES}/${shake.id}`,
-      METHOD: 'DELETE',
-      successFn: this.handleRejectOfferItemSuccess,
-      errorFn: this.handleRejectOfferItemFailed,
-    });
-  }
-
-  handleRejectOfferItemSuccess = (responseData) => {
-    const { intl } = this.props;
-    const { data } = responseData;
-    const { currency } = data;
-
-    // const offer = this.offer;
-    // if (currency === CRYPTO_CURRENCY.ETH) {
-    //   this.handleCallActionOnContract(data);
-    // } else if (currency === CRYPTO_CURRENCY.BTC) {
-    //   if (offer.type === EXCHANGE_ACTION.BUY) {
-    //     const wallet = MasterWallet.getWalletDefault(offer.currency);
-    //     wallet.transfer(offer.systemAddress, offer.totalAmount).then(success => {
-    //       console.log('transfer', success);
-    //     });
-    //   }
+    // if (location) {
+    //   const latLng = location.split(',')
+      // this.distanceKm = getDistanceFromLatLonInKm(latitude, longitude, latLng[0], latLng[1])
+      distanceKm = getDistanceFromLatLonInKm(latitude, longitude, this.offer.latitude || 0, this.offer.longitude || 0);
+      distanceMiles = distanceKm * 0.621371;
     // }
 
-    this.hideLoading();
-    const message = intl.formatMessage({ id: 'rejectOfferItemSuccessMassage' }, {
-      // offerType: offerType,
-      // amount: formatAmountCurrency(offer.amount),
-      // currency: offer.currency,
-      // currency_symbol: offer.fiatCurrency,
-      // total: formatMoney(fiatAmount),
-      // fee: offer.feePercentage,
-      // payment_method: EXCHANGE_METHOD_PAYMENT[EXCHANGE_FEED_TYPE.EXCHANGE],
-    });
-
-    this.props.showAlert({
-      message: <div className="text-center">{message}</div>,
-      timeOut: 2000,
-      type: 'success',
-      callBack: () => {
-        // this.props.updateOfferStatus({ [`exchange_${data.id}`]: data });
-        // this.props.history.push(URL.HANDSHAKE_ME);
-      },
+    return intl.formatMessage({ id: 'offerDistanceContent' }, {
+      distanceKm: distanceKm > 1 || distanceMiles === 0 ? distanceKm.toFixed(0) : distanceKm.toFixed(3),
+      distanceMiles: distanceMiles === 0 ? distanceKm.toFixed(0) : distanceMiles.toFixed(1),
     });
   }
 
-  handleRejectOfferItemFailed = (e) => {
-    this.handleActionFailed(e);
-  }
+  getPrices = () => {
+    const { listOfferPrice } = this.props;
 
-  ////////////////////////
+    let priceBuyBTC, priceSellBTC, priceBuyETH, priceSellETH;
 
-  completeOfferItem = () => {
-    const { offer, shake } = this.props;
+    if (listOfferPrice) {
+      let offerPrice = getOfferPrice(listOfferPrice, EXCHANGE_ACTION.BUY, CRYPTO_CURRENCY.BTC);
+      priceBuyBTC = offerPrice.price;
 
-    this.showLoading();
-    this.props.completeOfferItem({
-      PATH_URL: `${API_URL.EXCHANGE.OFFER_STORES}/${offer.id}/${API_URL.EXCHANGE.SHAKES}/${shake.id}`,
-      METHOD: 'POST',
-      successFn: this.handleCompleteOfferItemSuccess,
-      errorFn: this.handleCompleteOfferItemFailed,
-    });
-  }
+      offerPrice = getOfferPrice(listOfferPrice, EXCHANGE_ACTION.SELL, CRYPTO_CURRENCY.BTC);
+      priceSellBTC = offerPrice.price;
 
-  handleCompleteOfferItemSuccess = (responseData) => {
-    const { intl } = this.props;
-    const { data } = responseData;
-    const { currency } = data;
+      offerPrice = getOfferPrice(listOfferPrice, EXCHANGE_ACTION.BUY, CRYPTO_CURRENCY.ETH);
+      priceBuyETH = offerPrice.price;
 
-    // const offer = this.offer;
-    // if (currency === CRYPTO_CURRENCY.ETH) {
-    //   this.handleCallActionOnContract(data);
-    // } else if (currency === CRYPTO_CURRENCY.BTC) {
-    //   if (offer.type === EXCHANGE_ACTION.BUY) {
-    //     const wallet = MasterWallet.getWalletDefault(offer.currency);
-    //     wallet.transfer(offer.systemAddress, offer.totalAmount).then(success => {
-    //       console.log('transfer', success);
-    //     });
-    //   }
-    // }
+      offerPrice = getOfferPrice(listOfferPrice, EXCHANGE_ACTION.SELL, CRYPTO_CURRENCY.ETH);
+      priceSellETH = offerPrice.price;
+    }
 
-    this.hideLoading();
-    const message = intl.formatMessage({ id: 'completeOfferItemSuccessMassage' }, {
-      // offerType: offerType,
-      // amount: formatAmountCurrency(offer.amount),
-      // currency: offer.currency,
-      // currency_symbol: offer.fiatCurrency,
-      // total: formatMoney(fiatAmount),
-      // fee: offer.feePercentage,
-      // payment_method: EXCHANGE_METHOD_PAYMENT[EXCHANGE_FEED_TYPE.EXCHANGE],
-    });
-
-    this.props.showAlert({
-      message: <div className="text-center">{message}</div>,
-      timeOut: 2000,
-      type: 'success',
-      callBack: () => {
-        // this.props.updateOfferStatus({ [`exchange_${data.id}`]: data });
-        // this.props.history.push(URL.HANDSHAKE_ME);
-      },
-    });
-  }
-
-  handleCompleteOfferItemFailed = (e) => {
-    this.handleActionFailed(e);
+    return { priceBuyBTC, priceSellBTC, priceBuyETH, priceSellETH };
   }
 
   render() {
-    const nameShop = 'CryptoWorkshop'
-    const currency = 'USD'
-    const success = 60
-    const fail = 60
-    const distance = '800 meters (30 miles) away'
+    const { offer, eth, btc } = this;
+    const nameShop = offer.username;
+    const currency = offer.fiatCurrency;
+    const success = offer.transactionCount.success;
+    const failed = offer.transactionCount.failed;
+
+    const distance = this.getOfferDistance();
+
+    const { priceBuyBTC, priceSellBTC, priceBuyETH, priceSellETH } = this.getPrices();
+
     return (
       <div className="feed-exchange">
         <Feed
@@ -391,7 +259,7 @@ class FeedExchange extends React.PureComponent {
         >
           <div className="info">
             <div className="name-shop">{nameShop}</div>
-            <div className="transaction">Successful ({success}) - Failed ({fail})</div>
+            <div className="transaction">Successful ({success}) - Failed ({failed})</div>
             <div className="distance">{distance}</div>
           </div>
           <table className="table-ex">
@@ -406,22 +274,22 @@ class FeedExchange extends React.PureComponent {
               <tr>
                 <td><div className="image"><img src={iconBitcoin} /></div></td>
                 <td>
-                  <div className="buy-color price-number">10000</div>
+                  <div className="buy-color price-number">{priceBuyBTC}</div>
                   <div className="currency">{currency}</div>
                 </td>
                 <td>
-                  <div className="sell-color price-number">8000</div>
+                  <div className="sell-color price-number">{priceSellBTC}</div>
                   <div className="currency">{currency}</div>
                 </td>
               </tr>
               <tr>
                 <td><div className="image"><img src={iconEthereum} className="icon" /></div></td>
                 <td>
-                  <div className="buy-color price-number">625</div>
+                  <div className="buy-color price-number">{priceBuyETH}</div>
                   <div className="currency">{currency}</div>
                 </td>
                 <td>
-                  <div className="sell-color price-number">615</div>
+                  <div className="sell-color price-number">{priceSellETH}</div>
                   <div className="currency">{currency}</div>
                 </td>
               </tr>
