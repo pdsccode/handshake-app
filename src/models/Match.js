@@ -13,6 +13,8 @@ class Match {
       homeTeamCode: data.homeTeamCode || '',
       homeTeamFlag: data.homeTeamFlag || '',
       homeTeamName: data.homeTeamName || '',
+      name: data.name || '',
+      marketFee: data.market_fee || '',
       outcomes: handleOutcomeListPayload(data.outcomes) || '',
     };
   }

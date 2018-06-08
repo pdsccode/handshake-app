@@ -7,13 +7,34 @@ import Loading from '@/components/core/presentation/Loading';
 import { URL } from '@/constants';
 import { setHeaderTitle, clearHeaderRight, clearHeaderLeft, hideHeader } from '@/reducers/app/action';
 
-const Me = props => (<DynamicImport loading={Loading} load={() => import('@/pages/Me/Me')}>{Component => <Component {...props} />}</DynamicImport>);
-const MeProfile = props => (<DynamicImport loading={Loading} load={() => import('@/pages/Me/Profile')}>{Component => <Component {...props} />}</DynamicImport>);
-const Page404 = props => (<DynamicImport isNotFound loading={Loading} load={() => import('@/pages/Error/Page404')}>{Component => <Component {...props} />}</DynamicImport>);
+const Me = props => (
+  <DynamicImport loading={Loading} load={() => import('@/pages/Me/Me')}>
+    {Component => <Component {...props} />}
+  </DynamicImport>
+);
+
+const MeProfile = props => (
+  <DynamicImport loading={Loading} load={() => import('@/pages/Me/Profile')}>
+    {Component => <Component {...props} />}
+  </DynamicImport>
+);
+
+const MeVerifyEmailProfile = props => (
+  <DynamicImport loading={Loading} load={() => import('@/pages/Me/VerifyEmail')}>
+    {Component => <Component {...props} />}
+  </DynamicImport>
+);
+
+const Page404 = props => (
+  <DynamicImport isNotFound loading={Loading} load={() => import('@/pages/Error/Page404')}>
+    {Component => <Component {...props} />}
+  </DynamicImport>
+);
 
 const routerMap = [
   { path: URL.HANDSHAKE_ME_INDEX, component: Me },
   { path: URL.HANDSHAKE_ME_PROFILE, component: MeProfile },
+  { path: URL.HANDSHAKE_ME_VERIRY_EMAIL, component: MeVerifyEmailProfile },
 ];
 
 class MeRouter extends React.Component {

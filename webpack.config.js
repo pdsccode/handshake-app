@@ -162,7 +162,8 @@ module.exports = function webpackConfig(env, argv) {
             : null,
           filename: 'index.html',
           template: xPath('src/templates/main.ejs'),
-          favicon: xPath('src/assets/favicon.ico'),
+          favicon: xPath('src/assets/favicon.png'),
+          title: 'Ninja: Anonymous Peer-to-Peer Prediction Exchange',
           social: {
             googleAnalyticId: appEnvConfig.social.googleAnalyticId,
             facebookPixelId: appEnvConfig.social.facebookPixelId,

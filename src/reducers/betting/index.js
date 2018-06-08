@@ -9,6 +9,7 @@ const bettingReducter = (state = {
   matches: [],
   supports: [],
   against: [],
+  tradedVolum: 0,
   isFetching: false
 }, action) => {
   switch (action.type) {
@@ -40,6 +41,7 @@ const bettingReducter = (state = {
         isFetching: true,
         supports: action.payload.data.support,
         against: action.payload.data.against,
+        tradedVolum: action.payload.data.traded_volumn
       };
       case `${BETTING_ACTIONS.LOAD_HANDSHAKES}_FAILED`:
       return {

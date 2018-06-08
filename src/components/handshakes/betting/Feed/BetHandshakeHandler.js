@@ -11,6 +11,7 @@ console.log('Chain Id:', chainId);
 const bettinghandshake = new BettingHandshake(chainId);
 
 export const MESSAGE = {
+  BET_PROGRESSING: "Your bet is creating. Please wait",
   CREATE_BET_SUCCESSFUL: "Success! You placed a bet.",
   NOT_ENOUGH_BALANCE: "Go to wallet to request free ETH",
   CHOOSE_MATCH: "Please choose match and outcome",
@@ -153,17 +154,16 @@ export class BetHandshakeHandler {
   }
 
   static isInitBet(dict) {
-    /*
+    
+   const {shakers} = dict;
+   if(shakers.length == 0){
+     
     const profile = local.get(APP.AUTH_PROFILE);
+    console.log('User Profile Id:', profile.id);
     const { user_id } = dict;
     if (user_id && profile.id === user_id) {
       return true;
     }
-    return false;
-    */
-   const {shakers} = dict;
-   if(shakers.length == 0){
-     return true
    }
    return false;
   }
@@ -231,7 +231,7 @@ export class BetHandshakeHandler {
               
       }   
 
-    }, 15000*i); 
+    }, 3000*i); 
     
   }
   static controlShake = async (list, hid) => {
