@@ -121,7 +121,7 @@ class BettingFilter extends React.Component {
     }
     getStringDate(date){
         //console.log('Date:', date);
-        var formattedDate = moment(new Date(date)).format('MMM DD');
+        var formattedDate = moment.unix(date).format('MMM DD');
         //console.log('Formated date:', formattedDate);
         return formattedDate;
 

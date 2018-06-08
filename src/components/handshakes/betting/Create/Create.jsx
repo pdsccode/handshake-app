@@ -123,7 +123,7 @@ class BettingCreate extends React.PureComponent {
     })
 }
 getStringDate(date){
-  var formattedDate = moment(date).format('MMM DD');
+  var formattedDate = moment.unix(date).format('MMM DD');
   return formattedDate;
 
 }
