@@ -269,8 +269,6 @@ class BettingFilter extends React.Component {
 
                     </div>
                 </div>
-                {/* Feed Comment */}
-                <FeedComponent objectId={outcomeId} />
             </div>
         );
     }

@@ -3,10 +3,13 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { getCommentCountById } from '@/reducers/comment/action';
-import { API_URL } from '@/constants';
+import { API_URL, URL } from '@/constants';
 import Helper from '@/services/helper';
 
+import { Link } from 'react-router-dom';
+
 import './TopInfo.scss';
+
 
 class TopInfo extends React.Component {
   static propTypes = {
@@ -21,6 +24,7 @@ class TopInfo extends React.Component {
       commentNo: 0,
     };
   }
+  isFirstCallCommmentCount = false;
 
   componentDidMount() {
     this.getCommentCount(this.props);
@@ -40,15 +44,21 @@ class TopInfo extends React.Component {
         qs: { object_id: Helper.getObjectIdOfComment({ id: objectId }) },
         successFn: ({ status, data }) => {
           this.setState({ commentNo: data });
+          this.isFirstCallCommmentCount = true;
         },
-        errorFn: () => this.setState({ commentNo: 0 }),
+        errorFn: () => {
+          this.setState({ commentNo: 0 });
+          this.isFirstCallCommmentCount = true;
+        },
       });
     }
   }
 
   render()  {
-    const { marketTotal, percentFee } = this.props;
+    const { marketTotal, percentFee, objectId } = this.props;
     const { commentNo } = this.state;
+    const commentLink = `${URL.COMMENTS_BY_SHAKE_INDEX}?objectId=${objectId}`;
+    const addCommentLink = `${commentLink}&addComment=true`;
     return (
       <div className="wrapperTopInfoContainer">
         <div className="boxInfo">
@@ -59,10 +69,18 @@ class TopInfo extends React.Component {
           <div className="number">{percentFee}%</div>
           <div className="des">Wining fee</div>
         </div>
-        <div className="boxInfo">
-          <div className="number">{commentNo}</div>
-          <div className="des">comments</div>
-        </div>
+        {
+          (commentNo > 0 || !this.isFirstCallCommmentCount) ? (
+            <Link className="boxInfo" to={commentLink}>
+              <div className="number">{commentNo}</div>
+              <div className="des">comments</div>
+            </Link>
+          ) : (
+            <Link className="boxInfo" to={addCommentLink}>
+              <div className="des">Add <br/> a comment</div>
+            </Link>
+          )
+        }
       </div>
     );
   }

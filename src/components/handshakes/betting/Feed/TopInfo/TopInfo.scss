@@ -1,25 +1,31 @@
 @import './src/styles/style';
 
+.wrapperTopInfoContainer {
+  display: flex;
+  //flex-wrap: wrap;
+  justify-content: space-between;
+  padding: rem-calc(10px 0 10px 0);
+}
 
- .wrapperTopInfoContainer{
-    display: flex;   
-    //flex-wrap: wrap;
-    justify-content: space-between;
-    padding: rem-calc(10px 0 10px 0);
+.boxInfo {
+  background-color: #1a3d7a;
+  color: white;
+  padding: rem-calc(5px);
+  flex-basis: 32%;
+  .number {
+    font-size: rem-calc(14px);
+    font-weight: bold;
+    text-align: center;
   }
-  .boxInfo {
-    background-color: #1a3d7a;
+  .des {
+    font-size: rem-calc(13px);
+    text-align: center;
+  }
+  a {
     color: white;
-    padding: rem-calc(5px);
-    flex-basis: 32%;
-    .number {
-        font-size: rem-calc(14px);
-        font-weight: bold;
-        text-align: center;
-    }
-    .des {
-        font-size: rem-calc(13px);
-        text-align: center;
-
-    }
   }
+}
+
+.addAComment {
+  align-items: center;
+}
