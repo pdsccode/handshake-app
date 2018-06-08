@@ -20,7 +20,6 @@ import {
   API_URL,
   CRYPTO_CURRENCY,
   CRYPTO_CURRENCY_DEFAULT,
-  CRYPTO_CURRENCY_LIST,
   DEFAULT_FEE,
   EXCHANGE_ACTION,
   EXCHANGE_ACTION_DEFAULT,
@@ -29,7 +28,8 @@ import {
   FIAT_CURRENCY,
   FIAT_CURRENCY_SYMBOL,
   MIN_AMOUNT,
-  SELL_PRICE_TYPE_DEFAULT
+  SELL_PRICE_TYPE_DEFAULT,
+  CRYPTO_CURRENCY_NAME,
 } from "@/constants";
 import "../styles.scss";
 import ModalDialog from "@/components/core/controls/ModalDialog/ModalDialog";
@@ -37,13 +37,15 @@ import ModalDialog from "@/components/core/controls/ModalDialog/ModalDialog";
 import {URL} from "@/constants";
 import {hideLoading, showAlert, showLoading} from "@/reducers/app/action";
 import {MasterWallet} from "@/models/MasterWallet";
-import {ExchangeHandshake} from "@/services/neuron";
+import {ExchangeShopHandshake} from "@/services/neuron";
 // import phoneCountryCodes from '@/components/core/form/country-calling-codes.min.json';
 import COUNTRIES from "@/data/country-dial-codes.js";
 import {feedBackgroundColors} from "@/components/handshakes/exchange/config";
 import {formatAmountCurrency, formatMoney} from "@/services/offer-util";
 import {createOfferStores,} from "@/reducers/exchange/action";
 import {BigNumber} from "bignumber.js/bignumber";
+import { authUpdate } from '@/reducers/auth/action';
+import OfferShop from "@/models/OfferShop";
 
 const nameFormExchangeCreate = "exchangeCreate";
 const FormExchangeCreate = createForm({
@@ -68,6 +70,11 @@ const minValue01 = minValue(MIN_AMOUNT[CRYPTO_CURRENCY.ETH]);
 const minValue001 = minValue(MIN_AMOUNT[CRYPTO_CURRENCY.BTC]);
 
 class Component extends React.Component {
+  CRYPTO_CURRENCY_LIST = [
+    { value: CRYPTO_CURRENCY.ETH, text: CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.ETH], hide: false },
+    { value: CRYPTO_CURRENCY.BTC, text: CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.BTC], hide: false },
+  ];
+
   constructor(props) {
     super(props);
 
@@ -76,6 +83,9 @@ class Component extends React.Component {
       currency: CRYPTO_CURRENCY_DEFAULT,
       lat: 0,
       lng: 0,
+      haveProfile: false,
+      haveOfferETH: false,
+      haveOfferBTC: false,
     };
     // this.mainColor = _sample(feedBackgroundColors)
     this.mainColor = "#1F2B34";
@@ -251,7 +261,7 @@ class Component extends React.Component {
 
   handleCreateOfferSuccess = async (responseData) => {
     console.log('handleCreateOfferSuccess', responseData);
-    const { currency, amountBuy, amountSell } = this.props;
+    const { currency, amountSell } = this.props;
     const data = responseData.data;
 
     console.log('handleCreateOfferSuccess', data);
@@ -267,15 +277,10 @@ class Component extends React.Component {
         console.log('transfer', success);
       });
     } else if (currency === CRYPTO_CURRENCY.ETH) {
-      const exchangeHandshake = new ExchangeHandshake(wallet.chainId);
+      const exchangeHandshake = new ExchangeShopHandshake(wallet.chainId);
 
       let result = null;
-      // if (data.type === EXCHANGE_ACTION.BUY) {
-      //   result = await exchangeHandshake.initByCashOwner(wallet.address, rewardWallet.address, data.amount, data.id);
-      // } else {
-      //   result = await exchangeHandshake.initByCoinOwner(wallet.address, rewardWallet.address, data.amount, data.id);
-      // }
-
+      result = await exchangeHandshake.initByCashOwner(wallet.address, rewardWallet.address, amountSell, data.id);
       console.log('handleCreateOfferSuccess', result);
     }
 
@@ -285,9 +290,25 @@ class Component extends React.Component {
       timeOut: 2000,
       type: 'success',
       callBack: () => {
-        this.props.history.push(URL.HANDSHAKE_ME);
+        this.setState((prevStates, props) => ({
+          haveOfferETH: currency === CRYPTO_CURRENCY.ETH ? true : prevStates.haveOfferETH,
+          haveOfferBTC: currency === CRYPTO_CURRENCY.BTC ? true : prevStates.haveOfferBTC,
+        }), () => {
+          this.CRYPTO_CURRENCY_LIST = [
+            { value: CRYPTO_CURRENCY.ETH, text: CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.ETH], hide: this.state.haveOfferETH },
+            { value: CRYPTO_CURRENCY.BTC, text: CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.BTC], hide: this.state.haveOfferBTC },
+          ];
+
+          if (this.state.haveOfferETH && this.state.haveOfferBTC) {
+            this.props.history.push(URL.HANDSHAKE_ME);
+          }
+        });
       }
     });
+
+    if (!this.state.haveProfile) {
+      this.updateUserProfile(OfferShop.offerShop(data.offer));
+    }
   }
 
   handleCreateOfferFailed = (e) => {
@@ -297,6 +318,24 @@ class Component extends React.Component {
       message: <div className="text-center">{e.response?.data?.message}</div>,
       timeOut: 3000,
       type: 'danger',
+    });
+  }
+
+  updateUserProfile = (offerShop) => {
+    const params = new URLSearchParams();
+    params.append('name', offerShop.username);
+    params.append('address', offerShop.contactInfo);
+    this.props.authUpdate({
+      PATH_URL: 'user/profile',
+      data: params,
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      METHOD: 'POST',
+      successFn: () => {
+        this.setState({ haveProfile: true });
+      },
+      errorFn: () => {
+        this.setState({ haveProfile: false });
+      },
     });
   }
 
@@ -316,7 +355,7 @@ class Component extends React.Component {
                     // containerClass="radio-container-old"
                     component={fieldRadioButton}
                     type="tab"
-                    list={CRYPTO_CURRENCY_LIST}
+                    list={this.CRYPTO_CURRENCY_LIST}
                     color={textColor}
                     validate={[required]}
                     onChange={this.onCurrencyChange}
@@ -488,6 +527,7 @@ const mapDispatchToProps = (dispatch) => ({
   rfChange: bindActionCreators(change, dispatch),
   showLoading: bindActionCreators(showLoading, dispatch),
   hideLoading: bindActionCreators(hideLoading, dispatch),
+  authUpdate: bindActionCreators(authUpdate, dispatch),
 
   createOfferStores: bindActionCreators(createOfferStores, dispatch),
 });
