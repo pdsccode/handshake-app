@@ -122,7 +122,7 @@ class BettingCreate extends React.PureComponent {
     })
 }
 getStringDate(date){
-  var formattedDate = moment(date).format('MMM DD: HH.mm');
+  var formattedDate = moment(date).format('MMM DD');
   return formattedDate;
 
 }
@@ -140,7 +140,7 @@ get foundMatch(){
 get matchNames() {
   const {matches} = this.state;
   //return matches.map((item) => ({ id: item.id, value: `${item.homeTeamName} - ${item.awayTeamName} (${this.getStringDate(item.date)})` }));
-  return matches.map((item) => ({ id: item.id, value: `${item.name}`, marketFee: item.market_fee }));
+  return matches.map((item) => ({ id: item.id, value: `${item.name} (${this.getStringDate(item.date)})`, marketFee: item.market_fee }));
 
 }
 get matchOutcomes(){
@@ -288,7 +288,7 @@ get defaultOutcome() {
     if (key === 'event_odds'){
       console.log('Change Odds');
       this.setState({
-        oddValue: parseFloat(text).toFixed(2),
+        oddValue: text,
         isChangeOdds: true
       })
     }

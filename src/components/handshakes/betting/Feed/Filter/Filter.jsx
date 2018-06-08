@@ -121,7 +121,7 @@ class BettingFilter extends React.Component {
     }
     getStringDate(date){
         //console.log('Date:', date);
-        var formattedDate = moment(new Date(date)).format('MMM DD: HH.mm');
+        var formattedDate = moment(new Date(date)).format('MMM DD');
         //console.log('Formated date:', formattedDate);
         return formattedDate;
 
@@ -131,7 +131,7 @@ class BettingFilter extends React.Component {
         const {matches} = this.state;
         if(matches){
             //return matches.map((item) => ({ id: item.id, value: `${item.homeTeamName} vs ${item.awayTeamName} (${this.getStringDate(item.date)})`  }));
-            return matches.map((item) => ({ id: item.id, value: `${item.name}`, marketFee: item.market_fee }));
+            return matches.map((item) => ({ id: item.id, value: `${item.name} (${this.getStringDate(item.date)})`, marketFee: item.market_fee }));
 
         }
         return null;
