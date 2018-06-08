@@ -173,11 +173,17 @@
   }
 
   .btnRed {
-    background: #FA6B49;
+    background: #fa6b49;
     border: none;
+    &:active {
+      background-color: #fa6b49;
+    }
   }
   .btnBlue {
-    background: #8BF275;
+    background: #8bf275;
     border: none;
+    &:active {
+      background-color: #8bf275;
+    }
   }
 }

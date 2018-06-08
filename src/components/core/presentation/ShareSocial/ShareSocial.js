@@ -10,7 +10,50 @@ import CopyLink from '@/assets/images/share/link.svg';
 import FacebookSVG from '@/assets/images/share/facebook.svg';
 import TwitterSVG from '@/assets/images/share/twitter.svg';
 import './ShareSocial.scss';
-const Clipboard = (function(window, document, navigator) { var textArea, copy; function isOS() { return navigator.userAgent.match(/ipad|iphone/i); } function createTextArea(text) { textArea = document.createElement('textArea'); textArea.value = text; document.body.appendChild(textArea); } function selectText() { var range, selection; if (isOS()) { range = document.createRange(); range.selectNodeContents(textArea); selection = window.getSelection(); selection.removeAllRanges(); selection.addRange(range); textArea.setSelectionRange(0, 999999); } else { textArea.select(); } } function copyToClipboard() { document.execCommand('copy'); document.body.removeChild(textArea); } copy = function(text) { createTextArea(text); selectText(); copyToClipboard(); }; return { copy: copy }; })(window, document, navigator);
+
+const Clipboard = (function (window, document, navigator) {
+  let textArea,
+      copy;
+
+  function isOS() {
+      return navigator.userAgent.match(/ipad|iphone/i);
+  }
+
+  function createTextArea(text) {
+      textArea = document.createElement('textArea');
+      textArea.value = text;
+      document.body.appendChild(textArea);
+  }
+
+  function selectText() {
+      let range,
+          selection;
+      if (isOS()) {
+          range = document.createRange();
+          range.selectNodeContents(textArea);
+          selection = window.getSelection();
+          selection.removeAllRanges();
+          selection.addRange(range);
+          textArea.setSelectionRange(0, 999999);
+      } else {
+          textArea.select();
+      }
+  }
+
+  function copyToClipboard() {
+      const execCommand =  document.execCommand('copy');
+      document.body.removeChild(textArea);
+      return execCommand;
+  }
+  copy = function (text) {
+      createTextArea(text);
+      selectText();
+      return copyToClipboard();
+  };
+  return {
+      copy
+  };
+}(window, document, navigator));
 
 class ShareSocial extends PureComponent {
   constructor(props) {
@@ -56,13 +99,20 @@ class ShareSocial extends PureComponent {
         break;
       case 'COPY':
         // copy to clip board
-        Clipboard.copy(shortLink);
-        // show alert
-        this.props.showAlert({
-          message: <div className="text-center">Copied to clipboard!</div>,
-          timeOut: 3000,
-          type: 'success',
-        });
+        const resultCopy = Clipboard.copy(shortLink);
+        if (Clipboard.copy(shortLink)) {
+          this.props.showAlert({
+            message: <div className="text-center">Copied to clipboard!</div>,
+            timeOut: 3000,
+            type: 'success',
+          });
+        } else {
+          this.props.showAlert({
+            message: <div className="text-center">Copied to clipboard fail!</div>,
+            timeOut: 3000,
+            type: 'danger',
+          });
+        }
         return;
       default:
         // facebook
