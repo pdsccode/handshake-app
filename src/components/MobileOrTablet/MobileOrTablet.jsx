@@ -58,7 +58,7 @@ class MobileOrTablet extends React.PureComponent {
             <p>
               The Ninja network is only accessible via mobile.
               <br/>
-              Open <span className="website">www.shake.ninja</span> on your mobile browser to gain anonymous entry.
+              Open <span className="website">www.ninja.org</span> on your mobile browser to gain anonymous entry.
               <br />
               <span className="whiteColor">No download needed. No sign up required.</span>
             </p>
