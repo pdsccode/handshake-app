@@ -11,7 +11,7 @@ import { initHandshake } from '@/reducers/handshake/action';
 import { loadMatches } from '@/reducers/betting/action';
 import { HANDSHAKE_ID, API_URL, APP } from '@/constants';
 import  { BetHandshakeHandler, SIDE, MESSAGE} from '@/components/handshakes/betting/Feed/BetHandshakeHandler.js';
-import { URL } from '@/config';
+import { URL } from '@/constants';
 import local from '@/services/localStore';
 
 // components

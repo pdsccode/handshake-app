@@ -35,7 +35,7 @@ import '../styles.scss';
 import ModalDialog from '@/components/core/controls/ModalDialog/ModalDialog';
 // import {MasterWallet} from '@/models/MasterWallet';
 import getSymbolFromCurrency from 'currency-symbol-map';
-import {URL} from '@/config';
+import {URL} from '@/constants';
 import {showAlert} from '@/reducers/app/action';
 import {MasterWallet} from "@/models/MasterWallet";
 import {ExchangeHandshake} from '@/services/neuron';
@@ -48,6 +48,9 @@ import { feedBackgroundColors } from "@/components/handshakes/exchange/config";
 import {formatAmountCurrency, formatMoney} from "@/services/offer-util";
 import {BigNumber} from "bignumber.js";
 import { showLoading, hideLoading } from '@/reducers/app/action';
+
+import iconLock from '@/assets/images/icon/lock.png';
+import iconUnlock from '@/assets/images/icon/unlock.png';
 const nameFormExchangeCreate = 'exchangeCreate';
 const FormExchangeCreate = createForm({
   propsReduxForm: {
@@ -57,17 +60,14 @@ const FormExchangeCreate = createForm({
 });
 const selectorFormExchangeCreate = formValueSelector(nameFormExchangeCreate);
 
-import iconLock from '@/assets/images/icon/lock.png';
-import iconUnlock from '@/assets/images/icon/unlock.png';
-
-const textColor = '#ffffff'
-const btnBg = 'rgba(29,29,38,0.30)'
+const textColor = '#ffffff';
+const btnBg = 'rgba(29,29,38,0.30)';
 const validateFee = [
   minValue(-50),
   maxValue(50),
-]
-const minValue01 = minValue(0.1)
-const minValue001 = minValue(0.01)
+];
+const minValue01 = minValue(0.1);
+const minValue001 = minValue(0.01);
 
 class Component extends React.Component {
   constructor(props) {
@@ -78,14 +78,14 @@ class Component extends React.Component {
       currency: CRYPTO_CURRENCY_DEFAULT,
       type: 'buy',
       lat: 0,
-      lng: 0
+      lng: 0,
     };
     // this.mainColor = _sample(feedBackgroundColors)
-    this.mainColor = '#1F2B34'
+    this.mainColor = '#1F2B34';
   }
 
   setAddressFromLatLng = (lat, lng) => {
-    this.setState({lat: lat, lng: lng});
+    this.setState({ lat, lng });
     const { rfChange } = this.props;
     axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&sensor=true`).then((response) => {
       const address = response.data.results[0] && response.data.results[0].formatted_address;
@@ -93,22 +93,22 @@ class Component extends React.Component {
     });
   }
 
-async componentDidMount() {
-  const { ipInfo, rfChange, authProfile } = this.props;
-  navigator.geolocation.getCurrentPosition((location) => {
-      const { coords: { latitude, longitude } } = location
-      this.setAddressFromLatLng(latitude, longitude) // better precision
+  async componentDidMount() {
+    const { ipInfo, rfChange, authProfile } = this.props;
+    navigator.geolocation.getCurrentPosition((location) => {
+      const { coords: { latitude, longitude } } = location;
+      this.setAddressFromLatLng(latitude, longitude); // better precision
     }, () => {
-      this.setAddressFromLatLng(ipInfo.latitude, ipInfo.longitude) // fallback
+      this.setAddressFromLatLng(ipInfo.latitude, ipInfo.longitude); // fallback
     });
 
     // auto fill phone number from user profile
-    let detectedCountryCode = ''
-    const foundCountryPhone = COUNTRIES.find(i => i.code.toUpperCase() === ipInfo.country_code.toUpperCase())
+    let detectedCountryCode = '';
+    const foundCountryPhone = COUNTRIES.find(i => i.code.toUpperCase() === ipInfo.country_code.toUpperCase());
     if (foundCountryPhone) {
-      detectedCountryCode = foundCountryPhone.dialCode
+      detectedCountryCode = foundCountryPhone.dialCode;
     }
-    rfChange(nameFormExchangeCreate, 'phone', authProfile.phone || `${detectedCountryCode}-`)
+    rfChange(nameFormExchangeCreate, 'phone', authProfile.phone || `${detectedCountryCode}-`);
 
     this.getCryptoPriceByAmount(0);
     this.intervalCountdown = setInterval(() => {
@@ -126,7 +126,7 @@ async componentDidMount() {
   }
 
   showLoading = () => {
-    this.props.showLoading({message: '',});
+    this.props.showLoading({ message: ''  });
   }
 
   hideLoading = () => {
@@ -135,11 +135,11 @@ async componentDidMount() {
 
   getCryptoPriceByAmount = (amount) => {
     const { type, currency } = this.state;
-    const {ipInfo: {currency: fiat_currency}} = this.props;
+    const { ipInfo: { currency: fiat_currency } } = this.props;
 
-    let data = {
+    const data = {
       amount,
-      currency: currency,
+      currency,
       type,
       fiat_currency,
     };
@@ -186,7 +186,7 @@ async componentDidMount() {
   handleSubmit = async (values) => {
     const { intl, totalAmount, price } = this.props;
     // const fiat_currency = this.state.ipInfo.currency;
-    const {ipInfo: {currency: fiat_currency}, authProfile} = this.props;
+    const { ipInfo: { currency: fiat_currency }, authProfile } = this.props;
     // console.log('valuessss', values);
 
     const wallet = MasterWallet.getWalletDefault(values.currency);
@@ -198,7 +198,7 @@ async componentDidMount() {
       amount = new BigNumber(0);
     }
 
-    let condition = balance.isLessThan(amount.plus(fee));
+    const condition = balance.isLessThan(amount.plus(fee));
 
     if ((values.currency === CRYPTO_CURRENCY.ETH || (values.type === EXCHANGE_ACTION.SELL && values.currency === CRYPTO_CURRENCY.BTC))
       && condition) {
@@ -209,11 +209,11 @@ async componentDidMount() {
             fee: formatAmountCurrency(fee),
             currency: values.currency,
           })}
-          </div>,
+        </div>,
         timeOut: 3000,
         type: 'danger',
         callBack: () => {
-        }
+        },
       });
 
       return;
@@ -224,7 +224,7 @@ async componentDidMount() {
     const rewardWallet = MasterWallet.getRewardWalletDefault(values.currency);
     const reward_address = rewardWallet.address;
 
-    let phones = values.phone.trim().split('-');
+    const phones = values.phone.trim().split('-');
 
     let phone = '';
     if (phones.length > 1) {
@@ -233,13 +233,13 @@ async componentDidMount() {
 
     const offer = {
       amount: values.amount,
-      price: price,
+      price,
       percentage: values.customizePrice.toString(),
       currency: values.currency,
       type: values.type,
       contact_info: values.address,
       contact_phone: phone,
-      fiat_currency: fiat_currency,
+      fiat_currency,
       latitude: this.state.lat,
       longitude: this.state.lng,
       email: authProfile ? authProfile.email : '',
@@ -291,13 +291,13 @@ async componentDidMount() {
 
     // if (currency === 'BTC') {
     this.showLoading();
-      this.props.createOffer({
-        PATH_URL: API_URL.EXCHANGE.OFFERS,
-        data: offer,
-        METHOD: 'POST',
-        successFn: this.handleCreateOfferSuccess,
-        errorFn: this.handleCreateOfferFailed,
-      });
+    this.props.createOffer({
+      PATH_URL: API_URL.EXCHANGE.OFFERS,
+      data: offer,
+      METHOD: 'POST',
+      successFn: this.handleCreateOfferSuccess,
+      errorFn: this.handleCreateOfferFailed,
+    });
     // } else {
     //
     // }
@@ -319,7 +319,7 @@ async componentDidMount() {
     console.log('wallet', wallet);
 
     if (currency === CRYPTO_CURRENCY.BTC) {
-      wallet.transfer(data.system_address, data.amount).then(success => {
+      wallet.transfer(data.system_address, data.amount).then((success) => {
         console.log('transfer', success);
       });
     } else if (currency === CRYPTO_CURRENCY.ETH) {
@@ -341,12 +341,12 @@ async componentDidMount() {
 
     this.hideLoading();
     this.props.showAlert({
-      message: <div className="text-center"><FormattedMessage id="createOfferSuccessMessage"/></div>,
+      message: <div className="text-center"><FormattedMessage id="createOfferSuccessMessage" /></div>,
       timeOut: 2000,
       type: 'success',
       callBack: () => {
         this.props.history.push(URL.HANDSHAKE_ME);
-      }
+      },
     });
 
     // this.timeoutClosePopup = setTimeout(() => {
@@ -409,7 +409,9 @@ async componentDidMount() {
   // }
 
   render() {
-    const { totalAmount, type, sellPriceType, offerPrice, currency, ipInfo } = this.props;
+    const {
+      totalAmount, type, sellPriceType, offerPrice, currency, ipInfo
+    } = this.props;
     const modalContent = this.state.modalContent;
 
     return (
@@ -418,8 +420,8 @@ async componentDidMount() {
           <Feed className="feed my-2 p-0" background={this.mainColor}>
             <div style={{ color: 'white', padding: '20px' }}>
               <div className="d-flex mb-4">
-                <label className="col-form-label mr-auto" style={{ width: '190px', fontWeight: 'bold'  }}>I want to</label>
-                <div className='input-group'>
+                <label className="col-form-label mr-auto" style={{ width: '190px', fontWeight: 'bold' }}>I want to</label>
+                <div className="input-group">
                   <Field
                     name="type"
                     // containerClass="radio-container-old"
@@ -433,7 +435,7 @@ async componentDidMount() {
               </div>
               <div className="d-flex">
                 <label className="col-form-label mr-auto label-create" style={{ width: '190px' }}>Coin</label>
-                <div className='input-group'>
+                <div className="input-group">
                   <Field
                     name="currency"
                     component={fieldRadioButton}
@@ -467,8 +469,8 @@ async componentDidMount() {
               </div>
 
               <div className="d-flex mt-2">
-                {/*<label className="col-form-label mr-auto" style={{ width: '220px' }} />*/}
-                <div className='input-group justify-content-start'>
+                {/*<label className="col-form-label mr-auto" style={{ width: '220px' }} /> */}
+                <div className="input-group justify-content-start">
                   <Field
                     name="sellPriceType"
                     component={fieldRadioButton}
@@ -477,7 +479,7 @@ async componentDidMount() {
                       { value: 'flexible', text: `${EXCHANGE_ACTION_NAME[type]} at market price`, icon: <img src={iconUnlock} width={20} /> },
                     ]}
                     styleButton={{
-                      fontSize: '12px'
+                      fontSize: '12px',
                     }}
                     color={textColor}
                     validate={[required]}
@@ -489,13 +491,13 @@ async componentDidMount() {
 
               <div className="d-flex py-1">
                 <label className="col-form-label mr-auto label-create" style={{ width: '220px' }}>Your percentage</label>
-                <div className='input-group align-items-center'>
+                <div className="input-group align-items-center">
                   <Field
                     name="customizePrice"
                     // className='form-control-custom form-control-custom-ex w-100'
                     component={fieldNumericInput}
                     btnBg={btnBg}
-                    suffix={'%'}
+                    suffix="%"
                     color={textColor}
                     validate={validateFee}
                   />
@@ -555,15 +557,21 @@ const mapStateToProps = (state) => {
   const customizePrice = selectorFormExchangeCreate(state, 'customizePrice') || 0;
 
   const offerPrice = state.exchange.offerPrice;
-  let totalAmount =  amount * (offerPrice && offerPrice.price || 0) || 0;
+  let totalAmount = amount * (offerPrice && offerPrice.price || 0) || 0;
   totalAmount += totalAmount * customizePrice / 100;
 
   const price = offerPrice && offerPrice.price || 0;
 
-  return { amount, currency, totalAmount, type, sellPriceType, price,
-    offerPrice: offerPrice,
+  return {
+    amount,
+    currency,
+    totalAmount,
+    type,
+    sellPriceType,
+    price,
+    offerPrice,
     ipInfo: state.app.ipInfo,
-    authProfile: state.auth.profile
+    authProfile: state.auth.profile,
   };
 };
 
@@ -573,7 +581,7 @@ const mapStateToProps = (state) => {
 //   type: 'danger',
 // });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
   createOffer: bindActionCreators(createOffer, dispatch),
   getOfferPrice: bindActionCreators(getOfferPrice, dispatch),
   showAlert: bindActionCreators(showAlert, dispatch),

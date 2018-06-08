@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Route, Switch } from 'react-router-dom';
 import DynamicImport from '@/components/App/DynamicImport';
 import Loading from '@/components/core/presentation/Loading';
-import { URL } from '@/config';
+import { URL } from '@/constants';
 import { setHeaderTitle, clearHeaderRight, clearHeaderLeft } from '@/reducers/app/action';
 
 const Exchange = props => (<DynamicImport loading={Loading} load={() => import('@/pages/Exchange/Exchange')}>{Component => <Component {...props} />}</DynamicImport>);

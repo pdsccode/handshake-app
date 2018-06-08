@@ -1,6 +1,6 @@
 import React from 'react';
 // import Button from '@/components/core/controls/Button/Button';
-// import { URL } from '@/config';
+// import { URL } from '@/constants';
 import { Grid, Row, Col } from 'react-bootstrap';
 import {FormattedMessage, injectIntl} from 'react-intl';
 import { Collapse, Button, CardBody, Card } from 'reactstrap';

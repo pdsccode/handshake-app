@@ -206,12 +206,19 @@ class BettingFilter extends React.Component {
         const shareInfo = this.getInfoShare(selectedMatch, selectedOutcome);
         const marketFee = (selectedMatch && selectedMatch.marketFee >= 0) ? selectedMatch.marketFee : null;
         const marketOdds = (selectedOutcome && selectedOutcome.marketOdds) ? selectedOutcome.marketOdds : null;
-        const commentNo = 5;
         console.log('defaultOutcomeId:', defaultOutcomeId);
         console.log('Market Fee:', marketFee);
         console.log('Market Odds:', marketOdds);
         return (
             <div className="wrapperBettingFilter">
+            <div className="share-block">
+                <p className="text">Bet against more ninjas!</p>
+                <ShareSocial
+                    className="share"
+                    title={shareInfo.title}
+                    shareUrl={shareInfo.shareUrl}
+                />
+            </div>
             <div className="dropDown">
                 <Dropdown placeholder="Select an event"
                 onRef={match => this.matchDropDown = match}
@@ -237,17 +244,11 @@ class BettingFilter extends React.Component {
                 }
                 />
             </div>
-            <div className="share-block">
-                <p className="text">Bet against more ninjas!</p>
-                <ShareSocial
-                    className="share"
-                    title={shareInfo.title}
-                    shareUrl={shareInfo.shareUrl}
-                />
-            </div>
+
             {<TopInfo marketTotal={parseFloat(tradedVolum)}
                     percentFee={marketFee}
-                    commentNo={commentNo}/>}
+                    objectId={outcomeId} />}
+
 
                 <div className="wrapperContainer">
                     <div className="item">
@@ -262,14 +263,12 @@ class BettingFilter extends React.Component {
                     {<BettingShake
                         matchName={matchName}
                         matchOutcome={matchOutcome}
-                        outcomeId={parseInt(outcomeId)} 
+                        outcomeId={parseInt(outcomeId)}
                         outcomeHid={parseInt(outcomeHid)}
                         marketOdds={parseFloat(marketOdds)}/>}
 
                     </div>
                 </div>
-                {/* Feed Comment */}
-                <FeedComponent objectId={outcomeId} />
             </div>
         );
     }

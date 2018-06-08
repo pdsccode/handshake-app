@@ -1,20 +1,21 @@
 import React, { Component } from 'react';
-import './Firechat.scss';
-import { MessageList, ChatList, Input, Button } from 'react-chat-elements';
-import { Firechat } from './Firechat';
-import { setHeaderLeft, setHeaderTitle } from '@/reducers/app/action';
-import { Grid, Row, Col } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import SearchBar from '@/components/core/controls/SearchBar';
+import { MessageList, ChatList, Input } from 'react-chat-elements';
+import md5 from 'md5';
+import moment from 'moment';
+import Identicon from 'identicon.js';
+import firebase from 'firebase/app';
+import 'firebase/database';
+import 'firebase/auth';
+
+import { setHeaderLeft, setHeaderTitle } from '@/reducers/app/action';
 import IconBtnSend from '@/assets/images/icon/ic-btn-send.svg';
 import IconBackBtn from '@/assets/images/icon/back-chevron.svg';
 
-const moment = require('moment');
-const Identicon = require('identicon.js');
-const firebase = require('firebase');
-const md5 = require('md5');
-require('firebase/database');
+import { Firechat } from './Firechat';
+import './Firechat.scss';
+
 // Get a reference to the Firebase Realtime Database
 const chatRef = firebase.database().ref();
 let isInitialized = false;
@@ -163,7 +164,7 @@ class Chat extends Component {
         prevChatSource[invitation.roomId] = room;
         return {
           chatSource: prevChatSource,
-        }
+        };
       });
 
       console.log('enter here', room);
@@ -181,7 +182,7 @@ class Chat extends Component {
           prevChatSource[invitation.roomId] = room;
           return {
             chatSource: prevChatSource,
-          }
+          };
         });
 
         this.enterMessageRoom(this.generateMessageRoomData(room.id, invitation.fromUserId, invitation.fromUserName, room));
@@ -202,7 +203,7 @@ class Chat extends Component {
     const query = e.target.value;
     this.setCustomState({
       searchUserString: query,
-    })
+    });
     chatInstance.getUsersByPrefix(query, null, null, this.maxUserSearchResult, (userListFiltered) => {
       // console.log(userListFiltered);
       if (!query) {
@@ -210,7 +211,7 @@ class Chat extends Component {
       }
       this.setCustomState({
         searchUsers: userListFiltered,
-      })
+      });
     });
     e.preventDefault();
   }
@@ -313,7 +314,9 @@ class Chat extends Component {
 
       const historyState = this.loadDataFromLocalStorage();
       if (historyState && isInitialized) {
-        this.setCustomState(historyState);
+        this.setCustomState(historyState, () => {
+          this.updateHeaderLeft();
+        });
       }
 
       isInitialized = true;
@@ -423,7 +426,7 @@ class Chat extends Component {
       this.setCustomState({
         searchUserString: '',
         searchUsers: [],
-      })
+      });
     }
   }
 
@@ -483,7 +486,7 @@ class Chat extends Component {
           return {
             searchUsers: [],
             chatSource: prevChatSource,
-          }
+          };
         }, () => {
           console.log('onsearchuser click roomId', roomId, 'chatsource', JSON.parse(JSON.stringify(this.state.chatSource)));
           this.enterMessageRoom(this.generateMessageRoomData(roomId, userId, userName, room));
@@ -518,11 +521,11 @@ class Chat extends Component {
           onClick={isInSearchMode ? this.onSearchUserClicked : this.onChatItemClicked}
         />
       </div>
-    ) : this.renderEmptyMessage(isInSearchMode ? 'NO RESULT FOUND' : 'NO MESSAGE YET');
+    ) : this.renderEmptyMessage(isInSearchMode ? 'The Ninja you are looking for is not here. Perhaps you have their name wrong.' : 'NO MESSAGE YET');
   }
 
   renderBackButton() {
-    return (<img src={IconBackBtn} onClick={this.onBackButtonClicked} />)
+    return (<img src={IconBackBtn} onClick={this.onBackButtonClicked} />);
   }
 
   renderSearchButton() {
@@ -532,18 +535,18 @@ class Chat extends Component {
         type="search"
         className="rce-search-input"
         onChange={this.onSearchUser}
-        onBlur={() => { setTimeout(() => { this.clearSearch() }, 100); }}
-        placeholder='Search for your fellow ninjas by their code name'
+        onBlur={() => { setTimeout(() => { this.clearSearch(); }, 100); }}
+        placeholder="Search for your fellow ninjas by their code name"
       />
-    )
+    );
   }
 
   renderEmptyMessage(message) {
     return (
-      <div className={'no-data'}>
-        <p className={'text'}>{message}</p>
+      <div className="no-data">
+        <p className="text">{message}</p>
       </div>
-    )
+    );
   }
 
   renderChatDetail(room) {
@@ -573,8 +576,8 @@ class Chat extends Component {
         <MessageList
           ref={(ref) => { this.messageListRef = ref; }}
           dataSource={messageList}
-          toBottomHeight={'100%'}
-          downButton={true}
+          toBottomHeight="100%"
+          downButton
         />
         <Input
           placeholder="Type a message..."
@@ -593,6 +596,7 @@ class Chat extends Component {
             <img
               src={IconBtnSend}
               onClick={this.sendMessage}
+              alt=""
             />
           }
         />
@@ -603,10 +607,10 @@ class Chat extends Component {
   render() {
     const { chatDetail } = this.state;
     return (
-      <div className={'chat-container'}>
+      <div className="chat-container">
         {chatDetail ? this.renderChatDetail(chatDetail) : this.renderChatList()}
       </div>
-    )
+    );
   }
 }
 
@@ -614,7 +618,7 @@ Chat.propTypes = {
   discover: PropTypes.object,
 };
 
-const mapState = (state) => ({
+const mapState = state => ({
   auth: state.auth,
 });
 

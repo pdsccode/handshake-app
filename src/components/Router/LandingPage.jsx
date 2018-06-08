@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Switch, Route } from 'react-router-dom';
 import DynamicImport from '@/components/App/DynamicImport';
 import Loading from '@/components/core/presentation/Loading';
-import { URL } from '@/config';
+import { URL } from '@/constants';
 import { setHeaderTitle, setHeaderCanBack } from '@/reducers/app/action';
 
 const LandingPage = props => (<DynamicImport loading={Loading} load={() => import('@/pages/LandingPage/LandingPage')}>{Component => <Component {...props} />}</DynamicImport>);
