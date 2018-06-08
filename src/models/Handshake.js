@@ -2,6 +2,7 @@ const handleListPayload = payload => payload.map(handshake => Handshake.handshak
 
 class Handshake {
   static handshake(data) {
+    console.log('Response Data:', data);
     return {
       id: data.id,
       hid: data.hid,
