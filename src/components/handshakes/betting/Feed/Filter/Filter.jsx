@@ -81,8 +81,8 @@ class BettingFilter extends React.Component {
             return againstOdds;
         }
         return 0;
-        
-       
+
+
     }
 
     get defaultAgainstOdds(){
@@ -288,32 +288,30 @@ class BettingFilter extends React.Component {
             {<TopInfo marketTotal={parseFloat(tradedVolum)}
                     percentFee={marketFee}
                     objectId={outcomeId} />}
-
-
-                <div className="wrapperContainer">
-                    <div className="item">
-                        <div className="titleBox">
-                            <div>Pool (ETH)</div>
-                            <div>Price (ODDS)</div>
-                        </div>
-                    <GroupBook amountColor="#FA6B49" bookList={this.bookListSupport}/>
-                    {/*<div className="titleBox">
-                            <div>ODDS SPREAD</div>
-                            <div>{this.oddSpread}</div>
-            </div>*/}
-                    <GroupBook amountColor="#8BF275" bookList={this.bookListAgainst}/>
-                    </div>
-                    <div className="item">
-                    {<BettingShake
-                        matchName={matchName}
-                        matchOutcome={matchOutcome}
-                        outcomeId={parseInt(outcomeId)}
-                        outcomeHid={parseInt(outcomeHid)}
-                        marketSupportOdds={parseFloat(this.defaultSupportOdds)}
-                        marketAgainstOdds={parseFloat(this.defaultAgainstOdds)}/>}
-
-                    </div>
+              <div className="wrapperContainer">
+                <div className="item">
+                  <div className="titleBox">
+                    <div>Pool (ETH)</div>
+                    <div>Price (ODDS)</div>
+                  </div>
+                  <GroupBook amountColor="#FA6B49" bookList={this.bookListSupport}/>
+                  {/*<div className="spreadBox">*/}
+                    {/*<div>ODDS SPREAD</div>*/}
+                    {/*<div>{this.oddSpread}</div>*/}
+                  {/*</div>*/}
+                  <GroupBook amountColor="#8BF275" bookList={this.bookListAgainst}/>
                 </div>
+                <div className="item">
+                  {<BettingShake
+                    matchName={matchName}
+                    matchOutcome={matchOutcome}
+                    outcomeId={parseInt(outcomeId)}
+                    outcomeHid={parseInt(outcomeHid)}
+                    marketSupportOdds={parseFloat(this.defaultSupportOdds)}
+                    marketAgainstOdds={parseFloat(this.defaultAgainstOdds)}/>}
+
+                </div>
+              </div>
             </div>
         );
     }
