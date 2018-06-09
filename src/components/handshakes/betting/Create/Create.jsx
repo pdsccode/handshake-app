@@ -386,6 +386,7 @@ get defaultOutcome() {
         onChange={(evt) => {
           this.changeText(key, evt.target.value)
         }}
+        onClick={event => {event.target.setSelectionRange(0, event.target.value.length)}}
       />
     );
   }
