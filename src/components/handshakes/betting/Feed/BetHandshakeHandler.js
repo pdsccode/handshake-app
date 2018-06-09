@@ -173,7 +173,7 @@ export class BetHandshakeHandler {
     const {
       amount, id, odds, side, outcome_id, from_address, offchain,
     } = item;
-    const stake = amount;
+    const stake = Math.round(amount * 10 ** 18)/10 ** 18;
     // const payout = stake * odds;
     const payout = Math.round(stake * odds * 10 ** 18) / 10 ** 18;
     const maker = from_address;
@@ -188,7 +188,7 @@ export class BetHandshakeHandler {
     const {
       amount, id, odds, side, outcome_id, from_address,
     } = item;
-    const stake = amount;
+    const stake = Math.round(amount * 10 ** 18)/10 ** 18;;
     // const payout = stake * odds;
     const payout = Math.round(stake * odds * 10 ** 18) / 10 ** 18;
     const offchain = `cryptosign_s${id}`;
