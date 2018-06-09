@@ -51,6 +51,7 @@ class FeedBetting extends React.Component {
         isAction: false,
         role: null,
         isMatch: false,
+        itemInfo: props
       };
 
 
@@ -78,13 +79,29 @@ class FeedBetting extends React.Component {
 
     }
   }
+  
   handleStatus(){
-    const {status, side, result, shakeUserIds} = this.props;
+    const {status, side, result, shakeUserIds, id} = this.props;
 
     console.log('Props:', this.props);
     console.log('Status:', status);
     const profile = local.get(APP.AUTH_PROFILE);
     const isUserShake = this.isShakeUser(shakeUserIds, profile.id);
+    let itemInfo = this.props;
+    if(isUserShake){
+      const extraData = this.extraData;
+      console.log('Extra data:', extraData);
+      const {shakers} = extraData;
+      const idOffchain = BetHandshakeHandler.getId(id);
+
+      if(shakers){
+        const foundShakedItem = shakers.find(element => element.shaker_id === profile.id && element.handshake_id === idOffchain);
+        console.log('Found Shaked Item:', foundShakedItem);
+        if(foundShakedItem){
+          itemInfo = foundShakedItem;
+        }
+      }
+    }
     const role = isUserShake ? ROLE.SHAKER : ROLE.INITER;
     //const blockchainStatusHardcode = 5;
     const isMatch = this.isMatch;
@@ -100,6 +117,7 @@ class FeedBetting extends React.Component {
       isAction,
       role,
       isMatch,
+      itemInfo
     })
   }
 
@@ -135,14 +153,15 @@ class FeedBetting extends React.Component {
   }
 
   render() {
-    const {actionTitle , isAction } = this.state;
+    const {actionTitle , isAction, itemInfo } = this.state;
     // const {actionTitle = "Match is ongoing...", isAction =true} = this.state;
      /***
      * side = SIDE.SUPPORT // SIDE.AGAINST ;ORGRANCE
      *
      */
-    const {amount, odds, winValue, side } = this.props;
-    const {event_name, event_predict, event_odds, event_bet,event_date, balance} = this.extraData;
+    console.log('Item info:', itemInfo);
+    const {amount, odds, win_value, side } = itemInfo;
+    const {event_name, event_predict} = this.extraData;
     const { commentCount, id, type } = this.props;
     // const realEventName = event_name ? event_name.slice(7).split('(') : ['', ''];
     // const matchName = realEventName[0];
@@ -166,7 +185,7 @@ class FeedBetting extends React.Component {
               <span className="content">{amount.toFixed(4)} ETH </span>
               <span className="odds" >{odds.toFixed(2)}</span>
             </div>
-            <div className="possibleWin">Possible winnings: {winValue.toFixed(4)} ETH</div>
+            <div className="possibleWin">Possible winnings: {parseFloat(win_value).toFixed(4)} ETH</div>
 
             {this.renderStatus()}
         </Feed>
