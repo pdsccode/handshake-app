@@ -58,7 +58,7 @@ class ErrorBox extends React.PureComponent {
 }
 
 const TAG = 'BETTING_CREATE';
-class BettingCreate extends React.PureComponent {
+class BettingCreate extends React.Component {
   static propTypes = {
     item: PropTypes.object.isRequired,
     toAddress: PropTypes.string.isRequired,
