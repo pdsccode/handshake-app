@@ -63,9 +63,8 @@ class BettingFilter extends React.Component {
     get defaultSupportOdds(){
         const {against} = this.state;
         if(against && against.length > 0) {
-            const sortedAgainst = against.sort(function(a, b) { return b.odds > a.odds })
-            console.log('Sorted Against:', sortedAgainst);
-            const firstElement = sortedAgainst[0];
+            console.log('Sorted Against:', against);
+            const firstElement = against[0];
             const againstOdds = firstElement.odds/(firstElement.odds - 1);
             return againstOdds;
         }
@@ -77,9 +76,8 @@ class BettingFilter extends React.Component {
     get defaultAgainstOdds(){
         const {support} = this.state;
         if(support && support.length > 0){
-            const sortedSupport = support.sort(function(a, b) { return b.odds > a.odds })
-            console.log('Sorted Support:', sortedSupport);
-            const finalElement = sortedSupport[sortedSupport.length-1];
+            console.log('Sorted Support:', support);
+            const finalElement = support[support.length-1];
             const supportOdds = finalElement.odds/(finalElement.odds - 1);
             return supportOdds;
         }
