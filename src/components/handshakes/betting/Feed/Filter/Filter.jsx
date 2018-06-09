@@ -60,6 +60,18 @@ class BettingFilter extends React.Component {
     componentDidMount(){
         this.props.loadMatches({PATH_URL: API_URL.CRYPTOSIGN.LOAD_MATCHES});
     }
+    get oddSpread(){
+        const {support, against} = this.state;
+        if(support && support.length > 0 && against && against.length > 0){
+            const minSupport = support[support.length-1].odds;
+            console.log('Min Support:', minSupport);
+            const minAgainst = against[0].odds;
+            console.log('Against Support:', minAgainst);
+            const X = Math.abs(minSupport - minAgainst).toFixed(2);
+            return X;
+        }
+        return 0;
+    }
     get defaultSupportOdds(){
         const {against} = this.state;
         if(against && against.length > 0) {
@@ -285,6 +297,10 @@ class BettingFilter extends React.Component {
                             <div>Price (ODDS)</div>
                         </div>
                     <GroupBook amountColor="#FA6B49" bookList={this.bookListSupport}/>
+                    <div className="titleBox">
+                            <div>ODDS SPREAD</div>
+                            <div>{this.oddSpread}</div>
+                    </div>
                     <GroupBook amountColor="#8BF275" bookList={this.bookListAgainst}/>
                     </div>
                     <div className="item">
