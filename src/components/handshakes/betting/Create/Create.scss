@@ -112,6 +112,15 @@
       left: 65%;
     }
   }
+  .cryptoCurrencyYourOdds {
+    left: 77%;
+    @media (max-width: 375px) {
+      left: 76%;
+    }
+    @media (max-width: 330px) {
+      left: 73%;
+    }
+  }
   .oddField {
     //padding-left: rem-calc(5px);
   }

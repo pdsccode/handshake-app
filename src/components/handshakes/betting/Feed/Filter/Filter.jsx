@@ -60,26 +60,36 @@ class BettingFilter extends React.Component {
     componentDidMount(){
         this.props.loadMatches({PATH_URL: API_URL.CRYPTOSIGN.LOAD_MATCHES});
     }
+    get oddSpread(){
+        const {support, against} = this.state;
+        if(support && support.length > 0 && against && against.length > 0){
+            const minSupport = support[support.length-1].odds;
+            console.log('Min Support:', minSupport);
+            const minAgainst = against[0].odds;
+            console.log('Against Support:', minAgainst);
+            const X = Math.abs(minSupport - minAgainst).toFixed(2);
+            return X;
+        }
+        return 0;
+    }
     get defaultSupportOdds(){
         const {against} = this.state;
         if(against && against.length > 0) {
-            const sortedAgainst = against.sort(function(a, b) { return b.odds > a.odds })
-            console.log('Sorted Against:', sortedAgainst);
-            const firstElement = sortedAgainst[0];
+            console.log('Sorted Against:', against);
+            const firstElement = against[0];
             const againstOdds = firstElement.odds/(firstElement.odds - 1);
             return againstOdds;
         }
         return 0;
-        
-       
+
+
     }
 
     get defaultAgainstOdds(){
         const {support} = this.state;
         if(support && support.length > 0){
-            const sortedSupport = support.sort(function(a, b) { return b.odds > a.odds })
-            console.log('Sorted Support:', sortedSupport);
-            const finalElement = sortedSupport[sortedSupport.length-1];
+            console.log('Sorted Support:', support);
+            const finalElement = support[support.length-1];
             const supportOdds = finalElement.odds/(finalElement.odds - 1);
             return supportOdds;
         }
@@ -278,28 +288,30 @@ class BettingFilter extends React.Component {
             {<TopInfo marketTotal={parseFloat(tradedVolum)}
                     percentFee={marketFee}
                     objectId={outcomeId} />}
-
-
-                <div className="wrapperContainer">
-                    <div className="item">
-                        <div className="titleBox">
-                            <div>Pool (ETH)</div>
-                            <div>Price (ODDS)</div>
-                        </div>
-                    <GroupBook amountColor="#FA6B49" bookList={this.bookListSupport}/>
-                    <GroupBook amountColor="#8BF275" bookList={this.bookListAgainst}/>
-                    </div>
-                    <div className="item">
-                    {<BettingShake
-                        matchName={matchName}
-                        matchOutcome={matchOutcome}
-                        outcomeId={parseInt(outcomeId)}
-                        outcomeHid={parseInt(outcomeHid)}
-                        marketSupportOdds={parseFloat(this.defaultSupportOdds)}
-                        marketAgainstOdds={parseFloat(this.defaultAgainstOdds)}/>}
-
-                    </div>
+              <div className="wrapperContainer">
+                <div className="item">
+                  <div className="titleBox">
+                    <div>Pool (ETH)</div>
+                    <div>Price (ODDS)</div>
+                  </div>
+                  <GroupBook amountColor="#FA6B49" bookList={this.bookListSupport}/>
+                  {/*<div className="spreadBox">*/}
+                    {/*<div>ODDS SPREAD</div>*/}
+                    {/*<div>{this.oddSpread}</div>*/}
+                  {/*</div>*/}
+                  <GroupBook amountColor="#8BF275" bookList={this.bookListAgainst}/>
                 </div>
+                <div className="item">
+                  {<BettingShake
+                    matchName={matchName}
+                    matchOutcome={matchOutcome}
+                    outcomeId={parseInt(outcomeId)}
+                    outcomeHid={parseInt(outcomeHid)}
+                    marketSupportOdds={parseFloat(this.defaultSupportOdds)}
+                    marketAgainstOdds={parseFloat(this.defaultAgainstOdds)}/>}
+
+                </div>
+              </div>
             </div>
         );
     }

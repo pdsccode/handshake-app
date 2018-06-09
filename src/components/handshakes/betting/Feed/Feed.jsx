@@ -79,7 +79,7 @@ class FeedBetting extends React.Component {
 
     }
   }
-  
+
   handleStatus(){
     const {status, side, result, shakeUserIds, id} = this.props;
 
@@ -180,7 +180,7 @@ class FeedBetting extends React.Component {
               <p className="eventName">
                 {event_name}
               </p>
-              <p className="eventInfo">{side === 1 ? `Support: ` : 'Oppose: '}{event_predict.slice(8)}</p>
+              <p className="eventInfo">{side === 1 ? `Support: ` : 'Oppose: '}{event_predict ? event_predict.slice(8) : ''}</p>
             </div>
             <div className="bottomWrapper">
               <span className="content">{amount.toFixed(4)} ETH </span>

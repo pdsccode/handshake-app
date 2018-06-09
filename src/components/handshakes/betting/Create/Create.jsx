@@ -58,7 +58,7 @@ class ErrorBox extends React.PureComponent {
 }
 
 const TAG = 'BETTING_CREATE';
-class BettingCreate extends React.PureComponent {
+class BettingCreate extends React.Component {
   static propTypes = {
     item: PropTypes.object.isRequired,
     toAddress: PropTypes.string.isRequired,
@@ -414,7 +414,7 @@ get defaultOutcome() {
       default:
         itemRender = this.renderInput(item, index,{width:'100%',fontSize:16,color:'white'} );
     }
-    const classNameSuffix = `cryptoCurrency${item.className}`;
+    const classNameSuffix = `cryptoCurrency${item.className} ${(isChangeOdds && item.key === "event_odds") ? 'cryptoCurrencyYourOdds' : ''}`;
     return (
       <div className="rowWrapper" key={index + 1} >
           <label style={{fontSize:13, color:'white'}}>{label || placeholder}</label>
