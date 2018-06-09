@@ -386,6 +386,7 @@ get defaultOutcome() {
         onChange={(evt) => {
           this.changeText(key, evt.target.value)
         }}
+        onClick={event => {event.target.setSelectionRange(0, event.target.value.length)}}
       />
     );
   }
@@ -413,7 +414,7 @@ get defaultOutcome() {
       default:
         itemRender = this.renderInput(item, index,{width:'100%',fontSize:16,color:'white'} );
     }
-    const classNameSuffix = `cryptoCurrency${item.className}`;
+    const classNameSuffix = `cryptoCurrency${item.className} ${(isChangeOdds && item.key === "event_odds") ? 'cryptoCurrencyYourOdds' : ''}`;
     return (
       <div className="rowWrapper" key={index + 1} >
           <label style={{fontSize:13, color:'white'}}>{label || placeholder}</label>

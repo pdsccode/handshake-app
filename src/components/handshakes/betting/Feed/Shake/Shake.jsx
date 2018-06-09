@@ -228,6 +228,7 @@ class BetingShake extends React.Component {
                   }, ()=> this.updateTotal())
                 }
               }}
+              onClick={event => {event.target.setSelectionRange(0, event.target.value.length)}}
             />
           ) : (<div className={cn('value', className)}>{value}</div>)
         }
