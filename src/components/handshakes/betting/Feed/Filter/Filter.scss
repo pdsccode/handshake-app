@@ -48,7 +48,7 @@
     display: flex;
     flex-direction: column;
   }
-  .titleBox {
+  .titleBox, .spreadBox {
     display: flex;
     background-color: #1F2B34;;
     color: $white;
@@ -56,6 +56,11 @@
     justify-content: space-between;
     letter-spacing: 0;
     padding: rem-calc(14px 10px);
+  }
+  .spreadBox {
+    border-top: 1px solid #808080;
+    border-bottom: 1px solid #808080;
+    align-items: center;
   }
   .disable {
     color: #fa6b49 !important;
