@@ -160,9 +160,10 @@ class FeedBetting extends React.Component {
      *
      */
     console.log('Item info:', itemInfo);
-    const {amount, odds, win_value, side } = itemInfo;
+    const {amount, odds, side } = itemInfo;
     const {event_name, event_predict} = this.extraData;
     const { commentCount, id, type } = this.props;
+    const winValue = itemInfo.win_value || itemInfo.winValue;
     // const realEventName = event_name ? event_name.slice(7).split('(') : ['', ''];
     // const matchName = realEventName[0];
     // const matchDate = `(${realEventName[1]}`;
@@ -185,7 +186,7 @@ class FeedBetting extends React.Component {
               <span className="content">{amount.toFixed(4)} ETH </span>
               <span className="odds" >{odds.toFixed(2)}</span>
             </div>
-            <div className="possibleWin">Possible winnings: {parseFloat(win_value).toFixed(4)} ETH</div>
+            <div className="possibleWin">Possible winnings: {parseFloat(winValue).toFixed(4)} ETH</div>
 
             {this.renderStatus()}
         </Feed>
