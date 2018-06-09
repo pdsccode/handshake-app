@@ -297,10 +297,10 @@ class BettingFilter extends React.Component {
                             <div>Price (ODDS)</div>
                         </div>
                     <GroupBook amountColor="#FA6B49" bookList={this.bookListSupport}/>
-                    <div className="titleBox">
+                    {/*<div className="titleBox">
                             <div>ODDS SPREAD</div>
                             <div>{this.oddSpread}</div>
-                    </div>
+            </div>*/}
                     <GroupBook amountColor="#8BF275" bookList={this.bookListAgainst}/>
                     </div>
                     <div className="item">
