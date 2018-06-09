@@ -133,17 +133,19 @@ class FeedExchange extends React.PureComponent {
 
   ////////////////////////
 
-  shakeOfferItem = () => {
-    const { offer } = this.props;
+  shakeOfferItem = (values) => {
+    this.modalRef.close();
+
+    const { authProfile, offer } = this.props;
 
     const offerItem = {
-      type: 'buy',
-      currency: 'ETH',
-      amount: '',
-      username: '',
-      email: '',
-      contact_phone: '',
-      user_address: '',
+      type: values.type,
+      currency: values.currency,
+      amount: values.amount,
+      username: authProfile?.name,
+      email: authProfile?.email,
+      contact_phone: authProfile?.phone,
+      user_address: authProfile?.address,
     };
 
     this.showLoading();
@@ -155,32 +157,34 @@ class FeedExchange extends React.PureComponent {
     });
   }
 
-  handleShakeOfferItemSuccess = (responseData) => {
+  handleShakeOfferItemSuccess = async (responseData) => {
     const { intl } = this.props;
     const { data } = responseData;
-    const { currency } = data;
+    const { currency, type, totalAmount } = data;
 
-    // const offer = this.offer;
-    // if (currency === CRYPTO_CURRENCY.ETH) {
-    //   this.handleCallActionOnContract(data);
-    // } else if (currency === CRYPTO_CURRENCY.BTC) {
-    //   if (offer.type === EXCHANGE_ACTION.BUY) {
-    //     const wallet = MasterWallet.getWalletDefault(offer.currency);
-    //     wallet.transfer(offer.systemAddress, offer.totalAmount).then(success => {
-    //       console.log('transfer', success);
-    //     });
-    //   }
-    // }
+    const offer = this.offer;
+    if (currency === CRYPTO_CURRENCY.ETH) {
+      let amount = 0;
+      if (offer.type === EXCHANGE_ACTION.BUY) {
+        amount = data.total_amount;
+      }
+
+      const wallet = MasterWallet.getWalletDefault(currency);
+      const exchangeHandshake = new ExchangeHandshake(wallet.chainId);
+      const result = await exchangeHandshake.shake(data.hid, amount, data.id);
+
+      console.log('handleShakeOfferSuccess', result);
+    } else if (currency === CRYPTO_CURRENCY.BTC) {
+      if (type === EXCHANGE_ACTION.BUY) {
+        const wallet = MasterWallet.getWalletDefault(currency);
+        wallet.transfer(offer.systemAddress, totalAmount).then(success => {
+          console.log('transfer', success);
+        });
+      }
+    }
 
     this.hideLoading();
     const message = intl.formatMessage({ id: 'shakeOfferItemSuccessMassage' }, {
-      // offerType: offerType,
-      // amount: formatAmountCurrency(offer.amount),
-      // currency: offer.currency,
-      // currency_symbol: offer.fiatCurrency,
-      // total: formatMoney(fiatAmount),
-      // fee: offer.feePercentage,
-      // payment_method: EXCHANGE_METHOD_PAYMENT[EXCHANGE_FEED_TYPE.EXCHANGE],
     });
 
     this.props.showAlert({
@@ -188,14 +192,24 @@ class FeedExchange extends React.PureComponent {
       timeOut: 2000,
       type: 'success',
       callBack: () => {
-        // this.props.updateOfferStatus({ [`exchange_${data.id}`]: data });
-        // this.props.history.push(URL.HANDSHAKE_ME);
       },
     });
   }
 
   handleShakeOfferItemFailed = (e) => {
     this.handleActionFailed(e);
+  }
+
+  handleActionFailed = (e) => {
+    this.hideLoading();
+    // console.log('e', e);
+    this.props.showAlert({
+      message: <div className="text-center">{e.response?.data?.message}</div>,
+      timeOut: 3000,
+      type: 'danger',
+      callBack: () => {
+      }
+    });
   }
 
   getOfferDistance = () => {
@@ -298,7 +312,7 @@ class FeedExchange extends React.PureComponent {
         </Feed>
         <Button block className="mt-2" onClick={this.handleOnShake}>Shake</Button>
         <ModalDialog onRef={modal => this.modalRef = modal} className="dialog-shake-detail">
-          <ShakeDetail />
+          <ShakeDetail offer={this.offer} eth={this.eth} btc={this.btc} handleShake={this.shakeOfferItem}/>
         </ModalDialog>
       </div>
     );
@@ -318,13 +332,8 @@ const mapState = state => ({
 });
 
 const mapDispatch = ({
-  shakeOffer,
-  closeOffer,
-  completeShakedOffer,
-  cancelShakedOffer,
-  withdrawShakedOffer,
+  shakeOfferItem,
   showAlert,
-  updateOfferStatus,
   showLoading,
   hideLoading,
 });

@@ -3,26 +3,47 @@ import './styles.scss'
 import createForm from '@/components/core/form/createForm';
 import {required} from '@/components/core/form/validation';
 
-import { formValueSelector, Field } from "redux-form";
+import {Field, formValueSelector} from "redux-form";
 import Button from '@/components/core/controls/Button';
 
 import {fieldCleave, fieldDropdown, fieldInput, fieldRadioButton} from '@/components/core/form/customField'
 import iconBitcoin from '@/assets/images/icon/coin/btc.svg';
 import iconEthereum from '@/assets/images/icon/coin/eth.svg';
 import iconApproximate from '@/assets/images/icon/icons8-approximately_equal.svg';
+import {CRYPTO_CURRENCY, CRYPTO_CURRENCY_NAME, EXCHANGE_ACTION, EXCHANGE_ACTION_LIST} from "../../../../../constants";
+import {connect} from "react-redux";
+import {injectIntl} from "react-intl";
+import {formatMoney, getOfferPrice} from "@/services/offer-util";
+import {hideLoading, showAlert, showLoading} from "@/reducers/app/action";
+
 const nameFormShakeDetail = 'shakeDetail'
-const FormShakeDetail = createForm({ propsReduxForm: { form: nameFormShakeDetail } });
+const FormShakeDetail = createForm({ propsReduxForm: { form: nameFormShakeDetail,
+    initialValues: {
+      type: EXCHANGE_ACTION.BUY,
+      currency: CRYPTO_CURRENCY.ETH,
+    }
+} });
 const selectorFormShakeDetail = formValueSelector(nameFormShakeDetail);
 
 export class Component extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
+  CRYPTO_CURRENCY_LIST = [
+    { value: CRYPTO_CURRENCY.ETH, text: CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.ETH], icon: <img src={iconEthereum} width={22} />},
+    { value: CRYPTO_CURRENCY.BTC, text: CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.BTC], icon: <img src={iconBitcoin} width={22} />  },
+  ];
+
   handleSubmit = (values) => {
-    console.log('valuess', values)
+    const { handleShake } = this.props;
+
+    if (handleShake) {
+      handleShake(values);
+    }
   }
 
   render() {
-    const currency = "ETH";
-    const fiat = "USD";
-    const total = "623,232";
+    const { offer, btc, eth, currency, fiatAmount } = this.props;
+
+    const fiat = offer.fiatCurrency;
+
     return (
       <div className="shake-detail">
         <FormShakeDetail onSubmit={this.handleSubmit}>
@@ -32,7 +53,7 @@ export class Component extends React.PureComponent { // eslint-disable-line reac
               // containerClass="radio-container-old"
               component={fieldRadioButton}
               type="tab-1"
-              list={[{ value: 'buy', text: 'BUY' }, { value: 'sell', text: 'SELL' }]}
+              list={EXCHANGE_ACTION_LIST}
               // color={textColor}
               // validate={[required]}
             />
@@ -43,7 +64,7 @@ export class Component extends React.PureComponent { // eslint-disable-line reac
               // containerClass="radio-container-old"
               component={fieldRadioButton}
               type="tab-2"
-              list={[{ value: 'btc', text: 'BTC', icon: <img src={iconBitcoin} width={22} /> }, { value: 'eth', text: 'ETH', icon: <img src={iconEthereum} width={22} /> }]}
+              list={this.CRYPTO_CURRENCY_LIST}
               // color={textColor}
               // validate={[required]}
             />
@@ -66,7 +87,7 @@ export class Component extends React.PureComponent { // eslint-disable-line reac
           </div>
           <hr className="hl" />
           <div className="text-total">
-            Total ({fiat}) <img src={iconApproximate} /> <span className="float-right">{total}</span>
+            Total ({fiat}) <img src={iconApproximate} /> <span className="float-right">{formatMoney(fiatAmount)}</span>
           </div>
           <Button block type="submit" className="mt-3">Shake</Button>
         </FormShakeDetail>
@@ -78,4 +99,48 @@ export class Component extends React.PureComponent { // eslint-disable-line reac
 Component.propTypes = {
 };
 
-export default Component;
+const mapState = (state, prevProps) => {
+  const listOfferPrice = state.exchange.listOfferPrice;
+  const type = selectorFormShakeDetail(state, 'type');
+  const currency = selectorFormShakeDetail(state, 'currency');
+  const amount = selectorFormShakeDetail(state, 'amount');
+
+  let fiatAmount = 0;
+
+  if (listOfferPrice && type && currency) {
+    const offerPrice = getOfferPrice(listOfferPrice, type, CRYPTO_CURRENCY_NAME[currency]);
+    fiatAmount = amount * offerPrice?.price || 0;
+  }
+
+  let percentage = 0;
+  const { eth, btc } = prevProps;
+
+  if (currency === CRYPTO_CURRENCY.ETH) {
+    if (type === EXCHANGE_ACTION.BUY) {
+      percentage = eth.buyPercentage;
+    } else {
+      percentage = eth.sellPercentage;
+    }
+  } else if (currency === CRYPTO_CURRENCY.BTC) {
+    if (type === EXCHANGE_ACTION.BUY) {
+      percentage = btc.buyPercentage;
+    } else {
+      percentage = btc.sellPercentage;
+    }
+  }
+
+  fiatAmount += fiatAmount * percentage / 100;
+
+  return {
+    listOfferPrice: listOfferPrice,
+    fiatAmount,
+  }
+};
+
+const mapDispatch = ({
+  showAlert,
+  showLoading,
+  hideLoading,
+});
+
+export default injectIntl(connect(mapState, mapDispatch)(Component));
