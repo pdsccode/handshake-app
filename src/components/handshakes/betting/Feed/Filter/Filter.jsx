@@ -61,13 +61,29 @@ class BettingFilter extends React.Component {
         this.props.loadMatches({PATH_URL: API_URL.CRYPTOSIGN.LOAD_MATCHES});
     }
     get defaultSupportOdds(){
-        const {support} = this.state;
-        return support && support.length > 0 ? support[support.length-1].odds : 0;
+        const {against} = this.state;
+        if(against && against.length > 0) {
+            const sortedAgainst = against.sort(function(a, b) { return b.odds > a.odds })
+            console.log('Sorted Support:', sortedAgainst);
+            const firstElement = sortedAgainst[0];
+            const againstOdds = firstElement.odds/(firstElement.odds - 1);
+            return againstOdds;
+        }
+        return 0;
+        
+       
     }
 
     get defaultAgainstOdds(){
-        const {against} = this.state;
-        return against && against.length > 0 ? against[0].odds : 0;
+        const {support} = this.state;
+        if(support && support.length > 0){
+            const sortedSupport = support.sort(function(a, b) { return b.odds < a.odds })
+            console.log('Sorted Against:', sortedSupport);
+            const firstElement = sortedSupport[0];
+            const supportOdds = firstElement.odds/(firstElement.odds - 1);
+            return supportOdds;
+        }
+        return 0;
     }
 
     get defaultMatch() {
