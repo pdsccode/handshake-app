@@ -176,11 +176,11 @@ export const fieldPhoneInput = customField(({
     phoneNumber = splittedNumbers[1] || '';
   }
   return (
-    <span className="d-flex align-items-center">
-      <span style={{ width: '110px' }} className="mr-auto">
+    <span>
+      <span style={{ display: 'table-cell' }}>
         <SelectCountryCode countryCode={countryCode} onChange={newCountryCode => onChange(`${newCountryCode}-${phoneNumber}`)} />
       </span>
-      <span className="ml-1"><input type="tel" placeholder={placeholder} className="form-control-custom form-control-custom-ex w-100 input-no-border" value={phoneNumber} onChange={e => onChange(`${countryCode}-${e.target.value}`)} /></span>
+      <span style={{ display: 'table-cell' }} className="pl-2"><input type="tel" placeholder={placeholder} className="form-control-custom form-control-custom-ex w-100 input-no-border" value={phoneNumber} onChange={e => onChange(`${countryCode}-${e.target.value}`)} /></span>
     </span>
   );
 });
