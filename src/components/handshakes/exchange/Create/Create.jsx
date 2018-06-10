@@ -48,6 +48,7 @@ import { authUpdate } from '@/reducers/auth/action';
 import OfferShop from "@/models/OfferShop";
 import CoinOffer from "@/models/CoinOffer";
 import { addOfferItem, } from "@/reducers/exchange/action";
+import {getOfferStores} from "@/reducers/exchange/action";
 
 const nameFormExchangeCreate = "exchangeCreate";
 const FormExchangeCreate = createForm({
@@ -95,9 +96,9 @@ class Component extends React.Component {
       currency: CRYPTO_CURRENCY_DEFAULT,
       lat: 0,
       lng: 0,
-      haveProfile: false,
+      /*haveProfile: false,
       haveOfferETH: false,
-      haveOfferBTC: false,
+      haveOfferBTC: false,*/
     };
     // this.mainColor = _sample(feedBackgroundColors)
     this.mainColor = "#1F2B34";
@@ -118,18 +119,60 @@ class Component extends React.Component {
       const { coords: { latitude, longitude } } = location
       this.setAddressFromLatLng(latitude, longitude) // better precision
     }, () => {
-      this.setAddressFromLatLng(ipInfo.latitude, ipInfo.longitude) // fallback
+      this.setAddressFromLatLng(ipInfo?.latitude, ipInfo?.longitude) // fallback
     });
 
     // auto fill phone number from user profile
     let detectedCountryCode = ''
-    const foundCountryPhone = COUNTRIES.find(i => i.code.toUpperCase() === ipInfo.country_code.toUpperCase())
+    const foundCountryPhone = COUNTRIES.find(i => i.code.toUpperCase() === ipInfo?.country_code.toUpperCase())
     if (foundCountryPhone) {
       detectedCountryCode = foundCountryPhone.dialCode
     }
     rfChange(nameFormExchangeCreate, 'phone', authProfile.phone || `${detectedCountryCode}-`);
     rfChange(nameFormExchangeCreate, 'nameShop', authProfile.name || '');
     rfChange(nameFormExchangeCreate, 'address', authProfile.address || '');
+
+    this.props.getOfferStores({
+      PATH_URL: `${API_URL.EXCHANGE.OFFER_STORES}/${authProfile.id}`,
+
+    });
+  }
+
+  componentWillReceiveProps(nextProps){
+    const { intl } = this.props;
+    console.log('componentWillReceiveProps',nextProps);
+    if (nextProps.offerStores && nextProps.offerStores !== this.props.offerStores) {
+      console.log('componentWillReceiveProps inside', nextProps.offerStores);
+      this.offer = nextProps.offerStores;
+
+      let haveOfferETH = this.offer.itemFlags.ETH;
+      let haveOfferBTC = this.offer.itemFlags.BTC;
+
+      if (haveOfferETH && haveOfferBTC) {
+        const message = intl.formatMessage({ id: 'offerStoresAlreadyCreated' }, {
+        });
+
+        this.setState({
+          modalContent:
+            (
+              <div className="py-2">
+                <Feed className="feed p-2" background="#259B24">
+                  <div className="text-white d-flex align-items-center" style={{ minHeight: '50px' }}>
+                    <div>{message}</div>
+                  </div>
+                </Feed>
+                <Button block className="btn btn-secondary" onClick={this.handleOfferStoreAlreadyCreated}>OK</Button>
+              </div>
+            ),
+        }, () => {
+          this.modalRef.open();
+        });
+      }
+    }
+  }
+
+  handleOfferStoreAlreadyCreated = () => {
+    this.props.history.push(URL.HANDSHAKE_ME);
   }
 
   showLoading = () => {
@@ -193,11 +236,11 @@ class Component extends React.Component {
     const balance = await wallet.getBalance();
     const fee = await wallet.getFee(4, true);
 
-    const condition = this.showNotEnoughCoinAlert(balance, amountBuy, amountSell, fee, currency);
-
-    if (condition) {
-      return;
-    }
+    // const condition = this.showNotEnoughCoinAlert(balance, amountBuy, amountSell, fee, currency);
+    //
+    // if (condition) {
+    //   return;
+    // }
 
     const rewardWallet = MasterWallet.getRewardWalletDefault(currency);
 
@@ -214,19 +257,6 @@ class Component extends React.Component {
       reward_address: rewardWallet.address,
     };
 
-    const walletBTC = MasterWallet.getWalletDefault('BTC');
-    const walletRewardBTC = MasterWallet.getRewardWalletDefault('BTC');
-
-    const dataBTC = {
-      currency: 'BTC',
-      sell_amount: amountSell.toString(),
-      sell_percentage: customizePriceSell.toString(),
-      buy_amount: amountBuy.toString(),
-      buy_percentage: customizePriceBuy.toString(),
-      user_address: walletBTC.address,
-      reward_address: walletRewardBTC.address,
-    };
-
     const offer = {
       email: authProfile?.email || '',
       username: nameShop,
@@ -239,8 +269,7 @@ class Component extends React.Component {
 
     const offerStore = {
       offer: offer,
-      [currency.toLowerCase()]: data,
-      btc: dataBTC,
+      item: data,
     }
 
     const message = intl.formatMessage({ id: 'createOfferStoreConfirm' }, {
@@ -297,7 +326,7 @@ class Component extends React.Component {
 
   addOfferItem = (offerItem) => {
     this.modalRef.close();
-    console.log('addOfferItem', offerItem, offer);
+    console.log('addOfferItem', offerItem, this.offer);
     const { offer } = this;
 
     this.showLoading();
@@ -316,29 +345,27 @@ class Component extends React.Component {
     console.log('handleCreateOfferSuccess', responseData);
     const { intl, rfChange, currency, amountSell } = this.props;
     const data = responseData.data;
-    this.offer = OfferShop.offerShop(data.offer);
-    this.eth = CoinOffer.coinOffer(data.eth);
-    this.btc = CoinOffer.coinOffer(data.btc);
+    this.offer = OfferShop.offerShop(data);
 
     console.log('handleCreateOfferSuccess', data);
 
     const wallet = MasterWallet.getWalletDefault(currency);
-    const rewardWallet = MasterWallet.getRewardWalletDefault(currency);
+    // const rewardWallet = MasterWallet.getRewardWalletDefault(currency);
 
     console.log('wallet', wallet);
-    console.log('rewardWallet', rewardWallet);
+    // console.log('rewardWallet', rewardWallet);
 
-    if (currency === CRYPTO_CURRENCY.BTC) {
-      wallet.transfer(this.btc.systemAddress, amountSell).then(success => {
-        console.log('transfer', success);
-      });
-    } else if (currency === CRYPTO_CURRENCY.ETH) {
-      const exchangeHandshake = new ExchangeShopHandshake(wallet.chainId);
-
-      let result = null;
-      result = await exchangeHandshake.initByShopOwner(amountSell, this.offer.id);
-      console.log('handleCreateOfferSuccess', result);
-    }
+    // if (currency === CRYPTO_CURRENCY.BTC) {
+    //   wallet.transfer(this.offer.itemSnapshots.BTC.systemAddress, amountSell).then(success => {
+    //     console.log('transfer', success);
+    //   });
+    // } else if (currency === CRYPTO_CURRENCY.ETH) {
+    //   const exchangeHandshake = new ExchangeShopHandshake(wallet.chainId);
+    //
+    //   let result = null;
+    //   result = await exchangeHandshake.initByShopOwner(amountSell, this.offer.id);
+    //   console.log('handleCreateOfferSuccess', result);
+    // }
 
     this.hideLoading();
     const message = intl.formatMessage({ id: 'createOfferSuccessMessage' }, {
@@ -352,19 +379,31 @@ class Component extends React.Component {
       }
     });
 
-    this.setState((prevStates, props) => ({
-      haveOfferETH: currency === CRYPTO_CURRENCY.ETH ? true : prevStates.haveOfferETH,
-      haveOfferBTC: currency === CRYPTO_CURRENCY.BTC ? true : prevStates.haveOfferBTC,
-    }), () => {
-      this.CRYPTO_CURRENCY_LIST = [
-        { value: CRYPTO_CURRENCY.ETH, text: CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.ETH], hide: this.state.haveOfferETH },
-        { value: CRYPTO_CURRENCY.BTC, text: CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.BTC], hide: this.state.haveOfferBTC },
-      ];
+    // this.setState((prevStates, props) => ({
+    //   haveOfferETH: currency === CRYPTO_CURRENCY.ETH ? true : prevStates.haveOfferETH,
+    //   haveOfferBTC: currency === CRYPTO_CURRENCY.BTC ? true : prevStates.haveOfferBTC,
+    // }), () => {
+    //   this.CRYPTO_CURRENCY_LIST = [
+    //     { value: CRYPTO_CURRENCY.ETH, text: CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.ETH], hide: this.state.haveOfferETH },
+    //     { value: CRYPTO_CURRENCY.BTC, text: CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.BTC], hide: this.state.haveOfferBTC },
+    //   ];
+    //
+    //   if (this.state.haveOfferETH && this.state.haveOfferBTC) {
+    //     this.props.history.push(URL.HANDSHAKE_ME);
+    //   }
+    // });
 
-      if (this.state.haveOfferETH && this.state.haveOfferBTC) {
-        this.props.history.push(URL.HANDSHAKE_ME);
-      }
-    });
+    let haveOfferETH = this.offer.itemFlags.ETH;
+    let haveOfferBTC = this.offer.itemFlags.BTC;
+
+    this.CRYPTO_CURRENCY_LIST = [
+      { value: CRYPTO_CURRENCY.ETH, text: CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.ETH], hide: haveOfferETH },
+      { value: CRYPTO_CURRENCY.BTC, text: CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.BTC], hide: haveOfferBTC },
+    ];
+
+    if (haveOfferETH && haveOfferBTC) {
+      this.props.history.push(URL.HANDSHAKE_ME);
+    }
 
     if (currency === CRYPTO_CURRENCY.ETH) {
       rfChange(nameFormExchangeCreate, 'currency', CRYPTO_CURRENCY.BTC);
@@ -372,8 +411,8 @@ class Component extends React.Component {
       rfChange(nameFormExchangeCreate, 'currency', CRYPTO_CURRENCY.ETH);
     }
 
-    if (!this.state.haveProfile) {
-      this.updateUserProfile(OfferShop.offerShop(data.offer));
+    if (!haveOfferETH || !haveOfferBTC) {
+      this.updateUserProfile(OfferShop.offerShop(this.offer));
     }
   }
 
@@ -400,10 +439,10 @@ class Component extends React.Component {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       METHOD: 'POST',
       successFn: () => {
-        this.setState({ haveProfile: true });
+        // this.setState({ haveProfile: true });
       },
       errorFn: () => {
-        this.setState({ haveProfile: false });
+        // this.setState({ haveProfile: false });
       },
     });
   }
@@ -413,7 +452,11 @@ class Component extends React.Component {
   render() {
     const { currency  } = this.props;
     const modalContent = this.state.modalContent;
-    const { haveProfile } = this.state;
+    const haveProfile = this.offer ? true : false;
+    const allowInitiate = this.offer ? (!this.offer.itemFlags.ETH || !this.offer.itemFlags.BTC) : false;
+
+    console.log('render',haveProfile);
+
     return (
       <div>
         <FormExchangeCreate onSubmit={this.handleSubmit}>
@@ -552,7 +595,7 @@ class Component extends React.Component {
 
             </div>
           </Feed>
-          <Button block type="submit">Initiate</Button>
+          {allowInitiate && (<Button block type="submit">Initiate</Button>)}
         </FormExchangeCreate>
         <ModalDialog onRef={modal => this.modalRef = modal}>
           {modalContent}
@@ -579,21 +622,13 @@ const mapStateToProps = (state) => {
     currency, amountBuy, amountSell,
     customizePriceBuy, customizePriceSell,
     nameShop, phone, address,
-    // offerPrice: offerPrice,
     ipInfo: state.app.ipInfo,
     authProfile: state.auth.profile,
+    offerStores: state.exchange.offerStores,
   };
 };
 
-// this.props.showAlert({
-//   message: <p className="text-center">aaaaaaaa</p>,
-//   timeOut: 10000000,
-//   type: 'danger',
-// });
-
 const mapDispatchToProps = (dispatch) => ({
-  // createOffer: bindActionCreators(createOffer, dispatch),
-  // getOfferPrice: bindActionCreators(getOfferPrice, dispatch),
   showAlert: bindActionCreators(showAlert, dispatch),
   rfChange: bindActionCreators(change, dispatch),
   showLoading: bindActionCreators(showLoading, dispatch),
@@ -602,5 +637,6 @@ const mapDispatchToProps = (dispatch) => ({
 
   createOfferStores: bindActionCreators(createOfferStores, dispatch),
   addOfferItem: bindActionCreators(addOfferItem, dispatch),
+  getOfferStores: bindActionCreators(getOfferStores, dispatch),
 });
 export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(Component));

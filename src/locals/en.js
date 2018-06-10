@@ -42,4 +42,5 @@ export default {
   shakeOfferItemSuccessMassage: 'Shake offer item success',
   rejectOfferItemSuccessMassage: 'Reject offer item success',
   completeOfferItemSuccessMassage: 'Complete offer item success',
+  offerStoresAlreadyCreated: 'You have already create offer'
 };

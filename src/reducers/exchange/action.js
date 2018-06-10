@@ -28,6 +28,7 @@ export const EXCHANGE_ACTIONS = {
   SHAKE_OFFER_ITEM: 'SHAKE_OFFER_ITEM',
   REJECT_OFFER_ITEM: 'REJECT_OFFER_ITEM',
   COMPLETE_OFFER_ITEM: 'COMPLETE_OFFER_ITEM',
+  GET_OFFER_STORES: 'GET_OFFER_STORES',
 };
 
 export const getCryptoPrice = createAPI(EXCHANGE_ACTIONS.GET_CRYPTO_PRICE);
@@ -69,4 +70,5 @@ export const deleteOfferItem = createAPI(EXCHANGE_ACTIONS.DELETE_OFFER_ITEM);
 export const shakeOfferItem = createAPI(EXCHANGE_ACTIONS.SHAKE_OFFER_ITEM);
 export const rejectOfferItem = createAPI(EXCHANGE_ACTIONS.REJECT_OFFER_ITEM);
 export const completeOfferItem = createAPI(EXCHANGE_ACTIONS.COMPLETE_OFFER_ITEM);
+export const getOfferStores = createAPI(EXCHANGE_ACTIONS.GET_OFFER_STORES);
 

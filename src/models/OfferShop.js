@@ -3,7 +3,7 @@ class OfferShop {
     return {
       id: data.id || '',
       hid: data.hid || '',
-      itemFlags: data.item_flags || '',
+      itemFlags: data.item_flags || {},
       status: data.status || '',
       username: data.username || '',
       email: data.email || '',
@@ -14,6 +14,9 @@ class OfferShop {
       latitude: data.latitude || '',
       fiatCurrency: data.fiat_currency || '',
       transactionCount: data.transaction_count || {},
+      createdAt: data.created_at || '',
+      updatedAt: data.updated_at || '',
+      itemSnapshots: data.item_snapshots || {},
     };
   }
 }
