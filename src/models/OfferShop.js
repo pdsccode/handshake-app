@@ -1,3 +1,5 @@
+import CoinOffer from "./CoinOffer";
+
 class OfferShop {
   static offerShop(data) {
     return {
@@ -16,7 +18,10 @@ class OfferShop {
       transactionCount: data.transaction_count || {},
       createdAt: data.created_at || '',
       updatedAt: data.updated_at || '',
-      itemSnapshots: data.item_snapshots || {},
+      itemSnapshots: data.item_snapshots ? {
+        BTC: CoinOffer.coinOffer(data.item_snapshots.BTC),
+        ETH: CoinOffer.coinOffer(data.item_snapshots.ETH),
+      } : {},
     };
   }
 }

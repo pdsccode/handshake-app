@@ -40,7 +40,7 @@ export class Component extends React.PureComponent { // eslint-disable-line reac
   }
 
   render() {
-    const { offer, btc, eth, currency, fiatAmount } = this.props;
+    const { offer, currency, fiatAmount, enableShake } = this.props;
 
     const fiat = offer.fiatCurrency;
 
@@ -89,7 +89,7 @@ export class Component extends React.PureComponent { // eslint-disable-line reac
           <div className="text-total">
             Total ({fiat}) <img src={iconApproximate} /> <span className="float-right">{formatMoney(fiatAmount)}</span>
           </div>
-          <Button block type="submit" className="mt-3">Shake</Button>
+          { enableShake && (<Button block type="submit" className="mt-3">Shake</Button>) }
         </FormShakeDetail>
       </div>
     );
@@ -105,6 +105,8 @@ const mapState = (state, prevProps) => {
   const currency = selectorFormShakeDetail(state, 'currency');
   const amount = selectorFormShakeDetail(state, 'amount');
 
+
+  //Calculate fiatAmount
   let fiatAmount = 0;
 
   if (listOfferPrice && type && currency) {
@@ -113,27 +115,42 @@ const mapState = (state, prevProps) => {
   }
 
   let percentage = 0;
-  const { eth, btc } = prevProps;
+  let balance = 0;
+  const { offer } = prevProps;
+
+  const eth = offer.itemSnapshots.ETH;
+  const btc = offer.itemSnapshots.BTC;
 
   if (currency === CRYPTO_CURRENCY.ETH) {
-    if (type === EXCHANGE_ACTION.BUY) {
+    if (type === EXCHANGE_ACTION.SELL) {
       percentage = eth.buyPercentage;
+      balance = eth.buyBalance;
     } else {
       percentage = eth.sellPercentage;
+      balance = eth.sellBalance;
     }
   } else if (currency === CRYPTO_CURRENCY.BTC) {
-    if (type === EXCHANGE_ACTION.BUY) {
+    if (type === EXCHANGE_ACTION.SELL) {
       percentage = btc.buyPercentage;
+      balance = btc.buyBalance;
     } else {
       percentage = btc.sellPercentage;
+      balance = btc.sellBalance;
     }
   }
 
   fiatAmount += fiatAmount * percentage / 100;
 
+  //Enable Shake or not
+  console.log('currency',currency);
+  console.log('type',type);
+  console.log('check', balance, amount, balance > amount);
+  const enableShake = balance > amount;
+
   return {
     listOfferPrice: listOfferPrice,
     fiatAmount,
+    enableShake
   }
 };
 

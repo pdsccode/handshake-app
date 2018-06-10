@@ -64,66 +64,84 @@ class FeedExchange extends React.PureComponent {
 
     // const { extraData } = props;
     const extraData = {
-      "btc": {
-        "currency": "BTC",
-        "sell_amount_min": "",
-        "sell_amount": "0",
-        "sell_balance": "",
-        "sell_percentage": "5",
-        "buy_amount_min": "",
-        "buy_amount": "0",
-        "buy_balance": "",
-        "buy_percentage": "5",
-        "system_address": "",
-        "user_address": "xxx",
-        "reward_address": "xxx"
-      },
-      "eth": {
-        "currency": "ETH",
-        "sell_amount_min": "",
-        "sell_amount": "0",
-        "sell_balance": "",
-        "sell_percentage": "5",
-        "buy_amount_min": "",
-        "buy_amount": "0",
-        "buy_balance": "",
-        "buy_percentage": "5",
-        "system_address": "",
-        "user_address": "xxx",
-        "reward_address": "xxx"
-      },
-      "offer": {
-        "id": "",
+      "status": 200,
+      "code": 1,
+      "message": "Success",
+      "data": {
+        "id": "658",
         "hid": 0,
-        "item_flags": null,
-        "status": "",
-        "username": "abc",
-        "email": "abc@mail.com",
-        "language": "",
-        "contact_phone": "",
-        "contact_info": "",
-        "longitude": 0,
-        "latitude": 0,
+        "item_flags": {
+          "BTC": true,
+          "ETH": true
+        },
+        "status": "created",
+        "username": "Apple store",
+        "email": "",
+        "language": "en-US",
+        "contact_phone": "+84-123",
+        "contact_info": "Tran phu",
+        "longitude": 106.6559066,
+        "latitude": 10.7862542,
         "fiat_currency": "VND",
         "transaction_count": {
           "currency": "",
           "success": 0,
           "failed": 0
-        }
+        },
+        "item_snapshots": {
+          "BTC": {
+            "currency": "BTC",
+            "status": "active",
+            "sell_amount_min": "0.01",
+            "sell_amount": "0.02",
+            "sell_balance": "0.02",
+            "sell_percentage": "-0.0025",
+            "buy_amount_min": "0.01",
+            "buy_amount": "0.01",
+            "buy_balance": "0.01",
+            "buy_percentage": "0.0025",
+            "system_address": "3AxHW4x2wjdDJHvez3t1U3HPzxp1too7HS",
+            "user_address": "mggcHNAWQfn8pTZ7BLSCaHWb49UZTLnVgv",
+            "reward_address": "1LNsFik7ewrtanxzXFfMi4rKxELoSZLSj7"
+          },
+          "ETH": {
+            "currency": "ETH",
+            "status": "active",
+            "sell_amount_min": "0.1",
+            "sell_amount": "0.1",
+            "sell_balance": "0",
+            "sell_percentage": "-0.0025",
+            "buy_amount_min": "0.1",
+            "buy_amount": "0.1",
+            "buy_balance": "0.1",
+            "buy_percentage": "0.0025",
+            "system_address": "",
+            "user_address": "0x0ef39e1F896E5882F07405439859bc5988979Cf8",
+            "reward_address": "0xd9152338F065d4EEC5D03ecb76852BDafc94CFB2"
+          }
+        },
+        "created_at": "0001-01-01T00:00:00Z",
+        "updated_at": "2018-06-09T23:56:37.744Z"
       }
     };
 
-    this.offer = OfferShop.offerShop(extraData.offer);
-    this.eth = CoinOffer.coinOffer(extraData.eth);
-    this.btc = CoinOffer.coinOffer(extraData.btc);
+    this.offer = OfferShop.offerShop(extraData.data);
 
-    console.log('extraData', this.offer, this.eth, this.btc);
+    console.log('offer',this.offer);
 
     this.state = {
       modalContent: '',
     };
 
     this.mainColor = 'linear-gradient(-180deg, rgba(0,0,0,0.50) 0%, #303030 0%, #000000 100%)'
+  }
+
+  showLoading = () => {
+    this.props.showLoading({message: '',});
+  }
+
+  hideLoading = () => {
+    this.props.hideLoading();
   }
 
   handleOnShake = () => {
@@ -134,12 +152,16 @@ class FeedExchange extends React.PureComponent {
   ////////////////////////
 
   shakeOfferItem = (values) => {
+    console.log('shakeOfferItem',values);
     this.modalRef.close();
 
-    const { authProfile, offer } = this.props;
+    const { authProfile } = this.props;
+    const { offer } = this;
+
+    const shopType = values.type === EXCHANGE_ACTION.BUY ? EXCHANGE_ACTION.SELL : EXCHANGE_ACTION.BUY;
 
     const offerItem = {
-      type: values.type,
+      type: shopType,
       currency: values.currency,
       amount: values.amount,
       username: authProfile?.name,
@@ -152,36 +174,39 @@ class FeedExchange extends React.PureComponent {
     this.props.shakeOfferItem({
       PATH_URL: `${API_URL.EXCHANGE.OFFER_STORES}/${offer.id}/${API_URL.EXCHANGE.SHAKES}`,
       METHOD: 'POST',
+      data: offerItem,
       successFn: this.handleShakeOfferItemSuccess,
       errorFn: this.handleShakeOfferItemFailed,
     });
   }
 
   handleShakeOfferItemSuccess = async (responseData) => {
+    console.log('handleShakeOfferItemSuccess', responseData);
+
     const { intl } = this.props;
     const { data } = responseData;
     const { currency, type, totalAmount } = data;
 
     const offer = this.offer;
-    if (currency === CRYPTO_CURRENCY.ETH) {
-      let amount = 0;
-      if (offer.type === EXCHANGE_ACTION.BUY) {
-        amount = data.total_amount;
-      }
-
-      const wallet = MasterWallet.getWalletDefault(currency);
-      const exchangeHandshake = new ExchangeHandshake(wallet.chainId);
-      const result = await exchangeHandshake.shake(data.hid, amount, data.id);
-
-      console.log('handleShakeOfferSuccess', result);
-    } else if (currency === CRYPTO_CURRENCY.BTC) {
-      if (type === EXCHANGE_ACTION.BUY) {
-        const wallet = MasterWallet.getWalletDefault(currency);
-        wallet.transfer(offer.systemAddress, totalAmount).then(success => {
-          console.log('transfer', success);
-        });
-      }
-    }
+    // if (currency === CRYPTO_CURRENCY.ETH) {
+    //   let amount = 0;
+    //   if (offer.type === EXCHANGE_ACTION.BUY) {
+    //     amount = data.total_amount;
+    //   }
+    //
+    //   const wallet = MasterWallet.getWalletDefault(currency);
+    //   const exchangeHandshake = new ExchangeHandshake(wallet.chainId);
+    //   const result = await exchangeHandshake.shake(data.hid, amount, data.id);
+    //
+    //   console.log('handleShakeOfferSuccess', result);
+    // } else if (currency === CRYPTO_CURRENCY.BTC) {
+    //   if (type === EXCHANGE_ACTION.BUY) {
+    //     const wallet = MasterWallet.getWalletDefault(currency);
+    //     wallet.transfer(offer.systemAddress, totalAmount).then(success => {
+    //       console.log('transfer', success);
+    //     });
+    //   }
+    // }
 
     this.hideLoading();
     const message = intl.formatMessage({ id: 'shakeOfferItemSuccessMassage' }, {
@@ -214,15 +239,16 @@ class FeedExchange extends React.PureComponent {
 
   getOfferDistance = () => {
     const { intl,  ipInfo: { latitude, longitude } } = this.props;
+    const { offer } = this;
     let distanceKm = 0;
     let distanceMiles = 0;
 
-    console.log('getOfferDistance', latitude, longitude, this.offer.latitude, this.offer.longitude);
+    console.log('getOfferDistance', latitude, longitude, offer.latitude, offer.longitude);
 
     // if (location) {
     //   const latLng = location.split(',')
       // this.distanceKm = getDistanceFromLatLonInKm(latitude, longitude, latLng[0], latLng[1])
-      distanceKm = getDistanceFromLatLonInKm(latitude, longitude, this.offer.latitude || 0, this.offer.longitude || 0);
+      distanceKm = getDistanceFromLatLonInKm(latitude, longitude, offer.latitude || 0, offer.longitude || 0);
       distanceMiles = distanceKm * 0.621371;
     // }
 
@@ -255,7 +281,7 @@ class FeedExchange extends React.PureComponent {
   }
 
   render() {
-    const { offer, eth, btc } = this;
+    const { offer } = this;
     const nameShop = offer.username;
     const currency = offer.fiatCurrency;
     const success = offer.transactionCount.success;
@@ -312,7 +338,7 @@ class FeedExchange extends React.PureComponent {
         </Feed>
         <Button block className="mt-2" onClick={this.handleOnShake}>Shake</Button>
         <ModalDialog onRef={modal => this.modalRef = modal} className="dialog-shake-detail">
-          <ShakeDetail offer={this.offer} eth={this.eth} btc={this.btc} handleShake={this.shakeOfferItem}/>
+          <ShakeDetail offer={this.offer} handleShake={this.shakeOfferItem}/>
         </ModalDialog>
       </div>
     );
