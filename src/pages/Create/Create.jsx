@@ -5,7 +5,8 @@ import { Grid, Row, Col } from 'react-bootstrap';
 import SearchBar from '@/components/core/controls/SearchBar';
 import CreatePromise from '@/components/handshakes/promise/Create';
 import CreateBetting from '@/components/handshakes/betting/Create';
-import CreateExchange from '@/components/handshakes/exchange/Create';
+import CreateExchange from '@/components/handshakes/exchange/Create/Create.jsx';
+import CreateExchangeLocal from '@/components/handshakes/exchange/Create/CreateLocal.jsx';
 import CreateSeed from '@/components/handshakes/seed/Create';
 // style
 import './Create.scss';
@@ -14,6 +15,7 @@ const maps = {
   [HANDSHAKE_ID.PROMISE]: CreatePromise,
   [HANDSHAKE_ID.BETTING]: CreateBetting,
   [HANDSHAKE_ID.EXCHANGE]: CreateExchange,
+  [HANDSHAKE_ID.EXCHANGE_LOCAL]: CreateExchangeLocal,
   [HANDSHAKE_ID.SEED]: CreateSeed,
 };
 
