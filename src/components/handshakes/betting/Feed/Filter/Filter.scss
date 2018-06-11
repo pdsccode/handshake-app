@@ -40,6 +40,7 @@
   .item {
     flex-basis: 50%;
     width: 50%;
+    height: rem-calc(310px);
     border: none;
     padding: rem-calc(1px);
   }
@@ -47,6 +48,8 @@
   .item:first-child {
     display: flex;
     flex-direction: column;
+    background: #1F2B34;
+
   }
   .titleBox, .spreadBox {
     display: flex;
@@ -64,5 +67,15 @@
   }
   .disable {
     color: #fa6b49 !important;
+  }
+  .modal {
+    background-color: #1F2B34;
+  }
+  .buttonSupport {
+    background-color: #8BF275;
+    
+  }
+  .buttonAgainst {
+    background-color: #FA6B49;
   }
 }

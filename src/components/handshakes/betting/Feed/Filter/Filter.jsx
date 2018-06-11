@@ -14,6 +14,9 @@ import GroupBook from './../GroupBook';
 import ShareSocial from '@/components/core/presentation/ShareSocial';
 import FeedComponent from '@/components/Comment/FeedComment';
 import TopInfo from './../TopInfo';
+import Button from '@/components/core/controls/Button';
+import ModalDialog from '@/components/core/controls/ModalDialog';
+
 // style
 import './Filter.scss';
 
@@ -39,6 +42,7 @@ class BettingFilter extends React.Component {
             selectedOutcome: null,
             support: null,
             against: null,
+            side: SIDE.SUPPORT
         };
 
 
@@ -54,7 +58,7 @@ class BettingFilter extends React.Component {
             //selectedMatch,
             //selectedOutcome,
             support,
-            against
+            against,
         })
     }
     componentDidMount(){
@@ -287,13 +291,19 @@ class BettingFilter extends React.Component {
 
             {<TopInfo marketTotal={parseFloat(tradedVolum)}
                     percentFee={marketFee}
-                    objectId={outcomeId} />}
+            objectId={outcomeId} />}
               <div className="wrapperContainer">
                 <div className="item">
-                  <div className="titleBox">
+                <Button className="buttonSupport" block onClick={() => {
+                    this.setState({
+                        side: SIDE.SUPPORT
+                    }, ()=> this.modalBetRef.open());
+                    
+                }}>SUPPORT</Button>
+                  {<div className="titleBox">
                     <div>Pool (ETH)</div>
                     <div>Price (ODDS)</div>
-                  </div>
+            </div>}
                   {/*<GroupBook amountColor="#FA6B49" bookList={this.bookListSupport}/>*/}
                     {<GroupBook amountColor="#8BF275" bookList={this.bookListSupport}/>}
                   {/*<div className="spreadBox">*/}
@@ -301,23 +311,48 @@ class BettingFilter extends React.Component {
                     {/*<div>{this.oddSpread}</div>*/}
                   {/*</div>*/}
                   {/*<GroupBook amountColor="#8BF275" bookList={this.bookListAgainst}/>*/}
-                    {<GroupBook amountColor="#FA6B49" bookList={this.bookListAgainst}/>}
-
+                    {/*<GroupBook amountColor="#FA6B49" bookList={this.bookListAgainst}/>*/}
+                
+                    
                 </div>
                 <div className="item">
-                  {<BettingShake
+                <Button  className="buttonAgainst" block onClick={() => {
+                    console.log('click oppose');
+                    this.setState({
+                        side: SIDE.AGAINST
+                    }, ()=> this.modalBetRef.open());
+                }}>OPPOSE</Button>
+                {<div className="titleBox">
+                    <div>Pool (ETH)</div>
+                    <div>Price (ODDS)</div>
+            </div>}
+                
+                  {/*<BettingShake
                     matchName={matchName}
                     matchOutcome={matchOutcome}
                     outcomeId={parseInt(outcomeId)}
                     outcomeHid={parseInt(outcomeHid)}
                     marketSupportOdds={parseFloat(this.defaultSupportOdds)}
-                    marketAgainstOdds={parseFloat(this.defaultAgainstOdds)}/>}
-
+                  marketAgainstOdds={parseFloat(this.defaultAgainstOdds)}/>*/}
+                    {<GroupBook amountColor="#FA6B49" bookList={this.bookListAgainst}/>}
+                    
+                    
                 </div>
               </div>
+              <ModalDialog className="modal" onRef={modal => this.modalBetRef = modal}>
+                <BettingShake
+                side={this.state.side}
+                matchName={matchName}
+                matchOutcome={matchOutcome}
+                outcomeId={parseInt(outcomeId)}
+                outcomeHid={parseInt(outcomeHid)}
+                marketSupportOdds={parseFloat(this.defaultSupportOdds)}
+                marketAgainstOdds={parseFloat(this.defaultAgainstOdds)}/>
+            </ModalDialog>
             </div>
         );
     }
+
     callGetHandshakes(item){
 
         const params = {

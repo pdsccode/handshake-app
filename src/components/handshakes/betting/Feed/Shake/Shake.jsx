@@ -93,9 +93,11 @@ class BetingShake extends React.Component {
     // extraData["event_predict"] = matchOutcome;
     // console.log('componentWillReceiveProps Extra Data: ', extraData);
     // this.setState({extraData})
-    const {marketSupportOdds, marketAgainstOdds} = nextProps;
+    const {marketSupportOdds, marketAgainstOdds, side} = nextProps;
     console.log('Shake nextProps: ',nextProps );
-    const marketOdds = this.toggleRef.value === SIDE.SUPPORT ? marketSupportOdds : marketAgainstOdds;
+    //const marketOdds = this.toggleRef.value === SIDE.SUPPORT ? marketSupportOdds : marketAgainstOdds;
+    const marketOdds = side === SIDE.SUPPORT ? marketSupportOdds : marketAgainstOdds;
+
     this.setState({
       oddValue: parseFloat(marketOdds).toFixed(2)
     })
@@ -109,12 +111,12 @@ class BetingShake extends React.Component {
     const values = this.refs;
     console.log('Values:', values);
     const {isShowOdds} = this.state;
-    const {matchName, matchOutcome} = this.props;
+    const {matchName, matchOutcome, side} = this.props;
     const amount = parseFloat(values.amount.value);
     const odds = parseFloat(values.odds.value);
-    console.log("Amount, Side, Odds", amount, this.toggleRef.value, odds);
+    console.log("Amount, Side, Odds", amount, side, odds);
     // this.props.onSubmitClick(amount);
-    const side = parseInt(this.toggleRef.value);
+    //const side = parseInt(this.toggleRef.value);
     const balance = await BetHandshakeHandler.getBalance();
     const estimatedGas = await bettinghandshake.getEstimateGas();
     //const estimatedGas = 0.00001;
@@ -169,15 +171,15 @@ class BetingShake extends React.Component {
 
   onToggleChange(id) {
     const {isChangeOdds} = this.state;
-    const {marketAgainstOdds, marketSupportOdds} = this.props;
-    const marketOdds = this.toggleRef.value === SIDE.SUPPORT ? marketSupportOdds : marketAgainstOdds;
+    const {marketAgainstOdds, marketSupportOdds, side} = this.props;
+    const marketOdds = side === SIDE.SUPPORT ? marketSupportOdds : marketAgainstOdds;
 
     if(!isChangeOdds){
       this.setState({
         oddValue: parseFloat(marketOdds).toFixed(2)
       })
     }
-    this.setState({buttonClass: `btnOK ${id === 1 ? 'btnBlue' : 'btnRed' }`});
+    this.setState({buttonClass: `btnOK ${side === 1 ? 'btnBlue' : 'btnRed' }`});
 
   }
 
@@ -243,7 +245,8 @@ class BetingShake extends React.Component {
   }
 
   renderForm() {
-    const { total, buttonClass, isShowOdds, marketOdds, isChangeOdds } = this.state;
+    const { total, isShowOdds, marketOdds, isChangeOdds } = this.state;
+    const {side} = this.props; 
     console.log('Market Odd render form:', marketOdds);
     /*
     const formFieldData = [
@@ -309,14 +312,18 @@ class BetingShake extends React.Component {
     };
     // const {BettingShakeForm} = this.state;
     // console.log('BettingShakeForm:', BettingShakeForm);
+    const buttonClass = `btnOK ${side === 1 ? 'btnBlue' : 'btnRed' }`;
+
     return (
       <form className="wrapperBettingShake" onSubmit={this.onSubmit}>
         <p className="titleForm text-center">BET ON THE OUTCOME</p>
-        <Toggle ref={(component) => {this.toggleRef = component}} onChange={this.onToggleChange} />
+        {/*<Toggle ref={(component) => {this.toggleRef = component}} onChange={this.onToggleChange} />*/}
         {this.renderInputField(amountField)}
         {isShowOdds && this.renderInputField(oddsField)}
-         <div style={{color: 'white', fontSize: '0.75rem'}}>Possible winnings: {this.state.winValue}</div>
-
+        <div className="rowWrapper">
+         <div>Possible winnings:</div>
+         <div>{this.state.winValue}</div>
+        </div>
         <Button type="submit" block className={buttonClass}>
           Go
         </Button>
@@ -439,9 +446,9 @@ class BetingShake extends React.Component {
   }
 
   initHandshake(amount, odds){
-    const {outcomeId, matchName, matchOutcome} = this.props;
+    const {outcomeId, matchName, matchOutcome, side} = this.props;
     const {extraData} = this.state;
-    const side = this.toggleRef.value;
+    //const side = this.toggleRef.value;
     const fromAddress = wallet.address;
     extraData["event_name"] = matchName;
     extraData["event_predict"] = matchOutcome;
@@ -470,10 +477,10 @@ class BetingShake extends React.Component {
     };
     console.log("Params:", params);
 
-    this.props.initHandshake({PATH_URL: API_URL.CRYPTOSIGN.INIT_HANDSHAKE, METHOD:'POST', data: params,
-    successFn: this.initHandshakeSuccess,
-    errorFn: this.handleGetCryptoPriceFailed
-  });
+  //   this.props.initHandshake({PATH_URL: API_URL.CRYPTOSIGN.INIT_HANDSHAKE, METHOD:'POST', data: params,
+  //   successFn: this.initHandshakeSuccess,
+  //   errorFn: this.handleGetCryptoPriceFailed
+  // });
   }
 
   initHandshakeSuccess = async (successData)=>{

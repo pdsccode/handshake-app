@@ -1,7 +1,7 @@
 @import './src/styles/style';
 
 .wrapperBettingShake {
-  padding: rem-calc(46px 12px);
+  padding: rem-calc(46px 30px 12px 30px);
   background: #3A444C;
   //box-shadow: 0 2px 4px 0 rgba(203,203,203,0.50);
   font-family: $font-family-base;
@@ -18,6 +18,10 @@
 
   .rowWrapper + .rowWrapper {
     margin-top: rem-calc(20px);
+    display: flex;
+    justify-content: space-between;
+    color: white;
+    font-size: 0.75rem;
   }
 
   .line {
