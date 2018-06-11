@@ -1,0 +1,170 @@
+@import './src/styles/style';
+
+.root {
+  height: 100%;
+  background: url('../../assets/images/icon/landingpage/trade-banner.png') no-repeat;
+  background-size: cover;
+  font-family: azo-sans-web, sans-serif;
+  font-style: normal;
+  .firstContainer {
+    padding-top: rem-calc(49px);
+    .bannerIcon {
+      width: rem-calc(82px);
+      margin: rem-calc(0 0 33px);
+    }
+    h1 {
+      font-size: rem-calc(48px);
+      color: #FFFFFF;
+      letter-spacing: 0;
+      line-height: rem-calc(44px);
+      margin: rem-calc(0 0 50px);
+    }
+    dl {
+      margin: rem-calc(0 0 60px);
+      dt, dd {
+        font-size: rem-calc(20px);
+        color: #FFFFFF;
+        letter-spacing: -0.24px;
+        line-height: rem-calc(20px);
+        margin-bottom: rem-calc(16px);
+        font-weight: $normal;
+      }
+      dt {
+        font-weight: $semi-bold;
+      }
+
+      dd + dt {
+        margin-top: rem-calc(35px);
+      }
+    }
+    .btnStartTrading {
+      background-image: linear-gradient(-269deg, #7740FF 0%, #1E4EFF 100%);
+      border-radius: rem-calc(4px);
+      font-size: rem-calc(24px);
+      color: #FFFFFF;
+      letter-spacing: 0;
+      padding: rem-calc(10px 50px);
+    }
+    .registerEmail {
+      display: flex;
+      flex-wrap: wrap;
+      margin: 0 auto 98px;
+      .email {
+        width: 100%;
+        padding: 15px 26px;
+        text-align: left;
+        border: 1px solid #FAFAFA;
+        box-shadow: 1px 1px 10px #c2c2c238;
+        font-weight: $normal;
+        font-size: 18px;
+        font-family: azo-sans-web, sans-serif;
+        font-style: normal;
+        letter-spacing: 0;
+        background: #FFFFFF;
+        border-radius: 4px;
+        &::placeHolder {
+          color: #959595;
+          letter-spacing: 0;
+        }
+      }
+      .btnSubmit {
+        width: 46%;
+        font-family: azo-sans-web, sans-serif;
+        font-style: normal;
+        font-weight: $medium;
+        font-size: 16px;
+        color: #FFFFFF;
+        letter-spacing: 0;
+        position: relative;
+        right: -53%;
+        top: -50px;
+        background-image: linear-gradient(-269deg, #7740FF 0%, #1E4EFF 100%);
+        border-radius: 4px;
+        padding: 8px 24px;
+        border: none;
+      }
+    }
+    .appScreen {
+      width: 324px;
+      height: 670px;
+      margin: 0 auto;
+      background: url('../../assets/images/icon/landingpage/trade-app-screen.svg');
+    }
+  }
+
+  .secondContainer {
+    margin-top: rem-calc(89px);
+    margin-bottom: rem-calc(133px);
+    .subTitle {
+      font-size: rem-calc(24px);
+      font-weight: $semi-bold;
+      color: #FFFFFF;
+      letter-spacing: 0;
+      line-height: rem-calc(40px);
+      margin-bottom: rem-calc(34px);
+    }
+    .description {
+      font-size: rem-calc(20px);
+      font-weight: $normal;
+      color: #FFFFFF;
+      letter-spacing: 0;
+      line-height: rem-calc(40px);
+    }
+  }
+  .thirdContainer {
+    margin-bottom: rem-calc(154px);
+  }
+  .fourContainer {
+    margin-bottom: rem-calc(147px);
+    img {
+      margin-bottom: rem-calc(51px);
+    }
+    .subTitle {
+      font-size: rem-calc(24px);
+      font-weight: $semi-bold;
+      color: #FFFFFF;
+      letter-spacing: -0.24px;
+      line-height: rem-calc(24px);
+      margin-bottom: rem-calc(13px);
+    }
+    .description {
+      font-size: rem-calc(20px);
+      font-weight: $normal;
+      color: #FFFFFF;
+      letter-spacing: 0;
+      line-height: rem-calc(40px);
+    }
+  }
+}
+
+@media (min-width: 1000px) and (max-width: 1680px) {
+  .root {
+    .mainContent {
+      .appScreen {
+        /*max-width: 400px;*/
+      }
+    }
+  }
+}
+
+@media (min-width: 767px) and (max-width: 1200px) {
+  .root {
+  }
+}
+
+@media (max-width: 767px) {
+  .root {
+
+  }
+}
+
+@media (max-width: 500px) {
+  .root {
+  }
+}
+
+@media (max-width: 375px) {
+  .root {
+
+  }
+}
