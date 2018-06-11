@@ -284,4 +284,18 @@
   html {
     font-size: 10px;
   }
+
+  .root {
+    .firstContainer {
+      .registerEmail {
+        .btnSubmit {
+          width: 100%;
+          position: inherit;
+          right: unset;
+          top: unset;
+          margin-top: rem-calc(10px);
+        }
+      }
+    }
+  }
 }
