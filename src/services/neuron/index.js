@@ -213,48 +213,53 @@ class Neuron {
     console.log('sendRawTransaction limitedGas->', String(limitedGas));
     console.log('sendRawTransaction chainid ->', chainId);
     console.log('sendRawTransaction', payloadData);
-    return this.getNonce(address).then((_nonce) => {
-      const nonce = _nonce;
-      const rawTx = {
-        nonce: web3.utils.toHex(nonce),
-        gasPrice: web3.utils.toHex(gasPrice),
-        gasLimit: estimatedGas,
-        data: payloadData,
-        from: address,
-        chainId,
-        // gas: estimatedGas,
-        to: toAddress,
-      };
-      console.log('rawTx->', rawTx);
-      const tx = new Tx(rawTx);
-      if (amount) {
-        tx.value = Web3.utils.toHex(web3.utils.toWei(String(amount), 'ether'));
-      }
-      tx.sign(Buffer.from(privateKey, 'hex'));
-      const serializedTx = tx.serialize();
-      const rawTxHex = `0x${serializedTx.toString('hex')}`;
-      return web3.eth
-        .sendSignedTransaction(rawTxHex)
-        .on('transactionHash', (hash) => {
-          console.log(
-            TAG,
-            ' sendRawTransaction sendSignedTransaction hash = ',
-            hash,
-          );
-          return {
-            hash,
-            payload: payloadData,
-            fromAddress: address,
-            toAddress: toAddress || '',
-            amount: amount || 0,
-            arguments: argumentsParams || {},
-          };
-        })
-        .on('error', error => ({
-          hash: -1,
-          error: String(error),
-        }));
-    });
+    return this.getNonce(address)
+      .then((_nonce) => {
+        const nonce = _nonce;
+        const rawTx = {
+          nonce: web3.utils.toHex(nonce),
+          gasPrice: web3.utils.toHex(gasPrice),
+          gasLimit: estimatedGas,
+          data: payloadData,
+          from: address,
+          chainId,
+          // gas: estimatedGas,
+          to: toAddress,
+        };
+        console.log('rawTx->', rawTx);
+        const tx = new Tx(rawTx);
+        if (amount) {
+          tx.value = Web3.utils.toHex(web3.utils.toWei(String(amount), 'ether'));
+        }
+        tx.sign(Buffer.from(privateKey, 'hex'));
+        const serializedTx = tx.serialize();
+        const rawTxHex = `0x${serializedTx.toString('hex')}`;
+        return web3.eth
+          .sendSignedTransaction(rawTxHex)
+          .on('transactionHash', (hash) => {
+            console.log(
+              TAG,
+              ' sendRawTransaction sendSignedTransaction hash = ',
+              hash,
+            );
+            return {
+              hash,
+              payload: payloadData,
+              fromAddress: address,
+              toAddress: toAddress || '',
+              amount: amount || 0,
+              arguments: argumentsParams || {},
+            };
+          })
+          .on('error', error => ({
+            hash: -1,
+            error: String(error),
+          }));
+      })
+      .catch(error => ({
+        hash: -1,
+        error: String(error),
+      }));
   };
   makeRawTransfer = (address, privateKey, options) => {
     console.log('makeRawTransfer', address, privateKey, options);

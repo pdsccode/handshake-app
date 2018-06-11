@@ -48,6 +48,7 @@ export default class BettingHandshake extends BaseHandshake {
       odds,
       offchain,
     );
+
     const oddsValue = odds * 100;
     const bytesOffchain = this.web3.utils.asciiToHex(offchain);
 
@@ -86,7 +87,7 @@ export default class BettingHandshake extends BaseHandshake {
       ' offchain = ',
       offchain,
     );
-    //const payoutValue = Web3.utils.toWei(payout.toString(), 'ether');
+    // const payoutValue = Web3.utils.toWei(payout.toString(), 'ether');
     const bytesOffchain = this.web3.utils.asciiToHex(offchain);
     const oddsTakerValue = takerOdds * 100;
     const oddsMakerValue = makerOdds * 100;
@@ -120,7 +121,7 @@ export default class BettingHandshake extends BaseHandshake {
       offchain,
     );
     const stakeValue = Web3.utils.toWei(stake.toString(), 'ether');
-    //const payoutValue = Web3.utils.toWei(payout.toString(), 'ether');
+    // const payoutValue = Web3.utils.toWei(payout.toString(), 'ether');
     const oddsValue = odds * 100;
 
     const bytesOffchain = this.web3.utils.asciiToHex(offchain);
