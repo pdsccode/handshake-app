@@ -10,6 +10,7 @@ module.exports = {
     messagingSenderId: '',
   },
   ipfindKey: '',
+  GOOGLE_API_KEY: '',
   social: {
     isUseSocial: false,
     googleAnalyticId: '',

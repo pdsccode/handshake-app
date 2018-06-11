@@ -167,6 +167,7 @@ module.exports = function webpackConfig(env, argv) {
           social: {
             googleAnalyticId: appEnvConfig.social.googleAnalyticId,
             facebookPixelId: appEnvConfig.social.facebookPixelId,
+            isUseSocial: appEnvConfig.social.isUseSocial,
           },
         }),
         new PwaManifestPlugin({
