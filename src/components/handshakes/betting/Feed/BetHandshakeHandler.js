@@ -171,26 +171,26 @@ export class BetHandshakeHandler {
     console.log('initContract, hid:', item, hid);
 
     const {
-      amount, id, odds, side, outcome_id, from_address, offchain,
+      amount, odds, side, offchain,
     } = item;
     const stake = Math.round(amount * 10 ** 18)/10 ** 18;
     // const payout = stake * odds;
-    const payout = Math.round(stake * odds * 10 ** 18) / 10 ** 18;
-    const maker = from_address;
+    //const payout = Math.round(stake * odds * 10 ** 18) / 10 ** 18;
+    //const maker = from_address;
     // const hid = outcome_id;
-    const dataBlockchain = await bettinghandshake.initBet(hid, side, stake, payout, offchain);
+    const dataBlockchain = await bettinghandshake.initBet(hid, side, stake, odds, offchain);
     return dataBlockchain;
   };
 
-  static async shakeContract(item, hid) {
+  static async shakeContract(item, hid, markerOdds) {
     console.log('shakeContract, hid:', item, hid);
 
     const {
-      amount, id, odds, side, outcome_id, from_address,
+      amount, id, odds, side, from_address,
     } = item;
     const stake = Math.round(amount * 10 ** 18)/10 ** 18;;
     // const payout = stake * odds;
-    const payout = Math.round(stake * odds * 10 ** 18) / 10 ** 18;
+    //const payout = Math.round(stake * odds * 10 ** 18) / 10 ** 18;
     const offchain = `cryptosign_s${id}`;
     console.log('offchain:', offchain);
     const maker = from_address;
@@ -199,8 +199,9 @@ export class BetHandshakeHandler {
       hid,
       side,
       stake,
-      payout,
+      odds,
       maker,
+      markerOdds,
       offchain,
     );
     return result;
@@ -215,7 +216,7 @@ export class BetHandshakeHandler {
   static handleContract(element, hid, i){
     setTimeout(function () {
       console.log("Time out:");
-      const {offchain} = element;
+      const {offchain, odds} = element;
       const isInitBet = BetHandshakeHandler.isInitBet(element);
       console.log('isInitBet:', isInitBet);
       if (isInitBet) {
@@ -225,7 +226,7 @@ export class BetHandshakeHandler {
         console.log("Found shake List:", foundShakeList);
         for (var i = 0; i< foundShakeList.length; i++){
           const shakedItem = foundShakeList[i];  
-          BetHandshakeHandler.shakeContract(shakedItem, hid);   
+          BetHandshakeHandler.shakeContract(shakedItem, hid, odds);   
 
         }
               
