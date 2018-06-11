@@ -40,6 +40,8 @@ export default {
   addOfferItemSuccessMassage: 'Add offer item success',
   deleteOfferItemSuccessMassage: 'Delete offer item success',
   shakeOfferItemSuccessMassage: 'Shake offer item success',
+  acceptOfferItemSuccessMassage: 'Accept offer item success',
+  cancelOfferItemSuccessMassage: 'Cancel offer item success',
   rejectOfferItemSuccessMassage: 'Reject offer item success',
   completeOfferItemSuccessMassage: 'Complete offer item success',
   offerStoresAlreadyCreated: 'You have already create offer'
