@@ -1,21 +1,15 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Grid, Row, Col } from 'react-bootstrap';
-import {Bitcoin} from '@/models/Bitcoin.js'
 import {Ethereum} from '@/models/Ethereum.js'
-  import iconSent from '@/assets/images/icon/icon-sent.svg';
-  import iconReceived from '@/assets/images/icon/icon-received.svg';
-
+import iconSent from '@/assets/images/icon/icon-sent.svg';
+import iconReceived from '@/assets/images/icon/icon-received.svg';
 import PropTypes from 'prop-types';
 import './Wallet.scss';
 import WalletTransaction from './WalletTransaction';
-
-import Button from '@/components/core/controls/Button';
-import Checkbox from '@/components/core/forms/Checkbox/Checkbox';
+import { showLoading, hideLoading } from '@/reducers/app/action';
 import Modal from '@/components/core/controls/Modal';
-import ModalDialog from '@/components/core/controls/ModalDialog';
-import createForm from '@/components/core/form/createForm';
-import { differenceWith } from 'lodash';
+
+const moment = require('moment');
 
 class WalletHistory extends React.Component {
 	constructor(props) {
@@ -23,8 +17,7 @@ class WalletHistory extends React.Component {
     super(props);
     this.state = {
       transactions: this.props.transactions,
-      transaction_detail: false,
-      transaction_time_stamp: 0
+      transaction_detail: null
     };
   }
 
@@ -35,26 +28,97 @@ class WalletHistory extends React.Component {
     }
   }
 
+  cooked_transaction(data){
+    const wallet = this.props.wallet;
+    if(wallet.name == "ETH"){//for ETH json
+      let value = Number(data.value / 1000000000000000000),
+      transaction_date = new Date(data.timeStamp*1000),addresses = [],
+      is_sent = String(data.from).toLowerCase() == wallet.address.toLowerCase();
+
+      let cssLabel = `label-${is_sent ? "sent" : "received"}`,
+          cssValue = `value-${is_sent ? "sent" : "received"}`;
+
+      let addr = data.from;
+      if(is_sent) addr = data.to;
+      addresses.push(addr.replace(addr.substr(4, 34), '...'));
+
+      return {
+        value: value,
+        transaction_no: data.hash,
+        transaction_date: transaction_date,
+        transaction_relative_time:  moment(transaction_date).fromNow(),
+        addresses: addresses,
+        is_sent: is_sent,
+        cssLabel: cssLabel,
+        cssValue: cssValue
+      };
+    }
+    else{//for BTC json
+      let vin = data.vin, vout = data.vout,
+        is_sent = false, value = 0,
+        addresses = [], confirmations = data.confirmations,
+        transaction_date = data.time ? new Date(data.time*1000) : "";
+
+      //check transactions are send
+      for(let tin of vin){
+        if(tin.addr.toLowerCase() == wallet.address.toLowerCase()){
+          is_sent = true;
+
+          for(let tout of vout){
+            let tout_addresses = tout.scriptPubKey.addresses.join(" ").toLowerCase();
+            if(tout_addresses.indexOf(wallet.address.toLowerCase()) < 0){
+              value += Number(tout.value);
+              addresses.push(tout_addresses.replace(tout_addresses.substr(4, 26), '...'));
+            }
+          }
+
+          break;
+        }
+      }
+
+      //check transactions are receive
+      if(!is_sent){
+        for(let tout of vout){
+          let tout_addresses = tout.scriptPubKey.addresses.join(" ").toLowerCase();
+          if(tout_addresses.indexOf(wallet.address.toLowerCase()) >= 0){
+            value += tout.value;
+          }
+          else{
+            addresses.push(tout_addresses.replace(tout_addresses.substr(4, 26), '...'));
+          }
+        }
+      }
+
+      return {
+        value: value,
+        transaction_no: data.txid,
+        transaction_date: transaction_date,
+        addresses: addresses,
+        transaction_relative_time:  transaction_date ? moment(transaction_date).fromNow() : "",
+        confirmations: confirmations,
+        is_sent: is_sent
+      };
+    }
+  }
+
   get list_transaction() {
     const wallet = this.props.wallet;
-
-    if (this.state.transactions.length==0)
+    if (wallet && this.state.transactions.length==0)
       return <div className="history-no-trans">No transactions yet</div>;
 
-      return this.state.transactions.map((tran) => {
-        let cssLabel = `label-${tran.is_sent ? "sent" : "received"}`,
-        cssValue = `value-${tran.is_sent ? "sent" : "received"}`;
+      return this.state.transactions.map((res) => {
+        let tran = this.cooked_transaction(res);
 
         return (
-        <div key={tran.transaction_no} className="row" onClick={() =>{this.show_transaction(tran.time_stamp, tran.transaction_no)}}>
+        <div key={tran.transaction_no} className="row" onClick={() =>{this.show_transaction(res)}}>
           <div className="col3">
             <div className="time">{tran.transaction_relative_time}</div>
-            <div className={cssValue}>{tran.is_sent ? "-" : ""} {Number(tran.value)} {wallet.name}</div>
+            <div className={tran.cssValue}>{tran.is_sent ? "-" : ""} {Number(tran.value)} {wallet.name}</div>
             {tran.confirmations <= 0 ? <div className="unconfirmation">Unconfirmed</div> : ""}
           </div>
           <div className="col1"><img className="iconDollar" src={tran.is_sent ? iconSent : iconReceived} /></div>
           <div className="col2 address">
-            <div className={cssLabel}>{tran.is_sent ? "Sent" : "Received"}</div>
+            <div className={tran.cssLabel}>{tran.is_sent ? "Sent" : "Received"}</div>
             {
               tran.addresses.map((addr) => {
                 return <div key={addr}>{addr}</div>
@@ -66,12 +130,24 @@ class WalletHistory extends React.Component {
       });
   }
 
-  async show_transaction(timeStamp, no){
+  closeDetail = () => {
+    this.setState({ transaction_detail: null });
+  }
+
+  showLoading(status) {
+    this.props.showLoading({ message: '' });
+  }
+  hideLoading() {
+    this.props.hideLoading();
+  }
+
+  async show_transaction(data){
     const wallet = this.props.wallet;
-    if(wallet && no){
+    if(wallet && data){
       this.modalTransactionRef.open();
-      let transaction_detail =  await wallet.getTransactionDetail(no);
-      this.setState({transaction_detail: transaction_detail, transaction_time_stamp: Number(timeStamp)});
+      this.showLoading();
+      this.setState({transaction_detail: data});
+      this.hideLoading();
     }
   }
 
@@ -79,11 +155,10 @@ class WalletHistory extends React.Component {
     const wallet = this.props.wallet;
 
     return (
-      <Modal title="Transaction details" onRef={modal => this.modalTransactionRef = modal}>
-        <WalletTransaction transaction_detail={this.state.transaction_detail} transaction_time_stamp={this.state.transaction_time_stamp}  />
+      <Modal title="Transaction details" onRef={modal => this.modalTransactionRef = modal} onClose={this.closeDetail}>
+        <WalletTransaction wallet={wallet} transaction_detail={this.state.transaction_detail}  />
       </Modal>
     );f
-
   }
 
 	render(){
@@ -102,7 +177,7 @@ class WalletHistory extends React.Component {
 
 WalletHistory.propTypes = {
   wallet: PropTypes.any,
-  transactions: PropTypes.any
+  transactions: PropTypes.array
 };
 
 const mapState = (state) => ({
@@ -110,6 +185,8 @@ const mapState = (state) => ({
 });
 
 const mapDispatch = ({
+  showLoading,
+  hideLoading,
 });
 
 export default connect(mapState, mapDispatch)(WalletHistory);
