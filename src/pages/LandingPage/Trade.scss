@@ -147,6 +147,70 @@
       line-height: rem-calc(40px);
     }
   }
+
+  .fiveContainer {
+    .subTitle {
+      font-size: rem-calc(40px);
+      color: #FFFFFF;
+      letter-spacing: 0;
+      text-align: center;
+      line-height: rem-calc(54px);
+      margin-bottom: rem-calc(34px);
+    }
+  }
+
+  .collapse-custom {
+    border-bottom: 2px solid #3D3D3D;
+    font-weight: $normal;
+    .head {
+      padding: rem-calc(12px 0);
+      display: flex;
+      flex-wrap: wrap;
+      &:hover {
+        cursor: pointer;
+      }
+      .label {
+        width: 90%;
+        margin: 0;
+        font-size: rem-calc(20px);
+        color: #FFFFFF;
+        letter-spacing: 0;
+        padding-left: rem-calc(54px);
+        font-weight: $light;
+        line-height: 20px;
+        .index {
+          position: relative;
+          left: rem-calc(-54px);
+        }
+      }
+      .extend {
+        width: 10%;
+        text-align: right;
+        img {
+          transform: rotate(90deg);
+        }
+        .rotate {
+          transform: rotate(0);
+        }
+      }
+    }
+    .noList {
+      opacity: 0.6;
+    }
+    .content {
+      margin-bottom: rem-calc(18px);
+      padding-right: rem-calc(54px);
+      font-size: rem-calc(20px);
+      color: #FFFFFF;
+      letter-spacing: 0;
+      line-height: rem-calc(40px);
+      font-weight: $light;
+    }
+  }
+
+  .collapse-custom + .collapse-custom {
+    margin-top: rem-calc(17px);
+  }
 }
 
 @media (min-width: 1000px) and (max-width: 1680px) {

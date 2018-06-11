@@ -19,9 +19,93 @@ import tradeThirdContainer from '@/assets/images/icon/landingpage/trade-third-co
 import paymentMethodIcon from '@/assets/images/icon/landingpage/trade-payment-method.svg';
 import safeIcon from '@/assets/images/icon/landingpage/trade-safe.svg';
 import fastAnOnIcon from '@/assets/images/icon/landingpage/trade-fast-and-on.svg';
+import ExpandArrowSVG from '@/assets/images/icon/expand-arrow-white.svg';
 
 const inputRefOne = 'emailRef';
 const inputRefTwo = 'emailRefTwo';
+
+const data = [
+  {
+    question: 'What ID do I need as a seller or a buyer?',
+    answer: 'We do not need ID verification. If you verify your phone number, you will have the chance to get 1 free ETH to make transaction on Shake Ninja',
+  },
+  {
+    question: 'Are credit cards accepted?',
+    answer: 'Yes. We accept Visa, Mastercard, Amex and Discover',
+  },
+  {
+    question: 'What currencies can people exchange?',
+    answer: 'We accept all types of currencies',
+  },
+  {
+    question: 'Is there a system to track the trading history?',
+    answer: 'Yes. We count the successful and failed transactions with clear report for each seller and buyer',
+  },
+  {
+    question: 'What are the steps for signing up?',
+    answer: '',
+  },
+  {
+    question: '',
+    answer: '',
+  },
+  {
+    question: '',
+    answer: '',
+  },
+  {
+    question: '',
+    answer: '',
+  },
+  {
+    question: '',
+    answer: '',
+  },
+];
+
+class Collapse extends React.PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isCollapsed: true,
+    };
+    this.toggle = ::this.toggle;
+  }
+
+  toggle() {
+    this.setState(state => ({isCollapsed: !state.isCollapsed}));
+  }
+
+  render() {
+    const { isCollapsed } = this.state;
+    const { label, content, isList, index } = this.props;
+    return (
+      <div className="collapse-custom">
+        <div
+          className="head"
+          onClick={this.toggle}
+        >
+          <p className="label">
+            <span className="index">{index}{index > 9 ? '.' : '. '}</span><span>{label}</span>
+          </p>
+          <div className="extend">
+            <img className={isCollapsed ? 'rotate' : ''} src={ExpandArrowSVG} alt="arrow" />
+          </div>
+        </div>
+        <div className={`content ${isList ? '' : 'noList'} ${!isCollapsed ? '' : 'd-none'}`}>
+          {isList ? (
+            <dl>
+              {content.map((item, index) => [
+                <dt>{item.title}</dt>,
+                <dd>{item.content}</dd>
+              ])}
+            </dl>
+          ) : content}
+        </div>
+      </div>
+    )
+  }
+}
 
 class Handshake extends React.Component {
   constructor(props) {
@@ -231,11 +315,11 @@ class Handshake extends React.Component {
 
         <div className={`container fiveContainer`}>
           <div className="row">
-            <div className="col-lg-4 col-md-12 col-sm-12 col-xs-12">
-
-            </div>
-            <div className="col-lg-8 col-md-12 col-sm-12 col-xs-12">
-
+            <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+              <p className="subTitle">Have any questions?</p>
+              <div>
+                {data.map((item, index) => <Collapse label={item.question} content={item.answer} isList={item.isList} key={index} index={index + 1} />)}
+              </div>
             </div>
           </div>
         </div>
