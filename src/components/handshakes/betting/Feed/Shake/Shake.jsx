@@ -116,7 +116,8 @@ class BetingShake extends React.Component {
     // this.props.onSubmitClick(amount);
     const side = parseInt(this.toggleRef.value);
     const balance = await BetHandshakeHandler.getBalance();
-    const estimatedGas = await bettinghandshake.getEstimateGas();
+    //const estimatedGas = await bettinghandshake.getEstimateGas();
+    const estimatedGas = 0.00001;
     const total = amount + parseFloat(estimatedGas);
     var message = null;
 
