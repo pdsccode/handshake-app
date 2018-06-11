@@ -19,8 +19,8 @@ class OfferShop {
       createdAt: data.created_at || '',
       updatedAt: data.updated_at || '',
       itemSnapshots: data.item_snapshots ? {
-        BTC: CoinOffer.coinOffer(data.item_snapshots.BTC),
-        ETH: CoinOffer.coinOffer(data.item_snapshots.ETH),
+        BTC: data.item_snapshots.BTC && CoinOffer.coinOffer(data.item_snapshots.BTC) || {},
+        ETH: data.item_snapshots.ETH && CoinOffer.coinOffer(data.item_snapshots.ETH) || {},
       } : {},
     };
   }
