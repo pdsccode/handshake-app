@@ -52,7 +52,7 @@ export default class BettingHandshake extends BaseHandshake {
     const bytesOffchain = this.web3.utils.asciiToHex(offchain);
 
     const payloadData = this.handshakeInstance.methods
-      .init(hid, side, odds, bytesOffchain)
+      .init(hid, side, oddsValue, bytesOffchain)
       .encodeABI();
 
     const dataBlockChain = await this.neuron.sendRawTransaction(
