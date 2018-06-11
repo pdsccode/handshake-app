@@ -13,6 +13,7 @@ import { HANDSHAKE_ID, API_URL, APP } from '@/constants';
 import  { BetHandshakeHandler, SIDE, MESSAGE} from '@/components/handshakes/betting/Feed/BetHandshakeHandler.js';
 import { URL } from '@/constants';
 import local from '@/services/localStore';
+import GA from '@/services/googleAnalytics';
 
 // components
 import Button from '@/components/core/controls/Button';
@@ -206,6 +207,11 @@ get defaultOutcome() {
     const inputList = this.inputList;
     let extraParams = values;
     console.log('Before Content:', content);
+
+    // send event tracking
+    try {
+      GA.clickGoButtonCreatePage(selectedMatch, selectedOutcome, this.toggleRef.sideName);
+    } catch (err) {}
 
     inputList.forEach(element => {
       const item = JSON.parse(element.replace(regexReplace, ''));
@@ -453,7 +459,8 @@ get defaultOutcome() {
                 const {values} = this.state;
                 values["event_name"] = item.value;
                 this.setState({selectedMatch: item, values});
-
+                // send event tracking
+                GA.clickChooseAnEventCreatePage(item.value);
               }
               }
           />
@@ -477,7 +484,9 @@ get defaultOutcome() {
               values["event_predict"] = item.value;
               values["event_odds"] = item.marketOdds;
 
-              this.setState({selectedOutcome: item, values})
+              this.setState({selectedOutcome: item, values});
+              // send event tracking
+              GA.clickChooseAnOutcomeCreatePage(item.value);
               }
             }
           />}

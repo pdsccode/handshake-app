@@ -63,7 +63,7 @@ class GoogleAnalyticsService {
   clickChooseAnOutcome(outcomeName) {
     this.sendGAEvent({
       category: EVENT_CATEGORY.DISCOVER_BETTING,
-      action: EVENT_ACTION.CLICK_CHOOSE_EVENT,
+      action: EVENT_ACTION.CLICK_CHOOSE_OUTCOME,
       label: outcomeName,
     });
   }
@@ -75,7 +75,55 @@ class GoogleAnalyticsService {
   clickChooseASide(sideName) {
     this.sendGAEvent({
       category: EVENT_CATEGORY.DISCOVER_BETTING,
+      action: EVENT_ACTION.CLICK_CHOOSE_SIDE,
+      label: sideName,
+    });
+  }
+
+  /**
+   *
+   * @param eventName
+   */
+  clickChooseAnEventCreatePage(eventName) {
+    this.sendGAEvent({
+      category: EVENT_CATEGORY.CREATE,
       action: EVENT_ACTION.CLICK_CHOOSE_EVENT,
+      label: eventName,
+    });
+  }
+
+  /**
+   *
+   * @param outcomeName
+   */
+  clickChooseAnOutcomeCreatePage(outcomeName) {
+    this.sendGAEvent({
+      category: EVENT_CATEGORY.CREATE,
+      action: EVENT_ACTION.CLICK_CHOOSE_OUTCOME,
+      label: outcomeName,
+    });
+  }
+
+  /**
+   *
+   * @param sideName
+   */
+  clickChooseASideCreatePage(sideName) {
+    this.sendGAEvent({
+      category: EVENT_CATEGORY.CREATE,
+      action: EVENT_ACTION.CLICK_CHOOSE_SIDE,
+      label: sideName,
+    });
+  }
+
+  /**
+   *
+   * @param sideName
+   */
+  clickGoButtonCreatePage(sideName) {
+    this.sendGAEvent({
+      category: EVENT_CATEGORY.CREATE,
+      action: EVENT_ACTION.CLICK_GO_BUTTON,
       label: sideName,
     });
   }
