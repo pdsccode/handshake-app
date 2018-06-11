@@ -125,6 +125,7 @@ module.exports = function webpackConfig(env, argv) {
     appEnvConfig = { ...appEnvConfig, ...require('./.env.production.js') }; // eslint-disable-line
   }
 
+  // common config
   const finalConfig = merge(
     {
       entry: {
@@ -161,13 +162,9 @@ module.exports = function webpackConfig(env, argv) {
             }
             : null,
           filename: 'index.html',
-          template: xPath('src/templates/main.ejs'),
+          template: xPath('src/templates/index.hbs'),
           favicon: xPath('src/assets/favicon.png'),
-          title: 'Ninja: Anonymous Peer-to-Peer Prediction Exchange',
-          social: {
-            googleAnalyticId: appEnvConfig.social.googleAnalyticId,
-            facebookPixelId: appEnvConfig.social.facebookPixelId,
-          },
+          env: appEnvConfig,
         }),
         new PwaManifestPlugin({
           name: 'Ninja',
@@ -191,9 +188,11 @@ module.exports = function webpackConfig(env, argv) {
           {
             test: /\.jsx?$/,
             exclude: /node_modules/,
-            use: {
-              loader: 'babel-loader',
-            },
+            use: [
+              {
+                loader: 'babel-loader',
+              },
+            ],
           },
           {
             test: /\.html$/,
@@ -201,6 +200,14 @@ module.exports = function webpackConfig(env, argv) {
               {
                 loader: 'html-loader',
                 options: { minimize: isProduction },
+              },
+            ],
+          },
+          {
+            test: /\.hbs$/,
+            use: [
+              {
+                loader: 'handlebars-loader',
               },
             ],
           },

@@ -280,9 +280,9 @@
 
   .text-danger{
     font-size: 14px;
-    
+
   }
-  
+
   .label-balance{
     margin-top: 9px;
     color: #7b7b7b;
@@ -558,18 +558,22 @@
   .body{
     padding-bottom: 10px;
     clear: both;
+    overflow: hidden;
 
     .value{
       width:auto;
       min-height: 30px;
       word-wrap: break-word;
+      font-size: 14px;
     }
 
     .key{
-      width:80px;
+      width:70px;
+      padding-right: 10px;
       float: left;
       color:#6c757d;
       min-height: 30px;
+      font-size: 14px;
     }
   }
 

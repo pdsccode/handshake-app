@@ -3,13 +3,66 @@ import { HANDSHAKE_ID, HANDSHAKE_NAME, HANDSHAKE_ID_DEFAULT } from '@/constants'
 // components
 import { Grid, Row, Col } from 'react-bootstrap';
 import SearchBar from '@/components/core/controls/SearchBar';
-import CreatePromise from '@/components/handshakes/promise/Create';
-import CreateBetting from '@/components/handshakes/betting/Create';
-import CreateExchange from '@/components/handshakes/exchange/Create/Create.jsx';
-import CreateExchangeLocal from '@/components/handshakes/exchange/Create/CreateLocal.jsx';
-import CreateSeed from '@/components/handshakes/seed/Create';
-// style
+import DynamicImport from '@/components/App/DynamicImport';
+import Loading from '@/components/core/presentation/Loading';
+
 import './Create.scss';
+
+const CreatePromise = props => (
+  <DynamicImport
+    loading={Loading}
+    load={() => import('@/components/handshakes/promise/Create')}
+  >
+    {Component => <Component {...props} />}
+  </DynamicImport>
+);
+
+const CreateBetting = props => (
+  <DynamicImport
+    loading={Loading}
+    load={() => import('@/components/handshakes/betting/Create')}
+  >
+    {Component => <Component {...props} />}
+  </DynamicImport>
+);
+
+const CreateExchange = props => (
+  <DynamicImport
+    loading={Loading}
+    load={() => import('@/components/handshakes/exchange/Create/Create.jsx')}
+  >
+    {Component => <Component {...props} />}
+  </DynamicImport>
+);
+
+const CreateExchangeLocal = props => (
+  <DynamicImport
+    loading={Loading}
+    load={() => import('@/components/handshakes/exchange/Create/CreateLocal.jsx')}
+  >
+    {Component => <Component {...props} />}
+  </DynamicImport>
+);
+
+const CreateSeed = props => (
+  <DynamicImport
+    loading={Loading}
+    load={() => import('@/components/handshakes/seed/Create')}
+  >
+    {Component => <Component {...props} />}
+  </DynamicImport>
+);
+
+const CreateWalletTransfer = props => (
+  <DynamicImport
+    loading={Loading}
+    load={() => import('@/components/handshakes/wallet/Create/Transfer')}
+  >
+    {Component => <Component {...props} />}
+  </DynamicImport>
+);
+
+// style
 
 const maps = {
   [HANDSHAKE_ID.PROMISE]: CreatePromise,
@@ -17,6 +70,7 @@ const maps = {
   [HANDSHAKE_ID.EXCHANGE]: CreateExchange,
   [HANDSHAKE_ID.EXCHANGE_LOCAL]: CreateExchangeLocal,
   [HANDSHAKE_ID.SEED]: CreateSeed,
+  [HANDSHAKE_ID.WALLET_TRANSFER]: CreateWalletTransfer,
 };
 
 class Create extends React.Component {
@@ -47,15 +101,15 @@ class Create extends React.Component {
 
     return (
       <Grid className="create">
-        {/*<Row>*/}
-          {/*<Col md={12}>*/}
-            {/*<SearchBar*/}
-              {/*suggestions={this.handShakeList}*/}
-              {/*onSuggestionSelected={this.handshakeChange}*/}
-              {/*inputSearchDefault={HANDSHAKE_NAME[HANDSHAKE_ID_DEFAULT]}*/}
-            {/*/>*/}
-          {/*</Col>*/}
-        {/*</Row>*/}
+        <Row>
+          <Col md={12}>
+            <SearchBar
+              suggestions={this.handShakeList}
+              onSuggestionSelected={this.handshakeChange}
+              inputSearchDefault={HANDSHAKE_NAME[HANDSHAKE_ID_DEFAULT]}
+            />
+          </Col>
+        </Row>
         <Row>
           <Col md={12}>
             <CreateComponent {...this.props} />

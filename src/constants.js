@@ -12,22 +12,26 @@ export const APP = {
   EMAIL_NEED_VERIFY: 'email_need_verify',
 };
 
-export const HANDSHAKE_ID = {
+export const HANDSHAKE_ID = { // important
   PROMISE: 1,
   EXCHANGE: 2,
   BETTING: 3,
   SEED: 4,
-  EXCHANGE_LOCAL: 5,
+  WALLET_TRANSFER: 5,
+  EXCHANGE_LOCAL: 6,
 };
 
-export const HANDSHAKE_ID_DEFAULT = 2;
+export const HANDSHAKE_ID_DEFAULT = 3;
 
 export const HANDSHAKE_NAME = {
+  [HANDSHAKE_ID.PROMISE]: 'Promise',
+  // [HANDSHAKE_ID.EXCHANGE]: 'Exchange',
   // [HANDSHAKE_ID.PROMISE]: 'Promise',
   [HANDSHAKE_ID.EXCHANGE]: 'Exchange',
   [HANDSHAKE_ID.EXCHANGE_LOCAL]: 'Exchange Local',
   [HANDSHAKE_ID.BETTING]: 'Bet',
   // [HANDSHAKE_ID.SEED]: 'Seed',
+  [HANDSHAKE_ID.WALLET_TRANSFER]: 'Transfer coin',
 };
 
 export const PRICE_DECIMAL = 0;
