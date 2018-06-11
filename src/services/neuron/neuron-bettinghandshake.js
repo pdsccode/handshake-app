@@ -91,7 +91,7 @@ export default class BettingHandshake extends BaseHandshake {
     const oddsTakerValue = takerOdds * 100;
     const oddsMakerValue = makerOdds * 100;
     const payloadData = this.handshakeInstance.methods
-      .shake(hid, side, oddsMakerValue, maker, oddsMakerValue, bytesOffchain)
+      .shake(hid, side, oddsTakerValue, maker, oddsMakerValue, bytesOffchain)
       .encodeABI();
 
     const dataBlockChain = await this.neuron.sendRawTransaction(
@@ -140,7 +140,7 @@ export default class BettingHandshake extends BaseHandshake {
 
     return dataBlockChain;
   };
-  // Refund if ater 4 days no one withdraw
+  // Refund if outcome draw
   refund = async (hid, offchain) => {
     console.log(
       'refund address, privateKey, hid, offchain',
