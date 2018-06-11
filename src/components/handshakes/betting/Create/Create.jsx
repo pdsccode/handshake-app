@@ -225,13 +225,13 @@ get defaultOutcome() {
     //const fromAddress = "0x54CD16578564b9952d645E92b9fa254f1feffee9";
     let balance = await BetHandshakeHandler.getBalance();
     balance = parseFloat(balance);
-    //const estimatedGas = await bettinghandshake.getEstimateGas();
-    const estimatedGas = 0.00001;
+    const estimatedGas = await bettinghandshake.getEstimateGas();
+    //const estimatedGas = 0.00001;
     console.log('Estimate Gas:', estimatedGas);
     const eventBet = parseFloat(values["event_bet"]);
     const odds = parseFloat(values['event_odds']);
     const total = eventBet + parseFloat(estimatedGas);
-    console.log("Event Bet, Odds, Total:",eventBet,odds, total);
+    console.log("Event Bet, Odds, Estimate, Total:",eventBet,odds,estimatedGas, total);
 
     const fromAddress = address;
     console.log('Match, Outcome:', selectedMatch, selectedOutcome);
