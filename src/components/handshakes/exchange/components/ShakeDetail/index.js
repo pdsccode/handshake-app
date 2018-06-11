@@ -118,8 +118,8 @@ const mapState = (state, prevProps) => {
   let balance = 0;
   const { offer } = prevProps;
 
-  const eth = offer.itemSnapshots.ETH;
-  const btc = offer.itemSnapshots.BTC;
+  const eth = offer.items.ETH;
+  const btc = offer.items.BTC;
 
   if (currency === CRYPTO_CURRENCY.ETH) {
     if (type === EXCHANGE_ACTION.SELL) {
