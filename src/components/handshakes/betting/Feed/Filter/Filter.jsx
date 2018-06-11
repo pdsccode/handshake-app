@@ -294,12 +294,15 @@ class BettingFilter extends React.Component {
                     <div>Pool (ETH)</div>
                     <div>Price (ODDS)</div>
                   </div>
-                  <GroupBook amountColor="#FA6B49" bookList={this.bookListSupport}/>
+                  {/*<GroupBook amountColor="#FA6B49" bookList={this.bookListSupport}/>*/}
+                    {<GroupBook amountColor="#8BF275" bookList={this.bookListSupport}/>}
                   {/*<div className="spreadBox">*/}
                     {/*<div>ODDS SPREAD</div>*/}
                     {/*<div>{this.oddSpread}</div>*/}
                   {/*</div>*/}
-                  <GroupBook amountColor="#8BF275" bookList={this.bookListAgainst}/>
+                  {/*<GroupBook amountColor="#8BF275" bookList={this.bookListAgainst}/>*/}
+                    {<GroupBook amountColor="#FA6B49" bookList={this.bookListAgainst}/>}
+
                 </div>
                 <div className="item">
                   {<BettingShake

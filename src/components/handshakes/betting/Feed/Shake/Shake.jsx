@@ -64,7 +64,7 @@ class BetingShake extends React.Component {
     // });
 
     this.state = {
-      buttonClass: 'btnOK btnRed',
+      buttonClass: 'btnOK btnBlue',
       isShowOdds: true,
       extraData: {},
       isChangeOdds: false,
@@ -177,7 +177,7 @@ class BetingShake extends React.Component {
         oddValue: parseFloat(marketOdds).toFixed(2)
       })
     }
-    this.setState({buttonClass: `btnOK ${id === 2 ? 'btnBlue' : 'btnRed' }`});
+    this.setState({buttonClass: `btnOK ${id === 1 ? 'btnBlue' : 'btnRed' }`});
 
   }
 
