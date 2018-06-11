@@ -208,7 +208,7 @@ export class MasterWallet {
         wallet.privateKey = walletJson.privateKey;
         wallet.coinType = walletJson.coinType;
         wallet.default = walletJson.default;
-        wallet.balance = 0;//walletJson.balance;
+        wallet.balance = walletJson.balance;
         wallet.network = walletJson.network;
         wallet.name = walletJson.name;
         wallet.title = walletJson.title;
