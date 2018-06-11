@@ -61,11 +61,11 @@ export class Bitcoin extends Wallet {
     }
 
     checkAddressValid(toAddress){
-      
+
       if (!bitcore.Address.isValid(toAddress)){
           return "You can only send tokens to Bitcoin address";
       }
-      else return true;    
+      else return true;
     }
 
 
@@ -208,11 +208,45 @@ export class Bitcoin extends Wallet {
       return false;
     }
 
-    async getTransactionDetail() {
-      const url = `${this.network}/txs/?address=${this.address}`;
+    async getTransactionDetail(txid) {
+      const url = `${this.network}/tx/${txid}`;
       const response = await axios.get(url);
       if (response.status == 200) {
-        console.log(response.data);
+        let detail = response.data, result = {}, is_sent = false, value = 0,
+        from_addresses = [], to_addresses = [];
+
+        result = {
+          header: {
+            coin: "BTC",
+            confirmations: detail.confirmations
+          },
+          body: {
+            size: detail.size,
+            received_time: moment(detail.time).format('llll'),
+            mined_time: moment(detail.blocktime).format('llll'),
+            block_hash: detail.blockhash,
+            fees: detail.fees + " BTC",
+          }
+        };
+
+        for(let i in detail.vin){
+          if(String(detail.vin[i].addr).toLowerCase() == this.address.toLowerCase())
+            is_sent = true;
+
+          let no = Number(i) + 1;
+          result.body["from_addr_"+no] = detail.vin[i].addr + " " + detail.vin[i].value + " BTC";
+          value += Number(detail.vin[i].value);
+        }
+
+        for(let i in detail.vout){
+          let no = Number(i) + 1;
+          result.body["to_addr_"+no] = detail.vout[i].scriptPubKey.addresses.join(" ") + " " + detail.vout[i].value + " BTC";
+        }
+
+        result.header.value = value;
+        result.header.is_sent = is_sent;
+
+        return result;
       }
       return response.data;
     }
@@ -225,7 +259,6 @@ export class Bitcoin extends Wallet {
       if (response.status == 200) {
 
         if(response.data && response.data.txs){
-          //console.log(response.data.txs);
           for(let tran of response.data.txs){
             let vin = tran.vin, vout = tran.vout,
             is_sent = false, value = 0,
@@ -261,7 +294,7 @@ export class Bitcoin extends Wallet {
                 else{
                   let bitcoin = new Bitcoin();
                     bitcoin.address = tout_addresses;
-                    addresses.push(bitcoin.getShortAddress());                  
+                    addresses.push(bitcoin.getShortAddress());
                 }
               }
             }
