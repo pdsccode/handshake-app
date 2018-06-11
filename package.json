@@ -56,6 +56,7 @@
     "firebase": "^5.0.4",
     "flag-icon-css": "^3.0.0",
     "formik": "^0.11.11",
+    "handlebars-loader": "^1.7.0",
     "hdkey": "^0.8.0",
     "history": "^4.7.2",
     "html-loader": "^0.5.5",
