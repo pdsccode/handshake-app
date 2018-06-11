@@ -12,17 +12,25 @@ export default class BettingHandshake extends BaseHandshake {
   constructor(chainId) {
     super(chainId);
 
-    // // / test
-    // this.neuron.caculateEstimatGasWithEthUnit(address).then((gas) => {
-    //   console.log(TAG, ' contructor -- gas = ', gas.toString());
-    // });
+    // / test
+    this.getEstimateGas().then((gas) => {
+      console.log(TAG, ' contructor -- gas = ', gas.toString());
+    });
   }
   get contractFileNameWithoutExtension() {
     // return process.env.isProduction ? 'PredictionHandshake' : 'PredictionHandshakeDev';
     return process.env.PredictionHandshakeFileName;
   }
   async getEstimateGas() {
+    const hid = 0;
+    const side = 1;
+    const payoutValue = Web3.utils.toWei('0.5', 'ether');
+    const bytesOffchain = this.web3.utils.asciiToHex('cryptosign_m562');
+    const payloadData = this.handshakeInstance.methods
+      .init(hid, side, payoutValue, bytesOffchain)
+      .encodeABI();
     const estimateGas = await this.neuron.caculateEstimatGasWithEthUnit(
+      payloadData,
       address,
       gasPrice,
     );
@@ -40,13 +48,6 @@ export default class BettingHandshake extends BaseHandshake {
       odds,
       offchain,
     );
-    // hid = 0;
-    // side = 1;
-    // hid = 1;
-    // side = 1;
-    // payout = 0.5;
-    // offchain = 'cryptosign_m562';
-    //const payoutValue = Web3.utils.toWei(payout.toString(), 'ether');
     const oddsValue = odds * 100;
     const bytesOffchain = this.web3.utils.asciiToHex(offchain);
 
@@ -91,6 +92,7 @@ export default class BettingHandshake extends BaseHandshake {
     const payloadData = this.handshakeInstance.methods
       .shake(hid, side, oddsMakerValue, maker, oddsMakerValue, bytesOffchain)
       .encodeABI();
+
     const dataBlockChain = await this.neuron.sendRawTransaction(
       address,
       privateKey,
