@@ -1,19 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Grid, Row, Col } from 'react-bootstrap';
-import {Bitcoin} from '@/models/Bitcoin.js'
-import {Ethereum} from '@/models/Ethereum.js'
 import iconSent from '@/assets/images/icon/icon-sent.svg';
 import iconReceived from '@/assets/images/icon/icon-received.svg';
-
 import PropTypes from 'prop-types';
 import './Wallet.scss';
 
-import Button from '@/components/core/controls/Button';
-import Checkbox from '@/components/core/forms/Checkbox/Checkbox';
-import Modal from '@/components/core/controls/Modal';
-import ModalDialog from '@/components/core/controls/ModalDialog';
-import createForm from '@/components/core/form/createForm';
 const _ = require('lodash');
 const moment = require('moment');
 
@@ -23,31 +14,103 @@ class WalletTransaction extends React.Component {
     super(props);
     this.state = {
       wallet: props.wallet,
-      transaction_detail: props.transaction_detail,
-      transaction_time_stamp: props.transaction_time_stamp
+      transaction_detail: props.transaction_detail
     };
   }
 
   async componentDidUpdate(){
-    const {transaction_detail, transaction_time_stamp}  = this.props;
+    const {transaction_detail}  = this.props;
     if (transaction_detail != this.state.transaction_detail){
-        this.setState({transaction_detail: transaction_detail, transaction_time_stamp: transaction_time_stamp });
+      this.setState({transaction_detail: transaction_detail });
     }
   }
 
+  cooked_transaction(data){
+    const wallet = this.props.wallet;
+    if(wallet && data){
+      if(wallet.name == "ETH"){
+        return {
+          header: {
+            value: Number(data.value / 1000000000000000000),
+            coin: wallet.name,
+            confirmations: data.confirmations,
+            is_sent: wallet.address.toLowerCase() == String(data.from).toLowerCase(),
+            status: Number(data.txreceipt_status) > 0 ? "success" : "failed"
+          },
+          body: {
+            hash: data.hash,
+            block: data.blockNumber,
+            from: data.from,
+            to: data.to,
+            gas: data.gas,
+            gas_price: Number(data.gasPrice / 1000000000000000000).toFixed(data.gasPrice.length) + wallet.name,
+            gas_used: data.gasUsed,
+            nouce: data.nouce,
+            transaction_index: data.transactionIndex,
+            input: data.input
+          }
+        };
+      }
+      else{
+        let result = {}, is_sent = false, value = 0;
+
+        result = {
+          header: {
+            coin: "BTC",
+            confirmations: data.confirmations
+          },
+          body: {
+            size: data.size,
+            received_time: moment(data.time).format('llll'),
+            mined_time: moment(data.blocktime).format('llll'),
+            block_hash: data.blockhash,
+            fees: data.fees + " BTC",
+          }
+        };
+
+        for(let i in data.vin){
+          if(String(data.vin[i].addr).toLowerCase() == wallet.address.toLowerCase())
+            is_sent = true;
+
+          let no = Number(i) + 1;
+          result.body["from_addr_"+no] = data.vin[i].addr + " " + data.vin[i].value + " BTC";
+          value += Number(data.vin[i].value);
+        }
+
+        for(let i in data.vout){
+          let no = Number(i) + 1;
+          result.body["to_addr_"+no] = data.vout[i].scriptPubKey.addresses.join(" ") + " " + data.vout[i].value + " BTC";
+        }
+
+        result.header.value = value;
+        result.header.is_sent = is_sent;
+
+        return result;
+      }
+    }
+
+    return false;
+  }
+
   get detail_transaction() {
-    let detail = this.state.transaction_detail;
-    return this.state.transaction_detail ?
+    let detail = this.cooked_transaction(this.state.transaction_detail);
+    let css_status = detail ? "status-" + detail.header.status : "";
+
+    return detail ?
     (
       <div className="transaction-detail-wrapper" >
         <div className="col1"><img className="iconDollar" src={detail.header.is_sent ? iconSent : iconReceived} /></div>
         <div className="col2">
           {detail.header.value} {detail.header.coin}<br />
-          <span>{moment(this.state.transaction_time_stamp).format('llll')}</span>
+          <span>{moment(detail.timeStamp).format('llll')}</span>
         </div>
-        <div className="confirmation">{detail.header.confirmations} Confirmations<br/>
-          <span className="text-secondary">Please wait for least 12 confirmations to make sure your transaction is processed securely</span>
+        <div className="confirmation">
+          {
+            detail.header.status ? <div className={css_status}>Status {detail.header.status}</div> : ""
+          }
+          <div>{detail.header.confirmations} confirmations</div>
         </div>
+
         {
           Object.keys(detail.body).map((char) => {
             return (
@@ -73,8 +136,7 @@ class WalletTransaction extends React.Component {
 }
 
 WalletTransaction.propTypes = {
-  transaction_detail: PropTypes.any,
-  transaction_time_stamp: PropTypes.number
+  transaction_detail: PropTypes.any
 };
 
 const mapState = (state) => ({

@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 // service, constant
@@ -48,7 +49,7 @@ import QrReader from 'react-qr-reader';
 import { showAlert } from '@/reducers/app/action';
 import { showLoading, hideLoading } from '@/reducers/app/action';
 import { Input as Input2, InputGroup, InputGroupAddon } from 'reactstrap';
-
+import _ from 'lodash';
 // import filesaver from 'file-saver';
 
 
@@ -84,6 +85,15 @@ const selectorFormCreditCard = formValueSelector(nameFormCreditCard);
 
 const amountValid = value => (value && isNaN(value) ? 'Invalid amount' : undefined);
 
+const defaultOffset = 500;
+
+var topOfElement = function(element) {
+    if (!element) {
+        return 0;
+    }
+    return element.offsetTop + topOfElement(element.offsetParent);
+};
+
 class Wallet extends React.Component {
   constructor(props) {
     super(props);
@@ -113,9 +123,13 @@ class Wallet extends React.Component {
       isNewCCOpen: false,
       stepProtected: 1,
       activeProtected: false,
+      isHistory: false,
+      pagenoHistory: 1,
       transactions: [],
+      isLoadMore: false
     };
     this.props.setHeaderRight(this.headerRight());
+    this.listener = _.throttle(this.scrollListener, 200).bind(this);
   }
 
   showAlert(msg, type = 'success', timeOut = 3000, icon = '') {
@@ -141,7 +155,6 @@ class Wallet extends React.Component {
   hideLoading() {
     this.props.hideLoading();
   }
-
   headerRight() {
     return (<HeaderMore onHeaderMoreClick={this.onIconRightHeaderClick} />);
   }
@@ -169,10 +182,54 @@ class Wallet extends React.Component {
       isLoading: true, listMainWalletBalance: listMainWallet, listTestWalletBalance: listTestWallet, listRewardWalletBalance: listRewardWallet,
     });
   }
-  componentDidMount1() {
 
+  scrollListener () {
+    console.log("scrollListener 0");
+    let el = ReactDOM.findDOMNode(this),
+      offset = this.props.offset || defaultOffset,
+      scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+    let {walletSelected, pagenoHistory } = this.state;
+    pagenoHistory++;
+    if (this.state.isHistory && this.state.isLoadMore == false &&
+      pagenoHistory > 0 && pagenoHistory != this.state.pagenoHistory &&
+      topOfElement(el) + el.offsetHeight - scrollTop - window.innerHeight < offset) {
+      this.setState({ isLoadMore: true});
+      console.log(topOfElement(el),  el.offsetHeight , scrollTop , window.innerHeight ,offset);
+
+      let list = this.state.transactions;
+      const dataHistory = walletSelected.getTransactionHistory(pagenoHistory).then((data) => {
+        if(data.length > 0){
+          console.log("scrollListener 1", list.length, pagenoHistory);
+          let final_list = list.concat(data);
+          console.log("scrollListener 2", list.length);
+          this.setState({ transactions: final_list, pagenoHistory: pagenoHistory, isLoadMore: false});
+        }
+        else{
+          this.setState({ pagenoHistory: 0, isLoadMore: false});
+        }
+
+        console.log("scrollListener 3", this.state.transactions.length);
+      });
+    }
   }
+
+  attachScrollListener() {
+    window.addEventListener('scroll', this.listener);
+    window.addEventListener('resize', this.listener);
+    this.listener();
+  }
+
+  detachScrollListener() {
+    window.removeEventListener('scroll', this.listener);
+    window.removeEventListener('resize', this.listener);
+  }
+
+  componentWillUnmount() {
+    this.detachScrollListener();
+  }
+
   async componentDidMount() {
+    this.attachScrollListener();
     let listWallet = await MasterWallet.getMasterWallet();
     // console.log("listWallet", listWallet);
 
@@ -291,12 +348,28 @@ class Wallet extends React.Component {
     obj.push({
       title: 'View transaction history',
       handler: () => {
-        this.setState({ walletSelected: wallet, transactions: [] });
+        let pagenoHistory = 1;
+        this.setState({ walletSelected: wallet, transactions: [], isHistory: true, pagenoHistory: pagenoHistory });
         this.toggleBottomSheet();
         this.modalHistoryRef.open();
         this.showLoading();
-        const dataHistory = wallet.getTransactionHistory().then((data) => {
-          this.setState({ walletSelected: wallet, transactions: data });
+
+        wallet.getBalance().then(result=>{
+          wallet.balance = result;
+          this.setState({walletSelected: wallet});
+        });
+
+        // wallet.getTransactionCount().then(result=>{
+        //   wallet.transaction_count = result;
+        //   this.setState({walletSelected: wallet});
+        // });
+
+        wallet.getTransactionHistory(1).then((data) => {
+          if(data.length < 10){
+            pagenoHistory = 0;
+          }
+
+          this.setState({ transactions: data, pagenoHistory: pagenoHistory });
           this.hideLoading();
         });
       },
@@ -310,7 +383,7 @@ class Wallet extends React.Component {
       },
     });
 
-    if (!wallet.isReward) {      
+    if (!wallet.isReward) {
         obj.push({
           title: StringHelper.format('Set as default {0} wallet ', wallet.name) + (wallet.default ? "✓ " : ""),
           handler: () => {
@@ -331,7 +404,7 @@ class Wallet extends React.Component {
             this.modalBetRef.open();
             this.toggleBottomSheet();
           }
-        })       
+        })
     }
     obj.push({
       title: 'Cancel',
@@ -611,6 +684,11 @@ class Wallet extends React.Component {
   closeProtected = () => {
     this.setState({ activeProtected: false });
   }
+
+  closeHistory = () => {
+    this.setState({ transactions: [], isHistory: false });
+  }
+
   onCopyProtected = () => {
     Clipboard.copy(this.state.walletSelected.mnemonic);
     this.showToast('Copied to clipboard');
@@ -769,7 +847,7 @@ class Wallet extends React.Component {
           </Modal>
 
 
-          <Modal title="Transaction history" onRef={modal => this.modalHistoryRef = modal}>
+          <Modal title="Transaction history" onRef={modal => this.modalHistoryRef = modal} onClose={this.closeHistory}>
             <WalletHistory wallet={this.state.walletSelected} transactions={this.state.transactions} />
           </Modal>
 

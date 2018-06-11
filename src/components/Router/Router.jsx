@@ -179,6 +179,9 @@ class Router extends React.Component {
     if (this.timeOutGetPrice) {
       clearInterval(this.timeOutGetPrice);
     }
+    if (this.timeOutCheckGotETHFree) {
+      clearInterval(this.timeOutCheckGotETHFree);
+    }
   }
 
 
@@ -273,7 +276,26 @@ class Router extends React.Component {
             this.props.getFreeETH({
               PATH_URL: `/user/free-rinkeby-eth?address=${wallet.address}`,
               METHOD: 'POST',
-              successFn: () => { this.setState({ isLoading: false, loadingText: '' }); },
+              successFn: (response) => {
+                this.setState({ isLoading: false, loadingText: '' });
+                // run cron alert user when got 1eth:
+                this.timeOutCheckGotETHFree = setInterval(() => {
+                  wallet.getBalance().then(result=>{
+                    if (result > 0){
+                      this.porps.showAlert({
+                        message: <div className="text-center">You have ETH! Now you can play for free on the Ninja testnet.</div>,
+                        timeOut: false,
+                        isShowClose: true,
+                        type: 'success',
+                        callBack: () => {},
+                      });
+                      // notify user:
+                      clearInterval(this.timeOutCheckGotETHFree);
+                      
+                    }
+                  })
+                }, 20 * 60 * 1000); // 20'
+              },
               errorFn: () => { this.setState({ isLoading: false, loadingText: '' }); },
             });
           });
