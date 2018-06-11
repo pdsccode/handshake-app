@@ -89,7 +89,7 @@ export class Component extends React.PureComponent { // eslint-disable-line reac
           <div className="text-total">
             Total ({fiat}) <img src={iconApproximate} /> <span className="float-right">{formatMoney(fiatAmount)}</span>
           </div>
-          { enableShake && (<Button block type="submit" className="mt-3">Shake</Button>) }
+          <Button block type="submit" className="mt-3" disabled={!enableShake}>Shake</Button>
         </FormShakeDetail>
       </div>
     );
@@ -123,19 +123,19 @@ const mapState = (state, prevProps) => {
 
   if (currency === CRYPTO_CURRENCY.ETH) {
     if (type === EXCHANGE_ACTION.SELL) {
-      percentage = eth.buyPercentage;
-      balance = eth.buyBalance;
+      percentage = eth?.buyPercentage;
+      balance = eth?.buyBalance;
     } else {
-      percentage = eth.sellPercentage;
-      balance = eth.sellBalance;
+      percentage = eth?.sellPercentage;
+      balance = eth?.sellBalance;
     }
   } else if (currency === CRYPTO_CURRENCY.BTC) {
     if (type === EXCHANGE_ACTION.SELL) {
-      percentage = btc.buyPercentage;
-      balance = btc.buyBalance;
+      percentage = btc?.buyPercentage;
+      balance = btc?.buyBalance;
     } else {
-      percentage = btc.sellPercentage;
-      balance = btc.sellBalance;
+      percentage = btc?.sellPercentage;
+      balance = btc?.sellBalance;
     }
   }
 
@@ -149,7 +149,7 @@ const mapState = (state, prevProps) => {
 
   return {
     listOfferPrice: listOfferPrice,
-    fiatAmount,
+    fiatAmount: fiatAmount || 0,
     enableShake
   }
 };

@@ -63,70 +63,9 @@ class FeedExchange extends React.PureComponent {
   constructor(props) {
     super(props);
 
-    // const { extraData } = props;
-    const extraData = {
-      "status": 200,
-      "code": 1,
-      "message": "Success",
-      "data": {
-        "id": "658",
-        "hid": 0,
-        "item_flags": {
-          "BTC": true,
-          "ETH": true
-        },
-        "status": "created",
-        "username": "Apple store",
-        "email": "",
-        "language": "en-US",
-        "contact_phone": "+84-123",
-        "contact_info": "Tran phu",
-        "longitude": 106.6559066,
-        "latitude": 10.7862542,
-        "fiat_currency": "VND",
-        "transaction_count": {
-          "currency": "",
-          "success": 0,
-          "failed": 0
-        },
-        "item_snapshots": {
-          "BTC": {
-            "currency": "BTC",
-            "status": "active",
-            "sell_amount_min": "0.01",
-            "sell_amount": "0.02",
-            "sell_balance": "0.02",
-            "sell_percentage": "-0.0025",
-            "buy_amount_min": "0.01",
-            "buy_amount": "0.01",
-            "buy_balance": "0.01",
-            "buy_percentage": "0.0025",
-            "system_address": "3AxHW4x2wjdDJHvez3t1U3HPzxp1too7HS",
-            "user_address": "mggcHNAWQfn8pTZ7BLSCaHWb49UZTLnVgv",
-            "reward_address": "1LNsFik7ewrtanxzXFfMi4rKxELoSZLSj7"
-          },
-          "ETH": {
-            "currency": "ETH",
-            "status": "active",
-            "sell_amount_min": "0.1",
-            "sell_amount": "0.1",
-            "sell_balance": "0",
-            "sell_percentage": "-0.0025",
-            "buy_amount_min": "0.1",
-            "buy_amount": "0.1",
-            "buy_balance": "0.1",
-            "buy_percentage": "0.0025",
-            "system_address": "",
-            "user_address": "0x0ef39e1F896E5882F07405439859bc5988979Cf8",
-            "reward_address": "0xd9152338F065d4EEC5D03ecb76852BDafc94CFB2"
-          }
-        },
-        "created_at": "0001-01-01T00:00:00Z",
-        "updated_at": "2018-06-09T23:56:37.744Z"
-      }
-    };
+    const { extraData } = props;
 
-    this.offer = OfferShop.offerShop(extraData.data);
+    this.offer = OfferShop.offerShop(JSON.parse(extraData));
 
     console.log('offer',this.offer);
 
