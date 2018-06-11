@@ -18,6 +18,7 @@
       letter-spacing: 0;
       line-height: rem-calc(44px);
       margin: rem-calc(0 0 50px);
+      font-weight: $medium;
     }
     dl {
       margin: rem-calc(0 0 60px);
@@ -27,15 +28,18 @@
         letter-spacing: -0.24px;
         line-height: rem-calc(20px);
         margin-bottom: rem-calc(16px);
-        font-weight: $normal;
+        font-weight: $light;
       }
       dt {
-        font-weight: $semi-bold;
+        font-weight: $medium;
       }
 
       dd + dt {
         margin-top: rem-calc(35px);
       }
+    }
+    .bottomBox {
+      margin-bottom: rem-calc(98px);
     }
     .btnStartTrading {
       background-image: linear-gradient(-269deg, #7740FF 0%, #1E4EFF 100%);
@@ -43,19 +47,22 @@
       font-size: rem-calc(24px);
       color: #FFFFFF;
       letter-spacing: 0;
-      padding: rem-calc(10px 50px);
+      padding: rem-calc(15px 30px);
+      align-self: center;
+      position: relative;
+      top: rem-calc(10px);
     }
     .registerEmail {
       display: flex;
       flex-wrap: wrap;
-      margin: 0 auto 98px;
+      margin: 0 auto;
       .email {
         width: 100%;
         padding: 15px 26px;
         text-align: left;
         border: 1px solid #FAFAFA;
         box-shadow: 1px 1px 10px #c2c2c238;
-        font-weight: $normal;
+        font-weight: $light;
         font-size: 18px;
         font-family: azo-sans-web, sans-serif;
         font-style: normal;
@@ -95,20 +102,25 @@
   .secondContainer {
     margin-top: rem-calc(89px);
     margin-bottom: rem-calc(133px);
+    & > div {
+      align-items: center;
+    }
     .subTitle {
       font-size: rem-calc(24px);
-      font-weight: $semi-bold;
+      font-weight: $medium;
       color: #FFFFFF;
       letter-spacing: 0;
       line-height: rem-calc(40px);
       margin-bottom: rem-calc(34px);
+      padding-left: rem-calc(20px);
     }
     .description {
       font-size: rem-calc(20px);
-      font-weight: $normal;
+      font-weight: $light;
       color: #FFFFFF;
       letter-spacing: 0;
       line-height: rem-calc(40px);
+      padding-left: rem-calc(20px);
     }
   }
   .thirdContainer {
@@ -121,7 +133,7 @@
     }
     .subTitle {
       font-size: rem-calc(24px);
-      font-weight: $semi-bold;
+      font-weight: $medium;
       color: #FFFFFF;
       letter-spacing: -0.24px;
       line-height: rem-calc(24px);
@@ -129,7 +141,7 @@
     }
     .description {
       font-size: rem-calc(20px);
-      font-weight: $normal;
+      font-weight: $light;
       color: #FFFFFF;
       letter-spacing: 0;
       line-height: rem-calc(40px);

@@ -157,20 +157,27 @@ class Handshake extends React.Component {
                 <dd>Process has been secured 100% by smart contract</dd>
               </dl>
 
-              <a href="/"
-                 className="btnStartTrading">
-                <span>Start Trading Now</span>
-              </a>
-              {
-                this.renderInputForm({
-                  id: 'email-1',
-                  onSubmit: (e) => {
-                    e && e.preventDefault();
-                    this.submitEmail(inputRefOne);
-                  },
-                  refName: inputRefOne,
-                })
-              }
+              <div className="row bottomBox">
+                <div className="col-lg-5 col-md-12 col-sm-12 col-xs-12">
+                  <a href="/"
+                     className="btnStartTrading"
+                  >
+                    <span>Start Trading Now</span>
+                  </a>
+                </div>
+                <div className="col-lg-7 col-md-12 col-sm-12 col-xs-12">
+                  {
+                    this.renderInputForm({
+                      id: 'email-1',
+                      onSubmit: (e) => {
+                        e && e.preventDefault();
+                        this.submitEmail(inputRefOne);
+                      },
+                      refName: inputRefOne,
+                    })
+                  }
+                </div>
+              </div>
             </div>
             <div className="col-lg-4 col-md-12 d-none d-lg-block">
               {/*<img src={appScreenIcon} alt="app screen" className={`img-fluid ${s.appScreen}`} />*/}
@@ -205,17 +212,17 @@ class Handshake extends React.Component {
         <div className={`container fourContainer text-center`}>
           <div className="row">
             <div className="col-lg-4 col-md-12 col-sm-12 col-xs-12">
-              <img src={paymentMethodIcon} />
+              <img src={paymentMethodIcon} width={93} height={64} />
               <p className="subTitle">Multiple Payment Method</p>
               <p className="description">We are available for cash - coin trading and credit card - coin trading. Find your nearest traders and leave no transaction history for any activity on our platform.</p>
             </div>
             <div className="col-lg-4 col-md-12 col-sm-12 col-xs-12">
-              <img src={fastAnOnIcon} />
+              <img src={fastAnOnIcon} width={80} height={80} />
               <p className="subTitle">Fast and On the go</p>
               <p className="description">With location based trading, we allow you to make payment in few minutes with utmost convenience.</p>
             </div>
             <div className="col-lg-4 col-md-12 col-sm-12 col-xs-12">
-              <img src={safeIcon} />
+              <img src={safeIcon} width={70} height={80} />
               <p className="subTitle">100% safe and secured for both sides</p>
               <p className="description">Unlike any other platform, we do not hold users' keys and grant full key controls to buyers and sellers.</p>
             </div>
