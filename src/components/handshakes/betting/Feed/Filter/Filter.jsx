@@ -294,12 +294,7 @@ class BettingFilter extends React.Component {
             objectId={outcomeId} />}
               <div className="wrapperContainer">
                 <div className="item">
-                <Button className="buttonSupport" block onClick={() => {
-                    this.setState({
-                        side: SIDE.SUPPORT
-                    }, ()=> this.modalBetRef.open());
-                    
-                }}>SUPPORT</Button>
+                
                   {<div className="titleBox">
                     <div>Pool (ETH)</div>
                     <div>Price (ODDS)</div>
@@ -312,16 +307,16 @@ class BettingFilter extends React.Component {
                   {/*</div>*/}
                   {/*<GroupBook amountColor="#8BF275" bookList={this.bookListAgainst}/>*/}
                     {/*<GroupBook amountColor="#FA6B49" bookList={this.bookListAgainst}/>*/}
-                
+                    <Button className="buttonSupport" block onClick={() => {
+                        this.setState({
+                            side: SIDE.SUPPORT
+                        }, ()=> this.modalBetRef.open());
+                        
+                    }}>SUPPORT</Button>
                     
                 </div>
                 <div className="item">
-                <Button  className="buttonAgainst" block onClick={() => {
-                    console.log('click oppose');
-                    this.setState({
-                        side: SIDE.AGAINST
-                    }, ()=> this.modalBetRef.open());
-                }}>OPPOSE</Button>
+                
                 {<div className="titleBox">
                     <div>Pool (ETH)</div>
                     <div>Price (ODDS)</div>
@@ -335,7 +330,12 @@ class BettingFilter extends React.Component {
                     marketSupportOdds={parseFloat(this.defaultSupportOdds)}
                   marketAgainstOdds={parseFloat(this.defaultAgainstOdds)}/>*/}
                     {<GroupBook amountColor="#FA6B49" bookList={this.bookListAgainst}/>}
-                    
+                    <Button  className="buttonAgainst" block onClick={() => {
+                        console.log('click oppose');
+                        this.setState({
+                            side: SIDE.AGAINST
+                        }, ()=> this.modalBetRef.open());
+                    }}>OPPOSE</Button>
                     
                 </div>
               </div>
