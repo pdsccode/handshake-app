@@ -228,7 +228,7 @@ get defaultOutcome() {
     const estimatedGas = await bettinghandshake.getEstimateGas();
     console.log('Estimate Gas:', estimatedGas);
     const eventBet = parseFloat(values["event_bet"]);
-    const odds = parseFloat(this.state.oddValue);
+    const odds = parseFloat(values['event_odds']);
     const total = eventBet + parseFloat(estimatedGas);
     console.log("Event Bet, Odds, Total:",eventBet,odds, total);
 
@@ -305,7 +305,7 @@ get defaultOutcome() {
     const odds = values['event_odds'];
     const total = amount * odds;
     this.setState({
-      winValue: total || 0
+      winValue: total || 0,
     })
   }
 
@@ -380,7 +380,7 @@ get defaultOutcome() {
         //min="0.0001"
         //step="0.0002"
         placeholder={placeholder}
-        value={key === "event_odds" ? this.state.oddValue : values[key]}
+        value={values[key]}
         validate={[required]}
         //ErrorBox={ErrorBox}
         onChange={(evt) => {
