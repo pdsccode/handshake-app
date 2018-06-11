@@ -16,6 +16,7 @@ import IconAvatar from '@/assets/images/icon/avatar.svg';
 
 import { Firechat } from './Firechat';
 import './Firechat.scss';
+import './Chat.scss';
 
 // Get a reference to the Firebase Realtime Database
 const chatRef = firebase.database().ref();
