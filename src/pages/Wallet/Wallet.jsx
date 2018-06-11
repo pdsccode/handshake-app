@@ -213,6 +213,8 @@ class Wallet extends React.Component {
 
     await this.splitWalletData(listWallet);
 
+    await MasterWallet.UpdateLocalStore(listWallet);
+
 
     // var btcTestnet = new Bitcoin(Bitcoin.Network.Testnet);
     // var balance = await btcTestnet.getBalance("n1MZwXhWs1unyuG6qNbEZRZV4qjzd3ZMyz");

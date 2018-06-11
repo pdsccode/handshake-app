@@ -125,6 +125,7 @@ module.exports = function webpackConfig(env, argv) {
     appEnvConfig = { ...appEnvConfig, ...require('./.env.production.js') }; // eslint-disable-line
   }
 
+  // common config
   const finalConfig = merge(
     {
       entry: {
@@ -161,8 +162,9 @@ module.exports = function webpackConfig(env, argv) {
             }
             : null,
           filename: 'index.html',
-          template: xPath('src/templates/main.html'),
+          template: xPath('src/templates/index.hbs'),
           favicon: xPath('src/assets/favicon.png'),
+          env: appEnvConfig,
         }),
         new PwaManifestPlugin({
           name: 'Ninja',
@@ -175,7 +177,7 @@ module.exports = function webpackConfig(env, argv) {
           icons: [
             {
               src: xPath('src/assets/images/logo.png'),
-              sizes: [96, 128, 192, 256, 384, 512],
+              sizes: [192, 256, 384, 512],
               destination: path.join('assets', 'icons'),
             },
           ],
@@ -186,9 +188,11 @@ module.exports = function webpackConfig(env, argv) {
           {
             test: /\.jsx?$/,
             exclude: /node_modules/,
-            use: {
-              loader: 'babel-loader',
-            },
+            use: [
+              {
+                loader: 'babel-loader',
+              },
+            ],
           },
           {
             test: /\.html$/,
@@ -196,6 +200,14 @@ module.exports = function webpackConfig(env, argv) {
               {
                 loader: 'html-loader',
                 options: { minimize: isProduction },
+              },
+            ],
+          },
+          {
+            test: /\.hbs$/,
+            use: [
+              {
+                loader: 'handlebars-loader',
               },
             ],
           },

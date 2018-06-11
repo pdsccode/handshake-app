@@ -26,7 +26,7 @@ class CreateRouter extends React.Component {
   constructor(props) {
     super(props);
     this.props.setHeaderCanBack();
-    this.props.setHeaderTitle('Initiate a Handshake');
+    this.props.setHeaderTitle('Predict');
     this.props.clearHeaderRight();
     this.props.clearHeaderLeft();
     this.props.showHeader();

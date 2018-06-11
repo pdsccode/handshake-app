@@ -1,4 +1,5 @@
 module.exports = {
+  title: 'Ninja: Anonymous Peer-to-Peer Prediction Exchange',
   BASE_API_URL: "http://localhost:8000/api",
   PUBLIC_URL: "http://localhost:8080",
   firebase: {
@@ -10,4 +11,12 @@ module.exports = {
     messagingSenderId: '',
   },
   ipfindKey: '',
+  GOOGLE_API_KEY: '',
+  social: {
+    isUseSocial: false,
+    googleAnalyticId: '',
+    facebookPixelId: '',
+    facebookAppId: '',
+  },
+  PredictionHandshakeFileName: ''
 };

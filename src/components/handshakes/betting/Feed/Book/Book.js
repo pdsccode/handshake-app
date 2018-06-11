@@ -25,7 +25,7 @@ class BetBook extends React.Component {
     return (
       <div className="wrapperBettingBook">
         <div className="oddText">{parseFloat(amount).toFixed(4)}</div>
-        <div className="amountText" style={amountStyle}>{odds}</div>
+        <div className="amountText" style={amountStyle}>{parseFloat(odds).toFixed(2)}</div>
       </div>
     );
   }

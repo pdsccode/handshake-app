@@ -15,7 +15,7 @@ export const MESSAGE = {
   CREATE_BET_SUCCESSFUL: "Success! You placed a bet.",
   NOT_ENOUGH_BALANCE: "Go to wallet to request free ETH",
   CHOOSE_MATCH: "Please choose match and outcome",
-  ODD_LARGE_THAN: "Please enter odds of 1 or greater.",
+  ODD_LARGE_THAN: "Please enter odds greater than 1",
   AMOUNT_VALID: "Please place a bet larger than 0.",
 }
 
@@ -54,7 +54,7 @@ export const BETTING_STATUS_LABEL =
     WITHDRAW: 'Withdraw winnings', 
     CANCELLING: 'Your bet is being cancelled.',
     PROGRESSING: "Your bet is progressing.",
-    WAITING_RESULT: 'Match has not yet begun', 
+    WAITING_RESULT: 'Waiting for the outcome', 
     REFUND: 'Refund your bet', 
     CANCELLED: 'Your bet was cancelled.', 
     REFUNDING: 'Your coin is being refunded to you.', 
@@ -87,7 +87,7 @@ export class BetHandshakeHandler {
           //TO DO: scan txhash and rollback after a few minutes
           strStatus = BETTING_STATUS_LABEL.PROGRESSING;
           isAction = false;
-        }else if(!isMatch && role === ROLE.INITER){
+        }else if(!isMatch && role === ROLE.INITER && blockchainStatus !== BET_BLOCKCHAIN_STATUS.STATUS_SHAKER_SHAKED){
             label = BETTING_STATUS_LABEL.CANCEL;
             strStatus = BETTING_STATUS_LABEL.WAITING_RESULT;
             isAction = true;
@@ -111,7 +111,7 @@ export class BetHandshakeHandler {
             label = BETTING_STATUS_LABEL.WITHDRAW;
             strStatus = BETTING_STATUS_LABEL.WIN;
             isAction = true;
-        }else if(isMatch){
+        }else if(isMatch || blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_SHAKER_SHAKED){
           strStatus = BETTING_STATUS_LABEL.WAITING_RESULT;
           isAction = false;
       }
@@ -154,17 +154,16 @@ export class BetHandshakeHandler {
   }
 
   static isInitBet(dict) {
-    /*
+    
+   const {shakers} = dict;
+   if(shakers.length == 0){
+     
     const profile = local.get(APP.AUTH_PROFILE);
+    console.log('User Profile Id:', profile.id);
     const { user_id } = dict;
     if (user_id && profile.id === user_id) {
       return true;
     }
-    return false;
-    */
-   const {shakers} = dict;
-   if(shakers.length == 0){
-     return true
    }
    return false;
   }
@@ -174,7 +173,7 @@ export class BetHandshakeHandler {
     const {
       amount, id, odds, side, outcome_id, from_address, offchain,
     } = item;
-    const stake = amount;
+    const stake = Math.round(amount * 10 ** 18)/10 ** 18;
     // const payout = stake * odds;
     const payout = Math.round(stake * odds * 10 ** 18) / 10 ** 18;
     const maker = from_address;
@@ -189,7 +188,7 @@ export class BetHandshakeHandler {
     const {
       amount, id, odds, side, outcome_id, from_address,
     } = item;
-    const stake = amount;
+    const stake = Math.round(amount * 10 ** 18)/10 ** 18;;
     // const payout = stake * odds;
     const payout = Math.round(stake * odds * 10 ** 18) / 10 ** 18;
     const offchain = `cryptosign_s${id}`;

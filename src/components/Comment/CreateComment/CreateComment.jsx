@@ -16,6 +16,7 @@ import Image from '@/components/core/presentation/Image';
 import './CreateComment.scss';
 import createImageIcon from '@/assets/images/icon/comment/image.svg';
 import postCommentIcon from '@/assets/images/icon/comment/post-comment.svg';
+import postCommentIconActive from '@/assets/images/icon/comment/post-comment-active.svg';
 import deleteIcon from '@/assets/images/icon/comment/delete-icon.svg';
 
 const wallet = MasterWallet.getWalletDefault('ETH');
@@ -26,12 +27,14 @@ class CreateComment extends React.PureComponent {
     this.state = {
       file: '',
       imagePreviewUrl: '',
+      dirty: false,
     };
     this.createComment = ::this.createComment;
     this.handleImageChange = ::this.handleImageChange;
     this.deleteImage = ::this.deleteImage;
     this.resetState = ::this.resetState;
     this.autoResizeTextArea = ::this.autoResizeTextArea;
+    this.onChangeText = ::this.onChangeText;
   }
   isInFirstRow = true;
 
@@ -43,17 +46,21 @@ class CreateComment extends React.PureComponent {
   }
 
   createComment() {
+    if(!this.state.dirty) {
+      return;
+    }
+    this.setState({ dirty: false });
     const { file } = this.state;
     if(!this.textareaRef || !this.textareaRef.value) {
       this.props.showAlert({
         message: <div className="text-center">Please type something</div>,
         timeOut: 3000,
         type: 'danger',
-        callBack: () => {}
+        callBack: () => {},
       });
       return;
     }
-    const { objectId } = this.props;
+    const { objectId, onCreateCb, createComment } = this.props;
     const rawData = {
       comment: this.textareaRef.value,
       object_id: Helper.getObjectIdOfComment({ id: objectId }),
@@ -64,16 +71,18 @@ class CreateComment extends React.PureComponent {
     if(!!file) {
       data.append('image', this.uploadImageRef.files[0]);
     }
-    this.props.createComment({
+    // call api create comment
+    createComment({
       PATH_URL: API_URL.COMMENT.CREATE,
       METHOD: 'post',
       data,
       successFn: () => {
-        this.props.onCreateCb();
+        onCreateCb();
         this.resetState();
         this.textareaRef.value = '';
         this.textareaRef.style.height = '40px';
-      }
+      },
+      errorFn: () => { },
     });
   }
 
@@ -119,8 +128,13 @@ class CreateComment extends React.PureComponent {
     }
   }
 
+  onChangeText(e) {
+    const value = e.target.value;
+    this.setState({ dirty: !!value });
+  }
+
   render() {
-    const { imagePreviewUrl } = this.state;
+    const { imagePreviewUrl, dirty } = this.state;
     const { addComment } = this.props;
     return (
       <div className="createComment">
@@ -143,8 +157,9 @@ class CreateComment extends React.PureComponent {
           ref={(component) => { this.textareaRef = component; }}
           autoFocus={addComment === 'true'}
           onKeyDown={this.autoResizeTextArea}
+          onChange={this.onChangeText}
         />
-        <Image src={postCommentIcon} alt="post comment icon" onClick={this.createComment} />
+        <Image src={dirty ? postCommentIconActive : postCommentIcon} alt="post comment icon" onClick={this.createComment} />
       </div>
     );
   }

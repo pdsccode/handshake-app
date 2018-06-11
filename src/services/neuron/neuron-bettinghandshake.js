@@ -18,7 +18,8 @@ export default class BettingHandshake extends BaseHandshake {
     // });
   }
   get contractFileNameWithoutExtension() {
-    return process.env.isProduction ? 'PredictionHandshake' : 'PredictionHandshakeDev';
+    // return process.env.isProduction ? 'PredictionHandshake' : 'PredictionHandshakeDev';
+    return process.env.PredictionHandshakeFileName;
   }
   async getEstimateGas() {
     const estimateGas = await this.neuron.caculateEstimatGasWithEthUnit(
@@ -68,9 +69,17 @@ export default class BettingHandshake extends BaseHandshake {
   };
 
   shake = async (hid, side, stake, payout, maker, offchain) => {
-    console.log('eth-contract-service shake', address, privateKey, hid, maker);
+    console.log(
+      TAG,
+      ' shake payout : ',
+      payout,
+      ' hid = ',
+      hid,
+      ' marker = ',
+      maker,
+    );
     const payoutValue = Web3.utils.toWei(payout.toString(), 'ether');
-    const bytesOffchain = this.web3.utils.fromAscii(offchain);
+    const bytesOffchain = this.web3.utils.asciiToHex(offchain);
 
     const payloadData = this.handshakeInstance.methods
       .shake(hid, side, payoutValue, maker, bytesOffchain)
@@ -103,7 +112,7 @@ export default class BettingHandshake extends BaseHandshake {
     const stakeValue = Web3.utils.toWei(stake.toString(), 'ether');
     const payoutValue = Web3.utils.toWei(payout.toString(), 'ether');
 
-    const bytesOffchain = this.web3.utils.fromAscii(offchain);
+    const bytesOffchain = this.web3.utils.asciiToHex(offchain);
     const payloadData = this.handshakeInstance.methods
       .uninit(hid, side, stakeValue, payoutValue, bytesOffchain)
       .encodeABI();
@@ -130,11 +139,11 @@ export default class BettingHandshake extends BaseHandshake {
       offchain,
     );
 
-    const bytesOffchain = this.web3.utils.fromAscii(offchain);
+    const bytesOffchain = this.web3.utils.asciiToHex(offchain);
     const payloadData = this.handshakeInstance.methods
       .refund(hid, bytesOffchain)
       .encodeABI();
-    const dataBlockChain = await this.neuron.makeRawTransaction(
+    const dataBlockChain = await this.neuron.sendRawTransaction(
       address,
       privateKey,
       payloadData,
@@ -155,12 +164,12 @@ export default class BettingHandshake extends BaseHandshake {
       hid,
       offchain,
     );
-    const bytesOffchain = this.web3.utils.fromAscii(offchain);
+    const bytesOffchain = this.web3.utils.asciiToHex(offchain);
 
     const payloadData = this.handshakeInstance.methods
       .collect(hid, bytesOffchain)
       .encodeABI();
-    const dataBlockChain = await this.neuron.makeRawTransaction(
+    const dataBlockChain = await this.neuron.sendRawTransaction(
       address,
       privateKey,
       payloadData,
