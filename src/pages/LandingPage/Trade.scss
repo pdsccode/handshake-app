@@ -149,6 +149,7 @@
   }
 
   .fiveContainer {
+    margin-bottom: rem-calc(75px);
     .subTitle {
       font-size: rem-calc(40px);
       color: #FFFFFF;
@@ -170,21 +171,20 @@
         cursor: pointer;
       }
       .label {
-        width: 90%;
+        width: 92%;
+        display: flex;
         margin: 0;
         font-size: rem-calc(20px);
         color: #FFFFFF;
         letter-spacing: 0;
-        padding-left: rem-calc(54px);
         font-weight: $light;
-        line-height: 20px;
+        line-height: rem-calc(35px);
         .index {
-          position: relative;
-          left: rem-calc(-54px);
+          flex-basis: 4%;
         }
       }
       .extend {
-        width: 10%;
+        width: 8%;
         text-align: right;
         img {
           transform: rotate(90deg);
@@ -199,11 +199,11 @@
     }
     .content {
       margin-bottom: rem-calc(18px);
-      padding-right: rem-calc(54px);
+      padding-right: rem-calc(40px);
       font-size: rem-calc(20px);
       color: #FFFFFF;
       letter-spacing: 0;
-      line-height: rem-calc(40px);
+      line-height: rem-calc(35px);
       font-weight: $light;
     }
   }
@@ -223,14 +223,36 @@
   }
 }
 
-@media (min-width: 767px) and (max-width: 1200px) {
+@media (max-width: 1200px) {
   .root {
+    .firstContainer {
+      div[class='row bottomBox'] {
+        & > div {
+          flex: 0 0 100%;
+          max-width: 100%;
+        }
+      }
+      .btnStartTrading {
+        padding: rem-calc(10px 30px);
+        display: block;
+        text-align: center;
+        margin-bottom: rem-calc(25px);
+        width: 100%;
+      }
+    }
   }
 }
 
 @media (max-width: 767px) {
   .root {
-
+    .firstContainer {
+      .btnStartTrading {
+        padding: rem-calc(10px 30px);
+        display: block;
+        text-align: center;
+        margin-bottom: rem-calc(25px);
+      }
+    }
   }
 }
 

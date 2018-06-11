@@ -43,24 +43,28 @@ const data = [
   },
   {
     question: 'What are the steps for signing up?',
-    answer: '',
+    answer: 'We do no require signup',
   },
   {
-    question: '',
-    answer: '',
+    question: 'Is there any country restricted for this platform?',
+    answer: 'We are available for all countries',
   },
   {
-    question: '',
-    answer: '',
+    question: 'Is there decentralized exchange?',
+    answer: 'Yes. Therefore the transaction is 100% safe and secured',
   },
   {
-    question: '',
-    answer: '',
+    question: 'Can I use paypal?',
+    answer: 'We are not available on Paypal at the moment',
   },
   {
-    question: '',
-    answer: '',
+    question: 'Will the funds be held in Escrow?',
+    answer: 'Yes, in either Escrow on smart contract of ethereum blockchain',
   },
+  {
+    question: 'How will the Smart Contract execute when physical cash is involved and there is a lag in transaction time?',
+    answer: 'After receiving the physical cash, the seller will click on the accept button, the coin will be automatic transfered to the buyer. The process takes about 10 minutes to 20 minutes',
+  }
 ];
 
 class Collapse extends React.PureComponent {
@@ -85,9 +89,9 @@ class Collapse extends React.PureComponent {
           className="head"
           onClick={this.toggle}
         >
-          <p className="label">
-            <span className="index">{index}{index > 9 ? '.' : '. '}</span><span>{label}</span>
-          </p>
+          <div className="label">
+            <div className="index">{index}{index > 9 ? '.' : '. '}</div><div>{label}</div>
+          </div>
           <div className="extend">
             <img className={isCollapsed ? 'rotate' : ''} src={ExpandArrowSVG} alt="arrow" />
           </div>
