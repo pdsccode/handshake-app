@@ -146,6 +146,11 @@ class Component extends React.Component {
       let haveOfferETH = this.offer.itemFlags.ETH;
       let haveOfferBTC = this.offer.itemFlags.BTC;
 
+      this.CRYPTO_CURRENCY_LIST = [
+        { value: CRYPTO_CURRENCY.ETH, text: CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.ETH], hide: haveOfferETH },
+        { value: CRYPTO_CURRENCY.BTC, text: CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.BTC], hide: haveOfferBTC },
+      ];
+
       if (haveOfferETH && haveOfferBTC) {
         const message = intl.formatMessage({ id: 'offerStoresAlreadyCreated' }, {
         });
