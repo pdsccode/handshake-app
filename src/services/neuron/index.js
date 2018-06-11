@@ -73,25 +73,26 @@ class Neuron {
     const estimatedGas = await this.web3.eth.estimateGas(estimateGasData);
     return estimatedGas;
   };
-  caculateEstimatGasWithEthUnit = async (address, gasPrice = undefined) => {
+  caculateEstimatGasWithEthUnit = async (
+    payloadData,
+    toAddress,
+    gasPrice = undefined,
+  ) => {
     gasPrice = new BN(gasPrice
       ? Web3.utils.toWei(String(gasPrice), 'gwei')
       : await this.web3.eth.getGasPrice());
     // console.log('caculateEstimatGasWithEthUnit gasPrice = ', String(gasPrice));
-    const balance = new BN(await this.web3.eth.getBalance(address));
-    const estimateGas = balance.div(gasPrice);
+    const estimateGas = await this.getEstimateGas(payloadData, toAddress);
     // console.log(
     //   'caculateEstimatGasWithEthUnit estiGas = ',
     //   String(estimateGas),
     // );
-    const limitedGas = 3000000;
 
-    const estimatedGas = Math.min(estimateGas.toNumber(), limitedGas);
     // console.log(
     //   'caculateEstimatGasWithEthUnit estimatedGas = ',
     //   String(estimatedGas),
     // );
-    return Web3.utils.fromWei(String(estimatedGas * gasPrice));
+    return Web3.utils.fromWei(String(estimateGas * gasPrice));
   };
   /**
    *
@@ -128,7 +129,7 @@ class Neuron {
       //   gasPrice = new BN(Web3.utils.toWei(_options.gasPrice.toString(), 'gwei'));
       // }
 
-      let nonce = await web3.eth.getTransactionCount(address);
+      let nonce = await this.getNonce(address);
       nonce = nonce.toString(16);
       const balance = new BN(await web3.eth.getBalance(address));
 
@@ -249,7 +250,10 @@ class Neuron {
             arguments: argumentsParams || {},
           };
         })
-        .on('error', error => error);
+        .on('error', error => ({
+          hash: -1,
+          error: String(error),
+        }));
     });
   };
   makeRawTransfer = (address, privateKey, options) => {
