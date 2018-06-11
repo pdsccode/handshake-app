@@ -151,6 +151,12 @@ class Component extends React.Component {
         { value: CRYPTO_CURRENCY.BTC, text: CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.BTC], hide: haveOfferBTC },
       ];
 
+      if (!haveOfferETH) {
+        rfChange(nameFormExchangeCreate, 'currency', CRYPTO_CURRENCY.ETH);
+      } else if (!haveOfferBTC) {
+        rfChange(nameFormExchangeCreate, 'currency', CRYPTO_CURRENCY.BTC);
+      }
+
       if (haveOfferETH && haveOfferBTC) {
         const message = intl.formatMessage({ id: 'offerStoresAlreadyCreated' }, {
         });
