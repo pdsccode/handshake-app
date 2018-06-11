@@ -26,6 +26,7 @@ export default {
   completeOfferConfirm: 'Do you want to Complete this handshake?',
   withdrawOfferConfirm: 'Do you want to Withdraw this handshake?',
   cancelOfferConfirm: 'Do you want to Cancel this handshake?',
+  acceptOfferConfirm: 'Do you want to Accept this handshake?',
   createOfferSuccessMessage: 'Create offer success',
   shakeOfferSuccessMessage: 'Shake offer success',
   closeOfferSuccessMessage: 'Close offer success',
@@ -44,5 +45,6 @@ export default {
   cancelOfferItemSuccessMassage: 'Cancel offer item success',
   rejectOfferItemSuccessMassage: 'Reject offer item success',
   completeOfferItemSuccessMassage: 'Complete offer item success',
-  offerStoresAlreadyCreated: 'You have already create offer'
+  offerStoresAlreadyCreated: 'You have already create offer',
+  offerStoreHandShakeContent: '{offerTypeBuy} {amountBuy} {currency} at {fiatAmountBuy} {fiatAmountCurrency}. {offerTypeSell} {amountSell} {currency} at {fiatAmountSell} {fiatAmountCurrency}',
 };

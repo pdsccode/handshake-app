@@ -37,6 +37,7 @@ import {
   closeOffer,
   completeOfferItem,
   completeShakedOffer,
+  deleteOfferItem,
   rejectOfferItem,
   shakeOffer,
   withdrawShakedOffer
@@ -98,6 +99,113 @@ class FeedMe extends React.PureComponent {
     return condition;
   }
 
+  getContentOfferStore = () => {
+    const {intl, status} = this.props;
+    const { offer } = this;
+    let message = '';
+    let fiatAmountBuy = this.calculateFiatAmountOfferStore(offer.buyAmount, EXCHANGE_ACTION.SELL, offer.currency, offer.buyPercentage);
+    let fiatAmountSell = this.calculateFiatAmountOfferStore(offer.sellAmount, EXCHANGE_ACTION.BUY, offer.currency, offer.sellPercentage);
+    switch (status) {
+      case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CREATED:
+      case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.ACTIVE:
+      case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSING:
+      case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSED: {
+        message = intl.formatMessage({id: 'offerStoreHandShakeContent'}, {
+          offerTypeBuy: EXCHANGE_ACTION_NAME[EXCHANGE_ACTION.BUY],
+          offerTypeSell: EXCHANGE_ACTION_NAME[EXCHANGE_ACTION.SELL],
+          amountBuy: offer.buyAmount,
+          amountSell: offer.sellAmount,
+          currency: offer.currency,
+          fiatAmountCurrency: offer.fiatCurrency,
+          fiatAmountBuy: formatMoney(fiatAmountBuy),
+          fiatAmountSell: formatMoney(fiatAmountSell),
+        });
+
+        break;
+      }
+    }
+
+    return message;
+  }
+
+  getActionButtonsOfferStore = () => {
+    const {intl, status} = this.props;
+    let actionButtons = null;
+
+    switch (status) {
+      case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CREATED:
+      case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.ACTIVE: {
+        let message = intl.formatMessage({id: 'cancelOfferConfirm'}, {});
+        actionButtons = (
+          <div>
+            <Button block className="mt-2"
+                    onClick={() => this.confirmOfferAction(message, this.deleteOfferItem)}>Cancel</Button>
+          </div>
+        );
+        break;
+      }
+
+      case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSING:
+      case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSED: {
+        break;
+      }
+    }
+
+    return actionButtons;
+  }
+
+  ////////////////////////
+
+  deleteOfferItem = () => {
+    const { offer } = this.props;
+
+    this.showLoading();
+    this.props.deleteOfferItem({
+      PATH_URL: `${API_URL.EXCHANGE.OFFER_STORE}/${offer.id}`,
+      METHOD: 'DELETE',
+      qs: { currency: offer.currency},
+      successFn: this.handleDeleteOfferItemSuccess,
+      errorFn: this.handleDeleteOfferItemFailed,
+    });
+  }
+
+  handleDeleteOfferItemSuccess = (responseData) => {
+    const { intl, refreshPage } = this.props;
+    const { data } = responseData;
+    const { currency } = data;
+
+    // const offer = this.offer;
+    // if (currency === CRYPTO_CURRENCY.ETH) {
+    //   this.handleCallActionOnContract(data);
+    // } else if (currency === CRYPTO_CURRENCY.BTC) {
+    //   if (offer.type === EXCHANGE_ACTION.BUY) {
+    //     const wallet = MasterWallet.getWalletDefault(offer.currency);
+    //     wallet.transfer(offer.systemAddress, offer.totalAmount).then(success => {
+    //       console.log('transfer', success);
+    //     });
+    //   }
+    // }
+
+    this.hideLoading();
+    const message = intl.formatMessage({ id: 'deleteOfferItemSuccessMassage' }, {
+    });
+
+    this.props.showAlert({
+      message: <div className="text-center">{message}</div>,
+      timeOut: 2000,
+      type: 'success',
+      callBack: () => {
+        if (refreshPage) {
+          refreshPage();
+        }
+      },
+    });
+  }
+
+  handleDeleteOfferItemFailed = (e) => {
+    this.handleActionFailed(e);
+  }
+
   getContent = (fiatAmount) => {
     const {intl, status} = this.props;
     const { offer } = this;
@@ -113,7 +221,9 @@ class FeedMe extends React.PureComponent {
           case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.PRE_SHAKING:
           case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.PRE_SHAKE:
           case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.REJECTING:
-          case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.REJECTED: {
+          case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.REJECTED:
+          case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.CANCELLING:
+          case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.CANCELLED: {
 
             if (offer.type === EXCHANGE_ACTION.BUY) {
               offerType = EXCHANGE_ACTION_PRESENT_NAME[EXCHANGE_ACTION.SELL];
@@ -185,6 +295,8 @@ class FeedMe extends React.PureComponent {
     return message;
   }
 
+  ////////////////////////
+
   getActionButtons = () => {
     const {intl, status} = this.props;
     const offer = this.offer;
@@ -198,7 +310,7 @@ class FeedMe extends React.PureComponent {
       case HANDSHAKE_USER.SHAKED: {
         switch (status) {
           case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.PRE_SHAKE: {
-            let message = intl.formatMessage({id: 'cancelOfferItemSuccessMassage'}, {});
+            let message = intl.formatMessage({id: 'cancelOfferConfirm'}, {});
             actionButtons = (
               <div>
                 <Button block className="mt-2"
@@ -228,7 +340,7 @@ class FeedMe extends React.PureComponent {
       case HANDSHAKE_USER.OWNER: {
         switch (status) {
           case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.PRE_SHAKE: {
-            message = intl.formatMessage({id: 'acceptOfferItemSuccessMassage'}, {});
+            message = intl.formatMessage({id: 'acceptOfferConfirm'}, {});
             actionButtons = (
               <div>
                 <Button block className="mt-2"
@@ -562,31 +674,31 @@ class FeedMe extends React.PureComponent {
     return fiatAmount;
   }
 
-  render() {
-    // const email = 'abc@mail.com'
-    // const statusText = 'pending'
-    // const buyerSeller = 'buyer'
-    // const phone = '+84-123456789'
-    // const phoneDisplayed = phone.replace(/-/g, '')
-    // const address = '81 Boulevaoud'
-    // const distanceKm = 12342134
-    // const distanceMiles = 1.23
-    // const message = 'Sample message aowiejf oawei fawoei fjaweo fiwaj fe'
-    // const nameShop = 'CryptoWorkshop'
+  calculateFiatAmountOfferStore(amount, type, currency, percentage) {
+    const { listOfferPrice } = this.props;
+    let fiatAmount = 0;
 
+    if (listOfferPrice) {
+      let offerPrice = getOfferPrice(listOfferPrice, type, currency);
+      if (offerPrice) {
+        fiatAmount = amount * offerPrice.price || 0;
+        fiatAmount += fiatAmount * percentage / 100;
+      } else {
+        console.log('aaaa', offer.type, offer.currency);
+      }
+    }
+
+    return fiatAmount;
+  }
+
+
+  render() {
     const {intl, initUserId, shakeUserIds, location, state, status, mode = 'discover', ipInfo: { latitude, longitude }, initAt, ...props} = this.props;
     const offer = this.offer;
     console.log('render',offer);
     const {listOfferPrice} = this.props;
 
     let modalContent = this.state.modalContent;
-
-    // let email = '';
-    // if (offer.feedType === EXCHANGE_FEED_TYPE.EXCHANGE) {
-    //   email = offer.email ? offer : offer.contactPhone ? offer.contactPhone : offer.contactInfo;
-    // } else if (offer.feedType === EXCHANGE_FEED_TYPE.INSTANT) {
-    //   email = APP_USER_NAME;
-    // }
 
     let email = '';
     let statusText = '';
@@ -600,122 +712,6 @@ class FeedMe extends React.PureComponent {
     let nameShop = offer.username;
 
     switch (offer.feedType) {
-      // case EXCHANGE_FEED_TYPE.EXCHANGE: {
-      //   statusText = HANDSHAKE_EXCHANGE_STATUS_NAME[status];
-      //
-      //   let offerType = '';
-      //   if (mode === 'me') {
-      //     switch (status) {
-      //       case HANDSHAKE_EXCHANGE_STATUS.SHAKING:
-      //       case HANDSHAKE_EXCHANGE_STATUS.SHAKE:
-      //       case HANDSHAKE_EXCHANGE_STATUS.COMPLETING:
-      //       case HANDSHAKE_EXCHANGE_STATUS.COMPLETED:
-      //       case HANDSHAKE_EXCHANGE_STATUS.WITHDRAWING:
-      //       case HANDSHAKE_EXCHANGE_STATUS.WITHDRAW: {
-      //         switch (this.userType) {
-      //           case HANDSHAKE_USER.SHAKED: {
-      //             from = 'With';
-      //             if (offer.type === EXCHANGE_ACTION.BUY) {
-      //               offerType = EXCHANGE_ACTION_PAST_NAME[EXCHANGE_ACTION.SELL];
-      //             } else if (offer.type === EXCHANGE_ACTION.SELL) {
-      //               offerType = EXCHANGE_ACTION_PAST_NAME[EXCHANGE_ACTION.BUY];
-      //             }
-      //             break;
-      //           }
-      //           case HANDSHAKE_USER.OWNER: {
-      //             from = 'From';
-      //
-      //             offerType = EXCHANGE_ACTION_PAST_NAME[offer.type];
-      //             break;
-      //           }
-      //         }
-      //
-      //         // offerType = EXCHANGE_ACTION_PAST_NAME[offer.type];
-      //         message = intl.formatMessage({ id: 'offerHandShakeContentMeDone' }, {
-      //           offerType: offerType,
-      //           amount: formatAmountCurrency(offer.amount),
-      //           currency: offer.currency,
-      //           currency_symbol: offer.fiatCurrency,
-      //           total: formatMoney(fiatAmount),
-      //           fee: offer.feePercentage,
-      //           payment_method: EXCHANGE_METHOD_PAYMENT[EXCHANGE_FEED_TYPE.EXCHANGE],
-      //         });
-      //         break;
-      //       }
-      //       default: {
-      //         switch (this.userType) {
-      //           case HANDSHAKE_USER.SHAKED: {
-      //             from = 'With';
-      //             if (offer.type === EXCHANGE_ACTION.BUY) {
-      //               offerType = EXCHANGE_ACTION_PRESENT_NAME[EXCHANGE_ACTION.SELL];
-      //             } else if (offer.type === EXCHANGE_ACTION.SELL) {
-      //               offerType = EXCHANGE_ACTION_PRESENT_NAME[EXCHANGE_ACTION.BUY];
-      //             }
-      //             break;
-      //           }
-      //           case HANDSHAKE_USER.OWNER: {
-      //             from = 'From';
-      //
-      //             offerType = EXCHANGE_ACTION_PRESENT_NAME[offer.type];
-      //
-      //             break;
-      //           }
-      //         }
-      //
-      //         message = intl.formatMessage({ id: 'offerHandShakeContentMe' }, {
-      //           offerType: offerType,
-      //           amount: formatAmountCurrency(offer.amount),
-      //           currency: offer.currency,
-      //           currency_symbol: offer.fiatCurrency,
-      //           total: formatMoney(fiatAmount),
-      //           fee: offer.feePercentage,
-      //           payment_method: EXCHANGE_METHOD_PAYMENT[EXCHANGE_FEED_TYPE.EXCHANGE],
-      //         });
-      //         break;
-      //       }
-      //     }
-      //
-      //     //Check show chat
-      //     switch (status) {
-      //       case HANDSHAKE_EXCHANGE_STATUS.CREATED:
-      //       case HANDSHAKE_EXCHANGE_STATUS.ACTIVE:
-      //       case HANDSHAKE_EXCHANGE_STATUS.CLOSING:
-      //       case HANDSHAKE_EXCHANGE_STATUS.CLOSED: {
-      //         showChat = false;
-      //         break;
-      //       }
-      //       default: {
-      //         showChat = true;
-      //
-      //         switch (this.userType) {
-      //           case HANDSHAKE_USER.NORMAL: {
-      //             break;
-      //           }
-      //           case HANDSHAKE_USER.SHAKED: {
-      //             chatUsername = offer.username;
-      //             break;
-      //           }
-      //           case HANDSHAKE_USER.OWNER: {
-      //             chatUsername = offer.toUsername;
-      //             break;
-      //           }
-      //         }
-      //       }
-      //     }
-      //   } else {
-      //     message = intl.formatMessage({ id: 'offerHandShakeContent' }, {
-      //       offerType: offer.type === EXCHANGE_ACTION.BUY ? EXCHANGE_ACTION_NAME[EXCHANGE_ACTION.SELL] : EXCHANGE_ACTION_NAME[EXCHANGE_ACTION.BUY],
-      //       amount: formatAmountCurrency(offer.amount),
-      //       currency: offer.currency,
-      //       currency_symbol: offer.fiatCurrency,
-      //       total: formatMoney(fiatAmount),
-      //       payment_method: EXCHANGE_METHOD_PAYMENT[EXCHANGE_FEED_TYPE.EXCHANGE]
-      //     });
-      //   }
-      //
-      //   actionButtons = this.getActionButtons();
-      //   break;
-      // }
       case EXCHANGE_FEED_TYPE.INSTANT: {
         email = APP_USER_NAME;
         statusText = HANDSHAKE_EXCHANGE_CC_STATUS_NAME[status];
@@ -745,25 +741,10 @@ class FeedMe extends React.PureComponent {
       case EXCHANGE_FEED_TYPE.OFFER_STORE: {
         email = offer.email ? offer.email : offer.contactPhone ? offer.contactPhone : offer.contactInfo;
 
-        switch (status) {
-          case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CREATED:
-          case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.ACTIVE:
-          case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSING:
-          case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSED: {
-              // message = intl.formatMessage({ id: 'offerHandShakeContentMe' }, {
-              //   offerType: offerType,
-              //   amount: formatAmountCurrency(offer.amount),
-              //   currency: offer.currency,
-              //   currency_symbol: offer.fiatCurrency,
-              //   total: formatMoney(fiatAmount),
-              //   fee: offer.feePercentage,
-              //   payment_method: EXCHANGE_METHOD_PAYMENT[EXCHANGE_FEED_TYPE.EXCHANGE],
-              // });
-            break;
-          }
-        }
+        message = this.getContentOfferStore();
 
-        // actionButtons = this.getActionButtons();
+        actionButtons = this.getActionButtonsOfferStore();
+
         break;
       }
       case EXCHANGE_FEED_TYPE.OFFER_STORE_SHAKE: {
@@ -894,6 +875,7 @@ const mapDispatch = ({
   completeOfferItem,
   cancelOfferItem,
   acceptOfferItem,
+  deleteOfferItem,
 });
 
 export default injectIntl(connect(mapState, mapDispatch)(FeedMe));

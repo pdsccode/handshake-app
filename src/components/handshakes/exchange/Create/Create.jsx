@@ -96,9 +96,6 @@ class Component extends React.Component {
       currency: CRYPTO_CURRENCY_DEFAULT,
       lat: 0,
       lng: 0,
-      /*haveProfile: false,
-      haveOfferETH: false,
-      haveOfferBTC: false,*/
     };
     // this.mainColor = _sample(feedBackgroundColors)
     this.mainColor = "#1F2B34";
@@ -147,6 +144,17 @@ class Component extends React.Component {
 
       let haveOfferETH = this.offer.itemFlags.ETH;
       let haveOfferBTC = this.offer.itemFlags.BTC;
+
+      this.CRYPTO_CURRENCY_LIST = [
+        { value: CRYPTO_CURRENCY.ETH, text: CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.ETH], hide: haveOfferETH },
+        { value: CRYPTO_CURRENCY.BTC, text: CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.BTC], hide: haveOfferBTC },
+      ];
+
+      if (!haveOfferETH) {
+        rfChange(nameFormExchangeCreate, 'currency', CRYPTO_CURRENCY.ETH);
+      } else if (!haveOfferBTC) {
+        rfChange(nameFormExchangeCreate, 'currency', CRYPTO_CURRENCY.BTC);
+      }
 
       if (haveOfferETH && haveOfferBTC) {
         const message = intl.formatMessage({ id: 'offerStoresAlreadyCreated' }, {
@@ -236,11 +244,11 @@ class Component extends React.Component {
     const balance = await wallet.getBalance();
     const fee = await wallet.getFee(4, true);
 
-    // const condition = this.showNotEnoughCoinAlert(balance, amountBuy, amountSell, fee, currency);
-    //
-    // if (condition) {
-    //   return;
-    // }
+    const condition = this.showNotEnoughCoinAlert(balance, amountBuy, amountSell, fee, currency);
+
+    if (condition) {
+      return;
+    }
 
     const rewardWallet = MasterWallet.getRewardWalletDefault(currency);
 
@@ -355,17 +363,21 @@ class Component extends React.Component {
     console.log('wallet', wallet);
     // console.log('rewardWallet', rewardWallet);
 
-    // if (currency === CRYPTO_CURRENCY.BTC) {
-    //   wallet.transfer(this.offer.itemSnapshots.BTC.systemAddress, amountSell).then(success => {
-    //     console.log('transfer', success);
-    //   });
-    // } else if (currency === CRYPTO_CURRENCY.ETH) {
-    //   const exchangeHandshake = new ExchangeShopHandshake(wallet.chainId);
-    //
-    //   let result = null;
-    //   result = await exchangeHandshake.initByShopOwner(amountSell, this.offer.id);
-    //   console.log('handleCreateOfferSuccess', result);
-    // }
+    if (currency === CRYPTO_CURRENCY.BTC) {
+      if (amountSell > 0) {
+        wallet.transfer(this.offer.items.BTC.systemAddress, amountSell).then(success => {
+          console.log('transfer', success);
+        });
+      }
+    } else if (currency === CRYPTO_CURRENCY.ETH) {
+      if (amountSell > 0) {
+        const exchangeHandshake = new ExchangeShopHandshake(wallet.chainId);
+
+        let result = null;
+        result = await exchangeHandshake.initByShopOwner(amountSell, this.offer.id);
+        console.log('handleCreateOfferSuccess', result);
+      }
+    }
 
     this.hideLoading();
     const message = intl.formatMessage({ id: 'createOfferSuccessMessage' }, {
@@ -378,20 +390,6 @@ class Component extends React.Component {
 
       }
     });
-
-    // this.setState((prevStates, props) => ({
-    //   haveOfferETH: currency === CRYPTO_CURRENCY.ETH ? true : prevStates.haveOfferETH,
-    //   haveOfferBTC: currency === CRYPTO_CURRENCY.BTC ? true : prevStates.haveOfferBTC,
-    // }), () => {
-    //   this.CRYPTO_CURRENCY_LIST = [
-    //     { value: CRYPTO_CURRENCY.ETH, text: CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.ETH], hide: this.state.haveOfferETH },
-    //     { value: CRYPTO_CURRENCY.BTC, text: CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.BTC], hide: this.state.haveOfferBTC },
-    //   ];
-    //
-    //   if (this.state.haveOfferETH && this.state.haveOfferBTC) {
-    //     this.props.history.push(URL.HANDSHAKE_ME);
-    //   }
-    // });
 
     let haveOfferETH = this.offer.itemFlags.ETH;
     let haveOfferBTC = this.offer.itemFlags.BTC;
