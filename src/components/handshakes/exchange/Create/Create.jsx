@@ -453,7 +453,7 @@ class Component extends React.Component {
     const { currency  } = this.props;
     const modalContent = this.state.modalContent;
     const haveProfile = this.offer ? true : false;
-    const allowInitiate = this.offer ? (!this.offer.itemFlags.ETH || !this.offer.itemFlags.BTC) : false;
+    const allowInitiate = this.offer ? (!this.offer.itemFlags.ETH || !this.offer.itemFlags.BTC) : true;
 
     console.log('render',haveProfile);
 
