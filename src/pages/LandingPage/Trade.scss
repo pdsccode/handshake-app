@@ -39,7 +39,7 @@
       }
     }
     .bottomBox {
-      margin-bottom: rem-calc(98px);
+      margin-bottom: rem-calc(20px);
     }
     .btnStartTrading {
       background-image: linear-gradient(-269deg, #7740FF 0%, #1E4EFF 100%);
@@ -244,6 +244,9 @@
 }
 
 @media (max-width: 767px) {
+  html {
+    font-size: 12px;
+  }
   .root {
     .firstContainer {
       .btnStartTrading {
@@ -253,16 +256,32 @@
         margin-bottom: rem-calc(25px);
       }
     }
+    .secondContainer {
+      .subTitle {
+        margin-top: rem-calc(40px);
+        margin-bottom: rem-calc(34px);
+        padding-left: rem-calc(20px);
+      }
+    }
+
+    .fourContainer {
+      & > .row {
+        div + div {
+          margin-top: rem-calc(40px);
+        }
+      }
+    }
   }
 }
 
 @media (max-width: 500px) {
-  .root {
+  html {
+    font-size: 11px;
   }
 }
 
 @media (max-width: 375px) {
-  .root {
-
+  html {
+    font-size: 10px;
   }
 }
