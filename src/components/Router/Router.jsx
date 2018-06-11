@@ -5,8 +5,7 @@ import PropTypes from 'prop-types';
 import { Switch, BrowserRouter, Route, Redirect } from 'react-router-dom';
 import DynamicImport from '@/components/App/DynamicImport';
 import Loading from '@/components/core/presentation/Loading';
-import { URL } from '@/constants';
-import { APP, FIREBASE_PATH, API_URL } from '@/constants';
+import { APP, FIREBASE_PATH, API_URL, URL } from '@/constants';
 
 import local from '@/services/localStore';
 import { signUp, fetchProfile, authUpdate, getFreeETH } from '@/reducers/auth/action';
@@ -20,12 +19,13 @@ import fr from 'react-intl/locale-data/fr';
 import { withFirebase } from 'react-redux-firebase';
 import messages from '@/locals';
 import axios from 'axios';
-import { setIpInfo } from '@/reducers/app/action';
+import { setIpInfo, showAlert } from '@/reducers/app/action';
 import { getUserProfile, getListOfferPrice } from '@/reducers/exchange/action';
 import { MasterWallet } from '@/models/MasterWallet';
 import { createMasterWallets } from '@/reducers/wallet/action';
 import MobileOrTablet from '@/components/MobileOrTablet';
 import BrowserDetect from '@/services/browser-detect';
+import NetworkError from '@/components/Router/NetworkError';
 
 addLocaleData([...en, ...fr]);
 
@@ -144,8 +144,10 @@ class Router extends React.Component {
       profile: this.props.auth.profile,
       profileUpdatedAt: this.props.auth.profileUpdatedAt,
       loadingText: 'Loading application',
+      isNetworkError: false,
     };
 
+    this.checkRegistry = ::this.checkRegistry;
     this.authSuccess = ::this.authSuccess;
     this.notification = ::this.notification;
   }
@@ -162,22 +164,8 @@ class Router extends React.Component {
     return null;
   }
 
-  async componentDidMount() {
-    const token = local.get(APP.AUTH_TOKEN);
-
-    // auth
-    if (!token) {
-      this.props.signUp({
-        PATH_URL: 'user/sign-up',
-        METHOD: 'POST',
-        successFn: async () => {
-          await this.authSuccess();
-        },
-      });
-    } else {
-      await this.authSuccess();
-    }
-
+  componentDidMount() {
+    this.checkRegistry();
     this.notification();
   }
 
@@ -216,46 +204,85 @@ class Router extends React.Component {
     });
   }
 
-  authSuccess() {
-    // basic profile
-    this.props.fetchProfile({ PATH_URL: 'user/profile' });
-
-    // exchange profile
-    this.props.getUserProfile({
-      PATH_URL: API_URL.EXCHANGE.GET_USER_PROFILE,
-    });
-
-    // GET IP INFO
-    this.getIpInfo();
-    this.timeOutInterval = setInterval(() => {
-      this.getIpInfo();
-    }, 30 * 60 * 1000); // 30'
-
-    // GET PRICE
-    this.getListOfferPrice();
-    this.timeOutGetPrice = setInterval(() => {
-      this.getListOfferPrice();
-    }, 5 * 60 * 1000); // 30'
-
-    // wallet handle
-    let listWallet = MasterWallet.getMasterWallet();
-
-    if (listWallet === false) {
-      this.setState({ loadingText: 'Creating your local wallets' });
-      listWallet = createMasterWallets().then(() => {        
-        
-        this.setState({ loadingText: 'Please be patient. We are gathering ETH for you.' });
-        let wallet = MasterWallet.getWalletDefault('ETH');        
-        this.props.getFreeETH({
-          PATH_URL: '/user/free-rinkeby-eth?address=' + wallet.address,          
-          METHOD: 'POST',
-          successFn: (response) => {this.setState({ isLoading: false, loadingText: '' });},
-          errorFn: (error) => {this.setState({ isLoading: false, loadingText: '' });}
-        });                
+  checkRegistry() {
+    const token = local.get(APP.AUTH_TOKEN);
+    // auth
+    if (!token) {
+      this.props.signUp({
+        PATH_URL: 'user/sign-up',
+        METHOD: 'POST',
+        successFn: () => {
+          this.authSuccess();
+        },
       });
     } else {
-      this.setState({ isLoading: false });
+      this.authSuccess();
     }
+  }
+
+  authSuccess() {
+    // basic profile
+    this.props.fetchProfile({
+      PATH_URL: 'user/profile',
+      errorFn: (res) => {
+        if (res.message === 'Network Error') {
+          this.setState({ isNetworkError: true });
+        }
+
+        if (!process.env.isProduction) {
+          if (res.message === 'Invalid user.') {
+            local.remove(APP.AUTH_TOKEN);
+            this.checkRegistry();
+          }
+        } else {
+          this.porps.showAlert({
+            message: <div className="text-center">Have something wrong with your profile, please contact supporters</div>,
+            timeOut: false,
+            isShowClose: true,
+            type: 'danger',
+            callBack: () => {},
+          });
+        }
+      },
+      successFn: () => {
+        // exchange profile
+        this.props.getUserProfile({
+          PATH_URL: API_URL.EXCHANGE.GET_USER_PROFILE,
+        });
+
+        // GET IP INFO
+        this.getIpInfo();
+        this.timeOutInterval = setInterval(() => {
+          this.getIpInfo();
+        }, 30 * 60 * 1000); // 30'
+
+        // GET PRICE
+        this.getListOfferPrice();
+        this.timeOutGetPrice = setInterval(() => {
+          this.getListOfferPrice();
+        }, 5 * 60 * 1000); // 30'
+
+        // wallet handle
+        let listWallet = MasterWallet.getMasterWallet();
+
+        if (listWallet === false) {
+          this.setState({ loadingText: 'Creating your local wallets' });
+          listWallet = createMasterWallets().then(() => {
+            this.setState({ loadingText: 'Please be patient. We are gathering ETH for you.' });
+            const wallet = MasterWallet.getWalletDefault('ETH');
+            this.props.getFreeETH({
+              PATH_URL: `/user/free-rinkeby-eth?address=${wallet.address}`,
+              METHOD: 'POST',
+              successFn: () => { this.setState({ isLoading: false, loadingText: '' }); },
+              errorFn: () => { this.setState({ isLoading: false, loadingText: '' }); },
+            });
+          });
+        } else {
+          this.setState({ isLoading: false });
+        }
+      },
+      // end success fn
+    });
   }
 
   notification() {
@@ -292,7 +319,7 @@ class Router extends React.Component {
             path={URL.INDEX}
             render={loadingProps => (
               <Layout {...loadingProps}>
-                <Loading message={this.state.loadingText} />
+                {(this.state.isNetworkError) ? <NetworkError /> : <Loading message={this.state.loadingText} />}
               </Layout>
               )}
           />
@@ -371,5 +398,6 @@ export default compose(
     authUpdate,
     getListOfferPrice,
     getFreeETH,
+    showAlert,
   }),
 )(Router);

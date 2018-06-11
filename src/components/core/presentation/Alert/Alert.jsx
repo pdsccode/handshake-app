@@ -7,6 +7,11 @@ import { hideAlert } from '@/reducers/app/action';
 import './Alert.scss';
 
 class Alert extends React.PureComponent {
+  static propTypes = {
+    app: PropTypes.object,
+    hideAlert: PropTypes.func,
+    isShowClose: PropTypes.bool,
+  }
 
   constructor(props) {
     super(props);
@@ -20,14 +25,9 @@ class Alert extends React.PureComponent {
     this.handleShowAlert = ::this.handleShowAlert;
   }
 
-  configDefault = {
-    isShow: false,
-    message: '',
-    timeOut: 5000,
-    type: '',
-    isShowClose: false,
-    callBack: () => {},
-  };
+  componentWillReceiveProps(nextProps) {
+    this.handleShowAlert(nextProps);
+  }
 
   getTypeClass(type) {
     switch (type) {
@@ -43,25 +43,32 @@ class Alert extends React.PureComponent {
     }
   }
 
+  configDefault = {
+    isShow: false,
+    message: '',
+    timeOut: 5000,
+    type: '',
+    isShowClose: false,
+    callBack: () => {},
+  }
+
   handleShowAlert(props) {
     const { configAlert } = props.app;
     const config = Object.assign({}, this.configDefault, configAlert);
-    if (config.isShow) {
+    if (config.isShow && config.timeOut) {
       setTimeout(() => {
         this.props.hideAlert();
         // call back
         config.callBack();
       }, config.timeOut);
     }
-    this.setState({ ...config });    
-  }
-
-  componentWillReceiveProps(nextProps) {
-    this.handleShowAlert(nextProps);
+    this.setState({ ...config });
   }
 
   render() {
-    const { isShow, type, message, isShowClose } = this.state;
+    const {
+      isShow, type, message, isShowClose,
+    } = this.state;
     const tyleClassName = this.getTypeClass(type);
     if (!isShow) return null;
     return (
@@ -79,18 +86,12 @@ class Alert extends React.PureComponent {
   }
 }
 
-Alert.propTypes = {
-  app: PropTypes.object,
-  hideAlert: PropTypes.func,
-  isShowClose: PropTypes.bool,
-};
-
 const mapState = state => ({
   app: state.app,
 });
 
 const mapDispatch = ({
-  hideAlert
+  hideAlert,
 });
 
 export default connect(mapState, mapDispatch)(Alert);
