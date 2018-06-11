@@ -12,7 +12,7 @@ import {
   fieldPhoneInput,
   fieldRadioButton
 } from "@/components/core/form/customField";
-import {maxValue, minValue, required, requiredOne} from "@/components/core/form/validation";
+import {maxValue, minValue, required} from "@/components/core/form/validation";
 import {change, Field, formValueSelector} from "redux-form";
 import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
@@ -31,6 +31,8 @@ import {
   SELL_PRICE_TYPE_DEFAULT,
   CRYPTO_CURRENCY_NAME,
 } from "@/constants";
+
+import { validate } from './validation';
 import "../styles.scss";
 import ModalDialog from "@/components/core/controls/ModalDialog/ModalDialog";
 // import {MasterWallet} from '@/models/MasterWallet';
@@ -79,9 +81,6 @@ const validateFee = [
   minValue(-50),
   maxValue(50)
 ];
-const minValue01 = minValue(MIN_AMOUNT[CRYPTO_CURRENCY.ETH]);
-const minValue001 = minValue(MIN_AMOUNT[CRYPTO_CURRENCY.BTC]);
-const requiredOneOfAmounts = requiredOne(['amountBuy', 'amountSell'])
 
 class Component extends React.Component {
   CRYPTO_CURRENCY_LIST = [
@@ -448,7 +447,11 @@ class Component extends React.Component {
     });
   }
 
-  ////////////////////////
+  ///////////////////////
+
+  handleValidate = (values) => {
+    return validate(values);
+  }
 
   render() {
     const { currency  } = this.props;
@@ -460,7 +463,7 @@ class Component extends React.Component {
 
     return (
       <div>
-        <FormExchangeCreate onSubmit={this.handleSubmit}>
+        <FormExchangeCreate onSubmit={this.handleSubmit} validate={this.handleValidate}>
           <Feed className="feed my-2 p-0" background={this.mainColor}>
             <div style={{ color: "white", padding: "20px" }}>
               <div className="d-flex mb-4">
@@ -487,7 +490,7 @@ class Component extends React.Component {
                     component={fieldInput}
                     placeholder={MIN_AMOUNT[currency]}
                     // onChange={this.onAmountChange}
-                    validate={[requiredOneOfAmounts, currency === CRYPTO_CURRENCY.BTC ? minValue001 : minValue01]}
+                    // validate={[requiredOneOfAmounts, currency === CRYPTO_CURRENCY.BTC ? minValue001 : minValue01]}
                   />
                 </div>
               </div>
@@ -503,7 +506,7 @@ class Component extends React.Component {
                     component={fieldInput}
                     placeholder={MIN_AMOUNT[currency]}
                     // onChange={this.onAmountChange}
-                    validate={[requiredOneOfAmounts, currency === CRYPTO_CURRENCY.BTC ? minValue001 : minValue01]}
+                    // validate={[requiredOneOfAmounts, currency === CRYPTO_CURRENCY.BTC ? minValue001 : minValue01]}
                   />
                 </div>
               </div>
