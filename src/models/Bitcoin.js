@@ -208,6 +208,15 @@ export class Bitcoin extends Wallet {
       return false;
     }
 
+    async getTransactionDetail() {
+      const url = `${this.network}/txs/?address=${this.address}`;
+      const response = await axios.get(url);
+      if (response.status == 200) {
+        console.log(response.data);
+      }
+      return response.data;
+    }
+
     async getTransactionHistory() {
       // txs/?address=muU86kcQGfJUydQ9uZmfJwcDRb1H5PQuzr
       const url = `${this.network}/txs/?address=${this.address}`;
@@ -220,8 +229,8 @@ export class Bitcoin extends Wallet {
           for(let tran of response.data.txs){
             let vin = tran.vin, vout = tran.vout,
             is_sent = false, value = 0,
-            addresses = [],
-            transaction_date = new Date(tran.blocktime*1000);
+            addresses = [], confirmations = tran.confirmations,
+            transaction_date = tran.time ? new Date(tran.time*1000) : "";
 
             //check transactions are send
             for(let tin of vin){
@@ -232,7 +241,9 @@ export class Bitcoin extends Wallet {
                   let tout_addresses = tout.scriptPubKey.addresses.join(" ").toLowerCase();
                   if(tout_addresses.indexOf(this.address.toLowerCase()) < 0){
                     value += Number(tout.value);
-                    addresses.push(tout_addresses.replace(tout_addresses.substr(5, 24), '...'));
+                    let bitcoin = new Bitcoin();
+                    bitcoin.address = tout_addresses;
+                    addresses.push(bitcoin.getShortAddress());
                   }
                 }
 
@@ -248,16 +259,21 @@ export class Bitcoin extends Wallet {
                   value += tout.value;
                 }
                 else{
-                  addresses.push(tout_addresses.replace(tout_addresses.substr(5, 24), '...'));
+                  let bitcoin = new Bitcoin();
+                    bitcoin.address = tout_addresses;
+                    addresses.push(bitcoin.getShortAddress());                  
                 }
               }
             }
 
             result.push({
               value: value,
+              transaction_no: tran.txid,
               transaction_date: transaction_date,
               addresses: addresses,
-              transaction_relative_time:  moment(transaction_date).fromNow(),
+              transaction_relative_time:  transaction_date ? moment(transaction_date).fromNow() : "",
+              confirmations: confirmations,
+              time_stamp: tran.time,
               is_sent: is_sent});
           }
 

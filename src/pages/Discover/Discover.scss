@@ -13,4 +13,15 @@
   .search-bar-wrapper {
     margin-bottom: rem-calc(15px);
   }
+  .faq {
+    margin-top: rem-calc(30px);
+    dl {
+      dd {
+        font-size: rem-calc(18px);
+      }
+      dt {
+        font-weight: $normal;
+      }
+    }
+  }
 }

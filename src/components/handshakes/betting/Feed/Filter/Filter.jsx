@@ -60,6 +60,41 @@ class BettingFilter extends React.Component {
     componentDidMount(){
         this.props.loadMatches({PATH_URL: API_URL.CRYPTOSIGN.LOAD_MATCHES});
     }
+    get oddSpread(){
+        const {support, against} = this.state;
+        if(support && support.length > 0 && against && against.length > 0){
+            const minSupport = support[support.length-1].odds;
+            console.log('Min Support:', minSupport);
+            const minAgainst = against[0].odds;
+            console.log('Against Support:', minAgainst);
+            const X = Math.abs(minSupport - minAgainst).toFixed(2);
+            return X;
+        }
+        return 0;
+    }
+    get defaultSupportOdds(){
+        const {against} = this.state;
+        if(against && against.length > 0) {
+            console.log('Sorted Against:', against);
+            const firstElement = against[0];
+            const againstOdds = firstElement.odds/(firstElement.odds - 1);
+            return againstOdds;
+        }
+        return 0;
+
+
+    }
+
+    get defaultAgainstOdds(){
+        const {support} = this.state;
+        if(support && support.length > 0){
+            console.log('Sorted Support:', support);
+            const finalElement = support[support.length-1];
+            const supportOdds = finalElement.odds/(finalElement.odds - 1);
+            return supportOdds;
+        }
+        return 0;
+    }
 
     get defaultMatch() {
         const matchNames = this.matchNames;
@@ -112,7 +147,7 @@ class BettingFilter extends React.Component {
     }
     getStringDate(date){
         //console.log('Date:', date);
-        var formattedDate = moment(new Date(date)).format('MMM DD: HH.mm');
+        var formattedDate = moment.unix(date).format('MMM DD');
         //console.log('Formated date:', formattedDate);
         return formattedDate;
 
@@ -121,9 +156,16 @@ class BettingFilter extends React.Component {
     get matchNames() {
         const {matches} = this.state;
         if(matches){
-            //return matches.map((item) => ({ id: item.id, value: `${item.homeTeamName} vs ${item.awayTeamName} (${this.getStringDate(item.date)})`  }));
-            return matches.map((item) => ({ id: item.id, value: `${item.name} (${this.getStringDate(item.date)})`, marketFee: item.market_fee }));
-
+          const mathNamesList = matches.map((item) => ({ id: item.id, value: `Event: ${item.name} (${this.getStringDate(item.date)})`, marketFee: item.market_fee }));
+          return [
+            ...mathNamesList,
+            {
+              id: -1,
+              value: 'COMING SOON: Create your own event',
+              className: 'disable',
+              disableClick: true,
+            }
+          ]
         }
         return null;
     }
@@ -136,7 +178,7 @@ class BettingFilter extends React.Component {
 
                 const {outcomes} = foundMatch;
                 if(outcomes){
-                    return outcomes.map((item) => ({ id: item.id, value: `${item.name} (Odds:${parseFloat(item.market_odds).toFixed(2)})`, hid: item.hid, marketOdds: item.market_odds}));
+                    return outcomes.map((item) => ({ id: item.id, value: `Outcome: ${item.name}`, hid: item.hid, marketOdds: item.market_odds}));
                 }
             }
         }
@@ -205,11 +247,8 @@ class BettingFilter extends React.Component {
         const defaultOutcomeId = this.defaultOutcome ? this.defaultOutcome.id : null;
         const shareInfo = this.getInfoShare(selectedMatch, selectedOutcome);
         const marketFee = (selectedMatch && selectedMatch.marketFee >= 0) ? selectedMatch.marketFee : null;
-        const marketOdds = (selectedOutcome && selectedOutcome.marketOdds) ? selectedOutcome.marketOdds : null;
-        const commentNo = 5;
         console.log('defaultOutcomeId:', defaultOutcomeId);
         console.log('Market Fee:', marketFee);
-        console.log('Market Odds:', marketOdds);
         return (
             <div className="wrapperBettingFilter">
             <div className="share-block">
@@ -248,30 +287,31 @@ class BettingFilter extends React.Component {
 
             {<TopInfo marketTotal={parseFloat(tradedVolum)}
                     percentFee={marketFee}
-                    commentNo={commentNo}/>}
-
-
-                <div className="wrapperContainer">
-                    <div className="item">
-                        <div className="titleBox">
-                            <div>Amount (ETH)</div>
-                            <div>Odds</div>
-                        </div>
-                    <GroupBook amountColor="#FA6B49" bookList={this.bookListSupport}/>
-                    <GroupBook amountColor="#8BF275" bookList={this.bookListAgainst}/>
-                    </div>
-                    <div className="item">
-                    {<BettingShake
-                        matchName={matchName}
-                        matchOutcome={matchOutcome}
-                        outcomeId={parseInt(outcomeId)}
-                        outcomeHid={parseInt(outcomeHid)}
-                        marketOdds={parseFloat(marketOdds)}/>}
-
-                    </div>
+                    objectId={outcomeId} />}
+              <div className="wrapperContainer">
+                <div className="item">
+                  <div className="titleBox">
+                    <div>Pool (ETH)</div>
+                    <div>Price (ODDS)</div>
+                  </div>
+                  <GroupBook amountColor="#FA6B49" bookList={this.bookListSupport}/>
+                  {/*<div className="spreadBox">*/}
+                    {/*<div>ODDS SPREAD</div>*/}
+                    {/*<div>{this.oddSpread}</div>*/}
+                  {/*</div>*/}
+                  <GroupBook amountColor="#8BF275" bookList={this.bookListAgainst}/>
                 </div>
-                {/* Feed Comment */}
-                <FeedComponent objectId={outcomeId} />
+                <div className="item">
+                  {<BettingShake
+                    matchName={matchName}
+                    matchOutcome={matchOutcome}
+                    outcomeId={parseInt(outcomeId)}
+                    outcomeHid={parseInt(outcomeHid)}
+                    marketSupportOdds={parseFloat(this.defaultSupportOdds)}
+                    marketAgainstOdds={parseFloat(this.defaultAgainstOdds)}/>}
+
+                </div>
+              </div>
             </div>
         );
     }

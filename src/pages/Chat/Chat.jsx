@@ -12,6 +12,7 @@ import 'firebase/auth';
 import { setHeaderLeft, setHeaderTitle } from '@/reducers/app/action';
 import IconBtnSend from '@/assets/images/icon/ic-btn-send.svg';
 import IconBackBtn from '@/assets/images/icon/back-chevron.svg';
+import IconAvatar from '@/assets/images/icon/avatar.svg';
 
 import { Firechat } from './Firechat';
 import './Firechat.scss';
@@ -273,7 +274,8 @@ class Chat extends Component {
   }
 
   getUserAvatar(userId) {
-    return `data:image/png;base64,${new Identicon(md5(userId)).toString()}`;
+    // return `data:image/png;base64,${new Identicon(md5(userId)).toString()}`;
+    return IconAvatar;
   }
 
   generateMessageRoomData(roomId, userId, userName, room) {
@@ -521,7 +523,7 @@ class Chat extends Component {
           onClick={isInSearchMode ? this.onSearchUserClicked : this.onChatItemClicked}
         />
       </div>
-    ) : this.renderEmptyMessage(isInSearchMode ? 'The Ninja you are looking for is not here. Perhaps you have their name wrong.' : 'NO MESSAGE YET');
+    ) : this.renderEmptyMessage(isInSearchMode ? 'The Ninja you are looking for is not here. Perhaps you have their name wrong.' : 'Chat to your fellow ninjas. Your secrets are safe.');
   }
 
   renderBackButton() {
@@ -536,7 +538,7 @@ class Chat extends Component {
         className="rce-search-input"
         onChange={this.onSearchUser}
         onBlur={() => { setTimeout(() => { this.clearSearch(); }, 100); }}
-        placeholder="Search for your fellow ninjas by their code name"
+        placeholder="Enter a ninja’s name or alias."
       />
     );
   }

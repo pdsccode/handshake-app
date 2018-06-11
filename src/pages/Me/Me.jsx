@@ -107,7 +107,7 @@ class Me extends React.Component {
                   }
                 })
               ) : (
-                <NoData message="Create a Shake to get started!" />
+                <NoData message="Make a Prediction to get started!" />
               )
             }
           </Col>

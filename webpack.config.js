@@ -161,8 +161,13 @@ module.exports = function webpackConfig(env, argv) {
             }
             : null,
           filename: 'index.html',
-          template: xPath('src/templates/main.html'),
+          template: xPath('src/templates/main.ejs'),
           favicon: xPath('src/assets/favicon.png'),
+          title: 'Ninja: Anonymous Peer-to-Peer Prediction Exchange',
+          social: {
+            googleAnalyticId: appEnvConfig.social.googleAnalyticId,
+            facebookPixelId: appEnvConfig.social.facebookPixelId,
+          },
         }),
         new PwaManifestPlugin({
           name: 'Ninja',
@@ -175,7 +180,7 @@ module.exports = function webpackConfig(env, argv) {
           icons: [
             {
               src: xPath('src/assets/images/logo.png'),
-              sizes: [96, 128, 192, 256, 384, 512],
+              sizes: [192, 256, 384, 512],
               destination: path.join('assets', 'icons'),
             },
           ],

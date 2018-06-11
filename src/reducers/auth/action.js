@@ -10,6 +10,7 @@ export const ACTIONS = {
   VERIFY_EMAIL: 'VERIFY_EMAIL',
   SUBMIT_EMAIL: 'SUBMIT_EMAIL',
   CHECK_USERNAME: 'CHECK_USERNAME',
+  GET_FREE_ETH: 'GET_FREE_ETH',
 };
 
 export const fetchProfile = createAPI(ACTIONS.AUTH_FETCH);
@@ -22,3 +23,5 @@ export const submitPhone = createAPI(ACTIONS.SUBMIT_PHONE);
 export const verifyEmail = createAPI(ACTIONS.VERIFY_EMAIL);
 export const submitEmail = createAPI(ACTIONS.SUBMIT_EMAIL);
 export const checkUsernameExist = createAPI(ACTIONS.CHECK_USERNAME);
+// wallet: 
+export const getFreeETH = createAPI(ACTIONS.GET_FREE_ETH);

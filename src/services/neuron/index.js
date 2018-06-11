@@ -40,13 +40,16 @@ class Neuron {
   };
   getNonce = async (accountAddress) => {
     const web3 = this.getWeb3();
-    const nonce = await web3.eth.getTransactionCount(accountAddress,(error,result)=>{
-      console.log(TAG," getNonce error" ,error, " result = ",result);
-    }).then(_nonce=>{
-      console.log(TAG," getNonce 0000-- ", _nonce);
-      this.lastResultNonce = this.lastResultNonce == _nonce ? _nonce +1 :_nonce;
-      return this.lastResultNonce;
-    });
+    const nonce = await web3.eth
+      .getTransactionCount(accountAddress, 'pending', (error, result) => {
+        console.log(TAG, ' getNonce error', error, ' result = ', result);
+      })
+      .then((_nonce) => {
+        this.lastResultNonce =
+          this.lastResultNonce >= _nonce ? this.lastResultNonce + 1 : _nonce;
+        console.log(TAG, ' getNonce 0000-- ', this.lastResultNonce);
+        return this.lastResultNonce;
+      });
     return nonce;
   };
   /**
@@ -205,16 +208,15 @@ class Neuron {
     const limitedGas = 3000000;
     const estimatedGas = await BN.min(estimateGas, limitedGas);
     const chainId = await web3.eth.net.getId();
-    console.log('gasPrice->', parseInt(gasPrice));
-    console.log('estimatedGas->', String(estimatedGas));
-    console.log('limitedGas->', String(limitedGas));
-    console.log('chainid ->', chainId);
-    console.log('makeRawTransaction', payloadData);
+    console.log('sendRawTransaction gasPrice->', parseInt(gasPrice));
+    console.log('sendRawTransaction estimatedGas->', String(estimatedGas));
+    console.log('sendRawTransaction limitedGas->', String(limitedGas));
+    console.log('sendRawTransaction chainid ->', chainId);
+    console.log('sendRawTransaction', payloadData);
     return this.getNonce(address).then((_nonce) => {
-      const nonce = _nonce ;
+      const nonce = _nonce;
       const rawTx = {
         nonce: web3.utils.toHex(nonce),
-        // nonce: `0x${nonce}`,
         gasPrice: web3.utils.toHex(gasPrice),
         gasLimit: estimatedGas,
         data: payloadData,
@@ -249,22 +251,6 @@ class Neuron {
           };
         })
         .on('error', error => error);
-      //   web3.eth.sendSignedTransaction(rawTxHex)
-      //   .on('transactionHash', (hash)=>{
-      //     console.log(hash);
-      //     return {
-      //             hash,
-      //             payload: payloadData,
-      //             fromAddress: address,
-      //             toAddress: toAddress || '',
-      //             amount: amount || 0,
-      //             arguments: argumentsParams || {},
-      //           };
-      //         }
-      // })
-      //   .on('error', (error)=>{
-      //     return error;
-      //   });
     });
   };
   makeRawTransfer = (address, privateKey, options) => {
