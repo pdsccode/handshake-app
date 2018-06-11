@@ -18,9 +18,9 @@ class OfferShop {
       transactionCount: data.transaction_count || {},
       createdAt: data.created_at || '',
       updatedAt: data.updated_at || '',
-      itemSnapshots: data.item_snapshots ? {
-        BTC: data.item_snapshots.BTC && CoinOffer.coinOffer(data.item_snapshots.BTC) || {},
-        ETH: data.item_snapshots.ETH && CoinOffer.coinOffer(data.item_snapshots.ETH) || {},
+      items: data.items ? {
+        BTC: data.items.BTC && CoinOffer.coinOffer(data.items.BTC) || {},
+        ETH: data.items.ETH && CoinOffer.coinOffer(data.items.ETH) || {},
       } : {},
     };
   }
