@@ -11,6 +11,7 @@ import local from '@/services/localStore';
 import {FIREBASE_PATH, HANDSHAKE_ID, API_URL, APP} from '@/constants';
 import { BettingHandshake } from '@/services/neuron';
 import { uninitItem, collect, refund, rollback } from '@/reducers/handshake/action';
+import { loadMyHandshakeList} from '@/reducers/me/action';
 
 
 // components
@@ -50,15 +51,16 @@ class FeedBetting extends React.Component {
         isAction: false,
         role: null,
         isMatch: false,
+        itemInfo: props
       };
 
 
   }
 
   get isMatch(){
-    const {shakeCount} = this.props;
-    if(shakeCount){
-      return shakeCount > 0 ? true : false;
+    const {shakeUserIds} = this.props;
+    if(shakeUserIds){
+      return shakeUserIds.length > 0 ? true : false;
 
     }
     return false;
@@ -77,13 +79,29 @@ class FeedBetting extends React.Component {
 
     }
   }
+
   handleStatus(){
-    const {status, side, result, shakeUserIds} = this.props;
+    const {status, side, result, shakeUserIds, id} = this.props;
 
     console.log('Props:', this.props);
     console.log('Status:', status);
     const profile = local.get(APP.AUTH_PROFILE);
     const isUserShake = this.isShakeUser(shakeUserIds, profile.id);
+    let itemInfo = this.props;
+    if(isUserShake){
+      const extraData = this.extraData;
+      console.log('Extra data:', extraData);
+      const {shakers} = extraData;
+      const idOffchain = BetHandshakeHandler.getId(id);
+
+      if(shakers){
+        const foundShakedItem = shakers.find(element => element.shaker_id === profile.id && element.handshake_id === idOffchain);
+        console.log('Found Shaked Item:', foundShakedItem);
+        if(foundShakedItem){
+          itemInfo = foundShakedItem;
+        }
+      }
+    }
     const role = isUserShake ? ROLE.SHAKER : ROLE.INITER;
     //const blockchainStatusHardcode = 5;
     const isMatch = this.isMatch;
@@ -99,6 +117,7 @@ class FeedBetting extends React.Component {
       isAction,
       role,
       isMatch,
+      itemInfo
     })
   }
 
@@ -134,16 +153,20 @@ class FeedBetting extends React.Component {
   }
 
   render() {
-    const {actionTitle , isAction,side } = this.state;
-    const backgroundColor = side === SIDE.SUPPORT ? "#85D477":'#FB7753';
+    const {actionTitle , isAction, itemInfo } = this.state;
     // const {actionTitle = "Match is ongoing...", isAction =true} = this.state;
      /***
      * side = SIDE.SUPPORT // SIDE.AGAINST ;ORGRANCE
      *
      */
-    const {amount, odds} = this.props;
-    const {event_name, event_predict, event_odds, event_bet,event_date, balance} = this.extraData;
+    console.log('Item info:', itemInfo);
+    const {amount, odds, side } = itemInfo;
+    const {event_name, event_predict} = this.extraData;
     const { commentCount, id, type } = this.props;
+    const winValue = itemInfo.win_value || itemInfo.winValue;
+    // const realEventName = event_name ? event_name.slice(7).split('(') : ['', ''];
+    // const matchName = realEventName[0];
+    // const matchDate = `(${realEventName[1]}`;
 
     return (
       <div>
@@ -154,13 +177,17 @@ class FeedBetting extends React.Component {
           onClick={this.props.onFeedClick}
         >
             <div className="description">
-              <p>{event_name}</p>
-              <p className="eventInfo">{event_predict}</p>
+              <p className="eventName">
+                {event_name}
+              </p>
+              <p className="eventInfo">{side === 1 ? `Support: ` : 'Oppose: '}{event_predict ? event_predict.slice(8) : ''}</p>
             </div>
             <div className="bottomWrapper">
-              <span className="odds" >1:{odds}</span>
-              <span className="content"  >{amount} ETH</span>
+              <span className="content">{amount.toFixed(4)} ETH </span>
+              <span className="odds" >{odds.toFixed(2)}</span>
             </div>
+            <div className="possibleWin">Possible winnings: {parseFloat(winValue).toFixed(4)} ETH</div>
+
             {this.renderStatus()}
         </Feed>
         {/* Shake */}
@@ -204,8 +231,12 @@ class FeedBetting extends React.Component {
       break;
 
     }
+    this.loadMyHandshakeList();
 
 
+  }
+  loadMyHandshakeList = () => {
+    this.props.loadMyHandshakeList({ PATH_URL: API_URL.ME.BASE });
   }
   uninitItem(id){
     const url = API_URL.CRYPTOSIGN.UNINIT_HANDSHAKE.concat(`/${id}`);
@@ -298,6 +329,7 @@ const mapState = state => ({
   firebaseUser: state.firebase.data,
 });
 const mapDispatch = ({
+  loadMyHandshakeList,
   uninitItem,
   collect,
   refund,

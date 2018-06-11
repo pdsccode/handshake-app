@@ -34,11 +34,11 @@ console.log('Chain Id:', chainId);
 
 const bettinghandshake = new BettingHandshake(chainId);
 const nameFormBettingCreate = 'bettingCreate';
-const BettingCreateForm = createForm({
-  propsReduxForm: {
-    form: nameFormBettingCreate,
-  },
-});
+// const BettingCreateForm = createForm({
+//   propsReduxForm: {
+//     form: nameFormBettingCreate,
+//   },
+// });
 
 const regex = /\[.*?\]/g;
 const regexReplace = /\[|\]/g;
@@ -58,7 +58,7 @@ class ErrorBox extends React.PureComponent {
 }
 
 const TAG = 'BETTING_CREATE';
-class BettingCreate extends React.PureComponent {
+class BettingCreate extends React.Component {
   static propTypes = {
     item: PropTypes.object.isRequired,
     toAddress: PropTypes.string.isRequired,
@@ -91,6 +91,8 @@ class BettingCreate extends React.PureComponent {
       privateKey: null,
       matches: [],
       isChangeOdds: false,
+      oddValue: 0,
+      winValue: 0,
       selectedMatch:null,
       selectedOutcome: null,
       buttonClass: 'btnRed',
@@ -121,7 +123,7 @@ class BettingCreate extends React.PureComponent {
     })
 }
 getStringDate(date){
-  var formattedDate = moment(date).format('MMM DD: HH.mm');
+  var formattedDate = moment.unix(date).format('MMM DD');
   return formattedDate;
 
 }
@@ -139,8 +141,16 @@ get foundMatch(){
 get matchNames() {
   const {matches} = this.state;
   //return matches.map((item) => ({ id: item.id, value: `${item.homeTeamName} - ${item.awayTeamName} (${this.getStringDate(item.date)})` }));
-  return matches.map((item) => ({ id: item.id, value: `${item.name} (${this.getStringDate(item.date)})`, marketFee: item.market_fee }));
-
+  const mathNamesList = matches.map((item) => ({ id: item.id, value: `Event: ${item.name} (${this.getStringDate(item.date)})`, marketFee: item.market_fee }));
+  return [
+    ...mathNamesList,
+    {
+      id: -1,
+      value: 'COMING SOON: Create your own event',
+      className: 'disable',
+      disableClick: true,
+    }
+  ]
 }
 get matchOutcomes(){
   const {selectedMatch, matches} = this.state;
@@ -150,7 +160,7 @@ get matchOutcomes(){
           const {outcomes} = foundMatch;
           if(outcomes){
               //return outcomes.map((item) => ({ id: item.id, value: item.name, hid: item.hid}));
-              return outcomes.map((item) => ({ id: item.id, value: `${item.name} (Odds:${parseFloat(item.market_odds).toFixed(2)})`, hid: item.hid, marketOdds: item.market_odds}));
+              return outcomes.map((item) => ({ id: item.id, value: `Outcome: ${item.name}`, hid: item.hid, marketOdds: item.market_odds}));
 
           }
       }
@@ -186,7 +196,9 @@ get defaultOutcome() {
   // return matchOutcomes && matchOutcomes.length > 0 ? matchOutcomes[0] : null;
 }
 
-  async onSubmit(dict) {
+  async onSubmit(e) {
+    e.preventDefault();
+    const dict = this.refs;
     const {address, privateKey, values, selectedMatch, selectedOutcome} = this.state;
     console.log("values", values);
 
@@ -215,36 +227,49 @@ get defaultOutcome() {
     balance = parseFloat(balance);
     const estimatedGas = await bettinghandshake.getEstimateGas();
     console.log('Estimate Gas:', estimatedGas);
-    const eventBet = parseFloat(dict.event_bet);
+    const eventBet = parseFloat(values["event_bet"]);
+    const odds = parseFloat(this.state.oddValue);
     const total = eventBet + parseFloat(estimatedGas);
-    console.log("Total:", total);
+    console.log("Event Bet, Odds, Total:",eventBet,odds, total);
 
     const fromAddress = address;
     console.log('Match, Outcome:', selectedMatch, selectedOutcome);
 
+    var message = null;
+
     if(selectedMatch && selectedOutcome){
       if(eventBet > 0){
         if(total <= balance){
-          this.initHandshake(extraParams, fromAddress);
+          if(odds > 1){
+            this.initHandshake(extraParams, fromAddress);
+          }else {
+            message = MESSAGE.ODD_LARGE_THAN;
+
+          }
         }else {
-          this.props.showAlert({
-            message: <div className="text-center">{MESSAGE.NOT_ENOUGH_BALANCE}</div>,
-            timeOut: 3000,
-            type: 'danger',
-            callBack: () => {
-            }
-          });
+          message = MESSAGE.NOT_ENOUGH_BALANCE;
+
         }
+
+      }else {
+        message = MESSAGE.AMOUNT_VALID;
+
       }
     }else {
+      message = MESSAGE.CHOOSE_MATCH;
+
+    }
+
+    if(message){
       this.props.showAlert({
-        message: <div className="text-center">{MESSAGE.CHOOSE_MATCH}</div>,
+        message: <div className="text-center">{message}</div>,
         timeOut: 3000,
         type: 'danger',
         callBack: () => {
         }
       });
     }
+
 
 
     // if(selectedMatch && selectedOutcome && eventBet > 0 && eventBet <= balance){
@@ -269,6 +294,19 @@ get defaultOutcome() {
     const {values} = this.state;
     values[key] = text;
     this.setState({values});
+    if (key === 'event_odds'){
+      console.log('Change Odds');
+      this.setState({
+        oddValue: text,
+        isChangeOdds: true
+      })
+    }
+    const amount = values["event_bet"];
+    const odds = values['event_odds'];
+    const total = amount * odds;
+    this.setState({
+      winValue: total || 0
+    })
   }
 
   onToggleChange(id) {
@@ -277,17 +315,20 @@ get defaultOutcome() {
 
   renderInput(item, index,style = {}) {
     const {key, placeholder, type, className} = item;
+    const {values} = this.state;
     //const className = 'amount';
     console.log('Item:', item);
     return (
-      <Field
+      <input
         //style={style}
+        ref={key}
         component={InputField}
         type="text"
         placeholder={placeholder}
         //className={className}
         className={cn('form-control-custom input', className || '')}
         name={key}
+        value={values[key]}
         validate={[required]}
         //ErrorBox={ErrorBox}
         onChange={(evt) => {
@@ -326,22 +367,26 @@ get defaultOutcome() {
 
   renderNumber(item, style={}) {
     const {key, placeholder} = item;
-
+    const {values} = this.state;
     return (
-      <Field
+      <input
+        ref={key}
+        id={key}
         className="form-control-custom input"
         name={key}
         style={style}
-        component={InputField}
+        //component={InputField}
         type="text"
         //min="0.0001"
         //step="0.0002"
         placeholder={placeholder}
+        value={key === "event_odds" ? this.state.oddValue : values[key]}
         validate={[required]}
-        ErrorBox={ErrorBox}
+        //ErrorBox={ErrorBox}
         onChange={(evt) => {
           this.changeText(key, evt.target.value)
         }}
+        onClick={event => {event.target.setSelectionRange(0, event.target.value.length)}}
       />
     );
   }
@@ -353,14 +398,12 @@ get defaultOutcome() {
     const item = JSON.parse(field.replace(regexReplace, ''));
     const {key, placeholder, type, label, className,prefix} = item;
     let itemRender = null;//this.renderInput(item, index);
-    const {selectedOutcome} = this.state;
+    const { isChangeOdds } = this.state;
     let suffix = item.suffix;
     if(item.key === "event_odds"){
-      suffix = this.state.isChangeOdds ? "Your Odds" : "Market Odds";
+      suffix = isChangeOdds ? "Your Odds" : "Market Odds";
     }
-    console.log('Selected Outcome:', selectedOutcome);
-    const marketOdds = (selectedOutcome && selectedOutcome.marketOdds) ? selectedOutcome.marketOdds : 0; 
-    console.log('Market Odds:', marketOdds);
+
     switch (type) {
       case 'date':
         itemRender = this.renderDate(item, index);
@@ -371,7 +414,7 @@ get defaultOutcome() {
       default:
         itemRender = this.renderInput(item, index,{width:'100%',fontSize:16,color:'white'} );
     }
-    const classNameSuffix = `cryptoCurrency${item.className}`;
+    const classNameSuffix = `cryptoCurrency${item.className} ${(isChangeOdds && item.key === "event_odds") ? 'cryptoCurrencyYourOdds' : ''}`;
     return (
       <div className="rowWrapper" key={index + 1} >
           <label style={{fontSize:13, color:'white'}}>{label || placeholder}</label>
@@ -390,9 +433,11 @@ get defaultOutcome() {
     const { selectedMatch, buttonClass } = this.state;
     const defaultMatchId = this.defaultMatch ? this.defaultMatch.id : null;
     const defaultOutcomeId = this.defaultOutcome ? this.defaultOutcome.id : null;
-
+    // console.log('Selected Outcome:', selectedOutcome);
+    // const marketOdds = (selectedOutcome && selectedOutcome.marketOdds) ? selectedOutcome.marketOdds : 0;
+    // console.log('Market Odds:', marketOdds);
     return (
-      <BettingCreateForm className="wrapperBetting" onSubmit={this.onSubmit}>
+      <form className="wrapperBetting" onSubmit={this.onSubmit}>
         <div className="dropDown">
           <Dropdown
             placeholder="Select an event"
@@ -419,13 +464,19 @@ get defaultOutcome() {
             source={this.matchOutcomes}
             afterSetDefault={(item)=> {
               const {values} = this.state;
+              console.log('Selected outcome:', item);
+
               values["event_predict"] = item.value;
+              values["event_odds"] = item.marketOdds;
               this.setState({selectedOutcome: item, values})
-              
+
             }}
             onItemSelected={(item) => {
+              console.log('Selected outcome:', item);
               const {values} = this.state;
               values["event_predict"] = item.value;
+              values["event_odds"] = item.marketOdds;
+
               this.setState({selectedOutcome: item, values})
               }
             }
@@ -447,11 +498,12 @@ get defaultOutcome() {
             <div style={{display:'flex',flexDirection:'column',flex:1,marginBottom:10}}>
               {inputList.map((field, index) => this.renderItem(field, index))}
             </div>
+            <div style={{color: 'white', fontSize: 13}}>Amount you could win: {this.state.winValue}</div>
         </div>
 
 
-        <Button type="submit" block className={buttonClass}>Shake and Send</Button>
-      </BettingCreateForm>
+        <Button type="submit" block className={buttonClass}>Go</Button>
+      </form>
     );
   }
 
@@ -483,15 +535,15 @@ get defaultOutcome() {
       outcome_id: selectedOutcome.id,
       //outcome_id: selectedOutcome.hid,
       //outcome_id: 10,
-      odds: parseFloat(fields['event_odds']),
-      amount: parseFloat(fields['event_bet']),
+      odds: `${fields['event_odds']}`,
+      amount: `${fields['event_bet']}`,
       extra_data: JSON.stringify(fields),
       currency: 'ETH',
       side: parseInt(side),
       from_address: fromAddress,
       chain_id: chainId,
     };
-    console.log("Params:", params);
+    console.log("Go to Params:", params);
     const hid = selectedOutcome.hid;
 
     this.props.initHandshake({PATH_URL: API_URL.CRYPTOSIGN.INIT_HANDSHAKE, METHOD:'POST', data: params,

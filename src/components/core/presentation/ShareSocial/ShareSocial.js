@@ -10,8 +10,48 @@ import CopyLink from '@/assets/images/share/link.svg';
 import FacebookSVG from '@/assets/images/share/facebook.svg';
 import TwitterSVG from '@/assets/images/share/twitter.svg';
 import './ShareSocial.scss';
-const Clipboard = (function(window, document, navigator) { var textArea, copy; function isOS() { return navigator.userAgent.match(/ipad|iphone/i); } function createTextArea(text) { textArea = document.createElement('textArea'); textArea.value = text; document.body.appendChild(textArea); } function selectText() { var range, selection; if (isOS()) { range = document.createRange(); range.selectNodeContents(textArea); selection = window.getSelection(); selection.removeAllRanges(); selection.addRange(range); textArea.setSelectionRange(0, 999999); } else { textArea.select(); } } function copyToClipboard() { document.execCommand('copy'); document.body.removeChild(textArea); } copy = function(text) { createTextArea(text); selectText(); copyToClipboard(); }; return { copy: copy }; })(window, document, navigator);
 
+const Clipboard = (function (window, document, navigator) {
+  let textArea, copy;
+
+  function isOS() {
+    return navigator.userAgent.match(/ipad|iphone/i);
+  }
+
+  function createTextArea(text) {
+    textArea = document.createElement('textArea');
+    textArea.value = text;
+    document.body.insertBefore(textArea, document.body.firstChild);
+  }
+
+  function selectText() {
+    let range, selection;
+    if (isOS()) {
+      range = document.createRange();
+      range.selectNodeContents(textArea);
+      selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(range);
+      textArea.setSelectionRange(0, 999999);
+    } else {
+      textArea.select();
+    }
+  }
+
+  function copyToClipboard() {
+    const execCommand =  document.execCommand('copy');
+    document.body.removeChild(textArea);
+    return execCommand;
+  }
+  copy = function (text) {
+    createTextArea(text);
+    selectText();
+    return copyToClipboard();
+  };
+  return {
+    copy
+  };
+}(window, document, navigator));
 
 class ShareSocial extends PureComponent {
   constructor(props) {
@@ -28,10 +68,6 @@ class ShareSocial extends PureComponent {
       img: CopyLink,
       title: 'COPY'
     }
-    // {
-    //   img: LinkedinSVG,
-    //   title: 'LINKEDIN'
-    // }
     ];
   }
 
@@ -46,33 +82,44 @@ class ShareSocial extends PureComponent {
   async clickShare(e, shareType) {
     e.stopPropagation();
     const { title, shareUrl } = this.props;
-    const { data } = await this.converToShortLink(shareUrl);
-    const shortLink = data.id;
     let rawUrlShare = '';
+    let shortLink = shareUrl;
+
     switch(shareType) {
       case 'TWITTER':
+        if (!Helper.broswer.isSafari) {
+          try {
+            const { data } = await this.converToShortLink(shareUrl);
+            shortLink = data.id;
+          } catch (error) {
+            console.log(error);
+          }
+        }
         rawUrlShare = `http://twitter.com/intent/tweet?status=${title}+${shortLink}`;
         break;
-      // case 'LINKEDIN':
-      //   rawUrlShare = `https://www.linkedin.com/shareArticle?mini=true&url=${shareUrl}&summary=${title}&source=LinkedIn`;
-      //   break;
       case 'COPY':
-        // TODO: Short link
         // copy to clip board
-        Clipboard.copy(shortLink);
-        // show alert
-        this.props.showAlert({
-          message: <div className="text-center">Copied to clipboard!</div>,
-          timeOut: 3000,
-          type: 'success',
-        });
+        const resultCopy = Clipboard.copy(shortLink);
+        if (Clipboard.copy(shortLink)) {
+          this.props.showAlert({
+            message: <div className="text-center">Copied to clipboard!</div>,
+            timeOut: 3000,
+            type: 'success',
+          });
+        } else {
+          this.props.showAlert({
+            message: <div className="text-center">Copy to clipboard fail! <p style={{ margin: 0 }}>{shortLink}</p></div>,
+            timeOut: 20000,
+            type: 'danger',
+            isShowClose: true,
+          });
+        }
         return;
       default:
         // facebook
         rawUrlShare = `https://www.facebook.com/sharer/sharer.php?u=${shortLink}&amp;title=${title}`;
         break;
     }
-    
     Helper.popupCenter(rawUrlShare, 'facebook', 670, 340);
   }
  

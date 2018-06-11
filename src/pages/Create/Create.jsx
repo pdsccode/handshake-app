@@ -45,17 +45,17 @@ class Create extends React.Component {
 
     return (
       <Grid className="create">
+        {/*<Row>*/}
+          {/*<Col md={12}>*/}
+            {/*<SearchBar*/}
+              {/*suggestions={this.handShakeList}*/}
+              {/*onSuggestionSelected={this.handshakeChange}*/}
+              {/*inputSearchDefault={HANDSHAKE_NAME[HANDSHAKE_ID_DEFAULT]}*/}
+            {/*/>*/}
+          {/*</Col>*/}
+        {/*</Row>*/}
         <Row>
           <Col md={12}>
-            <SearchBar 
-              suggestions={this.handShakeList}
-              onSuggestionSelected={this.handshakeChange}
-              inputSearchDefault={HANDSHAKE_NAME[HANDSHAKE_ID_DEFAULT]}
-            />
-          </Col>
-        </Row>
-        <Row>
-          <Col md={12} className="margin-top-20">
             <CreateComponent {...this.props} />
           </Col>
         </Row>

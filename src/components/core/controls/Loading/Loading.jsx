@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 // component
 import Image from '@/components/core/presentation/Image';
-import loadingSVG from '@/assets/images/icon/loading.svg';
+import loadingSVG from '@/assets/images/icon/loading.gif';
 // style
 import './Loading.scss';
 
