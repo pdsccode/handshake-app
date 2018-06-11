@@ -1,8 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import iconLocation from '@/assets/images/icon/icons8-geo_fence.svg';
-import iconTransaction from '@/assets/images/icon/icons8-transfer_between_users.svg';
-import iconPhone from '@/assets/images/icon/icons8-phone.svg';
 import iconChat from '@/assets/images/icon/icons8-chat.svg';
 // style
 import './FeedExchange.scss';
@@ -11,53 +9,51 @@ import Feed from "@/components/core/presentation/Feed/Feed";
 import Button from "@/components/core/controls/Button/Button";
 import {
   API_URL,
+  APP_USER_NAME,
   CRYPTO_CURRENCY,
   DEFAULT_FEE,
   EXCHANGE_ACTION,
   EXCHANGE_ACTION_NAME,
+  EXCHANGE_ACTION_PAST_NAME,
+  EXCHANGE_ACTION_PERSON,
+  EXCHANGE_ACTION_PRESENT_NAME,
   EXCHANGE_FEED_TYPE,
   EXCHANGE_METHOD_PAYMENT,
   HANDSHAKE_EXCHANGE_CC_STATUS_NAME,
+  HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS,
+  HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS,
   HANDSHAKE_EXCHANGE_STATUS,
   HANDSHAKE_EXCHANGE_STATUS_NAME,
   HANDSHAKE_STATUS_NAME,
   HANDSHAKE_USER,
-  APP_USER_NAME,
-  EXCHANGE_ACTION_PAST_NAME,
-  EXCHANGE_ACTION_PRESENT_NAME,
-  EXCHANGE_ACTION_PERSON
+  URL
 } from "@/constants";
 import ModalDialog from "@/components/core/controls/ModalDialog";
 import {connect} from "react-redux";
 import {
+  acceptOfferItem,
+  cancelOfferItem,
   cancelShakedOffer,
   closeOffer,
+  completeOfferItem,
   completeShakedOffer,
+  rejectOfferItem,
   shakeOffer,
   withdrawShakedOffer
 } from "@/reducers/exchange/action";
 // import getSymbolFromCurrency from 'currency-symbol-map';
 import Offer from "@/models/Offer";
 import {MasterWallet} from "@/models/MasterWallet";
-import {getHandshakeUserType, getOfferPrice} from "@/services/offer-util";
-import {showAlert} from '@/reducers/app/action';
+import {formatAmountCurrency, formatMoney, getHandshakeUserType, getOfferPrice} from "@/services/offer-util";
+import {hideLoading, showAlert, showLoading} from '@/reducers/app/action';
 import {Link} from "react-router-dom";
-import {URL} from '@/constants';
 import {getDistanceFromLatLonInKm} from '../utils'
-import {ExchangeHandshake} from '@/services/neuron';
+import {ExchangeHandshake, ExchangeShopHandshake} from '@/services/neuron';
 import _sample from "lodash/sample";
-import { feedBackgroundColors } from "@/components/handshakes/exchange/config";
+import {feedBackgroundColors} from "@/components/handshakes/exchange/config";
 import {updateOfferStatus} from "@/reducers/discover/action";
-import {formatAmountCurrency, formatMoney} from "@/services/offer-util";
 import {BigNumber} from "bignumber.js";
-import { showLoading, hideLoading } from '@/reducers/app/action';
 import "./FeedMe.scss"
-import {HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS, HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS} from "../../../../constants";
-import {
-  acceptOfferItem, cancelOfferItem, completeOfferItem,
-  rejectOfferItem
-} from "../../../../reducers/exchange/action";
-import {ExchangeShopHandshake} from "../../../../services/neuron";
 
 class FeedMe extends React.PureComponent {
   constructor(props) {
@@ -102,13 +98,12 @@ class FeedMe extends React.PureComponent {
     return condition;
   }
 
-  getContent = () => {
+  getContent = (fiatAmount) => {
     const {intl, status} = this.props;
-    const offer = this.offer;
-    const fiatAmount = this.fiatAmount;
-    let message = '';
+    const { offer } = this;
     let offerType = '';
 
+    let idMessage = '';
     switch (this.userType) {
       case HANDSHAKE_USER.NORMAL: {
         break;
@@ -126,6 +121,8 @@ class FeedMe extends React.PureComponent {
               offerType = EXCHANGE_ACTION_PRESENT_NAME[EXCHANGE_ACTION.BUY];
             }
 
+            idMessage = 'offerHandShakeContentMe';
+
             break;
           }
           case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.SHAKING:
@@ -138,6 +135,8 @@ class FeedMe extends React.PureComponent {
             } else if (offer.type === EXCHANGE_ACTION.SELL) {
               offerType = EXCHANGE_ACTION_PAST_NAME[EXCHANGE_ACTION.BUY];
             }
+
+            idMessage = 'offerHandShakeContentMeDone';
 
             break;
           }
@@ -154,6 +153,8 @@ class FeedMe extends React.PureComponent {
 
             offerType = EXCHANGE_ACTION_PRESENT_NAME[offer.type];
 
+            idMessage = 'offerHandShakeContentMe';
+
             break;
           }
           case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.SHAKING:
@@ -163,17 +164,30 @@ class FeedMe extends React.PureComponent {
 
             offerType = EXCHANGE_ACTION_PAST_NAME[offer.type];
 
+            idMessage = 'offerHandShakeContentMeDone';
+
             break;
           }
         }
       }
     }
+
+    const message = intl.formatMessage({ id: idMessage }, {
+      offerType: offerType,
+      amount: formatAmountCurrency(offer.amount),
+      currency: offer.currency,
+      currency_symbol: offer.fiatCurrency,
+      total: formatMoney(fiatAmount),
+      fee: offer.feePercentage,
+      payment_method: EXCHANGE_METHOD_PAYMENT[EXCHANGE_FEED_TYPE.EXCHANGE],
+    });
+
+    return message;
   }
 
   getActionButtons = () => {
     const {intl, status} = this.props;
     const offer = this.offer;
-    const fiatAmount = this.fiatAmount;
     let actionButtons = null;
     let message = '';
 
@@ -244,6 +258,25 @@ class FeedMe extends React.PureComponent {
     }
   }
 
+  ////////////////////////
+  getEmail = () => {
+    const { offer } = this;
+    let email = '';
+
+    switch (this.userType) {
+      case HANDSHAKE_USER.NORMAL: {
+        break;
+      }
+      case HANDSHAKE_USER.SHAKED: {
+        email = offer.email ? offer.email : offer.contactPhone ? offer.contactPhone : offer.contactInfo;
+        break;
+      }
+      case HANDSHAKE_USER.OWNER: {
+        email = offer.toEmail ? offer.toEmail : offer.toContactPhone ? offer.toContactPhone : offer.toContactInfo;
+        break;
+      }
+    }
+  }
   ////////////////////////
 
   handleRejectShakedOffer = async () => {
@@ -525,7 +558,6 @@ class FeedMe extends React.PureComponent {
           console.log('aaaa', offer.type, offer.currency);
         }
       }
-      // this.fiatAmount = fiatAmount;
     }
     return fiatAmount;
   }
@@ -696,6 +728,7 @@ class FeedMe extends React.PureComponent {
         }
 
         let fiatAmount = this.calculateFiatAmount(offer);
+
         message = intl.formatMessage({ id: 'instantOfferHandShakeContent' }, {
           just: just,
           offerType: 'bought',
@@ -734,11 +767,14 @@ class FeedMe extends React.PureComponent {
         break;
       }
       case EXCHANGE_FEED_TYPE.OFFER_STORE_SHAKE: {
-        email = offer.email ? offer.email : offer.contactPhone ? offer.contactPhone : offer.contactInfo;
+        from = 'With';
+        email = this.getEmail();
         showChat = true;
         chatUsername = offer.toUsername;
 
+        let fiatAmount = this.calculateFiatAmount(offer);
 
+        message = this.getContent(fiatAmount);
 
         actionButtons = this.getActionButtons();
         break;
