@@ -28,7 +28,7 @@ class WalletHistory extends React.Component {
     };
   }
 
-  componentDidUpdate(){console.log('componentDidUpdate', this.props);
+  componentDidUpdate(){
     const {transactions} = this.props
     if (transactions != this.state.transactions){
       this.setState({transactions: transactions});
@@ -36,7 +36,6 @@ class WalletHistory extends React.Component {
   }
 
   get list_transaction() {
-    console.log('list_transaction', this.props);
     const wallet = this.props.wallet;
 
     if (this.state.transactions.length==0)
@@ -47,7 +46,7 @@ class WalletHistory extends React.Component {
         cssValue = `value-${tran.is_sent ? "sent" : "received"}`;
 
         return (
-        <div key={tran.transaction_no} className="row">
+        <div key={tran.transaction_no} className="row" onClick={() =>{this.show_transaction(tran.time_stamp, tran.transaction_no)}}>
           <div className="col3">
             <div className="time">{tran.transaction_relative_time}</div>
             <div className={cssValue}>{tran.is_sent ? "-" : ""} {Number(tran.value)} {wallet.name}</div>
@@ -69,7 +68,6 @@ class WalletHistory extends React.Component {
 
   async show_transaction(timeStamp, no){
     const wallet = this.props.wallet;
-
     if(wallet && no){
       this.modalTransactionRef.open();
       let transaction_detail =  await wallet.getTransactionDetail(no);
