@@ -273,8 +273,8 @@ class Router extends React.Component {
             this.props.getFreeETH({
               PATH_URL: `/user/free-rinkeby-eth?address=${wallet.address}`,
               METHOD: 'POST',
-              successFn: (response) => { this.setState({ isLoading: false, loadingText: '' }); },
-              errorFn: (error) => { this.setState({ isLoading: false, loadingText: '' }); },
+              successFn: () => { this.setState({ isLoading: false, loadingText: '' }); },
+              errorFn: () => { this.setState({ isLoading: false, loadingText: '' }); },
             });
           });
         } else {

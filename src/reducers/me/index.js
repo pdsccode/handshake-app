@@ -65,9 +65,9 @@ const meReducter = (
       const userProfile = action.profile;
       const rootPathFirebase = `${FIREBASE_PATH.USERS}/${String(userProfile.id || -1)}`;
       const firebaseExchange = firebase
-      ?.database()
-      ?.ref(rootPathFirebase)
-      ?.child('offers');
+        ?.database()
+        ?.ref(rootPathFirebase)
+        ?.child('offers');
 
       Object.keys(listOfferStatus).forEach((offer_id) => {
         const offer = listOfferStatus[offer_id];

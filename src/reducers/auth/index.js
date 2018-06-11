@@ -1,11 +1,11 @@
 import { APP } from '@/constants';
 import local from '@/services/localStore';
-import { ACTIONS } from './action';
 import Auth from '@/models/Auth';
+import { ACTIONS } from './action';
 
 const authReducter = (state = {
   token: local.get(APP.AUTH_TOKEN),
-  profile: local.get(APP.AUTH_PROFILE) || {},
+  profile: Auth.profile(local.get(APP.AUTH_PROFILE)) || Auth.profile({}),
   isLogged: false,
   profileUpdatedAt: Date.now(),
 }, action) => {
