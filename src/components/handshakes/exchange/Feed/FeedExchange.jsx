@@ -57,6 +57,7 @@ import { showLoading, hideLoading } from '@/reducers/app/action';
 import { shakeOfferItem } from "@/reducers/exchange/action";
 import CoinOffer from "@/models/CoinOffer";
 import OfferShop from "@/models/OfferShop";
+import {ExchangeShopHandshake} from "@/services/neuron";
 
 class FeedExchange extends React.PureComponent {
   constructor(props) {
@@ -185,28 +186,29 @@ class FeedExchange extends React.PureComponent {
 
     const { intl } = this.props;
     const { data } = responseData;
-    const { currency, type, totalAmount } = data;
+    const offerShake = Offer.offer(data);
+    const { id, currency, type, totalAmount, systemAddress } = offerShake;
+    const { offer } = this;
 
-    const offer = this.offer;
-    // if (currency === CRYPTO_CURRENCY.ETH) {
-    //   let amount = 0;
-    //   if (offer.type === EXCHANGE_ACTION.BUY) {
-    //     amount = data.total_amount;
-    //   }
-    //
-    //   const wallet = MasterWallet.getWalletDefault(currency);
-    //   const exchangeHandshake = new ExchangeHandshake(wallet.chainId);
-    //   const result = await exchangeHandshake.shake(data.hid, amount, data.id);
-    //
-    //   console.log('handleShakeOfferSuccess', result);
-    // } else if (currency === CRYPTO_CURRENCY.BTC) {
-    //   if (type === EXCHANGE_ACTION.BUY) {
-    //     const wallet = MasterWallet.getWalletDefault(currency);
-    //     wallet.transfer(offer.systemAddress, totalAmount).then(success => {
-    //       console.log('transfer', success);
-    //     });
-    //   }
-    // }
+    if (currency === CRYPTO_CURRENCY.ETH) {
+      let amount = 0;
+      if (type === EXCHANGE_ACTION.BUY) {
+        amount = totalAmount;
+      }
+
+      const wallet = MasterWallet.getWalletDefault(currency);
+      const exchangeHandshake = new ExchangeShopHandshake(wallet.chainId);
+      const result = await exchangeHandshake.initByCustomer(offer.ETH.userAddress, amount, id);
+
+      console.log('handleShakeOfferSuccess', result);
+    } else if (currency === CRYPTO_CURRENCY.BTC) {
+      if (type === EXCHANGE_ACTION.BUY) {
+        const wallet = MasterWallet.getWalletDefault(currency);
+        wallet.transfer(systemAddress, totalAmount).then(success => {
+          console.log('transfer', success);
+        });
+      }
+    }
 
     this.hideLoading();
     const message = intl.formatMessage({ id: 'shakeOfferItemSuccessMassage' }, {
