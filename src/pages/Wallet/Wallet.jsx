@@ -308,7 +308,7 @@ class Wallet extends React.Component {
       },
     });
 
-    if (!wallet.isReward) {      
+    if (!wallet.isReward) {
         obj.push({
           title: StringHelper.format('Set as default {0} wallet ', wallet.name) + (wallet.default ? "✓ " : ""),
           handler: () => {
@@ -329,7 +329,7 @@ class Wallet extends React.Component {
             this.modalBetRef.open();
             this.toggleBottomSheet();
           }
-        })       
+        })
     }
     obj.push({
       title: 'Cancel',
@@ -609,6 +609,11 @@ class Wallet extends React.Component {
   closeProtected = () => {
     this.setState({ activeProtected: false });
   }
+
+  closeHistory = () => {
+    this.setState({ transactions: [] });
+  }
+
   onCopyProtected = () => {
     Clipboard.copy(this.state.walletSelected.mnemonic);
     this.showToast('Copied to clipboard');
@@ -767,7 +772,7 @@ class Wallet extends React.Component {
           </Modal>
 
 
-          <Modal title="Transaction history" onRef={modal => this.modalHistoryRef = modal}>
+          <Modal title="Transaction history" onRef={modal => this.modalHistoryRef = modal} onClose={this.closeHistory}>
             <WalletHistory wallet={this.state.walletSelected} transactions={this.state.transactions} />
           </Modal>
 

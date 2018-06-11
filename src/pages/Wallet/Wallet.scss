@@ -550,8 +550,14 @@
     padding-bottom: 15px;
     border-bottom:solid 1px #ECECEC;
 
-    span{
-      font-size: 14px;
+    .status-failed{
+      float: right;
+      color:#FF2D55;
+    }
+
+    .status-success{
+      float: right;
+      color:#4CD964;
     }
   }
 
