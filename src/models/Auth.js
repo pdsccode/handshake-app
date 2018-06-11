@@ -25,7 +25,7 @@ class Auth {
       status: rawData.status || '',
       username: rawData.username || '',
       address: rawData.address || '',
-    }
+    };
   }
 }
 

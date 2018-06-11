@@ -18,7 +18,7 @@ import { Input as Input2, InputGroup, InputGroupAddon } from 'reactstrap';
 import { StringHelper } from '@/services/helper';
 import iconSuccessChecked from '@/assets/images/icon/icon-checked-green.svg';
 
-import './Transfer.scss';
+import './TransferCoin.scss';
 import Dropdown from '@/components/core/controls/Dropdown';
 
 import iconQRCodeBlack from '@/assets/images/icon/scan-qr-code.svg';
