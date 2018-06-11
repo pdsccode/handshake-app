@@ -595,7 +595,7 @@ class Component extends React.Component {
 
             </div>
           </Feed>
-          {allowInitiate && (<Button block type="submit">Initiate</Button>)}
+          <Button block type="submit" disabled={!allowInitiate}>Initiate</Button>
         </FormExchangeCreate>
         <ModalDialog onRef={modal => this.modalRef = modal}>
           {modalContent}
