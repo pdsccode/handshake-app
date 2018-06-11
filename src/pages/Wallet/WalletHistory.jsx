@@ -89,6 +89,9 @@ class WalletHistory extends React.Component {
         }
       }
 
+      let cssLabel = `label-${is_sent ? "sent" : "received"}`,
+          cssValue = `value-${is_sent ? "sent" : "received"}`;
+
       return {
         value: value,
         transaction_no: data.txid,
@@ -96,7 +99,9 @@ class WalletHistory extends React.Component {
         addresses: addresses,
         transaction_relative_time:  transaction_date ? moment(transaction_date).fromNow() : "",
         confirmations: confirmations,
-        is_sent: is_sent
+        is_sent: is_sent,
+        cssLabel: cssLabel,
+        cssValue: cssValue
       };
     }
   }
@@ -158,13 +163,26 @@ class WalletHistory extends React.Component {
       <Modal title="Transaction details" onRef={modal => this.modalTransactionRef = modal} onClose={this.closeDetail}>
         <WalletTransaction wallet={wallet} transaction_detail={this.state.transaction_detail}  />
       </Modal>
-    );f
+    );
+  }
+
+  get load_balance(){
+    const wallet = this.props.wallet;
+    return wallet ?
+    (
+      <div className="history-balance">
+        Balance: {wallet.balance} {wallet.name}
+        {/* <br/>
+        Transactions: {wallet.transaction_count} */}
+      </div>
+    ) : "";
   }
 
 	render(){
 		return (
     <div>
       <div className="historywallet-wrapper">
+        {this.load_balance}
         {this.list_transaction}
       </div>
       <div className="historywallet-wrapper">

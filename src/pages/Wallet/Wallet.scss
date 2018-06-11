@@ -442,9 +442,18 @@
   margin-right: 5px;
 }
 
+
+
 .historywallet-wrapper{
-  padding-bottom: 70px;
+  padding-bottom: 40px;
   font-weight: 300;
+
+  .history-balance{
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-size: 14px;
+    border-bottom:solid 2px #1E4EFF;
+  }
 
   .row{
     flex-wrap:nowrap !important;
@@ -574,7 +583,7 @@
     }
 
     .key{
-      width:70px;
+      width:80px;
       padding-right: 10px;
       float: left;
       color:#6c757d;

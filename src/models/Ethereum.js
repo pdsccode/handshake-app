@@ -145,16 +145,31 @@ export class Ethereum extends Wallet {
     }
 
 
-  async getTransactionHistory() {
+  async getTransactionHistory(pageno) {
     let result = [];
     const API_KEY = configs.network[4].apikeyEtherscan;
-    const url =this.constructor.API[this.getNetworkName()] + `?module=account&action=txlist&address=${this.address}&startblock=0&endblock=99999999&page=1&offset=20&sort=desc&apikey=${API_KEY}`;
-    const response = await axios.get(url);
+    console.log("getTransactionHistory", pageno);
+    const url =this.constructor.API[this.getNetworkName()] + `?module=account&action=txlist&address=${this.address}&startblock=0&endblock=99999999&page=${pageno}&offset=20&sort=desc&apikey=${API_KEY}`;
+    const response = await axios.get(url);console.log(url);
+    if (response.status == 200) {
+      result = response.data.result;
+    }
+    return result;
+  }
+
+  async getTransactionCount() {
+    let result = [];
+    const API_KEY = configs.network[4].apikeyEtherscan;
+    const url =this.constructor.API[this.getNetworkName()] + `?module=proxy&action=eth_getTransactionCount&address=${this.address}&tag=latest&apikey=${API_KEY}`;
+    const response = await axios.get(url);console.log(url);
     if (response.status == 200) {
       result = response.data.result;
     }
     return result;
   }
 }
+
+
+
 
 export default { Ethereum };
