@@ -1,16 +1,56 @@
 import Handshake from '@/models/Handshake';
 import {
+  EXCHANGE_FEED_TYPE,
+  FIREBASE_PATH,
   HANDSHAKE_EXCHANGE_CC_STATUS_VALUE,
   HANDSHAKE_EXCHANGE_STATUS_VALUE,
-  FIREBASE_PATH,
 } from '@/constants';
 import firebase from 'firebase/app';
 import 'firebase/database';
 import 'firebase/messaging';
-import { ACTIONS } from './action';
+import {ACTIONS} from './action';
 
-const handleListPayload = payload =>
-  payload.map(handshake => Handshake.handshake(handshake));
+function handlePreProcessForOfferStore(handshake, result) {
+  let extraData = JSON.parse(handshake.extra_data);
+  const id = handshake.id;
+  if (extraData.item_flags.BTC) {
+    let extraDataBTC = {...extraData, ...extraData.items.BTC};
+    delete extraDataBTC.items;
+    delete extraDataBTC.status;
+    handshake.extra_data = JSON.stringify(extraDataBTC);
+    handshake.id = id + '_BTC';
+
+    result.push(Handshake.handshake(handshake));
+  }
+
+  if (extraData.item_flags.ETH) {
+    let extraDataETH = {...extraData, ...extraData.items.ETH};
+    delete extraDataETH.items;
+    delete extraDataETH.status;
+    handshake.extra_data = JSON.stringify(extraDataETH);
+    handshake.id = id + '_ETH';
+
+    result.push(Handshake.handshake(handshake));
+  }
+}
+
+const handleListPayload = payload => {
+  let result = [];
+
+  for (let handshake of payload) {
+    if (handshake.offer_feed_type === EXCHANGE_FEED_TYPE.OFFER_STORE) {
+      handlePreProcessForOfferStore(handshake, result);
+
+    } else {
+      result.push(Handshake.handshake(handshake));
+    }
+  }
+
+  console.log('handleListPayload result', result);
+
+  return result;
+}
+
 
 const handleDetailPayload = payload => Handshake.handshake(payload.data);
 

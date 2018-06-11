@@ -32,6 +32,18 @@ class Offer {
       toEmail: data.to_email || '',
       toContactPhone: data.to_contact_phone || '',
       toContactInfo: data.to_contact_info || '',
+
+
+      //Offer store
+      sellAmountMin: data.sell_amount_min || '',
+      sellAmount: data.sell_amount || '',
+      sellBalance: data.sell_balance || '',
+      sellPercentage: data.sell_percentage || '',
+      buyAmountMin: data.buy_amount_min || '',
+      buyAmount: data.buy_amount || '',
+      buyBalance: data.buy_balance || '',
+      buyPercentage: data.buy_percentage || '',
+      rewardAddress: data.reward_address || '',
     };
   }
 }
