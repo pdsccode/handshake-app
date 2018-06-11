@@ -73,7 +73,13 @@ class Transfer extends React.Component {
   componentDidMount() {    
     // clear form:
     this.props.clearFields(nameFormSendWallet, false, false, "to_address", "from_address", "amount");
-    this.getWalletDefault();
+    if (this.props.amount)
+      this.props.rfChange(nameFormSendWallet, 'amount', this.props.amount);
+      
+    if (this.props.toAddress)
+      this.props.rfChange(nameFormSendWallet, 'to_address', this.props.toAddress);
+    
+      this.getWalletDefault();
   }
 
   resetForm(){
