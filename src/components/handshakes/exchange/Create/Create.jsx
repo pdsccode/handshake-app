@@ -365,15 +365,19 @@ class Component extends React.Component {
     // console.log('rewardWallet', rewardWallet);
 
     if (currency === CRYPTO_CURRENCY.BTC) {
-      wallet.transfer(this.offer.items.BTC.systemAddress, amountSell).then(success => {
-        console.log('transfer', success);
-      });
+      if (amountSell > 0) {
+        wallet.transfer(this.offer.items.BTC.systemAddress, amountSell).then(success => {
+          console.log('transfer', success);
+        });
+      }
     } else if (currency === CRYPTO_CURRENCY.ETH) {
-      const exchangeHandshake = new ExchangeShopHandshake(wallet.chainId);
+      if (amountSell > 0) {
+        const exchangeHandshake = new ExchangeShopHandshake(wallet.chainId);
 
-      let result = null;
-      result = await exchangeHandshake.initByShopOwner(amountSell, this.offer.id);
-      console.log('handleCreateOfferSuccess', result);
+        let result = null;
+        result = await exchangeHandshake.initByShopOwner(amountSell, this.offer.id);
+        console.log('handleCreateOfferSuccess', result);
+      }
     }
 
     this.hideLoading();
