@@ -21,17 +21,17 @@ export const HANDSHAKE_ID = { // important
   EXCHANGE_LOCAL: 6,
 };
 
-export const HANDSHAKE_ID_DEFAULT = 1;
+export const HANDSHAKE_ID_DEFAULT = 3;
 
 export const HANDSHAKE_NAME = {
-  [HANDSHAKE_ID.PROMISE]: { name: 'Promise', sort: 2 },
-  [HANDSHAKE_ID.BETTING]: { name: 'Betting', sort: 1 },
+  // [HANDSHAKE_ID.PROMISE]: { name: 'Promise', priority: 2 },
+  [HANDSHAKE_ID.BETTING]: { name: 'Betting', priority: 1 },
   // [HANDSHAKE_ID.EXCHANGE]: 'Exchange',
   // [HANDSHAKE_ID.SEED]: 'Seed',
-  [HANDSHAKE_ID.WALLET_TRANSFER]: { name: 'Transfer coin', sort: 3 },
+  [HANDSHAKE_ID.WALLET_TRANSFER]: { name: 'Transfer coin', priority: 3 },
   // [HANDSHAKE_ID.PROMISE]: 'Promise',
-  [HANDSHAKE_ID.EXCHANGE]: { name: 'Exchange', sort: 4 },
-  [HANDSHAKE_ID.EXCHANGE_LOCAL]: { name: 'Exchange Local', sort: 5 },
+  [HANDSHAKE_ID.EXCHANGE]: { name: 'Exchange', priority: 4 },
+  [HANDSHAKE_ID.EXCHANGE_LOCAL]: { name: 'Exchange Local', priority: 5 },
 };
 
 export const PRICE_DECIMAL = 0;

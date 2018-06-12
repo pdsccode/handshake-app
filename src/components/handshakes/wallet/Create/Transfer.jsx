@@ -7,7 +7,7 @@ import { URL } from '@/constants';
 class Transfer extends React.Component {
   render() {
     return (
-      //<TransferCoin coinName="BTC" toAddress = 'ABC' amount={0.01} onFinish={() => {}} />
+      // <TransferCoin coinName="BTC" toAddress = 'ABC' amount={0.01} onFinish={() => {}} />
       <TransferCoin onFinish={() => {this.props.history.push(URL.HANDSHAKE_ME);}} />
     );
   }

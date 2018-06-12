@@ -167,7 +167,7 @@ module.exports = function webpackConfig(env, argv) {
           env: appEnvConfig,
         }),
         new PwaManifestPlugin({
-          name: 'Ninja',
+          name: appEnvConfig.title,
           short_name: 'Ninja',
           description: '',
           background_color: '#1A1919',

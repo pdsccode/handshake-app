@@ -18,15 +18,17 @@ class Button extends React.PureComponent {
     small: PropTypes.bool,
     onClick: PropTypes.func,
     disabled: PropTypes.bool,
-    isSubmit: PropTypes.bool,
     cssType: PropTypes.string,
-    app: PropTypes.object,
+    app: PropTypes.object.isRequired,
     immunity: PropTypes.any,
     isLoading: PropTypes.bool,
     style: PropTypes.any,
   };
 
   static defaultProps = {
+    type: '',
+    cssType: 'primary',
+    className: '',
     disabled: false,
     immunity: null,
     block: false,
@@ -67,7 +69,6 @@ class Button extends React.PureComponent {
   }
 
   getImmunity() {
-    console.log('state imunity', this.immunity);
     if (this.props.immunity !== null) {
       return this.props.immunity;
     }
@@ -123,8 +124,6 @@ class Button extends React.PureComponent {
     const typeClass = this.typeClass(cssType);
     const Tag = link ? Link : 'button';
 
-    console.log('immunity', this.getImmunity());
-
     return (
       <Tag
         to={to || ''}
@@ -143,7 +142,7 @@ class Button extends React.PureComponent {
           }`,
         )}
         style={style}
-        type={type || ''}
+        type={type}
         onClick={this.onClick}
         disabled={
           isLoading ||
