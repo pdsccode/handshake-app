@@ -242,14 +242,14 @@ class Handshake extends React.Component {
               </dl>
 
               <div className="row bottomBox">
-                <div className="col-lg-5 col-md-12 col-sm-12 col-xs-12">
+                <div className="col-lg-4 col-md-12 col-sm-12 col-xs-12">
                   <a href="/"
                      className="btnStartTrading"
                   >
                     <span>Start Trading Now</span>
                   </a>
                 </div>
-                <div className="col-lg-7 col-md-12 col-sm-12 col-xs-12">
+                <div className="col-lg-8 col-md-12 col-sm-12 col-xs-12">
                   {
                     this.renderInputForm({
                       id: 'email-1',

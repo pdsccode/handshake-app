@@ -172,8 +172,8 @@ class WalletHistory extends React.Component {
     (
       <div className="history-balance">
         Balance: {wallet.balance} {wallet.name}
-        {/* <br/>
-        Transactions: {wallet.transaction_count} */}
+        <br/>
+        Transactions: {wallet.transaction_count}
       </div>
     ) : "";
   }

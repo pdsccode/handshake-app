@@ -22,7 +22,8 @@ if (process.env.TURN_OFF_CACHE && window.caches) {
     .keys()
     .then(keyList => Promise.all(keyList.map(key => window.caches.delete(key))));
 }
-//require('@/testing/web3_test');
+
+// require('@/testing/web3_test');
 // require('@/testing/web3_handshake');
 
 ReactDOM.render(<App />, document.getElementById('app'));

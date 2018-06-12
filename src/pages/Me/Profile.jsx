@@ -268,7 +268,7 @@ class Profile extends React.Component {
 
   render() {
     const {
-      countryCode, countries, sms, email, phone,
+      countryCode, countries, sms, email,
     } = this.state;
     const { UsernameForm, NumberPhoneForm, EmailForm } = this;
     return (
