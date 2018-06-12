@@ -142,7 +142,7 @@ class Router extends React.Component {
       isLoading: true,
       isLogged: this.props.auth.isLogged,
       profile: this.props.auth.profile,
-      profileUpdatedAt: this.props.auth.profileUpdatedAt,
+      updatedAt: this.props.auth.updatedAt,
       loadingText: 'Loading application',
       isNetworkError: false,
     };
@@ -156,10 +156,10 @@ class Router extends React.Component {
     if (nextProps.auth.isLogged !== prevState.isLogged) {
       return { isLogged: nextProps.auth.isLogged };
     }
-    if (nextProps.auth.profileUpdatedAt !== prevState.profileUpdatedAt) {
+    if (nextProps.auth.updatedAt !== prevState.updatedAt) {
       nextProps.firebase.unWatchEvent('value', `${FIREBASE_PATH.USERS}/${String(prevState.profile?.id)}`);
       nextProps.firebase.watchEvent('value', `${FIREBASE_PATH.USERS}/${String(nextProps.auth.profile?.id)}`);
-      return { profile: nextProps.auth.profile, profileUpdatedAt: nextProps.auth.profileUpdatedAt };
+      return { profile: nextProps.auth.profile, updatedAt: nextProps.auth.updatedAt };
     }
     return null;
   }

@@ -7,7 +7,7 @@ const authReducter = (state = {
   token: local.get(APP.AUTH_TOKEN),
   profile: Auth.profile(local.get(APP.AUTH_PROFILE)) || Auth.profile({}),
   isLogged: false,
-  profileUpdatedAt: Date.now(),
+  updatedAt: Date.now(),
 }, action) => {
   switch (action.type) {
     case `${ACTIONS.AUTH_SIGNUP}_SUCCESS`:
@@ -17,13 +17,13 @@ const authReducter = (state = {
     case `${ACTIONS.AUTH_FETCH}_SUCCESS`:
       local.save(APP.AUTH_PROFILE, action.payload.data);
       return {
-        ...state, profile: Auth.profile(action.payload.data), isLogged: true, profileUpdatedAt: Date.now(),
+        ...state, profile: Auth.profile(action.payload.data), isLogged: true, updatedAt: Date.now(),
       };
 
     case `${ACTIONS.AUTH_UPDATE}_SUCCESS`:
       local.save(APP.AUTH_PROFILE, action.payload.data);
       return {
-        ...state, profile: Auth.profile(action.payload.data), isLogged: true, profileUpdatedAt: Date.now(),
+        ...state, profile: Auth.profile(action.payload.data), isLogged: true, updatedAt: Date.now(),
       };
     default:
       return state;
