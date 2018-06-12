@@ -225,8 +225,8 @@ class FeedExchange extends React.PureComponent {
     const { offer } = this;
     const nameShop = offer.username;
     const currency = offer.fiatCurrency;
-    const success = offer.transactionCount.success;
-    const failed = offer.transactionCount.failed;
+    const success = offer.transactionCount.success || 0;
+    const failed = offer.transactionCount.failed || 0;
 
     const distance = this.getOfferDistance();
 
