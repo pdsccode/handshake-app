@@ -60,7 +60,6 @@ const COUNTRIES_BLACKLIST = [
   'South Korea',
   'Taiwan',
   'Thailand',
-  'Vietnam',
   'Brazil',
   'Chile',
   'HongKong',
