@@ -481,13 +481,7 @@ class FeedMe extends React.PureComponent {
 
       let result = null;
 
-      if ((type === EXCHANGE_ACTION.BUY && this.userType === HANDSHAKE_USER.OWNER) ||
-        (type === EXCHANGE_ACTION.SELL && this.userType === HANDSHAKE_USER.SHAKED)
-      ) {
-        result = await exchangeHandshake.reject(hid, offChainId);
-      } else {
-        result = await exchangeHandshake.cancel(hid, offChainId);
-      }
+      result = await exchangeHandshake.reject(hid, offChainId);
 
       console.log('handleCancelShakedOfferSuccess', result);
     }
