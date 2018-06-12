@@ -96,6 +96,7 @@ export const API_URL = {
     SHAKE: 'cryptosign/handshake/shake',
     LOAD_MATCHES: 'cryptosign/match',
     LOAD_HANDSHAKES: 'cryptosign/handshake',
+    CHECK_FREE_AVAILABLE: 'cryptosign/checkfree',
     UNINIT_HANDSHAKE: 'cryptosign/handshake/uninit',
     COLLECT: 'cryptosign/handshake/collect',
     ROLLBACK: 'cryptosign/handshake/rollback',

@@ -5,7 +5,7 @@ import moment from 'moment';
 
 // service, constant
 import { API_URL } from '@/constants';
-import { loadMatches, loadHandshakes } from '@/reducers/betting/action';
+import { loadMatches, loadHandshakes, checkFreeAvailable } from '@/reducers/betting/action';
 import { BetHandshakeHandler, SIDE } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
 // components
 import Dropdown from '@/components/core/controls/Dropdown';
@@ -42,6 +42,7 @@ class BettingFilter extends React.Component {
             selectedOutcome: null,
             support: null,
             against: null,
+            isFirstFree: false,
             side: SIDE.SUPPORT
         };
 
@@ -49,7 +50,7 @@ class BettingFilter extends React.Component {
       }
     componentWillReceiveProps(nextProps) {
 
-        const {matches, support, against, } = nextProps;
+        const {matches, support, against,isFirstFree } = nextProps;
         console.log(`${TAG} Matches:`, matches);
         // const selectedMatch = this.defaultMatch;
         // const selectedOutcome = this.defaultOutcome;
@@ -59,6 +60,7 @@ class BettingFilter extends React.Component {
             //selectedOutcome,
             support,
             against,
+            isFirstFree,
         })
     }
     componentDidMount(){
@@ -390,6 +392,27 @@ class BettingFilter extends React.Component {
         this.modalBetRef.close()
     }
 
+    callCheckFirstFree(){
+        this.props.checkFreeAvailable({PATH_URL: API_URL.CRYPTOSIGN.CHECK_FREE_AVAILABLE, METHOD:'POST', data: params,
+        successFn: this.getCheckFirstFreeSuccess,
+        errorFn: this.getCheckFirstFreeFailed});
+        if(typeof window !== 'undefined') {
+          window.isGotDefaultOutCome = true;
+        }
+    }
+    getCheckFirstFreeSuccess = async (successData)=>{
+        console.log('getCheckFirstFreeSuccess', successData);
+        const {status, data} = successData;
+        
+
+    }
+    getCheckFirstFreeFailed = async (successData)=>{
+        console.log('getCheckFirstFreeFailed', successData);
+        const {status, data} = successData;
+        
+
+    }
+
     callGetHandshakes(item){
 
         const params = {
@@ -429,6 +452,7 @@ const mapState = state => ({
   supports: state.betting.supports,
   against: state.betting.against,
   tradedVolum: state.betting.tradedVolum,
+  isFirstFree: state.betting.isFirstFree,
 });
 
 const mapDispatch = ({

@@ -34,7 +34,7 @@ const nameFormBettingShake = 'bettingShakeForm';
 
 const defaultAmount = 1;
 
-class BetingShake extends React.Component {
+class BetingShakeFree extends React.Component {
   static propTypes = {
     outcomeId: PropTypes.number,
     outcomeHid: PropTypes.number,
@@ -529,4 +529,4 @@ const mapDispatch = ({
   shakeItem,
   showAlert
 });
-export default connect(null, mapDispatch)(BetingShake);
+export default connect(null, mapDispatch)(BetingShakeFree);
