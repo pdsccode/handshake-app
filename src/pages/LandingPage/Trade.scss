@@ -40,6 +40,10 @@
     }
     .bottomBox {
       margin-bottom: rem-calc(20px);
+      & > div:last-child {
+        padding-left: 0;
+        padding-right: rem-calc(75px);
+      }
     }
     .btnStartTrading {
       background-image: linear-gradient(-269deg, #7740FF 0%, #1E4EFF 100%);
@@ -76,7 +80,7 @@
         }
       }
       .btnSubmit {
-        width: 46%;
+        width: 38%;
         font-family: azo-sans-web, sans-serif;
         font-style: normal;
         font-weight: $medium;
@@ -84,11 +88,11 @@
         color: #FFFFFF;
         letter-spacing: 0;
         position: relative;
-        right: -53%;
+        right: -60%;
         top: rem-calc(-51px);
         background-image: linear-gradient(-269deg, #7740FF 0%, #1E4EFF 100%);
         border-radius: rem-calc(4px);
-        padding: rem-calc(10px 24px);
+        padding: rem-calc(10px 12px);
         border: none;
       }
     }
@@ -237,6 +241,10 @@
         & > div {
           flex: 0 0 100%;
           max-width: 100%;
+        }
+        & > div:last-child {
+          padding-left: 15px;
+          padding-right: 15px;
         }
       }
       .btnStartTrading {
