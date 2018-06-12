@@ -67,7 +67,7 @@ class FeedExchange extends React.PureComponent {
 
     this.offer = OfferShop.offerShop(JSON.parse(extraData));
 
-    console.log('offer',this.offer);
+    // console.log('offer',this.offer);
 
     this.state = {
       modalContent: '',
@@ -157,6 +157,7 @@ class FeedExchange extends React.PureComponent {
       timeOut: 2000,
       type: 'success',
       callBack: () => {
+        // this.props.history.push(URL.HANDSHAKE_ME);
       },
     });
   }
@@ -224,8 +225,8 @@ class FeedExchange extends React.PureComponent {
     const { offer } = this;
     const nameShop = offer.username;
     const currency = offer.fiatCurrency;
-    const success = offer.transactionCount.success;
-    const failed = offer.transactionCount.failed;
+    const success = offer.transactionCount.success || 0;
+    const failed = offer.transactionCount.failed || 0;
 
     const distance = this.getOfferDistance();
 
@@ -255,24 +256,24 @@ class FeedExchange extends React.PureComponent {
             <tr>
               <td>
                 <div className="buy-color">Buy rate</div>
-                <div className="buy-color price-number mt-1">{priceBuyBTC}</div>
+                <div className="buy-color price-number mt-1">{formatMoney(priceBuyBTC)}</div>
                 <div className="currency">{currency}</div>
               </td>
               <td>
                 <div className="buy-color">Buy rate</div>
-                <div className="buy-color price-number mt-1">{priceBuyETH}</div>
+                <div className="buy-color price-number mt-1">{formatMoney(priceBuyETH)}</div>
                 <div className="currency">{currency}</div>
               </td>
             </tr>
             <tr>
               <td>
                 <div className="sell-color">Sell rate</div>
-                <div className="sell-color price-number mt-1">{priceSellBTC}</div>
+                <div className="sell-color price-number mt-1">{formatMoney(priceSellBTC)}</div>
                 <div className="currency">{currency}</div>
               </td>
               <td>
                 <div className="sell-color">Sell rate</div>
-                <div className="sell-color price-number mt-1">{priceSellETH}</div>
+                <div className="sell-color price-number mt-1">{formatMoney(priceSellETH)}</div>
                 <div className="currency">{currency}</div>
               </td>
             </tr>
