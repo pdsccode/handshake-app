@@ -359,10 +359,10 @@ class Wallet extends React.Component {
           this.setState({walletSelected: wallet});
         });
 
-        // wallet.getTransactionCount().then(result=>{
-        //   wallet.transaction_count = result;
-        //   this.setState({walletSelected: wallet});
-        // });
+        wallet.getTransactionCount().then(result=>{
+          wallet.transaction_count = result;
+          this.setState({walletSelected: wallet});
+        });
 
         wallet.getTransactionHistory(1).then((data) => {
           if(data.length < 10){

@@ -163,12 +163,12 @@ export class Ethereum extends Wallet {
     const url =this.constructor.API[this.getNetworkName()] + `?module=proxy&action=eth_getTransactionCount&address=${this.address}&tag=latest&apikey=${API_KEY}`;
     const response = await axios.get(url);console.log(url);
     if (response.status == 200) {
-      result = response.data.result;
+      const web3 = this.getWeb3();
+      result = web3.utils.hexToNumber(response.data.result);
     }
     return result;
   }
 }
-
 
 
 
