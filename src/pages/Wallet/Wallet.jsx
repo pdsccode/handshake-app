@@ -227,9 +227,6 @@ class Wallet extends React.Component {
   async componentDidMount() {
     this.attachScrollListener();
     let listWallet = await MasterWallet.getMasterWallet();
-    // console.log("listWallet", listWallet);
-
-    // console.log("default", MasterWallet.getWalletDefault("ETH"))
 
     if (listWallet == false) {
       listWallet = await MasterWallet.createMasterWallets();
@@ -353,11 +350,9 @@ class Wallet extends React.Component {
         wallet.balance = await wallet.getBalance();
         wallet.transaction_count = await wallet.getTransactionCount();
 
-        let data = [];
-        if(wallet.transaction_count > 0)
-          data = await wallet.getTransactionHistory(pagenoHistory);
-
-        if(Number(wallet.transaction_count) < 20) pagenoHistory = 0;
+        let data = await wallet.getTransactionHistory(pagenoHistory);
+        if(Number(data.length) < 20) pagenoHistory = 0;
+        if(data.length > wallet.transaction_count) wallet.transaction_count = data.length;
 
         this.setState({ transactions: data, pagenoHistory: pagenoHistory, walletSelected: wallet });
         this.hideLoading();
