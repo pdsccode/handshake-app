@@ -1,20 +1,20 @@
 @import "./src/styles/style";
 
 .wrapperBettingFeed {
-  margin-top: rem-calc(20px);
+  margin-top: rem-calc(10px);
   padding: rem-calc(20px) !important;
   margin-bottom: rem-calc(16px);
   background-color: transparent;
   .description {
-    font-size: rem-calc(28px);
+    font-size: rem-calc(22px);
     color: #ffffff;
     letter-spacing: 0;
     line-height: rem-calc(36px);
-    font-weight: $bold;
+    font-weight: $heavy;
     margin-bottom: rem-calc(15px);
     .eventInfo,
     .odds {
-      font-size: rem-calc(20px);
+      font-size: rem-calc(16px);
     }
     p {
       margin-bottom: 0;
@@ -24,6 +24,7 @@
     }
     .eventName {
       margin-bottom: rem-calc(15px);
+      line-height: rem-calc(30px);
       .matchDate {
         font-weight: $light;
         font-size: rem-calc(20px);
@@ -44,7 +45,7 @@
     .odds {
       color: #ffffff;
       margin-right: 20px;
-      font-size: rem-calc(20px);
+      font-size: rem-calc(16px);
     }
     img {
       margin-bottom: rem-calc(11px);
@@ -53,7 +54,7 @@
       display: flex;
     }
     .content {
-      font-size: rem-calc(20px);
+      font-size: rem-calc(16px);
       color: #ffffff;
       letter-spacing: 0;
       align-items: center;
@@ -65,7 +66,7 @@
     }
   }
   .possibleWin {
-    font-size: rem-calc(20px);
+    font-size: rem-calc(16px);
     font-weight: $medium;
     color: #ffffff;
     margin-bottom: rem-calc(24px);
