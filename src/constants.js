@@ -20,10 +20,10 @@ export const HANDSHAKE_ID = { // important
   WALLET_TRANSFER: 5,
 };
 
-export const HANDSHAKE_ID_DEFAULT = 1;
+export const HANDSHAKE_ID_DEFAULT = 3;
 
 export const HANDSHAKE_NAME = {
-  [HANDSHAKE_ID.PROMISE]: { name: 'Promise', sort: 2 },
+  // [HANDSHAKE_ID.PROMISE]: { name: 'Promise', sort: 2 },
   [HANDSHAKE_ID.BETTING]: { name: 'Betting', sort: 1 },
   // [HANDSHAKE_ID.EXCHANGE]: 'Exchange',
   // [HANDSHAKE_ID.SEED]: 'Seed',

@@ -20,9 +20,11 @@ class Promise extends React.Component {
     }
     return null;
   }
-  shake() {
+
+  init() {
 
   }
+
   render() {
     return (
       <div>
@@ -41,7 +43,7 @@ class Promise extends React.Component {
 
           </div>
         </div>
-        <Button block onClick={this.shake}>Sign &amp; send</Button>
+        <Button block onClick={this.init}>Sign &amp; send</Button>
       </div>
     );
   }
