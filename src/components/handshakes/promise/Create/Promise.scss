@@ -1,0 +1,24 @@
+$background-color: blue;
+$white: white;
+
+.promise-container {
+  padding: 10px 20px;
+  background-color: $background-color;
+  margin: 7px 0 1.75rem;
+  border-radius: 4px;
+  color: $white;
+  div {
+    padding: 7px 0;
+    input {
+      color: $white;
+      outline: 0;
+      background-color: $background-color;
+      border: none;
+    }
+    span {
+      display: inline-block;
+      border-bottom: 1px solid rgba(241, 241, 241, 0.7);
+      min-width: 20vw;
+    }
+  }
+}

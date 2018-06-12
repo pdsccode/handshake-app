@@ -18,6 +18,7 @@ class BetBook extends React.Component {
     //console.log('OK_____ ',typeof amount);
     //const amountBN = new BN(amount);
     //console.log('OK_____ 11 ',amountBN.toString);
+    const oppositeOdds = odds/(odds - 1);
     const amountStyle = {
       color: amountColor,
     };
@@ -26,6 +27,7 @@ class BetBook extends React.Component {
       <div className="wrapperBettingBook">
         <div className="oddText">{parseFloat(amount).toFixed(4)}</div>
         <div className="amountText" style={amountStyle}>{parseFloat(odds).toFixed(2)}</div>
+        {/*<div className="amountText" style={amountStyle}>/{parseFloat(oppositeOdds).toFixed(2)}</div>*/}
       </div>
     );
   }

@@ -12,8 +12,8 @@ export default class BettingHandshake extends BaseHandshake {
   constructor(chainId) {
     super(chainId);
 
-    // // / test
-    // this.neuron.caculateEstimatGasWithEthUnit(address).then((gas) => {
+    // / test
+    // this.getEstimateGas().then((gas) => {
     //   console.log(TAG, ' contructor -- gas = ', gas.toString());
     // });
   }
@@ -21,38 +21,41 @@ export default class BettingHandshake extends BaseHandshake {
     // return process.env.isProduction ? 'PredictionHandshake' : 'PredictionHandshakeDev';
     return process.env.PredictionHandshakeFileName;
   }
-  async getEstimateGas() {
+  async getEstimateGas(hid=0, side=1, odds=3) {
+    const oddsValue = odds * 100;
+    //const payoutValue = Web3.utils.toWei(payout, 'ether');
+    const bytesOffchain = this.web3.utils.asciiToHex('cryptosign_m562');
+    //const bytesOffchain = this.web3.utils.asciiToHex(offchain);
+    const payloadData = this.handshakeInstance.methods
+      .init(hid, side, oddsValue, bytesOffchain)
+      .encodeABI();
     const estimateGas = await this.neuron.caculateEstimatGasWithEthUnit(
+      payloadData,
       address,
       gasPrice,
     );
     return estimateGas;
   }
-  initBet = async (hid, side, stake, payout, offchain) => {
+  initBet = async (hid, side, stake, odds, offchain) => {
     console.log(
       TAG,
-      ' init = ',
+      ' initBet = Address, private Key, hid, side, stake, odds, offchain',
       address,
       privateKey,
       hid,
       side,
       stake,
-      payout,
+      odds,
       offchain,
     );
-    // hid = 0;
-    // side = 1;
-    // hid = 1;
-    // side = 1;
-    // payout = 0.5;
-    // offchain = 'cryptosign_m562';
-    console.log(TAG, ' initBet payout : ', payout, ' hid = ', hid);
-    const payoutValue = Web3.utils.toWei(payout.toString(), 'ether');
+
+    const oddsValue = odds * 100;
     const bytesOffchain = this.web3.utils.asciiToHex(offchain);
 
     const payloadData = this.handshakeInstance.methods
-      .init(hid, side, payoutValue, bytesOffchain)
+      .init(hid, side, oddsValue, bytesOffchain)
       .encodeABI();
+    console.log('Payload Data:', payloadData);
 
     const dataBlockChain = await this.neuron.sendRawTransaction(
       address,
@@ -68,22 +71,30 @@ export default class BettingHandshake extends BaseHandshake {
     return dataBlockChain;
   };
 
-  shake = async (hid, side, stake, payout, maker, offchain) => {
+  shake = async (hid, side, stake, takerOdds, maker, makerOdds, offchain) => {
     console.log(
       TAG,
-      ' shake payout : ',
-      payout,
+      ' shake stake : ',
+      stake,
+      ' takerOdds : ',
+      takerOdds,
+      ' maker : ',
+      maker,
+      ' makerOdds : ',
+      makerOdds,
       ' hid = ',
       hid,
-      ' marker = ',
-      maker,
+      ' offchain = ',
+      offchain,
     );
-    const payoutValue = Web3.utils.toWei(payout.toString(), 'ether');
+    // const payoutValue = Web3.utils.toWei(payout.toString(), 'ether');
     const bytesOffchain = this.web3.utils.asciiToHex(offchain);
-
+    const oddsTakerValue = takerOdds * 100;
+    const oddsMakerValue = makerOdds * 100;
     const payloadData = this.handshakeInstance.methods
-      .shake(hid, side, payoutValue, maker, bytesOffchain)
+      .shake(hid, side, oddsTakerValue, maker, oddsMakerValue, bytesOffchain)
       .encodeABI();
+
     const dataBlockChain = await this.neuron.sendRawTransaction(
       address,
       privateKey,
@@ -98,23 +109,24 @@ export default class BettingHandshake extends BaseHandshake {
     return dataBlockChain;
   };
   // Cancel Bet when it isn't matched
-  cancelBet = async (hid, side, stake, payout, offchain) => {
+  cancelBet = async (hid, side, stake, odds, offchain) => {
     console.log(
-      'eth-contract-service cancel',
+      'cancelBet address, privateKey, hid, side, stake, odds, offchain',
       address,
       privateKey,
       hid,
       side,
       stake,
-      payout,
+      odds,
       offchain,
     );
     const stakeValue = Web3.utils.toWei(stake.toString(), 'ether');
-    const payoutValue = Web3.utils.toWei(payout.toString(), 'ether');
+    // const payoutValue = Web3.utils.toWei(payout.toString(), 'ether');
+    const oddsValue = odds * 100;
 
     const bytesOffchain = this.web3.utils.asciiToHex(offchain);
     const payloadData = this.handshakeInstance.methods
-      .uninit(hid, side, stakeValue, payoutValue, bytesOffchain)
+      .uninit(hid, side, stakeValue, oddsValue, bytesOffchain)
       .encodeABI();
     const dataBlockChain = await this.neuron.makeRawTransaction(
       address,
@@ -129,10 +141,10 @@ export default class BettingHandshake extends BaseHandshake {
 
     return dataBlockChain;
   };
-  // Refund if ater 4 days no one withdraw
+  // Refund if outcome draw
   refund = async (hid, offchain) => {
     console.log(
-      'eth-contract-service cancel',
+      'refund address, privateKey, hid, offchain',
       address,
       privateKey,
       hid,
@@ -158,7 +170,7 @@ export default class BettingHandshake extends BaseHandshake {
 
   withdraw = async (hid, offchain) => {
     console.log(
-      'eth-contract-service withdraw',
+      'withdraw address, privateKey, hid, offchain',
       address,
       privateKey,
       hid,
