@@ -54,6 +54,7 @@
     font-size: rem-calc(12px);
     justify-content: space-between;
     letter-spacing: 0;
+    margin-bottom: rem-calc(10px);
   }
   .titleSupport {
     color: #FA6B49;
@@ -74,7 +75,7 @@
     }
   }
   .buttonSupport {
-    background-color: #8BF275 !important;
+    background-color: $caribbean-green !important;
   }
   .buttonAgainst {
     background-color: #FA6B49 !important;

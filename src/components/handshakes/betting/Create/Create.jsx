@@ -95,7 +95,7 @@ class BettingCreate extends React.Component {
       winValue: 0,
       selectedMatch:null,
       selectedOutcome: null,
-      buttonClass: 'btnRed',
+      buttonClass: 'btnBlue',
     };
     this.onSubmit = ::this.onSubmit;
     this.renderInput = ::this.renderInput;
@@ -311,7 +311,7 @@ get defaultOutcome() {
   }
 
   onToggleChange(id) {
-    this.setState({buttonClass: `${id === 2 ? 'btnBlue' : 'btnRed' }`});
+    this.setState({buttonClass: `${id === 2 ? 'btnRed' : 'btnBlue' }`});
   }
 
   renderInput(item, index,style = {}) {
