@@ -462,144 +462,155 @@ class Component extends React.Component {
     console.log('render',haveProfile);
 
     return (
-      <div>
+      <div className="create-exchange">
         <FormExchangeCreate onSubmit={this.handleSubmit} validate={this.handleValidate}>
-          <Feed className="feed my-2 p-0" background={this.mainColor}>
-            <div style={{ color: "white", padding: "20px" }}>
-              <div className="d-flex mb-4">
-                <div className='input-group'>
-                  <Field
-                    name="currency"
-                    // containerClass="radio-container-old"
-                    component={fieldRadioButton}
-                    type="tab"
-                    list={this.CRYPTO_CURRENCY_LIST}
-                    color={textColor}
-                    validate={[required]}
-                    onChange={this.onCurrencyChange}
-                  />
-                </div>
+          <div className="d-flex mt-3">
+            <div className='input-group'>
+              <Field
+                name="currency"
+                // containerClass="radio-container-old"
+                component={fieldRadioButton}
+                type="tab"
+                list={this.CRYPTO_CURRENCY_LIST}
+                color={textColor}
+                validate={[required]}
+                onChange={this.onCurrencyChange}
+              />
+            </div>
+          </div>
+          <div className="label">Exchange rate</div>
+          <Feed className="feed mt-2 wrapper" background={this.mainColor}>
+            <div className="d-flex">
+              <label className="col-form-label mr-auto label-create"><span className="align-middle">Amount to buy</span></label>
+              <div className='input-group'>
+                <Field
+                  name="amountBuy"
+                  className="form-control-custom form-control-custom-ex w-100 input-no-border"
+                  component={fieldInput}
+                  placeholder={MIN_AMOUNT[currency]}
+                  // onChange={this.onAmountChange}
+                  // validate={[requiredOneOfAmounts, currency === CRYPTO_CURRENCY.BTC ? minValue001 : minValue01]}
+                />
               </div>
+            </div>
 
-              <div className="d-flex">
-                <label className="col-form-label mr-auto label-create"><span className="align-middle">Amount buy</span></label>
-                <div className='input-group'>
-                  <Field
-                    name="amountBuy"
-                    className="form-control-custom form-control-custom-ex w-100 input-no-border"
-                    component={fieldInput}
-                    placeholder={MIN_AMOUNT[currency]}
-                    // onChange={this.onAmountChange}
-                    // validate={[requiredOneOfAmounts, currency === CRYPTO_CURRENCY.BTC ? minValue001 : minValue01]}
-                  />
-                </div>
+            <hr className="hrLine"/>
+
+            <div className="d-flex">
+              <label className="col-form-label mr-auto label-create"><span className="align-middle">Amount to sell</span></label>
+              <div className='input-group'>
+                <Field
+                  name="amountSell"
+                  className="form-control-custom form-control-custom-ex w-100 input-no-border"
+                  component={fieldInput}
+                  placeholder={MIN_AMOUNT[currency]}
+                  // onChange={this.onAmountChange}
+                  // validate={[requiredOneOfAmounts, currency === CRYPTO_CURRENCY.BTC ? minValue001 : minValue01]}
+                />
               </div>
+            </div>
 
-              <hr className="hrLine"/>
+            <hr className="hrLine"/>
 
-              <div className="d-flex">
-                <label className="col-form-label mr-auto label-create"><span className="align-middle">Amount sell</span></label>
-                <div className='input-group'>
-                  <Field
-                    name="amountSell"
-                    className="form-control-custom form-control-custom-ex w-100 input-no-border"
-                    component={fieldInput}
-                    placeholder={MIN_AMOUNT[currency]}
-                    // onChange={this.onAmountChange}
-                    // validate={[requiredOneOfAmounts, currency === CRYPTO_CURRENCY.BTC ? minValue001 : minValue01]}
-                  />
-                </div>
+            <div className="d-flex">
+              <label className="col-form-label mr-auto label-create"><span className="align-middle">Current price</span></label>
+              <div className='input-group'>
+                <div><span className="form-text">10000 USD</span></div>
               </div>
+            </div>
 
-              <hr className="hrLine"/>
+            <hr className="hrLine"/>
 
-              <div className="d-flex py-1">
-                <label className="col-form-label mr-auto label-create"><span className="align-middle">Customize price buy</span></label>
-                <div className='input-group align-items-center'>
-                  <Field
-                    name="customizePriceBuy"
-                    // className='form-control-custom form-control-custom-ex w-100'
-                    component={fieldNumericInput}
-                    btnBg={btnBg}
-                    suffix={"%"}
-                    color={textColor}
-                    validate={validateFee}
-                  />
-                </div>
+            <div className="d-flex py-1">
+              <label className="col-form-label mr-auto label-create"><span className="align-middle">Your buying fee</span></label>
+              <div className='input-group align-items-center'>
+                <Field
+                  name="customizePriceBuy"
+                  // className='form-control-custom form-control-custom-ex w-100'
+                  component={fieldNumericInput}
+                  btnBg={btnBg}
+                  suffix={"%"}
+                  color={textColor}
+                  validate={validateFee}
+                />
               </div>
+            </div>
 
-              <hr className="hrLine"/>
+            <hr className="hrLine"/>
 
-              <div className="d-flex py-1">
-                <label className="col-form-label mr-auto label-create"><span className="align-middle">Customize price sell</span></label>
-                <div className='input-group align-items-center'>
-                  <Field
-                    name="customizePriceSell"
-                    // className='form-control-custom form-control-custom-ex w-100'
-                    component={fieldNumericInput}
-                    btnBg={btnBg}
-                    suffix={"%"}
-                    color={textColor}
-                    validate={validateFee}
-                  />
-                </div>
+            <div className="d-flex py-1">
+              <label className="col-form-label mr-auto label-create"><span className="align-middle">Your selling fee</span></label>
+              <div className='input-group align-items-center'>
+                <Field
+                  name="customizePriceSell"
+                  // className='form-control-custom form-control-custom-ex w-100'
+                  component={fieldNumericInput}
+                  btnBg={btnBg}
+                  suffix={"%"}
+                  color={textColor}
+                  validate={validateFee}
+                />
               </div>
+            </div>
 
-              {
-                !haveProfile && (
-                  <div>
-                    <hr className="hrLine"/>
-
-                    <div className="d-flex">
-                      <label className="col-form-label mr-auto label-create"><span className="align-middle">Name shop*</span></label>
-                      <div className='input-group'>
-                        <Field
-                          name="nameShop"
-                          className="form-control-custom form-control-custom-ex w-100 input-no-border"
-                          component={fieldInput}
-                          placeholder={'Apple store'}
-                          // onChange={this.onAmountChange}
-                          validate={[required]}
-                        />
-                      </div>
-                    </div>
-
-                    <hr className="hrLine"/>
-
-                    <div className="d-flex mt-2">
-                      <label className="col-form-label mr-auto label-create"><span className="align-middle">Phone</span></label>
-                      <div className="input-group w-100">
-                        <Field
-                          name="phone"
-                          className="form-control-custom form-control-custom-ex w-100 input-no-border"
-                          component={fieldPhoneInput}
-                          type="tel"
-                          placeholder="4995926433"
-                          // validate={[required, currency === 'BTC' ? minValue001 : minValue01]}
-                        />
-                      </div>
-                    </div>
-                    <hr className="hrLine"/>
-
-                    <div className="d-flex mt-2">
-                      <label className="col-form-label mr-auto label-create"><span className="align-middle">Address*</span></label>
-                      <div className="w-100">
-                        <Field
-                          name="address"
-                          className="form-control-custom form-control-custom-ex w-100 input-no-border"
-                          component={fieldInput}
-                          validate={[required]}
-                          placeholder="81 E. Augusta Ave. Salinas"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                )
-              }
-
+            <div className="tooltip-price mt-2">
+              Your buying price 100$, your selling price 1200$. This may fluctuate according to the price of ETH
             </div>
           </Feed>
-          <Button block type="submit" disabled={!allowInitiate}>Initiate</Button>
+
+          {
+            !haveProfile && (
+              <div>
+                <div className="label">Shop information</div>
+                <Feed className="feed my-2 wrapper" background={this.mainColor}>
+                  <div className="d-flex">
+                    <label className="col-form-label mr-auto label-create"><span className="align-middle">Name shop*</span></label>
+                    <div className='input-group'>
+                      <Field
+                        name="nameShop"
+                        className="form-control-custom form-control-custom-ex w-100 input-no-border"
+                        component={fieldInput}
+                        placeholder={'Apple store'}
+                        // onChange={this.onAmountChange}
+                        validate={[required]}
+                      />
+                    </div>
+                  </div>
+
+                  <hr className="hrLine"/>
+
+                  <div className="d-flex mt-2">
+                    <label className="col-form-label mr-auto label-create"><span className="align-middle">Phone</span></label>
+                    <div className="input-group w-100">
+                      <Field
+                        name="phone"
+                        className="form-control-custom form-control-custom-ex w-100 input-no-border"
+                        component={fieldPhoneInput}
+                        type="tel"
+                        placeholder="4995926433"
+                        // validate={[required, currency === 'BTC' ? minValue001 : minValue01]}
+                      />
+                    </div>
+                  </div>
+                  <hr className="hrLine"/>
+
+                  <div className="d-flex mt-2">
+                    <label className="col-form-label mr-auto label-create"><span className="align-middle">Address*</span></label>
+                    <div className="w-100">
+                      <Field
+                        name="address"
+                        className="form-control-custom form-control-custom-ex w-100 input-no-border"
+                        component={fieldInput}
+                        validate={[required]}
+                        placeholder="81 E. Augusta Ave. Salinas"
+                      />
+                    </div>
+                  </div>
+                </Feed>
+              </div>
+            )
+          }
+          <Button block type="submit" disabled={!allowInitiate} className="mt-3">Initiate</Button>
         </FormExchangeCreate>
         <ModalDialog onRef={modal => this.modalRef = modal}>
           {modalContent}
