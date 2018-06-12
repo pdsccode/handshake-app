@@ -21,7 +21,7 @@ export const HANDSHAKE_ID = { // important
   EXCHANGE_LOCAL: 6,
 };
 
-export const HANDSHAKE_ID_DEFAULT = 2;
+export const HANDSHAKE_ID_DEFAULT = 3;
 
 export const HANDSHAKE_NAME = {
   // [HANDSHAKE_ID.PROMISE]: { name: 'Promise', priority: 2 },
