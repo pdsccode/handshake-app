@@ -16,7 +16,7 @@ export default {
   shakeNow: 'Shake',
   offerHandShakeContent: '{offerType} {amount} {currency} for {total} {currency_symbol} in {payment_method}?',
   offerHandShakeContentMe: '{offerType} {amount} {currency} for {total} {currency_symbol} ({payment_method})',
-  offerHandShakeContentMeDone: '{offerType} {amount} {currency} for {total} {currency_symbol} ({payment_method}) with a fee of {fee}%',
+  offerHandShakeContentMeDone: '{offerType} {amount} {currency} for {total} {currency_symbol} ({payment_method})',
   instantOfferHandShakeContent: 'You{just}{offerType} {amount} {currency} for {total} {currency_symbol} on your card - fee {fee}%',
   offerDistanceContent: '{distanceKm} km ({distanceMiles} miles) away',
   transactonOfferInfo: 'Successful ({success}) / Failed ({failed})',

@@ -72,6 +72,44 @@ class FeedMe extends React.PureComponent {
     this.mainColor = _sample(feedBackgroundColors)
   }
 
+  showLoading = () => {
+    this.props.showLoading({message: '',});
+  }
+
+  hideLoading = () => {
+    this.props.hideLoading();
+  }
+
+  confirmOfferAction = (message, actionConfirm) => {
+    console.log('offer', this.offer);
+
+    this.setState({
+      modalContent:
+        (
+          <div className="py-2">
+            <Feed className="feed p-2" background="#259B24">
+              <div className="text-white d-flex align-items-center" style={{minHeight: '50px'}}>
+                <div>{message}</div>
+              </div>
+            </Feed>
+            <Button className="mt-2" block onClick={() => this.handleConfirmAction(actionConfirm)}>Confirm</Button>
+            <Button block className="btn btn-secondary" onClick={this.cancelAction}>Not now</Button>
+          </div>
+        ),
+    }, () => {
+      this.modalRef.open();
+    });
+  }
+
+  handleConfirmAction = (actionConfirm) => {
+    this.modalRef.close();
+    actionConfirm();
+  }
+
+  cancelAction = () => {
+    this.modalRef.close();
+  }
+
   showNotEnoughCoinAlert = (balance, amount, fee, currency) => {
     const bnBalance = new BigNumber(balance);
     const bnAmount = new BigNumber(amount);
@@ -157,11 +195,12 @@ class FeedMe extends React.PureComponent {
   ////////////////////////
 
   deleteOfferItem = () => {
-    const { offer } = this.props;
+    const { offer } = this;
+    console.log('deleteOfferItem', offer);
 
     this.showLoading();
     this.props.deleteOfferItem({
-      PATH_URL: `${API_URL.EXCHANGE.OFFER_STORE}/${offer.id}`,
+      PATH_URL: `${API_URL.EXCHANGE.OFFER_STORES}/${offer.id}`,
       METHOD: 'DELETE',
       qs: { currency: offer.currency},
       successFn: this.handleDeleteOfferItemSuccess,
@@ -169,22 +208,26 @@ class FeedMe extends React.PureComponent {
     });
   }
 
-  handleDeleteOfferItemSuccess = (responseData) => {
+  handleDeleteOfferItemSuccess = async (responseData) => {
     const { intl, refreshPage } = this.props;
     const { data } = responseData;
     const { currency } = data;
 
-    // const offer = this.offer;
-    // if (currency === CRYPTO_CURRENCY.ETH) {
-    //   this.handleCallActionOnContract(data);
-    // } else if (currency === CRYPTO_CURRENCY.BTC) {
-    //   if (offer.type === EXCHANGE_ACTION.BUY) {
-    //     const wallet = MasterWallet.getWalletDefault(offer.currency);
-    //     wallet.transfer(offer.systemAddress, offer.totalAmount).then(success => {
-    //       console.log('transfer', success);
-    //     });
-    //   }
-    // }
+    console.log('handleDeleteOfferItemSuccess', responseData);
+
+    if (currency === CRYPTO_CURRENCY.ETH) {
+      const wallet = MasterWallet.getWalletDefault(currency);
+
+      const exchangeHandshake = new ExchangeShopHandshake(wallet.chainId);
+
+      let result = null;
+
+      result = await exchangeHandshake.closeByShopOwner(data.hid, data.id);
+
+      console.log('handleDeleteOfferItemSuccess', result);
+    } else if (currency === CRYPTO_CURRENCY.BTC) {
+
+    }
 
     this.hideLoading();
     const message = intl.formatMessage({ id: 'deleteOfferItemSuccessMassage' }, {
@@ -288,7 +331,7 @@ class FeedMe extends React.PureComponent {
       currency: offer.currency,
       currency_symbol: offer.fiatCurrency,
       total: formatMoney(fiatAmount),
-      fee: offer.feePercentage,
+      // fee: offer.feePercentage,
       payment_method: EXCHANGE_METHOD_PAYMENT[EXCHANGE_FEED_TYPE.EXCHANGE],
     });
 
@@ -418,6 +461,8 @@ class FeedMe extends React.PureComponent {
     const { data } = responseData;
     const { currency } = data;
 
+    console.log('handleDeleteOfferItemSuccess', responseData);
+
     if (currency === CRYPTO_CURRENCY.ETH) {
       const wallet = MasterWallet.getWalletDefault(currency);
 
@@ -480,6 +525,8 @@ class FeedMe extends React.PureComponent {
     const { refreshPage } = this.props;
     const { data } = responseData;
     const { currency } = data;
+
+    console.log('handleDeleteOfferItemSuccess', responseData);
 
     if (currency === CRYPTO_CURRENCY.ETH) {
       const wallet = MasterWallet.getWalletDefault(currency);
@@ -545,6 +592,8 @@ class FeedMe extends React.PureComponent {
     const { refreshPage } = this.props;
     const { data } = responseData;
     const { currency } = data;
+
+    console.log('handleDeleteOfferItemSuccess', responseData);
 
     if (currency === CRYPTO_CURRENCY.ETH) {
       const wallet = MasterWallet.getWalletDefault(currency);
@@ -612,6 +661,7 @@ class FeedMe extends React.PureComponent {
     const { refreshPage } = this.props;
     const { data } = responseData;
     const { currency } = data;
+    console.log('handleDeleteOfferItemSuccess', responseData);
 
     if (currency === CRYPTO_CURRENCY.ETH) {
       const wallet = MasterWallet.getWalletDefault(currency);
@@ -695,7 +745,7 @@ class FeedMe extends React.PureComponent {
   render() {
     const {intl, initUserId, shakeUserIds, location, state, status, mode = 'discover', ipInfo: { latitude, longitude }, initAt, ...props} = this.props;
     const offer = this.offer;
-    console.log('render',offer);
+    // console.log('render',offer);
     const {listOfferPrice} = this.props;
 
     let modalContent = this.state.modalContent;
