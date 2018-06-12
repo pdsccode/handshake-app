@@ -36,18 +36,21 @@ class WalletItem extends React.Component {
         }
         return  "feed " + bgClassName;
       }
+
     render(){ 
         const {wallet, onMoreClick, onWarningClick, onAddressClick} =  this.props;   
         const iconProtected = !wallet.protected ? iconWarning : iconSafe;
-        
+        const bgImg = require("@/assets/images/pages/wallet/" + wallet.getBackgroundImg());
+        const itemSelected = wallet.default ? "feed feed-selected" : "feed";
         return  ( 
+            
             <Col sm={6} md={6} xs={6} key={wallet.address+wallet.network} className="feed-wrapper">
-              <div className={this.getBgClass(wallet)}>
-              
+              <div className={itemSelected} style={{backgroundImage: "url('"+bgImg+"')"}}>
+                
                 <div className="name">{wallet.title}
-                {wallet.default ? <img className="iconDefault" src={iconChecked}/> : ''}
+                {/* {wallet.default ? <img className="iconDefault" src={iconChecked}/> : ''} */}
                 </div> 
-                <p className="balance"> {wallet.balance} {wallet.name} </p>
+                <p className="balance"> {wallet.getShortBalance()} {wallet.name} </p>
                 <img className="more" src={dontIcon} onClick={onMoreClick}/> 
                 <img className="safe" src={wallet.protected ? iconSafe : iconProtected} onClick={onWarningClick}/>   
 

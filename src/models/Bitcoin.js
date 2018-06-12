@@ -222,6 +222,19 @@ export class Bitcoin extends Wallet {
 
       return result;
     }
+
+    async getTransactionCount() {
+      const url = `${this.network}/addrs/${this.address}/txs/?from=0&to=1`;
+      const response = await axios.get(url);
+      let result = 0;
+      if (response.status == 200) {
+        if(response.data && response.data.totalItems){
+          result = response.data.totalItems;
+        }
+      }
+
+      return result;
+    }
 }
 
 export default { Bitcoin };
