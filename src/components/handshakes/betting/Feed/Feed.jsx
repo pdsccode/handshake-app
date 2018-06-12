@@ -151,7 +151,7 @@ class FeedBetting extends React.Component {
     const label = statusTitle ? statusTitle : '';
     //const backgroundColorWithStatus = status == 2? 'ffffff25' :'#00000030';
     const backgroundColorWithStatus = '#ffffff25';
-    return <Button style={{backgroundColor:backgroundColorWithStatus , borderColor:'transparent',color:textColor}}  block disabled >{label}</Button>;
+    return <Button style={{backgroundColor:backgroundColorWithStatus , borderColor:'transparent',color:textColor, opacity: '0.85'}}  block disabled >{label}</Button>;
   }
 
   render() {
