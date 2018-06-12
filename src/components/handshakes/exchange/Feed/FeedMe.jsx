@@ -173,11 +173,11 @@ class FeedMe extends React.PureComponent {
     switch (status) {
       case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CREATED:
       case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.ACTIVE: {
-        let message = intl.formatMessage({id: 'cancelOfferConfirm'}, {});
+        let message = intl.formatMessage({id: 'closeOfferConfirm'}, {});
         actionButtons = (
           <div>
             <Button block className="mt-2"
-                    onClick={() => this.confirmOfferAction(message, this.deleteOfferItem)}>Cancel</Button>
+                    onClick={() => this.confirmOfferAction(message, this.deleteOfferItem)}>Close</Button>
           </div>
         );
         break;
@@ -212,19 +212,22 @@ class FeedMe extends React.PureComponent {
     const { intl, refreshPage } = this.props;
     const { data } = responseData;
     const { currency } = data;
+    const { offer } = this;
 
     console.log('handleDeleteOfferItemSuccess', responseData);
 
     if (currency === CRYPTO_CURRENCY.ETH) {
-      const wallet = MasterWallet.getWalletDefault(currency);
+      if (offer.sellAmount > 0) {
+        const wallet = MasterWallet.getWalletDefault(currency);
 
-      const exchangeHandshake = new ExchangeShopHandshake(wallet.chainId);
+        const exchangeHandshake = new ExchangeShopHandshake(wallet.chainId);
 
-      let result = null;
+        let result = null;
 
-      result = await exchangeHandshake.closeByShopOwner(data.hid, data.id);
+        result = await exchangeHandshake.closeByShopOwner(data.hid, data.id);
 
-      console.log('handleDeleteOfferItemSuccess', result);
+        console.log('handleDeleteOfferItemSuccess', result);
+      }
     } else if (currency === CRYPTO_CURRENCY.BTC) {
 
     }

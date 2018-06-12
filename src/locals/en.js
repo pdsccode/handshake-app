@@ -26,6 +26,7 @@ export default {
   completeOfferConfirm: 'Do you want to Complete this handshake?',
   withdrawOfferConfirm: 'Do you want to Withdraw this handshake?',
   cancelOfferConfirm: 'Do you want to Cancel this handshake?',
+  closeOfferConfirm: 'Do you want to Close this handshake?',
   acceptOfferConfirm: 'Do you want to Accept this handshake?',
   createOfferSuccessMessage: 'Create offer success',
   shakeOfferSuccessMessage: 'Shake offer success',
