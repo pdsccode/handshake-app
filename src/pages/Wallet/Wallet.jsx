@@ -40,6 +40,7 @@ import HeaderMore from './HeaderMore';
 import WalletItem from './WalletItem';
 import WalletProtect from './WalletProtect';
 import WalletHistory from './WalletHistory';
+import Refers from './Refers';
 import FeedCreditCard from '@/components/handshakes/exchange/Feed/FeedCreditCard';
 import ReactBottomsheet from 'react-bottomsheet';
 // var ReactBottomsheet = require('react-bottomsheet');
@@ -748,6 +749,16 @@ class Wallet extends React.Component {
     const {intl, cryptoPrice, amount, userCcLimit, ccLimits} = this.props;
     return (
       <div className="wallet-page">
+      
+        {/* Header for refers ... */}
+        <div className="headerRefers" >
+          <p className="hTitle">Shuriken Airdrop</p>
+          <p className="hLink" onClick={() => { this.modalRefersRef.open() }}>Receive token</p>
+        </div>
+        <Modal title="Shuriken Airdrop (limited)" onRef={modal => this.modalRefersRef = modal}>
+            <Refers />
+        </Modal>
+
         <Grid>
 
           {/* Tooltim menu Bottom */ }
