@@ -4,7 +4,7 @@
   display: flex;
   //flex-wrap: wrap;
   justify-content: space-between;
-  padding: rem-calc(10px 0 10px 0);
+  padding: rem-calc(10px 0 2px 0);
   .modal-info {
     p {
       margin-top: 12px;
@@ -20,7 +20,7 @@
 
   color: white;
   padding: rem-calc(5px);
-  flex-basis: 32%;
+  flex-basis: 33%;
   .number {
     font-size: rem-calc(14px);
     font-weight: bold;
