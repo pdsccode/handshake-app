@@ -23,11 +23,11 @@ export const HANDSHAKE_ID = { // important
 export const HANDSHAKE_ID_DEFAULT = 1;
 
 export const HANDSHAKE_NAME = {
-  [HANDSHAKE_ID.PROMISE]: { name: 'Promise', sort: 2 },
-  [HANDSHAKE_ID.BETTING]: { name: 'Betting', sort: 1 },
+  [HANDSHAKE_ID.PROMISE]: { name: 'Promise', priority: 2 },
+  [HANDSHAKE_ID.BETTING]: { name: 'Betting', priority: 1 },
   // [HANDSHAKE_ID.EXCHANGE]: 'Exchange',
   // [HANDSHAKE_ID.SEED]: 'Seed',
-  [HANDSHAKE_ID.WALLET_TRANSFER]: { name: 'Transfer coin', sort: 3 },
+  [HANDSHAKE_ID.WALLET_TRANSFER]: { name: 'Transfer coin', priority: 3 },
 };
 
 export const PRICE_DECIMAL = 0;
