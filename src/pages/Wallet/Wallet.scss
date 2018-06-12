@@ -10,15 +10,15 @@
   }
   .feed {
     margin-bottom: 7px;
-    padding: rem-calc(10px 25px 10px 15px);
-    min-height: 120px;
-    border-radius: 10px;
+    padding: rem-calc(10px 5px 10px 15px);
+    min-height: 120px;    
     position: relative;    
   }
   .feed-selected{
-    border-color: #ffd027;
-    border-width: 3px;
+    border-color: #0BE200;
+    border-width: 2px;
     border-style: solid;
+    border-radius: 10px;
   }
 
   .name {
