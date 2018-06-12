@@ -445,15 +445,17 @@ class FeedMe extends React.PureComponent {
   handleRejectShakedOffer = async () => {
     const { offer } = this;
     const { initUserId } = this.props;
-    const { id, currency } = offer;
+    const { id, currency, type } = offer;
 
     if (currency === CRYPTO_CURRENCY.ETH) {
-      const wallet = MasterWallet.getWalletDefault(currency);
-      const balance = await wallet.getBalance();
-      const fee = await wallet.getFee();
+      if (type === EXCHANGE_ACTION.BUY) {
+        const wallet = MasterWallet.getWalletDefault(currency);
+        const balance = await wallet.getBalance();
+        const fee = await wallet.getFee();
 
-      if (this.showNotEnoughCoinAlert(balance, 0, fee, currency)) {
-        return;
+        if (this.showNotEnoughCoinAlert(balance, 0, fee, currency)) {
+          return;
+        }
       }
     }
 
@@ -472,18 +474,20 @@ class FeedMe extends React.PureComponent {
     const offerShake = Offer.offer(data);
     const { hid, currency, type, offChainId } = offerShake;
 
-    console.log('handleDeleteOfferItemSuccess', responseData);
+    console.log('handleRejectShakedOfferSuccess', responseData);
 
     if (currency === CRYPTO_CURRENCY.ETH) {
-      const wallet = MasterWallet.getWalletDefault(currency);
+      if (type === EXCHANGE_ACTION.BUY) {
+        const wallet = MasterWallet.getWalletDefault(currency);
 
-      const exchangeHandshake = new ExchangeShopHandshake(wallet.chainId);
+        const exchangeHandshake = new ExchangeShopHandshake(wallet.chainId);
 
-      let result = null;
+        let result = null;
 
-      result = await exchangeHandshake.reject(hid, offChainId);
+        result = await exchangeHandshake.reject(hid, offChainId);
 
-      console.log('handleCancelShakedOfferSuccess', result);
+        console.log('handleRejectShakedOfferSuccess', result);
+      }
     }
 
     this.hideLoading();
@@ -843,8 +847,8 @@ class FeedMe extends React.PureComponent {
     const isCreditCard = offer.feedType === EXCHANGE_FEED_TYPE.INSTANT;
     return (
       <div className="feed-me-exchange">
-        <div>userType: {this.userType}</div>
-        <div>status: {status}</div>
+        {/*<div>userType: {this.userType}</div>*/}
+        {/*<div>status: {status}</div>*/}
         <div className="mb-1">
           <span style={{ color: '#C8C7CC' }}>{from}</span> <span style={{ color: '#666666' }}>{email}</span>
           <span className="float-right" style={{ color: '#4CD964' }}>{statusText}</span>
