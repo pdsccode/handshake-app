@@ -100,9 +100,11 @@ class BetingShake extends React.Component {
     //const marketOdds = this.toggleRef.value === SIDE.SUPPORT ? marketSupportOdds : marketAgainstOdds;
     const marketOdds = side === SIDE.SUPPORT ? marketSupportOdds : marketAgainstOdds;
     const marketAmount = side === SIDE.SUPPORT ? amountSupport : amountAgainst;
+    const winvalue = marketAmount * marketOdds;
     this.setState({
-      oddValue: parseFloat(marketOdds).toFixed(2),
-      amountValue: parseFloat(marketAmount).toFixed(4)
+      oddValue: marketOdds,
+      amountValue: marketAmount,
+      winvalue: winvalue
     })
   }
 
@@ -207,6 +209,7 @@ class BetingShake extends React.Component {
       isInput = true,
       ...newProps
     } = props;
+    const {oddValue, amountValue} = this.state;
     console.log('Label Default Value:',label, defaultValue);
     return (
       <div className="rowWrapper">
@@ -220,7 +223,7 @@ class BetingShake extends React.Component {
               id={id}
               type={type}
               //defaultValue={defaultValue}
-              value={id==="odds" ? this.state.oddValue: this.state.amountValue}
+              value={id==="odds" ? oddValue : amountValue}
               //value={value}
               {...newProps}
               onChange= {(evt)=> {

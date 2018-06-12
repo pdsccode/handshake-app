@@ -237,29 +237,6 @@ export class BetHandshakeHandler {
   }
   static controlShake = async (list, hid) => {
     const result = null;
-/*
-    const dataList = async (element) => {
-      console.log('Element:', element);
-      const isInitBet = BetHandshakeHandler.isInitBet(element);
-      console.log('isInitBet:', isInitBet);
-      
-      if (isInitBet) {
-        BetHandshakeHandler.addContract(element, hid);
-      } else {
-        const foundShakeList = BetHandshakeHandler.foundShakeItemList(element, offchain);
-        console.log("Found shake List:", foundShakeList);
-        for (var i = 0; i< foundShakeList.length; i++){
-          const shakedItem = foundShakeList[i];  
-          BetHandshakeHandler.timemoutShake(shakedItem, i, hid);
-        }
-              
-      }
-      
-     BetHandshakeHandler.handleContract(element, hid, i);
-
-    };
-    list.forEach(dataList);
-    */
 
     for (var i = 0; i< list.length ; i++){
       const element = list[i];

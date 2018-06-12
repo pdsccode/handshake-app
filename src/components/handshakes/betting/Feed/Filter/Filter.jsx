@@ -79,8 +79,8 @@ class BettingFilter extends React.Component {
     get defaultSupportAmount(){
         const {against} = this.state;
         if(against && against.length > 0) {
-            const firstElement = against[0];
-            const guessAmout = firstElement.amount * (firstElement.odds - 1);
+            const element = against[against.length -1];
+            const guessAmout = element.amount * (element.odds - 1);
             return guessAmout;
         }
         return 0;
@@ -89,8 +89,8 @@ class BettingFilter extends React.Component {
         const {support} = this.state;
         if(support && support.length > 0){
             console.log('Sorted Support:', support);
-            const firstElement = support[0];
-            const guessAmout = firstElement.amount * (firstElement.odds - 1);
+            const element = support[support.length -1];
+            const guessAmout = element.amount * (element.odds - 1);
             return guessAmout;
         }
         return 0;
@@ -99,8 +99,8 @@ class BettingFilter extends React.Component {
         const {against} = this.state;
         if(against && against.length > 0) {
             console.log('Sorted Against:', against);
-            const firstElement = against[0];
-            const againstOdds = firstElement.odds/(firstElement.odds - 1);
+            const element = against[against.length - 1];
+            const againstOdds = element.odds/(element.odds - 1);
             return againstOdds;
         }
         return 0;
@@ -112,8 +112,8 @@ class BettingFilter extends React.Component {
         const {support} = this.state;
         if(support && support.length > 0){
             console.log('Sorted Support:', support);
-            const firstElement = support[0];
-            const supportOdds = firstElement.odds/(firstElement.odds - 1);
+            const element = support[support.length - 1];
+            const supportOdds = element.odds/(element.odds - 1);
             return supportOdds;
         }
         return 0;
@@ -316,7 +316,7 @@ class BettingFilter extends React.Component {
                 
                   {<div className="titleBox">
                     <div>Pool (ETH)</div>
-                    <div>Price (ODDS)</div>
+                    <div>Support (ODDS)</div>
             </div>}
                   {/*<GroupBook amountColor="#FA6B49" bookList={this.bookListSupport}/>*/}
                     {<GroupBook amountColor="#8BF275" bookList={this.bookListSupport}/>}
@@ -326,13 +326,17 @@ class BettingFilter extends React.Component {
                   {/*</div>*/}
                   {/*<GroupBook amountColor="#8BF275" bookList={this.bookListAgainst}/>*/}
                     {/*<GroupBook amountColor="#FA6B49" bookList={this.bookListAgainst}/>*/}
-                    
-                    <Button  className="buttonAgainst" block onClick={() => {
-                        console.log('click oppose');
+                    {<div className="titleBox">
+                    <div>Market</div>
+                    <div>{this.defaultSupportOdds}</div>
+                    </div>}
+                    <Button className="buttonSupport" block onClick={() => {
                         this.setState({
-                            side: SIDE.AGAINST
+                            side: SIDE.SUPPORT
                         }, ()=> this.modalBetRef.open());
-                    }}>OPPOSE</Button>
+                        
+                    }}>SUPPORT</Button>
+                    
 
                     
                 </div>
@@ -340,7 +344,7 @@ class BettingFilter extends React.Component {
                 
                 {<div className="titleBox">
                     <div>Pool (ETH)</div>
-                    <div>Price (ODDS)</div>
+                    <div>Oppose(ODDS)</div>
             </div>}
                 
                   {/*<BettingShake
@@ -351,12 +355,17 @@ class BettingFilter extends React.Component {
                     marketSupportOdds={parseFloat(this.defaultSupportOdds)}
                   marketAgainstOdds={parseFloat(this.defaultAgainstOdds)}/>*/}
                     {<GroupBook amountColor="#FA6B49" bookList={this.bookListAgainst}/>}
-                    <Button className="buttonSupport" block onClick={() => {
+                    <div className="titleBox">
+                    <div>Market</div>
+                    <div>{this.defaultAgainstOdds}</div>
+                    </div>
+                    <Button  className="buttonAgainst" block onClick={() => {
+                        console.log('click oppose');
                         this.setState({
-                            side: SIDE.SUPPORT
+                            side: SIDE.AGAINST
                         }, ()=> this.modalBetRef.open());
-                        
-                    }}>SUPPORT</Button>                   
+                    }}>OPPOSE</Button>
+                                       
                 </div>
               </div>
               <ModalDialog className="modal" onRef={modal => this.modalBetRef = modal}>
@@ -370,10 +379,15 @@ class BettingFilter extends React.Component {
                 outcomeHid={parseInt(outcomeHid)}
                 marketSupportOdds={parseFloat(this.defaultSupportOdds)}
                 marketAgainstOdds={parseFloat(this.defaultAgainstOdds)}
-                onSubmitClick={()=> this.modalBetRef.close()}/>
+                onSubmitClick={()=> this.closeShakePopup()}/>
             </ModalDialog>
             </div>
         );
+    }
+    closeShakePopup(){
+        const {selectedOutcome} = this.state;
+        this.callGetHandshakes(selectedOutcome);
+        this.modalBetRef.close()
     }
 
     callGetHandshakes(item){

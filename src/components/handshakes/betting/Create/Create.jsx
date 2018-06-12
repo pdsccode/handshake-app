@@ -160,7 +160,7 @@ get matchOutcomes(){
           const {outcomes} = foundMatch;
           if(outcomes){
               //return outcomes.map((item) => ({ id: item.id, value: item.name, hid: item.hid}));
-              return outcomes.map((item) => ({ id: item.id, value: `Outcome: ${item.name}`, hid: item.hid, marketOdds: item.market_odds}));
+              return outcomes.map((item) => ({ id: item.id, value: `Outcome: ${item.name}`, hid: item.hid, marketOdds: item.market_odds, marketAmount: item.market_amount}));
 
           }
       }
@@ -469,7 +469,9 @@ get defaultOutcome() {
 
               values["event_predict"] = item.value;
               values["event_odds"] = item.marketOdds;
-              this.setState({selectedOutcome: item, values})
+              values["event_bet"] = item.marketAmount;
+              const winValue = item.marketAmount * item.marketOdds;
+              this.setState({selectedOutcome: item, values, winValue})
 
             }}
             onItemSelected={(item) => {
@@ -477,8 +479,10 @@ get defaultOutcome() {
               const {values} = this.state;
               values["event_predict"] = item.value;
               values["event_odds"] = item.marketOdds;
+              values["event_bet"] = item.marketAmount;
+              const winValue = item.marketAmount * item.marketOdds;
 
-              this.setState({selectedOutcome: item, values})
+              this.setState({selectedOutcome: item, values, winValue})
               }
             }
           />}
