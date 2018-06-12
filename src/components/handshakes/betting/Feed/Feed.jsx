@@ -163,7 +163,9 @@ class FeedBetting extends React.Component {
     const {amount, odds, side } = itemInfo;
     const {event_name, event_predict} = this.extraData;
     const { commentCount, id, type } = this.props;
-    const winValue = itemInfo.win_value || itemInfo.winValue;
+    //const winValue = itemInfo.win_value || itemInfo.winValue;
+    const winValue = amount * odds;
+
     // const realEventName = event_name ? event_name.slice(7).split('(') : ['', ''];
     // const matchName = realEventName[0];
     // const matchDate = `(${realEventName[1]}`;

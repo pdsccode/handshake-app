@@ -466,23 +466,12 @@ get defaultOutcome() {
             afterSetDefault={(item)=> {
               const {values} = this.state;
               console.log('Selected outcome:', item);
-
-              values["event_predict"] = item.value;
-              values["event_odds"] = item.marketOdds;
-              values["event_bet"] = item.marketAmount;
-              const winValue = item.marketAmount * item.marketOdds;
-              this.setState({selectedOutcome: item, values, winValue})
+              this.selectOutcomeClick(item);
 
             }}
             onItemSelected={(item) => {
               console.log('Selected outcome:', item);
-              const {values} = this.state;
-              values["event_predict"] = item.value;
-              values["event_odds"] = item.marketOdds;
-              values["event_bet"] = item.marketAmount;
-              const winValue = item.marketAmount * item.marketOdds;
-
-              this.setState({selectedOutcome: item, values, winValue})
+              this.selectOutcomeClick(item);
               }
             }
           />}
@@ -510,6 +499,15 @@ get defaultOutcome() {
         <Button type="submit" block className={buttonClass}>Go</Button>
       </form>
     );
+  }
+  selectOutcomeClick(item){
+    const {values} = this.state;
+    values["event_predict"] = item.value;
+    values["event_odds"] = parseFloat(item.marketOdds).toFixed(2);
+    values["event_bet"] = parseFloat(item.marketAmount).toFixed(4);
+    const winValue =  parseFloat(item.marketAmount * item.marketOdds).toFixed(4);
+
+    this.setState({selectedOutcome: item, values, winValue})
   }
 
   render() {
