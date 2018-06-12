@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import createForm from '@/components/core/form/createForm';
 import { required } from '@/components/core/form/validation';
 import { Field } from "redux-form";
-import { shakeItem, initHandshake, } from '@/reducers/handshake/action';
+import { shakeItem, initFreeHandshake, } from '@/reducers/handshake/action';
 import {HANDSHAKE_ID, API_URL, APP } from '@/constants';
 import {MasterWallet} from '@/models/MasterWallet';
 import local from '@/services/localStore';
@@ -130,25 +130,11 @@ class BetingShakeFree extends React.Component {
 
 
     if(matchName && matchOutcome){
-        if(amount > 0){
-          if(total <= parseFloat(balance)){
-            if(isShowOdds){
-              if(odds >1){
-                this.initHandshake(amount, odds);
-              }else {
-                message = MESSAGE.ODD_LARGE_THAN;
-              }
-            }else {
-              //LOGIC new nerver use shake item
-              //this.shakeItem(amount, side);
-
-            }
-          }else {
-            message = MESSAGE.NOT_ENOUGH_BALANCE;
-          }
-        }else {
-          message = MESSAGE.AMOUNT_VALID;
-        }
+      if(odds >1){
+        this.initHandshake(amount, odds);
+      }else {
+        message = MESSAGE.ODD_LARGE_THAN;
+      }
     }else {
       message = MESSAGE.CHOOSE_MATCH;
     }
@@ -442,7 +428,6 @@ class BetingShakeFree extends React.Component {
       //odds:  parseFloat(odds),
       //amount: parseFloat(amount),
       odds:`${odds}`,
-      amount: `${amount}`,
       extra_data: JSON.stringify(extraData),
       currency: 'ETH',
       side: parseInt(side),
@@ -451,9 +436,9 @@ class BetingShakeFree extends React.Component {
     };
     console.log("Params:", params);
 
-    this.props.initHandshake({PATH_URL: API_URL.CRYPTOSIGN.INIT_HANDSHAKE, METHOD:'POST', data: params,
+    this.props.initFreeHandshake({PATH_URL: API_URL.CRYPTOSIGN.INIT_HANDSHAKE_FREE, METHOD:'POST', data: params,
     successFn: this.initHandshakeSuccess,
-    errorFn: this.handleGetCryptoPriceFailed
+    errorFn: this.initHandshakeFailed
   });
   }
 
@@ -477,7 +462,7 @@ class BetingShakeFree extends React.Component {
       */
      const {outcomeHid} = this.props;
       console.log('OutcomeHid:', outcomeHid);
-     betHandshakeHandler.controlShake(data, outcomeHid);
+     //betHandshakeHandler.controlShake(data, outcomeHid);
      this.props.showAlert({
       message: <div className="text-center">{MESSAGE.CREATE_BET_SUCCESSFUL}</div>,
       timeOut: 3000,
@@ -488,12 +473,23 @@ class BetingShakeFree extends React.Component {
     }
     this.props.onSubmitClick();
   }
-  initHandshakeFailed = (error) => {
-    console.log('initHandshakeFailed', error);
+  initHandshakeFailed = (errorData) => {
+    console.log('initHandshakeFailed', errorData);
+    const {status, message} = errorData;
+    if(status == 0){
+      this.props.showAlert({
+        message: <div className="text-center">{message}</div>,
+        timeOut: 3000,
+        type: 'danger',
+        callBack: () => {
+        }
+      });
+    }
+
   }
 }
 const mapDispatch = ({
-  initHandshake,
+  initFreeHandshake,
   shakeItem,
   showAlert
 });
