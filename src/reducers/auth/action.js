@@ -23,5 +23,5 @@ export const submitPhone = createAPI(ACTIONS.SUBMIT_PHONE);
 export const verifyEmail = createAPI(ACTIONS.VERIFY_EMAIL);
 export const submitEmail = createAPI(ACTIONS.SUBMIT_EMAIL);
 export const checkUsernameExist = createAPI(ACTIONS.CHECK_USERNAME);
-// wallet: 
+// wallet:
 export const getFreeETH = createAPI(ACTIONS.GET_FREE_ETH);
