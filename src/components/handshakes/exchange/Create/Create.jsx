@@ -353,7 +353,8 @@ class Component extends React.Component {
     console.log('handleCreateOfferSuccess', responseData);
     const { intl, rfChange, currency, amountSell } = this.props;
     const data = responseData.data;
-    this.offer = OfferShop.offerShop(data);
+    const offer = OfferShop.offerShop(data);
+    this.offer = offer;
 
     console.log('handleCreateOfferSuccess', data);
 
@@ -364,9 +365,9 @@ class Component extends React.Component {
     // console.log('rewardWallet', rewardWallet);
 
     if (currency === CRYPTO_CURRENCY.BTC) {
-      console.log('transfer BTC', this.offer.items.BTC.systemAddress, amountSell);
+      console.log('transfer BTC', offer.items.BTC.systemAddress, amountSell);
       if (amountSell > 0) {
-        wallet.transfer(this.offer.items.BTC.systemAddress, amountSell).then(success => {
+        wallet.transfer(offer.items.BTC.systemAddress, amountSell).then(success => {
           console.log('transfer', success);
         });
       }
@@ -375,7 +376,7 @@ class Component extends React.Component {
         const exchangeHandshake = new ExchangeShopHandshake(wallet.chainId);
 
         let result = null;
-        result = await exchangeHandshake.initByShopOwner(amountSell, this.offer.id);
+        result = await exchangeHandshake.initByShopOwner(amountSell, offer.id);
         console.log('handleCreateOfferSuccess', result);
       }
     }
@@ -392,8 +393,8 @@ class Component extends React.Component {
       }
     });
 
-    let haveOfferETH = this.offer.itemFlags.ETH;
-    let haveOfferBTC = this.offer.itemFlags.BTC;
+    let haveOfferETH = offer.itemFlags.ETH;
+    let haveOfferBTC = offer.itemFlags.BTC;
 
     this.CRYPTO_CURRENCY_LIST = [
       { value: CRYPTO_CURRENCY.ETH, text: CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.ETH], hide: haveOfferETH },
@@ -411,7 +412,7 @@ class Component extends React.Component {
     }
 
     if (!haveOfferETH || !haveOfferBTC) {
-      this.updateUserProfile(OfferShop.offerShop(this.offer));
+      this.updateUserProfile(offer);
     }
   }
 
