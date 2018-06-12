@@ -1,12 +1,12 @@
 @import './src/styles/var';
 
 .feed {
-    border-radius: 6px;
+  border-radius: 6px;
 }
 
 .feed-exchange {
   .info {
-    text-align: center;
+    text-align: left;
     margin-bottom: 20px;
     .name-shop {
       font-weight: 500;
@@ -31,7 +31,10 @@
   .table-ex {
     width: 100%;
     .image {
-      width: 45px;
+      vertical-align: middle;
+      display: inline-block;
+      width: 30px;
+      margin-right: 4px;
       img {
         width: 100%;
         display: block;
@@ -43,7 +46,7 @@
     }
     thead {
       border-top: 1px solid rgba(255,255,255,0.25);
-      border-bottom: 1px solid rgba(255,255,255,0.25);
+      //border-bottom: 1px solid rgba(255,255,255,0.25);
       th {
         padding: 15px 0;
       }
@@ -55,9 +58,9 @@
     }
     .header-text {
       font-weight: 500;
-      font-size: 16px;
-      color: #FF3B3B;
-      letter-spacing: 0.29px;
+      font-size: 14px;
+      color: #FFFFFF;
+      letter-spacing: 0.25px;
     }
     .buy-color {
       color: #00FFC6;
@@ -67,9 +70,10 @@
     }
     .price-number {
       font-weight: 900;
-      font-size: 24px;
-      letter-spacing: 0.43px;
-      line-height: 32px;
+      font-size: 18px;
+      letter-spacing: 0.32px;
+      line-height: 18px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.50);
     }
     .currency {
       opacity: 0.8;

@@ -245,35 +245,38 @@ class FeedExchange extends React.PureComponent {
           </div>
           <table className="table-ex">
             <thead>
-              <tr>
-                <th></th>
-                <th className="buy-color header-text">Buy rate</th>
-                <th className="sell-color header-text">Sell rate</th>
-              </tr>
+            <tr>
+              <th className="header-text"><div className="image"><img src={iconBitcoin} /></div> <span>Bitcoin</span></th>
+              <th className="header-text"><div className="image"><img src={iconEthereum} /></div> <span>Ethereum</span></th>
+              {/*<th className="buy-color header-text">Buy rate</th>*/}
+              {/*<th className="sell-color header-text">Sell rate</th>*/}
+            </tr>
             </thead>
             <tbody>
-              <tr>
-                <td><div className="image"><img src={iconBitcoin} /></div></td>
-                <td>
-                  <div className="buy-color price-number">{priceBuyBTC}</div>
-                  <div className="currency">{currency}</div>
-                </td>
-                <td>
-                  <div className="sell-color price-number">{priceSellBTC}</div>
-                  <div className="currency">{currency}</div>
-                </td>
-              </tr>
-              <tr>
-                <td><div className="image"><img src={iconEthereum} className="icon" /></div></td>
-                <td>
-                  <div className="buy-color price-number">{priceBuyETH}</div>
-                  <div className="currency">{currency}</div>
-                </td>
-                <td>
-                  <div className="sell-color price-number">{priceSellETH}</div>
-                  <div className="currency">{currency}</div>
-                </td>
-              </tr>
+            <tr>
+              <td>
+                <div className="buy-color">Buy rate</div>
+                <div className="buy-color price-number mt-1">{priceBuyBTC}</div>
+                <div className="currency">{currency}</div>
+              </td>
+              <td>
+                <div className="buy-color">Buy rate</div>
+                <div className="buy-color price-number mt-1">{priceBuyETH}</div>
+                <div className="currency">{currency}</div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div className="sell-color">Sell rate</div>
+                <div className="sell-color price-number mt-1">{priceSellBTC}</div>
+                <div className="currency">{currency}</div>
+              </td>
+              <td>
+                <div className="sell-color">Sell rate</div>
+                <div className="sell-color price-number mt-1">{priceSellETH}</div>
+                <div className="currency">{currency}</div>
+              </td>
+            </tr>
             </tbody>
           </table>
         </Feed>
