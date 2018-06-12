@@ -18,6 +18,15 @@ class Navigation extends React.Component {
     app: PropTypes.object.isRequired,
   };
 
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      currentPath: this.props.location.pathname,
+      isNotFound: this.props.app.isNotFound,
+    };
+  }
+
   static getDerivedStateFromProps(nextProps, prevState) {
     if (nextProps.location.pathname !== prevState.currentPath) {
       return { currentPath: nextProps.location.pathname };
@@ -28,14 +37,6 @@ class Navigation extends React.Component {
     return null;
   }
 
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      currentPath: this.props.location.pathname,
-      isNotFound: this.props.app.isNotFound,
-    };
-  }
 
   checkSelected(_URL) {
     return this.state.currentPath.startsWith(_URL) && !this.state.isNotFound ? 'selected' : '';
