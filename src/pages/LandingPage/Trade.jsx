@@ -42,10 +42,6 @@ const data = [
     answer: 'Yes. We count the successful and failed transactions with clear report for each seller and buyer',
   },
   {
-    question: 'What are the steps for signing up?',
-    answer: 'We do no require signup',
-  },
-  {
     question: 'Is there any country restricted for this platform?',
     answer: 'We are available for all countries',
   },
