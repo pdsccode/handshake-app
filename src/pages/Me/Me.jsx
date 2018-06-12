@@ -14,8 +14,12 @@ import FeedBetting from '@/components/handshakes/betting/Feed';
 import FeedExchange from '@/components/handshakes/exchange/Feed/FeedMe';
 import FeedSeed from '@/components/handshakes/seed/Feed';
 import Image from '@/components/core/presentation/Image';
+
+import ToggleSwitch from '@/components/core/presentation/ToggleSwitch';
+
 // style
 import AvatarSVG from '@/assets/images/icon/avatar.svg';
+import ShopSVG from '@/assets/images/icon/icons8-shop_filled.svg';
 import ExpandArrowSVG from '@/assets/images/icon/expand-arrow.svg';
 import './Me.scss';
 
@@ -84,6 +88,20 @@ class Me extends React.Component {
                 <Image src={ExpandArrowSVG} alt="arrow" />
               </div>
             </Link>
+          </Col>
+        </Row>
+        <Row>
+          <Col md={12}>
+            <div className="update-profile pt-2">
+              <Image className="avatar" src={ShopSVG} alt="shop" />
+              <div className="text" style={{ width: '69%'}}>
+                <strong>Shop appearance</strong>
+                <p>Change your shop status</p>
+              </div>
+              <div className="arrow">
+                <ToggleSwitch onChange={ flag => console.log(flag) } />
+              </div>
+            </div>
           </Col>
         </Row>
         <Row>
