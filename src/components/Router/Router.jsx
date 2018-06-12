@@ -101,6 +101,14 @@ const LandingPageRootRouter = props => (
     {Component => <Component {...props} />}
   </DynamicImport>
 );
+const LandingTradeRootRouter = props => (
+  <DynamicImport
+    loading={Loading}
+    load={() => import('@/components/Router/LandingTrade')}
+  >
+    {Component => <Component {...props} />}
+  </DynamicImport>
+);
 const FAQRootRouter = props => (
   <DynamicImport
     loading={Loading}
@@ -142,7 +150,7 @@ class Router extends React.Component {
       isLoading: true,
       isLogged: this.props.auth.isLogged,
       profile: this.props.auth.profile,
-      profileUpdatedAt: this.props.auth.profileUpdatedAt,
+      updatedAt: this.props.auth.updatedAt,
       loadingText: 'Loading application',
       isNetworkError: false,
     };
@@ -156,10 +164,10 @@ class Router extends React.Component {
     if (nextProps.auth.isLogged !== prevState.isLogged) {
       return { isLogged: nextProps.auth.isLogged };
     }
-    if (nextProps.auth.profileUpdatedAt !== prevState.profileUpdatedAt) {
+    if (nextProps.auth.updatedAt !== prevState.updatedAt) {
       nextProps.firebase.unWatchEvent('value', `${FIREBASE_PATH.USERS}/${String(prevState.profile?.id)}`);
       nextProps.firebase.watchEvent('value', `${FIREBASE_PATH.USERS}/${String(nextProps.auth.profile?.id)}`);
-      return { profile: nextProps.auth.profile, profileUpdatedAt: nextProps.auth.profileUpdatedAt };
+      return { profile: nextProps.auth.profile, updatedAt: nextProps.auth.updatedAt };
     }
     return null;
   }
@@ -178,6 +186,9 @@ class Router extends React.Component {
 
     if (this.timeOutGetPrice) {
       clearInterval(this.timeOutGetPrice);
+    }
+    if (this.timeOutCheckGotETHFree) {
+      clearInterval(this.timeOutCheckGotETHFree);
     }
   }
 
@@ -273,7 +284,26 @@ class Router extends React.Component {
             this.props.getFreeETH({
               PATH_URL: `/user/free-rinkeby-eth?address=${wallet.address}`,
               METHOD: 'POST',
-              successFn: () => { this.setState({ isLoading: false, loadingText: '' }); },
+              successFn: (response) => {
+                this.setState({ isLoading: false, loadingText: '' });
+                // run cron alert user when got 1eth:
+                this.timeOutCheckGotETHFree = setInterval(() => {
+                  wallet.getBalance().then(result=>{
+                    if (result > 0){
+                      this.porps.showAlert({
+                        message: <div className="text-center">You have ETH! Now you can play for free on the Ninja testnet.</div>,
+                        timeOut: false,
+                        isShowClose: true,
+                        type: 'success',
+                        callBack: () => {},
+                      });
+                      // notify user:
+                      clearInterval(this.timeOutCheckGotETHFree);
+                      
+                    }
+                  })
+                }, 20 * 60 * 1000); // 20'
+              },
               errorFn: () => { this.setState({ isLoading: false, loadingText: '' }); },
             });
           });
@@ -311,6 +341,7 @@ class Router extends React.Component {
   render() {
     if (window.location.pathname === URL.LANDING_PAGE_SHURIKEN) return <LandingPageRootRouter />;
     if (window.location.pathname === URL.FAQ) return <FAQRootRouter />;
+    if (window.location.pathname === URL.LANDING_PAGE_TRADE) return <LandingTradeRootRouter />;
     if (BrowserDetect.isDesktop && process.env.isProduction) return <MobileOrTablet />;
     if (!this.state.isLogged || this.state.isLoading) {
       return (

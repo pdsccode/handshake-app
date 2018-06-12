@@ -108,6 +108,16 @@ export class MasterWallet {
       localStore.save(MasterWallet.KEY, masterWallet);
     }
 
+    static UpdateBalanceItem(item){
+      let wallets = MasterWallet.getMasterWallet();
+      wallets.forEach((wallet) => {
+        if (wallet.address == item.network && wallet.network == item.network) {
+          wallet.balance = item.balance;
+        }
+      });
+      MasterWallet.UpdateLocalStore(wallets);
+    }
+
     // Restore wallets:
     static RestoreMasterWallet(masterWalletDataString) {
       // todo: need verify invalid data:

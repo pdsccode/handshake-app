@@ -37,8 +37,9 @@ export const fieldInput = customField('input');
 export const fieldDropdown = customField(({
   onChange, value, list, defaultText = 'Select an item',
 }) => {
-  let txtSelectedItem = defaultText;
-  const selectedItem = list.find(i => i.name === value);
+  let txtSelectedItem = defaultText;  
+  const selectedItem = list.find(i => i.id === value.id);  
+  
   if (selectedItem) {
     txtSelectedItem = selectedItem.text;
   }
@@ -49,14 +50,13 @@ export const fieldDropdown = customField(({
       </DropdownToggle>
       <DropdownMenu>
         {
-            list.map((item, index) => {
-              const { name, text } = item;
+            list.map((item) => {              
               return (
                 <DropdownItem
-                  key={index}
-                  onClick={() => onChange(name)}
+                  key={item.id}
+                  onClick={() => onChange(item)}
                 >
-                  {text}
+                  {item.text}
                 </DropdownItem>
               );
             })

@@ -157,6 +157,7 @@ class DiscoverPage extends React.Component {
     const qs = { };
 
     const pt = `${this.props?.app?.ipInfo?.latitude  },${  this.props?.app?.ipInfo?.longitude}`;
+    
     qs.location_p = { pt, d: DISCOVER_GET_HANDSHAKE_RADIUS };
     if (handshakeIdActive) {
       qs.type = handshakeIdActive;
