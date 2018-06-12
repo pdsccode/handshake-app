@@ -182,7 +182,7 @@ class BetingShakeFree extends React.Component {
         oddValue: parseFloat(marketOdds).toFixed(2)
       })
     }
-    this.setState({buttonClass: `btnOK ${side === 1 ? 'btnBlue' : 'btnRed' }`});
+    this.setState({buttonClass: `btnOK ${id === 1 ? 'btnBlue' : 'btnRed' }`});
 
   }
 
@@ -250,7 +250,7 @@ class BetingShakeFree extends React.Component {
 
   renderForm() {
     const { total, isShowOdds, marketOdds, isChangeOdds, buttonClass } = this.state;
-    const {amount} = this.props; 
+    const {amount} = this.props;
     console.log('Market Odd render form:', marketOdds);
 
     const youCouldWinField = {
