@@ -14,19 +14,19 @@ class MainLayout extends React.Component {
     app: PropTypes.object.isRequired,
   }
 
-  static getDerivedStateFromProps(nextProps, prevState) {
-    if (nextProps.app.showHeader !== prevState.app.showHeader) {
-      return { app: nextProps.app };
-    }
-    return null;
-  }
-
   constructor(props) {
     super(props);
 
     this.state = {
       app: this.props.app,
     };
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.app.showHeader !== prevState.app.showHeader) {
+      return { app: nextProps.app };
+    }
+    return null;
   }
 
   render() {

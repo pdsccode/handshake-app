@@ -43,6 +43,8 @@ class Navigation extends React.Component {
   }
 
   render() {
+    console.log(this.props.location.pathname);
+    console.log(URL.HANDSHAKE_CREATE_INDEX);
     return (
       <footer className="footer">
         <ul>
@@ -59,9 +61,19 @@ class Navigation extends React.Component {
             </Link>
           </li>
           <li>
-            <Link to={URL.HANDSHAKE_CREATE_INDEX}>
-              <div className="create" dangerouslySetInnerHTML={{ __html: createIcon }} />
-            </Link>
+            {
+              this.props.location.pathname === URL.HANDSHAKE_CREATE_INDEX
+              ? (
+                <a>
+                  <div className="create" dangerouslySetInnerHTML={{ __html: createIcon }} />
+                </a>
+              )
+              : (
+                <Link to={URL.HANDSHAKE_CREATE_INDEX}>
+                  <div className="create" dangerouslySetInnerHTML={{ __html: createIcon }} />
+                </Link>
+              )
+            }
           </li>
           <li className={cn(this.checkSelected(URL.HANDSHAKE_CHAT_INDEX))}>
             <Link to={URL.HANDSHAKE_CHAT_INDEX} onClick={this.props.clearHeaderBack}>
