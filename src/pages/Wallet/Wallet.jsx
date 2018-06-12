@@ -183,33 +183,29 @@ class Wallet extends React.Component {
     });
   }
 
-  scrollListener () {
-    console.log("scrollListener 0");
+  async scrollListener () {
     let el = ReactDOM.findDOMNode(this),
       offset = this.props.offset || defaultOffset,
       scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
-    let {walletSelected, pagenoHistory } = this.state;
-    pagenoHistory++;
-    if (this.state.isHistory && this.state.isLoadMore == false &&
-      pagenoHistory > 0 && pagenoHistory != this.state.pagenoHistory &&
-      topOfElement(el) + el.offsetHeight - scrollTop - window.innerHeight < offset) {
+
+    let {walletSelected, pagenoHistory, isHistory, isLoadMore } = this.state;
+    let calcTop = topOfElement(el) + el.offsetHeight - scrollTop - window.innerHeight ;
+
+    if (isHistory && isLoadMore == false && pagenoHistory > 0 && calcTop < offset) {
+      pagenoHistory++;
+
       this.setState({ isLoadMore: true});
-      console.log(topOfElement(el),  el.offsetHeight , scrollTop , window.innerHeight ,offset);
 
       let list = this.state.transactions;
-      const dataHistory = walletSelected.getTransactionHistory(pagenoHistory).then((data) => {
-        if(data.length > 0){
-          console.log("scrollListener 1", list.length, pagenoHistory);
-          let final_list = list.concat(data);
-          console.log("scrollListener 2", list.length);
-          this.setState({ transactions: final_list, pagenoHistory: pagenoHistory, isLoadMore: false});
-        }
-        else{
-          this.setState({ pagenoHistory: 0, isLoadMore: false});
-        }
+      let data = await walletSelected.getTransactionHistory(pagenoHistory);
 
-        console.log("scrollListener 3", this.state.transactions.length);
-      });
+      if(data.length > 0){
+        let final_list = list.concat(data);
+        this.setState({ transactions: final_list, pagenoHistory: data.length < 20 ? 0 : pagenoHistory, isLoadMore: false});
+      }
+      else{
+        this.setState({ pagenoHistory: 0, isLoadMore: false});
+      }
     }
   }
 
@@ -347,32 +343,25 @@ class Wallet extends React.Component {
 
     obj.push({
       title: 'View transaction history',
-      handler: () => {
+      handler: async () => {
         let pagenoHistory = 1;
         this.setState({ walletSelected: wallet, transactions: [], isHistory: true, pagenoHistory: pagenoHistory });
         this.toggleBottomSheet();
         this.modalHistoryRef.open();
         this.showLoading();
 
-        wallet.getBalance().then(result=>{
-          wallet.balance = result;
-          this.setState({walletSelected: wallet});
-        });
+        wallet.balance = await wallet.getBalance();
+        wallet.transaction_count = await wallet.getTransactionCount();
 
-        wallet.getTransactionCount().then(result=>{
-          wallet.transaction_count = result;
-          this.setState({walletSelected: wallet});
-        });
+        let data = [];
+        if(wallet.transaction_count > 0)
+          data = await wallet.getTransactionHistory(pagenoHistory);
 
-        wallet.getTransactionHistory(1).then((data) => {
-          if(data.length < 10){
-            pagenoHistory = 0;
-          }
+        if(Number(wallet.transaction_count) < 20) pagenoHistory = 0;
 
-          this.setState({ transactions: data, pagenoHistory: pagenoHistory });
-          this.hideLoading();
-        });
-      },
+        this.setState({ transactions: data, pagenoHistory: pagenoHistory, walletSelected: wallet });
+        this.hideLoading();
+      }
     });
     obj.push({
       title: 'Copy address to clipboard',
