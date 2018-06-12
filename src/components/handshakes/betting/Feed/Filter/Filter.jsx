@@ -274,7 +274,7 @@ class BettingFilter extends React.Component {
         const defaultOutcomeId = this.defaultOutcome ? this.defaultOutcome.id : null;
         const shareInfo = this.getInfoShare(selectedMatch, selectedOutcome);
         const marketFee = (selectedMatch && selectedMatch.marketFee >= 0) ? selectedMatch.marketFee : null;
-        
+
         console.log('defaultOutcomeId:', defaultOutcomeId);
         console.log('Market Fee:', marketFee);
         return (
@@ -329,7 +329,7 @@ class BettingFilter extends React.Component {
                     <div>Support (ODDS)</div>
             </div>}
                   {/*<GroupBook amountColor="#FA6B49" bookList={this.bookListSupport}/>*/}
-                    {<GroupBook amountColor="#8BF275" bookList={this.bookListSupport}/>}
+                    {<GroupBook amountColor="#0BDD91" bookList={this.bookListSupport}/>}
                   {/*<div className="spreadBox">*/}
                     {/*<div>ODDS SPREAD</div>*/}
                     {/*<div>{this.oddSpread}</div>*/}
@@ -422,13 +422,13 @@ class BettingFilter extends React.Component {
     getCheckFirstFreeSuccess = async (successData)=>{
         console.log('getCheckFirstFreeSuccess', successData);
         const {status, data} = successData;
-        
+
 
     }
     getCheckFirstFreeFailed = async (successData)=>{
         console.log('getCheckFirstFreeFailed', successData);
         const {status, data} = successData;
-        
+
 
     }
 
