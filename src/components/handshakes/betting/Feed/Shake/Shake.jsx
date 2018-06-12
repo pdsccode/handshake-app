@@ -28,7 +28,7 @@ const wallet = MasterWallet.getWalletDefault('ETH');
 const chainId = wallet.chainId;
 
 const bettinghandshake = new BettingHandshake(chainId);
-
+const betHandshakeHandler = new BetHandshakeHandler()
 const nameFormBettingShake = 'bettingShakeForm';
 
 

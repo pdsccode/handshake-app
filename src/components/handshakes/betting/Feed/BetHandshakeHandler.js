@@ -1,8 +1,10 @@
 import { MasterWallet } from '@/models/MasterWallet';
 import { BettingHandshake } from '@/services/neuron';
-import { APP } from '@/constants';
+import { connect } from 'react-redux';
+import {HANDSHAKE_ID, API_URL, APP } from '@/constants';
 
 import local from '@/services/localStore';
+import { uninitItem, collect, refund, rollback } from '@/reducers/handshake/action';
 
 const wallet = MasterWallet.getWalletDefault('ETH');
 const chainId = wallet.chainId;
@@ -61,7 +63,10 @@ export const BETTING_STATUS_LABEL =
     REFUNDED: 'Your coin has been refunded.'}
 
 export class BetHandshakeHandler {
-    static getStatusLabel(blockchainStatus, resultStatus, role, side, isMatch){
+  constructor() {
+
+  }
+  getStatusLabel(blockchainStatus, resultStatus, role, side, isMatch){
         var label = null;
         var strStatus = null;
         var isAction = false;
@@ -118,7 +123,7 @@ export class BetHandshakeHandler {
         return {"title": label, "isAction": isAction, "status": strStatus};
   }
 
-  static getId(idOffchain) {
+  getId(idOffchain) {
     const array = idOffchain.split('_');
     if (array.length > 1) {
       const secondItem = array[1];
@@ -131,18 +136,18 @@ export class BetHandshakeHandler {
     }
   }
 
-  static async getBalance() {
+  async getBalance() {
     const balance = await wallet.getBalance();
     console.log('Balance:', balance);
     return balance;
   }
 
-  static foundShakeItemList(dict, offchain) {
+  foundShakeItemList(dict, offchain) {
     const shakerList = [];
     const profile = local.get(APP.AUTH_PROFILE);
     const { shakers, outcome_id, from_address } = dict;
     console.log('Shakers:', shakers);
-    const idOffchain = BetHandshakeHandler.getId(offchain);
+    const idOffchain = this.getId(offchain);
     const foundShakedItem = shakers.find(element => element.shaker_id === profile.id && element.id === idOffchain);
     console.log('foundShakedItem:', foundShakedItem);
     if (foundShakedItem) {
@@ -153,7 +158,7 @@ export class BetHandshakeHandler {
     return shakerList;
   }
 
-  static isInitBet(dict) {
+  isInitBet(dict) {
     
    const {shakers} = dict;
    if(shakers.length == 0){
@@ -167,7 +172,7 @@ export class BetHandshakeHandler {
    }
    return false;
   }
-  static addContract = async (item, hid) => {
+  addContract = async (item, hid) => {
     console.log('initContract, hid:', item, hid);
 
     const {
@@ -182,12 +187,13 @@ export class BetHandshakeHandler {
     return dataBlockchain;
   };
 
-  static async shakeContract(item, hid, markerOdds) {
+  async shakeContract(item, hid, markerOdds) {
     console.log('shakeContract, hid:', item, hid);
 
     const {
       amount, id, odds, side, from_address,
     } = item;
+    //hid = 100;
     const stake = Math.round(amount * 10 ** 18)/10 ** 18;;
     // const payout = stake * odds;
     //const payout = Math.round(stake * odds * 10 ** 18) / 10 ** 18;
@@ -204,29 +210,28 @@ export class BetHandshakeHandler {
       markerOdds,
       offchain,
     );
+    const {hash} = result;
+    if(hash === -1){
+      this.rollback(offchain);
+    }
     return result;
   }
-  // static timemoutShake(shakedItem, i, hid){
-  //   setTimeout(function () {
-  //     console.log("Time out:", i);
-  //     BetHandshakeHandler.shakeContract(shakedItem, hid);   
-
-  //   }, 15000*i); 
-  // }
-  static handleContract(element, hid, i){
+ 
+  
+  handleContract(element, hid, i){
     setTimeout(function () {
       console.log("Time out:");
       const {offchain, odds} = element;
-      const isInitBet = BetHandshakeHandler.isInitBet(element);
+      const isInitBet = this.isInitBet(element);
       console.log('isInitBet:', isInitBet);
       if (isInitBet) {
-        BetHandshakeHandler.addContract(element, hid);
+        this.addContract(element, hid);
       } else {
-        const foundShakeList = BetHandshakeHandler.foundShakeItemList(element, offchain);
+        const foundShakeList = this.foundShakeItemList(element, offchain);
         console.log("Found shake List:", foundShakeList);
         for (var i = 0; i< foundShakeList.length; i++){
           const shakedItem = foundShakeList[i];  
-          BetHandshakeHandler.shakeContract(shakedItem, hid, odds);   
+          this.shakeContract(shakedItem, hid, odds);   
 
         }
               
@@ -235,20 +240,40 @@ export class BetHandshakeHandler {
     }, 3000*i); 
     
   }
-  static controlShake = async (list, hid) => {
+  controlShake = async (list, hid) => {
     const result = null;
 
     for (var i = 0; i< list.length ; i++){
       const element = list[i];
       console.log('Element:', element);
       
-      BetHandshakeHandler.handleContract(element, hid, i);
+      this.handleContract(element, hid, i);
 
     }
   };
 
-  static async initContract(hid, side, stake, payout, offchain) {
-    result = await bettinghandshake.initBet(hid, side, stake, payout, offchain);
-    return result;
+  
+  rollback(offchain){
+    console.log('Rollback:', offchain);
+    const params = {
+      offchain
+    }
+    this.props.rollback({PATH_URL: API_URL.CRYPTOSIGN.ROLLBACK, METHOD:'POST', data: params,
+    successFn: this.rollbackSuccess,
+    errorFn: this.rollbackFailed
+  });
+  }
+  rollbackSuccess = async (successData)=>{
+    console.log('rollbackSuccess', successData);
+  }
+  rollbackFailed = (error) => {
+    console.log('rollbackFailed', error);
   }
 }
+const mapState = state => ({
+});
+const mapDispatch = ({
+  rollback
+});
+export default connect(mapState, mapDispatch)(BetHandshakeHandler);
+

@@ -33,6 +33,8 @@ const chainId = wallet.chainId;
 console.log('Chain Id:', chainId);
 
 const bettinghandshake = new BettingHandshake(chainId);
+const betHandshakeHandler = new BetHandshakeHandler()
+
 const nameFormBettingCreate = 'bettingCreate';
 // const BettingCreateForm = createForm({
 //   propsReduxForm: {
