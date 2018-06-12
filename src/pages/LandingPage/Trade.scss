@@ -128,6 +128,9 @@
   }
   .fourContainer {
     margin-bottom: rem-calc(147px);
+    & > .row > div {
+      padding: rem-calc(0 10px);
+    }
     img {
       margin-bottom: rem-calc(51px);
     }
@@ -161,17 +164,17 @@
   }
 
   .collapse-custom {
-    border-bottom: 2px solid #3D3D3D;
+    border-bottom: 0.5px outset #f7f7f7;
     font-weight: $normal;
     .head {
-      padding: rem-calc(12px 0);
+      padding: rem-calc(21px);
       display: flex;
       flex-wrap: wrap;
       &:hover {
         cursor: pointer;
       }
       .label {
-        width: 92%;
+        width: 94%;
         display: flex;
         margin: 0;
         font-size: rem-calc(20px);
@@ -184,7 +187,7 @@
         }
       }
       .extend {
-        width: 8%;
+        width: 6%;
         text-align: right;
         img {
           transform: rotate(90deg);
@@ -198,8 +201,10 @@
       opacity: 0.6;
     }
     .content {
-      margin-bottom: rem-calc(18px);
+      margin-bottom: rem-calc(40px);
+      margin-top: rem-calc(-11px);
       padding-right: rem-calc(40px);
+      padding-left: rem-calc(21px);
       font-size: rem-calc(20px);
       color: #FFFFFF;
       letter-spacing: 0;
@@ -208,8 +213,8 @@
     }
   }
 
-  .collapse-custom + .collapse-custom {
-    margin-top: rem-calc(17px);
+  .collapse-custom:first-child {
+    border-top: 0.5px inset #f7f7f7;
   }
 }
 
