@@ -24,6 +24,21 @@ const handshakeReducter = (state = {
             ...state,
             isFetching: false,
             };
+        case ACTIONS.INIT_HANDSHAKE_FREE:
+        return {
+            ...state,
+            isFetching: true,
+        };
+        case `${ACTIONS.INIT_HANDSHAKE_FREE}_SUCCESS`:
+        return {
+            ...state,
+            isFetching: true,
+        };
+        case `${ACTIONS.INIT_HANDSHAKE_FREE}_FAILED`:
+        return {
+            ...state,
+            isFetching: true,
+        };
         case ACTIONS.SHAKE:
             return {
                 ...state,

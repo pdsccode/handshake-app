@@ -9,7 +9,6 @@ const bettingReducter = (state = {
   matches: [],
   supports: [],
   against: [],
-  isFirstFree: false,
   tradedVolum: 0,
   isFetching: false,
 }, action) => {
@@ -58,7 +57,6 @@ const bettingReducter = (state = {
       return {
         ...state,
         isFetching: true,
-        //isFirstFree:
       };
       case `${BETTING_ACTIONS.CHECK_FREE_AVAILABLE}_FAILED`:
       return {

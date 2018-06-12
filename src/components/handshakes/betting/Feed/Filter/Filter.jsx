@@ -22,6 +22,9 @@ import ModalDialog from '@/components/core/controls/ModalDialog';
 // style
 import './Filter.scss';
 
+const betHandshakeHandler = new BetHandshakeHandler()
+const freeAmount = 0.01;
+
 const TAG = "BETTING_FILTER";
 const SELECTING_DEFAULT = {
     id: '',
@@ -52,7 +55,7 @@ class BettingFilter extends React.Component {
       }
     componentWillReceiveProps(nextProps) {
 
-        const {matches, support, against,isFirstFree } = nextProps;
+        const {matches, support, against } = nextProps;
         console.log(`${TAG} Matches:`, matches);
         // const selectedMatch = this.defaultMatch;
         // const selectedOutcome = this.defaultOutcome;
@@ -62,11 +65,11 @@ class BettingFilter extends React.Component {
             //selectedOutcome,
             support,
             against,
-            isFirstFree,
         })
     }
     componentDidMount(){
         this.props.loadMatches({PATH_URL: API_URL.CRYPTOSIGN.LOAD_MATCHES});
+        this.checkShowFreeBanner();
     }
     get oddSpread(){
         const {support, against} = this.state;
@@ -172,6 +175,14 @@ class BettingFilter extends React.Component {
         }
         return null;
     }
+    async checkShowFreeBanner(){
+        const balance = await betHandshakeHandler.getBalance();
+        console.log('Balance:', balance);
+        if(balance == 0){
+            //Call API check if show free
+            this.callCheckFirstFree();
+        }
+    }
     getStringDate(date){
         //console.log('Date:', date);
         var formattedDate = moment.unix(date).format('MMM DD');
@@ -253,7 +264,7 @@ class BettingFilter extends React.Component {
     }
 
     render(){
-        const {matches} = this.state;
+        const {isFirstFree} = this.state;
         const {tradedVolum} = this.props;
         const selectedOutcome = this.outcomeDropDown ? this.outcomeDropDown.itemSelecting : SELECTING_DEFAULT;
         const selectedMatch = this.outcomeDropDown?  this.matchDropDown.itemSelecting : SELECTING_DEFAULT;
@@ -313,10 +324,10 @@ class BettingFilter extends React.Component {
                 />
             </div>
 
-            <Button block onClick={() => {
+            {isFirstFree && <Button block onClick={() => {
                 this.modalBetFreeRef.open();
 
-            }}>FIRST BET FREE</Button>
+            }}>FIRST BET FREE</Button>}
 
             {<TopInfo marketTotal={parseFloat(tradedVolum)}
                     percentFee={marketFee}
@@ -393,14 +404,14 @@ class BettingFilter extends React.Component {
             </ModalDialog>
             <ModalDialog className="modal" onRef={modal => this.modalBetFreeRef = modal}>
                 <BettingShakeFree
-                amount={0.005}
+                amount={freeAmount}
                 matchName={matchName}
                 matchOutcome={matchOutcome}
                 outcomeId={parseInt(outcomeId)}
                 outcomeHid={parseInt(outcomeHid)}
                 marketSupportOdds={parseFloat(this.defaultSupportOdds)}
                 marketAgainstOdds={parseFloat(this.defaultAgainstOdds)}
-                onSubmitClick={()=> this.modalBetFreeRef.close()}/>
+                onSubmitClick={()=> this.closeShakeFreePopup()}/>
             </ModalDialog>
             </div>
         );
@@ -410,19 +421,28 @@ class BettingFilter extends React.Component {
         this.callGetHandshakes(selectedOutcome);
         this.modalBetRef.close()
     }
+    closeShakeFreePopup(){
+        this.setState({
+            isFirstFree: false,
+        })
+        this.modalBetFreeRef.close();
+    }
 
     callCheckFirstFree(){
-        this.props.checkFreeAvailable({PATH_URL: API_URL.CRYPTOSIGN.CHECK_FREE_AVAILABLE, METHOD:'POST', data: params,
+        console.log('Call API check first free');
+        this.props.checkFreeAvailable({PATH_URL: API_URL.CRYPTOSIGN.CHECK_FREE_AVAILABLE, METHOD:'GET',
         successFn: this.getCheckFirstFreeSuccess,
         errorFn: this.getCheckFirstFreeFailed});
-        if(typeof window !== 'undefined') {
-          window.isGotDefaultOutCome = true;
-        }
+        
     }
     getCheckFirstFreeSuccess = async (successData)=>{
         console.log('getCheckFirstFreeSuccess', successData);
         const {status, data} = successData;
-
+        if(status){
+            this.setState({
+                isFirstFree: true
+            })
+        }
 
     }
     getCheckFirstFreeFailed = async (successData)=>{
@@ -477,6 +497,7 @@ const mapState = state => ({
 const mapDispatch = ({
     loadMatches,
     loadHandshakes,
+    checkFreeAvailable
 });
 
 export default connect(mapState, mapDispatch)(BettingFilter);
