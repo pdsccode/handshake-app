@@ -238,7 +238,9 @@ class FeedBetting extends React.Component {
   loadMyHandshakeList = () => {
     this.props.loadMyHandshakeList({ PATH_URL: API_URL.ME.BASE });
   }
-  uninitItem(id){
+  async uninitItem(id){
+    const balance = await BetHandshakeHandler.getBalance();
+    console.log('Balance:', balance);
     const url = API_URL.CRYPTOSIGN.UNINIT_HANDSHAKE.concat(`/${id}`);
     this.props.uninitItem({PATH_URL: url, METHOD:'POST',
     successFn: this.uninitHandshakeSuccess,
@@ -251,8 +253,8 @@ class FeedBetting extends React.Component {
     if(status && data){
       const {hid, side, amount, odds, offchain} = data;
       const stake = amount;
-      const payout = stake * odds;
-      bettinghandshake.cancelBet(hid, side, stake, payout, offchain);
+      //const payout = stake * odds;
+      bettinghandshake.cancelBet(hid, side, stake, odds, offchain);
 
     }
   }
@@ -277,7 +279,12 @@ class FeedBetting extends React.Component {
       const {hid, id} = this.props;
       const offchain = id;
 
-      bettinghandshake.withdraw(hid, offchain);
+     const result = await bettinghandshake.withdraw(hid, offchain);
+     const {hash} = result;
+     if(hash === -1){
+       // Error, rollback
+       this.rollback(offchain);
+     }
 
     }
   }
@@ -300,19 +307,22 @@ class FeedBetting extends React.Component {
     if(status){
       const {hid, id} = this.props;
       const offchain = id;
-      bettinghandshake.refund(hid, offchain);
+      const result = await bettinghandshake.refund(hid, offchain);
+      if(hash === -1){
+        // Error, rollback
+        this.rollback(offchain);
+      }
     }
   }
   refundFailed = (error) => {
     console.log('refundFailed', error);
   }
 
-  rollback(id, offchain){
+  rollback(offchain){
     const params = {
       offchain
     }
-    const url = API_URL.CRYPTOSIGN.ROLLBACK.concat(id);
-    this.props.rollback({PATH_URL: url, METHOD:'POST', data: params,
+    this.props.rollback({PATH_URL: API_URL.CRYPTOSIGN.ROLLBACK, METHOD:'POST', data: params,
     successFn: this.rollbackSuccess,
     errorFn: this.rollbackFailed
   });
