@@ -1,3 +1,3 @@
-import ShakeFree from './Shake';
+import ShakeFree from './ShakeFree';
 
 export default ShakeFree;

@@ -10,6 +10,8 @@ import { BetHandshakeHandler, SIDE } from '@/components/handshakes/betting/Feed/
 // components
 import Dropdown from '@/components/core/controls/Dropdown';
 import BettingShake from './../Shake';
+import BettingShakeFree from './../ShakeFree';
+
 import GroupBook from './../GroupBook';
 import ShareSocial from '@/components/core/presentation/ShareSocial';
 import FeedComponent from '@/components/Comment/FeedComment';
@@ -272,6 +274,7 @@ class BettingFilter extends React.Component {
         const defaultOutcomeId = this.defaultOutcome ? this.defaultOutcome.id : null;
         const shareInfo = this.getInfoShare(selectedMatch, selectedOutcome);
         const marketFee = (selectedMatch && selectedMatch.marketFee >= 0) ? selectedMatch.marketFee : null;
+        
         console.log('defaultOutcomeId:', defaultOutcomeId);
         console.log('Market Fee:', marketFee);
         return (
@@ -310,6 +313,11 @@ class BettingFilter extends React.Component {
                 />
             </div>
 
+            <Button block onClick={() => {
+                this.modalBetFreeRef.open();
+
+            }}>OPEN SHAKE FREE</Button>
+
             {<TopInfo marketTotal={parseFloat(tradedVolum)}
                     percentFee={marketFee}
             objectId={outcomeId} />}
@@ -330,7 +338,7 @@ class BettingFilter extends React.Component {
                     {/*<GroupBook amountColor="#FA6B49" bookList={this.bookListAgainst}/>*/}
                     {<div className="titleBox">
                     <div>Market</div>
-                    <div>{this.defaultSupportOdds}</div>
+                    <div>{parseFloat(this.defaultSupportOdds).toFixed(4)}</div>
                     </div>}
                     <Button className="buttonSupport" block onClick={() => {
                         this.setState({
@@ -359,7 +367,7 @@ class BettingFilter extends React.Component {
                     {<GroupBook amountColor="#FA6B49" bookList={this.bookListAgainst}/>}
                     <div className="titleBox">
                     <div>Market</div>
-                    <div>{this.defaultAgainstOdds}</div>
+                    <div>{parseFloat(this.defaultAgainstOdds).toFixed(4)}</div>
                     </div>
                     <Button  className="buttonAgainst" block onClick={() => {
                         console.log('click oppose');
@@ -382,6 +390,17 @@ class BettingFilter extends React.Component {
                 marketSupportOdds={parseFloat(this.defaultSupportOdds)}
                 marketAgainstOdds={parseFloat(this.defaultAgainstOdds)}
                 onSubmitClick={()=> this.closeShakePopup()}/>
+            </ModalDialog>
+            <ModalDialog className="modal" onRef={modal => this.modalBetFreeRef = modal}>
+                <BettingShakeFree
+                amount={0.005}
+                matchName={matchName}
+                matchOutcome={matchOutcome}
+                outcomeId={parseInt(outcomeId)}
+                outcomeHid={parseInt(outcomeHid)}
+                marketSupportOdds={parseFloat(this.defaultSupportOdds)}
+                marketAgainstOdds={parseFloat(this.defaultAgainstOdds)}
+                onSubmitClick={()=> this.modalBetFreeRef.close()}/>
             </ModalDialog>
             </div>
         );

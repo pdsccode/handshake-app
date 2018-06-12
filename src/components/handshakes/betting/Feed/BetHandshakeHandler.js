@@ -219,7 +219,7 @@ export class BetHandshakeHandler {
  
   
   handleContract(element, hid, i){
-    setTimeout(function () {
+    setTimeout(() => {
       console.log("Time out:");
       const {offchain, odds} = element;
       const isInitBet = this.isInitBet(element);
