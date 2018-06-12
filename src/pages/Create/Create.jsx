@@ -75,10 +75,12 @@ class Create extends React.Component {
   }
 
   get handshakeList() {
-    return Object.entries(HANDSHAKE_NAME).sort((a, b) => a.sort > b.sort).map(([key, value]) => ({
+    const handshakes = Object.entries(HANDSHAKE_NAME).map(([key, value]) => ({
       id: key,
       name: value.name,
+      priority: value.priority,
     }));
+    return handshakes.sort((x, y) => x.priority < y.priority);
   }
 
   handshakeChange({ suggestion }) {
