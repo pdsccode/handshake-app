@@ -346,7 +346,7 @@ renderScanQRCode = () => (
                 </div>
                 :""}
 
-            <Button className="button-wallet" isLoading={this.state.isRestoreLoading}  type="submit" block={true}>Transfer</Button>
+            <Button className="button-wallet-cpn" isLoading={this.state.isRestoreLoading}  type="submit" block={true}>Transfer</Button>
           </SendWalletForm>
         </div>
     )
