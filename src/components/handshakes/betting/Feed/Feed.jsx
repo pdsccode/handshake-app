@@ -33,6 +33,8 @@ import GroupBook from './GroupBook';
 const wallet = MasterWallet.getWalletDefault('ETH');
 const chainId = wallet.chainId;
 const bettinghandshake = new BettingHandshake(chainId);
+const betHandshakeHandler = new BetHandshakeHandler()
+
 class FeedBetting extends React.Component {
   static propTypes = {
 
@@ -92,7 +94,7 @@ class FeedBetting extends React.Component {
       const extraData = this.extraData;
       console.log('Extra data:', extraData);
       const {shakers} = extraData;
-      const idOffchain = BetHandshakeHandler.getId(id);
+      const idOffchain = betHandshakeHandler.getId(id);
 
       if(shakers){
         const foundShakedItem = shakers.find(element => element.shaker_id === profile.id && element.handshake_id === idOffchain);
@@ -109,7 +111,7 @@ class FeedBetting extends React.Component {
     //const hardCodeResult = 2;
     console.log('Is Match:', isMatch);
 
-    const statusResult = BetHandshakeHandler.getStatusLabel(status, result, role,side, isMatch);
+    const statusResult = betHandshakeHandler.getStatusLabel(status, result, role,side, isMatch);
     const {title, isAction} = statusResult;
     this.setState({
       actionTitle: title,
@@ -214,7 +216,7 @@ class FeedBetting extends React.Component {
 
   clickActionButton(title){
     const {id} = this.props;
-    const realId = BetHandshakeHandler.getId(id);
+    const realId = betHandshakeHandler.getId(id);
     console.log('realId:', realId);
 
     switch(title){
@@ -241,7 +243,7 @@ class FeedBetting extends React.Component {
     this.props.loadMyHandshakeList({ PATH_URL: API_URL.ME.BASE });
   }
   async uninitItem(id){
-    const balance = await BetHandshakeHandler.getBalance();
+    const balance = await betHandshakeHandler.getBalance();
     console.log('Balance:', balance);
     const url = API_URL.CRYPTOSIGN.UNINIT_HANDSHAKE.concat(`/${id}`);
     this.props.uninitItem({PATH_URL: url, METHOD:'POST',
@@ -256,7 +258,11 @@ class FeedBetting extends React.Component {
       const {hid, side, amount, odds, offchain} = data;
       const stake = amount;
       //const payout = stake * odds;
-      bettinghandshake.cancelBet(hid, side, stake, odds, offchain);
+      const result = await bettinghandshake.cancelBet(hid, side, stake, odds, offchain);
+      const {hash} = result;
+      if(hash === -1){
+        this.rollback(offchain);
+      }
 
     }
   }

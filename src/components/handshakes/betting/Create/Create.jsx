@@ -33,6 +33,8 @@ const chainId = wallet.chainId;
 console.log('Chain Id:', chainId);
 
 const bettinghandshake = new BettingHandshake(chainId);
+const betHandshakeHandler = new BetHandshakeHandler()
+
 const nameFormBettingCreate = 'bettingCreate';
 // const BettingCreateForm = createForm({
 //   propsReduxForm: {
@@ -223,7 +225,7 @@ get defaultOutcome() {
     //const {toAddress, isPublic, industryId} = this.props;
 
     //const fromAddress = "0x54CD16578564b9952d645E92b9fa254f1feffee9";
-    let balance = await BetHandshakeHandler.getBalance();
+    let balance = await betHandshakeHandler.getBalance();
     balance = parseFloat(balance);
     const estimatedGas = await bettinghandshake.getEstimateGas();
     //const estimatedGas = 0.00001;
@@ -566,7 +568,7 @@ get defaultOutcome() {
     //const hid = selectedOutcome.id;
     const hid = selectedOutcome.hid;
     if(status && data){
-      BetHandshakeHandler.controlShake(data, hid);
+      betHandshakeHandler.controlShake(data, hid);
       this.props.showAlert({
         message: <div className="text-center">{MESSAGE.CREATE_BET_SUCCESSFUL}</div>,
         timeOut: 3000,
