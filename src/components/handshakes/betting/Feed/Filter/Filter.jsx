@@ -5,11 +5,13 @@ import moment from 'moment';
 
 // service, constant
 import { API_URL } from '@/constants';
-import { loadMatches, loadHandshakes } from '@/reducers/betting/action';
+import { loadMatches, loadHandshakes, checkFreeAvailable } from '@/reducers/betting/action';
 import { BetHandshakeHandler, SIDE } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
 // components
 import Dropdown from '@/components/core/controls/Dropdown';
 import BettingShake from './../Shake';
+import BettingShakeFree from './../ShakeFree';
+
 import GroupBook from './../GroupBook';
 import ShareSocial from '@/components/core/presentation/ShareSocial';
 import FeedComponent from '@/components/Comment/FeedComment';
@@ -19,6 +21,9 @@ import ModalDialog from '@/components/core/controls/ModalDialog';
 
 // style
 import './Filter.scss';
+
+const betHandshakeHandler = new BetHandshakeHandler()
+const freeAmount = 0.01;
 
 const TAG = "BETTING_FILTER";
 const SELECTING_DEFAULT = {
@@ -42,6 +47,7 @@ class BettingFilter extends React.Component {
             selectedOutcome: null,
             support: null,
             against: null,
+            isFirstFree: false,
             side: SIDE.SUPPORT
         };
 
@@ -49,7 +55,7 @@ class BettingFilter extends React.Component {
       }
     componentWillReceiveProps(nextProps) {
 
-        const {matches, support, against, } = nextProps;
+        const {matches, support, against } = nextProps;
         console.log(`${TAG} Matches:`, matches);
         // const selectedMatch = this.defaultMatch;
         // const selectedOutcome = this.defaultOutcome;
@@ -63,6 +69,7 @@ class BettingFilter extends React.Component {
     }
     componentDidMount(){
         this.props.loadMatches({PATH_URL: API_URL.CRYPTOSIGN.LOAD_MATCHES});
+        this.checkShowFreeBanner();
     }
     get oddSpread(){
         const {support, against} = this.state;
@@ -79,8 +86,8 @@ class BettingFilter extends React.Component {
     get defaultSupportAmount(){
         const {against} = this.state;
         if(against && against.length > 0) {
-            const firstElement = against[0];
-            const guessAmout = firstElement.amount * (firstElement.odds - 1);
+            const element = against[against.length -1];
+            const guessAmout = element.amount * (element.odds - 1);
             return guessAmout;
         }
         return 0;
@@ -89,8 +96,8 @@ class BettingFilter extends React.Component {
         const {support} = this.state;
         if(support && support.length > 0){
             console.log('Sorted Support:', support);
-            const firstElement = support[0];
-            const guessAmout = firstElement.amount * (firstElement.odds - 1);
+            const element = support[support.length -1];
+            const guessAmout = element.amount * (element.odds - 1);
             return guessAmout;
         }
         return 0;
@@ -99,8 +106,8 @@ class BettingFilter extends React.Component {
         const {against} = this.state;
         if(against && against.length > 0) {
             console.log('Sorted Against:', against);
-            const firstElement = against[0];
-            const againstOdds = firstElement.odds/(firstElement.odds - 1);
+            const element = against[against.length - 1];
+            const againstOdds = element.odds/(element.odds - 1);
             return againstOdds;
         }
         return 0;
@@ -112,8 +119,8 @@ class BettingFilter extends React.Component {
         const {support} = this.state;
         if(support && support.length > 0){
             console.log('Sorted Support:', support);
-            const firstElement = support[0];
-            const supportOdds = firstElement.odds/(firstElement.odds - 1);
+            const element = support[support.length - 1];
+            const supportOdds = element.odds/(element.odds - 1);
             return supportOdds;
         }
         return 0;
@@ -167,6 +174,14 @@ class BettingFilter extends React.Component {
               });
         }
         return null;
+    }
+    async checkShowFreeBanner(){
+        const balance = await betHandshakeHandler.getBalance();
+        console.log('Balance:', balance);
+        if(balance == 0){
+            //Call API check if show free
+            this.callCheckFirstFree();
+        }
     }
     getStringDate(date){
         //console.log('Date:', date);
@@ -249,7 +264,7 @@ class BettingFilter extends React.Component {
     }
 
     render(){
-        const {matches} = this.state;
+        const {isFirstFree} = this.state;
         const {tradedVolum} = this.props;
         const selectedOutcome = this.outcomeDropDown ? this.outcomeDropDown.itemSelecting : SELECTING_DEFAULT;
         const selectedMatch = this.outcomeDropDown?  this.matchDropDown.itemSelecting : SELECTING_DEFAULT;
@@ -270,6 +285,7 @@ class BettingFilter extends React.Component {
         const defaultOutcomeId = this.defaultOutcome ? this.defaultOutcome.id : null;
         const shareInfo = this.getInfoShare(selectedMatch, selectedOutcome);
         const marketFee = (selectedMatch && selectedMatch.marketFee >= 0) ? selectedMatch.marketFee : null;
+
         console.log('defaultOutcomeId:', defaultOutcomeId);
         console.log('Market Fee:', marketFee);
         return (
@@ -308,41 +324,50 @@ class BettingFilter extends React.Component {
                 />
             </div>
 
+            {isFirstFree && <Button block onClick={() => {
+                this.modalBetFreeRef.open();
+
+            }}>FIRST BET FREE</Button>}
+
             {<TopInfo marketTotal={parseFloat(tradedVolum)}
                     percentFee={marketFee}
             objectId={outcomeId} />}
               <div className="wrapperContainer">
                 <div className="item">
-                
-                  {<div className="titleBox">
+
+                  {<div className="titleBox opacity65">
                     <div>Pool (ETH)</div>
-                    <div>Price (ODDS)</div>
+                    <div>Support (ODDS)</div>
             </div>}
                   {/*<GroupBook amountColor="#FA6B49" bookList={this.bookListSupport}/>*/}
-                    {<GroupBook amountColor="#8BF275" bookList={this.bookListSupport}/>}
+                    {<GroupBook amountColor="#0BDD91" bookList={this.bookListSupport}/>}
                   {/*<div className="spreadBox">*/}
                     {/*<div>ODDS SPREAD</div>*/}
                     {/*<div>{this.oddSpread}</div>*/}
                   {/*</div>*/}
                   {/*<GroupBook amountColor="#8BF275" bookList={this.bookListAgainst}/>*/}
                     {/*<GroupBook amountColor="#FA6B49" bookList={this.bookListAgainst}/>*/}
-                    
-                    <Button  className="buttonAgainst" block onClick={() => {
-                        console.log('click oppose');
+                    {<div className="titleBox">
+                    <div>Market</div>
+                    <div>{parseFloat(this.defaultSupportOdds).toFixed(4)}</div>
+                    </div>}
+                    <Button className="buttonSupport" block onClick={() => {
                         this.setState({
-                            side: SIDE.AGAINST
+                            side: SIDE.SUPPORT
                         }, ()=> this.modalBetRef.open());
-                    }}>OPPOSE</Button>
 
-                    
+                    }}>SUPPORT</Button>
+
+
+
                 </div>
                 <div className="item">
-                
-                {<div className="titleBox">
+
+                {<div className="titleBox opacity65">
                     <div>Pool (ETH)</div>
-                    <div>Price (ODDS)</div>
+                    <div>Oppose(ODDS)</div>
             </div>}
-                
+
                   {/*<BettingShake
                     matchName={matchName}
                     matchOutcome={matchOutcome}
@@ -351,12 +376,17 @@ class BettingFilter extends React.Component {
                     marketSupportOdds={parseFloat(this.defaultSupportOdds)}
                   marketAgainstOdds={parseFloat(this.defaultAgainstOdds)}/>*/}
                     {<GroupBook amountColor="#FA6B49" bookList={this.bookListAgainst}/>}
-                    <Button className="buttonSupport" block onClick={() => {
+                    <div className="titleBox">
+                    <div>Market</div>
+                    <div>{parseFloat(this.defaultAgainstOdds).toFixed(4)}</div>
+                    </div>
+                    <Button  className="buttonAgainst" block onClick={() => {
+                        console.log('click oppose');
                         this.setState({
-                            side: SIDE.SUPPORT
+                            side: SIDE.AGAINST
                         }, ()=> this.modalBetRef.open());
-                        
-                    }}>SUPPORT</Button>                   
+                    }}>OPPOSE</Button>
+
                 </div>
               </div>
               <ModalDialog className="modal" onRef={modal => this.modalBetRef = modal}>
@@ -370,10 +400,56 @@ class BettingFilter extends React.Component {
                 outcomeHid={parseInt(outcomeHid)}
                 marketSupportOdds={parseFloat(this.defaultSupportOdds)}
                 marketAgainstOdds={parseFloat(this.defaultAgainstOdds)}
-                onSubmitClick={()=> this.modalBetRef.close()}/>
+                onSubmitClick={()=> this.closeShakePopup()}/>
+            </ModalDialog>
+            <ModalDialog className="modal" onRef={modal => this.modalBetFreeRef = modal}>
+                <BettingShakeFree
+                amount={freeAmount}
+                matchName={matchName}
+                matchOutcome={matchOutcome}
+                outcomeId={parseInt(outcomeId)}
+                outcomeHid={parseInt(outcomeHid)}
+                marketSupportOdds={parseFloat(this.defaultSupportOdds)}
+                marketAgainstOdds={parseFloat(this.defaultAgainstOdds)}
+                onSubmitClick={()=> this.closeShakeFreePopup()}/>
             </ModalDialog>
             </div>
         );
+    }
+    closeShakePopup(){
+        const {selectedOutcome} = this.state;
+        this.callGetHandshakes(selectedOutcome);
+        this.modalBetRef.close()
+    }
+    closeShakeFreePopup(){
+        this.setState({
+            isFirstFree: false,
+        })
+        this.modalBetFreeRef.close();
+    }
+
+    callCheckFirstFree(){
+        console.log('Call API check first free');
+        this.props.checkFreeAvailable({PATH_URL: API_URL.CRYPTOSIGN.CHECK_FREE_AVAILABLE, METHOD:'GET',
+        successFn: this.getCheckFirstFreeSuccess,
+        errorFn: this.getCheckFirstFreeFailed});
+        
+    }
+    getCheckFirstFreeSuccess = async (successData)=>{
+        console.log('getCheckFirstFreeSuccess', successData);
+        const {status, data} = successData;
+        if(status){
+            this.setState({
+                isFirstFree: true
+            })
+        }
+
+    }
+    getCheckFirstFreeFailed = async (successData)=>{
+        console.log('getCheckFirstFreeFailed', successData);
+        const {status, data} = successData;
+
+
     }
 
     callGetHandshakes(item){
@@ -415,11 +491,13 @@ const mapState = state => ({
   supports: state.betting.supports,
   against: state.betting.against,
   tradedVolum: state.betting.tradedVolum,
+  isFirstFree: state.betting.isFirstFree,
 });
 
 const mapDispatch = ({
     loadMatches,
     loadHandshakes,
+    checkFreeAvailable
 });
 
 export default connect(mapState, mapDispatch)(BettingFilter);

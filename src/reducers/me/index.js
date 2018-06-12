@@ -15,7 +15,7 @@ import {ACTIONS} from './action';
 function handlePreProcessForOfferStore(handshake, result) {
   let extraData = JSON.parse(handshake.extra_data);
   const id = handshake.id;
-  if (extraData.item_flags.BTC) {
+  if (extraData.items.BTC) {
     let extraDataBTC = {...extraData, ...extraData.items.BTC};
     delete extraDataBTC.items;
     delete extraDataBTC.status;
@@ -25,7 +25,7 @@ function handlePreProcessForOfferStore(handshake, result) {
     result.push(Handshake.handshake(handshake));
   }
 
-  if (extraData.item_flags.ETH) {
+  if (extraData.items.ETH) {
     let extraDataETH = {...extraData, ...extraData.items.ETH};
     delete extraDataETH.items;
     delete extraDataETH.status;

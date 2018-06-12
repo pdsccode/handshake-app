@@ -48,6 +48,22 @@ const bettingReducter = (state = {
         ...state,
         isFetching: true,
       };
+      case BETTING_ACTIONS.CHECK_FREE_AVAILABLE:
+      return {
+        ...state,
+        isFetching: true,
+      };
+      case `${BETTING_ACTIONS.CHECK_FREE_AVAILABLE}_SUCCESS`:
+      return {
+        ...state,
+        isFetching: true,
+      };
+      case `${BETTING_ACTIONS.CHECK_FREE_AVAILABLE}_FAILED`:
+      return {
+        ...state,
+        isFetching: true,
+        
+      };
     default:
       return state;
   }

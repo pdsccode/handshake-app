@@ -18,6 +18,7 @@ import en from 'react-intl/locale-data/en';
 import fr from 'react-intl/locale-data/fr';
 import { withFirebase } from 'react-redux-firebase';
 import messages from '@/locals';
+import COUNTRIES_BLACKLIST from '@/data/country-blacklist';
 import axios from 'axios';
 import { setIpInfo, showAlert } from '@/reducers/app/action';
 import { getUserProfile, getListOfferPrice } from '@/reducers/exchange/action';
@@ -26,6 +27,7 @@ import { createMasterWallets } from '@/reducers/wallet/action';
 import MobileOrTablet from '@/components/MobileOrTablet';
 import BrowserDetect from '@/services/browser-detect';
 import NetworkError from '@/components/Router/NetworkError';
+import BlockCountry from '@/components/core/presentation/BlockCountry';
 
 addLocaleData([...en, ...fr]);
 
@@ -153,11 +155,13 @@ class Router extends React.Component {
       updatedAt: this.props.auth.updatedAt,
       loadingText: 'Loading application',
       isNetworkError: false,
+      isCountryBlackList: false,
     };
 
     this.checkRegistry = ::this.checkRegistry;
     this.authSuccess = ::this.authSuccess;
     this.notification = ::this.notification;
+    this.detectCountry.call(this);
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -192,7 +196,6 @@ class Router extends React.Component {
     }
   }
 
-
   getListOfferPrice = () => {
     this.props.getListOfferPrice({
       PATH_URL: API_URL.EXCHANGE.GET_LIST_OFFER_PRICE,
@@ -202,17 +205,22 @@ class Router extends React.Component {
     });
   }
 
-
   getIpInfo = () => {
     axios.get(API_URL.EXCHANGE.IP_DOMAIN, {
       params: {
         auth: process.env.ipfindKey,
       },
     }).then((response) => {
-      // console.log('response', response.data);
       this.props.setIpInfo(response.data);
       local.save(APP.IP_INFO, response.data);
     });
+  }
+
+  async detectCountry() {
+    const { data } = await axios.get((process.env.ipapiKey ? `https://ipapi.co/json/?key=${process.env.ipapiKey}` : 'https://ipapi.co/json'));
+    if (COUNTRIES_BLACKLIST.indexOf(data.country_name) !== -1) {
+      this.setState({ isCountryBlackList: true });
+    }
   }
 
   checkRegistry() {
@@ -284,12 +292,12 @@ class Router extends React.Component {
             this.props.getFreeETH({
               PATH_URL: `/user/free-rinkeby-eth?address=${wallet.address}`,
               METHOD: 'POST',
-              successFn: (response) => {
+              successFn: () => {
                 this.setState({ isLoading: false, loadingText: '' });
                 // run cron alert user when got 1eth:
                 this.timeOutCheckGotETHFree = setInterval(() => {
-                  wallet.getBalance().then(result=>{
-                    if (result > 0){
+                  wallet.getBalance().then((result) => {
+                    if (result > 0) {
                       this.porps.showAlert({
                         message: <div className="text-center">You have ETH! Now you can play for free on the Ninja testnet.</div>,
                         timeOut: false,
@@ -299,9 +307,8 @@ class Router extends React.Component {
                       });
                       // notify user:
                       clearInterval(this.timeOutCheckGotETHFree);
-                      
                     }
-                  })
+                  });
                 }, 20 * 60 * 1000); // 20'
               },
               errorFn: () => { this.setState({ isLoading: false, loadingText: '' }); },
@@ -357,6 +364,7 @@ class Router extends React.Component {
         </BrowserRouter>
       );
     }
+    if (this.state.isCountryBlackList && process.env.isProduction) return <BlockCountry />;
     return (
       <IntlProvider
         locale={this.state.currentLocale}
