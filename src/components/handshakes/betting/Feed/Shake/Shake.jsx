@@ -42,6 +42,8 @@ class BetingShake extends React.Component {
     matchOutcome: PropTypes.string,
     marketSupportOdds: PropTypes.number,
     marketAgainstOdds: PropTypes.number,
+    amountSupport: PropTypes.number,
+    amountAgainst: PropTypes.number,
     onSubmitClick: PropTypes.func,
     onCancelClick: PropTypes.func,
   }
@@ -93,13 +95,14 @@ class BetingShake extends React.Component {
     // extraData["event_predict"] = matchOutcome;
     // console.log('componentWillReceiveProps Extra Data: ', extraData);
     // this.setState({extraData})
-    const {marketSupportOdds, marketAgainstOdds, side} = nextProps;
+    const {marketSupportOdds, marketAgainstOdds, side, amountSupport, amountAgainst} = nextProps;
     console.log('Shake nextProps: ',nextProps );
     //const marketOdds = this.toggleRef.value === SIDE.SUPPORT ? marketSupportOdds : marketAgainstOdds;
     const marketOdds = side === SIDE.SUPPORT ? marketSupportOdds : marketAgainstOdds;
-
+    const marketAmount = side === SIDE.SUPPORT ? amountSupport : amountAgainst;
     this.setState({
-      oddValue: parseFloat(marketOdds).toFixed(2)
+      oddValue: parseFloat(marketOdds).toFixed(2),
+      amountValue: parseFloat(marketAmount).toFixed(4)
     })
   }
 
@@ -217,7 +220,7 @@ class BetingShake extends React.Component {
               id={id}
               type={type}
               //defaultValue={defaultValue}
-              value={id==="odds" ? this.state.oddValue: null}
+              value={id==="odds" ? this.state.oddValue: this.state.amountValue}
               //value={value}
               {...newProps}
               onChange= {(evt)=> {
@@ -477,10 +480,10 @@ class BetingShake extends React.Component {
     };
     console.log("Params:", params);
 
-  //   this.props.initHandshake({PATH_URL: API_URL.CRYPTOSIGN.INIT_HANDSHAKE, METHOD:'POST', data: params,
-  //   successFn: this.initHandshakeSuccess,
-  //   errorFn: this.handleGetCryptoPriceFailed
-  // });
+    this.props.initHandshake({PATH_URL: API_URL.CRYPTOSIGN.INIT_HANDSHAKE, METHOD:'POST', data: params,
+    successFn: this.initHandshakeSuccess,
+    errorFn: this.handleGetCryptoPriceFailed
+  });
   }
 
   initHandshakeSuccess = async (successData)=>{
@@ -512,6 +515,7 @@ class BetingShake extends React.Component {
       }
     });
     }
+    this.props.onSubmitClick();
   }
   initHandshakeFailed = (error) => {
     console.log('initHandshakeFailed', error);

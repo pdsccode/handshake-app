@@ -157,7 +157,7 @@ class DiscoverPage extends React.Component {
     const qs = { };
 
     const pt = `${this.props?.app?.ipInfo?.latitude  },${  this.props?.app?.ipInfo?.longitude}`;
-
+    
     qs.location_p = { pt, d: DISCOVER_GET_HANDSHAKE_RADIUS };
     if (handshakeIdActive) {
       qs.type = handshakeIdActive;
@@ -223,7 +223,7 @@ class DiscoverPage extends React.Component {
         {
           handshakeIdActive === HANDSHAKE_ID.BETTING && <BettingFilter />
         }
-        {/*<Row>
+        <Row>
           <Col md={12}>
             <dl className="faq">
               <dt>Price (Odds)</dt>
@@ -252,7 +252,7 @@ class DiscoverPage extends React.Component {
               </dd>
             </dl>
           </Col>
-        </Row>*/}
+        </Row>
         {/* <Row>
           {handshakeIdActive !== HANDSHAKE_ID.BETTING && this.getHandshakeList}
         </Row> */}
