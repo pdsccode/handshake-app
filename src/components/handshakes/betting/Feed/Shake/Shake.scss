@@ -1,7 +1,7 @@
 @import './src/styles/style';
 
 .wrapperBettingShake {
-  padding: rem-calc(46px 30px 12px 30px);
+  padding: rem-calc(30px 30px 12px 30px);
   background: #3A444C;
   //box-shadow: 0 2px 4px 0 rgba(203,203,203,0.50);
   font-family: $font-family-base;
@@ -66,7 +66,7 @@
     letter-spacing: 0;
     position: relative;
     bottom: 26px;
-    left: 68%;
+    left: 70%;
     @media (max-width: 375px) {
       left: 64%;
     }
