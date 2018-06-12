@@ -33,6 +33,7 @@ class Offer {
       toContactPhone: data.to_contact_phone || '',
       toContactInfo: data.to_contact_info || '',
       offChainId: data.off_chain_id || '',
+      hid: data.hid || '',
 
 
       //Offer store
