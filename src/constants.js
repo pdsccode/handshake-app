@@ -97,9 +97,11 @@ export const SELL_PRICE_TYPE_DEFAULT = 'fix';
 export const API_URL = {
   CRYPTOSIGN: {
     INIT_HANDSHAKE: 'cryptosign/handshake/init',
+    INIT_HANDSHAKE_FREE: 'cryptosign/handshake/create_bet',
     SHAKE: 'cryptosign/handshake/shake',
     LOAD_MATCHES: 'cryptosign/match',
     LOAD_HANDSHAKES: 'cryptosign/handshake',
+    CHECK_FREE_AVAILABLE: 'cryptosign/handshake/check_free_bet',
     UNINIT_HANDSHAKE: 'cryptosign/handshake/uninit',
     COLLECT: 'cryptosign/handshake/collect',
     ROLLBACK: 'cryptosign/handshake/rollback',

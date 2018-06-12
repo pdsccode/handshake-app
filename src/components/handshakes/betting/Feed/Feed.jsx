@@ -33,6 +33,8 @@ import GroupBook from './GroupBook';
 const wallet = MasterWallet.getWalletDefault('ETH');
 const chainId = wallet.chainId;
 const bettinghandshake = new BettingHandshake(chainId);
+const betHandshakeHandler = new BetHandshakeHandler()
+
 class FeedBetting extends React.Component {
   static propTypes = {
 
@@ -92,7 +94,7 @@ class FeedBetting extends React.Component {
       const extraData = this.extraData;
       console.log('Extra data:', extraData);
       const {shakers} = extraData;
-      const idOffchain = BetHandshakeHandler.getId(id);
+      const idOffchain = betHandshakeHandler.getId(id);
 
       if(shakers){
         const foundShakedItem = shakers.find(element => element.shaker_id === profile.id && element.handshake_id === idOffchain);
@@ -109,7 +111,7 @@ class FeedBetting extends React.Component {
     //const hardCodeResult = 2;
     console.log('Is Match:', isMatch);
 
-    const statusResult = BetHandshakeHandler.getStatusLabel(status, result, role,side, isMatch);
+    const statusResult = betHandshakeHandler.getStatusLabel(status, result, role,side, isMatch);
     const {title, isAction} = statusResult;
     this.setState({
       actionTitle: title,
@@ -149,7 +151,7 @@ class FeedBetting extends React.Component {
     const label = statusTitle ? statusTitle : '';
     //const backgroundColorWithStatus = status == 2? 'ffffff25' :'#00000030';
     const backgroundColorWithStatus = '#ffffff25';
-    return <Button style={{backgroundColor:backgroundColorWithStatus , borderColor:'transparent',color:textColor}}  block disabled >{label}</Button>;
+    return <Button style={{backgroundColor:backgroundColorWithStatus , borderColor:'transparent',color:textColor, opacity: '0.85'}}  block disabled >{label}</Button>;
   }
 
   render() {
@@ -163,7 +165,9 @@ class FeedBetting extends React.Component {
     const {amount, odds, side } = itemInfo;
     const {event_name, event_predict} = this.extraData;
     const { commentCount, id, type } = this.props;
-    const winValue = itemInfo.win_value || itemInfo.winValue;
+    //const winValue = itemInfo.win_value || itemInfo.winValue;
+    const winValue = amount * odds;
+
     // const realEventName = event_name ? event_name.slice(7).split('(') : ['', ''];
     // const matchName = realEventName[0];
     // const matchDate = `(${realEventName[1]}`;
@@ -212,7 +216,7 @@ class FeedBetting extends React.Component {
 
   clickActionButton(title){
     const {id} = this.props;
-    const realId = BetHandshakeHandler.getId(id);
+    const realId = betHandshakeHandler.getId(id);
     console.log('realId:', realId);
 
     switch(title){
@@ -239,7 +243,7 @@ class FeedBetting extends React.Component {
     this.props.loadMyHandshakeList({ PATH_URL: API_URL.ME.BASE });
   }
   async uninitItem(id){
-    const balance = await BetHandshakeHandler.getBalance();
+    const balance = await betHandshakeHandler.getBalance();
     console.log('Balance:', balance);
     const url = API_URL.CRYPTOSIGN.UNINIT_HANDSHAKE.concat(`/${id}`);
     this.props.uninitItem({PATH_URL: url, METHOD:'POST',
@@ -254,7 +258,11 @@ class FeedBetting extends React.Component {
       const {hid, side, amount, odds, offchain} = data;
       const stake = amount;
       //const payout = stake * odds;
-      bettinghandshake.cancelBet(hid, side, stake, odds, offchain);
+      const result = await bettinghandshake.cancelBet(hid, side, stake, odds, offchain);
+      const {hash} = result;
+      if(hash === -1){
+        this.rollback(offchain);
+      }
 
     }
   }

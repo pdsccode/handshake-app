@@ -4,6 +4,7 @@ import { createAPI } from '@/reducers/action';
 export const ACTIONS = {
   // HANDSHAKE
   INIT_HANDSHAKE: 'INIT_HANDSHAKE',
+  INIT_HANDSHAKE_FREE: 'INIT_HANDSHAKE_FREE',
   SHAKE: 'SHAKE',
   UNINIT: 'UNINIT',
   COLLECT: 'COLLECT',
@@ -12,6 +13,7 @@ export const ACTIONS = {
 };
 
 export const initHandshake = createAPI(ACTIONS.INIT_HANDSHAKE);
+export const initFreeHandshake = createAPI(ACTIONS.INIT_HANDSHAKE_FREE);
 export const shakeItem = createAPI(ACTIONS.SHAKE);
 export const uninitItem = createAPI(ACTIONS.UNINIT);
 export const collect = createAPI(ACTIONS.COLLECT);

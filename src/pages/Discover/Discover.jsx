@@ -8,13 +8,13 @@ import { URL } from '@/constants';
 // components
 import { Col, Grid, Row } from 'react-bootstrap';
 import SearchBar from '@/components/core/controls/SearchBar';
-// import Category from '@/components/core/controls/Category';
+import Category from '@/components/core/controls/Category';
 import FeedPromise from '@/components/handshakes/promise/Feed';
 import FeedBetting from '@/components/handshakes/betting/Feed';
 import FeedExchange from '@/components/handshakes/exchange/Feed/FeedExchange';
 import FeedSeed from '@/components/handshakes/seed/Feed';
 import FeedCreditCard from '@/components/handshakes/exchange/Feed/FeedCreditCard';
-// import Tabs from '@/components/handshakes/exchange/components/Tabs';
+import Tabs from '@/components/handshakes/exchange/components/Tabs';
 import NoData from '@/components/core/presentation/NoData';
 import BettingFilter from '@/components/handshakes/betting/Feed/Filter';
 import { getListOfferPrice } from '@/reducers/exchange/action';
@@ -39,7 +39,7 @@ class DiscoverPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      handshakeIdActive: HANDSHAKE_ID.EXCHANGE, // default show bet
+      handshakeIdActive: HANDSHAKE_ID.BETTING, // default show bet
       tabIndexActive: '',
       query: '',
     };
@@ -156,16 +156,16 @@ class DiscoverPage extends React.Component {
     const { handshakeIdActive, tabIndexActive, query } = this.state;
     const qs = { };
 
-    const pt = `${this.props?.app?.ipInfo?.latitude  },${  this.props?.app?.ipInfo?.longitude}`;
-    
+    const pt = `${this.props?.app?.ipInfo?.latitude},${this.props?.app?.ipInfo?.longitude}`;
+
     qs.location_p = { pt, d: DISCOVER_GET_HANDSHAKE_RADIUS };
     if (handshakeIdActive) {
       qs.type = handshakeIdActive;
     }
 
-    if (tabIndexActive) {
-      qs.custom_query = `offer_feed_type_s:exchange AND offer_type_s:${tabIndexActive === 1 ? EXCHANGE_ACTION.SELL : EXCHANGE_ACTION.BUY}`;
-    }
+    // if (tabIndexActive) {
+    //   qs.custom_query = `offer_feed_type_s:exchange AND offer_type_s:${tabIndexActive === 1 ? EXCHANGE_ACTION.SELL : EXCHANGE_ACTION.BUY}`;
+    // }
 
     if (query) {
       qs.query = query;
@@ -184,15 +184,16 @@ class DiscoverPage extends React.Component {
             <SearchBar onSuggestionSelected={() => {}} onInputSearchChange={this.searchChange} />
           </Col>
         </Row> */}
-        {/* <Row>
+        <Row>
           <Col md={12} xs={6}>
             <Category
+              idActive={handshakeIdActive}
               className="category-wrapper"
-              onRef={category => this.categoryRef = category}
+              onRef={(category) => { this.categoryRef = category; return null; }}
               onItemClick={this.clickCategoryItem}
             />
           </Col>
-        </Row> */}
+        </Row>
         {
           handshakeIdActive === HANDSHAKE_ID.EXCHANGE && (
             <Row>
@@ -203,39 +204,43 @@ class DiscoverPage extends React.Component {
           )
         }
         {
-          handshakeIdActive === HANDSHAKE_ID.BETTING && <BettingFilter />
+          handshakeIdActive === HANDSHAKE_ID.BETTING && (
+            <React.Fragment>
+              <BettingFilter />
+              <Row>
+                <Col md={12}>
+                  <dl className="faq">
+                    <dt>Price (Odds)</dt>
+                    <dd>
+                      Ninja uses <strong>decimal odds</strong>.  A winning bet at 1.75 would return a total of 1.75 ETH for every ETH staked. An even money bet is expressed as 2.00.
+                    </dd>
+                    <dt>Pool (ETH)</dt>
+                    <dd>
+                      The total bets for different price points (odds).  Red: Support orders. Green: Oppose orders.
+                    </dd>
+                    <dt>Support or Oppose</dt>
+                    <dd>
+                      Pick a side to bet on.  You can support the outcome or oppose the outcome.
+                    </dd>
+                    <dt>Market odds</dt>
+                    <dd>
+                      You can bet with the market odds, which will likely be matched immediately with existing orders on the order book, or set your own odds, which will likely go on the order book to wait for a matching order.
+                    </dd>
+                    <dt>Market volume</dt>
+                    <dd>
+                      The total volume of bets on this outcome.
+                    </dd>
+                    <dt>Market fee</dt>
+                    <dd>
+                      This is the fee set by the market creator, as a percentage of the winnings.  A market fee of 1% would be 1ETH on a winning payout of 100 ETH.
+                    </dd>
+                  </dl>
+                </Col>
+              </Row>
+            </React.Fragment>
+          )
         }
-        {/*<Row>
-          <Col md={12}>
-            <dl className="faq">
-              <dt>Price (Odds)</dt>
-              <dd>
-                Ninja uses <strong>decimal odds</strong>.  A winning bet at 1.75 would return a total of 1.75 ETH for every ETH staked. An even money bet is expressed as 2.00.
-              </dd>
-              <dt>Pool (ETH)</dt>
-              <dd>
-                The total bets for different price points (odds).  Red: Support orders. Green: Oppose orders.
-              </dd>
-              <dt>Support or Oppose</dt>
-              <dd>
-                Pick a side to bet on.  You can support the outcome or oppose the outcome.
-              </dd>
-              <dt>Market odds</dt>
-              <dd>
-                You can bet with the market odds, which will likely be matched immediately with existing orders on the order book, or set your own odds, which will likely go on the order book to wait for a matching order.
-              </dd>
-              <dt>Market volume</dt>
-              <dd>
-                The total volume of bets on this outcome.
-              </dd>
-              <dt>Market fee</dt>
-              <dd>
-                This is the fee set by the market creator, as a percentage of the winnings.  A market fee of 1% would be 1ETH on a winning payout of 100 ETH.
-              </dd>
-            </dl>
-          </Col>
-        </Row>*/}
-         <Row>
+        <Row>
           {handshakeIdActive !== HANDSHAKE_ID.BETTING && this.getHandshakeList}
         </Row>
       </Grid>
