@@ -242,14 +242,14 @@ class Handshake extends React.Component {
               </dl>
 
               <div className="row bottomBox">
-                <div className="col-lg-5 col-md-12 col-sm-12 col-xs-12">
+                <div className="col-lg-4 col-md-12 col-sm-12 col-xs-12">
                   <a href="/"
                      className="btnStartTrading"
                   >
                     <span>Start Trading Now</span>
                   </a>
                 </div>
-                <div className="col-lg-7 col-md-12 col-sm-12 col-xs-12">
+                <div className="col-lg-8 col-md-12 col-sm-12 col-xs-12">
                   {
                     this.renderInputForm({
                       id: 'email-1',
@@ -296,7 +296,7 @@ class Handshake extends React.Component {
         <div className={`container fourContainer text-center`}>
           <div className="row">
             <div className="col-lg-4 col-md-12 col-sm-12 col-xs-12">
-              <img src={paymentMethodIcon} width={93} height={64} />
+              <img src={paymentMethodIcon} height={80} />
               <p className="subTitle">Multiple Payment Method</p>
               <p className="description">We are available for cash - coin trading and credit card - coin trading. Find your nearest traders and leave no transaction history for any activity on our platform.</p>
             </div>

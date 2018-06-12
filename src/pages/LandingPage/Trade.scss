@@ -44,13 +44,14 @@
     .btnStartTrading {
       background-image: linear-gradient(-269deg, #7740FF 0%, #1E4EFF 100%);
       border-radius: rem-calc(4px);
-      font-size: rem-calc(24px);
+      font-size: rem-calc(20px);
+      font-weight: $medium;
       color: #FFFFFF;
       letter-spacing: 0;
-      padding: rem-calc(15px 30px);
+      padding: rem-calc(17px 26px);
       align-self: center;
       position: relative;
-      top: rem-calc(10px);
+      top: rem-calc(15px);
     }
     .registerEmail {
       display: flex;
@@ -58,17 +59,17 @@
       margin: 0 auto;
       .email {
         width: 100%;
-        padding: 15px 26px;
+        padding: rem-calc(15px 26px);
         text-align: left;
         border: 1px solid #FAFAFA;
         box-shadow: 1px 1px 10px #c2c2c238;
         font-weight: $light;
-        font-size: 18px;
+        font-size: rem-calc(18px);
         font-family: azo-sans-web, sans-serif;
         font-style: normal;
         letter-spacing: 0;
         background: #FFFFFF;
-        border-radius: 4px;
+        border-radius: rem-calc(4px);
         &::placeHolder {
           color: #959595;
           letter-spacing: 0;
@@ -79,15 +80,15 @@
         font-family: azo-sans-web, sans-serif;
         font-style: normal;
         font-weight: $medium;
-        font-size: 16px;
+        font-size: rem-calc(16px);
         color: #FFFFFF;
         letter-spacing: 0;
         position: relative;
         right: -53%;
-        top: -50px;
+        top: rem-calc(-51px);
         background-image: linear-gradient(-269deg, #7740FF 0%, #1E4EFF 100%);
-        border-radius: 4px;
-        padding: 8px 24px;
+        border-radius: rem-calc(4px);
+        padding: rem-calc(10px 24px);
         border: none;
       }
     }
@@ -128,6 +129,9 @@
   }
   .fourContainer {
     margin-bottom: rem-calc(147px);
+    & > .row > div {
+      padding: rem-calc(0 10px);
+    }
     img {
       margin-bottom: rem-calc(51px);
     }
@@ -157,21 +161,22 @@
       text-align: center;
       line-height: rem-calc(54px);
       margin-bottom: rem-calc(34px);
+      font-weight: $medium;
     }
   }
 
   .collapse-custom {
-    border-bottom: 2px solid #3D3D3D;
+    border-bottom: 0.5px outset #f7f7f7;
     font-weight: $normal;
     .head {
-      padding: rem-calc(12px 0);
+      padding: rem-calc(21px);
       display: flex;
       flex-wrap: wrap;
       &:hover {
         cursor: pointer;
       }
       .label {
-        width: 92%;
+        width: 94%;
         display: flex;
         margin: 0;
         font-size: rem-calc(20px);
@@ -184,7 +189,7 @@
         }
       }
       .extend {
-        width: 8%;
+        width: 6%;
         text-align: right;
         img {
           transform: rotate(90deg);
@@ -198,8 +203,10 @@
       opacity: 0.6;
     }
     .content {
-      margin-bottom: rem-calc(18px);
+      margin-bottom: rem-calc(40px);
+      margin-top: rem-calc(-11px);
       padding-right: rem-calc(40px);
+      padding-left: rem-calc(21px);
       font-size: rem-calc(20px);
       color: #FFFFFF;
       letter-spacing: 0;
@@ -208,8 +215,8 @@
     }
   }
 
-  .collapse-custom + .collapse-custom {
-    margin-top: rem-calc(17px);
+  .collapse-custom:first-child {
+    border-top: 0.5px inset #f7f7f7;
   }
 }
 
