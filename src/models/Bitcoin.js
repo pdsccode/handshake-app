@@ -208,13 +208,28 @@ export class Bitcoin extends Wallet {
       return false;
     }
 
-    async getTransactionHistory() {
-      const url = `${this.network}/txs/?address=${this.address}`;
-      const response = await axios.get(url);
+    async getTransactionHistory(pageno) {
+      const from = (pageno-1) * 20;
+      const to = from + 20;
+      const url = `${this.network}/addrs/${this.address}/txs/?from=${from}&to=${to}`;
+      const response = await axios.get(url);console.log(url);
       let result = [];
       if (response.status == 200) {
-        if(response.data && response.data.txs){
-          result = response.data.txs;
+        if(response.data && response.data.items){
+          result = response.data.items;
+        }
+      }
+
+      return result;
+    }
+
+    async getTransactionCount() {
+      const url = `${this.network}/addrs/${this.address}/txs/?from=0&to=1`;
+      const response = await axios.get(url);
+      let result = 0;
+      if (response.status == 200) {
+        if(response.data && response.data.totalItems){
+          result = response.data.totalItems;
         }
       }
 
