@@ -4,6 +4,8 @@ import Feed from "@/components/core/presentation/Feed";
 import Button from "@/components/core/controls/Button";
 import './styles.scss'
 import createForm from "@/components/core/form/createForm";
+import {getOfferPrice} from "@/services/offer-util";
+
 import {
   fieldCleave,
   fieldDropdown,
@@ -454,12 +456,15 @@ class Component extends React.Component {
   }
 
   render() {
-    const { currency  } = this.props;
+    const { currency, listOfferPrice, ipInfo: { currency: fiatCurrency }, customizePriceBuy, customizePriceSell, amountBuy, amountSell } = this.props;
     const modalContent = this.state.modalContent;
     const haveProfile = this.offer ? true : false;
     const allowInitiate = this.offer ? (!this.offer.itemFlags.ETH || !this.offer.itemFlags.BTC) : true;
 
-    console.log('render',haveProfile);
+    const { price } = getOfferPrice(listOfferPrice, EXCHANGE_ACTION.BUY, currency);
+    const priceDisplayed = formatMoney(price)
+    const estimatedPriceBuy = formatMoney(price * (1 + parseFloat(customizePriceBuy, 10)/100))
+    const estimatedPriceSell = formatMoney(price * (1 + parseFloat(customizePriceSell, 10)/100))
 
     return (
       <div className="create-exchange">
@@ -514,7 +519,7 @@ class Component extends React.Component {
             <div className="d-flex">
               <label className="col-form-label mr-auto label-create"><span className="align-middle">Current price</span></label>
               <div className='input-group'>
-                <div><span className="form-text">10000 USD</span></div>
+                <div><span className="form-text">{priceDisplayed} {fiatCurrency}</span></div>
               </div>
             </div>
 
@@ -553,7 +558,7 @@ class Component extends React.Component {
             </div>
 
             <div className="tooltip-price mt-2">
-              Your buying price 100$, your selling price 1200$. This may fluctuate according to the price of ETH
+              Your buying price {estimatedPriceBuy} {fiatCurrency}, your selling price {estimatedPriceSell} {fiatCurrency}. {(amountBuy && amountSell) ? 'These' : 'This'} may fluctuate according to the price of {currency}
             </div>
           </Feed>
 
@@ -639,6 +644,7 @@ const mapStateToProps = (state) => {
     ipInfo: state.app.ipInfo,
     authProfile: state.auth.profile,
     offerStores: state.exchange.offerStores,
+    listOfferPrice: state.exchange.listOfferPrice
   };
 };
 
