@@ -174,9 +174,9 @@ export default class ExchangeShopHandshake extends BaseHandshake {
     });
   }
 
-  // CoinOwner accept transaction
+  //customer finish transaction for sending the coin to shopOwner
   finish = (hid, offchain) => {
-    console.log(TAG, ' accept = ', hid, offchain);
+    console.log(TAG, ' finish = ', hid, offchain);
 
     const bytesOffchain = this.web3.utils.fromAscii(offchain);
 
