@@ -43,8 +43,6 @@ class Navigation extends React.Component {
   }
 
   render() {
-    console.log(this.props.location.pathname);
-    console.log(URL.HANDSHAKE_CREATE_INDEX);
     return (
       <footer className="footer">
         <ul>
