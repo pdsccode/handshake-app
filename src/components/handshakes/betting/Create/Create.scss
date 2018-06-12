@@ -195,10 +195,10 @@
     }
   }
   .btnBlue {
-    background: #8bf275;
+    background: $caribbean-green;
     border: none;
     &:active {
-      background-color: #8bf275;
+      background-color: $caribbean-green;
     }
   }
   .disable {

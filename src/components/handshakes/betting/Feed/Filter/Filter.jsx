@@ -315,8 +315,8 @@ class BettingFilter extends React.Component {
             objectId={outcomeId} />}
               <div className="wrapperContainer">
                 <div className="item">
-                
-                  {<div className="titleBox">
+
+                  {<div className="titleBox opacity65">
                     <div>Pool (ETH)</div>
                     <div>Support (ODDS)</div>
             </div>}
@@ -336,19 +336,19 @@ class BettingFilter extends React.Component {
                         this.setState({
                             side: SIDE.SUPPORT
                         }, ()=> this.modalBetRef.open());
-                        
-                    }}>SUPPORT</Button>
-                    
 
-                    
+                    }}>SUPPORT</Button>
+
+
+
                 </div>
                 <div className="item">
-                
-                {<div className="titleBox">
+
+                {<div className="titleBox opacity65">
                     <div>Pool (ETH)</div>
                     <div>Oppose(ODDS)</div>
             </div>}
-                
+
                   {/*<BettingShake
                     matchName={matchName}
                     matchOutcome={matchOutcome}
@@ -367,7 +367,7 @@ class BettingFilter extends React.Component {
                             side: SIDE.AGAINST
                         }, ()=> this.modalBetRef.open());
                     }}>OPPOSE</Button>
-                                       
+
                 </div>
               </div>
               <ModalDialog className="modal" onRef={modal => this.modalBetRef = modal}>
