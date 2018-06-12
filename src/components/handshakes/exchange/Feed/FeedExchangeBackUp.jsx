@@ -996,7 +996,7 @@ class FeedExchange extends React.PureComponent {
 
     let email = '';
     if (offer.feedType === EXCHANGE_FEED_TYPE.EXCHANGE) {
-      email = offer.email ? offer : offer.contactPhone ? offer.contactPhone : offer.contactInfo;
+      email = offer.email ? offer.email : offer.contactPhone ? offer.contactPhone : offer.contactInfo;
     } else if (offer.feedType === EXCHANGE_FEED_TYPE.INSTANT) {
       email = APP_USER_NAME;
     }
