@@ -82,18 +82,22 @@ export class MasterWallet {
 
     // for create new wallets:
     static createNewsallets(listCoinTemp, mnemonic) {
-      console.log('mnemonic', mnemonic);
+      let isImport = false;
       if (mnemonic == '') {
         mnemonic = bip39.generateMnemonic(); // generates string
       } else if (!bip39.validateMnemonic(mnemonic)) {
         console.log('validateMnemonic mnemonic', false);
         return false;
       }
+      else {
+        isImport = true;
+      }
       const masterWallet = MasterWallet.getMasterWallet();
       listCoinTemp.forEach((wallet) => {
         if (wallet.default) {
           wallet.default = false;
           wallet.mnemonic = mnemonic;
+          wallet.protected = isImport;
           // create address, private-key ...
           wallet.createAddressPrivatekey();
           masterWallet.push(wallet);
