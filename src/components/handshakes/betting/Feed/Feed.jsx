@@ -258,7 +258,11 @@ class FeedBetting extends React.Component {
       const {hid, side, amount, odds, offchain} = data;
       const stake = amount;
       //const payout = stake * odds;
-      bettinghandshake.cancelBet(hid, side, stake, odds, offchain);
+      const result = await bettinghandshake.cancelBet(hid, side, stake, odds, offchain);
+      const {hash} = result;
+      if(hash === -1){
+        this.rollback(offchain);
+      }
 
     }
   }
