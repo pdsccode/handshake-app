@@ -73,11 +73,16 @@ class Transfer extends React.Component {
   componentDidMount() {    
     // clear form:
     this.props.clearFields(nameFormSendWallet, false, false, "to_address", "from_address", "amount");
-    if (this.props.amount)
+    if (this.props.amount){
+      this.setState({inputSendAmountValue: this.props.amount});
       this.props.rfChange(nameFormSendWallet, 'amount', this.props.amount);
+    }
       
     if (this.props.toAddress)
-      this.props.rfChange(nameFormSendWallet, 'to_address', this.props.toAddress);
+      {
+        this.setState({inputAddressAmountValue: this.props.toAddress});
+        this.props.rfChange(nameFormSendWallet, 'to_address', this.props.toAddress);
+      }
     
       this.getWalletDefault();
   }
@@ -105,7 +110,8 @@ class Transfer extends React.Component {
     
 
     if (onFinish) {
-      onFinish();
+      let result = {"toAddress": this.state.inputAddressAmountValue, "fromWallet": this.state.walletSelected, "amount": this.state.inputSendAmountValue}
+      onFinish(result);
     } else {
       
     }
@@ -144,7 +150,16 @@ class Transfer extends React.Component {
     if (walletDefault){      
       walletDefault.text = walletDefault.getShortAddress() + " (" + walletDefault.name + "-" + walletDefault.getNetworkName() + ")";         
       walletDefault.id = walletDefault.address + "-" + walletDefault.getNetworkName();   
+
+      // get balance for first item + update to local store:
+      walletDefault.getBalance().then(result => {
+        walletDefault.balance = result;
+        this.setState({walletSelected: walletDefault});
+        MasterWallet.UpdateBalanceItem(walletDefault);
+      });
+
     }    
+
     this.setState({wallets: wallets, walletDefault: walletDefault, walletSelected: walletDefault});
 
   }
@@ -200,13 +215,7 @@ submitSendCoin=()=>{
     });
 }
 
-updateSendAmountValue = (evt) => {
-  this.setState({
-    inputSendAmountValue: evt.target.value,
-  });
-}
-
-onItemSelectedWallet =(item)=>{
+onItemSelectedWallet = (item) =>{
   
   // I don't know why the item is not object class ?????
   let wallet = MasterWallet.convertObject(item);
@@ -224,6 +233,7 @@ onItemSelectedWallet =(item)=>{
     MasterWallet.UpdateBalanceItem(wallet);
   });
 }
+
 // For Qrcode:
 handleScan=(data) =>{
   const { rfChange } = this.props
