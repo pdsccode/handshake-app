@@ -155,7 +155,7 @@ class Router extends React.Component {
       updatedAt: this.props.auth.updatedAt,
       loadingText: 'Loading application',
       isNetworkError: false,
-      isCountryBlackList : false,
+      isCountryBlackList: false,
     };
 
     this.checkRegistry = ::this.checkRegistry;
@@ -174,13 +174,6 @@ class Router extends React.Component {
       return { profile: nextProps.auth.profile, updatedAt: nextProps.auth.updatedAt };
     }
     return null;
-  }
-
-  async detectCountry() {
-    const { data } = await axios.get(`https://ipapi.co/json/?key=${process.env.IPAPI}`);
-    if (COUNTRIES_BLACKLIST.indexOf(data.country_name) !== -1) {
-      this.setState({ isCountryBlackList: true });
-    }
   }
 
   componentDidMount() {
@@ -203,7 +196,6 @@ class Router extends React.Component {
     }
   }
 
-
   getListOfferPrice = () => {
     this.props.getListOfferPrice({
       PATH_URL: API_URL.EXCHANGE.GET_LIST_OFFER_PRICE,
@@ -212,7 +204,6 @@ class Router extends React.Component {
       errorFn: this.handleGetPriceFailed,
     });
   }
-
 
   getIpInfo = () => {
     axios.get(API_URL.EXCHANGE.IP_DOMAIN, {
@@ -223,6 +214,13 @@ class Router extends React.Component {
       this.props.setIpInfo(response.data);
       local.save(APP.IP_INFO, response.data);
     });
+  }
+
+  async detectCountry() {
+    const { data } = await axios.get((process.env.ipapiKey ? `https://ipapi.co/json/?key=${process.env.ipapiKey}` : 'https://ipapi.co/json'));
+    if (COUNTRIES_BLACKLIST.indexOf(data.country_name) !== -1) {
+      this.setState({ isCountryBlackList: true });
+    }
   }
 
   checkRegistry() {
@@ -294,12 +292,12 @@ class Router extends React.Component {
             this.props.getFreeETH({
               PATH_URL: `/user/free-rinkeby-eth?address=${wallet.address}`,
               METHOD: 'POST',
-              successFn: (response) => {
+              successFn: () => {
                 this.setState({ isLoading: false, loadingText: '' });
                 // run cron alert user when got 1eth:
                 this.timeOutCheckGotETHFree = setInterval(() => {
-                  wallet.getBalance().then(result=>{
-                    if (result > 0){
+                  wallet.getBalance().then((result) => {
+                    if (result > 0) {
                       this.porps.showAlert({
                         message: <div className="text-center">You have ETH! Now you can play for free on the Ninja testnet.</div>,
                         timeOut: false,
@@ -309,9 +307,8 @@ class Router extends React.Component {
                       });
                       // notify user:
                       clearInterval(this.timeOutCheckGotETHFree);
-                      
                     }
-                  })
+                  });
                 }, 20 * 60 * 1000); // 20'
               },
               errorFn: () => { this.setState({ isLoading: false, loadingText: '' }); },
