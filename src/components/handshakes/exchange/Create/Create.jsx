@@ -470,9 +470,8 @@ class Component extends React.Component {
                 name="currency"
                 // containerClass="radio-container-old"
                 component={fieldRadioButton}
-                type="tab"
+                type="tab-3"
                 list={this.CRYPTO_CURRENCY_LIST}
-                color={textColor}
                 validate={[required]}
                 onChange={this.onCurrencyChange}
               />

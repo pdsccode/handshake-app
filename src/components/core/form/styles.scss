@@ -90,6 +90,41 @@
     }
   }
 
+  &.tab-3 {
+    text-align: center;
+    input {
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+      &:checked ~ button {
+        background: #2AB016;
+        border-color: #2AB016;
+        color: #FFFFFF;
+        box-shadow: none;
+      }
+      & ~ button {
+        font-weight: 900;
+
+        width: 100%;
+        border-radius: 0;
+        background: rgba(216,216,216,0.14);
+
+        border: 2px solid #000000;
+        font-size: 13px;
+        color: #000000;
+        letter-spacing: 0.43px;
+        text-align: center;
+        line-height: 13px;
+      }
+    }
+    &:first-of-type {
+      padding-right: 8px;
+    }
+    &:not(:first-of-type) {
+      padding-left: 8px;
+    }
+  }
+
   &.big {
     input {
       position: absolute;

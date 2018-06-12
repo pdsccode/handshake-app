@@ -37,9 +37,9 @@ export const fieldInput = customField('input');
 export const fieldDropdown = customField(({
   onChange, value, list, defaultText = 'Select an item',
 }) => {
-  let txtSelectedItem = defaultText;  
-  const selectedItem = list.find(i => i.id === value.id);  
-  
+  let txtSelectedItem = defaultText;
+  const selectedItem = list.find(i => i.id === value.id);
+
   if (selectedItem) {
     txtSelectedItem = selectedItem.text;
   }
@@ -50,7 +50,7 @@ export const fieldDropdown = customField(({
       </DropdownToggle>
       <DropdownMenu>
         {
-            list.map((item) => {              
+            list.map((item) => {
               return (
                 <DropdownItem
                   key={item.id}
@@ -88,6 +88,11 @@ export const fieldRadioButton = customField(({
       containerClass = 'tab-2';
       fullWidth = true;
       hasPrefixIcon = true;
+      break;
+    case 'tab-3':
+      containerClass = 'tab-3';
+      fullWidth = true;
+      hasPrefixIcon = false;
       break;
     case 'radio-big':
       containerClass = 'big';
