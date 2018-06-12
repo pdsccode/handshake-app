@@ -316,7 +316,7 @@ class BettingFilter extends React.Component {
             <Button block onClick={() => {
                 this.modalBetFreeRef.open();
 
-            }}>OPEN SHAKE FREE</Button>
+            }}>FIRST BET FREE</Button>
 
             {<TopInfo marketTotal={parseFloat(tradedVolum)}
                     percentFee={marketFee}
