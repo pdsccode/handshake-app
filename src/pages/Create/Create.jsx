@@ -80,7 +80,7 @@ class Create extends React.Component {
       name: value.name,
       priority: value.priority,
     }));
-    return handshakes.sort((x, y) => x.priority < y.priority);
+    return handshakes.sort((x, y) => x.priority > y.priority);
   }
 
   handshakeChange({ suggestion }) {
