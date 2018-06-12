@@ -354,6 +354,37 @@ class FeedMe extends React.PureComponent {
       case HANDSHAKE_USER.NORMAL: {
         break;
       }
+      case HANDSHAKE_USER.OWNER: {
+        switch (status) {
+          case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.PRE_SHAKE: {
+            message = intl.formatMessage({id: 'acceptOfferConfirm'}, {});
+            actionButtons = (
+              <div>
+                <Button block className="mt-2"
+                        onClick={() => this.confirmOfferAction(message, this.handleAcceptShakedOffer)}>Accept</Button>
+              </div>
+            );
+            break;
+          }
+          case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.SHAKE: {
+            // actionButtons = 'Reject'; // complete: nguoi nhan cash
+            message = intl.formatMessage({id: 'rejectOfferConfirm'}, {});
+            let message2 = intl.formatMessage({id: 'completeOfferConfirm'}, {});
+            actionButtons = (
+              <div>
+                <Button block className="mt-2"
+                        onClick={() => this.confirmOfferAction(message, this.handleRejectShakedOffer)}>Reject</Button>
+                {offer.type === EXCHANGE_ACTION.SELL &&
+                <Button block className="mt-2"
+                        onClick={() => this.confirmOfferAction(message2, this.handleCompleteShakedOffer)}>Complete</Button>
+                }
+              </div>
+            );
+            break;
+          }
+        }
+        break;
+      }
       case HANDSHAKE_USER.SHAKED: {
         switch (status) {
           case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.PRE_SHAKE: {
@@ -385,36 +416,6 @@ class FeedMe extends React.PureComponent {
         }
         break;
       }
-      case HANDSHAKE_USER.OWNER: {
-        switch (status) {
-          case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.PRE_SHAKE: {
-            message = intl.formatMessage({id: 'acceptOfferConfirm'}, {});
-            actionButtons = (
-              <div>
-                <Button block className="mt-2"
-                        onClick={() => this.confirmOfferAction(message, this.handleAcceptShakedOffer)}>Accept</Button>
-              </div>
-            );
-            break;
-          }
-          case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.SHAKE: {
-            // actionButtons = 'Reject'; // complete: nguoi nhan cash
-            message = intl.formatMessage({id: 'rejectOfferConfirm'}, {});
-            let message2 = intl.formatMessage({id: 'completeOfferConfirm'}, {});
-            actionButtons = (
-              <div>
-                <Button block className="mt-2"
-                        onClick={() => this.confirmOfferAction(message, this.handleRejectShakedOffer)}>Reject</Button>
-                {offer.type === EXCHANGE_ACTION.SELL &&
-                <Button block className="mt-2"
-                        onClick={() => this.confirmOfferAction(message2, this.handleCompleteShakedOffer)}>Complete</Button>
-                }
-              </div>
-            );
-            break;
-          }
-        }
-      }
     }
 
     return actionButtons;
@@ -444,20 +445,21 @@ class FeedMe extends React.PureComponent {
   handleRejectShakedOffer = async () => {
     const { offer } = this;
     const { initUserId } = this.props;
+    const { id, currency } = offer;
 
-    if (offer.currency === CRYPTO_CURRENCY.ETH) {
-      const wallet = MasterWallet.getWalletDefault(offer.currency);
+    if (currency === CRYPTO_CURRENCY.ETH) {
+      const wallet = MasterWallet.getWalletDefault(currency);
       const balance = await wallet.getBalance();
       const fee = await wallet.getFee();
 
-      if (this.showNotEnoughCoinAlert(balance, 0, fee, offer.currency)) {
+      if (this.showNotEnoughCoinAlert(balance, 0, fee, currency)) {
         return;
       }
     }
 
     this.showLoading();
     this.props.rejectOfferItem({
-      PATH_URL: `${API_URL.EXCHANGE.OFFER_STORES}/${initUserId}/${API_URL.EXCHANGE.SHAKES}/${offer.id}`,
+      PATH_URL: `${API_URL.EXCHANGE.OFFER_STORES}/${initUserId}/${API_URL.EXCHANGE.SHAKES}/${id}`,
       METHOD: 'DELETE',
       successFn: this.handleRejectShakedOfferSuccess,
       errorFn: this.handleRejectShakedOfferFailed,
@@ -511,20 +513,23 @@ class FeedMe extends React.PureComponent {
   handleCancelShakeOffer = async () => {
     const { offer } = this;
     const { initUserId } = this.props;
+    const { id, currency, type } = offer;
 
-    if (offer.currency === CRYPTO_CURRENCY.ETH) {
-      const wallet = MasterWallet.getWalletDefault(offer.currency);
-      const balance = await wallet.getBalance();
-      const fee = await wallet.getFee();
+    if (currency === CRYPTO_CURRENCY.ETH) {
+      if (type === EXCHANGE_ACTION.BUY) { //shop buy
+        const wallet = MasterWallet.getWalletDefault(currency);
+        const balance = await wallet.getBalance();
+        const fee = await wallet.getFee();
 
-      if (this.showNotEnoughCoinAlert(balance, 0, fee, offer.currency)) {
-        return;
+        if (this.showNotEnoughCoinAlert(balance, 0, fee, currency)) {
+          return;
+        }
       }
     }
 
     this.showLoading();
     this.props.cancelOfferItem({
-      PATH_URL: `${API_URL.EXCHANGE.OFFER_STORES}/${initUserId}/${API_URL.EXCHANGE.SHAKES}/${offer.id}/cancel`,
+      PATH_URL: `${API_URL.EXCHANGE.OFFER_STORES}/${initUserId}/${API_URL.EXCHANGE.SHAKES}/${id}/cancel`,
       METHOD: 'POST',
       successFn: this.handleCancelShakeOfferSuccess,
       errorFn: this.handleCancelShakeOfferFailed,
@@ -540,26 +545,22 @@ class FeedMe extends React.PureComponent {
     console.log('handleCancelShakeOfferSuccess', responseData);
 
     if (currency === CRYPTO_CURRENCY.ETH) {
-      const wallet = MasterWallet.getWalletDefault(currency);
+      if (type === EXCHANGE_ACTION.BUY) { //shop buy
+        const wallet = MasterWallet.getWalletDefault(currency);
 
-      const exchangeHandshake = new ExchangeShopHandshake(wallet.chainId);
+        const exchangeHandshake = new ExchangeShopHandshake(wallet.chainId);
 
-      let result = null;
+        let result = null;
 
-      // if ((data.type === EXCHANGE_ACTION.BUY && this.userType === HANDSHAKE_USER.OWNER) ||
-      //   (data.type === EXCHANGE_ACTION.SELL && this.userType === HANDSHAKE_USER.SHAKED)
-      // ) {
-      //   result = await exchangeHandshake.reject(data.hid, data.id);
-      // } else {
         result = await exchangeHandshake.cancel(hid, offChainId);
-      // }
 
-      console.log('handleCancelShakedOfferSuccess', result);
+        console.log('handleCancelShakeOfferSuccess', result);
+      }
     }
 
     this.hideLoading();
     this.props.showAlert({
-      message: <div className="text-center"><FormattedMessage id="rejectOfferItemSuccessMassage"/></div>,
+      message: <div className="text-center"><FormattedMessage id="cancelOfferItemSuccessMassage"/></div>,
       timeOut: 2000,
       type: 'success',
       callBack: () => {
@@ -579,15 +580,16 @@ class FeedMe extends React.PureComponent {
   handleCompleteShakedOffer = async () => {
     const { offer } = this;
     const { initUserId } = this.props;
+    const { id, currency, type } = offer;
 
-    if (offer.currency === CRYPTO_CURRENCY.ETH) {
-      if ((offer.type === EXCHANGE_ACTION.SELL && this.userType === HANDSHAKE_USER.OWNER) ||
-      (offer.type === EXCHANGE_ACTION.BUY && this.userType === HANDSHAKE_USER.SHAKED)){
-        const wallet = MasterWallet.getWalletDefault(offer.currency);
+    if (currency === CRYPTO_CURRENCY.ETH) {
+      if ((type === EXCHANGE_ACTION.SELL && this.userType === HANDSHAKE_USER.OWNER) ||
+      (type === EXCHANGE_ACTION.BUY && this.userType === HANDSHAKE_USER.SHAKED)){
+        const wallet = MasterWallet.getWalletDefault(currency);
         const balance = await wallet.getBalance();
         const fee = await wallet.getFee();
 
-        if (this.showNotEnoughCoinAlert(balance, offer.totalAmount, fee, offer.currency)) {
+        if (this.showNotEnoughCoinAlert(balance, 0, fee, currency)) {
           return;
         }
       }
@@ -595,7 +597,7 @@ class FeedMe extends React.PureComponent {
 
     this.showLoading();
     this.props.completeOfferItem({
-      PATH_URL: `${API_URL.EXCHANGE.OFFER_STORES}/${initUserId}/${API_URL.EXCHANGE.SHAKES}/${offer.id}/complete`,
+      PATH_URL: `${API_URL.EXCHANGE.OFFER_STORES}/${initUserId}/${API_URL.EXCHANGE.SHAKES}/${id}/complete`,
       METHOD: 'POST',
       successFn: this.handleCompleteShakedOfferSuccess,
       errorFn: this.handleCompleteShakedOfferFailed,
@@ -607,7 +609,7 @@ class FeedMe extends React.PureComponent {
     const { initUserId, refreshPage } = this.props;
     const { data } = responseData;
     const offerShake = Offer.offer(data);
-    const { hid, currency, type, offChainId } = offerShake;
+    const { hid, currency, type, offChainId, totalAmount } = offerShake;
 
     console.log('handleDeleteOfferItemSuccess', responseData);
 
@@ -619,7 +621,7 @@ class FeedMe extends React.PureComponent {
         let result = null;
 
         if (type === EXCHANGE_ACTION.SELL && this.userType === HANDSHAKE_USER.OWNER) {
-          result = await exchangeHandshake.releasePartialFund(hid, offer.userAddress ,data.totalAmount, initUserId, offChainId);
+          result = await exchangeHandshake.releasePartialFund(hid, offer.userAddress , totalAmount, initUserId, offChainId);
         } else if (type === EXCHANGE_ACTION.BUY && this.userType === HANDSHAKE_USER.SHAKED){
           result = await exchangeHandshake.finish(hid, offChainId);
         }
