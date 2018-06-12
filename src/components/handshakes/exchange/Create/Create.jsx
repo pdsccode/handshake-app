@@ -466,6 +466,9 @@ class Component extends React.Component {
     const estimatedPriceBuy = formatMoney(price * (1 + parseFloat(customizePriceBuy, 10)/100))
     const estimatedPriceSell = formatMoney(price * (1 + parseFloat(customizePriceSell, 10)/100))
 
+    const wantToBuy = amountBuy && amountBuy > 0
+    const wantToSell = amountSell && amountSell > 0
+
     return (
       <div className="create-exchange">
         <FormExchangeCreate onSubmit={this.handleSubmit} validate={this.handleValidate}>
@@ -557,9 +560,15 @@ class Component extends React.Component {
               </div>
             </div>
 
-            <div className="tooltip-price mt-2">
-              Your buying price {estimatedPriceBuy} {fiatCurrency}, your selling price {estimatedPriceSell} {fiatCurrency}. {(amountBuy && amountSell) ? 'These' : 'This'} may fluctuate according to the price of {currency}
-            </div>
+            {
+              (wantToBuy || wantToSell) && (
+                <div className="tooltip-price mt-2">
+                  { wantToBuy && <span>Your buying price {estimatedPriceBuy} {fiatCurrency}. </span> }
+                  { wantToSell && <span>Your selling price {estimatedPriceSell} {fiatCurrency}. </span> }
+                  { (wantToBuy && wantToSell) ? 'These' : 'This'} may fluctuate according to the price of {currency}
+                </div>
+              )
+            }
           </Feed>
 
           {
