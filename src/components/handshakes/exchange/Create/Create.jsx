@@ -136,7 +136,7 @@ class Component extends React.Component {
   }
 
   componentWillReceiveProps(nextProps){
-    const { intl } = this.props;
+    const { intl, rfChange } = this.props;
     console.log('componentWillReceiveProps',nextProps);
     if (nextProps.offerStores && nextProps.offerStores !== this.props.offerStores) {
       console.log('componentWillReceiveProps inside', nextProps.offerStores);
@@ -221,7 +221,7 @@ class Component extends React.Component {
             currency: currency,
           })}
         </div>,
-        timeOut: 3000,
+        timeOut: 5000,
         type: 'danger',
         callBack: () => {
         }
@@ -364,6 +364,7 @@ class Component extends React.Component {
     // console.log('rewardWallet', rewardWallet);
 
     if (currency === CRYPTO_CURRENCY.BTC) {
+      console.log('transfer BTC', this.offer.items.BTC.systemAddress, amountSell);
       if (amountSell > 0) {
         wallet.transfer(this.offer.items.BTC.systemAddress, amountSell).then(success => {
           console.log('transfer', success);

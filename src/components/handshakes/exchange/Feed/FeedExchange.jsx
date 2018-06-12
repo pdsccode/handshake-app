@@ -126,20 +126,19 @@ class FeedExchange extends React.PureComponent {
     const { intl } = this.props;
     const { data } = responseData;
     const offerShake = Offer.offer(data);
-    const { id, currency, type, totalAmount, systemAddress } = offerShake;
+    const { currency, type, totalAmount, systemAddress, offChainId } = offerShake;
     const { offer } = this;
 
     if (currency === CRYPTO_CURRENCY.ETH) {
-      let amount = 0;
-      if (type === EXCHANGE_ACTION.BUY) {
-        amount = totalAmount;
+      if (type === EXCHANGE_ACTION.BUY) { //shop buy
+        const amount = totalAmount;
+
+        const wallet = MasterWallet.getWalletDefault(currency);
+        const exchangeHandshake = new ExchangeShopHandshake(wallet.chainId);
+        const result = await exchangeHandshake.initByCustomer(offer.items.ETH.userAddress, amount, offChainId);
+
+        console.log('handleShakeOfferSuccess', result);
       }
-
-      const wallet = MasterWallet.getWalletDefault(currency);
-      const exchangeHandshake = new ExchangeShopHandshake(wallet.chainId);
-      const result = await exchangeHandshake.initByCustomer(offer.ETH.userAddress, amount, id);
-
-      console.log('handleShakeOfferSuccess', result);
     } else if (currency === CRYPTO_CURRENCY.BTC) {
       if (type === EXCHANGE_ACTION.BUY) {
         const wallet = MasterWallet.getWalletDefault(currency);

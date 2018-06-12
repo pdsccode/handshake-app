@@ -32,6 +32,7 @@ class Offer {
       toEmail: data.to_email || '',
       toContactPhone: data.to_contact_phone || '',
       toContactInfo: data.to_contact_info || '',
+      offChainId: data.off_chain_id || '',
 
 
       //Offer store

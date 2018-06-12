@@ -21,7 +21,9 @@ import {
   EXCHANGE_METHOD_PAYMENT,
   HANDSHAKE_EXCHANGE_CC_STATUS_NAME,
   HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS,
+  HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS_NAME,
   HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS,
+  HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_NAME,
   HANDSHAKE_EXCHANGE_STATUS,
   HANDSHAKE_EXCHANGE_STATUS_NAME,
   HANDSHAKE_STATUS_NAME,
@@ -171,7 +173,6 @@ class FeedMe extends React.PureComponent {
     let actionButtons = null;
 
     switch (status) {
-      case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CREATED:
       case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.ACTIVE: {
         let message = intl.formatMessage({id: 'closeOfferConfirm'}, {});
         actionButtons = (
@@ -182,7 +183,7 @@ class FeedMe extends React.PureComponent {
         );
         break;
       }
-
+      case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CREATED:
       case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSING:
       case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSED: {
         break;
@@ -793,6 +794,7 @@ class FeedMe extends React.PureComponent {
       }
       case EXCHANGE_FEED_TYPE.OFFER_STORE: {
         email = offer.email ? offer.email : offer.contactPhone ? offer.contactPhone : offer.contactInfo;
+        statusText = HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_NAME[status];
 
         message = this.getContentOfferStore();
 
@@ -803,6 +805,7 @@ class FeedMe extends React.PureComponent {
       case EXCHANGE_FEED_TYPE.OFFER_STORE_SHAKE: {
         from = 'With';
         email = this.getEmail();
+        statusText = HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS_NAME[status];
         showChat = true;
         chatUsername = offer.toUsername;
 
