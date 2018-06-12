@@ -1,7 +1,7 @@
 @import './src/styles/style';
 
 .wrapperBettingShake {
-  padding: rem-calc(46px 30px 12px 30px);
+  padding: rem-calc(30px 30px 30px 30px);
   background: #3A444C;
   //box-shadow: 0 2px 4px 0 rgba(203,203,203,0.50);
   font-family: $font-family-base;
@@ -145,5 +145,10 @@
     letter-spacing: 0;
     font-weight: bold;
     margin-bottom: rem-calc(20px);
+  }
+
+  .freeAmount {
+    color: white;
+    margin-top: rem-calc(20px);
   }
 }
