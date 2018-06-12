@@ -1,3 +1,3 @@
-import Book from './GroupBook';
+import GroupBook from './GroupBook';
 
-export default Book;
+export default GroupBook;

@@ -1,7 +1,7 @@
 @import './src/styles/style';
 
 .wrapperBettingShake {
-  padding: rem-calc(46px 12px);
+  padding: rem-calc(46px 30px 12px 30px);
   background: #3A444C;
   //box-shadow: 0 2px 4px 0 rgba(203,203,203,0.50);
   font-family: $font-family-base;
@@ -17,7 +17,11 @@
   }
 
   .rowWrapper + .rowWrapper {
-    margin-top: rem-calc(20px);
+    //margin-top: rem-calc(20px);
+    display: flex;
+    justify-content: space-between;
+    color: white;
+    font-size: 0.75rem;
   }
 
   .line {
@@ -50,9 +54,9 @@
     letter-spacing: 0;
     position: relative;
     top: 6px;
-    left: 80%;
+    left: 86%;
     @media (max-width: 330px) {
-      left: 77%;
+      left: 84%;
     }
   }
   .odds + .cryptoCurrency {
@@ -62,9 +66,9 @@
     letter-spacing: 0;
     position: relative;
     bottom: 26px;
-    left: 50%;
+    left: 68%;
     @media (max-width: 375px) {
-      left: 45%;
+      left: 64%;
     }
     @media (max-width: 330px) {
       left: 35%;
