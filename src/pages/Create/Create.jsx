@@ -11,7 +11,7 @@ import './Create.scss';
 const CreatePromise = props => (
   <DynamicImport
     loading={Loading}
-    load={() => import('@/components/handshakes/promise/Create')}
+    load={() => import('@/components/handshakes/promise/Create/Promise')}
   >
     {Component => <Component {...props} />}
   </DynamicImport>
@@ -74,11 +74,13 @@ class Create extends React.Component {
     this.handshakeChange = this.handshakeChange.bind(this);
   }
 
-  get handShakeList() {
-    return Object.entries(HANDSHAKE_NAME).map(([key, value]) => ({
+  get handshakeList() {
+    const handshakes = Object.entries(HANDSHAKE_NAME).map(([key, value]) => ({
       id: key,
-      name: value,
+      name: value.name,
+      priority: value.priority,
     }));
+    return handshakes.sort((x, y) => x.priority > y.priority);
   }
 
   handshakeChange({ suggestion }) {
@@ -94,9 +96,9 @@ class Create extends React.Component {
         <Row>
           <Col md={12}>
             <SearchBar
-              suggestions={this.handShakeList}
+              suggestions={this.handshakeList}
               onSuggestionSelected={this.handshakeChange}
-              inputSearchDefault={HANDSHAKE_NAME[HANDSHAKE_ID_DEFAULT]}
+              inputSearchDefault={HANDSHAKE_NAME[HANDSHAKE_ID_DEFAULT].name}
             />
           </Col>
         </Row>

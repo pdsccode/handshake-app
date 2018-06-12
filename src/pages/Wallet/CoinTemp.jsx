@@ -15,31 +15,15 @@ class CoinTemp extends React.Component {
         return [Ethereum.Network.Mainnet, Bitcoin.Network.Mainnet].indexOf(wallet.network) > -1;
     }
 
-    getBgClass(wallet){
-        var bgClassName = 'testnet-wallet-bg';
-        if (this.isMainnet(wallet)){
-          switch(wallet.name) {
-            case 'ETH':
-                bgClassName = 'eth-wallet-bg';
-                break;
-            case 'BTC':
-                bgClassName = 'btc-wallet-bg';
-                break;
-            case 'XRP':
-                bgClassName = 'xrp-wallet-bg';
-            default:
-              bgClassName = 'testnet-wallet-bg';
-          }
-        }
-        return  "feed " + bgClassName;
-      }
+    
     render(){ 
         const {wallet, onClick} =  this.props;        
-        
+        const bgImg = require("@/assets/images/pages/wallet/" + wallet.getBackgroundImg());
+        const itemSelected = wallet.default ? "feed feed-selected" : "feed";
+
         return  ( 
-            <Col sm={6} md={6} xs={6} className="feed-wrapper">
-              <div onClick={onClick} className={this.getBgClass(wallet)}>
-              
+            <Col sm={6} md={6} xs={6} className="feed-wrapper">              
+              <div onClick={onClick}  className={itemSelected} style={{backgroundImage: "url('"+bgImg+"')"}}>
                 <span className="name">{wallet.getNetworkName() + " (" + wallet.name + ")"}</span>                 
                 
                 {wallet.default ? <img className="iconChecked" src={iconChecked}/> : ''}

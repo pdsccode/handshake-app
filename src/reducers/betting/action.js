@@ -10,6 +10,3 @@ export const BETTING_ACTIONS = {
 export const loadMatches = createAPI(BETTING_ACTIONS.LOAD_MATCHES);
 export const loadHandshakes = createAPI(BETTING_ACTIONS.LOAD_HANDSHAKES);
 export const checkFreeAvailable = createAPI(BETTING_ACTIONS.CHECK_FREE_AVAILABLE);
-
-
-
