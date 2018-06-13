@@ -172,7 +172,7 @@ class FeedBetting extends React.Component {
     // const realEventName = event_name ? event_name.slice(7).split('(') : ['', ''];
     // const matchName = realEventName[0];
     // const matchDate = `(${realEventName[1]}`;
-    let eventName = event_name;
+    let eventName = event_name ? event_name: '';
     console.log('Result:', eventName.indexOf('Event'));
     if(eventName.indexOf('Event') == -1){
       eventName = `Event: ${eventName}`;

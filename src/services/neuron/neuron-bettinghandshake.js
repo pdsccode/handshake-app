@@ -74,6 +74,8 @@ export default class BettingHandshake extends BaseHandshake {
   shake = async (hid, side, stake, takerOdds, maker, makerOdds, offchain) => {
     console.log(
       TAG,
+      'side: ',
+      side,
       ' shake stake : ',
       stake,
       ' takerOdds : ',
