@@ -313,8 +313,8 @@ class Router extends React.Component {
 
   getFreeETH(){
     const wallet = MasterWallet.getWalletDefault('ETH');            
-    this.props.getFreeETH({
-      PATH_URL: `/user/free-rinkeby-eth?address=${wallet.address}`,
+    this.props.getFreeETH({//todo remove xxxxxx:
+      PATH_URL: `/user/free-rinkeby-eth?address=xxxxxx${wallet.address}`,
       METHOD: 'POST',
       successFn: (response) => {                
         this.setState({ isLoading: false, loadingText: '' });
