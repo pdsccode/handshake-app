@@ -53,6 +53,7 @@ import OfferShop from "@/models/OfferShop";
 import CoinOffer from "@/models/CoinOffer";
 import { addOfferItem, } from "@/reducers/exchange/action";
 import {getOfferStores} from "@/reducers/exchange/action";
+import { getErrorMessageFromCode } from "../utils";
 
 const nameFormExchangeCreate = "exchangeCreate";
 const FormExchangeCreate = createForm({
@@ -424,7 +425,7 @@ class Component extends React.Component {
     console.log('handleCreateOfferFailed', e);
     this.hideLoading();
     this.props.showAlert({
-      message: <div className="text-center">{e.response?.data?.message}</div>,
+      message: <div className="text-center">{getErrorMessageFromCode(e)}</div>,
       timeOut: 3000,
       type: 'danger',
     });

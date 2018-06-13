@@ -19,3 +19,49 @@ export const getDistanceFromLatLonInKm = (_lat1, _lon1, _lat2, _lon2) => {
   return d;
 };
 
+export const getErrorMessageFromCode = (error) => {
+  let result = ''
+  const messageFromApi = error.response?.data?.message;
+  const code = error.response?.data?.code;
+  const codeInt = parseInt(code, 10);
+  switch (codeInt) {
+    case -4: case -5: case -6: case -201: case -202: case -203: case -204:
+    case -305: case -306: case -307: case -308: case -311:
+      result = 'Sorry Ninja. Something went wrong. Come back soon.';
+      break;
+    case -312:
+      result = 'Oh no! You cancelled your offer. You will not be able to make orders for 4 hours. Sorry'
+      break;
+    case -313:
+      result = 'You already have a listing! To change your rates, please cancel your current listing.'
+      break;
+    case -314:
+      result = 'Looks like that listing has been deleted.'
+      break;
+    case -315:
+      result = 'Sorry ninja, someone else got there first.'
+      break;
+    case -1:
+      result = 'Oops! Something went wrong. Come back soon.'
+      break;
+    case -3:
+      result = 'It looks like that token is invalid.'
+      break;
+    case -301:
+      result = 'You are already a ninja.'
+      break;
+    case -302:
+      result = 'Sorry, that ninja does not exist.'
+      break;
+    case -303:
+      result = 'It looks like you have reached your credit card limit.'
+      break;
+    case -309:
+      result = 'You already have a listing! To change your rates, please cancel your current listing.'
+      break;
+    default:
+      result = messageFromApi || 'Oops! Something went wrong.';
+  }
+  return result;
+}
+

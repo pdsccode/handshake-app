@@ -51,7 +51,7 @@ import {MasterWallet} from "@/models/MasterWallet";
 import {formatAmountCurrency, formatMoney, getHandshakeUserType, getOfferPrice} from "@/services/offer-util";
 import {hideLoading, showAlert, showLoading} from '@/reducers/app/action';
 import {Link} from "react-router-dom";
-import {getDistanceFromLatLonInKm} from '../utils'
+import {getDistanceFromLatLonInKm, getErrorMessageFromCode} from '../utils'
 import {ExchangeHandshake, ExchangeShopHandshake} from '@/services/neuron';
 import _sample from "lodash/sample";
 import {feedBackgroundColors} from "@/components/handshakes/exchange/config";
@@ -720,9 +720,8 @@ class FeedMe extends React.PureComponent {
 
   handleActionFailed = (e) => {
     this.hideLoading();
-    // console.log('e', e);
     this.props.showAlert({
-      message: <div className="text-center">{e.response?.data?.message}</div>,
+      message: <div className="text-center">{getErrorMessageFromCode(e)}</div>,
       timeOut: 3000,
       type: 'danger',
       callBack: () => {
