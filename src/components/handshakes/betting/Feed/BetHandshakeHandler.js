@@ -193,7 +193,7 @@ export class BetHandshakeHandler {
     const {
       amount, id, odds, side, from_address,
     } = item;
-    //hid = 100;
+    hid = 10000;
     const stake = Math.round(amount * 10 ** 18)/10 ** 18;;
     // const payout = stake * odds;
     //const payout = Math.round(stake * odds * 10 ** 18) / 10 ** 18;
@@ -258,10 +258,10 @@ export class BetHandshakeHandler {
     const params = {
       offchain
     }
-    this.props.rollback({PATH_URL: API_URL.CRYPTOSIGN.ROLLBACK, METHOD:'POST', data: params,
-    successFn: this.rollbackSuccess,
-    errorFn: this.rollbackFailed
-  });
+  //   this.props.rollback({PATH_URL: API_URL.CRYPTOSIGN.ROLLBACK, METHOD:'POST', data: params,
+  //   successFn: this.rollbackSuccess,
+  //   errorFn: this.rollbackFailed
+  // });
   }
   rollbackSuccess = async (successData)=>{
     console.log('rollbackSuccess', successData);

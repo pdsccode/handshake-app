@@ -327,7 +327,7 @@ class BettingFilter extends React.Component {
             {isFirstFree && <Button block onClick={() => {
                 this.modalBetFreeRef.open();
 
-            }}>FIRST BET FREE</Button>}
+            }}>You have free ETH to play</Button>}
 
             {<TopInfo marketTotal={parseFloat(tradedVolum)}
                     percentFee={marketFee}
@@ -365,7 +365,7 @@ class BettingFilter extends React.Component {
 
                 {<div className="titleBox opacity65">
                     <div>Pool (ETH)</div>
-                    <div>Oppose(ODDS)</div>
+                    <div>Oppose (ODDS)</div>
             </div>}
 
                   {/*<BettingShake
