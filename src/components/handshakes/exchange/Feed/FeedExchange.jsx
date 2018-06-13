@@ -58,6 +58,7 @@ import { shakeOfferItem } from "@/reducers/exchange/action";
 import CoinOffer from "@/models/CoinOffer";
 import OfferShop from "@/models/OfferShop";
 import {ExchangeShopHandshake} from "@/services/neuron";
+import { getLocalizedDistance } from "@/services/util"
 
 class FeedExchange extends React.PureComponent {
   constructor(props) {
@@ -179,23 +180,24 @@ class FeedExchange extends React.PureComponent {
   }
 
   getOfferDistance = () => {
-    const { intl,  ipInfo: { latitude, longitude } } = this.props;
+    const { intl,  ipInfo: { latitude, longitude, country_code } } = this.props;
     const { offer } = this;
-    let distanceKm = 0;
-    let distanceMiles = 0;
+    // let distanceKm = 0;
+    // let distanceMiles = 0;
 
     console.log('getOfferDistance', latitude, longitude, offer.latitude, offer.longitude);
 
     // if (location) {
     //   const latLng = location.split(',')
       // this.distanceKm = getDistanceFromLatLonInKm(latitude, longitude, latLng[0], latLng[1])
-      distanceKm = getDistanceFromLatLonInKm(latitude, longitude, offer.latitude || 0, offer.longitude || 0);
-      distanceMiles = distanceKm * 0.621371;
+    const distanceKm = getDistanceFromLatLonInKm(latitude, longitude, offer.latitude || 0, offer.longitude || 0);
+      // distanceMiles = distanceKm * 0.621371;
     // }
 
     return intl.formatMessage({ id: 'offerDistanceContent' }, {
-      distanceKm: distanceKm > 1 || distanceMiles === 0 ? distanceKm.toFixed(0) : distanceKm.toFixed(3),
-      distanceMiles: distanceMiles === 0 ? distanceKm.toFixed(0) : distanceMiles.toFixed(1),
+      distance: getLocalizedDistance(distanceKm, country_code)
+      // distanceKm: distanceKm > 1 || distanceMiles === 0 ? distanceKm.toFixed(0) : distanceKm.toFixed(3),
+      // distanceMiles: distanceMiles === 0 ? distanceKm.toFixed(0) : distanceMiles.toFixed(1),
     });
   }
 
