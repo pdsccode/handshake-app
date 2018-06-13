@@ -19,7 +19,7 @@ const CATEGORIES = [{
 // },
 {
   id: HANDSHAKE_ID.EXCHANGE,
-  name: 'Exchange',
+  name: 'Cash',
   image: exchangeSVG,
   priority: 2,
 },

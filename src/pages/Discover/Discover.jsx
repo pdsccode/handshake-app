@@ -67,7 +67,7 @@ class DiscoverPage extends React.Component {
       handshakeIdActive: HANDSHAKE_ID.BETTING, // default show bet
       // tabIndexActive: '',
       query: '',
-      isLoading: false,
+      isLoading: true,
       exchange: this.props.exchange,
       modalContent: null,
     };
@@ -288,10 +288,7 @@ class DiscoverPage extends React.Component {
             </Col>
           </Row> */}
           <Row>
-            <Col md={12} xs={6} className="top" style={{ marginBottom: handshakeIdActive === HANDSHAKE_ID.EXCHANGE ? '0px' : '' }}>
-              <div className="logo">
-                <Image className="img-fluid" src={ninjaLogoSVG} alt="ninja logo" />
-              </div>
+            <Col md={12} xs={6} style={{ marginBottom: handshakeIdActive === HANDSHAKE_ID.EXCHANGE ? '0px' : '' }}>
               <Category
                 idActive={handshakeIdActive}
                 className="category-wrapper"
