@@ -31,7 +31,7 @@ export const HANDSHAKE_NAME = {
   [HANDSHAKE_ID.WALLET_TRANSFER]: { name: 'Transfer coin', priority: 3 },
   // [HANDSHAKE_ID.PROMISE]: 'Promise',
   [HANDSHAKE_ID.EXCHANGE]: { name: 'Exchange', priority: 4 },
-  [HANDSHAKE_ID.EXCHANGE_LOCAL]: { name: 'Exchange Local', priority: 5 },
+  // [HANDSHAKE_ID.EXCHANGE_LOCAL]: { name: 'Exchange Local', priority: 5 },
 };
 
 export const PRICE_DECIMAL = 0;
