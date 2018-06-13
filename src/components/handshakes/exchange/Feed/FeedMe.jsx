@@ -306,7 +306,9 @@ class FeedMe extends React.PureComponent {
           case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.PRE_SHAKING:
           case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.PRE_SHAKE:
           case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.REJECTING:
-          case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.REJECTED: {
+          case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.REJECTED:
+          case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.CANCELLING:
+          case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.CANCELLED: {
 
             offerType = EXCHANGE_ACTION_PRESENT_NAME[offer.type];
 
@@ -329,15 +331,18 @@ class FeedMe extends React.PureComponent {
       }
     }
 
-    const message = intl.formatMessage({ id: idMessage }, {
-      offerType: offerType,
-      amount: formatAmountCurrency(offer.amount),
-      currency: offer.currency,
-      currency_symbol: offer.fiatCurrency,
-      total: formatMoney(fiatAmount),
-      // fee: offer.feePercentage,
-      payment_method: EXCHANGE_METHOD_PAYMENT[EXCHANGE_FEED_TYPE.EXCHANGE],
-    });
+    let  message = '';
+    if (idMessage) {
+      message = intl.formatMessage({ id: idMessage }, {
+        offerType: offerType,
+        amount: formatAmountCurrency(offer.amount),
+        currency: offer.currency,
+        currency_symbol: offer.fiatCurrency,
+        total: formatMoney(fiatAmount),
+        // fee: offer.feePercentage,
+        payment_method: EXCHANGE_METHOD_PAYMENT[EXCHANGE_FEED_TYPE.EXCHANGE],
+      });
+    }
 
     return message;
   }
