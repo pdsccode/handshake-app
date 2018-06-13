@@ -529,7 +529,7 @@ class Component extends React.Component {
             <hr className="hrLine"/>
 
             <div className="d-flex py-1">
-              <label className="col-form-label mr-auto label-create"><span className="align-middle">Your buying fee</span></label>
+              <label className="col-form-label mr-auto label-create"><span className="align-middle">Your buying price</span></label>
               <div className='input-group align-items-center'>
                 <Field
                   name="customizePriceBuy"
@@ -546,7 +546,7 @@ class Component extends React.Component {
             <hr className="hrLine"/>
 
             <div className="d-flex py-1">
-              <label className="col-form-label mr-auto label-create"><span className="align-middle">Your selling fee</span></label>
+              <label className="col-form-label mr-auto label-create"><span className="align-middle">Your selling price</span></label>
               <div className='input-group align-items-center'>
                 <Field
                   name="customizePriceSell"
@@ -577,7 +577,7 @@ class Component extends React.Component {
                 <div className="label">Shop information</div>
                 <Feed className="feed my-2 wrapper" background={this.mainColor}>
                   <div className="d-flex">
-                    <label className="col-form-label mr-auto label-create"><span className="align-middle">Name shop*</span></label>
+                    <label className="col-form-label mr-auto label-create"><span className="align-middle">Shop name</span></label>
                     <div className='input-group'>
                       <Field
                         name="nameShop"
@@ -608,7 +608,7 @@ class Component extends React.Component {
                   <hr className="hrLine"/>
 
                   <div className="d-flex mt-2">
-                    <label className="col-form-label mr-auto label-create"><span className="align-middle">Address*</span></label>
+                    <label className="col-form-label mr-auto label-create"><span className="align-middle">Address</span></label>
                     <div className="w-100">
                       <Field
                         name="address"
