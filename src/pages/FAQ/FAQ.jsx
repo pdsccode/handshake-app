@@ -151,20 +151,21 @@ class FAQ extends React.Component {
   }
 
   render() {
-    const { FAQ_DATA } = this.props.intl.messages;
+    const { locale, messages } = this.props.intl;
+    console.log("this.props", this.props);
     return (
       <div className="container faq">
         <div className="row">
           <div className="col-lg-12 col-md-12 col-xs-12">
             <div className="headerPage">
               <img src={ninjaIcon} alt="shuriken icon" />
-              <span><span className="yellow"><FormattedMessage id="FAQ_HEADER_YELLOW" /></span> <FormattedMessage id="FAQ_HEADER" /></span>
+              <span><span className="yellow" hidden={locale !== 'en'}><FormattedMessage id="FAQ_HEADER_YELLOW" /></span> <FormattedMessage id="FAQ_HEADER" /></span>
             </div>
           </div>
           <div className="col-lg-12">
             <h1><FormattedMessage id="FAQ_TITLE" /></h1>
             <div>
-              {FAQ_DATA.map((item, index) => <Collapse label={item.question} content={item.answer} isList={item.isList} key={index} index={index + 1} />)}
+              {messages.FAQ_DATA.map((item, index) => <Collapse label={item.question} content={item.answer} isList={item.isList} key={index} index={index + 1} />)}
             </div>
           </div>
         </div>

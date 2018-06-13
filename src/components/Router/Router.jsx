@@ -15,8 +15,17 @@ import ScrollToTop from '@/components/App/ScrollToTop';
 import Layout from '@/components/Layout/Main';
 
 import { addLocaleData, IntlProvider } from 'react-intl';
+// languages
 import en from 'react-intl/locale-data/en';
 import fr from 'react-intl/locale-data/fr';
+import zh from 'react-intl/locale-data/zh';
+import de from 'react-intl/locale-data/de';
+import ja from 'react-intl/locale-data/ja';
+import ko from 'react-intl/locale-data/ko';
+import ru from 'react-intl/locale-data/ru';
+import es from 'react-intl/locale-data/es';
+import vi from 'react-intl/locale-data/vi';
+
 import { withFirebase } from 'react-redux-firebase';
 import messages from '@/locals';
 import COUNTRIES_BLACKLIST from '@/data/country-blacklist';
@@ -30,7 +39,7 @@ import NetworkError from '@/components/Router/NetworkError';
 import BlockCountry from '@/components/core/presentation/BlockCountry';
 import qs from 'querystring';
 
-addLocaleData([...en, ...fr]);
+addLocaleData([...en, ...fr, ...zh, ...de, ...ja, ...ko, ...ru, ...es, ...vi ]);
 
 const MeRootRouter = props => (
   <DynamicImport
