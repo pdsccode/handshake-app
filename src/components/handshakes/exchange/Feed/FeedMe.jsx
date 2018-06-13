@@ -59,6 +59,7 @@ import {updateOfferStatus} from "@/reducers/discover/action";
 import {BigNumber} from "bignumber.js";
 import "./FeedMe.scss"
 import {getLocalizedDistance} from "@/services/util"
+import {responseExchangeDataChange} from "@/reducers/me/action";
 
 class FeedMe extends React.PureComponent {
   constructor(props) {
@@ -141,6 +142,40 @@ class FeedMe extends React.PureComponent {
     return condition;
   }
 
+  responseExchangeDataChange = (offerShake) => {
+    const { id, status, } = offerShake;
+    let data = [];
+    let firebaseOffer = {};
+
+    firebaseOffer.id = id;
+    firebaseOffer.status = status;
+    firebaseOffer.type = 'offer_store_shake';
+
+    data[`offer_store_shake_${id}`] = firebaseOffer;
+
+    console.log('responseExchangeDataChange', data);
+
+    this.props.responseExchangeDataChange(data);
+  }
+
+  responseExchangeDataChangeOfferStore = (offerStore) => {
+    const { id, status } = offerStore;
+    const { currency } = this.offer;
+    let data = [];
+    let firebaseOffer = {};
+
+    firebaseOffer.id = id;
+    firebaseOffer.status = `${currency.toLowerCase()}_${status}`;
+    firebaseOffer.type = 'offer_store';
+
+
+    data[`offer_store_${id}`] = firebaseOffer;
+
+    console.log('responseExchangeDataChangeOfferStore', data);
+
+    this.props.responseExchangeDataChange(data);
+  }
+
   getContentOfferStore = () => {
     const {intl, status} = this.props;
     const { offer } = this;
@@ -218,7 +253,11 @@ class FeedMe extends React.PureComponent {
     const { currency, sellAmount } = offer;
 
     console.log('handleDeleteOfferItemSuccess', responseData);
-    console.log('currency, sellAmount',currency, sellAmount);
+
+    const offerStore = Offer.offer(data);
+
+    //Update status to redux
+    this.responseExchangeDataChangeOfferStore(offerStore);
 
     if (currency === CRYPTO_CURRENCY.ETH) {
       if (sellAmount > 0) {
@@ -509,6 +548,9 @@ class FeedMe extends React.PureComponent {
 
     console.log('handleRejectShakedOfferSuccess', responseData);
 
+    //Update status to redux
+    this.responseExchangeDataChange(offerShake);
+
     if (currency === CRYPTO_CURRENCY.ETH) {
       if (type === EXCHANGE_ACTION.BUY) {
         const wallet = MasterWallet.getWalletDefault(currency);
@@ -574,6 +616,9 @@ class FeedMe extends React.PureComponent {
     const { hid, currency, type, offChainId } = offerShake;
 
     console.log('handleCancelShakeOfferSuccess', responseData);
+
+    //Update status to redux
+    this.responseExchangeDataChange(offerShake);
 
     if (currency === CRYPTO_CURRENCY.ETH) {
       if (type === EXCHANGE_ACTION.BUY) { //shop buy
@@ -644,6 +689,9 @@ class FeedMe extends React.PureComponent {
 
     console.log('handleDeleteOfferItemSuccess', responseData);
 
+    //Update status to redux
+    this.responseExchangeDataChange(offerShake);
+
     if (currency === CRYPTO_CURRENCY.ETH) {
       if ((type === EXCHANGE_ACTION.SELL && this.userType === HANDSHAKE_USER.OWNER) ||
         (type === EXCHANGE_ACTION.BUY && this.userType === HANDSHAKE_USER.SHAKED)){
@@ -712,6 +760,9 @@ class FeedMe extends React.PureComponent {
     const { data } = responseData;
     const offerShake = Offer.offer(data);
     const { hid, currency, type, offChainId } = offerShake;
+
+    //Update status to redux
+    this.responseExchangeDataChange(offerShake);
 
     if (currency === CRYPTO_CURRENCY.ETH) {
       if (type === EXCHANGE_ACTION.BUY) {
@@ -1005,6 +1056,7 @@ const mapDispatch = ({
   cancelOfferItem,
   acceptOfferItem,
   deleteOfferItem,
+  responseExchangeDataChange,
 });
 
 export default injectIntl(connect(mapState, mapDispatch)(FeedMe));
