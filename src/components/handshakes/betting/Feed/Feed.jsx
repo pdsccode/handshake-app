@@ -171,7 +171,12 @@ class FeedBetting extends React.Component {
     // const realEventName = event_name ? event_name.slice(7).split('(') : ['', ''];
     // const matchName = realEventName[0];
     // const matchDate = `(${realEventName[1]}`;
-
+    let predictName = event_predict ? event_predict : '';
+    console.log('Predict Name:', predictName);
+    if(predictName.indexOf('Outcome')!== -1) {
+      predictName = event_predict.slice(8);
+    }
+    
     return (
       <div>
         {/* Feed */}
@@ -184,7 +189,7 @@ class FeedBetting extends React.Component {
               <p className="eventName">
                 {event_name}
               </p>
-              <p className="eventInfo">{side === 1 ? `Support: ` : 'Oppose: '}{event_predict ? event_predict.slice(8) : ''}</p>
+              <p className="eventInfo">{side === 1 ? `Support: ` : 'Oppose: '}{predictName}</p>
             </div>
             <div className="bottomWrapper">
               <span className="content">{amount.toFixed(4)} ETH </span>
