@@ -72,7 +72,7 @@ class CreateBettingEvent extends React.Component {
             validate={[required]}
           />
           <DatePicker onChange={(date)=>{this.changeDate(date, 'closingTime')}} className="form-control input-field" placeholder="Closing Time" />
-          <Label for="reporting" className="font-weight-bold text-uppercase reporting-label">Reporting</Label>
+          <Label for="reporting" className="font-weight-bold text-uppercase reporting-label">Reportings</Label>
           <Field
             name="reportingSource"
             type="text"
@@ -84,16 +84,6 @@ class CreateBettingEvent extends React.Component {
             validate={[required]}
           />
           <DatePicker onChange={(date)=>{this.changeDate(date, 'reportingTime')}} className="form-control input-field"  placeholder="Reporting Time" />
-          <Field
-            name="reporting-time"
-            type="text"
-            className="form-control input-field"
-            placeholder="Reporting Time"
-            component={fieldInput}
-            value={this.state.outcome}
-            onChange={evt => this.updateFormField(evt, 'outcome')}
-            validate={[required]}
-          />
           <Label for="creatorFee" className="font-weight-bold text-uppercase fees-label">Fees</Label>
           <Field
             name="creatorFee"
