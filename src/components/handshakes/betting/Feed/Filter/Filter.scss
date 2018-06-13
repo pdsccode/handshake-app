@@ -47,7 +47,7 @@
     background: #1F2B34;
     padding: rem-calc(14px 10px 10px);
   }
-  .titleBox, .spreadBox {
+  .titleBox, .spreadBox, .marketBox {
     display: flex;
     background-color: #1F2B34;;
     color: $white;
@@ -55,6 +55,9 @@
     justify-content: space-between;
     letter-spacing: 0;
     margin-bottom: rem-calc(10px);
+  }
+  .marketBox {
+    font-size: rem-calc(12px);
   }
   .opacity65 {
     opacity: 0.65;
@@ -71,7 +74,7 @@
   .disable {
     color: #fa6b49 !important;
   }
-  .modal {
+  & > .modal {
     background-color: #1F2B34;
     .modal-custom-body {
       padding: 0 !important;
@@ -86,7 +89,7 @@
   .buttonAgainst, .buttonSupport {
     border: none;
     border-radius: 0;
-    height: rem-calc(36px);
+    height: rem-calc(40px) !important;
     font-size: rem-calc(12px);
     font-weight: $bold;
   }

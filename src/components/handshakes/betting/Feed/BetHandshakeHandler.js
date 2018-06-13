@@ -196,7 +196,7 @@ export class BetHandshakeHandler {
     const {
       amount, id, odds, side, from_address,
     } = item;
-     hid = 10000;
+    // hid = 10000;
     const stake = Math.round(amount * 10 ** 18) / 10 ** 18;
     // const payout = stake * odds;
     // const payout = Math.round(stake * odds * 10 ** 18) / 10 ** 18;
