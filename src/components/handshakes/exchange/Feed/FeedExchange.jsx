@@ -41,7 +41,7 @@ import Offer from '@/models/Offer';
 import {MasterWallet} from '@/models/MasterWallet';
 import {formatAmountCurrency, formatMoney, getHandshakeUserType, getOfferPrice} from '@/services/offer-util';
 import {hideLoading, showAlert, showLoading} from '@/reducers/app/action';
-import {getDistanceFromLatLonInKm} from '../utils';
+import { getDistanceFromLatLonInKm, getErrorMessageFromCode } from "../utils";
 import {ExchangeHandshake, ExchangeShopHandshake} from '@/services/neuron';
 import {feedBackgroundColors} from '@/components/handshakes/exchange/config';
 import {updateOfferStatus} from '@/reducers/discover/action';
@@ -89,6 +89,8 @@ class FeedExchange extends React.PureComponent {
 
     const shopType = values.type === EXCHANGE_ACTION.BUY ? EXCHANGE_ACTION.SELL : EXCHANGE_ACTION.BUY;
 
+    const wallet = MasterWallet.getWalletDefault(values.currency);
+
     const offerItem = {
       type: shopType,
       currency: values.currency,
@@ -96,7 +98,9 @@ class FeedExchange extends React.PureComponent {
       username: authProfile?.name,
       email: authProfile?.email,
       contact_phone: authProfile?.phone,
-      user_address: authProfile?.address,
+      contact_info: authProfile?.address,
+      user_address: wallet.address,
+      chat_username: authProfile?.username,
     };
 
     this.showLoading();
@@ -115,9 +119,7 @@ class FeedExchange extends React.PureComponent {
     const { intl } = this.props;
     const { data } = responseData;
     const offerShake = Offer.offer(data);
-    const {
- currency, type, totalAmount, systemAddress, offChainId
-} = offerShake;
+    const { currency, type, totalAmount, systemAddress, offChainId } = offerShake;
     const { offer } = this;
 
     if (currency === CRYPTO_CURRENCY.ETH) {
@@ -161,7 +163,7 @@ class FeedExchange extends React.PureComponent {
     this.hideLoading();
     // console.log('e', e);
     this.props.showAlert({
-      message: <div className="text-center">{e.response?.data?.message}</div>,
+      message: <div className="text-center">{getErrorMessageFromCode(e)}</div>,
       timeOut: 3000,
       type: 'danger',
       callBack: () => {
