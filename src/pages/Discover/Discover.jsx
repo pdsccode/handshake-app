@@ -86,7 +86,7 @@ class DiscoverPage extends React.Component {
     // }
   }
 
-  get getHandshakeList() {
+  getHandshakeList() {
     const { list } = this.props.discover;
     if (list && list.length > 0) {
       return list.map((handshake) => {
@@ -123,11 +123,11 @@ class DiscoverPage extends React.Component {
   }
 
   handleGetPriceSuccess = () => {
-    this.loadDiscoverList();
+    // this.loadDiscoverList();
   }
 
   handleGetPriceFailed = () => {
-    this.loadDiscoverList();
+    // this.loadDiscoverList();
   }
 
   searchChange(query) {
@@ -144,8 +144,10 @@ class DiscoverPage extends React.Component {
   }
 
   clickCategoryItem(category) {
-    this.setLoading(true);
     const { id } = category;
+    if (this.state.handshakeIdActive !== id) {
+      this.setLoading(true);
+    }
     // let tabIndexActive = '';
     switch (id) {
       case HANDSHAKE_ID.BETTING:
@@ -184,6 +186,7 @@ class DiscoverPage extends React.Component {
   }
 
   loadDiscoverList = () => {
+    console.log('call loadDiscoverList');
     const {
       handshakeIdActive,
       // tabIndexActive,
@@ -292,7 +295,7 @@ class DiscoverPage extends React.Component {
             )
           }
           <Row>
-            {handshakeIdActive !== HANDSHAKE_ID.BETTING && this.getHandshakeList}
+            {handshakeIdActive !== HANDSHAKE_ID.BETTING && this.getHandshakeList()}
           </Row>
         </Grid>
       </React.Fragment>
