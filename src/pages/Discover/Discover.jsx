@@ -11,6 +11,8 @@ import {
   HANDSHAKE_ID,
   URL,
 } from '@/constants';
+import {Link} from "react-router-dom";
+
 // components
 import { Col, Grid, Row } from 'react-bootstrap';
 // import SearchBar from '@/components/core/controls/SearchBar';
@@ -29,6 +31,7 @@ import { getListOfferPrice } from '@/reducers/exchange/action';
 import Image from '@/components/core/presentation/Image';
 import loadingSVG from '@/assets/images/icon/loading.gif';
 import ninjaLogoSVG from '@/assets/images/logo.png';
+import iconShopSVG from '@/assets/images/icon/icons8-shop.svg';
 
 // style
 import './Discover.scss';
@@ -238,7 +241,7 @@ class DiscoverPage extends React.Component {
             </Col>
           </Row> */}
           <Row>
-            <Col md={12} xs={6} className="top">
+            <Col md={12} xs={6} className="top" style={{ marginBottom: handshakeIdActive === HANDSHAKE_ID.EXCHANGE ? '0px' : '' }}>
               <div className="logo">
                 <Image className="img-fluid" src={ninjaLogoSVG} alt="ninja logo" />
               </div>
@@ -252,11 +255,28 @@ class DiscoverPage extends React.Component {
           </Row>
           {
             handshakeIdActive === HANDSHAKE_ID.EXCHANGE && (
-              <Row>
-                <Col md={12} className="feed-wrapper">
-                  <FeedCreditCard history={this.props.history} />
-                </Col>
-              </Row>
+              <React.Fragment>
+                <Row>
+                  <Col md={12} className="exchange-intro">
+                    <span className="icon-shop">
+                      <img src={iconShopSVG} />
+                    </span>
+                    <span className="text-intro">
+                      <div>Be the first shop in your area to <span className="money">earn 1 ETH</span></div>
+                      <div className="mt-2">
+                        <Link className="btn btn-sm btn-join-now" to={{ pathname: URL.HANDSHAKE_CREATE_INDEX, search: '?id=2' }}>
+                          <span>Join now</span>
+                        </Link>
+                      </div>
+                    </span>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col md={12} className="feed-wrapper">
+                    <FeedCreditCard history={this.props.history} />
+                  </Col>
+                </Row>
+              </React.Fragment>
             )
           }
           {
