@@ -15,7 +15,7 @@ import {ACTIONS} from './action';
 function handlePreProcessForOfferStore(handshake, result) {
   let extraData = JSON.parse(handshake.extra_data);
   const id = handshake.id;
-  if (extraData.item_flags.BTC) {
+  if (extraData.items.BTC) {
     let extraDataBTC = {...extraData, ...extraData.items.BTC};
     delete extraDataBTC.items;
     delete extraDataBTC.status;
@@ -25,7 +25,7 @@ function handlePreProcessForOfferStore(handshake, result) {
     result.push(Handshake.handshake(handshake));
   }
 
-  if (extraData.item_flags.ETH) {
+  if (extraData.items.ETH) {
     let extraDataETH = {...extraData, ...extraData.items.ETH};
     delete extraDataETH.items;
     delete extraDataETH.status;
@@ -48,7 +48,7 @@ const handleListPayload = payload => {
     }
   }
 
-  console.log('handleListPayload result', result);
+  // console.log('handleListPayload result', result);
 
   return result;
 }
@@ -136,6 +136,42 @@ const meReducter = (
       });
 
       firebaseExchange?.remove();
+
+      return {
+        ...state,
+        list: myList,
+      };
+    }
+    case ACTIONS.RESPONSE_EXCHANGE_DATA_CHANGE: {
+      const listOfferStatus = action.payload;
+      const myList = state.list;
+
+      console.log('ACTIONS.RESPONSE_EXCHANGE_DATA_CHANGE', listOfferStatus);
+      console.log('ACTIONS.RESPONSE_EXCHANGE_DATA_CHANGE', myList);
+
+      Object.keys(listOfferStatus).forEach((offer_id) => {
+        const offer = listOfferStatus[offer_id];
+        for (const handshake of myList) {
+          let status = '';
+          let id = offer.id;
+          if (offer.type === EXCHANGE_FEED_TYPE.INSTANT) {
+            status = HANDSHAKE_EXCHANGE_CC_STATUS_VALUE[offer.status];
+          } else if (offer.type === EXCHANGE_FEED_TYPE.EXCHANGE) {
+            status = HANDSHAKE_EXCHANGE_STATUS_VALUE[offer.status];
+          } else if (offer.type === EXCHANGE_FEED_TYPE.OFFER_STORE_SHAKE) {
+            status = HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS_VALUE[offer.status];
+          } else if (offer.type === EXCHANGE_FEED_TYPE.OFFER_STORE) {
+            const values = offer.status.split('_');
+            id = id + '_' + values[0].toUpperCase();
+            status = HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[values[1]];
+          }
+
+          if (handshake.id.includes(id) && handshake.status !== status) {
+            handshake.status = status;
+            break;
+          }
+        }
+      });
 
       return {
         ...state,

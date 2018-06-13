@@ -100,20 +100,20 @@ class Me extends React.Component {
             </Link>
           </Col>
         </Row>
-        <Row>
+        {/* <Row>
           <Col md={12}>
             <div className="update-profile pt-2">
               <Image className="avatar" src={ShopSVG} alt="shop" />
-              <div className="text" style={{ width: '69%' }}>
-                <strong>Shop appearance</strong>
-                <p>Change your shop status</p>
+              <div className="text" style={{ width: '69%'}}>
+                <strong>Your station</strong>
+                <p>Open for business</p>
               </div>
               <div className="arrow">
                 <ToggleSwitch onChange={flag => console.log(flag)} />
               </div>
             </div>
           </Col>
-        </Row>
+        </Row> */}
         <Row>
           <Col md={12}>
             {
@@ -136,7 +136,7 @@ class Me extends React.Component {
                   return null;
                 })
               ) : (
-                <NoData message="Make a Prediction to get started!" />
+                <NoData message="Start a mission." />
               )
             }
           </Col>

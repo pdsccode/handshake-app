@@ -238,4 +238,18 @@ export const states = [
   },
 ];
 
+export const getLocalizedDistance = (distanceKm, countryCode) => {
+  let result = '';
+  if (countryCode === 'US') {
+    const distanceMiles = distanceKm * 0.621371;
+    result = distanceKm === 0 ? distanceKm.toFixed(0) : distanceMiles.toFixed(1);
+    result += ' miles';
+    return result;
+  }
+  result = distanceKm > 1 || distanceKm === 0 ? distanceKm.toFixed(0) : distanceKm.toFixed(3);
+  result += ' km'
+  return result;
+}
+
+
 export default { states };

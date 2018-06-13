@@ -53,26 +53,29 @@ import OfferShop from "@/models/OfferShop";
 import CoinOffer from "@/models/CoinOffer";
 import { addOfferItem, } from "@/reducers/exchange/action";
 import {getOfferStores} from "@/reducers/exchange/action";
+import { getErrorMessageFromCode } from "../utils";
 
 const nameFormExchangeCreate = "exchangeCreate";
 const FormExchangeCreate = createForm({
   propsReduxForm: {
     form: nameFormExchangeCreate,
-    // initialValues: {
-    //   currency: CRYPTO_CURRENCY_DEFAULT,
-    //   customizePriceBuy: 0,
-    //   customizePriceSell: 0,
-    // }
     initialValues: {
       currency: CRYPTO_CURRENCY_DEFAULT,
-      customizePriceBuy: 0.25,
-      customizePriceSell: -0.25,
-      amountBuy: 0.1,
-      amountSell: 0.2,
-      nameShop: 'Apple store',
-      phone: '1234567',
-      address: '139 Hong Ha',
+      customizePriceBuy: 0,
+      customizePriceSell: 0,
+      customizePriceBuy: -0.25,
+      customizePriceSell: 0.25,
     }
+    // initialValues: {
+    //   currency: CRYPTO_CURRENCY_DEFAULT,
+    //   customizePriceBuy: 0.25,
+    //   customizePriceSell: -0.25,
+    //   amountBuy: 0.1,
+    //   amountSell: 0.2,
+    //   nameShop: 'Apple store',
+    //   phone: '1234567',
+    //   address: '139 Hong Ha',
+    // }
   }
 });
 const selectorFormExchangeCreate = formValueSelector(nameFormExchangeCreate);
@@ -144,8 +147,8 @@ class Component extends React.Component {
       console.log('componentWillReceiveProps inside', nextProps.offerStores);
       this.offer = nextProps.offerStores;
 
-      let haveOfferETH = this.offer.itemFlags.ETH;
-      let haveOfferBTC = this.offer.itemFlags.BTC;
+      let haveOfferETH = this.offer.itemFlags.ETH || false;
+      let haveOfferBTC = this.offer.itemFlags.BTC || false;
 
       this.CRYPTO_CURRENCY_LIST = [
         { value: CRYPTO_CURRENCY.ETH, text: CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.ETH], hide: haveOfferETH },
@@ -275,6 +278,7 @@ class Component extends React.Component {
       latitude: lat,
       longitude: lng,
       fiat_currency: ipInfo.currency,
+      chat_username: authProfile?.username,
     };
 
     const offerStore = {
@@ -358,12 +362,12 @@ class Component extends React.Component {
     const offer = OfferShop.offerShop(data);
     this.offer = offer;
 
-    console.log('handleCreateOfferSuccess', data);
+    // console.log('handleCreateOfferSuccess', data);
 
     const wallet = MasterWallet.getWalletDefault(currency);
     // const rewardWallet = MasterWallet.getRewardWalletDefault(currency);
 
-    console.log('wallet', wallet);
+    // console.log('wallet', wallet);
     // console.log('rewardWallet', rewardWallet);
 
     if (currency === CRYPTO_CURRENCY.BTC) {
@@ -422,7 +426,7 @@ class Component extends React.Component {
     console.log('handleCreateOfferFailed', e);
     this.hideLoading();
     this.props.showAlert({
-      message: <div className="text-center">{e.response?.data?.message}</div>,
+      message: <div className="text-center">{getErrorMessageFromCode(e)}</div>,
       timeOut: 3000,
       type: 'danger',
     });
@@ -465,6 +469,9 @@ class Component extends React.Component {
     const priceDisplayed = formatMoney(price)
     const estimatedPriceBuy = formatMoney(price * (1 + parseFloat(customizePriceBuy, 10)/100))
     const estimatedPriceSell = formatMoney(price * (1 + parseFloat(customizePriceSell, 10)/100))
+
+    const wantToBuy = amountBuy && amountBuy > 0
+    const wantToSell = amountSell && amountSell > 0
 
     return (
       <div className="create-exchange">
@@ -526,7 +533,7 @@ class Component extends React.Component {
             <hr className="hrLine"/>
 
             <div className="d-flex py-1">
-              <label className="col-form-label mr-auto label-create"><span className="align-middle">Your buying fee</span></label>
+              <label className="col-form-label mr-auto label-create"><span className="align-middle">Your buying price</span></label>
               <div className='input-group align-items-center'>
                 <Field
                   name="customizePriceBuy"
@@ -543,7 +550,7 @@ class Component extends React.Component {
             <hr className="hrLine"/>
 
             <div className="d-flex py-1">
-              <label className="col-form-label mr-auto label-create"><span className="align-middle">Your selling fee</span></label>
+              <label className="col-form-label mr-auto label-create"><span className="align-middle">Your selling price</span></label>
               <div className='input-group align-items-center'>
                 <Field
                   name="customizePriceSell"
@@ -557,18 +564,24 @@ class Component extends React.Component {
               </div>
             </div>
 
-            <div className="tooltip-price mt-2">
-              Your buying price {estimatedPriceBuy} {fiatCurrency}, your selling price {estimatedPriceSell} {fiatCurrency}. {(amountBuy && amountSell) ? 'These' : 'This'} may fluctuate according to the price of {currency}
-            </div>
+            {
+              (wantToBuy || wantToSell) && (
+                <div className="tooltip-price mt-2">
+                  { wantToBuy && <span>Your buying price {estimatedPriceBuy} {fiatCurrency}. </span> }
+                  { wantToSell && <span>Your selling price {estimatedPriceSell} {fiatCurrency}. </span> }
+                  { (wantToBuy && wantToSell) ? 'These' : 'This'} may fluctuate according to the price of {currency}
+                </div>
+              )
+            }
           </Feed>
 
           {
             !haveProfile && (
               <div>
-                <div className="label">Shop information</div>
+                <div className="label">Station information</div>
                 <Feed className="feed my-2 wrapper" background={this.mainColor}>
                   <div className="d-flex">
-                    <label className="col-form-label mr-auto label-create"><span className="align-middle">Name shop*</span></label>
+                    <label className="col-form-label mr-auto label-create"><span className="align-middle">Station name</span></label>
                     <div className='input-group'>
                       <Field
                         name="nameShop"
@@ -599,7 +612,7 @@ class Component extends React.Component {
                   <hr className="hrLine"/>
 
                   <div className="d-flex mt-2">
-                    <label className="col-form-label mr-auto label-create"><span className="align-middle">Address*</span></label>
+                    <label className="col-form-label mr-auto label-create"><span className="align-middle">Address</span></label>
                     <div className="w-100">
                       <Field
                         name="address"

@@ -299,14 +299,14 @@ renderScanQRCode = () => (
           {this.renderScanQRCode()}
           <SendWalletForm className="sendwallet-wrapper" onSubmit={this.sendCoin} validate={this.invalidateTransferCoins}>
 
-          <p className="labelText">Receiving address</p>
+          <p className="labelText">To wallet address</p>
           <div className="div-address-qr-code">
 
             <Field
                   name="to_address"
                   type="text"
                   className="form-control input-address-qr-code"
-                  placeholder="Specify receiving..."
+                  placeholder="Wallet address..."
                   component={fieldInput}
                   value={this.state.inputAddressAmountValue}
                   onChange={evt => this.updateSendAddressValue(evt)}
@@ -314,7 +314,8 @@ renderScanQRCode = () => (
                 />          
             {!isIOs ? <img onClick={() => { this.openQrcode() }} className="icon-qr-code-black" src={iconQRCodeBlack} /> : ""}
           </div>
-          <p className="labelText">{ this.state.walletSelected ? StringHelper.format("Amount ({0})", this.state.walletSelected.name) : "Amount "}</p>          
+          <p className="labelText">Amount</p>          
+          <div className="div-amount">
             <Field
                   name="amount"
                   type={isIOs ? "number" : "tel"}
@@ -326,25 +327,28 @@ renderScanQRCode = () => (
                   validate={[required, amountValid]}
                   // validate={[required, amountValid, balanceValid(this.state.walletSelected ? this.state.walletSelected.balance : "", this.state.walletSelected ? this.state.walletSelected.name : "")]}
                 />
-              { this.state.walletDefault ? 
-                <div className ="dropdown-wallet-tranfer">
-                  <p className="labelText">From wallet</p>            
-                  <Field
-                    name="walletSelected"
-                    component={fieldDropdown}
-                    // className="dropdown-wallet-tranfer"
-                    placeholder="Sellect a wallet"
-                    defaultText={this.state.walletDefault.text}
-                    list={this.state.wallets}
-                    onChange={(item) => {
-                        this.onItemSelectedWallet(item);
-                      }
-                      }
-                    />                  
+                <span className="coiname-append">{ this.state.walletSelected ? StringHelper.format("{0}", this.state.walletSelected.name) : ''}</span>
+            </div>
 
-                    <label className='label-balance'>Your balance: { this.state.walletSelected ? StringHelper.format("{0} {1}", this.state.walletSelected.balance, this.state.walletSelected.name) : ""}</label>
-                </div>
-                :""}
+            { this.state.walletDefault ? 
+              <div className ="dropdown-wallet-tranfer">
+                <p className="labelText">From wallet</p>            
+                <Field
+                  name="walletSelected"
+                  component={fieldDropdown}
+                  // className="dropdown-wallet-tranfer"
+                  placeholder="Sellect a wallet"
+                  defaultText={this.state.walletDefault.text}
+                  list={this.state.wallets}
+                  onChange={(item) => {
+                      this.onItemSelectedWallet(item);
+                    }
+                    }
+                  />                  
+
+                  <label className='label-balance'>Your balance: { this.state.walletSelected ? StringHelper.format("{0} {1}", this.state.walletSelected.balance, this.state.walletSelected.name) : ""}</label>
+              </div>
+              :""}
 
             <Button className="button-wallet-cpn" isLoading={this.state.isRestoreLoading}  type="submit" block={true}>Transfer</Button>
           </SendWalletForm>

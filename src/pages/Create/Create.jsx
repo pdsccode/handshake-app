@@ -1,5 +1,6 @@
 import React from 'react';
 import { HANDSHAKE_ID, HANDSHAKE_NAME, HANDSHAKE_ID_DEFAULT } from '@/constants';
+import Helper from '@/services/helper';
 // components
 import { Grid, Row, Col } from 'react-bootstrap';
 import SearchBar from '@/components/core/controls/SearchBar';
@@ -89,9 +90,15 @@ const maps = {
 class Create extends React.Component {
   constructor(props) {
     super(props);
-
+    let seletedId = HANDSHAKE_ID_DEFAULT;
+    // get default
+    let { id } = Helper.getQueryStrings(location.search);
+    id = parseInt(id, 10);
+    if (id && Object.values(HANDSHAKE_ID).indexOf(id !== -1)) {
+      seletedId = id;
+    }
     this.state = {
-      seletedId: HANDSHAKE_ID_DEFAULT,
+      seletedId,
     };
     // bind
     this.handshakeChange = this.handshakeChange.bind(this);
@@ -112,7 +119,8 @@ class Create extends React.Component {
   }
 
   render() {
-    const CreateComponent = maps[this.state.seletedId];
+    const { seletedId } = this.state;
+    const CreateComponent = maps[seletedId];
 
     return (
       <Grid className="create">
@@ -121,7 +129,7 @@ class Create extends React.Component {
             <SearchBar
               suggestions={this.handshakeList}
               onSuggestionSelected={this.handshakeChange}
-              inputSearchDefault={HANDSHAKE_NAME[HANDSHAKE_ID_DEFAULT].name}
+              inputSearchDefault={HANDSHAKE_NAME[seletedId].name}
             />
           </Col>
         </Row>
