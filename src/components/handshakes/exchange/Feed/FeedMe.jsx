@@ -144,7 +144,7 @@ class FeedMe extends React.PureComponent {
 
   responseExchangeDataChange = (offerShake) => {
     const { id, status, } = offerShake;
-    let data = [];
+    let data = {};
     let firebaseOffer = {};
 
     firebaseOffer.id = id;
@@ -161,7 +161,7 @@ class FeedMe extends React.PureComponent {
   responseExchangeDataChangeOfferStore = (offerStore) => {
     const { id, status } = offerStore;
     const { currency } = this.offer;
-    let data = [];
+    let data = {};
     let firebaseOffer = {};
 
     firebaseOffer.id = id;
