@@ -129,7 +129,7 @@ class Component extends React.Component {
             />
           </div>
         </div>
-        <div className="text-promise mt-2">We'll keep your stuff safe, we promise.</div>
+        <div className="text-promise mt-3">We'll keep your stuff safe, we promise.</div>
       </div>
     )
     return (
