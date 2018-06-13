@@ -15,7 +15,7 @@ export const validate = (values) => {
   const wantToBuy = amountBuyFloat && amountBuyFloat > 0
   const wantToSell = amountSellFloat && amountSellFloat > 0
   if (!wantToBuy && !wantToSell) {
-    errors.amountBuy = errors.amountSell = 'One of these is required'
+    errors.amountBuy = errors.amountSell = 'You need to fill in one of these!'
   } else {
     const validateMin = currency === CRYPTO_CURRENCY.BTC ? minValueBTC : minValueETH
     if (wantToBuy) {

@@ -104,9 +104,9 @@ class Me extends React.Component {
           <Col md={12}>
             <div className="update-profile pt-2">
               <Image className="avatar" src={ShopSVG} alt="shop" />
-              <div className="text" style={{ width: '69%' }}>
-                <strong>Shop appearance</strong>
-                <p>Change your shop status</p>
+              <div className="text" style={{ width: '69%'}}>
+                <strong>Your station</strong>
+                <p>Open for business</p>
               </div>
               <div className="arrow">
                 <ToggleSwitch onChange={flag => console.log(flag)} />

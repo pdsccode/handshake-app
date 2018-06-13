@@ -1,22 +1,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import iconLocation from '@/assets/images/icon/icons8-geo_fence.svg';
-import iconTransaction from '@/assets/images/icon/icons8-transfer_between_users.svg';
-import iconPhone from '@/assets/images/icon/icons8-phone.svg';
-import iconChat from '@/assets/images/icon/icons8-chat.svg';
 import iconBitcoin from '@/assets/images/icon/coin/btc.svg';
 import iconEthereum from '@/assets/images/icon/coin/eth.svg';
 // style
 import './FeedExchange.scss';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import {injectIntl} from 'react-intl';
 import Feed from '@/components/core/presentation/Feed/Feed';
 import Button from '@/components/core/controls/Button/Button';
 import {
   API_URL,
+  APP_USER_NAME,
   CRYPTO_CURRENCY,
   DEFAULT_FEE,
   EXCHANGE_ACTION,
   EXCHANGE_ACTION_NAME,
+  EXCHANGE_ACTION_PAST_NAME,
+  EXCHANGE_ACTION_PERSON,
+  EXCHANGE_ACTION_PRESENT_NAME,
   EXCHANGE_FEED_TYPE,
   EXCHANGE_METHOD_PAYMENT,
   HANDSHAKE_EXCHANGE_CC_STATUS_NAME,
@@ -24,40 +24,29 @@ import {
   HANDSHAKE_EXCHANGE_STATUS_NAME,
   HANDSHAKE_STATUS_NAME,
   HANDSHAKE_USER,
-  APP_USER_NAME,
-  EXCHANGE_ACTION_PAST_NAME,
-  EXCHANGE_ACTION_PRESENT_NAME,
-  EXCHANGE_ACTION_PERSON,
+  URL,
 } from '@/constants';
 import ModalDialog from '@/components/core/controls/ModalDialog';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import ShakeDetail from '../components/ShakeDetail';
 import {
   cancelShakedOffer,
   closeOffer,
   completeShakedOffer,
   shakeOffer,
+  shakeOfferItem,
   withdrawShakedOffer,
 } from '@/reducers/exchange/action';
-// import getSymbolFromCurrency from 'currency-symbol-map';
 import Offer from '@/models/Offer';
-import { MasterWallet } from '@/models/MasterWallet';
-import { getHandshakeUserType, getOfferPrice } from '@/services/offer-util';
-import { showAlert } from '@/reducers/app/action';
-import { Link } from 'react-router-dom';
-import { URL } from '@/constants';
-import { getDistanceFromLatLonInKm } from '../utils';
-import { ExchangeHandshake } from '@/services/neuron';
-import _sample from 'lodash/sample';
-import { feedBackgroundColors } from '@/components/handshakes/exchange/config';
-import { updateOfferStatus } from '@/reducers/discover/action';
-import { formatAmountCurrency, formatMoney } from '@/services/offer-util';
-import { BigNumber } from 'bignumber.js';
-import { showLoading, hideLoading } from '@/reducers/app/action';
-import { shakeOfferItem } from '@/reducers/exchange/action';
-import CoinOffer from '@/models/CoinOffer';
+import {MasterWallet} from '@/models/MasterWallet';
+import {formatAmountCurrency, formatMoney, getHandshakeUserType, getOfferPrice} from '@/services/offer-util';
+import {hideLoading, showAlert, showLoading} from '@/reducers/app/action';
+import {getDistanceFromLatLonInKm} from '../utils';
+import {ExchangeHandshake, ExchangeShopHandshake} from '@/services/neuron';
+import {feedBackgroundColors} from '@/components/handshakes/exchange/config';
+import {updateOfferStatus} from '@/reducers/discover/action';
 import OfferShop from '@/models/OfferShop';
-import { ExchangeShopHandshake } from '@/services/neuron';
+import {getLocalizedDistance} from "@/services/util";
 
 class FeedExchange extends React.PureComponent {
   constructor(props) {
@@ -181,23 +170,24 @@ class FeedExchange extends React.PureComponent {
   }
 
   getOfferDistance = () => {
-    const { intl, ipInfo: { latitude, longitude } } = this.props;
+    const { intl,  ipInfo: { latitude, longitude, country_code } } = this.props;
     const { offer } = this;
-    let distanceKm = 0;
-    let distanceMiles = 0;
+    // let distanceKm = 0;
+    // let distanceMiles = 0;
 
     console.log('getOfferDistance', latitude, longitude, offer.latitude, offer.longitude);
 
     // if (location) {
     //   const latLng = location.split(',')
-    // this.distanceKm = getDistanceFromLatLonInKm(latitude, longitude, latLng[0], latLng[1])
-    distanceKm = getDistanceFromLatLonInKm(latitude, longitude, offer.latitude || 0, offer.longitude || 0);
-    distanceMiles = distanceKm * 0.621371;
+      // this.distanceKm = getDistanceFromLatLonInKm(latitude, longitude, latLng[0], latLng[1])
+    const distanceKm = getDistanceFromLatLonInKm(latitude, longitude, offer.latitude || 0, offer.longitude || 0);
+      // distanceMiles = distanceKm * 0.621371;
     // }
 
     return intl.formatMessage({ id: 'offerDistanceContent' }, {
-      distanceKm: distanceKm > 1 || distanceMiles === 0 ? distanceKm.toFixed(0) : distanceKm.toFixed(3),
-      distanceMiles: distanceMiles === 0 ? distanceKm.toFixed(0) : distanceMiles.toFixed(1),
+      distance: getLocalizedDistance(distanceKm, country_code)
+      // distanceKm: distanceKm > 1 || distanceMiles === 0 ? distanceKm.toFixed(0) : distanceKm.toFixed(3),
+      // distanceMiles: distanceMiles === 0 ? distanceKm.toFixed(0) : distanceMiles.toFixed(1),
     });
   }
 
