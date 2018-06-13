@@ -97,3 +97,39 @@
     transform: translate(-50%, -50%);
   }
 }
+
+.exchange-popup-intro {
+  font-weight: 400;
+  font-size: 16px;
+  height: 330px;
+  overflow: auto;
+  padding: 0 15px 15px;
+  color: #000000;
+  .logo {
+    width: 57px;
+    margin: 15px 0;
+  }
+  .headline {
+    font-weight: bold;
+    font-size: 18px;
+    color: #000000;
+  }
+  .highlight-text {
+    font-weight: bold;
+    font-size: 14px;
+    color: #2456FB;
+    letter-spacing: 0;
+  }
+  .usage {
+    font-weight: bold;
+  }
+  .link {
+    color: #15C032 !important;
+    text-decoration: underline !important;
+  }
+}
+.discover-popup {
+  .modal-custom-body {
+    padding: 0 !important;
+  }
+}
