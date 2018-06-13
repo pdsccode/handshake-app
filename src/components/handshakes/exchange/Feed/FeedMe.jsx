@@ -57,6 +57,7 @@ import {feedBackgroundColors} from "@/components/handshakes/exchange/config";
 import {updateOfferStatus} from "@/reducers/discover/action";
 import {BigNumber} from "bignumber.js";
 import "./FeedMe.scss"
+import { getLocalizedDistance } from "@/services/util"
 
 class FeedMe extends React.PureComponent {
   constructor(props) {
@@ -767,7 +768,7 @@ class FeedMe extends React.PureComponent {
 
 
   render() {
-    const {intl, initUserId, shakeUserIds, location, state, status, mode = 'discover', ipInfo: { latitude, longitude }, initAt, ...props} = this.props;
+    const {intl, initUserId, shakeUserIds, location, state, status, mode = 'discover', ipInfo: { latitude, longitude, country_code }, initAt, ...props} = this.props;
     const offer = this.offer;
     // console.log('render',offer);
     const {listOfferPrice} = this.props;
@@ -842,12 +843,10 @@ class FeedMe extends React.PureComponent {
     const address = offer.contactInfo;*/
 
     let distanceKm = 0;
-    let distanceMiles = 0;
 
     if (location) {
       const latLng = location.split(',')
       distanceKm = getDistanceFromLatLonInKm(latitude, longitude, latLng[0], latLng[1])
-      distanceMiles = distanceKm * 0.621371
     }
     const isCreditCard = offer.feedType === EXCHANGE_FEED_TYPE.INSTANT;
     return (
@@ -906,8 +905,9 @@ class FeedMe extends React.PureComponent {
                   <div>
                     <FormattedMessage id="offerDistanceContent" values={{
                       // offerType: offer.type === 'buy' ? 'Buyer' : 'Seller',
-                      distanceKm: distanceKm > 1 || distanceMiles === 0 ? distanceKm.toFixed(0) : distanceKm.toFixed(3),
-                      distanceMiles: distanceMiles === 0 ? distanceKm.toFixed(0) : distanceMiles.toFixed(1),
+                      distance: getLocalizedDistance(distanceKm, country_code)
+                      // distanceKm: distanceKm > 1 || distanceMiles === 0 ? distanceKm.toFixed(0) : distanceKm.toFixed(3),
+                      // distanceMiles: distanceMiles === 0 ? distanceKm.toFixed(0) : distanceMiles.toFixed(1),
                     }}/>
                   </div>
                 </div>
