@@ -144,8 +144,8 @@ class Component extends React.Component {
       console.log('componentWillReceiveProps inside', nextProps.offerStores);
       this.offer = nextProps.offerStores;
 
-      let haveOfferETH = this.offer.itemFlags.ETH;
-      let haveOfferBTC = this.offer.itemFlags.BTC;
+      let haveOfferETH = this.offer.itemFlags.ETH || false;
+      let haveOfferBTC = this.offer.itemFlags.BTC || false;
 
       this.CRYPTO_CURRENCY_LIST = [
         { value: CRYPTO_CURRENCY.ETH, text: CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.ETH], hide: haveOfferETH },
