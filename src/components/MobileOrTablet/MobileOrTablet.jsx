@@ -52,7 +52,7 @@ class MobileOrTablet extends React.PureComponent {
           </div>
           <div className="col-lg-12 text-center">
             <img className="img-fluid imageHeader" src={onlyMobileTabletSVG} alt="ninja" />
-            <h1>Anonymous Peer-to-Peer Prediction Exchange</h1>
+            <h1>The anonymous exchange of anything</h1>
           </div>
           <div className="col-lg-12 text-center">
             <p>
@@ -66,6 +66,9 @@ class MobileOrTablet extends React.PureComponent {
           <div className="col-lg-12">
             <div>
               <ul>
+                <li>
+                  <img src={shurikenIcon} /> Jump in for <a href="/shuriken">Airdrop</a>
+                </li>
                 <li>
                   <img src={shurikenIcon} /> Read the <a href={whitePaperLink} target="_blank">whitepaper</a>
                 </li>

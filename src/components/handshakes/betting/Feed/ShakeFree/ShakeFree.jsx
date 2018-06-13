@@ -274,15 +274,15 @@ class BetingShakeFree extends React.Component {
     //const buttonClass = `btnOK ${this.toggleRef.value === 1 ? 'btnBlue' : 'btnRed' }`;
 
     return (
-      <form className="wrapperBettingShake" onSubmit={this.onSubmit}>
+      <form className="wrapperBettingShakeFree" onSubmit={this.onSubmit}>
         <p className="titleForm text-center">BET FREE ON THE OUTCOME</p>
         {<Toggle ref={(component) => {this.toggleRef = component}} onChange={this.onToggleChange} />}
         {/*this.renderInputField(amountField)*/}
         <div className="freeAmount"> You have free {amount} ETH</div>
         {isShowOdds && this.renderInputField(oddsField)}
         <div className="rowWrapper">
-         <div>Possible winnings:</div>
-         <div>{this.state.winValue}</div>
+         <div>Possible winnings</div>
+         <div className="possibleWinningsValue">{this.state.winValue}</div>
         </div>
         <Button type="submit" block className={buttonClass}>
           Go

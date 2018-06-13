@@ -33,6 +33,7 @@ const nameFormBettingShake = 'bettingShakeForm';
 
 
 const defaultAmount = 1;
+const titleBySide = { 1: 'Bet for the outcome', 2: 'Bet against the outcome' };
 
 class BetingShake extends React.Component {
   static propTypes = {
@@ -100,11 +101,12 @@ class BetingShake extends React.Component {
     //const marketOdds = this.toggleRef.value === SIDE.SUPPORT ? marketSupportOdds : marketAgainstOdds;
     const marketOdds = side === SIDE.SUPPORT ? marketSupportOdds : marketAgainstOdds;
     const marketAmount = side === SIDE.SUPPORT ? amountSupport : amountAgainst;
-    const winvalue = marketAmount * marketOdds;
+    const winValue = marketAmount * marketOdds;
+    console.log('componentWillReceiveProps: marketOdds, marketAmount, winValue:', marketOdds, marketAmount, winValue);
     this.setState({
-      oddValue: marketOdds,
-      amountValue: marketAmount,
-      winvalue: winvalue
+      oddValue: parseFloat(marketOdds).toFixed(2),
+      amountValue: parseFloat(marketAmount).toFixed(4),
+      winValue: parseFloat(winValue).toFixed(4)
     })
   }
 
@@ -251,8 +253,8 @@ class BetingShake extends React.Component {
   }
 
   renderForm() {
-    const { total, isShowOdds, marketOdds, isChangeOdds } = this.state;
-    const {side} = this.props; 
+    const { total, isShowOdds, marketOdds, isChangeOdds, winValue } = this.state;
+    const {side} = this.props;
     console.log('Market Odd render form:', marketOdds);
     /*
     const formFieldData = [
@@ -322,13 +324,13 @@ class BetingShake extends React.Component {
 
     return (
       <form className="wrapperBettingShake" onSubmit={this.onSubmit}>
-        <p className="titleForm text-center">BET ON THE OUTCOME</p>
+        <p className="titleForm text-center">{titleBySide[side]}</p>
         {/*<Toggle ref={(component) => {this.toggleRef = component}} onChange={this.onToggleChange} />*/}
         {this.renderInputField(amountField)}
         {isShowOdds && this.renderInputField(oddsField)}
         <div className="rowWrapper">
-         <div>Possible winnings:</div>
-         <div>{this.state.winValue}</div>
+         <div>Possible winnings</div>
+         <div className="possibleWinningsValue">{this.state.winValue}</div>
         </div>
         <Button type="submit" block className={buttonClass}>
           Go

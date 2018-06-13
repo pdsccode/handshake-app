@@ -429,7 +429,7 @@ class BettingFilter extends React.Component {
                   this.modalBetFreeRef.open();
               }}
             >
-            FIRST BET FREE
+              You have free ETH to play
             </Button>
           )
           : ''
@@ -454,25 +454,26 @@ class BettingFilter extends React.Component {
             {/* </div> */}
             {/* <GroupBook amountColor="#8BF275" bookList={this.bookListAgainst}/> */}
             {/* <GroupBook amountColor="#FA6B49" bookList={this.bookListAgainst}/> */}
-            <div className="titleBox">
+            <div className="marketBox">
               <div>Market</div>
-              <div>{parseFloat(this.defaultSupportOdds).toFixed(4)}</div>
+              <div>{parseFloat(this.defaultSupportOdds).toFixed(2)}</div>
             </div>
             <Button
               className="buttonSupport"
               block
               onClick={() => {
-                      this.setState({
-                          side: SIDE.SUPPORT,
-                      }, () => this.modalBetRef.open());
-                  }}
-            >SUPPORT
+                this.setState({
+                  side: SIDE.SUPPORT,
+                }, () => this.modalBetRef.open());
+              }}
+            >
+              SUPPORT
             </Button>
           </div>
           <div className="item">
             <div className="titleBox opacity65">
               <div>Pool (ETH)</div>
-              <div>Oppose(ODDS)</div>
+              <div>Oppose (ODDS)</div>
             </div>
             {/* <BettingShake
                   matchName={matchName}
