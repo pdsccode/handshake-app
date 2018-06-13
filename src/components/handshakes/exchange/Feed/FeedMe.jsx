@@ -58,7 +58,7 @@ import {feedBackgroundColors} from "@/components/handshakes/exchange/config";
 import {updateOfferStatus} from "@/reducers/discover/action";
 import {BigNumber} from "bignumber.js";
 import "./FeedMe.scss"
-import { getLocalizedDistance } from "@/services/util"
+import {getLocalizedDistance} from "@/services/util"
 
 class FeedMe extends React.PureComponent {
   constructor(props) {
@@ -447,7 +447,32 @@ class FeedMe extends React.PureComponent {
         break;
       }
     }
+
+    return email;
   }
+
+  ////////////////////////
+  getChatUserName = () => {
+    const { offer } = this;
+    let chatUserName = '';
+
+    switch (this.userType) {
+      case HANDSHAKE_USER.NORMAL: {
+        break;
+      }
+      case HANDSHAKE_USER.SHAKED: {
+        chatUserName = offer?.chatUsername;
+        break;
+      }
+      case HANDSHAKE_USER.OWNER: {
+        chatUserName = offer?.toChatUsername;
+        break;
+      }
+    }
+
+    return chatUserName;
+  }
+
   ////////////////////////
 
   handleRejectShakedOffer = async () => {
@@ -829,7 +854,7 @@ class FeedMe extends React.PureComponent {
         email = this.getEmail();
         statusText = HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS_NAME[status];
         showChat = true;
-        chatUsername = offer.toUsername;
+        chatUsername = this.getChatUserName();
 
         let fiatAmount = this.calculateFiatAmount(offer);
 

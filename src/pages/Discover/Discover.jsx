@@ -199,7 +199,7 @@ class DiscoverPage extends React.Component {
       qs.type = handshakeIdActive;
 
       if (handshakeIdActive === HANDSHAKE_ID.EXCHANGE) {
-        qs.custom_query = ` fiat_currency_s:${ipInfo?.currency} `;
+        qs.custom_query = ` fiat_currency_s:${ipInfo?.currency} AND -offline_i:1 `;
       }
     }
 
