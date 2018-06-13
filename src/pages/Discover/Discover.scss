@@ -1,11 +1,28 @@
 @import './src/styles/style';
 
 .discover {
-  .feed-wrapper {
-    margin-bottom:  rem-calc(23px);
+  .top {
+    background: $black;
+    margin-bottom: rem-calc(15px);
+    padding: rem-calc(6px 15px 3px 15px);
+    .logo {
+      display: inline-block;
+      width: 10%;
+      img {
+        width: 32px;
+        vertical-align: baseline;
+      }
+    }
+    .category-wrapper {
+      position: relative;
+      top: 3px;
+      display: inline-block;
+      width: 80%;
+      margin-left: 10%;
+    }
   }
-  .category-wrapper {
-    margin-bottom: rem-calc(11px);
+  .feed-wrapper {
+    margin-bottom: rem-calc(23px);
   }
   .buy-sell-wrapper {
     margin-bottom: rem-calc(15px);

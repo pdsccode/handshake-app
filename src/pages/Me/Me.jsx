@@ -100,7 +100,7 @@ class Me extends React.Component {
             </Link>
           </Col>
         </Row>
-        <Row>
+        {/* <Row>
           <Col md={12}>
             <div className="update-profile pt-2">
               <Image className="avatar" src={ShopSVG} alt="shop" />
@@ -113,7 +113,7 @@ class Me extends React.Component {
               </div>
             </div>
           </Col>
-        </Row>
+        </Row> */}
         <Row>
           <Col md={12}>
             {
@@ -136,7 +136,7 @@ class Me extends React.Component {
                   return null;
                 })
               ) : (
-                <NoData message="Make a Prediction to get started!" />
+                <NoData message="Start a mission." />
               )
             }
           </Col>

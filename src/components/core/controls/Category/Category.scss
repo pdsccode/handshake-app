@@ -2,20 +2,21 @@
 @import './src/styles/style';
 .category {
   width: 100%;
-  padding: rem-calc(11px 0);
+  // padding: rem-calc(11px 0);
   overflow-x: auto;
   overflow-y: hidden;
   white-space: nowrap;
   .active {
-    background: #383d41 !important;
-    color: $white;
+    span {
+      opacity: 1 !important;
+    }
   }
   .category-item {
     display: inline-block;
     margin-right: rem-calc(5px);
     padding: rem-calc(6px 11px);
-    background: $white;
-    box-shadow: rem-calc(0 2px 4px 0) rgba(203, 203, 203, 0.50);
+    // background: $white;
+    // box-shadow: rem-calc(0 2px 4px 0) rgba(203, 203, 203, 0.50);
     border-radius: 6px;
     &:hover {
       cursor: pointer;
@@ -28,7 +29,10 @@
       margin-right: rem-calc(8px);
     }
     span {
-      font-size: rem-calc(14px);
+      opacity: 0.6;
+      font-weight: $semi-bold;
+      font-size: 1rem;
+      color: $white;
     }
   }
 }
