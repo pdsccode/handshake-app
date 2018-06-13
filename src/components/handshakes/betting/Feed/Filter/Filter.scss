@@ -89,7 +89,7 @@
   .buttonAgainst, .buttonSupport {
     border: none;
     border-radius: 0;
-    height: rem-calc(40px);
+    height: rem-calc(40px) !important;
     font-size: rem-calc(12px);
     font-weight: $bold;
   }
