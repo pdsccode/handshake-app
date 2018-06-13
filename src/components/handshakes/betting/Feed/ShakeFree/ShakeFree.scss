@@ -1,6 +1,6 @@
 @import './src/styles/style';
 
-.wrapperBettingShake {
+.wrapperBettingShakeFree {
   padding: rem-calc(30px 30px 30px 30px);
   background: #3A444C;
   //box-shadow: 0 2px 4px 0 rgba(203,203,203,0.50);
@@ -48,7 +48,7 @@
     margin-bottom: -35px;
   }
   .amount + .cryptoCurrency {
-    font-size: rem-calc(12px);
+    font-size: rem-calc(14px);
     font-weight: $medium;
     color: #FFFFFF;
     letter-spacing: 0;
@@ -60,18 +60,18 @@
     }
   }
   .odds + .cryptoCurrency {
-    font-size: rem-calc(12px);
+    font-size: rem-calc(14px);
     font-weight: $medium;
     color: #FFFFFF;
     letter-spacing: 0;
     position: relative;
     bottom: 26px;
-    left: 73%;
+    left: 70%;
     @media (max-width: 375px) {
-      left: 70%;
+      left: 67%;
     }
     @media (max-width: 330px) {
-      left: 65%;
+      left: 60%;
     }
   }
   .yourOdds +  .cryptoCurrency {
@@ -80,7 +80,7 @@
       left: 73%;
     }
     @media (max-width: 330px) {
-      left: 69%;
+      left: 67%;
     }
   }
   .input[readOnly] {
@@ -153,5 +153,6 @@
   }
   .possibleWinningsValue {
     font-weight: $medium;
+    font-size: rem-calc(14px);
   }
 }

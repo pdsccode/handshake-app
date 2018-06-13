@@ -52,19 +52,19 @@
     margin-bottom: -35px;
   }
   .amount + .cryptoCurrency {
-    font-size: rem-calc(12px);
+    font-size: rem-calc(14px);
     font-weight: $medium;
     color: #FFFFFF;
     letter-spacing: 0;
     position: relative;
     top: 6px;
-    left: 86%;
+    left: 88%;
     @media (max-width: 330px) {
       left: 84%;
     }
   }
   .odds + .cryptoCurrency {
-    font-size: rem-calc(12px);
+    font-size: rem-calc(14px);
     font-weight: $medium;
     color: #FFFFFF;
     letter-spacing: 0;
@@ -153,5 +153,6 @@
   }
   .possibleWinningsValue {
     font-weight: $medium;
+    font-size: rem-calc(14px);
   }
 }
