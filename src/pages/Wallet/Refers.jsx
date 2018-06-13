@@ -59,27 +59,8 @@ class Refers extends React.Component {
     console.log("componentWillMount");
   }
 
-  async componentDidMount(){
-    const refers = local.get(APP.REFERS);
-    if(refers){
-      if(refers.step1){console.log(refers);
-        this.setState({step1: true, step1_value: refers.step1_value});
-      }
-
-      if(refers.step2){
-        this.setState({step2: true, step2_value: refers.step2_value});
-      }
-
-      if(refers.step3){
-        this.setState({step2: true, step3_value: refers.step3_value});
-      }
-    }
-    else{
-      this.setState({telegram_count: await this.getTelegramCount()});
-      this.resetForm();
-    }
-
-    console.log(this.state);
+  componentDidMount(){
+    this.resetForm();
   }
 
   componentWillUnmount() {
@@ -111,7 +92,7 @@ class Refers extends React.Component {
     this.props.hideLoading();
   }
 
-  resetForm(){
+  async resetForm(){
     // clear form:
     this.props.clearFields(nameFormStep1, false, false, "telegram_username");
     this.props.clearFields(nameFormStep2, false, false, "twitter_username");
@@ -122,11 +103,34 @@ class Refers extends React.Component {
     this.setState({profile: profile});
     alert(profile.username);
     this.props.rfChange(nameFormStep4, 'refer_link', profile != false ? "https://ninja.org/ref=?" + profile.username : '');
+    console.log(profile, profile.email);
+    if(profile && profile.email){
+      this.setState({step3: true, step3_value: profile.email});
+      this.props.rfChange(nameFormStep3, 'refer_email', profile && profile.email ? profile.email : '');
+    }
 
-  }
+    const refers = local.get(APP.REFERS);
+    if(refers){
+      if(refers.step1){console.log(refers);
+        this.setState({step1: true, step1_value: refers.step1_value});
+      }
 
-  componentWillUnmount() {
+      if(refers.step2){
+        this.setState({step2: true, step2_value: refers.step2_value});
+      }
 
+      if(refers.step3){
+        this.setState({step3: true, step3_value: refers.step3_value});
+      }
+
+      this.props.rfChange(nameFormStep1, 'telegram_username', refers && refers.step1_value ? refers.step1_value : '');
+      this.props.rfChange(nameFormStep2, 'twitter_username', refers && refers.step2_value ? refers.step2_value : '');
+      this.props.rfChange(nameFormStep3, 'refer_email', refers && refers.step3_value ? refers.step3_value : '');
+    }
+
+    if(this.state.step1 == false){
+      this.setState({telegram_count: await this.getTelegramCount()});
+    }
   }
 
   onFinish = () => {
@@ -309,12 +313,13 @@ renderStep3= () => (
               />
           </Col>
           <Col sm={4} md={4} xs={4} className="no-padding-left">
-          <Button isLoading={this.state.isLoading} block disabled={this.state.step3} type="submit">{this.state.step3 ? "Receive token" : "Receive token"}</Button>
+          <Button isLoading={this.state.isLoading} block disabled={this.state.step3} type="submit">{this.state.step3 ? "Verified" : "Verify"}</Button>
           </Col>
       </Row>
   </Step3Form>
 )
 
+<<<<<<< HEAD
 renderLinkRefer= () => (
   <Step4Form onSubmit={this.submitStep4}>
       <h6>Final: Share this link to friend to get extra 20 Shuriken</h6>
@@ -340,27 +345,29 @@ renderLinkRefer= () => (
   </Step4Form>
 )
 
+=======
+>>>>>>> d83756b347f9572553961edad4c52bc95723a1a6
   renderLinkRefer= () => (
-      <Step4Form onSubmit={this.submitStep4}>
-          <h6>Final: Share this link to friend to get extra 20 Shuriken</h6>
-          <p>Referral link:</p>
-          <Row>
-              <Col sm={8} md={8} xs={8}>
-                  <Field
-                      name="refer_link"
-                      type="text"
-                      className="form-control"
-                      placeholder=""
-                      readOnly
-                      component={fieldInput}
-                      validate={[required]}
-                  />
-              </Col>
-              <Col sm={4} md={4} xs={4} className="no-padding-left">
-                  <Button block type="submit">Done</Button>
-              </Col>
-          </Row>
-      </Step4Form>
+    <Step4Form onSubmit={this.submitStep4}>
+        <h6>Final: Share this link to friend to get extra 20 Shuriken</h6>
+        <p>Referral link:</p>
+        <Row>
+            <Col sm={8} md={8} xs={8}>
+                <Field
+                    name="refer_link"
+                    type="text"
+                    className="form-control"
+                    placeholder=""
+                    readOnly
+                    component={fieldInput}
+                    validate={[required]}
+                />
+            </Col>
+            <Col sm={4} md={4} xs={4} className="no-padding-left">
+                <Button block type="submit">Done</Button>
+            </Col>
+        </Row>
+    </Step4Form>
   )
 
   render() {
