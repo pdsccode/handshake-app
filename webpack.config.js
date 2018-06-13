@@ -26,6 +26,12 @@ module.exports = function webpackConfig(env, argv) {
     chunks: false,
   };
 
+  let appEnvConfig = {
+    NODE_ENV: argv.mode,
+    isProduction,
+    ...envConfig,
+  };
+
   const development = {
     plugins: [new webpack.HotModuleReplacementPlugin()],
     devServer: {
@@ -68,7 +74,7 @@ module.exports = function webpackConfig(env, argv) {
         new UglifyJsPlugin({
           uglifyOptions: {
             compress: {
-              drop_console: true,
+              drop_console: appEnvConfig.dropConsole,
             },
           },
         }),
@@ -113,12 +119,6 @@ module.exports = function webpackConfig(env, argv) {
       }),
     ],
     performance: { hints: false },
-  };
-
-  let appEnvConfig = {
-    NODE_ENV: argv.mode,
-    isProduction,
-    ...envConfig,
   };
 
   if (isProduction && fs.existsSync(xPath('.env.production.js'))) {
