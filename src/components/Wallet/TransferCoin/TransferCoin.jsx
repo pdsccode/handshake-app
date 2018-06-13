@@ -299,14 +299,14 @@ renderScanQRCode = () => (
           {this.renderScanQRCode()}
           <SendWalletForm className="sendwallet-wrapper" onSubmit={this.sendCoin} validate={this.invalidateTransferCoins}>
 
-          <p className="labelText">Receiving address</p>
+          <p className="labelText">To wallet address</p>
           <div className="div-address-qr-code">
 
             <Field
                   name="to_address"
                   type="text"
                   className="form-control input-address-qr-code"
-                  placeholder="Specify receiving..."
+                  placeholder="Wallet address..."
                   component={fieldInput}
                   value={this.state.inputAddressAmountValue}
                   onChange={evt => this.updateSendAddressValue(evt)}
