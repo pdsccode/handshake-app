@@ -33,6 +33,7 @@ const nameFormBettingShake = 'bettingShakeForm';
 
 
 const defaultAmount = 1;
+const titleBySide = { 1: 'Bet for the outcome', 2: 'Bet against the outcome' };
 
 class BetingShake extends React.Component {
   static propTypes = {
@@ -322,7 +323,7 @@ class BetingShake extends React.Component {
 
     return (
       <form className="wrapperBettingShake" onSubmit={this.onSubmit}>
-        <p className="titleForm text-center">BET ON THE OUTCOME</p>
+        <p className="titleForm text-center">{titleBySide[side]}</p>
         {/*<Toggle ref={(component) => {this.toggleRef = component}} onChange={this.onToggleChange} />*/}
         {this.renderInputField(amountField)}
         {isShowOdds && this.renderInputField(oddsField)}
