@@ -105,8 +105,8 @@ class Me extends React.Component {
             <div className="update-profile pt-2">
               <Image className="avatar" src={ShopSVG} alt="shop" />
               <div className="text" style={{ width: '69%'}}>
-                <strong>Shop appearance</strong>
-                <p>Change your shop status</p>
+                <strong>Your station</strong>
+                <p>Open for business</p>
               </div>
               <div className="arrow">
                 <ToggleSwitch onChange={flag => console.log(flag)} />

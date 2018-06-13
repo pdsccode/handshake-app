@@ -841,8 +841,8 @@ class FeedMe extends React.PureComponent {
       }
     }
 
-    /*const phone = offer.contactPhone;
-    const address = offer.contactInfo;*/
+    /*const phone = offer.contactPhone;*/
+    const address = offer.contactInfo;
 
 
     let distanceKm = 0;
@@ -914,8 +914,18 @@ class FeedMe extends React.PureComponent {
               </div>
             )
           }
-
           {
+            address && (
+              <div className="media mb-1 detail">
+                <img className="mr-2" src={iconLocation} width={20}/>
+                <div className="media-body">
+                  <div>{address}</div>
+                </div>
+              </div>
+            )
+          }
+
+          {/*
             !isCreditCard && (
               <div className="media detail">
                 <img className="mr-2" src={iconLocation} width={20} />
@@ -931,7 +941,7 @@ class FeedMe extends React.PureComponent {
                 </div>
               </div>
             )
-          }
+          */}
         </Feed>
         {/*<Button block className="mt-2">Accept</Button>*/}
         {actionButtons}
