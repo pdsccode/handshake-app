@@ -25,17 +25,25 @@ class CreateBettingEvent extends React.Component {
       closingTime: '',
       resolutionSource: '',
       reportingTime: '',
-      fees: null,
-      referralFees: '',
+      creatorFee: null,
+      referralFee: null,
     };
+  }
+
+  updateFormField = (event,stateName) => {
+    this.setState({
+      [stateName]: event.target.value,
+    });
   }
 
   submitBettingEvent() {
     console.log('test');
   }
 
-  changeClosingTime() {
-    console.log('t1');
+  changeDate(date,stateName) {
+    this.setState({
+      [stateName]: date,
+    });
   }
 
   render() {
@@ -50,7 +58,7 @@ class CreateBettingEvent extends React.Component {
             placeholder="Event name"
             component={fieldInput}
             value={this.state.eventName}
-            onChange={evt => this.updateFormField(evt, this.state.eventName)}
+            onChange={evt => this.updateFormField(evt, 'eventName')}
             validate={[required]}
           />
           <Field
@@ -60,10 +68,10 @@ class CreateBettingEvent extends React.Component {
             placeholder="Outcome"
             component={fieldInput}
             value={this.state.outcome}
-            onChange={evt => this.updateFormField(evt, this.state.outcome)}
+            onChange={evt => this.updateFormField(evt, 'outcome')}
             validate={[required]}
           />
-          <DatePicker onChange={this.changeClosingTime} className="form-control input-field" placeholder="Closing Time" />
+          <DatePicker onChange={(date)=>{this.changeDate(date, 'closingTime')}} className="form-control input-field" placeholder="Closing Time" />
           <Label for="reporting" className="font-weight-bold text-uppercase reporting-label">Reporting</Label>
           <Field
             name="reportingSource"
@@ -72,21 +80,46 @@ class CreateBettingEvent extends React.Component {
             placeholder="Resolution source"
             component={fieldInput}
             value={this.state.resolutionSource}
-            onChange={evt => this.updateFormField(evt, this.state.resolutionSource)}
+            onChange={evt => this.updateFormField(evt, 'resolutionSource')}
             validate={[required]}
           />
-          <DatePicker onChange={this.changeClosingTime} className="form-control input-field"  placeholder="Reporting Time" />
+          <DatePicker onChange={(date)=>{this.changeDate(date, 'reportingTime')}} className="form-control input-field"  placeholder="Reporting Time" />
           <Field
-            name="outcome"
+            name="reporting-time"
             type="text"
             className="form-control input-field"
-            placeholder="Outcome"
+            placeholder="Reporting Time"
             component={fieldInput}
             value={this.state.outcome}
-            onChange={evt => this.updateFormField(evt, this.state.outcome)}
+            onChange={evt => this.updateFormField(evt, 'outcome')}
             validate={[required]}
           />
+          <Label for="creatorFee" className="font-weight-bold text-uppercase fees-label">Fees</Label>
+          <Field
+            name="creatorFee"
+            type="number"
+            className="form-control input-field"
+            placeholder="Creator Fee"
+            component={fieldInput}
+            value={this.state.creatorFee}
+            onChange={evt => this.updateFormField(evt, 'creatorFee')}
+            validate={[required]}
+          />
+          <Label for="feesDesc" className="">Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis aliquid iure illum dolor asperiores. </Label>
+          <Label for="referralFee" className="font-weight-bold text-uppercase fees-label">Referral</Label>
+          <Field
+            name="referralFee"
+            type="number"
+            className="form-control input-field"
+            placeholder="Creator Fee"
+            component={fieldInput}
+            value={this.state.referralFee}
+            onChange={evt => this.updateFormField(evt, 'referralFee')}
+            validate={[required]}
+          />
+          <Label for="reffeesDesc" className="">Lorem ipsum dolor sit amet consectetur adipisicing elit. </Label>
         </SaveBettingEventForm>
+        <Button type="submit" block className="btnGreen submit-button">Submit</Button>
       </div>
     );
   }
