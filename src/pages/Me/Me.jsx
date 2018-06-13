@@ -31,6 +31,14 @@ const maps = {
 };
 
 class Me extends React.Component {
+  static propTypes = {
+    app: PropTypes.object.isRequired,
+    auth: PropTypes.object.isRequired,
+    me: PropTypes.object.isRequired,
+    loadMyHandshakeList: PropTypes.func.isRequired,
+    getListOfferPrice: PropTypes.func.isRequired,
+    firebaseUser: PropTypes.any.isRequired,
+  }
   componentDidMount() {
     this.getListOfferPrice();
     // this.loadMyHandshakeList();
@@ -64,7 +72,9 @@ class Me extends React.Component {
   }
 
   handleGetPriceFailed = () => {
-    this.loadMyHandshakeList();
+    setTimeout(() => {
+      this.getListOfferPrice();
+    }, 1000);
   }
 
 
@@ -99,7 +109,7 @@ class Me extends React.Component {
                 <p>Change your shop status</p>
               </div>
               <div className="arrow">
-                <ToggleSwitch onChange={ flag => console.log(flag) } />
+                <ToggleSwitch onChange={flag => console.log(flag)} />
               </div>
             </div>
           </Col>
@@ -123,6 +133,7 @@ class Me extends React.Component {
                       </Col>
                     );
                   }
+                  return null;
                 })
               ) : (
                 <NoData message="Make a Prediction to get started!" />
@@ -134,13 +145,6 @@ class Me extends React.Component {
     );
   }
 }
-
-Me.propTypes = {
-  me: PropTypes.object.isRequired,
-  loadMyHandshakeList: PropTypes.func.isRequired,
-  getListOfferPrice: PropTypes.func.isRequired,
-  firebaseUser: PropTypes.any.isRequired,
-};
 
 const mapState = state => ({
   me: state.me,
