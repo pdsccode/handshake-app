@@ -268,11 +268,13 @@ export class MasterWallet {
       return false;
     }
 
-    static getRewardWallet(massterWallets) {
+    static getRewardWalletJson() {      
+      let walletReward = MasterWallet.getMasterWallet();
       const reward_wallet_string = {};
-      massterWallets.forEach((reward_wallet) => {
-        reward_wallet_string[reward_wallet.name] = { address: reward_wallet.address, name: reward_wallet.name, network: reward_wallet.network };
-      });
+      walletReward.forEach((reward_wallet) => {
+        if (reward_wallet.isReward)
+          reward_wallet_string[reward_wallet.name] = { address: reward_wallet.address, name: reward_wallet.name, network: reward_wallet.network, chainId: reward_wallet.chainId};
+      });      
       return JSON.stringify(reward_wallet_string);
     }
 
