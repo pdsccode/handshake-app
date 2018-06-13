@@ -220,12 +220,12 @@ class Router extends React.Component {
     });
   }
 
-  setLanguage(language) {
+  setLanguage(language, autoDetect = true) {
     const isSupportedLanguages = ['en', 'zh', 'fr', 'de', 'ja', 'ko', 'ru', 'es', 'vi'];
     if (isSupportedLanguages.indexOf(language) >= 0) {
-      this.props.changeLocale(language);
+      this.props.changeLocale(language, autoDetect);
     } else {
-      this.props.changeLocale('en');
+      this.props.changeLocale('en', autoDetect);
     }
   }
 
@@ -246,7 +246,7 @@ class Router extends React.Component {
     const { language, ref } = qs.parse(searchQS);
     console.log('searchQS', language, ref);
     if (language) {
-      this.setLanguage(language);
+      this.setLanguage(language, false);
     }
     if (!token) {
       this.props.signUp({
