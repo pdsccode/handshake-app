@@ -6,8 +6,6 @@ import { Grid, Row, Col } from 'react-bootstrap';
 // components
 import axios from 'axios';
 import Button from '@/components/core/controls/Button';
-import { APP } from '@/constants';
-import local from '@/services/localStore';
 import {
     fieldCleave,
     fieldDropdown,
@@ -24,7 +22,6 @@ import createForm from '@/components/core/form/createForm';
 import { showAlert } from '@/reducers/app/action';
 import { showLoading, hideLoading } from '@/reducers/app/action';
 import iconSuccessChecked from '@/assets/images/icon/icon-checked-green.svg';
-import {required} from '@/components/core/form/validation';
 import local from '@/services/localStore';
 import {APP} from '@/constants';
 
