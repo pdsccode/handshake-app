@@ -345,7 +345,16 @@ class Router extends React.Component {
 
   render() {
     if (window.location.pathname === URL.LANDING_PAGE_SHURIKEN) return <LandingPageRootRouter />;
-    if (window.location.pathname === URL.FAQ) return <FAQRootRouter />;
+    if (window.location.pathname === URL.FAQ) {
+      return (
+        <IntlProvider
+          locale={this.state.currentLocale}
+          messages={messages[this.state.currentLocale]}
+        >
+          <FAQRootRouter />
+        </IntlProvider>
+      );
+    }
     if (window.location.pathname === URL.LANDING_PAGE_TRADE) return <LandingTradeRootRouter />;
     if (BrowserDetect.isDesktop && process.env.isProduction) return <MobileOrTablet />;
     if (!this.state.isLogged || this.state.isLoading) {
