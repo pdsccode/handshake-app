@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import PropTypes from 'prop-types';
+
 import { connect } from 'react-redux';
 // service, constant
 import { Grid, Row, Col } from 'react-bootstrap';
@@ -744,11 +744,11 @@ class Wallet extends React.Component {
     const {intl, cryptoPrice, amount, userCcLimit, ccLimits} = this.props;
     return (
       <div className="wallet-page">
-      
+
         {/* Header for refers ... */}
         <div className="headerRefers" >
           <p className="hTitle">Shuriken Airdrop</p>
-          <p className="hLink" onClick={() => { this.modalRefersRef.open() }}>Receive token</p>
+          <p className="hLink" onClick={() => this.modalRefersRef.open()}>Receive token</p>
         </div>
         <Modal title="Shuriken Airdrop (limited)" onRef={modal => this.modalRefersRef = modal}>
             <Refers />
