@@ -278,6 +278,7 @@ class Component extends React.Component {
       latitude: lat,
       longitude: lng,
       fiat_currency: ipInfo.currency,
+      chat_username: authProfile?.username,
     };
 
     const offerStore = {

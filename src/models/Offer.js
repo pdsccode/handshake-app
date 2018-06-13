@@ -34,6 +34,7 @@ class Offer {
       toContactInfo: data.to_contact_info || '',
       offChainId: data.off_chain_id || '',
       hid: data.hid || '',
+      chatUsername: data.chat_username || '',
 
 
       //Offer store

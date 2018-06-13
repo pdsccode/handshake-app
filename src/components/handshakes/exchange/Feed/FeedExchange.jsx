@@ -100,6 +100,7 @@ class FeedExchange extends React.PureComponent {
       contact_phone: authProfile?.phone,
       contact_info: authProfile?.address,
       user_address: wallet.address,
+      chat_username: authProfile?.username,
     };
 
     this.showLoading();
