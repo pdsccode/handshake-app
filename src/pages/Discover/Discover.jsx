@@ -125,7 +125,9 @@ class DiscoverPage extends React.Component {
   }
 
   handleGetPriceFailed = () => {
-    this.loadDiscoverList();
+    setTimeout(() => {
+      this.getListOfferPrice();
+    }, 1000);
   }
 
   searchChange(query) {

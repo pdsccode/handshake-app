@@ -72,7 +72,9 @@ class Me extends React.Component {
   }
 
   handleGetPriceFailed = () => {
-    this.loadMyHandshakeList();
+    setTimeout(() => {
+      this.getListOfferPrice();
+    }, 1000);
   }
 
 
