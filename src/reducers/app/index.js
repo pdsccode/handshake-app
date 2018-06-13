@@ -12,10 +12,12 @@ const close = {
   overlay: false,
 };
 
-local.save(APP.VERSION, '0.0.1');
+local.save(APP.VERSION, '0.0.2');
 
 function appReducter(state = {
   version: local.get(APP.VERSION),
+
+  locale: 'en',
 
   isCalling: false,
   isLoading: false,

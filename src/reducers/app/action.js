@@ -30,6 +30,8 @@ export const APP_ACTION = {
   HEADER_SHOW: 'HEADER_SHOW',
 
   IP_INFO: 'IP_INFO',
+
+  CHANGE_LOCALE: 'CHANGE_LOCALE',
 };
 
 // Loading
@@ -66,3 +68,5 @@ export const setIpInfo = data => ({ type: APP_ACTION.IP_INFO, payload: data });
 export const scrollToBottom = () => {
   window.scrollTo(0, document.body.scrollHeight);
 };
+
+export const changeLocale = data => ({ type: APP_ACTION.CHANGE_LOCALE, payload: data });
