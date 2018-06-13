@@ -184,6 +184,7 @@ class DiscoverPage extends React.Component {
   }
 
   loadDiscoverList = () => {
+    const { ipInfo } = this.props;
     const {
       handshakeIdActive,
       // tabIndexActive,
@@ -196,6 +197,10 @@ class DiscoverPage extends React.Component {
     qs.location_p = { pt, d: DISCOVER_GET_HANDSHAKE_RADIUS };
     if (handshakeIdActive) {
       qs.type = handshakeIdActive;
+
+      if (handshakeIdActive === HANDSHAKE_ID.EXCHANGE) {
+        qs.custom_query = ` fiat_currency_s:${ipInfo?.currency} `;
+      }
     }
 
     // if (tabIndexActive) {
@@ -304,6 +309,7 @@ const mapState = state => ({
   discover: state.discover,
   firebaseUser: state.firebase.data,
   app: state.app,
+  ipInfo: state.app.ipInfo,
 });
 
 const mapDispatch = ({
