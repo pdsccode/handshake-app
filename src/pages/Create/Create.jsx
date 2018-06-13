@@ -1,5 +1,6 @@
 import React from 'react';
 import { HANDSHAKE_ID, HANDSHAKE_NAME, HANDSHAKE_ID_DEFAULT } from '@/constants';
+import Helper from '@/services/helper';
 // components
 import { Grid, Row, Col } from 'react-bootstrap';
 import SearchBar from '@/components/core/controls/SearchBar';
@@ -89,9 +90,15 @@ const maps = {
 class Create extends React.Component {
   constructor(props) {
     super(props);
-
+    let seletedId = HANDSHAKE_ID_DEFAULT;
+    // get default
+    let { id } = Helper.getQueryStrings(location.search);
+    id = parseInt(id, 10);
+    if (id && Object.values(HANDSHAKE_ID).indexOf(id !== -1)) {
+      seletedId = id;
+    }
     this.state = {
-      seletedId: HANDSHAKE_ID_DEFAULT,
+      seletedId,
     };
     // bind
     this.handshakeChange = this.handshakeChange.bind(this);
