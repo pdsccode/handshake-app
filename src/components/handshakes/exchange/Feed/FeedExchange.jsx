@@ -2,6 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import iconBitcoin from '@/assets/images/icon/coin/btc.svg';
 import iconEthereum from '@/assets/images/icon/coin/eth.svg';
+import iconLocation from '@/assets/images/icon/icons8-marker.svg';
+import iconOk from '@/assets/images/icon/icons8-ok.svg';
+import iconCancel from '@/assets/images/icon/icons8-cancel.svg';
 // style
 import './FeedExchange.scss';
 import {injectIntl} from 'react-intl';
@@ -239,47 +242,45 @@ class FeedExchange extends React.PureComponent {
           className="feed"
           background={this.mainColor}
         >
-          <div className="info">
-            <div className="name-shop">{nameShop}</div>
-            <div className="transaction">Successful ({success}) - Failed ({failed})</div>
-            <div className="distance">{distance}</div>
-          </div>
-          <table className="table-ex">
+          <div className="name-shop">{nameShop}</div>
+          <table className="table-ex mt-2">
             <thead>
               <tr>
-              <th className="header-text"><div className="image"><img src={iconBitcoin} /></div> <span>Bitcoin</span></th>
-              <th className="header-text"><div className="image"><img src={iconEthereum} /></div> <span>Ethereum</span></th>
-              {/*<th className="buy-color header-text">Buy rate</th> */}
-              {/* <th className="sell-color header-text">Sell rate</th>*/}
-            </tr>
+                <th></th>
+                <th className="header-text buy-color">Buy rate</th>
+                <th className="header-text sell-color">Sell rate</th>
+              </tr>
             </thead>
             <tbody>
               <tr>
-              <td>
-                <div className="buy-color">Buy rate</div>
-                <div className="buy-color price-number mt-1">{formatMoney(priceBuyBTC)}</div>
-                <div className="currency">{currency}</div>
-              </td>
-              <td>
-                <div className="buy-color">Buy rate</div>
-                <div className="buy-color price-number mt-1">{formatMoney(priceBuyETH)}</div>
-                <div className="currency">{currency}</div>
-              </td>
-            </tr>
+                <td><div className="image"><img src={iconBitcoin} /></div></td>
+                <td>
+                  <div className="buy-color price-number mt-1">{formatMoney(priceBuyBTC)}</div>
+                  <div className="currency">{currency}</div>
+                </td>
+                <td>
+                  <div className="sell-color price-number mt-1">{formatMoney(priceSellBTC)}</div>
+                  <div className="currency">{currency}</div>
+                </td>
+              </tr>
               <tr>
-              <td>
-                <div className="sell-color">Sell rate</div>
-                <div className="sell-color price-number mt-1">{formatMoney(priceSellBTC)}</div>
-                <div className="currency">{currency}</div>
-              </td>
-              <td>
-                <div className="sell-color">Sell rate</div>
-                <div className="sell-color price-number mt-1">{formatMoney(priceSellETH)}</div>
-                <div className="currency">{currency}</div>
-              </td>
-            </tr>
+                <td><div className="image"><img src={iconEthereum} /></div></td>
+                <td>
+                  <div className="buy-color price-number mt-1">{formatMoney(priceBuyETH)}</div>
+                  <div className="currency">{currency}</div>
+                </td>
+                <td>
+                  <div className="sell-color price-number mt-1">{formatMoney(priceSellETH)}</div>
+                  <div className="currency">{currency}</div>
+                </td>
+              </tr>
             </tbody>
           </table>
+          <div className="mt-2">
+            <div className="distance"><img src={iconLocation}/>{distance}</div>
+            <div className="transaction-successful"><img src={iconOk}/> {success} successful</div>
+            <div className="transaction-failed"><img src={iconCancel}/> {failed} failed</div>
+          </div>
         </Feed>
         <Button block className="mt-2" onClick={this.handleOnShake}>Shake</Button>
         <ModalDialog onRef={modal => this.modalRef = modal} className="dialog-shake-detail">
