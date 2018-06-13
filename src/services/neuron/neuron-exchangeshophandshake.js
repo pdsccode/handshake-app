@@ -30,12 +30,12 @@ export default class ExchangeShopHandshake extends BaseHandshake {
   initByShopOwner = (value, offchain) => {
     console.log(TAG, ' initByShopOwner = ', value, offchain);
 
-    const payoutValue = Web3.utils.toHex(this.web3.utils.toWei(value.toString(), 'ether'));
+    // const payoutValue = Web3.utils.toHex(this.web3.utils.toWei(value.toString(), 'ether'));
     const bytesOffchain = this.web3.utils.fromAscii(offchain);
 
     const payloadData = this.handshakeInstance.methods
       .initByShopOwner(
-        payoutValue,
+        // payoutValue,
         bytesOffchain,
       )
       .encodeABI();
@@ -96,13 +96,13 @@ export default class ExchangeShopHandshake extends BaseHandshake {
   initByCustomer = (shopOwner, value, offchain) => {
     console.log(TAG, ' initByCustomer = ', shopOwner, value, offchain);
 
-    const payoutValue = Web3.utils.toHex(this.web3.utils.toWei(value.toString(), 'ether'));
+    // const payoutValue = Web3.utils.toHex(this.web3.utils.toWei(value.toString(), 'ether'));
     const bytesOffchain = this.web3.utils.fromAscii(offchain);
 
     const payloadData = this.handshakeInstance.methods
       .initByCustomer(
         shopOwner,
-        payoutValue,
+        // payoutValue,
         bytesOffchain,
       )
       .encodeABI();

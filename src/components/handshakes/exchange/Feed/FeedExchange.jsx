@@ -46,7 +46,7 @@ import {ExchangeHandshake, ExchangeShopHandshake} from '@/services/neuron';
 import {feedBackgroundColors} from '@/components/handshakes/exchange/config';
 import {updateOfferStatus} from '@/reducers/discover/action';
 import OfferShop from '@/models/OfferShop';
-import {getLocalizedDistance} from "@/services/util"
+import {getLocalizedDistance} from "@/services/util";
 
 class FeedExchange extends React.PureComponent {
   constructor(props) {
