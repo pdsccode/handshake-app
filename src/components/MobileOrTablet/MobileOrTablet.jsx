@@ -52,7 +52,7 @@ class MobileOrTablet extends React.PureComponent {
           </div>
           <div className="col-lg-12 text-center">
             <img className="img-fluid imageHeader" src={onlyMobileTabletSVG} alt="ninja" />
-            <h1>Anonymous Peer-to-Peer Prediction Exchange</h1>
+            <h1>The anonymous exchange of anything</h1>
           </div>
           <div className="col-lg-12 text-center">
             <p>
