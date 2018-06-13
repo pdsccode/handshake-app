@@ -59,8 +59,8 @@ const data = [
   },
   {
     question: 'How will the Smart Contract execute when physical cash is involved and there is a lag in transaction time?',
-    answer: 'After receiving the physical cash, the seller will click on the accept button, the coin will be automatic transfered to the buyer. The process takes about 10 minutes to 20 minutes',
-  }
+    answer: 'After receiving the physical cash, the seller will click on the accept button, the coin will be automatically transferred to the buyer. The process takes about 10 minutes to 20 minutes',
+  },
 ];
 
 class Collapse extends React.PureComponent {
