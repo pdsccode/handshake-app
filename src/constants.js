@@ -2,6 +2,7 @@ export const APP = {
   HEADER_DEFAULT: 'Handshake',
   // store
   VERSION: 'app_version',
+  LOCALE: 'app_locale',
   AUTH_TOKEN: 'auth_token',
   AUTH_PROFILE: 'auth_profile',
   WALLET_MASTER: 'wallet_master',

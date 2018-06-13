@@ -163,6 +163,7 @@ class Router extends React.Component {
     this.checkRegistry = ::this.checkRegistry;
     this.authSuccess = ::this.authSuccess;
     this.notification = ::this.notification;
+    this.setLanguage = ::this.setLanguage;
     this.detectCountry.call(this);
   }
 
@@ -219,14 +220,20 @@ class Router extends React.Component {
     });
   }
 
-  async detectCountry() {
+  setLanguage(language, autoDetect = true) {
     const isSupportedLanguages = ['en', 'zh', 'fr', 'de', 'ja', 'ko', 'ru', 'es', 'vi'];
+    if (isSupportedLanguages.indexOf(language) >= 0) {
+      this.props.changeLocale(language, autoDetect);
+    } else {
+      this.props.changeLocale('en', autoDetect);
+    }
+  }
+
+  async detectCountry() {
     const url = `https://ipapi.co/json${process.env.ipapiKey ? `?key=${process.env.ipapiKey}` : ''}`;
     const { data } = await axios.get(url);
     const firstLanguage = data.languages.split(',')[0];
-    if (isSupportedLanguages.indexOf(firstLanguage) >= 0) {
-      this.props.changeLocale(firstLanguage);
-    }
+    this.setLanguage(firstLanguage);
     if (COUNTRIES_BLACKLIST.indexOf(data.country_name) !== -1) {
       this.setState({ isCountryBlackList: true });
     }
@@ -235,7 +242,12 @@ class Router extends React.Component {
   checkRegistry() {
     const token = local.get(APP.AUTH_TOKEN);
     // auth
-    const ref = qs.parse(window.location.search)['?ref'];
+    const searchQS = window.location.search.replace('?', '');
+    const { language, ref } = qs.parse(searchQS);
+    console.log('searchQS', language, ref);
+    if (language) {
+      this.setLanguage(language, false);
+    }
     if (!token) {
       this.props.signUp({
         PATH_URL: `user/sign-up${ref ? `?ref=${ref}` : ''}`,
@@ -302,7 +314,7 @@ class Router extends React.Component {
             this.props.getFreeETH({
               PATH_URL: `/user/free-rinkeby-eth?address=${wallet.address}`,
               METHOD: 'POST',
-              successFn: (response) => {
+              successFn: () => {
                 this.setState({ isLoading: false, loadingText: '' });
                 // run cron alert user when got 1eth:
                 this.timeOutCheckGotETHFree = setInterval(() => {

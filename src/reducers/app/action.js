@@ -69,4 +69,4 @@ export const scrollToBottom = () => {
   window.scrollTo(0, document.body.scrollHeight);
 };
 
-export const changeLocale = data => ({ type: APP_ACTION.CHANGE_LOCALE, payload: data });
+export const changeLocale = (data, autoDetect) => ({ type: APP_ACTION.CHANGE_LOCALE, payload: data, autoDetect });
