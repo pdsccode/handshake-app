@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import iconLocation from '@/assets/images/icon/icons8-geo_fence.svg';
 import iconChat from '@/assets/images/icon/icons8-chat.svg';
+import iconPhone from '@/assets/images/icon/icons8-phone.svg';
 // style
 import './FeedExchange.scss';
 import {FormattedMessage, injectIntl} from 'react-intl';
@@ -842,6 +843,7 @@ class FeedMe extends React.PureComponent {
     /*const phone = offer.contactPhone;
     const address = offer.contactInfo;*/
 
+
     let distanceKm = 0;
 
     if (location) {
@@ -849,6 +851,10 @@ class FeedMe extends React.PureComponent {
       distanceKm = getDistanceFromLatLonInKm(latitude, longitude, latLng[0], latLng[1])
     }
     const isCreditCard = offer.feedType === EXCHANGE_FEED_TYPE.INSTANT;
+
+    const phone = offer.contactPhone;
+    const phoneDisplayed = phone.replace(/-/g, '');
+
     return (
       <div className="feed-me-exchange">
         {/*<div>userType: {this.userType}</div>*/}
@@ -896,6 +902,17 @@ class FeedMe extends React.PureComponent {
             </div>
           </div>
           */}
+
+          {
+            phone && phone.split('-')[1] !== '' && ( // no phone number
+              <div className="media mb-1 detail">
+                <img className="mr-2" src={iconPhone} width={20}/>
+                <div className="media-body">
+                  <div><a href={`tel:${phoneDisplayed}`} className="text-white">{phoneDisplayed}</a></div>
+                </div>
+              </div>
+            )
+          }
 
           {
             !isCreditCard && (
