@@ -24,6 +24,40 @@
       }
     }
   }
+  .exchange-intro {
+    background: #8BB7F0;
+    margin-bottom: 0.9375rem;
+    padding-top: 20px;
+    .icon-shop {
+      display: table-cell;
+      vertical-align: bottom;
+      width: 112px;
+      img {
+        width: 100%;
+      }
+    }
+    .text-intro {
+      padding-left: 12px;
+      display: table-cell;
+      font-weight: 400;
+      font-size: 16px;
+      color: #FFFFFF;
+      letter-spacing: 0.29px;
+      line-height: 23px;
+      .btn-join-now {
+        background: #2456FB;
+        font-weight: bold;
+        font-size: 14px;
+        color: #FFFFFF;
+        letter-spacing: 0.25px;
+        width: 121px;
+      }
+      .money {
+        color: #F9E91F;
+        font-weight: bold;
+      }
+    }
+  }
 }
 
 .discover-overlay {
@@ -44,5 +78,41 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+  }
+}
+
+.exchange-popup-intro {
+  font-weight: 400;
+  font-size: 16px;
+  height: 330px;
+  overflow: auto;
+  padding: 0 15px 15px;
+  color: #000000;
+  .logo {
+    width: 57px;
+    margin: 15px 0;
+  }
+  .headline {
+    font-weight: bold;
+    font-size: 18px;
+    color: #000000;
+  }
+  .highlight-text {
+    font-weight: bold;
+    font-size: 14px;
+    color: #2456FB;
+    letter-spacing: 0;
+  }
+  .usage {
+    font-weight: bold;
+  }
+  .link {
+    color: #15C032 !important;
+    text-decoration: underline !important;
+  }
+}
+.discover-popup {
+  .modal-custom-body {
+    padding: 0 !important;
   }
 }

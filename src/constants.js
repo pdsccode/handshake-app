@@ -328,6 +328,11 @@ export const EXCHANGE_METHOD_PAYMENT = {
   [EXCHANGE_FEED_TYPE.INSTANT]: 'credit card',
 };
 
+export const EXCHANGE_COOKIE_READ_INSTRUCTION = {
+  name: 'exchange-read-instruction',
+  option: { expires: 7 },
+}
+
 export const DISCOVER_GET_HANDSHAKE_RADIUS = 20;
 
 export const APP_USER_NAME = 'Ninja';

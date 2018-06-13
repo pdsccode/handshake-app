@@ -10,10 +10,14 @@ import {
   // EXCHANGE_ACTION_NAME,
   HANDSHAKE_ID,
   URL,
+  EXCHANGE_COOKIE_READ_INSTRUCTION,
 } from '@/constants';
+import {Link} from "react-router-dom";
+import Cookies from 'js-cookie';
 // components
 import { Col, Grid, Row } from 'react-bootstrap';
 // import SearchBar from '@/components/core/controls/SearchBar';
+import ModalDialog from '@/components/core/controls/ModalDialog';
 import Category from '@/components/core/controls/Category';
 
 import FeedPromise from '@/components/handshakes/promise/Feed';
@@ -28,6 +32,8 @@ import BettingFilter from '@/components/handshakes/betting/Feed/Filter';
 import { getListOfferPrice } from '@/reducers/exchange/action';
 import Image from '@/components/core/presentation/Image';
 import loadingSVG from '@/assets/images/icon/loading.gif';
+import ninjaLogoSVG from '@/assets/images/logo.png';
+import iconShopSVG from '@/assets/images/icon/icons8-shop.svg';
 
 // style
 import './Discover.scss';
@@ -63,6 +69,7 @@ class DiscoverPage extends React.Component {
       query: '',
       isLoading: true,
       exchange: this.props.exchange,
+      modalContent: null,
     };
     // this.loadDiscoverList();
     // bind
@@ -142,6 +149,48 @@ class DiscoverPage extends React.Component {
     this.props.history.push(`${URL.HANDSHAKE_DISCOVER}/${id || ''}`);
   }
 
+  handleCloseExchangePopupIntro = () => {
+    Cookies.set(EXCHANGE_COOKIE_READ_INSTRUCTION.name, true, EXCHANGE_COOKIE_READ_INSTRUCTION.option);
+    this.modalRef.close();
+  }
+
+  showWelcomePopup = () => {
+    if (Cookies.get(EXCHANGE_COOKIE_READ_INSTRUCTION.name) !== 'true') {
+      setTimeout(() => {
+        this.setState({
+          modalContent: (
+            <div>
+              <div className="text-right pr-2 pt-1">
+                <a className="d-inline-block" onClick={this.handleCloseExchangePopupIntro}>&times;</a>
+              </div>
+              <div className="exchange-popup-intro">
+                <div className="logo"><img className="w-100" src={ninjaLogoSVG}/></div>
+                <p className="headline">Ninja, welcomes you to the Dojo!</p>
+                <p>We are the first to offer a completely decentralized platform to buy and sell Bitcoin and Ethereum.</p>
+                <p>We support credit, debit card and cash.</p>
+                <div className="my-3">
+                  <div className="highlight-text">How to use:</div>
+                  <div className="usage">
+                    - <Link className="link" to={{ pathname: URL.HANDSHAKE_CREATE_INDEX, search: '?id=2' }}>
+                    Become a shop
+                  </Link> to buy and sell BTC/ETH
+                  </div>
+                  <div className="highlight-text">Or</div>
+                  <div className="usage">- Swipe through all the shops to find <a className="link" onClick={this.handleCloseExchangePopupIntro}>the most suitable price.</a></div>
+                </div>
+                <p>Chat and meet up at the store to fulfill your exchange.</p>
+                <p><strong>Have fun trading!</strong></p>
+                <button className="btn btn-primary btn-block" onClick={this.handleCloseExchangePopupIntro}>Got it!</button>
+              </div>
+            </div>
+          ),
+        }, () => {
+          this.modalRef.open();
+        });
+      }, 1500);
+    }
+  }
+
   clickCategoryItem(category) {
     const { id } = category;
     if (this.state.handshakeIdActive !== id) {
@@ -158,6 +207,7 @@ class DiscoverPage extends React.Component {
       case HANDSHAKE_ID.EXCHANGE:
         // do something
         // tabIndexActive = 1;
+        this.showWelcomePopup();
         break;
       default:
         // is promise
@@ -223,6 +273,7 @@ class DiscoverPage extends React.Component {
     const {
       handshakeIdActive,
       // tabIndexActive,
+      modalContent,
     } = this.state;
 
     return (
@@ -237,7 +288,7 @@ class DiscoverPage extends React.Component {
             </Col>
           </Row> */}
           <Row>
-            <Col md={12} xs={6}>
+            <Col md={12} xs={6} style={{ marginBottom: handshakeIdActive === HANDSHAKE_ID.EXCHANGE ? '0px' : '' }}>
               <Category
                 idActive={handshakeIdActive}
                 className="category-wrapper"
@@ -248,11 +299,28 @@ class DiscoverPage extends React.Component {
           </Row>
           {
             handshakeIdActive === HANDSHAKE_ID.EXCHANGE && (
-              <Row>
-                <Col md={12} className="feed-wrapper">
-                  <FeedCreditCard history={this.props.history} />
-                </Col>
-              </Row>
+              <React.Fragment>
+                <Row>
+                  <Col md={12} className="exchange-intro">
+                    <span className="icon-shop">
+                      <img src={iconShopSVG} />
+                    </span>
+                    <span className="text-intro">
+                      <div>Be the first shop in your area to <span className="money">earn 1 ETH</span></div>
+                      <div className="mt-2">
+                        <Link className="btn btn-sm btn-join-now" to={{ pathname: URL.HANDSHAKE_CREATE_INDEX, search: '?id=2' }}>
+                          <span>Join now</span>
+                        </Link>
+                      </div>
+                    </span>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col md={12} className="feed-wrapper">
+                    <FeedCreditCard history={this.props.history} />
+                  </Col>
+                </Row>
+              </React.Fragment>
             )
           }
           {
@@ -296,6 +364,9 @@ class DiscoverPage extends React.Component {
             {handshakeIdActive !== HANDSHAKE_ID.BETTING && this.getHandshakeList()}
           </Row>
         </Grid>
+        <ModalDialog onRef={modal => this.modalRef = modal} className="discover-popup">
+          {modalContent}
+        </ModalDialog>
       </React.Fragment>
     );
   }
