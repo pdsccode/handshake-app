@@ -25,3 +25,24 @@
     }
   }
 }
+
+.discover-overlay {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  background-color: rgba($color: $black, $alpha: 0.3);
+  display: none;
+  &.show {
+    display: block;
+  }
+  img {
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}

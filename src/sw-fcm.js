@@ -1,3 +1,7 @@
+/* eslint-env serviceworker */
+/* eslint no-restricted-globals: 1 */
+/* global firebase */
+
 import logo from '@/assets/images/app/logo.png';
 
 importScripts('https://www.gstatic.com/firebasejs/4.8.1/firebase-app.js');

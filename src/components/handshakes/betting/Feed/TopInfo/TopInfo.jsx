@@ -84,10 +84,10 @@ class TopInfo extends React.Component {
             </Link>
           )
         }
-        <ModalDialog className="modal-info" title="Market volume" onRef={modal => this.modalTradedVolumeRef = modal}>
+        <ModalDialog className="modal-info-betting" title="Market volume" onRef={modal => this.modalTradedVolumeRef = modal}>
           <p>The market volume of this prediction is the current amount wagered by all participating ninjas.</p>
         </ModalDialog>
-        <ModalDialog className="modal-info" title="Market fee" onRef={modal => this.modalWiningFeeRef = modal}>
+        <ModalDialog className="modal-info-betting" title="Market fee" onRef={modal => this.modalWiningFeeRef = modal}>
           <p>The Ninja that created this prediction is free to set his own fees.</p>
           <p>It will be a percentage of the total amount wagered by all participating ninjas.</p>
         </ModalDialog>

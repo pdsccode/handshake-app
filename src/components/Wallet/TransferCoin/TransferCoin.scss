@@ -34,6 +34,21 @@
     margin-right: 15px;
     margin-top: 15px;
   }
+
+  .div-amount{
+    position: relative;    
+    .coiname-append{
+      position: absolute;
+      right: 15px;
+      top: 15px;
+      color: #6b7480;
+      font-weight: 400;
+    }
+    input{
+      margin: 0 !important;
+      padding-right: 60px;
+    }
+  }
   
 .div-address-qr-code{
   position: relative;

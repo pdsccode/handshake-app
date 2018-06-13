@@ -18,6 +18,15 @@ class Navigation extends React.Component {
     app: PropTypes.object.isRequired,
   };
 
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      currentPath: this.props.location.pathname,
+      isNotFound: this.props.app.isNotFound,
+    };
+  }
+
   static getDerivedStateFromProps(nextProps, prevState) {
     if (nextProps.location.pathname !== prevState.currentPath) {
       return { currentPath: nextProps.location.pathname };
@@ -28,14 +37,6 @@ class Navigation extends React.Component {
     return null;
   }
 
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      currentPath: this.props.location.pathname,
-      isNotFound: this.props.app.isNotFound,
-    };
-  }
 
   checkSelected(_URL) {
     return this.state.currentPath.startsWith(_URL) && !this.state.isNotFound ? 'selected' : '';
@@ -58,9 +59,19 @@ class Navigation extends React.Component {
             </Link>
           </li>
           <li>
-            <Link to={URL.HANDSHAKE_CREATE_INDEX}>
-              <div className="create" dangerouslySetInnerHTML={{ __html: createIcon }} />
-            </Link>
+            {
+              this.props.location.pathname === URL.HANDSHAKE_CREATE_INDEX
+              ? (
+                <a>
+                  <div className="create" dangerouslySetInnerHTML={{ __html: createIcon }} />
+                </a>
+              )
+              : (
+                <Link to={URL.HANDSHAKE_CREATE_INDEX}>
+                  <div className="create" dangerouslySetInnerHTML={{ __html: createIcon }} />
+                </Link>
+              )
+            }
           </li>
           <li className={cn(this.checkSelected(URL.HANDSHAKE_CHAT_INDEX))}>
             <Link to={URL.HANDSHAKE_CHAT_INDEX} onClick={this.props.clearHeaderBack}>

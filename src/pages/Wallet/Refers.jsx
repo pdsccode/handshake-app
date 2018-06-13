@@ -24,6 +24,10 @@ import createForm from '@/components/core/form/createForm';
 import { showAlert } from '@/reducers/app/action';
 import { showLoading, hideLoading } from '@/reducers/app/action';
 import iconSuccessChecked from '@/assets/images/icon/icon-checked-green.svg';
+import {required} from '@/components/core/form/validation';
+import local from '@/services/localStore';
+import {APP} from '@/constants';
+
 import "./Refers.scss"
 
   // 3 step Form
@@ -115,6 +119,16 @@ class Refers extends React.Component {
     this.props.clearFields(nameFormStep1, false, false, "telegram_username");
     this.props.clearFields(nameFormStep2, false, false, "twitter_username");
     this.props.clearFields(nameFormStep3, false, false, "refer_email");
+
+    // fill link ref:
+    const profile = local.get(APP.AUTH_PROFILE);
+    this.setState({profile: profile});
+    this.props.rfChange(nameFormStep4, 'refer_link', profile != false ? "https://ninja.org/ref=?" + profile.username : '');
+
+  }
+
+  componentWillUnmount() {
+
   }
 
   onFinish = () => {
@@ -328,6 +342,28 @@ renderLinkRefer= () => (
   </Step4Form>
 )
 
+  renderLinkRefer= () => (
+      <Step4Form onSubmit={this.submitStep4}>
+          <h6>Final: Share this link to friend to get extra 20 Shuriken</h6>
+          <p>Referral link:</p>
+          <Row>
+              <Col sm={8} md={8} xs={8}>
+                  <Field
+                      name="refer_link"
+                      type="text"
+                      className="form-control"
+                      placeholder=""
+                      readOnly
+                      component={fieldInput}
+                      validate={[required]}
+                  />
+              </Col>
+              <Col sm={4} md={4} xs={4} className="no-padding-left">
+                  <Button block type="submit">Done</Button>
+              </Col>
+          </Row>
+      </Step4Form>
+  )
 
   render() {
 

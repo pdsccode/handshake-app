@@ -18,6 +18,7 @@ import en from 'react-intl/locale-data/en';
 import fr from 'react-intl/locale-data/fr';
 import { withFirebase } from 'react-redux-firebase';
 import messages from '@/locals';
+import COUNTRIES_BLACKLIST from '@/data/country-blacklist';
 import axios from 'axios';
 import { setIpInfo, showAlert } from '@/reducers/app/action';
 import { getUserProfile, getListOfferPrice } from '@/reducers/exchange/action';
@@ -26,6 +27,7 @@ import { createMasterWallets } from '@/reducers/wallet/action';
 import MobileOrTablet from '@/components/MobileOrTablet';
 import BrowserDetect from '@/services/browser-detect';
 import NetworkError from '@/components/Router/NetworkError';
+import BlockCountry from '@/components/core/presentation/BlockCountry';
 
 addLocaleData([...en, ...fr]);
 
@@ -101,6 +103,14 @@ const LandingPageRootRouter = props => (
     {Component => <Component {...props} />}
   </DynamicImport>
 );
+const LandingTradeRootRouter = props => (
+  <DynamicImport
+    loading={Loading}
+    load={() => import('@/components/Router/LandingTrade')}
+  >
+    {Component => <Component {...props} />}
+  </DynamicImport>
+);
 const FAQRootRouter = props => (
   <DynamicImport
     loading={Loading}
@@ -142,24 +152,26 @@ class Router extends React.Component {
       isLoading: true,
       isLogged: this.props.auth.isLogged,
       profile: this.props.auth.profile,
-      profileUpdatedAt: this.props.auth.profileUpdatedAt,
+      updatedAt: this.props.auth.updatedAt,
       loadingText: 'Loading application',
       isNetworkError: false,
+      isCountryBlackList: false,
     };
 
     this.checkRegistry = ::this.checkRegistry;
     this.authSuccess = ::this.authSuccess;
     this.notification = ::this.notification;
+    this.detectCountry.call(this);
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
     if (nextProps.auth.isLogged !== prevState.isLogged) {
       return { isLogged: nextProps.auth.isLogged };
     }
-    if (nextProps.auth.profileUpdatedAt !== prevState.profileUpdatedAt) {
+    if (nextProps.auth.updatedAt !== prevState.updatedAt) {
       nextProps.firebase.unWatchEvent('value', `${FIREBASE_PATH.USERS}/${String(prevState.profile?.id)}`);
       nextProps.firebase.watchEvent('value', `${FIREBASE_PATH.USERS}/${String(nextProps.auth.profile?.id)}`);
-      return { profile: nextProps.auth.profile, profileUpdatedAt: nextProps.auth.profileUpdatedAt };
+      return { profile: nextProps.auth.profile, updatedAt: nextProps.auth.updatedAt };
     }
     return null;
   }
@@ -184,16 +196,12 @@ class Router extends React.Component {
     }
   }
 
-
   getListOfferPrice = () => {
     this.props.getListOfferPrice({
       PATH_URL: API_URL.EXCHANGE.GET_LIST_OFFER_PRICE,
       qs: { fiat_currency: this.props?.app?.ipInfo?.currency },
-      successFn: this.handleGetPriceSuccess,
-      errorFn: this.handleGetPriceFailed,
     });
   }
-
 
   getIpInfo = () => {
     axios.get(API_URL.EXCHANGE.IP_DOMAIN, {
@@ -201,10 +209,16 @@ class Router extends React.Component {
         auth: process.env.ipfindKey,
       },
     }).then((response) => {
-      // console.log('response', response.data);
       this.props.setIpInfo(response.data);
       local.save(APP.IP_INFO, response.data);
     });
+  }
+
+  async detectCountry() {
+    const { data } = await axios.get((process.env.ipapiKey ? `https://ipapi.co/json/?key=${process.env.ipapiKey}` : 'https://ipapi.co/json'));
+    if (COUNTRIES_BLACKLIST.indexOf(data.country_name) !== -1) {
+      this.setState({ isCountryBlackList: true });
+    }
   }
 
   checkRegistry() {
@@ -263,7 +277,7 @@ class Router extends React.Component {
         this.getListOfferPrice();
         this.timeOutGetPrice = setInterval(() => {
           this.getListOfferPrice();
-        }, 5 * 60 * 1000); // 30'
+        }, 2 * 60 * 1000); // 2'
 
         // wallet handle
         let listWallet = MasterWallet.getMasterWallet();
@@ -280,8 +294,8 @@ class Router extends React.Component {
                 this.setState({ isLoading: false, loadingText: '' });
                 // run cron alert user when got 1eth:
                 this.timeOutCheckGotETHFree = setInterval(() => {
-                  wallet.getBalance().then(result=>{
-                    if (result > 0){
+                  wallet.getBalance().then((result) => {
+                    if (result > 0) {
                       this.porps.showAlert({
                         message: <div className="text-center">You have ETH! Now you can play for free on the Ninja testnet.</div>,
                         timeOut: false,
@@ -291,9 +305,8 @@ class Router extends React.Component {
                       });
                       // notify user:
                       clearInterval(this.timeOutCheckGotETHFree);
-                      
                     }
-                  })
+                  });
                 }, 20 * 60 * 1000); // 20'
               },
               errorFn: () => { this.setState({ isLoading: false, loadingText: '' }); },
@@ -333,6 +346,7 @@ class Router extends React.Component {
   render() {
     if (window.location.pathname === URL.LANDING_PAGE_SHURIKEN) return <LandingPageRootRouter />;
     if (window.location.pathname === URL.FAQ) return <FAQRootRouter />;
+    if (window.location.pathname === URL.LANDING_PAGE_TRADE) return <LandingTradeRootRouter />;
     if (BrowserDetect.isDesktop && process.env.isProduction) return <MobileOrTablet />;
     if (!this.state.isLogged || this.state.isLoading) {
       return (
@@ -348,6 +362,7 @@ class Router extends React.Component {
         </BrowserRouter>
       );
     }
+    if (this.state.isCountryBlackList && process.env.isProduction) return <BlockCountry />;
     return (
       <IntlProvider
         locale={this.state.currentLocale}
