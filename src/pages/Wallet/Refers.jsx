@@ -319,7 +319,6 @@ renderStep3= () => (
   </Step3Form>
 )
 
-<<<<<<< HEAD
 renderLinkRefer= () => (
   <Step4Form onSubmit={this.submitStep4}>
       <h6>Final: Share this link to friend to get extra 20 Shuriken</h6>
@@ -345,8 +344,6 @@ renderLinkRefer= () => (
   </Step4Form>
 )
 
-=======
->>>>>>> d83756b347f9572553961edad4c52bc95723a1a6
   renderLinkRefer= () => (
     <Step4Form onSubmit={this.submitStep4}>
         <h6>Final: Share this link to friend to get extra 20 Shuriken</h6>
