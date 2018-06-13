@@ -8,9 +8,9 @@ import iconBitcoin from '@/assets/images/icon/coin/btc.svg';
 import iconEthereum from '@/assets/images/icon/coin/eth.svg';
 // style
 import './FeedExchange.scss';
-import {FormattedMessage, injectIntl} from 'react-intl';
-import Feed from "@/components/core/presentation/Feed/Feed";
-import Button from "@/components/core/controls/Button/Button";
+import { FormattedMessage, injectIntl } from 'react-intl';
+import Feed from '@/components/core/presentation/Feed/Feed';
+import Button from '@/components/core/controls/Button/Button';
 import {
   API_URL,
   CRYPTO_CURRENCY,
@@ -27,37 +27,37 @@ import {
   APP_USER_NAME,
   EXCHANGE_ACTION_PAST_NAME,
   EXCHANGE_ACTION_PRESENT_NAME,
-  EXCHANGE_ACTION_PERSON
-} from "@/constants";
-import ModalDialog from "@/components/core/controls/ModalDialog";
-import {connect} from "react-redux";
+  EXCHANGE_ACTION_PERSON,
+} from '@/constants';
+import ModalDialog from '@/components/core/controls/ModalDialog';
+import { connect } from 'react-redux';
 import ShakeDetail from '../components/ShakeDetail';
 import {
   cancelShakedOffer,
   closeOffer,
   completeShakedOffer,
   shakeOffer,
-  withdrawShakedOffer
-} from "@/reducers/exchange/action";
+  withdrawShakedOffer,
+} from '@/reducers/exchange/action';
 // import getSymbolFromCurrency from 'currency-symbol-map';
-import Offer from "@/models/Offer";
-import {MasterWallet} from "@/models/MasterWallet";
-import {getHandshakeUserType, getOfferPrice} from "@/services/offer-util";
-import {showAlert} from '@/reducers/app/action';
-import {Link} from "react-router-dom";
-import {URL} from '@/constants';
-import {getDistanceFromLatLonInKm} from '../utils'
-import {ExchangeHandshake} from '@/services/neuron';
-import _sample from "lodash/sample";
-import { feedBackgroundColors } from "@/components/handshakes/exchange/config";
-import {updateOfferStatus} from "@/reducers/discover/action";
-import {formatAmountCurrency, formatMoney} from "@/services/offer-util";
-import {BigNumber} from "bignumber.js";
+import Offer from '@/models/Offer';
+import { MasterWallet } from '@/models/MasterWallet';
+import { getHandshakeUserType, getOfferPrice } from '@/services/offer-util';
+import { showAlert } from '@/reducers/app/action';
+import { Link } from 'react-router-dom';
+import { URL } from '@/constants';
+import { getDistanceFromLatLonInKm } from '../utils';
+import { ExchangeHandshake } from '@/services/neuron';
+import _sample from 'lodash/sample';
+import { feedBackgroundColors } from '@/components/handshakes/exchange/config';
+import { updateOfferStatus } from '@/reducers/discover/action';
+import { formatAmountCurrency, formatMoney } from '@/services/offer-util';
+import { BigNumber } from 'bignumber.js';
 import { showLoading, hideLoading } from '@/reducers/app/action';
-import { shakeOfferItem } from "@/reducers/exchange/action";
-import CoinOffer from "@/models/CoinOffer";
-import OfferShop from "@/models/OfferShop";
-import {ExchangeShopHandshake} from "@/services/neuron";
+import { shakeOfferItem } from '@/reducers/exchange/action';
+import CoinOffer from '@/models/CoinOffer';
+import OfferShop from '@/models/OfferShop';
+import { ExchangeShopHandshake } from '@/services/neuron';
 import { getLocalizedDistance } from "@/services/util"
 
 class FeedExchange extends React.PureComponent {
@@ -74,11 +74,11 @@ class FeedExchange extends React.PureComponent {
       modalContent: '',
     };
 
-    this.mainColor = 'linear-gradient(-180deg, rgba(0,0,0,0.50) 0%, #303030 0%, #000000 100%)'
+    this.mainColor = 'linear-gradient(-180deg, rgba(0,0,0,0.50) 0%, #303030 0%, #000000 100%)';
   }
 
   showLoading = () => {
-    this.props.showLoading({message: '',});
+    this.props.showLoading({ message: ''  });
   }
 
   hideLoading = () => {
@@ -90,10 +90,10 @@ class FeedExchange extends React.PureComponent {
   }
 
 
-  ////////////////////////
+  // //////////////////////
 
   shakeOfferItem = (values) => {
-    console.log('shakeOfferItem',values);
+    console.log('shakeOfferItem', values);
     this.modalRef.close();
 
     const { authProfile } = this.props;
@@ -127,11 +127,13 @@ class FeedExchange extends React.PureComponent {
     const { intl } = this.props;
     const { data } = responseData;
     const offerShake = Offer.offer(data);
-    const { currency, type, totalAmount, systemAddress, offChainId } = offerShake;
+    const {
+ currency, type, totalAmount, systemAddress, offChainId
+} = offerShake;
     const { offer } = this;
 
     if (currency === CRYPTO_CURRENCY.ETH) {
-      if (type === EXCHANGE_ACTION.BUY) { //shop buy
+      if (type === EXCHANGE_ACTION.BUY) { // shop buy
         const amount = totalAmount;
 
         const wallet = MasterWallet.getWalletDefault(currency);
@@ -143,7 +145,7 @@ class FeedExchange extends React.PureComponent {
     } else if (currency === CRYPTO_CURRENCY.BTC) {
       if (type === EXCHANGE_ACTION.BUY) {
         const wallet = MasterWallet.getWalletDefault(currency);
-        wallet.transfer(systemAddress, totalAmount).then(success => {
+        wallet.transfer(systemAddress, totalAmount).then((success) => {
           console.log('transfer', success);
         });
       }
@@ -175,7 +177,7 @@ class FeedExchange extends React.PureComponent {
       timeOut: 3000,
       type: 'danger',
       callBack: () => {
-      }
+      },
     });
   }
 
@@ -204,7 +206,10 @@ class FeedExchange extends React.PureComponent {
   getPrices = () => {
     const { listOfferPrice } = this.props;
 
-    let priceBuyBTC, priceSellBTC, priceBuyETH, priceSellETH;
+    let priceBuyBTC;
+    let priceSellBTC;
+    let priceBuyETH;
+    let priceSellETH;
 
     if (listOfferPrice) {
       let offerPrice = getOfferPrice(listOfferPrice, EXCHANGE_ACTION.BUY, CRYPTO_CURRENCY.BTC);
@@ -220,7 +225,9 @@ class FeedExchange extends React.PureComponent {
       priceSellETH = offerPrice.price;
     }
 
-    return { priceBuyBTC, priceSellBTC, priceBuyETH, priceSellETH };
+    return {
+      priceBuyBTC, priceSellBTC, priceBuyETH, priceSellETH,
+    };
   }
 
   render() {
@@ -232,7 +239,9 @@ class FeedExchange extends React.PureComponent {
 
     const distance = this.getOfferDistance();
 
-    const { priceBuyBTC, priceSellBTC, priceBuyETH, priceSellETH } = this.getPrices();
+    const {
+      priceBuyBTC, priceSellBTC, priceBuyETH, priceSellETH,
+    } = this.getPrices();
 
     return (
       <div className="feed-exchange">
@@ -247,15 +256,15 @@ class FeedExchange extends React.PureComponent {
           </div>
           <table className="table-ex">
             <thead>
-            <tr>
+              <tr>
               <th className="header-text"><div className="image"><img src={iconBitcoin} /></div> <span>Bitcoin</span></th>
               <th className="header-text"><div className="image"><img src={iconEthereum} /></div> <span>Ethereum</span></th>
-              {/*<th className="buy-color header-text">Buy rate</th>*/}
-              {/*<th className="sell-color header-text">Sell rate</th>*/}
+              {/*<th className="buy-color header-text">Buy rate</th> */}
+              {/* <th className="sell-color header-text">Sell rate</th>*/}
             </tr>
             </thead>
             <tbody>
-            <tr>
+              <tr>
               <td>
                 <div className="buy-color">Buy rate</div>
                 <div className="buy-color price-number mt-1">{formatMoney(priceBuyBTC)}</div>
@@ -267,7 +276,7 @@ class FeedExchange extends React.PureComponent {
                 <div className="currency">{currency}</div>
               </td>
             </tr>
-            <tr>
+              <tr>
               <td>
                 <div className="sell-color">Sell rate</div>
                 <div className="sell-color price-number mt-1">{formatMoney(priceSellBTC)}</div>
@@ -284,7 +293,7 @@ class FeedExchange extends React.PureComponent {
         </Feed>
         <Button block className="mt-2" onClick={this.handleOnShake}>Shake</Button>
         <ModalDialog onRef={modal => this.modalRef = modal} className="dialog-shake-detail">
-          <ShakeDetail offer={this.offer} handleShake={this.shakeOfferItem}/>
+          <ShakeDetail offer={this.offer} handleShake={this.shakeOfferItem} />
         </ModalDialog>
       </div>
     );

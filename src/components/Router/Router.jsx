@@ -200,8 +200,6 @@ class Router extends React.Component {
     this.props.getListOfferPrice({
       PATH_URL: API_URL.EXCHANGE.GET_LIST_OFFER_PRICE,
       qs: { fiat_currency: this.props?.app?.ipInfo?.currency },
-      successFn: this.handleGetPriceSuccess,
-      errorFn: this.handleGetPriceFailed,
     });
   }
 
@@ -279,7 +277,7 @@ class Router extends React.Component {
         this.getListOfferPrice();
         this.timeOutGetPrice = setInterval(() => {
           this.getListOfferPrice();
-        }, 5 * 60 * 1000); // 30'
+        }, 2 * 60 * 1000); // 2'
 
         // wallet handle
         let listWallet = MasterWallet.getMasterWallet();

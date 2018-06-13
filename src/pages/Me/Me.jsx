@@ -38,10 +38,30 @@ class Me extends React.Component {
     loadMyHandshakeList: PropTypes.func.isRequired,
     getListOfferPrice: PropTypes.func.isRequired,
     firebaseUser: PropTypes.any.isRequired,
+    history: PropTypes.object.isRequired,
+    fireBaseExchangeDataChange: PropTypes.func.isRequired,
+    fireBaseBettingChange: PropTypes.func.isRequired,
+    exchange: PropTypes.object.isRequired,
   }
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      exchange: this.props.exchange,
+    };
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.exchange.listOfferPrice.updatedAt !== prevState.exchange.listOfferPrice.updatedAt) {
+      nextProps.loadMyHandshakeList({ PATH_URL: API_URL.ME.BASE });
+      return { exchange: nextProps.exchange };
+    }
+    return null;
+  }
+
   componentDidMount() {
-    this.getListOfferPrice();
-    // this.loadMyHandshakeList();
+    this.loadMyHandshakeList();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -57,26 +77,6 @@ class Me extends React.Component {
       }
     }
   }
-
-  getListOfferPrice = () => {
-    this.props.getListOfferPrice({
-      PATH_URL: API_URL.EXCHANGE.GET_LIST_OFFER_PRICE,
-      qs: { fiat_currency: this.props?.app?.ipInfo?.currency },
-      successFn: this.handleGetPriceSuccess,
-      errorFn: this.handleGetPriceFailed,
-    });
-  }
-
-  handleGetPriceSuccess = () => {
-    this.loadMyHandshakeList();
-  }
-
-  handleGetPriceFailed = () => {
-    setTimeout(() => {
-      this.getListOfferPrice();
-    }, 1000);
-  }
-
 
   loadMyHandshakeList = () => {
     this.props.loadMyHandshakeList({ PATH_URL: API_URL.ME.BASE });
@@ -104,7 +104,7 @@ class Me extends React.Component {
           <Col md={12}>
             <div className="update-profile pt-2">
               <Image className="avatar" src={ShopSVG} alt="shop" />
-              <div className="text" style={{ width: '69%'}}>
+              <div className="text" style={{ width: '69%' }}>
                 <strong>Shop appearance</strong>
                 <p>Change your shop status</p>
               </div>
@@ -151,6 +151,7 @@ const mapState = state => ({
   app: state.app,
   auth: state.auth,
   firebaseUser: state.firebase.data,
+  exchange: state.exchange,
 });
 
 const mapDispatch = ({
