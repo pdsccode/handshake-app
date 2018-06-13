@@ -152,7 +152,6 @@ class FAQ extends React.Component {
 
   render() {
     const { locale, messages } = this.props.intl;
-    console.log("this.props", this.props);
     return (
       <div className="container faq">
         <div className="row">

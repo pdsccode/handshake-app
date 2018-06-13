@@ -59,80 +59,80 @@ export default {
       answer: 'Ninja est un échange anonyme-to-peer décentralisé prédiction en cours d’exécution sur le dessus de l’Ethereum blockchain.',
     },
     {
-      question: '',
-      answer: '',
+      question: 'ce qui est spécial au sujet de PEX ? Pourquoi devrais je parie sur un ?',
+      answer: 'Il permet aux parties de parier directement contre l’autre sans passer par une autorité centrale ou le bookmaker. Cela rend 100 % anonyme, pas de signes place aucun téléchargement requis. La gestion de Paris et au règlement des gains sont effectués collectivement par le réseau blockchain, protection des utilisateurs contre n’importe quel point de défaillance unique. Vous pouvez également créer vos propres marchés de prédiction.',
     },
     {
-      question: '',
-      answer: '',
+      question: 'ai-je besoin d’éther ? Supporte-t-il les autres cryptocurrencies ?',
+      answer: 'Oui. Ninja accepte uniquement les ETH pour l’instant, mais le support sera ajouté pour les autres monnaies très bientôt.',
     },
     {
-      question: '',
+      question: ' Comment puis-je commencer avec Ninja ?',
       isList: true,
       answer: [
         {
-          title: '',
-          content: '',
+          title: 'Obtenez l’éther :',
+          content: 'Vous pouvez soit acheter ETH directement en PEX avec vos cartes de crédit ou d’échanges de pièces populaires tels que Coinbase ou Binance.',
         },
         {
-          title: '',
-          content: '',
+          title: 'Recharger votre porte-monnaie PEX :',
+          content: 'Transférer l’ETH dans le portefeuille PEX. Portefeuille de PEX est complètement décentralisé, la clé privée est tenue sur votre téléphone, que vous pouvez transférer et recevoir ETH.',
         },
         {
-          title: '',
-          content: 'pain), the outcomes (i.e. Brazil wins) and the site (i.e. support or bet against the outcome)\n' +
-          'Enter the stake you want to bet (i.e. 1 ETH) and the odds (i.e. 1/ 2.25)\n' +
-          'The PEX Matching Engine will then find another order that bets against the odds you set.',
+          title: 'Placer un pari :',
+          content: 'Choix du marché vous voulez parier (p. ex. Brésil - Espagne), les résultats (c.-à-d. les victoires Brésil) et le site (c\'est-à-dire le support ou le pari contre l’issue)\n' +
+          'Entrer dans le jeu vous voulez à pari (c.-à-d. 1 ETH) et les cotes (c.-à-d. 1 / 2,25)\n' +
+          'Le moteur de Matching BEX trouverez alors une autre ordonnance qui parie contre vents et marées que vous définir.',
         },
         {
-          title: '',
-          content: '',
+          title: 'Attendre le rapport :',
+          content: 'Si vous gagnez, vos gains seront automatiquement transférées du contrat escrow intelligente à votre compte.',
         },
       ],
     },
     {
-      question: '',
-      answer: '',
+      question: 'puis-je créer mes propres cotes de préférés ? Comment ?',
+      answer: 'Oui ! Lorsque vous créez votre propre pari, vous allez entrer dans l’événement qui que vous intéresse et le résultat que vous souhaitez parier sur. Ensuite, il suffit d’entrer votre mise et la cote souhaitée. Puis le moteur PEX ',
     },
     {
-      question: '',
-      answer: '',
+      question: 'Comment vous la police Paris douteux ou illégaux ?',
+      answer: 'Nous construisons actuellement un système de freins et contrepoids à signaler les comportements inappropriés dans le dojo.',
     },
     {
-      question: '',
-      answer: '',
+      question: 'Comment est le système sait le résultat de Paris entre les gens ? Qui agit en tant qu’arbitre et vérifie un résultat par rapport à un autre à la conclusion du contrat ?',
+      answer: 'Ninja aura bientôt une solution complètement décentralisée pour vérifier le résultat et motivant la vérité en disant (un DAO de reporters !). En attendant, que nous allons lancer juste à temps pour la Coupe du monde, notre équipe utilise ',
     },
     {
-      question: 'Where is the coin held?',
-      answer: 'No one holds the funds. All the funds are kept safe in escrow until a resolution is reached.',
+      question: 'où se déroule la pièce ?',
+      answer: 'Personne ne détient les fonds. Tous les fonds sont conservés sécuritaire en dépôt jusqu\'à ce qu’une résolution soit atteinte.',
     },
     {
-      question: 'Why should I bet on blockchain instead of using traditional methods?',
-      answer: 'A decentralized prediction exchange will provide you the freedom to create your own odds and bet directly with anyone, offer you 100% ninja anonymity and guaranteed payouts.',
+      question: 'Pourquoi devrais je parie sur blockchain au lieu d’utiliser les méthodes traditionnelles ?',
+      answer: 'Un échange décentralisé de prédiction fournira vous la liberté de créer vos propres cotes et parier directement avec n’importe qui, vous offrons anonymat 100 % ninja et garantie des paiements.',
     },
     {
-      question: 'How about privacy and anonymity?',
-      answer: 'Ninja requires no downloads, and no sign ups. That means no passwords, no phone numbers and no emails. 100% anonymity.',
+      question: 'qu’en est-il de la vie privée et anonymat ?',
+      answer: 'Ninja nécessite aucun téléchargement et aucun signe d’ups. Cela veut dire aucun mot de passe, aucun numéro de téléphone et pas de courriels. anonymat 100 %.',
     },
     {
-      question: 'Do I need to pay any fees?',
-      answer: 'There are two main types of fees: creator fees (for the ninja that creates the bet) and the network fee (a percentage of the creator fee, that goes towards maintaining the platform).',
+      question: ' dois-je payer tous les frais ?',
+      answer: 'Il existe deux principaux types de frais : frais de créateur (pour le ninja qui crée le PARI) et les frais de réseau (un pourcentage de la taxe de créateur, qui se dirige vers le maintien de la plate-forme).',
     },
     {
-      question: 'What do I need to do when the outcome is finalized?',
-      answer: 'Nothing. If you win, your winnings will be automatically transferred to your account. If you lose, it will be someone else’s account.',
+      question: 'que dois-je faire quand le résultat est finalisé ?',
+      answer: 'Rien. Si vous gagnez, vos gains seront automatiquement transférés sur votre compte. Si vous perdez, ce sera quelqu\'un d’autre compte.',
     },
     {
-      question: 'Where can I find a match to bet on?',
-      answer: 'On the homepage, you’ll be able to browse ongoing bets and markets. If you can’t find any you like, create your own!',
+      question: 'où puis-je trouver une correspondance pour parier sur ?',
+      answer: 'Sur la page d’accueil, vous serez en mesure de parcourir les marchés et les Paris en cours. Si vous ne trouvez pas que vous aimez, créez vos propres !',
     },
     {
-      question: 'Other than sports, can I bet on anything else? How does it work?',
-      answer: 'Very soon, Ninja will apply to everything under the sun. The only limitation will be your creativity. You can easily create any market on any future event, be it sports, politics, science, markets, climate… you name it.',
+      question: 'autres que sportives, je peux parier sur autre chose ? Comment ça marche ?',
+      answer: 'Très bientôt, Ninja s’appliqueront à tout sous le soleil. La seule limite sera votre créativité. Vous pouvez facilement créer n’importe quel marché à n’importe quel événement futur, qu’elle soit sportive, politique, science, marchés, climat... vous l’appelez. ',
     },
     {
-      question: 'What’s gonna happen to the Handshake mobile app?',
-      answer: 'We will be integrating Handshake (and your favourite features like promises, IOUs, contract upload, etc.) into the Ninja mobile website.',
+      question: 'ce qui va se passer à l’application mobile de la poignée de main ?',
+      answer: 'Nous intégrerons Handshake (et vos fonctions préférées comme promesses, reconnaissances de dette, upload de contrat, etc.) dans le site Web mobile de Ninja. ',
     },
   ],
 };
