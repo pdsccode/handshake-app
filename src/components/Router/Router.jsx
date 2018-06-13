@@ -28,6 +28,7 @@ import MobileOrTablet from '@/components/MobileOrTablet';
 import BrowserDetect from '@/services/browser-detect';
 import NetworkError from '@/components/Router/NetworkError';
 import BlockCountry from '@/components/core/presentation/BlockCountry';
+import qs from 'querystring';
 
 addLocaleData([...en, ...fr]);
 
@@ -162,6 +163,7 @@ class Router extends React.Component {
     this.checkRegistry = ::this.checkRegistry;
     this.authSuccess = ::this.authSuccess;
     this.notification = ::this.notification;
+    this.setLanguage = ::this.setLanguage;
     this.detectCountry.call(this);
   }
 
@@ -218,14 +220,20 @@ class Router extends React.Component {
     });
   }
 
-  async detectCountry() {
+  setLanguage(language) {
     const isSupportedLanguages = ['en', 'zh', 'fr', 'de', 'ja', 'ko', 'ru', 'es', 'vi'];
+    if (isSupportedLanguages.indexOf(language) >= 0) {
+      this.props.changeLocale(language);
+    } else {
+      this.props.changeLocale('en');
+    }
+  }
+
+  async detectCountry() {
     const url = `https://ipapi.co/json${process.env.ipapiKey ? `?key=${process.env.ipapiKey}` : ''}`;
     const { data } = await axios.get(url);
     const firstLanguage = data.languages.split(',')[0];
-    if (isSupportedLanguages.indexOf(firstLanguage) >= 0) {
-      this.props.changeLocale(firstLanguage);
-    }
+    this.setLanguage(firstLanguage);
     if (COUNTRIES_BLACKLIST.indexOf(data.country_name) !== -1) {
       this.setState({ isCountryBlackList: true });
     }
@@ -234,9 +242,15 @@ class Router extends React.Component {
   checkRegistry() {
     const token = local.get(APP.AUTH_TOKEN);
     // auth
+    const searchQS = window.location.search.replace('?', '');
+    const { language, ref } = qs.parse(searchQS);
+    console.log('searchQS', language, ref);
+    if (language) {
+      this.setLanguage(language);
+    }
     if (!token) {
       this.props.signUp({
-        PATH_URL: 'user/sign-up',
+        PATH_URL: `user/sign-up${ref ? `?ref=${ref}` : ''}`,
         METHOD: 'POST',
         successFn: () => {
           this.authSuccess();

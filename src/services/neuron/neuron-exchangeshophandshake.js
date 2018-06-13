@@ -5,7 +5,7 @@ import { MasterWallet } from '@/models/MasterWallet';
 const wallet = MasterWallet.getWalletDefault('ETH');
 const address = wallet.address;
 const privateKey = wallet.privateKey;
-console.log('Address, PrivateKey:', address, privateKey);
+// console.log('Address, PrivateKey:', address, privateKey);
 
 const TAG = 'ExchangeShopHandshake';
 export default class ExchangeShopHandshake extends BaseHandshake {
@@ -30,18 +30,18 @@ export default class ExchangeShopHandshake extends BaseHandshake {
   initByShopOwner = (value, offchain) => {
     console.log(TAG, ' initByShopOwner = ', value, offchain);
 
-    const payoutValue = Web3.utils.toHex(this.web3.utils.toWei(value.toString(), 'ether'));
+    // const payoutValue = Web3.utils.toHex(this.web3.utils.toWei(value.toString(), 'ether'));
     const bytesOffchain = this.web3.utils.fromAscii(offchain);
 
     const payloadData = this.handshakeInstance.methods
       .initByShopOwner(
-        payoutValue,
+        // payoutValue,
         bytesOffchain,
       )
       .encodeABI();
 
-    console.log('address', address);
-    console.log('privateKey', privateKey);
+    // console.log('address', address);
+    // console.log('privateKey', privateKey);
 
     return this.neuron.makeRawTransaction(address, privateKey, payloadData, {
       amount: value,
@@ -96,19 +96,19 @@ export default class ExchangeShopHandshake extends BaseHandshake {
   initByCustomer = (shopOwner, value, offchain) => {
     console.log(TAG, ' initByCustomer = ', shopOwner, value, offchain);
 
-    const payoutValue = Web3.utils.toHex(this.web3.utils.toWei(value.toString(), 'ether'));
+    // const payoutValue = Web3.utils.toHex(this.web3.utils.toWei(value.toString(), 'ether'));
     const bytesOffchain = this.web3.utils.fromAscii(offchain);
 
     const payloadData = this.handshakeInstance.methods
       .initByCustomer(
         shopOwner,
-        payoutValue,
+        // payoutValue,
         bytesOffchain,
       )
       .encodeABI();
 
-    console.log('address', address);
-    console.log('privateKey', privateKey);
+    // console.log('address', address);
+    // console.log('privateKey', privateKey);
 
     return this.neuron.makeRawTransaction(address, privateKey, payloadData, {
       amount: value,

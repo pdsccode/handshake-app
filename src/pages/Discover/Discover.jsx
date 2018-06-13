@@ -48,6 +48,7 @@ class DiscoverPage extends React.Component {
     app: PropTypes.object.isRequired,
     firebaseUser: PropTypes.object,
     exchange: PropTypes.object.isRequired,
+    ipInfo: PropTypes.object.isRequired,
   }
 
   static defaultProps = {
@@ -184,7 +185,7 @@ class DiscoverPage extends React.Component {
   }
 
   loadDiscoverList = () => {
-    console.log('call loadDiscoverList');
+    const { ipInfo } = this.props;
     const {
       handshakeIdActive,
       query,
@@ -196,6 +197,10 @@ class DiscoverPage extends React.Component {
     qs.location_p = { pt, d: DISCOVER_GET_HANDSHAKE_RADIUS };
     if (handshakeIdActive) {
       qs.type = handshakeIdActive;
+
+      if (handshakeIdActive === HANDSHAKE_ID.EXCHANGE) {
+        qs.custom_query = ` fiat_currency_s:${ipInfo?.currency} `;
+      }
     }
 
     if (query) {
@@ -223,7 +228,7 @@ class DiscoverPage extends React.Component {
     return (
       <React.Fragment>
         <div className={`discover-overlay ${this.state.isLoading ? 'show' : ''}`}>
-          <Image src={loadingSVG} alt="loading" />
+          <Image src={loadingSVG} alt="loading" width="100" />
         </div>
         <Grid className="discover">
           {/* <Row className="search-bar-wrapper">
@@ -300,6 +305,7 @@ const mapState = state => ({
   discover: state.discover,
   firebaseUser: state.firebase.data,
   app: state.app,
+  ipInfo: state.app.ipInfo,
   exchange: state.exchange,
 });
 

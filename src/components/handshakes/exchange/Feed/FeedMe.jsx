@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import iconLocation from '@/assets/images/icon/icons8-geo_fence.svg';
 import iconChat from '@/assets/images/icon/icons8-chat.svg';
+import iconPhone from '@/assets/images/icon/icons8-phone.svg';
 // style
 import './FeedExchange.scss';
 import {FormattedMessage, injectIntl} from 'react-intl';
@@ -57,6 +58,7 @@ import {feedBackgroundColors} from "@/components/handshakes/exchange/config";
 import {updateOfferStatus} from "@/reducers/discover/action";
 import {BigNumber} from "bignumber.js";
 import "./FeedMe.scss"
+import { getLocalizedDistance } from "@/services/util"
 
 class FeedMe extends React.PureComponent {
   constructor(props) {
@@ -212,13 +214,14 @@ class FeedMe extends React.PureComponent {
   handleDeleteOfferItemSuccess = async (responseData) => {
     const { intl, refreshPage } = this.props;
     const { data } = responseData;
-    const { currency } = data;
     const { offer } = this;
+    const { currency, sellAmount } = offer;
 
     console.log('handleDeleteOfferItemSuccess', responseData);
+    console.log('currency, sellAmount',currency, sellAmount);
 
     if (currency === CRYPTO_CURRENCY.ETH) {
-      if (offer.sellAmount > 0) {
+      if (sellAmount > 0) {
         const wallet = MasterWallet.getWalletDefault(currency);
 
         const exchangeHandshake = new ExchangeShopHandshake(wallet.chainId);
@@ -306,7 +309,9 @@ class FeedMe extends React.PureComponent {
           case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.PRE_SHAKING:
           case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.PRE_SHAKE:
           case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.REJECTING:
-          case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.REJECTED: {
+          case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.REJECTED:
+          case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.CANCELLING:
+          case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.CANCELLED: {
 
             offerType = EXCHANGE_ACTION_PRESENT_NAME[offer.type];
 
@@ -329,15 +334,18 @@ class FeedMe extends React.PureComponent {
       }
     }
 
-    const message = intl.formatMessage({ id: idMessage }, {
-      offerType: offerType,
-      amount: formatAmountCurrency(offer.amount),
-      currency: offer.currency,
-      currency_symbol: offer.fiatCurrency,
-      total: formatMoney(fiatAmount),
-      // fee: offer.feePercentage,
-      payment_method: EXCHANGE_METHOD_PAYMENT[EXCHANGE_FEED_TYPE.EXCHANGE],
-    });
+    let  message = '';
+    if (idMessage) {
+      message = intl.formatMessage({ id: idMessage }, {
+        offerType: offerType,
+        amount: formatAmountCurrency(offer.amount),
+        currency: offer.currency,
+        currency_symbol: offer.fiatCurrency,
+        total: formatMoney(fiatAmount),
+        // fee: offer.feePercentage,
+        payment_method: EXCHANGE_METHOD_PAYMENT[EXCHANGE_FEED_TYPE.EXCHANGE],
+      });
+    }
 
     return message;
   }
@@ -762,7 +770,7 @@ class FeedMe extends React.PureComponent {
 
 
   render() {
-    const {intl, initUserId, shakeUserIds, location, state, status, mode = 'discover', ipInfo: { latitude, longitude }, initAt, ...props} = this.props;
+    const {intl, initUserId, shakeUserIds, location, state, status, mode = 'discover', ipInfo: { latitude, longitude, country_code }, initAt, ...props} = this.props;
     const offer = this.offer;
     // console.log('render',offer);
     const {listOfferPrice} = this.props;
@@ -833,18 +841,21 @@ class FeedMe extends React.PureComponent {
       }
     }
 
-    /*const phone = offer.contactPhone;
-    const address = offer.contactInfo;*/
+    /*const phone = offer.contactPhone;*/
+    const address = offer.contactInfo;
+
 
     let distanceKm = 0;
-    let distanceMiles = 0;
 
     if (location) {
       const latLng = location.split(',')
       distanceKm = getDistanceFromLatLonInKm(latitude, longitude, latLng[0], latLng[1])
-      distanceMiles = distanceKm * 0.621371
     }
     const isCreditCard = offer.feedType === EXCHANGE_FEED_TYPE.INSTANT;
+
+    const phone = offer.contactPhone;
+    const phoneDisplayed = phone.replace(/-/g, '');
+
     return (
       <div className="feed-me-exchange">
         {/*<div>userType: {this.userType}</div>*/}
@@ -894,6 +905,27 @@ class FeedMe extends React.PureComponent {
           */}
 
           {
+            phone && phone.split('-')[1] !== '' && ( // no phone number
+              <div className="media mb-1 detail">
+                <img className="mr-2" src={iconPhone} width={20}/>
+                <div className="media-body">
+                  <div><a href={`tel:${phoneDisplayed}`} className="text-white">{phoneDisplayed}</a></div>
+                </div>
+              </div>
+            )
+          }
+          {
+            address && (
+              <div className="media mb-1 detail">
+                <img className="mr-2" src={iconLocation} width={20}/>
+                <div className="media-body">
+                  <div>{address}</div>
+                </div>
+              </div>
+            )
+          }
+
+          {/*
             !isCreditCard && (
               <div className="media detail">
                 <img className="mr-2" src={iconLocation} width={20} />
@@ -901,14 +933,15 @@ class FeedMe extends React.PureComponent {
                   <div>
                     <FormattedMessage id="offerDistanceContent" values={{
                       // offerType: offer.type === 'buy' ? 'Buyer' : 'Seller',
-                      distanceKm: distanceKm > 1 || distanceMiles === 0 ? distanceKm.toFixed(0) : distanceKm.toFixed(3),
-                      distanceMiles: distanceMiles === 0 ? distanceKm.toFixed(0) : distanceMiles.toFixed(1),
+                      distance: getLocalizedDistance(distanceKm, country_code)
+                      // distanceKm: distanceKm > 1 || distanceMiles === 0 ? distanceKm.toFixed(0) : distanceKm.toFixed(3),
+                      // distanceMiles: distanceMiles === 0 ? distanceKm.toFixed(0) : distanceMiles.toFixed(1),
                     }}/>
                   </div>
                 </div>
               </div>
             )
-          }
+          */}
         </Feed>
         {/*<Button block className="mt-2">Accept</Button>*/}
         {actionButtons}

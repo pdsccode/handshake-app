@@ -6,7 +6,7 @@ export const requiredOne = (fieldNames) => (value, allValues) => {
     const fieldName = fieldNames[i]
     if (allValues[fieldName]) return undefined;
   }
-  return 'One of these is required';
+  return 'You need to fill in one of these!';
   // return (value && value < min ? `Must be greater than ${min}` : undefined);
 }
 
