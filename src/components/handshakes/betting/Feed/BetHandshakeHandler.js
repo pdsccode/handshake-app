@@ -75,9 +75,9 @@ export class BetHandshakeHandler {
     let label = null;
     let strStatus = null;
     let isAction = false;
-    console.log('Role:', role);
-    console.log('isMatch:', isMatch);
-    console.log('Blockchain status:', blockchainStatus);
+    console.log('getStatusLabel Role:', role);
+    console.log('getStatusLabel isMatch:', isMatch);
+    console.log('getStatusLabel Blockchain status:', blockchainStatus);
     if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_PENDING) {
       strStatus = BETTING_STATUS_LABEL.INITING;
       isAction = false;

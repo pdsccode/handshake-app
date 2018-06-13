@@ -91,6 +91,8 @@ export default class BettingHandshake extends BaseHandshake {
     const bytesOffchain = this.web3.utils.asciiToHex(offchain);
     const oddsTakerValue = takerOdds * 100;
     const oddsMakerValue = makerOdds * 100;
+    console.log('Sa debug OddsTaker OddsMaker:', oddsTakerValue, oddsMakerValue)
+
     const payloadData = this.handshakeInstance.methods
       .shake(hid, side, oddsTakerValue, maker, oddsMakerValue, bytesOffchain)
       .encodeABI();

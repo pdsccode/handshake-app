@@ -83,13 +83,13 @@ class FeedBetting extends React.Component {
   }
 
   handleStatus(){
-    const {status, side, result, shakeUserIds, id} = this.props;
+    const {side, result, shakeUserIds, id} = this.props;
 
     console.log('Props:', this.props);
-    console.log('Status:', status);
     const profile = local.get(APP.AUTH_PROFILE);
     const isUserShake = this.isShakeUser(shakeUserIds, profile.id);
     let itemInfo = this.props;
+    let status = this.props;
     if(isUserShake){
       const extraData = this.extraData;
       console.log('Extra data:', extraData);
@@ -101,6 +101,7 @@ class FeedBetting extends React.Component {
         console.log('Found Shaked Item:', foundShakedItem);
         if(foundShakedItem){
           itemInfo = foundShakedItem;
+          status = itemInfo.status;
         }
       }
     }
