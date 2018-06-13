@@ -265,7 +265,7 @@ class DiscoverPage extends React.Component {
                       </dd>
                       <dt>Pool (ETH)</dt>
                       <dd>
-                        The total bets for different price points (odds).  Red: Support orders. Green: Oppose orders.
+                        The total bets for different price points (odds).  Green: Support orders. Red: Oppose orders.
                       </dd>
                       <dt>Support or Oppose</dt>
                       <dd>
