@@ -5,31 +5,35 @@
 }
 
 .feed-exchange {
-  .info {
-    text-align: left;
-    margin-bottom: 20px;
-    .name-shop {
-      font-weight: 500;
-      font-size: 18px;
-      color: #FFFFFF;
-      letter-spacing: 0.32px;
+  .name-shop {
+    font-weight: 500;
+    color: #FFFFFF;
+    font-size: 16px;
+    letter-spacing: 0.29px;
+  }
+  .distance {
+    padding-bottom: 2px;
+    font-weight: 400;
+    font-size: 14px;
+    color: #FFFFFF;
+    img {
+      margin-top: -2px;
+      padding: 0 11px 0 7px;
     }
-    .transaction {
-      font-weight: 400;
-      font-size: 14px;
-      color: #FFFFFF;
-      letter-spacing: 0;
-      line-height: 25px;
-    }
-    .distance {
-      opacity: 0.6;
-      font-weight: 400;
-      font-size: 14px;
-      color: #FFFFFF;
-    }
+  }
+  .transaction-successful {
+    color: #4CD964;
+    font-weight: 400;
+    font-size: 14px;
+  }
+  .transaction-failed {
+    font-size: 14px;
+    color: #F5A623;
+    font-weight: 400;
   }
   .table-ex {
     width: 100%;
+    border-bottom: 1px solid rgba(255,255,255,0.25);
     .image {
       vertical-align: middle;
       display: inline-block;
@@ -46,14 +50,19 @@
     }
     thead {
       border-top: 1px solid rgba(255,255,255,0.25);
-      //border-bottom: 1px solid rgba(255,255,255,0.25);
+      border-bottom: 1px solid rgba(255,255,255,0.25);
       th {
-        padding: 15px 0;
+        padding: 5px 0;
       }
     }
     tbody {
       td {
         padding-top: 15px;
+      }
+      tr:last-child {
+        td {
+          padding-bottom: 15px;
+        }
       }
     }
     .header-text {
@@ -70,9 +79,8 @@
     }
     .price-number {
       font-weight: 900;
-      font-size: 18px;
-      letter-spacing: 0.32px;
-      line-height: 18px;
+      font-size: 16px;
+      letter-spacing: 0.29px;
       text-shadow: 0 2px 4px rgba(0,0,0,0.50);
     }
     .currency {

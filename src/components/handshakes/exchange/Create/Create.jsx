@@ -53,6 +53,7 @@ import OfferShop from "@/models/OfferShop";
 import CoinOffer from "@/models/CoinOffer";
 import { addOfferItem, } from "@/reducers/exchange/action";
 import {getOfferStores} from "@/reducers/exchange/action";
+import { getErrorMessageFromCode } from "../utils";
 
 const nameFormExchangeCreate = "exchangeCreate";
 const FormExchangeCreate = createForm({
@@ -277,6 +278,7 @@ class Component extends React.Component {
       latitude: lat,
       longitude: lng,
       fiat_currency: ipInfo.currency,
+      chat_username: authProfile?.username,
     };
 
     const offerStore = {
@@ -360,12 +362,12 @@ class Component extends React.Component {
     const offer = OfferShop.offerShop(data);
     this.offer = offer;
 
-    console.log('handleCreateOfferSuccess', data);
+    // console.log('handleCreateOfferSuccess', data);
 
     const wallet = MasterWallet.getWalletDefault(currency);
     // const rewardWallet = MasterWallet.getRewardWalletDefault(currency);
 
-    console.log('wallet', wallet);
+    // console.log('wallet', wallet);
     // console.log('rewardWallet', rewardWallet);
 
     if (currency === CRYPTO_CURRENCY.BTC) {
@@ -424,7 +426,7 @@ class Component extends React.Component {
     console.log('handleCreateOfferFailed', e);
     this.hideLoading();
     this.props.showAlert({
-      message: <div className="text-center">{e.response?.data?.message}</div>,
+      message: <div className="text-center">{getErrorMessageFromCode(e)}</div>,
       timeOut: 3000,
       type: 'danger',
     });
@@ -576,10 +578,10 @@ class Component extends React.Component {
           {
             !haveProfile && (
               <div>
-                <div className="label">Shop information</div>
+                <div className="label">Station information</div>
                 <Feed className="feed my-2 wrapper" background={this.mainColor}>
                   <div className="d-flex">
-                    <label className="col-form-label mr-auto label-create"><span className="align-middle">Shop name</span></label>
+                    <label className="col-form-label mr-auto label-create"><span className="align-middle">Station name</span></label>
                     <div className='input-group'>
                       <Field
                         name="nameShop"
