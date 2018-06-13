@@ -214,13 +214,14 @@ class FeedMe extends React.PureComponent {
   handleDeleteOfferItemSuccess = async (responseData) => {
     const { intl, refreshPage } = this.props;
     const { data } = responseData;
-    const { currency } = data;
     const { offer } = this;
+    const { currency, sellAmount } = offer;
 
     console.log('handleDeleteOfferItemSuccess', responseData);
+    console.log('currency, sellAmount',currency, sellAmount);
 
     if (currency === CRYPTO_CURRENCY.ETH) {
-      if (offer.sellAmount > 0) {
+      if (sellAmount > 0) {
         const wallet = MasterWallet.getWalletDefault(currency);
 
         const exchangeHandshake = new ExchangeShopHandshake(wallet.chainId);
