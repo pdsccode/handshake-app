@@ -19,5 +19,6 @@ module.exports = {
     facebookAppId: '',
   },
   PredictionHandshakeFileName: '',
+  ipapiKey: '',
   dropConsole: true,
 };
