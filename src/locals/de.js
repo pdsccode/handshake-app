@@ -50,47 +50,75 @@ export default {
   offerStoreHandShakeContent: '{offerTypeBuy} {amountBuy} {currency} at {fiatAmountBuy} {fiatAmountCurrency}. {offerTypeSell} {amountSell} {currency} at {fiatAmountSell} {fiatAmountCurrency}',
 
   // FAQ
-  FAQ_TITLE: 'FAQ',
+  FAQ_TITLE: 'Häufig gestellte Fragen',
   FAQ_HEADER_YELLOW: '',
-  FAQ_HEADER: 'Décentralisé de prédiction change ',
+  FAQ_HEADER: 'Dezentrale Vorhersage Exchange',
   FAQ_DATA: [
     {
-      question: 'quel est le Ninja PEX ?',
-      answer: 'Ninja est un échange anonyme-to-peer décentralisé prédiction en cours d’exécution sur le dessus de l’Ethereum blockchain.',
+      question: 'Was ist Ninja PEX?',
+      answer: 'Ninja ist ein anonymen Peer-to-Peer-dezentrale Vorhersage-Austausch auf der Oberseite des Astraleums Blockchain ausgeführt.',
     },
     {
-      question: '',
-      answer: '',
+      question: 'Was ist besonders an PEX? Warum sollte ich auf eine Wette?',
+      answer: 'Es kann Parteien direkt gegeneinander wetten, ohne den Umweg über eine zentrale Behörde oder Buchmacher. Dies macht es 100 % anonym, keine Anzeichen, keine Downloads erforderlich. Wetten-Management und die Abrechnung ',
     },
     {
-      question: '',
-      answer: '',
+      question: 'benötige ich Äther? Unterstützt es andere kryptowährungen?',
+      answer: 'Ja. Ninja akzeptiert nur ETH für jetzt, aber Unterstützung wird sehr bald für andere Währungen hinzugefügt werden.',
     },
     {
-      question: '',
+      question: 'Wie starte ich mit Ninja?',
       isList: true,
       answer: [
         {
-          title: '',
-          content: '',
+          title: 'Äther zu bekommen:',
+          content: 'Sie können entweder direkt in PEX ETH mit Ihren Kreditkarten oder von beliebten Münze Börsen wie Coinbase oder Binance kaufen.',
         },
         {
-          title: '',
-          content: '',
+          title: 'Füllen Sie Ihre Brieftasche PEX:',
+          content: 'Übertragen Sie die ETH in den PEX-Wallet. PEX Brieftasche ist völlig dezentral, der private Schlüssel wird auf Ihrem Telefon gehalten, nur Sie können übertragen und empfangen ETH.',
         },
         {
-          title: '',
-          content: 'pain), the outcomes (i.e. Brazil wins) and the site (i.e. support or bet against the outcome)\n' +
-          'Enter the stake you want to bet (i.e. 1 ETH) and the odds (i.e. 1/ 2.25)\n' +
-          'The PEX Matching Engine will then find another order that bets against the odds you set.',
+          title: 'Platzieren Sie eine Wette:',
+          content: 'Wählen Sie den Markt, die Sie möchten Wette (d.h. Brasilien - Spanien), die Ergebnisse (z. B. Brasilien gewinnt) und der Website (d.h. Unterstützung oder Wette gegen das Ergebnis)\n' +
+          'Geben Sie den Einsatz Sie wollen Wette (d. h. 1 ETH) und die Quoten (d. h. 1 / 2,25)\n' +
+          'Die BEX-Matching-Engine finden dann einen weiteren Auftrag, der gegen die Quoten Wetten, die Sie festlegen.',
         },
         {
-          title: '',
-          content: '',
+          title: 'Warten auf den Bericht:',
+          content: 'Wenn Sie gewinnen, Ihre Gewinne werden werden automatisch vom smart Escrow-Vertrag auf Ihr Konto überwiesen.',
         },
       ],
     },
     {
+      question: 'einstellen kann ich meine eigenen bevorzugten Chancen? Wie?',
+      answer: 'Ja! Wenn Sie Ihren eigenen Einsatz zu erstellen, geben Sie das Ereignis, das, dem Sie interessiert sind, und die Ergebnisse, die, der Sie wetten möchten. Dann geben Sie einfach Ihren Einsatz und die Chancen, die Sie wollen. Dann die PEX-',
+    },
+    {
+      question: 'wie Polizei Sie unangenehme/illegale Wetten?',
+      answer: 'Wir bauen derzeit ein System der Checks and Balances, unangemessenes Verhalten im Dojo zu kennzeichnen.',
+    },
+    {
+      question: 'Woher weiß das System das Ergebnis der Wette zwischen den Menschen? Wer als Schiedsrichter und überprüft ein Ergebnis vs. ein weiteres bei Vertragsabschluss?',
+      answer: 'Ninja haben bald eine völlig dezentrale Lösung für die Überprüfung der Ergebnisses und Incentivierung Wahrheit erzählen (ein DAO von Reportern!). In der Zwischenzeit als wir just in Time für den FIFA World Cup startet, wird unser Team verwenden Sie eine öffentliche Quelle (livescore.com) und fungieren als der Reporter.',
+    },
+    {
+      question: 'wo findet die Münze?',
+      answer: 'Niemand hält die Fonds. Die Mittel werden auf dem Treuhandkonto sicher aufbewahrt, bis eine Lösung gefunden ist.',
+    },
+    {
+      question: 'Warum soll ich auf Blockchain anstelle von traditionellen Methoden Wetten?',
+      answer: 'Ein dezentrale Vorhersage Austausch stellen Ihnen die Freiheit, Ihre eigenen Quoten und Wetten direkt mit jedem zu schaffen bieten Ihnen 100 % Ninja Anonymität und garantierte Auszahlungen. ',
+    },
+    {
+      question: '',
+      answer: '',
+    },
+    {
+      question: '',
+      answer: '',
+    },
+    {
       question: '',
       answer: '',
     },
@@ -103,36 +131,8 @@ export default {
       answer: '',
     },
     {
-      question: 'Where is the coin held?',
-      answer: 'No one holds the funds. All the funds are kept safe in escrow until a resolution is reached.',
-    },
-    {
-      question: 'Why should I bet on blockchain instead of using traditional methods?',
-      answer: 'A decentralized prediction exchange will provide you the freedom to create your own odds and bet directly with anyone, offer you 100% ninja anonymity and guaranteed payouts.',
-    },
-    {
-      question: 'How about privacy and anonymity?',
-      answer: 'Ninja requires no downloads, and no sign ups. That means no passwords, no phone numbers and no emails. 100% anonymity.',
-    },
-    {
-      question: 'Do I need to pay any fees?',
-      answer: 'There are two main types of fees: creator fees (for the ninja that creates the bet) and the network fee (a percentage of the creator fee, that goes towards maintaining the platform).',
-    },
-    {
-      question: 'What do I need to do when the outcome is finalized?',
-      answer: 'Nothing. If you win, your winnings will be automatically transferred to your account. If you lose, it will be someone else’s account.',
-    },
-    {
-      question: 'Where can I find a match to bet on?',
-      answer: 'On the homepage, you’ll be able to browse ongoing bets and markets. If you can’t find any you like, create your own!',
-    },
-    {
-      question: 'Other than sports, can I bet on anything else? How does it work?',
-      answer: 'Very soon, Ninja will apply to everything under the sun. The only limitation will be your creativity. You can easily create any market on any future event, be it sports, politics, science, markets, climate… you name it.',
-    },
-    {
-      question: 'What’s gonna happen to the Handshake mobile app?',
-      answer: 'We will be integrating Handshake (and your favourite features like promises, IOUs, contract upload, etc.) into the Ninja mobile website.',
+      question: '',
+      answer: '',
     },
   ],
 };
