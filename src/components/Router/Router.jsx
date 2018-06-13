@@ -287,7 +287,7 @@ class Router extends React.Component {
           listWallet = createMasterWallets().then(() => {            
             this.setState({ loadingText: 'Please be patient. We are gathering ETH for you.' });
             
-            this.updateRewardAddress(listWallet);
+            this.updateRewardAddress();
             this.getFreeETH();
             
           });
@@ -299,8 +299,8 @@ class Router extends React.Component {
     });
   }
 
-  updateRewardAddress(masterWallet) {
-    let walletReward = MasterWallet.getRewardWallet(masterWallet);
+  updateRewardAddress() {    
+    let walletReward = MasterWallet.getRewardWalletJson();      
     const params = new URLSearchParams();
           params.append('reward_wallet_addresses', walletReward);
           this.props.authUpdate({
@@ -314,7 +314,7 @@ class Router extends React.Component {
   getFreeETH(){
     const wallet = MasterWallet.getWalletDefault('ETH');            
     this.props.getFreeETH({
-      PATH_URL: `/user/free-rinkeby-eth?address=A${wallet.address}`,
+      PATH_URL: `/user/free-rinkeby-eth?address=${wallet.address}`,
       METHOD: 'POST',
       successFn: (response) => {                
         this.setState({ isLoading: false, loadingText: '' });
