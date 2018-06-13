@@ -577,10 +577,10 @@ class Component extends React.Component {
           {
             !haveProfile && (
               <div>
-                <div className="label">Shop information</div>
+                <div className="label">Station information</div>
                 <Feed className="feed my-2 wrapper" background={this.mainColor}>
                   <div className="d-flex">
-                    <label className="col-form-label mr-auto label-create"><span className="align-middle">Shop name</span></label>
+                    <label className="col-form-label mr-auto label-create"><span className="align-middle">Station name</span></label>
                     <div className='input-group'>
                       <Field
                         name="nameShop"
