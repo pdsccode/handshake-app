@@ -19,19 +19,19 @@ export const HANDSHAKE_ID = { // important
   SEED: 4,
   WALLET_TRANSFER: 5,
   EXCHANGE_LOCAL: 6,
+  BETTING_EVENT: 7,
 };
 
 export const HANDSHAKE_ID_DEFAULT = 3;
 
 export const HANDSHAKE_NAME = {
-  // [HANDSHAKE_ID.PROMISE]: { name: 'Promise', priority: 2 },
+  // [HANDSHAKE_ID.PROMISE]: { name: 'Promise', priority: 3 },
   [HANDSHAKE_ID.BETTING]: { name: 'Betting', priority: 1 },
-  // [HANDSHAKE_ID.EXCHANGE]: 'Exchange',
+  [HANDSHAKE_ID.BETTING_EVENT]: { name: 'Design a betting market', priority: 2 },
   // [HANDSHAKE_ID.SEED]: 'Seed',
-  [HANDSHAKE_ID.WALLET_TRANSFER]: { name: 'Transfer coin', priority: 3 },
-  // [HANDSHAKE_ID.PROMISE]: 'Promise',
-  [HANDSHAKE_ID.EXCHANGE]: { name: 'Exchange', priority: 4 },
-  [HANDSHAKE_ID.EXCHANGE_LOCAL]: { name: 'Exchange Local', priority: 5 },
+  [HANDSHAKE_ID.WALLET_TRANSFER]: { name: 'Transfer coin', priority: 4 },
+  [HANDSHAKE_ID.EXCHANGE]: { name: 'Exchange', priority: 5 },
+  [HANDSHAKE_ID.EXCHANGE_LOCAL]: { name: 'Exchange Local', priority: 6 },
 };
 
 export const PRICE_DECIMAL = 0;
@@ -124,7 +124,7 @@ export const API_URL = {
     WITHDRAW: 'withdraw',
     IP_DOMAIN: 'https://ipfind.co/me',
 
-    //Store
+    // Store
     OFFER_STORES: 'exchange/offer-stores',
     SHAKES: 'shakes',
   },
@@ -270,15 +270,15 @@ export const HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE = {
 
 export const HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS = {
   PRE_SHAKING: 0,
-  PRE_SHAKE:   1,
+  PRE_SHAKE: 1,
   SHAKING: 2,
-  SHAKE:   3,
-  REJECTING:   4,
-  REJECTED:5,
-  COMPLETING:  6,
-  COMPLETED:   7,
-  CANCELLING:  8,
-  CANCELLED:   9,
+  SHAKE: 3,
+  REJECTING: 4,
+  REJECTED: 5,
+  COMPLETING: 6,
+  COMPLETED: 7,
+  CANCELLING: 8,
+  CANCELLED: 9,
 };
 
 export const HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS_NAME = {

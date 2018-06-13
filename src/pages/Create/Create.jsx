@@ -8,6 +8,7 @@ import Loading from '@/components/core/presentation/Loading';
 
 import './Create.scss';
 
+//
 const CreatePromise = props => (
   <DynamicImport
     loading={Loading}
@@ -17,6 +18,7 @@ const CreatePromise = props => (
   </DynamicImport>
 );
 
+//
 const CreateBetting = props => (
   <DynamicImport
     loading={Loading}
@@ -26,6 +28,16 @@ const CreateBetting = props => (
   </DynamicImport>
 );
 
+const CreateBettingEvent = props => (
+  <DynamicImport
+    loading={Loading}
+    load={() => import('@/components/handshakes/betting-event/Create/Create')}
+  >
+    {Component => <Component {...props} />}
+  </DynamicImport>
+);
+
+//
 const CreateExchange = props => (
   <DynamicImport
     loading={Loading}
@@ -44,6 +56,7 @@ const CreateExchangeLocal = props => (
   </DynamicImport>
 );
 
+//
 const CreateSeed = props => (
   <DynamicImport
     loading={Loading}
@@ -53,6 +66,7 @@ const CreateSeed = props => (
   </DynamicImport>
 );
 
+//
 const CreateWalletTransfer = props => (
   <DynamicImport
     loading={Loading}
@@ -62,11 +76,10 @@ const CreateWalletTransfer = props => (
   </DynamicImport>
 );
 
-// style
-
 const maps = {
   [HANDSHAKE_ID.PROMISE]: CreatePromise,
   [HANDSHAKE_ID.BETTING]: CreateBetting,
+  [HANDSHAKE_ID.BETTING_EVENT]: CreateBettingEvent,
   [HANDSHAKE_ID.EXCHANGE]: CreateExchange,
   [HANDSHAKE_ID.EXCHANGE_LOCAL]: CreateExchangeLocal,
   [HANDSHAKE_ID.SEED]: CreateSeed,
