@@ -102,8 +102,8 @@ class BetingShake extends React.Component {
     const marketAmount = side === SIDE.SUPPORT ? amountSupport : amountAgainst;
     const winvalue = marketAmount * marketOdds;
     this.setState({
-      oddValue: marketOdds,
-      amountValue: marketAmount,
+      oddValue: parseFloat(marketOdds).toFixed(2),
+      amountValue: parseFloat(marketAmount).toFixed(4),
       winvalue: winvalue
     })
   }
