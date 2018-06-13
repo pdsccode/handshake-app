@@ -461,11 +461,11 @@ class FeedMe extends React.PureComponent {
         break;
       }
       case HANDSHAKE_USER.SHAKED: {
-        chatUserName = offer.chatUsername;
+        chatUserName = offer?.chatUsername;
         break;
       }
       case HANDSHAKE_USER.OWNER: {
-        chatUserName = offer.toChatUsername;
+        chatUserName = offer?.toChatUsername;
         break;
       }
     }
