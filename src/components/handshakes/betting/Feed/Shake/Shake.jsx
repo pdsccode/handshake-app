@@ -101,11 +101,12 @@ class BetingShake extends React.Component {
     //const marketOdds = this.toggleRef.value === SIDE.SUPPORT ? marketSupportOdds : marketAgainstOdds;
     const marketOdds = side === SIDE.SUPPORT ? marketSupportOdds : marketAgainstOdds;
     const marketAmount = side === SIDE.SUPPORT ? amountSupport : amountAgainst;
-    const winvalue = marketAmount * marketOdds;
+    const winValue = marketAmount * marketOdds;
+    console.log('componentWillReceiveProps: marketOdds, marketAmount, winValue:', marketOdds, marketAmount, winValue);
     this.setState({
       oddValue: parseFloat(marketOdds).toFixed(2),
       amountValue: parseFloat(marketAmount).toFixed(4),
-      winvalue: winvalue
+      winValue: parseFloat(winValue).toFixed(4)
     })
   }
 
@@ -252,7 +253,7 @@ class BetingShake extends React.Component {
   }
 
   renderForm() {
-    const { total, isShowOdds, marketOdds, isChangeOdds } = this.state;
+    const { total, isShowOdds, marketOdds, isChangeOdds, winValue } = this.state;
     const {side} = this.props;
     console.log('Market Odd render form:', marketOdds);
     /*
