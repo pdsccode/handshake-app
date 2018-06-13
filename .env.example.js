@@ -14,9 +14,9 @@ module.exports = {
   GOOGLE_API_KEY: '',
   social: {
     isUseSocial: false,
-    // googleAnalyticId: '',
-    // facebookPixelId: '',
-    // facebookAppId: '',
+    googleAnalyticId: '',
+    facebookPixelId: '',
+    facebookAppId: '',
   },
   PredictionHandshakeFileName: ''
 };

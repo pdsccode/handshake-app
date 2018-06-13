@@ -3,21 +3,30 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 // service, constant
 import { loadDiscoverList } from '@/reducers/discover/action';
-import { API_URL, DISCOVER_GET_HANDSHAKE_RADIUS, EXCHANGE_ACTION, EXCHANGE_ACTION_NAME, HANDSHAKE_ID } from '@/constants';
-import { URL } from '@/constants';
+import {
+  API_URL,
+  DISCOVER_GET_HANDSHAKE_RADIUS,
+  // EXCHANGE_ACTION,
+  // EXCHANGE_ACTION_NAME,
+  HANDSHAKE_ID,
+  URL,
+} from '@/constants';
 // components
 import { Col, Grid, Row } from 'react-bootstrap';
-import SearchBar from '@/components/core/controls/SearchBar';
+// import SearchBar from '@/components/core/controls/SearchBar';
 import Category from '@/components/core/controls/Category';
 import FeedPromise from '@/components/handshakes/promise/Feed';
 import FeedBetting from '@/components/handshakes/betting/Feed';
 import FeedExchange from '@/components/handshakes/exchange/Feed/FeedExchange';
 import FeedSeed from '@/components/handshakes/seed/Feed';
 import FeedCreditCard from '@/components/handshakes/exchange/Feed/FeedCreditCard';
-import Tabs from '@/components/handshakes/exchange/components/Tabs';
+// import Tabs from '@/components/handshakes/exchange/components/Tabs';
 import NoData from '@/components/core/presentation/NoData';
 import BettingFilter from '@/components/handshakes/betting/Feed/Filter';
 import { getListOfferPrice } from '@/reducers/exchange/action';
+import Image from '@/components/core/presentation/Image';
+import loadingSVG from '@/assets/images/icon/loading.gif';
+
 // style
 import './Discover.scss';
 
@@ -34,14 +43,21 @@ class DiscoverPage extends React.Component {
     history: PropTypes.object.isRequired,
     loadDiscoverList: PropTypes.func.isRequired,
     getListOfferPrice: PropTypes.func.isRequired,
+    app: PropTypes.object.isRequired,
+    firebaseUser: PropTypes.object,
+  }
+
+  static defaultProps = {
+    firebaseUser: {},
   }
 
   constructor(props) {
     super(props);
     this.state = {
       handshakeIdActive: HANDSHAKE_ID.BETTING, // default show bet
-      tabIndexActive: '',
+      // tabIndexActive: '',
       query: '',
+      isLoading: true,
     };
     // this.loadDiscoverList();
     // bind
@@ -52,6 +68,7 @@ class DiscoverPage extends React.Component {
 
   componentDidMount() {
     this.getListOfferPrice();
+    // this.setState({ isLoading: false });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -90,6 +107,10 @@ class DiscoverPage extends React.Component {
     return <NoData style={{ height: '50vh' }} />;
   }
 
+  setLoading = (loadingState) => {
+    this.setState({ isLoading: loadingState });
+  }
+
   getListOfferPrice = () => {
     this.props.getListOfferPrice({
       PATH_URL: API_URL.EXCHANGE.GET_LIST_OFFER_PRICE,
@@ -121,8 +142,9 @@ class DiscoverPage extends React.Component {
   }
 
   clickCategoryItem(category) {
+    this.setLoading(true);
     const { id } = category;
-    let tabIndexActive = '';
+    // let tabIndexActive = '';
     switch (id) {
       case HANDSHAKE_ID.BETTING:
         // do something
@@ -132,7 +154,7 @@ class DiscoverPage extends React.Component {
         break;
       case HANDSHAKE_ID.EXCHANGE:
         // do something
-        tabIndexActive = 1;
+        // tabIndexActive = 1;
         break;
       default:
         // is promise
@@ -140,20 +162,31 @@ class DiscoverPage extends React.Component {
     // set feed type activate
     this.setState({
       handshakeIdActive: id,
-      tabIndexActive,
+      // tabIndexActive,
     }, () => {
-      this.loadDiscoverList();
+      if (category.id !== 3) {
+        this.loadDiscoverList();
+      }
     });
   }
 
-  clickTabItem(index) {
-    this.setState({ tabIndexActive: index }, () => {
-      this.loadDiscoverList();
+  clickTabItem() {
+    // index
+    this.setState({
+      // tabIndexActive: index
+    }, () => {
+      // if (category.id !== 3) {
+      //   this.loadDiscoverList();
+      // }
     });
   }
 
   loadDiscoverList = () => {
-    const { handshakeIdActive, tabIndexActive, query } = this.state;
+    const {
+      handshakeIdActive,
+      // tabIndexActive,
+      query,
+    } = this.state;
     const qs = { };
 
     const pt = `${this.props?.app?.ipInfo?.latitude},${this.props?.app?.ipInfo?.longitude}`;
@@ -171,79 +204,96 @@ class DiscoverPage extends React.Component {
       qs.query = query;
     }
 
-    this.props.loadDiscoverList({ PATH_URL: API_URL.DISCOVER.INDEX, qs });
+    this.props.loadDiscoverList({
+      PATH_URL: API_URL.DISCOVER.INDEX,
+      qs,
+      successFn: () => {
+        this.setLoading(false);
+      },
+      errorFn: () => {
+        this.setLoading(false);
+      },
+    });
   }
 
   render() {
-    const { handshakeIdActive, tabIndexActive } = this.state;
+    const {
+      handshakeIdActive,
+      // tabIndexActive,
+    } = this.state;
 
     return (
-      <Grid className="discover">
-        {/* <Row className="search-bar-wrapper">
-          <Col md={12} xs={12}>
-            <SearchBar onSuggestionSelected={() => {}} onInputSearchChange={this.searchChange} />
-          </Col>
-        </Row> */}
-        <Row>
-          <Col md={12} xs={6}>
-            <Category
-              idActive={handshakeIdActive}
-              className="category-wrapper"
-              onRef={(category) => { this.categoryRef = category; return null; }}
-              onItemClick={this.clickCategoryItem}
-            />
-          </Col>
-        </Row>
-        {
-          handshakeIdActive === HANDSHAKE_ID.EXCHANGE && (
-            <Row>
-              <Col md={12} className="feed-wrapper">
-                <FeedCreditCard history={this.props.history} />
-              </Col>
-            </Row>
-          )
-        }
-        {
-          handshakeIdActive === HANDSHAKE_ID.BETTING && (
-            <React.Fragment>
-              <BettingFilter />
+      <React.Fragment>
+        <div className={`discover-overlay ${this.state.isLoading ? 'show' : ''}`}>
+          <Image src={loadingSVG} alt="loading" />
+        </div>
+        <Grid className="discover">
+          {/* <Row className="search-bar-wrapper">
+            <Col md={12} xs={12}>
+              <SearchBar onSuggestionSelected={() => {}} onInputSearchChange={this.searchChange} />
+            </Col>
+          </Row> */}
+          <Row>
+            <Col md={12} xs={6}>
+              <Category
+                idActive={handshakeIdActive}
+                className="category-wrapper"
+                onRef={(category) => { this.categoryRef = category; return null; }}
+                onItemClick={this.clickCategoryItem}
+              />
+            </Col>
+          </Row>
+          {
+            handshakeIdActive === HANDSHAKE_ID.EXCHANGE && (
               <Row>
-                <Col md={12}>
-                  <dl className="faq">
-                    <dt>Price (Odds)</dt>
-                    <dd>
-                      Ninja uses <strong>decimal odds</strong>.  A winning bet at 1.75 would return a total of 1.75 ETH for every ETH staked. An even money bet is expressed as 2.00.
-                    </dd>
-                    <dt>Pool (ETH)</dt>
-                    <dd>
-                      The total bets for different price points (odds).  Red: Support orders. Green: Oppose orders.
-                    </dd>
-                    <dt>Support or Oppose</dt>
-                    <dd>
-                      Pick a side to bet on.  You can support the outcome or oppose the outcome.
-                    </dd>
-                    <dt>Market odds</dt>
-                    <dd>
-                      You can bet with the market odds, which will likely be matched immediately with existing orders on the order book, or set your own odds, which will likely go on the order book to wait for a matching order.
-                    </dd>
-                    <dt>Market volume</dt>
-                    <dd>
-                      The total volume of bets on this outcome.
-                    </dd>
-                    <dt>Market fee</dt>
-                    <dd>
-                      This is the fee set by the market creator, as a percentage of the winnings.  A market fee of 1% would be 1ETH on a winning payout of 100 ETH.
-                    </dd>
-                  </dl>
+                <Col md={12} className="feed-wrapper">
+                  <FeedCreditCard history={this.props.history} />
                 </Col>
               </Row>
-            </React.Fragment>
-          )
-        }
-        <Row>
-          {handshakeIdActive !== HANDSHAKE_ID.BETTING && this.getHandshakeList}
-        </Row>
-      </Grid>
+            )
+          }
+          {
+            handshakeIdActive === HANDSHAKE_ID.BETTING && (
+              <React.Fragment>
+                <BettingFilter setLoading={this.setLoading} />
+                <Row>
+                  <Col md={12}>
+                    <dl className="faq">
+                      <dt>Price (Odds)</dt>
+                      <dd>
+                        Ninja uses <strong>decimal odds</strong>.  A winning bet at 1.75 would return a total of 1.75 ETH for every ETH staked. An even money bet is expressed as 2.00.
+                      </dd>
+                      <dt>Pool (ETH)</dt>
+                      <dd>
+                        The total bets for different price points (odds).  Red: Support orders. Green: Oppose orders.
+                      </dd>
+                      <dt>Support or Oppose</dt>
+                      <dd>
+                        Pick a side to bet on.  You can support the outcome or oppose the outcome.
+                      </dd>
+                      <dt>Market odds</dt>
+                      <dd>
+                        You can bet with the market odds, which will likely be matched immediately with existing orders on the order book, or set your own odds, which will likely go on the order book to wait for a matching order.
+                      </dd>
+                      <dt>Market volume</dt>
+                      <dd>
+                        The total volume of bets on this outcome.
+                      </dd>
+                      <dt>Market fee</dt>
+                      <dd>
+                        This is the fee set by the market creator, as a percentage of the winnings.  A market fee of 1% would be 1ETH on a winning payout of 100 ETH.
+                      </dd>
+                    </dl>
+                  </Col>
+                </Row>
+              </React.Fragment>
+            )
+          }
+          <Row>
+            {handshakeIdActive !== HANDSHAKE_ID.BETTING && this.getHandshakeList}
+          </Row>
+        </Grid>
+      </React.Fragment>
     );
   }
 }
