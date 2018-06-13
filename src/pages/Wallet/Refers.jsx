@@ -29,8 +29,10 @@ import {
   import { showAlert } from '@/reducers/app/action';
   import { showLoading, hideLoading } from '@/reducers/app/action';
   import { Input as Input2, InputGroup, InputGroupAddon } from 'reactstrap';
+  import local from '@/services/localStore';
+import {APP} from '@/constants';
 
-  import "./Refers.scss"
+import "./Refers.scss"
 
   // 3 step Form
 const nameFormStep1 = 'referStep1';
@@ -50,7 +52,7 @@ class Refers extends React.Component {
     super(props);
 
     this.state = {
-      step: 1
+      step: 1, profile: false
     }    
   }
 
@@ -86,7 +88,13 @@ class Refers extends React.Component {
     // clear form:
     this.props.clearFields(nameFormStep1, false, false, "telegram_username");    
     this.props.clearFields(nameFormStep2, false, false, "twitter_username");    
-    this.props.clearFields(nameFormStep3, false, false, "refer_email");    
+    this.props.clearFields(nameFormStep3, false, false, "refer_email"); 
+    
+    // fill link ref:
+    const profile = local.get(APP.AUTH_PROFILE);
+    this.setState({profile: profile});    
+    this.props.rfChange(nameFormStep4, 'refer_link', profile != false ? "https://ninja.org/ref=?" + profile.username : '');
+    
   }
 
   componentWillUnmount() {
@@ -206,10 +214,8 @@ submitSendCoin=()=>{
                         type="text"
                         className="form-control"
                         placeholder=""
-                        value="ninja.org/ref=?IDsvsvrfsfe45545"
-                        component={fieldInput}
-                        value={this.state.inputLinkValue}
-                        onChange={evt => this.updateLinkValue(evt)}
+                        readOnly                        
+                        component={fieldInput}                        
                         validate={[required]}
                     />
                 </Col>
