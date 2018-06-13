@@ -136,7 +136,7 @@ class Me extends React.Component {
                   return null;
                 })
               ) : (
-                <NoData message="Make a Prediction to get started!" />
+                <NoData message="Start a mission." />
               )
             }
           </Col>
