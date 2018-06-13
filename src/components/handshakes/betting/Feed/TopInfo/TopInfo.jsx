@@ -10,6 +10,7 @@ import ModalDialog from '@/components/core/controls/ModalDialog';
 import { Link } from 'react-router-dom';
 
 import './TopInfo.scss';
+import commentIcon from '@/assets/images/icon/comment/comment-icon-top-info.svg';
 
 
 class TopInfo extends React.Component {
@@ -73,13 +74,19 @@ class TopInfo extends React.Component {
         {
           (commentNo > 0 || !this.isFirstCallCommmentCount) ? (
             <Link className="boxInfo" to={commentLink}>
-              <div className="number">{commentNo}</div>
+              <div className="number">
+                <img src={commentIcon} alt="comment icon" />
+                <span>{commentNo}</span>
+                </div>
               <div className="des">Comment{(commentNo === 0 || commentNo > 1) ? 's' : ''}</div>
             </Link>
           ) : (
             <Link className="boxInfo" to={addCommentLink}>
               {/*<div className="des">Say something</div>*/}
-              <div className="number">0</div>
+              <div className="number">
+                <img src={commentIcon} alt="comment icon" />
+                <span>0</span>
+              </div>
               <div className="des">Comments</div>
             </Link>
           )
