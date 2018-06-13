@@ -47,6 +47,7 @@ class DiscoverPage extends React.Component {
     getListOfferPrice: PropTypes.func.isRequired,
     app: PropTypes.object.isRequired,
     firebaseUser: PropTypes.object,
+    exchange: PropTypes.object.isRequired,
   }
 
   static defaultProps = {
@@ -60,6 +61,7 @@ class DiscoverPage extends React.Component {
       // tabIndexActive: '',
       query: '',
       isLoading: true,
+      exchange: this.props.exchange,
     };
     // this.loadDiscoverList();
     // bind
@@ -68,22 +70,35 @@ class DiscoverPage extends React.Component {
     this.searchChange = this.searchChange.bind(this);
   }
 
-  componentDidMount() {
-    this.getListOfferPrice();
-    // this.setState({ isLoading: false });
-  }
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.exchange.listOfferPrice.updatedAt !== prevState.exchange.listOfferPrice.updatedAt) {
+      if (prevState.handshakeIdActive !== 3) {
+        //
+        const {
+          handshakeIdActive,
+          query,
+        } = prevState;
+        const qs = { };
 
-  componentWillReceiveProps(nextProps) {
-    console.log('firebase', nextProps.firebaseUser);
-    // set active betting
-    // if (this.state.handshakeIdActive === -1) {
-    //   if (this.props.discover.list.length < 1) {
-    //     this.setState({
-    //       handshakeIdActive: HANDSHAKE_ID.BETTING
-    //     });
-    //     this.categoryRef.idActive = HANDSHAKE_ID.BETTING;
-    //   }
-    // }
+        const pt = `${nextProps?.app?.ipInfo?.latitude},${nextProps?.app?.ipInfo?.longitude}`;
+
+        qs.location_p = { pt, d: DISCOVER_GET_HANDSHAKE_RADIUS };
+        if (handshakeIdActive) {
+          qs.type = handshakeIdActive;
+        }
+
+        if (query) {
+          qs.query = query;
+        }
+
+        // nextProps.loadDiscoverList({
+        //   PATH_URL: API_URL.DISCOVER.INDEX,
+        //   qs,
+        // });
+      }
+      return { exchange: nextProps.exchange };
+    }
+    return null;
   }
 
   getHandshakeList() {
@@ -111,23 +126,6 @@ class DiscoverPage extends React.Component {
 
   setLoading = (loadingState) => {
     this.setState({ isLoading: loadingState });
-  }
-
-  getListOfferPrice = () => {
-    this.props.getListOfferPrice({
-      PATH_URL: API_URL.EXCHANGE.GET_LIST_OFFER_PRICE,
-      qs: { fiat_currency: this.props?.app?.ipInfo?.currency },
-      successFn: this.handleGetPriceSuccess,
-      errorFn: this.handleGetPriceFailed,
-    });
-  }
-
-  handleGetPriceSuccess = () => {
-    // this.loadDiscoverList();
-  }
-
-  handleGetPriceFailed = () => {
-    // this.loadDiscoverList();
   }
 
   searchChange(query) {
@@ -189,7 +187,6 @@ class DiscoverPage extends React.Component {
     console.log('call loadDiscoverList');
     const {
       handshakeIdActive,
-      // tabIndexActive,
       query,
     } = this.state;
     const qs = { };
@@ -200,10 +197,6 @@ class DiscoverPage extends React.Component {
     if (handshakeIdActive) {
       qs.type = handshakeIdActive;
     }
-
-    // if (tabIndexActive) {
-    //   qs.custom_query = `offer_feed_type_s:exchange AND offer_type_s:${tabIndexActive === 1 ? EXCHANGE_ACTION.SELL : EXCHANGE_ACTION.BUY}`;
-    // }
 
     if (query) {
       qs.query = query;
@@ -307,6 +300,7 @@ const mapState = state => ({
   discover: state.discover,
   firebaseUser: state.firebase.data,
   app: state.app,
+  exchange: state.exchange,
 });
 
 const mapDispatch = ({

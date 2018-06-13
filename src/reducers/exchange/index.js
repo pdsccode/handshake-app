@@ -3,10 +3,15 @@ import UserCcLimit from '@/models/UserCcLimit';
 import UserProfile from '@/models/UserProfile';
 import CryptoPrice from '@/models/CryptoPrice';
 import OfferPrice from '@/models/OfferPrice';
+import OfferShop from '@/models/OfferShop';
 import { EXCHANGE_ACTIONS } from './action';
-import OfferShop from "@/models/OfferShop";
 
-function exchangeReducter(state = {}, action) {
+const initListOfferPrice = [];
+initListOfferPrice.updatedAt = Date.now();
+
+function exchangeReducter(state = {
+  listOfferPrice: initListOfferPrice,
+}, action) {
   // console.log('exchangeReducter', JSON.stringify(action));
   switch (action.type) {
     case `${EXCHANGE_ACTIONS.GET_CRYPTO_PRICE}_SUCCESS`: {
@@ -28,7 +33,12 @@ function exchangeReducter(state = {}, action) {
       return { ...state, userTransaction: action.payload };
     }
     case `${EXCHANGE_ACTIONS.GET_LIST_OFFER_PRICE}_SUCCESS`: {
-      return { ...state, listOfferPrice: action.payload.data.map(offerPrice => OfferPrice.offerPrice(offerPrice)) };
+      const listOfferPrice = action.payload.data.map(offerPrice => OfferPrice.offerPrice(offerPrice));
+      listOfferPrice.updatedAt = Date.now();
+      return {
+        ...state,
+        listOfferPrice,
+      };
     }
     case `${EXCHANGE_ACTIONS.GET_IP_INFORM}_SUCCESS`: {
       return { ...state, ipInfo: action.payload.data };
