@@ -62,7 +62,7 @@ class DiscoverPage extends React.Component {
       handshakeIdActive: HANDSHAKE_ID.BETTING, // default show bet
       // tabIndexActive: '',
       query: '',
-      isLoading: true,
+      isLoading: false,
       exchange: this.props.exchange,
     };
     // this.loadDiscoverList();
