@@ -40,18 +40,15 @@ import HeaderMore from './HeaderMore';
 import WalletItem from './WalletItem';
 import WalletProtect from './WalletProtect';
 import WalletHistory from './WalletHistory';
+// import Refers from './Refers';
 import FeedCreditCard from '@/components/handshakes/exchange/Feed/FeedCreditCard';
 import ReactBottomsheet from 'react-bottomsheet';
-// var ReactBottomsheet = require('react-bottomsheet');
-// var Blob = require('./Blob.js');
 import { setHeaderRight } from '@/reducers/app/action';
 import QrReader from 'react-qr-reader';
 import { showAlert } from '@/reducers/app/action';
 import { showLoading, hideLoading } from '@/reducers/app/action';
 import { Input as Input2, InputGroup, InputGroupAddon } from 'reactstrap';
 import _ from 'lodash';
-// import filesaver from 'file-saver';
-
 
 // style
 import './Wallet.scss';
@@ -227,9 +224,6 @@ class Wallet extends React.Component {
   async componentDidMount() {
     this.attachScrollListener();
     let listWallet = await MasterWallet.getMasterWallet();
-    // console.log("listWallet", listWallet);
-
-    // console.log("default", MasterWallet.getWalletDefault("ETH"))
 
     if (listWallet == false) {
       listWallet = await MasterWallet.createMasterWallets();
@@ -355,11 +349,9 @@ class Wallet extends React.Component {
         wallet.balance = await wallet.getBalance();
         wallet.transaction_count = await wallet.getTransactionCount();
 
-        let data = [];
-        if(wallet.transaction_count > 0)
-          data = await wallet.getTransactionHistory(pagenoHistory);
-
-        if(Number(wallet.transaction_count) < 20) pagenoHistory = 0;
+        let data = await wallet.getTransactionHistory(pagenoHistory);
+        if(Number(data.length) < 20) pagenoHistory = 0;
+        if(data.length > wallet.transaction_count) wallet.transaction_count = data.length;
 
         this.setState({ transactions: data, pagenoHistory: pagenoHistory, walletSelected: wallet });
         this.hideLoading();
@@ -748,6 +740,16 @@ class Wallet extends React.Component {
     const {intl, cryptoPrice, amount, userCcLimit, ccLimits} = this.props;
     return (
       <div className="wallet-page">
+      
+        {/* Header for refers ... */}
+        {/* <div className="headerRefers" >
+          <p className="hTitle">Shuriken Airdrop</p>
+          <p className="hLink" onClick={() => { this.modalRefersRef.open() }}>Receive token</p>
+        </div>
+        <Modal title="Shuriken Airdrop (limited)" onRef={modal => this.modalRefersRef = modal}>
+            <Refers />
+        </Modal> */}
+
         <Grid>
 
           {/* Tooltim menu Bottom */ }
@@ -974,6 +976,13 @@ class Wallet extends React.Component {
 
           {/* Render list wallet: */}
           <Row className="list">
+            <Header title="Mainnet wallets" hasLink={false} linkTitle="+ Add new" onLinkClick={this.onLinkClick} />
+          </Row>
+          <Row className="list">
+            {this.listMainWalletBalance}
+          </Row>
+
+          <Row className="list">
             <Header title="Testnet wallets" hasLink linkTitle="Request free ETH" onLinkClick={this.getETHFree} />
           </Row>
           <Row className="list">
@@ -985,14 +994,7 @@ class Wallet extends React.Component {
           </Row>
           <Row className="list">
             {this.listRewardWalletBalance}
-          </Row>
-
-          <Row className="list">
-            <Header title="Mainnet wallets" hasLink={false} linkTitle="+ Add new" onLinkClick={this.onLinkClick} />
-          </Row>
-          <Row className="list">
-            {this.listMainWalletBalance}
-          </Row>
+          </Row>          
 
         </Grid>
       </div>
