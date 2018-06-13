@@ -18,7 +18,7 @@ export default {
   offerHandShakeContentMe: '{offerType} {amount} {currency} for {total} {currency_symbol} ({payment_method})',
   offerHandShakeContentMeDone: '{offerType} {amount} {currency} for {total} {currency_symbol} ({payment_method})',
   instantOfferHandShakeContent: 'You{just}{offerType} {amount} {currency} for {total} {currency_symbol} on your card - fee {fee}%',
-  offerDistanceContent: '{distance} away',
+  offerDistanceContent: '{distanceKm} km ({distanceMiles} miles) away',
   transactonOfferInfo: 'Successful ({success}) / Failed ({failed})',
   createOfferConfirm: 'You are about to {type} {amount} {currency} for {total} {currency_symbol}',
   handshakeOfferConfirm: 'You are about to {type} {amount} {currency} for {total} {currency_symbol}',
@@ -51,56 +51,56 @@ export default {
 
   // FAQ
   FAQ_TITLE: 'FAQ',
-  FAQ_HEADER_YELLOW: 'Decentralized',
-  FAQ_HEADER: 'Prediction Exchange',
+  FAQ_HEADER_YELLOW: '',
+  FAQ_HEADER: 'Décentralisé de prédiction change ',
   FAQ_DATA: [
     {
-      question: 'What is Ninja PEX?',
-      answer: 'Ninja is an anonymous peer-to-peer decentralized prediction exchange running on top of the Ethereum blockchain.',
+      question: 'quel est le Ninja PEX ?',
+      answer: 'Ninja est un échange anonyme-to-peer décentralisé prédiction en cours d’exécution sur le dessus de l’Ethereum blockchain.',
     },
     {
-      question: 'What’s special about PEX? Why should i bet on one?',
-      answer: 'It allows parties to directly bet against each other without going through a central authority or bookmaker. This makes it 100% anonymous, no signs up no downloads required. The management of bets and the settlement of winnings are carried out collectively by the blockchain network, protecting users from any single point of failure. You can also create your own prediction markets.',
+      question: '',
+      answer: '',
     },
     {
-      question: 'Do I need Ether? Does it support other cryptocurrencies?',
-      answer: 'It allows parties to directly bet against each other without going through a central authority or bookmaker. This makes it 100% anonymous, no signs up no downloads required. The management of bets and the settlement of winnings are carried out collectively by the blockchain network, protecting users from any single point of failure. You can also create your own prediction markets.',
+      question: '',
+      answer: '',
     },
     {
-      question: 'How do I start with Ninja?',
+      question: '',
       isList: true,
       answer: [
         {
-          title: 'Get Ether:',
-          content: ' You can either buy ETH directly in PEX with your credit cards or from popular coin exchanges like Coinbase or Binance.',
+          title: '',
+          content: '',
         },
         {
-          title: 'Top up your PEX Wallet:',
-          content: 'You can either buy ETH directly in PEX with your credit cards or from popular coin exchanges like Coinbase or Binance.',
+          title: '',
+          content: '',
         },
         {
-          title: 'Place a bet:',
-          content: 'Pick the market you want to bet (i.e. Brazil - Spain), the outcomes (i.e. Brazil wins) and the site (i.e. support or bet against the outcome)\n' +
+          title: '',
+          content: 'pain), the outcomes (i.e. Brazil wins) and the site (i.e. support or bet against the outcome)\n' +
           'Enter the stake you want to bet (i.e. 1 ETH) and the odds (i.e. 1/ 2.25)\n' +
           'The PEX Matching Engine will then find another order that bets against the odds you set.',
         },
         {
-          title: 'Wait for the report:',
-          content: 'if you win, your winnings will be automatically transferred from the escrow smart contract to your account.',
+          title: '',
+          content: '',
         },
       ],
     },
     {
-      question: 'What’s special about PEX? Why should i bet on one?',
-      answer: 'Yes! When creating your own bet, you’ll enter the event you’re interested in and the outcome you want to bet on. Then, simply enter your stake and the odds you want. Then the PEX Engine will automatically find and match you with anyone that has an interest in the same event, and who accepts your odds.',
+      question: '',
+      answer: '',
     },
     {
-      question: 'How do you police unsavory/illegal bets?',
-      answer: 'We are currently building a system of checks and balances to flag up inappropriate behaviour in the dojo.',
+      question: '',
+      answer: '',
     },
     {
-      question: 'How does the system know the result of bets between people? Who acts as arbitrator and verifies one outcome vs. another at conclusion of contract?',
-      answer: 'Ninja will soon have a completely decentralized solution for verifying the outcome and incentivizing truth telling (a DAO of reporters!). In the meantime, as we will launch just in time for the FIFA world cup, our team will use a public source (livescore.com) and act as the reporter.',
+      question: '',
+      answer: '',
     },
     {
       question: 'Where is the coin held?',
