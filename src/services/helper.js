@@ -59,6 +59,29 @@ class Helper {
   static getObjectIdOfComment({ prefix = 'outcome_id', id }) {
     return `${prefix}_${id}`;
   }
+
+  /**
+   * get query params from text
+   * @static
+   * @param {*} text
+   * @returns Object
+   * @memberof Helper
+   */
+  static getQueryStrings(text) {
+    const assoc  = {};
+    const decode = s => decodeURIComponent(s.replace(/\+/g, ' '));
+    const queryString = text.substring(1);
+    const keyValues = queryString.split('&');
+  
+    for(let i in keyValues) {
+      const key = keyValues[i].split('=');
+      if (key.length > 1) {
+        assoc[decode(key[0])] = decode(key[1]);
+      }
+    }
+    return assoc;
+  }
+
 }
 
 export class StringHelper {
