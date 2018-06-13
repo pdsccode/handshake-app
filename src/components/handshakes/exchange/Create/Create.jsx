@@ -362,12 +362,12 @@ class Component extends React.Component {
     const offer = OfferShop.offerShop(data);
     this.offer = offer;
 
-    console.log('handleCreateOfferSuccess', data);
+    // console.log('handleCreateOfferSuccess', data);
 
     const wallet = MasterWallet.getWalletDefault(currency);
     // const rewardWallet = MasterWallet.getRewardWalletDefault(currency);
 
-    console.log('wallet', wallet);
+    // console.log('wallet', wallet);
     // console.log('rewardWallet', rewardWallet);
 
     if (currency === CRYPTO_CURRENCY.BTC) {
