@@ -999,6 +999,7 @@ class FeedMe extends React.PureComponent {
               </div>
             )
           }
+          { !isCreditCard && <div className="mt-2">Moving your coin to escrow. This may take a few minutes.</div> }
 
           {/*
             !isCreditCard && (
