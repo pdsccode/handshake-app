@@ -135,4 +135,30 @@ export default {
       answer: '我々 は忍者携帯サイトにハンドシェイク (と約束、IOUs、契約アップロード等のようなあなたのお気に入りの機能) を統合するでしょう。',
     },
   ],
+
+  // MobileOrTablet components
+  MOT_TITLE: 'The anonymous exchange of anything',
+  MOT_CONTENT_0: 'The Ninja network is only accessible via mobile.',
+  MOT_CONTENT_1: 'Open',
+  MOT_CONTENT_2: 'on your mobile browser to gain anonymous entry.',
+  MOT_CONTENT_3: 'No download needed. No sign up required.',
+  MOT_LIST_CONTENT: [
+    {
+      mainContent: 'Read the',
+      placeHolderLink: 'whitepaper',
+      link: 'https://medium.com/@ninjadotorg/shakeninja-bex-1c938f18b3e8',
+      isBlankTarget: true,
+    },
+    {
+      mainContent: 'We answered your',
+      placeHolderLink: 'FAQ',
+      link: '/faq',
+    },
+    {
+      mainContent: 'Join the dojo on',
+      placeHolderLink: 'Telegram',
+      link: 'https://t.me/ninja_org',
+      isBlankTarget: true,
+    },
+  ],
 };

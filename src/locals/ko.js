@@ -135,4 +135,30 @@ export default {
       answer: '우리 것 이다 수 통합 악수 (와 같은 약속, 계약 업로드, 등 평소 좋아하는 기능) 닌자 모바일 웹사이트에. ',
     },
   ],
+
+  // MobileOrTablet components
+  MOT_TITLE: 'The anonymous exchange of anything',
+  MOT_CONTENT_0: 'The Ninja network is only accessible via mobile.',
+  MOT_CONTENT_1: 'Open',
+  MOT_CONTENT_2: 'on your mobile browser to gain anonymous entry.',
+  MOT_CONTENT_3: 'No download needed. No sign up required.',
+  MOT_LIST_CONTENT: [
+    {
+      mainContent: 'Read the',
+      placeHolderLink: 'whitepaper',
+      link: 'https://medium.com/@ninjadotorg/shakeninja-bex-1c938f18b3e8',
+      isBlankTarget: true,
+    },
+    {
+      mainContent: 'We answered your',
+      placeHolderLink: 'FAQ',
+      link: '/faq',
+    },
+    {
+      mainContent: 'Join the dojo on',
+      placeHolderLink: 'Telegram',
+      link: 'https://t.me/ninja_org',
+      isBlankTarget: true,
+    },
+  ],
 };

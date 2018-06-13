@@ -389,7 +389,7 @@ class Router extends React.Component {
       );
     }
     if (window.location.pathname === URL.LANDING_PAGE_TRADE) return <LandingTradeRootRouter />;
-    if (BrowserDetect.isDesktop && process.env.isProduction) {
+    if (BrowserDetect.isDesktop) {
       return (
         <IntlProvider
           locale={this.state.currentLocale}
