@@ -120,6 +120,7 @@ class Refers extends React.Component {
     // fill link ref:
     const profile = local.get(APP.AUTH_PROFILE);
     this.setState({profile: profile});
+    alert(profile.username);
     this.props.rfChange(nameFormStep4, 'refer_link', profile != false ? "https://ninja.org/ref=?" + profile.username : '');
 
   }
@@ -324,12 +325,12 @@ renderLinkRefer= () => (
                   name="refer_link"
                   type="text"
                   className="form-control"
-                  placeholder=""
-                  value="ninja.org/ref=?IDsvsvrfsfe45545"
+                  placeholder=""                  
                   component={fieldInput}
-                  value={this.state.inputLinkValue}
+                //   value={this.state.inputLinkValue}
                   onChange={evt => this.updateLinkValue(evt)}
                   validate={[required]}
+                  onFocus={() => { Clipboard.copy(JSON.stringify(this.state.inputLinkValue)); this.showToast('Referral link copied to clipboard.'); }}
               />
           </Col>
           <Col sm={4} md={4} xs={4} className="no-padding-left">
