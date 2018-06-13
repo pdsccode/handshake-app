@@ -89,6 +89,8 @@ class FeedExchange extends React.PureComponent {
 
     const shopType = values.type === EXCHANGE_ACTION.BUY ? EXCHANGE_ACTION.SELL : EXCHANGE_ACTION.BUY;
 
+    const wallet = MasterWallet.getWalletDefault(values.currency);
+
     const offerItem = {
       type: shopType,
       currency: values.currency,
@@ -96,7 +98,8 @@ class FeedExchange extends React.PureComponent {
       username: authProfile?.name,
       email: authProfile?.email,
       contact_phone: authProfile?.phone,
-      user_address: authProfile?.address,
+      contact_info: authProfile?.address,
+      user_address: wallet.address,
     };
 
     this.showLoading();
@@ -115,9 +118,7 @@ class FeedExchange extends React.PureComponent {
     const { intl } = this.props;
     const { data } = responseData;
     const offerShake = Offer.offer(data);
-    const {
- currency, type, totalAmount, systemAddress, offChainId
-} = offerShake;
+    const { currency, type, totalAmount, systemAddress, offChainId } = offerShake;
     const { offer } = this;
 
     if (currency === CRYPTO_CURRENCY.ETH) {
