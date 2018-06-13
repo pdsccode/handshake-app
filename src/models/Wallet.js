@@ -1,3 +1,4 @@
+import { StringHelper } from '@/services/helper';
 export class Wallet {
   constructor() {
     this.mnemonic = '';
@@ -29,6 +30,12 @@ export class Wallet {
       }
     }
     return this.title;
+  }
+  getShortBalance(){
+    return Number((parseFloat(this.balance)).toFixed(8));
+  }
+  getBackgroundImg(){
+    return StringHelper.format("{0}-{1}{2}.svg", this.name.toLowerCase(), this.getNetworkName().toLowerCase(), this.isReward ? "-reward" : '' );    
   }
 }
 

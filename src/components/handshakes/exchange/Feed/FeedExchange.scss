@@ -1,5 +1,94 @@
 @import './src/styles/var';
 
 .feed {
-    border-radius: 6px;
+  border-radius: 6px;
+}
+
+.feed-exchange {
+  .info {
+    text-align: left;
+    margin-bottom: 20px;
+    .name-shop {
+      font-weight: 500;
+      font-size: 18px;
+      color: #FFFFFF;
+      letter-spacing: 0.32px;
+    }
+    .transaction {
+      font-weight: 400;
+      font-size: 14px;
+      color: #FFFFFF;
+      letter-spacing: 0;
+      line-height: 25px;
+    }
+    .distance {
+      opacity: 0.6;
+      font-weight: 400;
+      font-size: 14px;
+      color: #FFFFFF;
+    }
+  }
+  .table-ex {
+    width: 100%;
+    .image {
+      vertical-align: middle;
+      display: inline-block;
+      width: 30px;
+      margin-right: 4px;
+      img {
+        width: 100%;
+        display: block;
+        height: auto;
+      }
+    }
+    td, th {
+      border: 0;
+    }
+    thead {
+      border-top: 1px solid rgba(255,255,255,0.25);
+      //border-bottom: 1px solid rgba(255,255,255,0.25);
+      th {
+        padding: 15px 0;
+      }
+    }
+    tbody {
+      td {
+        padding-top: 15px;
+      }
+    }
+    .header-text {
+      font-weight: 500;
+      font-size: 14px;
+      color: #FFFFFF;
+      letter-spacing: 0.25px;
+    }
+    .buy-color {
+      color: #00FFC6;
+    }
+    .sell-color {
+      color: #FF3B3B;
+    }
+    .price-number {
+      font-weight: 900;
+      font-size: 18px;
+      letter-spacing: 0.32px;
+      line-height: 18px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.50);
+    }
+    .currency {
+      opacity: 0.8;
+      font-weight: 500;
+      font-size: 14px;
+      color: #FFFFFF;
+      letter-spacing: 0.25px;
+      //line-height: 32px;
+    }
+  }
+  .dialog-shake-detail {
+    .modal-custom-body {
+      background: #485059;
+      border-radius: 4px;
+      padding: 20px !important;
+    }
+  }
 }

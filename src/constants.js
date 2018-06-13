@@ -18,16 +18,20 @@ export const HANDSHAKE_ID = { // important
   BETTING: 3,
   SEED: 4,
   WALLET_TRANSFER: 5,
+  EXCHANGE_LOCAL: 6,
+  BETTING_EVENT: 7,
 };
 
 export const HANDSHAKE_ID_DEFAULT = 3;
 
 export const HANDSHAKE_NAME = {
-  [HANDSHAKE_ID.BETTING]: 'Betting',
-  [HANDSHAKE_ID.PROMISE]: 'Promise',
-  // [HANDSHAKE_ID.EXCHANGE]: 'Exchange',
+  // [HANDSHAKE_ID.PROMISE]: { name: 'Promise', priority: 3 },
+  [HANDSHAKE_ID.BETTING]: { name: 'Betting', priority: 1 },
+  [HANDSHAKE_ID.BETTING_EVENT]: { name: 'Design a betting market', priority: 2 },
   // [HANDSHAKE_ID.SEED]: 'Seed',
-  [HANDSHAKE_ID.WALLET_TRANSFER]: 'Transfer coin',
+  [HANDSHAKE_ID.WALLET_TRANSFER]: { name: 'Transfer coin', priority: 4 },
+  [HANDSHAKE_ID.EXCHANGE]: { name: 'Exchange', priority: 5 },
+  [HANDSHAKE_ID.EXCHANGE_LOCAL]: { name: 'Exchange Local', priority: 6 },
 };
 
 export const PRICE_DECIMAL = 0;
@@ -93,9 +97,11 @@ export const SELL_PRICE_TYPE_DEFAULT = 'fix';
 export const API_URL = {
   CRYPTOSIGN: {
     INIT_HANDSHAKE: 'cryptosign/handshake/init',
+    INIT_HANDSHAKE_FREE: 'cryptosign/handshake/create_bet',
     SHAKE: 'cryptosign/handshake/shake',
     LOAD_MATCHES: 'cryptosign/match',
     LOAD_HANDSHAKES: 'cryptosign/handshake',
+    CHECK_FREE_AVAILABLE: 'cryptosign/handshake/check_free_bet',
     UNINIT_HANDSHAKE: 'cryptosign/handshake/uninit',
     COLLECT: 'cryptosign/handshake/collect',
     ROLLBACK: 'cryptosign/handshake/rollback',
@@ -117,6 +123,10 @@ export const API_URL = {
     SHAKE: 'shake',
     WITHDRAW: 'withdraw',
     IP_DOMAIN: 'https://ipfind.co/me',
+
+    // Store
+    OFFER_STORES: 'exchange/offer-stores',
+    SHAKES: 'shakes',
   },
   SEED: {
     BASE: 'seed',
@@ -237,6 +247,66 @@ export const HANSHAKE_USER_NAME = {
   [HANDSHAKE_USER.SHAKED]: 'SHAKED',
 };
 
+export const HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS = {
+  CREATED: 0,
+  ACTIVE: 1,
+  CLOSING: 2,
+  CLOSED: 3,
+};
+
+export const HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_NAME = {
+  [HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CREATED]: 'created',
+  [HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.ACTIVE]: 'active',
+  [HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSING]: 'closing',
+  [HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSED]: 'closed',
+};
+
+export const HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE = {
+  created: HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CREATED,
+  active: HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.ACTIVE,
+  closing: HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSING,
+  closed: HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSED,
+};
+
+export const HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS = {
+  PRE_SHAKING: 0,
+  PRE_SHAKE: 1,
+  SHAKING: 2,
+  SHAKE: 3,
+  REJECTING: 4,
+  REJECTED: 5,
+  COMPLETING: 6,
+  COMPLETED: 7,
+  CANCELLING: 8,
+  CANCELLED: 9,
+};
+
+export const HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS_NAME = {
+  [HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.PRE_SHAKING]: 'pre_shaking',
+  [HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.PRE_SHAKE]: 'pre_shake',
+  [HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.SHAKING]: 'shaking',
+  [HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.SHAKE]: 'shake',
+  [HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.REJECTING]: 'rejecting',
+  [HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.REJECTED]: 'rejected',
+  [HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.COMPLETING]: 'completing',
+  [HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.COMPLETED]: 'completed',
+  [HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.CANCELLING]: 'cancelling',
+  [HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.CANCELLED]: 'cancelled',
+};
+
+export const HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS_VALUE = {
+  pre_shaking: HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.PRE_SHAKING,
+  pre_shake: HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.PRE_SHAKE,
+  shaking: HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.SHAKING,
+  shake: HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.SHAKE,
+  rejecting: HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.REJECTING,
+  rejected: HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.REJECTED,
+  completing: HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.COMPLETING,
+  completed: HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.COMPLETED,
+  cancelling: HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.CANCELLING,
+  cancelled: HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.CANCELLED,
+};
+
 export const DEFAULT_FEE = {
   ETH: 0,
   BTC: 0,
@@ -245,6 +315,8 @@ export const DEFAULT_FEE = {
 export const EXCHANGE_FEED_TYPE = {
   EXCHANGE: 'exchange',
   INSTANT: 'instant',
+  OFFER_STORE: 'offer_store',
+  OFFER_STORE_SHAKE: 'offer_store_shake',
 };
 
 export const EXCHANGE_METHOD_PAYMENT = {
@@ -302,6 +374,9 @@ export const URL = {
 
   LANDING_PAGE_SHURIKEN: '/shuriken',
   LANDING_PAGE_SHURIKEN_INDEX: '/shuriken',
+
+  LANDING_PAGE_TRADE: '/coin-exchange',
+  LANDING_PAGE_TRADE_INDEX: '/coin-exchange',
 
   FAQ: '/faq',
   FAQ_INDEX: '/faq',
