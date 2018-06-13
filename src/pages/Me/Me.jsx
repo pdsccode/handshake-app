@@ -11,11 +11,15 @@ import NoData from '@/components/core/presentation/NoData';
 import { getListOfferPrice } from '@/reducers/exchange/action';
 import FeedPromise from '@/components/handshakes/promise/Feed';
 import FeedBetting from '@/components/handshakes/betting/Feed';
-import FeedExchange from '@/components/handshakes/exchange/Feed/FeedExchange';
+import FeedExchange from '@/components/handshakes/exchange/Feed/FeedMe';
 import FeedSeed from '@/components/handshakes/seed/Feed';
 import Image from '@/components/core/presentation/Image';
+
+import ToggleSwitch from '@/components/core/presentation/ToggleSwitch';
+
 // style
 import AvatarSVG from '@/assets/images/icon/avatar.svg';
+import ShopSVG from '@/assets/images/icon/icons8-shop_filled.svg';
 import ExpandArrowSVG from '@/assets/images/icon/expand-arrow.svg';
 import './Me.scss';
 
@@ -27,9 +31,37 @@ const maps = {
 };
 
 class Me extends React.Component {
+  static propTypes = {
+    app: PropTypes.object.isRequired,
+    auth: PropTypes.object.isRequired,
+    me: PropTypes.object.isRequired,
+    loadMyHandshakeList: PropTypes.func.isRequired,
+    getListOfferPrice: PropTypes.func.isRequired,
+    firebaseUser: PropTypes.any.isRequired,
+    history: PropTypes.object.isRequired,
+    fireBaseExchangeDataChange: PropTypes.func.isRequired,
+    fireBaseBettingChange: PropTypes.func.isRequired,
+    exchange: PropTypes.object.isRequired,
+  }
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      exchange: this.props.exchange,
+    };
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.exchange.listOfferPrice.updatedAt !== prevState.exchange.listOfferPrice.updatedAt) {
+      nextProps.loadMyHandshakeList({ PATH_URL: API_URL.ME.BASE });
+      return { exchange: nextProps.exchange };
+    }
+    return null;
+  }
+
   componentDidMount() {
-    this.getListOfferPrice();
-    // this.loadMyHandshakeList();
+    this.loadMyHandshakeList();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -45,24 +77,6 @@ class Me extends React.Component {
       }
     }
   }
-
-  getListOfferPrice = () => {
-    this.props.getListOfferPrice({
-      PATH_URL: API_URL.EXCHANGE.GET_LIST_OFFER_PRICE,
-      qs: { fiat_currency: this.props?.app?.ipInfo?.currency },
-      successFn: this.handleGetPriceSuccess,
-      errorFn: this.handleGetPriceFailed,
-    });
-  }
-
-  handleGetPriceSuccess = () => {
-    this.loadMyHandshakeList();
-  }
-
-  handleGetPriceFailed = () => {
-    this.loadMyHandshakeList();
-  }
-
 
   loadMyHandshakeList = () => {
     this.props.loadMyHandshakeList({ PATH_URL: API_URL.ME.BASE });
@@ -88,6 +102,20 @@ class Me extends React.Component {
         </Row>
         <Row>
           <Col md={12}>
+            <div className="update-profile pt-2">
+              <Image className="avatar" src={ShopSVG} alt="shop" />
+              <div className="text" style={{ width: '69%' }}>
+                <strong>Shop appearance</strong>
+                <p>Change your shop status</p>
+              </div>
+              <div className="arrow">
+                <ToggleSwitch onChange={flag => console.log(flag)} />
+              </div>
+            </div>
+          </Col>
+        </Row>
+        <Row>
+          <Col md={12}>
             {
               list && list.length > 0 ? (
                 list.map((handshake) => {
@@ -105,6 +133,7 @@ class Me extends React.Component {
                       </Col>
                     );
                   }
+                  return null;
                 })
               ) : (
                 <NoData message="Make a Prediction to get started!" />
@@ -117,18 +146,12 @@ class Me extends React.Component {
   }
 }
 
-Me.propTypes = {
-  me: PropTypes.object.isRequired,
-  loadMyHandshakeList: PropTypes.func.isRequired,
-  getListOfferPrice: PropTypes.func.isRequired,
-  firebaseUser: PropTypes.any.isRequired,
-};
-
 const mapState = state => ({
   me: state.me,
   app: state.app,
   auth: state.auth,
   firebaseUser: state.firebase.data,
+  exchange: state.exchange,
 });
 
 const mapDispatch = ({

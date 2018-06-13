@@ -8,15 +8,17 @@ import Loading from '@/components/core/presentation/Loading';
 
 import './Create.scss';
 
+//
 const CreatePromise = props => (
   <DynamicImport
     loading={Loading}
-    load={() => import('@/components/handshakes/promise/Create')}
+    load={() => import('@/components/handshakes/promise/Create/Promise')}
   >
     {Component => <Component {...props} />}
   </DynamicImport>
 );
 
+//
 const CreateBetting = props => (
   <DynamicImport
     loading={Loading}
@@ -26,15 +28,35 @@ const CreateBetting = props => (
   </DynamicImport>
 );
 
-const CreateExchange = props => (
+const CreateBettingEvent = props => (
   <DynamicImport
     loading={Loading}
-    load={() => import('@/components/handshakes/exchange/Create')}
+    load={() => import('@/components/handshakes/betting-event/Create/Create')}
   >
     {Component => <Component {...props} />}
   </DynamicImport>
 );
 
+//
+const CreateExchange = props => (
+  <DynamicImport
+    loading={Loading}
+    load={() => import('@/components/handshakes/exchange/Create/Create.jsx')}
+  >
+    {Component => <Component {...props} />}
+  </DynamicImport>
+);
+
+const CreateExchangeLocal = props => (
+  <DynamicImport
+    loading={Loading}
+    load={() => import('@/components/handshakes/exchange/Create/CreateLocal.jsx')}
+  >
+    {Component => <Component {...props} />}
+  </DynamicImport>
+);
+
+//
 const CreateSeed = props => (
   <DynamicImport
     loading={Loading}
@@ -44,6 +66,7 @@ const CreateSeed = props => (
   </DynamicImport>
 );
 
+//
 const CreateWalletTransfer = props => (
   <DynamicImport
     loading={Loading}
@@ -53,12 +76,12 @@ const CreateWalletTransfer = props => (
   </DynamicImport>
 );
 
-// style
-
 const maps = {
   [HANDSHAKE_ID.PROMISE]: CreatePromise,
   [HANDSHAKE_ID.BETTING]: CreateBetting,
+  [HANDSHAKE_ID.BETTING_EVENT]: CreateBettingEvent,
   [HANDSHAKE_ID.EXCHANGE]: CreateExchange,
+  [HANDSHAKE_ID.EXCHANGE_LOCAL]: CreateExchangeLocal,
   [HANDSHAKE_ID.SEED]: CreateSeed,
   [HANDSHAKE_ID.WALLET_TRANSFER]: CreateWalletTransfer,
 };
@@ -74,11 +97,13 @@ class Create extends React.Component {
     this.handshakeChange = this.handshakeChange.bind(this);
   }
 
-  get handShakeList() {
-    return Object.entries(HANDSHAKE_NAME).map(([key, value]) => ({
+  get handshakeList() {
+    const handshakes = Object.entries(HANDSHAKE_NAME).map(([key, value]) => ({
       id: key,
-      name: value,
+      name: value.name,
+      priority: value.priority,
     }));
+    return handshakes.sort((x, y) => x.priority > y.priority);
   }
 
   handshakeChange({ suggestion }) {
@@ -94,9 +119,9 @@ class Create extends React.Component {
         <Row>
           <Col md={12}>
             <SearchBar
-              suggestions={this.handShakeList}
+              suggestions={this.handshakeList}
               onSuggestionSelected={this.handshakeChange}
-              inputSearchDefault={HANDSHAKE_NAME[HANDSHAKE_ID_DEFAULT]}
+              inputSearchDefault={HANDSHAKE_NAME[HANDSHAKE_ID_DEFAULT].name}
             />
           </Col>
         </Row>

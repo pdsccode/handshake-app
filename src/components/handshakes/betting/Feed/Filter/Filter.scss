@@ -14,8 +14,6 @@
     justify-content: space-between;
   }
 
-
-
   .share-block {
     display: flex;
     flex-wrap: wrap;
@@ -38,24 +36,35 @@
   }
 
   .item {
-    flex-basis: 50%;
-    width: 50%;
+    width: 49.8%;
+    height: rem-calc(280px);
     border: none;
-    padding: rem-calc(1px);
   }
 
-  .item:first-child {
+  .item {
     display: flex;
     flex-direction: column;
+    background: #1F2B34;
+    padding: rem-calc(14px 10px 10px);
   }
-  .titleBox, .spreadBox {
+  .titleBox, .spreadBox, .marketBox {
     display: flex;
     background-color: #1F2B34;;
     color: $white;
-    font-size: rem-calc(12px);
+    font-size: rem-calc(11px);
     justify-content: space-between;
     letter-spacing: 0;
-    padding: rem-calc(14px 10px);
+    margin-bottom: rem-calc(10px);
+  }
+  .marketBox {
+    font-size: rem-calc(12px);
+  }
+  .opacity65 {
+    opacity: 0.65;
+  }
+  .titleSupport {
+    color: #FA6B49;
+
   }
   .spreadBox {
     border-top: 1px solid #808080;
@@ -64,5 +73,24 @@
   }
   .disable {
     color: #fa6b49 !important;
+  }
+  & > .modal {
+    background-color: #1F2B34;
+    .modal-custom-body {
+      padding: 0 !important;
+    }
+  }
+  .buttonSupport {
+    background-color: $caribbean-green !important;
+  }
+  .buttonAgainst {
+    background-color: #FA6B49 !important;
+  }
+  .buttonAgainst, .buttonSupport {
+    border: none;
+    border-radius: 0;
+    height: rem-calc(40px) !important;
+    font-size: rem-calc(12px);
+    font-weight: $bold;
   }
 }

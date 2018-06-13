@@ -30,7 +30,7 @@ class Loading extends React.PureComponent {
 }
 
 Loading.propTypes = {
-  app: PropTypes.object,
-}
+  app: PropTypes.object.isRequired,
+};
 
 export default connect(state => ({ app: state.app }))(Loading);

@@ -1,22 +1,20 @@
 @import './src/styles/style';
 
 .wrapperGroupBook {
-  padding: rem-calc(10px);
+  //padding: rem-calc(10px);
   background: #1F2B34;
   height: 100%;
   .wrapperBettingBook + .wrapperBettingBook {
     margin-top: rem-calc(4px);
   }
+}
 
-  .noData {
-    color: #fff;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-  }
+.noData {
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
 
 .wrapperGroupBook + .wrapperGroupBook {

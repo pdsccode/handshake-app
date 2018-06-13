@@ -33,6 +33,8 @@ const chainId = wallet.chainId;
 console.log('Chain Id:', chainId);
 
 const bettinghandshake = new BettingHandshake(chainId);
+const betHandshakeHandler = new BetHandshakeHandler()
+
 const nameFormBettingCreate = 'bettingCreate';
 // const BettingCreateForm = createForm({
 //   propsReduxForm: {
@@ -95,7 +97,7 @@ class BettingCreate extends React.Component {
       winValue: 0,
       selectedMatch:null,
       selectedOutcome: null,
-      buttonClass: 'btnRed',
+      buttonClass: 'btnBlue',
     };
     this.onSubmit = ::this.onSubmit;
     this.renderInput = ::this.renderInput;
@@ -160,7 +162,7 @@ get matchOutcomes(){
           const {outcomes} = foundMatch;
           if(outcomes){
               //return outcomes.map((item) => ({ id: item.id, value: item.name, hid: item.hid}));
-              return outcomes.map((item) => ({ id: item.id, value: `Outcome: ${item.name}`, hid: item.hid, marketOdds: item.market_odds}));
+              return outcomes.map((item) => ({ id: item.id, value: `Outcome: ${item.name}`, hid: item.hid, marketOdds: item.market_odds, marketAmount: item.market_amount}));
 
           }
       }
@@ -223,14 +225,15 @@ get defaultOutcome() {
     //const {toAddress, isPublic, industryId} = this.props;
 
     //const fromAddress = "0x54CD16578564b9952d645E92b9fa254f1feffee9";
-    let balance = await BetHandshakeHandler.getBalance();
+    let balance = await betHandshakeHandler.getBalance();
     balance = parseFloat(balance);
     const estimatedGas = await bettinghandshake.getEstimateGas();
+    //const estimatedGas = 0.00001;
     console.log('Estimate Gas:', estimatedGas);
     const eventBet = parseFloat(values["event_bet"]);
-    const odds = parseFloat(this.state.oddValue);
+    const odds = parseFloat(values['event_odds']);
     const total = eventBet + parseFloat(estimatedGas);
-    console.log("Event Bet, Odds, Total:",eventBet,odds, total);
+    console.log("Event Bet, Odds, Estimate, Total:",eventBet,odds,estimatedGas, total);
 
     const fromAddress = address;
     console.log('Match, Outcome:', selectedMatch, selectedOutcome);
@@ -305,12 +308,12 @@ get defaultOutcome() {
     const odds = values['event_odds'];
     const total = amount * odds;
     this.setState({
-      winValue: total || 0
+      winValue: total || 0,
     })
   }
 
   onToggleChange(id) {
-    this.setState({buttonClass: `${id === 2 ? 'btnBlue' : 'btnRed' }`});
+    this.setState({buttonClass: `${id === 2 ? 'btnRed' : 'btnBlue' }`});
   }
 
   renderInput(item, index,style = {}) {
@@ -380,7 +383,7 @@ get defaultOutcome() {
         //min="0.0001"
         //step="0.0002"
         placeholder={placeholder}
-        value={key === "event_odds" ? this.state.oddValue : values[key]}
+        value={values[key]}
         validate={[required]}
         //ErrorBox={ErrorBox}
         onChange={(evt) => {
@@ -465,19 +468,12 @@ get defaultOutcome() {
             afterSetDefault={(item)=> {
               const {values} = this.state;
               console.log('Selected outcome:', item);
-
-              values["event_predict"] = item.value;
-              values["event_odds"] = item.marketOdds;
-              this.setState({selectedOutcome: item, values})
+              this.selectOutcomeClick(item);
 
             }}
             onItemSelected={(item) => {
               console.log('Selected outcome:', item);
-              const {values} = this.state;
-              values["event_predict"] = item.value;
-              values["event_odds"] = item.marketOdds;
-
-              this.setState({selectedOutcome: item, values})
+              this.selectOutcomeClick(item);
               }
             }
           />}
@@ -505,6 +501,15 @@ get defaultOutcome() {
         <Button type="submit" block className={buttonClass}>Go</Button>
       </form>
     );
+  }
+  selectOutcomeClick(item){
+    const {values} = this.state;
+    values["event_predict"] = item.value;
+    values["event_odds"] = parseFloat(item.marketOdds).toFixed(2);
+    values["event_bet"] = parseFloat(item.marketAmount).toFixed(4);
+    const winValue =  parseFloat(item.marketAmount * item.marketOdds).toFixed(4);
+
+    this.setState({selectedOutcome: item, values, winValue})
   }
 
   render() {
@@ -563,7 +568,7 @@ get defaultOutcome() {
     //const hid = selectedOutcome.id;
     const hid = selectedOutcome.hid;
     if(status && data){
-      BetHandshakeHandler.controlShake(data, hid);
+      betHandshakeHandler.controlShake(data, hid);
       this.props.showAlert({
         message: <div className="text-center">{MESSAGE.CREATE_BET_SUCCESSFUL}</div>,
         timeOut: 3000,

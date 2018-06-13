@@ -1,16 +1,58 @@
 import Handshake from '@/models/Handshake';
 import {
-  HANDSHAKE_EXCHANGE_CC_STATUS_VALUE,
-  HANDSHAKE_EXCHANGE_STATUS_VALUE,
+  EXCHANGE_FEED_TYPE,
   FIREBASE_PATH,
+  HANDSHAKE_EXCHANGE_CC_STATUS_VALUE,
+  HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS_VALUE,
+  HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE,
+  HANDSHAKE_EXCHANGE_STATUS_VALUE,
 } from '@/constants';
 import firebase from 'firebase/app';
 import 'firebase/database';
 import 'firebase/messaging';
-import { ACTIONS } from './action';
+import {ACTIONS} from './action';
 
-const handleListPayload = payload =>
-  payload.map(handshake => Handshake.handshake(handshake));
+function handlePreProcessForOfferStore(handshake, result) {
+  let extraData = JSON.parse(handshake.extra_data);
+  const id = handshake.id;
+  if (extraData.item_flags.BTC) {
+    let extraDataBTC = {...extraData, ...extraData.items.BTC};
+    delete extraDataBTC.items;
+    delete extraDataBTC.status;
+    handshake.extra_data = JSON.stringify(extraDataBTC);
+    handshake.id = id + '_BTC';
+
+    result.push(Handshake.handshake(handshake));
+  }
+
+  if (extraData.item_flags.ETH) {
+    let extraDataETH = {...extraData, ...extraData.items.ETH};
+    delete extraDataETH.items;
+    delete extraDataETH.status;
+    handshake.extra_data = JSON.stringify(extraDataETH);
+    handshake.id = id + '_ETH';
+
+    result.push(Handshake.handshake(handshake));
+  }
+}
+
+const handleListPayload = payload => {
+  let result = [];
+
+  for (let handshake of payload) {
+    if (handshake.offer_feed_type === EXCHANGE_FEED_TYPE.OFFER_STORE) {
+      handlePreProcessForOfferStore(handshake, result);
+
+    } else {
+      result.push(Handshake.handshake(handshake));
+    }
+  }
+
+  console.log('handleListPayload result', result);
+
+  return result;
+}
+
 
 const handleDetailPayload = payload => Handshake.handshake(payload.data);
 
@@ -73,13 +115,20 @@ const meReducter = (
         const offer = listOfferStatus[offer_id];
         for (const handshake of myList) {
           let status = '';
-          if (offer.type === 'instant') {
+          let id = offer.id;
+          if (offer.type === EXCHANGE_FEED_TYPE.INSTANT) {
             status = HANDSHAKE_EXCHANGE_CC_STATUS_VALUE[offer.status];
-          } else if (offer.type === 'exchange') {
+          } else if (offer.type === EXCHANGE_FEED_TYPE.EXCHANGE) {
             status = HANDSHAKE_EXCHANGE_STATUS_VALUE[offer.status];
+          } else if (offer.type === EXCHANGE_FEED_TYPE.OFFER_STORE_SHAKE) {
+            status = HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS_VALUE[offer.status];
+          } else if (offer.type === EXCHANGE_FEED_TYPE.OFFER_STORE) {
+            const values = offer.status.split('_');
+            id = id + '_' + values[0].toUpperCase();
+            status = HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[values[1]];
           }
 
-          if (handshake.id.includes(offer.id) && handshake.status !== status) {
+          if (handshake.id.includes(id) && handshake.status !== status) {
             handshake.status = status;
             break;
           }

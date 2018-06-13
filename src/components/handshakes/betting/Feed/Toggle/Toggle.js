@@ -29,7 +29,9 @@ class Toggle extends React.Component {
     const { active } = this.state;
     const renderToggle = data.map(item => (
       <div
-        className={`itemToggle ${(active === item.id && item.id === 2) ? 'btnBlue' : (active === item.id && item.id === 1) ? 'btnRed' : ''}`}
+        //className={`itemToggle ${(active === item.id && item.id === 2) ? 'btnBlue' : (active === item.id && item.id === 1) ? 'btnRed' : ''}`}
+        className={`itemToggle ${(active === item.id && item.id === 1) ? 'btnBlue' : (active === item.id && item.id === 2) ? 'btnRed' : ''}`}
+
         key={item.id}
         onClick={(e) => { e && e.preventDefault(); this.onActive(item); }}
       >
