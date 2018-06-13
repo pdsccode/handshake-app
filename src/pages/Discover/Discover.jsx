@@ -28,7 +28,6 @@ import BettingFilter from '@/components/handshakes/betting/Feed/Filter';
 import { getListOfferPrice } from '@/reducers/exchange/action';
 import Image from '@/components/core/presentation/Image';
 import loadingSVG from '@/assets/images/icon/loading.gif';
-import ninjaLogoSVG from '@/assets/images/logo.png';
 
 // style
 import './Discover.scss';
@@ -200,7 +199,7 @@ class DiscoverPage extends React.Component {
       qs.type = handshakeIdActive;
 
       if (handshakeIdActive === HANDSHAKE_ID.EXCHANGE) {
-        qs.custom_query = ` fiat_currency_s:${ipInfo?.currency} `;
+        qs.custom_query = ` fiat_currency_s:${ipInfo?.currency} AND -offline_i:1 `;
       }
     }
 
@@ -238,10 +237,7 @@ class DiscoverPage extends React.Component {
             </Col>
           </Row> */}
           <Row>
-            <Col md={12} xs={6} className="top">
-              <div className="logo">
-                <Image className="img-fluid" src={ninjaLogoSVG} alt="ninja logo" />
-              </div>
+            <Col md={12} xs={6}>
               <Category
                 idActive={handshakeIdActive}
                 className="category-wrapper"

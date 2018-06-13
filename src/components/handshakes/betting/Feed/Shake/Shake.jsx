@@ -97,15 +97,15 @@ class BetingShake extends React.Component {
     // console.log('componentWillReceiveProps Extra Data: ', extraData);
     // this.setState({extraData})
     const {marketSupportOdds, marketAgainstOdds, side, amountSupport, amountAgainst} = nextProps;
-    console.log('Shake nextProps: ',nextProps );
+    //console.log('Props: ',nextProps );
     //const marketOdds = this.toggleRef.value === SIDE.SUPPORT ? marketSupportOdds : marketAgainstOdds;
     const marketOdds = side === SIDE.SUPPORT ? marketSupportOdds : marketAgainstOdds;
     const marketAmount = side === SIDE.SUPPORT ? amountSupport : amountAgainst;
     const winValue = marketAmount * marketOdds;
     console.log('componentWillReceiveProps: marketOdds, marketAmount, winValue:', marketOdds, marketAmount, winValue);
     this.setState({
-      oddValue: parseFloat(marketOdds).toFixed(2),
-      amountValue: parseFloat(marketAmount).toFixed(4),
+      oddValue: Math.floor(marketOdds*100)/100,
+      amountValue: Math.floor(marketAmount*10000)/10000,
       winValue: parseFloat(winValue).toFixed(4)
     })
   }
