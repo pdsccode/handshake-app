@@ -27,7 +27,7 @@ const inputRefTwo = 'emailRefTwo';
 const data = [
   {
     question: 'What ID do I need as a seller or a buyer?',
-    answer: 'We do not need ID verification. If you verify your phone number, you will have the chance to get 1 free ETH to make transaction on Shake Ninja',
+    answer: 'We do not need ID verification. If you verify your phone number, you will have the chance to get 1 free ETH to make transactions on Shake Ninja',
   },
   {
     question: 'Are credit cards accepted?',
@@ -55,7 +55,7 @@ const data = [
   },
   {
     question: 'Will the funds be held in Escrow?',
-    answer: 'Yes, in either Escrow on smart contract of ethereum blockchain',
+    answer: 'Yes, in either Escrow on smart contract or ethereum blockchain',
   },
   {
     question: 'How will the Smart Contract execute when physical cash is involved and there is a lag in transaction time?',
