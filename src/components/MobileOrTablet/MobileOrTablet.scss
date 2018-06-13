@@ -20,8 +20,7 @@
     }
   }
   .imageHeader {
-    max-width: rem-calc(146px);
-    margin-bottom: rem-calc(20px);
+    min-width: 400px;
   }
   h1 {
     font-size: rem-calc(22px);

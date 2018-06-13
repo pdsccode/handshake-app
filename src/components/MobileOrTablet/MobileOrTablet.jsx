@@ -67,6 +67,9 @@ class MobileOrTablet extends React.PureComponent {
             <div>
               <ul>
                 <li>
+                  <img src={shurikenIcon} /> Jump in for <a href="/shuriken">Airdrop</a>
+                </li>
+                <li>
                   <img src={shurikenIcon} /> Read the <a href={whitePaperLink} target="_blank">whitepaper</a>
                 </li>
                 <li>
