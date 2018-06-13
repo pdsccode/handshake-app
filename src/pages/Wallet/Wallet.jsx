@@ -40,7 +40,7 @@ import HeaderMore from './HeaderMore';
 import WalletItem from './WalletItem';
 import WalletProtect from './WalletProtect';
 import WalletHistory from './WalletHistory';
-// import Refers from './Refers';
+import Refers from './Refers';
 import FeedCreditCard from '@/components/handshakes/exchange/Feed/FeedCreditCard';
 import ReactBottomsheet from 'react-bottomsheet';
 import { setHeaderRight } from '@/reducers/app/action';
@@ -742,13 +742,13 @@ class Wallet extends React.Component {
       <div className="wallet-page">
       
         {/* Header for refers ... */}
-        {/* <div className="headerRefers" >
+        <div className="headerRefers" >
           <p className="hTitle">Shuriken Airdrop</p>
           <p className="hLink" onClick={() => { this.modalRefersRef.open() }}>Receive token</p>
         </div>
         <Modal title="Shuriken Airdrop (limited)" onRef={modal => this.modalRefersRef = modal}>
             <Refers />
-        </Modal> */}
+        </Modal>
 
         <Grid>
 
