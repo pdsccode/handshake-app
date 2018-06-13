@@ -100,8 +100,7 @@ class Refers extends React.Component {
 
     // fill link ref:
     const profile = local.get(APP.AUTH_PROFILE);
-    this.setState({profile: profile});
-    alert(profile.username);
+    this.setState({profile: profile});    
     this.props.rfChange(nameFormStep4, 'refer_link', profile != false ? "https://ninja.org/ref=?" + profile.username : '');
     console.log(profile, profile.email);
     if(profile && profile.email){
