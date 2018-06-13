@@ -83,13 +83,13 @@ class FeedBetting extends React.Component {
   }
 
   handleStatus(){
-    const {status, side, result, shakeUserIds, id} = this.props;
+    const {side, result, shakeUserIds, id} = this.props;
 
     console.log('Props:', this.props);
-    console.log('Status:', status);
     const profile = local.get(APP.AUTH_PROFILE);
     const isUserShake = this.isShakeUser(shakeUserIds, profile.id);
     let itemInfo = this.props;
+    let status = this.props;
     if(isUserShake){
       const extraData = this.extraData;
       console.log('Extra data:', extraData);
@@ -101,6 +101,7 @@ class FeedBetting extends React.Component {
         console.log('Found Shaked Item:', foundShakedItem);
         if(foundShakedItem){
           itemInfo = foundShakedItem;
+          status = itemInfo.status;
         }
       }
     }
@@ -171,7 +172,17 @@ class FeedBetting extends React.Component {
     // const realEventName = event_name ? event_name.slice(7).split('(') : ['', ''];
     // const matchName = realEventName[0];
     // const matchDate = `(${realEventName[1]}`;
-
+    let eventName = event_name ? event_name: '';
+    console.log('Result:', eventName.indexOf('Event'));
+    if(eventName.indexOf('Event') == -1){
+      eventName = `Event: ${eventName}`;
+    }
+    let predictName = event_predict ? event_predict : '';
+    console.log('Predict Name:', predictName);
+    if(predictName.indexOf('Outcome')!== -1) {
+      predictName = event_predict.slice(8);
+    }
+    
     return (
       <div>
         {/* Feed */}
@@ -182,9 +193,9 @@ class FeedBetting extends React.Component {
         >
             <div className="description">
               <p className="eventName">
-                {event_name}
+                {eventName}
               </p>
-              <p className="eventInfo">{side === 1 ? `Support: ` : 'Oppose: '}{event_predict ? event_predict.slice(8) : ''}</p>
+              <p className="eventInfo">{side === 1 ? `Support: ` : 'Oppose: '}{predictName}</p>
             </div>
             <div className="bottomWrapper">
               <span className="content">{amount.toFixed(4)} ETH </span>
