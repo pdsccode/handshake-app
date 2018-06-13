@@ -40,19 +40,15 @@ import HeaderMore from './HeaderMore';
 import WalletItem from './WalletItem';
 import WalletProtect from './WalletProtect';
 import WalletHistory from './WalletHistory';
-import Refers from './Refers';
+// import Refers from './Refers';
 import FeedCreditCard from '@/components/handshakes/exchange/Feed/FeedCreditCard';
 import ReactBottomsheet from 'react-bottomsheet';
-// var ReactBottomsheet = require('react-bottomsheet');
-// var Blob = require('./Blob.js');
 import { setHeaderRight } from '@/reducers/app/action';
 import QrReader from 'react-qr-reader';
 import { showAlert } from '@/reducers/app/action';
 import { showLoading, hideLoading } from '@/reducers/app/action';
 import { Input as Input2, InputGroup, InputGroupAddon } from 'reactstrap';
 import _ from 'lodash';
-// import filesaver from 'file-saver';
-
 
 // style
 import './Wallet.scss';
@@ -746,13 +742,13 @@ class Wallet extends React.Component {
       <div className="wallet-page">
       
         {/* Header for refers ... */}
-        <div className="headerRefers" >
+        {/* <div className="headerRefers" >
           <p className="hTitle">Shuriken Airdrop</p>
           <p className="hLink" onClick={() => { this.modalRefersRef.open() }}>Receive token</p>
         </div>
         <Modal title="Shuriken Airdrop (limited)" onRef={modal => this.modalRefersRef = modal}>
             <Refers />
-        </Modal>
+        </Modal> */}
 
         <Grid>
 
@@ -980,6 +976,13 @@ class Wallet extends React.Component {
 
           {/* Render list wallet: */}
           <Row className="list">
+            <Header title="Mainnet wallets" hasLink={false} linkTitle="+ Add new" onLinkClick={this.onLinkClick} />
+          </Row>
+          <Row className="list">
+            {this.listMainWalletBalance}
+          </Row>
+
+          <Row className="list">
             <Header title="Testnet wallets" hasLink linkTitle="Request free ETH" onLinkClick={this.getETHFree} />
           </Row>
           <Row className="list">
@@ -991,14 +994,7 @@ class Wallet extends React.Component {
           </Row>
           <Row className="list">
             {this.listRewardWalletBalance}
-          </Row>
-
-          <Row className="list">
-            <Header title="Mainnet wallets" hasLink={false} linkTitle="+ Add new" onLinkClick={this.onLinkClick} />
-          </Row>
-          <Row className="list">
-            {this.listMainWalletBalance}
-          </Row>
+          </Row>          
 
         </Grid>
       </div>
