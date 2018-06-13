@@ -41,9 +41,12 @@ export class MasterWallet {
         }
       }
 
-      // set item 1,3 is default
-      if (masterWallet.length > 0) { masterWallet[1].default = true; }
-      masterWallet[3].default = true;
+      // set item 0,2 is default
+      if (masterWallet.length > 1) 
+      { 
+        masterWallet[0].default = true; 
+        masterWallet[2].default = true;
+      }
 
       // For Reward wallet:
       mnemonic = bip39.generateMnemonic();
