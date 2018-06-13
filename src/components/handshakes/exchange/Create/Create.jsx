@@ -62,6 +62,8 @@ const FormExchangeCreate = createForm({
       currency: CRYPTO_CURRENCY_DEFAULT,
       customizePriceBuy: 0,
       customizePriceSell: 0,
+      customizePriceBuy: -0.25,
+      customizePriceSell: 0.25,
     }
     // initialValues: {
     //   currency: CRYPTO_CURRENCY_DEFAULT,
