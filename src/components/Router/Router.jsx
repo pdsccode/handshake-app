@@ -389,7 +389,16 @@ class Router extends React.Component {
       );
     }
     if (window.location.pathname === URL.LANDING_PAGE_TRADE) return <LandingTradeRootRouter />;
-    if (BrowserDetect.isDesktop && process.env.isProduction) return <MobileOrTablet />;
+    if (BrowserDetect.isDesktop && process.env.isProduction) {
+      return (
+        <IntlProvider
+          locale={this.state.currentLocale}
+          messages={messages[this.state.currentLocale]}
+        >
+          <MobileOrTablet />
+        </IntlProvider>
+      );
+    }
     if (!this.state.isLogged || this.state.isLoading) {
       return (
         <BrowserRouter>
