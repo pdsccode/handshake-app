@@ -4,6 +4,7 @@ import UserProfile from '@/models/UserProfile';
 import CryptoPrice from '@/models/CryptoPrice';
 import OfferPrice from '@/models/OfferPrice';
 import { EXCHANGE_ACTIONS } from './action';
+import OfferShop from "@/models/OfferShop";
 
 function exchangeReducter(state = {}, action) {
   // console.log('exchangeReducter', JSON.stringify(action));
@@ -31,6 +32,9 @@ function exchangeReducter(state = {}, action) {
     }
     case `${EXCHANGE_ACTIONS.GET_IP_INFORM}_SUCCESS`: {
       return { ...state, ipInfo: action.payload.data };
+    }
+    case `${EXCHANGE_ACTIONS.GET_OFFER_STORES}_SUCCESS`: {
+      return { ...state, offerStores: OfferShop.offerShop(action.payload.data) };
     }
     default:
       return state;

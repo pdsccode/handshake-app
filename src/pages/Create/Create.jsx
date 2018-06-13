@@ -29,7 +29,16 @@ const CreateBetting = props => (
 const CreateExchange = props => (
   <DynamicImport
     loading={Loading}
-    load={() => import('@/components/handshakes/exchange/Create')}
+    load={() => import('@/components/handshakes/exchange/Create/Create.jsx')}
+  >
+    {Component => <Component {...props} />}
+  </DynamicImport>
+);
+
+const CreateExchangeLocal = props => (
+  <DynamicImport
+    loading={Loading}
+    load={() => import('@/components/handshakes/exchange/Create/CreateLocal.jsx')}
   >
     {Component => <Component {...props} />}
   </DynamicImport>
@@ -59,6 +68,7 @@ const maps = {
   [HANDSHAKE_ID.PROMISE]: CreatePromise,
   [HANDSHAKE_ID.BETTING]: CreateBetting,
   [HANDSHAKE_ID.EXCHANGE]: CreateExchange,
+  [HANDSHAKE_ID.EXCHANGE_LOCAL]: CreateExchangeLocal,
   [HANDSHAKE_ID.SEED]: CreateSeed,
   [HANDSHAKE_ID.WALLET_TRANSFER]: CreateWalletTransfer,
 };
