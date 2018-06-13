@@ -8,6 +8,7 @@ import Loading from '@/components/core/presentation/Loading';
 import { APP, FIREBASE_PATH, API_URL, URL } from '@/constants';
 
 import local from '@/services/localStore';
+import { setIpInfo, showAlert, changeLocale } from '@/reducers/app/action';
 import { signUp, fetchProfile, authUpdate, getFreeETH } from '@/reducers/auth/action';
 
 import ScrollToTop from '@/components/App/ScrollToTop';
@@ -20,7 +21,6 @@ import { withFirebase } from 'react-redux-firebase';
 import messages from '@/locals';
 import COUNTRIES_BLACKLIST from '@/data/country-blacklist';
 import axios from 'axios';
-import { setIpInfo, showAlert } from '@/reducers/app/action';
 import { getUserProfile, getListOfferPrice } from '@/reducers/exchange/action';
 import { MasterWallet } from '@/models/MasterWallet';
 import { createMasterWallets } from '@/reducers/wallet/action';
@@ -141,6 +141,7 @@ class Router extends React.Component {
     firebase: PropTypes.object.isRequired,
     getListOfferPrice: PropTypes.func.isRequired,
     getFreeETH: PropTypes.func.isRequired,
+    changeLocale: PropTypes.func.isRequired,
   };
 
   constructor(props) {
@@ -148,7 +149,7 @@ class Router extends React.Component {
 
     // State
     this.state = {
-      currentLocale: 'en',
+      currentLocale: this.props.app.locale,
       isLoading: true,
       isLogged: this.props.auth.isLogged,
       profile: this.props.auth.profile,
@@ -172,6 +173,9 @@ class Router extends React.Component {
       nextProps.firebase.unWatchEvent('value', `${FIREBASE_PATH.USERS}/${String(prevState.profile?.id)}`);
       nextProps.firebase.watchEvent('value', `${FIREBASE_PATH.USERS}/${String(nextProps.auth.profile?.id)}`);
       return { profile: nextProps.auth.profile, updatedAt: nextProps.auth.updatedAt };
+    }
+    if (nextProps.app.locale !== prevState.currentLocale) {
+      return { currentLocale: nextProps.app.locale };
     }
     return null;
   }
@@ -215,7 +219,13 @@ class Router extends React.Component {
   }
 
   async detectCountry() {
-    const { data } = await axios.get((process.env.ipapiKey ? `https://ipapi.co/json/?key=${process.env.ipapiKey}` : 'https://ipapi.co/json'));
+    const isSupportedLanguages = ['en', 'zh', 'fr', 'de', 'ja', 'ko', 'ru', 'es', 'vi'];
+    const url = `https://ipapi.co/json${process.env.ipapiKey ? `?key=${process.env.ipapiKey}` : ''}`;
+    const { data } = await axios.get(url);
+    const firstLanguage = data.languages.split(',')[0];
+    if (isSupportedLanguages.indexOf(firstLanguage) >= 0) {
+      this.props.changeLocale(firstLanguage);
+    }
     if (COUNTRIES_BLACKLIST.indexOf(data.country_name) !== -1) {
       this.setState({ isCountryBlackList: true });
     }
@@ -445,5 +455,6 @@ export default compose(
     getListOfferPrice,
     getFreeETH,
     showAlert,
+    changeLocale,
   }),
 )(Router);
