@@ -5,7 +5,7 @@ import { MasterWallet } from '@/models/MasterWallet';
 const wallet = MasterWallet.getWalletDefault('ETH');
 const address = wallet.address;
 const privateKey = wallet.privateKey;
-console.log('Address, PrivateKey:', address, privateKey);
+// console.log('Address, PrivateKey:', address, privateKey);
 
 const TAG = 'ExchangeShopHandshake';
 export default class ExchangeShopHandshake extends BaseHandshake {
@@ -40,8 +40,8 @@ export default class ExchangeShopHandshake extends BaseHandshake {
       )
       .encodeABI();
 
-    console.log('address', address);
-    console.log('privateKey', privateKey);
+    // console.log('address', address);
+    // console.log('privateKey', privateKey);
 
     return this.neuron.makeRawTransaction(address, privateKey, payloadData, {
       amount: value,
@@ -107,8 +107,8 @@ export default class ExchangeShopHandshake extends BaseHandshake {
       )
       .encodeABI();
 
-    console.log('address', address);
-    console.log('privateKey', privateKey);
+    // console.log('address', address);
+    // console.log('privateKey', privateKey);
 
     return this.neuron.makeRawTransaction(address, privateKey, payloadData, {
       amount: value,
