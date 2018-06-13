@@ -119,7 +119,8 @@ class Create extends React.Component {
   }
 
   render() {
-    const CreateComponent = maps[this.state.seletedId];
+    const { seletedId } = this.state;
+    const CreateComponent = maps[seletedId];
 
     return (
       <Grid className="create">
@@ -128,7 +129,7 @@ class Create extends React.Component {
             <SearchBar
               suggestions={this.handshakeList}
               onSuggestionSelected={this.handshakeChange}
-              inputSearchDefault={HANDSHAKE_NAME[HANDSHAKE_ID_DEFAULT].name}
+              inputSearchDefault={HANDSHAKE_NAME[seletedId].name}
             />
           </Col>
         </Row>

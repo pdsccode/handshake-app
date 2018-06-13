@@ -13,6 +13,8 @@ export const APP = {
   EMAIL_NEED_VERIFY: 'email_need_verify',
 };
 
+export const UNSELECTED = 'UNSELECTED';
+
 export const HANDSHAKE_ID = { // important
   PROMISE: 1,
   EXCHANGE: 2,
@@ -27,11 +29,12 @@ export const HANDSHAKE_ID_DEFAULT = 3;
 
 export const HANDSHAKE_NAME = {
   // [HANDSHAKE_ID.PROMISE]: { name: 'Promise', priority: 3 },
-  [HANDSHAKE_ID.BETTING]: { name: 'Betting', priority: 1 },
+  [HANDSHAKE_ID.BETTING]: { name: 'Predict an outcome', priority: 1 },
   // [HANDSHAKE_ID.BETTING_EVENT]: { name: 'Design a betting market', priority: 2 },
   // [HANDSHAKE_ID.SEED]: 'Seed',
-  [HANDSHAKE_ID.WALLET_TRANSFER]: { name: 'Transfer coin', priority: 4 },
-  [HANDSHAKE_ID.EXCHANGE]: { name: 'Exchange', priority: 5 },
+  [HANDSHAKE_ID.WALLET_TRANSFER]: { name: 'Transfer coins', priority: 4 },
+  [HANDSHAKE_ID.EXCHANGE]: { name: 'Open a cash station', priority: 5 },
+  // UNSELECTED: { name: 'Create a prediction market', priority: 100 },
   // [HANDSHAKE_ID.EXCHANGE_LOCAL]: { name: 'Exchange Local', priority: 6 },
 };
 
