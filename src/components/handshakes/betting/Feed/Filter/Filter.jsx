@@ -347,7 +347,7 @@ class BettingFilter extends React.Component {
                   {/*</div>*/}
                   {/*<GroupBook amountColor="#8BF275" bookList={this.bookListAgainst}/>*/}
                     {/*<GroupBook amountColor="#FA6B49" bookList={this.bookListAgainst}/>*/}
-                    {<div className="titleBox">
+                    {<div className="marketBox">
                     <div>Market</div>
                     <div>{parseFloat(this.defaultSupportOdds).toFixed(2)}</div>
                     </div>}
@@ -376,7 +376,7 @@ class BettingFilter extends React.Component {
                     marketSupportOdds={parseFloat(this.defaultSupportOdds)}
                   marketAgainstOdds={parseFloat(this.defaultAgainstOdds)}/>*/}
                     {<GroupBook amountColor="#FA6B49" bookList={this.bookListAgainst}/>}
-                    <div className="titleBox">
+                    <div className="marketBox">
                     <div>Market</div>
                     <div>{parseFloat(this.defaultAgainstOdds).toFixed(2)}</div>
                     </div>
@@ -433,7 +433,7 @@ class BettingFilter extends React.Component {
         this.props.checkFreeAvailable({PATH_URL: API_URL.CRYPTOSIGN.CHECK_FREE_AVAILABLE, METHOD:'GET',
         successFn: this.getCheckFirstFreeSuccess,
         errorFn: this.getCheckFirstFreeFailed});
-        
+
     }
     getCheckFirstFreeSuccess = async (successData)=>{
         console.log('getCheckFirstFreeSuccess', successData);

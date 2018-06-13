@@ -252,7 +252,7 @@ class BetingShake extends React.Component {
 
   renderForm() {
     const { total, isShowOdds, marketOdds, isChangeOdds } = this.state;
-    const {side} = this.props; 
+    const {side} = this.props;
     console.log('Market Odd render form:', marketOdds);
     /*
     const formFieldData = [
@@ -327,8 +327,8 @@ class BetingShake extends React.Component {
         {this.renderInputField(amountField)}
         {isShowOdds && this.renderInputField(oddsField)}
         <div className="rowWrapper">
-         <div>Possible winnings:</div>
-         <div>{this.state.winValue}</div>
+         <div>Possible winnings</div>
+         <div className="possibleWinningsValue">{this.state.winValue}</div>
         </div>
         <Button type="submit" block className={buttonClass}>
           Go

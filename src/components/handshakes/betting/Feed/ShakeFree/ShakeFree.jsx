@@ -282,7 +282,7 @@ class BetingShakeFree extends React.Component {
         {isShowOdds && this.renderInputField(oddsField)}
         <div className="rowWrapper">
          <div>Possible winnings:</div>
-         <div>{this.state.winValue}</div>
+         <div className="possibleWinningsValue">{this.state.winValue}</div>
         </div>
         <Button type="submit" block className={buttonClass}>
           Go
