@@ -8,6 +8,7 @@ import Loading from '@/components/core/presentation/Loading';
 import { APP, FIREBASE_PATH, API_URL, URL } from '@/constants';
 
 import local from '@/services/localStore';
+import { setIpInfo, showAlert, changeLocale } from '@/reducers/app/action';
 import { signUp, fetchProfile, authUpdate, getFreeETH } from '@/reducers/auth/action';
 
 import ScrollToTop from '@/components/App/ScrollToTop';
@@ -20,7 +21,6 @@ import { withFirebase } from 'react-redux-firebase';
 import messages from '@/locals';
 import COUNTRIES_BLACKLIST from '@/data/country-blacklist';
 import axios from 'axios';
-import { setIpInfo, showAlert } from '@/reducers/app/action';
 import { getUserProfile, getListOfferPrice } from '@/reducers/exchange/action';
 import { MasterWallet } from '@/models/MasterWallet';
 import { createMasterWallets } from '@/reducers/wallet/action';
@@ -28,6 +28,7 @@ import MobileOrTablet from '@/components/MobileOrTablet';
 import BrowserDetect from '@/services/browser-detect';
 import NetworkError from '@/components/Router/NetworkError';
 import BlockCountry from '@/components/core/presentation/BlockCountry';
+import qs from 'querystring';
 
 addLocaleData([...en, ...fr]);
 
@@ -141,6 +142,7 @@ class Router extends React.Component {
     firebase: PropTypes.object.isRequired,
     getListOfferPrice: PropTypes.func.isRequired,
     getFreeETH: PropTypes.func.isRequired,
+    changeLocale: PropTypes.func.isRequired,
   };
 
   constructor(props) {
@@ -148,7 +150,7 @@ class Router extends React.Component {
 
     // State
     this.state = {
-      currentLocale: 'en',
+      currentLocale: this.props.app.locale,
       isLoading: true,
       isLogged: this.props.auth.isLogged,
       profile: this.props.auth.profile,
@@ -161,6 +163,7 @@ class Router extends React.Component {
     this.checkRegistry = ::this.checkRegistry;
     this.authSuccess = ::this.authSuccess;
     this.notification = ::this.notification;
+    this.setLanguage = ::this.setLanguage;
     this.detectCountry.call(this);
   }
 
@@ -172,6 +175,9 @@ class Router extends React.Component {
       nextProps.firebase.unWatchEvent('value', `${FIREBASE_PATH.USERS}/${String(prevState.profile?.id)}`);
       nextProps.firebase.watchEvent('value', `${FIREBASE_PATH.USERS}/${String(nextProps.auth.profile?.id)}`);
       return { profile: nextProps.auth.profile, updatedAt: nextProps.auth.updatedAt };
+    }
+    if (nextProps.app.locale !== prevState.currentLocale) {
+      return { currentLocale: nextProps.app.locale };
     }
     return null;
   }
@@ -214,8 +220,20 @@ class Router extends React.Component {
     });
   }
 
+  setLanguage(language, autoDetect = true) {
+    const isSupportedLanguages = ['en', 'zh', 'fr', 'de', 'ja', 'ko', 'ru', 'es', 'vi'];
+    if (isSupportedLanguages.indexOf(language) >= 0) {
+      this.props.changeLocale(language, autoDetect);
+    } else {
+      this.props.changeLocale('en', autoDetect);
+    }
+  }
+
   async detectCountry() {
-    const { data } = await axios.get((process.env.ipapiKey ? `https://ipapi.co/json/?key=${process.env.ipapiKey}` : 'https://ipapi.co/json'));
+    const url = `https://ipapi.co/json${process.env.ipapiKey ? `?key=${process.env.ipapiKey}` : ''}`;
+    const { data } = await axios.get(url);
+    const firstLanguage = data.languages.split(',')[0];
+    this.setLanguage(firstLanguage);
     if (COUNTRIES_BLACKLIST.indexOf(data.country_name) !== -1) {
       this.setState({ isCountryBlackList: true });
     }
@@ -224,9 +242,15 @@ class Router extends React.Component {
   checkRegistry() {
     const token = local.get(APP.AUTH_TOKEN);
     // auth
+    const searchQS = window.location.search.replace('?', '');
+    const { language, ref } = qs.parse(searchQS);
+    console.log('searchQS', language, ref);
+    if (language) {
+      this.setLanguage(language, false);
+    }
     if (!token) {
       this.props.signUp({
-        PATH_URL: 'user/sign-up',
+        PATH_URL: `user/sign-up${ref ? `?ref=${ref}` : ''}`,
         METHOD: 'POST',
         successFn: () => {
           this.authSuccess();
@@ -436,5 +460,6 @@ export default compose(
     getListOfferPrice,
     getFreeETH,
     showAlert,
+    changeLocale,
   }),
 )(Router);

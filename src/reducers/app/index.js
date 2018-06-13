@@ -12,10 +12,12 @@ const close = {
   overlay: false,
 };
 
-local.save(APP.VERSION, '0.0.1');
+local.save(APP.VERSION, '0.0.2');
 
 function appReducter(state = {
   version: local.get(APP.VERSION),
+
+  locale: local.get(APP.LOCALE) || 'en',
 
   isCalling: false,
   isLoading: false,
@@ -196,6 +198,16 @@ function appReducter(state = {
       return {
         ...state,
         ipInfo: action.payload,
+      };
+    }
+
+    case APP_ACTION.CHANGE_LOCALE: {
+      if (!action.autoDetect) {
+        local.save(APP.LOCALE, action.payload);
+      }
+      return {
+        ...state,
+        locale: action.payload,
       };
     }
 

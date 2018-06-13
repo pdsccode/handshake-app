@@ -228,7 +228,7 @@ class DiscoverPage extends React.Component {
     return (
       <React.Fragment>
         <div className={`discover-overlay ${this.state.isLoading ? 'show' : ''}`}>
-          <Image src={loadingSVG} alt="loading" />
+          <Image src={loadingSVG} alt="loading" width="100" />
         </div>
         <Grid className="discover">
           {/* <Row className="search-bar-wrapper">
