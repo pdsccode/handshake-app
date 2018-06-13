@@ -28,6 +28,7 @@ import MobileOrTablet from '@/components/MobileOrTablet';
 import BrowserDetect from '@/services/browser-detect';
 import NetworkError from '@/components/Router/NetworkError';
 import BlockCountry from '@/components/core/presentation/BlockCountry';
+import qs from 'querystring';
 
 addLocaleData([...en, ...fr]);
 
@@ -234,9 +235,10 @@ class Router extends React.Component {
   checkRegistry() {
     const token = local.get(APP.AUTH_TOKEN);
     // auth
+    const ref = qs.parse(window.location.search)['?ref'];
     if (!token) {
       this.props.signUp({
-        PATH_URL: 'user/sign-up',
+        PATH_URL: `user/sign-up${ref ? `?ref=${ref}` : ''}`,
         METHOD: 'POST',
         successFn: () => {
           this.authSuccess();
@@ -294,13 +296,13 @@ class Router extends React.Component {
 
         if (listWallet === false) {
           this.setState({ loadingText: 'Creating your local wallets' });
-          listWallet = createMasterWallets().then(() => {            
+          listWallet = createMasterWallets().then(() => {
             this.setState({ loadingText: 'Please be patient. We are gathering ETH for you.' });
-            const wallet = MasterWallet.getWalletDefault('ETH');            
+            const wallet = MasterWallet.getWalletDefault('ETH');
             this.props.getFreeETH({
               PATH_URL: `/user/free-rinkeby-eth?address=${wallet.address}`,
               METHOD: 'POST',
-              successFn: (response) => {                
+              successFn: (response) => {
                 this.setState({ isLoading: false, loadingText: '' });
                 // run cron alert user when got 1eth:
                 this.timeOutCheckGotETHFree = setInterval(() => {
