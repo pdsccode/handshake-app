@@ -121,6 +121,13 @@
         a {
           color: $deep-blue;
         }
+        .chat-icon {
+          svg {
+            g {
+              stroke: $deep-blue;
+            }
+          }
+        }
       }
     }
   }
