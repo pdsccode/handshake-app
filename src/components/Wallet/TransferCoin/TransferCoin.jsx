@@ -21,7 +21,11 @@ import iconSuccessChecked from '@/assets/images/icon/icon-checked-green.svg';
 import './TransferCoin.scss';
 import Dropdown from '@/components/core/controls/Dropdown';
 
-import iconQRCodeBlack from '@/assets/images/icon/scan-qr-code.svg';
+import iconQRCodeWhite from '@/assets/images/icon/scan-qr-code-w.svg';
+
+import bgBox from '@/assets/images/pages/wallet/bg-box-wallet-coin.svg';
+
+
 
 const isIOs = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
 
@@ -29,7 +33,6 @@ const amountValid = value => (value && isNaN(value) ? 'Invalid amount' : undefin
 
 const nameFormSendWallet = 'sendWallet';
 const SendWalletForm = createForm({ propsReduxForm: { form: nameFormSendWallet, enableReinitialize: true, clearSubmitErrors: true}});
-
 
 class Transfer extends React.Component {
   constructor(props) {
@@ -139,7 +142,10 @@ class Transfer extends React.Component {
     // set name + text for list:
     if (wallets.length > 0){
       wallets.forEach((wallet) => {
-        wallet.text = wallet.getShortAddress() + " (" + wallet.name + "-" + wallet.getNetworkName() + ")";        
+        wallet.text = wallet.getShortAddress() + " (" + wallet.name + "-" + wallet.getNetworkName() + ")";
+        if (process.env.isProduction){
+          wallet.text = wallet.getShortAddress() + " (" + wallet.className + " " + wallet.name + ")";
+        }
         wallet.id = wallet.address + "-" + wallet.getNetworkName();        
         
       });
@@ -149,6 +155,9 @@ class Transfer extends React.Component {
     MasterWallet.log(walletDefault, "walletDefault");
     if (walletDefault){      
       walletDefault.text = walletDefault.getShortAddress() + " (" + walletDefault.name + "-" + walletDefault.getNetworkName() + ")";         
+      if (process.env.isProduction){
+        walletDefault.text = walletDefault.getShortAddress() + " (" + walletDefault.className + " " + walletDefault.name + ")";
+      }
       walletDefault.id = walletDefault.address + "-" + walletDefault.getNetworkName();   
 
       // get balance for first item + update to local store:
@@ -168,8 +177,8 @@ class Transfer extends React.Component {
       this.modalConfirmTranferRef.open();    
   }
 
-  invalidateTransferCoins = (value) => {
-    console.log("this.state.walletSelected.balance", this.state.walletSelected.balance);
+  invalidateTransferCoins = (value) => {    
+    if (!this.state.walletSelected) return {};
     let errors = {};
     if (this.state.walletSelected){
       // check address:
@@ -299,36 +308,39 @@ renderScanQRCode = () => (
           {this.renderScanQRCode()}
           <SendWalletForm className="sendwallet-wrapper" onSubmit={this.sendCoin} validate={this.invalidateTransferCoins}>
 
-          <p className="labelText">To wallet address</p>
-          <div className="div-address-qr-code">
+          {/* Box: */}
+          <div className="bgBox">
+            <p className="labelText">To wallet address</p>
+            <div className="div-address-qr-code">
 
-            <Field
-                  name="to_address"
-                  type="text"
-                  className="form-control input-address-qr-code"
-                  placeholder="Wallet address..."
-                  component={fieldInput}
-                  value={this.state.inputAddressAmountValue}
-                  onChange={evt => this.updateSendAddressValue(evt)}
-                  validate={[required]}
-                />          
-            {!isIOs ? <img onClick={() => { this.openQrcode() }} className="icon-qr-code-black" src={iconQRCodeBlack} /> : ""}
-          </div>
-          <p className="labelText">Amount</p>          
-          <div className="div-amount">
-            <Field
-                  name="amount"
-                  type={isIOs ? "number" : "tel"}
-                  className="form-control"
-                  component={fieldInput}
-                  value={this.state.inputSendAmountValue}
-                  onChange={evt => this.updateSendAmountValue(evt)}
-                  placeholder={"0.0"}
-                  validate={[required, amountValid]}
-                  // validate={[required, amountValid, balanceValid(this.state.walletSelected ? this.state.walletSelected.balance : "", this.state.walletSelected ? this.state.walletSelected.name : "")]}
-                />
-                <span className="coiname-append">{ this.state.walletSelected ? StringHelper.format("{0}", this.state.walletSelected.name) : ''}</span>
+              <Field
+                    name="to_address"
+                    type="text"
+                    className="form-control input-address-qr-code"
+                    placeholder="Wallet address..."
+                    component={fieldInput}
+                    value={this.state.inputAddressAmountValue}
+                    onChange={evt => this.updateSendAddressValue(evt)}
+                    validate={[required]}
+                  />          
+              {!isIOs ? <img onClick={() => { this.openQrcode() }} className="icon-qr-code-black" src={iconQRCodeWhite} /> : ""}
             </div>
+            <p className="labelText">Amount</p>          
+            <div className="div-amount">
+              <Field
+                    name="amount"
+                    type={isIOs ? "number" : "tel"}
+                    className="form-control"
+                    component={fieldInput}
+                    value={this.state.inputSendAmountValue}
+                    onChange={evt => this.updateSendAmountValue(evt)}
+                    placeholder={"0.0"}
+                    validate={[required, amountValid]}
+                    // validate={[required, amountValid, balanceValid(this.state.walletSelected ? this.state.walletSelected.balance : "", this.state.walletSelected ? this.state.walletSelected.name : "")]}
+                  />
+                  <span className="coiname-append">{ this.state.walletSelected ? StringHelper.format("{0}", this.state.walletSelected.name) : ''}</span>
+              </div>
+
 
             { this.state.walletDefault ? 
               <div className ="dropdown-wallet-tranfer">
@@ -346,9 +358,11 @@ renderScanQRCode = () => (
                     }
                   />                  
 
-                  <label className='label-balance'>Your balance: { this.state.walletSelected ? StringHelper.format("{0} {1}", this.state.walletSelected.balance, this.state.walletSelected.name) : ""}</label>
+                  <label className='label-balance'>Wallet balance: { this.state.walletSelected ? StringHelper.format("{0} {1}", this.state.walletSelected.balance, this.state.walletSelected.name) : ""}</label>
               </div>
               :""}
+
+              </div>
 
             <Button className="button-wallet-cpn" isLoading={this.state.isRestoreLoading}  type="submit" block={true}>Transfer</Button>
           </SendWalletForm>

@@ -11,6 +11,7 @@ import { shakeItem, initFreeHandshake, } from '@/reducers/handshake/action';
 import {HANDSHAKE_ID, API_URL, APP } from '@/constants';
 import {MasterWallet} from '@/models/MasterWallet';
 import local from '@/services/localStore';
+import moment from 'moment';
 
 // components
 import { InputField } from '@/components/handshakes/betting/form/customField';
@@ -37,6 +38,7 @@ class BetingShakeFree extends React.Component {
     marketSupportOdds: PropTypes.number,
     marketAgainstOdds: PropTypes.number,
     amount: PropTypes.number,
+    closingDate: PropTypes.any,
     onSubmitClick: PropTypes.func,
     onCancelClick: PropTypes.func,
   }
@@ -100,6 +102,19 @@ class BetingShakeFree extends React.Component {
   }
 
 
+  isExpiredDate(){
+    const {closingDate} = this.props;
+    let dayUnit = moment.unix(closingDate).utc();
+    let today = moment();
+    let todayUnit = today.utc();
+    console.log('Date Unix:', dayUnit.format());
+    console.log('Today Unix:', todayUnit.format());
+    if(!todayUnit.isSameOrBefore(dayUnit, "miliseconds") && today){
+      console.log('Expired Date');
+      return true
+    }
+    return false;
+  }
 
   async onSubmit(e) {
     console.log("Submit");
@@ -122,8 +137,11 @@ class BetingShakeFree extends React.Component {
 
     var message = null;
 
+    if(this.isExpiredDate()){
+      message = MESSAGE.MATCH_OVER;
 
-    if(matchName && matchOutcome){
+    }
+    else if(matchName && matchOutcome){
       if(odds >1){
         this.initHandshake(amount, odds);
       }else {

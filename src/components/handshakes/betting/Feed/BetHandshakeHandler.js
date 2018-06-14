@@ -34,6 +34,7 @@ export const MESSAGE = {
   CHOOSE_MATCH: 'Please choose match and outcome',
   ODD_LARGE_THAN: 'Please enter odds greater than 1',
   AMOUNT_VALID: 'Please place a bet larger than 0.',
+  MATCH_OVER: 'Time travel is hard. Please bet on a future or ongoing match.',
 };
 
 export const BET_BLOCKCHAIN_STATUS = {

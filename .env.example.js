@@ -21,4 +21,5 @@ module.exports = {
   },
   PredictionHandshakeFileName: '',
   dropConsole: true,
+  TURN_OFF_CACHE: true,
 };
