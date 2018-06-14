@@ -242,7 +242,7 @@ class FeedExchange extends React.PureComponent {
   }
 
   getOfferDistance = () => {
-    const { intl,  ipInfo: { latitude, longitude, country_code } } = this.props;
+    const { intl,  ipInfo: { latitude, longitude, country } } = this.props;
     const { offer } = this;
     // let distanceKm = 0;
     // let distanceMiles = 0;
@@ -258,7 +258,7 @@ class FeedExchange extends React.PureComponent {
     // }
 
     return intl.formatMessage({ id: 'offerDistanceContent' }, {
-      distance: getLocalizedDistance(distanceKm, country_code)
+      distance: getLocalizedDistance(distanceKm, country)
       // distanceKm: distanceKm > 1 || distanceMiles === 0 ? distanceKm.toFixed(0) : distanceKm.toFixed(3),
       // distanceMiles: distanceMiles === 0 ? distanceKm.toFixed(0) : distanceMiles.toFixed(1),
     });

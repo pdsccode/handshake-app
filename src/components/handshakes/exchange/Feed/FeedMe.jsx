@@ -900,7 +900,7 @@ class FeedMe extends React.PureComponent {
 
 
   render() {
-    const {intl, initUserId, shakeUserIds, location, state, status, mode = 'discover', ipInfo: { latitude, longitude, country_code }, initAt, ...props} = this.props;
+    const {intl, initUserId, shakeUserIds, location, state, status, mode = 'discover', ipInfo: { latitude, longitude, country }, initAt, ...props} = this.props;
     const offer = this.offer;
     // console.log('render',offer);
     const {listOfferPrice} = this.props;
