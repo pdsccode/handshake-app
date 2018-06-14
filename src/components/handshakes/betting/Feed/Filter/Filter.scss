@@ -69,18 +69,33 @@
   .freeBox {
     display: flex;
     color: $white;
-    background-color: #1F2B34;
+    background: url("../../../../../assets/images/icon/betting/free-box.svg");
     font-size: rem-calc(18px);
+    align-items: center;
     justify-content: space-between;
     .buttonBet {
-      margin: (10px 10px);
+      margin: rem-calc(10px 10px) !important;
+      background: #FF001F !important;
+      box-shadow: 0 2px 6px 0 rgba(0,0,0,0.50) !important;
+      border-radius: rem-calc(6px) !important;
+      font-size: rem-calc(14px) !important;
+      color: #FFFFFF !important;
+      letter-spacing: 0.29px !important;
+      border: none !important;
     }
     .contentFree {
-      width: 80%;
       justify-content: center;
       text-align: center;
-      font-weight: bold;
-      padding: (10px 10px);
+      font-weight: $normal;
+      padding: rem-calc(10px 10px 10px 30px);
+      font-size: rem-calc(16px);
+      color: #FFFFFF;
+      letter-spacing: 0.32px;
+      text-shadow: 0 1px 5px rgba(0,0,0,0.50);
+      span {
+        font-weight: $bold;
+        text-transform: uppercase;
+      }
     }
   }
   .spreadBox {
