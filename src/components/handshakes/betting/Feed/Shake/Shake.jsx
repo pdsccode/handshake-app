@@ -69,7 +69,8 @@ class BetingShake extends React.Component {
       marketOdds: 0,
       oddValue: 0,
       amountValue: 0,
-      winValue: 0
+      winValue: 0,
+      disable: false
       //BettingShakeForm
 
     };
@@ -327,7 +328,7 @@ class BetingShake extends React.Component {
          <div>Possible winnings</div>
          <div className="possibleWinningsValue">{this.state.winValue}</div>
         </div>
-        <Button type="submit" block className={buttonClass}>
+        <Button type="submit" disable={this.state.disable} block className={buttonClass}>
           Go
         </Button>
       </form>
@@ -449,6 +450,9 @@ class BetingShake extends React.Component {
   }
 
   initHandshake(amount, odds){
+    this.setState({
+      disable: true
+    })
     const {outcomeId, matchName, matchOutcome, side} = this.props;
     const {extraData} = this.state;
     //const side = this.toggleRef.value;
@@ -503,10 +507,16 @@ class BetingShake extends React.Component {
       }
     });
     }
+    this.setState({
+      disable: false
+    })
     this.props.onSubmitClick();
   }
   initHandshakeFailed = (error) => {
     console.log('initHandshakeFailed', error);
+    this.setState({
+      disable: false
+    })
   }
 }
 const mapDispatch = ({
