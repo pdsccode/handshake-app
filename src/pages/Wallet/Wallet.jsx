@@ -981,13 +981,15 @@ class Wallet extends React.Component {
           <Row className="list">
             {this.listMainWalletBalance}
           </Row>
-
+          {this.listTestWalletBalance.length > 0 ? 
           <Row className="list">
             <Header title="Testnet wallets" hasLink linkTitle="Request free ETH" onLinkClick={this.getETHFree} />
           </Row>
+          : ''}
           <Row className="list">
             {this.listTestWalletBalance}
           </Row>
+          
 
           <Row className="list">
             <Header title="Reward wallets" hasLink={false} />
