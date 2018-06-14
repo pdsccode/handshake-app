@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 // action, mock
 import { fireBaseExchangeDataChange, loadMyHandshakeList, fireBaseBettingChange } from '@/reducers/me/action';
-import { API_URL, HANDSHAKE_ID, URL } from '@/constants';
+import { API_URL, APP, HANDSHAKE_ID, URL } from '@/constants';
 // components
 import { Link } from 'react-router-dom';
 import { Grid, Row, Col } from 'react-bootstrap';
@@ -16,12 +16,13 @@ import FeedSeed from '@/components/handshakes/seed/Feed';
 import Image from '@/components/core/presentation/Image';
 
 import ToggleSwitch from '@/components/core/presentation/ToggleSwitch';
-
 // style
 import AvatarSVG from '@/assets/images/icon/avatar.svg';
 import ShopSVG from '@/assets/images/icon/icons8-shop_filled.svg';
 import ExpandArrowSVG from '@/assets/images/icon/expand-arrow.svg';
 import './Me.scss';
+import {setOfflineStatus} from "@/reducers/auth/action";
+import local from '@/services/localStore';
 
 const maps = {
   [HANDSHAKE_ID.PROMISE]: FeedPromise,
@@ -82,8 +83,29 @@ class Me extends React.Component {
     this.props.loadMyHandshakeList({ PATH_URL: API_URL.ME.BASE });
   }
 
+  setOfflineStatus = (online) => {
+    const offlineValue = online ? 0 : 1;
+    this.props.setOfflineStatus( {
+      PATH_URL: `${API_URL.ME.SET_OFFLINE_STATUS}/${offlineValue}`,
+      METHOD: 'POST',
+      successFn: this.handleSetOfflineStatusSuccess,
+      errorFn: this.handleSetOfflineStatusFailed,
+    });
+  }
+
+  handleSetOfflineStatusSuccess = (responseData) => {
+    const { offline } = this.props.auth;
+    local.save(APP.OFFLINE_STATUS, offline ? 1 : 0);
+  }
+
+  handleSetOfflineStatusFailed = (e) => {
+    console.log('handleSetOfflineStatusFailed',e);
+  }
+
   render() {
     const { list } = this.props.me;
+    const online = !this.props.auth.offline;
+
     return (
       <Grid className="me">
         <Row>
@@ -100,7 +122,7 @@ class Me extends React.Component {
             </Link>
           </Col>
         </Row>
-        {/* <Row>
+         <Row>
           <Col md={12}>
             <div className="update-profile pt-2">
               <Image className="avatar" src={ShopSVG} alt="shop" />
@@ -109,11 +131,11 @@ class Me extends React.Component {
                 <p>Open for business</p>
               </div>
               <div className="arrow">
-                <ToggleSwitch onChange={flag => console.log(flag)} />
+                <ToggleSwitch defaultChecked={online} onChange={flag => this.setOfflineStatus(flag)} />
               </div>
             </div>
           </Col>
-        </Row> */}
+        </Row>
         <Row>
           <Col md={12}>
             {
@@ -159,6 +181,7 @@ const mapDispatch = ({
   getListOfferPrice,
   fireBaseExchangeDataChange,
   fireBaseBettingChange,
+  setOfflineStatus,
 });
 
 export default connect(mapState, mapDispatch)(Me);

@@ -11,6 +11,7 @@ export const APP = {
   WALLET_LIST: 'wallet_list',
   IP_INFO: 'ip_info',
   EMAIL_NEED_VERIFY: 'email_need_verify',
+  OFFLINE_STATUS: 'offline_status',
 };
 
 export const UNSELECTED = 'UNSELECTED';
@@ -137,6 +138,7 @@ export const API_URL = {
   },
   ME: {
     BASE: 'handshake/me',
+    SET_OFFLINE_STATUS: 'exchange/user/profile/offline',
   },
   HANDSHAKE: {
     INDEX: 'handshake', // id handshake

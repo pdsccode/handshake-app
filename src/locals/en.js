@@ -48,6 +48,7 @@ export default {
   completeOfferItemSuccessMassage: 'Good news! Your order has been completed.',
   offerStoresAlreadyCreated: 'Oops! You already created an order on Ninja.',
   offerStoreHandShakeContent: '{offerTypeBuy} {amountBuy} {currency} at {fiatAmountBuy} {fiatAmountCurrency}. {offerTypeSell} {amountSell} {currency} at {fiatAmountSell} {fiatAmountCurrency}',
+  requireDefaultWalletOnMainNet: 'You must set your wallet on Mainnet',
 
   // FAQ
   FAQ_TITLE: 'FAQ',
