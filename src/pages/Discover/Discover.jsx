@@ -110,9 +110,13 @@ class DiscoverPage extends React.Component {
         } = prevState;
         const qs = { };
 
-        const pt = `${prevState.lat},${prevState.lng}`;
+        // const pt = `${prevState.lat},${prevState.lng}`;
+        //
+        // qs.location_p = { pt, d: DISCOVER_GET_HANDSHAKE_RADIUS };
 
-        qs.location_p = { pt, d: DISCOVER_GET_HANDSHAKE_RADIUS };
+        qs.pt = `${prevState.lat},${prevState.lng}`;
+        qs.d = DISCOVER_GET_HANDSHAKE_RADIUS;
+
         if (handshakeIdActive) {
           qs.type = handshakeIdActive;
         }
@@ -284,9 +288,12 @@ class DiscoverPage extends React.Component {
     } = this.state;
     const qs = { };
 
-    const pt = `${this.state.lat},${this.state.lng}`;
+    // const pt = `${this.state.lat},${this.state.lng}`;
+    //
+    // qs.location_p = { pt, d: DISCOVER_GET_HANDSHAKE_RADIUS };
+    qs.pt = `${this.state.lat},${this.state.lng}`;
+    qs.d = DISCOVER_GET_HANDSHAKE_RADIUS;
 
-    qs.location_p = { pt, d: DISCOVER_GET_HANDSHAKE_RADIUS };
     if (handshakeIdActive) {
       qs.type = handshakeIdActive;
 
