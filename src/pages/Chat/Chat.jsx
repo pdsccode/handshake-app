@@ -23,7 +23,7 @@ import './Chat.scss';
 import { validateCallback } from '@firebase/util';
 
 // Get a reference to the Firebase Realtime Database
-const chatRef = firebase.database().ref();
+const chatRef = firebase.database().ref('chat');
 let isInitialized = false;
 
 // Create an instance of Firechat
@@ -121,11 +121,10 @@ class Chat extends Component {
     const {
       userId: fromUserId, name: fromUserName,
     } = message;
-    const { chatSource, chatDetail } = this.state;
+    const { chatSource } = this.state;
 
     if (Object.prototype.hasOwnProperty.call(chatSource, roomId)) {
       const room = chatSource[roomId];
-      console.log('new message', roomId, 'room', room);
       // room.froms = room.froms || {};
       // room.froms[fromUserId] = fromUserName;
       if (Object.prototype.hasOwnProperty.call(room.froms, fromUserId) && room.froms[fromUserId]) {
@@ -143,13 +142,8 @@ class Chat extends Component {
       room.messages.push(message);
       chatSource[roomId] = room;
 
-      if (chatDetail && chatDetail.roomData.id == roomId) {
-        chatDetail.roomData = room;
-      }
-
       this.setCustomState({
         chatSource,
-        chatDetail,
       }, () => {
         console.log('after receive new message', JSON.parse(JSON.stringify(this.state.chatSource)));
       });
@@ -265,13 +259,8 @@ class Chat extends Component {
         const fromNamesFiltered = Object.keys(room.froms).filter(userId => (userId !== this.user.id));
         const fromNames = fromNamesFiltered.map(userId => (room.froms[userId])).join(', ');
         const fromUserIds = fromNamesFiltered.map(userId => (userId)).join(',');
-        let lastMessage;
-
-        room.messages.reverse().forEach((message) => {
-          if (message.message.type != 'special') {
-            lastMessage = message;
-            return false;
-          }
+        const lastMessage = [...room.messages].reverse().find((message) => {
+          return message.message.type != 'special';
         });
 
         const lastMessageTime = lastMessage.timestamp;
@@ -288,7 +277,6 @@ class Chat extends Component {
           subtitle: lastMessageContent,
           unread: 0,
           dateString: moment(new Date(lastMessageTime)).format('HH:mm'),
-          roomData: room,
         });
       }
     });
@@ -320,6 +308,15 @@ class Chat extends Component {
     return usersData;
   }
 
+  getRoom(roomId) {
+    const { chatSource } = this.state;
+    if (Object.prototype.hasOwnProperty.call(chatSource, roomId)) {
+      return chatSource[roomId];
+    }
+
+    return {};
+  }
+
   getUserAvatar(userId) {
     // return `data:image/png;base64,${new Identicon(md5(userId)).toString()}`;
     return IconAvatar;
@@ -337,7 +334,6 @@ class Chat extends Component {
       subtitle: '',
       unread: 0,
       dateString: moment(new Date()).format('HH:mm'),
-      roomData: room,
     };
   }
 
@@ -358,7 +354,7 @@ class Chat extends Component {
     const self = this;
 
     // Initialize data events
-    chatInstance.setUser(userId, userName, (user) => {
+    chatInstance.setUser(userId, userName, !isInitialized, (user) => {
       self.user = user;
 
       const historyState = this.loadDataFromLocalStorage();
@@ -480,6 +476,7 @@ class Chat extends Component {
   }
 
   enterMessageRoom(room) {
+    const roomData = this.getRoom(room.id);
     this.setCustomState({
       chatDetail: room,
       currentMessage: '',
@@ -488,23 +485,37 @@ class Chat extends Component {
       this.scrollToBottom();
     });
     this.clearSearch();
-    this.props.setHeaderTitle(Object.keys(room.roomData.froms).filter(userId => (userId !== this.user.id)).map(userId => (room.roomData.froms[userId])).join(', '));
+    this.props.setHeaderTitle(Object.keys(roomData.froms).filter(userId => (userId !== this.user.id)).map(userId => (roomData.froms[userId])).join(', '));
   }
 
   scrollToBottom() {
     window.scrollTo(0, document.body.scrollHeight);
   }
 
-  sendMessage(e, messageType = 'plain_text', ...args) {
+  sendMessage(e, messageType = 'plain_text', args) {
     const { chatDetail, currentMessage } = this.state;
     if (currentMessage && chatDetail) {
       const { id: roomId } = chatDetail;
+      const roomData = this.getRoom(roomId);
+      const { authorizedUsers } = roomData;
+      let publicKey;
+
+      // get group public keys
+      Object.keys(authorizedUsers).forEach((userId) => {
+        if (userId === this.user.id) {
+          return true;
+        }
+
+        // TO-DO: calculate public key from other users in group
+        publicKey = authorizedUsers[userId].publicKey;
+      });
+
       const message = {
         message: currentMessage,
         type: messageType,
-        args
+        ...args,
       };
-      chatInstance.sendMessage(roomId, message, null, () => {
+      chatInstance.sendMessage(roomId, message, publicKey, null, () => {
         if (this.chatInputRef) {
           this.chatInputRef.clear();
           this.chatInputRef.input.focus();
@@ -518,14 +529,19 @@ class Chat extends Component {
   }
 
   chatWithUser(user) {
-    const { id: userId, name: userName } = user;
+    const { id: userId, name: userName, publicKey: userPublicKey } = user;
     const roomId = md5(this.mixString(userId, this.user.id));
 
     if (Object.prototype.hasOwnProperty.call(this.state.chatSource, roomId)) {
       this.enterMessageRoom(this.generateMessageRoomData(roomId, userId, userName, this.state.chatSource[roomId]));
     } else {
-      chatInstance.createRoom(roomId, (room) => {
-        chatInstance.inviteUser(userId, userName, roomId);
+      const usersInGroup = {};
+      usersInGroup[userId] = {
+        name: userName,
+        publicKey: userPublicKey,
+      };
+      chatInstance.createRoom(roomId, usersInGroup, (room) => {
+        chatInstance.inviteUser(userId, userName, userPublicKey, roomId);
         room.messages = room.messages || [];
         room.froms = {
           [userId]: userName,
@@ -568,7 +584,7 @@ class Chat extends Component {
           //     value = authorizedUsers[value].name;
           //   }
           // }
-          value = "I";
+          value = 'I';
           break;
         case 'amount':
         case 'coin_name':
@@ -650,7 +666,7 @@ class Chat extends Component {
           onClick={isInSearchMode ? this.onSearchUserClicked : this.onChatItemClicked}
         />
       </div>
-    ) : this.renderEmptyMessage(isInSearchMode ? 'The Ninja you are looking for is not here. Perhaps you have their name wrong.' : 'Chat to your fellow ninjas. Your secrets are safe.');
+    ) : this.renderEmptyMessage(isInSearchMode ? 'The Ninja you are looking for is not here. Perhaps you have their name wrong.' : 'Trade secrets here. All communication is encrypted and no one is listening.');
   }
 
   renderBackButton() {
@@ -682,7 +698,7 @@ class Chat extends Component {
 
   renderChatDetail(room) {
     // console.log('render chat detail', room);
-    const { roomData } = room;
+    const roomData = this.getRoom(room.id);
     const { messages } = roomData;
     let prevUserId = null;
 

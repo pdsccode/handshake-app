@@ -50,6 +50,7 @@ import {feedBackgroundColors} from '@/components/handshakes/exchange/config';
 import {updateOfferStatus} from '@/reducers/discover/action';
 import OfferShop from '@/models/OfferShop';
 import {getLocalizedDistance} from "@/services/util";
+import {BigNumber} from "bignumber.js";
 
 class FeedExchange extends React.PureComponent {
   constructor(props) {
@@ -80,10 +81,63 @@ class FeedExchange extends React.PureComponent {
     this.modalRef.open();
   }
 
+  showAlert = (message) => {
+    this.props.showAlert({
+      message: <div className="text-center">
+        {message}
+      </div>,
+      timeOut: 5000,
+      type: 'danger',
+      callBack: () => {
+      }
+    });
+  }
+
+  checkMainNetDefaultWallet = (wallet) => {
+    const { intl } = this.props;
+    let result = true;
+    if (wallet.network === MasterWallet.ListCoin[wallet.className].Network.Mainnet) {
+      result = true;
+    } else {
+      const message = intl.formatMessage({ id: 'requireDefaultWalletOnMainNet' }, {});
+      this.showAlert(message);
+      result = false;
+    }
+
+    return result;
+  }
+
+  showNotEnoughCoinAlert = (balance, amount, fee, currency) => {
+    const bnBalance = new BigNumber(balance);
+    const bnAmount = new BigNumber(amount);
+    const bnFee = new BigNumber(fee);
+
+    const condition = bnBalance.isLessThan(bnAmount.plus(bnFee));
+
+    if (condition) {
+      const { intl } = this.props;
+      this.props.showAlert({
+        message: <div className="text-center">
+          {intl.formatMessage({ id: 'notEnoughCoinInWallet' }, {
+            amount: formatAmountCurrency(balance),
+            fee: formatAmountCurrency(fee),
+            currency: currency,
+          })}
+        </div>,
+        timeOut: 3000,
+        type: 'danger',
+        callBack: () => {
+        }
+      });
+    }
+
+    return condition;
+  }
+
 
   // //////////////////////
 
-  shakeOfferItem = (values) => {
+  shakeOfferItem = async (values) => {
     console.log('shakeOfferItem', values);
     this.modalRef.close();
 
@@ -93,6 +147,19 @@ class FeedExchange extends React.PureComponent {
     const shopType = values.type === EXCHANGE_ACTION.BUY ? EXCHANGE_ACTION.SELL : EXCHANGE_ACTION.BUY;
 
     const wallet = MasterWallet.getWalletDefault(values.currency);
+
+    if (!this.checkMainNetDefaultWallet(wallet)) {
+      return;
+    }
+
+    if (shopType === EXCHANGE_ACTION.BUY) { // shop buy
+      const balance = await wallet.getBalance();
+      const fee = await wallet.getFee(4, true);
+
+      if (this.showNotEnoughCoinAlert(balance, values.amount, fee, values.currency)) {
+        return;
+      }
+    }
 
     const offerItem = {
       type: shopType,
@@ -186,6 +253,7 @@ class FeedExchange extends React.PureComponent {
     //   const latLng = location.split(',')
       // this.distanceKm = getDistanceFromLatLonInKm(latitude, longitude, latLng[0], latLng[1])
     const distanceKm = getDistanceFromLatLonInKm(latitude, longitude, offer.latitude || 0, offer.longitude || 0);
+    console.log('checkdistance dis', distanceKm, latitude, longitude, offer.latitude, offer.longitude)
       // distanceMiles = distanceKm * 0.621371;
     // }
 

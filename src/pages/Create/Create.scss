@@ -4,4 +4,7 @@
     .margin-top-20 {
         margin-top: rem-calc(20px);
     }
+    .disable {
+        color: $disable-color !important;
+    }
 }

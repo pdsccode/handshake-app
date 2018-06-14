@@ -11,7 +11,10 @@ export const APP = {
   WALLET_LIST: 'wallet_list',
   IP_INFO: 'ip_info',
   EMAIL_NEED_VERIFY: 'email_need_verify',
+  OFFLINE_STATUS: 'offline_status',
 };
+
+export const UNSELECTED = 'UNSELECTED';
 
 export const HANDSHAKE_ID = { // important
   PROMISE: 1,
@@ -21,18 +24,22 @@ export const HANDSHAKE_ID = { // important
   WALLET_TRANSFER: 5,
   EXCHANGE_LOCAL: 6,
   BETTING_EVENT: 7,
+  WALLET_RECEIVE: 8,
 };
 
 export const HANDSHAKE_ID_DEFAULT = 3;
 
 export const HANDSHAKE_NAME = {
   // [HANDSHAKE_ID.PROMISE]: { name: 'Promise', priority: 3 },
-  [HANDSHAKE_ID.BETTING]: { name: 'Betting', priority: 1 },
+  [HANDSHAKE_ID.BETTING]: { name: 'Predict an outcome', priority: 1 },
   // [HANDSHAKE_ID.BETTING_EVENT]: { name: 'Design a betting market', priority: 2 },
   // [HANDSHAKE_ID.SEED]: 'Seed',
-  [HANDSHAKE_ID.WALLET_TRANSFER]: { name: 'Transfer coin', priority: 4 },
-  [HANDSHAKE_ID.EXCHANGE]: { name: 'Exchange', priority: 5 },
-  // [HANDSHAKE_ID.EXCHANGE_LOCAL]: { name: 'Exchange Local', priority: 6 },
+  [HANDSHAKE_ID.WALLET_TRANSFER]: { name: 'Transfer coins', priority: 4 },
+  [HANDSHAKE_ID.WALLET_RECEIVE]: { name: 'Receive coins', priority: 5 },
+  [HANDSHAKE_ID.EXCHANGE]: { name: 'Manage your station', priority: 6 },
+  // UNSELECTED: { name: 'Create a prediction market', priority: 100 },
+  // [HANDSHAKE_ID.EXCHANGE_LOCAL]: { name: 'Exchange Local', priority: 7 },
+  [HANDSHAKE_ID.EXCHANGE_LOCAL]: { name: 'Exchange Local', priority: 7 },
 };
 
 export const PRICE_DECIMAL = 0;
@@ -134,6 +141,7 @@ export const API_URL = {
   },
   ME: {
     BASE: 'handshake/me',
+    SET_OFFLINE_STATUS: 'exchange/user/profile/offline',
   },
   HANDSHAKE: {
     INDEX: 'handshake', // id handshake
@@ -323,6 +331,11 @@ export const EXCHANGE_FEED_TYPE = {
 export const EXCHANGE_METHOD_PAYMENT = {
   [EXCHANGE_FEED_TYPE.EXCHANGE]: 'cash',
   [EXCHANGE_FEED_TYPE.INSTANT]: 'credit card',
+};
+
+export const EXCHANGE_COOKIE_READ_INSTRUCTION = {
+  name: 'exchange-read-instruction',
+  option: { expires: 7 },
 };
 
 export const DISCOVER_GET_HANDSHAKE_RADIUS = 20;

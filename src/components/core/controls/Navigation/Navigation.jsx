@@ -55,7 +55,7 @@ class Navigation extends React.Component {
           <li className={cn(this.checkSelected(URL.HANDSHAKE_DISCOVER_INDEX))}>
             <Link to={URL.HANDSHAKE_DISCOVER_INDEX} onClick={this.props.clearHeaderBack}>
               <div dangerouslySetInnerHTML={{ __html: discoverIcon }} />
-              <span>Discover</span>
+              <span>Exchanges</span>
             </Link>
           </li>
           <li>
@@ -76,7 +76,7 @@ class Navigation extends React.Component {
           <li className={cn(this.checkSelected(URL.HANDSHAKE_CHAT_INDEX))}>
             <Link to={URL.HANDSHAKE_CHAT_INDEX} onClick={this.props.clearHeaderBack}>
               <div className="chat-icon" dangerouslySetInnerHTML={{ __html: chatIcon }} />
-              <span>Chat</span>
+              <span>Whisper</span>
             </Link>
           </li>
           <li className={cn((this.state.currentPath.startsWith(URL.HANDSHAKE_WALLET_INDEX) && !this.state.isNotFound ? 'selected' : ''))}>
