@@ -111,28 +111,54 @@ export default {
       answer: 'Ein dezentrale Vorhersage Austausch stellen Ihnen die Freiheit, Ihre eigenen Quoten und Wetten direkt mit jedem zu schaffen bieten Ihnen 100 % Ninja Anonymität und garantierte Auszahlungen. ',
     },
     {
-      question: '',
-      answer: '',
+      question: 'wie über Privatsphäre und Anonymität?',
+      answer: 'Ninja erfordert keine Downloads und keine Anmeldungen. Das heißt, keine Passwörter, keine Telefonnummern und keine e-Mails. 100 % Anonymität.',
     },
     {
-      question: '',
-      answer: '',
+      question: 'muss ich Gebühren bezahlen?',
+      answer: 'Es gibt zwei Arten von Gebühren: Schöpfer Gebühren (für die Ninja, die die Wette erstellt) und die netzwerkgebühr (ein Prozentsatz der Schöpfer-Gebühr, das geht auf die Erhaltung der Plattform).',
     },
     {
-      question: '',
-      answer: '',
+      question: 'Was muss ich tun, wenn das Ergebnis abgeschlossen ist?',
+      answer: 'Nichts. Wenn du gewinnst, werden Ihre Gewinne automatisch auf Ihr Konto überwiesen. Wenn Sie verlieren, wird es ein fremdes Konto sein.',
     },
     {
-      question: '',
-      answer: '',
+      question: 'wo finde ich ein Match auf Wetten?',
+      answer: 'Auf der Homepage werden Sie laufenden Wetten und Märkte durchsuchen. Wenn Sie einen nicht, die Sie mögen finden können, erstellen Sie Ihre eigenen!',
     },
     {
-      question: '',
-      answer: '',
+      question: 'als Sport kann ich auf etwas anderes setzen? Wie funktioniert es?',
+      answer: 'Sehr bald wird alles unter der Sonne Ninja zuweisen. Die einzige Einschränkung wird Ihre Kreativität sein. Sie können leicht jedem Markt auf jede künftige Veranstaltung zu schaffen, sei es Sport, Politik, Wissenschaft, Märkte, Klima... you',
     },
     {
-      question: '',
-      answer: '',
+      question: 'Was soll passieren, an die Handshake-mobile-app?',
+      answer: 'Wir werden Handshake (und Ihre Lieblings-Features wie Versprechungen, Schuldscheine, Vertrag Upload, etc.) die Ninja-mobile-Website integriert.',
+    },
+  ],
+
+  // MobileOrTablet components
+  MOT_TITLE: 'The anonymous exchange of anything',
+  MOT_CONTENT_0: 'The Ninja network is only accessible via mobile.',
+  MOT_CONTENT_1: 'Open',
+  MOT_CONTENT_2: 'on your mobile browser to gain anonymous entry.',
+  MOT_CONTENT_3: 'No download needed. No sign up required.',
+  MOT_LIST_CONTENT: [
+    {
+      mainContent: 'Read the',
+      placeHolderLink: 'whitepaper',
+      link: 'https://medium.com/@ninjadotorg/shakeninja-bex-1c938f18b3e8',
+      isBlankTarget: true,
+    },
+    {
+      mainContent: 'We answered your',
+      placeHolderLink: 'FAQ',
+      link: '/faq',
+    },
+    {
+      mainContent: 'Join the dojo on',
+      placeHolderLink: 'Telegram',
+      link: 'https://t.me/ninja_org',
+      isBlankTarget: true,
     },
   ],
 };

@@ -24,7 +24,6 @@ import ja from 'react-intl/locale-data/ja';
 import ko from 'react-intl/locale-data/ko';
 import ru from 'react-intl/locale-data/ru';
 import es from 'react-intl/locale-data/es';
-import vi from 'react-intl/locale-data/vi';
 
 import { withFirebase } from 'react-redux-firebase';
 import messages from '@/locals';
@@ -39,7 +38,7 @@ import NetworkError from '@/components/Router/NetworkError';
 import BlockCountry from '@/components/core/presentation/BlockCountry';
 import qs from 'querystring';
 
-addLocaleData([...en, ...fr, ...zh, ...de, ...ja, ...ko, ...ru, ...es, ...vi]);
+addLocaleData([...en, ...fr, ...zh, ...de, ...ja, ...ko, ...ru, ...es ]);
 
 const MeRootRouter = props => (
   <DynamicImport
@@ -221,7 +220,7 @@ class Router extends React.Component {
   }
 
   setLanguage(language, autoDetect = true) {
-    const isSupportedLanguages = ['en', 'zh', 'fr', 'de', 'ja', 'ko', 'ru', 'es', 'vi'];
+    const isSupportedLanguages = ['en', 'zh', 'fr', 'de', 'ja', 'ko', 'ru', 'es'];
     if (isSupportedLanguages.indexOf(language) >= 0) {
       this.props.changeLocale(language, autoDetect);
     } else {
@@ -369,7 +368,16 @@ class Router extends React.Component {
       );
     }
     if (window.location.pathname === URL.LANDING_PAGE_TRADE) return <LandingTradeRootRouter />;
-    if (BrowserDetect.isDesktop && process.env.isProduction) return <MobileOrTablet />;
+    if (BrowserDetect.isDesktop && process.env.isProduction) {
+      return (
+        <IntlProvider
+          locale={this.state.currentLocale}
+          messages={messages[this.state.currentLocale]}
+        >
+          <MobileOrTablet />
+        </IntlProvider>
+      );
+    }
     if (!this.state.isLogged || this.state.isLoading) {
       return (
         <BrowserRouter>
