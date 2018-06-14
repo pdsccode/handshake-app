@@ -12,7 +12,7 @@ const bip39 = require('bip39');
 export class MasterWallet {
     // list coin is supported, can add some more Ripple ...
     static ListCoin = { Ethereum, Bitcoin, BitcoinTestnet };
-
+    
     static ListCoinReward = { Ethereum, Bitcoin };
 
     static KEY = 'wallets';
@@ -27,9 +27,20 @@ export class MasterWallet {
 
       let mnemonic = bip39.generateMnemonic(); // generates string
 
-      const masterWallet = [];
+      let masterWallet = [];
+
+      let defaultWallet = [1, 3]  
+      if (process.env.isProduction){
+        defaultWallet = [0, 1]  
+      }  
+
       for (const k1 in MasterWallet.ListCoin) {
         for (const k2 in MasterWallet.ListCoin[k1].Network) {
+          
+          // check production, only get mainnet:
+          if (process.env.isProduction && k2 != "Mainnet"){
+            break
+          }              
           // init a wallet:
           const wallet = new MasterWallet.ListCoin[k1]();
           // set mnemonic, if not set then auto gen.
@@ -37,15 +48,16 @@ export class MasterWallet {
           wallet.network = MasterWallet.ListCoin[k1].Network[k2];
           // create address, private-key ...
           wallet.createAddressPrivatekey();
+
           masterWallet.push(wallet);
         }
       }
 
-      // set item 0,2 is default
+      // set default item:
       if (masterWallet.length > 1) 
       { 
-        masterWallet[0].default = true; 
-        masterWallet[2].default = true;
+        masterWallet[defaultWallet[0]].default = true; 
+        masterWallet[defaultWallet[1]].default = true;
       }
 
       // For Reward wallet:
@@ -74,6 +86,10 @@ export class MasterWallet {
       const tempWallet = [];
       for (const k1 in MasterWallet.ListCoin) {
         for (const k2 in MasterWallet.ListCoin[k1].Network) {
+          // check production, only get mainnet:
+          if (process.env.isProduction && k2 != "Mainnet"){
+            break
+          }              
           const wallet = new MasterWallet.ListCoin[k1]();
           wallet.network = MasterWallet.ListCoin[k1].Network[k2];
           tempWallet.push(wallet);

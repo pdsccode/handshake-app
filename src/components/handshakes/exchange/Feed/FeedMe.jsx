@@ -115,6 +115,32 @@ class FeedMe extends React.PureComponent {
     this.modalRef.close();
   }
 
+  showAlert = (message) => {
+    this.props.showAlert({
+      message: <div className="text-center">
+        {message}
+      </div>,
+      timeOut: 5000,
+      type: 'danger',
+      callBack: () => {
+      }
+    });
+  }
+
+  checkMainNetDefaultWallet = (wallet) => {
+    const { intl } = this.props;
+    let result = true;
+    if (wallet.network === MasterWallet.ListCoin[wallet.className].Network.Mainnet) {
+      result = true;
+    } else {
+      const message = intl.formatMessage({ id: 'requireDefaultWalletOnMainNet' }, {});
+      this.showAlert(message);
+      result = false;
+    }
+
+    return result;
+  }
+
   showNotEnoughCoinAlert = (balance, amount, fee, currency) => {
     const bnBalance = new BigNumber(balance);
     const bnAmount = new BigNumber(amount);
@@ -232,9 +258,22 @@ class FeedMe extends React.PureComponent {
 
   ////////////////////////
 
-  deleteOfferItem = () => {
+  deleteOfferItem = async () => {
     const { offer } = this;
+    const { currency, sellAmount } = offer;
     console.log('deleteOfferItem', offer);
+
+    if (currency === CRYPTO_CURRENCY.ETH) {
+      if (sellAmount > 0) {
+        const wallet = MasterWallet.getWalletDefault(currency);
+        const balance = await wallet.getBalance();
+        const fee = await wallet.getFee();
+
+        if (this.showNotEnoughCoinAlert(balance, 0, fee, currency)) {
+          return;
+        }
+      }
+    }
 
     this.showLoading();
     this.props.deleteOfferItem({
@@ -525,6 +564,10 @@ class FeedMe extends React.PureComponent {
         const balance = await wallet.getBalance();
         const fee = await wallet.getFee();
 
+        if (!this.checkMainNetDefaultWallet(wallet)) {
+          return;
+        }
+
         if (this.showNotEnoughCoinAlert(balance, 0, fee, currency)) {
           return;
         }
@@ -593,6 +636,10 @@ class FeedMe extends React.PureComponent {
         const wallet = MasterWallet.getWalletDefault(currency);
         const balance = await wallet.getBalance();
         const fee = await wallet.getFee();
+
+        if (!this.checkMainNetDefaultWallet(wallet)) {
+          return;
+        }
 
         if (this.showNotEnoughCoinAlert(balance, 0, fee, currency)) {
           return;
@@ -664,6 +711,10 @@ class FeedMe extends React.PureComponent {
         const wallet = MasterWallet.getWalletDefault(currency);
         const balance = await wallet.getBalance();
         const fee = await wallet.getFee();
+
+        if (!this.checkMainNetDefaultWallet(wallet)) {
+          return;
+        }
 
         if (this.showNotEnoughCoinAlert(balance, 0, fee, currency)) {
           return;
@@ -738,6 +789,10 @@ class FeedMe extends React.PureComponent {
         const wallet = MasterWallet.getWalletDefault(offer.currency);
         const balance = await wallet.getBalance();
         const fee = await wallet.getFee();
+
+        if (!this.checkMainNetDefaultWallet(wallet)) {
+          return;
+        }
 
         if (this.showNotEnoughCoinAlert(balance, 0, fee, offer.currency)) {
           return;

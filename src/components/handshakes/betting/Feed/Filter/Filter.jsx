@@ -9,7 +9,6 @@ import { loadMatches, loadHandshakes, checkFreeAvailable } from '@/reducers/bett
 import { BetHandshakeHandler, SIDE } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
 // components
 import Dropdown from '@/components/core/controls/Dropdown';
-
 import ShareSocial from '@/components/core/presentation/ShareSocial';
 // import FeedComponent from '@/components/Comment/FeedComment';
 import Button from '@/components/core/controls/Button';
@@ -218,9 +217,11 @@ class BettingFilter extends React.Component {
       const { foundMatch } = this;
       if (foundMatch) {
         const { outcomes } = foundMatch;
+        console.log(foundMatch);
         if (outcomes) {
+          console.log('outcomes.length', outcomes.length);
           if (outcomes.length === 0) {
-            this.setState({ errorMessage: `Outcomes are empty`, isError: true });
+            // this.setState({ errorMessage: `Outcomes are empty`, isError: true });
             this.props.setLoading(false);
           }
           return outcomes.map(item => ({
@@ -414,6 +415,7 @@ class BettingFilter extends React.Component {
               source={this.matchNames}
               afterSetDefault={item => this.setState({ selectedMatch: item })}
               onItemSelected={item => this.setState({ selectedMatch: item })}
+              hasSearch
             />
           </div>
           <div className="dropDown">
@@ -423,31 +425,31 @@ class BettingFilter extends React.Component {
               defaultId={defaultOutcomeId}
               source={this.matchOutcomes}
               afterSetDefault={item => this.setState({
-                selectedOutcome: item,
-              }, () => this.callGetHandshakes(item))}
+              selectedOutcome: item,
+            }, () => this.callGetHandshakes(item))}
               onItemSelected={(item) => {
-                /* this.callGetHandshakes(item) */
-                this.setState({
-                  selectedOutcome: item,
-                }, () => this.callGetHandshakes(item));
-              }
-              }
+              /* this.callGetHandshakes(item) */
+              this.setState({
+                selectedOutcome: item,
+              }, () => this.callGetHandshakes(item));
+            }
+            }
             />
           </div>
           {
-            isFirstFree
-            ? (
-              <Button
-                block
-                onClick={() => {
-                    this.modalBetFreeRef.open();
-                }}
-              >
-                You have free ETH to play
-              </Button>
-            )
-            : ''
-          }
+          isFirstFree
+          ? (
+            <Button
+              block
+              onClick={() => {
+                  this.modalBetFreeRef.open();
+              }}
+            >
+              You have free ETH to play
+            </Button>
+          )
+          : ''
+        }
 
           <TopInfo
             marketTotal={parseFloat(tradedVolum)}
@@ -470,7 +472,7 @@ class BettingFilter extends React.Component {
               {/* <GroupBook amountColor="#FA6B49" bookList={this.bookListAgainst}/> */}
               <div className="marketBox">
                 <div>Market</div>
-                <div>{parseFloat(this.defaultSupportOdds).toFixed(2)}</div>
+                <div>{Math.floor(this.defaultSupportOdds * 100) / 100}</div>
               </div>
               <Button
                 className="buttonSupport"
@@ -490,16 +492,16 @@ class BettingFilter extends React.Component {
                 <div>Oppose (ODDS)</div>
               </div>
               {/* <BettingShake
-                    matchName={matchName}
-                    matchOutcome={matchOutcome}
-                    outcomeId={parseInt(outcomeId)}
-                    outcomeHid={parseInt(outcomeHid)}
-                    marketSupportOdds={parseFloat(this.defaultSupportOdds)}
-                  marketAgainstOdds={parseFloat(this.defaultAgainstOdds)}/> */}
+                  matchName={matchName}
+                  matchOutcome={matchOutcome}
+                  outcomeId={parseInt(outcomeId)}
+                  outcomeHid={parseInt(outcomeHid)}
+                  marketSupportOdds={parseFloat(this.defaultSupportOdds)}
+                marketAgainstOdds={parseFloat(this.defaultAgainstOdds)}/> */}
               {<GroupBook amountColor="#FA6B49" bookList={this.bookListAgainst} />}
               <div className="titleBox">
                 <div>Market</div>
-                <div>{parseFloat(this.defaultAgainstOdds).toFixed(4)}</div>
+                <div>{Math.floor(this.defaultAgainstOdds * 100) / 100}</div>
               </div>
               <Button
                 className="buttonAgainst"

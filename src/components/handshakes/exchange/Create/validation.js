@@ -3,8 +3,8 @@ import {
   MIN_AMOUNT,
   CRYPTO_CURRENCY,
 } from "@/constants";
-const minValueETH = minValue(MIN_AMOUNT[CRYPTO_CURRENCY.ETH]);
-const minValueBTC = minValue(MIN_AMOUNT[CRYPTO_CURRENCY.BTC]);
+export const minValueETH = minValue(MIN_AMOUNT[CRYPTO_CURRENCY.ETH]);
+export const minValueBTC = minValue(MIN_AMOUNT[CRYPTO_CURRENCY.BTC]);
 
 export const validate = (values) => {
   const { amountBuy, amountSell, currency } = values
