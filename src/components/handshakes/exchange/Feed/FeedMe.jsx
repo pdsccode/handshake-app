@@ -1170,10 +1170,8 @@ class FeedMe extends React.PureComponent {
         break;
       }
       case EXCHANGE_FEED_TYPE.EXCHANGE: {
-        message = this.getContentExchange();
-
         statusText = HANDSHAKE_EXCHANGE_STATUS_NAME[status];
-
+        nameShop = 'About';
         const fiatAmount = this.calculateFiatAmount(offer);
 
         from = this.getFrom();

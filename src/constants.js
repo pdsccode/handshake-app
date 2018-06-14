@@ -39,7 +39,7 @@ export const HANDSHAKE_NAME = {
   [HANDSHAKE_ID.EXCHANGE]: { name: 'Manage your station', priority: 6 },
   // UNSELECTED: { name: 'Create a prediction market', priority: 100 },
   // [HANDSHAKE_ID.EXCHANGE_LOCAL]: { name: 'Exchange Local', priority: 7 },
-  [HANDSHAKE_ID.EXCHANGE_LOCAL]: { name: 'Exchange Local', priority: 7 },
+  [HANDSHAKE_ID.EXCHANGE_LOCAL]: { name: 'Arrange swaps', priority: 7 },
 };
 
 export const PRICE_DECIMAL = 0;

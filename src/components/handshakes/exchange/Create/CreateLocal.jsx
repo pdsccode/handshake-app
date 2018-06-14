@@ -427,7 +427,7 @@ class Component extends React.Component {
                     name="physical_item"
                     className="form-control-custom form-control-custom-ex w-100 input-no-border"
                     component={fieldInput}
-                    placeholder="something, something"
+                    placeholder="any item or service"
                     // onChange={this.onAmountChange}
                     validate={[required]}
                   />
@@ -454,7 +454,7 @@ class Component extends React.Component {
               <hr className="hrLine"/>
 
               <div className="d-flex">
-                <label className="col-form-label mr-auto label-create"><span className="align-middle">Amount coin</span></label>
+                <label className="col-form-label mr-auto label-create"><span className="align-middle">Amount</span></label>
                 <div className='input-group'>
                   <Field
                     name="amount"
@@ -467,16 +467,15 @@ class Component extends React.Component {
                 </div>
               </div>
 
-              <hr className="hrLine"/>
-
-              <div className="d-flex">
-                <label className="col-form-label mr-auto label-create"><span
-                  className="align-middle">Total</span></label>
-                <div className='input-group'>
-                  <div><span className="form-text"><img src={iconApproximate}/> {totalFormatted} {fiatCurrency}</span>
-                  </div>
-                </div>
-              </div>
+              {/*<div className="d-flex">*/}
+                {/*<label className="col-form-label mr-auto label-create"><span*/}
+                  {/*className="align-middle">Total</span></label>*/}
+                {/*<div className='input-group'>*/}
+                  {/*<div>*/}
+                    {/*{ !isNaN(totalFormatted) && <span className="form-text"><img src={iconApproximate}/> {totalFormatted} {fiatCurrency}</span>}*/}
+                  {/*</div>*/}
+                {/*</div>*/}
+              {/*</div>*/}
 
               <hr className="hrLine"/>
 
