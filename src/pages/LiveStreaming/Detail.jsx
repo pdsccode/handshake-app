@@ -9,11 +9,13 @@ import moment from 'moment';
 
 // components
 import { Grid, Row, Col } from 'react-bootstrap';
+import ShareSocial from '@/components/core/presentation/ShareSocial';
 
 // self
 import './LiveStreamingDetail.scss';
 import russiaFlag from '../../assets/images/team-flag/russia-flag-logo.png';
 import saudiArabia from '../../assets/images/team-flag/saudi-arabia-flag-logo.png';
+const defaultLink = "https://www.youtube.com/embed/V15BYnSr0P8";
 
 const data = {
   'nga-vs-saudi-arabia-14-6': {
@@ -61,21 +63,23 @@ class Detail extends React.PureComponent {
             <div className="matchDetail">
               <div className="matchDetailInfo">
                 <div className="team">
-                  <img src={match._links.homeTeam.crestUrl} alt={match.homeTeamName} className="teamFlag home"/>
                   <span className="teamName">{match.homeTeamName}</span>
                 </div>
-                <div className="middle">
-                  <div>World Cup 2018 Russia</div>
-                  <div className="time">{moment(match.date).format("LT")}</div>
-                  <div>{moment(match.date).format('L')}</div>
-                </div>
+                <div className="time">{moment(match.date).format("HH:MM")}</div>
                 <div className="team">
                   <span className="teamName">{match.awayTeamName}</span>
-                  <img src={match._links.awayTeam.crestUrl} alt={match.awayTeamName} className="teamFlag away" />
                 </div>
               </div>
               <div className="liveBox">
-                <iframe src={activeLink} width="100%" />
+                <iframe src={activeLink || defaultLink} width="100%" />
+              </div>
+              <div className="share-block">
+                <p className="text">Share to</p>
+                <ShareSocial
+                  className="share"
+                  title={`${match.homeTeamName} vs ${match.awayTeamName}`}
+                  shareUrl={window.location.href}
+                />
               </div>
               <div className="links">
                 <div>
