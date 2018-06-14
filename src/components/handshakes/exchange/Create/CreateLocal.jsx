@@ -4,6 +4,7 @@ import Feed from "@/components/core/presentation/Feed";
 import Button from "@/components/core/controls/Button";
 import "./styles.scss";
 import createForm from "@/components/core/form/createForm";
+import {ExchangeHandshake} from '@/services/neuron';
 import { getOfferPrice } from "@/services/offer-util";
 import {
   fieldCleave,
@@ -233,7 +234,6 @@ class Component extends React.Component {
   // }
 
   handleCreateOfferFailed = (e) => {
-    console.log('abcde', e)
     this.hideLoading();
     this.props.showAlert({
       message: <div className="text-center">{e.response?.data?.message}</div>,
