@@ -24,16 +24,12 @@ export default [
       "goalsAwayTeam": null
     },
     "odds": null,
-    link: 'https://wc.kenhtructiep.com/ss.php?v=1481482',
+    link: '',
     linksLive: [
-      'https://wc.kenhtructiep.com/ss.php?v=1481482',
-      'https://wc.kenhtructiep.com/ss.php?v=1481533',
-      'https://wc.kenhtructiep.com/ss.php?v=1481565',
+
     ],
     linksSoftCast: [
-      'https://wc.kenhtructiep.com/ss.php?v=1481482',
-      'https://wc.kenhtructiep.com/ss.php?v=1481482',
-      'https://wc.kenhtructiep.com/ss.php?v=1481482',
+
     ],
   },
   {
