@@ -16,13 +16,16 @@ import {injectIntl} from "react-intl";
 import {formatMoney, getOfferPrice} from "@/services/offer-util";
 import {hideLoading, showAlert, showLoading} from "@/reducers/app/action";
 
-const nameFormShakeDetail = 'shakeDetail'
-const FormShakeDetail = createForm({ propsReduxForm: { form: nameFormShakeDetail,
+const nameFormShakeDetail = 'shakeDetail';
+const FormShakeDetail = createForm({
+  propsReduxForm: {
+    form: nameFormShakeDetail,
     initialValues: {
       type: EXCHANGE_ACTION.BUY,
       currency: CRYPTO_CURRENCY.ETH,
-    }
-} });
+    },
+  },
+});
 const selectorFormShakeDetail = formValueSelector(nameFormShakeDetail);
 
 export class Component extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
