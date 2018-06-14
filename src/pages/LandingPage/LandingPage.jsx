@@ -150,7 +150,7 @@ class Handshake extends React.Component {
                   <img src={ninjaIcon} alt="ninja icon" />
                   <div>
                     <img src={shakeNinjaText} alt="ninja text icon" />
-                    <p>ANONYMOUS PEER-TO-PEER PREDICTION EXCHANGE</p>
+                    <p>THE ANONYMOUS EXCHANGE OF ANYTHING</p>
                   </div>
                 </div>
                 <h1>Meet <span className="blue">Shuriken</span>, the native coin of the Ninja network.</h1>
