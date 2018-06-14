@@ -399,7 +399,7 @@
   }
 
   .rce-avatar-container.flexible .rce-avatar {
-    height: auto !important;
+    // height: auto !important;
     width: 100% !important;
     border-radius: unset !important;
     overflow: unset !important;
@@ -491,7 +491,7 @@
     width: 50px;
     height: 50px;
     border: none !important;
-    background: #ccc;
+    // background: #ccc;
     border-radius: 100%;
     overflow: hidden;
     font-size: 10px;
