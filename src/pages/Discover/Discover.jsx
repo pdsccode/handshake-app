@@ -249,7 +249,7 @@ class DiscoverPage extends React.Component {
       case HANDSHAKE_ID.EXCHANGE:
         // do something
         // tabIndexActive = 1;
-        this.showWelcomePopup();
+        // this.showWelcomePopup();
         break;
       default:
         // is promise
