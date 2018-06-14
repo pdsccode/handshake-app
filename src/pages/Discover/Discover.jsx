@@ -33,7 +33,7 @@ import { getListOfferPrice } from '@/reducers/exchange/action';
 import Image from '@/components/core/presentation/Image';
 import loadingSVG from '@/assets/images/icon/loading.gif';
 import ninjaLogoSVG from '@/assets/images/logo.png';
-import iconShopSVG from '@/assets/images/icon/icons8-shop.svg';
+import icon2KuNinja from '@/assets/images/icon/2_ku_ninja.svg';
 
 // style
 import './Discover.scss';
@@ -73,6 +73,8 @@ class DiscoverPage extends React.Component {
       isLoading: true,
       exchange: this.props.exchange,
       modalContent: null,
+      lat: 0,
+      lng: 0,
       isBannedCash: this.props.isBannedCash,
       isBannedPrediction: this.props.isBannedPrediction,
       isBannedChecked: this.props.isBannedChecked,
@@ -82,6 +84,20 @@ class DiscoverPage extends React.Component {
     this.clickCategoryItem = this.clickCategoryItem.bind(this);
     this.clickTabItem = this.clickTabItem.bind(this);
     this.searchChange = this.searchChange.bind(this);
+  }
+
+  componentDidMount() {
+    const { ipInfo, } = this.props;
+    navigator.geolocation.getCurrentPosition((location) => {
+      const { coords: { latitude, longitude } } = location
+      this.setAddressFromLatLng(latitude, longitude) // better precision
+    }, () => {
+      this.setAddressFromLatLng(ipInfo?.latitude, ipInfo?.longitude) // fallback
+    });
+  }
+
+  setAddressFromLatLng = (lat, lng) => {
+    this.setState({lat: lat, lng: lng});
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -94,7 +110,7 @@ class DiscoverPage extends React.Component {
         } = prevState;
         const qs = { };
 
-        const pt = `${nextProps?.app?.ipInfo?.latitude},${nextProps?.app?.ipInfo?.longitude}`;
+        const pt = `${prevState.lat},${prevState.lng}`;
 
         qs.location_p = { pt, d: DISCOVER_GET_HANDSHAKE_RADIUS };
         if (handshakeIdActive) {
@@ -268,7 +284,7 @@ class DiscoverPage extends React.Component {
     } = this.state;
     const qs = { };
 
-    const pt = `${this.props?.app?.ipInfo?.latitude},${this.props?.app?.ipInfo?.longitude}`;
+    const pt = `${this.state.lat},${this.state.lng}`;
 
     qs.location_p = { pt, d: DISCOVER_GET_HANDSHAKE_RADIUS };
     if (handshakeIdActive) {
@@ -329,11 +345,12 @@ class DiscoverPage extends React.Component {
                 <Row>
                   <Col md={12} className="exchange-intro">
                     <span className="icon-shop">
-                      <img src={iconShopSVG} alt="" />
+                      <img src={icon2KuNinja} alt="" />
                     </span>
                     <span className="text-intro">
-                      <div>Sell coin for cash, buy coin with cash. Set your own rates. <span className="money">1 ETH welcome bonus.</span></div>
-                      <div className="mt-2">
+                      <div>Sell coin for cash, buy coin with cash. Set your own rates.</div>
+                      <div><span className="money">1 ETH welcome bonus.</span></div>
+                      <div className="my-3">
                         <Link className="btn btn-sm btn-join-now" to={{ pathname: URL.HANDSHAKE_CREATE_INDEX, search: '?id=2' }}>
                           <span>Open your station</span>
                         </Link>
