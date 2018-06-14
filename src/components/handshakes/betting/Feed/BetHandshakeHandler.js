@@ -71,6 +71,7 @@ export class BetHandshakeHandler {
   getChainIdDefaultWallet(){
     const wallet = MasterWallet.getWalletDefault('ETH');
     const chainId = wallet.chainId;
+    console.log('ChainId:', chainId);
     return chainId;
   }
   getStatusLabel(blockchainStatus, resultStatus, role, side, isMatch) {
@@ -154,6 +155,11 @@ export class BetHandshakeHandler {
     const bettinghandshake = new BettingHandshake(chainId);
     const result = await bettinghandshake.getEstimateGas();
     return result;
+  }
+  getAddress(){
+    const chainId = this.getChainIdDefaultWallet();
+    const bettinghandshake = new BettingHandshake(chainId);
+    return bettinghandshake.address;
   }
 
   foundShakeItemList(dict, offchain) {

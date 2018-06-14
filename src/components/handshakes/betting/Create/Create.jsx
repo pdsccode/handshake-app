@@ -103,8 +103,7 @@ class BettingCreate extends React.Component {
   componentDidMount(){
     console.log('Betting Create Props:', this.props, history);
     this.setState({
-      address: wallet.address,
-      privateKey: wallet.privateKey,
+      
     })
     this.props.loadMatches({PATH_URL: API_URL.CRYPTOSIGN.LOAD_MATCHES});
 
@@ -229,7 +228,7 @@ get defaultOutcome() {
     const total = eventBet + parseFloat(estimatedGas);
     console.log("Event Bet, Odds, Estimate, Total:",eventBet,odds,estimatedGas, total);
 
-    const fromAddress = address;
+    const fromAddress = betHandshakeHandler.getAddress();
     console.log('Match, Outcome:', selectedMatch, selectedOutcome);
 
     var message = null;
@@ -526,7 +525,7 @@ get defaultOutcome() {
   initHandshake(fields, fromAddress){
     const {selectedOutcome} = this.state;
     const side = this.toggleRef.value;
-    const chainId = betHandshakeHandler.getChainIdDefaultWallet();
+    const chainId = betHandshakeHandler
     const params = {
       //to_address: toAddress ? toAddress.trim() : '',
       //public: isPublic,
@@ -545,7 +544,7 @@ get defaultOutcome() {
       currency: 'ETH',
       side: parseInt(side),
       from_address: fromAddress,
-      chain_id: chainId,
+      chain_id: betHandshakeHandler.getChainIdDefaultWallet(),
     };
     console.log("Go to Params:", params);
     const hid = selectedOutcome.hid;

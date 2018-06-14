@@ -368,8 +368,8 @@ class BetingShake extends React.Component {
         amount,
         currency: 'ETH',
         side,
-        chain_id: chainId,
-        from_address: wallet.address
+        chain_id: betHandshakeHandler.getChainIdDefaultWallet(),
+        from_address: betHandshakeHandler.getAddress()
       };
       console.log(params);
 
@@ -452,7 +452,7 @@ class BetingShake extends React.Component {
     const {outcomeId, matchName, matchOutcome, side} = this.props;
     const {extraData} = this.state;
     //const side = this.toggleRef.value;
-    const fromAddress = wallet.address;
+    const fromAddress = betHandshakeHandler.getAddress();
     extraData["event_name"] = matchName;
     extraData["event_predict"] = matchOutcome;
     extraData["event_odds"] = odds;
@@ -476,7 +476,7 @@ class BetingShake extends React.Component {
       currency: 'ETH',
       side: parseInt(side),
       from_address: fromAddress,
-      chain_id: chainId,
+      chain_id: betHandshakeHandler.getChainIdDefaultWallet(),
     };
     console.log("Params:", params);
 

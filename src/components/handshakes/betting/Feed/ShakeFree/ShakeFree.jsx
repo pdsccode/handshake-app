@@ -22,10 +22,6 @@ import './ShakeFree.scss';
 import { BetHandshakeHandler, MESSAGE, SIDE } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
 import { Form } from 'reactstrap';
 
-
-const wallet = MasterWallet.getWalletDefault('ETH');
-const chainId = wallet.chainId;
-
 const betHandshakeHandler = new BetHandshakeHandler()
 const nameFormBettingShake = 'bettingShakeForm';
 
@@ -323,8 +319,8 @@ class BetingShakeFree extends React.Component {
         amount,
         currency: 'ETH',
         side,
-        chain_id: chainId,
-        from_address: wallet.address
+        chain_id: betHandshakeHandler.getChainIdDefaultWallet(),
+        from_address: betHandshakeHandler.getAddress()
       };
       console.log(params);
 
@@ -407,7 +403,7 @@ class BetingShakeFree extends React.Component {
     const {outcomeId, matchName, matchOutcome} = this.props;
     const {extraData} = this.state;
     const side = this.toggleRef.value;
-    const fromAddress = wallet.address;
+    const fromAddress = betHandshakeHandler.getAddress();
     extraData["event_name"] = matchName;
     extraData["event_predict"] = matchOutcome;
     extraData["event_odds"] = odds;
@@ -430,7 +426,7 @@ class BetingShakeFree extends React.Component {
       currency: 'ETH',
       side: parseInt(side),
       from_address: fromAddress,
-      chain_id: chainId,
+      chain_id: betHandshakeHandler.getChainIdDefaultWallet(),
     };
     console.log("Params:", params);
 
