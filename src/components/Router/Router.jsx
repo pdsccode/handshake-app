@@ -38,6 +38,7 @@ import BrowserDetect from '@/services/browser-detect';
 import NetworkError from '@/components/Router/NetworkError';
 // import BlockCountry from '@/components/core/presentation/BlockCountry';
 import qs from 'querystring';
+import IpInfo from "@/models/IpInfo";
 
 addLocaleData([...en, ...fr, ...zh, ...de, ...ja, ...ko, ...ru, ...es]);
 
@@ -240,8 +241,9 @@ class Router extends React.Component {
     axios.get(url).then((res) => {
       const { data } = res;
       console.log('ipInfo', data);
-      this.props.setIpInfo(data);
-      local.save(APP.IP_INFO, data);
+      const ipInfo = IpInfo.ipInfo(data);
+      this.props.setIpInfo(ipInfo);
+      local.save(APP.IP_INFO, ipInfo);
       if (!local.get(APP.LOCALE)) {
         const firstLanguage = data.languages.split(',')[0];
         this.setLanguage(firstLanguage);
