@@ -55,15 +55,23 @@ class BettingFilter extends React.Component {
       isFirstFree: false,
       side: SIDE.SUPPORT,
       isError: false,
+      errorMessage: '',
     };
   }
 
   componentDidMount() {
     this.props.loadMatches({
       PATH_URL: API_URL.CRYPTOSIGN.LOAD_MATCHES,
-      successFn: () => {
+      successFn: (res) => {
+        const { data } = res;
+        console.log('loadMatches success', data);
+        if (data.length === 0) {
+          this.setState({ errorMessage: `Matches are empty`, isError: true });
+          this.props.setLoading(false);
+        }
       },
-      errorFn: () => {
+      errorFn: (e) => {
+        console.log('loadMatches failed', e);
         this.props.setLoading(false);
         this.setState({ errorMessage: `Can't load matches`, isError: true });
       },
@@ -354,7 +362,7 @@ class BettingFilter extends React.Component {
       return (
         <div className="text-center">
           <p>{this.state.errorMessage}</p>
-          <Button>Try again</Button>
+          <Button onClick={() => window.location.reload()}>Try again</Button>
         </div>
       );
     }
