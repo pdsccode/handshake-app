@@ -7,11 +7,8 @@ import local from '@/services/localStore';
 import { uninitItem, collect, refund, rollback } from '@/reducers/handshake/action';
 import store from '@/stores';
 
-const wallet = MasterWallet.getWalletDefault('ETH');
-const chainId = wallet.chainId;
-console.log('Chain Id:', chainId);
 
-const bettinghandshake = new BettingHandshake(chainId);
+
 
 export const MESSAGE = {
   BET_PROGRESSING: 'Your bet is creating. Please wait',
@@ -70,6 +67,11 @@ export const BETTING_STATUS_LABEL =
 export class BetHandshakeHandler {
   constructor() {
 
+  }
+  getChainIdDefaultWallet(){
+    const wallet = MasterWallet.getWalletDefault('ETH');
+    const chainId = wallet.chainId;
+    return chainId;
   }
   getStatusLabel(blockchainStatus, resultStatus, role, side, isMatch) {
     let label = null;
@@ -142,9 +144,16 @@ export class BetHandshakeHandler {
   }
 
   async getBalance() {
+    const wallet = MasterWallet.getWalletDefault('ETH');
     const balance = await wallet.getBalance();
     console.log('Balance:', balance);
     return balance;
+  }
+  async getEstimateGas(){
+    const chainId = this.getChainIdDefaultWallet();
+    const bettinghandshake = new BettingHandshake(chainId);
+    const result = await bettinghandshake.getEstimateGas();
+    return result;
   }
 
   foundShakeItemList(dict, offchain) {
@@ -186,6 +195,8 @@ export class BetHandshakeHandler {
     // const payout = Math.round(stake * odds * 10 ** 18) / 10 ** 18;
     // const maker = from_address;
     // const hid = outcome_id;
+    const chainId = this.getChainIdDefaultWallet();
+    const bettinghandshake = new BettingHandshake(chainId);
     const dataBlockchain = await bettinghandshake.initBet(hid, side, stake, odds, offchain);
     return dataBlockchain;
   };
@@ -204,6 +215,9 @@ export class BetHandshakeHandler {
     console.log('offchain:', offchain);
     const maker = from_address;
     // const hid = outcome_id;
+    const chainId = this.getChainIdDefaultWallet();
+    const bettinghandshake = new BettingHandshake(chainId);
+    
     const result = await bettinghandshake.shake(
       hid,
       side,
@@ -269,6 +283,24 @@ export class BetHandshakeHandler {
   }
   rollbackFailed = (error) => {
     console.log('rollbackFailed', error);
+  }
+  async cancelBet(hid, side, stake, odds, offchain){
+    const chainId = this.getChainIdDefaultWallet();
+    const bettinghandshake = new BettingHandshake(chainId);
+    const result = await bettinghandshake.cancelBet(hid, side, stake, odds, offchain);
+    return result;
+  }
+  async withdraw(hid, offchain){
+    const chainId = this.getChainIdDefaultWallet();
+    const bettinghandshake = new BettingHandshake(chainId);
+    const result = await bettinghandshake.withdraw(hid, offchain);
+    return result;
+  }
+  async refund(hid, offchain){
+    const chainId = this.getChainIdDefaultWallet();
+    const bettinghandshake = new BettingHandshake(chainId);
+    const result = await bettinghandshake.refund(hid, offchain);
+    return result;
   }
 }
 

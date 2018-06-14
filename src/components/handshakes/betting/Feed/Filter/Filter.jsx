@@ -456,7 +456,7 @@ class BettingFilter extends React.Component {
             {/* <GroupBook amountColor="#FA6B49" bookList={this.bookListAgainst}/> */}
             <div className="marketBox">
               <div>Market</div>
-              <div>{parseFloat(this.defaultSupportOdds).toFixed(2)}</div>
+              <div>{Math.floor(this.defaultSupportOdds*100)/100}</div>
             </div>
             <Button
               className="buttonSupport"
@@ -485,7 +485,7 @@ class BettingFilter extends React.Component {
             {<GroupBook amountColor="#FA6B49" bookList={this.bookListAgainst} />}
             <div className="titleBox">
               <div>Market</div>
-              <div>{parseFloat(this.defaultAgainstOdds).toFixed(4)}</div>
+              <div>{Math.floor(this.defaultAgainstOdds*100)/100}</div>
             </div>
             <Button
               className="buttonAgainst"
