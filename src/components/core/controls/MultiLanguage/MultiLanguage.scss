@@ -1,0 +1,49 @@
+/**
+ * SearchBar Component.
+*/
+
+@import './src/styles/style';
+.multi-language {
+  .country-block {
+    padding: rem-calc(20px 0);
+    .text {
+      margin-bottom: rem-calc(32px);
+      text-align: center;
+      font-weight: $semi-bold;
+      font-size: rem-calc(22px);
+      color: $black;
+    }
+    .country {
+      display: flex;
+      align-items: center;
+      padding: 15px 0;
+      border-bottom: 1px solid #f0f0f0;
+      .flag, .name {
+        display: inline-block;
+      }
+      .flag {
+        width: 44px;
+        height: 28px;
+        margin-right: 15px;
+      }
+      .name {
+        width: 70%;
+        font-weight: $semi-bold;
+        font-size: rem-calc(18px);
+        color: $black;
+      }
+      .radio {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        border: 2px solid #cbcbcb;
+      }
+    }
+    .active {
+      .radio {
+        background-color: $blue;
+        border: 2px solid $black;
+      }
+    }
+  }
+}

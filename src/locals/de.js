@@ -137,25 +137,25 @@ export default {
   ],
 
   // MobileOrTablet components
-  MOT_TITLE: 'The anonymous exchange of anything',
-  MOT_CONTENT_0: 'The Ninja network is only accessible via mobile.',
-  MOT_CONTENT_1: 'Open',
-  MOT_CONTENT_2: 'on your mobile browser to gain anonymous entry.',
-  MOT_CONTENT_3: 'No download needed. No sign up required.',
+  MOT_TITLE: 'Anonyme Peer-to-Peer-Vorhersage Exchange',
+  MOT_CONTENT_0: 'Das Ninja-Netz ist nur erreichbar via Handy',
+  MOT_CONTENT_1: 'Öffnen Sie',
+  MOT_CONTENT_2: 'in Ihren mobilen Browser anonym Zutritt.',
+  MOT_CONTENT_3: 'Kein Download erforderlich. Keine Anmeldung erforderlich.',
   MOT_LIST_CONTENT: [
     {
-      mainContent: 'Read the',
-      placeHolderLink: 'whitepaper',
+      mainContent: 'Lesen Sie das',
+      placeHolderLink: 'Whitepaper',
       link: 'https://medium.com/@ninjadotorg/shakeninja-bex-1c938f18b3e8',
       isBlankTarget: true,
     },
     {
-      mainContent: 'We answered your',
+      mainContent: 'Wir beantworten Ihre',
       placeHolderLink: 'FAQ',
       link: '/faq',
     },
     {
-      mainContent: 'Join the dojo on',
+      mainContent: 'Begleiten Sie das Dojo auf',
       placeHolderLink: 'Telegram',
       link: 'https://t.me/ninja_org',
       isBlankTarget: true,

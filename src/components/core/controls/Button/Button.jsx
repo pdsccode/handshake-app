@@ -102,6 +102,8 @@ class Button extends React.PureComponent {
         return 'btn-warning';
       case 'info':
         return 'btn-info';
+      case 'anonymous':
+        return 'btn-anonymous';
       default:
         return 'btn-primary';
     }
