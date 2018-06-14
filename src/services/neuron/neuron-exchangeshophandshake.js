@@ -2,9 +2,9 @@ import Web3 from 'web3';
 import BaseHandshake from './BaseHandshake';
 import { MasterWallet } from '@/models/MasterWallet';
 
-const wallet = MasterWallet.getWalletDefault('ETH');
-const address = wallet.address;
-const privateKey = wallet.privateKey;
+// const wallet = MasterWallet.getWalletDefault('ETH');
+// const address = wallet.address;
+// const privateKey = wallet.privateKey;
 // console.log('Address, PrivateKey:', address, privateKey);
 
 const TAG = 'ExchangeShopHandshake';
@@ -22,16 +22,34 @@ export default class ExchangeShopHandshake extends BaseHandshake {
     return balance;
   }
 
+  get address() {
+    const wallet = MasterWallet.getWalletDefault('ETH');
+    return wallet.address;
+  }
+  get privateKey() {
+    const wallet = MasterWallet.getWalletDefault('ETH');
+    return wallet.privateKey;
+  }
+  get gasPrice() {
+    const wallet = MasterWallet.getWalletDefault('ETH');
+    return wallet.chainId === 4 ? 100 : 20;
+
+  }
+
   /**
    * @dev Initiate handshake by shopOwner
    * @param value funds required for this handshake
    * @param offchain record ID in offchain backend database
    */
-  initByShopOwner = (value, offchain) => {
+  initByShopOwner = async (value, offchain) => {
     console.log(TAG, ' initByShopOwner = ', value, offchain);
 
     // const payoutValue = Web3.utils.toHex(this.web3.utils.toWei(value.toString(), 'ether'));
     const bytesOffchain = this.web3.utils.fromAscii(offchain);
+
+    // let balance = await wallet.getBalance();
+
+    // console.log('initByShopOwner balance', balance);
 
     const payloadData = this.handshakeInstance.methods
       .initByShopOwner(
@@ -40,12 +58,16 @@ export default class ExchangeShopHandshake extends BaseHandshake {
       )
       .encodeABI();
 
+    // this.neuron.caculateEstimatGasWithEthUnit(payloadData, address, 20).then((gas) => {
+    //   console.log(TAG, ' contructor -- gas = ', gas.toString());
+    // });
+
     // console.log('address', address);
     // console.log('privateKey', privateKey);
 
-    return this.neuron.makeRawTransaction(address, privateKey, payloadData, {
+    return this.neuron.makeRawTransaction(this.address, this.privateKey, payloadData, {
       amount: value,
-      gasPrice: this.chainId === 4 ? 100 : 20,
+      gasPrice: this.gasPrice,
       toAddress: this.contractAddress,
     });
   }
@@ -63,8 +85,8 @@ export default class ExchangeShopHandshake extends BaseHandshake {
       )
       .encodeABI();
 
-    return this.neuron.makeRawTransaction(address, privateKey, payloadData, {
-      gasPrice: this.chainId === 4 ? 100 : 20,
+    return this.neuron.makeRawTransaction(this.address, this.privateKey, payloadData, {
+      gasPrice: this.gasPrice,
       toAddress: this.contractAddress,
     });
   }
@@ -87,8 +109,8 @@ export default class ExchangeShopHandshake extends BaseHandshake {
       )
       .encodeABI();
 
-    return this.neuron.makeRawTransaction(address, privateKey, payloadData, {
-      gasPrice: this.chainId === 4 ? 100 : 20,
+    return this.neuron.makeRawTransaction(this.address, this.privateKey, payloadData, {
+      gasPrice: this.gasPrice,
       toAddress: this.contractAddress,
     });
   }
@@ -110,9 +132,9 @@ export default class ExchangeShopHandshake extends BaseHandshake {
     // console.log('address', address);
     // console.log('privateKey', privateKey);
 
-    return this.neuron.makeRawTransaction(address, privateKey, payloadData, {
+    return this.neuron.makeRawTransaction(this.address, this.privateKey, payloadData, {
       amount: value,
-      gasPrice: this.chainId === 4 ? 100 : 20,
+      gasPrice: this.gasPrice,
       toAddress: this.contractAddress,
     });
   }
@@ -130,8 +152,8 @@ export default class ExchangeShopHandshake extends BaseHandshake {
       )
       .encodeABI();
 
-    return this.neuron.makeRawTransaction(address, privateKey, payloadData, {
-      gasPrice: this.chainId === 4 ? 100 : 20,
+    return this.neuron.makeRawTransaction(this.address, this.privateKey, payloadData, {
+      gasPrice: this.gasPrice,
       toAddress: this.contractAddress,
     });
   }
@@ -149,8 +171,8 @@ export default class ExchangeShopHandshake extends BaseHandshake {
       )
       .encodeABI();
 
-    return this.neuron.makeRawTransaction(address, privateKey, payloadData, {
-      gasPrice: this.chainId === 4 ? 100 : 20,
+    return this.neuron.makeRawTransaction(this.address, this.privateKey, payloadData, {
+      gasPrice: this.gasPrice,
       toAddress: this.contractAddress,
     });
   }
@@ -168,8 +190,8 @@ export default class ExchangeShopHandshake extends BaseHandshake {
       )
       .encodeABI();
 
-    return this.neuron.makeRawTransaction(address, privateKey, payloadData, {
-      gasPrice: this.chainId === 4 ? 100 : 20,
+    return this.neuron.makeRawTransaction(this.address, this.privateKey, payloadData, {
+      gasPrice: this.gasPrice,
       toAddress: this.contractAddress,
     });
   }
@@ -187,8 +209,8 @@ export default class ExchangeShopHandshake extends BaseHandshake {
       )
       .encodeABI();
 
-    return this.neuron.makeRawTransaction(address, privateKey, payloadData, {
-      gasPrice: this.chainId === 4 ? 100 : 20,
+    return this.neuron.makeRawTransaction(this.address, this.privateKey, payloadData, {
+      gasPrice: this.gasPrice,
       toAddress: this.contractAddress,
     });
   }
@@ -200,9 +222,9 @@ export default class ExchangeShopHandshake extends BaseHandshake {
       .getState(hid)
       .encodeABI();
 
-    return this.neuron.makeRawTransaction(address, privateKey, payloadData, {
+    return this.neuron.makeRawTransaction(this.address, this.privateKey, payloadData, {
       // amount: value,
-      gasPrice: this.chainId === 4 ? 100 : 20,
+      gasPrice: this.gasPrice,
       toAddress: this.contractAddress,
     });
   }
