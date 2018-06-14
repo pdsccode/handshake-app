@@ -3,9 +3,10 @@ import { HANDSHAKE_ID, HANDSHAKE_NAME, HANDSHAKE_ID_DEFAULT } from '@/constants'
 import Helper from '@/services/helper';
 // components
 import { Grid, Row, Col } from 'react-bootstrap';
-import SearchBar from '@/components/core/controls/SearchBar';
+// import SearchBar from '@/components/core/controls/SearchBar';
 import DynamicImport from '@/components/App/DynamicImport';
 import Loading from '@/components/core/presentation/Loading';
+import Dropdown from '@/components/core/controls/Dropdown';
 
 import './Create.scss';
 
@@ -107,14 +108,21 @@ class Create extends React.Component {
   get handshakeList() {
     const handshakes = Object.entries(HANDSHAKE_NAME).map(([key, value]) => ({
       id: key,
-      name: value.name,
+      value: value.name,
       priority: value.priority,
     }));
-    return handshakes.sort((x, y) => x.priority > y.priority);
+    return [
+      ...handshakes.sort((x, y) => x.priority > y.priority),
+      {
+        id: -1,
+        value: 'COMING SOON: Create a prediction market',
+        className: 'disable',
+        disableClick: true,
+      },
+    ];
   }
 
-  handshakeChange({ suggestion }) {
-    const { id } = suggestion;
+  handshakeChange({ id }) {
     this.setState({ seletedId: id });
   }
 
@@ -126,11 +134,18 @@ class Create extends React.Component {
       <Grid className="create">
         <Row>
           <Col md={12}>
-            <SearchBar
+            <Dropdown
+              placeholder="Select an mission"
+              defaultId={seletedId}
+              source={this.handshakeList}
+              onItemSelected={this.handshakeChange}
+              hasSearch
+            />
+            {/* <SearchBar
               suggestions={this.handshakeList}
               onSuggestionSelected={this.handshakeChange}
               inputSearchDefault={HANDSHAKE_NAME[seletedId].name}
-            />
+            /> */}
           </Col>
         </Row>
         <Row>
