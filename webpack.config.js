@@ -112,11 +112,11 @@ module.exports = function webpackConfig(env, argv) {
         filename: 'css/[name].css',
         chunkFilename: 'css/[hash].[name].css',
       }),
-      new OfflinePlugin({
-        appShell: '/',
-        responseStrategy: 'network-first',
-        autoUpdate: true,
-      }),
+      // new OfflinePlugin({
+      //   appShell: '/',
+      //   responseStrategy: 'network-first',
+      //   autoUpdate: true,
+      // }),
     ],
     performance: { hints: false },
   };
