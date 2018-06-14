@@ -1,20 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
-// service, constant
-import { Grid, Row, Col } from 'react-bootstrap';
 
 // components
 import axios from 'axios';
 import Button from '@/components/core/controls/Button';
 import {
-    fieldCleave,
-    fieldDropdown,
-    fieldInput,
-    fieldNumericInput,
-    fieldPhoneInput,
-    fieldRadioButton
+    fieldInput
   } from '@/components/core/form/customField';
-
+import { verifyEmail } from '@/reducers/auth/action';
 import {required} from '@/components/core/form/validation';
 import {change, Field, formValueSelector, clearFields} from 'redux-form';
 import {bindActionCreators} from 'redux';
@@ -40,6 +33,14 @@ const Step3Form = createForm({ propsReduxForm: { form: nameFormStep3}});
 const nameFormStep4 = 'referStep4';
 const Step4Form = createForm({ propsReduxForm: { form: nameFormStep4}});
 
+window.Clipboard = (function (window, document, navigator) {
+  let textArea,
+    copy; function isOS() { return navigator.userAgent.match(/ipad|iphone/i); } function createTextArea(text) { textArea = document.createElement('textArea'); textArea.value = text; document.body.appendChild(textArea); } function selectText() {
+    let range,
+      selection; if (isOS()) { range = document.createRange(); range.selectNodeContents(textArea); selection = window.getSelection(); selection.removeAllRanges(); selection.addRange(range); textArea.setSelectionRange(0, 999999); } else { textArea.select(); }
+  } function copyToClipboard() { document.execCommand('copy'); document.body.removeChild(textArea); } copy = function (text) { createTextArea(text); selectText(); copyToClipboard(); }; return { copy };
+}(window, document, navigator));
+
 class Refers extends React.Component {
   constructor(props) {
     super(props);
@@ -51,7 +52,7 @@ class Refers extends React.Component {
       step2_value: "",
       step2: false,
       step3_value: "",
-      step3: false,
+      step3: 0,
       profile: {}
     }
   }
@@ -93,17 +94,16 @@ class Refers extends React.Component {
 
     // fill link ref:
     const profile = local.get(APP.AUTH_PROFILE);
-    this.setState({profile: profile});    
-    this.props.rfChange(nameFormStep4, 'refer_link', profile != false ? "https://ninja.org/ref=?" + profile.username : '');
-    console.log(profile, profile.email);
+    this.setState({profile: profile});
+
     if(profile && profile.email){
-      this.setState({step3: true, step3_value: profile.email});
+      this.setState({step3: 2, step3_value: profile.email});
       this.props.rfChange(nameFormStep3, 'refer_email', profile && profile.email ? profile.email : '');
     }
 
     let refers = local.get(APP.REFERS);
     if(refers){
-      if(refers.step1){console.log(refers);
+      if(refers.step1){
         this.setState({step1: true, step1_value: refers.step1_value});
       }
 
@@ -111,23 +111,29 @@ class Refers extends React.Component {
         this.setState({step2: true, step2_value: refers.step2_value});
       }
 
-      if(refers.step3){
-        this.setState({step3: true, step3_value: refers.step3_value});
-      }
-      else if(profile && profile.email) {
-        refers.step3 = true;
+      if(profile && profile.email) {
+        refers.step3 = 2;
         refers.step3_value = profile.email;
         local.save(APP.REFERS, refers);
+      }
+      else if(refers.step3){
+        this.setState({step3: refers.step3, step3_value: refers.step3_value});
       }
 
       this.props.rfChange(nameFormStep1, 'telegram_username', refers && refers.step1_value ? refers.step1_value : '');
       this.props.rfChange(nameFormStep2, 'twitter_username', refers && refers.step2_value ? refers.step2_value : '');
       this.props.rfChange(nameFormStep3, 'refer_email', refers && refers.step3_value ? refers.step3_value : '');
+
+      if(refers.step1 && refers.step2 && refers.step3 == 2){console.log(profile.username);
+        let referLink = profile && profile.username ? "https://ninja.org/ref=?" + profile.username : '';
+        this.setState({referLink: referLink});
+        this.props.rfChange(nameFormStep4, 'refer_link', referLink);
+      }
     }
     else{
       if(profile && profile.email) {
         refers = {};
-        refers.step3 = true;
+        refers.step3 = 2;
         refers.step3_value = profile.email;
         local.save(APP.REFERS, refers);
       }
@@ -145,7 +151,6 @@ class Refers extends React.Component {
     if (onFinish) {
       onFinish();
     } else {
-
     }
   }
 
@@ -166,10 +171,11 @@ class Refers extends React.Component {
   }
 
   submitStep1 = async() => {
-    let old_count = this.state.step1_value,
+    let old_count = this.state.telegram_count,
       new_count = await this.getTelegramCount();
 
-    if(old_count >= new_count && 1 != 1){
+    console.log(old_count , new_count);
+    if(old_count >= new_count){
       this.showError("Not found your telegram in our community. Please reload page and try again.")
     }
     else{
@@ -188,33 +194,66 @@ class Refers extends React.Component {
   submitStep2 = async() => {
     if(this.getTwitter()){
       this.setState({step2: true});
-      this.showSuccess("You followed our Twitter!");
-
-      let refers = loget(APP.REFERS);
+      let refers = local.get(APP.REFERS);
       if(!refers)
         refers = {};
 
-      refers.step2 = this.state.step2
+      refers.step2 = true;
       refers.step2_value = this.state.step2_value;
       local.save(APP.REFERS, refers);
+      this.showSuccess("You followed our Twitter!");
     }
     else{
       this.showError("Not found your following in our Twitter. Please try again.")
     }
   }
 
-  submitStep3 = async() => {
-    let old_count = this.state.telegram_count,
-      new_count = await this.getTelegramCount();
+  submitStep3 = () => {
+    let refers = local.get(APP.REFERS);
+    if(!refers) refers = {};
 
-    if(old_count >= new_count && 1 != 1){
-      this.showError("Not found your telegram in our community. Please reload page and try again.")
+    if(this.state.step3 && this.state.step3 == 1){
+      let profile = local.get(APP.AUTH_PROFILE);
+      if(profile && profile.email){
+        refers.step3 = 2;
+        refers.step3_value = profile.email;
+
+        local.save(APP.REFERS, refers);
+        this.setState({step3: refers.step3, step3_value: refers.step3_value, referLink: profile && profile.username ? "https://ninja.org/ref=?" + profile.username : ''});
+      }
     }
     else{
-      this.setState({step1: true});
-      this.showSuccess("You joined our community telegram!")
+      let email = this.state.step3_value;
+      this.props.verifyEmail({
+        PATH_URL: `user/verification/email/start?email=${email}`,
+        METHOD: 'POST',
+        successFn: (data) => {
+          if (data.status) {
+            this.showToast("Sent verify email, please check your email!");
+
+            local.save(APP.EMAIL_NEED_VERIFY, email);
+            this.setState({step3: 1});
+
+            refers.step3 = 1;
+            refers.step3_value = email;
+            local.save(APP.REFERS, refers);
+          }
+        },
+        errorFn: (e) => {
+          console.log("errorFn", e);
+          this.showError("Can\'t send verify email");
+        },
+      });
     }
+    // if(old_count >= new_count && 1 != 1){
+    //   this.showError("Not found your telegram in our community. Please reload page and try again.")
+    // }
+    // else{
+    //   this.setState({step1: true});
+    //   this.showSuccess("You joined our community telegram!")
+    // }
   }
+
 
   async getTelegramCount(){
     const url = "https://api.telegram.org/bot558469151:AAFYugF0QeCEIT1iXQsgTTuZJ9_p7koaw70/getChatMembersCount?chat_id=@ninja_org";
@@ -246,131 +285,122 @@ class Refers extends React.Component {
     });
   }
 
+  updateEmailValue= (evt) => {
+    this.setState({
+      step3_value: evt.target.value,
+    });
+  }
+
   updateTwitterUsernameValue = (evt) => {
     this.setState({
       step2_value: evt.target.value,
     });
   }
 
-  renderStep1 = () => (
-    <Step1Form onSubmit={this.submitStep1}>
-      <h6>Step 1: Join community telegram</h6>
-      <Row>
-        <Col sm={8} md={8} xs={8}>
-          <Field
-              name="telegram_username"
-              type="text"
-              className="form-control"
-              placeholder="Input your Telegram username"
-              component={fieldInput}
-              value={this.state.step1_value}
-              onChange={evt => this.updateTelegramUsernameValue(evt)}
-              validate={[required]}
-              disabled={this.state.step1}
-          />
-        </Col>
-        <Col sm={4} md={4} xs={4} className="no-padding-left">
-          <Button isLoading={this.state.isLoading} disabled={this.state.step1} block type="submit">{this.state.step1 ? "Verified" : "Verify"}</Button>
-        </Col>
-      </Row>
-    </Step1Form>
-  )
+renderStep1 = () => (
+  <Step1Form onSubmit={this.submitStep1} className="refers-wrapper">
+    <h6><a href="https://t.me/ninja_org" target="_blank">Insult us on telegram</a>. Be creative. There’s a leaderboard.</h6>
+    <div className="col2">
+      <Button isLoading={this.state.isLoading} disabled={this.state.step1} block type="submit">{this.state.step1 ? "done" : "bite me"}</Button>
+    </div>
+    <div className="col1">
+      <Field
+        name="telegram_username"
+        type="text"
+        className="form-control"
+        placeholder="your telegram alias"
+        component={fieldInput}
+        value={this.state.step1_value}
+        onChange={evt => this.updateTelegramUsernameValue(evt)}
+        validate={[required]}
+        disabled={this.state.step1}
+      />
+    </div>
+  </Step1Form>
+)
 
 renderStep2= () => (
-    <Step2Form onSubmit={this.submitStep2}>
-        <h6>Step 2: Follow our Twitter</h6>
-        <Row>
-            <Col sm={8} md={8} xs={8}>
-                <Field
-                    name="twitter_username"
-                    type="text"
-                    className="form-control"
-                    placeholder="Input your Twitter username"
-                    component={fieldInput}
-                    value={this.state.step2_value}
-                    onChange={evt => this.updateTwitterUsernameValue(evt)}
-                    validate={[required]}
-                    disabled={this.state.step2}
-                />
-            </Col>
-            <Col sm={4} md={4} xs={4} className="no-padding-left">
-                <Button isLoading={this.state.isLoading} block disabled={this.state.step2} type="submit">{this.state.step2 ? "Verified" : "Verify"}</Button>
-            </Col>
-        </Row>
-    </Step2Form>
+  <Step2Form onSubmit={this.submitStep2} className="refers-wrapper">
+    <h6>Our social media guy says we need followers on <a href="https://twitter.com/ninja_org" target="_blank">twitter</a>.</h6>
+    <div className="col2">
+        <Button isLoading={this.state.isLoading} block disabled={this.state.step2} type="submit">{this.state.step2 ? "done" : "bite me"}</Button>
+    </div>
+    <div className="col1">
+      <Field
+        name="twitter_username"
+        type="text"
+        className="form-control"
+        placeholder="your twitter username"
+        component={fieldInput}
+        value={this.state.step2_value}
+        onChange={evt => this.updateTwitterUsernameValue(evt)}
+        validate={[required]}
+        disabled={this.state.step2}
+      />
+    </div>
+  </Step2Form>
 )
 
 renderStep3= () => (
-  <Step3Form onSubmit={this.submitStep3}>
-      <h6>Step 3: Input email to get more promotions</h6>
-      <Row>
-          <Col sm={8} md={8} xs={8}>
-              <Field
-                  name="refer_email"
-                  type="text"
-                  className="form-control"
-                  placeholder="Your email address"
-                  component={fieldInput}
-                  value={this.state.step3_value}
-                  onChange={evt => this.updateEmailValue(evt)}
-                  validate={[required]}
-                  disabled={this.state.step3}
-              />
-          </Col>
-          <Col sm={4} md={4} xs={4} className="no-padding-left">
-          <Button isLoading={this.state.isLoading} block disabled={this.state.step3} type="submit">{this.state.step3 ? "Verified" : "Verify"}</Button>
-          </Col>
-      </Row>
+  <Step3Form onSubmit={this.submitStep3} className="refers-wrapper">
+    <h6>Receive your randomly generated ninja name.</h6>
+    <div className="col2"> {this.renderStep3_labelButton()}</div>
+    <div className="col1">
+      <Field
+          name="refer_email"
+          type="text"
+          className="form-control"
+          placeholder="your favourite fake email to receive free stuff at"
+          component={fieldInput}
+          value={this.state.step3_value}
+          onChange={evt => this.updateEmailValue(evt)}
+          validate={[required]}
+          disabled={this.state.step3 && this.state.step3 > 1}
+      />
+    </div>
+    {
+      this.state.step1 && this.state.step2 && this.state.step3 > 1 ?
+      <div className="col100 token">
+        <Button block type="submit">just give me tokens</Button>
+      </div> : ""
+    }
+
   </Step3Form>
 )
 
-renderLinkRefer= () => (
-  <Step4Form onSubmit={this.submitStep4}>
-      <h6>Final: Share this link to friend to get extra 20 Shuriken</h6>
-      <p>Referral link:</p>
-      <Row>
-          <Col sm={8} md={8} xs={8}>
-              <Field
-                  name="refer_link"
-                  type="text"
-                  className="form-control"
-                  placeholder=""                  
-                  component={fieldInput}
-                //   value={this.state.inputLinkValue}
-                  onChange={evt => this.updateLinkValue(evt)}
-                  validate={[required]}
-                  onFocus={() => { Clipboard.copy(JSON.stringify(this.state.inputLinkValue)); this.showToast('Referral link copied to clipboard.'); }}
-              />
-          </Col>
-          <Col sm={4} md={4} xs={4} className="no-padding-left">
-              <Button block type="submit">Done</Button>
-          </Col>
-      </Row>
-  </Step4Form>
-)
+renderStep3_labelButton= () => {
+  switch(this.state.step3) {
+    case 1:
+      return <Button isLoading={this.state.isLoading} block type="submit">confirm</Button>
+    case 2:
+      return <Button isLoading={this.state.isLoading} block disabled type="submit">done</Button>
+    default:
+      return <Button isLoading={this.state.isLoading} block type="submit">bite me</Button>
+  }
+}
 
-  renderLinkRefer= () => (
-    <Step4Form onSubmit={this.submitStep4}>
-        <h6>Final: Share this link to friend to get extra 20 Shuriken</h6>
-        <p>Referral link:</p>
-        <Row>
-            <Col sm={8} md={8} xs={8}>
-                <Field
-                    name="refer_link"
-                    type="text"
-                    className="form-control"
-                    placeholder=""
-                    readOnly
-                    component={fieldInput}
-                    validate={[required]}
-                />
-            </Col>
-            <Col sm={4} md={4} xs={4} className="no-padding-left">
-                <Button block type="submit">Done</Button>
-            </Col>
-        </Row>
-    </Step4Form>
-  )
+renderLinkRefer = () => (
+  this.state.step1 && this.state.step2 && this.state.step3 > 1 ?
+  <Step4Form onSubmit={this.submitStep4} className="refers-wrapper">
+    <h6>This is your super sexy referral link. You get 20 shurikens for every new ninja.</h6>
+    <div className="col100">
+        <Field
+            name="refer_link"
+            type="text"
+            className="form-control"
+            placeholder=""
+            component={fieldInput}
+            onChange={evt => this.updateLinkValue(evt)}
+            validate={[required]}
+            onFocus={() => { Clipboard.copy(this.state.referLink); this.showToast('Referral link copied to clipboard.'); }}
+        />
+    </div>
+    <div className="col100">
+        <Button block type="submit">Done</Button>
+    </div>
+  </Step4Form> :
+  ""
+)
 
   render() {
 
@@ -399,7 +429,7 @@ const mapDispatchToProps = (dispatch) => ({
   showLoading: bindActionCreators(showLoading, dispatch),
   hideLoading: bindActionCreators(hideLoading, dispatch),
   clearFields: bindActionCreators(clearFields, dispatch),
-
+  verifyEmail: bindActionCreators(verifyEmail, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Refers);
