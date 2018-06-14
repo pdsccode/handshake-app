@@ -50,89 +50,108 @@ export default {
   offerStoreHandShakeContent: '{offerTypeBuy} {amountBuy} {currency} at {fiatAmountBuy} {fiatAmountCurrency}. {offerTypeSell} {amountSell} {currency} at {fiatAmountSell} {fiatAmountCurrency}',
 
   // FAQ
-  FAQ_TITLE: 'FAQ',
+  FAQ_TITLE: 'Вопросы и ответы',
   FAQ_HEADER_YELLOW: '',
-  FAQ_HEADER: 'Décentralisé de prédiction change ',
+  FAQ_HEADER: 'Децентрализованные предсказание обмен',
   FAQ_DATA: [
     {
-      question: 'quel est le Ninja PEX ?',
-      answer: 'Ninja est un échange anonyme-to-peer décentralisé prédiction en cours d’exécution sur le dessus de l’Ethereum blockchain.',
+      question: 'что такое PEX ниндзя?',
+      answer: 'Ниндзя представляет собой обмен анонимный peer-to-peer децентрализованных предсказание, запущенное поверх Эфириума blockchain.',
     },
     {
-      question: '',
-      answer: '',
+      question: 'что особенного PEX? Почему следует поставить на один?',
+      answer: 'Она позволяет сторонам ставить непосредственно против друг друга без прохождения через Центральный орган или букмекер. Это делает его 100% анонимный, никаких признаков вверх загружаемые файлы не требуется. Управление ставок и урегулирования выигрыши осуществляется коллективно blockchain сети, защищая пользователей от любой единой точки отказа. Можно также создать свои собственные рынки предсказаний. ',
     },
     {
-      question: '',
-      answer: '',
+      question: 'нужна ли мне эфира? Он поддерживает другие cryptocurrencies?',
+      answer: 'Да. Ниндзя принимает только ETH для теперь, но очень скоро для других валют будет добавлена поддержка.',
     },
     {
-      question: '',
+      question: 'как начать с ниндзя?',
       isList: true,
       answer: [
         {
-          title: '',
-          content: '',
+          title: 'Получите эфира:',
+          content: 'Вы можете либо купить ETH непосредственно в PEX с вашей кредитной карты или из популярных монет обменов как Coinbase или Binance.',
         },
         {
-          title: '',
-          content: '',
+          title: 'Пополните кошелек PEX:',
+          content: 'Перенесите ETH в бумажник PEX. PEX кошелек полностью децентрализованной, закрытый ключ проводится на вашем телефоне, только вы можете передавать и получать ETH.',
         },
         {
-          title: '',
-          content: 'pain), the outcomes (i.e. Brazil wins) and the site (i.e. support or bet against the outcome)\n' +
-          'Enter the stake you want to bet (i.e. 1 ETH) and the odds (i.e. 1/ 2.25)\n' +
-          'The PEX Matching Engine will then find another order that bets against the odds you set.',
+          title: 'Сделайте ставку:',
+          content: 'Выбор рынка, вы хотите ставку (т.е. Бразилия - Испания), результаты (т.е. победы Бразилии) и сайта (т.е. поддержки или ставку против результатов)\n' +
+          'Введите ставку, вы хотите ставку (т.е. 1 ETH) и шансы (т.е. 1 / 2.25)\n' +
+          'BEX соответствия будут затем найти другой порядок, что ставки против коэффициенты, заданные.',
         },
         {
-          title: '',
-          content: '',
+          title: 'Ждать для отчета:',
+          content: 'Если вы выиграете, ваши выигрыши будут автоматически переведены из смарт-контракт сделки на ваш счет.',
         },
       ],
     },
     {
-      question: '',
-      answer: '',
+      question: 'можно ли установить мой собственный предпочтительным шансы? Как?',
+      answer: 'Да! При создании собственных ставку, вы войдете, событие, которое вы заинтересованы в и результаты, которые вы хотите сделать ставку на. Просто введите вашу ставку и шансы, что вы хотите. Затем обработчик PEX автоматически найдет и матч вы с кем-либо, имеет интерес в то же событие, и кто принимает ваши шансы.',
     },
     {
-      question: '',
-      answer: '',
+      question: 'как вы полиции непривлекательный/незаконный ставки?',
+      answer: 'В настоящее время мы строим систему сдержек и противовесов для флага за неподобающее поведение в додзё.',
     },
     {
-      question: '',
-      answer: '',
+      question: 'как система знать результат ставки между людьми? ВОЗ выступает в качестве арбитра и проверяет один результат против другой на заключение контракта?',
+      answer: 'Ниндзя скоро будет полностью децентрализованное решение для проверки результатов и стимулированием правду говорю (DAO Репортеры!). В то же время как мы будем запускать как раз вовремя для чемпионата мира по футболу, наша команда будет использовать общественный источник (livescore.com) и действовать в качестве репортера.',
     },
     {
-      question: 'Where is the coin held?',
-      answer: 'No one holds the funds. All the funds are kept safe in escrow until a resolution is reached.',
+      question: 'где проходит монеты?',
+      answer: 'Никто держит средства. Все средства хранятся безопасной в эскроу, пока не будет достигнуто решение.',
+    }, {
+      question: 'Почему следует поставить на blockchain вместо использования традиционных методов?',
+      answer: 'Децентрализованные предсказание обмен обеспечит вам свободу создавать собственные шансы и ставки непосредственно с кем-либо, предлагаем вам ниндзя 100% анонимность и гарантированные выплаты. ',
+    }, {
+      question: 'как насчет конфиденциальности и анонимности?',
+      answer: 'Ниндзя требует никаких Скачиваний и не подписать взлеты. Это означает, что никакие пароли, без номера телефонов и без писем. 100% анонимность.',
+    }, {
+      question: 'нужно ли мне платить?',
+      answer: 'Существует два основных типа сборов: создатель сборы (для ниндзя, который создает ставку) и сетевой платы (в процентах от создателя плату, которая идет на поддержание платформы).',
+    }, {
+      question: 'что нужно делать, когда завершается результат?',
+      answer: 'Ничего. Если вы выиграете, ваши выигрыши будут автоматически переведены на ваш счет. Если вы потеряете, он будет кто-то чужой учетной записью.',
+    }, {
+      question: 'где можно найти ставки на матч?',
+      answer: 'На домашней странице вы сможете просматривать текущие ставки и рынки. Если вы не можете найти любой понравившийся вам, создайте свой собственный!',
+    }, {
+      question: 'Помимо спорта можно ставить на что-нибудь еще? Как это работает?',
+      answer: 'Очень скоро ниндзя будет применяться ко всем под солнцем. Единственное ограничение будет ваше творчество. Вы можете легко создать любой рынок на любых будущих событий, будь то спорт, политика, Наука, рынки, климат... вы назовите его',
+    }, {
+      question: 'то, что должно произойти для подтверждения мобильного приложения?',
+      answer: 'Мы будет интеграция рукопожатие (и ваши любимые функции, такие как обещания, долговые расписки, загрузить контракт и т.д.) в ниндзя мобильный веб-сайт.',
+    },
+  ],
+
+  // MobileOrTablet components
+  MOT_TITLE: 'The anonymous exchange of anything',
+  MOT_CONTENT_0: 'The Ninja network is only accessible via mobile.',
+  MOT_CONTENT_1: 'Open',
+  MOT_CONTENT_2: 'on your mobile browser to gain anonymous entry.',
+  MOT_CONTENT_3: 'No download needed. No sign up required.',
+  MOT_LIST_CONTENT: [
+    {
+      mainContent: 'Read the',
+      placeHolderLink: 'whitepaper',
+      link: 'https://medium.com/@ninjadotorg/shakeninja-bex-1c938f18b3e8',
+      isBlankTarget: true,
     },
     {
-      question: 'Why should I bet on blockchain instead of using traditional methods?',
-      answer: 'A decentralized prediction exchange will provide you the freedom to create your own odds and bet directly with anyone, offer you 100% ninja anonymity and guaranteed payouts.',
+      mainContent: 'We answered your',
+      placeHolderLink: 'FAQ',
+      link: '/faq',
     },
     {
-      question: 'How about privacy and anonymity?',
-      answer: 'Ninja requires no downloads, and no sign ups. That means no passwords, no phone numbers and no emails. 100% anonymity.',
-    },
-    {
-      question: 'Do I need to pay any fees?',
-      answer: 'There are two main types of fees: creator fees (for the ninja that creates the bet) and the network fee (a percentage of the creator fee, that goes towards maintaining the platform).',
-    },
-    {
-      question: 'What do I need to do when the outcome is finalized?',
-      answer: 'Nothing. If you win, your winnings will be automatically transferred to your account. If you lose, it will be someone else’s account.',
-    },
-    {
-      question: 'Where can I find a match to bet on?',
-      answer: 'On the homepage, you’ll be able to browse ongoing bets and markets. If you can’t find any you like, create your own!',
-    },
-    {
-      question: 'Other than sports, can I bet on anything else? How does it work?',
-      answer: 'Very soon, Ninja will apply to everything under the sun. The only limitation will be your creativity. You can easily create any market on any future event, be it sports, politics, science, markets, climate… you name it.',
-    },
-    {
-      question: 'What’s gonna happen to the Handshake mobile app?',
-      answer: 'We will be integrating Handshake (and your favourite features like promises, IOUs, contract upload, etc.) into the Ninja mobile website.',
+      mainContent: 'Join the dojo on',
+      placeHolderLink: 'Telegram',
+      link: 'https://t.me/ninja_org',
+      isBlankTarget: true,
     },
   ],
 };
