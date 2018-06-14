@@ -92,7 +92,7 @@ class Detail extends React.PureComponent {
                           onClick={() => this.setState({activeLink: item})}
                           className={item === activeLink ? 'active' : ''}
                         >
-                          {item}
+                          Link {index + 1}
                         </li>
                       )) : <li>No data available</li>
                     }

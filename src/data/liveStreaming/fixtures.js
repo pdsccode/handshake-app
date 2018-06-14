@@ -24,9 +24,9 @@ export default [
       "goalsAwayTeam": null
     },
     "odds": null,
-    link: '',
+    link: 'https://api.tructiephd.com/live/kda/play.php?type=vip&v=kdb',
     linksLive: [
-
+      'https://www.facebook.com/Demoxing/videos/1925639240890776',
     ],
     linksSoftCast: [
 
