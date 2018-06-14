@@ -8,7 +8,7 @@ import Loading from '@/components/core/presentation/Loading';
 import { APP, FIREBASE_PATH, API_URL, URL } from '@/constants';
 
 import local from '@/services/localStore';
-import { setIpInfo, showAlert, changeLocale, setBannedPrediction, setBannedCash } from '@/reducers/app/action';
+import { setIpInfo, showAlert, changeLocale, setBannedPrediction, setBannedCash, setCheckBanned } from '@/reducers/app/action';
 import { signUp, fetchProfile, authUpdate, getFreeETH } from '@/reducers/auth/action';
 
 import ScrollToTop from '@/components/App/ScrollToTop';
@@ -38,7 +38,7 @@ import BrowserDetect from '@/services/browser-detect';
 import NetworkError from '@/components/Router/NetworkError';
 // import BlockCountry from '@/components/core/presentation/BlockCountry';
 import qs from 'querystring';
-import IpInfo from "@/models/IpInfo";
+import IpInfo from '@/models/IpInfo';
 
 addLocaleData([...en, ...fr, ...zh, ...de, ...ja, ...ko, ...ru, ...es]);
 
@@ -155,6 +155,7 @@ class Router extends React.Component {
     changeLocale: PropTypes.func.isRequired,
     setBannedPrediction: PropTypes.func.isRequired,
     setBannedCash: PropTypes.func.isRequired,
+    setCheckBanned: PropTypes.func.isRequired,
   };
 
   constructor(props) {
@@ -256,6 +257,7 @@ class Router extends React.Component {
       if (COUNTRIES_BLACKLIST_CASH.indexOf(data.country_name) !== -1) {
         this.props.setBannedCash();
       }
+      this.props.setCheckBanned();
       // this.setState({ isCountryBlackList: true });
     });
   }
@@ -488,5 +490,6 @@ export default compose(
     changeLocale,
     setBannedPrediction,
     setBannedCash,
+    setCheckBanned,
   }),
 )(Router);
