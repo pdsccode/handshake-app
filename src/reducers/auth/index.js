@@ -7,6 +7,7 @@ const authReducter = (state = {
   token: local.get(APP.AUTH_TOKEN),
   profile: Auth.profile(local.get(APP.AUTH_PROFILE)) || Auth.profile({}),
   isLogged: false,
+  offline: local.get(APP.OFFLINE_STATUS),
   updatedAt: Date.now(),
 }, action) => {
   switch (action.type) {
@@ -25,6 +26,10 @@ const authReducter = (state = {
       return {
         ...state, profile: Auth.profile(action.payload.data), isLogged: true, updatedAt: Date.now(),
       };
+    case `${ACTIONS.SET_OFFLINE_STATUS}_SUCCESS`: {
+      return {...state, offline: state.offline ? 0 : 1 };
+    }
+
     default:
       return state;
   }
