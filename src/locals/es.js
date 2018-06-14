@@ -50,89 +50,107 @@ export default {
   offerStoreHandShakeContent: '{offerTypeBuy} {amountBuy} {currency} at {fiatAmountBuy} {fiatAmountCurrency}. {offerTypeSell} {amountSell} {currency} at {fiatAmountSell} {fiatAmountCurrency}',
 
   // FAQ
-  FAQ_TITLE: 'FAQ',
+  FAQ_TITLE: 'Preguntas más frecuentes',
   FAQ_HEADER_YELLOW: '',
-  FAQ_HEADER: 'Décentralisé de prédiction change ',
+  FAQ_HEADER: ' Descentralizada de intercambio de predicción',
   FAQ_DATA: [
     {
-      question: 'quel est le Ninja PEX ?',
-      answer: 'Ninja est un échange anonyme-to-peer décentralisé prédiction en cours d’exécution sur le dessus de l’Ethereum blockchain.',
+      question: '¿Qué es Ninja PEX?',
+      answer: 'Ninja es un intercambio anónimo peer-to-peer descentralizada predicción corriendo encima de la blockchain de Etereum.',
     },
     {
-      question: '',
-      answer: '',
+      question: '¿Qué es especial acerca de PEX? ¿Por qué debo apostar por uno?',
+      answer: 'Permite partes apuesta directamente contra otros sin pasar por una autoridad central o la casa de apuestas. Esto es 100% anónimo, sin señales para arriba sin descargas necesarias. La gestión de las apuestas y la liquidación de las ganancias se llevan a cabo conjuntamente por la red de blockchain, protegiendo a los usuarios de cualquier punto único de falla. También puede crear sus propios mercados de predicción. ',
     },
     {
-      question: '',
-      answer: '',
+      question: '¿necesito éter? ¿Soporta otros cryptocurrencies?',
+      answer: 'Sí. Ninja sólo acepta ETH por ahora, pero se añadió soporte para otras monedas muy pronto.',
     },
     {
-      question: '',
+      question: '¿Cómo empiezo con Ninja?',
       isList: true,
       answer: [
         {
-          title: '',
-          content: '',
+          title: 'Obtener éter:',
+          content: 'Cualquiera puede comprar ETH directamente en PEX con tus tarjetas de crédito o de intercambios de monedas populares como Coinbase o Binance.',
         },
         {
-          title: '',
-          content: '',
+          title: 'Recargar su billetera PEX:',
+          content: 'Transferencia del ETH en la cartera PEX. Cartera de PEX es totalmente descentralizada, la clave privada se lleva a cabo en el teléfono, sólo puede transferir y recibir ETH.',
         },
         {
-          title: '',
-          content: 'pain), the outcomes (i.e. Brazil wins) and the site (i.e. support or bet against the outcome)\n' +
-          'Enter the stake you want to bet (i.e. 1 ETH) and the odds (i.e. 1/ 2.25)\n' +
-          'The PEX Matching Engine will then find another order that bets against the odds you set.',
+          title: 'Hacer una apuesta:',
+          content: 'Escoger el mercado que quiere apostar (es decir, Brasil - España), los resultados (es decir victorias de Brasil) y el sitio (es decir, apoyo o apuesta contra el resultado)\n' +
+          'Entrar en el juego que desee apuesta (es decir, 1 ETH) y las probabilidades (es decir 1 / 2.25)\n' +
+          'El motor de Matching de BEX encontrará otra orden que apuesta contra viento y marea que se establece.',
         },
         {
-          title: '',
-          content: '',
+          title: 'Espere el informe:',
+          content: 'Si usted gana, sus ganancias serán transferidas automáticamente el contrato de fideicomiso inteligente a su cuenta.',
         },
       ],
     },
     {
-      question: '',
-      answer: '',
+      question: '¿puedo configurar mis propias probabilidades de recomendado:? ¿?',
+      answer: '¡Sí! Al crear su propia apuesta, entrará el evento que te interesa y el resultado que desea apostar. Luego, simplemente introduzca su juego y las probabilidades que usted quiere. Entonces el motor PEX automáticamente encontrará y emparejarle con alguien que tiene un interés en el mismo evento, y que acepta sus probabilidades.',
     },
     {
-      question: '',
-      answer: '',
+      question: '¿Cómo usted policía indeseables o ilegales apuestas?',
+      answer: 'Actualmente estamos construyendo un sistema de controles y equilibrios para airear inadecuado comportamiento en el dojo.',
     },
     {
-      question: '',
-      answer: '',
+      question: '¿Cómo sabe el sistema el resultado de apuestas entre las personas? Que actúa como árbitro y verifica el uno resultado contra otro en la conclusión del contrato?',
+      answer: 'Ninja pronto tendrá una solución totalmente descentralizada para comprobar el resultado e incentivar la verdad diciendo (un DAO de reporteros!). Mientras tanto, como se lanzará justo a tiempo para la Copa Mundial, nuestro equipo utiliza una fuente pública (livescore.com) y actúan como el reportero.',
+    }, {
+      question: '¿Dónde se lleva a cabo la moneda?',
+      answer: 'Nadie tiene los fondos. Todos los fondos se mantienen en fideicomiso hasta que se alcance una resolución.',
+    }, {
+      question: '¿por qué debo apostar en blockchain en lugar de utilizar los métodos tradicionales?',
+      answer: 'Un intercambio descentralizado predicción proporcionará usted la libertad de crear su propio pronóstico y apuesta directamente con cualquier persona, le anonimato ninja 100% y garantizado los pagos. ',
+    }, {
+      question: '¿Qué privacidad y anonimato?',
+      answer: 'Ninja requiere sin descargas y sin inscripciones. Eso significa que no hay contraseñas, no hay números de teléfono y ningún email. 100% anonimato.',
+    }, {
+      question: '¿necesito pagar algo?',
+      answer: 'Hay dos tipos de tarifas: tarifas de creador (para el ninja que crea la apuesta) y la cuota de la red (un porcentaje de la cuota del creador, que va hacia el mantenimiento de la plataforma).',
+    }, {
+      question: '¿Qué tengo que hacer cuando el resultado esté finalizado?',
+      answer: 'Nada. Si usted gana, sus ganancias se transferirán automáticamente a su cuenta. Si pierde, será cuenta de otra persona.',
+    }, {
+      question: '¿Dónde puedo encontrar un partido para apostar?',
+      answer: 'En la Página principal, podrás ver los mercados y las apuestas actuales. Si no encuentras alguna que te gusta, crear su propio!',
+    }, {
+      question: 'que deportes, puedo apostar en otra cosa? ¿Cómo funciona?',
+      answer: 'Muy pronto, el Ninja se aplicará a todo bajo el sol. La única limitación será tu creatividad. Fácilmente puede crear cualquier mercado en cualquier evento futuro, ya sea deportes, política, ciencia, mercados, clima... lo que sea. ',
+    }, {
+      question: '¿Qué va a pasar a la aplicación móvil de apretón de manos?',
+      answer: 'Se ser integrar apretón de manos (y tus rasgos favoritos como promesas, pagarés, subida de contrato, etc.) en la página web móvil de Ninja.',
+    },
+  ],
+
+  // MobileOrTablet components
+  MOT_TITLE: 'Predicción de Peer to Peer anónimo intercambio',
+  MOT_CONTENT_0: 'El red Ninja sólo es accesible a través del móvil',
+  MOT_CONTENT_1: 'Abra',
+  MOT_CONTENT_2: 'en el navegador del móvil para tener acceso anónimo.',
+  MOT_CONTENT_3: 'No es necesitada para descargar. Ningún registro necesario.',
+  MOT_LIST_CONTENT: [
+    {
+      mainContent: 'Lea el',
+      placeHolderLink: 'white paper',
+      link: 'https://medium.com/@ninjadotorg/shakeninja-bex-1c938f18b3e8',
+      isBlankTarget: true,
     },
     {
-      question: 'Where is the coin held?',
-      answer: 'No one holds the funds. All the funds are kept safe in escrow until a resolution is reached.',
+      mainContent: 'Respondemos tu',
+      placeHolderLink: 'FAQ',
+      link: '/faq',
     },
     {
-      question: 'Why should I bet on blockchain instead of using traditional methods?',
-      answer: 'A decentralized prediction exchange will provide you the freedom to create your own odds and bet directly with anyone, offer you 100% ninja anonymity and guaranteed payouts.',
-    },
-    {
-      question: 'How about privacy and anonymity?',
-      answer: 'Ninja requires no downloads, and no sign ups. That means no passwords, no phone numbers and no emails. 100% anonymity.',
-    },
-    {
-      question: 'Do I need to pay any fees?',
-      answer: 'There are two main types of fees: creator fees (for the ninja that creates the bet) and the network fee (a percentage of the creator fee, that goes towards maintaining the platform).',
-    },
-    {
-      question: 'What do I need to do when the outcome is finalized?',
-      answer: 'Nothing. If you win, your winnings will be automatically transferred to your account. If you lose, it will be someone else’s account.',
-    },
-    {
-      question: 'Where can I find a match to bet on?',
-      answer: 'On the homepage, you’ll be able to browse ongoing bets and markets. If you can’t find any you like, create your own!',
-    },
-    {
-      question: 'Other than sports, can I bet on anything else? How does it work?',
-      answer: 'Very soon, Ninja will apply to everything under the sun. The only limitation will be your creativity. You can easily create any market on any future event, be it sports, politics, science, markets, climate… you name it.',
-    },
-    {
-      question: 'What’s gonna happen to the Handshake mobile app?',
-      answer: 'We will be integrating Handshake (and your favourite features like promises, IOUs, contract upload, etc.) into the Ninja mobile website.',
+      mainContent: 'Únete al dojo en',
+      placeHolderLink: 'telegrama',
+      link: 'https://t.me/ninja_org',
+      isBlankTarget: true,
     },
   ],
 };

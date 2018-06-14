@@ -19,7 +19,7 @@ import { APP } from '@/constants';
 import ExpandArrowSVG from '@/assets/images/icon/expand-arrow.svg';
 import CheckedSVG from '@/assets/images/icon/checked.svg';
 
-import { chatInstance } from '@/pages/Chat/Chat';
+// import { chatInstance } from '@/pages/Chat/Chat';
 import valid from '@/services/validate';
 
 import './Profile.scss';
@@ -228,7 +228,7 @@ class Profile extends React.Component {
                   timeOut: 3000,
                   type: 'success',
                 });
-                chatInstance.updateUserName(values.username);
+                // chatInstance.updateUserName(values.username);
               },
             });
           } else {
@@ -299,7 +299,7 @@ class Profile extends React.Component {
                     className="form-control-custom form-control-custom-ex w-100"
                     component={fieldCleave}
                   />
-                  <Button className="submit-btn">Save</Button>
+                  <Button cssType="anonymous" className="submit-btn">Save</Button>
                 </UsernameForm>
               </div>
             </div>
@@ -361,7 +361,7 @@ class Profile extends React.Component {
                         this.onTextFieldChange(name, value);
                       }}
                     />
-                    <Button className="send-btn">Send</Button>
+                    <Button cssType="anonymous" className="send-btn">Send</Button>
                   </div>
                   <div className={this.state.isShowVerificationCode ? '' : 'd-none'}>
                     <p className="text">Enter the secret code sent to your phone.</p>
@@ -377,7 +377,7 @@ class Profile extends React.Component {
                       }}
                       value={sms}
                     />
-                    <Button className="submit-btn">Verify your number</Button>
+                    <Button cssType="anonymous" className="submit-btn">Verify your number</Button>
                   </div>
                 </NumberPhoneForm>
               </div>
@@ -410,7 +410,7 @@ class Profile extends React.Component {
                     }}
                     value={email}
                   />
-                  <Button className="submit-btn">Verify your email</Button>
+                  <Button cssType="anonymous" className="submit-btn">Verify your email</Button>
                 </EmailForm>
               </div>
             </div>

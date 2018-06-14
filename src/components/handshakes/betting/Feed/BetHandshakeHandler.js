@@ -8,7 +8,24 @@ import { uninitItem, collect, refund, rollback } from '@/reducers/handshake/acti
 import store from '@/stores';
 
 
+/*
+'STATUS_MAKER_UNINIT_PENDING': -8,
+    'STATUS_COLLECT_PENDING': -7,
+    'STATUS_REFUND_PENDING': -6,
+    'STATUS_DISPUTE_PENDING': -5,
+    'STATUS_BLOCKCHAIN_PENDING': -4,
+    'STATUS_NEW': -3,
+    'STATUS_TRANSACTION_FAILED': -2,
 
+    'STATUS_PENDING': -1,
+    'STATUS_INITED': 0,
+    'STATUS_MAKER_UNINITED': 1,
+    'STATUS_SHAKER_SHAKED': 2,
+    'STATUS_REFUND': 3,
+    'STATUS_DISPUTE': 4,
+    'STATUS_RESOLVE': 5,
+    'STATUS_DONE': 6,
+    */
 
 export const MESSAGE = {
   BET_PROGRESSING: 'Your bet is creating. Please wait',
@@ -17,6 +34,7 @@ export const MESSAGE = {
   CHOOSE_MATCH: 'Please choose match and outcome',
   ODD_LARGE_THAN: 'Please enter odds greater than 1',
   AMOUNT_VALID: 'Please place a bet larger than 0.',
+  MATCH_OVER: 'Time travel is hard. Please bet on a future or ongoing match.',
 };
 
 export const BET_BLOCKCHAIN_STATUS = {

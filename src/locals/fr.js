@@ -135,4 +135,30 @@ export default {
       answer: 'Nous intégrerons Handshake (et vos fonctions préférées comme promesses, reconnaissances de dette, upload de contrat, etc.) dans le site Web mobile de Ninja. ',
     },
   ],
+
+  // MobileOrTablet components
+  MOT_TITLE: 'Prédiction de Peer to Peer anonyme Exchange',
+  MOT_CONTENT_0: 'Le réseau de Ninja n’est accessible que via mobile',
+  MOT_CONTENT_1: 'Ouvrez',
+  MOT_CONTENT_2: 'dans votre navigateur mobile pour gagner l’entrée anonyme.',
+  MOT_CONTENT_3: 'Aucun téléchargement nécessaire. Aucuns inscription ne nécessaire.',
+  MOT_LIST_CONTENT: [
+    {
+      mainContent: 'Lisez le',
+      placeHolderLink: 'livre blanc',
+      link: 'https://medium.com/@ninjadotorg/shakeninja-bex-1c938f18b3e8',
+      isBlankTarget: true,
+    },
+    {
+      mainContent: 'Nous répondons à votre',
+      placeHolderLink: 'FAQ',
+      link: '/faq',
+    },
+    {
+      mainContent: 'Rejoindre le dojo sur le',
+      placeHolderLink: 'télégramme',
+      link: 'https://t.me/ninja_org',
+      isBlankTarget: true,
+    },
+  ],
 };

@@ -78,13 +78,32 @@ class FeedBetting extends React.Component {
     }
   }
 
-  handleStatus(){
-    const {result, shakeUserIds, id} = this.props;
+  handleStatus(props){
+    
+    const {result, shakeUserIds, id} = props; // new state
+    
 
-    console.log('Props:', this.props);
+    console.log('Item Info bkstatus:', this.state.itemInfo.bkStatus);
+    console.log('Props Status:', props.status);
+    
+    /*
+    if(this.state.itemInfo){
+      if(this.state.itemInfo.bkStatus === props.status){
+        console.log('Not update UI');
+        return;
+  
+      }
+    
+   
+    }
+    */
+    
+    console.log('Handle Status: ', props);
+    //console.log('Props:', this.props);
     const profile = local.get(APP.AUTH_PROFILE);
     const isUserShake = this.isShakeUser(shakeUserIds, profile.id);
-    let itemInfo = this.props;
+    let itemInfo = props;
+    console.log('Inpu Props:', props);
     
     if(isUserShake){
       const extraData = this.extraData;
@@ -103,7 +122,7 @@ class FeedBetting extends React.Component {
     }
     const status = itemInfo.status;
     const side = itemInfo.side;
-    
+
     const role = isUserShake ? ROLE.SHAKER : ROLE.INITER;
     //const blockchainStatusHardcode = 5;
     const isMatch = this.isMatch;
@@ -124,13 +143,14 @@ class FeedBetting extends React.Component {
   }
 
   componentDidMount() {
-    this.handleStatus();
+    this.handleStatus(this.props);
 
   }
 
   componentWillReceiveProps(nextProps) {
     console.log('Feeding Next Props:', nextProps);
-    this.handleStatus();
+    
+    this.handleStatus(nextProps);
   }
 
   get extraData(){
@@ -245,7 +265,6 @@ class FeedBetting extends React.Component {
       break;
 
     }
-    this.loadMyHandshakeList();
 
 
   }
@@ -265,7 +284,15 @@ class FeedBetting extends React.Component {
     console.log("uninitHandshakeSuccess", successData);
     const {status, data} = successData
     if(status && data){
-      const {hid, side, amount, odds, offchain} = data;
+      const {hid, side, amount, odds, offchain, status} = data;
+      
+      const {itemInfo} = this.state;
+      let updateInfo = Object.assign({}, itemInfo);
+      updateInfo.bkStatus = itemInfo.status;
+      updateInfo.status = status;
+
+      this.handleStatus(updateInfo);
+      
       const stake = amount;
       //const payout = stake * odds;
       const result = await betHandshakeHandler.cancelBet(hid, side, stake, odds, offchain);
@@ -273,6 +300,7 @@ class FeedBetting extends React.Component {
       if(hash === -1){
         this.rollback(offchain);
       }
+      //this.loadMyHandshakeList();
 
     }
   }
@@ -294,15 +322,25 @@ class FeedBetting extends React.Component {
     console.log('collectSuccess', successData);
     const {status} = successData
     if(status){
-      const {hid, id} = this.props;
+      const {hid, id, status} = this.props;
       const offchain = id;
+      const {itemInfo} = this.state;
+      let updateInfo = Object.assign({}, itemInfo);
+      updateInfo.bkStatus = itemInfo.status;
+      updateInfo.status = status;
 
+      this.handleStatus(updateInfo);
+
+      this.setState({
+        itemInfo: updateInfo
+      });
      const result = await betHandshakeHandler.withdraw(hid, offchain);
      const {hash} = result;
      if(hash === -1){
        // Error, rollback
        this.rollback(offchain);
      }
+     //this.loadMyHandshakeList();
 
     }
   }
@@ -323,7 +361,14 @@ class FeedBetting extends React.Component {
     console.log('refundSuccess', successData);
     const {status} = successData
     if(status){
-      const {hid, id} = this.props;
+      const {hid, id, status} = this.props;
+      const {itemInfo} = this.state;
+      let updateInfo = Object.assign({}, itemInfo);
+      updateInfo.bkStatus = itemInfo.status;
+      updateInfo.status = status;
+
+      this.handleStatus(updateInfo);
+
       const offchain = id;
       const result = await betHandshakeHandler.refund(hid, offchain);
       const {hash} = result;
@@ -331,6 +376,8 @@ class FeedBetting extends React.Component {
         // Error, rollback
         this.rollback(offchain);
       }
+      //this.loadMyHandshakeList();
+
     }
   }
   refundFailed = (error) => {

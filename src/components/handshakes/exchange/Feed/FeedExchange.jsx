@@ -40,6 +40,8 @@ import {
   shakeOfferItem,
   withdrawShakedOffer,
 } from '@/reducers/exchange/action';
+import { Ethereum } from '@/models/Ethereum.js';
+import { Bitcoin } from '@/models/Bitcoin';
 import Offer from '@/models/Offer';
 import {MasterWallet} from '@/models/MasterWallet';
 import {formatAmountCurrency, formatMoney, getHandshakeUserType, getOfferPrice} from '@/services/offer-util';
@@ -96,12 +98,15 @@ class FeedExchange extends React.PureComponent {
   checkMainNetDefaultWallet = (wallet) => {
     const { intl } = this.props;
     let result = true;
-    if (wallet.network === MasterWallet.ListCoin[wallet.className].Network.Mainnet) {
-      result = true;
-    } else {
-      const message = intl.formatMessage({ id: 'requireDefaultWalletOnMainNet' }, {});
-      this.showAlert(message);
-      result = false;
+
+    if (process.env.isProduction) {
+      if (wallet.network === MasterWallet.ListCoin[wallet.className].Network.Mainnet) {
+        result = true;
+      } else {
+        const message = intl.formatMessage({id: 'requireDefaultWalletOnMainNet'}, {});
+        this.showAlert(message);
+        result = false;
+      }
     }
 
     return result;
@@ -242,23 +247,19 @@ class FeedExchange extends React.PureComponent {
   }
 
   getOfferDistance = () => {
-    const { intl,  ipInfo: { latitude, longitude, country_code } } = this.props;
+    const { intl,  ipInfo: { latitude, longitude, country }, location } = this.props;
     const { offer } = this;
     // let distanceKm = 0;
     // let distanceMiles = 0;
 
-    console.log('getOfferDistance', latitude, longitude, offer.latitude, offer.longitude);
-
-    // if (location) {
-    //   const latLng = location.split(',')
-      // this.distanceKm = getDistanceFromLatLonInKm(latitude, longitude, latLng[0], latLng[1])
-    const distanceKm = getDistanceFromLatLonInKm(latitude, longitude, offer.latitude || 0, offer.longitude || 0);
-    console.log('checkdistance dis', distanceKm, latitude, longitude, offer.latitude, offer.longitude)
-      // distanceMiles = distanceKm * 0.621371;
-    // }
+    let distanceKm = 0;
+    if (location) {
+      const latLng = location.split(',');
+      distanceKm = getDistanceFromLatLonInKm(latitude, longitude, latLng[0], latLng[1]);
+    }
 
     return intl.formatMessage({ id: 'offerDistanceContent' }, {
-      distance: getLocalizedDistance(distanceKm, country_code)
+      distance: getLocalizedDistance(distanceKm, country)
       // distanceKm: distanceKm > 1 || distanceMiles === 0 ? distanceKm.toFixed(0) : distanceKm.toFixed(3),
       // distanceMiles: distanceMiles === 0 ? distanceKm.toFixed(0) : distanceMiles.toFixed(1),
     });
@@ -291,9 +292,25 @@ class FeedExchange extends React.PureComponent {
     };
   }
 
+  getNameShopDisplayed = () => {
+    const { username, item_flags, items } = this.offer;
+    if (username) { return username; }
+    if (item_flags.ETH) {
+      const wallet = new Ethereum();
+      wallet.address = items.ETH.user_address;
+      return wallet.getShortAddress();
+    }
+    if (item_flags.BTC) {
+      const wallet = new Bitcoin();
+      wallet.address = items.BTC.user_address;
+      return wallet.getShortAddress();
+    }
+    return '';
+  }
+
   render() {
     const { offer } = this;
-    const nameShop = offer.username;
+    const nameShopDisplayed = this.getNameShopDisplayed();
     const currency = offer.fiatCurrency;
     const success = offer.transactionCount.success || 0;
     const failed = offer.transactionCount.failed || 0;
@@ -310,7 +327,7 @@ class FeedExchange extends React.PureComponent {
           className="feed"
           background={this.mainColor}
         >
-          <div className="name-shop">{nameShop}</div>
+          <div className="name-shop">{nameShopDisplayed}</div>
           <table className="table-ex mt-2">
             <thead>
               <tr>

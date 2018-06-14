@@ -12,7 +12,7 @@ import {
   URL,
   EXCHANGE_COOKIE_READ_INSTRUCTION,
 } from '@/constants';
-import {Link} from "react-router-dom";
+import { Link } from 'react-router-dom';
 import Cookies from 'js-cookie';
 // components
 import { Col, Grid, Row } from 'react-bootstrap';
@@ -24,7 +24,7 @@ import FeedPromise from '@/components/handshakes/promise/Feed';
 import FeedBetting from '@/components/handshakes/betting/Feed';
 import FeedExchange from '@/components/handshakes/exchange/Feed/FeedExchange';
 import FeedSeed from '@/components/handshakes/seed/Feed';
-import FeedCreditCard from '@/components/handshakes/exchange/Feed/FeedCreditCard';
+// import FeedCreditCard from '@/components/handshakes/exchange/Feed/FeedCreditCard';
 
 // import Tabs from '@/components/handshakes/exchange/components/Tabs';
 import NoData from '@/components/core/presentation/NoData';
@@ -33,7 +33,7 @@ import { getListOfferPrice } from '@/reducers/exchange/action';
 import Image from '@/components/core/presentation/Image';
 import loadingSVG from '@/assets/images/icon/loading.gif';
 import ninjaLogoSVG from '@/assets/images/logo.png';
-import iconShopSVG from '@/assets/images/icon/icons8-shop.svg';
+import icon2KuNinja from '@/assets/images/icon/2_ku_ninja.svg';
 
 // style
 import './Discover.scss';
@@ -55,6 +55,9 @@ class DiscoverPage extends React.Component {
     firebaseUser: PropTypes.object,
     exchange: PropTypes.object.isRequired,
     ipInfo: PropTypes.object.isRequired,
+    isBannedCash: PropTypes.bool.isRequired,
+    isBannedPrediction: PropTypes.bool.isRequired,
+    isBannedChecked: PropTypes.bool.isRequired,
   }
 
   static defaultProps = {
@@ -70,12 +73,31 @@ class DiscoverPage extends React.Component {
       isLoading: true,
       exchange: this.props.exchange,
       modalContent: null,
+      lat: 0,
+      lng: 0,
+      isBannedCash: this.props.isBannedCash,
+      isBannedPrediction: this.props.isBannedPrediction,
+      isBannedChecked: this.props.isBannedChecked,
     };
     // this.loadDiscoverList();
     // bind
     this.clickCategoryItem = this.clickCategoryItem.bind(this);
     this.clickTabItem = this.clickTabItem.bind(this);
     this.searchChange = this.searchChange.bind(this);
+  }
+
+  componentDidMount() {
+    const { ipInfo, } = this.props;
+    navigator.geolocation.getCurrentPosition((location) => {
+      const { coords: { latitude, longitude } } = location
+      this.setAddressFromLatLng(latitude, longitude) // better precision
+    }, () => {
+      this.setAddressFromLatLng(ipInfo?.latitude, ipInfo?.longitude) // fallback
+    });
+  }
+
+  setAddressFromLatLng = (lat, lng) => {
+    this.setState({lat: lat, lng: lng});
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -88,7 +110,7 @@ class DiscoverPage extends React.Component {
         } = prevState;
         const qs = { };
 
-        const pt = `${nextProps?.app?.ipInfo?.latitude},${nextProps?.app?.ipInfo?.longitude}`;
+        const pt = `${prevState.lat},${prevState.lng}`;
 
         qs.location_p = { pt, d: DISCOVER_GET_HANDSHAKE_RADIUS };
         if (handshakeIdActive) {
@@ -105,6 +127,18 @@ class DiscoverPage extends React.Component {
         // });
       }
       return { exchange: nextProps.exchange };
+    }
+    if (nextProps.isBannedCash !== prevState.isBannedCash) {
+      return { isBannedCash: nextProps.isBannedCash };
+    }
+    if (nextProps.isBannedPrediction !== prevState.isBannedPrediction) {
+      return { isBannedPrediction: nextProps.isBannedPrediction };
+    }
+    if (nextProps.isBannedChecked !== prevState.isBannedChecked) {
+      return { isBannedChecked: nextProps.isBannedChecked };
+    }
+    if (nextProps.isBannedPrediction && nextProps.isBannedChecked) {
+      return { isLoading: false };
     }
     return null;
   }
@@ -164,16 +198,18 @@ class DiscoverPage extends React.Component {
                 <a className="d-inline-block" onClick={this.handleCloseExchangePopupIntro}>&times;</a>
               </div>
               <div className="exchange-popup-intro">
-                <div className="logo"><img className="w-100" src={ninjaLogoSVG}/></div>
+                <div className="logo"><img className="w-100" src={ninjaLogoSVG} alt="" /></div>
                 <p className="headline">Ninja, welcomes you to the Dojo!</p>
                 <p>We are the first to offer a completely decentralized platform to buy and sell Bitcoin and Ethereum.</p>
                 <p>We support credit, debit card and cash.</p>
                 <div className="my-3">
                   <div className="highlight-text">How to use:</div>
                   <div className="usage">
-                    - <Link className="link" to={{ pathname: URL.HANDSHAKE_CREATE_INDEX, search: '?id=2' }}>
-                    Become a shop
-                  </Link> to buy and sell BTC/ETH
+                    - (
+                    <Link className="link" to={{ pathname: URL.HANDSHAKE_CREATE_INDEX, search: '?id=2' }}>
+                      Become a shop
+                    </Link>
+                    ) to buy and sell BTC/ETH
                   </div>
                   <div className="highlight-text">Or</div>
                   <div className="usage">- Swipe through all the shops to find <a className="link" onClick={this.handleCloseExchangePopupIntro}>the most suitable price.</a></div>
@@ -221,6 +257,12 @@ class DiscoverPage extends React.Component {
         this.loadDiscoverList();
       }
     });
+    if (category.id === 2 && this.state.isBannedCash) {
+      this.setLoading(false);
+    }
+    if (category.id === 3 && this.state.isBannedPrediction) {
+      this.setLoading(false);
+    }
   }
 
   clickTabItem() {
@@ -242,7 +284,7 @@ class DiscoverPage extends React.Component {
     } = this.state;
     const qs = { };
 
-    const pt = `${this.props?.app?.ipInfo?.latitude},${this.props?.app?.ipInfo?.longitude}`;
+    const pt = `${this.state.lat},${this.state.lng}`;
 
     qs.location_p = { pt, d: DISCOVER_GET_HANDSHAKE_RADIUS };
     if (handshakeIdActive) {
@@ -298,16 +340,17 @@ class DiscoverPage extends React.Component {
             </Col>
           </Row>
           {
-            handshakeIdActive === HANDSHAKE_ID.EXCHANGE && (
+            this.state.isBannedChecked && handshakeIdActive === HANDSHAKE_ID.EXCHANGE && !this.state.isBannedCash && (
               <React.Fragment>
                 <Row>
                   <Col md={12} className="exchange-intro">
                     <span className="icon-shop">
-                      <img src={iconShopSVG} />
+                      <img src={icon2KuNinja} alt="" />
                     </span>
                     <span className="text-intro">
-                      <div>Sell coin for cash, buy coin with cash. Set your own rates. <span className="money">1 ETH welcome bonus.</span></div>
-                      <div className="mt-2">
+                      <div>Sell coin for cash, buy coin with cash. Set your own rates.</div>
+                      <div><span className="money">1 ETH welcome bonus.</span></div>
+                      <div className="my-3">
                         <Link className="btn btn-sm btn-join-now" to={{ pathname: URL.HANDSHAKE_CREATE_INDEX, search: '?id=2' }}>
                           <span>Open your station</span>
                         </Link>
@@ -315,16 +358,23 @@ class DiscoverPage extends React.Component {
                     </span>
                   </Col>
                 </Row>
-                {/*<Row>*/}
-                  {/*<Col md={12} className="feed-wrapper">*/}
-                    {/*<FeedCreditCard history={this.props.history} />*/}
-                  {/*</Col>*/}
-                {/*</Row>*/}
+                {/* <Row> */}
+                  {/* <Col md={12} className="feed-wrapper"> */}
+                {/* <FeedCreditCard history={this.props.history} /> */}
+                  {/* </Col> */}
+                {/* </Row> */}
               </React.Fragment>
             )
           }
           {
-            handshakeIdActive === HANDSHAKE_ID.BETTING && (
+              this.state.isBannedChecked && this.state.handshakeIdActive === HANDSHAKE_ID.BETTING && this.state.isBannedPrediction
+              ? (
+                <div>{'Hey Ninja. Your wet blanket IP address won\'t let you play this game.'}</div>
+              )
+              : null
+            }
+          {
+            this.state.isBannedChecked && this.state.handshakeIdActive === HANDSHAKE_ID.BETTING && !this.state.isBannedPrediction && (
               <React.Fragment>
                 <BettingFilter setLoading={this.setLoading} />
                 <Row>
@@ -361,10 +411,17 @@ class DiscoverPage extends React.Component {
             )
           }
           <Row>
-            {handshakeIdActive !== HANDSHAKE_ID.BETTING && this.getHandshakeList()}
+            {this.state.isBannedChecked && handshakeIdActive === HANDSHAKE_ID.EXCHANGE && !this.state.isBannedCash && this.getHandshakeList()}
+            {
+              this.state.isBannedChecked && handshakeIdActive === HANDSHAKE_ID.EXCHANGE && this.state.isBannedCash
+              ? (
+                <div>{'Hey Ninja. Your wet blanket IP address won\'t let you play this game.'}</div>
+              )
+              : null
+            }
           </Row>
         </Grid>
-        <ModalDialog onRef={modal => this.modalRef = modal} className="discover-popup" isDismiss={false} >
+        <ModalDialog onRef={(modal) => { this.modalRef = modal; return null; }} className="discover-popup" isDismiss={false} >
           {modalContent}
         </ModalDialog>
       </React.Fragment>
@@ -378,6 +435,9 @@ const mapState = state => ({
   app: state.app,
   ipInfo: state.app.ipInfo,
   exchange: state.exchange,
+  isBannedCash: state.app.isBannedCash,
+  isBannedPrediction: state.app.isBannedPrediction,
+  isBannedChecked: state.app.isBannedChecked,
 });
 
 const mapDispatch = ({

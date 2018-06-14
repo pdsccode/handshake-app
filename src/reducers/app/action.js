@@ -32,6 +32,10 @@ export const APP_ACTION = {
   IP_INFO: 'IP_INFO',
 
   CHANGE_LOCALE: 'CHANGE_LOCALE',
+
+  BAN_CASH: 'BAN_CASH',
+  BAN_PREDICTION: 'BAN_PREDICTION',
+  BAN_CHECKED: 'BAN_CHECKED',
 };
 
 // Loading
@@ -70,3 +74,6 @@ export const scrollToBottom = () => {
 };
 
 export const changeLocale = (data, autoDetect) => ({ type: APP_ACTION.CHANGE_LOCALE, payload: data, autoDetect });
+export const setBannedCash = () => ({ type: APP_ACTION.BAN_CASH });
+export const setBannedPrediction = () => ({ type: APP_ACTION.BAN_PREDICTION });
+export const setCheckBanned = () => ({ type: APP_ACTION.BAN_CHECKED });
