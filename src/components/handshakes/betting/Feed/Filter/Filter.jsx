@@ -443,14 +443,18 @@ class BettingFilter extends React.Component {
           {
           isFirstFree
           ? (
-            <Button
-              block
-              onClick={() => {
-                  this.modalBetFreeRef.open();
-              }}
-            >
-              You have free ETH to play
-            </Button>
+              <div className="freeBox">
+                <div className="contentFree">You got free ETH to play
+                </div>
+                <Button
+                className="buttonBet"
+                onClick={() => {
+                    this.modalBetFreeRef.open();
+                }}
+                >Bet now
+                </Button>
+              </div>
+            
           )
           : ''
         }

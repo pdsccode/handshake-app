@@ -66,6 +66,23 @@
     color: #FA6B49;
 
   }
+  .freeBox {
+    display: flex;
+    color: $white;
+    background-color: #1F2B34;
+    font-size: rem-calc(18px);
+    justify-content: space-between;
+    .buttonBet {
+      margin: (10px 10px);
+    }
+    .contentFree {
+      width: 80%;
+      justify-content: center;
+      text-align: center;
+      font-weight: bold;
+      padding: (10px 10px);
+    }
+  }
   .spreadBox {
     border-top: 1px solid #808080;
     border-bottom: 1px solid #808080;
