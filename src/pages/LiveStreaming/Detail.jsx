@@ -109,6 +109,11 @@ class Detail extends React.PureComponent {
                   </ul>
                 </div>
               </div>
+
+              {/* faceboo comment */}
+              <div className="fbCommentsBox">
+                <div className="fb-comments" data-href={window.location.href} data-numposts="5" />
+              </div>
             </div>
           </Col>
         </Row>
