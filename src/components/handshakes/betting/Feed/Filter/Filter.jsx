@@ -55,15 +55,23 @@ class BettingFilter extends React.Component {
       isFirstFree: false,
       side: SIDE.SUPPORT,
       isError: false,
+      errorMessage: '',
     };
   }
 
   componentDidMount() {
     this.props.loadMatches({
       PATH_URL: API_URL.CRYPTOSIGN.LOAD_MATCHES,
-      successFn: () => {
+      successFn: (res) => {
+        const { data } = res;
+        console.log('loadMatches success', data);
+        if (data.length === 0) {
+          this.setState({ errorMessage: `Matches are empty`, isError: true });
+          this.props.setLoading(false);
+        }
       },
-      errorFn: () => {
+      errorFn: (e) => {
+        console.log('loadMatches failed', e);
         this.props.setLoading(false);
         this.setState({ errorMessage: `Can't load matches`, isError: true });
       },
@@ -210,7 +218,13 @@ class BettingFilter extends React.Component {
       const { foundMatch } = this;
       if (foundMatch) {
         const { outcomes } = foundMatch;
+        console.log(foundMatch);
         if (outcomes) {
+          console.log('outcomes.length', outcomes.length);
+          if (outcomes.length === 0) {
+            // this.setState({ errorMessage: `Outcomes are empty`, isError: true });
+            this.props.setLoading(false);
+          }
           return outcomes.map(item => ({
             id: item.id, value: `Outcome: ${item.name}`, hid: item.hid, marketOdds: item.market_odds,
           }));
@@ -350,14 +364,6 @@ class BettingFilter extends React.Component {
   }
 
   render() {
-    if (this.state.isError) {
-      return (
-        <div className="text-center">
-          <p>{this.state.errorMessage}</p>
-          <Button>Try again</Button>
-        </div>
-      );
-    }
     const { isFirstFree } = this.state;
     const { tradedVolum } = this.props;
     const selectedOutcome = this.outcomeDropDown ? this.outcomeDropDown.itemSelecting : SELECTING_DEFAULT;
@@ -392,36 +398,45 @@ class BettingFilter extends React.Component {
             shareUrl={shareInfo.shareUrl}
           />
         </div>
-        <div className="dropDown">
-          <Dropdown
-            placeholder="Select an event"
-            onRef={(match) => { this.matchDropDown = match; return null; }}
-            defaultId={defaultMatchId}
-            source={this.matchNames}
-            afterSetDefault={item => this.setState({ selectedMatch: item })}
-            onItemSelected={item => this.setState({ selectedMatch: item })}
-            hasSearch
-          />
-        </div>
-        <div className="dropDown">
-          <Dropdown
-            placeholder="Select an outcome"
-            onRef={(match) => { this.outcomeDropDown = match; return null; }}
-            defaultId={defaultOutcomeId}
-            source={this.matchOutcomes}
-            afterSetDefault={item => this.setState({
+        {
+          this.state.isError
+          ? (
+            <div className="text-center" style={{ marginBottom: '10px' }}>
+              <p>{this.state.errorMessage}</p>
+              <Button onClick={() => window.location.reload()}>Try again</Button>
+            </div>
+          ) : ''
+        }
+        <div className={`${this.state.isError ? 'betting-disabled' : ''}`}>
+          <div className="dropDown">
+            <Dropdown
+              placeholder="Select an event"
+              onRef={(match) => { this.matchDropDown = match; return null; }}
+              defaultId={defaultMatchId}
+              source={this.matchNames}
+              afterSetDefault={item => this.setState({ selectedMatch: item })}
+              onItemSelected={item => this.setState({ selectedMatch: item })}
+            />
+          </div>
+          <div className="dropDown">
+            <Dropdown
+              placeholder="Select an outcome"
+              onRef={(match) => { this.outcomeDropDown = match; return null; }}
+              defaultId={defaultOutcomeId}
+              source={this.matchOutcomes}
+              afterSetDefault={item => this.setState({
               selectedOutcome: item,
             }, () => this.callGetHandshakes(item))}
-            onItemSelected={(item) => {
+              onItemSelected={(item) => {
               /* this.callGetHandshakes(item) */
               this.setState({
                 selectedOutcome: item,
               }, () => this.callGetHandshakes(item));
             }
             }
-          />
-        </div>
-        {
+            />
+          </div>
+          {
           isFirstFree
           ? (
             <Button
@@ -436,70 +451,71 @@ class BettingFilter extends React.Component {
           : ''
         }
 
-        <TopInfo
-          marketTotal={parseFloat(tradedVolum)}
-          percentFee={marketFee}
-          objectId={outcomeId}
-        />
-        <div className="wrapperContainer">
-          <div className="item">
-            <div className="titleBox opacity65">
-              <div>Pool (ETH)</div>
-              <div>Support (ODDS)</div>
+          <TopInfo
+            marketTotal={parseFloat(tradedVolum)}
+            percentFee={marketFee}
+            objectId={outcomeId}
+          />
+          <div className="wrapperContainer">
+            <div className="item">
+              <div className="titleBox opacity65">
+                <div>Pool (ETH)</div>
+                <div>Support (ODDS)</div>
+              </div>
+              {/* <GroupBook amountColor="#FA6B49" bookList={this.bookListSupport}/> */}
+              {<GroupBook amountColor="#0BDD91" bookList={this.bookListSupport} />}
+              {/* <div className="spreadBox"> */}
+              {/* <div>ODDS SPREAD</div> */}
+              {/* <div>{this.oddSpread}</div> */}
+              {/* </div> */}
+              {/* <GroupBook amountColor="#8BF275" bookList={this.bookListAgainst}/> */}
+              {/* <GroupBook amountColor="#FA6B49" bookList={this.bookListAgainst}/> */}
+              <div className="marketBox">
+                <div>Market</div>
+                <div>{Math.floor(this.defaultSupportOdds * 100) / 100}</div>
+              </div>
+              <Button
+                className="buttonSupport"
+                block
+                onClick={() => {
+                  this.setState({
+                    side: SIDE.SUPPORT,
+                  }, () => this.modalBetRef.open());
+                }}
+              >
+                SUPPORT
+              </Button>
             </div>
-            {/* <GroupBook amountColor="#FA6B49" bookList={this.bookListSupport}/> */}
-            {<GroupBook amountColor="#0BDD91" bookList={this.bookListSupport} />}
-            {/* <div className="spreadBox"> */}
-            {/* <div>ODDS SPREAD</div> */}
-            {/* <div>{this.oddSpread}</div> */}
-            {/* </div> */}
-            {/* <GroupBook amountColor="#8BF275" bookList={this.bookListAgainst}/> */}
-            {/* <GroupBook amountColor="#FA6B49" bookList={this.bookListAgainst}/> */}
-            <div className="marketBox">
-              <div>Market</div>
-              <div>{parseFloat(this.defaultSupportOdds).toFixed(2)}</div>
-            </div>
-            <Button
-              className="buttonSupport"
-              block
-              onClick={() => {
-                this.setState({
-                  side: SIDE.SUPPORT,
-                }, () => this.modalBetRef.open());
-              }}
-            >
-              SUPPORT
-            </Button>
-          </div>
-          <div className="item">
-            <div className="titleBox opacity65">
-              <div>Pool (ETH)</div>
-              <div>Oppose (ODDS)</div>
-            </div>
-            {/* <BettingShake
+            <div className="item">
+              <div className="titleBox opacity65">
+                <div>Pool (ETH)</div>
+                <div>Oppose (ODDS)</div>
+              </div>
+              {/* <BettingShake
                   matchName={matchName}
                   matchOutcome={matchOutcome}
                   outcomeId={parseInt(outcomeId)}
                   outcomeHid={parseInt(outcomeHid)}
                   marketSupportOdds={parseFloat(this.defaultSupportOdds)}
                 marketAgainstOdds={parseFloat(this.defaultAgainstOdds)}/> */}
-            {<GroupBook amountColor="#FA6B49" bookList={this.bookListAgainst} />}
-            <div className="titleBox">
-              <div>Market</div>
-              <div>{parseFloat(this.defaultAgainstOdds).toFixed(4)}</div>
+              {<GroupBook amountColor="#FA6B49" bookList={this.bookListAgainst} />}
+              <div className="titleBox">
+                <div>Market</div>
+                <div>{Math.floor(this.defaultAgainstOdds * 100) / 100}</div>
+              </div>
+              <Button
+                className="buttonAgainst"
+                block
+                onClick={() => {
+                  console.log('click oppose');
+                  this.setState({
+                    side: SIDE.AGAINST,
+                  }, () => this.modalBetRef.open());
+                }}
+              >
+                OPPOSE
+              </Button>
             </div>
-            <Button
-              className="buttonAgainst"
-              block
-              onClick={() => {
-                console.log('click oppose');
-                this.setState({
-                  side: SIDE.AGAINST,
-                }, () => this.modalBetRef.open());
-              }}
-            >
-              OPPOSE
-            </Button>
           </div>
         </div>
         <ModalDialog className="modal" onRef={(modal) => { this.modalBetRef = modal; return null; }}>

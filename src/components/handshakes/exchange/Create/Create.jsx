@@ -5,6 +5,7 @@ import Button from "@/components/core/controls/Button";
 import './styles.scss'
 import createForm from "@/components/core/form/createForm";
 import {getOfferPrice} from "@/services/offer-util";
+import axios from 'axios';
 
 import {
   fieldCleave,
@@ -109,10 +110,10 @@ class Component extends React.Component {
   setAddressFromLatLng = (lat, lng) => {
     this.setState({lat: lat, lng: lng});
     const { rfChange } = this.props;
-    /*axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&sensor=true`).then((response) => {
+    axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&sensor=true`).then((response) => {
       const address = response.data.results[0] && response.data.results[0].formatted_address;
       rfChange(nameFormExchangeCreate, 'address', address);
-    });*/
+    });
   }
 
   componentDidMount() {
@@ -125,10 +126,10 @@ class Component extends React.Component {
     });
 
     // auto fill phone number from user profile
-    let detectedCountryCode = ''
-    const foundCountryPhone = COUNTRIES.find(i => i.code.toUpperCase() === ipInfo?.country_code.toUpperCase())
+    let detectedCountryCode = '';
+    const foundCountryPhone = COUNTRIES.find(i => i.code.toUpperCase() === ipInfo?.country.toUpperCase());
     if (foundCountryPhone) {
-      detectedCountryCode = foundCountryPhone.dialCode
+      detectedCountryCode = foundCountryPhone.dialCode;
     }
     rfChange(nameFormExchangeCreate, 'phone', authProfile.phone || `${detectedCountryCode}-`);
     rfChange(nameFormExchangeCreate, 'nameShop', authProfile.name || '');
@@ -196,6 +197,18 @@ class Component extends React.Component {
     this.props.hideLoading();
   }
 
+  showAlert = (message) => {
+    this.props.showAlert({
+      message: <div className="text-center">
+        {message}
+      </div>,
+      timeOut: 5000,
+      type: 'danger',
+      callBack: () => {
+      }
+    });
+  }
+
   onCurrencyChange = (e, newValue) => {
     console.log('onCurrencyChange', newValue);
     // const currency = e.target.textContent || e.target.innerText;
@@ -236,6 +249,20 @@ class Component extends React.Component {
     return conditionBuy || conditionSell;
   }
 
+  checkMainNetDefaultWallet = (wallet) => {
+    const { intl } = this.props;
+    let result = true;
+    if (wallet.network === MasterWallet.ListCoin[wallet.className].Network.Mainnet) {
+      result = true;
+    } else {
+      const message = intl.formatMessage({ id: 'requireDefaultWalletOnMainNet' }, {});
+      this.showAlert(message);
+      result = false;
+    }
+
+    return result;
+  }
+
   handleSubmit = async (values) => {
     const { intl, authProfile, ipInfo } = this.props;
     const { lat, lng } = this.state;
@@ -246,6 +273,11 @@ class Component extends React.Component {
     } = values;
 
     const wallet = MasterWallet.getWalletDefault(currency);
+
+    if (!this.checkMainNetDefaultWallet(wallet)) {
+      return;
+    }
+
     const balance = await wallet.getBalance();
     const fee = await wallet.getFee(4, true);
 

@@ -315,11 +315,11 @@ class DiscoverPage extends React.Component {
                     </span>
                   </Col>
                 </Row>
-                <Row>
-                  <Col md={12} className="feed-wrapper">
-                    <FeedCreditCard history={this.props.history} />
-                  </Col>
-                </Row>
+                {/*<Row>*/}
+                  {/*<Col md={12} className="feed-wrapper">*/}
+                    {/*<FeedCreditCard history={this.props.history} />*/}
+                  {/*</Col>*/}
+                {/*</Row>*/}
               </React.Fragment>
             )
           }
