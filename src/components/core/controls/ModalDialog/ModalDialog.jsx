@@ -7,8 +7,9 @@ class ModalDialog extends React.Component {
   constructor(props) {
     super(props);
     // bind
-    this.open = this.open.bind(this);
-    this.close = this.close.bind(this);
+    this.open = ::this.open;
+    this.close = ::this.close;
+    this.onClosePanel = ::this.onClosePanel;
   }
 
   open() {
@@ -19,6 +20,12 @@ class ModalDialog extends React.Component {
   close() {
     this.modalRef && this.modalRef.classList.remove('modal-custom-show');
     this.contentRef && this.contentRef.classList.remove('zoomIn');
+  }
+
+  onClosePanel() {
+    if (this.props.isDismiss) {
+      this.close();
+    }
   }
 
   componentDidMount() {
@@ -35,7 +42,7 @@ class ModalDialog extends React.Component {
     return (
       <div className={`modal modal-dialog-custom ${className || ''}`} ref={modal => this.modalRef = modal}>
         <div className="modal-backdrop show"/>
-        <div className="position" onClick={this.close}>
+        <div className="position" onClick={this.onClosePanel}>
           <div 
             className="modal-dialog-content animated"
             onClick={e => e.stopPropagation()}
@@ -62,7 +69,12 @@ ModalDialog.propTypes = {
   className: PropTypes.string,
   title: PropTypes.string,
   children: PropTypes.node.isRequired,
-  onRef: PropTypes.func
+  onRef: PropTypes.func,
+  isDismiss: PropTypes.bool,
+};
+
+ModalDialog.defaultProps = {
+  isDismiss: true,
 };
 
 export default ModalDialog;
