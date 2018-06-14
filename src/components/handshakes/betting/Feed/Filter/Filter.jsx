@@ -400,6 +400,7 @@ class BettingFilter extends React.Component {
             source={this.matchNames}
             afterSetDefault={item => this.setState({ selectedMatch: item })}
             onItemSelected={item => this.setState({ selectedMatch: item })}
+            hasSearch
           />
         </div>
         <div className="dropDown">
