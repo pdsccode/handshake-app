@@ -332,7 +332,7 @@ class BettingFilter extends React.Component {
     }
   }
 
-  
+
   callCheckFirstFree() {
     console.log('Call API check first free');
     this.props.checkFreeAvailable({
@@ -444,8 +444,7 @@ class BettingFilter extends React.Component {
           isFirstFree
           ? (
               <div className="freeBox">
-                <div className="contentFree">You got free ETH to play
-                </div>
+                <div className="contentFree">You got <span>free ETH</span> to play</div>
                 <Button
                 className="buttonBet"
                 onClick={() => {
@@ -454,7 +453,7 @@ class BettingFilter extends React.Component {
                 >Bet now
                 </Button>
               </div>
-            
+
           )
           : ''
         }
