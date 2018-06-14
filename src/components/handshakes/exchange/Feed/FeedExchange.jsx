@@ -40,6 +40,8 @@ import {
   shakeOfferItem,
   withdrawShakedOffer,
 } from '@/reducers/exchange/action';
+import { Ethereum } from '@/models/Ethereum.js';
+import { Bitcoin } from '@/models/Bitcoin';
 import Offer from '@/models/Offer';
 import {MasterWallet} from '@/models/MasterWallet';
 import {formatAmountCurrency, formatMoney, getHandshakeUserType, getOfferPrice} from '@/services/offer-util';
@@ -291,9 +293,25 @@ class FeedExchange extends React.PureComponent {
     };
   }
 
+  getNameShopDisplayed = () => {
+    const { username, item_flags, items } = this.offer;
+    if (username) { return username; }
+    if (item_flags.ETH) {
+      const wallet = new Ethereum();
+      wallet.address = items.ETH.user_address;
+      return wallet.getShortAddress();
+    }
+    if (item_flags.BTC) {
+      const wallet = new Bitcoin();
+      wallet.address = items.BTC.user_address;
+      return wallet.getShortAddress();
+    }
+    return '';
+  }
+
   render() {
     const { offer } = this;
-    const nameShop = offer.username;
+    const nameShopDisplayed = this.getNameShopDisplayed();
     const currency = offer.fiatCurrency;
     const success = offer.transactionCount.success || 0;
     const failed = offer.transactionCount.failed || 0;
@@ -310,7 +328,7 @@ class FeedExchange extends React.PureComponent {
           className="feed"
           background={this.mainColor}
         >
-          <div className="name-shop">{nameShop}</div>
+          <div className="name-shop">{nameShopDisplayed}</div>
           <table className="table-ex mt-2">
             <thead>
               <tr>
