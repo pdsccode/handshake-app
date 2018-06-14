@@ -43,7 +43,7 @@ const CreateBettingEvent = props => (
 const CreateExchange = props => (
   <DynamicImport
     loading={Loading}
-    load={() => import('@/components/handshakes/exchange/Create/Create.jsx')}
+    load={() => import('@/components/handshakes/exchange/Create/Create')}
   >
     {Component => <Component {...props} />}
   </DynamicImport>
@@ -78,6 +78,15 @@ const CreateWalletTransfer = props => (
   </DynamicImport>
 );
 
+const CreateWalletReceive = props => (
+  <DynamicImport
+    loading={Loading}
+    load={() => import('@/components/handshakes/wallet/Create/Receive')}
+  >
+    {Component => <Component {...props} />}
+  </DynamicImport>
+);
+
 const maps = {
   [HANDSHAKE_ID.PROMISE]: CreatePromise,
   [HANDSHAKE_ID.BETTING]: CreateBetting,
@@ -86,6 +95,7 @@ const maps = {
   [HANDSHAKE_ID.EXCHANGE_LOCAL]: CreateExchangeLocal,
   [HANDSHAKE_ID.SEED]: CreateSeed,
   [HANDSHAKE_ID.WALLET_TRANSFER]: CreateWalletTransfer,
+  [HANDSHAKE_ID.WALLET_RECEIVE]: CreateWalletReceive,
 };
 
 class Create extends React.Component {
@@ -93,7 +103,7 @@ class Create extends React.Component {
     super(props);
     let seletedId = HANDSHAKE_ID_DEFAULT;
     // get default
-    let { id } = Helper.getQueryStrings(location.search);
+    let { id } = Helper.getQueryStrings(window.location.search);
     id = parseInt(id, 10);
     if (id && Object.values(HANDSHAKE_ID).indexOf(id !== -1)) {
       seletedId = id;
