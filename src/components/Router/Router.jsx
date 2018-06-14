@@ -384,7 +384,6 @@ class Router extends React.Component {
   }
 
   render() {
-    if (window.location.pathname.startsWith(URL.LIVE_STREAMING)) return <LiveStreamingRootRouter />;
     return (
       <IntlProvider
         locale={this.state.currentLocale}
@@ -395,49 +394,19 @@ class Router extends React.Component {
             path={URL.INDEX}
             render={props =>
               (
-                <Layout {...props}>
-                  <ScrollToTop>
-                    <Switch>
-                      <Route
-                        exact
-                        path={URL.INDEX}
-                        render={() => (
-                          <Redirect to={{ pathname: URL.HANDSHAKE_DISCOVER }} />
-                        )}
-                      />
-                      <Route path={URL.HANDSHAKE_ME} component={MeRootRouter} />
-                      <Route
-                        path={URL.HANDSHAKE_DISCOVER}
-                        component={DiscoverRootRouter}
-                      />
-                      <Route
-                        path={URL.HANDSHAKE_CHAT}
-                        component={ChatRootRouter}
-                      />
-                      <Route
-                        path={URL.HANDSHAKE_WALLET}
-                        component={WalletRootRouter}
-                      />
-                      <Route
-                        path={URL.HANDSHAKE_CREATE}
-                        component={CreateRootRouter}
-                      />
-                      <Route
-                        path={URL.HANDSHAKE_EXCHANGE}
-                        component={ExchangeRootRouter}
-                      />
-                      <Route
-                        path={URL.TRANSACTION_LIST}
-                        component={TransactionRootRouter}
-                      />
-                      <Route
-                        path={URL.COMMENTS_BY_SHAKE}
-                        component={CommentRootRouter}
-                      />
-                      <Route component={Page404} />
-                    </Switch>
-                  </ScrollToTop>
-                </Layout>
+                <ScrollToTop>
+                  <Switch>
+                    <Route
+                      exact
+                      path={URL.INDEX}
+                      render={() => (
+                        <Redirect to={{pathname: URL.LIVE_STREAMING}}/>
+                      )}
+                    />
+                    <Route path={URL.LIVE_STREAMING} component={LiveStreamingRootRouter}/>
+                    <Route component={Page404} />
+                  </Switch>
+                </ScrollToTop>
               )
             }
           />
