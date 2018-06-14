@@ -108,7 +108,7 @@ class Component extends React.Component {
 
     // auto fill phone number from user profile
     let detectedCountryCode = "";
-    const foundCountryPhone = COUNTRIES.find(i => i.code.toUpperCase() === ipInfo?.country_code.toUpperCase());
+    const foundCountryPhone = COUNTRIES.find(i => i.code.toUpperCase() === ipInfo?.country_code?.toUpperCase());
     if (foundCountryPhone) {
       detectedCountryCode = foundCountryPhone.dialCode;
     }
