@@ -37,6 +37,10 @@
   }
   .liveBox {
     margin-top: rem-calc(50px);
+    iframe {
+      max-height: 500px;
+      min-height: 300px;
+    }
   }
 
   .links {

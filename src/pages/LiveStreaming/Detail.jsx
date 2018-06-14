@@ -70,7 +70,7 @@ class Detail extends React.PureComponent {
                 </div>
               </div>
               <div className="liveBox">
-                <iframe src={activeLink} width="100%" height="500" />
+                <iframe src={activeLink} width="100%" />
               </div>
               <div className="links">
                 <div>
