@@ -85,8 +85,7 @@ class FeedBetting extends React.Component {
     const profile = local.get(APP.AUTH_PROFILE);
     const isUserShake = this.isShakeUser(shakeUserIds, profile.id);
     let itemInfo = this.props;
-    let status = this.props;
-    let side = this.props
+    
     if(isUserShake){
       const extraData = this.extraData;
       console.log('Extra data:', extraData);
@@ -98,11 +97,13 @@ class FeedBetting extends React.Component {
         console.log('Found Shaked Item:', foundShakedItem);
         if(foundShakedItem){
           itemInfo = foundShakedItem;
-          status = itemInfo.status;
-          side = itemInfo.side;
+          
         }
       }
     }
+    const status = itemInfo.status;
+    const side = itemInfo.side;
+    
     const role = isUserShake ? ROLE.SHAKER : ROLE.INITER;
     //const blockchainStatusHardcode = 5;
     const isMatch = this.isMatch;
@@ -171,7 +172,7 @@ class FeedBetting extends React.Component {
     // const matchName = realEventName[0];
     // const matchDate = `(${realEventName[1]}`;
     let eventName = event_name ? event_name: '';
-    console.log('Result:', eventName.indexOf('Event'));
+    //console.log('Result:', eventName.indexOf('Event'));
     if(eventName.indexOf('Event') == -1){
       eventName = `Event: ${eventName}`;
     }
