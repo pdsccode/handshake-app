@@ -29,7 +29,7 @@ export class MasterWallet {
 
       const masterWallet = [];
 
-      const defaultWallet = [1, 3]  
+      let defaultWallet = [1, 3]  
       if (process.env.isProduction){
         defaultWallet = [0, 1]  
       }  
