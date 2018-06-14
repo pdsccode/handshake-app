@@ -378,6 +378,30 @@ renderStep3_labelButton= () => {
       return <Button isLoading={this.state.isLoading} block type="submit">bite me</Button>
   }
 }
+renderLinkRefer= () => (
+  <Step4Form onSubmit={this.submitStep4}>
+      <h6>Final: Share this link to friend to get extra 20 Shuriken</h6>
+      <p>Referral link:</p>
+      <Row>
+          <Col sm={8} md={8} xs={8}>
+              <Field
+                  name="refer_link"
+                  type="text"
+                  className="form-control"
+                  placeholder=""
+                  component={fieldInput}
+                //   value={this.state.inputLinkValue}
+                  onChange={evt => this.updateLinkValue(evt)}
+                  validate={[required]}
+                  onClick={() => { alert('ga'); Clipboard.copy(JSON.stringify(this.state.inputLinkValue)); this.showToast('Referral link copied to clipboard.'); }}
+              />
+          </Col>
+          <Col sm={4} md={4} xs={4} className="no-padding-left">
+              <Button block type="submit">Done</Button>
+          </Col>
+      </Row>
+  </Step4Form>
+)
 
 renderLinkRefer = () => (
   this.state.step1 && this.state.step2 && this.state.step3 > 1 ?
