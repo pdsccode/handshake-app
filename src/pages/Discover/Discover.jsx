@@ -307,7 +307,7 @@ class DiscoverPage extends React.Component {
                     </span>
                     <span className="text-intro">
                       <div>Sell coin for cash, buy coin with cash. Set your own rates. <span className="money">1 ETH welcome bonus.</span></div>
-                      <div className="mt-2">
+                      <div className="my-1">
                         <Link className="btn btn-sm btn-join-now" to={{ pathname: URL.HANDSHAKE_CREATE_INDEX, search: '?id=2' }}>
                           <span>Open your station</span>
                         </Link>
