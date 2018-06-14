@@ -621,7 +621,7 @@ class Component extends React.Component {
                         component={fieldInput}
                         placeholder={'Apple store'}
                         // onChange={this.onAmountChange}
-                        validate={[required]}
+                        // validate={[required]}
                       />
                     </div>
                   </div>
