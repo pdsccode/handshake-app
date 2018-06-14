@@ -197,6 +197,18 @@ class Component extends React.Component {
     this.props.hideLoading();
   }
 
+  showAlert = (message) => {
+    this.props.showAlert({
+      message: <div className="text-center">
+        {message}
+      </div>,
+      timeOut: 5000,
+      type: 'danger',
+      callBack: () => {
+      }
+    });
+  }
+
   onCurrencyChange = (e, newValue) => {
     console.log('onCurrencyChange', newValue);
     // const currency = e.target.textContent || e.target.innerText;
@@ -237,6 +249,20 @@ class Component extends React.Component {
     return conditionBuy || conditionSell;
   }
 
+  checkMainNetDefaultWallet = (wallet) => {
+    const { intl } = this.props;
+    let result = true;
+    if (wallet.network === MasterWallet.ListCoin[wallet.className].Network.Mainnet) {
+      result = true;
+    } else {
+      const message = intl.formatMessage({ id: 'requireDefaultWalletOnMainNet' }, {});
+      this.showAlert(message);
+      result = false;
+    }
+
+    return result;
+  }
+
   handleSubmit = async (values) => {
     const { intl, authProfile, ipInfo } = this.props;
     const { lat, lng } = this.state;
@@ -247,6 +273,11 @@ class Component extends React.Component {
     } = values;
 
     const wallet = MasterWallet.getWalletDefault(currency);
+
+    if (!this.checkMainNetDefaultWallet(wallet)) {
+      return;
+    }
+
     const balance = await wallet.getBalance();
     const fee = await wallet.getFee(4, true);
 
