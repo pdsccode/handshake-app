@@ -27,7 +27,7 @@ export class MasterWallet {
 
       let mnemonic = bip39.generateMnemonic(); // generates string
 
-      const masterWallet = [];
+      let masterWallet = [];
 
       let defaultWallet = [1, 3]  
       if (process.env.isProduction){
