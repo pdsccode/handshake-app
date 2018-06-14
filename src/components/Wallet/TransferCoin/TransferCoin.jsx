@@ -177,8 +177,8 @@ class Transfer extends React.Component {
       this.modalConfirmTranferRef.open();    
   }
 
-  invalidateTransferCoins = (value) => {
-    console.log("this.state.walletSelected.balance", this.state.walletSelected.balance);
+  invalidateTransferCoins = (value) => {    
+    if (!this.state.walletSelected) return {};
     let errors = {};
     if (this.state.walletSelected){
       // check address:
