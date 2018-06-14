@@ -218,9 +218,11 @@ class BettingFilter extends React.Component {
       const { foundMatch } = this;
       if (foundMatch) {
         const { outcomes } = foundMatch;
+        console.log(foundMatch);
         if (outcomes) {
+          console.log('outcomes.length', outcomes.length);
           if (outcomes.length === 0) {
-            this.setState({ errorMessage: `Outcomes are empty`, isError: true });
+            // this.setState({ errorMessage: `Outcomes are empty`, isError: true });
             this.props.setLoading(false);
           }
           return outcomes.map(item => ({
