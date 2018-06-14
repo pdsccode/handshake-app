@@ -130,11 +130,11 @@ export default {
   ],
 
   // MobileOrTablet components
-  MOT_TITLE: 'The anonymous exchange of anything',
-  MOT_CONTENT_0: 'The Ninja network is only accessible via mobile.',
-  MOT_CONTENT_1: 'Open',
-  MOT_CONTENT_2: 'on your mobile browser to gain anonymous entry.',
-  MOT_CONTENT_3: 'No download needed. No sign up required.',
+  MOT_TITLE: 'Анонимные предсказание одноранговой обмен',
+  MOT_CONTENT_0: 'Ниндзя сеть доступна только через мобильный',
+  MOT_CONTENT_1: 'Откройте',
+  MOT_CONTENT_2: 'в вашем мобильном браузере, чтобы получить анонимный вход.',
+  MOT_CONTENT_3: 'Не нужно загружать. Не Зарегистрируйся требуется.',
   MOT_LIST_CONTENT: [
     {
       mainContent: 'Read the',

@@ -137,11 +137,11 @@ export default {
   ],
 
   // MobileOrTablet components
-  MOT_TITLE: 'The anonymous exchange of anything',
-  MOT_CONTENT_0: 'The Ninja network is only accessible via mobile.',
-  MOT_CONTENT_1: 'Open',
-  MOT_CONTENT_2: 'on your mobile browser to gain anonymous entry.',
-  MOT_CONTENT_3: 'No download needed. No sign up required.',
+  MOT_TITLE: '익명 피어 투 피어 예측 교환',
+  MOT_CONTENT_0: '닌자 네트워크는 액세스할 수 모바일을 통해',
+  MOT_CONTENT_1: '익명 항목을 얻을 귀하의 모바일 브라우저에서',
+  MOT_CONTENT_2: '를 엽니다.',
+  MOT_CONTENT_3: '필요 없습니다 다운로드 합니다. 흔적이 필요합니다.',
   MOT_LIST_CONTENT: [
     {
       mainContent: 'Read the',

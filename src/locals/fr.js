@@ -137,11 +137,11 @@ export default {
   ],
 
   // MobileOrTablet components
-  MOT_TITLE: 'The anonymous exchange of anything',
-  MOT_CONTENT_0: 'The Ninja network is only accessible via mobile.',
-  MOT_CONTENT_1: 'Open',
-  MOT_CONTENT_2: 'on your mobile browser to gain anonymous entry.',
-  MOT_CONTENT_3: 'No download needed. No sign up required.',
+  MOT_TITLE: 'Prédiction de Peer to Peer anonyme Exchange',
+  MOT_CONTENT_0: 'Le réseau de Ninja n’est accessible que via mobile',
+  MOT_CONTENT_1: 'Ouvrez',
+  MOT_CONTENT_2: 'dans votre navigateur mobile pour gagner l’entrée anonyme.',
+  MOT_CONTENT_3: 'Aucun téléchargement nécessaire. Aucuns inscription ne nécessaire.',
   MOT_LIST_CONTENT: [
     {
       mainContent: 'Read the',
