@@ -90,6 +90,8 @@ class BettingFilter extends React.Component {
       support,
       against,
     });
+    this.checkShowFreeBanner();
+
   }
 
   get oddSpread() {
@@ -330,6 +332,7 @@ class BettingFilter extends React.Component {
     }
   }
 
+  
   callCheckFirstFree() {
     console.log('Call API check first free');
     this.props.checkFreeAvailable({
@@ -354,9 +357,10 @@ class BettingFilter extends React.Component {
   }
 
   async checkShowFreeBanner() {
+
     const balance = await betHandshakeHandler.getBalance();
-    console.log('Balance:', balance);
-    if (balance === 0) {
+    console.log('checkShowFreeBanner Balance:', balance);
+    if (balance == 0) {
       // Call API check if show free
       this.callCheckFirstFree();
     }
