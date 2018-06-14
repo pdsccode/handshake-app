@@ -39,7 +39,7 @@ import NetworkError from '@/components/Router/NetworkError';
 import BlockCountry from '@/components/core/presentation/BlockCountry';
 import qs from 'querystring';
 
-addLocaleData([...en, ...fr, ...zh, ...de, ...ja, ...ko, ...ru, ...es, ...vi ]);
+addLocaleData([...en, ...fr, ...zh, ...de, ...ja, ...ko, ...ru, ...es, ...vi]);
 
 const MeRootRouter = props => (
   <DynamicImport
@@ -173,7 +173,7 @@ class Router extends React.Component {
     this.authSuccess = ::this.authSuccess;
     this.notification = ::this.notification;
     this.setLanguage = ::this.setLanguage;
-    this.detectCountry.call(this);
+    this.ipInfo = ::this.ipInfo;
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -181,8 +181,10 @@ class Router extends React.Component {
       return { isLogged: nextProps.auth.isLogged };
     }
     if (nextProps.auth.updatedAt !== prevState.updatedAt) {
+      //
       nextProps.firebase.unWatchEvent('value', `${FIREBASE_PATH.USERS}/${String(prevState.profile?.id)}`);
       nextProps.firebase.watchEvent('value', `${FIREBASE_PATH.USERS}/${String(nextProps.auth.profile?.id)}`);
+      //
       return { profile: nextProps.auth.profile, updatedAt: nextProps.auth.updatedAt };
     }
     if (nextProps.app.locale !== prevState.currentLocale) {
@@ -218,17 +220,6 @@ class Router extends React.Component {
     });
   }
 
-  getIpInfo = () => {
-    axios.get(API_URL.EXCHANGE.IP_DOMAIN, {
-      params: {
-        auth: process.env.ipfindKey,
-      },
-    }).then((response) => {
-      this.props.setIpInfo(response.data);
-      local.save(APP.IP_INFO, response.data);
-    });
-  }
-
   setLanguage(language, autoDetect = true) {
     const isSupportedLanguages = ['en', 'zh', 'fr', 'de', 'ja', 'ko', 'ru', 'es', 'vi'];
     if (isSupportedLanguages.indexOf(language) >= 0) {
@@ -238,14 +229,21 @@ class Router extends React.Component {
     }
   }
 
-  async detectCountry() {
+  ipInfo() {
     const url = `https://ipapi.co/json${process.env.ipapiKey ? `?key=${process.env.ipapiKey}` : ''}`;
-    const { data } = await axios.get(url);
-    const firstLanguage = data.languages.split(',')[0];
-    this.setLanguage(firstLanguage);
-    if (COUNTRIES_BLACKLIST.indexOf(data.country_name) !== -1) {
-      this.setState({ isCountryBlackList: true });
-    }
+    axios.get(url).then((res) => {
+      const { data } = res;
+      console.log('ipInfo', data);
+      this.props.setIpInfo(data);
+      local.save(APP.IP_INFO, data);
+      const firstLanguage = data.languages.split(',')[0];
+      this.setLanguage(firstLanguage);
+      if (COUNTRIES_BLACKLIST.indexOf(data.country_name) !== -1) {
+        // should use country code: .country ISO 3166-1 alpha-2
+        // https://ipapi.co/api/#complete-location
+        this.setState({ isCountryBlackList: true });
+      }
+    });
   }
 
   checkRegistry() {
@@ -301,9 +299,9 @@ class Router extends React.Component {
         });
 
         // GET IP INFO
-        this.getIpInfo();
+        this.ipInfo();
         this.timeOutInterval = setInterval(() => {
-          this.getIpInfo();
+          this.ipInfo();
         }, 30 * 60 * 1000); // 30'
 
         // GET PRICE
@@ -318,32 +316,14 @@ class Router extends React.Component {
         if (listWallet === false) {
           this.setState({ loadingText: 'Creating your local wallets' });
           listWallet = createMasterWallets().then(() => {
-            this.setState({ loadingText: 'Please be patient. We are gathering ETH for you.' });
-            const wallet = MasterWallet.getWalletDefault('ETH');
-            this.props.getFreeETH({
-              PATH_URL: `/user/free-rinkeby-eth?address=${wallet.address}`,
-              METHOD: 'POST',
-              successFn: () => {
-                this.setState({ isLoading: false, loadingText: '' });
-                // run cron alert user when got 1eth:
-                this.timeOutCheckGotETHFree = setInterval(() => {
-                  wallet.getBalance().then((result) => {
-                    if (result > 0) {
-                      this.porps.showAlert({
-                        message: <div className="text-center">You have ETH! Now you can play for free on the Ninja testnet.</div>,
-                        timeOut: false,
-                        isShowClose: true,
-                        type: 'success',
-                        callBack: () => {},
-                      });
-                      // notify user:
-                      clearInterval(this.timeOutCheckGotETHFree);
-                    }
-                  });
-                }, 20 * 60 * 1000); // 20'
-              },
-              errorFn: () => { this.setState({ isLoading: false, loadingText: '' }); },
-            });
+            this.setState({ isLoading: false, loadingText: '' });
+            if (!process.env.isProduction) {
+              const wallet = MasterWallet.getWalletDefault('ETH');
+              this.props.getFreeETH({
+                PATH_URL: `/user/free-rinkeby-eth?address=${wallet.address}`,
+                METHOD: 'POST',
+              });
+            }
           });
         } else {
           this.setState({ isLoading: false });
