@@ -96,12 +96,15 @@ class FeedExchange extends React.PureComponent {
   checkMainNetDefaultWallet = (wallet) => {
     const { intl } = this.props;
     let result = true;
-    if (wallet.network === MasterWallet.ListCoin[wallet.className].Network.Mainnet) {
-      result = true;
-    } else {
-      const message = intl.formatMessage({ id: 'requireDefaultWalletOnMainNet' }, {});
-      this.showAlert(message);
-      result = false;
+
+    if (process.env.isProduction) {
+      if (wallet.network === MasterWallet.ListCoin[wallet.className].Network.Mainnet) {
+        result = true;
+      } else {
+        const message = intl.formatMessage({id: 'requireDefaultWalletOnMainNet'}, {});
+        this.showAlert(message);
+        result = false;
+      }
     }
 
     return result;
