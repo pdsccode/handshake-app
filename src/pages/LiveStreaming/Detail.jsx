@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 // services, constants
 import { find } from 'lodash';
 import fixtures from '../../data/liveStreaming/fixtures';
+import moment from 'moment';
 
 // components
 import { Grid, Row, Col } from 'react-bootstrap';
@@ -65,8 +66,8 @@ class Detail extends React.PureComponent {
                 </div>
                 <div className="middle">
                   <div>World Cup 2018 Russia</div>
-                  <div className="time">{match.date}</div>
-                  <div>{match.date}</div>
+                  <div className="time">{moment(match.date).format("LT")}</div>
+                  <div>{moment(match.date).format('L')}</div>
                 </div>
                 <div className="team">
                   <span className="teamName">{match.awayTeamName}</span>
@@ -81,7 +82,7 @@ class Detail extends React.PureComponent {
                   <p>Lives</p>
                   <ul>
                     {
-                      match.linksLive.map((item, index) => (
+                      match.linksLive ? match.linksLive.map((item, index) => (
                         <li
                           key={index}
                           onClick={() => this.setState({activeLink: item})}
@@ -89,14 +90,17 @@ class Detail extends React.PureComponent {
                         >
                           {item}
                         </li>
-                      ))
+                      )) : <li>No data available</li>
                     }
                   </ul>
                 </div>
                 <div>
                   <p>SoftCast</p>
                   <ul>
-                    {match.linksLive.map((item, index) => (<li key={index}>{item}</li>))}
+                    {match.linksSoftCast ?
+                      match.linksSoftCast.map((item, index) => (<li key={index}>{item}</li>)) :
+                      (<li>No data available</li>)
+                    }
                   </ul>
                 </div>
               </div>
