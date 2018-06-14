@@ -181,8 +181,10 @@ class Router extends React.Component {
       return { isLogged: nextProps.auth.isLogged };
     }
     if (nextProps.auth.updatedAt !== prevState.updatedAt) {
+      //
       nextProps.firebase.unWatchEvent('value', `${FIREBASE_PATH.USERS}/${String(prevState.profile?.id)}`);
       nextProps.firebase.watchEvent('value', `${FIREBASE_PATH.USERS}/${String(nextProps.auth.profile?.id)}`);
+      //
       return { profile: nextProps.auth.profile, updatedAt: nextProps.auth.updatedAt };
     }
     if (nextProps.app.locale !== prevState.currentLocale) {
@@ -314,14 +316,14 @@ class Router extends React.Component {
         if (listWallet === false) {
           this.setState({ loadingText: 'Creating your local wallets' });
           listWallet = createMasterWallets().then(() => {
-            this.setState({ isLoading: false, loadingText: '' }); 
-            if (!process.env.isProduction ){              
+            this.setState({ isLoading: false, loadingText: '' });
+            if (!process.env.isProduction) {
               const wallet = MasterWallet.getWalletDefault('ETH');
               this.props.getFreeETH({
                 PATH_URL: `/user/free-rinkeby-eth?address=${wallet.address}`,
-                METHOD: 'POST'                
+                METHOD: 'POST',
               });
-            }            
+            }
           });
         } else {
           this.setState({ isLoading: false });
