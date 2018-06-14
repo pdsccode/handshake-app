@@ -186,6 +186,7 @@ class FeedExchange extends React.PureComponent {
     //   const latLng = location.split(',')
       // this.distanceKm = getDistanceFromLatLonInKm(latitude, longitude, latLng[0], latLng[1])
     const distanceKm = getDistanceFromLatLonInKm(latitude, longitude, offer.latitude || 0, offer.longitude || 0);
+    console.log('checkdistance dis', distanceKm, latitude, longitude, offer.latitude, offer.longitude)
       // distanceMiles = distanceKm * 0.621371;
     // }
 

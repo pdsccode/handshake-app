@@ -33,9 +33,9 @@ export const HANDSHAKE_NAME = {
   // [HANDSHAKE_ID.BETTING_EVENT]: { name: 'Design a betting market', priority: 2 },
   // [HANDSHAKE_ID.SEED]: 'Seed',
   [HANDSHAKE_ID.WALLET_TRANSFER]: { name: 'Transfer coins', priority: 4 },
-  [HANDSHAKE_ID.EXCHANGE]: { name: 'Open a cash station', priority: 5 },
+  [HANDSHAKE_ID.EXCHANGE]: { name: 'Manage your station', priority: 5 },
   // UNSELECTED: { name: 'Create a prediction market', priority: 100 },
-  // [HANDSHAKE_ID.EXCHANGE_LOCAL]: { name: 'Exchange Local', priority: 6 },
+  [HANDSHAKE_ID.EXCHANGE_LOCAL]: { name: 'Exchange Local', priority: 6 },
 };
 
 export const PRICE_DECIMAL = 0;
