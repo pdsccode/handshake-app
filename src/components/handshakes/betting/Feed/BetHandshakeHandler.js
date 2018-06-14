@@ -8,7 +8,24 @@ import { uninitItem, collect, refund, rollback } from '@/reducers/handshake/acti
 import store from '@/stores';
 
 
+/*
+'STATUS_MAKER_UNINIT_PENDING': -8,
+    'STATUS_COLLECT_PENDING': -7,
+    'STATUS_REFUND_PENDING': -6,
+    'STATUS_DISPUTE_PENDING': -5,
+    'STATUS_BLOCKCHAIN_PENDING': -4,
+    'STATUS_NEW': -3,
+    'STATUS_TRANSACTION_FAILED': -2,
 
+    'STATUS_PENDING': -1,
+    'STATUS_INITED': 0,
+    'STATUS_MAKER_UNINITED': 1,
+    'STATUS_SHAKER_SHAKED': 2,
+    'STATUS_REFUND': 3,
+    'STATUS_DISPUTE': 4,
+    'STATUS_RESOLVE': 5,
+    'STATUS_DONE': 6,
+    */
 
 export const MESSAGE = {
   BET_PROGRESSING: 'Your bet is creating. Please wait',
