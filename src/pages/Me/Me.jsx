@@ -57,10 +57,12 @@ class Me extends React.Component {
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
+    /*
     if (nextProps.exchange.listOfferPrice.updatedAt !== prevState.exchange.listOfferPrice.updatedAt) {
       nextProps.loadMyHandshakeList({ PATH_URL: API_URL.ME.BASE });
       return { exchange: nextProps.exchange };
     }
+    */
     if (nextProps.firebaseUser) {
       if (JSON.stringify(nextProps.firebaseUser) !== JSON.stringify(prevState.firebaseUser)) {
         const nextUser = nextProps.firebaseUser.users?.[prevState.auth?.profile?.id];
