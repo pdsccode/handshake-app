@@ -172,7 +172,8 @@ class BetingShakeFree extends React.Component {
 
   onToggleChange(id) {
     const {isChangeOdds} = this.state;
-    const {marketAgainstOdds, marketSupportOdds, side} = this.props;
+    const {marketAgainstOdds, marketSupportOdds} = this.props;
+    const side = this.toggleRef.value;
     const marketOdds = side === SIDE.SUPPORT ? marketSupportOdds : marketAgainstOdds;
 
     if(!isChangeOdds){
