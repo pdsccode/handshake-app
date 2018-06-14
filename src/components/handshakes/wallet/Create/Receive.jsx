@@ -1,13 +1,13 @@
 import React from 'react';
 import { Grid, Row, Col } from 'react-bootstrap';
-import TransferCoin from '@/components/Wallet/TransferCoin';
 import history from '@/services/history';
 import { URL } from '@/constants';
+import ReceiveCoin from '@/components/Wallet/ReceiveCoin';
 
 class Receive extends React.Component {
   render() {
     return (
-      <div>Receive</div>
+      <ReceiveCoin onFinish={() => { this.props.history.goBack();} }/>
     );
   }
 }
