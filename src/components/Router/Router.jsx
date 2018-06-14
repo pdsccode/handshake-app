@@ -128,6 +128,14 @@ const FAQRootRouter = props => (
     {Component => <Component {...props} />}
   </DynamicImport>
 );
+const LiveStreamingRootRouter = props => (
+  <DynamicImport
+    loading={Loading}
+    load={() => import('@/components/Router/LiveStreaming')}
+  >
+    {Component => <Component {...props} />}
+  </DynamicImport>
+);
 const Page404 = props => (
   <DynamicImport
     isNotFound
@@ -376,43 +384,7 @@ class Router extends React.Component {
   }
 
   render() {
-    if (window.location.pathname === URL.LANDING_PAGE_SHURIKEN) return <LandingPageRootRouter />;
-    if (window.location.pathname === URL.FAQ) {
-      return (
-        <IntlProvider
-          locale={this.state.currentLocale}
-          messages={messages[this.state.currentLocale]}
-        >
-          <FAQRootRouter />
-        </IntlProvider>
-      );
-    }
-    if (window.location.pathname === URL.LANDING_PAGE_TRADE) return <LandingTradeRootRouter />;
-    if (BrowserDetect.isDesktop && process.env.isProduction) {
-      return (
-        <IntlProvider
-          locale={this.state.currentLocale}
-          messages={messages[this.state.currentLocale]}
-        >
-          <MobileOrTablet />
-        </IntlProvider>
-      );
-    }
-    if (!this.state.isLogged || this.state.isLoading) {
-      return (
-        <BrowserRouter>
-          <Route
-            path={URL.INDEX}
-            render={loadingProps => (
-              <Layout {...loadingProps}>
-                {(this.state.isNetworkError) ? <NetworkError /> : <Loading message={this.state.loadingText} />}
-              </Layout>
-              )}
-          />
-        </BrowserRouter>
-      );
-    }
-    if (this.state.isCountryBlackList && process.env.isProduction) return <BlockCountry />;
+    if (window.location.pathname.startsWith(URL.LIVE_STREAMING)) return <LiveStreamingRootRouter />;
     return (
       <IntlProvider
         locale={this.state.currentLocale}

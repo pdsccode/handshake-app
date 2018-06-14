@@ -381,5 +381,8 @@ export const URL = {
 
   FAQ: '/faq',
   FAQ_INDEX: '/faq',
+
+  LIVE_STREAMING: '/live-streaming',
+  LIVE_STREAMING_DETAIL: '/live-streaming/:slug',
 };
 

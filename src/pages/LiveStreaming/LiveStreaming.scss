@@ -1,0 +1,74 @@
+@import './src/styles/style';
+
+.listMatch {
+  margin-top: rem-calc(50px);
+  .matchItem {
+    color: black;
+    display: flex;
+    &:hover {
+      text-decoration: none;
+    }
+    .matchTime {
+      background: #DDD;
+      width: 25%;
+      padding: rem-calc(9x 0);
+      .league {
+        font-size: rem-calc(10px);
+        line-height: rem-calc(14px);
+        text-transform: uppercase;
+        text-align: center;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+      }
+      .time {
+        font-size: rem-calc(18px);
+        line-height: rem-calc(18px);
+        padding: rem-calc(4px 0);
+        text-align: center;
+      }
+    }
+    .matchInfo {
+      padding: rem-calc(9px);
+      width: 75%;
+      background-color: #f3f3f3;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      .team {
+        .teamFlag {
+          width: rem-calc(40px);
+        }
+        .teamName {
+          font-weight: $normal;
+          font-size: rem-calc(16px);
+          margin: 0;
+        }
+        .home {
+          margin-right: rem-calc(5px);
+        }
+        .away {
+          margin-left: rem-calc(5px);
+        }
+      }
+      .vs {
+        font-style: italic;
+      }
+    }
+  }
+
+  .matchItem:hover {
+    .matchTime {
+      background:#27ae5e;
+      color:#FFF
+    }
+    .matchInfo {
+      background:#555;
+      color:#FFF
+    }
+  }
+
+  .matchItem + .matchItem {
+    margin-top: rem-calc(2px);
+  }
+}
