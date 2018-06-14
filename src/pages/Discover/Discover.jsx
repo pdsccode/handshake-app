@@ -33,7 +33,7 @@ import { getListOfferPrice } from '@/reducers/exchange/action';
 import Image from '@/components/core/presentation/Image';
 import loadingSVG from '@/assets/images/icon/loading.gif';
 import ninjaLogoSVG from '@/assets/images/logo.png';
-import iconShopSVG from '@/assets/images/icon/icons8-shop.svg';
+import icon2KuNinja from '@/assets/images/icon/2_ku_ninja.svg';
 
 // style
 import './Discover.scss';
@@ -321,11 +321,12 @@ class DiscoverPage extends React.Component {
                 <Row>
                   <Col md={12} className="exchange-intro">
                     <span className="icon-shop">
-                      <img src={iconShopSVG} alt="" />
+                      <img src={icon2KuNinja} alt="" />
                     </span>
                     <span className="text-intro">
-                      <div>Sell coin for cash, buy coin with cash. Set your own rates. <span className="money">1 ETH welcome bonus.</span></div>
-                      <div className="my-1">
+                      <div>Sell coin for cash, buy coin with cash. Set your own rates.</div>
+                      <div><span className="money">1 ETH welcome bonus.</span></div>
+                      <div className="my-3">
                         <Link className="btn btn-sm btn-join-now" to={{ pathname: URL.HANDSHAKE_CREATE_INDEX, search: '?id=2' }}>
                           <span>Open your station</span>
                         </Link>
