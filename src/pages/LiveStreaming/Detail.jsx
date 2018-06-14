@@ -56,6 +56,7 @@ class Detail extends React.PureComponent {
   render() {
     const match = this.match;
     const { activeLink } = this.state;
+    const hasList = (list) => Array.isArray(list) && list.length > 0;
     return (
       <Grid>
         <Row>
@@ -71,7 +72,7 @@ class Detail extends React.PureComponent {
                 </div>
               </div>
               <div className="liveBox">
-                <iframe src={activeLink || defaultLink} width="100%" />
+                <iframe src={activeLink || defaultLink} width="100%" allowFullScreen/>
               </div>
               <div className="share-block">
                 <p className="text">Share to</p>
@@ -86,7 +87,7 @@ class Detail extends React.PureComponent {
                   <p>Lives</p>
                   <ul>
                     {
-                      match.linksLive ? match.linksLive.map((item, index) => (
+                      (hasList(match.linksLive)) ? match.linksLive.map((item, index) => (
                         <li
                           key={index}
                           onClick={() => this.setState({activeLink: item})}
@@ -94,16 +95,16 @@ class Detail extends React.PureComponent {
                         >
                           Link {index + 1}
                         </li>
-                      )) : <li>No data available</li>
+                      )) : <li className="noData">No data available</li>
                     }
                   </ul>
                 </div>
                 <div>
                   <p>SoftCast</p>
                   <ul>
-                    {match.linksSoftCast ?
+                    {hasList(match.linksSoftCast) ?
                       match.linksSoftCast.map((item, index) => (<li key={index}>{item}</li>)) :
-                      (<li>No data available</li>)
+                      (<li className="noData">No data available</li>)
                     }
                   </ul>
                 </div>

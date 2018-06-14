@@ -26,7 +26,8 @@ export default [
     "odds": null,
     link: 'https://api.tructiephd.com/live/kda/play.php?type=vip&v=kdb',
     linksLive: [
-      'https://www.facebook.com/Demoxing/videos/1925639240890776',
+      'https://api.tructiephd.com/live/kda/play.php?type=vip&v=kdb',
+      'https://api.tructiephd.com/live/kda/play.php?type=vip&v=kdb',
     ],
     linksSoftCast: [
 
