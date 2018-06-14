@@ -1094,6 +1094,50 @@ class FeedMe extends React.PureComponent {
 
         break;
       }
+      case EXCHANGE_FEED_TYPE.EXCHANGE: {
+        switch (status) {
+          case HANDSHAKE_EXCHANGE_STATUS.CREATED:
+          case HANDSHAKE_EXCHANGE_STATUS.CLOSING:
+          case HANDSHAKE_EXCHANGE_STATUS.SHAKING:
+          case HANDSHAKE_EXCHANGE_STATUS.COMPLETING:
+          case HANDSHAKE_EXCHANGE_STATUS.WITHDRAWING:
+          case HANDSHAKE_EXCHANGE_STATUS.REJECTING: {
+
+            switch (this.userType) {
+              case HANDSHAKE_USER.NORMAL: {
+                break;
+              }
+              case HANDSHAKE_USER.SHAKED: {//user shake
+                if (offer.type === EXCHANGE_ACTION.BUY) {//shop buy
+                  result = true;
+                }
+
+                break;
+              }
+              case HANDSHAKE_USER.OWNER: {//shop
+                if (offer.type === EXCHANGE_ACTION.SELL) {//shop sell
+                  result = true;
+                }
+
+                break;
+              }
+            }
+
+            break;
+          }
+
+          case HANDSHAKE_EXCHANGE_STATUS.ACTIVE:
+          case HANDSHAKE_EXCHANGE_STATUS.CLOSED:
+          case HANDSHAKE_EXCHANGE_STATUS.SHAKE:
+          case HANDSHAKE_EXCHANGE_STATUS.COMPLETED:
+          case HANDSHAKE_EXCHANGE_STATUS.WITHDRAW:
+          case HANDSHAKE_EXCHANGE_STATUS.REJECTED: {
+            break;
+          }
+        }
+
+        break;
+      }
     }
 
     return result;
