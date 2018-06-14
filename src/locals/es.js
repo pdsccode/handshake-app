@@ -136,19 +136,19 @@ export default {
   MOT_CONTENT_3: 'No es necesitada para descargar. Ningún registro necesario.',
   MOT_LIST_CONTENT: [
     {
-      mainContent: 'Read the',
-      placeHolderLink: 'whitepaper',
+      mainContent: 'Lea el',
+      placeHolderLink: 'white paper',
       link: 'https://medium.com/@ninjadotorg/shakeninja-bex-1c938f18b3e8',
       isBlankTarget: true,
     },
     {
-      mainContent: 'We answered your',
+      mainContent: 'Respondemos tu',
       placeHolderLink: 'FAQ',
       link: '/faq',
     },
     {
-      mainContent: 'Join the dojo on',
-      placeHolderLink: 'Telegram',
+      mainContent: 'Únete al dojo en',
+      placeHolderLink: 'telegrama',
       link: 'https://t.me/ninja_org',
       isBlankTarget: true,
     },

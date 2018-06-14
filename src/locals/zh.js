@@ -145,8 +145,9 @@ export default {
   MOT_LIST_CONTENT: [
     {
       mainContent: '阅读',
-      placeHolderLink: '白皮书',
+      placeHolderLink: '白皮',
       link: 'https://medium.com/@ninjadotorg/shakeninja-bex-1c938f18b3e8',
+      mainContent1: '书',
       isBlankTarget: true,
     },
     {
@@ -155,10 +156,11 @@ export default {
       link: '/faq',
     },
     {
-      mainContent: 'Join the dojo on',
-      placeHolderLink: 'Telegram',
+      mainContent: '通过',
+      placeHolderLink: '电报',
       link: 'https://t.me/ninja_org',
       isBlankTarget: true,
+      mainContent1: '加入 dojo',
     },
   ],
 };

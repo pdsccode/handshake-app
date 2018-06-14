@@ -144,19 +144,22 @@ export default {
   MOT_CONTENT_3: '필요 없습니다 다운로드 합니다. 흔적이 필요합니다.',
   MOT_LIST_CONTENT: [
     {
-      mainContent: 'Read the',
-      placeHolderLink: 'whitepaper',
+      mainContent: '기술',
+      placeHolderLink: '백서',
       link: 'https://medium.com/@ninjadotorg/shakeninja-bex-1c938f18b3e8',
       isBlankTarget: true,
+      mainContent1: '보기',
     },
     {
-      mainContent: 'We answered your',
-      placeHolderLink: 'FAQ',
+      mainContent: '우리는 당신의',
+      placeHolderLink: '질문',
+      mainContent1: '에 대답',
       link: '/faq',
     },
     {
-      mainContent: 'Join the dojo on',
-      placeHolderLink: 'Telegram',
+      mainContent: '',
+      placeHolderLink: '전보',
+      mainContent1: '에 미꾸라지를 가입',
       link: 'https://t.me/ninja_org',
       isBlankTarget: true,
     },

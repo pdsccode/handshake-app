@@ -144,18 +144,18 @@ export default {
   MOT_CONTENT_3: 'Kein Download erforderlich. Keine Anmeldung erforderlich.',
   MOT_LIST_CONTENT: [
     {
-      mainContent: 'Read the',
-      placeHolderLink: 'whitepaper',
+      mainContent: 'Lesen Sie das',
+      placeHolderLink: 'Whitepaper',
       link: 'https://medium.com/@ninjadotorg/shakeninja-bex-1c938f18b3e8',
       isBlankTarget: true,
     },
     {
-      mainContent: 'We answered your',
+      mainContent: 'Wir beantworten Ihre',
       placeHolderLink: 'FAQ',
       link: '/faq',
     },
     {
-      mainContent: 'Join the dojo on',
+      mainContent: 'Begleiten Sie das Dojo auf',
       placeHolderLink: 'Telegram',
       link: 'https://t.me/ninja_org',
       isBlankTarget: true,
