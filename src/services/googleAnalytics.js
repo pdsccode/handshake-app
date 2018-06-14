@@ -118,14 +118,36 @@ class GoogleAnalyticsService {
 
   /**
    *
+   * @param selectedMatch
+   * @param selectedOutcome
    * @param sideName
    */
-  clickGoButtonCreatePage(sideName) {
-    this.sendGAEvent({
-      category: EVENT_CATEGORY.CREATE,
-      action: EVENT_ACTION.CLICK_GO_BUTTON,
-      label: sideName,
-    });
+  clickGoButtonCreatePage(selectedMatch, selectedOutcome, sideName) {
+    try {
+      console.log("sele", selectedMatch, selectedOutcome);
+      this.sendGAEvent({
+        category: EVENT_CATEGORY.CREATE,
+        action: EVENT_ACTION.CLICK_GO_BUTTON,
+        label: `${sideName}: ${selectedMatch.value} -  ${selectedOutcome.value}`,
+      });
+    } catch (err) {}
+  }
+
+  /**
+   *
+   * @param matchName
+   * @param matchOutCome
+   * @param sideName
+   */
+  clickGoButton(matchName, matchOutCome, sideName) {
+    try {
+      console.log("matchName", matchName, matchOutCome, sideName);
+      this.sendGAEvent({
+        category: EVENT_CATEGORY.CREATE,
+        action: EVENT_ACTION.CLICK_GO_BUTTON,
+        label: `${sideName === 1 ? 'Support' : 'Oppose'}: ${matchName} - ${matchOutCome}`,
+      });
+    } catch (err) {}
   }
 }
 
