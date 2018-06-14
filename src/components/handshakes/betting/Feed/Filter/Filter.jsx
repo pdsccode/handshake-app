@@ -198,7 +198,9 @@ class BettingFilter extends React.Component {
   get matchNames() {
     const { matches } = this.state;
     if (matches) {
-      const mathNamesList = matches.map(item => ({ id: item.id, value: `Event: ${item.name} (${this.getStringDate(item.date)})`, marketFee: item.market_fee }));
+      const mathNamesList = matches.map(item => ({ id: item.id, 
+                                                value: `Event: ${item.name} (${this.getStringDate(item.date)})`, 
+                                                    marketFee: item.market_fee , date: item.date}));
       return [
         ...mathNamesList,
         {
@@ -332,7 +334,7 @@ class BettingFilter extends React.Component {
     }
   }
 
-  
+
   callCheckFirstFree() {
     console.log('Call API check first free');
     this.props.checkFreeAvailable({
@@ -388,7 +390,7 @@ class BettingFilter extends React.Component {
     const defaultOutcomeId = this.defaultOutcome ? this.defaultOutcome.id : null;
     const shareInfo = this.getInfoShare(selectedMatch, selectedOutcome);
     const marketFee = (selectedMatch && selectedMatch.marketFee >= 0) ? selectedMatch.marketFee : null;
-
+    const closingDate = (selectedMatch && selectedMatch.date) ? selectedMatch.date : null;
     console.log('defaultOutcomeId:', defaultOutcomeId);
     console.log('Market Fee:', marketFee);
     return (
@@ -443,14 +445,17 @@ class BettingFilter extends React.Component {
           {
           isFirstFree
           ? (
-            <Button
-              block
-              onClick={() => {
-                  this.modalBetFreeRef.open();
-              }}
-            >
-              You have free ETH to play
-            </Button>
+              <div className="freeBox">
+                <div className="contentFree">You got <span>free ETH</span> to play</div>
+                <Button
+                className="buttonBet"
+                onClick={() => {
+                    this.modalBetFreeRef.open();
+                }}
+                >Bet now
+                </Button>
+              </div>
+
           )
           : ''
         }
@@ -533,6 +538,7 @@ class BettingFilter extends React.Component {
             outcomeHid={parseInt(outcomeHid, 10)}
             marketSupportOdds={parseFloat(this.defaultSupportOdds)}
             marketAgainstOdds={parseFloat(this.defaultAgainstOdds)}
+            closingDate = {closingDate}
             onSubmitClick={() => this.closeShakePopup()}
           />
         </ModalDialog>
@@ -545,6 +551,7 @@ class BettingFilter extends React.Component {
             outcomeHid={parseInt(outcomeHid, 10)}
             marketSupportOdds={parseFloat(this.defaultSupportOdds)}
             marketAgainstOdds={parseFloat(this.defaultAgainstOdds)}
+            closingDate = {closingDate}
             onSubmitClick={() => this.closeShakeFreePopup()}
           />
         </ModalDialog>
