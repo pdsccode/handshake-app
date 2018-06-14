@@ -146,6 +146,9 @@ export const API_URL = {
     LIST: 'comment/list',
     GET_COMMENT_COUNT: 'comment/count',
   },
+  LIVE_STREAMING: {
+    TEAMS: 'http://api.football-data.org/v1/competitions/467/teams',
+  },
 };
 
 export const HANDSHAKE_STATUS = {

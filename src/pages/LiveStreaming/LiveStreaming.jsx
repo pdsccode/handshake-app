@@ -3,7 +3,10 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 // services, constants
-import { URL } from '@/constants';
+import axios from 'axios';
+import { URL, API_URL } from '@/constants';
+import fixtures from '../../data/liveStreaming/fixtures';
+import moment from 'moment';
 
 // components
 import { Grid, Row, Col } from 'react-bootstrap';
@@ -78,21 +81,22 @@ class LiveStreaming extends React.PureComponent {
   }
 
   renderMatchItem(match, index) {
+    const slug = match._links.self.href.split('/').slice(-1);
     return (
-      <a href={`${URL.LIVE_STREAMING}/${match.slug}`} className="matchItem" key={index}>
+      <a href={`${URL.LIVE_STREAMING}/${slug}`} className="matchItem" key={index}>
         <div className="matchTime">
-          <div className="league">{match.league}</div>
-          <div className="time">{match.time}</div>
+          <div className="league">World Cup 2018 Russia</div>
+          <div className="time">{moment(match.date).format('LLL')}</div>
         </div>
         <div className="matchInfo">
           <div className="team">
-            <img src={match.teamHomeFlag} alt={match.teamHomeName} className="teamFlag home" />
-            <span className="teamName">{match.teamHomeName}</span>
+            <img src={match._links.homeTeam.crestUrl} alt={match.homeTeamName} className="teamFlag home" />
+            <span className="teamName">{match.homeTeamName}</span>
           </div>
           <div className="vs">vs</div>
           <div className="team">
-            <span className="teamName">{match.teamAwayName}</span>
-            <img src={match.teamAwayFlag} alt={match.teamAwayName} className="teamFlag away" />
+            <span className="teamName">{match.awayTeamName}</span>
+            <img src={match._links.awayTeam.crestUrl} alt={match.awayTeamName} className="teamFlag away" />
           </div>
         </div>
       </a>
@@ -106,7 +110,7 @@ class LiveStreaming extends React.PureComponent {
           <Col md={12} xs={12}>
             <h1 className="text-center">Matches</h1>
             <div className="listMatch">
-              {data.map((item, index) => this.renderMatchItem(item, index))}
+              {fixtures.slice(0, 5).map((item, index) => this.renderMatchItem(item, index))}
             </div>
           </Col>
         </Row>

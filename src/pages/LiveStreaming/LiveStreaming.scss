@@ -36,6 +36,10 @@
       justify-content: space-between;
       align-items: center;
       .team {
+        width: 40%;
+        &:last-child {
+          text-align: right;
+        }
         .teamFlag {
           width: rem-calc(40px);
         }
@@ -45,14 +49,15 @@
           margin: 0;
         }
         .home {
-          margin-right: rem-calc(5px);
+          margin-right: rem-calc(8px);
         }
         .away {
-          margin-left: rem-calc(5px);
+          margin-left: rem-calc(8px);
         }
       }
       .vs {
         font-style: italic;
+        width: 20%;
       }
     }
   }

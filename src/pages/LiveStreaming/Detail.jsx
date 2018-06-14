@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 // services, constants
+import { find } from 'lodash';
+import fixtures from '../../data/liveStreaming/fixtures';
 
 // components
 import { Grid, Row, Col } from 'react-bootstrap';
@@ -38,16 +40,18 @@ const data = {
 class Detail extends React.PureComponent {
   constructor(props) {
     super(props);
-    const { params } = this.props.match;
-    const match = data[params.slug]
     this.state = {
-      activeLink: match.link,
+      activeLink: this.match.link,
     };
   }
 
-  render() {
+  get match() {
     const { params } = this.props.match;
-    const match = data[params.slug];
+    return find(fixtures, item => item._links.self.href === `http://api.football-data.org/v1/fixtures/${params.slug}`) || fixtures[1];
+  }
+
+  render() {
+    const match = this.match;
     const { activeLink } = this.state;
     return (
       <Grid>
@@ -56,17 +60,17 @@ class Detail extends React.PureComponent {
             <div className="matchDetail">
               <div className="matchDetailInfo">
                 <div className="team">
-                  <img src={match.teamHomeFlag} alt={match.teamHomeName} className="teamFlag home"/>
-                  <span className="teamName">{match.teamHomeName}</span>
+                  <img src={match._links.homeTeam.crestUrl} alt={match.homeTeamName} className="teamFlag home"/>
+                  <span className="teamName">{match.homeTeamName}</span>
                 </div>
                 <div className="middle">
-                  <div>{match.league}</div>
-                  <div className="time">{match.time}</div>
+                  <div>World Cup 2018 Russia</div>
+                  <div className="time">{match.date}</div>
                   <div>{match.date}</div>
                 </div>
                 <div className="team">
-                  <span className="teamName">{match.teamAwayName}</span>
-                  <img src={match.teamAwayFlag} alt={match.teamAwayName} className="teamFlag away" />
+                  <span className="teamName">{match.awayTeamName}</span>
+                  <img src={match._links.awayTeam.crestUrl} alt={match.awayTeamName} className="teamFlag away" />
                 </div>
               </div>
               <div className="liveBox">
