@@ -80,20 +80,24 @@ class FeedBetting extends React.Component {
 
   handleStatus(props){
     
-    const {result, shakeUserIds, id, bkStatus} = props;
+    const {result, shakeUserIds, id} = props; // new state
     
-    console.log('BkStatus:', this.state.itemInfo.bkStatus);
-    console.log('New Status:', props.status);
+
+    console.log('Item Info bkstatus:', this.state.itemInfo.bkStatus);
+    console.log('Props Status:', props.status);
+    
     /*
     if(this.state.itemInfo){
-      if(bkStatus !== this.state.itemInfo.status){
+      if(this.state.itemInfo.bkStatus === props.status){
         console.log('Not update UI');
         return;
   
       }
+    
    
     }
     */
+    
     console.log('Handle Status: ', props);
     //console.log('Props:', this.props);
     const profile = local.get(APP.AUTH_PROFILE);
@@ -321,9 +325,11 @@ class FeedBetting extends React.Component {
       const {hid, id, status} = this.props;
       const offchain = id;
       const {itemInfo} = this.state;
-      
       let updateInfo = Object.assign({}, itemInfo);
+      updateInfo.bkStatus = itemInfo.status;
       updateInfo.status = status;
+
+      this.handleStatus(updateInfo);
 
       this.setState({
         itemInfo: updateInfo
@@ -358,11 +364,11 @@ class FeedBetting extends React.Component {
       const {hid, id, status} = this.props;
       const {itemInfo} = this.state;
       let updateInfo = Object.assign({}, itemInfo);
+      updateInfo.bkStatus = itemInfo.status;
       updateInfo.status = status;
 
-      this.setState({
-        itemInfo: updateInfo
-      });
+      this.handleStatus(updateInfo);
+
       const offchain = id;
       const result = await betHandshakeHandler.refund(hid, offchain);
       const {hash} = result;
