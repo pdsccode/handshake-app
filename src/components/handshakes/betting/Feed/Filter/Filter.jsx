@@ -9,7 +9,6 @@ import { loadMatches, loadHandshakes, checkFreeAvailable } from '@/reducers/bett
 import { BetHandshakeHandler, SIDE } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
 // components
 import Dropdown from '@/components/core/controls/Dropdown';
-
 import ShareSocial from '@/components/core/presentation/ShareSocial';
 // import FeedComponent from '@/components/Comment/FeedComment';
 import Button from '@/components/core/controls/Button';
@@ -416,6 +415,7 @@ class BettingFilter extends React.Component {
               source={this.matchNames}
               afterSetDefault={item => this.setState({ selectedMatch: item })}
               onItemSelected={item => this.setState({ selectedMatch: item })}
+              hasSearch
             />
           </div>
           <div className="dropDown">
