@@ -6,14 +6,16 @@ import App from '@/components/App/App';
 import * as OfflinePlugin from 'offline-plugin/runtime';
 // import registerServiceWorker from '@/services/worker';
 
-OfflinePlugin.install({
-  onUpdateReady() {
-    OfflinePlugin.applyUpdate();
-  },
-  onUpdated() {
-    window.location.reload();
-  },
-});
+if (!process.env.TURN_OFF_CACHE) {
+  OfflinePlugin.install({
+    onUpdateReady() {
+      OfflinePlugin.applyUpdate();
+    },
+    onUpdated() {
+      window.location.reload();
+    },
+  });
+}
 // registerServiceWorker();
 
 // clear cache mode on:

@@ -123,6 +123,9 @@ class ReceiveCoin extends React.Component {
     if (wallets.length > 0){
       wallets.forEach((wallet) => {
         wallet.value = wallet.getShortAddress() + " (" + wallet.name + "-" + wallet.getNetworkName() + ")";        
+        if (process.env.isProduction){
+          wallet.value = wallet.getShortAddress() + " (" + wallet.className + " " + wallet.name + ")";
+        }
         wallet.id = wallet.address + "-" + wallet.getNetworkName();        
         
       });
@@ -132,6 +135,9 @@ class ReceiveCoin extends React.Component {
     MasterWallet.log(walletDefault, "walletDefault");
     if (walletDefault){      
       walletDefault.value = walletDefault.getShortAddress() + " (" + walletDefault.name + "-" + walletDefault.getNetworkName() + ")";         
+      if (process.env.isProduction){
+        walletDefault.value = walletDefault.getShortAddress() + " (" + walletDefault.className + " " + walletDefault.name + ")";
+      }
       walletDefault.id = walletDefault.address + "-" + walletDefault.getNetworkName();   
 
       // get balance for first item + update to local store:

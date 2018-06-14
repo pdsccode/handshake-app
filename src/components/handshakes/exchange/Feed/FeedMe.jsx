@@ -1222,16 +1222,16 @@ class FeedMe extends React.PureComponent {
 
         message = this.getContentExchange(fiatAmount);
 
-        //Check show chat
         switch (status) {
-          case HANDSHAKE_EXCHANGE_STATUS.CREATED:
-          case HANDSHAKE_EXCHANGE_STATUS.ACTIVE:
-          case HANDSHAKE_EXCHANGE_STATUS.CLOSING:
-          case HANDSHAKE_EXCHANGE_STATUS.CLOSED: {
-            showChat = false;
-            break;
-          }
-          default: {
+          case HANDSHAKE_EXCHANGE_STATUS.SHAKING:
+          case HANDSHAKE_EXCHANGE_STATUS.COMPLETING:
+          case HANDSHAKE_EXCHANGE_STATUS.WITHDRAWING:
+          case HANDSHAKE_EXCHANGE_STATUS.REJECTING:
+          case HANDSHAKE_EXCHANGE_STATUS.SHAKE:
+          case HANDSHAKE_EXCHANGE_STATUS.COMPLETED:
+          case HANDSHAKE_EXCHANGE_STATUS.WITHDRAW:
+          case HANDSHAKE_EXCHANGE_STATUS.REJECTED: {
+
             showChat = true;
 
             switch (this.userType) {
@@ -1247,10 +1247,12 @@ class FeedMe extends React.PureComponent {
                 break;
               }
             }
+
+            break;
           }
         }
 
-        actionButtons = this.getActionButtons();
+        // actionButtons = this.getActionButtons();
         break;
       }
     }

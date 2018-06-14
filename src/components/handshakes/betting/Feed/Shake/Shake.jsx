@@ -11,6 +11,7 @@ import { shakeItem, initHandshake, } from '@/reducers/handshake/action';
 import {HANDSHAKE_ID, API_URL, APP } from '@/constants';
 import {MasterWallet} from '@/models/MasterWallet';
 import local from '@/services/localStore';
+import moment from 'moment';
 
 // components
 import { InputField } from '@/components/handshakes/betting/form/customField';
@@ -40,6 +41,7 @@ class BetingShake extends React.Component {
     marketAgainstOdds: PropTypes.number,
     amountSupport: PropTypes.number,
     amountAgainst: PropTypes.number,
+    closingDate: PropTypes.any,
     onSubmitClick: PropTypes.func,
     onCancelClick: PropTypes.func,
   }
@@ -69,7 +71,8 @@ class BetingShake extends React.Component {
       marketOdds: 0,
       oddValue: 0,
       amountValue: 0,
-      winValue: 0
+      winValue: 0,
+      disable: false
       //BettingShakeForm
 
     };
@@ -105,7 +108,19 @@ class BetingShake extends React.Component {
     })
   }
 
-
+  isExpiredDate(){
+    const {closingDate} = this.props;
+    let dayUnit = moment.unix(closingDate).utc();
+    let today = moment();
+    let todayUnit = today.utc();
+    console.log('Date Unix:', dayUnit.format());
+    console.log('Today Unix:', todayUnit.format());
+    if(!todayUnit.isSameOrBefore(dayUnit, "miliseconds") && today){
+      console.log('Expired Date');
+      return true
+    }
+    return false;
+  }
 
   async onSubmit(e) {
     console.log("Submit");
@@ -127,8 +142,10 @@ class BetingShake extends React.Component {
 
     var message = null;
 
-
-    if(matchName && matchOutcome){
+    if (this.isExpiredDate()){
+      message = MESSAGE.MATCH_OVER;
+    }
+    else if(matchName && matchOutcome){
         if(amount > 0){
           if(total <= parseFloat(balance)){
             if(isShowOdds){
@@ -327,7 +344,7 @@ class BetingShake extends React.Component {
          <div>Possible winnings</div>
          <div className="possibleWinningsValue">{this.state.winValue}</div>
         </div>
-        <Button type="submit" block className={buttonClass}>
+        <Button type="submit" disable={this.state.disable} block className={buttonClass}>
           Go
         </Button>
       </form>
@@ -449,6 +466,9 @@ class BetingShake extends React.Component {
   }
 
   initHandshake(amount, odds){
+    this.setState({
+      disable: true
+    })
     const {outcomeId, matchName, matchOutcome, side} = this.props;
     const {extraData} = this.state;
     //const side = this.toggleRef.value;
@@ -503,10 +523,16 @@ class BetingShake extends React.Component {
       }
     });
     }
+    this.setState({
+      disable: false
+    })
     this.props.onSubmitClick();
   }
   initHandshakeFailed = (error) => {
     console.log('initHandshakeFailed', error);
+    this.setState({
+      disable: false
+    })
   }
 }
 const mapDispatch = ({
