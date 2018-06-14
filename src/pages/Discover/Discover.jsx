@@ -12,7 +12,7 @@ import {
   URL,
   EXCHANGE_COOKIE_READ_INSTRUCTION,
 } from '@/constants';
-import {Link} from "react-router-dom";
+import { Link } from 'react-router-dom';
 import Cookies from 'js-cookie';
 // components
 import { Col, Grid, Row } from 'react-bootstrap';
@@ -24,7 +24,7 @@ import FeedPromise from '@/components/handshakes/promise/Feed';
 import FeedBetting from '@/components/handshakes/betting/Feed';
 import FeedExchange from '@/components/handshakes/exchange/Feed/FeedExchange';
 import FeedSeed from '@/components/handshakes/seed/Feed';
-import FeedCreditCard from '@/components/handshakes/exchange/Feed/FeedCreditCard';
+// import FeedCreditCard from '@/components/handshakes/exchange/Feed/FeedCreditCard';
 
 // import Tabs from '@/components/handshakes/exchange/components/Tabs';
 import NoData from '@/components/core/presentation/NoData';
@@ -164,16 +164,18 @@ class DiscoverPage extends React.Component {
                 <a className="d-inline-block" onClick={this.handleCloseExchangePopupIntro}>&times;</a>
               </div>
               <div className="exchange-popup-intro">
-                <div className="logo"><img className="w-100" src={ninjaLogoSVG}/></div>
+                <div className="logo"><img className="w-100" src={ninjaLogoSVG} alt="" /></div>
                 <p className="headline">Ninja, welcomes you to the Dojo!</p>
                 <p>We are the first to offer a completely decentralized platform to buy and sell Bitcoin and Ethereum.</p>
                 <p>We support credit, debit card and cash.</p>
                 <div className="my-3">
                   <div className="highlight-text">How to use:</div>
                   <div className="usage">
-                    - <Link className="link" to={{ pathname: URL.HANDSHAKE_CREATE_INDEX, search: '?id=2' }}>
-                    Become a shop
-                  </Link> to buy and sell BTC/ETH
+                    - (
+                    <Link className="link" to={{ pathname: URL.HANDSHAKE_CREATE_INDEX, search: '?id=2' }}>
+                      Become a shop
+                    </Link>
+                    ) to buy and sell BTC/ETH
                   </div>
                   <div className="highlight-text">Or</div>
                   <div className="usage">- Swipe through all the shops to find <a className="link" onClick={this.handleCloseExchangePopupIntro}>the most suitable price.</a></div>
@@ -303,7 +305,7 @@ class DiscoverPage extends React.Component {
                 <Row>
                   <Col md={12} className="exchange-intro">
                     <span className="icon-shop">
-                      <img src={iconShopSVG} />
+                      <img src={iconShopSVG} alt="" />
                     </span>
                     <span className="text-intro">
                       <div>Sell coin for cash, buy coin with cash. Set your own rates. <span className="money">1 ETH welcome bonus.</span></div>
@@ -315,11 +317,11 @@ class DiscoverPage extends React.Component {
                     </span>
                   </Col>
                 </Row>
-                {/*<Row>*/}
-                  {/*<Col md={12} className="feed-wrapper">*/}
-                    {/*<FeedCreditCard history={this.props.history} />*/}
-                  {/*</Col>*/}
-                {/*</Row>*/}
+                {/* <Row> */}
+                  {/* <Col md={12} className="feed-wrapper"> */}
+                {/* <FeedCreditCard history={this.props.history} /> */}
+                  {/* </Col> */}
+                {/* </Row> */}
               </React.Fragment>
             )
           }
@@ -378,6 +380,8 @@ const mapState = state => ({
   app: state.app,
   ipInfo: state.app.ipInfo,
   exchange: state.exchange,
+  isBannedCash: state.app.isBannedCash,
+  isBannedPrediction: state.app.isBannedPrediction,
 });
 
 const mapDispatch = ({

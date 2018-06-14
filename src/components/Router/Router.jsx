@@ -8,7 +8,7 @@ import Loading from '@/components/core/presentation/Loading';
 import { APP, FIREBASE_PATH, API_URL, URL } from '@/constants';
 
 import local from '@/services/localStore';
-import { setIpInfo, showAlert, changeLocale } from '@/reducers/app/action';
+import { setIpInfo, showAlert, changeLocale, setBannedPrediction, setBannedCash } from '@/reducers/app/action';
 import { signUp, fetchProfile, authUpdate, getFreeETH } from '@/reducers/auth/action';
 
 import ScrollToTop from '@/components/App/ScrollToTop';
@@ -27,7 +27,8 @@ import es from 'react-intl/locale-data/es';
 
 import { withFirebase } from 'react-redux-firebase';
 import messages from '@/locals';
-import COUNTRIES_BLACKLIST from '@/data/country-blacklist';
+import COUNTRIES_BLACKLIST_PREDICTION from '@/data/country-blacklist-betting';
+import COUNTRIES_BLACKLIST_CASH from '@/data/country-blacklist-exchange';
 import axios from 'axios';
 import { getUserProfile, getListOfferPrice } from '@/reducers/exchange/action';
 import { MasterWallet } from '@/models/MasterWallet';
@@ -35,7 +36,7 @@ import { createMasterWallets } from '@/reducers/wallet/action';
 import MobileOrTablet from '@/components/MobileOrTablet';
 import BrowserDetect from '@/services/browser-detect';
 import NetworkError from '@/components/Router/NetworkError';
-import BlockCountry from '@/components/core/presentation/BlockCountry';
+// import BlockCountry from '@/components/core/presentation/BlockCountry';
 import qs from 'querystring';
 import IpInfo from "@/models/IpInfo";
 
@@ -152,6 +153,8 @@ class Router extends React.Component {
     getListOfferPrice: PropTypes.func.isRequired,
     getFreeETH: PropTypes.func.isRequired,
     changeLocale: PropTypes.func.isRequired,
+    setBannedPrediction: PropTypes.func.isRequired,
+    setBannedCash: PropTypes.func.isRequired,
   };
 
   constructor(props) {
@@ -166,7 +169,6 @@ class Router extends React.Component {
       updatedAt: this.props.auth.updatedAt,
       loadingText: 'Loading application',
       isNetworkError: false,
-      isCountryBlackList: false,
     };
 
     this.checkRegistry = ::this.checkRegistry;
@@ -246,11 +248,15 @@ class Router extends React.Component {
         const firstLanguage = data.languages.split(',')[0];
         this.setLanguage(firstLanguage);
       }
-      if (COUNTRIES_BLACKLIST.indexOf(data.country_name) !== -1) {
+      if (COUNTRIES_BLACKLIST_PREDICTION.indexOf(data.country_name) !== -1) {
+        this.props.setBannedPrediction();
         // should use country code: .country ISO 3166-1 alpha-2
         // https://ipapi.co/api/#complete-location
-        this.setState({ isCountryBlackList: true });
       }
+      if (COUNTRIES_BLACKLIST_CASH.indexOf(data.country_name) !== -1) {
+        this.props.setBannedCash();
+      }
+      // this.setState({ isCountryBlackList: true });
     });
   }
 
@@ -292,7 +298,11 @@ class Router extends React.Component {
           }
         } else {
           this.porps.showAlert({
-            message: <div className="text-center">Have something wrong with your profile, please contact supporters</div>,
+            message: (
+              <div className="text-center">
+                Have something wrong with your profile, please contact supporters
+              </div>
+            ),
             timeOut: false,
             isShowClose: true,
             type: 'danger',
@@ -401,7 +411,7 @@ class Router extends React.Component {
         </BrowserRouter>
       );
     }
-    if (this.state.isCountryBlackList && process.env.isProduction) return <BlockCountry />;
+    // if (this.state.isCountryBlackList && process.env.isProduction) return <BlockCountry />;
     return (
       <IntlProvider
         locale={this.state.currentLocale}
@@ -476,5 +486,7 @@ export default compose(
     getFreeETH,
     showAlert,
     changeLocale,
+    setBannedPrediction,
+    setBannedCash,
   }),
 )(Router);
