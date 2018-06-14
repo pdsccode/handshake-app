@@ -125,10 +125,10 @@ class Component extends React.Component {
     });
 
     // auto fill phone number from user profile
-    let detectedCountryCode = ''
-    const foundCountryPhone = COUNTRIES.find(i => i.code.toUpperCase() === ipInfo?.country_code.toUpperCase())
+    let detectedCountryCode = '';
+    const foundCountryPhone = COUNTRIES.find(i => i.code.toUpperCase() === ipInfo?.country.toUpperCase());
     if (foundCountryPhone) {
-      detectedCountryCode = foundCountryPhone.dialCode
+      detectedCountryCode = foundCountryPhone.dialCode;
     }
     rfChange(nameFormExchangeCreate, 'phone', authProfile.phone || `${detectedCountryCode}-`);
     rfChange(nameFormExchangeCreate, 'nameShop', authProfile.name || '');
