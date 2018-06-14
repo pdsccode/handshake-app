@@ -24,9 +24,8 @@ export class Wallet {
   }
   getNetworkName() {
     for (const k in this.constructor.Network) {
-      if (this.constructor.Network[k] == this.network) {
-        this.title = k;
-        return this.title;
+      if (this.constructor.Network[k] == this.network) {        
+        return k;
       }
     }
     return this.title;
