@@ -72,7 +72,7 @@
     align-items: center;
   }
   .disable {
-    color: #fa6b49 !important;
+    color: $disable-color !important;
   }
   & > .modal {
     background-color: #1F2B34;

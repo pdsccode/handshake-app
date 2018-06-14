@@ -29,7 +29,7 @@ class CreateRouter extends React.Component {
     this.props.setHeaderTitle('Mission');
     this.props.clearHeaderRight();
     this.props.clearHeaderLeft();
-    this.props.showHeader();
+    // this.props.showHeader();
   }
 
   render() {
