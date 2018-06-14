@@ -24,6 +24,7 @@ export const HANDSHAKE_ID = { // important
   WALLET_TRANSFER: 5,
   EXCHANGE_LOCAL: 6,
   BETTING_EVENT: 7,
+  WALLET_RECEIVE: 8,
 };
 
 export const HANDSHAKE_ID_DEFAULT = 3;
@@ -34,9 +35,10 @@ export const HANDSHAKE_NAME = {
   // [HANDSHAKE_ID.BETTING_EVENT]: { name: 'Design a betting market', priority: 2 },
   // [HANDSHAKE_ID.SEED]: 'Seed',
   [HANDSHAKE_ID.WALLET_TRANSFER]: { name: 'Transfer coins', priority: 4 },
-  [HANDSHAKE_ID.EXCHANGE]: { name: 'Open a cash station', priority: 5 },
+  [HANDSHAKE_ID.WALLET_RECEIVE]: { name: 'Receive coins', priority: 5 },
+  [HANDSHAKE_ID.EXCHANGE]: { name: 'Open a cash station', priority: 6 },
   // UNSELECTED: { name: 'Create a prediction market', priority: 100 },
-  // [HANDSHAKE_ID.EXCHANGE_LOCAL]: { name: 'Exchange Local', priority: 6 },
+  // [HANDSHAKE_ID.EXCHANGE_LOCAL]: { name: 'Exchange Local', priority: 7 },
 };
 
 export const PRICE_DECIMAL = 0;
@@ -333,7 +335,7 @@ export const EXCHANGE_METHOD_PAYMENT = {
 export const EXCHANGE_COOKIE_READ_INSTRUCTION = {
   name: 'exchange-read-instruction',
   option: { expires: 7 },
-}
+};
 
 export const DISCOVER_GET_HANDSHAKE_RADIUS = 20;
 
