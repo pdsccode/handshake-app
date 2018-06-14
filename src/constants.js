@@ -36,9 +36,10 @@ export const HANDSHAKE_NAME = {
   // [HANDSHAKE_ID.SEED]: 'Seed',
   [HANDSHAKE_ID.WALLET_TRANSFER]: { name: 'Transfer coins', priority: 4 },
   [HANDSHAKE_ID.WALLET_RECEIVE]: { name: 'Receive coins', priority: 5 },
-  [HANDSHAKE_ID.EXCHANGE]: { name: 'Open a cash station', priority: 6 },
+  [HANDSHAKE_ID.EXCHANGE]: { name: 'Manage your station', priority: 6 },
   // UNSELECTED: { name: 'Create a prediction market', priority: 100 },
   // [HANDSHAKE_ID.EXCHANGE_LOCAL]: { name: 'Exchange Local', priority: 7 },
+  [HANDSHAKE_ID.EXCHANGE_LOCAL]: { name: 'Exchange Local', priority: 7 },
 };
 
 export const PRICE_DECIMAL = 0;
@@ -337,7 +338,7 @@ export const EXCHANGE_COOKIE_READ_INSTRUCTION = {
   option: { expires: 7 },
 };
 
-export const DISCOVER_GET_HANDSHAKE_RADIUS = 20;
+export const DISCOVER_GET_HANDSHAKE_RADIUS = 2000000;
 
 export const APP_USER_NAME = 'Ninja';
 

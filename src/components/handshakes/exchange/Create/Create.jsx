@@ -252,12 +252,15 @@ class Component extends React.Component {
   checkMainNetDefaultWallet = (wallet) => {
     const { intl } = this.props;
     let result = true;
-    if (wallet.network === MasterWallet.ListCoin[wallet.className].Network.Mainnet) {
-      result = true;
-    } else {
-      const message = intl.formatMessage({ id: 'requireDefaultWalletOnMainNet' }, {});
-      this.showAlert(message);
-      result = false;
+
+    if (process.env.isProduction) {
+      if (wallet.network === MasterWallet.ListCoin[wallet.className].Network.Mainnet) {
+        result = true;
+      } else {
+        const message = intl.formatMessage({id: 'requireDefaultWalletOnMainNet'}, {});
+        this.showAlert(message);
+        result = false;
+      }
     }
 
     return result;
@@ -524,7 +527,7 @@ class Component extends React.Component {
           <div className="label">Exchange rate</div>
           <Feed className="feed mt-2 wrapper" background={this.mainColor}>
             <div className="d-flex">
-              <label className="col-form-label mr-auto label-create"><span className="align-middle">Amount to buy</span></label>
+              <label className="col-form-label mr-auto label-create"><span className="align-middle">Inventory for purchase</span></label>
               <div className='input-group'>
                 <Field
                   name="amountBuy"
@@ -540,7 +543,7 @@ class Component extends React.Component {
             <hr className="hrLine"/>
 
             <div className="d-flex">
-              <label className="col-form-label mr-auto label-create"><span className="align-middle">Amount to sell</span></label>
+              <label className="col-form-label mr-auto label-create"><span className="align-middle">Inventory for sale</span></label>
               <div className='input-group'>
                 <Field
                   name="amountSell"
@@ -556,7 +559,7 @@ class Component extends React.Component {
             <hr className="hrLine"/>
 
             <div className="d-flex">
-              <label className="col-form-label mr-auto label-create"><span className="align-middle">Current price</span></label>
+              <label className="col-form-label mr-auto label-create"><span className="align-middle">Market price</span></label>
               <div className='input-group'>
                 <div><span className="form-text">{priceDisplayed} {fiatCurrency}</span></div>
               </div>
@@ -621,7 +624,7 @@ class Component extends React.Component {
                         component={fieldInput}
                         placeholder={'Apple store'}
                         // onChange={this.onAmountChange}
-                        validate={[required]}
+                        // validate={[required]}
                       />
                     </div>
                   </div>

@@ -11,7 +11,7 @@ class NoData extends React.PureComponent {
       <div className={`no-data ${className || ''}`} {...props}>
         <div>
           <img className="img-fluid img" src={nodataNinjaSVG} alt="nodata ninja" />
-          <p className="text">{ message || 'NO DATA AVAILABLE' }</p>
+          <p className="text">{ message || 'No stations near you yet. Be the first.' }</p>
         </div>
       </div>
     );

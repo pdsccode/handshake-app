@@ -20,9 +20,9 @@ import ToggleSwitch from '@/components/core/presentation/ToggleSwitch';
 import AvatarSVG from '@/assets/images/icon/avatar.svg';
 import ShopSVG from '@/assets/images/icon/icons8-shop_filled.svg';
 import ExpandArrowSVG from '@/assets/images/icon/expand-arrow.svg';
-import './Me.scss';
-import {setOfflineStatus} from "@/reducers/auth/action";
+import { setOfflineStatus } from '@/reducers/auth/action';
 import local from '@/services/localStore';
+import './Me.scss';
 
 const maps = {
   [HANDSHAKE_ID.PROMISE]: FeedPromise,
@@ -43,6 +43,7 @@ class Me extends React.Component {
     fireBaseExchangeDataChange: PropTypes.func.isRequired,
     fireBaseBettingChange: PropTypes.func.isRequired,
     exchange: PropTypes.object.isRequired,
+    setOfflineStatus: PropTypes.func.isRequired,
   }
 
   constructor(props) {
@@ -50,13 +51,32 @@ class Me extends React.Component {
 
     this.state = {
       exchange: this.props.exchange,
+      auth: this.props.auth,
+      firebaseUser: this.props.firebaseUser,
     };
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
+    /*
     if (nextProps.exchange.listOfferPrice.updatedAt !== prevState.exchange.listOfferPrice.updatedAt) {
       nextProps.loadMyHandshakeList({ PATH_URL: API_URL.ME.BASE });
       return { exchange: nextProps.exchange };
+    }
+    */
+    if (nextProps.firebaseUser) {
+      if (JSON.stringify(nextProps.firebaseUser) !== JSON.stringify(prevState.firebaseUser)) {
+        const nextUser = nextProps.firebaseUser.users?.[prevState.auth?.profile?.id];
+        const prevUser = prevState?.firebaseUser.users?.[prevState.auth?.profile?.id];
+        if (JSON.stringify(nextUser?.offers) !== JSON.stringify(prevUser?.offers)) {
+          nextProps.fireBaseExchangeDataChange(nextUser?.offers);
+        } else if (nextUser?.betting && JSON.stringify(nextUser?.betting) !== JSON.stringify(prevUser?.betting)) {
+          nextProps.fireBaseBettingChange(nextUser?.betting);
+        }
+        return { firebaseUser: nextProps.firebaseUser };
+      }
+    }
+    if (nextProps.auth.updatedAt !== prevState.auth.updatedAt) {
+      return { auth: nextProps.auth };
     }
     return null;
   }
@@ -65,32 +85,18 @@ class Me extends React.Component {
     this.loadMyHandshakeList();
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.firebaseUser) {
-      if (JSON.stringify(nextProps.firebaseUser) !== JSON.stringify(this.props.firebaseUser)) {
-        const nextUser = nextProps.firebaseUser.users?.[this.props.auth?.profile?.id];
-        const prevUser = this.props?.firebaseUser.users?.[this.props.auth?.profile?.id];
-        if (JSON.stringify(nextUser?.offers) !== JSON.stringify(prevUser?.offers)) {
-          this.props.fireBaseExchangeDataChange(nextUser?.offers);
-        } else if (nextUser?.betting && JSON.stringify(nextUser?.betting) !== JSON.stringify(prevUser?.betting)) {
-          this.props.fireBaseBettingChange(nextUser?.betting);
-        }
-      }
-    }
-  }
-
-  loadMyHandshakeList = () => {
-    this.props.loadMyHandshakeList({ PATH_URL: API_URL.ME.BASE });
-  }
-
   setOfflineStatus = (online) => {
     const offlineValue = online ? 0 : 1;
-    this.props.setOfflineStatus( {
+    this.props.setOfflineStatus({
       PATH_URL: `${API_URL.ME.SET_OFFLINE_STATUS}/${offlineValue}`,
       METHOD: 'POST',
       successFn: this.handleSetOfflineStatusSuccess,
       errorFn: this.handleSetOfflineStatusFailed,
     });
+  }
+
+  loadMyHandshakeList = () => {
+    this.props.loadMyHandshakeList({ PATH_URL: API_URL.ME.BASE });
   }
 
   handleSetOfflineStatusSuccess = (responseData) => {
@@ -99,7 +105,7 @@ class Me extends React.Component {
   }
 
   handleSetOfflineStatusFailed = (e) => {
-    console.log('handleSetOfflineStatusFailed',e);
+    console.log('handleSetOfflineStatusFailed', e);
   }
 
   render() {
@@ -122,11 +128,11 @@ class Me extends React.Component {
             </Link>
           </Col>
         </Row>
-         <Row>
+        <Row>
           <Col md={12}>
             <div className="update-profile pt-2">
               <Image className="avatar" src={ShopSVG} alt="shop" />
-              <div className="text" style={{ width: '69%'}}>
+              <div className="text" style={{ width: '69%' }}>
                 <strong>Your station</strong>
                 <p>Open for business</p>
               </div>

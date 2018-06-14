@@ -130,12 +130,15 @@ class FeedMe extends React.PureComponent {
   checkMainNetDefaultWallet = (wallet) => {
     const { intl } = this.props;
     let result = true;
-    if (wallet.network === MasterWallet.ListCoin[wallet.className].Network.Mainnet) {
-      result = true;
-    } else {
-      const message = intl.formatMessage({ id: 'requireDefaultWalletOnMainNet' }, {});
-      this.showAlert(message);
-      result = false;
+
+    if (process.env.isProduction) {
+      if (wallet.network === MasterWallet.ListCoin[wallet.className].Network.Mainnet) {
+        result = true;
+      } else {
+        const message = intl.formatMessage({ id: 'requireDefaultWalletOnMainNet' }, {});
+        this.showAlert(message);
+        result = false;
+      }
     }
 
     return result;
@@ -900,7 +903,7 @@ class FeedMe extends React.PureComponent {
 
 
   render() {
-    const {intl, initUserId, shakeUserIds, location, state, status, mode = 'discover', ipInfo: { latitude, longitude, country_code }, initAt, ...props} = this.props;
+    const {intl, initUserId, shakeUserIds, location, state, status, mode = 'discover', ipInfo: { latitude, longitude, country }, initAt, ...props} = this.props;
     const offer = this.offer;
     // console.log('render',offer);
     const {listOfferPrice} = this.props;
