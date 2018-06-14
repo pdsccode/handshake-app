@@ -11,7 +11,6 @@ import { shakeItem, initHandshake, } from '@/reducers/handshake/action';
 import {HANDSHAKE_ID, API_URL, APP } from '@/constants';
 import {MasterWallet} from '@/models/MasterWallet';
 import local from '@/services/localStore';
-import { BettingHandshake } from '@/services/neuron';
 
 // components
 import { InputField } from '@/components/handshakes/betting/form/customField';
@@ -24,10 +23,6 @@ import { BetHandshakeHandler, MESSAGE, SIDE } from '@/components/handshakes/bett
 import { Form } from 'reactstrap';
 
 
-const wallet = MasterWallet.getWalletDefault('ETH');
-const chainId = wallet.chainId;
-
-const bettinghandshake = new BettingHandshake(chainId);
 const betHandshakeHandler = new BetHandshakeHandler()
 const nameFormBettingShake = 'bettingShakeForm';
 
@@ -106,7 +101,7 @@ class BetingShake extends React.Component {
     this.setState({
       oddValue: Math.floor(marketOdds*100)/100,
       amountValue: Math.floor(marketAmount*10000)/10000,
-      winValue: parseFloat(winValue).toFixed(4)
+      winValue: Math.floor(winValue*10000)/10000
     })
   }
 
@@ -125,7 +120,7 @@ class BetingShake extends React.Component {
     // this.props.onSubmitClick(amount);
     //const side = parseInt(this.toggleRef.value);
     const balance = await betHandshakeHandler.getBalance();
-    const estimatedGas = await bettinghandshake.getEstimateGas();
+    const estimatedGas = await betHandshakeHandler.getEstimateGas();
     //const estimatedGas = 0.00001;
     const total = amount + parseFloat(estimatedGas);
     console.log('Balance, estimate gas, total:', balance, estimatedGas, total);
@@ -194,7 +189,7 @@ class BetingShake extends React.Component {
     const {oddValue, amountValue} = this.state;
     const total = oddValue * amountValue;
       this.setState({
-        winValue: total.toFixed(4),
+        winValue: Math.floor(total*100)/100,
       })
   }
 
@@ -373,8 +368,8 @@ class BetingShake extends React.Component {
         amount,
         currency: 'ETH',
         side,
-        chain_id: chainId,
-        from_address: wallet.address
+        chain_id: betHandshakeHandler.getChainIdDefaultWallet(),
+        from_address: betHandshakeHandler.getAddress()
       };
       console.log(params);
 
@@ -457,7 +452,7 @@ class BetingShake extends React.Component {
     const {outcomeId, matchName, matchOutcome, side} = this.props;
     const {extraData} = this.state;
     //const side = this.toggleRef.value;
-    const fromAddress = wallet.address;
+    const fromAddress = betHandshakeHandler.getAddress();
     extraData["event_name"] = matchName;
     extraData["event_predict"] = matchOutcome;
     extraData["event_odds"] = odds;
@@ -481,7 +476,7 @@ class BetingShake extends React.Component {
       currency: 'ETH',
       side: parseInt(side),
       from_address: fromAddress,
-      chain_id: chainId,
+      chain_id: betHandshakeHandler.getChainIdDefaultWallet(),
     };
     console.log("Params:", params);
 
@@ -496,19 +491,7 @@ class BetingShake extends React.Component {
     const {status, data} = successData
 
     if(status && data){
-      /*
-      const {offchain, side} = data;
-      var result = null;
-
-      if(this.isShakedBet(data)){
-        result = await bettinghandshake.shake(hid, side,stake, payout,maker, offchain);
-      }else {
-        result = await bettinghandshake.initBet(hid, side,stake, payout, offchain);
-      }
-      if(result){
-        //TO DO: redirect and show alert
-      }
-      */
+      
      const {outcomeHid} = this.props;
       console.log('OutcomeHid:', outcomeHid);
      betHandshakeHandler.controlShake(data, outcomeHid);
