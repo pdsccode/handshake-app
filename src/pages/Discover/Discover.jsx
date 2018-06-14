@@ -364,7 +364,7 @@ class DiscoverPage extends React.Component {
             {handshakeIdActive !== HANDSHAKE_ID.BETTING && this.getHandshakeList()}
           </Row>
         </Grid>
-        <ModalDialog onRef={modal => this.modalRef = modal} className="discover-popup">
+        <ModalDialog onRef={modal => this.modalRef = modal} className="discover-popup" isDismiss={false} >
           {modalContent}
         </ModalDialog>
       </React.Fragment>
