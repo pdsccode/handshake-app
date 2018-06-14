@@ -9,7 +9,7 @@ import Identicon from 'identicon.js';
 import firebase from 'firebase/app';
 import 'firebase/database';
 import 'firebase/auth';
-import TransferCoin from '@/components/Wallet/TransferCoin';
+// import TransferCoin from '@/components/Wallet/TransferCoin';
 import Modal from '@/components/core/controls/Modal';
 
 import { setHeaderLeft, setHeaderTitle } from '@/reducers/app/action';
@@ -772,27 +772,27 @@ class Chat extends Component {
           </Popover>
         } */}
         {
-          Object.keys(transferCoin).length > 0 && (
-            <Modal
-              title="Transfer coin"
-              ref={(modalRef) => {
-                this.modalRef = modalRef;
-                modalRef && modalRef.open();
-              }}
-              onClose={() => {
-                this.setState({ transferCoin: {} });
-              }}>
-              <TransferCoin coinName={transferCoin.coinName} amount={transferCoin.amount} onFinish={(transferResult) => {
-                const { toAddress, fromWallet, amount } = transferResult;
-                this.setState({
-                  currentMessage: `Mission complete. Sent [AMOUNT:${amount}] [COIN_NAME:${fromWallet.name}] to [TO_ADDRESS:${toAddress}]`,
-                }, () => {
-                  this.sendMessage(null, 'special', { specialTag: 'transfer_coin' });
-                  this.modalRef && this.modalRef.close();
-                });
-              }} />
-            </Modal>
-          )
+          // Object.keys(transferCoin).length > 0 && (
+          //   <Modal
+          //     title="Transfer coin"
+          //     ref={(modalRef) => {
+          //       this.modalRef = modalRef;
+          //       modalRef && modalRef.open();
+          //     }}
+          //     onClose={() => {
+          //       this.setState({ transferCoin: {} });
+          //     }}>
+          //     <TransferCoin coinName={transferCoin.coinName} amount={transferCoin.amount} onFinish={(transferResult) => {
+          //       const { toAddress, fromWallet, amount } = transferResult;
+          //       this.setState({
+          //         currentMessage: `Mission complete. Sent [AMOUNT:${amount}] [COIN_NAME:${fromWallet.name}] to [TO_ADDRESS:${toAddress}]`,
+          //       }, () => {
+          //         this.sendMessage(null, 'special', { specialTag: 'transfer_coin' });
+          //         this.modalRef && this.modalRef.close();
+          //       });
+          //     }} />
+          //   </Modal>
+          // )
         }
       </div>
     );
