@@ -21,7 +21,7 @@ import iconSuccessChecked from '@/assets/images/icon/icon-checked-green.svg';
 import './TransferCoin.scss';
 import Dropdown from '@/components/core/controls/Dropdown';
 
-import iconQRCodeBlack from '@/assets/images/icon/scan-qr-code.svg';
+import iconQRCodeWhite from '@/assets/images/icon/scan-qr-code-w.svg';
 
 import bgBox from '@/assets/images/pages/wallet/bg-box-wallet-coin.svg';
 
@@ -142,7 +142,10 @@ class Transfer extends React.Component {
     // set name + text for list:
     if (wallets.length > 0){
       wallets.forEach((wallet) => {
-        wallet.text = wallet.getShortAddress() + " (" + wallet.name + "-" + wallet.getNetworkName() + ")";        
+        wallet.text = wallet.getShortAddress() + " (" + wallet.name + "-" + wallet.getNetworkName() + ")";
+        if (process.env.isProduction){
+          wallet.text = wallet.getShortAddress() + " (" + wallet.className + " " + wallet.name + ")";
+        }
         wallet.id = wallet.address + "-" + wallet.getNetworkName();        
         
       });
@@ -152,6 +155,9 @@ class Transfer extends React.Component {
     MasterWallet.log(walletDefault, "walletDefault");
     if (walletDefault){      
       walletDefault.text = walletDefault.getShortAddress() + " (" + walletDefault.name + "-" + walletDefault.getNetworkName() + ")";         
+      if (process.env.isProduction){
+        walletDefault.text = walletDefault.getShortAddress() + " (" + walletDefault.className + " " + walletDefault.name + ")";
+      }
       walletDefault.id = walletDefault.address + "-" + walletDefault.getNetworkName();   
 
       // get balance for first item + update to local store:
@@ -317,7 +323,7 @@ renderScanQRCode = () => (
                     onChange={evt => this.updateSendAddressValue(evt)}
                     validate={[required]}
                   />          
-              {!isIOs ? <img onClick={() => { this.openQrcode() }} className="icon-qr-code-black" src={iconQRCodeBlack} /> : ""}
+              {!isIOs ? <img onClick={() => { this.openQrcode() }} className="icon-qr-code-black" src={iconQRCodeWhite} /> : ""}
             </div>
             <p className="labelText">Amount</p>          
             <div className="div-amount">
@@ -334,7 +340,7 @@ renderScanQRCode = () => (
                   />
                   <span className="coiname-append">{ this.state.walletSelected ? StringHelper.format("{0}", this.state.walletSelected.name) : ''}</span>
               </div>
-          </div>
+
 
             { this.state.walletDefault ? 
               <div className ="dropdown-wallet-tranfer">
@@ -352,9 +358,11 @@ renderScanQRCode = () => (
                     }
                   />                  
 
-                  <label className='label-balance'>Your balance: { this.state.walletSelected ? StringHelper.format("{0} {1}", this.state.walletSelected.balance, this.state.walletSelected.name) : ""}</label>
+                  <label className='label-balance'>Wallet balance: { this.state.walletSelected ? StringHelper.format("{0} {1}", this.state.walletSelected.balance, this.state.walletSelected.name) : ""}</label>
               </div>
               :""}
+
+              </div>
 
             <Button className="button-wallet-cpn" isLoading={this.state.isRestoreLoading}  type="submit" block={true}>Transfer</Button>
           </SendWalletForm>

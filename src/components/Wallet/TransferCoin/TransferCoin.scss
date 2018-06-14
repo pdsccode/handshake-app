@@ -1,11 +1,17 @@
-.bgBox{
-  background-image: url('../../../assets/images/pages/wallet/bg-box-wallet-coin.svg')
-}
-
 .sendwallet-wrapper{
-    margin-top: 20px;
-    padding-left: 7px;
-    padding-right: 7px;
+    
+    .bgBox{
+      background-image: url('../../../assets/images/pages/wallet/bg-box-wallet-coin.svg');
+      background-repeat: no-repeat;
+      background-size: cover;      
+      padding: 12px;
+      color: #fff;
+      border-radius: 6px;
+      margin-top: 20px;
+      ::placeholder{
+        color: #ffffff;
+      }
+    }
   
     .text-danger{
       font-size: 14px;
@@ -14,20 +20,24 @@
   
     .label-balance{
       margin-top: 9px;
-      color: #7b7b7b;
+      color: #ffffff;
       font-size: 16px;
       display: block;
     }
   
-    input[type=text], input[type=tel], input[type=number]{
-      margin-bottom: 5px;
+    input[type=text], input[type=tel], input[type=number]{      
       font-size: 16px;
-      line-height: 22px;
-      border:1px solid #EFEFEF;
-      height: 54px;
-      background: transparent;
+      line-height: 22px;      
+      height: 45px;
+      // background: #4869D1;
+      // border: 1px solid #6485F6;
+      border: 1px solid #6c95ea;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 6px;
+      color: #fff;
+      font-weight: 300;
       ::placeholder{
-        color: #fff;
+        color: #ffffff;
       }
     }
   }
@@ -48,8 +58,8 @@
     .coiname-append{
       position: absolute;
       right: 15px;
-      top: 15px;
-      color: #6b7480;
+      top: 10px;
+      color: #f9f7fa;
       font-weight: 400;
     }
     input{
@@ -74,7 +84,7 @@
   .icon-qr-code-black{
     width: 35px;
     position: absolute;
-    top: 15px;
+    top: 12px;
     right: 10px;
     opacity: 0.6;
   }
@@ -88,7 +98,7 @@
 .labelText{
   margin-bottom: 10px;
   font-weight: 400;
-  margin-top: 20px;
+  margin-top: 10px;
 }
 .textCenter{
   text-align: center;
@@ -102,10 +112,14 @@
     border: 0!important;
     background: transparent!important;
     box-shadow: none!important;
+    color: #ffffff;
   };
   .btn-group{
-    border: 1px solid #EFEFEF;
-    padding: 8px;
+    // background: #4869D1;
+    // border: 1px solid #6485F6;
+    border: 1px solid #6c95ea;
+    background: rgba(255, 255, 255, 0.15);
+    padding: 5px;
     border-radius: 5px;
     padding-left: 1px;
   }
