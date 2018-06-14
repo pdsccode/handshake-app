@@ -173,7 +173,7 @@ class Router extends React.Component {
     this.authSuccess = ::this.authSuccess;
     this.notification = ::this.notification;
     this.setLanguage = ::this.setLanguage;
-    // this.detectCountry.call(this);
+    this.detectCountry.call(this);
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -226,12 +226,6 @@ class Router extends React.Component {
     }).then((response) => {
       this.props.setIpInfo(response.data);
       local.save(APP.IP_INFO, response.data);
-
-      const firstLanguage = response.data.languages.split(',')[0];
-      this.setLanguage(firstLanguage);
-      if (COUNTRIES_BLACKLIST.indexOf(data.country) !== -1) {
-        this.setState({ isCountryBlackList: true });
-      }
     });
   }
 
