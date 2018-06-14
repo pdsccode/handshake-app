@@ -231,10 +231,7 @@ export class Firechat {
         }
 
         publicKey = room.authorizedUsers[userId].publicKey;
-        console.log('xxxa', publicKey);
       });
-
-      console.log('xxx', publicKey);
 
       messageContent.message = this.decryptMessage(messageContent.message, nonce, publicKey);
     } else {
@@ -288,7 +285,7 @@ export class Firechat {
     this.invokeEventCallbacks('room-invite-response', invite);
   }
 
-  setUser(userId, userName, callback) {
+  setUser(userId, userName, shouldSetupDataEvents, callback) {
     const self = this;
 
     self.firebaseApp.auth().onAuthStateChanged((user) => {
@@ -302,7 +299,9 @@ export class Firechat {
         self.loadUserMetadata(() => {
           setTimeout(() => {
             callback(self.user);
-            self.setupDataEvents();
+            if (shouldSetupDataEvents) {
+              self.setupDataEvents();
+            }
           }, 0);
         });
       } else {
@@ -456,7 +455,6 @@ export class Firechat {
   }
 
   encryptMessage(message, nonce, publicKey) {
-    console.log('message', message, 'nonce', nonce, 'publicKey', publicKey);
     if (!(publicKey instanceof Uint8Array)) {
       publicKey = naclUtil.decodeBase64(publicKey);
     }
@@ -473,7 +471,6 @@ export class Firechat {
   }
 
   decryptMessage(message, nonce, publicKey) {
-    console.log('message', message, 'nonce', nonce, 'publicKey', publicKey);
     if (!(publicKey instanceof Uint8Array)) {
       publicKey = naclUtil.decodeBase64(publicKey);
     }
