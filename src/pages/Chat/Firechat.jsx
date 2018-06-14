@@ -1,3 +1,6 @@
+import nacl from 'tweetnacl';
+import naclUtil from 'tweetnacl-util';
+
 export class Firechat {
   constructor(firebaseInstance, firebaseRef, options) {
     if (!firebaseInstance) {
@@ -14,6 +17,7 @@ export class Firechat {
     this.userId = null;
     this.userName = null;
     this.isModerator = false;
+
 
     // A unique id generated for each session.
     this.sessionId = null;
@@ -38,6 +42,48 @@ export class Firechat {
 
     // The number of historical messages to load per room.
     this.options.numMaxMessages = this.options.numMaxMessages || 50;
+    this.keyPairLocalStorageKey = 'chat_encryption_keypair';
+
+    this.encryptionKeyPair = this.generateEncryptionKeyPair();
+  }
+
+  loadEncryptionKeyPairFromLocalStorage() {
+    let userKeyPair = localStorage.getItem(this.keyPairLocalStorageKey);
+
+    if (userKeyPair) {
+      userKeyPair = JSON.parse(userKeyPair);
+      userKeyPair.publicKey = naclUtil.decodeBase64(userKeyPair.publicKey);
+      userKeyPair.secretKey = naclUtil.decodeBase64(userKeyPair.secretKey);
+    }
+
+    return userKeyPair;
+  }
+
+  saveEncryptionKeyPairToLocalStorage(keyPair) {
+    const userKeyPair = { ...keyPair };
+    userKeyPair.publicKey = naclUtil.encodeBase64(userKeyPair.publicKey);
+    userKeyPair.secretKey = naclUtil.encodeBase64(userKeyPair.secretKey);
+
+    localStorage.setItem(this.keyPairLocalStorageKey, JSON.stringify(userKeyPair));
+  }
+
+  generateEncryptionKeyPair() {
+    let userKeyPair = this.loadEncryptionKeyPairFromLocalStorage();
+
+    if (!userKeyPair) {
+      userKeyPair = nacl.box.keyPair();
+      this.saveEncryptionKeyPairToLocalStorage(userKeyPair);
+    }
+
+    return userKeyPair;
+  }
+
+  getEncodedKeyPair() {
+    const userKeyPair = { ...this.encryptionKeyPair };
+    userKeyPair.publicKey = naclUtil.encodeBase64(userKeyPair.publicKey);
+    userKeyPair.secretKey = naclUtil.encodeBase64(userKeyPair.secretKey);
+
+    return userKeyPair;
   }
 
   // Load the initial metadata for the user's account and set initial state.
@@ -46,11 +92,12 @@ export class Firechat {
 
     // Update the user record with a default name on user's first visit.
     this.userRef.transaction((current) => {
-      if (!current || !current.id || !current.name) {
-        return {
-          id: self.userId,
-          name: self.userName,
-        };
+      if (!current || !current.id || !current.name || !current.publicKey) {
+        const userDetail = current || {};
+        userDetail.id = current && current.id ? current.id : self.userId;
+        userDetail.name = current && current.name ? current.name : self.userName;
+        userDetail.publicKey = current && current.publicKey ? current.publicKey : this.getEncodedKeyPair().publicKey;
+        return userDetail;
       }
     }, (error, committed, snapshot) => {
       self.user = snapshot.val();
@@ -84,11 +131,13 @@ export class Firechat {
       name: this.userName,
       shortName: this.userName.toLowerCase(),
       sessionId: this.sessionId,
+      publicKey: this.user.publicKey,
       online: true,
     }, {
         name: this.userName,
         shortName: this.userName.toLowerCase(),
         sessionId: this.sessionId,
+        publicKey: this.user.publicKey,
         online: false,
       });
     // const usernameSessionRef = usernameRef.child(this.sessionId);
@@ -171,6 +220,27 @@ export class Firechat {
   onNewMessage(roomId, snapshot) {
     const message = snapshot.val();
     message.id = snapshot.key;
+    const { nonce, message: messageContent } = message;
+    if (Object.prototype.hasOwnProperty.call(this.rooms, roomId)) {
+      const room = this.rooms[roomId];
+      let publicKey;
+
+      Object.keys(room.authorizedUsers).forEach((userId) => {
+        if (userId === this.user.id) {
+          return true;
+        }
+
+        publicKey = room.authorizedUsers[userId].publicKey;
+        console.log('xxxa', publicKey);
+      });
+
+      console.log('xxx', publicKey);
+
+      messageContent.message = this.decryptMessage(messageContent.message, nonce, publicKey);
+    } else {
+      messageContent.message = 'This message is encryted and can\'t be decode.';
+    }
+    message.message = messageContent;
     this.invokeEventCallbacks('message-add', roomId, message);
   }
 
@@ -255,7 +325,7 @@ export class Firechat {
     this.addEventCallback(eventType, cb);
   }
 
-  createRoom(roomId, callback) {
+  createRoom(roomId, usersInGroup, callback) {
     const self = this;
     const newRoomRef = this.roomRef.child(roomId);
 
@@ -270,7 +340,16 @@ export class Firechat {
     newRoom.authorizedUsers[this.userId] = {
       name: this.userName,
       allowed: true,
+      publicKey: this.getEncodedKeyPair().publicKey,
     };
+
+    Object.keys(usersInGroup).forEach((userId) => {
+      const user = usersInGroup[userId];
+      newRoom.authorizedUsers[userId] = {
+        name: user.name,
+        publicKey: user.publicKey,
+      };
+    });
 
     newRoomRef.set(newRoom, (error) => {
       if (!error) {
@@ -299,7 +378,7 @@ export class Firechat {
         return;
       }
 
-      self.rooms[roomId] = true;
+      self.rooms[roomId] = room;
 
       if (self.user) {
         // Save entering this room to resume the session again later.
@@ -310,13 +389,15 @@ export class Firechat {
         });
 
         // Set presence bit for the room and queue it for removal on disconnect.
-        // const presenceRef = self.firechatRef.child('chat-room-users').child(roomId).child(self.userId).child(self.sessionId);
-        // presenceRef.set({
-        //   id: self.userId,
-        //   name: self.userName,
-        // });
+        const presenceRef = self.firechatRef.child('chat-room-users').child(roomId).child(self.userId).child(self.sessionId);
+        presenceRef.set({
+          id: self.userId,
+          name: self.userName,
+        });
+
         self.roomRef.child(roomId).child('authorizedUsers').child(self.userId).update({
           name: self.userName,
+          publicKey: self.user.publicKey,
         });
 
         authorizedUsers[self.userId].name = self.userName;
@@ -370,13 +451,54 @@ export class Firechat {
     self.onLeaveRoom(roomId);
   }
 
-  sendMessage(roomId, messageContent, messageType, cb) {
+  generateMessageNonce() {
+    return nacl.randomBytes(nacl.box.nonceLength);
+  }
+
+  encryptMessage(message, nonce, publicKey) {
+    console.log('message', message, 'nonce', nonce, 'publicKey', publicKey);
+    if (!(publicKey instanceof Uint8Array)) {
+      publicKey = naclUtil.decodeBase64(publicKey);
+    }
+
+    if (!(nonce instanceof Uint8Array)) {
+      nonce = naclUtil.decodeUTF8(nonce);
+    }
+
+    if (!(message instanceof Uint8Array)) {
+      message = naclUtil.decodeUTF8(message);
+    }
+
+    return naclUtil.encodeBase64(nacl.box(message, nonce, publicKey, this.encryptionKeyPair.secretKey));
+  }
+
+  decryptMessage(message, nonce, publicKey) {
+    console.log('message', message, 'nonce', nonce, 'publicKey', publicKey);
+    if (!(publicKey instanceof Uint8Array)) {
+      publicKey = naclUtil.decodeBase64(publicKey);
+    }
+
+    if (!(nonce instanceof Uint8Array)) {
+      nonce = naclUtil.decodeBase64(nonce);
+    }
+
+    if (!(message instanceof Uint8Array)) {
+      message = naclUtil.decodeBase64(message);
+    }
+
+    return naclUtil.encodeUTF8(nacl.box.open(message, nonce, publicKey, this.encryptionKeyPair.secretKey));
+  }
+
+  sendMessage(roomId, messageContent, publicKey, messageType, cb) {
     const self = this;
+    const nonce = this.generateMessageNonce();
+    messageContent.message = this.encryptMessage(messageContent.message, nonce, publicKey);
     const message = {
       userId: self.userId,
       name: self.userName,
       timestamp: this.firebaseInstance.database.ServerValue.TIMESTAMP,
       message: messageContent,
+      nonce: naclUtil.encodeBase64(nonce),
       type: messageType || 'default',
     };
 
@@ -426,7 +548,7 @@ export class Firechat {
   }
 
   // Invite a user to a specific chat room.
-  inviteUser(userId, userName, roomId) {
+  inviteUser(userId, userName, publicKey, roomId) {
     const self = this;
 
     if (!self.user) {
@@ -438,6 +560,7 @@ export class Firechat {
       const authorizedUserRef = self.roomRef.child(roomId).child('authorizedUsers');
       authorizedUserRef.child(userId).set({
         name: userName,
+        publicKey,
         allowed: true,
       }, (error) => {
         if (!error) {
@@ -535,8 +658,7 @@ export class Firechat {
 
       Object.keys(usernames).forEach((userId) => {
         const userInfo = usernames[userId];
-        const userName = userInfo.name;
-        const isOnline = userInfo.online;
+        const { name: userName, online: isOnline, publicKey } = userInfo;
 
         if ((this.user && userId === this.user.id) || ((prefix.length > 0) && (userName.toLowerCase().indexOf(prefixLower) !== 0))) {
           return true;
@@ -546,6 +668,7 @@ export class Firechat {
           name: userName,
           id: userId,
           online: isOnline,
+          publicKey,
         };
 
         return true;
@@ -606,21 +729,25 @@ export class Firechat {
       setTimeout(() => {
         self.getRoomList((rooms) => {
           const updateValues = {};
-          Object.keys(rooms).forEach((roomId) => {
-            const room = rooms[roomId];
-            if (Object.prototype.hasOwnProperty.call(room.authorizedUsers, self.userId)) {
-              updateValues[`/${roomId}/authorizedUsers/${self.userId}`] = {
-                name: userName,
-              };
-            }
-          });
+          if (rooms) {
+            Object.keys(rooms).forEach((roomId) => {
+              const room = rooms[roomId];
+              if (Object.prototype.hasOwnProperty.call(room.authorizedUsers, self.userId)) {
+                updateValues[`/${roomId}/authorizedUsers/${self.userId}/name`] = userName;
+              }
+            });
+          }
 
-          if (updateValues) {
+          if (Object.keys(updateValues).length > 0) {
             self.roomRef.update(updateValues);
           }
         });
       }, 0);
     }
+  }
+
+  setRoom(roomId, room) {
+    this.rooms[roomId] = room;
   }
 
   warn(msg) {
