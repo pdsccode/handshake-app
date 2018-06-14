@@ -338,7 +338,7 @@ export const EXCHANGE_COOKIE_READ_INSTRUCTION = {
   option: { expires: 7 },
 };
 
-export const DISCOVER_GET_HANDSHAKE_RADIUS = 20;
+export const DISCOVER_GET_HANDSHAKE_RADIUS = 2000000;
 
 export const APP_USER_NAME = 'Ninja';
 
