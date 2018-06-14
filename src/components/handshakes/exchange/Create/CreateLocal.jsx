@@ -1,5 +1,5 @@
 import React from "react";
-import { injectIntl } from "react-intl";
+import { injectIntl, FormattedMessage } from "react-intl";
 import Feed from "@/components/core/presentation/Feed";
 import Button from "@/components/core/controls/Button";
 import "./styles.scss";
@@ -56,6 +56,7 @@ import { addOfferItem } from "@/reducers/exchange/action";
 import { getOfferStores } from "@/reducers/exchange/action";
 import iconApproximate from "@/assets/images/icon/icons8-approximately_equal.svg";
 import axios from "axios/index";
+import { getErrorMessageFromCode } from "../utils";
 
 const nameFormExchangeCreateLocal = "exchangeCreateLocal";
 const FormExchangeCreateLocal = createForm({
@@ -236,7 +237,7 @@ class Component extends React.Component {
   handleCreateOfferFailed = (e) => {
     this.hideLoading();
     this.props.showAlert({
-      message: <div className="text-center">{e.response?.data?.message}</div>,
+      message: <div className="text-center">{getErrorMessageFromCode(e)}</div>,
       timeOut: 3000,
       type: 'danger',
     });
@@ -287,6 +288,10 @@ class Component extends React.Component {
       successFn: this.handleCreateOfferSuccess,
       errorFn: this.handleCreateOfferFailed,
     });
+  }
+
+  hideLoading = () => {
+    this.props.hideLoading();
   }
 
   handleSubmit = async (values) => {

@@ -261,6 +261,130 @@ class FeedMe extends React.PureComponent {
 
   ////////////////////////
 
+  getFrom = () => {
+    const {intl, status} = this.props;
+
+    let from = '';
+    switch (status) {
+      case HANDSHAKE_EXCHANGE_STATUS.SHAKING:
+      case HANDSHAKE_EXCHANGE_STATUS.SHAKE:
+      case HANDSHAKE_EXCHANGE_STATUS.COMPLETING:
+      case HANDSHAKE_EXCHANGE_STATUS.COMPLETED:
+      case HANDSHAKE_EXCHANGE_STATUS.WITHDRAWING:
+      case HANDSHAKE_EXCHANGE_STATUS.WITHDRAW: {
+        switch (this.userType) {
+          case HANDSHAKE_USER.SHAKED: {
+            from = 'With';
+
+            break;
+          }
+          case HANDSHAKE_USER.OWNER: {
+            from = 'From';
+
+            break;
+          }
+        }
+
+        break;
+      }
+      default: {
+        switch (this.userType) {
+          case HANDSHAKE_USER.SHAKED: {
+            from = 'With';
+
+            break;
+          }
+          case HANDSHAKE_USER.OWNER: {
+            from = 'From';
+
+            break;
+          }
+        }
+        break;
+      }
+    }
+
+    return from;
+  }
+
+  getContentExchange(fiatAmount) {
+    const {intl, status} = this.props;
+    console.log('thisss', this.offer)
+    const { offer } = this;
+    let message = '';
+
+    let offerType = '';
+    switch (status) {
+      case HANDSHAKE_EXCHANGE_STATUS.SHAKING:
+      case HANDSHAKE_EXCHANGE_STATUS.SHAKE:
+      case HANDSHAKE_EXCHANGE_STATUS.COMPLETING:
+      case HANDSHAKE_EXCHANGE_STATUS.COMPLETED:
+      case HANDSHAKE_EXCHANGE_STATUS.WITHDRAWING:
+      case HANDSHAKE_EXCHANGE_STATUS.WITHDRAW: {
+        switch (this.userType) {
+          case HANDSHAKE_USER.SHAKED: {
+            if (offer.type === EXCHANGE_ACTION.BUY) {
+              offerType = EXCHANGE_ACTION_PAST_NAME[EXCHANGE_ACTION.SELL];
+            } else if (offer.type === EXCHANGE_ACTION.SELL) {
+              offerType = EXCHANGE_ACTION_PAST_NAME[EXCHANGE_ACTION.BUY];
+            }
+            break;
+          }
+          case HANDSHAKE_USER.OWNER: {
+            offerType = EXCHANGE_ACTION_PAST_NAME[offer.type];
+
+            break;
+          }
+        }
+
+        // offerType = EXCHANGE_ACTION_PAST_NAME[offer.type];
+        message = intl.formatMessage({ id: 'offerHandShakeExchangeContentMeDone' }, {
+          offerType: offerType,
+          something: offer.physicalItem,
+          amount: formatAmountCurrency(offer.amount),
+          currency: offer.currency,
+          currency_symbol: offer.fiatCurrency,
+          total: formatMoney(fiatAmount),
+          fee: offer.feePercentage,
+          payment_method: EXCHANGE_METHOD_PAYMENT[EXCHANGE_FEED_TYPE.EXCHANGE],
+        });
+        break;
+      }
+      default: {
+        switch (this.userType) {
+          case HANDSHAKE_USER.SHAKED: {
+            if (offer.type === EXCHANGE_ACTION.BUY) {
+              offerType = EXCHANGE_ACTION_PRESENT_NAME[EXCHANGE_ACTION.SELL];
+            } else if (offer.type === EXCHANGE_ACTION.SELL) {
+              offerType = EXCHANGE_ACTION_PRESENT_NAME[EXCHANGE_ACTION.BUY];
+            }
+            break;
+          }
+          case HANDSHAKE_USER.OWNER: {
+            offerType = EXCHANGE_ACTION_PRESENT_NAME[offer.type];
+
+            break;
+          }
+        }
+        message = intl.formatMessage({ id: 'offerHandShakeExchangeContentMe' }, {
+          offerType: offerType,
+          something: offer.physicalItem,
+          amount: formatAmountCurrency(offer.amount),
+          currency: offer.currency,
+          currency_symbol: offer.fiatCurrency,
+          total: formatMoney(fiatAmount),
+          fee: offer.feePercentage,
+          payment_method: EXCHANGE_METHOD_PAYMENT[EXCHANGE_FEED_TYPE.EXCHANGE],
+        });
+        break;
+      }
+    }
+    console.log('offferes', offer.physical_item)
+    return message;
+  }
+
+  ////////////////////////
+
   deleteOfferItem = async () => {
     const { offer } = this;
     const { currency, sellAmount } = offer;
@@ -968,6 +1092,48 @@ class FeedMe extends React.PureComponent {
         let fiatAmount = this.calculateFiatAmount(offer);
 
         message = this.getContent(fiatAmount);
+
+        actionButtons = this.getActionButtons();
+        break;
+      }
+      case EXCHANGE_FEED_TYPE.EXCHANGE: {
+        message = this.getContentExchange();
+
+        statusText = HANDSHAKE_EXCHANGE_STATUS_NAME[status];
+
+        const fiatAmount = this.calculateFiatAmount(offer);
+
+        from = this.getFrom();
+
+        message = this.getContentExchange(fiatAmount);
+
+        //Check show chat
+        switch (status) {
+          case HANDSHAKE_EXCHANGE_STATUS.CREATED:
+          case HANDSHAKE_EXCHANGE_STATUS.ACTIVE:
+          case HANDSHAKE_EXCHANGE_STATUS.CLOSING:
+          case HANDSHAKE_EXCHANGE_STATUS.CLOSED: {
+            showChat = false;
+            break;
+          }
+          default: {
+            showChat = true;
+
+            switch (this.userType) {
+              case HANDSHAKE_USER.NORMAL: {
+                break;
+              }
+              case HANDSHAKE_USER.SHAKED: {
+                chatUsername = offer.username;
+                break;
+              }
+              case HANDSHAKE_USER.OWNER: {
+                chatUsername = offer.toUsername;
+                break;
+              }
+            }
+          }
+        }
 
         actionButtons = this.getActionButtons();
         break;
