@@ -333,7 +333,7 @@ renderLinkRefer= () => (
                 //   value={this.state.inputLinkValue}
                   onChange={evt => this.updateLinkValue(evt)}
                   validate={[required]}
-                  onFocus={() => { Clipboard.copy(JSON.stringify(this.state.inputLinkValue)); this.showToast('Referral link copied to clipboard.'); }}
+                  onClick={() => { alert('ga'); Clipboard.copy(JSON.stringify(this.state.inputLinkValue)); this.showToast('Referral link copied to clipboard.'); }}
               />
           </Col>
           <Col sm={4} md={4} xs={4} className="no-padding-left">
