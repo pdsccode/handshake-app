@@ -1,3 +1,7 @@
+.bgBox{
+  background-image: url('../../../assets/images/pages/wallet/bg-box-wallet-coin.svg')
+}
+
 .sendwallet-wrapper{
     margin-top: 20px;
     padding-left: 7px;
@@ -21,6 +25,10 @@
       line-height: 22px;
       border:1px solid #EFEFEF;
       height: 54px;
+      background: transparent;
+      ::placeholder{
+        color: #fff;
+      }
     }
   }
 
