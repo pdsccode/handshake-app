@@ -135,4 +135,32 @@ export default {
       answer: '我们将整合握手 (和您最喜欢的功能, 如承诺, 欠条, 合同上传等) 到忍者移动网站。',
     },
   ],
+
+  // MobileOrTablet components
+  MOT_TITLE: '忍者网络只能通过移动访问',
+  MOT_CONTENT_0: '忍者网络只能通过移动访问',
+  MOT_CONTENT_1: '在移动浏览器上打开',
+  MOT_CONTENT_2: '以获取匿名输入。',
+  MOT_CONTENT_3: '不需要下载。不需要注册。',
+  MOT_LIST_CONTENT: [
+    {
+      mainContent: '阅读',
+      placeHolderLink: '白皮',
+      link: 'https://medium.com/@ninjadotorg/shakeninja-bex-1c938f18b3e8',
+      mainContent1: '书',
+      isBlankTarget: true,
+    },
+    {
+      mainContent: '我们回答您的',
+      placeHolderLink: '常见问题',
+      link: '/faq',
+    },
+    {
+      mainContent: '通过',
+      placeHolderLink: '电报',
+      link: 'https://t.me/ninja_org',
+      isBlankTarget: true,
+      mainContent1: '加入 dojo',
+    },
+  ],
 };

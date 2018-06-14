@@ -79,7 +79,7 @@ class MobileOrTablet extends React.PureComponent {
                 {
                   messages.MOT_LIST_CONTENT.map((item, index) => (
                     <li key={index}>
-                      <img src={shurikenIcon} alt="shuriken icon" /> {item.mainContent} <a href={item.link} target="_blank">{item.placeHolderLink}</a>
+                      <img src={shurikenIcon} alt="shuriken icon" /> {item.mainContent || ''} <a href={item.link} target="_blank">{item.placeHolderLink}</a> {item.mainContent1 || ''}
                     </li>
                   ))
                 }
