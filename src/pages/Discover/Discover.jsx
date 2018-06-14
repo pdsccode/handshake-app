@@ -55,6 +55,9 @@ class DiscoverPage extends React.Component {
     firebaseUser: PropTypes.object,
     exchange: PropTypes.object.isRequired,
     ipInfo: PropTypes.object.isRequired,
+    isBannedCash: PropTypes.bool.isRequired,
+    isBannedPrediction: PropTypes.bool.isRequired,
+    isBannedChecked: PropTypes.bool.isRequired,
   }
 
   static defaultProps = {
@@ -72,6 +75,9 @@ class DiscoverPage extends React.Component {
       modalContent: null,
       lat: 0,
       lng: 0,
+      isBannedCash: this.props.isBannedCash,
+      isBannedPrediction: this.props.isBannedPrediction,
+      isBannedChecked: this.props.isBannedChecked,
     };
     // this.loadDiscoverList();
     // bind
@@ -121,6 +127,18 @@ class DiscoverPage extends React.Component {
         // });
       }
       return { exchange: nextProps.exchange };
+    }
+    if (nextProps.isBannedCash !== prevState.isBannedCash) {
+      return { isBannedCash: nextProps.isBannedCash };
+    }
+    if (nextProps.isBannedPrediction !== prevState.isBannedPrediction) {
+      return { isBannedPrediction: nextProps.isBannedPrediction };
+    }
+    if (nextProps.isBannedChecked !== prevState.isBannedChecked) {
+      return { isBannedChecked: nextProps.isBannedChecked };
+    }
+    if (nextProps.isBannedPrediction && nextProps.isBannedChecked) {
+      return { isLoading: false };
     }
     return null;
   }
@@ -239,6 +257,12 @@ class DiscoverPage extends React.Component {
         this.loadDiscoverList();
       }
     });
+    if (category.id === 2 && this.state.isBannedCash) {
+      this.setLoading(false);
+    }
+    if (category.id === 3 && this.state.isBannedPrediction) {
+      this.setLoading(false);
+    }
   }
 
   clickTabItem() {
@@ -316,7 +340,7 @@ class DiscoverPage extends React.Component {
             </Col>
           </Row>
           {
-            handshakeIdActive === HANDSHAKE_ID.EXCHANGE && (
+            this.state.isBannedChecked && handshakeIdActive === HANDSHAKE_ID.EXCHANGE && !this.state.isBannedCash && (
               <React.Fragment>
                 <Row>
                   <Col md={12} className="exchange-intro">
@@ -343,7 +367,14 @@ class DiscoverPage extends React.Component {
             )
           }
           {
-            handshakeIdActive === HANDSHAKE_ID.BETTING && (
+              this.state.isBannedChecked && this.state.handshakeIdActive === HANDSHAKE_ID.BETTING && this.state.isBannedPrediction
+              ? (
+                <div>{'Hey Ninja. Your wet blanket IP address won\'t let you play this game.'}</div>
+              )
+              : null
+            }
+          {
+            this.state.isBannedChecked && this.state.handshakeIdActive === HANDSHAKE_ID.BETTING && !this.state.isBannedPrediction && (
               <React.Fragment>
                 <BettingFilter setLoading={this.setLoading} />
                 <Row>
@@ -380,10 +411,17 @@ class DiscoverPage extends React.Component {
             )
           }
           <Row>
-            {handshakeIdActive !== HANDSHAKE_ID.BETTING && this.getHandshakeList()}
+            {this.state.isBannedChecked && handshakeIdActive === HANDSHAKE_ID.EXCHANGE && !this.state.isBannedCash && this.getHandshakeList()}
+            {
+              this.state.isBannedChecked && handshakeIdActive === HANDSHAKE_ID.EXCHANGE && this.state.isBannedCash
+              ? (
+                <div>{'Hey Ninja. Your wet blanket IP address won\'t let you play this game.'}</div>
+              )
+              : null
+            }
           </Row>
         </Grid>
-        <ModalDialog onRef={modal => this.modalRef = modal} className="discover-popup" isDismiss={false} >
+        <ModalDialog onRef={(modal) => { this.modalRef = modal; return null; }} className="discover-popup" isDismiss={false} >
           {modalContent}
         </ModalDialog>
       </React.Fragment>
@@ -399,6 +437,7 @@ const mapState = state => ({
   exchange: state.exchange,
   isBannedCash: state.app.isBannedCash,
   isBannedPrediction: state.app.isBannedPrediction,
+  isBannedChecked: state.app.isBannedChecked,
 });
 
 const mapDispatch = ({

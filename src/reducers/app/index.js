@@ -49,6 +49,7 @@ function appReducter(state = {
 
   isBannedCash: false,
   isBannedPrediction: false,
+  isBannedChecked: false,
 
 }, action) {
   switch (action.type) {
@@ -226,6 +227,13 @@ function appReducter(state = {
       return {
         ...state,
         isBannedPrediction: true,
+      };
+    }
+
+    case APP_ACTION.BAN_CHECKED: {
+      return {
+        ...state,
+        isBannedChecked: true,
       };
     }
 
