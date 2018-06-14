@@ -23,6 +23,7 @@ import Category from '@/components/core/controls/Category';
 import FeedPromise from '@/components/handshakes/promise/Feed';
 import FeedBetting from '@/components/handshakes/betting/Feed';
 import FeedExchange from '@/components/handshakes/exchange/Feed/FeedExchange';
+import FeedExchangeLocal from '@/components/handshakes/exchange/Feed/FeedExchangeLocal';
 import FeedSeed from '@/components/handshakes/seed/Feed';
 // import FeedCreditCard from '@/components/handshakes/exchange/Feed/FeedCreditCard';
 
@@ -42,6 +43,7 @@ const maps = {
   [HANDSHAKE_ID.PROMISE]: FeedPromise,
   [HANDSHAKE_ID.BETTING]: FeedBetting,
   [HANDSHAKE_ID.EXCHANGE]: FeedExchange,
+  [HANDSHAKE_ID.EXCHANGE_LOCAL]: FeedExchangeLocal,
   [HANDSHAKE_ID.SEED]: FeedSeed,
 };
 
