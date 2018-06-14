@@ -51,20 +51,13 @@ class Refers extends React.Component {
       step2_value: "",
       step2: false,
       step3_value: "",
-      step3: false
+      step3: false,
+      profile: {}
     }
-  }
-
-  componentWillMount(){
-    console.log("componentWillMount");
   }
 
   componentDidMount(){
     this.resetForm();
-  }
-
-  componentWillUnmount() {
-    console.log("componentWillUnmount");
   }
 
   showAlert(msg, type = 'success', timeOut = 3000, icon = '') {
@@ -108,7 +101,7 @@ class Refers extends React.Component {
       this.props.rfChange(nameFormStep3, 'refer_email', profile && profile.email ? profile.email : '');
     }
 
-    const refers = local.get(APP.REFERS);
+    let refers = local.get(APP.REFERS);
     if(refers){
       if(refers.step1){console.log(refers);
         this.setState({step1: true, step1_value: refers.step1_value});
@@ -121,10 +114,23 @@ class Refers extends React.Component {
       if(refers.step3){
         this.setState({step3: true, step3_value: refers.step3_value});
       }
+      else if(profile && profile.email) {
+        refers.step3 = true;
+        refers.step3_value = profile.email;
+        local.save(APP.REFERS, refers);
+      }
 
       this.props.rfChange(nameFormStep1, 'telegram_username', refers && refers.step1_value ? refers.step1_value : '');
       this.props.rfChange(nameFormStep2, 'twitter_username', refers && refers.step2_value ? refers.step2_value : '');
       this.props.rfChange(nameFormStep3, 'refer_email', refers && refers.step3_value ? refers.step3_value : '');
+    }
+    else{
+      if(profile && profile.email) {
+        refers = {};
+        refers.step3 = true;
+        refers.step3_value = profile.email;
+        local.save(APP.REFERS, refers);
+      }
     }
 
     if(this.state.step1 == false){
@@ -168,7 +174,7 @@ class Refers extends React.Component {
     }
     else{
       this.setState({step1: true});
-      let refers = loget(APP.REFERS);
+      let refers = local.get(APP.REFERS);
       if(!refers)
         refers = {};
 
