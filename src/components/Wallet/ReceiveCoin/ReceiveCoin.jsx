@@ -37,7 +37,8 @@ class ReceiveCoin extends React.Component {
     this.state = {
       wallets: [],
       walletDefault: false,
-      walletSelected: false,      
+      walletSelected: false,     
+      inputSendAmountValue: '', 
     }    
   }
 
@@ -144,6 +145,12 @@ class ReceiveCoin extends React.Component {
 
     this.setState({wallets: wallets, walletDefault: walletDefault, walletSelected: walletDefault});
 
+  }
+
+  updateSendAmountValue = (evt) => {
+    this.setState({
+      inputSendAmountValue: evt.target.value,
+    });
   }
 
 onItemSelectedWallet = (item) =>{
