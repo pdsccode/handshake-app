@@ -39,6 +39,7 @@ import NetworkError from '@/components/Router/NetworkError';
 // import BlockCountry from '@/components/core/presentation/BlockCountry';
 import qs from 'querystring';
 import IpInfo from '@/models/IpInfo';
+import Maintain from './Maintain';
 
 addLocaleData([...en, ...fr, ...zh, ...de, ...ja, ...ko, ...ru, ...es]);
 
@@ -170,6 +171,7 @@ class Router extends React.Component {
       updatedAt: this.props.auth.updatedAt,
       loadingText: 'Loading application',
       isNetworkError: false,
+      isMaintain: true,
     };
 
     this.checkRegistry = ::this.checkRegistry;
@@ -407,6 +409,20 @@ class Router extends React.Component {
             render={loadingProps => (
               <Layout {...loadingProps}>
                 {(this.state.isNetworkError) ? <NetworkError /> : <Loading message={this.state.loadingText} />}
+              </Layout>
+              )}
+          />
+        </BrowserRouter>
+      );
+    }
+    if (this.state.isMaintain) {
+      return (
+        <BrowserRouter>
+          <Route
+            path={URL.INDEX}
+            render={loadingProps => (
+              <Layout {...loadingProps}>
+                <Maintain />
               </Layout>
               )}
           />
