@@ -1,4 +1,6 @@
 import React from 'react';
+import { injectIntl } from 'react-intl';
+
 // style
 import onlyMobileTabletSVG from '@/assets/images/ninja/ninja-header.svg';
 import shurikenIcon from '@/assets/images/ninja/shuriken-icon.svg';
@@ -33,6 +35,7 @@ class MobileOrTablet extends React.PureComponent {
   }
 
   render() {
+    const { messages, locale } = this.props.intl;
     return (
       <div className="container mobile-tablet">
         <div className="row">
@@ -52,32 +55,34 @@ class MobileOrTablet extends React.PureComponent {
           </div>
           <div className="col-lg-12 text-center">
             <img className="img-fluid imageHeader" src={onlyMobileTabletSVG} alt="ninja" />
-            <h1>The anonymous exchange of anything</h1>
+            <h1>{messages.MOT_TITLE}</h1>
           </div>
           <div className="col-lg-12 text-center">
             <p>
-              The Ninja network is only accessible via mobile.
+              {messages.MOT_CONTENT_0}
               <br/>
-              Open <span className="website">www.ninja.org</span> on your mobile browser to gain anonymous entry.
+              {messages.MOT_CONTENT_1} <span className="website">www.ninja.org</span> {messages.MOT_CONTENT_2}
               <br />
-              <span className="whiteColor">No download needed. No sign up required.</span>
+              <span className="whiteColor">{messages.MOT_CONTENT_3}</span>
             </p>
           </div>
           <div className="col-lg-12">
             <div>
               <ul>
-                <li>
-                  <img src={shurikenIcon} /> Jump in for <a href="/shuriken">Airdrop</a>
-                </li>
-                <li>
-                  <img src={shurikenIcon} /> Read the <a href={whitePaperLink} target="_blank">whitepaper</a>
-                </li>
-                <li>
-                  <img src={shurikenIcon} /> We answered your <a href="/faq">FAQ</a>
-                </li>
-                <li>
-                  <img src={shurikenIcon} /> Join the dojo on <a href={mediumLink} target="_blank">Telegram</a>
-                </li>
+                {
+                  locale === 'en' && (
+                    <li>
+                      <img src={shurikenIcon} alt="shuriken icon" /> Jump in for <a href="/shuriken">Airdrop</a>
+                    </li>
+                  )
+                }
+                {
+                  messages.MOT_LIST_CONTENT.map((item, index) => (
+                    <li key={index}>
+                      <img src={shurikenIcon} alt="shuriken icon" /> {item.mainContent} <a href={item.link} target="_blank">{item.placeHolderLink}</a>
+                    </li>
+                  ))
+                }
               </ul>
             </div>
           </div>
@@ -87,4 +92,4 @@ class MobileOrTablet extends React.PureComponent {
   }
 }
 
-export default MobileOrTablet;
+export default injectIntl(MobileOrTablet);

@@ -27,7 +27,7 @@ const authReducter = (state = {
         ...state, profile: Auth.profile(action.payload.data), isLogged: true, updatedAt: Date.now(),
       };
     case `${ACTIONS.SET_OFFLINE_STATUS}_SUCCESS`: {
-      return {...state, offline: state.offline ? 0 : 1 };
+      return { ...state, offline: state.offline ? 0 : 1 };
     }
 
     default:

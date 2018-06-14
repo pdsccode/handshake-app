@@ -24,7 +24,6 @@ import ja from 'react-intl/locale-data/ja';
 import ko from 'react-intl/locale-data/ko';
 import ru from 'react-intl/locale-data/ru';
 import es from 'react-intl/locale-data/es';
-import vi from 'react-intl/locale-data/vi';
 
 import { withFirebase } from 'react-redux-firebase';
 import messages from '@/locals';
@@ -40,7 +39,7 @@ import BlockCountry from '@/components/core/presentation/BlockCountry';
 import qs from 'querystring';
 import IpInfo from "@/models/IpInfo";
 
-addLocaleData([...en, ...fr, ...zh, ...de, ...ja, ...ko, ...ru, ...es, ...vi]);
+addLocaleData([...en, ...fr, ...zh, ...de, ...ja, ...ko, ...ru, ...es]);
 
 const MeRootRouter = props => (
   <DynamicImport
@@ -175,6 +174,12 @@ class Router extends React.Component {
     this.notification = ::this.notification;
     this.setLanguage = ::this.setLanguage;
     this.ipInfo = ::this.ipInfo;
+
+    this.isSupportedLanguages = ['en', 'zh', 'fr', 'de', 'ja', 'ko', 'ru', 'es'];
+    const currentLanguage = local.get(APP.LOCALE);
+    if (currentLanguage && this.isSupportedLanguages.indexOf(currentLanguage) < 0) {
+      local.remove(APP.LOCALE);
+    }
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -222,8 +227,7 @@ class Router extends React.Component {
   }
 
   setLanguage(language, autoDetect = true) {
-    const isSupportedLanguages = ['en', 'zh', 'fr', 'de', 'ja', 'ko', 'ru', 'es', 'vi'];
-    if (isSupportedLanguages.indexOf(language) >= 0) {
+    if (this.isSupportedLanguages.indexOf(language) >= 0) {
       this.props.changeLocale(language, autoDetect);
     } else {
       this.props.changeLocale('en', autoDetect);
@@ -238,8 +242,10 @@ class Router extends React.Component {
       const ipInfo = IpInfo.ipInfo(data);
       this.props.setIpInfo(ipInfo);
       local.save(APP.IP_INFO, ipInfo);
-      const firstLanguage = data.languages.split(',')[0];
-      this.setLanguage(firstLanguage);
+      if (!local.get(APP.LOCALE)) {
+        const firstLanguage = data.languages.split(',')[0];
+        this.setLanguage(firstLanguage);
+      }
       if (COUNTRIES_BLACKLIST.indexOf(data.country_name) !== -1) {
         // should use country code: .country ISO 3166-1 alpha-2
         // https://ipapi.co/api/#complete-location
@@ -371,7 +377,16 @@ class Router extends React.Component {
       );
     }
     if (window.location.pathname === URL.LANDING_PAGE_TRADE) return <LandingTradeRootRouter />;
-    if (BrowserDetect.isDesktop && process.env.isProduction) return <MobileOrTablet />;
+    if (BrowserDetect.isDesktop && process.env.isProduction) {
+      return (
+        <IntlProvider
+          locale={this.state.currentLocale}
+          messages={messages[this.state.currentLocale]}
+        >
+          <MobileOrTablet />
+        </IntlProvider>
+      );
+    }
     if (!this.state.isLogged || this.state.isLoading) {
       return (
         <BrowserRouter>
