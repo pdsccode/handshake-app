@@ -386,6 +386,7 @@ export const URL = {
   FAQ_INDEX: '/faq',
 
   LIVE_STREAMING: '/live-streaming',
+  LIVE_STREAMING_PREDICTION: '/prediction',
   LIVE_STREAMING_DETAIL: '/live-streaming/:slug',
 };
 

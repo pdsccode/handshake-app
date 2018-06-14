@@ -136,6 +136,14 @@ const LiveStreamingRootRouter = props => (
     {Component => <Component {...props} />}
   </DynamicImport>
 );
+const PredictionRootRouter = props => (
+  <DynamicImport
+    loading={Loading}
+    load={() => import('@/components/Router/Prediction')}
+  >
+    {Component => <Component {...props} />}
+  </DynamicImport>
+);
 const Page404 = props => (
   <DynamicImport
     isNotFound
@@ -197,7 +205,8 @@ class Router extends React.Component {
                         <Redirect to={{pathname: URL.LIVE_STREAMING}}/>
                       )}
                     />
-                    <Route path={URL.LIVE_STREAMING} component={LiveStreamingRootRouter}/>
+                    <Route path={URL.LIVE_STREAMING} component={LiveStreamingRootRouter} />
+                    <Route path={URL.LIVE_STREAMING_PREDICTION} component={PredictionRootRouter} />
                     <Route component={Page404} />
                   </Switch>
                 </ScrollToTop>

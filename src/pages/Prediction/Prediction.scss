@@ -1,0 +1,62 @@
+@import './src/styles/style';
+
+.matchDetail {
+  .matchDetailInfo {
+    padding: rem-calc(0 20px);
+    background: #333;
+    color: #FFF;
+    //width: 75%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .team {
+      .teamFlag {
+        width: rem-calc(40px);
+      }
+      .teamName {
+        font-weight: $normal;
+        font-size: rem-calc(16px);
+        margin: 0;
+      }
+      .home {
+        margin-right: rem-calc(5px);
+      }
+      .away {
+        margin-left: rem-calc(5px);
+      }
+    }
+    .middle {
+      background: rgba(5, 5, 5, 0.3);
+      text-align: center;
+      padding: rem-calc(20px 15px);
+      .time {
+        font-size: rem-calc(26px);
+        color: #FFF735;
+      }
+    }
+  }
+  .liveBox {
+    margin-top: rem-calc(50px);
+    iframe {
+      max-height: 500px;
+      min-height: 300px;
+    }
+  }
+
+  .links {
+    margin-top: rem-calc(50px);
+    ul {
+      list-style: none;
+      li {
+        color: blue;
+        &:hover {
+          cursor: pointer;
+        }
+      }
+
+      .active {
+        opacity: 0.65;
+      }
+    }
+  }
+}
