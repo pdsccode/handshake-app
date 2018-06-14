@@ -8,12 +8,11 @@ const EthereumTx = require('ethereumjs-tx');
 const hdkey = require('hdkey');
 const ethUtil = require('ethereumjs-util');
 const bip39 = require('bip39');
-const moment = require('moment');
 const BN = Web3.utils.BN;
 
 export class Ethereum extends Wallet {
     static Network = { Mainnet: 'https://mainnet.infura.io/', Rinkeby: 'https://rinkeby.infura.io/' }
-    static API = { Mainnet: 'https://api-rinkeby.etherscan.io/api', Rinkeby: 'https://api-rinkeby.etherscan.io/api' }
+    static API = { Mainnet: 'https://api.etherscan.io/api', Rinkeby: 'https://api-rinkeby.etherscan.io/api' }
 
     constructor() {
       super();
@@ -145,68 +144,31 @@ export class Ethereum extends Wallet {
       }
     }
 
-    async getTransactionDetail(txhash) {
-      const API_KEY = configs.network[4].apikeyEtherscan;
-      const url =this.constructor.API[this.getNetworkName()] + `?module=proxy&action=eth_getTransactionByHash&txhash=${txhash}&apikey=${API_KEY}`;
-      const response = await axios.get(url);
 
-      const web3 = new Web3(new Web3.providers.HttpProvider(this.network));
-
-      if (response.status == 200) {
-        let detail = response.data.result, result = {};
-        result = {
-          header: {
-            value: Number(web3.utils.hexToNumber(detail.value) / 1000000000000000000),
-            coin: "ETH",
-            confirmations: web3.utils.hexToNumber(detail.transactionIndex),
-            is_sent: this.address.toLowerCase() == detail.from.toLowerCase(),
-          },
-          body: {
-            hash: detail.hash,
-            block: web3.utils.hexToNumber(detail.blockNumber),
-            gas: web3.utils.hexToNumber(detail.gas),
-            gas_price: Number(web3.utils.hexToNumber(detail.gasPrice) / 1000000000000000000).toFixed(web3.utils.hexToNumberString(detail.gasPrice).length) + " ETH",
-            from: detail.from,
-            to: detail.to,
-            nouce: web3.utils.hexToNumber(detail.nouce),
-            data: detail.input
-          }
-        };
-        return result;
-      }
-
-      return false;
+  async getTransactionHistory(pageno) {
+    let result = [];
+    const API_KEY = configs.network[4].apikeyEtherscan;
+    const url =this.constructor.API[this.getNetworkName()] + `?module=account&action=txlist&address=${this.address}&startblock=0&endblock=99999999&page=${pageno}&offset=20&sort=desc&apikey=${API_KEY}`;
+    const response = await axios.get(url);
+    if (response.status == 200) {
+      result = response.data.result;
     }
+    return result;
+  }
 
-    async getTransactionHistory() {
-      const API_KEY = configs.network[4].apikeyEtherscan;
-      const url =this.constructor.API[this.getNetworkName()] + `?module=account&action=txlist&address=${this.address}&startblock=0&endblock=99999999&page=1&offset=20&sort=desc&apikey=${API_KEY}`;
-      const response = await axios.get(url);
-      if (response.status == 200) {
-        let result = [];
-        for(let tran of response.data.result){
-          let value = Number(tran.value / 1000000000000000000),
-          transaction_date = new Date(tran.timeStamp*1000),addresses = [],
-          is_sent = tran.from.toLowerCase() == this.address.toLowerCase();
-          let ethTmp = new Ethereum();
-          ethTmp.address = tran.from;
-          if(is_sent) ethTmp.address = tran.to;
-          addresses.push(ethTmp.getShortAddress());
-          result.push({
-            value: value,
-            transaction_no: tran.hash,
-            transaction_date: transaction_date,
-            transaction_relative_time:  moment(transaction_date).fromNow(),
-            addresses: addresses,
-            time_stamp: tran.timeStamp ,
-            is_sent: is_sent});
-        }
-
-        return result;
-      }
-      return [];
+  async getTransactionCount() {
+    let result = [];
+    const API_KEY = configs.network[4].apikeyEtherscan;
+    const url =this.constructor.API[this.getNetworkName()] + `?module=proxy&action=eth_getTransactionCount&address=${this.address}&tag=latest&apikey=${API_KEY}`;
+    const response = await axios.get(url);
+    if (response.status == 200) {
+      const web3 = this.getWeb3();
+      result = web3.utils.hexToNumber(response.data.result);
     }
-
+    return result;
+  }
 }
+
+
 
 export default { Ethereum };

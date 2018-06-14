@@ -11,6 +11,7 @@ $red: #f00;
 // main color
 $deep-blue: #1e4eff;
 $titan-black: #000000;
+$caribbean-green: #0BDD91;
 // 5 Shades of Grey
 $baltic-sea: #3e3e3e;
 $steel: #666666;
@@ -68,7 +69,8 @@ $font-size-caption:       ($font-size-base * 0.875) !default;
 $z-index: 1050 !default; // default of boostrap
 $z-index-loading-full-screen: $z-index + 1;
 $z-index-alert: $z-index + 2;
+$disable-color: #fa6b49;
 /*
-* Utilities
+* Animation
 * ======================================================================== */
 $animation-duration: 0.5s;

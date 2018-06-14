@@ -29,6 +29,26 @@ class Offer {
       feedType: data.feed_type || '',
       email: data.email || '',
       feePercentage: data.fee_percentage || '',
+      toEmail: data.to_email || '',
+      toContactPhone: data.to_contact_phone || '',
+      toContactInfo: data.to_contact_info || '',
+      offChainId: data.off_chain_id || '',
+      hid: data.hid || '',
+      chatUsername: data.chat_username || '',
+      toChatUsername: data.to_chat_username || '',
+      physicalItem: data.physical_item || '',
+
+
+      //Offer store
+      sellAmountMin: data.sell_amount_min || '',
+      sellAmount: data.sell_amount || '',
+      sellBalance: data.sell_balance || '',
+      sellPercentage: data.sell_percentage || '',
+      buyAmountMin: data.buy_amount_min || '',
+      buyAmount: data.buy_amount || '',
+      buyBalance: data.buy_balance || '',
+      buyPercentage: data.buy_percentage || '',
+      rewardAddress: data.reward_address || '',
     };
   }
 }

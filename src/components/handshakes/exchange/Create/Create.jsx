@@ -1,10 +1,12 @@
-import React from 'react';
-import {FormattedMessage, injectIntl} from 'react-intl';
-import Feed from '@/components/core/presentation/Feed';
-import Button from '@/components/core/controls/Button';
+import React from "react";
+import {injectIntl} from "react-intl";
+import Feed from "@/components/core/presentation/Feed";
+import Button from "@/components/core/controls/Button";
+import './styles.scss'
+import createForm from "@/components/core/form/createForm";
+import {getOfferPrice} from "@/services/offer-util";
 import axios from 'axios';
 
-import createForm from '@/components/core/form/createForm';
 import {
   fieldCleave,
   fieldDropdown,
@@ -12,15 +14,14 @@ import {
   fieldNumericInput,
   fieldPhoneInput,
   fieldRadioButton
-} from '@/components/core/form/customField';
-import {maxValue, minValue, required} from '@/components/core/form/validation';
-import {change, Field, formValueSelector} from 'redux-form';
-import {bindActionCreators} from 'redux';
-import {connect} from 'react-redux';
-import {createOffer, getOfferPrice} from '@/reducers/exchange/action';
+} from "@/components/core/form/customField";
+import {maxValue, minValue, required} from "@/components/core/form/validation";
+import {change, Field, formValueSelector} from "redux-form";
+import {bindActionCreators} from "redux";
+import {connect} from "react-redux";
 import {
   API_URL,
-  CRYPTO_CURRENCY_LIST,
+  CRYPTO_CURRENCY,
   CRYPTO_CURRENCY_DEFAULT,
   DEFAULT_FEE,
   EXCHANGE_ACTION,
@@ -29,63 +30,85 @@ import {
   EXCHANGE_ACTION_NAME,
   FIAT_CURRENCY,
   FIAT_CURRENCY_SYMBOL,
+  MIN_AMOUNT,
   SELL_PRICE_TYPE_DEFAULT,
-} from '@/constants';
-import '../styles.scss';
-import ModalDialog from '@/components/core/controls/ModalDialog/ModalDialog';
+  CRYPTO_CURRENCY_NAME,
+} from "@/constants";
+
+import { validate } from './validation';
+import "../styles.scss";
+import ModalDialog from "@/components/core/controls/ModalDialog/ModalDialog";
 // import {MasterWallet} from '@/models/MasterWallet';
-import getSymbolFromCurrency from 'currency-symbol-map';
-import {URL} from '@/constants';
-import {showAlert} from '@/reducers/app/action';
+import {URL} from "@/constants";
+import {hideLoading, showAlert, showLoading} from "@/reducers/app/action";
 import {MasterWallet} from "@/models/MasterWallet";
-import {ExchangeHandshake} from '@/services/neuron';
+import {ExchangeShopHandshake} from "@/services/neuron";
 // import phoneCountryCodes from '@/components/core/form/country-calling-codes.min.json';
-import COUNTRIES from '@/data/country-dial-codes.js';
-
-import {CRYPTO_CURRENCY, MIN_AMOUNT} from "@/constants";
-import _sample from 'lodash/sample'
-import { feedBackgroundColors } from "@/components/handshakes/exchange/config";
+import COUNTRIES from "@/data/country-dial-codes.js";
+import {feedBackgroundColors} from "@/components/handshakes/exchange/config";
 import {formatAmountCurrency, formatMoney} from "@/services/offer-util";
-import {BigNumber} from "bignumber.js";
-import { showLoading, hideLoading } from '@/reducers/app/action';
+import {createOfferStores,} from "@/reducers/exchange/action";
+import {BigNumber} from "bignumber.js/bignumber";
+import { authUpdate } from '@/reducers/auth/action';
+import OfferShop from "@/models/OfferShop";
+import CoinOffer from "@/models/CoinOffer";
+import { addOfferItem, } from "@/reducers/exchange/action";
+import {getOfferStores} from "@/reducers/exchange/action";
+import { getErrorMessageFromCode } from "../utils";
 
-import iconLock from '@/assets/images/icon/lock.png';
-import iconUnlock from '@/assets/images/icon/unlock.png';
-const nameFormExchangeCreate = 'exchangeCreate';
+const nameFormExchangeCreate = "exchangeCreate";
 const FormExchangeCreate = createForm({
   propsReduxForm: {
     form: nameFormExchangeCreate,
-    initialValues: { type: EXCHANGE_ACTION_DEFAULT, currency: CRYPTO_CURRENCY_DEFAULT, sellPriceType: SELL_PRICE_TYPE_DEFAULT, customizePrice: 0 },
-  },
+    initialValues: {
+      currency: CRYPTO_CURRENCY_DEFAULT,
+      customizePriceBuy: 0,
+      customizePriceSell: 0,
+      customizePriceBuy: -0.25,
+      customizePriceSell: 0.25,
+    }
+    // initialValues: {
+    //   currency: CRYPTO_CURRENCY_DEFAULT,
+    //   customizePriceBuy: 0.25,
+    //   customizePriceSell: -0.25,
+    //   amountBuy: 0.1,
+    //   amountSell: 0.2,
+    //   nameShop: 'Apple store',
+    //   phone: '1234567',
+    //   address: '139 Hong Ha',
+    // }
+  }
 });
 const selectorFormExchangeCreate = formValueSelector(nameFormExchangeCreate);
 
-const textColor = '#ffffff';
-const btnBg = 'rgba(29,29,38,0.30)';
+const textColor = "#ffffff";
+const btnBg = "rgba(29,29,38,0.30)";
 const validateFee = [
   minValue(-50),
-  maxValue(50),
+  maxValue(50)
 ];
-const minValue01 = minValue(0.1);
-const minValue001 = minValue(0.01);
 
 class Component extends React.Component {
+  CRYPTO_CURRENCY_LIST = [
+    { value: CRYPTO_CURRENCY.ETH, text: CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.ETH], hide: false },
+    { value: CRYPTO_CURRENCY.BTC, text: CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.BTC], hide: false },
+  ];
+
   constructor(props) {
     super(props);
 
     this.state = {
-      modalContent: '',
+      modalContent: "",
       currency: CRYPTO_CURRENCY_DEFAULT,
-      type: 'buy',
       lat: 0,
       lng: 0,
     };
     // this.mainColor = _sample(feedBackgroundColors)
-    this.mainColor = '#1F2B34';
+    this.mainColor = "#1F2B34";
   }
 
   setAddressFromLatLng = (lat, lng) => {
-    this.setState({ lat, lng });
+    this.setState({lat: lat, lng: lng});
     const { rfChange } = this.props;
     axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&sensor=true`).then((response) => {
       const address = response.data.results[0] && response.data.results[0].formatted_address;
@@ -93,173 +116,215 @@ class Component extends React.Component {
     });
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     const { ipInfo, rfChange, authProfile } = this.props;
     navigator.geolocation.getCurrentPosition((location) => {
-      const { coords: { latitude, longitude } } = location;
-      this.setAddressFromLatLng(latitude, longitude); // better precision
+      const { coords: { latitude, longitude } } = location
+      this.setAddressFromLatLng(latitude, longitude) // better precision
     }, () => {
-      this.setAddressFromLatLng(ipInfo.latitude, ipInfo.longitude); // fallback
+      this.setAddressFromLatLng(ipInfo?.latitude, ipInfo?.longitude) // fallback
     });
 
     // auto fill phone number from user profile
     let detectedCountryCode = '';
-    const foundCountryPhone = COUNTRIES.find(i => i.code.toUpperCase() === ipInfo.country_code.toUpperCase());
+    const foundCountryPhone = COUNTRIES.find(i => i.code.toUpperCase() === ipInfo?.country.toUpperCase());
     if (foundCountryPhone) {
       detectedCountryCode = foundCountryPhone.dialCode;
     }
     rfChange(nameFormExchangeCreate, 'phone', authProfile.phone || `${detectedCountryCode}-`);
+    rfChange(nameFormExchangeCreate, 'nameShop', authProfile.name || '');
+    rfChange(nameFormExchangeCreate, 'address', authProfile.address || '');
 
-    this.getCryptoPriceByAmount(0);
-    this.intervalCountdown = setInterval(() => {
-      const { amount } = this.props;
-      this.getCryptoPriceByAmount(amount);
-    }, 5 * 60000);
+    this.props.getOfferStores({
+      PATH_URL: `${API_URL.EXCHANGE.OFFER_STORES}/${authProfile.id}`,
 
-    // const ipInfo = await axios.get(`https://ipfind.co/me`, {
-    //   params: {
-    //     auth: 'a59f33e5-0879-411a-908b-792359a0d6cc',
-    //   },
-    // });
+    });
+  }
 
-    // this.setState({ ipInfo: ipInfo.data });
+  componentWillReceiveProps(nextProps){
+    const { intl, rfChange } = this.props;
+    console.log('componentWillReceiveProps',nextProps);
+    if (nextProps.offerStores && nextProps.offerStores !== this.props.offerStores) {
+      console.log('componentWillReceiveProps inside', nextProps.offerStores);
+      this.offer = nextProps.offerStores;
+
+      let haveOfferETH = this.offer.itemFlags.ETH || false;
+      let haveOfferBTC = this.offer.itemFlags.BTC || false;
+
+      this.CRYPTO_CURRENCY_LIST = [
+        { value: CRYPTO_CURRENCY.ETH, text: CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.ETH], hide: haveOfferETH },
+        { value: CRYPTO_CURRENCY.BTC, text: CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.BTC], hide: haveOfferBTC },
+      ];
+
+      if (!haveOfferETH) {
+        rfChange(nameFormExchangeCreate, 'currency', CRYPTO_CURRENCY.ETH);
+      } else if (!haveOfferBTC) {
+        rfChange(nameFormExchangeCreate, 'currency', CRYPTO_CURRENCY.BTC);
+      }
+
+      if (haveOfferETH && haveOfferBTC) {
+        const message = intl.formatMessage({ id: 'offerStoresAlreadyCreated' }, {
+        });
+
+        this.setState({
+          modalContent:
+            (
+              <div className="py-2">
+                <Feed className="feed p-2" background="#259B24">
+                  <div className="text-white d-flex align-items-center" style={{ minHeight: '50px' }}>
+                    <div>{message}</div>
+                  </div>
+                </Feed>
+                <Button block className="btn btn-secondary" onClick={this.handleOfferStoreAlreadyCreated}>OK</Button>
+              </div>
+            ),
+        }, () => {
+          this.modalRef.open();
+        });
+      }
+    }
+  }
+
+  handleOfferStoreAlreadyCreated = () => {
+    this.props.history.push(URL.HANDSHAKE_ME);
   }
 
   showLoading = () => {
-    this.props.showLoading({ message: ''  });
+    this.props.showLoading({message: '',});
   }
 
   hideLoading = () => {
     this.props.hideLoading();
   }
 
-  getCryptoPriceByAmount = (amount) => {
-    const { type, currency } = this.state;
-    const { ipInfo: { currency: fiat_currency } } = this.props;
-
-    const data = {
-      amount,
-      currency,
-      type,
-      fiat_currency,
-    };
-
-    this.props.getOfferPrice({
-      PATH_URL: API_URL.EXCHANGE.GET_OFFER_PRICE,
-      qs: data,
+  showAlert = (message) => {
+    this.props.showAlert({
+      message: <div className="text-center">
+        {message}
+      </div>,
+      timeOut: 5000,
+      type: 'danger',
+      callBack: () => {
+      }
     });
-  }
-
-  onAmountChange = (e) => {
-    const amount = e.target.value;
-    console.log('onAmountChange', amount);
-    // this.getCryptoPriceByAmount(amount);
-    // this.setState({amount: amount}, () => {
-    //   this.getCryptoPriceByAmountThrottled(amount);
-    // });
-  }
-
-  onTypeChange = (e, newValue) => {
-    const { amount } = this.props;
-
-    this.setState({ type: newValue }, () => {
-      this.getCryptoPriceByAmount(amount);
-    });
-  }
-
-  onSellPriceTypeChange = (e, newValue) => {
-    const { amount } = this.props;
-    // this.setState({currency: newValue}, () => {
-    this.getCryptoPriceByAmount(amount);
-    // });
   }
 
   onCurrencyChange = (e, newValue) => {
-    // console.log('onCurrencyChange', newValue);
+    console.log('onCurrencyChange', newValue);
     // const currency = e.target.textContent || e.target.innerText;
-    const { amount } = this.props;
-    this.setState({ currency: newValue }, () => {
-      this.getCryptoPriceByAmount(amount);
-    });
+    // const { amount } = this.props;
+    // this.setState({ currency: newValue }, () => {
+    //   this.getCryptoPriceByAmount(amount);
+    // });
+  }
+
+  showNotEnoughCoinAlert = (balance, amountBuy, amountSell, fee, currency) => {
+    console.log('showNotEnoughCoinAlert', balance, amountBuy, amountSell, fee, currency);
+    const bnBalance = new BigNumber(balance);
+    const bnAmountBuy = new BigNumber(0);
+    const bnAmountSell = new BigNumber(amountSell);
+    const bnFeeBuy = new BigNumber(0);
+    const bnFeeSell = new BigNumber(fee);
+
+    const conditionBuy = bnBalance.isLessThan(bnAmountBuy.plus(bnFeeBuy));
+    const conditionSell = bnBalance.isLessThan(bnAmountSell.plus(bnFeeSell));
+
+    if (conditionBuy || conditionSell) {
+      const { intl } = this.props;
+      this.props.showAlert({
+        message: <div className="text-center">
+          {intl.formatMessage({ id: 'notEnoughCoinInWalletStores' }, {
+            amount: formatAmountCurrency(balance),
+            fee: formatAmountCurrency(fee),
+            currency: currency,
+          })}
+        </div>,
+        timeOut: 5000,
+        type: 'danger',
+        callBack: () => {
+        }
+      });
+    }
+
+    return conditionBuy || conditionSell;
+  }
+
+  checkMainNetDefaultWallet = (wallet) => {
+    const { intl } = this.props;
+    let result = true;
+
+    if (process.env.isProduction) {
+      if (wallet.network === MasterWallet.ListCoin[wallet.className].Network.Mainnet) {
+        result = true;
+      } else {
+        const message = intl.formatMessage({id: 'requireDefaultWalletOnMainNet'}, {});
+        this.showAlert(message);
+        result = false;
+      }
+    }
+
+    return result;
   }
 
   handleSubmit = async (values) => {
-    const { intl, totalAmount, price } = this.props;
-    // const fiat_currency = this.state.ipInfo.currency;
-    const { ipInfo: { currency: fiat_currency }, authProfile } = this.props;
-    // console.log('valuessss', values);
+    const { intl, authProfile, ipInfo } = this.props;
+    const { lat, lng } = this.state;
+    console.log('handleSubmit', values);
+    const {
+      currency, amountBuy, amountSell, customizePriceBuy,
+      customizePriceSell, nameShop, phone, address,
+    } = values;
 
-    const wallet = MasterWallet.getWalletDefault(values.currency);
-    const balance = new BigNumber(await wallet.getBalance());
-    const fee = new BigNumber(await wallet.getFee(4, true));
-    let amount = new BigNumber(values.amount);
+    const wallet = MasterWallet.getWalletDefault(currency);
 
-    if (values.currency === CRYPTO_CURRENCY.ETH && values.type === EXCHANGE_ACTION.BUY) {
-      amount = new BigNumber(0);
-    }
-
-    const condition = balance.isLessThan(amount.plus(fee));
-
-    if ((values.currency === CRYPTO_CURRENCY.ETH || (values.type === EXCHANGE_ACTION.SELL && values.currency === CRYPTO_CURRENCY.BTC))
-      && condition) {
-      this.props.showAlert({
-        message: <div className="text-center">
-          {intl.formatMessage({ id: 'notEnoughCoinInWallet' }, {
-            amount: formatAmountCurrency(balance),
-            fee: formatAmountCurrency(fee),
-            currency: values.currency,
-          })}
-        </div>,
-        timeOut: 3000,
-        type: 'danger',
-        callBack: () => {
-        },
-      });
-
+    if (!this.checkMainNetDefaultWallet(wallet)) {
       return;
     }
 
-    const address = wallet.address;
+    const balance = await wallet.getBalance();
+    const fee = await wallet.getFee(4, true);
 
-    const rewardWallet = MasterWallet.getRewardWalletDefault(values.currency);
-    const reward_address = rewardWallet.address;
+    const condition = this.showNotEnoughCoinAlert(balance, amountBuy, amountSell, fee, currency);
 
-    const phones = values.phone.trim().split('-');
-
-    let phone = '';
-    if (phones.length > 1) {
-      phone = phones[1].length > 0 ? values.phone : '';
+    if (condition) {
+      return;
     }
 
-    const offer = {
-      amount: values.amount,
-      price,
-      percentage: values.customizePrice.toString(),
-      currency: values.currency,
-      type: values.type,
-      contact_info: values.address,
-      contact_phone: phone,
-      fiat_currency,
-      latitude: this.state.lat,
-      longitude: this.state.lng,
-      email: authProfile ? authProfile.email : '',
+    const rewardWallet = MasterWallet.getRewardWalletDefault(currency);
+
+    const phones = phone.trim().split('-');
+    const phoneNew = phones.length > 1 && phones[1].length > 0 ? phone : '';
+
+    const data = {
+      currency: currency,
+      sell_amount: amountSell.toString(),
+      sell_percentage: customizePriceSell.toString(),
+      buy_amount: amountBuy.toString(),
+      buy_percentage: customizePriceBuy.toString(),
+      user_address: wallet.address,
+      reward_address: rewardWallet.address,
     };
 
-    if (values.type === EXCHANGE_ACTION.BUY) {
-      offer.user_address = address;
-    } else {
-      offer.refund_address = address;
+    const offer = {
+      email: authProfile?.email || '',
+      username: nameShop,
+      contact_phone: phoneNew,
+      contact_info: address,
+      latitude: lat,
+      longitude: lng,
+      fiat_currency: ipInfo.currency,
+      chat_username: authProfile?.username,
+    };
+
+    const offerStore = {
+      offer: offer,
+      item: data,
     }
 
-    offer.reward_address = reward_address;
-
-    console.log('handleSubmit', offer);
-    const message = intl.formatMessage({ id: 'createOfferConfirm' }, {
-      type: EXCHANGE_ACTION_NAME[values.type],
-      amount: formatAmountCurrency(values.amount),
-      currency: values.currency,
-      currency_symbol: fiat_currency,
-      total: formatMoney(totalAmount),
+    const message = intl.formatMessage({ id: 'createOfferStoreConfirm' }, {
+      currency: currency,
+      amountBuy: amountBuy,
+      amountSell: amountSell,
     });
 
     this.setState({
@@ -271,7 +336,13 @@ class Component extends React.Component {
                 <div>{message}</div>
               </div>
             </Feed>
-            <Button className="mt-2" block onClick={() => this.createOffer(offer)}>Confirm</Button>
+            {
+              this.offer ? (
+                <Button className="mt-2" block onClick={() => this.addOfferItem(data)}>Confirm</Button>
+              ) : (
+                <Button className="mt-2" block onClick={() => this.createOffer(offerStore)}>Confirm</Button>
+              )
+            }
             <Button block className="btn btn-secondary" onClick={this.cancelCreateOffer}>Not now</Button>
           </div>
         ),
@@ -284,262 +355,314 @@ class Component extends React.Component {
     this.modalRef.close();
   }
 
+  ////////////////////////
+
   createOffer = (offer) => {
     this.modalRef.close();
     console.log('createOffer', offer);
-    const { currency } = this.props;
 
-    // if (currency === 'BTC') {
     this.showLoading();
-    this.props.createOffer({
-      PATH_URL: API_URL.EXCHANGE.OFFERS,
+    this.props.createOfferStores({
+      PATH_URL: API_URL.EXCHANGE.OFFER_STORES,
       data: offer,
       METHOD: 'POST',
       successFn: this.handleCreateOfferSuccess,
       errorFn: this.handleCreateOfferFailed,
     });
-    // } else {
-    //
-    // }
   }
 
+  ////////////////////////
+
+  addOfferItem = (offerItem) => {
+    this.modalRef.close();
+    console.log('addOfferItem', offerItem, this.offer);
+    const { offer } = this;
+
+    this.showLoading();
+    this.props.addOfferItem({
+      PATH_URL: `${API_URL.EXCHANGE.OFFER_STORES}/${offer.id}`,
+      METHOD: 'POST',
+      data: offerItem,
+      successFn: this.handleCreateOfferSuccess,
+      errorFn: this.handleCreateOfferFailed,
+    });
+  }
+
+  ////////////////////////
+
   handleCreateOfferSuccess = async (responseData) => {
-    // const { currency } = this.props;
+    console.log('handleCreateOfferSuccess', responseData);
+    const { intl, rfChange, currency, amountSell } = this.props;
     const data = responseData.data;
+    const offer = OfferShop.offerShop(data);
+    this.offer = offer;
 
-    const currency = data.currency;
-
-    // this.props.history.push(URL.HANDSHAKE_ME);
-    console.log('handleCreateOfferSuccess', data);
+    // console.log('handleCreateOfferSuccess', data);
 
     const wallet = MasterWallet.getWalletDefault(currency);
-    const rewardWallet = MasterWallet.getRewardWalletDefault(currency);
+    // const rewardWallet = MasterWallet.getRewardWalletDefault(currency);
 
-    console.log('data', data);
-    console.log('wallet', wallet);
+    // console.log('wallet', wallet);
+    // console.log('rewardWallet', rewardWallet);
 
     if (currency === CRYPTO_CURRENCY.BTC) {
-      wallet.transfer(data.system_address, data.amount).then((success) => {
-        console.log('transfer', success);
-      });
-    } else if (currency === CRYPTO_CURRENCY.ETH) {
-      const exchangeHandshake = new ExchangeHandshake(wallet.chainId);
-
-      let result = null;
-      if (data.type === EXCHANGE_ACTION.BUY) {
-        result = await exchangeHandshake.initByCashOwner(wallet.address, rewardWallet.address, data.amount, data.id);
-      } else {
-        result = await exchangeHandshake.initByCoinOwner(wallet.address, rewardWallet.address, data.amount, data.id);
+      console.log('transfer BTC', offer.items.BTC.systemAddress, amountSell);
+      if (amountSell > 0) {
+        wallet.transfer(offer.items.BTC.systemAddress, amountSell).then(success => {
+          console.log('transfer', success);
+        });
       }
+    } else if (currency === CRYPTO_CURRENCY.ETH) {
+      if (amountSell > 0) {
+        const exchangeHandshake = new ExchangeShopHandshake(wallet.chainId);
 
-      console.log('handleCreateOfferSuccess', result);
+        let result = null;
+        result = await exchangeHandshake.initByShopOwner(amountSell, offer.id);
+        console.log('handleCreateOfferSuccess', result);
+      }
     }
-    // this.state.walletSelected.transfer(this.state.inputAddressAmountValue, this.state.inputSendAmountValue).then(success => {
-    //   alert(success);
-    //   this.modalSendRef.close();
-    // });
 
     this.hideLoading();
+    const message = intl.formatMessage({ id: 'createOfferSuccessMessage' }, {
+    });
     this.props.showAlert({
-      message: <div className="text-center"><FormattedMessage id="createOfferSuccessMessage" /></div>,
+      message: <div className="text-center">{message}</div>,
       timeOut: 2000,
       type: 'success',
       callBack: () => {
-        this.props.history.push(URL.HANDSHAKE_ME);
-      },
+
+      }
     });
 
-    // this.timeoutClosePopup = setTimeout(() => {
-    //   this.handleBuySuccess();
-    // }, 3000);
-    //
-    // console.log('handleCreateCCOrderSuccess', data);
-    // this.setState({
-    //   modalContent:
-    //   (
-    //     <div className="py-2">
-    //       <Feed className="feed p-2" background="#259B24">
-    //         <div className="text-white d-flex align-items-center" style={{ minHeight: '75px' }}>
-    //           <div>Create offer success</div>
-    //         </div>
-    //       </Feed>
-    //       <Button block className="btn btn-secondary mt-2" onClick={this.handleBuySuccess}>Dismiss</Button>
-    //     </div>
-    //   ),
-    // }, () => {
-    //   this.modalRef.open();
-    // });
+    let haveOfferETH = offer.itemFlags.ETH;
+    let haveOfferBTC = offer.itemFlags.BTC;
+
+    this.CRYPTO_CURRENCY_LIST = [
+      { value: CRYPTO_CURRENCY.ETH, text: CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.ETH], hide: haveOfferETH },
+      { value: CRYPTO_CURRENCY.BTC, text: CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.BTC], hide: haveOfferBTC },
+    ];
+
+    if (haveOfferETH && haveOfferBTC) {
+      this.props.history.push(URL.HANDSHAKE_ME);
+    }
+
+    if (currency === CRYPTO_CURRENCY.ETH) {
+      rfChange(nameFormExchangeCreate, 'currency', CRYPTO_CURRENCY.BTC);
+    } else {
+      rfChange(nameFormExchangeCreate, 'currency', CRYPTO_CURRENCY.ETH);
+    }
+
+    if (!haveOfferETH || !haveOfferBTC) {
+      this.updateUserProfile(offer);
+    }
   }
 
-  // handleBuySuccess = () => {
-  //   if (this.timeoutClosePopup) {
-  //     clearTimeout(this.timeoutClosePopup);
-  //   }
-  //   this.modalRef.close();
-  //   this.props.history.push(URL.HANDSHAKE_ME);
-  // }
-
   handleCreateOfferFailed = (e) => {
+    console.log('handleCreateOfferFailed', e);
     this.hideLoading();
     this.props.showAlert({
-      message: <div className="text-center">{e.response?.data?.message}</div>,
+      message: <div className="text-center">{getErrorMessageFromCode(e)}</div>,
       timeOut: 3000,
       type: 'danger',
     });
-    // console.log('handleCreateCCOrderFailed', JSON.stringify(e.response));
-    // this.setState({
-    //   modalContent:
-    //     (
-    //       <div className="py-2">
-    //         <Feed className="feed p-2" background="#259B24">
-    //           <div className="text-white d-flex align-items-center" style={{ minHeight: '75px' }}>
-    //             <div>Create offer failed</div>
-    //           </div>
-    //         </Feed>
-    //         <Button block className="btn btn-secondary mt-2" onClick={this.handleBuyFailed}>Dismiss</Button>
-    //       </div>
-    //     ),
-    // }, () => {
-    //   this.modalRef.open();
-    // });
   }
 
-  // handleBuyFailed = () => {
-  //   this.modalRef.close();
-  // }
+  ////////////////////////
+
+  updateUserProfile = (offerShop) => {
+    console.log('updateUserProfile offerShop',offerShop);
+    const params = new URLSearchParams();
+    params.append('name', offerShop.username);
+    params.append('address', offerShop.contactInfo);
+    this.props.authUpdate({
+      PATH_URL: 'user/profile',
+      data: params,
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      METHOD: 'POST',
+      successFn: () => {
+        // this.setState({ haveProfile: true });
+      },
+      errorFn: () => {
+        // this.setState({ haveProfile: false });
+      },
+    });
+  }
+
+  ///////////////////////
+
+  handleValidate = (values) => {
+    return validate(values);
+  }
 
   render() {
-    const {
-      totalAmount, type, sellPriceType, offerPrice, currency, ipInfo
-    } = this.props;
+    const { currency, listOfferPrice, ipInfo: { currency: fiatCurrency }, customizePriceBuy, customizePriceSell, amountBuy, amountSell } = this.props;
     const modalContent = this.state.modalContent;
+    const haveProfile = this.offer ? true : false;
+    const allowInitiate = this.offer ? (!this.offer.itemFlags.ETH || !this.offer.itemFlags.BTC) : true;
+
+    const { price } = getOfferPrice(listOfferPrice, EXCHANGE_ACTION.BUY, currency);
+    const priceDisplayed = formatMoney(price)
+    const estimatedPriceBuy = formatMoney(price * (1 + parseFloat(customizePriceBuy, 10)/100))
+    const estimatedPriceSell = formatMoney(price * (1 + parseFloat(customizePriceSell, 10)/100))
+
+    const wantToBuy = amountBuy && amountBuy > 0
+    const wantToSell = amountSell && amountSell > 0
 
     return (
-      <div>
-        <FormExchangeCreate onSubmit={this.handleSubmit}>
-          <Feed className="feed my-2 p-0" background={this.mainColor}>
-            <div style={{ color: 'white', padding: '20px' }}>
-              <div className="d-flex mb-4">
-                <label className="col-form-label mr-auto" style={{ width: '190px', fontWeight: 'bold' }}>I want to</label>
-                <div className="input-group">
-                  <Field
-                    name="type"
-                    // containerClass="radio-container-old"
-                    component={fieldRadioButton}
-                    list={EXCHANGE_ACTION_LIST}
-                    color={textColor}
-                    validate={[required]}
-                    onChange={this.onTypeChange}
-                  />
-                </div>
-              </div>
-              <div className="d-flex">
-                <label className="col-form-label mr-auto label-create" style={{ width: '190px' }}>Coin</label>
-                <div className="input-group">
-                  <Field
-                    name="currency"
-                    component={fieldRadioButton}
-                    list={CRYPTO_CURRENCY_LIST}
-                    color={textColor}
-                    validate={[required]}
-                    onChange={this.onCurrencyChange}
-                  />
-                </div>
-              </div>
-              <hr className="hrLine" />
-
-              <div className="d-flex mt-2">
-                <label className="col-form-label mr-auto label-create" style={{ width: '220px' }}>Amount*</label>
-                <div className="w-100">
-                  <Field
-                    name="amount"
-                    className="form-control-custom form-control-custom-ex w-100 input-no-border"
-                    component={fieldInput}
-                    placeholder={MIN_AMOUNT[currency]}
-                    onChange={this.onAmountChange}
-                    validate={[required, currency === CRYPTO_CURRENCY.BTC ? minValue001 : minValue01]}
-                  />
-                </div>
-              </div>
-              <hr className="hrLine" />
-
-              <div className="d-flex mt-2">
-                <label className="col-form-label mr-auto label-create" style={{ width: '220px' }}>Price/{currency}</label>
-                <span className="w-100 col-form-label">{ formatMoney(offerPrice ? offerPrice.price : 0) } {ipInfo.currency}</span>
-              </div>
-
-              <div className="d-flex mt-2">
-                {/*<label className="col-form-label mr-auto" style={{ width: '220px' }} /> */}
-                <div className="input-group justify-content-start">
-                  <Field
-                    name="sellPriceType"
-                    component={fieldRadioButton}
-                    list={[
-                      { value: 'fix', text: 'Lock this price', icon: <img src={iconLock} width={20} /> },
-                      { value: 'flexible', text: `${EXCHANGE_ACTION_NAME[type]} at market price`, icon: <img src={iconUnlock} width={20} /> },
-                    ]}
-                    styleButton={{
-                      fontSize: '12px',
-                    }}
-                    color={textColor}
-                    validate={[required]}
-                    onChange={this.onSellPriceTypeChange}
-                  />
-                </div>
-              </div>
-              <hr className="hrLine" />
-
-              <div className="d-flex py-1">
-                <label className="col-form-label mr-auto label-create" style={{ width: '220px' }}>Your percentage</label>
-                <div className="input-group align-items-center">
-                  <Field
-                    name="customizePrice"
-                    // className='form-control-custom form-control-custom-ex w-100'
-                    component={fieldNumericInput}
-                    btnBg={btnBg}
-                    suffix="%"
-                    color={textColor}
-                    validate={validateFee}
-                  />
-                </div>
-              </div>
-              <hr className="hrLine" />
-
-              <div className="d-flex mt-2">
-                <label className="col-form-label mr-auto label-create" style={{ width: '220px' }}>Total</label>
-                <span className="w-100 col-form-label">{ formatMoney(totalAmount) } {ipInfo.currency}</span>
-              </div>
-              <hr className="hrLine" />
-              <div className="d-flex mt-2">
-                <label className="col-form-label mr-auto label-create" style={{ width: '220px' }}>Phone</label>
-                <div className="input-group w-100">
-                  <Field
-                    name="phone"
-                    className="form-control-custom form-control-custom-ex w-100 input-no-border"
-                    component={fieldPhoneInput}
-                    type="tel"
-                    placeholder="4995926433"
-                    // validate={[required, currency === 'BTC' ? minValue001 : minValue01]}
-                  />
-                </div>
-              </div>
-              <hr className="hrLine" />
-
-              <div className="d-flex mt-2">
-                <label className="col-form-label mr-auto label-create" style={{ width: '220px' }}>Address*</label>
-                <div className="w-100">
-                  <Field
-                    name="address"
-                    className="form-control-custom form-control-custom-ex w-100 input-no-border"
-                    component={fieldInput}
-                    validate={[required]}
-                    placeholder="81 E. Augusta Ave. Salinas"
-                  />
-                </div>
+      <div className="create-exchange">
+        <FormExchangeCreate onSubmit={this.handleSubmit} validate={this.handleValidate}>
+          <div className="d-flex mt-3">
+            <div className='input-group'>
+              <Field
+                name="currency"
+                // containerClass="radio-container-old"
+                component={fieldRadioButton}
+                type="tab-3"
+                list={this.CRYPTO_CURRENCY_LIST}
+                validate={[required]}
+                onChange={this.onCurrencyChange}
+              />
+            </div>
+          </div>
+          <div className="label">Exchange rate</div>
+          <Feed className="feed mt-2 wrapper" background={this.mainColor}>
+            <div className="d-flex">
+              <label className="col-form-label mr-auto label-create"><span className="align-middle">Inventory for purchase</span></label>
+              <div className='input-group'>
+                <Field
+                  name="amountBuy"
+                  className="form-control-custom form-control-custom-ex w-100 input-no-border"
+                  component={fieldInput}
+                  placeholder={MIN_AMOUNT[currency]}
+                  // onChange={this.onAmountChange}
+                  // validate={[requiredOneOfAmounts, currency === CRYPTO_CURRENCY.BTC ? minValue001 : minValue01]}
+                />
               </div>
             </div>
+
+            <hr className="hrLine"/>
+
+            <div className="d-flex">
+              <label className="col-form-label mr-auto label-create"><span className="align-middle">Inventory for sale</span></label>
+              <div className='input-group'>
+                <Field
+                  name="amountSell"
+                  className="form-control-custom form-control-custom-ex w-100 input-no-border"
+                  component={fieldInput}
+                  placeholder={MIN_AMOUNT[currency]}
+                  // onChange={this.onAmountChange}
+                  // validate={[requiredOneOfAmounts, currency === CRYPTO_CURRENCY.BTC ? minValue001 : minValue01]}
+                />
+              </div>
+            </div>
+
+            <hr className="hrLine"/>
+
+            <div className="d-flex">
+              <label className="col-form-label mr-auto label-create"><span className="align-middle">Market price</span></label>
+              <div className='input-group'>
+                <div><span className="form-text">{priceDisplayed} {fiatCurrency}</span></div>
+              </div>
+            </div>
+
+            <hr className="hrLine"/>
+
+            <div className="d-flex py-1">
+              <label className="col-form-label mr-auto label-create"><span className="align-middle">Your buying price</span></label>
+              <div className='input-group align-items-center'>
+                <Field
+                  name="customizePriceBuy"
+                  // className='form-control-custom form-control-custom-ex w-100'
+                  component={fieldNumericInput}
+                  btnBg={btnBg}
+                  suffix={"%"}
+                  color={textColor}
+                  validate={validateFee}
+                />
+              </div>
+            </div>
+
+            <hr className="hrLine"/>
+
+            <div className="d-flex py-1">
+              <label className="col-form-label mr-auto label-create"><span className="align-middle">Your selling price</span></label>
+              <div className='input-group align-items-center'>
+                <Field
+                  name="customizePriceSell"
+                  // className='form-control-custom form-control-custom-ex w-100'
+                  component={fieldNumericInput}
+                  btnBg={btnBg}
+                  suffix={"%"}
+                  color={textColor}
+                  validate={validateFee}
+                />
+              </div>
+            </div>
+
+            {
+              (wantToBuy || wantToSell) && (
+                <div className="tooltip-price mt-2">
+                  { wantToBuy && <span>Your buying price {estimatedPriceBuy} {fiatCurrency}. </span> }
+                  { wantToSell && <span>Your selling price {estimatedPriceSell} {fiatCurrency}. </span> }
+                  { (wantToBuy && wantToSell) ? 'These' : 'This'} may fluctuate according to the price of {currency}
+                </div>
+              )
+            }
           </Feed>
-          <Button block type="submit">Initiate</Button>
+
+          {
+            !haveProfile && (
+              <div>
+                <div className="label">Station information</div>
+                <Feed className="feed my-2 wrapper" background={this.mainColor}>
+                  <div className="d-flex">
+                    <label className="col-form-label mr-auto label-create"><span className="align-middle">Station name</span></label>
+                    <div className='input-group'>
+                      <Field
+                        name="nameShop"
+                        className="form-control-custom form-control-custom-ex w-100 input-no-border"
+                        component={fieldInput}
+                        placeholder={'Apple store'}
+                        // onChange={this.onAmountChange}
+                        // validate={[required]}
+                      />
+                    </div>
+                  </div>
+
+                  <hr className="hrLine"/>
+
+                  <div className="d-flex mt-2">
+                    <label className="col-form-label mr-auto label-create"><span className="align-middle">Phone</span></label>
+                    <div className="input-group w-100">
+                      <Field
+                        name="phone"
+                        className="form-control-custom form-control-custom-ex w-100 input-no-border"
+                        component={fieldPhoneInput}
+                        type="tel"
+                        placeholder="4995926433"
+                        // validate={[required, currency === 'BTC' ? minValue001 : minValue01]}
+                      />
+                    </div>
+                  </div>
+                  <hr className="hrLine"/>
+
+                  <div className="d-flex mt-2">
+                    <label className="col-form-label mr-auto label-create"><span className="align-middle">Address</span></label>
+                    <div className="w-100">
+                      <Field
+                        name="address"
+                        className="form-control-custom form-control-custom-ex w-100 input-no-border"
+                        component={fieldInput}
+                        validate={[required]}
+                        placeholder="81 E. Augusta Ave. Salinas"
+                      />
+                    </div>
+                  </div>
+                </Feed>
+              </div>
+            )
+          }
+          <Button block type="submit" disabled={!allowInitiate} className="mt-3">Initiate</Button>
         </FormExchangeCreate>
         <ModalDialog onRef={modal => this.modalRef = modal}>
           {modalContent}
@@ -550,45 +673,38 @@ class Component extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  const type = selectorFormExchangeCreate(state, 'type');
-  const currency = selectorFormExchangeCreate(state, 'currency');
-  const sellPriceType = selectorFormExchangeCreate(state, 'sellPriceType');
-  const amount = selectorFormExchangeCreate(state, 'amount') || 0;
-  const customizePrice = selectorFormExchangeCreate(state, 'customizePrice') || 0;
+  const currency = selectorFormExchangeCreate(state, "currency");
 
-  const offerPrice = state.exchange.offerPrice;
-  let totalAmount = amount * (offerPrice && offerPrice.price || 0) || 0;
-  totalAmount += totalAmount * customizePrice / 100;
+  const amountBuy = selectorFormExchangeCreate(state, "amountBuy");
+  const amountSell = selectorFormExchangeCreate(state, "amountSell");
 
-  const price = offerPrice && offerPrice.price || 0;
+  const customizePriceBuy = selectorFormExchangeCreate(state, "customizePriceBuy") || 0;
+  const customizePriceSell = selectorFormExchangeCreate(state, "customizePriceSell") || 0;
+
+  const nameShop = selectorFormExchangeCreate(state, "nameShop");
+  const phone = selectorFormExchangeCreate(state, "phone");
+  const address = selectorFormExchangeCreate(state, "address");
 
   return {
-    amount,
-    currency,
-    totalAmount,
-    type,
-    sellPriceType,
-    price,
-    offerPrice,
+    currency, amountBuy, amountSell,
+    customizePriceBuy, customizePriceSell,
+    nameShop, phone, address,
     ipInfo: state.app.ipInfo,
     authProfile: state.auth.profile,
+    offerStores: state.exchange.offerStores,
+    listOfferPrice: state.exchange.listOfferPrice
   };
 };
 
-// this.props.showAlert({
-//   message: <p className="text-center">aaaaaaaa</p>,
-//   timeOut: 10000000,
-//   type: 'danger',
-// });
-
-const mapDispatchToProps = dispatch => ({
-  createOffer: bindActionCreators(createOffer, dispatch),
-  getOfferPrice: bindActionCreators(getOfferPrice, dispatch),
+const mapDispatchToProps = (dispatch) => ({
   showAlert: bindActionCreators(showAlert, dispatch),
   rfChange: bindActionCreators(change, dispatch),
   showLoading: bindActionCreators(showLoading, dispatch),
   hideLoading: bindActionCreators(hideLoading, dispatch),
+  authUpdate: bindActionCreators(authUpdate, dispatch),
+
+  createOfferStores: bindActionCreators(createOfferStores, dispatch),
+  addOfferItem: bindActionCreators(addOfferItem, dispatch),
+  getOfferStores: bindActionCreators(getOfferStores, dispatch),
 });
-
-
 export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(Component));

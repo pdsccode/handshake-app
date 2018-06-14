@@ -1,5 +1,15 @@
 
 export const required = value => (value ? undefined : 'Required');
+
+export const requiredOne = (fieldNames) => (value, allValues) => {
+  for (let i = 0; i < fieldNames.length; ++i) {
+    const fieldName = fieldNames[i]
+    if (allValues[fieldName]) return undefined;
+  }
+  return 'You need to fill in one of these!';
+  // return (value && value < min ? `Must be greater than ${min}` : undefined);
+}
+
 // const maxLength = max => value =>
 //     value && value.length > max ? `Must be ${max} characters or less` : undefined
 // const maxLength15 = maxLength(15, 25)

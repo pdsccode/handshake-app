@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 // service, constant
@@ -39,18 +40,15 @@ import HeaderMore from './HeaderMore';
 import WalletItem from './WalletItem';
 import WalletProtect from './WalletProtect';
 import WalletHistory from './WalletHistory';
+// import Refers from './Refers';
 import FeedCreditCard from '@/components/handshakes/exchange/Feed/FeedCreditCard';
 import ReactBottomsheet from 'react-bottomsheet';
-// var ReactBottomsheet = require('react-bottomsheet');
-// var Blob = require('./Blob.js');
 import { setHeaderRight } from '@/reducers/app/action';
 import QrReader from 'react-qr-reader';
 import { showAlert } from '@/reducers/app/action';
 import { showLoading, hideLoading } from '@/reducers/app/action';
 import { Input as Input2, InputGroup, InputGroupAddon } from 'reactstrap';
-
-// import filesaver from 'file-saver';
-
+import _ from 'lodash';
 
 // style
 import './Wallet.scss';
@@ -84,6 +82,15 @@ const selectorFormCreditCard = formValueSelector(nameFormCreditCard);
 
 const amountValid = value => (value && isNaN(value) ? 'Invalid amount' : undefined);
 
+const defaultOffset = 500;
+
+var topOfElement = function(element) {
+    if (!element) {
+        return 0;
+    }
+    return element.offsetTop + topOfElement(element.offsetParent);
+};
+
 class Wallet extends React.Component {
   constructor(props) {
     super(props);
@@ -113,9 +120,13 @@ class Wallet extends React.Component {
       isNewCCOpen: false,
       stepProtected: 1,
       activeProtected: false,
+      isHistory: false,
+      pagenoHistory: 1,
       transactions: [],
+      isLoadMore: false
     };
     this.props.setHeaderRight(this.headerRight());
+    this.listener = _.throttle(this.scrollListener, 200).bind(this);
   }
 
   showAlert(msg, type = 'success', timeOut = 3000, icon = '') {
@@ -141,7 +152,6 @@ class Wallet extends React.Component {
   hideLoading() {
     this.props.hideLoading();
   }
-
   headerRight() {
     return (<HeaderMore onHeaderMoreClick={this.onIconRightHeaderClick} />);
   }
@@ -169,14 +179,51 @@ class Wallet extends React.Component {
       isLoading: true, listMainWalletBalance: listMainWallet, listTestWalletBalance: listTestWallet, listRewardWalletBalance: listRewardWallet,
     });
   }
-  componentDidMount1() {
 
+  async scrollListener () {
+    let el = ReactDOM.findDOMNode(this),
+      offset = this.props.offset || defaultOffset,
+      scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+
+    let {walletSelected, pagenoHistory, isHistory, isLoadMore } = this.state;
+    let calcTop = topOfElement(el) + el.offsetHeight - scrollTop - window.innerHeight ;
+
+    if (isHistory && isLoadMore == false && pagenoHistory > 0 && calcTop < offset) {
+      pagenoHistory++;
+
+      this.setState({ isLoadMore: true});
+
+      let list = this.state.transactions;
+      let data = await walletSelected.getTransactionHistory(pagenoHistory);
+
+      if(data.length > 0){
+        let final_list = list.concat(data);
+        this.setState({ transactions: final_list, pagenoHistory: data.length < 20 ? 0 : pagenoHistory, isLoadMore: false});
+      }
+      else{
+        this.setState({ pagenoHistory: 0, isLoadMore: false});
+      }
+    }
   }
-  async componentDidMount() {
-    let listWallet = await MasterWallet.getMasterWallet();
-    // console.log("listWallet", listWallet);
 
-    // console.log("default", MasterWallet.getWalletDefault("ETH"))
+  attachScrollListener() {
+    window.addEventListener('scroll', this.listener);
+    window.addEventListener('resize', this.listener);
+    this.listener();
+  }
+
+  detachScrollListener() {
+    window.removeEventListener('scroll', this.listener);
+    window.removeEventListener('resize', this.listener);
+  }
+
+  componentWillUnmount() {
+    this.detachScrollListener();
+  }
+
+  async componentDidMount() {
+    this.attachScrollListener();
+    let listWallet = await MasterWallet.getMasterWallet();
 
     if (listWallet == false) {
       listWallet = await MasterWallet.createMasterWallets();
@@ -267,15 +314,17 @@ class Wallet extends React.Component {
           this.modalShareAddressRef.open();
         }
       })
-
-    obj.push({
-      title: 'Buy coins',
-      handler: () => {
-        this.setState({ walletSelected: wallet });
-        this.toggleBottomSheet();
-        this.modalFillRef.open();
-      },
-    });
+    // not allow for testnet:
+    if (wallet.network === MasterWallet.ListCoin[wallet.className].Network.Mainnet){
+      obj.push({
+        title: 'Buy coins',
+        handler: () => {
+          this.setState({ walletSelected: wallet });
+          this.toggleBottomSheet();
+          this.modalFillRef.open();
+        },
+      });
+    }
 
     if (!wallet.protected) {
       obj.push({
@@ -290,16 +339,23 @@ class Wallet extends React.Component {
 
     obj.push({
       title: 'View transaction history',
-      handler: () => {
-        this.setState({ walletSelected: wallet, transactions: [] });
+      handler: async () => {
+        let pagenoHistory = 1;
+        this.setState({ walletSelected: wallet, transactions: [], isHistory: true, pagenoHistory: pagenoHistory });
         this.toggleBottomSheet();
         this.modalHistoryRef.open();
         this.showLoading();
-        const dataHistory = wallet.getTransactionHistory().then((data) => {
-          this.setState({ walletSelected: wallet, transactions: data });
-          this.hideLoading();
-        });
-      },
+
+        wallet.balance = await wallet.getBalance();
+        wallet.transaction_count = await wallet.getTransactionCount();
+
+        let data = await wallet.getTransactionHistory(pagenoHistory);
+        if(Number(data.length) < 20) pagenoHistory = 0;
+        if(data.length > wallet.transaction_count) wallet.transaction_count = data.length;
+
+        this.setState({ transactions: data, pagenoHistory: pagenoHistory, walletSelected: wallet });
+        this.hideLoading();
+      }
     });
     obj.push({
       title: 'Copy address to clipboard',
@@ -310,7 +366,7 @@ class Wallet extends React.Component {
       },
     });
 
-    if (!wallet.isReward) {      
+    if (!wallet.isReward) {
         obj.push({
           title: StringHelper.format('Set as default {0} wallet ', wallet.name) + (wallet.default ? "✓ " : ""),
           handler: () => {
@@ -331,7 +387,7 @@ class Wallet extends React.Component {
             this.modalBetRef.open();
             this.toggleBottomSheet();
           }
-        })       
+        })
     }
     obj.push({
       title: 'Cancel',
@@ -611,6 +667,11 @@ class Wallet extends React.Component {
   closeProtected = () => {
     this.setState({ activeProtected: false });
   }
+
+  closeHistory = () => {
+    this.setState({ transactions: [], isHistory: false });
+  }
+
   onCopyProtected = () => {
     Clipboard.copy(this.state.walletSelected.mnemonic);
     this.showToast('Copied to clipboard');
@@ -679,6 +740,16 @@ class Wallet extends React.Component {
     const {intl, cryptoPrice, amount, userCcLimit, ccLimits} = this.props;
     return (
       <div className="wallet-page">
+      
+        {/* Header for refers ... */}
+        {/* <div className="headerRefers" >
+          <p className="hTitle">Shuriken Airdrop</p>
+          <p className="hLink" onClick={() => { this.modalRefersRef.open() }}>Receive token</p>
+        </div>
+        <Modal title="Shuriken Airdrop (limited)" onRef={modal => this.modalRefersRef = modal}>
+            <Refers />
+        </Modal> */}
+
         <Grid>
 
           {/* Tooltim menu Bottom */ }
@@ -769,7 +840,7 @@ class Wallet extends React.Component {
           </Modal>
 
 
-          <Modal title="Transaction history" onRef={modal => this.modalHistoryRef = modal}>
+          <Modal title="Transaction history" onRef={modal => this.modalHistoryRef = modal} onClose={this.closeHistory}>
             <WalletHistory wallet={this.state.walletSelected} transactions={this.state.transactions} />
           </Modal>
 
@@ -905,25 +976,27 @@ class Wallet extends React.Component {
 
           {/* Render list wallet: */}
           <Row className="list">
+            <Header title="Mainnet wallets" hasLink={false} linkTitle="+ Add new" onLinkClick={this.onLinkClick} />
+          </Row>
+          <Row className="list">
+            {this.listMainWalletBalance}
+          </Row>
+          {this.listTestWalletBalance.length > 0 ? 
+          <Row className="list">
             <Header title="Testnet wallets" hasLink linkTitle="Request free ETH" onLinkClick={this.getETHFree} />
           </Row>
+          : ''}
           <Row className="list">
             {this.listTestWalletBalance}
           </Row>
+          
 
           <Row className="list">
             <Header title="Reward wallets" hasLink={false} />
           </Row>
           <Row className="list">
             {this.listRewardWalletBalance}
-          </Row>
-
-          <Row className="list">
-            <Header title="Mainnet wallets" hasLink={false} linkTitle="+ Add new" onLinkClick={this.onLinkClick} />
-          </Row>
-          <Row className="list">
-            {this.listMainWalletBalance}
-          </Row>
+          </Row>          
 
         </Grid>
       </div>

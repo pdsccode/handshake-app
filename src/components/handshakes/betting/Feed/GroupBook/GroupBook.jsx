@@ -22,12 +22,13 @@ class GroupBook extends React.Component {
   render() {
     const {bookList, amountColor} = this.props;
     const isGotDefaultOutCome = typeof window !== 'undefined' && window.isGotDefaultOutCome;
+    const hasData = bookList && bookList.length > 0;
     return (
-      <div className="wrapperGroupBook">
+      <div className={`wrapperGroupBook ${hasData ? '' : 'noData'}`}>
         {
-          (bookList && bookList.length > 0) ?
+          (hasData) ?
             bookList.map((item, index) => <Book key={index} amountColor={amountColor} item={item} />) :
-            isGotDefaultOutCome ? <div className="noData">Stake a bet on new territory.</div> : ''
+            isGotDefaultOutCome ? <div>Stake a bet on new territory.</div> : ''
         }
       </div>
     );

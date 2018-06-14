@@ -24,16 +24,12 @@ import {MasterWallet} from '@/models/MasterWallet';
 import Dropdown from '@/components/core/controls/Dropdown';
 import Toggle from '@/components/handshakes/betting/Feed/Toggle';
 import {showAlert} from '@/reducers/app/action';
-
-import { BettingHandshake } from '@/services/neuron';
 // self
 import './Create.scss';
+const ROUND = 1000000;
 
-const wallet = MasterWallet.getWalletDefault('ETH');
-const chainId = wallet.chainId;
-console.log('Chain Id:', chainId);
+const betHandshakeHandler = new BetHandshakeHandler()
 
-const bettinghandshake = new BettingHandshake(chainId);
 const nameFormBettingCreate = 'bettingCreate';
 // const BettingCreateForm = createForm({
 //   propsReduxForm: {
@@ -96,7 +92,7 @@ class BettingCreate extends React.Component {
       winValue: 0,
       selectedMatch:null,
       selectedOutcome: null,
-      buttonClass: 'btnRed',
+      buttonClass: 'btnBlue',
     };
     this.onSubmit = ::this.onSubmit;
     this.renderInput = ::this.renderInput;
@@ -108,8 +104,7 @@ class BettingCreate extends React.Component {
   componentDidMount(){
     console.log('Betting Create Props:', this.props, history);
     this.setState({
-      address: wallet.address,
-      privateKey: wallet.privateKey,
+
     })
     this.props.loadMatches({PATH_URL: API_URL.CRYPTOSIGN.LOAD_MATCHES});
 
@@ -161,7 +156,7 @@ get matchOutcomes(){
           const {outcomes} = foundMatch;
           if(outcomes){
               //return outcomes.map((item) => ({ id: item.id, value: item.name, hid: item.hid}));
-              return outcomes.map((item) => ({ id: item.id, value: `Outcome: ${item.name}`, hid: item.hid, marketOdds: item.market_odds}));
+              return outcomes.map((item) => ({ id: item.id, value: `Outcome: ${item.name}`, hid: item.hid, marketOdds: item.market_odds, marketAmount: item.market_amount}));
 
           }
       }
@@ -229,16 +224,17 @@ get defaultOutcome() {
     //const {toAddress, isPublic, industryId} = this.props;
 
     //const fromAddress = "0x54CD16578564b9952d645E92b9fa254f1feffee9";
-    let balance = await BetHandshakeHandler.getBalance();
+    let balance = await betHandshakeHandler.getBalance();
     balance = parseFloat(balance);
-    const estimatedGas = await bettinghandshake.getEstimateGas();
+    const estimatedGas = await betHandshakeHandler.getEstimateGas();
+    //const estimatedGas = 0.00001;
     console.log('Estimate Gas:', estimatedGas);
     const eventBet = parseFloat(values["event_bet"]);
-    const odds = parseFloat(this.state.oddValue);
+    const odds = parseFloat(values['event_odds']);
     const total = eventBet + parseFloat(estimatedGas);
-    console.log("Event Bet, Odds, Total:",eventBet,odds, total);
+    console.log("Event Bet, Odds, Estimate, Total:",eventBet,odds,estimatedGas, total);
 
-    const fromAddress = address;
+    const fromAddress = betHandshakeHandler.getAddress();
     console.log('Match, Outcome:', selectedMatch, selectedOutcome);
 
     var message = null;
@@ -311,12 +307,12 @@ get defaultOutcome() {
     const odds = values['event_odds'];
     const total = amount * odds;
     this.setState({
-      winValue: total || 0
+      winValue: Math.floor(total*ROUND)/ROUND || 0,
     })
   }
 
   onToggleChange(id) {
-    this.setState({buttonClass: `${id === 2 ? 'btnBlue' : 'btnRed' }`});
+    this.setState({buttonClass: `${id === 2 ? 'btnRed' : 'btnBlue' }`});
   }
 
   renderInput(item, index,style = {}) {
@@ -386,7 +382,7 @@ get defaultOutcome() {
         //min="0.0001"
         //step="0.0002"
         placeholder={placeholder}
-        value={key === "event_odds" ? this.state.oddValue : values[key]}
+        value={values[key]}
         validate={[required]}
         //ErrorBox={ErrorBox}
         onChange={(evt) => {
@@ -472,21 +468,12 @@ get defaultOutcome() {
             afterSetDefault={(item)=> {
               const {values} = this.state;
               console.log('Selected outcome:', item);
-
-              values["event_predict"] = item.value;
-              values["event_odds"] = item.marketOdds;
-              this.setState({selectedOutcome: item, values})
+              this.selectOutcomeClick(item);
 
             }}
             onItemSelected={(item) => {
               console.log('Selected outcome:', item);
-              const {values} = this.state;
-              values["event_predict"] = item.value;
-              values["event_odds"] = item.marketOdds;
-
-              this.setState({selectedOutcome: item, values});
-              // send event tracking
-              GA.clickChooseAnOutcomeCreatePage(item.value);
+              this.selectOutcomeClick(item);
               }
             }
           />}
@@ -515,6 +502,21 @@ get defaultOutcome() {
       </form>
     );
   }
+  selectOutcomeClick(item){
+    const {values} = this.state;
+    values["event_predict"] = item.value;
+    values["event_odds"] = parseFloat(item.marketOdds).toFixed(2);
+    values["event_bet"] = parseFloat(item.marketAmount).toFixed(6);
+    const roundWin = item.marketAmount * item.marketOdds;
+    console.log('roundWin Value:', roundWin);
+
+    const winValue =  Math.floor(roundWin*ROUND)/ROUND;
+    console.log('Win Value:', winValue);
+
+    this.setState({selectedOutcome: item, values, winValue});
+    // send event tracking
+    GA.clickChooseAnOutcomeCreatePage(item.value);
+  }
 
   render() {
     return (
@@ -532,6 +534,7 @@ get defaultOutcome() {
   initHandshake(fields, fromAddress){
     const {selectedOutcome} = this.state;
     const side = this.toggleRef.value;
+    const chainId = betHandshakeHandler
     const params = {
       //to_address: toAddress ? toAddress.trim() : '',
       //public: isPublic,
@@ -550,7 +553,7 @@ get defaultOutcome() {
       currency: 'ETH',
       side: parseInt(side),
       from_address: fromAddress,
-      chain_id: chainId,
+      chain_id: betHandshakeHandler.getChainIdDefaultWallet(),
     };
     console.log("Go to Params:", params);
     const hid = selectedOutcome.hid;
@@ -572,7 +575,7 @@ get defaultOutcome() {
     //const hid = selectedOutcome.id;
     const hid = selectedOutcome.hid;
     if(status && data){
-      BetHandshakeHandler.controlShake(data, hid);
+      betHandshakeHandler.controlShake(data, hid);
       this.props.showAlert({
         message: <div className="text-center">{MESSAGE.CREATE_BET_SUCCESSFUL}</div>,
         timeOut: 3000,

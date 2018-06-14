@@ -1,59 +1,163 @@
 import React from 'react';
 import { HANDSHAKE_ID, HANDSHAKE_NAME, HANDSHAKE_ID_DEFAULT } from '@/constants';
+import Helper from '@/services/helper';
 // components
 import { Grid, Row, Col } from 'react-bootstrap';
-import SearchBar from '@/components/core/controls/SearchBar';
-import CreatePromise from '@/components/handshakes/promise/Create';
-import CreateBetting from '@/components/handshakes/betting/Create';
-import CreateExchange from '@/components/handshakes/exchange/Create';
-import CreateSeed from '@/components/handshakes/seed/Create';
-// style
+// import SearchBar from '@/components/core/controls/SearchBar';
+import DynamicImport from '@/components/App/DynamicImport';
+import Loading from '@/components/core/presentation/Loading';
+import Dropdown from '@/components/core/controls/Dropdown';
+
 import './Create.scss';
+
+//
+const CreatePromise = props => (
+  <DynamicImport
+    loading={Loading}
+    load={() => import('@/components/handshakes/promise/Create/Promise')}
+  >
+    {Component => <Component {...props} />}
+  </DynamicImport>
+);
+
+//
+const CreateBetting = props => (
+  <DynamicImport
+    loading={Loading}
+    load={() => import('@/components/handshakes/betting/Create')}
+  >
+    {Component => <Component {...props} />}
+  </DynamicImport>
+);
+
+const CreateBettingEvent = props => (
+  <DynamicImport
+    loading={Loading}
+    load={() => import('@/components/handshakes/betting-event/Create/Create')}
+  >
+    {Component => <Component {...props} />}
+  </DynamicImport>
+);
+
+//
+const CreateExchange = props => (
+  <DynamicImport
+    loading={Loading}
+    load={() => import('@/components/handshakes/exchange/Create/Create')}
+  >
+    {Component => <Component {...props} />}
+  </DynamicImport>
+);
+
+const CreateExchangeLocal = props => (
+  <DynamicImport
+    loading={Loading}
+    load={() => import('@/components/handshakes/exchange/Create/CreateLocal.jsx')}
+  >
+    {Component => <Component {...props} />}
+  </DynamicImport>
+);
+
+//
+const CreateSeed = props => (
+  <DynamicImport
+    loading={Loading}
+    load={() => import('@/components/handshakes/seed/Create')}
+  >
+    {Component => <Component {...props} />}
+  </DynamicImport>
+);
+
+//
+const CreateWalletTransfer = props => (
+  <DynamicImport
+    loading={Loading}
+    load={() => import('@/components/handshakes/wallet/Create/Transfer')}
+  >
+    {Component => <Component {...props} />}
+  </DynamicImport>
+);
+
+const CreateWalletReceive = props => (
+  <DynamicImport
+    loading={Loading}
+    load={() => import('@/components/handshakes/wallet/Create/Receive')}
+  >
+    {Component => <Component {...props} />}
+  </DynamicImport>
+);
 
 const maps = {
   [HANDSHAKE_ID.PROMISE]: CreatePromise,
   [HANDSHAKE_ID.BETTING]: CreateBetting,
+  [HANDSHAKE_ID.BETTING_EVENT]: CreateBettingEvent,
   [HANDSHAKE_ID.EXCHANGE]: CreateExchange,
+  [HANDSHAKE_ID.EXCHANGE_LOCAL]: CreateExchangeLocal,
   [HANDSHAKE_ID.SEED]: CreateSeed,
+  [HANDSHAKE_ID.WALLET_TRANSFER]: CreateWalletTransfer,
+  [HANDSHAKE_ID.WALLET_RECEIVE]: CreateWalletReceive,
 };
 
 class Create extends React.Component {
   constructor(props) {
     super(props);
-
+    let seletedId = HANDSHAKE_ID_DEFAULT;
+    // get default
+    let { id } = Helper.getQueryStrings(window.location.search);
+    id = parseInt(id, 10);
+    if (id && Object.values(HANDSHAKE_ID).indexOf(id !== -1)) {
+      seletedId = id;
+    }
     this.state = {
-      seletedId: HANDSHAKE_ID_DEFAULT,
+      seletedId,
     };
     // bind
     this.handshakeChange = this.handshakeChange.bind(this);
   }
 
-  get handShakeList() {
-    return Object.entries(HANDSHAKE_NAME).map(([key, value]) => ({
+  get handshakeList() {
+    const handshakes = Object.entries(HANDSHAKE_NAME).map(([key, value]) => ({
       id: key,
-      name: value,
+      value: value.name,
+      priority: value.priority,
     }));
+    return [
+      ...handshakes.sort((x, y) => x.priority > y.priority),
+      {
+        id: -1,
+        value: 'COMING SOON: Create a prediction market',
+        className: 'disable',
+        disableClick: true,
+      },
+    ];
   }
 
-  handshakeChange({ suggestion }) {
-    const { id } = suggestion;
+  handshakeChange({ id }) {
     this.setState({ seletedId: id });
   }
 
   render() {
-    const CreateComponent = maps[this.state.seletedId];
+    const { seletedId } = this.state;
+    const CreateComponent = maps[seletedId];
 
     return (
       <Grid className="create">
-        {/*<Row>*/}
-          {/*<Col md={12}>*/}
-            {/*<SearchBar*/}
-              {/*suggestions={this.handShakeList}*/}
-              {/*onSuggestionSelected={this.handshakeChange}*/}
-              {/*inputSearchDefault={HANDSHAKE_NAME[HANDSHAKE_ID_DEFAULT]}*/}
-            {/*/>*/}
-          {/*</Col>*/}
-        {/*</Row>*/}
+        <Row>
+          <Col md={12}>
+            <Dropdown
+              placeholder="Select an mission"
+              defaultId={seletedId}
+              source={this.handshakeList}
+              onItemSelected={this.handshakeChange}
+              hasSearch
+            />
+            {/* <SearchBar
+              suggestions={this.handshakeList}
+              onSuggestionSelected={this.handshakeChange}
+              inputSearchDefault={HANDSHAKE_NAME[seletedId].name}
+            /> */}
+          </Col>
+        </Row>
         <Row>
           <Col md={12}>
             <CreateComponent {...this.props} />

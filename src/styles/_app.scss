@@ -78,6 +78,7 @@
       text-align: center;
       width: 20%;
       a {
+        cursor: pointer;
         display: block;
         height: $footer-height;
         position: relative;
@@ -120,7 +121,7 @@
         a {
           color: $deep-blue;
         }
-        .me-icon, .chat-icon {
+        .chat-icon {
           svg {
             g {
               stroke: $deep-blue;
@@ -129,6 +130,13 @@
         }
       }
     }
+  }
+}
+
+.network-error {
+  padding-top: 20vh;
+  p {
+    margin-top: 20px;
   }
 }
 

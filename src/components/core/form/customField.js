@@ -38,7 +38,8 @@ export const fieldDropdown = customField(({
   onChange, value, list, defaultText = 'Select an item',
 }) => {
   let txtSelectedItem = defaultText;
-  const selectedItem = list.find(i => i.name === value);
+  const selectedItem = list.find(i => i.id === value.id);
+
   if (selectedItem) {
     txtSelectedItem = selectedItem.text;
   }
@@ -49,14 +50,13 @@ export const fieldDropdown = customField(({
       </DropdownToggle>
       <DropdownMenu>
         {
-            list.map((item, index) => {
-              const { name, text } = item;
+            list.map((item) => {
               return (
                 <DropdownItem
-                  key={index}
-                  onClick={() => onChange(name)}
+                  key={item.id}
+                  onClick={() => onChange(item)}
                 >
-                  {text}
+                  {item.text}
                 </DropdownItem>
               );
             })
@@ -66,40 +66,76 @@ export const fieldDropdown = customField(({
   );
 });
 
+// type = tab|radio-big|default
 export const fieldRadioButton = customField(({
-  onChange, value, list, name, color = '', containerClass = 'radio-container', styleButton = {}
-}) => (
-  <span>
+  onChange, value, list, name, color = '', styleButton = {}, type
+}) => {
+  let containerClass = '';
+  let fullWidth = false;
+  let hasPrefixIcon = false;
+  switch (type) {
+    case 'tab':
+      containerClass = 'tab';
+      fullWidth = true;
+      hasPrefixIcon = false;
+      break;
+    case 'tab-1':
+      containerClass = 'tab-1';
+      hasPrefixIcon = false;
+      fullWidth = true;
+      break;
+    case 'tab-2':
+      containerClass = 'tab-2';
+      fullWidth = true;
+      hasPrefixIcon = true;
+      break;
+    case 'tab-3':
+      containerClass = 'tab-3';
+      fullWidth = true;
+      hasPrefixIcon = false;
+      break;
+    case 'radio-big':
+      containerClass = 'big';
+      hasPrefixIcon = false;
+      break;
+    default:
+      hasPrefixIcon = true;
+      containerClass = 'default';
+  }
+  return (
+    <span style={{ width: fullWidth ? '100%' : '' }}>
     {
-        list.map((item, index) => {
-          const { value: itemValue, text, icon } = item;
-          const isChecked = itemValue === value;
-          return (
-            <div key={index} className={containerClass}>
-              <input
-                type="radio"
-                name={name}
-                checked={isChecked}
-                readOnly
-              />
-              <button
-                type="button"
-                className="btn"
-                onClick={() => onChange(itemValue)}
-                style={{ color, minWidth: '58px', ...styleButton }}
-              >
-                {/*<span style={{ fontSize: '28px' }}>&sdot;</span> */}
-                {
-                  !containerClass.includes('old') && (<span>{icon || <span>&#x25cf;</span>}&nbsp;</span>)
-                }
-                {text}
-              </button>
-            </div>
-          );
-        })
-      }
-  </span>
-));
+      list.map((item, index) => {
+        const { value: itemValue, text, icon, hide } = item;
+        if (hide) return null;
+        const isChecked = itemValue === value;
+        return (
+          <div key={index} className={cx('radio-container', containerClass)} style={fullWidth ? { width: `${100 / list.length}%` } : {}}>
+            <input
+              type="radio"
+              name={name}
+              checked={isChecked}
+              readOnly
+            />
+            <button
+              type="button"
+              className="btn"
+              onClick={() => onChange(itemValue)}
+              style={{ color, minWidth: '58px', ...styleButton }}
+            >
+              {/*<span style={{ fontSize: '28px' }}>&sdot;</span> */}
+              {
+                hasPrefixIcon && (<span>{icon || <span>&#x25cf;</span>}&nbsp;</span>)
+              }
+              {text}
+            </button>
+          </div>
+        );
+      })
+    }
+    </span>
+  )
+});
 
 export const fieldNumericInput = customField(({
   onChange, value, list, name, color = '', step = 0.25, suffix, btnBg = ''
@@ -145,11 +181,11 @@ export const fieldPhoneInput = customField(({
     phoneNumber = splittedNumbers[1] || '';
   }
   return (
-    <span className="d-flex align-items-center">
-      <span style={{ width: '110px' }} className="mr-auto">
+    <span>
+      <span style={{ display: 'table-cell' }}>
         <SelectCountryCode countryCode={countryCode} onChange={newCountryCode => onChange(`${newCountryCode}-${phoneNumber}`)} />
       </span>
-      <span className="ml-1"><input type="tel" placeholder={placeholder} className="form-control-custom form-control-custom-ex w-100 input-no-border" value={phoneNumber} onChange={e => onChange(`${countryCode}-${e.target.value}`)} /></span>
+      <span style={{ display: 'table-cell' }} className="pl-2"><input type="tel" placeholder={placeholder} className="form-control-custom form-control-custom-ex w-100 input-no-border" value={phoneNumber} onChange={e => onChange(`${countryCode}-${e.target.value}`)} /></span>
     </span>
   );
 });

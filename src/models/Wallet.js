@@ -1,3 +1,4 @@
+import { StringHelper } from '@/services/helper';
 export class Wallet {
   constructor() {
     this.mnemonic = '';
@@ -23,12 +24,17 @@ export class Wallet {
   }
   getNetworkName() {
     for (const k in this.constructor.Network) {
-      if (this.constructor.Network[k] == this.network) {
-        this.title = k;
-        return this.title;
+      if (this.constructor.Network[k] == this.network) {        
+        return k;
       }
     }
     return this.title;
+  }
+  getShortBalance(){
+    return Number((parseFloat(this.balance)).toFixed(8));
+  }
+  getBackgroundImg(){
+    return StringHelper.format("{0}-{1}{2}.svg", this.name.toLowerCase(), this.getNetworkName().toLowerCase(), this.isReward ? "-reward" : '' );    
   }
 }
 

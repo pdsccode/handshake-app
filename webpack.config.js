@@ -12,7 +12,7 @@ const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const PwaManifestPlugin = require('webpack-pwa-manifest');
-const OfflinePlugin = require('offline-plugin');
+// const OfflinePlugin = require('offline-plugin');
 
 // configs
 const envConfig = require('./.env.js');
@@ -24,6 +24,12 @@ module.exports = function webpackConfig(env, argv) {
     modules: false,
     children: false,
     chunks: false,
+  };
+
+  let appEnvConfig = {
+    NODE_ENV: argv.mode,
+    isProduction,
+    ...envConfig,
   };
 
   const development = {
@@ -68,7 +74,7 @@ module.exports = function webpackConfig(env, argv) {
         new UglifyJsPlugin({
           uglifyOptions: {
             compress: {
-              drop_console: true,
+              drop_console: appEnvConfig.dropConsole,
             },
           },
         }),
@@ -106,19 +112,13 @@ module.exports = function webpackConfig(env, argv) {
         filename: 'css/[name].css',
         chunkFilename: 'css/[hash].[name].css',
       }),
-      new OfflinePlugin({
-        appShell: '/',
-        responseStrategy: 'network-first',
-        autoUpdate: true,
-      }),
+      // new OfflinePlugin({
+      //   appShell: '/',
+      //   responseStrategy: 'network-first',
+      //   autoUpdate: true,
+      // }),
     ],
     performance: { hints: false },
-  };
-
-  let appEnvConfig = {
-    NODE_ENV: argv.mode,
-    isProduction,
-    ...envConfig,
   };
 
   if (isProduction && fs.existsSync(xPath('.env.production.js'))) {
@@ -167,7 +167,7 @@ module.exports = function webpackConfig(env, argv) {
           env: appEnvConfig,
         }),
         new PwaManifestPlugin({
-          name: 'Ninja',
+          name: appEnvConfig.title,
           short_name: 'Ninja',
           description: '',
           background_color: '#1A1919',

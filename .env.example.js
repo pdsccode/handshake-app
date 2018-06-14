@@ -11,6 +11,7 @@ module.exports = {
     messagingSenderId: '',
   },
   ipfindKey: '',
+  ipapiKey: '',
   GOOGLE_API_KEY: '',
   social: {
     isUseSocial: false,
@@ -18,5 +19,7 @@ module.exports = {
     facebookPixelId: '',
     facebookAppId: '',
   },
-  PredictionHandshakeFileName: ''
+  PredictionHandshakeFileName: '',
+  dropConsole: true,
+  TURN_OFF_CACHE: true,
 };

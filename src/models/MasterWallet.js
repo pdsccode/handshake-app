@@ -12,7 +12,7 @@ const bip39 = require('bip39');
 export class MasterWallet {
     // list coin is supported, can add some more Ripple ...
     static ListCoin = { Ethereum, Bitcoin, BitcoinTestnet };
-
+    
     static ListCoinReward = { Ethereum, Bitcoin };
 
     static KEY = 'wallets';
@@ -27,9 +27,20 @@ export class MasterWallet {
 
       let mnemonic = bip39.generateMnemonic(); // generates string
 
-      const masterWallet = [];
+      let masterWallet = [];
+
+      let defaultWallet = [1, 3]  
+      if (process.env.isProduction){
+        defaultWallet = [0, 1]  
+      }  
+
       for (const k1 in MasterWallet.ListCoin) {
         for (const k2 in MasterWallet.ListCoin[k1].Network) {
+          
+          // check production, only get mainnet:
+          if (process.env.isProduction && k2 != "Mainnet"){
+            break
+          }              
           // init a wallet:
           const wallet = new MasterWallet.ListCoin[k1]();
           // set mnemonic, if not set then auto gen.
@@ -37,13 +48,17 @@ export class MasterWallet {
           wallet.network = MasterWallet.ListCoin[k1].Network[k2];
           // create address, private-key ...
           wallet.createAddressPrivatekey();
+
           masterWallet.push(wallet);
         }
       }
 
-      // set item 1,3 is default
-      if (masterWallet.length > 0) { masterWallet[1].default = true; }
-      masterWallet[3].default = true;
+      // set default item:
+      if (masterWallet.length > 1) 
+      { 
+        masterWallet[defaultWallet[0]].default = true; 
+        masterWallet[defaultWallet[1]].default = true;
+      }
 
       // For Reward wallet:
       mnemonic = bip39.generateMnemonic();
@@ -71,6 +86,10 @@ export class MasterWallet {
       const tempWallet = [];
       for (const k1 in MasterWallet.ListCoin) {
         for (const k2 in MasterWallet.ListCoin[k1].Network) {
+          // check production, only get mainnet:
+          if (process.env.isProduction && k2 != "Mainnet"){
+            break
+          }              
           const wallet = new MasterWallet.ListCoin[k1]();
           wallet.network = MasterWallet.ListCoin[k1].Network[k2];
           tempWallet.push(wallet);
@@ -82,18 +101,22 @@ export class MasterWallet {
 
     // for create new wallets:
     static createNewsallets(listCoinTemp, mnemonic) {
-      console.log('mnemonic', mnemonic);
+      let isImport = false;
       if (mnemonic == '') {
         mnemonic = bip39.generateMnemonic(); // generates string
       } else if (!bip39.validateMnemonic(mnemonic)) {
         console.log('validateMnemonic mnemonic', false);
         return false;
       }
+      else {
+        isImport = true;
+      }
       const masterWallet = MasterWallet.getMasterWallet();
       listCoinTemp.forEach((wallet) => {
         if (wallet.default) {
           wallet.default = false;
           wallet.mnemonic = mnemonic;
+          wallet.protected = isImport;
           // create address, private-key ...
           wallet.createAddressPrivatekey();
           masterWallet.push(wallet);
@@ -106,6 +129,16 @@ export class MasterWallet {
     static UpdateLocalStore(masterWallet) {
       console.log('masterWallet saved');
       localStore.save(MasterWallet.KEY, masterWallet);
+    }
+
+    static UpdateBalanceItem(item){
+      let wallets = MasterWallet.getMasterWallet();
+      wallets.forEach((wallet) => {
+        if (wallet.address == item.address && wallet.network == item.network) {
+          wallet.balance = item.balance;
+        }
+      });
+      MasterWallet.UpdateLocalStore(wallets);
     }
 
     // Restore wallets:

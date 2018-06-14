@@ -11,7 +11,7 @@ class Category extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      idActive: -1,
+      idActive: this.props.idActive || -1,
     };
     // bind
     this.categoryClick.bind(this);
@@ -22,7 +22,7 @@ class Category extends React.PureComponent {
     const { idActive } = this.state;
     const categoriesList = (categories && categories.length > 0) ? categories : CATEGORIES;
     return categoriesList.map((category, index) => (
-      <div 
+      <div
         key={index + 1}
         className={`category-item ${category.id === idActive ? 'active': ''}`}
         onClick={() => this.categoryClick(category)}>

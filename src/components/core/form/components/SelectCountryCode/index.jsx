@@ -60,7 +60,7 @@ class SelectCountryCode extends React.Component {
     return (
       <span>
         <span className="select-country-code" onClick={this.toggleShowSelect}>
-          {countryCode}
+          <span>{countryCode}</span>
           <img className="ml-2" src={iconArrow} />
         </span>
         {

@@ -10,6 +10,7 @@ import ModalDialog from '@/components/core/controls/ModalDialog';
 import { Link } from 'react-router-dom';
 
 import './TopInfo.scss';
+import commentIcon from '@/assets/images/icon/comment/comment-icon-top-info.svg';
 
 
 class TopInfo extends React.Component {
@@ -73,21 +74,27 @@ class TopInfo extends React.Component {
         {
           (commentNo > 0 || !this.isFirstCallCommmentCount) ? (
             <Link className="boxInfo" to={commentLink}>
-              <div className="number">{commentNo}</div>
+              <div className="number">
+                <img src={commentIcon} alt="comment icon" />
+                <span>{commentNo}</span>
+                </div>
               <div className="des">Comment{(commentNo === 0 || commentNo > 1) ? 's' : ''}</div>
             </Link>
           ) : (
             <Link className="boxInfo" to={addCommentLink}>
               {/*<div className="des">Say something</div>*/}
-              <div className="number">0</div>
+              <div className="number">
+                <img src={commentIcon} alt="comment icon" />
+                <span>0</span>
+              </div>
               <div className="des">Comments</div>
             </Link>
           )
         }
-        <ModalDialog className="modal-info" title="Market volume" onRef={modal => this.modalTradedVolumeRef = modal}>
+        <ModalDialog className="modal-info-betting" title="Market volume" onRef={modal => this.modalTradedVolumeRef = modal}>
           <p>The market volume of this prediction is the current amount wagered by all participating ninjas.</p>
         </ModalDialog>
-        <ModalDialog className="modal-info" title="Market fee" onRef={modal => this.modalWiningFeeRef = modal}>
+        <ModalDialog className="modal-info-betting" title="Market fee" onRef={modal => this.modalWiningFeeRef = modal}>
           <p>The Ninja that created this prediction is free to set his own fees.</p>
           <p>It will be a percentage of the total amount wagered by all participating ninjas.</p>
         </ModalDialog>

@@ -19,7 +19,7 @@ import { APP } from '@/constants';
 import ExpandArrowSVG from '@/assets/images/icon/expand-arrow.svg';
 import CheckedSVG from '@/assets/images/icon/checked.svg';
 
-import { chatInstance } from '@/pages/Chat/Chat';
+// import { chatInstance } from '@/pages/Chat/Chat';
 import valid from '@/services/validate';
 
 import './Profile.scss';
@@ -109,14 +109,14 @@ class Profile extends React.Component {
         successFn: () => {
           this.setState(() => ({ phoneStart: phone, isShowVerificationCode: true }));
           this.props.showAlert({
-            message: <div className="text-center">Sent verify OTP code to your phone</div>,
+            message: <div className="text-center">We sent the secret code to your phone.</div>,
             timeOut: 3000,
             type: 'success',
           });
         },
         errorFn: () => {
           this.props.showAlert({
-            message: <div className="text-center">Send SMS fail, please check again your phone number.</div>,
+            message: <div className="text-center">That’s not a real number. Try harder.</div>,
             timeOut: 3000,
             type: 'danger',
           });
@@ -142,14 +142,14 @@ class Profile extends React.Component {
             successFn: () => {
               this.setState({ isShowVerificationCode: false });
               this.props.showAlert({
-                message: <div className="text-center">Added your phone number</div>,
+                message: <div className="text-center">Phone number securely saved.</div>,
                 timeOut: 3000,
                 type: 'success',
               });
             },
             errorFn: () => {
               this.props.showAlert({
-                message: <div className="text-center">Verify your phone number failed</div>,
+                message: <div className="text-center">Enter the secret code sent to your phone.</div>,
                 timeOut: 3000,
                 type: 'danger',
               });
@@ -158,7 +158,7 @@ class Profile extends React.Component {
         },
         errorFn: () => {
           this.props.showAlert({
-            message: <div className="text-center">Verify your phone number failed</div>,
+            message: <div className="text-center">That’s not a real number. Try harder.</div>,
             timeOut: 3000,
             type: 'danger',
           });
@@ -172,7 +172,7 @@ class Profile extends React.Component {
     if (email) {
       if (valid.email(email)) {
         this.props.showAlert({
-          message: <div className="text-center">Please enter valid email</div>,
+          message: <div className="text-center">A valid email would work better.</div>,
           timeOut: 3000,
           type: 'danger',
         });
@@ -184,7 +184,7 @@ class Profile extends React.Component {
         successFn: (data) => {
           if (data.status) {
             this.props.showAlert({
-              message: <div className="text-center">Sent verify email, please check your email</div>,
+              message: <div className="text-center">Tap the verification link we just sent to your email.</div>,
               timeOut: 3000,
               type: 'success',
             });
@@ -193,7 +193,7 @@ class Profile extends React.Component {
         },
         errorFn: () => {
           this.props.showAlert({
-            message: <div className="text-center">{'Can\'t send verify email'}</div>,
+            message: <div className="text-center">A valid email would work better.</div>,
             timeOut: 3000,
             type: 'danger',
           });
@@ -201,7 +201,7 @@ class Profile extends React.Component {
       });
     } else {
       this.props.showAlert({
-        message: <div className="text-center">Please enter your email</div>,
+        message: <div className="text-center">A valid email would work better.</div>,
         timeOut: 3000,
         type: 'danger',
       });
@@ -224,16 +224,16 @@ class Profile extends React.Component {
               METHOD: 'POST',
               successFn: () => {
                 this.props.showAlert({
-                  message: <div className="text-center">Updated your username</div>,
+                  message: <div className="text-center">Your alias is recorded.</div>,
                   timeOut: 3000,
                   type: 'success',
                 });
-                chatInstance.updateUserName(values.username);
+                // chatInstance.updateUserName(values.username);
               },
             });
           } else {
             this.props.showAlert({
-              message: <div className="text-center">This username has exist</div>,
+              message: <div className="text-center">username has existed!</div>,
               timeOut: 3000,
               type: 'danger',
             });
@@ -268,7 +268,7 @@ class Profile extends React.Component {
 
   render() {
     const {
-      countryCode, countries, sms, email, phone,
+      countryCode, countries, sms, email,
     } = this.state;
     const { UsernameForm, NumberPhoneForm, EmailForm } = this;
     return (
@@ -299,7 +299,7 @@ class Profile extends React.Component {
                     className="form-control-custom form-control-custom-ex w-100"
                     component={fieldCleave}
                   />
-                  <Button className="submit-btn">Save</Button>
+                  <Button cssType="anonymous" className="submit-btn">Save</Button>
                 </UsernameForm>
               </div>
             </div>
@@ -361,10 +361,10 @@ class Profile extends React.Component {
                         this.onTextFieldChange(name, value);
                       }}
                     />
-                    <Button className="send-btn">Send</Button>
+                    <Button cssType="anonymous" className="send-btn">Send</Button>
                   </div>
                   <div className={this.state.isShowVerificationCode ? '' : 'd-none'}>
-                    <p className="text">Enter verification code sent to your phone</p>
+                    <p className="text">Enter the secret code sent to your phone.</p>
                     <Field
                       name="sms"
                       className="form-control-custom form-control-custom-ex w-100"
@@ -377,7 +377,7 @@ class Profile extends React.Component {
                       }}
                       value={sms}
                     />
-                    <Button className="submit-btn">Verify your number</Button>
+                    <Button cssType="anonymous" className="submit-btn">Verify your number</Button>
                   </div>
                 </NumberPhoneForm>
               </div>
@@ -410,7 +410,7 @@ class Profile extends React.Component {
                     }}
                     value={email}
                   />
-                  <Button className="submit-btn">Verify your email</Button>
+                  <Button cssType="anonymous" className="submit-btn">Verify your email</Button>
                 </EmailForm>
               </div>
             </div>

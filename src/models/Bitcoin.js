@@ -208,116 +208,32 @@ export class Bitcoin extends Wallet {
       return false;
     }
 
-    async getTransactionDetail(txid) {
-      const url = `${this.network}/tx/${txid}`;
-      const response = await axios.get(url);
-      if (response.status == 200) {
-        let detail = response.data, result = {}, is_sent = false, value = 0,
-        from_addresses = [], to_addresses = [];
-
-        result = {
-          header: {
-            coin: "BTC",
-            confirmations: detail.confirmations
-          },
-          body: {
-            size: detail.size,
-            received_time: moment(detail.time).format('llll'),
-            mined_time: moment(detail.blocktime).format('llll'),
-            block_hash: detail.blockhash,
-            fees: detail.fees + " BTC",
-          }
-        };
-
-        for(let i in detail.vin){
-          if(String(detail.vin[i].addr).toLowerCase() == this.address.toLowerCase())
-            is_sent = true;
-
-          let no = Number(i) + 1;
-          result.body["from_addr_"+no] = detail.vin[i].addr + " " + detail.vin[i].value + " BTC";
-          value += Number(detail.vin[i].value);
-        }
-
-        for(let i in detail.vout){
-          let no = Number(i) + 1;
-          result.body["to_addr_"+no] = detail.vout[i].scriptPubKey.addresses.join(" ") + " " + detail.vout[i].value + " BTC";
-        }
-
-        result.header.value = value;
-        result.header.is_sent = is_sent;
-
-        return result;
-      }
-      return response.data;
-    }
-
-    async getTransactionHistory() {
-      // txs/?address=muU86kcQGfJUydQ9uZmfJwcDRb1H5PQuzr
-      const url = `${this.network}/txs/?address=${this.address}`;
-      const response = await axios.get(url);
+    async getTransactionHistory(pageno) {
+      const from = (pageno-1) * 20;
+      const to = from + 20;
+      const url = `${this.network}/addrs/${this.address}/txs/?from=${from}&to=${to}`;
+      const response = await axios.get(url);console.log(url);
       let result = [];
       if (response.status == 200) {
-
-        if(response.data && response.data.txs){
-          for(let tran of response.data.txs){
-            let vin = tran.vin, vout = tran.vout,
-            is_sent = false, value = 0,
-            addresses = [], confirmations = tran.confirmations,
-            transaction_date = tran.time ? new Date(tran.time*1000) : "";
-
-            //check transactions are send
-            for(let tin of vin){
-              if(tin.addr.toLowerCase() == this.address.toLowerCase()){
-                is_sent = true;
-
-                for(let tout of vout){
-                  let tout_addresses = tout.scriptPubKey.addresses.join(" ").toLowerCase();
-                  if(tout_addresses.indexOf(this.address.toLowerCase()) < 0){
-                    value += Number(tout.value);
-                    let bitcoin = new Bitcoin();
-                    bitcoin.address = tout_addresses;
-                    addresses.push(bitcoin.getShortAddress());
-                  }
-                }
-
-                break;
-              }
-            }
-
-            //check transactions are receive
-            if(!is_sent){
-              for(let tout of vout){
-                let tout_addresses = tout.scriptPubKey.addresses.join(" ").toLowerCase();
-                if(tout_addresses.indexOf(this.address.toLowerCase()) >= 0){
-                  value += tout.value;
-                }
-                else{
-                  let bitcoin = new Bitcoin();
-                    bitcoin.address = tout_addresses;
-                    addresses.push(bitcoin.getShortAddress());
-                }
-              }
-            }
-
-            result.push({
-              value: value,
-              transaction_no: tran.txid,
-              transaction_date: transaction_date,
-              addresses: addresses,
-              transaction_relative_time:  transaction_date ? moment(transaction_date).fromNow() : "",
-              confirmations: confirmations,
-              time_stamp: tran.time,
-              is_sent: is_sent});
-          }
-
-          return result;
-        }
-        else{
-          return false;
+        if(response.data && response.data.items){
+          result = response.data.items;
         }
       }
 
-      return false;
+      return result;
+    }
+
+    async getTransactionCount() {
+      const url = `${this.network}/addrs/${this.address}/txs/?from=0&to=1`;
+      const response = await axios.get(url);
+      let result = 0;
+      if (response.status == 200) {
+        if(response.data && response.data.totalItems){
+          result = response.data.totalItems;
+        }
+      }
+
+      return result;
     }
 }
 
