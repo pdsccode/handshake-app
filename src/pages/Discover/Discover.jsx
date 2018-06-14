@@ -306,20 +306,20 @@ class DiscoverPage extends React.Component {
                       <img src={iconShopSVG} />
                     </span>
                     <span className="text-intro">
-                      <div>Be the first shop in your area to <span className="money">earn 1 ETH</span></div>
+                      <div>Sell coin for cash, buy coin with cash. Set your own rates. <span className="money">1 ETH welcome bonus.</span></div>
                       <div className="mt-2">
                         <Link className="btn btn-sm btn-join-now" to={{ pathname: URL.HANDSHAKE_CREATE_INDEX, search: '?id=2' }}>
-                          <span>Join now</span>
+                          <span>Open your station</span>
                         </Link>
                       </div>
                     </span>
                   </Col>
                 </Row>
-                <Row>
-                  <Col md={12} className="feed-wrapper">
-                    <FeedCreditCard history={this.props.history} />
-                  </Col>
-                </Row>
+                {/*<Row>*/}
+                  {/*<Col md={12} className="feed-wrapper">*/}
+                    {/*<FeedCreditCard history={this.props.history} />*/}
+                  {/*</Col>*/}
+                {/*</Row>*/}
               </React.Fragment>
             )
           }
