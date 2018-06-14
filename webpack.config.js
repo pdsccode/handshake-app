@@ -12,7 +12,7 @@ const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const PwaManifestPlugin = require('webpack-pwa-manifest');
-const OfflinePlugin = require('offline-plugin');
+// const OfflinePlugin = require('offline-plugin');
 
 // configs
 const envConfig = require('./.env.js');
