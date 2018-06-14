@@ -181,8 +181,10 @@ class Router extends React.Component {
       return { isLogged: nextProps.auth.isLogged };
     }
     if (nextProps.auth.updatedAt !== prevState.updatedAt) {
+      //
       nextProps.firebase.unWatchEvent('value', `${FIREBASE_PATH.USERS}/${String(prevState.profile?.id)}`);
       nextProps.firebase.watchEvent('value', `${FIREBASE_PATH.USERS}/${String(nextProps.auth.profile?.id)}`);
+      //
       return { profile: nextProps.auth.profile, updatedAt: nextProps.auth.updatedAt };
     }
     if (nextProps.app.locale !== prevState.currentLocale) {
@@ -326,7 +328,11 @@ class Router extends React.Component {
                   wallet.getBalance().then((result) => {
                     if (result > 0) {
                       this.porps.showAlert({
-                        message: <div className="text-center">You have ETH! Now you can play for free on the Ninja testnet.</div>,
+                        message: (
+                          <div className="text-center">
+                            You have ETH! Now you can play for free on the Ninja testnet.
+                          </div>
+                        ),
                         timeOut: false,
                         isShowClose: true,
                         type: 'success',
