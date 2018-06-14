@@ -206,7 +206,6 @@ class Router extends React.Component {
 
   componentDidMount() {
     this.checkRegistry();
-    this.notification();
   }
 
   componentWillUnmount() {
@@ -350,6 +349,8 @@ class Router extends React.Component {
         } else {
           this.setState({ isLoading: false });
         }
+
+        this.notification();
       },
       // end success fn
     });

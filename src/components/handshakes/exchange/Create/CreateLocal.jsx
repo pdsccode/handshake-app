@@ -1,9 +1,10 @@
 import React from "react";
-import { injectIntl } from "react-intl";
+import { injectIntl, FormattedMessage } from "react-intl";
 import Feed from "@/components/core/presentation/Feed";
 import Button from "@/components/core/controls/Button";
 import "./styles.scss";
 import createForm from "@/components/core/form/createForm";
+import {ExchangeHandshake} from '@/services/neuron';
 import { getOfferPrice } from "@/services/offer-util";
 import {
   fieldCleave,
@@ -55,6 +56,7 @@ import { addOfferItem } from "@/reducers/exchange/action";
 import { getOfferStores } from "@/reducers/exchange/action";
 import iconApproximate from "@/assets/images/icon/icons8-approximately_equal.svg";
 import axios from "axios/index";
+import { getErrorMessageFromCode } from "../utils";
 
 const nameFormExchangeCreateLocal = "exchangeCreateLocal";
 const FormExchangeCreateLocal = createForm({
@@ -233,10 +235,9 @@ class Component extends React.Component {
   // }
 
   handleCreateOfferFailed = (e) => {
-    console.log('abcde', e)
     this.hideLoading();
     this.props.showAlert({
-      message: <div className="text-center">{e.response?.data?.message}</div>,
+      message: <div className="text-center">{getErrorMessageFromCode(e)}</div>,
       timeOut: 3000,
       type: 'danger',
     });
@@ -287,6 +288,10 @@ class Component extends React.Component {
       successFn: this.handleCreateOfferSuccess,
       errorFn: this.handleCreateOfferFailed,
     });
+  }
+
+  hideLoading = () => {
+    this.props.hideLoading();
   }
 
   handleSubmit = async (values) => {
@@ -422,7 +427,7 @@ class Component extends React.Component {
                     name="physical_item"
                     className="form-control-custom form-control-custom-ex w-100 input-no-border"
                     component={fieldInput}
-                    placeholder="something, something"
+                    placeholder="any item or service"
                     // onChange={this.onAmountChange}
                     validate={[required]}
                   />
@@ -449,7 +454,7 @@ class Component extends React.Component {
               <hr className="hrLine"/>
 
               <div className="d-flex">
-                <label className="col-form-label mr-auto label-create"><span className="align-middle">Amount coin</span></label>
+                <label className="col-form-label mr-auto label-create"><span className="align-middle">Amount</span></label>
                 <div className='input-group'>
                   <Field
                     name="amount"
@@ -462,16 +467,15 @@ class Component extends React.Component {
                 </div>
               </div>
 
-              <hr className="hrLine"/>
-
-              <div className="d-flex">
-                <label className="col-form-label mr-auto label-create"><span
-                  className="align-middle">Total</span></label>
-                <div className='input-group'>
-                  <div><span className="form-text"><img src={iconApproximate}/> {totalFormatted} {fiatCurrency}</span>
-                  </div>
-                </div>
-              </div>
+              {/*<div className="d-flex">*/}
+                {/*<label className="col-form-label mr-auto label-create"><span*/}
+                  {/*className="align-middle">Total</span></label>*/}
+                {/*<div className='input-group'>*/}
+                  {/*<div>*/}
+                    {/*{ !isNaN(totalFormatted) && <span className="form-text"><img src={iconApproximate}/> {totalFormatted} {fiatCurrency}</span>}*/}
+                  {/*</div>*/}
+                {/*</div>*/}
+              {/*</div>*/}
 
               <hr className="hrLine"/>
 
