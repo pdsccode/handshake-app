@@ -97,7 +97,10 @@ export default [
       "goalsHomeTeam": null,
       "goalsAwayTeam": null
     },
-    "odds": null
+    "odds": null,
+    link: 'https://wc.kenhtructiep.com/ss.php?v=1481482',
+    linksLive: [],
+    linksSoftCast: [],
   },
   {
     "_links": {
@@ -123,7 +126,10 @@ export default [
       "goalsHomeTeam": null,
       "goalsAwayTeam": null
     },
-    "odds": null
+    "odds": null,
+    link: 'https://wc.kenhtructiep.com/ss.php?v=1481482',
+    linksLive: [],
+    linksSoftCast: [],
   },
   {
     "_links": {
@@ -149,7 +155,10 @@ export default [
       "goalsHomeTeam": null,
       "goalsAwayTeam": null
     },
-    "odds": null
+    "odds": null,
+    link: 'https://wc.kenhtructiep.com/ss.php?v=1481482',
+    linksLive: [],
+    linksSoftCast: [],
   },
   {
     "_links": {
