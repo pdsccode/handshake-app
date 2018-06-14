@@ -9,7 +9,6 @@ import {MasterWallet} from '@/models/MasterWallet';
 
 import local from '@/services/localStore';
 import {FIREBASE_PATH, HANDSHAKE_ID, API_URL, APP} from '@/constants';
-import { BettingHandshake } from '@/services/neuron';
 import { uninitItem, collect, refund, rollback } from '@/reducers/handshake/action';
 import { loadMyHandshakeList} from '@/reducers/me/action';
 
@@ -30,11 +29,8 @@ import Shake from '@/components/core/controls/Button';
 
 import GroupBook from './GroupBook';
 
-const wallet = MasterWallet.getWalletDefault('ETH');
-const chainId = wallet.chainId;
-const bettinghandshake = new BettingHandshake(chainId);
 const betHandshakeHandler = new BetHandshakeHandler()
-
+const ROUND = 1000000
 class FeedBetting extends React.Component {
   static propTypes = {
 
@@ -83,13 +79,13 @@ class FeedBetting extends React.Component {
   }
 
   handleStatus(){
-    const {side, result, shakeUserIds, id} = this.props;
+    const {result, shakeUserIds, id} = this.props;
 
     console.log('Props:', this.props);
     const profile = local.get(APP.AUTH_PROFILE);
     const isUserShake = this.isShakeUser(shakeUserIds, profile.id);
     let itemInfo = this.props;
-    let status = this.props;
+    
     if(isUserShake){
       const extraData = this.extraData;
       console.log('Extra data:', extraData);
@@ -101,10 +97,13 @@ class FeedBetting extends React.Component {
         console.log('Found Shaked Item:', foundShakedItem);
         if(foundShakedItem){
           itemInfo = foundShakedItem;
-          status = itemInfo.status;
+          
         }
       }
     }
+    const status = itemInfo.status;
+    const side = itemInfo.side;
+    
     const role = isUserShake ? ROLE.SHAKER : ROLE.INITER;
     //const blockchainStatusHardcode = 5;
     const isMatch = this.isMatch;
@@ -173,7 +172,7 @@ class FeedBetting extends React.Component {
     // const matchName = realEventName[0];
     // const matchDate = `(${realEventName[1]}`;
     let eventName = event_name ? event_name: '';
-    console.log('Result:', eventName.indexOf('Event'));
+    //console.log('Result:', eventName.indexOf('Event'));
     if(eventName.indexOf('Event') == -1){
       eventName = `Event: ${eventName}`;
     }
@@ -198,10 +197,10 @@ class FeedBetting extends React.Component {
               <p className="eventInfo">{side === 1 ? `Support: ` : 'Oppose: '}{predictName}</p>
             </div>
             <div className="bottomWrapper">
-              <span className="content">{amount.toFixed(4)} ETH </span>
+              <span className="content">{amount.toFixed(6)} ETH </span>
               <span className="odds" >{odds.toFixed(2)}</span>
             </div>
-            <div className="possibleWin">Possible winnings: {parseFloat(winValue).toFixed(4)} ETH</div>
+            <div className="possibleWin">Possible winnings: {Math.floor(winValue*ROUND)/ROUND} ETH</div>
 
             {this.renderStatus()}
         </Feed>
@@ -269,7 +268,7 @@ class FeedBetting extends React.Component {
       const {hid, side, amount, odds, offchain} = data;
       const stake = amount;
       //const payout = stake * odds;
-      const result = await bettinghandshake.cancelBet(hid, side, stake, odds, offchain);
+      const result = await betHandshakeHandler.cancelBet(hid, side, stake, odds, offchain);
       const {hash} = result;
       if(hash === -1){
         this.rollback(offchain);
@@ -298,7 +297,7 @@ class FeedBetting extends React.Component {
       const {hid, id} = this.props;
       const offchain = id;
 
-     const result = await bettinghandshake.withdraw(hid, offchain);
+     const result = await betHandshakeHandler.withdraw(hid, offchain);
      const {hash} = result;
      if(hash === -1){
        // Error, rollback
@@ -326,7 +325,8 @@ class FeedBetting extends React.Component {
     if(status){
       const {hid, id} = this.props;
       const offchain = id;
-      const result = await bettinghandshake.refund(hid, offchain);
+      const result = await betHandshakeHandler.refund(hid, offchain);
+      const {hash} = result;
       if(hash === -1){
         // Error, rollback
         this.rollback(offchain);

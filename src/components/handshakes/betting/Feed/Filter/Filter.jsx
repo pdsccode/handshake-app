@@ -425,31 +425,31 @@ class BettingFilter extends React.Component {
               defaultId={defaultOutcomeId}
               source={this.matchOutcomes}
               afterSetDefault={item => this.setState({
-                selectedOutcome: item,
-              }, () => this.callGetHandshakes(item))}
+              selectedOutcome: item,
+            }, () => this.callGetHandshakes(item))}
               onItemSelected={(item) => {
-                /* this.callGetHandshakes(item) */
-                this.setState({
-                  selectedOutcome: item,
-                }, () => this.callGetHandshakes(item));
-              }
-              }
+              /* this.callGetHandshakes(item) */
+              this.setState({
+                selectedOutcome: item,
+              }, () => this.callGetHandshakes(item));
+            }
+            }
             />
           </div>
           {
-            isFirstFree
-            ? (
-              <Button
-                block
-                onClick={() => {
-                    this.modalBetFreeRef.open();
-                }}
-              >
-                You have free ETH to play
-              </Button>
-            )
-            : ''
-          }
+          isFirstFree
+          ? (
+            <Button
+              block
+              onClick={() => {
+                  this.modalBetFreeRef.open();
+              }}
+            >
+              You have free ETH to play
+            </Button>
+          )
+          : ''
+        }
 
           <TopInfo
             marketTotal={parseFloat(tradedVolum)}
@@ -472,7 +472,7 @@ class BettingFilter extends React.Component {
               {/* <GroupBook amountColor="#FA6B49" bookList={this.bookListAgainst}/> */}
               <div className="marketBox">
                 <div>Market</div>
-                <div>{parseFloat(this.defaultSupportOdds).toFixed(2)}</div>
+                <div>{Math.floor(this.defaultSupportOdds * 100) / 100}</div>
               </div>
               <Button
                 className="buttonSupport"
@@ -492,16 +492,16 @@ class BettingFilter extends React.Component {
                 <div>Oppose (ODDS)</div>
               </div>
               {/* <BettingShake
-                    matchName={matchName}
-                    matchOutcome={matchOutcome}
-                    outcomeId={parseInt(outcomeId)}
-                    outcomeHid={parseInt(outcomeHid)}
-                    marketSupportOdds={parseFloat(this.defaultSupportOdds)}
-                  marketAgainstOdds={parseFloat(this.defaultAgainstOdds)}/> */}
+                  matchName={matchName}
+                  matchOutcome={matchOutcome}
+                  outcomeId={parseInt(outcomeId)}
+                  outcomeHid={parseInt(outcomeHid)}
+                  marketSupportOdds={parseFloat(this.defaultSupportOdds)}
+                marketAgainstOdds={parseFloat(this.defaultAgainstOdds)}/> */}
               {<GroupBook amountColor="#FA6B49" bookList={this.bookListAgainst} />}
               <div className="titleBox">
                 <div>Market</div>
-                <div>{parseFloat(this.defaultAgainstOdds).toFixed(4)}</div>
+                <div>{Math.floor(this.defaultAgainstOdds * 100) / 100}</div>
               </div>
               <Button
                 className="buttonAgainst"

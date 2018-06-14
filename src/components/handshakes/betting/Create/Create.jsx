@@ -23,16 +23,10 @@ import {MasterWallet} from '@/models/MasterWallet';
 import Dropdown from '@/components/core/controls/Dropdown';
 import Toggle from '@/components/handshakes/betting/Feed/Toggle';
 import {showAlert} from '@/reducers/app/action';
-
-import { BettingHandshake } from '@/services/neuron';
 // self
 import './Create.scss';
+const ROUND = 1000000;
 
-const wallet = MasterWallet.getWalletDefault('ETH');
-const chainId = wallet.chainId;
-console.log('Chain Id:', chainId);
-
-const bettinghandshake = new BettingHandshake(chainId);
 const betHandshakeHandler = new BetHandshakeHandler()
 
 const nameFormBettingCreate = 'bettingCreate';
@@ -109,8 +103,7 @@ class BettingCreate extends React.Component {
   componentDidMount(){
     console.log('Betting Create Props:', this.props, history);
     this.setState({
-      address: wallet.address,
-      privateKey: wallet.privateKey,
+      
     })
     this.props.loadMatches({PATH_URL: API_URL.CRYPTOSIGN.LOAD_MATCHES});
 
@@ -227,7 +220,7 @@ get defaultOutcome() {
     //const fromAddress = "0x54CD16578564b9952d645E92b9fa254f1feffee9";
     let balance = await betHandshakeHandler.getBalance();
     balance = parseFloat(balance);
-    const estimatedGas = await bettinghandshake.getEstimateGas();
+    const estimatedGas = await betHandshakeHandler.getEstimateGas();
     //const estimatedGas = 0.00001;
     console.log('Estimate Gas:', estimatedGas);
     const eventBet = parseFloat(values["event_bet"]);
@@ -235,7 +228,7 @@ get defaultOutcome() {
     const total = eventBet + parseFloat(estimatedGas);
     console.log("Event Bet, Odds, Estimate, Total:",eventBet,odds,estimatedGas, total);
 
-    const fromAddress = address;
+    const fromAddress = betHandshakeHandler.getAddress();
     console.log('Match, Outcome:', selectedMatch, selectedOutcome);
 
     var message = null;
@@ -308,7 +301,7 @@ get defaultOutcome() {
     const odds = values['event_odds'];
     const total = amount * odds;
     this.setState({
-      winValue: total || 0,
+      winValue: Math.floor(total*ROUND)/ROUND || 0,
     })
   }
 
@@ -506,8 +499,12 @@ get defaultOutcome() {
     const {values} = this.state;
     values["event_predict"] = item.value;
     values["event_odds"] = parseFloat(item.marketOdds).toFixed(2);
-    values["event_bet"] = parseFloat(item.marketAmount).toFixed(4);
-    const winValue =  parseFloat(item.marketAmount * item.marketOdds).toFixed(4);
+    values["event_bet"] = parseFloat(item.marketAmount).toFixed(6);
+    const roundWin = item.marketAmount * item.marketOdds;
+    console.log('roundWin Value:', roundWin);
+
+    const winValue =  Math.floor(roundWin*ROUND)/ROUND;
+    console.log('Win Value:', winValue);
 
     this.setState({selectedOutcome: item, values, winValue})
   }
@@ -528,6 +525,7 @@ get defaultOutcome() {
   initHandshake(fields, fromAddress){
     const {selectedOutcome} = this.state;
     const side = this.toggleRef.value;
+    const chainId = betHandshakeHandler
     const params = {
       //to_address: toAddress ? toAddress.trim() : '',
       //public: isPublic,
@@ -546,7 +544,7 @@ get defaultOutcome() {
       currency: 'ETH',
       side: parseInt(side),
       from_address: fromAddress,
-      chain_id: chainId,
+      chain_id: betHandshakeHandler.getChainIdDefaultWallet(),
     };
     console.log("Go to Params:", params);
     const hid = selectedOutcome.hid;
