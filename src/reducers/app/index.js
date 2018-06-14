@@ -47,6 +47,9 @@ function appReducter(state = {
 
   ipInfo: local.get(APP.IP_INFO),
 
+  isBannedCash: false,
+  isBannedPrediction: false,
+
 }, action) {
   switch (action.type) {
     case APP_ACTION.HEADER_TITLE_SET:
@@ -194,6 +197,7 @@ function appReducter(state = {
         ...state,
         configAlert: { ...action.payload },
       };
+
     case APP_ACTION.IP_INFO: {
       return {
         ...state,
@@ -208,6 +212,20 @@ function appReducter(state = {
       return {
         ...state,
         locale: action.payload,
+      };
+    }
+
+    case APP_ACTION.BAN_CASH: {
+      return {
+        ...state,
+        isBannedCash: true,
+      };
+    }
+
+    case APP_ACTION.BAN_PREDICTION: {
+      return {
+        ...state,
+        isBannedPrediction: true,
       };
     }
 
