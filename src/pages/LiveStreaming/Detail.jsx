@@ -104,7 +104,7 @@ class Detail extends React.PureComponent {
                   </ul>
                 </div>
                 <div>
-                  <p>SoftCast</p>
+                  <p>SopCast</p>
                   <ul>
                     {(hasList(match.linksSoftCast) && isHideDefaultLink) ?
                       match.linksSoftCast.map((item, index) => (<li key={index}><a href={item}>Sopcast {index + 1}</a></li>)) :

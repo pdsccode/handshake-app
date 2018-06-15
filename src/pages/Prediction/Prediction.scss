@@ -1,61 +1,154 @@
 @import './src/styles/style';
 
-.matchDetail {
-  .matchDetailInfo {
-    padding: rem-calc(0 20px);
-    background: #333;
-    color: #FFF;
-    //width: 75%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    .team {
-      .teamFlag {
-        width: rem-calc(40px);
-      }
-      .teamName {
-        font-weight: $normal;
-        font-size: rem-calc(16px);
-        margin: 0;
-      }
-      .home {
-        margin-right: rem-calc(5px);
-      }
-      .away {
-        margin-left: rem-calc(5px);
-      }
-    }
-    .middle {
-      background: rgba(5, 5, 5, 0.3);
-      text-align: center;
-      padding: rem-calc(20px 15px);
-      .time {
-        font-size: rem-calc(26px);
-        color: #FFF735;
-      }
-    }
-  }
-  .liveBox {
-    margin-top: rem-calc(50px);
-    iframe {
-      max-height: 500px;
-      min-height: 300px;
-    }
-  }
+html {
+  background: white;
+}
 
-  .links {
-    margin-top: rem-calc(50px);
-    ul {
-      list-style: none;
-      li {
-        color: blue;
-        &:hover {
-          cursor: pointer;
+.liveStreamingIndex {
+  max-width: $app-width;
+  margin: 0 auto;
+  .container {
+    background: white;
+    padding: 0;
+  }
+  .listMatchTitle {
+    background: rgba(29, 29, 38, 0.03);
+    opacity: 0.5;
+    font-size: rem-calc(10px);
+    color: #1D1D26;
+    line-height: rem-calc(10px);
+    height: rem-calc(30px);
+    font-weight: $bold;
+    padding: rem-calc(10px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-transform: uppercase;
+  }
+  .listMatch {
+    .matchItem {
+      color: black;
+      display: flex;
+      &:hover {
+        text-decoration: none;
+      }
+      .matchTime {
+        background: #DDD;
+        width: 25%;
+        padding: rem-calc(9x 0);
+        .league {
+          font-size: rem-calc(10px);
+          line-height: rem-calc(14px);
+          text-transform: uppercase;
+          text-align: center;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          overflow: hidden;
+        }
+        .time {
+          font-size: rem-calc(18px);
+          line-height: rem-calc(18px);
+          padding: rem-calc(4px 0);
+          text-align: center;
         }
       }
+      .matchInfo {
+        width: 100%;
+        padding: rem-calc(22px 24px);
+        display: flex;
+        justify-content: space-between;
+        border-bottom: 1px solid #d8d8d8;
+        align-items: center;
+        .team {
+          width: 40%;
+          &:last-child {
+            text-align: left;
+            padding-left: rem-calc(20px);
+          }
+          &:first-child {
+            text-align: right;
+            padding-right: rem-calc(20px);
+          }
+          .teamFlag {
+            width: rem-calc(30px);
+          }
+          .teamName {
+            font-weight: $normal;
+            font-size: rem-calc(16px);
+            margin: 0;
+          }
+          .home {
+            margin-left: rem-calc(8px);
+          }
+          .away {
+            margin-right: rem-calc(8px);
+          }
+        }
+        .vs {
+          width: 20%;
+          background: #00CE7D;
+          border-radius: 2px;
+          font-size: 12px;
+          color: #FFFFFF;
+          letter-spacing: 0;
+          text-align: center;
+          line-height: 12px;
+          padding: rem-calc(4px 10px);
+          font-weight: $normal;
+        }
+      }
+    }
 
-      .active {
-        opacity: 0.65;
+    .matchItem:hover {
+      .matchTime {
+        background: #27ae5e;
+        color: #FFF
+      }
+      //.matchInfo {
+      //  background: #555;
+      //  color: #FFF
+      //}
+    }
+
+    .matchItem + .matchItem {
+      margin-top: rem-calc(2px);
+    }
+  }
+  .hightlightVideos {
+    margin-top: rem-calc(50px);
+    padding: rem-calc(10px);
+    p {
+      font-size: 9.39px;
+      color: #000000;
+      letter-spacing: 0;
+      font-weight: $bold;
+      margin-bottom: rem-calc(20px);
+    }
+    ul {
+      padding-left: 0;
+    }
+    li + li {
+      margin-top: rem-calc(30px);
+    }
+    li {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      iframe {
+        width: 100%;
+        min-height: 300px;
+        height: auto;
+      }
+      div {
+        width: 90%;
+        margin: 5px auto;
+        font-size: rem-calc(11.95px);
+        color: #000000;
+        letter-spacing: 0;
+        line-height: rem-calc(17.92px);
+        font-weight: $normal;
+        padding-left: rem-calc(8px);
+        text-align: center;
       }
     }
   }
