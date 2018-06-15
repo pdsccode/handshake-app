@@ -7,6 +7,7 @@ import axios from 'axios';
 import { URL, API_URL } from '@/constants';
 import fixtures from '../../data/liveStreaming/fixtures';
 import moment from 'moment';
+import { groupBy } from 'lodash';
 
 // components
 import { Grid, Row, Col } from 'react-bootstrap';
@@ -98,6 +99,7 @@ class LiveStreaming extends React.PureComponent {
   constructor(props) {
     super(props);
     this.renderMatchItem = ::this.renderMatchItem;
+    this.renderMatchesByDate = ::this.renderMatchesByDate;
   }
 
   renderMatchItem(match, index) {
@@ -109,7 +111,7 @@ class LiveStreaming extends React.PureComponent {
             <span className="teamName">{match.homeTeamName}</span>
             {/*<img src={match._links.homeTeam.crestUrl} alt={match.homeTeamName} className="teamFlag home" />*/}
           </div>
-          <div className="vs">{moment(match.date).format('HH:MM')}</div>
+          <div className="vs">{moment(match.date).format('HH:mm')}</div>
           <div className="team">
             {/*<img src={match._links.awayTeam.crestUrl} alt={match.awayTeamName} className="teamFlag away" />*/}
             <span className="teamName">{match.awayTeamName}</span>
@@ -119,12 +121,34 @@ class LiveStreaming extends React.PureComponent {
     );
   }
 
+  renderMatchesByDate(keyDate, matches, index) {
+    return (
+      <div key={index}>
+        <div className="listMatchTitle">
+          <div>World Cup 2018 Russia</div> <div>{keyDate}</div>
+        </div>
+        <Grid>
+          <Row>
+            <Col md={12} xs={12}>
+              <div className="listMatch">
+                {matches.map((item, index) => this.renderMatchItem(item, index))}
+              </div>
+            </Col>
+          </Row>
+        </Grid>
+      </div>
+    );
+  }
+
   render() {
     const matches = fixtures.filter(item => {
       const now = moment();
       const matchTime = moment(item.date);
       return matchTime.isSameOrAfter(now, 'milliseconds');
     });
+    const groupMatchesByDate = groupBy(matches.slice(0, 5), item => moment(item.date).format("MMM DD"));
+    const dateKeys = Object.keys(groupMatchesByDate);
+    console.log(dateKeys, "data keys", groupMatchesByDate['Jun 15'], groupMatchesByDate['Jun 16']);
     return (
       <div className="liveStreamingIndex">
         <div>
@@ -133,15 +157,12 @@ class LiveStreaming extends React.PureComponent {
             <img src={banner} width="100%" style={{marginTop: '-20px'}} />
           </a>
         </div>
-        <div className="listMatchTitle">
-          World Cup 2018 Russia
-        </div>
+        {
+          dateKeys.map((keyDate, index) => this.renderMatchesByDate(keyDate, groupMatchesByDate[keyDate], index))
+        }
         <Grid>
           <Row>
             <Col md={12} xs={12}>
-              <div className="listMatch">
-                {matches.slice(0, 5).map((item, index) => this.renderMatchItem(item, index))}
-              </div>
               <div className="hightlightVideos">
                 <p>HIGHLIGHT VIDEO</p>
                 <ul>
