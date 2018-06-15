@@ -11,7 +11,10 @@
     padding-top: 10px;
   }
   * {
-    user-select: none;
+    user-select: none !important;
+    *:focus {
+      user-select: none !important;
+    }
   }
 }
 
