@@ -16,6 +16,7 @@ import { Link } from 'react-router-dom';
 import Cookies from 'js-cookie';
 // components
 import { Col, Grid, Row } from 'react-bootstrap';
+import FAQBetting from '@/components/core/presentation/FAQBetting';
 // import SearchBar from '@/components/core/controls/SearchBar';
 import ModalDialog from '@/components/core/controls/ModalDialog';
 import Category from '@/components/core/controls/Category';
@@ -75,12 +76,13 @@ class DiscoverPage extends React.Component {
       query: '',
       isLoading: true,
       exchange: this.props.exchange,
-      modalContent: null,
+      modalContent: <div/>, // type is node
       lat: 0,
       lng: 0,
       isBannedCash: this.props.isBannedCash,
       isBannedPrediction: this.props.isBannedPrediction,
       isBannedChecked: this.props.isBannedChecked,
+
     };
     // this.loadDiscoverList();
     // bind
@@ -90,17 +92,17 @@ class DiscoverPage extends React.Component {
   }
 
   componentDidMount() {
-    const { ipInfo, } = this.props;
+    const { ipInfo } = this.props;
     navigator.geolocation.getCurrentPosition((location) => {
-      const { coords: { latitude, longitude } } = location
-      this.setAddressFromLatLng(latitude, longitude) // better precision
+      const { coords: { latitude, longitude } } = location;
+      this.setAddressFromLatLng(latitude, longitude); // better precision
     }, () => {
-      this.setAddressFromLatLng(ipInfo?.latitude, ipInfo?.longitude) // fallback
+      this.setAddressFromLatLng(ipInfo?.latitude, ipInfo?.longitude); // fallback
     });
   }
 
   setAddressFromLatLng = (lat, lng) => {
-    this.setState({lat: lat, lng: lng});
+    this.setState({ lat, lng });
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -339,11 +341,10 @@ class DiscoverPage extends React.Component {
               <SearchBar onSuggestionSelected={() => {}} onInputSearchChange={this.searchChange} />
             </Col>
           </Row> */}
-          <Row>
+          <Row className="category-wrapper">
             <Col md={12} xs={6} style={{ marginBottom: handshakeIdActive === HANDSHAKE_ID.EXCHANGE ? '0px' : '' }}>
               <Category
                 idActive={handshakeIdActive}
-                className="category-wrapper"
                 onRef={(category) => { this.categoryRef = category; return null; }}
                 onItemClick={this.clickCategoryItem}
               />
@@ -389,33 +390,8 @@ class DiscoverPage extends React.Component {
               <React.Fragment>
                 <BettingFilter setLoading={this.setLoading} />
                 <Row>
-                  <Col md={12}>
-                    <dl className="faq">
-                      <dt>Price (Odds)</dt>
-                      <dd>
-                        Ninja uses <strong>decimal odds</strong>.  A winning bet at 1.75 would return a total of 1.75 ETH for every ETH staked. An even money bet is expressed as 2.00.
-                      </dd>
-                      <dt>Pool (ETH)</dt>
-                      <dd>
-                        The total bets for different price points (odds).  Green: Support orders. Red: Oppose orders.
-                      </dd>
-                      <dt>Support or Oppose</dt>
-                      <dd>
-                        Pick a side to bet on.  You can support the outcome or oppose the outcome.
-                      </dd>
-                      <dt>Market odds</dt>
-                      <dd>
-                        You can bet with the market odds, which will likely be matched immediately with existing orders on the order book, or set your own odds, which will likely go on the order book to wait for a matching order.
-                      </dd>
-                      <dt>Market volume</dt>
-                      <dd>
-                        The total volume of bets on this outcome.
-                      </dd>
-                      <dt>Market fee</dt>
-                      <dd>
-                        This is the fee set by the market creator, as a percentage of the winnings.  A market fee of 1% would be 1ETH on a winning payout of 100 ETH.
-                      </dd>
-                    </dl>
+                  <Col md={12} className="faq-block">
+                    <FAQBetting />
                   </Col>
                 </Row>
               </React.Fragment>
@@ -426,10 +402,14 @@ class DiscoverPage extends React.Component {
             {
               this.state.isBannedChecked && handshakeIdActive === HANDSHAKE_ID.EXCHANGE && this.state.isBannedCash
               ? (
-                <div>{'Hey Ninja. Your wet blanket IP address won\'t let you play this game.'}</div>
+                <BlockCountry />
+                // <div>{'Hey Ninja. Your wet blanket IP address won\'t let you play this game.'}</div>
               )
               : null
             }
+          </Row>
+          <Row className="info">
+            Ninja is open-source, decentralized software that never holds your funds. By choosing to use Ninja, the user makes it their business to be aware of the legalities of their governing jurisdiction, and accepts that they are solely responsible for how they choose to use the software. Ninja is not a gambling operator and cannot be liable for legal, monetary or psychological damages should you do something stupid. Never invest more than you are willing to lose. Play safe!
           </Row>
         </Grid>
         <ModalDialog onRef={(modal) => { this.modalRef = modal; return null; }} className="discover-popup" isDismiss={false} >

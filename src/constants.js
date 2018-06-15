@@ -115,6 +115,7 @@ export const API_URL = {
     REFUND: 'cryptosign/handshake/refund',
     ADD_MATCH: 'cryptosign/match/add',
     ADD_OUTCOME: 'cryptosign/outcome/add',
+    SAVE_TRANSACTION: 'cryptosign/tx/add',
   },
   DISCOVER: {
     INDEX: 'handshake/discover',
