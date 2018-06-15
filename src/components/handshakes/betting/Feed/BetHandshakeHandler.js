@@ -39,6 +39,7 @@ export const MESSAGE = {
 };
 
 export const BET_BLOCKCHAIN_STATUS = {
+  /*
   STATUS_PENDING: -1,
   STATUS_INITED: 0,
   STATUS_MAKER_UNINITED: 1,
@@ -47,6 +48,21 @@ export const BET_BLOCKCHAIN_STATUS = {
   STATUS_REFUND: 4,
   STATUS_DONE: 5,
   STATUS_BLOCKCHAIN_PENDING: -4,
+  */
+    STATUS_MAKER_UNINIT_PENDING: -8,
+    STATUS_COLLECT_PENDING: -7,
+    STATUS_REFUND_PENDING: -6,
+    STATUS_DISPUTE_PENDING: -5,
+    STATUS_BLOCKCHAIN_PENDING: -4,
+
+    STATUS_PENDING: -1,
+    STATUS_INITED: 0,
+    STATUS_MAKER_UNINITED: 1,
+    STATUS_SHAKER_SHAKED: 2,
+    STATUS_REFUND: 3,
+    STATUS_DISPUTE: 4,
+    STATUS_RESOLVE: 5,
+    STATUS_DONE: 6,
 };
 
 export const ROLE = {
@@ -89,19 +105,14 @@ export class BetHandshakeHandler {
   }
 
   isRightNetwork(){
-    const walletMainnet = true;
-    if(process.env.isProduction && walletMainnet){
-      return true; 
-    }else if(process.env.isProduction && !walletMainnet){
-      return true;
-    }
+    
     const wallet = MasterWallet.getWalletDefault('ETH');
 
-    if (process.env.isProduction) {
+    if (process.env.isProduction && !process.env.isStaging) { //Live use mainet
       if (wallet.network === MasterWallet.ListCoin[wallet.className].Network.Mainnet) {
         return true;
       } 
-    }else if (!process.env.isProduction){
+    }else if (process.env.isStaging){
       return true;
     }
     return false;
@@ -134,7 +145,11 @@ export class BetHandshakeHandler {
     } else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_DONE && resultStatus === BETTING_STATUS.SUPPORT_WIN && side === SIDE.AGAINST) {
       strStatus = BETTING_STATUS_LABEL.WIN;
       isAction = false;
-    } else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_BLOCKCHAIN_PENDING) {
+    } else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_BLOCKCHAIN_PENDING
+              || blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINIT_PENDING
+              || blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_PENDING
+              || blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_REFUND_PENDING
+              || blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_DISPUTE_PENDING) {
       // TO DO: scan txhash and rollback after a few minutes
       strStatus = BETTING_STATUS_LABEL.PROGRESSING;
       isAction = false;
