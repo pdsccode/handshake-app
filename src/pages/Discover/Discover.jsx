@@ -90,17 +90,17 @@ class DiscoverPage extends React.Component {
   }
 
   componentDidMount() {
-    const { ipInfo, } = this.props;
+    const { ipInfo } = this.props;
     navigator.geolocation.getCurrentPosition((location) => {
-      const { coords: { latitude, longitude } } = location
-      this.setAddressFromLatLng(latitude, longitude) // better precision
+      const { coords: { latitude, longitude } } = location;
+      this.setAddressFromLatLng(latitude, longitude); // better precision
     }, () => {
-      this.setAddressFromLatLng(ipInfo?.latitude, ipInfo?.longitude) // fallback
+      this.setAddressFromLatLng(ipInfo?.latitude, ipInfo?.longitude); // fallback
     });
   }
 
   setAddressFromLatLng = (lat, lng) => {
-    this.setState({lat: lat, lng: lng});
+    this.setState({ lat, lng });
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
