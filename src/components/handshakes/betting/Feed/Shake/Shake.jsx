@@ -525,8 +525,13 @@ class BetingShake extends React.Component {
      const {outcomeHid} = this.props;
       console.log('OutcomeHid:', outcomeHid);
      betHandshakeHandler.controlShake(data, outcomeHid);
+     const isExist = betHandshakeHandler.isExistMatchBet(data);
+     let message = MESSAGE.CREATE_BET_NOT_MATCH;
+     if(isExist){
+       message = MESSAGE.CREATE_BET_MATCHED;
+     }
      this.props.showAlert({
-      message: <div className="text-center">{MESSAGE.CREATE_BET_SUCCESSFUL}</div>,
+      message: <div className="text-center">{message}</div>,
       timeOut: 3000,
       type: 'success',
       callBack: () => {
