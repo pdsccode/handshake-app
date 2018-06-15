@@ -987,11 +987,12 @@ class Wallet extends React.Component {
             <Header title="Testnet wallets" hasLink linkTitle="Request free ETH" onLinkClick={this.getETHFree} />
           </Row>
           : ''}
+          {!process.env.isProduction ? 
           <Row className="list">
             {this.listTestWalletBalance}
           </Row>
+          : ''}
           
-
           <Row className="list">
             <Header title="Reward wallets" hasLink={false} />
           </Row>
