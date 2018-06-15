@@ -340,11 +340,10 @@ class DiscoverPage extends React.Component {
               <SearchBar onSuggestionSelected={() => {}} onInputSearchChange={this.searchChange} />
             </Col>
           </Row> */}
-          <Row>
+          <Row className="category-wrapper">
             <Col md={12} xs={6} style={{ marginBottom: handshakeIdActive === HANDSHAKE_ID.EXCHANGE ? '0px' : '' }}>
               <Category
                 idActive={handshakeIdActive}
-                className="category-wrapper"
                 onRef={(category) => { this.categoryRef = category; return null; }}
                 onItemClick={this.clickCategoryItem}
               />
@@ -407,6 +406,9 @@ class DiscoverPage extends React.Component {
               )
               : null
             }
+          </Row>
+          <Row className="info">
+            Ninja is open-source, decentralized software that never holds your funds. By choosing to use Ninja, the user makes it their business to be aware of the legalities of their governing jurisdiction, and accepts that they are solely responsible for how they choose to use the software. Ninja is not a gambling operator and cannot be liable for legal, monetary or psychological damages should you do something stupid. Never invest more than you are willing to lose. Play safe!
           </Row>
         </Grid>
         <ModalDialog onRef={(modal) => { this.modalRef = modal; return null; }} className="discover-popup" isDismiss={false} >
