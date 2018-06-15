@@ -126,10 +126,10 @@ export default [
       "goalsAwayTeam": null
     },
     "odds": null,
-    link: 'https://www.youtube.com/embed/oXVy4TKVxyg',
+    link: 'https://api.tructiephd.com/play.php?type=vip&v=kda',
     linksLive: [
-      'https://www.youtube.com/embed/oXVy4TKVxyg',
       'https://api.tructiephd.com/play.php?type=vip&v=kda',
+      'https://www.youtube.com/embed/Z4O39424ENc',
     ],
     linksSoftCast: [
       'sop://broker.sopcast.com:3912/258811',
