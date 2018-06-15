@@ -76,7 +76,7 @@ class Detail extends React.PureComponent {
                 </div>
               </div>
               <div className="liveBox">
-                <iframe src={isHideDefaultLink ? activeLink : defaultLink} width="100%" allowFullScreen autoPlay />
+                <iframe src={isHideDefaultLink ? activeLink : defaultLink} width="100%" allowFullScreen autoPlay="autoPlay" />
               </div>
               <div className="share-block">
                 <p className="text">Share to</p>
@@ -91,7 +91,7 @@ class Detail extends React.PureComponent {
                   <p>Lives</p>
                   <ul>
                     {
-                      (hasList(match.linksLive)) ? match.linksLive.map((item, index) => (
+                      (hasList(match.linksLive) && isHideDefaultLink) ? match.linksLive.map((item, index) => (
                         <li
                           key={index}
                           onClick={() => this.setState({activeLink: item})}
@@ -106,7 +106,7 @@ class Detail extends React.PureComponent {
                 <div>
                   <p>SoftCast</p>
                   <ul>
-                    {hasList(match.linksSoftCast) ?
+                    {(hasList(match.linksSoftCast) && isHideDefaultLink) ?
                       match.linksSoftCast.map((item, index) => (<li key={index}><a href={item}>Sopcast {index + 1}</a></li>)) :
                       (<li className="noData">No data available</li>)
                     }
