@@ -28,7 +28,7 @@ import {showAlert} from '@/reducers/app/action';
 import './Create.scss';
 const ROUND = 1000000;
 
-const betHandshakeHandler = new BetHandshakeHandler()
+const betHandshakeHandler = BetHandshakeHandler.getShareManager();
 
 const nameFormBettingCreate = 'bettingCreate';
 // const BettingCreateForm = createForm({
@@ -183,6 +183,8 @@ get defaultMatch() {
 get defaultOutcome() {
   const matchOutcomes = this.matchOutcomes;
   //console.log('defaultOutcome matchOutcomes: ', matchOutcomes);
+  const sortedMatch = matchOutcomes.sort((a, b) => b.id > a.id);
+
   const { outComeId } = this.props;
   if (matchOutcomes && matchOutcomes.length > 0) {
       const itemDefault = matchOutcomes.find(item => item.id === outComeId);
@@ -190,6 +192,24 @@ get defaultOutcome() {
   }
   return null;
   // return matchOutcomes && matchOutcomes.length > 0 ? matchOutcomes[0] : null;
+}
+
+isExpiredDate(){
+  const {closingDate} = this.props;
+  //console.log(moment(closingDate).format());
+  const newClosingDate = moment.unix(closingDate).add(90, 'minutes');
+  //let closingDateUnit = moment.unix(closingDate).utc();
+  let dayUnit = newClosingDate.utc();
+  let today = moment();
+  let todayUnit = today.utc();
+  //console.log('Closing Unix:', closingDateUnit.format());
+  console.log('New Date Unix:', dayUnit.format());
+  console.log('Today Unix:', todayUnit.format());
+  if(!todayUnit.isSameOrBefore(dayUnit, "miliseconds") && today){
+    console.log('Expired Date');
+    return true
+  }
+  return false;
 }
 
   async onSubmit(e) {
@@ -239,6 +259,13 @@ get defaultOutcome() {
 
     var message = null;
 
+    if(!betHandshakeHandler.isRightNetwork()){
+      message = MESSAGE.MATCH_OVER;
+
+    }
+    /*else if (this.isExpiredDate()){
+      message = MESSAGE.MATCH_OVER;
+    }*/
     if(selectedMatch && selectedOutcome){
       if(eventBet > 0){
         if(total <= balance){
@@ -578,10 +605,17 @@ get defaultOutcome() {
     // const payout = stake * event_odds;
     //const hid = selectedOutcome.id;
     const hid = selectedOutcome.hid;
+
     if(status && data){
+      const isExist = betHandshakeHandler.isExistMatchBet(data);
+      let message = MESSAGE.CREATE_BET_NOT_MATCH;
+     if(isExist){
+       message = MESSAGE.CREATE_BET_MATCHED;
+     }
       betHandshakeHandler.controlShake(data, hid);
+
       this.props.showAlert({
-        message: <div className="text-center">{MESSAGE.CREATE_BET_SUCCESSFUL}</div>,
+        message: <div className="text-center">{message}</div>,
         timeOut: 3000,
         type: 'success',
         callBack: () => {

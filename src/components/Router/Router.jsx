@@ -100,6 +100,7 @@ class Router extends React.Component {
     setBannedPrediction: PropTypes.func.isRequired,
     setBannedCash: PropTypes.func.isRequired,
     setCheckBanned: PropTypes.func.isRequired,
+    showAlert: PropTypes.func.isRequired,
   };
 
   constructor(props) {
@@ -110,7 +111,7 @@ class Router extends React.Component {
       isLoading: true,
       loadingText: 'Loading application',
       isNetworkError: false,
-      isMaintain: true,
+      isMaintain: process.env.isMaintain,
 
       app: this.props.app,
       auth: this.props.auth,
@@ -243,7 +244,7 @@ class Router extends React.Component {
             this.checkRegistry();
           }
         } else {
-          this.porps.showAlert({
+          this.props.showAlert({
             message: (
               <div className="text-center">
                 Have something wrong with your profile, please contact supporters

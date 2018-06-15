@@ -28,4 +28,7 @@ if (process.env.TURN_OFF_CACHE && window.caches) {
 // require('@/testing/web3_test');
 // require('@/testing/web3_handshake');
 
-ReactDOM.render(<App />, document.getElementById('app'));
+const blockContextMenu = e => e.preventDefault();
+const app = document.getElementById('app');
+app.addEventListener('contextmenu', blockContextMenu);
+ReactDOM.render(<App />, app);
