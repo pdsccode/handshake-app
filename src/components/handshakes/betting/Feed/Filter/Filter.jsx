@@ -24,7 +24,7 @@ import './Filter.scss';
 
 const betHandshakeHandler = new BetHandshakeHandler();
 const freeAmount = 0.01;
-
+const CRYPTOSIGN_MINIMUM_MONEY = 0.00002;
 const TAG = 'BETTING_FILTER';
 const SELECTING_DEFAULT = {
   id: '',
@@ -62,12 +62,12 @@ class BettingFilter extends React.Component {
   componentDidMount() {
       /* Test */
     let value = 1.389999999;
-    console.log(`Value, ceil:`, value, Math.ceil(value));
-    console.log(`Value, floor:`, value, Math.floor(value));
+    console.log(`Value, ceil:`, value, Math.ceil(value, 2));
+    console.log(`Value, floor:`, value, Math.floor(value, 2));
 
     value = 1.33333333333;
-    console.log(`Value, ceil:`, value, Math.ceil(value));
-    console.log(`Value, floor:`, value, Math.floor(value));
+    console.log(`Value, ceil:`, value, Math.ceil(value, 2));
+    console.log(`Value, floor:`, value, Math.floor(value, 2));
 
 
 
@@ -325,9 +325,11 @@ class BettingFilter extends React.Component {
     const { status, data } = successData;
     if (status && data) {
       const { support, against } = data;
+      const filterSupport = support.filter(item => item.amount >= CRYPTOSIGN_MINIMUM_MONEY);
+      const filterAgainst = against.filter(item => item.amount >= CRYPTOSIGN_MINIMUM_MONEY);
       this.setState({
-        support,
-        against,
+        support: filterSupport,
+        against: filterAgainst,
       });
     }
   }
