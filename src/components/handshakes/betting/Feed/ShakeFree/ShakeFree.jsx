@@ -23,7 +23,7 @@ import './ShakeFree.scss';
 import { BetHandshakeHandler, MESSAGE, SIDE } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
 import { Form } from 'reactstrap';
 
-const betHandshakeHandler = new BetHandshakeHandler()
+const betHandshakeHandler = BetHandshakeHandler.getShareManager();
 const nameFormBettingShake = 'bettingShakeForm';
 
 
@@ -136,8 +136,10 @@ class BetingShakeFree extends React.Component {
     console.log('Balance, estimate gas, total:', balance, estimatedGas, total);
 
     var message = null;
-
-    if(this.isExpiredDate()){
+    if(!betHandshakeHandler.isRightNetwork()){
+      message = MESSAGE.RIGHT_NETWORK;
+    }
+    else if(this.isExpiredDate()){
       message = MESSAGE.MATCH_OVER;
 
     }

@@ -25,7 +25,7 @@ import { BetHandshakeHandler, MESSAGE, SIDE } from '@/components/handshakes/bett
 import { Form } from 'reactstrap';
 
 
-const betHandshakeHandler = new BetHandshakeHandler()
+const betHandshakeHandler = BetHandshakeHandler.getShareManager();
 const nameFormBettingShake = 'bettingShakeForm';
 
 
@@ -148,7 +148,11 @@ class BetingShake extends React.Component {
       GA.clickGoButton(matchName, matchOutcome, side);
     } catch (err) {}
 
-    if (this.isExpiredDate()){
+    if(!betHandshakeHandler.isRightNetwork()){
+      message = MESSAGE.MATCH_OVER;
+
+    }
+    else if (this.isExpiredDate()){
       message = MESSAGE.MATCH_OVER;
     }
     else if(matchName && matchOutcome){
