@@ -426,7 +426,8 @@ class DiscoverPage extends React.Component {
             {
               this.state.isBannedChecked && handshakeIdActive === HANDSHAKE_ID.EXCHANGE && this.state.isBannedCash
               ? (
-                <div>{'Hey Ninja. Your wet blanket IP address won\'t let you play this game.'}</div>
+                <BlockCountry />
+                // <div>{'Hey Ninja. Your wet blanket IP address won\'t let you play this game.'}</div>
               )
               : null
             }
