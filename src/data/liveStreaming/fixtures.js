@@ -90,9 +90,9 @@ export default [
       "goalsAwayTeam": null
     },
     "odds": null,
-    link: '',
+    link: 'https://api.tructiephd.com/live/kda/play.php?type=vip&v=kdb',
     linksLive: [
-
+      'https://api.tructiephd.com/live/kda/play.php?type=vip&v=kdb',
     ],
     linksSoftCast: [
       'sop://broker.sopcast.com:3912/257744',
