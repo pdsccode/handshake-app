@@ -79,13 +79,13 @@ const data = [
 
 const highlightVideos = [
   {
-    url: 'https://www.youtube.com/embed/D9CDFBrTNbM',
-    title: 'Russia vs Saudi Arabia 5-0 | All Goals & Extended Highlights',
+    url: 'https://www.youtube.com/embed/HSDjGbFo9NY',
+    title: 'EGY vs URU 0-1 Highlights World Cup 2018',
     time: '',
   },
   {
-    url: 'https://www.youtube.com/embed/SDY1N-IJOA8',
-    title: 'Russia v Saudi Arabia - 2018 FIFA World Cup Russia™',
+    url: 'https://www.youtube.com/embed/D9CDFBrTNbM',
+    title: 'Russia vs Saudi Arabia 5-0 | All Goals & Extended Highlights',
     time: '',
   },
   {
