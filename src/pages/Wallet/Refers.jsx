@@ -7,7 +7,7 @@ import Button from '@/components/core/controls/Button';
 import {
     fieldInput
   } from '@/components/core/form/customField';
-import { verifyEmail } from '@/reducers/auth/action';
+import { verifyEmail, checkJoinTelegram, completeProfile } from '@/reducers/auth/action';
 import {required} from '@/components/core/form/validation';
 import {change, Field, formValueSelector, clearFields} from 'redux-form';
 import {bindActionCreators} from 'redux';
@@ -18,7 +18,9 @@ import iconSuccessChecked from '@/assets/images/icon/icon-checked-green.svg';
 import local from '@/services/localStore';
 import {APP} from '@/constants';
 
-import "./Refers.scss"
+import "./Refers.scss";
+//import oauth from "@/oauths";
+
 
   // 3 step Form
 const nameFormStep1 = 'referStep1';
@@ -46,14 +48,14 @@ class Refers extends React.Component {
     super(props);
 
     this.state = {
-      telegram_count: 0,
       step1_value: "",
       step1: false,
       step2_value: "",
       step2: false,
       step3_value: "",
       step3: 0,
-      profile: {}
+      profile: {},
+      end: false
     }
   }
 
@@ -86,7 +88,7 @@ class Refers extends React.Component {
     this.props.hideLoading();
   }
 
-  async resetForm(){
+  resetForm(){
     // clear form:
     this.props.clearFields(nameFormStep1, false, false, "telegram_username");
     this.props.clearFields(nameFormStep2, false, false, "twitter_username");
@@ -138,45 +140,12 @@ class Refers extends React.Component {
         local.save(APP.REFERS, refers);
       }
     }
-
-    if(this.state.step1 == false){
-      this.setState({telegram_count: await this.getTelegramCount()});
-    }
   }
 
-  onFinish = () => {
-
-    const { onFinish } = this.props;
-
-    if (onFinish) {
-      onFinish();
-    } else {
-    }
-  }
-
-
-  sendCoin = () => {
-      this.modalConfirmTranferRef.open();
-  }
-
-  updateSendAddressValue = (evt) => {
-    this.setState({
-      inputAddressAmountValue: evt.target.value,
-    });
-  }
-
-  submitSendCoin=()=>{
-    this.setState({isRestoreLoading: true});
-    this.modalConfirmTranferRef.close();
-  }
-
-  submitStep1 = async() => {
-    let old_count = this.state.telegram_count,
-      new_count = await this.getTelegramCount();
-
-    console.log(old_count , new_count);
-    if(old_count >= new_count){
-      this.showError("Not found your telegram in our community. Please reload page and try again.")
+  submitStep1 = async () => {
+    let result = await this.checkJoinTelegram(this.state.step1_value);
+    if(!result){
+      this.showError("Not found your telegram in our community. Please try again.")
     }
     else{
       this.setState({step1: true});
@@ -192,13 +161,14 @@ class Refers extends React.Component {
   }
 
   submitStep2 = async() => {
+    console.log("submitStep2");
     if(this.getTwitter()){
-      this.setState({step2: true});
+      this.setState({step2: false});
       let refers = local.get(APP.REFERS);
       if(!refers)
         refers = {};
 
-      refers.step2 = true;
+      refers.step2 = false;
       refers.step2_value = this.state.step2_value;
       local.save(APP.REFERS, refers);
       this.showSuccess("You followed our Twitter!");
@@ -255,28 +225,93 @@ class Refers extends React.Component {
   }
 
 
-  async getTelegramCount(){
-    const url = "https://api.telegram.org/bot558469151:AAFYugF0QeCEIT1iXQsgTTuZJ9_p7koaw70/getChatMembersCount?chat_id=@ninja_org";
-    const response = await axios.get(url);
-    if (response.status == 200 && response.data && response.data.ok) {
-      return Number(response.data.result);
-    }
+  checkJoinTelegram(username) {
+    return new Promise((resolve, reject) => {
+      let result = false;
+      this.props.checkJoinTelegram({
+        PATH_URL: 'telegram/chat-member',
+        qs: { user_name: username, chat_id: '-1001320226748'},
+        successFn: (res) => {
+          if(res && res.data){
+            resolve(true);
+          }
+          else{
+            resolve(false);
+          }
+        },
+        errorFn: (e) =>{
+          reject(e);
+        }
+      });
+    });
   }
 
   async getTwitter(){
-    const url = "https://api.twitter.com/1.1/followers/list.json?cursor=-1&screen_name=ninja_org&skip_status=true&include_user_entities=false";
-    let oauth = {
-      consumer_key: 'GcmABUZqxQ3ozWPkFLIXAwrHM',
-      consumer_secret: 'XAliYph83XYA96l98l3maDTLooUG2dLC2Z9wtIZrzatBe1aAgp',
-      token: "1002034013488336896-eCfCTuOwJ7PXuWb8JoiEMgp1kgvihP"
-    };
+  //   const url = "https://api.twitter.com/1.1/followers/list.json?cursor=-1&screen_name=ninja_org&skip_status=true&include_user_entities=false";
+  //   const data = {
+  //     consumer_key: 'GcmABUZqxQ3ozWPkFLIXAwrHM',
+  //     consumer_secret: 'XAliYph83XYA96l98l3maDTLooUG2dLC2Z9wtIZrzatBe1aAgp',
+  //     token: "1002034013488336896-eCfCTuOwJ7PXuWb8JoiEMgp1kgvihP",
+  //     token_secret: "waalpIVe5gjdVBu99hYmuEW0wzATD0pMyiXUWZZrE8a2B"
+  //   };
 
-    const response = await axios.get(url, oauth);
-    console.log(response);
-    if (response.status == 200) {
+  //   var oauth_consumer_key = "GcmABUZqxQ3ozWPkFLIXAwrHM";
+  //   var consumerSecret = "XAliYph83XYA96l98l3maDTLooUG2dLC2Z9wtIZrzatBe1aAgp";
+  //   var oauth_token = "1002034013488336896-eCfCTuOwJ7PXuWb8JoiEMgp1kgvihP";
+  //   var tokenSecret = "waalpIVe5gjdVBu99hYmuEW0wzATD0pMyiXUWZZrE8a2B";
 
-      return Number(response);
-    }
+  //   var nonce = oauth.nonce(32);
+  //   var ts = Math.floor(new Date().getTime() / 1000);
+  //   var timestamp = ts.toString();
+
+  //   var accessor = {
+  //       "consumerSecret": consumerSecret,
+  //       "tokenSecret": tokenSecret
+  //   };
+
+  //   var params = {
+  //       "oauth_consumer_key": oauth_consumer_key,
+  //       "oauth_nonce": nonce,
+  //       "oauth_signature_method": "HMAC-SHA1",
+  //       "oauth_timestamp": timestamp,
+  //       "oauth_token": oauth_token,
+  //       "oauth_version": "1.0"
+  //   };
+
+  //   var message = {
+  //       "method": "POST",
+  //       "action": url,
+  //       "parameters": params
+  //   };
+
+  //   //lets create signature
+  //   oauth.SignatureMethod.sign(message, accessor);
+  //   var normPar = oauth.SignatureMethod.normalizeParameters(message.parameters);
+  //   var baseString = oauth.SignatureMethod.getBaseString(message);
+  //   var sig = oauth.getParameter(message.parameters, "oauth_signature") + "=";
+  //   var encodedSig = oauth.percentEncode(sig); //finally you got oauth signature
+
+  //   var header = {
+  //     "Authorization": 'OAuth oauth_consumer_key="'+oauth_consumer_key+'",oauth_signature_method="HMAC-SHA1",oauth_timestamp="' + timestamp + '",oauth_nonce="' + nonce + '",oauth_version="1.0",oauth_token="'+oauth_token+'",oauth_signature="' + encodedSig + '"'
+  //   }
+
+  // axios.post(url, {header: header})
+  //  .then(response => {
+  //     console.log(response);
+  //   })
+  //  .catch((error) => {
+  //     console.log(error);
+  //  });
+
+  // const AuthStr = 'Bearer '.concat(USER_TOKEN);
+  // axios.get(URL, { headers: { Authorization: AuthStr } })
+  // .then(response => {
+  //     // If request is good...
+  //     console.log(response.data);
+  //   })
+  // .catch((error) => {
+  //     console.log('error ' + error);
+  //   });
   }
 
   updateTelegramUsernameValue = (evt) => {
@@ -342,7 +377,7 @@ renderStep2= () => (
 )
 
 renderStep3= () => (
-  <Step3Form onSubmit={this.submitStep3} className="refers-wrapper">
+  <Step3Form onSubmit={this.submitStep3} className="refers-wrapper refers-wrapper-border">
     <h6>Receive your randomly generated ninja name.</h6>
     <div className="col2"> {this.renderStep3_labelButton()}</div>
     <div className="col1">
@@ -359,14 +394,50 @@ renderStep3= () => (
       />
     </div>
     {
-      this.state.step1 && this.state.step2 && this.state.step3 > 1 ?
+      this.state.step1 && this.state.step2 && this.state.step3 > 1 && !this.state.end ?
       <div className="col100 token">
-        <Button block type="submit">just give me tokens</Button>
+        <Button block type="button" onClick={() => {this.submitEndStep()}}>just give me tokens</Button>
       </div> : ""
     }
 
   </Step3Form>
 )
+
+completeRefers() {
+  return new Promise((resolve, reject) => {
+    let result = false;
+    this.props.completeProfile({
+      PATH_URL: 'user/complete-profile',
+      successFn: (res) => {
+        if(res && res.data){console.log(1);
+          resolve(true);
+        }
+        else{console.log(2);
+          resolve(false);
+        }
+      },
+      errorFn: (e) =>{console.log(3);
+        reject(e);
+      }
+    });
+  });
+}
+
+submitEndStep= async () => {
+  if(await this.completeRefers()){
+    let refers = local.get(APP.REFERS);
+    if(!refers) refers = {};
+
+    this.setState({end: true})
+    refers.end = 1;
+    local.save(APP.REFERS, refers);
+
+    this.showSuccess("Complete success! You will receive 80 shurikens in few seconds.");
+  }
+  else{
+    this.showError("Failed! Your reffers are not complete.");
+  }
+}
 
 renderStep3_labelButton= () => {
   switch(this.state.step3) {
@@ -378,30 +449,6 @@ renderStep3_labelButton= () => {
       return <Button isLoading={this.state.isLoading} block type="submit">bite me</Button>
   }
 }
-renderLinkRefer= () => (
-  <Step4Form onSubmit={this.submitStep4}>
-      <h6>Final: Share this link to friend to get extra 20 Shuriken</h6>
-      <p>Referral link:</p>
-      <Row>
-          <Col sm={8} md={8} xs={8}>
-              <Field
-                  name="refer_link"
-                  type="text"
-                  className="form-control"
-                  placeholder=""
-                  component={fieldInput}
-                //   value={this.state.inputLinkValue}
-                  onChange={evt => this.updateLinkValue(evt)}
-                  validate={[required]}
-                  onClick={() => { alert('ga'); Clipboard.copy(JSON.stringify(this.state.inputLinkValue)); this.showToast('Referral link copied to clipboard.'); }}
-              />
-          </Col>
-          <Col sm={4} md={4} xs={4} className="no-padding-left">
-              <Button block type="submit">Done</Button>
-          </Col>
-      </Row>
-  </Step4Form>
-)
 
 renderLinkRefer = () => (
   this.state.step1 && this.state.step2 && this.state.step3 > 1 ?
@@ -418,9 +465,6 @@ renderLinkRefer = () => (
             validate={[required]}
             onFocus={() => { Clipboard.copy(this.state.referLink); this.showToast('Referral link copied to clipboard.'); }}
         />
-    </div>
-    <div className="col100">
-        <Button block type="submit">Done</Button>
     </div>
   </Step4Form> :
   ""
@@ -454,6 +498,8 @@ const mapDispatchToProps = (dispatch) => ({
   hideLoading: bindActionCreators(hideLoading, dispatch),
   clearFields: bindActionCreators(clearFields, dispatch),
   verifyEmail: bindActionCreators(verifyEmail, dispatch),
+  checkJoinTelegram: bindActionCreators(checkJoinTelegram, dispatch),
+  completeProfile: bindActionCreators(completeProfile, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Refers);
