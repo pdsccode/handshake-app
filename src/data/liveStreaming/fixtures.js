@@ -126,8 +126,9 @@ export default [
       "goalsAwayTeam": null
     },
     "odds": null,
-    link: 'https://api.tructiephd.com/play.php?type=vip&v=kda',
+    link: 'https://www.youtube.com/embed/oXVy4TKVxyg',
     linksLive: [
+      'https://www.youtube.com/embed/oXVy4TKVxyg',
       'https://api.tructiephd.com/play.php?type=vip&v=kda',
     ],
     linksSoftCast: [
