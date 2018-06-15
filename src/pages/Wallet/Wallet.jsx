@@ -315,17 +315,17 @@ class Wallet extends React.Component {
           this.modalShareAddressRef.open();
         }
       })
-    // not allow for testnet:
-    if (wallet.network === MasterWallet.ListCoin[wallet.className].Network.Mainnet){
-      obj.push({
-        title: 'Buy coins',
-        handler: () => {
-          this.setState({ walletSelected: wallet });
-          this.toggleBottomSheet();
-          this.modalFillRef.open();
-        },
-      });
-    }
+    // now hide buy coin:    
+    // if (wallet.network === MasterWallet.ListCoin[wallet.className].Network.Mainnet){
+    //   obj.push({
+    //     title: 'Buy coins',
+    //     handler: () => {
+    //       this.setState({ walletSelected: wallet });
+    //       this.toggleBottomSheet();
+    //       this.modalFillRef.open();
+    //     },
+    //   });
+    // }
 
     if (!wallet.protected) {
       obj.push({
