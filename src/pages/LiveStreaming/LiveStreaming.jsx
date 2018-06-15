@@ -16,7 +16,7 @@ import { Link } from 'react-router-dom';
 import './LiveStreaming.scss';
 import russiaFlag from '../../assets/images/team-flag/russia-flag-logo.png';
 import saudiArabia from '../../assets/images/team-flag/saudi-arabia-flag-logo.png';
-import headerLS from '../../assets/images/live-streaming/header.png';
+import headerLS from '../../assets/images/live-streaming/header.svg';
 import banner from '../../assets/images/live-streaming/banner.svg';
 
 const data = [
@@ -128,9 +128,9 @@ class LiveStreaming extends React.PureComponent {
     return (
       <div className="liveStreamingIndex">
         <div>
-          <img src={headerLS} width="100%" />
+          <img src={headerLS} width="100%" style={{marginTop: '-3px'}} />
           <a href="https://ninja.org/">
-            <img src={banner} width="100%" style={{marginTop: '0.2px'}} />
+            <img src={banner} width="100%" style={{marginTop: '-20px'}} />
           </a>
         </div>
         <div className="listMatchTitle">
