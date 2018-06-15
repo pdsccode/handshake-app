@@ -171,13 +171,13 @@ export class MasterWallet {
         });
         if (!isDefaultBTC || !isDefaultETH){
           listWallet.forEach((wallet) => {          
-            if (wallet.name == 'BTC'){
+            if (wallet.name == 'BTC' && !wallet.isReward){
               if (!isDefaultBTC){
                 wallet.default = true;
                 isDefaultBTC = true;
               }
             }
-            if (wallet.name == 'ETH'){
+            if (wallet.name == 'ETH' && !wallet.isReward){
               if (!isDefaultETH){
                 wallet.default = true;
                 isDefaultETH = true;
