@@ -630,10 +630,25 @@
   .col100{ width:100%; padding-bottom: 10px}
   .token{
     margin-top: 20px;
-    padding-bottom: 20px;
-    border-bottom:solid 1px #9a9a9a;
+    padding-bottom: 0px;
   }
 }
-.refers-wrapper:last-child{
-  margin-top: -20px !important;
+
+.refers-wrapper-border{
+  border-bottom:solid 1px #9a9a9a;
+  padding-bottom: 20px;
+}
+
+.refers-dashboard{
+  margin-top:20px;
+
+  .refers-wrapper{
+    padding-top: 20px;
+    border-top:solid 1px #9a9a9a;
+    margin-top: 20px !important;
+  }
+
+  .info div{
+    padding-top: 5px;
+  }
 }

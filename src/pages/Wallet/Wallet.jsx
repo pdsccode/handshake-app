@@ -2,12 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import { connect } from 'react-redux';
+
 // service, constant
 import { Grid, Row, Col } from 'react-bootstrap';
+
 // components
-import { load } from '@/reducers/discover/action';
 import Button from '@/components/core/controls/Button';
-import { handShakeList } from '@/data/shake.js';
 import { MasterWallet } from '@/models/MasterWallet';
 import Input from '@/components/core/forms/Input/Input';
 import { StringHelper } from '@/services/helper';
@@ -41,6 +41,7 @@ import WalletItem from './WalletItem';
 import WalletProtect from './WalletProtect';
 import WalletHistory from './WalletHistory';
 import Refers from './Refers';
+import RefersDashboard from './RefersDashboard';
 import FeedCreditCard from '@/components/handshakes/exchange/Feed/FeedCreditCard';
 import ReactBottomsheet from 'react-bottomsheet';
 import { setHeaderRight } from '@/reducers/app/action';
@@ -48,12 +49,12 @@ import QrReader from 'react-qr-reader';
 import { showAlert } from '@/reducers/app/action';
 import { showLoading, hideLoading } from '@/reducers/app/action';
 import { Input as Input2, InputGroup, InputGroupAddon } from 'reactstrap';
+import local from '@/services/localStore';
+import {APP} from '@/constants';
 import _ from 'lodash';
 
 // style
 import './Wallet.scss';
-import { Bitcoin } from '@/models/Bitcoin';
-import { initHandshake } from '@/reducers/handshake/action';
 import CoinTemp from '@/pages/Wallet/CoinTemp';
 
 const QRCode = require('qrcode.react');
@@ -723,7 +724,15 @@ class Wallet extends React.Component {
     this.modalScanQrCodeRef.open();
   }
 
-  renderScanQRCode = () => (
+  openRefers = () => {
+    let refers = local.get(APP.REFERS);
+    if(refers && refers.end)
+      this.modalRefersDashboardRef.open();
+    else
+      this.modalRefersRef.open();
+  }
+
+  renderScanQRCode = () => {
     <Modal onClose={() => this.oncloseQrCode()} title="Scan QR code" onRef={modal => this.modalScanQrCodeRef = modal}>
       {this.state.qrCodeOpen ?
         <QrReader
@@ -734,7 +743,7 @@ class Wallet extends React.Component {
         />
         : ''}
     </Modal>
-  )
+  }
 
   render() {
     const {intl, cryptoPrice, amount, userCcLimit, ccLimits} = this.props;
@@ -744,10 +753,14 @@ class Wallet extends React.Component {
         {/* Header for refers ... */}
         <div className="headerRefers" >
           <p className="hTitle">Shuriken Airdrop (limited)</p>
-          <p className="hLink" onClick={() => this.modalRefersRef.open()}>Click here</p>
+          <p className="hLink" onClick={() => this.openRefers()}>Click here</p>
         </div>
         <Modal title="Shuriken Airdrop" onRef={modal => this.modalRefersRef = modal}>
             <Refers />
+        </Modal>
+
+        <Modal title="Shuriken Airdrop" onRef={modal => this.modalRefersDashboardRef = modal}>
+            <RefersDashboard />
         </Modal>
 
         <Grid>
