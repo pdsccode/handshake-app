@@ -13,8 +13,7 @@ const BN = Web3.utils.BN;
 export class Shuriken extends Ethereum {
 
     constructor() {
-      super();
-      this.coinType = 60;
+      super();      
       this.name = 'SHURI';
       this.title = 'Shuriken';
       this.className = 'Shuriken';

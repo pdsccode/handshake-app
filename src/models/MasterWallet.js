@@ -11,7 +11,7 @@ const bip39 = require('bip39');
 
 export class MasterWallet {
     // list coin is supported, can add some more Ripple ...
-    static ListCoin = { Ethereum, Bitcoin, BitcoinTestnet };
+    static ListCoin = { Ethereum, Shuriken, Bitcoin, BitcoinTestnet };
 
     static ListCoinReward = { Ethereum, Bitcoin };
 
