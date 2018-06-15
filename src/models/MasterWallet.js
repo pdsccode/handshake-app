@@ -150,27 +150,70 @@ export class MasterWallet {
       return masterWallet;
     }
 
+    // for force set default mainnet:
+    static forceSetDefaultMainnet(wallets){
+      let listWallet = [];
+      let isDefaultBTC = false;
+      let isDefaultETH = false;
+      if (!process.env.isProduction) {
+        wallets.forEach((wallet) => {          
+          if ( wallet.getNetworkName() == "Mainnet"){
+            if (wallet.default){
+              if (wallet.name == 'ETH'){
+                isDefaultETH = true;
+              }
+              if (wallet.name == 'BTC'){
+                isDefaultBTC = true;
+              }
+            }
+            listWallet.push(wallet);
+          }                              
+        });
+        if (!isDefaultBTC || !isDefaultETH){
+          listWallet.forEach((wallet) => {          
+            if (wallet.name == 'BTC'){
+              if (!isDefaultBTC){
+                wallet.default = true;
+                isDefaultBTC = true;
+              }
+            }
+            if (wallet.name == 'ETH'){
+              if (!isDefaultETH){
+                wallet.default = true;
+                isDefaultETH = true;
+              }
+            }            
+          })
+        }
+        MasterWallet.UpdateLocalStore(listWallet);
+        return listWallet;
+      }
+      return wallets;
+      
+    }
+
     // Get list wallet from store local:
     static getMasterWallet() {
-      const wallets = localStore.get(MasterWallet.KEY);
+      let wallets = localStore.get(MasterWallet.KEY);
 
       if (wallets == false) return false;
 
-      const listWallet = [];
-      wallets.forEach((walletJson) => {
-        
+      let listWallet = [];
+      let hasTestnet = false;
+    
+      wallets.forEach((walletJson) => {        
         let wallet =  MasterWallet.convertObject(walletJson);
         if (wallet != false) {
-          if (process.env.isProduction) {            
-            if ( wallet.getNetworkName() == "Mainnet"){
-              listWallet.push(wallet);
-            }
+          if (wallet.getNetworkName() !== "Mainnet"){
+            hasTestnet = true;
           }
-          else{
-              listWallet.push(wallet);
-          }
+          listWallet.push(wallet);
         }
       });
+      
+      if (hasTestnet){
+        return MasterWallet.forceSetDefaultMainnet(listWallet);
+      }
 
       return listWallet;
     }
