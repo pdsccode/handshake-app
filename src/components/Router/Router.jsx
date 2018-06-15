@@ -171,7 +171,7 @@ class Router extends React.Component {
       updatedAt: this.props.auth.updatedAt,
       loadingText: 'Loading application',
       isNetworkError: false,
-      isMaintain: false,
+      isMaintain: process.env.isMaintain,
     };
 
     this.checkRegistry = ::this.checkRegistry;
