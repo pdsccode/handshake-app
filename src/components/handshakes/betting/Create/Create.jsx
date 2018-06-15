@@ -572,7 +572,7 @@ get defaultOutcome() {
     console.log('initHandshakeSuccess', successData);
 
     const {status, data} = successData
-    const {values, selectedOutcome} = this.state;
+    const {values, selectedOutcome, selectedMatch} = this.state;
     // const stake = values['event_bet'];
     // const event_odds = values['event_odds'];
     // const payout = stake * event_odds;
@@ -588,6 +588,10 @@ get defaultOutcome() {
           this.props.history.push(URL.HANDSHAKE_ME);
         }
       });
+      // send ga event
+      try {
+        GA.createBetSuccessCreatePage(selectedMatch, selectedOutcome, this.toggleRef.sideName);
+      } catch (err) {}
     }
 
 
