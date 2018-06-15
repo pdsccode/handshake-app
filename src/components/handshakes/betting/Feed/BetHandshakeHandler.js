@@ -31,7 +31,7 @@ export const MESSAGE = {
   BET_PROGRESSING: 'Your bet is creating. Please wait',
   CREATE_BET_NOT_MATCH: 'Finding a ninja to bet against you.',
   CREATE_BET_MATCHED: 'Bet matched! Waiting for outcome.',
-  NOT_ENOUGH_BALANCE: 'Time travel is hard. Please bet on a future or ongoing match.',
+  NOT_ENOUGH_BALANCE: 'Too rich for your blood. Please top up your wallet.',
   CHOOSE_MATCH: 'Please choose match and outcome',
   ODD_LARGE_THAN: 'Please enter odds greater than 1',
   AMOUNT_VALID: 'Please place a bet larger than 0.',
