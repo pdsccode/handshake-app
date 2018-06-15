@@ -120,6 +120,11 @@ class LiveStreaming extends React.PureComponent {
   }
 
   render() {
+    const matches = fixtures.filter(item => {
+      const now = moment();
+      const matchTime = moment(item.date);
+      return matchTime.isSameOrAfter(now, 'milliseconds');
+    });
     return (
       <div className="liveStreamingIndex">
         <div>
@@ -135,7 +140,7 @@ class LiveStreaming extends React.PureComponent {
           <Row>
             <Col md={12} xs={12}>
               <div className="listMatch">
-                {fixtures.slice(0, 5).map((item, index) => this.renderMatchItem(item, index))}
+                {matches.slice(0, 5).map((item, index) => this.renderMatchItem(item, index))}
               </div>
               <div className="hightlightVideos">
                 <p>HIGHLIGHT VIDEO</p>
