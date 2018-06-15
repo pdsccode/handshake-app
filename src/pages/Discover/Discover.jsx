@@ -80,6 +80,7 @@ class DiscoverPage extends React.Component {
       isBannedCash: this.props.isBannedCash,
       isBannedPrediction: this.props.isBannedPrediction,
       isBannedChecked: this.props.isBannedChecked,
+
     };
     // this.loadDiscoverList();
     // bind

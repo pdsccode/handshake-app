@@ -148,7 +148,10 @@ class BetingShake extends React.Component {
       GA.clickGoButton(matchName, matchOutcome, side);
     } catch (err) {}
 
-    if (this.isExpiredDate()){
+    if(!betHandshakeHandler.isRightNetwork()){
+      message = MESSAGE.RIGHT_NETWORK;
+    }
+    else if (this.isExpiredDate()){
       message = MESSAGE.MATCH_OVER;
     }
     else if(matchName && matchOutcome){

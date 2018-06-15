@@ -35,6 +35,7 @@ export const MESSAGE = {
   ODD_LARGE_THAN: 'Please enter odds greater than 1',
   AMOUNT_VALID: 'Please place a bet larger than 0.',
   MATCH_OVER: 'Time travel is hard. Please bet on a future or ongoing match.',
+  RIGHT_NETWORK: 'You must set your wallet on Mainnet',
 };
 
 export const BET_BLOCKCHAIN_STATUS = {
@@ -85,6 +86,25 @@ export const BETTING_STATUS_LABEL =
 export class BetHandshakeHandler {
   constructor() {
 
+  }
+
+  isRightNetwork(){
+    const walletMainnet = true;
+    if(process.env.isProduction && walletMainnet){
+      return true; 
+    }else if(process.env.isProduction && !walletMainnet){
+      return true;
+    }
+    const wallet = MasterWallet.getWalletDefault('ETH');
+
+    if (process.env.isProduction) {
+      if (wallet.network === MasterWallet.ListCoin[wallet.className].Network.Mainnet) {
+        return true;
+      } 
+    }else if (!process.env.isProduction){
+      return true;
+    }
+    return false;
   }
   getChainIdDefaultWallet(){
     const wallet = MasterWallet.getWalletDefault('ETH');

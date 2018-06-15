@@ -19,6 +19,8 @@ import Button from '@/components/core/controls/Button';
 import ModalDialog from '@/components/core/controls/ModalDialog';
 import Feed from '@/components/core/presentation/Feed';
 import BettingShake from './Shake';
+import {showAlert} from '@/reducers/app/action';
+
 
 // css, icons
 import './Feed.scss';
@@ -245,26 +247,38 @@ class FeedBetting extends React.Component {
   }
 
   clickActionButton(title){
-    const {id} = this.props;
-    const realId = betHandshakeHandler.getId(id);
-    console.log('realId:', realId);
-
-    switch(title){
-
-      case BETTING_STATUS_LABEL.CANCEL:
-        // TO DO: CLOSE BET
-        this.uninitItem(realId);
+    if(!betHandshakeHandler.isRightNetwork()){
+      message = MESSAGE.RIGHT_NETWORK;
+      this.props.showAlert({
+        message: <div className="text-center">{message}</div>,
+        timeOut: 3000,
+        type: 'danger',
+        callBack: () => {
+        }
+      });
+    }else {
+      const {id} = this.props;
+      const realId = betHandshakeHandler.getId(id);
+      console.log('realId:', realId);
+  
+      switch(title){
+  
+        case BETTING_STATUS_LABEL.CANCEL:
+          // TO DO: CLOSE BET
+          this.uninitItem(realId);
+          break;
+  
+        case BETTING_STATUS_LABEL.WITHDRAW:
+          // TO DO: WITHDRAW
+          this.collect(id);
+          break;
+        case BETTING_STATUS_LABEL.REFUND:
+        this.refund(realId);
         break;
-
-      case BETTING_STATUS_LABEL.WITHDRAW:
-        // TO DO: WITHDRAW
-        this.collect(id);
-        break;
-      case BETTING_STATUS_LABEL.REFUND:
-      this.refund(realId);
-      break;
-
+  
+      }
     }
+    
 
 
   }
@@ -409,6 +423,7 @@ const mapDispatch = ({
   uninitItem,
   collect,
   refund,
-  rollback
+  rollback,
+  showAlert
 });
 export default connect(mapState, mapDispatch)(FeedBetting);
