@@ -157,6 +157,7 @@ class Router extends React.Component {
     setBannedPrediction: PropTypes.func.isRequired,
     setBannedCash: PropTypes.func.isRequired,
     setCheckBanned: PropTypes.func.isRequired,
+    showAlert: PropTypes.func.isRequired,
   };
 
   constructor(props) {
@@ -300,7 +301,7 @@ class Router extends React.Component {
             this.checkRegistry();
           }
         } else {
-          this.porps.showAlert({
+          this.props.showAlert({
             message: (
               <div className="text-center">
                 Have something wrong with your profile, please contact supporters
