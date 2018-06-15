@@ -111,10 +111,14 @@ class BetingShake extends React.Component {
 
   isExpiredDate(){
     const {closingDate} = this.props;
-    let dayUnit = moment.unix(closingDate).utc();
+    //console.log(moment(closingDate).format());
+    const newClosingDate = moment.unix(closingDate).add(90, 'minutes');
+    //let closingDateUnit = moment.unix(closingDate).utc();
+    let dayUnit = newClosingDate.utc();
     let today = moment();
     let todayUnit = today.utc();
-    console.log('Date Unix:', dayUnit.format());
+    //console.log('Closing Unix:', closingDateUnit.format());
+    console.log('New Date Unix:', dayUnit.format());
     console.log('Today Unix:', todayUnit.format());
     if(!todayUnit.isSameOrBefore(dayUnit, "miliseconds") && today){
       console.log('Expired Date');
