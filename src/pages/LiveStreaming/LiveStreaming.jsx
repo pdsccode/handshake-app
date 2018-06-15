@@ -84,11 +84,6 @@ const highlightVideos = [
     time: '',
   },
   {
-    url: 'https://www.youtube.com/embed/D9CDFBrTNbM',
-    title: 'Russia vs Saudi Arabia 5-0 | All Goals & Extended Highlights',
-    time: '',
-  },
-  {
     url: 'https://www.youtube.com/embed/LJ2vr7VUytM',
     title: 'Live It Up (Official Video) - Nicky Jam feat. Will Smith & Era Istrefi (2018 FIFA World Cup Russia)',
     time: '',
@@ -143,7 +138,7 @@ class LiveStreaming extends React.PureComponent {
   render() {
     const matches = fixtures.filter(item => {
       const now = moment();
-      const matchTime = moment(item.date).add(100, 'm');
+      const matchTime = moment(item.date).add(130, 'm');
       return matchTime.isSameOrAfter(now, 'milliseconds');
     });
     const groupMatchesByDate = groupBy(matches.slice(0, 5), item => moment(item.date).format("MMM DD"));

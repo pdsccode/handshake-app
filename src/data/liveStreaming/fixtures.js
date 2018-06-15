@@ -126,9 +126,19 @@ export default [
       "goalsAwayTeam": null
     },
     "odds": null,
-    link: 'https://wc.kenhtructiep.com/ss.php?v=1481482',
-    linksLive: [],
-    linksSoftCast: [],
+    link: 'https://api.tructiephd.com/play.php?type=vip&v=kda',
+    linksLive: [
+      'https://api.tructiephd.com/play.php?type=vip&v=kda',
+    ],
+    linksSoftCast: [
+      'sop://broker.sopcast.com:3912/258811',
+      'sop://broker.sopcast.com:3912/258822',
+      'sop://broker.sopcast.com:3912/253462',
+      'acestream://cbe46c7d5f5c513ee997db61bce4c0b828c8d70d',
+      'acestream://05a6d37f52d0d24b02090bb6a4da6d65135936dc',
+      'acestream://0c620b2e6ef41263dec0ea0ce93ae12fda8c898c',
+      'acestream://82d8a50a50fd30f09ad318843be8ed66e4386ec5',
+    ],
   },
   {
     "_links": {
