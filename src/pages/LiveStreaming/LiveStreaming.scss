@@ -136,6 +136,7 @@ html {
       flex-wrap: wrap;
       iframe {
         width: 100%;
+        min-height: 300px;
         height: auto;
       }
       div {

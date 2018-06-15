@@ -36,6 +36,7 @@
       text-align: center;
       line-height: 12px;
       padding: rem-calc(4px 10px);
+      font-weight: $normal;
     }
   }
   .liveBox {
@@ -49,6 +50,7 @@
     display: flex;
     flex-wrap: wrap;
     margin-bottom: rem-calc(18px);
+    margin-top: rem-calc(-7px);
     padding: rem-calc(20px 10px);
     background: rgba(29,29,38,0.03);
     .text {
