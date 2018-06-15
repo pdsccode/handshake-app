@@ -155,7 +155,7 @@ export class MasterWallet {
       let listWallet = [];
       let isDefaultBTC = false;
       let isDefaultETH = false;
-      if (!process.env.isProduction) {
+      if (process.env.isProduction) {
         wallets.forEach((wallet) => {          
           if ( wallet.getNetworkName() == "Mainnet"){
             if (wallet.default){
