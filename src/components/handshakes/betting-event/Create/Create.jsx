@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {injectIntl} from 'react-intl';
+import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Field, formValueSelector, clearFields } from 'redux-form';
 import Button from '@/components/core/controls/Button';
 import { PredictionHandshake } from '@/services/neuron';
-import { bindActionCreators } from "redux";
+import { bindActionCreators } from 'redux';
 import moment from 'moment';
 import { fieldDropdown, fieldInput, fieldRadioButton } from '@/components/core/form/customField';
 import createForm from '@/components/core/form/createForm';
@@ -35,81 +35,78 @@ class CreateBettingEvent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      matches:[],
-      selectedMatch:'',
-      values:{},
+      matches: [],
+      selectedMatch: '',
+      values: {},
       name: '',
       outcome: '',
       closingTime: '',
       resolutionSource: '',
       reportingTime: '',
+      disputeTime: '',
       creatorFee: null,
       referralFee: null,
     };
   }
 
-  componentDidMount(){
+  componentDidMount() {
     // console.log('Betting Create Props:', this.props, history);
     // this.setState({
     //   address: wallet.address,
     //   privateKey: wallet.privateKey,
     // })
-    this.props.loadMatches({PATH_URL: API_URL.CRYPTOSIGN.LOAD_MATCHES});
-
+    this.props.loadMatches({ PATH_URL: API_URL.CRYPTOSIGN.LOAD_MATCHES });
   }
 
-  componentWillReceiveProps(nextProps){
+  componentWillReceiveProps(nextProps) {
     this.setState({
-        matches : nextProps.matches
-    })
+      matches: nextProps.matches,
+    });
   }
 
   showLoading = () => {
-    this.props.showLoading({message: '',});
+    this.props.showLoading({ message: '' });
   }
 
   hideLoading = () => {
     this.props.hideLoading();
   }
 
-  updateFormField = (event,stateName) => {
+  updateFormField = (event, stateName) => {
     this.setState({
       [stateName]: event.target.value,
     });
   }
 
-  submitBettingEvent=(values)=> {
+  submitBettingEvent= (values) => {
     console.log(values);
     const url = API_URL.CRYPTOSIGN.ADD_OUTCOME.concat(`/${this.state.selectedMatch.id}`);
-    debugger
     const a = this.props.loadMatches({
-      PATH_URL:url,
+      PATH_URL: url,
       METHOD: 'post',
-      data: [{name: values.outcome}],
-      successFn: () => {
-        console.log("s");
+      data: [{ name: values.outcome }],
+      successFn: (response) => {
+        console.log(response.data);
+        const result = predictionhandshake.createMarket(this.state.creatorFee, this.state.resolutionSource, this.state.closingTime, this.state.reportingTime, this.state.disputeTime, response.data.id);
+        console.log(result);
       },
       errorFn: () => { },
     });
-    console.log(a);
-    predictionhandshake.createMarket(this.state.creatorFee,this.state.resolutionSource,this.state.reportingTime,null,chainId)
-    console.log('test');
   }
-  getStringDate(date){
-    var formattedDate = moment.unix(date).format('MMM DD');
+  getStringDate(date) {
+    const formattedDate = moment.unix(date).format('MMM DD');
     return formattedDate;
-
   }
   get matchNames() {
-    const {matches} = this.state;
-    //return matches.map((item) => ({ id: item.id, value: `${item.homeTeamName} - ${item.awayTeamName} (${this.getStringDate(item.date)})` }));
-    const mathNamesList = matches.map((item) => ({ id: item.id, value: `Event: ${item.name} (${this.getStringDate(item.date)})`, marketFee: item.market_fee }));
+    const { matches } = this.state;
+    // return matches.map((item) => ({ id: item.id, value: `${item.homeTeamName} - ${item.awayTeamName} (${this.getStringDate(item.date)})` }));
+    const mathNamesList = matches.map(item => ({ id: item.id, value: `Event: ${item.name} (${this.getStringDate(item.date)})`, marketFee: item.market_fee }));
     return [
       ...mathNamesList,
-    ]
+    ];
   }
 
-  changeDate(date,stateName) {
+  changeDate(date, stateName) {
     this.setState({
       [stateName]: date,
     });
@@ -126,18 +123,16 @@ class CreateBettingEvent extends React.Component {
             placeholder="Select an event"
             defaultId={defaultMatchId}
             className="dropDown"
-            afterSetDefault={(item)=>{
-              const {values} = this.state;
-              values["event_name"] = item.value;
-              this.setState({selectedMatch: item, values})
+            afterSetDefault={(item) => {
+              const { values } = this.state;
+              values.event_name = item.value;
+              this.setState({ selectedMatch: item, values });
             }}
             source={this.matchNames}
-            onItemSelected={(item) =>
-              {
-                const {values} = this.state;
-                values["event_name"] = item.value;
-                this.setState({selectedMatch: item, values});
-
+            onItemSelected={(item) => {
+                const { values } = this.state;
+                values.event_name = item.value;
+                this.setState({ selectedMatch: item, values });
               }
               }
           />}
@@ -160,7 +155,6 @@ class CreateBettingEvent extends React.Component {
             onChange={evt => this.updateFormField(evt, 'outcome')}
             validate={[required]}
           />
-          <DatePicker onChange={(date)=>{this.changeDate(date, 'closingTime')}} className="form-control input-field" placeholder="Closing Time" />
           <Label for="reporting" className="font-weight-bold text-uppercase reporting-label">Reportings</Label>
           <Field
             name="reportingSource"
@@ -172,7 +166,9 @@ class CreateBettingEvent extends React.Component {
             onChange={evt => this.updateFormField(evt, 'resolutionSource')}
 
           />
-          <DatePicker onChange={(date)=>{this.changeDate(date, 'reportingTime')}} className="form-control input-field"  placeholder="Reporting Time" />
+          <DatePicker onChange={(date) => { this.changeDate(date, 'closingTime'); }} className="form-control input-field" placeholder="Closing Time" />
+          <DatePicker onChange={(date) => { this.changeDate(date, 'reportingTime'); }} className="form-control input-field" placeholder="Reporting Time" />
+          <DatePicker onChange={(date) => { this.changeDate(date, 'disputeTime'); }} className="form-control input-field" placeholder="Dispute Time" />
           <Label for="creatorFee" className="font-weight-bold text-uppercase fees-label">Fees</Label>
           <Field
             name="creatorFee"
@@ -190,7 +186,7 @@ class CreateBettingEvent extends React.Component {
             name="referralFee"
             type="number"
             className="form-control input-field"
-            placeholder="Creator Fee"
+            placeholder="Referral Fee"
             component={fieldInput}
             value={this.state.referralFee}
             onChange={evt => this.updateFormField(evt, 'referralFee')}
@@ -210,15 +206,15 @@ class CreateBettingEvent extends React.Component {
 // };
 
 // export default connect(mapState)(NewComponent);
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   matches: state.betting.matches,
 });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
   showLoading: bindActionCreators(showLoading, dispatch),
   hideLoading: bindActionCreators(hideLoading, dispatch),
   clearFields: bindActionCreators(clearFields, dispatch),
-  loadMatches: bindActionCreators(loadMatches, dispatch)
+  loadMatches: bindActionCreators(loadMatches, dispatch),
 });
 
 export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(CreateBettingEvent));

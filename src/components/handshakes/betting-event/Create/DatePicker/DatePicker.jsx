@@ -21,17 +21,18 @@ class DatePicker extends React.PureComponent {
     return this.selectedDate;
   }
 
-  onChangeDate(date){
+  onChangeDate(date) {
     // this.setState({ selectedDate: date });
     this.selectedDate = date;
     console.log('Date:', this.selectedDate);
     const { onChange } = this.props;
-    onChange && onChange(date);
+    const unixDate = date.unix();
+    onChange && onChange(unixDate);
   }
 
   render() {
     const { className, onChange, ...props } = this.props;
-    return (<Datetime onChange={this.onChangeDate} {...props} inputProps={{ placeholder: this.props.placeholder  , className: this.props.className }} />);
+    return (<Datetime onChange={this.onChangeDate} {...props} inputProps={{ placeholder: this.props.placeholder , className: this.props.className }} />);
   }
 }
 

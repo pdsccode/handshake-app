@@ -18,11 +18,11 @@ export default class PredictionHandshake extends BaseHandshake {
     // return process.env.isProduction ? 'PredictionHandshake' : 'PredictionHandshakeDev';
     return process.env.PredictionHandshakeFileName;
   }
-  async getEstimateGas(hid=0, side=1, odds=3) {
+  async getEstimateGas(hid = 0, side = 1, odds = 3) {
     const oddsValue = odds * 100;
-    //const payoutValue = Web3.utils.toWei(payout, 'ether');
+    // const payoutValue = Web3.utils.toWei(payout, 'ether');
     const bytesOffchain = this.web3.utils.asciiToHex('cryptosign_m562');
-    //const bytesOffchain = this.web3.utils.asciiToHex(offchain);
+    // const bytesOffchain = this.web3.utils.asciiToHex(offchain);
     const payloadData = this.handshakeInstance.methods
       .init(hid, side, oddsValue, bytesOffchain)
       .encodeABI();
@@ -34,8 +34,26 @@ export default class PredictionHandshake extends BaseHandshake {
     return estimateGas;
   }
   // new functions here
-  createMarket = async (fee,source,closingWindow,reportWindow,disputeWindow,offchain) => {
-    console.log(fee,source,closingWindow,reportWindow,disputeWindow,offchain);
+  createMarket = async (fee, source, closingWindow, reportWindow, disputeWindow, offchain) => {
+    console.log(fee, source, closingWindow, reportWindow, disputeWindow, offchain);
+    const bytesOffchain = this.web3.utils.asciiToHex(`cryptosign_createMarket${offchain}`);
+    const sourceBytes = this.web3.utils.asciiToHex(source);
+    const payloadData = this.handshakeInstance.methods
+      .createMarket(fee, sourceBytes, closingWindow, reportWindow, disputeWindow, bytesOffchain)
+      .encodeABI();
+    console.log('Payload Data:', payloadData);
+
+    const dataBlockChain = await this.neuron.sendRawTransaction(
+      address,
+      privateKey,
+      payloadData,
+      {
+        gasPrice,
+        toAddress: this.contractAddress,
+      },
+    );
+    console.log('Data Blockchain:', dataBlockChain);
+    return dataBlockChain;
   }
 
   initBet = async (hid, side, stake, odds, offchain) => {
