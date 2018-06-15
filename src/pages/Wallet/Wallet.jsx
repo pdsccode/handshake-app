@@ -646,14 +646,14 @@ class Wallet extends React.Component {
   }
 
   get listMainWalletBalance() {
-    return this.state.listMainWalletBalance.map(wallet => <WalletItem key={wallet.address + wallet.network} wallet={wallet} onMoreClick={() => this.onMoreClick(wallet)} onWarningClick={() => this.onWarningClick(wallet)} onAddressClick={() => this.onAddressClick(wallet)} />);
+    return this.state.listMainWalletBalance.map(wallet => <WalletItem key={wallet.address + wallet.network + wallet.name} wallet={wallet} onMoreClick={() => this.onMoreClick(wallet)} onWarningClick={() => this.onWarningClick(wallet)} onAddressClick={() => this.onAddressClick(wallet)} />);
   }
   get listTestWalletBalance() {
-    return this.state.listTestWalletBalance.map(wallet => <WalletItem key={wallet.address + wallet.network} wallet={wallet} onMoreClick={() => this.onMoreClick(wallet)} onWarningClick={() => this.onWarningClick(wallet)} onAddressClick={() => this.onAddressClick(wallet)} />);
+    return this.state.listTestWalletBalance.map(wallet => <WalletItem key={wallet.address + wallet.network + wallet.name} wallet={wallet} onMoreClick={() => this.onMoreClick(wallet)} onWarningClick={() => this.onWarningClick(wallet)} onAddressClick={() => this.onAddressClick(wallet)} />);
   }
 
   get listRewardWalletBalance() {
-    return this.state.listRewardWalletBalance.map(wallet => <WalletItem key={wallet.address + wallet.network} wallet={wallet} onMoreClick={() => this.onMoreClick(wallet)} onWarningClick={() => this.onWarningClick(wallet)} onAddressClick={() => this.onAddressClick(wallet)} />);
+    return this.state.listRewardWalletBalance.map(wallet => <WalletItem key={wallet.address + wallet.network + wallet.name} wallet={wallet} onMoreClick={() => this.onMoreClick(wallet)} onWarningClick={() => this.onWarningClick(wallet)} onAddressClick={() => this.onAddressClick(wallet)} />);
   }
 
   get getListCoinTempForCreate() {

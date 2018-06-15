@@ -2,6 +2,7 @@ import axios from 'axios';
 import { Wallet } from '@/models/Wallet.js';
 import configs from '@/configs';
 import { StringHelper } from '@/services/helper';
+import { Ethereum } from '@/models/Ethereum.js';
 
 const Web3 = require('web3');
 const EthereumTx = require('ethereumjs-tx');
