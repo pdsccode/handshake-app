@@ -308,6 +308,31 @@ export class BetHandshakeHandler {
     }
   };
 
+  saveTransaction(offchain,contractMethod, chainId, hash){
+    console.log('saveTransaction:', offchain);
+    const params = {
+      offchain,
+      contract_address: "",
+      contract_method: contractMethod,
+      chain_id: chainId,
+      hash
+    }
+    store.dispatch(saveTransaction({
+      PATH_URL: API_URL.CRYPTOSIGN.SAVE_TRANSACTION,
+      METHOD: 'POST',
+      data: params,
+      successFn: this.saveTransactionSuccess,
+      errorFn: this.saveTransactionFailed,
+    }));
+  }
+  saveTransactionSuccess = async (successData) => {
+    console.log('saveTransactionSuccess', successData);
+
+  }
+  saveTransactionFailed = (error) => {
+    console.log('rollbackFailed', error);
+
+  }
 
   rollback(offchain) {
     console.log('Rollback:', offchain);
@@ -332,18 +357,30 @@ export class BetHandshakeHandler {
     const chainId = this.getChainIdDefaultWallet();
     const bettinghandshake = new BettingHandshake(chainId);
     const result = await bettinghandshake.cancelBet(hid, side, stake, odds, offchain);
+    const {hash} = result;
+    if(hash == -1){
+      this.rollback(offchain);
+    }
     return result;
   }
   async withdraw(hid, offchain){
     const chainId = this.getChainIdDefaultWallet();
     const bettinghandshake = new BettingHandshake(chainId);
     const result = await bettinghandshake.withdraw(hid, offchain);
+    const {hash} = result;
+    if(hash == -1){
+      this.rollback(offchain);
+    }
     return result;
   }
   async refund(hid, offchain){
     const chainId = this.getChainIdDefaultWallet();
     const bettinghandshake = new BettingHandshake(chainId);
     const result = await bettinghandshake.refund(hid, offchain);
+    const {hash} = result;
+    if(hash == -1){
+      this.rollback(offchain);
+    }
     return result;
   }
 }

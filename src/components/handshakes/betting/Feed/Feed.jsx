@@ -9,7 +9,7 @@ import {MasterWallet} from '@/models/MasterWallet';
 
 import local from '@/services/localStore';
 import {FIREBASE_PATH, HANDSHAKE_ID, API_URL, APP} from '@/constants';
-import { uninitItem, collect, refund, rollback } from '@/reducers/handshake/action';
+import { uninitItem, collect, refund } from '@/reducers/handshake/action';
 import { loadMyHandshakeList} from '@/reducers/me/action';
 
 
@@ -310,10 +310,10 @@ class FeedBetting extends React.Component {
       const stake = amount;
       //const payout = stake * odds;
       const result = await betHandshakeHandler.cancelBet(hid, side, stake, odds, offchain);
-      const {hash} = result;
-      if(hash === -1){
-        this.rollback(offchain);
-      }
+      // const {hash} = result;
+      // if(hash === -1){
+      //   this.rollback(offchain);
+      // }
       //this.loadMyHandshakeList();
 
     }
@@ -349,11 +349,11 @@ class FeedBetting extends React.Component {
         itemInfo: updateInfo
       });
      const result = await betHandshakeHandler.withdraw(hid, offchain);
-     const {hash} = result;
-     if(hash === -1){
-       // Error, rollback
-       this.rollback(offchain);
-     }
+    //  const {hash} = result;
+    //  if(hash === -1){
+    //    // Error, rollback
+    //    this.rollback(offchain);
+    //  }
      //this.loadMyHandshakeList();
 
     }
@@ -385,11 +385,11 @@ class FeedBetting extends React.Component {
 
       const offchain = id;
       const result = await betHandshakeHandler.refund(hid, offchain);
-      const {hash} = result;
-      if(hash === -1){
-        // Error, rollback
-        this.rollback(offchain);
-      }
+      // const {hash} = result;
+      // if(hash === -1){
+      //   // Error, rollback
+      //   this.rollback(offchain);
+      // }
       //this.loadMyHandshakeList();
 
     }
@@ -398,6 +398,7 @@ class FeedBetting extends React.Component {
     console.log('refundFailed', error);
   }
 
+  /*
   rollback(offchain){
     const params = {
       offchain
@@ -413,6 +414,7 @@ class FeedBetting extends React.Component {
   rollbackFailed = (error) => {
     console.log('rollbackFailed', error);
   }
+  */
 }
 
 const mapState = state => ({
@@ -423,7 +425,7 @@ const mapDispatch = ({
   uninitItem,
   collect,
   refund,
-  rollback,
+  //rollback,
   showAlert
 });
 export default connect(mapState, mapDispatch)(FeedBetting);
