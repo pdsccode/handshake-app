@@ -60,6 +60,18 @@ class BettingFilter extends React.Component {
   }
 
   componentDidMount() {
+      /* Test */
+    let value = 1.389999999;
+    console.log(`Value, ceil:`, value, Math.ceil(value));
+    console.log(`Value, floor:`, value, Math.floor(value));
+
+    value = 1.33333333333;
+    console.log(`Value, ceil:`, value, Math.ceil(value));
+    console.log(`Value, floor:`, value, Math.floor(value));
+
+
+
+
     this.props.loadMatches({
       PATH_URL: API_URL.CRYPTOSIGN.LOAD_MATCHES,
       successFn: (res) => {
@@ -170,6 +182,7 @@ class BettingFilter extends React.Component {
     const { matchOutcomes } = this;
     // console.log('defaultOutcome matchOutcomes: ', matchOutcomes);
     const { outComeId } = this.props;
+    const sortedMatch = matchOutcomes.sort((a, b) => b.id > a.id);
     if (matchOutcomes && matchOutcomes.length > 0) {
       const itemDefault = matchOutcomes.find(item => item.id === outComeId);
       return itemDefault || matchOutcomes[0];
