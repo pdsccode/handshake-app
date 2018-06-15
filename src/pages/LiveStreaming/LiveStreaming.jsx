@@ -76,6 +76,24 @@ const data = [
   },
 ];
 
+const highlightVideos = [
+  {
+    url: 'https://www.youtube.com/embed/D9CDFBrTNbM',
+    title: 'Russia vs Saudi Arabia 5-0 | All Goals & Extended Highlights',
+    time: '',
+  },
+  {
+    url: 'https://www.youtube.com/embed/SDY1N-IJOA8',
+    title: 'Russia v Saudi Arabia - 2018 FIFA World Cup Russia™',
+    time: '',
+  },
+  {
+    url: 'https://www.youtube.com/embed/LJ2vr7VUytM',
+    title: 'Live It Up (Official Video) - Nicky Jam feat. Will Smith & Era Istrefi (2018 FIFA World Cup Russia)',
+    time: '',
+  },
+];
+
 class LiveStreaming extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -118,6 +136,19 @@ class LiveStreaming extends React.PureComponent {
             <Col md={12} xs={12}>
               <div className="listMatch">
                 {fixtures.slice(0, 5).map((item, index) => this.renderMatchItem(item, index))}
+              </div>
+              <div className="hightlightVideos">
+                <p>HIGHLIGHT VIDEO</p>
+                <ul>
+                  {highlightVideos.map((item, index) => (
+                    <li key={index}>
+                      <iframe src={item.url} allowFullScreen/>
+                      <div>
+                        {item.title}
+                      </div>
+                    </li>)
+                  )}
+                </ul>
               </div>
             </Col>
           </Row>

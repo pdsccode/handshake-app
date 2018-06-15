@@ -111,5 +111,37 @@ html {
       margin-top: rem-calc(2px);
     }
   }
-
+  .hightlightVideos {
+    margin-top: rem-calc(50px);
+    padding: rem-calc(10px);
+    p {
+      font-size: 9.39px;
+      color: #000000;
+      letter-spacing: 0;
+      font-weight: $bold;
+      margin-bottom: rem-calc(20px);
+    }
+    ul {
+      padding-left: 0;
+    }
+    li + li {
+      margin-top: rem-calc(17px);
+    }
+    li {
+      display: flex;
+      align-items: center;
+      iframe {
+        width: 107px;
+        height: 61px;
+      }
+      div {
+        font-size: rem-calc(11.95px);
+        color: #000000;
+        letter-spacing: 0;
+        line-height: rem-calc(17.92px);
+        font-weight: $normal;
+        padding-left: rem-calc(8px);
+      }
+    }
+  }
 }
