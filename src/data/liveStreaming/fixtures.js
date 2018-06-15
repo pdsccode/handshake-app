@@ -90,9 +90,16 @@ export default [
       "goalsAwayTeam": null
     },
     "odds": null,
-    link: 'https://wc.kenhtructiep.com/ss.php?v=1481482',
-    linksLive: [],
-    linksSoftCast: [],
+    link: '',
+    linksLive: [
+
+    ],
+    linksSoftCast: [
+      'sop://broker.sopcast.com:3912/257744',
+      'sop://broker.sopcast.com:3912/173785',
+      'sop://broker.sopcast.com:3912/151777',
+      'sop://broker.sopcast.com:3912/254780',
+    ],
   },
   {
     "_links": {
