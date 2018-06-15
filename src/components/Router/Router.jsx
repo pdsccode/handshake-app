@@ -1,21 +1,36 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { withFirebase } from 'react-redux-firebase';
 import PropTypes from 'prop-types';
 import { Switch, BrowserRouter, Route, Redirect } from 'react-router-dom';
+import axios from 'axios';
+
+// constants
+import { APP, FIREBASE_PATH, API_URL, URL } from '@/constants';
+// router
 import DynamicImport from '@/components/App/DynamicImport';
 import Loading from '@/components/core/presentation/Loading';
-import { APP, FIREBASE_PATH, API_URL, URL } from '@/constants';
-
+// local store
 import local from '@/services/localStore';
-import { setIpInfo, showAlert, changeLocale, setBannedPrediction, setBannedCash, setCheckBanned } from '@/reducers/app/action';
+// actions
+import {
+  setIpInfo,
+  showAlert,
+  changeLocale,
+  setBannedPrediction,
+  setBannedCash,
+  setCheckBanned,
+} from '@/reducers/app/action';
 import { signUp, fetchProfile, authUpdate, getFreeETH } from '@/reducers/auth/action';
-
+import { getUserProfile, getListOfferPrice } from '@/reducers/exchange/action';
+import { createMasterWallets } from '@/reducers/wallet/action';
+// heplers
 import ScrollToTop from '@/components/App/ScrollToTop';
+// layout
 import Layout from '@/components/Layout/Main';
-
-import { addLocaleData, IntlProvider } from 'react-intl';
 // languages
+import { addLocaleData, IntlProvider } from 'react-intl';
 import en from 'react-intl/locale-data/en';
 import fr from 'react-intl/locale-data/fr';
 import zh from 'react-intl/locale-data/zh';
@@ -24,18 +39,15 @@ import ja from 'react-intl/locale-data/ja';
 import ko from 'react-intl/locale-data/ko';
 import ru from 'react-intl/locale-data/ru';
 import es from 'react-intl/locale-data/es';
-
-import { withFirebase } from 'react-redux-firebase';
 import messages from '@/locals';
+// blocks
 import COUNTRIES_BLACKLIST_PREDICTION from '@/data/country-blacklist-betting';
 import COUNTRIES_BLACKLIST_CASH from '@/data/country-blacklist-exchange';
-import axios from 'axios';
-import { getUserProfile, getListOfferPrice } from '@/reducers/exchange/action';
 import { MasterWallet } from '@/models/MasterWallet';
-import { createMasterWallets } from '@/reducers/wallet/action';
 import MobileOrTablet from '@/components/MobileOrTablet';
 import BrowserDetect from '@/services/browser-detect';
 import NetworkError from '@/components/Router/NetworkError';
+
 // import BlockCountry from '@/components/core/presentation/BlockCountry';
 import qs from 'querystring';
 import IpInfo from '@/models/IpInfo';
@@ -43,117 +55,48 @@ import Maintain from './Maintain';
 
 addLocaleData([...en, ...fr, ...zh, ...de, ...ja, ...ko, ...ru, ...es]);
 
-const MeRootRouter = props => (
-  <DynamicImport
-    loading={Loading}
-    load={() => import('@/components/Router/Me')}
-  >
-    {Component => <Component {...props} />}
-  </DynamicImport>
-);
-const DiscoverRootRouter = props => (
-  <DynamicImport
-    loading={Loading}
-    load={() => import('@/components/Router/Discover')}
-  >
-    {Component => <Component {...props} />}
-  </DynamicImport>
-);
-const ChatRootRouter = props => (
-  <DynamicImport
-    loading={Loading}
-    load={() => import('@/components/Router/Chat')}
-  >
-    {Component => <Component {...props} />}
-  </DynamicImport>
-);
-const WalletRootRouter = props => (
-  <DynamicImport
-    loading={Loading}
-    load={() => import('@/components/Router/Wallet')}
-  >
-    {Component => <Component {...props} />}
-  </DynamicImport>
-);
-const CreateRootRouter = props => (
-  <DynamicImport
-    loading={Loading}
-    load={() => import('@/components/Router/Create')}
-  >
-    {Component => <Component {...props} />}
-  </DynamicImport>
-);
-const ExchangeRootRouter = props => (
-  <DynamicImport
-    loading={Loading}
-    load={() => import('@/components/Router/Exchange')}
-  >
-    {Component => <Component {...props} />}
-  </DynamicImport>
-);
-const TransactionRootRouter = props => (
-  <DynamicImport
-    loading={Loading}
-    load={() => import('@/components/Router/Transaction')}
-  >
-    {Component => <Component {...props} />}
-  </DynamicImport>
-);
-const CommentRootRouter = props => (
-  <DynamicImport
-    loading={Loading}
-    load={() => import('@/components/Router/Comment')}
-  >
-    {Component => <Component {...props} />}
-  </DynamicImport>
-);
-const LandingPageRootRouter = props => (
-  <DynamicImport
-    loading={Loading}
-    load={() => import('@/components/Router/LandingPage')}
-  >
-    {Component => <Component {...props} />}
-  </DynamicImport>
-);
-const LandingTradeRootRouter = props => (
-  <DynamicImport
-    loading={Loading}
-    load={() => import('@/components/Router/LandingTrade')}
-  >
-    {Component => <Component {...props} />}
-  </DynamicImport>
-);
-const FAQRootRouter = props => (
-  <DynamicImport
-    loading={Loading}
-    load={() => import('@/components/Router/FAQ')}
-  >
-    {Component => <Component {...props} />}
-  </DynamicImport>
-);
-const Page404 = props => (
-  <DynamicImport
-    isNotFound
-    loading={Loading}
-    load={() => import('@/pages/Error/Page404')}
-  >
-    {Component => <Component {...props} />}
-  </DynamicImport>
-);
+const createDynamicImport = (path) => {
+  const dynamicImport = props => (
+    <DynamicImport loading={Loading} load={() => import(path)}>
+      {Component => <Component {...props} />}
+    </DynamicImport>
+  );
+  return dynamicImport;
+};
+
+const rootRouterMap = [
+  { path: URL.HANDSHAKE_ME, component: '@/components/Router/Me' },
+  { path: URL.HANDSHAKE_DISCOVER, component: '@/components/Router/Discover' },
+  { path: URL.HANDSHAKE_CHAT, component: '@/components/Router/Chat' },
+  { path: URL.HANDSHAKE_WALLET, component: '@/components/Router/Wallet' },
+  { path: URL.HANDSHAKE_CREATE, component: '@/components/Router/Create' },
+  { path: URL.HANDSHAKE_EXCHANGE, component: '@/components/Router/Exchange' },
+  { path: URL.TRANSACTION_LIST, component: '@/components/Router/Transaction' },
+  { path: URL.COMMENTS_BY_SHAKE, component: '@/components/Router/Comment' },
+];
+
+const LandingPageRootRouter = createDynamicImport('@/components/Router/LandingPage');
+const LandingTradeRootRouter = createDynamicImport('@/components/Router/LandingPage');
+const FAQRootRouter = createDynamicImport('@/components/Router/FAQ');
 
 class Router extends React.Component {
   static propTypes = {
+    //
     app: PropTypes.object.isRequired,
+    auth: PropTypes.object.isRequired,
+    //
+    firebase: PropTypes.object.isRequired,
+    firebaseData: PropTypes.object.isRequired,
+    //
     signUp: PropTypes.func.isRequired,
     fetchProfile: PropTypes.func.isRequired,
-    auth: PropTypes.object.isRequired,
     authUpdate: PropTypes.func.isRequired,
     setIpInfo: PropTypes.func.isRequired,
     getUserProfile: PropTypes.func.isRequired,
-    firebase: PropTypes.object.isRequired,
     getListOfferPrice: PropTypes.func.isRequired,
     getFreeETH: PropTypes.func.isRequired,
     changeLocale: PropTypes.func.isRequired,
+    //
     setBannedPrediction: PropTypes.func.isRequired,
     setBannedCash: PropTypes.func.isRequired,
     setCheckBanned: PropTypes.func.isRequired,
@@ -164,14 +107,13 @@ class Router extends React.Component {
 
     // State
     this.state = {
-      currentLocale: this.props.app.locale,
       isLoading: true,
-      isLogged: this.props.auth.isLogged,
-      profile: this.props.auth.profile,
-      updatedAt: this.props.auth.updatedAt,
       loadingText: 'Loading application',
       isNetworkError: false,
       isMaintain: true,
+
+      app: this.props.app,
+      auth: this.props.auth,
     };
 
     this.checkRegistry = ::this.checkRegistry;
@@ -181,6 +123,7 @@ class Router extends React.Component {
     this.ipInfo = ::this.ipInfo;
 
     this.isSupportedLanguages = ['en', 'zh', 'fr', 'de', 'ja', 'ko', 'ru', 'es'];
+
     const currentLanguage = local.get(APP.LOCALE);
     if (currentLanguage && this.isSupportedLanguages.indexOf(currentLanguage) < 0) {
       local.remove(APP.LOCALE);
@@ -188,14 +131,14 @@ class Router extends React.Component {
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    if (nextProps.auth.isLogged !== prevState.isLogged) {
-      return { isLogged: nextProps.auth.isLogged };
+    if (nextProps.auth.isLogged !== prevState.auth.isLogged) {
+      return { auth: nextProps.auth };
     }
     if (nextProps.auth.updatedAt !== prevState.updatedAt) {
-      //
-      nextProps.firebase.unWatchEvent('value', `${FIREBASE_PATH.USERS}/${String(prevState.profile?.id)}`);
-      nextProps.firebase.watchEvent('value', `${FIREBASE_PATH.USERS}/${String(nextProps.auth.profile?.id)}`);
-      //
+      const { userId } = nextProps.auth.profile;
+      if (userId) {
+        nextProps.firebase.watchEvent('value', `${FIREBASE_PATH.USERS}/${userId}`);
+      }
       return { profile: nextProps.auth.profile, updatedAt: nextProps.auth.updatedAt };
     }
     if (nextProps.app.locale !== prevState.currentLocale) {
@@ -209,7 +152,7 @@ class Router extends React.Component {
   }
 
   componentWillUnmount() {
-    this.props.firebase.unWatchEvent('value', `${FIREBASE_PATH.USERS}/${String(this.state.profile?.id)}`);
+    this.props.firebase.unWatchEvent('value', `${FIREBASE_PATH.USERS}/${this.state.profile?.id}`);
 
     if (this.timeOutInterval) {
       clearInterval(this.timeOutInterval);
@@ -384,8 +327,8 @@ class Router extends React.Component {
     if (window.location.pathname === URL.FAQ) {
       return (
         <IntlProvider
-          locale={this.state.currentLocale}
-          messages={messages[this.state.currentLocale]}
+          locale={this.state.app.locale}
+          messages={messages[this.state.app.locale]}
         >
           <FAQRootRouter />
         </IntlProvider>
@@ -395,8 +338,8 @@ class Router extends React.Component {
     if (BrowserDetect.isDesktop && process.env.isProduction) {
       return (
         <IntlProvider
-          locale={this.state.currentLocale}
-          messages={messages[this.state.currentLocale]}
+          locale={this.state.app.locale}
+          messages={messages[this.state.app.locale]}
         >
           <MobileOrTablet />
         </IntlProvider>
@@ -430,7 +373,6 @@ class Router extends React.Component {
         </BrowserRouter>
       );
     }
-    // if (this.state.isCountryBlackList && process.env.isProduction) return <BlockCountry />;
     return (
       <IntlProvider
         locale={this.state.currentLocale}
@@ -451,36 +393,14 @@ class Router extends React.Component {
                           <Redirect to={{ pathname: URL.HANDSHAKE_DISCOVER }} />
                         )}
                       />
-                      <Route path={URL.HANDSHAKE_ME} component={MeRootRouter} />
-                      <Route
-                        path={URL.HANDSHAKE_DISCOVER}
-                        component={DiscoverRootRouter}
-                      />
-                      <Route
-                        path={URL.HANDSHAKE_CHAT}
-                        component={ChatRootRouter}
-                      />
-                      <Route
-                        path={URL.HANDSHAKE_WALLET}
-                        component={WalletRootRouter}
-                      />
-                      <Route
-                        path={URL.HANDSHAKE_CREATE}
-                        component={CreateRootRouter}
-                      />
-                      <Route
-                        path={URL.HANDSHAKE_EXCHANGE}
-                        component={ExchangeRootRouter}
-                      />
-                      <Route
-                        path={URL.TRANSACTION_LIST}
-                        component={TransactionRootRouter}
-                      />
-                      <Route
-                        path={URL.COMMENTS_BY_SHAKE}
-                        component={CommentRootRouter}
-                      />
-                      <Route component={Page404} />
+                      {rootRouterMap.map(router => (
+                        <Route
+                          key={router.path}
+                          path={router.path}
+                          component={createDynamicImport(router.component)}
+                        />
+                      ))}
+                      <Route component={createDynamicImport('@/components/Router/Page404')} />
                     </Switch>
                   </ScrollToTop>
                 </Layout>
@@ -495,7 +415,11 @@ class Router extends React.Component {
 
 export default compose(
   withFirebase,
-  connect(state => ({ auth: state.auth, app: state.app }), {
+  connect(state => ({
+    auth: state.auth,
+    app: state.app,
+    firebaseData: state.firebase.data,
+  }), {
     signUp,
     fetchProfile,
     setIpInfo,
