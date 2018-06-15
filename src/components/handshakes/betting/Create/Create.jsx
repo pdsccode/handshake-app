@@ -28,7 +28,7 @@ import {showAlert} from '@/reducers/app/action';
 import './Create.scss';
 const ROUND = 1000000;
 
-const betHandshakeHandler = new BetHandshakeHandler()
+const betHandshakeHandler = BetHandshakeHandler.getShareManager();
 
 const nameFormBettingCreate = 'bettingCreate';
 // const BettingCreateForm = createForm({

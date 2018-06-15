@@ -25,7 +25,7 @@ import { BetHandshakeHandler, MESSAGE, SIDE } from '@/components/handshakes/bett
 import { Form } from 'reactstrap';
 
 
-const betHandshakeHandler = new BetHandshakeHandler()
+const betHandshakeHandler = BetHandshakeHandler.getShareManager();
 const nameFormBettingShake = 'bettingShakeForm';
 
 
@@ -149,7 +149,8 @@ class BetingShake extends React.Component {
     } catch (err) {}
 
     if(!betHandshakeHandler.isRightNetwork()){
-      message = MESSAGE.RIGHT_NETWORK;
+      message = MESSAGE.MATCH_OVER;
+
     }
     else if (this.isExpiredDate()){
       message = MESSAGE.MATCH_OVER;
