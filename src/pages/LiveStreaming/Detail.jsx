@@ -60,7 +60,7 @@ class Detail extends React.PureComponent {
     const now = moment();
     const matchTime = moment(match.date);
     const isHideDefaultLink = now.isSameOrAfter(matchTime, 'milliseconds') && !!activeLink;
-    console.log("isHideDefau", isHideDefaultLink);
+    console.log("isHideDefau", isHideDefaultLink, match.linksSoftCast);
     return (
       <Grid>
         <Row>
@@ -106,7 +106,7 @@ class Detail extends React.PureComponent {
                 <div>
                   <p>SopCast</p>
                   <ul>
-                    {(hasList(match.linksSoftCast) && isHideDefaultLink) ?
+                    {(hasList(match.linksSoftCast)) ?
                       match.linksSoftCast.map((item, index) => (<li key={index}><a href={item}>Sopcast {index + 1}</a></li>)) :
                       (<li className="noData">No data available</li>)
                     }
