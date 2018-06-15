@@ -159,9 +159,17 @@ export class MasterWallet {
       const listWallet = [];
       wallets.forEach((walletJson) => {
         
-        let wallet =  MasterWallet.convertObject(walletJson)
-        if (wallet != false) listWallet.push(wallet);
-
+        let wallet =  MasterWallet.convertObject(walletJson);
+        if (wallet != false) {
+          if (process.env.isProduction) {            
+            if ( wallet.getNetworkName() == "Mainnet"){
+              listWallet.push(wallet);
+            }
+          }
+          else{
+              listWallet.push(wallet);
+          }
+        }
       });
 
       return listWallet;

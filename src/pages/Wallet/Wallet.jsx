@@ -981,7 +981,7 @@ class Wallet extends React.Component {
           <Row className="list">
             {this.listMainWalletBalance}
           </Row>
-          {this.listTestWalletBalance.length > 0 ? 
+          {!process.env.isProduction ? 
           <Row className="list">
             <Header title="Testnet wallets" hasLink linkTitle="Request free ETH" onLinkClick={this.getETHFree} />
           </Row>
