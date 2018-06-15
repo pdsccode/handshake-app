@@ -187,7 +187,13 @@ export class MasterWallet {
           let wallet = false;
           wallets.forEach((walletJson) => {
             if (walletJson.default && coinName == walletJson.name) {
-              wallet = MasterWallet.convertObject(walletJson);
+              if (process.env.isProduction){
+                if (walletJson.network === MasterWallet.ListCoin[walletJson.className].Network.Mainnet){
+                  wallet = MasterWallet.convertObject(walletJson);
+                }
+              }
+              else
+                wallet = MasterWallet.convertObject(walletJson);
             }
           });
           return wallet;
@@ -198,7 +204,13 @@ export class MasterWallet {
         wallets.forEach((walletJson) => {
           if (!lstDefault.hasOwnProperty(walletJson.name)) { lstDefault[walletJson.name] = null; }
           if (walletJson.default) {
-            lstDefault[walletJson.name] = MasterWallet.convertObject(walletJson);
+            if (process.env.isProduction){
+              if (walletJson.network === MasterWallet.ListCoin[walletJson.className].Network.Mainnet){
+                lstDefault[walletJson.name] = MasterWallet.convertObject(walletJson);
+              }
+            }
+            else
+              lstDefault[walletJson.name] = MasterWallet.convertObject(walletJson);
           }
         });
         return lstDefault;
