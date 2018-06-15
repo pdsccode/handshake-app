@@ -130,7 +130,7 @@ class LiveStreaming extends React.PureComponent {
         <div>
           <img src={headerLS} width="100%" />
           <a href="https://ninja.org/">
-            <img src={banner} width="109%" style={{marginTop: '0.5px'}} />
+            <img src={banner} width="100%" style={{marginTop: '0.2px'}} />
           </a>
         </div>
         <div className="listMatchTitle">
