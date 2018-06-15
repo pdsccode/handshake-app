@@ -70,7 +70,7 @@ class Detail extends React.PureComponent {
                 <div className="team">
                   <span className="teamName">{match.homeTeamName}</span>
                 </div>
-                <div className="time">{moment(match.date).format("HH:MM")}</div>
+                <div className="time">{moment(match.date).format("HH:mm")}</div>
                 <div className="team">
                   <span className="teamName">{match.awayTeamName}</span>
                 </div>
