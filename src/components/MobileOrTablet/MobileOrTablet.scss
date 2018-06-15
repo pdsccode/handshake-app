@@ -12,11 +12,26 @@
   font-family: anonymous-pro, monospace;
   font-style: normal;
   .chooseLanguage {
+    margin: 0 auto;
     font-size: rem-calc(16px);
     color: #FFFFFF;
     text-align: center;
-    countryActive {
-      //border-bottom: ;
+    font-weight: $normal;
+    display: flex;
+    justify-content: center;
+    margin-bottom:rem-calc(60px);
+    .countryName {
+      padding: rem-calc(0 15px);
+      &:hover {
+        cursor: pointer;
+      }
+    }
+    .countryName + .countryName {
+      border-left:1px solid #666666;
+    }
+    .countryActive {
+      border-bottom: 2px solid #FFFF00;
+      font-weight: $semi-bold;
     }
   }
   .imageHeader {
