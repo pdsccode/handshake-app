@@ -57,6 +57,10 @@ class Detail extends React.PureComponent {
     const match = this.match;
     const { activeLink } = this.state;
     const hasList = (list) => Array.isArray(list) && list.length > 0;
+    const now = moment();
+    const matchTime = moment(match.date);
+    const isHideDefaultLink = now.isSameOrAfter(matchTime, 'milliseconds') && !!activeLink;
+    console.log("isHideDefau", isHideDefaultLink);
     return (
       <Grid>
         <Row>
@@ -72,7 +76,7 @@ class Detail extends React.PureComponent {
                 </div>
               </div>
               <div className="liveBox">
-                <iframe src={activeLink || defaultLink} width="100%" allowFullScreen/>
+                <iframe src={isHideDefaultLink ? activeLink : defaultLink} width="100%" allowFullScreen autoPlay />
               </div>
               <div className="share-block">
                 <p className="text">Share to</p>
@@ -103,7 +107,7 @@ class Detail extends React.PureComponent {
                   <p>SoftCast</p>
                   <ul>
                     {hasList(match.linksSoftCast) ?
-                      match.linksSoftCast.map((item, index) => (<li key={index}>{item}</li>)) :
+                      match.linksSoftCast.map((item, index) => (<li key={index}><a href={item}>Sopcast {index + 1}</a></li>)) :
                       (<li className="noData">No data available</li>)
                     }
                   </ul>
