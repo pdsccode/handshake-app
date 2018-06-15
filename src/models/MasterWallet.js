@@ -3,6 +3,7 @@ import localStore from '@/services/localStore';
 import { Bitcoin } from '@/models/Bitcoin.js';
 import { BitcoinTestnet } from '@/models/BitcoinTestnet.js';
 import { Ethereum } from '@/models/Ethereum.js';
+import { Shuriken } from '@/models/Shuriken.js';
 import { Wallet } from '@/models/Wallet.js';
 import { APP } from '@/constants';
 import { StringHelper } from '@/services/helper';
@@ -11,7 +12,7 @@ const bip39 = require('bip39');
 
 export class MasterWallet {
     // list coin is supported, can add some more Ripple ...
-    static ListCoin = { Ethereum, Bitcoin, BitcoinTestnet };
+    static ListCoin = { Ethereum, Shuriken, Bitcoin, BitcoinTestnet };
 
     static ListCoinReward = { Ethereum, Bitcoin };
 
