@@ -312,6 +312,10 @@ get defaultOutcome() {
   }
 
   onToggleChange(id) {
+    // send event tracking
+    try {
+     GA.clickChooseASideCreatePage(id === 1 ? 'Support' : 'Oppose');
+    } catch (err) {}
     this.setState({buttonClass: `${id === 2 ? 'btnRed' : 'btnBlue' }`});
   }
 
