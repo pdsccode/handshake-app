@@ -31,7 +31,7 @@ const nameFormBettingShake = 'bettingShakeForm';
 
 const defaultAmount = 1;
 const titleBySide = { 1: 'Bet for the outcome', 2: 'Bet against the outcome' };
-
+const ROUND = 1000000;
 class BetingShake extends React.Component {
   static propTypes = {
     outcomeId: PropTypes.number,
@@ -101,11 +101,12 @@ class BetingShake extends React.Component {
     const marketOdds = side === SIDE.SUPPORT ? marketSupportOdds : marketAgainstOdds;
     const marketAmount = side === SIDE.SUPPORT ? amountSupport : amountAgainst;
     const winValue = marketAmount * marketOdds;
-    console.log('componentWillReceiveProps: marketOdds, marketAmount, winValue:', marketOdds, marketAmount, winValue);
+    const roundMarketAmount = Math.floor(marketAmount*ROUND)/ROUND;
+    console.log('componentWillReceiveProps: marketOdds, marketAmount, winValue, roundMarketAmount:', marketOdds, marketAmount, winValue, roundMarketAmount);
     this.setState({
       oddValue: Math.floor(marketOdds*100)/100,
-      amountValue: Math.floor(marketAmount*10000)/10000,
-      winValue: Math.floor(winValue*10000)/10000
+      amountValue: roundMarketAmount,
+      winValue: Math.floor(winValue*ROUND)/ROUND
     })
   }
 
@@ -216,7 +217,7 @@ class BetingShake extends React.Component {
     const {oddValue, amountValue} = this.state;
     const total = oddValue * amountValue;
       this.setState({
-        winValue: Math.floor(total*100)/100,
+        winValue: Math.floor(total*ROUND)/ROUND,
       })
   }
 

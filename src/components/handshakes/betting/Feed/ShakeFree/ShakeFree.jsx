@@ -28,6 +28,7 @@ const nameFormBettingShake = 'bettingShakeForm';
 
 
 const defaultAmount = 1;
+const ROUND = 1000000;
 
 class BetingShakeFree extends React.Component {
   static propTypes = {
@@ -90,14 +91,17 @@ class BetingShakeFree extends React.Component {
     // extraData["event_predict"] = matchOutcome;
     // console.log('componentWillReceiveProps Extra Data: ', extraData);
     // this.setState({extraData})
-    const {marketSupportOdds, marketAgainstOdds, amount} = nextProps;
+    const {marketSupportOdds, marketAgainstOdds} = this.props;
+    const {amount} = this.props;
     //console.log('Shake nextProps: ',nextProps );
     const marketOdds = this.toggleRef.value === SIDE.SUPPORT ? marketSupportOdds : marketAgainstOdds;
-    const winvalue = amount * marketOdds;
+    const winValue = amount * marketOdds;
+    const roundWinValue = Math.floor(winValue*ROUND)/ROUND;
+    console.log('Next props: amount, marketOdds, winValue, roundWinValue: ', amount, marketOdds, winValue, roundWinValue);
     this.setState({
       oddValue: Math.floor(marketOdds*100)/100,
-      amountValue: Math.floor(amount*100)/100,
-      winvalue: Math.floor(winvalue*100)/100
+      amountValue: amount,
+      winValue: roundWinValue
     })
   }
 
@@ -173,16 +177,24 @@ class BetingShakeFree extends React.Component {
   }
 
   onToggleChange(id) {
-    const {isChangeOdds} = this.state;
+    //const {isChangeOdds} = this.state;
     const {marketAgainstOdds, marketSupportOdds} = this.props;
     const side = this.toggleRef.value;
     const marketOdds = side === SIDE.SUPPORT ? marketSupportOdds : marketAgainstOdds;
 
+    /*
     if(!isChangeOdds){
       this.setState({
         oddValue: parseFloat(marketOdds).toFixed(2)
-      })
+      }, ()=> this.updateTotal());
     }
+    */
+    
+   this.setState({
+    oddValue: Math.floor(marketOdds*100)/100
+  }, ()=> this.updateTotal());
+  
+
     this.setState({buttonClass: `btnOK ${id === 1 ? 'btnBlue' : 'btnRed' }`});
 
   }
@@ -191,7 +203,7 @@ class BetingShakeFree extends React.Component {
     const {oddValue, amountValue} = this.state;
     const total = oddValue * amountValue;
       this.setState({
-        winValue: Math.floor(total*100)/100,
+        winValue: Math.floor(total*ROUND)/ROUND,
       })
   }
 
@@ -252,26 +264,9 @@ class BetingShakeFree extends React.Component {
   renderForm() {
     const { total, isShowOdds, marketOdds, isChangeOdds, buttonClass } = this.state;
     const {amount} = this.props;
-    console.log('Market Odd render form:', marketOdds);
-
-    const youCouldWinField = {
-      id: 'you_could_win',
-      name: 'you_could_win',
-      label: 'You could win',
-      className: 'total',
-      isInput: false,
-      value: total || 0,
-      readOnly: true,
-    };
-
-    const amountField = {
-      id: 'amount',
-      name: 'amount',
-      label: 'Amount',
-      className: 'amount',
-      placeholder: '0.00',
-      type: 'text',
-    };
+    const {winValue} = this.state;
+    console.log('Win Value:', winValue);
+    
     let oddsField = {
       id: 'odds',
       name: 'odds',
@@ -293,11 +288,11 @@ class BetingShakeFree extends React.Component {
         <p className="titleForm text-center">BET FREE ON THE OUTCOME</p>
         {<Toggle ref={(component) => {this.toggleRef = component}} onChange={this.onToggleChange} />}
         {/*this.renderInputField(amountField)*/}
-        <div className="freeAmount"> You have free {amount} ETH</div>
+        <div className="freeAmount">You have {amount} ETH FREE to bet!</div>
         {isShowOdds && this.renderInputField(oddsField)}
         <div className="rowWrapper">
          <div>Possible winnings</div>
-         <div className="possibleWinningsValue">{this.state.winValue}</div>
+         <div className="possibleWinningsValue">{winValue}</div>
         </div>
         <Button type="submit" block className={buttonClass}>
           Go
