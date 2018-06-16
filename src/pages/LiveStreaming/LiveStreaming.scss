@@ -6,6 +6,7 @@ html {
 
 .liveStreamingIndex {
   max-width: $app-width;
+  overflow-x: hidden;
   margin: 0 auto;
   .container {
     background: white;

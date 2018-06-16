@@ -26,17 +26,50 @@
   <!--<link rel="stylesheet" href="https://use.typekit.net/qow3iea.css">-->
 </head>
 <body>
-<div id="fb-root"></div>
-<script>(function (d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) return;
-  js = d.createElement(s);
-  js.id = id;
-  js.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.0&appId=380022628861188&autoLogAppEvents=1';
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));
-</script>
+  <div id="fb-root"></div>
   <div id="app"></div>
+  <script>
+    function initSocial() {
+      // Facebook sdk
+      // -- setup facebook app
+      window.fbAsyncInit = function () {
+        FB.init({
+          appId: '380022628861188',
+          xfbml: true,
+          version: 'v3.0'
+        });
+      };
+
+      (function (d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) {
+          return;
+        }
+        js = d.createElement(s);
+        js.id = id;
+        js.async = true;
+        js.src = "//connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));
+      // End Facebook sdk
+
+      // Twitter sdk share button
+      !function (d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https';
+        if (!d.getElementById(id)) {
+          js = d.createElement(s);
+          js.id = id;
+          js.async = true;
+          js.src = p + '://platform.twitter.com/widgets.js';
+          fjs.parentNode.insertBefore(js, fjs);
+        }
+      }(document, 'script', 'twitter-wjs');
+    }
+
+    setTimeout(function () {
+      initSocial();
+    }, 1000);
+  </script>
   <noscript>Your browser does not support JavaScript!</noscript>
 </body>
 </html>
