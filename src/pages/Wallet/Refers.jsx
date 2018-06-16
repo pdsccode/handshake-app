@@ -188,7 +188,7 @@ class Refers extends React.Component {
         refers.step3_value = profile.email;
 
         local.save(APP.REFERS, refers);
-        this.setState({step3: refers.step3, step3_value: refers.step3_value, referLink: profile && profile.username ? "https://ninja.org/ref=?" + profile.username : ''});
+        this.setState({step3: refers.step3, step3_value: refers.step3_value, referLink: profile && profile.username ? "https://ninja.org/?ref=" + profile.username : ''});
         this.showSuccess("Your email is verified successfully!");
       }
       else{

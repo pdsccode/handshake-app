@@ -97,7 +97,7 @@ class RefersDashboard extends React.Component {
 
   getLinkRefer(){
     const profile = local.get(APP.AUTH_PROFILE);
-    let referLink = profile && profile.username ? "https://ninja.org/ref=?" + profile.username : '';
+    let referLink = profile && profile.username ? "https://ninja.org/?ref=" + profile.username : '';
     this.setState({referLink: referLink});
     this.props.rfChange(nameFormStep4, 'refer_link', referLink);
   }
