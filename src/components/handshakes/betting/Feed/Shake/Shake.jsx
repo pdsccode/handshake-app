@@ -137,13 +137,15 @@ class BetingShake extends React.Component {
     const {isShowOdds, isChangeOdds} = this.state;
     const {matchName, matchOutcome, side, marketAgainstOdds, marketSupportOdds, closingDate} = this.props;
     const amount = parseFloat(values.amount.value);
-    let odds = parseFloat(values.odds.value);
+    const odds = parseFloat(values.odds.value);
 
     const marketOdds = side === SIDE.SUPPORT ? marketSupportOdds : marketAgainstOdds;
 
+    /*
     if(!isChangeOdds){
       odds = marketOdds;
     }
+    */
 
     console.log("Amount, Side, Odds", amount, side, odds);
     // this.props.onSubmitClick(amount);
