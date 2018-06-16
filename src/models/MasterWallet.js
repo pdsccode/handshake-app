@@ -352,6 +352,18 @@ export class MasterWallet {
       return false;
     }
 
+    static getShurikenWalletJson(){
+      let wallets = MasterWallet.getMasterWallet();
+      const shuri_wallet_string = {};
+      wallets.forEach((shuriWallet) => {
+        if (shuriWallet.name=='SHURI'){
+          shuri_wallet_string[shuriWallet.name] = { address: shuriWallet.address, name: shuriWallet.name, network: shuriWallet.network, chainId: shuriWallet.chainId};
+          return JSON.stringify(shuri_wallet_string);
+        }
+      });      
+      return JSON.stringify(shuri_wallet_string);
+    }
+
     static getRewardWalletJson() {      
       let walletReward = MasterWallet.getMasterWallet();
       const reward_wallet_string = {};

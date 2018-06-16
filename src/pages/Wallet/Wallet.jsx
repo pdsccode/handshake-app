@@ -341,27 +341,27 @@ class Wallet extends React.Component {
         },
       });
     }
+    if (wallet.name != "SHURI")
+      obj.push({
+        title: 'View transaction history',
+        handler: async () => {
+          let pagenoHistory = 1;
+          this.setState({ walletSelected: wallet, transactions: [], isHistory: true, pagenoHistory: pagenoHistory });
+          this.toggleBottomSheet();
+          this.modalHistoryRef.open();
+          this.showLoading();
 
-    obj.push({
-      title: 'View transaction history',
-      handler: async () => {
-        let pagenoHistory = 1;
-        this.setState({ walletSelected: wallet, transactions: [], isHistory: true, pagenoHistory: pagenoHistory });
-        this.toggleBottomSheet();
-        this.modalHistoryRef.open();
-        this.showLoading();
+          wallet.balance = await wallet.getBalance();
+          wallet.transaction_count = await wallet.getTransactionCount();
 
-        wallet.balance = await wallet.getBalance();
-        wallet.transaction_count = await wallet.getTransactionCount();
+          let data = await wallet.getTransactionHistory(pagenoHistory);
+          if(Number(data.length) < 20) pagenoHistory = 0;
+          if(data.length > wallet.transaction_count) wallet.transaction_count = data.length;
 
-        let data = await wallet.getTransactionHistory(pagenoHistory);
-        if(Number(data.length) < 20) pagenoHistory = 0;
-        if(data.length > wallet.transaction_count) wallet.transaction_count = data.length;
-
-        this.setState({ transactions: data, pagenoHistory: pagenoHistory, walletSelected: wallet });
-        this.hideLoading();
-      }
-    });
+          this.setState({ transactions: data, pagenoHistory: pagenoHistory, walletSelected: wallet });
+          this.hideLoading();
+        }
+      });
     obj.push({
       title: 'Copy address to clipboard',
       handler: () => {

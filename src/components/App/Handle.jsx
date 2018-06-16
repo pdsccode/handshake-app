@@ -210,7 +210,7 @@ class Handle extends React.Component {
   }
 
   updateRewardAddress() {        
-    let walletReward = MasterWallet.getRewardWalletJson();      
+    let walletReward = MasterWallet.getShurikenWalletJson();      
     const params = new URLSearchParams();
           params.append('reward_wallet_addresses', walletReward);
           this.props.authUpdate({

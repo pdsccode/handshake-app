@@ -27,7 +27,7 @@ export class Shuriken extends Ethereum {
         configs.network[this.chainId].shurikenTokenAddress,
       );
       
-      let balance = await instance.methods.balanceOf('0xa74b6b6dc85631ce7b5a1896ae4acffda0b4aaab').call();      
+      let balance = await instance.methods.balanceOf(this.address).call();      
           
       return Web3.utils.fromWei(balance.toString());
 
