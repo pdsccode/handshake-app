@@ -60,68 +60,6 @@ class Router extends React.Component {
     return null;
   }
 
-  updateRewardAddress() {    
-    let walletReward = MasterWallet.getRewardWalletJson();      
-    const params = new URLSearchParams();
-          params.append('reward_wallet_addresses', walletReward);
-          this.props.authUpdate({
-            PATH_URL: 'user/profile',
-            data: params,
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            METHOD: 'POST',
-          });
-  }
-
-  getFreeETH(){
-    const wallet = MasterWallet.getWalletDefault('ETH');            
-    this.props.getFreeETH({//todo remove xxxxxx:
-      PATH_URL: `/user/free-rinkeby-eth?address=xxxxxx${wallet.address}`,
-      METHOD: 'POST',
-      successFn: (response) => {                
-        this.setState({ isLoading: false, loadingText: '' });
-        // run cron alert user when got 1eth:
-        this.timeOutCheckGotETHFree = setInterval(() => {
-          wallet.getBalance().then((result) => {
-            if (result > 0) {
-              this.porps.showAlert({
-                message: <div className="text-center">You have ETH! Now you can play for free on the Ninja testnet.</div>,
-                timeOut: false,
-                isShowClose: true,
-                type: 'success',
-                callBack: () => {},
-              });
-              // notify user:
-              clearInterval(this.timeOutCheckGotETHFree);
-            }
-          });
-        }, 20 * 60 * 1000); // 20'
-      },
-      errorFn: () => { this.setState({ isLoading: false, loadingText: '' }); },
-    });
-  }
-
-  notification() {
-    try {
-      const messaging = this.props.firebase.messaging();
-      messaging
-        .requestPermission()
-        .then(() => messaging.getToken())
-        .catch(e => console.log(e))
-        .then((notificationToken) => {
-          const params = new URLSearchParams();
-          params.append('fcm_token', notificationToken);
-          this.props.authUpdate({
-            PATH_URL: 'user/profile',
-            data: params,
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            METHOD: 'POST',
-          });
-        })
-        .catch(e => console.log(e));
-    } catch (e) {
-      console.log(e);
-    }
-
   routers() {
     return rootRouterMap.map(router => (
       <Route
