@@ -51,7 +51,7 @@ class MobileOrTablet extends React.PureComponent {
                     className={`countryName ${locale.toUpperCase() === item ? 'countryActive' : ''}`}
                     onClick={() => this.changeCountry(item.toLowerCase())}
                   >
-                    {item}
+                    <span>{item}</span>
                   </div>)
                 )
               }
