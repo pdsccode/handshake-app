@@ -17,10 +17,7 @@ import { showLoading, hideLoading } from '@/reducers/app/action';
 import iconSuccessChecked from '@/assets/images/icon/icon-checked-green.svg';
 import local from '@/services/localStore';
 import {APP} from '@/constants';
-
 import "./Refers.scss";
-//import oauth from "@/oauths";
-
 
   // 3 step Form
 const nameFormStep1 = 'referStep1';
@@ -122,8 +119,8 @@ class Refers extends React.Component {
         this.setState({step3: refers.step3, step3_value: refers.step3_value});
       }
 
-      this.props.rfChange(nameFormStep1, 'telegram_username', refers && refers.step1_value ? refers.step1_value : '');
-      this.props.rfChange(nameFormStep2, 'twitter_username', refers && refers.step2_value ? refers.step2_value : '');
+      this.props.rfChange(nameFormStep1, 'telegram_username', refers && refers.step1 ? refers.step1_value : '');
+      this.props.rfChange(nameFormStep2, 'twitter_username', refers && refers.step2 ? refers.step2_value : '');
       this.props.rfChange(nameFormStep3, 'refer_email', refers && refers.step3_value ? refers.step3_value : '');
 
       if(refers.step1 && refers.step2 && refers.step3 == 2){
@@ -161,7 +158,7 @@ class Refers extends React.Component {
   }
 
   submitStep2 = async() => {
-    if(this.getTwitter()){
+    if(await this.getTwitter()){
       this.setState({step2: true});
       let refers = local.get(APP.REFERS);
       if(!refers)
@@ -249,72 +246,27 @@ class Refers extends React.Component {
     });
   }
 
-  async getTwitter(){
-  //   const url = "https://api.twitter.com/1.1/followers/list.json?cursor=-1&screen_name=ninja_org&skip_status=true&include_user_entities=false";
-  //   const data = {
-  //     consumer_key: 'GcmABUZqxQ3ozWPkFLIXAwrHM',
-  //     consumer_secret: 'XAliYph83XYA96l98l3maDTLooUG2dLC2Z9wtIZrzatBe1aAgp',
-  //     token: "1002034013488336896-eCfCTuOwJ7PXuWb8JoiEMgp1kgvihP",
-  //     token_secret: "waalpIVe5gjdVBu99hYmuEW0wzATD0pMyiXUWZZrE8a2B"
-  //   };
+  getTwitter(){
+    const url = "http://www.mykenty.com/ninja/"+this.state.step2_value;
+    return new Promise((resolve, reject) => {
+      axios({
+        url: url,
+        method: 'get'
+      })
+      .then(response => {
+          if(response.data && response.data.id){
+            resolve(true);
+          }
+          else{
+            resolve(false);
+          }
 
-  //   var oauth_consumer_key = "GcmABUZqxQ3ozWPkFLIXAwrHM";
-  //   var consumerSecret = "XAliYph83XYA96l98l3maDTLooUG2dLC2Z9wtIZrzatBe1aAgp";
-  //   var oauth_token = "1002034013488336896-eCfCTuOwJ7PXuWb8JoiEMgp1kgvihP";
-  //   var tokenSecret = "waalpIVe5gjdVBu99hYmuEW0wzATD0pMyiXUWZZrE8a2B";
-
-  //   var nonce = oauth.nonce(32);
-  //   var ts = Math.floor(new Date().getTime() / 1000);
-  //   var timestamp = ts.toString();
-
-  //   var accessor = {
-  //       "consumerSecret": consumerSecret,
-  //       "tokenSecret": tokenSecret
-  //   };
-
-  //   var params = {
-  //       "oauth_consumer_key": oauth_consumer_key,
-  //       "oauth_nonce": nonce,
-  //       "oauth_signature_method": "HMAC-SHA1",
-  //       "oauth_timestamp": timestamp,
-  //       "oauth_token": oauth_token,
-  //       "oauth_version": "1.0"
-  //   };
-
-  //   var message = {
-  //       "method": "POST",
-  //       "action": url,
-  //       "parameters": params
-  //   };
-
-  //   //lets create signature
-  //   oauth.SignatureMethod.sign(message, accessor);
-  //   var normPar = oauth.SignatureMethod.normalizeParameters(message.parameters);
-  //   var baseString = oauth.SignatureMethod.getBaseString(message);
-  //   var sig = oauth.getParameter(message.parameters, "oauth_signature") + "=";
-  //   var encodedSig = oauth.percentEncode(sig); //finally you got oauth signature
-
-  //   var header = {
-  //     "Authorization": 'OAuth oauth_consumer_key="'+oauth_consumer_key+'",oauth_signature_method="HMAC-SHA1",oauth_timestamp="' + timestamp + '",oauth_nonce="' + nonce + '",oauth_version="1.0",oauth_token="'+oauth_token+'",oauth_signature="' + encodedSig + '"'
-  //   }
-
-  // axios.post(url, {header: header})
-  //  .then(response => {
-  //     console.log(response);
-  //   })
-  //  .catch((error) => {
-  //     console.log(error);
-  //  });
-
-  // const AuthStr = 'Bearer '.concat(USER_TOKEN);
-  // axios.get(URL, { headers: { Authorization: AuthStr } })
-  // .then(response => {
-  //     // If request is good...
-  //     console.log(response.data);
-  //   })
-  // .catch((error) => {
-  //     console.log('error ' + error);
-  //   });
+        })
+      .catch((error) => {
+          console.log(error);
+          resolve(false);
+      });
+    });
   }
 
   updateTelegramUsernameValue = (evt) => {
