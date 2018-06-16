@@ -23,8 +23,9 @@ import BettingShakeFree from './../ShakeFree';
 import './Filter.scss';
 
 const betHandshakeHandler = new BetHandshakeHandler();
-const freeAmount = 0.01;
 const CRYPTOSIGN_MINIMUM_MONEY = 0.00002;
+const freeAmount = 0.001;
+
 const TAG = 'BETTING_FILTER';
 const SELECTING_DEFAULT = {
   id: '',
@@ -471,18 +472,18 @@ class BettingFilter extends React.Component {
           {
           isFirstFree
           ? (
-              
+
               <div className="freeBox" onClick={() => {
                 this.modalBetFreeRef.open();
             }}>
                 <div className="contentFree">Unlock your <span>FREE ETH</span> to play</div>
                 <Button
                 className="buttonBet"
-                
+
                 >Bet now
                 </Button>
               </div>
-              
+
              /*
              <Button className="freeBox" onClick={() => {
                 this.modalBetFreeRef.open();
@@ -490,7 +491,7 @@ class BettingFilter extends React.Component {
                 <div className="contentFree">Unlock your <span>FREE ETH</span> to play</div>
                 <div
                 className="buttonBet"
-                
+
                 >Bet now
                 </div>
               </Button>
