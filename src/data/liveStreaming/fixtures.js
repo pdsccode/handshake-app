@@ -249,6 +249,7 @@ export default [
     linksLive: [
       'https://www.youtube.com/embed/6PfILRNSueE?autoplay=1',
       'http://capodeportes.net/reproductor2/canal3.php?width=400&height=300',
+      'https://www.youtube.com/embed/vffUpaMsGBo',
     ],
     linksSoftCast: [
       'sop://broker.sopcast.com:3912/253463',
