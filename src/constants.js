@@ -11,7 +11,7 @@ export const APP = {
   WALLET_LIST: 'wallet_list',
   IP_INFO: 'ip_info',
   EMAIL_NEED_VERIFY: 'email_need_verify',
-  REFERS: 'refers'
+  REFERS: 'refers',
   OFFLINE_STATUS: 'offline_status',
 };
 
