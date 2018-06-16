@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import axios from 'axios';
 import { URL, API_URL } from '@/constants';
 import fixtures from '../../data/liveStreaming/fixtures';
+import highlightVideos from '../../data/liveStreaming/highlightVideos';
 import moment from 'moment';
 import { groupBy } from 'lodash';
 
@@ -20,52 +21,54 @@ import saudiArabia from '../../assets/images/team-flag/saudi-arabia-flag-logo.pn
 import headerLS from '../../assets/images/live-streaming/header.svg';
 import banner from '../../assets/images/live-streaming/banner.svg';
 
-const highlightVideos = [
-  {
-    url: 'https://www.youtube.com/embed/D9CDFBrTNbM',
-    title: 'Russia vs Saudi Arabia 5-0 | All Goals & Extended Highlights',
-    time: '',
-  },
-  {
-    url: 'https://www.youtube.com/embed/SDY1N-IJOA8',
-    title: 'Russia v Saudi Arabia - 2018 FIFA World Cup Russia™',
-    time: '',
-  },
-  {
-    url: 'https://www.youtube.com/embed/LJ2vr7VUytM',
-    title: 'Live It Up (Official Video) - Nicky Jam feat. Will Smith & Era Istrefi (2018 FIFA World Cup Russia)',
-    time: '',
-  },
-];
-
-class LiveStreaming extends React.PureComponent {
+class MatchItem extends React.PureComponent {
   constructor(props) {
     super(props);
-    this.renderMatchItem = ::this.renderMatchItem;
-    this.renderMatchesByDate = ::this.renderMatchesByDate;
+    this.state = {
+      goalsAwayTeam: 0,
+      goalsHomeTeam: 0,
+    };
+    this.randomGoals = ::this.randomGoals;
   }
 
-  renderMatchItem(match, index) {
-    const slug = match._links.self.href.split('/').slice(-1);
+  randomGoals() {
+    const random = () => Math.floor((Math.random() * 3) + 1);
+    this.setState({
+      goalsAwayTeam: random(),
+      goalsHomeTeam: random(),
+    });
+  }
+
+  render() {
+    const { match } = this.props;
+    const { goalsHomeTeam, goalsAwayTeam } = this.state;
     return (
-      <div className="matchItem" key={index}>
+      <div className="matchItem">
         <div className="matchInfo">
           <div className="team">
             <span className="teamName">{match.homeTeamName}</span>
             {/*<img src={match._links.homeTeam.crestUrl} alt={match.homeTeamName} className="teamFlag home" />*/}
           </div>
           <div className="vs">
-            <div className="goalsHomeTeam">00</div>
-            <div> : </div>
-            <div className="goalsAwayTeam">00</div>
+            <div className="goals">{`0${goalsHomeTeam}`}</div>
+            <div className="dots"> : </div>
+            <div className="goals">{`0${goalsAwayTeam}`}</div>
           </div>
           <div className="team">
             {/*<img src={match._links.awayTeam.crestUrl} alt={match.awayTeamName} className="teamFlag away" />*/}
             <span className="teamName">{match.awayTeamName}</span>
           </div>
         </div>
+        <button onClick={this.randomGoals}>Get the Score</button>
       </div>
     );
+  }
+}
+
+class LiveStreaming extends React.PureComponent {
+  constructor(props) {
+    super(props);
+    this.renderMatchesByDate = ::this.renderMatchesByDate;
   }
 
   renderMatchesByDate(keyDate, matches, index) {
@@ -78,7 +81,7 @@ class LiveStreaming extends React.PureComponent {
           <Row>
             <Col md={12} xs={12}>
               <div className="listMatch">
-                {matches.map((item, index) => this.renderMatchItem(item, index))}
+                {matches.map((item, index) => <MatchItem match={item} key={index} />)}
               </div>
             </Col>
           </Row>

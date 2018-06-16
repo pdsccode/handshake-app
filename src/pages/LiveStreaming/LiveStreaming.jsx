@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import axios from 'axios';
 import { URL, API_URL } from '@/constants';
 import fixtures from '../../data/liveStreaming/fixtures';
+import highlightVideos from '../../data/liveStreaming/highlightVideos';
 import moment from 'moment';
 import { groupBy } from 'lodash';
 
@@ -19,86 +20,6 @@ import russiaFlag from '../../assets/images/team-flag/russia-flag-logo.png';
 import saudiArabia from '../../assets/images/team-flag/saudi-arabia-flag-logo.png';
 import headerLS from '../../assets/images/live-streaming/header.svg';
 import banner from '../../assets/images/live-streaming/banner.svg';
-
-const data = [
-  {
-    league: 'World cup 2018',
-    time: '14/06/2018 22:00',
-    teamHomeName: 'Russia',
-    teamHomeFlag: russiaFlag,
-    teamAwayName: 'Saudi Arabia',
-    teamAwayFlag: saudiArabia,
-    slug: 'nga-vs-saudi-arabia-14-6',
-  },
-  {
-    league: 'World cup 2018',
-    time: '14/06/2018 22:00',
-    teamHomeName: 'Russia',
-    teamHomeFlag: russiaFlag,
-    teamAwayName: 'Saudi Arabia',
-    teamAwayFlag: saudiArabia,
-    slug: 'nga-vs-saudi-arabia-14-6',
-  },
-  {
-    league: 'World cup 2018',
-    time: '14/06/2018 22:00',
-    teamHomeName: 'Russia',
-    teamHomeFlag: russiaFlag,
-    teamAwayName: 'Saudi Arabia',
-    teamAwayFlag: saudiArabia,
-    slug: 'nga-vs-saudi-arabia-14-6',
-  },
-  {
-    league: 'World cup 2018',
-    time: '14/06/2018 22:00',
-    teamHomeName: 'Russia',
-    teamHomeFlag: russiaFlag,
-    teamAwayName: 'Saudi Arabia',
-    teamAwayFlag: saudiArabia,
-    slug: 'nga-vs-saudi-arabia-14-6',
-  },
-  {
-    league: 'World cup 2018',
-    time: '14/06/2018 22:00',
-    teamHomeName: 'Russia',
-    teamHomeFlag: russiaFlag,
-    teamAwayName: 'Saudi Arabia',
-    teamAwayFlag: saudiArabia,
-    slug: 'nga-vs-saudi-arabia-14-6',
-  },
-  {
-    league: 'World cup 2018',
-    time: '14/06/2018 22:00',
-    teamHomeName: 'Russia',
-    teamHomeFlag: russiaFlag,
-    teamAwayName: 'Saudi Arabia',
-    teamAwayFlag: saudiArabia,
-    slug: 'nga-vs-saudi-arabia-14-6',
-  },
-];
-
-const highlightVideos = [
-  {
-    url: 'https://www.youtube.com/embed/_vDAwelyk58',
-    title: 'France vs Australia 2-1',
-    time: '',
-  },
-  {
-    url: 'https://www.youtube.com/embed/Fe5sLVeVt7M',
-    title: 'Portugal vs Spain 3-3 All goals & Highlights',
-    time: '',
-  },
-  {
-    url: 'https://www.youtube.com/embed/KoQM1bnwfq0',
-    title: 'Morocco 0-1 Iran Highlights',
-    time: '',
-  },
-  {
-    url: 'https://www.youtube.com/embed/LJ2vr7VUytM',
-    title: 'Live It Up (Official Video) - Nicky Jam feat. Will Smith & Era Istrefi (2018 FIFA World Cup Russia)',
-    time: '',
-  },
-];
 
 class LiveStreaming extends React.PureComponent {
   constructor(props) {
