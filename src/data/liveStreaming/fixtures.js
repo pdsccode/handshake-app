@@ -206,8 +206,9 @@ export default [
       "goalsAwayTeam": null
     },
     "odds": null,
-    link: 'https://www.youtube.com/embed/lM8BF1qE_6U',
+    link: 'http://capodeportes.net/reproductor2/canal3.php',
     linksLive: [
+      'http://capodeportes.net/reproductor2/canal3.php',
       'https://www.youtube.com/embed/lM8BF1qE_6U',
     ],
     linksSoftCast: [
