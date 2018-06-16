@@ -185,36 +185,43 @@ class Handle extends React.Component {
         let listWallet = MasterWallet.getMasterWallet();
 
         if (listWallet === false) {
-          this.setState({ loadingText: 'Creating your local wallets' });
-          listWallet = createMasterWallets().then(() => {
-            this.setState({ isLoading: false, loadingText: '' });
+          this.setState({ loadingText: 'Creating your local wallets' });          
+          listWallet = createMasterWallets().then(() => {            
+            this.setState({ isLoading: false, loadingText: '' });            
             this.updateRewardAddress();
-            if (!process.env.isProduction) {
-              const wallet = MasterWallet.getWalletDefault('ETH');
-              this.props.getFreeETH({
-                PATH_URL: `/user/free-rinkeby-eth?address=${wallet.address}`,
-                METHOD: 'POST',
-              });
-            }
+            // if (!process.env.isProduction) {
+            //   const wallet = MasterWallet.getWalletDefault('ETH');
+            //   this.props.getFreeETH({
+            //     PATH_URL: `/user/free-rinkeby-eth?address=${wallet.address}`,
+            //     METHOD: 'POST',
+            //   });
+            // }
           });
         } else {
           this.setState({ isLoading: false });
+          this.firebase();
         }
-        this.firebase();
+        
       },
       // end success fn
     });
   }
 
-  updateRewardAddress() {    
+  updateRewardAddress() {        
     let walletReward = MasterWallet.getRewardWalletJson();      
     const params = new URLSearchParams();
           params.append('reward_wallet_addresses', walletReward);
           this.props.authUpdate({
             PATH_URL: 'user/profile',
-            data: params,
+            data: params,            
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             METHOD: 'POST',
+            successFn: (response) => {
+              this.firebase();
+            },
+            errorFn: (e) =>{
+              this.firebase();
+            }
           });
   }
 
