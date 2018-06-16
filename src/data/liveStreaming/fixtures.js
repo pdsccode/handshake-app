@@ -244,7 +244,17 @@ export default [
       "goalsHomeTeam": null,
       "goalsAwayTeam": null
     },
-    "odds": null
+    "odds": null,
+    link: 'https://www.youtube.com/embed/6PfILRNSueE?autoplay=1',
+    linksLive: [
+      'https://www.youtube.com/embed/6PfILRNSueE?autoplay=1',
+      'http://capodeportes.net/reproductor2/canal3.php?width=400&height=300',
+    ],
+    linksSoftCast: [
+      'sop://broker.sopcast.com:3912/253463',
+      'sop://broker.sopcast.com:3912/258006',
+      'sop://broker.sopcast.com:3912/254780',
+    ],
   },
   {
     "_links": {
