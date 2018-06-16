@@ -76,7 +76,8 @@ class RefersDashboard extends React.Component {
     return new Promise((resolve, reject) => {
       let result = false;
       this.props.referredInfo({
-        PATH_URL: '/api/user/referred',
+        PATH_URL: 'user/referred',
+        METHOD: 'GET',
         successFn: (res) => {
           console.log(res);
           if(res && res.data){

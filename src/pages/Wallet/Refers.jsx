@@ -126,7 +126,7 @@ class Refers extends React.Component {
       this.props.rfChange(nameFormStep2, 'twitter_username', refers && refers.step2_value ? refers.step2_value : '');
       this.props.rfChange(nameFormStep3, 'refer_email', refers && refers.step3_value ? refers.step3_value : '');
 
-      if(refers.step1 && refers.step2 && refers.step3 == 2){console.log(profile.username);
+      if(refers.step1 && refers.step2 && refers.step3 == 2){
         let referLink = profile && profile.username ? "https://ninja.org/ref=?" + profile.username : '';
         this.setState({referLink: referLink});
         this.props.rfChange(nameFormStep4, 'refer_link', referLink);
@@ -161,14 +161,13 @@ class Refers extends React.Component {
   }
 
   submitStep2 = async() => {
-    console.log("submitStep2");
     if(this.getTwitter()){
-      this.setState({step2: false});
+      this.setState({step2: true});
       let refers = local.get(APP.REFERS);
       if(!refers)
         refers = {};
 
-      refers.step2 = false;
+      refers.step2 = true;
       refers.step2_value = this.state.step2_value;
       local.save(APP.REFERS, refers);
       this.showSuccess("You followed our Twitter!");
@@ -412,15 +411,16 @@ completeRefers() {
     let result = false;
     this.props.completeProfile({
       PATH_URL: 'user/complete-profile',
+      METHOD: 'POST',
       successFn: (res) => {
-        if(res && res.data){console.log(1);
+        if(res && res.data){
           resolve(true);
         }
-        else{console.log(2);
+        else{
           resolve(false);
         }
       },
-      errorFn: (e) =>{console.log(3);
+      errorFn: (e) =>{
         reject(e);
       }
     });
