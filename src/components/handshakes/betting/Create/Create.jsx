@@ -137,7 +137,10 @@ get foundMatch(){
 get matchNames() {
   const {matches} = this.state;
   //return matches.map((item) => ({ id: item.id, value: `${item.homeTeamName} - ${item.awayTeamName} (${this.getStringDate(item.date)})` }));
-  const mathNamesList = matches.map((item) => ({ id: item.id, value: `Event: ${item.name} (${this.getStringDate(item.date)})`, marketFee: item.market_fee }));
+  const mathNamesList = matches.map((item) => ({ id: item.id, 
+                                                value: `Event: ${item.name} (${this.getStringDate(item.date)})`, 
+                                                marketFee: item.market_fee, 
+                                                date: item.date}));
   return [
     ...mathNamesList,
     {
@@ -194,28 +197,11 @@ get defaultOutcome() {
   // return matchOutcomes && matchOutcomes.length > 0 ? matchOutcomes[0] : null;
 }
 
-isExpiredDate(){
-  const {closingDate} = this.props;
-  //console.log(moment(closingDate).format());
-  const newClosingDate = moment.unix(closingDate).add(90, 'minutes');
-  //let closingDateUnit = moment.unix(closingDate).utc();
-  let dayUnit = newClosingDate.utc();
-  let today = moment();
-  let todayUnit = today.utc();
-  //console.log('Closing Unix:', closingDateUnit.format());
-  console.log('New Date Unix:', dayUnit.format());
-  console.log('Today Unix:', todayUnit.format());
-  if(!todayUnit.isSameOrBefore(dayUnit, "miliseconds") && today){
-    console.log('Expired Date');
-    return true
-  }
-  return false;
-}
 
   async onSubmit(e) {
     e.preventDefault();
     const dict = this.refs;
-    const {address, privateKey, values, selectedMatch, selectedOutcome} = this.state;
+    const {address, privateKey, values, selectedMatch, selectedOutcome, isChangeOdds} = this.state;
     console.log("values", values);
 
     let content = this.content;
@@ -250,7 +236,10 @@ isExpiredDate(){
     //const estimatedGas = 0.00001;
     console.log('Estimate Gas:', estimatedGas);
     const eventBet = parseFloat(values["event_bet"]);
-    const odds = parseFloat(values['event_odds']);
+    let odds = parseFloat(values['event_odds']);
+    if(!isChangeOdds){
+      odds = selectedOutcome.marketOdds;
+    }
     const total = eventBet + parseFloat(estimatedGas);
     console.log("Event Bet, Odds, Estimate, Total:",eventBet,odds,estimatedGas, total);
 
@@ -258,16 +247,18 @@ isExpiredDate(){
     console.log('Match, Outcome:', selectedMatch, selectedOutcome);
 
     var message = null;
-
+    const date = selectedMatch.date;
+    console.log('Date:', date);
     if(!betHandshakeHandler.isRightNetwork()){
       message = MESSAGE.MATCH_OVER;
 
     }
-    /*else if (this.isExpiredDate()){
-      message = MESSAGE.MATCH_OVER;
-    }*/
+    
     if(selectedMatch && selectedOutcome){
-      if(eventBet > 0){
+      if (betHandshakeHandler.isExpiredDate(date)){
+        message = MESSAGE.MATCH_OVER;
+      }
+      else if(eventBet > 0){
         if(total <= balance){
           if(odds > 1){
             this.initHandshake(extraParams, fromAddress);

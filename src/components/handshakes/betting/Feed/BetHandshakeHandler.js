@@ -6,6 +6,7 @@ import { HANDSHAKE_ID, API_URL, APP } from '@/constants';
 import local from '@/services/localStore';
 import { uninitItem, collect, refund, rollback, saveTransaction } from '@/reducers/handshake/action';
 import store from '@/stores';
+import moment from 'moment';
 
 
 /*
@@ -135,6 +136,20 @@ export class BetHandshakeHandler {
       } 
     }else if (process.env.isStaging){
       return true;
+    }
+    return false;
+  }
+  isExpiredDate(closingDate){
+    const newClosingDate = moment.unix(closingDate).add(90, 'minutes');
+    let dayUnit = newClosingDate.utc();
+    let today = moment();
+    let todayUnit = today.utc();
+    //console.log('Closing Unix:', closingDateUnit.format());
+    console.log('New Date Unix:', dayUnit.format());
+    console.log('Today Unix:', todayUnit.format());
+    if(!todayUnit.isSameOrBefore(dayUnit, "miliseconds") && today){
+      console.log('Expired Date');
+      return true
     }
     return false;
   }
