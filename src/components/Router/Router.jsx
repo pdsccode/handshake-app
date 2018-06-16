@@ -1,4 +1,6 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import { Switch, BrowserRouter, Route, Redirect } from 'react-router-dom';
 // constants
 import { URL } from '@/constants';
@@ -8,6 +10,9 @@ import { createDynamicImport } from '@/services/app';
 import Loading from '@/components/core/presentation/Loading';
 import ScrollToTop from '@/components/App/ScrollToTop';
 import Layout from '@/components/Layout/Main';
+
+// import NetworkError from '@/components/Router/NetworkError';
+import Maintain from '@/components/Router/Maintain';
 
 const RouterMe = createDynamicImport(() => import('@/components/Router/Me'), Loading);
 const RouterDiscover = createDynamicImport(() => import('@/components/Router/Discover'), Loading);
@@ -32,6 +37,29 @@ const rootRouterMap = [
 const Page404 = createDynamicImport(() => import('@/pages/Error/Page404'), Loading, true);
 
 class Router extends React.Component {
+  static propTypes = {
+    firebaseApp: PropTypes.object.isRequired,
+  }
+  constructor(props) {
+    super(props);
+
+    const initFirebaseApp = this.props.firebaseApp;
+    if (!initFirebaseApp.config) initFirebaseApp.config = {};
+
+    this.state = {
+      firebaseApp: initFirebaseApp,
+    };
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.firebaseApp.config) {
+      if (nextProps.firebaseApp.config.isMaintain !== prevState.firebaseApp.config.isMaintain) {
+        return { firebaseApp: nextProps.firebaseApp };
+      }
+    }
+    return null;
+  }
+
   routers() {
     return rootRouterMap.map(router => (
       <Route
@@ -43,7 +71,6 @@ class Router extends React.Component {
   }
 
   render() {
-    console.log(this.state);
     return (
       <BrowserRouter>
         <Route
@@ -51,19 +78,25 @@ class Router extends React.Component {
           render={props =>
             (
               <Layout {...props}>
-                <ScrollToTop>
-                  <Switch>
-                    <Route
-                      exact
-                      path={URL.INDEX}
-                      render={() => (
-                        <Redirect to={{ pathname: URL.HANDSHAKE_DISCOVER }} />
-                      )}
-                    />
-                    {this.routers()}
-                    <Route component={Page404} />
-                  </Switch>
-                </ScrollToTop>
+                {
+                  this.state.firebaseApp.config.isMaintain
+                  ? <Maintain />
+                  : (
+                    <ScrollToTop>
+                      <Switch>
+                        <Route
+                          exact
+                          path={URL.INDEX}
+                          render={() => (
+                            <Redirect to={{ pathname: URL.HANDSHAKE_DISCOVER }} />
+                          )}
+                        />
+                        {this.routers()}
+                        <Route component={Page404} />
+                      </Switch>
+                    </ScrollToTop>
+                  )
+                }
               </Layout>
             )
           }
@@ -73,4 +106,4 @@ class Router extends React.Component {
   }
 }
 
-export default Router;
+export default connect(state => ({ firebaseApp: state.firebase.data }))(Router);
