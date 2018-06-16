@@ -13,6 +13,7 @@ const config = {
       exchangeHandshakeAddress: '0xa646028608fb23b61e5128c77b2409d06a295f4d',
       blockchainNetwork: 'https://mainnet.infura.io/',
       apikeyEtherscan: 'AVBIHJUF3G4ZY2CHZI6F4RVBFWC3A3EIVB',
+      shurikenTokenAddress: '0xca0fed76b5807557ce38e65cab83be3373cc2e7d',
     },
     4: {
       multiSigAuthAddress: '',
@@ -29,6 +30,7 @@ const config = {
       cryptosignOwnerPrivateKey: '',
       blockchainNetwork: 'https://rinkeby.infura.io/LLJy74SjotuIMxZJMUvf',
       apikeyEtherscan: 'AVBIHJUF3G4ZY2CHZI6F4RVBFWC3A3EIVB',
+      shurikenTokenAddress: '0xc2f227834af7b44a11a9286f1771cade7ecd316c',
     },
   },
 
