@@ -128,8 +128,7 @@ class Handle extends React.Component {
     if (token) {
       this.authSuccess();
     } else {      
-      let refs = localStorage.getItem('ref');
-      alert("refs"+refs);
+      let refs = localStorage.getItem('ref');      
       this.props.signUp({
         PATH_URL: `user/sign-up${refs ? `?ref=${refs}` : ''}`,
         METHOD: 'POST',
