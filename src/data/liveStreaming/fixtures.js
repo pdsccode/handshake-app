@@ -205,7 +205,17 @@ export default [
       "goalsHomeTeam": null,
       "goalsAwayTeam": null
     },
-    "odds": null
+    "odds": null,
+    link: 'https://www.youtube.com/embed/lM8BF1qE_6U',
+    linksLive: [
+      'https://www.youtube.com/embed/lM8BF1qE_6U',
+    ],
+    linksSoftCast: [
+      'sop://broker.sopcast.com:3912/258008',
+      'sop://broker.sopcast.com:3912/253463',
+      'sop://broker.sopcast.com:3912/259900',
+      'sop://broker.sopcast.com:3912/258008',
+    ],
   },
   {
     "_links": {

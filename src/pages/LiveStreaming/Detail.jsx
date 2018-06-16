@@ -57,7 +57,7 @@ class Detail extends React.PureComponent {
     const match = this.match;
     const { activeLink } = this.state;
     const hasList = (list) => Array.isArray(list) && list.length > 0;
-    const now = moment();
+    const now = moment().add(10, 'm');
     const matchTime = moment(match.date);
     const isHideDefaultLink = now.isSameOrAfter(matchTime, 'milliseconds') && !!activeLink;
     console.log("isHideDefau", isHideDefaultLink, match.linksSoftCast);
