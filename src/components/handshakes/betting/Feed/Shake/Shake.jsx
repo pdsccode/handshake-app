@@ -102,12 +102,12 @@ class BetingShake extends React.Component {
     const marketOdds = side === SIDE.SUPPORT ? marketSupportOdds : marketAgainstOdds;
     const marketAmount = side === SIDE.SUPPORT ? amountSupport : amountAgainst;
     const winValue = marketAmount * marketOdds;
-    const roundMarketAmount = Math.floor(marketAmount*ROUND)/ROUND;
+    const roundMarketAmount = Math.round(marketAmount*ROUND)/ROUND;
     console.log('componentWillReceiveProps: marketOdds, marketAmount, winValue, roundMarketAmount:', marketOdds, marketAmount, winValue, roundMarketAmount);
     this.setState({
-      oddValue: Math.floor(marketOdds*100)/100,
+      oddValue: Math.round(marketOdds*100)/100,
       amountValue: roundMarketAmount,
-      winValue: Math.floor(winValue*ROUND)/ROUND
+      winValue: Math.round(winValue*ROUND)/ROUND
     })
   }
 
@@ -229,7 +229,7 @@ class BetingShake extends React.Component {
     const {oddValue, amountValue} = this.state;
     const total = oddValue * amountValue;
       this.setState({
-        winValue: Math.floor(total*ROUND)/ROUND,
+        winValue: Math.round(total*ROUND)/ROUND,
       })
   }
 

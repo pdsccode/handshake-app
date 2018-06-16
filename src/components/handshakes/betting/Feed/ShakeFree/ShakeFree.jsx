@@ -96,10 +96,10 @@ class BetingShakeFree extends React.Component {
     //console.log('Shake nextProps: ',nextProps );
     const marketOdds = this.toggleRef.value === SIDE.SUPPORT ? marketSupportOdds : marketAgainstOdds;
     const winValue = amount * marketOdds;
-    const roundWinValue = Math.floor(winValue*ROUND)/ROUND;
+    const roundWinValue = Math.round(winValue*ROUND)/ROUND;
     console.log('Next props: amount, marketOdds, winValue, roundWinValue: ', amount, marketOdds, winValue, roundWinValue);
     this.setState({
-      oddValue: Math.floor(marketOdds*100)/100,
+      oddValue: Math.round(marketOdds*100)/100,
       amountValue: amount,
       winValue: roundWinValue
     })
@@ -185,7 +185,7 @@ class BetingShakeFree extends React.Component {
     */
 
    this.setState({
-    oddValue: Math.floor(marketOdds*100)/100
+    oddValue: Math.round(marketOdds*100)/100
   }, ()=> this.updateTotal());
 
 
@@ -197,7 +197,7 @@ class BetingShakeFree extends React.Component {
     const {oddValue, amountValue} = this.state;
     const total = oddValue * amountValue;
       this.setState({
-        winValue: Math.floor(total*ROUND)/ROUND,
+        winValue: Math.round(total*ROUND)/ROUND,
       })
   }
 

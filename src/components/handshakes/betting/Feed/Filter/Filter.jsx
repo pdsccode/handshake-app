@@ -62,16 +62,24 @@ class BettingFilter extends React.Component {
 
   componentDidMount() {
       /* Test */
+      /*
     let value = 1.389999999;
-    console.log(`Value, ceil:`, value, Math.ceil(value, 2));
-    console.log(`Value, floor:`, value, Math.floor(value, 2));
+    const roundValue = 100;
+    console.log(`Value, ceil:`, value, Math.ceil(value * roundValue)/roundValue);
+    console.log(`Value, floor:`, value, Math.floor(value * roundValue)/roundValue);
+    console.log(`Value, round:`, value, Math.round(value * roundValue)/roundValue);
 
     value = 1.33333333333;
-    console.log(`Value, ceil:`, value, Math.ceil(value, 2));
-    console.log(`Value, floor:`, value, Math.floor(value, 2));
+    console.log(`Value, ceil:`, value, Math.ceil(value * roundValue)/roundValue);
+    console.log(`Value, floor:`, value, Math.floor(value * roundValue)/ roundValue);
+    console.log(`Value, round:`, value, Math.round(value * roundValue)/ roundValue);
 
+    value = 1.667777777;
+    console.log(`Value, ceil:`, value, Math.ceil(value * roundValue)/roundValue);
+    console.log(`Value, floor:`, value, Math.floor(value * roundValue)/ roundValue);
+    console.log(`Value, round:`, value, Math.round(value * roundValue)/ roundValue);
 
-
+    */
 
     this.props.loadMatches({
       PATH_URL: API_URL.CRYPTOSIGN.LOAD_MATCHES,
@@ -522,7 +530,7 @@ class BettingFilter extends React.Component {
               {/* <GroupBook amountColor="#FA6B49" bookList={this.bookListAgainst}/> */}
               <div className="marketBox">
                 <div>Market</div>
-                <div>{Math.floor(this.defaultSupportOdds * 100) / 100}</div>
+                <div>{Math.round(this.defaultSupportOdds * 100) / 100}</div>
               </div>
               <Button
                 className="buttonSupport"
@@ -553,7 +561,7 @@ class BettingFilter extends React.Component {
               {<GroupBook amountColor="#FA6B49" bookList={this.bookListAgainst} />}
               <div className="titleBox">
                 <div>Market</div>
-                <div>{Math.floor(this.defaultAgainstOdds * 100) / 100}</div>
+                <div>{Math.round(this.defaultAgainstOdds * 100) / 100}</div>
               </div>
               <Button
                 className="buttonAgainst"
