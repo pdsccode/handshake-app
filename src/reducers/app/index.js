@@ -12,10 +12,12 @@ const close = {
   overlay: false,
 };
 
-local.save(APP.VERSION, '0.0.1');
+local.save(APP.VERSION, '0.0.2');
 
 function appReducter(state = {
   version: local.get(APP.VERSION),
+
+  locale: local.get(APP.LOCALE) || 'en',
 
   isCalling: false,
   isLoading: false,
@@ -45,6 +47,12 @@ function appReducter(state = {
 
   ipInfo: local.get(APP.IP_INFO),
 
+  isBannedCash: false,
+  isBannedPrediction: false,
+  isBannedChecked: false,
+
+  isNerworkError: false,
+
 }, action) {
   switch (action.type) {
     case APP_ACTION.HEADER_TITLE_SET:
@@ -68,10 +76,7 @@ function appReducter(state = {
     case APP_ACTION.NETWORK_ERROR:
       return {
         ...state,
-        overlay: true,
-        isAlert: true,
-        isError: true,
-        isAlertContent: null,
+        isNerworkError: true,
       };
 
 
@@ -192,10 +197,42 @@ function appReducter(state = {
         ...state,
         configAlert: { ...action.payload },
       };
+
     case APP_ACTION.IP_INFO: {
       return {
         ...state,
         ipInfo: action.payload,
+      };
+    }
+
+    case APP_ACTION.CHANGE_LOCALE: {
+      if (!action.autoDetect) {
+        local.save(APP.LOCALE, action.payload);
+      }
+      return {
+        ...state,
+        locale: action.payload,
+      };
+    }
+
+    case APP_ACTION.BAN_CASH: {
+      return {
+        ...state,
+        isBannedCash: true,
+      };
+    }
+
+    case APP_ACTION.BAN_PREDICTION: {
+      return {
+        ...state,
+        isBannedPrediction: true,
+      };
+    }
+
+    case APP_ACTION.BAN_CHECKED: {
+      return {
+        ...state,
+        isBannedChecked: true,
       };
     }
 

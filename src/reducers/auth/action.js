@@ -4,6 +4,7 @@ export const ACTIONS = {
   AUTH_SIGNUP: 'AUTH_SIGNUP',
   AUTH_FETCH: 'AUTH_FETCH',
   AUTH_UPDATE: 'AUTH_UPDATE',
+  SET_OFFLINE_STATUS: 'SET_OFFLINE_STATUS',
   GET_VERIFY_PHONE_CODE: 'GET_VERIFY_PHONE_CODE',
   VERIFY_PHONE: 'VERIFY_PHONE',
   SUBMIT_PHONE: 'SUBMIT_PHONE',
@@ -19,6 +20,7 @@ export const ACTIONS = {
 export const fetchProfile = createAPI(ACTIONS.AUTH_FETCH);
 export const signUp = createAPI(ACTIONS.AUTH_SIGNUP);
 export const authUpdate = createAPI(ACTIONS.AUTH_UPDATE);
+export const setOfflineStatus = createAPI(ACTIONS.SET_OFFLINE_STATUS);
 // profile
 export const getVerifyPhoneCode = createAPI(ACTIONS.GET_VERIFY_PHONE_CODE);
 export const verifyPhone = createAPI(ACTIONS.VERIFY_PHONE);

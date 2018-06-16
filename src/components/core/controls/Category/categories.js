@@ -7,7 +7,7 @@ import { HANDSHAKE_ID, HANDSHAKE_NAME } from '@/constants';
 
 const CATEGORIES = [{
   id: HANDSHAKE_ID.BETTING,
-  name: HANDSHAKE_NAME[HANDSHAKE_ID.BETTING] ? HANDSHAKE_NAME[HANDSHAKE_ID.BETTING].name : '',
+  name: 'Prediction',
   image: chipSVG,
   priority: 0,
 },
@@ -19,10 +19,16 @@ const CATEGORIES = [{
 // },
 {
   id: HANDSHAKE_ID.EXCHANGE,
-  name: HANDSHAKE_NAME[HANDSHAKE_ID.EXCHANGE] ? HANDSHAKE_NAME[HANDSHAKE_ID.EXCHANGE].name : '',
+  name: 'Cash',
   image: exchangeSVG,
   priority: 2,
 },
+// {
+//   id: HANDSHAKE_ID.EXCHANGE_LOCAL,
+//   name: 'Swap',
+//   image: exchangeSVG,
+//   priority: 3,
+// },
 // {
 //   id: 99, // temp
 //   name: 'Bazaar',

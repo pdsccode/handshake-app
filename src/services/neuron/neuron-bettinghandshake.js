@@ -2,11 +2,7 @@ import Web3 from 'web3';
 import BaseHandshake from './BaseHandshake';
 import { MasterWallet } from '@/models/MasterWallet';
 
-const wallet = MasterWallet.getWalletDefault('ETH');
-const address = wallet.address;
-const privateKey = wallet.privateKey;
-console.log('Address, PrivateKey:', address, privateKey);
-const gasPrice = wallet.chainId === 4 ? 100 : 20;
+
 const TAG = 'BettingHandshake';
 export default class BettingHandshake extends BaseHandshake {
   constructor(chainId) {
@@ -21,7 +17,21 @@ export default class BettingHandshake extends BaseHandshake {
     // return process.env.isProduction ? 'PredictionHandshake' : 'PredictionHandshakeDev';
     return process.env.PredictionHandshakeFileName;
   }
+  get address(){
+    const wallet = MasterWallet.getWalletDefault('ETH');
+    return wallet.address;
+  }
+  get privateKey(){
+    const wallet = MasterWallet.getWalletDefault('ETH');
+    return wallet.privateKey;
+  }
+  get gasPrice(){
+    const wallet = MasterWallet.getWalletDefault('ETH');
+    return wallet.chainId === 4 ? 100 : 20;
+
+  }
   async getEstimateGas(hid=0, side=1, odds=3) {
+
     const oddsValue = odds * 100;
     //const payoutValue = Web3.utils.toWei(payout, 'ether');
     const bytesOffchain = this.web3.utils.asciiToHex('cryptosign_m562');
@@ -31,8 +41,8 @@ export default class BettingHandshake extends BaseHandshake {
       .encodeABI();
     const estimateGas = await this.neuron.caculateEstimatGasWithEthUnit(
       payloadData,
-      address,
-      gasPrice,
+      this.address,
+      this.gasPrice,
     );
     return estimateGas;
   }
@@ -40,8 +50,8 @@ export default class BettingHandshake extends BaseHandshake {
     console.log(
       TAG,
       ' initBet = Address, private Key, hid, side, stake, odds, offchain',
-      address,
-      privateKey,
+      this.address,
+      this.privateKey,
       hid,
       side,
       stake,
@@ -58,12 +68,12 @@ export default class BettingHandshake extends BaseHandshake {
     console.log('Payload Data:', payloadData);
 
     const dataBlockChain = await this.neuron.sendRawTransaction(
-      address,
-      privateKey,
+      this.address,
+      this.privateKey,
       payloadData,
       {
         amount: stake,
-        gasPrice,
+        gasPrice: this.gasPrice,
         toAddress: this.contractAddress,
       },
     );
@@ -74,6 +84,8 @@ export default class BettingHandshake extends BaseHandshake {
   shake = async (hid, side, stake, takerOdds, maker, makerOdds, offchain) => {
     console.log(
       TAG,
+      'side: ',
+      side,
       ' shake stake : ',
       stake,
       ' takerOdds : ',
@@ -91,13 +103,15 @@ export default class BettingHandshake extends BaseHandshake {
     const bytesOffchain = this.web3.utils.asciiToHex(offchain);
     const oddsTakerValue = takerOdds * 100;
     const oddsMakerValue = makerOdds * 100;
+    console.log('Sa debug OddsTaker OddsMaker:', oddsTakerValue, oddsMakerValue)
+
     const payloadData = this.handshakeInstance.methods
       .shake(hid, side, oddsTakerValue, maker, oddsMakerValue, bytesOffchain)
       .encodeABI();
 
     const dataBlockChain = await this.neuron.sendRawTransaction(
-      address,
-      privateKey,
+      this.address,
+      this.privateKey,
       payloadData,
       {
         amount: stake,
@@ -112,8 +126,8 @@ export default class BettingHandshake extends BaseHandshake {
   cancelBet = async (hid, side, stake, odds, offchain) => {
     console.log(
       'cancelBet address, privateKey, hid, side, stake, odds, offchain',
-      address,
-      privateKey,
+      this.address,
+      this.privateKey,
       hid,
       side,
       stake,
@@ -129,8 +143,8 @@ export default class BettingHandshake extends BaseHandshake {
       .uninit(hid, side, stakeValue, oddsValue, bytesOffchain)
       .encodeABI();
     const dataBlockChain = await this.neuron.makeRawTransaction(
-      address,
-      privateKey,
+      this.address,
+      this.privateKey,
       payloadData,
       {
         // amount: stake,
@@ -145,8 +159,8 @@ export default class BettingHandshake extends BaseHandshake {
   refund = async (hid, offchain) => {
     console.log(
       'refund address, privateKey, hid, offchain',
-      address,
-      privateKey,
+      this.address,
+      this.privateKey,
       hid,
       offchain,
     );
@@ -156,8 +170,8 @@ export default class BettingHandshake extends BaseHandshake {
       .refund(hid, bytesOffchain)
       .encodeABI();
     const dataBlockChain = await this.neuron.sendRawTransaction(
-      address,
-      privateKey,
+      this.address,
+      this.privateKey,
       payloadData,
       {
         // amount: stake,
@@ -171,8 +185,8 @@ export default class BettingHandshake extends BaseHandshake {
   withdraw = async (hid, offchain) => {
     console.log(
       'withdraw address, privateKey, hid, offchain',
-      address,
-      privateKey,
+      this.address,
+      this.privateKey,
       hid,
       offchain,
     );
@@ -182,8 +196,8 @@ export default class BettingHandshake extends BaseHandshake {
       .collect(hid, bytesOffchain)
       .encodeABI();
     const dataBlockChain = await this.neuron.sendRawTransaction(
-      address,
-      privateKey,
+      this.address,
+      this.privateKey,
       payloadData,
       {
         // amount,

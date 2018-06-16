@@ -2,28 +2,38 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 // components
-import App from '@/components/App/App';
-import * as OfflinePlugin from 'offline-plugin/runtime';
+import Website from '@/components/App/Basic';
 // import registerServiceWorker from '@/services/worker';
+import * as OfflinePlugin from 'offline-plugin/runtime';
 
-OfflinePlugin.install({
-  onUpdateReady() {
-    OfflinePlugin.applyUpdate();
-  },
-  onUpdated() {
-    window.location.reload();
-  },
-});
 // registerServiceWorker();
 
-// clear cache mode on:
-if (process.env.TURN_OFF_CACHE && window.caches) {
-  window.caches
-    .keys()
-    .then(keyList => Promise.all(keyList.map(key => window.caches.delete(key))));
+if (process.env.caches) {
+  OfflinePlugin.install({
+    onUpdateReady() {
+      OfflinePlugin.applyUpdate();
+    },
+    onUpdated() {
+      window.location.reload();
+    },
+  });
+} else {
+  if (window.caches) {
+    window.caches
+      .keys()
+      .then(keyList => Promise.all(keyList.map(key => window.caches.delete(key))));
+  }
+  if (navigator.serviceWorker) {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      registrations.forEach((sw) => {
+        if (/\/sw.js$/.test(sw.active.scriptURL)) {
+          sw.unregister();
+        }
+      });
+    });
+  }
 }
 
-// require('@/testing/web3_test');
-// require('@/testing/web3_handshake');
-
-ReactDOM.render(<App />, document.getElementById('app'));
+ReactDOM.render(<Website />, document.getElementById('app'));
+const root = document.getElementById('root');
+if (root) root.addEventListener('contextmenu', e => e.preventDefault());

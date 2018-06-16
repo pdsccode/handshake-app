@@ -27,7 +27,7 @@ class ChatRouter extends React.Component {
   constructor(props) {
     super(props);
 
-    this.props.setHeaderTitle('Chat');
+    this.props.setHeaderTitle('Whisper');
     this.props.clearHeaderRight();
     this.props.clearHeaderLeft();
     this.props.showHeader();

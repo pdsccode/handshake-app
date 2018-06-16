@@ -5,6 +5,7 @@ import Button from "@/components/core/controls/Button";
 import './styles.scss'
 import createForm from "@/components/core/form/createForm";
 import {getOfferPrice} from "@/services/offer-util";
+import axios from 'axios';
 
 import {
   fieldCleave,
@@ -53,26 +54,29 @@ import OfferShop from "@/models/OfferShop";
 import CoinOffer from "@/models/CoinOffer";
 import { addOfferItem, } from "@/reducers/exchange/action";
 import {getOfferStores} from "@/reducers/exchange/action";
+import { getErrorMessageFromCode } from "../utils";
 
 const nameFormExchangeCreate = "exchangeCreate";
 const FormExchangeCreate = createForm({
   propsReduxForm: {
     form: nameFormExchangeCreate,
-    // initialValues: {
-    //   currency: CRYPTO_CURRENCY_DEFAULT,
-    //   customizePriceBuy: 0,
-    //   customizePriceSell: 0,
-    // }
     initialValues: {
       currency: CRYPTO_CURRENCY_DEFAULT,
-      customizePriceBuy: 0.25,
-      customizePriceSell: -0.25,
-      amountBuy: 0.1,
-      amountSell: 0.2,
-      nameShop: 'Apple store',
-      phone: '1234567',
-      address: '139 Hong Ha',
+      customizePriceBuy: 0,
+      customizePriceSell: 0,
+      customizePriceBuy: -0.25,
+      customizePriceSell: 0.25,
     }
+    // initialValues: {
+    //   currency: CRYPTO_CURRENCY_DEFAULT,
+    //   customizePriceBuy: 0.25,
+    //   customizePriceSell: -0.25,
+    //   amountBuy: 0.1,
+    //   amountSell: 0.2,
+    //   nameShop: 'Apple store',
+    //   phone: '1234567',
+    //   address: '139 Hong Ha',
+    // }
   }
 });
 const selectorFormExchangeCreate = formValueSelector(nameFormExchangeCreate);
@@ -106,10 +110,10 @@ class Component extends React.Component {
   setAddressFromLatLng = (lat, lng) => {
     this.setState({lat: lat, lng: lng});
     const { rfChange } = this.props;
-    /*axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&sensor=true`).then((response) => {
+    axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&sensor=true`).then((response) => {
       const address = response.data.results[0] && response.data.results[0].formatted_address;
       rfChange(nameFormExchangeCreate, 'address', address);
-    });*/
+    });
   }
 
   componentDidMount() {
@@ -122,10 +126,10 @@ class Component extends React.Component {
     });
 
     // auto fill phone number from user profile
-    let detectedCountryCode = ''
-    const foundCountryPhone = COUNTRIES.find(i => i.code.toUpperCase() === ipInfo?.country_code.toUpperCase())
+    let detectedCountryCode = '';
+    const foundCountryPhone = COUNTRIES.find(i => i.code.toUpperCase() === ipInfo?.country.toUpperCase());
     if (foundCountryPhone) {
-      detectedCountryCode = foundCountryPhone.dialCode
+      detectedCountryCode = foundCountryPhone.dialCode;
     }
     rfChange(nameFormExchangeCreate, 'phone', authProfile.phone || `${detectedCountryCode}-`);
     rfChange(nameFormExchangeCreate, 'nameShop', authProfile.name || '');
@@ -144,8 +148,8 @@ class Component extends React.Component {
       console.log('componentWillReceiveProps inside', nextProps.offerStores);
       this.offer = nextProps.offerStores;
 
-      let haveOfferETH = this.offer.itemFlags.ETH;
-      let haveOfferBTC = this.offer.itemFlags.BTC;
+      let haveOfferETH = this.offer.itemFlags.ETH || false;
+      let haveOfferBTC = this.offer.itemFlags.BTC || false;
 
       this.CRYPTO_CURRENCY_LIST = [
         { value: CRYPTO_CURRENCY.ETH, text: CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.ETH], hide: haveOfferETH },
@@ -193,6 +197,18 @@ class Component extends React.Component {
     this.props.hideLoading();
   }
 
+  showAlert = (message) => {
+    this.props.showAlert({
+      message: <div className="text-center">
+        {message}
+      </div>,
+      timeOut: 5000,
+      type: 'danger',
+      callBack: () => {
+      }
+    });
+  }
+
   onCurrencyChange = (e, newValue) => {
     console.log('onCurrencyChange', newValue);
     // const currency = e.target.textContent || e.target.innerText;
@@ -233,6 +249,23 @@ class Component extends React.Component {
     return conditionBuy || conditionSell;
   }
 
+  checkMainNetDefaultWallet = (wallet) => {
+    const { intl } = this.props;
+    let result = true;
+
+    if (process.env.isProduction) {
+      if (wallet.network === MasterWallet.ListCoin[wallet.className].Network.Mainnet) {
+        result = true;
+      } else {
+        const message = intl.formatMessage({id: 'requireDefaultWalletOnMainNet'}, {});
+        this.showAlert(message);
+        result = false;
+      }
+    }
+
+    return result;
+  }
+
   handleSubmit = async (values) => {
     const { intl, authProfile, ipInfo } = this.props;
     const { lat, lng } = this.state;
@@ -243,6 +276,11 @@ class Component extends React.Component {
     } = values;
 
     const wallet = MasterWallet.getWalletDefault(currency);
+
+    if (!this.checkMainNetDefaultWallet(wallet)) {
+      return;
+    }
+
     const balance = await wallet.getBalance();
     const fee = await wallet.getFee(4, true);
 
@@ -275,6 +313,7 @@ class Component extends React.Component {
       latitude: lat,
       longitude: lng,
       fiat_currency: ipInfo.currency,
+      chat_username: authProfile?.username,
     };
 
     const offerStore = {
@@ -358,12 +397,12 @@ class Component extends React.Component {
     const offer = OfferShop.offerShop(data);
     this.offer = offer;
 
-    console.log('handleCreateOfferSuccess', data);
+    // console.log('handleCreateOfferSuccess', data);
 
     const wallet = MasterWallet.getWalletDefault(currency);
     // const rewardWallet = MasterWallet.getRewardWalletDefault(currency);
 
-    console.log('wallet', wallet);
+    // console.log('wallet', wallet);
     // console.log('rewardWallet', rewardWallet);
 
     if (currency === CRYPTO_CURRENCY.BTC) {
@@ -422,7 +461,7 @@ class Component extends React.Component {
     console.log('handleCreateOfferFailed', e);
     this.hideLoading();
     this.props.showAlert({
-      message: <div className="text-center">{e.response?.data?.message}</div>,
+      message: <div className="text-center">{getErrorMessageFromCode(e)}</div>,
       timeOut: 3000,
       type: 'danger',
     });
@@ -466,6 +505,9 @@ class Component extends React.Component {
     const estimatedPriceBuy = formatMoney(price * (1 + parseFloat(customizePriceBuy, 10)/100))
     const estimatedPriceSell = formatMoney(price * (1 + parseFloat(customizePriceSell, 10)/100))
 
+    const wantToBuy = amountBuy && amountBuy > 0
+    const wantToSell = amountSell && amountSell > 0
+
     return (
       <div className="create-exchange">
         <FormExchangeCreate onSubmit={this.handleSubmit} validate={this.handleValidate}>
@@ -485,7 +527,7 @@ class Component extends React.Component {
           <div className="label">Exchange rate</div>
           <Feed className="feed mt-2 wrapper" background={this.mainColor}>
             <div className="d-flex">
-              <label className="col-form-label mr-auto label-create"><span className="align-middle">Amount to buy</span></label>
+              <label className="col-form-label mr-auto label-create"><span className="align-middle">Inventory for purchase</span></label>
               <div className='input-group'>
                 <Field
                   name="amountBuy"
@@ -501,7 +543,7 @@ class Component extends React.Component {
             <hr className="hrLine"/>
 
             <div className="d-flex">
-              <label className="col-form-label mr-auto label-create"><span className="align-middle">Amount to sell</span></label>
+              <label className="col-form-label mr-auto label-create"><span className="align-middle">Inventory for sale</span></label>
               <div className='input-group'>
                 <Field
                   name="amountSell"
@@ -517,7 +559,7 @@ class Component extends React.Component {
             <hr className="hrLine"/>
 
             <div className="d-flex">
-              <label className="col-form-label mr-auto label-create"><span className="align-middle">Current price</span></label>
+              <label className="col-form-label mr-auto label-create"><span className="align-middle">Market price</span></label>
               <div className='input-group'>
                 <div><span className="form-text">{priceDisplayed} {fiatCurrency}</span></div>
               </div>
@@ -526,7 +568,7 @@ class Component extends React.Component {
             <hr className="hrLine"/>
 
             <div className="d-flex py-1">
-              <label className="col-form-label mr-auto label-create"><span className="align-middle">Your buying fee</span></label>
+              <label className="col-form-label mr-auto label-create"><span className="align-middle">Your buying price</span></label>
               <div className='input-group align-items-center'>
                 <Field
                   name="customizePriceBuy"
@@ -543,7 +585,7 @@ class Component extends React.Component {
             <hr className="hrLine"/>
 
             <div className="d-flex py-1">
-              <label className="col-form-label mr-auto label-create"><span className="align-middle">Your selling fee</span></label>
+              <label className="col-form-label mr-auto label-create"><span className="align-middle">Your selling price</span></label>
               <div className='input-group align-items-center'>
                 <Field
                   name="customizePriceSell"
@@ -557,18 +599,24 @@ class Component extends React.Component {
               </div>
             </div>
 
-            <div className="tooltip-price mt-2">
-              Your buying price {estimatedPriceBuy} {fiatCurrency}, your selling price {estimatedPriceSell} {fiatCurrency}. {(amountBuy && amountSell) ? 'These' : 'This'} may fluctuate according to the price of {currency}
-            </div>
+            {
+              (wantToBuy || wantToSell) && (
+                <div className="tooltip-price mt-2">
+                  { wantToBuy && <span>Your buying price {estimatedPriceBuy} {fiatCurrency}. </span> }
+                  { wantToSell && <span>Your selling price {estimatedPriceSell} {fiatCurrency}. </span> }
+                  { (wantToBuy && wantToSell) ? 'These' : 'This'} may fluctuate according to the price of {currency}
+                </div>
+              )
+            }
           </Feed>
 
           {
             !haveProfile && (
               <div>
-                <div className="label">Shop information</div>
+                <div className="label">Station information</div>
                 <Feed className="feed my-2 wrapper" background={this.mainColor}>
                   <div className="d-flex">
-                    <label className="col-form-label mr-auto label-create"><span className="align-middle">Name shop*</span></label>
+                    <label className="col-form-label mr-auto label-create"><span className="align-middle">Station name</span></label>
                     <div className='input-group'>
                       <Field
                         name="nameShop"
@@ -576,7 +624,7 @@ class Component extends React.Component {
                         component={fieldInput}
                         placeholder={'Apple store'}
                         // onChange={this.onAmountChange}
-                        validate={[required]}
+                        // validate={[required]}
                       />
                     </div>
                   </div>
@@ -599,7 +647,7 @@ class Component extends React.Component {
                   <hr className="hrLine"/>
 
                   <div className="d-flex mt-2">
-                    <label className="col-form-label mr-auto label-create"><span className="align-middle">Address*</span></label>
+                    <label className="col-form-label mr-auto label-create"><span className="align-middle">Address</span></label>
                     <div className="w-100">
                       <Field
                         name="address"

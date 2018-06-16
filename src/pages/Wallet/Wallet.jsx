@@ -223,6 +223,7 @@ class Wallet extends React.Component {
   }
 
   async componentDidMount() {
+
     this.attachScrollListener();
     let listWallet = await MasterWallet.getMasterWallet();
 
@@ -290,23 +291,26 @@ class Wallet extends React.Component {
   // create list menu of wallet item when click Show more ...
   creatSheetMenuItem(wallet){
     let obj = [];
-      obj.push({
-        title: 'Transfer coins',
-        handler: () => {
 
-          wallet.getBalance().then(result=>{
-            wallet.balance = result;
-            this.setState({walletSelected: wallet});
-          });
+      if (wallet.name != "SHURI"){
+        obj.push({
+          title: 'Transfer coins',
+          handler: () => {
 
-          // clear form:
-          this.props.clearFields(nameFormSendWallet, false, false, "to_address", "amount");
-          this.setState({isRestoreLoading: false, walletSelected: wallet, inputAddressAmountValue: '', inputSendAmountValue: ''}, () => {});
-          this.toggleBottomSheet();
-          this.modalSendRef.open();
+            wallet.getBalance().then(result=>{
+              wallet.balance = result;
+              this.setState({walletSelected: wallet});
+            });
 
-        }
-      })
+            // clear form:
+            this.props.clearFields(nameFormSendWallet, false, false, "to_address", "amount");
+            this.setState({isRestoreLoading: false, walletSelected: wallet, inputAddressAmountValue: '', inputSendAmountValue: ''}, () => {});
+            this.toggleBottomSheet();
+            this.modalSendRef.open();
+
+          }
+        })
+      }
       obj.push({
         title: 'Receive coins',
         handler: () => {
@@ -315,7 +319,7 @@ class Wallet extends React.Component {
           this.modalShareAddressRef.open();
         }
       })
-    // not allow for testnet:
+    // now hide buy coin:    
     // if (wallet.network === MasterWallet.ListCoin[wallet.className].Network.Mainnet){
     //   obj.push({
     //     title: 'Buy coins',
@@ -367,7 +371,7 @@ class Wallet extends React.Component {
       },
     });
 
-    if (!wallet.isReward) {
+    if (!wallet.isReward && wallet.name != "SHURI") {
         obj.push({
           title: StringHelper.format('Set as default {0} wallet ', wallet.name) + (wallet.default ? "✓ " : ""),
           handler: () => {
@@ -994,14 +998,17 @@ class Wallet extends React.Component {
           <Row className="list">
             {this.listMainWalletBalance}
           </Row>
-
+          {!process.env.isProduction ? 
           <Row className="list">
             <Header title="Testnet wallets" hasLink linkTitle="Request free ETH" onLinkClick={this.getETHFree} />
           </Row>
+          : ''}
+          {!process.env.isProduction ? 
           <Row className="list">
             {this.listTestWalletBalance}
           </Row>
-
+          : ''}
+          
           <Row className="list">
             <Header title="Reward wallets" hasLink={false} />
           </Row>

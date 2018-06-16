@@ -12,7 +12,7 @@ const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const PwaManifestPlugin = require('webpack-pwa-manifest');
-const OfflinePlugin = require('offline-plugin');
+// const OfflinePlugin = require('offline-plugin');
 
 // configs
 const envConfig = require('./.env.js');
@@ -106,11 +106,11 @@ module.exports = function webpackConfig(env, argv) {
         filename: 'css/[name].css',
         chunkFilename: 'css/[hash].[name].css',
       }),
-      new OfflinePlugin({
-        appShell: '/',
-        responseStrategy: 'network-first',
-        autoUpdate: true,
-      }),
+      // new OfflinePlugin({
+      //   appShell: '/',
+      //   responseStrategy: 'network-first',
+      //   autoUpdate: true,
+      // }),
     ],
     performance: { hints: false },
   };

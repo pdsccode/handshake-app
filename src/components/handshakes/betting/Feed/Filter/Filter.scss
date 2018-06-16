@@ -37,7 +37,7 @@
 
   .item {
     width: 49.8%;
-    height: rem-calc(280px);
+    min-height: rem-calc(280px);
     border: none;
   }
 
@@ -66,13 +66,46 @@
     color: #FA6B49;
 
   }
+  .freeBox {
+    display: flex;
+    color: $white;
+    background: url("../../../../../assets/images/icon/betting/free-box.svg");
+    font-size: rem-calc(18px);
+    align-items: center;
+    justify-content: space-between;
+    .buttonBet {
+      margin: rem-calc(10px 10px) !important;
+      background: #FF001F !important;
+      box-shadow: 0 2px 6px 0 rgba(0,0,0,0.50) !important;
+      border-radius: rem-calc(6px) !important;
+      font-size: rem-calc(14px) !important;
+      color: #FFFFFF !important;
+      letter-spacing: 0.29px !important;
+      border: none !important;
+      padding: 10px 13px;
+    }
+    .contentFree {
+      justify-content: center;
+      text-align: center;
+      font-weight: $normal;
+      padding: rem-calc(10px 10px 10px 30px);
+      font-size: rem-calc(16px);
+      color: #FFFFFF;
+      letter-spacing: 0.32px;
+      text-shadow: 0 1px 5px rgba(0,0,0,0.50);
+      span {
+        font-weight: $bold;
+        text-transform: uppercase;
+      }
+    }
+  }
   .spreadBox {
     border-top: 1px solid #808080;
     border-bottom: 1px solid #808080;
     align-items: center;
   }
   .disable {
-    color: #fa6b49 !important;
+    color: $disable-color !important;
   }
   & > .modal {
     background-color: #1F2B34;

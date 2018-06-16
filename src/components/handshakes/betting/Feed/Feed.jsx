@@ -9,8 +9,7 @@ import {MasterWallet} from '@/models/MasterWallet';
 
 import local from '@/services/localStore';
 import {FIREBASE_PATH, HANDSHAKE_ID, API_URL, APP} from '@/constants';
-import { BettingHandshake } from '@/services/neuron';
-import { uninitItem, collect, refund, rollback } from '@/reducers/handshake/action';
+import { uninitItem, collect, refund } from '@/reducers/handshake/action';
 import { loadMyHandshakeList} from '@/reducers/me/action';
 
 
@@ -20,6 +19,8 @@ import Button from '@/components/core/controls/Button';
 import ModalDialog from '@/components/core/controls/ModalDialog';
 import Feed from '@/components/core/presentation/Feed';
 import BettingShake from './Shake';
+import {showAlert} from '@/reducers/app/action';
+
 
 // css, icons
 import './Feed.scss';
@@ -30,11 +31,8 @@ import Shake from '@/components/core/controls/Button';
 
 import GroupBook from './GroupBook';
 
-const wallet = MasterWallet.getWalletDefault('ETH');
-const chainId = wallet.chainId;
-const bettinghandshake = new BettingHandshake(chainId);
 const betHandshakeHandler = new BetHandshakeHandler()
-
+const ROUND = 1000000
 class FeedBetting extends React.Component {
   static propTypes = {
 
@@ -82,14 +80,33 @@ class FeedBetting extends React.Component {
     }
   }
 
-  handleStatus(){
-    const {status, side, result, shakeUserIds, id} = this.props;
+  handleStatus(props){
+    
+    const {result, shakeUserIds, id} = props; // new state
+    
 
-    console.log('Props:', this.props);
-    console.log('Status:', status);
+    console.log('Item Info bkstatus:', this.state.itemInfo.bkStatus);
+    console.log('Props Status:', props.status);
+    
+    /*
+    if(this.state.itemInfo){
+      if(this.state.itemInfo.bkStatus === props.status){
+        console.log('Not update UI');
+        return;
+  
+      }
+    
+   
+    }
+    */
+    
+    console.log('Handle Status: ', props);
+    //console.log('Props:', this.props);
     const profile = local.get(APP.AUTH_PROFILE);
     const isUserShake = this.isShakeUser(shakeUserIds, profile.id);
-    let itemInfo = this.props;
+    let itemInfo = props;
+    console.log('Inpu Props:', props);
+    
     if(isUserShake){
       const extraData = this.extraData;
       console.log('Extra data:', extraData);
@@ -101,9 +118,13 @@ class FeedBetting extends React.Component {
         console.log('Found Shaked Item:', foundShakedItem);
         if(foundShakedItem){
           itemInfo = foundShakedItem;
+          
         }
       }
     }
+    const status = itemInfo.status;
+    const side = itemInfo.side;
+
     const role = isUserShake ? ROLE.SHAKER : ROLE.INITER;
     //const blockchainStatusHardcode = 5;
     const isMatch = this.isMatch;
@@ -124,13 +145,14 @@ class FeedBetting extends React.Component {
   }
 
   componentDidMount() {
-    this.handleStatus();
+    this.handleStatus(this.props);
 
   }
 
   componentWillReceiveProps(nextProps) {
     console.log('Feeding Next Props:', nextProps);
-    this.handleStatus();
+    
+    this.handleStatus(nextProps);
   }
 
   get extraData(){
@@ -171,7 +193,17 @@ class FeedBetting extends React.Component {
     // const realEventName = event_name ? event_name.slice(7).split('(') : ['', ''];
     // const matchName = realEventName[0];
     // const matchDate = `(${realEventName[1]}`;
-
+    let eventName = event_name ? event_name: '';
+    //console.log('Result:', eventName.indexOf('Event'));
+    if(eventName.indexOf('Event') == -1){
+      eventName = `Event: ${eventName}`;
+    }
+    let predictName = event_predict ? event_predict : '';
+    console.log('Predict Name:', predictName);
+    if(predictName.indexOf('Outcome')!== -1) {
+      predictName = event_predict.slice(8);
+    }
+    
     return (
       <div>
         {/* Feed */}
@@ -182,15 +214,15 @@ class FeedBetting extends React.Component {
         >
             <div className="description">
               <p className="eventName">
-                {event_name}
+                {eventName}
               </p>
-              <p className="eventInfo">{side === 1 ? `Support: ` : 'Oppose: '}{event_predict ? event_predict.slice(8) : ''}</p>
+              <p className="eventInfo">{side === 1 ? `Support: ` : 'Oppose: '}{predictName}</p>
             </div>
             <div className="bottomWrapper">
-              <span className="content">{amount.toFixed(4)} ETH </span>
+              <span className="content">{amount.toFixed(6)} ETH </span>
               <span className="odds" >{odds.toFixed(2)}</span>
             </div>
-            <div className="possibleWin">Possible winnings: {parseFloat(winValue).toFixed(4)} ETH</div>
+            <div className="possibleWin">Possible winnings: {Math.floor(winValue*ROUND)/ROUND} ETH</div>
 
             {this.renderStatus()}
         </Feed>
@@ -215,27 +247,38 @@ class FeedBetting extends React.Component {
   }
 
   clickActionButton(title){
-    const {id} = this.props;
-    const realId = betHandshakeHandler.getId(id);
-    console.log('realId:', realId);
-
-    switch(title){
-
-      case BETTING_STATUS_LABEL.CANCEL:
-        // TO DO: CLOSE BET
-        this.uninitItem(realId);
+    if(!betHandshakeHandler.isRightNetwork()){
+      message = MESSAGE.RIGHT_NETWORK;
+      this.props.showAlert({
+        message: <div className="text-center">{message}</div>,
+        timeOut: 3000,
+        type: 'danger',
+        callBack: () => {
+        }
+      });
+    }else {
+      const {id} = this.props;
+      const realId = betHandshakeHandler.getId(id);
+      console.log('realId:', realId);
+  
+      switch(title){
+  
+        case BETTING_STATUS_LABEL.CANCEL:
+          // TO DO: CLOSE BET
+          this.uninitItem(realId);
+          break;
+  
+        case BETTING_STATUS_LABEL.WITHDRAW:
+          // TO DO: WITHDRAW
+          this.collect(id);
+          break;
+        case BETTING_STATUS_LABEL.REFUND:
+        this.refund(realId);
         break;
-
-      case BETTING_STATUS_LABEL.WITHDRAW:
-        // TO DO: WITHDRAW
-        this.collect(id);
-        break;
-      case BETTING_STATUS_LABEL.REFUND:
-      this.refund(realId);
-      break;
-
+  
+      }
     }
-    this.loadMyHandshakeList();
+    
 
 
   }
@@ -255,14 +298,23 @@ class FeedBetting extends React.Component {
     console.log("uninitHandshakeSuccess", successData);
     const {status, data} = successData
     if(status && data){
-      const {hid, side, amount, odds, offchain} = data;
+      const {hid, side, amount, odds, offchain, status} = data;
+      
+      const {itemInfo} = this.state;
+      let updateInfo = Object.assign({}, itemInfo);
+      updateInfo.bkStatus = itemInfo.status;
+      updateInfo.status = status;
+
+      this.handleStatus(updateInfo);
+      
       const stake = amount;
       //const payout = stake * odds;
-      const result = await bettinghandshake.cancelBet(hid, side, stake, odds, offchain);
-      const {hash} = result;
-      if(hash === -1){
-        this.rollback(offchain);
-      }
+      const result = await betHandshakeHandler.cancelBet(hid, side, stake, odds, offchain);
+      // const {hash} = result;
+      // if(hash === -1){
+      //   this.rollback(offchain);
+      // }
+      //this.loadMyHandshakeList();
 
     }
   }
@@ -284,15 +336,25 @@ class FeedBetting extends React.Component {
     console.log('collectSuccess', successData);
     const {status} = successData
     if(status){
-      const {hid, id} = this.props;
+      const {hid, id, status} = this.props;
       const offchain = id;
+      const {itemInfo} = this.state;
+      let updateInfo = Object.assign({}, itemInfo);
+      updateInfo.bkStatus = itemInfo.status;
+      updateInfo.status = status;
 
-     const result = await bettinghandshake.withdraw(hid, offchain);
-     const {hash} = result;
-     if(hash === -1){
-       // Error, rollback
-       this.rollback(offchain);
-     }
+      this.handleStatus(updateInfo);
+
+      this.setState({
+        itemInfo: updateInfo
+      });
+     const result = await betHandshakeHandler.withdraw(hid, offchain);
+    //  const {hash} = result;
+    //  if(hash === -1){
+    //    // Error, rollback
+    //    this.rollback(offchain);
+    //  }
+     //this.loadMyHandshakeList();
 
     }
   }
@@ -313,19 +375,30 @@ class FeedBetting extends React.Component {
     console.log('refundSuccess', successData);
     const {status} = successData
     if(status){
-      const {hid, id} = this.props;
+      const {hid, id, status} = this.props;
+      const {itemInfo} = this.state;
+      let updateInfo = Object.assign({}, itemInfo);
+      updateInfo.bkStatus = itemInfo.status;
+      updateInfo.status = status;
+
+      this.handleStatus(updateInfo);
+
       const offchain = id;
-      const result = await bettinghandshake.refund(hid, offchain);
-      if(hash === -1){
-        // Error, rollback
-        this.rollback(offchain);
-      }
+      const result = await betHandshakeHandler.refund(hid, offchain);
+      // const {hash} = result;
+      // if(hash === -1){
+      //   // Error, rollback
+      //   this.rollback(offchain);
+      // }
+      //this.loadMyHandshakeList();
+
     }
   }
   refundFailed = (error) => {
     console.log('refundFailed', error);
   }
 
+  /*
   rollback(offchain){
     const params = {
       offchain
@@ -341,6 +414,7 @@ class FeedBetting extends React.Component {
   rollbackFailed = (error) => {
     console.log('rollbackFailed', error);
   }
+  */
 }
 
 const mapState = state => ({
@@ -351,6 +425,7 @@ const mapDispatch = ({
   uninitItem,
   collect,
   refund,
-  rollback
+  //rollback,
+  showAlert
 });
 export default connect(mapState, mapDispatch)(FeedBetting);
