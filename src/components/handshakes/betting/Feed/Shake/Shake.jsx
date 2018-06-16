@@ -73,7 +73,8 @@ class BetingShake extends React.Component {
       oddValue: 0,
       amountValue: 0,
       winValue: 0,
-      disable: false
+      disable: false,
+
       //BettingShakeForm
 
     };
@@ -132,10 +133,17 @@ class BetingShake extends React.Component {
     e.preventDefault();
     const values = this.refs;
     console.log('Values:', values);
-    const {isShowOdds} = this.state;
-    const {matchName, matchOutcome, side} = this.props;
+    const {isShowOdds, isChangeOdds} = this.state;
+    const {matchName, matchOutcome, side, marketAgainstOdds, marketSupportOdds, closingDate} = this.props;
     const amount = parseFloat(values.amount.value);
-    const odds = parseFloat(values.odds.value);
+    let odds = parseFloat(values.odds.value);
+
+    const marketOdds = side === SIDE.SUPPORT ? marketSupportOdds : marketAgainstOdds;
+
+    if(!isChangeOdds){
+      odds = marketOdds;
+    }
+
     console.log("Amount, Side, Odds", amount, side, odds);
     // this.props.onSubmitClick(amount);
     //const side = parseInt(this.toggleRef.value);
@@ -156,7 +164,7 @@ class BetingShake extends React.Component {
       message = MESSAGE.MATCH_OVER;
 
     }
-    else if (this.isExpiredDate()){
+    else if (betHandshakeHandler.isExpiredDate(closingDate)){
       message = MESSAGE.MATCH_OVER;
     }
     else if(matchName && matchOutcome){
@@ -514,10 +522,12 @@ class BetingShake extends React.Component {
     };
     console.log("Params:", params);
 
+    
     this.props.initHandshake({PATH_URL: API_URL.CRYPTOSIGN.INIT_HANDSHAKE, METHOD:'POST', data: params,
     successFn: this.initHandshakeSuccess,
     errorFn: this.initHandshakeFailed
   });
+  
   }
 
   initHandshakeSuccess = async (successData)=>{
