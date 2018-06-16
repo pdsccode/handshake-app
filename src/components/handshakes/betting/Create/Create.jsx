@@ -13,6 +13,7 @@ import { HANDSHAKE_ID, API_URL, APP } from '@/constants';
 import  { BetHandshakeHandler, SIDE, MESSAGE} from '@/components/handshakes/betting/Feed/BetHandshakeHandler.js';
 import { URL } from '@/constants';
 import local from '@/services/localStore';
+import GA from '@/services/googleAnalytics';
 
 // components
 import Button from '@/components/core/controls/Button';
@@ -23,17 +24,11 @@ import {MasterWallet} from '@/models/MasterWallet';
 import Dropdown from '@/components/core/controls/Dropdown';
 import Toggle from '@/components/handshakes/betting/Feed/Toggle';
 import {showAlert} from '@/reducers/app/action';
-
-import { BettingHandshake } from '@/services/neuron';
 // self
 import './Create.scss';
+const ROUND = 1000000;
 
-const wallet = MasterWallet.getWalletDefault('ETH');
-const chainId = wallet.chainId;
-console.log('Chain Id:', chainId);
-
-const bettinghandshake = new BettingHandshake(chainId);
-const betHandshakeHandler = new BetHandshakeHandler()
+const betHandshakeHandler = BetHandshakeHandler.getShareManager();
 
 const nameFormBettingCreate = 'bettingCreate';
 // const BettingCreateForm = createForm({
@@ -109,8 +104,7 @@ class BettingCreate extends React.Component {
   componentDidMount(){
     console.log('Betting Create Props:', this.props, history);
     this.setState({
-      address: wallet.address,
-      privateKey: wallet.privateKey,
+
     })
     this.props.loadMatches({PATH_URL: API_URL.CRYPTOSIGN.LOAD_MATCHES});
 
@@ -189,6 +183,8 @@ get defaultMatch() {
 get defaultOutcome() {
   const matchOutcomes = this.matchOutcomes;
   //console.log('defaultOutcome matchOutcomes: ', matchOutcomes);
+  const sortedMatch = matchOutcomes.sort((a, b) => b.id > a.id);
+
   const { outComeId } = this.props;
   if (matchOutcomes && matchOutcomes.length > 0) {
       const itemDefault = matchOutcomes.find(item => item.id === outComeId);
@@ -196,6 +192,24 @@ get defaultOutcome() {
   }
   return null;
   // return matchOutcomes && matchOutcomes.length > 0 ? matchOutcomes[0] : null;
+}
+
+isExpiredDate(){
+  const {closingDate} = this.props;
+  //console.log(moment(closingDate).format());
+  const newClosingDate = moment.unix(closingDate).add(90, 'minutes');
+  //let closingDateUnit = moment.unix(closingDate).utc();
+  let dayUnit = newClosingDate.utc();
+  let today = moment();
+  let todayUnit = today.utc();
+  //console.log('Closing Unix:', closingDateUnit.format());
+  console.log('New Date Unix:', dayUnit.format());
+  console.log('Today Unix:', todayUnit.format());
+  if(!todayUnit.isSameOrBefore(dayUnit, "miliseconds") && today){
+    console.log('Expired Date');
+    return true
+  }
+  return false;
 }
 
   async onSubmit(e) {
@@ -208,6 +222,11 @@ get defaultOutcome() {
     const inputList = this.inputList;
     let extraParams = values;
     console.log('Before Content:', content);
+
+    // send event tracking
+    try {
+      GA.clickGoButtonCreatePage(selectedMatch, selectedOutcome, this.toggleRef.sideName);
+    } catch (err) {}
 
     inputList.forEach(element => {
       const item = JSON.parse(element.replace(regexReplace, ''));
@@ -227,7 +246,7 @@ get defaultOutcome() {
     //const fromAddress = "0x54CD16578564b9952d645E92b9fa254f1feffee9";
     let balance = await betHandshakeHandler.getBalance();
     balance = parseFloat(balance);
-    const estimatedGas = await bettinghandshake.getEstimateGas();
+    const estimatedGas = await betHandshakeHandler.getEstimateGas();
     //const estimatedGas = 0.00001;
     console.log('Estimate Gas:', estimatedGas);
     const eventBet = parseFloat(values["event_bet"]);
@@ -235,11 +254,18 @@ get defaultOutcome() {
     const total = eventBet + parseFloat(estimatedGas);
     console.log("Event Bet, Odds, Estimate, Total:",eventBet,odds,estimatedGas, total);
 
-    const fromAddress = address;
+    const fromAddress = betHandshakeHandler.getAddress();
     console.log('Match, Outcome:', selectedMatch, selectedOutcome);
 
     var message = null;
 
+    if(!betHandshakeHandler.isRightNetwork()){
+      message = MESSAGE.MATCH_OVER;
+
+    }
+    /*else if (this.isExpiredDate()){
+      message = MESSAGE.MATCH_OVER;
+    }*/
     if(selectedMatch && selectedOutcome){
       if(eventBet > 0){
         if(total <= balance){
@@ -308,11 +334,15 @@ get defaultOutcome() {
     const odds = values['event_odds'];
     const total = amount * odds;
     this.setState({
-      winValue: total || 0,
+      winValue: Math.floor(total*ROUND)/ROUND || 0,
     })
   }
 
   onToggleChange(id) {
+    // send event tracking
+    try {
+     GA.clickChooseASideCreatePage(id === 1 ? 'Support' : 'Oppose');
+    } catch (err) {}
     this.setState({buttonClass: `${id === 2 ? 'btnRed' : 'btnBlue' }`});
   }
 
@@ -456,7 +486,8 @@ get defaultOutcome() {
                 const {values} = this.state;
                 values["event_name"] = item.value;
                 this.setState({selectedMatch: item, values});
-
+                // send event tracking
+                GA.clickChooseAnEventCreatePage(item.value);
               }
               }
           />
@@ -506,10 +537,16 @@ get defaultOutcome() {
     const {values} = this.state;
     values["event_predict"] = item.value;
     values["event_odds"] = parseFloat(item.marketOdds).toFixed(2);
-    values["event_bet"] = parseFloat(item.marketAmount).toFixed(4);
-    const winValue =  parseFloat(item.marketAmount * item.marketOdds).toFixed(4);
+    values["event_bet"] = parseFloat(item.marketAmount).toFixed(6);
+    const roundWin = item.marketAmount * item.marketOdds;
+    console.log('roundWin Value:', roundWin);
 
-    this.setState({selectedOutcome: item, values, winValue})
+    const winValue =  Math.floor(roundWin*ROUND)/ROUND;
+    console.log('Win Value:', winValue);
+
+    this.setState({selectedOutcome: item, values, winValue});
+    // send event tracking
+    GA.clickChooseAnOutcomeCreatePage(item.value);
   }
 
   render() {
@@ -528,6 +565,7 @@ get defaultOutcome() {
   initHandshake(fields, fromAddress){
     const {selectedOutcome} = this.state;
     const side = this.toggleRef.value;
+    const chainId = betHandshakeHandler
     const params = {
       //to_address: toAddress ? toAddress.trim() : '',
       //public: isPublic,
@@ -546,7 +584,7 @@ get defaultOutcome() {
       currency: 'ETH',
       side: parseInt(side),
       from_address: fromAddress,
-      chain_id: chainId,
+      chain_id: betHandshakeHandler.getChainIdDefaultWallet(),
     };
     console.log("Go to Params:", params);
     const hid = selectedOutcome.hid;
@@ -561,22 +599,33 @@ get defaultOutcome() {
     console.log('initHandshakeSuccess', successData);
 
     const {status, data} = successData
-    const {values, selectedOutcome} = this.state;
+    const {values, selectedOutcome, selectedMatch} = this.state;
     // const stake = values['event_bet'];
     // const event_odds = values['event_odds'];
     // const payout = stake * event_odds;
     //const hid = selectedOutcome.id;
     const hid = selectedOutcome.hid;
+
     if(status && data){
+      const isExist = betHandshakeHandler.isExistMatchBet(data);
+      let message = MESSAGE.CREATE_BET_NOT_MATCH;
+     if(isExist){
+       message = MESSAGE.CREATE_BET_MATCHED;
+     }
       betHandshakeHandler.controlShake(data, hid);
+
       this.props.showAlert({
-        message: <div className="text-center">{MESSAGE.CREATE_BET_SUCCESSFUL}</div>,
+        message: <div className="text-center">{message}</div>,
         timeOut: 3000,
         type: 'success',
         callBack: () => {
           this.props.history.push(URL.HANDSHAKE_ME);
         }
       });
+      // send ga event
+      try {
+        GA.createBetSuccessCreatePage(selectedMatch, selectedOutcome, this.toggleRef.sideName);
+      } catch (err) {}
     }
 
 

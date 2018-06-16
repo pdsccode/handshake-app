@@ -2,6 +2,7 @@
  * Handshake component.
  */
 import React from 'react';
+import {FormattedMessage, injectIntl} from 'react-intl';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 // service
@@ -128,8 +129,8 @@ class Collapse extends React.PureComponent {
           {isList ? (
             <dl>
               {content.map((item, index) => [
-                <dt>{item.title}</dt>,
-                <dd>{item.content}</dd>
+                <dt key={`dt_${index}`}>{item.title}</dt>,
+                <dd key={`dd_${index}`}>{item.content}</dd>
               ])}
             </dl>
           ) : content}
@@ -150,19 +151,20 @@ class FAQ extends React.Component {
   }
 
   render() {
+    const { locale, messages } = this.props.intl;
     return (
       <div className="container faq">
         <div className="row">
           <div className="col-lg-12 col-md-12 col-xs-12">
             <div className="headerPage">
               <img src={ninjaIcon} alt="shuriken icon" />
-              <span><span className="yellow">Decentralized</span> Prediction Exchange</span>
+              <span><span className="yellow" hidden={locale !== 'en'}><FormattedMessage id="FAQ_HEADER_YELLOW" /></span> <FormattedMessage id="FAQ_HEADER" /></span>
             </div>
           </div>
           <div className="col-lg-12">
-            <h1>FAQ</h1>
+            <h1><FormattedMessage id="FAQ_TITLE" /></h1>
             <div>
-              {data.map((item, index) => <Collapse label={item.question} content={item.answer} isList={item.isList} key={index} index={index + 1} />)}
+              {messages.FAQ_DATA.map((item, index) => <Collapse label={item.question} content={item.answer} isList={item.isList} key={index} index={index + 1} />)}
             </div>
           </div>
         </div>
@@ -171,4 +173,4 @@ class FAQ extends React.Component {
   }
 }
 
-export default (FAQ);
+export default injectIntl(FAQ);

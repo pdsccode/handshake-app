@@ -6,14 +6,16 @@ import App from '@/components/App/App';
 import * as OfflinePlugin from 'offline-plugin/runtime';
 // import registerServiceWorker from '@/services/worker';
 
-OfflinePlugin.install({
-  onUpdateReady() {
-    OfflinePlugin.applyUpdate();
-  },
-  onUpdated() {
-    window.location.reload();
-  },
-});
+if (!process.env.TURN_OFF_CACHE) {
+  OfflinePlugin.install({
+    onUpdateReady() {
+      OfflinePlugin.applyUpdate();
+    },
+    onUpdated() {
+      window.location.reload();
+    },
+  });
+}
 // registerServiceWorker();
 
 // clear cache mode on:
@@ -26,4 +28,7 @@ if (process.env.TURN_OFF_CACHE && window.caches) {
 // require('@/testing/web3_test');
 // require('@/testing/web3_handshake');
 
-ReactDOM.render(<App />, document.getElementById('app'));
+const blockContextMenu = e => e.preventDefault();
+const app = document.getElementById('app');
+app.addEventListener('contextmenu', blockContextMenu);
+ReactDOM.render(<App />, app);

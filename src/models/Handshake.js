@@ -30,6 +30,7 @@ class Handshake {
       winValue: data.win_value || '',
       offerFeedType: data.offer_feed_type || '',
       offerType: data.offer_type || '',
+      bkStatus: data.bk_status || '',
     };
   }
 }

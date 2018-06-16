@@ -18,9 +18,9 @@ import iconChevronBottom from '@/assets/images/icon/chevron-bottom.svg';
 import { fieldInput, fieldCleave, fieldDropdown } from '@/components/core/form/customField'
 import validation, { required } from '@/components/core/form/validation'
 import { connect } from "react-redux";
+import './styles.scss';
 
 const heightOfTabsHeader = 0.5;
-
 const Wrapper = styled.div`
   background: rgb(255,255,255,0.2);
 `
@@ -129,10 +129,11 @@ class Component extends React.Component {
             />
           </div>
         </div>
+        <div className="text-promise mt-3">We'll keep your stuff safe, we promise.</div>
       </div>
     )
     return (
-      <Wrapper className="rounded p-2">
+      <Wrapper className="rounded p-2 credit-card">
         <div className='col1'>
           {
             isCCExisting ? (

@@ -8,28 +8,40 @@ import Loading from '@/components/core/presentation/Loading';
 import { APP, FIREBASE_PATH, API_URL, URL } from '@/constants';
 
 import local from '@/services/localStore';
+import { setIpInfo, showAlert, changeLocale, setBannedPrediction, setBannedCash, setCheckBanned } from '@/reducers/app/action';
 import { signUp, fetchProfile, authUpdate, getFreeETH } from '@/reducers/auth/action';
 
 import ScrollToTop from '@/components/App/ScrollToTop';
 import Layout from '@/components/Layout/Main';
 
 import { addLocaleData, IntlProvider } from 'react-intl';
+// languages
 import en from 'react-intl/locale-data/en';
 import fr from 'react-intl/locale-data/fr';
+import zh from 'react-intl/locale-data/zh';
+import de from 'react-intl/locale-data/de';
+import ja from 'react-intl/locale-data/ja';
+import ko from 'react-intl/locale-data/ko';
+import ru from 'react-intl/locale-data/ru';
+import es from 'react-intl/locale-data/es';
+
 import { withFirebase } from 'react-redux-firebase';
 import messages from '@/locals';
-import COUNTRIES_BLACKLIST from '@/data/country-blacklist';
+import COUNTRIES_BLACKLIST_PREDICTION from '@/data/country-blacklist-betting';
+import COUNTRIES_BLACKLIST_CASH from '@/data/country-blacklist-exchange';
 import axios from 'axios';
-import { setIpInfo, showAlert } from '@/reducers/app/action';
 import { getUserProfile, getListOfferPrice } from '@/reducers/exchange/action';
 import { MasterWallet } from '@/models/MasterWallet';
 import { createMasterWallets } from '@/reducers/wallet/action';
 import MobileOrTablet from '@/components/MobileOrTablet';
 import BrowserDetect from '@/services/browser-detect';
 import NetworkError from '@/components/Router/NetworkError';
-import BlockCountry from '@/components/core/presentation/BlockCountry';
+// import BlockCountry from '@/components/core/presentation/BlockCountry';
+import qs from 'querystring';
+import IpInfo from '@/models/IpInfo';
+import Maintain from './Maintain';
 
-addLocaleData([...en, ...fr]);
+addLocaleData([...en, ...fr, ...zh, ...de, ...ja, ...ko, ...ru, ...es]);
 
 const MeRootRouter = props => (
   <DynamicImport
@@ -141,6 +153,11 @@ class Router extends React.Component {
     firebase: PropTypes.object.isRequired,
     getListOfferPrice: PropTypes.func.isRequired,
     getFreeETH: PropTypes.func.isRequired,
+    changeLocale: PropTypes.func.isRequired,
+    setBannedPrediction: PropTypes.func.isRequired,
+    setBannedCash: PropTypes.func.isRequired,
+    setCheckBanned: PropTypes.func.isRequired,
+    showAlert: PropTypes.func.isRequired,
   };
 
   constructor(props) {
@@ -148,20 +165,27 @@ class Router extends React.Component {
 
     // State
     this.state = {
-      currentLocale: 'en',
+      currentLocale: this.props.app.locale,
       isLoading: true,
       isLogged: this.props.auth.isLogged,
       profile: this.props.auth.profile,
       updatedAt: this.props.auth.updatedAt,
       loadingText: 'Loading application',
       isNetworkError: false,
-      isCountryBlackList: false,
+      isMaintain: process.env.isMaintain,
     };
 
     this.checkRegistry = ::this.checkRegistry;
     this.authSuccess = ::this.authSuccess;
     this.notification = ::this.notification;
-    this.detectCountry.call(this);
+    this.setLanguage = ::this.setLanguage;
+    this.ipInfo = ::this.ipInfo;
+
+    this.isSupportedLanguages = ['en', 'zh', 'fr', 'de', 'ja', 'ko', 'ru', 'es'];
+    const currentLanguage = local.get(APP.LOCALE);
+    if (currentLanguage && this.isSupportedLanguages.indexOf(currentLanguage) < 0) {
+      local.remove(APP.LOCALE);
+    }
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -169,16 +193,20 @@ class Router extends React.Component {
       return { isLogged: nextProps.auth.isLogged };
     }
     if (nextProps.auth.updatedAt !== prevState.updatedAt) {
+      //
       nextProps.firebase.unWatchEvent('value', `${FIREBASE_PATH.USERS}/${String(prevState.profile?.id)}`);
       nextProps.firebase.watchEvent('value', `${FIREBASE_PATH.USERS}/${String(nextProps.auth.profile?.id)}`);
+      //
       return { profile: nextProps.auth.profile, updatedAt: nextProps.auth.updatedAt };
+    }
+    if (nextProps.app.locale !== prevState.currentLocale) {
+      return { currentLocale: nextProps.app.locale };
     }
     return null;
   }
 
   componentDidMount() {
     this.checkRegistry();
-    this.notification();
   }
 
   componentWillUnmount() {
@@ -203,30 +231,51 @@ class Router extends React.Component {
     });
   }
 
-  getIpInfo = () => {
-    axios.get(API_URL.EXCHANGE.IP_DOMAIN, {
-      params: {
-        auth: process.env.ipfindKey,
-      },
-    }).then((response) => {
-      this.props.setIpInfo(response.data);
-      local.save(APP.IP_INFO, response.data);
-    });
+  setLanguage(language, autoDetect = true) {
+    if (this.isSupportedLanguages.indexOf(language) >= 0) {
+      this.props.changeLocale(language, autoDetect);
+    } else {
+      this.props.changeLocale('en', autoDetect);
+    }
   }
 
-  async detectCountry() {
-    const { data } = await axios.get((process.env.ipapiKey ? `https://ipapi.co/json/?key=${process.env.ipapiKey}` : 'https://ipapi.co/json'));
-    if (COUNTRIES_BLACKLIST.indexOf(data.country_name) !== -1) {
-      this.setState({ isCountryBlackList: true });
-    }
+  ipInfo() {
+    const url = `https://ipapi.co/json${process.env.ipapiKey ? `?key=${process.env.ipapiKey}` : ''}`;
+    axios.get(url).then((res) => {
+      const { data } = res;
+      console.log('ipInfo', data);
+      const ipInfo = IpInfo.ipInfo(data);
+      this.props.setIpInfo(ipInfo);
+      local.save(APP.IP_INFO, ipInfo);
+      if (!local.get(APP.LOCALE)) {
+        const firstLanguage = data.languages.split(',')[0];
+        this.setLanguage(firstLanguage);
+      }
+      if (COUNTRIES_BLACKLIST_PREDICTION.indexOf(data.country_name) !== -1) {
+        this.props.setBannedPrediction();
+        // should use country code: .country ISO 3166-1 alpha-2
+        // https://ipapi.co/api/#complete-location
+      }
+      if (COUNTRIES_BLACKLIST_CASH.indexOf(data.country_name) !== -1) {
+        this.props.setBannedCash();
+      }
+      this.props.setCheckBanned();
+      // this.setState({ isCountryBlackList: true });
+    });
   }
 
   checkRegistry() {
     const token = local.get(APP.AUTH_TOKEN);
     // auth
+    const searchQS = window.location.search.replace('?', '');
+    const { language, ref } = qs.parse(searchQS);
+    console.log('searchQS', language, ref);
+    if (language) {
+      this.setLanguage(language, false);
+    }
     if (!token) {
       this.props.signUp({
-        PATH_URL: 'user/sign-up',
+        PATH_URL: `user/sign-up${ref ? `?ref=${ref}` : ''}`,
         METHOD: 'POST',
         successFn: () => {
           this.authSuccess();
@@ -252,8 +301,12 @@ class Router extends React.Component {
             this.checkRegistry();
           }
         } else {
-          this.porps.showAlert({
-            message: <div className="text-center">Have something wrong with your profile, please contact supporters</div>,
+          this.props.showAlert({
+            message: (
+              <div className="text-center">
+                Have something wrong with your profile, please contact supporters
+              </div>
+            ),
             timeOut: false,
             isShowClose: true,
             type: 'danger',
@@ -268,9 +321,9 @@ class Router extends React.Component {
         });
 
         // GET IP INFO
-        this.getIpInfo();
+        this.ipInfo();
         this.timeOutInterval = setInterval(() => {
-          this.getIpInfo();
+          this.ipInfo();
         }, 30 * 60 * 1000); // 30'
 
         // GET PRICE
@@ -284,16 +337,21 @@ class Router extends React.Component {
 
         if (listWallet === false) {
           this.setState({ loadingText: 'Creating your local wallets' });
-          listWallet = createMasterWallets().then(() => {            
-            this.setState({ loadingText: 'Please be patient. We are gathering ETH for you.' });
-            
-            this.updateRewardAddress();
-            this.getFreeETH();
-            
+          listWallet = createMasterWallets().then(() => {
+            this.setState({ isLoading: false, loadingText: '' });
+            if (!process.env.isProduction) {
+              const wallet = MasterWallet.getWalletDefault('ETH');
+              this.props.getFreeETH({
+                PATH_URL: `/user/free-rinkeby-eth?address=${wallet.address}`,
+                METHOD: 'POST',
+              });
+            }
           });
         } else {
           this.setState({ isLoading: false });
         }
+
+        this.notification();
       },
       // end success fn
     });
@@ -364,9 +422,27 @@ class Router extends React.Component {
 
   render() {
     if (window.location.pathname === URL.LANDING_PAGE_SHURIKEN) return <LandingPageRootRouter />;
-    if (window.location.pathname === URL.FAQ) return <FAQRootRouter />;
+    if (window.location.pathname === URL.FAQ) {
+      return (
+        <IntlProvider
+          locale={this.state.currentLocale}
+          messages={messages[this.state.currentLocale]}
+        >
+          <FAQRootRouter />
+        </IntlProvider>
+      );
+    }
     if (window.location.pathname === URL.LANDING_PAGE_TRADE) return <LandingTradeRootRouter />;
-    if (BrowserDetect.isDesktop && process.env.isProduction) return <MobileOrTablet />;
+    if (BrowserDetect.isDesktop && process.env.isProduction) {
+      return (
+        <IntlProvider
+          locale={this.state.currentLocale}
+          messages={messages[this.state.currentLocale]}
+        >
+          <MobileOrTablet />
+        </IntlProvider>
+      );
+    }
     if (!this.state.isLogged || this.state.isLoading) {
       return (
         <BrowserRouter>
@@ -381,7 +457,21 @@ class Router extends React.Component {
         </BrowserRouter>
       );
     }
-    if (this.state.isCountryBlackList && process.env.isProduction) return <BlockCountry />;
+    if (this.state.isMaintain) {
+      return (
+        <BrowserRouter>
+          <Route
+            path={URL.INDEX}
+            render={loadingProps => (
+              <Layout {...loadingProps}>
+                <Maintain />
+              </Layout>
+              )}
+          />
+        </BrowserRouter>
+      );
+    }
+    // if (this.state.isCountryBlackList && process.env.isProduction) return <BlockCountry />;
     return (
       <IntlProvider
         locale={this.state.currentLocale}
@@ -455,5 +545,9 @@ export default compose(
     getListOfferPrice,
     getFreeETH,
     showAlert,
+    changeLocale,
+    setBannedPrediction,
+    setBannedCash,
+    setCheckBanned,
   }),
 )(Router);

@@ -223,6 +223,7 @@ class Wallet extends React.Component {
   }
 
   async componentDidMount() {
+
     this.attachScrollListener();
     let listWallet = await MasterWallet.getMasterWallet();
 
@@ -318,7 +319,7 @@ class Wallet extends React.Component {
           this.modalShareAddressRef.open();
         }
       })
-    // not allow for testnet:
+    // now hide buy coin:    
     // if (wallet.network === MasterWallet.ListCoin[wallet.className].Network.Mainnet){
     //   obj.push({
     //     title: 'Buy coins',
@@ -997,14 +998,17 @@ class Wallet extends React.Component {
           <Row className="list">
             {this.listMainWalletBalance}
           </Row>
-
+          {!process.env.isProduction ? 
           <Row className="list">
             <Header title="Testnet wallets" hasLink linkTitle="Request free ETH" onLinkClick={this.getETHFree} />
           </Row>
+          : ''}
+          {!process.env.isProduction ? 
           <Row className="list">
             {this.listTestWalletBalance}
           </Row>
-
+          : ''}
+          
           <Row className="list">
             <Header title="Reward wallets" hasLink={false} />
           </Row>

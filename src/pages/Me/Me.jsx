@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 // action, mock
 import { fireBaseExchangeDataChange, loadMyHandshakeList, fireBaseBettingChange } from '@/reducers/me/action';
-import { API_URL, HANDSHAKE_ID, URL } from '@/constants';
+import { API_URL, APP, HANDSHAKE_ID, URL } from '@/constants';
 // components
 import { Link } from 'react-router-dom';
 import { Grid, Row, Col } from 'react-bootstrap';
@@ -16,11 +16,12 @@ import FeedSeed from '@/components/handshakes/seed/Feed';
 import Image from '@/components/core/presentation/Image';
 
 import ToggleSwitch from '@/components/core/presentation/ToggleSwitch';
-
 // style
 import AvatarSVG from '@/assets/images/icon/avatar.svg';
 import ShopSVG from '@/assets/images/icon/icons8-shop_filled.svg';
 import ExpandArrowSVG from '@/assets/images/icon/expand-arrow.svg';
+import { setOfflineStatus } from '@/reducers/auth/action';
+import local from '@/services/localStore';
 import './Me.scss';
 
 const maps = {
@@ -42,6 +43,7 @@ class Me extends React.Component {
     fireBaseExchangeDataChange: PropTypes.func.isRequired,
     fireBaseBettingChange: PropTypes.func.isRequired,
     exchange: PropTypes.object.isRequired,
+    setOfflineStatus: PropTypes.func.isRequired,
   }
 
   constructor(props) {
@@ -49,13 +51,32 @@ class Me extends React.Component {
 
     this.state = {
       exchange: this.props.exchange,
+      auth: this.props.auth,
+      firebaseUser: this.props.firebaseUser,
     };
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
+    /*
     if (nextProps.exchange.listOfferPrice.updatedAt !== prevState.exchange.listOfferPrice.updatedAt) {
       nextProps.loadMyHandshakeList({ PATH_URL: API_URL.ME.BASE });
       return { exchange: nextProps.exchange };
+    }
+    */
+    if (nextProps.firebaseUser) {
+      if (JSON.stringify(nextProps.firebaseUser) !== JSON.stringify(prevState.firebaseUser)) {
+        const nextUser = nextProps.firebaseUser.users?.[prevState.auth?.profile?.id];
+        const prevUser = prevState?.firebaseUser.users?.[prevState.auth?.profile?.id];
+        if (JSON.stringify(nextUser?.offers) !== JSON.stringify(prevUser?.offers)) {
+          nextProps.fireBaseExchangeDataChange(nextUser?.offers);
+        } else if (nextUser?.betting && JSON.stringify(nextUser?.betting) !== JSON.stringify(prevUser?.betting)) {
+          nextProps.fireBaseBettingChange(nextUser?.betting);
+        }
+        return { firebaseUser: nextProps.firebaseUser };
+      }
+    }
+    if (nextProps.auth.updatedAt !== prevState.auth.updatedAt) {
+      return { auth: nextProps.auth };
     }
     return null;
   }
@@ -64,26 +85,33 @@ class Me extends React.Component {
     this.loadMyHandshakeList();
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.firebaseUser) {
-      if (JSON.stringify(nextProps.firebaseUser) !== JSON.stringify(this.props.firebaseUser)) {
-        const nextUser = nextProps.firebaseUser.users?.[this.props.auth?.profile?.id];
-        const prevUser = this.props?.firebaseUser.users?.[this.props.auth?.profile?.id];
-        if (JSON.stringify(nextUser?.offers) !== JSON.stringify(prevUser?.offers)) {
-          this.props.fireBaseExchangeDataChange(nextUser?.offers);
-        } else if (nextUser?.betting && JSON.stringify(nextUser?.betting) !== JSON.stringify(prevUser?.betting)) {
-          this.props.fireBaseBettingChange(nextUser?.betting);
-        }
-      }
-    }
+  setOfflineStatus = (online) => {
+    const offlineValue = online ? 0 : 1;
+    this.props.setOfflineStatus({
+      PATH_URL: `${API_URL.ME.SET_OFFLINE_STATUS}/${offlineValue}`,
+      METHOD: 'POST',
+      successFn: this.handleSetOfflineStatusSuccess,
+      errorFn: this.handleSetOfflineStatusFailed,
+    });
   }
 
   loadMyHandshakeList = () => {
     this.props.loadMyHandshakeList({ PATH_URL: API_URL.ME.BASE });
   }
 
+  handleSetOfflineStatusSuccess = (responseData) => {
+    const { offline } = this.props.auth;
+    local.save(APP.OFFLINE_STATUS, offline ? 1 : 0);
+  }
+
+  handleSetOfflineStatusFailed = (e) => {
+    console.log('handleSetOfflineStatusFailed', e);
+  }
+
   render() {
     const { list } = this.props.me;
+    const online = !this.props.auth.offline;
+
     return (
       <Grid className="me">
         <Row>
@@ -105,11 +133,11 @@ class Me extends React.Component {
             <div className="update-profile pt-2">
               <Image className="avatar" src={ShopSVG} alt="shop" />
               <div className="text" style={{ width: '69%' }}>
-                <strong>Shop appearance</strong>
-                <p>Change your shop status</p>
+                <strong>Your station</strong>
+                <p>Open for business</p>
               </div>
               <div className="arrow">
-                <ToggleSwitch onChange={flag => console.log(flag)} />
+                <ToggleSwitch defaultChecked={online} onChange={flag => this.setOfflineStatus(flag)} />
               </div>
             </div>
           </Col>
@@ -136,7 +164,7 @@ class Me extends React.Component {
                   return null;
                 })
               ) : (
-                <NoData message="Make a Prediction to get started!" />
+                <NoData message="Start a mission." isShowArrowDown />
               )
             }
           </Col>
@@ -159,6 +187,7 @@ const mapDispatch = ({
   getListOfferPrice,
   fireBaseExchangeDataChange,
   fireBaseBettingChange,
+  setOfflineStatus,
 });
 
 export default connect(mapState, mapDispatch)(Me);

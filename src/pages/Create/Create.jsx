@@ -1,10 +1,14 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import { HANDSHAKE_ID, HANDSHAKE_NAME, HANDSHAKE_ID_DEFAULT } from '@/constants';
+import Helper from '@/services/helper';
 // components
 import { Grid, Row, Col } from 'react-bootstrap';
-import SearchBar from '@/components/core/controls/SearchBar';
+// import SearchBar from '@/components/core/controls/SearchBar';
 import DynamicImport from '@/components/App/DynamicImport';
 import Loading from '@/components/core/presentation/Loading';
+import Dropdown from '@/components/core/controls/Dropdown';
 
 import './Create.scss';
 
@@ -41,7 +45,7 @@ const CreateBettingEvent = props => (
 const CreateExchange = props => (
   <DynamicImport
     loading={Loading}
-    load={() => import('@/components/handshakes/exchange/Create/Create.jsx')}
+    load={() => import('@/components/handshakes/exchange/Create/Create')}
   >
     {Component => <Component {...props} />}
   </DynamicImport>
@@ -76,6 +80,15 @@ const CreateWalletTransfer = props => (
   </DynamicImport>
 );
 
+const CreateWalletReceive = props => (
+  <DynamicImport
+    loading={Loading}
+    load={() => import('@/components/handshakes/wallet/Create/Receive')}
+  >
+    {Component => <Component {...props} />}
+  </DynamicImport>
+);
+
 const maps = {
   [HANDSHAKE_ID.PROMISE]: CreatePromise,
   [HANDSHAKE_ID.BETTING]: CreateBetting,
@@ -84,45 +97,104 @@ const maps = {
   [HANDSHAKE_ID.EXCHANGE_LOCAL]: CreateExchangeLocal,
   [HANDSHAKE_ID.SEED]: CreateSeed,
   [HANDSHAKE_ID.WALLET_TRANSFER]: CreateWalletTransfer,
+  [HANDSHAKE_ID.WALLET_RECEIVE]: CreateWalletReceive,
 };
 
 class Create extends React.Component {
+  static propTypes = {
+    isBannedCash: PropTypes.bool.isRequired,
+    isBannedPrediction: PropTypes.bool.isRequired,
+    isBannedChecked: PropTypes.bool.isRequired,
+  }
+
   constructor(props) {
     super(props);
-
+    let seletedId = HANDSHAKE_ID_DEFAULT;
+    // get default
+    let { id } = Helper.getQueryStrings(window.location.search);
+    id = parseInt(id, 10);
+    if (id && Object.values(HANDSHAKE_ID).indexOf(id !== -1)) {
+      seletedId = id;
+    }
     this.state = {
-      seletedId: HANDSHAKE_ID_DEFAULT,
+      seletedId,
+      isBannedCash: this.props.isBannedCash,
+      isBannedPrediction: this.props.isBannedPrediction,
+      isBannedChecked: this.props.isBannedChecked,
     };
     // bind
     this.handshakeChange = this.handshakeChange.bind(this);
   }
 
-  get handshakeList() {
-    const handshakes = Object.entries(HANDSHAKE_NAME).map(([key, value]) => ({
-      id: key,
-      name: value.name,
-      priority: value.priority,
-    }));
-    return handshakes.sort((x, y) => x.priority > y.priority);
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.isBannedCash !== prevState.isBannedCash) {
+      return { isBannedCash: nextProps.isBannedCash };
+    }
+    if (nextProps.isBannedPrediction !== prevState.isBannedPrediction) {
+      return { isBannedPrediction: nextProps.isBannedPrediction };
+    }
+    if (nextProps.isBannedChecked !== prevState.isBannedChecked) {
+      return { isBannedChecked: nextProps.isBannedChecked };
+    }
+    if (nextProps.isBannedPrediction && nextProps.isBannedChecked) {
+      return { isLoading: false };
+    }
+    return null;
   }
 
-  handshakeChange({ suggestion }) {
-    const { id } = suggestion;
+  get handshakeList() {
+    const handshakes = Object.entries(HANDSHAKE_NAME).map(([key, value]) => {
+      const currentKey = parseInt(key, 10);
+      if (this.state.isBannedCash && (currentKey === HANDSHAKE_ID.EXCHANGE || currentKey === HANDSHAKE_ID.EXCHANGE_LOCAL)) {
+        return null;
+      }
+      if (this.state.isBannedPrediction && (currentKey === HANDSHAKE_ID.BETTING)) {
+        return null;
+      }
+      return {
+        id: key,
+        value: value.name,
+        priority: value.priority,
+      };
+    }).filter(a => a);
+    if (!handshakes.filter(item => item.id === this.state.seletedId).length) {
+      this.setState({ seletedId: handshakes[0].id });
+    }
+    return [
+      ...handshakes.sort((x, y) => x.priority > y.priority),
+      {
+        id: -1,
+        value: 'COMING SOON: Create a prediction market',
+        className: 'disable',
+        disableClick: true,
+      },
+    ];
+  }
+
+  handshakeChange({ id }) {
     this.setState({ seletedId: id });
   }
 
   render() {
-    const CreateComponent = maps[this.state.seletedId];
+    const { seletedId } = this.state;
+    const CreateComponent = maps[seletedId];
 
     return (
       <Grid className="create">
         <Row>
           <Col md={12}>
-            <SearchBar
+            <Dropdown
+              placeholder="Select an mission"
+              defaultId={seletedId}
+              source={this.handshakeList}
+              onItemSelected={this.handshakeChange}
+              hasSearch
+            />
+            {/* <SearchBar
               suggestions={this.handshakeList}
               onSuggestionSelected={this.handshakeChange}
-              inputSearchDefault={HANDSHAKE_NAME[HANDSHAKE_ID_DEFAULT].name}
-            />
+              inputSearchDefault={HANDSHAKE_NAME[seletedId].name}
+            /> */}
           </Col>
         </Row>
         <Row>
@@ -135,4 +207,8 @@ class Create extends React.Component {
   }
 }
 
-export default Create;
+export default connect(state => ({
+  isBannedCash: state.app.isBannedCash,
+  isBannedPrediction: state.app.isBannedPrediction,
+  isBannedChecked: state.app.isBannedChecked,
+}))(Create);
