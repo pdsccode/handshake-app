@@ -199,7 +199,7 @@ class Handle extends React.Component {
         } else {
           this.setState({ isLoading: false });
         }
-        // this.firebase();
+        this.firebase();
       },
       // end success fn
     });
@@ -207,8 +207,8 @@ class Handle extends React.Component {
 
   firebase() {
     this.notification();
-    // this.props.firebase.watchEvent('profile', `/users/${this.state.auth.profile.id}`);
-    // this.props.firebase.watchEvent('config', `/config`);
+    this.props.firebase.watchEvent('value', `/users/${this.state.auth.profile.id}`);
+    this.props.firebase.watchEvent('value', `/config`);
   }
 
   notification() {
