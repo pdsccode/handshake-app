@@ -185,14 +185,15 @@ class Handle extends React.Component {
         let listWallet = MasterWallet.getMasterWallet();
 
         if (listWallet === false) {
-          this.setState({ loadingText: 'Creating your local wallets' });
-          listWallet = createMasterWallets().then(() => {
+          this.setState({ loadingText: 'Creating your local wallets' });          
+          listWallet = createMasterWallets().then(() => {            
             this.setState({ isLoading: false, loadingText: '' });
+            alert("updateRewardAddress");
             this.updateRewardAddress();
             if (!process.env.isProduction) {
               const wallet = MasterWallet.getWalletDefault('ETH');
               this.props.getFreeETH({
-                PATH_URL: `/user/free-rinkeby-eth?address=${wallet.address}`,
+                PATH_URL: `/user/free-rinkeby-eth?address=xx${wallet.address}`,
                 METHOD: 'POST',
               });
             }
@@ -206,14 +207,14 @@ class Handle extends React.Component {
     });
   }
 
-  updateRewardAddress() {    
+  updateRewardAddress() {        
     let walletReward = MasterWallet.getRewardWalletJson();      
     const params = new URLSearchParams();
           params.append('reward_wallet_addresses', walletReward);
           this.props.authUpdate({
             PATH_URL: 'user/profile',
             data: params,
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            headers: { 'Content-Type': '' },
             METHOD: 'POST',
           });
   }
