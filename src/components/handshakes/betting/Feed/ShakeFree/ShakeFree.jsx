@@ -102,34 +102,24 @@ class BetingShakeFree extends React.Component {
   }
 
 
-  isExpiredDate(){
-    const {closingDate} = this.props;
-    //console.log(moment(closingDate).format());
-    const newClosingDate = moment.unix(closingDate).add(90, 'minutes');
-    //let closingDateUnit = moment.unix(closingDate).utc();
-    let dayUnit = newClosingDate.utc();
-    let today = moment();
-    let todayUnit = today.utc();
-    //console.log('Closing Unix:', closingDateUnit.format());
-    console.log('New Date Unix:', dayUnit.format());
-    console.log('Today Unix:', todayUnit.format());
-    if(!todayUnit.isSameOrBefore(dayUnit, "miliseconds") && today){
-      console.log('Expired Date');
-      return true
-    }
-    return false;
-  }
+  
 
   async onSubmit(e) {
     console.log("Submit");
     e.preventDefault();
     const values = this.refs;
     console.log('Values:', values);
-    const {isShowOdds} = this.state;
-    const {matchName, matchOutcome, amount} = this.props;
+    const {isShowOdds, isChangeOdds} = this.state;
+    const {matchName, matchOutcome, amount, marketAgainstOdds, marketSupportOdds, closingDate} = this.props;
     //const amount = parseFloat(values.amount.value);
-    const odds = parseFloat(values.odds.value);
+    let odds = parseFloat(values.odds.value);
     const side = parseInt(this.toggleRef.value);
+
+    const marketOdds = side === SIDE.SUPPORT ? marketSupportOdds : marketAgainstOdds;
+
+    if(!isChangeOdds){
+      odds = marketOdds;
+    }
 
     console.log("Amount, Side, Odds", amount, side, odds);
     // this.props.onSubmitClick(amount);
@@ -143,7 +133,7 @@ class BetingShakeFree extends React.Component {
     if(!betHandshakeHandler.isRightNetwork()){
       message = MESSAGE.RIGHT_NETWORK;
     }
-    else if(this.isExpiredDate()){
+    else if(betHandshakeHandler.isExpiredDate(closingDate)){
       message = MESSAGE.MATCH_OVER;
 
     }
@@ -297,7 +287,7 @@ class BetingShakeFree extends React.Component {
         <p className="titleForm text-center">BET FREE ON THE OUTCOME</p>
         {<Toggle ref={(component) => {this.toggleRef = component}} onChange={this.onToggleChange} />}
         {/*this.renderInputField(amountField)*/}
-        <div className="freeAmount"> You have free {amount} ETH</div>
+        <div className="freeAmount"> You have {amount} ETH free </div>
         {isShowOdds && this.renderInputField(oddsField)}
         <div className="rowWrapper">
          <div>Possible winnings</div>
@@ -455,10 +445,12 @@ class BetingShakeFree extends React.Component {
     };
     console.log("Params:", params);
 
+    
     this.props.initFreeHandshake({PATH_URL: API_URL.CRYPTOSIGN.INIT_HANDSHAKE_FREE, METHOD:'POST', data: params,
     successFn: this.initHandshakeSuccess,
     errorFn: this.initHandshakeFailed
   });
+  
   }
 
   initHandshakeSuccess = async (successData)=>{
