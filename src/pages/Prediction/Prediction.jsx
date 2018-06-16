@@ -93,7 +93,7 @@ class LiveStreaming extends React.PureComponent {
   render() {
     const matches = fixtures.filter(item => {
       const now = moment();
-      const matchTime = moment(item.date);
+      const matchTime = moment(item.date).add(100, 'm');
       return matchTime.isSameOrAfter(now, 'milliseconds');
     });
     const groupMatchesByDate = groupBy(matches.slice(0, 5), item => moment(item.date).format("MMM DD"));
