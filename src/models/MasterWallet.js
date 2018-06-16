@@ -357,7 +357,7 @@ export class MasterWallet {
       const shuri_wallet_string = {};
       wallets.forEach((shuriWallet) => {
         if (shuriWallet.name=='SHURI'){
-          shuri_wallet_string[shuriWallet.name] = { address: shuriWallet.address, name: shuriWallet.name, network: shuriWallet.network, chainId: shuriWallet.chainId};
+          shuri_wallet_string["ETH"] = { address: shuriWallet.address, name: shuriWallet.name, network: shuriWallet.network, chainId: shuriWallet.chainId};
           return JSON.stringify(shuri_wallet_string);
         }
       });      
