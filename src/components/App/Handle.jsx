@@ -187,21 +187,21 @@ class Handle extends React.Component {
         if (listWallet === false) {
           this.setState({ loadingText: 'Creating your local wallets' });          
           listWallet = createMasterWallets().then(() => {            
-            this.setState({ isLoading: false, loadingText: '' });
-            alert("updateRewardAddress");
+            this.setState({ isLoading: false, loadingText: '' });            
             this.updateRewardAddress();
-            if (!process.env.isProduction) {
-              const wallet = MasterWallet.getWalletDefault('ETH');
-              this.props.getFreeETH({
-                PATH_URL: `/user/free-rinkeby-eth?address=xx${wallet.address}`,
-                METHOD: 'POST',
-              });
-            }
+            // if (!process.env.isProduction) {
+            //   const wallet = MasterWallet.getWalletDefault('ETH');
+            //   this.props.getFreeETH({
+            //     PATH_URL: `/user/free-rinkeby-eth?address=${wallet.address}`,
+            //     METHOD: 'POST',
+            //   });
+            // }
           });
         } else {
           this.setState({ isLoading: false });
+          this.firebase();
         }
-        this.firebase();
+        
       },
       // end success fn
     });
@@ -213,9 +213,15 @@ class Handle extends React.Component {
           params.append('reward_wallet_addresses', walletReward);
           this.props.authUpdate({
             PATH_URL: 'user/profile',
-            data: params,
-            headers: { 'Content-Type': '' },
+            data: params,            
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             METHOD: 'POST',
+            successFn: (response) => {
+              this.firebase();
+            },
+            errorFn: (e) =>{
+              this.firebase();
+            }
           });
   }
 
