@@ -79,8 +79,13 @@ const data = [
 
 const highlightVideos = [
   {
-    url: 'https://www.youtube.com/embed/HSDjGbFo9NY',
-    title: 'EGY vs URU 0-1 Highlights World Cup 2018',
+    url: 'https://www.youtube.com/embed/Fe5sLVeVt7M',
+    title: 'Portugal vs Spain 3-3 All goals & Highlights (15/06/2018)',
+    time: '',
+  },
+  {
+    url: 'https://www.youtube.com/embed/KoQM1bnwfq0',
+    title: 'Morocco 0-1 Iran Highlights',
     time: '',
   },
   {

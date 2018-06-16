@@ -166,9 +166,20 @@ export default [
       "goalsAwayTeam": null
     },
     "odds": null,
-    link: 'https://wc.kenhtructiep.com/ss.php?v=1481482',
-    linksLive: [],
-    linksSoftCast: [],
+    link: 'http://capodeportes.net/reproductor2/canal3.php',
+    linksLive: [
+      'http://capodeportes.net/reproductor2/canal3.php',
+      'https://www.youtube.com/embed/lM8BF1qE_6U',
+    ],
+    linksSoftCast: [
+      'acestream://99be8b3ede53ddc801506ffe652f441c48d91426',
+      'acestream://abbdefc969badb71c3f20af6397d2753565f0e35',
+      'acestream://b4a174b7da816b09647f5f56a6baac452c393a8a',
+      'acestream://db26751076e3fd6878338a05b6dc84bc405fd5cd',
+      'acestream://db26751076e3fd6878338a05b6dc84bc405fd5cd',
+      'acestream://e30e95ae63f194698f82927d4d9b6ace8b03e3d0',
+      'acestream://f07f40cc887905e30a603a602e9ea9a8d9f7422a',
+    ],
   },
   {
     "_links": {
