@@ -127,7 +127,7 @@ class Refers extends React.Component {
       this.props.rfChange(nameFormStep3, 'refer_email', refers && refers.step3_value ? refers.step3_value : '');
 
       if(refers.step1 && refers.step2 && refers.step3 == 2){
-        let referLink = profile && profile.username ? "https://ninja.org/ref=?" + profile.username : '';
+        let referLink = profile && profile.username ? "https://ninja.org/?ref=" + profile.username : '';
         this.setState({referLink: referLink});
         this.props.rfChange(nameFormStep4, 'refer_link', referLink);
       }
