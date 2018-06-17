@@ -254,7 +254,7 @@ class Refers extends React.Component {
         method: 'get'
       })
       .then(response => {
-          if(response.data && response.data.id){
+          if(response.data && response.data.result){
             resolve(true);
           }
           else{
