@@ -76,7 +76,7 @@ class Detail extends React.PureComponent {
                 </div>
               </div>
               <div className="liveBox">
-                <iframe src={isHideDefaultLink ? activeLink : defaultLink} width="100%" allowFullScreen autoPlay="autoPlay" />
+                <iframe src={isHideDefaultLink ? activeLink : defaultLink} width="100%" allowFullScreen autoPlay="autoPlay" allow="autoplay; encrypted-media" />
               </div>
               <div className="share-block">
                 <p className="text">Share to</p>
