@@ -373,7 +373,24 @@ export default [
       "goalsHomeTeam": null,
       "goalsAwayTeam": null
     },
-    "odds": null
+    "odds": null,
+    link: 'https://www.youtube.com/embed/xHy5fTS65pw?autoplay=1',
+    linksLive: [
+      'https://www.youtube.com/embed/xHy5fTS65pw?autoplay=1',
+      'http://capodeportes.net/reproductor2/canal3.php?width=400&height=300&autoplay=1',
+      'https://www.youtube.com/embed/6RCSbkHsiiM?autoplay=1',
+      'https://www.youtube.com/embed/rwOnt9a4Cz4?autoplay=1',
+      'https://www.youtube.com/embed/Synsu20dYtQ?autoplay=1',
+    ],
+    linksSoftCast: [
+      'sop://broker.sopcast.com:3912/263006',
+      'sop://broker.sopcast.com:3912/263020',
+      'sop://broker.sopcast.com:3912/259944',
+      'sop://broker.sopcast.com:3912/151777',
+      'sop://broker.sopcast.com:3912/254780',
+      'sop://broker.sopcast.com:3912/259955',
+      'sop://broker.sopcast.com:3912/263005',
+    ],
   },
   {
     "_links": {
