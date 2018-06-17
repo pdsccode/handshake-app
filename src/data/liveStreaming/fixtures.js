@@ -381,6 +381,7 @@ export default [
       'https://www.youtube.com/embed/6RCSbkHsiiM?autoplay=1',
       'https://www.youtube.com/embed/rwOnt9a4Cz4?autoplay=1',
       'https://www.youtube.com/embed/Synsu20dYtQ?autoplay=1',
+      'https://www.youtube.com/embed/csBjGMOkdZ8?autoplay=1',
     ],
     linksSoftCast: [
       'sop://broker.sopcast.com:3912/263006',
