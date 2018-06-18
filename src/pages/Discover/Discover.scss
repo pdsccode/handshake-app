@@ -8,6 +8,11 @@
   .category-wrapper {
     margin-bottom: rem-calc(11px);
     background: $white;
+    .multilanguage-block {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+    }
   }
   .buy-sell-wrapper {
     margin-bottom: rem-calc(15px);
