@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 // services, constants
-import  { BetHandshakeHandler, SIDE, BETTING_STATUS_LABEL, ROLE} from './BetHandshakeHandler.js';
+import  { BetHandshakeHandler, SIDE, BETTING_STATUS_LABEL, ROLE, MESSAGE} from './BetHandshakeHandler.js';
 import momment from 'moment';
 import {MasterWallet} from '@/models/MasterWallet';
 
@@ -250,7 +250,7 @@ class FeedBetting extends React.Component {
     const balance = await betHandshakeHandler.getBalance();
     const estimatedGas = await betHandshakeHandler.getEstimateGas();
     let message = null;
-    if(estimatedGas < balance){
+    if(estimatedGas > balance){
       message = MESSAGE.NOT_ENOUGH_BALANCE;
 
     }
