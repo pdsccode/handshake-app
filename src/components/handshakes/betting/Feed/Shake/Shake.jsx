@@ -154,17 +154,18 @@ class BetingShake extends React.Component {
     const estimatedGas = await betHandshakeHandler.getEstimateGas();
     //const estimatedGas = 0.00001;
     const total = amount + parseFloat(estimatedGas);
-    console.log('Balance, estimate gas, total:', balance, estimatedGas, total);
+    console.log('Balance, estimate gas, total, date:', balance, estimatedGas, total, closingDate);
 
     var message = null;
-
+    console.log
     // send event tracking
     try {
       GA.clickGoButton(matchName, matchOutcome, side);
     } catch (err) {}
 
+
     if(!betHandshakeHandler.isRightNetwork()){
-      message = MESSAGE.MATCH_OVER;
+      message = MESSAGE.RIGHT_NETWORK;
 
     }
     else if (betHandshakeHandler.isExpiredDate(closingDate)){
@@ -175,7 +176,7 @@ class BetingShake extends React.Component {
           if(total <= parseFloat(balance)){
             if(isShowOdds){
               if(odds >1){
-                this.initHandshake(amount, odds);
+                //this.initHandshake(amount, odds);
               }else {
                 message = MESSAGE.ODD_LARGE_THAN;
               }
