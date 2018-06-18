@@ -338,14 +338,14 @@ class DiscoverPage extends React.Component {
             </Col>
           </Row> */}
           <Row className="category-wrapper" style={{ marginBottom: handshakeIdActive === HANDSHAKE_ID.EXCHANGE ? '0px' : '' }}>
-            <Col md={9}>
+            <Col className="col-9">
               <Category
                 idActive={handshakeIdActive}
                 onRef={(category) => { this.categoryRef = category; return null; }}
                 onItemClick={this.clickCategoryItem}
               />
             </Col>
-            <Col md={3} className="multilanguage-block">
+            <Col className="col-3 multilanguage-block">
               <MultiLanguage />
             </Col>
           </Row>
