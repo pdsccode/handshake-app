@@ -198,15 +198,23 @@ class Router extends React.Component {
               (
                 <ScrollToTop>
                   <Switch>
-                    <Route
-                      exact
-                      path={URL.INDEX}
-                      render={() => (
-                        <Redirect to={{pathname: URL.LIVE_STREAMING}}/>
-                      )}
-                    />
-                    <Route path={URL.LIVE_STREAMING} component={LiveStreamingRootRouter} />
-                    <Route path={URL.LIVE_STREAMING_PREDICTION} component={PredictionRootRouter} />
+                    {
+                      window.location.hostname !== 'ninjaprediction.org' ? (
+                        [
+                          <Route
+                            exact
+                            path={URL.INDEX}
+                            render={() => (
+                              <Redirect to={{pathname: URL.LIVE_STREAMING}}/>
+                            )}
+                            key={0}
+                          />,
+                          <Route path={URL.LIVE_STREAMING} component={LiveStreamingRootRouter} key={1} />
+                        ]
+                      ) : (
+                        <Route exact path={URL.INDEX} component={PredictionRootRouter} />
+                      )
+                    }
                     <Route component={Page404} />
                   </Switch>
                 </ScrollToTop>

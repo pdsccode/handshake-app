@@ -11,7 +11,7 @@ const LiveStreaming = props => (<DynamicImport loading={Loading} load={() => imp
 const Page404 = props => (<DynamicImport isNotFound loading={Loading} load={() => import('@/pages/Error/Page404')}>{Component => <Component {...props} />}</DynamicImport>);
 
 const routerMap = [
-  { path: URL.LIVE_STREAMING_PREDICTION, component: LiveStreaming },
+  { path: URL.INDEX, component: LiveStreaming },
 ];
 
 class DiscoverRouter extends React.Component {
