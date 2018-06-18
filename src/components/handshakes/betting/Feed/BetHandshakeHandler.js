@@ -447,7 +447,6 @@ export class BetHandshakeHandler {
   }
   async cancelBet(hid, side, stake, odds, offchain){
     const chainId = this.getChainIdDefaultWallet();
-    //hid = 10000;
 
     const bettinghandshake = new BettingHandshake(chainId);
     const result = await bettinghandshake.cancelBet(hid, side, stake, odds, offchain);

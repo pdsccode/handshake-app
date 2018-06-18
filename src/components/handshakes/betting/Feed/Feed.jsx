@@ -344,6 +344,7 @@ class FeedBetting extends React.Component {
 
       //this.handleStatus(updateInfo);
       this.props.updateBettingChange(updateInfo);
+
       const stake = amount;
       //const payout = stake * odds;
       const result = await betHandshakeHandler.cancelBet(hid, side, stake, odds, offchain);
