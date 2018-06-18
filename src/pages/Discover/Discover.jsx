@@ -348,7 +348,7 @@ class DiscoverPage extends React.Component {
           {
             this.state.isBannedChecked && handshakeIdActive === HANDSHAKE_ID.EXCHANGE && !this.state.isBannedCash && (
               <React.Fragment>
-                <Row>
+                {/*<Row>
                   <Col md={12} className="exchange-intro">
                     <span className="icon-shop">
                       <img src={icon2KuNinja} alt="" />
@@ -364,11 +364,11 @@ class DiscoverPage extends React.Component {
                     </span>
                   </Col>
                 </Row>
-                {/* <Row> */}
-                  {/* <Col md={12} className="feed-wrapper"> */}
-                {/* <FeedCreditCard history={this.props.history} /> */}
-                  {/* </Col> */}
-                {/* </Row> */}
+                 <Row>
+                   <Col md={12} className="feed-wrapper">
+                 <FeedCreditCard history={this.props.history} />
+                   </Col>
+                 </Row> */}
               </React.Fragment>
             )
           }
@@ -392,9 +392,9 @@ class DiscoverPage extends React.Component {
             )
           }
           <Row>
-            {this.state.isBannedChecked && handshakeIdActive === HANDSHAKE_ID.EXCHANGE && !this.state.isBannedCash && this.getHandshakeList()}
+            {this.state.isBannedChecked && [HANDSHAKE_ID.EXCHANGE, HANDSHAKE_ID.EXCHANGE_LOCAL].indexOf(handshakeIdActive) >= 0 && !this.state.isBannedCash && this.getHandshakeList()}
             {
-              this.state.isBannedChecked && handshakeIdActive === HANDSHAKE_ID.EXCHANGE && this.state.isBannedCash
+              this.state.isBannedChecked && [HANDSHAKE_ID.EXCHANGE, HANDSHAKE_ID.EXCHANGE_LOCAL].indexOf(handshakeIdActive) >= 0 && this.state.isBannedCash
               ? (
                 <BlockCountry />
               )
