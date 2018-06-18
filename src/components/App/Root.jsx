@@ -46,6 +46,8 @@ class Root extends React.Component {
       app: this.props.app,
     };
 
+    this.setLanguage = ::this.setLanguage;
+
     this.isSupportedLanguages = ['en', 'zh', 'fr', 'de', 'ja', 'ko', 'ru', 'es'];
 
     const currentLanguage = local.get(APP.LOCALE);
