@@ -33,6 +33,7 @@ import GroupBook from './GroupBook';
 
 const betHandshakeHandler = new BetHandshakeHandler();
 const ROUND = 1000000;
+const ROUND_ODD = 10;
 const BACKGROUND_COLORS = [
   'linear-gradient(-135deg, #FFA7E7 0%, #EA6362 100%)',
   'linear-gradient(-135deg, #17EAD9 0%, #6078EA 100%)',
@@ -258,7 +259,7 @@ class FeedBetting extends React.Component {
             </div>
             <div>
               <div className="description">On odds</div>
-              <div className={`value ${colorBySide}`}> {odds.toFixed(2)}</div>
+              <div className={`value ${colorBySide}`}> {Math.floor(odds*ROUND_ODD)/ROUND_ODD}</div>
             </div>
             <div>
               <div className="description">You could win</div>
