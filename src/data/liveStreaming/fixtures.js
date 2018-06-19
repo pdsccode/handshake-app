@@ -522,8 +522,9 @@ export default [
       "goalsAwayTeam": null
     },
     "odds": null,
-    link: 'http://capodeportes.net/reproductor2/canal3.php?width=400&height=300&autoplay=1',
+    link: 'https://player.twitch.tv/?autoplay=true&channel=cmostafa99man&autoplay=1',
     linksLive: [
+      'https://player.twitch.tv/?autoplay=true&channel=cmostafa99man&autoplay=1',
       'http://capodeportes.net/reproductor2/canal3.php?width=400&height=300&autoplay=1',
       'https://www.youtube.com/embed/of6k9wMnaCg?autoplay=1',
     ],
