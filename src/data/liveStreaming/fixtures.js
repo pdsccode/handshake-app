@@ -559,7 +559,21 @@ export default [
       "goalsHomeTeam": null,
       "goalsAwayTeam": null
     },
-    "odds": null
+    "odds": null,
+    link: 'https://player.twitch.tv/?autoplay=true&channel=rgiselepire&autoplay=1',
+    linksLive: [
+      'https://player.twitch.tv/?autoplay=true&channel=rgiselepire&autoplay=1',
+      'http://capodeportes.net/reproductor2/canal3.php?width=400&height=300&autoplay=1',
+      'https://www.youtube.com/embed/RwOkPLnCrC8?autoplay=1',
+    ],
+    linksSoftCast: [
+      'sop://broker.sopcast.com:3912/260848',
+      'sop://broker.sopcast.com:3912/260848',
+      'sop://broker.sopcast.com:3912/262232',
+      'sop://broker.sopcast.com:3912/257744',
+      'sop://broker.sopcast.com:3912/151777',
+      'sop://broker.sopcast.com:3912/255015',
+    ],
   },
   {
     "_links": {
