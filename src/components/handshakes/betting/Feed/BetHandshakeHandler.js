@@ -38,6 +38,8 @@ export const MESSAGE = {
   AMOUNT_VALID: 'Please place a bet larger than 0.',
   MATCH_OVER: 'Time travel is hard. Please bet on a future or ongoing match.',
   RIGHT_NETWORK: 'You must set your wallet on Mainnet',
+  ROLLBACK: `Something did not go according to plan. Please try again.`,
+
 };
 
 export const BET_BLOCKCHAIN_STATUS = {
@@ -102,8 +104,7 @@ export const BETTING_STATUS_LABEL =
       CANCELLED: 'Your bet was cancelled.',
       REFUNDING: 'Your coin is being refunded to you.',
       REFUNDED: 'Your coin has been refunded.',
-      ROLLBACK: `Something did not go according to plan. Please try again.`,
-
+      ROLLBACK: `Something did not go according to plan. We're fixing it`,
     };
 
 export const CONTRACT_METHOD = {
@@ -442,11 +443,10 @@ export class BetHandshakeHandler {
   rollbackSuccess = async (successData) => {
     console.log('rollbackSuccess', successData);
     store.dispatch(showAlert({
-      message: <div className="text-center">{MESSAGE.ROLLBACK}</div>,
-      timeOut: 3000,
-      type: 'info',
-      callBack: () => {
-      }
+      message: MESSAGE.ROLLBACK,
+      timeOut: 5000,
+      type: 'danger',
+      
     }));
   }
   rollbackFailed = (error) => {
