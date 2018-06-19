@@ -216,6 +216,13 @@ export default {
       },
     ],
   },
+  COIN_EXCHANGE_LP_START_TRADING_NOW: 'Начать торговать прямо сейчас',
+  COIN_EXCHANGE_LP_PLACEHOLDER_INPUT: 'Ваша электронная почта',
+  COIN_EXCHANGE_LP_TITLE_SUBMIT_BT: 'Присоединиться к списку рассылки',
+  COIN_EXCHANGE_LP_SECOND_BOX_TITLE: 'Мы первые, кто предложил полностью децентрализованную платформу для покупки и продажи Bitcoin и Ethereum.',
+  COIN_EXCHANGE_LP_SECOND_BOX_DESCRIPTION_1: 'Несколько способов оплаты: кредитная карта и наличные деньги',
+  COIN_EXCHANGE_LP_SECOND_BOX_DESCRIPTION_2: 'Обеспеченная сделка по blockchain технологии',
+  COIN_EXCHANGE_LP_SECOND_BOX_DESCRIPTION_3: '-Быстрое и удобное использование.',
   COIN_EXCHANGE_LP_THIRD_BOX_1: {
     title: 'Несколько способов оплаты',
     description: 'Мы обеспечиваем торговлю наличных денег на криптовалюту и кредитной карты на криптовалюту. Найдите своих ближайших трейдеров, не оставляя истории транзакций для каких-либо действий на нашей платформе.',

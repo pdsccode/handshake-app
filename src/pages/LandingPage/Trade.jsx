@@ -164,6 +164,7 @@ class Handshake extends React.Component {
   }
 
   renderInputForm({id, onSubmit, refName}) {
+    const { messages, locale } = this.props.intl;
     return (
       <form className="registerEmail" onSubmit={onSubmit}>
         <input
@@ -171,11 +172,11 @@ class Handshake extends React.Component {
           name="email"
           type="text"
           id={id}
-          placeholder="Enter your email"
+          placeholder={messages.COIN_EXCHANGE_LP_PLACEHOLDER_INPUT}
           ref={input => this[refName] = input}
         />
         <button className="btnSubmit" onClick={onSubmit}>
-          <span>Join mailing list</span>
+          <span>{messages.COIN_EXCHANGE_LP_TITLE_SUBMIT_BT}</span>
         </button>
       </form>
     )
@@ -202,15 +203,15 @@ class Handshake extends React.Component {
                 }
               </dl>
 
-              <div className="row bottomBox">
-                <div className="col-lg-4 col-md-12 col-sm-12 col-xs-12">
+              <div className={`row bottomBox${locale === 'ru' ? ' russia' : ''}`}>
+                <div className={`${locale === 'ru' ? 'col-lg-10' : 'col-lg-4'} col-md-12 col-sm-12 col-xs-12`}>
                   <a href="/"
                      className="btnStartTrading"
                   >
-                    <span>Start Trading Now</span>
+                    <span>{messages.COIN_EXCHANGE_LP_START_TRADING_NOW}</span>
                   </a>
                 </div>
-                <div className="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+                <div className={`${locale === 'ru' ? 'col-lg-10' : 'col-lg-8'} col-md-12 col-sm-12 col-xs-12`}>
                   {
                     this.renderInputForm({
                       id: 'email-1',
@@ -238,11 +239,11 @@ class Handshake extends React.Component {
               <img src={tradeCoinExchange} alt="trade coin exchange icon" className="img-fluid" />
             </div>
             <div className="col-lg-6 col-md-12 col-sm-12 col-xs-12">
-              <p className="subTitle">We are the first to offer a completely decentralized platform to buy and sell Bitcoin and Ethereum.</p>
+              <p className="subTitle">{messages.COIN_EXCHANGE_LP_SECOND_BOX_TITLE}</p>
               <p className="description">
-                Multiple payment method: credit card and cash<br />
-                Secured transaction by blockchain technology<br />
-                Fast and convenient usage.
+                {messages.COIN_EXCHANGE_LP_SECOND_BOX_DESCRIPTION_1} <br />
+                {messages.COIN_EXCHANGE_LP_SECOND_BOX_DESCRIPTION_2} <br />
+                {messages.COIN_EXCHANGE_LP_SECOND_BOX_DESCRIPTION_3}
               </p>
             </div>
           </div>

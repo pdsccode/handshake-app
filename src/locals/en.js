@@ -314,6 +314,13 @@ export default {
       },
     ],
   },
+  COIN_EXCHANGE_LP_START_TRADING_NOW: 'Start Trading Now',
+  COIN_EXCHANGE_LP_PLACEHOLDER_INPUT: 'Enter your email',
+  COIN_EXCHANGE_LP_TITLE_SUBMIT_BT: 'Join mailing list',
+  COIN_EXCHANGE_LP_SECOND_BOX_TITLE: 'We are the first to offer a completely decentralized platform to buy and sell Bitcoin and Ethereum.',
+  COIN_EXCHANGE_LP_SECOND_BOX_DESCRIPTION_1: 'Multiple payment method: credit card and cash',
+  COIN_EXCHANGE_LP_SECOND_BOX_DESCRIPTION_2: 'Secured transaction by blockchain technology',
+  COIN_EXCHANGE_LP_SECOND_BOX_DESCRIPTION_3: 'Fast and convenient usage.',
   COIN_EXCHANGE_LP_THIRD_BOX_1: {
     title: 'Multiple Payment Method',
     description: 'We are available for cash - coin trading and credit card - coin trading. Find your nearest traders and leave no transaction history for any activity on our platform.',
