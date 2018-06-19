@@ -215,6 +215,25 @@ class FeedBetting extends React.Component {
       predictName = event_predict.slice(8);
     }
 
+    let buttonClassName = "cancel";
+    switch(actionTitle){
+
+      case BETTING_STATUS_LABEL.CANCEL:
+      break;
+
+      case BETTING_STATUS_LABEL.WITHDRAW:
+      buttonClassName= "withdraw";
+
+        break;
+      case BETTING_STATUS_LABEL.REFUND:
+      buttonClassName= "refund";
+
+      break;
+      default:
+      break;
+
+    }
+
     return (
       <div>
         {/* Feed */}
@@ -250,7 +269,7 @@ class FeedBetting extends React.Component {
           <div className="bottomDiv">
             {this.renderStatus()}
              {/* Shake */}
-             {actionTitle && <Button block disabled={!isAction} onClick={() => { this.clickActionButton(actionTitle); }}>{actionTitle}</Button>}
+             {actionTitle && <Button block className={buttonClassName} disabled={!isAction} onClick={() => { this.clickActionButton(actionTitle); }}>{actionTitle}</Button>}
              {/*{<Button block onClick={() => { this.clickActionButton(actionTitle); }} className={side === 1 ? 'cancel' : 'withdraw'}>{side === 1 ? 'cancel this bet' : 'withdraw'}</Button>}*/}
           </div>
         </Feed>
