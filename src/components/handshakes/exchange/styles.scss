@@ -7,6 +7,10 @@
   &:focus {
     border-color: darkblue;
   }
+  &::placeholder {
+    opacity: 1;
+    color: #C8C7CC;
+  }
 }
 input {
   color: #ffffff;
@@ -15,4 +19,8 @@ input {
 .hrLine {
   background: rgba(255,255,255,0.2);
   margin: 10px 0;
+}
+
+.app {
+  padding-bottom: 150px !important;
 }
