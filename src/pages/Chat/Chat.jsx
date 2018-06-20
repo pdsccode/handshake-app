@@ -5,13 +5,13 @@ import PropTypes from 'prop-types';
 import { MessageList, ChatList, Input } from 'react-chat-elements';
 import md5 from 'md5';
 import moment from 'moment';
-import Identicon from 'identicon.js';
+// import Identicon from 'identicon.js';
 import firebase from 'firebase/app';
-import { validateCallback } from '@firebase/util';
-import 'firebase/database';
-import 'firebase/auth';
 // import TransferCoin from '@/components/Wallet/TransferCoin';
 import Modal from '@/components/core/controls/Modal';
+import { getUserName } from '@/reducers/chat/action';
+import { bindActionCreators } from 'redux';
+import { API_URL } from '@/constants';
 
 import { setHeaderLeft, setHeaderTitle } from '@/reducers/app/action';
 import IconBtnSend from '@/assets/images/icon/ic-btn-send.svg';
@@ -30,12 +30,17 @@ let isInitialized = false;
 export const chatInstance = new Firechat(firebase, chatRef);
 
 class Chat extends Component {
+  static propTypes = {
+    setHeaderLeft: PropTypes.func.isRequired,
+    setHeaderTitle: PropTypes.func.isRequired,
+    auth: PropTypes.object.isRequired,
+    getUserName: PropTypes.func.isRequired,
+  }
+
   constructor(props) {
     super(props);
 
     this.coinTextRegEx = /([-+]?[0-9]*\.?[0-9]+)\s*?(ETHEREUM|BITCOIN|ETHER|ETH|BTC)/gi;
-    this.htmlTagRegEx = /<\/?[\w\s="/.':;#-\/\?]+>/gi;
-    this.specialTags = ['transfer_coin'];
     this.user = null;
 
     this.state = {
@@ -55,16 +60,19 @@ class Chat extends Component {
     this.maxUserSearchResult = null;
     this.isInChatTab = true;
 
-    this.renderChatList = this.renderChatList.bind(this);
-    this.renderChatDetail = this.renderChatDetail.bind(this);
-    this.onChatItemClicked = this.onChatItemClicked.bind(this);
-    this.onSearchUserClicked = this.onSearchUserClicked.bind(this);
-    this.sendMessage = this.sendMessage.bind(this);
-    this.onSearchUser = this.onSearchUser.bind(this);
-    this.onBackButtonClicked = this.onBackButtonClicked.bind(this);
-    this.toggleTooltip = this.toggleTooltip.bind(this);
+    this.renderChatList = :: this.renderChatList;
+    this.renderChatDetail = :: this.renderChatDetail;
+    this.onChatItemClicked = :: this.onChatItemClicked;
+    this.onSearchUserClicked = :: this.onSearchUserClicked;
+    this.sendMessage = :: this.sendMessage;
+    this.onSearchUser = :: this.onSearchUser;
+    this.onBackButtonClicked = :: this.onBackButtonClicked;
 
     this.chatTo = props.match.params.username;
+
+    if (!isInitialized) {
+      this.saveCurrentDataToLocalStorage();
+    }
 
     this.bindDataEvents();
     this.signIn(null);
@@ -249,6 +257,71 @@ class Chat extends Component {
     }
   }
 
+  setCurrentUserName() {
+    console.log('set current user name');
+    if (this.isInChatTab) {
+      this.props.setHeaderTitle(this.user.name);
+    }
+  }
+
+  setUser(userId, userName) {
+    const self = this;
+
+    // Initialize data events
+    chatInstance.setUser(userId, userName, !isInitialized, (user) => {
+      self.user = user;
+
+      const historyState = this.loadDataFromLocalStorage();
+      if (historyState && isInitialized) {
+        this.setCustomState(historyState, () => {
+          this.updateHeaderLeft();
+        });
+      }
+
+      chatInstance.resumeSession();
+      this.updateCurrentUserName(userName);
+      this.updateHeaderTitle();
+
+      if (this.chatTo && !isInitialized) {
+        this.props.getUserName({
+          PATH_URL: `${API_URL.CHAT.GET_USER_NAME}/${this.chatTo}`,
+          successFn: (response) => {
+            const chatToUserName = response.data;
+            chatInstance.getUserById(chatToUserName, (chatToUser) => {
+              if (chatToUser && chatToUser.id !== this.user.id) {
+                this.chatWithUser(chatToUser);
+              }
+            });
+          },
+        });
+      }
+
+      isInitialized = true;
+    });
+  }
+
+  setChatSourceState(roomId, room) {
+    this.setCustomState((prevState) => {
+      const prevChatSource = prevState.chatSource;
+      prevChatSource[roomId] = room;
+
+      return {
+        chatSource: prevState.chatSource,
+      };
+    });
+  }
+
+  setCustomState(state, cb) {
+    this.setState(state, () => {
+      if (cb) {
+        setTimeout(() => {
+          this.saveCurrentDataToLocalStorage();
+        }, 0);
+        cb();
+      }
+    });
+  }
+
   getLastMessages() {
     const { chatSource } = this.state;
     const messages = [];
@@ -259,7 +332,7 @@ class Chat extends Component {
         const fromNamesFiltered = Object.keys(room.froms).filter(userId => (userId !== this.user.id));
         const fromNames = fromNamesFiltered.map(userId => (room.froms[userId])).join(', ');
         const fromUserIds = fromNamesFiltered.map(userId => (userId)).join(',');
-        const lastMessage = [...room.messages].reverse().find((message) => message.message.type != 'special');
+        const lastMessage = [...room.messages].reverse().find(message => message.message.type !== 'special');
 
         const lastMessageTime = lastMessage.timestamp;
         const lastMessageContent = lastMessage.message.message;
@@ -284,8 +357,7 @@ class Chat extends Component {
 
   getListSearchUsersSource(users) {
     const usersData = [];
-    Object.keys(users).forEach((userName) => {
-      const user = users[userName];
+    users.forEach((user) => {
       const { online, name, id: userId } = user;
 
       usersData.push({
@@ -341,64 +413,6 @@ class Chat extends Component {
     }
   }
 
-  setCurrentUserName() {
-    console.log('set current user name');
-    if (this.isInChatTab) {
-      this.props.setHeaderTitle(this.user.name);
-    }
-  }
-
-  setUser(userId, userName) {
-    const self = this;
-
-    // Initialize data events
-    chatInstance.setUser(userId, userName, !isInitialized, (user) => {
-      self.user = user;
-
-      const historyState = this.loadDataFromLocalStorage();
-      if (historyState && isInitialized) {
-        this.setCustomState(historyState, () => {
-          this.updateHeaderLeft();
-        });
-      }
-
-      isInitialized = true;
-
-      chatInstance.resumeSession();
-      this.updateCurrentUserName(userName);
-
-      if (this.chatTo) {
-        chatInstance.getUserById(this.chatTo, (user) => {
-          if (user) {
-            this.chatWithUser(user);
-          }
-        });
-      }
-    });
-  }
-
-  setChatSourceState(roomId, room) {
-    this.setCustomState((prevState) => {
-      const prevChatSource = prevState.chatSource;
-      prevChatSource[roomId] = room;
-
-      return {
-        chatSource: prevState.chatSource,
-      };
-    });
-  }
-
-  setCustomState(state, cb) {
-    this.setState(state, () => {
-      if (cb) {
-        setTimeout(() => {
-          this.saveCurrentDataToLocalStorage();
-        }, 0);
-        cb();
-      }
-    });
-  }
-
   loadDataFromLocalStorage() {
     return JSON.parse(localStorage.getItem('chat_data'));
   }
@@ -422,6 +436,20 @@ class Chat extends Component {
 
   updateHeaderLeft() {
     this.props.setHeaderLeft(this.state.chatDetail ? this.renderBackButton() : this.renderSearchButton());
+  }
+
+  updateHeaderTitle() {
+    const { chatDetail } = this.state;
+
+    if (chatDetail) {
+      const roomData = this.getRoom(chatDetail.id);
+      if (!roomData) {
+        return;
+      }
+      this.props.setHeaderTitle(Object.keys(roomData.froms).filter(userId => (userId !== this.user.id)).map(userId => (roomData.froms[userId])).join(', '));
+    } else if (this.user) {
+      this.props.setHeaderTitle(this.user.name);
+    }
   }
 
   signIn(user) {
@@ -474,16 +502,15 @@ class Chat extends Component {
   }
 
   enterMessageRoom(room) {
-    const roomData = this.getRoom(room.id);
     this.setCustomState({
       chatDetail: room,
       currentMessage: '',
     }, () => {
       this.updateHeaderLeft();
       this.scrollToBottom();
+      this.clearSearch();
+      this.updateHeaderTitle();
     });
-    this.clearSearch();
-    this.props.setHeaderTitle(Object.keys(roomData.froms).filter(userId => (userId !== this.user.id)).map(userId => (roomData.froms[userId])).join(', '));
   }
 
   scrollToBottom() {
@@ -527,6 +554,7 @@ class Chat extends Component {
   }
 
   chatWithUser(user) {
+    console.log('chat with username', user);
     const { id: userId, name: userName, publicKey: userPublicKey } = user;
     const roomId = md5(this.mixString(userId, this.user.id));
 
@@ -611,20 +639,21 @@ class Chat extends Component {
 
   processMessage(messageId, messageContent, messageType = 'plain_text') {
     switch (messageType) {
-      case 'special':
+      case 'special': {
         messageContent = this.processSpecialMessage(messageContent);
         break;
-      case 'plain_text':
+      }
+      case 'plain_text': {
         const coinsTest = messageContent.match(this.coinTextRegEx);
         if (coinsTest && coinsTest.length > 0) {
           const messageArr = [];
-          for (const i in coinsTest) {
+          coinsTest.forEach((i) => {
             const coinMessage = coinsTest[i];
             const coinMessageIndex = messageContent.indexOf(coinMessage);
             messageArr.push(messageContent.substr(0, coinMessageIndex));
             messageArr.push(<span id={`coin-highlight-${messageId}-${i}`} className="coin-highlight" key={i} onClick={() => { this.onCoinTextClicked(`coin-highlight-${messageId}-${i}`, coinMessage); }}>{coinMessage}</span>);
             messageContent = messageContent.substr(coinMessageIndex + coinMessage.length);
-          }
+          });
 
           if (messageContent) {
             messageArr.push(messageContent);
@@ -632,6 +661,9 @@ class Chat extends Component {
 
           messageContent = messageArr;
         }
+        break;
+      }
+      default:
         break;
     }
 
@@ -701,7 +733,7 @@ class Chat extends Component {
     let prevUserId = null;
 
     const messageList = messages.map((message, messageId) => {
-      const { name: messageName, userId } = message;
+      const { userId } = message;
       const { message: messageContent, type: messageType } = message.message;
       const notch = userId !== prevUserId;
       prevUserId = userId;
@@ -730,9 +762,9 @@ class Chat extends Component {
           placeholder="Type a message..."
           multiline={false}
           ref={(ref) => { this.chatInputRef = ref; }}
-          onFocus={(e) => { this.scrollToBottom(); }}
+          onFocus={() => { this.scrollToBottom(); }}
           onKeyDown={(e) => {
-            if (e.keyCode == 13) {
+            if (e.keyCode === 13) {
               this.sendMessage();
               e.preventDefault();
               return false;
@@ -751,14 +783,8 @@ class Chat extends Component {
     );
   }
 
-  toggleTooltip() {
-    this.setState({
-      tooltipTarget: '',
-    });
-  }
-
   render() {
-    const { chatDetail, tooltipTarget, transferCoin } = this.state;
+    const { chatDetail, transferCoin } = this.state;
     return (
       <div className="chat-container">
         {chatDetail ? this.renderChatDetail(chatDetail) : this.renderChatList()}
@@ -775,20 +801,25 @@ class Chat extends Component {
           //     title="Transfer coin"
           //     ref={(modalRef) => {
           //       this.modalRef = modalRef;
-          //       modalRef && modalRef.open();
+          //       return modalRef && modalRef.open();
           //     }}
           //     onClose={() => {
           //       this.setState({ transferCoin: {} });
-          //     }}>
-          //     <TransferCoin coinName={transferCoin.coinName} amount={transferCoin.amount} onFinish={(transferResult) => {
-          //       const { toAddress, fromWallet, amount } = transferResult;
-          //       this.setState({
-          //         currentMessage: `Mission complete. Sent [AMOUNT:${amount}] [COIN_NAME:${fromWallet.name}] to [TO_ADDRESS:${toAddress}]`,
-          //       }, () => {
-          //         this.sendMessage(null, 'special', { specialTag: 'transfer_coin' });
-          //         this.modalRef && this.modalRef.close();
-          //       });
-          //     }} />
+          //     }}
+          //   >
+          //     <TransferCoin
+          //       coinName={transferCoin.coinName}
+          //       amount={transferCoin.amount}
+          //       onFinish={(transferResult) => {
+          //         const { toAddress, fromWallet, amount } = transferResult;
+          //         this.setState({
+          //           currentMessage: `Mission complete. Sent [AMOUNT:${amount}] [COIN_NAME:${fromWallet.name}] to [TO_ADDRESS:${toAddress}]`,
+          //         }, () => {
+          //           this.sendMessage(null, 'special', { specialTag: 'transfer_coin' });
+          //           return this.modalRef && this.modalRef.close();
+          //         });
+          //       }}
+          //     />
           //   </Modal>
           // )
         }
@@ -797,12 +828,14 @@ class Chat extends Component {
   }
 }
 
-Chat.propTypes = {
-  discover: PropTypes.object,
-};
-
 const mapState = state => ({
   auth: state.auth,
 });
 
-export default connect(mapState, ({ setHeaderLeft, setHeaderTitle }))(Chat);
+const mapStateDispatch = dispatch => ({
+  setHeaderLeft: bindActionCreators(setHeaderLeft, dispatch),
+  setHeaderTitle: bindActionCreators(setHeaderTitle, dispatch),
+  getUserName: bindActionCreators(getUserName, dispatch),
+});
+
+export default connect(mapState, mapStateDispatch)(Chat);

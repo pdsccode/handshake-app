@@ -471,6 +471,7 @@ export class Firechat {
   }
 
   decryptMessage(message, nonce, publicKey) {
+    console.log('message to decode', message);
     if (!(publicKey instanceof Uint8Array)) {
       publicKey = naclUtil.decodeBase64(publicKey);
     }
@@ -483,7 +484,8 @@ export class Firechat {
       message = naclUtil.decodeBase64(message);
     }
 
-    return naclUtil.encodeUTF8(nacl.box.open(message, nonce, publicKey, this.encryptionKeyPair.secretKey));
+    let decodedMessage = nacl.box.open(message, nonce, publicKey, this.encryptionKeyPair.secretKey);
+    return decodedMessage ? naclUtil.encodeUTF8(decodedMessage) : 'You lost the key to this secret message.';
   }
 
   sendMessage(roomId, messageContent, publicKey, messageType, cb) {
@@ -651,7 +653,9 @@ export class Firechat {
 
     query.once('value', (snapshot) => {
       const usernames = snapshot.val() || {};
-      const usernamesFiltered = {};
+
+      console.log('usernames', usernames);
+      const usernamesFiltered = [];
 
       Object.keys(usernames).forEach((userId) => {
         const userInfo = usernames[userId];
@@ -661,12 +665,12 @@ export class Firechat {
           return true;
         }
 
-        usernamesFiltered[userName] = {
+        usernamesFiltered.push({
           name: userName,
           id: userId,
           online: isOnline,
           publicKey,
-        };
+        });
 
         return true;
       });
