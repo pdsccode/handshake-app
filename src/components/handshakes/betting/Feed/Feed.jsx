@@ -338,9 +338,11 @@ class FeedBetting extends React.Component {
 
       if(shakers){
         const foundShakedItem = shakers.find(element => element.shaker_id === profile.id && element.handshake_id === idOffchain);
-        //console.log('Found Shaked Item:', foundShakedItem);
-        idCryptosign = `cryptosign_s${foundShakedItem.id}`;
-        isFreeBet = foundShakedItem.free_bet;
+        console.log('Found Shaked Item:', foundShakedItem);
+        if(foundShakedItem){
+          idCryptosign = betHandshakeHandler.getShakeOffchain(foundShakedItem.id);
+          isFreeBet = foundShakedItem.free_bet;
+        }
       }
     }
     console.log("idCryptosign, isFreeBet, isUserShaker: ", idCryptosign, isFreeBet, isUserShake);
@@ -434,9 +436,36 @@ class FeedBetting extends React.Component {
       offchain: id
     }
     this.props.collectFree({PATH_URL: API_URL.CRYPTOSIGN.COLLECT_FREE, METHOD:'POST',data: params,
-    successFn: this.collectSuccess,
-    errorFn: this.collectFailed
+    successFn: this.collectFreeSuccess,
+    errorFn: this.collectFreeFailed
   });
+  }
+
+  collectFreeSuccess = async (successData)=>{
+    console.log('collectFreeSuccess', successData);
+    const {status} = successData
+    if(status){
+      this.props.showAlert({
+        message: <div className="text-center">{MESSAGE.WITHDRAW_SUCCESS}</div>,
+        timeOut: 3000,
+        type: 'success',
+        callBack: () => {
+        }
+      });
+    }
+  }
+  collectFreeFailed = (error) => {
+    console.log('collectFreeFailed', error);
+    const {status, message} = error;
+    if(status == 0){
+      this.props.showAlert({
+        message: <div className="text-center">{message}</div>,
+        timeOut: 3000,
+        type: 'danger',
+        callBack: () => {
+        }
+      });
+    }
   }
 
   collect(id){
@@ -454,9 +483,14 @@ class FeedBetting extends React.Component {
     console.log('collectSuccess', successData);
     const {status} = successData
     if(status){
-      const {hid, id, status} = this.props;
-      const offchain = id;
+      const {hid, id, status, shakeUserIds} = this.props;
+      const profile = local.get(APP.AUTH_PROFILE);
+      const isUserShake = this.isShakeUser(shakeUserIds, profile.id);
       const {itemInfo} = this.state;
+      let offchain = id;
+      if(isUserShake){
+        offchain = betHandshakeHandler.getShakeOffchain(itemInfo.id);
+      }
       let updateInfo = Object.assign({}, itemInfo);
       updateInfo.bkStatus = itemInfo.status;
       updateInfo.status = status;
@@ -468,8 +502,19 @@ class FeedBetting extends React.Component {
       this.setState({
         itemInfo: updateInfo
       });
+      console.log('Withdraw hid, offchain:', hid, offchain);
      const result = await betHandshakeHandler.withdraw(hid, offchain);
-    //  const {hash} = result;
+     const {blockHash} = result;
+     if(blockHash){
+      this.props.showAlert({
+        message: <div className="text-center">{MESSAGE.WITHDRAW_SUCCESS}</div>,
+        timeOut: 3000,
+        type: 'success',
+        callBack: () => {
+        }
+      });
+     }
+     //  const {hash} = result;
     //  if(hash === -1){
     //    // Error, rollback
     //    this.rollback(offchain);
