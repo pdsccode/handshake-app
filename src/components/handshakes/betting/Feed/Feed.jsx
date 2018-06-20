@@ -294,7 +294,7 @@ class FeedBetting extends React.Component {
   }
   handleActionFree(title, id){
     switch(title){
-  
+
       case BETTING_STATUS_LABEL.WITHDRAW:
         this.collectFree(id);
         break;
@@ -355,13 +355,13 @@ class FeedBetting extends React.Component {
       else {
         if(estimatedGas > balance){
           message = MESSAGE.NOT_ENOUGH_GAS;
-    
+
         }else {
           this.handleActionReal(title, idCryptosign);
 
         }
       }
-      
+
     }
     if(message){
       this.props.showAlert({

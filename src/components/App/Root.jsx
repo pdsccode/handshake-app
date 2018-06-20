@@ -7,7 +7,6 @@ import { URL, APP, API_URL } from '@/constants';
 // actions
 import { setIpInfo, changeLocale, setBannedPrediction, setBannedCash, setCheckBanned } from '@/reducers/app/action';
 import { getListOfferPrice } from '@/reducers/exchange/action';
-
 // services
 import $http from '@/services/api';
 import { createDynamicImport } from '@/services/app';
@@ -37,6 +36,8 @@ addLocaleData([...en, ...fr, ...zh, ...de, ...ja, ...ko, ...ru, ...es]);
 // pages
 const LandingPage = createDynamicImport(() => import('@/pages/LandingPage/LandingPage'), Loading);
 const LandingPageTrade = createDynamicImport(() => import('@/pages/LandingPage/Trade'), Loading);
+const LandingPageWhitePaper = createDynamicImport(() => import('@/pages/LandingPage/WhitePaper'), Loading);
+const LandingPageIntroNjnjaCash = createDynamicImport(() => import('@/pages/LandingPage/IntroducingNinjaCash'), Loading);
 const LandingPageFAQ = createDynamicImport(() => import('@/pages/FAQ/FAQ'), Loading);
 const MobileOrTablet = createDynamicImport(() => import('@/components/MobileOrTablet'), Loading);
 
@@ -58,6 +59,7 @@ class Root extends React.Component {
     this.state = {
       messages,
       app: this.props.app,
+      isLoading: true,
     };
 
     this.setLanguage = ::this.setLanguage;
@@ -141,6 +143,7 @@ class Root extends React.Component {
         }
       }
       this.props.setCheckBanned();
+      this.setState({ isLoading: false });
       // /locale
     });
   }
@@ -149,6 +152,8 @@ class Root extends React.Component {
     if (window.location.pathname === URL.LANDING_PAGE_SHURIKEN) return <LandingPage />;
     if (window.location.pathname === URL.LANDING_PAGE_TRADE) return <LandingPageTrade />;
     if (window.location.pathname === URL.FAQ) return <LandingPageFAQ />;
+    if (window.location.pathname === URL.WHITE_PAPER) return <LandingPageWhitePaper />;
+    if (window.location.pathname === URL.INTRODUCING_NINJA_CASH) return <LandingPageIntroNjnjaCash />;
     if (BrowserDetect.isDesktop) return <MobileOrTablet />;
     return <Handle setLanguage={this.setLanguage} refer={this.refer} />;
   }
@@ -160,7 +165,11 @@ class Root extends React.Component {
         messages={this.state.messages[this.state.app.locale]}
       >
         <div className="root">
-          {this.preRender()}
+          {
+            this.state.isLoading
+            ? <Loading style={{ height: '100vh' }} />
+            : this.preRender()
+          }
         </div>
       </IntlProvider>
     );
