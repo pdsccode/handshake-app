@@ -651,7 +651,19 @@ export default [
       "goalsHomeTeam": null,
       "goalsAwayTeam": null
     },
-    "odds": null
+    "odds": null,
+    link: 'https://player.twitch.tv/?autoplay=true&channel=etrammellf',
+    linksLive: [
+      'https://player.twitch.tv/?autoplay=true&channel=etrammellf',
+      'http://capodeportes.net/reproductor2/canal3.php?width=400&height=300&autoplay=1',
+    ],
+    linksSoftCast: [
+      'sop://broker.sopcast.com:3912/258825',
+      'sop://broker.sopcast.com:3912/263046',
+      'sop://broker.sopcast.com:3912/263041',
+      'sop://broker.sopcast.com:3912/151777',
+      'sop://broker.sopcast.com:3912/254780',
+    ],
   },
   {
     "_links": {
