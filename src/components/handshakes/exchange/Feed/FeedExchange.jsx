@@ -353,26 +353,26 @@ class FeedExchange extends React.PureComponent {
       priceBuyBTC, priceSellBTC, priceBuyETH, priceSellETH,
     } = this.getPrices();
 
-    if (offer.itemFlags.BTC) {
-      let coin = {};
-
-      coin.name = CRYPTO_CURRENCY.BTC;
-      coin.color = '#FF880E';
-      coin.icon = iconBtc;
-      coin.priceBuy = offer.items.BTC.buyBalance ? formatMoneyByLocale(priceBuyBTC,currency) : '-';
-      coin.priceSell = offer.items.BTC.sellBalance ? formatMoneyByLocale(priceSellBTC,currency) : '-';
-
-      coins.push(coin);
-    }
-
     if (offer.itemFlags.ETH) {
       let coin = {};
 
       coin.name = CRYPTO_CURRENCY.ETH;
-      coin.color = 'linear-gradient(-135deg, #CB75ED 0%, #9E53E1 100%)';
+      coin.color = 'linear-gradient(-135deg, #D772FF 0%, #9B10F2 45%, #9E53E1 100%)';
       coin.icon = iconEth;
-      coin.priceBuy = offer.items.ETH.buyBalance ? formatMoneyByLocale(priceBuyETH,currency) : '-';
-      coin.priceSell = offer.items.ETH.sellBalance ? formatMoneyByLocale(priceSellETH,currency) : '-';
+      coin.priceBuy = offer.items.ETH.buyBalance > 0 ? formatMoneyByLocale(priceBuyETH,currency) : '-';
+      coin.priceSell = offer.items.ETH.sellBalance > 0 ? formatMoneyByLocale(priceSellETH,currency) : '-';
+
+      coins.push(coin);
+    }
+
+    if (offer.itemFlags.BTC) {
+      let coin = {};
+
+      coin.name = CRYPTO_CURRENCY.BTC;
+      coin.color = 'linear-gradient(45deg, #FF8006 0%, #FFA733 51%, #FFC349 100%)';
+      coin.icon = iconBtc;
+      coin.priceBuy = offer.items.BTC.buyBalance > 0 ? formatMoneyByLocale(priceBuyBTC,currency) : '-';
+      coin.priceSell = offer.items.BTC.sellBalance > 0 ? formatMoneyByLocale(priceSellBTC,currency) : '-';
 
       coins.push(coin);
     }
@@ -392,8 +392,8 @@ class FeedExchange extends React.PureComponent {
                     <span key={index} className="coin-item" style={{ background: color }} onClick={() => console.log('click item')}>
                       {/*<div className="icon-coin"><img src={icon}/></div>*/}
                       <div className="name mb-1">{name}</div>
-                      <div className="price-wrapper"><label><FormattedMessage id="ex.discover.label.priceBuy" /></label>&nbsp;<span className="price">{priceBuy} {currency}</span></div>
-                      <div className="price-wrapper"><label><FormattedMessage id="ex.discover.label.priceSell" /></label>&nbsp;<span className="price">{priceSell} {currency}</span></div>
+                      <div className="price-wrapper"><label><FormattedMessage id="ex.discover.label.priceBuy" /></label>&nbsp;<span className="price">{priceBuy} {priceBuy !== '-' && currency}</span></div>
+                      <div className="price-wrapper"><label><FormattedMessage id="ex.discover.label.priceSell" /></label>&nbsp;<span className="price">{priceSell} {priceSell !== '-' && currency}</span></div>
                     </span>
                   )
                 })
