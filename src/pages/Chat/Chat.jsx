@@ -6,7 +6,6 @@ import { MessageList, ChatList, Input } from 'react-chat-elements';
 import md5 from 'md5';
 import moment from 'moment';
 // import Identicon from 'identicon.js';
-import firebase from 'firebase/app';
 // import TransferCoin from '@/components/Wallet/TransferCoin';
 import Modal from '@/components/core/controls/Modal';
 import { getUserName } from '@/reducers/chat/action';
@@ -18,16 +17,11 @@ import IconBtnSend from '@/assets/images/icon/ic-btn-send.svg';
 import IconBackBtn from '@/assets/images/icon/back-chevron.svg';
 import IconAvatar from '@/assets/images/icon/avatar.svg';
 
-import { Firechat } from './Firechat';
 import './Firechat.scss';
 import './Chat.scss';
 
 // Get a reference to the Firebase Realtime Database
-const chatRef = firebase.database().ref('chat');
 let isInitialized = false;
-
-// Create an instance of Firechat
-export const chatInstance = new Firechat(firebase, chatRef);
 
 class Chat extends Component {
   static propTypes = {
@@ -35,13 +29,12 @@ class Chat extends Component {
     setHeaderTitle: PropTypes.func.isRequired,
     auth: PropTypes.object.isRequired,
     getUserName: PropTypes.func.isRequired,
+    firebase: PropTypes.object.isRequired,
+    app: PropTypes.object.isRequired,
   }
 
   constructor(props) {
     super(props);
-
-    console.log('chat - contructor - init');
-
     this.coinTextRegEx = /([-+]?[0-9]*\.?[0-9]+)\s*?(ETHEREUM|BITCOIN|ETHER|ETH|BTC)/gi;
     this.user = null;
 
@@ -54,6 +47,8 @@ class Chat extends Component {
       tooltipTarget: '',
       transferCoin: {},
     };
+
+    this.firechat = this.props.app.firechat;
 
     this.chatInputRef = React.createRef();
     this.messageListRef = null;
@@ -77,11 +72,17 @@ class Chat extends Component {
     }
 
     this.bindDataEvents();
-    this.signIn(null);
+    // this.signIn(null);
   }
 
   componentDidMount() {
     this.updateHeaderLeft();
+    const firebaseAuth = this.props.firebase.auth;
+    const profile = this.state.auth;
+    const userId = firebaseAuth.uid;
+    const userName = profile ? profile.username : `${userId.substr(10, 8)}`;
+    console.log('auth profile', profile);
+    this.setUser(firebaseAuth.uid, userName);
   }
 
   componentWillUnmount() {
@@ -170,7 +171,7 @@ class Chat extends Component {
 
   // Events related to chat invitations.
   onChatInvite(invitation) {
-    chatInstance.acceptInvite(invitation.id);
+    this.firechat.acceptInvite(invitation.id);
   }
 
   onChatInviteResponse(invitation) {
@@ -196,7 +197,7 @@ class Chat extends Component {
 
       this.enterMessageRoom(this.generateMessageRoomData(room.id, invitation.fromUserId, invitation.fromUserName, room));
     } else {
-      chatInstance.getRoom(invitation.roomId, (room) => {
+      this.firechat.getRoom(invitation.roomId, (room) => {
         room.messages = room.messages || [];
         room.froms = room.froms || {};
         room.froms[invitation.toUserId] = invitation.toUserName;
@@ -229,7 +230,7 @@ class Chat extends Component {
     this.setCustomState({
       searchUserString: query,
     });
-    chatInstance.getUsersByPrefix(query, null, null, this.maxUserSearchResult, (userListFiltered) => {
+    this.firechat.getUsersByPrefix(query, null, null, this.maxUserSearchResult, (userListFiltered) => {
       // console.log(userListFiltered);
       if (!query) {
         userListFiltered = [];
@@ -270,7 +271,7 @@ class Chat extends Component {
     const self = this;
 
     // Initialize data events
-    chatInstance.setUser(userId, userName, !isInitialized, (user) => {
+    this.firechat.setUser(userId, userName, !isInitialized, (user) => {
       self.user = user;
 
       const historyState = this.loadDataFromLocalStorage();
@@ -280,7 +281,7 @@ class Chat extends Component {
         });
       }
 
-      chatInstance.resumeSession();
+      this.firechat.resumeSession();
       this.updateCurrentUserName(userName);
       this.updateHeaderTitle();
 
@@ -289,7 +290,7 @@ class Chat extends Component {
           PATH_URL: `${API_URL.CHAT.GET_USER_NAME}/${this.chatTo}`,
           successFn: (response) => {
             const chatToUserName = response.data;
-            chatInstance.getUserById(chatToUserName, (chatToUser) => {
+            this.firechat.getUserById(chatToUserName, (chatToUser) => {
               if (chatToUser && chatToUser.id !== this.user.id) {
                 this.chatWithUser(chatToUser);
               }
@@ -410,8 +411,8 @@ class Chat extends Component {
   }
 
   updateCurrentUserName(userName, roomId) {
-    if (chatInstance) {
-      chatInstance.updateUserName(userName, roomId);
+    if (this.firechat) {
+      this.firechat.updateUserName(userName, roomId);
     }
   }
 
@@ -542,7 +543,7 @@ class Chat extends Component {
         type: messageType,
         ...args,
       };
-      chatInstance.sendMessage(roomId, message, publicKey, null, () => {
+      this.firechat.sendMessage(roomId, message, publicKey, null, () => {
         if (this.chatInputRef) {
           this.chatInputRef.clear();
           this.chatInputRef.input.focus();
@@ -568,8 +569,8 @@ class Chat extends Component {
         name: userName,
         publicKey: userPublicKey,
       };
-      chatInstance.createRoom(roomId, usersInGroup, (room) => {
-        chatInstance.inviteUser(userId, userName, userPublicKey, roomId);
+      this.firechat.createRoom(roomId, usersInGroup, (room) => {
+        this.firechat.inviteUser(userId, userName, userPublicKey, roomId);
         room.messages = room.messages || [];
         room.froms = {
           [userId]: userName,
@@ -673,17 +674,17 @@ class Chat extends Component {
   }
 
   bindDataEvents() {
-    chatInstance.on('user-update', this.onUpdateUser.bind(this));
+    this.firechat.on('user-update', this.onUpdateUser.bind(this));
 
     // Bind events for new messages, enter / leaving rooms, and user metadata.
-    chatInstance.on('room-enter', this.onEnterRoom.bind(this));
-    chatInstance.on('room-exit', this.onLeaveRoom.bind(this));
-    chatInstance.on('message-add', this.onNewMessage.bind(this));
-    chatInstance.on('message-remove', this.onRemoveMessage.bind(this));
+    this.firechat.on('room-enter', this.onEnterRoom.bind(this));
+    this.firechat.on('room-exit', this.onLeaveRoom.bind(this));
+    this.firechat.on('message-add', this.onNewMessage.bind(this));
+    this.firechat.on('message-remove', this.onRemoveMessage.bind(this));
 
     // Bind events related to chat invitations.
-    chatInstance.on('room-invite', this.onChatInvite.bind(this));
-    chatInstance.on('room-invite-response', this.onChatInviteResponse.bind(this));
+    this.firechat.on('room-invite', this.onChatInvite.bind(this));
+    this.firechat.on('room-invite-response', this.onChatInviteResponse.bind(this));
   }
 
   renderChatList() {
@@ -831,7 +832,9 @@ class Chat extends Component {
 }
 
 const mapState = state => ({
+  app: state.app,
   auth: state.auth,
+  firebase: state.firebase,
 });
 
 const mapStateDispatch = dispatch => ({

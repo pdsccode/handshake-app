@@ -8,7 +8,7 @@ import { APP, API_URL } from '@/constants';
 // services
 import local from '@/services/localStore';
 // actions
-import { showAlert } from '@/reducers/app/action';
+import { showAlert, setFirechat } from '@/reducers/app/action';
 import { signUp, fetchProfile, authUpdate, getFreeETH } from '@/reducers/auth/action';
 import { getUserProfile } from '@/reducers/exchange/action';
 import { createMasterWallets } from '@/reducers/wallet/action';
@@ -16,6 +16,8 @@ import { createMasterWallets } from '@/reducers/wallet/action';
 import { MasterWallet } from '@/models/MasterWallet';
 import Loading from '@/components/core/presentation/Loading';
 import Router from '@/components/Router/Router';
+// chat
+import Firechat from '@/pages/Chat/Firechat';
 
 class Handle extends React.Component {
   static propTypes = {
@@ -44,6 +46,7 @@ class Handle extends React.Component {
     this.checkRegistry = ::this.checkRegistry;
     this.authSuccess = ::this.authSuccess;
     this.firebase = ::this.firebase;
+    this.firechat = ::this.firechat;
     this.notification = ::this.notification;
     this.updateRewardAddress = ::this.updateRewardAddress;
 
@@ -70,7 +73,7 @@ class Handle extends React.Component {
       PATH_URL: `/user/free-rinkeby-eth?address=xxxxxx${wallet.address}`,
       METHOD: 'POST',
       successFn: () => {
-        this.setState({ isLoading: false, loadingText: '' });
+        this.setState({ loadingText: '' });
         // run cron alert user when got 1eth:
         this.timeOutCheckGotETHFree = setInterval(() => {
           wallet.getBalance().then((result) => {
@@ -88,7 +91,7 @@ class Handle extends React.Component {
           });
         }, 20 * 60 * 1000); // 20'
       },
-      errorFn: () => { this.setState({ isLoading: false, loadingText: '' }); },
+      errorFn: () => { this.setState({ loadingText: '' }); },
     });
   }
 
@@ -162,7 +165,7 @@ class Handle extends React.Component {
         if (listWallet === false) {
           this.setState({ loadingText: 'Creating your local wallets' });
           createMasterWallets().then(() => {
-            this.setState({ isLoading: false, loadingText: '' });
+            this.setState({ loadingText: '' });
             this.updateRewardAddress();
             // if (!process.env.isProduction) {
             //   const wallet = MasterWallet.getWalletDefault('ETH');
@@ -183,7 +186,9 @@ class Handle extends React.Component {
 
         // core
         this.firebase();
+        this.firechat();
         this.notification();
+        this.setState({ isLoading: false });
         // /core
       },
     });
@@ -194,6 +199,12 @@ class Handle extends React.Component {
     console.log('app - handle - core - firebase');
     this.props.firebase.watchEvent('value', `/users/${this.state.auth.profile.id}`);
     this.props.firebase.watchEvent('value', `/config`);
+  }
+
+  firechat() {
+    const chatInstance = new Firechat(this.props.firebase, this.props.firebase.database().ref('chat'))
+    console.log('chatInstance', chatInstance);
+    this.props.setFirechat(chatInstance);
   }
 
   notification() {
@@ -241,4 +252,5 @@ export default compose(withFirebase, connect(state => ({
   authUpdate,
   getUserProfile,
   getFreeETH,
+  setFirechat,
 }))(Handle);
