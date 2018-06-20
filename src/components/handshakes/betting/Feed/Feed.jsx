@@ -338,9 +338,12 @@ class FeedBetting extends React.Component {
 
       if(shakers){
         const foundShakedItem = shakers.find(element => element.shaker_id === profile.id && element.handshake_id === idOffchain);
-        //console.log('Found Shaked Item:', foundShakedItem);
-        idCryptosign = betHandshakeHandler.getShakeOffchain(foundShakedItem.id);
-        isFreeBet = foundShakedItem.free_bet;
+        console.log('Found Shaked Item:', foundShakedItem);
+        if(foundShakedItem){
+          idCryptosign = betHandshakeHandler.getShakeOffchain(foundShakedItem.id);
+          isFreeBet = foundShakedItem.free_bet;
+        }
+        
       }
     }
     console.log("idCryptosign, isFreeBet, isUserShaker: ", idCryptosign, isFreeBet, isUserShake);
@@ -481,9 +484,14 @@ class FeedBetting extends React.Component {
     console.log('collectSuccess', successData);
     const {status} = successData
     if(status){
-      const {hid, id, status} = this.props;
-      const offchain = id;
+      const {hid, id, status, shakeUserIds} = this.props;
+      const profile = local.get(APP.AUTH_PROFILE);
+      const isUserShake = this.isShakeUser(shakeUserIds, profile.id);
       const {itemInfo} = this.state;
+      let offchain = id;
+      if(isUserShake){
+        offchain = betHandshakeHandler.getShakeOffchain(itemInfo.id);
+      }
       let updateInfo = Object.assign({}, itemInfo);
       updateInfo.bkStatus = itemInfo.status;
       updateInfo.status = status;
@@ -495,6 +503,7 @@ class FeedBetting extends React.Component {
       this.setState({
         itemInfo: updateInfo
       });
+      console.log('Withdraw hid, offchain:', hid, offchain);
      const result = await betHandshakeHandler.withdraw(hid, offchain);
      const {blockHash} = result;
      if(blockHash){
