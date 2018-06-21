@@ -379,12 +379,9 @@ class Chat extends Component {
       return;
     }
 
-    console.log('chat initalizing ...');
-
     if (this.props && this.props.auth && Object.keys(this.firechat).length > 0 && this.componentMounted) {
       console.log('chat initialized');
       this.initialized = true;
-      this.props.showLoading();
       this.initChatRooms();
       this.bindDataEvents();
     } else {

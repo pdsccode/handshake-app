@@ -230,10 +230,12 @@ class Handle extends React.Component {
       const userId = firebaseAuth.uid || '';
       const userName = profile ? profile.username : `${userId.substr(10, 8)}`;
 
-      chatInstance.setUser(userId, userName, true, (firechatUser) => {
-        this.props.setFirebaseUser(firechatUser);
-        chatInstance.resumeSession();
-      });
+      if (userId && userName) {
+        chatInstance.setUser(userId, userName, true, (firechatUser) => {
+          this.props.setFirebaseUser(firechatUser);
+          chatInstance.resumeSession();
+        });
+      }
     });
   }
 
@@ -242,29 +244,17 @@ class Handle extends React.Component {
     const username = `${md5(`${token}_${profile.id}`)}@handshake.autonomous.nyc`;
     const password = md5(token);
     this.props.firebase.auth().onAuthStateChanged((user) => {
-      if (!user) {
-        this.props.firebase.auth().signInWithEmailAndPassword(username, password)
-          .then((user) => {
-            if (user) {
-              // If the user is logged in, set them as the Firechat user
-              if (cb) {
-                cb(user.user);
-              }
-            }
-          })
-          .catch((error) => {
-            this.props.firebase.auth().createUserWithEmailAndPassword(username, password).then((user) => {
-              if (cb) {
-                cb(user.user);
-              }
-            });
-          });
-      } else {
+      if (user) {
         if (cb) {
           cb(user);
         }
       }
     });
+
+    this.props.firebase.auth().signInWithEmailAndPassword(username, password)
+      .catch((error) => {
+        this.props.firebase.auth().createUserWithEmailAndPassword(username, password);
+      });
   }
 
   notification() {
@@ -308,13 +298,13 @@ export default compose(withFirebase, connect(state => ({
   app: state.app,
   firebaseApp: state.firebase,
 }), {
-  showAlert,
-  signUp,
-  fetchProfile,
-  authUpdate,
-  getUserProfile,
-  getFreeETH,
-  getListOfferPrice,
-  setFirechat,
-  setFirebaseUser,
-}))(Handle);
+    showAlert,
+    signUp,
+    fetchProfile,
+    authUpdate,
+    getUserProfile,
+    getFreeETH,
+    getListOfferPrice,
+    setFirechat,
+    setFirebaseUser,
+  }))(Handle);
