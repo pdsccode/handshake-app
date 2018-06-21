@@ -220,7 +220,7 @@ export class Firechat {
   onEnterRoom(room) {
     this.rooms[room.id] = room;
     this.invokeEventCallbacks('room-enter', room);
-    this.invokeEventCallbacks('room-update', room.id, room);
+    this.onRoomUpdate(room.id, room);
   }
 
   onNewMessage(roomId, snapshot) {
@@ -244,7 +244,7 @@ export class Firechat {
     message.message = messageContent;
     room.messages.push(message);
     this.invokeEventCallbacks('message-add', roomId, message);
-    this.invokeEventCallbacks('room-update', roomId, room);
+    this.onRoomUpdate(roomId, room);
   }
 
   onRemoveMessage(roomId, snapshot) {

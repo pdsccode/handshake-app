@@ -249,18 +249,18 @@ class Chat extends Component {
 
   getRoomList() {
     const { chatSource } = this.state;
-    return Object.values(chatSource)
+    const rooms = { ...chatSource };
+    return Object.values(rooms)
       .reverse()
       .filter(room => room.froms && room.messages && room.messages.length > 0)
       .sort((prevRoom, nextRoom) => {
         const prevRoomLastMessage = this.getLastMessage(prevRoom.messages);
         const nextRoomLastMessage = this.getLastMessage(nextRoom.messages);
 
-        if (!prevRoomLastMessage || !nextRoomLastMessage) {
-          return prevRoom.createdAt < nextRoom.createdAt;
-        }
+        const prevCompareTime = prevRoomLastMessage ? prevRoomLastMessage.timestamp : prevRoom.createdAt;
+        const nextCompareTime = nextRoomLastMessage ? nextRoomLastMessage.timestamp : nextRoom.createdAt;
 
-        return prevRoomLastMessage.timestamp < nextRoomLastMessage.timestamp;
+        return nextCompareTime - prevCompareTime;
       })
       .map((room) => {
         const fromNamesFiltered = Object.keys(room.froms).filter(userId => (userId !== this.user.id));
@@ -287,8 +287,9 @@ class Chat extends Component {
   }
 
   getLastMessage(messages) {
-    const reverseMessage = messages.reverse();
-    return reverseMessage.find(message => message.message.type === 'plain_text');
+    const reverseMessage = messages.slice().reverse();
+    const lastMessage = reverseMessage.find(message => message.message.type === 'plain_text');
+    return lastMessage;
   }
 
   getListSearchUsersSource(users) {
