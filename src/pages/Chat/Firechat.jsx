@@ -438,7 +438,7 @@ export class Firechat {
           self.onNewMessage(roomId, snapshot);
         }, /* onCancel */() => {
           // Turns out we don't have permission to access these messages.
-          self.leaveRoom(roomId);
+          // self.leaveRoom(roomId);
         }, /* context */ self);
 
         self.messageRef.child(roomId).limitToLast(self.options.numMaxMessages).on('child_removed', (snapshot) => {
@@ -682,7 +682,6 @@ export class Firechat {
     query.once('value', (snapshot) => {
       const usernames = snapshot.val() || {};
 
-      console.log('usernames', usernames);
       const usernamesFiltered = [];
 
       Object.keys(usernames).forEach((userId) => {
@@ -770,6 +769,10 @@ export class Firechat {
           if (Object.keys(updateValues).length > 0) {
             self.roomRef.update(updateValues);
           }
+
+          if (self.user) {
+            self.user.name = userName;
+          }
         });
       }, 0);
     }
@@ -781,6 +784,10 @@ export class Firechat {
 
   getRooms() {
     return this.rooms;
+  }
+
+  getCurrentUser() {
+    return this.user;
   }
 
   warn(msg) {

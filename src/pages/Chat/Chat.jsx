@@ -46,7 +46,6 @@ class Chat extends Component {
     this.state = {
       chatSource: {},
       chatDetail: null,
-      currentMessage: '',
       searchUserString: '',
       searchUsers: [],
       tooltipTarget: '',
@@ -252,6 +251,7 @@ class Chat extends Component {
     const { chatSource } = this.state;
     return Object.values(chatSource)
       .reverse()
+      .filter(room => room.froms && room.messages && room.messages.length > 0)
       .sort((prevRoom, nextRoom) => {
         const prevRoomLastMessage = prevRoom.lastMessage >= prevRoom.messages.length ? prevRoom.messages[prevRoom.lastMessage - 1] : null;
         const nextRoomLastMessage = nextRoom.lastMessage >= nextRoom.messages.length ? nextRoom.messages[nextRoom.lastMessage - 1] : null;
@@ -262,7 +262,6 @@ class Chat extends Component {
 
         return prevRoomLastMessage.timestamp < nextRoomLastMessage.timestamp;
       })
-      .filter(room => room.froms && room.messages && room.messages.length > 0)
       .map((room) => {
         const fromNamesFiltered = Object.keys(room.froms).filter(userId => (userId !== this.user.id));
         const fromNames = fromNamesFiltered.map(userId => (room.froms[userId])).join(', ');
@@ -336,7 +335,7 @@ class Chat extends Component {
   }
 
   initChatRooms() {
-    this.user = this.props.app.firebaseUser;
+    this.user = this.firechat.getCurrentUser();
     this.props.showLoading();
 
     this.setCustomState({
@@ -386,12 +385,6 @@ class Chat extends Component {
       this.bindDataEvents();
     } else {
       setTimeout(() => { this.initChatComponent(); }, 500);
-    }
-  }
-
-  updateCurrentUserName(userName, roomId) {
-    if (this.firechat) {
-      this.firechat.updateUserName(userName, roomId);
     }
   }
 
@@ -447,7 +440,6 @@ class Chat extends Component {
   enterMessageRoom(room) {
     this.setCustomState({
       chatDetail: room.id,
-      currentMessage: '',
       notFoundUser: false,
     }, () => {
       this.updateHeaderLeft();
@@ -461,9 +453,9 @@ class Chat extends Component {
     window.scrollTo(0, document.body.scrollHeight);
   }
 
-  sendMessage(e, messageType = 'plain_text', args) {
-    const { chatDetail: roomId, currentMessage } = this.state;
-    if (currentMessage && roomId) {
+  sendMessage(message, messageType = 'plain_text', args) {
+    const { chatDetail: roomId } = this.state;
+    if (message && roomId) {
       const roomData = this.getRoom(roomId);
       const { authorizedUsers } = roomData;
       let publicKey;
@@ -478,21 +470,19 @@ class Chat extends Component {
         publicKey = authorizedUsers[userId].publicKey;
       });
 
-      const message = {
-        message: currentMessage,
+      const sendMessageObj = {
+        message,
         type: messageType,
         ...args,
       };
-      this.firechat.sendMessage(roomId, message, publicKey, null, () => {
-        if (this.chatInputRef) {
-          this.chatInputRef.clear();
-          this.chatInputRef.input.focus();
-          this.scrollToBottom();
-        }
+      this.firechat.sendMessage(roomId, sendMessageObj, publicKey, null, () => {
+        this.scrollToBottom();
       });
-    }
-    if (e) {
-      e.preventDefault();
+
+      if (this.chatInputRef) {
+        this.chatInputRef.clear();
+        this.chatInputRef.input.focus();
+      }
     }
   }
 
@@ -744,12 +734,11 @@ class Chat extends Component {
           onFocus={() => { this.scrollToBottom(); }}
           onKeyDown={(e) => {
             if (e.keyCode === 13) {
-              this.sendMessage();
+              this.sendMessage(e.target.value);
               e.preventDefault();
               return false;
             }
           }}
-          onChange={(e) => { this.setCustomState({ currentMessage: e.target.value }); }}
           rightButtons={
             <img
               src={IconBtnSend}
