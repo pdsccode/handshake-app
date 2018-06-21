@@ -42,7 +42,8 @@ export const MESSAGE = {
   MATCH_OVER: 'Time travel is hard. Please bet on a future or ongoing match.',
   RIGHT_NETWORK: 'You must set your wallet on Mainnet',
   ROLLBACK: `Something did not go according to plan. Please try again.`,
-  WITHDRAW_SUCCESS: 'Success! Your winnings have been withdrawn to your wallet.'
+  WITHDRAW_SUCCESS: 'Success! Your winnings have been withdrawn to your wallet.',
+  DIFFERENCE_ADDRESS: `Current address isn't same as which you used create bet`
 };
 
 export const BET_BLOCKCHAIN_STATUS = {
@@ -133,6 +134,13 @@ export class BetHandshakeHandler {
   }
   constructor() {
 
+  }
+  isSameAddress(address){
+    const currentAddress = this.getAddress();
+    if(address !== currentAddress){
+      return false
+    }
+    return true;
   }
   isRightNetwork(){
 
