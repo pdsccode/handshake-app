@@ -352,7 +352,6 @@ class Chat extends Component {
       }
 
       if (this.chatWithUserId) {
-        this.props.showLoading();
         this.props.getUserName({
           PATH_URL: `${API_URL.CHAT.GET_USER_NAME}/${this.chatWithUserId}`,
           successFn: (response) => {
@@ -388,9 +387,8 @@ class Chat extends Component {
       this.props.showLoading();
       this.initChatRooms();
       this.bindDataEvents();
-      this.props.hideLoading();
     } else {
-      setTimeout(this.initChatComponent, 500);
+      setTimeout(() => { this.initChatComponent(); }, 500);
     }
   }
 
@@ -511,7 +509,9 @@ class Chat extends Component {
     }
 
     if (!this.user) {
-      setTimeout(this.chatWithUser, 100, user);
+      setTimeout(() => {
+        this.chatWithUser(user);
+      }, 100);
       return;
     }
 
@@ -667,13 +667,9 @@ class Chat extends Component {
   }
 
   renderChatList() {
-    const { searchUsers, searchUserString, notFoundUser } = this.state;
+    const { searchUsers, searchUserString } = this.state;
     const isInSearchMode = !!searchUserString;
     const chatSource = isInSearchMode ? this.getListSearchUsersSource(searchUsers) : this.getLastMessages();
-
-    if (notFoundUser) {
-      return this.renderNotFoundUser();
-    }
 
     return chatSource.length > 0 ? (
       <div>
@@ -770,10 +766,10 @@ class Chat extends Component {
   }
 
   render() {
-    const { chatDetail, transferCoin } = this.state;
+    const { chatDetail, notFoundUser } = this.state;
     return (
       <div className="chat-container">
-        {chatDetail ? this.renderChatDetail(chatDetail) : this.renderChatList()}
+        {notFoundUser ? this.renderNotFoundUser() : (chatDetail ? this.renderChatDetail(chatDetail) : this.renderChatList())}
         {
           // Object.keys(transferCoin).length > 0 && (
           //   <Modal

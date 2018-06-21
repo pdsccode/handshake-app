@@ -12,6 +12,7 @@ import { showAlert, setFirechat, setFirebaseUser } from '@/reducers/app/action';
 import { signUp, fetchProfile, authUpdate, getFreeETH } from '@/reducers/auth/action';
 import { getUserProfile } from '@/reducers/exchange/action';
 import { createMasterWallets } from '@/reducers/wallet/action';
+import { getListOfferPrice } from '@/reducers/exchange/action';
 // components
 import { MasterWallet } from '@/models/MasterWallet';
 import Loading from '@/components/core/presentation/Loading';
@@ -35,6 +36,7 @@ class Handle extends React.Component {
     //
     getFreeETH: PropTypes.func.isRequired,
     refer: PropTypes.string,
+    getListOfferPrice: PropTypes.func.isRequired,
   }
 
   static defaultProps = {
@@ -53,6 +55,7 @@ class Handle extends React.Component {
 
     this.state = {
       auth: this.props.auth,
+      isLoading: true,
     };
   }
 
@@ -66,6 +69,16 @@ class Handle extends React.Component {
     }
     return null;
   }
+
+  // exchange
+  getListOfferPrice() {
+    const ipInfo = local.get(APP.IP_INFO);
+    this.props.getListOfferPrice({
+      PATH_URL: API_URL.EXCHANGE.GET_LIST_OFFER_PRICE,
+      qs: { fiat_currency: ipInfo?.currency },
+    });
+  }
+  // /exchange
 
   // wallet
   getFreeETH() {
@@ -158,6 +171,10 @@ class Handle extends React.Component {
       successFn: () => {
         // exchange
         this.props.getUserProfile({ PATH_URL: API_URL.EXCHANGE.GET_USER_PROFILE });
+
+        // exchange
+        this.getListOfferPrice();
+        this.timeOutGetPrice = setInterval(() => this.getListOfferPrice(), 2 * 60 * 1000); // 2'
 
         // wallet
         const listWallet = MasterWallet.getMasterWallet();
@@ -276,6 +293,7 @@ class Handle extends React.Component {
   }
 
   render() {
+    console.log('test - contructor', this.state.isLoading);
     if (this.state.isLoading) {
       return <Loading message={this.state.loadingText} />;
     }
@@ -290,12 +308,13 @@ export default compose(withFirebase, connect(state => ({
   app: state.app,
   firebaseApp: state.firebase,
 }), {
-    showAlert,
-    signUp,
-    fetchProfile,
-    authUpdate,
-    getUserProfile,
-    getFreeETH,
-    setFirechat,
-    setFirebaseUser
-  }))(Handle);
+  showAlert,
+  signUp,
+  fetchProfile,
+  authUpdate,
+  getUserProfile,
+  getFreeETH,
+  getListOfferPrice,
+  setFirechat,
+  setFirebaseUser,
+}))(Handle);
