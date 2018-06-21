@@ -243,7 +243,6 @@ export class Firechat {
     messageContent.message = this.decryptMessage(messageContent.message, nonce, publicKey);
     message.message = messageContent;
     room.messages.push(message);
-    room.lastMessage = messageContent.type === 'plain_text' ? room.messages.length : room.messages.length - 1;
     this.invokeEventCallbacks('message-add', roomId, message);
     this.invokeEventCallbacks('room-update', roomId, room);
   }
@@ -429,7 +428,7 @@ export class Firechat {
       });
 
       self.onEnterRoom({
-        id: roomId, name: roomName, createdByUserId, createdAt, authorizedUsers, messages: [], lastMessage: -1, froms,
+        id: roomId, name: roomName, createdByUserId, createdAt, authorizedUsers, messages: [], froms,
       });
 
       // Setup message listeners

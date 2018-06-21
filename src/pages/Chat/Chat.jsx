@@ -247,14 +247,14 @@ class Chat extends Component {
     });
   }
 
-  getLastMessages() {
+  getRoomList() {
     const { chatSource } = this.state;
     return Object.values(chatSource)
       .reverse()
       .filter(room => room.froms && room.messages && room.messages.length > 0)
       .sort((prevRoom, nextRoom) => {
-        const prevRoomLastMessage = prevRoom.lastMessage >= prevRoom.messages.length ? prevRoom.messages[prevRoom.lastMessage - 1] : null;
-        const nextRoomLastMessage = nextRoom.lastMessage >= nextRoom.messages.length ? nextRoom.messages[nextRoom.lastMessage - 1] : null;
+        const prevRoomLastMessage = this.getLastMessage(prevRoom.messages);
+        const nextRoomLastMessage = this.getLastMessage(nextRoom.messages);
 
         if (!prevRoomLastMessage || !nextRoomLastMessage) {
           return prevRoom.createdAt < nextRoom.createdAt;
@@ -266,7 +266,7 @@ class Chat extends Component {
         const fromNamesFiltered = Object.keys(room.froms).filter(userId => (userId !== this.user.id));
         const fromNames = fromNamesFiltered.map(userId => (room.froms[userId])).join(', ');
         const fromUserIds = fromNamesFiltered.map(userId => (userId)).join(',');
-        const lastMessage = room.lastMessage >= room.messages.length ? room.messages[room.lastMessage - 1] : null;
+        const lastMessage = this.getLastMessage(room.messages);
 
         const lastMessageTime = lastMessage ? lastMessage.timestamp : null;
         const lastMessageContent = lastMessage ? (lastMessage.message.message || 'You lost the key to this secret message.') : '';
@@ -284,6 +284,11 @@ class Chat extends Component {
           dateString: lastMessageTime ? moment(new Date(lastMessageTime)).format('HH:mm') : '',
         };
       });
+  }
+
+  getLastMessage(messages) {
+    const reverseMessage = messages.reverse();
+    return reverseMessage.find(message => message.message.type === 'plain_text');
   }
 
   getListSearchUsersSource(users) {
@@ -656,7 +661,7 @@ class Chat extends Component {
   renderChatList() {
     const { searchUsers, searchUserString } = this.state;
     const isInSearchMode = !!searchUserString;
-    const chatSource = isInSearchMode ? this.getListSearchUsersSource(searchUsers) : this.getLastMessages();
+    const chatSource = isInSearchMode ? this.getListSearchUsersSource(searchUsers) : this.getRoomList();
 
     return chatSource.length > 0 ? (
       <div>
