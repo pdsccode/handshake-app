@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 // services, constants
-import  { BetHandshakeHandler, SIDE, BETTING_STATUS_LABEL, ROLE, MESSAGE} from './BetHandshakeHandler.js';
+import  { BetHandshakeHandler, SIDE, BETTING_STATUS_LABEL, ROLE, MESSAGE, BET_BLOCKCHAIN_STATUS} from './BetHandshakeHandler.js';
 import momment from 'moment';
 import {MasterWallet} from '@/models/MasterWallet';
 
@@ -459,6 +459,12 @@ class FeedBetting extends React.Component {
         callBack: () => {
         }
       });
+      const {itemInfo} = this.state;
+
+      let updateInfo = Object.assign({}, itemInfo);
+      updateInfo.status = BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_PENDING;
+      this.props.updateBettingChange(updateInfo);
+
     }
   }
   collectFreeFailed = (error) => {

@@ -101,7 +101,7 @@ export const BETTING_STATUS_LABEL =
       DONE: 'Completed',
       WITHDRAW: 'Withdraw winnings',
       CANCELLING: 'Your bet is being cancelled.',
-      PROGRESSING: 'Your bet is progressing.',
+      PROGRESSING: 'Your bet is progressing a transaction. Please wait..',
       BET_WAIT_MATCHING: 'Bet placed. Matching..',
       BET_MACHED_WAIT_RESULT: 'Bet matched. Waiting for result..',
       REFUND: 'Refund your bet',
@@ -194,7 +194,7 @@ export class BetHandshakeHandler {
     strStatus = BETTING_STATUS_LABEL.PROGRESSING;
     isAction = false;
 } 
-    if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_PENDING) {
+    else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_PENDING) {
       strStatus = BETTING_STATUS_LABEL.INITING;
       isAction = false;
     } else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINITED) {
