@@ -159,6 +159,10 @@ export class Firechat {
     this.events[eventId].push(callback);
   }
 
+  removeEventCallback(eventId) {
+    this.events[eventId] = [];
+  }
+
   // Retrieve the list of event handlers for a given event id.
   getEventCallbacks(eventId) {
     if (Object.prototype.hasOwnProperty.call(this.events, eventId)) {
@@ -214,31 +218,34 @@ export class Firechat {
 
   // Events to monitor room entry / exit and messages additional / removal.
   onEnterRoom(room) {
+    this.rooms[room.id] = room;
     this.invokeEventCallbacks('room-enter', room);
+    this.invokeEventCallbacks('room-update', room.id, room);
   }
 
   onNewMessage(roomId, snapshot) {
     const message = snapshot.val();
     message.id = snapshot.key;
     const { nonce, message: messageContent } = message;
-    if (Object.prototype.hasOwnProperty.call(this.rooms, roomId)) {
-      const room = this.rooms[roomId];
-      let publicKey;
+    const room = this.rooms[roomId];
+    let publicKey;
 
-      Object.keys(room.authorizedUsers).forEach((userId) => {
-        if (userId === this.user.id) {
-          return true;
-        }
+    room.messages = room.messages || [];
 
-        publicKey = room.authorizedUsers[userId].publicKey;
-      });
+    Object.keys(room.authorizedUsers).forEach((userId) => {
+      if (userId === this.user.id) {
+        return true;
+      }
 
-      messageContent.message = this.decryptMessage(messageContent.message, nonce, publicKey);
-    } else {
-      messageContent.message = 'This message is encryted and can\'t be decode.';
-    }
+      publicKey = room.authorizedUsers[userId].publicKey;
+    });
+
+    messageContent.message = this.decryptMessage(messageContent.message, nonce, publicKey);
     message.message = messageContent;
+    room.messages.push(message);
+    room.lastMessage = messageContent.type === 'plain_text' ? room.messages.length : room.messages.length - 1;
     this.invokeEventCallbacks('message-add', roomId, message);
+    this.invokeEventCallbacks('room-update', roomId, room);
   }
 
   onRemoveMessage(roomId, snapshot) {
@@ -285,6 +292,10 @@ export class Firechat {
     this.invokeEventCallbacks('room-invite-response', invite);
   }
 
+  onRoomUpdate(roomId, room) {
+    this.invokeEventCallbacks('room-update', roomId, room);
+  }
+
   setUser(userId, userName, shouldSetupDataEvents, callback) {
     const self = this;
 
@@ -320,8 +331,12 @@ export class Firechat {
     }, /* onError */() => { }, /* context */ this);
   }
 
-  on(eventType, cb) {
+  bind(eventType, cb) {
     this.addEventCallback(eventType, cb);
+  }
+
+  unbind(eventType) {
+    this.removeEventCallback(eventType);
   }
 
   createRoom(roomId, usersInGroup, callback) {
@@ -407,8 +422,14 @@ export class Firechat {
       }
 
       // Invoke our callbacks before we start listening for new messages.
+      const froms = {};
+
+      Object.keys(authorizedUsers).forEach((userId) => {
+        froms[userId] = authorizedUsers[userId].name;
+      });
+
       self.onEnterRoom({
-        id: roomId, name: roomName, createdByUserId, createdAt, authorizedUsers,
+        id: roomId, name: roomName, createdByUserId, createdAt, authorizedUsers, messages: [], lastMessage: -1, froms,
       });
 
       // Setup message listeners
@@ -455,37 +476,44 @@ export class Firechat {
   }
 
   encryptMessage(message, nonce, publicKey) {
-    if (!(publicKey instanceof Uint8Array)) {
-      publicKey = naclUtil.decodeBase64(publicKey);
-    }
+    try {
+      if (!(publicKey instanceof Uint8Array)) {
+        publicKey = naclUtil.decodeBase64(publicKey);
+      }
 
-    if (!(nonce instanceof Uint8Array)) {
-      nonce = naclUtil.decodeUTF8(nonce);
-    }
+      if (!(nonce instanceof Uint8Array)) {
+        nonce = naclUtil.decodeUTF8(nonce);
+      }
 
-    if (!(message instanceof Uint8Array)) {
-      message = naclUtil.decodeUTF8(message);
-    }
+      if (!(message instanceof Uint8Array)) {
+        message = naclUtil.decodeUTF8(message);
+      }
 
-    return naclUtil.encodeBase64(nacl.box(message, nonce, publicKey, this.encryptionKeyPair.secretKey));
+      return naclUtil.encodeBase64(nacl.box(message, nonce, publicKey, this.encryptionKeyPair.secretKey));
+    } catch (e) {
+      return '';
+    }
   }
 
   decryptMessage(message, nonce, publicKey) {
-    console.log('message to decode', message);
-    if (!(publicKey instanceof Uint8Array)) {
-      publicKey = naclUtil.decodeBase64(publicKey);
-    }
+    try {
+      if (!(publicKey instanceof Uint8Array)) {
+        publicKey = naclUtil.decodeBase64(publicKey);
+      }
 
-    if (!(nonce instanceof Uint8Array)) {
-      nonce = naclUtil.decodeBase64(nonce);
-    }
+      if (!(nonce instanceof Uint8Array)) {
+        nonce = naclUtil.decodeBase64(nonce);
+      }
 
-    if (!(message instanceof Uint8Array)) {
-      message = naclUtil.decodeBase64(message);
-    }
+      if (!(message instanceof Uint8Array)) {
+        message = naclUtil.decodeBase64(message);
+      }
 
-    let decodedMessage = nacl.box.open(message, nonce, publicKey, this.encryptionKeyPair.secretKey);
-    return decodedMessage ? naclUtil.encodeUTF8(decodedMessage) : 'You lost the key to this secret message.';
+      let decodedMessage = nacl.box.open(message, nonce, publicKey, this.encryptionKeyPair.secretKey);
+      return decodedMessage ? naclUtil.encodeUTF8(decodedMessage) : null;
+    } catch (e) {
+      return null;
+    }
   }
 
   sendMessage(roomId, messageContent, publicKey, messageType, cb) {
@@ -749,6 +777,10 @@ export class Firechat {
 
   setRoom(roomId, room) {
     this.rooms[roomId] = room;
+  }
+
+  getRooms() {
+    return this.rooms;
   }
 
   warn(msg) {

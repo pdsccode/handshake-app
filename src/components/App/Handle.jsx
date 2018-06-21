@@ -8,7 +8,7 @@ import { APP, API_URL } from '@/constants';
 // services
 import local from '@/services/localStore';
 // actions
-import { showAlert, setFirechat } from '@/reducers/app/action';
+import { showAlert, setFirechat, setFirebaseUser } from '@/reducers/app/action';
 import { signUp, fetchProfile, authUpdate, getFreeETH } from '@/reducers/auth/action';
 import { getUserProfile } from '@/reducers/exchange/action';
 import { createMasterWallets } from '@/reducers/wallet/action';
@@ -17,6 +17,7 @@ import { MasterWallet } from '@/models/MasterWallet';
 import Loading from '@/components/core/presentation/Loading';
 import Router from '@/components/Router/Router';
 // chat
+import md5 from 'md5';
 import Firechat from '@/pages/Chat/Firechat';
 
 class Handle extends React.Component {
@@ -43,12 +44,12 @@ class Handle extends React.Component {
   constructor(props) {
     super(props);
 
-    this.checkRegistry = ::this.checkRegistry;
-    this.authSuccess = ::this.authSuccess;
-    this.firebase = ::this.firebase;
-    this.firechat = ::this.firechat;
-    this.notification = ::this.notification;
-    this.updateRewardAddress = ::this.updateRewardAddress;
+    this.checkRegistry = :: this.checkRegistry;
+    this.authSuccess = :: this.authSuccess;
+    this.firebase = :: this.firebase;
+    this.firechat = :: this.firechat;
+    this.notification = :: this.notification;
+    this.updateRewardAddress = :: this.updateRewardAddress;
 
     this.state = {
       auth: this.props.auth,
@@ -83,7 +84,7 @@ class Handle extends React.Component {
                 timeOut: false,
                 isShowClose: true,
                 type: 'success',
-                callBack: () => {},
+                callBack: () => { },
               });
               // notify user:
               clearInterval(this.timeOutCheckGotETHFree);
@@ -150,7 +151,7 @@ class Handle extends React.Component {
             timeOut: false,
             isShowClose: true,
             type: 'danger',
-            callBack: () => {},
+            callBack: () => { },
           });
         }
       },
@@ -202,9 +203,51 @@ class Handle extends React.Component {
   }
 
   firechat() {
-    const chatInstance = new Firechat(this.props.firebase, this.props.firebase.database().ref('chat'))
-    console.log('chatInstance', chatInstance);
-    this.props.setFirechat(chatInstance);
+    this.signInFirebase((firebaseUser) => {
+      const chatInstance = new Firechat(this.props.firebase, this.props.firebase.database().ref('chat'));
+      this.props.setFirechat(chatInstance);
+
+      // initialize firechat with signed in firebase user
+      const firebaseAuth = this.props.firebaseApp.auth;
+      const { profile } = this.props.auth;
+      const userId = firebaseAuth.uid || '';
+      const userName = profile ? profile.username : `${userId.substr(10, 8)}`;
+
+      chatInstance.setUser(userId, userName, true, (firechatUser) => {
+        this.props.setFirebaseUser(firechatUser);
+        chatInstance.resumeSession();
+      });
+    });
+  }
+
+  signInFirebase(cb) {
+    const { profile, token } = this.props.auth;
+    const username = `${md5(`${token}_${profile.id}`)}@handshake.autonomous.nyc`;
+    const password = md5(token);
+    this.props.firebase.auth().onAuthStateChanged((user) => {
+      if (!user) {
+        this.props.firebase.auth().signInWithEmailAndPassword(username, password)
+          .then((user) => {
+            if (user) {
+              // If the user is logged in, set them as the Firechat user
+              if (cb) {
+                cb(user.user);
+              }
+            }
+          })
+          .catch((error) => {
+            this.props.firebase.auth().createUserWithEmailAndPassword(username, password).then((user) => {
+              if (cb) {
+                cb(user.user);
+              }
+            });
+          });
+      } else {
+        if (cb) {
+          cb(user);
+        }
+      }
+    });
   }
 
   notification() {
@@ -245,12 +288,14 @@ class Handle extends React.Component {
 export default compose(withFirebase, connect(state => ({
   auth: state.auth,
   app: state.app,
+  firebaseApp: state.firebase,
 }), {
-  showAlert,
-  signUp,
-  fetchProfile,
-  authUpdate,
-  getUserProfile,
-  getFreeETH,
-  setFirechat,
-}))(Handle);
+    showAlert,
+    signUp,
+    fetchProfile,
+    authUpdate,
+    getUserProfile,
+    getFreeETH,
+    setFirechat,
+    setFirebaseUser
+  }))(Handle);

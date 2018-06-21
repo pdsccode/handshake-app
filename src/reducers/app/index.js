@@ -245,6 +245,13 @@ function appReducter(state = {
       }
     }
 
+    case APP_ACTION.SET_FIREBASE_USER: {
+      return {
+        ...state,
+        firebaseUser: action.payload,
+      }
+    }
+
     default:
       return state;
   }
