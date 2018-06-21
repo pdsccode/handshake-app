@@ -741,7 +741,21 @@ export default [
       "goalsHomeTeam": null,
       "goalsAwayTeam": null
     },
-    "odds": null
+    "odds": null,
+    link: 'https://player.twitch.tv/?autoplay=true&channel=zb129684ae1',
+    linksLive: [
+      'https://player.twitch.tv/?autoplay=true&channel=zb129684ae1',
+      'http://capodeportes.net/reproductor2/canal3.php?width=400&height=300&autoplay=1',
+      'https://www.youtube.com/embed/m4yjIxseuiM',
+    ],
+    linksSoftCast: [
+      'sop://broker.sopcast.com:3912/259922',
+      'sop://broker.sopcast.com:3912/263031',
+      'sop://broker.sopcast.com:3912/263040',
+      'sop://broker.sopcast.com:3912/151777',
+      'sop://broker.sopcast.com:3912/255015',
+      'sop://broker.sopcast.com:3912/259922',
+    ],
   },
   {
     "_links": {
