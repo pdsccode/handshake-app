@@ -201,6 +201,16 @@ class Chat extends Component {
     }
   }
 
+  onNewMessage(roomId, message) {
+    console.log('onNewMessage', roomId, message);
+    const { chatDetail } = this.state;
+    if (chatDetail && chatDetail === roomId) {
+      setTimeout(() => {
+        this.firechat.markMessagesAsRead(roomId);
+      }, 0);
+    }
+  }
+
   onCoinTextClicked(elementId, coinText) {
     const coinsTest = (new RegExp(this.coinTextRegEx)).exec(coinText.replace(/[\s]{2,}/g, ' '));
 
@@ -270,7 +280,7 @@ class Chat extends Component {
 
         const lastMessageTime = lastMessage ? lastMessage.timestamp : null;
         const lastMessageContent = lastMessage ? (lastMessage.message.message || 'You lost the key to this secret message.') : '';
-        const isRead = lastMessage ? lastMessage.actions[this.user.id]?.seen : true;
+        const isRead = lastMessage && lastMessage.actions ? (lastMessage.actions[this.user.id]?.seen) : true;
 
         return {
           id: room.id,
@@ -344,6 +354,8 @@ class Chat extends Component {
   initChatRooms() {
     this.user = this.firechat.getCurrentUser();
     this.props.showLoading();
+    this.updateHeaderLeft();
+    this.updateHeaderTitle();
 
     // TODO: load state from local storage and display when component bound
     const historyState = this.loadDataFromLocalStorage();
@@ -644,7 +656,7 @@ class Chat extends Component {
     // // Bind events for new messages, enter / leaving rooms, and user metadata.
     // this.firechat.on('room-enter', this.onEnterRoom.bind(this));
     // this.firechat.on('room-exit', this.onLeaveRoom.bind(this));
-    // this.firechat.on('message-add', this.onNewMessage.bind(this));
+    this.firechat.bind('message-add', ::this.onNewMessage);
     // this.firechat.on('message-remove', this.onRemoveMessage.bind(this));
 
     // // Bind events related to chat invitations.
@@ -655,6 +667,7 @@ class Chat extends Component {
 
   unBindDataEvents() {
     console.log('unbound data events');
+    this.firechat.unbind('message-add', this.onNewMessage.bind(this));
     this.firechat.unbind('user-update');
     this.firechat.unbind('room-invite');
     this.firechat.unbind('room-invite-response');
