@@ -64,7 +64,7 @@ class Handshake extends React.Component {
   productIdFillForm = 1300;
 
   handleScroll() {
-    const theta = (window.scrollY / 200) % Math.PI;
+    const theta = (window.scrollY / 250) % Math.PI;
     if (this.imageRef) {
       this.imageRef.style.transform = `rotate(${theta}rad)`;
       this.imageRef.style.position = 'relative';
