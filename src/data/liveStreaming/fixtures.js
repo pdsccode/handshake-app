@@ -833,7 +833,18 @@ export default [
       "goalsHomeTeam": null,
       "goalsAwayTeam": null
     },
-    "odds": null
+    "odds": null,
+    link: 'http://haixombia.com/api/vstv.php?sv=https://itdjjs2gko.vcdn.com.vn/hls/4gsl4rj/index.m3u8',
+    linksLive: [
+      'http://haixombia.com/api/vstv.php?sv=https://itdjjs2gko.vcdn.com.vn/hls/4gsl4rj/index.m3u8',
+      'http://capodeportes.net/reproductor2/canal3.php?width=400&height=300&autoplay=1',
+    ],
+    linksSoftCast: [
+      'sop://broker.sopcast.com:3912/259966',
+      'acestream://2b3119a7752920ad43a627d4cf60f69e2e6efb04',
+      'acestream://1e58f6d83a003ef7ecb1978913fe6fae6761e8f3',
+      'acestream://39865c63cd984752018c08476c98ef2575f4ebe7',
+    ],
   },
   {
     "_links": {
