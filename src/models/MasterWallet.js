@@ -7,7 +7,7 @@ import { Shuriken } from '@/models/Shuriken.js';
 import { Wallet } from '@/models/Wallet.js';
 import { APP } from '@/constants';
 import { StringHelper } from '@/services/helper';
-import Neuron from '@/services/neuron';
+import Neuron from '@/services/neuron/Neutron';
 
 const bip39 = require('bip39');
 
