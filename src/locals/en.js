@@ -176,7 +176,7 @@ export default {
     },
     {
       question: 'Do I need Ether? Does it support other cryptocurrencies?',
-      answer: 'It allows parties to directly bet against each other without going through a central authority or bookmaker. This makes it 100% anonymous, no signs up no downloads required. The management of bets and the settlement of winnings are carried out collectively by the blockchain network, protecting users from any single point of failure. You can also create your own prediction markets.',
+      answer: 'Yes. Ninja only accepts ETH for now, but support will be added for other currencies very soon.',
     },
     {
       question: 'How do I start with Ninja?',
