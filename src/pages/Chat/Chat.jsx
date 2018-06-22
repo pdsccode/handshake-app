@@ -366,6 +366,15 @@ class Chat extends Component {
       });
     }
 
+    // TODO: load state from local storage and display when component bound
+    const historyState = this.loadDataFromLocalStorage();
+    if (historyState && isComponentBound) {
+      this.setCustomState(historyState, () => {
+        this.updateHeaderLeft();
+        this.updateHeaderTitle();
+      });
+    }
+
     this.setCustomState({
       chatSource: this.firechat.getRooms(),
     }, () => {
