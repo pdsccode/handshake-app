@@ -482,7 +482,6 @@ class Chat extends Component {
         type: messageType,
         ...args,
       };
-
       this.firechat.sendMessage(roomId, sendMessageObj, publicKey, null, () => {
         this.scrollToBottom();
       });
