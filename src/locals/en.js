@@ -1,5 +1,4 @@
 export default {
-  HELLO: 'hello {name}',
   buy: 'Buy',
   sell: 'Sell',
   amount: 'amount',
