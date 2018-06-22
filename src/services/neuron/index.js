@@ -8,6 +8,8 @@ export { default as ExchangeHandshake } from './neuron-exchangehandshake';
 export { default as ExchangeShopHandshake } from './neuron-exchangeshophandshake';
 export { default as PredictionHandshake } from './neuron-predictionhandshake';
 
+const LIMIT_GAS = 350000;
+
 const BN = Web3.utils.BN;
 const TAG = 'Neuron';
 class Neuron {
@@ -75,6 +77,16 @@ class Neuron {
     const estimatedGas = await this.web3.eth.estimateGas(estimateGasData);
     return estimatedGas;
   };
+  caculateLimitGasWithEthUnit = async (
+    gasPrice = undefined
+  ) => {
+    gasPrice = new BN(gasPrice
+      ? Web3.utils.toWei(String(gasPrice), 'gwei')
+      : await this.web3.eth.getGasPrice());
+
+    return Web3.utils.fromWei(String(LIMIT_GAS * gasPrice));
+  }
+  
   caculateEstimatGasWithEthUnit = async (
     payloadData,
     toAddress,
@@ -136,7 +148,9 @@ class Neuron {
       const balance = new BN(await web3.eth.getBalance(address));
 
       const estimateGas = balance.div(gasPrice);
-      const limitedGas = 3000000; // await this.getEstimateGas(payloadData, address);
+      //const limitedGas = 3000000; // await this.getEstimateGas(payloadData, address);
+      const limitedGas = LIMIT_GAS;
+
       const estimatedGas = await BN.min(estimateGas, limitedGas);
 
       const chainId = await web3.eth.net.getId();
@@ -207,7 +221,9 @@ class Neuron {
       : await web3.eth.getGasPrice());
     const balance = new BN(await web3.eth.getBalance(address));
     const estimateGas = balance.div(gasPrice);
-    const limitedGas = 3000000;
+    //const limitedGas = 3000000;
+    //const limitedGas = 350000;
+    const limitedGas = LIMIT_GAS;
     const estimatedGas = await BN.min(estimateGas, limitedGas);
     const chainId = await web3.eth.net.getId();
     console.log('sendRawTransaction gasPrice->', parseInt(gasPrice));
@@ -281,7 +297,8 @@ class Neuron {
         }
         console.log(parseInt(gasPrice));
         const nonce = await web3.eth.getTransactionCount(address);
-        const gasLimit = 3000000;
+        //const gasLimit = 3000000;
+        const gasLimit = LIMIT_GAS;
         const estimatedGas = 3000000;
         const rawTx = {
           nonce: web3.utils.toHex(nonce),
