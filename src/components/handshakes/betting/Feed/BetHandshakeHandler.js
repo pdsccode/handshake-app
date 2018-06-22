@@ -35,7 +35,7 @@ export const MESSAGE = {
   CREATE_BET_NOT_MATCH: 'Finding a ninja to bet against you.',
   CREATE_BET_MATCHED: 'Bet matched! Waiting for outcome.',
   NOT_ENOUGH_BALANCE: 'Too rich for your blood. Please top up your wallet.',
-  NOT_ENOUGH_GAS: `Not enough gas. Please top up your wallet.`,
+  NOT_ENOUGH_GAS: `Not enough gas. Your balance should larger than 0.007eth gas + value. Please top up your wallet.`,
   CHOOSE_MATCH: 'Please choose match and outcome',
   ODD_LARGE_THAN: 'Please enter odds greater than 1',
   AMOUNT_VALID: 'Please place a bet larger than 0.',
@@ -62,7 +62,9 @@ export const BET_BLOCKCHAIN_STATUS = {
     STATUS_REFUND_PENDING: -6,
     STATUS_DISPUTE_PENDING: -5,
     STATUS_BLOCKCHAIN_PENDING: -4,
-    STATUS_BLOCKCHAIN_ROLLBACK: -9,
+    STATUS_SHAKER_ROLLBACK: -9,
+    STATUS_INIT_ROLLBACK: -2,
+
 
 
     STATUS_PENDING: -1,
@@ -96,6 +98,10 @@ export const BETTING_STATUS_LABEL =
     {
       INITING: 'Placing a bet..',
       CANCEL: 'Cancel this bet',
+      RETRY: 'Retry',
+      ROLLBACK_INIT: 'There is something wrong with blockchain. The bet is cancelled',
+      ROLLBACK_SHAKE: 'There is something wrong with blockchain. The bet is cancelled',
+      SOLVE: 'Please retry to solve problem',
       LOSE: 'Better luck next time.',
       WIN: `You're a winner!`,
       DONE: 'Completed',
@@ -193,14 +199,14 @@ export class BetHandshakeHandler {
     // TO DO: scan txhash and rollback after a few minutes
     strStatus = BETTING_STATUS_LABEL.PROGRESSING;
     isAction = false;
-} 
+  } 
     else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_PENDING) {
       strStatus = BETTING_STATUS_LABEL.INITING;
       isAction = false;
     } else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINITED) {
       strStatus = BETTING_STATUS_LABEL.CANCELLED;
       isAction = false;
-    }else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_BLOCKCHAIN_ROLLBACK) {
+    }else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_SHAKER_ROLLBACK) {
       strStatus = BETTING_STATUS_LABEL.CANCELLED;
       isAction = false;
     } else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_REFUND) {
@@ -336,6 +342,8 @@ export class BetHandshakeHandler {
     if(hash == -1){
       realBlockHash = "-1";
       logJson = error.message;
+      this.rollback(offchain);
+
     }
 
     // Send GA event tracking
@@ -496,6 +504,16 @@ export class BetHandshakeHandler {
   }
   rollbackFailed = (error) => {
     console.log('rollbackFailed', error);
+    const {status, message} = error;
+    if(status == 0){
+      store.dispatch(showAlert({
+        message: message,
+        timeOut: 5000,
+        type: 'danger',
+        
+      }));
+    }
+    
   }
   async cancelBet(hid, side, stake, odds, offchain){
     const chainId = this.getChainIdDefaultWallet();
