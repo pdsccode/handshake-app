@@ -351,7 +351,7 @@ class FeedBetting extends React.Component {
     }
     console.log("idCryptosign, isFreeBet, isUserShaker, fromAddress: ", idCryptosign, 
     isFreeBet, isUserShake, userFromAddress);
-
+    //userFromAddress = "abc";
     if(!betHandshakeHandler.isRightNetwork()){
       message = MESSAGE.RIGHT_NETWORK;
     }else if (!betHandshakeHandler.isSameAddress(userFromAddress)){

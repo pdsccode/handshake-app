@@ -43,7 +43,7 @@ export const MESSAGE = {
   RIGHT_NETWORK: 'You must set your wallet on Mainnet',
   ROLLBACK: `Something did not go according to plan. Please try again.`,
   WITHDRAW_SUCCESS: 'Success! Your winnings have been withdrawn to your wallet.',
-  DIFFERENCE_ADDRESS: `Current address isn't same as which you used create bet`
+  DIFFERENCE_ADDRESS: `Current address isn't same as which you used to create bet`
 };
 
 export const BET_BLOCKCHAIN_STATUS = {
