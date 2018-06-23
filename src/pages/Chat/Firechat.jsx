@@ -823,11 +823,11 @@ export class Firechat {
   }
 
   getRooms() {
-    return this.rooms;
+    return { ...this.rooms };
   }
 
   getCurrentUser() {
-    return this.user;
+    return { ...this.user };
   }
 
   warn(msg) {
@@ -860,30 +860,31 @@ export class Firechat {
   }
 
   markMessagesAsRead(roomId) {
-    const originalMessages = this.rooms[roomId].messages || [];
-    const updateValues = {};
-    originalMessages.forEach((message, i) => {
-      const isRead = message.actions ? message.actions[this.user.id] ?.seen : false;
-      if (isRead) {
-        return true;
+    if (this.rooms[roomId]) {
+      const originalMessages = this.rooms[roomId].messages || [];
+      const updateValues = {};
+      originalMessages.forEach((message, i) => {
+        const isRead = message.actions ? message.actions[this.user.id] ?.seen : false;
+        if (isRead) {
+          return true;
+        }
+
+        updateValues[`/${roomId}/${message.id}/actions/${this.user.id}/seen`] = true;
+        message.actions[this.userId] = {
+          ...message.actions[this.userId],
+          ...{
+            seen: true,
+          },
+        };
+        originalMessages[i] = message;
+      });
+
+      if (Object.keys(updateValues).length > 0) {
+        this.messageRef.update(updateValues);
       }
-
-      updateValues[`/${roomId}/${message.id}/actions/${this.user.id}/seen`] = true;
-      message.actions[this.userId] = {
-        ...message.actions[this.userId],
-        ...{
-          seen: true,
-        },
-      };
-      originalMessages[i] = message;
-    });
-
-    if (Object.keys(updateValues).length > 0) {
-      this.messageRef.update(updateValues);
+      this.rooms[roomId].messages = originalMessages;
+      this.onRoomUpdate(roomId, this.rooms[roomId]);
     }
-
-    this.rooms[roomId].messages = originalMessages;
-    this.onRoomUpdate(roomId, this.rooms[roomId]);
   }
 }
 
