@@ -39,6 +39,7 @@ class BettingFilter extends React.Component {
     checkFreeAvailable: PropTypes.func.isRequired,
     matchId: PropTypes.number,
     outComeId: PropTypes.number,
+    isPrivate: PropTypes.bool,
     setLoading: PropTypes.func.isRequired,
   }
 
@@ -58,6 +59,7 @@ class BettingFilter extends React.Component {
       side: SIDE.SUPPORT,
       isError: false,
       errorMessage: '',
+      isPrivate: props.isPrivate || false,
     };
   }
 
@@ -192,9 +194,10 @@ class BettingFilter extends React.Component {
     const { matchOutcomes } = this;
     // console.log('defaultOutcome matchOutcomes: ', matchOutcomes);
     const { outComeId } = this.props;
+    const {isPrivate} = this.state;
     const sortedMatch = matchOutcomes.sort((a, b) => b.id > a.id);
     if (matchOutcomes && matchOutcomes.length > 0) {
-      const itemDefault = matchOutcomes.find(item => item.id === outComeId);
+      const itemDefault = matchOutcomes.find(item => item.id === outComeId && item.isPrivate === isPrivate);
       return itemDefault || matchOutcomes[0];
     }
     return null;
