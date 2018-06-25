@@ -9,7 +9,7 @@ import {MasterWallet} from '@/models/MasterWallet';
 
 import local from '@/services/localStore';
 import {FIREBASE_PATH, HANDSHAKE_ID, API_URL, APP} from '@/constants';
-import { uninitItem, collect, refund, collectFree, rollback } from '@/reducers/handshake/action';
+import { uninitItem, collect, refund, collectFree, rollback, uninitItemFree } from '@/reducers/handshake/action';
 import { loadMyHandshakeList, updateBettingChange} from '@/reducers/me/action';
 
 
@@ -295,6 +295,10 @@ class FeedBetting extends React.Component {
   handleActionFree(title, id){
     switch(title){
 
+      case BETTING_STATUS_LABEL.CANCEL:
+        // TO DO: CLOSE BET
+        this.uninitItem(realId);
+        break;
       case BETTING_STATUS_LABEL.WITHDRAW:
         this.collectFree(id);
         break;
@@ -436,6 +440,41 @@ class FeedBetting extends React.Component {
       });
     }
 
+  }
+  async uninitItemFree(id){
+    const balance = await betHandshakeHandler.getBalance();
+    console.log('Balance:', balance);
+    const url = API_URL.CRYPTOSIGN.UNINIT_HANDSHAKE_FREE.concat(`/${id}`);
+    this.props.uninitItemFree({PATH_URL: url, METHOD:'POST',
+    successFn: this.uninitHandshakeFreeSuccess,
+    errorFn: this.uninitHandshakeFreeFailed
+  });
+  }
+  uninitHandshakeFreeSuccess= async (successData)=>{
+    console.log("uninitHandshakeFreeSuccess", successData);
+    const {status} = successData
+    if(status){
+      const {itemInfo} = this.state;
+
+      let updateInfo = Object.assign({}, itemInfo);
+      updateInfo.status = BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINIT_PENDING;
+      this.props.updateBettingChange(updateInfo);
+
+    }
+  }
+  uninitHandshakeFreeFailed = (error) => {
+    console.log('uninitHandshakeFreeFailed', error);
+    const {status, message} = error;
+    if(status == 0){
+      this.props.showAlert({
+        message: <div className="text-center">{message}</div>,
+        timeOut: 3000,
+        type: 'danger',
+        callBack: () => {
+        }
+      });
+    }
+  
   }
   collectFree(id){
     console.log('Call Collect Free');
@@ -641,6 +680,7 @@ const mapDispatch = ({
   collectFree,
   refund,
   rollback,
-  showAlert
+  showAlert,
+  uninitItemFree
 });
 export default connect(mapState, mapDispatch)(FeedBetting);
