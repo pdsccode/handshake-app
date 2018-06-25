@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { MessageList, ChatList, Input } from 'react-chat-elements';
 import moment from 'moment';
+import { injectIntl } from 'react-intl';
+
 // import Identicon from 'identicon.js';
 // import TransferCoin from '@/components/Wallet/TransferCoin';
 import Modal from '@/components/core/controls/Modal';
@@ -259,6 +261,7 @@ class Chat extends Component {
 
   getRoomList() {
     const { chatSource } = this.state;
+    const { messages } = this.props.intl;
     const rooms = { ...chatSource };
     return Object.values(rooms)
       .reverse()
@@ -279,7 +282,7 @@ class Chat extends Component {
         const lastMessage = this.getLastMessage(room.messages);
 
         const lastMessageTime = lastMessage ? lastMessage.timestamp : null;
-        const lastMessageContent = lastMessage ? (lastMessage.message.message || 'You lost the key to this secret message.') : '';
+        const lastMessageContent = lastMessage ? (lastMessage.message.message || messages.chat.lastMessageContent) : '';
         const isRead = lastMessage && lastMessage.actions ? (lastMessage.actions[this.user.id]?.seen) : true;
 
         return {
@@ -675,11 +678,13 @@ class Chat extends Component {
   }
 
   renderNotFoundUser() {
-    return this.renderEmptyMessage('The Ninja you are looking for is not here. Perhaps you have their name wrong.');
+    const { messages } = this.props.intl;
+    return this.renderEmptyMessage(messages.chat.notFoundUser);
   }
 
   renderChatList() {
     const { searchUsers, searchUserString } = this.state;
+    const { messages } = this.props.intl;
     const isInSearchMode = !!searchUserString;
     const chatSource = isInSearchMode ? this.getListSearchUsersSource(searchUsers) : this.getRoomList();
 
@@ -690,7 +695,7 @@ class Chat extends Component {
           onClick={isInSearchMode ? this.onSearchUserClicked : this.onChatItemClicked}
         />
       </div>
-    ) : (isInSearchMode ? this.renderNotFoundUser() : this.renderEmptyMessage('Trade secrets here. All communication is encrypted and no one is listening.'));
+    ) : (isInSearchMode ? this.renderNotFoundUser() : this.renderEmptyMessage(messages.chat.emptyMessage));
   }
 
   renderBackButton() {
@@ -698,6 +703,7 @@ class Chat extends Component {
   }
 
   renderSearchButton() {
+    const { messages } = this.props.intl;
     return (
       <div className="chat-search-container">
         <input
@@ -706,7 +712,7 @@ class Chat extends Component {
           className="rce-search-input"
           onChange={this.onSearchUser}
           onBlur={() => { setTimeout(() => { this.clearSearch(); }, 100); }}
-          placeholder="Enter a ninja’s name or alias."
+          placeholder={messages.chat.searchPlaceHolder}
         />
       </div>
     );
@@ -833,4 +839,4 @@ const mapStateDispatch = dispatch => ({
   hideLoading: bindActionCreators(hideLoading, dispatch),
 });
 
-export default connect(mapState, mapStateDispatch)(Chat);
+export default injectIntl(connect(mapState, mapStateDispatch)(Chat));

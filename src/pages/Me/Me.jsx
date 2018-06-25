@@ -6,6 +6,8 @@ import { withFirebase } from 'react-redux-firebase';
 // action, mock
 import { fireBaseExchangeDataChange, loadMyHandshakeList, fireBaseBettingChange } from '@/reducers/me/action';
 import { API_URL, APP, HANDSHAKE_ID, URL } from '@/constants';
+import { injectIntl } from 'react-intl';
+
 // components
 import { Link } from 'react-router-dom';
 import { Grid, Row, Col } from 'react-bootstrap';
@@ -243,4 +245,4 @@ const mapDispatch = ({
   reviewOffer,
 });
 
-export default compose(withFirebase, connect(mapState, mapDispatch))(Me);
+export default injectIntl(compose(withFirebase, connect(mapState, mapDispatch))(Me));
