@@ -159,6 +159,7 @@ class Me extends React.Component {
 
   render() {
     const { list } = this.props.me;
+    const { messages } = this.props.intl;
     const online = !this.props.auth.offline;
 
     return (
@@ -168,8 +169,8 @@ class Me extends React.Component {
             <Link className="update-profile" to={URL.HANDSHAKE_ME_PROFILE} title="profile">
               <Image className="avatar" src={AvatarSVG} alt="avatar" />
               <div className="text">
-                <strong>The face behind the mask</strong>
-                <p>You, glorious you</p>
+                <strong>{messages.me.feed.profileTitle}</strong>
+                <p>{messages.me.feed.profileDescription}</p>
               </div>
               <div className="arrow">
                 <Image src={ExpandArrowSVG} alt="arrow" />
@@ -182,8 +183,8 @@ class Me extends React.Component {
             <div className="update-profile pt-2">
               <Image className="avatar" src={ShopSVG} alt="shop" />
               <div className="text" style={{ width: '69%' }}>
-                <strong>Your station</strong>
-                <p>Open for business</p>
+                <strong>{messages.me.feed.shopTitle}</strong>
+                <p>{messages.me.feed.shopDescription}</p>
               </div>
               <div className="arrow">
                 <ToggleSwitch defaultChecked={online} onChange={flag => this.setOfflineStatus(flag)} />
@@ -213,7 +214,7 @@ class Me extends React.Component {
                   return null;
                 })
               ) : (
-                <NoData message="Start a mission." isShowArrowDown />
+                <NoData message={messages.me.feed.noDataMessage} isShowArrowDown />
               )
             }
           </Col>
