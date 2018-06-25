@@ -23,7 +23,7 @@ import local from '@/services/localStore';
 // style
 import './Filter.scss';
 
-const betHandshakeHandler = new BetHandshakeHandler();
+const betHandshakeHandler = BetHandshakeHandler.getShareManager();
 const CRYPTOSIGN_MINIMUM_MONEY = 0.00002;
 const freeAmount = 0.001;
 const ROUND_ODD = 10;
