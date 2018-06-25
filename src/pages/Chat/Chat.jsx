@@ -118,11 +118,6 @@ class Chat extends Component {
     }
   }
 
-  // Events related to chat invitations.
-  onChatInvite(invitation) {
-    this.firechat.acceptInvite(invitation.id);
-  }
-
   onChatInviteResponse(invitation) {
     console.log('new invitation response', invitation);
     if (!invitation.status) return;
@@ -660,7 +655,7 @@ class Chat extends Component {
     // this.firechat.on('message-remove', this.onRemoveMessage.bind(this));
 
     // // Bind events related to chat invitations.
-    this.firechat.bind('room-invite', :: this.onChatInvite);
+    // this.firechat.bind('room-invite', :: this.onChatInvite);
     this.firechat.bind('room-invite-response', :: this.onChatInviteResponse);
     this.firechat.bind('room-update', :: this.onRoomUpdate);
   }
@@ -669,7 +664,7 @@ class Chat extends Component {
     console.log('unbound data events');
     this.firechat.unbind('message-add', this.onNewMessage.bind(this));
     this.firechat.unbind('user-update');
-    this.firechat.unbind('room-invite');
+    // this.firechat.unbind('room-invite');
     this.firechat.unbind('room-invite-response');
     this.firechat.unbind('room-update');
   }
