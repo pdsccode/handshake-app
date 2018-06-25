@@ -346,13 +346,7 @@ class BetingShakeFree extends React.Component {
     console.log('shakeItemSuccess', successData);
     const {status, data, message} = successData;
     if(status){
-      /*
-      const foundShakeList = this.foundShakeItemList(data);
-      console.log('foundShakeList:', foundShakeList);
-      foundShakeList.forEach(element => {
-        this.shakeContract(element);
-      });
-      */
+      
      const {outcomeHid} = this.props;
       betHandshakeHandler.controlShake(data, outcomeHid);
      this.props.showAlert({

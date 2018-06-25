@@ -206,8 +206,12 @@ export class BetHandshakeHandler {
     } else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINITED) {
       strStatus = BETTING_STATUS_LABEL.CANCELLED;
       isAction = false;
-    }else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_SHAKER_ROLLBACK) {
-      strStatus = BETTING_STATUS_LABEL.CANCELLED;
+    }else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.ROLLBACK_INIT) {
+      strStatus = BETTING_STATUS_LABEL.ROLLBACK_INIT;
+      isAction = false;
+    }
+    else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_SHAKER_ROLLBACK) {
+      strStatus = BETTING_STATUS_LABEL.ROLLBACK_SHAKE;
       isAction = false;
     } else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_REFUND) {
       strStatus = BETTING_STATUS_LABEL.REFUNDED;
@@ -283,8 +287,8 @@ export class BetHandshakeHandler {
     return bettinghandshake.address;
   }
 
-  foundShakeItemList(dict, offchain) {
-    const shakerList = [];
+  foundShakeItem(dict, offchain) {
+    //const shakerList = [];
     const profile = local.get(APP.AUTH_PROFILE);
     const { shakers, outcome_id, from_address } = dict;
     console.log('Shakers:', shakers);
@@ -294,17 +298,19 @@ export class BetHandshakeHandler {
     if (foundShakedItem) {
       foundShakedItem.outcome_id = outcome_id;
       foundShakedItem.from_address = from_address;
-      shakerList.push(foundShakedItem);
+      return foundShakedItem;
+      //shakerList.push(foundShakedItem);
     }
-    return shakerList;
+    //return shakerList;
+    return null;
   }
   isExistMatchBet(list){
     for (let i = 0; i < list.length; i++) {
       const element = list[i];
       const { offchain } = element;
-      const foundShakeList = this.foundShakeItemList(element, offchain);
+      const foundShakeItem = this.foundShakeItem(element, offchain);
       console.log('isExistMatchBet FoundShakeList:', this.foundShakeList);
-      if(foundShakeList.length > 0){
+      if(foundShakeItem){
         return true;
       }
     }
@@ -333,33 +339,42 @@ export class BetHandshakeHandler {
     //hid = 10000;
     const chainId = this.getChainIdDefaultWallet();
     const bettinghandshake = new BettingHandshake(chainId);
-    const dataBlockchain = await bettinghandshake.initBet(hid, side, stake, odds, offchain);
-    //TO DO: SAVE TRANSACTION
-    const {blockHash, logs, hash, error} = dataBlockchain;
-    let logJson = JSON.stringify(logs);
     const contractAddress = bettinghandshake.contractAddress;
-    let realBlockHash = blockHash;
-    if(hash == -1){
-      realBlockHash = "-1";
-      logJson = error.message;
-      this.rollback(offchain);
-
-    }
-
-    // Send GA event tracking
+    let realBlockHash = "";
     try {
-      if(hash === -1) {
-        GA.createBetNotMatchFail({
-          side,
-          odds,
-          amount,
-          message: logJson,
-        })
-      } else {
-        GA.createBetNotMatchSuccess({ side, odds, amount });
+      const dataBlockchain = await bettinghandshake.initBet(hid, side, stake, odds, offchain);
+      //TO DO: SAVE TRANSACTION
+      const {blockHash, logs, hash, error} = dataBlockchain;
+      let logJson = JSON.stringify(logs);
+      realBlockHash = blockHash;
+      if(hash == -1){
+        realBlockHash = "-1";
+        logJson = error.message;
+        this.rollback(offchain);
+  
       }
-    } catch (err) {}
-
+  
+      // Send GA event tracking
+      try {
+        if(hash === -1) {
+          GA.createBetNotMatchFail({
+            side,
+            odds,
+            amount,
+            message: logJson,
+          })
+        } else {
+          GA.createBetNotMatchSuccess({ side, odds, amount });
+        }
+      } catch (err) {
+        console.log(err);
+      }
+  
+    }catch(e){
+      realBlockHash = "-1";
+      logJson = e.message;
+    }
+    
     this.saveTransaction(offchain,CONTRACT_METHOD.INIT, chainId, realBlockHash, contractAddress, logJson);
 
     return dataBlockchain;
@@ -381,40 +396,47 @@ export class BetHandshakeHandler {
     // const hid = outcome_id;
     const chainId = this.getChainIdDefaultWallet();
     const bettinghandshake = new BettingHandshake(chainId);
-    const result = await bettinghandshake.shake(
-      hid,
-      side,
-      stake,
-      odds,
-      maker,
-      markerOdds,
-      offchain,
-    );
-    const {blockHash, logs, hash, error} = result;
-
-    let logJson = JSON.stringify(logs);
     const contractAddress = bettinghandshake.contractAddress;
-    let realBlockHash = blockHash;
-    if(hash == -1){
-      realBlockHash = "-1";
-      logJson = error.message;
-      this.rollback(offchain);
-    }
-
-     // Send GA event tracking
+    let realBlockHash = "";
+    let logJson = "";
     try {
-      if(hash === -1) {
-        GA.createBetMatchedFail({
-          side,
-          odds,
-          amount,
-          message: logJson,
-        });
-      } else {
-        GA.createBetMatchedSuccess({ side, odds, amount });
+      const result = await bettinghandshake.shake(
+        hid,
+        side,
+        stake,
+        odds,
+        maker,
+        markerOdds,
+        offchain,
+      );
+      const {blockHash, logs, hash, error} = result;
+  
+      logJson = JSON.stringify(logs);
+      realBlockHash = blockHash;
+      if(hash == -1){
+        realBlockHash = "-1";
+        logJson = error.message;
+        this.rollback(offchain);
       }
-    } catch (err) {}
+  
+       // Send GA event tracking
+      try {
+        if(hash === -1) {
+          GA.createBetMatchedFail({
+            side,
+            odds,
+            amount,
+            message: logJson,
+          });
+        } else {
+          GA.createBetMatchedSuccess({ side, odds, amount });
+        }
+      } catch (err) {}
+  
+    }catch(e){
 
+    }
+    
     this.saveTransaction(offchain,CONTRACT_METHOD.SHAKE, chainId, realBlockHash, contractAddress, logJson);
 
     return result;
@@ -430,12 +452,18 @@ export class BetHandshakeHandler {
       if (isInitBet) {
         this.addContract(element, hid);
       } else {
-        const foundShakeList = this.foundShakeItemList(element, offchain);
-        console.log('Found shake List:', foundShakeList);
+        const foundShakeItem = this.foundShakeItem(element, offchain);
+        console.log('Found shake Item:', foundShakeItem);
+        /*
         for (let i = 0; i < foundShakeList.length; i++) {
           const shakedItem = foundShakeList[i];
           this.shakeContract(shakedItem, hid, odds);
         }
+        */
+       if(foundShakeItem){
+        this.shakeContract(foundShakeItem, hid, odds);
+
+       }
       }
     }, 3000 * i);
   }
