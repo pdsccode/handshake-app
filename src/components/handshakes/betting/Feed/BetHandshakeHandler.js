@@ -579,7 +579,16 @@ export class BetHandshakeHandler {
   }
   saveTransactionFailed = (error) => {
     console.log('saveTransactionSuccess', error);
-
+    const {status, code} = error;
+    if(status == 0){
+      const message = this.getMessageWithCode(code);
+      store.dispatch(showAlert({
+        message: message,
+        timeOut: 5000,
+        type: 'danger',
+        
+      }));
+    }
   }
 
   rollback(offchain) {
@@ -606,8 +615,9 @@ export class BetHandshakeHandler {
   }
   rollbackFailed = (error) => {
     console.log('rollbackFailed', error);
-    const {status, message} = error;
+    const {status, code} = error;
     if(status == 0){
+      const message = this.getMessageWithCode(code);
       store.dispatch(showAlert({
         message: message,
         timeOut: 5000,
@@ -621,18 +631,28 @@ export class BetHandshakeHandler {
     const chainId = this.getChainIdDefaultWallet();
 
     const bettinghandshake = new BettingHandshake(chainId);
-    const result = await bettinghandshake.cancelBet(hid, side, stake, odds, offchain);
-    const {blockHash, logs, hash, error} = result;
-
-    let logJson = JSON.stringify(logs);
     const contractAddress = bettinghandshake.contractAddress;
-    let realBlockHash = blockHash;
-    if(hash == -1){
-      realBlockHash = "-1";
-      logJson = error.message;
-      this.rollback(offchain);
 
+    let logJson = "";
+    let realBlockHash = "";
+    let result = null;
+    try{
+      result = await bettinghandshake.cancelBet(hid, side, stake, odds, offchain);
+      const {blockHash, logs, hash, error} = result;
+  
+      logJson = JSON.stringify(logs);
+      realBlockHash = blockHash;
+      if(hash == -1){
+        realBlockHash = "-1";
+        logJson = error.message;
+        this.rollback(offchain);
+  
+      }
+    }catch(err){
+      realBlockHash = "-1";
+      logJson = err.message;
     }
+    
     this.saveTransaction(offchain,CONTRACT_METHOD.CANCEL, chainId, realBlockHash, contractAddress, logJson);
 
     return result;
@@ -640,17 +660,27 @@ export class BetHandshakeHandler {
   async withdraw(hid, offchain){
     const chainId = this.getChainIdDefaultWallet();
     const bettinghandshake = new BettingHandshake(chainId);
-    const result = await bettinghandshake.withdraw(hid, offchain);
-    const {blockHash, logs, hash, error} = result;
-    let logJson = JSON.stringify(logs);
     const contractAddress = bettinghandshake.contractAddress;
-    let realBlockHash = blockHash;
-    if(hash == -1){
-      realBlockHash = "-1";
-      logJson = error.message;
-      this.rollback(offchain);
 
+    let result = null;
+    let logJson = "";
+    let realBlockHash= "";
+    try {
+      result = await bettinghandshake.withdraw(hid, offchain);
+      const {blockHash, logs, hash, error} = result;
+      logJson = JSON.stringify(logs);
+      realBlockHash = blockHash;
+      if(hash == -1){
+        realBlockHash = "-1";
+        logJson = error.message;
+        this.rollback(offchain);
+  
+      }
+    }catch(err){
+      realBlockHash = "-1";
+      logJson = err.message;
     }
+    
     this.saveTransaction(offchain,CONTRACT_METHOD.COLLECT, chainId, realBlockHash, contractAddress, logJson);
 
     return result;

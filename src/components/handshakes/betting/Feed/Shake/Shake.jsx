@@ -568,6 +568,17 @@ class BetingShake extends React.Component {
     this.setState({
       disable: false
     })
+    const {status, code} = error;
+    if(status == 0){
+      const message = betHandshakeHandler.getMessageWithCode(code);
+      this.props.showAlert({
+        message: <div className="text-center">{message}</div>,
+        timeOut: 3000,
+        type: 'danger',
+        callBack: () => {
+        }
+      });
+    }
     this.props.onSubmitClick();
 
   }

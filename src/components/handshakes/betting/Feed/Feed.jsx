@@ -464,8 +464,9 @@ class FeedBetting extends React.Component {
   }
   uninitHandshakeFreeFailed = (error) => {
     console.log('uninitHandshakeFreeFailed', error);
-    const {status, message} = error;
+    const {status, code} = error;
     if(status == 0){
+      const message = betHandshakeHandler.getMessageWithCode(code);
       this.props.showAlert({
         message: <div className="text-center">{message}</div>,
         timeOut: 3000,
@@ -508,8 +509,9 @@ class FeedBetting extends React.Component {
   }
   collectFreeFailed = (error) => {
     console.log('collectFreeFailed', error);
-    const {status, message} = error;
+    const {status, code} = error;
     if(status == 0){
+      const message = betHandshakeHandler.getMessageWithCode(code);
       this.props.showAlert({
         message: <div className="text-center">{message}</div>,
         timeOut: 3000,
@@ -589,8 +591,9 @@ class FeedBetting extends React.Component {
   }
   collectFailed = (error) => {
     console.log('collectFailed', error);
-    const {status, message} = error;
+    const {status, code} = error;
     if(status == 0){
+      const message = betHandshakeHandler.getMessageWithCode(code);
       this.props.showAlert({
         message: <div className="text-center">{message}</div>,
         timeOut: 3000,
@@ -637,8 +640,9 @@ class FeedBetting extends React.Component {
   }
   refundFailed = (error) => {
     console.log('refundFailed', error);
-    const {status, message} = error;
+    const {status, code} = error;
     if(status == 0){
+      const message = betHandshakeHandler.getMessageWithCode(code);
       this.props.showAlert({
         message: <div className="text-center">{message}</div>,
         timeOut: 3000,
@@ -665,6 +669,18 @@ class FeedBetting extends React.Component {
   }
   rollbackFailed = (error) => {
     console.log('rollbackFailed', error);
+    const {status, code} = error;
+
+    if(status == 0){
+      const message = betHandshakeHandler.getMessageWithCode(code);
+      this.props.showAlert({
+        message: <div className="text-center">{message}</div>,
+        timeOut: 3000,
+        type: 'danger',
+        callBack: () => {
+        }
+      });
+    }
   }
   
 }

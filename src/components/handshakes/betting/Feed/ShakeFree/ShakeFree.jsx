@@ -470,8 +470,9 @@ class BetingShakeFree extends React.Component {
   }
   initHandshakeFailed = (errorData) => {
     console.log('initHandshakeFailed', errorData);
-    const {status, message} = errorData;
+    const {status, code} = errorData;
     if(status == 0){
+      const message = betHandshakeHandler.getMessageWithCode(code);
       this.props.showAlert({
         message: <div className="text-center">{message}</div>,
         timeOut: 3000,
