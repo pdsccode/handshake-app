@@ -4,6 +4,10 @@
 
 .rdt {
   input[readonly] {
-    background-color: inherit;
+    background-color: #fff;
   }
+}
+.disabled-datePicker{
+  cursor: not-allowed;
+  background-color: #e9ecef !important;
 }
