@@ -176,7 +176,7 @@ export default {
     },
     {
       question: 'Do I need Ether? Does it support other cryptocurrencies?',
-      answer: 'It allows parties to directly bet against each other without going through a central authority or bookmaker. This makes it 100% anonymous, no signs up no downloads required. The management of bets and the settlement of winnings are carried out collectively by the blockchain network, protecting users from any single point of failure. You can also create your own prediction markets.',
+      answer: 'Yes. Ninja only accepts ETH for now, but support will be added for other currencies very soon.',
     },
     {
       question: 'How do I start with Ninja?',
@@ -426,6 +426,88 @@ export default {
         },
       },
     },
+    feed: {
+      profileTitle: 'The face behind the mask',
+      profileDescription: 'You, glorious you',
+      shopTitle: 'Your station',
+      shopDescription: 'Open for business',
+      noDataMessage: 'Start a mission.',
+    },
+  },
+
+  wallet: {
+    top_banner: {
+      message: "Shuriken Airdrop (limited)",
+      button: "Click here"
+    },
+    refers_dashboard: {
+      header: "3 Shuriken Airdrop hoops",
+
+    },
+    refers: {
+      header: "3 Shuriken Airdrop hoops",
+      error: {
+        submit_telegram: "Couldn't find you on Telegram. Please exit the group and try again.",
+        submit_twitter: "You haven't followed us yet. Please try again.",
+        confirm_code: "Verification code is wrong. Please try again!",
+        verify_code: "Can\'t send verify email",
+        get_token: "Failed! Your reffers are not complete.",
+      },
+      success: {
+        submit_telegram: "You joined our community telegram!",
+        submit_twitter: "You followed our Twitter!",
+        confirm_code: "Your email has been verified.",
+        verify_code: "Verification code is sent to your email. Please check!",
+        get_token: "Complete success! You will receive 80 shurikens in few seconds.",
+        copy_link: "Referral link copied to clipboard."
+      },
+      button: {
+        verified: "verified",
+        verify: "verify",
+        confirm: "confirm",
+        reset_email: "Reset email",
+        get_token: "just give me tokens"
+      },
+      text: {
+        title: "80 shiny Shurikens (SHURI).",
+        telegram: "Insult us on telegram",
+        telegram2: "Be creative. There’s a leaderboard.",
+        twitter: "twitter",
+        twitter2: "Our social media guy says we need followers on ",
+        referral_link: "This is your super sexy referral link. You get 20 shurikens for every new ninja."
+      },
+      placeholder: {
+        telegram_username: "Your telegram alias",
+        twitter_username: "Your twitter username",
+        email: "Verification code",
+        email2: "Your favourite fake email"
+      }
+    },
+    action: {
+      remove: {
+        header: "Are you sure?",
+        message: "This will permanently delete your wallet.",
+        button_yes: "Yes, remove",
+        button_cancel: "Cancel"
+      },
+      transfer: {
+        header: "Transfer coins",
+        to_address: {
+          placeholder: "Specify receiving..."
+        },
+      },
+    },
+  },
+
+
+  /**
+   * Chat page
+   */
+  chat: {
+    emptyMessage: 'Trade secrets here. All communication is encrypted and no one is listening.',
+    notFoundUser: 'The Ninja you are looking for is not here. Perhaps you have their name wrong.',
+    lastMessageContent: 'You lost the key to this secret message.',
+    searchPlaceHolder: 'Enter a ninja’s name or alias.',
   },
 
   /*
@@ -540,4 +622,7 @@ export default {
   WHITE_PAPER_SUMMARY_4: 'Build PEX with us. Join the conversation at',
   WHITE_PAPER_END: 'And it actually works',
   WHITE_PAPER_END_1: 'Hey, thanks for reading. Ninja will go live on the testnet on 5 June! We’re excited to hear your thoughts.',
+
+  // betting
+
 };
