@@ -129,10 +129,14 @@ const tokenHandle = ({
         },
         successFn: () => {
           // success
+          console.log('coins - getListOfferPrice - ipInfo', ipInfo);
           dispatch(getUserProfile({ PATH_URL: API_URL.EXCHANGE.GET_USER_PROFILE }));
           dispatch(getListOfferPrice({
             PATH_URL: API_URL.EXCHANGE.GET_LIST_OFFER_PRICE,
             qs: { fiat_currency: ipInfo?.currency },
+            errorFn(e) {
+              console.log('coins - getListOfferPrice - redux - error', e);
+            },
           }));
           // wallet
           const listWallet = MasterWallet.getMasterWallet();
@@ -174,7 +178,9 @@ const tokenHandle = ({
 const auth = ({ ref, dispatch, ipInfo }) => new Promise((resolve, reject) => {
   const token = local.get(APP.AUTH_TOKEN);
   if (token) {
-    tokenHandle({ resolve, token, dispatch });
+    tokenHandle({
+      resolve, token, dispatch, ipInfo,
+    });
   } else {
     dispatch(signUp({
       PATH_URL: `user/sign-up${ref ? `?ref=${ref}` : ''}`,
