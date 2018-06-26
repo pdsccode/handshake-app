@@ -100,7 +100,7 @@ class CreateBettingEvent extends React.Component {
       successFn: (response) => {
         console.log(response.data);
         this.props.showAlert({
-          message: <div className="text-center">Outcome added successfully.</div>,
+          message: <div className="text-center">Outcome added successfully. Please wait a few minutes for the Blockchain to update.</div>,
           timeOut: 3000,
           type: 'success',
           callBack: () => { },
@@ -151,7 +151,7 @@ class CreateBettingEvent extends React.Component {
         successFn: (response) => {
           console.log(response.data);
           this.props.showAlert({
-            message: <div className="text-center">Event added successfully.</div>,
+            message: <div className="text-center">Event added successfully. Please wait a few minutes for the Blockchain to update.</div>,
             timeOut: 3000,
             type: 'success',
             callBack: () => { },
