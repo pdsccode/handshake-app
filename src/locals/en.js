@@ -568,9 +568,15 @@ export default {
           success: 'success',
           failed: 'failed',
         },
-
       },
     },
+  },
+
+  chat: {
+    emptyMessage: 'Trade secrets here. All communication is encrypted and no one is listening.',
+    notFoundUser: 'The Ninja you are looking for is not here. Perhaps you have their name wrong?',
+    lastMessageContent: 'You lost the key to this secret message.',
+    searchPlaceHolder: 'Enter a ninja’s name or alias.',
   },
   /*
   *
