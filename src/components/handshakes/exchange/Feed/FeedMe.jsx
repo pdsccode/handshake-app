@@ -31,8 +31,8 @@ import {
   HANDSHAKE_EXCHANGE_STATUS_NAME,
   HANDSHAKE_STATUS_NAME,
   HANDSHAKE_USER,
-  URL,
-  NB_BLOCKS
+  NB_BLOCKS,
+  URL
 } from "@/constants";
 import ModalDialog from "@/components/core/controls/ModalDialog";
 import Rate from "@/components/core/controls/Rate";
@@ -52,7 +52,6 @@ import {
   shakeOffer,
   withdrawShakedOffer
 } from "@/reducers/exchange/action";
-import FeedMeExchangeLocal from '@/components/handshakes/exchange/Feed/FeedMeExchangeLocal'
 // import getSymbolFromCurrency from 'currency-symbol-map';
 import Offer from "@/models/Offer";
 import {MasterWallet} from "@/models/MasterWallet";
@@ -70,6 +69,7 @@ import {getLocalizedDistance} from "@/services/util"
 import {responseExchangeDataChange} from "@/reducers/me/action";
 import {Ethereum} from '@/models/Ethereum.js';
 import {Bitcoin} from '@/models/Bitcoin';
+import OfferShop from "@/models/OfferShop";
 
 class FeedMe extends React.PureComponent {
   constructor(props) {
@@ -213,10 +213,11 @@ class FeedMe extends React.PureComponent {
   }
 
   responseExchangeDataChangeOfferStore = (offerStore) => {
-    const { id, status } = offerStore;
+    const { id, } = offerStore;
     const { currency } = this.offer;
     let data = {};
     let firebaseOffer = {};
+    const status = offerStore.items[`${currency}`].status;
 
     firebaseOffer.id = id;
     firebaseOffer.status = `${currency.toLowerCase()}_${status}`;
@@ -1023,11 +1024,11 @@ class FeedMe extends React.PureComponent {
 
   deleteOfferItem = async () => {
     const { offer } = this;
-    const { currency, sellAmount } = offer;
+    const { currency, sellAmount, freeStart } = offer;
     console.log('deleteOfferItem', offer);
 
     if (currency === CRYPTO_CURRENCY.ETH) {
-      if (sellAmount > 0) {
+      if (sellAmount > 0 && !freeStart) {
         const wallet = MasterWallet.getWalletDefault(currency);
         const balance = await wallet.getBalance();
         const fee = await wallet.getFee();
@@ -1052,17 +1053,17 @@ class FeedMe extends React.PureComponent {
     const { refreshPage } = this.props;
     const { data } = responseData;
     const { offer } = this;
-    const { currency, sellAmount } = offer;
+    const { currency, sellAmount, freeStart } = offer;
 
     console.log('handleDeleteOfferItemSuccess', responseData);
 
-    const offerStore = Offer.offer(data);
+    const offerStore = OfferShop.offerShop(data);
 
     //Update status to redux
     this.responseExchangeDataChangeOfferStore(offerStore);
 
     if (currency === CRYPTO_CURRENCY.ETH) {
-      if (sellAmount > 0) {
+      if (sellAmount > 0 && !freeStart) {
         const wallet = MasterWallet.getWalletDefault(currency);
 
         const exchangeHandshake = new ExchangeShopHandshake(wallet.chainId);
@@ -1529,10 +1530,10 @@ class FeedMe extends React.PureComponent {
   handleCompleteShakedOffer = async () => {
     const { offer } = this;
     const { initUserId } = this.props;
-    const { id, currency, type } = offer;
+    const { id, currency, type, freeStart } = offer;
 
     if (currency === CRYPTO_CURRENCY.ETH) {
-      if ((type === EXCHANGE_ACTION.SELL && this.userType === HANDSHAKE_USER.OWNER) ||
+      if ((type === EXCHANGE_ACTION.SELL && this.userType === HANDSHAKE_USER.OWNER && !freeStart) ||
       (type === EXCHANGE_ACTION.BUY && this.userType === HANDSHAKE_USER.SHAKED)){
         const wallet = MasterWallet.getWalletDefault(currency);
         const balance = await wallet.getBalance();
@@ -1562,7 +1563,8 @@ class FeedMe extends React.PureComponent {
     const { initUserId, refreshPage } = this.props;
     const { data } = responseData;
     const offerShake = Offer.offer(data);
-    const { hid, currency, type, offChainId, totalAmount } = offerShake;
+    const { hid, currency, type, offChainId, amount } = offerShake;
+    const { freeStart } = offer;
 
     console.log('handleDeleteOfferItemSuccess', responseData);
 
@@ -1570,14 +1572,14 @@ class FeedMe extends React.PureComponent {
     this.responseExchangeDataChange(offerShake);
 
     if (currency === CRYPTO_CURRENCY.ETH) {
-      if ((type === EXCHANGE_ACTION.SELL && this.userType === HANDSHAKE_USER.OWNER) ||
+      if ((type === EXCHANGE_ACTION.SELL && this.userType === HANDSHAKE_USER.OWNER && !freeStart) ||
         (type === EXCHANGE_ACTION.BUY && this.userType === HANDSHAKE_USER.SHAKED)){
         const wallet = MasterWallet.getWalletDefault(currency);
         const exchangeHandshake = new ExchangeShopHandshake(wallet.chainId);
         let result = null;
 
         if (type === EXCHANGE_ACTION.SELL && this.userType === HANDSHAKE_USER.OWNER) {
-          result = await exchangeHandshake.releasePartialFund(hid, offer.userAddress , totalAmount, initUserId, offChainId);
+          result = await exchangeHandshake.releasePartialFund(hid, offer.userAddress , amount, initUserId, offChainId);
         } else if (type === EXCHANGE_ACTION.BUY && this.userType === HANDSHAKE_USER.SHAKED){
           result = await exchangeHandshake.finish(hid, offChainId);
         }
@@ -1870,11 +1872,16 @@ class FeedMe extends React.PureComponent {
   }
 
   render() {
-    const {initUserId, shakeUserIds, location, state, status, mode = 'discover', ipInfo: { latitude, longitude, country }, initAt, review, reviewCount, ...props} = this.props;
-    const offer = this.offer;
+    const {initUserId, shakeUserIds, extraData, location, state, status, mode = 'discover', ipInfo: { latitude, longitude, country }, initAt, review, reviewCount, ...props} = this.props;
+
+    const offer = Offer.offer(JSON.parse(extraData));
+
+    this.offer = offer;
+    // const offer = this.offer;
+
     // console.log('render',offer);
-    const {listOfferPrice} = this.props;
-    console.log('review, reviewCount',review, reviewCount);
+    // const {listOfferPrice} = this.props;
+    // console.log('review, reviewCount',review, reviewCount);
     let modalContent = this.state.modalContent;
 
     let email = '';

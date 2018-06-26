@@ -8,11 +8,10 @@ import { APP, API_URL } from '@/constants';
 // services
 import local from '@/services/localStore';
 // actions
-import { showAlert, setFirechat, setFirebaseUser } from '@/reducers/app/action';
-import { signUp, fetchProfile, authUpdate, getFreeETH } from '@/reducers/auth/action';
-import { getUserProfile } from '@/reducers/exchange/action';
+import { setFirebaseUser, setFirechat, showAlert } from '@/reducers/app/action';
+import { authUpdate, fetchProfile, getFreeETH, signUp } from '@/reducers/auth/action';
+import { getListOfferPrice, getUserProfile } from '@/reducers/exchange/action';
 import { createMasterWallets } from '@/reducers/wallet/action';
-import { getListOfferPrice } from '@/reducers/exchange/action';
 // components
 import { MasterWallet } from '@/models/MasterWallet';
 import Loading from '@/components/core/presentation/Loading';
