@@ -194,10 +194,9 @@ class BettingFilter extends React.Component {
     const { matchOutcomes } = this;
     // console.log('defaultOutcome matchOutcomes: ', matchOutcomes);
     const { outComeId } = this.props;
-    const {isPrivate} = this.state;
     const sortedMatch = matchOutcomes.sort((a, b) => b.id > a.id);
     if (matchOutcomes && matchOutcomes.length > 0) {
-      const itemDefault = matchOutcomes.find(item => item.id === outComeId && item.isPrivate === isPrivate);
+      const itemDefault = matchOutcomes.find(item => item.id === outComeId);
       return itemDefault || matchOutcomes[0];
     }
     return null;
@@ -242,20 +241,25 @@ class BettingFilter extends React.Component {
   }
 
   get matchOutcomes() {
-    const { selectedMatch, matches } = this.state;
+    const { selectedMatch, isPrivate } = this.state;
+    const { outComeId } = this.props;
+
     // console.log('matchOutcomes selectedMatch:', selectedMatch);
     if (selectedMatch) {
       const { foundMatch } = this;
       if (foundMatch) {
         const { outcomes } = foundMatch;
-        console.log(foundMatch);
-        if (outcomes) {
-          console.log('outcomes.length', outcomes.length);
-          if (outcomes.length === 0) {
+        let filterOutcome = outcomes;
+        if(isPrivate && outComeId){
+          filterOutcome = outcomes.filter(item => item.id === outComeId) || outcomes;
+
+        }
+        if (filterOutcome) {
+          if (filterOutcome.length === 0) {
             // this.setState({ errorMessage: `Outcomes are empty`, isError: true });
             this.props.setLoading(false);
           }
-          return outcomes.map(item => ({
+          return filterOutcome.map(item => ({
             id: item.id, value: `Outcome: ${item.name}`, hid: item.hid, marketOdds: item.market_odds,
           }));
         }

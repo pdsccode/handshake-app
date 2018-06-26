@@ -47,7 +47,7 @@ class BettingDetail extends React.Component {
     const { match, outCome,isPrivate } = this.state;
     return (
       <div className="beeting-detail">
-        <BettingFilter matchId={match} outComeId={outCome} isPrivate={isPrivate}/>
+        <BettingFilter matchId={match} outComeId={outCome} isPrivate={false}/>
         <div className="faq-block">
           <FAQBetting />
         </div>
