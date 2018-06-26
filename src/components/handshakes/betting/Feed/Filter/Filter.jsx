@@ -39,7 +39,7 @@ class BettingFilter extends React.Component {
     checkFreeAvailable: PropTypes.func.isRequired,
     matchId: PropTypes.number,
     outComeId: PropTypes.number,
-    isPrivate: PropTypes.bool,
+    isPrivate: PropTypes.any,
     setLoading: PropTypes.func.isRequired,
   }
 
@@ -48,7 +48,7 @@ class BettingFilter extends React.Component {
 
   constructor(props) {
     super(props);
-    const { odd } = props;
+    const { odd , isPrivate} = props;
     this.state = {
       matches: [],
       selectedMatch: null,
@@ -59,7 +59,6 @@ class BettingFilter extends React.Component {
       side: SIDE.SUPPORT,
       isError: false,
       errorMessage: '',
-      isPrivate: props.isPrivate || false,
     };
   }
 
@@ -241,15 +240,16 @@ class BettingFilter extends React.Component {
   }
 
   get matchOutcomes() {
-    const { selectedMatch, isPrivate } = this.state;
-    const { outComeId } = this.props;
+    const { selectedMatch } = this.state;
+    const { outComeId,isPrivate } = this.props;
 
     // console.log('matchOutcomes selectedMatch:', selectedMatch);
     if (selectedMatch) {
       const { foundMatch } = this;
       if (foundMatch) {
         const { outcomes } = foundMatch;
-        let filterOutcome = outcomes;
+        let filterOutcome = outcomes.filter(item => item.public == 1);
+        console.log("Is Private, outComeId: ", isPrivate, outComeId);
         if(isPrivate && outComeId){
           filterOutcome = outcomes.filter(item => item.id === outComeId) || outcomes;
 
@@ -314,7 +314,7 @@ class BettingFilter extends React.Component {
     let ref = profile ? "&ref=" + profile.username : ''
     return {
       title: `I put a bet on ${selectedMatch.value}. ${selectedOutcome.value}! Put your coin where your mouth is.`,
-      shareUrl: `${window.location.origin}/discover/${encodeURI(selectedMatch.value)}?match=${selectedMatch.id}&out_come=${selectedOutcome.id}${ref}`,
+      shareUrl: `${window.location.origin}/discover/${encodeURI(selectedMatch.value)}?match=${selectedMatch.id}&out_come=${selectedOutcome.id}${ref}?is_private=0`,
     };
   }
 

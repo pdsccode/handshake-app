@@ -143,9 +143,11 @@ class BettingCreate extends React.Component {
       const foundMatch = this.foundMatch;
       if (foundMatch) {
         const { outcomes } = foundMatch;
-        if (outcomes) {
+        let filterOutcome = outcomes.filter(item => item.public == 1);
+
+        if (filterOutcome) {
           // return outcomes.map((item) => ({ id: item.id, value: item.name, hid: item.hid}));
-          return outcomes.map(item => ({
+          return filterOutcome.map(item => ({
             id: item.id, value: `Outcome: ${item.name}`, hid: item.hid, marketOdds: item.market_odds, marketAmount: item.market_amount,
           }));
         }
