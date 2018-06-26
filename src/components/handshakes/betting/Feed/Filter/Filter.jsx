@@ -19,6 +19,7 @@ import TopInfo from './../TopInfo';
 import BettingShake from './../Shake';
 import BettingShakeFree from './../ShakeFree';
 import local from '@/services/localStore';
+import {getBalance} from '@/components/handshakes/betting/utils.js';
 
 // style
 import './Filter.scss';
@@ -249,6 +250,7 @@ class BettingFilter extends React.Component {
       if (foundMatch) {
         const { outcomes } = foundMatch;
         let filterOutcome = outcomes.filter(item => item.public == 1);
+        //let filterOutcome = outcomes;
         console.log("Is Private, outComeId: ", isPrivate, outComeId);
         if(isPrivate && outComeId){
           filterOutcome = outcomes.filter(item => item.id === outComeId) || outcomes;
@@ -395,7 +397,7 @@ class BettingFilter extends React.Component {
 
   async checkShowFreeBanner() {
 
-    const balance = await betHandshakeHandler.getBalance();
+    const balance = await getBalance();
     console.log('checkShowFreeBanner Balance:', balance);
     if (balance == 0) {
       // Call API check if show free
