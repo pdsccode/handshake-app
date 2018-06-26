@@ -1275,14 +1275,16 @@ export default [
       "goalsAwayTeam": null
     },
     "odds": null,
-    link: 'http://haixombia.com/api/vstv.php?sv=http://chat02-aase.streaming.media.azure.net/b74a2dff-5040-4038-a232-cf19bd8fd059/6c8cd591-4116-4eb3-8344-c68fcbd14e40.ism/manifest(format=m3u8-aapl-v3).m3u8',
+    link: 'http://tv.keonhacai.com/kenh9',
     linksLive: [
-      'http://haixombia.com/api/vstv.php?sv=http://chat02-aase.streaming.media.azure.net/b74a2dff-5040-4038-a232-cf19bd8fd059/6c8cd591-4116-4eb3-8344-c68fcbd14e40.ism/manifest(format=m3u8-aapl-v3).m3u8',
+      'http://tv.keonhacai.com/kenh9',
       'http://capodeportes.net/reproductor2/canal3.php?width=400&height=300&autoplay=1',
     ],
     linksSoftCast: [
-      'sop://broker.sopcast.com:3912/257770',
-      'sop://broker.sopcast.com:3912/263023',
+      'sop://broker.sopcast.com:3912/259405',
+      'sop://broker.sopcast.com:3912/258822',
+      'sop://broker.sopcast.com:3912/258822',
+      'sop://broker.sopcast.com:3912/259405',
     ],
   },
   {
@@ -1310,14 +1312,14 @@ export default [
       "goalsAwayTeam": null
     },
     "odds": null,
-    link: 'http://haixombia.com/api/vstv.php?sv=http://chat02-aase.streaming.media.azure.net/b74a2dff-5040-4038-a232-cf19bd8fd059/6c8cd591-4116-4eb3-8344-c68fcbd14e40.ism/manifest(format=m3u8-aapl-v3).m3u8',
+    link: 'http://tv.keonhacai.com/kenh8',
     linksLive: [
-      'http://haixombia.com/api/vstv.php?sv=http://chat02-aase.streaming.media.azure.net/b74a2dff-5040-4038-a232-cf19bd8fd059/6c8cd591-4116-4eb3-8344-c68fcbd14e40.ism/manifest(format=m3u8-aapl-v3).m3u8',
+      'http://tv.keonhacai.com/kenh8',
       'http://capodeportes.net/reproductor2/canal3.php?width=400&height=300&autoplay=1',
     ],
     linksSoftCast: [
-      'sop://broker.sopcast.com:3912/257770',
-      'sop://broker.sopcast.com:3912/263023',
+      'sop://broker.sopcast.com:3912/259900',
+      'sop://broker.sopcast.com:3912/258007',
     ],
   },
   {
