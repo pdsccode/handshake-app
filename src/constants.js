@@ -484,3 +484,16 @@ export const blockchainNetworks = {
     unit: 'BTC',
   },
 };
+
+
+
+export const Country = {
+  'AD': 'EUR',
+  'AE': 'AED',
+  'AF': 'AFN',
+  'PH': 'PHP',
+  'VN': 'D',
+  'US': 'USD',
+  'CA': 'CAD',
+  'RU': 'RUB',
+};
