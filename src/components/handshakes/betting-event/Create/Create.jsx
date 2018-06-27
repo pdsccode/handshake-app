@@ -6,7 +6,6 @@ import { Field, formValueSelector, clearFields } from 'redux-form';
 import Button from '@/components/core/controls/Button';
 import { PredictionHandshake } from '@/services/neuron';
 import { bindActionCreators } from 'redux';
-import moment from 'moment';
 import { fieldDropdown, fieldInput, fieldRadioButton } from '@/components/core/form/customField';
 import createForm from '@/components/core/form/createForm';
 import { showLoading, hideLoading } from '@/reducers/app/action';
@@ -22,6 +21,8 @@ import { Alert } from 'reactstrap';
 import { API_URL, APP, URL } from '@/constants';
 import history from '@/services/history';
 import { showAlert } from '@/reducers/app/action';
+
+const moment = require('moment');
 
 const wallet = MasterWallet.getWalletDefault('ETH');
 const chainId = wallet.chainId;
@@ -143,32 +144,41 @@ class CreateBettingEvent extends React.Component {
       },
     ];
     if (this.state.closingTime && this.state.disputeTime && this.state.reportingTime !== '') {
-      this.props.addMatch({
-        PATH_URL: API_URL.CRYPTOSIGN.ADD_MATCH,
-        METHOD: 'post',
-        data,
-        headers: { 'Content-Type': 'application/json' },
-        successFn: (response) => {
-          console.log(response.data);
-          this.props.showAlert({
-            message: <div className="text-center">Event added successfully. Please wait a few minutes for the Blockchain to update.</div>,
-            timeOut: 3000,
-            type: 'success',
-            callBack: () => { },
-          });
-          this.props.history.push(URL.HANDSHAKE_DISCOVER);
-          const result = predictionhandshake.createMarket(Number(this.state.creatorFee), this.state.resolutionSource, this.state.closingTime, this.state.reportingTime, this.state.disputeTime, response.data[0].id);
-          console.log(result);
-        },
-        errorFn: (response) => {
-          response.message && this.props.showAlert({
-            message: <div className="text-center">{response.message}</div>,
-            timeOut: 3000,
-            type: 'danger',
-            callBack: () => {},
-          });
-        },
-      });
+      if ((this.state.closingTime < this.state.reportingTime) && (this.state.reportingTime < this.state.disputeTime)) {
+        this.props.addMatch({
+          PATH_URL: API_URL.CRYPTOSIGN.ADD_MATCH,
+          METHOD: 'post',
+          data,
+          headers: { 'Content-Type': 'application/json' },
+          successFn: (response) => {
+            console.log(response.data);
+            this.props.showAlert({
+              message: <div className="text-center">Event added successfully. Please wait a few minutes for the Blockchain to update.</div>,
+              timeOut: 3000,
+              type: 'success',
+              callBack: () => { },
+            });
+            this.props.history.push(URL.HANDSHAKE_DISCOVER);
+            const result = predictionhandshake.createMarket(Number(this.state.creatorFee), this.state.resolutionSource, this.state.closingTime, this.state.reportingTime, this.state.disputeTime, response.data[0].outcomes[0].id);
+            console.log(result);
+          },
+          errorFn: (response) => {
+            response.message && this.props.showAlert({
+              message: <div className="text-center">{response.message}</div>,
+              timeOut: 3000,
+              type: 'danger',
+              callBack: () => {},
+            });
+          },
+        });
+      } else {
+        this.props.showAlert({
+          message: <div className="text-center">Please double check Time.</div>,
+          timeOut: 3000,
+          type: 'danger',
+          callBack: () => {},
+        });
+      }
     } else {
       let message = 'Please select Closing Time';
       if (this.state.closingTime !== '' && this.state.reportingTime === '') { message = 'Please select Reporting Time'; } else if (this.state.closingTime !== '' && this.state.reportingTime !== '' && this.state.disputeTime === '') { message = 'Please select Dispute Time'; }
