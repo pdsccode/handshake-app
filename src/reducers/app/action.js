@@ -1,6 +1,7 @@
 import $http from '@/services/api';
 import IpInfo from '@/models/IpInfo';
-import { APP, API_URL,Country } from '@/constants';
+import axios from 'axios';
+import { APP, API_URL, Country } from '@/constants';
 import local from '@/services/localStore';
 import COUNTRIES_BLACKLIST_PREDICTION from '@/data/country-blacklist-betting';
 import COUNTRIES_BLACKLIST_CASH from '@/data/country-blacklist-exchange';
