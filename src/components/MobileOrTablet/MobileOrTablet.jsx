@@ -75,7 +75,7 @@ class MobileOrTablet extends React.PureComponent {
     const { messages, locale } = this.props.intl;
     return (
       <div className="container mobile-tablet">
-        <div className="row firstSection">
+        <div className="row firstSection animated1 fadeInUp">
           <div className="col-lg-5 d-flex">
             <img className="img-fluid imageHeader" src={onlyMobileTabletSVG} alt="ninja"/>
             <h1>{messages.MOT_TITLE}</h1>
@@ -95,7 +95,7 @@ class MobileOrTablet extends React.PureComponent {
           </div>
         </div>
 
-        <div className="row secondSection">
+        <div className="row secondSection animated2 fadeInUp">
           <div className="col-lg-6">
             <img src={phoneIcon} alt="phone icon" />
             <p>
@@ -117,7 +117,7 @@ class MobileOrTablet extends React.PureComponent {
           </div>
         </div>
 
-        <div className="row thirdSection">
+        <div className="row thirdSection animated3 fadeInUp">
           <div className="col-lg-7">
             <VideoYoutube
               playButtonIcon={playVideoButton}
@@ -149,8 +149,7 @@ class MobileOrTablet extends React.PureComponent {
                         rel="noopener noreferrer"
                       >
                         {item.placeHolderLink}
-                      </a>
-                      {item.mainContent1 || ''}
+                      </a> {item.mainContent1 || ''}
                     </li>
                   );
                 })
