@@ -1,8 +1,9 @@
 import nacl from 'tweetnacl';
 import naclUtil from 'tweetnacl-util';
-import logo from '@/assets/images/app/logo.png';
+import logo from '@/assets/images/logo.png';
 import Push from 'push.js';
 import _ from 'lodash';
+import md5 from 'md5';
 
 export class Firechat {
   constructor(firebaseInstance, firebaseRef, options) {
@@ -845,16 +846,22 @@ export class Firechat {
     if (!this.shouldShowNotification) {
       return;
     }
+    const tag = md5(from);
+    const selfWindow = window;
     console.log('show notification', from, message);
     Push.create(`${from} says`, {
       body: message,
       icon: logo,
+      tag,
       onClick: () => {
-        window.focus();
+        selfWindow.focus();
+        Push.close(tag);
       },
       onError: (e) => {
         console.log('notification error', e);
       },
+    }).then(() => {
+      navigator.vibrate([200, 100, 200]);
     });
   }
 
