@@ -61,6 +61,7 @@ class DiscoverPage extends React.Component {
     isBannedCash: PropTypes.bool.isRequired,
     isBannedPrediction: PropTypes.bool.isRequired,
     setFreeStart: PropTypes.func.isRequired,
+    firebaseApp: PropTypes.object.isRequired,
   }
 
   constructor(props) {
@@ -152,7 +153,7 @@ class DiscoverPage extends React.Component {
   }
 
   getDefaultHandShakeId() {
-    let seletedId = HANDSHAKE_ID.BETTING;
+    let seletedId = HANDSHAKE_ID.EXCHANGE;
     let { id } = Helper.getQueryStrings(window.location.search);
     id = parseInt(id, 10);
     if (id && Object.values(HANDSHAKE_ID).indexOf(id) !== -1) {
