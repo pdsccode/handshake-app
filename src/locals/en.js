@@ -164,6 +164,7 @@ export default {
   'error.requiredOne': 'You need to fill in one of these!',
   'error.greaterThan': 'Must be greater than {min}',
   'error.lessThan': 'Must be less than {max}',
+  'error.mustBeANumber': 'Must be a number',
 
   'btn.initiate': 'Initiate',
   'btn.shake': 'Shake',
