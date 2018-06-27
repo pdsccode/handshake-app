@@ -185,9 +185,11 @@ const auth = ({ ref, dispatch, ipInfo }) => new Promise((resolve, reject) => {
     dispatch(signUp({
       PATH_URL: `user/sign-up${ref ? `?ref=${ref}` : ''}`,
       METHOD: 'POST',
-      successFn: () => {
+      successFn: (res) => {
+        const signUpToken = res.data.passpharse;
+        console.log('signUpToken', signUpToken);
         tokenHandle({
-          resolve, token, dispatch, ipInfo,
+          resolve, token: signUpToken, dispatch, ipInfo,
         });
       },
       errorFn: () => {
