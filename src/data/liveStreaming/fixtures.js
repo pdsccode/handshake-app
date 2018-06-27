@@ -1398,7 +1398,21 @@ export default [
       "goalsHomeTeam": null,
       "goalsAwayTeam": null
     },
-    "odds": null
+    "odds": null,
+    link: 'http://tv.keonhacai.com/kenh8',
+    linksLive: [
+      'http://tv.keonhacai.com/kenh8',
+      'http://capodeportes.net/reproductor2/canal3.php?width=400&height=300&autoplay=1',
+    ],
+    linksSoftCast: [
+      'sop://broker.sopcast.com:3912/140544',
+      'sop://broker.sopcast.com:3912/138778',
+      'sop://broker.sopcast.com:3912/263022',
+      'sop://broker.sopcast.com:3912/263023',
+      'sop://broker.sopcast.com:3912/259933',
+      'sop://broker.sopcast.com:3912/151777',
+      'sop://broker.sopcast.com:3912/254780',
+    ],
   },
   {
     "_links": {
@@ -1424,7 +1438,18 @@ export default [
       "goalsHomeTeam": null,
       "goalsAwayTeam": null
     },
-    "odds": null
+    "odds": null,
+    link: 'http://tv.keonhacai.com/kenh9',
+    linksLive: [
+      'http://tv.keonhacai.com/kenh9',
+      'http://capodeportes.net/reproductor2/canal3.php?width=400&height=300&autoplay=1',
+    ],
+    linksSoftCast: [
+      'sop://broker.sopcast.com:3912/140700',
+      'sop://broker.sopcast.com:3912/263020',
+      'sop://broker.sopcast.com:3912/259966',
+      'sop://broker.sopcast.com:3912/255015',
+    ],
   },
   {
     "_links": {
