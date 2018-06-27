@@ -7,7 +7,7 @@
   height: 100%;
   position: fixed;
   overflow-y: auto;
-  padding: rem-calc(50px 0);
+  //padding: rem-calc(50px 0);
 }
 
 .root {
@@ -19,7 +19,7 @@
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  padding: 40px 0;
+  padding: rem-calc(50px 0);
   margin: 0 auto;
   font-family: motiva-sans, sans-serif;
   font-style: normal;
@@ -52,16 +52,20 @@
     }
     & > div:last-child {
       margin: 0 auto;
-      width: 90%;
+      .embed-responsive {
+        width: 80%;
+      }
     }
   }
   .thirdSection {
-    //.embed-responsive-16by9::before {
-    //  padding-top: 0 !important;
-    //}
     & > div:last-child {
       display: flex;
       align-items: center;
+    }
+    & > div:first-child {
+      .embed-responsive {
+        width: 93%;
+      }
     }
   }
   .chooseLanguage {
@@ -90,32 +94,34 @@
         background: url("../../assets/images/ninja/line-yellow.svg") no-repeat;
       }
       span {
-        //border-bottom: 2px solid #FFFF00;
         color: #FFFF00;
         font-weight: $semi-bold;
       }
     }
   }
   .imageHeader {
-    max-width: rem-calc(206px);
+    max-width: rem-calc(202px);
   }
   .motListContent {
     display: flex;
   }
   h1 {
     font-size: rem-calc(22px);
-    color: #BCBCBC;
     letter-spacing: 0;
     font-weight: $normal;
+    color: #979797;
+    line-height: rem-calc(30px);
+    margin-bottom: rem-calc(16px);
   }
   p {
     font-size: rem-calc(18px);
     font-weight: $medium;
     color: #979797;
     letter-spacing: 0;
-    line-height: rem-calc(24px);
+    line-height: rem-calc(27px);
     .website {
-      color: #7491F1;
+      text-decoration: none;
+      border-bottom: 2px solid #FFFF00;
     }
     .whiteColor {
       color: #fff;
@@ -154,19 +160,7 @@
       margin-left: rem-calc(40px);
     }
   }
-  //.embed-responsive-16by9::before {
-  //  padding-top: 0 !important;
-  //}
-  //.embed-responsive {
-  //  iframe {
-  //    max-height: rem-calc(182px) !important;
-  //  }
-  //  max-height: rem-calc(182px) !important;
-  //}
   .embed-responsive {
-    .imgCover {
-      margin-top: -56.25%;
-    }
     box-shadow: -30px 30px 0 #000;
   }
 }
