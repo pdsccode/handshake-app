@@ -39,7 +39,7 @@ export default {
   completeOfferConfirm: 'Finish shaking?',
   withdrawOfferConfirm: 'Are you sure you want to withdraw?',
   cancelOfferConfirm: 'Cancel this order?',
-  closeOfferConfirm: 'Finish your order?',
+  closeOfferConfirm: 'Are you sure you want to delete your station?',
   acceptOfferConfirm: 'Accept the order?',
   createOfferSuccessMessage: 'Success! You have created an offer on Ninja.',
   shakeOfferSuccessMessage: 'Success! A ninja has shaked on your order.',
@@ -172,8 +172,8 @@ export default {
   'ex.error.302': 'Sorry, that ninja does not exist.',
   'ex.error.303': 'It looks like you have reached your credit card limit.',
   'ex.error.309': 'You already have a listing! To change your rates, please cancel your current listing.',
-  'ex.error.319': 'Invalid free start amount',
-  'ex.error.320': 'Register free start failed',
+  'ex.error.319': 'Please type 0.5 ETH only.',
+  'ex.error.320': 'The early bird program has ended, please cash in to trade with us.',
   'ex.error.default': 'Oops! Something went wrong.',
 
   'ex.earlyBird.label.1': 'WELCOME TO OUR <br/> EARLY BIRD PROGRAM!',
@@ -195,6 +195,7 @@ export default {
   'btn.cancel': 'Cancel',
   'btn.close': 'Close',
   'btn.accept': 'Accept',
+  'btn.delete': 'Delete',
 
   product_info: 'Ninja is open-source, decentralized software that never holds your funds. By freely choosing to use Ninja, the user accepts sole responsibility for their behavior and agrees to abide by the legalities of their governing jurisdiction. Ninja cannot be liable for legal, monetary or psychological damages should you do something stupid. Never invest more than you are willing to lose. Play safe!',
 

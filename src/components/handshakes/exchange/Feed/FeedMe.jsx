@@ -1065,7 +1065,7 @@ class FeedMe extends React.PureComponent {
               block
               className="mt-2"
               onClick={() => this.confirmOfferAction(message, this.deleteOfferItem)}
-            ><FormattedMessage id="btn.close" />
+            ><FormattedMessage id="btn.delete" />
             </Button>
           </div>
         );
