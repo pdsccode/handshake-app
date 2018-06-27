@@ -226,7 +226,8 @@ class BettingFilter extends React.Component {
     if (matches) {
       const mathNamesList = matches.map(item => ({ id: item.id,
                                                 value: `Event: ${item.name} (${this.getStringDate(item.date)})`,
-                                                    marketFee: item.market_fee , date: item.date}));
+                                                    marketFee: item.market_fee , date: item.date,
+                                                  reportTime:item.reportTime}));
       return [
         ...mathNamesList,
         {
@@ -428,6 +429,7 @@ class BettingFilter extends React.Component {
     const shareInfo = this.getInfoShare(selectedMatch, selectedOutcome);
     const marketFee = (selectedMatch && selectedMatch.marketFee >= 0) ? selectedMatch.marketFee : null;
     const closingDate = (selectedMatch && selectedMatch.date) ? selectedMatch.date : null;
+    const reportTime = (selectedMatch && selectedMatch.reportTime) ? selectedMatch.reportTime : null;
     console.log('defaultOutcomeId:', defaultOutcomeId);
     console.log('Market Fee:', marketFee);
     return (
@@ -604,6 +606,7 @@ class BettingFilter extends React.Component {
             marketSupportOdds={parseFloat(this.defaultSupportOdds)}
             marketAgainstOdds={parseFloat(this.defaultAgainstOdds)}
             closingDate = {closingDate}
+            reportTime = {reportTime}
             onSubmitClick={() => this.closeShakePopup()}
           />
         </ModalDialog>
@@ -617,6 +620,7 @@ class BettingFilter extends React.Component {
             marketSupportOdds={parseFloat(this.defaultSupportOdds)}
             marketAgainstOdds={parseFloat(this.defaultAgainstOdds)}
             closingDate = {closingDate}
+            reportTime = {reportTime}
             onSubmitClick={() => this.closeShakeFreePopup()}
           />
         </ModalDialog>
