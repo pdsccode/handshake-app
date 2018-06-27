@@ -70,28 +70,28 @@
   }
   .chooseLanguage {
     margin: 0 auto;
-    font-size: rem-calc(16px);
-    color: #FFFFFF;
-    font-weight: $light;
+    font-size: rem-calc(18px);
+    color: #9B9B9B;
+    font-weight: $semi-bold;
     display: flex;
     justify-content: flex-end;
-    margin-bottom: rem-calc(60px);
     .countryName {
-      padding: rem-calc(0 10px);
+      padding: rem-calc(0 7px);
       &:hover {
         cursor: pointer;
       }
       span {
-        padding: rem-calc(0 7.5px 5px);
+        padding: rem-calc(5px 10px 0);
       }
     }
-    .countryName + .countryName {
-      //border-left: 1px solid #666666;
-    }
     .countryActive {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      top: rem-calc(-50px);
       &:before {
-        content: "";
-        background: url("../../assets/images/ninja/line-yellow.svg") no-repeat;
+        content: url("../../assets/images/ninja/line-yellow.svg");
       }
       span {
         color: #FFFF00;
