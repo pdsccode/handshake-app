@@ -492,7 +492,7 @@ export const Country = {
   'AE': 'AED',
   'AF': 'AFN',
   'PH': 'PHP',
-  'VN': 'D',
+  'VN': 'VND',
   'US': 'USD',
   'CA': 'CAD',
   'RU': 'RUB',
