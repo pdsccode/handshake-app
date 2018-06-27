@@ -34,7 +34,7 @@ export const HANDSHAKE_ID = { // important
   WALLET_RECEIVE: 8,
 };
 
-export const HANDSHAKE_ID_DEFAULT = 3;
+export const HANDSHAKE_ID_DEFAULT = 2;
 
 export const HANDSHAKE_NAME = {
   // [HANDSHAKE_ID.PROMISE]: { name: 'Promise', priority: 3 },
@@ -483,4 +483,17 @@ export const blockchainNetworks = {
     isTest: true,
     unit: 'BTC',
   },
+};
+
+
+
+export const Country = {
+  'AD': 'EUR',
+  'AE': 'AED',
+  'AF': 'AFN',
+  'PH': 'PHP',
+  'VN': 'D',
+  'US': 'USD',
+  'CA': 'CAD',
+  'RU': 'RUB',
 };

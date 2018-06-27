@@ -152,7 +152,7 @@ class DiscoverPage extends React.Component {
   }
 
   getDefaultHandShakeId() {
-    let seletedId = HANDSHAKE_ID.BETTING;
+    let seletedId = HANDSHAKE_ID.EXCHANGE;
     let { id } = Helper.getQueryStrings(window.location.search);
     id = parseInt(id, 10);
     if (id && Object.values(HANDSHAKE_ID).indexOf(id) !== -1) {

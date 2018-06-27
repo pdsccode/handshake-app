@@ -1065,7 +1065,7 @@ class FeedMe extends React.PureComponent {
               block
               className="mt-2"
               onClick={() => this.confirmOfferAction(message, this.deleteOfferItem)}
-            ><FormattedMessage id="btn.close" />
+            ><FormattedMessage id="btn.delete" />
             </Button>
           </div>
         );
@@ -1486,7 +1486,7 @@ class FeedMe extends React.PureComponent {
     const { id, currency, type } = offer;
 
     if (currency === CRYPTO_CURRENCY.ETH) {
-      if (type === EXCHANGE_ACTION.BUY) {
+      if (type === EXCHANGE_ACTION.BUY) {//shop buy
         const wallet = MasterWallet.getWalletDefault(currency);
         const balance = await wallet.getBalance();
         const fee = await wallet.getFee();
@@ -1524,7 +1524,7 @@ class FeedMe extends React.PureComponent {
     this.responseExchangeDataChange(offerShake);
 
     if (currency === CRYPTO_CURRENCY.ETH) {
-      if (type === EXCHANGE_ACTION.BUY) {
+      if (type === EXCHANGE_ACTION.BUY) {//shop buy
         const wallet = MasterWallet.getWalletDefault(currency);
 
         const exchangeHandshake = new ExchangeShopHandshake(wallet.chainId);
