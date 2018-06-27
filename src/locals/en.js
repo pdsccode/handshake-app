@@ -161,6 +161,8 @@ export default {
   'btn.close': 'Close',
   'btn.accept': 'Accept',
 
+  product_info: 'Ninja is open-source, decentralized software that never holds your funds. By freely choosing to use Ninja, the user accepts sole responsibility for their behavior and agrees to abide by the legalities of their governing jurisdiction. Ninja cannot be liable for legal, monetary or psychological damages should you do something stupid. Never invest more than you are willing to lose. Play safe!',
+
   // FAQ
   FAQ_TITLE: 'FAQ',
   FAQ_HEADER_YELLOW: 'Decentralized',
@@ -435,81 +437,154 @@ export default {
     },
   },
 
+  discover: {
+    noDataMessageCash: 'No stations near you yet. Be the first.',
+    noDataMessageSwap: 'No vendors near you yet. Be the first',
+  },
+
   wallet: {
     top_banner: {
-      message: "Shuriken Airdrop (limited)",
-      button: "Click here"
-    },
-    refers_dashboard: {
-      header: "3 Shuriken Airdrop hoops",
-
+      message: 'Shuriken Airdrop (limited)',
+      button: 'Click here',
     },
     refers: {
-      header: "3 Shuriken Airdrop hoops",
+      header: '3 Shuriken Airdrop hoops',
       error: {
-        submit_telegram: "Couldn't find you on Telegram. Please exit the group and try again.",
-        submit_twitter: "You haven't followed us yet. Please try again.",
-        confirm_code: "Verification code is wrong. Please try again!",
-        verify_code: "Can\'t send verify email",
-        get_token: "Failed! Your reffers are not complete.",
+        submit_telegram: 'Couldn\'t find you on Telegram. Please exit the group and try again.',
+        submit_twitter: 'You haven\'t followed us yet. Please try again.',
+        confirm_code: 'Verification code is wrong. Please try again!',
+        verify_code: 'Can\'t send verify email',
+        get_token: 'Referral incomplete. Please try again.',
       },
       success: {
-        submit_telegram: "You joined our community telegram!",
-        submit_twitter: "You followed our Twitter!",
-        confirm_code: "Your email has been verified.",
-        verify_code: "Verification code is sent to your email. Please check!",
-        get_token: "Complete success! You will receive 80 shurikens in few seconds.",
-        copy_link: "Referral link copied to clipboard."
+        submit_telegram: 'Welcome to our telegram group!',
+        submit_twitter: 'Thanks for following us on Twitter.',
+        confirm_code: 'Your email has been verified.',
+        verify_code: 'Verification code has been sent to your email.',
+        get_token: 'Success! 80 shurikens have been added to your wallet.',
+        copy_link: 'Referral link copied to clipboard.',
       },
       button: {
-        verified: "verified",
-        verify: "verify",
-        confirm: "confirm",
-        reset_email: "Reset email",
-        get_token: "just give me tokens"
+        verified: 'Verified',
+        verify: 'Verify',
+        confirm: 'Confirm',
+        reset_email: 'Reset email',
+        get_token: 'Just give me tokens',
       },
       text: {
-        title: "80 shiny Shurikens (SHURI).",
-        telegram: "Insult us on telegram",
-        telegram2: "Be creative. There’s a leaderboard.",
-        twitter: "twitter",
-        twitter2: "Our social media guy says we need followers on ",
-        referral_link: "This is your super sexy referral link. You get 20 shurikens for every new ninja."
+        title: '80 shiny Shurikens (SHURI).',
+        telegram: 'Say hello on telegram.',
+        telegram2: 'Leave your best joke for a chance to win more Shuri.',
+        twitter: 'Twitter',
+        twitter2: 'Our social media guy says we need followers on ',
+        referral_link: 'This is your super sexy referral link. You get 20 shurikens for every new ninja.',
       },
       placeholder: {
-        telegram_username: "Your telegram alias",
-        twitter_username: "Your twitter username",
-        email: "Verification code",
-        email2: "Your favourite fake email"
-      }
+        telegram_username: 'Your telegram alias',
+        twitter_username: 'Your twitter username',
+        email: 'Verification code',
+        email2: 'Your favourite fake email',
+      },
+    },
+    refers_dashboard: {
+      header: '3 Shuriken Airdrop hoops',
+      title: 'This is your super sexy referral link. You get 20 shurikens for every new ninja.',
+      text: {
+        copy_link: 'Referral link copied to clipboard.',
+        note: 'Do not change your alias or this link will be unvalid',
+        number_ninjas: 'You brought {0} ninjas to the dojo.',
+        number_total: 'Total reward: {0} SHURI',
+      },
     },
     action: {
       remove: {
-        header: "Are you sure?",
-        message: "This will permanently delete your wallet.",
-        button_yes: "Yes, remove",
-        button_cancel: "Cancel"
+        title: 'Remove',
+        header: 'Are you sure?',
+        message: 'This will permanently delete your wallet.',
+        button_yes: 'Yes, remove',
+        button_cancel: 'Cancel',
       },
       transfer: {
-        header: "Transfer coins",
+        title: 'Transfer coins',
+        header: 'Transfer coins',
         to_address: {
-          placeholder: "Specify receiving..."
+          placeholder: 'Specify receiving...',
+        },
+        error: 'Insufficient balance: ',
+        button: 'Transfer',
+
+      },
+      copy: {
+        title: 'Copy address to clipboard',
+        message: 'Copy address to clipboard',
+        success: 'Copied to clipboard',
+      },
+      default: {
+        title: 'Set as default {0} wallet ',
+      },
+      cancel: {
+        title: 'Cancel',
+      },
+      restore: {
+        title: 'Restore wallets',
+        message: 'Your Wallet restore success',
+        error: 'Invalid wallets',
+      },
+      import: {
+        title: 'Add new / Import',
+      },
+      backup: {
+        title: 'Backup wallets',
+      },
+      protect: {
+        title: 'Secure this wallet',
+        text: {
+          step1_msg1: 'This passphrase will allow you to recover your funds if your phone is ever lost or stolen.',
+          step1_msg2: 'Please make sure nobody has access to your passphrase. You can use a password manager or write it down and hide it under your mattress.',
+          step1_label: 'I understand that if I lose my passphrase, I lose access to my account.',
+          step2_msg1: 'Record these words carefully. Don\'t email it or screenshot it.',
+          step3_msg1: 'Tap to put these words in the correct order.',
+        },
+        button: {
+          continue: 'Continue',
+          verify: 'Verify your passsphrase',
+          copy_clipboard: 'Copy to clipboard',
+          ok: 'OK',
+        },
+        error: {
+          confirm: 'These words are in the wrong order. Please try again.',
+        },
+        success: 'Your wallet has been secured!',
+      },
+      receive: {
+        title: 'Receive coins',
+      },
+      scan_qrcode: {
+        header: 'Scan QR code',
+      },
+      history: {
+        title: 'View transaction history',
+        header: 'Transaction details',
+        label: {
+          failed: 'Failed',
+          unconfirmed: 'Unconfirmed',
+          balance: 'Balance',
+          transactions: 'Transactions',
+          status: 'Status',
+          confirmations: 'confirmations',
+          success: 'success',
+          failed: 'failed',
         },
       },
     },
   },
 
-
-  /**
-   * Chat page
-   */
   chat: {
     emptyMessage: 'Trade secrets here. All communication is encrypted and no one is listening.',
-    notFoundUser: 'The Ninja you are looking for is not here. Perhaps you have their name wrong.',
+    notFoundUser: 'The Ninja you are looking for is not here. Perhaps you have their name wrong?',
     lastMessageContent: 'You lost the key to this secret message.',
     searchPlaceHolder: 'Enter a ninja’s name or alias.',
   },
-
   /*
   *
   * White Paper

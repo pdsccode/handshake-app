@@ -169,8 +169,8 @@ export const API_URL = {
     BASE: 'admin/',
   },
   CHAT: {
-    GET_USER_NAME: 'user/username'
-  }
+    GET_USER_NAME: 'user/username',
+  },
 };
 
 export const HANDSHAKE_STATUS = {
@@ -424,4 +424,6 @@ export const URL = {
 
   INTRODUCING_NINJA_CASH: '/introducing-ninja-cash',
 };
+
+export const NB_BLOCKS = 20;
 

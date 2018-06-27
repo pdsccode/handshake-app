@@ -100,15 +100,18 @@ class BettingCreate extends React.Component {
     });
     this.props.loadMatches({ PATH_URL: API_URL.CRYPTOSIGN.LOAD_MATCHES });
   }
+
   componentWillReceiveProps(nextProps) {
     // console.log('Receive Props: ', nextProps);
     const { matches } = nextProps;
     console.log(`${TAG} Matches:`, matches);
 
+
     this.setState({
       matches,
     });
   }
+
   getStringDate(date) {
     const formattedDate = moment.unix(date).format('MMM DD');
     return formattedDate;

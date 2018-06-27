@@ -3,6 +3,7 @@ import { BettingHandshake } from '@/services/neuron';
 import { API_URL, APP } from '@/constants';
 import {showAlert} from '@/reducers/app/action';
 import {getMessageWithCode, getChainIdDefaultWallet, foundShakeItem, isInitBet} from '@/components/handshakes/betting/utils.js';
+
 import GA from '@/services/googleAnalytics';
 
 import local from '@/services/localStore';
@@ -89,11 +90,10 @@ export const MESSAGE = {
   RIGHT_NETWORK: 'You must set your wallet on Mainnet',
   ROLLBACK: `Something did not go according to plan. Please try again.`,
   WITHDRAW_SUCCESS: 'Success! Your winnings have been withdrawn to your wallet.',
-  DIFFERENCE_ADDRESS: `Current address isn't same as which you used to create bet`
+  DIFFERENCE_ADDRESS: `Current address isn't same as which you used to create bet`,
 };
 
-export const BET_BLOCKCHAIN_STATUS = {
-  
+export const BET_BLOCKCHAIN_STATUS = {  
     STATUS_MAKER_UNINIT_PENDING: -8,
     STATUS_COLLECT_PENDING: -7,
     STATUS_REFUND_PENDING: -6,
@@ -161,16 +161,15 @@ export const CONTRACT_METHOD = {
   CANCEL: 'uninit',
   REFUND: 'refund',
   COLLECT: 'collect',
-}
+};
 
-let myManager = null;
+const myManager = null;
 
 export class BetHandshakeHandler {
   static getShareManager() {
     if (this.myManager == null) {
-      console.log("Create new instance");
+      console.log('Create new instance');
       this.myManager = new BetHandshakeHandler();
-
     }
 
     return this.myManager;
@@ -178,11 +177,6 @@ export class BetHandshakeHandler {
   constructor() {
 
   }
-  
-  
-  
-  
-  
   getStatusLabel(blockchainStatus, resultStatus, role, side, isMatch) {
     let label = null;
     let strStatus = null;
@@ -199,6 +193,7 @@ export class BetHandshakeHandler {
     isAction = false;
   } 
     else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_PENDING) {
+
       strStatus = BETTING_STATUS_LABEL.INITING;
       isAction = false;
     } else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINITED) {
@@ -249,9 +244,7 @@ export class BetHandshakeHandler {
       isAction = false;
     }
     return { title: label, isAction, status: strStatus };
-  }
-
-  
+  }  
   
   addContract = async (item, hid) => {
     console.log('initContract, hid:', item, hid);
@@ -302,7 +295,6 @@ export class BetHandshakeHandler {
     }
     
     this.saveTransaction(offchain,CONTRACT_METHOD.INIT, chainId, realBlockHash, contractAddress, logJson);
-
     return dataBlockchain;
   };
 
@@ -312,7 +304,7 @@ export class BetHandshakeHandler {
     const {
       amount, id, odds, side, from_address,
     } = item;
-    //hid = 10000;
+    // hid = 10000;
     const stake = Math.floor(amount * 10 ** 18) / 10 ** 18;
     // const payout = stake * odds;
     // const payout = Math.round(stake * odds * 10 ** 18) / 10 ** 18;
@@ -398,6 +390,8 @@ export class BetHandshakeHandler {
       this.handleContract(element, hid, i);
     }
   };
+
+
 
   async cancelBet(hid, side, stake, odds, offchain){
     const chainId = getChainIdDefaultWallet();
@@ -525,15 +519,15 @@ export class BetHandshakeHandler {
   }
   saveTransaction(offchain,contractMethod, chainId, hash, contractAddress, payload){
     console.log('saveTransaction:', offchain);
-    let arrayParams = [];
+    const arrayParams = [];
     const params = {
       offchain,
       contract_address: contractAddress,
       contract_method: contractMethod,
       chain_id: chainId,
       hash,
-      payload
-    }
+      payload,
+    };
     arrayParams.push(params);
     console.log('saveTransaction Params:', arrayParams);
     store.dispatch(saveTransaction({
@@ -546,7 +540,6 @@ export class BetHandshakeHandler {
   }
   saveTransactionSuccess = async (successData) => {
     console.log('saveTransactionSuccess', successData);
-
   }
   saveTransactionFailed = (error) => {
     console.log('saveTransactionSuccess', error);
@@ -560,6 +553,7 @@ export class BetHandshakeHandler {
         
       }));
     }
+
   }
 
   rollback(offchain) {
@@ -581,7 +575,7 @@ export class BetHandshakeHandler {
       message: MESSAGE.ROLLBACK,
       timeOut: 5000,
       type: 'danger',
-      
+
     }));
   }
   rollbackFailed = (error) => {
@@ -598,7 +592,6 @@ export class BetHandshakeHandler {
     }
     
   }
- 
 }
 
 export default BetHandshakeHandler;

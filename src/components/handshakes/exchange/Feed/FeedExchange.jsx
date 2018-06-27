@@ -25,6 +25,8 @@ import {
   HANDSHAKE_STATUS_NAME,
   HANDSHAKE_USER,
   URL,
+  NB_BLOCKS
+
 } from '@/constants';
 import ModalDialog from '@/components/core/controls/ModalDialog';
 import {connect} from 'react-redux';
@@ -207,8 +209,7 @@ class FeedExchange extends React.PureComponent {
 
     if (shopType === EXCHANGE_ACTION.BUY) { // shop buy
       const balance = await wallet.getBalance();
-      const fee = await wallet.getFee(10, true);
-
+      const fee = await wallet.getFee(NB_BLOCKS, true);
       if (this.showNotEnoughCoinAlert(balance, values.amount, fee, values.currency)) {
         return;
       }
@@ -257,7 +258,7 @@ class FeedExchange extends React.PureComponent {
     } else if (currency === CRYPTO_CURRENCY.BTC) {
       if (type === EXCHANGE_ACTION.BUY) {
         const wallet = MasterWallet.getWalletDefault(currency);
-        wallet.transfer(systemAddress, totalAmount, 10).then((success) => {
+        wallet.transfer(systemAddress, totalAmount, NB_BLOCKS).then((success) => {
           console.log('transfer', success);
         });
       }
@@ -293,7 +294,7 @@ class FeedExchange extends React.PureComponent {
   }
 
   getOfferDistance = () => {
-    const { ipInfo: { latitude, longitude, country }, location } = this.props;
+    const { ipInfo: { country }, latitude, longitude, location } = this.props;
     const { offer } = this;
     // let distanceKm = 0;
     // let distanceMiles = 0;
@@ -365,10 +366,6 @@ class FeedExchange extends React.PureComponent {
   handleClickCoin = (e, name) => {
     e.stopPropagation();
     this.handleOnShake(name)
-  }
-
-  handleCreateExchange = () => {
-    this.props.history.push(`${URL.HANDSHAKE_CREATE}?id=${HANDSHAKE_ID.EXCHANGE}`);
   }
 
 
@@ -444,11 +441,6 @@ class FeedExchange extends React.PureComponent {
           </div>
         </div>
         {/*<Button block className="mt-2" onClick={this.handleOnShake}><FormattedMessage id="btn.shake"/></Button>*/}
-
-        <div className="ex-sticky-note">
-          <div className="mb-2"><FormattedMessage id="ex.discover.banner.text"/></div>
-          <div><button className="btn btn-become" onClick={this.handleCreateExchange}><FormattedMessage id="ex.discover.banner.btnText"/></button></div>
-        </div>
         <ModalDialog onRef={modal => this.modalRef = modal} className="dialog-shake-detail">
           <ShakeDetail offer={this.offer} handleShake={this.shakeOfferItem} CRYPTO_CURRENCY_LIST={this.state.CRYPTO_CURRENCY_LIST} />
         </ModalDialog>

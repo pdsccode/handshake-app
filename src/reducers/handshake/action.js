@@ -12,7 +12,7 @@ export const ACTIONS = {
   COLLECT_FREE: 'COLLECT_FREE',
   REFUND: 'REFUND',
   ROLLBACK: 'ROLLBACK',
-  SAVE_TRANSACTION: 'SAVE_TRANSACTION'
+  SAVE_TRANSACTION: 'SAVE_TRANSACTION',
 };
 
 export const initHandshake = createAPI(ACTIONS.INIT_HANDSHAKE);
@@ -25,6 +25,4 @@ export const collectFree = createAPI(ACTIONS.COLLECT_FREE);
 export const refund = createAPI(ACTIONS.REFUND);
 export const rollback = createAPI(ACTIONS.ROLLBACK);
 export const saveTransaction = createAPI(ACTIONS.SAVE_TRANSACTION);
-
-
 
