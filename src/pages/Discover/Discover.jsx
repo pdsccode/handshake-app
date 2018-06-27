@@ -61,6 +61,7 @@ class DiscoverPage extends React.Component {
     isBannedCash: PropTypes.bool.isRequired,
     isBannedPrediction: PropTypes.bool.isRequired,
     setFreeStart: PropTypes.func.isRequired,
+    firebaseApp: PropTypes.object.isRequired,
   }
 
   constructor(props) {
