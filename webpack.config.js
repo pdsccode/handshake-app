@@ -1,6 +1,6 @@
 const path = require('path');
 const fs = require('fs');
-const packageConfig = require('./package.json');
+// const packageConfig = require('./package.json');
 
 const xPath = filepath => path.resolve(__dirname, filepath);
 
@@ -159,8 +159,8 @@ module.exports = function webpackConfig(env, argv) {
         'firebase-messaging-sw': xPath('src/sw-fcm.js'),
       },
       output: {
-        filename: `[name].js?v=${packageConfig.version}`,
-        chunkFilename: `[name].chunk.js?v=${packageConfig.version}`,
+        filename: `[name].js?v=[hash]`,
+        chunkFilename: `[name].chunk.js?v=[hash]`,
         publicPath: '/',
         globalObject: 'this',
       },
@@ -254,7 +254,7 @@ module.exports = function webpackConfig(env, argv) {
         ],
       },
       stats,
-      devtool: 'eval-source-map', // 'source-map',
+      devtool: 'source-map',
     },
     isProduction ? production : development,
   );

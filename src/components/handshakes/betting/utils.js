@@ -3,6 +3,7 @@ import { BettingHandshake } from '@/services/neuron';
 import local from '@/services/localStore';
 import moment from 'moment';
 import { APP } from '@/constants';
+import { BET_TYPE } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
 
 export const getMessageWithCode= (code)=> {
     const keys = Object.keys(MESSAGE_SERVER).filter(k => k == code); // ["A", "B"]
@@ -37,6 +38,7 @@ export const getMessageWithCode= (code)=> {
 
   export const isExpiredDate = (reportTime) => {
     //const newClosingDate = moment.unix(closingDate).add(90, 'minutes');
+    console.log('Report Time:', reportTime);
     const newClosingDate = moment.unix(reportTime);
     let dayUnit = newClosingDate.utc();
     let today = moment();
@@ -107,16 +109,25 @@ export const getMessageWithCode= (code)=> {
   export const isExistMatchBet = (list) => {
     for (let i = 0; i < list.length; i++) {
       const element = list[i];
+      /*
       const { offchain } = element;
       const shakeItem = foundShakeItem(element, offchain);
       if(shakeItem){
         return true;
       }
+      */
+     const {type} = element;
+     console.log('Sa element:', element);
+
+     if(type == BET_TYPE.SHAKE){
+       return true;
+     }
     }
     return false;
   }
 
   export const isInitBet = (dict) => {
+    /*
     const { shakers } = dict;
     if (shakers.length == 0) {
       const profile = local.get(APP.AUTH_PROFILE);
@@ -127,4 +138,10 @@ export const getMessageWithCode= (code)=> {
       }
     }
     return false;
+    */
+   const {type} = dict;
+   if(type == BET_TYPE.INIT){
+     return true;
+   }
+   return false;
   }
