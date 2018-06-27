@@ -1829,14 +1829,17 @@ class FeedMe extends React.PureComponent {
       case EXCHANGE_FEED_TYPE.OFFER_STORE: {
         switch (status) {
           case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CREATED: {
-            idMessage = 'movingCoinToEscrow';
+            idMessage = 'ex.exchange.explanation.created';
+            break;
+          }
+          case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.ACTIVE: {
+            idMessage = 'ex.exchange.explanation.active';
             break;
           }
           case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSING: {
-            idMessage = 'movingCoinFromEscrow';
+            idMessage = 'ex.exchange.explanation.closing';
             break;
           }
-          case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.ACTIVE:
           case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSED: {
             break;
           }
@@ -1850,48 +1853,69 @@ class FeedMe extends React.PureComponent {
       }
       case EXCHANGE_FEED_TYPE.OFFER_STORE_SHAKE: {
         switch (status) {
-          case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.PRE_SHAKING:
-          case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.SHAKING:
-          case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.COMPLETING:
           case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.CANCELLING: {
-            switch (this.userType) {
-              case HANDSHAKE_USER.NORMAL: {
-                break;
-              }
-              case HANDSHAKE_USER.SHAKED: { // user shake
-                if (offer.type === EXCHANGE_ACTION.BUY) { // shop buy
-                  idMessage = 'movingCoinToEscrow';
-                }
-                break;
-              }
-              case HANDSHAKE_USER.OWNER: { // shop
-                if (offer.type === EXCHANGE_ACTION.SELL) { // shop sell
-                  idMessage = 'movingCoinToEscrow';
-                }
-                break;
-              }
-              default: {
-                // code
-                break;
-              }
-            }
-
+            idMessage = 'ex.exchange.explanation.cancelling';
             break;
           }
           case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.REJECTING: {
+            idMessage = 'ex.exchange.explanation.rejecting';
+            break;
+          }
+          case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.PRE_SHAKING: {
+            if (this.userType === HANDSHAKE_USER.SHAKED) {
+              idMessage = 'ex.exchange.explanation.pre_shaking';
+            }
+            break;
+          }
+          case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.PRE_SHAKE: {
+            if (this.userType === HANDSHAKE_USER.SHAKED) {
+              idMessage = 'ex.exchange.explanation.pre_shake';
+            }
+            break;
+          }
+          case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.SHAKING: {
+            if (this.userType === HANDSHAKE_USER.SHAKED) {
+              idMessage = 'ex.exchange.explanation.shaking';
+            }
+            break;
+          }
+          case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.SHAKE: {
             switch (this.userType) {
               case HANDSHAKE_USER.NORMAL: {
                 break;
               }
               case HANDSHAKE_USER.SHAKED: { // user shake
-                if (offer.type === EXCHANGE_ACTION.BUY) { // shop buy
-                  idMessage = 'movingCoinFromEscrow';
+                if (offer.type === EXCHANGE_ACTION.SELL) { // shop sell
+                  idMessage = 'ex.exchange.explanation.shake';
                 }
                 break;
               }
               case HANDSHAKE_USER.OWNER: { // shop
+                if (offer.type === EXCHANGE_ACTION.BUY) { // shop buy
+                  idMessage = 'ex.exchange.explanation.shake';
+                }
+                break;
+              }
+              default: {
+                // code
+                break;
+              }
+            }
+          }
+          case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.COMPLETING: {
+            switch (this.userType) {
+              case HANDSHAKE_USER.NORMAL: {
+                break;
+              }
+              case HANDSHAKE_USER.SHAKED: { // user shake
                 if (offer.type === EXCHANGE_ACTION.SELL) { // shop sell
-                  idMessage = 'movingCoinFromEscrow';
+                  idMessage = 'ex.exchange.explanation.completing';
+                }
+                break;
+              }
+              case HANDSHAKE_USER.OWNER: { // shop
+                if (offer.type === EXCHANGE_ACTION.BUY) { // shop buy
+                  idMessage = 'ex.exchange.explanation.completing';
                 }
                 break;
               }
@@ -1903,8 +1927,6 @@ class FeedMe extends React.PureComponent {
 
             break;
           }
-          case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.SHAKE:
-          case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.PRE_SHAKE:
           case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.REJECTED:
           case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.CANCELLED:
           case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.COMPLETED: {
