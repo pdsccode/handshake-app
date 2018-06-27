@@ -42,6 +42,7 @@ class BetingShakeFree extends React.Component {
     marketAgainstOdds: PropTypes.number,
     amount: PropTypes.number,
     closingDate: PropTypes.any,
+    reportTime: PropTypes.any,
     onSubmitClick: PropTypes.func,
     onCancelClick: PropTypes.func,
   }
@@ -116,7 +117,7 @@ class BetingShakeFree extends React.Component {
     const values = this.refs;
     console.log('Values:', values);
     const {isShowOdds, isChangeOdds} = this.state;
-    const {matchName, matchOutcome, amount, marketAgainstOdds, marketSupportOdds, closingDate} = this.props;
+    const {matchName, matchOutcome, amount, marketAgainstOdds, marketSupportOdds, closingDate, reportTime} = this.props;
     //const amount = parseFloat(values.amount.value);
     const odds = parseFloat(values.odds.value);
     const side = parseInt(this.toggleRef.value);
@@ -141,7 +142,7 @@ class BetingShakeFree extends React.Component {
     if(!isRightNetwork()){
       message = MESSAGE.RIGHT_NETWORK;
     }
-    else if(isExpiredDate(closingDate)){
+    else if(isExpiredDate(reportTime)){
       message = MESSAGE.MATCH_OVER;
 
     }

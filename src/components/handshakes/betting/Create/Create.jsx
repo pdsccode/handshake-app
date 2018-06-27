@@ -132,6 +132,7 @@ class BettingCreate extends React.Component {
       value: `Event: ${item.name} (${this.getStringDate(item.date)})`,
       marketFee: item.market_fee,
       date: item.date,
+      reportTime: item.reportTime,
     }));
     return [
       ...mathNamesList,
@@ -245,13 +246,13 @@ class BettingCreate extends React.Component {
 
     let message = null;
     const date = selectedMatch.date;
-    console.log('Date:', date);
+    const reportTime = selectedMatch.reportTime;
     if (!isRightNetwork()) {
       message = MESSAGE.RIGHT_NETWORK;
     }
 
     if (selectedMatch && selectedOutcome) {
-      if (isExpiredDate(date)) {
+      if (isExpiredDate(reportTime)) {
         message = MESSAGE.MATCH_OVER;
       } else if (eventBet > 0) {
         if (total <= balance) {
