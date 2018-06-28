@@ -15,7 +15,7 @@ class DatePicker extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      selectedTime: moment().format('h:mm a'),
+      selectedTime: moment().add(10, 'minutes').format('h:mm a'),
       selectedDateValue: '',
       finalDateTime: '',
     };
