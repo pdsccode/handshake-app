@@ -228,7 +228,7 @@ class Transfer extends React.Component {
       // check amount:
 
       if (parseFloat(this.state.walletSelected.balance) <= parseFloat(value['amountCoin']))
-        errors.amountCoin = `${messages.wallet.action.transfer.error} ${this.state.walletSelected.balance} ${this.state.walletSelected.name}`
+        errors.amountCoin = `${messages.wallet.action.transfer.error}`
     }
     return errors
   }
