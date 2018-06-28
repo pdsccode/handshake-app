@@ -75,7 +75,7 @@ class MobileOrTablet extends React.PureComponent {
     const { messages, locale } = this.props.intl;
     return (
       <div className="container mobile-tablet">
-        <div className="row firstSection animated1 fadeInUp">
+        <div className="row firstSection">
           <div className="col-lg-5 d-flex">
             <img className="img-fluid imageHeader" src={onlyMobileTabletSVG} alt="ninja"/>
             <h1>{messages.MOT_TITLE}</h1>
@@ -131,7 +131,7 @@ class MobileOrTablet extends React.PureComponent {
               {
                 locale === 'en' && (
                   <li>
-                    Jump in for <a href="/shuriken">Airdrop</a>
+                    Jump in for <a href="/shuriken" target="_blank" rel="noopener noreferrer">Airdrop</a>
                   </li>
                 )
               }
