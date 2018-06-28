@@ -4,7 +4,6 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Field, formValueSelector, clearFields } from 'redux-form';
 import Button from '@/components/core/controls/Button';
-import { PredictionHandshake } from '@/services/neuron';
 import { bindActionCreators } from 'redux';
 import moment from 'moment';
 import { fieldDropdown, fieldInput, fieldRadioButton } from '@/components/core/form/customField';
@@ -22,11 +21,13 @@ import { Alert } from 'reactstrap';
 import { API_URL, APP, URL } from '@/constants';
 import history from '@/services/history';
 import { showAlert } from '@/reducers/app/action';
+import { BetHandshakeHandler } from '../../betting/Feed/BetHandshakeHandler.js';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
-const wallet = MasterWallet.getWalletDefault('ETH');
-const chainId = wallet.chainId;
-const predictionhandshake = new PredictionHandshake(chainId);
+// const wallet = MasterWallet.getWalletDefault('ETH');
+// const chainId = wallet.chainId;
+// const predictionhandshake = new PredictionHandshake(chainId);
+const betHandshakeHandler = BetHandshakeHandler.getShareManager();
 
 const nameFormSaveBettingEvent = 'saveBettingEvent';
 const SaveBettingEventForm = createForm({ propsReduxForm: { form: nameFormSaveBettingEvent, enableReinitialize: true, clearSubmitErrors: true } });
@@ -89,43 +90,43 @@ class CreateBettingEvent extends React.Component {
     });
   }
 
-  submitOutCome = (values) => {
-    const url = API_URL.CRYPTOSIGN.ADD_OUTCOME.concat(`/${this.state.selectedMatch.id}`);
-    const activeMatchDetailsArray = this.state.matches.filter((item) => {
-      if (this.state.selectedMatch.id === item.id) {
-        return item;
-      }
-      return null;
-    });
-    const activeMatchDetails = activeMatchDetailsArray[0];
-    this.props.addMatch({
-      PATH_URL: url,
-      METHOD: 'post',
-      headers: { 'Content-Type': 'application/json' },
-      data: [{ name: values.outcome, public: 0 }],
-      successFn: (response) => {
-        console.log(response.data);
-        this.props.showAlert({
-          message: <div className="text-center">Outcome added successfully. Please wait a few minutes for the Blockchain to update.</div>,
-          timeOut: 3000,
-          type: 'success',
-          callBack: () => {
-            this.setState({ shareURL: 'url' });
-          },
-        });
-        const result = predictionhandshake.createMarket(activeMatchDetails.market_fee, activeMatchDetails.source, activeMatchDetails.date, activeMatchDetails.reportTime, activeMatchDetails.disputeTime, response.data[0].id);
-        console.log(result);
-      },
-      errorFn: (response) => {
-        response.message && this.props.showAlert({
-          message: <div className="text-center">{response.message}</div>,
-          timeOut: 3000,
-          type: 'danger',
-          callBack: () => {},
-        });
-      },
-    });
-  }
+   submitOutCome = (values) => {
+     const url = API_URL.CRYPTOSIGN.ADD_OUTCOME.concat(`/${this.state.selectedMatch.id}`);
+     const activeMatchDetailsArray = this.state.matches.filter((item) => {
+       if (this.state.selectedMatch.id === item.id) {
+         return item;
+       }
+       return null;
+     });
+     const activeMatchDetails = activeMatchDetailsArray[0];
+     this.props.addMatch({
+       PATH_URL: url,
+       METHOD: 'post',
+       headers: { 'Content-Type': 'application/json' },
+       data: [{ name: values.outcome, public: 0 }],
+       successFn: async (response) => {
+         console.log(response.data);
+         this.props.showAlert({
+           message: <div className="text-center">Outcome added successfully. Please wait a few minutes for the Blockchain to update.</div>,
+           timeOut: 3000,
+           type: 'success',
+           callBack: () => {
+             this.setState({ shareURL: 'url' });
+           },
+         });
+         const result = await betHandshakeHandler.createMarket(activeMatchDetails.market_fee, activeMatchDetails.source, activeMatchDetails.date, activeMatchDetails.reportTime, activeMatchDetails.disputeTime, response.data[0].id);
+         console.log(result);
+       },
+       errorFn: (response) => {
+         response.message && this.props.showAlert({
+           message: <div className="text-center">{response.message}</div>,
+           timeOut: 3000,
+           type: 'danger',
+           callBack: () => {},
+         });
+       },
+     });
+   }
   submitNewEvent = (values) => {
     const data = [
       {
@@ -164,7 +165,7 @@ class CreateBettingEvent extends React.Component {
             callBack: () => { },
           });
           this.setState({ shareURL: 'url' });
-          const result = predictionhandshake.createMarket(Number(this.state.creatorFee), this.state.resolutionSource, this.state.closingTime, this.state.reportingTime, this.state.disputeTime, response.data[0].id);
+          const result = betHandshakeHandler.createMarket(Number(this.state.creatorFee), this.state.resolutionSource, this.state.closingTime, this.state.reportingTime, this.state.disputeTime, response.data[0].id);
           console.log(result);
         },
         errorFn: (response) => {
