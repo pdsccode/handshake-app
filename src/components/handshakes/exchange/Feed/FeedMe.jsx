@@ -1449,7 +1449,6 @@ class FeedMe extends React.PureComponent {
         break;
       }
     }
-
     return chatUserName?.toString() || '';
   }
 
