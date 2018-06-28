@@ -22,6 +22,7 @@ import { Alert } from 'reactstrap';
 import { API_URL, APP, URL } from '@/constants';
 import history from '@/services/history';
 import { showAlert } from '@/reducers/app/action';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 const wallet = MasterWallet.getWalletDefault('ETH');
 const chainId = wallet.chainId;
@@ -51,6 +52,8 @@ class CreateBettingEvent extends React.Component {
       eventType: '',
       newEventType: '',
       key: 1,
+      shareURL: 'url',
+      copied: false,
     };
   }
 
@@ -106,11 +109,12 @@ class CreateBettingEvent extends React.Component {
           message: <div className="text-center">Outcome added successfully. Please wait a few minutes for the Blockchain to update.</div>,
           timeOut: 3000,
           type: 'success',
-          callBack: () => { },
+          callBack: () => {
+            this.setState({ shareURL: 'url' });
+          },
         });
         const result = predictionhandshake.createMarket(activeMatchDetails.market_fee, activeMatchDetails.source, activeMatchDetails.date, activeMatchDetails.reportTime, activeMatchDetails.disputeTime, response.data[0].id);
         console.log(result);
-        this.props.history.push(URL.HANDSHAKE_DISCOVER);
       },
       errorFn: (response) => {
         response.message && this.props.showAlert({
@@ -159,7 +163,7 @@ class CreateBettingEvent extends React.Component {
             type: 'success',
             callBack: () => { },
           });
-          this.props.history.push(URL.HANDSHAKE_DISCOVER);
+          this.setState({ shareURL: 'url' });
           const result = predictionhandshake.createMarket(Number(this.state.creatorFee), this.state.resolutionSource, this.state.closingTime, this.state.reportingTime, this.state.disputeTime, response.data[0].id);
           console.log(result);
         },
@@ -226,6 +230,8 @@ class CreateBettingEvent extends React.Component {
       message: '',
       key: this.state.key + 1,
       newEventType: '',
+      shareURL: '',
+      copied: false,
     });
   }
   eventsDropdown=() => {
@@ -250,6 +256,16 @@ class CreateBettingEvent extends React.Component {
               }
     />);
   }
+  copyURLClick=() => {
+    this.setState({ copied: true });
+    this.props.showAlert({
+      message: <div className="text-center">URL Copied to Clipboard</div>,
+      timeOut: 3000,
+      type: 'success',
+      callBack: () => { this.props.history.push(URL.HANDSHAKE_DISCOVER); },
+    });
+  }
+
   render() {
     return (
       <div>
@@ -367,10 +383,18 @@ class CreateBettingEvent extends React.Component {
               <Button type="submit" block className="submit-button">Submit</Button>
               <Button type="button" block className="cancel-button" onClick={this.resetForm}>Cancel</Button>
               <br />
-              {this.state.message &&
-              <Alert color={this.state.messageType === 'error' ? 'danger' : 'success'}>
-                {this.state.message}
-              </Alert>}
+              {
+                this.state.shareURL &&
+                <div>
+                  <Label for="shareUrl" className="">Click on the button below to copy the URL to share with your friends.</Label> <br />
+                  <CopyToClipboard
+                    text={this.state.shareURL}
+                    onCopy={this.copyURLClick}
+                  >
+                    <Button type="button" block className={`copy-url-button-${this.state.copied}`}>Copy Share URL</Button>
+                  </CopyToClipboard>
+                </div>
+              }
             </div>
         }
         </SaveBettingEventForm>
