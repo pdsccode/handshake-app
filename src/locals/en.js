@@ -569,7 +569,7 @@ export default {
         text: {
           confirm_transfer: "Are you sure you want to transfer out "
         },
-        error: "Insufficient balance: ",
+        error: "Insufficient balance:",
         button: {
           transfer: "Transfer",
           confirm: "Confirm",
