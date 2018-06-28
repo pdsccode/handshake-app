@@ -400,7 +400,7 @@ class Handshake extends React.Component {
             <div className="col-lg-6 col-md-12 wow animated slideInLeft" data-wow-delay="6.7s">
               <div className="col-lg-9 mw600">
                 <div className="logo wow animated fadeInUp" data-wow-delay="0.2s">
-                  <img height="45" src={logoNinjaIcon}/>
+                  <a href="/"><img height="45" src={logoNinjaIcon} /></a>
                 </div>
                 <h2 className="text-up text-y mt20 wow animated fadeInUp" data-wow-delay="1.5s">Our token is the
                   Shuriken (SHURI). <br/>
