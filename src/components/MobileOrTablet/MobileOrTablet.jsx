@@ -101,7 +101,7 @@ class MobileOrTablet extends React.PureComponent {
             <p>
               {messages.MOT_CONTENT_0}
               <br/>
-              {messages.MOT_CONTENT_1} <span className="website">www.ninja.org</span> {messages.MOT_CONTENT_2}
+              {messages.MOT_CONTENT_1} <a className="website" href="/">www.ninja.org</a> {messages.MOT_CONTENT_2}
               <br/>
               <span>{messages.MOT_CONTENT_3}</span>
             </p>
