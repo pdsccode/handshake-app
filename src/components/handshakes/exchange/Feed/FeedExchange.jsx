@@ -101,14 +101,6 @@ class FeedExchange extends React.PureComponent {
     const { offer } = this;
 
     this.setState({
-      modalContent: (
-        <ShakeDetail offer={this.offer} handleShake={this.shakeOfferItem} CRYPTO_CURRENCY_LIST={this.state.CRYPTO_CURRENCY_LIST} />
-      ),
-    }, () => {
-      this.modalRef.open();
-    });
-
-    this.setState({
       CRYPTO_CURRENCY_LIST: [
         {
           value: CRYPTO_CURRENCY.ETH, text: CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.ETH], icon: <img src={iconEthereum} width={22} />, hide: !offer.itemFlags.ETH,
@@ -149,6 +141,14 @@ class FeedExchange extends React.PureComponent {
       this.props.rfChange(nameFormShakeDetail, 'type', newType);
 
       this.props.clearFields(nameFormShakeDetail, false, false, 'amount', 'amountFiat');
+
+      this.setState({
+        modalContent: (
+          <ShakeDetail offer={this.offer} handleShake={this.shakeOfferItem} CRYPTO_CURRENCY_LIST={this.state.CRYPTO_CURRENCY_LIST} />
+        ),
+      }, () => {
+        this.modalRef.open();
+      });
     });
   }
 
