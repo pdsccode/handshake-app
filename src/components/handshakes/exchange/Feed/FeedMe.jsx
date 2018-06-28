@@ -1450,7 +1450,7 @@ class FeedMe extends React.PureComponent {
       }
     }
 
-    return chatUserName.toString();
+    return chatUserName?.toString() || '';
   }
 
   handleOnClickRating = (numStars) => {
