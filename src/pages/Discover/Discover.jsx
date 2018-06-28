@@ -114,7 +114,7 @@ class DiscoverPage extends React.Component {
       this.setAddressFromLatLng(ipInfo?.latitude, ipInfo?.longitude); // fallback
     });
 
-    if (this.state.utm === 'early_bird') {
+    if (this.state.utm === 'earlybird') {
       this.props.getFreeStartInfo({
         PATH_URL: `exchange/info/offer-store-free-start/ETH`,
         successFn: (res) => {
@@ -163,7 +163,7 @@ class DiscoverPage extends React.Component {
   }
 
   getUtm() {
-    let { utm } = Helper.getQueryStrings(window.location.search);
+    let { utm_campaign: utm } = Helper.getQueryStrings(window.location.search);
 
     return utm;
   }
