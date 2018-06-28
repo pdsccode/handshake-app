@@ -60,7 +60,10 @@ class CreateBettingEvent extends React.Component {
     //   address: wallet.address,
     //   privateKey: wallet.privateKey,
     // })
-    this.props.loadMatches({ PATH_URL: API_URL.CRYPTOSIGN.LOAD_MATCHES, headers: { 'Content-Type': 'application/json' } });
+    const params = {
+      public: 1,
+    };
+    this.props.loadMatches({ PATH_URL: API_URL.CRYPTOSIGN.LOAD_MATCHES, METHOD: 'POST', data: params });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -96,7 +99,7 @@ class CreateBettingEvent extends React.Component {
       PATH_URL: url,
       METHOD: 'post',
       headers: { 'Content-Type': 'application/json' },
-      data: [{ name: values.outcome }],
+      data: [{ name: values.outcome, public: 0 }],
       successFn: (response) => {
         console.log(response.data);
         this.props.showAlert({
