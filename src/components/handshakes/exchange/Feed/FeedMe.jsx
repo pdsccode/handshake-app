@@ -392,7 +392,7 @@ class FeedMe extends React.PureComponent {
             message = <FormattedMessage id="cancelOfferConfirm" values={{}} />;
             actionButtons = (
               <div>
-                <Button block className="mt-2" onClick={() => this.confirmOfferAction(message, this.handleCloseOfferExchange)}><FormattedMessage id="btn.close" /></Button>
+                <Button block className="mt-2 btn btn-secondary" onClick={() => this.confirmOfferAction(message, this.handleCloseOfferExchange)}><FormattedMessage id="btn.close" /></Button>
               </div>
             );
             break;
@@ -412,7 +412,7 @@ class FeedMe extends React.PureComponent {
                 {offer.type === EXCHANGE_ACTION.BUY &&
                 <Button
                   block
-                  className="mt-2"
+                  className="mt-2 btn btn-secondary"
                   onClick={() => this.confirmOfferAction(message, this.handleCancelOfferExchange)}
                 ><FormattedMessage id="btn.cancel" />
                 </Button>
@@ -427,10 +427,10 @@ class FeedMe extends React.PureComponent {
             const message2 = <FormattedMessage id="completeOfferConfirm" values={{}} />;
             actionButtons = (
               <div>
-                <Button block className="mt-2" onClick={() => this.confirmOfferAction(message, this.handleRejectShakedOfferExchange)}><FormattedMessage id="btn.reject" /></Button>
                 {offer.type === EXCHANGE_ACTION.SELL &&
                 <Button block className="mt-2" onClick={() => this.confirmOfferAction(message2, this.handleCompleteShakedOfferExchange)}><FormattedMessage id="btn.complete" /></Button>
                 }
+                <Button block className="mt-2 btn btn-secondary" onClick={() => this.confirmOfferAction(message, this.handleRejectShakedOfferExchange)}><FormattedMessage id="btn.reject" /></Button>
               </div>
             );
             break;
@@ -451,7 +451,7 @@ class FeedMe extends React.PureComponent {
                 {offer.type === EXCHANGE_ACTION.BUY &&
                 <Button
                   block
-                  className="mt-2"
+                  className="mt-2 btn btn-secondary"
                   onClick={() => this.confirmOfferAction(message, this.handleCancelOfferExchange)}
                 ><FormattedMessage id="btn.cancel" />
                 </Button>
@@ -465,10 +465,10 @@ class FeedMe extends React.PureComponent {
             const message2 = <FormattedMessage id="completeOfferConfirm" values={{}} />;
             actionButtons = (
               <div>
-                <Button block className="mt-2" onClick={() => this.confirmOfferAction(message, this.handleRejectShakedOfferExchange)}><FormattedMessage id="btn.reject" /></Button>
                 {offer.type === EXCHANGE_ACTION.BUY &&
                 <Button block className="mt-2" onClick={() => this.confirmOfferAction(message2, this.handleCompleteShakedOfferExchange)}><FormattedMessage id="btn.complete" /></Button>
                 }
+                <Button block className="mt-2 btn btn-secondary" onClick={() => this.confirmOfferAction(message, this.handleRejectShakedOfferExchange)}><FormattedMessage id="btn.reject" /></Button>
               </div>
             );
 
@@ -1063,7 +1063,7 @@ class FeedMe extends React.PureComponent {
           <div>
             <Button
               block
-              className="mt-2"
+              className="mt-2 btn btn-secondary"
               onClick={() => this.confirmOfferAction(message, this.deleteOfferItem)}
             ><FormattedMessage id="btn.delete" />
             </Button>
@@ -1318,12 +1318,6 @@ class FeedMe extends React.PureComponent {
             const message2 = <FormattedMessage id="completeOfferConfirm" values={{ }} />;
             actionButtons = (
               <div>
-                <Button
-                  block
-                  className="mt-2"
-                  onClick={() => this.confirmOfferAction(message, this.handleRejectShakedOffer)}
-                ><FormattedMessage id="btn.reject" />
-                </Button>
                 {offer.type === EXCHANGE_ACTION.SELL &&
                 <Button
                   block
@@ -1332,6 +1326,12 @@ class FeedMe extends React.PureComponent {
                 ><FormattedMessage id="btn.complete" />
                 </Button>
                 }
+                <Button
+                  block
+                  className="mt-2 btn btn-secondary"
+                  onClick={() => this.confirmOfferAction(message, this.handleRejectShakedOffer)}
+                ><FormattedMessage id="btn.reject" />
+                </Button>
               </div>
             );
             break;
@@ -1347,7 +1347,7 @@ class FeedMe extends React.PureComponent {
               <div>
                 <Button
                   block
-                  className="mt-2"
+                  className="mt-2 btn btn-secondary"
                   onClick={() => this.confirmOfferAction(message, this.handleCancelShakeOffer)}
                 ><FormattedMessage id="btn.cancel" />
                 </Button>
@@ -1361,12 +1361,6 @@ class FeedMe extends React.PureComponent {
             const message2 = <FormattedMessage id="completeOfferConfirm" values={{ }} />;
             actionButtons = (
               <div>
-                <Button
-                  block
-                  className="mt-2"
-                  onClick={() => this.confirmOfferAction(message, this.handleRejectShakedOffer)}
-                ><FormattedMessage id="btn.cancel" />
-                </Button>
                 {offer.type === EXCHANGE_ACTION.BUY &&
                 <Button
                   block
@@ -1375,6 +1369,12 @@ class FeedMe extends React.PureComponent {
                 ><FormattedMessage id="btn.complete" />
                 </Button>
                 }
+                <Button
+                  block
+                  className="mt-2 btn btn-secondary"
+                  onClick={() => this.confirmOfferAction(message, this.handleRejectShakedOffer)}
+                ><FormattedMessage id="btn.cancel" />
+                </Button>
               </div>
             );
             break;
