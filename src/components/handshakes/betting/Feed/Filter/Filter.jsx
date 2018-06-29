@@ -117,8 +117,6 @@ class BettingFilter extends React.Component {
     }
     this.props.loadMatches({
       PATH_URL: API_URL.CRYPTOSIGN.LOAD_MATCHES,
-      METHOD:'POST',
-      data: params,
       successFn: (res) => {
         const { data } = res;
         console.log('loadMatches success', data);

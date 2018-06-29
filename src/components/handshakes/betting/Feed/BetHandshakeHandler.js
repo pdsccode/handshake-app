@@ -274,8 +274,8 @@ export class BetHandshakeHandler {
     try {
       dataBlockchain = await bettinghandshake.initBet(hid, side, stake, odds, offchain);
       //TO DO: SAVE TRANSACTION
-      const {logs, hash, error, transactionHash} = dataBlockchain;
-      logJson = JSON.stringify(logs);
+      const {logs, hash, error, transactionHash, payload} = dataBlockchain;
+      logJson = payload;
       realBlockHash = hash;
       if(hash == -1){
         realBlockHash = "-1";
@@ -336,9 +336,9 @@ export class BetHandshakeHandler {
         makerOdds,
         offchain,
       );
-      const {logs, hash, error, transactionHash} = result;
+      const {logs, hash, error, transactionHash, payload} = result;
 
-      logJson = JSON.stringify(logs);
+      logJson = payload;
       realBlockHash = hash;
       if(hash == -1){
         realBlockHash = "-1";
@@ -424,9 +424,9 @@ export class BetHandshakeHandler {
     let result = null;
     try{
       result = await bettinghandshake.cancelBet(hid, side, stake, odds, offchain);
-      const {logs, hash, error, transactionHash} = result;
+      const {logs, hash, error, transactionHash, payload} = result;
 
-      logJson = JSON.stringify(logs);
+      logJson = payload;
       realBlockHash = hash;
       if(hash == -1){
         realBlockHash = "-1";
@@ -451,7 +451,6 @@ export class BetHandshakeHandler {
     return result;
   }
   getLoadingOnChain = (offchain) => {
-    console.log("Sa List On Chain:", this.listOnChainLoading);
 
     return this.listOnChainLoading[offchain];
   }
@@ -461,7 +460,6 @@ export class BetHandshakeHandler {
         isLoading: isLoading
       }
     }
-    console.log("Sa List On Chain:", this.listOnChainLoading);
   }
   async withdraw(hid, offchain){
 
@@ -476,8 +474,8 @@ export class BetHandshakeHandler {
     let realBlockHash= "";
     try {
       result = await bettinghandshake.withdraw(hid, offchain);
-      const {logs, hash, error, transactionHash} = result;
-      logJson = JSON.stringify(logs);
+      const {logs, hash, error, transactionHash, payload} = result;
+      logJson = payload;
       realBlockHash = hash;
       if(hash == -1){
         realBlockHash = "-1";

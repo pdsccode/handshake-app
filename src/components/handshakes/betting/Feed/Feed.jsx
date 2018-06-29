@@ -361,40 +361,51 @@ class FeedBetting extends React.Component {
 
       case BETTING_STATUS_LABEL.CANCEL:
         // TO DO: CLOSE BET
-        const {side, amount, odds} = itemInfo;
-        this.setState({
-          isLoading: true
-        })
-        betHandshakeHandler.setItemOnChain(offchain, true);
-        const result = await betHandshakeHandler.cancelBet(hid, side, amount, odds, offchain);
-        const {hash} = result;
-        if(hash){
-          betHandshakeHandler.setItemOnChain(offchain, false);
-          let updateInfo = Object.assign({}, itemInfo);
-          updateInfo.status = BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINIT_PENDING;
-          this.props.updateBettingChange(updateInfo);
-        }
+        this.cancelOnChain(offchain, hid);
         
         break;
 
       case BETTING_STATUS_LABEL.WITHDRAW:
-        // TO DO: WITHDRAW
-        //this.collect(id);
-        //this.rollback(id);
-        betHandshakeHandler.setItemOnChain(offchain, true);
-        await betHandshakeHandler.withdraw(hid, offchain);
-        const {hash} = result;
-        if(hash){
-          betHandshakeHandler.setItemOnChain(offchain, false);
-          let updateInfo = Object.assign({}, itemInfo);
-          updateInfo.status = BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_PENDING;
-          this.props.updateBettingChange(updateInfo);
-        }
+       
+        this.withdrawOnChain(offchain, hid);
         break;
       case BETTING_STATUS_LABEL.REFUND:
       this.refund(realId);
       break;
 
+    }
+  }
+  async cancelOnChain(offchain, hid){
+    const {itemInfo} = this.state;
+    const {side, amount, odds} = itemInfo;
+    this.setState({
+      isLoading: true
+    })
+    betHandshakeHandler.setItemOnChain(offchain, true);
+    const result = await betHandshakeHandler.cancelBet(hid, side, amount, odds, offchain);
+    const {hash} = result;
+    if(hash){
+      betHandshakeHandler.setItemOnChain(offchain, false);
+      let updateInfo = Object.assign({}, itemInfo);
+      updateInfo.status = BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINIT_PENDING;
+      this.props.updateBettingChange(updateInfo);
+    }
+  }
+  async withdrawOnChain(offchain, hid){
+    const {itemInfo} = this.state;
+    this.setState({
+      isLoading: true
+    })
+    betHandshakeHandler.setItemOnChain(offchain, true);
+    const result = await betHandshakeHandler.withdraw(hid, offchain);
+    const {hash} = result;
+    console.log("Sa test:", result);
+    if(hash){
+      console.log('Sa test Update Withdraw UI');
+      betHandshakeHandler.setItemOnChain(offchain, false);
+      let updateInfo = Object.assign({}, itemInfo);
+      updateInfo.status = BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_PENDING;
+      this.props.updateBettingChange(updateInfo);
     }
   }
 

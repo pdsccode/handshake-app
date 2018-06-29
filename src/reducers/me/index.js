@@ -222,6 +222,30 @@ const meReducter = (
         if (handledHandshake.id === item.id) {
           handledHandshake.status = item.status;
           // handledHandshake.result = resultI;
+        }else {
+          
+          const {shakers} = handshake;
+          if(shakers.length > 0){
+            console.log('Shakers List:', shakers);
+
+            /*
+            const newShakers = shakers.map( shakerItem => {
+              const handleShaker = shakerItem;
+              if(handleShaker.id === item.id){
+                handleShaker.status = item.status;
+                console.log("Found Item shakers:", handleShaker);
+  
+              }
+              return handleShaker;
+            });
+            handledHandshake.shakers = newShakers;
+            console.log('New Shakers:', newShakers);
+            */
+            
+
+          }
+          
+          
         }
         return handledHandshake;
       });
