@@ -2,9 +2,18 @@ language: node_js
 sudo: required
 node_js:
   - "8"
-#cache:
-#  directories:
-#    - node_modules
+before_install:
+  - openssl aes-256-cbc -K $encrypted_a9cb6cbf83f4_key -iv $encrypted_a9cb6cbf83f4_iv -in deployment.tar.enc -out deployment.tar -d
+  - tar xvf credentials.tar
 install:
+  - cp ./deployment/conf/.env.js ./.env.js
   - yarn install
   - npm install --save-dev webpack
+  - yarn add https://github.com/ninjadotorg/handshake-i18n
+  - yarn build
+deploy:
+- provider: script
+  skip_cleanup: true
+  script: bash ./deploy.sh
+  on:
+    branch: deployment
