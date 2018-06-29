@@ -12,7 +12,7 @@ import { updateBettingChange} from '@/reducers/me/action';
 
 import store from '@/stores';
 import moment from 'moment';
-
+ 
 export const MESSAGE_SERVER = {
   /* ERROR */
     1000: 'Please double check your input data.',
@@ -279,11 +279,11 @@ export class BetHandshakeHandler {
     return { title: label, isAction, status: strStatus };
   }
 
-  addContract = async (item, hid) => {
-    console.log('initContract, hid:', item, hid);
+  addContract = async (item) => {
+    console.log('initContract', item);
 
     const {
-      amount, odds, side, offchain,
+      amount, odds, side, offchain, hid
     } = item;
     const stake = Math.floor(amount * 10 ** 18) / 10 ** 18;
     //hid = 10000;
@@ -331,18 +331,17 @@ export class BetHandshakeHandler {
     return dataBlockchain;
   };
 
-  async shakeContract(item, hid) {
-    console.log('shakeContract, hid:', item, hid);
+  async shakeContract(item) {
+    console.log('shakeContract', item);
 
     const {
-      amount, id, odds, side,maker_address, maker_odds, offchain
+      amount, id, odds, side,maker_address, maker_odds, offchain, hid
     } = item;
     // hid = 10000;
     const stake = Math.floor(amount * 10 ** 18) / 10 ** 18;
     
     const maker = maker_address;
     const makerOdds = maker_odds;
-    // const hid = outcome_id;
     const chainId = getChainIdDefaultWallet();
     const bettinghandshake = new BettingHandshake(chainId);
     const contractAddress = bettinghandshake.contractAddress;
@@ -393,29 +392,42 @@ export class BetHandshakeHandler {
   }
 
 
-  handleContract(element, hid, i) {
+  handleContract(element, i) {
+    /*
     setTimeout(() => {
       console.log('Time out:');
       const { offchain, odds } = element;
       const isInit = isInitBet(element);
       console.log('Is Init Bet:', isInit);
       if (isInit) {
-        this.addContract(element, hid);
+        this.addContract(element);
       } else {
        
-      this.shakeContract(element, hid);
+      this.shakeContract(element);
 
       }
     }, 3000 * i);
+    */
+
+   const { offchain, odds } = element;
+   const isInit = isInitBet(element);
+   console.log('Is Init Bet:', isInit);
+   if (isInit) {
+     this.addContract(element);
+   } else {
+    
+   this.shakeContract(element);
+
+   }
   }
-  controlShake = async (list, hid) => {
+  controlShake = async (list) => {
     const result = null;
 
     for (let i = 0; i < list.length; i++) {
       const element = list[i];
       console.log('Element:', element);
 
-      this.handleContract(element, hid, i);
+      this.handleContract(element, i);
     }
   };
 
