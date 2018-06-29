@@ -383,6 +383,8 @@ export const BASE_API = {
 export const URL = {
   INDEX: '/',
 
+  ADMIN: '/admin',
+
   HANDSHAKE_ME: '/me',
   HANDSHAKE_ME_INDEX: '/me',
   HANDSHAKE_ME_PROFILE: '/me/profile',
