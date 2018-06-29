@@ -1,12 +1,12 @@
 @import './src/styles/style';
 
 .mobileTabletApp {
-  background-color: #161616;
+  background-color: #000;
   width: 100%;
   height: 100%;
   position: fixed;
   overflow-y: auto;
-  padding: rem-calc(50px 0);
+  //padding: rem-calc(50px 0);
 }
 
 .root {
@@ -17,76 +17,107 @@
   //height: 100%;
   display: flex;
   align-items: center;
-  padding: 40px 0;
+  flex-wrap: wrap;
+  padding: rem-calc(50px 0);
   margin: 0 auto;
   font-family: anonymous-pro, monospace;
   font-style: normal;
   & > .row {
+    width: rem-calc(850px);
     height: 100%;
+    margin: 0 auto;
+  }
+  .firstSection {
+    margin-bottom: rem-calc(30px);
+  }
+  .secondSection {
+    max-height: rem-calc(187px) !important;
+    //justify-content: space-between;
+    margin-bottom: rem-calc(30px);
+    & > div {
+      //padding-right: rem-calc(90px);
+    }
+  }
+  .thirdSection {
+    //justify-content: space-between;
+    & > div:last-child {
+      display: flex;
+    }
+    //& > div {
+    //  flex: 0 0 350px;
+    //  max-width: 350px;
+    //}
   }
   .chooseLanguage {
     margin: 0 auto;
-    font-size: rem-calc(16px);
-    color: #FFFFFF;
-    text-align: center;
-    font-weight: $light;
+    font-size: rem-calc(14px);
+    color: #9B9B9B;
+    font-weight: $semi-bold;
     display: flex;
     justify-content: center;
-    margin-bottom:rem-calc(60px);
     .countryName {
-      padding: rem-calc(0 10px);
+      padding: rem-calc(0 7px);
       &:hover {
         cursor: pointer;
       }
       span {
-        padding: rem-calc(0 7.5px 5px);
+        padding: rem-calc(7px 10px 0);
       }
     }
-    .countryName + .countryName {
-      border-left:1px solid #666666;
-    }
     .countryActive {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      top: rem-calc(-50px);
+      &:before {
+        content: url("../../assets/images/ninja/line-yellow.svg");
+      }
       span {
-        border-bottom: 2px solid #FFFF00;
+        color: #FFFF00;
         font-weight: $semi-bold;
       }
     }
   }
   .imageHeader {
-    min-width: rem-calc(409px);
+    max-width: rem-calc(370px);
   }
   .motListContent {
     display: flex;
   }
   h1 {
-    font-size: rem-calc(22px);
-    color: #BCBCBC;
+    font-size: rem-calc(20px);
     letter-spacing: 0;
-    text-align: center;
-    margin-bottom: rem-calc(78px);
-    font-weight: $normal;
+    font-weight: 600;
+    color: #979797;
+    line-height: rem-calc(30px);
   }
   p {
-    font-size: rem-calc(22px);
-    font-weight: $semi-bold;
-    color: #BCBCBC;
+    font-size: rem-calc(16px);
+    font-weight: $light;
+    color: #979797;
     letter-spacing: 0;
-    text-align: center;
-    line-height: rem-calc(34px);
-    margin-bottom: rem-calc(84px);
+    line-height: 1.4;
     .website {
-      color: #7491F1;
+      text-decoration: none;
+      border-bottom: 2px solid #FFFF00;
+      color: #D8D8D8;
+      &:hover {
+        color: #FFFF00;
+        cursor: pointer;
+      }
     }
     .whiteColor {
       color: #fff;
     }
   }
   ul {
-    font-size: rem-calc(22px);
-    color: #FFFFFF;
+    font-size: rem-calc(16px);
     letter-spacing: 0;
+    font-weight: $medium;
     list-style: none;
-    margin: 0 auto;
+    color: #979797;
+    line-height: 1.4;
     padding-left: 0;
     li {
       img {
@@ -94,12 +125,16 @@
         height: rem-calc(21px);
       }
       a {
+        color: #D8D8D8;
+        text-decoration: none;
+        border-bottom: 2px solid #FFFF00;
+      }
+      a:hover {
         color: #FFFF00;
-        text-decoration: underline;
       }
     }
     li + li {
-      margin-top: rem-calc(16px);
+      margin-top: rem-calc(5px);
     }
   }
   .topBox {
@@ -115,9 +150,17 @@
     padding-top: 0 !important;
   }
   .embed-responsive {
-    iframe {
-      max-height: rem-calc(182px) !important;
+    height: 100%;
+    max-height: rem-calc(187px) !important;
+    .youTubeContainer {
+      height: 100%;
+      & > span {
+        display: block;
+        height: 100%;
+      }
     }
-    max-height: rem-calc(182px) !important;
+    iframe {
+      position: inherit;
+    }
   }
 }

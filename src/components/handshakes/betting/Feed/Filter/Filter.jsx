@@ -24,7 +24,7 @@ import {getBalance} from '@/components/handshakes/betting/utils.js';
 // style
 import './Filter.scss';
 
-const betHandshakeHandler = BetHandshakeHandler.getShareManager();
+//const betHandshakeHandler = BetHandshakeHandler.getShareManager();
 const CRYPTOSIGN_MINIMUM_MONEY = 0.00002;
 const freeAmount = 0.001;
 const ROUND_ODD = 10;
@@ -84,8 +84,52 @@ class BettingFilter extends React.Component {
 
     */
 
+    this.loadMatches();
+    this.checkShowFreeBanner();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { matches, support, against } = nextProps;
+    const {isPrivate, outComeId} = this.props;
+
+    let filterMatches = [];
+    if(isPrivate && outComeId){
+      matches.forEach(element => {
+        const {outcomes} = element;
+        const privateOutcomeArr = outcomes.filter(item => item.public == 0 && item.id == outComeId);
+        if(privateOutcomeArr.length > 0){
+          filterMatches.push(element);
+        }
+      });
+    }else {
+      matches.forEach(element => {
+        const {outcomes} = element;
+        const publicOutcomeArr = outcomes.filter(item => item.public == 1);
+        if(publicOutcomeArr.length > 0){
+          filterMatches.push(element);
+        }
+      });
+    }
+    this.setState({
+      matches: filterMatches,
+      // selectedMatch,
+      // selectedOutcome,
+      support,
+      against,
+    });
+    this.checkShowFreeBanner();
+
+  }
+
+  loadMatches(){
+    const {isPrivate, outComeId} = this.props;
+    let params = {
+      public: !isPrivate,
+      outcome_id: outComeId
+    }
     this.props.loadMatches({
       PATH_URL: API_URL.CRYPTOSIGN.LOAD_MATCHES,
+      METHOD:'POST',
       successFn: (res) => {
         const { data } = res;
         console.log('loadMatches success', data);
@@ -100,25 +144,7 @@ class BettingFilter extends React.Component {
         this.setState({ errorMessage: `Can't load matches`, isError: true });
       },
     });
-    this.checkShowFreeBanner();
   }
-
-  componentWillReceiveProps(nextProps) {
-    const { matches, support, against } = nextProps;
-    //console.log(`${TAG} Matches:`, matches);
-    // const selectedMatch = this.defaultMatch;
-    // const selectedOutcome = this.defaultOutcome;
-    this.setState({
-      matches,
-      // selectedMatch,
-      // selectedOutcome,
-      support,
-      against,
-    });
-    this.checkShowFreeBanner();
-
-  }
-
   get oddSpread() {
     const { support, against } = this.state;
     if (support && support.length > 0 && against && against.length > 0) {
