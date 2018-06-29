@@ -166,8 +166,8 @@ class Me extends React.Component {
     const { messages } = this.props.intl;
     const online = !this.props.auth.offline;
 
-    console.log('this.props.intl', this.props.intl);
-    console.log('messages.me.feed', messages.me.feed);
+    // console.log('this.props.intl', this.props.intl);
+    // console.log('messages.me.feed', messages.me.feed);
 
     return (
       <Grid className="me">

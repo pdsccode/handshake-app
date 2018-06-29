@@ -1,14 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import {connect} from 'react-redux';
+import {FormattedMessage, injectIntl} from 'react-intl';
 import _sample from 'lodash/sample';
-import { BigNumber } from 'bignumber.js';
-import { Link } from 'react-router-dom';
-
-import iconLocation from '@/assets/images/icon/icons8-geo_fence.svg';
-import iconChat from '@/assets/images/icon/icons8-chat.svg';
-import iconPhone from '@/assets/images/icon/icons8-phone.svg';
+import {BigNumber} from 'bignumber.js';
 
 import Feed from '@/components/core/presentation/Feed/Feed';
 import Button from '@/components/core/controls/Button/Button';
@@ -35,11 +30,9 @@ import {
   HANDSHAKE_EXCHANGE_STATUS_NAME,
   HANDSHAKE_STATUS_NAME,
   HANDSHAKE_USER,
-  URL,
   NB_BLOCKS,
+  URL,
 } from '@/constants';
-import ModalDialog from '@/components/core/controls/ModalDialog';
-import Rate from '@/components/core/controls/Rate';
 import {
   acceptOffer,
   acceptOfferItem,
@@ -56,22 +49,24 @@ import {
   withdrawShakedOffer,
 } from '@/reducers/exchange/action';
 import Offer from '@/models/Offer';
-import { MasterWallet } from '@/models/MasterWallet';
-import { formatAmountCurrency, formatMoneyByLocale, getHandshakeUserType, getOfferPrice } from '@/services/offer-util';
-import { hideLoading, showAlert, showLoading } from '@/reducers/app/action';
+import {MasterWallet} from '@/models/MasterWallet';
+import {formatAmountCurrency, formatMoneyByLocale, getHandshakeUserType, getOfferPrice} from '@/services/offer-util';
+import {hideLoading, showAlert, showLoading} from '@/reducers/app/action';
 
-import { ExchangeHandshake, ExchangeShopHandshake } from '@/services/neuron';
-import { feedBackgroundColors } from '@/components/handshakes/exchange/config';
-import { updateOfferStatus } from '@/reducers/discover/action';
-import { responseExchangeDataChange } from '@/reducers/me/action';
-import { Ethereum } from '@/models/Ethereum.js';
-import { Bitcoin } from '@/models/Bitcoin';
-import { getLocalizedDistance } from '@/services/util';
+import {ExchangeHandshake, ExchangeShopHandshake} from '@/services/neuron';
+import {feedBackgroundColors} from '@/components/handshakes/exchange/config';
+import {updateOfferStatus} from '@/reducers/discover/action';
+import {responseExchangeDataChange} from '@/reducers/me/action';
+import {Ethereum} from '@/models/Ethereum.js';
+import {Bitcoin} from '@/models/Bitcoin';
+import {getLocalizedDistance} from '@/services/util';
 import OfferShop from '@/models/OfferShop';
 
-import { getDistanceFromLatLonInKm, getErrorMessageFromCode } from '../utils';
+import {getDistanceFromLatLonInKm, getErrorMessageFromCode} from '../utils';
 import './FeedExchange.scss';
 import './FeedMe.scss';
+import FeedMeOfferStoreContainer from "./FeedMeOfferStoreContainer";
+import ModalDialog from "../../../core/controls/ModalDialog/ModalDialog";
 
 class FeedMe extends React.PureComponent {
   constructor(props) {
@@ -964,201 +959,6 @@ class FeedMe extends React.PureComponent {
 
   // /Start Offer store
   // //////////////////////
-
-  calculateFiatAmountOfferStore(amount, type, currency, percentage) {
-    const { listOfferPrice } = this.props;
-    let fiatAmount = 0;
-
-    if (listOfferPrice) {
-      const offerPrice = getOfferPrice(listOfferPrice, type, currency);
-      if (offerPrice) {
-        fiatAmount = amount * offerPrice.price || 0;
-        fiatAmount += fiatAmount * percentage / 100;
-      } else {
-        // console.log('aaaa', offer.type, offer.currency);
-      }
-    }
-
-    return fiatAmount;
-  }
-
-  getEmailOfferStore = () => {
-    const {
-      email, contactPhone, currency, userAddress,
-    } = this.offer;
-
-    if (email) { return email; }
-    if (contactPhone) { return contactPhone; }
-    if (currency === CRYPTO_CURRENCY.ETH) {
-      const wallet = new Ethereum();
-      wallet.address = userAddress;
-      return wallet.getShortAddress();
-    }
-    if (currency === CRYPTO_CURRENCY.BTC) {
-      const wallet = new Bitcoin();
-      wallet.address = userAddress;
-      return wallet.getShortAddress();
-    }
-    return '';
-  }
-
-  getContentOfferStore = () => {
-    const { status } = this.props;
-    const { offer } = this;
-    const {
-      buyAmount, sellAmount, currency, buyPercentage, sellPercentage,
-    } = offer;
-    let message = '';
-    const fiatAmountBuy = this.calculateFiatAmountOfferStore(buyAmount, EXCHANGE_ACTION.BUY, currency, buyPercentage);
-    const fiatAmountSell = this.calculateFiatAmountOfferStore(sellAmount, EXCHANGE_ACTION.SELL, currency, sellPercentage);
-    switch (status) {
-      case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CREATED:
-      case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.ACTIVE:
-      case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSING:
-      case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSED: {
-        message = (
-          <span>
-            {offer.buyAmount > 0 && (
-              <FormattedMessage
-                id="offerStoreHandShakeContentBuy"
-                values={{
-                  offerTypeBuy: EXCHANGE_ACTION_NAME[EXCHANGE_ACTION.BUY],
-                  amountBuy: offer.buyAmount,
-                  currency: offer.currency,
-                  fiatAmountCurrency: offer.fiatCurrency,
-                  fiatAmountBuy: formatMoneyByLocale(fiatAmountBuy, offer.fiatCurrency),
-                }}
-              />
-            )}
-            {offer.sellAmount > 0 && (
-              <FormattedMessage
-                id="offerStoreHandShakeContentSell"
-                values={{
-                  offerTypeSell: EXCHANGE_ACTION_NAME[EXCHANGE_ACTION.SELL],
-                  amountSell: offer.sellAmount,
-                  currency: offer.currency,
-                  fiatAmountCurrency: offer.fiatCurrency,
-                  fiatAmountSell: formatMoneyByLocale(fiatAmountSell, offer.fiatCurrency),
-                }}
-              />
-            )}
-          </span>
-        );
-        break;
-      }
-    }
-
-    return message;
-  }
-
-  getActionButtonsOfferStore = () => {
-    const { offer } = this;
-    const status = HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[offer.status];
-    let actionButtons = null;
-
-    switch (status) {
-      case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.ACTIVE: {
-        const message = <FormattedMessage id="closeOfferConfirm" values={{ }} />;
-        actionButtons = (
-          <div>
-            <Button
-              block
-              className="mt-2 btn btn-secondary"
-              onClick={() => this.confirmOfferAction(message, this.deleteOfferItem)}
-            ><FormattedMessage id="btn.delete" />
-            </Button>
-          </div>
-        );
-        break;
-      }
-      case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CREATED:
-      case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSING:
-      case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSED: {
-        break;
-      }
-      default: {
-        // code
-        break;
-      }
-    }
-
-    return actionButtons;
-  }
-
-  deleteOfferItem = async () => {
-    const { offer } = this;
-    const { currency, sellAmount, freeStart } = offer;
-    console.log('deleteOfferItem', offer);
-
-    if (currency === CRYPTO_CURRENCY.ETH) {
-      if (sellAmount > 0 && !freeStart) {
-        const wallet = MasterWallet.getWalletDefault(currency);
-        const balance = await wallet.getBalance();
-        const fee = await wallet.getFee();
-
-        if (this.showNotEnoughCoinAlert(balance, 0, fee, currency)) {
-          return;
-        }
-      }
-    }
-
-    this.showLoading();
-    this.props.deleteOfferItem({
-      PATH_URL: `${API_URL.EXCHANGE.OFFER_STORES}/${offer.id}`,
-      METHOD: 'DELETE',
-      qs: { currency: offer.currency },
-      successFn: this.handleDeleteOfferItemSuccess,
-      errorFn: this.handleDeleteOfferItemFailed,
-    });
-  }
-
-  handleDeleteOfferItemSuccess = async (responseData) => {
-    const { refreshPage } = this.props;
-    const { data } = responseData;
-    const { offer } = this;
-    const { currency, sellAmount, freeStart } = offer;
-
-    console.log('handleDeleteOfferItemSuccess', responseData);
-
-    const offerStore = OfferShop.offerShop(data);
-
-    // Update status to redux
-    this.responseExchangeDataChangeOfferStore(offerStore);
-
-    if (currency === CRYPTO_CURRENCY.ETH) {
-      if (sellAmount > 0 && !freeStart && offerStore.items.ETH.status !== 'closed') {
-        const wallet = MasterWallet.getWalletDefault(currency);
-
-        const exchangeHandshake = new ExchangeShopHandshake(wallet.chainId);
-
-        let result = null;
-
-        result = await exchangeHandshake.closeByShopOwner(data.hid, data.id);
-
-        console.log('handleDeleteOfferItemSuccess', result);
-      }
-    } else if (currency === CRYPTO_CURRENCY.BTC) {
-
-    }
-
-    this.hideLoading();
-    const message = <FormattedMessage id="deleteOfferItemSuccessMassage" values={{ }} />;
-
-    this.props.showAlert({
-      message: <div className="text-center">{message}</div>,
-      timeOut: 2000,
-      type: 'success',
-      callBack: () => {
-        // if (refreshPage) {
-        //   refreshPage();
-        // }
-      },
-    });
-  }
-
-  handleDeleteOfferItemFailed = (e) => {
-    this.handleActionFailed(e);
-  }
 
   // /End Offer store
   // //////////////////////
@@ -2174,107 +1974,25 @@ class FeedMe extends React.PureComponent {
 
     const messageMovingCoin = this.getMessageMovingCoin();
 
-    // if (mode === 'me) {
-    //   return (
-    //     <FeedMeExchangeLocal />
-    //   )
-    // }
+    const feedProps = {
+      from, email, statusText, message, isCreditCard,
+      showChat, chatUsername,
+      nameShop, phone , phoneDisplayed,
+      address , messageMovingCoin,
+      actionButtons, modalContent,
+    };
+
+    const feed = <FeedMeOfferStoreContainer {...this.props} {...feedProps}
+                                            confirmOfferAction={this.confirmOfferAction}
+                                            handleActionFailed={this.handleActionFailed}
+    />;
 
     return (
-      <div className="feed-me-exchange">
-        {/* <div>id: {this.offer.id}</div> */}
-        {/* <div>userType: {this.userType}</div> */}
-        {/* <div>status: {status}</div> */}
-        <div className="mb-1">
-          <span style={{ color: '#C8C7CC' }}>{from}</span> <span style={{ color: '#666666' }}>{email}</span>
-          <span className="float-right" style={{ color: '#4CD964' }}>{statusText}</span>
-        </div>
-        <Feed
-          className="feed text-white"
-          // background={`${mode === 'discover' ? '#FF2D55' : '#50E3C2'}`}
-          background="linear-gradient(-225deg, #EE69FF 0%, #955AF9 100%)"
-        >
-          <div className="d-flex mb-4">
-            <div className="headline">{message}</div>
-            {
-              !isCreditCard && showChat && (
-                <div className="ml-auto pl-2 pt-2" style={{ width: '50px' }}>                {/* to-do chat link */}
-                  <Link to={`${URL.HANDSHAKE_CHAT_INDEX}/${chatUsername}`}>
-                    <img src={iconChat} width="35px" alt="" />
-                  </Link>
-                </div>
-              )
-            }
-
-          </div>
-
-          <div className="mb-1 name-shop">{nameShop}</div>
-          {/*
-          {
-            phone && phone.split('-')[1] !== '' && ( // no phone number
-              <div className="media mb-1 detail">
-                <img className="mr-2" src={iconPhone} width={20}/>
-                <div className="media-body">
-                  <div><a href={`tel:${phoneDisplayed}`} className="text-white">{phoneDisplayed}</a></div>
-                </div>
-              </div>
-            )
-          }
-
-          <div className="media mb-1 detail">
-            <img className="mr-2" src={iconLocation} width={20}/>
-            <div className="media-body">
-              <div>{address}</div>
-            </div>
-          </div>
-          */}
-
-          {
-            phone && phone.split('-')[1] !== '' && ( // no phone number
-              <div className="media mb-1 detail">
-                <img className="mr-2" src={iconPhone} width={20} alt="" />
-                <div className="media-body">
-                  <div><a href={`tel:${phoneDisplayed}`} className="text-white">{phoneDisplayed}</a></div>
-                </div>
-              </div>
-            )
-          }
-          {
-            address && (
-              <div className="media mb-1 detail">
-                <img className="mr-2" src={iconLocation} width={20} alt="" />
-                <div className="media-body">
-                  <div>{address}</div>
-                </div>
-              </div>
-            )
-          }
-          { messageMovingCoin && (<div className="mt-2">{messageMovingCoin}</div>) }
-
-          {/*
-            !isCreditCard && (
-              <div className="media detail">
-                <img className="mr-2" src={iconLocation} width={20} />
-                <div className="media-body">
-                  <div>
-                    <FormattedMessage id="offerDistanceContent" values={{
-                      // offerType: offer.type === 'buy' ? 'Buyer' : 'Seller',
-                      distance: getLocalizedDistance(distanceKm, country_code)
-                      // distanceKm: distanceKm > 1 || distanceMiles === 0 ? distanceKm.toFixed(0) : distanceKm.toFixed(3),
-                      // distanceMiles: distanceMiles === 0 ? distanceKm.toFixed(0) : distanceMiles.toFixed(1),
-                    }}/>
-                  </div>
-                </div>
-              </div>
-            )
-          */}
-        </Feed>
-        {/* <Button block className="mt-2">Accept</Button> */}
-        {actionButtons}
+      <div>
+        { feed }
         <ModalDialog onRef={modal => this.modalRef = modal}>
           {modalContent}
         </ModalDialog>
-        <Rate onRef={e => this.rateRef = e} startNum={5} onSubmit={this.handleSubmitRating} ratingOnClick={this.handleOnClickRating} />
       </div>
     );
   }
