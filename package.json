@@ -8,6 +8,7 @@
     "start": "yarn i18n && webpack-dev-server --mode development",
     "build": "yarn i18n && webpack --mode production",
     "lint": "eslint --fix src/**",
+    "test": "__tests__/fake_test.sh",
     "serve": "cd dist && ws --spa index.html --port 8080",
     "ngrok": "ngrok http 8080 -host-header=localhost:8080"
   },
