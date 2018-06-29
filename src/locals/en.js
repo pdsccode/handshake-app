@@ -36,6 +36,7 @@ export default {
   createOfferConfirm: 'You are about to {type} {something} by {amount} {currency}',
   handshakeOfferConfirm: 'You are about to {type} {something} for {amount} {currency}',
   rejectOfferConfirm: 'Do you want to Reject this handshake? You will not be able to make transactions for 4 hours.',
+  rejectOfferConfirmForShop: 'Do you want to Reject this handshake?',
   completeOfferConfirm: 'Finish shaking?',
   withdrawOfferConfirm: 'Are you sure you want to withdraw?',
   cancelOfferConfirm: 'Cancel this order?',
