@@ -352,16 +352,16 @@ id="offerDistanceContent"
 
     if (listOfferPrice) {
       let offerPrice = getOfferPrice(listOfferPrice, EXCHANGE_ACTION.BUY, CRYPTO_CURRENCY.BTC);
-      priceBuyBTC = offerPrice.price * (1 + btc?.buyPercentage / 100);
+      priceBuyBTC = offerPrice.price * (1 + btc?.buyPercentage / 100) || 0;
 
       offerPrice = getOfferPrice(listOfferPrice, EXCHANGE_ACTION.SELL, CRYPTO_CURRENCY.BTC);
-      priceSellBTC = offerPrice.price * (1 + btc?.sellPercentage / 100);
+      priceSellBTC = offerPrice.price * (1 + btc?.sellPercentage / 100) || 0;
 
       offerPrice = getOfferPrice(listOfferPrice, EXCHANGE_ACTION.BUY, CRYPTO_CURRENCY.ETH);
-      priceBuyETH = offerPrice.price * (1 + eth?.buyPercentage / 100);
+      priceBuyETH = offerPrice.price * (1 + eth?.buyPercentage / 100) || 0;
 
       offerPrice = getOfferPrice(listOfferPrice, EXCHANGE_ACTION.SELL, CRYPTO_CURRENCY.ETH);
-      priceSellETH = offerPrice.price * (1 + eth?.sellPercentage / 100);
+      priceSellETH = offerPrice.price * (1 + eth?.sellPercentage / 100) || 0;
     }
 
     return {
