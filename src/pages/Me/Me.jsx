@@ -57,9 +57,6 @@ class Me extends React.Component {
 
   constructor(props) {
     super(props);
-
-    console.log('me - contructor - init');
-
     const { s, sh } = Helper.getQueryStrings(window.location.search);
 
     const initUserId = s;
