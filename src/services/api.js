@@ -5,7 +5,7 @@ import { APP, BASE_API } from '@/constants';
 import { MasterWallet } from '@/models/MasterWallet';
 
 const $http = ({
-  url, data = {}, qs, id = '', headers = {}, method = 'GET',
+  url, data = {}, qs, id = '', headers = {}, method = 'GET', ...rest
 }) => {
   // start handle headers
   const parsedMethod = method.toLowerCase();
@@ -36,6 +36,7 @@ const $http = ({
     url: trimEnd(`${url}/${id}`, '/'),
     params: qs,
     data,
+    ...rest,
   });
 };
 
