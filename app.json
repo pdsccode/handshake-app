@@ -36,20 +36,8 @@
     "ipfindKey": {
       "required": true
     },
-    "PredictionHandshakeFileName": {
-      "required": false
-    },
     "PUBLIC_URL": {
       "required": true
-    },
-    "social_facebookAppId": {
-      "required": false
-    },
-    "social_facebookPixelId": {
-      "required": false
-    },
-    "social_googleAnalyticId": {
-      "required": false
     },
     "social_isUseSocial": {
       "required": true
