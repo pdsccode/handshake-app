@@ -110,10 +110,10 @@ class BettingFilter extends React.Component {
   }
 
   loadMatches(){
-    const {isPrivate, selectedOutcome} = this.props;
+    const {isPrivate, outComeId} = this.props;
     let params = {
       public: !isPrivate,
-      outcome_id: selectedOutcome.id
+      //outcome_id: outComeId
     }
     this.props.loadMatches({
       PATH_URL: API_URL.CRYPTOSIGN.LOAD_MATCHES,

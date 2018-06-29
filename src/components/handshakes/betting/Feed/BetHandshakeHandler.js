@@ -394,7 +394,7 @@ export class BetHandshakeHandler {
 
 
   handleContract(element, i) {
-    /*
+    
     setTimeout(() => {
       console.log('Time out:');
       const { offchain, odds } = element;
@@ -408,8 +408,9 @@ export class BetHandshakeHandler {
 
       }
     }, 3000 * i);
-    */
+    
 
+    /*
    const { offchain, odds } = element;
    const isInit = isInitBet(element);
    console.log('Is Init Bet:', isInit);
@@ -420,6 +421,7 @@ export class BetHandshakeHandler {
    this.shakeContract(element);
 
    }
+   */
   }
   controlShake = async (list) => {
     const result = null;
