@@ -34,7 +34,7 @@ class FeedMeOfferStoreContainer extends React.PureComponent {
     this.offer = offer;
   }
 
-  calculateFiatAmountOfferStore = (amount, type, currency, percentage) => {
+  calculateFiatAmount = (amount, type, currency, percentage) => {
     const { listOfferPrice } = this.props;
     let fiatAmount = 0;
 
@@ -78,8 +78,8 @@ class FeedMeOfferStoreContainer extends React.PureComponent {
       buyAmount, sellAmount, currency, buyPercentage, sellPercentage,
     } = offer;
     let message = '';
-    const fiatAmountBuy = this.calculateFiatAmountOfferStore(buyAmount, EXCHANGE_ACTION.BUY, currency, buyPercentage);
-    const fiatAmountSell = this.calculateFiatAmountOfferStore(sellAmount, EXCHANGE_ACTION.SELL, currency, sellPercentage);
+    const fiatAmountBuy = this.calculateFiatAmount(buyAmount, EXCHANGE_ACTION.BUY, currency, buyPercentage);
+    const fiatAmountSell = this.calculateFiatAmount(sellAmount, EXCHANGE_ACTION.SELL, currency, sellPercentage);
     switch (status) {
       case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CREATED:
       case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.ACTIVE:
