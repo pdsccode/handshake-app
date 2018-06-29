@@ -24,4 +24,4 @@ deploy:
   skip_cleanup: true
   script: bash ./deployment/deploy.sh
   on:
-    branch: deployment
+    branch: develop
