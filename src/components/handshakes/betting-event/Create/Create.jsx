@@ -301,7 +301,7 @@ class CreateBettingEvent extends React.Component {
     fetchUrl.then((response) => {
       if (response.data.status === 1) {
         this.setState({
-          shareURL: `${BASE_API.BASE_URL}/${response.data.data.slug}`,
+          shareURL: `${window.location.origin}/${response.data.data.slug}`,
         });
       }
     });
