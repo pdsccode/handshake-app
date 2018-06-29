@@ -4,14 +4,8 @@ import cn from 'classnames';
 import { connect } from 'react-redux';
 
 // service, constant
-import createForm from '@/components/core/form/createForm';
-import { required } from '@/components/core/form/validation';
-import { Field } from "redux-form";
 import { shakeItem, initFreeHandshake, } from '@/reducers/handshake/action';
 import {HANDSHAKE_ID, API_URL, APP } from '@/constants';
-import {MasterWallet} from '@/models/MasterWallet';
-import local from '@/services/localStore';
-import moment from 'moment';
 
 // components
 import { InputField } from '@/components/handshakes/betting/form/customField';
@@ -23,13 +17,9 @@ import {getMessageWithCode, isExpiredDate, getChainIdDefaultWallet,getBalance,
 
 import './ShakeFree.scss';
 import { BetHandshakeHandler, MESSAGE, SIDE } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
-import { Form } from 'reactstrap';
 
 const betHandshakeHandler = BetHandshakeHandler.getShareManager();
-const nameFormBettingShake = 'bettingShakeForm';
 
-
-const defaultAmount = 1;
 const ROUND = 1000000;
 const ROUND_ODD = 10;
 class BetingShakeFree extends React.Component {
@@ -56,14 +46,6 @@ class BetingShakeFree extends React.Component {
   constructor(props) {
     super(props);
 
-    // const BettingShakeForm = createForm({
-    //   propsReduxForm: {
-    //     form: nameFormBettingShake,
-
-    //     enableReinitialize : true
-    //   },
-    // });
-
     this.state = {
       buttonClass: 'btnOK btnBlue',
       isShowOdds: true,
@@ -72,8 +54,8 @@ class BetingShakeFree extends React.Component {
       marketOdds: 0,
       oddValue: 0,
       amountValue: 0,
-      winValue: 0
-      //BettingShakeForm
+      winValue: 0,
+      disable: false,
 
     };
 
@@ -87,16 +69,9 @@ class BetingShakeFree extends React.Component {
   componentDidMount(){
   }
   componentWillReceiveProps(nextProps){
-    // const {extraData} = this.state;
-    // const {matchName, matchOutcome, outcomeHid} = this.props;
-    // console.log("componentWillReceiveProps Props:", this.props);
-    // extraData["event_name"] = matchName;
-    // extraData["event_predict"] = matchOutcome;
-    // console.log('componentWillReceiveProps Extra Data: ', extraData);
-    // this.setState({extraData})
+    
     const {marketSupportOdds, marketAgainstOdds} = this.props;
     const {amount} = this.props;
-    //console.log('Shake nextProps: ',nextProps );
     const marketOdds = this.toggleRef.value === SIDE.SUPPORT ? marketSupportOdds : marketAgainstOdds;
     const winValue = amount * marketOdds;
     const roundWinValue = Math.floor(winValue*ROUND)/ROUND;
@@ -116,6 +91,9 @@ class BetingShakeFree extends React.Component {
     e.preventDefault();
     const values = this.refs;
     console.log('Values:', values);
+    this.setState({
+      disable: true,
+    });
     const {isShowOdds, isChangeOdds} = this.state;
     const {matchName, matchOutcome, amount, marketAgainstOdds, marketSupportOdds, closingDate, reportTime} = this.props;
     //const amount = parseFloat(values.amount.value);
@@ -124,17 +102,9 @@ class BetingShakeFree extends React.Component {
 
     const marketOdds = side === SIDE.SUPPORT ? marketSupportOdds : marketAgainstOdds;
 
-    /*
-    if(!isChangeOdds){
-      odds = marketOdds;
-    }
-    */
-
     console.log("Amount, Side, Odds", amount, side, odds);
-    // this.props.onSubmitClick(amount);
     const balance = await getBalance();
     const estimatedGas = await getEstimateGas();
-    //const estimatedGas = 0.00001;
     const total = amount + parseFloat(estimatedGas);
     console.log('Balance, estimate gas, total:', balance, estimatedGas, total);
 
@@ -166,7 +136,7 @@ class BetingShakeFree extends React.Component {
         }
       });
     }
-
+    this.props.onSubmitClick();
 
   }
 
@@ -261,7 +231,7 @@ class BetingShakeFree extends React.Component {
   }
 
   renderForm() {
-    const { total, isShowOdds, marketOdds, isChangeOdds, buttonClass } = this.state;
+    const { total, isShowOdds, marketOdds, isChangeOdds, buttonClass, disable } = this.state;
     const {amount} = this.props;
     const {winValue} = this.state;
     console.log('Win Value:', winValue);
@@ -278,10 +248,7 @@ class BetingShakeFree extends React.Component {
       isShowInfoText: true,
       type: 'text',
     };
-    // const {BettingShakeForm} = this.state;
-    // console.log('BettingShakeForm:', BettingShakeForm);
-    //const buttonClass = `btnOK ${this.toggleRef.value === 1 ? 'btnBlue' : 'btnRed' }`;
-
+    
     return (
       <form className="wrapperBettingShakeFree" onSubmit={this.onSubmit}>
         <p className="titleForm text-center">BET FREE ON THE OUTCOME</p>
@@ -293,7 +260,7 @@ class BetingShakeFree extends React.Component {
          <div>Possible winnings</div>
          <div className="possibleWinningsValue">{winValue}</div>
         </div>
-        <Button type="submit" block className={buttonClass}>
+        <Button type="submit" disabled={disable} block className={buttonClass}>
           Go
         </Button>
       </form>
@@ -419,17 +386,10 @@ class BetingShakeFree extends React.Component {
     extraData["event_bet"] = amount;
     console.log('Extra Data:', extraData);
     const params = {
-      //to_address: toAddress ? toAddress.trim() : '',
-      //public: isPublic,
-      //description: content,
-      // description: JSON.stringify(extraParams),
-      //industries_type: industryId,
+     
       type: HANDSHAKE_ID.BETTING,
-      //type: 3,
-      //extra_data: JSON.stringify(fields),
+      
       outcome_id: outcomeId,
-      //odds:  parseFloat(odds),
-      //amount: parseFloat(amount),
       odds:`${odds}`,
       extra_data: JSON.stringify(extraData),
       currency: 'ETH',
@@ -439,11 +399,12 @@ class BetingShakeFree extends React.Component {
     };
     console.log("Params:", params);
 
-
+/*
     this.props.initFreeHandshake({PATH_URL: API_URL.CRYPTOSIGN.INIT_HANDSHAKE_FREE, METHOD:'POST', data: params,
     successFn: this.initHandshakeSuccess,
     errorFn: this.initHandshakeFailed
   });
+  */
 
   }
 
@@ -469,7 +430,7 @@ class BetingShakeFree extends React.Component {
       }
     });
     }
-    this.props.onSubmitClick();
+    //this.props.onSubmitClick();
   }
   initHandshakeFailed = (errorData) => {
     console.log('initHandshakeFailed', errorData);
