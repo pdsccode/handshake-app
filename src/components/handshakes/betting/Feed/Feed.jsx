@@ -142,7 +142,13 @@ class FeedBetting extends React.Component {
     //const isMatch = true;
     //const hardCodeResult = 2;
     console.log('Is Match:', isMatch);
-    const isLoading = betHandshakeHandler.getLoadingOnChain(id)
+    let isLoading = false;
+    const isLoadingObj = betHandshakeHandler.getLoadingOnChain(idCryptosign);
+    if(isLoadingObj){
+      isLoading = isLoadingObj.isLoading;
+
+    }
+
     const statusResult = BetHandshakeHandler.getStatusLabel(status, result, role,side, isMatch);
     const {title, isAction} = statusResult;
     this.setState({
@@ -360,11 +366,15 @@ class FeedBetting extends React.Component {
           isLoading: true
         })
         betHandshakeHandler.setItemOnChain(offchain, true);
-        await betHandshakeHandler.cancelBet(hid, side, amount, odds, offchain);
-        betHandshakeHandler.setItemOnChain(offchain, false);
-        this.setState({
-          isLoading: false
-        })
+        const result = await betHandshakeHandler.cancelBet(hid, side, amount, odds, offchain);
+        const {hash} = result;
+        if(hash){
+          betHandshakeHandler.setItemOnChain(offchain, false);
+          let updateInfo = Object.assign({}, itemInfo);
+          updateInfo.status = BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINIT_PENDING;
+          this.props.updateBettingChange(updateInfo);
+        }
+        
         break;
 
       case BETTING_STATUS_LABEL.WITHDRAW:
@@ -373,8 +383,13 @@ class FeedBetting extends React.Component {
         //this.rollback(id);
         betHandshakeHandler.setItemOnChain(offchain, true);
         await betHandshakeHandler.withdraw(hid, offchain);
-        betHandshakeHandler.setItemOnChain(offchain, false);
-
+        const {hash} = result;
+        if(hash){
+          betHandshakeHandler.setItemOnChain(offchain, false);
+          let updateInfo = Object.assign({}, itemInfo);
+          updateInfo.status = BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_PENDING;
+          this.props.updateBettingChange(updateInfo);
+        }
         break;
       case BETTING_STATUS_LABEL.REFUND:
       this.refund(realId);
@@ -394,22 +409,7 @@ class FeedBetting extends React.Component {
     const profile = local.get(APP.AUTH_PROFILE);
     const isUserShake = this.isShakeUser(shakeUserIds, profile.id);
     if(isUserShake){
-      /*
-      const extraData = this.extraData;
-      const {shakers} = extraData;
-      const idOffchain = getId(id);
-
-      if(shakers){
-        const foundShakedItem = shakers.find(element => element.shaker_id === profile.id && element.handshake_id === idOffchain);
-        console.log('Found Shaked Item:', foundShakedItem);
-        if(foundShakedItem){
-          idCryptosign = getShakeOffchain(foundShakedItem.id);
-          isFreeBet = foundShakedItem.free_bet;
-          userFromAddress = foundShakedItem.from_address;
-        }
-
-      }
-      */
+      
      const shakedItemList = foundShakeList(this.props, id);
      if(shakedItemList.length > 0){
        let shakeItem = shakedItemList[0];
@@ -539,91 +539,6 @@ class FeedBetting extends React.Component {
       });
     }
   }
-
-  /*
-  collect(id){
-    console.log('Withdraw');
-    let params = {
-      offchain: id
-    }
-    this.props.collect({PATH_URL: API_URL.CRYPTOSIGN.COLLECT, METHOD:'POST',data: params,
-    successFn: this.collectSuccess,
-    errorFn: this.collectFailed
-  });
-  }
-
-  collectSuccess = async (successData)=>{
-    console.log('collectSuccess', successData);
-    const {status} = successData
-    if(status){
-      const {hid, id, status, shakeUserIds} = this.props;
-      const profile = local.get(APP.AUTH_PROFILE);
-      const isUserShake = this.isShakeUser(shakeUserIds, profile.id);
-      const {itemInfo} = this.state;
-      let offchain = id;
-      if(isUserShake){
-        //offchain = betHandshakeHandler.getShakeOffchain(itemInfo.id);
-        const extraData = this.extraData;
-      const {shakers} = extraData;
-      const idOffchain = betHandshakeHandler.getId(id);
-
-      if(shakers){
-        const foundShakedItem = shakers.find(element => element.shaker_id === profile.id && element.handshake_id === idOffchain);
-        //console.log('Found Shaked Item:', foundShakedItem);
-        if(foundShakedItem){
-          offchain = betHandshakeHandler.getShakeOffchain(foundShakedItem.id);
-        }
-      }
-      }
-      let updateInfo = Object.assign({}, itemInfo);
-      //updateInfo.bkStatus = itemInfo.status;
-      updateInfo.status = BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_PENDING;
-
-
-      //this.handleStatus(updateInfo);
-      this.props.updateBettingChange(updateInfo);
-
-
-      this.setState({
-        itemInfo: updateInfo
-      });
-      console.log('Withdraw hid, offchain:', hid, offchain);
-     const result = await betHandshakeHandler.withdraw(hid, offchain);
-     const {blockHash} = result;
-     if(blockHash){
-      this.props.showAlert({
-        message: <div className="text-center">{MESSAGE.WITHDRAW_SUCCESS}</div>,
-        timeOut: 3000,
-        type: 'success',
-        callBack: () => {
-        }
-      });
-     }
-     //  const {hash} = result;
-    //  if(hash === -1){
-    //    // Error, rollback
-    //    this.rollback(offchain);
-    //  }
-     //this.loadMyHandshakeList();
-
-    }
-  }
-  collectFailed = (error) => {
-    console.log('collectFailed', error);
-    const {status, code} = error;
-    if(status == 0){
-      const message = betHandshakeHandler.getMessageWithCode(code);
-      this.props.showAlert({
-        message: <div className="text-center">{message}</div>,
-        timeOut: 3000,
-        type: 'danger',
-        callBack: () => {
-        }
-      });
-    }
-
-  }
-  */
 
   refund(id){
     const url = API_URL.CRYPTOSIGN.REFUND.concat(`/${id}`);

@@ -95,29 +95,6 @@ export const MESSAGE = {
 };
 
 
-/*
-```'STATUS_COLLECT_FAILED': -9,
-    'STATUS_COLLECT_PENDING': -8,
-
-    'STATUS_DISPUTE_FAILED': -7,
-    'STATUS_REFUND_FAILED': -6,
-
-    'STATUS_MAKER_UNINIT_FAILED': -5,
-    'STATUS_MAKER_UNINIT_PENDING': -4,
-
-    'STATUS_SHAKER_ROLLBACK': -3,
-    'STATUS_MAKER_INIT_ROLLBACK': -2,
-
-    'STATUS_PENDING': -1,
-
-    'STATUS_INITED': 0,
-    'STATUS_MAKER_UNINITED': 1,
-    'STATUS_SHAKER_SHAKED': 2,
-    'STATUS_REFUNDED': 3,
-    'STATUS_DISPUTED': 4,
-    'STATUS_RESOLVED': 5,
-    'STATUS_DONE': 6,```*/
-
 export const BET_BLOCKCHAIN_STATUS = {
     STATUS_COLLECT_PENDING: -8,
     STATUS_DISPUTE_FAILED: -7,
@@ -299,7 +276,7 @@ export class BetHandshakeHandler {
       //TO DO: SAVE TRANSACTION
       const {logs, hash, error, transactionHash} = dataBlockchain;
       logJson = JSON.stringify(logs);
-      realBlockHash = transactionHash;
+      realBlockHash = hash;
       if(hash == -1){
         realBlockHash = "-1";
         logJson = error.message;
@@ -362,7 +339,7 @@ export class BetHandshakeHandler {
       const {logs, hash, error, transactionHash} = result;
 
       logJson = JSON.stringify(logs);
-      realBlockHash = transactionHash;
+      realBlockHash = hash;
       if(hash == -1){
         realBlockHash = "-1";
         logJson = error.message;
@@ -450,7 +427,7 @@ export class BetHandshakeHandler {
       const {logs, hash, error, transactionHash} = result;
 
       logJson = JSON.stringify(logs);
-      realBlockHash = transactionHash;
+      realBlockHash = hash;
       if(hash == -1){
         realBlockHash = "-1";
         logJson = error.message;
@@ -461,18 +438,21 @@ export class BetHandshakeHandler {
           callBack: () => {
           }
         }));
+      }else {  
+
       }
 
     }catch(err){
       realBlockHash = "-1";
       logJson = err.message;
     }
-
     this.saveTransaction(offchain,CONTRACT_METHOD.CANCEL, chainId, realBlockHash, contractAddress, logJson);
 
     return result;
   }
   getLoadingOnChain = (offchain) => {
+    console.log("Sa List On Chain:", this.listOnChainLoading);
+
     return this.listOnChainLoading[offchain];
   }
   setItemOnChain = (offchain,isLoading = false) => {
@@ -481,7 +461,7 @@ export class BetHandshakeHandler {
         isLoading: isLoading
       }
     }
-    console.log(this.listOnChainLoading);
+    console.log("Sa List On Chain:", this.listOnChainLoading);
   }
   async withdraw(hid, offchain){
 
@@ -498,7 +478,7 @@ export class BetHandshakeHandler {
       result = await bettinghandshake.withdraw(hid, offchain);
       const {logs, hash, error, transactionHash} = result;
       logJson = JSON.stringify(logs);
-      realBlockHash = transactionHash;
+      realBlockHash = hash;
       if(hash == -1){
         realBlockHash = "-1";
         logJson = error.message;
@@ -536,7 +516,7 @@ export class BetHandshakeHandler {
     const {logs, hash, error, transactionHash} = result;
     let logJson = JSON.stringify(logs);
     const contractAddress = bettinghandshake.contractAddress;
-    let realBlockHash = transactionHash;
+    let realBlockHash = hash;
     if(hash == -1){
       realBlockHash = "-1";
       logJson = error.message;
