@@ -10,7 +10,7 @@
     "lint": "eslint --fix src/**",
     "test": "jest",
     "serve": "cd dist && ws --spa index.html --port 8080",
-    "serve-heroku": "ws --spa index.html --port 80",
+    "serve-heroku": "ws --spa index.html --port ${PORT}",
     "ngrok": "ngrok http 8080 -host-header=localhost:8080"
   },
   "dependencies": {
