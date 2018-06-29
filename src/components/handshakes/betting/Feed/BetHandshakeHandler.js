@@ -12,6 +12,7 @@ import { updateBettingChange} from '@/reducers/me/action';
 
 import store from '@/stores';
 import moment from 'moment';
+import { off } from 'rsvp';
  
 export const MESSAGE_SERVER = {
   /* ERROR */
@@ -469,12 +470,16 @@ export class BetHandshakeHandler {
 
     return result;
   }
+  getLoadingOnChain = (offchain) => {
+    return this.listOnChainLoading[offchain];
+  }
   setItemOnChain = (offchain,isLoading = false) => {
     if(this.listOnChainLoading){
         this.listOnChainLoading[offchain] = {
         isLoading: isLoading
       }
     }
+    console.log(this.listOnChainLoading);
   }
   async withdraw(hid, offchain){
 
