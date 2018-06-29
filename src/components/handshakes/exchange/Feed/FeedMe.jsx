@@ -423,7 +423,7 @@ class FeedMe extends React.PureComponent {
             break;
           }
           case HANDSHAKE_EXCHANGE_STATUS.SHAKE: {
-            message = <FormattedMessage id="rejectOfferConfirm" values={{}} />;
+            message = <FormattedMessage id="rejectOfferConfirmForShop" values={{}} />;
             const message2 = <FormattedMessage id="completeOfferConfirm" values={{}} />;
             actionButtons = (
               <div>
@@ -1314,7 +1314,7 @@ class FeedMe extends React.PureComponent {
           }
           case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.SHAKE: {
             // actionButtons = 'Reject'; // complete: nguoi nhan cash
-            message = <FormattedMessage id="rejectOfferConfirm" values={{ }} />;
+            message = <FormattedMessage id="rejectOfferConfirmForShop" values={{ }} />;
             const message2 = <FormattedMessage id="completeOfferConfirm" values={{ }} />;
             actionButtons = (
               <div>
