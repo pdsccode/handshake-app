@@ -252,7 +252,6 @@ class FeedMeOfferStoreContainer extends React.PureComponent {
 
   getMessageMovingCoin = () => {
     const { status } = this.props;
-    const { offer } = this;
 
     let idMessage = '';
 
