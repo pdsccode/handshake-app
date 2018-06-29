@@ -662,11 +662,11 @@ export class BetHandshakeHandler {
     try {
       result = await predictionhandshake.createMarket(fee, source, closingWindow, reportWindow, disputeWindow, offchain);
       const {
-        blockHash, logs, hash, error,
+        logs, hash, error, transactionHash,
       } = result;
 
       logJson = JSON.stringify(logs);
-      realBlockHash = blockHash;
+      realBlockHash = transactionHash;
       if (hash == -1) {
         realBlockHash = '-1';
         logJson = error.message;

@@ -18,11 +18,12 @@ import { __asyncValues } from 'tslib';
 import { loadMatches, addMatch } from '@/reducers/betting/action';
 import Dropdown from '@/components/core/controls/Dropdown';
 import { Alert } from 'reactstrap';
-import { API_URL, APP, URL } from '@/constants';
+import { BASE_API, API_URL, APP, URL } from '@/constants';
 import history from '@/services/history';
 import { showAlert } from '@/reducers/app/action';
 import { BetHandshakeHandler } from '../../betting/Feed/BetHandshakeHandler.js';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+import $http from '@/services/api';
 
 // const wallet = MasterWallet.getWalletDefault('ETH');
 // const chainId = wallet.chainId;
@@ -53,10 +54,11 @@ class CreateBettingEvent extends React.Component {
       eventType: '',
       newEventType: '',
       key: 1,
-      shareURL: 'url',
+      shareURL: '',
       copied: false,
     };
   }
+
 
   componentDidMount() {
     // console.log('Betting Create Props:', this.props, history);
@@ -64,11 +66,9 @@ class CreateBettingEvent extends React.Component {
     //   address: wallet.address,
     //   privateKey: wallet.privateKey,
     // })
-    const params = {
-      public: 1,
-    };
-    this.props.loadMatches({ PATH_URL: API_URL.CRYPTOSIGN.LOAD_MATCHES, METHOD: 'POST', data: params });
+    this.fetchAllEvents();
   }
+
 
   componentWillReceiveProps(nextProps) {
     this.setState({
@@ -106,12 +106,12 @@ class CreateBettingEvent extends React.Component {
        data: [{ name: values.outcome, public: 0 }],
        successFn: async (response) => {
          console.log(response.data);
+         this.fetchShareUrl(response.data[0].id);
          this.props.showAlert({
-           message: <div className="text-center">Outcome added successfully. Please wait a few minutes for the Blockchain to update.</div>,
+           message: <div className="text-center">Outcome added successfully.</div>,
            timeOut: 3000,
            type: 'success',
            callBack: () => {
-             this.setState({ shareURL: 'url' });
            },
          });
          const result = await betHandshakeHandler.createMarket(activeMatchDetails.market_fee, activeMatchDetails.source, activeMatchDetails.date, activeMatchDetails.reportTime, activeMatchDetails.disputeTime, response.data[0].id);
@@ -151,32 +151,49 @@ class CreateBettingEvent extends React.Component {
       },
     ];
     if (this.state.closingTime && this.state.disputeTime && this.state.reportingTime !== '') {
-      this.props.addMatch({
-        PATH_URL: API_URL.CRYPTOSIGN.ADD_MATCH,
-        METHOD: 'post',
-        data,
-        headers: { 'Content-Type': 'application/json' },
-        successFn: (response) => {
-          console.log(response.data);
-          this.props.showAlert({
-            message: <div className="text-center">Event added successfully. Please wait a few minutes for the Blockchain to update.</div>,
-            timeOut: 3000,
-            type: 'success',
-            callBack: () => { },
-          });
-          this.setState({ shareURL: 'url' });
-          const result = betHandshakeHandler.createMarket(Number(this.state.creatorFee), this.state.resolutionSource, this.state.closingTime, this.state.reportingTime, this.state.disputeTime, response.data[0].id);
-          console.log(result);
-        },
-        errorFn: (response) => {
-          response.message && this.props.showAlert({
-            message: <div className="text-center">{response.message}</div>,
-            timeOut: 3000,
-            type: 'danger',
-            callBack: () => {},
-          });
-        },
-      });
+      if (this.state.closingTime < this.state.reportingTime && this.state.reportingTime < this.state.disputeTime) {
+        this.props.addMatch({
+          PATH_URL: API_URL.CRYPTOSIGN.ADD_MATCH,
+          METHOD: 'post',
+          data,
+          headers: { 'Content-Type': 'application/json' },
+          successFn: (response) => {
+            console.log(response.data);
+            this.fetchShareUrl(response.data[0].outcomes[0].id);
+            this.props.showAlert({
+              message: <div className="text-center">Event added successfully.</div>,
+              timeOut: 3000,
+              type: 'success',
+              callBack: () => { },
+            });
+            this.fetchAllEvents();
+            const result = betHandshakeHandler.createMarket(Number(this.state.creatorFee), this.state.resolutionSource, this.state.closingTime, this.state.reportingTime, this.state.disputeTime, response.data[0].outcomes[0].id);
+            console.log(result);
+          },
+          errorFn: (response) => {
+            response.message && this.props.showAlert({
+              message: <div className="text-center">{response.message}</div>,
+              timeOut: 3000,
+              type: 'danger',
+              callBack: () => {},
+            });
+          },
+        });
+      } else {
+        let message = 'Closing Time';
+        if (this.state.disputeTime <= this.state.reportingTime) {
+          message = 'Dispute Time';
+        }
+        if (this.state.closingTime >= this.state.reportingTime) {
+          message = 'Reporting Time';
+        }
+        this.props.showAlert({
+          message: <div className="text-center">{`Please check ${message}`}</div>,
+          timeOut: 3000,
+          type: 'danger',
+          callBack: () => {},
+        });
+      }
     } else {
       let message = 'Please select Closing Time';
       if (this.state.closingTime !== '' && this.state.reportingTime === '') { message = 'Please select Reporting Time'; } else if (this.state.closingTime !== '' && this.state.reportingTime !== '' && this.state.disputeTime === '') { message = 'Please select Dispute Time'; }
@@ -208,6 +225,20 @@ class CreateBettingEvent extends React.Component {
   changeDate(date, stateName) {
     this.setState({
       [stateName]: date,
+    });
+  }
+
+  fetchAllEvents() {
+    const params = {
+      public: 1,
+    };
+    this.props.loadMatches({
+      PATH_URL: API_URL.CRYPTOSIGN.LOAD_MATCHES,
+      METHOD: 'POST',
+      data: params,
+      successFn: (res) => {
+        if (res.data && res.data.length === 0) this.handleNewEvent();
+      },
     });
   }
 
@@ -257,35 +288,60 @@ class CreateBettingEvent extends React.Component {
               }
     />);
   }
+
+  fetchShareUrl(id) {
+    const fetchUrl = $http({
+      url: `${BASE_API.BASE_URL}/cryptosign/outcome/generate_link`,
+      data: {
+        outcome_id: id,
+      },
+      headers: { 'Content-Type': 'application/json' },
+      method: 'post',
+    });
+    fetchUrl.then((response) => {
+      if (response.data.status === 1) {
+        this.setState({
+          shareURL: `${BASE_API.BASE_URL}/${response.data.data.slug}`,
+        });
+      }
+    });
+  }
+
   copyURLClick=() => {
     this.setState({ copied: true });
     this.props.showAlert({
-      message: <div className="text-center">URL Copied to Clipboard</div>,
+      message: <div className="text-center">URL Copied to Clipboard.</div>,
       timeOut: 3000,
       type: 'success',
       callBack: () => { this.props.history.push(URL.HANDSHAKE_DISCOVER); },
     });
   }
 
+  componentWillUnmount() {
+    this.resetForm();
+  }
+
   render() {
     return (
       <div>
         <Label for="eventName" className="font-weight-bold text-uppercase event-label">Event</Label>
-        <SaveBettingEventForm className="save-betting-event" onSubmit={this.submitBettingEvent}>
-          {(!this.state.eventType || this.state.eventType === 'existing') && this.state.matches && this.state.matches.length > 0 && <this.eventsDropdown />}
-          {!this.state.eventType && <div htmlFor="eventName" className="font-weight-bold text-uppercase or-label text-center">OR</div>}
-          {!this.state.eventType && <Button type="button" block className="btnPrimary create-event-button" onClick={this.handleNewEvent}>Create New Event</Button>}
-          {this.state.eventType === 'new' && <Field
-            name="eventName"
-            type="text"
-            className="form-control input-event-name input-field"
-            placeholder="Event name"
-            component={fieldInput}
-            value={this.state.eventName}
-            validate={[required]}
-            onChange={evt => this.updateFormField(evt, 'eventName')}
-          />}
-          {/* {this.state.eventType === 'new' && <div className="dropdown-new-event-type">
+        {
+          !this.state.shareURL &&
+          <SaveBettingEventForm className="save-betting-event" onSubmit={this.submitBettingEvent}>
+            {(!this.state.eventType || this.state.eventType === 'existing') && this.state.matches && this.state.matches.length > 0 && <this.eventsDropdown />}
+            {!this.state.eventType && <div htmlFor="eventName" className="font-weight-bold text-uppercase or-label text-center">OR</div>}
+            {!this.state.eventType && <Button type="button" block className="btnPrimary create-event-button" onClick={this.handleNewEvent}>Create New Event</Button>}
+            {this.state.eventType === 'new' && <Field
+              name="eventName"
+              type="text"
+              className="form-control input-event-name input-field"
+              placeholder="Event name"
+              component={fieldInput}
+              value={this.state.eventName}
+              validate={[required]}
+              onChange={evt => this.updateFormField(evt, 'eventName')}
+            />}
+            {/* {this.state.eventType === 'new' && <div className="dropdown-new-event-type">
             <Field
               name="walletSelected"
               component={fieldDropdown}
@@ -302,56 +358,56 @@ class CreateBettingEvent extends React.Component {
             />
           </div>
         } */}
-          {this.state.eventType && <Field
-            name="outcome"
-            type="text"
-            className="form-control input-field"
-            placeholder="Outcome"
-            component={fieldInput}
-            value={this.state.outcome}
-            onChange={evt => this.updateFormField(evt, 'outcome')}
-            validate={[required]}
-          />}
-          {this.state.eventType === 'new' && (
-          <div><Label for="reporting" className="font-weight-bold text-uppercase reporting-label">Reportings</Label>
-            <Field
-              name="reportingSource"
+            {this.state.eventType && <Field
+              name="outcome"
               type="text"
               className="form-control input-field"
-              placeholder="Resolution source"
+              placeholder="Outcome"
               component={fieldInput}
+              value={this.state.outcome}
+              onChange={evt => this.updateFormField(evt, 'outcome')}
               validate={[required]}
-              value={this.state.resolutionSource}
-              onChange={evt => this.updateFormField(evt, 'resolutionSource')}
-            />
-            <DatePicker
-              onChange={(date) => { this.changeDate(date, 'closingTime'); }}
-              className="form-control input-field"
-              placeholder="Closing Time"
-              name="closingTime"
-              required
-            />
-            <DatePicker
-              onChange={(date) => { this.changeDate(date, 'reportingTime'); }}
-              name="reportingTime"
-              className={`form-control input-field${!this.state.closingTime ? ' disabled-datePicker' : ' active-DatePicker'}`}
-              placeholder="Reporting Time"
-              disabled={!this.state.closingTime}
-              startDate={this.state.closingTime}
-              required
-            />
-            <DatePicker
-              onChange={(date) => { this.changeDate(date, 'disputeTime'); }}
-              className={`form-control input-field${!this.state.reportingTime ? ' disabled-datePicker' : ' active-DatePicker'}`}
-              placeholder="Dispute Time"
-              name="disputeTime"
-              startDate={this.state.reportingTime}
-              disabled={!this.state.reportingTime}
-              required
-            />
-          </div>
+            />}
+            {this.state.eventType === 'new' && (
+            <div><Label for="reporting" className="font-weight-bold text-uppercase reporting-label">Reportings</Label>
+              <Field
+                name="reportingSource"
+                type="text"
+                className="form-control input-field"
+                placeholder="Resolution source"
+                component={fieldInput}
+                validate={[required]}
+                value={this.state.resolutionSource}
+                onChange={evt => this.updateFormField(evt, 'resolutionSource')}
+              />
+              <DatePicker
+                onChange={(date) => { this.changeDate(date, 'closingTime'); }}
+                className="form-control input-field"
+                placeholder="Closing Time"
+                name="closingTime"
+                required
+              />
+              <DatePicker
+                onChange={(date) => { this.changeDate(date, 'reportingTime'); }}
+                name="reportingTime"
+                className={`form-control input-field${!this.state.closingTime ? ' disabled-datePicker' : ' active-DatePicker'}`}
+                placeholder="Reporting Time"
+                disabled={!this.state.closingTime}
+                startDate={this.state.closingTime}
+                required
+              />
+              <DatePicker
+                onChange={(date) => { this.changeDate(date, 'disputeTime'); }}
+                className={`form-control input-field${!this.state.reportingTime ? ' disabled-datePicker' : ' active-DatePicker'}`}
+                placeholder="Dispute Time"
+                name="disputeTime"
+                startDate={this.state.reportingTime}
+                disabled={!this.state.reportingTime}
+                required
+              />
+            </div>
         )}
-          {
+            {
             this.state.eventType &&
             <div>
               {this.state.eventType === 'new' &&
@@ -384,21 +440,22 @@ class CreateBettingEvent extends React.Component {
               <Button type="submit" block className="submit-button">Submit</Button>
               <Button type="button" block className="cancel-button" onClick={this.resetForm}>Cancel</Button>
               <br />
-              {
-                this.state.shareURL &&
-                <div>
-                  <Label for="shareUrl" className="">Click on the button below to copy the URL to share with your friends.</Label> <br />
-                  <CopyToClipboard
-                    text={this.state.shareURL}
-                    onCopy={this.copyURLClick}
-                  >
-                    <Button type="button" block className={`copy-url-button-${this.state.copied}`}>Copy Share URL</Button>
-                  </CopyToClipboard>
-                </div>
-              }
             </div>
         }
-        </SaveBettingEventForm>
+          </SaveBettingEventForm>
+        }
+        {
+          this.state.shareURL &&
+          <div>
+            <Label for="shareUrl" className="">Click on the button below to copy the URL to share with your friends.</Label> <br />
+            <CopyToClipboard
+              text={this.state.shareURL}
+              onCopy={this.copyURLClick}
+            >
+              <Button type="button" block className={`copy-url-button-${this.state.copied}`}>Copy Share URL</Button>
+            </CopyToClipboard>
+          </div>
+        }
       </div>
     );
   }
