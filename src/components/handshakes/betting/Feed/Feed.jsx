@@ -352,7 +352,8 @@ class FeedBetting extends React.Component {
 
       case BETTING_STATUS_LABEL.CANCEL:
         // TO DO: CLOSE BET
-        this.uninitItem(realId);
+        //this.uninitItem(realId);
+        this.uninitItemFree(realId);
         break;
       case BETTING_STATUS_LABEL.WITHDRAW:
         this.collectFree(id);
