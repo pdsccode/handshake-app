@@ -4,7 +4,7 @@ node_js:
   - "8"
 before_install:
   - openssl aes-256-cbc -K $encrypted_a9cb6cbf83f4_key -iv $encrypted_a9cb6cbf83f4_iv -in deployment.tar.enc -out deployment.tar -d
-  - tar xvf credentials.tar
+  - tar xvf deployment.tar
 install:
   - cp ./deployment/conf/.env.js ./.env.js
   - yarn install
