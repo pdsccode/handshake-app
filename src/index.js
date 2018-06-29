@@ -3,11 +3,15 @@ import ReactDOM from 'react-dom';
 
 // components
 import Website from '@/components/App/Basic';
+import LogManage from '@/services/logmanage';
 // import registerServiceWorker from '@/services/worker';
 import * as OfflinePlugin from 'offline-plugin/runtime';
 
-// registerServiceWorker();
-
+if (process.env.isStaging) {
+  console.debug = function (message) {
+    LogManage.bettingSaveLog(message);
+  };
+}
 if (process.env.caches) {
   OfflinePlugin.install({
     onUpdateReady() {
@@ -21,7 +25,8 @@ if (process.env.caches) {
   if (window.caches) {
     window.caches
       .keys()
-      .then(keyList => Promise.all(keyList.map(key => window.caches.delete(key))));
+      .then(keyList =>
+        Promise.all(keyList.map(key => window.caches.delete(key))));
   }
   if (navigator.serviceWorker) {
     navigator.serviceWorker.getRegistrations().then((registrations) => {
