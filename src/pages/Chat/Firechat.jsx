@@ -846,7 +846,7 @@ export class Firechat {
     if (!this.shouldShowNotification) {
       return;
     }
-    const tag = md5(from);
+    const tag = `chat-notification-${md5(from)}`;
     const selfWindow = window;
     console.log('show notification', from, message);
     Push.create(`${from} says`, {
