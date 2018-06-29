@@ -181,6 +181,8 @@ class FeedMe extends React.PureComponent {
       });
     }
 
+    console.log('showNotEnoughCoinAlert', condition);
+
     return condition;
   }
 
@@ -1625,31 +1627,31 @@ class FeedMe extends React.PureComponent {
         }
         break;
       }
-      case EXCHANGE_FEED_TYPE.OFFER_STORE: {
-        switch (status) {
-          case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CREATED: {
-            idMessage = 'ex.exchange.explanation.created';
-            break;
-          }
-          case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.ACTIVE: {
-            idMessage = 'ex.exchange.explanation.active';
-            break;
-          }
-          case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSING: {
-            idMessage = 'ex.exchange.explanation.closing';
-            break;
-          }
-          case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSED: {
-            break;
-          }
-          default: {
-            // code
-            break;
-          }
-        }
-
-        break;
-      }
+      // case EXCHANGE_FEED_TYPE.OFFER_STORE: {
+      //   switch (status) {
+      //     case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CREATED: {
+      //       idMessage = 'ex.exchange.explanation.created';
+      //       break;
+      //     }
+      //     case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.ACTIVE: {
+      //       idMessage = 'ex.exchange.explanation.active';
+      //       break;
+      //     }
+      //     case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSING: {
+      //       idMessage = 'ex.exchange.explanation.closing';
+      //       break;
+      //     }
+      //     case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSED: {
+      //       break;
+      //     }
+      //     default: {
+      //       // code
+      //       break;
+      //     }
+      //   }
+      //
+      //   break;
+      // }
       case EXCHANGE_FEED_TYPE.OFFER_STORE_SHAKE: {
         switch (status) {
           case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.CANCELLING: {
@@ -1879,17 +1881,17 @@ class FeedMe extends React.PureComponent {
         actionButtons = null;
         break;
       }
-      case EXCHANGE_FEED_TYPE.OFFER_STORE: {
-        email = this.getEmailOfferStore();
-        const statusValue = HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[offer.status];
-        statusText = HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_NAME[statusValue];
-
-        message = this.getContentOfferStore();
-
-        actionButtons = this.getActionButtonsOfferStore();
-
-        break;
-      }
+      // case EXCHANGE_FEED_TYPE.OFFER_STORE: {
+      //   email = this.getEmailOfferStore();
+      //   const statusValue = HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[offer.status];
+      //   statusText = HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_NAME[statusValue];
+      //
+      //   message = this.getContentOfferStore();
+      //
+      //   actionButtons = this.getActionButtonsOfferStore();
+      //
+      //   break;
+      // }
       case EXCHANGE_FEED_TYPE.OFFER_STORE_SHAKE: {
         from = <FormattedMessage id="ex.me.label.with" />;
         email = this.getEmail();
@@ -1975,16 +1977,15 @@ class FeedMe extends React.PureComponent {
     const messageMovingCoin = this.getMessageMovingCoin();
 
     const feedProps = {
-      from, email, statusText, message, isCreditCard,
-      showChat, chatUsername,
-      nameShop, phone , phoneDisplayed,
-      address , messageMovingCoin,
-      actionButtons, modalContent,
+      isCreditCard,
+      phone , phoneDisplayed,
+      address,
     };
 
     const feed = <FeedMeOfferStoreContainer {...this.props} {...feedProps}
                                             confirmOfferAction={this.confirmOfferAction}
                                             handleActionFailed={this.handleActionFailed}
+                                            showNotEnoughCoinAlert={this.showNotEnoughCoinAlert}
     />;
 
     return (

@@ -1,0 +1,337 @@
+import React from "react";
+import FeedMePresentation from './FeedMePresentation';
+import {
+  API_URL,
+  CRYPTO_CURRENCY,
+  EXCHANGE_ACTION,
+  EXCHANGE_ACTION_NAME,
+  HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS,
+  HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_NAME,
+  HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE
+} from "@/constants";
+import {MasterWallet} from "@/models/MasterWallet";
+import OfferShop from "@/models/OfferShop";
+import {ExchangeShopHandshake} from "@/services/neuron";
+import {FormattedMessage} from "react-intl";
+import {connect} from "react-redux";
+import PropTypes from "prop-types";
+import {hideLoading, showAlert, showLoading} from '@/reducers/app/action';
+import Button from '@/components/core/controls/Button/Button';
+import {responseExchangeDataChange} from "@/reducers/me/action";
+import {Ethereum} from '@/models/Ethereum.js';
+import {Bitcoin} from '@/models/Bitcoin';
+import {formatMoneyByLocale, getHandshakeUserType, getOfferPrice} from "@/services/offer-util";
+import Offer from "@/models/Offer";
+
+class FeedMeOfferStoreContainer extends React.PureComponent {
+  constructor(props) {
+    super(props);
+
+    const { initUserId, shakeUserIds, extraData } = props;
+    const offer = Offer.offer(JSON.parse(extraData));
+
+    this.userType = getHandshakeUserType(initUserId, shakeUserIds);
+    this.offer = offer;
+  }
+
+  calculateFiatAmountOfferStore = (amount, type, currency, percentage) => {
+    const { listOfferPrice } = this.props;
+    let fiatAmount = 0;
+
+    if (listOfferPrice) {
+      const offerPrice = getOfferPrice(listOfferPrice, type, currency);
+      if (offerPrice) {
+        fiatAmount = amount * offerPrice.price || 0;
+        fiatAmount += fiatAmount * percentage / 100;
+      } else {
+        // console.log('aaaa', offer.type, offer.currency);
+      }
+    }
+
+    return fiatAmount;
+  }
+
+  getEmail = () => {
+    const {
+      email, contactPhone, currency, userAddress,
+    } = this.offer;
+
+    if (email) { return email; }
+    if (contactPhone) { return contactPhone; }
+    if (currency === CRYPTO_CURRENCY.ETH) {
+      const wallet = new Ethereum();
+      wallet.address = userAddress;
+      return wallet.getShortAddress();
+    }
+    if (currency === CRYPTO_CURRENCY.BTC) {
+      const wallet = new Bitcoin();
+      wallet.address = userAddress;
+      return wallet.getShortAddress();
+    }
+    return '';
+  }
+
+  getMessageContent = () => {
+    const { status } = this.props;
+    const { offer } = this;
+    const {
+      buyAmount, sellAmount, currency, buyPercentage, sellPercentage,
+    } = offer;
+    let message = '';
+    const fiatAmountBuy = this.calculateFiatAmountOfferStore(buyAmount, EXCHANGE_ACTION.BUY, currency, buyPercentage);
+    const fiatAmountSell = this.calculateFiatAmountOfferStore(sellAmount, EXCHANGE_ACTION.SELL, currency, sellPercentage);
+    switch (status) {
+      case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CREATED:
+      case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.ACTIVE:
+      case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSING:
+      case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSED: {
+        message = (
+          <span>
+            {offer.buyAmount > 0 && (
+              <FormattedMessage
+                id="offerStoreHandShakeContentBuy"
+                values={{
+                  offerTypeBuy: EXCHANGE_ACTION_NAME[EXCHANGE_ACTION.BUY],
+                  amountBuy: offer.buyAmount,
+                  currency: offer.currency,
+                  fiatAmountCurrency: offer.fiatCurrency,
+                  fiatAmountBuy: formatMoneyByLocale(fiatAmountBuy, offer.fiatCurrency),
+                }}
+              />
+            )}
+            {offer.sellAmount > 0 && (
+              <FormattedMessage
+                id="offerStoreHandShakeContentSell"
+                values={{
+                  offerTypeSell: EXCHANGE_ACTION_NAME[EXCHANGE_ACTION.SELL],
+                  amountSell: offer.sellAmount,
+                  currency: offer.currency,
+                  fiatAmountCurrency: offer.fiatCurrency,
+                  fiatAmountSell: formatMoneyByLocale(fiatAmountSell, offer.fiatCurrency),
+                }}
+              />
+            )}
+          </span>
+        );
+        break;
+      }
+    }
+
+    return message;
+  }
+
+  getActionButtons = () => {
+    const { confirmOfferAction } = this.props;
+    const { offer } = this;
+
+    const status = HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[offer.status];
+    let actionButtons = null;
+
+    switch (status) {
+      case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.ACTIVE: {
+        const message = <FormattedMessage id="closeOfferConfirm" values={{ }} />;
+        actionButtons = (
+          <div>
+            <Button
+              block
+              className="mt-2 btn btn-secondary"
+              onClick={() => confirmOfferAction(message, this.deleteOfferItem)}
+            ><FormattedMessage id="btn.delete" />
+            </Button>
+          </div>
+        );
+        break;
+      }
+      case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CREATED:
+      case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSING:
+      case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSED: {
+        break;
+      }
+      default: {
+        // code
+        break;
+      }
+    }
+
+    return actionButtons;
+  }
+
+  deleteOfferItem = async () => {
+    const { offer } = this;
+    const { currency, sellAmount, freeStart } = offer;
+    const { showNotEnoughCoinAlert } = this.props;
+    console.log('deleteOfferItem', offer);
+
+    if (currency === CRYPTO_CURRENCY.ETH) {
+      if (sellAmount > 0 && !freeStart) {
+        const wallet = MasterWallet.getWalletDefault(currency);
+        const balance = await wallet.getBalance();
+        const fee = await wallet.getFee();
+
+        if (showNotEnoughCoinAlert(balance, 0, fee, currency)) {
+          return;
+        }
+      }
+    }
+
+    this.props.showLoading({ message: '' });
+    this.props.deleteOfferItem({
+      PATH_URL: `${API_URL.EXCHANGE.OFFER_STORES}/${offer.id}`,
+      METHOD: 'DELETE',
+      qs: { currency: offer.currency },
+      successFn: this.handleDeleteOfferItemSuccess,
+      errorFn: this.handleDeleteOfferItemFailed,
+    });
+  }
+
+  handleDeleteOfferItemSuccess = async (responseData) => {
+    const { offer } = this;
+    const { data } = responseData;
+    const { currency, sellAmount, freeStart } = offer;
+
+    console.log('handleDeleteOfferItemSuccess', responseData);
+
+    const offerStore = OfferShop.offerShop(data);
+
+    // Update status to redux
+    this.responseExchangeDataChange(offerStore);
+
+    if (currency === CRYPTO_CURRENCY.ETH) {
+      if (sellAmount > 0 && !freeStart && offerStore.items.ETH.status !== 'closed') {
+        const wallet = MasterWallet.getWalletDefault(currency);
+
+        const exchangeHandshake = new ExchangeShopHandshake(wallet.chainId);
+
+        let result = null;
+
+        result = await exchangeHandshake.closeByShopOwner(data.hid, data.id);
+
+        console.log('handleDeleteOfferItemSuccess', result);
+      }
+    } else if (currency === CRYPTO_CURRENCY.BTC) {
+
+    }
+
+    this.props.hideLoading();
+    const message = <FormattedMessage id="deleteOfferItemSuccessMassage" values={{ }} />;
+
+    this.props.showAlert({
+      message: <div className="text-center">{message}</div>,
+      timeOut: 2000,
+      type: 'success',
+      callBack: () => {
+        // if (refreshPage) {
+        //   refreshPage();
+        // }
+      },
+    });
+  }
+
+  handleDeleteOfferItemFailed = (e) => {
+    this.props.handleActionFailed(e);
+  }
+
+  responseExchangeDataChange = (offerStore) => {
+    const { id } = offerStore;
+    const { currency } = this.offer;
+    const data = {};
+    const firebaseOffer = {};
+    const status = offerStore.items[`${currency}`].status;
+
+    firebaseOffer.id = id;
+    firebaseOffer.status = `${currency.toLowerCase()}_${status}`;
+    firebaseOffer.type = 'offer_store';
+
+
+    data[`offer_store_${id}`] = firebaseOffer;
+
+    console.log('responseExchangeDataChangeOfferStore', data);
+
+    this.props.responseExchangeDataChange(data);
+  }
+
+  getMessageMovingCoin = () => {
+    const { status } = this.props;
+    const { offer } = this;
+
+    let idMessage = '';
+
+    switch (status) {
+      case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CREATED: {
+        idMessage = 'ex.exchange.explanation.created';
+        break;
+      }
+      case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.ACTIVE: {
+        idMessage = 'ex.exchange.explanation.active';
+        break;
+      }
+      case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSING: {
+        idMessage = 'ex.exchange.explanation.closing';
+        break;
+      }
+      case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSED: {
+        break;
+      }
+      default: {
+        // code
+        break;
+      }
+    }
+
+    let message = '';
+    if (idMessage) {
+      message = <FormattedMessage id={idMessage} values={{}} />;
+    }
+
+    return message;
+  }
+
+  render() {
+    const { extraData } = this.props;
+
+    const offer = Offer.offer(JSON.parse(extraData));
+    this.offer = offer;
+
+    const from = <FormattedMessage id="ex.me.label.from" />;
+    const email = this.getEmail();
+    const statusValue = HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[offer.status];
+    const statusText = HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_NAME[statusValue];
+    const showChat = false;
+    const chatUsername = '';
+    const nameShop = offer.username;
+    const message = this.getMessageContent();
+    const actionButtons = this.getActionButtons();
+    const messageMovingCoin = this.getMessageMovingCoin();
+
+    const feedProps = {
+      from, email, statusText, message,
+      showChat, chatUsername,
+      nameShop,
+      messageMovingCoin,
+      actionButtons,
+    };
+
+    return (
+      <FeedMePresentation {...this.props} {...feedProps} />
+    );
+  }
+}
+
+FeedMeOfferStoreContainer.propTypes = {
+  className: PropTypes.string,
+  background: PropTypes.string,
+};
+
+const mapState = state => ({
+  listOfferPrice: state.exchange.listOfferPrice,
+});
+
+const mapDispatch = ({
+  showAlert,
+  showLoading,
+  hideLoading,
+
+  responseExchangeDataChange,
+});
+
+export default connect(mapState, mapDispatch)(FeedMeOfferStoreContainer);
