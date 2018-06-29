@@ -66,7 +66,6 @@ class Chat extends Component {
     this.searchBtnRef = null;
     this.modalRef = null;
     this.maxUserSearchResult = null;
-    this.isInChatTab = true;
 
     this.renderChatList = :: this.renderChatList;
     this.renderChatDetail = :: this.renderChatDetail;
@@ -79,6 +78,7 @@ class Chat extends Component {
     this.chatWithUserId = props.match.params.userId;
     this.componentMounted = false;
     this.initialized = false;
+    this.currentHtmlTagOverflow = 'auto';
 
     if (!isComponentBound) {
       this.saveCurrentDataToLocalStorage();
@@ -87,6 +87,8 @@ class Chat extends Component {
 
   componentDidMount() {
     this.componentMounted = true;
+    this.reCalculateChatContainerHeight();
+    this.fixCss();
     this.initChatComponent();
   }
 
@@ -96,8 +98,8 @@ class Chat extends Component {
   }
 
   componentWillUnmount() {
-    this.isInChatTab = false;
     this.componentMounted = false;
+    this.removeFixCss();
     if (this.initialized) {
       this.firechat.enableNotification();
       this.unBindDataEvents();
@@ -110,6 +112,7 @@ class Chat extends Component {
       notFoundUser: false,
     }, () => {
       this.updateHeaderLeft();
+      this.reCalculateChatContainerHeight();
       window.history.pushState('', '', URL.HANDSHAKE_CHAT);
     });
     this.setCurrentUserName();
@@ -431,6 +434,38 @@ class Chat extends Component {
     return result;
   }
 
+  reCalculateChatContainerHeight() {
+    const { chatDetail } = this.state;
+    const windowHeight = window.innerHeight;
+    const bodyHeight = document.body.clientHeight;
+    let chatContainer = document.getElementsByClassName('chat-container');
+    chatContainer = chatContainer && chatContainer.length > 0 ? chatContainer[0] : null;
+
+    if (!chatContainer) {
+      return;
+    }
+
+    if (bodyHeight > windowHeight) {
+      chatContainer.setAttribute('style', `height: calc(100vh - ${bodyHeight - windowHeight + 45}px - ${chatDetail ? 120 : 60}px)`);
+    } else {
+      chatContainer.removeAttribute('style');
+    }
+  }
+
+  fixCss() {
+    this.currentHtmlTagOverflow = document.getElementsByTagName('html')[0].style.overflow;
+    document.getElementsByTagName('html')[0].style.overflow = 'hidden';
+
+    window.addEventListener('resize', () => {
+      this.reCalculateChatContainerHeight();
+    });
+  }
+
+  removeFixCss() {
+    document.getElementsByTagName('html')[0].style.overflow = this.currentHtmlTagOverflow;
+    window.removeEventListener('resize', () => { });
+  }
+
   updateHeaderLeft() {
     this.props.setHeaderLeft(this.state.chatDetail || (this.chatWithUserId && this.state.notFoundUser) ? this.renderBackButton() : this.renderSearchButton());
   }
@@ -476,9 +511,10 @@ class Chat extends Component {
       notFoundUser: false,
     }, () => {
       this.updateHeaderLeft();
-      this.scrollToBottom();
       this.clearSearch();
       this.updateHeaderTitle();
+      this.reCalculateChatContainerHeight();
+      this.scrollToBottom();
       setTimeout(() => {
         this.firechat.markMessagesAsRead(roomId);
       }, 0);
@@ -486,7 +522,8 @@ class Chat extends Component {
   }
 
   scrollToBottom() {
-    window.scrollTo(0, document.body.scrollHeight);
+    const chatEl = document.getElementsByClassName('chat-container')[0];
+    chatEl.scrollTop = chatEl.scrollHeight - chatEl.clientHeight;
   }
 
   sendMessage(message, messageType = 'plain_text', args) {
@@ -774,13 +811,12 @@ class Chat extends Component {
           ref={(ref) => { this.messageListRef = ref; }}
           dataSource={messageList}
           toBottomHeight="100%"
-          downButton
+          lockable
         />
         <Input
           placeholder="Type a message..."
           multiline={false}
           ref={(ref) => { this.chatInputRef = ref; }}
-          onFocus={() => { this.scrollToBottom(); }}
           onKeyDown={(e) => {
             if (e.keyCode === 13) {
               this.sendMessage(this.state.currentMessage);
@@ -808,7 +844,7 @@ class Chat extends Component {
   render() {
     const { chatDetail, notFoundUser } = this.state;
     return (
-      <div className="chat-container">
+      <div className={`chat-container ${chatDetail ? 'in-detail' : ''}`}>
         {notFoundUser ? this.renderNotFoundUser() : (chatDetail ? this.renderChatDetail(chatDetail) : this.renderChatList())}
         {
           // Object.keys(transferCoin).length > 0 && (
