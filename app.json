@@ -37,19 +37,19 @@
       "required": true
     },
     "PredictionHandshakeFileName": {
-      "required": true
+      "required": false
     },
     "PUBLIC_URL": {
       "required": true
     },
     "social_facebookAppId": {
-      "required": true
+      "required": false
     },
     "social_facebookPixelId": {
-      "required": true
+      "required": false
     },
     "social_googleAnalyticId": {
-      "required": true
+      "required": false
     },
     "social_isUseSocial": {
       "required": true
