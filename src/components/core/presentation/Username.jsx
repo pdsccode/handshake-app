@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'redux';
 import { showAlert } from '@/reducers/app/action';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 class Username extends React.PureComponent {
   static propTypes = {
@@ -14,7 +15,7 @@ class Username extends React.PureComponent {
     this.state = { username: this.props.username?.toString() };
     this.state.username = this.walletAddressHandle(this.state.username);
 
-    this.clickToCopy = ::this.clickToCopy;
+    this.copied = ::this.copied;
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -31,7 +32,7 @@ class Username extends React.PureComponent {
     return address;
   }
 
-  clickToCopy() {
+  copied() {
     this.props.showAlert({
       message: 'Copied to clipboard!',
       timeOut: false,
@@ -42,7 +43,11 @@ class Username extends React.PureComponent {
   }
 
   render() {
-    return <span onClick={this.clickToCopy}>{this.state.username}</span>;
+    return (
+      <CopyToClipboard text={this.props.username} onCopy={this.copied}>
+        <span style={{ cursor: 'pointer' }}>{this.state.username}</span>
+      </CopyToClipboard>
+    );
   }
 }
 
