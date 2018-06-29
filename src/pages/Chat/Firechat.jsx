@@ -3,7 +3,7 @@ import naclUtil from 'tweetnacl-util';
 import logo from '@/assets/images/logo.png';
 import Push from 'push.js';
 import _ from 'lodash';
-import md5 from 'md5';
+import { URL } from '@/constants';
 
 export class Firechat {
   constructor(firebaseInstance, firebaseRef, options) {
@@ -272,7 +272,7 @@ export class Firechat {
     const diffTime = (currentTime - messageTime) / 1000;
 
     if (!notified && diffTime <= 60) {
-      this.showNotification(fromUserName, messageContent.message);
+      this.showNotification(roomId, fromUserName, messageContent.message);
     }
 
     if (!notified) {
@@ -842,20 +842,19 @@ export class Firechat {
     }
   }
 
-  showNotification(from, message) {
+  showNotification(roomId, from, message) {
     if (!this.shouldShowNotification) {
       return;
     }
-    const tag = `chat-notification-${md5(from)}`;
     const selfWindow = window;
     console.log('show notification', from, message);
     Push.create(`${from} says`, {
       body: message,
       icon: logo,
-      tag,
+      tag: roomId,
       onClick: () => {
-        selfWindow.focus();
-        Push.close(tag);
+        selfWindow.location.href = URL.HANDSHAKE_CHAT_ROOM_DETAIL.replace(':roomId', roomId);
+        Push.close(roomId);
       },
       onError: (e) => {
         console.log('notification error', e);
