@@ -313,7 +313,9 @@ class CreateBettingEvent extends React.Component {
       message: <div className="text-center">URL Copied to Clipboard.</div>,
       timeOut: 3000,
       type: 'success',
-      callBack: () => { this.props.history.push(URL.HANDSHAKE_DISCOVER); },
+      callBack: () => {
+        // this.props.history.push(URL.HANDSHAKE_DISCOVER);
+      },
     });
   }
 
@@ -449,8 +451,8 @@ class CreateBettingEvent extends React.Component {
           <div>
             <Label for="shareUrl" className="">Click on the button below to copy the URL to share with your friends.</Label> <br />
             <CopyToClipboard
+              onCopy={() => { this.copyURLClick(); }}
               text={this.state.shareURL}
-              onCopy={this.copyURLClick}
             >
               <Button type="button" block className={`copy-url-button-${this.state.copied}`}>Copy Share URL</Button>
             </CopyToClipboard>
