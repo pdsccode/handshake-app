@@ -243,27 +243,29 @@ class Neuron {
         tx.sign(Buffer.from(privateKey, 'hex'));
         const serializedTx = tx.serialize();
         const rawTxHex = `0x${serializedTx.toString('hex')}`;
-        return web3.eth
-          .sendSignedTransaction(rawTxHex)
-          .on('transactionHash', (hash) => {
-            console.log(
-              TAG,
-              ' sendRawTransaction sendSignedTransaction hash = ',
-              hash,
-            );
-            return {
-              hash,
-              payload: payloadData,
-              fromAddress: address,
-              toAddress: toAddress || '',
-              amount: amount || 0,
-              arguments: argumentsParams || {},
-            };
-          })
-          .on('error', error => ({
-            hash: -1,
-            error,
-          }));
+        return new Promise((resolve, reject) => {
+          web3.eth
+            .sendSignedTransaction(rawTxHex)
+            .on('transactionHash', (hash) => {
+              console.log(
+                TAG,
+                ' sendRawTransaction sendSignedTransaction hash = ',
+                hash,
+              );
+              resolve({
+                hash,
+                payload: payloadData,
+                fromAddress: address,
+                toAddress: toAddress || '',
+                amount: amount || 0,
+                arguments: argumentsParams || {},
+              });
+            })
+            .on('error', error => ({
+              hash: -1,
+              error,
+            }));
+        });
       })
       .catch(error => ({
         hash: -1,
