@@ -228,7 +228,7 @@ class FeedMeOfferStoreContainer extends React.PureComponent {
       case HANDSHAKE_USER.OWNER: {
         switch (status) {
           case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.PRE_SHAKE: {
-            message = <FormattedMessage id="acceptOfferConfirm" values={{ }} />;
+            message = <FormattedMessage id="rejectOfferConfirmForShop" values={{ }} />;
             actionButtons = (
               <div>
                 <Button
