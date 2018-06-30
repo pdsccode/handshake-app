@@ -220,7 +220,7 @@ class FeedBetting extends React.Component {
   render() {
     const {actionTitle , isAction, itemInfo, role, isLoading } = this.state;
 
-    const {side } = itemInfo;
+    const {side, odds } = itemInfo;
     const {event_name, event_predict} = this.extraData;
 
     const styleEventName = {
@@ -252,13 +252,17 @@ class FeedBetting extends React.Component {
             {eventName}
           </div>
 
-          <div className={`predictName`}>
-            <span className={colorBySide}>{side === 1 ? `Support: ` : 'Oppose: '}</span>{predictName}
+          <div className="predictRow">
+            <div className={`predictName`}>
+              <span className={colorBySide}>{side === 1 ? `Support: ` : 'Oppose: '}</span>{predictName}
+            </div>
+            <div className={`predictName`}>Odds: {odds}</div>
           </div>
+
           <div className="bettingInfo">
-            <div className="description">Matched bet (ETH)</div>
-            <div className="description">On odds</div>
-            <div className="description">You could win</div>
+            <div className="description">You bet ETH</div>
+            <div className="description">Matched ETH</div>
+            <div className="description">You could win ETH</div>
         </div>
           {role == ROLE.INITER ? this.renderMaker(): this.renderShaker()}
 
@@ -271,27 +275,31 @@ class FeedBetting extends React.Component {
     );
 
   }
-  renderItem(matchedAmount,amount, colorBySide, odds, winMatch, remaining ){
+  renderItem(matchedAmount,amount, colorBySide, odds, winMatch, remaining, winValue ){
     return(
       <div>
       <div className="bettingInfo">
       <div>
         {/*<div className="description">Matched bet (ETH)</div>*/}
-        {<div className="value">{matchedAmount}/{amount}</div>}
+        {/*<div className="value">{matchedAmount}/{amount}</div>*/}
+        {<div className="value">{amount}</div>}
+
       </div>
       <div>
         {/*<div className="description">On odds</div>*/}
-        <div className={`value ${colorBySide}`}> {Math.floor(odds*ROUND_ODD)/ROUND_ODD}</div>
+        {/*<div className={`value ${colorBySide}`}> {Math.floor(odds*ROUND_ODD)/ROUND_ODD}</div>*/}
+        {<div className="value">{matchedAmount}</div>}
+
       </div>
       <div>
         {/*<div className="description">You could win</div>*/}
-        <div className="value">{Math.floor(winMatch * ROUND) / ROUND} ETH</div>
+        <div className="value">{winMatch}/{winValue}</div>
         {/*winMatch > 0 && <div className="value">{Math.floor(winMatch * ROUND) / ROUND} ETH matched</div>*/}
       </div>
     </div>
-    {remaining > 0 && <div className="bettingInfo">
+    {/*remaining > 0 && <div className="bettingInfo">
         <div className="value"> Remaining {remaining} ETH</div>
-    </div>}
+    </div>*/}
   </div>
     );
   }
@@ -301,11 +309,13 @@ class FeedBetting extends React.Component {
     const colorBySide = side === 1 ? `support` : 'oppose';
     const amountMatch = amount;
     const winMatch = amountMatch * odds;
+    const winValue = amount * odds;
+    const displayWinMatch = Math.floor(winMatch * ROUND)/ROUND;
     const displayAmount = Math.floor(amount * ROUND)/ROUND;
     const displayMatchedAmount = Math.floor(amountMatch * ROUND)/ROUND;
     const displayRemaining = Math.floor(remainingValue * ROUND)/ROUND;
-
-    return (this.renderItem(displayMatchedAmount,displayAmount, colorBySide, odds, winMatch, displayRemaining ));
+    const displayWinValue = Math.floor(winValue * ROUND)/ROUND;
+    return (this.renderItem(displayMatchedAmount,displayAmount, colorBySide, odds, displayWinMatch, displayRemaining, displayWinValue ));
   }
   renderMaker(){
     console.log('Render Maker');
@@ -313,13 +323,16 @@ class FeedBetting extends React.Component {
 
     const {amount, odds,side, remainingAmount } = itemInfo;
     const remainingValue = remainingAmount || 0;
+    const winValue = amount * odds;
     const displayAmount = Math.floor(amount * ROUND)/ROUND;
     const displayMatchedAmount = Math.floor(amountMatch * ROUND)/ROUND;
     const displayRemaining = Math.floor(remainingValue * ROUND)/ROUND;
+    const displayWinMatch = Math.floor(winMatch * ROUND)/ROUND;
+    const displayWinValue = Math.floor(winValue * ROUND)/ROUND;
     const colorBySide = side === 1 ? `support` : 'oppose';
 
     return (
-      this.renderItem(displayMatchedAmount,displayAmount, colorBySide, odds, winMatch, displayRemaining )
+      this.renderItem(displayMatchedAmount,displayAmount, colorBySide, odds, displayWinMatch, displayRemaining, displayWinValue )
     );
 
   }
