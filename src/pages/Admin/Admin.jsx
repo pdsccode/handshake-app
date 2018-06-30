@@ -156,7 +156,7 @@ class Admin extends React.Component {
     const submit = $http({
       url,
       data: {
-        result: { outcome_id: this.state.selectedOutcome, side: this.state.selectedResult },
+        result: [{ outcome_id: this.state.selectedOutcome, side: this.state.selectedResult }],
       },
       headers: { Authorization: `Bearer ${tokenValue}`, 'Content-Type': 'application/json' },
       method: 'post',
