@@ -640,13 +640,13 @@ export default {
         header2: 'Custom Amount',
         message: 'Share your public wallet address to receive',
         label: {
-          address: "Address",
-          amount: "Amount",
-          usd: "USD"
+          address: 'Address',
+          amount: 'Amount',
+          usd: 'USD',
         },
         placeholder: {
-          amount: "Specify amount ...",
-          choose_wallet: "Choose a wallet ..."
+          amount: 'Specify amount ...',
+          choose_wallet: 'Choose a wallet ...',
         },
         button: {
           share: 'Copy to share',
@@ -710,7 +710,7 @@ export default {
     error: {
       invalid_address: 'You can only send tokens to Ethereum address',
       invalid_address2: 'Please enter a valid receiving address.',
-      insufficient: 'You have insufficient coin to make the transfer.',
+      insufficient: 'You have insufficient coin to make the transfer.',
     },
     success: {
       transaction: 'Your transaction will appear on blockchain in about 30 seconds.',
