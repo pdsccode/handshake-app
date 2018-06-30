@@ -43,7 +43,6 @@ class Admin extends React.Component {
       outcomes: matches[0].outcomes,
       activeMatchData: matches[0],
       selectedMatch: matches[0].name,
-      selectedOutcome: matches[0].outcomes[0].id,
     });
   }
 
@@ -139,7 +138,7 @@ class Admin extends React.Component {
       this.setState({
         disable: false,
       });
-    }, 120000);
+    }, 1000);
   }
 
   checkToken() {
@@ -248,8 +247,8 @@ class Admin extends React.Component {
 
           {this.state.disable && <div><br /><Alert color="success">
             Match details submitted. Please wait.
-                                            </Alert>
-                                 </div>}
+          </Alert>
+          </div>}
           <div>
             <Modal isOpen={this.state.modal} toggle={this.toggle} className="modal-sm">
               <ModalHeader toggle={this.toggle}>Update Match Data</ModalHeader>
@@ -261,7 +260,7 @@ class Admin extends React.Component {
                 <Label>AwayScore {this.state.activeMatchData.awayScore}</Label> <br /> */}
                 {this.state.errorMessage && <Alert color="danger">
                     {this.state.errorMessage}
-                                            </Alert>}
+                </Alert>}
               </ModalBody>
               <ModalFooter>
                 <Button color="primary" onClick={this.onSubmit}>Confirm</Button>{' '}
