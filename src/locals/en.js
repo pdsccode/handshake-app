@@ -36,6 +36,7 @@ export default {
   createOfferConfirm: 'You are about to {type} {something} by {amount} {currency}',
   handshakeOfferConfirm: 'You are about to {type} {something} for {amount} {currency}',
   rejectOfferConfirm: 'Do you want to Reject this handshake? You will not be able to make transactions for 4 hours.',
+  rejectOfferConfirmForShop: 'Do you want to Reject this handshake?',
   completeOfferConfirm: 'Finish shaking?',
   withdrawOfferConfirm: 'Are you sure you want to withdraw?',
   cancelOfferConfirm: 'Cancel this order?',
@@ -569,7 +570,7 @@ export default {
         text: {
           confirm_transfer: 'Are you sure you want to transfer out ',
         },
-        error: 'You don\'t have enough coin right now. Please top up.',
+        error: 'You don\'t have enough coin right now.',
         button: {
           transfer: 'Transfer',
           confirm: 'Confirm',
@@ -641,9 +642,11 @@ export default {
         label: {
           address: 'Address',
           amount: 'Amount',
+          usd: 'USD',
         },
         placeholder: {
           amount: 'Specify amount ...',
+          choose_wallet: 'Choose a wallet ...',
         },
         button: {
           share: 'Copy to share',
@@ -697,7 +700,7 @@ export default {
     error: {
       invalid_address: 'You can only send tokens to Bitcoin address',
       invalid_address2: 'Please enter a valid receiving address.',
-      insufficient: 'You have insufficient coin to make the transfer. Please top up and try again.',
+      insufficient: 'You have insufficient coin to make the transfer.',
     },
     success: {
       transaction: 'Your transaction will appear on blockchain in about 30 seconds.',
@@ -707,7 +710,7 @@ export default {
     error: {
       invalid_address: 'You can only send tokens to Ethereum address',
       invalid_address2: 'Please enter a valid receiving address.',
-      insufficient: 'You have insufficient coin to make the transfer. Please top up and try again.',
+      insufficient: 'You have insufficient coin to make the transfer.',
     },
     success: {
       transaction: 'Your transaction will appear on blockchain in about 30 seconds.',
