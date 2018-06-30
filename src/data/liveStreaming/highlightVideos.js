@@ -1,15 +1,5 @@
 export default [
   {
-    url: 'https://www.youtube.com/embed/1IpGjgzRRCc',
-    title: 'South Korea vs Germany 2-0',
-    time: '',
-  },
-  {
-    url: 'https://www.youtube.com/embed/m6drxZAWdpQ',
-    title: 'Australia vs Peru 0-2',
-    time: '',
-  },
-  {
     url: 'https://www.youtube.com/embed/fo0yS3tmN0Y',
     title: 'France vs Australia 2-1',
     time: '',
