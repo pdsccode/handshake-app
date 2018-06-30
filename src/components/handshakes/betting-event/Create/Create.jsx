@@ -23,7 +23,6 @@ import { BASE_API, API_URL, APP, URL } from '@/constants';
 import history from '@/services/history';
 import { showAlert } from '@/reducers/app/action';
 import { BetHandshakeHandler } from '../../betting/Feed/BetHandshakeHandler.js';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
 import $http from '@/services/api';
 
 // const wallet = MasterWallet.getWalletDefault('ETH');
