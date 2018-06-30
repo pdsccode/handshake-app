@@ -1,5 +1,24 @@
 @import './src/styles/style';
 .chat-container {
+  height: calc(100vh - 45px - 60px);
+  margin-top: -10px;
+
+  &.in-detail {
+    height: calc(100vh - 45px - 120px);
+  }
+
+  .scroll-to-bottom {
+    height: 100%;
+  }
+
+  .scroll-button {
+    display: none;
+  }
+
+  .scroll-view {
+    padding: 10px 0px;
+  }
+
   .rce-container-mbox {
     flex-direction: column;
     display: block;
@@ -569,7 +588,6 @@
   .rce-container-mlist {
     position: relative;
     display: flex;
-    margin-bottom: 60px;
   }
 
   .rce-mlist {
