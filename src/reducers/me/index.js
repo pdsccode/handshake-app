@@ -225,11 +225,12 @@ const meReducter = (
         }else {
           
           const {shakers} = handshake;
-          if(shakers.length > 0){
+          const shakerArr = JSON.parse(shakers);
+          if(shakerArr.length > 0){
             console.log('Shakers List:', shakers);
 
-            /*
-            const newShakers = shakers.map( shakerItem => {
+            
+            const newShakers = shakerArr.map( shakerItem => {
               const handleShaker = shakerItem;
               if(handleShaker.id === item.id){
                 handleShaker.status = item.status;
@@ -238,9 +239,9 @@ const meReducter = (
               }
               return handleShaker;
             });
-            handledHandshake.shakers = newShakers;
+            handledHandshake.shakers = JSON.stringify(newShakers);
             console.log('New Shakers:', newShakers);
-            */
+            
             
 
           }
