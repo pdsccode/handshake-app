@@ -184,7 +184,7 @@ export class BetHandshakeHandler {
   constructor() {
     this.listOnChainLoading = {};
   }
-  static getStatusLabel(blockchainStatus, resultStatus, role, side, isMatch) {
+  static getStatusLabel(blockchainStatus, resultStatus, role, side, isMatch, reportTime, disputeTime) {
     let label = null;
     let strStatus = null;
     let isAction = false;

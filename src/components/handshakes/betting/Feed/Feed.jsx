@@ -149,7 +149,7 @@ class FeedBetting extends React.Component {
 
     }
 
-    const statusResult = BetHandshakeHandler.getStatusLabel(status, result, role,side, isMatch);
+    const statusResult = BetHandshakeHandler.getStatusLabel(status, result, role,side, isMatch, null, null);
     const {title, isAction} = statusResult;
     this.setState({
       actionTitle: title,
