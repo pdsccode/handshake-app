@@ -19,7 +19,12 @@
     font-weight: $bold;
     color: #000;
     letter-spacing: rem-calc(0.29px);
+  }
+  .predictRow {
+    display: flex;
+    justify-content: space-between;
     margin: rem-calc(18px 15px 19px);
+
   }
   .support {
     color: $caribbean-green !important;
@@ -40,7 +45,7 @@
       margin-bottom: rem-calc(2px);
     }
     .value {
-      font-size: rem-calc(16px);
+      font-size: rem-calc(14px);
       color: #000000;
       letter-spacing: rem-calc(0.29px);
       font-weight: $normal;

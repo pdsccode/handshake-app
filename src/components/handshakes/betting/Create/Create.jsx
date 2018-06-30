@@ -120,7 +120,7 @@ class BettingCreate extends React.Component {
     let params = {
       public: 1,
     }
-    this.props.loadMatches({ PATH_URL: API_URL.CRYPTOSIGN.LOAD_MATCHES, METHOD:'POST'});
+    this.props.loadMatches({ PATH_URL: API_URL.CRYPTOSIGN.LOAD_MATCHES});
 
   }
 

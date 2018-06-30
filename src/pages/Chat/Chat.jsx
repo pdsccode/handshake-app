@@ -19,6 +19,7 @@ import IconBtnSend from '@/assets/images/icon/ic-btn-send.svg';
 import IconBackBtn from '@/assets/images/icon/back-chevron.svg';
 import IconAvatar from '@/assets/images/icon/avatar.svg';
 import md5 from 'md5';
+import ScrollToBottom from 'react-scroll-to-bottom';
 
 import './Firechat.scss';
 import './Chat.scss';
@@ -66,7 +67,6 @@ class Chat extends Component {
     this.searchBtnRef = null;
     this.modalRef = null;
     this.maxUserSearchResult = null;
-    this.isInChatTab = true;
 
     this.renderChatList = :: this.renderChatList;
     this.renderChatDetail = :: this.renderChatDetail;
@@ -77,6 +77,7 @@ class Chat extends Component {
     this.onBackButtonClicked = :: this.onBackButtonClicked;
 
     this.chatWithUserId = props.match.params.userId;
+    this.chatRoomId = props.match.params.roomId;
     this.componentMounted = false;
     this.initialized = false;
 
@@ -87,6 +88,8 @@ class Chat extends Component {
 
   componentDidMount() {
     this.componentMounted = true;
+    this.reCalculateChatContainerHeight();
+    this.fixCss();
     this.initChatComponent();
   }
 
@@ -96,8 +99,8 @@ class Chat extends Component {
   }
 
   componentWillUnmount() {
-    this.isInChatTab = false;
     this.componentMounted = false;
+    this.removeFixCss();
     if (this.initialized) {
       this.firechat.enableNotification();
       this.unBindDataEvents();
@@ -110,6 +113,7 @@ class Chat extends Component {
       notFoundUser: false,
     }, () => {
       this.updateHeaderLeft();
+      this.reCalculateChatContainerHeight();
       window.history.pushState('', '', URL.HANDSHAKE_CHAT);
     });
     this.setCurrentUserName();
@@ -144,7 +148,7 @@ class Chat extends Component {
         };
       });
 
-      this.enterMessageRoom(this.generateMessageRoomData(room.id, invitation.fromUserId, invitation.fromUserName, room));
+      this.enterMessageRoom(room.id);
     } else {
       this.firechat.getRoom(invitation.roomId, (foundRoom) => {
         const room = foundRoom;
@@ -161,14 +165,14 @@ class Chat extends Component {
           };
         });
 
-        this.enterMessageRoom(this.generateMessageRoomData(room.id, invitation.fromUserId, invitation.fromUserName, room));
+        this.enterMessageRoom(room.id);
       });
     }
   }
 
   onChatItemClicked(room) {
     // console.log('onChatItemClicked', room);
-    this.enterMessageRoom(room);
+    this.enterMessageRoom(room.id);
   }
 
   onSearchUserClicked(user) {
@@ -365,6 +369,7 @@ class Chat extends Component {
       this.setCustomState(historyState, () => {
         this.updateHeaderLeft();
         this.updateHeaderTitle();
+        this.reCalculateChatContainerHeight();
       });
     }
 
@@ -372,20 +377,23 @@ class Chat extends Component {
       chatSource: this.firechat.getRooms(),
     }, () => {
       if (this.chatWithUserId) {
-        this.props.getUserName({
-          PATH_URL: `${API_URL.CHAT.GET_USER_NAME}/${this.chatWithUserId}`,
-          successFn: (response) => {
-            const { data: chatToUserName } = response;
-            this.firechat.getUserById(chatToUserName, (chatToUser) => {
-              this.chatWithUser(chatToUser);
+        if (!isNaN(this.chatWithUserId)) {
+          this.props.getUserName({
+            PATH_URL: `${API_URL.CHAT.GET_USER_NAME}/${this.chatWithUserId}`,
+            successFn: (response) => {
+              const { data: chatToUserName } = response;
+              this.findAndChatWithUser(chatToUserName);
+            },
+            errorFn: (e) => {
+              this.chatWithUser(null);
               this.props.hideLoading();
-            });
-          },
-          errorFn: (e) => {
-            this.chatWithUser(null);
-            this.props.hideLoading();
-          },
-        });
+            },
+          });
+        } else {
+          this.findAndChatWithUser(this.chatWithUserId);
+        }
+      } else if (this.chatRoomId) {
+        this.findRoomAndEnter(this.chatRoomId);
       } else {
         this.props.hideLoading();
       }
@@ -410,6 +418,50 @@ class Chat extends Component {
     }
   }
 
+  findAndChatWithUser(chatToUserName) {
+    this.firechat.getUserById(chatToUserName, (chatToUser) => {
+      this.chatWithUser(chatToUser);
+      this.props.hideLoading();
+    });
+  }
+
+  findRoomAndEnter(roomId) {
+    if (_.isEmpty(this.user)) {
+      setTimeout(() => {
+        this.findRoomAndEnter(roomId);
+      }, 100);
+      return;
+    }
+
+    this.firechat.getRoom(roomId, (foundRoom) => {
+      const room = foundRoom;
+      if (room) {
+        const { authorizedUsers } = foundRoom;
+        room.messages = foundRoom.messages || [];
+        room.froms = foundRoom.froms || {};
+
+        _.forIn(authorizedUsers, (userData, userId) => {
+          room.froms[userId] = userData.name;
+        });
+
+        this.setCustomState((prevState) => {
+          const prevChatSource = prevState.chatSource;
+          prevChatSource[this.chatRoomId] = room;
+          return {
+            chatSource: prevChatSource,
+          };
+        }, () => {
+          this.enterMessageRoom(foundRoom.id);
+        });
+      } else {
+        this.setCustomState({
+          notFoundUser: true,
+        });
+      }
+      this.props.hideLoading();
+    });
+  }
+
   loadDataFromLocalStorage() {
     return JSON.parse(localStorage.getItem('chat_data'));
   }
@@ -431,8 +483,32 @@ class Chat extends Component {
     return result;
   }
 
+  reCalculateChatContainerHeight() {
+    const { chatDetail } = this.state;
+    const windowHeight = window.innerHeight;
+    let chatContainer = document.getElementsByClassName('chat-container');
+    chatContainer = chatContainer && chatContainer.length > 0 ? chatContainer[0] : null;
+
+    if (!chatContainer) {
+      return;
+    }
+
+    chatContainer.setAttribute('style', `height: calc(${windowHeight}px - 45px - ${chatDetail ? 120 : 60}px)`);
+  }
+
+  fixCss() {
+    window.addEventListener('resize', () => {
+      this.reCalculateChatContainerHeight();
+    });
+  }
+
+  removeFixCss() {
+    window.removeEventListener('resize', () => { });
+  }
+
   updateHeaderLeft() {
-    this.props.setHeaderLeft(this.state.chatDetail || (this.chatWithUserId && this.state.notFoundUser) ? this.renderBackButton() : this.renderSearchButton());
+    const { chatDetail, notFoundUser } = this.state;
+    this.props.setHeaderLeft(chatDetail || notFoundUser ? this.renderBackButton() : this.renderSearchButton());
   }
 
   updateHeaderTitle() {
@@ -469,16 +545,16 @@ class Chat extends Component {
     }
   }
 
-  enterMessageRoom(room) {
-    const roomId = room.id;
+  enterMessageRoom(roomId) {
     this.setCustomState({
       chatDetail: roomId,
       notFoundUser: false,
     }, () => {
+      window.history.pushState('', '', URL.HANDSHAKE_CHAT_ROOM_DETAIL.replace(':roomId', roomId));
       this.updateHeaderLeft();
-      this.scrollToBottom();
       this.clearSearch();
       this.updateHeaderTitle();
+      this.reCalculateChatContainerHeight();
       setTimeout(() => {
         this.firechat.markMessagesAsRead(roomId);
       }, 0);
@@ -486,7 +562,10 @@ class Chat extends Component {
   }
 
   scrollToBottom() {
-    window.scrollTo(0, document.body.scrollHeight);
+    const chatEl = document.getElementsByClassName('scroll-button');
+    if (chatEl && chatEl.length > 0) {
+      chatEl[0].click();
+    }
   }
 
   sendMessage(message, messageType = 'plain_text', args) {
@@ -551,7 +630,7 @@ class Chat extends Component {
     const roomId = md5(this.mixString(userId, this.user.id));
 
     if (_.has(this.state.chatSource, roomId)) {
-      this.enterMessageRoom(this.generateMessageRoomData(roomId, userId, userName, this.state.chatSource[roomId]));
+      this.enterMessageRoom(roomId);
     } else {
       const usersInGroup = {};
       usersInGroup[userId] = {
@@ -577,7 +656,7 @@ class Chat extends Component {
           };
         }, () => {
           console.log('onsearchuser click roomId', roomId, 'chatsource', JSON.parse(JSON.stringify(this.state.chatSource)));
-          this.enterMessageRoom(this.generateMessageRoomData(roomId, userId, userName, room));
+          this.enterMessageRoom(roomId);
         });
       });
     }
@@ -769,18 +848,21 @@ class Chat extends Component {
     });
 
     return (
-      <div>
+      <ScrollToBottom
+        className="scroll-to-bottom"
+        followButtonClassName="scroll-button"
+        scrollViewClassName="scroll-view"
+      >
         <MessageList
           ref={(ref) => { this.messageListRef = ref; }}
           dataSource={messageList}
           toBottomHeight="100%"
-          downButton
+          lockable
         />
         <Input
           placeholder="Type a message..."
           multiline={false}
           ref={(ref) => { this.chatInputRef = ref; }}
-          onFocus={() => { this.scrollToBottom(); }}
           onKeyDown={(e) => {
             if (e.keyCode === 13) {
               this.sendMessage(this.state.currentMessage);
@@ -801,14 +883,14 @@ class Chat extends Component {
             />
           }
         />
-      </div>
+      </ScrollToBottom>
     );
   }
 
   render() {
     const { chatDetail, notFoundUser } = this.state;
     return (
-      <div className="chat-container">
+      <div className={`chat-container ${chatDetail ? 'in-detail' : ''}`}>
         {notFoundUser ? this.renderNotFoundUser() : (chatDetail ? this.renderChatDetail(chatDetail) : this.renderChatList())}
         {
           // Object.keys(transferCoin).length > 0 && (

@@ -67,10 +67,16 @@ class BettingFilter extends React.Component {
 
   componentDidMount() {
       /* Test */
-    const odds = 100;
-    const oppositeOdd = odds/(odds - 1);
-    const result = Math.floor(oppositeOdd * ROUND_ODD)/ROUND_ODD;
-    console.log('Sa Test oppositeOdd Result:',oppositeOdd, result);
+    const odds = 1.2;
+    const amount = 0.001;
+    //const oppositeOdd = odds/(odds - 1);
+    const guessAmout = amount * parseFloat(odds) - parseFloat(amount);
+    const roundAmount = Math.round(guessAmout*1000000)/1000000;
+    //const result = Math.floor(oppositeOdd * ROUND_ODD)/ROUND_ODD;
+    //console.log('Sa Test oppositeOdd Result:',oppositeOdd, result);
+    console.log("Sa test Amount:", amount);
+    console.log("Sa test Odds:", odds);
+    console.log('Sa test Guest amount:', roundAmount);
 
     this.loadMatches();
     this.checkShowFreeBanner();
@@ -113,11 +119,10 @@ class BettingFilter extends React.Component {
     const {isPrivate, outComeId} = this.props;
     let params = {
       public: !isPrivate,
-      outcome_id: outComeId
+      //outcome_id: outComeId
     }
     this.props.loadMatches({
       PATH_URL: API_URL.CRYPTOSIGN.LOAD_MATCHES,
-      METHOD:'POST',
       successFn: (res) => {
         const { data } = res;
         console.log('loadMatches success', data);

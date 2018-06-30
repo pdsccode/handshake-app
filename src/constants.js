@@ -383,6 +383,8 @@ export const BASE_API = {
 export const URL = {
   INDEX: '/',
 
+  ADMIN: '/admin',
+
   HANDSHAKE_ME: '/me',
   HANDSHAKE_ME_INDEX: '/me',
   HANDSHAKE_ME_PROFILE: '/me/profile',
@@ -395,6 +397,7 @@ export const URL = {
   HANDSHAKE_CHAT: '/chat',
   HANDSHAKE_CHAT_INDEX: '/chat',
   HANDSHAKE_CHAT_DETAIL: '/chat/:userId',
+  HANDSHAKE_CHAT_ROOM_DETAIL: '/chat/room/:roomId',
 
   HANDSHAKE_WALLET: '/wallet',
   HANDSHAKE_WALLET_INDEX: '/wallet',
