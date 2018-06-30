@@ -11,6 +11,7 @@ import createForm from '@/components/core/form/createForm';
 import { showLoading, hideLoading } from '@/reducers/app/action';
 import { required } from '@/components/core/form/validation';
 import { Label, Col, Row } from 'reactstrap';
+import ShareSocial from '@/components/core/presentation/ShareSocial';
 import DatePicker from './DatePicker';
 import './Create.scss';
 import { MasterWallet } from '@/models/MasterWallet';
@@ -448,14 +449,13 @@ class CreateBettingEvent extends React.Component {
         }
         {
           this.state.shareURL &&
-          <div>
-            <Label for="shareUrl" className="">Click on the button below to copy the URL to share with your friends.</Label> <br />
-            <CopyToClipboard
-              onCopy={() => { this.copyURLClick(); }}
-              text={this.state.shareURL}
-            >
-              <Button type="button" block className={`copy-url-button-${this.state.copied}`}>Copy Share URL</Button>
-            </CopyToClipboard>
+          <div className="shareurl">
+            <Label for="shareUrl" className="">You can share the URL with your friends.</Label> <br /><br />
+            <ShareSocial
+              title="Copy"
+              className="center-block"
+              shareUrl={this.state.shareURL}
+            />
           </div>
         }
       </div>
