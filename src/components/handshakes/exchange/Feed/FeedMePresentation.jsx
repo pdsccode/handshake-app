@@ -75,7 +75,6 @@ class FeedMePresentation extends React.PureComponent {
           { messageMovingCoin && (<div className="mt-2">{messageMovingCoin}</div>) }
         </Feed>
         {actionButtons}
-        <Rate onRef={e => this.rateRef = e} startNum={5} onSubmit={this.handleSubmitRating} ratingOnClick={this.handleOnClickRating} />
       </div>
     );
   }

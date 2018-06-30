@@ -34,6 +34,8 @@ import {
   rejectOfferItem,
   reviewOffer
 } from "@/reducers/exchange/action";
+import {HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS_NAME} from "../../../../constants";
+import Rate from "../../../core/controls/Rate/Rate";
 
 class FeedMeOfferStoreContainer extends React.PureComponent {
   constructor(props) {
@@ -243,7 +245,7 @@ class FeedMeOfferStoreContainer extends React.PureComponent {
           }
           case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.SHAKE: {
             // actionButtons = 'Reject'; // complete: nguoi nhan cash
-            message = <FormattedMessage id="rejectOfferConfirm" values={{ }} />;
+            message = <FormattedMessage id="rejectOfferConfirmForShop" values={{ }} />;
             const message2 = <FormattedMessage id="completeOfferConfirm" values={{ }} />;
             actionButtons = (
               <div>
@@ -781,19 +783,39 @@ class FeedMeOfferStoreContainer extends React.PureComponent {
   }
 
   render() {
-    const { extraData } = this.props;
+    const { extraData, status } = this.props;
 
     const offer = Offer.offer(JSON.parse(extraData));
     this.offer = offer;
 
-    const from = <FormattedMessage id="ex.me.label.from" />;
+    const from = <FormattedMessage id="ex.me.label.with" />;
     const email = this.getEmail();
-    const statusValue = HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[offer.status];
-    const statusText = HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_NAME[statusValue];
-    const showChat = false;
-    const chatUsername = '';
+    const statusText = HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS_NAME[status];
+    let showChat = false;
+    let chatUsername = '';
+
+    switch (status) {
+      case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.PRE_SHAKING:
+      case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.PRE_SHAKE:
+      case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.SHAKING:
+      case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.SHAKE:
+      case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.COMPLETING:
+      case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.COMPLETED: {
+        chatUsername = this.getChatUserName();
+
+        showChat = chatUsername.length > 0;
+
+        break;
+      }
+      default: {
+        // code
+        break;
+      }
+    }
+
     const nameShop = offer.username;
-    const message = this.getMessageContent();
+    const fiatAmount = this.calculateFiatAmount(offer);
+    const message = this.getMessageContent(fiatAmount);
     const actionButtons = this.getActionButtons();
     const messageMovingCoin = this.getMessageMovingCoin();
 
@@ -806,7 +828,10 @@ class FeedMeOfferStoreContainer extends React.PureComponent {
     };
 
     return (
-      <FeedMePresentation {...this.props} {...feedProps} />
+      <div>
+        <FeedMePresentation {...this.props} {...feedProps} />
+        <Rate onRef={e => this.rateRef = e} startNum={5} onSubmit={this.handleSubmitRating} ratingOnClick={this.handleOnClickRating} />
+      </div>
     );
   }
 }
