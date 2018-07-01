@@ -367,17 +367,14 @@ export default [
       "goalsAwayTeam": null
     },
     "odds": null,
-    link: 'http://tv.keonhacai.com/bongda/kenh15.php',
+    link: 'http://tv.keonhacai.com/bongda/kenh12.php',
     linksLive: [
-      'http://tv.keonhacai.com/bongda/kenh15.php',
+      'http://tv.keonhacai.com/bongda/kenh12.php',
       'http://capodeportes.net/reproductor2/canal3.php?width=400&height=300&autoplay=1',
     ],
     linksSoftCast: [
-      'sop://broker.sopcast.com:3912/257000',
-      'sop://broker.sopcast.com:3912/173784',
-      'sop://broker.sopcast.com:3912/253461',
-      'sop://broker.sopcast.com:3912/254780',
-      'sop://broker.sopcast.com:3912/257555',
+      'sop://broker.sopcast.com:3912/257722',
+      'sop://broker.sopcast.com:3912/260848',
     ],
   },
   {
