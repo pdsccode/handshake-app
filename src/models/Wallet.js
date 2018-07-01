@@ -17,6 +17,7 @@ export class Wallet {
     this.chainId = -1;
     this.isToken = false;
     this.customToken = false;
+    this.decimals = 18;
   }
 
   getShortAddress() {

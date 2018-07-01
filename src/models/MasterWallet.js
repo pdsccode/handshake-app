@@ -6,6 +6,10 @@ import { Ethereum } from '@/models/Ethereum.js';
 import { Shuriken } from '@/models/Shuriken.js';
 import { Wallet } from '@/models/Wallet.js';
 import { TokenERC20 } from '@/models/TokenERC20';
+import { CryptoStrikers } from '@/models/CryptoStrikers';
+import { CryptoKitties } from '@/models/CryptoKitties';
+import { TokenERC721 } from '@/models/TokenERC721';
+import { CryptoPunks } from '@/models/CryptoPunks';
 import { APP } from '@/constants';
 import { StringHelper } from '@/services/helper';
 import Neuron from '@/services/neuron/Neutron';
@@ -16,11 +20,11 @@ export class MasterWallet {
     
     // list coin is supported, can add some more Ripple ...
     static ListDefaultCoin = {
-      Ethereum, Shuriken, Bitcoin, BitcoinTestnet,
+      Ethereum, Shuriken, Bitcoin, BitcoinTestnet
     };
 
     static ListCoin = {
-      Ethereum, Bitcoin, BitcoinTestnet, Shuriken, TokenERC20
+      Ethereum, Bitcoin, BitcoinTestnet, Shuriken, TokenERC20,CryptoStrikers, CryptoPunks, CryptoKitties, TokenERC20
     };
 
     static ListCoinReward = { Ethereum, Bitcoin };
@@ -116,8 +120,7 @@ export class MasterWallet {
       let isImport = false;
       if (mnemonic == '') {
         mnemonic = bip39.generateMnemonic(); // generates string
-      } else if (!bip39.validateMnemonic(mnemonic)) {
-        console.log('validateMnemonic mnemonic', false);
+      } else if (!bip39.validateMnemonic(mnemonic)) {        
         return false;
       } else {
         isImport = true;
@@ -139,15 +142,13 @@ export class MasterWallet {
 
     static AddToken(newToken){
       let wallets = localStore.get(MasterWallet.KEY);
-      if (wallets == false) return false;
-
-      wallets.push(JSON.parse(JSON.stringify(newToken)));      
+      if (wallets == false) return false;      
+      wallets.push(JSON.parse(JSON.stringify(newToken)));            
       MasterWallet.UpdateLocalStore(wallets);      
       return true;
     }
 
-    static UpdateLocalStore(masterWallet) {
-      //console.log('masterWallet saved');
+    static UpdateLocalStore(masterWallet) {      
       localStore.save(MasterWallet.KEY, masterWallet);
     }
 
