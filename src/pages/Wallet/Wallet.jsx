@@ -451,11 +451,13 @@ class Wallet extends React.Component {
     if (this.state.inputRestoreWalletValue != '') {
       const walletData = MasterWallet.restoreWallets(this.state.inputRestoreWalletValue);
       if (walletData !== false) {
-        this.getListBalace(walletData);
-        this.splitWalletData(walletData);
-        this.setState({ isRestoreLoading: false });
-        this.modalRestoreRef.close();
-        this.showSuccess(messages.wallet.action.restore.success.restore);
+        // this.getListBalace(walletData);
+        // this.splitWalletData(walletData);
+        // this.setState({ isRestoreLoading: false });
+        // this.modalRestoreRef.close();
+        // this.showSuccess(messages.wallet.action.restore.success.restore);
+        // reload page:
+        window.location.reload();
         return;
       }
     }
@@ -595,7 +597,8 @@ class Wallet extends React.Component {
       title: messages.wallet.action.backup.title,
       handler: () => {
         this.modalBackupRef.open();
-        this.setState({ walletsData: this.getAllWallet() });
+        
+        this.setState({ walletsData: {"auth_token": local.get(APP.AUTH_TOKEN) ,"wallets": this.getAllWallet() }});
         this.toggleBottomSheet();
       },
     });

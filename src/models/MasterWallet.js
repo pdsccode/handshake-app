@@ -151,7 +151,7 @@ export class MasterWallet {
     static UpdateLocalStore(masterWallet) {      
       localStore.save(MasterWallet.KEY, masterWallet);
     }
-
+    
     static UpdateBalanceItem(item) {
       const wallets = MasterWallet.getMasterWallet();
       wallets.forEach((wallet) => {
@@ -396,12 +396,25 @@ export class MasterWallet {
     static restoreWallets(dataString) {
       try {
         const jsonData = MasterWallet.IsJsonString(dataString);
+        let auth_token = false;
+        let wallets = false;
         console.log('jsonData', jsonData);
         if (jsonData !== false) {
-          if (Array.isArray(jsonData)) {
+        
+          if (jsonData.hasOwnProperty('auth_token')){
+            auth_token = jsonData['auth_token'];
+          }
+          if (jsonData.hasOwnProperty('wallets')){
+            wallets = jsonData['wallets'];
+          }
+          else{
+            wallets = jsonData;
+          }
+
+          if (Array.isArray(wallets)) {
             console.log('isArray');
             const listWallet = [];
-            jsonData.forEach((walletJson) => {
+            wallets.forEach((walletJson) => {
               const wallet = MasterWallet.convertObject(walletJson);
               console.log('wallet=>', wallet);
               if (wallet === false) {
@@ -410,6 +423,9 @@ export class MasterWallet {
               listWallet.push(wallet);
             });
             MasterWallet.UpdateLocalStore(listWallet);
+            if (auth_token !== false){
+              localStore.save(APP.AUTH_TOKEN, auth_token);
+            }
             return listWallet;
           }
         }
