@@ -10,6 +10,7 @@ import {
   EXCHANGE_FEED_TYPE,
   EXCHANGE_METHOD_PAYMENT,
   HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS,
+  HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS_NAME,
   HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS,
   HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_NAME,
   HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE,
@@ -34,8 +35,7 @@ import {
   rejectOfferItem,
   reviewOffer
 } from "@/reducers/exchange/action";
-import {HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS_NAME} from "../../../../constants";
-import Rate from "../../../core/controls/Rate/Rate";
+import Rate from "@/core/controls/Rate/Rate";
 
 class FeedMeOfferStoreContainer extends React.PureComponent {
   constructor(props) {
@@ -344,7 +344,7 @@ class FeedMeOfferStoreContainer extends React.PureComponent {
       }
     }
 
-    this.showLoading();
+    this.props.showLoading({ message: '' });
     this.props.acceptOfferItem({
       PATH_URL: `${API_URL.EXCHANGE.OFFER_STORES}/${initUserId}/${API_URL.EXCHANGE.SHAKES}/${offer.id}/accept`,
       METHOD: 'POST',
@@ -378,7 +378,7 @@ class FeedMeOfferStoreContainer extends React.PureComponent {
     }
 
     // console.log('data', data);
-    this.hideLoading();
+    this.props.hideLoading();
     this.props.showAlert({
       message: <div className="text-center"><FormattedMessage id="acceptOfferItemSuccessMassage" /></div>,
       timeOut: 2000,
@@ -421,7 +421,7 @@ class FeedMeOfferStoreContainer extends React.PureComponent {
       }
     }
 
-    this.showLoading();
+    this.props.showLoading({ message: '' });
     this.props.completeOfferItem({
       PATH_URL: `${API_URL.EXCHANGE.OFFER_STORES}/${initUserId}/${API_URL.EXCHANGE.SHAKES}/${id}/complete`,
       METHOD: 'POST',
@@ -463,7 +463,7 @@ class FeedMeOfferStoreContainer extends React.PureComponent {
     }
 
     // console.log('data', data);
-    this.hideLoading();
+    this.props.hideLoading();
     this.props.showAlert({
       message: <div className="text-center"><FormattedMessage id="completeOfferItemSuccessMassage" /></div>,
       timeOut: 2000,
@@ -507,7 +507,7 @@ class FeedMeOfferStoreContainer extends React.PureComponent {
       }
     }
 
-    this.showLoading();
+    this.props.showLoading({ message: '' });
     this.props.rejectOfferItem({
       PATH_URL: `${API_URL.EXCHANGE.OFFER_STORES}/${initUserId}/${API_URL.EXCHANGE.SHAKES}/${id}`,
       METHOD: 'DELETE',
@@ -543,7 +543,7 @@ class FeedMeOfferStoreContainer extends React.PureComponent {
       }
     }
 
-    this.hideLoading();
+    this.props.hideLoading();
     this.props.showAlert({
       message: <div className="text-center"><FormattedMessage id="rejectOfferItemSuccessMassage" /></div>,
       timeOut: 2000,
@@ -583,7 +583,7 @@ class FeedMeOfferStoreContainer extends React.PureComponent {
       }
     }
 
-    this.showLoading();
+    this.props.showLoading({ message: '' });
     this.props.cancelOfferItem({
       PATH_URL: `${API_URL.EXCHANGE.OFFER_STORES}/${initUserId}/${API_URL.EXCHANGE.SHAKES}/${id}/cancel`,
       METHOD: 'POST',
@@ -619,7 +619,7 @@ class FeedMeOfferStoreContainer extends React.PureComponent {
       }
     }
 
-    this.hideLoading();
+    this.props.hideLoading();
     this.props.showAlert({
       message: <div className="text-center"><FormattedMessage id="cancelOfferItemSuccessMassage" /></div>,
       timeOut: 2000,
