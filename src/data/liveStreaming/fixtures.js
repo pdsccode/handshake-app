@@ -338,6 +338,8 @@ export default [
     ],
     linksSoftCast: [
       'sop://broker.sopcast.com:3912/257725',
+      'sop://broker.sopcast.com:3912/257711',
+      'sop://broker.sopcast.com:3912/254780',
     ],
   },
   {
@@ -460,8 +462,8 @@ export default [
     "date": "2018-07-03T14:00:00Z",
     "status": "SCHEDULED",
     "matchday": 4,
-    "homeTeamName": "",
-    "awayTeamName": "",
+    "homeTeamName": "Sweden",
+    "awayTeamName": "Switzerland",
     "result": {
       "goalsHomeTeam": null,
       "goalsAwayTeam": null
@@ -486,8 +488,8 @@ export default [
     "date": "2018-07-03T18:00:00Z",
     "status": "SCHEDULED",
     "matchday": 4,
-    "homeTeamName": "",
-    "awayTeamName": "",
+    "homeTeamName": "Colombia",
+    "awayTeamName": "England",
     "result": {
       "goalsHomeTeam": null,
       "goalsAwayTeam": null
