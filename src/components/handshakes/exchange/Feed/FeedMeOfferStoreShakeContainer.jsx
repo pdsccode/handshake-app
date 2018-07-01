@@ -35,9 +35,9 @@ import {
   rejectOfferItem,
   reviewOffer
 } from "@/reducers/exchange/action";
-import Rate from "@/core/controls/Rate/Rate";
+import Rate from '@/components/core/controls/Rate/Rate';
 
-class FeedMeOfferStoreContainer extends React.PureComponent {
+class FeedMeOfferStoreShakeContainer extends React.PureComponent {
   constructor(props) {
     super(props);
 
@@ -836,7 +836,7 @@ class FeedMeOfferStoreContainer extends React.PureComponent {
   }
 }
 
-FeedMeOfferStoreContainer.propTypes = {
+FeedMeOfferStoreShakeContainer.propTypes = {
   className: PropTypes.string,
   background: PropTypes.string,
 };
@@ -860,4 +860,4 @@ const mapDispatch = ({
   responseExchangeDataChange,
 });
 
-export default connect(mapState, mapDispatch)(FeedMeOfferStoreContainer);
+export default connect(mapState, mapDispatch)(FeedMeOfferStoreShakeContainer);
