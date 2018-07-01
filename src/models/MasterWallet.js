@@ -378,7 +378,8 @@ export class MasterWallet {
         if (walletJson.decimals) wallet.decimals = walletJson.decimals;
         if (walletJson.contractAddress) wallet.contractAddress = walletJson.contractAddress;
         if (walletJson.customToken) wallet.customToken = walletJson.customToken;
-      
+        if (walletJson.isCollectibles) wallet.isCollectibles = walletJson.isCollectibles;
+        
         return wallet;
       } catch (e) {
         return false;

@@ -17,6 +17,7 @@ export class Wallet {
     this.chainId = -1;
     this.isToken = false;
     this.customToken = false;
+    this.isCollectibles = false;
     this.decimals = 18;
   }
 

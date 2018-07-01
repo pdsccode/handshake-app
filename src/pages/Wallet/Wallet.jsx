@@ -318,7 +318,7 @@ class Wallet extends React.Component {
     const { messages } = this.props.intl;
     let obj = [];
 
-    // if (wallet.name != "SHURI"){
+    if (!wallet.isCollectibles){
       obj.push({
         title: messages.wallet.action.transfer.title,
         handler: async () => {
@@ -337,7 +337,7 @@ class Wallet extends React.Component {
 
         }
       })
-    // }
+    }
     obj.push({
       title: messages.wallet.action.receive.title,
       handler: () => {

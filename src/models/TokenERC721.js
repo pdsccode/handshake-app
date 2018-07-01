@@ -22,6 +22,7 @@ export class TokenERC721 extends Ethereum {
       this.customToken = true;
       this.title = "";
       this.name = "";
+      this.isCollectibles = true;
     }  
 
     createFromWallet(wallet){
