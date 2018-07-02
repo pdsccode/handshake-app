@@ -268,7 +268,7 @@ class FeedBetting extends React.Component {
           onClick={this.props.onFeedClick}
           background="white"
         >
-          <div className="eventName" style={styleEventName}>
+          <div className="eventTitle">
             {eventName}
           </div>
 

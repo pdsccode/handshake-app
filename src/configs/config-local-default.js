@@ -20,7 +20,7 @@ const config = {
       multiSigAuthAddress: '',
       handshakeProtocolAddress: '',
       crowdsaleHandshakeAddress: '',
-      basicHandshakeAddress: '0x4c621cfd5496b2077eb1c5b0308e2ea72358191b',
+      basicHandshakeAddress: '0xc5f0b59a854a5a63a48bff22d6e5adef73bff02b',
       payableHandshakeAddress: '',
       groupHandshakeAddress: '',
       // predictionHandshakeAddress: '0xb90a6b2d5b6dd306b9350304fe6fe88636847298',
