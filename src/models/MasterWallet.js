@@ -439,13 +439,36 @@ export class MasterWallet {
       return false;
     }
 
-    static getShurikenWalletJson() {
-      const wallets = MasterWallet.getMasterWallet();
-      const shuries = wallets.filter(wallet => wallet.name === 'SHURI');
-      if (shuries.length) {
+    static getShuriWallet(){
+      let wallets = MasterWallet.getMasterWallet();
+      if (wallets !== false){
+        let shuries = wallets.filter(wallet => wallet.name === 'SHURI' && !wallet.customToken);
+        if (shuries.length > 0)
+            return shuries[0]
+      }
+      return false;
+    }
+
+    static convertToJsonETH(wallet){
+      if (wallet !== false) {
         const {
           address, name, network, chainId,
-        } = shuries[0];
+        } = wallet;
+        return JSON.stringify({
+          ETH: {
+            address, name, network, chainId,
+          },
+        });
+      }
+      return false;
+    }
+
+    static getShurikenWalletJson() {
+      let shuries = MasterWallet.getShuriWallet();
+      if (shuries !== false) {
+        const {
+          address, name, network, chainId,
+        } = shuries;
         return JSON.stringify({
           ETH: {
             address, name, network, chainId,
