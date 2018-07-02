@@ -144,6 +144,7 @@ export const BETTING_STATUS_LABEL =
       RETRY: 'Retry',
       ROLLBACK_INIT: 'There is something wrong with blockchain. The bet is cancelled',
       ROLLBACK_SHAKE: 'There is something wrong with blockchain. The bet is cancelled',
+      COLLECT_FAILED: 'There is something wrong with withdraw. Please cancel to get back money',
       ACTION_FAILED: `There is something wrong with blockchain. Your action is cancelled`,
       SOLVE: 'Please retry to solve problem',
       LOSE: 'Better luck next time.',
@@ -195,7 +196,9 @@ export class BetHandshakeHandler {
     console.log('getStatusLabel Blockchain status:', blockchainStatus);
 
     if(blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_FAILED){
-
+      label = BETTING_STATUS_LABEL.CANCEL;
+      strStatus = BETTING_STATUS_LABEL.COLLECT_FAILED;
+      isAction = true;
     }
     else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINIT_PENDING
       || blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_PENDING) {
@@ -231,13 +234,14 @@ export class BetHandshakeHandler {
       label = BETTING_STATUS_LABEL.CANCEL;
       strStatus = BETTING_STATUS_LABEL.BET_WAIT_MATCHING;
       isAction = true;
-    } else if (isMatch && resultStatus === BETTING_STATUS.DRAW) {
+    } else if ((isMatch && resultStatus === BETTING_STATUS.DRAW)
+              || (isMatch &&  resultStatus === BETTING_STATUS.INITED && isExpiredDate(disputeTime))){
       label = BETTING_STATUS_LABEL.REFUND;
       strStatus = BETTING_STATUS_LABEL.REFUNDING;
       isAction = true;
     } else if ((isMatch && resultStatus === BETTING_STATUS.SUPPORT_WIN && side === SIDE.SUPPORT)
                 || (isMatch && resultStatus === BETTING_STATUS.AGAINST_WIN && side === SIDE.AGAINST)) {
-      if(isExpiredDate(disputeTime)){ //Over dispute time, user can withdraw
+      if(isExpiredDate(reportTime)){ //Over dispute time, user can withdraw
         label = BETTING_STATUS_LABEL.WITHDRAW;
         strStatus = BETTING_STATUS_LABEL.WIN;
         isAction = true;
@@ -500,6 +504,7 @@ export class BetHandshakeHandler {
     return result;
   }
   async refund(hid, offchain) {
+    /*
     const chainId = getChainIdDefaultWallet();
     const bettinghandshake = new BettingHandshake(chainId);
     const result = await bettinghandshake.refund(hid, offchain);
@@ -515,6 +520,41 @@ export class BetHandshakeHandler {
       this.rollback(offchain);
     }
     this.saveTransaction(offchain, CONTRACT_METHOD.REFUND, chainId, realBlockHash, contractAddress, logJson);
+
+    return result;
+    */
+   const chainId = getChainIdDefaultWallet();
+
+    const bettinghandshake = new BettingHandshake(chainId);
+    const contractAddress = bettinghandshake.contractAddress;
+
+    let logJson = '';
+    let realBlockHash = '';
+    let result = null;
+    try {
+      result = await bettinghandshake.refund(hid, side, stake, odds, offchain);
+      const {logs, hash, error, transactionHash, payload} = result;
+
+      logJson = payload;
+      realBlockHash = hash;
+      if(hash == -1){
+        realBlockHash = "-1";
+        logJson = error.message;
+        store.dispatch(showAlert({
+          message: MESSAGE.ROLLBACK,
+          timeOut: 3000,
+          type: 'danger',
+          callBack: () => {
+          },
+        }));
+      }else {  
+
+      }
+    } catch (err) {
+      realBlockHash = '-1';
+      logJson = err.message;
+    }
+    this.saveTransaction(offchain,CONTRACT_METHOD.CANCEL, chainId, realBlockHash, contractAddress, logJson);
 
     return result;
   }
@@ -605,12 +645,10 @@ export class BetHandshakeHandler {
     const offchainString = `cryptosign_createMarket${offchain}`;
     try {
       result = await predictionhandshake.createMarket(fee, source, closingWindow, reportWindow, disputeWindow, offchain);
-      const {
-        logs, hash, error, transactionHash,
-      } = result;
+      const {logs, hash, error, transactionHash, payload} = result;
 
-      logJson = JSON.stringify(logs);
-      realBlockHash = transactionHash;
+      logJson = payload;
+      realBlockHash = hash;
       if (hash == -1) {
         realBlockHash = '-1';
         logJson = error.message;

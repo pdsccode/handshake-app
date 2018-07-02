@@ -383,8 +383,8 @@ class FeedBetting extends React.Component {
         this.withdrawOnChain(offchain, hid);
         break;
       case BETTING_STATUS_LABEL.REFUND:
-      this.refund(realId);
-      break;
+        this.refund(realId);
+        break;
 
     }
   }
@@ -421,7 +421,22 @@ class FeedBetting extends React.Component {
       this.props.updateBettingChange(updateInfo);
     }
   }
-
+  async refundOnChain(offchain, hid){
+    const {itemInfo} = this.state;
+    const {side, amount, odds} = itemInfo;
+    this.setState({
+      isLoading: true
+    })
+    betHandshakeHandler.setItemOnChain(offchain, true);
+    const result = await betHandshakeHandler.refund(hid, side, amount, odds, offchain);
+    const {hash} = result;
+    if(hash){
+      betHandshakeHandler.setItemOnChain(offchain, false);
+      let updateInfo = Object.assign({}, itemInfo);
+      updateInfo.status = BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINIT_PENDING;
+      this.props.updateBettingChange(updateInfo);
+    }
+  }
   async clickActionButton(title){
     const balance = await getBalance();
     const estimatedGas = await getEstimateGas();
