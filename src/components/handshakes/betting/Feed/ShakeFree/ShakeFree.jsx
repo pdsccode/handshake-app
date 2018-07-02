@@ -115,7 +115,7 @@ class BetingShakeFree extends React.Component {
     let message = null;
     if (!isRightNetwork()) {
       message = MESSAGE.RIGHT_NETWORK;
-    } else if (isExpiredDate(reportTime)) {
+    } else if (isExpiredDate(closingDate)) {
       message = MESSAGE.MATCH_OVER;
     } else if (matchName && matchOutcome) {
       if (odds.gte(1)) {

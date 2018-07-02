@@ -8,7 +8,7 @@ const config = {
       payableHandshakeAddress: '',
       groupHandshakeAddress: '',
       // predictionHandshakeAddress: '0xb90a6b2d5b6dd306b9350304fe6fe88636847298',
-      predictionHandshakeAddress: '0x2730da6188a35a5a384f4a3127036bb90f3721b5',
+      predictionHandshakeAddress: '0x619777cdacb39ecc1f37e8319ef74d2ef72b7432',
       predictionHandshakeDevAddress: '0x52112758dd3c64d4d4ce6bc8b62ff62335582b42',
       exchangeHandshakeAddress: '0x5fa2e0d96dbe664beb502407bf46ea85b131fb86',
       exchangeShopAddress: '0x05914192cbbaae87a910f79e012b4091a39cc85c',

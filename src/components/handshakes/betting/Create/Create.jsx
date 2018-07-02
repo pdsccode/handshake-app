@@ -264,8 +264,9 @@ class BettingCreate extends React.Component {
 
     if (selectedMatch && selectedOutcome) {
       const date = selectedMatch.date;
-      const reportTime = selectedMatch.reportTime;
-      if (isExpiredDate(reportTime)) {
+      //const reportTime = selectedMatch.reportTime;
+      const closingTime = selectedMatch.date;
+      if (isExpiredDate(closingTime)) {
         message = MESSAGE.MATCH_OVER;
       } else if (eventBet > 0) {
         if (total <= balance) {
