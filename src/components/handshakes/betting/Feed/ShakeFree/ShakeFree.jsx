@@ -118,7 +118,7 @@ class BetingShakeFree extends React.Component {
     } else if (isExpiredDate(closingDate)) {
       message = MESSAGE.MATCH_OVER;
     } else if (matchName && matchOutcome) {
-      if (odds.gte(1)) {
+      if (odds.gt(1)) {
         this.initHandshake(amount, odds);
         this.props.onSubmitClick();
       } else {
