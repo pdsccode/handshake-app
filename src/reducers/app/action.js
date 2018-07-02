@@ -157,10 +157,10 @@ const tokenHandle = ({
             data,
             METHOD: 'POST',
             successFn: (res) => {
-              //console.log('app - handle - wallet - success - ', res);
+              // console.log('app - handle - wallet - success - ', res);
             },
             errorFn: (e) => {
-              //console.log('app - handle - wallet - error - ', e);
+              // console.log('app - handle - wallet - error - ', e);
             },
           }));
           resolve(true);
@@ -201,12 +201,12 @@ const auth = ({ ref, dispatch, ipInfo }) => new Promise((resolve, reject) => {
 });
 
 function getCountry(addrComponents) {
-  for (var i = 0; i < addrComponents.length; i++) {
-    if (addrComponents[i].types[0] == "country") {
+  for (let i = 0; i < addrComponents.length; i++) {
+    if (addrComponents[i].types[0] == 'country') {
       return addrComponents[i].short_name;
     }
     if (addrComponents[i].types.length == 2) {
-      if (addrComponents[i].types[0] == "political") {
+      if (addrComponents[i].types[0] == 'political') {
         return addrComponents[i].short_name;
       }
     }
@@ -222,21 +222,20 @@ export const initApp = (language, ref) => (dispatch) => {
   }).then((res) => {
     const { data } = res;
 
-    var ipInfo = IpInfo.ipInfo(data);
-    //get currency base on GPS
-    console.log('------------GPS-------------' + ipInfo);
+    const ipInfo = IpInfo.ipInfo(data);
+    // get currency base on GPS
+    console.log(`------------GPS-------------${ipInfo}`);
 
     navigator.geolocation.getCurrentPosition((location) => {
-      const {coords: {latitude, longitude}} = location;
-      console.log('------------GPS-------------' + latitude);
+      const { coords: { latitude, longitude } } = location;
+      console.log(`------------GPS-------------${latitude}`);
 
       axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&sensor=true`).then((response) => {
-
-        if (response.data.results[0] && response.data.results[0].address_components){
-          var country = getCountry(response.data.results[0].address_components);
-          if(country && Country[country]){
+        if (response.data.results[0] && response.data.results[0].address_components) {
+          const country = getCountry(response.data.results[0].address_components);
+          if (country && Country[country]) {
             ipInfo.currency = Country[country];
-            console.log('------------GPS-------------' + ipInfo.currency);
+            console.log(`------------GPS-------------${ipInfo.currency}`);
             dispatch(setIpInfo(ipInfo));
           }
         }
