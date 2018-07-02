@@ -6,8 +6,8 @@ import placeHolder from '@/assets/images/icon/upload-image.svg';
 
 import $http from '@/services/api';
 import { BASE_API } from '@/constants';
-import {injectIntl} from "react-intl";
-import {connect} from "react-redux";
+import { injectIntl } from 'react-intl';
+import { connect } from 'react-redux';
 
 import axios from 'axios';
 
@@ -18,7 +18,7 @@ export class Component extends React.PureComponent { // eslint-disable-line reac
     files: [],
   }
 
-  onDrop = acceptedFiles => {
+  onDrop = (acceptedFiles) => {
     const { onSuccess, multiple, authProfile } = this.props;
 
     const file = acceptedFiles[0];
@@ -32,9 +32,9 @@ export class Component extends React.PureComponent { // eslint-disable-line reac
         const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
         const correspondingFile = newFiles.find(item => item.name === file.name);
         if (correspondingFile) {
-          correspondingFile.percent = percentCompleted
+          correspondingFile.percent = percentCompleted;
         }
-        this.setState({ files: newFiles })
+        this.setState({ files: newFiles });
         this.forceUpdate();
       },
     }).then((res) => {

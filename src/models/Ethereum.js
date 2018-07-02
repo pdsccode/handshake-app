@@ -12,7 +12,6 @@ const bip39 = require('bip39');
 const BN = Web3.utils.BN;
 
 export class Ethereum extends Wallet {
-
   static Network = { Mainnet: 'https://mainnet.infura.io/', Rinkeby: 'https://rinkeby.infura.io/' }
   static API = { Mainnet: 'https://api.etherscan.io/api', Rinkeby: 'https://api-rinkeby.etherscan.io/api' }
 
@@ -81,13 +80,12 @@ export class Ethereum extends Wallet {
     const web3 = new Web3(new Web3.providers.HttpProvider(this.network));
 
     if (!web3.utils.isAddress(toAddress)) {
-      return "messages.ethereum.error.invalid_address";
+      return 'messages.ethereum.error.invalid_address';
     }
     return true;
   }
 
   async transfer(toAddress, amountToSend) {
-
     try {
       console.log(`transfered from address:${this.address}`);
 
@@ -95,7 +93,7 @@ export class Ethereum extends Wallet {
       const web3 = new Web3(new Web3.providers.HttpProvider(this.network));
 
       if (!web3.utils.isAddress(toAddress)) {
-        return { status: 0, message: "messages.ethereum.error.invalid_address2" };
+        return { status: 0, message: 'messages.ethereum.error.invalid_address2' };
       }
       // check amount:
       let balance = await web3.eth.getBalance(this.address);
@@ -104,7 +102,7 @@ export class Ethereum extends Wallet {
       console.log(StringHelper.format('Your wallet balance is currently {0} ETH', balance));
 
       if (balance == 0 || balance <= amountToSend) {
-        return { status: 0, message: "messages.ethereum.error.insufficient" };
+        return { status: 0, message: 'messages.ethereum.error.insufficient' };
       }
 
       const gasPrice = new BN(await web3.eth.getGasPrice());
@@ -137,9 +135,9 @@ export class Ethereum extends Wallet {
       const url = StringHelper.format('{0}/tx/{1}', this.network, transactionId);
       console.log('url', url);
 
-      return { status: 1, message: "messages.ethereum.success.transaction" };
+      return { status: 1, message: 'messages.ethereum.success.transaction' };
     } catch (error) {
-      return { status: 0, message: "messages.ethereum.error.insufficient" };
+      return { status: 0, message: 'messages.ethereum.error.insufficient' };
     }
   }
 

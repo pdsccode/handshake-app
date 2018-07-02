@@ -13,7 +13,7 @@ import { rollback, saveTransaction, collect } from '@/reducers/handshake/action'
 import store from '@/stores';
 import moment from 'moment';
 import { off } from 'rsvp';
- 
+
 export const MESSAGE_SERVER = {
   /* ERROR */
   1000: 'Please double check your input data.',
@@ -195,12 +195,11 @@ export class BetHandshakeHandler {
     console.log('getStatusLabel isMatch:', isMatch);
     console.log('getStatusLabel Blockchain status:', blockchainStatus);
 
-    if(blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_FAILED){
+    if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_FAILED) {
       label = BETTING_STATUS_LABEL.CANCEL;
       strStatus = BETTING_STATUS_LABEL.COLLECT_FAILED;
       isAction = true;
-    }
-    else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINIT_PENDING
+    } else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINIT_PENDING
       || blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_PENDING) {
       strStatus = BETTING_STATUS_LABEL.PROGRESSING;
       isAction = false;
@@ -235,23 +234,22 @@ export class BetHandshakeHandler {
       strStatus = BETTING_STATUS_LABEL.BET_WAIT_MATCHING;
       isAction = true;
     } else if ((isMatch && resultStatus === BETTING_STATUS.DRAW)
-              || (isMatch &&  resultStatus === BETTING_STATUS.INITED && isExpiredDate(disputeTime))){
+              || (isMatch && resultStatus === BETTING_STATUS.INITED && isExpiredDate(disputeTime))) {
       label = BETTING_STATUS_LABEL.REFUND;
       strStatus = BETTING_STATUS_LABEL.REFUNDING;
       isAction = true;
     } else if ((isMatch && resultStatus === BETTING_STATUS.SUPPORT_WIN && side === SIDE.SUPPORT)
                 || (isMatch && resultStatus === BETTING_STATUS.AGAINST_WIN && side === SIDE.AGAINST)) {
-      if(isExpiredDate(reportTime)){ //Over dispute time, user can withdraw
+      if (isExpiredDate(reportTime)) { // Over dispute time, user can withdraw
         label = BETTING_STATUS_LABEL.WITHDRAW;
         strStatus = BETTING_STATUS_LABEL.WIN;
         isAction = true;
-      }else { //
+      } else { //
         strStatus = BETTING_STATUS_LABEL.WIN + BETTING_STATUS_LABEL.WIN_WAIT;
         isAction = true;
-      }            
-      
+      }
     } else if ((isMatch && resultStatus === BETTING_STATUS.SUPPORT_WIN && side === SIDE.AGAINST)
-                ||  (isMatch && resultStatus === BETTING_STATUS.AGAINST_WIN && side === SIDE.SUPPORT)){
+                || (isMatch && resultStatus === BETTING_STATUS.AGAINST_WIN && side === SIDE.SUPPORT)) {
       strStatus = BETTING_STATUS_LABEL.LOSE;
       isAction = false;
     } else if (isMatch || blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_SHAKER_SHAKED) {
@@ -265,7 +263,7 @@ export class BetHandshakeHandler {
     console.log('initContract', item);
 
     const {
-      amount, odds, side, offchain, hid
+      amount, odds, side, offchain, hid,
     } = item;
     const stake = Math.floor(amount * 10 ** 18) / 10 ** 18;
     // hid = 10000;
@@ -277,12 +275,14 @@ export class BetHandshakeHandler {
     let dataBlockchain = '';
     try {
       dataBlockchain = await bettinghandshake.initBet(hid, side, stake, odds, offchain);
-      //TO DO: SAVE TRANSACTION
-      const {logs, hash, error, transactionHash, payload} = dataBlockchain;
+      // TO DO: SAVE TRANSACTION
+      const {
+        logs, hash, error, transactionHash, payload,
+      } = dataBlockchain;
       logJson = payload;
       realBlockHash = hash;
-      if(hash == -1){
-        realBlockHash = "-1";
+      if (hash == -1) {
+        realBlockHash = '-1';
 
         logJson = error.message;
         this.rollback(offchain);
@@ -316,7 +316,7 @@ export class BetHandshakeHandler {
     console.log('shakeContract', item);
 
     const {
-      amount, id, odds, side,maker_address, maker_odds, offchain, hid
+      amount, id, odds, side, maker_address, maker_odds, offchain, hid,
     } = item;
     // hid = 10000;
     const stake = Math.floor(amount * 10 ** 18) / 10 ** 18;
@@ -339,12 +339,14 @@ export class BetHandshakeHandler {
         makerOdds,
         offchain,
       );
-      const {logs, hash, error, transactionHash, payload} = result;
+      const {
+        logs, hash, error, transactionHash, payload,
+      } = result;
 
       logJson = payload;
       realBlockHash = hash;
-      if(hash == -1){
-        realBlockHash = "-1";
+      if (hash == -1) {
+        realBlockHash = '-1';
         logJson = error.message;
         this.rollback(offchain);
       }
@@ -373,7 +375,6 @@ export class BetHandshakeHandler {
 
 
   handleContract(element, i) {
-    
     setTimeout(() => {
       console.log('Time out:');
       const { offchain, odds } = element;
@@ -381,11 +382,11 @@ export class BetHandshakeHandler {
       console.log('Is Init Bet:', isInit);
       if (isInit) {
         this.addContract(element);
-      } else {       
-      this.shakeContract(element);
+      } else {
+        this.shakeContract(element);
       }
     }, 3000 * i);
-    
+
 
     /*
    const { offchain, odds } = element;
@@ -394,7 +395,7 @@ export class BetHandshakeHandler {
    if (isInit) {
      this.addContract(element);
    } else {
-    
+
    this.shakeContract(element);
 
    }
@@ -423,12 +424,14 @@ export class BetHandshakeHandler {
     let result = null;
     try {
       result = await bettinghandshake.cancelBet(hid, side, stake, odds, offchain);
-      const {logs, hash, error, transactionHash, payload} = result;
+      const {
+        logs, hash, error, transactionHash, payload,
+      } = result;
 
       logJson = payload;
       realBlockHash = hash;
-      if(hash == -1){
-        realBlockHash = "-1";
+      if (hash == -1) {
+        realBlockHash = '-1';
         logJson = error.message;
         store.dispatch(showAlert({
           message: MESSAGE.ROLLBACK,
@@ -437,26 +440,23 @@ export class BetHandshakeHandler {
           callBack: () => {
           },
         }));
-      }else {  
+      } else {
 
       }
     } catch (err) {
       realBlockHash = '-1';
       logJson = err.message;
     }
-    this.saveTransaction(offchain,CONTRACT_METHOD.CANCEL, chainId, realBlockHash, contractAddress, logJson);
+    this.saveTransaction(offchain, CONTRACT_METHOD.CANCEL, chainId, realBlockHash, contractAddress, logJson);
 
     return result;
   }
-  getLoadingOnChain = (offchain) => {
-
-    return this.listOnChainLoading[offchain];
-  }
-  setItemOnChain = (offchain,isLoading = false) => {
-    if(this.listOnChainLoading){
-        this.listOnChainLoading[offchain] = {
-        isLoading: isLoading
-      }
+  getLoadingOnChain = offchain => this.listOnChainLoading[offchain]
+  setItemOnChain = (offchain, isLoading = false) => {
+    if (this.listOnChainLoading) {
+      this.listOnChainLoading[offchain] = {
+        isLoading,
+      };
     }
   }
   async withdraw(hid, offchain) {
@@ -471,11 +471,13 @@ export class BetHandshakeHandler {
     let realBlockHash = '';
     try {
       result = await bettinghandshake.withdraw(hid, offchain);
-      const {logs, hash, error, transactionHash, payload} = result;
+      const {
+        logs, hash, error, transactionHash, payload,
+      } = result;
       logJson = payload;
       realBlockHash = hash;
-      if(hash == -1){
-        realBlockHash = "-1";
+      if (hash == -1) {
+        realBlockHash = '-1';
         logJson = error.message;
         store.dispatch(showAlert({
           message: MESSAGE.ROLLBACK,
@@ -514,8 +516,8 @@ export class BetHandshakeHandler {
     let logJson = JSON.stringify(logs);
     const contractAddress = bettinghandshake.contractAddress;
     let realBlockHash = hash;
-    if(hash == -1){
-      realBlockHash = "-1";
+    if (hash == -1) {
+      realBlockHash = '-1';
       logJson = error.message;
       this.rollback(offchain);
     }
@@ -523,7 +525,7 @@ export class BetHandshakeHandler {
 
     return result;
     */
-   const chainId = getChainIdDefaultWallet();
+    const chainId = getChainIdDefaultWallet();
 
     const bettinghandshake = new BettingHandshake(chainId);
     const contractAddress = bettinghandshake.contractAddress;
@@ -533,12 +535,14 @@ export class BetHandshakeHandler {
     let result = null;
     try {
       result = await bettinghandshake.refund(hid, side, stake, odds, offchain);
-      const {logs, hash, error, transactionHash, payload} = result;
+      const {
+        logs, hash, error, transactionHash, payload,
+      } = result;
 
       logJson = payload;
       realBlockHash = hash;
-      if(hash == -1){
-        realBlockHash = "-1";
+      if (hash == -1) {
+        realBlockHash = '-1';
         logJson = error.message;
         store.dispatch(showAlert({
           message: MESSAGE.ROLLBACK,
@@ -547,14 +551,14 @@ export class BetHandshakeHandler {
           callBack: () => {
           },
         }));
-      }else {  
+      } else {
 
       }
     } catch (err) {
       realBlockHash = '-1';
       logJson = err.message;
     }
-    this.saveTransaction(offchain,CONTRACT_METHOD.CANCEL, chainId, realBlockHash, contractAddress, logJson);
+    this.saveTransaction(offchain, CONTRACT_METHOD.CANCEL, chainId, realBlockHash, contractAddress, logJson);
 
     return result;
   }
@@ -645,7 +649,9 @@ export class BetHandshakeHandler {
     const offchainString = `cryptosign_createMarket${offchain}`;
     try {
       result = await predictionhandshake.createMarket(fee, source, closingWindow, reportWindow, disputeWindow, offchain);
-      const {logs, hash, error, transactionHash, payload} = result;
+      const {
+        logs, hash, error, transactionHash, payload,
+      } = result;
 
       logJson = payload;
       realBlockHash = hash;
