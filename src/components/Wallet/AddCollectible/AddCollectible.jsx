@@ -9,9 +9,9 @@ import createForm from '@/components/core/form/createForm'
 import { change } from 'redux-form'
 import {fieldDropdown, fieldInput, fieldRadioButton} from '@/components/core/form/customField'
 import {required} from '@/components/core/form/validation'
-import {MasterWallet} from "@/models/MasterWallet";
-import {CryptoKitties} from "@/models/CryptoKitties";
-import {CryptoPunks} from "@/models/CryptoPunks";
+import {MasterWallet} from "@/services/Wallets/MasterWallet";
+import {CryptoKitties} from "@/services/Wallets/Collectibles/CryptoKitties";
+import {CryptoPunks} from "@/services/Wallets/Collectibles/CryptoPunks";
 import { bindActionCreators } from "redux";
 import {showAlert} from '@/reducers/app/action';
 import { showLoading, hideLoading } from '@/reducers/app/action';
@@ -27,7 +27,7 @@ import Dropdown from '@/components/core/controls/Dropdown';
 import iconQRCodeWhite from '@/assets/images/icon/scan-qr-code.svg';
 
 import bgBox from '@/assets/images/pages/wallet/bg-box-wallet-coin.svg';
-import { CryptoStrikers } from '@/models/CryptoStrikers';
+import { CryptoStrikers } from '@/services/Wallets/Collectibles/CryptoStrikers';
 
 const isIOs = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
 

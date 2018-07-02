@@ -39,7 +39,7 @@ import {
 } from "@/reducers/exchange/action";
 // import getSymbolFromCurrency from 'currency-symbol-map';
 import Offer from "@/models/Offer";
-import {MasterWallet} from "@/models/MasterWallet";
+import {MasterWallet} from "@/services/Wallets/MasterWallet";
 import {getHandshakeUserType, getOfferPrice} from "@/services/offer-util";
 import {showAlert} from '@/reducers/app/action';
 import {Link} from "react-router-dom";

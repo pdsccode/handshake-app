@@ -1,7 +1,7 @@
 import axios from 'axios';
 import satoshi from 'satoshi-bitcoin';
 import { rule } from 'postcss';
-import { Bitcoin } from '@/models/Bitcoin';
+import { Bitcoin } from '@/services/Wallets/Bitcoin';
 
 const bitcore = require('bitcore-lib');
 

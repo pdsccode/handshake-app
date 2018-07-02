@@ -10,7 +10,7 @@ import {fieldInput} from '@/components/core/form/customField'
 import { API_URL } from "@/constants";
 import {getCryptoPrice} from '@/reducers/exchange/action';
 import Modal from '@/components/core/controls/Modal';
-import {MasterWallet} from "@/models/MasterWallet";
+import {MasterWallet} from "@/services/Wallets/MasterWallet";
 
 import { showLoading, hideLoading, showAlert } from '@/reducers/app/action';
 import { StringHelper } from '@/services/helper';
@@ -161,7 +161,7 @@ class ReceiveCoin extends React.Component {
         if (process.env.isLive){
           wallet.value = wallet.getShortAddress() + " (" + wallet.className + " " + wallet.name + ")";
         }
-        wallet.id = wallet.address + "-" + wallet.getNetworkName();
+        wallet.id = Math.random();
 
       });
     }
