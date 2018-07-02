@@ -853,9 +853,8 @@ export class Firechat {
       icon: logo,
       tag: roomId,
       onClick: () => {
-        selfWindow.location.href = URL.HANDSHAKE_CHAT_ROOM_DETAIL.replace(':roomId', roomId);
-        Push.close(roomId);
-        console.log(this, selfWindow);
+        console.log(this, selfWindow, roomId);
+        this.onNotificationClicked(roomId);
       },
       onError: (e) => {
         console.log('notification error', e);
@@ -863,6 +862,11 @@ export class Firechat {
     }).then(() => {
       navigator.vibrate([200, 100, 200]);
     });
+  }
+
+  onNotificationClicked(roomId) {
+    Push.close(roomId);
+    window.location.href = `${URL.HANDSHAKE_CHAT_ROOM_DETAIL.replace(':roomId', roomId)}`;
   }
 
   markMessagesAsRead(roomId) {
