@@ -4,6 +4,18 @@ import local from '@/services/localStore';
 import moment from 'moment';
 import { APP } from '@/constants';
 import { BET_TYPE, MESSAGE_SERVER } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
+import {BigNumber} from 'bignumber.js';
+import _ from 'lodash';
+export const parseBigNumber = (value)=>{
+  return new BigNumber(value);
+}
+export const getMessageWithCode= (code)=> {
+    const keys = Object.keys(MESSAGE_SERVER).filter(k => k == code); // ["A", "B"]
+    console.log('Keys:', keys);
+    const value = keys.map(k => MESSAGE_SERVER[k]); // [0, 1]
+    console.log('Message:', value);
+    return value;
+  }
 
 export const getMessageWithCode = (code) => {
   const keys = Object.keys(MESSAGE_SERVER).filter(k => k === code); // ["A", "B"]
@@ -101,7 +113,7 @@ export const foundShakeList = (item, offchain) => {
 
   const idOffchain = getId(offchain);
   console.log('Id Offchain:', idOffchain);
-  if (shakers) {
+  if (!_.isEmpty(shakers)) {
     const shakersArr = JSON.parse(shakers);
     const shakedList = shakersArr.filter(element => element.shaker_id === profile.id);
     console.log('foundShakedList:', shakedList);

@@ -143,8 +143,9 @@ class FeedBetting extends React.Component {
     //const hardCodeResult = 2;
     console.log('Is Match:', isMatch);
     let isLoading = false;
-    const isLoadingObj = betHandshakeHandler.getLoadingOnChain(idCryptosign);
+    const isLoadingObj = betHandshakeHandler?.getLoadingOnChain(idCryptosign);
     if(isLoadingObj){
+      console.log('handleStatus  isLoadingObj:', isLoadingObj);
       isLoading = isLoadingObj.isLoading;
 
     }
@@ -175,9 +176,10 @@ class FeedBetting extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log('Feeding Next Props:', nextProps);
-
-    this.handleStatus(nextProps);
+    // console.log('Feeding Next Props:', nextProps);
+    if(nextProps&& JSON.stringify(this.props)!==JSON.stringify(nextProps)){
+      this.handleStatus(nextProps);
+    }
   }
 
   get extraData(){
@@ -237,7 +239,7 @@ class FeedBetting extends React.Component {
       predictName = event_predict.slice(8);
     }
     const buttonClassName = this.getButtonClassName(actionTitle);
-    console.log('Sa Role:', role);
+    // console.log('Sa Role:', role);
 
     return (
       <div>
@@ -318,7 +320,7 @@ class FeedBetting extends React.Component {
     return (this.renderItem(displayMatchedAmount,displayAmount, colorBySide, odds, displayWinMatch, displayRemaining, displayWinValue ));
   }
   renderMaker(){
-    console.log('Render Maker');
+    // console.log('Render Maker');
     const {itemInfo, amountMatch, winMatch } = this.state;
 
     const {amount, odds,side, remainingAmount } = itemInfo;
@@ -337,7 +339,7 @@ class FeedBetting extends React.Component {
 
   }
   renderShaker(){
-    console.log('Render Maker');
+    // console.log('Render Maker');
 
     const {shakedItemList} = this.state;
     return (
@@ -398,7 +400,7 @@ class FeedBetting extends React.Component {
     const result = await betHandshakeHandler.cancelBet(hid, side, amount, odds, offchain);
     const {hash} = result;
     if(hash){
-      betHandshakeHandler.setItemOnChain(offchain, false);
+      // betHandshakeHandler.setItemOnChain(offchain, false);
       let updateInfo = Object.assign({}, itemInfo);
       updateInfo.status = BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINIT_PENDING;
       this.props.updateBettingChange(updateInfo);
