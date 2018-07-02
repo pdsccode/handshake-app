@@ -1,6 +1,6 @@
 import Web3 from 'web3';
 import BaseHandshake from './BaseHandshake';
-import { MasterWallet } from '@/models/MasterWallet';
+import { MasterWallet } from '@/services/Wallets/MasterWallet';
 
 // const wallet = MasterWallet.getWalletDefault('ETH');
 // const address = wallet.address;

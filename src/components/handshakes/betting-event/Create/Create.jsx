@@ -14,7 +14,7 @@ import { Label, Col, Row } from 'reactstrap';
 import ShareSocial from '@/components/core/presentation/ShareSocial';
 import DatePicker from './DatePicker';
 import './Create.scss';
-import { MasterWallet } from '@/models/MasterWallet';
+import { MasterWallet } from '@/services/Wallets/MasterWallet';
 import { __asyncValues } from 'tslib';
 import { loadMatches, addMatch } from '@/reducers/betting/action';
 import Dropdown from '@/components/core/controls/Dropdown';

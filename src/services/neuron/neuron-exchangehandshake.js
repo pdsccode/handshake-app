@@ -1,5 +1,5 @@
 import BaseHandshake from './BaseHandshake';
-import { MasterWallet } from '@/models/MasterWallet';
+import { MasterWallet } from '@/services/Wallets/MasterWallet';
 
 const TAG = 'ExchangeHandshake';
 export default class ExchangeHandshake extends BaseHandshake {

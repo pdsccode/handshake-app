@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 // services, constants
 import  { BetHandshakeHandler, SIDE, BETTING_STATUS_LABEL, ROLE, MESSAGE, BET_BLOCKCHAIN_STATUS} from './BetHandshakeHandler.js';
 import momment from 'moment';
-import {MasterWallet} from '@/models/MasterWallet';
+import {MasterWallet} from '@/services/Wallets/MasterWallet';
 
 import local from '@/services/localStore';
 import {FIREBASE_PATH, HANDSHAKE_ID, API_URL, APP} from '@/constants';
