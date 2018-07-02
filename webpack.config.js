@@ -157,7 +157,7 @@ module.exports = function webpackConfig(env, argv) {
         main: xPath('src/index.js'),
         'app-sw': xPath('src/sw.js'),
         'firebase-messaging-sw': xPath('src/sw-fcm.js'),
-        'serviceWorker.min': xPath('src/serviceWorker.js'),
+        // 'serviceWorker.min': xPath('src/serviceWorker.js'),
       },
       output: {
         filename: `[name].js?v=[hash]`,
