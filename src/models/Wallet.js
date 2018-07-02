@@ -37,8 +37,9 @@ export class Wallet {
     return Number((parseFloat(this.balance)).toFixed(8));
   }
   getBackgroundImg(){
-    return StringHelper.format("{0}-{1}{2}.svg", this.className.toLowerCase(), this.getNetworkName().toLowerCase(), this.isReward ? "-reward" : '' );    
+    return StringHelper.format("{0}-{1}{2}.svg", this.className.toLowerCase(), this.getNetworkName().toLowerCase(), this.isReward ? "-reward" : '' );
   }
+
 }
 
 export default { Wallet };
