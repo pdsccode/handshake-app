@@ -107,7 +107,7 @@ class FeedBetting extends React.Component {
     }
   }
   isMakerShakerSameUser(userId, initUserId, shakeIds){
-    if(userId == initUserId && isShakeUser(shakeIds, userId)){
+    if(userId == initUserId && this.isShakeUser(shakeIds, userId)){
       return true;
     }
     return false;
@@ -130,9 +130,10 @@ class FeedBetting extends React.Component {
       winMatch = amountMatch * odds;
     }
     let shakedItemList = [];
+    const isMakerShakerSameUser = this.isMakerShakerSameUser(profile.id, initUserId, shakeUserIds);
     console.log('Amount,RemainingAmount, AmountMatch:', amount,remainingAmount,  amountMatch);
     
-    if(isUserShake && !this.isMakerShakerSameUser(profile.id, initUserId, shakeUserIds)){
+    if(isUserShake && !isMakerShakerSameUser){
      
      shakedItemList = foundShakeList(props, id);
      if(shakedItemList.length > 0){
