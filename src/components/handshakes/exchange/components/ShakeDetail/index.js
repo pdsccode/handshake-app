@@ -51,6 +51,9 @@ export class Component extends React.PureComponent { // eslint-disable-line reac
       this.onFiatAmountChange(e, fiatAmount);
     });
   }
+  componentDidMount() {
+    // this.props.rfChange(nameFormShakeDetail, 'currency', 'BTC');
+  }
 
   onCurrencyChange = (e, newValue) => {
     const {

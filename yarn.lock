@@ -5048,8 +5048,8 @@ handlebars@^4.0.11, handlebars@^4.0.3:
     uglify-js "^2.6"
 
 "handshake-i18n@github:ninjadotorg/handshake-i18n":
-  version "0.0.1530516239"
-  resolved "https://codeload.github.com/ninjadotorg/handshake-i18n/tar.gz/08d3129c012b3f6f0a3eb6eb4013a429cf45c483"
+  version "0.0.1530519886"
+  resolved "https://codeload.github.com/ninjadotorg/handshake-i18n/tar.gz/eb8237b1e9b55ae574f05bd7bd33d1d8c25e0879"
   dependencies:
     "@babel/core" "^7.0.0-beta.51"
     "@babel/node" "^7.0.0-beta.51"
