@@ -96,6 +96,7 @@ export const MESSAGE = {
 
 
 export const BET_BLOCKCHAIN_STATUS = {
+  STATUS_INIT_FAILED: -10,
   STATUS_COLLECT_FAILED: -9,
   STATUS_COLLECT_PENDING: -8,
   STATUS_DISPUTE_FAILED: -7,
@@ -194,8 +195,11 @@ export class BetHandshakeHandler {
     console.log('getStatusLabel Role:', role);
     console.log('getStatusLabel isMatch:', isMatch);
     console.log('getStatusLabel Blockchain status:', blockchainStatus);
-
-    if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_FAILED) {
+    if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_INIT_FAILED){
+      strStatus = BETTING_STATUS_LABEL.ACTION_FAILED;
+      isAction = false;
+    }
+    else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_FAILED) {
       label = BETTING_STATUS_LABEL.CANCEL;
       strStatus = BETTING_STATUS_LABEL.COLLECT_FAILED;
       isAction = true;
