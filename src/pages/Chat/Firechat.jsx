@@ -846,27 +846,18 @@ export class Firechat {
     if (!this.shouldShowNotification) {
       return;
     }
-    const selfWindow = window;
     console.log('show notification', from, message);
     Push.create(`${from} says`, {
       body: message,
       icon: logo,
       tag: roomId,
-      onClick: () => {
-        console.log(this, selfWindow, roomId);
-        this.onNotificationClicked(roomId);
-      },
+      link: URL.HANDSHAKE_CHAT_ROOM_DETAIL.replace(':roomId', roomId),
       onError: (e) => {
         console.log('notification error', e);
       },
     }).then(() => {
       navigator.vibrate([200, 100, 200]);
     });
-  }
-
-  onNotificationClicked(roomId) {
-    Push.close(roomId);
-    window.location.href = `${URL.HANDSHAKE_CHAT_ROOM_DETAIL.replace(':roomId', roomId)}`;
   }
 
   markMessagesAsRead(roomId) {

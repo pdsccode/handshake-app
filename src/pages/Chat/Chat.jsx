@@ -20,6 +20,7 @@ import IconBackBtn from '@/assets/images/icon/back-chevron.svg';
 import IconAvatar from '@/assets/images/icon/avatar.svg';
 import md5 from 'md5';
 import ScrollToBottom from 'react-scroll-to-bottom';
+import Username from '@/components/core/presentation/Username';
 
 import './Firechat.scss';
 import './Chat.scss';
@@ -235,7 +236,7 @@ class Chat extends Component {
 
   setCurrentUserName() {
     if (this.componentMounted) {
-      this.props.setHeaderTitle(this.user.name);
+      this.setHeaderTitle(this.user.name);
     }
   }
 
@@ -259,6 +260,12 @@ class Chat extends Component {
         cb();
       }
     });
+  }
+
+  setHeaderTitle(title) {
+    if (title) {
+      this.props.setHeaderTitle(title.startsWith('0x') ? <Username username={title} /> : title);
+    }
   }
 
   getRoomList() {
@@ -317,7 +324,7 @@ class Chat extends Component {
         avatarFlexible: true,
         statusColor: online ? 'lightgreen' : false,
         alt: name,
-        title: name,
+        title: name.startsWith('0x') ? <Username username={name} /> : name,
         subtitle: '',
         unread: 0,
         date: null,
@@ -519,9 +526,9 @@ class Chat extends Component {
       if (!roomData) {
         return;
       }
-      this.props.setHeaderTitle(_.keys(roomData.froms).filter(userId => (userId !== this.user.id)).map(userId => (roomData.froms[userId])).join(', '));
+      this.setHeaderTitle(_.keys(roomData.froms).filter(userId => (userId !== this.user.id)).map(userId => (roomData.froms[userId])).join(', '));
     } else if (this.user) {
-      this.props.setHeaderTitle(this.user.name);
+      this.setHeaderTitle(this.user.name);
     }
   }
 
