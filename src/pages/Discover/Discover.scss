@@ -4,6 +4,9 @@
   background: $gray;
   .feed-wrapper {
     margin-bottom:  rem-calc(11px);
+    &:empty {
+      display: none;
+    }
   }
   .category-wrapper {
     margin-bottom: rem-calc(11px);
