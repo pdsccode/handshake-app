@@ -133,7 +133,7 @@ class BettingFilter extends React.Component {
         const { data } = res;
         console.log('loadMatches success', data);
         if (data.length === 0) {
-          this.setState({ errorMessage: `Matches are empty`, isError: true });
+          this.setState({ errorMessage: `Events are empty`, isError: true });
           this.props.setLoading(false);
         }
       },
