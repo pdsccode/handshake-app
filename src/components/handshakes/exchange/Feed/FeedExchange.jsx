@@ -111,44 +111,45 @@ class FeedExchange extends React.PureComponent {
         },
       ],
     }, () => {
-      let newCurrency = '';
-      if (name) {
-        newCurrency = name;
-        this.props.rfChange(nameFormShakeDetail, 'currency', name);
-      } else {
-        for (const crypto of this.state.CRYPTO_CURRENCY_LIST) {
-          if (!crypto.hide) {
-            newCurrency = crypto.value;
-            this.props.rfChange(nameFormShakeDetail, 'currency', crypto.value);
-            break;
-          }
-        }
-      }
-
-      const eth = offer.items.ETH;
-      const btc = offer.items.BTC;
-
-      const buyBalance = newCurrency === CRYPTO_CURRENCY.BTC ? btc.buyBalance : eth.buyBalance;
-      const sellBalance = newCurrency === CRYPTO_CURRENCY.BTC ? btc.sellBalance : eth.sellBalance;
-
-      let newType = EXCHANGE_ACTION.BUY;
-
-      if (newType === EXCHANGE_ACTION.BUY && sellBalance <= 0) {
-        newType = EXCHANGE_ACTION.SELL;
-      } else if (newType === EXCHANGE_ACTION.SELL && buyBalance <= 0) {
-        newType = EXCHANGE_ACTION.BUY;
-      }
-
-      this.props.rfChange(nameFormShakeDetail, 'type', newType);
-
-      this.props.clearFields(nameFormShakeDetail, false, false, 'amount', 'amountFiat');
-
       onFeedClick({
         modalClassName: 'dialog-shake-detail',
         modalContent: (
           <ShakeDetail offer={this.offer} handleShake={this.shakeOfferItem} CRYPTO_CURRENCY_LIST={this.state.CRYPTO_CURRENCY_LIST} />
         )
       })
+      setTimeout(() => {
+        let newCurrency = '';
+        if (name) {
+          newCurrency = name;
+          this.props.rfChange(nameFormShakeDetail, 'currency', name);
+        } else {
+          for (const crypto of this.state.CRYPTO_CURRENCY_LIST) {
+            if (!crypto.hide) {
+              newCurrency = crypto.value;
+              this.props.rfChange(nameFormShakeDetail, 'currency', crypto.value);
+              break;
+            }
+          }
+        }
+
+        const eth = offer.items.ETH;
+        const btc = offer.items.BTC;
+
+        const buyBalance = newCurrency === CRYPTO_CURRENCY.BTC ? btc.buyBalance : eth.buyBalance;
+        const sellBalance = newCurrency === CRYPTO_CURRENCY.BTC ? btc.sellBalance : eth.sellBalance;
+
+        let newType = EXCHANGE_ACTION.BUY;
+
+        if (newType === EXCHANGE_ACTION.BUY && sellBalance <= 0) {
+          newType = EXCHANGE_ACTION.SELL;
+        } else if (newType === EXCHANGE_ACTION.SELL && buyBalance <= 0) {
+          newType = EXCHANGE_ACTION.BUY;
+        }
+
+        this.props.rfChange(nameFormShakeDetail, 'type', newType);
+
+        this.props.clearFields(nameFormShakeDetail, false, false, 'amount', 'amountFiat');
+      }, 100)
 
       // this.setState({
       //   modalContent: (
