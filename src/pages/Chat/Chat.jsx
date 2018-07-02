@@ -102,8 +102,8 @@ class Chat extends Component {
     this.componentMounted = false;
     this.removeFixCss();
     if (this.initialized) {
-      this.firechat.enableNotification();
       this.unBindDataEvents();
+      this.firechat.enableNotification();
     }
   }
 
@@ -763,6 +763,18 @@ class Chat extends Component {
     // this.firechat.bind('room-invite', :: this.onChatInvite);
     this.firechat.bind('room-invite-response', :: this.onChatInviteResponse);
     this.firechat.bind('room-update', :: this.onRoomUpdate);
+
+    window.addEventListener('blur', () => {
+      if (this.initialized) {
+        this.firechat.enableNotification();
+      }
+    });
+
+    window.addEventListener('focus', () => {
+      if (this.initialized) {
+        this.firechat.disableNotification();
+      }
+    });
   }
 
   unBindDataEvents() {
@@ -772,6 +784,9 @@ class Chat extends Component {
     // this.firechat.unbind('room-invite');
     this.firechat.unbind('room-invite-response');
     this.firechat.unbind('room-update');
+
+    window.removeEventListener('blur', () => { });
+    window.removeEventListener('focus', () => { });
   }
 
   renderNotFoundUser() {
