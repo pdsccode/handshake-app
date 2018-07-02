@@ -106,10 +106,17 @@ class FeedBetting extends React.Component {
 
     }
   }
+  isMakerShakerSameUser(userId, initUserId, shakeIds){
+    if(userId == initUserId && isShakeUser(shakeIds, userId)){
+      return true;
+    }
+    return false;
+  }
 
   handleStatus(props){
 
-    const {result, shakeUserIds, id, amount, remainingAmount, odds, closingTime, reportTime, disputeTime} = props; // new state
+    const {result, shakeUserIds, id, amount, remainingAmount, odds, 
+      closingTime, reportTime, disputeTime, initUserId} = props; // new state
 
     const profile = local.get(APP.AUTH_PROFILE);
     const isUserShake = this.isShakeUser(shakeUserIds, profile.id);
@@ -124,7 +131,8 @@ class FeedBetting extends React.Component {
     }
     let shakedItemList = [];
     console.log('Amount,RemainingAmount, AmountMatch:', amount,remainingAmount,  amountMatch);
-    if(isUserShake){
+    
+    if(isUserShake && !this.isMakerShakerSameUser(profile.id, initUserId, shakeUserIds)){
      
      shakedItemList = foundShakeList(props, id);
      if(shakedItemList.length > 0){
@@ -383,7 +391,7 @@ class FeedBetting extends React.Component {
         this.withdrawOnChain(offchain, hid);
         break;
       case BETTING_STATUS_LABEL.REFUND:
-        this.refund(realId);
+        this.refundOnChain(offchain, hid);
         break;
 
     }
