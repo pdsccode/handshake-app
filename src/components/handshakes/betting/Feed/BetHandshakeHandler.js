@@ -194,7 +194,10 @@ export class BetHandshakeHandler {
     console.log('getStatusLabel isMatch:', isMatch);
     console.log('getStatusLabel Blockchain status:', blockchainStatus);
 
-    if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINIT_PENDING
+    if(blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_FAILED){
+
+    }
+    else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINIT_PENDING
       || blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_PENDING) {
       strStatus = BETTING_STATUS_LABEL.PROGRESSING;
       isAction = false;

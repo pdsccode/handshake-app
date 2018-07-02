@@ -399,12 +399,12 @@ class BetingShakeFree extends React.Component {
     };
     console.log("Params:", params);
 
-/*
+
     this.props.initFreeHandshake({PATH_URL: API_URL.CRYPTOSIGN.INIT_HANDSHAKE_FREE, METHOD:'POST', data: params,
     successFn: this.initHandshakeSuccess,
     errorFn: this.initHandshakeFailed
   });
-  */
+
 
   }
 
