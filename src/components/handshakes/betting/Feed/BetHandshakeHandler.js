@@ -534,7 +534,7 @@ export class BetHandshakeHandler {
     let realBlockHash = '';
     let result = null;
     try {
-      result = await bettinghandshake.refund(hid, side, stake, odds, offchain);
+      result = await bettinghandshake.refund(hid, offchain);
       const {
         logs, hash, error, transactionHash, payload,
       } = result;
