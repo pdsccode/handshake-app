@@ -23,7 +23,7 @@ import ModalDialog from "@/components/core/controls/ModalDialog";
 import {connect} from "react-redux";
 import {shakeOffer,} from "@/reducers/exchange/action";
 import Offer from "@/models/Offer";
-import {MasterWallet} from "@/models/MasterWallet";
+import {MasterWallet} from "@/services/Wallets/MasterWallet";
 import {formatAmountCurrency, getHandshakeUserType} from "@/services/offer-util";
 import {hideLoading, showAlert, showLoading} from '@/reducers/app/action';
 import {Link} from "react-router-dom";

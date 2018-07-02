@@ -10,7 +10,7 @@ import createForm from '@/components/core/form/createForm'
 import {fieldDropdown, fieldInput} from '@/components/core/form/customField'
 import { API_URL } from "@/constants";
 import {required} from '@/components/core/form/validation'
-import {MasterWallet} from "@/models/MasterWallet";
+import {MasterWallet} from "@/services/Wallets/MasterWallet";
 import { bindActionCreators } from "redux";
 import {showAlert} from '@/reducers/app/action';
 import {getCryptoPrice} from '@/reducers/exchange/action';
@@ -182,7 +182,7 @@ class Transfer extends React.Component {
         if (process.env.isLive){
           wallet.text = wallet.getShortAddress() + " (" + wallet.className + " " + wallet.name + ")";
         }
-        wallet.id = wallet.address + "-" + wallet.getNetworkName() + wallet.name;
+        wallet.id = Math.random();
       });
     }
 

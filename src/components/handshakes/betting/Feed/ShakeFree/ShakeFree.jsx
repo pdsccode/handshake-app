@@ -9,7 +9,7 @@ import { required } from '@/components/core/form/validation';
 import { Field } from "redux-form";
 import { shakeItem, initFreeHandshake, } from '@/reducers/handshake/action';
 import {HANDSHAKE_ID, API_URL, APP } from '@/constants';
-import {MasterWallet} from '@/models/MasterWallet';
+import {MasterWallet} from '@/services/Wallets/MasterWallet';
 import local from '@/services/localStore';
 import moment from 'moment';
 

@@ -1,8 +1,8 @@
 import axios from 'axios';
-import { Wallet } from '@/models/Wallet.js';
+import { Wallet } from '@/services/Wallets/Wallet.js';
 import { StringHelper } from '@/services/helper';
-import { Ethereum } from '@/models/Ethereum.js';
-import { TokenERC721 } from '@/models/TokenERC721';
+import { Ethereum } from '@/services/Wallets/Ethereum.js';
+import { TokenERC721 } from '@/services/Wallets/Collectibles/TokenERC721';
 
 const Web3 = require('web3');
 const BN = Web3.utils.BN;

@@ -41,10 +41,10 @@ import {
   shakeOfferItem,
   withdrawShakedOffer,
 } from '@/reducers/exchange/action';
-import { Ethereum } from '@/models/Ethereum.js';
-import { Bitcoin } from '@/models/Bitcoin';
+import { Ethereum } from '@/services/Wallets/Ethereum.js';
+import { Bitcoin } from '@/services/Wallets/Bitcoin';
 import Offer from '@/models/Offer';
-import {MasterWallet} from '@/models/MasterWallet';
+import {MasterWallet} from '@/services/Wallets/MasterWallet';
 import {formatAmountCurrency, formatMoney, getHandshakeUserType, getOfferPrice} from '@/services/offer-util';
 import {hideLoading, showAlert, showLoading} from '@/reducers/app/action';
 import { getDistanceFromLatLonInKm, getErrorMessageFromCode } from "../utils";

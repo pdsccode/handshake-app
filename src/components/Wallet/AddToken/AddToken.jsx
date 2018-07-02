@@ -9,8 +9,8 @@ import createForm from '@/components/core/form/createForm'
 import { change } from 'redux-form'
 import {fieldDropdown, fieldInput, fieldRadioButton} from '@/components/core/form/customField'
 import {required} from '@/components/core/form/validation'
-import {MasterWallet} from "@/models/MasterWallet";
-import {TokenERC20} from "@/models/TokenERC20";
+import {MasterWallet} from "@/services/Wallets/MasterWallet";
+import {TokenERC20} from "@/services/Wallets/Tokens/TokenERC20";
 import { bindActionCreators } from "redux";
 import {showAlert} from '@/reducers/app/action';
 import { showLoading, hideLoading } from '@/reducers/app/action';

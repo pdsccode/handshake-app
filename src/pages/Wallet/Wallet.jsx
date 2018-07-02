@@ -10,7 +10,7 @@ import { Grid, Row, Col } from 'react-bootstrap';
 
 // components
 import Button from '@/components/core/controls/Button';
-import { MasterWallet } from '@/models/MasterWallet';
+import { MasterWallet } from '@/services/Wallets/MasterWallet';
 import Input from '@/components/core/forms/Input/Input';
 import { StringHelper } from '@/services/helper';
 
@@ -390,7 +390,7 @@ class Wallet extends React.Component {
     let canRemove = (wallet.isToken &&  wallet.customToken) || !wallet.isReward;
     let cansetDefault = !wallet.isToken && !wallet.isReward;
 
-    if (cansetDefault) {
+    if (cansetDefault && !wallet.default) {
         obj.push({
           title: StringHelper.format(messages.wallet.action.default.title, wallet.name) + (wallet.default ? "✓ " : ""),
           handler: () => {
@@ -716,18 +716,18 @@ class Wallet extends React.Component {
   }
 
   get listMainWalletBalance() {
-    return this.state.listMainWalletBalance.map(wallet => <WalletItem key={wallet.address + wallet.network + wallet.name} wallet={wallet} onMoreClick={() => this.onMoreClick(wallet)} onWarningClick={() => this.onWarningClick(wallet)} onAddressClick={() => this.onAddressClick(wallet)} />);
+    return this.state.listMainWalletBalance.map(wallet => <WalletItem key={Math.random()} wallet={wallet} onMoreClick={() => this.onMoreClick(wallet)} onWarningClick={() => this.onWarningClick(wallet)} onAddressClick={() => this.onAddressClick(wallet)} />);
   }
   get listTestWalletBalance() {
-    return this.state.listTestWalletBalance.map(wallet => <WalletItem key={wallet.address + wallet.network + wallet.name} wallet={wallet} onMoreClick={() => this.onMoreClick(wallet)} onWarningClick={() => this.onWarningClick(wallet)} onAddressClick={() => this.onAddressClick(wallet)} />);
+    return this.state.listTestWalletBalance.map(wallet => <WalletItem key={Math.random()} wallet={wallet} onMoreClick={() => this.onMoreClick(wallet)} onWarningClick={() => this.onWarningClick(wallet)} onAddressClick={() => this.onAddressClick(wallet)} />);
   }
 
   get listRewardWalletBalance() {
-    return this.state.listRewardWalletBalance.map(wallet => <WalletItem key={wallet.address + wallet.network + wallet.name} wallet={wallet} onMoreClick={() => this.onMoreClick(wallet)} onWarningClick={() => this.onWarningClick(wallet)} onAddressClick={() => this.onAddressClick(wallet)} />);
+    return this.state.listRewardWalletBalance.map(wallet => <WalletItem key={Math.random()} wallet={wallet} onMoreClick={() => this.onMoreClick(wallet)} onWarningClick={() => this.onWarningClick(wallet)} onAddressClick={() => this.onAddressClick(wallet)} />);
   }
 
   get getListCoinTempForCreate() {
-    return this.state.listCoinTempToCreate.map(walletTemp => <CoinTemp key={walletTemp.network} wallet={walletTemp} onClick={() => this.onSelectCoinClick(walletTemp)} />);
+    return this.state.listCoinTempToCreate.map(walletTemp => <CoinTemp key={Math.random()} wallet={walletTemp} onClick={() => this.onSelectCoinClick(walletTemp)} />);
   }
 
   afterWalletFill = () => {
