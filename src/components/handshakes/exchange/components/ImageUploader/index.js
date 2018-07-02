@@ -25,38 +25,30 @@ export class Component extends React.PureComponent { // eslint-disable-line reac
     let newFiles = this.state.files;
 
     $http({
-      url: `${BASE_API.BASE_URL}/storage/user/upload?file=${authProfile?.id}-${Date.now()}-${file.name}`,
-      data: {file},
       method: 'POST',
-    })
-    // axios.post(`https://staging.ninja.org/api/storage/user/upload?file=${Date.now()}-${file.name}`, file,
-    //   {
-    //     headers: {
-    //       Payload: 'C3m4t-lmiqrMIV-QD9F6LVPcqlZF7AYS5tVBMbklvlECBqiC2ay7BS3QcA=='
-    //     },
-    //     onUploadProgress: (progressEvent) => {
-    //       const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-    //       const correspondingFile = newFiles.find(item => item.name === file.name);
-    //       if (correspondingFile) {
-    //         correspondingFile.percent = percentCompleted
-    //       }
-    //       this.setState({ files: newFiles })
-    //       this.forceUpdate();
-    //     },
-    //   })
-      .then((res) => {
+      url: `${BASE_API.BASE_URL}/storage/user/upload?file=${authProfile?.id}-${Date.now()}-${file.name}`,
+      data: file,
+      onUploadProgress: (progressEvent) => {
+        const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
         const correspondingFile = newFiles.find(item => item.name === file.name);
         if (correspondingFile) {
-          correspondingFile.url = `https://cdn-handshake-staging.autonomous.ai/${res.data.data}`;
-          delete correspondingFile.percent;
-          this.setState({ files: newFiles });
-          this.forceUpdate();
-          onSuccess(newFiles);
+          correspondingFile.percent = percentCompleted
         }
-      })
-      .catch((err) => {
-        console.log('err upload image', err);
-      });
+        this.setState({ files: newFiles })
+        this.forceUpdate();
+      },
+    }).then((res) => {
+      const correspondingFile = newFiles.find(item => item.name === file.name);
+      if (correspondingFile) {
+        correspondingFile.url = `https://cdn-handshake-staging.autonomous.ai/${res.data.data}`;
+        delete correspondingFile.percent;
+        this.setState({ files: newFiles });
+        this.forceUpdate();
+        onSuccess(newFiles);
+      }
+    }).catch((err) => {
+      console.log('err upload image', err);
+    });
 
     newFiles = [{
       name: file.name,
