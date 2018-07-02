@@ -229,13 +229,9 @@ class CreateBettingEvent extends React.Component {
   }
 
   fetchAllEvents() {
-    const params = {
-      public: 1,
-    };
     this.props.loadMatches({
       PATH_URL: API_URL.CRYPTOSIGN.LOAD_MATCHES,
-      METHOD: 'POST',
-      data: params,
+      METHOD: 'GET',
       successFn: (res) => {
         if (res.data && res.data.length === 0) this.handleNewEvent();
       },
