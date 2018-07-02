@@ -7,6 +7,8 @@ import { BASE_API, API_URL } from '@/constants';
 import md5 from 'md5';
 import { Alert } from 'reactstrap';
 import $http from '@/services/api';
+import './Admin.scss';
+import { showAlert } from '@/reducers/app/action';
 
 let token = null;
 class Admin extends React.Component {
@@ -22,9 +24,11 @@ class Admin extends React.Component {
       activeMatchData: {},
       login: false,
       disable: false,
+      final: [],
       errorMessage: '',
     };
     this.toggle = this.toggle.bind(this);
+    // side: 0 (unknown), 1 (support), 2 (against)
   }
 
   componentDidMount() {
@@ -44,6 +48,25 @@ class Admin extends React.Component {
       activeMatchData: matches[0],
       selectedMatch: matches[0].name,
     });
+    if (matches.length > 0) {
+      const final = [];
+      matches.map((item) => {
+        if (item.outcomes && item.outcomes.length > 0) {
+          item.outcomes.map((outcomeItem) => {
+            const obj = {
+              outcome_id: outcomeItem.id,
+              side: 0,
+            };
+            final.push(obj);
+            return obj;
+          });
+        }
+        return final;
+      });
+      this.setState({
+        final,
+      });
+    }
   }
 
   fetchMatches() {
@@ -156,22 +179,44 @@ class Admin extends React.Component {
     const submit = $http({
       url,
       data: {
-        result: [{ outcome_id: this.state.selectedOutcome, side: this.state.selectedResult }],
+        result: this.state.final,
       },
       headers: { Authorization: `Bearer ${tokenValue}`, 'Content-Type': 'application/json' },
       method: 'post',
     });
     submit.then((response) => {
       response.data.status === 1 && this.setState({
-        modal: false,
         disable: true,
       }, this.disablePage);
-      console.log(response);
-      response.data.status === 0 && this.setState({
-        errorMessage: response.data.message,
+      response.data.status === 1 && this.props.showAlert({
+        message: <div className="text-center">Success!</div>,
+        timeOut: 3000,
+        type: 'success',
+        callBack: () => {},
+      });
+      response.data.status === 0 && this.props.showAlert({
+        message: <div className="text-center">{response.data.message}</div>,
+        timeOut: 3000,
+        type: 'danger',
+        callBack: () => {},
       });
     });
   }
+
+  onChangeFinal=(item, result) => {
+    console.log(item, result);
+    const finalCopy = [...this.state.final];
+    finalCopy.map((outcomeItem) => {
+      if (outcomeItem.outcome_id === item.id) {
+        outcomeItem.side = result;
+      }
+      return outcomeItem;
+    });
+    this.setState({
+      final: finalCopy,
+    });
+  }
+
   render() {
     return (!this.state.login ?
       <Form style={{ margin: '1em', WebkitAppearance: 'menulist' }} onSubmit={this.loginUser}>
@@ -197,7 +242,7 @@ class Admin extends React.Component {
         </FormGroup>
       </Form>
       :
-      <div>
+      <div className="form-admin">
         <Form style={{ margin: '1em', WebkitAppearance: 'menulist' }}>
           <FormGroup disabled={this.state.disable}>
             <Label for="matchSelect">Select Match</Label>
@@ -205,20 +250,30 @@ class Admin extends React.Component {
               {this.state.matches && this.state.matches.length > 0 && this.state.matches.map(item => <option key={item.id}>{item.name}</option>)}
             </Input>
           </FormGroup>
-          <FormGroup disabled={this.state.disable}>
-            <Label for="outcomeSelect">Select Outcome</Label>
-            <Input type="select" name="select" id="outcomeSelect" onChange={(event) => { this.onChangeOutcome(event, 'selectedOutcome'); }} disabled={this.state.disable}>
-              {this.state.outcomes && this.state.outcomes.length > 0 && this.state.outcomes.map(item => <option key={item.id}>{`${item.name},id:${item.id}`}</option>)}
-            </Input>
-          </FormGroup>
-          <FormGroup disabled={this.state.disable}>
-            <Label for="resultOfMatch">Result of Match</Label>
-            <Input type="select" name="select" id="resultOfMatch" onChange={(event) => { this.onChangeResult(event, 'selectedResult'); }} disabled={this.state.disable}>
-              <option value="0">Unknown</option>
-              <option value="1">Support</option>
-              <option value="2">Against</option>
-            </Input>
-          </FormGroup>
+          <Label for="outcomeSelect">Outcomes</Label><br />
+          {/* <FormGroup id="outcomeSelect" onChange={(event) => { this.onChangeOutcome(event, 'selectedOutcome'); }} disabled={this.state.disable}> */}
+          {this.state.outcomes && this.state.outcomes.length > 0 && this.state.outcomes.map(item => (<Label check key={item.id} style={{}}>{`${item.name},id:${item.id}`}<br />
+            {/* side: 0 (unknown), 1 (support), 2 (against) */}
+            <FormGroup check>
+              <Label check>
+                <Input type="radio" name="selectedOption" onChange={() => { this.onChangeFinal(item, 0); }} />{' '}
+              Unknown
+              </Label>
+            </FormGroup>
+            <FormGroup check>
+              <Label check>
+                <Input type="radio" name="selectedOption" onChange={() => { this.onChangeFinal(item, 1); }} />{' '}
+              Support
+              </Label>
+            </FormGroup>
+            <FormGroup check>
+              <Label check>
+                <Input type="radio" name="selectedOption" onChange={() => { this.onChangeFinal(item, 2); }} />{' '}
+              Against
+              </Label>
+            </FormGroup><br />
+          </Label>))}
+          <br /> <br />
           {/* <FormGroup>
             <Label for="homescore">Home Score</Label>
             <Input
@@ -243,32 +298,17 @@ class Admin extends React.Component {
               onChange={(event) => { this.onChangeScore(event, 'awayScore'); }}
             />
           </FormGroup> */}
-          <Button disabled={this.state.disable} onClick={this.toggle}>Submit</Button>
+          <Button disabled={this.state.disable} onClick={this.onSubmit}>Submit</Button>
 
-          {this.state.disable && <div><br /><Alert color="success">
-            Match details submitted. Please wait.
-          </Alert>
-          </div>}
-          <div>
-            <Modal isOpen={this.state.modal} toggle={this.toggle} className="modal-sm">
-              <ModalHeader toggle={this.toggle}>Update Match Data</ModalHeader>
-              <ModalBody>
-                <Label>Selected Match - {this.state.selectedMatch}</Label> <br />
-                <Label>Selected Outcome {this.state.selectedOutcome}</Label> <br />
-                <Label>Selected Result {this.state.selectedResult}</Label> <br />
-                {/* <Label>HomeScore {this.state.activeMatchData.homeScore}</Label> <br />
-                <Label>AwayScore {this.state.activeMatchData.awayScore}</Label> <br /> */}
-                {this.state.errorMessage && <Alert color="danger">
-                    {this.state.errorMessage}
-                </Alert>}
-              </ModalBody>
-              <ModalFooter>
-                <Button color="primary" onClick={this.onSubmit}>Confirm</Button>{' '}
-                <Button color="secondary" onClick={this.toggle}>Cancel</Button>
-              </ModalFooter>
-            </Modal>
-          </div>
         </Form>
+        {
+          this.state.disable &&
+          <div><br />
+            <Alert color="success">
+            Match details submitted. Please wait.
+            </Alert>
+          </div>
+      }
       </div>
     );
   }
@@ -280,6 +320,7 @@ const mapState = state => ({
 
 const mapDispatch = ({
   loadMatches,
+  showAlert,
 });
 
 export default connect(mapState, mapDispatch)(Admin);
