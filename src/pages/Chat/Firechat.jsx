@@ -50,9 +50,9 @@ export class Firechat {
     this.shouldShowNotification = true;
 
     this.encryptionKeyPair = this.generateEncryptionKeyPair();
-    Push.config({
-      serviceWorker: '/main.js',
-    });
+    // Push.config({
+    //   serviceWorker: '/main.js',
+    // });
   }
 
   enableNotification() {
