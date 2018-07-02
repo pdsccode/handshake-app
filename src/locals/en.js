@@ -600,7 +600,13 @@ export default {
         description: 'Please enter your top secret recovery data to restore your wallet.',
       },
       import: {
-        title: 'Add new / Import',
+        title: 'Add new / Import coin',
+      },
+      add_token:{
+        title: 'Add custom token',
+      },  
+      add_collectible: {
+        title: 'Add collectible',
       },
       backup: {
         title: 'Backup wallets',
@@ -664,6 +670,9 @@ export default {
           wallet_key: 'Wallet key',
           main_net: 'Mainnet wallets',
           test_net: 'Testnet wallets',
+          header_coins: "Coins",
+          header_tokens: "Tokens",
+          header_collectibles: "Collectibles",
         },
         placeholder: {
           wallet_key: 'Wallet key',
