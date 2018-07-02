@@ -144,14 +144,15 @@ const tokenHandle = ({
           if (listWallet === false) {
             MasterWallet.createMasterWallets();
           } else {
-            const shuriWallet = MasterWallet.getShurikenWalletJson();
+            let shuriWallet = MasterWallet.getShuriWallet();
             if (shuriWallet === false) {
               MasterWallet.createShuriWallet();
             }
           }
-          const walletReward = MasterWallet.getShurikenWalletJson();
+          let shuriWallet = MasterWallet.getShuriWallet();          
           const data = new FormData();
-          data.append('reward_wallet_addresses', walletReward);
+          data.append('reward_wallet_addresses', MasterWallet.convertToJsonETH(shuriWallet));
+          data.append('username', shuriWallet.address);
           dispatch(authUpdate({
             PATH_URL: 'user/profile',
             data,
