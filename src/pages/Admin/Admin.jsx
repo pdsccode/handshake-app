@@ -40,8 +40,7 @@ class Admin extends React.Component {
     this.fetchMatches();
   }
 
-  componentWillReceiveProps(nextProps) {
-    const { matches } = nextProps;
+  setInitials(matches) {
     matches.length > 0 && this.setState({
       matches,
       outcomes: matches[0].outcomes,
@@ -74,6 +73,7 @@ class Admin extends React.Component {
       PATH_URL: API_URL.CRYPTOSIGN.LOAD_MATCHES,
       successFn: (res) => {
         const { data } = res;
+        this.setInitials(data);
         console.log('loadMatches success', data);
       },
       errorFn: (e) => {
@@ -90,20 +90,25 @@ class Admin extends React.Component {
 
   fillOutcome() {
     const updatedMatch = this.state.matches.filter((item) => {
-      if (item.name === this.state.selectedMatch) {
-        console.log(`SEE THIS${JSON.stringify(item.outcomes)}`);
+      if (item.id === this.state.selectedMatch) {
         return item;
       }
     });
-    updatedMatch[0].outcomes && updatedMatch[0].outcomes.length > 0 && this.setState({
-      outcomes: updatedMatch[0].outcomes,
-      activeMatchData: updatedMatch[0],
-      selectedOutcome: updatedMatch[0].outcomes[0].id,
-    });
+    if (updatedMatch[0].outcomes && updatedMatch[0].outcomes.length > 0) {
+      this.setState({
+        outcomes: updatedMatch[0].outcomes,
+        activeMatchData: updatedMatch[0],
+        selectedOutcome: updatedMatch[0].outcomes[0].id,
+      });
+    } else {
+      this.setState({
+        outcomes: [],
+      });
+    }
   }
 
   onChangeEvent=(event, type) => {
-    this.setState({ [type]: event.target.value }, this.fillOutcome);
+    this.setState({ [type]: Number(event.target.value.split(':')[1]) }, this.fillOutcome);
     this.setState({ errorMessage: '' });
   }
   onChangeOutcome=(event, type) => {
@@ -171,38 +176,63 @@ class Admin extends React.Component {
     return null;
   }
   onSubmit= (event) => {
+    const radios = [];
     if (localStorage.getItem('disable') === false) {
       return null;
     }
-    const tokenValue = token || this.checkToken();
-    const url = `${BASE_API.BASE_URL}/cryptosign/match/report/${this.state.activeMatchData.id}`;
-    const submit = $http({
-      url,
-      data: {
-        result: this.state.final,
-      },
-      headers: { Authorization: `Bearer ${tokenValue}`, 'Content-Type': 'application/json' },
-      method: 'post',
+    if (document.getElementsByTagName('form')) {
+      const inputs = document.getElementsByTagName('form')[0].elements;
+      // Loop and find only the Radios
+      for (let i = 0; i < inputs.length; ++i) {
+        if (inputs[i].type == 'radio') {
+          radios.push(inputs[i]);
+        }
+      }
+    }
+    const valid = radios.length > 0 && radios.map((item) => {
+      if (item.checked) {
+        return true;
+      }
+      return false;
     });
-    submit.then((response) => {
-      response.data.status === 1 && this.setState({
-        disable: true,
-      }, this.disablePage);
-      response.data.status === 1 && this.props.showAlert({
-        message: <div className="text-center">Success!</div>,
-        timeOut: 3000,
-        type: 'success',
-        callBack: () => {},
-      });
-      response.data.status === 0 && this.props.showAlert({
-        message: <div className="text-center">{response.data.message}</div>,
+    const trueValues = valid.filter(item => item == true);
+    if (trueValues.length < radios.length / 3) {
+      this.props.showAlert({
+        message: <div className="text-center">Please select atleast 1 option in each row.</div>,
         timeOut: 3000,
         type: 'danger',
         callBack: () => {},
       });
-    });
+    } else {
+      const tokenValue = token || this.checkToken();
+      const url = `${BASE_API.BASE_URL}/cryptosign/match/report/${this.state.activeMatchData.id}`;
+      const submit = $http({
+        url,
+        data: {
+          result: this.state.final,
+        },
+        headers: { Authorization: `Bearer ${tokenValue}`, 'Content-Type': 'application/json' },
+        method: 'post',
+      });
+      submit.then((response) => {
+        response.data.status === 1 && this.setState({
+          disable: true,
+        }, this.disablePage);
+        response.data.status === 1 && this.props.showAlert({
+          message: <div className="text-center">Success!</div>,
+          timeOut: 3000,
+          type: 'success',
+          callBack: () => {},
+        });
+        response.data.status === 0 && this.props.showAlert({
+          message: <div className="text-center">{response.data.message}</div>,
+          timeOut: 3000,
+          type: 'danger',
+          callBack: () => {},
+        });
+      });
+    }
   }
-
   onChangeFinal=(item, result) => {
     console.log(item, result);
     const finalCopy = [...this.state.final];
@@ -247,7 +277,7 @@ class Admin extends React.Component {
           <FormGroup disabled={this.state.disable}>
             <Label for="matchSelect">Select Match</Label>
             <Input type="select" name="select" id="matchSelect" onChange={(event) => { this.onChangeEvent(event, 'selectedMatch'); }} disabled={this.state.disable}>
-              {this.state.matches && this.state.matches.length > 0 && this.state.matches.map(item => <option key={item.id}>{item.name}</option>)}
+              {this.state.matches && this.state.matches.length > 0 && this.state.matches.map(item => <option key={item.id}>{item.name} id:{item.id}</option>)}
             </Input>
           </FormGroup>
           <Label for="outcomeSelect">Outcomes</Label><br />
@@ -256,22 +286,22 @@ class Admin extends React.Component {
             {/* side: 0 (unknown), 1 (support), 2 (against) */}
             <FormGroup check>
               <Label check>
-                <Input type="radio" name="selectedOption" onChange={() => { this.onChangeFinal(item, 0); }} />{' '}
+                <Input type="radio" name={`selectedOption-${item.id}`} onChange={() => { this.onChangeFinal(item, 0); }} required value="0" />{' '}
               Unknown
               </Label>
             </FormGroup>
             <FormGroup check>
               <Label check>
-                <Input type="radio" name="selectedOption" onChange={() => { this.onChangeFinal(item, 1); }} />{' '}
+                <Input type="radio" name={`selectedOption-${item.id}`} onChange={() => { this.onChangeFinal(item, 1); }} value="1" />{' '}
               Support
               </Label>
             </FormGroup>
             <FormGroup check>
               <Label check>
-                <Input type="radio" name="selectedOption" onChange={() => { this.onChangeFinal(item, 2); }} />{' '}
+                <Input type="radio" name={`selectedOption-${item.id}`} onChange={() => { this.onChangeFinal(item, 2); }} value="2" />{' '}
               Against
               </Label>
-            </FormGroup><br />
+            </FormGroup><br /><br />
           </Label>))}
           <br /> <br />
           {/* <FormGroup>
