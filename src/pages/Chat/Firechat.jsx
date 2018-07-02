@@ -855,6 +855,7 @@ export class Firechat {
       onClick: () => {
         selfWindow.location.href = URL.HANDSHAKE_CHAT_ROOM_DETAIL.replace(':roomId', roomId);
         Push.close(roomId);
+        console.log(this, selfWindow);
       },
       onError: (e) => {
         console.log('notification error', e);
