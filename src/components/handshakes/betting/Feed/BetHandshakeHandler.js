@@ -3,13 +3,12 @@ import { BettingHandshake } from '@/services/neuron';
 import { API_URL, APP } from '@/constants';
 import { showAlert } from '@/reducers/app/action';
 import { PredictionHandshake } from '@/services/neuron';
-import { getMessageWithCode, getChainIdDefaultWallet, foundShakeItem, isInitBet } from '@/components/handshakes/betting/utils.js';
+import { getMessageWithCode, getChainIdDefaultWallet, foundShakeItem, isInitBet, isExpiredDate } from '@/components/handshakes/betting/utils.js';
 import Web3 from 'web3';
 import GA from '@/services/googleAnalytics';
 
 import local from '@/services/localStore';
 import { rollback, saveTransaction, collect } from '@/reducers/handshake/action';
-import { updateBettingChange } from '@/reducers/me/action';
 
 import store from '@/stores';
 import moment from 'moment';
@@ -149,6 +148,7 @@ export const BETTING_STATUS_LABEL =
       SOLVE: 'Please retry to solve problem',
       LOSE: 'Better luck next time.',
       WIN: `You're a winner!`,
+      WIN_WAIT: `You can't withdraw now`,
       DONE: 'Completed',
       WITHDRAW: 'Withdraw winnings',
       CANCELLING: 'Your bet is being cancelled.',
@@ -235,22 +235,21 @@ export class BetHandshakeHandler {
       label = BETTING_STATUS_LABEL.REFUND;
       strStatus = BETTING_STATUS_LABEL.REFUNDING;
       isAction = true;
-    } else if (isMatch && resultStatus === BETTING_STATUS.SUPPORT_WIN && side === SIDE.SUPPORT) {
-      label = BETTING_STATUS_LABEL.WITHDRAW;
-      strStatus = BETTING_STATUS_LABEL.WIN;
-      isAction = true;
-    } else if (isMatch && resultStatus === BETTING_STATUS.SUPPORT_WIN && side === SIDE.AGAINST) {
-      // label = BETTING_STATUS_LABEL.LOSE;
+    } else if ((isMatch && resultStatus === BETTING_STATUS.SUPPORT_WIN && side === SIDE.SUPPORT)
+                || (isMatch && resultStatus === BETTING_STATUS.AGAINST_WIN && side === SIDE.AGAINST)) {
+      if(isExpiredDate(disputeTime)){ //Over dispute time, user can withdraw
+        label = BETTING_STATUS_LABEL.WITHDRAW;
+        strStatus = BETTING_STATUS_LABEL.WIN;
+        isAction = true;
+      }else { //
+        strStatus = BETTING_STATUS_LABEL.WIN + BETTING_STATUS_LABEL.WIN_WAIT;
+        isAction = true;
+      }            
+      
+    } else if ((isMatch && resultStatus === BETTING_STATUS.SUPPORT_WIN && side === SIDE.AGAINST)
+                ||  (isMatch && resultStatus === BETTING_STATUS.AGAINST_WIN && side === SIDE.SUPPORT)){
       strStatus = BETTING_STATUS_LABEL.LOSE;
       isAction = false;
-    } else if (isMatch && resultStatus === BETTING_STATUS.AGAINST_WIN && side === SIDE.SUPPORT) {
-      // label = BETTING_STATUS_LABEL.LOSE;
-      strStatus = BETTING_STATUS_LABEL.LOSE;
-      isAction = false;
-    } else if (isMatch && resultStatus === BETTING_STATUS.AGAINST_WIN && side === SIDE.AGAINST) {
-      label = BETTING_STATUS_LABEL.WITHDRAW;
-      strStatus = BETTING_STATUS_LABEL.WIN;
-      isAction = true;
     } else if (isMatch || blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_SHAKER_SHAKED) {
       strStatus = BETTING_STATUS_LABEL.BET_MACHED_WAIT_RESULT;
       isAction = false;

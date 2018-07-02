@@ -109,7 +109,7 @@ class FeedBetting extends React.Component {
 
   handleStatus(props){
 
-    const {result, shakeUserIds, id, amount, remainingAmount, odds} = props; // new state
+    const {result, shakeUserIds, id, amount, remainingAmount, odds, closingTime, reportTime, disputeTime} = props; // new state
 
     const profile = local.get(APP.AUTH_PROFILE);
     const isUserShake = this.isShakeUser(shakeUserIds, profile.id);
@@ -149,7 +149,7 @@ class FeedBetting extends React.Component {
 
     }
 
-    const statusResult = BetHandshakeHandler.getStatusLabel(status, result, role,side, isMatch, null, null);
+    const statusResult = BetHandshakeHandler.getStatusLabel(status, result, role,side, isMatch, reportTime, disputeTime);
     const {title, isAction} = statusResult;
     this.setState({
       actionTitle: title,
