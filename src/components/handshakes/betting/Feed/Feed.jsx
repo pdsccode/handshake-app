@@ -133,7 +133,8 @@ class FeedBetting extends React.Component {
     const isMakerShakerSameUser = this.isMakerShakerSameUser(profile.id, initUserId, shakeUserIds);
     console.log('Amount,RemainingAmount, AmountMatch:', amount,remainingAmount,  amountMatch);
     
-    if(isUserShake && !isMakerShakerSameUser){
+
+    if(isUserShake){
      
      shakedItemList = foundShakeList(props, id);
      if(shakedItemList.length > 0){
@@ -143,6 +144,16 @@ class FeedBetting extends React.Component {
        winMatch = amountMatch * itemInfo.odds;
      }
     }
+
+    /*
+    if(isMakerShakerSameUser){
+      if ((isMatch && result === BETTING_STATUS.SUPPORT_WIN && side === SIDE.SUPPORT)
+      || (isMatch && result === BETTING_STATUS.AGAINST_WIN && side === SIDE.AGAINST)){
+        itemInfo = props;
+      }
+    }
+    */
+    
     const status = itemInfo.status;
     const side = itemInfo.side;
 
