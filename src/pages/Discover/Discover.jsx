@@ -234,7 +234,7 @@ class DiscoverPage extends React.Component {
               <FeedComponent
                 {...handshake}
                 history={this.props.history}
-                onFeedClick={() => this.clickFeedDetail(handshake.id)}
+                onFeedClick={(extraData) => this.clickFeedDetail(handshake, extraData)}
                 refreshPage={this.loadDiscoverList}
                 latitude={lat}
                 longitude={lng}
@@ -275,8 +275,21 @@ class DiscoverPage extends React.Component {
     }, 500);
   }
 
-  clickFeedDetail(id) {
-    this.props.history.push(`${URL.HANDSHAKE_DISCOVER}/${id || ''}`);
+  clickFeedDetail(handshake, extraData) {
+    const { type } = handshake
+    switch (type) {
+      case HANDSHAKE_ID.EXCHANGE: {
+        const { modalContent, modalClassName } = extraData
+        if (modalContent) {
+          this.setState({ modalContent, propsModal: { className: modalClassName } }, () => {
+            this.modalRef.open();
+          });
+        }
+        break;
+      }
+      default:
+    }
+    // this.props.history.push(`${URL.HANDSHAKE_DISCOVER}/${id || ''}`);
   }
 
   handleCloseExchangePopupIntro = () => {
