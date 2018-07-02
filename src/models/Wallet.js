@@ -41,6 +41,7 @@ export class Wallet {
   getBackgroundImg() {
     return StringHelper.format('{0}-{1}{2}.svg', this.className.toLowerCase(), this.getNetworkName().toLowerCase(), this.isReward ? '-reward' : '');
   }
+
 }
 
 export default { Wallet };
