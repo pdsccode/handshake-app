@@ -850,7 +850,7 @@ export class Firechat {
       icon: logo,
       tag: roomId,
       onClick: () => {
-        selfWindow.location.href = URL.HANDSHAKE_CHAT_ROOM_DETAIL.replace(':roomId', roomId);
+        window.location.href = URL.HANDSHAKE_CHAT_ROOM_DETAIL.replace(':roomId', roomId);
         Push.close(roomId);
       },
       onError: (e) => {
