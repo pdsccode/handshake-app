@@ -21,10 +21,9 @@ export class TokenERC20 extends Ethereum {
       this.contractAddress = '';
       this.decimals = 18;
       this.customToken = true;
-    }
+    }  
 
-    async init(contractAddress, wallet){            
-
+    createFromWallet(wallet){
       this.network = wallet.network;      
       this.address = wallet.address;
       this.chainId = wallet.chainId;
@@ -32,8 +31,10 @@ export class TokenERC20 extends Ethereum {
       this.privateKey = wallet.privateKey;
       this.protected = wallet.protected;      
       this.mnemonic = wallet.mnemonic;      
-      this.contractAddress = contractAddress;
-      
+    }
+
+    async getContractInfo(contractAddress){   
+      this.contractAddress = contractAddress;               
       try{
         const web3 = this.getWeb3();      
         let instance = new web3.eth.Contract(
@@ -47,7 +48,7 @@ export class TokenERC20 extends Ethereum {
         }
         catch (e){
           console.log("error: ", e);
-          this.decimals = 0;
+          this.decimals = "0";
         }
         return true;
 
