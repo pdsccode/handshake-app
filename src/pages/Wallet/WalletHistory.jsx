@@ -54,7 +54,7 @@ class WalletHistory extends React.Component {
             <div className="col3">
               <div className="time">{tran.transaction_relative_time}</div>
               <div className={cssValue}>{tran.is_sent ? "-" : ""} {Number(tran.value)} {tran.coin_name}</div>
-              {tran.confirmations <= 0 ? <div className="unconfirmation">{messages.wallet.action.hisry.label.unconfirmed}</div> : ""}
+              {tran.confirmations <= 0 ? <div className="unconfirmation">{messages.wallet.action.history.label.unconfirmed}</div> : ""}
               {tran.is_error ? <div className="unconfirmation">{messages.wallet.action.history.label.failed}</div> : ""}
             </div>
             <div className="col1"><img className="iconDollar" src={tran.is_sent ? iconSent : iconReceived} /></div>
