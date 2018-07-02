@@ -80,6 +80,7 @@ class FeedBetting extends React.Component {
       winMatch: 0,
       isUserShake: false,
       shakedItemList: [],
+      matchDone: false,
     };
   }
 
@@ -233,7 +234,7 @@ class FeedBetting extends React.Component {
       actionTitle, isAction, itemInfo, role, isLoading,
     } = this.state;
 
-    const { side, odds } = itemInfo;
+    const { side, odds, status } = itemInfo;
     const { event_name, event_predict } = this.extraData;
 
     const styleEventName = {
@@ -251,7 +252,9 @@ class FeedBetting extends React.Component {
     }
     const buttonClassName = this.getButtonClassName(actionTitle);
     console.log('Sa Role:', role);
-
+    if (status === BET_BLOCKCHAIN_STATUS.STATUS_DONE) {
+      this.setState({ matchDone: true });
+    }
     return (
       <div>
         {/* Feed */}
@@ -261,7 +264,7 @@ class FeedBetting extends React.Component {
           onClick={this.props.onFeedClick}
           background="white"
         >
-          <div className="eventTitle">
+          <div className={`eventTitle event-done-${this.state.matchDone}`}>
             {eventName}
           </div>
 
