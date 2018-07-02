@@ -99,6 +99,7 @@ class FeedExchange extends React.PureComponent {
 
   handleOnShake = (name) => {
     const { offer } = this;
+    const { onFeedClick } = this.props;
 
     this.setState({
       CRYPTO_CURRENCY_LIST: [
@@ -142,13 +143,20 @@ class FeedExchange extends React.PureComponent {
 
       this.props.clearFields(nameFormShakeDetail, false, false, 'amount', 'amountFiat');
 
-      this.setState({
+      onFeedClick({
+        modalClassName: 'dialog-shake-detail',
         modalContent: (
           <ShakeDetail offer={this.offer} handleShake={this.shakeOfferItem} CRYPTO_CURRENCY_LIST={this.state.CRYPTO_CURRENCY_LIST} />
-        ),
-      }, () => {
-        this.modalRef.open();
-      });
+        )
+      })
+
+      // this.setState({
+      //   modalContent: (
+      //     <ShakeDetail offer={this.offer} handleShake={this.shakeOfferItem} CRYPTO_CURRENCY_LIST={this.state.CRYPTO_CURRENCY_LIST} />
+      //   ),
+      // }, () => {
+      //   this.modalRef.open();
+      // });
     });
   }
 
@@ -478,10 +486,10 @@ id="offerDistanceContent"
             </div>
           </div>
         </div>
-        {/* <Button block className="mt-2" onClick={this.handleOnShake}><FormattedMessage id="btn.shake"/></Button> */}
+        {/* <Button block className="mt-2" onClick={this.handleOnShake}><FormattedMessage id="btn.shake"/></Button>
         <ModalDialog onRef={modal => this.modalRef = modal} className="dialog-shake-detail">
           {modalContent}
-        </ModalDialog>
+        </ModalDialog> */}
       </div>
     );
   }
