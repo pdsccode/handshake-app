@@ -334,14 +334,7 @@
 		"decimal": "18",
 		"address": "0xca0fed76b5807557ce38e65cab83be3373cc2e7d",
 		"type": "ERC20"
-    },
-    {
-		"name": "Shuriken-Rikeby",
-		"symbol": "SHURI",
-		"decimal": "18",
-		"address": "0xc2f227834af7b44a11a9286f1771cade7ecd316c",
-		"type": "ERC20"
-	},
+    },    
 	{
 		"name": "ADST - AdShares",
 		"symbol": "ADST",

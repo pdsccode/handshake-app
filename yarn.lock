@@ -2644,7 +2644,7 @@ compressible@^2.0.0, compressible@~2.0.13:
   dependencies:
     mime-db ">= 1.34.0 < 2"
 
-compression@^1.5.2:
+compression@^1.5.2, compression@^1.7.2:
   version "1.7.2"
   resolved "http://registry.npmjs.org/compression/-/compression-1.7.2.tgz#aaffbcd6aaf854b44ebb280353d5ad1651f59a69"
   dependencies:
@@ -5048,8 +5048,8 @@ handlebars@^4.0.11, handlebars@^4.0.3:
     uglify-js "^2.6"
 
 "handshake-i18n@github:ninjadotorg/handshake-i18n":
-  version "0.0.1530434188"
-  resolved "https://codeload.github.com/ninjadotorg/handshake-i18n/tar.gz/0fa6d95e43de0b407b1467fd5ebf81eee011e172"
+  version "0.0.1530494839"
+  resolved "https://codeload.github.com/ninjadotorg/handshake-i18n/tar.gz/479971a303c0f09ed6b62ab84461e947aa5d4052"
   dependencies:
     "@babel/core" "^7.0.0-beta.51"
     "@babel/node" "^7.0.0-beta.51"
