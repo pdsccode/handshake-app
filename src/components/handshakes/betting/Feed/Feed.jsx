@@ -21,9 +21,9 @@ import Feed from '@/components/core/presentation/Feed';
 import BettingShake from './Shake';
 import { showAlert } from '@/reducers/app/action';
 import {
- getMessageWithCode, isRightNetwork, getId,
-  getShakeOffchain, getBalance, getEstimateGas, isSameAddress, foundShakeList
- } from '@/components/handshakes/betting/utils.js';
+  getMessageWithCode, isRightNetwork, getId,
+  getShakeOffchain, getBalance, getEstimateGas, isSameAddress, foundShakeList,
+} from '@/components/handshakes/betting/utils.js';
 
 
 // css, icons
@@ -109,10 +109,10 @@ class FeedBetting extends React.Component {
   }
 
   handleStatus(props) {
-    const { 
-result, shakeUserIds, id, amount, remainingAmount, odds,
-      closingTime, reportTime, disputeTime, initUserId 
-} = props; // new state
+    const {
+      result, shakeUserIds, id, amount, remainingAmount, odds,
+      closingTime, reportTime, disputeTime, initUserId,
+    } = props; // new state
 
     const profile = local.get(APP.AUTH_PROFILE);
     const isUserShake = this.isShakeUser(shakeUserIds, profile.id);
@@ -129,7 +129,8 @@ result, shakeUserIds, id, amount, remainingAmount, odds,
     const isMakerShakerSameUser = this.isMakerShakerSameUser(profile.id, initUserId, shakeUserIds);
     console.log('Amount,RemainingAmount, AmountMatch:', amount, remainingAmount, amountMatch);
 
-    if (isUserShake && !isMakerShakerSameUser) {
+
+    if (isUserShake) {
       shakedItemList = foundShakeList(props, id);
       if (shakedItemList.length > 0) {
         itemInfo = shakedItemList[0];
@@ -138,6 +139,16 @@ result, shakeUserIds, id, amount, remainingAmount, odds,
         winMatch = amountMatch * itemInfo.odds;
       }
     }
+
+    /*
+    if(isMakerShakerSameUser){
+      if ((isMatch && result === BETTING_STATUS.SUPPORT_WIN && side === SIDE.SUPPORT)
+      || (isMatch && result === BETTING_STATUS.AGAINST_WIN && side === SIDE.AGAINST)){
+        itemInfo = props;
+      }
+    }
+    */
+
     const status = itemInfo.status;
     const side = itemInfo.side;
 
@@ -186,7 +197,7 @@ result, shakeUserIds, id, amount, remainingAmount, odds,
     const { extraData } = this.props;
     try {
       return JSON.parse(extraData);
-    }catch (e) {
+    } catch (e) {
       console.log(e);
       return {};
     }
@@ -219,8 +230,8 @@ result, shakeUserIds, id, amount, remainingAmount, odds,
 
   render() {
     const {
- actionTitle, isAction, itemInfo, role, isLoading 
-} = this.state;
+      actionTitle, isAction, itemInfo, role, isLoading,
+    } = this.state;
 
     const { side, odds } = itemInfo;
     const { event_name, event_predict } = this.extraData;
@@ -280,25 +291,25 @@ result, shakeUserIds, id, amount, remainingAmount, odds,
     return (
       <div>
         <div className="bettingInfo">
-        <div>
-        {/* <div className="description">Matched bet (ETH)</div>*/}
-        {/* <div className="value">{matchedAmount}/{amount}</div>*/}
-        {<div className="value">{amount}</div>}
+          <div>
+            {/* <div className="description">Matched bet (ETH)</div> */}
+            {/* <div className="value">{matchedAmount}/{amount}</div> */}
+            {<div className="value">{amount}</div>}
 
-      </div>
-        <div>
-        {/*<div className="description">On odds</div> */}
-        {/* <div className={`value ${colorBySide}`}> {Math.floor(odds*ROUND_ODD)/ROUND_ODD}</div>*/}
-        {<div className="value">{matchedAmount}</div>}
+          </div>
+          <div>
+            {/* <div className="description">On odds</div> */}
+            {/* <div className={`value ${colorBySide}`}> {Math.floor(odds*ROUND_ODD)/ROUND_ODD}</div> */}
+            {<div className="value">{matchedAmount}</div>}
 
-      </div>
-        <div>
-        {/* <div className="description">You could win</div>*/}
-        <div className="value">{winMatch}/{winValue}</div>
-        {/* winMatch > 0 && <div className="value">{Math.floor(winMatch * ROUND) / ROUND} ETH matched</div>*/}
-      </div>
-      </div>
-        {/*remaining > 0 && <div className="bettingInfo">
+          </div>
+          <div>
+            {/* <div className="description">You could win</div> */}
+            <div className="value">{winMatch}/{winValue}</div>
+            {/* winMatch > 0 && <div className="value">{Math.floor(winMatch * ROUND) / ROUND} ETH matched</div> */}
+          </div>
+        </div>
+        {/* remaining > 0 && <div className="bettingInfo">
         <div className="value"> Remaining {remaining} ETH</div>
     </div> */}
       </div>
@@ -306,8 +317,8 @@ result, shakeUserIds, id, amount, remainingAmount, odds,
   }
   renderItemShake(item) {
     const {
- amount, odds, side, remainingAmount 
-} = item;
+      amount, odds, side, remainingAmount,
+    } = item;
     const remainingValue = remainingAmount || 0;
     const colorBySide = side === 1 ? `support` : 'oppose';
     const amountMatch = amount;
@@ -324,9 +335,9 @@ result, shakeUserIds, id, amount, remainingAmount, odds,
     console.log('Render Maker');
     const { itemInfo, amountMatch, winMatch } = this.state;
 
-    const { 
-amount, odds, side, remainingAmount 
-} = itemInfo;
+    const {
+      amount, odds, side, remainingAmount,
+    } = itemInfo;
     const remainingValue = remainingAmount || 0;
     const winValue = amount * odds;
     const displayAmount = Math.floor(amount * ROUND) / ROUND;
@@ -442,8 +453,8 @@ amount, odds, side, remainingAmount
     const estimatedGas = await getEstimateGas();
     let message = null;
     const {
- id, shakeUserIds, freeBet, fromAddress, hid 
-} = this.props; // new state
+      id, shakeUserIds, freeBet, fromAddress, hid,
+    } = this.props; // new state
     let idCryptosign = id;
     let isFreeBet = freeBet;
     let userFromAddress = fromAddress;
@@ -459,26 +470,21 @@ amount, odds, side, remainingAmount
       }
     }
     console.log(
-'idCryptosign, isFreeBet, isUserShaker, fromAddress: ', idCryptosign,
-      isFreeBet, isUserShake, userFromAddress
-);
+      'idCryptosign, isFreeBet, isUserShaker, fromAddress: ', idCryptosign,
+      isFreeBet, isUserShake, userFromAddress,
+    );
     // userFromAddress = "abc";
     if (!isRightNetwork()) {
       message = MESSAGE.RIGHT_NETWORK;
     } else if (!isSameAddress(userFromAddress)) {
       message = MESSAGE.DIFFERENCE_ADDRESS;
-    } else if(isFreeBet){
-        this.handleActionFree(title,idCryptosign);
-      }
-      else {
-        if(estimatedGas > balance){
-          message = MESSAGE.NOT_ENOUGH_GAS;
-
-        }else {
-          this.handleActionReal(title, idCryptosign, hid);
-
-        }
-      }
+    } else if (isFreeBet) {
+      this.handleActionFree(title, idCryptosign);
+    } else if (estimatedGas > balance) {
+      message = MESSAGE.NOT_ENOUGH_GAS;
+    } else {
+      this.handleActionReal(title, idCryptosign, hid);
+    }
     if (message) {
       this.props.showAlert({
         message: <div className="text-center">{message}</div>,
@@ -497,9 +503,9 @@ amount, odds, side, remainingAmount
     const balance = await getBalance();
     console.log('Balance:', balance);
     const url = API_URL.CRYPTOSIGN.UNINIT_HANDSHAKE_FREE.concat(`/${id}`);
-    this.props.uninitItemFree({ 
-PATH_URL: url,
-METHOD: 'POST',
+    this.props.uninitItemFree({
+      PATH_URL: url,
+      METHOD: 'POST',
       successFn: this.uninitHandshakeFreeSuccess,
       errorFn: this.uninitHandshakeFreeFailed,
     });
@@ -534,10 +540,10 @@ METHOD: 'POST',
     const params = {
       offchain: id,
     };
-    this.props.collectFree({ 
-PATH_URL: API_URL.CRYPTOSIGN.COLLECT_FREE,
-METHOD: 'POST', 
-data: params,
+    this.props.collectFree({
+      PATH_URL: API_URL.CRYPTOSIGN.COLLECT_FREE,
+      METHOD: 'POST',
+      data: params,
       successFn: this.collectFreeSuccess,
       errorFn: this.collectFreeFailed,
     });
@@ -578,9 +584,9 @@ data: params,
 
   refund(id) {
     const url = API_URL.CRYPTOSIGN.REFUND.concat(`/${id}`);
-    this.props.refund({ 
-PATH_URL: API_URL.CRYPTOSIGN.REFUND,
-METHOD: 'POST',
+    this.props.refund({
+      PATH_URL: API_URL.CRYPTOSIGN.REFUND,
+      METHOD: 'POST',
       successFn: this.refundSuccess,
       errorFn: this.refundFailed,
     });
@@ -623,10 +629,10 @@ METHOD: 'POST',
     const params = {
       offchain,
     };
-    this.props.rollback({ 
-PATH_URL: API_URL.CRYPTOSIGN.ROLLBACK,
-METHOD: 'POST',
-data: params,
+    this.props.rollback({
+      PATH_URL: API_URL.CRYPTOSIGN.ROLLBACK,
+      METHOD: 'POST',
+      data: params,
       successFn: this.rollbackSuccess,
       errorFn: this.rollbackFailed,
     });
