@@ -137,7 +137,7 @@ class Wallet extends React.Component {
       stepProtected: 1,
       activeProtected: false,
       formAddTokenIsActive: false,
-      formAddCollectibleIsActive: false,      
+      formAddCollectibleIsActive: false,
       isHistory: false,
       pagenoHistory: 1,
       transactions: [],
@@ -610,13 +610,13 @@ class Wallet extends React.Component {
         this.showModalAddCollectible();
       },
     });
-    
+
 
     obj.push({
       title: messages.wallet.action.backup.title,
       handler: () => {
         this.modalBackupRef.open();
-        
+
         this.setState({ walletsData: {"auth_token": local.get(APP.AUTH_TOKEN) ,"wallets": this.getAllWallet() }});
         this.toggleBottomSheet();
       },
@@ -670,6 +670,7 @@ class Wallet extends React.Component {
   }
 
   createNewWallets = () => {
+    const { messages } = this.props.intl;
     this.setState({ isRestoreLoading: true, erroValueBackup: false });
     const listCoinTemp = this.state.listCoinTempToCreate;
 
@@ -678,11 +679,19 @@ class Wallet extends React.Component {
     const masterWallet = MasterWallet.createNewsallets(listCoinTemp, phrase);
     if (masterWallet == false) {
       this.setState({ isRestoreLoading: false, erroValueBackup: true });
-    } else {
+
       if (phrase != '') {
-        // need get balance
+        this.showError(messages.wallet.action.create.error.recovery_words_invalid)
+      }
+      else{
+        this.showError(messages.wallet.action.create.error.random);
+      }
+    } else {
+      if (phrase != '') {// need get balance
         this.getListBalace(masterWallet);
       }
+
+      this.setState({ input12PhraseValue: "" });
       this.splitWalletData(masterWallet);
       this.modalCreateWalletRef.close();
     }
@@ -1069,10 +1078,12 @@ class Wallet extends React.Component {
                 className="dropdown-wallet"
                 placeholder={messages.wallet.action.create.placeholder.wallet_key}
                 defaultId={this.state.walletKeySelected}
-                source={[{ id: 1, value: 'Random' }, { id: 2, value: 'Specify recovery Phrase' }]}
+                source={[{ id: 1, value: messages.wallet.action.create.text.random }, { id: 2, value: messages.wallet.action.create.text.specify_phrase }]}
                 onItemSelected={(item) => {
                     this.setState({
                       walletKeyDefaultToCreate: item.id,
+                      erroValueBackup: false,
+                      input12PhraseValue: ""
                     });
                   }
                 }
@@ -1083,6 +1094,7 @@ class Wallet extends React.Component {
                   name="phrase"
                   placeholder={messages.wallet.action.create.placeholder.phrase}
                   required
+                  value={this.state.input12PhraseValue}
                   className={this.state.erroValueBackup ? 'input12Phrase error' : 'input12Phrase'}
                   onChange={evt => this.update12PhraseValue(evt)}
                 />
