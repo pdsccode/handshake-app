@@ -106,7 +106,7 @@ export const setLanguage = (data, autoDetect = true) => ({
 export const setRootLoading = bool => ({ type: APP_ACTION.SET_ROOT_LOADING, payload: bool });
 
 const tokenHandle = ({
-  token, resolve, reject, dispatch, ipInfo,
+  token, resolve, reject, dispatch, ipInfo, isSignup
 }) => {
   if (resolve) {
     if (token) {
@@ -151,8 +151,8 @@ const tokenHandle = ({
           }
           let shuriWallet = MasterWallet.getShuriWallet();          
           const data = new FormData();
-          data.append('reward_wallet_addresses', MasterWallet.convertToJsonETH(shuriWallet));
-          data.append('username', shuriWallet.address);
+          data.append('reward_wallet_addresses', MasterWallet.convertToJsonETH(shuriWallet));          
+          if (isSignup) data.append('username', shuriWallet.address);
           dispatch(authUpdate({
             PATH_URL: 'user/profile',
             data,
@@ -181,7 +181,7 @@ const auth = ({ ref, dispatch, ipInfo }) => new Promise((resolve, reject) => {
   const token = local.get(APP.AUTH_TOKEN);
   if (token) {
     tokenHandle({
-      resolve, token, dispatch, ipInfo,
+      resolve, token, dispatch, ipInfo, isSignup: false,
     });
   } else {
     dispatch(signUp({
@@ -191,7 +191,7 @@ const auth = ({ ref, dispatch, ipInfo }) => new Promise((resolve, reject) => {
         const signUpToken = res.data.passpharse;
         console.log('signUpToken', signUpToken);
         tokenHandle({
-          resolve, token: signUpToken, dispatch, ipInfo,
+          resolve, token: signUpToken, dispatch, ipInfo, isSignup: true
         });
       },
       errorFn: () => {
