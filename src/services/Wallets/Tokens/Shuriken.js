@@ -1,8 +1,8 @@
 import axios from 'axios';
-import { Wallet } from '@/models/Wallet.js';
+import { Wallet } from '@/services/Wallets/Wallet.js';
 import configs from '@/configs';
 import { StringHelper } from '@/services/helper';
-import { TokenERC20 } from '@/models/TokenERC20.js';
+import { TokenERC20 } from '@/services/Wallets/Tokens/TokenERC20.js';
 
 const Web3 = require('web3');
 const EthereumTx = require('ethereumjs-tx');

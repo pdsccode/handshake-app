@@ -1,15 +1,15 @@
 
 import localStore from '@/services/localStore';
-import { Bitcoin } from '@/models/Bitcoin.js';
-import { BitcoinTestnet } from '@/models/BitcoinTestnet.js';
-import { Ethereum } from '@/models/Ethereum.js';
-import { Shuriken } from '@/models/Shuriken.js';
-import { Wallet } from '@/models/Wallet.js';
-import { TokenERC20 } from '@/models/TokenERC20';
-import { CryptoStrikers } from '@/models/CryptoStrikers';
-import { CryptoKitties } from '@/models/CryptoKitties';
-import { TokenERC721 } from '@/models/TokenERC721';
-import { CryptoPunks } from '@/models/CryptoPunks';
+import { Bitcoin } from '@/services/Wallets/Bitcoin.js';
+import { BitcoinTestnet } from '@/services/Wallets/BitcoinTestnet.js';
+import { Ethereum } from '@/services/Wallets/Ethereum.js';
+import { Shuriken } from '@/services/Wallets/Tokens/Shuriken.js';
+import { Wallet } from '@/services/Wallets/Wallet.js';
+import { TokenERC20 } from '@/services/Wallets/Tokens/TokenERC20';
+import { CryptoStrikers } from '@/services/Wallets/Collectibles/CryptoStrikers';
+import { CryptoKitties } from '@/services/Wallets/Collectibles/CryptoKitties';
+import { TokenERC721 } from '@/services/Wallets/Tokens/TokenERC20';
+import { CryptoPunks } from '@/services/Wallets/Collectibles/CryptoPunks';
 import { APP } from '@/constants';
 import { StringHelper } from '@/services/helper';
 import Neuron from '@/services/neuron/Neutron';

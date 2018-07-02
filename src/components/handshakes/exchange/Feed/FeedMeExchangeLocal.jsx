@@ -16,7 +16,7 @@ import {
 } from '@/constants'
 import { connect } from 'react-redux'
 import { shakeOffer } from '@/reducers/exchange/action'
-import { MasterWallet } from '@/models/MasterWallet'
+import { MasterWallet } from '@/services/Wallets/MasterWallet'
 import {
   formatAmountCurrency,
   getHandshakeUserType
