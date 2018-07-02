@@ -127,11 +127,11 @@ class BetingShake extends React.Component {
       message = MESSAGE.RIGHT_NETWORK;
 
     }
-    else if (isExpiredDate(reportTime)){
-      message = MESSAGE.MATCH_OVER;
-    }
+    
     else if(matchName && matchOutcome){
-        if(amount > 0){
+      if (isExpiredDate(closingDate)){
+        message = MESSAGE.MATCH_OVER;
+      }else if(amount > 0){
           if(total <= parseFloat(balance)){
             if(isShowOdds){
               if(odds >1){

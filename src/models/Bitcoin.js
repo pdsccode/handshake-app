@@ -8,7 +8,6 @@ const bitcore = require('bitcore-lib');
 const BigNumber = require('bignumber.js');
 
 export class Bitcoin extends Wallet {
-
   static Network = { Mainnet: 'https://insight.bitpay.com/api' }
 
   constructor() {
@@ -61,19 +60,17 @@ export class Bitcoin extends Wallet {
   }
 
   checkAddressValid(toAddress) {
-
     if (!bitcore.Address.isValid(toAddress)) {
-      return "messages.bitcoin.error.invalid_address";
+      return 'messages.bitcoin.error.invalid_address';
     }
     return true;
   }
 
 
   async transfer(toAddress, amountToSend, blocks = NB_BLOCKS) {
-
     try {
       if (!bitcore.Address.isValid(toAddress)) {
-        return { status: 0, message: "messages.bitcoin.error.invalid_address2" };
+        return { status: 0, message: 'messages.bitcoin.error.invalid_address2' };
       }
 
       console.log(`transfered from address:${this.address}`);
@@ -86,7 +83,7 @@ export class Bitcoin extends Wallet {
       console.log(StringHelper.format('Your wallet balance is currently {0} ETH', balance));
 
       if (!balance || balance == 0 || balance <= amountToSend) {
-        return { status: 0, message: "messages.bitcoin.error.insufficient" };
+        return { status: 0, message: 'messages.bitcoin.error.insufficient' };
       }
 
       // each BTC can be split into 100,000,000 units. Each unit of bitcoin, or 0.00000001 bitcoin, is called a satoshi
@@ -121,13 +118,13 @@ export class Bitcoin extends Wallet {
           const txHash = await this.sendRawTx(rawTx);
           console.log(txHash);
 
-          return { status: 1, message: "messages.bitcoin.success.transaction" };
+          return { status: 1, message: 'messages.bitcoin.success.transaction' };
         }
 
-        return { status: 0, message: "messages.bitcoin.error.insufficient" };
+        return { status: 0, message: 'messages.bitcoin.error.insufficient' };
       }
     } catch (error) {
-      return { status: 0, message: "messages.bitcoin.error.insufficient" };
+      return { status: 0, message: 'messages.bitcoin.error.insufficient' };
     }
   }
 

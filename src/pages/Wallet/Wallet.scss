@@ -25,6 +25,8 @@
     padding: rem-calc(10px 5px 10px 15px);
     min-height: 120px;
     position: relative;
+    border-radius: 6px;
+    background-size: cover;
   }
   .feed-selected{
     border-color: #0BE200;
