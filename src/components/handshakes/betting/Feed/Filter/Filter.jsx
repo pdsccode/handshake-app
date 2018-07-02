@@ -90,18 +90,24 @@ class BettingFilter extends React.Component {
     if(isPrivate && outComeId){
       matches.forEach(element => {
         const {outcomes} = element;
-        const privateOutcomeArr = outcomes.filter(item => item.public == 0 && item.id == outComeId);
-        if(privateOutcomeArr.length > 0){
-          filterMatches.push(element);
+        if(outcomes.length > 0){
+          const privateOutcomeArr = outcomes.filter(item => item.public == 0 && item.id == outComeId);
+          if(privateOutcomeArr.length > 0){
+            filterMatches.push(element);
+          }
         }
+        
       });
     }else {
       matches.forEach(element => {
         const {outcomes} = element;
-        const publicOutcomeArr = outcomes.filter(item => item.public == 1);
-        if(publicOutcomeArr.length > 0){
-          filterMatches.push(element);
+        if(outcomes.length > 0){
+          const publicOutcomeArr = outcomes.filter(item => item.public == 1);
+          if(publicOutcomeArr.length > 0){
+            filterMatches.push(element);
+          }
         }
+       
       });
     }
     this.setState({
@@ -348,19 +354,22 @@ class BettingFilter extends React.Component {
   }
 
   callGetHandshakes(item) {
-    const params = {
-      outcome_id: item.id,
-    };
-    this.props.loadHandshakes({
-      PATH_URL: API_URL.CRYPTOSIGN.LOAD_HANDSHAKES,
-      METHOD: 'POST',
-      data: params,
-      successFn: this.getHandshakeSuccess,
-      errorFn: this.getHandshakeFailed,
-    });
-    if (typeof window !== 'undefined') {
-      window.isGotDefaultOutCome = true;
+    if(item){
+      const params = {
+        outcome_id: item.id,
+      };
+      this.props.loadHandshakes({
+        PATH_URL: API_URL.CRYPTOSIGN.LOAD_HANDSHAKES,
+        METHOD: 'POST',
+        data: params,
+        successFn: this.getHandshakeSuccess,
+        errorFn: this.getHandshakeFailed,
+      });
+      if (typeof window !== 'undefined') {
+        window.isGotDefaultOutCome = true;
+      }
     }
+    
   }
 
 

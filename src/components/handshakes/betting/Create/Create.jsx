@@ -23,7 +23,7 @@ import Dropdown from '@/components/core/controls/Dropdown';
 import Toggle from '@/components/handshakes/betting/Feed/Toggle';
 import { showAlert } from '@/reducers/app/action';
 import {isRightNetwork, isExpiredDate, getChainIdDefaultWallet, 
-  getBalance, getEstimateGas, isExistMatchBet} from '@/components/handshakes/betting/utils.js';
+  getBalance, getEstimateGas, isExistMatchBet, getAddress} from '@/components/handshakes/betting/utils.js';
 
 // self
 import { InputField } from '../form/customField';
@@ -257,13 +257,14 @@ class BettingCreate extends React.Component {
     console.log('Match, Outcome:', selectedMatch, selectedOutcome);
 
     let message = null;
-    const date = selectedMatch.date;
-    const reportTime = selectedMatch.reportTime;
+   
     if (!isRightNetwork()) {
       message = MESSAGE.RIGHT_NETWORK;
     }
 
     if (selectedMatch && selectedOutcome) {
+      const date = selectedMatch.date;
+      const reportTime = selectedMatch.reportTime;
       if (isExpiredDate(reportTime)) {
         message = MESSAGE.MATCH_OVER;
       } else if (eventBet > 0) {
