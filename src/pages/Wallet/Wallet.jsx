@@ -113,6 +113,8 @@ class Wallet extends React.Component {
       isLoading: false,
       error: null,
       listMainWalletBalance: [],
+      listTokenWalletBalance: [],
+      listCollectibleWalletBalance: [],
       listTestWalletBalance: [],
       listRewardWalletBalance: [],
       bottomSheet: false,
@@ -173,18 +175,31 @@ class Wallet extends React.Component {
   }
 
   splitWalletData(listWallet) {
-    const listMainWallet = [];
-    const listTestWallet = [];
-    const listRewardWallet = [];
+    let listMainWallet = [];
+    let listTestWallet = [];
+    let listRewardWallet = [];
+    let listTokenWallet = [];
+    let listCollectibleWallet = [];
 
     listWallet.forEach((wallet) => {
       // is reward wallet:
       if (wallet.isReward) {
-        listRewardWallet.push(wallet);
+        // listRewardWallet.push(wallet);
       }
-      // is Mainnet
+      // is Mainnet (coin, token, collectible)
       else if (wallet.network === MasterWallet.ListCoin[wallet.className].Network.Mainnet) {
-        listMainWallet.push(wallet);
+        if(wallet.isToken){
+          wallet.default = false;
+          if (wallet.isCollectibles){
+            listCollectibleWallet.push(wallet);
+          }
+          else{
+            listTokenWallet.push(wallet);
+          }
+        }
+        else{
+          listMainWallet.push(wallet);
+        }        
       } else {
         // is Testnet
         listTestWallet.push(wallet);
@@ -192,7 +207,7 @@ class Wallet extends React.Component {
     });
 
     this.setState({
-      isLoading: true, listMainWalletBalance: listMainWallet, listTestWalletBalance: listTestWallet, listRewardWalletBalance: listRewardWallet,
+      isLoading: true, listMainWalletBalance: listMainWallet, listTokenWalletBalance: listTokenWallet, listCollectibleWalletBalance: listCollectibleWallet, listTestWalletBalance: listTestWallet, listRewardWalletBalance: listRewardWallet,
     });
   }
 
@@ -268,7 +283,7 @@ class Wallet extends React.Component {
 
 
   getAllWallet() {
-    return this.state.listMainWalletBalance.concat(this.state.listTestWalletBalance).concat(this.state.listRewardWalletBalance);
+    return this.state.listMainWalletBalance.concat(this.state.listTestWalletBalance).concat(this.state.listRewardWalletBalance).concat(this.state.listTokenWalletBalance).concat(this.state.listCollectibleWalletBalance);
   }
 
   async getListBalace(listWallet) {
@@ -558,6 +573,20 @@ class Wallet extends React.Component {
   }
 
   // Menu for Right header bar
+  showModalAddCoin = () =>{
+    this.setState({ isRestoreLoading: false, countCheckCoinToCreate: 1, listCoinTempToCreate: MasterWallet.getListCoinTemp() });
+    this.modalCreateWalletRef.open();    
+  }
+  showModalAddToken = () =>{
+      this.setState({formAddTokenIsActive: true}, () => {
+        this.modalAddNewTokenRef.open();        
+    });
+  }
+  showModalAddCollectible = () =>{
+    this.setState({formAddCollectibleIsActive: true}, () => {
+      this.modalAddNewCollectibleRef.open();      
+    });
+  }
   creatSheetMenuHeaderMore() {
     const { messages } = this.props.intl;
     const obj = [];
@@ -565,30 +594,20 @@ class Wallet extends React.Component {
     obj.push({
       title: messages.wallet.action.import.title,
       handler: () => {
-        this.setState({ isRestoreLoading: false, countCheckCoinToCreate: 1, listCoinTempToCreate: MasterWallet.getListCoinTemp() });
-        this.modalCreateWalletRef.open();
-        this.toggleBottomSheet();
+        this.showModalAddCoin();
       },
     });
 
     obj.push({
-      title: 'Add custom token',
+      title: messages.wallet.action.add_token.title,
       handler: () => {
-
-        this.setState({formAddTokenIsActive: true}, () => {
-          this.modalAddNewTokenRef.open();
-          this.toggleBottomSheet();
-        });
+        this.showModalAddToken();       
       },
     });
     obj.push({
-      title: 'Add collectible',
+      title: messages.wallet.action.add_collectible.title,
       handler: () => {
-
-        this.setState({formAddCollectibleIsActive: true}, () => {
-          this.modalAddNewCollectibleRef.open();
-          this.toggleBottomSheet();
-        });
+        this.showModalAddCollectible();
       },
     });
 
@@ -727,6 +746,14 @@ class Wallet extends React.Component {
   get listMainWalletBalance() {
     return this.state.listMainWalletBalance.map(wallet => <WalletItem key={Math.random()} wallet={wallet} onMoreClick={() => this.onMoreClick(wallet)} onWarningClick={() => this.onWarningClick(wallet)} onAddressClick={() => this.onAddressClick(wallet)} />);
   }
+
+  get listTokenWalletBalance() {
+    return this.state.listTokenWalletBalance.map(wallet => <WalletItem key={Math.random()} wallet={wallet} onMoreClick={() => this.onMoreClick(wallet)} onWarningClick={() => this.onWarningClick(wallet)} onAddressClick={() => this.onAddressClick(wallet)} />);
+  }
+  get listCollectibleWalletBalance() {
+    return this.state.listCollectibleWalletBalance.map(wallet => <WalletItem key={Math.random()} wallet={wallet} onMoreClick={() => this.onMoreClick(wallet)} onWarningClick={() => this.onWarningClick(wallet)} onAddressClick={() => this.onAddressClick(wallet)} />);
+  }
+
   get listTestWalletBalance() {
     return this.state.listTestWalletBalance.map(wallet => <WalletItem key={Math.random()} wallet={wallet} onMoreClick={() => this.onMoreClick(wallet)} onWarningClick={() => this.onWarningClick(wallet)} onAddressClick={() => this.onAddressClick(wallet)} />);
   }
@@ -1096,18 +1123,30 @@ class Wallet extends React.Component {
           </Modal>
 
           {/* Render list wallet: */}
-
+          {/* Coin*/}
           <Row className="list">
-            <Header
-              title={!process.env.isLive ? messages.wallet.action.create.label.main_net : ""}hasLink={false} linkTitle={messages.wallet.action.create.button.add_new} onLinkClick={this.onLinkClick} />
-            </Row>
-
-          <Row className="list">
-            {this.listMainWalletBalance}
-            <Col sm={6} md={6} xs={6} key={"bgAddImg"} className="feed-wrapper-wallet">
-              <div onClick={this.onIconRightHeaderClick} className='feed' style={{backgroundImage: "url('"+bgAddImg+"')"}}></div>
-            </Col>
+            <Header title={messages.wallet.action.create.label.header_coins}hasLink={true} linkTitle={messages.wallet.action.create.button.add_new} onLinkClick={this.showModalAddCoin} />
           </Row>
+          <Row className="list">
+            {this.listMainWalletBalance}            
+          </Row>
+
+          {/* Tokens */}
+          <Row className="list">
+            <Header title={messages.wallet.action.create.label.header_tokens}hasLink={true} linkTitle={messages.wallet.action.create.button.add_new} onLinkClick={this.showModalAddToken} />
+          </Row>
+          <Row className="list">
+            {this.listTokenWalletBalance}
+          </Row>
+
+          {/* Collectible */}
+          <Row className="list">
+            <Header title={messages.wallet.action.create.label.header_collectibles}hasLink={true} linkTitle={messages.wallet.action.create.button.add_new} onLinkClick={this.showModalAddCollectible} />
+          </Row>
+          <Row className="list">
+            {this.listCollectibleWalletBalance}
+          </Row>
+
           {!process.env.isLive ?
           <Row className="list">
             <Header title={messages.wallet.action.create.label.test_net} hasLink linkTitle={messages.wallet.action.create.button.request_free_eth} onLinkClick={this.getETHFree} />
