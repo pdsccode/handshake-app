@@ -916,52 +916,8 @@ class Wallet extends React.Component {
 
 
           <Modal title={messages.wallet.action.transfer.header} onRef={modal => this.modalSendRef = modal}  onClose={this.closeTransfer}>
-            <TransferCoin active={this.state.activeTransfer} wallet={this.state.walletSelected} onFinish={() => { this.successTransfer() }} />
-
-            {/* <SendWalletForm className="sendwallet-wrapper" onSubmit={this.sendCoin} validate={this.invalidateTransferCoins}>
-            <p className="labelText">Receiving address</p>
-            <div className="div-address-qr-code">
-
-              <Field
-                    name="to_address"
-                    type="text"
-                    className="form-control input-address-qr-code"
-                    placeholder={messages.wallet.action.transfer.to_address.placeholder}
-                    component={fieldInput}
-                    value={this.state.inputAddressAmountValue}
-                    onChange={evt => this.updateSendAddressValue(evt)}
-                    validate={[required]}
-                  />
-
-              {!isIOs ? <img onClick={() => { this.openQrcode() }} className="icon-qr-code-black" src={iconQRCodeBlack} /> : ""}
-            </div>
-            <p className="labelText">{ this.state.walletSelected ? StringHelper.format("Amount ({0})", this.state.walletSelected.name) : "Amount "}</p>
-              <Field
-                    name="amount"
-                    type="text"
-                    className="form-control"
-                    component={fieldInput}
-                    value={this.state.inputSendAmountValue}
-                    onChange={evt => this.updateSendAmountValue(evt)}
-                    placeholder={"0.0"}
-                    validate={[required, amountValid]}
-                    // validate={[required, amountValid, balanceValid(this.state.walletSelected ? this.state.walletSelected.balance : "", this.state.walletSelected ? this.state.walletSelected.name : "")]}
-                  />
-
-                  <label className='label-balance'>Your balance: { this.state.walletSelected ? StringHelper.format("{0} {1}", this.state.walletSelected.balance, this.state.walletSelected.name) : ""}</label>
-
-              <Button className="button-wallet" isLoading={this.state.isRestoreLoading}  type="submit" block={true}>{messages.wallet.action.transfer.button}</Button>
-            </SendWalletForm> */}
+            <TransferCoin active={this.state.activeTransfer} wallet={this.state.walletSelected} onFinish={() => { this.successTransfer() }} />            
           </Modal>
-
-          {/* Dialog confirm transfer coin */}
-          {/* <ModalDialog title={messages.wallet.action.transfer.header} onRef={modal => this.modalConfirmSendRef = modal}>
-            <div className="bodyConfirm"><span>{messages.wallet.action.transfer.text.confirm_transfer} {this.state.inputSendAmountValue} {this.state.walletSelected ? this.state.walletSelected.name : ''}?</span></div>
-            <div className="bodyConfirm">
-              <Button className="left" cssType="danger" onClick={this.submitSendCoin} >Confirm</Button>
-              <Button className="right" cssType="secondary" onClick={() => { this.modalConfirmSendRef.close(); }}>Cancel</Button>
-            </div>
-          </ModalDialog> */}
 
           {/* <Modal title="Buy coins" onRef={modal => this.modalFillRef = modal}>
             <FeedCreditCard
@@ -1028,39 +984,6 @@ class Wallet extends React.Component {
               </Button>
             </div> */}
           </Modal>
-
-          {/* Modal for Custom amount : */}
-          {/* <Modal title={messages.wallet.action.receive.header2} onRef={modal => this.modalCustomAmountRef = modal}>
-            <div className={['bodyBackup bodyShareAddress']}>
-
-              <QRCode value={(this.state.walletSelected ? this.state.walletSelected.address : '') + (this.state.inputSendAmountValue != '' ? `,${this.state.inputSendAmountValue}` : '')} />
-              <div className="addressDivPopup">
-                <InputGroup>
-                  <InputGroupAddon addonType="prepend">{messages.wallet.action.receive.label.address}</InputGroupAddon>
-                  <Input2
-                    disabled
-                    value={this.state.walletSelected ? this.state.walletSelected.address : ''}
-                  />
-                </InputGroup>
-
-                <br />
-
-                <InputGroup>
-                  <InputGroupAddon addonType="prepend">{messages.wallet.action.receive.label.amount}</InputGroupAddon>
-                  <Input2
-                  placeholder={messages.wallet.action.receive.placeholder.amount}
-                  type="text"
-                  value={this.state.inputSendAmountValue} onChange={evt => this.updateSendAmountValue(evt)}/>
-                  <InputGroupAddon addonType="append">{ this.state.walletSelected ? StringHelper.format("{0}", this.state.walletSelected.name) : ""}</InputGroupAddon>
-                </InputGroup>
-
-
-              </div>
-              <Button className="button" cssType="primary" onClick={() => { this.modalCustomAmountRef.close(); this.modalShareAddressRef.close(); }} >
-                {messages.wallet.action.receive.button.done}
-              </Button>
-            </div>
-          </Modal> */}
 
           {/* Modal for Create/Import wallet : */}
           <Modal title={messages.wallet.action.create.header} onRef={modal => this.modalCreateWalletRef = modal}>
