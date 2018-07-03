@@ -149,7 +149,7 @@ class FeedBetting extends React.Component {
     }
 
 
-    const status = itemInfo.status;
+    let status = itemInfo.status;
     const side = itemInfo.side;
 
     const role = isUserShake ? ROLE.SHAKER : ROLE.INITER;
@@ -325,22 +325,37 @@ class FeedBetting extends React.Component {
       </div>
     );
   }
-  renderItemShake(item) {
-    const {
-      amount = 0, odds = 0, side, remainingAmount,
-    } = item;
-    const remainingValue = remainingAmount || 0;
-    const colorBySide = side === 1 ? `support` : 'oppose';
-    const amountMatch = parseBigNumber(amount);
-    let oddsBN = parseBigNumber(odds);
-    const winMatch = amountMatch.times(oddsBN).toNumber()||0;
-    const winValue = amountMatch.times(oddsBN).toNumber()||0;;
-    const displayWinMatch = Math.floor(winMatch * ROUND) / ROUND;
-    const displayAmount = Math.floor(amount * ROUND) / ROUND;
-    const displayMatchedAmount = Math.floor(amountMatch * ROUND) / ROUND;
-    const displayRemaining = Math.floor(remainingValue * ROUND) / ROUND;
-    const displayWinValue = Math.floor(winValue * ROUND) / ROUND;
-    return (this.renderItem(displayMatchedAmount, displayAmount, colorBySide, odds, displayWinMatch, displayRemaining, displayWinValue));
+  renderItemShake(shakerList) {
+
+    let displayWinMatch = 0;
+    let displayAmount = 0;
+    let colorBySide = `support`;
+    let displayMatchedAmount = 0;
+    let displayRemaining = 0;
+    let displayWinValue = 0;
+    let oddsItem = 0;
+    let remainingValue = 0;
+    if(shakerList){
+      shakerList.forEach(item => {
+        const {
+          amount = 0, odds = 0, side, remainingAmount,
+        } = item;
+        remainingValue = remainingAmount || 0;
+        colorBySide = side === 1 ? `support` : 'oppose';
+        const amountMatch = parseBigNumber(amount);
+        let oddsBN = parseBigNumber(odds);
+        const winMatch = amountMatch.times(oddsBN).toNumber()||0;
+        const winValue = amountMatch.times(oddsBN).toNumber()||0;;
+        displayWinMatch += Math.floor(winMatch * ROUND) / ROUND;
+        displayAmount += Math.floor(amount * ROUND) / ROUND;
+        displayMatchedAmount = Math.floor(amountMatch * ROUND) / ROUND;
+        displayRemaining = Math.floor(remainingValue * ROUND) / ROUND;
+        displayWinValue = Math.floor(winValue * ROUND) / ROUND;
+      });
+    }
+   
+
+    return (this.renderItem(displayMatchedAmount, displayAmount, colorBySide, oddsItem, displayWinMatch, displayRemaining, displayWinValue));
   }
   renderMaker(){
     // console.log('Render Maker');
@@ -366,9 +381,10 @@ class FeedBetting extends React.Component {
     // console.log('Render Maker');
 
     const { shakedItemList } = this.state;
+
     return (
       <div>
-        {shakedItemList.map(item => this.renderItemShake(item))}
+        {this.renderItemShake(shakedItemList)}
       </div>
     );
   }
