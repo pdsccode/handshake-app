@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 // services, constants
 import { BetHandshakeHandler, SIDE, BETTING_STATUS_LABEL, ROLE, MESSAGE, BET_BLOCKCHAIN_STATUS } from './BetHandshakeHandler.js';
 import momment from 'moment';
-import {MasterWallet} from '@/services/Wallets/MasterWallet';
+import { MasterWallet } from '@/services/Wallets/MasterWallet';
 
 import local from '@/services/localStore';
 import { FIREBASE_PATH, HANDSHAKE_ID, API_URL, APP } from '@/constants';
@@ -130,10 +130,10 @@ class FeedBetting extends React.Component {
     const isMakerShakerSameUser = this.isMakerShakerSameUser(profile.id, initUserId, shakeUserIds);
     console.log('Amount,RemainingAmount, AmountMatch:', amount, remainingAmount, amountMatch);
 
-    if(isMakerShakerSameUser){
-      //Is Maker win ?
+    if (isMakerShakerSameUser) {
+      // Is Maker win ?
       if ((isMatch && result === BETTING_STATUS.SUPPORT_WIN && side === SIDE.SUPPORT)
-          || (isMatch && result === BETTING_STATUS.AGAINST_WIN && side === SIDE.AGAINST)){
+          || (isMatch && result === BETTING_STATUS.AGAINST_WIN && side === SIDE.AGAINST)) {
         isUserShake = false;
       }
     }
@@ -147,8 +147,6 @@ class FeedBetting extends React.Component {
         winMatch = amountMatch * itemInfo.odds;
       }
     }
-
-
 
 
     const status = itemInfo.status;
@@ -167,6 +165,12 @@ class FeedBetting extends React.Component {
 
     const statusResult = BetHandshakeHandler.getStatusLabel(status, result, role, side, isMatch, reportTime, disputeTime);
     const { title, isAction } = statusResult;
+
+    if (status === BET_BLOCKCHAIN_STATUS.STATUS_DONE) {
+      this.setState({ matchDone: true });
+    } else {
+      this.setState({ matchDone: false });
+    }
     this.setState({
       actionTitle: title,
       statusTitle: statusResult.status,
@@ -253,9 +257,6 @@ class FeedBetting extends React.Component {
     }
     const buttonClassName = this.getButtonClassName(actionTitle);
     console.log('Sa Role:', role);
-    if (status === BET_BLOCKCHAIN_STATUS.STATUS_DONE) {
-      this.setState({ matchDone: true });
-    }
     return (
       <div>
         {/* Feed */}
@@ -275,14 +276,14 @@ class FeedBetting extends React.Component {
             </div>
             <div className="predictName">Odds: {odds}</div>
           </div>
-
-          <div className="bettingInfo">
-            <div className="description">You bet ETH</div>
-            <div className="description">Matched ETH</div>
-            <div className="description">You could win ETH</div>
+          <div className="clearfix">
+            <div className="bettingInfo">
+              <div className="description">You bet</div>
+              <div className="description">Matched</div>
+              <div className="description">You could win</div>
+            </div>
+            {role == ROLE.INITER ? this.renderMaker() : this.renderShaker()}
           </div>
-          {role == ROLE.INITER ? this.renderMaker() : this.renderShaker()}
-
           <div className="bottomDiv">
             {this.renderStatus()}
             {actionTitle && <Button isLoading={isLoading} block className={buttonClassName} disabled={!isAction} onClick={() => { this.clickActionButton(actionTitle); }}>{actionTitle}</Button>}
@@ -293,25 +294,23 @@ class FeedBetting extends React.Component {
   }
   renderItem(matchedAmount, amount, colorBySide, odds, winMatch, remaining, winValue) {
     return (
-      <div>
-        <div className="bettingInfo">
-          <div>
-            {/* <div className="description">Matched bet (ETH)</div> */}
-            {/* <div className="value">{matchedAmount}/{amount}</div> */}
-            {<div className="value">{amount}</div>}
+      <div className="bettingInfoValues">
+        <div>
+          {/* <div className="description">Matched bet (ETH)</div> */}
+          {/* <div className="value">{matchedAmount}/{amount}</div> */}
+          {<div className="value">{amount} ETH</div>}
 
-          </div>
-          <div>
-            {/* <div className="description">On odds</div> */}
-            {/* <div className={`value ${colorBySide}`}> {Math.floor(odds*ROUND_ODD)/ROUND_ODD}</div> */}
-            {<div className="value">{matchedAmount}</div>}
+        </div>
+        <div>
+          {/* <div className="description">On odds</div> */}
+          {/* <div className={`value ${colorBySide}`}> {Math.floor(odds*ROUND_ODD)/ROUND_ODD}</div> */}
+          {<div className="value">{matchedAmount} ETH</div>}
 
-          </div>
-          <div>
-            {/* <div className="description">You could win</div> */}
-            <div className="value">{winMatch}/{winValue}</div>
-            {/* winMatch > 0 && <div className="value">{Math.floor(winMatch * ROUND) / ROUND} ETH matched</div> */}
-          </div>
+        </div>
+        <div>
+          {/* <div className="description">You could win</div> */}
+          <div className="value">{winMatch}/{winValue} ETH</div>
+          {/* winMatch > 0 && <div className="value">{Math.floor(winMatch * ROUND) / ROUND} ETH matched</div> */}
         </div>
         {/* remaining > 0 && <div className="bettingInfo">
         <div className="value"> Remaining {remaining} ETH</div>
