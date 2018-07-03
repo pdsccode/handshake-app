@@ -165,12 +165,8 @@ class FeedBetting extends React.Component {
 
     const statusResult = BetHandshakeHandler.getStatusLabel(status, result, role, side, isMatch, reportTime, disputeTime);
     const { title, isAction } = statusResult;
+    const matchDone = status === BET_BLOCKCHAIN_STATUS.STATUS_DONE;
 
-    if (status === BET_BLOCKCHAIN_STATUS.STATUS_DONE) {
-      this.setState({ matchDone: true });
-    } else {
-      this.setState({ matchDone: false });
-    }
     this.setState({
       actionTitle: title,
       statusTitle: statusResult.status,
@@ -182,6 +178,7 @@ class FeedBetting extends React.Component {
       isUserShake,
       shakedItemList,
       isLoading,
+      matchDone,
     });
   }
 
@@ -231,7 +228,7 @@ class FeedBetting extends React.Component {
 
   renderStatus = () => {
     const { statusTitle } = this.state;
-    return <div className="statusBetting" dangerouslySetInnerHTML={{__html: statusTitle}} />;
+    return <div className="statusBetting" dangerouslySetInnerHTML={{ __html: statusTitle }} />;
   }
 
   render() {
