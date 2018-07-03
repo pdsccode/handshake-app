@@ -444,22 +444,24 @@ class Chat extends Component {
       const room = foundRoom;
       if (room) {
         const { authorizedUsers } = foundRoom;
-        room.messages = foundRoom.messages || [];
-        room.froms = foundRoom.froms || {};
+        if (_.has(authorizedUsers, this.user.id)) {
+          room.messages = foundRoom.messages || [];
+          room.froms = foundRoom.froms || {};
 
-        _.forIn(authorizedUsers, (userData, userId) => {
-          room.froms[userId] = userData.name;
-        });
+          _.forIn(authorizedUsers, (userData, userId) => {
+            room.froms[userId] = userData.name;
+          });
 
-        this.setCustomState((prevState) => {
-          const prevChatSource = prevState.chatSource;
-          prevChatSource[this.chatRoomId] = room;
-          return {
-            chatSource: prevChatSource,
-          };
-        }, () => {
-          this.enterMessageRoom(foundRoom.id);
-        });
+          this.setCustomState((prevState) => {
+            const prevChatSource = prevState.chatSource;
+            prevChatSource[this.chatRoomId] = room;
+            return {
+              chatSource: prevChatSource,
+            };
+          }, () => {
+            this.enterMessageRoom(foundRoom.id);
+          });
+        }
       } else {
         this.setCustomState({
           notFoundUser: true,
