@@ -7,7 +7,7 @@ import {
   HANDSHAKE_EXCHANGE_STATUS_VALUE,
 } from '@/constants';
 import { ACTIONS } from './action';
-
+const TAG = "MeReducer";
 function handlePreProcessForOfferStore(handshake) {
   const extraData = JSON.parse(handshake.extra_data);
   const { id } = handshake;
@@ -193,11 +193,11 @@ const meReducter = (
       const listBettingStatus = action.payload;
       const myList = state.list;
       let handledMylist;
-
+      console.log(TAG,'FIREBASE_BETTING_DATA_CHANGE action.payload =', action.payload);
       Object.keys(listBettingStatus).forEach((key) => {
         const element = listBettingStatus[key];
         const { id, status_i: statusI, result_i: resultI } = element;
-        console.log('New id, status, result:', id, statusI, resultI);
+        
 
         handledMylist = myList.map((handshake) => {
           const handledHandshake = handshake;

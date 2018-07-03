@@ -8,7 +8,7 @@ import local from '@/services/localStore';
 import { APP, API_URL } from '@/constants';
 import { loadMatches, loadHandshakes, checkFreeAvailable } from '@/reducers/betting/action';
 import { SIDE } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
-import { getBalance } from '@/components/handshakes/betting/utils';
+import { getBalance,parseBigNumber } from '@/components/handshakes/betting/utils';
 import GA from '@/services/googleAnalytics';
 // components
 import Dropdown from '@/components/core/controls/Dropdown';

@@ -134,22 +134,29 @@ class FeedBetting extends React.Component {
        winMatch = amountMatch * itemInfo.odds;
      }
     }
-    const status = itemInfo.status;
+    let status = itemInfo.status;
     const side = itemInfo.side;
 
     const role = isUserShake ? ROLE.SHAKER : ROLE.INITER;
     //const blockchainStatusHardcode = 5;
     //const isMatch = true;
     //const hardCodeResult = 2;
-    console.log('Is Match:', isMatch);
+    
     let isLoading = false;
     const isLoadingObj = betHandshakeHandler?.getLoadingOnChain(idCryptosign);
+    console.log('handleStatus idCryptosign:', idCryptosign,' status = ',status);
     if(isLoadingObj){
       console.log('handleStatus  isLoadingObj:', isLoadingObj);
-      isLoading = isLoadingObj.isLoading;
-
+      if(status === BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINITED||status === BET_BLOCKCHAIN_STATUS.STATUS_DONE){
+        betHandshakeHandler.setItemOnChain(idCryptosign,null);
+        isLoading = false;
+      }else{
+        status = isLoadingObj.status||status;
+        isLoading = true;
+      }
+      
     }
-
+    console.log('handleStatus ------ idCryptosign:', idCryptosign,' statusChange = ',status);
     const statusResult = BetHandshakeHandler.getStatusLabel(status, result, role,side, isMatch, reportTime, disputeTime);
     const {title, isAction} = statusResult;
     this.setState({
@@ -396,13 +403,14 @@ class FeedBetting extends React.Component {
     this.setState({
       isLoading: true
     })
-    betHandshakeHandler.setItemOnChain(offchain, true);
+    betHandshakeHandler.setItemOnChain(offchain, itemInfo);
     const result = await betHandshakeHandler.cancelBet(hid, side, amount, odds, offchain);
     const {hash} = result;
     if(hash){
       // betHandshakeHandler.setItemOnChain(offchain, false);
       let updateInfo = Object.assign({}, itemInfo);
       updateInfo.status = BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINIT_PENDING;
+      betHandshakeHandler.setItemOnChain(offchain, updateInfo);
       this.props.updateBettingChange(updateInfo);
     }
   }
@@ -655,7 +663,7 @@ class FeedBetting extends React.Component {
 }
 
 const mapState = state => ({
-  firebaseUser: state.firebase.data,
+  // firebaseUser: state.firebase.data,
 });
 const mapDispatch = ({
   loadMyHandshakeList,
