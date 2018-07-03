@@ -394,6 +394,10 @@ export const URL = {
   HANDSHAKE_DISCOVER_INDEX: '/discover',
   HANDSHAKE_DISCOVER_DETAIL: '/discover/:slug',
 
+  HANDSHAKE_CASH: '/cash',
+  HANDSHAKE_CASH_INDEX: '/cash',
+  HANDSHAKE_CASH_DETAIL: '/cash/:slug',
+
   HANDSHAKE_CHAT: '/chat',
   HANDSHAKE_CHAT_INDEX: '/chat',
   HANDSHAKE_CHAT_DETAIL: '/chat/:userId',
