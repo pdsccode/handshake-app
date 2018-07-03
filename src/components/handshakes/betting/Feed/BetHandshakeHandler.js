@@ -152,7 +152,7 @@ export const BETTING_STATUS_LABEL =
       LOSE: 'Better luck next time.',
       WIN: `You're a winner!`,
       WIN_WAIT: `<br/> It's not time to withdraw. Please wait`,
-      DONE: 'Completed',
+      DONE: ` The bet is done`,
       WITHDRAW: 'Withdraw winnings',
       CANCELLING: 'Your bet is being cancelled.',
       PROGRESSING: 'Your bet is progressing a transaction. Please wait..',
@@ -228,12 +228,10 @@ export class BetHandshakeHandler {
     } else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_REFUND) {
       strStatus = BETTING_STATUS_LABEL.REFUNDED;
       isAction = false;
-    } else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_DONE && resultStatus === BETTING_STATUS.SUPPORT_WIN && side === SIDE.SUPPORT) {
-      strStatus = BETTING_STATUS_LABEL.WIN;
-      isAction = false;
-    } else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_DONE && resultStatus === BETTING_STATUS.SUPPORT_WIN && side === SIDE.AGAINST) {
-      strStatus = BETTING_STATUS_LABEL.WIN;
-      isAction = false;
+    } else if ((blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_DONE && resultStatus === BETTING_STATUS.SUPPORT_WIN && side === SIDE.SUPPORT)
+                ||  (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_DONE && resultStatus === BETTING_STATUS.AGAINST_WIN && side === SIDE.AGAINST)){
+            strStatus = BETTING_STATUS_LABEL.WIN + BETTING_STATUS_LABEL.DONE;
+            isAction = false;
     } else if (!isMatch && role === ROLE.INITER && blockchainStatus !== BET_BLOCKCHAIN_STATUS.STATUS_SHAKER_SHAKED) {
       label = BETTING_STATUS_LABEL.CANCEL;
       strStatus = BETTING_STATUS_LABEL.BET_WAIT_MATCHING;
