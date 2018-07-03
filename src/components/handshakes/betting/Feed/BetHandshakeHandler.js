@@ -454,12 +454,15 @@ export class BetHandshakeHandler {
 
     return result;
   }
-  getLoadingOnChain = offchain => this.listOnChainLoading[offchain]
-  setItemOnChain = (offchain, isLoading = false) => {
-    if (this.listOnChainLoading) {
-      this.listOnChainLoading[offchain] = {
-        isLoading,
-      };
+  getLoadingOnChain = (offchain) => {
+
+    return this.listOnChainLoading[offchain];
+  }
+  setItemOnChain = (offchain,itemOnChain) => {
+    if(this.listOnChainLoading){
+        this.listOnChainLoading[offchain] = {
+          itemOnChain:itemOnChain
+      }
     }
   }
   async withdraw(hid, offchain) {

@@ -31,7 +31,7 @@ import Helper from '@/services/helper';
 import Rate from '@/components/core/controls/Rate/Rate';
 
 import './Me.scss';
-
+const TAG = "Me";
 const maps = {
   [HANDSHAKE_ID.PROMISE]: FeedPromise,
   [HANDSHAKE_ID.BETTING]: FeedBetting,
@@ -73,21 +73,27 @@ class Me extends React.Component {
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
+    console.log(TAG,' getDerivedStateFromProps begin ');
     if (nextProps.exchange.listOfferPrice.updatedAt !== prevState.exchange.listOfferPrice.updatedAt) {
       nextProps.loadMyHandshakeList({ PATH_URL: API_URL.ME.BASE });
       return { exchange: nextProps.exchange };
     }
+    console.log(TAG,' getDerivedStateFromProps begin firebaseUser = ',nextProps.firebaseUser);
     if (nextProps.firebaseUser) {
+      console.log(TAG,' getDerivedStateFromProps begin 01');
       if (JSON.stringify(nextProps.firebaseUser) !== JSON.stringify(prevState.firebaseUser)) {
         const nextUser = nextProps.firebaseUser.users?.[nextProps.auth.profile.id];
         const prevUser = prevState.firebaseUser.users?.[prevState.auth.profile.id];
-
-        if (nextUser && prevUser) {
+        console.log(TAG,' getDerivedStateFromProps begin 02');
+        if (nextUser) {
+          console.log(TAG,' getDerivedStateFromProps begin 03');
           if (JSON.stringify(nextUser?.offers) !== JSON.stringify(prevUser?.offers)) {
             nextProps.fireBaseExchangeDataChange(nextUser?.offers);
             nextProps.firebase.remove(`/users/${nextProps.auth.profile.id}/offers`);
           }
+          console.log(TAG,' getDerivedStateFromProps begin 04');
           if (JSON.stringify(nextUser?.betting) !== JSON.stringify(prevUser?.betting)) {
+            console.log(TAG,' getDerivedStateFromProps betting ' ,nextUser?.betting);
             nextProps.fireBaseBettingChange(nextUser?.betting);
             nextProps.firebase.remove(`/users/${nextProps.auth.profile.id}/betting`);
           }
@@ -163,8 +169,8 @@ class Me extends React.Component {
     const { messages } = this.props.intl;
     const online = !this.props.auth.offline;
 
-    console.log('this.props.intl', this.props.intl);
-    console.log('messages.me.feed', messages.me.feed);
+    // console.log('this.props.intl', this.props.intl);
+    // console.log('messages.me.feed', messages.me.feed);
 
     return (
       <Grid className="me">
