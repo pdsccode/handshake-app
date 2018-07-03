@@ -95,9 +95,9 @@ class BetingShake extends React.Component {
     //   disable: !isOpen
     // });
     this.setState({
-      oddValue: marketOdds,
+      oddValue: marketOdds.toFixed(1,1),
       amountValue: roundMarketAmount,
-      winValue: winValue,
+      winValue: winValue.toFixed(6,1),
       disable: !isOpen
     });
   }
