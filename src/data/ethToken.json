@@ -1,0 +1,370 @@
+[
+	{
+		"name": "EOS",
+		"symbol": "EOS",
+		"decimal": "18",
+		"address": "0x86Fa049857E0209aa7D9e616F7eb3b3B78ECfdb0",
+		"type": "ERC20"
+	},
+	{
+		"name": "OMGToken",
+		"symbol": "OMG",
+		"decimal": "18",
+		"address": "0xd26114cd6EE289AccF82350c8d8487fedB8A0C07",
+		"type": "ERC20"
+	},
+	{
+		"name": "Tronix",
+		"symbol": "TRX",
+		"decimal": "6",
+		"address": "0xf230b790e05390fc8295f4d3f60332c93bed42e2",
+		"type": "ERC20"
+	},
+	{
+		"name": "EthLend",
+		"symbol": "LEND",
+		"decimal": "18",
+		"address": "0x80fB784B7eD66730e8b1DBd9820aFD29931aab03",
+		"type": "ERC20"
+	},
+	{
+		"name": "BitClave",
+		"symbol": "CAT",
+		"decimal": "18",
+		"address": "0x1234567461d3f8Db7496581774Bd869C83D51c93",
+		"type": "ERC20"
+	},
+	{
+		"name": "Salt",
+		"symbol": "SALT",
+		"decimal": "8",
+		"address": "0x4156D3342D5c385a87D264F90653733592000581",
+		"type": "ERC20"
+	},
+	{
+		"name": "Enumiv0",
+		"symbol": "ENU",
+		"decimal": "8",
+		"address": "0x275b69AA7c8C1d648A0557656bCe1C286e69a29d",
+		"type": "ERC20"
+	},
+	{
+		"name": "MCAP",
+		"symbol": "MCAP",
+		"decimal": "8",
+		"address": "0x93E682107d1E9defB0b5ee701C71707a4B2E46Bc",
+		"type": "ERC20"
+	},
+	{
+		"name": "StorjToken",
+		"symbol": "STORJ",
+		"decimal": "8",
+		"address": "0xB64ef51C888972c908CFacf59B47C1AfBC0Ab8aC",
+		"type": "ERC20"
+	},
+	{
+		"name": "VIU",
+		"symbol": "VIU",
+		"decimal": "18",
+		"address": "0x519475b31653E46D20cD09F9FdcF3B12BDAcB4f5",
+		"type": "ERC20"
+	},
+	{
+		"name": "Status Network",
+		"symbol": "SNT",
+		"decimal": "18",
+		"address": "0x744d70FDBE2Ba4CF95131626614a1763DF805B9E",
+		"type": "ERC20"
+	},
+	{
+		"name": "Golem Network",
+		"symbol": "GNT",
+		"decimal": "18",
+		"address": "0xa74476443119A942dE498590Fe1f2454d7D4aC0d",
+		"type": "ERC20"
+	},
+	{
+		"name": "FunFair",
+		"symbol": "FUN",
+		"decimal": "8",
+		"address": "0x419D0d8BdD9aF5e606Ae2232ed285Aff190E711b",
+		"type": "ERC20"
+	},
+	{
+		"name": "CandyHCoin",
+		"symbol": "CANDY",
+		"decimal": "8",
+		"address": "0x45555629AAbfEA138EAd1C1E5f2AC3Cce2aDd830",
+		"type": "ERC20"
+	},
+	{
+		"name": "Basic Attention",
+		"symbol": "BAT",
+		"decimal": "18",
+		"address": "0x0D8775F648430679A709E98d2b0Cb6250d2887EF",
+		"type": "ERC20"
+	},
+	{
+		"name": "Bancor Network",
+		"symbol": "BNT",
+		"decimal": "18",
+		"address": "0x1F573D6Fb3F13d689FF844B4cE37794d79a7FF1C",
+		"type": "ERC20"
+	},
+	{
+		"name": "Kin",
+		"symbol": "KIN",
+		"decimal": "18",
+		"address": "0x818Fc6C2Ec5986bc6E2CBf00939d90556aB12ce5",
+		"type": "ERC20"
+	},
+	{
+		"name": "Ox Protocol",
+		"symbol": "ZRX",
+		"decimal": "18",
+		"address": "0xE41d2489571d322189246DaFA5ebDe1F4699F498",
+		"type": "ERC20"
+	},
+	{
+		"name": "PowerLedger",
+		"symbol": "POWR",
+		"decimal": "6",
+		"address": "0x595832F8FC6BF59c85C527fEC3740A1b7a361269",
+		"type": "ERC20"
+	},
+	{
+		"name": "VeChain",
+		"symbol": "VEN",
+		"decimal": "18",
+		"address": "0xD850942eF8811f2A866692A623011bDE52a462C1",
+		"type": "ERC20"
+	},
+	{
+		"name": "Civic",
+		"symbol": "CVC",
+		"decimal": "8",
+		"address": "0x41e5560054824eA6B0732E656E3Ad64E20e94E45",
+		"type": "ERC20"
+	},
+	{
+		"name": "Dragon",
+		"symbol": "DRGN",
+		"decimal": "18",
+		"address": "0x419c4dB4B9e25d6Db2AD9691ccb832C8D9fDA05E",
+		"type": "ERC20"
+	},
+	{
+		"name": "CANDY",
+		"symbol": "CANDY",
+		"decimal": "18",
+		"address": "0xf2EAb3A2034D3f6B63734D2E08262040E3fF7B48",
+		"type": "ERC20"
+	},
+	{
+		"name": "Titanium BAR",
+		"symbol": "BAR",
+		"decimal": "18",
+		"address": "0xc7579bB99Af590EC71c316E1Ac4436C535039594",
+		"type": "ERC20"
+	},
+	{
+		"name": "TenX Pay",
+		"symbol": "PAY",
+		"decimal": "18",
+		"address": "0xB97048628DB6B661D4C2aA833e95Dbe1A905B280",
+		"type": "ERC20"
+	},
+	{
+		"name": "KickCoin",
+		"symbol": "KICK",
+		"decimal": "8",
+		"address": "0x27695E09149AdC738A978e9A678F99E4c39e9eb9",
+		"type": "ERC20"
+	},
+	{
+		"name": "Crypterium",
+		"symbol": "CRPT",
+		"decimal": "18",
+		"address": "0x80A7E048F37A50500351C204Cb407766fA3baE7f",
+		"type": "ERC20"
+	},
+	{
+		"name": "ICON",
+		"symbol": "ICX",
+		"decimal": "18",
+		"address": "0xb5A5F22694352C15B00323844aD545ABb2B11028",
+		"type": "ERC20"
+	},
+	{
+		"name": "GSG Coin",
+		"symbol": "GSGC",
+		"decimal": "0",
+		"address": "0x151BC71a40c56C7cB3317d86996fd0b4fF9bD907",
+		"type": "ERC20"
+	},
+	{
+		"name": "Reputation",
+		"symbol": "REP",
+		"decimal": "18",
+		"address": "0xE94327D07Fc17907b4DB788E5aDf2ed424adDff6",
+		"type": "ERC20"
+	},
+	{
+		"name": "Decentraland",
+		"symbol": "MANA",
+		"decimal": "18",
+		"address": "0x0F5D2fB29fb7d3CFeE444a200298f468908cC942",
+		"type": "ERC20"
+	},
+	{
+		"name": "Wizzle Infinity",
+		"symbol": "WZI",
+		"decimal": "18",
+		"address": "0xb8327F32127aFE37a544c52B628653e222a93BaD",
+		"type": "ERC20"
+	},
+	{
+		"name": "Loopring",
+		"symbol": "LRC",
+		"decimal": "18",
+		"address": "0xEF68e7C694F40c8202821eDF525dE3782458639f",
+		"type": "ERC20"
+	},
+	{
+		"name": "Request Token",
+		"symbol": "REQ",
+		"decimal": "18",
+		"address": "0x8f8221aFbB33998d8584A2B05749bA73c37a938a",
+		"type": "ERC20"
+	},
+	{
+		"name": "Gift Bag",
+		"symbol": "LOOT032",
+		"decimal": "18",
+		"address": "0x9648915F9A4B6778C3d3716bC084F0a44E4Cba48",
+		"type": "ERC20"
+	},
+	{
+		"name": "CyberMiles",
+		"symbol": "CMT",
+		"decimal": "18",
+		"address": "0xf85fEea2FdD81d51177F6b8F35F0e6734Ce45F5F",
+		"type": "ERC20"
+	},
+	{
+		"name": "PolyAI",
+		"symbol": "AI",
+		"decimal": "18",
+		"address": "0x5121E348e897dAEf1Eef23959Ab290e5557CF274",
+		"type": "ERC20"
+	},
+	{
+		"name": "Quantstamp",
+		"symbol": "QSP",
+		"decimal": "18",
+		"address": "0x99ea4dB9EE77ACD40B119BD1dC4E33e1C070b80d",
+		"type": "ERC20"
+	},
+	{
+		"name": "EtherEcash",
+		"symbol": "ECH",
+		"decimal": "18",
+		"address": "0xc8fFD394421E09cB48b620dda56168171ca35Ab7",
+		"type": "ERC20"
+	},
+	{
+		"name": "Credo Token",
+		"symbol": "CREDO",
+		"decimal": "18",
+		"address": "0x4E0603e2A27A30480E5e3a4Fe548e29EF12F64bE",
+		"type": "ERC20"
+	},
+	{
+		"name": "LLToken",
+		"symbol": "LLT",
+		"decimal": "8",
+		"address": "0x6D5caC36c1AE39f41d52393b7a425d0A610ad9f2",
+		"type": "ERC20"
+	},
+	{
+		"name": "Kyber Network Crystal",
+		"symbol": "KNC",
+		"decimal": "18",
+		"address": "0xdd974D5C2e2928deA5F71b9825b8b646686BD200",
+		"type": "ERC20"
+	},
+	{
+		"name": "Bytom",
+		"symbol": "BTM",
+		"decimal": "8",
+		"address": "0xcB97e65F07DA24D46BcDD078EBebd7C6E6E3d750",
+		"type": "ERC20"
+	},
+	{
+		"name": "Bitcoin EOS",
+		"symbol": "BITE",
+		"decimal": "8",
+		"address": "0x1530df3e1C69501d4Ecb7E58eB045b90DE158873",
+		"type": "ERC20"
+	},
+	{
+		"name": "SPANK",
+		"symbol": "SPANK",
+		"decimal": "18",
+		"address": "0x42d6622dece394b54999fbd73d108123806f6a18",
+		"type": "ERC20"
+	},
+	{
+		"name": "IOST",
+		"symbol": "IOST",
+		"decimal": "18",
+		"address": "0xfa1a856cfa3409cfa145fa4e20eb270df3eb21ab",
+		"type": "ERC20"
+	},
+	{
+		"name": "Qtum",
+		"symbol": "QTM",
+		"decimal": "18",
+		"address": "0x9a642d6b3368ddc662CA244bAdf32cDA716005BC",
+		"type": "ERC20"
+    },
+    {
+		"name": "Shuriken",
+		"symbol": "SHURI",
+		"decimal": "18",
+		"address": "0xca0fed76b5807557ce38e65cab83be3373cc2e7d",
+		"type": "ERC20"
+    },    
+	{
+		"name": "ADST - AdShares",
+		"symbol": "ADST",
+		"decimal": "0",
+		"address": "0x422866a8F0b032c5cf1DfBDEf31A20F4509562b0",
+		"type": "ERC20"
+	},
+	{
+		"name": "AIgathaToken",
+		"symbol": "ATH",
+		"decimal": "18",
+		"address": "0x1543d0F83489e82A1344DF6827B23d541F235A50",
+		"type": "ERC20"
+	}
+	,
+	{
+		"name": "ATHENIAN WARRIOR",
+		"symbol": "ATH",
+		"decimal": "18",
+		"address": "0x17052d51E954592C1046320c2371AbaB6C73Ef10",
+		"type": "ERC20"
+	}
+	,
+	{
+		"name": "APIS Token",
+		"symbol": "APIS",
+		"decimal": "18",
+		"address": "0x4c0fbe1bb46612915e7967d2c3213cd4d87257ad",
+		"type": "ERC20"
+	}
+	
+	
+]

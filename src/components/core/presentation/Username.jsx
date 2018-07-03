@@ -5,6 +5,13 @@ import { showAlert } from '@/reducers/app/action';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 class Username extends React.PureComponent {
+  static walletAddressHandle(address) {
+    if ((address.startsWith('0x') && address.length === 42) || address.length === 34 || address.length >= 20) {
+      return `${address.substr(0, 5)}...${address.substr(-5)}`;
+    }
+    return address;
+  }
+
   static propTypes = {
     username: PropTypes.any.isRequired,
     showAlert: PropTypes.func.isRequired,
@@ -20,16 +27,9 @@ class Username extends React.PureComponent {
 
   static getDerivedStateFromProps(nextProps, prevState) {
     if (nextProps.username !== prevState.username) {
-      return { username: this.walletAddressHandle(nextProps.username) };
+      return { username: Username.walletAddressHandle(nextProps.username) };
     }
     return null;
-  }
-
-  walletAddressHandle(address) {
-    if ((address.startsWith('0x') && address.length === 42) || address.length === 34 || address.length >= 20) {
-      return `${address.substr(0, 5)}...${address.substr(-5)}`;
-    }
-    return address;
   }
 
   copied() {

@@ -36,6 +36,7 @@ import iconWarning from '@/assets/images/icon/icon-warning.svg';
 import iconSuccessChecked from '@/assets/images/icon/icon-checked-green.svg';
 import iconLoading from '@/assets/images/icon/loading.svg.raw';
 import iconQRCodeBlack from '@/assets/images/icon/scan-qr-code.svg';
+import bgAddImg from '@/assets/images/pages/wallet/add-wallet.svg';
 
 import Header from './Header';
 import HeaderMore from './HeaderMore';
@@ -44,8 +45,8 @@ import WalletProtect from './WalletProtect';
 import WalletHistory from './WalletHistory';
 import Refers from './Refers';
 import RefersDashboard from './RefersDashboard';
-//import FeedCreditCard from '@/components/handshakes/exchange/Feed/FeedCreditCard';
 import TransferCoin from '@/components/Wallet/TransferCoin';
+import ReceiveCoin from '@/components/Wallet/ReceiveCoin';
 import ReactBottomsheet from 'react-bottomsheet';
 import { setHeaderRight } from '@/reducers/app/action';
 import QrReader from 'react-qr-reader';
@@ -58,6 +59,7 @@ import _ from 'lodash';
 import qs from 'querystring';
 
 import AddToken from '@/components/Wallet/AddToken/AddToken';
+import AddCollectible from '@/components/Wallet/AddCollectible/AddCollectible';
 
 // style
 import './Wallet.scss';
@@ -133,6 +135,7 @@ class Wallet extends React.Component {
       stepProtected: 1,
       activeProtected: false,
       formAddTokenIsActive: false,
+      formAddCollectibleIsActive: false,      
       isHistory: false,
       pagenoHistory: 1,
       transactions: [],
@@ -315,7 +318,7 @@ class Wallet extends React.Component {
     const { messages } = this.props.intl;
     let obj = [];
 
-    // if (wallet.name != "SHURI"){
+    if (!wallet.isCollectibles){
       obj.push({
         title: messages.wallet.action.transfer.title,
         handler: async () => {
@@ -334,7 +337,7 @@ class Wallet extends React.Component {
 
         }
       })
-    // }
+    }
     obj.push({
       title: messages.wallet.action.receive.title,
       handler: () => {
@@ -448,11 +451,13 @@ class Wallet extends React.Component {
     if (this.state.inputRestoreWalletValue != '') {
       const walletData = MasterWallet.restoreWallets(this.state.inputRestoreWalletValue);
       if (walletData !== false) {
-        this.getListBalace(walletData);
-        this.splitWalletData(walletData);
-        this.setState({ isRestoreLoading: false });
-        this.modalRestoreRef.close();
-        this.showSuccess(messages.wallet.action.restore.success.restore);
+        // this.getListBalace(walletData);
+        // this.splitWalletData(walletData);
+        // this.setState({ isRestoreLoading: false });
+        // this.modalRestoreRef.close();
+        // this.showSuccess(messages.wallet.action.restore.success.restore);
+        // reload page:
+        window.location.reload();
         return;
       }
     }
@@ -576,12 +581,24 @@ class Wallet extends React.Component {
         });
       },
     });
+    obj.push({
+      title: 'Add collectible',
+      handler: () => {
+
+        this.setState({formAddCollectibleIsActive: true}, () => {
+          this.modalAddNewCollectibleRef.open();
+          this.toggleBottomSheet();
+        });
+      },
+    });
+    
 
     obj.push({
       title: messages.wallet.action.backup.title,
       handler: () => {
         this.modalBackupRef.open();
-        this.setState({ walletsData: this.getAllWallet() });
+        
+        this.setState({ walletsData: {"auth_token": local.get(APP.AUTH_TOKEN) ,"wallets": this.getAllWallet() }});
         this.toggleBottomSheet();
       },
     });
@@ -610,6 +627,16 @@ class Wallet extends React.Component {
     this.splitWalletData(masterWallet);
     this.modalAddNewTokenRef.close();
     this.setState({formAddTokenIsActive: false});
+  }
+
+  //add Collectible
+  addedCollectible = () =>{
+    let masterWallet = MasterWallet.getMasterWallet();
+    this.getListBalace(masterWallet);
+
+    this.splitWalletData(masterWallet);
+    this.modalAddNewCollectibleRef.close();
+    this.setState({formAddCollectibleIsActive: false});
   }
 
   // on select type of wallet to create:
@@ -720,6 +747,11 @@ class Wallet extends React.Component {
     this.autoCheckBalance(this.state.walletSelected.address, this.state.inputAddressAmountValue);
   }
 
+  successReceive = () => {
+    this.modalShareAddressRef.close();
+    this.autoCheckBalance(this.state.walletSelected.address, this.state.inputAddressAmountValue);
+  }
+
   closeHistory = () => {
     this.setState({ transactions: [], isHistory: false });
   }
@@ -800,14 +832,16 @@ class Wallet extends React.Component {
   }
 
   render = () => {
-    const {cryptoPrice, amount, userCcLimit, ccLimits} = this.props;
     const { messages } = this.props.intl;
     return (
       <div className="wallet-page">
 
-
         <Modal onClose={() => this.setState({formAddTokenIsActive: false})} title="Add Custom Token" onRef={modal => this.modalAddNewTokenRef = modal}>
             <AddToken formAddTokenIsActive={this.state.formAddTokenIsActive} onFinish={() => {this.addedCustomToken()}}/>
+        </Modal>
+
+        <Modal onClose={() => this.setState({formAddCollectibleIsActive: false})} title="Add Collectible" onRef={modal => this.modalAddNewCollectibleRef = modal}>
+            <AddCollectible formAddCollectibleIsActive={this.state.formAddCollectibleIsActive} onFinish={() => {this.addedCollectible()}}/>
         </Modal>
 
         {/* Header for refers ... */}
@@ -885,13 +919,13 @@ class Wallet extends React.Component {
           </Modal>
 
           {/* Dialog confirm transfer coin */}
-          <ModalDialog title={messages.wallet.action.transfer.header} onRef={modal => this.modalConfirmSendRef = modal}>
+          {/* <ModalDialog title={messages.wallet.action.transfer.header} onRef={modal => this.modalConfirmSendRef = modal}>
             <div className="bodyConfirm"><span>{messages.wallet.action.transfer.text.confirm_transfer} {this.state.inputSendAmountValue} {this.state.walletSelected ? this.state.walletSelected.name : ''}?</span></div>
             <div className="bodyConfirm">
               <Button className="left" cssType="danger" onClick={this.submitSendCoin} >Confirm</Button>
               <Button className="right" cssType="secondary" onClick={() => { this.modalConfirmSendRef.close(); }}>Cancel</Button>
             </div>
-          </ModalDialog>
+          </ModalDialog> */}
 
           {/* <Modal title="Buy coins" onRef={modal => this.modalFillRef = modal}>
             <FeedCreditCard
@@ -905,7 +939,6 @@ class Wallet extends React.Component {
           <Modal title={messages.wallet.action.protect.header} onClose={this.closeProtected} onRef={modal => this.modalProtectRef = modal}>
             <WalletProtect onCopy={this.onCopyProtected} step={this.state.stepProtected} active={this.state.activeProtected} wallet={this.state.walletSelected} callbackSuccess={() => { this.successWalletProtect(this.state.walletSelected); }} />
           </Modal>
-
 
           <Modal title={messages.wallet.action.history.header} onRef={modal => this.modalHistoryRef = modal} onClose={this.closeHistory}>
             <WalletHistory wallet={this.state.walletSelected} transactions={this.state.transactions} />
@@ -945,8 +978,9 @@ class Wallet extends React.Component {
 
           {/* Modal for Copy address : */}
           <Modal title={messages.wallet.action.receive.header} onRef={modal => this.modalShareAddressRef = modal}>
-            <div className="bodyTitle"><span>{messages.wallet.action.receive.message} { this.state.walletSelected ? this.state.walletSelected.name : ''} </span></div>
-            <div className={['bodyBackup bodySahreAddress']}>
+            <ReceiveCoin active={this.state.activeReceive} wallet={this.state.walletSelected} onFinish={() => { this.successReceive() }} />
+            {/* <div className="bodyTitle"><span>{messages.wallet.action.receive.message} { this.state.walletSelected ? this.state.walletSelected.name : ''} </span></div>
+            <div className={['bodyBackup bodyShareAddress']}>
 
               <QRCode value={this.state.walletSelected ? this.state.walletSelected.address : ''} />
               <div className="addressDivPopup">{ this.state.walletSelected ? this.state.walletSelected.address : ''}</div>
@@ -956,12 +990,12 @@ class Wallet extends React.Component {
               <Button className="button" cssType="primary" onClick={() => { Clipboard.copy(this.state.walletSelected.address); this.modalShareAddressRef.close(); this.showToast(messages.wallet.action.receive.success.share); }} >
                 {messages.wallet.action.receive.button.share}
               </Button>
-            </div>
+            </div> */}
           </Modal>
 
           {/* Modal for Custom amount : */}
-          <Modal title={messages.wallet.action.receive.header2} onRef={modal => this.modalCustomAmountRef = modal}>
-            <div className={['bodyBackup bodySahreAddress']}>
+          {/* <Modal title={messages.wallet.action.receive.header2} onRef={modal => this.modalCustomAmountRef = modal}>
+            <div className={['bodyBackup bodyShareAddress']}>
 
               <QRCode value={(this.state.walletSelected ? this.state.walletSelected.address : '') + (this.state.inputSendAmountValue != '' ? `,${this.state.inputSendAmountValue}` : '')} />
               <div className="addressDivPopup">
@@ -990,7 +1024,7 @@ class Wallet extends React.Component {
                 {messages.wallet.action.receive.button.done}
               </Button>
             </div>
-          </Modal>
+          </Modal> */}
 
           {/* Modal for Create/Import wallet : */}
           <Modal title={messages.wallet.action.create.header} onRef={modal => this.modalCreateWalletRef = modal}>
@@ -1058,6 +1092,9 @@ class Wallet extends React.Component {
 
           <Row className="list">
             {this.listMainWalletBalance}
+            <Col sm={6} md={6} xs={6} key={"bgAddImg"} className="feed-wrapper-wallet">
+              <div onClick={this.onIconRightHeaderClick} className='feed' style={{backgroundImage: "url('"+bgAddImg+"')"}}></div>
+            </Col>
           </Row>
           {!process.env.isLive ?
           <Row className="list">

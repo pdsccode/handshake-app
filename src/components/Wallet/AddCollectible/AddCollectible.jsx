@@ -10,7 +10,8 @@ import { change } from 'redux-form'
 import {fieldDropdown, fieldInput, fieldRadioButton} from '@/components/core/form/customField'
 import {required} from '@/components/core/form/validation'
 import {MasterWallet} from "@/models/MasterWallet";
-import {TokenERC20} from "@/models/TokenERC20";
+import {CryptoKitties} from "@/models/CryptoKitties";
+import {CryptoPunks} from "@/models/CryptoPunks";
 import { bindActionCreators } from "redux";
 import {showAlert} from '@/reducers/app/action';
 import { showLoading, hideLoading } from '@/reducers/app/action';
@@ -20,24 +21,24 @@ import { StringHelper } from '@/services/helper';
 import iconSuccessChecked from '@/assets/images/icon/icon-checked-green.svg';
 import PropTypes from 'prop-types';
 
-import './AddToken.scss';
+import './AddCollectible.scss';
 import Dropdown from '@/components/core/controls/Dropdown';
 
 import iconQRCodeWhite from '@/assets/images/icon/scan-qr-code.svg';
 
 import bgBox from '@/assets/images/pages/wallet/bg-box-wallet-coin.svg';
+import { CryptoStrikers } from '@/models/CryptoStrikers';
 
 const isIOs = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
 
 const amountValid = value => (value && isNaN(value) ? 'Invalid amount' : undefined);
 
-const nameFormAddToken = 'addToken';
-const AddNewTokenForm = createForm({ propsReduxForm: { form: nameFormAddToken, enableReinitialize: true, clearSubmitErrors: true}});
+const nameFormAddCollectible = 'addCollectible';
+const AddNewCollectibleForm = createForm({ propsReduxForm: { form: nameFormAddCollectible, enableReinitialize: true, clearSubmitErrors: true}});
 
-// suggesion:
-import listToken from '@/data/ethToken.json';
+const listToken721 = [CryptoKitties, CryptoPunks, CryptoStrikers];    
 
-class AddToken extends React.Component {
+class AddCollectible extends React.Component {
   constructor(props) {
     super(props);
 
@@ -45,18 +46,16 @@ class AddToken extends React.Component {
       wallets: [],      
       walletSelected: false,
       inputContractAddressValue: '',
-      inputTokenDecimalsValue: 0,
-      inputTokenNameValue: '',
-      inputTokenSymbolValue: '',      
-      formAddTokenIsActive: false,
-      // Qrcode
-      qrCodeOpen: false,
-      delay: 300,
+      inputCollectibleDecimalsValue: 0,
+      inputCollectibleNameValue: '',
+      inputCollectibleSymbolValue: '',      
+      formAddCollectibleIsActive: false,
+      
       walletsData: false,
-      tokenType: false,    
+      collectibleType: false,    
       
       // Autosuggest
-      listToken: [],          
+      listCollectibleType: [],          
     }    
   }
 
@@ -88,11 +87,11 @@ class AddToken extends React.Component {
     // clear form:    
     this.resetForm();  
     this.getWalletDefault();
-    this.listTokenType();        
+    this.listCollectibleType();        
   }
 
   resetForm(){
-    this.props.clearFields(nameFormAddToken, false, false, "contractAddress", "tokenName", "tokenSymbol", "tokenDecimals");
+    this.props.clearFields(nameFormAddCollectible, false, false, "contractAddress", "collectibleName", "collectibleSymbol", "collectibleDecimals");
   }
 
   componentWillUnmount() {
@@ -102,13 +101,13 @@ class AddToken extends React.Component {
   
   }
   componentWillReceiveProps() {       
-    if (!this.props.formAddTokenIsActive && this.state.formAddTokenIsActive != this.props.formAddTokenIsActive){    
-      this.props.clearFields(nameFormAddToken, false, false, "contractAddress", "tokenName", "tokenSymbol", "tokenDecimals");
-      this.setState({formAddTokenIsActive: this.props.formAddTokenIsActive});
+    if (!this.props.formAddCollectibleIsActive && this.state.formAddCollectibleIsActive != this.props.formAddCollectibleIsActive){    
+      this.props.clearFields(nameFormAddCollectible, false, false, "contractAddress", "collectibleName", "collectibleSymbol", "collectibleDecimals");
+      this.setState({formAddCollectibleIsActive: this.props.formAddCollectibleIsActive});
     }
-    if (this.props.formAddTokenIsActive && this.state.formAddTokenIsActive != this.props.formAddTokenIsActive){      
+    if (this.props.formAddCollectibleIsActive && this.state.formAddCollectibleIsActive != this.props.formAddCollectibleIsActive){      
       this.getWalletDefault();
-      this.setState({formAddTokenIsActive: this.props.formAddTokenIsActive});
+      this.setState({formAddCollectibleIsActive: this.props.formAddCollectibleIsActive});
     }
   }
 
@@ -126,7 +125,7 @@ class AddToken extends React.Component {
     const { onFinish } = this.props;
     
     if (onFinish) {      
-      onFinish({"data": this.state.tokenType});
+      onFinish({"data": this.state.CollectibleType});
     } else {
       
     }
@@ -163,40 +162,11 @@ class AddToken extends React.Component {
       walletDefault = listWalletETH[0];
     
     this.setState({wallets: listWalletETH, walletSelected: walletDefault});
-    this.props.rfChange(nameFormAddToken, 'walletSelected', walletDefault);
+    this.props.rfChange(nameFormAddCollectible, 'walletSelected', walletDefault);    
 
   }
 
-  loadTokenInfo = (contractAddress) =>{
-
-    if (this.state.walletSelected && this.state.walletSelected.checkAddressValid(contractAddress) !== true){
-      return false;
-    }
-
-    this.setState({isRestoreLoading: true});
-        
-    this.props.clearFields(nameFormAddToken, false, false, "tokenName", "tokenSymbol", "tokenDecimals");   
-
-    let tokenType = new TokenERC20();
-    tokenType.createFromWallet(this.state.walletSelected);    
-    tokenType.getContractInfo(contractAddress).then(result =>{
-      if (result){           
-        this.setState({
-          inputTokenNameValue: tokenType.title,
-          inputTokenSymbolValue: tokenType.name,
-          inputTokenDecimalsValue: tokenType.decimals,
-        });
-        const { rfChange } = this.props        
-        rfChange(nameFormAddToken, 'tokenName', tokenType.title);
-        rfChange(nameFormAddToken, 'tokenSymbol', tokenType.name);
-        rfChange(nameFormAddToken, 'tokenDecimals', tokenType.decimals);        
-        this.setState({isRestoreLoading: false, tokenType: tokenType});        
-      }
-      else this.setState({isRestoreLoading: false, tokenType: false});        
-    });    
-  }
-
-  invalidateAddNewToken = (value) => {    
+  invalidateAddNewCollectible = (value) => {    
     if (!this.state.walletSelected) return {};
     let errors = {};
     if (this.state.walletSelected){
@@ -204,60 +174,54 @@ class AddToken extends React.Component {
       let result = this.state.walletSelected.checkAddressValid(value['contractAddress']);
       if (result !== true){
           errors.contractAddress = 'Please enter a valid contract address';      
-          this.props.clearFields(nameFormAddToken, false, false, "tokenName", "tokenSymbol", "tokenDecimals");   
+          this.props.clearFields(nameFormAddCollectible, false, false, "collectibleName", "collectibleSymbol", "collectibleDecimals");   
       }
     }
     return errors
   }
 
-  updateTokenNameValue = (evt) => {
+  updateCollectibleNameValue = (evt) => {
     this.setState({
-      inputTokenNameValue: evt.target.value,
+      inputCollectibleNameValue: evt.target.value,
     });
   }
 
-  updateAddressValue = (evt) => {
-    let contractAddress = evt.target.value;
+  updateCollectibleSymbolValue = (evt) => {
     this.setState({
-      inputContractAddressValue: contractAddress,
-    });
-    this.loadTokenInfo(contractAddress);
-  }
-
-  updateTokenSymbolValue = (evt) => {
-    this.setState({
-      inputTokenSymbolValue: evt.target.value,
+      inputCollectibleSymbolValue: evt.target.value,
     });
   }
-  updateTokenDecimalsValue = (evt) => {
+  updateCollectibleDecimalsValue = (evt) => {
     this.setState({
-      inputTokenDecimalsValue: evt.target.value,
+      inputCollectibleDecimalsValue: evt.target.value,
     });
   }
 
-submitAddToken=()=>{
-  // todo handle submit form ....
+submitAddCollectible=()=>{
   
-  if (this.state.tokenType != false){
+  if (this.state.collectibleType != false){
     this.setState({isRestoreLoading: true});  
-    let tokenType  = this.state.tokenType;
+    let collectibleType  = this.state.collectibleType;
     
-    tokenType.decimals = this.state.inputTokenDecimalsValue;
-    tokenType.name = this.state.inputTokenSymbolValue;
-    tokenType.title = this.state.inputTokenNameValue;
+    collectibleType.decimals = this.state.inputCollectibleDecimalsValue;
+    collectibleType.name = this.state.inputCollectibleSymbolValue;
+    collectibleType.title = this.state.inputCollectibleNameValue;
 
-    this.setState({tokenType: tokenType});
+    // create from walet sellected:    
+    collectibleType.createFromWallet(this.state.walletSelected);
+
+    this.setState({collectibleType: collectibleType});
     
-    let result = MasterWallet.AddToken(tokenType);
+    let result = MasterWallet.AddToken(collectibleType);
     
-    this.showSuccess("Successfully added custom token");
+    this.showSuccess("Successfully added collectible");
     
     this.onFinish();
     
-    this.setState({isRestoreLoading: false, tokenType: false});  
+    this.setState({isRestoreLoading: false, collectibleType: false});  
   }
   else{
-    this.showError("Unable to add custom token");
+    this.showError("Unable to add collectible");
   }
 }
 
@@ -265,109 +229,63 @@ onItemSelectedWallet = (item) =>{
   
   // I don't know why the item is not object ?????
   let wallet = MasterWallet.convertObject(item);  
-  this.setState({walletSelected: wallet}, () => {
-      this.loadTokenInfo(this.state.inputContractAddressValue);
-  });  
+  this.setState({walletSelected: wallet}, () => {});  
 }
 
-onItemSelectedTokenType = (item) =>{    
-
-  // to check token type first:
-  let tokenType = new TokenERC20();
-  tokenType.createFromWallet(this.state.walletSelected);    
-  tokenType.contractAddress = item.address;
-  tokenType.name = item.symbol;
-  tokenType.title = item.name;
-  tokenType.decimals = item.decimal;
+onItemSelectedCollectibleType = (item) =>{    
+  
+  let collectibleType = item.object;
 
   this.setState({
-    inputTokenNameValue: item.name,
-    inputTokenSymbolValue: item.symbol,
-    inputTokenDecimalsValue: item.decimal,
-    inputContractAddressValue: item.address,
-    tokenType: tokenType,
+    inputCollectibleNameValue: collectibleType.title,
+    inputCollectibleSymbolValue: collectibleType.name,
+    inputCollectibleDecimalsValue: collectibleType.decimals,
+    inputContractAddressValue: collectibleType.contractAddress,
+    collectibleType: collectibleType,
   });
   const { rfChange } = this.props        
-  rfChange(nameFormAddToken, 'tokenName', item.name);
-  rfChange(nameFormAddToken, 'tokenSymbol', item.symbol);
-  rfChange(nameFormAddToken, 'tokenDecimals', item.decimal);
-  rfChange(nameFormAddToken, 'contractAddress', item.address);            
+  rfChange(nameFormAddCollectible, 'collectibleName', collectibleType.title);
+  rfChange(nameFormAddCollectible, 'collectibleSymbol', collectibleType.name);
+  rfChange(nameFormAddCollectible, 'collectibleDecimals', collectibleType.decimals);
+  rfChange(nameFormAddCollectible, 'contractAddress', collectibleType.contractAddress);
   
 }
 
-// For Qrcode:
-handleScan=(data) =>{
-  const { rfChange } = this.props
-  if(data){
-    rfChange(nameFormAddToken, 'contractAddress', data);   
-    this.loadTokenInfo(data); 
-    this.modalScanQrCodeRef.close();    
-  }
-}
-handleError(err) {
-  console.log('error wc', err);
-}
+ listCollectibleType(){
 
-oncloseQrCode=() => {
-  this.setState({ qrCodeOpen: false });
-}
-
-openQrcode = () => {
-  this.setState({ qrCodeOpen: true });
-  this.modalScanQrCodeRef.open();
-}
-
-renderScanQRCode = () => (
-  <Modal onClose={() => this.oncloseQrCode()} title="Scan QR code" onRef={modal => this.modalScanQrCodeRef = modal}>
-    {this.state.qrCodeOpen ?
-      <QrReader
-        delay={this.state.delay}
-        onScan={(data) => { this.handleScan(data); }}
-        onError={this.handleError}
-        style={{ width: '100%', height: '100%' }}
-      />
-      : ''}
-  </Modal>
-)
-
- listTokenType(){
-
-   let objectTokenList = this.state.listToken;
-   if (objectTokenList.length == 0){
-    objectTokenList = [];
-    // objectTokenList.push({"id": "Empty", "value": "Select a contract...", "address": "", "name": "", "symbol": "", "decimals": "0"});
-    listToken.forEach(token => {
-      let tokenTmp = token;
-      tokenTmp.id = token.address;
-      tokenTmp.value = token.name + ` (${token.symbol})`;    
-      objectTokenList.push(tokenTmp);   
-      this.setState({listToken: objectTokenList});
+   let objectCollectibleList = this.state.listCollectibleType;
+   if (objectCollectibleList.length == 0){
+    let listCollectibleType = [];        
+    listToken721.forEach(tokenERC720 => {
+      let token = new tokenERC720();
+      let item = {"id": token.contractAddress, "value": `${token.title} (${token.name})`, "object": token}
+      listCollectibleType.push(item);
     });
+    this.setState({listCollectibleType: listCollectibleType});
    }   
  }
   
   render() {
         
     return ( 
-      <div>                                 
-          {/* QR code dialog */}
-          {this.renderScanQRCode()}
-          <AddNewTokenForm className="addtoken-wrapper" onSubmit={this.submitAddToken} validate={this.invalidateAddNewToken}>
+      <div>                                           
+          <AddNewCollectibleForm className="addtoken-wrapper" onSubmit={this.submitAddCollectible}>
 
           {/* Box: */}
           <div className="bgBox">
           {/* <p className="labelText">Select Existing Contract</p> */}
           <Dropdown
-                  placeholder="Select Existing Token"
-                  defaultId={this.state.tokenType != false ? this.state.listToken[0].id : '' }
-                  source={this.state.listToken}
-                  onItemSelected={this.onItemSelectedTokenType}
+                  placeholder="Select a collectible"
+                  defaultId={this.state.collectibleType != false ? this.state.listCollectibleType[0].id : '' }
+                  source={this.state.listCollectibleType}
+                  onItemSelected={this.onItemSelectedCollectibleType}
                   hasSearch
                 />
 
             <p className="labelText">Contract address</p>
             <div className="div-address-qr-code">
               <Field
+                    readOnly
                     name="contractAddress"
                     type="text"
                     className="form-control input-address-qr-code"
@@ -376,37 +294,36 @@ renderScanQRCode = () => (
                     value={this.state.inputContractAddressValue}
                     onChange={evt => this.updateAddressValue(evt)}
                     validate={[required]}
-                  />          
-              {!isIOs ? <img onClick={() => { this.openQrcode() }} className="icon-qr-code-black" src={iconQRCodeWhite} /> : ""}
+                  />                        
             </div>
 
             <p className="labelText">Name</p>           
             <Field
-                  name="tokenName"
+                  name="collectibleName"                  
                   type="text" className="form-control"
                   component={fieldInput}
-                  value={this.state.inputTokenNameValue}
-                  onChange={evt => this.updateTokenNameValue(evt)}                  
+                  value={this.state.inputCollectibleNameValue}
+                  onChange={evt => this.updateCollectibleNameValue(evt)}                  
                   validate={[required]}                    
               />
 
               <p className="labelText">Symbol</p>                      
               <Field
-                  name="tokenSymbol"
+                  name="collectibleSymbol"
                   type="text"className="form-control"
                   component={fieldInput}
-                  value={this.state.inputTokenSymbolValue}
-                  onChange={evt => this.updateTokenSymbolValue(evt)}                  
+                  value={this.state.inputCollectibleSymbolValue}
+                  onChange={evt => this.updateCollectibleSymbolValue(evt)}                  
                   validate={[required]}
               />
 
               <p className="labelText">Decimals</p>                      
               <Field
-                  name="tokenDecimals"
+                  name="collectibleDecimals"
                   type="text"className="form-control"
                   component={fieldInput}
-                  value={this.state.inputTokenDecimalsValue}
-                  onChange={evt => this.updateTokenDecimalsValue(evt)}                  
+                  value={this.state.inputCollectibleDecimalsValue}
+                  onChange={evt => this.updateCollectibleDecimalsValue(evt)}                  
                   // validate={[required]}
               />
 
@@ -427,14 +344,14 @@ renderScanQRCode = () => (
                                 
                 <Button className="button-wallet-cpn" isLoading={this.state.isRestoreLoading}  type="submit" block={true}>Add Token</Button>
               </div>            
-          </AddNewTokenForm>
+          </AddNewCollectibleForm>
         </div>
     )
   }
 }
 
-AddToken.propTypes = {
-  formAddTokenIsActive: PropTypes.bool,  
+AddCollectible.propTypes = {
+  formAddCollectibleIsActive: PropTypes.bool,  
 };
 
 const mapStateToProps = (state) => ({
@@ -450,4 +367,4 @@ const mapDispatchToProps = (dispatch) => ({
   
 });
 
-export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(AddToken));
+export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(AddCollectible));

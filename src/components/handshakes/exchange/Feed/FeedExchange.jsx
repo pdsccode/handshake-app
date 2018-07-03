@@ -99,56 +99,65 @@ class FeedExchange extends React.PureComponent {
 
   handleOnShake = (name) => {
     const { offer } = this;
+    const { onFeedClick } = this.props;
 
     this.setState({
       CRYPTO_CURRENCY_LIST: [
         {
-          value: CRYPTO_CURRENCY.ETH, text: CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.ETH], icon: <img src={iconEthereum} width={22} />, hide: !offer.itemFlags.ETH,
+          value: CRYPTO_CURRENCY.ETH, text: CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.ETH], icon: <img src={iconEthereum} width={22} />, hide: !offer.itemFlags.ETH || this.isEmptyBalance(offer.items.ETH),
         },
         {
-          value: CRYPTO_CURRENCY.BTC, text: CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.BTC], icon: <img src={iconBitcoin} width={22} />, hide: !offer.itemFlags.BTC,
+          value: CRYPTO_CURRENCY.BTC, text: CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.BTC], icon: <img src={iconBitcoin} width={22} />, hide: !offer.itemFlags.BTC || this.isEmptyBalance(offer.items.BTC),
         },
       ],
     }, () => {
-      let newCurrency = '';
-      if (name) {
-        newCurrency = name;
-        this.props.rfChange(nameFormShakeDetail, 'currency', name);
-      } else {
-        for (const crypto of this.state.CRYPTO_CURRENCY_LIST) {
-          if (!crypto.hide) {
-            newCurrency = crypto.value;
-            this.props.rfChange(nameFormShakeDetail, 'currency', crypto.value);
-            break;
-          }
-        }
-      }
-
-      const eth = offer.items.ETH;
-      const btc = offer.items.BTC;
-
-      const buyBalance = newCurrency === CRYPTO_CURRENCY.BTC ? btc.buyBalance : eth.buyBalance;
-      const sellBalance = newCurrency === CRYPTO_CURRENCY.BTC ? btc.sellBalance : eth.sellBalance;
-
-      let newType = EXCHANGE_ACTION.BUY;
-
-      if (newType === EXCHANGE_ACTION.BUY && sellBalance <= 0) {
-        newType = EXCHANGE_ACTION.SELL;
-      } else if (newType === EXCHANGE_ACTION.SELL && buyBalance <= 0) {
-        newType = EXCHANGE_ACTION.BUY;
-      }
-
-      this.props.rfChange(nameFormShakeDetail, 'type', newType);
-
-      this.props.clearFields(nameFormShakeDetail, false, false, 'amount', 'amountFiat');
-
-      this.setState({
+      onFeedClick({
+        modalClassName: 'dialog-shake-detail',
         modalContent: (
           <ShakeDetail offer={this.offer} handleShake={this.shakeOfferItem} CRYPTO_CURRENCY_LIST={this.state.CRYPTO_CURRENCY_LIST} />
-        ),
-      }, () => {
-        this.modalRef.open();
-      });
+        )
+      })
+      setTimeout(() => {
+        let newCurrency = '';
+        if (name) {
+          newCurrency = name;
+          this.props.rfChange(nameFormShakeDetail, 'currency', name);
+        } else {
+          for (const crypto of this.state.CRYPTO_CURRENCY_LIST) {
+            if (!crypto.hide) {
+              newCurrency = crypto.value;
+              this.props.rfChange(nameFormShakeDetail, 'currency', crypto.value);
+              break;
+            }
+          }
+        }
+
+        const eth = offer.items.ETH;
+        const btc = offer.items.BTC;
+
+        const buyBalance = newCurrency === CRYPTO_CURRENCY.BTC ? btc.buyBalance : eth.buyBalance;
+        const sellBalance = newCurrency === CRYPTO_CURRENCY.BTC ? btc.sellBalance : eth.sellBalance;
+
+        let newType = EXCHANGE_ACTION.BUY;
+
+        if (newType === EXCHANGE_ACTION.BUY && sellBalance <= 0) {
+          newType = EXCHANGE_ACTION.SELL;
+        } else if (newType === EXCHANGE_ACTION.SELL && buyBalance <= 0) {
+          newType = EXCHANGE_ACTION.BUY;
+        }
+
+        this.props.rfChange(nameFormShakeDetail, 'type', newType);
+
+        this.props.clearFields(nameFormShakeDetail, false, false, 'amount', 'amountFiat');
+      }, 100)
+
+      // this.setState({
+      //   modalContent: (
+      //     <ShakeDetail offer={this.offer} handleShake={this.shakeOfferItem} CRYPTO_CURRENCY_LIST={this.state.CRYPTO_CURRENCY_LIST} />
+      //   ),
+      // }, () => {
+      //   this.modalRef.open();
+      // });
     });
   }
 
@@ -280,7 +289,7 @@ class FeedExchange extends React.PureComponent {
     } else if (currency === CRYPTO_CURRENCY.BTC) {
       if (type === EXCHANGE_ACTION.BUY) {
         const wallet = MasterWallet.getWalletDefault(currency);
-        wallet.transfer(systemAddress, totalAmount, NB_BLOCKS).then((success) => {
+        wallet.transfer(systemAddress, amount, NB_BLOCKS).then((success) => {
           console.log('transfer', success);
         });
       }
@@ -395,6 +404,10 @@ id="offerDistanceContent"
     this.handleOnShake(name);
   }
 
+  isEmptyBalance = (item) => {
+    const { buyBalance, sellBalance } = item
+    return !(buyBalance > 0 || sellBalance > 0)
+  }
 
   render() {
     const { offer } = this;
@@ -403,36 +416,38 @@ id="offerDistanceContent"
     const currency = offer.fiatCurrency;
 
     const coins = [];
-
     const {
       priceBuyBTC, priceSellBTC, priceBuyETH, priceSellETH,
     } = this.getPrices();
 
     if (offer.itemFlags.ETH) {
-      const coin = {};
+      if (!this.isEmptyBalance(offer.items.ETH)) {
+        const coin = {};
 
-      coin.name = CRYPTO_CURRENCY.ETH;
-      coin.color = 'linear-gradient(-135deg, #D772FF 0%, #9B10F2 45%, #9E53E1 100%)';
-      coin.icon = iconEth;
-      coin.priceBuy = offer.items.ETH.buyBalance > 0 ? formatMoneyByLocale(priceBuyETH, currency) : '-';
-      coin.priceSell = offer.items.ETH.sellBalance > 0 ? formatMoneyByLocale(priceSellETH, currency) : '-';
+        coin.name = CRYPTO_CURRENCY.ETH;
+        coin.color = 'linear-gradient(-135deg, #D772FF 0%, #9B10F2 45%, #9E53E1 100%)';
+        coin.icon = iconEth;
+        coin.priceBuy = offer.items.ETH.buyBalance > 0 ? formatMoneyByLocale(priceBuyETH, currency) : '-';
+        coin.priceSell = offer.items.ETH.sellBalance > 0 ? formatMoneyByLocale(priceSellETH, currency) : '-';
 
-      coins.push(coin);
+        coins.push(coin);
+      }
     }
 
     if (offer.itemFlags.BTC) {
-      const coin = {};
+      if (!this.isEmptyBalance(offer.items.BTC)) {
+        const coin = {};
 
-      coin.name = CRYPTO_CURRENCY.BTC;
-      coin.color = 'linear-gradient(45deg, #FF8006 0%, #FFA733 51%, #FFC349 100%)';
-      coin.icon = iconBtc;
-      coin.priceBuy = offer.items.BTC.buyBalance > 0 ? formatMoneyByLocale(priceBuyBTC, currency) : '-';
-      coin.priceSell = offer.items.BTC.sellBalance > 0 ? formatMoneyByLocale(priceSellBTC, currency) : '-';
+        coin.name = CRYPTO_CURRENCY.BTC;
+        coin.color = 'linear-gradient(45deg, #FF8006 0%, #FFA733 51%, #FFC349 100%)';
+        coin.icon = iconBtc;
+        coin.priceBuy = offer.items.BTC.buyBalance > 0 ? formatMoneyByLocale(priceBuyBTC, currency) : '-';
+        coin.priceSell = offer.items.BTC.sellBalance > 0 ? formatMoneyByLocale(priceSellBTC, currency) : '-';
 
-      coins.push(coin);
+        coins.push(coin);
+      }
     }
-
-    console.log('coins', coins);
+    if (coins.length === 0) return null;
 
     const address = this.getNameShopDisplayed();
     const distance = this.getOfferDistance();
@@ -472,10 +487,10 @@ id="offerDistanceContent"
             </div>
           </div>
         </div>
-        {/* <Button block className="mt-2" onClick={this.handleOnShake}><FormattedMessage id="btn.shake"/></Button> */}
+        {/* <Button block className="mt-2" onClick={this.handleOnShake}><FormattedMessage id="btn.shake"/></Button>
         <ModalDialog onRef={modal => this.modalRef = modal} className="dialog-shake-detail">
           {modalContent}
-        </ModalDialog>
+        </ModalDialog> */}
       </div>
     );
   }
