@@ -461,7 +461,7 @@ class BettingFilter extends React.Component {
     return (
       <div className="wrapperBettingFilter">
         <div className="share-block">
-          <p className="text">Share. Get 20 coins.</p>
+          <p className="text">Share to get 20 free coins</p>
           <ShareSocial
             className="share"
             title={shareInfo.title}

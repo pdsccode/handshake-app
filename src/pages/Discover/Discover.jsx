@@ -107,13 +107,7 @@ class DiscoverPage extends React.Component {
 
   componentDidMount() {
     const { ipInfo, } = this.props;
-    navigator.geolocation.getCurrentPosition((location) => {
-      const { coords: { latitude, longitude } } = location;
-      this.setAddressFromLatLng(latitude, longitude); // better precision
-    }, () => {
-      this.setAddressFromLatLng(ipInfo?.latitude, ipInfo?.longitude); // fallback
-    });
-
+    this.setAddressFromLatLng(ipInfo?.latitude, ipInfo?.longitude); // fallback
     if (this.state.utm === 'earlybird') {
       this.props.getFreeStartInfo({
         PATH_URL: `exchange/info/offer-store-free-start/ETH`,
@@ -153,6 +147,9 @@ class DiscoverPage extends React.Component {
   }
 
   getDefaultHandShakeId() {
+    if (window.location.pathname.indexOf(URL.HANDSHAKE_CASH) >= 0) {
+      return HANDSHAKE_ID.EXCHANGE;
+    }
     let seletedId = HANDSHAKE_ID.EXCHANGE;
     let { id } = Helper.getQueryStrings(window.location.search);
     id = parseInt(id, 10);
@@ -238,6 +235,7 @@ class DiscoverPage extends React.Component {
                 refreshPage={this.loadDiscoverList}
                 latitude={lat}
                 longitude={lng}
+                modalRef={this.modalRef}
               />
             </Col>
           );

@@ -225,24 +225,30 @@ export const initApp = (language, ref) => (dispatch) => {
 
     var ipInfo = IpInfo.ipInfo(data);
     //get currency base on GPS
-    console.log('------------GPS-------------' + ipInfo);
-
     navigator.geolocation.getCurrentPosition((location) => {
       const {coords: {latitude, longitude}} = location;
+      ipInfo.latitude = latitude;
+      ipInfo.longitude = longitude;
       console.log('------------GPS-------------' + latitude);
 
       axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&sensor=true`).then((response) => {
 
         if (response.data.results[0] && response.data.results[0].address_components){
           var country = getCountry(response.data.results[0].address_components);
+
+          ipInfo.addressDefault = response.data.results[0].formatted_address;
+
           if(country && Country[country]){
             ipInfo.currency = Country[country];
             console.log('------------GPS-------------' + ipInfo.currency);
-            dispatch(setIpInfo(ipInfo));
           }
         }
+        dispatch(setIpInfo(ipInfo));
       });
+    }, () => {
+      //console.log('zon')// fallback
     });
+
     dispatch(setIpInfo(ipInfo));
 
     const ipInfoRes = { language: 'en', bannedPrediction: false, bannedCash: false };

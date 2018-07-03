@@ -110,19 +110,9 @@ class Component extends React.Component {
     this.mainColor = '#1F2B34'
   }
 
-  componentDidMount () {
-    const { ipInfo, rfChange, authProfile } = this.props
-    navigator.geolocation.getCurrentPosition(
-      location => {
-        const {
-          coords: { latitude, longitude }
-        } = location
-        this.setAddressFromLatLng(latitude, longitude) // better precision
-      },
-      () => {
-        this.setAddressFromLatLng(ipInfo?.latitude, ipInfo?.longitude) // fallback
-      }
-    )
+  componentDidMount() {
+    const { ipInfo, rfChange, authProfile } = this.props;
+    this.setAddressFromLatLng(ipInfo?.latitude, ipInfo?.longitude);
 
     // auto fill phone number from user profile
     let detectedCountryCode = ''
