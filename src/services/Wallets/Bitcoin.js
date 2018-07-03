@@ -1,7 +1,7 @@
 import axios from 'axios';
 import satoshi from 'satoshi-bitcoin';
 import { StringHelper } from '@/services/helper';
-import { Wallet } from '@/models/Wallet';
+import { Wallet } from '@/services/Wallets/Wallet';
 import { NB_BLOCKS } from '@/constants';
 
 const bitcore = require('bitcore-lib');

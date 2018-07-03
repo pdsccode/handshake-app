@@ -1,4 +1,4 @@
-import { MasterWallet } from '@/models/MasterWallet';
+import { MasterWallet } from '@/services/Wallets/MasterWallet';
 import { BettingHandshake } from '@/services/neuron';
 import local from '@/services/localStore';
 import moment from 'moment';

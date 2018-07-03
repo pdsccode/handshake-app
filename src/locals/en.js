@@ -665,6 +665,10 @@ export default {
           main_net: 'Mainnet wallets',
           test_net: 'Testnet wallets',
         },
+        text: {
+          random: "Random",
+          specify_phrase: "Specify recovery Phrase"
+        },
         placeholder: {
           wallet_key: 'Wallet key',
           phrase: 'Type your 12 secret recovery words.',
@@ -674,6 +678,10 @@ export default {
           add_new: '+ Add new',
           request_free_eth: 'Request free ETH',
         },
+        error:{
+          recovery_words_invalid: "Cannot create wallet. Recovery words are invalid.",
+          random: "Cannot create wallet. Please reload and try again"
+        }
       },
       scan_qrcode: {
         header: 'Scan QR code',

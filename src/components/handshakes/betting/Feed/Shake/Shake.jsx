@@ -6,12 +6,15 @@ import { connect } from 'react-redux';
 // service, constant
 import { shakeItem, initHandshake, } from '@/reducers/handshake/action';
 import {HANDSHAKE_ID, API_URL, APP } from '@/constants';
+import {MasterWallet} from '@/services/Wallets/MasterWallet';
+import local from '@/services/localStore';
+import moment from 'moment';
 import GA from '@/services/googleAnalytics';
 
 // components
 import Button from '@/components/core/controls/Button';
 import {showAlert} from '@/reducers/app/action';
-import {getMessageWithCode, isExpiredDate, getChainIdDefaultWallet, 
+import {getMessageWithCode, isExpiredDate, getChainIdDefaultWallet,
   getBalance, getEstimateGas, getAddress, isExistMatchBet, isRightNetwork} from '@/components/handshakes/betting/utils.js';
 
 import './Shake.scss';
@@ -73,10 +76,10 @@ class BetingShake extends React.Component {
   }
   componentDidMount(){
     console.log('Sa test componentDidMount');
-    
+
   }
   componentWillReceiveProps(nextProps){
-    
+
     const {marketSupportOdds, marketAgainstOdds, side, amountSupport, amountAgainst, isOpen} = nextProps;
     const marketOdds = side === SIDE.SUPPORT ? marketSupportOdds : marketAgainstOdds;
     const marketAmount = side === SIDE.SUPPORT ? amountSupport : amountAgainst;
@@ -108,10 +111,10 @@ class BetingShake extends React.Component {
     const marketOdds = side === SIDE.SUPPORT ? marketSupportOdds : marketAgainstOdds;
 
     console.log("Amount, Side, Odds", amount, side, odds);
-    
+
     const balance = await getBalance();
     const estimatedGas = await getEstimateGas();
-    
+
     const total = amount + parseFloat(estimatedGas);
     console.log('Balance, estimate gas, total, date:', balance, estimatedGas, total, closingDate);
 
@@ -127,7 +130,7 @@ class BetingShake extends React.Component {
       message = MESSAGE.RIGHT_NETWORK;
 
     }
-    
+
     else if(matchName && matchOutcome){
       if (isExpiredDate(closingDate)){
         message = MESSAGE.MATCH_OVER;
@@ -303,7 +306,7 @@ class BetingShake extends React.Component {
   }
 
   initHandshake(amount, odds){
-    
+
     const {outcomeId, matchName, matchOutcome, side} = this.props;
     const {extraData} = this.state;
     //const side = this.toggleRef.value;
@@ -314,7 +317,7 @@ class BetingShake extends React.Component {
     extraData["event_bet"] = amount;
     console.log('Extra Data:', extraData);
     const params = {
-      
+
       type: HANDSHAKE_ID.BETTING,
       outcome_id: outcomeId,
       odds:`${odds}`,
@@ -326,15 +329,15 @@ class BetingShake extends React.Component {
       chain_id: getChainIdDefaultWallet(),
     };
     console.log("Params:", params, this);
-      
-      
+
+
       this.props.initHandshake({PATH_URL: API_URL.CRYPTOSIGN.INIT_HANDSHAKE, METHOD:'POST', data: params,
       successFn: this.initHandshakeSuccess,
       errorFn: this.initHandshakeFailed
-      
+
     });
-        
-  
+
+
   }
 
   initHandshakeSuccess = async (successData)=>{
@@ -365,11 +368,11 @@ class BetingShake extends React.Component {
         GA.createBetSuccess(matchName, matchOutcome, side);
       } catch (err) {}
     }
- 
+
   }
   initHandshakeFailed = (error) => {
     console.log('initHandshakeFailed', error);
-   
+
     const {status, code} = error;
     if(status == 0){
       const message = getMessageWithCode(code);

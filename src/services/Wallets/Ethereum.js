@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Wallet } from '@/models/Wallet.js';
+import { Wallet } from '@/services/Wallets/Wallet.js';
 import configs from '@/configs';
 import { StringHelper } from '@/services/helper';
 

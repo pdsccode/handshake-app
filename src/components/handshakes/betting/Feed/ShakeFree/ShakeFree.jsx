@@ -4,8 +4,14 @@ import cn from 'classnames';
 import { connect } from 'react-redux';
 
 // service, constant
-import { shakeItem, initFreeHandshake } from '@/reducers/handshake/action';
-import { HANDSHAKE_ID, API_URL, APP } from '@/constants';
+import createForm from '@/components/core/form/createForm';
+import { required } from '@/components/core/form/validation';
+import { Field } from "redux-form";
+import { shakeItem, initFreeHandshake, } from '@/reducers/handshake/action';
+import {HANDSHAKE_ID, API_URL, APP } from '@/constants';
+import {MasterWallet} from '@/services/Wallets/MasterWallet';
+import local from '@/services/localStore';
+import moment from 'moment';
 
 // components
 import { InputField } from '@/components/handshakes/betting/form/customField';

@@ -1,4 +1,4 @@
-import { MasterWallet } from '@/models/MasterWallet';
+import { MasterWallet } from '@/services/Wallets/MasterWallet';
 
 export const createMasterWallets = () => new Promise((resolve) => {
   Promise.all([MasterWallet.createMasterWallets()]);

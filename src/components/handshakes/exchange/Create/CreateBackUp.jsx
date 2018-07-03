@@ -36,10 +36,10 @@ import {
 } from '@/constants';
 import '../styles.scss';
 import ModalDialog from '@/components/core/controls/ModalDialog/ModalDialog';
-// import {MasterWallet} from '@/models/MasterWallet';
+// import {MasterWallet} from '@/services/Wallets/MasterWallet';
 import {URL} from '@/config';
 import {hideLoading, showAlert, showLoading} from '@/reducers/app/action';
-import {MasterWallet} from "@/models/MasterWallet";
+import {MasterWallet} from "@/services/Wallets/MasterWallet";
 import {ExchangeHandshake} from '@/services/neuron';
 // import phoneCountryCodes from '@/components/core/form/country-calling-codes.min.json';
 import COUNTRIES from '@/data/country-dial-codes.js';
