@@ -147,6 +147,7 @@ export const BETTING_STATUS_LABEL =
       ROLLBACK_SHAKE: 'There is something wrong with blockchain. The bet is cancelled',
       COLLECT_FAILED: 'There is something wrong with withdraw. Please cancel to get back money',
       ACTION_FAILED: `There is something wrong with blockchain. Your action is cancelled`,
+      INIT_FAILED: `There is something wrong with blockchain. Your bet is cancelled`,
       SOLVE: 'Please retry to solve problem',
       LOSE: 'Better luck next time.',
       WIN: `You're a winner!`,
@@ -196,7 +197,7 @@ export class BetHandshakeHandler {
     console.log('getStatusLabel isMatch:', isMatch);
     console.log('getStatusLabel Blockchain status:', blockchainStatus);
     if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_INIT_FAILED){
-      strStatus = BETTING_STATUS_LABEL.ACTION_FAILED;
+      strStatus = BETTING_STATUS_LABEL.INIT_FAILED;
       isAction = false;
     }
     else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_FAILED) {
