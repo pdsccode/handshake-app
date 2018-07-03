@@ -180,6 +180,9 @@ class Admin extends React.Component {
     if (localStorage.getItem('disable') === false) {
       return null;
     }
+    if (this.state.outcomes && this.state.outcomes.length === 0) {
+      return null;
+    }
     if (document.getElementsByTagName('form')) {
       const inputs = document.getElementsByTagName('form')[0].elements;
       // Loop and find only the Radios

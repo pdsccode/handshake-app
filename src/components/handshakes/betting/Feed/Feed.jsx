@@ -149,27 +149,26 @@ class FeedBetting extends React.Component {
     }
 
 
-    const status = itemInfo.status;
+    let { status } = itemInfo;
     const side = itemInfo.side;
 
     const role = isUserShake ? ROLE.SHAKER : ROLE.INITER;
-    //const blockchainStatusHardcode = 5;
-    //const isMatch = true;
-    //const hardCodeResult = 2;
-    
+    // const blockchainStatusHardcode = 5;
+    // const isMatch = true;
+    // const hardCodeResult = 2;
+
     let isLoading = false;
     const isLoadingObj = betHandshakeHandler?.getLoadingOnChain(idCryptosign);
-    console.log('handleStatus idCryptosign:', idCryptosign,' status = ',status);
-    if(isLoadingObj){
+    console.log('handleStatus idCryptosign:', idCryptosign, ' status = ', status);
+    if (isLoadingObj) {
       console.log('handleStatus  isLoadingObj:', isLoadingObj);
-      if(status === BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINITED||status === BET_BLOCKCHAIN_STATUS.STATUS_DONE){
-        betHandshakeHandler.setItemOnChain(idCryptosign,null);
+      if (status === BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINITED || status === BET_BLOCKCHAIN_STATUS.STATUS_DONE) {
+        betHandshakeHandler.setItemOnChain(idCryptosign, null);
         isLoading = false;
-      }else{
-        status = isLoadingObj.status||status;
+      } else {
+        status = isLoadingObj.status || status;
         isLoading = true;
       }
-      
     }
 
     const statusResult = BetHandshakeHandler.getStatusLabel(status, result, role, side, isMatch, reportTime, disputeTime);
@@ -201,7 +200,7 @@ class FeedBetting extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     // console.log('Feeding Next Props:', nextProps);
-    if(nextProps&& JSON.stringify(nextProps)!==JSON.stringify(this.props)){
+    if (nextProps && JSON.stringify(nextProps) !== JSON.stringify(this.props)) {
       this.handleStatus(nextProps);
     }
   }
@@ -281,11 +280,10 @@ class FeedBetting extends React.Component {
             <div className="predictName predictTitle">
               <span className={colorBySide}>{side === 1 ? `Support` : 'Oppose'}</span>{predictName}
             </div>
-            <div className="predictName">Odds: {odds}</div>
+            <div className="predictName"><span className="odds-text-feed">Odds</span> <span className={`odds-value-feed-${colorBySide}`}>{odds}</span></div>
           </div>
           <div className="clearfix">
             <div className="bettingInfo">
-              <div className="description">You bet</div>
               <div className="description">Matched</div>
               <div className="description">You could win</div>
             </div>
@@ -305,7 +303,7 @@ class FeedBetting extends React.Component {
         <div>
           {/* <div className="description">Matched bet (ETH)</div> */}
           {/* <div className="value">{matchedAmount}/{amount}</div> */}
-          {<div className="value">{amount} ETH</div>}
+          {/* {<div className="value">{amount} ETH</div>} */}
 
         </div>
         <div>
@@ -332,9 +330,9 @@ class FeedBetting extends React.Component {
     const remainingValue = remainingAmount || 0;
     const colorBySide = side === 1 ? `support` : 'oppose';
     const amountMatch = parseBigNumber(amount);
-    let oddsBN = parseBigNumber(odds);
-    const winMatch = amountMatch.times(oddsBN).toNumber()||0;
-    const winValue = amountMatch.times(oddsBN).toNumber()||0;;
+    const oddsBN = parseBigNumber(odds);
+    const winMatch = amountMatch.times(oddsBN).toNumber() || 0;
+    const winValue = amountMatch.times(oddsBN).toNumber() || 0;
     const displayWinMatch = Math.floor(winMatch * ROUND) / ROUND;
     const displayAmount = Math.floor(amount * ROUND) / ROUND;
     const displayMatchedAmount = Math.floor(amountMatch * ROUND) / ROUND;
@@ -342,15 +340,15 @@ class FeedBetting extends React.Component {
     const displayWinValue = Math.floor(winValue * ROUND) / ROUND;
     return (this.renderItem(displayMatchedAmount, displayAmount, colorBySide, odds, displayWinMatch, displayRemaining, displayWinValue));
   }
-  renderMaker(){
+  renderMaker() {
     // console.log('Render Maker');
-    const {itemInfo, amountMatch, winMatch } = this.state;
+    const { itemInfo, amountMatch, winMatch } = this.state;
 
     const {
       amount = 0, odds = 0, side, remainingAmount,
     } = itemInfo;
     const remainingValue = remainingAmount || 0;
-    const winValue = parseBigNumber(amount).times(parseBigNumber(odds)).toNumber()||0;
+    const winValue = parseBigNumber(amount).times(parseBigNumber(odds)).toNumber() || 0;
     const displayAmount = Math.floor(amount * ROUND) / ROUND;
     const displayMatchedAmount = Math.floor(amountMatch * ROUND) / ROUND;
     const displayRemaining = Math.floor(remainingValue * ROUND) / ROUND;
@@ -362,7 +360,7 @@ class FeedBetting extends React.Component {
       this.renderItem(displayMatchedAmount, displayAmount, colorBySide, odds, displayWinMatch, displayRemaining, displayWinValue)
     );
   }
-  renderShaker(){
+  renderShaker() {
     // console.log('Render Maker');
 
     const { shakedItemList } = this.state;
@@ -414,14 +412,14 @@ class FeedBetting extends React.Component {
     const { itemInfo } = this.state;
     const { side, amount, odds } = itemInfo;
     this.setState({
-      isLoading: true
-    })
+      isLoading: true,
+    });
     betHandshakeHandler.setItemOnChain(offchain, itemInfo);
     const result = await betHandshakeHandler.cancelBet(hid, side, amount, odds, offchain);
-    const {hash} = result;
-    if(hash){
+    const { hash } = result;
+    if (hash) {
       // betHandshakeHandler.setItemOnChain(offchain, false);
-      let updateInfo = Object.assign({}, itemInfo);
+      const updateInfo = Object.assign({}, itemInfo);
       updateInfo.status = BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINIT_PENDING;
       betHandshakeHandler.setItemOnChain(offchain, updateInfo);
       this.props.updateBettingChange(updateInfo);
