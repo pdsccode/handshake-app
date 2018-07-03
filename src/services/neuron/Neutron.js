@@ -1,10 +1,11 @@
 import configs from '../../configs';
 import Web3 from 'web3';
 import Tx from 'ethereumjs-tx';
+import { BigNumber as BN } from 'bignumber.js';
 
 const LIMIT_GAS = 350000;
 
-const BN = Web3.utils.BN;
+// const BN = Web3.utils.BN;
 const TAG = 'Neuron';
 class Neuron {
   constructor(chainId = 4) {
@@ -75,7 +76,9 @@ class Neuron {
       ? Web3.utils.toWei(String(gasPrice), 'gwei')
       : await this.web3.eth.getGasPrice());
 
-    return Web3.utils.fromWei(String(LIMIT_GAS * gasPrice));
+    console.log('gasPrice.times(LIMIT_GAS).toString(10)', gasPrice.times(LIMIT_GAS).toString(10));
+
+    return Web3.utils.fromWei(gasPrice.times(LIMIT_GAS).toString(10));
   }
 
   caculateEstimatGasWithEthUnit = async (

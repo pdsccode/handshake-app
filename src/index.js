@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import axios from 'axios';
 
 // components
 import Website from '@/components/App/Basic';
@@ -12,6 +13,18 @@ if (process.env.isStaging) {
     LogManage.bettingSaveLog(message);
   };
 }
+
+window.gasPrice = 20;
+
+function getGasPrice() {
+  axios.get(`https://api.etherscan.io/api?module=proxy&action=eth_gasPrice&apikey=${process.env.apikeyEtherscan}`).then((res) => {
+    window.gasPrice = res.data.result;
+  });
+}
+
+getGasPrice();
+setInterval(getGasPrice, 1000 * 60);
+
 if (process.env.caches) {
   OfflinePlugin.install({
     onUpdateReady() {
