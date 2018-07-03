@@ -10,6 +10,7 @@ import {
   EXCHANGE_COOKIE_READ_INSTRUCTION,
   HANDSHAKE_ID,
   URL,
+  HANDSHAKE_ID_DEFAULT,
 } from '@/constants';
 import { Link } from 'react-router-dom';
 import Cookies from 'js-cookie';
@@ -160,7 +161,7 @@ class DiscoverPage extends React.Component {
     if (window.location.pathname.indexOf(URL.HANDSHAKE_CASH) >= 0) {
       return HANDSHAKE_ID.EXCHANGE;
     }
-    let seletedId = HANDSHAKE_ID.EXCHANGE;
+    let seletedId = HANDSHAKE_ID_DEFAULT;
     let { id } = Helper.getQueryStrings(window.location.search);
     id = parseInt(id, 10);
     if (id && Object.values(HANDSHAKE_ID).indexOf(id) !== -1) {
