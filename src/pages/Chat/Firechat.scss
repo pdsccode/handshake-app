@@ -2,9 +2,11 @@
 .chat-container {
   height: calc(100vh - 45px - 60px);
   margin-top: -10px;
+  overflow: auto;
 
   &.in-detail {
     height: calc(100vh - 45px - 120px);
+    overflow: hidden;
   }
 
   .scroll-to-bottom {

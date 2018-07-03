@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'redux';
+import { connect } from 'react-redux';
 import { showAlert } from '@/reducers/app/action';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
@@ -19,15 +19,18 @@ class Username extends React.PureComponent {
 
   constructor(props) {
     super(props);
-    this.state = { username: this.props.username?.toString() };
-    this.state.username = this.walletAddressHandle(this.state.username);
+    this.state = {
+      username: this.props.username ?.toString(),
+      enableCopy: this.props.enableCopy ? this.props.enableCopy : false,
+    };
+    this.state.username = Username.walletAddressHandle(this.state.username);
 
-    this.copied = ::this.copied;
+    this.copied = :: this.copied;
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    if (nextProps.username !== prevState.username) {
-      return { username: Username.walletAddressHandle(nextProps.username) };
+    if (nextProps.username !== prevState.username || nextProps.enableCopy !== prevState.enableCopy) {
+      return { username: Username.walletAddressHandle(nextProps.username), enableCopy: nextProps.enableCopy };
     }
     return null;
   }
@@ -38,11 +41,18 @@ class Username extends React.PureComponent {
       timeOut: false,
       isShowClose: true,
       type: 'success',
-      callBack: () => {},
+      callBack: () => { },
     });
   }
 
   render() {
+    const { enableCopy } = this.state;
+    if (!enableCopy) {
+      return (
+        <span style={{ cursor: 'pointer' }}>{this.state.username}</span>
+      );
+    }
+
     return (
       <CopyToClipboard text={this.props.username} onCopy={this.copied}>
         <span style={{ cursor: 'pointer' }}>{this.state.username}</span>
