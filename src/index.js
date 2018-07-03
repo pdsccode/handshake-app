@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import axios from 'axios';
+import Web3 from 'web3';
 
 // components
 import Website from '@/components/App/Basic';
@@ -18,7 +19,9 @@ window.gasPrice = 20;
 
 function getGasPrice() {
   axios.get(`https://api.etherscan.io/api?module=proxy&action=eth_gasPrice&apikey=${process.env.apikeyEtherscan}`).then((res) => {
-    window.gasPrice = res.data.result;
+    const gasPrice = Number(res.data.result).toString();
+    console.log('gasPrice', gasPrice);
+    window.gasPrice = Web3.utils.fromWei(gasPrice, 'gwei');
   });
 }
 

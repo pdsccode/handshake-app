@@ -231,7 +231,7 @@ class Neuron {
         const rawTx = {
           nonce: web3.utils.toHex(nonce),
           gasPrice: web3.utils.toHex(gasPrice),
-          gasLimit: estimatedGas,
+          gasLimit: estimatedGas.toNumber(),
           data: payloadData,
           from: address,
           chainId,
