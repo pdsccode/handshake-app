@@ -106,7 +106,7 @@ export const setLanguage = (data, autoDetect = true) => ({
 export const setRootLoading = bool => ({ type: APP_ACTION.SET_ROOT_LOADING, payload: bool });
 
 const tokenHandle = ({
-  token, resolve, reject, dispatch, ipInfo, isSignup
+  token, resolve, reject, dispatch, ipInfo, isSignup,
 }) => {
   if (resolve) {
     if (token) {
@@ -144,24 +144,24 @@ const tokenHandle = ({
           if (listWallet === false) {
             MasterWallet.createMasterWallets();
           } else {
-            let shuriWallet = MasterWallet.getShuriWallet();
+            const shuriWallet = MasterWallet.getShuriWallet();
             if (shuriWallet === false) {
               MasterWallet.createShuriWallet();
             }
           }
-          let shuriWallet = MasterWallet.getShuriWallet();          
+          const shuriWallet = MasterWallet.getShuriWallet();
           const data = new FormData();
-          data.append('reward_wallet_addresses', MasterWallet.convertToJsonETH(shuriWallet));          
+          data.append('reward_wallet_addresses', MasterWallet.convertToJsonETH(shuriWallet));
           if (isSignup) data.append('username', shuriWallet.address);
           dispatch(authUpdate({
             PATH_URL: 'user/profile',
             data,
             METHOD: 'POST',
             successFn: (res) => {
-              //console.log('app - handle - wallet - success - ', res);
+              // console.log('app - handle - wallet - success - ', res);
             },
             errorFn: (e) => {
-              //console.log('app - handle - wallet - error - ', e);
+              // console.log('app - handle - wallet - error - ', e);
             },
           }));
           resolve(true);
@@ -191,7 +191,7 @@ const auth = ({ ref, dispatch, ipInfo }) => new Promise((resolve, reject) => {
         const signUpToken = res.data.passpharse;
         console.log('signUpToken', signUpToken);
         tokenHandle({
-          resolve, token: signUpToken, dispatch, ipInfo, isSignup: true
+          resolve, token: signUpToken, dispatch, ipInfo, isSignup: true,
         });
       },
       errorFn: () => {
@@ -202,12 +202,12 @@ const auth = ({ ref, dispatch, ipInfo }) => new Promise((resolve, reject) => {
 });
 
 function getCountry(addrComponents) {
-  for (var i = 0; i < addrComponents.length; i++) {
-    if (addrComponents[i].types[0] == "country") {
+  for (let i = 0; i < addrComponents.length; i++) {
+    if (addrComponents[i].types[0] == 'country') {
       return addrComponents[i].short_name;
     }
     if (addrComponents[i].types.length == 2) {
-      if (addrComponents[i].types[0] == "political") {
+      if (addrComponents[i].types[0] == 'political') {
         return addrComponents[i].short_name;
       }
     }
@@ -223,30 +223,29 @@ export const initApp = (language, ref) => (dispatch) => {
   }).then((res) => {
     const { data } = res;
 
-    var ipInfo = IpInfo.ipInfo(data);
-    //get currency base on GPS
+    const ipInfo = IpInfo.ipInfo(data);
+    // get currency base on GPS
     navigator.geolocation.getCurrentPosition((location) => {
-      const {coords: {latitude, longitude}} = location;
+      const { coords: { latitude, longitude } } = location;
       ipInfo.latitude = latitude;
       ipInfo.longitude = longitude;
-      console.log('------------GPS-------------' + latitude);
+      console.log(`------------GPS-------------${latitude}`);
 
       axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&sensor=true`).then((response) => {
-
-        if (response.data.results[0] && response.data.results[0].address_components){
-          var country = getCountry(response.data.results[0].address_components);
+        if (response.data.results[0] && response.data.results[0].address_components) {
+          const country = getCountry(response.data.results[0].address_components);
 
           ipInfo.addressDefault = response.data.results[0].formatted_address;
 
-          if(country && Country[country]){
+          if (country && Country[country]) {
             ipInfo.currency = Country[country];
-            console.log('------------GPS-------------' + ipInfo.currency);
+            console.log(`------------GPS-------------${ipInfo.currency}`);
           }
         }
         dispatch(setIpInfo(ipInfo));
       });
     }, () => {
-      //console.log('zon')// fallback
+      // console.log('zon')// fallback
     });
 
     dispatch(setIpInfo(ipInfo));

@@ -23,7 +23,7 @@ import Dropdown from '@/components/core/controls/Dropdown';
 import Toggle from '@/components/handshakes/betting/Feed/Toggle';
 import { showAlert } from '@/reducers/app/action';
 import {isRightNetwork, isExpiredDate, getChainIdDefaultWallet, 
-  getBalance, getEstimateGas, isExistMatchBet} from '@/components/handshakes/betting/utils.js';
+  getBalance, getEstimateGas, isExistMatchBet, getAddress} from '@/components/handshakes/betting/utils.js';
 
 // self
 import { InputField } from '../form/customField';
@@ -120,7 +120,7 @@ class BettingCreate extends React.Component {
     let params = {
       public: 1,
     }
-    this.props.loadMatches({ PATH_URL: API_URL.CRYPTOSIGN.LOAD_MATCHES, METHOD:'POST'});
+    this.props.loadMatches({ PATH_URL: API_URL.CRYPTOSIGN.LOAD_MATCHES});
 
   }
 
@@ -257,14 +257,16 @@ class BettingCreate extends React.Component {
     console.log('Match, Outcome:', selectedMatch, selectedOutcome);
 
     let message = null;
-    const date = selectedMatch.date;
-    const reportTime = selectedMatch.reportTime;
+   
     if (!isRightNetwork()) {
       message = MESSAGE.RIGHT_NETWORK;
     }
 
     if (selectedMatch && selectedOutcome) {
-      if (isExpiredDate(reportTime)) {
+      const date = selectedMatch.date;
+      //const reportTime = selectedMatch.reportTime;
+      const closingTime = selectedMatch.date;
+      if (isExpiredDate(closingTime)) {
         message = MESSAGE.MATCH_OVER;
       } else if (eventBet > 0) {
         if (total <= balance) {

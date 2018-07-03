@@ -19,6 +19,11 @@ img {
   max-width: 100%;
 }
 
+button {
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
 @import "app/splash";
 @import "app";
 @import "forms/dropdown-input";

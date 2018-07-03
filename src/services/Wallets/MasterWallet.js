@@ -40,19 +40,18 @@ import Neuron from '@/services/neuron/Neutron';
 const bip39 = require('bip39');
 
 export class MasterWallet {
-    
     // list coin is supported, can add some more Ripple ...
     static ListDefaultCoin = {
-      Ethereum, Shuriken, Bitcoin, BitcoinTestnet
+      Ethereum, Shuriken, Bitcoin, BitcoinTestnet,
     };
 
     static ListCoin = {
-      Ethereum, Bitcoin, BitcoinTestnet, Shuriken, TokenERC20, TokenERC721, 
+      Ethereum, Bitcoin, BitcoinTestnet, Shuriken, TokenERC20, TokenERC721,
       CryptoStrikers, CryptoPunks, CryptoKitties, Axie, BlockchainCuties,
       ChibiFighters, CryptoClown, CryptoCrystal, Cryptogs, CryptoHorse,
       CryptoSoccr, CryptoZodiacs, CSCPreSaleFactory, DopeRaider, Etherbots,
       EtheremonAsset, EtherLambos, ExoPlanets,
-      Giftomon, HelloDog, OxcertKYC, PandaEarth, PirateKittyToken, UnicornGO, WarToken 
+      Giftomon, HelloDog, OxcertKYC, PandaEarth, PirateKittyToken, UnicornGO, WarToken
     };
 
     static ListCoinReward = { Ethereum, Bitcoin };
@@ -148,7 +147,7 @@ export class MasterWallet {
       let isImport = false;
       if (mnemonic == '') {
         mnemonic = bip39.generateMnemonic(); // generates string
-      } else if (!bip39.validateMnemonic(mnemonic)) {        
+      } else if (!bip39.validateMnemonic(mnemonic)) {
         return false;
       } else {
         isImport = true;
@@ -168,22 +167,22 @@ export class MasterWallet {
       return masterWallet;
     }
 
-    static AddToken(newToken){
-      let wallets = localStore.get(MasterWallet.KEY);
-      if (wallets == false) return false;      
-      wallets.push(JSON.parse(JSON.stringify(newToken)));            
-      MasterWallet.UpdateLocalStore(wallets);      
+    static AddToken(newToken) {
+      const wallets = localStore.get(MasterWallet.KEY);
+      if (wallets === false) return false;
+      wallets.push(JSON.parse(JSON.stringify(newToken)));
+      MasterWallet.UpdateLocalStore(wallets);
       return true;
     }
 
-    static UpdateLocalStore(masterWallet) {      
+    static UpdateLocalStore(masterWallet) {
       localStore.save(MasterWallet.KEY, masterWallet);
     }
-    
+
     static UpdateBalanceItem(item) {
       const wallets = MasterWallet.getMasterWallet();
       wallets.forEach((wallet) => {
-        if (wallet.address == item.address && wallet.network == item.network) {
+        if (wallet.address === item.address && wallet.network === item.network) {
           wallet.balance = item.balance;
         }
       });
@@ -317,14 +316,14 @@ export class MasterWallet {
     static getWalletDefault(coinName = '') {
       const wallets = localStore.get(MasterWallet.KEY);
 
-      if (wallets == false) return false;
+      if (wallets === false) return false;
 
       const BreakException = {};
       try {
-        if (coinName != '') {
+        if (coinName !== '') {
           let wallet = false;
           wallets.forEach((walletJson) => {
-            if (walletJson.default && coinName == walletJson.name) {
+            if (walletJson.default && coinName === walletJson.name) {
               if (process.env.isLive) {
                 if (walletJson.network === MasterWallet.ListCoin[walletJson.className].Network.Mainnet) {
                   wallet = MasterWallet.convertObject(walletJson);
@@ -358,14 +357,14 @@ export class MasterWallet {
     static getRewardWalletDefault(coinName = '') {
       const wallets = localStore.get(MasterWallet.KEY);
 
-      if (wallets == false) return false;
+      if (wallets === false) return false;
 
       const BreakException = {};
       try {
-        if (coinName != '') {
+        if (coinName !== '') {
           let wallet = false;
           wallets.forEach((walletJson) => {
-            if (walletJson.isReward && coinName == walletJson.name) {
+            if (walletJson.isReward && coinName === walletJson.name) {
               wallet = MasterWallet.convertObject(walletJson);
             }
           });
@@ -401,13 +400,13 @@ export class MasterWallet {
         wallet.title = walletJson.title;
         wallet.protected = walletJson.protected;
         wallet.isReward = walletJson.isReward;
-        wallet.chainId = walletJson.chainId;        
+        wallet.chainId = walletJson.chainId;
         if (walletJson.isToken) wallet.isToken = walletJson.isToken;
         if (walletJson.decimals) wallet.decimals = walletJson.decimals;
         if (walletJson.contractAddress) wallet.contractAddress = walletJson.contractAddress;
         if (walletJson.customToken) wallet.customToken = walletJson.customToken;
         if (walletJson.isCollectibles) wallet.isCollectibles = walletJson.isCollectibles;
-        
+
         return wallet;
       } catch (e) {
         return false;
@@ -428,14 +427,12 @@ export class MasterWallet {
         let wallets = false;
         console.log('jsonData', jsonData);
         if (jsonData !== false) {
-        
-          if (jsonData.hasOwnProperty('auth_token')){
-            auth_token = jsonData['auth_token'];
+          if (jsonData.hasOwnProperty('auth_token')) {
+            auth_token = jsonData.auth_token;
           }
-          if (jsonData.hasOwnProperty('wallets')){
-            wallets = jsonData['wallets'];
-          }
-          else{
+          if (jsonData.hasOwnProperty('wallets')) {
+            wallets = jsonData.wallets;
+          } else {
             wallets = jsonData;
           }
 
@@ -451,7 +448,7 @@ export class MasterWallet {
               listWallet.push(wallet);
             });
             MasterWallet.UpdateLocalStore(listWallet);
-            if (auth_token !== false){
+            if (auth_token !== false) {
               localStore.save(APP.AUTH_TOKEN, auth_token);
             }
             return listWallet;
