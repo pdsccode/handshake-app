@@ -151,7 +151,7 @@ export const BETTING_STATUS_LABEL =
       SOLVE: 'Please retry to solve problem',
       LOSE: 'Better luck next time.',
       WIN: `You're a winner!`,
-      WIN_WAIT: `You can't withdraw now`,
+      WIN_WAIT: `<br/> It's not time to withdraw. Please wait`,
       DONE: 'Completed',
       WITHDRAW: 'Withdraw winnings',
       CANCELLING: 'Your bet is being cancelled.',
@@ -239,13 +239,13 @@ export class BetHandshakeHandler {
       strStatus = BETTING_STATUS_LABEL.BET_WAIT_MATCHING;
       isAction = true;
     } else if ((isMatch && resultStatus === BETTING_STATUS.DRAW)
-              || (isMatch && resultStatus === BETTING_STATUS.INITED && isExpiredDate(disputeTime))) {
+              || (isMatch && resultStatus === BETTING_STATUS.INITED && isExpiredDate(reportTime))) {
       label = BETTING_STATUS_LABEL.REFUND;
       strStatus = BETTING_STATUS_LABEL.REFUNDING;
       isAction = true;
     } else if ((isMatch && resultStatus === BETTING_STATUS.SUPPORT_WIN && side === SIDE.SUPPORT)
                 || (isMatch && resultStatus === BETTING_STATUS.AGAINST_WIN && side === SIDE.AGAINST)) {
-      if (isExpiredDate(reportTime)) { // Over dispute time, user can withdraw
+      if (isExpiredDate(disputeTime)) { // Over dispute time, user can withdraw
         label = BETTING_STATUS_LABEL.WITHDRAW;
         strStatus = BETTING_STATUS_LABEL.WIN;
         isAction = true;

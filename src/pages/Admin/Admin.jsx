@@ -70,7 +70,7 @@ class Admin extends React.Component {
 
   fetchMatches() {
     this.props.loadMatches({
-      PATH_URL: API_URL.CRYPTOSIGN.LOAD_MATCHES,
+      PATH_URL: `${API_URL.CRYPTOSIGN.LOAD_MATCHES}?report=1`,
       successFn: (res) => {
         const { data } = res;
         this.setInitials(data);
