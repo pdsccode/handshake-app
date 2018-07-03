@@ -105,6 +105,9 @@
       color: #fff;
       background: #000000;
       font-weight: normal;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      padding: 0.625rem 1rem 0.625rem 0.625rem;
       color: #333;
       border: 1px solid #7a7a7a;
       opacity: 1;
