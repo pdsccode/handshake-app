@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 // services, constants
-import { BetHandshakeHandler, SIDE, BETTING_STATUS_LABEL, ROLE, MESSAGE, BET_BLOCKCHAIN_STATUS } from './BetHandshakeHandler.js';
+import { BetHandshakeHandler, SIDE, BETTING_STATUS_LABEL, ROLE, MESSAGE, BET_BLOCKCHAIN_STATUS, BETTING_STATUS } from './BetHandshakeHandler.js';
 import momment from 'moment';
 import { MasterWallet } from '@/services/Wallets/MasterWallet';
 
