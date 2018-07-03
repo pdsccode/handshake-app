@@ -231,7 +231,7 @@ class FeedBetting extends React.Component {
 
   renderStatus = () => {
     const { statusTitle } = this.state;
-    return <div className="statusBetting">{statusTitle || ''}</div>;
+    return <div className="statusBetting" dangerouslySetInnerHTML={{__html: statusTitle}} />;
   }
 
   render() {
@@ -378,7 +378,7 @@ class FeedBetting extends React.Component {
         this.uninitItemFree(realId);
         break;
       case BETTING_STATUS_LABEL.WITHDRAW:
-        this.collectFree(id);
+        this.collectFree(offchain);
         break;
     }
   }
