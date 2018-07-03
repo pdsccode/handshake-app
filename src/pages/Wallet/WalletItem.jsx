@@ -1,7 +1,7 @@
 import React from 'react';
 import { Col } from 'react-bootstrap';
-import {Bitcoin} from '@/models/Bitcoin.js' 
-import {Ethereum} from '@/models/Ethereum.js' 
+import {Bitcoin} from '@/services/Wallets/Bitcoin.js' 
+import {Ethereum} from '@/services/Wallets/Ethereum.js' 
 import dontIcon from '@/assets/images/icon/3-dot-icon.svg';
 import iconSafe from '@/assets/images/icon/icon-safe.svg';
 import iconWarning from '@/assets/images/icon/icon-warning.svg';
@@ -25,7 +25,7 @@ class WalletItem extends React.Component {
         // const itemSelected = wallet.default ? "feed feed-selected" : "feed";
         return  ( 
             
-            <Col sm={6} md={6} xs={6} key={wallet.address+wallet.network} className="feed-wrapper-wallet">
+            <Col sm={6} md={6} xs={6} className="feed-wrapper-wallet">
               <div className='feed' style={{backgroundImage: "url('"+bgImg+"')"}}>
                 
                 <div className="name">{wallet.title}

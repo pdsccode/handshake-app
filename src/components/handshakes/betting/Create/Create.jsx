@@ -18,7 +18,7 @@ import GA from '@/services/googleAnalytics';
 import Button from '@/components/core/controls/Button';
 import Input from '@/components/core/forms/Input/Input';
 import DatePicker from '@/components/handshakes/betting/Create/DatePicker';
-import { MasterWallet } from '@/models/MasterWallet';
+import { MasterWallet } from '@/services/Wallets/MasterWallet';
 import Dropdown from '@/components/core/controls/Dropdown';
 import Toggle from '@/components/handshakes/betting/Feed/Toggle';
 import { showAlert } from '@/reducers/app/action';

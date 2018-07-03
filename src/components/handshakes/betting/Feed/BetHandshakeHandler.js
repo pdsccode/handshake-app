@@ -1,4 +1,4 @@
-import { MasterWallet } from '@/models/MasterWallet';
+import { MasterWallet } from '@/services/Wallets/MasterWallet';
 import { BettingHandshake } from '@/services/neuron';
 import { API_URL, APP } from '@/constants';
 import { showAlert } from '@/reducers/app/action';
@@ -96,6 +96,7 @@ export const MESSAGE = {
 
 
 export const BET_BLOCKCHAIN_STATUS = {
+  STATUS_INIT_FAILED: -10,
   STATUS_COLLECT_FAILED: -9,
   STATUS_COLLECT_PENDING: -8,
   STATUS_DISPUTE_FAILED: -7,
@@ -146,6 +147,7 @@ export const BETTING_STATUS_LABEL =
       ROLLBACK_SHAKE: 'There is something wrong with blockchain. The bet is cancelled',
       COLLECT_FAILED: 'There is something wrong with withdraw. Please cancel to get back money',
       ACTION_FAILED: `There is something wrong with blockchain. Your action is cancelled`,
+      INIT_FAILED: `There is something wrong with blockchain. Your bet is cancelled`,
       SOLVE: 'Please retry to solve problem',
       LOSE: 'Better luck next time.',
       WIN: `You're a winner!`,
@@ -194,8 +196,11 @@ export class BetHandshakeHandler {
     console.log('getStatusLabel Role:', role);
     console.log('getStatusLabel isMatch:', isMatch);
     console.log('getStatusLabel Blockchain status:', blockchainStatus);
-
-    if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_FAILED) {
+    if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_INIT_FAILED){
+      strStatus = BETTING_STATUS_LABEL.INIT_FAILED;
+      isAction = false;
+    }
+    else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_FAILED) {
       label = BETTING_STATUS_LABEL.CANCEL;
       strStatus = BETTING_STATUS_LABEL.COLLECT_FAILED;
       isAction = true;
@@ -537,7 +542,7 @@ export class BetHandshakeHandler {
     let realBlockHash = '';
     let result = null;
     try {
-      result = await bettinghandshake.refund(hid, side, stake, odds, offchain);
+      result = await bettinghandshake.refund(hid, offchain);
       const {
         logs, hash, error, transactionHash, payload,
       } = result;

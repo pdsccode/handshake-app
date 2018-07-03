@@ -7,7 +7,7 @@ import COUNTRIES_BLACKLIST_PREDICTION from '@/data/country-blacklist-betting';
 import COUNTRIES_BLACKLIST_CASH from '@/data/country-blacklist-exchange';
 import { signUp, fetchProfile, authUpdate } from '@/reducers/auth/action';
 import { getListOfferPrice, getUserProfile } from '@/reducers/exchange/action';
-import { MasterWallet } from '@/models/MasterWallet';
+import { MasterWallet } from '@/services/Wallets/MasterWallet';
 
 export const APP_ACTION = {
   NETWORK_ERROR: 'NETWORK_ERROR',

@@ -14,7 +14,7 @@ import { Label, Col, Row } from 'reactstrap';
 import ShareSocial from '@/components/core/presentation/ShareSocial';
 import DatePicker from './DatePicker';
 import './Create.scss';
-import { MasterWallet } from '@/models/MasterWallet';
+import { MasterWallet } from '@/services/Wallets/MasterWallet';
 import { __asyncValues } from 'tslib';
 import { loadMatches, addMatch } from '@/reducers/betting/action';
 import Dropdown from '@/components/core/controls/Dropdown';
@@ -229,13 +229,9 @@ class CreateBettingEvent extends React.Component {
   }
 
   fetchAllEvents() {
-    const params = {
-      public: 1,
-    };
     this.props.loadMatches({
       PATH_URL: API_URL.CRYPTOSIGN.LOAD_MATCHES,
-      METHOD: 'POST',
-      data: params,
+      METHOD: 'GET',
       successFn: (res) => {
         if (res.data && res.data.length === 0) this.handleNewEvent();
       },

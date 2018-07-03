@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { createComment } from '@/reducers/comment/action';
 import { showAlert } from '@/reducers/app/action';
 import { API_URL, HANDSHAKE_ID } from '@/constants';
-import {MasterWallet} from '@/models/MasterWallet';
+import {MasterWallet} from '@/services/Wallets/MasterWallet';
 import Helper from '@/services/helper';
 
 // components
