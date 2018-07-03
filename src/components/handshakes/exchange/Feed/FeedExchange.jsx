@@ -223,7 +223,7 @@ class FeedExchange extends React.PureComponent {
 
   shakeOfferItem = async (values) => {
     console.log('shakeOfferItem', values);
-    this.modalRef.close();
+    this.props.modalRef.close();
 
     const { authProfile } = this.props;
     const { offer } = this;

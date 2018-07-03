@@ -12,6 +12,28 @@ import {required} from '@/components/core/form/validation'
 import {MasterWallet} from "@/services/Wallets/MasterWallet";
 import {CryptoKitties} from "@/services/Wallets/Collectibles/CryptoKitties";
 import {CryptoPunks} from "@/services/Wallets/Collectibles/CryptoPunks";
+import { Axie } from '@/services/Wallets/Collectibles/Axie';
+import { BlockchainCuties } from '@/services/Wallets/Collectibles/BlockchainCuties';
+import { ChibiFighters } from '@/services/Wallets/Collectibles/ChibiFighters';
+import { CryptoClown } from '@/services/Wallets/Collectibles/CryptoClown';
+import { CryptoCrystal } from '@/services/Wallets/Collectibles/CryptoCrystal';
+import { Cryptogs } from '@/services/Wallets/Collectibles/Cryptogs';
+import { CryptoHorse } from '@/services/Wallets/Collectibles/CryptoHorse';
+import { CryptoSoccr } from '@/services/Wallets/Collectibles/CryptoSoccr';
+import { CryptoZodiacs } from '@/services/Wallets/Collectibles/CryptoZodiacs';
+import { CSCPreSaleFactory } from '@/services/Wallets/Collectibles/CSCPreSaleFactory';
+import { DopeRaider } from '@/services/Wallets/Collectibles/DopeRaider';
+import { Etherbots } from '@/services/Wallets/Collectibles/Etherbots';
+import { EtheremonAsset } from '@/services/Wallets/Collectibles/EtheremonAsset';
+import { EtherLambos } from '@/services/Wallets/Collectibles/EtherLambos';
+import { ExoPlanets } from '@/services/Wallets/Collectibles/ExoPlanets';
+import { Giftomon } from '@/services/Wallets/Collectibles/Giftomon';
+import { HelloDog } from '@/services/Wallets/Collectibles/HelloDog';
+import { OxcertKYC } from '@/services/Wallets/Collectibles/OxcertKYC';
+import { PandaEarth } from '@/services/Wallets/Collectibles/PandaEarth';
+import { PirateKittyToken } from '@/services/Wallets/Collectibles/PirateKittyToken';
+import { UnicornGO } from '@/services/Wallets/Collectibles/UnicornGO';
+import { WarToken } from '@/services/Wallets/Collectibles/WarToken';
 import { bindActionCreators } from "redux";
 import {showAlert} from '@/reducers/app/action';
 import { showLoading, hideLoading } from '@/reducers/app/action';
@@ -36,7 +58,11 @@ const amountValid = value => (value && isNaN(value) ? 'Invalid amount' : undefin
 const nameFormAddCollectible = 'addCollectible';
 const AddNewCollectibleForm = createForm({ propsReduxForm: { form: nameFormAddCollectible, enableReinitialize: true, clearSubmitErrors: true}});
 
-const listToken721 = [CryptoKitties, CryptoPunks, CryptoStrikers];    
+const listToken721 = [CryptoKitties, CryptoPunks, CryptoStrikers, Axie, BlockchainCuties,
+  ChibiFighters, CryptoClown, CryptoCrystal, Cryptogs, CryptoHorse,
+  CryptoSoccr, CryptoZodiacs, CSCPreSaleFactory, DopeRaider, Etherbots,
+  EtheremonAsset, EtherLambos, ExoPlanets,
+  Giftomon, HelloDog, OxcertKYC, PandaEarth, PirateKittyToken, UnicornGO, WarToken];    
 
 class AddCollectible extends React.Component {
   constructor(props) {

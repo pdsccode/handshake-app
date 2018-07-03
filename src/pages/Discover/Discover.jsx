@@ -9,7 +9,6 @@ import {
   DISCOVER_GET_HANDSHAKE_RADIUS,
   EXCHANGE_COOKIE_READ_INSTRUCTION,
   HANDSHAKE_ID,
-  HANDSHAKE_ID_DEFAULT,
   URL,
 } from '@/constants';
 import { Link } from 'react-router-dom';
@@ -111,13 +110,7 @@ class DiscoverPage extends React.Component {
 
   componentDidMount() {
     const { ipInfo } = this.props;
-    navigator.geolocation.getCurrentPosition((location) => {
-      const { coords: { latitude, longitude } } = location;
-      this.setAddressFromLatLng(latitude, longitude); // better precision
-    }, () => {
-      this.setAddressFromLatLng(ipInfo?.latitude, ipInfo?.longitude); // fallback
-    });
-
+    this.setAddressFromLatLng(ipInfo?.latitude, ipInfo?.longitude); // fallback
     if (this.state.utm === 'earlybird') {
       this.props.getFreeStartInfo({
         PATH_URL: `exchange/info/offer-store-free-start/ETH`,
@@ -164,7 +157,10 @@ class DiscoverPage extends React.Component {
   }
 
   getDefaultHandShakeId() {
-    let seletedId = HANDSHAKE_ID_DEFAULT;
+    if (window.location.pathname.indexOf(URL.HANDSHAKE_CASH) >= 0) {
+      return HANDSHAKE_ID.EXCHANGE;
+    }
+    let seletedId = HANDSHAKE_ID.EXCHANGE;
     let { id } = Helper.getQueryStrings(window.location.search);
     id = parseInt(id, 10);
     if (id && Object.values(HANDSHAKE_ID).indexOf(id) !== -1) {
@@ -237,10 +233,11 @@ class DiscoverPage extends React.Component {
               <FeedComponent
                 {...handshake}
                 history={this.props.history}
-                onFeedClick={(extraData) => this.clickFeedDetail(handshake, extraData)}
+                onFeedClick={extraData => this.clickFeedDetail(handshake, extraData)}
                 refreshPage={this.loadDiscoverList}
                 latitude={lat}
                 longitude={lng}
+                modalRef={this.modalRef}
               />
             </Col>
           );
@@ -279,10 +276,10 @@ class DiscoverPage extends React.Component {
   }
 
   clickFeedDetail(handshake, extraData) {
-    const { type } = handshake
+    const { type } = handshake;
     switch (type) {
       case HANDSHAKE_ID.EXCHANGE: {
-        const { modalContent, modalClassName } = extraData
+        const { modalContent, modalClassName } = extraData;
         if (modalContent) {
           this.setState({ modalContent, propsModal: { className: modalClassName } }, () => {
             this.modalRef.open();

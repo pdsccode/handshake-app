@@ -10,20 +10,20 @@ const BigNumber = require('bignumber.js');
 
 const EthereumTx = require('ethereumjs-tx');
 
-const abi = require('@/contracts/CryptoStrikers.json');
+const abi = require('@/contracts/CryptoHorse.json');
 
-export class CryptoStrikers extends TokenERC721 {
+export class CryptoHorse extends TokenERC721 {
 
     constructor() {
       super();
-      this.className = 'CryptoStrikers';
+      this.className = 'CryptoHorse';
       this.isToken = true;
-      this.contractAddress = '0xdcaad9fd9a74144d226dbf94ce6162ca9f09ed7e';
+      this.contractAddress = '0xb88924408a95917c75de67fc9fbdc4af992979c3';
       this.decimals = 0;
       this.customToken = true;
-      this.title = "CryptoStrikers";
-      this.name = "STRK";
+      this.title = "CryptoHorse";
+      this.name = "CHC";
     }  
 }
 
-export default { CryptoStrikers };
+export default { CryptoHorse };

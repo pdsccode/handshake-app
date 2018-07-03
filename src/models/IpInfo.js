@@ -19,6 +19,8 @@ class IpInfo {
       languages: data.languages || '',
       asn: data.asn || '',
       org: data.org || '',
+      addressDefault: '',
+
     };
   }
 }

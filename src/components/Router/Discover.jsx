@@ -13,6 +13,7 @@ const Page404 = props => (<DynamicImport isNotFound loading={Loading} load={() =
 
 const routerMap = [
   { path: URL.HANDSHAKE_DISCOVER_INDEX, component: Discover },
+  { path: URL.HANDSHAKE_CASH_INDEX, component: Discover },
   { path: URL.HANDSHAKE_DISCOVER_DETAIL, component: DiscoverDetail },
 ];
 

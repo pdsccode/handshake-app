@@ -106,7 +106,7 @@ export const setLanguage = (data, autoDetect = true) => ({
 export const setRootLoading = bool => ({ type: APP_ACTION.SET_ROOT_LOADING, payload: bool });
 
 const tokenHandle = ({
-  token, resolve, reject, dispatch, ipInfo, isSignup
+  token, resolve, reject, dispatch, ipInfo, isSignup,
 }) => {
   if (resolve) {
     if (token) {
@@ -144,14 +144,14 @@ const tokenHandle = ({
           if (listWallet === false) {
             MasterWallet.createMasterWallets();
           } else {
-            let shuriWallet = MasterWallet.getShuriWallet();
+            const shuriWallet = MasterWallet.getShuriWallet();
             if (shuriWallet === false) {
               MasterWallet.createShuriWallet();
             }
           }
-          let shuriWallet = MasterWallet.getShuriWallet();          
+          const shuriWallet = MasterWallet.getShuriWallet();
           const data = new FormData();
-          data.append('reward_wallet_addresses', MasterWallet.convertToJsonETH(shuriWallet));          
+          data.append('reward_wallet_addresses', MasterWallet.convertToJsonETH(shuriWallet));
           if (isSignup) data.append('username', shuriWallet.address);
           dispatch(authUpdate({
             PATH_URL: 'user/profile',
@@ -191,7 +191,7 @@ const auth = ({ ref, dispatch, ipInfo }) => new Promise((resolve, reject) => {
         const signUpToken = res.data.passpharse;
         console.log('signUpToken', signUpToken);
         tokenHandle({
-          resolve, token: signUpToken, dispatch, ipInfo, isSignup: true
+          resolve, token: signUpToken, dispatch, ipInfo, isSignup: true,
         });
       },
       errorFn: () => {
@@ -225,23 +225,29 @@ export const initApp = (language, ref) => (dispatch) => {
 
     const ipInfo = IpInfo.ipInfo(data);
     // get currency base on GPS
-    console.log(`------------GPS-------------${ipInfo}`);
-
     navigator.geolocation.getCurrentPosition((location) => {
       const { coords: { latitude, longitude } } = location;
+      ipInfo.latitude = latitude;
+      ipInfo.longitude = longitude;
       console.log(`------------GPS-------------${latitude}`);
 
       axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&sensor=true`).then((response) => {
         if (response.data.results[0] && response.data.results[0].address_components) {
           const country = getCountry(response.data.results[0].address_components);
+
+          ipInfo.addressDefault = response.data.results[0].formatted_address;
+
           if (country && Country[country]) {
             ipInfo.currency = Country[country];
             console.log(`------------GPS-------------${ipInfo.currency}`);
-            dispatch(setIpInfo(ipInfo));
           }
         }
+        dispatch(setIpInfo(ipInfo));
       });
+    }, () => {
+      // console.log('zon')// fallback
     });
+
     dispatch(setIpInfo(ipInfo));
 
     const ipInfoRes = { language: 'en', bannedPrediction: false, bannedCash: false };
