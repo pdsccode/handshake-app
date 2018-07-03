@@ -235,6 +235,7 @@ class DiscoverPage extends React.Component {
                 refreshPage={this.loadDiscoverList}
                 latitude={lat}
                 longitude={lng}
+                modalRef={this.modalRef}
               />
             </Col>
           );
