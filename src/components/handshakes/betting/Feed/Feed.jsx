@@ -22,7 +22,7 @@ import BettingShake from './Shake';
 import { showAlert } from '@/reducers/app/action';
 import {
   getMessageWithCode, isRightNetwork, getId,
-  getShakeOffchain, getBalance, getEstimateGas, isSameAddress, foundShakeList,
+  getShakeOffchain, getBalance, getEstimateGas, isSameAddress, foundShakeList, parseBigNumber,
 } from '@/components/handshakes/betting/utils.js';
 
 
@@ -186,7 +186,7 @@ class FeedBetting extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     // console.log('Feeding Next Props:', nextProps);
-    if(nextProps&& JSON.stringify(this.props)!==JSON.stringify(nextProps)){
+    if(nextProps&& JSON.stringify(nextProps)!==JSON.stringify(this.props)){
       this.handleStatus(nextProps);
     }
   }
@@ -234,9 +234,9 @@ class FeedBetting extends React.Component {
     const { side, odds, status } = itemInfo;
     const { event_name, event_predict } = this.extraData;
 
-    const styleEventName = {
-      background: this.randomItemInList(BACKGROUND_COLORS),
-    };
+    // const styleEventName = {
+    //   background: this.randomItemInList(BACKGROUND_COLORS),
+    // };
     const colorBySide = side === 1 ? `support` : 'oppose';
 
     let eventName = event_name || '';
@@ -317,13 +317,14 @@ class FeedBetting extends React.Component {
   }
   renderItemShake(item) {
     const {
-      amount, odds, side, remainingAmount,
+      amount = 0, odds = 0, side, remainingAmount,
     } = item;
     const remainingValue = remainingAmount || 0;
     const colorBySide = side === 1 ? `support` : 'oppose';
-    const amountMatch = amount;
-    const winMatch = amountMatch * odds;
-    const winValue = amount * odds;
+    const amountMatch = parseBigNumber(amount);
+    let oddsBN = parseBigNumber(odds);
+    const winMatch = amountMatch.times(oddsBN).toNumber()||0;
+    const winValue = amountMatch.times(oddsBN).toNumber()||0;;
     const displayWinMatch = Math.floor(winMatch * ROUND) / ROUND;
     const displayAmount = Math.floor(amount * ROUND) / ROUND;
     const displayMatchedAmount = Math.floor(amountMatch * ROUND) / ROUND;
@@ -336,10 +337,10 @@ class FeedBetting extends React.Component {
     const {itemInfo, amountMatch, winMatch } = this.state;
 
     const {
-      amount, odds, side, remainingAmount,
+      amount = 0, odds = 0, side, remainingAmount,
     } = itemInfo;
     const remainingValue = remainingAmount || 0;
-    const winValue = amount * odds;
+    const winValue = parseBigNumber(amount).times(parseBigNumber(odds)).toNumber()||0;
     const displayAmount = Math.floor(amount * ROUND) / ROUND;
     const displayMatchedAmount = Math.floor(amountMatch * ROUND) / ROUND;
     const displayRemaining = Math.floor(remainingValue * ROUND) / ROUND;
