@@ -109,23 +109,24 @@ class Component extends React.Component {
     this.mainColor = "#1F2B34";
   }
 
-  setAddressFromLatLng = (lat, lng) => {
+  setAddressFromLatLng = (lat, lng,addressDefault) => {
     this.setState({lat: lat, lng: lng});
     const { rfChange } = this.props;
-    axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&sensor=true`).then((response) => {
-      const address = response.data.results[0] && response.data.results[0].formatted_address;
-      rfChange(nameFormExchangeCreate, 'address', address);
-    });
+    if(addressDefault){
+      setTimeout(() => {
+        rfChange(nameFormExchangeCreate, 'address', addressDefault);
+      }, 0)
+    }else{
+      axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&sensor=true`).then((response) => {
+        const address = response.data.results[0] && response.data.results[0].formatted_address;
+        rfChange(nameFormExchangeCreate, 'address', address);
+      });
+    }
   }
 
   componentDidMount() {
     const { ipInfo, rfChange, authProfile, freeETH, freeStart } = this.props;
-    navigator.geolocation.getCurrentPosition((location) => {
-      const { coords: { latitude, longitude } } = location
-      this.setAddressFromLatLng(latitude, longitude) // better precision
-    }, () => {
-      this.setAddressFromLatLng(ipInfo?.latitude, ipInfo?.longitude) // fallback
-    });
+    this.setAddressFromLatLng(ipInfo?.latitude, ipInfo?.longitude,ipInfo?.addressDefault)
 
     // auto fill phone number from user profile
     let detectedCountryCode = '';
