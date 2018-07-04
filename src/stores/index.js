@@ -1,5 +1,5 @@
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
-import { routerReducer, routerMiddleware } from 'react-router-redux';
+import { connectRouter, routerMiddleware } from 'connected-react-router';
 import { firebaseReducer, reactReduxFirebase } from 'react-redux-firebase';
 import thunk from 'redux-thunk';
 import firebase from 'firebase/app';
@@ -16,11 +16,10 @@ import reducers from '@/reducers';
 
 firebase.initializeApp(process.env.firebase);
 
-const AppReducers = combineReducers({
+const rootReducer = combineReducers({
   app: appReducer,
   auth: authReducer,
   firebase: firebaseReducer,
-  router: routerReducer,
   ...reducers,
 });
 
@@ -29,6 +28,6 @@ const createStoreWithFirebase = compose(
   composeWithDevTools(applyMiddleware(routerMiddleware(history), thunk)),
 )(createStore);
 
-const store = createStoreWithFirebase(AppReducers);
+const store = createStoreWithFirebase(connectRouter(history)(rootReducer));
 
 export default store;
