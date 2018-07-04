@@ -36,7 +36,8 @@ class Handshake {
       freeBet: data.free_bet || 0,
       closingTime: data.closing_time,
       reportTime: data.reporting_time,
-      disputeTime: data.disputing_time
+      disputeTime: data.disputing_time,
+      fiatCurrency: data.fiat_currency,
     };
   }
 }
