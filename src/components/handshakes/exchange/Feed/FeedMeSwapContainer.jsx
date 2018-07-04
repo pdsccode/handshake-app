@@ -10,7 +10,7 @@ import {
   HANDSHAKE_EXCHANGE_STATUS_NAME,
   HANDSHAKE_USER
 } from "@/constants";
-import {MasterWallet} from "@/models/MasterWallet";
+import {MasterWallet} from '@/services/Wallets/MasterWallet';
 import {ExchangeHandshake} from "@/services/neuron";
 import {FormattedMessage} from "react-intl";
 import {connect} from "react-redux";
@@ -18,8 +18,8 @@ import PropTypes from "prop-types";
 import {hideLoading, showAlert, showLoading} from '@/reducers/app/action';
 import Button from '@/components/core/controls/Button/Button';
 import {responseExchangeDataChange} from "@/reducers/me/action";
-import {Ethereum} from '@/models/Ethereum.js';
-import {Bitcoin} from '@/models/Bitcoin';
+import {Ethereum} from '@/services/Wallets/Ethereum.js';
+import {Bitcoin} from '@/services/Wallets/Bitcoin';
 import {formatAmountCurrency, getHandshakeUserType, getOfferPrice} from "@/services/offer-util";
 import Offer from "@/models/Offer";
 import {acceptOffer, cancelOffer, closeOffer, completeShakedOffer,} from "@/reducers/exchange/action";

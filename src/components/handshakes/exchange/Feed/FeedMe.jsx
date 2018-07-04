@@ -50,7 +50,7 @@ import {
   withdrawShakedOffer,
 } from '@/reducers/exchange/action';
 import Offer from '@/models/Offer';
-import {MasterWallet} from '@/models/MasterWallet';
+import {MasterWallet} from '@/services/Wallets/MasterWallet';
 import {formatAmountCurrency, formatMoneyByLocale, getHandshakeUserType, getOfferPrice} from '@/services/offer-util';
 import {hideLoading, showAlert, showLoading} from '@/reducers/app/action';
 
@@ -58,8 +58,8 @@ import {ExchangeHandshake, ExchangeShopHandshake} from '@/services/neuron';
 import {feedBackgroundColors} from '@/components/handshakes/exchange/config';
 import {updateOfferStatus} from '@/reducers/discover/action';
 import {responseExchangeDataChange} from '@/reducers/me/action';
-import {Ethereum} from '@/models/Ethereum.js';
-import {Bitcoin} from '@/models/Bitcoin';
+import {Ethereum} from '@/services/Wallets/Ethereum.js';
+import {Bitcoin} from '@/services/Wallets/Bitcoin';
 import {getLocalizedDistance} from '@/services/util';
 
 import {getErrorMessageFromCode} from '../utils';
