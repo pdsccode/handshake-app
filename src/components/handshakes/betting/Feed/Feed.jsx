@@ -309,7 +309,7 @@ class FeedBetting extends React.Component {
         <div>
           {/* <div className="description">On odds</div> */}
           {/* <div className={`value ${colorBySide}`}> {Math.floor(odds*ROUND_ODD)/ROUND_ODD}</div> */}
-          {<div className="value">{matchedAmount} ETH</div>}
+          {<div className="value">{matchedAmount}/{amount} ETH</div>}
 
         </div>
         <div>
