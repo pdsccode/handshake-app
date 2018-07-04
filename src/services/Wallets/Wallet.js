@@ -38,8 +38,8 @@ export class Wallet {
   getShortBalance() {
     return Number((parseFloat(this.balance)).toFixed(8));
   }
-  getBackgroundImg(){
-    return StringHelper.format("{0}-{1}{2}.svg", this.className.toLowerCase(), this.getNetworkName().toLowerCase(), this.isReward ? "-reward" : '' );
+  getBackgroundImg() {
+    return StringHelper.format('{0}-{1}{2}.svg', this.className.toLowerCase(), this.getNetworkName().toLowerCase(), this.isReward ? '-reward' : '');
   }
 
 }
