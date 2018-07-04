@@ -47,25 +47,6 @@ class Admin extends React.Component {
       activeMatchData: matches[0],
       selectedMatch: matches[0].name,
     });
-    if (matches.length > 0) {
-      const final = [];
-      matches.map((item) => {
-        if (item.outcomes && item.outcomes.length > 0) {
-          item.outcomes.map((outcomeItem) => {
-            const obj = {
-              outcome_id: outcomeItem.id,
-              side: 0,
-            };
-            final.push(obj);
-            return obj;
-          });
-        }
-        return final;
-      });
-      this.setState({
-        final,
-      });
-    }
   }
 
   fetchMatches() {
@@ -95,10 +76,20 @@ class Admin extends React.Component {
       }
     });
     if (updatedMatch[0].outcomes && updatedMatch[0].outcomes.length > 0) {
+      const final = [];
+      updatedMatch[0].outcomes.map((item) => {
+        const obj = {
+          outcome_id: item.id,
+          side: 0,
+        };
+        final.push(obj);
+        return final;
+      });
       this.setState({
         outcomes: updatedMatch[0].outcomes,
         activeMatchData: updatedMatch[0],
         selectedOutcome: updatedMatch[0].outcomes[0].id,
+        final,
       });
     } else {
       this.setState({
@@ -305,7 +296,7 @@ class Admin extends React.Component {
               Against
               </Label>
             </FormGroup><br /><br />
-          </Label>))}
+                                                                                                     </Label>))}
           <br /> <br />
           {/* <FormGroup>
             <Label for="homescore">Home Score</Label>

@@ -1853,11 +1853,15 @@ class FeedMe extends React.PureComponent {
       case EXCHANGE_FEED_TYPE.OFFER_STORE_SHAKE: {
         switch (status) {
           case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.CANCELLING: {
-            idMessage = 'ex.exchange.explanation.cancelling';
+            if (this.userType === HANDSHAKE_USER.OWNER) {
+              idMessage = 'ex.exchange.explanation.cancelling';
+            }
             break;
           }
           case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.REJECTING: {
-            idMessage = 'ex.exchange.explanation.rejecting';
+            if (this.userType === HANDSHAKE_USER.OWNER) {
+              idMessage = 'ex.exchange.explanation.rejecting';
+            }
             break;
           }
           case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.PRE_SHAKING: {
@@ -1872,12 +1876,12 @@ class FeedMe extends React.PureComponent {
             }
             break;
           }
-          case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.SHAKING: {
-            if (this.userType === HANDSHAKE_USER.SHAKED) {
-              idMessage = 'ex.exchange.explanation.shaking';
-            }
-            break;
-          }
+          // case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.SHAKING: {
+          //   if (this.userType === HANDSHAKE_USER.SHAKED) {
+          //     idMessage = 'ex.exchange.explanation.shaking';
+          //   }
+          //   break;
+          // }
           case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.SHAKE: {
             switch (this.userType) {
               case HANDSHAKE_USER.NORMAL: {
@@ -1901,36 +1905,36 @@ class FeedMe extends React.PureComponent {
               }
             }
           }
-          case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.COMPLETING: {
-            switch (this.userType) {
-              case HANDSHAKE_USER.NORMAL: {
-                break;
-              }
-              case HANDSHAKE_USER.SHAKED: { // user shake
-                if (offer.type === EXCHANGE_ACTION.SELL) { // shop sell
-                  idMessage = 'ex.exchange.explanation.completing';
-                }
-                break;
-              }
-              case HANDSHAKE_USER.OWNER: { // shop
-                if (offer.type === EXCHANGE_ACTION.BUY) { // shop buy
-                  idMessage = 'ex.exchange.explanation.completing';
-                }
-                break;
-              }
-              default: {
-                // code
-                break;
-              }
-            }
-
-            break;
-          }
-          case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.REJECTED:
-          case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.CANCELLED:
-          case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.COMPLETED: {
-            break;
-          }
+          // case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.COMPLETING: {
+          //   switch (this.userType) {
+          //     case HANDSHAKE_USER.NORMAL: {
+          //       break;
+          //     }
+          //     case HANDSHAKE_USER.SHAKED: { // user shake
+          //       if (offer.type === EXCHANGE_ACTION.SELL) { // shop sell
+          //         idMessage = 'ex.exchange.explanation.completing';
+          //       }
+          //       break;
+          //     }
+          //     case HANDSHAKE_USER.OWNER: { // shop
+          //       if (offer.type === EXCHANGE_ACTION.BUY) { // shop buy
+          //         idMessage = 'ex.exchange.explanation.completing';
+          //       }
+          //       break;
+          //     }
+          //     default: {
+          //       // code
+          //       break;
+          //     }
+          //   }
+          //
+          //   break;
+          // }
+          // case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.REJECTED:
+          // case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.CANCELLED:
+          // case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.COMPLETED: {
+          //   break;
+          // }
           default: {
             // code
             break;
