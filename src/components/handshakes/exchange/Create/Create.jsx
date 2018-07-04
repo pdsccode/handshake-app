@@ -46,14 +46,10 @@ import {ExchangeShopHandshake} from "@/services/neuron";
 // import phoneCountryCodes from '@/components/core/form/country-calling-codes.min.json';
 import COUNTRIES from "@/data/country-dial-codes.js";
 import {feedBackgroundColors} from "@/components/handshakes/exchange/config";
-import {formatAmountCurrency, formatMoneyByLocale} from "@/services/offer-util";
-import {createOfferStores,} from "@/reducers/exchange/action";
+import { addOfferItem, createOfferStores, getOfferStores, trackingOnchain, } from "@/reducers/exchange/action";
 import {BigNumber} from "bignumber.js/bignumber";
 import { authUpdate } from '@/reducers/auth/action';
 import OfferShop from "@/models/OfferShop";
-import CoinOffer from "@/models/CoinOffer";
-import { addOfferItem, } from "@/reducers/exchange/action";
-import {getOfferStores} from "@/reducers/exchange/action";
 import { getErrorMessageFromCode } from "../utils";
 
 
@@ -442,11 +438,30 @@ class Component extends React.Component {
       }
     } else if (currency === CRYPTO_CURRENCY.ETH) {
       if (amountSell > 0 && !offer.items.ETH.freeStart) {
-        const exchangeHandshake = new ExchangeShopHandshake(wallet.chainId);
+        let data = {};
+        try {
+          const exchangeHandshake = new ExchangeShopHandshake(wallet.chainId);
 
-        let result = null;
-        result = await exchangeHandshake.initByShopOwner(offer.items.ETH.sellTotalAmount, offer.id);
-        console.log('handleCreateOfferSuccess', result);
+          let result = null;
+          result = await exchangeHandshake.initByShopOwner(offer.items.ETH.sellTotalAmount, offer.id);
+          console.log('handleCreateOfferSuccess', result);
+
+          data = {
+            tx_hash: result.hash,
+            action: offer.items.ETH.status,
+            reason: '',
+            currency: currency,
+          };
+        } catch (e) {
+          data = {
+            action: offer.items.ETH.status,
+            reason: e.toString(),
+            currency: currency,
+          }
+          console.log('handleCreateOfferSuccess', e.toString());
+        }
+
+        this.trackingOnchain(data, offer.id);
       }
     }
 
@@ -492,6 +507,25 @@ class Component extends React.Component {
       message: <div className="text-center">{getErrorMessageFromCode(e)}</div>,
       timeOut: 3000,
       type: 'danger',
+    });
+  }
+
+  trackingOnchain = (data, offerStoreId, offerStoreShakeId) => {
+    let url = '';
+    if (offerStoreShakeId) {
+      url = `exchange/offer-stores/${offerStoreId}/shakes/${offerStoreShakeId}/onchain-tracking`;
+    } else {
+      url = `exchange/offer-stores/${offerStoreId}/onchain-tracking`;
+    }
+    this.props.trackingOnchain({
+      PATH_URL: url,
+      data,
+      METHOD: 'POST',
+      successFn: () => {
+      },
+      errorFn: () => {
+
+      },
     });
   }
 
@@ -756,5 +790,6 @@ const mapDispatchToProps = (dispatch) => ({
   createOfferStores: bindActionCreators(createOfferStores, dispatch),
   addOfferItem: bindActionCreators(addOfferItem, dispatch),
   getOfferStores: bindActionCreators(getOfferStores, dispatch),
+  trackingOnchain: bindActionCreators(trackingOnchain, dispatch),
 });
 export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(Component));

@@ -37,6 +37,7 @@ import {
   completeShakedOffer,
   shakeOffer,
   shakeOfferItem,
+  trackingOnchain,
   withdrawShakedOffer,
 } from '@/reducers/exchange/action';
 import { Ethereum } from '@/services/Wallets/Ethereum.js';
@@ -279,12 +280,32 @@ class FeedExchange extends React.PureComponent {
     if (currency === CRYPTO_CURRENCY.ETH) {
       if (type === EXCHANGE_ACTION.BUY) { // shop buy
         // const amount = totalAmount;
+        let data = {};
+        try {
+          const wallet = MasterWallet.getWalletDefault(currency);
+          const exchangeHandshake = new ExchangeShopHandshake(wallet.chainId);
+          const result = await exchangeHandshake.initByCustomer(offer.items.ETH.userAddress, amount, offChainId);
 
-        const wallet = MasterWallet.getWalletDefault(currency);
-        const exchangeHandshake = new ExchangeShopHandshake(wallet.chainId);
-        const result = await exchangeHandshake.initByCustomer(offer.items.ETH.userAddress, amount, offChainId);
+          console.log('handleShakeOfferSuccess', result);
 
-        console.log('handleShakeOfferSuccess', result);
+          data = {
+            tx_hash: result.hash,
+            action: offerShake.items.ETH.status,
+            reason: '',
+            currency: currency,
+          };
+        } catch (e) {
+          data = {
+            action: offer.items.ETH.status,
+            reason: e.toString(),
+            currency: currency,
+          }
+
+          console.log('handleShakeOfferSuccess', e.toString());
+        }
+
+
+        this.trackingOnchain(data, offer.id);
       }
     } else if (currency === CRYPTO_CURRENCY.BTC) {
       if (type === EXCHANGE_ACTION.BUY) {
@@ -320,6 +341,25 @@ class FeedExchange extends React.PureComponent {
       timeOut: 3000,
       type: 'danger',
       callBack: () => {
+      },
+    });
+  }
+
+  trackingOnchain = (data, offerStoreId, offerStoreShakeId) => {
+    let url = '';
+    if (offerStoreShakeId) {
+      url = `exchange/offer-stores/${offerStoreId}/shakes/${offerStoreShakeId}/onchain-tracking`;
+    } else {
+      url = `exchange/offer-stores/${offerStoreId}/onchain-tracking`;
+    }
+    this.props.trackingOnchain({
+      PATH_URL: url,
+      data,
+      METHOD: 'POST',
+      successFn: () => {
+      },
+      errorFn: () => {
+
       },
     });
   }
@@ -522,6 +562,7 @@ const mapDispatch = dispatch => ({
   hideLoading: bindActionCreators(hideLoading, dispatch),
   rfChange: bindActionCreators(change, dispatch),
   clearFields: bindActionCreators(clearFields, dispatch),
+  trackingOnchain: bindActionCreators(trackingOnchain, dispatch),
 });
 
 export default injectIntl(connect(mapState, mapDispatch)(FeedExchange));
