@@ -156,7 +156,7 @@ class Neuron {
         // nonce: web3.utils.toHex(nonce),
         nonce: `0x${nonce}`,
         gasPrice: web3.utils.toHex(gasPrice),
-        gasLimit: estimatedGas,
+        gasLimit: estimatedGas.toNumber(),
         data: payloadData,
         from: address,
         chainId,
