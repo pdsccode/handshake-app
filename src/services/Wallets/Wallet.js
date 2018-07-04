@@ -1,7 +1,8 @@
 import { StringHelper } from '@/utils/helper';
 
-eximport { findKey } from '@firebase/util';
-port class Wallet {
+import { findKey } from '@firebase/util';
+
+export class Wallet {
   constructor() {
     this.mnemonic = '';
     this.address = '';

@@ -1,5 +1,5 @@
 import { APP_ACTION } from '@/reducers/app/action';
-// import { uuid } from '@/services/app';
+// import { uuid } from '@/components';
 import $http from '@/services/api';
 import { BASE_API } from '@/constants';
 

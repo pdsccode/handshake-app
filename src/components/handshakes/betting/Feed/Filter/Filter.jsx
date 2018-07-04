@@ -24,9 +24,6 @@ import BettingShakeFree from './../ShakeFree';
 // style
 import './Filter.scss';
 
-////
-
-
 const CRYPTOSIGN_MINIMUM_MONEY = 0.00002;
 const freeAmount = 0.001;
 const ROUND_ODD = 10;
@@ -126,7 +123,7 @@ class BettingFilter extends React.Component {
     const { against } = this.state;
     if (against && against.length > 0) {
       const element = against[against.length - 1];
-      // const guessAmout = element.amount * (element.odds - 1); 
+      // const guessAmout = element.amount * (element.odds - 1);
       const guessAmout = parseBigNumber(element.amount).times(parseBigNumber(element.odds).minus(1));
       console.log(TAG," defaultSupportAmount = ",guessAmout.toNumber());
       return guessAmout.toNumber()||0;
@@ -139,7 +136,7 @@ class BettingFilter extends React.Component {
     if (support && support.length > 0) {
       console.log('Sorted Support:', support);
       const element = support[support.length - 1];
-      // const guessAmout = element.amount * (element.odds - 1); 
+      // const guessAmout = element.amount * (element.odds - 1);
       const guessAmout = parseBigNumber(element.amount).times(parseBigNumber(element.odds).minus(1));
       console.log(TAG," defaultAgainstAmount = ",guessAmout.toNumber());
       return guessAmout.toNumber()||0;
@@ -152,7 +149,7 @@ class BettingFilter extends React.Component {
     if (against && against.length > 0) {
       console.log('Sorted Against:', against);
       const element = against[against.length - 1];
-      // const againstOdds = element.odds / (element.odds - 1); 
+      // const againstOdds = element.odds / (element.odds - 1);
       const odds = parseBigNumber(element.odds);
       const againstOdds = odds.div(odds.minus(1));
       console.log(TAG," defaultSupportOdds = ",againstOdds.toNumber());

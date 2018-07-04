@@ -15,7 +15,6 @@ import appReducer from '@/reducers/app';
 import authReducer from '@/reducers/auth';
 import reducers from '@/reducers';
 
-console.log('start');
 firebase.initializeApp(process.env.firebase);
 
 const history = createHistory();
@@ -33,8 +32,6 @@ const createStoreWithFirebase = compose(
 )(createStore);
 
 const store = createStoreWithFirebase(connectRouter(history)(rootReducer));
-
-console.log('abc', store, history);
 
 export { history };
 export default store;

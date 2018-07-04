@@ -1,9 +1,9 @@
 import { unionBy } from 'lodash';
 import Blockchain from '@/services/blockchain';
 import Wallet from '@/services/wallet';
-import local from '@/services/localStore';
+import local from '@/services/local-store';
 import { APP } from '@/constants';
-import { uuid } from '@/services/app';
+import { uuid } from '@/components';
 
 const ethBlockchain = new Blockchain('ETH');
 const btcBlockchain = new Blockchain('BTC');

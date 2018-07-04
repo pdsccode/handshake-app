@@ -133,7 +133,7 @@ class FeedBetting extends React.Component {
     if (isMakerShakerSameUser) {
       // Is Maker win ?
       if ((isMatch && result === BETTING_STATUS.SUPPORT_WIN && side === SIDE.SUPPORT)
-          || (isMatch && result === BETTING_STATUS.AGAINST_WIN && side === SIDE.AGAINST)) {
+        || (isMatch && result === BETTING_STATUS.AGAINST_WIN && side === SIDE.AGAINST)) {
         isUserShake = false;
       }
     }
@@ -158,7 +158,7 @@ class FeedBetting extends React.Component {
     // const hardCodeResult = 2;
 
     let isLoading = false;
-    const isLoadingObj = betHandshakeHandler?.getLoadingOnChain(idCryptosign);
+    const isLoadingObj = betHandshakeHandler ?.getLoadingOnChain(idCryptosign);
     console.log('handleStatus idCryptosign:', idCryptosign, ' status = ', status);
     if (isLoadingObj) {
       console.log('handleStatus  isLoadingObj:', isLoadingObj);
@@ -535,7 +535,7 @@ class FeedBetting extends React.Component {
       errorFn: this.uninitHandshakeFreeFailed,
     });
   }
-  uninitHandshakeFreeSuccess= async (successData) => {
+  uninitHandshakeFreeSuccess = async (successData) => {
     console.log('uninitHandshakeFreeSuccess', successData);
     const { status } = successData;
     if (status) {
