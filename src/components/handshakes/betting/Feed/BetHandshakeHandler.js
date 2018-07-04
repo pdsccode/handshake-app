@@ -199,8 +199,7 @@ export class BetHandshakeHandler {
     if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_INIT_FAILED) {
       strStatus = BETTING_STATUS_LABEL.INIT_FAILED;
       isAction = false;
-    }
-    else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_FAILED) {
+    } else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_FAILED) {
       label = BETTING_STATUS_LABEL.CANCEL;
       strStatus = BETTING_STATUS_LABEL.COLLECT_FAILED;
       isAction = true;
@@ -454,15 +453,12 @@ export class BetHandshakeHandler {
 
     return result;
   }
-  getLoadingOnChain = (offchain) => {
-
-    return this.listOnChainLoading[offchain];
-  }
+  getLoadingOnChain = offchain => this.listOnChainLoading[offchain]
   setItemOnChain = (offchain, itemOnChain) => {
     if (this.listOnChainLoading) {
       this.listOnChainLoading[offchain] = {
-        itemOnChain: itemOnChain
-      }
+        itemOnChain,
+      };
     }
   }
   async withdraw(hid, offchain) {

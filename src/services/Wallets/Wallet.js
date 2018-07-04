@@ -1,6 +1,7 @@
 import { StringHelper } from '@/utils/helper';
 
-export class Wallet {
+eximport { findKey } from '@firebase/util';
+port class Wallet {
   constructor() {
     this.mnemonic = '';
     this.address = '';
@@ -28,12 +29,13 @@ export class Wallet {
     return this.network;
   }
   getNetworkName() {
-    for (const k in this.constructor.Network) {
-      if (this.constructor.Network[k] == this.network) {
-        return k;
+    const networkName = this.constructor.Network.find((network) => {
+      if (network === this.network) {
+        return true;
       }
-    }
-    return this.title;
+      return false;
+    });
+    return networkName ? networkName : this.title;
   }
   getShortBalance() {
     return Number((parseFloat(this.balance)).toFixed(8));
@@ -41,7 +43,6 @@ export class Wallet {
   getBackgroundImg() {
     return StringHelper.format('{0}-{1}{2}.svg', this.className.toLowerCase(), this.getNetworkName().toLowerCase(), this.isReward ? '-reward' : '');
   }
-
 }
 
 export default { Wallet };

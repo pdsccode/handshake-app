@@ -4,18 +4,17 @@ import local from '@/services/local-store';
 import moment from 'moment';
 import { APP } from '@/constants';
 import { BET_TYPE, MESSAGE_SERVER } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
-import {BigNumber} from 'bignumber.js';
+import { BigNumber } from 'bignumber.js';
 import _ from 'lodash';
-export const parseBigNumber = (value)=>{
-  return new BigNumber(value);
-}
-export const getMessageWithCode= (code)=> {
-    const keys = Object.keys(MESSAGE_SERVER).filter(k => k == code); // ["A", "B"]
-    console.log('Keys:', keys);
-    const value = keys.map(k => MESSAGE_SERVER[k]); // [0, 1]
-    console.log('Message:', value);
-    return value;
-  }
+
+export const parseBigNumber = value => new BigNumber(value);
+export const getMessageWithCode = (code) => {
+  const keys = Object.keys(MESSAGE_SERVER).filter(k => k == code); // ["A", "B"]
+  console.log('Keys:', keys);
+  const value = keys.map(k => MESSAGE_SERVER[k]); // [0, 1]
+  console.log('Message:', value);
+  return value;
+};
 export const getChainIdDefaultWallet = () => {
   const wallet = MasterWallet.getWalletDefault('ETH');
   const { chainId } = wallet;

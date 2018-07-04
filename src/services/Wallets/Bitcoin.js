@@ -215,69 +215,71 @@ export class Bitcoin extends Wallet {
     return result;
   }
 
-  cook(data){
-    let vin = {}, vout = {}, coin_name = "BTC",
-        is_sent = false, value = 0,
-        addresses = [], confirmations = 0, transaction_no = "",
-        transaction_date = new Date();
+  cook(data) {
+    let vin = {},
+      vout = {},
+      coin_name = 'BTC',
+      is_sent = false,
+      value = 0,
+      addresses = [],
+      confirmations = 0,
+      transaction_no = '',
+      transaction_date = new Date();
 
-    if(data){
+    if (data) {
       transaction_no = data.txid;
       vin = data.vin;
       vout = data.vout;
       confirmations = data.confirmations,
-      transaction_date = data.time ? new Date(data.time*1000) : "";
+      transaction_date = data.time ? new Date(data.time * 1000) : '';
 
-      try{
-        //check transactions are send
-        for(let tin of vin){
-          if(tin.addr.toLowerCase() == this.address.toLowerCase()){
+      try {
+        // check transactions are send
+        for (const tin of vin) {
+          if (tin.addr.toLowerCase() == this.address.toLowerCase()) {
             is_sent = true;
 
-            for(let tout of vout){
-              if(tout.scriptPubKey.addresses){
-                let tout_addresses = tout.scriptPubKey.addresses.join(" ").toLowerCase();
-                if(tout_addresses.indexOf(this.address.toLowerCase()) < 0){
+            for (const tout of vout) {
+              if (tout.scriptPubKey.addresses) {
+                const tout_addresses = tout.scriptPubKey.addresses.join(' ').toLowerCase();
+                if (tout_addresses.indexOf(this.address.toLowerCase()) < 0) {
                   value += Number(tout.value);
                   addresses.push(tout_addresses.replace(tout_addresses.substr(4, 26), '...'));
                 }
               }
-
             }
 
             break;
           }
         }
 
-        //check transactions are receive
-        if(!is_sent && vout){
-          for(let tout of vout){
-            if(tout.scriptPubKey.addresses){
-              let tout_addresses = tout.scriptPubKey.addresses.join(" ").toLowerCase();
-              if(tout_addresses.indexOf(this.address.toLowerCase()) >= 0){
+        // check transactions are receive
+        if (!is_sent && vout) {
+          for (const tout of vout) {
+            if (tout.scriptPubKey.addresses) {
+              const tout_addresses = tout.scriptPubKey.addresses.join(' ').toLowerCase();
+              if (tout_addresses.indexOf(this.address.toLowerCase()) >= 0) {
                 value += tout.value;
-              }
-              else{
+              } else {
                 addresses.push(tout_addresses.replace(tout_addresses.substr(4, 26), '...'));
               }
             }
           }
         }
-      }
-      catch(e){
+      } catch (e) {
         console.error(e);
       }
     }
 
     return {
-      coin_name: coin_name,
-      value: value,
-      transaction_no: transaction_no,
-      transaction_date: transaction_date,
-      addresses: addresses,
-      transaction_relative_time:  transaction_date ? moment(transaction_date).fromNow() : "",
-      confirmations: confirmations,
-      is_sent: is_sent
+      coin_name,
+      value,
+      transaction_no,
+      transaction_date,
+      addresses,
+      transaction_relative_time: transaction_date ? moment(transaction_date).fromNow() : '',
+      confirmations,
+      is_sent,
     };
   }
 }

@@ -46,12 +46,37 @@ export class MasterWallet {
     };
 
     static ListCoin = {
-      Ethereum, Bitcoin, BitcoinTestnet, Shuriken, TokenERC20, TokenERC721,
-      CryptoStrikers, CryptoPunks, CryptoKitties, Axie, BlockchainCuties,
-      ChibiFighters, CryptoClown, CryptoCrystal, Cryptogs, CryptoHorse,
-      CryptoSoccr, CryptoZodiacs, CSCPreSaleFactory, DopeRaider, Etherbots,
-      EtheremonAsset, EtherLambos, ExoPlanets,
-      Giftomon, HelloDog, OxcertKYC, PandaEarth, PirateKittyToken, UnicornGO, WarToken
+      Ethereum,
+      Bitcoin,
+      BitcoinTestnet,
+      Shuriken,
+      TokenERC20,
+      TokenERC721,
+      CryptoStrikers,
+      CryptoPunks,
+      CryptoKitties,
+      Axie,
+      BlockchainCuties,
+      ChibiFighters,
+      CryptoClown,
+      CryptoCrystal,
+      Cryptogs,
+      CryptoHorse,
+      CryptoSoccr,
+      CryptoZodiacs,
+      CSCPreSaleFactory,
+      DopeRaider,
+      Etherbots,
+      EtheremonAsset,
+      EtherLambos,
+      ExoPlanets,
+      Giftomon,
+      HelloDog,
+      OxcertKYC,
+      PandaEarth,
+      PirateKittyToken,
+      UnicornGO,
+      WarToken,
     };
 
     static ListCoinReward = { Ethereum, Bitcoin };
@@ -460,17 +485,16 @@ export class MasterWallet {
       return false;
     }
 
-    static getShuriWallet(){
-      let wallets = MasterWallet.getMasterWallet();
-      if (wallets !== false){
-        let shuries = wallets.filter(wallet => wallet.name === 'SHURI' && !wallet.customToken);
-        if (shuries.length > 0)
-            return shuries[0]
+    static getShuriWallet() {
+      const wallets = MasterWallet.getMasterWallet();
+      if (wallets !== false) {
+        const shuries = wallets.filter(wallet => wallet.name === 'SHURI' && !wallet.customToken);
+        if (shuries.length > 0) { return shuries[0]; }
       }
       return false;
     }
 
-    static convertToJsonETH(wallet){
+    static convertToJsonETH(wallet) {
       if (wallet !== false) {
         const {
           address, name, network, chainId,
@@ -485,7 +509,7 @@ export class MasterWallet {
     }
 
     static getShurikenWalletJson() {
-      let shuries = MasterWallet.getShuriWallet();
+      const shuries = MasterWallet.getShuriWallet();
       if (shuries !== false) {
         const {
           address, name, network, chainId,

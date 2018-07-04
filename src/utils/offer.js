@@ -3,14 +3,12 @@ import { AMOUNT_DECIMAL, APP, HANDSHAKE_USER, PRICE_DECIMAL } from '@/constants'
 import { BigNumber } from 'bignumber.js';
 
 export function getOfferPrice(listOfferPrice = [], type = '', currency = '') {
-  let result = {};
-
-  for (const offerPrice of listOfferPrice) {
+  const result = listOfferPrice.find((offerPrice) => {
     if (offerPrice.type === type && offerPrice.currency === currency) {
-      result = offerPrice;
-      break;
+      return true;
     }
-  }
+    return false;
+  });
 
   return result;
 }
