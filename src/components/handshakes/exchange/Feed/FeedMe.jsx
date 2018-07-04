@@ -240,6 +240,18 @@ class FeedMe extends React.PureComponent {
     this.props.responseExchangeDataChange(data);
   }
 
+  getNameShopDisplayed = () => {
+    const { offer } = this;
+    const wallet = new Ethereum();
+
+    if (wallet.checkAddressValid(offer.username)) {
+      wallet.address = offer.username;
+      return wallet.getShortAddress();
+    }
+
+    return offer.username;
+  }
+
   // /Exchange
   // //////////////////////
 
@@ -2055,7 +2067,7 @@ class FeedMe extends React.PureComponent {
     let showChat = false;
     let chatUsername = '';
     // let buyerSeller = this.getBuyerSeller();
-    let nameShop = offer.username;
+    let nameShop = this.getNameShopDisplayed();
 
     switch (offer.feedType) {
       case EXCHANGE_FEED_TYPE.INSTANT: {
