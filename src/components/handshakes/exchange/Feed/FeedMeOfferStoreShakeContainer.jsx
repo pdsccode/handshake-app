@@ -52,9 +52,11 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
     };
   }
 
-  calculateFiatAmount = (offer) => {
+  calculateFiatAmount = () => {
+    const { offer } = this;
     const { listOfferPrice } = this.props;
     let fiatAmount = 0;
+    const { currency, fiatCurrency, } = offer;
 
     if (offer.fiatAmount) {
       fiatAmount = offer.fiatAmount;
@@ -64,7 +66,7 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
         checkType = offer.type === EXCHANGE_ACTION.BUY ? EXCHANGE_ACTION.SELL : EXCHANGE_ACTION.BUY;
       }
 
-      const offerPrice = getOfferPrice(listOfferPrice, checkType, offer.currency);
+      const offerPrice = getOfferPrice(listOfferPrice, checkType, currency, fiatCurrency);
       if (offerPrice) {
         fiatAmount = offer.amount * offerPrice.price || 0;
         fiatAmount += fiatAmount * offer.percentage / 100;
@@ -814,7 +816,7 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
     }
 
     const nameShop = offer.username;
-    const fiatAmount = this.calculateFiatAmount(offer);
+    const fiatAmount = this.calculateFiatAmount();
     const message = this.getMessageContent(fiatAmount);
     const actionButtons = this.getActionButtons();
     const messageMovingCoin = this.getMessageMovingCoin();

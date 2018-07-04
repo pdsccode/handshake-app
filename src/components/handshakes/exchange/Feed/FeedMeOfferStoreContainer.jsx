@@ -34,12 +34,14 @@ class FeedMeOfferStoreContainer extends React.PureComponent {
     this.offer = offer;
   }
 
-  calculateFiatAmount = (amount, type, currency, percentage) => {
+  calculateFiatAmount = (amount, type, percentage) => {
+    const { offer } = this;
     const { listOfferPrice } = this.props;
+    const { currency, fiatCurrency, } = offer;
     let fiatAmount = 0;
 
     if (listOfferPrice) {
-      const offerPrice = getOfferPrice(listOfferPrice, type, currency);
+      const offerPrice = getOfferPrice(listOfferPrice, type, currency, fiatCurrency);
       if (offerPrice) {
         fiatAmount = amount * offerPrice.price || 0;
         fiatAmount += fiatAmount * percentage / 100;
@@ -78,8 +80,8 @@ class FeedMeOfferStoreContainer extends React.PureComponent {
       buyAmount, sellAmount, currency, buyPercentage, sellPercentage,
     } = offer;
     let message = '';
-    const fiatAmountBuy = this.calculateFiatAmount(buyAmount, EXCHANGE_ACTION.BUY, currency, buyPercentage);
-    const fiatAmountSell = this.calculateFiatAmount(sellAmount, EXCHANGE_ACTION.SELL, currency, sellPercentage);
+    const fiatAmountBuy = this.calculateFiatAmount(buyAmount, EXCHANGE_ACTION.BUY, buyPercentage);
+    const fiatAmountSell = this.calculateFiatAmount(sellAmount, EXCHANGE_ACTION.SELL, sellPercentage);
     switch (status) {
       case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CREATED:
       case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.ACTIVE:

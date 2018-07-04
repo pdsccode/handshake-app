@@ -20,7 +20,7 @@ import Button from '@/components/core/controls/Button/Button';
 import {responseExchangeDataChange} from "@/reducers/me/action";
 import {Ethereum} from '@/services/Wallets/Ethereum.js';
 import {Bitcoin} from '@/services/Wallets/Bitcoin';
-import {formatAmountCurrency, getHandshakeUserType, getOfferPrice} from "@/services/offer-util";
+import {formatAmountCurrency, getHandshakeUserType, } from "@/services/offer-util";
 import Offer from "@/models/Offer";
 import {acceptOffer, cancelOffer, closeOffer, completeShakedOffer,} from "@/reducers/exchange/action";
 
