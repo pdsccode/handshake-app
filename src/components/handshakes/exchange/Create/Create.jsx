@@ -4,7 +4,7 @@ import Feed from "@/components/core/presentation/Feed";
 import Button from "@/components/core/controls/Button";
 import './styles.scss'
 import createForm from "@/components/core/form/createForm";
-import {getOfferPrice} from "@/services/offer-util";
+import {formatMoneyByLocale, getOfferPrice} from "@/services/offer-util";
 import axios from 'axios';
 import {FormattedMessage} from 'react-intl';
 import {
