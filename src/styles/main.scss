@@ -24,6 +24,11 @@ button {
   overflow: hidden;
 }
 
-@import "app/splash";
 @import "app";
+@import "app/splash";
+@import "app/header";
+@import "components/horizontal-list";
+@import "pages/discover";
+@import "pages/discover-tab-prediction";
+
 @import "forms/dropdown-input";

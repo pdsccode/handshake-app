@@ -43,9 +43,18 @@ const LANGUAGES = [
 ];
 
 class MultiLanguage extends React.PureComponent {
+  static propTypes = {
+    className: PropTypes.string,
+    app: PropTypes.object.isRequired,
+    setLanguage: PropTypes.func.isRequired,
+  }
+
+  static defaultProps = {
+    className: '',
+  }
+
   constructor(props) {
     super(props);
-    // bind
     this.changeCountry = ::this.changeCountry;
   }
 
@@ -109,22 +118,4 @@ class MultiLanguage extends React.PureComponent {
   }
 }
 
-MultiLanguage.propTypes = {
-  className: PropTypes.string,
-  app: PropTypes.object.isRequired,
-  setLanguage: PropTypes.func.isRequired,
-};
-
-MultiLanguage.defaultProps = {
-  className: '',
-};
-
-const mapState = state => ({
-  app: state.app,
-});
-
-const mapDispatch = ({
-  setLanguage,
-});
-
-export default connect(mapState, mapDispatch)(MultiLanguage);
+export default connect(state => ({ app: state.app }), ({ setLanguage }))(MultiLanguage);

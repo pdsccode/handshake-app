@@ -1,13 +1,13 @@
 import chipSVG from '@/assets/images/categories/chip.svg';
 import exchangeSVG from '@/assets/images/categories/exchange.svg';
-import exchangeLocalSVG from '@/assets/images/categories/exchange-local.svg';
+// import exchangeLocalSVG from '@/assets/images/categories/exchange-local.svg';
 // import handPlantingSVG from '@/assets/images/categories/hand-planting.svg';
 // import shoppingCartSVG from '@/assets/images/categories/shopping-cart.svg';
 
-import { HANDSHAKE_ID } from '@/constants';
+import { DISCOVER } from '@/constants';
 
-const CATEGORIES = [{
-  id: HANDSHAKE_ID.BETTING,
+const TABS = [{
+  id: DISCOVER.TABS.PREDICTION.ID,
   name: 'Prediction',
   image: chipSVG,
   priority: 0,
@@ -19,7 +19,7 @@ const CATEGORIES = [{
 //   priority: 1,
 // },
 {
-  id: HANDSHAKE_ID.EXCHANGE,
+  id: DISCOVER.TABS.EXCHANGE.ID,
   name: 'Cash',
   image: exchangeSVG,
   priority: 2,
@@ -38,4 +38,4 @@ const CATEGORIES = [{
 // },
 ];
 
-export default CATEGORIES;
+export default TABS;

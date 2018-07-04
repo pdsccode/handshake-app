@@ -1,14 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Col, Row } from 'react-bootstrap';
 
 import BlockCountry from '@/components/core/presentation/BlockCountry';
 import Maintain from '@/components/core/presentation/Maintain';
-import BettingFilter from '@/components/handshakes/betting/Feed/Filter';
-import FAQBetting from '@/components/core/presentation/FAQBetting';
+import Prediction from '@/components/handshakes/betting/Discover/Prediction';
+import FAQ from '@/components/handshakes/betting/Discover/FAQ';
+import Share from '@/components/handshakes/betting/Discover/Share';
 
-class DiscoverBetting extends React.Component {
+class DiscoverPrediction extends React.Component {
   static propTypes = {
     app: PropTypes.object.isRequired,
     firebaseApp: PropTypes.object.isRequired,
@@ -27,14 +27,11 @@ class DiscoverBetting extends React.Component {
     if (this.state.app.isBannedPrediction) return <BlockCountry />;
     if (this.props.firebaseApp.config?.maintainChild?.betting) return <Maintain />;
     return (
-      <React.Fragment>
-        <BettingFilter setLoading={this.props.setLoading} />
-        <Row>
-          <Col md={12} className="faq-block">
-            <FAQBetting />
-          </Col>
-        </Row>
-      </React.Fragment>
+      <div className="discover-tab-prediction">
+        <Share className="discover-tab-prediction-share" />
+        <Prediction setLoading={this.props.setLoading} />
+        <FAQ className="discover-tab-prediction-faq" />
+      </div>
     );
   }
 }
@@ -42,4 +39,4 @@ class DiscoverBetting extends React.Component {
 export default connect(state => ({
   app: state.app,
   firebaseApp: state.firebase.data,
-}))(DiscoverBetting);
+}))(DiscoverPrediction);

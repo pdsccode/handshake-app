@@ -2,6 +2,7 @@ import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 import { connectRouter, routerMiddleware } from 'connected-react-router';
 import { firebaseReducer, reactReduxFirebase } from 'react-redux-firebase';
 import thunk from 'redux-thunk';
+
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/database';

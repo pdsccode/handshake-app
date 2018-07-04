@@ -155,9 +155,6 @@ const tokenHandle = ({
           data.append('reward_wallet_addresses', MasterWallet.convertToJsonETH(shuriWallet));
           if (isSignup) data.append('username', shuriWallet.address);
           dispatch(authUpdate({ PATH_URL: 'user/profile', data, METHOD: 'POST' }));
-
-          console.log('test');
-
           resolve(true);
         },
       }));

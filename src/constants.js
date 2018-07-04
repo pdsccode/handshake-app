@@ -22,6 +22,18 @@ export const APP = {
   isSupportedLanguages: ['en', 'zh', 'fr', 'de', 'ja', 'ko', 'ru', 'es'],
 };
 
+export const DISCOVER = {
+  TABS: {
+    PREDICTION: {
+      ID: 1,
+    },
+    EXCHANGE: {
+      ID: 2,
+    },
+  },
+  DEFAULT_TAB_ID: 1,
+};
+
 export const UNSELECTED = 'UNSELECTED';
 
 export const HANDSHAKE_ID = { // important
