@@ -347,7 +347,7 @@ id="offerDistanceContent"
   }
 
   getPrices = () => {
-    const { listOfferPrice } = this.props;
+    const { listOfferPrice, fiatCurrency } = this.props;
     console.log('coins - listOfferPrice', listOfferPrice);
     const { offer } = this;
 
@@ -360,16 +360,16 @@ id="offerDistanceContent"
     const btc = offer.items.BTC;
 
     if (listOfferPrice) {
-      let offerPrice = getOfferPrice(listOfferPrice, EXCHANGE_ACTION.BUY, CRYPTO_CURRENCY.BTC);
+      let offerPrice = getOfferPrice(listOfferPrice, EXCHANGE_ACTION.BUY, CRYPTO_CURRENCY.BTC, fiatCurrency);
       priceBuyBTC = offerPrice.price * (1 + btc?.buyPercentage / 100) || 0;
 
-      offerPrice = getOfferPrice(listOfferPrice, EXCHANGE_ACTION.SELL, CRYPTO_CURRENCY.BTC);
+      offerPrice = getOfferPrice(listOfferPrice, EXCHANGE_ACTION.SELL, CRYPTO_CURRENCY.BTC, fiatCurrency);
       priceSellBTC = offerPrice.price * (1 + btc?.sellPercentage / 100) || 0;
 
-      offerPrice = getOfferPrice(listOfferPrice, EXCHANGE_ACTION.BUY, CRYPTO_CURRENCY.ETH);
+      offerPrice = getOfferPrice(listOfferPrice, EXCHANGE_ACTION.BUY, CRYPTO_CURRENCY.ETH, fiatCurrency);
       priceBuyETH = offerPrice.price * (1 + eth?.buyPercentage / 100) || 0;
 
-      offerPrice = getOfferPrice(listOfferPrice, EXCHANGE_ACTION.SELL, CRYPTO_CURRENCY.ETH);
+      offerPrice = getOfferPrice(listOfferPrice, EXCHANGE_ACTION.SELL, CRYPTO_CURRENCY.ETH, fiatCurrency);
       priceSellETH = offerPrice.price * (1 + eth?.sellPercentage / 100) || 0;
     }
 

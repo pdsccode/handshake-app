@@ -527,8 +527,8 @@ class Component extends React.Component {
     const modalContent = this.state.modalContent;
     const allowInitiate = this.offer ? (!this.offer.itemFlags.ETH || !this.offer.itemFlags.BTC) : true;
 
-    const { price: priceBuy } = getOfferPrice(listOfferPrice, EXCHANGE_ACTION.BUY, currency);
-    const { price: priceSell } = getOfferPrice(listOfferPrice, EXCHANGE_ACTION.SELL, currency);
+    const { price: priceBuy } = getOfferPrice(listOfferPrice, EXCHANGE_ACTION.BUY, currency, fiatCurrency);
+    const { price: priceSell } = getOfferPrice(listOfferPrice, EXCHANGE_ACTION.SELL, currency, fiatCurrency);
     const priceBuyDisplayed = formatMoneyByLocale(priceBuy,fiatCurrency)
     const priceSellDisplayed = formatMoneyByLocale(priceSell,fiatCurrency)
     const estimatedPriceBuy = formatMoneyByLocale(priceBuy * (1 + parseFloat(customizePriceBuy, 10)/100),fiatCurrency)
