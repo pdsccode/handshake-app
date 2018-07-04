@@ -1,9 +1,6 @@
 /* eslint no-restricted-globals: 1 */
 /* global screen */
 
-import { blockchainNetworks as blockchains } from '@/constants';
-import Blockchain from '@/services/blockchain';
-
 /**
  * Here is write function use common
  * @class Helper
@@ -13,7 +10,7 @@ class Helper {
    * Is browser?
    * https://stackoverflow.com/questions/9847580/how-to-detect-safari-chrome-ie-firefox-and-opera-browser?answertab=votes#tab-top
    */
-  static get broswer() {
+  static get browser() {
     // don't support at server
     if (typeof window === 'undefined') {
       return {};
@@ -123,19 +120,5 @@ export class StringHelper {
 }
 
 Helper.StringHelper = StringHelper;
-
-class Wallet {
-  static createBlockchainConnect(objectKey) {
-    return new Blockchain(blockchains[objectKey].type)
-      .connect(blockchains[objectKey].endpoint)
-      .setInitObj(blockchains[objectKey])
-      .setName(blockchains[objectKey].name)
-      .setUnit(blockchains[objectKey].unit)
-      .setTest(blockchains[objectKey].isTest)
-      .setChainId(blockchains[objectKey].chainId);
-  }
-}
-
-Helper.Wallet = Wallet;
 
 export default Helper;

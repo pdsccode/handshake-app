@@ -8,7 +8,7 @@ import { initApp } from '@/reducers/app/action';
 import I18n from '@/components/App/I18n';
 import Splash from '@/components/App/Splash';
 import Handle from '@/components/App/Handle';
-import { createDynamicImport } from '@/services/app';
+import { createDynamicImport } from '@/components';
 import BrowserDetect from '@/services/browser-detect';
 
 // styles

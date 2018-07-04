@@ -16,7 +16,7 @@ import createForm from '@/components/core/form/createForm';
 import { showAlert } from '@/reducers/app/action';
 import { showLoading, hideLoading } from '@/reducers/app/action';
 import iconSuccessChecked from '@/assets/images/icon/icon-checked-green.svg';
-import local from '@/services/localStore';
+import local from '@/services/local-store';
 import {APP} from '@/constants';
 import "./Refers.scss";
 

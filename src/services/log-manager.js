@@ -1,4 +1,4 @@
-import local from '@/services/localStore';
+import local from '@/services/local-store';
 import moment from 'moment';
 
 // const logParams = {
@@ -20,7 +20,7 @@ const templateLog = (value = '') => {
     timeStamp: time,
   };
 };
-export default class LogManage {
+export default class LogManager {
   static saveLog(KEY = '', value = '') {
     const time = moment().valueOf();
 
@@ -38,6 +38,6 @@ export default class LogManage {
   }
 
   static bettingSaveLog(value) {
-    LogManage.saveLog('Betting', value);
+    LogManager.saveLog('Betting', value);
   }
 }

@@ -16,14 +16,14 @@ import Button from '@/components/core/controls/Button';
 import { Field } from 'redux-form';
 import { fieldCleave } from '@/components/core/form/customField';
 import ModalDialog from '@/components/core/controls/ModalDialog';
-import local from '@/services/localStore';
+import local from '@/services/local-store';
 import { APP } from '@/constants';
 // style
 import ExpandArrowSVG from '@/assets/images/icon/expand-arrow.svg';
 import CheckedSVG from '@/assets/images/icon/checked.svg';
 
 // import { chatInstance } from '@/pages/Chat/Chat';
-import valid from '@/services/validate';
+import valid from '@/utils/validate';
 
 import './Profile.scss';
 
@@ -62,12 +62,12 @@ class Profile extends React.Component {
       isShowVerificationEmailCode: false,
     };
     // bind
-    this.onSubmitVerifyPhone = ::this.onSubmitVerifyPhone;
-    this.onSubmitVerifyEmail = ::this.onSubmitVerifyEmail;
-    this.selectPhoneRegionCode = ::this.selectPhoneRegionCode;
-    this.filterCountries = ::this.filterCountries;
-    this.onTextFieldChange = ::this.onTextFieldChange;
-    this.addUsername = ::this.addUsername;
+    this.onSubmitVerifyPhone = :: this.onSubmitVerifyPhone;
+    this.onSubmitVerifyEmail = :: this.onSubmitVerifyEmail;
+    this.selectPhoneRegionCode = :: this.selectPhoneRegionCode;
+    this.filterCountries = :: this.filterCountries;
+    this.onTextFieldChange = :: this.onTextFieldChange;
+    this.addUsername = :: this.addUsername;
 
     this.UsernameForm = createForm({
       propsReduxForm: {
@@ -500,7 +500,7 @@ class Profile extends React.Component {
                   <span>{messages.me.profile.text.email.desc1}</span>
                 </p>
                 <div className="extend">
-                  <span className="badge badge-success">{ this.props.auth.profile.email ? 'Verified' : '' }</span>
+                  <span className="badge badge-success">{this.props.auth.profile.email ? 'Verified' : ''}</span>
                   <Image className={this.state.emailCollapse ? 'rotate' : ''} src={ExpandArrowSVG} alt="arrow" />
                 </div>
               </div>
@@ -570,7 +570,7 @@ class Profile extends React.Component {
           <div className="modal-verify">
             <Image src={CheckedSVG} alt="checked" />
             <p>Successed!</p>
-            <p>{ this.state.successMessage ? this.state.successMessage : 'Your authentication is verified' }</p>
+            <p>{this.state.successMessage ? this.state.successMessage : 'Your authentication is verified'}</p>
           </div>
         </ModalDialog>
       </Grid>

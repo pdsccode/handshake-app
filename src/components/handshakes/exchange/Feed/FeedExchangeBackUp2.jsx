@@ -7,7 +7,7 @@ import iconOk from '@/assets/images/icon/icons8-ok.svg';
 import iconCancel from '@/assets/images/icon/icons8-cancel.svg';
 // style
 import './FeedExchange.scss';
-import {injectIntl} from 'react-intl';
+import { injectIntl } from 'react-intl';
 import Feed from '@/components/core/presentation/Feed/Feed';
 import Button from '@/components/core/controls/Button/Button';
 import {
@@ -31,7 +31,7 @@ import {
   NB_BLOCKS
 } from '@/constants';
 import ModalDialog from '@/components/core/controls/ModalDialog';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import ShakeDetail from '../components/ShakeDetail';
 import {
   cancelShakedOffer,
@@ -44,16 +44,16 @@ import {
 import { Ethereum } from '@/services/Wallets/Ethereum.js';
 import { Bitcoin } from '@/services/Wallets/Bitcoin';
 import Offer from '@/models/Offer';
-import {MasterWallet} from '@/services/Wallets/MasterWallet';
-import {formatAmountCurrency, formatMoney, getHandshakeUserType, getOfferPrice} from '@/services/offer-util';
-import {hideLoading, showAlert, showLoading} from '@/reducers/app/action';
+import { MasterWallet } from '@/services/Wallets/MasterWallet';
+import { formatAmountCurrency, formatMoney, getHandshakeUserType, getOfferPrice } from '@/utils/offer';
+import { hideLoading, showAlert, showLoading } from '@/reducers/app/action';
 import { getDistanceFromLatLonInKm, getErrorMessageFromCode } from "../utils";
-import {ExchangeHandshake, ExchangeShopHandshake} from '@/services/neuron';
-import {feedBackgroundColors} from '@/components/handshakes/exchange/config';
-import {updateOfferStatus} from '@/reducers/discover/action';
-import OfferShop from '@/models/OfferShop';
-import {getLocalizedDistance} from "@/services/util";
-import {BigNumber} from "bignumber.js";
+import { ExchangeHandshake, ExchangeShopHandshake } from '@/services/neuron';
+import { feedBackgroundColors } from '@/components/handshakes/exchange/config';
+import { updateOfferStatus } from '@/reducers/discover/action';
+import { ExchangeFactory } from '@/factories';
+import { getLocalizedDistance } from "@/utils";
+import { BigNumber } from "bignumber.js";
 
 class FeedExchange extends React.PureComponent {
   constructor(props) {
@@ -61,7 +61,7 @@ class FeedExchange extends React.PureComponent {
 
     const { extraData } = props;
 
-    this.offer = OfferShop.offerShop(JSON.parse(extraData));
+    this.offer = ExchangeFactory.offerShop(JSON.parse(extraData));
 
     // console.log('offer',this.offer);
 
@@ -73,7 +73,7 @@ class FeedExchange extends React.PureComponent {
   }
 
   showLoading = () => {
-    this.props.showLoading({ message: ''  });
+    this.props.showLoading({ message: '' });
   }
 
   hideLoading = () => {
@@ -104,7 +104,7 @@ class FeedExchange extends React.PureComponent {
       if (wallet.network === MasterWallet.ListCoin[wallet.className].Network.Mainnet) {
         result = true;
       } else {
-        const message = intl.formatMessage({id: 'requireDefaultWalletOnMainNet'}, {});
+        const message = intl.formatMessage({ id: 'requireDefaultWalletOnMainNet' }, {});
         this.showAlert(message);
         result = false;
       }
@@ -171,12 +171,12 @@ class FeedExchange extends React.PureComponent {
       type: shopType,
       currency: values.currency,
       amount: values.amount,
-      username: authProfile?.name,
-      email: authProfile?.email,
-      contact_phone: authProfile?.phone,
-      contact_info: authProfile?.address,
+      username: authProfile ?.name,
+      email: authProfile ?.email,
+      contact_phone: authProfile ?.phone,
+      contact_info: authProfile ?.address,
       user_address: wallet.address,
-      chat_username: authProfile?.username,
+      chat_username: authProfile ?.username,
     };
 
     this.showLoading();
@@ -194,7 +194,7 @@ class FeedExchange extends React.PureComponent {
 
     const { intl } = this.props;
     const { data } = responseData;
-    const offerShake = Offer.offer(data);
+    const offerShake = ExchangeFactory.offer(data);
     const { currency, type, totalAmount, systemAddress, offChainId } = offerShake;
     const { offer } = this;
 
@@ -248,7 +248,7 @@ class FeedExchange extends React.PureComponent {
   }
 
   getOfferDistance = () => {
-    const { intl,  ipInfo: { latitude, longitude, country }, location } = this.props;
+    const { intl, ipInfo: { latitude, longitude, country }, location } = this.props;
     const { offer } = this;
     // let distanceKm = 0;
     // let distanceMiles = 0;
@@ -363,9 +363,9 @@ class FeedExchange extends React.PureComponent {
             </tbody>
           </table>
           <div className="mt-2">
-            <div className="distance"><img src={iconLocation}/>{distance}</div>
-            <div className="transaction-successful"><img src={iconOk}/> {success} successful</div>
-            <div className="transaction-failed"><img src={iconCancel}/> {failed} failed</div>
+            <div className="distance"><img src={iconLocation} />{distance}</div>
+            <div className="transaction-successful"><img src={iconOk} /> {success} successful</div>
+            <div className="transaction-failed"><img src={iconCancel} /> {failed} failed</div>
           </div>
         </Feed>
         <Button block className="mt-2" onClick={this.handleOnShake}>Shake</Button>

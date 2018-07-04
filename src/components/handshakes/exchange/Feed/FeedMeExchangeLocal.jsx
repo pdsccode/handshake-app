@@ -20,7 +20,7 @@ import { MasterWallet } from '@/services/Wallets/MasterWallet'
 import {
   formatAmountCurrency,
   getHandshakeUserType
-} from '@/services/offer-util'
+} from '@/utils/offer'
 import { hideLoading, showAlert, showLoading } from '@/reducers/app/action'
 import { ExchangeHandshake } from '@/services/neuron'
 import { feedBackgroundColors } from '@/components/handshakes/exchange/config'

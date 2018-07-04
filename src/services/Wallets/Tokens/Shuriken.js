@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Wallet } from '@/services/Wallets/Wallet.js';
 import configs from '@/configs';
-import { StringHelper } from '@/services/helper';
+import { StringHelper } from '@/utils/helper';
 import { TokenERC20 } from '@/services/Wallets/Tokens/TokenERC20.js';
 
 const Web3 = require('web3');

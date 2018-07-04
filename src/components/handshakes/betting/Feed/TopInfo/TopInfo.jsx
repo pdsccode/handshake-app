@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import { getCommentCountById } from '@/reducers/comment/action';
 import { API_URL, URL } from '@/constants';
-import Helper from '@/services/helper';
+import Helper from '@/utils/helper';
 // components
 import ModalDialog from '@/components/core/controls/ModalDialog';
 import { Link } from 'react-router-dom';

@@ -1,10 +1,10 @@
-import Handshake from '@/models/Handshake';
+import { HandshakeFactory } from '@/factories';
 import { HANDSHAKE_EXCHANGE_STATUS_VALUE } from '@/constants';
 import { handShakeList } from '@/data/shake';
 import { ACTIONS } from './action';
 
-const handleListPayload = payload => payload.map(handshake => Handshake.handshake(handshake));
-const handleDetailPayload = () => Handshake.handshake(handShakeList.data[1]);
+const handleListPayload = payload => payload.map(handshake => HandshakeFactory.handshake(handshake));
+const handleDetailPayload = () => HandshakeFactory.handshake(handShakeList.data[1]);
 
 const discoverReducter = (state = {
   list: [],

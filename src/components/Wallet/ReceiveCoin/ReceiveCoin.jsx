@@ -13,9 +13,9 @@ import Modal from '@/components/core/controls/Modal';
 import {MasterWallet} from "@/services/Wallets/MasterWallet";
 
 import { showLoading, hideLoading, showAlert } from '@/reducers/app/action';
-import { StringHelper } from '@/services/helper';
+import { StringHelper } from '@/utils/helper';
 import createForm from '@/components/core/form/createForm'
-import CryptoPrice from "@/models/CryptoPrice";
+import { ExchangeFactory } from "@/factories";
 import './ReceiveCoin.scss';
 import Dropdown from '@/components/core/controls/Dropdown';
 import { BigNumber } from "bignumber.js";
@@ -92,7 +92,7 @@ class ReceiveCoin extends React.Component {
       PATH_URL: API_URL.EXCHANGE.GET_CRYPTO_PRICE,
       qs: data,
       successFn: (res) => {
-        const cryptoPrice = CryptoPrice.cryptoPrice(res.data);
+        const cryptoPrice = ExchangeFactory.cryptoPrice(res.data);
         const price = new BigNumber(cryptoPrice.fiatAmount).toNumber();
         if(currency == "BTC")
           this.setState({rateBTC: price});

@@ -25,9 +25,9 @@ import AvatarSVG from '@/assets/images/icon/avatar.svg';
 import ShopSVG from '@/assets/images/icon/icons8-shop_filled.svg';
 import ExpandArrowSVG from '@/assets/images/icon/expand-arrow.svg';
 import { setOfflineStatus } from '@/reducers/auth/action';
-import local from '@/services/localStore';
+import local from '@/services/local-store';
 
-import Helper from '@/services/helper';
+import Helper from '@/utils/helper';
 import Rate from '@/components/core/controls/Rate/Rate';
 
 import './Me.scss';

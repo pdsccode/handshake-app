@@ -5,7 +5,7 @@ import { Switch, BrowserRouter, Route, Redirect } from 'react-router-dom';
 // constants
 import { URL } from '@/constants';
 // services
-import { createDynamicImport } from '@/services/app';
+import { createDynamicImport } from '@/components';
 // components
 import Loading from '@/components/core/presentation/Loading';
 import ScrollToTop from '@/components/App/ScrollToTop';

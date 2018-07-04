@@ -11,7 +11,7 @@ import {
   formatAmountCurrency,
   formatMoney,
   getOfferPrice
-} from '@/services/offer-util'
+} from '@/utils/offer'
 import {
   fieldCleave,
   fieldDropdown,

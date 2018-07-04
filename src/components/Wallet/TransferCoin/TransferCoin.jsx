@@ -14,10 +14,10 @@ import {MasterWallet} from "@/services/Wallets/MasterWallet";
 import { bindActionCreators } from "redux";
 import {showAlert} from '@/reducers/app/action';
 import {getCryptoPrice} from '@/reducers/exchange/action';
-import CryptoPrice from "@/models/CryptoPrice";
+import { ExchangeFactory } from "@/factories";
 import { showLoading, hideLoading } from '@/reducers/app/action';
 import QrReader from 'react-qr-reader';
-import { StringHelper } from '@/services/helper';
+import { StringHelper } from '@/utils/helper';
 import iconSuccessChecked from '@/assets/images/icon/icon-checked-green.svg';
 import './TransferCoin.scss';
 import iconQRCodeWhite from '@/assets/images/icon/scan-qr-code.svg';
@@ -143,7 +143,7 @@ class Transfer extends React.Component {
       PATH_URL: API_URL.EXCHANGE.GET_CRYPTO_PRICE,
       qs: data,
       successFn: (res) => {
-        const cryptoPrice = CryptoPrice.cryptoPrice(res.data);
+        const cryptoPrice = ExchangeFactory.cryptoPrice(res.data);
         const price = new BigNumber(cryptoPrice.fiatAmount).toNumber();
         if(currency == "BTC")
           this.setState({rateBTC: price});

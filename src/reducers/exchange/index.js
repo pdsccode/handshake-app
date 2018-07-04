@@ -1,11 +1,6 @@
-import CcLimit from '@/models/CcLimit';
-import UserCcLimit from '@/models/UserCcLimit';
-import UserProfile from '@/models/UserProfile';
-import CryptoPrice from '@/models/CryptoPrice';
-import OfferPrice from '@/models/OfferPrice';
-import OfferShop from '@/models/OfferShop';
-import { EXCHANGE_ACTIONS } from './action';
+import { UserFactory, ExchangeFactory } from '@/factories';
 import { EXCHANGE_ACTION } from '@/constants';
+import { EXCHANGE_ACTIONS } from './action';
 
 const initListOfferPrice = [];
 initListOfferPrice.updatedAt = Date.now();
@@ -17,26 +12,26 @@ function exchangeReducter(state = {
   // console.log('exchangeReducter', JSON.stringify(action));
   switch (action.type) {
     case `${EXCHANGE_ACTIONS.GET_CRYPTO_PRICE}_SUCCESS`: {
-      return { ...state, cryptoPrice: CryptoPrice.cryptoPrice(action.payload.data) };
+      return { ...state, cryptoPrice: ExchangeFactory.cryptoPrice(action.payload.data) };
     }
     case `${EXCHANGE_ACTIONS.GET_USER_CC_LIMIT}_SUCCESS`: {
-      return { ...state, userCcLimit: UserCcLimit.userCcLimit(action.payload.data) };
+      return { ...state, userCcLimit: UserFactory.userCcLimit(action.payload.data) };
     }
     case `${EXCHANGE_ACTIONS.GET_CC_LIMITS}_SUCCESS`: {
-      return { ...state, ccLimits: action.payload.data.map(ccLimit => CcLimit.ccLimit(ccLimit)) };
+      return { ...state, ccLimits: action.payload.data.map(ccLimit => UserFactory.ccLimit(ccLimit)) };
     }
     case `${EXCHANGE_ACTIONS.GET_USER_PROFILE}_SUCCESS`: {
-      return { ...state, userProfile: UserProfile.userProfile(action.payload.data) };
+      return { ...state, userProfile: UserFactory.userProfile(action.payload.data) };
     }
     case `${EXCHANGE_ACTIONS.GET_OFFER_PRICE}_SUCCESS`: {
-      return { ...state, offerPrice: OfferPrice.offerPrice(action.payload.data) };
+      return { ...state, offerPrice: ExchangeFactory.offerPrice(action.payload.data) };
     }
     case `${EXCHANGE_ACTIONS.GET_USER_TRANSACTION}_SUCCESS`: {
       return { ...state, userTransaction: action.payload };
     }
     case `${EXCHANGE_ACTIONS.GET_LIST_OFFER_PRICE}_SUCCESS`: {
       const listOfferPrice = action.payload.data.map((offerPrice) => {
-        const price = OfferPrice.offerPrice(offerPrice);
+        const price = ExchangeFactory.offerPrice(offerPrice);
 
         price.type = price.type === EXCHANGE_ACTION.SELL ? EXCHANGE_ACTION.BUY : EXCHANGE_ACTION.SELL;
 
@@ -52,10 +47,10 @@ function exchangeReducter(state = {
       return { ...state, ipInfo: action.payload.data };
     }
     case `${EXCHANGE_ACTIONS.GET_OFFER_STORES}_SUCCESS`: {
-      return { ...state, offerStores: OfferShop.offerShop(action.payload.data) };
+      return { ...state, offerStores: ExchangeFactory.offerShop(action.payload.data) };
     }
     case `${EXCHANGE_ACTIONS.GET_FREE_START_INFO}_SUCCESS`: {
-      return { ...state, freeETH: action.payload.data?.reward };
+      return { ...state, freeETH: action.payload.data ?.reward };
     }
     case `${EXCHANGE_ACTIONS.SET_FREE_START}`: {
       return { ...state, freeStart: action.payload.data };

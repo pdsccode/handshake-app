@@ -11,7 +11,7 @@ import iconApproximate from '@/assets/images/icon/icons8-approximately_equal.svg
 import { CRYPTO_CURRENCY, CRYPTO_CURRENCY_NAME, EXCHANGE_ACTION, EXCHANGE_ACTION_NAME } from '@/constants';
 import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import { formatMoney, formatMoneyByLocale, getOfferPrice, roundNumberByLocale } from '@/services/offer-util';
+import { formatMoney, formatMoneyByLocale, getOfferPrice, roundNumberByLocale } from '@/utils/offer';
 import { hideLoading, showAlert, showLoading } from '@/reducers/app/action';
 import { bindActionCreators } from 'redux';
 import { minValueBTC, minValueETH } from '../../Create/validation';

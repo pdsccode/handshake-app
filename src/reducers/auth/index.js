@@ -1,11 +1,11 @@
 import { APP } from '@/constants';
-import local from '@/services/localStore';
-import Auth from '@/models/Auth';
+import local from '@/services/local-store';
+import { UserFactory } from '@/factories';
 import { ACTIONS } from './action';
 
 const authReducter = (state = {
   token: local.get(APP.AUTH_TOKEN),
-  profile: Auth.profile(local.get(APP.AUTH_PROFILE)) || Auth.profile({}),
+  profile: UserFactory.profile(local.get(APP.AUTH_PROFILE)) || UserFactory.profile({}),
   isLogged: false,
   offline: local.get(APP.OFFLINE_STATUS),
   updatedAt: Date.now(),
@@ -18,13 +18,13 @@ const authReducter = (state = {
     case `${ACTIONS.AUTH_FETCH}_SUCCESS`:
       local.save(APP.AUTH_PROFILE, action.payload.data);
       return {
-        ...state, profile: Auth.profile(action.payload.data), isLogged: true, updatedAt: Date.now(),
+        ...state, profile: UserFactory.profile(action.payload.data), isLogged: true, updatedAt: Date.now(),
       };
 
     case `${ACTIONS.AUTH_UPDATE}_SUCCESS`:
       local.save(APP.AUTH_PROFILE, action.payload.data);
       return {
-        ...state, profile: Auth.profile(action.payload.data), isLogged: true, updatedAt: Date.now(),
+        ...state, profile: UserFactory.profile(action.payload.data), isLogged: true, updatedAt: Date.now(),
       };
     case `${ACTIONS.SET_OFFLINE_STATUS}_SUCCESS`: {
       return { ...state, offline: state.offline ? 0 : 1 };

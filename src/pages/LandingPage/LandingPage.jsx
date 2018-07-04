@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import axios from 'axios';
 import qs from 'qs';
 import { showAlert } from '@/reducers/app/action';
-import Helper from '@/services/helper';
+import Helper from '@/utils/helper';
 
 import Alert from '@/components/core/presentation/Alert';
 import ninjaStarHtml from '../../assets/images/ninja-star/index.html';

@@ -7,7 +7,7 @@ import LevelItem from "@/components/handshakes/exchange/components/LevelItem";
 import Feed from "@/components/core/presentation/Feed";
 import Button from "@/components/core/controls/Button";
 import ModalDialog from "@/components/core/controls/ModalDialog";
-import localStore from "@/services/localStore";
+import localStore from "@/services/local-store";
 import { URL } from "@/constants";
 import "../styles.scss";
 import { validate } from "@/components/handshakes/exchange/validation";
@@ -19,13 +19,13 @@ import { required } from "@/components/core/form/validation";
 import { createCCOrder, getCcLimits, getCryptoPrice, getUserCcLimit } from "@/reducers/exchange/action";
 import { API_URL, CRYPTO_CURRENCY_LIST, CRYPTO_CURRENCY_DEFAULT, FIAT_CURRENCY_SYMBOL } from "@/constants";
 import { FIAT_CURRENCY } from "@/constants";
-import CryptoPrice from "@/models/CryptoPrice";
+import { ExchangeFactory } from "@/factories";
 import { MasterWallet } from "@/services/Wallets/MasterWallet";
 import { bindActionCreators } from "redux";
 import { showAlert } from "@/reducers/app/action";
 import _sample from "lodash/sample";
 import { feedBackgroundColors } from "@/components/handshakes/exchange/config";
-import { formatMoney } from "@/services/offer-util";
+import { formatMoney } from "@/utils/offer";
 import { BigNumber } from "bignumber.js";
 import { showLoading, hideLoading } from "@/reducers/app/action";
 import axios from "axios";
@@ -102,7 +102,7 @@ class FeedCreditCard extends React.Component {
   handleGetCryptoPriceSuccess = (responseData) => {
     // console.log('handleGetCryptoPriceSuccess', data);
     const { userCcLimit } = this.props;
-    const cryptoPrice = CryptoPrice.cryptoPrice(responseData.data);
+    const cryptoPrice = ExchangeFactory.cryptoPrice(responseData.data);
 
     const amoutWillUse = new BigNumber(userCcLimit.amount).plus(new BigNumber(cryptoPrice.fiatAmount)).toNumber();
 

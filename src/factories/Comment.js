@@ -1,4 +1,7 @@
-class Comment {
+/**
+ * CommentFactory
+ */
+export default class CommentFactory {
   static comment(data) {
     return {
       dateCreated: data.date_created,
@@ -11,5 +14,3 @@ class Comment {
     };
   }
 }
-
-export default Comment;

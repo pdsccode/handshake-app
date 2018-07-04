@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import iconLocation from '@/assets/images/icon/icons8-geo_fence.svg';
 import iconPhone from '@/assets/images/icon/icons8-phone.svg';
 // style
-import {FormattedMessage, injectIntl} from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import Feed from "@/components/core/presentation/Feed/Feed";
 import Button from "@/components/core/controls/Button/Button";
 import {
@@ -20,18 +20,18 @@ import {
   NB_BLOCKS
 } from "@/constants";
 import ModalDialog from "@/components/core/controls/ModalDialog";
-import {connect} from "react-redux";
-import {shakeOffer,} from "@/reducers/exchange/action";
-import Offer from "@/models/Offer";
-import {MasterWallet} from "@/services/Wallets/MasterWallet";
-import {formatAmountCurrency, getHandshakeUserType} from "@/services/offer-util";
-import {hideLoading, showAlert, showLoading} from '@/reducers/app/action';
-import {Link} from "react-router-dom";
-import {getDistanceFromLatLonInKm} from '../utils'
-import {ExchangeHandshake,} from '@/services/neuron';
+import { connect } from "react-redux";
+import { shakeOffer, } from "@/reducers/exchange/action";
+import { ExchangeFactory } from "@/factories";
+import { MasterWallet } from "@/services/Wallets/MasterWallet";
+import { formatAmountCurrency, getHandshakeUserType } from "@/utils/offer";
+import { hideLoading, showAlert, showLoading } from '@/reducers/app/action';
+import { Link } from "react-router-dom";
+import { getDistanceFromLatLonInKm } from '../utils'
+import { ExchangeHandshake, } from '@/services/neuron';
 import _sample from "lodash/sample";
-import {feedBackgroundColors} from "@/components/handshakes/exchange/config";
-import {BigNumber} from "bignumber.js";
+import { feedBackgroundColors } from "@/components/handshakes/exchange/config";
+import { BigNumber } from "bignumber.js";
 import "./FeedExchangeLocal.scss"
 import StarsRating from "@/components/core/presentation/StarsRating";
 import iconChat from '@/assets/images/icon/chat-icon.svg';
@@ -40,8 +40,8 @@ class FeedExchangeLocal extends React.PureComponent {
   constructor(props) {
     super(props);
 
-    const {initUserId, shakeUserIds, extraData} = props;
-    const offer = Offer.offer(JSON.parse(extraData));
+    const { initUserId, shakeUserIds, extraData } = props;
+    const offer = ExchangeFactory.offer(JSON.parse(extraData));
 
     this.userType = getHandshakeUserType(initUserId, shakeUserIds);
     this.offer = offer;
@@ -54,7 +54,7 @@ class FeedExchangeLocal extends React.PureComponent {
   }
 
   showLoading = () => {
-    this.props.showLoading({message: '',});
+    this.props.showLoading({ message: '', });
   }
 
   hideLoading = () => {
@@ -69,12 +69,12 @@ class FeedExchangeLocal extends React.PureComponent {
         (
           <div className="py-2">
             <Feed className="feed p-2" background="#259B24">
-              <div className="text-white d-flex align-items-center" style={{minHeight: '50px'}}>
+              <div className="text-white d-flex align-items-center" style={{ minHeight: '50px' }}>
                 <div>{message}</div>
               </div>
             </Feed>
-            <Button className="mt-2" block onClick={() => this.handleConfirmAction(actionConfirm)}><FormattedMessage id="ex.btn.confirm"/></Button>
-            <Button block className="btn btn-secondary" onClick={this.cancelAction}><FormattedMessage id="ex.btn.notNow"/></Button>
+            <Button className="mt-2" block onClick={() => this.handleConfirmAction(actionConfirm)}><FormattedMessage id="ex.btn.confirm" /></Button>
+            <Button block className="btn btn-secondary" onClick={this.cancelAction}><FormattedMessage id="ex.btn.notNow" /></Button>
           </div>
         ),
     }, () => {
@@ -129,11 +129,11 @@ class FeedExchangeLocal extends React.PureComponent {
     if (condition) {
       this.props.showAlert({
         message: <div className="text-center">
-          <FormattedMessage id="notEnoughCoinInWallet" values={ {
+          <FormattedMessage id="notEnoughCoinInWallet" values={{
             amount: formatAmountCurrency(balance),
             fee: formatAmountCurrency(fee),
             currency: currency,
-          } }/>
+          }} />
         </div>,
         timeOut: 3000,
         type: 'danger',
@@ -156,30 +156,30 @@ class FeedExchangeLocal extends React.PureComponent {
 
 
     const message = <FormattedMessage id="offerHandShakeExchangeContentMe"
-                                values={ {
-                                  offerType: offerType,
-                                  something: physicalItem,
-                                  amount: formatAmountCurrency(amount),
-                                  currency: currency,
-                                } } />;
+      values={{
+        offerType: offerType,
+        something: physicalItem,
+        amount: formatAmountCurrency(amount),
+        currency: currency,
+      }} />;
 
     return message;
   }
 
   getActionButtonsExchange = () => {
-    const {status} = this.props;
+    const { status } = this.props;
     const offer = this.offer;
     const { type, physicalItem, amount, currency } = offer;
     const message = <FormattedMessage id="handshakeOfferConfirm"
-                                values={ {
-                                  type: type === EXCHANGE_ACTION.BUY ? EXCHANGE_ACTION_NAME[EXCHANGE_ACTION.SELL] : EXCHANGE_ACTION_NAME[EXCHANGE_ACTION.BUY],
-                                  something: physicalItem,
-                                  amount: formatAmountCurrency(amount),
-                                  currency: currency,
-                                } } />;
+      values={{
+        type: type === EXCHANGE_ACTION.BUY ? EXCHANGE_ACTION_NAME[EXCHANGE_ACTION.SELL] : EXCHANGE_ACTION_NAME[EXCHANGE_ACTION.BUY],
+        something: physicalItem,
+        amount: formatAmountCurrency(amount),
+        currency: currency,
+      }} />;
     const actionButtons = (
       <div>
-        <Button block className="mt-2" onClick={() => this.confirmOfferAction(message, this.handleShakeOfferExchange)}><FormattedMessage id="btn.shake"/></Button>
+        <Button block className="mt-2" onClick={() => this.confirmOfferAction(message, this.handleShakeOfferExchange)}><FormattedMessage id="btn.shake" /></Button>
       </div>
     );
 
@@ -218,9 +218,9 @@ class FeedExchangeLocal extends React.PureComponent {
       address: wallet.address,
       email: authProfile.email || '',
       username: authProfile.username || '',
-      email: authProfile?.email || '',
-      username: authProfile?.name || '',
-      chat_username: authProfile?.username || '',
+      email: authProfile ?.email || '',
+      username: authProfile ?.name || '',
+      chat_username: authProfile ?.username || '',
       user_address: wallet.address,
     };
 
@@ -238,9 +238,9 @@ class FeedExchangeLocal extends React.PureComponent {
     const { refreshPage } = this.props;
     const { offer } = this;
     const { data } = res;
-    const { currency, type, system_address, total_amount, id, hid} = data;
+    const { currency, type, system_address, total_amount, id, hid } = data;
 
-    console.log('handleShakeOfferExchangeSuccess',res);
+    console.log('handleShakeOfferExchangeSuccess', res);
 
     if (type === EXCHANGE_ACTION.SELL) {
       if (currency === CRYPTO_CURRENCY.ETH) {
@@ -268,7 +268,7 @@ class FeedExchangeLocal extends React.PureComponent {
 
     this.hideLoading();
     this.props.showAlert({
-      message: <div className="text-center"><FormattedMessage id="shakeOfferSuccessMessage"/></div>,
+      message: <div className="text-center"><FormattedMessage id="shakeOfferSuccessMessage" /></div>,
       timeOut: 2000,
       type: 'success',
       callBack: () => {
@@ -282,7 +282,7 @@ class FeedExchangeLocal extends React.PureComponent {
   }
 
   render() {
-    const {intl, initUserId, shakeUserIds, location, state, status, mode = 'discover', ipInfo: { latitude, longitude, country }, initAt, ...props} = this.props;
+    const { intl, initUserId, shakeUserIds, location, state, status, mode = 'discover', ipInfo: { latitude, longitude, country }, initAt, ...props } = this.props;
     const offer = this.offer;
     let modalContent = this.state.modalContent;
 
@@ -290,7 +290,7 @@ class FeedExchangeLocal extends React.PureComponent {
     let statusText = '';
     let message = '';
     let actionButtons = null;
-    let from = <FormattedMessage id="ex.me.label.from"/>;
+    let from = <FormattedMessage id="ex.me.label.from" />;
     let showChat = false;
     let chatUsername = '';
     let nameShop = offer.username;
@@ -298,9 +298,9 @@ class FeedExchangeLocal extends React.PureComponent {
     switch (offer.feedType) {
       case EXCHANGE_FEED_TYPE.EXCHANGE: {
         statusText = HANDSHAKE_EXCHANGE_STATUS_NAME[status];
-        nameShop = <FormattedMessage id="ex.me.label.about"/>;
+        nameShop = <FormattedMessage id="ex.me.label.about" />;
 
-        from = <FormattedMessage id="ex.me.label.from"/>;
+        from = <FormattedMessage id="ex.me.label.from" />;
 
         message = this.getContentExchange();
 

@@ -1,9 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import history from '@/services/history';
+import store, { history } from '@/stores';
 import backBtn from '@/assets/images/icon/header-back.svg.raw';
 import { clickHeaderBack } from '@/reducers/app/action';
+
+console.log(store, history);
 
 class MainHeader extends React.Component {
   static propTypes = {
