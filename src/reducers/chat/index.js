@@ -3,7 +3,7 @@ import Handshake from '@/models/Handshake';
 import { CHAT_ACTIONS } from './action';
 import Match from '@/models/Match';
 
-const chatReducter = (state = {
+const chatReducer = (state = {
   userName: '',
   isFetching: false,
 }, action) => {
@@ -29,4 +29,4 @@ const chatReducter = (state = {
   }
 };
 
-export default chatReducter;
+export default chatReducer;

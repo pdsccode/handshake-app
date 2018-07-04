@@ -5,11 +5,11 @@ import { EXCHANGE_ACTIONS } from './action';
 const initListOfferPrice = [];
 initListOfferPrice.updatedAt = Date.now();
 
-function exchangeReducter(state = {
+function exchangeReducer(state = {
   listOfferPrice: initListOfferPrice,
   freeStart: false,
 }, action) {
-  // console.log('exchangeReducter', JSON.stringify(action));
+  // console.log('exchangeReducer', JSON.stringify(action));
   switch (action.type) {
     case `${EXCHANGE_ACTIONS.GET_CRYPTO_PRICE}_SUCCESS`: {
       return { ...state, cryptoPrice: ExchangeFactory.cryptoPrice(action.payload.data) };
@@ -60,4 +60,4 @@ function exchangeReducter(state = {
   }
 }
 
-export default exchangeReducter;
+export default exchangeReducer;

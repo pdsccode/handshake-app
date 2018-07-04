@@ -3,7 +3,7 @@ import local from '@/services/local-store';
 import { UserFactory } from '@/factories';
 import { ACTIONS } from './action';
 
-const authReducter = (state = {
+const authReducer = (state = {
   token: local.get(APP.AUTH_TOKEN),
   profile: UserFactory.profile(local.get(APP.AUTH_PROFILE)) || UserFactory.profile({}),
   isLogged: false,
@@ -35,4 +35,4 @@ const authReducter = (state = {
   }
 };
 
-export default authReducter;
+export default authReducer;

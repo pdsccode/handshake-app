@@ -14,7 +14,7 @@ const close = {
 
 local.save(APP.VERSION, '0.0.2');
 
-function appReducter(state = {
+function appReducer(state = {
   version: local.get(APP.VERSION),
 
   rootLoading: true,
@@ -266,4 +266,4 @@ function appReducter(state = {
   }
 }
 
-export default appReducter;
+export default appReducer;

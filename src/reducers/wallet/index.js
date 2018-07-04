@@ -10,14 +10,14 @@ if (localWallets) {
   parsedWallets = localWallets.map(wallet => parseWallet(wallet));
 }
 
-function walletReducter(state = {
+function walletReducer(state = {
   list: parsedWallets,
   ...parseTool(parsedWallets),
 }) {
   return state;
 }
 
-export default walletReducter;
+export default walletReducer;
 
 
 /*

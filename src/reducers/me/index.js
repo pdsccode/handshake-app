@@ -53,7 +53,7 @@ const handleListPayload = (payload) => {
 
 const handleDetailPayload = payload => HandshakeFactory.handshake(payload.data);
 
-const meReducter = (
+const meReducer = (
   state = {
     list: [],
     detail: {},
@@ -268,4 +268,4 @@ const meReducter = (
   }
 };
 
-export default meReducter;
+export default meReducer;

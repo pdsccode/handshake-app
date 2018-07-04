@@ -6,7 +6,7 @@ import { ACTIONS } from './action';
 const handleListPayload = payload => payload.map(handshake => HandshakeFactory.handshake(handshake));
 const handleDetailPayload = () => HandshakeFactory.handshake(handShakeList.data[1]);
 
-const discoverReducter = (state = {
+const discoverReducer = (state = {
   list: [],
   detail: {},
   isFetching: false,
@@ -77,4 +77,4 @@ const discoverReducter = (state = {
   }
 };
 
-export default discoverReducter;
+export default discoverReducer;
