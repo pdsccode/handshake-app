@@ -126,7 +126,7 @@ class BettingFilter extends React.Component {
     const { against } = this.state;
     if (against && against.length > 0) {
       const element = against[against.length - 1];
-      // const guessAmout = element.amount * (element.odds - 1); 
+      // const guessAmout = element.amount * (element.odds - 1);
       const guessAmout = parseBigNumber(element.amount).times(parseBigNumber(element.odds).minus(1));
       console.log(TAG," defaultSupportAmount = ",guessAmout.toNumber());
       return guessAmout.toNumber()||0;
@@ -139,7 +139,7 @@ class BettingFilter extends React.Component {
     if (support && support.length > 0) {
       console.log('Sorted Support:', support);
       const element = support[support.length - 1];
-      // const guessAmout = element.amount * (element.odds - 1); 
+      // const guessAmout = element.amount * (element.odds - 1);
       const guessAmout = parseBigNumber(element.amount).times(parseBigNumber(element.odds).minus(1));
       console.log(TAG," defaultAgainstAmount = ",guessAmout.toNumber());
       return guessAmout.toNumber()||0;
@@ -152,7 +152,7 @@ class BettingFilter extends React.Component {
     if (against && against.length > 0) {
       console.log('Sorted Against:', against);
       const element = against[against.length - 1];
-      // const againstOdds = element.odds / (element.odds - 1); 
+      // const againstOdds = element.odds / (element.odds - 1);
       const odds = parseBigNumber(element.odds);
       const againstOdds = odds.div(odds.minus(1));
       console.log(TAG," defaultSupportOdds = ",againstOdds.toNumber());
@@ -416,18 +416,12 @@ class BettingFilter extends React.Component {
     const matchName = (selectedMatch && selectedMatch.value) ? selectedMatch.value : null;
     const matchOutcome = (selectedOutcome && selectedOutcome.value) ? selectedOutcome.value : null;
 
-    console.log('Outcome Hid:', outcomeHid);
-    console.log('Outcome id', outcomeId);
     const defaultMatchId = this.defaultMatch ? this.defaultMatch.id : null;
-    // console.log("Default Match:", defaultMatchId);
-    // console.log('Default Outcome:', defaultOutcome);
     const defaultOutcomeId = this.defaultOutcome ? this.defaultOutcome.id : null;
     const shareInfo = this.getInfoShare(selectedMatch, selectedOutcome);
     const marketFee = (selectedMatch && selectedMatch.marketFee >= 0) ? selectedMatch.marketFee : null;
     const closingDate = (selectedMatch && selectedMatch.date) ? selectedMatch.date : null;
     const reportTime = (selectedMatch && selectedMatch.reportTime) ? selectedMatch.reportTime : null;
-    console.log('defaultOutcomeId:', defaultOutcomeId);
-    console.log('Market Fee:', marketFee);
     return (
       <div className="wrapperBettingFilter">
         <div className="share-block">
