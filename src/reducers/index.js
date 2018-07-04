@@ -5,7 +5,7 @@ import handshake from './handshake';
 import betting from './betting';
 import me from './me';
 import comment from './comment';
-// import firebase from './firebase';
+import wallet from './wallet';
 
 export default {
   discover,
@@ -15,5 +15,5 @@ export default {
   me,
   betting,
   comment,
-  // firebase,
+  wallet,
 };

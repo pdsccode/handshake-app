@@ -8,6 +8,7 @@ export const APP = {
   LOCALE: 'app_locale',
   AUTH_TOKEN: 'auth_token',
   AUTH_PROFILE: 'auth_profile',
+  WALLET: 'wallets',
   WALLET_MASTER: 'wallet_master',
   WALLET_CACHE: 'wallet_cache',
   WALLET_DEFAULT: 'wallet_default',
