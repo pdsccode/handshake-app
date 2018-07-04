@@ -10,7 +10,7 @@ import LogManage from '@/services/logmanage';
 import * as OfflinePlugin from 'offline-plugin/runtime';
 
 if (process.env.isStaging) {
-  console.debug = function (message) {
+  console.debug = function consoleDebug(message) {
     LogManage.bettingSaveLog(message);
   };
 }
