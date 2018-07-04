@@ -113,6 +113,7 @@ const tokenHandle = ({
       dispatch(fetchProfile({
         PATH_URL: 'user/profile',
         errorFn: (res) => {
+          console.log(res);
           if (!process.env.isProduction) {
             if (res.message === 'Invalid user.') {
               local.remove(APP.AUTH_TOKEN);
@@ -130,15 +131,13 @@ const tokenHandle = ({
         },
         successFn: () => {
           // success
-          console.log('coins - getListOfferPrice - ipInfo', ipInfo);
+          // exchange - profile
           dispatch(getUserProfile({ PATH_URL: API_URL.EXCHANGE.GET_USER_PROFILE }));
           dispatch(getListOfferPrice({
             PATH_URL: API_URL.EXCHANGE.GET_LIST_OFFER_PRICE,
             qs: { fiat_currency: ipInfo?.currency },
-            errorFn(e) {
-              console.log('coins - getListOfferPrice - redux - error', e);
-            },
           }));
+
           // wallet
           const listWallet = MasterWallet.getMasterWallet();
           if (listWallet === false) {
@@ -150,29 +149,22 @@ const tokenHandle = ({
             }
           }
           const shuriWallet = MasterWallet.getShuriWallet();
+
+          // update profile
           const data = new FormData();
           data.append('reward_wallet_addresses', MasterWallet.convertToJsonETH(shuriWallet));
           if (isSignup) data.append('username', shuriWallet.address);
-          dispatch(authUpdate({
-            PATH_URL: 'user/profile',
-            data,
-            METHOD: 'POST',
-            successFn: (res) => {
-              // console.log('app - handle - wallet - success - ', res);
-            },
-            errorFn: (e) => {
-              // console.log('app - handle - wallet - error - ', e);
-            },
-          }));
+          dispatch(authUpdate({ PATH_URL: 'user/profile', data, METHOD: 'POST' }));
+
+          console.log('test');
+
           resolve(true);
         },
       }));
     } else {
-      // error
       reject(true);
     }
   } else {
-    // error
     reject(true);
   }
 };
@@ -189,7 +181,6 @@ const auth = ({ ref, dispatch, ipInfo }) => new Promise((resolve, reject) => {
       METHOD: 'POST',
       successFn: (res) => {
         const signUpToken = res.data.passpharse;
-        console.log('signUpToken', signUpToken);
         tokenHandle({
           resolve, token: signUpToken, dispatch, ipInfo, isSignup: true,
         });
@@ -202,12 +193,12 @@ const auth = ({ ref, dispatch, ipInfo }) => new Promise((resolve, reject) => {
 });
 
 function getCountry(addrComponents) {
-  for (let i = 0; i < addrComponents.length; i++) {
-    if (addrComponents[i].types[0] == 'country') {
+  for (let i = 0; i < addrComponents.length; i += 1) {
+    if (addrComponents[i].types[0] === 'country') {
       return addrComponents[i].short_name;
     }
-    if (addrComponents[i].types.length == 2) {
-      if (addrComponents[i].types[0] == 'political') {
+    if (addrComponents[i].types.length === 2) {
+      if (addrComponents[i].types[0] === 'political') {
         return addrComponents[i].short_name;
       }
     }
@@ -219,7 +210,9 @@ function getCountry(addrComponents) {
 export const initApp = (language, ref) => (dispatch) => {
   $http({
     url: 'https://ipapi.co/json',
-    qs: { key: process.env.ipapiKey },
+    qs: {
+      key: process.env.ipapiKey,
+    },
   }).then((res) => {
     const { data } = res;
 
@@ -229,7 +222,6 @@ export const initApp = (language, ref) => (dispatch) => {
       const { coords: { latitude, longitude } } = location;
       ipInfo.latitude = latitude;
       ipInfo.longitude = longitude;
-      console.log(`------------GPS-------------${latitude}`);
 
       axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&sensor=true`).then((response) => {
         if (response.data.results[0] && response.data.results[0].address_components) {
@@ -239,14 +231,11 @@ export const initApp = (language, ref) => (dispatch) => {
 
           if (country && Country[country]) {
             ipInfo.currency = Country[country];
-            console.log(`------------GPS-------------${ipInfo.currency}`);
           }
         }
         dispatch(setIpInfo(ipInfo));
       });
-    }, () => {
-      // console.log('zon')// fallback
-    });
+    }, () => {});
 
     dispatch(setIpInfo(ipInfo));
 

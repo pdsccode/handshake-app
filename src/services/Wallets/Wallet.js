@@ -1,7 +1,5 @@
 import { StringHelper } from '@/utils/helper';
 
-import { findKey } from '@firebase/util';
-
 export class Wallet {
   constructor() {
     this.mnemonic = '';
@@ -30,13 +28,9 @@ export class Wallet {
     return this.network;
   }
   getNetworkName() {
-    const networkName = this.constructor.Network.find((network) => {
-      if (network === this.network) {
-        return true;
-      }
-      return false;
-    });
-    return networkName ? networkName : this.title;
+    const keys = Object.keys(this.constructor.Network);
+    const networkName = keys.find(key => this.constructor.Network[key] === this.network);
+    return networkName || this.title;
   }
   getShortBalance() {
     return Number((parseFloat(this.balance)).toFixed(8));
