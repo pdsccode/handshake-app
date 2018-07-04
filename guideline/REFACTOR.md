@@ -1,0 +1,4 @@
+- blockchain connection
+- wallet
+- models/factory
+- app flow

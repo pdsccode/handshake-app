@@ -1,0 +1,4 @@
+EditorConfig
+ESLint
+Quote: ', `
+

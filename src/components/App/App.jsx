@@ -3,7 +3,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'connected-react-router';
 // app
-import Root from '@/components/App/Root';
+// import Root from '@/components/App/Root';
 // store
 import store, { history } from '@/stores';
 
@@ -13,7 +13,7 @@ class App extends React.Component {
     return (
       <Provider store={store}>
         <ConnectedRouter history={history}>
-          <Root />
+          <div />
         </ConnectedRouter>
       </Provider>
     );
