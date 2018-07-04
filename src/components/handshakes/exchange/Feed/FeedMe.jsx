@@ -965,12 +965,15 @@ class FeedMe extends React.PureComponent {
   // /Start Offer store
   // //////////////////////
 
-  calculateFiatAmountOfferStore(amount, type, currency, percentage) {
+  calculateFiatAmountOfferStore(amount, type, percentage) {
+    const { offer } = this;
     const { listOfferPrice } = this.props;
+    const { currency, fiatCurrency, } = offer;
+
     let fiatAmount = 0;
 
     if (listOfferPrice) {
-      const offerPrice = getOfferPrice(listOfferPrice, type, currency);
+      const offerPrice = getOfferPrice(listOfferPrice, type, currency, fiatCurrency);
       if (offerPrice) {
         fiatAmount = amount * offerPrice.price || 0;
         fiatAmount += fiatAmount * percentage / 100;
@@ -1006,11 +1009,11 @@ class FeedMe extends React.PureComponent {
     const { status } = this.props;
     const { offer } = this;
     const {
-      buyAmount, sellAmount, currency, buyPercentage, sellPercentage,
+      buyAmount, sellAmount, buyPercentage, sellPercentage,
     } = offer;
     let message = '';
-    const fiatAmountBuy = this.calculateFiatAmountOfferStore(buyAmount, EXCHANGE_ACTION.BUY, currency, buyPercentage);
-    const fiatAmountSell = this.calculateFiatAmountOfferStore(sellAmount, EXCHANGE_ACTION.SELL, currency, sellPercentage);
+    const fiatAmountBuy = this.calculateFiatAmountOfferStore(buyAmount, EXCHANGE_ACTION.BUY, buyPercentage);
+    const fiatAmountSell = this.calculateFiatAmountOfferStore(sellAmount, EXCHANGE_ACTION.SELL, sellPercentage);
     switch (status) {
       case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CREATED:
       case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.ACTIVE:
@@ -1166,7 +1169,8 @@ class FeedMe extends React.PureComponent {
   // /Start Offer store shake
   // //////////////////////
 
-  calculateFiatAmount = (offer) => {
+  calculateFiatAmount = () => {
+    const { offer } = this;
     const { listOfferPrice } = this.props;
     let fiatAmount = 0;
 
@@ -1178,7 +1182,7 @@ class FeedMe extends React.PureComponent {
         checkType = offer.type === EXCHANGE_ACTION.BUY ? EXCHANGE_ACTION.SELL : EXCHANGE_ACTION.BUY;
       }
 
-      const offerPrice = getOfferPrice(listOfferPrice, checkType, offer.currency);
+      const offerPrice = getOfferPrice(listOfferPrice, checkType, offer.currency, offer.fiatCurrency);
       if (offerPrice) {
         fiatAmount = offer.amount * offerPrice.price || 0;
         fiatAmount += fiatAmount * offer.percentage / 100;
@@ -2065,7 +2069,7 @@ class FeedMe extends React.PureComponent {
           just = ' just ';
         }
 
-        const fiatAmount = this.calculateFiatAmount(offer);
+        const fiatAmount = this.calculateFiatAmount();
 
         message = (<FormattedMessage
           id="instantOfferHandShakeContent"
@@ -2118,7 +2122,7 @@ class FeedMe extends React.PureComponent {
           }
         }
 
-        const fiatAmount = this.calculateFiatAmount(offer);
+        const fiatAmount = this.calculateFiatAmount();
 
         message = this.getContent(fiatAmount);
 
