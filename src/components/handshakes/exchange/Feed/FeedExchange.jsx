@@ -380,7 +380,14 @@ id="offerDistanceContent"
 
   getNameShopDisplayed = () => {
     const { username, itemFlags, items } = this.offer;
-    if (username) { return username; }
+    if (username) {
+      const wallet = new Ethereum();
+      if (wallet.checkAddressValid(username) === true) {
+        wallet.address = username;
+        return wallet.getShortAddress();
+      }
+      return username;
+    }
     if (itemFlags.ETH) {
       const wallet = new Ethereum();
       wallet.address = items.ETH.userAddress;

@@ -244,7 +244,7 @@ class FeedMe extends React.PureComponent {
     const { offer } = this;
     const wallet = new Ethereum();
 
-    if (wallet.checkAddressValid(offer.username)) {
+    if (wallet.checkAddressValid(offer.username) === true) {
       wallet.address = offer.username;
       return wallet.getShortAddress();
     }
