@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import moment from 'moment';
-import history from '@/services/history';
 // service, constant
 import createForm from '@/components/core/form/createForm';
 import { required } from '@/components/core/form/validation';
@@ -11,8 +10,8 @@ import { initHandshake } from '@/reducers/handshake/action';
 import { loadMatches } from '@/reducers/betting/action';
 import { HANDSHAKE_ID, API_URL, APP, URL } from '@/constants';
 import { BetHandshakeHandler, SIDE, MESSAGE } from '@/components/handshakes/betting/Feed/BetHandshakeHandler.js';
-import local from '@/services/localStore';
-import GA from '@/services/googleAnalytics';
+import local from '@/services/local-store';
+import GA from '@/services/google-analytics';
 
 // components
 import Button from '@/components/core/controls/Button';
@@ -22,7 +21,7 @@ import { MasterWallet } from '@/services/Wallets/MasterWallet';
 import Dropdown from '@/components/core/controls/Dropdown';
 import Toggle from '@/components/handshakes/betting/Feed/Toggle';
 import { showAlert } from '@/reducers/app/action';
-import {isRightNetwork, isExpiredDate, getChainIdDefaultWallet, 
+import {isRightNetwork, isExpiredDate, getChainIdDefaultWallet,
   getBalance, getEstimateGas, isExistMatchBet, getAddress} from '@/components/handshakes/betting/utils.js';
 
 // self
@@ -94,7 +93,7 @@ class BettingCreate extends React.Component {
     this.onToggleChange = ::this.onToggleChange;
   }
   componentDidMount() {
-    console.log('Betting Create Props:', this.props, history);
+    console.log('Betting Create Props:', this.props, this.props.history);
     this.setState({
 
     });
@@ -257,7 +256,7 @@ class BettingCreate extends React.Component {
     console.log('Match, Outcome:', selectedMatch, selectedOutcome);
 
     let message = null;
-   
+
     if (!isRightNetwork()) {
       message = MESSAGE.RIGHT_NETWORK;
     }

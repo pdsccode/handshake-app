@@ -57,7 +57,7 @@ import {
 } from '@/reducers/exchange/action';
 import { ExchangeFactory } from '@/factories';
 import { MasterWallet } from '@/services/Wallets/MasterWallet';
-import { formatAmountCurrency, formatMoneyByLocale, getHandshakeUserType, getOfferPrice } from '@/services/offer-util';
+import { formatAmountCurrency, formatMoneyByLocale, getHandshakeUserType, getOfferPrice } from '@/utils/offer';
 import { hideLoading, showAlert, showLoading } from '@/reducers/app/action';
 
 import { ExchangeHandshake, ExchangeShopHandshake } from '@/services/neuron';
@@ -66,7 +66,7 @@ import { updateOfferStatus } from '@/reducers/discover/action';
 import { responseExchangeDataChange } from '@/reducers/me/action';
 import { Ethereum } from '@/services/Wallets/Ethereum.js';
 import { Bitcoin } from '@/services/Wallets/Bitcoin';
-import { getLocalizedDistance } from '@/services/util';
+import { getLocalizedDistance } from '@/utils';
 
 import { getDistanceFromLatLonInKm, getErrorMessageFromCode } from '../utils';
 import './FeedExchange.scss';

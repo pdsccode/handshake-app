@@ -1,4 +1,4 @@
-import { StringHelper } from '@/services/helper';
+import { StringHelper } from '@/utils/helper';
 
 export class Wallet {
   constructor() {

@@ -24,7 +24,7 @@ import { connect } from "react-redux";
 import { shakeOffer, } from "@/reducers/exchange/action";
 import { ExchangeFactory } from "@/factories";
 import { MasterWallet } from "@/services/Wallets/MasterWallet";
-import { formatAmountCurrency, getHandshakeUserType } from "@/services/offer-util";
+import { formatAmountCurrency, getHandshakeUserType } from "@/utils/offer";
 import { hideLoading, showAlert, showLoading } from '@/reducers/app/action';
 import { Link } from "react-router-dom";
 import { getDistanceFromLatLonInKm } from '../utils'

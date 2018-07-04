@@ -5,13 +5,13 @@ import Web3 from 'web3';
 
 // components
 import Website from '@/components/App/Basic';
-import LogManage from '@/services/logmanage';
+import LogManager from '@/services/log-manager';
 // import registerServiceWorker from '@/services/worker';
 import * as OfflinePlugin from 'offline-plugin/runtime';
 
 if (process.env.isStaging) {
   console.debug = function consoleDebug(message) {
-    LogManage.bettingSaveLog(message);
+    LogManager.bettingSaveLog(message);
   };
 }
 

@@ -40,7 +40,7 @@ import {
 // import getSymbolFromCurrency from 'currency-symbol-map';
 import { ExchangeFactory } from "@/factories";
 import { MasterWallet } from "@/services/Wallets/MasterWallet";
-import { getHandshakeUserType, getOfferPrice } from "@/services/offer-util";
+import { getHandshakeUserType, getOfferPrice } from "@/utils/offer";
 import { showAlert } from '@/reducers/app/action';
 import { Link } from "react-router-dom";
 import { URL } from '@/config';
@@ -49,7 +49,7 @@ import { ExchangeHandshake } from '@/services/neuron';
 import _sample from "lodash/sample";
 import { feedBackgroundColors } from "@/components/handshakes/exchange/config";
 import { updateOfferStatus } from "@/reducers/discover/action";
-import { formatAmountCurrency, formatMoney } from "@/services/offer-util";
+import { formatAmountCurrency, formatMoney } from "@/utils/offer";
 import { BigNumber } from "bignumber.js";
 import { showLoading, hideLoading } from '@/reducers/app/action';
 

@@ -7,9 +7,9 @@ import { connect } from 'react-redux';
 import { shakeItem, initHandshake, } from '@/reducers/handshake/action';
 import {HANDSHAKE_ID, API_URL, APP } from '@/constants';
 import {MasterWallet} from '@/services/Wallets/MasterWallet';
-import local from '@/services/localStore';
+import local from '@/services/local-store';
 import moment from 'moment';
-import GA from '@/services/googleAnalytics';
+import GA from '@/services/google-analytics';
 
 // components
 import Button from '@/components/core/controls/Button';

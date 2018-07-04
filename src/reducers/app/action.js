@@ -2,7 +2,7 @@ import $http from '@/services/api';
 import { UserFactory } from '@/factories';
 import axios from 'axios';
 import { APP, API_URL, Country } from '@/constants';
-import local from '@/services/localStore';
+import local from '@/services/local-store';
 import COUNTRIES_BLACKLIST_PREDICTION from '@/data/country-blacklist-betting';
 import COUNTRIES_BLACKLIST_CASH from '@/data/country-blacklist-exchange';
 import { signUp, fetchProfile, authUpdate } from '@/reducers/auth/action';

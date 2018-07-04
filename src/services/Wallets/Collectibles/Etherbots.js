@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { Wallet } from '@/services/Wallets/Wallet.js';
-import { StringHelper } from '@/services/helper';
+import { StringHelper } from '@/utils/helper';
 import { Ethereum } from '@/services/Wallets/Ethereum.js';
 import { TokenERC721 } from '@/services/Wallets/Collectibles/TokenERC721';
 

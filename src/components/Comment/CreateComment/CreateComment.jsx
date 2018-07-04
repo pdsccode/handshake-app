@@ -6,8 +6,8 @@ import { connect } from 'react-redux';
 import { createComment } from '@/reducers/comment/action';
 import { showAlert } from '@/reducers/app/action';
 import { API_URL, HANDSHAKE_ID } from '@/constants';
-import {MasterWallet} from '@/services/Wallets/MasterWallet';
-import Helper from '@/services/helper';
+import { MasterWallet } from '@/services/Wallets/MasterWallet';
+import Helper from '@/utils/helper';
 
 // components
 import Image from '@/components/core/presentation/Image';
@@ -29,12 +29,12 @@ class CreateComment extends React.PureComponent {
       imagePreviewUrl: '',
       dirty: false,
     };
-    this.createComment = ::this.createComment;
-    this.handleImageChange = ::this.handleImageChange;
-    this.deleteImage = ::this.deleteImage;
-    this.resetState = ::this.resetState;
-    this.autoResizeTextArea = ::this.autoResizeTextArea;
-    this.onChangeText = ::this.onChangeText;
+    this.createComment = :: this.createComment;
+    this.handleImageChange = :: this.handleImageChange;
+    this.deleteImage = :: this.deleteImage;
+    this.resetState = :: this.resetState;
+    this.autoResizeTextArea = :: this.autoResizeTextArea;
+    this.onChangeText = :: this.onChangeText;
   }
   isInFirstRow = true;
 
@@ -46,17 +46,17 @@ class CreateComment extends React.PureComponent {
   }
 
   createComment() {
-    if(!this.state.dirty) {
+    if (!this.state.dirty) {
       return;
     }
     this.setState({ dirty: false });
     const { file } = this.state;
-    if(!this.textareaRef || !this.textareaRef.value) {
+    if (!this.textareaRef || !this.textareaRef.value) {
       this.props.showAlert({
         message: <div className="text-center">Please type something</div>,
         timeOut: 3000,
         type: 'danger',
-        callBack: () => {},
+        callBack: () => { },
       });
       return;
     }
@@ -68,7 +68,7 @@ class CreateComment extends React.PureComponent {
     };
     const data = new FormData();
     data.append('request', JSON.stringify(rawData));
-    if(!!file) {
+    if (!!file) {
       data.append('image', this.uploadImageRef.files[0]);
     }
     // call api create comment
@@ -89,7 +89,7 @@ class CreateComment extends React.PureComponent {
   handleImageChange(e) {
     e.preventDefault();
 
-    if(e.target.files && e.target.files[0]) {
+    if (e.target.files && e.target.files[0]) {
       const reader = new FileReader();
       const file = e.target.files[0];
 
@@ -114,9 +114,9 @@ class CreateComment extends React.PureComponent {
       setTimeout(() => {
         const offsetHeightIsLessThanScrollHeight = (this.textareaRef.offsetHeight + 10) < this.textareaRef.scrollHeight;
         const isClearTextToFirstRow = this.textareaRef.value.length < 30;
-        if(!this.isInFirstRow || offsetHeightIsLessThanScrollHeight) {
-          if(this.isInFirstRow) this.isInFirstRow = false;
-          if(!this.isInFirstRow && isClearTextToFirstRow) {
+        if (!this.isInFirstRow || offsetHeightIsLessThanScrollHeight) {
+          if (this.isInFirstRow) this.isInFirstRow = false;
+          if (!this.isInFirstRow && isClearTextToFirstRow) {
             this.isInFirstRow = true;
             this.textareaRef.style.height = '40px';
           } else {
@@ -148,7 +148,7 @@ class CreateComment extends React.PureComponent {
         }
         <div className="imageUpload">
           <label className="sr-only" htmlFor="image-upload">Image Upload</label>
-          <input onChange={this.handleImageChange} type="file" accept="image/*" id="image-upload" ref={element => {this.uploadImageRef = element;}} />
+          <input onChange={this.handleImageChange} type="file" accept="image/*" id="image-upload" ref={element => { this.uploadImageRef = element; }} />
           <Image src={createImageIcon} alt="create image icon" />
         </div>
         <textarea

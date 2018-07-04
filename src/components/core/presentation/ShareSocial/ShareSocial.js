@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 // service
 import $http from '@/services/api';
-import Helper from '@/services/helper';
+import Helper from '@/utils/helper';
 import { showAlert } from '@/reducers/app/action';
-import GA from '@/services/googleAnalytics';
+import GA from '@/services/google-analytics';
 
 // style
 import CopyLink from '@/assets/images/share/link.svg';
@@ -99,7 +99,7 @@ class ShareSocial extends PureComponent {
 
     switch (shareType) {
       case 'TWITTER':
-        if (!Helper.broswer.isSafari) {
+        if (!Helper.browser.isSafari) {
           try {
             const { data } = await this.converToShortLink(shareUrl);
             shortLink = data.id;

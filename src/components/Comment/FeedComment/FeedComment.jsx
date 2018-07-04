@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { URL, BASE_API, API_URL } from '@/constants';
 import $http from '@/services/api';
-import Helper from '@/services/helper';
+import Helper from '@/utils/helper';
 
 // style
 import addAComment from '@/assets/images/icon/comment/add-a-comment.svg';

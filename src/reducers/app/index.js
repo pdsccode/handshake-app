@@ -1,4 +1,4 @@
-import local from '@/services/localStore';
+import local from '@/services/local-store';
 import { APP } from '@/constants';
 import { APP_ACTION } from './action';
 

@@ -8,9 +8,9 @@ import { showLoading, hideLoading, showAlert } from '@/reducers/app/action';
 import Image from '@/components/core/presentation/Image';
 import ExpandArrowSVG from '@/assets/images/icon/expand-arrow.svg';
 import { referredInfo } from '@/reducers/auth/action';
-import { StringHelper } from '@/services/helper';
+import { StringHelper } from '@/utils/helper';
 import './Refers.scss';
-import local from '@/services/localStore';
+import local from '@/services/local-store';
 import {APP} from '@/constants';
 
 

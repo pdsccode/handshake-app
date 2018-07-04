@@ -17,7 +17,7 @@ import {getCryptoPrice} from '@/reducers/exchange/action';
 import { ExchangeFactory } from "@/factories";
 import { showLoading, hideLoading } from '@/reducers/app/action';
 import QrReader from 'react-qr-reader';
-import { StringHelper } from '@/services/helper';
+import { StringHelper } from '@/utils/helper';
 import iconSuccessChecked from '@/assets/images/icon/icon-checked-green.svg';
 import './TransferCoin.scss';
 import iconQRCodeWhite from '@/assets/images/icon/scan-qr-code.svg';

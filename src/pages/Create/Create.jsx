@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { HANDSHAKE_ID, HANDSHAKE_NAME, HANDSHAKE_ID_DEFAULT } from '@/constants';
-import Helper from '@/services/helper';
+import Helper from '@/utils/helper';
 // components
 import { Grid, Row, Col } from 'react-bootstrap';
 // import SearchBar from '@/components/core/controls/SearchBar';

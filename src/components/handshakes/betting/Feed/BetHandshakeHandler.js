@@ -5,9 +5,9 @@ import { showAlert } from '@/reducers/app/action';
 import { PredictionHandshake } from '@/services/neuron';
 import { getMessageWithCode, getChainIdDefaultWallet, foundShakeItem, isInitBet, isExpiredDate } from '@/components/handshakes/betting/utils.js';
 import Web3 from 'web3';
-import GA from '@/services/googleAnalytics';
+import GA from '@/services/google-analytics';
 
-import local from '@/services/localStore';
+import local from '@/services/local-store';
 import { rollback, saveTransaction, collect } from '@/reducers/handshake/action';
 
 import store from '@/stores';

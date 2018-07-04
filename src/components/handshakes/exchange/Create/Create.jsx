@@ -4,7 +4,7 @@ import Feed from "@/components/core/presentation/Feed";
 import Button from "@/components/core/controls/Button";
 import './styles.scss'
 import createForm from "@/components/core/form/createForm";
-import { getOfferPrice } from "@/services/offer-util";
+import { getOfferPrice } from "@/utils/offer";
 import axios from 'axios';
 import { FormattedMessage } from 'react-intl';
 import {
@@ -46,7 +46,7 @@ import { ExchangeShopHandshake } from "@/services/neuron";
 // import phoneCountryCodes from '@/components/core/form/country-calling-codes.min.json';
 import COUNTRIES from "@/data/country-dial-codes.js";
 import { feedBackgroundColors } from "@/components/handshakes/exchange/config";
-import { formatAmountCurrency, formatMoneyByLocale } from "@/services/offer-util";
+import { formatAmountCurrency, formatMoneyByLocale } from "@/utils/offer";
 import { createOfferStores, } from "@/reducers/exchange/action";
 import { BigNumber } from "bignumber.js/bignumber";
 import { authUpdate } from '@/reducers/auth/action';

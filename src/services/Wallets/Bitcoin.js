@@ -1,6 +1,6 @@
 import axios from 'axios';
 import satoshi from 'satoshi-bitcoin';
-import { StringHelper } from '@/services/helper';
+import { StringHelper } from '@/utils/helper';
 import { Wallet } from '@/services/Wallets/Wallet';
 import { NB_BLOCKS } from '@/constants';
 

@@ -1,5 +1,5 @@
 import { APP } from '@/constants';
-import local from '@/services/localStore';
+import local from '@/services/local-store';
 import { UserFactory } from '@/factories';
 import { ACTIONS } from './action';
 

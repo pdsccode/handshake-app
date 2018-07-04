@@ -20,7 +20,6 @@ import { loadMatches, addMatch } from '@/reducers/betting/action';
 import Dropdown from '@/components/core/controls/Dropdown';
 import { Alert } from 'reactstrap';
 import { BASE_API, API_URL, APP, URL } from '@/constants';
-import history from '@/services/history';
 import { showAlert } from '@/reducers/app/action';
 import { BetHandshakeHandler } from '../../betting/Feed/BetHandshakeHandler.js';
 import $http from '@/services/api';
@@ -61,7 +60,7 @@ class CreateBettingEvent extends React.Component {
 
 
   componentDidMount() {
-    // console.log('Betting Create Props:', this.props, history);
+    // console.log('Betting Create Props:', this.props, this.props.history);
     // this.setState({
     //   address: wallet.address,
     //   privateKey: wallet.privateKey,

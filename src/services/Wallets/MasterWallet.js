@@ -1,5 +1,5 @@
 
-import localStore from '@/services/localStore';
+import localStore from '@/services/local-store';
 import { Bitcoin } from '@/services/Wallets/Bitcoin.js';
 import { BitcoinTestnet } from '@/services/Wallets/BitcoinTestnet.js';
 import { Ethereum } from '@/services/Wallets/Ethereum.js';
@@ -34,7 +34,7 @@ import { UnicornGO } from '@/services/Wallets/Collectibles/UnicornGO';
 import { WarToken } from '@/services/Wallets/Collectibles/WarToken';
 
 import { APP } from '@/constants';
-import { StringHelper } from '@/services/helper';
+import { StringHelper } from '@/utils/helper';
 import Neuron from '@/services/neuron/Neutron';
 
 const bip39 = require('bip39');

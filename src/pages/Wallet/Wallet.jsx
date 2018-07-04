@@ -12,7 +12,7 @@ import { Grid, Row, Col } from 'react-bootstrap';
 import Button from '@/components/core/controls/Button';
 import { MasterWallet } from '@/services/Wallets/MasterWallet';
 import Input from '@/components/core/forms/Input/Input';
-import { StringHelper } from '@/services/helper';
+import { StringHelper } from '@/utils/helper';
 
 import {
   fieldCleave,
@@ -53,7 +53,7 @@ import QrReader from 'react-qr-reader';
 import { showAlert } from '@/reducers/app/action';
 import { showLoading, hideLoading } from '@/reducers/app/action';
 import { Input as Input2, InputGroup, InputGroupAddon } from 'reactstrap';
-import local from '@/services/localStore';
+import local from '@/services/local-store';
 import {APP} from '@/constants';
 import _ from 'lodash';
 import qs from 'querystring';
@@ -199,7 +199,7 @@ class Wallet extends React.Component {
         }
         else{
           listMainWallet.push(wallet);
-        }        
+        }
       } else {
         // is Testnet
         listTestWallet.push(wallet);
@@ -575,16 +575,16 @@ class Wallet extends React.Component {
   // Menu for Right header bar
   showModalAddCoin = () =>{
     this.setState({ isRestoreLoading: false, countCheckCoinToCreate: 1, listCoinTempToCreate: MasterWallet.getListCoinTemp() });
-    this.modalCreateWalletRef.open();    
+    this.modalCreateWalletRef.open();
   }
   showModalAddToken = () =>{
       this.setState({formAddTokenIsActive: true}, () => {
-        this.modalAddNewTokenRef.open();        
+        this.modalAddNewTokenRef.open();
     });
   }
   showModalAddCollectible = () =>{
     this.setState({formAddCollectibleIsActive: true}, () => {
-      this.modalAddNewCollectibleRef.open();      
+      this.modalAddNewCollectibleRef.open();
     });
   }
   creatSheetMenuHeaderMore() {
@@ -601,7 +601,7 @@ class Wallet extends React.Component {
     obj.push({
       title: messages.wallet.action.add_token.title,
       handler: () => {
-        this.showModalAddToken();       
+        this.showModalAddToken();
       },
     });
     obj.push({
@@ -916,7 +916,7 @@ class Wallet extends React.Component {
 
 
           <Modal title={messages.wallet.action.transfer.header} onRef={modal => this.modalSendRef = modal}  onClose={this.closeTransfer}>
-            <TransferCoin active={this.state.activeTransfer} wallet={this.state.walletSelected} onFinish={() => { this.successTransfer() }} />            
+            <TransferCoin active={this.state.activeTransfer} wallet={this.state.walletSelected} onFinish={() => { this.successTransfer() }} />
           </Modal>
 
           {/* <Modal title="Buy coins" onRef={modal => this.modalFillRef = modal}>
@@ -1051,7 +1051,7 @@ class Wallet extends React.Component {
             <Header title={messages.wallet.action.create.label.header_coins}hasLink={true} linkTitle={messages.wallet.action.create.button.add_new} onLinkClick={this.showModalAddCoin} />
           </Row>
           <Row className="list">
-            {this.listMainWalletBalance}            
+            {this.listMainWalletBalance}
           </Row>
 
           {/* Tokens */}

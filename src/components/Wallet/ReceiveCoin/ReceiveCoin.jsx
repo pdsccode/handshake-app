@@ -13,7 +13,7 @@ import Modal from '@/components/core/controls/Modal';
 import {MasterWallet} from "@/services/Wallets/MasterWallet";
 
 import { showLoading, hideLoading, showAlert } from '@/reducers/app/action';
-import { StringHelper } from '@/services/helper';
+import { StringHelper } from '@/utils/helper';
 import createForm from '@/components/core/form/createForm'
 import { ExchangeFactory } from "@/factories";
 import './ReceiveCoin.scss';

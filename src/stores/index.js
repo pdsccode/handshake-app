@@ -9,12 +9,16 @@ import 'firebase/messaging';
 
 import { composeWithDevTools } from 'redux-devtools-extension/developmentOnly';
 
-import history from '@/services/history';
+import createHistory from 'history/createBrowserHistory';
+
 import appReducer from '@/reducers/app';
 import authReducer from '@/reducers/auth';
 import reducers from '@/reducers';
 
+console.log('start');
 firebase.initializeApp(process.env.firebase);
+
+const history = createHistory();
 
 const rootReducer = combineReducers({
   app: appReducer,
@@ -30,4 +34,7 @@ const createStoreWithFirebase = compose(
 
 const store = createStoreWithFirebase(connectRouter(history)(rootReducer));
 
+console.log('abc', store, history);
+
+export { history };
 export default store;

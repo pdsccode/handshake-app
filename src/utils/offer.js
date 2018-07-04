@@ -1,4 +1,4 @@
-import local from '@/services/localStore';
+import local from '@/services/local-store';
 import { AMOUNT_DECIMAL, APP, HANDSHAKE_USER, PRICE_DECIMAL } from '@/constants';
 import { BigNumber } from 'bignumber.js';
 

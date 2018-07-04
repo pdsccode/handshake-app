@@ -1,6 +1,6 @@
 import { MasterWallet } from '@/services/Wallets/MasterWallet';
 import { BettingHandshake } from '@/services/neuron';
-import local from '@/services/localStore';
+import local from '@/services/local-store';
 import moment from 'moment';
 import { APP } from '@/constants';
 import { BET_TYPE, MESSAGE_SERVER } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';

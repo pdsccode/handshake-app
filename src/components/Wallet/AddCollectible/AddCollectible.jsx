@@ -39,7 +39,7 @@ import {showAlert} from '@/reducers/app/action';
 import { showLoading, hideLoading } from '@/reducers/app/action';
 import QrReader from 'react-qr-reader';
 import { Input as Input2, InputGroup, InputGroupAddon } from 'reactstrap';
-import { StringHelper } from '@/services/helper';
+import { StringHelper } from '@/utils/helper';
 import iconSuccessChecked from '@/assets/images/icon/icon-checked-green.svg';
 import PropTypes from 'prop-types';
 

@@ -45,14 +45,14 @@ import { Ethereum } from '@/services/Wallets/Ethereum.js';
 import { Bitcoin } from '@/services/Wallets/Bitcoin';
 import Offer from '@/models/Offer';
 import { MasterWallet } from '@/services/Wallets/MasterWallet';
-import { formatAmountCurrency, formatMoney, getHandshakeUserType, getOfferPrice } from '@/services/offer-util';
+import { formatAmountCurrency, formatMoney, getHandshakeUserType, getOfferPrice } from '@/utils/offer';
 import { hideLoading, showAlert, showLoading } from '@/reducers/app/action';
 import { getDistanceFromLatLonInKm, getErrorMessageFromCode } from "../utils";
 import { ExchangeHandshake, ExchangeShopHandshake } from '@/services/neuron';
 import { feedBackgroundColors } from '@/components/handshakes/exchange/config';
 import { updateOfferStatus } from '@/reducers/discover/action';
 import { ExchangeFactory } from '@/factories';
-import { getLocalizedDistance } from "@/services/util";
+import { getLocalizedDistance } from "@/utils";
 import { BigNumber } from "bignumber.js";
 
 class FeedExchange extends React.PureComponent {

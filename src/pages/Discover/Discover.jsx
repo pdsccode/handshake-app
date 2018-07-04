@@ -14,7 +14,7 @@ import {
 } from '@/constants';
 import { Link } from 'react-router-dom';
 import Cookies from 'js-cookie';
-import Helper from '@/services/helper';
+import Helper from '@/utils/helper';
 // components
 import { Col, Grid, Row } from 'react-bootstrap';
 // import SearchBar from '@/components/core/controls/SearchBar';

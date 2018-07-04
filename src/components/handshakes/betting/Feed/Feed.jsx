@@ -7,7 +7,7 @@ import { BetHandshakeHandler, SIDE, BETTING_STATUS_LABEL, ROLE, MESSAGE, BET_BLO
 import momment from 'moment';
 import { MasterWallet } from '@/services/Wallets/MasterWallet';
 
-import local from '@/services/localStore';
+import local from '@/services/local-store';
 import { FIREBASE_PATH, HANDSHAKE_ID, API_URL, APP } from '@/constants';
 import { uninitItem, collect, refund, collectFree, rollback, uninitItemFree } from '@/reducers/handshake/action';
 import { loadMyHandshakeList, updateBettingChange } from '@/reducers/me/action';

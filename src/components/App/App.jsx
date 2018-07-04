@@ -5,8 +5,8 @@ import { ConnectedRouter } from 'connected-react-router';
 // app
 import Root from '@/components/App/Root';
 // store
-import store from '@/stores';
-import history from '@/services/history';
+import store, { history } from '@/stores';
+
 
 class App extends React.Component {
   render() {

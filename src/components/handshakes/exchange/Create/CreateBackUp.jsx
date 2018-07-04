@@ -1,5 +1,5 @@
 import React from 'react';
-import {FormattedMessage, injectIntl} from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import Feed from '@/components/core/presentation/Feed';
 import Button from '@/components/core/controls/Button';
 import axios from 'axios';
@@ -13,11 +13,11 @@ import {
   fieldPhoneInput,
   fieldRadioButton
 } from '@/components/core/form/customField';
-import {maxValue, minValue, required} from '@/components/core/form/validation';
-import {change, Field, formValueSelector} from 'redux-form';
-import {bindActionCreators} from 'redux';
-import {connect} from 'react-redux';
-import {createOffer, getOfferPrice} from '@/reducers/exchange/action';
+import { maxValue, minValue, required } from '@/components/core/form/validation';
+import { change, Field, formValueSelector } from 'redux-form';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import { createOffer, getOfferPrice } from '@/reducers/exchange/action';
 import {
   API_URL,
   CRYPTO_CURRENCY,
@@ -37,15 +37,15 @@ import {
 import '../styles.scss';
 import ModalDialog from '@/components/core/controls/ModalDialog/ModalDialog';
 // import {MasterWallet} from '@/services/Wallets/MasterWallet';
-import {URL} from '@/config';
-import {hideLoading, showAlert, showLoading} from '@/reducers/app/action';
-import {MasterWallet} from "@/services/Wallets/MasterWallet";
-import {ExchangeHandshake} from '@/services/neuron';
+import { URL } from '@/config';
+import { hideLoading, showAlert, showLoading } from '@/reducers/app/action';
+import { MasterWallet } from "@/services/Wallets/MasterWallet";
+import { ExchangeHandshake } from '@/services/neuron';
 // import phoneCountryCodes from '@/components/core/form/country-calling-codes.min.json';
 import COUNTRIES from '@/data/country-dial-codes.js';
-import {feedBackgroundColors} from "@/components/handshakes/exchange/config";
-import {formatAmountCurrency, formatMoney} from "@/services/offer-util";
-import {BigNumber} from "bignumber.js";
+import { feedBackgroundColors } from "@/components/handshakes/exchange/config";
+import { formatAmountCurrency, formatMoney } from "@/utils/offer";
+import { BigNumber } from "bignumber.js";
 import iconLock from '@/assets/images/icon/lock.png';
 import iconUnlock from '@/assets/images/icon/unlock.png';
 
@@ -83,7 +83,7 @@ class Component extends React.Component {
   }
 
   setAddressFromLatLng = (lat, lng) => {
-    this.setState({lat: lat, lng: lng});
+    this.setState({ lat: lat, lng: lng });
     const { rfChange } = this.props;
     axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&sensor=true`).then((response) => {
       const address = response.data.results[0] && response.data.results[0].formatted_address;
@@ -91,9 +91,9 @@ class Component extends React.Component {
     });
   }
 
-async componentDidMount() {
-  const { ipInfo, rfChange, authProfile } = this.props;
-  navigator.geolocation.getCurrentPosition((location) => {
+  async componentDidMount() {
+    const { ipInfo, rfChange, authProfile } = this.props;
+    navigator.geolocation.getCurrentPosition((location) => {
       const { coords: { latitude, longitude } } = location
       this.setAddressFromLatLng(latitude, longitude) // better precision
     }, () => {
@@ -124,7 +124,7 @@ async componentDidMount() {
   }
 
   showLoading = () => {
-    this.props.showLoading({message: '',});
+    this.props.showLoading({ message: '', });
   }
 
   hideLoading = () => {
@@ -133,7 +133,7 @@ async componentDidMount() {
 
   getCryptoPriceByAmount = (amount) => {
     const { type, currency } = this.state;
-    const {ipInfo: {currency: fiat_currency}} = this.props;
+    const { ipInfo: { currency: fiat_currency } } = this.props;
 
     let data = {
       amount,
@@ -184,7 +184,7 @@ async componentDidMount() {
   handleSubmit = async (values) => {
     const { intl, totalAmount, price } = this.props;
     // const fiat_currency = this.state.ipInfo.currency;
-    const {ipInfo: {currency: fiat_currency}, authProfile} = this.props;
+    const { ipInfo: { currency: fiat_currency }, authProfile } = this.props;
     // console.log('valuessss', values);
 
     const wallet = MasterWallet.getWalletDefault(values.currency);
@@ -207,7 +207,7 @@ async componentDidMount() {
             fee: formatAmountCurrency(fee),
             currency: values.currency,
           })}
-          </div>,
+        </div>,
         timeOut: 3000,
         type: 'danger',
         callBack: () => {
@@ -290,13 +290,13 @@ async componentDidMount() {
 
     // if (currency === 'BTC') {
     this.showLoading();
-      this.props.createOffer({
-        PATH_URL: API_URL.EXCHANGE.OFFERS,
-        data: offer,
-        METHOD: 'POST',
-        successFn: this.handleCreateOfferSuccess,
-        errorFn: this.handleCreateOfferFailed,
-      });
+    this.props.createOffer({
+      PATH_URL: API_URL.EXCHANGE.OFFERS,
+      data: offer,
+      METHOD: 'POST',
+      successFn: this.handleCreateOfferSuccess,
+      errorFn: this.handleCreateOfferFailed,
+    });
     // } else {
     //
     // }
@@ -340,7 +340,7 @@ async componentDidMount() {
 
     this.hideLoading();
     this.props.showAlert({
-      message: <div className="text-center"><FormattedMessage id="createOfferSuccessMessage"/></div>,
+      message: <div className="text-center"><FormattedMessage id="createOfferSuccessMessage" /></div>,
       timeOut: 2000,
       type: 'success',
       callBack: () => {
@@ -381,7 +381,7 @@ async componentDidMount() {
   handleCreateOfferFailed = (e) => {
     this.hideLoading();
     this.props.showAlert({
-      message: <div className="text-center">{e.response?.data?.message}</div>,
+      message: <div className="text-center">{e.response ?.data ?.message}</div>,
       timeOut: 3000,
       type: 'danger',
     });
@@ -417,7 +417,7 @@ async componentDidMount() {
           <Feed className="feed my-2 p-0" background={this.mainColor}>
             <div style={{ color: 'white', padding: '20px' }}>
               <div className="d-flex mb-4">
-                <label className="col-form-label mr-auto" style={{ width: '190px', fontWeight: 'bold'  }}>I want to</label>
+                <label className="col-form-label mr-auto" style={{ width: '190px', fontWeight: 'bold' }}>I want to</label>
                 <div className='input-group'>
                   <Field
                     name="type"
@@ -462,7 +462,7 @@ async componentDidMount() {
 
               <div className="d-flex mt-2">
                 <label className="col-form-label mr-auto label-create" style={{ width: '220px' }}>Price/{currency}</label>
-                <span className="w-100 col-form-label">{ formatMoney(offerPrice ? offerPrice.price : 0) } {ipInfo.currency}</span>
+                <span className="w-100 col-form-label">{formatMoney(offerPrice ? offerPrice.price : 0)} {ipInfo.currency}</span>
               </div>
 
               <div className="d-flex mt-2">
@@ -504,7 +504,7 @@ async componentDidMount() {
 
               <div className="d-flex mt-2">
                 <label className="col-form-label mr-auto label-create" style={{ width: '220px' }}>Total</label>
-                <span className="w-100 col-form-label">{ formatMoney(totalAmount) } {ipInfo.currency}</span>
+                <span className="w-100 col-form-label">{formatMoney(totalAmount)} {ipInfo.currency}</span>
               </div>
               <hr className="hrLine" />
               <div className="d-flex mt-2">
@@ -516,7 +516,7 @@ async componentDidMount() {
                     component={fieldPhoneInput}
                     type="tel"
                     placeholder="4995926433"
-                    // validate={[required, currency === 'BTC' ? minValue001 : minValue01]}
+                  // validate={[required, currency === 'BTC' ? minValue001 : minValue01]}
                   />
                 </div>
               </div>
@@ -554,12 +554,13 @@ const mapStateToProps = (state) => {
   const customizePrice = selectorFormExchangeCreate(state, 'customizePrice') || 0;
 
   const offerPrice = state.exchange.offerPrice;
-  let totalAmount =  amount * (offerPrice && offerPrice.price || 0) || 0;
+  let totalAmount = amount * (offerPrice && offerPrice.price || 0) || 0;
   totalAmount += totalAmount * customizePrice / 100;
 
   const price = offerPrice && offerPrice.price || 0;
 
-  return { amount, currency, totalAmount, type, sellPriceType, price,
+  return {
+    amount, currency, totalAmount, type, sellPriceType, price,
     offerPrice: offerPrice,
     ipInfo: state.app.ipInfo,
     authProfile: state.auth.profile

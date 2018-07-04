@@ -250,6 +250,3 @@ export const getLocalizedDistance = (distanceKm, countryCode) => {
   result += ' km';
   return result;
 };
-
-
-export default { states };

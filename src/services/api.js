@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { merge, trimEnd } from 'lodash';
-import local from '@/services/localStore';
+import local from '@/services/local-store';
 import { APP, BASE_API } from '@/constants';
 import { MasterWallet } from '@/services/Wallets/MasterWallet';
 

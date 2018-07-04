@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { loadCommentList } from '@/reducers/comment/action';
 import { API_URL } from '@/constants';
 import qs from 'qs';
-import Helper from '@/services/helper';
+import Helper from '@/utils/helper';
 
 // components
 import { Grid, Row, Col } from 'react-bootstrap';

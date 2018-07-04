@@ -3,7 +3,7 @@
 */
 import React from 'react';
 import PropTypes from 'prop-types';
-import Helper from '@/services/helper';
+import Helper from '@/utils/helper';
 // style
 import './StarsRating.scss';
 

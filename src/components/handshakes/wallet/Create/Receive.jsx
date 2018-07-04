@@ -1,6 +1,4 @@
 import React from 'react';
-import { Grid, Row, Col } from 'react-bootstrap';
-import history from '@/services/history';
 import { URL } from '@/constants';
 import ReceiveCoin from '@/components/Wallet/ReceiveCoin';
 
