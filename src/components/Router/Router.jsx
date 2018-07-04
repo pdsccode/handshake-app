@@ -19,6 +19,7 @@ const RouterDiscover = createDynamicImport(() => import('@/components/Router/Dis
 const RouterChat = createDynamicImport(() => import('@/components/Router/Chat'), Loading);
 const RouterCreate = createDynamicImport(() => import('@/components/Router/Create'), Loading);
 const RouterWallet = createDynamicImport(() => import('@/components/Router/Wallet'), Loading);
+const RouterPayment = createDynamicImport(() => import('@/components/Router/Payment'), Loading);
 const RouterExchange = createDynamicImport(() => import('@/components/Router/Exchange'), Loading);
 const RouterTransaction = createDynamicImport(() => import('@/components/Router/Transaction'), Loading);
 const RouterComment = createDynamicImport(() => import('@/components/Router/Comment'), Loading);
@@ -29,6 +30,7 @@ const rootRouterMap = [
   { path: URL.HANDSHAKE_DISCOVER, component: RouterDiscover },
   { path: URL.HANDSHAKE_CHAT, component: RouterChat },
   { path: URL.HANDSHAKE_WALLET, component: RouterWallet },
+  { path: URL.HANDSHAKE_PAYMENT, component: RouterPayment },
   { path: URL.HANDSHAKE_CREATE, component: RouterCreate },
   { path: URL.HANDSHAKE_EXCHANGE, component: RouterExchange },
   { path: URL.TRANSACTION_LIST, component: RouterTransaction },
@@ -60,7 +62,7 @@ class Router extends React.Component {
       firebaseApp: initFirebaseApp,
     };
 
-    console.log('root-router - contructor - init');
+    //console.log('root-router - contructor - init');
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {

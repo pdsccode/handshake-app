@@ -1,0 +1,27 @@
+@import './src/styles/style';
+
+.overview-wrapper{
+  padding: 10px;
+
+  h5{
+    text-align: center;
+  }
+
+  .second-h5{
+    margin-top: 30px;
+  }
+
+  .h5-border{
+    width: 100px;
+    border-bottom: solid 3px orange;
+    margin-left: calc(50% - 50px);
+  }
+  .content{
+    padding-top: 20px;
+    .title{
+      font-weight: 500;
+      padding-bottom: 5px;
+    }
+  }
+
+}

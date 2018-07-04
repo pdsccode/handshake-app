@@ -16,7 +16,7 @@ class Neuron {
 
   getWeb3 = () => {
     if (!this.web3) {
-      console.log(this.chainId);
+      //console.log(this.chainId);
       this.web3 = new Web3(new Web3.providers.HttpProvider(configs.network[this.chainId].blockchainNetwork));
     }
     return this.web3;
