@@ -1,10 +1,11 @@
-const handleListPayload = payload => payload.map(handshake => Handshake.handshake(handshake));
-
-class Handshake {
+/**
+ * HandshakeFactory
+ */
+export default class HandshakeFactory {
   static handshake(data) {
     return {
       id: data.id,
-      hid: data.hid,
+      hid: data.hid || '',
       type: data.type,
       state: data.state,
       status: data.status,
@@ -17,7 +18,6 @@ class Handshake {
       initAt: data.init_at,
       lastUpdateAt: data.last_update_at,
       extraData: data.extra_data,
-      hid: data.hid || '',
       fromAddress: data.from_address || '',
       odds: data.odds || '',
       outComeId: data.outcome_id || '',
@@ -36,9 +36,43 @@ class Handshake {
       freeBet: data.free_bet || 0,
       closingTime: data.closing_time,
       reportTime: data.reporting_time,
-      disputeTime: data.disputing_time
+      disputeTime: data.disputing_time,
+    };
+  }
+
+  static match(data) {
+    return {
+      id: data.id || '',
+      awayTeamCode: data.awayTeamCode || '',
+      awayTeamFlag: data.awayTeamFlag || '',
+      awayTeamName: data.awayTeamName || '',
+      date: data.date || '',
+      homeTeamCode: data.homeTeamCode || '',
+      homeTeamFlag: data.homeTeamFlag || '',
+      homeTeamName: data.homeTeamName || '',
+      name: data.name || '',
+      marketFee: data.market_fee || '',
+      outcomes: (() => {
+        if (data.outcomes) {
+          return data.outcomes.map(item => HandshakeFactory.outcome(item));
+        }
+        return [];
+      })(),
+    };
+  }
+
+  static outcome(data) {
+    return {
+      hid: data.hid || '',
+      id: data.id || '',
+      name: data.name || '',
+      public: data.public || 0,
+      handshakes: (() => {
+        if (data.handshakes) {
+          return data.handshakes.map(item => HandshakeFactory.handshake(item));
+        }
+        return [];
+      })(),
     };
   }
 }
-
-export default Handshake;

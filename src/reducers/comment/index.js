@@ -1,8 +1,8 @@
-import Comment from '@/models/Comment';
+import { CommentFactory } from '@/factories';
 import { ACTIONS } from './action';
 
-const handleListPayload = payload => payload.data.items.reverse().map(comment => Comment.comment(comment));
-const handleCreateCommentPayload = payload => Comment.comment(payload.data);
+const handleListPayload = payload => payload.data.items.reverse().map(comment => CommentFactory.comment(comment));
+const handleCreateCommentPayload = payload => CommentFactory.comment(payload.data);
 
 const commentReducer = (state = {
   list: [],

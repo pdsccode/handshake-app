@@ -1,4 +1,4 @@
-import Handshake from '@/models/Handshake';
+import { HandshakeFactory } from '@/factories';
 import {
   EXCHANGE_FEED_TYPE,
   HANDSHAKE_EXCHANGE_CC_STATUS_VALUE,
@@ -20,7 +20,7 @@ function handlePreProcessForOfferStore(handshake) {
     handledHandshake.extra_data = JSON.stringify(extraDataBTC);
     handledHandshake.id = `${id}_BTC`;
 
-    result.push(Handshake.handshake(handledHandshake));
+    result.push(HandshakeFactory.handshake(handledHandshake));
   }
 
   if (extraData.items.ETH) {
@@ -30,7 +30,7 @@ function handlePreProcessForOfferStore(handshake) {
     handledHandshake.extra_data = JSON.stringify(extraDataETH);
     handledHandshake.id = `${id}_ETH`;
 
-    result.push(Handshake.handshake(handledHandshake));
+    result.push(HandshakeFactory.handshake(handledHandshake));
   }
 
   return result;
@@ -42,7 +42,7 @@ const handleListPayload = (payload) => {
     if (handshake.offer_feed_type === EXCHANGE_FEED_TYPE.OFFER_STORE) {
       result.push(...handlePreProcessForOfferStore(handshake));
     } else {
-      result.push(Handshake.handshake(handshake));
+      result.push(HandshakeFactory.handshake(handshake));
     }
     return null;
   });
@@ -50,7 +50,7 @@ const handleListPayload = (payload) => {
   return result;
 };
 
-const handleDetailPayload = payload => Handshake.handshake(payload.data);
+const handleDetailPayload = payload => HandshakeFactory.handshake(payload.data);
 
 const meReducter = (
   state = {
@@ -197,7 +197,7 @@ const meReducter = (
       Object.keys(listBettingStatus).forEach((key) => {
         const element = listBettingStatus[key];
         const { id, status_i: statusI, result_i: resultI } = element;
-        
+
 
         handledMylist = myList.map((handshake) => {
           const handledHandshake = handshake;

@@ -1,8 +1,6 @@
-import Handshake from '@/models/Handshake';
 import { ACTIONS } from './action';
 
-const initHandshakePayload = payload => payload.data.map(handshake => Handshake.handshake(handshake));
-const handshakeReducter = (state = {
+const handshakeReducer = (state = {
   handshake: {},
   isFetching: false,
 }, action) => {
@@ -84,11 +82,6 @@ const handshakeReducter = (state = {
         ...state,
         isFetching: false,
       };
-    case `${ACTIONS.COLLECT}_FAILED`:
-      return {
-        ...state,
-        isFetching: false,
-      };
     case ACTIONS.COLLECT_FREE:
       return {
         ...state,
@@ -154,4 +147,4 @@ const handshakeReducter = (state = {
   }
 };
 
-export default handshakeReducter;
+export default handshakeReducer;

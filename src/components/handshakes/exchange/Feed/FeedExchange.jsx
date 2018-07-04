@@ -41,7 +41,7 @@ import {
 } from '@/reducers/exchange/action';
 import { Ethereum } from '@/services/Wallets/Ethereum.js';
 import { Bitcoin } from '@/services/Wallets/Bitcoin';
-import Offer from '@/models/Offer';
+import { ExchangeFactory } from '@/factories';
 import { MasterWallet } from '@/services/Wallets/MasterWallet';
 import { formatAmountCurrency, formatMoneyByLocale, getHandshakeUserType, getOfferPrice } from '@/services/offer-util';
 import { hideLoading, showAlert, showLoading } from '@/reducers/app/action';
@@ -49,7 +49,6 @@ import { getDistanceFromLatLonInKm, getErrorMessageFromCode } from '../utils';
 import { ExchangeHandshake, ExchangeShopHandshake } from '@/services/neuron';
 import { feedBackgroundColors } from '@/components/handshakes/exchange/config';
 import { updateOfferStatus } from '@/reducers/discover/action';
-import OfferShop from '@/models/OfferShop';
 import { getLocalizedDistance } from '@/services/util';
 import { BigNumber } from 'bignumber.js';
 import StarsRating from '@/components/core/presentation/StarsRating';
@@ -70,7 +69,7 @@ class FeedExchange extends React.PureComponent {
 
     const { extraData } = props;
 
-    this.offer = OfferShop.offerShop(JSON.parse(extraData));
+    this.offer = ExchangeFactory.offerShop(JSON.parse(extraData));
 
     console.log('offer', this.offer);
 
@@ -202,10 +201,10 @@ class FeedExchange extends React.PureComponent {
           <FormattedMessage
             id="notEnoughCoinInWallet"
             values={{
-                              amount: formatAmountCurrency(balance),
-                              fee: formatAmountCurrency(fee),
-                              currency,
-                            }}
+              amount: formatAmountCurrency(balance),
+              fee: formatAmountCurrency(fee),
+              currency,
+            }}
           />
         </div>,
         timeOut: 3000,
@@ -248,12 +247,12 @@ class FeedExchange extends React.PureComponent {
       type: shopType,
       currency: values.currency,
       amount: values.amount,
-      username: authProfile?.name,
-      email: authProfile?.email,
-      contact_phone: authProfile?.phone,
-      contact_info: authProfile?.address,
+      username: authProfile ?.name,
+      email: authProfile ?.email,
+      contact_phone: authProfile ?.phone,
+      contact_info: authProfile ?.address,
       user_address: wallet.address,
-      chat_username: authProfile?.username,
+      chat_username: authProfile ?.username,
     };
 
     this.showLoading();
@@ -270,7 +269,7 @@ class FeedExchange extends React.PureComponent {
     console.log('handleShakeOfferItemSuccess', responseData);
 
     const { data } = responseData;
-    const offerShake = Offer.offer(data);
+    const offerShake = ExchangeFactory.offer(data);
     const {
       currency, type, amount, totalAmount, systemAddress, offChainId,
     } = offerShake;
@@ -339,10 +338,10 @@ class FeedExchange extends React.PureComponent {
     }
 
     return (<FormattedMessage
-id="offerDistanceContent"
+      id="offerDistanceContent"
       values={{
-                                      distance: getLocalizedDistance(distanceKm, country),
-                                    }}
+        distance: getLocalizedDistance(distanceKm, country),
+      }}
     />);
   }
 
@@ -361,16 +360,16 @@ id="offerDistanceContent"
 
     if (listOfferPrice) {
       let offerPrice = getOfferPrice(listOfferPrice, EXCHANGE_ACTION.BUY, CRYPTO_CURRENCY.BTC);
-      priceBuyBTC = offerPrice.price * (1 + btc?.buyPercentage / 100) || 0;
+      priceBuyBTC = offerPrice.price * (1 + btc ?.buyPercentage / 100) || 0;
 
       offerPrice = getOfferPrice(listOfferPrice, EXCHANGE_ACTION.SELL, CRYPTO_CURRENCY.BTC);
-      priceSellBTC = offerPrice.price * (1 + btc?.sellPercentage / 100) || 0;
+      priceSellBTC = offerPrice.price * (1 + btc ?.sellPercentage / 100) || 0;
 
       offerPrice = getOfferPrice(listOfferPrice, EXCHANGE_ACTION.BUY, CRYPTO_CURRENCY.ETH);
-      priceBuyETH = offerPrice.price * (1 + eth?.buyPercentage / 100) || 0;
+      priceBuyETH = offerPrice.price * (1 + eth ?.buyPercentage / 100) || 0;
 
       offerPrice = getOfferPrice(listOfferPrice, EXCHANGE_ACTION.SELL, CRYPTO_CURRENCY.ETH);
-      priceSellETH = offerPrice.price * (1 + eth?.sellPercentage / 100) || 0;
+      priceSellETH = offerPrice.price * (1 + eth ?.sellPercentage / 100) || 0;
     }
 
     return {
@@ -460,8 +459,8 @@ id="offerDistanceContent"
               {
                 coins.map((coin, index) => {
                   const {
- name, priceBuy, priceSell, color, icon,
-} = coin;
+                    name, priceBuy, priceSell, color, icon,
+                  } = coin;
                   return (
                     <span key={index} className="coin-item" style={{ background: color }} onClick={e => this.handleClickCoin(e, name)}>
                       {/* <div className="icon-coin"><img src={icon}/></div> */}

@@ -1,5 +1,5 @@
 import $http from '@/services/api';
-import IpInfo from '@/models/IpInfo';
+import { UserFactory } from '@/factories';
 import axios from 'axios';
 import { APP, API_URL, Country } from '@/constants';
 import local from '@/services/localStore';
@@ -223,7 +223,7 @@ export const initApp = (language, ref) => (dispatch) => {
   }).then((res) => {
     const { data } = res;
 
-    const ipInfo = IpInfo.ipInfo(data);
+    const ipInfo = UserFactory.ipInfo(data);
     // get currency base on GPS
     navigator.geolocation.getCurrentPosition((location) => {
       const { coords: { latitude, longitude } } = location;

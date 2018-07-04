@@ -1,12 +1,12 @@
 import React from "react";
-import {injectIntl} from "react-intl";
+import { injectIntl } from "react-intl";
 import Feed from "@/components/core/presentation/Feed";
 import Button from "@/components/core/controls/Button";
 import './styles.scss'
 import createForm from "@/components/core/form/createForm";
-import {getOfferPrice} from "@/services/offer-util";
+import { getOfferPrice } from "@/services/offer-util";
 import axios from 'axios';
-import {FormattedMessage} from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import {
   fieldCleave,
   fieldDropdown,
@@ -15,10 +15,10 @@ import {
   fieldPhoneInput,
   fieldRadioButton
 } from "@/components/core/form/customField";
-import {maxValue, minValue, required, number} from "@/components/core/form/validation";
-import {change, Field, formValueSelector, clearFields} from "redux-form";
-import {bindActionCreators} from "redux";
-import {connect} from "react-redux";
+import { maxValue, minValue, required, number } from "@/components/core/form/validation";
+import { change, Field, formValueSelector, clearFields } from "redux-form";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
 import {
   API_URL,
   CRYPTO_CURRENCY,
@@ -39,21 +39,20 @@ import { validate } from './validation';
 import "../styles.scss";
 import ModalDialog from "@/components/core/controls/ModalDialog/ModalDialog";
 // import {MasterWallet} from '@/services/Wallets/MasterWallet';
-import {URL,NB_BLOCKS} from "@/constants";
-import {hideLoading, showAlert, showLoading} from "@/reducers/app/action";
-import {MasterWallet} from "@/services/Wallets/MasterWallet";
-import {ExchangeShopHandshake} from "@/services/neuron";
+import { URL, NB_BLOCKS } from "@/constants";
+import { hideLoading, showAlert, showLoading } from "@/reducers/app/action";
+import { MasterWallet } from "@/services/Wallets/MasterWallet";
+import { ExchangeShopHandshake } from "@/services/neuron";
 // import phoneCountryCodes from '@/components/core/form/country-calling-codes.min.json';
 import COUNTRIES from "@/data/country-dial-codes.js";
-import {feedBackgroundColors} from "@/components/handshakes/exchange/config";
-import {formatAmountCurrency, formatMoneyByLocale} from "@/services/offer-util";
-import {createOfferStores,} from "@/reducers/exchange/action";
-import {BigNumber} from "bignumber.js/bignumber";
+import { feedBackgroundColors } from "@/components/handshakes/exchange/config";
+import { formatAmountCurrency, formatMoneyByLocale } from "@/services/offer-util";
+import { createOfferStores, } from "@/reducers/exchange/action";
+import { BigNumber } from "bignumber.js/bignumber";
 import { authUpdate } from '@/reducers/auth/action';
-import OfferShop from "@/models/OfferShop";
-import CoinOffer from "@/models/CoinOffer";
+import { ExchangeFactory } from "@/factories";
 import { addOfferItem, } from "@/reducers/exchange/action";
-import {getOfferStores} from "@/reducers/exchange/action";
+import { getOfferStores } from "@/reducers/exchange/action";
 import { getErrorMessageFromCode } from "../utils";
 
 
@@ -92,8 +91,8 @@ const validateFee = [
 
 class Component extends React.Component {
   CRYPTO_CURRENCY_LIST = [
-    { value: CRYPTO_CURRENCY.ETH, text: <div className="currency-selector"><img src={iconEth}/> <span>{CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.ETH]}</span></div>, hide: false },
-    { value: CRYPTO_CURRENCY.BTC, text: <div className="currency-selector"><img src={iconBtc}/> <span>{CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.BTC]}</span></div>, hide: false },
+    { value: CRYPTO_CURRENCY.ETH, text: <div className="currency-selector"><img src={iconEth} /> <span>{CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.ETH]}</span></div>, hide: false },
+    { value: CRYPTO_CURRENCY.BTC, text: <div className="currency-selector"><img src={iconBtc} /> <span>{CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.BTC]}</span></div>, hide: false },
   ];
 
   constructor(props) {
@@ -109,14 +108,14 @@ class Component extends React.Component {
     this.mainColor = "#1F2B34";
   }
 
-  setAddressFromLatLng = (lat, lng,addressDefault) => {
-    this.setState({lat: lat, lng: lng});
+  setAddressFromLatLng = (lat, lng, addressDefault) => {
+    this.setState({ lat: lat, lng: lng });
     const { rfChange } = this.props;
-    if(addressDefault){
+    if (addressDefault) {
       setTimeout(() => {
         rfChange(nameFormExchangeCreate, 'address', addressDefault);
       }, 0)
-    }else{
+    } else {
       axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&sensor=true`).then((response) => {
         const address = response.data.results[0] && response.data.results[0].formatted_address;
         rfChange(nameFormExchangeCreate, 'address', address);
@@ -126,11 +125,11 @@ class Component extends React.Component {
 
   componentDidMount() {
     const { ipInfo, rfChange, authProfile, freeETH, freeStart } = this.props;
-    this.setAddressFromLatLng(ipInfo?.latitude, ipInfo?.longitude,ipInfo?.addressDefault)
+    this.setAddressFromLatLng(ipInfo ?.latitude, ipInfo ?.longitude, ipInfo ?.addressDefault)
 
     // auto fill phone number from user profile
     let detectedCountryCode = '';
-    const foundCountryPhone = COUNTRIES.find(i => i.code.toUpperCase() === ipInfo?.country.toUpperCase());
+    const foundCountryPhone = COUNTRIES.find(i => i.code.toUpperCase() === ipInfo ?.country.toUpperCase());
     if (foundCountryPhone) {
       detectedCountryCode = foundCountryPhone.dialCode;
     }
@@ -157,9 +156,9 @@ class Component extends React.Component {
     console.log('handleGetOfferStoresFailed', e);
   }
 
-  componentWillReceiveProps(nextProps){
+  componentWillReceiveProps(nextProps) {
     const { rfChange } = this.props;
-    console.log('componentWillReceiveProps',nextProps);
+    console.log('componentWillReceiveProps', nextProps);
     if (nextProps.offerStores && nextProps.offerStores !== this.props.offerStores) {
       console.log('componentWillReceiveProps inside', nextProps.offerStores);
       this.offer = nextProps.offerStores;
@@ -179,7 +178,7 @@ class Component extends React.Component {
       }
 
       if (haveOfferETH && haveOfferBTC) {
-        const message = <FormattedMessage id="offerStoresAlreadyCreated"/>;
+        const message = <FormattedMessage id="offerStoresAlreadyCreated" />;
 
         this.setState({
           modalContent:
@@ -205,7 +204,7 @@ class Component extends React.Component {
   }
 
   showLoading = () => {
-    this.props.showLoading({message: '',});
+    this.props.showLoading({ message: '', });
   }
 
   hideLoading = () => {
@@ -257,11 +256,11 @@ class Component extends React.Component {
       this.props.showAlert({
         message: <div className="text-center">
           <FormattedMessage id="notEnoughCoinInWalletStores"
-                            values={ {
-                              amount: formatAmountCurrency(balance),
-                              fee: formatAmountCurrency(fee),
-                              currency: currency,
-                            } } />
+            values={{
+              amount: formatAmountCurrency(balance),
+              fee: formatAmountCurrency(fee),
+              currency: currency,
+            }} />
         </div>,
         timeOut: 5000,
         type: 'danger',
@@ -339,14 +338,14 @@ class Component extends React.Component {
     }
 
     const offer = {
-      email: authProfile?.email || '',
-      username: authProfile?.username,
+      email: authProfile ?.email || '',
+      username: authProfile ?.username,
       contact_phone: phoneNew,
       contact_info: address,
       latitude: lat,
       longitude: lng,
       fiat_currency: ipInfo.currency,
-      chat_username: authProfile?.username,
+      chat_username: authProfile ?.username,
     };
 
     const offerStore = {
@@ -354,10 +353,10 @@ class Component extends React.Component {
       item: data,
     }
 
-    const message =<FormattedMessage id="createOfferStoreConfirm"
-      values={ {
+    const message = <FormattedMessage id="createOfferStoreConfirm"
+      values={{
         intentMsg: (amountBuy > 0 && amountSell > 0) ? `buy ${amountBuy} ${currency} and sell ${amountSell} ${currency}` : (amountBuy > 0 ? `buy ${amountBuy} ${currency}` : `sell ${amountSell} ${currency}`)
-      } } />;
+      }} />;
 
     this.setState({
       modalContent:
@@ -372,8 +371,8 @@ class Component extends React.Component {
               this.offer ? (
                 <Button className="mt-2" block onClick={() => this.addOfferItem(data)}><FormattedMessage id="ex.btn.confirm" /></Button>
               ) : (
-                <Button className="mt-2" block onClick={() => this.createOffer(offerStore)}><FormattedMessage id="ex.btn.confirm" /></Button>
-              )
+                  <Button className="mt-2" block onClick={() => this.createOffer(offerStore)}><FormattedMessage id="ex.btn.confirm" /></Button>
+                )
             }
             <Button block className="btn btn-secondary" onClick={this.cancelCreateOffer}><FormattedMessage id="ex.btn.notNow" /></Button>
           </div>
@@ -426,7 +425,7 @@ class Component extends React.Component {
     console.log('handleCreateOfferSuccess', responseData);
     const { rfChange, currency, amountSell } = this.props;
     const data = responseData.data;
-    const offer = OfferShop.offerShop(data);
+    const offer = ExchangeFactory.offerShop(data);
     this.offer = offer;
 
     // console.log('handleCreateOfferSuccess', data);
@@ -498,7 +497,7 @@ class Component extends React.Component {
   ////////////////////////
 
   updateUserProfile = (offerShop) => {
-    console.log('updateUserProfile offerShop',offerShop);
+    console.log('updateUserProfile offerShop', offerShop);
     const params = new URLSearchParams();
     params.append('name', offerShop.username);
     params.append('address', offerShop.contactInfo);
@@ -523,16 +522,16 @@ class Component extends React.Component {
   }
 
   render() {
-    const { currency, listOfferPrice, ipInfo: { currency: fiatCurrency }, customizePriceBuy, customizePriceSell, amountBuy, amountSell, freeETH, freeStart} = this.props;
+    const { currency, listOfferPrice, ipInfo: { currency: fiatCurrency }, customizePriceBuy, customizePriceSell, amountBuy, amountSell, freeETH, freeStart } = this.props;
     const modalContent = this.state.modalContent;
     const allowInitiate = this.offer ? (!this.offer.itemFlags.ETH || !this.offer.itemFlags.BTC) : true;
 
     const { price: priceBuy } = getOfferPrice(listOfferPrice, EXCHANGE_ACTION.BUY, currency);
     const { price: priceSell } = getOfferPrice(listOfferPrice, EXCHANGE_ACTION.SELL, currency);
-    const priceBuyDisplayed = formatMoneyByLocale(priceBuy,fiatCurrency)
-    const priceSellDisplayed = formatMoneyByLocale(priceSell,fiatCurrency)
-    const estimatedPriceBuy = formatMoneyByLocale(priceBuy * (1 + parseFloat(customizePriceBuy, 10)/100),fiatCurrency)
-    const estimatedPriceSell = formatMoneyByLocale(priceSell * (1 + parseFloat(customizePriceSell, 10)/100),fiatCurrency)
+    const priceBuyDisplayed = formatMoneyByLocale(priceBuy, fiatCurrency)
+    const priceSellDisplayed = formatMoneyByLocale(priceSell, fiatCurrency)
+    const estimatedPriceBuy = formatMoneyByLocale(priceBuy * (1 + parseFloat(customizePriceBuy, 10) / 100), fiatCurrency)
+    const estimatedPriceSell = formatMoneyByLocale(priceSell * (1 + parseFloat(customizePriceSell, 10) / 100), fiatCurrency)
 
     const wantToBuy = amountBuy && amountBuy > 0
     const wantToSell = amountSell && amountSell > 0
@@ -554,10 +553,10 @@ class Component extends React.Component {
             </div>
           </div>
 
-          <div className="label"><FormattedMessage id="ex.create.label.beASeller"/></div>
+          <div className="label"><FormattedMessage id="ex.create.label.beASeller" /></div>
           <div className="section">
             <div className="d-flex">
-              <label className="col-form-label mr-auto label-create"><span className="align-middle"><FormattedMessage id="ex.create.label.amountSell"/></span></label>
+              <label className="col-form-label mr-auto label-create"><span className="align-middle"><FormattedMessage id="ex.create.label.amountSell" /></span></label>
               <div className='input-group'>
                 <Field
                   name="amountSell"
@@ -572,20 +571,20 @@ class Component extends React.Component {
               </div>
             </div>
 
-            <hr className="hrLine"/>
+            <hr className="hrLine" />
 
             <div className="d-flex">
-              <label className="col-form-label mr-auto label-create"><span className="align-middle"><FormattedMessage id="ex.create.label.marketPrice"/></span></label>
+              <label className="col-form-label mr-auto label-create"><span className="align-middle"><FormattedMessage id="ex.create.label.marketPrice" /></span></label>
               <div className='input-group'>
                 <div><span className="form-text">{priceSellDisplayed} {fiatCurrency}</span></div>
               </div>
             </div>
-            <hr className="hrLine"/>
+            <hr className="hrLine" />
 
             <div className="d-flex py-1">
               <label className="col-form-label mr-auto label-create">
-                <span className="align-middle"><FormattedMessage id="ex.create.label.premiumSell"/></span>
-                <div className="explanation"><FormattedMessage id="ex.create.label.premiumSellExplanation"/></div>
+                <span className="align-middle"><FormattedMessage id="ex.create.label.premiumSell" /></span>
+                <div className="explanation"><FormattedMessage id="ex.create.label.premiumSellExplanation" /></div>
               </label>
               <div className='input-group align-items-center'>
                 <Field
@@ -597,7 +596,7 @@ class Component extends React.Component {
                   color={textColor}
                   validate={validateFee}
                 />
-                { wantToSell && <span className="w-100 estimate-price sell">&asymp; {estimatedPriceSell} {fiatCurrency}</span> }
+                {wantToSell && <span className="w-100 estimate-price sell">&asymp; {estimatedPriceSell} {fiatCurrency}</span>}
               </div>
             </div>
 
@@ -612,10 +611,10 @@ class Component extends React.Component {
             */}
           </div>
 
-          <div className="label"><FormattedMessage id="ex.create.label.beABuyer"/></div>
+          <div className="label"><FormattedMessage id="ex.create.label.beABuyer" /></div>
           <div className="section">
             <div className="d-flex">
-              <label className="col-form-label mr-auto label-create"><span className="align-middle"><FormattedMessage id="ex.create.label.amountBuy"/></span></label>
+              <label className="col-form-label mr-auto label-create"><span className="align-middle"><FormattedMessage id="ex.create.label.amountBuy" /></span></label>
               <div className='input-group'>
                 <Field
                   name="amountBuy"
@@ -628,21 +627,21 @@ class Component extends React.Component {
                 />
               </div>
             </div>
-            <hr className="hrLine"/>
+            <hr className="hrLine" />
 
             <div className="d-flex">
-              <label className="col-form-label mr-auto label-create"><span className="align-middle"><FormattedMessage id="ex.create.label.marketPrice"/></span></label>
+              <label className="col-form-label mr-auto label-create"><span className="align-middle"><FormattedMessage id="ex.create.label.marketPrice" /></span></label>
               <div className='input-group'>
                 <div><span className="form-text">{priceBuyDisplayed} {fiatCurrency}</span></div>
               </div>
             </div>
-            <hr className="hrLine"/>
+            <hr className="hrLine" />
 
 
             <div className="d-flex py-1">
               <label className="col-form-label mr-auto label-create">
-                <span className="align-middle"><FormattedMessage id="ex.create.label.premiumBuy"/></span>
-                <div className="explanation"><FormattedMessage id="ex.create.label.premiumSellExplanation"/></div>
+                <span className="align-middle"><FormattedMessage id="ex.create.label.premiumBuy" /></span>
+                <div className="explanation"><FormattedMessage id="ex.create.label.premiumSellExplanation" /></div>
               </label>
               <div className='input-group align-items-center'>
                 <Field
@@ -654,13 +653,13 @@ class Component extends React.Component {
                   color={textColor}
                   validate={validateFee}
                 />
-                { wantToBuy && <span className="w-100 estimate-price buy">&asymp; {estimatedPriceBuy} {fiatCurrency}</span> }
+                {wantToBuy && <span className="w-100 estimate-price buy">&asymp; {estimatedPriceBuy} {fiatCurrency}</span>}
               </div>
             </div>
           </div>
 
           <div>
-            <div className="label"><FormattedMessage id="ex.create.label.stationInfo"/></div>
+            <div className="label"><FormattedMessage id="ex.create.label.stationInfo" /></div>
             <div className="section">
               {/*
               <div className="d-flex">
@@ -679,7 +678,7 @@ class Component extends React.Component {
               <hr className="hrLine"/>*/}
 
               <div className="d-flex mt-2">
-                <label className="col-form-label mr-auto label-create"><span className="align-middle"><FormattedMessage id="ex.create.label.phone"/></span></label>
+                <label className="col-form-label mr-auto label-create"><span className="align-middle"><FormattedMessage id="ex.create.label.phone" /></span></label>
                 <div className="input-group w-100">
                   <Field
                     name="phone"
@@ -688,14 +687,14 @@ class Component extends React.Component {
                     color={textColor}
                     type="tel"
                     placeholder="4995926433"
-                    // validate={[required, currency === 'BTC' ? minValue001 : minValue01]}
+                  // validate={[required, currency === 'BTC' ? minValue001 : minValue01]}
                   />
                 </div>
               </div>
-              <hr className="hrLine"/>
+              <hr className="hrLine" />
 
               <div className="d-flex mt-2">
-                <label className="col-form-label mr-auto label-create"><span className="align-middle"><FormattedMessage id="ex.create.label.address"/></span></label>
+                <label className="col-form-label mr-auto label-create"><span className="align-middle"><FormattedMessage id="ex.create.label.address" /></span></label>
                 <div className="w-100">
                   <Field
                     name="address"
@@ -709,7 +708,7 @@ class Component extends React.Component {
             </div>
           </div>
 
-          <Button block type="submit" disabled={!allowInitiate} className="mt-3"><FormattedMessage id="btn.initiate"/></Button>
+          <Button block type="submit" disabled={!allowInitiate} className="mt-3"><FormattedMessage id="btn.initiate" /></Button>
         </FormExchangeCreate>
         <ModalDialog onRef={modal => this.modalRef = modal}>
           {modalContent}

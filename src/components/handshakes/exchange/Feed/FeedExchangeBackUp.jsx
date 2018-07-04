@@ -6,7 +6,7 @@ import iconPhone from '@/assets/images/icon/icons8-phone.svg';
 import iconChat from '@/assets/images/icon/icons8-chat.svg';
 // style
 import './FeedExchange.scss';
-import {FormattedMessage, injectIntl} from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import Feed from "@/components/core/presentation/Feed/Feed";
 import Button from "@/components/core/controls/Button/Button";
 import {
@@ -29,7 +29,7 @@ import {
   NB_BLOCKS
 } from "@/constants";
 import ModalDialog from "@/components/core/controls/ModalDialog";
-import {connect} from "react-redux";
+import { connect } from "react-redux";
 import {
   cancelShakedOffer,
   closeOffer,
@@ -38,27 +38,27 @@ import {
   withdrawShakedOffer
 } from "@/reducers/exchange/action";
 // import getSymbolFromCurrency from 'currency-symbol-map';
-import Offer from "@/models/Offer";
-import {MasterWallet} from "@/services/Wallets/MasterWallet";
-import {getHandshakeUserType, getOfferPrice} from "@/services/offer-util";
-import {showAlert} from '@/reducers/app/action';
-import {Link} from "react-router-dom";
-import {URL} from '@/config';
-import {getDistanceFromLatLonInKm} from '../utils'
-import {ExchangeHandshake} from '@/services/neuron';
+import { ExchangeFactory } from "@/factories";
+import { MasterWallet } from "@/services/Wallets/MasterWallet";
+import { getHandshakeUserType, getOfferPrice } from "@/services/offer-util";
+import { showAlert } from '@/reducers/app/action';
+import { Link } from "react-router-dom";
+import { URL } from '@/config';
+import { getDistanceFromLatLonInKm } from '../utils'
+import { ExchangeHandshake } from '@/services/neuron';
 import _sample from "lodash/sample";
 import { feedBackgroundColors } from "@/components/handshakes/exchange/config";
-import {updateOfferStatus} from "@/reducers/discover/action";
-import {formatAmountCurrency, formatMoney} from "@/services/offer-util";
-import {BigNumber} from "bignumber.js";
+import { updateOfferStatus } from "@/reducers/discover/action";
+import { formatAmountCurrency, formatMoney } from "@/services/offer-util";
+import { BigNumber } from "bignumber.js";
 import { showLoading, hideLoading } from '@/reducers/app/action';
 
 class FeedExchange extends React.PureComponent {
   constructor(props) {
     super(props);
 
-    const {initUserId, shakeUserIds, extraData} = props;
-    const offer = Offer.offer(JSON.parse(extraData));
+    const { initUserId, shakeUserIds, extraData } = props;
+    const offer = ExchangeFactory.offer(JSON.parse(extraData));
 
     this.userType = getHandshakeUserType(initUserId, shakeUserIds);
     this.offer = offer;
@@ -74,7 +74,7 @@ class FeedExchange extends React.PureComponent {
   }
 
   showLoading = () => {
-    this.props.showLoading({message: '',});
+    this.props.showLoading({ message: '', });
   }
 
   hideLoading = () => {
@@ -85,7 +85,7 @@ class FeedExchange extends React.PureComponent {
     this.hideLoading();
     // console.log('e', e);
     this.props.showAlert({
-      message: <div className="text-center">{e.response?.data?.message}</div>,
+      message: <div className="text-center">{e.response ?.data ?.message}</div>,
       timeOut: 3000,
       type: 'danger',
       callBack: () => {
@@ -118,7 +118,7 @@ class FeedExchange extends React.PureComponent {
   // }
 
   confirmOfferAction = (message, actionConfirm) => {
-    const {intl,} = this.props;
+    const { intl, } = this.props;
     console.log('offer', this.offer);
 
     // const message = intl.formatMessage({ id: 'handshakeOfferConfirm' }, {
@@ -134,7 +134,7 @@ class FeedExchange extends React.PureComponent {
         (
           <div className="py-2">
             <Feed className="feed p-2" background="#259B24">
-              <div className="text-white d-flex align-items-center" style={{minHeight: '50px'}}>
+              <div className="text-white d-flex align-items-center" style={{ minHeight: '50px' }}>
                 <div>{message}</div>
               </div>
             </Feed>
@@ -237,7 +237,7 @@ class FeedExchange extends React.PureComponent {
 
     this.hideLoading();
     this.props.showAlert({
-      message: <div className="text-center"><FormattedMessage id="shakeOfferSuccessMessage"/></div>,
+      message: <div className="text-center"><FormattedMessage id="shakeOfferSuccessMessage" /></div>,
       timeOut: 2000,
       type: 'success',
       callBack: () => {
@@ -286,7 +286,7 @@ class FeedExchange extends React.PureComponent {
 
     this.hideLoading();
     this.props.showAlert({
-      message: <div className="text-center"><FormattedMessage id="closeOfferSuccessMessage"/></div>,
+      message: <div className="text-center"><FormattedMessage id="closeOfferSuccessMessage" /></div>,
       timeOut: 2000,
       type: 'success',
       callBack: () => {
@@ -341,7 +341,7 @@ class FeedExchange extends React.PureComponent {
     // console.log('data', data);
     this.hideLoading();
     this.props.showAlert({
-      message: <div className="text-center"><FormattedMessage id="completeShakedfferSuccessMessage"/></div>,
+      message: <div className="text-center"><FormattedMessage id="completeShakedfferSuccessMessage" /></div>,
       timeOut: 2000,
       type: 'success',
       callBack: () => {
@@ -405,7 +405,7 @@ class FeedExchange extends React.PureComponent {
 
     this.hideLoading();
     this.props.showAlert({
-      message: <div className="text-center"><FormattedMessage id="cancelShakedfferSuccessMessage"/></div>,
+      message: <div className="text-center"><FormattedMessage id="cancelShakedfferSuccessMessage" /></div>,
       timeOut: 2000,
       type: 'success',
       callBack: () => {
@@ -455,7 +455,7 @@ class FeedExchange extends React.PureComponent {
 
     this.hideLoading();
     this.props.showAlert({
-      message: <div className="text-center"><FormattedMessage id="withdrawShakedfferSuccessMessage"/></div>,
+      message: <div className="text-center"><FormattedMessage id="withdrawShakedfferSuccessMessage" /></div>,
       timeOut: 2000,
       type: 'success',
       callBack: () => {
@@ -472,7 +472,7 @@ class FeedExchange extends React.PureComponent {
 
   ////////////////////////
   handleCallActionOnContract = async (data) => {
-    const {intl, status} = this.props;
+    const { intl, status } = this.props;
     const offer = this.offer;
 
     const currency = data.currency;
@@ -538,13 +538,13 @@ class FeedExchange extends React.PureComponent {
           }
           case HANDSHAKE_EXCHANGE_STATUS.SHAKE: {
             // actionButtons = 'Reject'; // complete: nguoi nhan cash
-            message = intl.formatMessage({id: 'rejectOfferConfirm'}, {});
-            let message2 = intl.formatMessage({id: 'completeOfferConfirm'}, {});
+            message = intl.formatMessage({ id: 'rejectOfferConfirm' }, {});
+            let message2 = intl.formatMessage({ id: 'completeOfferConfirm' }, {});
             actionButtons = (
               <div>
                 <Button block className="mt-2" onClick={() => this.confirmOfferAction(message, this.handleRejectShakedOfferExchange)}>Reject</Button>
                 {offer.type === EXCHANGE_ACTION.BUY &&
-                <Button block className="mt-2" onClick={() => this.confirmOfferAction(message2, this.handleCompleteShakedOfferExchange)}>Complete</Button>
+                  <Button block className="mt-2" onClick={() => this.confirmOfferAction(message2, this.handleCompleteShakedOfferExchange)}>Complete</Button>
                 }
               </div>
             );
@@ -654,7 +654,7 @@ class FeedExchange extends React.PureComponent {
 
 
   getActionButtonsExchange = () => {
-    const {intl, status} = this.props;
+    const { intl, status } = this.props;
     const offer = this.offer;
     const fiatAmount = this.fiatAmount;
     let actionButtons = null;
@@ -664,7 +664,7 @@ class FeedExchange extends React.PureComponent {
       case HANDSHAKE_USER.NORMAL: {
         switch (status) {
           case HANDSHAKE_EXCHANGE_STATUS.ACTIVE: {
-            message = intl.formatMessage({id: 'handshakeOfferConfirm'}, {
+            message = intl.formatMessage({ id: 'handshakeOfferConfirm' }, {
               type: offer.type === EXCHANGE_ACTION.BUY ? EXCHANGE_ACTION_NAME[EXCHANGE_ACTION.SELL] : EXCHANGE_ACTION_NAME[EXCHANGE_ACTION.BUY],
               amount: formatAmountCurrency(offer.amount),
               currency: offer.currency,
@@ -688,13 +688,13 @@ class FeedExchange extends React.PureComponent {
             break;
           }
           case HANDSHAKE_EXCHANGE_STATUS.SHAKE: {
-            message = intl.formatMessage({id: 'rejectOfferConfirm'}, {});
-            let message2 = intl.formatMessage({id: 'completeOfferConfirm'}, {});
+            message = intl.formatMessage({ id: 'rejectOfferConfirm' }, {});
+            let message2 = intl.formatMessage({ id: 'completeOfferConfirm' }, {});
             actionButtons = (
               <div>
                 <Button block className="mt-2" onClick={() => this.confirmOfferAction(message, this.handleRejectShakedOfferExchange)}>Reject</Button>
                 {offer.type === EXCHANGE_ACTION.BUY &&
-                <Button block className="mt-2" onClick={() => this.confirmOfferAction(message2, this.handleCompleteShakedOfferExchange)}>Complete</Button>
+                  <Button block className="mt-2" onClick={() => this.confirmOfferAction(message2, this.handleCompleteShakedOfferExchange)}>Complete</Button>
                 }
               </div>
             );
@@ -703,7 +703,7 @@ class FeedExchange extends React.PureComponent {
           }
           case HANDSHAKE_EXCHANGE_STATUS.COMPLETED: {
             if (offer.type === EXCHANGE_ACTION.SELL) {
-              message = intl.formatMessage({id: 'withdrawOfferConfirm'}, {});
+              message = intl.formatMessage({ id: 'withdrawOfferConfirm' }, {});
               actionButtons = (
                 <div>
                   <Button block className="mt-2" onClick={() => this.confirmOfferAction(message, this.handleWithdrawShakedOfferExchange)}>Withdraw</Button>
@@ -724,7 +724,7 @@ class FeedExchange extends React.PureComponent {
             break;
           }
           case HANDSHAKE_EXCHANGE_STATUS.ACTIVE: {
-            message = intl.formatMessage({id: 'cancelOfferConfirm'}, {});
+            message = intl.formatMessage({ id: 'cancelOfferConfirm' }, {});
             actionButtons = (
               <div>
                 <Button block className="mt-2" onClick={() => this.confirmOfferAction(message, this.handleCloseOfferExchange)}>Cancel</Button>
@@ -739,13 +739,13 @@ class FeedExchange extends React.PureComponent {
             break;
           }
           case HANDSHAKE_EXCHANGE_STATUS.SHAKE: {
-            message = intl.formatMessage({id: 'rejectOfferConfirm'}, {});
-            let message2 = intl.formatMessage({id: 'completeOfferConfirm'}, {});
+            message = intl.formatMessage({ id: 'rejectOfferConfirm' }, {});
+            let message2 = intl.formatMessage({ id: 'completeOfferConfirm' }, {});
             actionButtons = (
               <div>
                 <Button block className="mt-2" onClick={() => this.confirmOfferAction(message, this.handleRejectShakedOfferExchange)}>Reject</Button>
                 {offer.type === EXCHANGE_ACTION.SELL &&
-                <Button block className="mt-2" onClick={() => this.confirmOfferAction(message2, this.handleCompleteShakedOfferExchange)}>Complete</Button>
+                  <Button block className="mt-2" onClick={() => this.confirmOfferAction(message2, this.handleCompleteShakedOfferExchange)}>Complete</Button>
                 }
               </div>
             );
@@ -753,7 +753,7 @@ class FeedExchange extends React.PureComponent {
           }
           case HANDSHAKE_EXCHANGE_STATUS.COMPLETED: {
             if (offer.type === EXCHANGE_ACTION.BUY) {
-              message = intl.formatMessage({id: 'withdrawOfferConfirm'}, {});
+              message = intl.formatMessage({ id: 'withdrawOfferConfirm' }, {});
               actionButtons = (
                 <div>
                   <Button block className="mt-2" onClick={() => this.confirmOfferAction(message, this.handleWithdrawShakedOfferExchange)}>Withdraw</Button>
@@ -801,9 +801,9 @@ class FeedExchange extends React.PureComponent {
 
 
   render() {
-    const {intl, initUserId, shakeUserIds, location, state, status, mode = 'discover', ipInfo: { latitude, longitude }, initAt, ...props} = this.props;
+    const { intl, initUserId, shakeUserIds, location, state, status, mode = 'discover', ipInfo: { latitude, longitude }, initAt, ...props } = this.props;
     const offer = this.offer;
-    const {listOfferPrice} = this.props;
+    const { listOfferPrice } = this.props;
     let fiatAmount = 0;
 
     if (offer.fiatAmount) {
@@ -1022,7 +1022,7 @@ class FeedExchange extends React.PureComponent {
             <div>
               <h4 style={{ lineHeight: '1.4' }} className="headline">{message}</h4>
             </div>
-            { mode === 'me' && !isCreditCard && showChat && (
+            {mode === 'me' && !isCreditCard && showChat && (
               <div className="ml-auto pl-2" style={{ width: '50px' }}>
                 {/* to-do chat link */}
                 <Link to={`${URL.HANDSHAKE_CHAT_INDEX}/${chatUsername}`}>
@@ -1037,39 +1037,39 @@ class FeedExchange extends React.PureComponent {
           {
             mode === 'discover' ? (
               <div className="media mb-1">
-                <img className="mr-2" src={iconTransaction} width={20}/>
+                <img className="mr-2" src={iconTransaction} width={20} />
                 <div className="media-body">
                   <div>
                     <FormattedMessage id="transactonOfferInfo" values={{
                       success: offer.success, failed: offer.failed
-                    }}/>
+                    }} />
                   </div>
                 </div>
               </div>
             ) : (
-              !isCreditCard && (
-                <div>
-                  {
-                    phone && phone.split('-')[1] !== '' && ( // no phone number
-                      <div className="media mb-1">
-                        <img className="mr-2" src={iconPhone} width={20}/>
-                        <div className="media-body">
-                          <div>
-                            <a href={`tel:${phone.replace(/-/g, '')}`} className="text-white">{phone}</a>
+                !isCreditCard && (
+                  <div>
+                    {
+                      phone && phone.split('-')[1] !== '' && ( // no phone number
+                        <div className="media mb-1">
+                          <img className="mr-2" src={iconPhone} width={20} />
+                          <div className="media-body">
+                            <div>
+                              <a href={`tel:${phone.replace(/-/g, '')}`} className="text-white">{phone}</a>
+                            </div>
                           </div>
                         </div>
+                      )
+                    }
+                    <div className="media">
+                      <img className="mr-2" src={iconLocation} width={20} />
+                      <div className="media-body">
+                        <div>{address}</div>
                       </div>
-                    )
-                  }
-                  <div className="media">
-                    <img className="mr-2" src={iconLocation} width={20}/>
-                    <div className="media-body">
-                      <div>{address}</div>
                     </div>
                   </div>
-                </div>
+                )
               )
-            )
           }
           {
             !isCreditCard && (
@@ -1081,7 +1081,7 @@ class FeedExchange extends React.PureComponent {
                       // offerType: offer.type === 'buy' ? 'Buyer' : 'Seller',
                       distanceKm: distanceKm > 1 || distanceMiles === 0 ? distanceKm.toFixed(0) : distanceKm.toFixed(3),
                       distanceMiles: distanceMiles === 0 ? distanceKm.toFixed(0) : distanceMiles.toFixed(1),
-                    }}/>
+                    }} />
                   </div>
                 </div>
               </div>

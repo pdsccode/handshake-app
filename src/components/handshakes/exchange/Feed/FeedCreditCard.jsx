@@ -19,7 +19,7 @@ import { required } from "@/components/core/form/validation";
 import { createCCOrder, getCcLimits, getCryptoPrice, getUserCcLimit } from "@/reducers/exchange/action";
 import { API_URL, CRYPTO_CURRENCY_LIST, CRYPTO_CURRENCY_DEFAULT, FIAT_CURRENCY_SYMBOL } from "@/constants";
 import { FIAT_CURRENCY } from "@/constants";
-import CryptoPrice from "@/models/CryptoPrice";
+import { ExchangeFactory } from "@/factories";
 import { MasterWallet } from "@/services/Wallets/MasterWallet";
 import { bindActionCreators } from "redux";
 import { showAlert } from "@/reducers/app/action";
@@ -102,7 +102,7 @@ class FeedCreditCard extends React.Component {
   handleGetCryptoPriceSuccess = (responseData) => {
     // console.log('handleGetCryptoPriceSuccess', data);
     const { userCcLimit } = this.props;
-    const cryptoPrice = CryptoPrice.cryptoPrice(responseData.data);
+    const cryptoPrice = ExchangeFactory.cryptoPrice(responseData.data);
 
     const amoutWillUse = new BigNumber(userCcLimit.amount).plus(new BigNumber(cryptoPrice.fiatAmount)).toNumber();
 
