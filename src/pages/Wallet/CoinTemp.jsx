@@ -1,7 +1,7 @@
 import React from 'react';
 import { Col } from 'react-bootstrap';
-import {Bitcoin} from '@/models/Bitcoin.js' 
-import {Ethereum} from '@/models/Ethereum.js' 
+import {Bitcoin} from '@/services/Wallets/Bitcoin.js' 
+import {Ethereum} from '@/services/Wallets/Ethereum.js' 
 import iconChecked from '@/assets/images/icon/icon-checked-wallet.svg';
 
 

@@ -50,9 +50,6 @@ export class Firechat {
     this.shouldShowNotification = true;
 
     this.encryptionKeyPair = this.generateEncryptionKeyPair();
-    Push.config({
-      serviceWorker: '/main.js',
-    });
   }
 
   enableNotification() {
@@ -846,16 +843,12 @@ export class Firechat {
     if (!this.shouldShowNotification) {
       return;
     }
-    const selfWindow = window;
     console.log('show notification', from, message);
     Push.create(`${from} says`, {
       body: message,
       icon: logo,
       tag: roomId,
-      onClick: () => {
-        selfWindow.location.href = URL.HANDSHAKE_CHAT_ROOM_DETAIL.replace(':roomId', roomId);
-        Push.close(roomId);
-      },
+      link: URL.HANDSHAKE_CHAT_ROOM_DETAIL.replace(':roomId', roomId),
       onError: (e) => {
         console.log('notification error', e);
       },

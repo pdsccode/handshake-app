@@ -1,7 +1,7 @@
 import configs from '@/configs';
 import Neuron from './index';
 import { camelCase } from 'lodash';
-import { MasterWallet } from '@/models/MasterWallet';
+import { MasterWallet } from '@/services/Wallets/MasterWallet';
 
 const TAG = 'BaseHandshake';
 export default class BaseHandshake {

@@ -1,12 +1,32 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import axios from 'axios';
+import Web3 from 'web3';
 
 // components
 import Website from '@/components/App/Basic';
+import LogManage from '@/services/logmanage';
 // import registerServiceWorker from '@/services/worker';
 import * as OfflinePlugin from 'offline-plugin/runtime';
 
-// registerServiceWorker();
+if (process.env.isStaging) {
+  console.debug = function (message) {
+    LogManage.bettingSaveLog(message);
+  };
+}
+
+window.gasPrice = 20;
+
+function getGasPrice() {
+  axios.get(`https://api.etherscan.io/api?module=proxy&action=eth_gasPrice&apikey=${process.env.apikeyEtherscan}`).then((res) => {
+    const gasPrice = Number(res.data.result).toString();
+    console.log('gasPrice', gasPrice);
+    window.gasPrice = Web3.utils.fromWei(gasPrice, 'gwei');
+  });
+}
+
+getGasPrice();
+setInterval(getGasPrice, 1000 * 60);
 
 if (process.env.caches) {
   OfflinePlugin.install({
@@ -21,7 +41,8 @@ if (process.env.caches) {
   if (window.caches) {
     window.caches
       .keys()
-      .then(keyList => Promise.all(keyList.map(key => window.caches.delete(key))));
+      .then(keyList =>
+        Promise.all(keyList.map(key => window.caches.delete(key))));
   }
   if (navigator.serviceWorker) {
     navigator.serviceWorker.getRegistrations().then((registrations) => {

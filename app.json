@@ -41,6 +41,9 @@
     },
     "social_isUseSocial": {
       "required": true
+    },
+    "PredictionHandshakeFileName": {
+      "required": true
     }
   },
   "formation": {

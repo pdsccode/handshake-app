@@ -600,7 +600,13 @@ export default {
         description: 'Please enter your top secret recovery data to restore your wallet.',
       },
       import: {
-        title: 'Add new / Import',
+        title: 'Add new / Import coin',
+      },
+      add_token:{
+        title: 'Add custom token',
+      },  
+      add_collectible: {
+        title: 'Add collectible',
       },
       backup: {
         title: 'Backup wallets',
@@ -664,6 +670,13 @@ export default {
           wallet_key: 'Wallet key',
           main_net: 'Mainnet wallets',
           test_net: 'Testnet wallets',
+          header_coins: "Coins",
+          header_tokens: "Tokens",
+          header_collectibles: "Collectibles",
+        },
+        text: {
+          random: "Random",
+          specify_phrase: "Specify recovery Phrase"
         },
         placeholder: {
           wallet_key: 'Wallet key',
@@ -674,6 +687,10 @@ export default {
           add_new: '+ Add new',
           request_free_eth: 'Request free ETH',
         },
+        error:{
+          recovery_words_invalid: "Cannot create wallet. Recovery words are invalid.",
+          random: "Cannot create wallet. Please reload and try again"
+        }
       },
       scan_qrcode: {
         header: 'Scan QR code',

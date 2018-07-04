@@ -34,6 +34,9 @@ class Handshake {
       reviewCount: data.review_count || 0,
       review: data.review || 0,
       freeBet: data.free_bet || 0,
+      closingTime: data.closing_time,
+      reportTime: data.reporting_time,
+      disputeTime: data.disputing_time
     };
   }
 }

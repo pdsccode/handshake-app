@@ -1,6 +1,7 @@
 import Web3 from 'web3';
+import axios from 'axios';
+import { MasterWallet } from '@/services/Wallets/MasterWallet';
 import BaseHandshake from './BaseHandshake';
-import { MasterWallet } from '@/models/MasterWallet';
 
 
 const TAG = 'BettingHandshake';
@@ -27,9 +28,10 @@ export default class BettingHandshake extends BaseHandshake {
   }
   get gasPrice() {
     const wallet = MasterWallet.getWalletDefault('ETH');
-    // return wallet.chainId === 4 ? 100 : 20;
-    return wallet.chainId === 4 ? 20 : 20;
+
+    return wallet.chainId === 4 ? window.gasPrice || 20 : window.gasPrice || 20;
   }
+
   async getEstimateGas(hid = 0, side = 1, odds = 3) {
     const oddsValue = odds * 100;
     // const payoutValue = Web3.utils.toWei(payout, 'ether');

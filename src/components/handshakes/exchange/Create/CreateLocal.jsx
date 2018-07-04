@@ -27,7 +27,7 @@ import {
 } from '@/components/core/form/validation'
 import { minValueBTC, minValueETH } from './validation'
 import ImageUploader from '../components/ImageUploader'
-// import {MasterWallet} from '@/models/MasterWallet';
+// import {MasterWallet} from '@/services/Wallets/MasterWallet';
 import {
   API_URL,
   CRYPTO_CURRENCY,
@@ -48,7 +48,7 @@ import {
 import '../styles.scss'
 import ModalDialog from '@/components/core/controls/ModalDialog/ModalDialog'
 import { hideLoading, showAlert, showLoading } from '@/reducers/app/action'
-import { MasterWallet } from '@/models/MasterWallet'
+import { MasterWallet } from '@/services/Wallets/MasterWallet'
 import COUNTRIES from '@/data/country-dial-codes.js'
 import { feedBackgroundColors } from '@/components/handshakes/exchange/config'
 import {
@@ -110,19 +110,9 @@ class Component extends React.Component {
     this.mainColor = '#1F2B34'
   }
 
-  componentDidMount () {
-    const { ipInfo, rfChange, authProfile } = this.props
-    navigator.geolocation.getCurrentPosition(
-      location => {
-        const {
-          coords: { latitude, longitude }
-        } = location
-        this.setAddressFromLatLng(latitude, longitude) // better precision
-      },
-      () => {
-        this.setAddressFromLatLng(ipInfo?.latitude, ipInfo?.longitude) // fallback
-      }
-    )
+  componentDidMount() {
+    const { ipInfo, rfChange, authProfile } = this.props;
+    this.setAddressFromLatLng(ipInfo?.latitude, ipInfo?.longitude);
 
     // auto fill phone number from user profile
     let detectedCountryCode = ''

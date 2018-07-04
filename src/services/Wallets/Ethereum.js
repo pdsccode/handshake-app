@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Wallet } from '@/models/Wallet.js';
+import { Wallet } from '@/services/Wallets/Wallet.js';
 import configs from '@/configs';
 import { StringHelper } from '@/services/helper';
 
@@ -8,11 +8,10 @@ const EthereumTx = require('ethereumjs-tx');
 const hdkey = require('hdkey');
 const ethUtil = require('ethereumjs-util');
 const bip39 = require('bip39');
-
+const moment = require('moment');
 const BN = Web3.utils.BN;
 
 export class Ethereum extends Wallet {
-
   static Network = { Mainnet: 'https://mainnet.infura.io/', Rinkeby: 'https://rinkeby.infura.io/' }
   static API = { Mainnet: 'https://api.etherscan.io/api', Rinkeby: 'https://api-rinkeby.etherscan.io/api' }
 
@@ -77,17 +76,25 @@ export class Ethereum extends Wallet {
     return Web3.utils.fromWei(estimatedGas);
   }
 
+  async getTransactionReceipt(hash) {
+
+    const web3 = new Web3(new Web3.providers.HttpProvider(this.network));
+    const receipt = await web3.eth.getTransactionReceipt(hash);
+    console.log(receipt);
+    return null;
+  }
+
+
   checkAddressValid(toAddress) {
     const web3 = new Web3(new Web3.providers.HttpProvider(this.network));
 
     if (!web3.utils.isAddress(toAddress)) {
-      return "messages.ethereum.error.invalid_address";
+      return 'messages.ethereum.error.invalid_address';
     }
     return true;
   }
 
   async transfer(toAddress, amountToSend) {
-
     try {
       console.log(`transfered from address:${this.address}`);
 
@@ -95,7 +102,7 @@ export class Ethereum extends Wallet {
       const web3 = new Web3(new Web3.providers.HttpProvider(this.network));
 
       if (!web3.utils.isAddress(toAddress)) {
-        return { status: 0, message: "messages.ethereum.error.invalid_address2" };
+        return { status: 0, message: 'messages.ethereum.error.invalid_address2' };
       }
       // check amount:
       let balance = await web3.eth.getBalance(this.address);
@@ -104,7 +111,7 @@ export class Ethereum extends Wallet {
       console.log(StringHelper.format('Your wallet balance is currently {0} ETH', balance));
 
       if (balance == 0 || balance <= amountToSend) {
-        return { status: 0, message: "messages.ethereum.error.insufficient" };
+        return { status: 0, message: 'messages.ethereum.error.insufficient' };
       }
 
       const gasPrice = new BN(await web3.eth.getGasPrice());
@@ -129,17 +136,10 @@ export class Ethereum extends Wallet {
 
       const transaction = new EthereumTx(details);
       transaction.sign(Buffer.from(this.privateKey, 'hex'));
-      const serializedTransaction = transaction.serialize();
-      const addr = transaction.from.toString('hex');
-      console.log('Based on your private key, your wallet address is', addr);
-      const transactionId = web3.eth.sendSignedTransaction(`0x${serializedTransaction.toString('hex')}`);
-      console.log('transactionId:', transactionId);
-      const url = StringHelper.format('{0}/tx/{1}', this.network, transactionId);
-      console.log('url', url);
 
-      return { status: 1, message: "messages.ethereum.success.transaction" };
+      return { status: 1, message: 'messages.ethereum.success.transaction' };
     } catch (error) {
-      return { status: 0, message: "messages.ethereum.error.insufficient" };
+      return { status: 0, message: 'messages.ethereum.error.insufficient' };
     }
   }
 
@@ -165,6 +165,54 @@ export class Ethereum extends Wallet {
       result = web3.utils.hexToNumber(response.data.result);
     }
     return result;
+  }
+
+  cook(data){
+    let value = 0, transaction_date = new Date(), addresses = [],
+      is_sent = true, is_error = false, transaction_no = "", token = {}, coin_name = "ETH";
+
+    if(data){
+      try{
+        value = Number(data.value / 1000000000000000000);
+        transaction_date = new Date(data.timeStamp*1000);
+        is_sent = String(data.from).toLowerCase() == this.address.toLowerCase();
+        is_error = Boolean(data.isError == "1");
+        transaction_no = data.hash;
+      }
+      catch(e){
+        console.error(e);
+      }
+
+      let addr = data.from;
+      if(is_sent) addr = data.to;
+
+      token = this.checkToken(addr);
+      if(token.result){
+        coin_name = token.name
+        let a = this.getTransactionReceipt(transaction_no);
+      }
+
+      addresses.push(addr.replace(addr.substr(4, 34), '...'));
+    }
+
+    return {
+      coin_name: coin_name,
+      value: value,
+      transaction_no: transaction_no,
+      transaction_date: transaction_date,
+      transaction_relative_time:  moment(transaction_date).fromNow(),
+      addresses: addresses,
+      is_sent: is_sent,
+      is_error: is_error
+    };
+  }
+
+  checkToken(addr){
+    return {result: addr == "0xc2f227834af7b44a11a9286f1771cade7ecd316c", name: "SHURI"}
+  }
+
+  getTokenValue(hash){
+
   }
 }
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
 // service, constant
 import { loadDiscoverList } from '@/reducers/discover/action';
 import {
@@ -9,13 +10,13 @@ import {
   EXCHANGE_COOKIE_READ_INSTRUCTION,
   HANDSHAKE_ID,
   URL,
+  HANDSHAKE_ID_DEFAULT,
 } from '@/constants';
 import { Link } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import Helper from '@/services/helper';
 // components
 import { Col, Grid, Row } from 'react-bootstrap';
-import FAQBetting from '@/components/core/presentation/FAQBetting';
 // import SearchBar from '@/components/core/controls/SearchBar';
 import ModalDialog from '@/components/core/controls/ModalDialog';
 import Category from '@/components/core/controls/Category';
@@ -30,15 +31,16 @@ import Maintain from '@/components/core/presentation/Maintain';
 import MultiLanguage from '@/components/core/controls/MultiLanguage';
 // import Tabs from '@/components/handshakes/exchange/components/Tabs';
 import NoData from '@/components/core/presentation/NoData';
-import BettingFilter from '@/components/handshakes/betting/Feed/Filter';
 import { getFreeStartInfo, getListOfferPrice, setFreeStart } from '@/reducers/exchange/action';
 import Image from '@/components/core/presentation/Image';
 import loadingSVG from '@/assets/images/icon/loading.gif';
 import ninjaLogoSVG from '@/assets/images/logo.png';
+//
+import DiscoverBetting from '@/components/handshakes/betting/Discover/Discover';
 // style
 import '@/components/handshakes/exchange/Feed/FeedExchange.scss';
 import './Discover.scss';
-import { FormattedMessage, FormattedHTMLMessage, injectIntl } from "react-intl";
+
 // import icon2KuNinja from '@/assets/images/icon/2_ku_ninja.svg';
 
 const maps = {
@@ -62,6 +64,8 @@ class DiscoverPage extends React.Component {
     isBannedPrediction: PropTypes.bool.isRequired,
     setFreeStart: PropTypes.func.isRequired,
     firebaseApp: PropTypes.object.isRequired,
+    intl: PropTypes.object.isRequired,
+    getFreeStartInfo: PropTypes.func.isRequired,
   }
 
   constructor(props) {
@@ -106,14 +110,8 @@ class DiscoverPage extends React.Component {
   }
 
   componentDidMount() {
-    const { ipInfo, } = this.props;
-    navigator.geolocation.getCurrentPosition((location) => {
-      const { coords: { latitude, longitude } } = location;
-      this.setAddressFromLatLng(latitude, longitude); // better precision
-    }, () => {
-      this.setAddressFromLatLng(ipInfo?.latitude, ipInfo?.longitude); // fallback
-    });
-
+    const { ipInfo } = this.props;
+    this.setAddressFromLatLng(ipInfo?.latitude, ipInfo?.longitude); // fallback
     if (this.state.utm === 'earlybird') {
       this.props.getFreeStartInfo({
         PATH_URL: `exchange/info/offer-store-free-start/ETH`,
@@ -130,7 +128,7 @@ class DiscoverPage extends React.Component {
                     <FormattedHTMLMessage id="ex.earlyBird.label.1" />
                   </div>
                   <div className="intro-text mt-2">
-                    <FormattedHTMLMessage id="ex.earlyBird.label.2"  values={{ freeETH: data.reward }}/>
+                    <FormattedHTMLMessage id="ex.earlyBird.label.2" values={{ freeETH: data.reward }} />
                   </div>
                   <button className="btn btn-open-station" onClick={this.onFreeStartClick}>
                     <FormattedMessage id="ex.earlyBird.btn" />
@@ -141,19 +139,29 @@ class DiscoverPage extends React.Component {
               this.modalRef.open();
             });
           }
-
         },
-        errorFn: () => {  },
+        errorFn: () => { },
       });
     }
   }
 
-  setAddressFromLatLng = (lat, lng) => {
-    this.setState({ lat, lng });
+  onFreeStartClick() {
+    this.modalRef.close();
+    this.props.setFreeStart({ data: true });
+    this.props.history.push(`${URL.HANDSHAKE_CREATE}?id=${HANDSHAKE_ID.EXCHANGE}`);
+  }
+
+  getUtm() {
+    const { utm_campaign: utm } = Helper.getQueryStrings(window.location.search);
+
+    return utm;
   }
 
   getDefaultHandShakeId() {
-    let seletedId = HANDSHAKE_ID.EXCHANGE;
+    if (window.location.pathname.indexOf(URL.HANDSHAKE_CASH) >= 0) {
+      return HANDSHAKE_ID.EXCHANGE;
+    }
+    let seletedId = HANDSHAKE_ID_DEFAULT;
     let { id } = Helper.getQueryStrings(window.location.search);
     id = parseInt(id, 10);
     if (id && Object.values(HANDSHAKE_ID).indexOf(id) !== -1) {
@@ -162,16 +170,8 @@ class DiscoverPage extends React.Component {
     return seletedId;
   }
 
-  getUtm() {
-    let { utm_campaign: utm } = Helper.getQueryStrings(window.location.search);
-
-    return utm;
-  }
-
-  onFreeStartClick() {
-    this.modalRef.close();
-    this.props.setFreeStart({ data: true });
-    this.props.history.push(`${URL.HANDSHAKE_CREATE}?id=${HANDSHAKE_ID.EXCHANGE}`);
+  setAddressFromLatLng = (lat, lng) => {
+    this.setState({ lat, lng });
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -234,10 +234,11 @@ class DiscoverPage extends React.Component {
               <FeedComponent
                 {...handshake}
                 history={this.props.history}
-                onFeedClick={() => this.clickFeedDetail(handshake.id)}
+                onFeedClick={extraData => this.clickFeedDetail(handshake, extraData)}
                 refreshPage={this.loadDiscoverList}
                 latitude={lat}
                 longitude={lng}
+                modalRef={this.modalRef}
               />
             </Col>
           );
@@ -259,7 +260,7 @@ class DiscoverPage extends React.Component {
       // is promise
     }
 
-    return <NoData style={{ height: '50vh' }} message={message}/>;
+    return <NoData style={{ height: '50vh' }} message={message} />;
   }
 
   setLoading = (loadingState) => {
@@ -275,8 +276,21 @@ class DiscoverPage extends React.Component {
     }, 500);
   }
 
-  clickFeedDetail(id) {
-    this.props.history.push(`${URL.HANDSHAKE_DISCOVER}/${id || ''}`);
+  clickFeedDetail(handshake, extraData) {
+    const { type } = handshake;
+    switch (type) {
+      case HANDSHAKE_ID.EXCHANGE: {
+        const { modalContent, modalClassName } = extraData;
+        if (modalContent) {
+          this.setState({ modalContent, propsModal: { className: modalClassName } }, () => {
+            this.modalRef.open();
+          });
+        }
+        break;
+      }
+      default:
+    }
+    // this.props.history.push(`${URL.HANDSHAKE_DISCOVER}/${id || ''}`);
   }
 
   handleCloseExchangePopupIntro = () => {
@@ -429,15 +443,8 @@ class DiscoverPage extends React.Component {
           <Image src={loadingSVG} alt="loading" width="100" />
         </div>
         <Grid className="discover">
-          {/* <Row className="search-bar-wrapper">
-            <Col md={12} xs={12}>
-              <SearchBar onSuggestionSelected={() => {}} onInputSearchChange={this.searchChange} />
-            </Col>
-          </Row> */}
-          <Row
-            className="category-wrapper"
-            // style={{ marginBottom: handshakeIdActive === HANDSHAKE_ID.EXCHANGE ? '0px' : '' }}
-          >
+          {/* Discover header */}
+          <Row className="category-wrapper">
             <Col className="col-9">
               <Category
                 idActive={handshakeIdActive}
@@ -449,62 +456,16 @@ class DiscoverPage extends React.Component {
               <MultiLanguage />
             </Col>
           </Row>
-
+          {/* exchange */}
           {
             handshakeIdActive === HANDSHAKE_ID.EXCHANGE && (
               <React.Fragment>
-                {/*
-                <Row>
-                  <Col md={12} className="exchange-intro">
-                    <span className="icon-shop">
-                      <img src={icon2KuNinja} alt="" />
-                    </span>
-                    <span className="text-intro">
-                      <div>Sell coin for cash, buy coin with cash. Set your own rates.</div>
-                      <div><span className="money">1 ETH welcome bonus.</span></div>
-                      <div className="my-3">
-                        <Link className="btn btn-sm btn-join-now" to={{ pathname: URL.HANDSHAKE_CREATE_INDEX, search: '?id=2' }}>
-                          <span>Open your station</span>
-                        </Link>
-                      </div>
-                    </span>
-                  </Col>
-                </Row>
-                */}
-                {/*
-                  !this.state.isBannedCash && (
-                    <Row>
-                      <Col md={12} className="feed-wrapper">
-                        <FeedCreditCard history={this.props.history} />
-                      </Col>
-                    </Row>
-                  )
-                */}
                 <div>
                   <div className="ex-sticky-note">
-                    <div className="mb-2"><FormattedMessage id="ex.discover.banner.text"/></div>
-                    <div><button className="btn btn-become" onClick={this.handleCreateExchange}><FormattedMessage id="ex.discover.banner.btnText"/></button></div>
+                    <div className="mb-2"><FormattedMessage id="ex.discover.banner.text" /></div>
+                    <div><button className="btn btn-become" onClick={this.handleCreateExchange}><FormattedMessage id="ex.discover.banner.btnText" /></button></div>
                   </div>
                 </div>
-              </React.Fragment>
-            )
-          }
-          {
-              handshakeIdActive === HANDSHAKE_ID.BETTING && this.state.isBannedPrediction
-              ? (
-                <BlockCountry />
-              )
-              : handshakeIdActive === HANDSHAKE_ID.BETTING && this.props.firebaseApp.config?.maintainChild?.betting ? <Maintain /> : null
-            }
-          {
-            handshakeIdActive === HANDSHAKE_ID.BETTING && !this.state.isBannedPrediction && !this.props.firebaseApp.config?.maintainChild?.betting && (
-              <React.Fragment>
-                <BettingFilter setLoading={this.setLoading} />
-                <Row>
-                  <Col md={12} className="faq-block">
-                    <FAQBetting />
-                  </Col>
-                </Row>
               </React.Fragment>
             )
           }
@@ -518,6 +479,12 @@ class DiscoverPage extends React.Component {
               : [HANDSHAKE_ID.EXCHANGE, HANDSHAKE_ID.EXCHANGE_LOCAL].indexOf(handshakeIdActive) >= 0 && this.props.firebaseApp.config?.maintainChild?.exchange ? <Maintain /> : null
             }
           </Row>
+          {/* betting */}
+          {
+            handshakeIdActive === HANDSHAKE_ID.BETTING
+            ? <DiscoverBetting setLoading={this.setLoading} />
+            : null
+          }
           <Row className="info">
             {messages.product_info}
           </Row>
