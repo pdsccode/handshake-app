@@ -134,7 +134,7 @@ const tokenHandle = ({
           dispatch(getUserProfile({ PATH_URL: API_URL.EXCHANGE.GET_USER_PROFILE }));
           dispatch(getListOfferPrice({
             PATH_URL: API_URL.EXCHANGE.GET_LIST_OFFER_PRICE,
-            qs: { fiat_currency: ipInfo?.currency },
+            // qs: { fiat_currency: ipInfo?.currency },
             errorFn(e) {
               console.log('coins - getListOfferPrice - redux - error', e);
             },

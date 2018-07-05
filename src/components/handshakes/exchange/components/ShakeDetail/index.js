@@ -95,7 +95,7 @@ export class Component extends React.PureComponent { // eslint-disable-line reac
 
     const shopType = type === EXCHANGE_ACTION.BUY ? EXCHANGE_ACTION.SELL : EXCHANGE_ACTION.BUY;
     if (listOfferPrice && type && currency) {
-      const offerPrice = getOfferPrice(listOfferPrice, shopType, CRYPTO_CURRENCY_NAME[currency]);
+      const offerPrice = getOfferPrice(listOfferPrice, shopType, CRYPTO_CURRENCY_NAME[currency], offer.fiatCurrency);
       fiatAmount = amount * offerPrice?.price || 0;
     }
 
@@ -166,7 +166,7 @@ export class Component extends React.PureComponent { // eslint-disable-line reac
 
     let newAmount = 0;
     if (listOfferPrice && type && currency) {
-      const offerPrice = getOfferPrice(listOfferPrice, shopType, CRYPTO_CURRENCY_NAME[currency]);
+      const offerPrice = getOfferPrice(listOfferPrice, shopType, CRYPTO_CURRENCY_NAME[currency], offer.fiatCurrency);
       newAmount = fiatAmount / offerPrice?.price || 0;
     }
 

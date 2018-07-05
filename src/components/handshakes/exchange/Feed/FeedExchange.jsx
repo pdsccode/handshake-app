@@ -37,6 +37,7 @@ import {
   completeShakedOffer,
   shakeOffer,
   shakeOfferItem,
+  trackingOnchain,
   withdrawShakedOffer,
 } from '@/reducers/exchange/action';
 import { Ethereum } from '@/services/Wallets/Ethereum.js';
@@ -279,12 +280,32 @@ class FeedExchange extends React.PureComponent {
     if (currency === CRYPTO_CURRENCY.ETH) {
       if (type === EXCHANGE_ACTION.BUY) { // shop buy
         // const amount = totalAmount;
+        let data = {};
+        try {
+          const wallet = MasterWallet.getWalletDefault(currency);
+          const exchangeHandshake = new ExchangeShopHandshake(wallet.chainId);
+          const result = await exchangeHandshake.initByCustomer(offer.items.ETH.userAddress, amount, offChainId);
 
-        const wallet = MasterWallet.getWalletDefault(currency);
-        const exchangeHandshake = new ExchangeShopHandshake(wallet.chainId);
-        const result = await exchangeHandshake.initByCustomer(offer.items.ETH.userAddress, amount, offChainId);
+          console.log('handleShakeOfferSuccess', result);
 
-        console.log('handleShakeOfferSuccess', result);
+          data = {
+            tx_hash: result.hash,
+            action: offerShake.items.ETH.status,
+            reason: '',
+            currency: currency,
+          };
+        } catch (e) {
+          data = {
+            action: offer.items.ETH.status,
+            reason: e.toString(),
+            currency: currency,
+          }
+
+          console.log('handleShakeOfferSuccess', e.toString());
+        }
+
+
+        this.trackingOnchain(data, offer.id);
       }
     } else if (currency === CRYPTO_CURRENCY.BTC) {
       if (type === EXCHANGE_ACTION.BUY) {
@@ -324,6 +345,25 @@ class FeedExchange extends React.PureComponent {
     });
   }
 
+  trackingOnchain = (data, offerStoreId, offerStoreShakeId) => {
+    let url = '';
+    if (offerStoreShakeId) {
+      url = `exchange/offer-stores/${offerStoreId}/shakes/${offerStoreShakeId}/onchain-tracking`;
+    } else {
+      url = `exchange/offer-stores/${offerStoreId}/onchain-tracking`;
+    }
+    this.props.trackingOnchain({
+      PATH_URL: url,
+      data,
+      METHOD: 'POST',
+      successFn: () => {
+      },
+      errorFn: () => {
+
+      },
+    });
+  }
+
   getOfferDistance = () => {
     const {
       ipInfo: { country }, latitude, longitude, location,
@@ -347,7 +387,7 @@ id="offerDistanceContent"
   }
 
   getPrices = () => {
-    const { listOfferPrice } = this.props;
+    const { listOfferPrice, fiatCurrency } = this.props;
     console.log('coins - listOfferPrice', listOfferPrice);
     const { offer } = this;
 
@@ -360,16 +400,16 @@ id="offerDistanceContent"
     const btc = offer.items.BTC;
 
     if (listOfferPrice) {
-      let offerPrice = getOfferPrice(listOfferPrice, EXCHANGE_ACTION.BUY, CRYPTO_CURRENCY.BTC);
+      let offerPrice = getOfferPrice(listOfferPrice, EXCHANGE_ACTION.BUY, CRYPTO_CURRENCY.BTC, fiatCurrency);
       priceBuyBTC = offerPrice.price * (1 + btc?.buyPercentage / 100) || 0;
 
-      offerPrice = getOfferPrice(listOfferPrice, EXCHANGE_ACTION.SELL, CRYPTO_CURRENCY.BTC);
+      offerPrice = getOfferPrice(listOfferPrice, EXCHANGE_ACTION.SELL, CRYPTO_CURRENCY.BTC, fiatCurrency);
       priceSellBTC = offerPrice.price * (1 + btc?.sellPercentage / 100) || 0;
 
-      offerPrice = getOfferPrice(listOfferPrice, EXCHANGE_ACTION.BUY, CRYPTO_CURRENCY.ETH);
+      offerPrice = getOfferPrice(listOfferPrice, EXCHANGE_ACTION.BUY, CRYPTO_CURRENCY.ETH, fiatCurrency);
       priceBuyETH = offerPrice.price * (1 + eth?.buyPercentage / 100) || 0;
 
-      offerPrice = getOfferPrice(listOfferPrice, EXCHANGE_ACTION.SELL, CRYPTO_CURRENCY.ETH);
+      offerPrice = getOfferPrice(listOfferPrice, EXCHANGE_ACTION.SELL, CRYPTO_CURRENCY.ETH, fiatCurrency);
       priceSellETH = offerPrice.price * (1 + eth?.sellPercentage / 100) || 0;
     }
 
@@ -380,7 +420,14 @@ id="offerDistanceContent"
 
   getNameShopDisplayed = () => {
     const { username, itemFlags, items } = this.offer;
-    if (username) { return username; }
+    if (username) {
+      const wallet = new Ethereum();
+      if (wallet.checkAddressValid(username) === true) {
+        wallet.address = username;
+        return wallet.getShortAddress();
+      }
+      return username;
+    }
     if (itemFlags.ETH) {
       const wallet = new Ethereum();
       wallet.address = items.ETH.userAddress;
@@ -515,6 +562,7 @@ const mapDispatch = dispatch => ({
   hideLoading: bindActionCreators(hideLoading, dispatch),
   rfChange: bindActionCreators(change, dispatch),
   clearFields: bindActionCreators(clearFields, dispatch),
+  trackingOnchain: bindActionCreators(trackingOnchain, dispatch),
 });
 
 export default injectIntl(connect(mapState, mapDispatch)(FeedExchange));
