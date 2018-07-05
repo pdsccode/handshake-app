@@ -121,7 +121,7 @@ class Component extends React.Component {
   }
 
   componentDidMount() {
-    const { ipInfo, rfChange, authProfile, freeETH, freeStart } = this.props;
+    const { ipInfo, rfChange, authProfile, freeStartInfo, isChooseFreeStart } = this.props;
     this.setAddressFromLatLng(ipInfo?.latitude, ipInfo?.longitude,ipInfo?.addressDefault)
 
     // auto fill phone number from user profile
@@ -134,8 +134,8 @@ class Component extends React.Component {
     rfChange(nameFormExchangeCreate, 'nameShop', authProfile.name || '');
     rfChange(nameFormExchangeCreate, 'address', authProfile.address || '');
 
-    if (freeETH > 0 && freeStart) {
-      rfChange(nameFormExchangeCreate, 'amountSell', freeETH);
+    if (freeStartInfo?.reward !== '' && isChooseFreeStart) {
+      rfChange(nameFormExchangeCreate, 'amountSell', freeStartInfo?.reward);
     }
 
     this.props.getOfferStores({
@@ -222,12 +222,12 @@ class Component extends React.Component {
 
   onCurrencyChange = (e, newValue) => {
     console.log('onCurrencyChange newValue', newValue);
-    const { rfChange, amountSell, freeETH, freeStart } = this.props;
+    const { rfChange, amountSell, freeStartInfo, isChooseFreeStart } = this.props;
     // console.log('onCurrencyChange currency', currency);
 
     if (newValue === CRYPTO_CURRENCY.ETH) {
-      if (amountSell > freeETH && freeETH > 0 && freeStart) {
-        rfChange(nameFormExchangeCreate, 'amountSell', freeETH);
+      if (freeStartInfo?.reward !== '' && amountSell > +freeStartInfo?.reward && isChooseFreeStart) {
+        rfChange(nameFormExchangeCreate, 'amountSell', freeStartInfo?.reward);
       }
     }
 
@@ -293,7 +293,7 @@ class Component extends React.Component {
   }
 
   handleSubmit = async (values) => {
-    const { authProfile, ipInfo, freeETH, freeStart } = this.props;
+    const { authProfile, ipInfo, freeStartInfo, isChooseFreeStart } = this.props;
     const { lat, lng } = this.state;
     console.log('handleSubmit', values);
     const {
@@ -310,7 +310,7 @@ class Component extends React.Component {
     const balance = await wallet.getBalance();
     const fee = await wallet.getFee(NB_BLOCKS, true);
 
-    if (freeETH <= 0 || currency !== CRYPTO_CURRENCY.ETH || !freeStart) {
+    if (freeStartInfo?.reward === '' || currency !== CRYPTO_CURRENCY.ETH || !isChooseFreeStart) {
       const condition = this.showNotEnoughCoinAlert(balance, amountBuy, amountSell, fee, currency);
 
       if (condition) {
@@ -330,8 +330,8 @@ class Component extends React.Component {
       user_address: wallet.address,
     };
 
-    if (currency === CRYPTO_CURRENCY.ETH && freeETH > 0 && freeStart) {
-      data.free_start = freeStart;
+    if (currency === CRYPTO_CURRENCY.ETH && freeStartInfo?.reward !== '' && isChooseFreeStart) {
+      data.free_start = freeStartInfo?.token;
     }
 
     const offer = {
@@ -437,7 +437,7 @@ class Component extends React.Component {
         });
       }
     } else if (currency === CRYPTO_CURRENCY.ETH) {
-      if (amountSell > 0 && !offer.items.ETH.freeStart) {
+      if (amountSell > 0 && offer.items.ETH.freeStart === '') {
         let data = {};
         try {
           const exchangeHandshake = new ExchangeShopHandshake(wallet.chainId);
@@ -557,7 +557,7 @@ class Component extends React.Component {
   }
 
   render() {
-    const { currency, listOfferPrice, ipInfo: { currency: fiatCurrency }, customizePriceBuy, customizePriceSell, amountBuy, amountSell, freeETH, freeStart} = this.props;
+    const { currency, listOfferPrice, ipInfo: { currency: fiatCurrency }, customizePriceBuy, customizePriceSell, amountBuy, amountSell, freeStartInfo, isChooseFreeStart} = this.props;
     const modalContent = this.state.modalContent;
     const allowInitiate = this.offer ? (!this.offer.itemFlags.ETH || !this.offer.itemFlags.BTC) : true;
 
@@ -598,7 +598,7 @@ class Component extends React.Component {
                   className="form-control-custom form-control-custom-ex w-100 input-no-border"
                   component={fieldInput}
                   placeholder={MIN_AMOUNT[currency]}
-                  disabled={freeStart && freeETH > 0 && currency === CRYPTO_CURRENCY.ETH}
+                  disabled={isChooseFreeStart && freeStartInfo?.reward !== '' && currency === CRYPTO_CURRENCY.ETH}
                   // onChange={this.onAmountChange}
                   // validate={[requiredOneOfAmounts, currency === CRYPTO_CURRENCY.BTC ? minValue001 : minValue01]}
                   validate={[number]}
@@ -774,8 +774,8 @@ const mapStateToProps = (state) => {
     authProfile: state.auth.profile,
     offerStores: state.exchange.offerStores,
     listOfferPrice: state.exchange.listOfferPrice,
-    freeETH: state.exchange.freeETH || 0,
-    freeStart: state.exchange.freeStart,
+    freeStartInfo: state.exchange.freeStartInfo,
+    isChooseFreeStart: state.exchange.isChooseFreeStart,
   };
 };
 
