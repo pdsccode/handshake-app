@@ -3,18 +3,21 @@
 .wrapperGroupBook {
   //padding: rem-calc(10px);
   background: #1F2B34;
-  height: 100%;
+  //height: 100%;
+  flex: 1;
   .wrapperBettingBook + .wrapperBettingBook {
     margin-top: rem-calc(4px);
   }
 }
 
-.noData {
+.noDataGb {
   color: #fff;
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
+  //flex: 1;
+  height: 100%;
 }
 
 .wrapperGroupBook + .wrapperGroupBook {
