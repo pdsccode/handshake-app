@@ -472,6 +472,7 @@ export default {
       profileDescription: 'You, glorious you',
       shopTitle: 'Your station',
       shopDescription: 'Open for business',
+      shopNoDataDescription: 'None yet. Set one up?',
       noDataMessage: 'Start a mission.',
     },
   },

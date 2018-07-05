@@ -12,7 +12,7 @@ import { injectIntl } from 'react-intl';
 import { Link } from 'react-router-dom';
 import { Grid, Row, Col } from 'react-bootstrap';
 import NoData from '@/components/core/presentation/NoData';
-import { getListOfferPrice, reviewOffer } from '@/reducers/exchange/action';
+import { getListOfferPrice, getOfferStores, reviewOffer } from '@/reducers/exchange/action';
 import FeedPromise from '@/components/handshakes/promise/Feed';
 import FeedBetting from '@/components/handshakes/betting/Feed';
 import FeedExchange from '@/components/handshakes/exchange/Feed/FeedMe';
@@ -70,6 +70,7 @@ class Me extends React.Component {
       auth: this.props.auth,
       firebaseUser: this.props.firebaseUser,
       numStars: 0,
+      offerStores: this.props.offerStores,
     };
   }
 
@@ -106,6 +107,12 @@ class Me extends React.Component {
     if (nextProps.auth.updatedAt !== prevState.auth.updatedAt) {
       return { auth: nextProps.auth };
     }
+
+    if (nextProps.offerStores) {
+      if (JSON.stringify(nextProps.offerStores) !== JSON.stringify(prevState.offerStores)) {
+        return { offerStores: nextProps.offerStores };
+      }
+    }
     return null;
   }
 
@@ -115,6 +122,7 @@ class Me extends React.Component {
       this.rateRef.open();
     }
     this.loadMyHandshakeList();
+    this.getOfferStore();
   }
 
   setOfflineStatus = (online) => {
@@ -125,6 +133,17 @@ class Me extends React.Component {
       successFn: this.handleSetOfflineStatusSuccess,
       errorFn: this.handleSetOfflineStatusFailed,
     });
+  }
+
+  getOfferStore = () => {
+    const { authProfile } = this.props;
+    this.props.getOfferStores({
+      PATH_URL: `${API_URL.EXCHANGE.OFFER_STORES}/${authProfile.id}`,
+    });
+  }
+
+  handleCreateExchange = () => {
+    this.props.history.push(`${URL.HANDSHAKE_CREATE}?id=${HANDSHAKE_ID.EXCHANGE}`);
   }
 
   loadMyHandshakeList = () => {
@@ -168,7 +187,9 @@ class Me extends React.Component {
   render() {
     const { list } = this.props.me;
     const { messages } = this.props.intl;
+    const { offerStores } = this.state;
     const online = !this.props.auth.offline;
+    const haveOffer = offerStores ? (offerStores.itemFlags.ETH || offerStores.itemFlags.BTC) : false;
 
     // console.log('this.props.intl', this.props.intl);
     // console.log('messages.me.feed', messages.me.feed);
@@ -189,17 +210,21 @@ class Me extends React.Component {
             </Link>
           </Col>
         </Row>
-        <Row>
+        <Row onClick={!haveOffer ? this.handleCreateExchange : undefined}>
           <Col md={12}>
             <div className="update-profile pt-2">
               <Image className="avatar" src={ShopSVG} alt="shop" />
               <div className="text" style={{ width: '69%' }}>
                 <strong>{messages.me.feed.shopTitle}</strong>
-                <p>{messages.me.feed.shopDescription}</p>
+                {haveOffer ?
+                  (<p>{messages.me.feed.shopDescription}</p>) :
+                  (<p>{messages.me.feed.shopNoDataDescription}</p>)
+                }
               </div>
-              <div className="arrow">
-                <ToggleSwitch defaultChecked={online} onChange={flag => this.setOfflineStatus(flag)} />
-              </div>
+              {haveOffer && (<div className="arrow">
+                <ToggleSwitch defaultChecked={online} onChange={flag => this.setOfflineStatus(flag)}/>
+              </div>)
+              }
             </div>
           </Col>
         </Row>
@@ -243,6 +268,8 @@ const mapState = state => ({
   firebaseUser: state.firebase.data,
   firebaseApp: state.firebase,
   exchange: state.exchange,
+  authProfile: state.auth.profile,
+  offerStores: state.exchange.offerStores,
 });
 
 const mapDispatch = ({
@@ -252,6 +279,7 @@ const mapDispatch = ({
   fireBaseBettingChange,
   setOfflineStatus,
   reviewOffer,
+  getOfferStores,
 });
 
 export default injectIntl(compose(withFirebase, connect(mapState, mapDispatch))(Me));
