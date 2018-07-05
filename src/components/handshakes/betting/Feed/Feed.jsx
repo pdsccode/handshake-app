@@ -195,6 +195,7 @@ class FeedBetting extends React.Component {
   }
 
   componentDidMount() {
+    console.log("Feed componentDidMount");
     this.handleStatus(this.props);
   }
 
