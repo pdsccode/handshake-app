@@ -27,6 +27,8 @@ import { BetHandshakeHandler, MESSAGE, SIDE } from '@/components/handshakes/bett
 import './ShakeFree.scss';
 import Toggle from './../Toggle';
 import BigNumber from 'bignumber.js';
+import {parseBigNumber} from '@/components/handshakes/betting/utils.js';
+
 
 const betHandshakeHandler = BetHandshakeHandler.getShareManager();
 
@@ -166,7 +168,7 @@ class BetingShakeFree extends React.Component {
     */
 
     this.setState({
-      oddValue: Math.floor(marketOdds * ROUND_ODD) / ROUND_ODD,
+      oddValue: marketOdds.toFixed(2,1),
     }, () => this.updateTotal());
 
 
@@ -175,9 +177,9 @@ class BetingShakeFree extends React.Component {
 
   updateTotal() {
     const { oddValue, amountValue } = this.state;
-    const total = oddValue * amountValue;
+    const total = parseBigNumber(oddValue).times(parseBigNumber(amountValue));
     this.setState({
-      winValue: Math.floor(total * ROUND) / ROUND,
+      winValue: total.toFixed(6,1),
     });
   }
 
