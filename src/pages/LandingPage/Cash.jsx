@@ -202,7 +202,7 @@ class Handshake extends React.Component {
         </div>
         <div className={`container thirdContainer`}>
           <div className="row">
-            <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12 img-wrapper">
               <img
                 src={
                   locale === "ru"
