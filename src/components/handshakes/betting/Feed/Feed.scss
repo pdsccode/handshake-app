@@ -93,6 +93,7 @@
       font-weight: $normal;
       color: #333;
       padding-right: rem-calc(10px);
+      flex: 1;
     }
     button {
       width: rem-calc(170px);
@@ -120,7 +121,7 @@
       background: #3DD757;
     }
     .refund {
-
+      background: transparent !important;
     }
   }
 }
