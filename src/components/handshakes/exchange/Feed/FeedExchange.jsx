@@ -73,7 +73,7 @@ class FeedExchange extends React.PureComponent {
 
     this.offer = OfferShop.offerShop(JSON.parse(extraData));
 
-    console.log('offer', this.offer);
+    // console.log('offer', this.offer);
 
     this.state = {
       modalContent: '',
@@ -388,7 +388,8 @@ id="offerDistanceContent"
 
   getPrices = () => {
     const { listOfferPrice, fiatCurrency } = this.props;
-    console.log('coins - listOfferPrice', listOfferPrice);
+    // console.log('',this.getNameShopDisplayed());
+    // console.log('coins - listOfferPrice', listOfferPrice, fiatCurrency);
     const { offer } = this;
 
     let priceBuyBTC;
@@ -398,6 +399,9 @@ id="offerDistanceContent"
 
     const eth = offer.items.ETH;
     const btc = offer.items.BTC;
+
+    // console.log('eth', eth);
+    // console.log('btc', btc);
 
     if (listOfferPrice) {
       let offerPrice = getOfferPrice(listOfferPrice, EXCHANGE_ACTION.BUY, CRYPTO_CURRENCY.BTC, fiatCurrency);
