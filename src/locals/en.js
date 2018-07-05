@@ -670,9 +670,9 @@ export default {
           wallet_key: 'Wallet key',
           main_net: 'Mainnet wallets',
           test_net: 'Testnet wallets',
-          header_coins: "Coins",
-          header_tokens: "Tokens",
-          header_collectibles: "Collectibles",
+          header_coins: "Cryptocurrencies",
+          header_tokens: "ERC20 Tokens",
+          header_collectibles: "ERC721 Collectibles",
         },
         text: {
           random: "Random",
