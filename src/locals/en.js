@@ -181,6 +181,8 @@ export default {
   'ex.earlyBird.label.2': 'Create your station with <br /><span class="intro-amount">{freeETH} ETH</span> free now!',
   'ex.earlyBird.btn': 'Open Station',
 
+  'ex.seo.title': 'Ninja Cash: Buy/Sell Crypto with Cash',
+  'ex.seo.meta.description': 'The easiest way to trade with low fee. No signup or ID verification. Find out how to make money with your crypto with us now',
 
   'error.required': 'Required',
   'error.requiredOne': 'You need to fill in one of these!',
@@ -470,6 +472,7 @@ export default {
       profileDescription: 'You, glorious you',
       shopTitle: 'Your station',
       shopDescription: 'Open for business',
+      shopNoDataDescription: 'None yet. Set one up?',
       noDataMessage: 'Start a mission.',
     },
   },
@@ -604,7 +607,7 @@ export default {
       },
       add_token:{
         title: 'Add custom token',
-      },  
+      },
       add_collectible: {
         title: 'Add collectible',
       },

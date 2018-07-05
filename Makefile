@@ -1,5 +1,5 @@
 .PHONY: deploy
 deploy:
-	rm deployment.tar.enc;
+	rm -f deployment.tar.enc;
 	tar cvf deployment.tar deployment/;
 	travis encrypt-file deployment.tar;
