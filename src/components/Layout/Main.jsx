@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 // components
-import MainHeader from '@/components/Header/MainHeader';
+import Header from '@/components/App/Header';
 import Navigation from '@/components/core/controls/Navigation/Navigation';
 import Alert from '@/components/core/presentation/Alert';
 import Loading from '@/components/core/controls/Loading';
@@ -32,7 +32,7 @@ class MainLayout extends React.Component {
   render() {
     return (
       <div className={`app ${this.state.app.showHeader ? 'show-header' : 'hide-header'}`}>
-        <MainHeader />
+        <Header />
         <div className="content">
           {this.props.children}
         </div>

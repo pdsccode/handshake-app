@@ -1,0 +1,45 @@
+.app-header {
+  z-index: 3;
+  max-width: $app-width;
+  height: $header-height;
+  background-color: rgba(248, 248, 248, 0.82);
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  .app-header-right {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  .app-header-left {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  .app-header-back-btn {
+    position: absolute;
+    left: 0;
+    top: 0;
+    padding: 12px;
+    height: $header-height;
+    svg {
+      g {
+        fill: $deep-blue;
+      }
+    }
+    display: none;
+    &.visibled {
+      display: block;
+    }
+  }
+  .app-title {
+    line-height: $header-height;
+    text-align: center;
+    font-size: 24px;
+    color: $text-black;
+  }
+}

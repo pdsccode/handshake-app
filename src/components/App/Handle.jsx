@@ -51,7 +51,6 @@ class Handle extends React.Component {
   }
 
   firebase() {
-    console.log('app - handle - core - firebase');
     this.props.firebase.watchEvent('value', `/users/${this.state.auth.profile.id}`);
     this.props.firebase.watchEvent('value', `/config`);
   }
@@ -95,7 +94,6 @@ class Handle extends React.Component {
   }
 
   notification() {
-    console.log('app - handle - core - notification');
     try {
       const messaging = this.props.firebase.messaging();
       messaging

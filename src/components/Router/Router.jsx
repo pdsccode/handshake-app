@@ -11,7 +11,6 @@ import Loading from '@/components/core/presentation/Loading';
 import ScrollToTop from '@/components/App/ScrollToTop';
 import Layout from '@/components/Layout/Main';
 
-// import NetworkError from '@/components/Router/NetworkError';
 import Maintain from '@/components/Router/Maintain';
 
 const RouterMe = createDynamicImport(() => import('@/components/Router/Me'), Loading);
@@ -60,8 +59,6 @@ class Router extends React.Component {
     this.state = {
       firebaseApp: initFirebaseApp,
     };
-
-    console.log('root-router - contructor - init');
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {

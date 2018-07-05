@@ -2,7 +2,6 @@ import axios from 'axios';
 import { merge, trimEnd } from 'lodash';
 import local from '@/services/local-store';
 import { APP, BASE_API } from '@/constants';
-import { MasterWallet } from '@/services/Wallets/MasterWallet';
 
 const $http = ({
   url, data = {}, qs, id = '', headers = {}, method = 'GET', ...rest
@@ -13,6 +12,7 @@ const $http = ({
     'Content-Type': 'application/json',
   };
   const completedHeaders = merge(
+    {},
     defaultHeaders,
     headers,
   );
@@ -21,10 +21,6 @@ const $http = ({
     const token = local.get(APP.AUTH_TOKEN);
     if (token) {
       completedHeaders.Payload = token;
-    }
-    const wallet = MasterWallet.getWalletDefault('ETH');
-    if (wallet && wallet.chainId) {
-      completedHeaders.ChainId = wallet.chainId;
     }
   }
   // end handle headers

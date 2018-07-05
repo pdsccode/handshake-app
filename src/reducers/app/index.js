@@ -1,5 +1,5 @@
 import local from '@/services/local-store';
-import { APP } from '@/constants';
+import { APP, DISCOVER } from '@/constants';
 import { APP_ACTION } from './action';
 
 const close = {
@@ -20,6 +20,8 @@ function appReducer(state = {
   rootLoading: true,
 
   locale: local.get(APP.LOCALE) || 'en',
+
+  discoverTabSelectedId: DISCOVER.DEFAULT_TAB_ID,
 
   isCalling: false,
   isLoading: false,

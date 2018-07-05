@@ -1,16 +1,10 @@
-// style
-@import './src/styles/style';
-.category {
+.horizontal-list {
   width: 100%;
   padding: rem-calc(11px 0);
   overflow-x: auto;
   overflow-y: hidden;
   white-space: nowrap;
-  .active {
-    background: #383d41 !important;
-    color: $white;
-  }
-  .category-item {
+  .horizontal-list-item {
     display: inline-block;
     margin-right: rem-calc(5px);
     padding: rem-calc(6px 11px);
@@ -29,6 +23,10 @@
     }
     span {
       font-size: rem-calc(14px);
+    }
+    &.active {
+      background: #383d41 !important;
+      color: $white;
     }
   }
 }

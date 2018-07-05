@@ -1,0 +1,33 @@
+.discover-tab-prediction {
+  .discover-tab-prediction-share {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: rem-calc(18px);
+    padding: rem-calc(8px 0);
+    background-image: linear-gradient(90deg, #2456fb 0%, #1f2b34 100%);
+    color: $white;
+    .text {
+      width: 60%;
+      margin: 0;
+      font-size: 1rem;
+      font-weight: $normal;
+      text-align: center;
+    }
+    .share {
+      width: 40%;
+      display: inline-block;
+      text-align: right;
+    }
+  }
+  .discover-tab-prediction-faq {
+    margin-top: rem-calc(30px);
+    dl {
+      dd {
+        font-size: rem-calc(18px);
+      }
+      dt {
+        font-weight: $normal;
+      }
+    }
+  }
+}

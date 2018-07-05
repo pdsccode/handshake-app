@@ -6,6 +6,7 @@ import betting from './betting';
 import me from './me';
 import comment from './comment';
 import wallet from './wallet';
+import prediction from './prediction';
 
 export default {
   discover,
@@ -16,4 +17,5 @@ export default {
   betting,
   comment,
   wallet,
+  prediction,
 };

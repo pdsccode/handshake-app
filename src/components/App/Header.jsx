@@ -1,11 +1,20 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+<<<<<<< HEAD:src/components/Header/MainHeader.jsx
+=======
+import cn from '@sindresorhus/class-names';
+
+>>>>>>> 355fab27c13871578dfca4126dd464fd2ee9d3d3:src/components/App/Header.jsx
 import { history } from '@/stores';
 import backBtn from '@/assets/images/icon/header-back.svg.raw';
 import { clickHeaderBack } from '@/reducers/app/action';
 
+<<<<<<< HEAD:src/components/Header/MainHeader.jsx
 class MainHeader extends React.Component {
+=======
+class Header extends React.Component {
+>>>>>>> 355fab27c13871578dfca4126dd464fd2ee9d3d3:src/components/App/Header.jsx
   static propTypes = {
     app: PropTypes.object.isRequired,
     clickHeaderBack: PropTypes.func.isRequired,
@@ -32,11 +41,11 @@ class MainHeader extends React.Component {
   render() {
     if (this.props.app.showHeader) {
       return (
-        <header className="header">
+        <header className="app-header">
           {
             this.props.app.headerLeftContent
             ? (
-              <div className="header-left">
+              <div className="app-header-left">
                 {this.props.app.headerLeftContent}
               </div>
             )
@@ -44,7 +53,7 @@ class MainHeader extends React.Component {
               <div
                 tabIndex={0}
                 role="button"
-                className={`header-back-btn ${this.props.app.headerBack ? 'visibled' : ''}`}
+                className={cn('app-header-back-btn', { visibled: this.props.app.headerBack })}
                 onClick={this.back}
                 onKeyDown={this.back}
                 dangerouslySetInnerHTML={{ __html: backBtn }}
@@ -52,7 +61,7 @@ class MainHeader extends React.Component {
             )
           }
           <div className="title">{this.props.app.headerTitle}</div>
-          <div className="header-right">
+          <div className="app-header-right">
             {this.props.app.headerRightContent}
           </div>
         </header>
@@ -62,4 +71,4 @@ class MainHeader extends React.Component {
   }
 }
 
-export default connect(state => ({ app: state.app }), ({ clickHeaderBack }))(MainHeader);
+export default connect(state => ({ app: state.app }), ({ clickHeaderBack }))(Header);
