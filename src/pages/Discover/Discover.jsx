@@ -40,6 +40,7 @@ import DiscoverBetting from '@/components/handshakes/betting/Discover/Discover';
 // style
 import '@/components/handshakes/exchange/Feed/FeedExchange.scss';
 import './Discover.scss';
+import { Helmet } from "react-helmet";
 
 // import icon2KuNinja from '@/assets/images/icon/2_ku_ninja.svg';
 
@@ -436,6 +437,7 @@ class DiscoverPage extends React.Component {
       modalContent,
     } = this.state;
     const { messages } = this.props.intl;
+    const { intl } = this.props;
 
     return (
       <React.Fragment>
@@ -460,6 +462,10 @@ class DiscoverPage extends React.Component {
           {
             handshakeIdActive === HANDSHAKE_ID.EXCHANGE && (
               <React.Fragment>
+                <Helmet>
+                  <title>{intl.formatMessage({ id: 'ex.seo.title' })}</title>
+                  <meta name="description" content={intl.formatMessage({ id: 'ex.seo.meta.description' })} />
+                </Helmet>
                 <div>
                   <div className="ex-sticky-note">
                     <div className="mb-2"><FormattedMessage id="ex.discover.banner.text" /></div>
