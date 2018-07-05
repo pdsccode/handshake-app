@@ -2,7 +2,6 @@ import Web3 from 'web3';
 import BaseHandshake from './BaseHandshake';
 import { MasterWallet } from '@/services/Wallets/MasterWallet';
 
-
 const TAG = 'BettingHandshake';
 export default class BettingHandshake extends BaseHandshake {
   constructor(chainId) {
@@ -26,9 +25,9 @@ export default class BettingHandshake extends BaseHandshake {
     return wallet.privateKey;
   }
   get gasPrice() {
-    //const wallet = MasterWallet.getWalletDefault('ETH');
-    //return this.chainId === 4 ? window.gasPrice || 20 : window.gasPrice || 20;
-    return this.chainId === 4 ? this.web3.utils.fromWei(window.gasPrice,'gwei') || 20 : this.web3.utils.fromWei(window.gasPrice,'gwei') || 20;
+    // const wallet = MasterWallet.getWalletDefault('ETH');
+    // return this.chainId === 4 ? window.gasPrice || 20 : window.gasPrice || 20;
+    return this.chainId === 4 ? window.gasPrice || 20 : window.gasPrice || 20;
     // return this.chainId === 4 ? 64 : 64;
   }
   async getEstimateGas(hid = 0, side = 1, odds = 3) {
@@ -39,7 +38,7 @@ export default class BettingHandshake extends BaseHandshake {
     const payloadData = this.handshakeInstance.methods
       .init(hid, side, oddsValue, bytesOffchain)
       .encodeABI();
-      /*
+    /*
     const estimateGas = await this.neuron.caculateEstimatGasWithEthUnit(
       payloadData,
       this.address,
@@ -106,7 +105,11 @@ export default class BettingHandshake extends BaseHandshake {
     const bytesOffchain = this.web3.utils.asciiToHex(offchain);
     const oddsTakerValue = takerOdds * 100;
     const oddsMakerValue = makerOdds * 100;
-    console.log('Sa debug OddsTaker OddsMaker:', oddsTakerValue, oddsMakerValue);
+    console.log(
+      'Sa debug OddsTaker OddsMaker:',
+      oddsTakerValue,
+      oddsMakerValue,
+    );
     console.log('Gas Price:', this.gasPrice);
 
     const payloadData = this.handshakeInstance.methods
