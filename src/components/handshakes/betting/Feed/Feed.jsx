@@ -343,11 +343,11 @@ class FeedBetting extends React.Component {
         const oddsBN = parseBigNumber(odds);
         const winMatch = amountMatch.times(oddsBN).toNumber() || 0;
         const winValue = amountMatch.times(oddsBN).toNumber() || 0;
-        displayWinMatch += Math.floor(winMatch * ROUND) / ROUND;
+        displayWinMatch += winMatch.toFixed(6, 1);
         displayAmount += Math.floor(amount * ROUND) / ROUND;
         displayMatchedAmount = Math.floor(amountMatch * ROUND) / ROUND;
         displayRemaining = Math.floor(remainingValue * ROUND) / ROUND;
-        displayWinValue = Math.floor(winValue * ROUND) / ROUND;
+        displayWinValue = winValue.toFixed(6, 1);
       });
     }
 

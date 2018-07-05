@@ -27,9 +27,10 @@ export default class BettingHandshake extends BaseHandshake {
     return wallet.privateKey;
   }
   get gasPrice() {
-    const wallet = MasterWallet.getWalletDefault('ETH');
-
-    return wallet.chainId === 4 ? window.gasPrice || 20 : window.gasPrice || 20;
+    //const wallet = MasterWallet.getWalletDefault('ETH');
+    //return this.chainId === 4 ? window.gasPrice || 20 : window.gasPrice || 20;
+    //return wallet.chainId === 4 ? window.gasPrice || 20 : window.gasPrice || 20;
+    return this.chainId === 4 ? 64 : 64;
   }
 
   async getEstimateGas(hid = 0, side = 1, odds = 3) {
@@ -70,7 +71,7 @@ export default class BettingHandshake extends BaseHandshake {
       .init(hid, side, oddsValue, bytesOffchain)
       .encodeABI();
     console.log('Payload Data:', payloadData);
-
+    console.log('Gas Price:', this.gasPrice);
     const dataBlockChain = await this.neuron.sendRawTransaction(
       this.address,
       this.privateKey,
@@ -108,6 +109,7 @@ export default class BettingHandshake extends BaseHandshake {
     const oddsTakerValue = takerOdds * 100;
     const oddsMakerValue = makerOdds * 100;
     console.log('Sa debug OddsTaker OddsMaker:', oddsTakerValue, oddsMakerValue);
+    console.log('Gas Price:', this.gasPrice);
 
     const payloadData = this.handshakeInstance.methods
       .shake(hid, side, oddsTakerValue, maker, oddsMakerValue, bytesOffchain)
@@ -119,6 +121,7 @@ export default class BettingHandshake extends BaseHandshake {
       payloadData,
       {
         amount: stake,
+        gasPrice: this.gasPrice,
         toAddress: this.contractAddress,
       },
     );
@@ -152,6 +155,7 @@ export default class BettingHandshake extends BaseHandshake {
       payloadData,
       {
         // amount: stake,
+        gasPrice: this.gasPrice,
         toAddress: this.contractAddress,
       },
     );
@@ -179,6 +183,7 @@ export default class BettingHandshake extends BaseHandshake {
       payloadData,
       {
         // amount: stake,
+        gasPrice: this.gasPrice,
         toAddress: this.contractAddress,
       },
     );
@@ -205,6 +210,7 @@ export default class BettingHandshake extends BaseHandshake {
       payloadData,
       {
         // amount,
+        gasPrice: this.gasPrice,
         toAddress: this.contractAddress,
       },
     );
