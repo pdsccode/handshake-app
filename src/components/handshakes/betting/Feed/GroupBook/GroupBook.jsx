@@ -31,7 +31,7 @@ class GroupBook extends React.Component {
         {
           (hasData) ?
             bookList.map((item, index) => <Book key={index} amountColor={amountColor} item={item} />) :
-            isGotDefaultOutCome ? <div className="noData">Stake a bet on new territory.</div> : ''
+            isGotDefaultOutCome ? <div className="noDataGb">Stake a bet on new territory.</div> : ''
         }
       </div>
     );
