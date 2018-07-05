@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 
 import {injectIntl} from 'react-intl';
 import {Field, change, clearFields} from "redux-form";
+import {fieldDropdown, fieldInput} from '@/components/core/form/customField'
 import {connect} from "react-redux";
 import { bindActionCreators } from "redux";
 import Button from '@/components/core/controls/Button';
-import {fieldInput} from '@/components/core/form/customField'
 import { API_URL } from "@/constants";
 import {getCryptoPrice} from '@/reducers/exchange/action';
 import Modal from '@/components/core/controls/Modal';
@@ -33,6 +33,9 @@ window.Clipboard = (function (window, document, navigator) {
 const amountValid = value => (value && isNaN(value) ? 'Invalid amount' : undefined);
 const nameFormReceiveWallet = 'receiveWallet';
 const ReceiveWalletForm = createForm({ propsReduxForm: { form: nameFormReceiveWallet, enableReinitialize: true, clearSubmitErrors: true}});
+
+const nameFormShowAddressWallet = 'showAddressWallet';
+const ShowAddressWalletForm = createForm({ propsReduxForm: { form: nameFormShowAddressWallet}});
 
 class ReceiveCoin extends React.Component {
   static propTypes = {
@@ -78,7 +81,7 @@ class ReceiveCoin extends React.Component {
     this.props.hideLoading();
   }
 
-  componentDidMount() {
+  componentDidMount() {    
     this.getWalletDefault();
     if(!this.state.walletSelected.isToken){
       this.getRate("BTC");
@@ -105,12 +108,21 @@ class ReceiveCoin extends React.Component {
     });
   }
 
-  componentWillReceiveProps() {
-    const {active} = this.props;
-    if(!active && this.state.active){
-      this.setState({active: active, inputSendAmountValue: 0, inputSendMoneyValue: 0});
+  componentDidUpdate(){
+    if (this.props.active && this.props.active != this.state.active){      
+      this.setState({active: this.props.active, inputSendAmountValue: 0, inputSendMoneyValue: 0});
       this.resetForm();
+      this.getWalletDefault();      
     }
+    else if (this.props.active != this.state.active){
+      this.setState({active: this.props.active});
+    }
+
+    
+  }
+
+  componentWillReceiveProps() {
+  
   }
 
   resetForm(){
@@ -138,7 +150,7 @@ class ReceiveCoin extends React.Component {
 
   getWalletDefault = () =>{
 
-    const { coinName, listWallet } = this.props;
+    const { coinName, listWallet, wallet } = this.props;
 
     let wallets = listWallet;
     let walletDefault = null;
@@ -155,36 +167,36 @@ class ReceiveCoin extends React.Component {
       }
     }
     // set name + value for list:
+    let listWalletCoin = [];
     if (wallets.length > 0){
       wallets.forEach((wallet) => {
-        wallet.value = wallet.getShortAddress() + " (" + wallet.name + "-" + wallet.getNetworkName() + ")";
-        if (process.env.isLive){
-          wallet.value = wallet.getShortAddress() + " (" + wallet.className + " " + wallet.name + ")";
-        }
-        wallet.id = Math.random();
-
+        // if(!wallet.isCollectibles){
+          
+          wallet.text = wallet.getShortAddress() + " (" + wallet.name + "-" + wallet.getNetworkName() + ")";
+          if (process.env.isLive){
+            wallet.text = wallet.getShortAddress() + " (" + wallet.className + " " + wallet.name + ")";
+          }
+          wallet.id = wallet.address + wallet.getNetworkName() + wallet.name;
+          listWalletCoin.push(wallet);
+        // }
       });
     }
 
     // set name for walletDefault:
-    MasterWallet.log(walletDefault, "walletDefault");
+    if (wallet){
+      walletDefault = wallet;
+    }
+    
     if (walletDefault){
-      walletDefault.value = walletDefault.getShortAddress() + " (" + walletDefault.name + "-" + walletDefault.getNetworkName() + ")";
+      walletDefault.text = walletDefault.getShortAddress() + " (" + walletDefault.name + "-" + walletDefault.getNetworkName() + ")";
       if (process.env.isLive){
-        walletDefault.value = walletDefault.getShortAddress() + " (" + walletDefault.className + " " + walletDefault.name + ")";
+        walletDefault.text = walletDefault.getShortAddress() + " (" + walletDefault.className + " " + walletDefault.name + ")";
       }
-      walletDefault.id = walletDefault.address + "-" + walletDefault.getNetworkName();
-
-      // get balance for first item + update to local store:
-      walletDefault.getBalance().then(result => {
-        walletDefault.balance = result;
-        this.setState({walletSelected: walletDefault});
-        MasterWallet.UpdateBalanceItem(walletDefault);
-      });
+      walletDefault.id = walletDefault.address + walletDefault.getNetworkName() + walletDefault.name;      
 
     }
-
-    this.setState({wallets: wallets, walletDefault: walletDefault, walletSelected: walletDefault});
+    MasterWallet.log(walletDefault, "walletSelected");
+    this.setState({wallets: listWalletCoin, walletDefault: walletDefault, walletSelected: walletDefault});
 
   }
 
@@ -249,26 +261,33 @@ class ReceiveCoin extends React.Component {
   }
 
   render() {
-    const { messages } = this.props.intl;
+    const { messages } = this.props.intl;    
 
     return (
       <div className="receive-coins">
           <div className="bodyTitle"><span>{messages.wallet.action.receive.message} { this.state.walletSelected ? this.state.walletSelected.name : ''} </span></div>
           <div className={['bodyBackup bodyShareAddress']}>
 
-            <QRCode value={this.state.walletSelected ? this.state.walletSelected.address : ''} />
-            <div className="addressDivPopup">{ this.state.walletSelected ? this.state.walletSelected.address : ''}</div>
+            <QRCode size={250} value={this.state.walletSelected ? this.state.walletSelected.address : ''} />
+            {/* <div className="addressDivPopup">{ this.state.walletSelected ? this.state.walletSelected.address : ''}</div>           */}
 
-            <Dropdown
-              className="dropdown-receive"
-              placeholder={messages.wallet.action.receive.placeholder.choose_wallet}
-              defaultId={this.state.walletSelected.id}
-              source={this.state.wallets}
-              onItemSelected={(item) => {
-                  this.setState({ walletSelected: item});
-                }
-              }
-            />
+            <ShowAddressWalletForm className="receivewallet-wrapper">
+              { this.state.walletSelected ?
+                              
+                <Field
+                  name="showWalletSelected"
+                  component={fieldDropdown}
+                  placeholder={messages.wallet.action.receive.placeholder.choose_wallet}
+                  defaultText={this.state.walletSelected.text}
+                  list={this.state.wallets}
+                    onChange={(item) => {
+                      this.setState({ walletSelected: item});
+                    }
+                  }
+                  />
+              
+              :""}
+              </ShowAddressWalletForm>
 
             <div className="link-request-custom-amount" onClick={() => { this.modalCustomAmountRef.open(); this.setState({ inputSendAmountValue: '' }); }}>{messages.wallet.action.receive.button.request_amount}</div>
 
@@ -281,7 +300,7 @@ class ReceiveCoin extends React.Component {
           <Modal title={messages.wallet.action.receive.header2} onRef={modal => this.modalCustomAmountRef = modal} onClose={() => this.onCloseReceive()} >
             <div className={['bodyBackup bodyShareAddress']}>
 
-              <QRCode value={(this.state.walletSelected ? this.state.walletSelected.address : '') + (this.state.inputSendAmountValue != '' ? `,${this.state.inputSendAmountValue}` : '')} />
+              <QRCode size={250} value={(this.state.walletSelected ? this.state.walletSelected.address : '') + (this.state.inputSendAmountValue != '' ? `,${this.state.inputSendAmountValue}` : '')} />
               <div className="addressDivPopup">{ this.state.walletSelected ? this.state.walletSelected.address : ''}</div>
             </div>
             <ReceiveWalletForm className="receivewallet-wrapper">
@@ -325,6 +344,11 @@ class ReceiveCoin extends React.Component {
     )
   }
 }
+
+ReceiveCoin.propTypes = {
+  wallet: PropTypes.any,
+  active: PropTypes.bool,
+};
 
 const mapStateToProps = (state) => ({
 
