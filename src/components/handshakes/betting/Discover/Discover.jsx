@@ -5,8 +5,9 @@ import { Col, Row } from 'react-bootstrap';
 
 import BlockCountry from '@/components/core/presentation/BlockCountry';
 import Maintain from '@/components/core/presentation/Maintain';
-import BettingFilter from '@/components/handshakes/betting/Feed/Filter';
 import FAQBetting from '@/components/core/presentation/FAQBetting';
+
+import BettingFilter from '@/components/handshakes/betting/components/Filter';
 
 class DiscoverBetting extends React.Component {
   static propTypes = {

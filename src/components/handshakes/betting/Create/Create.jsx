@@ -9,20 +9,20 @@ import { Field } from 'redux-form';
 import { initHandshake } from '@/reducers/handshake/action';
 import { loadMatches } from '@/reducers/betting/action';
 import { HANDSHAKE_ID, API_URL, APP, URL } from '@/constants';
-import { BetHandshakeHandler, SIDE, MESSAGE } from '@/components/handshakes/betting/Feed/BetHandshakeHandler.js';
-import local from '@/services/local-store';
+import { MESSAGE } from '@/components/handshakes/betting/constants';
+import { HandshakeService as BetHandshakeHandler } from '@/components/handshakes/betting/services';
 import GA from '@/services/google-analytics';
 
 // components
 import Button from '@/components/core/controls/Button';
-import Input from '@/components/core/forms/Input/Input';
-import DatePicker from '@/components/handshakes/betting/Create/DatePicker';
-import { MasterWallet } from '@/services/Wallets/MasterWallet';
+import DatePicker from '@/components/handshakes/betting/components/DatePicker';
 import Dropdown from '@/components/core/controls/Dropdown';
-import Toggle from '@/components/handshakes/betting/Feed/Toggle';
+import Toggle from '@/components/handshakes/betting/components/Toggle';
 import { showAlert } from '@/reducers/app/action';
-import {isRightNetwork, isExpiredDate, getChainIdDefaultWallet,
-  getBalance, getEstimateGas, isExistMatchBet, getAddress} from '@/components/handshakes/betting/utils.js';
+import {
+  isRightNetwork, isExpiredDate, getChainIdDefaultWallet,
+  getBalance, getEstimateGas, isExistMatchBet
+} from '@/components/handshakes/betting/utils';
 
 // self
 import { InputField } from '../form/customField';
@@ -85,12 +85,12 @@ class BettingCreate extends React.Component {
       selectedOutcome: null,
       buttonClass: 'btnBlue',
     };
-    this.onSubmit = ::this.onSubmit;
-    this.renderInput = ::this.renderInput;
-    this.renderDate = ::this.renderDate;
-    this.renderForm = ::this.renderForm;
-    this.renderNumber = ::this.renderNumber;
-    this.onToggleChange = ::this.onToggleChange;
+    this.onSubmit = :: this.onSubmit;
+    this.renderInput = :: this.renderInput;
+    this.renderDate = :: this.renderDate;
+    this.renderForm = :: this.renderForm;
+    this.renderNumber = :: this.renderNumber;
+    this.onToggleChange = :: this.onToggleChange;
   }
   componentDidMount() {
     console.log('Betting Create Props:', this.props, this.props.history);
@@ -105,9 +105,9 @@ class BettingCreate extends React.Component {
     const { matches } = nextProps;
     let filterMatches = [];
     matches.forEach(element => {
-      const {outcomes} = element;
+      const { outcomes } = element;
       const publicOutcomeArr = outcomes.filter(item => item.public == 1);
-      if(publicOutcomeArr.length > 0){
+      if (publicOutcomeArr.length > 0) {
         filterMatches.push(element);
       }
     });
@@ -115,11 +115,11 @@ class BettingCreate extends React.Component {
       matches: filterMatches,
     });
   }
-  loadMatches(){
+  loadMatches() {
     let params = {
       public: 1,
     }
-    this.props.loadMatches({ PATH_URL: API_URL.CRYPTOSIGN.LOAD_MATCHES});
+    this.props.loadMatches({ PATH_URL: API_URL.CRYPTOSIGN.LOAD_MATCHES });
 
   }
 
@@ -201,7 +201,7 @@ class BettingCreate extends React.Component {
       return itemDefault || matchOutcomes[0];
     }
     return null;
-  // return matchOutcomes && matchOutcomes.length > 0 ? matchOutcomes[0] : null;
+    // return matchOutcomes && matchOutcomes.length > 0 ? matchOutcomes[0] : null;
   }
 
 
@@ -221,7 +221,7 @@ class BettingCreate extends React.Component {
     // send event tracking
     try {
       GA.clickGoButtonCreatePage(selectedMatch, selectedOutcome, this.toggleRef.sideName);
-    } catch (err) {}
+    } catch (err) { }
 
     inputList.forEach((element) => {
       const item = JSON.parse(element.replace(regexReplace, ''));
@@ -336,7 +336,7 @@ class BettingCreate extends React.Component {
     // send event tracking
     try {
       GA.clickChooseASideCreatePage(id === 1 ? 'Support' : 'Oppose');
-    } catch (err) {}
+    } catch (err) { }
     this.setState({ buttonClass: `${id === 2 ? 'btnRed' : 'btnBlue'}` });
   }
 
@@ -419,10 +419,10 @@ class BettingCreate extends React.Component {
     );
   }
 
-  renderLabelForItem=(text, { marginLeft, marginRight }) => text && (<label
+  renderLabelForItem = (text, { marginLeft, marginRight }) => text && (<label
     className="itemLabel"
     style={{
-    display: 'flex', color: 'white', fontSize: 16, marginLeft, marginRight, alignItems: 'center',
+      display: 'flex', color: 'white', fontSize: 16, marginLeft, marginRight, alignItems: 'center',
     }}>{text}
   </label>)
 
@@ -479,13 +479,13 @@ class BettingCreate extends React.Component {
             }}
             source={this.matchNames}
             onItemSelected={(item) => {
-                const { values } = this.state;
-                values.event_name = item.value;
-                this.setState({ selectedMatch: item, values });
-                // send event tracking
-                GA.clickChooseAnEventCreatePage(item.value);
-              }
-              }
+              const { values } = this.state;
+              values.event_name = item.value;
+              this.setState({ selectedMatch: item, values });
+              // send event tracking
+              GA.clickChooseAnEventCreatePage(item.value);
+            }
+            }
           />
 
           {selectedMatch && <Dropdown
@@ -500,7 +500,7 @@ class BettingCreate extends React.Component {
             onItemSelected={(item) => {
               console.log('Selected outcome:', item);
               this.selectOutcomeClick(item);
-              }
+            }
             }
           />}
         </div>
@@ -517,8 +517,8 @@ class BettingCreate extends React.Component {
             onChange={this.onToggleChange}
           />
           <div style={{
-display: 'flex', flexDirection: 'column', flex: 1, marginBottom: 10,
- }}
+            display: 'flex', flexDirection: 'column', flex: 1, marginBottom: 10,
+          }}
           >
             {inputList.map((field, index) => this.renderItem(field, index))}
           </div>
@@ -620,7 +620,7 @@ display: 'flex', flexDirection: 'column', flex: 1, marginBottom: 10,
       // send ga event
       try {
         GA.createBetSuccessCreatePage(selectedMatch, selectedOutcome, this.toggleRef.sideName);
-      } catch (err) {}
+      } catch (err) { }
     }
   }
   initHandshakeFailed = (error) => {

@@ -16,10 +16,10 @@ import ShareSocial from '@/components/core/presentation/ShareSocial';
 // import FeedComponent from '@/components/Comment/FeedComment';
 import Button from '@/components/core/controls/Button';
 import ModalDialog from '@/components/core/controls/ModalDialog';
-import GroupBook from './../GroupBook';
-import TopInfo from './../TopInfo';
-import BettingShake from './../Shake';
-import BettingShakeFree from './../ShakeFree';
+import GroupBook from './GroupBook';
+import TopInfo from './TopInfo';
+import BettingShake from '../Shake';
+import BettingShakeFree from '../ShakeFree';
 
 // style
 import './Filter.scss';

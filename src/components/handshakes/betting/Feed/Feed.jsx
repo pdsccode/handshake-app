@@ -4,36 +4,25 @@ import { connect } from 'react-redux';
 
 // services, constants
 import { BetHandshakeHandler, SIDE, BETTING_STATUS_LABEL, ROLE, MESSAGE, BET_BLOCKCHAIN_STATUS, BETTING_STATUS } from './BetHandshakeHandler.js';
-import momment from 'moment';
-import { MasterWallet } from '@/services/Wallets/MasterWallet';
 
 import local from '@/services/local-store';
-import { FIREBASE_PATH, HANDSHAKE_ID, API_URL, APP } from '@/constants';
+import { API_URL, APP } from '@/constants';
 import { uninitItem, collect, refund, collectFree, rollback, uninitItemFree } from '@/reducers/handshake/action';
 import { loadMyHandshakeList, updateBettingChange } from '@/reducers/me/action';
 
 
 // components
-import Image from '@/components/core/presentation/Image';
 import Button from '@/components/core/controls/Button';
-import ModalDialog from '@/components/core/controls/ModalDialog';
 import Feed from '@/components/core/presentation/Feed';
-import BettingShake from './Shake';
 import { showAlert } from '@/reducers/app/action';
 import {
   getMessageWithCode, isRightNetwork, getId,
   getShakeOffchain, getBalance, getEstimateGas, isSameAddress, foundShakeList, parseBigNumber,
-} from '@/components/handshakes/betting/utils.js';
+} from '@/components/handshakes/betting/utils';
 
 
 // css, icons
 import './Feed.scss';
-import chipIcon from '@/assets/images/icon/betting/chip.svg';
-import conferenceCallIcon from '@/assets/images/icon/betting/conference_call.svg';
-import ethereumIcon from '@/assets/images/icon/betting/ethereum.svg';
-import Shake from '@/components/core/controls/Button';
-
-import GroupBook from './GroupBook';
 
 const betHandshakeHandler = BetHandshakeHandler.getShareManager();
 const ROUND = 1000000;

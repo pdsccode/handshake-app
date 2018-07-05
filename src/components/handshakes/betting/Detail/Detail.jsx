@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { setHeaderTitle } from '@/reducers/app/action';
 // components
 import FAQBetting from '@/components/core/presentation/FAQBetting';
-import BettingFilter from '@/components/handshakes/betting/Feed/Filter';
+import BettingFilter from '@/components/handshakes/betting/components/Filter';
 // style
 import './Detail.scss';
 

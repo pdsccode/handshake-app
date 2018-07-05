@@ -6,7 +6,7 @@ import './Book.scss';
 const BN = Web3.utils.BN;
 const ROUND_ODDS = 10;
 const ROUND = 1000000;
-class BetBook extends React.Component {
+class Book extends React.Component {
   constructor(props) {
     super(props);
     const { odd } = props;
@@ -35,12 +35,12 @@ class BetBook extends React.Component {
   }
 }
 
-BetBook.propTypes = {
+Book.propTypes = {
   amountColor: PropTypes.string,
 };
 
-BetBook.defaultProps = {
+Book.defaultProps = {
   amountColor: '#FA6B49',
 };
 
-export default BetBook;
+export default Book;
