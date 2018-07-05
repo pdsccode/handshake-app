@@ -7,6 +7,11 @@
   margin-top: 20px;
   padding: 0 15px;
 
+  form.receivewallet-wrapper {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
   .div-amount {
     padding-bottom: 10px;
 
@@ -26,7 +31,7 @@
     }
   }
 
-  button {
+  .button {
     width: 100%;
     padding: 10px;
     margin-top: 15px;

@@ -105,9 +105,26 @@ class Transfer extends React.Component {
   }
 
   componentDidUpdate() {
-    const {wallet} = this.props;
-    if(!this.state.active && wallet){
-      this.setState({active: true, walletDefault: wallet, walletSelected : wallet});
+    
+    if (this.props.active && this.props.active != this.state.active){      
+      
+      this.setState({active: this.props.active});
+      
+      this.props.clearFields(nameFormSendWallet, false, false, "to_address", "amountCoin");
+      if (this.props.amount){
+        this.props.rfChange(nameFormSendWallet, 'amountCoin', this.props.amount);
+      }
+
+      if (this.props.toAddress){
+        this.setState({inputAddressAmountValue: this.props.toAddress});
+        this.props.rfChange(nameFormSendWallet, 'to_address', this.props.toAddress);
+      }
+
+      this.getWalletDefault();
+      
+    }
+    else if (this.props.active != this.state.active){
+      this.setState({active: this.props.active});
     }
   }
 
@@ -157,9 +174,7 @@ class Transfer extends React.Component {
   }
 
   getWalletDefault = () =>{
-    const { coinName, listWallet } = this.props;
-
-    MasterWallet.log(coinName, "coinName");
+    const { coinName, listWallet, wallet } = this.props;
 
     let wallets = listWallet;
     let walletDefault = null;
@@ -170,24 +185,32 @@ class Transfer extends React.Component {
     if (coinName){
       walletDefault = MasterWallet.getWalletDefault(coinName);
     }
-    if (!walletDefault){
-      if (wallets.length > 0){
-        walletDefault = wallets[0];
-      }
-    }
+    
     // set name + text for list:
+    let listWalletCoin = [];
     if (wallets.length > 0){
-      wallets.forEach((wallet) => {
-        wallet.text = wallet.getShortAddress() + " (" + wallet.name + "-" + wallet.getNetworkName() + ")";
-        if (process.env.isLive){
-          wallet.text = wallet.getShortAddress() + " (" + wallet.className + " " + wallet.name + ")";
+      wallets.forEach((wal) => {
+        if(!wal.isCollectibles){
+          wal.text = wal.getShortAddress() + " (" + wal.name + "-" + wal.getNetworkName() + ")";
+          if (process.env.isLive){
+            wal.text = wal.getShortAddress() + " (" + wal.className + " " + wal.name + ")";
+          }
+          wal.id = wal.address + "-" + wal.getNetworkName() + wal.name;
         }
-        wallet.id = Math.random();
+        listWalletCoin.push(wal);
       });
     }
 
-    // set name for walletDefault:
-    MasterWallet.log(walletDefault, "walletDefault");
+    if (!walletDefault){
+      if (listWalletCoin.length > 0){
+        walletDefault = listWalletCoin[0];
+      }
+    }
+
+    // set name for walletDefault:    
+    if (wallet){
+      walletDefault = wallet;
+    }
     if (walletDefault){
       walletDefault.text = walletDefault.getShortAddress() + " (" + walletDefault.name + "-" + walletDefault.getNetworkName() + ")";
       if (process.env.isLive){
@@ -204,7 +227,10 @@ class Transfer extends React.Component {
 
     }
 
-    this.setState({wallets: wallets, walletDefault: walletDefault, walletSelected: walletDefault});
+    this.setState({wallets: listWalletCoin, walletDefault: walletDefault, walletSelected: walletDefault}, ()=>{
+      this.props.rfChange(nameFormSendWallet, 'walletSelected', walletDefault);
+    });
+    
   }
 
   sendCoin = () => {
@@ -351,13 +377,7 @@ openQrcode = () => {
 }
 
   render() {
-    const { messages } = this.props.intl;
-    const { wallet } = this.props;
-    let isFromWallet = false;
-    if(wallet){
-      isFromWallet = true;
-    }
-
+    const { messages } = this.props.intl;    
     return (
       <div>
           {/* Dialog confirm transfer coin */}
@@ -431,23 +451,21 @@ openQrcode = () => {
                   />
                 </div>
               }
-
-            { this.state.walletDefault && !isFromWallet ?
+            
               <div className ="dropdown-wallet-tranfer">
                 <p className="labelText">{messages.wallet.action.transfer.label.from_wallet}</p>
                 <Field
                   name="walletSelected"
                   component={fieldDropdown}
                   placeholder={messages.wallet.action.transfer.placeholder.select_wallet}
-                  defaultText={this.state.walletDefault.text}
+                  defaultText={this.state.walletSelected.text}
                   list={this.state.wallets}
                   onChange={(item) => {
                       this.onItemSelectedWallet(item);
                     }
-                    }
-                  />
-              </div>
-              :""}
+                  }
+                />
+              </div>              
 
               <label className='label-balance'>{messages.wallet.action.transfer.label.wallet_balance} { this.state.walletSelected ? StringHelper.format("{0} {1}", this.state.walletSelected.balance, this.state.walletSelected.name) : ""}</label>
               </div>
