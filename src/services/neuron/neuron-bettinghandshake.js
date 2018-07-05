@@ -28,8 +28,8 @@ export default class BettingHandshake extends BaseHandshake {
   get gasPrice() {
     //const wallet = MasterWallet.getWalletDefault('ETH');
     //return this.chainId === 4 ? window.gasPrice || 20 : window.gasPrice || 20;
-    //return wallet.chainId === 4 ? window.gasPrice || 20 : window.gasPrice || 20;
-    return this.chainId === 4 ? 64 : 64;
+    return this.chainId === 4 ? this.web3.utils.fromWei(window.gasPrice,'gwei') || 20 : this.web3.utils.fromWei(window.gasPrice,'gwei') || 20;
+    // return this.chainId === 4 ? 64 : 64;
   }
   async getEstimateGas(hid = 0, side = 1, odds = 3) {
     const oddsValue = odds * 100;
