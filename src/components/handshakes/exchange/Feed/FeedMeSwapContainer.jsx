@@ -385,7 +385,7 @@ class FeedMeSwapContainer extends React.PureComponent {
   }
 
   handleCloseOfferExchangeFailed = (e) => {
-    this.handleActionFailed(e);
+    this.props.handleActionFailed(e);
   }
 
   // //////////////////////
@@ -450,7 +450,7 @@ class FeedMeSwapContainer extends React.PureComponent {
   }
 
   handleAcceptOfferExchangeFailed = (e) => {
-    this.handleActionFailed(e);
+    this.props.handleActionFailed(e);
   }
 
   // //////////////////////
@@ -516,7 +516,7 @@ class FeedMeSwapContainer extends React.PureComponent {
   }
 
   handleCancelOfferExchangeFailed = (e) => {
-    this.handleActionFailed(e);
+    this.props.handleActionFailed(e);
   }
 
   // //////////////////////
@@ -581,7 +581,7 @@ class FeedMeSwapContainer extends React.PureComponent {
   }
 
   handleCompleteShakedOfferExchangeFailed = (e) => {
-    this.handleActionFailed(e);
+    this.props.handleActionFailed(e);
   }
 
   // //////////////////////
@@ -657,7 +657,7 @@ class FeedMeSwapContainer extends React.PureComponent {
   }
 
   handleRejectShakedOfferExchangeFailed = (e) => {
-    this.handleActionFailed(e);
+    this.props.handleActionFailed(e);
   }
 
   // //////////////////////

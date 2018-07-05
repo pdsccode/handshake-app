@@ -7,60 +7,16 @@ import {BigNumber} from 'bignumber.js';
 
 import Feed from '@/components/core/presentation/Feed/Feed';
 import Button from '@/components/core/controls/Button/Button';
-import {
-  API_URL,
-  APP_USER_NAME,
-  CRYPTO_CURRENCY,
-  DEFAULT_FEE,
-  EXCHANGE_ACTION,
-  EXCHANGE_ACTION_NAME,
-  EXCHANGE_ACTION_PAST_NAME,
-  EXCHANGE_ACTION_PERSON,
-  EXCHANGE_ACTION_PRESENT_NAME,
-  EXCHANGE_FEED_TYPE,
-  EXCHANGE_METHOD_PAYMENT,
-  HANDSHAKE_EXCHANGE_CC_STATUS,
-  HANDSHAKE_EXCHANGE_CC_STATUS_NAME,
-  HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS,
-  HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS_NAME,
-  HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS,
-  HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_NAME,
-  HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE,
-  HANDSHAKE_EXCHANGE_STATUS,
-  HANDSHAKE_EXCHANGE_STATUS_NAME,
-  HANDSHAKE_STATUS_NAME,
-  HANDSHAKE_USER,
-  NB_BLOCKS,
-  URL,
-} from '@/constants';
+import {EXCHANGE_FEED_TYPE, URL,} from '@/constants';
 import ModalDialog from '@/components/core/controls/ModalDialog';
-import {
-  acceptOffer,
-  acceptOfferItem,
-  cancelOffer,
-  cancelOfferItem,
-  cancelShakedOffer,
-  closeOffer,
-  completeOfferItem,
-  completeShakedOffer,
-  deleteOfferItem,
-  rejectOfferItem,
-  reviewOffer,
-  shakeOffer,
-  withdrawShakedOffer,
-} from '@/reducers/exchange/action';
 import Offer from '@/models/Offer';
 import {MasterWallet} from '@/services/Wallets/MasterWallet';
-import {formatAmountCurrency, formatMoneyByLocale, getHandshakeUserType, getOfferPrice} from '@/services/offer-util';
+import {formatAmountCurrency, getHandshakeUserType} from '@/services/offer-util';
 import {hideLoading, showAlert, showLoading} from '@/reducers/app/action';
 
-import {ExchangeHandshake, ExchangeShopHandshake} from '@/services/neuron';
 import {feedBackgroundColors} from '@/components/handshakes/exchange/config';
-import {updateOfferStatus} from '@/reducers/discover/action';
-import {responseExchangeDataChange} from '@/reducers/me/action';
 import {Ethereum} from '@/services/Wallets/Ethereum.js';
 import {Bitcoin} from '@/services/Wallets/Bitcoin';
-import {getLocalizedDistance} from '@/services/util';
 
 import {getErrorMessageFromCode} from '../utils';
 import './FeedExchange.scss';
@@ -212,22 +168,14 @@ class FeedMe extends React.PureComponent {
 
   render() {
     const {
- initUserId, shakeUserIds, extraData, location, state, status, mode = 'discover', ipInfo: { latitude, longitude, country }, initAt, review, reviewCount, ...props
- } = this.props;
+      initUserId, shakeUserIds, extraData, location, state, status, mode = 'discover', ipInfo: { latitude, longitude, country }, initAt, review, reviewCount, ...props
+    } = this.props;
 
     const offer = Offer.offer(JSON.parse(extraData));
 
     this.offer = offer;
     const modalContent = this.state.modalContent;
 
-    let email = '';
-    let statusText = '';
-    let message = '';
-    let actionButtons = null;
-    let from = <FormattedMessage id="ex.me.label.from" />;
-    let showChat = false;
-    let chatUsername = '';
-    let nameShop = offer.username;
     const address = offer.contactInfo;
 
     const isCreditCard = offer.feedType === EXCHANGE_FEED_TYPE.INSTANT;
@@ -299,25 +247,10 @@ const mapState = state => ({
 });
 
 const mapDispatch = ({
-  shakeOffer,
-  closeOffer,
-  completeShakedOffer,
-  cancelShakedOffer,
-  withdrawShakedOffer,
   showAlert,
-  updateOfferStatus,
   showLoading,
   hideLoading,
 
-  rejectOfferItem,
-  completeOfferItem,
-  cancelOfferItem,
-  acceptOfferItem,
-  deleteOfferItem,
-  responseExchangeDataChange,
-  reviewOffer,
-  acceptOffer,
-  cancelOffer,
 });
 
 export default injectIntl(connect(mapState, mapDispatch)(FeedMe));
