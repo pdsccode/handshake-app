@@ -379,12 +379,7 @@ class Component extends React.Component {
 
   render () {
     const {
-      type,
       currency,
-      listOfferPrice,
-      ipInfo: { currency: fiatCurrency },
-      total,
-      totalFormatted,
       intl
     } = this.props
     const modalContent = this.state.modalContent
@@ -549,24 +544,17 @@ class Component extends React.Component {
 }
 
 const mapStateToProps = state => {
-  const type = selectorFormExchangeCreateLocal(state, 'type')
-  const currency = selectorFormExchangeCreateLocal(state, 'currency')
+  const type = selectorFormExchangeCreateLocal(state, 'type');
+  const currency = selectorFormExchangeCreateLocal(state, 'currency');
 
-  const listOfferPrice = state.exchange.listOfferPrice
-  const { price } = getOfferPrice(listOfferPrice, type, currency)
-
-  const amount = selectorFormExchangeCreateLocal(state, 'amount')
-  const total = price * amount
-  const totalFormatted = formatMoney(total)
-  const phone = selectorFormExchangeCreateLocal(state, 'phone')
-  const address = selectorFormExchangeCreateLocal(state, 'address')
+  const amount = selectorFormExchangeCreateLocal(state, 'amount');
+  const phone = selectorFormExchangeCreateLocal(state, 'phone');
+  const address = selectorFormExchangeCreateLocal(state, 'address');
 
   return {
     type,
     currency,
     amount,
-    total,
-    totalFormatted,
     phone,
     address,
     ipInfo: state.app.ipInfo,
