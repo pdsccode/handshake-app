@@ -256,8 +256,9 @@ class Transfer extends React.Component {
     return errors
   }
 
-  updateAddressAmountValue = (evt) => {
-    let amount = evt.target.value, rate = 0, money = 0;
+  updateAddressAmountValue = (evt, val) => {
+    let amount = evt ? evt.target.value : null, rate = 0, money = 0;    
+    if(!amount) amount = val;    
     if(this.state.walletSelected && this.state.walletSelected.name == "BTC")
       rate = this.state.rateBTC;
     else
@@ -268,10 +269,10 @@ class Transfer extends React.Component {
         inputSendAmountValue: amount,
         inputSendMoneyValue: money.toFixed(0)
       });
-
-      this.props.rfChange(nameFormSendWallet, 'amountCoin', amount);
-      this.props.rfChange(nameFormSendWallet, 'amountMoney', money);
+    
     }
+    this.props.rfChange(nameFormSendWallet, 'amountCoin', amount);
+    this.props.rfChange(nameFormSendWallet, 'amountMoney', money);
   }
 
   getMessage(str){
@@ -358,7 +359,8 @@ handleScan=(data) =>{
         inputSendAmountValue: value[1],
       });
 
-      rfChange(nameFormSendWallet, 'amountCoin', value[1]);
+      //rfChange(nameFormSendWallet, 'amountCoin', value[1]);
+      this.updateAddressAmountValue(null, value[1]);
     }
     this.modalScanQrCodeRef.close();
   }
