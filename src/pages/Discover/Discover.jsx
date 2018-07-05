@@ -110,9 +110,15 @@ class DiscoverPage extends React.Component {
   componentDidMount() {
     const { ipInfo } = this.props;
     this.setAddressFromLatLng(ipInfo?.latitude, ipInfo?.longitude); // fallback
+
+    let url = '';
+    if (this.state.utm === 'earlybird') {
+      url = `exchange/info/offer-store-free-start/ETH`;
+    }
+
     if (this.state.utm === 'earlybird') {
       this.props.getFreeStartInfo({
-        PATH_URL: `exchange/info/offer-store-free-start/ETH`,
+        PATH_URL: url,
         successFn: (res) => {
           const { data } = res;
           if (data.reward) {
