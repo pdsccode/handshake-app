@@ -42,6 +42,7 @@ class Transfer extends React.Component {
       wallets: [],
       walletDefault: false,
       walletSelected: false,
+      walletSelectedAddress: "",
       active: this.props.active,
       // Qrcode
       qrCodeOpen: false,
@@ -78,7 +79,7 @@ class Transfer extends React.Component {
     this.props.hideLoading();
   }
 
-  componentDidMount() {console.log("componentDidMount", this.props.amount);
+  componentDidMount() {
     if (!this.state.walletSelected.isToken) {
       this.getRate('BTC');
       this.getRate('ETH');
@@ -88,20 +89,24 @@ class Transfer extends React.Component {
   componentWillReceiveProps() {
     this.props.clearFields(nameFormSendWallet, false, false, 'to_address', 'amountCoin');
 
-    const { active, toAddress, amount } = this.props;
+    const { active, fromAddress, toAddress, amount } = this.props;
 
     if (toAddress) {
       this.setState({ inputAddressAmountValue: toAddress });
       this.props.rfChange(nameFormSendWallet, 'to_address', toAddress);
     }
-
+    //console.log("componentWillReceiveProps", fromAddress);
+    if (fromAddress) {
+      this.setState({ walletSelectedAddress: fromAddress });
+    }
     if (amount) {
       this.setState({ inputSendAmountValue: amount });
       this.props.rfChange(nameFormSendWallet, 'amountCoin', amount);
+      this.updateAddressAmountValue(null, amount);
     }
 
     //if(!this.state.walletDefault)
-      this.getWalletDefault();
+    //this.getWalletDefault();
 
     if (!active && this.state.active) {
       this.setState({ active: active, inputSendAmountValue: 0, inputSendMoneyValue: 0 });
@@ -109,10 +114,12 @@ class Transfer extends React.Component {
     }
   }
 
-  componentDidUpdate() {
-    const { wallet } = this.props;
-    if (!this.state.active && wallet) {
-      this.setState({ active: true, walletDefault: wallet, walletSelected : wallet });
+  componentDidUpdate = () => {
+    const { wallet, isShowWallets } = this.props;console.log("componentDidUpdate", this.state.active, wallet);
+    if (!this.state.active && (isShowWallets || wallet)) {
+      this.setState({ active: true, walletDefault: wallet, walletSelected: wallet });
+      console.log("componentDidUpdate", this.state.walletDefault);
+      this.getWalletDefault();
     }
   }
 
@@ -159,27 +166,29 @@ class Transfer extends React.Component {
   }
 
   getWalletDefault = () =>{
-    const { fromAddress, listWallet, coinName } = this.props;
+    const { isShowWallets, listWallet, coinName } = this.props;
 
     MasterWallet.log(coinName, "coinName");
 
     let wallets = listWallet;
-    let walletDefault = null;
+    let walletDefault = isShowWallets ? null : this.state.walletDefault;
     if (!wallets){
       wallets = MasterWallet.getMasterWallet();
     }
-
-    if (coinName){
-      walletDefault = MasterWallet.getWalletDefault(coinName);
-    }
-
+    console.log("getWalletDefault", walletDefault);
     //1 get walletDefault base on fromAddress
     if (!walletDefault && wallets.length > 0){
-      wallets.forEach((wallet) => {console.log(wallet.address, fromAddress);
-        if (wallet.address == fromAddress) {
-          walletDefault = wallet;
+      wallets.forEach((wallet) => {
+        if (this.state.walletSelectedAddress && wallet.address == this.state.walletSelectedAddress) {
+          walletDefault = wallet;console.log(1);
         }
       });
+    }
+
+
+    //2 get walletDefault base on coin name with default
+    if (!walletDefault && coinName){
+      walletDefault = MasterWallet.getWalletDefault(coinName);console.log(2);
     }
 
     // set name + text for list:
@@ -197,19 +206,19 @@ class Transfer extends React.Component {
           }
         }
         else{
-          //2 get walletDefault base coinName
+          //3 get walletDefault base coinName
           if(wallet.name == coinName){
-            walletDefault = wallet;
+            walletDefault = wallet;console.log(3);
           }
         }
       });
     }
 
-    //3 get walletDefault is first wallet
+    //4 get walletDefault is first wallet
     if (!walletDefault && wallets.length > 0){
-      walletDefault = wallets[0];
+      walletDefault = wallets[0];console.log(4);
     }
-
+    console.log("getWalletDefault", walletDefault);
     // set name for walletDefault:
     MasterWallet.log(walletDefault, "walletDefault");
     if (walletDefault){
@@ -251,8 +260,10 @@ class Transfer extends React.Component {
     return errors
   }
 
-  updateAddressAmountValue = (evt) => {
-    let amount = evt.target.value, rate = 0, money = 0;
+  updateAddressAmountValue = (evt, val) => {
+    let amount = evt ? evt.target.value : null, rate = 0, money = 0;
+    if(!amount) amount = val;
+
     if(this.state.walletSelected && this.state.walletSelected.name == "BTC")
       rate = this.state.rateBTC;
     else
@@ -302,7 +313,7 @@ class Transfer extends React.Component {
     }
   }
 
-  updateSendAddressValue = (evt) => {
+  updateSendAddressValue = (evt) => {console.log(evt);
     this.setState({
       inputAddressAmountValue: evt.target.value,
     });
@@ -355,6 +366,7 @@ handleScan=(data) =>{
       });
 
       rfChange(nameFormSendWallet, 'amountCoin', value[1]);
+      this.updateAddressAmountValue(null, value[1]);
     }
     this.modalScanQrCodeRef.close();
   }

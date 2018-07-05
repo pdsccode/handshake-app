@@ -425,7 +425,7 @@ export class MasterWallet {
         const jsonData = MasterWallet.IsJsonString(dataString);
         let auth_token = false;
         let wallets = false;
-        console.log('jsonData', jsonData);
+        //console.log('jsonData', jsonData);
         if (jsonData !== false) {
           if (jsonData.hasOwnProperty('auth_token')) {
             auth_token = jsonData.auth_token;
@@ -437,11 +437,11 @@ export class MasterWallet {
           }
 
           if (Array.isArray(wallets)) {
-            console.log('isArray');
+            //console.log('isArray');
             const listWallet = [];
             wallets.forEach((walletJson) => {
               const wallet = MasterWallet.convertObject(walletJson);
-              console.log('wallet=>', wallet);
+              //console.log('wallet=>', wallet);
               if (wallet === false) {
                 throw BreakException;
               }
@@ -455,7 +455,7 @@ export class MasterWallet {
           }
         }
       } catch (e) {
-        console.log('Wallet is invaild', e);
+        //console.log('Wallet is invaild', e);
       }
       return false;
     }
@@ -513,7 +513,7 @@ export class MasterWallet {
     }
 
     static log(data, key = MasterWallet.KEY) {
-      console.log(`%c ${StringHelper.format('{0}: ', key)}`, 'background: #222; color: #bada55', data);
+      //console.log(`%c ${StringHelper.format('{0}: ', key)}`, 'background: #222; color: #bada55', data);
     }
 }
 

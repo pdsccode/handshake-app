@@ -55,7 +55,7 @@ class Payment extends React.Component {
 
     this.state = {
       isLoading: false,
-      isPayNinja: false,
+      isShowWallets: false,
       toAddress: "",
       fromAddress: "",
       coinName: "",
@@ -96,8 +96,8 @@ class Payment extends React.Component {
     const querystring = window.location.search.replace('?', '');
     this.querystringParsed = qs.parse(querystring);
     const { order_id, amount, coin, ca, sa } = this.querystringParsed;
-    if (order_id && amount && ca && sa && coin) {
-      this.setState({isPayNinja: true, toAddress: sa, fromAddress: ca, coinName: coin.toUpperCase(), orderID: order_id});
+    if (order_id && amount && sa && coin) {
+      this.setState({isShowWallets: true, toAddress: sa, fromAddress: ca, coinName: coin.toUpperCase(), orderID: order_id});
       console.log(ca);
       if (!isNaN(amount))
         this.setState({ amount: amount });
@@ -107,7 +107,7 @@ class Payment extends React.Component {
   }
 
   closePayNinja = () => {
-    this.setState({ isPayNinja: false });
+    this.setState({ isShowWallets: false });
   }
 
   successPayNinja = () => {
@@ -123,7 +123,7 @@ class Payment extends React.Component {
           <div className="label">Order ID</div>
         </div>
         <div className="clearfix"></div>
-        <TransferCoin active={true} isPayNinja={true} toAddress={this.state.toAddress} fromAddress={this.state.fromAddress} amount={this.state.amount} coinName={this.state.coinName} onFinish={() => { this.successPayNinja() }} />
+        <TransferCoin isShowWallets={true} isShowWallets={true} toAddress={this.state.toAddress} fromAddress={this.state.fromAddress} amount={this.state.amount} coinName={this.state.coinName} onFinish={() => { this.successPayNinja() }} />
       </Modal>);
   }
 
@@ -142,7 +142,7 @@ class Payment extends React.Component {
           this.showPayNinja()
         }
         {
-          !this.state.isPayNinja ? this.showOverview() : ""
+          !this.state.isShowWallets ? this.showOverview() : ""
         }
       </div>
     );

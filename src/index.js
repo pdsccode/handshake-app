@@ -20,7 +20,7 @@ window.gasPrice = 20;
 function getGasPrice() {
   axios.get(`https://api.etherscan.io/api?module=proxy&action=eth_gasPrice&apikey=${process.env.apikeyEtherscan}`).then((res) => {
     const gasPrice = Number(res.data.result).toString();
-    console.log('gasPrice', gasPrice);
+    //console.log('gasPrice', gasPrice);
     window.gasPrice = Web3.utils.fromWei(gasPrice, 'gwei');
   });
 }

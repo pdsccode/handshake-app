@@ -229,7 +229,7 @@ export const initApp = (language, ref) => (dispatch) => {
       const { coords: { latitude, longitude } } = location;
       ipInfo.latitude = latitude;
       ipInfo.longitude = longitude;
-      console.log(`------------GPS-------------${latitude}`);
+      //console.log(`------------GPS-------------${latitude}`);
 
       axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&sensor=true`).then((response) => {
         if (response.data.results[0] && response.data.results[0].address_components) {
@@ -239,7 +239,7 @@ export const initApp = (language, ref) => (dispatch) => {
 
           if (country && Country[country]) {
             ipInfo.currency = Country[country];
-            console.log(`------------GPS-------------${ipInfo.currency}`);
+            //console.log(`------------GPS-------------${ipInfo.currency}`);
           }
         }
         dispatch(setIpInfo(ipInfo));
