@@ -1,19 +1,21 @@
 @import './src/styles/style';
 
 .order-info{
-  margin-left: 12px;
-  margin-right: 12px;
-  padding: 12px 0px;
-  border-bottom: 1px solid #e5eaef;
+  margin: 12px 12px 0px 12px;
+  padding: 12px;
   overflow: hidden;
+  background: #D8D8D8;
+  border-radius: 6px;
 
   .label{
     float:left;
     font-weight: 400;
+    padding-bottom: 7px;
   }
   .key{
     float: right;
     font-weight: 400;
+    padding-bottom: 7px;
   }
 }
 
@@ -41,4 +43,14 @@
     }
   }
 
+}
+
+.payment-success{
+  position:fixed;
+  top: 50%;
+  left: 50%;
+  width:20em;
+  height:18em;
+  margin-top: -9em; /*set to a negative number 1/2 of your height*/
+  margin-left: -10em; /*set to a negative number 1/2 of your width*/
 }

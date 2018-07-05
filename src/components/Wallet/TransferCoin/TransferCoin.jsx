@@ -88,7 +88,6 @@ class Transfer extends React.Component {
 
   componentWillReceiveProps() {
     this.props.clearFields(nameFormSendWallet, false, false, 'to_address', 'amountCoin');
-
     const { active, fromAddress, toAddress, amount } = this.props;
 
     if (toAddress) {
@@ -101,21 +100,21 @@ class Transfer extends React.Component {
     }
     if (amount) {
       this.setState({ inputSendAmountValue: amount });
-      this.props.rfChange(nameFormSendWallet, 'amountCoin', amount);
       this.updateAddressAmountValue(null, amount);
     }
 
     //if(!this.state.walletDefault)
     //this.getWalletDefault();
 
-    if (!active && this.state.active) {
-      this.setState({ active: active, inputSendAmountValue: 0, inputSendMoneyValue: 0 });
-      this.resetForm();
-    }
+    // if (!active && this.state.active) {
+    //   this.setState({ active: active, inputSendAmountValue: 0, inputSendMoneyValue: 0 });
+    //   this.resetForm();
+    // }
   }
 
   componentDidUpdate = () => {
     const { wallet, isShowWallets } = this.props;console.log("componentDidUpdate", this.state.active, wallet);
+
     if (!this.state.active && (isShowWallets || wallet)) {
       this.setState({ active: true, walletDefault: wallet, walletSelected: wallet });
       console.log("componentDidUpdate", this.state.walletDefault);
@@ -180,15 +179,14 @@ class Transfer extends React.Component {
     if (!walletDefault && wallets.length > 0){
       wallets.forEach((wallet) => {
         if (this.state.walletSelectedAddress && wallet.address == this.state.walletSelectedAddress) {
-          walletDefault = wallet;console.log(1);
+          walletDefault = wallet;
         }
       });
     }
 
-
     //2 get walletDefault base on coin name with default
     if (!walletDefault && coinName){
-      walletDefault = MasterWallet.getWalletDefault(coinName);console.log(2);
+      walletDefault = MasterWallet.getWalletDefault(coinName);
     }
 
     // set name + text for list:
@@ -208,7 +206,7 @@ class Transfer extends React.Component {
         else{
           //3 get walletDefault base coinName
           if(wallet.name == coinName){
-            walletDefault = wallet;console.log(3);
+            walletDefault = wallet;
           }
         }
       });
@@ -275,10 +273,10 @@ class Transfer extends React.Component {
         inputSendAmountValue: amount,
         inputSendMoneyValue: money.toFixed(0)
       });
-
-      this.props.rfChange(nameFormSendWallet, 'amountCoin', amount);
-      this.props.rfChange(nameFormSendWallet, 'amountMoney', money);
     }
+
+    this.props.rfChange(nameFormSendWallet, 'amountCoin', amount);
+    this.props.rfChange(nameFormSendWallet, 'amountMoney', money);
   }
 
   getMessage(str){
@@ -313,31 +311,31 @@ class Transfer extends React.Component {
     }
   }
 
-  updateSendAddressValue = (evt) => {console.log(evt);
+  updateSendAddressValue = (evt) => {
     this.setState({
       inputAddressAmountValue: evt.target.value,
     });
   }
 
-submitSendCoin=()=>{
-  this.setState({isRestoreLoading: true});
-  this.modalConfirmTranferRef.close();
+  submitSendCoin=()=>{
+    this.setState({isRestoreLoading: true});
+    this.modalConfirmTranferRef.close();
     this.state.walletSelected.transfer(this.state.inputAddressAmountValue, this.state.inputSendAmountValue).then(success => {
 
-        this.setState({isRestoreLoading: false});
-        if (success.hasOwnProperty('status')){
-          if (success.status == 1){
-            this.showSuccess(this.getMessage(success.message));
-            this.onFinish();
-            // start cron get balance auto ...
-            // todo hanlde it ...
-          }
-          else{
-            this.showError(this.getMessage(success.message));
-          }
+      this.setState({isRestoreLoading: false});
+      if (success.hasOwnProperty('status')){
+        if (success.status == 1){
+          this.showSuccess(this.getMessage(success.message));
+          this.onFinish();
+          // start cron get balance auto ...
+          // todo hanlde it ...
         }
+        else{
+          this.showError(this.getMessage(success.message));
+        }
+      }
     });
-}
+  }
 
 onItemSelectedWallet = (item) =>{
 
