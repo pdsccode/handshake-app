@@ -1,0 +1,315 @@
+@import './src/styles/style';
+
+.landing-page-cash {
+  padding-bottom: 50px;
+  //height: 100%;
+  //background: url('../../assets/images/campaign/bg-earlybird.svg') no-repeat center;
+  //background-size: 171% 118%;
+  background: url('../../assets/images/landing/cash/bg.svg') repeat-y;
+  //background-size: cover;
+  //background: #000B35;
+  font-family: azo-sans-web, sans-serif;
+  font-style: normal;
+
+  .navigation-bar {
+    .menu {
+      display: inline-block;
+      .item-menu {
+        display: inline-block;
+        opacity: 0.8;
+        font-weight: bold;
+        font-size: 14.4px;
+        color: #FFFFFF;
+        letter-spacing: 0.22px;
+        margin-left: 15px;
+        padding: 5px;
+      }
+    }
+  }
+  .video-intro {
+    text-align: center;
+    .label-1 {
+      font-weight: 900;
+      font-size: 60px;
+      color: #FFFFFF;
+      letter-spacing: 0;
+      line-height: 80px;
+    }
+    .label-2 {
+      font-size: 24px;
+      color: #D6D6D6;
+      letter-spacing: 0.69px;
+      text-align: center;
+    }
+    .youtube-video {
+      min-width: 500px;
+      display: inline-block;
+      //.embed-responsive-16by9::before {
+      //  padding-top: 0 !important;
+      //}
+    }
+  }
+  .description {
+    text-align: center;
+    .label-1 {
+      font-weight: 900;
+      font-size: 60px;
+      color: #FFFFFF;
+      letter-spacing: 0;
+      margin-bottom: 15px;
+      line-height: 60px;
+    }
+    .label-2 {
+      opacity: 0.8;
+      font-size: 18px;
+      color: #FFFFFF;
+      letter-spacing: 0;
+      text-align: center;
+      line-height: 28px;
+    }
+    .btn-read-more {
+      color: #0273F6;
+      text-decoration: underline;
+    }
+  }
+  .features {
+    text-align: center;
+    img {
+      width: 70px;
+    }
+    .txt {
+      margin-top: 5px;
+      font-weight: 500;
+      font-size: 14px;
+      color: #FFFFFF;
+      letter-spacing: 0;
+      line-height: 18px;
+    }
+  }
+
+  .join-telegram {
+    .text-try-telegram {
+      font-weight: bold;
+      font-size: 20px;
+      color: #FFFFFF;
+      letter-spacing: 0;
+      text-align: center;
+      line-height: 28px;
+    }
+    .btn-join-telegram {
+      background: #540CFA;
+      font-weight: bold;
+      font-size: 20px;
+      color: #FFFFFF;
+      letter-spacing: 0;
+      text-align: center;
+      min-width: 300px;
+    }
+  }
+
+  .thirdContainer {
+    margin-bottom: rem-calc(54px);
+  }
+
+  .fiveContainer {
+    .subTitle {
+      font-size: rem-calc(40px);
+      color: #FFFFFF;
+      letter-spacing: 0;
+      text-align: center;
+      line-height: rem-calc(54px);
+      margin-bottom: rem-calc(34px);
+      font-weight: $medium;
+    }
+  }
+
+  .collapse-custom {
+    border-bottom: 0.5px outset #f7f7f7;
+    font-weight: $normal;
+    .head {
+      padding: rem-calc(21px);
+      display: flex;
+      flex-wrap: wrap;
+      &:hover {
+        cursor: pointer;
+      }
+      .label {
+        width: 94%;
+        display: flex;
+        margin: 0;
+        font-size: rem-calc(20px);
+        color: #FFFFFF;
+        letter-spacing: 0;
+        font-weight: $light;
+        line-height: rem-calc(35px);
+        .index {
+          flex-basis: 4%;
+        }
+      }
+      .extend {
+        width: 6%;
+        text-align: right;
+        img {
+          transform: rotate(90deg);
+        }
+        .rotate {
+          transform: rotate(0);
+        }
+      }
+    }
+    .noList {
+      opacity: 0.6;
+    }
+    .content {
+      margin-bottom: rem-calc(40px);
+      margin-top: rem-calc(-11px);
+      padding-right: rem-calc(40px);
+      padding-left: rem-calc(21px);
+      font-size: rem-calc(20px);
+      color: #FFFFFF;
+      letter-spacing: 0;
+      line-height: rem-calc(35px);
+      font-weight: $light;
+    }
+  }
+
+  .collapse-custom:first-child {
+    border-top: 0.5px inset #f7f7f7;
+  }
+}
+
+@media (min-width: 1000px) and (max-width: 1680px) {
+  .root {
+    .mainContent {
+      .appScreen {
+        /*max-width: 400px;*/
+      }
+    }
+  }
+}
+
+@media (max-width: 1200px) {
+  .root {
+    .firstContainer {
+      div[class='row bottomBox'] {
+        & > div {
+          flex: 0 0 100%;
+          max-width: 100%;
+        }
+        & > div:last-child {
+          padding-left: 15px;
+          padding-right: 15px;
+        }
+      }
+      .btnStartTrading {
+        padding: rem-calc(10px 30px);
+        display: block;
+        text-align: center;
+        margin-bottom: rem-calc(25px);
+        width: 100%;
+      }
+      .russia {
+        & > div:last-child, & > div:first-child {
+          padding-left: rem-calc(15px);
+          padding-right: rem-calc(15px);
+        }
+        .registerEmail {
+          .btnSubmit {
+            width: 46%;
+            right: -53%;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 1024px) {
+  .root {
+    .firstContainer {
+      .russia {
+        & > div:last-child, & > div:first-child {
+          padding-left: rem-calc(15px);
+          padding-right: rem-calc(15px);
+        }
+        .registerEmail {
+          .btnSubmit {
+            width: 100%;
+            position: inherit;
+            right: unset;
+            top: unset;
+            margin-top: rem-calc(10px);
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 767px) {
+  html {
+    font-size: 12px;
+  }
+  .root {
+    .firstContainer {
+      .btnStartTrading {
+        padding: rem-calc(10px 30px);
+        display: block;
+        text-align: center;
+        margin-bottom: rem-calc(25px);
+      }
+    }
+    .secondContainer {
+      .subTitle {
+        margin-top: rem-calc(40px);
+        margin-bottom: rem-calc(34px);
+        padding-left: rem-calc(20px);
+      }
+    }
+
+    .fourContainer {
+      & > .row {
+        div + div {
+          margin-top: rem-calc(40px);
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 500px) {
+  html {
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 375px) {
+  html {
+    font-size: 10px;
+  }
+
+  .root {
+    .firstContainer {
+      .registerEmail {
+        .btnSubmit {
+          width: 100%;
+          position: inherit;
+          right: unset;
+          top: unset;
+          margin-top: rem-calc(10px);
+        }
+      }
+      .russia {
+        .registerEmail {
+          .btnSubmit {
+            width: 100%;
+            position: inherit;
+            right: unset;
+            top: unset;
+            margin-top: rem-calc(10px);
+          }
+        }
+      }
+    }
+  }
+}
