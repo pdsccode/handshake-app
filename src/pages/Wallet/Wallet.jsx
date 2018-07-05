@@ -141,7 +141,8 @@ class Wallet extends React.Component {
       isHistory: false,
       pagenoHistory: 1,
       transactions: [],
-      isLoadMore: false
+      isLoadMore: false,
+      activeReceive: false,
     };
     this.props.setHeaderRight(this.headerRight());
     this.listener = _.throttle(this.scrollListener, 200).bind(this);
@@ -336,29 +337,21 @@ class Wallet extends React.Component {
     if (!wallet.isCollectibles){
       obj.push({
         title: messages.wallet.action.transfer.title,
-        handler: async () => {
-          this.toggleBottomSheet();
-          this.showLoading();
-          wallet.balance = await wallet.getBalance();
-          this.setState({ walletSelected: wallet, activeTransfer: true });
-          this.modalSendRef.open();
-          this.hideLoading();
-
-          // // clear form:
-          // this.props.clearFields(nameFormSendWallet, false, false, "to_address", "amount");
-          // this.setState({isRestoreLoading: false, walletSelected: wallet, inputAddressAmountValue: '', inputSendAmountValue: ''}, () => {});
-          // this.toggleBottomSheet();console.log(wallet);
-          // this.modalSendRef.open();
-
+        handler: () => {
+          this.toggleBottomSheet();          
+          this.setState({ walletSelected: wallet, activeTransfer: true }, ()=>{
+            this.modalSendRef.open();
+          });                  
         }
       })
     }
     obj.push({
       title: messages.wallet.action.receive.title,
       handler: () => {
-        this.setState({walletSelected: wallet});
-        this.toggleBottomSheet();
-        this.modalShareAddressRef.open();
+        this.setState({walletSelected: wallet, activeReceive: true}, ()=>{
+          this.toggleBottomSheet();
+          this.modalShareAddressRef.open();
+        });        
       }
     })
 
@@ -591,25 +584,25 @@ class Wallet extends React.Component {
     const { messages } = this.props.intl;
     const obj = [];
 
-    obj.push({
-      title: messages.wallet.action.import.title,
-      handler: () => {
-        this.showModalAddCoin();
-      },
-    });
+    // obj.push({
+    //   title: messages.wallet.action.import.title,
+    //   handler: () => {
+    //     this.showModalAddCoin();
+    //   },
+    // });
 
-    obj.push({
-      title: messages.wallet.action.add_token.title,
-      handler: () => {
-        this.showModalAddToken();       
-      },
-    });
-    obj.push({
-      title: messages.wallet.action.add_collectible.title,
-      handler: () => {
-        this.showModalAddCollectible();
-      },
-    });
+    // obj.push({
+    //   title: messages.wallet.action.add_token.title,
+    //   handler: () => {
+    //     this.showModalAddToken();       
+    //   },
+    // });
+    // obj.push({
+    //   title: messages.wallet.action.add_collectible.title,
+    //   handler: () => {
+    //     this.showModalAddCollectible();
+    //   },
+    // });
 
 
     obj.push({
@@ -730,9 +723,10 @@ class Wallet extends React.Component {
     }
   }
 
-  onAddressClick = (wallet) => {
-    this.setState({ walletSelected: wallet });
-    this.modalShareAddressRef.open();
+  onAddressClick = (wallet) => {    
+    this.setState({walletSelected: wallet, activeReceive: true}, ()=>{      
+      this.modalShareAddressRef.open();
+    });        
   }
 
   handleFocus = (e) => {
@@ -969,7 +963,7 @@ class Wallet extends React.Component {
 
 
           {/* Modal for Copy address : */}
-          <Modal title={messages.wallet.action.receive.header} onRef={modal => this.modalShareAddressRef = modal}>
+          <Modal title={messages.wallet.action.receive.header} onRef={modal => this.modalShareAddressRef = modal} onClose={()=> {this.setState({activeReceive: false})}}>
             <ReceiveCoin active={this.state.activeReceive} wallet={this.state.walletSelected} onFinish={() => { this.successReceive() }} />
             {/* <div className="bodyTitle"><span>{messages.wallet.action.receive.message} { this.state.walletSelected ? this.state.walletSelected.name : ''} </span></div>
             <div className={['bodyBackup bodyShareAddress']}>

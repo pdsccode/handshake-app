@@ -25,7 +25,7 @@ class WalletRouter extends React.Component {
   constructor(props) {
     super(props);
 
-    this.props.setHeaderTitle('My wallets');
+    this.props.setHeaderTitle('My wallet');
     this.props.clearHeaderRight();
     this.props.clearHeaderLeft();
     this.props.showHeader();
