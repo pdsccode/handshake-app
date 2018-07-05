@@ -336,19 +336,24 @@ class FeedBetting extends React.Component {
     if (shakerList) {
       shakerList.forEach((item) => {
         const {
-          amount = 0, odds = 0, side, remainingAmount,
+          amount = 0, odds = 0, side, remainingAmount,status
         } = item;
         remainingValue = remainingAmount || 0;
         colorBySide = side === 1 ? `support` : 'oppose';
-        const amountMatch = parseBigNumber(amount);
         const oddsBN = parseBigNumber(odds);
+        const amountBN = parseBigNumber(amount);
+        let amountMatch = parseBigNumber(amount);
+        if(status === BET_BLOCKCHAIN_STATUS.STATUS_PENDING){
+          amountMatch = parseBigNumber(0);
+        }
         const winMatch = amountMatch.times(oddsBN).toNumber() || 0;
-        const winValue = amountMatch.times(oddsBN).toNumber() || 0;
-        displayWinMatch += winMatch.toFixed(6, 1);
-        displayAmount += Math.floor(amount * ROUND) / ROUND;
-        displayMatchedAmount = Math.floor(amountMatch * ROUND) / ROUND;
-        displayRemaining = Math.floor(remainingValue * ROUND) / ROUND;
-        displayWinValue = winValue.toFixed(6, 1);
+        const winValue = amountBN.times(oddsBN).toNumber() || 0;
+        displayWinMatch = Math.floor((Number(displayWinMatch) + winMatch)*ROUND)/ROUND;
+        displayAmount = Math.floor((Number(displayAmount) + amountBN.toNumber())*ROUND)/ROUND;
+        displayMatchedAmount = Math.floor((Number(displayMatchedAmount) + amountMatch.toNumber())*ROUND)/ROUND;
+        //displayRemaining = (Number(displayRemaining) + remainingValue).toFixed();
+        displayWinValue = Math.floor((Number(displayWinValue) + winValue)*ROUND)/ROUND;
+
       });
     }
 
