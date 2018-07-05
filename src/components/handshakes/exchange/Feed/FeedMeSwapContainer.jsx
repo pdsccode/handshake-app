@@ -35,6 +35,22 @@ class FeedMeSwapContainer extends React.PureComponent {
     this.offer = offer;
   }
 
+  checkMainNetDefaultWallet = (wallet) => {
+    const { checkMainNetDefaultWallet } = this.props;
+
+    if (checkMainNetDefaultWallet) {
+      return checkMainNetDefaultWallet(wallet);
+    }
+  }
+
+  showNotEnoughCoinAlert = (balance, amount, fee, currency) => {
+    const { showNotEnoughCoinAlert } = this.props;
+
+    if (showNotEnoughCoinAlert) {
+      return showNotEnoughCoinAlert(balance, amount, fee, currency);
+    }
+  }
+
   getFrom = () => {
     const { status } = this.props;
 

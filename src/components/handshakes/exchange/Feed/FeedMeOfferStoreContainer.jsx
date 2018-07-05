@@ -34,6 +34,22 @@ class FeedMeOfferStoreContainer extends React.PureComponent {
     this.offer = offer;
   }
 
+  checkMainNetDefaultWallet = (wallet) => {
+    const { checkMainNetDefaultWallet } = this.props;
+
+    if (checkMainNetDefaultWallet) {
+      return checkMainNetDefaultWallet(wallet);
+    }
+  }
+
+  showNotEnoughCoinAlert = (balance, amount, fee, currency) => {
+    const { showNotEnoughCoinAlert } = this.props;
+
+    if (showNotEnoughCoinAlert) {
+      return showNotEnoughCoinAlert(balance, amount, fee, currency);
+    }
+  }
+
   calculateFiatAmount = (amount, type, percentage) => {
     const { offer } = this;
     const { listOfferPrice } = this.props;
@@ -161,7 +177,6 @@ class FeedMeOfferStoreContainer extends React.PureComponent {
   deleteOfferItem = async () => {
     const { offer } = this;
     const { currency, sellAmount, freeStart } = offer;
-    const { showNotEnoughCoinAlert } = this.props;
     console.log('deleteOfferItem', offer);
 
     if (currency === CRYPTO_CURRENCY.ETH) {
@@ -170,7 +185,11 @@ class FeedMeOfferStoreContainer extends React.PureComponent {
         const balance = await wallet.getBalance();
         const fee = await wallet.getFee();
 
-        if (showNotEnoughCoinAlert(balance, 0, fee, currency)) {
+        if (!this.checkMainNetDefaultWallet(wallet)) {
+          return;
+        }
+
+        if (this.showNotEnoughCoinAlert(balance, 0, fee, currency)) {
           return;
         }
       }

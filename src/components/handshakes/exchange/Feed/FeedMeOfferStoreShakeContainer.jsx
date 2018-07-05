@@ -52,6 +52,22 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
     };
   }
 
+  checkMainNetDefaultWallet = (wallet) => {
+    const { checkMainNetDefaultWallet } = this.props;
+
+    if (checkMainNetDefaultWallet) {
+      return checkMainNetDefaultWallet(wallet);
+    }
+  }
+
+  showNotEnoughCoinAlert = (balance, amount, fee, currency) => {
+    const { showNotEnoughCoinAlert } = this.props;
+
+    if (showNotEnoughCoinAlert) {
+      return showNotEnoughCoinAlert(balance, amount, fee, currency);
+    }
+  }
+
   calculateFiatAmount = () => {
     const { offer } = this;
     const { listOfferPrice } = this.props;
@@ -328,7 +344,7 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
 
   handleAcceptShakedOffer = async () => {
     const { offer } = this;
-    const { initUserId, showNotEnoughCoinAlert } = this.props;
+    const { initUserId } = this.props;
 
     if (offer.currency === CRYPTO_CURRENCY.ETH) {
       if (offer.type === EXCHANGE_ACTION.BUY) {
@@ -340,7 +356,7 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
           return;
         }
 
-        if (showNotEnoughCoinAlert(balance, 0, fee, offer.currency)) {
+        if (this.showNotEnoughCoinAlert(balance, 0, fee, offer.currency)) {
           return;
         }
       }
@@ -401,7 +417,7 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
 
   handleCompleteShakedOffer = async () => {
     const { offer } = this;
-    const { initUserId, showNotEnoughCoinAlert } = this.props;
+    const { initUserId } = this.props;
     const {
       id, currency, type, freeStart
     } = offer;
@@ -417,7 +433,7 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
           return;
         }
 
-        if (showNotEnoughCoinAlert(balance, 0, fee, currency)) {
+        if (this.showNotEnoughCoinAlert(balance, 0, fee, currency)) {
           return;
         }
       }
@@ -490,7 +506,7 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
 
   handleRejectShakedOffer = async () => {
     const { offer } = this;
-    const { initUserId, showNotEnoughCoinAlert } = this.props;
+    const { initUserId } = this.props;
     const { id, currency, type } = offer;
 
     if (currency === CRYPTO_CURRENCY.ETH) {
@@ -503,7 +519,7 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
           return;
         }
 
-        if (showNotEnoughCoinAlert(balance, 0, fee, currency)) {
+        if (this.showNotEnoughCoinAlert(balance, 0, fee, currency)) {
           return;
         }
       }
@@ -566,7 +582,7 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
 
   handleCancelShakeOffer = async () => {
     const { offer } = this;
-    const { initUserId, showNotEnoughCoinAlert } = this.props;
+    const { initUserId } = this.props;
     const { id, currency, type } = offer;
 
     if (currency === CRYPTO_CURRENCY.ETH) {
@@ -579,7 +595,7 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
           return;
         }
 
-        if (showNotEnoughCoinAlert(balance, 0, fee, currency)) {
+        if (this.showNotEnoughCoinAlert(balance, 0, fee, currency)) {
           return;
         }
       }
