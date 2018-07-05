@@ -300,7 +300,7 @@ class ReceiveCoin extends React.Component {
           <Modal title={messages.wallet.action.receive.header2} onRef={modal => this.modalCustomAmountRef = modal} onClose={() => this.onCloseReceive()} >
             <div className={['bodyBackup bodyShareAddress']}>
 
-              <QRCode value={(this.state.walletSelected ? this.state.walletSelected.address : '') + (this.state.inputSendAmountValue != '' ? `,${this.state.inputSendAmountValue}` : '')} />
+              <QRCode size={250} value={(this.state.walletSelected ? this.state.walletSelected.address : '') + (this.state.inputSendAmountValue != '' ? `,${this.state.inputSendAmountValue}` : '')} />
               <div className="addressDivPopup">{ this.state.walletSelected ? this.state.walletSelected.address : ''}</div>
             </div>
             <ReceiveWalletForm className="receivewallet-wrapper">
