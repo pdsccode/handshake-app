@@ -785,7 +785,7 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
   }
 
   render() {
-    const { extraData, status } = this.props;
+    const { extraData, status, getNameShopDisplayed } = this.props;
 
     const offer = Offer.offer(JSON.parse(extraData));
     this.offer = offer;
@@ -815,7 +815,7 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
       }
     }
 
-    const nameShop = offer.username;
+    const nameShop = getNameShopDisplayed();
     const fiatAmount = this.calculateFiatAmount();
     const message = this.getMessageContent(fiatAmount);
     const actionButtons = this.getActionButtons();

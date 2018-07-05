@@ -288,7 +288,7 @@ class FeedMeOfferStoreContainer extends React.PureComponent {
   }
 
   render() {
-    const { extraData } = this.props;
+    const { extraData, getNameShopDisplayed } = this.props;
 
     const offer = Offer.offer(JSON.parse(extraData));
     this.offer = offer;
@@ -299,7 +299,7 @@ class FeedMeOfferStoreContainer extends React.PureComponent {
     const statusText = HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_NAME[statusValue];
     const showChat = false;
     const chatUsername = '';
-    const nameShop = offer.username;
+    const nameShop = getNameShopDisplayed();
     const message = this.getMessageContent();
     const actionButtons = this.getActionButtons();
     const messageMovingCoin = this.getMessageMovingCoin();

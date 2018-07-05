@@ -1450,6 +1450,18 @@ class FeedMe extends React.PureComponent {
     return chatUserName?.toString() || '';
   }
 
+  getNameShopDisplayed = () => {
+    const { offer } = this;
+    const wallet = new Ethereum();
+
+    if (wallet.checkAddressValid(offer.username) === true) {
+      wallet.address = offer.username;
+      return wallet.getShortAddress();
+    }
+
+    return offer.username;
+  }
+
   // handleOnClickRating = (numStars) => {
   //   this.setState({ numStars });
   // }
@@ -2054,6 +2066,7 @@ class FeedMe extends React.PureComponent {
       confirmOfferAction: this.confirmOfferAction,
       handleActionFailed: this.handleActionFailed,
       showNotEnoughCoinAlert: this.showNotEnoughCoinAlert,
+      getNameShopDisplayed: this.getNameShopDisplayed,
     };
 
     let feed = null;
