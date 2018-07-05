@@ -196,8 +196,9 @@ class Transfer extends React.Component {
             wal.text = wal.getShortAddress() + " (" + wal.className + " " + wal.name + ")";
           }
           wal.id = wal.address + "-" + wal.getNetworkName() + wal.name;
+          listWalletCoin.push(wal);
         }
-        listWalletCoin.push(wal);
+        
       });
     }
 
