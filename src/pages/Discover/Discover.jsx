@@ -93,14 +93,11 @@ class DiscoverPage extends React.Component {
       utm,
     };
 
-    if (this.state.isBannedPrediction) {
+    if (this.state.handshakeIdActive === HANDSHAKE_ID.EXCHANGE) {
+      this.state.isLoading = false;
+    } else if (this.state.isBannedPrediction) {
       this.state.isLoading = false;
       this.state.handshakeIdActive = HANDSHAKE_ID.EXCHANGE;
-      this.loadDiscoverList();
-    }
-
-    if (handshakeDefault === HANDSHAKE_ID.EXCHANGE) {
-      this.loadDiscoverList();
     }
 
     this.clickCategoryItem = this.clickCategoryItem.bind(this);
@@ -172,7 +169,11 @@ class DiscoverPage extends React.Component {
   }
 
   setAddressFromLatLng = (lat, lng) => {
-    this.setState({ lat, lng });
+    this.setState({ lat, lng }, () => {
+      if (this.state.handshakeIdActive === HANDSHAKE_ID.EXCHANGE) {
+        this.loadDiscoverList();
+      }
+    });
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
