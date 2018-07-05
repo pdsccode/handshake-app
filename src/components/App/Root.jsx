@@ -17,6 +17,7 @@ import '@/styles/main';
 // pages
 const LandingPage = createDynamicImport(() => import('@/pages/LandingPage/LandingPage'), Splash);
 const LandingPageTrade = createDynamicImport(() => import('@/pages/LandingPage/Trade'), Splash);
+const LandingPageCash = createDynamicImport(() => import('@/pages/LandingPage/Cash'), Splash);
 const LandingPageWhitePaper = createDynamicImport(() => import('@/pages/LandingPage/WhitePaper'), Splash);
 const IntroNjnjaCash = createDynamicImport(() => import('@/pages/LandingPage/IntroducingNinjaCash'), Splash);
 const LandingPageFAQ = createDynamicImport(() => import('@/pages/FAQ/FAQ'), Splash);
@@ -70,6 +71,11 @@ class Root extends React.Component {
         // code
     }
     if (BrowserDetect.isDesktop) {
+      switch (window.location.pathname) {
+        case URL.HANDSHAKE_CASH:
+          return <LandingPageCash />;
+        default:
+      }
       return <MobileOrTablet />;
     }
     return <Handle setLanguage={this.setLanguage} refer={this.refer} />;
