@@ -5,10 +5,12 @@
   //height: 100%;
   //background: url('../../assets/images/campaign/bg-earlybird.svg') no-repeat center;
   //background-size: 171% 118%;
-  background: url('../../assets/images/landing/cash/bg.svg') repeat-y;
+  background-image: url('../../assets/images/landing/cash/bg.svg');
+  background-repeat: repeat-y;
+  background-size: 100%;
   //background-size: cover;
   //background: #000B35;
-  font-family: azo-sans-web, sans-serif;
+  font-family: azo-sans-web, unset;
   font-style: normal;
 
   .navigation-bar {
@@ -28,8 +30,9 @@
   }
   .video-intro {
     text-align: center;
+    margin-bottom: 70px;
     .label-1 {
-      font-weight: 900;
+      font-weight: 700;
       font-size: 60px;
       color: #FFFFFF;
       letter-spacing: 0;
@@ -47,16 +50,19 @@
       //.embed-responsive-16by9::before {
       //  padding-top: 0 !important;
       //}
+      //background: rgba(0,0,0,0.30);
+      border: 10px solid #E4E8EA;
+      box-shadow: 0 2px 9px 0 rgba(18,18,18,0.03);
     }
   }
   .description {
     text-align: center;
     .label-1 {
-      font-weight: 900;
+      font-weight: 700;
       font-size: 60px;
       color: #FFFFFF;
       letter-spacing: 0;
-      margin-bottom: 15px;
+      margin-bottom: 30px;
       line-height: 60px;
     }
     .label-2 {
@@ -74,6 +80,7 @@
   }
   .features {
     text-align: center;
+    margin-bottom: 70px;
     img {
       width: 70px;
     }
@@ -88,6 +95,7 @@
   }
 
   .join-telegram {
+    margin-bottom: 100px;
     .text-try-telegram {
       font-weight: bold;
       font-size: 20px;
@@ -108,7 +116,7 @@
   }
 
   .thirdContainer {
-    margin-bottom: rem-calc(54px);
+    margin-bottom: 100px;
   }
 
   .fiveContainer {

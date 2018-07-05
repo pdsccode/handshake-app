@@ -117,7 +117,7 @@ class Handshake extends React.Component {
     const { messages, locale } = this.props.intl;
     return (
       <div className="landing-page-cash">
-        <div className="container navigation-bar mb-4 py-3">
+        <div className="container navigation-bar mb-5 py-3">
           <div className="row">
             <div className="col">
               <a href="/">
@@ -137,7 +137,7 @@ class Handshake extends React.Component {
           </div>
         </div>
 
-        <div className="container video-intro mb-5">
+        <div className="container video-intro">
           <div className="row">
             <div className="col">
               <div className="label-1">
@@ -159,7 +159,7 @@ class Handshake extends React.Component {
             </div>
           </div>
         </div>
-        <div className="container description mb-5">
+        <div className="container description mt-2 mb-5">
           <div className="row">
             <div className="col">
               <div className="label-1">
@@ -171,7 +171,7 @@ class Handshake extends React.Component {
             </div>
           </div>
         </div>
-        <div className="container features mb-5">
+        <div className="container features">
           <div className="row">
             {features.map((feature, index) => {
               const { icon, msg } = feature;
@@ -186,10 +186,10 @@ class Handshake extends React.Component {
             })}
           </div>
         </div>
-        <div className="container join-telegram mb-5">
+        <div className="container join-telegram">
           <div className="row">
             <div className="col">
-              <div className="text-try-telegram mb-2">
+              <div className="text-try-telegram mb-4">
                 <FormattedMessage id="ex.landing.tryTelegram.label" />
               </div>
               <div className="text-center">
