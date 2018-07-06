@@ -523,12 +523,12 @@ class BettingFilter extends React.Component {
           <div className="wrapperContainer">
             <div className="item">
               <div className="titleBox opacity65">
-                <div>Pool (ETH)</div>
-                <div>Support (ODDS)</div>
+                <div>Market size (ETH)</div>
+                <div className="supportOdds">Support (ODDS)</div>
               </div>
               {<GroupBook amountColor="#0BDD91" bookList={this.bookListSupport} />}
               <div className="marketBox">
-                <div>Market</div>
+                <div>Market odds</div>
                 <div>{Math.floor(this.defaultSupportOdds * ROUND_ODD) / ROUND_ODD}</div>
               </div>
               <Button
@@ -550,14 +550,14 @@ class BettingFilter extends React.Component {
             </div>
             <div className="item">
               <div className="titleBox opacity65">
-                <div>Pool (ETH)</div>
-                <div>Oppose (ODDS)</div>
+                <div>Market size (ETH)</div>
+                <div className="supportOdds">Oppose (ODDS)</div>
               </div>
 
               {<GroupBook amountColor="#FA6B49" bookList={this.bookListAgainst} />}
               <div className="titleBox">
-                <div>Market</div>
-                <div>{Math.floor(this.defaultAgainstOdds * ROUND_ODD) / ROUND_ODD}</div>
+                <div className="itemTitle">Market odds</div>
+                <div className="itemTitle">{Math.floor(this.defaultAgainstOdds * ROUND_ODD) / ROUND_ODD}</div>
               </div>
               <Button
                 className="buttonAgainst"
