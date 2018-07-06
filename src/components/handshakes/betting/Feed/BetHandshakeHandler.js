@@ -163,7 +163,8 @@ export const BETTING_STATUS_LABEL =
       REFUNDING: 'Your coin is being refunded to you.',
       REFUNDED: 'Your coin has been refunded.',
       ROLLBACK: `Something did not go according to plan. We're fixing it`,
-
+      COLLECT_PENDING: 'The blockchain is processing your withdrawal. Please wait.',
+      COLLECT_DONE: 'Your winnings have been withdrawn to your wallet!',
     };
 
 export const CONTRACT_METHOD = {
@@ -204,9 +205,11 @@ export class BetHandshakeHandler {
       label = BETTING_STATUS_LABEL.CANCEL;
       strStatus = BETTING_STATUS_LABEL.COLLECT_FAILED;
       isAction = true;
-    } else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINIT_PENDING
-      || blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_PENDING) {
+    } else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINIT_PENDING) {
       strStatus = BETTING_STATUS_LABEL.PROGRESSING;
+      isAction = false;
+    } else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_PENDING){
+      strStatus = BETTING_STATUS_LABEL.COLLECT_PENDING;
       isAction = false;
     } else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINIT_FAILED
               || blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_REFUND_FAILED
@@ -230,7 +233,7 @@ export class BetHandshakeHandler {
       isAction = false;
     } else if ((blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_DONE && resultStatus === BETTING_STATUS.SUPPORT_WIN && side === SIDE.SUPPORT)
                 ||  (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_DONE && resultStatus === BETTING_STATUS.AGAINST_WIN && side === SIDE.AGAINST)){
-            strStatus = BETTING_STATUS_LABEL.WIN + BETTING_STATUS_LABEL.DONE;
+            strStatus = BETTING_STATUS_LABEL.COLLECT_DONE;
             isAction = false;
     } else if (!isMatch && role === ROLE.INITER && blockchainStatus !== BET_BLOCKCHAIN_STATUS.STATUS_SHAKER_SHAKED) {
       label = BETTING_STATUS_LABEL.CANCEL;
