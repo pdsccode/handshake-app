@@ -136,9 +136,17 @@ export class Ethereum extends Wallet {
 
       const transaction = new EthereumTx(details);
       transaction.sign(Buffer.from(this.privateKey, 'hex'));
+      const serializedTransaction = transaction.serialize();
+      const addr = transaction.from.toString('hex');
+      console.log('Based on your private key, your wallet address is', addr);
+      const transactionId = web3.eth.sendSignedTransaction(`0x${serializedTransaction.toString('hex')}`);
+      // console.log("transactionId:", transactionId);
+      // const url = StringHelper.format('{0}/tx/{1}', this.network, transactionId);
+      // console.log("url", url);
 
       return { status: 1, message: 'messages.ethereum.success.transaction' };
     } catch (error) {
+      console.log("error", error);
       return { status: 0, message: 'messages.ethereum.error.insufficient' };
     }
   }
