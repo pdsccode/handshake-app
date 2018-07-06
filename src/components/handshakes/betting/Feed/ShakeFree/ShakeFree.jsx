@@ -81,19 +81,20 @@ class BetingShakeFree extends React.Component {
   }
   componentDidMount() {
   }
-  componentWillReceiveProps(nextProps) {
+  async componentWillReceiveProps(nextProps) {
     const { marketSupportOdds, marketAgainstOdds } = this.props;
     const { amount } = this.props;
     const marketOdds = this.toggleRef.value === SIDE.SUPPORT ? marketSupportOdds : marketAgainstOdds;
     const winValue = amount * marketOdds;
     const roundWinValue = Math.floor(winValue * ROUND) / ROUND;
-
+    const estimateGas = await getEstimateGas();
     console.log('Next props: amount, marketOdds, winValue, roundWinValue: ', amount, marketOdds, winValue, roundWinValue);
 
     this.setState({
       oddValue: Math.floor(marketOdds * ROUND_ODD) / ROUND_ODD,
       amountValue: amount,
       winValue: roundWinValue,
+      estimateGas,
     });
   }
 
@@ -105,7 +106,7 @@ class BetingShakeFree extends React.Component {
     this.setState({
       disable: true,
     });
-    const { isShowOdds, isChangeOdds } = this.state;
+    const { isShowOdds, isChangeOdds, estimateGas } = this.state;
     const {
       matchName, matchOutcome, amount, marketAgainstOdds, marketSupportOdds, closingDate, reportTime,
     } = this.props;
@@ -116,7 +117,7 @@ class BetingShakeFree extends React.Component {
     const marketOdds = side === SIDE.SUPPORT ? marketSupportOdds : marketAgainstOdds;
 
     const balance = new BigNumber(await getBalance());
-    const estimatedGas = new BigNumber(await getEstimateGas());
+    const estimatedGas = new BigNumber(estimateGas);
     const odds = new BigNumber(this.refs.odds.value);
     const total = amountS.plus(estimatedGas);
 
@@ -411,7 +412,7 @@ class BetingShakeFree extends React.Component {
 
   renderForm() {
     const {
-      total, isShowOdds, marketOdds, isChangeOdds, buttonClass, disable,
+      total, isShowOdds, marketOdds, isChangeOdds, buttonClass, disable,estimateGas
     } = this.state;
     const { amount } = this.props;
     const { winValue } = this.state;
@@ -440,6 +441,10 @@ class BetingShakeFree extends React.Component {
         <div className="rowWrapper">
           <div>Possible winnings</div>
           <div className="possibleWinningsValue">{winValue}</div>
+        </div>
+        <div className="rowWrapper">
+         <div className="gasPriceTitle">Current gas price per transaction (ETH)</div>
+         <div className="possibleWinningsValue">{estimateGas}</div>
         </div>
         <Button type="submit" disabled={disable} block className={buttonClass}>
           Go
