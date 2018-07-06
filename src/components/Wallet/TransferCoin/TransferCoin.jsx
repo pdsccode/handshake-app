@@ -494,7 +494,6 @@ openQrcode = () => {
                   />
                 </div>
               }
-
               <div className ="dropdown-wallet-tranfer">
                 <p className="labelText">{messages.wallet.action.transfer.label.from_wallet}</p>
                 <Field

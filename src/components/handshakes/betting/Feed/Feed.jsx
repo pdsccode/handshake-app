@@ -195,6 +195,7 @@ class FeedBetting extends React.Component {
   }
 
   componentDidMount() {
+    console.log("Feed componentDidMount");
     this.handleStatus(this.props);
   }
 
@@ -309,7 +310,7 @@ class FeedBetting extends React.Component {
         <div>
           {/* <div className="description">On odds</div> */}
           {/* <div className={`value ${colorBySide}`}> {Math.floor(odds*ROUND_ODD)/ROUND_ODD}</div> */}
-          {<div className="value">{matchedAmount} ETH</div>}
+          {<div className="value">{matchedAmount}/{amount} ETH</div>}
 
         </div>
         <div>
@@ -335,19 +336,24 @@ class FeedBetting extends React.Component {
     if (shakerList) {
       shakerList.forEach((item) => {
         const {
-          amount = 0, odds = 0, side, remainingAmount,
+          amount = 0, odds = 0, side, remainingAmount,status
         } = item;
         remainingValue = remainingAmount || 0;
         colorBySide = side === 1 ? `support` : 'oppose';
-        const amountMatch = parseBigNumber(amount);
         const oddsBN = parseBigNumber(odds);
+        const amountBN = parseBigNumber(amount);
+        let amountMatch = parseBigNumber(amount);
+        if(status === BET_BLOCKCHAIN_STATUS.STATUS_PENDING){
+          amountMatch = parseBigNumber(0);
+        }
         const winMatch = amountMatch.times(oddsBN).toNumber() || 0;
-        const winValue = amountMatch.times(oddsBN).toNumber() || 0;
-        displayWinMatch += Math.floor(winMatch * ROUND) / ROUND;
-        displayAmount += Math.floor(amount * ROUND) / ROUND;
-        displayMatchedAmount = Math.floor(amountMatch * ROUND) / ROUND;
-        displayRemaining = Math.floor(remainingValue * ROUND) / ROUND;
-        displayWinValue = Math.floor(winValue * ROUND) / ROUND;
+        const winValue = amountBN.times(oddsBN).toNumber() || 0;
+        displayWinMatch = Math.floor((Number(displayWinMatch) + winMatch)*ROUND)/ROUND;
+        displayAmount = Math.floor((Number(displayAmount) + amountBN.toNumber())*ROUND)/ROUND;
+        displayMatchedAmount = Math.floor((Number(displayMatchedAmount) + amountMatch.toNumber())*ROUND)/ROUND;
+        //displayRemaining = (Number(displayRemaining) + remainingValue).toFixed();
+        displayWinValue = Math.floor((Number(displayWinValue) + winValue)*ROUND)/ROUND;
+
       });
     }
 

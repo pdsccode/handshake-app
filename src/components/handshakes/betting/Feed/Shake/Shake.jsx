@@ -14,7 +14,7 @@ import GA from '@/services/googleAnalytics';
 // components
 import Button from '@/components/core/controls/Button';
 import {showAlert} from '@/reducers/app/action';
-import {getMessageWithCode, isExpiredDate, getChainIdDefaultWallet, 
+import {getMessageWithCode, isExpiredDate, getChainIdDefaultWallet,
   getBalance, getEstimateGas, getAddress, isExistMatchBet, isRightNetwork, parseBigNumber} from '@/components/handshakes/betting/utils.js';
 
 import './Shake.scss';
@@ -85,8 +85,8 @@ class BetingShake extends React.Component {
     const marketAmount = side === SIDE.SUPPORT ? amountSupport : amountAgainst;
     // const winValue = marketAmount * marketOdds;
     const winValue = parseBigNumber(marketAmount).times(parseBigNumber(marketOdds)).toNumber()||0;
-    // const roundMarketAmount = Math.round(marketAmount*ROUND)/ROUND;
-    const roundMarketAmount = marketAmount;
+    const roundMarketAmount = Math.floor(marketAmount*ROUND)/ROUND;
+    //const roundMarketAmount = marketAmount;
     console.log('componentWillReceiveProps: marketOdds, marketAmount, winValue, roundMarketAmount:', marketOdds, marketAmount, winValue, roundMarketAmount);
     // this.setState({
     //   oddValue: Math.floor(marketOdds*ROUND_ODD)/ROUND_ODD,
@@ -95,9 +95,9 @@ class BetingShake extends React.Component {
     //   disable: !isOpen
     // });
     this.setState({
-      oddValue: marketOdds.toFixed(1,1),
+      oddValue: Math.floor(marketOdds*ROUND_ODD)/ROUND_ODD,
       amountValue: roundMarketAmount,
-      winValue: winValue.toFixed(6,1),
+      winValue: Math.floor(winValue*ROUND)/ROUND,
       disable: !isOpen
     });
   }
@@ -118,11 +118,11 @@ class BetingShake extends React.Component {
 
     // const marketOdds = side === SIDE.SUPPORT ? marketSupportOdds : marketAgainstOdds;
 
-    console.log("Amount, Side, Odds", amount?.toNumber(), side, odds?.toNumber());    
+    console.log("Amount, Side, Odds", amount?.toNumber(), side, odds?.toNumber());
     const balance = await getBalance();
     let estimatedGas = await getEstimateGas();
     estimatedGas = parseBigNumber(estimatedGas.toString()||0);
-    
+
     // const total = amount + parseFloat(estimatedGas);
     const total = amount.plus(estimatedGas).toNumber()||0;
     console.log('Balance, estimate gas, total, date:', balance, estimatedGas, total, closingDate);

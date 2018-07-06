@@ -8,7 +8,7 @@ import local from '@/services/localStore';
 import { APP, API_URL } from '@/constants';
 import { loadMatches, loadHandshakes, checkFreeAvailable } from '@/reducers/betting/action';
 import { SIDE } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
-import { getBalance,parseBigNumber } from '@/components/handshakes/betting/utils';
+import { getBalance, parseBigNumber } from '@/components/handshakes/betting/utils';
 import GA from '@/services/googleAnalytics';
 // components
 import Dropdown from '@/components/core/controls/Dropdown';
@@ -24,7 +24,7 @@ import BettingShakeFree from './../ShakeFree';
 // style
 import './Filter.scss';
 
-////
+// //
 
 
 const CRYPTOSIGN_MINIMUM_MONEY = 0.00002;
@@ -126,10 +126,13 @@ class BettingFilter extends React.Component {
     const { against } = this.state;
     if (against && against.length > 0) {
       const element = against[against.length - 1];
-      // const guessAmout = element.amount * (element.odds - 1); 
-      const guessAmout = parseBigNumber(element.amount).times(parseBigNumber(element.odds).minus(1));
-      console.log(TAG," defaultSupportAmount = ",guessAmout.toNumber());
-      return guessAmout.toNumber()||0;
+      // const guessAmout = element.amount * (element.odds - 1);
+      const amountBN = parseBigNumber(element.amount);
+      const oddBN = parseBigNumber(element.odds);
+      const oneBN = parseBigNumber(1);
+      const guessAmout = amountBN.times(oddBN.minus(oneBN));
+      console.log(TAG, ' defaultSupportAmount = ', guessAmout.toNumber());
+      return guessAmout.toNumber() || 0;
     }
     return 0;
   }
@@ -139,10 +142,17 @@ class BettingFilter extends React.Component {
     if (support && support.length > 0) {
       console.log('Sorted Support:', support);
       const element = support[support.length - 1];
-      // const guessAmout = element.amount * (element.odds - 1); 
-      const guessAmout = parseBigNumber(element.amount).times(parseBigNumber(element.odds).minus(1));
-      console.log(TAG," defaultAgainstAmount = ",guessAmout.toNumber());
-      return guessAmout.toNumber()||0;
+      console.log(TAG, ' defaultAgainstAmount element= ', element);
+      // const guessAmout = element.amount * (element.odds - 1);
+      const amountBN = parseBigNumber(element.amount);
+      console.log(TAG, ' defaultAgainstAmount amount= ', amountBN.toNumber());
+      const oddBN = parseBigNumber(element.odds);
+      console.log(TAG, ' defaultAgainstAmount odds= ', oddBN.toNumber());
+      const oneBN = parseBigNumber(1);
+      console.log(TAG, ' defaultAgainstAmount one= ', oneBN.toNumber());
+      const guessAmout = amountBN.times(oddBN.minus(oneBN));
+      console.log(TAG, ' defaultAgainstAmount = ', guessAmout.toNumber());
+      return guessAmout.toNumber() || 0;
     }
     return 0;
   }
@@ -152,11 +162,12 @@ class BettingFilter extends React.Component {
     if (against && against.length > 0) {
       console.log('Sorted Against:', against);
       const element = against[against.length - 1];
-      // const againstOdds = element.odds / (element.odds - 1); 
+      // const againstOdds = element.odds / (element.odds - 1);
       const odds = parseBigNumber(element.odds);
-      const againstOdds = odds.div(odds.minus(1));
-      console.log(TAG," defaultSupportOdds = ",againstOdds.toNumber());
-      return againstOdds?.toNumber()||0;
+      const oneBN = parseBigNumber(1);
+      const againstOdds = odds.div(odds.minus(oneBN));
+      console.log(TAG, ' defaultSupportOdds = ', againstOdds.toNumber());
+      return againstOdds?.toNumber() || 0;
     }
     return 0;
   }
@@ -168,9 +179,10 @@ class BettingFilter extends React.Component {
       const element = support[support.length - 1];
       // const supportOdds = element.odds / (element.odds - 1);
       const odds = parseBigNumber(element.odds);
-      const supportOdds = odds.div(odds.minus(1));
-      console.log(TAG," defaultAgainstOdds = ",supportOdds.toNumber());
-      return supportOdds.toNumber()||0;
+      const oneBN = parseBigNumber(1);
+      const supportOdds = odds.div(odds.minus(oneBN));
+      console.log(TAG, ' defaultAgainstOdds = ', supportOdds.toNumber());
+      return supportOdds.toNumber() || 0;
     }
     return 0;
   }
@@ -416,20 +428,15 @@ class BettingFilter extends React.Component {
     const matchName = (selectedMatch && selectedMatch.value) ? selectedMatch.value : null;
     const matchOutcome = (selectedOutcome && selectedOutcome.value) ? selectedOutcome.value : null;
 
-    console.log('Outcome Hid:', outcomeHid);
-    console.log('Outcome id', outcomeId);
     const defaultMatchId = this.defaultMatch ? this.defaultMatch.id : null;
-    // console.log("Default Match:", defaultMatchId);
-    // console.log('Default Outcome:', defaultOutcome);
     const defaultOutcomeId = this.defaultOutcome ? this.defaultOutcome.id : null;
     const shareInfo = this.getInfoShare(selectedMatch, selectedOutcome);
     const marketFee = (selectedMatch && selectedMatch.marketFee >= 0) ? selectedMatch.marketFee : null;
     const closingDate = (selectedMatch && selectedMatch.date) ? selectedMatch.date : null;
     const reportTime = (selectedMatch && selectedMatch.reportTime) ? selectedMatch.reportTime : null;
-    console.log('defaultOutcomeId:', defaultOutcomeId);
-    console.log('Market Fee:', marketFee);
     return (
       <div className="wrapperBettingFilter">
+        {this.state.matches && this.state.matches.length > 0 &&
         <div className="share-block">
           <p className="text">Share to get 20 free coins</p>
           <ShareSocial
@@ -437,7 +444,7 @@ class BettingFilter extends React.Component {
             title={shareInfo.title}
             shareUrl={shareInfo.shareUrl}
           />
-        </div>
+        </div>}
         {
           this.state.isError
           ? (
@@ -516,12 +523,12 @@ class BettingFilter extends React.Component {
           <div className="wrapperContainer">
             <div className="item">
               <div className="titleBox opacity65">
-                <div>Pool (ETH)</div>
-                <div>Support (ODDS)</div>
+                <div>Market size (ETH)</div>
+                <div className="supportOdds">Support (ODDS)</div>
               </div>
               {<GroupBook amountColor="#0BDD91" bookList={this.bookListSupport} />}
               <div className="marketBox">
-                <div>Market</div>
+                <div>Market odds</div>
                 <div>{Math.floor(this.defaultSupportOdds * ROUND_ODD) / ROUND_ODD}</div>
               </div>
               <Button
@@ -543,14 +550,14 @@ class BettingFilter extends React.Component {
             </div>
             <div className="item">
               <div className="titleBox opacity65">
-                <div>Pool (ETH)</div>
-                <div>Oppose (ODDS)</div>
+                <div>Market size (ETH)</div>
+                <div className="supportOdds">Oppose (ODDS)</div>
               </div>
 
               {<GroupBook amountColor="#FA6B49" bookList={this.bookListAgainst} />}
               <div className="titleBox">
-                <div>Market</div>
-                <div>{Math.floor(this.defaultAgainstOdds * ROUND_ODD) / ROUND_ODD}</div>
+                <div className="itemTitle">Market odds</div>
+                <div className="itemTitle">{Math.floor(this.defaultAgainstOdds * ROUND_ODD) / ROUND_ODD}</div>
               </div>
               <Button
                 className="buttonAgainst"

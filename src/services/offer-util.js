@@ -2,11 +2,11 @@ import local from '@/services/localStore';
 import { AMOUNT_DECIMAL, APP, HANDSHAKE_USER, PRICE_DECIMAL } from '@/constants';
 import { BigNumber } from 'bignumber.js';
 
-export function getOfferPrice(listOfferPrice = [], type = '', currency = '') {
+export function getOfferPrice(listOfferPrice = [], type = '', currency = '', fiatCurrency = '') {
   let result = {};
 
   for (const offerPrice of listOfferPrice) {
-    if (offerPrice.type === type && offerPrice.currency === currency) {
+    if (offerPrice.type === type && offerPrice.currency === currency && offerPrice.fiatCurrency === fiatCurrency) {
       result = offerPrice;
       break;
     }
@@ -33,7 +33,7 @@ export function formatMoney(price = 0) {
 
 
 export function formatMoneyByLocale(price = 0, locale = 'USD') {
-  console.log('coins - price', price);
+  // console.log('coins - price', price);
   switch (locale.toLowerCase()) {
     case 'vnd':
       return new BigNumber(price).dividedBy(1000).decimalPlaces(0).times(1000)

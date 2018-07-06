@@ -55,6 +55,10 @@
     justify-content: space-between;
     letter-spacing: 0;
     margin-bottom: rem-calc(10px);
+
+    .supportOdds {
+      text-align: right;
+    }
   }
   .marketBox {
     font-size: rem-calc(12px);
@@ -83,6 +87,7 @@
       letter-spacing: 0.29px !important;
       border: none !important;
       padding: 10px 13px;
+      width: 6rem;
     }
     .contentFree {
       justify-content: center;

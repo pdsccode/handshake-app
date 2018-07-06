@@ -37,6 +37,7 @@ export const EXCHANGE_ACTIONS = {
 
   GET_FREE_START_INFO: 'GET_FREE_START_INFO',
   SET_FREE_START: 'SET_FREE_START',
+  TRACKING_ONCHAIN: 'TRACKING_ONCHAIN',
 };
 
 export const getCryptoPrice = createAPI(EXCHANGE_ACTIONS.GET_CRYPTO_PRICE);
@@ -88,4 +89,5 @@ export const reviewOffer = createAPI(EXCHANGE_ACTIONS.REVIEW_OFFER);
 
 export const getFreeStartInfo = createAPI(EXCHANGE_ACTIONS.GET_FREE_START_INFO);
 export const setFreeStart = data => ({ type: EXCHANGE_ACTIONS.SET_FREE_START, payload: data });
+export const trackingOnchain = createAPI(EXCHANGE_ACTIONS.TRACKING_ONCHAIN);
 
