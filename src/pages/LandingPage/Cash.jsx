@@ -96,19 +96,19 @@ const features = [
 const menuItems = [
   {
     txt: <FormattedMessage id="ex.landing.menu.about" />,
-    url: "#"
+    url: "https://docs.google.com/document/d/1Ou7qY-NXNenr0Mj_Qzn_4-BUXWIvJyWsHNXkca9Teek/edit"
   },
   {
     txt: <FormattedMessage id="ex.landing.menu.blog" />,
-    url: "#"
+    url: "https://medium.com/@ninja_org/introducing-ninja-cash-b0d51a9f4e1b"
   },
   {
     txt: <FormattedMessage id="ex.landing.menu.faq" />,
-    url: "#"
+    url: "#faq"
   },
   {
     txt: <FormattedMessage id="ex.landing.menu.contact" />,
-    url: "#"
+    url: "#telegram"
   }
 ];
 
@@ -186,16 +186,16 @@ class Handshake extends React.Component {
             })}
           </div>
         </div>
-        <div className="container join-telegram">
+        <div id="telegram" className="container join-telegram">
           <div className="row">
             <div className="col">
               <div className="text-try-telegram mb-4">
                 <FormattedMessage id="ex.landing.tryTelegram.label" />
               </div>
               <div className="text-center">
-                <button className="btn btn-join-telegram">
+                <a className="btn btn-join-telegram" href="https://t.me/ninjacash">
                   <FormattedMessage id="ex.landing.tryTelegram.btn" />
-                </button>
+                </a>
               </div>
             </div>
           </div>
@@ -236,7 +236,7 @@ class Handshake extends React.Component {
           </div>
         </div>
         */}
-        <div className={`container fiveContainer`}>
+        <div id="faq" className={`container fiveContainer`}>
           <div className="row">
             <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
               <p className="subTitle">{messages.COIN_EXCHANGE_LP_FAQ_TITLE}</p>

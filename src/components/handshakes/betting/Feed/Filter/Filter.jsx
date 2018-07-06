@@ -127,7 +127,10 @@ class BettingFilter extends React.Component {
     if (against && against.length > 0) {
       const element = against[against.length - 1];
       // const guessAmout = element.amount * (element.odds - 1);
-      const guessAmout = parseBigNumber(element.amount).times(parseBigNumber(element.odds).minus(1));
+      const amountBN = parseBigNumber(element.amount);
+      const oddBN = parseBigNumber(element.odds);
+      const oneBN = parseBigNumber(1);
+      const guessAmout = amountBN.times(oddBN.minus(oneBN));
       console.log(TAG, ' defaultSupportAmount = ', guessAmout.toNumber());
       return guessAmout.toNumber() || 0;
     }
@@ -139,8 +142,15 @@ class BettingFilter extends React.Component {
     if (support && support.length > 0) {
       console.log('Sorted Support:', support);
       const element = support[support.length - 1];
+      console.log(TAG, ' defaultAgainstAmount element= ', element);
       // const guessAmout = element.amount * (element.odds - 1);
-      const guessAmout = parseBigNumber(element.amount).times(parseBigNumber(element.odds).minus(1));
+      const amountBN = parseBigNumber(element.amount);
+      console.log(TAG, ' defaultAgainstAmount amount= ', amountBN.toNumber());
+      const oddBN = parseBigNumber(element.odds);
+      console.log(TAG, ' defaultAgainstAmount odds= ', oddBN.toNumber());
+      const oneBN = parseBigNumber(1);
+      console.log(TAG, ' defaultAgainstAmount one= ', oneBN.toNumber());
+      const guessAmout = amountBN.times(oddBN.minus(oneBN));
       console.log(TAG, ' defaultAgainstAmount = ', guessAmout.toNumber());
       return guessAmout.toNumber() || 0;
     }
@@ -154,7 +164,8 @@ class BettingFilter extends React.Component {
       const element = against[against.length - 1];
       // const againstOdds = element.odds / (element.odds - 1);
       const odds = parseBigNumber(element.odds);
-      const againstOdds = odds.div(odds.minus(1));
+      const oneBN = parseBigNumber(1);
+      const againstOdds = odds.div(odds.minus(oneBN));
       console.log(TAG, ' defaultSupportOdds = ', againstOdds.toNumber());
       return againstOdds?.toNumber() || 0;
     }
@@ -168,7 +179,8 @@ class BettingFilter extends React.Component {
       const element = support[support.length - 1];
       // const supportOdds = element.odds / (element.odds - 1);
       const odds = parseBigNumber(element.odds);
-      const supportOdds = odds.div(odds.minus(1));
+      const oneBN = parseBigNumber(1);
+      const supportOdds = odds.div(odds.minus(oneBN));
       console.log(TAG, ' defaultAgainstOdds = ', supportOdds.toNumber());
       return supportOdds.toNumber() || 0;
     }
