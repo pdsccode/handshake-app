@@ -20,6 +20,7 @@ const LandingPageTrade = createDynamicImport(() => import('@/pages/LandingPage/T
 const LandingPageCash = createDynamicImport(() => import('@/pages/LandingPage/Cash'), Splash);
 const LandingPageWhitePaper = createDynamicImport(() => import('@/pages/LandingPage/WhitePaper'), Splash);
 const IntroNjnjaCash = createDynamicImport(() => import('@/pages/LandingPage/IntroducingNinjaCash'), Splash);
+const AboutNjnjaCash = createDynamicImport(() => import('@/pages/LandingPage/AboutNinjaCash'), Splash);
 const LandingPageFAQ = createDynamicImport(() => import('@/pages/FAQ/FAQ'), Splash);
 const MobileOrTablet = createDynamicImport(() => import('@/components/MobileOrTablet'), Splash);
 
@@ -67,6 +68,8 @@ class Root extends React.Component {
         return <LandingPageWhitePaper />;
       case URL.INTRODUCING_NINJA_CASH:
         return <IntroNjnjaCash />;
+      case URL.ABOUT_NINJA_CASH:
+        return <AboutNjnjaCash />;
       default:
         // code
     }
