@@ -248,7 +248,7 @@ class FeedExchange extends React.PureComponent {
     const offerItem = {
       type: shopType,
       currency: values.currency,
-      amount: values.amount,
+      amount: values.amount.toString(),
       username: authProfile?.name,
       email: authProfile?.email,
       contact_phone: authProfile?.phone,
@@ -273,14 +273,13 @@ class FeedExchange extends React.PureComponent {
     const { data } = responseData;
     const offerShake = Offer.offer(data);
     const {
-      currency, type, amount, totalAmount, systemAddress, offChainId,
+      currency, type, amount, totalAmount, systemAddress, offChainId, status,
     } = offerShake;
     const { offer } = this;
 
     if (currency === CRYPTO_CURRENCY.ETH) {
       if (type === EXCHANGE_ACTION.BUY) { // shop buy
         // const amount = totalAmount;
-        let data = {};
         try {
           const wallet = MasterWallet.getWalletDefault(currency);
           const exchangeHandshake = new ExchangeShopHandshake(wallet.chainId);
@@ -288,24 +287,11 @@ class FeedExchange extends React.PureComponent {
 
           console.log('handleShakeOfferSuccess', result);
 
-          data = {
-            tx_hash: result.hash,
-            action: offerShake.items.ETH.status,
-            reason: '',
-            currency: currency,
-          };
+          this.trackingOnchain(offer.id, offerShake.id, result.hash, status, '', currency);
         } catch (e) {
-          data = {
-            action: offer.items.ETH.status,
-            reason: e.toString(),
-            currency: currency,
-          }
-
+          this.trackingOnchain(offer.id, offerShake.id, '', status, e.toString(), currency);
           console.log('handleShakeOfferSuccess', e.toString());
         }
-
-
-        this.trackingOnchain(data, offer.id);
       }
     } else if (currency === CRYPTO_CURRENCY.BTC) {
       if (type === EXCHANGE_ACTION.BUY) {
@@ -345,7 +331,9 @@ class FeedExchange extends React.PureComponent {
     });
   }
 
-  trackingOnchain = (data, offerStoreId, offerStoreShakeId) => {
+  trackingOnchain = (offerStoreId, offerStoreShakeId, txHash, action, reason, currency) => {
+    const data = { tx_hash: txHash, action, reason, currency };
+
     let url = '';
     if (offerStoreShakeId) {
       url = `exchange/offer-stores/${offerStoreId}/shakes/${offerStoreShakeId}/onchain-tracking`;
