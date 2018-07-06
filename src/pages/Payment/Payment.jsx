@@ -23,17 +23,18 @@ class Payment extends React.Component {
 
     this.state = {
       isLoading: false,
-      isShowWallets: false,
+      //isShowWallets: false,
       isShowSuccess: false,
       toAddress: "",
       fromAddress: "",
       coinName: "",
       amount: 0,
+      active: false,
     };
 
   }
 
-  showAlert(msg, type = 'success', timeOut = 3000, icon = '') {
+  showAlert(msg, type = 'success', timeOut = 5000, icon = '') {
     this.props.showAlert({
       message: <div className="textCenter">{icon}{msg}</div>,
       timeOut,
@@ -57,7 +58,7 @@ class Payment extends React.Component {
     this.props.hideLoading();
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     this.checkPayNinja();
   }
 
@@ -66,11 +67,11 @@ class Payment extends React.Component {
     this.querystringParsed = qs.parse(querystring);
     const { order_id, amount, coin, ca, sa, confirm_url } = this.querystringParsed;
     if (order_id && amount && sa && coin) {
-      this.setState({isShowWallets: true, toAddress: sa, fromAddress: ca, coinName: coin.toUpperCase(), orderID: order_id, confirmURL: confirm_url});
-      if (!isNaN(amount))
-        this.setState({ amount: amount });
-
-      this.modalSendRef.open();
+      this.setState({active: true, toAddress: sa, fromAddress: ca, amount: !isNaN(amount) ? amount : 0,
+        coinName: coin.toUpperCase(), orderID: order_id, confirmURL: confirm_url}, () => {
+          this.modalSendRef.open();
+        }
+      );
     }
   }
 
@@ -81,7 +82,7 @@ class Payment extends React.Component {
   successPayNinja = () => {
     this.modalSendRef.close();
     this.setState({isShowSuccess: true});
-    setTimeout(() => {window.location.href = this.state.confirmURL}, 2000);
+    setTimeout(() => {window.location.href = this.state.confirmURL}, 10000);
   }
 
   // To address those who want the "root domain," use this function:
@@ -127,7 +128,7 @@ class Payment extends React.Component {
           <div className="key">{this.extractDomain()}</div>
           <div className="label">Website</div>
         </div>
-        <TransferCoin isShowWallets={true} toAddress={this.state.toAddress} fromAddress={this.state.fromAddress} amount={this.state.amount} coinName={this.state.coinName} onFinish={() => { this.successPayNinja() }} />
+        <TransferCoin isShowWallets={true} active={this.state.active}  toAddress={this.state.toAddress} fromAddress={this.state.fromAddress} amount={this.state.amount} coinName={this.state.coinName} onFinish={() => { this.successPayNinja() }} />
       </Modal>);
   }
 
