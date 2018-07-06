@@ -66,7 +66,7 @@ export class Ethereum extends Wallet {
     const web3 = new Web3(new Web3.providers.HttpProvider(this.network));
     const gasPrice = new BN(await web3.eth.getGasPrice());
 
-    const limitedGas = new BN(3000000);
+    const limitedGas = new BN(150000);
 
     const estimatedGas = limitedGas.mul(gasPrice);
 
