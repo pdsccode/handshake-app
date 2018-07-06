@@ -252,12 +252,7 @@ class Component extends React.Component {
     if (conditionBuy || conditionSell) {
       this.props.showAlert({
         message: <div className="text-center">
-          <FormattedMessage id="notEnoughCoinInWalletStores"
-                            values={ {
-                              amount: formatAmountCurrency(balance),
-                              fee: formatAmountCurrency(fee),
-                              currency: currency,
-                            } } />
+          <FormattedMessage id="notEnoughCoinInWalletStores" />
         </div>,
         timeOut: 5000,
         type: 'danger',
