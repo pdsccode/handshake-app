@@ -34,6 +34,14 @@ class FeedMeOfferStoreContainer extends React.PureComponent {
     this.offer = offer;
   }
 
+  trackingOnchain = (offerStoreId, offerStoreShakeId, txHash, action, reason, currency) => {
+    const { trackingOnchain } = this.props;
+
+    if (trackingOnchain) {
+      trackingOnchain(offerStoreId, offerStoreShakeId, txHash, action, reason, currency);
+    }
+  }
+
   checkMainNetDefaultWallet = (wallet) => {
     const { checkMainNetDefaultWallet } = this.props;
 
@@ -219,15 +227,22 @@ class FeedMeOfferStoreContainer extends React.PureComponent {
 
     if (currency === CRYPTO_CURRENCY.ETH) {
       if (sellAmount > 0 && freeStart === '' && offerStore.items.ETH.status !== 'closed') {
-        const wallet = MasterWallet.getWalletDefault(currency);
+        try {
+          const wallet = MasterWallet.getWalletDefault(currency);
 
-        const exchangeHandshake = new ExchangeShopHandshake(wallet.chainId);
+          const exchangeHandshake = new ExchangeShopHandshake(wallet.chainId);
 
-        let result = null;
+          let result = null;
 
-        result = await exchangeHandshake.closeByShopOwner(data.hid, data.id);
+          result = await exchangeHandshake.closeByShopOwner(data.hid, data.id);
 
-        console.log('handleDeleteOfferItemSuccess', result);
+          console.log('handleDeleteOfferItemSuccess', result);
+
+          this.trackingOnchain(offer.id, '', result.hash, offerStore.items.ETH.status, '', currency);
+        } catch (e) {
+          this.trackingOnchain(offer.id, '', '', offerStore.items.ETH.status, e.toString(), currency);
+          console.log('handleDeleteOfferItemSuccess', e.toString());
+        }
       }
     } else if (currency === CRYPTO_CURRENCY.BTC) {
 

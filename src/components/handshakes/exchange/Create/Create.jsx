@@ -438,7 +438,6 @@ class Component extends React.Component {
       }
     } else if (currency === CRYPTO_CURRENCY.ETH) {
       if (amountSell > 0 && offer.items.ETH.freeStart === '') {
-        let data = {};
         try {
           const exchangeHandshake = new ExchangeShopHandshake(wallet.chainId);
 
@@ -446,22 +445,11 @@ class Component extends React.Component {
           result = await exchangeHandshake.initByShopOwner(offer.items.ETH.sellTotalAmount, offer.id);
           console.log('handleCreateOfferSuccess', result);
 
-          data = {
-            tx_hash: result.hash,
-            action: offer.items.ETH.status,
-            reason: '',
-            currency: currency,
-          };
+          this.trackingOnchain(offer.id, '', result.hash, offer.items.ETH.status, '', currency);
         } catch (e) {
-          data = {
-            action: offer.items.ETH.status,
-            reason: e.toString(),
-            currency: currency,
-          }
+          this.trackingOnchain(offer.id, '', '', offer.items.ETH.status, e.toString(), currency);
           console.log('handleCreateOfferSuccess', e.toString());
         }
-
-        this.trackingOnchain(data, offer.id);
       }
     }
 
@@ -510,7 +498,9 @@ class Component extends React.Component {
     });
   }
 
-  trackingOnchain = (data, offerStoreId, offerStoreShakeId) => {
+  trackingOnchain = (offerStoreId, offerStoreShakeId, txHash, action, reason, currency) => {
+    const data = { tx_hash: txHash, action, reason, currency };
+
     let url = '';
     if (offerStoreShakeId) {
       url = `exchange/offer-stores/${offerStoreId}/shakes/${offerStoreShakeId}/onchain-tracking`;
