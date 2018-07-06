@@ -212,6 +212,7 @@ class FeedMe extends React.PureComponent {
       address,
       confirmOfferAction: this.confirmOfferAction,
       handleActionFailed: this.handleActionFailed,
+      checkMainNetDefaultWallet: this.checkMainNetDefaultWallet,
       showNotEnoughCoinAlert: this.showNotEnoughCoinAlert,
       getNameShopDisplayed: this.getNameShopDisplayed,
       trackingOnchain: this.trackingOnchain,

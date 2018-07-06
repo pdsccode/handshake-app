@@ -22,6 +22,7 @@ import {Ethereum} from '@/services/Wallets/Ethereum.js';
 import {Bitcoin} from '@/services/Wallets/Bitcoin';
 import {formatMoneyByLocale, getHandshakeUserType, getOfferPrice} from "@/services/offer-util";
 import Offer from "@/models/Offer";
+import {deleteOfferItem} from "@/reducers/exchange/action";
 
 class FeedMeOfferStoreContainer extends React.PureComponent {
   constructor(props) {
@@ -48,6 +49,8 @@ class FeedMeOfferStoreContainer extends React.PureComponent {
     if (checkMainNetDefaultWallet) {
       return checkMainNetDefaultWallet(wallet);
     }
+
+    return true;
   }
 
   showNotEnoughCoinAlert = (balance, amount, fee, currency) => {
@@ -365,6 +368,7 @@ const mapDispatch = ({
   showAlert,
   showLoading,
   hideLoading,
+  deleteOfferItem,
 
   responseExchangeDataChange,
 });
