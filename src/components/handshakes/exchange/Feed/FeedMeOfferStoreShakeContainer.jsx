@@ -66,6 +66,8 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
     if (checkMainNetDefaultWallet) {
       return checkMainNetDefaultWallet(wallet);
     }
+
+    return true;
   }
 
   showNotEnoughCoinAlert = (balance, amount, fee, currency) => {
