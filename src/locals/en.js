@@ -200,6 +200,25 @@ export default {
   'btn.accept': 'Accept',
   'btn.delete': 'Delete',
 
+  'ex.landing.menu.about': 'ABOUT',
+  'ex.landing.menu.blog': 'BLOG',
+  'ex.landing.menu.faq': 'FAQ',
+  'ex.landing.menu.contact': 'CONTACT',
+
+  'ex.landing.intro.label.1': 'We are available on mobile only',
+  'ex.landing.intro.label.2': 'Switch to your phone now to start making money with us!',
+
+  'ex.landing.description.label.1': 'Set up a station <br/>& make some money',
+  'ex.landing.description.label.2': 'Ninja Cash is a decentralized peer to peer (P2P) cryptocurrency exchange that allows users to trade ETH and BTC for cash. You can join us anonymously: no signup, no ID verification, no fraud<br/><a href="https://docs.google.com/document/d/1Ou7qY-NXNenr0Mj_Qzn_4-BUXWIvJyWsHNXkca9Teek/edit" class="btn-read-more">Read more</a> about us here',
+
+  'ex.landing.features.label.1': 'Your market. Your rates',
+  'ex.landing.features.label.2': 'Secured with blockchain technology',
+  'ex.landing.features.label.3': 'No KYC information',
+  'ex.landing.features.label.4': 'Trade with other Ninjas in your area',
+
+  'ex.landing.tryTelegram.label': 'Try out the platform for FREE by joining the conversation on Telegram',
+  'ex.landing.tryTelegram.btn': 'Join Telegram',
+
   product_info: 'Ninja is open-source, decentralized software that never holds your funds. By freely choosing to use Ninja, the user accepts sole responsibility for their behavior and agrees to abide by the legalities of their governing jurisdiction. Ninja cannot be liable for legal, monetary or psychological damages should you do something stupid. Never invest more than you are willing to lose. Play safe!',
 
   // FAQ

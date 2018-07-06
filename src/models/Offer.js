@@ -49,7 +49,7 @@ class Offer {
       buyBalance: data.buy_balance || '',
       buyPercentage: data.buy_percentage || '',
       rewardAddress: data.reward_address || '',
-      freeStart: data.free_start || false,
+      freeStart: data.free_start || '',
     };
   }
 }
