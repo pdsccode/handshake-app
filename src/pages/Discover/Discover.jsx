@@ -74,6 +74,7 @@ class DiscoverPage extends React.Component {
     console.log('discover - contructor - init');
     const handshakeDefault = this.getDefaultHandShakeId();
     const utm = this.getUtm();
+    const program = this.getProgram();
 
     this.state = {
       handshakeIdActive: handshakeDefault,
@@ -91,6 +92,7 @@ class DiscoverPage extends React.Component {
       isBannedCash: this.props.isBannedCash,
       isBannedPrediction: this.props.isBannedPrediction,
       utm,
+      program,
     };
 
     if (this.state.handshakeIdActive === HANDSHAKE_ID.EXCHANGE) {
@@ -104,6 +106,7 @@ class DiscoverPage extends React.Component {
     this.clickTabItem = this.clickTabItem.bind(this);
     this.searchChange = this.searchChange.bind(this);
     this.getUtm = this.getUtm.bind(this);
+    this.getProgram = this.getProgram.bind(this);
     this.onFreeStartClick = this.onFreeStartClick.bind(this);
   }
 
@@ -113,7 +116,7 @@ class DiscoverPage extends React.Component {
 
     let url = '';
     if (this.state.utm === 'earlybird') {
-      url = `exchange/info/offer-store-free-start/ETH`;
+      url = `exchange/info/offer-store-free-start/${this.state.program}`;
     }
 
     if (this.state.utm === 'earlybird') {
@@ -132,7 +135,7 @@ class DiscoverPage extends React.Component {
                     <FormattedHTMLMessage id="ex.earlyBird.label.1" />
                   </div>
                   <div className="intro-text mt-2">
-                    <FormattedHTMLMessage id="ex.earlyBird.label.2" values={{ freeETH: data.reward }} />
+                    <FormattedHTMLMessage id="ex.earlyBird.label.2" values={{ freeETH: data?.reward }} />
                   </div>
                   <button className="btn btn-open-station" onClick={this.onFreeStartClick}>
                     <FormattedMessage id="ex.earlyBird.btn" />
@@ -159,6 +162,12 @@ class DiscoverPage extends React.Component {
     const { utm_campaign: utm } = Helper.getQueryStrings(window.location.search);
 
     return utm;
+  }
+
+  getProgram() {
+    const { free: program } = Helper.getQueryStrings(window.location.search);
+
+    return program;
   }
 
   getDefaultHandShakeId() {
@@ -518,7 +527,7 @@ const mapState = state => ({
   isBannedCash: state.app.isBannedCash,
   isBannedPrediction: state.app.isBannedPrediction,
   firebaseApp: state.firebase.data,
-  freeETH: state.exchange.freeETH || 0,
+  freeStartInfo: state.exchange.freeStartInfo,
 });
 
 const mapDispatch = ({

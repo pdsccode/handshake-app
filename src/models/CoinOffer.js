@@ -15,7 +15,7 @@ class CoinOffer {
       systemAddress: data.system_address || '',
       userAddress: data.user_address || '',
       rewardAddress: data.reward_address || '',
-      freeStart: data.free_start || false,
+      freeStart: data.free_start || '',
     };
   }
 }
