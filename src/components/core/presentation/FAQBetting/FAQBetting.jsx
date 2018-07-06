@@ -13,7 +13,7 @@ class FAQBetting extends React.PureComponent {
         <dd>
         This is the total amount of ETH staked on this event, across all odds and outcomes.
         </dd>
-        <dt>Pool (ETH)</dt>
+        <dt>Market size (ETH)</dt>
         <dd>
         Each row shows the total bets on the corresponding odds, that Support or Oppose this outcome. Pools will be listed until fully matched. Once the order book entry is balanced, it disappears.
         </dd>
