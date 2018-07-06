@@ -2,6 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { showAlert } from "@/reducers/app/action";
+import { URL } from '@/constants';
 import { FormattedHTMLMessage, FormattedMessage, injectIntl } from "react-intl";
 // import VideoYoutube from '@/components/core/controls/VideoYoutube';
 //
@@ -96,7 +97,7 @@ const features = [
 const menuItems = [
   {
     txt: <FormattedMessage id="ex.landing.menu.about" />,
-    url: "https://docs.google.com/document/d/1Ou7qY-NXNenr0Mj_Qzn_4-BUXWIvJyWsHNXkca9Teek/edit"
+    url: URL.ABOUT_NINJA_CASH
   },
   {
     txt: <FormattedMessage id="ex.landing.menu.blog" />,
