@@ -180,7 +180,7 @@ class FeedMeOfferStoreContainer extends React.PureComponent {
     console.log('deleteOfferItem', offer);
 
     if (currency === CRYPTO_CURRENCY.ETH) {
-      if (sellAmount > 0 && !freeStart) {
+      if (sellAmount > 0 && freeStart === '') {
         const wallet = MasterWallet.getWalletDefault(currency);
         const balance = await wallet.getBalance();
         const fee = await wallet.getFee();
@@ -218,7 +218,7 @@ class FeedMeOfferStoreContainer extends React.PureComponent {
     this.responseExchangeDataChange(offerStore);
 
     if (currency === CRYPTO_CURRENCY.ETH) {
-      if (sellAmount > 0 && !freeStart && offerStore.items.ETH.status !== 'closed') {
+      if (sellAmount > 0 && freeStart === '' && offerStore.items.ETH.status !== 'closed') {
         const wallet = MasterWallet.getWalletDefault(currency);
 
         const exchangeHandshake = new ExchangeShopHandshake(wallet.chainId);

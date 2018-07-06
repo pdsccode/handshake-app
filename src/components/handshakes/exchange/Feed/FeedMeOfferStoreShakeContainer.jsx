@@ -423,7 +423,7 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
     } = offer;
 
     if (currency === CRYPTO_CURRENCY.ETH) {
-      if ((type === EXCHANGE_ACTION.SELL && this.userType === HANDSHAKE_USER.OWNER && !freeStart) ||
+      if ((type === EXCHANGE_ACTION.SELL && this.userType === HANDSHAKE_USER.OWNER && freeStart === '') ||
         (type === EXCHANGE_ACTION.BUY && this.userType === HANDSHAKE_USER.SHAKED)) {
         const wallet = MasterWallet.getWalletDefault(currency);
         const balance = await wallet.getBalance();
@@ -464,7 +464,7 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
     this.responseExchangeDataChange(offerShake);
 
     if (currency === CRYPTO_CURRENCY.ETH) {
-      if ((type === EXCHANGE_ACTION.SELL && this.userType === HANDSHAKE_USER.OWNER && !freeStart) ||
+      if ((type === EXCHANGE_ACTION.SELL && this.userType === HANDSHAKE_USER.OWNER && freeStart === '') ||
         (type === EXCHANGE_ACTION.BUY && this.userType === HANDSHAKE_USER.SHAKED)) {
         const wallet = MasterWallet.getWalletDefault(currency);
         const exchangeHandshake = new ExchangeShopHandshake(wallet.chainId);
