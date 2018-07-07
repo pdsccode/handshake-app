@@ -574,12 +574,22 @@ export default [
     "status": "SCHEDULED",
     "matchday": 5,
     "homeTeamName": "Sweden",
-    "awayTeamName": "W56",
+    "awayTeamName": "England",
     "result": {
       "goalsHomeTeam": null,
       "goalsAwayTeam": null
     },
-    "odds": null
+    "odds": null,
+    link: 'http://tv.keonhacai.com/bongda/kenh19.php',
+    linksLive: [
+      'http://tv.keonhacai.com/bongda/kenh19.php',
+      'http://capodeportes.net/reproductor2/canal3.php?width=400&height=300&autoplay=1',
+    ],
+    linksSoftCast: [
+      'sop://broker.sopcast.com:3912/258800',
+      'sop://broker.sopcast.com:3912/263045',
+      'sop://broker.sopcast.com:3912/258825',
+    ],
   },
   {
     "_links": {
@@ -605,7 +615,17 @@ export default [
       "goalsHomeTeam": null,
       "goalsAwayTeam": null
     },
-    "odds": null
+    "odds": null,
+    link: 'http://tv.keonhacai.com/kenh4',
+    linksLive: [
+      'http://tv.keonhacai.com/kenh4',
+      'http://capodeportes.net/reproductor2/canal3.php?width=400&height=300&autoplay=1',
+    ],
+    linksSoftCast: [
+      'sop://broker.sopcast.com:3912/253461',
+      'sop://broker.sopcast.com:3912/264656',
+      'sop://broker.sopcast.com:3912/258822',
+    ],
   },
   {
     "_links": {
@@ -625,8 +645,8 @@ export default [
     "date": "2018-07-10T18:00:00Z",
     "status": "SCHEDULED",
     "matchday": 6,
-    "homeTeamName": "W57",
-    "awayTeamName": "W58",
+    "homeTeamName": "France",
+    "awayTeamName": "Belgium",
     "result": {
       "goalsHomeTeam": null,
       "goalsAwayTeam": null
