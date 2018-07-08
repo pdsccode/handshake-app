@@ -64,7 +64,7 @@ class BetingShake extends React.Component {
       amountValue: 0,
       winValue: 0,
       disable: false,
-
+      estimateGas: 0,
     };
 
 
@@ -78,7 +78,7 @@ class BetingShake extends React.Component {
     console.log('Sa test componentDidMount');
 
   }
-  componentWillReceiveProps(nextProps){
+  async componentWillReceiveProps(nextProps){
 
     const {marketSupportOdds, marketAgainstOdds, side, amountSupport, amountAgainst, isOpen} = nextProps;
     const marketOdds = side === SIDE.SUPPORT ? marketSupportOdds : marketAgainstOdds;
@@ -86,6 +86,8 @@ class BetingShake extends React.Component {
     // const winValue = marketAmount * marketOdds;
     const winValue = parseBigNumber(marketAmount).times(parseBigNumber(marketOdds)).toNumber()||0;
     const roundMarketAmount = Math.floor(marketAmount*ROUND)/ROUND;
+    const estimateGas = await getEstimateGas();
+
     //const roundMarketAmount = marketAmount;
     console.log('componentWillReceiveProps: marketOdds, marketAmount, winValue, roundMarketAmount:', marketOdds, marketAmount, winValue, roundMarketAmount);
     // this.setState({
@@ -98,7 +100,8 @@ class BetingShake extends React.Component {
       oddValue: Math.floor(marketOdds*ROUND_ODD)/ROUND_ODD,
       amountValue: roundMarketAmount,
       winValue: Math.floor(winValue*ROUND)/ROUND,
-      disable: !isOpen
+      disable: !isOpen,
+      estimateGas
     });
   }
 
@@ -111,7 +114,7 @@ class BetingShake extends React.Component {
     this.setState({
       disable: true,
     });
-    const {isShowOdds, isChangeOdds} = this.state;
+    const {isShowOdds, isChangeOdds, estimateGas} = this.state;
     const {matchName, matchOutcome, side, marketAgainstOdds, marketSupportOdds, closingDate, reportTime} = this.props;
     const amount = parseBigNumber(values.amount.value);
     const odds = parseBigNumber(values.odds.value);
@@ -120,12 +123,11 @@ class BetingShake extends React.Component {
 
     console.log("Amount, Side, Odds", amount?.toNumber(), side, odds?.toNumber());
     const balance = await getBalance();
-    let estimatedGas = await getEstimateGas();
-    estimatedGas = parseBigNumber(estimatedGas.toString()||0);
+    const estimatedGas = parseBigNumber(estimateGas.toString()||0);
 
     // const total = amount + parseFloat(estimatedGas);
     const total = amount.plus(estimatedGas).toNumber()||0;
-    console.log('Balance, estimate gas, total, date:', balance, estimatedGas, total, closingDate);
+    console.log('Balance, estimate gas, total, date:', balance, estimateGas, total, closingDate);
 
     var message = null;
     console.log
@@ -264,7 +266,7 @@ class BetingShake extends React.Component {
   }
 
   renderForm() {
-    const { total, isShowOdds, marketOdds, isChangeOdds, winValue, disable } = this.state;
+    const { total, isShowOdds, marketOdds, isChangeOdds, winValue, disable, estimateGas } = this.state;
     const {side} = this.props;
     console.log('Sa Test disable', disable);
 
@@ -301,6 +303,10 @@ class BetingShake extends React.Component {
         <div className="rowWrapper">
          <div>Possible winnings</div>
          <div className="possibleWinningsValue">{this.state.winValue}</div>
+        </div>
+        <div className="rowWrapper">
+         <div className="gasPriceTitle">Current gas price per transaction (ETH)</div>
+         <div className="possibleWinningsValue">{estimateGas}</div>
         </div>
         <Button type="submit" disabled={disable} block className={buttonClass}>
           Go
