@@ -133,6 +133,10 @@ class Component extends React.Component {
     rfChange(nameFormExchangeCreate, 'phone', authProfile.phone || `${detectedCountryCode}-`);
     rfChange(nameFormExchangeCreate, 'nameShop', authProfile.name || '');
     rfChange(nameFormExchangeCreate, 'address', authProfile.address || '');
+    const fiatCurrency = {
+      id: ipInfo?.currency, text: ipInfo?.currency
+    }
+    rfChange(nameFormExchangeCreate, 'stationCurrency', fiatCurrency);
 
     if (freeStartInfo?.reward !== '' && isChooseFreeStart) {
       rfChange(nameFormExchangeCreate, 'amountSell', freeStartInfo?.reward);
@@ -173,6 +177,12 @@ class Component extends React.Component {
       } else if (!haveOfferBTC) {
         rfChange(nameFormExchangeCreate, 'currency', CRYPTO_CURRENCY.BTC);
       }
+
+      const fiatCurrency = {
+        id: this.offer.fiatCurrency, text: this.offer.fiatCurrency
+      }
+
+      rfChange(nameFormExchangeCreate, 'stationCurrency', fiatCurrency);
 
       if (haveOfferETH && haveOfferBTC) {
         const message = <FormattedMessage id="offerStoresAlreadyCreated"/>;
@@ -293,7 +303,7 @@ class Component extends React.Component {
     console.log('handleSubmit', values);
     const {
       currency, amountBuy, amountSell, customizePriceBuy,
-      customizePriceSell, nameShop, phone, address,
+      customizePriceSell, nameShop, phone, address, stationCurrency,
     } = values;
 
     const wallet = MasterWallet.getWalletDefault(currency);
@@ -336,7 +346,7 @@ class Component extends React.Component {
       contact_info: address,
       latitude: lat,
       longitude: lng,
-      fiat_currency: ipInfo.currency,
+      fiat_currency: stationCurrency.id,
       chat_username: authProfile?.username,
     };
 
@@ -545,6 +555,7 @@ class Component extends React.Component {
     const { currency, listOfferPrice, ipInfo: { currency: fiatCurrency }, customizePriceBuy, customizePriceSell, amountBuy, amountSell, freeStartInfo, isChooseFreeStart} = this.props;
     const modalContent = this.state.modalContent;
     const allowInitiate = this.offer ? (!this.offer.itemFlags.ETH || !this.offer.itemFlags.BTC) : true;
+    const showChooseFiatCurrency = this.offer ? (!this.offer.itemFlags.ETH && !this.offer.itemFlags.BTC) : true;
 
     const { price: priceBuy } = getOfferPrice(listOfferPrice, EXCHANGE_ACTION.BUY, currency, fiatCurrency);
     const { price: priceSell } = getOfferPrice(listOfferPrice, EXCHANGE_ACTION.SELL, currency, fiatCurrency);
@@ -698,20 +709,24 @@ class Component extends React.Component {
               </div>
               <hr className="hrLine"/>*/}
 
-              <div className="d-flex mt-2">
-                <label className="col-form-label mr-auto label-create"><span className="align-middle"><FormattedMessage id="ex.create.label.stationCurrency"/></span></label>
-                <div className="input-group w-100">
-                  <Field
-                    name="stationCurrency"
-                    classNameWrapper=""
-                    defaultText={<FormattedMessage id="ex.create.placeholder.stationCurrency" />}
-                    classNameDropdownToggle="dropdown-button"
-                    list={listCurrency}
-                    component={fieldDropdown}
-                  />
+              {showChooseFiatCurrency && (
+                <div>
+                <div className="d-flex mt-2">
+                  <label className="col-form-label mr-auto label-create"><span className="align-middle"><FormattedMessage id="ex.create.label.stationCurrency"/></span></label>
+                  <div className="input-group w-100">
+                    <Field
+                      name="stationCurrency"
+                      classNameWrapper=""
+                      defaultText={<FormattedMessage id="ex.create.placeholder.stationCurrency" />}
+                      classNameDropdownToggle="dropdown-button"
+                      list={listCurrency}
+                      component={fieldDropdown}
+                    />
+                  </div>
                 </div>
-              </div>
-              <hr className="hrLine"/>
+                <hr className="hrLine"/>
+              </div>)
+              }
 
               <div className="d-flex mt-2">
                 <label className="col-form-label mr-auto label-create"><span className="align-middle"><FormattedMessage id="ex.create.label.phone"/></span></label>
