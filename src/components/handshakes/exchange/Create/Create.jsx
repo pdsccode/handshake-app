@@ -1,12 +1,11 @@
 import React from "react";
-import {injectIntl} from "react-intl";
+import { FormattedMessage, injectIntl } from "react-intl";
 import Feed from "@/components/core/presentation/Feed";
 import Button from "@/components/core/controls/Button";
 import './styles.scss'
 import createForm from "@/components/core/form/createForm";
 import {formatMoneyByLocale, getOfferPrice} from "@/services/offer-util";
 import axios from 'axios';
-import {FormattedMessage} from 'react-intl';
 import {
   fieldCleave,
   fieldDropdown,
@@ -15,31 +14,32 @@ import {
   fieldPhoneInput,
   fieldRadioButton
 } from "@/components/core/form/customField";
-import {maxValue, minValue, required, number} from "@/components/core/form/validation";
-import {change, Field, formValueSelector, clearFields} from "redux-form";
+import { maxValue, minValue, number, required } from "@/components/core/form/validation";
+import { change, clearFields, Field, formValueSelector } from "redux-form";
 import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
+// import {MasterWallet} from '@/services/Wallets/MasterWallet';
 import {
   API_URL,
   CRYPTO_CURRENCY,
   CRYPTO_CURRENCY_DEFAULT,
+  CRYPTO_CURRENCY_NAME,
   DEFAULT_FEE,
   EXCHANGE_ACTION,
   EXCHANGE_ACTION_DEFAULT,
   EXCHANGE_ACTION_LIST,
   EXCHANGE_ACTION_NAME,
-  FIAT_CURRENCY,
+  FIAT_CURRENCY_LIST,
   FIAT_CURRENCY_SYMBOL,
   MIN_AMOUNT,
+  NB_BLOCKS,
   SELL_PRICE_TYPE_DEFAULT,
-  CRYPTO_CURRENCY_NAME,
+  URL,
 } from "@/constants";
 
-import { validate } from './validation';
+import {validate} from './validation';
 import "../styles.scss";
 import ModalDialog from "@/components/core/controls/ModalDialog/ModalDialog";
-// import {MasterWallet} from '@/services/Wallets/MasterWallet';
-import {URL,NB_BLOCKS} from "@/constants";
 import {hideLoading, showAlert, showLoading} from "@/reducers/app/action";
 import {MasterWallet} from "@/services/Wallets/MasterWallet";
 import {ExchangeShopHandshake} from "@/services/neuron";
@@ -556,7 +556,7 @@ class Component extends React.Component {
     const wantToBuy = amountBuy && amountBuy > 0
     const wantToSell = amountSell && amountSell > 0
 
-    const listCurrency = [{ id: 'usd', text: 'USD' }, { id: 'eur', text: 'EUR' }]
+    const listCurrency = FIAT_CURRENCY_LIST;
     return (
       <div className="create-exchange">
         <FormExchangeCreate onSubmit={this.handleSubmit} validate={this.handleValidate}>
@@ -698,20 +698,20 @@ class Component extends React.Component {
               </div>
               <hr className="hrLine"/>*/}
 
-              {/*<div className="d-flex mt-2">*/}
-                {/*<label className="col-form-label mr-auto label-create"><span className="align-middle"><FormattedMessage id="ex.create.label.stationCurrency"/></span></label>*/}
-                {/*<div className="input-group w-100">*/}
-                  {/*<Field*/}
-                    {/*name="stationCurrency"*/}
-                    {/*classNameWrapper=""*/}
-                    {/*defaultText={<FormattedMessage id="ex.create.placeholder.stationCurrency" />}*/}
-                    {/*classNameDropdownToggle="dropdown-button"*/}
-                    {/*list={listCurrency}*/}
-                    {/*component={fieldDropdown}*/}
-                  {/*/>*/}
-                {/*</div>*/}
-              {/*</div>*/}
-              {/*<hr className="hrLine"/>*/}
+              <div className="d-flex mt-2">
+                <label className="col-form-label mr-auto label-create"><span className="align-middle"><FormattedMessage id="ex.create.label.stationCurrency"/></span></label>
+                <div className="input-group w-100">
+                  <Field
+                    name="stationCurrency"
+                    classNameWrapper=""
+                    defaultText={<FormattedMessage id="ex.create.placeholder.stationCurrency" />}
+                    classNameDropdownToggle="dropdown-button"
+                    list={listCurrency}
+                    component={fieldDropdown}
+                  />
+                </div>
+              </div>
+              <hr className="hrLine"/>
 
               <div className="d-flex mt-2">
                 <label className="col-form-label mr-auto label-create"><span className="align-middle"><FormattedMessage id="ex.create.label.phone"/></span></label>
