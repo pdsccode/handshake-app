@@ -1,7 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import iconLocation from '@/assets/images/icon/icons8-geo_fence.svg';
-import iconPhone from '@/assets/images/icon/icons8-phone.svg';
 // style
 import {FormattedMessage, injectIntl} from 'react-intl';
 import Feed from "@/components/core/presentation/Feed/Feed";
@@ -16,18 +14,16 @@ import {
   HANDSHAKE_EXCHANGE_STATUS,
   HANDSHAKE_EXCHANGE_STATUS_NAME,
   HANDSHAKE_USER,
-  URL,
-  NB_BLOCKS
+  NB_BLOCKS,
+  URL
 } from "@/constants";
-import ModalDialog from "@/components/core/controls/ModalDialog";
 import {connect} from "react-redux";
 import {shakeOffer,} from "@/reducers/exchange/action";
 import Offer from "@/models/Offer";
 import {MasterWallet} from "@/services/Wallets/MasterWallet";
 import {formatAmountCurrency, getHandshakeUserType} from "@/services/offer-util";
 import {hideLoading, showAlert, showLoading} from '@/reducers/app/action';
-import {Link} from "react-router-dom";
-import {getDistanceFromLatLonInKm} from '../utils'
+import {getDistanceFromLatLonInKm, getErrorMessageFromCode} from '../utils';
 import {ExchangeHandshake,} from '@/services/neuron';
 import _sample from "lodash/sample";
 import {feedBackgroundColors} from "@/components/handshakes/exchange/config";
@@ -279,6 +275,18 @@ class FeedExchangeLocal extends React.PureComponent {
 
   handleShakeOfferExchangeFailed = (e) => {
     this.handleActionFailed(e);
+  }
+
+  handleActionFailed = (e) => {
+    this.hideLoading();
+    this.props.showAlert({
+      message: <div className="text-center">{getErrorMessageFromCode(e)}</div>,
+      timeOut: 3000,
+      type: 'danger',
+      callBack: () => {
+        // this.props.history.push(URL.HANDSHAKE_ME);
+      },
+    });
   }
 
   render() {
