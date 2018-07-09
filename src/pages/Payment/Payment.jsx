@@ -30,6 +30,8 @@ class Payment extends React.Component {
       coinName: "",
       amount: 0,
       active: false,
+      orderID: "",
+      confirmURL: "",
     };
 
   }
@@ -82,7 +84,9 @@ class Payment extends React.Component {
   successPayNinja = () => {
     this.modalSendRef.close();
     this.setState({isShowSuccess: true});
-    setTimeout(() => {window.location.href = this.state.confirmURL}, 10000);
+
+    let fullBackUrl = `${this.state.confirmURL}?order_id=${this.state.orderID}&status=0&hash=`;
+    setTimeout(() => {window.location.href = fullBackUrl}, 10000);
   }
 
   // To address those who want the "root domain," use this function:
