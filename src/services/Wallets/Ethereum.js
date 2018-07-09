@@ -2,6 +2,7 @@ import axios from 'axios';
 import { Wallet } from '@/services/Wallets/Wallet.js';
 import configs from '@/configs';
 import { StringHelper } from '@/services/helper';
+import {MasterWallet} from "./MasterWallet";
 
 const Web3 = require('web3');
 const EthereumTx = require('ethereumjs-tx');
@@ -63,17 +64,21 @@ export class Ethereum extends Wallet {
   }
 
   async getFee() {
-    const web3 = new Web3(new Web3.providers.HttpProvider(this.network));
-    const gasPrice = new BN(await web3.eth.getGasPrice());
+    const wallet = MasterWallet.getWalletDefault('ETH');
+    const neuron = wallet.chainId === 4 ? MasterWallet.neutronTestNet : MasterWallet.neutronMainNet; // new Neuron(chainId);
+    return neuron.caculateLimitGasWithEthUnit(neuron.gasPrice);
 
-    const limitedGas = new BN(150000);
-
-    const estimatedGas = limitedGas.mul(gasPrice);
+    // const web3 = new Web3(new Web3.providers.HttpProvider(this.network));
+    // const gasPrice = new BN(await web3.eth.getGasPrice());
+    //
+    // const limitedGas = new BN(150000);
+    //
+    // const estimatedGas = limitedGas.mul(gasPrice);
 
     // console.log('getFee, gasPrice', gasPrice.toString());
     // console.log('getFee, estimateGas', estimatedGas.toString());
 
-    return Web3.utils.fromWei(estimatedGas);
+    // return Web3.utils.fromWei(estimatedGas);
   }
 
   async getTransactionReceipt(hash) {
