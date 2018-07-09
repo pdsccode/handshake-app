@@ -59,6 +59,10 @@ class Neuron {
   getGasPriceDefaultWithEthUnit = async () =>
     Web3.utils.fromWei(await this.web3.eth.getGasPrice());
 
+  get gasPrice() {
+    return this.chainId === 4 ? window.gasPrice || 20 : window.gasPrice || 20;
+  }
+
   getEstimateGas = async (payloadData, toAddress = undefined) => {
     const estimateGasData = {
       data: payloadData,

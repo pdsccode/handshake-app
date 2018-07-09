@@ -75,6 +75,8 @@ export default {
   'ex.create.label.premiumSell': 'My price',
   'ex.create.label.premiumSellExplanation': 'Market price ± percentage',
   'ex.create.label.nameStation': 'Station name',
+  'ex.create.label.stationCurrency': 'Station currency',
+  'ex.create.placeholder.stationCurrency': 'Select a currency',
   'ex.create.label.phone': 'Phone',
   'ex.create.label.address': 'Meet-up place',
   'ex.create.label.beASeller': 'Be a seller',
