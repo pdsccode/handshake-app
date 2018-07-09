@@ -1,20 +1,61 @@
 import React from 'react';
+import StarsRating from '@/components/core/presentation/StarsRating';
 
 import iconSpinner from '@/assets/images/icon/icons8-spinner.svg';
 import iconChat from '@/assets/images/icon/chat-icon.svg';
 import iconAvatar from '@/assets/images/icon/avatar.svg';
+import iconLogoWhite from '@/assets/images/icon/logo-white.svg';
 import iconInfo from '@/assets/images/icon/icons8-info_filled.svg';
+import iconPhone from '@/assets/images/icon/icon-phone.svg';
+import iconStar from '@/assets/images/icon/icon-star.svg';
 import './FeedMe.scss';
 import './FeedMeCash.scss';
 
 class FeedMeCash extends React.PureComponent {
   handleClickMoreInfo = () => {
     console.log('click more info');
-  };
+    const { onShowModalDialog } = this.props;
+    onShowModalDialog({
+      show: true,
+      modalContent: (
+        <div className="modal-more-info-content">
+          <button className="button-close" onClick={() => onShowModalDialog({ show: false })}>&times;</button>
+          <div className="d-table w-100">
+            <div className="d-table-cell align-middle" style={{ width: '50px' }}><img src={iconLogoWhite} width="35px" /></div>
+            <div className="d-table-cell align-middle"><span className="heading-text">Information</span></div>
+          </div>
+          <hr className="line-hr" />
 
-  constructor(props) {
-    super(props);
-  }
+          <div className="d-table w-100">
+            <div className="d-table-cell align-middle" style={{ width: '50px' }}>
+              <img src={iconPhone} width="35px" />
+            </div>
+            <div className="d-table-cell align-middle">
+              <div className="label-modal-more-info">Phone</div>
+              <div className="phone-number">01225511558</div>
+            </div>
+          </div>
+
+          <div className="d-table w-100 mt-3">
+            <div className="d-table-cell align-middle" style={{ width: '50px' }}>
+              <img src={iconStar} width="35px" />
+            </div>
+            <div className="d-table-cell align-middle">
+              <div className="label-modal-more-info">Reviews</div>
+              <div className="phone-number">
+                <StarsRating className="d-inline-block" starPoint={3.2} startNum={5} />
+                <span className="ml-2">(25 reviews)</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      ),
+      propsModal: {
+        className: 'modal-me-cash-more-info'
+      }
+    })
+  };
 
   render() {
     console.log('thisss', this.props);

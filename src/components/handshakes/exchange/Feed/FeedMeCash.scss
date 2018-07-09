@@ -72,5 +72,47 @@
     border: 1px solid #DEDEDE;
     border-radius: 3px;
   }
+}
 
+.modal-me-cash-more-info {
+  .modal-custom-body {
+    color: #e0dfea;
+    //background: url('../../assets/images/campaign/bg-earlybird.svg') no-repeat center;
+    //background-size: 171% 118%;
+    padding: 20px !important;
+
+    background: #000B35 !important;
+    box-shadow: 0 2px 11px 0 rgba(0,0,0,0.10);
+  }
+  .modal-more-info-content {
+    position: relative;
+    .button-close {
+      color: white;
+      position: absolute;
+      right: -15px;
+      top: -15px;
+      font-size: 20px;
+    }
+    .heading-text {
+      font-weight: 600;
+      font-size: 14px;
+      color: #0BDD91;
+      letter-spacing: 0;
+    }
+    .line-hr {
+      opacity: 0.3;
+      background: #979797;
+    }
+    .label-modal-more-info {
+      opacity: 0.4;
+      font-size: 14px;
+      color: #FFFFFF;
+      letter-spacing: 0;
+    }
+    .phone-number {
+      font-size: 14px;
+      color: #FFFFFF;
+      letter-spacing: 0;
+    }
+  }
 }

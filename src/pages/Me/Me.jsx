@@ -17,6 +17,7 @@ import FeedPromise from '@/components/handshakes/promise/Feed';
 import FeedBetting from '@/components/handshakes/betting/Feed';
 import FeedExchange from '@/components/handshakes/exchange/Feed/FeedMe';
 import FeedSeed from '@/components/handshakes/seed/Feed';
+import ModalDialog from '@/components/core/controls/ModalDialog';
 import Image from '@/components/core/presentation/Image';
 
 import ToggleSwitch from '@/components/core/presentation/ToggleSwitch';
@@ -71,6 +72,11 @@ class Me extends React.Component {
       firebaseUser: this.props.firebaseUser,
       numStars: 0,
       offerStores: this.props.offerStores,
+      modalContent: <div />, // type is node
+      propsModal: {
+        // className: "discover-popup",
+        // isDismiss: false
+      },
     };
   }
 
@@ -184,10 +190,24 @@ class Me extends React.Component {
   handleReviewOfferFailed = (e) => {
   }
 
+  handleShowModalDialog = (modalProps) => {
+    const { show, propsModal, modalContent } = modalProps
+    this.setState({
+      modalContent,
+      propsModal
+    }, () => {
+      if (show) {
+        this.modalRef.open();
+      } else {
+        this.modalRef.close();
+      }
+    })
+  }
+
   render() {
     const { list } = this.props.me;
     const { messages } = this.props.intl;
-    const { offerStores } = this.state;
+    const { offerStores, propsModal, modalContent } = this.state;
     const online = !this.props.auth.offline;
     const haveOffer = offerStores ? (offerStores.itemFlags.ETH || offerStores.itemFlags.BTC) : false;
 
@@ -241,6 +261,7 @@ class Me extends React.Component {
                           {...handshake}
                           history={this.props.history}
                           onFeedClick={() => {}}
+                          onShowModalDialog={this.handleShowModalDialog}
                           mode="me"
                           refreshPage={this.loadMyHandshakeList}
                         />
@@ -256,6 +277,9 @@ class Me extends React.Component {
           </Col>
         </Row>
         <Rate onRef={e => this.rateRef = e} startNum={5} onSubmit={this.handleSubmitRating} ratingOnClick={this.handleOnClickRating} />
+        <ModalDialog onRef={(modal) => { this.modalRef = modal; return null; }} {...propsModal}>
+          {modalContent}
+        </ModalDialog>
       </Grid>
     );
   }
