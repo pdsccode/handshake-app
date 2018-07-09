@@ -10,6 +10,8 @@ import iconPhone from '@/assets/images/icon/icon-phone.svg';
 import iconStar from '@/assets/images/icon/icon-star.svg';
 import './FeedMe.scss';
 import './FeedMeCash.scss';
+import {Link} from "react-router-dom";
+import { URL, } from '@/constants';
 
 class FeedMeCash extends React.PureComponent {
   handleClickMoreInfo = () => {
@@ -58,6 +60,13 @@ class FeedMeCash extends React.PureComponent {
   };
 
   render() {
+    const {
+      from, email, statusText, message, isCreditCard,
+      showChat, chatUsername,
+      nameShop, phone , phoneDisplayed,
+      address , messageMovingCoin,
+      actionButtons
+    } = this.props;
     console.log('thisss', this.props);
     return (
       <div className="feed-me-cash">
@@ -107,18 +116,13 @@ class FeedMeCash extends React.PureComponent {
             style={{ width: '50px' }}
           >
             <button className="d-inline-block p-0">
-              <img src={iconChat} width="35px" />
+              <Link to={`${URL.HANDSHAKE_CHAT_INDEX}/${chatUsername}`}>
+                <img src={iconChat} width="35px" />
+              </Link>
             </button>
           </div>
         </div>
-        <div className="mt-3">
-          <span className="d-inline-block w-50 pr-1">
-            <button className="btn btn-block btn-confirm">Confirm</button>
-          </span>
-          <span className="d-inline-block w-50 pl-1">
-            <button className="btn btn-block btn-cancel">Cancel</button>
-          </span>
-        </div>
+        {actionButtons}
       </div>
     );
   }

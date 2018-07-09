@@ -260,13 +260,12 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
           case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.PRE_SHAKE: {
             message = <FormattedMessage id="acceptOfferConfirm" values={{ }} />;
             actionButtons = (
-              <div>
-                <Button
-                  block
-                  className="mt-2"
-                  onClick={() => confirmOfferAction(message, this.handleAcceptShakedOffer)}
-                ><FormattedMessage id="btn.accept" />
-                </Button>
+              <div className="mt-3">
+                <span className="d-inline-block w-50 pr-1">
+                  <button className="btn btn-block btn-confirm"
+                          onClick={() => confirmOfferAction(message, this.handleAcceptShakedOffer)}
+                  ><FormattedMessage id="btn.accept" /></button>
+                </span>
               </div>
             );
             break;
@@ -276,21 +275,19 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
             message = <FormattedMessage id="rejectOfferConfirmForShop" values={{ }} />;
             const message2 = <FormattedMessage id="completeOfferConfirm" values={{ }} />;
             actionButtons = (
-              <div>
+              <div className="mt-3">
                 {offer.type === EXCHANGE_ACTION.SELL &&
-                <Button
-                  block
-                  className="mt-2"
-                  onClick={() => confirmOfferAction(message2, this.handleCompleteShakedOffer)}
-                ><FormattedMessage id="btn.complete" />
-                </Button>
+                <span className="d-inline-block w-50 pr-1">
+                  <button className="btn btn-block btn-confirm"
+                          onClick={() => confirmOfferAction(message2, this.handleCompleteShakedOffer)}
+                  ><FormattedMessage id="btn.complete" /></button>
+                </span>
                 }
-                <Button
-                  block
-                  className="mt-2 btn btn-secondary"
-                  onClick={() => confirmOfferAction(message, this.handleRejectShakedOffer)}
-                ><FormattedMessage id="btn.reject" />
-                </Button>
+                <span className="d-inline-block w-50 pl-1">
+                  <button className="btn btn-block btn-cancel"
+                          onClick={() => confirmOfferAction(message, this.handleRejectShakedOffer)}
+                  ><FormattedMessage id="btn.reject" /></button>
+                </span>
               </div>
             );
             break;
@@ -303,13 +300,12 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
           case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.PRE_SHAKE: {
             message = <FormattedMessage id="cancelOfferConfirm" values={{ }} />;
             actionButtons = (
-              <div>
-                <Button
-                  block
-                  className="mt-2 btn btn-secondary"
-                  onClick={() => confirmOfferAction(message, this.handleCancelShakeOffer)}
-                ><FormattedMessage id="btn.cancel" />
-                </Button>
+              <div className="mt-3">
+                <span className="d-inline-block w-50 pl-1">
+                  <button className="btn btn-block btn-cancel"
+                          onClick={() => confirmOfferAction(message, this.handleCancelShakeOffer)}
+                  ><FormattedMessage id="btn.cancel" /></button>
+                </span>
               </div>
             );
             break;
@@ -319,21 +315,19 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
             message = <FormattedMessage id="rejectOfferConfirm" values={{ }} />;
             const message2 = <FormattedMessage id="completeOfferConfirm" values={{ }} />;
             actionButtons = (
-              <div>
+              <div className="mt-3">
                 {offer.type === EXCHANGE_ACTION.BUY &&
-                <Button
-                  block
-                  className="mt-2"
-                  onClick={() => confirmOfferAction(message2, this.handleCompleteShakedOffer)}
-                ><FormattedMessage id="btn.complete" />
-                </Button>
+                <span className="d-inline-block w-50 pr-1">
+                  <button className="btn btn-block btn-confirm"
+                          onClick={() => confirmOfferAction(message2, this.handleCompleteShakedOffer)}
+                  ><FormattedMessage id="btn.complete" /></button>
+                </span>
                 }
-                <Button
-                  block
-                  className="mt-2 btn btn-secondary"
-                  onClick={() => confirmOfferAction(message, this.handleRejectShakedOffer)}
-                ><FormattedMessage id="btn.cancel" />
-                </Button>
+                <span className="d-inline-block w-50 pl-1">
+                  <button className="btn btn-block btn-cancel"
+                          onClick={() => confirmOfferAction(message, this.handleRejectShakedOffer)}
+                  ><FormattedMessage id="btn.cancel" /></button>
+                </span>
               </div>
             );
             break;
