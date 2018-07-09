@@ -698,20 +698,20 @@ class Component extends React.Component {
               </div>
               <hr className="hrLine"/>*/}
 
-              <div className="d-flex mt-2">
-                <label className="col-form-label mr-auto label-create"><span className="align-middle"><FormattedMessage id="ex.create.label.stationCurrency"/></span></label>
-                <div className="input-group w-100">
-                  <Field
-                    name="stationCurrency"
-                    classNameWrapper=""
-                    defaultText={<FormattedMessage id="ex.create.placeholder.stationCurrency" />}
-                    classNameDropdownToggle="dropdown-button"
-                    list={listCurrency}
-                    component={fieldDropdown}
-                  />
-                </div>
-              </div>
-              <hr className="hrLine"/>
+              {/*<div className="d-flex mt-2">*/}
+                {/*<label className="col-form-label mr-auto label-create"><span className="align-middle"><FormattedMessage id="ex.create.label.stationCurrency"/></span></label>*/}
+                {/*<div className="input-group w-100">*/}
+                  {/*<Field*/}
+                    {/*name="stationCurrency"*/}
+                    {/*classNameWrapper=""*/}
+                    {/*defaultText={<FormattedMessage id="ex.create.placeholder.stationCurrency" />}*/}
+                    {/*classNameDropdownToggle="dropdown-button"*/}
+                    {/*list={listCurrency}*/}
+                    {/*component={fieldDropdown}*/}
+                  {/*/>*/}
+                {/*</div>*/}
+              {/*</div>*/}
+              {/*<hr className="hrLine"/>*/}
 
               <div className="d-flex mt-2">
                 <label className="col-form-label mr-auto label-create"><span className="align-middle"><FormattedMessage id="ex.create.label.phone"/></span></label>

@@ -30,9 +30,9 @@ export default class ExchangeShopHandshake extends BaseHandshake {
     const wallet = MasterWallet.getWalletDefault('ETH');
     return wallet.privateKey;
   }
+
   get gasPrice() {
-    const wallet = MasterWallet.getWalletDefault('ETH');
-    return wallet.chainId === 4 ? 100 : 20;
+    return this.chainId === 4 ? window.gasPrice || 20 : window.gasPrice || 20;
   }
 
   /**
