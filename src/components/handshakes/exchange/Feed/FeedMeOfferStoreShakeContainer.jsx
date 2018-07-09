@@ -718,28 +718,28 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
 
     switch (status) {
       case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.CANCELLING: {
-        idMessage = 'ex.exchange.explanation.cancelling';
+        idMessage = 'ex.shop.explanation.cancelling';
         break;
       }
       case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.REJECTING: {
-        idMessage = 'ex.exchange.explanation.rejecting';
+        idMessage = 'ex.shop.explanation.rejecting';
         break;
       }
       case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.PRE_SHAKING: {
         if (this.userType === HANDSHAKE_USER.SHAKED) {
-          idMessage = 'ex.exchange.explanation.pre_shaking';
+          idMessage = 'ex.shop.explanation.pre_shaking';
         }
         break;
       }
       case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.PRE_SHAKE: {
         if (this.userType === HANDSHAKE_USER.SHAKED) {
-          idMessage = 'ex.exchange.explanation.pre_shake';
+          idMessage = 'ex.shop.explanation.pre_shake';
         }
         break;
       }
       case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.SHAKING: {
         if (this.userType === HANDSHAKE_USER.SHAKED) {
-          idMessage = 'ex.exchange.explanation.shaking';
+          idMessage = 'ex.shop.explanation.shaking';
         }
         break;
       }
@@ -750,13 +750,13 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
           }
           case HANDSHAKE_USER.SHAKED: { // user shake
             if (offer.type === EXCHANGE_ACTION.SELL) { // shop sell
-              idMessage = 'ex.exchange.explanation.shake';
+              idMessage = 'ex.shop.explanation.shake';
             }
             break;
           }
           case HANDSHAKE_USER.OWNER: { // shop
             if (offer.type === EXCHANGE_ACTION.BUY) { // shop buy
-              idMessage = 'ex.exchange.explanation.shake';
+              idMessage = 'ex.shop.explanation.shake';
             }
             break;
           }
@@ -773,13 +773,13 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
           }
           case HANDSHAKE_USER.SHAKED: { // user shake
             if (offer.type === EXCHANGE_ACTION.SELL) { // shop sell
-              idMessage = 'ex.exchange.explanation.completing';
+              idMessage = 'ex.shop.explanation.completing';
             }
             break;
           }
           case HANDSHAKE_USER.OWNER: { // shop
             if (offer.type === EXCHANGE_ACTION.BUY) { // shop buy
-              idMessage = 'ex.exchange.explanation.completing';
+              idMessage = 'ex.shop.explanation.completing';
             }
             break;
           }
