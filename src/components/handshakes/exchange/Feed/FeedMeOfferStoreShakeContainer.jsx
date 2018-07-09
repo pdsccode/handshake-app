@@ -1,5 +1,5 @@
 import React from "react";
-import FeedMePresentation from './FeedMePresentation';
+import FeedMeCash from './FeedMeCash';
 import {
   API_URL,
   CRYPTO_CURRENCY,
@@ -884,7 +884,7 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
 
     return (
       <div>
-        <FeedMePresentation {...this.props} {...feedProps} />
+        <FeedMeCash {...this.props} {...feedProps} />
         <Rate onRef={e => this.rateRef = e} startNum={5} onSubmit={this.handleSubmitRating} ratingOnClick={this.handleOnClickRating} />
       </div>
     );

@@ -1,0 +1,76 @@
+.feed-me-cash {
+  box-shadow: 0 0 2px 0 rgba(0,0,0,0.12), 0 2px 2px 0 rgba(0,0,0,0.12);
+  background: white;
+  padding: 15px;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  .status {
+    font-weight: 500;
+    font-size: 12px;
+    color: #000000;
+    line-height: 12px;
+  }
+  .status-explanation {
+    font-size: 10px;
+    color: #7B7B7B;
+    letter-spacing: -0.24px;
+    line-height: 14px;
+    margin-top: 5px;
+  }
+  .countdown {
+    font-weight: 500;
+    font-size: 12px;
+    color: #7B7B7B;
+    letter-spacing: -0.24px;
+    line-height: 12px;
+  }
+  .order-type {
+    display: inline-block;
+    background: #08C480;
+    border-radius: 2px;
+    font-weight: 500;
+    font-size: 10px;
+    color: #FFFFFF;
+    letter-spacing: -0.2px;
+    padding: 5px;
+    margin-top: 5px;
+  }
+  .info-wrapper {
+    display: table;
+    width: 100%;
+    margin-top: 5px;
+    .label {
+      display: table-cell;
+      font-size: 14px;
+      color: #7B7B7B;
+    }
+    .price {
+      display: table-cell;
+      text-align: right;
+      font-weight: 500;
+      font-size: 16px;
+      color: #000000;
+      letter-spacing: -0.24px;
+      line-height: 16px;
+    }
+  }
+  .hrLine {
+    margin: 10px 0 !important;
+  }
+  .address-info {
+    font-size: 12px;
+    color: #000000;
+    letter-spacing: 0.25px;
+  }
+  .btn-confirm {
+    background: #2456FB;
+    border-radius: 3px;
+    color: #ffffff;
+  }
+  .btn-cancel {
+    background-image: linear-gradient(-180deg, #FFFFFF 0%, #F9FAFB 99%);
+    border: 1px solid #DEDEDE;
+    border-radius: 3px;
+  }
+
+}
