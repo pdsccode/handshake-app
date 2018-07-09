@@ -49,15 +49,17 @@ class Dropdown extends React.PureComponent {
     this.filterSource = ::this.filterSource;
     this.handleShow = ::this.handleShow;
   }
-  // will store item selecting
 
   componentDidMount() {
     this.setDefaultItem();
     this.props.onRef(this);
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps, prevState) {
     this.setDefaultItem(nextProps);
+    if (nextProps.placeholder !== prevState.placeholder) {
+      this.setState({ text: nextProps.placeholder });
+    }
   }
 
   componentWillUnmount() {
@@ -80,6 +82,7 @@ class Dropdown extends React.PureComponent {
     }
     const { idActive } = this.state;
     if (!this.isDirtyDefault && defaultId && source && source.length > 0 && idActive !== defaultId) {
+      console.logg('test');
       const itemDefault = source.find(item => item.id === defaultId);
       if (itemDefault) {
         this.setState({ text: itemDefault.value, idActive: itemDefault.id });

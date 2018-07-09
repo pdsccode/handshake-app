@@ -14,12 +14,21 @@ class DiscoverTabPredictionFilter extends React.Component {
     this.state = {
       selectedEvent: this.props.events[0],
       selectedOutcome: null,
+      placeholder: 'Loading...',
+      eventsEmpty: false,
     };
 
     this.events = ::this.events;
     this.outcomes = ::this.outcomes;
     this.selectEvent = ::this.selectEvent;
     this.selectOutcome = ::this.selectOutcome;
+  }
+
+  static getDerivedStateFromProps(nextProps) {
+    if (nextProps.eventsLoaded && !nextProps.events.length) {
+      return { placeholder: 'Empty', eventsEmpty: true };
+    }
+    return null;
   }
 
   getStringDate() {
@@ -36,26 +45,35 @@ class DiscoverTabPredictionFilter extends React.Component {
   }
 
   events() {
+    const source = [
+      ...this.props.events.map(event => ({
+        ...event,
+        value: `Event: ${event.name} (${this.getStringDate(event.date)})`,
+        marketFee: event.market_fee,
+      })),
+    ];
+
+    const defaultEventId = this.props.events[0]?.id || 0;
+
+    if (source.length) {
+      source.push({
+        id: -1,
+        value: 'COMING SOON: Create your own event',
+        className: 'disable',
+        disableClick: true,
+      });
+    }
+
+    console.log(defaultEventId);
+
     return (
       <Dropdown
-        placeholder="Loading..."
-        defaultId={this.props.events[0]?.id || 0}
-        source={
-          [...this.props.events.map(event => ({
-            ...event,
-            value: `Event: ${event.name} (${this.getStringDate(event.date)})`,
-            marketFee: event.market_fee,
-          })),
-          {
-            id: -1,
-            value: 'COMING SOON: Create your own event',
-            className: 'disable',
-            disableClick: true,
-          },
-        ]}
+        placeholder={this.state.placeholder}
+        defaultId={defaultEventId}
+        source={source}
         afterSetDefault={item => this.selectEvent(item)}
         onItemSelected={item => this.selectEvent(item)}
-        hasSearch
+        hasSearch={!this.state.eventsEmpty}
       />
     );
   }
@@ -64,10 +82,12 @@ class DiscoverTabPredictionFilter extends React.Component {
     let outcomes = this.state.selectedEvent?.outcomes;
     if (!outcomes?.length) outcomes = [];
 
+    const defaultId = outcomes[0]?.id || 0;
+
     return (
       <Dropdown
-        placeholder="Loading..."
-        defaultId={outcomes[0]?.id || 0}
+        placeholder={this.state.placeholder}
+        defaultId={defaultId}
         source={outcomes.filter(outcome => outcome.public).map(outcome => ({
           ...outcome,
           value: `Outcome: ${outcome.name}`,
@@ -75,7 +95,7 @@ class DiscoverTabPredictionFilter extends React.Component {
         }))}
         afterSetDefault={item => this.selectOutcome(item)}
         onItemSelected={item => this.selectOutcome(item)}
-        hasSearch
+        hasSearch={!this.state.eventsEmpty}
       />
     );
   }

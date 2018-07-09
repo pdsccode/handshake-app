@@ -18,6 +18,7 @@ class Prediction extends React.Component {
     this.state = {
       events: [],
       eventsUpdatedAt: this.props.prediction.eventsUpdatedAt,
+      eventsLoaded: this.props.prediction.eventsLoaded,
       outcome: null,
     };
 
@@ -32,7 +33,10 @@ class Prediction extends React.Component {
 
   static getDerivedStateFromProps(nextProps, prevState) {
     if (nextProps.prediction.eventsUpdatedAt !== prevState.eventsUpdatedAt) {
-      return { events: nextProps.prediction.events };
+      return {
+        events: nextProps.prediction.events,
+        eventsLoaded: nextProps.prediction.eventsLoaded,
+      };
     }
     return null;
   }
@@ -56,7 +60,11 @@ class Prediction extends React.Component {
   render() {
     return (
       <>
-        <Filter events={this.state.events} detectOutcome={this.detectOutcome} />
+        <Filter
+          events={this.state.events}
+          eventsLoaded={this.state.eventsLoaded}
+          detectOutcome={this.detectOutcome}
+        />
         {this.topTable()}
         {this.table()}
       </>

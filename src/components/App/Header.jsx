@@ -53,7 +53,7 @@ class Header extends React.Component {
               />
             )
           }
-          <div className="title">{this.props.app.headerTitle}</div>
+          <div className="app-header-title">{this.props.app.headerTitle}</div>
           <div className="app-header-right">
             {this.props.app.headerRightContent}
           </div>
