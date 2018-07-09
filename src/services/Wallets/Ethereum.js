@@ -3,6 +3,7 @@ import { Wallet } from '@/services/Wallets/Wallet.js';
 import configs from '@/configs';
 import { StringHelper } from '@/services/helper';
 import {MasterWallet} from "./MasterWallet";
+import Tx from 'ethereumjs-tx';
 
 const Web3 = require('web3');
 const EthereumTx = require('ethereumjs-tx');
@@ -101,61 +102,86 @@ export class Ethereum extends Wallet {
 
   async transfer(toAddress, amountToSend) {
     try {
-      console.log(`transfered from address:${this.address}`);
 
-
-      const web3 = new Web3(new Web3.providers.HttpProvider(this.network));
-
-      if (!web3.utils.isAddress(toAddress)) {
-        return { status: 0, message: 'messages.ethereum.error.invalid_address2' };
-      }
-      // check amount:
-      let balance = await web3.eth.getBalance(this.address);
-      balance = await Web3.utils.fromWei(balance.toString());
-
-      console.log(StringHelper.format('Your wallet balance is currently {0} ETH', balance));
-
+      const web3 = this.getWeb3();
+      const balance = new BN(await web3.eth.getBalance(this.address));
       if (balance == 0 || balance <= amountToSend) {
         return { status: 0, message: 'messages.ethereum.error.insufficient' };
       }
 
       const gasPrice = new BN(await web3.eth.getGasPrice());
+      const estimateGas = balance.div(gasPrice);
+      const limitedGas = 210000;
+      const estimatedGas = await BN.min(estimateGas, limitedGas);
+      const chainId = await web3.eth.net.getId();
 
-      console.log(StringHelper.format('Current ETH Gas Prices (in GWEI): {0}', gasPrice));
+      console.log('transfer gasPrice->', parseInt(gasPrice));
+      console.log('transfer estimatedGas->', String(estimatedGas));
+      console.log('transfer limitedGas->', String(limitedGas));
+      console.log('transfer chainid->', chainId);
+      //console.log('transfer payloadData', payloadData);
 
-      const nonce = await web3.eth.getTransactionCount(this.address);
+      return this.getNonce(this.address).then((_nonce) => {
+        const nonce = _nonce;
+        const rawTx = {
+          nonce: web3.utils.toHex(nonce),
+          gasPrice: web3.utils.toHex(gasPrice),
+          gasLimit: estimatedGas,
+          data: "",
+          from: this.address,
+          chainId: this.chainId,
+          to: toAddress,
+        };
 
-      const value = web3.utils.toHex(web3.utils.toWei(amountToSend.toString(), 'ether'));
+        console.log('rawTx->', rawTx);
+        const tx = new Tx(rawTx);
+        if (amountToSend) {
+          tx.value = Web3.utils.toHex(web3.utils.toWei(String(amountToSend), 'ether'));
+        }
+        tx.sign(Buffer.from(this.privateKey, 'hex'));
+        const serializedTx = tx.serialize();
+        const rawTxHex = `0x${serializedTx.toString('hex')}`;
+        return new Promise((resolve, reject) => {
+          web3.eth
+            .sendSignedTransaction(rawTxHex)
+            .on('transactionHash', (hash) => {
 
-      console.log(StringHelper.format('Value to send: {0}', value));
+              console.log("hash", hash);
+              resolve({ status: 1, message: 'messages.ethereum.success.transaction',
+                data: {hash: hash}
+              });
+            })
+            .on('error', error => ({
+              hash: -1,
+              error,
+            }));
+        });
+      })
+      .catch(error => {
+        console.log("error", error);
+        return { status: 0, message: 'messages.ethereum.error.insufficient' };
+      });
 
-      const details = {
-        to: toAddress,
-        value,
-        gas: 210000,
-        gasPrice: await web3.utils.toHex(parseInt(gasPrice)), // converts the gwei price to wei
-        nonce,
-        chainId: this.chainId,
-      };
-      console.log('send details: ', details);
-
-      const transaction = new EthereumTx(details);
-      transaction.sign(Buffer.from(this.privateKey, 'hex'));
-      const serializedTransaction = transaction.serialize();
-      const addr = transaction.from.toString('hex');
-      console.log('Based on your private key, your wallet address is', addr);
-      const transactionId = web3.eth.sendSignedTransaction(`0x${serializedTransaction.toString('hex')}`);
-      // console.log("transactionId:", transactionId);
-      // const url = StringHelper.format('{0}/tx/{1}', this.network, transactionId);
-      // console.log("url", url);
-
-      return { status: 1, message: 'messages.ethereum.success.transaction' };
     } catch (error) {
       console.log("error", error);
       return { status: 0, message: 'messages.ethereum.error.insufficient' };
     }
   }
 
+   async getNonce(accountAddress){
+    const web3 = this.getWeb3();
+    const nonce = await web3.eth
+      .getTransactionCount(accountAddress, 'pending', (error, result) => {
+        console.log(' getNonce error', error, ' result = ', result);
+      })
+      .then((_nonce) => {
+        this.lastResultNonce =
+          this.lastResultNonce >= _nonce ? this.lastResultNonce + 1 : _nonce;
+        console.log('getNonce 0000-- ', this.lastResultNonce);
+        return this.lastResultNonce;
+      });
+    return nonce;
+  };
 
   async getTransactionHistory(pageno) {
     let result = [];
