@@ -7,7 +7,6 @@ import Root from '@/components/App/Root';
 // store
 import store, { history } from '@/stores';
 
-
 class App extends React.Component {
   render() {
     return (

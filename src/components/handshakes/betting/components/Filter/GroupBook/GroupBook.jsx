@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Book from './../Book';
+import Book from './Book';
 
 import "./GroupBook.scss";
 
@@ -14,13 +14,8 @@ class GroupBook extends React.Component {
     amountColor: '#FA6B49',
   }
 
-
-  constructor(props) {
-    super(props);
-  }
-
   render() {
-    const {bookList, amountColor} = this.props;
+    const { bookList, amountColor } = this.props;
     const isGotDefaultOutCome = typeof window !== 'undefined' && window.isGotDefaultOutCome;
     const hasData = bookList && bookList.length > 0;
     return (

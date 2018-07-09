@@ -8,8 +8,8 @@ import createForm from '@/components/core/form/createForm';
 import { required } from '@/components/core/form/validation';
 import { Field } from "redux-form";
 import { shakeItem, initFreeHandshake, } from '@/reducers/handshake/action';
-import {HANDSHAKE_ID, API_URL, APP } from '@/constants';
-import {MasterWallet} from '@/services/Wallets/MasterWallet';
+import { HANDSHAKE_ID, API_URL, APP } from '@/constants';
+import { MasterWallet } from '@/services/Wallets/MasterWallet';
 import local from '@/services/local-store';
 import moment from 'moment';
 
@@ -71,11 +71,11 @@ class BetingShakeFree extends React.Component {
     };
 
 
-    this.onSubmit = ::this.onSubmit;
-    this.onCancel = ::this.onCancel;
-    this.renderInputField = ::this.renderInputField;
-    this.renderForm = ::this.renderForm;
-    this.onToggleChange = ::this.onToggleChange;
+    this.onSubmit = :: this.onSubmit;
+    this.onCancel = :: this.onCancel;
+    this.renderInputField = :: this.renderInputField;
+    this.renderForm = :: this.renderForm;
+    this.onToggleChange = :: this.onToggleChange;
   }
   componentDidMount() {
   }

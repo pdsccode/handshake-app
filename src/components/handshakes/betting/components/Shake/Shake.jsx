@@ -5,17 +5,19 @@ import { connect } from 'react-redux';
 
 // service, constant
 import { shakeItem, initHandshake, } from '@/reducers/handshake/action';
-import {HANDSHAKE_ID, API_URL, APP } from '@/constants';
-import {MasterWallet} from '@/services/Wallets/MasterWallet';
+import { HANDSHAKE_ID, API_URL, APP } from '@/constants';
+import { MasterWallet } from '@/services/Wallets/MasterWallet';
 import local from '@/services/local-store';
 import moment from 'moment';
 import GA from '@/services/google-analytics';
 
 // components
 import Button from '@/components/core/controls/Button';
-import {showAlert} from '@/reducers/app/action';
-import {getMessageWithCode, isExpiredDate, getChainIdDefaultWallet, 
-  getBalance, getEstimateGas, getAddress, isExistMatchBet, isRightNetwork, parseBigNumber} from '@/components/handshakes/betting/utils.js';
+import { showAlert } from '@/reducers/app/action';
+import {
+  getMessageWithCode, isExpiredDate, getChainIdDefaultWallet,
+  getBalance, getEstimateGas, getAddress, isExistMatchBet, isRightNetwork, parseBigNumber
+} from '@/components/handshakes/betting/utils';
 
 import './Shake.scss';
 import { BetHandshakeHandler, MESSAGE, SIDE } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
@@ -68,23 +70,23 @@ class BetingShake extends React.Component {
     };
 
 
-    this.onSubmit = ::this.onSubmit;
-    this.onCancel = ::this.onCancel;
-    this.renderInputField = ::this.renderInputField;
-    this.renderForm = ::this.renderForm;
-    this.onToggleChange = ::this.onToggleChange;
+    this.onSubmit = :: this.onSubmit;
+    this.onCancel = :: this.onCancel;
+    this.renderInputField = :: this.renderInputField;
+    this.renderForm = :: this.renderForm;
+    this.onToggleChange = :: this.onToggleChange;
   }
-  componentDidMount(){
+  componentDidMount() {
     console.log('Sa test componentDidMount');
 
   }
-  componentWillReceiveProps(nextProps){
+  componentWillReceiveProps(nextProps) {
 
-    const {marketSupportOdds, marketAgainstOdds, side, amountSupport, amountAgainst, isOpen} = nextProps;
+    const { marketSupportOdds, marketAgainstOdds, side, amountSupport, amountAgainst, isOpen } = nextProps;
     const marketOdds = side === SIDE.SUPPORT ? marketSupportOdds : marketAgainstOdds;
     const marketAmount = side === SIDE.SUPPORT ? amountSupport : amountAgainst;
     // const winValue = marketAmount * marketOdds;
-    const winValue = parseBigNumber(marketAmount).times(parseBigNumber(marketOdds)).toNumber()||0;
+    const winValue = parseBigNumber(marketAmount).times(parseBigNumber(marketOdds)).toNumber() || 0;
     // const roundMarketAmount = Math.round(marketAmount*ROUND)/ROUND;
     const roundMarketAmount = marketAmount;
     console.log('componentWillReceiveProps: marketOdds, marketAmount, winValue, roundMarketAmount:', marketOdds, marketAmount, winValue, roundMarketAmount);
@@ -95,9 +97,9 @@ class BetingShake extends React.Component {
     //   disable: !isOpen
     // });
     this.setState({
-      oddValue: marketOdds.toFixed(1,1),
+      oddValue: marketOdds.toFixed(1, 1),
       amountValue: roundMarketAmount,
-      winValue: winValue.toFixed(6,1),
+      winValue: winValue.toFixed(6, 1),
       disable: !isOpen
     });
   }
@@ -111,20 +113,20 @@ class BetingShake extends React.Component {
     this.setState({
       disable: true,
     });
-    const {isShowOdds, isChangeOdds} = this.state;
-    const {matchName, matchOutcome, side, marketAgainstOdds, marketSupportOdds, closingDate, reportTime} = this.props;
+    const { isShowOdds, isChangeOdds } = this.state;
+    const { matchName, matchOutcome, side, marketAgainstOdds, marketSupportOdds, closingDate, reportTime } = this.props;
     const amount = parseBigNumber(values.amount.value);
     const odds = parseBigNumber(values.odds.value);
 
     // const marketOdds = side === SIDE.SUPPORT ? marketSupportOdds : marketAgainstOdds;
 
-    console.log("Amount, Side, Odds", amount?.toNumber(), side, odds?.toNumber());    
+    console.log("Amount, Side, Odds", amount ?.toNumber(), side, odds ?.toNumber());
     const balance = await getBalance();
     let estimatedGas = await getEstimateGas();
-    estimatedGas = parseBigNumber(estimatedGas.toString()||0);
-    
+    estimatedGas = parseBigNumber(estimatedGas.toString() || 0);
+
     // const total = amount + parseFloat(estimatedGas);
-    const total = amount.plus(estimatedGas).toNumber()||0;
+    const total = amount.plus(estimatedGas).toNumber() || 0;
     console.log('Balance, estimate gas, total, date:', balance, estimatedGas, total, closingDate);
 
     var message = null;
@@ -132,42 +134,42 @@ class BetingShake extends React.Component {
     // send event tracking
     try {
       GA.clickGoButton(matchName, matchOutcome, side);
-    } catch (err) {}
+    } catch (err) { }
 
 
-    if(!isRightNetwork()){
+    if (!isRightNetwork()) {
       message = MESSAGE.RIGHT_NETWORK;
 
     }
 
-    else if(matchName && matchOutcome){
-      if (isExpiredDate(closingDate)){
+    else if (matchName && matchOutcome) {
+      if (isExpiredDate(closingDate)) {
         message = MESSAGE.MATCH_OVER;
-      }else if(amount > 0){
-          if(total <= parseFloat(balance)){
-            if(isShowOdds){
-              if(odds >1){
-                this.initHandshake(amount, odds);
-              }else {
-                message = MESSAGE.ODD_LARGE_THAN;
-              }
-            }else {
-              //LOGIC new nerver use shake item
-              //this.shakeItem(amount, side);
-
+      } else if (amount > 0) {
+        if (total <= parseFloat(balance)) {
+          if (isShowOdds) {
+            if (odds > 1) {
+              this.initHandshake(amount, odds);
+            } else {
+              message = MESSAGE.ODD_LARGE_THAN;
             }
-          }else {
-            message = MESSAGE.NOT_ENOUGH_BALANCE;
+          } else {
+            //LOGIC new nerver use shake item
+            //this.shakeItem(amount, side);
+
           }
-        }else {
-          message = MESSAGE.AMOUNT_VALID;
+        } else {
+          message = MESSAGE.NOT_ENOUGH_BALANCE;
         }
-    }else {
+      } else {
+        message = MESSAGE.AMOUNT_VALID;
+      }
+    } else {
       message = MESSAGE.CHOOSE_MATCH;
     }
 
 
-    if(message){
+    if (message) {
       this.props.showAlert({
         message: <div className="text-center">{message}</div>,
         timeOut: 3000,
@@ -188,25 +190,25 @@ class BetingShake extends React.Component {
   }
 
   onToggleChange(id) {
-    const {isChangeOdds} = this.state;
-    const {marketAgainstOdds, marketSupportOdds, side} = this.props;
+    const { isChangeOdds } = this.state;
+    const { marketAgainstOdds, marketSupportOdds, side } = this.props;
     const marketOdds = side === SIDE.SUPPORT ? marketSupportOdds : marketAgainstOdds;
 
-    if(!isChangeOdds){
+    if (!isChangeOdds) {
       this.setState({
-        oddValue: Math.floor(parseFloat(marketOdds)*ROUND_ODD)/ROUND_ODD
+        oddValue: Math.floor(parseFloat(marketOdds) * ROUND_ODD) / ROUND_ODD
       })
     }
-    this.setState({buttonClass: `btnOK ${side === 1 ? 'btnBlue' : 'btnRed' }`});
+    this.setState({ buttonClass: `btnOK ${side === 1 ? 'btnBlue' : 'btnRed'}` });
 
   }
 
   updateTotal() {
-    const {oddValue, amountValue} = this.state;
+    const { oddValue, amountValue } = this.state;
     const total = oddValue * amountValue;
-      this.setState({
-        winValue: Math.floor(total*ROUND)/ROUND,
-      })
+    this.setState({
+      winValue: Math.floor(total * ROUND) / ROUND,
+    })
   }
 
   renderInputField(props) {
@@ -222,8 +224,8 @@ class BetingShake extends React.Component {
       isInput = true,
       ...newProps
     } = props;
-    const {oddValue, amountValue} = this.state;
-    console.log('Label Default Value:',label, defaultValue);
+    const { oddValue, amountValue } = this.state;
+    console.log('Label Default Value:', label, defaultValue);
     return (
       <div className="rowWrapper">
         <label className="label" htmlFor={id}>{label}</label>
@@ -236,23 +238,23 @@ class BetingShake extends React.Component {
               id={id}
               type={type}
               //defaultValue={defaultValue}
-              value={id==="odds" ? oddValue : amountValue}
+              value={id === "odds" ? oddValue : amountValue}
               //value={value}
               {...newProps}
-              onChange= {(evt)=> {
-                if (id === 'odds'){
+              onChange={(evt) => {
+                if (id === 'odds') {
                   console.log('Change Odds');
                   this.setState({
                     oddValue: evt.target.value,
                     isChangeOdds: true
-                  }, ()=> this.updateTotal())
-                }else {
-                  this.setState ({
+                  }, () => this.updateTotal())
+                } else {
+                  this.setState({
                     amountValue: evt.target.value
-                  }, ()=> this.updateTotal())
+                  }, () => this.updateTotal())
                 }
               }}
-              onClick={event => {event.target.setSelectionRange(0, event.target.value.length)}}
+              onClick={event => { event.target.setSelectionRange(0, event.target.value.length) }}
             />
           ) : (<div className={cn('value', className)}>{value}</div>)
         }
@@ -265,7 +267,7 @@ class BetingShake extends React.Component {
 
   renderForm() {
     const { total, isShowOdds, marketOdds, isChangeOdds, winValue, disable } = this.state;
-    const {side} = this.props;
+    const { side } = this.props;
     console.log('Sa Test disable', disable);
 
     const amountField = {
@@ -290,7 +292,7 @@ class BetingShake extends React.Component {
     };
     // const {BettingShakeForm} = this.state;
     // console.log('BettingShakeForm:', BettingShakeForm);
-    const buttonClass = `btnOK ${side === 1 ? 'btnBlue' : 'btnRed' }`;
+    const buttonClass = `btnOK ${side === 1 ? 'btnBlue' : 'btnRed'}`;
 
     return (
       <form className="wrapperBettingShake" onSubmit={this.onSubmit}>
@@ -299,8 +301,8 @@ class BetingShake extends React.Component {
         {this.renderInputField(amountField)}
         {isShowOdds && this.renderInputField(oddsField)}
         <div className="rowWrapper">
-         <div>Possible winnings</div>
-         <div className="possibleWinningsValue">{this.state.winValue}</div>
+          <div>Possible winnings</div>
+          <div className="possibleWinningsValue">{this.state.winValue}</div>
         </div>
         <Button type="submit" disabled={disable} block className={buttonClass}>
           Go
@@ -314,10 +316,10 @@ class BetingShake extends React.Component {
     return this.renderForm();
   }
 
-  initHandshake(amount, odds){
+  initHandshake(amount, odds) {
 
-    const {outcomeId, matchName, matchOutcome, side} = this.props;
-    const {extraData} = this.state;
+    const { outcomeId, matchName, matchOutcome, side } = this.props;
+    const { extraData } = this.state;
     //const side = this.toggleRef.value;
     const fromAddress = getAddress();
     extraData["event_name"] = matchName;
@@ -329,7 +331,7 @@ class BetingShake extends React.Component {
 
       type: HANDSHAKE_ID.BETTING,
       outcome_id: outcomeId,
-      odds:`${odds}`,
+      odds: `${odds}`,
       amount: `${amount}`,
       extra_data: JSON.stringify(extraData),
       currency: 'ETH',
@@ -340,7 +342,8 @@ class BetingShake extends React.Component {
     console.log("Params:", params, this);
 
 
-      this.props.initHandshake({PATH_URL: API_URL.CRYPTOSIGN.INIT_HANDSHAKE, METHOD:'POST', data: params,
+    this.props.initHandshake({
+      PATH_URL: API_URL.CRYPTOSIGN.INIT_HANDSHAKE, METHOD: 'POST', data: params,
       successFn: this.initHandshakeSuccess,
       errorFn: this.initHandshakeFailed
 
@@ -349,41 +352,41 @@ class BetingShake extends React.Component {
 
   }
 
-  initHandshakeSuccess = async (successData)=>{
+  initHandshakeSuccess = async (successData) => {
     console.log('initHandshakeSuccess', successData);
-    const {status, data} = successData
+    const { status, data } = successData
 
-    if(status && data){
+    if (status && data) {
 
-    //  const {outcomeHid} = this.props;
-    //   console.log('OutcomeHid:', outcomeHid);
-     betHandshakeHandler.controlShake(data);
-     const isExist = isExistMatchBet(data);
-     console.log('Sa isExist:', isExist);
-     let message = MESSAGE.CREATE_BET_NOT_MATCH;
-     if(isExist){
-       message = MESSAGE.CREATE_BET_MATCHED;
-     }
-     this.props.showAlert({
-      message: <div className="text-center">{message}</div>,
-      timeOut: 3000,
-      type: 'success',
-      callBack: () => {
+      //  const {outcomeHid} = this.props;
+      //   console.log('OutcomeHid:', outcomeHid);
+      betHandshakeHandler.controlShake(data);
+      const isExist = isExistMatchBet(data);
+      console.log('Sa isExist:', isExist);
+      let message = MESSAGE.CREATE_BET_NOT_MATCH;
+      if (isExist) {
+        message = MESSAGE.CREATE_BET_MATCHED;
       }
-    });
-     // send ga event
+      this.props.showAlert({
+        message: <div className="text-center">{message}</div>,
+        timeOut: 3000,
+        type: 'success',
+        callBack: () => {
+        }
+      });
+      // send ga event
       try {
-        const {matchName, matchOutcome, side} = this.props;
+        const { matchName, matchOutcome, side } = this.props;
         GA.createBetSuccess(matchName, matchOutcome, side);
-      } catch (err) {}
+      } catch (err) { }
     }
 
   }
   initHandshakeFailed = (error) => {
     console.log('initHandshakeFailed', error);
 
-    const {status, code} = error;
-    if(status == 0){
+    const { status, code } = error;
+    if (status == 0) {
       const message = getMessageWithCode(code);
       this.props.showAlert({
         message: <div className="text-center">{message}</div>,

@@ -1,13 +1,20 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+<<<<<<< HEAD:src/components/Header/MainHeader.jsx
+=======
 import cn from '@sindresorhus/class-names';
 
+>>>>>>> 355fab27c13871578dfca4126dd464fd2ee9d3d3:src/components/App/Header.jsx
 import { history } from '@/stores';
 import backBtn from '@/assets/images/icon/header-back.svg.raw';
 import { clickHeaderBack } from '@/reducers/app/action';
 
+<<<<<<< HEAD:src/components/Header/MainHeader.jsx
+class MainHeader extends React.Component {
+=======
 class Header extends React.Component {
+>>>>>>> 355fab27c13871578dfca4126dd464fd2ee9d3d3:src/components/App/Header.jsx
   static propTypes = {
     app: PropTypes.object.isRequired,
     clickHeaderBack: PropTypes.func.isRequired,
