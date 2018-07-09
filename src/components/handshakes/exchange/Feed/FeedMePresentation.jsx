@@ -6,7 +6,7 @@ import Rate from '@/components/core/controls/Rate';
 import iconLocation from '@/assets/images/icon/icons8-geo_fence.svg';
 import iconChat from '@/assets/images/icon/icons8-chat.svg';
 import iconPhone from '@/assets/images/icon/icons8-phone.svg';
-
+import {URL,} from '@/constants';
 
 class FeedMePresentation extends React.PureComponent {
   constructor(props) {
