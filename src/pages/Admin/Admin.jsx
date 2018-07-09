@@ -32,6 +32,7 @@ class Admin extends React.Component {
   }
 
   componentDidMount() {
+    console.log("Test Report");
     if (this.checkToken() != null) {
       this.setState({
         login: true,
