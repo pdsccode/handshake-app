@@ -229,7 +229,7 @@ class Admin extends React.Component {
   }
   onChangeFinal=(item, result) => {
     console.log(item, result);
-    const finalCopy = [...this.state.final];
+    const finalCopy = [...this.state.outcomes];
     finalCopy.map((outcomeItem) => {
       if (outcomeItem.outcome_id === item.id) {
         outcomeItem.side = result;
@@ -296,7 +296,7 @@ class Admin extends React.Component {
               Against
               </Label>
             </FormGroup><br /><br />
-                                                                                                     </Label>))}
+          </Label>))}
           <br /> <br />
           {/* <FormGroup>
             <Label for="homescore">Home Score</Label>
