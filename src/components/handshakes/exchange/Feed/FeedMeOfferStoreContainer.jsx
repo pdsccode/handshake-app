@@ -296,15 +296,15 @@ class FeedMeOfferStoreContainer extends React.PureComponent {
 
     switch (status) {
       case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CREATED: {
-        idMessage = 'ex.exchange.explanation.created';
+        idMessage = 'ex.shop.explanation.created';
         break;
       }
       case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.ACTIVE: {
-        idMessage = 'ex.exchange.explanation.active';
+        idMessage = 'ex.shop.explanation.active';
         break;
       }
       case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSING: {
-        idMessage = 'ex.exchange.explanation.closing';
+        idMessage = 'ex.shop.explanation.closing';
         break;
       }
       case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSED: {
