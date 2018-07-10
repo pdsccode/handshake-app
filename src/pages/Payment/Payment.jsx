@@ -86,7 +86,7 @@ class Payment extends React.Component {
     this.setState({isShowSuccess: true});
 
     let fullBackUrl = `${this.state.confirmURL}?order_id=${this.state.orderID}&status=0&hash=`;
-    setTimeout(() => {window.location.href = fullBackUrl}, 10000);
+    setTimeout(() => {window.location.href = fullBackUrl}, 3000);
   }
 
   // To address those who want the "root domain," use this function:
