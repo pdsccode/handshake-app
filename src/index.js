@@ -6,6 +6,10 @@ import Website from '@/components/App/Basic';
 // import registerServiceWorker from '@/services/worker';
 import * as OfflinePlugin from 'offline-plugin/runtime';
 
+import 'semantic-ui-css/semantic.min.css';
+import './assets/css/index.css';
+
+
 // registerServiceWorker();
 
 if (process.env.caches) {

@@ -1,0 +1,432 @@
+.ui.container .item{
+    margin-top: 11px;
+}
+
+.ui.container .button{
+    margin-top: -9px;
+}
+
+body{
+    background-color: #FFF;
+    font-family: Roboto;
+}
+
+.ui.inverted.menu { 
+    background: white!important;
+}
+.ui.vertical.segment{
+    border-bottom: 0;
+}
+.ui.loading.segment:before{
+    background: rgba(255, 255, 255, 0);
+}
+
+
+.ui.menu .item{
+    line-height:3;
+    padding: 0.4em 1.14285714em;
+}
+.ui.container .item{
+    margin-top: 0px;
+}
+.ui.search {
+    font-size: 1em;
+    margin: 0.5em 0.8em 0 1em;
+}
+
+.ui.menu.five.item a {
+    width: 20%;
+    text-align: center;
+    justify-content: center;
+    display: table-cell;
+}
+
+.footer {
+    height: 65px;
+    position: fixed;
+    bottom:0%;
+    width:100%;
+    background-color: white;
+    opacity: 1;
+}
+
+
+.uploader {
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.02);
+    cursor: pointer;
+    display: flex;
+    height: 200px;
+    justify-content: center;
+    outline: 3px dashed #ccc;
+    outline-offset: 5px;
+    position: relative;
+    width: 340px;
+    
+}
+.uploader input { 
+       display: none; 
+    }
+    
+.uploader img, .uploader .icon { 
+       pointer-events: none; 
+    }
+.uploader .icon {
+       transition: all 100ms ease-in; 
+       color: #eee;
+       color: rgba(0, 0, 0, 0.2);
+       font-size: 5em;
+    }
+    
+.uploader img {
+       left: 50%;
+       opacity: 0;
+       max-height: 100%;
+       max-width: 100%;
+       position: absolute;
+       top: 50%;
+       transition: all 300ms ease-in;
+       transform: translate(-50%, -50%); 
+}
+.uploader img.loaded {
+          opacity: 1;
+ 
+ }
+ 
+ /*test*/
+
+
+#wrapper {
+	width: 90%;
+	max-width: 1100px;
+	min-width: 800px;
+	margin: 50px auto;
+}
+
+#columns {
+	-webkit-column-count: 3;
+	-webkit-column-gap: 10px;
+	-webkit-column-fill: auto;
+	-moz-column-count: 3;
+	-moz-column-gap: 10px;
+	-moz-column-fill: auto;
+	column-count: 3;
+	column-gap: 15px;
+	column-fill: auto;
+}
+
+.pin {
+	display: inline-block;
+	background: #FEFEFE;
+	border: 2px solid #FAFAFA;
+	box-shadow: 0 1px 2px rgba(34, 25, 25, 0.4);
+	margin: 0 2px 15px;
+	-webkit-column-break-inside: avoid;
+	-moz-column-break-inside: avoid;
+	column-break-inside: avoid;
+	padding: 15px;
+	padding-bottom: 5px;
+	background: -webkit-linear-gradient(45deg, #FFF, #F9F9F9);
+	opacity: 1;
+	
+	-webkit-transition: all .2s ease;
+	-moz-transition: all .2s ease;
+	-o-transition: all .2s ease;
+	transition: all .2s ease;
+}
+
+.pin:first-child {
+  width: 100%;
+}
+
+.pin img {
+	width: 100%;
+	border-bottom: 1px solid #ccc;
+	padding-bottom: 15px;
+	margin-bottom: 5px;
+}
+
+.pin p {
+	font: 12px/18px Arial, sans-serif;
+	color: #333;
+	margin: 0;
+}
+
+@media (min-width: 960px) {
+	#columns {
+		-webkit-column-count: 4;
+		-moz-column-count: 4;
+		column-count: 4;
+	}
+}
+
+@media (min-width: 1100px) {
+	#columns {
+		-webkit-column-count: 5;
+		-moz-column-count: 5;
+		column-count: 5;
+	}
+}
+
+#columns:hover .pin:not(:hover) {
+	opacity: 0.4;
+}
+
+.ui.card, .ui.cards>.card{
+    width: 348px;
+    margin: 0em 0.5em 6px 0.5em; /*0em 0.5em 1em 0.5em;*/
+
+}
+
+.ui.fluid.dropdown{
+    margin: 1em 0em 0 0em;
+}
+.footer { 
+    border-radius: none!important;
+    box-shadow:none;
+    border: 0!important;
+    box-shadow: none!important;
+ 
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    background-color:rgba(255, 255, 255, 0.9)!important;
+
+
+}  
+#footer item:before{
+    border: none!important;
+}
+#footer.ui.menu .item{
+    background: none;
+    padding-top: 0.5em;
+}
+#footer.ui.menu .active.item{
+    background: none;
+    padding-top: 0.5em;
+}
+.ui.menu .active.item, .ui.menu .item:before{
+    background: none; 
+}
+.ui.menu .active.item:hover, .ui.menu .active.item{
+    background: none; 
+    color: #00b5ad;
+}
+ 
+/* .ui.card .content img, .ui.cards>.card .content img{
+    border-radius: .28571429rem .28571429rem 0 0!important;
+} */
+#topbarMenu{
+    border-bottom: 1px solid #eaeaea;
+}
+#topbarMenu.ui.menu .item{
+    padding: 0em 1.14285714em!important;
+    color: #2e2e2e;
+    margin-top: 1em;
+}
+
+#topbarMenu.ui.inverted.menu .active.item{
+    color: #00b5ad!important;
+}
+
+.fistgridimage{
+    border-radius: .28571429rem .28571429rem 0 0!important;
+}
+.ui.grid>.column:not(.row){
+    padding: 0!important;
+}
+
+#head-searchbox{
+    border: none;
+    box-shadow: none;
+    background-color: rgba(255, 255, 255);
+    padding: 5px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e8e1e1;
+    
+}
+div#head-searchbox .ui.search { 
+    margin-top: 0px;
+    width: 100%;
+}
+
+div#head-searchbox .ui.loading{
+    display: inline;
+}
+.ui.search>.results>.message .header{
+    position: relative;
+    padding: 10px;
+}
+div#head-searchbox .ui.input{
+    width: 100%;
+   
+}
+div#head-searchbox .ui.icon.input>input{
+    padding: .467857143em 1em !important;
+    border-radius: 5px;
+    border: none;
+    background-color: rgba(0, 0, 0, 0.06);
+    padding-left: 2.5em!important;
+}
+
+div#head-searchbox .ui.input.down input, div#head-searchbox .ui.input>input:active{
+    background-color: rgba(0, 0, 0, 0.06);
+}
+
+
+input#desktopsearch {
+    min-width: 360px;
+    padding: .4em 1em;
+
+}
+
+.my-card{
+    border: none!important;
+    box-shadow: none!important;
+    /* Plastic oceanic debr: */ 
+    font-size: 32px;
+    color: #262628;
+    letter-spacing: -0.24px;
+    line-height: 36px; 
+    border-radius: 5px;
+    /* Combined Shape: */
+    transform: rotate(-360deg); 
+    background: #262628;
+    
+
+}
+.my-card img.ui.image{ 
+/* Rectangle 18 Copy 6: */
+/* Sketch doesnt export pattern fills at this point */
+    border-radius: 6px!important ;
+}
+.ui.card>.content, .ui.cards>.card>.content{
+    padding:1em 0em 0em 0em; /*01em 0em 0.4em 0em; .4em 0em 0em 0em; */
+    border-top: none;
+    
+}
+/* Rectangle 18 Copy 6: */
+/* Sketch doesnt export pattern fills at this point */
+ 
+/* 1ETH: */
+
+/* 1000 img 14:20 PM, T: */   
+
+/* font-family: .SFNSDisplay; /* food: 
+font-family: HelveticaNeue-Bold;
+font-size: 32px;
+color: #262628;
+letter-spacing: -0.32px;
+line-height: 32px;
+
+font-size: 32px;
+color: #262628;
+letter-spacing: 0;
+line-height: 32px; */
+.ui.card>.content p, .ui.cards>.card>.content p {
+    margin: 0.2em 0em 0em 0em;
+    text-align: left;
+    line-height: 1em;
+}
+
+#explore-menu{
+    border: none;
+    box-shadow: none;
+    margin-top: -1.4em;
+    top: 4.5em;
+    position: fixed;
+    z-index: 1;
+    width: 100%;
+ 
+}
+#explore-menu.ui.menu .active.item:hover, #explore-menu.ui.menu .active.item {
+    background: none;
+    color: #000000;
+    /* border-bottom: 1px solid; */
+    text-decoration: underline;
+    font-weight: bold;
+}
+#explore-menu.ui.menu>.item:first-child{
+    padding-left: 0px;
+    border-radius: none!important;
+}
+
+.my-card .title{  
+        font-size: 16px;
+        font-weight: 600;
+        font-style: normal;
+        font-stretch: normal; 
+        letter-spacing: -0.1px;
+        color: #262628; 
+}
+
+.my-icon{
+    width: 20px!important;
+    height: 20px!important;
+   
+
+}
+
+.my-menu-bar{
+    width: 20px!important;
+    height: 20px!important;
+    margin-top: 0.7em!important;
+
+}
+.my-menu-bar-center{
+
+    width: 70px!important;
+    height: 70px!important;
+    margin: 0!important;
+    margin-top: -6px!important
+
+}
+
+.my-btn-buy-eth{
+    border: 0.7px solid #262628!important;
+    margin-left: 20px!important;
+    font-size: 11px!important;
+    font-weight: 1000!important;
+    height: 30px!important;
+    margin-right: 0px!important;
+    text-transform: uppercase!important;
+    padding: 0em 2em!important;
+    font-family: Roboto!important;
+}
+.ui.fluid.search .results{
+    text-align: left;
+}
+
+.my-card-header{
+    justify-content: left;
+    text-align: left;
+    padding: 0em 0.6em;
+    margin-top: -18px!important;
+}
+
+.footer ul{
+    margin-top: 5px;
+}
+
+
+.footer ul li.selected svg polygon{
+    fill: #21c364;
+
+}
+.footer ul li.selected svg path{
+    fill: #21c364;
+
+}
+
+.footer ul li.selected .chat-icon svg g{
+    stroke: #21c364;
+}
+
+.footer ul li.selected a{
+    color: #21c364;
+}
+.modal{
+    position: relative!important;
+    top: none!important;
+    height: auto!important;
+}

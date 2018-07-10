@@ -20,10 +20,10 @@ class Loading extends React.PureComponent {
     const { className, loadingImg, message } = Object.assign({}, this.CONFIG_DEFAULT, configLoading);
     return (
       <div className={`loading-full-screen ${className || ''}`}>
-        <Image src={loadingImg} alt="loading" />
+        {/* <Image src={loadingImg} alt="loading" />
         {
           message && (<p className="text">{message}</p>)
-        }
+        } */}
       </div>
     );
   }

@@ -2,8 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 // components
-//import MainHeader from '@/components/Header/MainHeader';  
-import DataSetHeader from '@/components/Header/DataSetHeader'; 
+import MainHeader from '@/components/Header/MainHeader';
 import Navigation from '@/components/core/controls/Navigation/Navigation';
 import Alert from '@/components/core/presentation/Alert';
 import Loading from '@/components/core/controls/Loading';
@@ -31,11 +30,16 @@ class MainLayout extends React.Component {
   }
 
   render() {
-    return ( 
-        <DataSetHeader location={this.props.location}> 
-          {this.props.children} 
-          <Navigation location={this.props.location} />
-        </DataSetHeader> 
+    return (
+      <div className={` ${this.state.app.showHeader ? 'show-header' : 'hide-header'}`}>
+        <MainHeader />
+        <div className="content">
+          {this.props.children}
+        </div>
+        <Navigation location={this.props.location} />
+        <Alert />
+        <Loading />
+      </div>
     );
   }
 }

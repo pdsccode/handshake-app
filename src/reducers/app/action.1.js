@@ -149,26 +149,22 @@ const tokenHandle = ({
               MasterWallet.createShuriWallet();
             }
           }
- 
           let shuriWallet = MasterWallet.getShuriWallet();          
           const data = new FormData();
           data.append('reward_wallet_addresses', MasterWallet.convertToJsonETH(shuriWallet));          
           if (isSignup) data.append('username', shuriWallet.address);
           
-          dispatch(
-            
-            authUpdate({
-                PATH_URL: 'user/profile',
-                data,
-                METHOD: 'POST',
-                successFn: (res) => {
-                  //console.log('app - handle - wallet - success - ', res);
-                },
-                errorFn: (e) => {
-                  //console.log('app - handle - wallet - error - ', e);
-                },
-             }));
-
+          dispatch(authUpdate({
+            PATH_URL: 'user/profile',
+            data,
+            METHOD: 'POST',
+            successFn: (res) => {
+              //console.log('app - handle - wallet - success - ', res);
+            },
+            errorFn: (e) => {
+              //console.log('app - handle - wallet - error - ', e);
+            },
+          }));
           resolve(true);
         },
       }));
@@ -184,48 +180,25 @@ const tokenHandle = ({
 
 const auth = ({ ref, dispatch, ipInfo }) => new Promise((resolve, reject) => {
   const token = local.get(APP.AUTH_TOKEN);
-  //Nếu chưa có token
   if (token) {
     tokenHandle({
       resolve, token, dispatch, ipInfo, isSignup: false,
     });
   } else {
-    ////Nếu chưa có token gọi SinUp.... New user.
-    // const data = new FormData();
-    // data.append('username',"abcdefghiklakakak");      
-    // data.append('password',"abcdefghiklakakak");      
-    dispatch(
-      signUp({
-        PATH_URL: `user/sign-up${ref ? `?ref=${ref}` : ''}`,
-        METHOD: 'POST',
-        successFn: (res) => {
-          const signUpToken = res.data.passpharse;
-          console.log('signUpToken', signUpToken);
-          tokenHandle({
-            resolve, token: signUpToken, dispatch, ipInfo, isSignup: true
-          });
-        },
-        errorFn: () => {
-          tokenHandle({ reject, token, dispatch });
-        },
-      })
-      // signUp({ ///api/signin/', {email, password})
-      //   PATH_URL: `/signin`,
-      //   METHOD: 'POST',
-      //   data:'',
-      //   successFn: (res) => {
-      //     const signUpToken = res.data.passpharse;
-      //     console.log('signUpToken', signUpToken);
-      //     tokenHandle({
-      //       resolve, token: signUpToken, dispatch, ipInfo, isSignup: true
-      //     });
-      //   },
-      //   errorFn: () => {
-      //     tokenHandle({ reject, token, dispatch });
-      //   },
-      // })
-
-    );
+    dispatch(signUp({
+      PATH_URL: `user/sign-up${ref ? `?ref=${ref}` : ''}`,
+      METHOD: 'POST',
+      successFn: (res) => {
+        const signUpToken = res.data.passpharse;
+        console.log('signUpToken', signUpToken);
+        tokenHandle({
+          resolve, token: signUpToken, dispatch, ipInfo, isSignup: true
+        });
+      },
+      errorFn: () => {
+        tokenHandle({ reject, token, dispatch });
+      },
+    }));
   }
 });
 

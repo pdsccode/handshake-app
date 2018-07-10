@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
 
 import Logo from '@/assets/images/logo.png';
+import logo2 from '@/assets/icons/logo2.png';
+
 
 class Splash extends React.Component {
   static propTypes = {
@@ -36,7 +38,7 @@ class Splash extends React.Component {
     return (
       <div className="splash">
         <div className="splash-content">
-          <img src={Logo} alt="Ninja logo" />
+          <img src={logo2} alt="DAD" />
           <p className="splash-loading-text">{this.state.loading}</p>
           <p className="splash-title">{this.state.name}: {this.state.description}</p>
         </div>

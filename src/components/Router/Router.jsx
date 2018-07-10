@@ -16,6 +16,7 @@ import Maintain from '@/components/Router/Maintain';
 
 const RouterMe = createDynamicImport(() => import('@/components/Router/Me'), Loading);
 const RouterDiscover = createDynamicImport(() => import('@/components/Router/Discover'), Loading);
+
 const RouterChat = createDynamicImport(() => import('@/components/Router/Chat'), Loading);
 const RouterCreate = createDynamicImport(() => import('@/components/Router/Create'), Loading);
 const RouterWallet = createDynamicImport(() => import('@/components/Router/Wallet'), Loading);
@@ -24,7 +25,19 @@ const RouterTransaction = createDynamicImport(() => import('@/components/Router/
 const RouterComment = createDynamicImport(() => import('@/components/Router/Comment'), Loading);
 const RouterAdmin = createDynamicImport(() => import('@/components/Router/Admin'), Loading);
 
+
+const RouterMine = createDynamicImport(() => import('@/components/Router/Mine'), Loading);
+const RouterExplore = createDynamicImport(() => import('@/components/Router/Explore'), Loading);
+
+
+
+
 const rootRouterMap = [
+
+  
+  { path: URL.DATA_SET_FEED_MINE, component: RouterMine },  
+  { path: URL.DATA_SET_DISCOVER, component: RouterExplore },  
+  
   { path: URL.HANDSHAKE_ME, component: RouterMe },
   { path: URL.HANDSHAKE_DISCOVER, component: RouterDiscover },
   { path: URL.HANDSHAKE_CHAT, component: RouterChat },
@@ -93,7 +106,7 @@ class Router extends React.Component {
                           exact
                           path={URL.INDEX}
                           render={() => (
-                            <Redirect to={{ pathname: URL.HANDSHAKE_DISCOVER }} />
+                            <Redirect to={{ pathname: URL.DATA_SET_FEED_MINE }} />
                           )}
                         />
                         {routers}

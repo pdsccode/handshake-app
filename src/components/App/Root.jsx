@@ -70,7 +70,7 @@ class Root extends React.Component {
         // code
     }
     if (BrowserDetect.isDesktop) {
-      return <MobileOrTablet />;
+      //return <MobileOrTablet />;
     }
     return <Handle setLanguage={this.setLanguage} refer={this.refer} />;
   }

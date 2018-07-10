@@ -385,6 +385,20 @@ export const URL = {
 
   ADMIN: '/admin',
 
+  DATA_SET_FEED_MINE: '/mine',
+  DATA_SET_FEED_MINE_INDEX: '/mine',
+
+  DATA_SET_DISCOVER: '/explore',
+  DATA_SET_DISCOVER_INDEX: '/explore',
+  DATA_SET_DISCOVER_DETAIL: '/explore/:slug',
+
+  DATA_SET_UPLOAD: '/upload',
+  DATA_SET_UPLOAD_INDEX: '/upload',
+
+  
+  DATA_SET_HISTORY: '/hist',
+  DATA_SET_HISTORY_INDEX: '/hist',
+
   HANDSHAKE_ME: '/me',
   HANDSHAKE_ME_INDEX: '/me',
   HANDSHAKE_ME_PROFILE: '/me/profile',

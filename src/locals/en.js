@@ -1,14 +1,18 @@
 export default {
   app: {
-    name: 'Ninja',
-    fullname: 'Ninja: Anonymous Peer-to-Peer Prediction Exchange',
-    description: 'Anonymous Peer-to-Peer Prediction Exchange',
+    name: 'DAD',
+    fullname: 'DAD:Data provided by humans',
+    description: 'Data provided by humans',
     loading: 'Loading...',
     navigation: {
       me: 'Me',
       exchanges: 'Exchanges',
       whisper: 'Whisper',
       wallet: 'Wallet',
+      mine:'Mine',
+      discover:'Discover',
+      history:'History',
+      
     },
   },
   buy: 'Buy',

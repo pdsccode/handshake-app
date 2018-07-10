@@ -287,8 +287,7 @@ export class MasterWallet {
 
     // Get list wallet from store local:
     static getWalletDefault(coinName = '') {
-      const wallets = localStore.get(MasterWallet.KEY);
-
+      const wallets = localStore.get(MasterWallet.KEY); 
       if (wallets == false) return false;
 
       const BreakException = {};

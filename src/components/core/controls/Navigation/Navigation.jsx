@@ -12,13 +12,23 @@ import discoverIcon from '@/assets/images/navigation/ic_discover.svg.raw';
 import chatIcon from '@/assets/images/navigation/ic_chat.svg.raw';
 import walletIcon from '@/assets/images/navigation/ic_wallet.svg.raw';
 import createIcon from '@/assets/images/navigation/ic_add.svg.raw';
+ 
+import home_icon from '@/assets/icons/home.svg.raw';
+import cam_icon from '@/assets/icons/qa.png';
+
+
+import { 
+  Responsive,  
+  Menu,
+  Image,
+} from 'semantic-ui-react'
 
 class Navigation extends React.Component {
   static propTypes = {
     clearHeaderBack: PropTypes.func.isRequired,
     location: PropTypes.object.isRequired,
     app: PropTypes.object.isRequired,
-    intl: PropTypes.object.isRequired,
+    intl: PropTypes.object.isRequired, 
   };
 
   constructor(props) {
@@ -39,47 +49,51 @@ class Navigation extends React.Component {
     }
     return null;
   }
+ 
 
 
   checkSelected(_URL) {
     return this.state.currentPath.startsWith(_URL) && !this.state.isNotFound ? 'selected' : '';
   }
 
-  render() {
+  render() { 
     return (
+      <Responsive {...Responsive.onlyMobile}>
       <footer className="footer">
         <ul>
-          <li className={cn(this.checkSelected(URL.HANDSHAKE_ME_INDEX))}>
-            <Link to={URL.HANDSHAKE_ME_INDEX} onClick={this.props.clearHeaderBack}>
-              <div className="me-icon" dangerouslySetInnerHTML={{ __html: meIcon }} />
-              <span>{this.props.intl.messages.app.navigation.me}</span>
+          <li className={cn(this.checkSelected(URL.DATA_SET_FEED_MINE_INDEX))}>
+            <Link to={URL.DATA_SET_FEED_MINE_INDEX} onClick={this.props.clearHeaderBack}>
+              <div className="me-icon" dangerouslySetInnerHTML={{ __html: home_icon }} />
+              <span>{this.props.intl.messages.app.navigation.mine}</span>
             </Link>
           </li>
-          <li className={cn(this.checkSelected(URL.HANDSHAKE_DISCOVER_INDEX))}>
-            <Link to={URL.HANDSHAKE_DISCOVER_INDEX} onClick={this.props.clearHeaderBack}>
+          <li className={cn(this.checkSelected(URL.DATA_SET_DISCOVER_INDEX))}>
+            <Link to={URL.DATA_SET_DISCOVER_INDEX} onClick={this.props.clearHeaderBack}>
               <div dangerouslySetInnerHTML={{ __html: discoverIcon }} />
-              <span>{this.props.intl.messages.app.navigation.exchanges}</span>
+              <span>{this.props.intl.messages.app.navigation.discover}</span>
             </Link>
           </li>
           <li>
             {
-              this.props.location.pathname === URL.HANDSHAKE_CREATE_INDEX
+              this.props.location.pathname === URL.DATA_SET_UPLOAD_INDEX
               ? (
                 <a>
-                  <div className="create" dangerouslySetInnerHTML={{ __html: createIcon }} />
+                  {/* <div className="create" dangerouslySetInnerHTML={{ __html: cambtn }} /> */}
+                  <Image  className="create" src={cam_icon} />
                 </a>
               )
               : (
-                <Link to={URL.HANDSHAKE_CREATE_INDEX}>
-                  <div className="create" dangerouslySetInnerHTML={{ __html: createIcon }} />
+                <Link to={URL.DATA_SET_UPLOAD_INDEX}>
+                  {/* <div className="create" dangerouslySetInnerHTML={{ __html: cambtn }} /> */}
+                  <Image  className="create" src={cam_icon} />
                 </Link>
               )
             }
           </li>
-          <li className={cn(this.checkSelected(URL.HANDSHAKE_CHAT_INDEX))}>
-            <Link to={URL.HANDSHAKE_CHAT_INDEX} onClick={this.props.clearHeaderBack}>
+          <li className={cn(this.checkSelected(URL.DATA_SET_HISTORY_INDEX))}>
+            <Link to={URL.DATA_SET_HISTORY_INDEX} onClick={this.props.clearHeaderBack}>
               <div className="chat-icon" dangerouslySetInnerHTML={{ __html: chatIcon }} />
-              <span>{this.props.intl.messages.app.navigation.whisper}</span>
+              <span>{this.props.intl.messages.app.navigation.history}</span>
             </Link>
           </li>
           <li className={cn((this.state.currentPath.startsWith(URL.HANDSHAKE_WALLET_INDEX) && !this.state.isNotFound ? 'selected' : ''))}>
@@ -90,6 +104,7 @@ class Navigation extends React.Component {
           </li>
         </ul>
       </footer>
+      </Responsive >
     );
   }
 }
