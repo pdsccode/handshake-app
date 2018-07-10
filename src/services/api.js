@@ -24,7 +24,7 @@ const $http = ({
     }
     const wallet = MasterWallet.getWalletDefault('ETH');
     if (wallet && wallet.chainId) {
-      completedHeaders.ChainId = wallet.chainId + (process.env.chainIdAddtitional || 0);
+      completedHeaders.ChainId = wallet.chainId + (process.env.chainIdAdditional || 0);
     }
   }
   // end handle headers
