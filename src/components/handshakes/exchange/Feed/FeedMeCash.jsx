@@ -16,7 +16,7 @@ import { URL, } from '@/constants';
 class FeedMeCash extends React.PureComponent {
   handleClickMoreInfo = () => {
     console.log('click more info');
-    const { onShowModalDialog } = this.props;
+    const { onShowModalDialog, phone , phoneDisplayed, review, reviewCount,} = this.props;
     onShowModalDialog({
       show: true,
       modalContent: (
@@ -28,15 +28,19 @@ class FeedMeCash extends React.PureComponent {
           </div>
           <hr className="line-hr" />
 
-          <div className="d-table w-100">
-            <div className="d-table-cell align-middle" style={{ width: '50px' }}>
-              <img src={iconPhone} width="35px" />
-            </div>
-            <div className="d-table-cell align-middle">
-              <div className="label-modal-more-info">Phone</div>
-              <div className="phone-number">01225511558</div>
-            </div>
-          </div>
+          {
+            phone && phone.split('-')[1] !== '' && ( // no phone number
+              <div className="d-table w-100">
+                <div className="d-table-cell align-middle" style={{ width: '50px' }}>
+                  <img src={iconPhone} width="35px" />
+                </div>
+                <div className="d-table-cell align-middle">
+                  <div className="label-modal-more-info">Phone</div>
+                  <div className="phone-number"><a href={`tel:${phoneDisplayed}`} >{phoneDisplayed}</a></div>
+                </div>
+              </div>
+            )
+          }
 
           <div className="d-table w-100 mt-3">
             <div className="d-table-cell align-middle" style={{ width: '50px' }}>
@@ -45,8 +49,8 @@ class FeedMeCash extends React.PureComponent {
             <div className="d-table-cell align-middle">
               <div className="label-modal-more-info">Reviews</div>
               <div className="phone-number">
-                <StarsRating className="d-inline-block" starPoint={3.2} startNum={5} />
-                <span className="ml-2">(25 reviews)</span>
+                <StarsRating className="d-inline-block" starPoint={review} startNum={5} />
+                <span className="ml-2">({reviewCount} reviews)</span>
               </div>
             </div>
           </div>
@@ -61,19 +65,19 @@ class FeedMeCash extends React.PureComponent {
 
   render() {
     const {
-      from, email, statusText, message, isCreditCard,
+      statusText, message, isCreditCard,
       showChat, chatUsername,
-      nameShop, phone , phoneDisplayed,
+      nameShop,
       address , messageMovingCoin,
-      actionButtons
+      actionButtons,
     } = this.props;
     console.log('thisss', this.props);
     return (
       <div className="feed-me-cash">
         <div>
           <div className="d-inline-block">
-            <div className="status">Deleting your station</div>
-            <div className="status-explanation">Please wait a few minute</div>
+            <div className="status">{statusText}</div>
+            <div className="status-explanation">{messageMovingCoin}</div>
           </div>
           <div className="countdown float-right">
             <img src={iconSpinner} width="14px" />
@@ -95,12 +99,12 @@ class FeedMeCash extends React.PureComponent {
             <img src={iconAvatar} width="35px" alt="" />
           </div>
           <div className="d-table-cell align-middle address-info">
-            <div>0x..233</div>
+            <div>{nameShop}</div>
             <div
               className="text-truncate d-inline-block"
               style={{ maxWidth: '120px' }}
             >
-              7956 Liberty Lane BakersfieldBak aw fe
+              {address}
             </div>
           </div>
           <div className="d-table-cell text-right align-middle">
@@ -111,16 +115,21 @@ class FeedMeCash extends React.PureComponent {
               <img src={iconInfo} width="35px" />
             </button>
           </div>
-          <div
-            className="d-table-cell text-right align-middle"
-            style={{ width: '50px' }}
-          >
-            <button className="d-inline-block p-0">
-              <Link to={`${URL.HANDSHAKE_CHAT_INDEX}/${chatUsername}`}>
-                <img src={iconChat} width="35px" />
-              </Link>
-            </button>
-          </div>
+
+          {
+            !isCreditCard && showChat && (
+              <div
+                className="d-table-cell text-right align-middle"
+                style={{ width: '50px' }}
+              >
+                <button className="d-inline-block p-0">
+                  <Link to={`${URL.HANDSHAKE_CHAT_INDEX}/${chatUsername}`}>
+                    <img src={iconChat} width="35px" />
+                  </Link>
+                </button>
+              </div>
+            )
+          }
         </div>
         {actionButtons}
       </div>
