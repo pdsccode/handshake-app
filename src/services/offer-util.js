@@ -1,6 +1,8 @@
+import React from "react";
 import local from '@/services/localStore';
 import { AMOUNT_DECIMAL, APP, HANDSHAKE_USER, PRICE_DECIMAL } from '@/constants';
 import { BigNumber } from 'bignumber.js';
+import { FormattedMessage } from 'react-intl';
 
 export function getOfferPrice(listOfferPrice = [], type = '', currency = '', fiatCurrency = '') {
   let result = {};
@@ -78,7 +80,10 @@ export function daysBetween(date1 = new Date(), date2 = new Date()) {
   const hours = Math.floor(difference_ms % 24);
   const days = Math.floor(difference_ms / 24);
 
-  return `${days > 0 ? days : ''} ${hours}:${minutes}:${seconds}`;
+  // const textDays = <FormattedMessage id="ex.shop.shake.label.days" />;
+  const textDays = ' days';
+
+  return `${days > 0 ? days + textDays : ''} ${hours > 10 ? hours : `0${hours}`}:${minutes > 10 ? minutes : `0${minutes}`}:${seconds > 10 ? seconds : `0${seconds}`}`;
 }
 
 export default { getOfferPrice };
