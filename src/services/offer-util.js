@@ -59,4 +59,26 @@ export function formatAmountCurrency(amount = 0) {
   // return new BigNumber(amount).toFormat(AMOUNT_DECIMAL);
 }
 
+export function daysBetween(date1 = new Date(), date2 = new Date()) {
+  // Get 1 day in milliseconds
+  const one_day = 1000 * 60 * 60 * 24;
+
+  // Convert both dates to milliseconds
+  const date1_ms = date1.getTime();
+  const date2_ms = date2.getTime();
+
+  // Calculate the difference in milliseconds
+  let difference_ms = date2_ms - date1_ms;
+  // take out milliseconds
+  difference_ms /= 1000;
+  const seconds = Math.floor(difference_ms % 60);
+  difference_ms /= 60;
+  const minutes = Math.floor(difference_ms % 60);
+  difference_ms /= 60;
+  const hours = Math.floor(difference_ms % 24);
+  const days = Math.floor(difference_ms / 24);
+
+  return `${days > 0 ? days : ''} ${hours}:${minutes}:${seconds}`;
+}
+
 export default { getOfferPrice };

@@ -190,7 +190,7 @@ class FeedMe extends React.PureComponent {
 
   render() {
     const {
-      initUserId, shakeUserIds, extraData, location, state, status, mode = 'discover', ipInfo: { latitude, longitude, country }, initAt, review, reviewCount, ...props
+      initUserId, shakeUserIds, extraData, location, state, status, mode = 'discover', ipInfo: { latitude, longitude, country }, initAt, lastUpdateAt, review, reviewCount, ...props
     } = this.props;
 
     const offer = Offer.offer(JSON.parse(extraData));
@@ -207,6 +207,7 @@ class FeedMe extends React.PureComponent {
 
 
     const feedProps = {
+      lastUpdateAt,
       isCreditCard,
       phone , phoneDisplayed,
       address,

@@ -13,9 +13,26 @@ import './FeedMeCash.scss';
 import { Link } from 'react-router-dom';
 import { URL } from '@/constants';
 import { formatAmountCurrency, formatMoneyByLocale } from '@/services/offer-util';
-import { upperFirst } from 'lodash';
+import {daysBetween} from "@/services/offer-util";
 
 class FeedMeCash extends React.PureComponent {
+  state = {timePassing: ''};
+  componentDidMount() {
+    const { messageMovingCoin, lastUpdateAt } = this.props;
+
+    if (messageMovingCoin) {
+      this.intervalCountdown = setInterval(() => {
+        this.setState({ timePassing: daysBetween(new Date(lastUpdateAt * 1000), new Date()) });
+      }, 1000);
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.intervalCountdown) {
+      clearInterval(this.intervalCountdown);
+    }
+  }
+
   handleClickMoreInfo = () => {
     console.log('click more info');
     const {
@@ -79,7 +96,7 @@ class FeedMeCash extends React.PureComponent {
       currency,
       fiatCurrency,
     } = this.props;
-    console.log('thisss', this.props);
+    // console.log('thisss', this.props);
     return (
       <div className="feed-me-cash">
         <div>
@@ -87,10 +104,12 @@ class FeedMeCash extends React.PureComponent {
             <div className="status">{statusText}</div>
             <div className="status-explanation">{messageMovingCoin}</div>
           </div>
-          <div className="countdown float-right">
-            <img src={iconSpinner} width="14px" />
-            <span className="ml-1">16:05:07</span>
-          </div>
+          { messageMovingCoin && (
+            <div className="countdown float-right">
+              <img src={iconSpinner} width="14px" />
+              <span className="ml-1">{this.state.timePassing}</span>
+            </div>)
+          }
         </div>
         <div className="order-type">{message}</div>
         <div className="info-wrapper">
