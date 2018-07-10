@@ -29,7 +29,8 @@ import {
   Header,
   Image,
 } from 'semantic-ui-react'
- 
+import Navigation from '@/components/core/controls/Navigation/Navigation';
+
 
 import logo2 from '@/assets/icons/logo2.png';
 
@@ -164,8 +165,10 @@ class DesktopContainer extends React.Component {
             </Menu>
           </Container>
           {this.props.children}
+          
           <UploadModal isAuth={this.props.isAuth} open={this.state.uploadModalOpen} handleClose={this.closeModal}/>
         </Segment>
+        
       </Responsive >
     )
   }
@@ -318,6 +321,7 @@ class MobileContainer extends React.Component {
                 <img class="my-menu-bar" src="/icons/user.svg"/>
               </Menu.Item>
             </Menu> */}
+           
         </Visibility>
       </Responsive>
     )
@@ -355,10 +359,10 @@ class DataSetHeader extends React.Component {
   render() {
       //console.log(this.props.location)
       return (
-          <div>
+              <Segment textAlign='center' vertical >
                  <DesktopContainer {...this.props} userId={""} isAuth={false}/> 
                  <MobileContainer {...this.props} userId={""} isAuth={false}/>
-          </div>
+              </Segment>
       );
   }
 }

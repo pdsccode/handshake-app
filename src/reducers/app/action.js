@@ -168,6 +168,12 @@ const tokenHandle = ({
                   //console.log('app - handle - wallet - error - ', e);
                 },
              }));
+             //CREATE DATASET-USERS, Goi thêm register user lên API DATASET.
+             //Username : username_wallets address.
+             //Password : pass-hash-key.
+             //BASE_DATASET_API_URL + "/signup"
+             //user_info + token. -> store xuống. DATA_SET_AUTH_TOKEN
+
 
           resolve(true);
         },
