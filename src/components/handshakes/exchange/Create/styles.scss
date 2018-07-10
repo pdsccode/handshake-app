@@ -74,6 +74,13 @@
     text-align: left;
     line-height: 19px;
   }
+  .dropdown-button {
+    background: none !important;
+    box-shadow: none !important;
+    border: none !important;
+    font-weight: 500 !important;
+    padding: 0 4px !important;
+  }
 }
 
 .form-text {

@@ -1,5 +1,4 @@
 import configs from '@/configs';
-import Neuron from './index';
 import { camelCase } from 'lodash';
 import { MasterWallet } from '@/services/Wallets/MasterWallet';
 
@@ -29,5 +28,9 @@ export default class BaseHandshake {
 
   get contractFileNameWithoutExtension() {
     return TAG;
+  }
+
+  get gasPrice() {
+    return this.chainId === 4 ? window.gasPrice || 20 : window.gasPrice || 20;
   }
 }

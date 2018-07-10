@@ -433,7 +433,6 @@ class Component extends React.Component {
       }
     } else if (currency === CRYPTO_CURRENCY.ETH) {
       if (amountSell > 0 && offer.items.ETH.freeStart === '') {
-        let data = {};
         try {
           const exchangeHandshake = new ExchangeShopHandshake(wallet.chainId);
 
@@ -441,22 +440,11 @@ class Component extends React.Component {
           result = await exchangeHandshake.initByShopOwner(offer.items.ETH.sellTotalAmount, offer.id);
           console.log('handleCreateOfferSuccess', result);
 
-          data = {
-            tx_hash: result.hash,
-            action: offer.items.ETH.status,
-            reason: '',
-            currency: currency,
-          };
+          this.trackingOnchain(offer.id, '', result.hash, offer.items.ETH.status, '', currency);
         } catch (e) {
-          data = {
-            action: offer.items.ETH.status,
-            reason: e.toString(),
-            currency: currency,
-          }
+          this.trackingOnchain(offer.id, '', '', offer.items.ETH.status, e.toString(), currency);
           console.log('handleCreateOfferSuccess', e.toString());
         }
-
-        this.trackingOnchain(data, offer.id);
       }
     }
 
@@ -505,7 +493,9 @@ class Component extends React.Component {
     });
   }
 
-  trackingOnchain = (data, offerStoreId, offerStoreShakeId) => {
+  trackingOnchain = (offerStoreId, offerStoreShakeId, txHash, action, reason, currency) => {
+    const data = { tx_hash: txHash, action, reason, currency };
+
     let url = '';
     if (offerStoreShakeId) {
       url = `exchange/offer-stores/${offerStoreId}/shakes/${offerStoreShakeId}/onchain-tracking`;
@@ -566,6 +556,7 @@ class Component extends React.Component {
     const wantToBuy = amountBuy && amountBuy > 0
     const wantToSell = amountSell && amountSell > 0
 
+    const listCurrency = [{ id: 'usd', text: 'USD' }, { id: 'eur', text: 'EUR' }]
     return (
       <div className="create-exchange">
         <FormExchangeCreate onSubmit={this.handleSubmit} validate={this.handleValidate}>
@@ -706,6 +697,21 @@ class Component extends React.Component {
                 </div>
               </div>
               <hr className="hrLine"/>*/}
+
+              {/*<div className="d-flex mt-2">*/}
+                {/*<label className="col-form-label mr-auto label-create"><span className="align-middle"><FormattedMessage id="ex.create.label.stationCurrency"/></span></label>*/}
+                {/*<div className="input-group w-100">*/}
+                  {/*<Field*/}
+                    {/*name="stationCurrency"*/}
+                    {/*classNameWrapper=""*/}
+                    {/*defaultText={<FormattedMessage id="ex.create.placeholder.stationCurrency" />}*/}
+                    {/*classNameDropdownToggle="dropdown-button"*/}
+                    {/*list={listCurrency}*/}
+                    {/*component={fieldDropdown}*/}
+                  {/*/>*/}
+                {/*</div>*/}
+              {/*</div>*/}
+              {/*<hr className="hrLine"/>*/}
 
               <div className="d-flex mt-2">
                 <label className="col-form-label mr-auto label-create"><span className="align-middle"><FormattedMessage id="ex.create.label.phone"/></span></label>
