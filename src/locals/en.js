@@ -762,6 +762,7 @@ export default {
       invalid_address: 'You can only send tokens to Ethereum address',
       invalid_address2: 'Please enter a valid receiving address.',
       insufficient: 'You have insufficient coin to make the transfer.',
+      insufficient_gas: 'You have insufficient coin to make the transfer with gas fee.',
     },
     success: {
       transaction: 'Your transaction will appear on blockchain in about 30 seconds.',
