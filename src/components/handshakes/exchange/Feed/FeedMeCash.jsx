@@ -1,7 +1,7 @@
 import React from 'react';
 import StarsRating from '@/components/core/presentation/StarsRating';
 
-import iconSpinner from '@/assets/images/icon/icons8-spinner.svg';
+import iconSpinner from '@/assets/images/icon/icons8-spinner.gif';
 import iconChat from '@/assets/images/icon/chat-icon.svg';
 import iconAvatar from '@/assets/images/icon/avatar.svg';
 import iconLogoWhite from '@/assets/images/icon/logo-white.svg';
@@ -99,13 +99,13 @@ class FeedMeCash extends React.PureComponent {
     // console.log('thisss', this.props);
     return (
       <div className="feed-me-cash">
-        <div>
-          <div className="d-inline-block">
+        <div className="d-table w-100">
+          <div className="d-table-cell">
             <div className="status">{statusText}</div>
             <div className="status-explanation">{messageMovingCoin}</div>
           </div>
           { messageMovingCoin && (
-            <div className="countdown float-right">
+            <div className="countdown d-table-cell text-right">
               <img src={iconSpinner} width="14px" />
               <span className="ml-1">{this.state.timePassing}</span>
             </div>)
@@ -128,13 +128,16 @@ class FeedMeCash extends React.PureComponent {
           <div className="d-table-cell align-middle address-info">
             <div>{nameShop}</div>
             <div
-              className="text-truncate d-inline-block"
-              style={{ maxWidth: '120px' }}
+              className="d-inline-block"
+              // style={{ maxWidth: '120px' }}
             >
               {address}
             </div>
           </div>
-          <div className="d-table-cell text-right align-middle">
+          <div
+            className="d-table-cell text-right align-middle"
+            style={{ width: '35px' }}
+          >
             <button
               className="d-inline-block p-0"
               onClick={this.handleClickMoreInfo}
