@@ -1,0 +1,23 @@
+@import './src/styles/style';
+.wrapperLuckyReal {
+  padding: rem-calc(30px 20px 30px 20px);
+  background:white;
+  font-family: $font-family-base;
+  .luckyButton {
+    background: #2456FB;
+    border-radius: rem-calc(2px);
+    font-size: rem-calc(16px);
+    color: #FFFFFF;
+    letter-spacing: 0;
+    margin-top: rem-calc(40px);
+    border: none;
+    //font-weight: $medium;
+  }
+  .luckyDes {
+    font-size: rem-calc(20px);
+
+  }
+  .luckyImage {
+
+  }
+}
