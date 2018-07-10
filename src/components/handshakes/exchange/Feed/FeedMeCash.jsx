@@ -12,11 +12,11 @@ import './FeedMe.scss';
 import './FeedMeCash.scss';
 import { Link } from 'react-router-dom';
 import { URL } from '@/constants';
-import { formatAmountCurrency, formatMoneyByLocale } from '@/services/offer-util';
-import {daysBetween} from "@/services/offer-util";
+import { daysBetween, formatAmountCurrency, formatMoneyByLocale } from '@/services/offer-util';
+import { FormattedMessage } from 'react-intl';
 
 class FeedMeCash extends React.PureComponent {
-  state = {timePassing: ''};
+  state = { timePassing: '' };
   componentDidMount() {
     const { messageMovingCoin, lastUpdateAt } = this.props;
 
@@ -45,7 +45,7 @@ class FeedMeCash extends React.PureComponent {
           <button className="button-close" onClick={() => onShowModalDialog({ show: false })}>&times;</button>
           <div className="d-table w-100">
             <div className="d-table-cell align-middle" style={{ width: '50px' }}><img src={iconLogoWhite} width="35px" /></div>
-            <div className="d-table-cell align-middle"><span className="heading-text">Information</span></div>
+            <div className="d-table-cell align-middle"><span className="heading-text"><FormattedMessage id="ex.shop.shake.label.information" /></span></div>
           </div>
           <hr className="line-hr" />
 
@@ -56,7 +56,7 @@ class FeedMeCash extends React.PureComponent {
                   <img src={iconPhone} width="35px" />
                 </div>
                 <div className="d-table-cell align-middle">
-                  <div className="label-modal-more-info">Phone</div>
+                  <div className="label-modal-more-info"><FormattedMessage id="ex.shop.shake.label.phone" /></div>
                   <div className="phone-number"><a href={`tel:${phoneDisplayed}`} >{phoneDisplayed}</a></div>
                 </div>
               </div>
@@ -68,10 +68,10 @@ class FeedMeCash extends React.PureComponent {
               <img src={iconStar} width="35px" />
             </div>
             <div className="d-table-cell align-middle">
-              <div className="label-modal-more-info">Reviews</div>
+              <div className="label-modal-more-info"><FormattedMessage id="ex.shop.shake.label.reviews" /></div>
               <div className="phone-number">
                 <StarsRating className="d-inline-block" starPoint={review} startNum={5} />
-                <span className="ml-2">({reviewCount} reviews)</span>
+                <span className="ml-2"><FormattedMessage id="ex.shop.shake.label.reviews.count" values={{ reviewCount }} /></span>
               </div>
             </div>
           </div>
@@ -113,11 +113,11 @@ class FeedMeCash extends React.PureComponent {
         </div>
         <div className="order-type">{message}</div>
         <div className="info-wrapper">
-          <div className="label">Cash inventory</div>
+          <div className="label"><FormattedMessage id="ex.shop.shake.label.cash.inventory" /></div>
           <div className="price">{`${formatMoneyByLocale(fiatAmount, fiatCurrency)} ${fiatCurrency}`}</div>
         </div>
         <div className="info-wrapper">
-          <div className="label">Coin inventory</div>
+          <div className="label"><FormattedMessage id="ex.shop.shake.label.cash.inventory" /></div>
           <div className="price">{`${formatAmountCurrency(amount)} ${currency}`}</div>
         </div>
         <hr className="hrLine" />

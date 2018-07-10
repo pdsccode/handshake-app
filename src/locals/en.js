@@ -167,6 +167,12 @@ export default {
   'ex.shop.shake.status.cancelled': 'Cancelled',
 
   'ex.shop.shake.buyer.seller': '{buyerSeller} order',
+  'ex.shop.shake.label.information': 'Information',
+  'ex.shop.shake.label.phone': 'Phone',
+  'ex.shop.shake.label.reviews': 'Reviews',
+  'ex.shop.shake.label.reviews.count': '({reviewCount} reviews)',
+  'ex.shop.shake.label.cash.inventory': 'Cash inventory',
+  'ex.shop.shake.label.coin.inventory': 'Coin inventory',
 
   'ex.error.systemError': 'Sorry Ninja. Something went wrong. Come back soon.',
   'ex.error.312': 'Oh no! You cancelled your offer. You will not be able to make orders for 4 hours. Sorry',
