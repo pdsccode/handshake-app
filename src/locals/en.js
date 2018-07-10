@@ -532,7 +532,7 @@ export default {
         submit_twitter: 'Thanks for following us on Twitter.',
         confirm_code: 'Your email has been verified.',
         verify_code: 'Verification code has been sent to your email.',
-        get_token: 'Success! 80 shurikens have been added to your wallet.',
+        get_token: 'Success! 60 shurikens have been added to your wallet.',
         copy_link: 'Referral link copied to clipboard.',
       },
       button: {
@@ -543,7 +543,7 @@ export default {
         get_token: 'Just give me tokens',
       },
       text: {
-        title: '80 shiny Shurikens (SHURI).',
+        title: '60 shiny Shurikens (SHURI).',
         telegram: 'Say hello on telegram.',
         telegram2: 'Leave your best joke for a chance to win more Shuri.',
         twitter: 'Twitter',
