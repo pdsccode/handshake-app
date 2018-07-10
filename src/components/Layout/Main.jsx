@@ -31,11 +31,13 @@ class MainLayout extends React.Component {
   }
 
   render() {
-    return ( 
-        <DataSetHeader location={this.props.location}> 
-          {this.props.children} 
-          <Navigation location={this.props.location} />
-        </DataSetHeader> 
+    return (   
+            <DataSetHeader location={this.props.location}> 
+              {this.props.children}   
+              <Navigation location={this.props.location} /> 
+            </DataSetHeader>
+            
+       
     );
   }
 }
