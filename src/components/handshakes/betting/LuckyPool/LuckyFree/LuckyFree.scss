@@ -1,12 +1,12 @@
 @import './src/styles/style';
-.wrapperLuckyReal {
+.wrapperLuckyFree {
   padding: rem-calc(40px 30px 40px 30px);
   background:white;
   font-family: $font-family-base;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  .luckyButton {
+  .luckyFreeButton {
     background: #2456FB;
     border-radius: rem-calc(2px);
     font-size: rem-calc(16px);
@@ -17,17 +17,17 @@
     height: rem-calc(50px);
     //font-weight: $medium;
   }
-  .luckyDes {
+  .luckyFreeDes {
     font-size: rem-calc(20px);
     text-align: center;
     margin-top: rem-calc(20px);
   }
-  .luckySmallDes {
+  .luckyFreeSmallDes {
     font-size: rem-calc(14px);
     text-align: center;
     margin-top: rem-calc(20px);
   }
-  .luckyImage {
+  .luckyFreeImage {
     margin-right: rem-calc(20px);
   }
 }
