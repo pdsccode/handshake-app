@@ -6,6 +6,7 @@ import { daysBetween, formatAmountCurrency, formatMoneyByLocale } from '@/servic
 import iconSpinner from '@/assets/images/icon/icons8-spinner.gif';
 import iconAvatar from '@/assets/images/icon/avatar.svg';
 import StarsRating from '@/components/core/presentation/StarsRating';
+import CoinCards from '@/components/handshakes/exchange/components/CoinCards';
 
 class FeedMeStation extends React.PureComponent {
 
@@ -25,7 +26,7 @@ class FeedMeStation extends React.PureComponent {
             </div>
           </div>
 
-          <div>Scrolling</div>
+          <CoinCards coins={[]} currency={'ETH'} />
 
           <div className="d-table w-100 mt-2">
             <div className="d-table-cell align-middle" style={{ width: '42px' }}>

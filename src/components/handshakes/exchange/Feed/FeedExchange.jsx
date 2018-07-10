@@ -62,6 +62,7 @@ import iconBitcoin from '@/assets/images/icon/coin/btc.svg';
 import iconEthereum from '@/assets/images/icon/coin/eth.svg';
 
 import { nameFormShakeDetail } from '@/components/handshakes/exchange/components/ShakeDetail';
+import CoinCards from '@/components/handshakes/exchange/components/CoinCards';
 import { change, clearFields } from 'redux-form';
 import { bindActionCreators } from 'redux';
 
@@ -495,23 +496,7 @@ id="offerDistanceContent"
       <div>
         <div className="feed-exchange" onClick={() => this.handleOnShake()}>
           <div>
-            <div className="coins-wrapper">
-              {
-                coins.map((coin, index) => {
-                  const {
- name, priceBuy, priceSell, color, icon,
-} = coin;
-                  return (
-                    <span key={index} className="coin-item" style={{ background: color }} onClick={e => this.handleClickCoin(e, name)}>
-                      {/* <div className="icon-coin"><img src={icon}/></div> */}
-                      <div className="name mb-1">{name}</div>
-                      <div className="price-wrapper"><label><FormattedMessage id="ex.discover.label.priceBuy" /></label>&nbsp;<span className="price">{priceBuy} {priceBuy !== '-' && currency}</span></div>
-                      <div className="price-wrapper"><label><FormattedMessage id="ex.discover.label.priceSell" /></label>&nbsp;<span className="price">{priceSell} {priceSell !== '-' && currency}</span></div>
-                    </span>
-                  );
-                })
-              }
-            </div>
+            <CoinCards coins={coins} currency={currency} />
             <div className="info-ex">
               <div>
                 <div className="address">{address}</div>
