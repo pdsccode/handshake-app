@@ -1,21 +1,35 @@
 @import './src/styles/style';
 
-.order-info{
-  margin: 12px 12px 0px 12px;
+.shop-info{
+  margin: 0 -15px 1px -15px;
   padding: 12px;
   overflow: hidden;
-  background: #D8D8D8;
-  border-radius: 6px;
+  background:#f3f1f1;
+  .shop{
+    font-weight: 400;
+    text-transform: uppercase;
+    padding-bottom: 5px;
+  }
+  .order{
+    padding-bottom: 0px;
+  }
+}
+.order-info{
+  margin: 0 -15px;
+  padding: 12px;
+  overflow: hidden;
+  background:#f3efef;
 
   .label{
     float:left;
-    font-weight: 400;
-    padding-bottom: 7px;
+    padding-bottom: 5px;
   }
   .key{
     float: right;
+    padding-bottom: 5px;
+  }
+  .bold{
     font-weight: 400;
-    padding-bottom: 7px;
   }
 }
 

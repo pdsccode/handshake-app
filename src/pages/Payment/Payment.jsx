@@ -125,12 +125,19 @@ class Payment extends React.Component {
     const { messages } = this.props.intl;
     return (
       <Modal title="Pay with Ninja" onRef={modal => this.modalSendRef = modal}  onClose={this.closePayNinja}>
+        <div className="shop-info">
+          <div className="shop">{this.extractDomain()}</div>
+          <div className="order">Order # {this.state.orderID}</div>
+        </div>
         <div className="order-info">
-          <div className="key">{this.state.orderID}</div>
-          <div className="label">Order ID</div>
+          <div className="label">Payment Amount</div>
+          <div className="key">{this.state.amount} {this.state.coinName}</div>
           <div className="clearfix"></div>
+          <div className="label">Network Cost</div>
           <div className="key">{this.extractDomain()}</div>
-          <div className="label">Website</div>
+          <div className="clearfix"></div>
+          <div className="label bold">Total</div>
+          <div className="key bold">{this.state.amount} {this.state.coinName}</div>
         </div>
         <TransferCoin isShowWallets={true} active={this.state.active}  toAddress={this.state.toAddress} fromAddress={this.state.fromAddress} amount={this.state.amount} coinName={this.state.coinName} onFinish={() => { this.successPayNinja() }} />
       </Modal>);
