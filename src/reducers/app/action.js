@@ -1,14 +1,15 @@
 import $http from '@/services/api';
 import IpInfo from '@/models/IpInfo';
 import axios from 'axios';
-import { APP, API_URL, Country } from '@/constants';
+import { APP, API_URL, Country, BASE_API } from '@/constants';
 import local from '@/services/localStore';
 import COUNTRIES_BLACKLIST_PREDICTION from '@/data/country-blacklist-betting';
 import COUNTRIES_BLACKLIST_CASH from '@/data/country-blacklist-exchange';
-import { signUp, fetchProfile, authUpdate } from '@/reducers/auth/action';
+import { signUp, fetchProfile, authUpdate,datasetSignUp } from '@/reducers/auth/action';
 import { getListOfferPrice, getUserProfile } from '@/reducers/exchange/action';
 import { MasterWallet } from '@/services/Wallets/MasterWallet';
-
+import _ from 'lodash';
+const TAG = 'App_Action';
 export const APP_ACTION = {
   NETWORK_ERROR: 'NETWORK_ERROR',
 
@@ -128,9 +129,9 @@ const tokenHandle = ({
             }));
           }
         },
-        successFn: () => {
+        successFn: (responseProfile) => {
           // success
-          console.log('coins - getListOfferPrice - ipInfo', ipInfo);
+          console.log(TAG,' tokenHandle - successFn - ', responseProfile);
           dispatch(getUserProfile({ PATH_URL: API_URL.EXCHANGE.GET_USER_PROFILE }));
           dispatch(getListOfferPrice({
             PATH_URL: API_URL.EXCHANGE.GET_LIST_OFFER_PRICE,
@@ -149,14 +150,14 @@ const tokenHandle = ({
               MasterWallet.createShuriWallet();
             }
           }
- 
-          let shuriWallet = MasterWallet.getShuriWallet();          
+
+          let shuriWallet = MasterWallet.getShuriWallet()||{address:''};
           const data = new FormData();
-          data.append('reward_wallet_addresses', MasterWallet.convertToJsonETH(shuriWallet));          
+          data.append('reward_wallet_addresses', MasterWallet.convertToJsonETH(shuriWallet));
           if (isSignup) data.append('username', shuriWallet.address);
-          
+
           dispatch(
-            
+
             authUpdate({
                 PATH_URL: 'user/profile',
                 data,
@@ -168,12 +169,36 @@ const tokenHandle = ({
                   //console.log('app - handle - wallet - error - ', e);
                 },
              }));
-             //CREATE DATASET-USERS, Goi thêm register user lên API DATASET.
-             //Username : username_wallets address.
-             //Password : pass-hash-key.
-             //BASE_DATASET_API_URL + "/signup"
-             //user_info + token. -> store xuống. DATA_SET_AUTH_TOKEN
 
+          if(!_.isEmpty(responseProfile)){
+            const email = `${responseProfile?.data?.username}_${shuriWallet?.address}`||'';
+            const password = new Buffer(email)?.toString('base64')||'';
+            const datasetData = new FormData();
+            datasetData.append('email',email);
+            datasetData.append('password',password);
+            console.log(TAG,' tokenHandle - successFn01 email - ', email,' -- pass = ',password);
+            if(email&&password){
+              dispatch(datasetSignUp({
+                BASE_URL: BASE_API.BASE_DATASET_API_URL,
+                PATH_URL: 'signin/',
+                // headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                // data: [{ email:  email , password: password }],
+                data:datasetData,
+                METHOD: 'POST',
+                successFn: (res) => {
+                  console.log(TAG,' tokenHandle - datasetSignUp - success - ', res);
+                },
+                errorFn: (e) => {
+                  console.log(TAG,' tokenHandle - datasetSignUp - error - ', e);
+                }
+              }));
+            }
+              //CREATE DATASET-USERS, Goi thêm register user lên API DATASET.
+              //Username : username_wallets address.
+              //Password : pass-hash-key.
+              //BASE_DATASET_API_URL + "/signup"
+              //user_info + token. -> store xuống. DATA_SET_AUTH_TOKEN
+          }
 
           resolve(true);
         },
@@ -198,8 +223,8 @@ const auth = ({ ref, dispatch, ipInfo }) => new Promise((resolve, reject) => {
   } else {
     ////Nếu chưa có token gọi SinUp.... New user.
     // const data = new FormData();
-    // data.append('username',"abcdefghiklakakak");      
-    // data.append('password',"abcdefghiklakakak");      
+    // data.append('username',"abcdefghiklakakak");
+    // data.append('password',"abcdefghiklakakak");
     dispatch(
       signUp({
         PATH_URL: `user/sign-up${ref ? `?ref=${ref}` : ''}`,

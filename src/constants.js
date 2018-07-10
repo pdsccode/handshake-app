@@ -8,6 +8,7 @@ export const APP = {
   LOCALE: 'app_locale',
   AUTH_TOKEN: 'auth_token',
   AUTH_PROFILE: 'auth_profile',
+  DATASET_AUTH_PROFILE: 'dataset_auth_profile',
   WALLET_MASTER: 'wallet_master',
   WALLET_CACHE: 'wallet_cache',
   WALLET_DEFAULT: 'wallet_default',
@@ -23,7 +24,8 @@ export const APP = {
 
 export const UNSELECTED = 'UNSELECTED';
 
-export const HANDSHAKE_ID = { // important
+export const HANDSHAKE_ID = {
+  // important
   PROMISE: 1,
   EXCHANGE: 2,
   BETTING: 3,
@@ -39,7 +41,10 @@ export const HANDSHAKE_ID_DEFAULT = 2;
 export const HANDSHAKE_NAME = {
   // [HANDSHAKE_ID.PROMISE]: { name: 'Promise', priority: 3 },
   [HANDSHAKE_ID.BETTING]: { name: 'Predict an outcome', priority: 1 },
-  [HANDSHAKE_ID.BETTING_EVENT]: { name: 'Design a betting market', priority: 2 },
+  [HANDSHAKE_ID.BETTING_EVENT]: {
+    name: 'Design a betting market',
+    priority: 2,
+  },
   // [HANDSHAKE_ID.SEED]: 'Seed',
   [HANDSHAKE_ID.WALLET_TRANSFER]: { name: 'Transfer coins', priority: 4 },
   [HANDSHAKE_ID.WALLET_RECEIVE]: { name: 'Receive coins', priority: 5 },
@@ -62,8 +67,14 @@ export const CRYPTO_CURRENCY_NAME = {
 };
 
 export const CRYPTO_CURRENCY_LIST = [
-  { value: CRYPTO_CURRENCY.ETH, text: CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.ETH] },
-  { value: CRYPTO_CURRENCY.BTC, text: CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.BTC] },
+  {
+    value: CRYPTO_CURRENCY.ETH,
+    text: CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.ETH],
+  },
+  {
+    value: CRYPTO_CURRENCY.BTC,
+    text: CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.BTC],
+  },
 ];
 export const FIREBASE_PATH = {
   USERS: '/users',
@@ -96,8 +107,14 @@ export const EXCHANGE_ACTION_PERSON = {
 };
 
 export const EXCHANGE_ACTION_LIST = [
-  { value: EXCHANGE_ACTION.BUY, text: EXCHANGE_ACTION_NAME[EXCHANGE_ACTION.BUY] },
-  { value: EXCHANGE_ACTION.SELL, text: EXCHANGE_ACTION_NAME[EXCHANGE_ACTION.SELL] },
+  {
+    value: EXCHANGE_ACTION.BUY,
+    text: EXCHANGE_ACTION_NAME[EXCHANGE_ACTION.BUY],
+  },
+  {
+    value: EXCHANGE_ACTION.SELL,
+    text: EXCHANGE_ACTION_NAME[EXCHANGE_ACTION.SELL],
+  },
 ];
 
 export const EXCHANGE_ACTION_DEFAULT = EXCHANGE_ACTION.BUY;
@@ -216,22 +233,49 @@ export const HANDSHAKE_EXCHANGE_STATUS = {
   CANCELLED: 13,
 };
 
-
 export const HANDSHAKE_EXCHANGE_STATUS_NAME = {
-  [HANDSHAKE_EXCHANGE_STATUS.CREATED]: <FormattedMessage id="ex.exchange.status.created" />,
-  [HANDSHAKE_EXCHANGE_STATUS.ACTIVE]: <FormattedMessage id="ex.exchange.status.active" />,
-  [HANDSHAKE_EXCHANGE_STATUS.CLOSING]: <FormattedMessage id="ex.exchange.status.closing" />,
-  [HANDSHAKE_EXCHANGE_STATUS.CLOSED]: <FormattedMessage id="ex.exchange.status.closed" />,
-  [HANDSHAKE_EXCHANGE_STATUS.SHAKING]: <FormattedMessage id="ex.exchange.status.shaking" />,
-  [HANDSHAKE_EXCHANGE_STATUS.SHAKE]: <FormattedMessage id="ex.exchange.status.shake" />,
-  [HANDSHAKE_EXCHANGE_STATUS.COMPLETING]: <FormattedMessage id="ex.exchange.status.completing" />,
-  [HANDSHAKE_EXCHANGE_STATUS.COMPLETED]: <FormattedMessage id="ex.exchange.status.completed" />,
-  [HANDSHAKE_EXCHANGE_STATUS.PRE_SHAKING]: <FormattedMessage id="ex.exchange.status.pre_shaking" />,
-  [HANDSHAKE_EXCHANGE_STATUS.PRE_SHAKE]: <FormattedMessage id="ex.exchange.status.pre_shake" />,
-  [HANDSHAKE_EXCHANGE_STATUS.REJECTING]: <FormattedMessage id="ex.exchange.status.rejecting" />,
-  [HANDSHAKE_EXCHANGE_STATUS.REJECTED]: <FormattedMessage id="ex.exchange.status.rejected" />,
-  [HANDSHAKE_EXCHANGE_STATUS.CANCELLING]: <FormattedMessage id="ex.exchange.status.cancelling" />,
-  [HANDSHAKE_EXCHANGE_STATUS.CANCELLED]: <FormattedMessage id="ex.exchange.status.cancelled" />,
+  [HANDSHAKE_EXCHANGE_STATUS.CREATED]: (
+    <FormattedMessage id="ex.exchange.status.created" />
+  ),
+  [HANDSHAKE_EXCHANGE_STATUS.ACTIVE]: (
+    <FormattedMessage id="ex.exchange.status.active" />
+  ),
+  [HANDSHAKE_EXCHANGE_STATUS.CLOSING]: (
+    <FormattedMessage id="ex.exchange.status.closing" />
+  ),
+  [HANDSHAKE_EXCHANGE_STATUS.CLOSED]: (
+    <FormattedMessage id="ex.exchange.status.closed" />
+  ),
+  [HANDSHAKE_EXCHANGE_STATUS.SHAKING]: (
+    <FormattedMessage id="ex.exchange.status.shaking" />
+  ),
+  [HANDSHAKE_EXCHANGE_STATUS.SHAKE]: (
+    <FormattedMessage id="ex.exchange.status.shake" />
+  ),
+  [HANDSHAKE_EXCHANGE_STATUS.COMPLETING]: (
+    <FormattedMessage id="ex.exchange.status.completing" />
+  ),
+  [HANDSHAKE_EXCHANGE_STATUS.COMPLETED]: (
+    <FormattedMessage id="ex.exchange.status.completed" />
+  ),
+  [HANDSHAKE_EXCHANGE_STATUS.PRE_SHAKING]: (
+    <FormattedMessage id="ex.exchange.status.pre_shaking" />
+  ),
+  [HANDSHAKE_EXCHANGE_STATUS.PRE_SHAKE]: (
+    <FormattedMessage id="ex.exchange.status.pre_shake" />
+  ),
+  [HANDSHAKE_EXCHANGE_STATUS.REJECTING]: (
+    <FormattedMessage id="ex.exchange.status.rejecting" />
+  ),
+  [HANDSHAKE_EXCHANGE_STATUS.REJECTED]: (
+    <FormattedMessage id="ex.exchange.status.rejected" />
+  ),
+  [HANDSHAKE_EXCHANGE_STATUS.CANCELLING]: (
+    <FormattedMessage id="ex.exchange.status.cancelling" />
+  ),
+  [HANDSHAKE_EXCHANGE_STATUS.CANCELLED]: (
+    <FormattedMessage id="ex.exchange.status.cancelled" />
+  ),
 };
 
 export const HANDSHAKE_EXCHANGE_STATUS_VALUE = {
@@ -258,9 +302,15 @@ export const HANDSHAKE_EXCHANGE_CC_STATUS = {
 };
 
 export const HANDSHAKE_EXCHANGE_CC_STATUS_NAME = {
-  [HANDSHAKE_EXCHANGE_CC_STATUS.PROCESSING]: <FormattedMessage id="ex.cc.status.processing" />,
-  [HANDSHAKE_EXCHANGE_CC_STATUS.SUCCESS]: <FormattedMessage id="ex.cc.status.success" />,
-  [HANDSHAKE_EXCHANGE_CC_STATUS.CANCELLED]: <FormattedMessage id="ex.cc.status.cancelled" />,
+  [HANDSHAKE_EXCHANGE_CC_STATUS.PROCESSING]: (
+    <FormattedMessage id="ex.cc.status.processing" />
+  ),
+  [HANDSHAKE_EXCHANGE_CC_STATUS.SUCCESS]: (
+    <FormattedMessage id="ex.cc.status.success" />
+  ),
+  [HANDSHAKE_EXCHANGE_CC_STATUS.CANCELLED]: (
+    <FormattedMessage id="ex.cc.status.cancelled" />
+  ),
 };
 
 export const HANDSHAKE_EXCHANGE_CC_STATUS_VALUE = {
@@ -289,10 +339,18 @@ export const HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS = {
 };
 
 export const HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_NAME = {
-  [HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CREATED]: <FormattedMessage id="ex.shop.status.created" />,
-  [HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.ACTIVE]: <FormattedMessage id="ex.shop.status.active" />,
-  [HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSING]: <FormattedMessage id="ex.shop.status.closing" />,
-  [HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSED]: <FormattedMessage id="ex.shop.status.closed" />,
+  [HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CREATED]: (
+    <FormattedMessage id="ex.shop.status.created" />
+  ),
+  [HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.ACTIVE]: (
+    <FormattedMessage id="ex.shop.status.active" />
+  ),
+  [HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSING]: (
+    <FormattedMessage id="ex.shop.status.closing" />
+  ),
+  [HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSED]: (
+    <FormattedMessage id="ex.shop.status.closed" />
+  ),
 };
 
 export const HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE = {
@@ -316,16 +374,36 @@ export const HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS = {
 };
 
 export const HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS_NAME = {
-  [HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.PRE_SHAKING]: <FormattedMessage id="ex.shop.shake.status.pre_shaking" />,
-  [HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.PRE_SHAKE]: <FormattedMessage id="ex.shop.shake.status.pre_shake" />,
-  [HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.SHAKING]: <FormattedMessage id="ex.shop.shake.status.shaking" />,
-  [HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.SHAKE]: <FormattedMessage id="ex.shop.shake.status.shake" />,
-  [HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.REJECTING]: <FormattedMessage id="ex.shop.shake.status.rejecting" />,
-  [HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.REJECTED]: <FormattedMessage id="ex.shop.shake.status.rejected" />,
-  [HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.COMPLETING]: <FormattedMessage id="ex.shop.shake.status.completing" />,
-  [HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.COMPLETED]: <FormattedMessage id="ex.shop.shake.status.completed" />,
-  [HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.CANCELLING]: <FormattedMessage id="ex.shop.shake.status.cancelling" />,
-  [HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.CANCELLED]: <FormattedMessage id="ex.shop.shake.status.cancelled" />,
+  [HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.PRE_SHAKING]: (
+    <FormattedMessage id="ex.shop.shake.status.pre_shaking" />
+  ),
+  [HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.PRE_SHAKE]: (
+    <FormattedMessage id="ex.shop.shake.status.pre_shake" />
+  ),
+  [HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.SHAKING]: (
+    <FormattedMessage id="ex.shop.shake.status.shaking" />
+  ),
+  [HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.SHAKE]: (
+    <FormattedMessage id="ex.shop.shake.status.shake" />
+  ),
+  [HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.REJECTING]: (
+    <FormattedMessage id="ex.shop.shake.status.rejecting" />
+  ),
+  [HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.REJECTED]: (
+    <FormattedMessage id="ex.shop.shake.status.rejected" />
+  ),
+  [HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.COMPLETING]: (
+    <FormattedMessage id="ex.shop.shake.status.completing" />
+  ),
+  [HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.COMPLETED]: (
+    <FormattedMessage id="ex.shop.shake.status.completed" />
+  ),
+  [HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.CANCELLING]: (
+    <FormattedMessage id="ex.shop.shake.status.cancelling" />
+  ),
+  [HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.CANCELLED]: (
+    <FormattedMessage id="ex.shop.shake.status.cancelled" />
+  ),
 };
 
 export const HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS_VALUE = {
@@ -372,10 +450,10 @@ export const MIN_AMOUNT = {
   [CRYPTO_CURRENCY.BTC]: 0.001,
 };
 
-
 // API
 
 export const BASE_API = {
+  BASE_DATASET_API_URL: process.env.BASE_DATASET_API_URL,
   BASE_URL: process.env.BASE_API_URL,
   TIMEOUT: 10000,
 };
@@ -395,7 +473,6 @@ export const URL = {
   DATA_SET_UPLOAD: '/upload',
   DATA_SET_UPLOAD_INDEX: '/upload',
 
-  
   DATA_SET_HISTORY: '/hist',
   DATA_SET_HISTORY_INDEX: '/hist',
 
@@ -445,7 +522,6 @@ export const URL = {
 
 export const NB_BLOCKS = 20;
 
-
 export const blockchainNetworks = {
   rinkeby: {
     type: 'ERC20',
@@ -456,7 +532,8 @@ export const blockchainNetworks = {
     chainId: 4,
     contracts: {
       predictionHandshakeAddress: '0x6f25814d49bcf8345f8afd2a3bf9d5fd95079f84',
-      predictionHandshakeDevAddress: '0x6f25814d49bcf8345f8afd2a3bf9d5fd95079f84',
+      predictionHandshakeDevAddress:
+        '0x6f25814d49bcf8345f8afd2a3bf9d5fd95079f84',
       exchangeHandshakeAddress: '0x6d86cf435978cb75aecc43d0a4e3a379af7667d8',
       exchangeShopAddress: '0xa849f62cacb770dd1aac0dceb9fc7ec53cffde84',
       shurikenTokenAddress: '0xc2f227834af7b44a11a9286f1771cade7ecd316c',
@@ -468,15 +545,15 @@ export const blockchainNetworks = {
     },
   },
   ethereum: {
-    type:
-    'ERC20',
+    type: 'ERC20',
     endpoint: 'https://mainnet.infura.io/',
     name: 'Ethereum',
     unit: 'ETH',
     chainId: 1,
     contracts: {
       predictionHandshakeAddress: '0x2730da6188a35a5a384f4a3127036bb90f3721b5',
-      predictionHandshakeDevAddress: '0x6f25814d49bcf8345f8afd2a3bf9d5fd95079f84',
+      predictionHandshakeDevAddress:
+        '0x6f25814d49bcf8345f8afd2a3bf9d5fd95079f84',
       exchangeHandshakeAddress: '0x5fa2e0d96dbe664beb502407bf46ea85b131fb86',
       exchangeShopAddress: '0x05914192cbbaae87a910f79e012b4091a39cc85c',
       shurikenTokenAddress: '0xca0fed76b5807557ce38e65cab83be3373cc2e7d',
@@ -501,8 +578,6 @@ export const blockchainNetworks = {
     unit: 'BTC',
   },
 };
-
-
 
 export const Country = {
   AD: 'EUR',
