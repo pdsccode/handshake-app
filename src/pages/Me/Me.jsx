@@ -191,7 +191,7 @@ class Me extends React.Component {
   }
 
   handleShowModalDialog = (modalProps) => {
-    const { show, propsModal, modalContent } = modalProps
+    const { show, propsModal, modalContent = <div /> } = modalProps
     this.setState({
       modalContent,
       propsModal
