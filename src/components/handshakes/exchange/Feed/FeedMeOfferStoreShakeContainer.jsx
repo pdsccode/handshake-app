@@ -1,40 +1,36 @@
-import React from "react";
+import React from 'react';
 import FeedMeCash from './FeedMeCash';
 import {
   API_URL,
   CRYPTO_CURRENCY,
   EXCHANGE_ACTION,
-  EXCHANGE_ACTION_NAME,
   EXCHANGE_ACTION_PAST_NAME,
+  EXCHANGE_ACTION_PERSON,
   EXCHANGE_ACTION_PRESENT_NAME,
   EXCHANGE_FEED_TYPE,
   EXCHANGE_METHOD_PAYMENT,
   HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS,
   HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS_NAME,
-  HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS,
-  HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_NAME,
-  HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE,
-  HANDSHAKE_USER
-} from "@/constants";
-import {MasterWallet} from '@/services/Wallets/MasterWallet';
-import {ExchangeShopHandshake} from "@/services/neuron";
-import {FormattedMessage} from "react-intl";
-import {connect} from "react-redux";
-import PropTypes from "prop-types";
-import {hideLoading, showAlert, showLoading} from '@/reducers/app/action';
-import Button from '@/components/core/controls/Button/Button';
-import {responseExchangeDataChange} from "@/reducers/me/action";
-import {Ethereum} from '@/services/Wallets/Ethereum.js';
-import {Bitcoin} from '@/services/Wallets/Bitcoin';
-import {formatAmountCurrency, formatMoneyByLocale, getHandshakeUserType, getOfferPrice} from "@/services/offer-util";
-import Offer from "@/models/Offer";
+  HANDSHAKE_USER,
+} from '@/constants';
+import { MasterWallet } from '@/services/Wallets/MasterWallet';
+import { ExchangeShopHandshake } from '@/services/neuron';
+import { FormattedMessage } from 'react-intl';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { hideLoading, showAlert, showLoading } from '@/reducers/app/action';
+import { responseExchangeDataChange } from '@/reducers/me/action';
+import { Ethereum } from '@/services/Wallets/Ethereum.js';
+import { Bitcoin } from '@/services/Wallets/Bitcoin';
+import { formatAmountCurrency, formatMoneyByLocale, getHandshakeUserType, getOfferPrice } from '@/services/offer-util';
+import Offer from '@/models/Offer';
 import {
   acceptOfferItem,
   cancelOfferItem,
   completeOfferItem,
   rejectOfferItem,
-  reviewOffer
-} from "@/reducers/exchange/action";
+  reviewOffer,
+} from '@/reducers/exchange/action';
 import Rate from '@/components/core/controls/Rate/Rate';
 
 class FeedMeOfferStoreShakeContainer extends React.PureComponent {
@@ -82,7 +78,7 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
     const { offer } = this;
     const { listOfferPrice } = this.props;
     let fiatAmount = 0;
-    const { currency, fiatCurrency, } = offer;
+    const { currency, fiatCurrency } = offer;
 
     if (offer.fiatAmount) {
       fiatAmount = offer.fiatAmount;
@@ -148,102 +144,134 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
     return chatUserName?.toString() || '';
   }
 
-  getMessageContent = (fiatAmount) => {
-    const { status } = this.props;
+  getBuyerSeller = () => {
     const { offer } = this;
-    let offerType = '';
 
-    let idMessage = '';
+    let message = '';
     switch (this.userType) {
       case HANDSHAKE_USER.NORMAL: {
         break;
       }
-      case HANDSHAKE_USER.SHAKED: {
-        switch (status) {
-          case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.PRE_SHAKING:
-          case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.PRE_SHAKE:
-          case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.REJECTING:
-          case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.REJECTED:
-          case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.CANCELLING:
-          case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.CANCELLED: {
-            if (offer.type === EXCHANGE_ACTION.BUY) {
-              offerType = EXCHANGE_ACTION_PRESENT_NAME[EXCHANGE_ACTION.SELL];
-            } else if (offer.type === EXCHANGE_ACTION.SELL) {
-              offerType = EXCHANGE_ACTION_PRESENT_NAME[EXCHANGE_ACTION.BUY];
-            }
-
-            idMessage = 'offerHandShakeContentMe';
-
-            break;
-          }
-          case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.SHAKING:
-          case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.SHAKE:
-          case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.COMPLETING:
-          case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.COMPLETED: {
-            if (offer.type === EXCHANGE_ACTION.BUY) {
-              offerType = EXCHANGE_ACTION_PAST_NAME[EXCHANGE_ACTION.SELL];
-            } else if (offer.type === EXCHANGE_ACTION.SELL) {
-              offerType = EXCHANGE_ACTION_PAST_NAME[EXCHANGE_ACTION.BUY];
-            }
-
-            idMessage = 'offerHandShakeContentMeDone';
-
-            break;
-          }
-        }
-
+      case HANDSHAKE_USER.OWNER: {
+        message = EXCHANGE_ACTION_PERSON[offer.type];
         break;
       }
-      case HANDSHAKE_USER.OWNER: {
-        switch (status) {
-          case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.PRE_SHAKING:
-          case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.PRE_SHAKE:
-          case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.REJECTING:
-          case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.REJECTED:
-          case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.CANCELLING:
-          case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.CANCELLED: {
-            offerType = EXCHANGE_ACTION_PRESENT_NAME[offer.type];
-
-            idMessage = 'offerHandShakeContentMe';
-
-            break;
-          }
-          case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.SHAKING:
-          case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.SHAKE:
-          case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.COMPLETING:
-          case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.COMPLETED: {
-            offerType = EXCHANGE_ACTION_PAST_NAME[offer.type];
-
-            idMessage = 'offerHandShakeContentMeDone';
-
-            break;
-          }
-          default: {
-            // code
-            break;
-          }
+      case HANDSHAKE_USER.SHAKED: {
+        if (offer.type === EXCHANGE_ACTION.BUY) {
+          message = EXCHANGE_ACTION_PERSON[EXCHANGE_ACTION.SELL];
+        } else if (offer.type === EXCHANGE_ACTION.SELL) {
+          message = EXCHANGE_ACTION_PERSON[EXCHANGE_ACTION.BUY];
         }
+        break;
       }
     }
 
-    let message = '';
-    if (idMessage) {
-      message = (<FormattedMessage
-        id={idMessage}
-        values={{
-          offerType,
-          amount: formatAmountCurrency(offer.amount),
-          currency: offer.currency,
-          currency_symbol: offer.fiatCurrency,
-          total: formatMoneyByLocale(fiatAmount, offer.fiatCurrency),
-          // fee: offer.feePercentage,
-          payment_method: EXCHANGE_METHOD_PAYMENT[EXCHANGE_FEED_TYPE.EXCHANGE],
-        }}
-      />);
+    if (message) {
+      message = <FormattedMessage id='ex.shop.shake.buyer.seller' values={{
+        buyerSeller: message
+      }}/>
     }
 
     return message;
   }
+
+  // getMessageContent = (fiatAmount) => {
+  //   const { status } = this.props;
+  //   const { offer } = this;
+  //   let offerType = '';
+  //
+  //   let idMessage = '';
+  //   switch (this.userType) {
+  //     case HANDSHAKE_USER.NORMAL: {
+  //       break;
+  //     }
+  //     case HANDSHAKE_USER.SHAKED: {
+  //       switch (status) {
+  //         case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.PRE_SHAKING:
+  //         case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.PRE_SHAKE:
+  //         case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.REJECTING:
+  //         case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.REJECTED:
+  //         case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.CANCELLING:
+  //         case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.CANCELLED: {
+  //           if (offer.type === EXCHANGE_ACTION.BUY) {
+  //             offerType = EXCHANGE_ACTION_PRESENT_NAME[EXCHANGE_ACTION.SELL];
+  //           } else if (offer.type === EXCHANGE_ACTION.SELL) {
+  //             offerType = EXCHANGE_ACTION_PRESENT_NAME[EXCHANGE_ACTION.BUY];
+  //           }
+  //
+  //           idMessage = 'offerHandShakeContentMe';
+  //
+  //           break;
+  //         }
+  //         case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.SHAKING:
+  //         case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.SHAKE:
+  //         case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.COMPLETING:
+  //         case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.COMPLETED: {
+  //           if (offer.type === EXCHANGE_ACTION.BUY) {
+  //             offerType = EXCHANGE_ACTION_PAST_NAME[EXCHANGE_ACTION.SELL];
+  //           } else if (offer.type === EXCHANGE_ACTION.SELL) {
+  //             offerType = EXCHANGE_ACTION_PAST_NAME[EXCHANGE_ACTION.BUY];
+  //           }
+  //
+  //           idMessage = 'offerHandShakeContentMeDone';
+  //
+  //           break;
+  //         }
+  //       }
+  //
+  //       break;
+  //     }
+  //     case HANDSHAKE_USER.OWNER: {
+  //       switch (status) {
+  //         case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.PRE_SHAKING:
+  //         case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.PRE_SHAKE:
+  //         case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.REJECTING:
+  //         case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.REJECTED:
+  //         case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.CANCELLING:
+  //         case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.CANCELLED: {
+  //           offerType = EXCHANGE_ACTION_PRESENT_NAME[offer.type];
+  //
+  //           idMessage = 'offerHandShakeContentMe';
+  //
+  //           break;
+  //         }
+  //         case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.SHAKING:
+  //         case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.SHAKE:
+  //         case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.COMPLETING:
+  //         case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.COMPLETED: {
+  //           offerType = EXCHANGE_ACTION_PAST_NAME[offer.type];
+  //
+  //           idMessage = 'offerHandShakeContentMeDone';
+  //
+  //           break;
+  //         }
+  //         default: {
+  //           // code
+  //           break;
+  //         }
+  //       }
+  //       break;
+  //     }
+  //   }
+  //
+  //   let message = '';
+  //   if (idMessage) {
+  //     message = (<FormattedMessage
+  //       id={idMessage}
+  //       values={{
+  //         offerType,
+  //         amount: formatAmountCurrency(offer.amount),
+  //         currency: offer.currency,
+  //         currency_symbol: offer.fiatCurrency,
+  //         total: formatMoneyByLocale(fiatAmount, offer.fiatCurrency),
+  //         // fee: offer.feePercentage,
+  //         payment_method: EXCHANGE_METHOD_PAYMENT[EXCHANGE_FEED_TYPE.EXCHANGE],
+  //       }}
+  //     />);
+  //   }
+  //
+  //   return message;
+  // }
 
   getActionButtons = () => {
     const { status, confirmOfferAction } = this.props;
@@ -262,9 +290,11 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
             actionButtons = (
               <div className="mt-3">
                 <span className="d-inline-block w-50 pr-1">
-                  <button className="btn btn-block btn-confirm"
-                          onClick={() => confirmOfferAction(message, this.handleAcceptShakedOffer)}
-                  ><FormattedMessage id="btn.accept" /></button>
+                  <button
+                    className="btn btn-block btn-confirm"
+                    onClick={() => confirmOfferAction(message, this.handleAcceptShakedOffer)}
+                  ><FormattedMessage id="btn.accept" />
+                  </button>
                 </span>
               </div>
             );
@@ -278,15 +308,19 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
               <div className="mt-3">
                 {offer.type === EXCHANGE_ACTION.SELL &&
                 <span className="d-inline-block w-50 pr-1">
-                  <button className="btn btn-block btn-confirm"
-                          onClick={() => confirmOfferAction(message2, this.handleCompleteShakedOffer)}
-                  ><FormattedMessage id="btn.complete" /></button>
+                  <button
+                    className="btn btn-block btn-confirm"
+                    onClick={() => confirmOfferAction(message2, this.handleCompleteShakedOffer)}
+                  ><FormattedMessage id="btn.complete" />
+                  </button>
                 </span>
                 }
                 <span className="d-inline-block w-50 pl-1">
-                  <button className="btn btn-block btn-cancel"
-                          onClick={() => confirmOfferAction(message, this.handleRejectShakedOffer)}
-                  ><FormattedMessage id="btn.reject" /></button>
+                  <button
+                    className="btn btn-block btn-cancel"
+                    onClick={() => confirmOfferAction(message, this.handleRejectShakedOffer)}
+                  ><FormattedMessage id="btn.reject" />
+                  </button>
                 </span>
               </div>
             );
@@ -302,9 +336,11 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
             actionButtons = (
               <div className="mt-3">
                 <span className="d-inline-block w-50 pl-1">
-                  <button className="btn btn-block btn-cancel"
-                          onClick={() => confirmOfferAction(message, this.handleCancelShakeOffer)}
-                  ><FormattedMessage id="btn.cancel" /></button>
+                  <button
+                    className="btn btn-block btn-cancel"
+                    onClick={() => confirmOfferAction(message, this.handleCancelShakeOffer)}
+                  ><FormattedMessage id="btn.cancel" />
+                  </button>
                 </span>
               </div>
             );
@@ -318,15 +354,19 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
               <div className="mt-3">
                 {offer.type === EXCHANGE_ACTION.BUY &&
                 <span className="d-inline-block w-50 pr-1">
-                  <button className="btn btn-block btn-confirm"
-                          onClick={() => confirmOfferAction(message2, this.handleCompleteShakedOffer)}
-                  ><FormattedMessage id="btn.complete" /></button>
+                  <button
+                    className="btn btn-block btn-confirm"
+                    onClick={() => confirmOfferAction(message2, this.handleCompleteShakedOffer)}
+                  ><FormattedMessage id="btn.complete" />
+                  </button>
                 </span>
                 }
                 <span className="d-inline-block w-50 pl-1">
-                  <button className="btn btn-block btn-cancel"
-                          onClick={() => confirmOfferAction(message, this.handleRejectShakedOffer)}
-                  ><FormattedMessage id="btn.cancel" /></button>
+                  <button
+                    className="btn btn-block btn-cancel"
+                    onClick={() => confirmOfferAction(message, this.handleRejectShakedOffer)}
+                  ><FormattedMessage id="btn.cancel" />
+                  </button>
                 </span>
               </div>
             );
@@ -430,7 +470,7 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
     const { offer } = this;
     const { initUserId } = this.props;
     const {
-      id, currency, type, freeStart
+      id, currency, type, freeStart,
     } = offer;
 
     if (currency === CRYPTO_CURRENCY.ETH) {
@@ -527,7 +567,7 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
     const { id, currency, type } = offer;
 
     if (currency === CRYPTO_CURRENCY.ETH) {
-      if (type === EXCHANGE_ACTION.BUY) {//shop buy
+      if (type === EXCHANGE_ACTION.BUY) { // shop buy
         const wallet = MasterWallet.getWalletDefault(currency);
         const balance = await wallet.getBalance();
         const fee = await wallet.getFee();
@@ -556,7 +596,7 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
     const { data } = responseData;
     const offerShake = Offer.offer(data);
     const {
-      hid, currency, type, offChainId, status
+      hid, currency, type, offChainId, status,
     } = offerShake;
 
     console.log('handleRejectShakedOfferSuccess', responseData);
@@ -565,7 +605,7 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
     this.responseExchangeDataChange(offerShake);
 
     if (currency === CRYPTO_CURRENCY.ETH) {
-      if (type === EXCHANGE_ACTION.BUY) {//shop buy
+      if (type === EXCHANGE_ACTION.BUY) { // shop buy
         try {
           const wallet = MasterWallet.getWalletDefault(currency);
 
@@ -864,16 +904,25 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
 
     const nameShop = getNameShopDisplayed();
     const fiatAmount = this.calculateFiatAmount();
-    const message = this.getMessageContent(fiatAmount);
+    // const message = this.getMessageContent(fiatAmount);
+    const message = this.getBuyerSeller();
     const actionButtons = this.getActionButtons();
     const messageMovingCoin = this.getMessageMovingCoin();
 
     const feedProps = {
-      from, email, statusText, message,
-      showChat, chatUsername,
+      from,
+      email,
+      statusText,
+      message,
+      showChat,
+      chatUsername,
       nameShop,
       messageMovingCoin,
       actionButtons,
+      amount: offer.amount,
+      fiatAmount,
+      currency: offer.currency,
+      fiatCurrency: offer.fiatCurrency,
     };
 
     return (

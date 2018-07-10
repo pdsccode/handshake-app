@@ -10,13 +10,17 @@ import iconPhone from '@/assets/images/icon/icon-phone.svg';
 import iconStar from '@/assets/images/icon/icon-star.svg';
 import './FeedMe.scss';
 import './FeedMeCash.scss';
-import {Link} from "react-router-dom";
-import { URL, } from '@/constants';
+import { Link } from 'react-router-dom';
+import { URL } from '@/constants';
+import { formatAmountCurrency, formatMoneyByLocale } from '@/services/offer-util';
+import { upperFirst } from 'lodash';
 
 class FeedMeCash extends React.PureComponent {
   handleClickMoreInfo = () => {
     console.log('click more info');
-    const { onShowModalDialog, phone , phoneDisplayed, review, reviewCount,} = this.props;
+    const {
+      onShowModalDialog, phone, phoneDisplayed, review, reviewCount,
+    } = this.props;
     onShowModalDialog({
       show: true,
       modalContent: (
@@ -58,9 +62,9 @@ class FeedMeCash extends React.PureComponent {
         </div>
       ),
       propsModal: {
-        className: 'modal-me-cash-more-info'
-      }
-    })
+        className: 'modal-me-cash-more-info',
+      },
+    });
   };
 
   render() {
@@ -68,8 +72,12 @@ class FeedMeCash extends React.PureComponent {
       statusText, message, isCreditCard,
       showChat, chatUsername,
       nameShop,
-      address , messageMovingCoin,
+      address, messageMovingCoin,
       actionButtons,
+      amount,
+      fiatAmount,
+      currency,
+      fiatCurrency,
     } = this.props;
     console.log('thisss', this.props);
     return (
@@ -84,14 +92,14 @@ class FeedMeCash extends React.PureComponent {
             <span className="ml-1">16:05:07</span>
           </div>
         </div>
-        <div className="order-type">Buyer order</div>
+        <div className="order-type">{message}</div>
         <div className="info-wrapper">
           <div className="label">Cash inventory</div>
-          <div className="price">14,000,000,000 VND</div>
+          <div className="price">{`${formatMoneyByLocale(fiatAmount, fiatCurrency)} ${fiatCurrency}`}</div>
         </div>
         <div className="info-wrapper">
           <div className="label">Coin inventory</div>
-          <div className="price">0.05 BTC</div>
+          <div className="price">{`${formatAmountCurrency(amount)} ${currency}`}</div>
         </div>
         <hr className="hrLine" />
         <div className="d-table w-100">

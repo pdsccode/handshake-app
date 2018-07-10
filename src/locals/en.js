@@ -113,8 +113,8 @@ export default {
   'ex.label.sold': 'Sold',
   'ex.label.buying': 'Buying',
   'ex.label.selling': 'Selling',
-  'ex.label.buyer': 'buyer',
-  'ex.label.seller': 'seller',
+  'ex.label.buyer': 'Buyer',
+  'ex.label.seller': 'Seller',
 
   'ex.exchange.status.created': 'Verifying',
   'ex.exchange.status.active': 'Active',
@@ -165,6 +165,8 @@ export default {
   'ex.shop.shake.status.completed': 'Success',
   'ex.shop.shake.status.cancelling': 'Processing',
   'ex.shop.shake.status.cancelled': 'Cancelled',
+
+  'ex.shop.shake.buyer.seller': '{buyerSeller} order',
 
   'ex.error.systemError': 'Sorry Ninja. Something went wrong. Come back soon.',
   'ex.error.312': 'Oh no! You cancelled your offer. You will not be able to make orders for 4 hours. Sorry',
