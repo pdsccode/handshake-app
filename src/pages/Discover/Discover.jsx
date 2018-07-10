@@ -41,7 +41,6 @@ import DiscoverBetting from '@/components/handshakes/betting/Discover/Discover';
 import '@/components/handshakes/exchange/Feed/FeedExchange.scss';
 import './Discover.scss';
 // import { Helmet } from "react-helmet";
-
 // import icon2KuNinja from '@/assets/images/icon/2_ku_ninja.svg';
 
 const maps = {
