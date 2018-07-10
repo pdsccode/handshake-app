@@ -580,11 +580,11 @@ class BettingFilter extends React.Component {
             </div>
           </div>
         </div>
-        <Button
+        {/*<Button
         block
         onClick={() => {
             this.modalLuckyRealRef.open();
-        }}>Test Lucky Real</Button>
+        }}>Test Lucky Real</Button>*/}
 
         <ModalDialog className="modal" onRef={(modal) => { this.modalBetRef = modal; return null; }}>
           <BettingShake
@@ -622,9 +622,9 @@ class BettingFilter extends React.Component {
             onSubmitClick={() => this.closeShakeFreePopup()}
           />
         </ModalDialog>
-        <ModalDialog className="modal" onRef={(modal) => { this.modalLuckyRealRef = modal; return null; }}>
+        {/*<ModalDialog className="modal" onRef={(modal) => { this.modalLuckyRealRef = modal; return null; }}>
           <LuckyReal />
-        </ModalDialog>
+          </ModalDialog>*/}
 
       </div>
     );
