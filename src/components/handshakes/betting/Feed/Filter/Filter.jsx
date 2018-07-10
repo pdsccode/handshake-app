@@ -13,6 +13,9 @@ import GA from '@/services/googleAnalytics';
 // components
 import Dropdown from '@/components/core/controls/Dropdown';
 import ShareSocial from '@/components/core/presentation/ShareSocial';
+import LuckyReal from '@/components/handshakes/betting/LuckyPool/LuckyReal';
+import LuckyFree from '@/components/handshakes/betting/LuckyPool/LuckyFree';
+
 // import FeedComponent from '@/components/Comment/FeedComment';
 import Button from '@/components/core/controls/Button';
 import ModalDialog from '@/components/core/controls/ModalDialog';
@@ -20,7 +23,6 @@ import GroupBook from './../GroupBook';
 import TopInfo from './../TopInfo';
 import BettingShake from './../Shake';
 import BettingShakeFree from './../ShakeFree';
-
 // style
 import './Filter.scss';
 
@@ -579,6 +581,18 @@ class BettingFilter extends React.Component {
             </div>
           </div>
         </div>
+        {/*<Button
+        block
+        onClick={() => {
+            this.modalLuckyRealRef.open();
+        }}>Test Lucky Real</Button>
+
+        <Button
+        block
+        onClick={() => {
+            this.modalLuckyFreeRef.open();
+        }}>Test Lucky Free</Button>*/}
+
         <ModalDialog className="modal" onRef={(modal) => { this.modalBetRef = modal; return null; }}>
           <BettingShake
             side={this.state.side}
@@ -593,7 +607,11 @@ class BettingFilter extends React.Component {
             marketAgainstOdds={parseFloat(this.defaultAgainstOdds)}
             closingDate={closingDate}
             reportTime={reportTime}
-            onSubmitClick={() => this.closeShakePopup()}
+            onSubmitClick={() => {
+              this.closeShakePopup();
+              this.modalLuckyRealRef.open();
+              }
+            }
           />
         </ModalDialog>
         <ModalDialog className="modal" onRef={(modal) => { this.modalBetFreeRef = modal; return null; }}>
@@ -608,9 +626,25 @@ class BettingFilter extends React.Component {
             marketAgainstOdds={parseFloat(this.defaultAgainstOdds)}
             closingDate={closingDate}
             reportTime={reportTime}
-            onSubmitClick={() => this.closeShakeFreePopup()}
+            onSubmitClick={() => {
+              this.closeShakeFreePopup();
+              this.modalLuckyFreeRef.open();
+              }
+            }
           />
         </ModalDialog>
+        <ModalDialog className="modal" onRef={(modal) => { this.modalLuckyRealRef = modal; return null; }}>
+          <LuckyReal
+            onButtonClick={() => this.modalLuckyRealRef.close()}
+          />
+        </ModalDialog>
+
+        <ModalDialog className="modal" onRef={(modal) => { this.modalLuckyFreeRef = modal; return null; }}>
+          <LuckyFree
+            onButtonClick={() => this.modalLuckyFreeRef.close()}
+          />
+        </ModalDialog>
+
       </div>
     );
   }
