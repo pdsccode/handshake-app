@@ -173,6 +173,7 @@ export default {
   'ex.shop.shake.label.reviews.count': '({reviewCount} reviews)',
   'ex.shop.shake.label.cash.inventory': 'Cash inventory',
   'ex.shop.shake.label.coin.inventory': 'Coin inventory',
+  'ex.shop.shake.label.days': 'days',
 
   'ex.error.systemError': 'Sorry Ninja. Something went wrong. Come back soon.',
   'ex.error.312': 'Oh no! You cancelled your offer. You will not be able to make orders for 4 hours. Sorry',
