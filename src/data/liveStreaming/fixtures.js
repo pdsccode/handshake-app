@@ -652,7 +652,18 @@ export default [
       "goalsHomeTeam": null,
       "goalsAwayTeam": null
     },
-    "odds": null
+    "odds": null,
+    link: 'http://tv.keonhacai.com/hot/k1_1.php',
+    linksLive: [
+      'http://tv.keonhacai.com/hot/k1_1.php',
+      'http://capodeportes.net/reproductor2/canal3.php?width=400&height=300&autoplay=1',
+    ],
+    linksSoftCast: [
+      'sop://broker.sopcast.com:3912/259955',
+      'sop://broker.sopcast.com:3912/259977',
+      'sop://broker.sopcast.com:3912/262044',
+      'sop://broker.sopcast.com:3912/254780',
+    ],
   },
   {
     "_links": {
@@ -672,8 +683,8 @@ export default [
     "date": "2018-07-11T18:00:00Z",
     "status": "SCHEDULED",
     "matchday": 6,
-    "homeTeamName": "W59",
-    "awayTeamName": "W60",
+    "homeTeamName": "Croatia",
+    "awayTeamName": "England",
     "result": {
       "goalsHomeTeam": null,
       "goalsAwayTeam": null
