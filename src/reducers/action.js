@@ -22,29 +22,46 @@ export const createAPI = INIT => ({
   const url = `${BASE_URL}/${PATH_URL}`;
   // const requestUuid = Date.now(); // uuid();
 
-  // console.log(`app - api - calling - id${requestUuid}`, `${METHOD}:${PATH_URL}`);
+  console.log(`app - api - calling - url = ${url} - `, `${METHOD}:${PATH_URL}`);
 
   $http({
-    url, data, id, qs, headers, method: METHOD,
-  }).then((response) => {
-    // console.log(`app - api - called - id${requestUuid}`);
-    dispatch({ type: APP_ACTION.CALLED });
+    url,
+    data,
+    id,
+    qs,
+    headers,
+    method: METHOD,
+  })
+    .then((response) => {
+      console.log(`app - api - called - response = `, response);
+      dispatch({ type: APP_ACTION.CALLED });
 
-    if (response.data.status === 1 || response.data.status === 200) {
-      dispatch({ type: `${INIT}_SUCCESS`, payload: response.data, ...more });
-      if (successFn) successFn(response.data);
-    } else {
-      dispatch({ type: `${INIT}_FAILED`, payload: response.data });
-      if (errorFn) errorFn(response.data);
-    }
-  }).catch((e) => {
-    // console.log(`app - api - called - id${requestUuid}`);
-    dispatch({ type: APP_ACTION.CALLED });
-    if (e.message === 'Network Error') { dispatch({ type: APP_ACTION.NETWORK_ERROR }); }
+      if (
+        response.data.status === 1 ||
+        response.data.status === 200 ||
+        response.status === 201
+      ) {
+        dispatch({
+          type: `${INIT}_SUCCESS`,
+          payload: response.data || response,
+          ...more,
+        });
+        if (successFn) successFn(response.data || response);
+      } else {
+        dispatch({ type: `${INIT}_FAILED`, payload: response.data });
+        if (errorFn) errorFn(response.data);
+      }
+    })
+    .catch((e) => {
+      // console.log(`app - api - called - id${requestUuid}`);
+      dispatch({ type: APP_ACTION.CALLED });
+      if (e.message === 'Network Error') {
+        dispatch({ type: APP_ACTION.NETWORK_ERROR });
+      }
 
-    if (errorFn) errorFn(e);
-    dispatch({ type: `${INIT}_FAILED`, payload: e });
-  });
+      if (errorFn) errorFn(e);
+      dispatch({ type: `${INIT}_FAILED`, payload: e });
+    });
 };
 
 export default { createAPI };

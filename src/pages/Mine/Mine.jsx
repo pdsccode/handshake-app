@@ -173,7 +173,7 @@ class Mine extends React.Component {
     console.log('messages.me.feed', messages.me.feed);
 
     return ( 
-        <DataFeed {...this.props} login={false} isAuth={false} isLoading={true} token={""} /> 
+        <DataFeed {...this.props} login={false} isAuth={false} isLoading={true} token={this.props.auth?.dataset_profile?.token||''} /> 
     );
   }
 }

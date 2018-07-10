@@ -91,11 +91,12 @@ class DataFeed extends React.Component {
     })
   }
   componentDidMount() {
-    document.title = 'Data oscar'
+    document.title = 'Data oscar';
+    console.log("AHIHI ==== ",this.props.token);
     this.init_data(this.props.token);
   }
   componentWillReceiveProps(nextProps) { 
-    if(this.state.token == undefined){ 
+    if(!this.state.token){ 
       this.setState({token: nextProps.token});
       this.init_data(nextProps.token);
     }

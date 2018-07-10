@@ -2,6 +2,7 @@ import { createAPI } from '@/reducers/action';
 
 export const ACTIONS = {
   AUTH_SIGNUP: 'AUTH_SIGNUP',
+  DATASET_AUTH_SIGNUP: 'DATASET_AUTH_SIGNUP',
   AUTH_FETCH: 'AUTH_FETCH',
   AUTH_UPDATE: 'AUTH_UPDATE',
   SET_OFFLINE_STATUS: 'SET_OFFLINE_STATUS',
@@ -17,6 +18,8 @@ export const ACTIONS = {
   REFERRED_INFO: 'REFERRED_INFO',
   COMPLETE_PROFILE: 'COMPLETE_PROFILE',
 };
+// DataSet
+export const datasetSignUp = createAPI(ACTIONS.DATASET_AUTH_SIGNUP);
 
 export const fetchProfile = createAPI(ACTIONS.AUTH_FETCH);
 export const signUp = createAPI(ACTIONS.AUTH_SIGNUP);

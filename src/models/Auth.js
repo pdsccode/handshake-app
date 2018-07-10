@@ -29,4 +29,28 @@ class Auth {
   }
 }
 
+export class DatasetAuth {
+  static profile(rawData = {}) {
+    return {
+      address: rawData.address || '',
+      city: rawData.city || '',
+      code: rawData.code || '',
+      country: rawData.country || '',
+      credit: rawData.credit || 0,
+      email: rawData.email || '',
+      eth_address: rawData.eth_address || '',
+      eth_balance: rawData.eth_balance || 0,
+      eth_private_key: rawData.eth_private_key || '',
+      ether_address: rawData.ether_address || '',
+      ether_balance: rawData.ether_balance || 0,
+      fullname: rawData.fullname || '',
+      id: rawData.id || 0,
+      phone: rawData.phone || '',
+      state_region: rawData.state_region || '',
+      token: rawData.token || '',
+      type: rawData.type || 0,
+    };
+  }
+}
+
 export default Auth;
