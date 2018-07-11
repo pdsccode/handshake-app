@@ -54,7 +54,7 @@ const handleDashboardPayload = (payload) => {
   const result = [];
   payload.map((handshake) => {
     if (handshake.offer_feed_type === EXCHANGE_FEED_TYPE.OFFER_STORE) {
-      result.push(...handlePreProcessForOfferStore(handshake));
+      result.push(Handshake.handshake(handshake));
     }
     return null;
   });

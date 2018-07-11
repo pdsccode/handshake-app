@@ -1,8 +1,8 @@
 import React from 'react';
 import './FeedMe.scss';
 import './FeedMeStation.scss';
-import { FIAT_CURRENCY, URL } from '@/constants';
-import { daysBetween, formatAmountCurrency, formatMoneyByLocale } from '@/services/offer-util';
+import { CRYPTO_CURRENCY, EXCHANGE_ACTION, FIAT_CURRENCY, URL } from '@/constants';
+import { daysBetween, formatAmountCurrency, formatMoneyByLocale, getOfferPrice } from '@/services/offer-util';
 import iconSpinner from '@/assets/images/icon/icons8-spinner.gif';
 import iconAvatar from '@/assets/images/icon/avatar.svg';
 import StarsRating from '@/components/core/presentation/StarsRating';
@@ -12,6 +12,9 @@ import Modal from '@/components/core/controls/Modal';
 import Button from '@/components/core/controls/Button';
 import { connect } from 'react-redux';
 import { showAlert } from '@/reducers/app/action';
+
+import iconBtc from '@/assets/images/icon/coin/icon-btc.svg';
+import iconEth from '@/assets/images/icon/coin/icon-eth.svg';
 
 window.Clipboard = (function (window, document, navigator) {
   let textArea,
@@ -29,17 +32,25 @@ class FeedMeStation extends React.PureComponent {
       timePassing: '',
       walletsData: false,
       inputRestoreWalletValue: '',
-      intervalCountdown: null,
+      coins: [],
     };
   }
 
   componentDidMount() {
+    const { messageMovingCoin, lastUpdateAt } = this.props;
 
+    this.getCoinList();
+
+    if (messageMovingCoin) {
+      this.intervalCountdown = setInterval(() => {
+        this.setState({ timePassing: daysBetween(new Date(lastUpdateAt * 1000), new Date()) });
+      }, 1000);
+    }
   }
 
   componentWillUnmount() {
-    if (this.state.intervalCountdown) {
-      clearInterval(this.state.intervalCountdown);
+    if (this.intervalCountdown) {
+      clearInterval(this.intervalCountdown);
     }
   }
 
@@ -57,44 +68,93 @@ class FeedMeStation extends React.PureComponent {
     });
   }
 
-  render() {
-    const { messages } = this.props.intl;
-    const { statusText, nameShop, messageMovingCoin, dashboardInfo, review, reviewCount} = this.props;
+  getPrices = () => {
+    const { offer, listOfferPrice, fiatCurrency } = this.props;
 
-    let transactionSuccessful = 0;
-    let transactionFailed = 0;
-    let transactionPending = 0;
-    const transactionRevenue = [];
+    let priceBuyBTC;
+    let priceSellBTC;
+    let priceBuyETH;
+    let priceSellETH;
 
-    if (dashboardInfo) {
-      dashboardInfo.forEach((item) => {
-        // console.log('item', item);
-        transactionSuccessful += item.success;
-        transactionFailed += item.failed;
-        transactionPending += item.pending;
+    const eth = offer.items.ETH;
+    const btc = offer.items.BTC;
 
-        Object.values(FIAT_CURRENCY).forEach((currency) => {
-          const buy = item.buyFiatAmounts[currency];
-          const sell = item.sellFiatAmounts[currency];
+    if (listOfferPrice) {
+      let offerPrice = getOfferPrice(listOfferPrice, EXCHANGE_ACTION.BUY, CRYPTO_CURRENCY.BTC, fiatCurrency);
+      priceBuyBTC = offerPrice.price * (1 + btc?.buyPercentage / 100) || 0;
 
-          if (buy || sell) {
-            transactionRevenue.push(
-            <div className="d-table w-100 station-info">
-              <div className="d-table-cell align-middle label"><FormattedMessage id="ex.shop.dashboard.label.revenue" /> {item.currency}</div>
-              <div className="d-table-cell align-middle text-right info">{formatMoneyByLocale(buy?.amount || 0, currency)}/{formatMoneyByLocale(sell?.amount || 0, currency)} {currency}</div>
-            </div>);
-          }
-        });
-      });
+      offerPrice = getOfferPrice(listOfferPrice, EXCHANGE_ACTION.SELL, CRYPTO_CURRENCY.BTC, fiatCurrency);
+      priceSellBTC = offerPrice.price * (1 + btc?.sellPercentage / 100) || 0;
+
+      offerPrice = getOfferPrice(listOfferPrice, EXCHANGE_ACTION.BUY, CRYPTO_CURRENCY.ETH, fiatCurrency);
+      priceBuyETH = offerPrice.price * (1 + eth?.buyPercentage / 100) || 0;
+
+      offerPrice = getOfferPrice(listOfferPrice, EXCHANGE_ACTION.SELL, CRYPTO_CURRENCY.ETH, fiatCurrency);
+      priceSellETH = offerPrice.price * (1 + eth?.sellPercentage / 100) || 0;
     }
 
-    const transactionTotal = dashboardInfo && dashboardInfo.map(item => (
-      <div className="d-table w-100 station-info">
-        <div className="d-table-cell align-middle label"><FormattedMessage id="ex.shop.dashboard.label.transaction.total" /> {item.currency}</div>
-        <div className="d-table-cell align-middle text-right info">{formatAmountCurrency(item.buyAmount)}/{formatAmountCurrency(item.sellAmount)}</div>
-      </div>));
+    return {
+      priceBuyBTC, priceSellBTC, priceBuyETH, priceSellETH,
+    };
+  }
 
-    console.log('thisss', this.props);
+  isEmptyBalance = (item) => {
+    const { buyBalance, sellBalance } = item;
+    return !(buyBalance > 0 || sellBalance > 0);
+  }
+
+  getCoinList = () => {
+    const { offer, fiatCurrency: currency } = this.props;
+    const coins = [];
+    const {
+      priceBuyBTC, priceSellBTC, priceBuyETH, priceSellETH,
+    } = this.getPrices();
+
+    if (offer.itemFlags.ETH) {
+      if (!this.isEmptyBalance(offer.items.ETH)) {
+        const coin = {};
+
+        coin.name = CRYPTO_CURRENCY.ETH;
+        coin.color = 'linear-gradient(-135deg, #D772FF 0%, #9B10F2 45%, #9E53E1 100%)';
+        coin.icon = iconEth;
+        coin.priceBuy = offer.items.ETH.buyBalance > 0 ? formatMoneyByLocale(priceBuyETH, currency) : '-';
+        coin.priceSell = offer.items.ETH.sellBalance > 0 ? formatMoneyByLocale(priceSellETH, currency) : '-';
+
+        coins.push(coin);
+      }
+    }
+
+    if (offer.itemFlags.BTC) {
+      if (!this.isEmptyBalance(offer.items.BTC)) {
+        const coin = {};
+
+        coin.name = CRYPTO_CURRENCY.BTC;
+        coin.color = 'linear-gradient(45deg, #FF8006 0%, #FFA733 51%, #FFC349 100%)';
+        coin.icon = iconBtc;
+        coin.priceBuy = offer.items.BTC.buyBalance > 0 ? formatMoneyByLocale(priceBuyBTC, currency) : '-';
+        coin.priceSell = offer.items.BTC.sellBalance > 0 ? formatMoneyByLocale(priceSellBTC, currency) : '-';
+
+        coins.push(coin);
+      }
+    }
+
+    this.setState({ coins });
+  }
+
+  render() {
+    const { messages } = this.props.intl;
+    const {
+      statusText, nameShop, messageMovingCoin,
+      review, reviewCount, fiatCurrency,
+      transactionSuccessful,
+      transactionFailed,
+      transactionPending,
+      transactionRevenue,
+      transactionTotal,
+    } = this.props;
+    const { coins } = this.state;
+
+    // console.log('thisss', this.props);
     return (
       <div>
         <div className="feed-me-station">
@@ -111,7 +171,7 @@ class FeedMeStation extends React.PureComponent {
             }
           </div>
 
-          <CoinCards coins={[]} currency="ETH" />
+          <CoinCards coins={coins} currency={fiatCurrency} />
 
           <div className="d-table w-100 mt-2">
             <div className="d-table-cell align-middle" style={{ width: '42px' }}>
@@ -178,9 +238,51 @@ class FeedMeStation extends React.PureComponent {
   }
 }
 
-const mapState = state => ({
-  dashboardInfo: state.exchange.dashboardInfo,
-});
+const mapState = (state) => {
+  const dashboardInfo = state.exchange.dashboardInfo;
+  const listOfferPrice = state.exchange.listOfferPrice;
+
+  let transactionSuccessful = 0;
+  let transactionFailed = 0;
+  let transactionPending = 0;
+  const transactionRevenue = [];
+
+  if (dashboardInfo) {
+    dashboardInfo.forEach((item) => {
+      transactionSuccessful += item.success;
+      transactionFailed += item.failed;
+      transactionPending += item.pending;
+
+      Object.values(FIAT_CURRENCY).forEach((currency) => {
+        const buy = item.buyFiatAmounts[currency];
+        const sell = item.sellFiatAmounts[currency];
+
+        if (buy || sell) {
+          transactionRevenue.push(<div className="d-table w-100 station-info">
+            <div className="d-table-cell align-middle label"><FormattedMessage id="ex.shop.dashboard.label.revenue" /> {item.currency}</div>
+            <div className="d-table-cell align-middle text-right info">{formatMoneyByLocale(buy?.amount || 0, currency)}/{formatMoneyByLocale(sell?.amount || 0, currency)} {currency}</div>
+                                  </div>);
+        }
+      });
+    });
+  }
+
+  const transactionTotal = dashboardInfo && dashboardInfo.map(item => (
+    <div className="d-table w-100 station-info">
+      <div className="d-table-cell align-middle label"><FormattedMessage id="ex.shop.dashboard.label.transaction.total" /> {item.currency}</div>
+      <div className="d-table-cell align-middle text-right info">{formatAmountCurrency(item.buyAmount)}/{formatAmountCurrency(item.sellAmount)}</div>
+    </div>));
+
+  return {
+    dashboardInfo,
+    listOfferPrice,
+    transactionSuccessful,
+    transactionFailed,
+    transactionPending,
+    transactionRevenue,
+    transactionTotal,
+  };
+};
 
 const mapDispatch = ({
   showAlert,
