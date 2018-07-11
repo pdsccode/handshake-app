@@ -12,7 +12,7 @@ import { injectIntl } from 'react-intl';
 import { Link } from 'react-router-dom';
 import { Grid, Row, Col } from 'react-bootstrap';
 import NoData from '@/components/core/presentation/NoData';
-import { getListOfferPrice, getOfferStores, reviewOffer } from '@/reducers/exchange/action';
+import { getDashboardInfo, getListOfferPrice, getOfferStores, reviewOffer } from '@/reducers/exchange/action';
 import FeedPromise from '@/components/handshakes/promise/Feed';
 import FeedBetting from '@/components/handshakes/betting/Feed';
 import FeedExchange from '@/components/handshakes/exchange/Feed/FeedMe';
@@ -129,6 +129,7 @@ class Me extends React.Component {
     }
     this.loadMyHandshakeList();
     this.getOfferStore();
+    this.getDashboardInfo();
   }
 
   setOfflineStatus = (online) => {
@@ -145,6 +146,12 @@ class Me extends React.Component {
     const { authProfile } = this.props;
     this.props.getOfferStores({
       PATH_URL: `${API_URL.EXCHANGE.OFFER_STORES}/${authProfile.id}`,
+    });
+  }
+
+  getDashboardInfo = () => {
+    this.props.getDashboardInfo({
+      PATH_URL: `${API_URL.EXCHANGE.GET_DASHBOARD_INFO}`,
     });
   }
 
@@ -307,6 +314,7 @@ const mapDispatch = ({
   setOfflineStatus,
   reviewOffer,
   getOfferStores,
+  getDashboardInfo,
 });
 
 export default injectIntl(compose(withFirebase, connect(mapState, mapDispatch))(Me));

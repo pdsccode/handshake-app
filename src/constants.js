@@ -174,6 +174,7 @@ export const API_URL = {
     OFFER_STORES: 'exchange/offer-stores',
     SHAKES: 'shakes',
     REVIEWS: 'reviews',
+    GET_DASHBOARD_INFO: 'exchange/user/transaction-counts',
   },
   SEED: {
     BASE: 'seed',

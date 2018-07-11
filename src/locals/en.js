@@ -175,6 +175,11 @@ export default {
   'ex.shop.shake.label.coin.inventory': 'Coin inventory',
   'ex.shop.shake.label.days': 'days',
 
+  'ex.shop.dashboard.label.transaction.successfull.failed': 'Transactions successful/failed',
+  'ex.shop.dashboard.label.transaction.pending': 'Transactions pending',
+  'ex.shop.dashboard.label.revenue': 'Bought/sold revenue',
+  'ex.shop.dashboard.label.transaction.total': 'Total bought/sold',
+
   'ex.error.systemError': 'Sorry Ninja. Something went wrong. Come back soon.',
   'ex.error.312': 'Oh no! You cancelled your offer. You will not be able to make orders for 4 hours. Sorry',
   'ex.error.313': 'You already have a listing! To change your rates, please cancel your current listing.',

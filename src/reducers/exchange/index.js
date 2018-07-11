@@ -60,6 +60,9 @@ function exchangeReducter(state = {
     case `${EXCHANGE_ACTIONS.SET_FREE_START}`: {
       return { ...state, isChooseFreeStart: action.payload.data };
     }
+    case `${EXCHANGE_ACTIONS.GET_DASHBOARD_INFO}_SUCCESS`: {
+      return { ...state, dashboardInfo: action.payload.data };
+    }
     default:
       return state;
   }
