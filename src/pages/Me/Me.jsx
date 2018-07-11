@@ -34,7 +34,9 @@ import Helper from '@/services/helper';
 import Rate from '@/components/core/controls/Rate/Rate';
 
 import './Me.scss';
-import { Field } from 'redux-form'
+import {change, Field} from 'redux-form'
+import {HANDSHAKE_ID_DEFAULT} from "@/constants";
+import {bindActionCreators} from "redux";
 
 const TAG = 'Me';
 const maps = {
@@ -44,6 +46,23 @@ const maps = {
   [HANDSHAKE_ID.EXCHANGE_LOCAL]: FeedExchange,
   [HANDSHAKE_ID.SEED]: FeedSeed,
 };
+
+const CASH_TAB = {
+  TRANSACTION: 'TRANSACTION',
+  DASHBOARD: 'DASHBOARD',
+};
+
+const CATEGORIES = [{
+  value: HANDSHAKE_ID.BETTING,
+  text: 'Prediction',
+  priority: 0,
+},
+  {
+    value: HANDSHAKE_ID.EXCHANGE,
+    text: 'Cash',
+    priority: 2,
+  },
+];
 
 const nameFormFilterFeeds = 'formFilterFeeds';
 const FormFilterFeeds = createForm({
@@ -70,6 +89,7 @@ class Me extends React.Component {
   constructor(props) {
     super(props);
     const { s, sh } = Helper.getQueryStrings(window.location.search);
+    const handshakeDefault = this.getDefaultHandShakeId();
 
     const initUserId = s;
     const offerId = sh;
@@ -87,7 +107,22 @@ class Me extends React.Component {
         // className: "discover-popup",
         // isDismiss: false
       },
+      cashTab: CASH_TAB.TRANSACTION,
+      handshakeIdActive: handshakeDefault,
     };
+  }
+
+  getDefaultHandShakeId() {
+    if (window.location.pathname.indexOf(URL.HANDSHAKE_CASH) >= 0) {
+      return HANDSHAKE_ID.EXCHANGE;
+    }
+    let seletedId = HANDSHAKE_ID_DEFAULT;
+    let { id } = Helper.getQueryStrings(window.location.search);
+    id = parseInt(id, 10);
+    if (id && Object.values(HANDSHAKE_ID).indexOf(id) !== -1) {
+      seletedId = id;
+    }
+    return seletedId;
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -133,10 +168,14 @@ class Me extends React.Component {
   }
 
   componentDidMount() {
-    const { initUserId, offerId } = this.state;
+    const { initUserId, offerId, handshakeIdActive } = this.state;
+    const { rfChange } = this.props;
     if (initUserId && offerId) {
       this.rateRef.open();
     }
+
+    rfChange(nameFormFilterFeeds, 'feedType', handshakeIdActive);
+
     this.loadMyHandshakeList();
     this.getOfferStore();
     this.getDashboardInfo();
@@ -170,7 +209,15 @@ class Me extends React.Component {
   }
 
   loadMyHandshakeList = () => {
-    this.props.loadMyHandshakeList({ PATH_URL: API_URL.ME.BASE });
+    const qs = { };
+    const {
+      handshakeIdActive,
+    } = this.state;
+
+    if (handshakeIdActive) {
+      qs.type = handshakeIdActive;
+    }
+    this.props.loadMyHandshakeList({ PATH_URL: API_URL.ME.BASE, qs, });
   }
 
   handleSetOfflineStatusSuccess = () => {
@@ -219,6 +266,29 @@ class Me extends React.Component {
         this.modalRef.close();
       }
     })
+  }
+
+  onCategoryChange = (e, newValue) => {
+    const { rfChange } = this.props;
+    console.log('onCategoryChange', newValue);
+    this.setState({ handshakeIdActive: newValue }, () => {
+      if (this.state.handshakeIdActive === HANDSHAKE_ID.EXCHANGE) {
+        rfChange(nameFormFilterFeeds, 'cash-show-type', CASH_TAB.TRANSACTION);
+        this.loadMyHandshakeList();
+      }
+    });
+  }
+
+  onCashTabChange = (e, newValue) => {
+    console.log('onTypeChange', newValue);
+    this.setState({cashTab: newValue}, () => {
+      if (newValue === CASH_TAB.TRANSACTION) {
+        this.loadMyHandshakeList();
+      } else if (newValue === CASH_TAB.DASHBOARD) {
+        this.getOfferStore();
+        this.getDashboardInfo();
+      }
+    });
   }
 
   render() {
@@ -275,38 +345,37 @@ class Me extends React.Component {
                   name="feedType"
                   component={fieldRadioButton}
                   type="tab-5"
-                  list={[
-                    { value: 'prediction', text: 'Prediction' },
-                    { value: 'swap', text: 'Swap' },
-                    { value: 'cash', text: 'Cash' },
-                  ]}
+                  list={CATEGORIES}
                   // validate={[required]}
-                  // onChange={this.onTypeChange}
+                  onChange={this.onCategoryChange}
                 />
               </div>
             </div>
 
             <hr />
 
-            <div>
-              <Field
-                name="cash-show-type"
-                component={fieldRadioButton}
-                type="tab-6"
-                list={[
-                  { value: 'prediction', text: 'Transactions', icon: <span className="icon-transactions align-middle" /> },
-                  { value: 'swap', text: 'Dashboard', icon: <span className="icon-dashboard align-middle" /> },
-                ]}
-                // validate={[required]}
-                // onChange={this.onTypeChange}
-              />
-            </div>
+            { this.state.handshakeIdActive === HANDSHAKE_ID.EXCHANGE && (
+              <div>
+                <Field
+                  name="cash-show-type"
+                  component={fieldRadioButton}
+                  type="tab-6"
+                  list={[
+                    { value: CASH_TAB.TRANSACTION, text: 'Transactions', icon: <span className="icon-transactions align-middle" /> },
+                    { value: CASH_TAB.DASHBOARD, text: 'Dashboard', icon: <span className="icon-dashboard align-middle" /> },
+                  ]}
+                  // validate={[required]}
+                  onChange={this.onCashTabChange}
+                />
+              </div>)
+            }
+
           </FormFilterFeeds>
         </div>
 
         <Row>
           <Col md={12} className="me-main-container">
-            {
+            { this.state.cashTab === CASH_TAB.TRANSACTION &&
               list && list.length > 0 ? (
                 list.map((handshake) => {
                   const FeedComponent = maps[handshake.type];
@@ -352,15 +421,16 @@ const mapState = state => ({
   offerStores: state.exchange.offerStores,
 });
 
-const mapDispatch = ({
-  loadMyHandshakeList,
-  getListOfferPrice,
-  fireBaseExchangeDataChange,
-  fireBaseBettingChange,
-  setOfflineStatus,
-  reviewOffer,
-  getOfferStores,
-  getDashboardInfo,
+const mapDispatch = (dispatch) => ({
+  rfChange: bindActionCreators(change, dispatch),
+  loadMyHandshakeList: bindActionCreators(loadMyHandshakeList, dispatch),
+  getListOfferPrice: bindActionCreators(getListOfferPrice, dispatch),
+  fireBaseExchangeDataChange: bindActionCreators(fireBaseExchangeDataChange, dispatch),
+  fireBaseBettingChange: bindActionCreators(fireBaseBettingChange, dispatch),
+  setOfflineStatus: bindActionCreators(setOfflineStatus, dispatch),
+  reviewOffer: bindActionCreators(reviewOffer, dispatch),
+  getOfferStores: bindActionCreators(getOfferStores, dispatch),
+  getDashboardInfo: bindActionCreators(getDashboardInfo, dispatch),
 });
 
 export default injectIntl(compose(withFirebase, connect(mapState, mapDispatch))(Me));
