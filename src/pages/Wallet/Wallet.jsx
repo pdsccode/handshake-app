@@ -188,19 +188,22 @@ class Wallet extends React.Component {
         // listRewardWallet.push(wallet);
       }
       // is Mainnet (coin, token, collectible)
-      else if (wallet.network === MasterWallet.ListCoin[wallet.className].Network.Mainnet) {
-        if(wallet.isToken){
-          wallet.default = false;
-          if (wallet.isCollectibles){
-            listCollectibleWallet.push(wallet);
+      else if (wallet.network === MasterWallet.ListCoin[wallet.className].Network.Mainnet) {        
+        if (!process.env.isDojo) 
+        { // not show for Dojo
+          if(wallet.isToken){
+            wallet.default = false;
+            if (wallet.isCollectibles){
+              listCollectibleWallet.push(wallet);
+            }
+            else{
+              listTokenWallet.push(wallet);
+            }
           }
           else{
-            listTokenWallet.push(wallet);
-          }
-        }
-        else{
-          listMainWallet.push(wallet);
-        }        
+            listMainWallet.push(wallet);
+          }      
+        }  
       } else {
         // is Testnet
         listTestWallet.push(wallet);
@@ -1041,32 +1044,43 @@ class Wallet extends React.Component {
 
           {/* Render list wallet: */}
           {/* Coin*/}
-          <Row className="list">
-            <Header title={messages.wallet.action.create.label.header_coins}hasLink={true} linkTitle={messages.wallet.action.create.button.add_new} onLinkClick={this.showModalAddCoin} />
-          </Row>
+          {!process.env.isDojo ? 
+            <Row className="list">
+              <Header title={messages.wallet.action.create.label.header_coins}hasLink={true} linkTitle={messages.wallet.action.create.button.add_new} onLinkClick={this.showModalAddCoin} />
+            </Row>
+          :""}
           <Row className="list">
             {this.listMainWalletBalance}            
           </Row>
+          
 
           {/* Tokens */}
+          {!process.env.isDojo ? 
           <Row className="list">
             <Header title={messages.wallet.action.create.label.header_tokens}hasLink={true} linkTitle={messages.wallet.action.create.button.add_new} onLinkClick={this.showModalAddToken} />
           </Row>
+          : ""}
           <Row className="list">
             {this.listTokenWalletBalance}
           </Row>
 
           {/* Collectible */}
+          {!process.env.isDojo ? 
           <Row className="list">
             <Header title={messages.wallet.action.create.label.header_collectibles}hasLink={true} linkTitle={messages.wallet.action.create.button.add_new} onLinkClick={this.showModalAddCollectible} />
           </Row>
+          :""}
           <Row className="list">
             {this.listCollectibleWalletBalance}
           </Row>
 
           {!process.env.isLive ?
           <Row className="list">
+            {!process.env.isDojo ? 
             <Header title={messages.wallet.action.create.label.test_net} hasLink linkTitle={messages.wallet.action.create.button.request_free_eth} onLinkClick={this.getETHFree} />
+            :
+            <Header title=""/>
+            }
           </Row>
           : ''}
           {!process.env.isLive ?
