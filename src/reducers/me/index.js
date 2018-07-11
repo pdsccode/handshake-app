@@ -40,9 +40,21 @@ const handleListPayload = (payload) => {
   const result = [];
   payload.map((handshake) => {
     if (handshake.offer_feed_type === EXCHANGE_FEED_TYPE.OFFER_STORE) {
-      result.push(...handlePreProcessForOfferStore(handshake));
+      // result.push(...handlePreProcessForOfferStore(handshake));
     } else {
       result.push(Handshake.handshake(handshake));
+    }
+    return null;
+  });
+
+  return result;
+};
+
+const handleDashboardPayload = (payload) => {
+  const result = [];
+  payload.map((handshake) => {
+    if (handshake.offer_feed_type === EXCHANGE_FEED_TYPE.OFFER_STORE) {
+      result.push(...handlePreProcessForOfferStore(handshake));
     }
     return null;
   });
@@ -72,6 +84,7 @@ const meReducter = (
         ...state,
         isFetching: false,
         list: handleListPayload(action.payload.data.handshakes),
+        listDashboard: handleDashboardPayload(action.payload.data.handshakes),
       };
     case `${ACTIONS.LOAD_MY_HANDSHAKE}_FAILED`:
       return {
@@ -197,7 +210,7 @@ const meReducter = (
       Object.keys(listBettingStatus).forEach((key) => {
         const element = listBettingStatus[key];
         const { id, status_i: statusI, result_i: resultI } = element;
-        
+
 
         handledMylist = myList.map((handshake) => {
           const handledHandshake = handshake;

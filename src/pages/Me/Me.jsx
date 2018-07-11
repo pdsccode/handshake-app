@@ -292,14 +292,17 @@ class Me extends React.Component {
   }
 
   render() {
-    const { list } = this.props.me;
+    const { list, listDashboard } = this.props.me;
+    let listFeed = [];
+    if (this.state.handshakeIdActive === HANDSHAKE_ID.EXCHANGE && this.state.cashTab === CASH_TAB.DASHBOARD) {
+      listFeed = listDashboard;
+    } else {
+      listFeed = list;
+    }
     const { messages } = this.props.intl;
     const { offerStores, propsModal, modalContent } = this.state;
     const online = !this.props.auth.offline;
     const haveOffer = offerStores ? (offerStores.itemFlags.ETH || offerStores.itemFlags.BTC) : false;
-
-    // console.log('this.props.intl', this.props.intl);
-    // console.log('messages.me.feed', messages.me.feed);
 
     return (
       <Grid className="me">
@@ -375,9 +378,9 @@ class Me extends React.Component {
 
         <Row>
           <Col md={12} className="me-main-container">
-            { this.state.cashTab === CASH_TAB.TRANSACTION &&
-              list && list.length > 0 ? (
-                list.map((handshake) => {
+            {
+            listFeed && listFeed.length > 0 ? (
+              listFeed.map((handshake) => {
                   const FeedComponent = maps[handshake.type];
                   if (FeedComponent) {
                     return (
