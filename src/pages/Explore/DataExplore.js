@@ -214,7 +214,7 @@ class DataExplore extends React.Component {
                   {this.state.categories.map((cat, i) => {
                     return (
                       <Card key={i} className="my-card"> 
-                        <Link className="ui image" to={'/cat/' + cat.id}>
+                        <Link className="ui image" to={'/explore/' + cat.id}>
                             {/* <ImageGrid displayImages={cat.display_images} />  className="fistgridimage"  */}
                             <Image src={cat.display_images[0]}/>
                         </Link> 

@@ -31,7 +31,7 @@ import Helper from '@/services/helper';
 import Rate from '@/components/core/controls/Rate/Rate';
 
 import './Classify.scss'; 
-import DataExplore from '@/pages/Explore/DataExplore';
+import DataDetail from '@/pages/Explore/DataDetail';
 
 const maps = {
   [HANDSHAKE_ID.PROMISE]: FeedPromise,
@@ -41,7 +41,7 @@ const maps = {
   [HANDSHAKE_ID.SEED]: FeedSeed,
 };
 
-class Explore extends React.Component {
+class ExploreDetail extends React.Component {
   static propTypes = {
     app: PropTypes.object.isRequired,
     auth: PropTypes.object.isRequired,
@@ -168,12 +168,12 @@ class Explore extends React.Component {
     const { list } = this.props.me;
     const { messages } = this.props.intl;
     const online = !this.props.auth.offline;
-
-    console.log('this.props.intl', this.props.intl);
-    console.log('messages.me.feed', messages.me.feed);
+    console.log("datasettoken", this.props.auth);
+    // console.log('this.props.intl', this.props.intl);
+    // console.log('messages.me.feed', messages.me.feed);
 
     return ( 
-         <DataExplore    {...this.props} token={this.props.auth?.dataset_profile?.token||''} />
+        <DataDetail {...this.props}  token={this.props.auth?.dataset_profile?.token||''}  />
     );
   }
 }
@@ -196,4 +196,4 @@ const mapDispatch = ({
   reviewOffer,
 });
 
-export default injectIntl(compose(withFirebase, connect(mapState, mapDispatch))(Explore));
+export default injectIntl(compose(withFirebase, connect(mapState, mapDispatch))(ExploreDetail));

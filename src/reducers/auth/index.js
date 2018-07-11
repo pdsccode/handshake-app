@@ -46,14 +46,14 @@ const authReducter = (
       return { ...state, offline: state.offline ? 0 : 1 };
     }
     case `${ACTIONS.DATASET_AUTH_SIGNUP}_SUCCESS`:
-      // console.log(
-      //   'HIENTON authReducter DATASET_AUTH_SIGNUP_SUCCESS  = ',
-      //   action.payload,
-      // );
+      console.log(
+        'HIENTON authReducter DATASET_AUTH_SIGNUP_SUCCESS  = ',
+        action.payload,
+      );
       local.save(APP.DATASET_AUTH_PROFILE, action.payload);
       return {
         ...state,
-        dataset_profile: DatasetAuth.profile(action.payload.data),
+        dataset_profile: DatasetAuth.profile(action.payload),
       };
 
     default:
