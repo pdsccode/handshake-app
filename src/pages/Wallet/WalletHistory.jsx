@@ -112,7 +112,10 @@ class WalletHistory extends React.Component {
     (
       <div>
         <div className="history-balance">
-          <div className="float-right"><a target="_blank" href={"https://etherscan.io/address/"+wallet.address}>{messages.wallet.action.history.label.view_all_etherscan}</a></div>
+          {wallet.name == "ETH" ?
+            <div className="float-right"><a target="_blank" href={"https://etherscan.io/address/"+wallet.address}>{messages.wallet.action.history.label.view_all_etherscan}</a></div>
+            : ""
+          }
           {messages.wallet.action.history.label.transactions}: {wallet.transaction_count}
           <br/>
           {messages.wallet.action.history.label.balance}: {wallet.balance} {wallet.name}
