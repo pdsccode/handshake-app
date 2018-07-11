@@ -27,7 +27,6 @@ class FeedMeStation extends React.PureComponent {
 
     this.state = {
       timePassing: '',
-      offerStores: this.props.offerStores,
       walletsData: false,
       inputRestoreWalletValue: '',
       intervalCountdown: null,
@@ -42,15 +41,6 @@ class FeedMeStation extends React.PureComponent {
     if (this.state.intervalCountdown) {
       clearInterval(this.state.intervalCountdown);
     }
-  }
-
-  static getDerivedStateFromProps(nextProps, prevState) {
-    if (nextProps.offerStores) {
-      if (JSON.stringify(nextProps.offerStores) !== JSON.stringify(prevState.offerStores)) {
-        return { offerStores: nextProps.offerStores };
-      }
-    }
-    return null;
   }
 
   handleFocus = (e) => {
@@ -69,13 +59,7 @@ class FeedMeStation extends React.PureComponent {
 
   render() {
     const { messages } = this.props.intl;
-    const { statusText, nameShop, messageMovingCoin, dashboardInfo, } = this.props
-    const { offerStores } = this.state;
-
-    console.log('offerStores',offerStores);
-
-    const review = offerStores?.review || 0;
-    const reviewCount = offerStores?.reviewCount || 0;
+    const { statusText, nameShop, messageMovingCoin, dashboardInfo, review, reviewCount} = this.props;
 
     let transactionSuccessful = 0;
     let transactionFailed = 0;
@@ -195,7 +179,6 @@ class FeedMeStation extends React.PureComponent {
 }
 
 const mapState = state => ({
-  offerStores: state.exchange.offerStores,
   dashboardInfo: state.exchange.dashboardInfo,
 });
 
