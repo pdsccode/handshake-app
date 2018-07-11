@@ -140,7 +140,7 @@ export const fieldRadioButton = customField(({
             >
               {/* <span style={{ fontSize: '28px' }}>&sdot;</span> */}
               {
-                hasPrefixIcon && (<span>{icon || <span>&#x25cf;</span>}&nbsp;</span>)
+                hasPrefixIcon && (<span className="align-middle">{icon || <span>&#x25cf;</span>}&nbsp;</span>)
               }
               {text}
             </button>

@@ -218,18 +218,15 @@
       opacity: 0;
       cursor: pointer;
       &:checked ~ button {
-        background: #000000;
-        color: #FFFFFF;
+        color: #2456fb;
       }
       & ~ button {
-        background: #FFFFFF;
-        box-shadow: 0 2px 4px 0 rgba(201,201,201,0.50);
-        border-radius: 4px;
         font-weight: 500;
-        font-size: 14px;
-        color: #6F6F6F;
+        font-size: 16px;
+        color: #000000;
         letter-spacing: 0;
-        width: 100%;
+        background: none;
+        box-shadow: none;
       }
     }
     &:first-of-type {

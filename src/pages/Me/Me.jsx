@@ -23,8 +23,6 @@ import Image from '@/components/core/presentation/Image';
 import ToggleSwitch from '@/components/core/presentation/ToggleSwitch';
 // style
 import AvatarSVG from '@/assets/images/icon/avatar.svg';
-import iconTransactions from '@/assets/images/icon/icons8-transactions.svg';
-import iconDashboard from '@/assets/images/icon/icons8-dashboard.svg';
 import ShopSVG from '@/assets/images/icon/icons8-shop_filled.svg';
 import ExpandArrowSVG from '@/assets/images/icon/expand-arrow.svg';
 import { setOfflineStatus } from '@/reducers/auth/action';
@@ -292,12 +290,12 @@ class Me extends React.Component {
 
             <div>
               <Field
-                name="type1"
+                name="cash-show-type"
                 component={fieldRadioButton}
                 type="tab-6"
                 list={[
-                  { value: 'prediction', text: 'Transactions', icon: <img src={iconTransactions} /> },
-                  { value: 'swap', text: 'Dashboard', icon: <img src={iconDashboard} /> },
+                  { value: 'prediction', text: 'Transactions', icon: <span className="icon-transactions align-middle" /> },
+                  { value: 'swap', text: 'Dashboard', icon: <span className="icon-dashboard align-middle" /> },
                 ]}
                 // validate={[required]}
                 // onChange={this.onTypeChange}
