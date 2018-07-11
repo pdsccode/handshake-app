@@ -23,15 +23,20 @@ import Image from '@/components/core/presentation/Image';
 import ToggleSwitch from '@/components/core/presentation/ToggleSwitch';
 // style
 import AvatarSVG from '@/assets/images/icon/avatar.svg';
+import iconTransactions from '@/assets/images/icon/icons8-transactions.svg';
+import iconDashboard from '@/assets/images/icon/icons8-dashboard.svg';
 import ShopSVG from '@/assets/images/icon/icons8-shop_filled.svg';
 import ExpandArrowSVG from '@/assets/images/icon/expand-arrow.svg';
 import { setOfflineStatus } from '@/reducers/auth/action';
 import local from '@/services/localStore';
+import { fieldRadioButton } from '@/components/core/form/customField'
+import createForm from '@/components/core/form/createForm'
 
 import Helper from '@/services/helper';
 import Rate from '@/components/core/controls/Rate/Rate';
 
 import './Me.scss';
+import { Field } from 'redux-form'
 
 const TAG = 'Me';
 const maps = {
@@ -41,6 +46,13 @@ const maps = {
   [HANDSHAKE_ID.EXCHANGE_LOCAL]: FeedExchange,
   [HANDSHAKE_ID.SEED]: FeedSeed,
 };
+
+const nameFormFilterFeeds = 'formFilterFeeds';
+const FormFilterFeeds = createForm({
+  propsReduxForm: {
+    form: nameFormFilterFeeds,
+  },
+});
 
 class Me extends React.Component {
   static propTypes = {
@@ -249,7 +261,43 @@ class Me extends React.Component {
           </Col>
         </Row>
 
-        <div>ahihido'sgocn</div>
+        <div className="my-3">
+          <FormFilterFeeds>
+            <div className="d-table w-100">
+              <div className="d-table-cell"><label className="label-filter-by">Filter by:</label></div>
+              <div className="d-table-cell">
+                <Field
+                  name="feedType"
+                  component={fieldRadioButton}
+                  type="tab-5"
+                  list={[
+                    { value: 'prediction', text: 'Prediction' },
+                    { value: 'swap', text: 'Swap' },
+                    { value: 'cash', text: 'Cash' },
+                  ]}
+                  // validate={[required]}
+                  // onChange={this.onTypeChange}
+                />
+              </div>
+            </div>
+
+            <hr />
+
+            <div>
+              <Field
+                name="type1"
+                component={fieldRadioButton}
+                type="tab-6"
+                list={[
+                  { value: 'prediction', text: 'Transactions', icon: <img src={iconTransactions} /> },
+                  { value: 'swap', text: 'Dashboard', icon: <img src={iconDashboard} /> },
+                ]}
+                // validate={[required]}
+                // onChange={this.onTypeChange}
+              />
+            </div>
+          </FormFilterFeeds>
+        </div>
 
         <Row>
           <Col md={12} className="me-main-container">
