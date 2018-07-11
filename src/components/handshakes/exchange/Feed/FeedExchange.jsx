@@ -100,7 +100,11 @@ class FeedExchange extends React.PureComponent {
 
   handleOnShake = (name) => {
     const { offer } = this;
-    const { onFeedClick } = this.props;
+    const { initUserId, authProfile, onFeedClick } = this.props;
+
+    if (initUserId === authProfile?.id) {
+      return;
+    }
 
     this.setState({
       CRYPTO_CURRENCY_LIST: [
