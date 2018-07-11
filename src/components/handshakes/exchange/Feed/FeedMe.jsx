@@ -26,6 +26,7 @@ import FeedMeOfferStoreShakeContainer from "./FeedMeOfferStoreShakeContainer";
 import FeedMeSwapContainer from "./FeedMeSwapContainer";
 import FeedMeInstantContainer from "./FeedMeInstantContainer";
 import {trackingOnchain,} from "@/reducers/exchange/action";
+import FeedMeDashboardContainer from "./FeedMeDashboardContainer";
 
 class FeedMe extends React.PureComponent {
   constructor(props) {
@@ -228,7 +229,7 @@ class FeedMe extends React.PureComponent {
         break;
       }
       case EXCHANGE_FEED_TYPE.OFFER_STORE: {
-        feed = <FeedMeOfferStoreContainer {...this.props} {...feedProps} />;
+        feed = <FeedMeDashboardContainer {...this.props} {...feedProps} />;
 
         break;
       }

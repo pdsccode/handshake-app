@@ -26,9 +26,31 @@ class FeedMeStation extends React.PureComponent {
     super(props);
 
     this.state = {
+      timePassing: '',
+      offerStores: this.props.offerStores,
       walletsData: false,
       inputRestoreWalletValue: '',
+      intervalCountdown: null,
     };
+  }
+
+  componentDidMount() {
+
+  }
+
+  componentWillUnmount() {
+    if (this.state.intervalCountdown) {
+      clearInterval(this.state.intervalCountdown);
+    }
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.offerStores) {
+      if (JSON.stringify(nextProps.offerStores) !== JSON.stringify(prevState.offerStores)) {
+        return { offerStores: nextProps.offerStores };
+      }
+    }
+    return null;
   }
 
   handleFocus = (e) => {
@@ -47,7 +69,13 @@ class FeedMeStation extends React.PureComponent {
 
   render() {
     const { messages } = this.props.intl;
-    const { dashboardInfo, offerStores } = this.props;
+    const { statusText, nameShop, messageMovingCoin, dashboardInfo, } = this.props
+    const { offerStores } = this.state;
+
+    console.log('offerStores',offerStores);
+
+    const review = offerStores?.review || 0;
+    const reviewCount = offerStores?.reviewCount || 0;
 
     let transactionSuccessful = 0;
     let transactionFailed = 0;
@@ -88,13 +116,15 @@ class FeedMeStation extends React.PureComponent {
         <div className="feed-me-station">
           <div className="d-table w-100">
             <div className="d-table-cell">
-              <div className="status">Statusss</div>
-              <div className="status-explanation">Message</div>
+              <div className="status">{statusText}</div>
+              <div className="status-explanation">{messageMovingCoin}</div>
             </div>
-            <div className="countdown d-table-cell text-right">
-              <img src={iconSpinner} width="14px" />
-              <span className="ml-1">16:00:00</span>
-            </div>
+            { messageMovingCoin && (
+              <div className="countdown d-table-cell text-right">
+                <img src={iconSpinner} width="14px" />
+                <span className="ml-1">{this.state.timePassing}</span>
+              </div>)
+            }
           </div>
 
           <CoinCards coins={[]} currency="ETH" />
@@ -104,10 +134,10 @@ class FeedMeStation extends React.PureComponent {
               <img src={iconAvatar} width="35px" alt="" />
             </div>
             <div className="d-table-cell align-middle address-info">
-              <div>Shop name</div>
+              <div>{nameShop}</div>
               <div>
-                <StarsRating className="d-inline-block" starPoint={3.2} startNum={5} />
-                <span className="ml-2">(25 reviews)</span>
+                <StarsRating className="d-inline-block" starPoint={review} startNum={5} />
+                <span className="ml-2"><FormattedMessage id="ex.shop.shake.label.reviews.count" values={{ reviewCount }} /></span>
               </div>
             </div>
           </div>
