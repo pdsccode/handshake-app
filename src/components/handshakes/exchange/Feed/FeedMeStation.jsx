@@ -7,6 +7,7 @@ import iconSpinner from '@/assets/images/icon/icons8-spinner.gif';
 import iconAvatar from '@/assets/images/icon/avatar.svg';
 import StarsRating from '@/components/core/presentation/StarsRating';
 import CoinCards from '@/components/handshakes/exchange/components/CoinCards';
+import {FormattedMessage} from "react-intl";
 
 class FeedMeStation extends React.PureComponent {
 
@@ -42,11 +43,19 @@ class FeedMeStation extends React.PureComponent {
           </div>
 
           <div className="mt-3 d-table w-100 station-info">
-            <div className="d-table-cell align-middle label">Transaction succesfl/fail</div>
+            <div className="d-table-cell align-middle label"><FormattedMessage id="ex.shop.dashboard.label.transaction.successfull.failed" /></div>
             <div className="d-table-cell align-middle text-right info">60/30</div>
           </div>
           <div className="d-table w-100 station-info">
-            <div className="d-table-cell align-middle label">Transationc pending</div>
+            <div className="d-table-cell align-middle label"><FormattedMessage id="ex.shop.dashboard.label.transaction.pending" /></div>
+            <div className="d-table-cell align-middle text-right info">30</div>
+          </div>
+          <div className="d-table w-100 station-info">
+            <div className="d-table-cell align-middle label"><FormattedMessage id="ex.shop.dashboard.label.revenue" /></div>
+            <div className="d-table-cell align-middle text-right info">30</div>
+          </div>
+          <div className="d-table w-100 station-info">
+            <div className="d-table-cell align-middle label"><FormattedMessage id="ex.shop.dashboard.label.transaction.total" /></div>
             <div className="d-table-cell align-middle text-right info">30</div>
           </div>
         </div>
