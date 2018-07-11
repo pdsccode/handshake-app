@@ -22,14 +22,30 @@ export class BitcoinCashTestnet extends Bitcoin {
     this.className = 'BitcoinCashTestnet';
   }
 
+  getShortAddress() {
+    return this.address.replace(this.address.substr(4, 34), '...');
+  }
+
   setDefaultNetwork() {
     bitcore.Networks.defaultNetwork = bitcore.Networks.testnet;
   }  
   createAddressPrivatekey() {
     super.createAddressPrivatekey();
     this.setDefaultNetwork();    
+    // get Cashaddr
     var address = new bitcore.PrivateKey(this.privateKey).toAddress();
-    this.address = address.toString();
+    this.address = address.toString().split(':')[1];
+  }
+  async getBalance() {
+    this.setDefaultNetwork();
+
+    const url = `${this.network}/addr/${this.address}/balance`;    
+    const response = await axios.get(url);
+
+    if (response.status == 200) {
+      return await new BigNumber(response.data);
+    }
+    return false;
   }
 }
 
