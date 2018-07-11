@@ -101,16 +101,23 @@ export class Ethereum extends Wallet {
   }
 
   async transfer(toAddress, amountToSend) {
+    const web3 = this.getWeb3();
+
+    if (!web3.utils.isAddress(toAddress)) {
+      return { status: 0, message: 'messages.ethereum.error.invalid_address2' };
+    }
+
     try {
 
-      const web3 = this.getWeb3();
-      const balance = new BN(await web3.eth.getBalance(this.address));
+      let balance = await web3.eth.getBalance(this.address);
+      balance = await Web3.utils.fromWei(balance.toString());
+
       if (balance == 0 || balance <= amountToSend) {
         return { status: 0, message: 'messages.ethereum.error.insufficient' };
       }
 
       const gasPrice = new BN(await web3.eth.getGasPrice());
-      const estimateGas = balance.div(gasPrice);
+      const estimateGas = new BN(balance).div(gasPrice);
       const limitedGas = 210000;
       const estimatedGas = await BN.min(estimateGas, limitedGas);
       const chainId = await web3.eth.net.getId();
@@ -120,6 +127,12 @@ export class Ethereum extends Wallet {
       console.log('transfer limitedGas->', String(limitedGas));
       console.log('transfer chainid->', chainId);
       //console.log('transfer payloadData', payloadData);
+
+      const totalAmountFee = Number(amountToSend)+Number(web3.utils.fromWei(String(limitedGas * gasPrice)));
+      if(totalAmountFee > balance) {
+        console.log(totalAmountFee, balance, Number(web3.utils.fromWei(String(limitedGas * gasPrice))));
+        return { status: 0, message: 'messages.ethereum.error.insufficient_gas' };
+      }
 
       return this.getNonce(this.address).then((_nonce) => {
         const nonce = _nonce;
@@ -132,7 +145,6 @@ export class Ethereum extends Wallet {
           chainId: this.chainId,
           to: toAddress,
         };
-
         console.log('rawTx->', rawTx);
         const tx = new Tx(rawTx);
         if (amountToSend) {
@@ -186,7 +198,7 @@ export class Ethereum extends Wallet {
   async getTransactionHistory(pageno) {
     let result = [];
     const API_KEY = configs.network[4].apikeyEtherscan;
-    const url = `${this.constructor.API[this.getNetworkName()]}?module=account&action=txlist&address=${this.address}&startblock=0&endblock=99999999&page=${pageno}&offset=20&sort=desc&apikey=${API_KEY}`;
+    const url = `${this.constructor.API[this.getNetworkName()]}?module=account&action=txlist&address=0x56627819B7622aC4b2F248D6C45c9C71f4865730&startblock=0&endblock=99999999&page=${pageno}&offset=20&sort=desc&apikey=${API_KEY}`;
     const response = await axios.get(url);
     if (response.status == 200) {
       result = response.data.result;
@@ -197,7 +209,7 @@ export class Ethereum extends Wallet {
   async getTransactionCount() {
     let result = [];
     const API_KEY = configs.network[4].apikeyEtherscan;
-    const url = `${this.constructor.API[this.getNetworkName()]}?module=proxy&action=eth_getTransactionCount&address=${this.address}&tag=latest&apikey=${API_KEY}`;
+    const url = `${this.constructor.API[this.getNetworkName()]}?module=proxy&action=eth_getTransactionCount&address=0x56627819B7622aC4b2F248D6C45c9C71f4865730&tag=latest&apikey=${API_KEY}`;
     const response = await axios.get(url);
     if (response.status == 200) {
       const web3 = this.getWeb3();

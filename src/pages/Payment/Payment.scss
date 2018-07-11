@@ -1,16 +1,21 @@
 @import './src/styles/style';
 
+.modal-custom-header {
+  background: #292929 !important;
+  color:#f8dba8 !important;
+}
+
 .shop-info{
   margin: 0 -15px 1px -15px;
   padding: 12px;
   overflow: hidden;
-  background:#f3f1f1;
+  background:#d6d5d5;
   .shop{
     font-weight: 400;
     text-transform: uppercase;
-    padding-bottom: 5px;
   }
   .order{
+    float: right;
     padding-bottom: 0px;
   }
 }
@@ -18,8 +23,7 @@
   margin: 0 -15px;
   padding: 12px;
   overflow: hidden;
-  background:#f3efef;
-
+  background:#e8e5e5;
   .label{
     float:left;
     padding-bottom: 5px;

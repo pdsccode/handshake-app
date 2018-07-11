@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
 import Modal from '@/components/core/controls/Modal';
-import TransferCoin from '@/components/Wallet/TransferCoin';
+import Checkout from './Checkout';
 import Overview from './Overview';
 import { setHeaderRight } from '@/reducers/app/action';
 import { showAlert } from '@/reducers/app/action';
@@ -29,6 +29,7 @@ class Payment extends React.Component {
       fromAddress: "",
       coinName: "",
       amount: 0,
+      fee: 0,
       active: false,
       orderID: "",
       confirmURL: "",
@@ -64,12 +65,13 @@ class Payment extends React.Component {
     this.checkPayNinja();
   }
 
-  checkPayNinja() {
+  async checkPayNinja() {
     const querystring = window.location.search.replace('?', '');
     this.querystringParsed = qs.parse(querystring);
     const { order_id, amount, coin, ca, sa, confirm_url } = this.querystringParsed;
     if (order_id && amount && sa && coin) {
-      this.setState({active: true, toAddress: sa, fromAddress: ca, amount: !isNaN(amount) ? amount : 0,
+      //let fee = await wallet.getFee();
+      this.setState({active: true, fee: 0, toAddress: sa, fromAddress: ca, amount: !isNaN(amount) ? amount : 0,
         coinName: coin.toUpperCase(), orderID: order_id, confirmURL: confirm_url}, () => {
           this.modalSendRef.open();
         }
@@ -126,20 +128,21 @@ class Payment extends React.Component {
     return (
       <Modal title="Pay with Ninja" onRef={modal => this.modalSendRef = modal}  onClose={this.closePayNinja}>
         <div className="shop-info">
-          <div className="shop">{this.extractDomain()}</div>
           <div className="order">Order # {this.state.orderID}</div>
+          <div className="shop">{this.extractDomain()}</div>
+
         </div>
         <div className="order-info">
           <div className="label">Payment Amount</div>
           <div className="key">{this.state.amount} {this.state.coinName}</div>
           <div className="clearfix"></div>
           <div className="label">Network Cost</div>
-          <div className="key">{this.extractDomain()}</div>
+          <div className="key">{this.state.fee} {this.state.coinName}</div>
           <div className="clearfix"></div>
           <div className="label bold">Total</div>
           <div className="key bold">{this.state.amount} {this.state.coinName}</div>
         </div>
-        <TransferCoin isShowWallets={true} active={this.state.active}  toAddress={this.state.toAddress} fromAddress={this.state.fromAddress} amount={this.state.amount} coinName={this.state.coinName} onFinish={() => { this.successPayNinja() }} />
+        <Checkout isShowWallets={true} active={this.state.active}  toAddress={this.state.toAddress} fromAddress={this.state.fromAddress} amount={this.state.amount} coinName={this.state.coinName} onFinish={() => { this.successPayNinja() }} />
       </Modal>);
   }
 
