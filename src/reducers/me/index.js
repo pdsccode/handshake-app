@@ -50,7 +50,6 @@ const handleListPayload = (payload) => {
   return result;
 };
 
-
 const handleDetailPayload = payload => Handshake.handshake(payload.data);
 
 const meReducter = (
@@ -114,14 +113,18 @@ const meReducter = (
           } else if (offer.type === EXCHANGE_FEED_TYPE.EXCHANGE) {
             status = HANDSHAKE_EXCHANGE_STATUS_VALUE[offer.status];
           } else if (offer.type === EXCHANGE_FEED_TYPE.OFFER_STORE_SHAKE) {
-            status = HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS_VALUE[offer.status];
+            status =
+              HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS_VALUE[offer.status];
           } else if (offer.type === EXCHANGE_FEED_TYPE.OFFER_STORE) {
             const values = offer.status.split('_');
             id = `${id}_${values[0].toUpperCase()}`;
             status = HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[values[1]];
           }
 
-          if (handledHandshake.id.includes(id) && handledHandshake.status !== status) {
+          if (
+            handledHandshake.id.includes(id) &&
+            handledHandshake.status !== status
+          ) {
             handledHandshake.status = status;
           }
           return handledHandshake;
@@ -150,21 +153,28 @@ const meReducter = (
           } else if (offer.type === EXCHANGE_FEED_TYPE.EXCHANGE) {
             status = HANDSHAKE_EXCHANGE_STATUS_VALUE[offer.status];
           } else if (offer.type === EXCHANGE_FEED_TYPE.OFFER_STORE_SHAKE) {
-            status = HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS_VALUE[offer.status];
+            status =
+              HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS_VALUE[offer.status];
           } else if (offer.type === EXCHANGE_FEED_TYPE.OFFER_STORE) {
             const values = offer.status.split('_');
             id = `${id}_${values[0].toUpperCase()}`;
             status = values[1];
 
             const extraData = JSON.parse(handledHandshake.extraData);
-            if (handledHandshake.id.includes(id) && extraData.status !== status) {
+            if (
+              handledHandshake.id.includes(id) &&
+              extraData.status !== status
+            ) {
               extraData.status = status;
               handledHandshake.extraData = JSON.stringify(extraData);
               return handledHandshake;
             }
           }
 
-          if (handledHandshake.id.includes(id) && handledHandshake.status !== status) {
+          if (
+            handledHandshake.id.includes(id) &&
+            handledHandshake.status !== status
+          ) {
             handledHandshake.status = status;
           }
           return handledHandshake;
@@ -231,6 +241,17 @@ const meReducter = (
         list: handledMylist,
       };
     }
+
+    case `${ACTIONS.SUBMIT_HASH_TAG}_SUCCESS`:
+      const myList = state.list;
+      const id = action.payload?.image || -1;
+      console.log('SUBMIT_HASH_TAG_SUCCESS id = ', id);
+      const itemList = myList.filter(item => item.id === id);
+      console.log('SUBMIT_HASH_TAG_SUCCESS itemList = ', itemList);
+      return {
+        ...state,
+        list: itemList,
+      };
 
     default:
       return state;

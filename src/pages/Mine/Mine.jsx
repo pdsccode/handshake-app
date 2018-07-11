@@ -4,8 +4,8 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { withFirebase } from 'react-redux-firebase';
 // action, mock
-import { fireBaseExchangeDataChange, loadMyHandshakeList, fireBaseBettingChange } from '@/reducers/me/action';
-import { API_URL, APP, HANDSHAKE_ID, URL } from '@/constants';
+import { fireBaseExchangeDataChange, loadMyHandshakeList, fireBaseBettingChange,submitHashTag } from '@/reducers/me/action';
+import { API_URL, APP, HANDSHAKE_ID, URL,BASE_API } from '@/constants';
 import { injectIntl } from 'react-intl';
 
 // components
@@ -32,7 +32,7 @@ import Rate from '@/components/core/controls/Rate/Rate';
 
 import './Classify.scss';
 import DataFeed from './DataFeed';
-
+const TAG = "Mine";
 const maps = {
   [HANDSHAKE_ID.PROMISE]: FeedPromise,
   [HANDSHAKE_ID.BETTING]: FeedBetting,
@@ -158,10 +158,33 @@ class Mine extends React.Component {
 
   handleReviewOfferSuccess = (responseData) => {
     console.log('handleReviewOfferSuccess', responseData);
-    const data = responseData.data;
+    // const data = responseData.data;
   }
 
   handleReviewOfferFailed = (e) => {
+  }
+
+  clickTagItem = (imageId,itemId)=>{
+    console.log(TAG,' clickTagItem - - begin');
+    if(imageId && itemId){
+      this.props.submitHashTag({
+        BASE_URL: BASE_API.BASE_DATASET_API_URL,
+        PATH_URL: 'image-profile/',
+        METHOD: 'POST',
+        headers: { 'Authorization': `JWT ${this.token}` },
+        data: [{ image:  imageId , classify: itemId }],
+        successFn: (res) => {
+          console.log(TAG,' clickTagItem - - success - ', res);
+        },
+        errorFn: (e) => {
+          console.log(TAG,' clickTagItem - error - ', e);
+        }
+    });
+    }
+  }
+
+  get token(){
+    return this.props.auth?.dataset_profile?.token||'';
   }
 
   render() {
@@ -173,7 +196,7 @@ class Mine extends React.Component {
     console.log('messages.me.feed', messages.me.feed);
 
     return ( 
-        <DataFeed {...this.props} login={false} isAuth={false} isLoading={true} token={this.props.auth?.dataset_profile?.token||''} /> 
+        <DataFeed {...this.props} login={false} isAuth={false} isLoading={true} token={this.props.auth?.dataset_profile?.token||''} clickTagItem={this.clickTagItem} /> 
     );
   }
 }
@@ -194,6 +217,7 @@ const mapDispatch = ({
   fireBaseBettingChange,
   setOfflineStatus,
   reviewOffer,
+  submitHashTag,
 });
 
 export default injectIntl(compose(withFirebase, connect(mapState, mapDispatch))(Mine));
