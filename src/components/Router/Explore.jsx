@@ -12,6 +12,9 @@ const Explore = props => (
     {Component => <Component {...props} />}
   </DynamicImport>
 );
+const ExploreDetail = props => (<DynamicImport loading={Loading} load={() => 
+  import('@/pages/Explore/ExploreDetail')}>{Component => <Component {...props} />}</DynamicImport>);
+
 
 // const MeProfile = props => (
 //   <DynamicImport loading={Loading} load={() => import('@/pages/Classify/Profile')}>
@@ -27,6 +30,9 @@ const Page404 = props => (
 
 const routerMap = [
   { path: URL.DATA_SET_DISCOVER, component: Explore },
+  { path: URL.DATA_SET_DISCOVER_DETAIL, component: ExploreDetail },
+  
+  
   //{ path: URL.HANDSHAKE_ME_PROFILE, component: MeProfile },
 ];
 

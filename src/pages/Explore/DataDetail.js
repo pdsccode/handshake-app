@@ -1,24 +1,25 @@
 import React from 'react';
-import {Grid, Image, Container, Card, Icon, Segment, Item, Visibility, Button, Modal, List, Input,Label} from 'semantic-ui-react';
-// import {AuthConsumer} from './AuthContext';
-import {Route, Redirect} from 'react-router';
-import agent from '../../services/agent';
-import {Link} from 'react-router-dom';
-import { connect } from 'react-redux';
-//import filter from 'lodash.filter';
-import { injectIntl } from 'react-intl';
-import {iosHeartOutline, iosCopyOutline,androidDone, iosHeart, iosCheckmarkOutline,  iosPlusOutline} from 'react-icons-kit/ionicons';
-import { withBaseIcon } from 'react-icons-kit';
+import {Grid, Image, Container, Card, Header, Form,Divider, Segment, Dropdown, Visibility, Modal, List, Button, Icon} from 'semantic-ui-react'
+// import {AuthConsumer} from './AuthContext'
+import {Route, Redirect} from 'react-router'
+import agent from '../../services/agent'
+import {Link} from 'react-router-dom'
+//import filter from 'lodash.filter'
+
+import {iosHeartOutline, iosCopyOutline,androidDone, iosHeart, iosCheckmarkOutline,  iosPlusOutline} from 'react-icons-kit/ionicons'
+import { withBaseIcon } from 'react-icons-kit'
+const SideIconContainer =  withBaseIcon({ size:28, color:'black'})
+
+ 
 import activity_active_icon from '@/assets/icons/activityactive.svg';
 import activity_icon from '@/assets/icons/activity.svg';
-import { submitHashTag } from '@/reducers/me/action';
+
 import plus_active_icon from '@/assets/icons/pluscheck.svg';
 import plus_icon from '@/assets/icons/plus.svg';
-import { BASE_API } from '@/constants';
+ 
 
-// const SideIconContainer =  withBaseIcon({ size:28, color:'black'});
 //{activeItem === 'history' ? <img class="my-menu-bar" src="/icons/activityactive.svg"/>: <img class="my-menu-bar" src="/icons/activity.svg"/> }
-const TAG = "DataFeed";
+
 function LikedIcon(props) {
   if (props.liked) {
     return (
@@ -34,7 +35,7 @@ function LikedIcon(props) {
   );
 }
 
-function ClassifiedIcon(props) {
+function ClassifiedIcon(props) { 
   if (props.classified) {
     return <a href='javascript:void(0);' style={{color:'#333'}}>
         <img class="my-icon" src={plus_active_icon}/>
@@ -47,14 +48,17 @@ function ClassifiedIcon(props) {
   );
 }
 
-class DataFeed extends React.Component {
+class DataDetail extends React.Component {
   constructor(props) {
     super(props);
-    // this.handleUpdate = this.handleUpdate.bind(this);
+    this.handleUpdate = this.handleUpdate.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.handleFile = this.handleFile.bind(this);
     this.state = {
       isLoading: false,
-      // categories: [],
+      img: '',
       images: [],
+      classifies: [],
       nextURL: '',
       calculations: {
         bottomVisible: false,
@@ -66,7 +70,7 @@ class DataFeed extends React.Component {
         classifyId: null,
         searchableClassfies: []
       },
-      token: props?.token||'',
+      category: null
     };
     this.handleLikeImage = this.handleLikeImage.bind(this);
     this.handleClassifyImage = this.handleClassifyImage.bind(this);
@@ -75,50 +79,76 @@ class DataFeed extends React.Component {
     this.submitClassify = this.submitClassify.bind(this);
   }
 
-  init_data(token){
-    this.setState({isLoading: true})
+  handleFile(e) {
+    const link = e.target.files[0];
+    let form = new FormData()
+    form.append('link', link)
+    //props.match.params.slug
+    form.append('category', this.props.match.params.slug)
+    console.log('submit image')
+    agent.req.post(agent.API_ROOT + '/api/image/', form).set('authorization', `JWT ${this.props.token}`).then((response) => {
 
-    const req = agent.req.get(agent.API_ROOT + '/api/feed/');
-    if (this.props.isAuth && token) {
-      req.set('authorization', `JWT ${token}`);
-    }
-    req.then((response) => {
-      const body = response?.body||{};
-      console.log(TAG," init_data body = ",body);
-      this.setState({isLoading: false});
-      this.setState({images: body?.results, nextURL: body?.next});
+      agent.req.get(agent.API_ROOT + '/api/image/?category=' + this.props.match.params.slug).set('authorization', `JWT ${this.props.token}`).then((response) => {
+        let resBody = response.body;
+        this.setState({images: resBody.results, nextURL: resBody.next})
+      }).catch((e) => {
+      })
+
     }).catch((e) => {
     })
   }
-  
-  componentDidMount() {
-    document.title = 'Data oscar';
-    console.log("AHIHI ==== ",this.props.token);
-    this.init_data(this.props.token);
+
+  handleChange = (image, e, value) => {
+    let classify = value;
+    console.log(image, classify);
+    agent.req.post(agent.API_ROOT + '/api/image-profile/', {image, classify})
+      .set('authorization', `JWT ${this.props.token}`).type('form').then((response) => {
+      let resBody = response.body;
+    }).catch((e) => {
+    })
   }
-  componentWillReceiveProps(nextProps) {
-    if(!this.state.token){
-      this.setState({token: nextProps.token});
-      this.init_data(nextProps.token);
-    }
+
+
+  componentDidMount() {
+    this.setState({isLoading: true})
+    console.log("DatasetDetail ", this.props.token)
+    // agent.req.get(agent.API_ROOT + '/api/classify/?category=' + this.props.match.params.categoryId).set('authorization', `JWT ${this.props.token}`).then((response) => {
+    //   let resBody = response.body;
+    //   let temp = [];
+    //   for (let i = 0; i < resBody.results.length; i++) {
+    //     temp.push({"text": resBody.results[i].name, "value": resBody.results[i].id})
+    //   }
+    //   this.setState({classifies: temp})
+    // }).catch((e) => {
+    // });
+    agent.req.get(agent.API_ROOT + '/api/category/' + this.props.match.params.slug).set('authorization', `JWT ${this.props.token}`).then((response) => {
+      this.setState({category: response.body})
+      console.log(response.body);
+    }).catch((e) => {
+    })
+
+    agent.req.get(agent.API_ROOT + '/api/image/?category=' + this.props.match.params.slug).set('authorization', `JWT ${this.props.token}`).then((response) => {
+      let resBody = response.body;
+      this.setState({isLoading: false})
+      this.setState({images: resBody.results, nextURL: resBody.next})
+    }).catch((e) => {
+    })
   }
 
   handleUpdate = (e, {calculations}) => {
-    this.setState({calculations});
-    if (calculations.direction === "down" && calculations.percentagePassed > 0.3) {
-      if (this.state.nextURL && !this.state.isLoading) {
-        this.setState({isLoading: true});
-        const req  = agent.req.get(this.state.nextURL);
-        if (this.props.isAuth && this.state.token !=undefined) {
-          req.set('authorization', `JWT ${this.props.token}`);
-        }
-
-        req.then((response) => {
-          let resBody = response?.body||{};
-          this.setState({isLoading: false});
-          if (resBody.next != this.state.nextURL) {
-            let newData = this.state.images.concat(resBody.results);
-            this.setState({images: newData, nextURL: resBody.next});
+    let self = this;
+    console.log(calculations)
+    console.log(calculations.percentagePassed)
+    this.setState({calculations})
+    if (calculations.direction === "down" & calculations.percentagePassed > 0.3) {
+      if (!!this.state.nextURL && this.state.isLoading == false) {
+        this.setState({isLoading: true})
+        agent.req.get(this.state.nextURL).set('authorization', `JWT ${this.props.token}`).then((response) => {
+          let resBody = response.body;
+          this.setState({isLoading: false})
+          if (resBody.next != self.state.nextURL) {
+            let newData = this.state.images.concat(resBody.results)
+            this.setState({images: newData, nextURL: resBody.next})
           }
         }).catch((e) => {
         })
@@ -145,36 +175,6 @@ class DataFeed extends React.Component {
       })
       .catch((err) => {
       });
-  }
-
-  clickTagItem = (imageId,itemId)=>{
-    console.log(TAG,' clickTagItem - - begin token = ',this.token());
-    if(imageId && itemId){
-      const data = new FormData();
-      data.append('image',imageId);
-      data.append('classify',itemId);
-      this.props.submitHashTag({
-        BASE_URL: BASE_API.BASE_DATASET_API_URL,
-        PATH_URL: 'image-profile/',
-        METHOD: 'POST',
-        headers: { 'Authorization': `JWT ${this.token()}` },
-        data,
-        successFn: (res) => {
-          const id = res?.image || -1;
-          const images = this.state.images;
-          console.log(TAG,' clickTagItem - - success - ', res);
-          const itemList = images.filter(item => item.id !== id);
-          this.setState({images:itemList});
-        },
-        errorFn: (e) => {
-          console.log(TAG,' clickTagItem - error - ', e);
-        }
-    });
-    }
-  }
-
-  token = ()=>{
-    return this.props?.token||'';
   }
 
   handleUnlikeImage(e, i) {
@@ -292,7 +292,7 @@ class DataFeed extends React.Component {
 
     const re = new RegExp(text, 'i');
     const isMatch = result => re.test(result.text);
-    //modal.searchableClassfies = filter(modal.classifies, isMatch);
+    modal.searchableClassfies = filter(modal.classifies, isMatch);
     this.setState({modal});
   }
 
@@ -317,52 +317,47 @@ class DataFeed extends React.Component {
     );
   }
 
-  renderHashTag = (item,index)=>{
-    const classifies  = item?.category?.classifies||[];
-    const imageId = item?.id||-1;
-    const listTagView  = classifies.map(item=>{
-      console.log(TAG," renderHashTag item = ",item);
-      return (<Label as='a' style={{marginTop:2,marginBottom:2}} size='small' onClick={()=>this.clickTagItem(imageId,item.id)}>
-        {item?.name||''}
-      </Label>);
-    });
-    return (<div style={{display:'flex',flex:1,flexWrap:'wrap'}}>
-      {listTagView}
-    </div>);
-  }
-
   render() {
+    let self = this;
     return (
-      <Visibility once={true} onUpdate={this.handleUpdate}>
-        <Segment vertical >
-            <Card.Group centered >
-              {this.state.images.map((item, i) => {
-                return (
-                  <Card key={i} className="my-card">
-                      <Link className="ui image" to={"/cat/" + item.category.id}>
-                        <Image src={item.link}/>
-                      </Link>
-                    <Card.Content>
-                    {this.renderHashTag(item,i)}
-                      {/*<div style={{float: 'left',marginTop:'-8px'}}>
-                        <Link  to={"/cat/" + item.category.id } className="title">
-                            {item.category.name}
-                        </Link>
-                      </div>
-                      <div style={{float: 'right', marginTop:'-10px'}}>
-                        <div style={{display: 'inline', marginRight: '2em'}}>
-                          {this.renderLikedIcon(i)}
-                        </div>
-
-                        <div style={{display: 'inline'}}>
-                          {this.renderClassifiedIcon(i)}
-                        </div>
-                </div>*/}
-                    </Card.Content>
-                  </Card>
-                )
-              })}
-            </Card.Group>
+      <Visibility once={true} onUpdate={this.handleUpdate}> 
+        <h2 className="header my-card-header">
+                <Image style={{marginLeft:'-20px'}} src={"https://chart.googleapis.com/chart?chs=100x100&cht=qr&chl="+(this.state.category ? this.state.category.contract_address : '')+"&choe=UTF-8"}/>
+                <span style={{float:'left',marginTop:'-50px',marginLeft: '80px'}}> {this.state.category ? this.state.category.name :''} </span>
+                <Header.Subheader>
+                  </Header.Subheader>
+                <div className='ui three'>
+                    <Button basic color='grey' content={this.state.category && this.state.category.total_followers ? `F ${this.state.category.total_followers}` : 'Followers 0'} ></Button>
+                    <Button basic color='grey' content={this.state.category && this.state.category.total_images ? `Img ${this.state.category.total_images}` : 'Images 0'} ></Button>
+                    <Button basic color='grey' content='BUY NOW' ></Button>
+                </div>
+            </h2>
+        <Segment vertical>   
+           <Container> 
+                <Card.Group centered >
+                  {this.state.images.map((item, i) => {
+                    return (
+                      <Card key={i} className="my-card">
+                          <Link className="ui image" to={"/explore/" + item.category.id}>
+                              <Image src={item.link}/>
+                            </Link>
+                        <Card.Content>
+                          <div style={{float: 'left',marginTop:'-8px'}}>  
+                          </div>
+                          <div style={{float: 'right', marginTop:'-10px'}}>
+                            <div style={{display: 'inline', marginRight: '2em'}}>
+                              {this.renderLikedIcon(i)}
+                            </div>
+                            <div style={{display: 'inline'}}>
+                              {this.renderClassifiedIcon(i)}
+                            </div>
+                          </div>
+                        </Card.Content>
+                      </Card>
+                    )
+                  })}  
+                </Card.Group> 
+                </Container>
               <Modal size='large'closeOnEscape closeIcon open={this.state.modal.open} onClose={this.closeModal} style={{height: '90%'}}>
                 <Modal.Header>Choose classify</Modal.Header>
                 <Modal.Content style={{height: '80%', overflowY: 'scroll'}}>
@@ -375,24 +370,10 @@ class DataFeed extends React.Component {
               </Modal>
         </Segment>
         <Segment vertical loading={this.state.isLoading}/>
-
       </Visibility>
+
     )
   }
 }
-// export default DataFeed;
-
-// export default props => (<AuthConsumer>
-//     {({login, token, isLoading, isAuth}) => {
-//       return <DataFeed {...props} login={login} isAuth={isAuth} isLoading={isLoading} token={token} />
-//     }}
-//   </AuthConsumer>
-// )
-const mapState = state => ({
-  
-});
-
-const mapDispatch = ({
-  submitHashTag,
-});
-export default injectIntl(connect(mapState, mapDispatch)(DataFeed));
+export default DataDetail;
+ 

@@ -242,16 +242,16 @@ const meReducter = (
       };
     }
 
-    case `${ACTIONS.SUBMIT_HASH_TAG}_SUCCESS`:
-      const myList = state.list;
-      const id = action.payload?.image || -1;
-      console.log('SUBMIT_HASH_TAG_SUCCESS id = ', id);
-      const itemList = myList.filter(item => item.id === id);
-      console.log('SUBMIT_HASH_TAG_SUCCESS itemList = ', itemList);
-      return {
-        ...state,
-        list: itemList,
-      };
+    // case `${ACTIONS.SUBMIT_HASH_TAG}_SUCCESS`:
+    //   const myList = state.list;
+    //   const id = action.payload?.image || -1;
+    //   console.log('SUBMIT_HASH_TAG_SUCCESS id = ', id);
+    //   const itemList = myList.filter(item => item.id !== id);
+    //   console.log('SUBMIT_HASH_TAG_SUCCESS itemList = ', itemList);
+    //   return {
+    //     ...state,
+    //     list: itemList,
+    //   };
 
     default:
       return state;
