@@ -743,6 +743,8 @@ export default {
           status: 'Status',
           confirmations: 'confirmations',
           success: 'success',
+          detail_etherscan: 'View detail on etherscan.io',
+          view_all_etherscan: 'View all on etherscan.io'
         },
       },
     },
