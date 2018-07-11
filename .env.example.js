@@ -24,4 +24,7 @@ module.exports = {
   dropConsole: true,
   isStaging: false,
   caches: false,
+  isProduction: false,
+  isLive: false ,
+  isDojo: true,
 };
