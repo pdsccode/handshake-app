@@ -185,11 +185,18 @@ class FeedMeOfferStoreContainer extends React.PureComponent {
   //   return actionButtons;
   // }
 
-  deleteOfferItem = async (item) => {
-    console.log('deleteOfferItem',item);
+  confirmDeleteOfferItem = (item) => {
     this.deleteItem = item;
+    const { confirmOfferAction } = this.props;
+    const message = <FormattedMessage id="closeOfferConfirm" values={{ }} />;
+    if (confirmOfferAction) {
+      confirmOfferAction(message, this.deleteOfferItem);
+    }
+  }
+
+  deleteOfferItem = async () => {
     const { offer } = this;
-    const { currency, sellAmount, freeStart } = item;
+    const { currency, sellAmount, freeStart } = this.deleteItem;
 
     if (currency === CRYPTO_CURRENCY.ETH) {
       if (sellAmount > 0 && freeStart === '') {
@@ -353,7 +360,7 @@ class FeedMeOfferStoreContainer extends React.PureComponent {
       nameShop,
       messageMovingCoin,
       // actionButtons,
-      deleteOfferItem: this.deleteOfferItem,
+      confirmDeleteOfferItem: this.confirmDeleteOfferItem,
     };
 
     return (

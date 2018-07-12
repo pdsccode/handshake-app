@@ -190,11 +190,11 @@ class FeedMeStation extends React.PureComponent {
   }
 
   deleteOfferItem = (currency) => {
-    const { offer, deleteOfferItem } = this.props;
+    const { offer, confirmDeleteOfferItem } = this.props;
 
     for (const item of Object.values(offer.items)) {
       if (item.currency === currency) {
-        deleteOfferItem(item);
+        confirmDeleteOfferItem(item);
         break;
       }
     }
