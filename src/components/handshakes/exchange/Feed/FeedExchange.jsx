@@ -471,8 +471,10 @@ id="offerDistanceContent"
         coin.name = CRYPTO_CURRENCY.ETH;
         coin.color = 'linear-gradient(-135deg, #D772FF 0%, #9B10F2 45%, #9E53E1 100%)';
         coin.icon = iconEth;
-        coin.priceBuy = offer.items.ETH.buyBalance > 0 ? formatMoneyByLocale(priceBuyETH, currency) : '-';
-        coin.priceSell = offer.items.ETH.sellBalance > 0 ? formatMoneyByLocale(priceSellETH, currency) : '-';
+        const priceBuy = offer.items.ETH.buyBalance > 0 ? formatMoneyByLocale(priceBuyETH, currency) : '-';
+        const priceSell = offer.items.ETH.sellBalance > 0 ? formatMoneyByLocale(priceSellETH, currency) : '-';
+        coin.txtBuy = `${priceBuy} ${priceBuy !== '-' ? currency : ''}`;
+        coin.txtSell = `${priceSell} ${priceSell !== '-' ? currency : ''}`;
 
         coins.push(coin);
       }
@@ -485,8 +487,10 @@ id="offerDistanceContent"
         coin.name = CRYPTO_CURRENCY.BTC;
         coin.color = 'linear-gradient(45deg, #FF8006 0%, #FFA733 51%, #FFC349 100%)';
         coin.icon = iconBtc;
-        coin.priceBuy = offer.items.BTC.buyBalance > 0 ? formatMoneyByLocale(priceBuyBTC, currency) : '-';
-        coin.priceSell = offer.items.BTC.sellBalance > 0 ? formatMoneyByLocale(priceSellBTC, currency) : '-';
+        const priceBuy = offer.items.BTC.buyBalance > 0 ? formatMoneyByLocale(priceBuyBTC, currency) : '-';
+        const priceSell = offer.items.BTC.sellBalance > 0 ? formatMoneyByLocale(priceSellBTC, currency) : '-';
+        coin.txtBuy = `${priceBuy} ${priceBuy !== '-' ? currency : ''}`;
+        coin.txtSell = `${priceSell} ${priceSell !== '-' ? currency : ''}`;
 
         coins.push(coin);
       }
