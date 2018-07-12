@@ -545,7 +545,7 @@ export class BetHandshakeHandler {
     try {
       result = await bettinghandshake.refund(hid, offchain);
       const {
-        logs, hash, error, transactionHash, payload,
+        hash, error, payload,
       } = result;
 
       logJson = payload;
@@ -567,7 +567,7 @@ export class BetHandshakeHandler {
       realBlockHash = '-1';
       logJson = err.message;
     }
-    this.saveTransaction(offchain, CONTRACT_METHOD.CANCEL, chainId, realBlockHash, contractAddress, logJson);
+    this.saveTransaction(offchain, CONTRACT_METHOD.REFUND, chainId, realBlockHash, contractAddress, logJson);
 
     return result;
   }
