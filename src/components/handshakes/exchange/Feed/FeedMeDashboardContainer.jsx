@@ -61,134 +61,135 @@ class FeedMeOfferStoreContainer extends React.PureComponent {
     }
   }
 
-  calculateFiatAmount = (amount, type, percentage) => {
+  // calculateFiatAmount = (amount, type, percentage) => {
+  //   const { offer } = this;
+  //   const { listOfferPrice } = this.props;
+  //   const { currency, fiatCurrency, } = offer;
+  //   let fiatAmount = 0;
+  //
+  //   if (listOfferPrice) {
+  //     const offerPrice = getOfferPrice(listOfferPrice, type, currency, fiatCurrency);
+  //     if (offerPrice) {
+  //       fiatAmount = amount * offerPrice.price || 0;
+  //       fiatAmount += fiatAmount * percentage / 100;
+  //     } else {
+  //       // console.log('aaaa', offer.type, offer.currency);
+  //     }
+  //   }
+  //
+  //   return fiatAmount;
+  // }
+
+  // getEmail = () => {
+  //   const {
+  //     email, contactPhone, currency, userAddress,
+  //   } = this.offer;
+  //
+  //   if (email) { return email; }
+  //   if (contactPhone) { return contactPhone; }
+  //   if (currency === CRYPTO_CURRENCY.ETH) {
+  //     const wallet = new Ethereum();
+  //     wallet.address = userAddress;
+  //     return wallet.getShortAddress();
+  //   }
+  //   if (currency === CRYPTO_CURRENCY.BTC) {
+  //     const wallet = new Bitcoin();
+  //     wallet.address = userAddress;
+  //     return wallet.getShortAddress();
+  //   }
+  //   return '';
+  // }
+
+  // getMessageContent = () => {
+  //   const { status } = this.props;
+  //   const { offer } = this;
+  //   const {
+  //     buyAmount, sellAmount, currency, buyPercentage, sellPercentage,
+  //   } = offer;
+  //   let message = '';
+  //   const fiatAmountBuy = this.calculateFiatAmount(buyAmount, EXCHANGE_ACTION.BUY, buyPercentage);
+  //   const fiatAmountSell = this.calculateFiatAmount(sellAmount, EXCHANGE_ACTION.SELL, sellPercentage);
+  //   switch (status) {
+  //     case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CREATED:
+  //     case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.ACTIVE:
+  //     case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSING:
+  //     case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSED: {
+  //       message = (
+  //         <span>
+  //           {offer.buyAmount > 0 && (
+  //             <FormattedMessage
+  //               id="offerStoreHandShakeContentBuy"
+  //               values={{
+  //                 offerTypeBuy: EXCHANGE_ACTION_NAME[EXCHANGE_ACTION.BUY],
+  //                 amountBuy: offer.buyAmount,
+  //                 currency: offer.currency,
+  //                 fiatAmountCurrency: offer.fiatCurrency,
+  //                 fiatAmountBuy: formatMoneyByLocale(fiatAmountBuy, offer.fiatCurrency),
+  //               }}
+  //             />
+  //           )}
+  //           {offer.sellAmount > 0 && (
+  //             <FormattedMessage
+  //               id="offerStoreHandShakeContentSell"
+  //               values={{
+  //                 offerTypeSell: EXCHANGE_ACTION_NAME[EXCHANGE_ACTION.SELL],
+  //                 amountSell: offer.sellAmount,
+  //                 currency: offer.currency,
+  //                 fiatAmountCurrency: offer.fiatCurrency,
+  //                 fiatAmountSell: formatMoneyByLocale(fiatAmountSell, offer.fiatCurrency),
+  //               }}
+  //             />
+  //           )}
+  //         </span>
+  //       );
+  //       break;
+  //     }
+  //   }
+  //
+  //   return message;
+  // }
+
+  // getActionButtons = () => {
+  //   const { confirmOfferAction } = this.props;
+  //   const { offer } = this;
+  //
+  //   const status = HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[offer.status];
+  //   let actionButtons = null;
+  //
+  //   switch (status) {
+  //     case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.ACTIVE: {
+  //       const message = <FormattedMessage id="closeOfferConfirm" values={{ }} />;
+  //       actionButtons = (
+  //         <div>
+  //           <Button
+  //             block
+  //             className="mt-2 btn btn-secondary"
+  //             onClick={() => confirmOfferAction(message, this.deleteOfferItem)}
+  //           ><FormattedMessage id="btn.delete" />
+  //           </Button>
+  //         </div>
+  //       );
+  //       break;
+  //     }
+  //     case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CREATED:
+  //     case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSING:
+  //     case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSED: {
+  //       break;
+  //     }
+  //     default: {
+  //       // code
+  //       break;
+  //     }
+  //   }
+  //
+  //   return actionButtons;
+  // }
+
+  deleteOfferItem = async (item) => {
+    console.log('deleteOfferItem',item);
+    this.deleteItem = item;
     const { offer } = this;
-    const { listOfferPrice } = this.props;
-    const { currency, fiatCurrency, } = offer;
-    let fiatAmount = 0;
-
-    if (listOfferPrice) {
-      const offerPrice = getOfferPrice(listOfferPrice, type, currency, fiatCurrency);
-      if (offerPrice) {
-        fiatAmount = amount * offerPrice.price || 0;
-        fiatAmount += fiatAmount * percentage / 100;
-      } else {
-        // console.log('aaaa', offer.type, offer.currency);
-      }
-    }
-
-    return fiatAmount;
-  }
-
-  getEmail = () => {
-    const {
-      email, contactPhone, currency, userAddress,
-    } = this.offer;
-
-    if (email) { return email; }
-    if (contactPhone) { return contactPhone; }
-    if (currency === CRYPTO_CURRENCY.ETH) {
-      const wallet = new Ethereum();
-      wallet.address = userAddress;
-      return wallet.getShortAddress();
-    }
-    if (currency === CRYPTO_CURRENCY.BTC) {
-      const wallet = new Bitcoin();
-      wallet.address = userAddress;
-      return wallet.getShortAddress();
-    }
-    return '';
-  }
-
-  getMessageContent = () => {
-    const { status } = this.props;
-    const { offer } = this;
-    const {
-      buyAmount, sellAmount, currency, buyPercentage, sellPercentage,
-    } = offer;
-    let message = '';
-    const fiatAmountBuy = this.calculateFiatAmount(buyAmount, EXCHANGE_ACTION.BUY, buyPercentage);
-    const fiatAmountSell = this.calculateFiatAmount(sellAmount, EXCHANGE_ACTION.SELL, sellPercentage);
-    switch (status) {
-      case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CREATED:
-      case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.ACTIVE:
-      case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSING:
-      case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSED: {
-        message = (
-          <span>
-            {offer.buyAmount > 0 && (
-              <FormattedMessage
-                id="offerStoreHandShakeContentBuy"
-                values={{
-                  offerTypeBuy: EXCHANGE_ACTION_NAME[EXCHANGE_ACTION.BUY],
-                  amountBuy: offer.buyAmount,
-                  currency: offer.currency,
-                  fiatAmountCurrency: offer.fiatCurrency,
-                  fiatAmountBuy: formatMoneyByLocale(fiatAmountBuy, offer.fiatCurrency),
-                }}
-              />
-            )}
-            {offer.sellAmount > 0 && (
-              <FormattedMessage
-                id="offerStoreHandShakeContentSell"
-                values={{
-                  offerTypeSell: EXCHANGE_ACTION_NAME[EXCHANGE_ACTION.SELL],
-                  amountSell: offer.sellAmount,
-                  currency: offer.currency,
-                  fiatAmountCurrency: offer.fiatCurrency,
-                  fiatAmountSell: formatMoneyByLocale(fiatAmountSell, offer.fiatCurrency),
-                }}
-              />
-            )}
-          </span>
-        );
-        break;
-      }
-    }
-
-    return message;
-  }
-
-  getActionButtons = () => {
-    const { confirmOfferAction } = this.props;
-    const { offer } = this;
-
-    const status = HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[offer.status];
-    let actionButtons = null;
-
-    switch (status) {
-      case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.ACTIVE: {
-        const message = <FormattedMessage id="closeOfferConfirm" values={{ }} />;
-        actionButtons = (
-          <div>
-            <Button
-              block
-              className="mt-2 btn btn-secondary"
-              onClick={() => confirmOfferAction(message, this.deleteOfferItem)}
-            ><FormattedMessage id="btn.delete" />
-            </Button>
-          </div>
-        );
-        break;
-      }
-      case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CREATED:
-      case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSING:
-      case HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSED: {
-        break;
-      }
-      default: {
-        // code
-        break;
-      }
-    }
-
-    return actionButtons;
-  }
-
-  deleteOfferItem = async () => {
-    const { offer } = this;
-    const { currency, sellAmount, freeStart } = offer;
-    console.log('deleteOfferItem', offer);
+    const { currency, sellAmount, freeStart } = item;
 
     if (currency === CRYPTO_CURRENCY.ETH) {
       if (sellAmount > 0 && freeStart === '') {
@@ -210,23 +211,24 @@ class FeedMeOfferStoreContainer extends React.PureComponent {
     this.props.deleteOfferItem({
       PATH_URL: `${API_URL.EXCHANGE.OFFER_STORES}/${offer.id}`,
       METHOD: 'DELETE',
-      qs: { currency: offer.currency },
+      qs: { currency },
       successFn: this.handleDeleteOfferItemSuccess,
       errorFn: this.handleDeleteOfferItemFailed,
     });
   }
 
   handleDeleteOfferItemSuccess = async (responseData) => {
+    const { refreshPage } = this.props;
     const { offer } = this;
     const { data } = responseData;
-    const { currency, sellAmount, freeStart } = offer;
+    const { currency, sellAmount, freeStart } = this.deleteItem;
 
     console.log('handleDeleteOfferItemSuccess', responseData);
 
     const offerStore = OfferShop.offerShop(data);
 
     // Update status to redux
-    this.responseExchangeDataChange(offerStore);
+    // this.responseExchangeDataChange(offerStore);
 
     if (currency === CRYPTO_CURRENCY.ETH) {
       if (sellAmount > 0 && freeStart === '' && offerStore.items.ETH.status !== 'closed') {
@@ -259,9 +261,9 @@ class FeedMeOfferStoreContainer extends React.PureComponent {
       timeOut: 2000,
       type: 'success',
       callBack: () => {
-        // if (refreshPage) {
-        //   refreshPage();
-        // }
+        if (refreshPage) {
+          refreshPage();
+        }
       },
     });
   }
@@ -332,22 +334,26 @@ class FeedMeOfferStoreContainer extends React.PureComponent {
     this.offer = offer;
 
     const from = <FormattedMessage id="ex.me.label.from" />;
-    const email = this.getEmail();
+    // const email = this.getEmail();
     const statusValue = HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[offer.status];
     const statusText = HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_NAME[statusValue];
-    const showChat = false;
-    const chatUsername = '';
+    // const showChat = false;
+    // const chatUsername = '';
     const nameShop = getNameShopDisplayed();
     // const message = this.getMessageContent();
-    const actionButtons = this.getActionButtons();
+    // const actionButtons = this.getActionButtons();
     const messageMovingCoin = this.getMessageMovingCoin();
 
     const feedProps = {
-      from, email, statusText,
-      showChat, chatUsername,
+      from,
+      // email,
+      statusText,
+      // showChat,
+      // chatUsername,
       nameShop,
       messageMovingCoin,
-      actionButtons,
+      // actionButtons,
+      deleteOfferItem: this.deleteOfferItem,
     };
 
     return (

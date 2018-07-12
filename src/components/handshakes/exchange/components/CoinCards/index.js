@@ -17,7 +17,7 @@ export class Component extends React.Component {
               style={{ background: color }}
               onClick={e => handleClickCoin && handleClickCoin(e, name)}
             >
-              {onClose && <button className="btn-close-card" onClick={(e) => { e.stopPropagation(); onClose(); }}>&times;</button>}
+              {onClose && <button className="btn-close-card" onClick={(e) => { e.stopPropagation(); onClose(name); }}>&times;</button>}
               {/* <div className="icon-coin"><img src={icon}/></div> */}
               <div className="name mb-1">{name}</div>
               <div className="price-wrapper">

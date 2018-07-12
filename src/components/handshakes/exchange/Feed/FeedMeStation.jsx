@@ -50,8 +50,8 @@ class FeedMeStation extends React.PureComponent {
     let lastUpdateAt = '';
 
     if (eth) {
-      const ethStatus = HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[eth.status];
-      isShowTimer = ethStatus === HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CREATED || ethStatus === HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSING;
+      const status = HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[eth.status];
+      isShowTimer = status === HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CREATED || status === HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSING;
 
       if (isShowTimer) {
         lastUpdateAt = eth.updatedAt;
@@ -60,8 +60,8 @@ class FeedMeStation extends React.PureComponent {
 
     if (btc) {
       if (!isShowTimer) {
-        const btcStatus = HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[btc.status];
-        isShowTimer = btcStatus === HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CREATED || btcStatus === HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSING;
+        const status = HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[btc.status];
+        isShowTimer = status === HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CREATED || status === HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSING;
 
         if (isShowTimer) {
           lastUpdateAt = eth.updatedAt;
@@ -141,38 +141,61 @@ class FeedMeStation extends React.PureComponent {
     } = this.getPrices();
 
     if (offer.itemFlags.ETH) {
-      if (!this.isEmptyBalance(offer.items.ETH)) {
+      const eth = offer.items.ETH;
+      if (!this.isEmptyBalance(eth)) {
         const coin = {};
 
         coin.name = CRYPTO_CURRENCY.ETH;
         coin.color = 'linear-gradient(-135deg, #D772FF 0%, #9B10F2 45%, #9E53E1 100%)';
         coin.icon = iconEth;
-        const priceBuy = offer.items.ETH.buyBalance > 0 ? formatMoneyByLocale(priceBuyETH, currency) : '-';
-        const priceSell = offer.items.ETH.sellBalance > 0 ? formatMoneyByLocale(priceSellETH, currency) : '-';
-        coin.txtBuy = `${priceBuy} ${priceBuy !== '-' ? currency : ''} ${priceBuy !== '-' ? `- ${formatAmountCurrency(offer.items.ETH.buyBalance)} ${CRYPTO_CURRENCY.ETH}` : ''}`;
-        coin.txtSell = `${priceSell} ${priceSell !== '-' ? currency : ''} ${priceSell !== '-' ? `- ${formatAmountCurrency(offer.items.ETH.sellBalance)} ${CRYPTO_CURRENCY.ETH}` : ''}`;
+        const priceBuy = eth.buyBalance > 0 ? formatMoneyByLocale(priceBuyETH, currency) : '-';
+        const priceSell = eth.sellBalance > 0 ? formatMoneyByLocale(priceSellETH, currency) : '-';
+        coin.txtBuy = `${priceBuy} ${priceBuy !== '-' ? currency : ''} ${priceBuy !== '-' ? `- ${formatAmountCurrency(eth.buyBalance)} ${CRYPTO_CURRENCY.ETH}` : ''}`;
+        coin.txtSell = `${priceSell} ${priceSell !== '-' ? currency : ''} ${priceSell !== '-' ? `- ${formatAmountCurrency(eth.sellBalance)} ${CRYPTO_CURRENCY.ETH}` : ''}`;
+
+        const status = HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[eth.status];
+        if (status === HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.ACTIVE) {
+          coin.onClose = this.deleteOfferItem;
+        }
 
         coins.push(coin);
       }
     }
 
     if (offer.itemFlags.BTC) {
-      if (!this.isEmptyBalance(offer.items.BTC)) {
+      const btc = offer.items.BTC;
+      if (!this.isEmptyBalance(btc)) {
         const coin = {};
 
         coin.name = CRYPTO_CURRENCY.BTC;
         coin.color = 'linear-gradient(45deg, #FF8006 0%, #FFA733 51%, #FFC349 100%)';
         coin.icon = iconBtc;
-        const priceBuy = offer.items.BTC.buyBalance > 0 ? formatMoneyByLocale(priceBuyBTC, currency) : '-';
-        const priceSell = offer.items.BTC.sellBalance > 0 ? formatMoneyByLocale(priceSellBTC, currency) : '-';
-        coin.txtBuy = `${priceBuy} ${priceBuy !== '-' ? currency : ''} ${priceBuy !== '-' ? `- ${formatAmountCurrency(offer.items.BTC.buyBalance)} ${CRYPTO_CURRENCY.BTC}` : ''}`;
-        coin.txtSell = `${priceSell} ${priceSell !== '-' ? currency : ''} ${priceSell !== '-' ? `- ${formatAmountCurrency(offer.items.BTC.sellBalance)} ${CRYPTO_CURRENCY.BTC}` : ''}`;
+        const priceBuy = btc.buyBalance > 0 ? formatMoneyByLocale(priceBuyBTC, currency) : '-';
+        const priceSell = btc.sellBalance > 0 ? formatMoneyByLocale(priceSellBTC, currency) : '-';
+        coin.txtBuy = `${priceBuy} ${priceBuy !== '-' ? currency : ''} ${priceBuy !== '-' ? `- ${formatAmountCurrency(btc.buyBalance)} ${CRYPTO_CURRENCY.BTC}` : ''}`;
+        coin.txtSell = `${priceSell} ${priceSell !== '-' ? currency : ''} ${priceSell !== '-' ? `- ${formatAmountCurrency(btc.sellBalance)} ${CRYPTO_CURRENCY.BTC}` : ''}`;
+
+        const status = HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[btc.status];
+        if (status === HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.ACTIVE) {
+          coin.onClose = this.deleteOfferItem;
+        }
 
         coins.push(coin);
       }
     }
 
     this.setState({ coins });
+  }
+
+  deleteOfferItem = (currency) => {
+    const { offer, deleteOfferItem } = this.props;
+
+    for (const item of Object.values(offer.items)) {
+      if (item.currency === currency) {
+        deleteOfferItem(item);
+        break;
+      }
+    }
   }
 
   render() {
