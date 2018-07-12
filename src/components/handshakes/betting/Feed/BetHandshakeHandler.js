@@ -99,6 +99,7 @@ export const MESSAGE = {
 
 
 export const BET_BLOCKCHAIN_STATUS = {
+  STATUS_MAKER_SHOULD_UNINIT: -12,
   STATUS_INIT_FAILED: -10,
   STATUS_COLLECT_FAILED: -9,
   STATUS_COLLECT_PENDING: -8,
@@ -149,6 +150,7 @@ export const BETTING_STATUS_LABEL =
       ROLLBACK_INIT: 'There is something wrong with blockchain. The bet is cancelled',
       ROLLBACK_SHAKE: 'There is something wrong with blockchain. The bet is cancelled',
       COLLECT_FAILED: 'There is something wrong with withdraw. Please cancel to get back money',
+      SHOULD_CANCEL: 'There is something wrong. Please cancel to get back money',
       ACTION_FAILED: `There is something wrong with blockchain. Your action is cancelled`,
       INIT_FAILED: `There is something wrong with blockchain. Your bet is cancelled`,
       SOLVE: 'Please retry to solve problem',
@@ -200,18 +202,21 @@ export class BetHandshakeHandler {
     console.log('getStatusLabel Role:', role);
     console.log('getStatusLabel isMatch:', isMatch);
     console.log('getStatusLabel Blockchain status:', blockchainStatus);
-    if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_INIT_FAILED){
+    if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_INIT_FAILED) {
       strStatus = BETTING_STATUS_LABEL.INIT_FAILED;
       isAction = false;
-    }
-    else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_FAILED) {
+    } else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_FAILED) {
+      label = BETTING_STATUS_LABEL.CANCEL;
+      strStatus = BETTING_STATUS_LABEL.SHOULD_CANCEL;
+      isAction = true;
+    } else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_MAKER_SHOULD_UNINIT) {
       label = BETTING_STATUS_LABEL.CANCEL;
       strStatus = BETTING_STATUS_LABEL.COLLECT_FAILED;
       isAction = true;
     } else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINIT_PENDING) {
       strStatus = BETTING_STATUS_LABEL.PROGRESSING;
       isAction = false;
-    } else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_PENDING){
+    } else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_PENDING) {
       strStatus = BETTING_STATUS_LABEL.COLLECT_PENDING;
       isAction = false;
     } else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINIT_FAILED
@@ -235,9 +240,9 @@ export class BetHandshakeHandler {
       strStatus = BETTING_STATUS_LABEL.REFUNDED;
       isAction = false;
     } else if ((blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_DONE && resultStatus === BETTING_STATUS.SUPPORT_WIN && side === SIDE.SUPPORT)
-                ||  (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_DONE && resultStatus === BETTING_STATUS.AGAINST_WIN && side === SIDE.AGAINST)){
-            strStatus = BETTING_STATUS_LABEL.COLLECT_DONE;
-            isAction = false;
+                || (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_DONE && resultStatus === BETTING_STATUS.AGAINST_WIN && side === SIDE.AGAINST)) {
+      strStatus = BETTING_STATUS_LABEL.COLLECT_DONE;
+      isAction = false;
     } else if (!isMatch && role === ROLE.INITER && blockchainStatus !== BET_BLOCKCHAIN_STATUS.STATUS_SHAKER_SHAKED) {
       label = BETTING_STATUS_LABEL.CANCEL;
       strStatus = BETTING_STATUS_LABEL.BET_WAIT_MATCHING;
