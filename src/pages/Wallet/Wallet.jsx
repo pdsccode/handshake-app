@@ -927,7 +927,7 @@ class Wallet extends React.Component {
           </Modal>
 
           <Modal title={messages.wallet.action.history.header} onRef={modal => this.modalHistoryRef = modal} onClose={this.closeHistory}>
-            {/* <WalletHistory wallet={this.state.walletSelected} transactions={this.state.transactions} /> */}
+            <WalletHistory wallet={this.state.walletSelected} transactions={this.state.transactions} />
           </Modal>
 
 

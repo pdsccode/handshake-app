@@ -165,7 +165,7 @@ class Transfer extends React.Component {
         const cryptoPrice = CryptoPrice.cryptoPrice(res.data);
         const price = new BigNumber(cryptoPrice.fiatAmount).toNumber();
 
-        rates.push({currency: price});
+        rates.push({[currency]: price});
         this.setState({rates: rates});             
       },
       errorFn: (err) => {
@@ -262,10 +262,10 @@ class Transfer extends React.Component {
     if(!amount) amount = val;   
     
     
-    let rates = rates.filter(rate => rate.hasOwnProperty(this.state.walletSelected.name));
+    let rates = this.state.rates.filter(rate => rate.hasOwnProperty(this.state.walletSelected.name));
 
     if (rates.length > 0){
-      rate = rates[this.state.walletSelected.name];
+      rate = rates[0][this.state.walletSelected.name];
       if(!isNaN(amount)){
         money = amount * rate;
         this.setState({
@@ -294,9 +294,10 @@ class Transfer extends React.Component {
 
   updateAddressMoneyValue = (evt) => {
     let money = evt.target.value, rate = 0, amount = 0;
-    let rates = rates.filter(rate => rate.hasOwnProperty(this.state.walletSelected.name));
+    let rates = this.state.rates.filter(rate => rate.hasOwnProperty(this.state.walletSelected.name));
 
     if (rates.length > 0){
+      rate = rates[0][this.state.walletSelected.name]
       if(!isNaN(money)){
         amount = money/rate;
         this.setState({
@@ -382,10 +383,9 @@ openQrcode = () => {
   this.modalScanQrCodeRef.open();
 }
 
-  render() {
-    console.log('this.state.rates',this.state.rates);
+  render() {    
     const { messages } = this.props.intl;  
-    let showDivAmount = (!this.state.walletSelected || ( this.state.walletSelected && ( this.state.walletSelected.isToken || this.state.rates.filter(rate => rate.hasOwnProperty(this.state.walletSelected.name).length > 0) ) ) ) ? false : true;     
+    let showDivAmount = (( this.state.walletSelected && ( !this.state.walletSelected.isToken && this.state.rates.filter(rate => rate.hasOwnProperty(this.state.walletSelected.name).length > 0) ) ) ) ? true : false;
     
     return (
       <div>

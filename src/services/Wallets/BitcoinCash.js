@@ -16,7 +16,7 @@ export class BitcoinCash extends Bitcoin {
 
     this.coinType = 0;
     this.name = 'BCH';
-    this.title = 'BitcoinCash';
+    this.title = 'Bitcoin Cash';
     this.className = 'BitcoinCash';
   }
 
@@ -67,7 +67,7 @@ export class BitcoinCash extends Bitcoin {
 
       console.log('bitcore.Networks.defaultNetwork', bitcore.Networks.defaultNetwork);
       console.log('server', this.network);
-      console.log(StringHelper.format('Your wallet balance is currently {0} ETH', balance));
+      console.log(StringHelper.format('Your wallet balance is currently {0} BHC', balance));
 
       if (!balance || balance == 0 || balance <= amountToSend) {
         return { status: 0, message: 'messages.bitcoin.error.insufficient' };
