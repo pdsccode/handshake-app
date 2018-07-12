@@ -225,12 +225,10 @@ export class BitcoinCash extends Bitcoin {
                 let tout_addresses = tout.scriptPubKey.addresses.join(" ").toLowerCase();
                 if(tout_addresses.indexOf(this.address.toLowerCase()) < 0){
                   value += Number(tout.value);
-                  addresses.push(tout_addresses.replace(tout_addresses.substr(4, 26), '...'));
+                  addresses.push(tout_addresses.replace(tout_addresses.substr(4, 34), '...'));
                 }
               }
-
             }
-
             break;
           }
         }
@@ -244,7 +242,7 @@ export class BitcoinCash extends Bitcoin {
                 value += tout.value;
               }
               else{
-                addresses.push(tout_addresses.replace(tout_addresses.substr(4, 26), '...'));
+                addresses.push(tout_addresses.replace(tout_addresses.substr(4, 34), '...'));
               }
             }
           }
