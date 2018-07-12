@@ -515,25 +515,7 @@ export class BetHandshakeHandler {
     return result;
   }
   async refund(hid, offchain) {
-    /*
-    const chainId = getChainIdDefaultWallet();
-    const bettinghandshake = new BettingHandshake(chainId);
-    const result = await bettinghandshake.refund(hid, offchain);
-    const {
-      logs, hash, error, transactionHash,
-    } = result;
-    let logJson = JSON.stringify(logs);
-    const contractAddress = bettinghandshake.contractAddress;
-    let realBlockHash = hash;
-    if (hash == -1) {
-      realBlockHash = '-1';
-      logJson = error.message;
-      this.rollback(offchain);
-    }
-    this.saveTransaction(offchain, CONTRACT_METHOD.REFUND, chainId, realBlockHash, contractAddress, logJson);
 
-    return result;
-    */
     const chainId = getChainIdDefaultWallet();
 
     const bettinghandshake = new BettingHandshake(chainId);
