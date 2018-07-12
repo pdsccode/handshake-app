@@ -103,12 +103,9 @@ export class Dataset extends Ethereum {
         const serializedTx = tx.serialize().toString('hex');
         const txHash = await web3.eth.sendSignedTransaction('0x' + serializedTx);
         console.log(txHash);
-
-        // web3.eth.sendSignedTransaction('0x' + serializedTx, function(err, txHash) {
-        //   console.log(err, txHash) }
-        // );
+        return txHash;
       } catch (e) {
-        console.log(e);
+        throw e;
       }
     }
 

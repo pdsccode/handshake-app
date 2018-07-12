@@ -115,10 +115,28 @@ class DataExplore extends React.Component {
     this.setState({ selectedItem: item, open: true })
   }
 
-  handleConfirmBuy() {
-    const dataset = new Dataset();
-    dataset.createFromWallet(MasterWallet.getWalletDefault('ETH'));
-    dataset.buy(this.state.selectedItem.id, (this.state.selectedItem.total_images/1000) + fee);
+  async handleConfirmBuy() {
+    try {
+      const dataset = new Dataset();
+      dataset.createFromWallet(MasterWallet.getWalletDefault('ETH'));
+      const tx = await dataset.buy(this.state.selectedItem.id, (this.state.selectedItem.total_images/1000) + fee);
+    } catch (e) {
+      console.log(e);
+      this.setState({ open: false });
+    }
+
+    const data = {
+      category: this.state.selectedItem.id,
+      tx: tx.transactionHash
+    };
+    agent.req.post(agent.API_ROOT + '/api/buy/', data).set('authorization', `JWT ${this.props.token}`).type('form')
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((e) => {
+        console.log(e);
+        this.setState({ open: false });
+      });
   }
 
   componentDidMount() {
@@ -214,16 +232,16 @@ class DataExplore extends React.Component {
   render() {
     return (
       <Visibility once={true} onUpdate={this.handleUpdate}>
-        <Segment vertical >  
+        <Segment vertical >
             <Card.Group centered style={{marginTop: '-2em'}}>
-                  <Card  className="my-card" style={{background:'#21c364' ,    marginBottom: '12px'}}> 
+                  <Card  className="my-card" style={{background:'#21c364' ,    marginBottom: '12px'}}>
                     <Link className="ui image" to={'/explore/create'}>
-                      <Card.Content style={{textAlign:'left'}}> 
+                      <Card.Content style={{textAlign:'left'}}>
                           <Icon size="large" name='newspaper outline'
                            style={{color: 'white',margin: '0.7em',float:'left' }}  />
                           <span style={{color: 'white',fontSize: '16px', float:'left', marginTop:'8px'}} >Create new Dataset</span>
                       </Card.Content>
-                    </Link> 
+                    </Link>
                   </Card>
                   {this.state.categories.map((cat, i) => {
                     return (
