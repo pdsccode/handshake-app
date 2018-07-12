@@ -216,7 +216,7 @@ export class Bitcoin extends Wallet {
   }
 
   cook(data){
-    let vin = {}, vout = {}, coin_name = "BTC",
+    let vin = {}, vout = {}, coin_name = this.name,
         is_sent = false, value = 0,
         addresses = [], confirmations = 0, transaction_no = "",
         transaction_date = new Date();
