@@ -1,14 +1,14 @@
 import React from 'react';
 import {Grid, Image, Container, Card, Icon, Segment, Item, Visibility, Button, Modal, List, Input,Label} from 'semantic-ui-react';
 // import {AuthConsumer} from './AuthContext';
-import {Route, Redirect} from 'react-router';
+// import {Route, Redirect} from 'react-router';
 import agent from '../../services/agent';
 import {Link} from 'react-router-dom';
 import { connect } from 'react-redux';
 //import filter from 'lodash.filter';
 import { injectIntl } from 'react-intl';
-import {iosHeartOutline, iosCopyOutline,androidDone, iosHeart, iosCheckmarkOutline,  iosPlusOutline} from 'react-icons-kit/ionicons';
-import { withBaseIcon } from 'react-icons-kit';
+// import {iosHeartOutline, iosCopyOutline,androidDone, iosHeart, iosCheckmarkOutline,  iosPlusOutline} from 'react-icons-kit/ionicons';
+// import { withBaseIcon } from 'react-icons-kit';
 import activity_active_icon from '@/assets/icons/activityactive.svg';
 import activity_icon from '@/assets/icons/activity.svg';
 import { submitHashTag } from '@/reducers/me/action';
@@ -23,13 +23,13 @@ function LikedIcon(props) {
   if (props.liked) {
     return (
       <a href='javascript:void(0);' onClick={props.onUnlike} style={{color:'#333'}}>
-         <img class="my-icon" src={activity_active_icon}/>
+         <img className="my-icon" src={activity_active_icon}/>
       </a>
     );
   }
   return (
     <a href='javascript:void(0);' onClick={props.onLike} style={{color:'#333'}} >
-        <img class="my-icon"  src={activity_icon}/>
+        <img className="my-icon"  src={activity_icon}/>
     </a>
   );
 }
@@ -37,12 +37,12 @@ function LikedIcon(props) {
 function ClassifiedIcon(props) {
   if (props.classified) {
     return <a href='javascript:void(0);' style={{color:'#333'}}>
-        <img class="my-icon" src={plus_active_icon}/>
+        <img className="my-icon" src={plus_active_icon}/>
     </a> ;
   }
   return (
     <a href='javascript:void(0);' onClick={props.onClassify} style={{color:'#333'}}>
-       <img class="my-icon" src={plus_icon}/>
+       <img className="my-icon" src={plus_icon}/>
     </a>
   );
 }
@@ -321,8 +321,8 @@ class DataFeed extends React.Component {
     const classifies  = item?.category?.classifies||[];
     const imageId = item?.id||-1;
     const listTagView  = classifies.map(item=>{
-      console.log(TAG," renderHashTag item = ",item);
-      return (<Label as='a' style={{marginTop:2,marginBottom:2}} size='small' onClick={()=>this.clickTagItem(imageId,item.id)}>
+      // console.log(TAG," renderHashTag item = ",item);
+      return (<Label key={String(item.id)||'-1'} as='a' style={{marginTop:2,marginBottom:2}} size='small' onClick={()=>this.clickTagItem(imageId,item.id)}>
         {item?.name||''}
       </Label>);
     });

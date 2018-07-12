@@ -6,7 +6,7 @@ import cn from 'classnames';
 import { injectIntl } from 'react-intl';
 
 import { URL } from '@/constants';
-import { clearHeaderBack } from '@/reducers/app/action';
+import { clearHeaderBack,showSearchBar } from '@/reducers/app/action';
 import meIcon from '@/assets/images/navigation/ic_private.svg.raw';
 import discoverIcon from '@/assets/images/navigation/ic_discover.svg.raw';
 import chatIcon from '@/assets/images/navigation/ic_chat.svg.raw';
@@ -26,6 +26,7 @@ import {
 class Navigation extends React.Component {
   static propTypes = {
     clearHeaderBack: PropTypes.func.isRequired,
+    showSearchBar: PropTypes.func.isRequired,
     location: PropTypes.object.isRequired,
     app: PropTypes.object.isRequired,
     intl: PropTypes.object.isRequired, 
@@ -56,19 +57,24 @@ class Navigation extends React.Component {
     return this.state.currentPath.startsWith(_URL) && !this.state.isNotFound ? 'selected' : '';
   }
 
+  onClickTab =()=>{
+    this.props.clearHeaderBack();
+    this.props.showSearchBar();
+  }
+
   render() { 
     return (
       <Responsive {...Responsive.onlyMobile}>
       <footer className="footer">
         <ul>
           <li className={cn(this.checkSelected(URL.DATA_SET_FEED_MINE_INDEX))}>
-            <Link to={URL.DATA_SET_FEED_MINE_INDEX} onClick={this.props.clearHeaderBack}>
+            <Link to={URL.DATA_SET_FEED_MINE_INDEX} onClick={this.onClickTab}>
               <div className="me-icon" dangerouslySetInnerHTML={{ __html: home_icon }} />
               <span>{this.props.intl.messages.app.navigation.mine}</span>
             </Link>
           </li>
           <li className={cn(this.checkSelected(URL.DATA_SET_DISCOVER_INDEX))}>
-            <Link to={URL.DATA_SET_DISCOVER_INDEX} onClick={this.props.clearHeaderBack}>
+            <Link to={URL.DATA_SET_DISCOVER_INDEX}  onClick={this.onClickTab}>
               <div dangerouslySetInnerHTML={{ __html: discoverIcon }} />
               <span>{this.props.intl.messages.app.navigation.discover}</span>
             </Link>
@@ -91,13 +97,13 @@ class Navigation extends React.Component {
             }
           </li>
           <li className={cn(this.checkSelected(URL.DATA_SET_HISTORY_INDEX))}>
-            <Link to={URL.DATA_SET_HISTORY_INDEX} onClick={this.props.clearHeaderBack}>
+            <Link to={URL.DATA_SET_HISTORY_INDEX} onClick={this.onClickTab}>
               <div className="chat-icon" dangerouslySetInnerHTML={{ __html: chatIcon }} />
               <span>{this.props.intl.messages.app.navigation.history}</span>
             </Link>
           </li>
           <li className={cn((this.state.currentPath.startsWith(URL.HANDSHAKE_WALLET_INDEX) && !this.state.isNotFound ? 'selected' : ''))}>
-            <Link to={URL.HANDSHAKE_WALLET_INDEX} onClick={this.props.clearHeaderBack}>
+            <Link to={URL.HANDSHAKE_WALLET_INDEX} onClick={this.onClickTab}>
               <div dangerouslySetInnerHTML={{ __html: walletIcon }} />
               <span>{this.props.intl.messages.app.navigation.wallet}</span>
             </Link>
@@ -109,4 +115,4 @@ class Navigation extends React.Component {
   }
 }
 
-export default injectIntl(connect(state => ({ app: state.app }), { clearHeaderBack })(Navigation));
+export default injectIntl(connect(state => ({ app: state.app }), { clearHeaderBack, showSearchBar, })(Navigation));

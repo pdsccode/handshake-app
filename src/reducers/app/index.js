@@ -14,50 +14,53 @@ const close = {
 
 local.save(APP.VERSION, '0.0.2');
 
-function appReducter(state = {
-  version: local.get(APP.VERSION),
+function appReducter(
+  state = {
+    version: local.get(APP.VERSION),
 
-  rootLoading: true,
+    rootLoading: true,
 
-  locale: local.get(APP.LOCALE) || 'en',
+    locale: local.get(APP.LOCALE) || 'en',
 
-  isCalling: false,
-  isLoading: false,
+    isCalling: false,
+    isLoading: false,
 
-  isModal: false,
-  isModalContent: null,
+    isModal: false,
+    isModalContent: null,
 
-  isAlert: false,
-  isAlertContent: null,
-  configAlert: {
-    isShow: false,
-    message: '',
+    isAlert: false,
+    isAlertContent: null,
+    configAlert: {
+      isShow: false,
+      message: '',
+    },
+
+    isError: false,
+    isWarning: false,
+
+    overlay: false,
+
+    isNotFound: false,
+
+    headerTitle: APP.HEADER_DEFAULT,
+    headerBack: false,
+    headerRightContent: null,
+    headerLeftContent: null,
+    showHeader: false,
+    showSearchBar: true,
+
+    ipInfo: local.get(APP.IP_INFO),
+
+    isBannedCash: false,
+    isBannedPrediction: false,
+    isBannedChecked: false,
+
+    isNerworkError: false,
+
+    firechat: {},
   },
-
-  isError: false,
-  isWarning: false,
-
-  overlay: false,
-
-  isNotFound: false,
-
-  headerTitle: APP.HEADER_DEFAULT,
-  headerBack: false,
-  headerRightContent: null,
-  headerLeftContent: null,
-  showHeader: false,
-
-  ipInfo: local.get(APP.IP_INFO),
-
-  isBannedCash: false,
-  isBannedPrediction: false,
-  isBannedChecked: false,
-
-  isNerworkError: false,
-
-  firechat: {},
-
-}, action) {
+  action,
+) {
   switch (action.type) {
     case APP_ACTION.SET_ROOT_LOADING:
       return {
@@ -99,7 +102,6 @@ function appReducter(state = {
         isNerworkError: true,
       };
 
-
     case APP_ACTION.CALLING:
       return {
         ...state,
@@ -110,7 +112,6 @@ function appReducter(state = {
         ...state,
         isCalling: false,
       };
-
 
     case APP_ACTION.LOADING:
       return {
@@ -124,7 +125,6 @@ function appReducter(state = {
         isLoading: false,
         configLoading: {},
       };
-
 
     case APP_ACTION.ALERT:
       return {
@@ -141,7 +141,6 @@ function appReducter(state = {
         ...close,
       };
 
-
     case APP_ACTION.MODAL:
       return {
         ...state,
@@ -156,7 +155,6 @@ function appReducter(state = {
         ...close,
       };
 
-
     case APP_ACTION.NOT_FOUND_SET:
       return {
         ...state,
@@ -168,7 +166,6 @@ function appReducter(state = {
         ...state,
         isNotFound: false,
       };
-
 
     case APP_ACTION.HEADER_RIGHT_SET:
       return {
@@ -204,6 +201,18 @@ function appReducter(state = {
       return {
         ...state,
         showHeader: false,
+      };
+
+    case APP_ACTION.SEARCH_BAR_SHOW:
+      return {
+        ...state,
+        showSearchBar: true,
+      };
+
+    case APP_ACTION.SEARCH_BAR_HIDE:
+      return {
+        ...state,
+        showSearchBar: false,
       };
 
     case APP_ACTION.SHOW_ALERT:

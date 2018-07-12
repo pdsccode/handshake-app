@@ -42,7 +42,8 @@ export const APP_ACTION = {
   HEADER_LEFT_REMOVE: 'HEADER_LEFT_REMOVE',
   HEADER_HIDE: 'HEADER_HIDE',
   HEADER_SHOW: 'HEADER_SHOW',
-
+  SEARCH_BAR_SHOW: 'SEARCH_BAR_SHOW',
+  SEARCH_BAR_HIDE: 'SEARCH_BAR_HIDE',
   IP_INFO: 'IP_INFO',
 
   BAN_CASH: 'BAN_CASH',
@@ -76,7 +77,8 @@ export const setHeaderLeft = data => ({ type: APP_ACTION.HEADER_LEFT_SET, payloa
 export const clearHeaderLeft = () => ({ type: APP_ACTION.HEADER_LEFT_REMOVE });
 export const hideHeader = () => ({ type: APP_ACTION.HEADER_HIDE });
 export const showHeader = () => ({ type: APP_ACTION.HEADER_SHOW });
-
+export const hideSearchBar = () => ({ type: APP_ACTION.SEARCH_BAR_HIDE });
+export const showSearchBar = () => ({ type: APP_ACTION.SEARCH_BAR_SHOW });
 // Not Found
 export const setNotFound = () => ({ type: APP_ACTION.NOT_FOUND_SET });
 export const clearNotFound = () => ({ type: APP_ACTION.NOT_FOUND_REMOVE });
