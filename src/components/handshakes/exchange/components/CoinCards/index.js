@@ -4,7 +4,7 @@ import './styles.scss';
 
 export class Component extends React.Component {
   render() {
-    const { coins } = this.props;
+    const { coins, handleClickCoin } = this.props;
     return (
       <div className="coins-wrapper">
         {coins.map((coin, index) => {
@@ -15,7 +15,7 @@ export class Component extends React.Component {
               key={index}
               className="coin-item"
               style={{ background: color }}
-              onClick={e => this.handleClickCoin(e, name)}
+              onClick={e => handleClickCoin && handleClickCoin(e, name)}
             >
               {onClose && <button className="btn-close-card" onClick={(e) => { e.stopPropagation(); onClose(); }}>&times;</button>}
               {/* <div className="icon-coin"><img src={icon}/></div> */}

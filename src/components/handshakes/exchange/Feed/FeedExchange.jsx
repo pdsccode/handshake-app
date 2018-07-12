@@ -500,7 +500,7 @@ id="offerDistanceContent"
       <div>
         <div className="feed-exchange" onClick={() => this.handleOnShake()}>
           <div>
-            <CoinCards coins={coins} currency={currency} />
+            <CoinCards coins={coins} currency={currency} handleClickCoin={this.handleClickCoin} />
             <div className="info-ex">
               <div>
                 <div className="address">{address}</div>
