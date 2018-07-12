@@ -14,30 +14,62 @@ import Layout from '@/components/Layout/Main';
 // import NetworkError from '@/components/Router/NetworkError';
 import Maintain from '@/components/Router/Maintain';
 
-const RouterMe = createDynamicImport(() => import('@/components/Router/Me'), Loading);
-const RouterDiscover = createDynamicImport(() => import('@/components/Router/Discover'), Loading);
+const RouterMe = createDynamicImport(
+  () => import('@/components/Router/Me'),
+  Loading,
+);
+const RouterDiscover = createDynamicImport(
+  () => import('@/components/Router/Discover'),
+  Loading,
+);
 
-const RouterChat = createDynamicImport(() => import('@/components/Router/Chat'), Loading);
-const RouterCreate = createDynamicImport(() => import('@/components/Router/Create'), Loading);
-const RouterWallet = createDynamicImport(() => import('@/components/Router/Wallet'), Loading);
-const RouterExchange = createDynamicImport(() => import('@/components/Router/Exchange'), Loading);
-const RouterTransaction = createDynamicImport(() => import('@/components/Router/Transaction'), Loading);
-const RouterComment = createDynamicImport(() => import('@/components/Router/Comment'), Loading);
-const RouterAdmin = createDynamicImport(() => import('@/components/Router/Admin'), Loading);
+const RouterChat = createDynamicImport(
+  () => import('@/components/Router/Chat'),
+  Loading,
+);
+const RouterCreate = createDynamicImport(
+  () => import('@/components/Router/Create'),
+  Loading,
+);
+const RouterWallet = createDynamicImport(
+  () => import('@/components/Router/Wallet'),
+  Loading,
+);
+const RouterExchange = createDynamicImport(
+  () => import('@/components/Router/Exchange'),
+  Loading,
+);
+const RouterTransaction = createDynamicImport(
+  () => import('@/components/Router/Transaction'),
+  Loading,
+);
+const RouterComment = createDynamicImport(
+  () => import('@/components/Router/Comment'),
+  Loading,
+);
+const RouterAdmin = createDynamicImport(
+  () => import('@/components/Router/Admin'),
+  Loading,
+);
 
-
-const RouterMine = createDynamicImport(() => import('@/components/Router/Mine'), Loading);
-const RouterExplore = createDynamicImport(() => import('@/components/Router/Explore'), Loading);
-
-
-
+const RouterUpload = createDynamicImport(
+  () => import('@/components/Router/Upload'),
+  Loading,
+);
+const RouterMine = createDynamicImport(
+  () => import('@/components/Router/Mine'),
+  Loading,
+);
+const RouterExplore = createDynamicImport(
+  () => import('@/components/Router/Explore'),
+  Loading,
+);
 
 const rootRouterMap = [
+  { path: URL.DATA_SET_FEED_MINE, component: RouterMine },
+  { path: URL.DATA_SET_UPLOAD, component: RouterUpload },
+  { path: URL.DATA_SET_DISCOVER, component: RouterExplore },
 
-  
-  { path: URL.DATA_SET_FEED_MINE, component: RouterMine },  
-  { path: URL.DATA_SET_DISCOVER, component: RouterExplore },  
-  
   { path: URL.HANDSHAKE_ME, component: RouterMe },
   { path: URL.HANDSHAKE_DISCOVER, component: RouterDiscover },
   { path: URL.HANDSHAKE_CHAT, component: RouterChat },
@@ -50,19 +82,19 @@ const rootRouterMap = [
 ];
 
 const routers = rootRouterMap.map(router => (
-  <Route
-    key={Date.now()}
-    path={router.path}
-    component={router.component}
-  />
+  <Route key={Date.now()} path={router.path} component={router.component} />
 ));
 
-const Page404 = createDynamicImport(() => import('@/pages/Error/Page404'), Loading, true);
+const Page404 = createDynamicImport(
+  () => import('@/pages/Error/Page404'),
+  Loading,
+  true,
+);
 
 class Router extends React.Component {
   static propTypes = {
     firebaseApp: PropTypes.object.isRequired,
-  }
+  };
   constructor(props) {
     super(props);
 
@@ -78,10 +110,16 @@ class Router extends React.Component {
 
   static getDerivedStateFromProps(nextProps, prevState) {
     if (nextProps.firebaseApp.config) {
-      if (nextProps.firebaseApp.config.isMaintain !== prevState.firebaseApp.config.isMaintain) {
+      if (
+        nextProps.firebaseApp.config.isMaintain !==
+        prevState.firebaseApp.config.isMaintain
+      ) {
         return { firebaseApp: nextProps.firebaseApp };
       }
-      if (nextProps.firebaseApp.config.version !== prevState.firebaseApp.config.version) {
+      if (
+        nextProps.firebaseApp.config.version !==
+        prevState.firebaseApp.config.version
+      ) {
         window.location.reload();
       }
     }
@@ -93,31 +131,27 @@ class Router extends React.Component {
       <BrowserRouter>
         <Route
           path={URL.INDEX}
-          render={props =>
-            (
-              <Layout {...props}>
-                {
-                  this.state.firebaseApp.config.isMaintain
-                  ? <Maintain />
-                  : (
-                    <ScrollToTop>
-                      <Switch>
-                        <Route
-                          exact
-                          path={URL.INDEX}
-                          render={() => (
-                            <Redirect to={{ pathname: URL.DATA_SET_FEED_MINE }} />
-                          )}
-                        />
-                        {routers}
-                        <Route component={Page404} />
-                      </Switch>
-                    </ScrollToTop>
-                  )
-                }
-              </Layout>
-            )
-          }
+          render={props => (
+            <Layout {...props}>
+              {this.state.firebaseApp.config.isMaintain ? (
+                <Maintain />
+              ) : (
+                <ScrollToTop>
+                  <Switch>
+                    <Route
+                      exact
+                      path={URL.INDEX}
+                      render={() => (
+                        <Redirect to={{ pathname: URL.DATA_SET_FEED_MINE }} />
+                      )}
+                    />
+                    {routers}
+                    <Route component={Page404} />
+                  </Switch>
+                </ScrollToTop>
+              )}
+            </Layout>
+          )}
         />
       </BrowserRouter>
     );

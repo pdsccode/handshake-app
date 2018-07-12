@@ -9,21 +9,15 @@ import {
   setHeaderTitle,
   clearHeaderRight,
   clearHeaderLeft,
-  hideHeader,
-  showSearchBar,
+  hideSearchBar,
+  showHeader,
 } from '@/reducers/app/action';
 
-const Mine = props => (
-  <DynamicImport loading={Loading} load={() => import('@/pages/Mine/Mine')}>
+const Upload = props => (
+  <DynamicImport loading={Loading} load={() => import('@/pages/Upload/Upload')}>
     {Component => <Component {...props} />}
   </DynamicImport>
 );
-
-// const MeProfile = props => (
-//   <DynamicImport loading={Loading} load={() => import('@/pages/Classify/Profile')}>
-//     {Component => <Component {...props} />}
-//   </DynamicImport>
-// );
 
 const Page404 = props => (
   <DynamicImport
@@ -35,31 +29,27 @@ const Page404 = props => (
   </DynamicImport>
 );
 
-const routerMap = [
-  { path: URL.DATA_SET_FEED_MINE, component: Mine },
-  // { path: URL.HANDSHAKE_ME_PROFILE, component: MeProfile },
-];
+const routerMap = [{ path: URL.DATA_SET_UPLOAD, component: Upload }];
 
-class MineRouter extends React.Component {
+class UploadRouter extends React.Component {
   static propTypes = {
     clearHeaderRight: PropTypes.func.isRequired,
     setHeaderTitle: PropTypes.func.isRequired,
+    hideSearchBar: PropTypes.func.isRequired,
     clearHeaderLeft: PropTypes.func.isRequired,
-    showSearchBar: PropTypes.func.isRequired,
-    hideHeader: PropTypes.func.isRequired,
+    showHeader: PropTypes.func.isRequired,
   };
 
   constructor(props) {
     super(props);
-    // this.props.showSearchBar();
-    this.props.setHeaderTitle('Data Classify');
+    this.props.hideSearchBar();
+    this.props.setHeaderTitle('Upload');
     this.props.clearHeaderRight();
     this.props.clearHeaderLeft();
-    this.props.hideHeader();
+    this.props.showHeader();
   }
 
   render() {
-    console.log('HANDSHAKE_CLASSIFY_INDEX');
     return (
       <Switch>
         {routerMap.map(route => (
@@ -80,6 +70,6 @@ export default connect(null, {
   setHeaderTitle,
   clearHeaderRight,
   clearHeaderLeft,
-  hideHeader,
-  showSearchBar,
-})(MineRouter);
+  showHeader,
+  hideSearchBar,
+})(UploadRouter);

@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { withFirebase } from 'react-redux-firebase';
 // action, mock
 import { fireBaseExchangeDataChange, loadMyHandshakeList, fireBaseBettingChange } from '@/reducers/me/action';
-import { API_URL, APP, HANDSHAKE_ID, URL } from '@/constants';
+import { API_URL, APP, HANDSHAKE_ID } from '@/constants';
 import { injectIntl } from 'react-intl';
 
 // components
@@ -32,7 +32,7 @@ import Rate from '@/components/core/controls/Rate/Rate';
 
 import './Classify.scss';
 import DataFeed from './DataFeed';
-
+const TAG = "Mine";
 const maps = {
   [HANDSHAKE_ID.PROMISE]: FeedPromise,
   [HANDSHAKE_ID.BETTING]: FeedBetting,
@@ -158,11 +158,13 @@ class Mine extends React.Component {
 
   handleReviewOfferSuccess = (responseData) => {
     console.log('handleReviewOfferSuccess', responseData);
-    const data = responseData.data;
+    // const data = responseData.data;
   }
 
   handleReviewOfferFailed = (e) => {
   }
+
+  
 
   render() {
     const { list } = this.props.me;
@@ -194,6 +196,7 @@ const mapDispatch = ({
   fireBaseBettingChange,
   setOfflineStatus,
   reviewOffer,
+  
 });
 
 export default injectIntl(compose(withFirebase, connect(mapState, mapDispatch))(Mine));

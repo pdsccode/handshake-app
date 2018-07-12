@@ -2,6 +2,7 @@ import { createAPI } from '@/reducers/action';
 
 export const ACTIONS = {
   LOAD_MY_HANDSHAKE: 'LOAD_MY_HANDSHAKE',
+  SUBMIT_HASH_TAG: 'SUBMIT_HASH_TAG',
   LOAD_MY_HANDSHAKE_DETAIL: 'LOAD_MY_HANDSHAKE_DETAIL',
   UPDATE_BETTING_DATA_CHANGE: 'UPDATE_BETTING_DATA_CHANGE',
   FIREBASE_BETTING_DATA_CHANGE: 'FIREBASE_BETTING_DATA_CHANGE',
@@ -11,6 +12,7 @@ export const ACTIONS = {
 
 export const loadMyHandshakeList = createAPI(ACTIONS.LOAD_MY_HANDSHAKE);
 export const loadMyHandshakeDetail = createAPI(ACTIONS.LOAD_MY_HANDSHAKE_DETAIL);
+export const submitHashTag = createAPI(ACTIONS.SUBMIT_HASH_TAG);
 export const success = data => ({
   type: `${ACTIONS.LOAD_MY_HANDSHAKE}_SUCCESS`,
   payload: data,
@@ -33,4 +35,3 @@ export const responseExchangeDataChange = data => ({
   type: ACTIONS.RESPONSE_EXCHANGE_DATA_CHANGE,
   payload: data,
 });
-
