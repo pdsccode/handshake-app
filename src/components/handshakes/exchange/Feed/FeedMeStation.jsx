@@ -15,6 +15,7 @@ import { showAlert } from '@/reducers/app/action';
 
 import iconBtc from '@/assets/images/icon/coin/icon-btc.svg';
 import iconEth from '@/assets/images/icon/coin/icon-eth.svg';
+import {HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS, HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE} from "@/constants";
 
 window.Clipboard = (function (window, document, navigator) {
   let textArea,
@@ -33,15 +34,44 @@ class FeedMeStation extends React.PureComponent {
       walletsData: false,
       inputRestoreWalletValue: '',
       coins: [],
+      isShowTimer: false,
     };
   }
 
   componentDidMount() {
-    const { messageMovingCoin, lastUpdateAt } = this.props;
+    const { messageMovingCoin, offer } = this.props;
 
     this.getCoinList();
 
-    if (messageMovingCoin) {
+    const eth = offer.items.ETH;
+    const btc = offer.items.BTC;
+
+    let isShowTimer = false;
+    let lastUpdateAt = '';
+
+    if (eth) {
+      const ethStatus = HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[eth.status];
+      isShowTimer = ethStatus === HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CREATED || ethStatus === HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSING;
+
+      if (isShowTimer) {
+        lastUpdateAt = eth.updatedAt;
+      }
+    }
+
+    if (btc) {
+      if (!isShowTimer) {
+        const btcStatus = HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[btc.status];
+        isShowTimer = btcStatus === HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CREATED || btcStatus === HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSING;
+
+        if (isShowTimer) {
+          lastUpdateAt = eth.updatedAt;
+        }
+      }
+    }
+
+    this.setState( { isShowTimer });
+
+    if (messageMovingCoin && isShowTimer) {
       this.intervalCountdown = setInterval(() => {
         this.setState({ timePassing: daysBetween(new Date(lastUpdateAt * 1000), new Date()) });
       }, 1000);
@@ -152,7 +182,7 @@ class FeedMeStation extends React.PureComponent {
       transactionRevenue,
       transactionTotal,
     } = this.props;
-    const { coins } = this.state;
+    const { coins, isShowTimer } = this.state;
 
     // console.log('thisss', this.props);
     return (
@@ -163,7 +193,7 @@ class FeedMeStation extends React.PureComponent {
               <div className="status">{statusText}</div>
               <div className="status-explanation">{messageMovingCoin}</div>
             </div>
-            { messageMovingCoin && (
+            { messageMovingCoin && isShowTimer && (
               <div className="countdown d-table-cell text-right">
                 <img src={iconSpinner} width="14px" />
                 <span className="ml-1">{this.state.timePassing}</span>

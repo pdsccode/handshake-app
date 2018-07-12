@@ -273,19 +273,20 @@ class Me extends React.Component {
     console.log('onCategoryChange', newValue);
     this.setState({ handshakeIdActive: newValue }, () => {
       if (this.state.handshakeIdActive === HANDSHAKE_ID.EXCHANGE) {
-        rfChange(nameFormFilterFeeds, 'cash-show-type', CASH_TAB.TRANSACTION);
-        this.loadMyHandshakeList();
+        this.setState({ cashTab: CASH_TAB.TRANSACTION }, () => {
+          rfChange(nameFormFilterFeeds, 'cash-show-type', CASH_TAB.TRANSACTION);
+        });
       }
+      this.loadMyHandshakeList();
     });
   }
 
   onCashTabChange = (e, newValue) => {
     console.log('onTypeChange', newValue);
     this.setState({cashTab: newValue}, () => {
-      if (newValue === CASH_TAB.TRANSACTION) {
-        this.loadMyHandshakeList();
-      } else if (newValue === CASH_TAB.DASHBOARD) {
-        this.getOfferStore();
+      this.loadMyHandshakeList();
+      if (newValue === CASH_TAB.DASHBOARD) {
+        // this.getOfferStore();
         this.getDashboardInfo();
       }
     });
@@ -355,22 +356,24 @@ class Me extends React.Component {
               </div>
             </div>
 
-            <hr />
-
             { this.state.handshakeIdActive === HANDSHAKE_ID.EXCHANGE && (
               <div>
-                <Field
-                  name="cash-show-type"
-                  component={fieldRadioButton}
-                  type="tab-6"
-                  list={[
-                    { value: CASH_TAB.TRANSACTION, text: 'Transactions', icon: <span className="icon-transactions align-middle" /> },
-                    { value: CASH_TAB.DASHBOARD, text: 'Dashboard', icon: <span className="icon-dashboard align-middle" /> },
-                  ]}
-                  // validate={[required]}
-                  onChange={this.onCashTabChange}
-                />
-              </div>)
+                <hr />
+                <div>
+                  <Field
+                    name="cash-show-type"
+                    component={fieldRadioButton}
+                    type="tab-6"
+                    list={[
+                      { value: CASH_TAB.TRANSACTION, text: 'Transactions', icon: <span className="icon-transactions align-middle" /> },
+                      { value: CASH_TAB.DASHBOARD, text: 'Dashboard', icon: <span className="icon-dashboard align-middle" /> },
+                    ]}
+                    // validate={[required]}
+                    onChange={this.onCashTabChange}
+                  />
+                </div>
+              </div>
+              )
             }
 
           </FormFilterFeeds>
