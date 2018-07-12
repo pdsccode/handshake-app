@@ -55,6 +55,7 @@ class Upload extends React.Component {
       categories: [],
       selectedCategory: null,
       selectedClassify: null,
+      messageForm:'',
     };
 
     this.onDragEnter = this.onDragEnter.bind(this);
@@ -204,7 +205,8 @@ class Upload extends React.Component {
 
   handleUpload() {
     if (!this.state.selectedCategory) {
-      alert('Category is required');
+      //alert('Category is required');
+      this.setState({messageForm:"Category is required"});
       return;
     }
     if (!this.state.uploading) {
@@ -214,7 +216,8 @@ class Upload extends React.Component {
       if (this.state.selectedClassify) {
         form.append('classify', this.state.selectedClassify);
       }
-      this.setState({ uploading: true });
+      this.setState({ uploading: true, messageForm:"" });
+      
       agent.req
         .post(`${agent.API_ROOT}/api/image/`, form)
         .set('authorization', `JWT ${this.token()}`)
@@ -289,8 +292,9 @@ class Upload extends React.Component {
 
     return (
       <Visibility once>
-        <Segment vertical loading={this.state.isLoading}>
-          <div className="ui center aligned grid container">
+         <Segment vertical loading={this.state.isLoading}  style={{marginTop:'-5em'}}>
+          <h2 className="my-h2-dataset-new">Upload Image</h2>
+          <div className="ui center aligned grid container" style={{padding:'15px', paddingTop:'5px'}}>
             <div className="row">
               <label
                 className={labelClass}
@@ -315,7 +319,7 @@ class Upload extends React.Component {
               </label>
             </div>
 
-            <div className="row">
+            <div className="row" style={{paddingTop:'0px',marginTop:'-4px'}}>
               <Dropdown
                 fluid
                 placeholder="Select category"
@@ -333,6 +337,14 @@ class Upload extends React.Component {
                 options={this.state.classifies}
               />
             </div>
+            {
+              this.state.messageForm !=""? 
+              <div className="row" style={{ padding: '0px', justifyContent:'left', color:'red'}}>
+                  <label  style={{color:'red'}} >{this.state.messageForm} </label>
+              </div> 
+              :""
+            }
+
             <div className="row">
               <Button
                 fluid

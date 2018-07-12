@@ -63,11 +63,10 @@ body{
     display: flex;
     height: 200px;
     justify-content: center;
-    outline: 3px dashed #ccc;
-    outline-offset: 5px;
+    outline: 1px solid #ccc;
+    outline-offset: 15px;
     position: relative;
-    width: 340px;
-    
+    width: 310px;
 }
 .uploader input { 
        display: none; 
@@ -81,6 +80,8 @@ body{
        color: #eee;
        color: rgba(0, 0, 0, 0.2);
        font-size: 5em;
+       top: 45%;
+       position: absolute;
     }
     
 .uploader img {
