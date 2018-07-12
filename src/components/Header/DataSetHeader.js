@@ -114,15 +114,17 @@ class DesktopContainer extends React.Component {
                   </Menu.Item>
                 </Link>
                   <Menu.Item position='right'/>
-
-                  <Search fluid
+                  {this.props.app.showSearchBar? 
+                    <Search fluid
                         loading={this.state.isLoading}
                         onResultSelect={this.handleResultSelect}
                         onSearchChange={this.handleSearchChange}
                         results={this.state.results}
                         value={this.state.value}
                         {...this.props}
-                      />
+                      />:null
+                  }
+                  
 
                   <Link to="/explore" >
                   <Menu.Item position='right' name='explore' active={activeItem === 'explore'}  onClick={this.handleItemClick}>
@@ -279,8 +281,9 @@ class MobileContainer extends React.Component {
     return (
       <Responsive {...Responsive.onlyMobile}>
         <Visibility onUpdate={this.handleUpdate} once={false}  >
+        {this.props.app.showSearchBar? 
             <Menu  icon  className="ui fluid five item menu fixed" id="head-searchbox">
-
+            
                <Search
                       input={{ icon: 'search', iconPosition: 'left', placeholder:'search' }}
                       fluid
@@ -292,7 +295,8 @@ class MobileContainer extends React.Component {
                       value={this.state.value} 
                       {...this.props}
                       />
-            </Menu>
+            </Menu>:null
+        }
 
             <Segment textAlign='center' style={{marginTop:'7.5em', padding: '1em 0em',bottom:'4em'}} vertical>
               {this.props.children}

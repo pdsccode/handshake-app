@@ -1,23 +1,25 @@
 import React from 'react';
-import {Grid, Menu, Modal,List, Image, Container, Transition, Card, Icon, Segment, Item, Visibility, Button} from 'semantic-ui-react'
+import {Grid, Menu, Modal,List, Image, Container, Transition, Card, Icon, Segment, Item, Visibility, Button, Confirm} from 'semantic-ui-react'
 // import {AuthConsumer} from './AuthContext'
 import {Route, Redirect} from 'react-router'
 import agent from '../../services/agent'
 import {Link} from 'react-router-dom'
 
+import {MasterWallet} from '@/services/Wallets/MasterWallet';
+import {Dataset} from '@/services/Wallets/Tokens/Dataset';
 
 import {iosHeartOutline, iosCopyOutline, iosHeart, iosCheckmarkOutline,  iosPlusOutline} from 'react-icons-kit/ionicons'
 import { withBaseIcon } from 'react-icons-kit'
 const SideIconContainer =  withBaseIcon({ size:20})
 
- 
+
 import activity_active_icon from '@/assets/icons/activityactive.svg';
 import activity_icon from '@/assets/icons/activity.svg';
 
 import plus_active_icon from '@/assets/icons/pluscheck.svg';
 import plus_icon from '@/assets/icons/plus.svg';
- 
 
+const fee = 0.005; // eth
 
 const inlineStyle = {
   modal : {
@@ -44,16 +46,16 @@ function ImageGrid(props) {
         </Grid>
         <Grid columns={2} padded>
           <Grid.Column fluid>
-           <Image src={props.displayImages[1]} /> 
+           <Image src={props.displayImages[1]} />
           </Grid.Column>
           <Grid.Column fluid>
-           <Image src={props.displayImages[2]} /> 
+           <Image src={props.displayImages[2]} />
           </Grid.Column>
-        </Grid> 
+        </Grid>
      </div>
   );
 }
- 
+
 function LikedIcon(props) {
   if (!props.isAuth) {
     return (
@@ -76,7 +78,7 @@ function LikedIcon(props) {
     </a>
   );
 }
- 
+
 
 class DataExplore extends React.Component {
   constructor(props) {
@@ -90,8 +92,8 @@ class DataExplore extends React.Component {
         bottomVisible: false,
       },
       open:false,
-      choice_address:"",
-
+      selectedItem: null,
+      walletSelected: null
     };
   }
 
@@ -109,11 +111,14 @@ class DataExplore extends React.Component {
     alert("Copped!");
   }
 
-  showQR(item){
-    console.log(item);
-    //this.setState({ choice_address: item.address ,  open: true })
-    this.setState({ choice_address: item, open: true })
-    //this.Copy(item);
+  showConfirm(item){
+    this.setState({ selectedItem: item, open: true })
+  }
+
+  handleConfirmBuy() {
+    const dataset = new Dataset();
+    dataset.createFromWallet(MasterWallet.getWalletDefault('ETH'));
+    dataset.buy(this.state.selectedItem.id, (this.state.selectedItem.total_images/1000) + fee);
   }
 
   componentDidMount() {
@@ -209,6 +214,7 @@ class DataExplore extends React.Component {
   render() {
     return (
       <Visibility once={true} onUpdate={this.handleUpdate}>
+<<<<<<< HEAD
         <Segment vertical >  
             <Card.Group centered style={{marginTop: '-2em'}}>
                   <Card  className="my-card" style={{background:'#21c364' ,    marginBottom: '12px'}}> 
@@ -220,41 +226,38 @@ class DataExplore extends React.Component {
                       </Card.Content>
                     </Link> 
                   </Card>
+=======
+        <Segment vertical>
+            <Card.Group centered   >
+>>>>>>> 6b81097cfb49b435f191e7fda0d9a7e95b46ac0e
                   {this.state.categories.map((cat, i) => {
                     return (
-                      <Card key={i} className="my-card"> 
+                      <Card key={i} className="my-card">
                         <Link className="ui image" to={'/explore/' + cat.id}>
                             {/* <ImageGrid displayImages={cat.display_images} />  className="fistgridimage"  */}
                             <Image src={cat.display_images[0]}/>
-                        </Link> 
-                        <Card.Content style={{marginBottom: '10px'}}> 
+                        </Link>
+                        <Card.Content style={{marginBottom: '10px'}}>
                           <div style={{float: 'left', marginTop:'-8px'}}>
                             <p  className="title">{cat.name}</p>
                             <p  style={{color:'#232323' , opacity:'0.4',     fontSize:'12px'}}>{cat.total_images} img</p>
-                          </div> 
-                          <div style={{float: 'right',marginTop:'-8px' }}> 
+                          </div>
+                          <div style={{float: 'right',marginTop:'-8px' }}>
                               <div style={{display: 'inline'}}>
                                {this.renderLikedIcon(i)}
                               </div>
                             <div style={{display: 'inline'}}>
-                               <Button onClick={()=>this.showQR(cat)}  size="mini" basic color='black' className="my-btn-buy-eth"> {"Buy "+ (cat.total_images/1000)+ " ETH"}</Button>
+                               <Button onClick={()=>this.showConfirm(cat)}  size="mini" basic color='black' className="my-btn-buy-eth"> {"Buy "+ (cat.total_images/1000 + 0.005)+ " ETH"}</Button>
                             </div>
-                          </div> 
+                          </div>
                         </Card.Content>
                       </Card>
                     )
-                  })} 
-               </Card.Group>      
+                  })}
+               </Card.Group>
         </Segment>
-        <Segment vertical loading={this.state.isLoading}/> 
-          <Modal  animation="fly up" duration="1699" dimmer="inverted" size="mini" open={this.state.open}
-                onClose={this.close} style={inlineStyle.modal}>
-                  <Modal.Content>
-                    <h3 style={{fontFamily: 'Roboto',lineHeight:'1em', opacity:0.7, marginBottom:'0.5em', fontWeight:'normal', fontSize:'18px', textAlign:'center',color:'#262628'}}>Receive</h3>
-                    <h3 style={{fontFamily: 'Roboto', lineHeight:'1em', opacity:0.7, fontWeight:'normal',margin:'0',fontSize:'24px', textAlign:'center',color:'#2ED573'}}>{this.state.choice_address.total_images /1000} ETH</h3> 
-                    <Image src={"https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl="+this.state.choice_address.contract_address+"&choe=UTF-8"}/>
-                  </Modal.Content>
-        </Modal> 
+        <Segment vertical loading={this.state.isLoading}/>
+        <Confirm content={`You want to buy this dataset?`} open={this.state.open} onCancel={this.close} onConfirm={() => this.handleConfirmBuy()} />
       </Visibility>
     )
   }
