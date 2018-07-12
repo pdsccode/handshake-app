@@ -3,7 +3,10 @@ import { BettingHandshake } from '@/services/neuron';
 import { API_URL, APP } from '@/constants';
 import { showAlert } from '@/reducers/app/action';
 import { PredictionHandshake } from '@/services/neuron';
-import { getMessageWithCode, getChainIdDefaultWallet, foundShakeItem, isInitBet, isExpiredDate } from '@/components/handshakes/betting/utils.js';
+import { getMessageWithCode, getChainIdDefaultWallet, isInitBet, } from '@/components/handshakes/betting/utils.js';
+
+import { isExpiredDate } from '@/components/handshakes/betting/validation.js';
+
 import Web3 from 'web3';
 import GA from '@/services/googleAnalytics';
 
@@ -85,7 +88,7 @@ export const MESSAGE = {
   NOT_ENOUGH_BALANCE: 'Too rich for your blood. Please top up your wallet.',
   NOT_ENOUGH_GAS: `Not enough gas. Your balance should larger than 0.007eth gas + value. Please top up your wallet.`,
   CHOOSE_MATCH: 'Please choose event and outcome',
-  ODD_LARGE_THAN: 'Please enter odds greater than 1',
+  ODD_LARGE_THAN: 'Please enter odds greater than 1 and smaller 12',
   AMOUNT_VALID: 'Please place a bet larger than 0.',
   MATCH_OVER: 'Time travel is hard. Please bet on a future or ongoing match.',
   RIGHT_NETWORK: 'You must set your wallet on Mainnet',
@@ -96,6 +99,7 @@ export const MESSAGE = {
 
 
 export const BET_BLOCKCHAIN_STATUS = {
+  STATUS_MAKER_SHOULD_UNINIT: -12,
   STATUS_INIT_FAILED: -10,
   STATUS_COLLECT_FAILED: -9,
   STATUS_COLLECT_PENDING: -8,
@@ -146,6 +150,7 @@ export const BETTING_STATUS_LABEL =
       ROLLBACK_INIT: 'There is something wrong with blockchain. The bet is cancelled',
       ROLLBACK_SHAKE: 'There is something wrong with blockchain. The bet is cancelled',
       COLLECT_FAILED: 'There is something wrong with withdraw. Please cancel to get back money',
+      SHOULD_CANCEL: 'There is something wrong. Please cancel to get back money',
       ACTION_FAILED: `There is something wrong with blockchain. Your action is cancelled`,
       INIT_FAILED: `There is something wrong with blockchain. Your bet is cancelled`,
       SOLVE: 'Please retry to solve problem',
@@ -197,18 +202,21 @@ export class BetHandshakeHandler {
     console.log('getStatusLabel Role:', role);
     console.log('getStatusLabel isMatch:', isMatch);
     console.log('getStatusLabel Blockchain status:', blockchainStatus);
-    if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_INIT_FAILED){
+    if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_INIT_FAILED) {
       strStatus = BETTING_STATUS_LABEL.INIT_FAILED;
       isAction = false;
-    }
-    else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_FAILED) {
+    } else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_FAILED) {
+      label = BETTING_STATUS_LABEL.CANCEL;
+      strStatus = BETTING_STATUS_LABEL.SHOULD_CANCEL;
+      isAction = true;
+    } else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_MAKER_SHOULD_UNINIT) {
       label = BETTING_STATUS_LABEL.CANCEL;
       strStatus = BETTING_STATUS_LABEL.COLLECT_FAILED;
       isAction = true;
     } else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINIT_PENDING) {
       strStatus = BETTING_STATUS_LABEL.PROGRESSING;
       isAction = false;
-    } else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_PENDING){
+    } else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_PENDING) {
       strStatus = BETTING_STATUS_LABEL.COLLECT_PENDING;
       isAction = false;
     } else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINIT_FAILED
@@ -232,9 +240,9 @@ export class BetHandshakeHandler {
       strStatus = BETTING_STATUS_LABEL.REFUNDED;
       isAction = false;
     } else if ((blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_DONE && resultStatus === BETTING_STATUS.SUPPORT_WIN && side === SIDE.SUPPORT)
-                ||  (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_DONE && resultStatus === BETTING_STATUS.AGAINST_WIN && side === SIDE.AGAINST)){
-            strStatus = BETTING_STATUS_LABEL.COLLECT_DONE;
-            isAction = false;
+                || (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_DONE && resultStatus === BETTING_STATUS.AGAINST_WIN && side === SIDE.AGAINST)) {
+      strStatus = BETTING_STATUS_LABEL.COLLECT_DONE;
+      isAction = false;
     } else if (!isMatch && role === ROLE.INITER && blockchainStatus !== BET_BLOCKCHAIN_STATUS.STATUS_SHAKER_SHAKED) {
       label = BETTING_STATUS_LABEL.CANCEL;
       strStatus = BETTING_STATUS_LABEL.BET_WAIT_MATCHING;
@@ -515,25 +523,7 @@ export class BetHandshakeHandler {
     return result;
   }
   async refund(hid, offchain) {
-    /*
-    const chainId = getChainIdDefaultWallet();
-    const bettinghandshake = new BettingHandshake(chainId);
-    const result = await bettinghandshake.refund(hid, offchain);
-    const {
-      logs, hash, error, transactionHash,
-    } = result;
-    let logJson = JSON.stringify(logs);
-    const contractAddress = bettinghandshake.contractAddress;
-    let realBlockHash = hash;
-    if (hash == -1) {
-      realBlockHash = '-1';
-      logJson = error.message;
-      this.rollback(offchain);
-    }
-    this.saveTransaction(offchain, CONTRACT_METHOD.REFUND, chainId, realBlockHash, contractAddress, logJson);
 
-    return result;
-    */
     const chainId = getChainIdDefaultWallet();
 
     const bettinghandshake = new BettingHandshake(chainId);
@@ -545,7 +535,7 @@ export class BetHandshakeHandler {
     try {
       result = await bettinghandshake.refund(hid, offchain);
       const {
-        logs, hash, error, transactionHash, payload,
+        hash, error, payload,
       } = result;
 
       logJson = payload;
@@ -567,7 +557,7 @@ export class BetHandshakeHandler {
       realBlockHash = '-1';
       logJson = err.message;
     }
-    this.saveTransaction(offchain, CONTRACT_METHOD.CANCEL, chainId, realBlockHash, contractAddress, logJson);
+    this.saveTransaction(offchain, CONTRACT_METHOD.REFUND, chainId, realBlockHash, contractAddress, logJson);
 
     return result;
   }
