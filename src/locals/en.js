@@ -185,8 +185,8 @@ export default {
   'ex.earlyBird.label.2': 'Create your station with <br /><span class="intro-amount">{freeETH} ETH</span> free now!',
   'ex.earlyBird.btn': 'Open Station',
 
-  'ex.seo.title': 'Ninja Cash: Buy/Sell Crypto with Cash',
-  'ex.seo.meta.description': 'The easiest way to trade with low fee. No signup or ID verification. Find out how to make money with your crypto with us now',
+  'ex.seo.title': 'Ninja: the anonymous exchange of anything.',
+  'ex.seo.meta.description': 'Trade predictions for the FIFA World Cup. Exchange coin for cash in your local neighborhood. No downloads, no sign ups. 100% anonymous.',
 
   'error.required': 'Required',
   'error.requiredOne': 'You need to fill in one of these!',
@@ -743,6 +743,8 @@ export default {
           status: 'Status',
           confirmations: 'confirmations',
           success: 'success',
+          detail_etherscan: 'View detail on etherscan.io',
+          view_all_etherscan: 'View all on etherscan.io'
         },
       },
     },
@@ -772,6 +774,7 @@ export default {
       invalid_address: 'You can only send tokens to Ethereum address',
       invalid_address2: 'Please enter a valid receiving address.',
       insufficient: 'You have insufficient coin to make the transfer.',
+      insufficient_gas: 'You have insufficient coin to make the transfer with gas fee.',
     },
     success: {
       transaction: 'Your transaction will appear on blockchain in about 30 seconds.',

@@ -32,6 +32,7 @@ class Admin extends React.Component {
   }
 
   componentDidMount() {
+    console.log("Test Report");
     if (this.checkToken() != null) {
       this.setState({
         login: true,
@@ -231,8 +232,9 @@ class Admin extends React.Component {
     console.log(item, result);
     const finalCopy = [...this.state.outcomes];
     finalCopy.map((outcomeItem) => {
-      if (outcomeItem.outcome_id === item.id) {
+      if (outcomeItem.id === item.id) {
         outcomeItem.side = result;
+        outcomeItem.outcome_id = item.id;
       }
       return outcomeItem;
     });

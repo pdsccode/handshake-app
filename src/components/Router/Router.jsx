@@ -23,6 +23,7 @@ const RouterExchange = createDynamicImport(() => import('@/components/Router/Exc
 const RouterTransaction = createDynamicImport(() => import('@/components/Router/Transaction'), Loading);
 const RouterComment = createDynamicImport(() => import('@/components/Router/Comment'), Loading);
 const RouterAdmin = createDynamicImport(() => import('@/components/Router/Admin'), Loading);
+const RouterLuckyPool = createDynamicImport(() => import('@/pages/LuckyLanding/LuckyLanding'), Loading);
 
 const rootRouterMap = [
   { path: URL.HANDSHAKE_ME, component: RouterMe },
@@ -79,34 +80,43 @@ class Router extends React.Component {
   render() {
     return (
       <BrowserRouter>
-        <Route
-          path={URL.INDEX}
-          render={props =>
-            (
-              <Layout {...props}>
-                {
-                  this.state.firebaseApp.config.isMaintain
-                  ? <Maintain />
-                  : (
-                    <ScrollToTop>
-                      <Switch>
-                        <Route
-                          exact
-                          path={URL.INDEX}
-                          render={() => (
-                            <Redirect to={{ pathname: URL.HANDSHAKE_DISCOVER }} />
-                          )}
-                        />
-                        {routers}
-                        <Route component={Page404} />
-                      </Switch>
-                    </ScrollToTop>
-                  )
-                }
-              </Layout>
-            )
-          }
-        />
+        <Switch>
+          <Route
+            exact
+            key={Date.now()}
+            path={URL.LUCKY_POOL}
+            component={RouterLuckyPool}
+          />
+          <Route
+            path={URL.INDEX}
+            render={props =>
+              (
+                <Layout {...props}>
+                  {
+                    this.state.firebaseApp.config.isMaintain
+                    ? <Maintain />
+                    : (
+                      <ScrollToTop>
+                        <Switch>
+                          <Route
+                            exact
+                            path={URL.INDEX}
+                            render={() => (
+                              <Redirect to={{ pathname: URL.LUCKY_POOL }} />
+
+                            )}
+                          />
+                          {routers}
+                          <Route component={Page404} />
+                        </Switch>
+                      </ScrollToTop>
+                    )
+                  }
+                </Layout>
+              )
+            }
+          />
+        </Switch>
       </BrowserRouter>
     );
   }

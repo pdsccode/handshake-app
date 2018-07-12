@@ -132,6 +132,11 @@ class WalletTransaction extends React.Component {
             detail.header.status ? <div className={css_status}>{messages.wallet.action.history.label.status} {detail.header.status}</div> : ""
           }
           <div>{detail.header.confirmations} {messages.wallet.action.history.label.confirmations}</div>
+          {
+            detail.header.coin == "ETH" ?
+              <div><a target="_blank" href={"https://etherscan.io/tx/"+detail.body.hash}>{messages.wallet.action.history.label.detail_etherscan}</a></div>
+            : ""
+          }
         </div>
 
         {

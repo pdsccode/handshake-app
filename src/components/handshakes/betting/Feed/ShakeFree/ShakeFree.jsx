@@ -4,30 +4,26 @@ import cn from 'classnames';
 import { connect } from 'react-redux';
 
 // service, constant
-import createForm from '@/components/core/form/createForm';
-import { required } from '@/components/core/form/validation';
-import { Field } from "redux-form";
-import { shakeItem, initFreeHandshake, } from '@/reducers/handshake/action';
-import {HANDSHAKE_ID, API_URL, APP } from '@/constants';
-import {MasterWallet} from '@/services/Wallets/MasterWallet';
-import local from '@/services/localStore';
-import moment from 'moment';
+
+import { shakeItem, initFreeHandshake } from '@/reducers/handshake/action';
+import { HANDSHAKE_ID, API_URL, APP } from '@/constants';
 
 // components
-import { InputField } from '@/components/handshakes/betting/form/customField';
 import Button from '@/components/core/controls/Button';
 
 import { showAlert } from '@/reducers/app/action';
 import {
-  getMessageWithCode, isExpiredDate, getChainIdDefaultWallet, getBalance,
-  getEstimateGas, getAddress, isRightNetwork,
+  getMessageWithCode, getChainIdDefaultWallet,
+  getEstimateGas, getAddress, parseBigNumber
 } from '@/components/handshakes/betting/utils';
+import { validateBet } from '@/components/handshakes/betting/validation.js';
+
+
 import { BetHandshakeHandler, MESSAGE, SIDE } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
 
 import './ShakeFree.scss';
 import Toggle from './../Toggle';
 import BigNumber from 'bignumber.js';
-import {parseBigNumber} from '@/components/handshakes/betting/utils.js';
 
 
 const betHandshakeHandler = BetHandshakeHandler.getShareManager();
@@ -106,38 +102,19 @@ class BetingShakeFree extends React.Component {
     this.setState({
       disable: true,
     });
-    const { isShowOdds, isChangeOdds, estimateGas } = this.state;
     const {
-      matchName, matchOutcome, amount, marketAgainstOdds, marketSupportOdds, closingDate, reportTime,
+      matchName, matchOutcome, amount, closingDate,
     } = this.props;
     const amountS = new BigNumber(amount);
-    // const amount = parseFloat(values.amount.value);
-    const side = parseInt(this.toggleRef.value, 10);
 
-    const marketOdds = side === SIDE.SUPPORT ? marketSupportOdds : marketAgainstOdds;
-
-    const balance = new BigNumber(await getBalance());
-    const estimatedGas = new BigNumber(estimateGas);
     const odds = new BigNumber(this.refs.odds.value);
-    const total = amountS.plus(estimatedGas);
 
-    let message = null;
-    if (!isRightNetwork()) {
-      message = MESSAGE.RIGHT_NETWORK;
-    } else if (isExpiredDate(closingDate)) {
-      message = MESSAGE.MATCH_OVER;
-    } else if (matchName && matchOutcome) {
-      if (odds.gt(1)) {
-        this.initHandshake(amount, odds);
-        this.props.onSubmitClick();
-      } else {
-        message = MESSAGE.ODD_LARGE_THAN;
-      }
-    } else {
-      message = MESSAGE.CHOOSE_MATCH;
-    }
-
-    if (message) {
+    const validate = await validateBet(amountS, odds, closingDate, matchName, matchOutcome, true);
+    const { status, message } = validate;
+    if (status) {
+      this.initHandshake(amountS, odds);
+      this.props.onSubmitClick();
+    } else if (message) {
       this.props.showAlert({
         message: <div className="text-center">{message}</div>,
         timeOut: 3000,
@@ -146,7 +123,7 @@ class BetingShakeFree extends React.Component {
         },
       });
       this.setState({ disable: false });
-    }
+      }
   }
 
   onCancel() {
@@ -155,21 +132,12 @@ class BetingShakeFree extends React.Component {
   }
 
   onToggleChange(id) {
-    // const {isChangeOdds} = this.state;
     const { marketAgainstOdds, marketSupportOdds } = this.props;
     const side = this.toggleRef.value;
     const marketOdds = side === SIDE.SUPPORT ? marketSupportOdds : marketAgainstOdds;
 
-    /*
-    if(!isChangeOdds){
-      this.setState({
-        oddValue: parseFloat(marketOdds).toFixed(2)
-      }, ()=> this.updateTotal());
-    }
-    */
-
     this.setState({
-      oddValue: marketOdds.toFixed(2,1),
+      oddValue: Math.floor(marketOdds * ROUND_ODD) / ROUND_ODD,
     }, () => this.updateTotal());
 
 
@@ -180,14 +148,14 @@ class BetingShakeFree extends React.Component {
     const { oddValue, amountValue } = this.state;
     const total = parseBigNumber(oddValue).times(parseBigNumber(amountValue));
     this.setState({
-      winValue: total.toFixed(6,1),
+      winValue: total.toFixed(6, 1),
     });
   }
 
   shakeItem(amount, side) {
     const { outcomeId } = this.props;
     const { extraData } = this.state;
-    const { matchName, matchOutcome, outcomeHid } = this.props;
+    const { matchName, matchOutcome } = this.props;
     extraData.event_name = matchName;
     extraData.event_predict = matchOutcome;
     extraData.event_bet = amount;
@@ -197,14 +165,9 @@ class BetingShakeFree extends React.Component {
     console.log('Props:', this.props);
 
     const params = {
-      // to_address: toAddress ? toAddress.trim() : '',
-      // public: isPublic,
-      // description: content,
-      // description: JSON.stringify(extraParams),
-      // industries_type: industryId,
+
       type: HANDSHAKE_ID.BETTING,
-      // type: 3,
-      // extra_data: JSON.stringify(fields),
+
       outcome_id: outcomeId,
       extra_data: JSON.stringify(extraData),
       amount,
@@ -226,7 +189,7 @@ class BetingShakeFree extends React.Component {
 
   shakeItemSuccess = async (successData) => {
     console.log('shakeItemSuccess', successData);
-    const { status, data, message } = successData;
+    const { status, data } = successData;
     if (status) {
       const { outcomeHid } = this.props;
       betHandshakeHandler.controlShake(data, outcomeHid);
@@ -238,21 +201,7 @@ class BetingShakeFree extends React.Component {
         },
       });
     } else {
-      // TO DO: Show message, show odd field
-      /*
-      this.setState({
-        isShowOdds: true,
-      }, ()=> {
-        const {message} = successData
-          this.props.showAlert({
-            message: <div className="text-center">{message}</div>,
-            timeOut: 3000,
-            type: 'danger',
-            callBack: () => {
-            }
-          });
-      })
-      */
+
 
       const { message } = successData;
       this.props.showAlert({
@@ -378,13 +327,10 @@ class BetingShakeFree extends React.Component {
           isInput ? (
             <input
               ref={id}
-              // component={InputField}
               className={cn('form-control-custom input value', className || '')}
               id={id}
               type={type}
-              // defaultValue={defaultValue}
               value={id === 'odds' ? oddValue : amountValue}
-              // value={value}
               {...newProps}
               onChange={(evt) => {
                 if (id === 'odds') {
@@ -412,7 +358,7 @@ class BetingShakeFree extends React.Component {
 
   renderForm() {
     const {
-      total, isShowOdds, marketOdds, isChangeOdds, buttonClass, disable,estimateGas
+      total, isShowOdds, marketOdds, isChangeOdds, buttonClass, disable, estimateGas,
     } = this.state;
     const { amount } = this.props;
     const { winValue } = this.state;
@@ -443,8 +389,8 @@ class BetingShakeFree extends React.Component {
           <div className="possibleWinningsValue">{winValue}</div>
         </div>
         <div className="rowWrapper">
-         <div className="gasPriceTitle">Current gas price per transaction (ETH)</div>
-         <div className="possibleWinningsValue">{estimateGas}</div>
+          <div className="gasPriceTitle">Current gas price per transaction (ETH)</div>
+          <div className="possibleWinningsValue">{estimateGas}</div>
         </div>
         <Button type="submit" disabled={disable} block className={buttonClass}>
           Go
