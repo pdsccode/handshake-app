@@ -15,7 +15,7 @@ import Dropdown from '@/components/core/controls/Dropdown';
 import ShareSocial from '@/components/core/presentation/ShareSocial';
 import LuckyReal from '@/components/handshakes/betting/LuckyPool/LuckyReal';
 import LuckyFree from '@/components/handshakes/betting/LuckyPool/LuckyFree';
-
+import Toggle from '@/components/handshakes/betting/Feed/Toggle';
 // import FeedComponent from '@/components/Comment/FeedComment';
 import Button from '@/components/core/controls/Button';
 import ModalDialog from '@/components/core/controls/ModalDialog';
@@ -68,6 +68,9 @@ class BettingFilter extends React.Component {
       isError: false,
       errorMessage: '',
     };
+
+    this.onToggleChange = ::this.onToggleChange;
+
   }
 
   componentDidMount() {
@@ -109,19 +112,6 @@ class BettingFilter extends React.Component {
       against,
     });
     this.checkShowFreeBanner();
-  }
-
-  get oddSpread() {
-    const { support, against } = this.state;
-    if (support && support.length > 0 && against && against.length > 0) {
-      const minSupport = support[support.length - 1].odds;
-      console.log('Min Support:', minSupport);
-      const minAgainst = against[0].odds;
-      console.log('Against Support:', minAgainst);
-      const X = Math.abs(minSupport - minAgainst).toFixed(2);
-      return X;
-    }
-    return 0;
   }
 
   get defaultSupportAmount() {
@@ -323,25 +313,6 @@ class BettingFilter extends React.Component {
     const { status, data } = successData;
   }
 
-  getHandshakeFailed = (error) => {
-    this.props.setLoading(false);
-    console.log('getHandshakeFailed', error);
-  }
-
-  getHandshakeSuccess = async (successData) => {
-    this.props.setLoading(false);
-    console.log('getHandshakeSuccess', successData);
-    const { status, data } = successData;
-    if (status && data) {
-      const { support, against } = data;
-      const filterSupport = support.filter(item => item.amount >= CRYPTOSIGN_MINIMUM_MONEY);
-      const filterAgainst = against.filter(item => item.amount >= CRYPTOSIGN_MINIMUM_MONEY);
-      this.setState({
-        support: filterSupport,
-        against: filterAgainst,
-      });
-    }
-  }
 
   loadMatches() {
     this.props.loadMatches({
@@ -379,6 +350,27 @@ class BettingFilter extends React.Component {
     }
   }
 
+  getHandshakeFailed = (error) => {
+    this.props.setLoading(false);
+    console.log('getHandshakeFailed', error);
+  }
+
+  getHandshakeSuccess = async (successData) => {
+    this.props.setLoading(false);
+    console.log('getHandshakeSuccess', successData);
+    const { status, data } = successData;
+    if (status && data) {
+      const { support, against } = data;
+      const filterSupport = support.filter(item => item.amount >= CRYPTOSIGN_MINIMUM_MONEY);
+      const filterAgainst = against.filter(item => item.amount >= CRYPTOSIGN_MINIMUM_MONEY);
+      this.setState({
+        support: filterSupport,
+        against: filterAgainst,
+      });
+    }
+  }
+
+
 
   callCheckFirstFree() {
     console.log('Call API check first free');
@@ -405,6 +397,12 @@ class BettingFilter extends React.Component {
       bettingShakeIsOpen: false,
     });
     this.modalBetFreeRef.close();
+  }
+
+  onToggleChange(id) {
+    const side = this.toggleRef.value;
+
+    this.setState({ buttonClass: `btnOK ${id === 1 ? 'btnBlue' : 'btnRed'}`, side });
   }
 
   async checkShowFreeBanner() {
@@ -438,7 +436,7 @@ class BettingFilter extends React.Component {
     const reportTime = (selectedMatch && selectedMatch.reportTime) ? selectedMatch.reportTime : null;
     return (
       <div className="wrapperBettingFilter">
-        {this.state.matches && this.state.matches.length > 0 &&
+        {/*this.state.matches && this.state.matches.length > 0 &&
         <div className="share-block">
           <p className="text">Share to get 20 free coins</p>
           <ShareSocial
@@ -446,7 +444,7 @@ class BettingFilter extends React.Component {
             title={shareInfo.title}
             shareUrl={shareInfo.shareUrl}
           />
-        </div>}
+        </div>*/}
         {
           this.state.isError
           ? (
@@ -517,11 +515,37 @@ class BettingFilter extends React.Component {
           : ''
         }
 
-          <TopInfo
+          {/*<TopInfo
             marketTotal={parseFloat(tradedVolum)}
             percentFee={marketFee}
             objectId={outcomeId}
-          />
+          />*/}
+          <Toggle ref={(component) => { this.toggleRef = component; }} onChange={this.onToggleChange} />
+          <div>
+          <div onClick={() => this.modalBetFreeRef.open()}>SIMPLE</div>
+          <div>ADVANCED</div>
+          </div>
+          <BettingShake
+          side={this.state.side}
+          amountSupport={this.defaultSupportAmount}
+          amountAgainst={this.defaultAgainstAmount}
+          matchName={matchName}
+          isOpen={this.state.bettingShakeIsOpen}
+          matchOutcome={matchOutcome}
+          outcomeId={parseInt(outcomeId, 10)}
+          outcomeHid={parseInt(outcomeHid, 10)}
+          marketSupportOdds={parseFloat(this.defaultSupportOdds)}
+          marketAgainstOdds={parseFloat(this.defaultAgainstOdds)}
+          closingDate={closingDate}
+          reportTime={reportTime}
+          onSubmitClick={() => {
+            this.closeShakePopup();
+            this.modalLuckyRealRef.open();
+            }
+          }
+        />
+
+        <div>ORDER BOOK</div>
           <div className="wrapperContainer">
             <div className="item">
               <div className="titleBox opacity65">
@@ -533,7 +557,7 @@ class BettingFilter extends React.Component {
                 <div>Market odds</div>
                 <div>{Math.floor(this.defaultSupportOdds * ROUND_ODD) / ROUND_ODD}</div>
               </div>
-              <Button
+              {/*<Button
                 className="buttonSupport"
                 block
                 onClick={() => {
@@ -548,7 +572,7 @@ class BettingFilter extends React.Component {
                 }}
               >
                 SUPPORT
-              </Button>
+              </Button>*/}
             </div>
             <div className="item">
               <div className="titleBox opacity65">
@@ -561,7 +585,7 @@ class BettingFilter extends React.Component {
                 <div className="itemTitle">Market odds</div>
                 <div className="itemTitle">{Math.floor(this.defaultAgainstOdds * ROUND_ODD) / ROUND_ODD}</div>
               </div>
-              <Button
+              {/*<Button
                 className="buttonAgainst"
                 block
                 onClick={() => {
@@ -577,43 +601,18 @@ class BettingFilter extends React.Component {
                 }}
               >
                 OPPOSE
-              </Button>
+              </Button>*/}
             </div>
           </div>
         </div>
-        {/*<Button
-        block
-        onClick={() => {
-            this.modalLuckyRealRef.open();
-        }}>Test Lucky Real</Button>
-
         <Button
-        block
-        onClick={() => {
-            this.modalLuckyFreeRef.open();
-        }}>Test Lucky Free</Button>*/}
+          block
+          onClick={() => {
 
-        <ModalDialog className="modal" onRef={(modal) => { this.modalBetRef = modal; return null; }}>
-          <BettingShake
-            side={this.state.side}
-            amountSupport={this.defaultSupportAmount}
-            amountAgainst={this.defaultAgainstAmount}
-            matchName={matchName}
-            isOpen={this.state.bettingShakeIsOpen}
-            matchOutcome={matchOutcome}
-            outcomeId={parseInt(outcomeId, 10)}
-            outcomeHid={parseInt(outcomeHid, 10)}
-            marketSupportOdds={parseFloat(this.defaultSupportOdds)}
-            marketAgainstOdds={parseFloat(this.defaultAgainstOdds)}
-            closingDate={closingDate}
-            reportTime={reportTime}
-            onSubmitClick={() => {
-              this.closeShakePopup();
-              this.modalLuckyRealRef.open();
-              }
-            }
-          />
-        </ModalDialog>
+          }}
+        >
+                PLACE SUPPORT ORDER
+        </Button>
         <ModalDialog className="modal" onRef={(modal) => { this.modalBetFreeRef = modal; return null; }}>
           <BettingShakeFree
             amount={freeAmount}
