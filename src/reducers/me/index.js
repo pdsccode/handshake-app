@@ -7,7 +7,8 @@ import {
   HANDSHAKE_EXCHANGE_STATUS_VALUE,
 } from '@/constants';
 import { ACTIONS } from './action';
-const TAG = "MeReducer";
+
+const TAG = 'MeReducer';
 function handlePreProcessForOfferStore(handshake) {
   const extraData = JSON.parse(handshake.extra_data);
   const { id } = handshake;
@@ -151,6 +152,7 @@ const meReducter = (
     }
     case ACTIONS.RESPONSE_EXCHANGE_DATA_CHANGE: {
       const listOfferStatus = action.payload;
+      console.log('listOfferStatus', listOfferStatus);
       const myList = state.list;
       let handledMylist = [];
 
@@ -158,7 +160,7 @@ const meReducter = (
         const offer = Object.assign({}, listOfferStatus[offerId]);
         handledMylist = myList.map((handshake) => {
           let status = '';
-          let { id } = offer;
+          const { id } = offer;
           const handledHandshake = handshake;
 
           if (offer.type === EXCHANGE_FEED_TYPE.INSTANT) {
@@ -168,20 +170,20 @@ const meReducter = (
           } else if (offer.type === EXCHANGE_FEED_TYPE.OFFER_STORE_SHAKE) {
             status =
               HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS_VALUE[offer.status];
-          } else if (offer.type === EXCHANGE_FEED_TYPE.OFFER_STORE) {
-            const values = offer.status.split('_');
-            id = `${id}_${values[0].toUpperCase()}`;
-            status = values[1];
-
-            const extraData = JSON.parse(handledHandshake.extraData);
-            if (
-              handledHandshake.id.includes(id) &&
-              extraData.status !== status
-            ) {
-              extraData.status = status;
-              handledHandshake.extraData = JSON.stringify(extraData);
-              return handledHandshake;
-            }
+          // } else if (offer.type === EXCHANGE_FEED_TYPE.OFFER_STORE) {
+          //   const values = offer.status.split('_');
+          //   id = `${id}_${values[0].toUpperCase()}`;
+          //   status = values[1];
+          //
+          //   const extraData = JSON.parse(handledHandshake.extraData);
+          //   if (
+          //     handledHandshake.id.includes(id) &&
+          //     extraData.status !== status
+          //   ) {
+          //     extraData.status = status;
+          //     handledHandshake.extraData = JSON.stringify(extraData);
+          //     return handledHandshake;
+          //   }
           }
 
           if (
@@ -194,11 +196,44 @@ const meReducter = (
         });
       });
 
-      console.log('handledMylist', handledMylist);
+      // console.log('handledMylist', handledMylist);
+
+      const myListDashboard = state.listDashboard;
+      let handledMylistDashboard = [];
+      Object.keys(listOfferStatus).forEach((offerId) => {
+        const offer = Object.assign({}, listOfferStatus[offerId]);
+        handledMylistDashboard = myListDashboard.map((handshake) => {
+          const { id } = offer;
+          const handledHandshake = handshake;
+
+          if (offer.type === EXCHANGE_FEED_TYPE.OFFER_STORE) {
+            const values = offer.status.split('_');
+            // id = `${id}_${values[0].toUpperCase()}`;
+            const currency = values[0].toUpperCase();
+            const status = values[1];
+
+            const offerStore = JSON.parse(handledHandshake.extraData);
+            if (handledHandshake.id.includes(id)) {
+              for (let item of offerStore.items) {
+                if (item.currency === currency) {
+                  item.status = status;
+                  handledHandshake.extraData = JSON.stringify(offerStore);
+                  break;
+                }
+              }
+            }
+          }
+
+          return handledHandshake;
+        });
+      });
+
+      // console.log('handledMylistDashboard', handledMylistDashboard);
 
       return {
         ...state,
         list: handledMylist,
+        listDashboard: handledMylistDashboard,
       };
     }
 
@@ -206,7 +241,7 @@ const meReducter = (
       const listBettingStatus = action.payload;
       const myList = state.list;
       let handledMylist;
-      console.log(TAG,'FIREBASE_BETTING_DATA_CHANGE action.payload =', action.payload);
+      console.log(TAG, 'FIREBASE_BETTING_DATA_CHANGE action.payload =', action.payload);
       Object.keys(listBettingStatus).forEach((key) => {
         const element = listBettingStatus[key];
         const { id, status_i: statusI, result_i: resultI } = element;

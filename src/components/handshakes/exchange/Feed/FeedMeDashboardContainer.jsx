@@ -228,7 +228,7 @@ class FeedMeOfferStoreContainer extends React.PureComponent {
     const offerStore = OfferShop.offerShop(data);
 
     // Update status to redux
-    // this.responseExchangeDataChange(offerStore);
+    this.responseExchangeDataChange(offerStore);
 
     if (currency === CRYPTO_CURRENCY.ETH) {
       if (sellAmount > 0 && freeStart === '' && offerStore.items.ETH.status !== 'closed') {
@@ -274,7 +274,7 @@ class FeedMeOfferStoreContainer extends React.PureComponent {
 
   responseExchangeDataChange = (offerStore) => {
     const { id } = offerStore;
-    const { currency } = this.offer;
+    const { currency } = this.deleteItem;
     const data = {};
     const firebaseOffer = {};
     const status = offerStore.items[`${currency}`].status;
