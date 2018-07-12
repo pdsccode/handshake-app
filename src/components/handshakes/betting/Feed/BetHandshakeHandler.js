@@ -648,8 +648,8 @@ export class BetHandshakeHandler {
   async createMarket(fee, source, closingWindow, reportWindow, disputeWindow, offchain) {
     console.log(fee, source, closingWindow, reportWindow, disputeWindow, offchain);
     const chainId = getChainIdDefaultWallet();
-    // const bettinghandshake = new BettingHandshake(chainId);
-    const predictionhandshake = new PredictionHandshake(chainId);
+    const bettinghandshake = new BettingHandshake(chainId);
+    //const predictionhandshake = new PredictionHandshake(chainId);
 
     const contractAddress = predictionhandshake.contractAddress;
     let realBlockHash = '';
