@@ -6,17 +6,15 @@ import { connect } from 'react-redux';
 // service, constant
 import { shakeItem, initHandshake, } from '@/reducers/handshake/action';
 import {HANDSHAKE_ID, API_URL, APP } from '@/constants';
-import {MasterWallet} from '@/services/Wallets/MasterWallet';
-import local from '@/services/localStore';
-import moment from 'moment';
+
 import GA from '@/services/googleAnalytics';
 
 // components
 import Button from '@/components/core/controls/Button';
 import {showAlert} from '@/reducers/app/action';
 import {getMessageWithCode, getChainIdDefaultWallet,
-validateBet, getEstimateGas, getAddress, isExistMatchBet, parseBigNumber , } from '@/components/handshakes/betting/utils.js';
-
+     getEstimateGas, getAddress, isExistMatchBet, parseBigNumber , } from '@/components/handshakes/betting/utils.js';
+import { validateBet } from '@/components/handshakes/betting/validation.js';
 import './Shake.scss';
 import { BetHandshakeHandler, MESSAGE, SIDE } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
 

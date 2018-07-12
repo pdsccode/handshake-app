@@ -4,30 +4,26 @@ import cn from 'classnames';
 import { connect } from 'react-redux';
 
 // service, constant
-import createForm from '@/components/core/form/createForm';
-import { required } from '@/components/core/form/validation';
-import { Field } from 'redux-form';
+
 import { shakeItem, initFreeHandshake } from '@/reducers/handshake/action';
 import { HANDSHAKE_ID, API_URL, APP } from '@/constants';
-import { MasterWallet } from '@/services/Wallets/MasterWallet';
-import local from '@/services/localStore';
-import moment from 'moment';
 
 // components
-import { InputField } from '@/components/handshakes/betting/form/customField';
 import Button from '@/components/core/controls/Button';
 
 import { showAlert } from '@/reducers/app/action';
 import {
   getMessageWithCode, getChainIdDefaultWallet,
-  getEstimateGas, getAddress, validateBet,
+  getEstimateGas, getAddress, parseBigNumber
 } from '@/components/handshakes/betting/utils';
+import { validateBet } from '@/components/handshakes/betting/validation.js';
+
+
 import { BetHandshakeHandler, MESSAGE, SIDE } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
 
 import './ShakeFree.scss';
 import Toggle from './../Toggle';
 import BigNumber from 'bignumber.js';
-import { parseBigNumber } from '@/components/handshakes/betting/utils.js';
 
 
 const betHandshakeHandler = BetHandshakeHandler.getShareManager();

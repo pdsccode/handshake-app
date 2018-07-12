@@ -3,7 +3,10 @@ import { BettingHandshake } from '@/services/neuron';
 import { API_URL, APP } from '@/constants';
 import { showAlert } from '@/reducers/app/action';
 import { PredictionHandshake } from '@/services/neuron';
-import { getMessageWithCode, getChainIdDefaultWallet, foundShakeItem, isInitBet, isExpiredDate } from '@/components/handshakes/betting/utils.js';
+import { getMessageWithCode, getChainIdDefaultWallet, isInitBet, } from '@/components/handshakes/betting/utils.js';
+
+import { isExpiredDate } from '@/components/handshakes/betting/validation.js';
+
 import Web3 from 'web3';
 import GA from '@/services/googleAnalytics';
 

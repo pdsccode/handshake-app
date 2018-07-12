@@ -21,9 +21,12 @@ import Feed from '@/components/core/presentation/Feed';
 import BettingShake from './Shake';
 import { showAlert } from '@/reducers/app/action';
 import {
-  getMessageWithCode, isRightNetwork, getId,
-  getShakeOffchain, getBalance, getEstimateGas, isSameAddress, foundShakeList, parseBigNumber,
+  getMessageWithCode, getId,
+  getShakeOffchain, getBalance, getEstimateGas, foundShakeList, parseBigNumber,
 } from '@/components/handshakes/betting/utils.js';
+
+import { isSameAddress } from '@/components/handshakes/betting/validation.js';
+
 
 
 // css, icons
