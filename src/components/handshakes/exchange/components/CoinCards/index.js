@@ -9,7 +9,7 @@ export class Component extends React.Component {
       <div className="coins-wrapper">
         {coins.map((coin, index) => {
           // eslint-disable-next-line
-          const { name, txtBuy, txtSell, color, icon } = coin;
+          const { name, txtBuy, txtSell, color, icon, onClose } = coin;
           return (
             <span
               key={index}
@@ -17,6 +17,7 @@ export class Component extends React.Component {
               style={{ background: color }}
               onClick={e => this.handleClickCoin(e, name)}
             >
+              {onClose && <button className="btn-close-card" onClick={(e) => { e.stopPropagation(); onClose(); }}>&times;</button>}
               {/* <div className="icon-coin"><img src={icon}/></div> */}
               <div className="name mb-1">{name}</div>
               <div className="price-wrapper">
