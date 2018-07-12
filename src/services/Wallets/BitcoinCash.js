@@ -49,7 +49,7 @@ export class BitcoinCash extends Bitcoin {
     const response = await axios.get(url);
 
     if (response.status == 200) {
-      return await new BigNumber(response.data);
+      return response.data;
     }
     return false;
   }
