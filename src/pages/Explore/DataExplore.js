@@ -209,8 +209,17 @@ class DataExplore extends React.Component {
   render() {
     return (
       <Visibility once={true} onUpdate={this.handleUpdate}>
-        <Segment vertical>  
-            <Card.Group centered   >
+        <Segment vertical >  
+            <Card.Group centered style={{marginTop: '-2em'}}>
+                  <Card  className="my-card" style={{background:'#21c364' ,    marginBottom: '12px'}}> 
+                    <Link className="ui image" to={'/explore/create'}>
+                      <Card.Content style={{textAlign:'left'}}> 
+                          <Icon size="large" name='newspaper outline'
+                           style={{color: 'white',margin: '0.7em',float:'left' }}  />
+                          <span style={{color: 'white',fontSize: '16px', float:'left', marginTop:'8px'}} >Create new Dataset</span>
+                      </Card.Content>
+                    </Link> 
+                  </Card>
                   {this.state.categories.map((cat, i) => {
                     return (
                       <Card key={i} className="my-card"> 

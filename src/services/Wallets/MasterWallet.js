@@ -4,6 +4,8 @@ import { Bitcoin } from '@/services/Wallets/Bitcoin.js';
 import { BitcoinTestnet } from '@/services/Wallets/BitcoinTestnet.js';
 import { Ethereum } from '@/services/Wallets/Ethereum.js';
 import { Shuriken } from '@/services/Wallets/Tokens/Shuriken.js';
+import { Dadtoken } from '@/services/Wallets/Tokens/Dadtoken.js';
+
 import { Wallet } from '@/services/Wallets/Wallet.js';
 import { TokenERC20 } from '@/services/Wallets/Tokens/TokenERC20';
 import { CryptoStrikers } from '@/services/Wallets/Collectibles/CryptoStrikers';
@@ -20,11 +22,11 @@ export class MasterWallet {
     
     // list coin is supported, can add some more Ripple ...
     static ListDefaultCoin = {
-      Ethereum, Shuriken, Bitcoin, BitcoinTestnet
+      Ethereum, Shuriken,Dadtoken, Bitcoin, BitcoinTestnet
     };
 
     static ListCoin = {
-      Ethereum, Bitcoin, BitcoinTestnet, Shuriken, TokenERC20,CryptoStrikers, CryptoPunks, CryptoKitties, TokenERC20
+      Ethereum, Bitcoin, Dadtoken, BitcoinTestnet, Shuriken, TokenERC20,CryptoStrikers, CryptoPunks, CryptoKitties, TokenERC20
     };
 
     static ListCoinReward = { Ethereum, Bitcoin };

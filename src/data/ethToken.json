@@ -365,6 +365,14 @@
 		"address": "0x4c0fbe1bb46612915e7967d2c3213cd4d87257ad",
 		"type": "ERC20"
 	}
+	,
+	{
+		"name": "DAD Token",
+		"symbol": "DAD",
+		"decimal": "18",
+		"address": "0x9da37ab3541c2b47ca67378723c9221e6f416a42",
+		"type": "ERC20"
+	}
 	
 	
 ]

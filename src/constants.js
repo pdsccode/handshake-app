@@ -468,6 +468,7 @@ export const URL = {
 
   DATA_SET_DISCOVER: '/explore',
   DATA_SET_DISCOVER_INDEX: '/explore',
+  DATA_SET_DISCOVER_CREATE:'/explore/create',
   DATA_SET_DISCOVER_DETAIL: '/explore/:slug',
 
   DATA_SET_UPLOAD: '/upload',
