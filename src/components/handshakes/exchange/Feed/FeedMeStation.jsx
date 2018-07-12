@@ -1,21 +1,25 @@
 import React from 'react';
 import './FeedMe.scss';
 import './FeedMeStation.scss';
-import { CRYPTO_CURRENCY, EXCHANGE_ACTION, FIAT_CURRENCY, URL } from '@/constants';
+import {
+  CRYPTO_CURRENCY,
+  EXCHANGE_ACTION,
+  FIAT_CURRENCY,
+  HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS,
+  HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE,
+  URL,
+} from '@/constants';
 import { daysBetween, formatAmountCurrency, formatMoneyByLocale, getOfferPrice } from '@/services/offer-util';
 import iconSpinner from '@/assets/images/icon/icons8-spinner.gif';
 import iconAvatar from '@/assets/images/icon/avatar.svg';
 import StarsRating from '@/components/core/presentation/StarsRating';
 import CoinCards from '@/components/handshakes/exchange/components/CoinCards';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import Modal from '@/components/core/controls/Modal';
-import Button from '@/components/core/controls/Button';
 import { connect } from 'react-redux';
 import { showAlert } from '@/reducers/app/action';
 
 import iconBtc from '@/assets/images/icon/coin/icon-btc.svg';
 import iconEth from '@/assets/images/icon/coin/icon-eth.svg';
-import { HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS, HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE } from '@/constants';
 
 window.Clipboard = (function (window, document, navigator) {
   let textArea,
@@ -31,8 +35,6 @@ class FeedMeStation extends React.PureComponent {
 
     this.state = {
       timePassing: '',
-      walletsData: false,
-      inputRestoreWalletValue: '',
       coins: [],
       isShowTimer: false,
     };
@@ -260,36 +262,6 @@ class FeedMeStation extends React.PureComponent {
           }
 
         </div>
-        <button className="btn btn-primary btn-block">{messages.me.feed.cash.backupStation}</button>
-        {/* Modal for Backup wallets : */}
-        <Modal title={messages.wallet.action.backup.header} onRef={modal => this.modalBackupRef = modal}>
-          <div className="bodyTitle">{messages.wallet.action.backup.description}</div>
-          <div className="bodyBackup">
-            <textarea
-              readOnly
-              onClick={this.handleChange}
-              onFocus={this.handleFocus}
-              value={this.state.walletsData ? JSON.stringify(this.state.walletsData) : ''}
-            />
-            <Button className="button" cssType="danger" onClick={() => { Clipboard.copy(JSON.stringify(this.state.walletsData)); this.modalBackupRef.close(); this.showToast(messages.wallet.action.backup.success.copied); }} >{messages.wallet.action.backup.button.copy}</Button>
-          </div>
-        </Modal>
-
-        {/* Modal for Restore wallets : */}
-        <Modal title={messages.wallet.action.restore.header} onRef={modal => this.modalRestoreRef = modal}>
-          <div className="bodyTitle">{messages.wallet.action.restore.description}</div>
-          <div className="bodyBackup">
-            <textarea
-              required
-              value={this.state.inputRestoreWalletValue}
-              className={this.state.erroValueBackup ? 'error' : ''}
-              onChange={evt => this.updateRestoreWalletValue(evt)}
-            />
-            <Button isLoading={this.state.isRestoreLoading} className="button" cssType="danger" onClick={() => { this.restoreWallets(); }} >
-              {messages.wallet.action.restore.button.restore}
-            </Button>
-          </div>
-        </Modal>
       </div>
     );
   }

@@ -1,16 +1,15 @@
 import React from 'react';
-import { compose } from 'redux';
+import { bindActionCreators, compose } from 'redux';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { withFirebase } from 'react-redux-firebase';
 // action, mock
-import { fireBaseExchangeDataChange, loadMyHandshakeList, fireBaseBettingChange } from '@/reducers/me/action';
-import { API_URL, APP, HANDSHAKE_ID, URL } from '@/constants';
+import { fireBaseBettingChange, fireBaseExchangeDataChange, loadMyHandshakeList } from '@/reducers/me/action';
+import { API_URL, APP, HANDSHAKE_ID, HANDSHAKE_ID_DEFAULT, URL } from '@/constants';
 import { injectIntl } from 'react-intl';
-
 // components
 import { Link } from 'react-router-dom';
-import { Grid, Row, Col } from 'react-bootstrap';
+import { Col, Grid, Row } from 'react-bootstrap';
 import NoData from '@/components/core/presentation/NoData';
 import { getDashboardInfo, getListOfferPrice, getOfferStores, reviewOffer } from '@/reducers/exchange/action';
 import FeedPromise from '@/components/handshakes/promise/Feed';
@@ -27,16 +26,17 @@ import ShopSVG from '@/assets/images/icon/icons8-shop_filled.svg';
 import ExpandArrowSVG from '@/assets/images/icon/expand-arrow.svg';
 import { setOfflineStatus } from '@/reducers/auth/action';
 import local from '@/services/localStore';
-import { fieldRadioButton } from '@/components/core/form/customField'
-import createForm from '@/components/core/form/createForm'
+import { fieldRadioButton } from '@/components/core/form/customField';
+import createForm from '@/components/core/form/createForm';
 
 import Helper from '@/services/helper';
 import Rate from '@/components/core/controls/Rate/Rate';
 
 import './Me.scss';
-import {change, Field} from 'redux-form'
-import {HANDSHAKE_ID_DEFAULT} from "@/constants";
-import {bindActionCreators} from "redux";
+import { change, Field } from 'redux-form';
+import Modal from '@/components/core/controls/Modal/Modal';
+import BackupWallet from '@/components/Wallet/BackupWallet/BackupWallet';
+import RestoreWallet from '@/components/Wallet/RestoreWallet/RestoreWallet';
 
 const TAG = 'Me';
 const maps = {
@@ -57,11 +57,11 @@ const CATEGORIES = [{
   text: 'Prediction',
   priority: 0,
 },
-  {
-    value: HANDSHAKE_ID.EXCHANGE,
-    text: 'Cash',
-    priority: 2,
-  },
+{
+  value: HANDSHAKE_ID.EXCHANGE,
+  text: 'Cash',
+  priority: 2,
+},
 ];
 
 const nameFormFilterFeeds = 'formFilterFeeds';
@@ -146,7 +146,7 @@ class Me extends React.Component {
           }
           console.log(TAG, ' getDerivedStateFromProps begin 04');
           if (JSON.stringify(nextUser?.betting) !== JSON.stringify(prevUser?.betting)) {
-            console.log(TAG, ' getDerivedStateFromProps betting ',nextUser?.betting);
+            console.log(TAG, ' getDerivedStateFromProps betting ', nextUser?.betting);
             nextProps.fireBaseBettingChange(nextUser?.betting);
             nextProps.firebase.remove(`/users/${nextProps.auth.profile.id}/betting`);
           }
@@ -217,7 +217,7 @@ class Me extends React.Component {
     if (handshakeIdActive) {
       qs.type = handshakeIdActive;
     }
-    this.props.loadMyHandshakeList({ PATH_URL: API_URL.ME.BASE, qs, });
+    this.props.loadMyHandshakeList({ PATH_URL: API_URL.ME.BASE, qs });
   }
 
   handleSetOfflineStatusSuccess = () => {
@@ -255,17 +255,17 @@ class Me extends React.Component {
   }
 
   handleShowModalDialog = (modalProps) => {
-    const { show, propsModal, modalContent = <div /> } = modalProps
+    const { show, propsModal, modalContent = <div /> } = modalProps;
     this.setState({
       modalContent,
-      propsModal
+      propsModal,
     }, () => {
       if (show) {
         this.modalRef.open();
       } else {
         this.modalRef.close();
       }
-    })
+    });
   }
 
   onCategoryChange = (e, newValue) => {
@@ -283,13 +283,21 @@ class Me extends React.Component {
 
   onCashTabChange = (e, newValue) => {
     console.log('onTypeChange', newValue);
-    this.setState({cashTab: newValue}, () => {
+    this.setState({ cashTab: newValue }, () => {
       this.loadMyHandshakeList();
       if (newValue === CASH_TAB.DASHBOARD) {
         // this.getOfferStore();
         this.getDashboardInfo();
       }
     });
+  }
+
+  showRestoreWallet = () => {
+    this.modalRestoreRef.open();
+  }
+
+  showBackupWallet = () => {
+    this.modalBackupRef.open();
   }
 
   render() {
@@ -333,7 +341,7 @@ class Me extends React.Component {
                 }
               </div>
               {haveOffer && (<div className="arrow">
-                <ToggleSwitch defaultChecked={online} onChange={flag => this.setOfflineStatus(flag)}/>
+                <ToggleSwitch defaultChecked={online} onChange={flag => this.setOfflineStatus(flag)} />
               </div>)
               }
             </div>
@@ -402,12 +410,17 @@ class Me extends React.Component {
                   return null;
                 })
               ) : this.state.handshakeIdActive === HANDSHAKE_ID.EXCHANGE && this.state.cashTab === CASH_TAB.DASHBOARD ? (
-              <div >
-                <button className="btn btn-primary btn-block">{messages.me.feed.cash.restoreStation}</button>
-              </div>
+                <div >
+                  <button className="btn btn-primary btn-block" onClick={this.showRestoreWallet}>{messages.me.feed.cash.restoreStation}</button>
+                </div>
               ) :
               (
                 <NoData message={messages.me.feed.noDataMessage} isShowArrowDown />
+              )
+            }
+            {
+              listFeed && listFeed.length > 0 && this.state.handshakeIdActive === HANDSHAKE_ID.EXCHANGE && this.state.cashTab === CASH_TAB.DASHBOARD && (
+                <button className="btn btn-primary btn-block" onClick={this.showBackupWallet}>{messages.me.feed.cash.backupStation}</button>
               )
             }
           </Col>
@@ -416,6 +429,14 @@ class Me extends React.Component {
         <ModalDialog onRef={(modal) => { this.modalRef = modal; return null; }} {...propsModal}>
           {modalContent}
         </ModalDialog>
+        {/* Modal for Backup wallets : */}
+        <Modal title={messages.wallet.action.backup.header} onRef={modal => this.modalBackupRef = modal}>
+          <BackupWallet onFinish={() => { this.modalBackupRef.close(); }} />
+        </Modal>
+        {/* Modal for Backup wallets : */}
+        <Modal title={messages.wallet.action.restore.header} onRef={modal => this.modalRestoreRef = modal}>
+          <RestoreWallet />
+        </Modal>
       </Grid>
     );
   }
@@ -432,7 +453,7 @@ const mapState = state => ({
   offerStores: state.exchange.offerStores,
 });
 
-const mapDispatch = (dispatch) => ({
+const mapDispatch = dispatch => ({
   rfChange: bindActionCreators(change, dispatch),
   loadMyHandshakeList: bindActionCreators(loadMyHandshakeList, dispatch),
   getListOfferPrice: bindActionCreators(getListOfferPrice, dispatch),
