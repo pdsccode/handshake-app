@@ -171,8 +171,8 @@ export default {
   'ex.shop.shake.label.phone': 'Phone',
   'ex.shop.shake.label.reviews': 'Reviews',
   'ex.shop.shake.label.reviews.count': '({reviewCount} reviews)',
-  'ex.shop.shake.label.cash.inventory': 'Cash inventory',
-  'ex.shop.shake.label.coin.inventory': 'Coin inventory',
+  'ex.shop.shake.label.cash.inventory': 'Cash',
+  'ex.shop.shake.label.coin.inventory': 'Coin',
   'ex.shop.shake.label.days': 'days',
 
   'ex.shop.dashboard.label.transaction.successfull.failed': 'Transactions successful/failed',
@@ -519,6 +519,15 @@ export default {
       shopDescription: 'Open for business',
       shopNoDataDescription: 'None yet. Set one up?',
       noDataMessage: 'Start a mission.',
+      filterBy: 'Filter buy:',
+      cash: {
+        predition: 'Prediction',
+        cash: 'Cash',
+        restoreStation: 'Restore station',
+        backupStation: 'Backup station',
+        transactions: 'Transactions',
+        dashboard: 'Dashboard',
+      }
     },
   },
 

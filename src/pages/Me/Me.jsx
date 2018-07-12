@@ -365,8 +365,8 @@ class Me extends React.Component {
                     component={fieldRadioButton}
                     type="tab-6"
                     list={[
-                      { value: CASH_TAB.TRANSACTION, text: 'Transactions', icon: <span className="icon-transactions align-middle" /> },
-                      { value: CASH_TAB.DASHBOARD, text: 'Dashboard', icon: <span className="icon-dashboard align-middle" /> },
+                      { value: CASH_TAB.TRANSACTION, text: messages.me.feed.cash.transactions, icon: <span className="icon-transactions align-middle" /> },
+                      { value: CASH_TAB.DASHBOARD, text: messages.me.feed.cash.dashboard, icon: <span className="icon-dashboard align-middle" /> },
                     ]}
                     // validate={[required]}
                     onChange={this.onCashTabChange}
@@ -401,7 +401,12 @@ class Me extends React.Component {
                   }
                   return null;
                 })
-              ) : (
+              ) : this.state.handshakeIdActive === HANDSHAKE_ID.EXCHANGE && this.state.cashTab === CASH_TAB.DASHBOARD ? (
+              <div >
+                <button className="btn btn-primary btn-block">{messages.me.feed.cash.restoreStation}</button>
+              </div>
+              ) :
+              (
                 <NoData message={messages.me.feed.noDataMessage} isShowArrowDown />
               )
             }

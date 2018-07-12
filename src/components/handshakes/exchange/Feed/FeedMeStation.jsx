@@ -230,7 +230,7 @@ class FeedMeStation extends React.PureComponent {
 
           <CoinCards coins={coins} currency={fiatCurrency} />
 
-          <div className="d-table w-100 mt-2">
+          <div className="mt-3 d-table w-100">
             <div className="d-table-cell align-middle" style={{ width: '42px' }}>
               <img src={iconAvatar} width="35px" alt="" />
             </div>
@@ -247,7 +247,7 @@ class FeedMeStation extends React.PureComponent {
             <div className="d-table-cell align-middle label"><FormattedMessage id="ex.shop.dashboard.label.transaction.successfull.failed" /></div>
             <div className="d-table-cell align-middle text-right info">{`${transactionSuccessful}/${transactionFailed}`}</div>
           </div>
-          <div className="d-table w-100 station-info">
+          <div className="mt-3 d-table w-100 station-info">
             <div className="d-table-cell align-middle label"><FormattedMessage id="ex.shop.dashboard.label.transaction.pending" /></div>
             <div className="d-table-cell align-middle text-right info">{transactionPending}</div>
           </div>
@@ -260,7 +260,7 @@ class FeedMeStation extends React.PureComponent {
           }
 
         </div>
-        <button className="btn btn-primary btn-block">Backup</button>
+        <button className="btn btn-primary btn-block">{messages.me.feed.cash.backupStation}</button>
         {/* Modal for Backup wallets : */}
         <Modal title={messages.wallet.action.backup.header} onRef={modal => this.modalBackupRef = modal}>
           <div className="bodyTitle">{messages.wallet.action.backup.description}</div>
@@ -315,7 +315,7 @@ const mapState = (state) => {
         const sell = item.sellFiatAmounts[currency];
 
         if (buy || sell) {
-          transactionRevenue.push(<div className="d-table w-100 station-info">
+          transactionRevenue.push(<div className="mt-3 d-table w-100 station-info">
             <div className="d-table-cell align-middle label"><FormattedMessage id="ex.shop.dashboard.label.revenue" /> {item.currency}</div>
             <div className="d-table-cell align-middle text-right info">{formatMoneyByLocale(buy?.amount || 0, currency)}/{formatMoneyByLocale(sell?.amount || 0, currency)} {currency}</div>
                                   </div>);
@@ -325,7 +325,7 @@ const mapState = (state) => {
   }
 
   const transactionTotal = dashboardInfo && dashboardInfo.map(item => (
-    <div className="d-table w-100 station-info">
+    <div className="mt-3 d-table w-100 station-info">
       <div className="d-table-cell align-middle label"><FormattedMessage id="ex.shop.dashboard.label.transaction.total" /> {item.currency}</div>
       <div className="d-table-cell align-middle text-right info">{formatAmountCurrency(item.buyAmount)}/{formatAmountCurrency(item.sellAmount)}</div>
     </div>));

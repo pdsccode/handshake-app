@@ -214,7 +214,7 @@ const meReducter = (
 
             const offerStore = JSON.parse(handledHandshake.extraData);
             if (handledHandshake.id.includes(id)) {
-              for (let item of offerStore.items) {
+              for (let item of Object.values(offerStore.items)) {
                 if (item.currency === currency) {
                   item.status = status;
                   handledHandshake.extraData = JSON.stringify(offerStore);
