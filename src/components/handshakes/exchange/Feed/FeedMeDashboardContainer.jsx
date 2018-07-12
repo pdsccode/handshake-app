@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import FeedMeStation from './FeedMeStation';
 import {
   API_URL,
@@ -7,22 +7,23 @@ import {
   EXCHANGE_ACTION_NAME,
   HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS,
   HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_NAME,
-  HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE
-} from "@/constants";
-import {MasterWallet} from '@/services/Wallets/MasterWallet';
-import OfferShop from "@/models/OfferShop";
-import {ExchangeShopHandshake} from "@/services/neuron";
-import {FormattedMessage} from "react-intl";
-import {connect} from "react-redux";
-import PropTypes from "prop-types";
-import {hideLoading, showAlert, showLoading} from '@/reducers/app/action';
-import Button from '@/components/core/controls/Button/Button';
-import {responseExchangeDataChange} from "@/reducers/me/action";
-import {Ethereum} from '@/services/Wallets/Ethereum.js';
-import {Bitcoin} from '@/services/Wallets/Bitcoin';
-import {formatMoneyByLocale, getHandshakeUserType, getOfferPrice} from "@/services/offer-util";
-import Offer from "@/models/Offer";
-import {deleteOfferItem} from "@/reducers/exchange/action";
+  HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE,
+} from '@/constants';
+import { MasterWallet } from '@/services/Wallets/MasterWallet';
+import OfferShop from '@/models/OfferShop';
+import { ExchangeShopHandshake } from '@/services/neuron';
+import { FormattedMessage } from 'react-intl';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { hideLoading, showAlert, showLoading } from '@/reducers/app/action';
+import { responseExchangeDataChange } from '@/reducers/me/action';
+import { Ethereum } from '@/services/Wallets/Ethereum.js';
+import { Bitcoin } from '@/services/Wallets/Bitcoin';
+import { formatAmountCurrency, formatMoneyByLocale, getHandshakeUserType, getOfferPrice } from '@/services/offer-util';
+import { deleteOfferItem } from '@/reducers/exchange/action';
+
+import iconBtc from '@/assets/images/icon/coin/icon-btc.svg';
+import iconEth from '@/assets/images/icon/coin/icon-eth.svg';
 
 class FeedMeOfferStoreContainer extends React.PureComponent {
   constructor(props) {
@@ -185,6 +186,108 @@ class FeedMeOfferStoreContainer extends React.PureComponent {
   //   return actionButtons;
   // }
 
+  getPrices = () => {
+    const { offer } = this;
+    const { listOfferPrice, fiatCurrency } = this.props;
+
+    let priceBuyBTC;
+    let priceSellBTC;
+    let priceBuyETH;
+    let priceSellETH;
+
+    const eth = offer.items.ETH;
+    const btc = offer.items.BTC;
+
+    if (listOfferPrice) {
+      let offerPrice = getOfferPrice(listOfferPrice, EXCHANGE_ACTION.BUY, CRYPTO_CURRENCY.BTC, fiatCurrency);
+      priceBuyBTC = offerPrice.price * (1 + btc?.buyPercentage / 100) || 0;
+
+      offerPrice = getOfferPrice(listOfferPrice, EXCHANGE_ACTION.SELL, CRYPTO_CURRENCY.BTC, fiatCurrency);
+      priceSellBTC = offerPrice.price * (1 + btc?.sellPercentage / 100) || 0;
+
+      offerPrice = getOfferPrice(listOfferPrice, EXCHANGE_ACTION.BUY, CRYPTO_CURRENCY.ETH, fiatCurrency);
+      priceBuyETH = offerPrice.price * (1 + eth?.buyPercentage / 100) || 0;
+
+      offerPrice = getOfferPrice(listOfferPrice, EXCHANGE_ACTION.SELL, CRYPTO_CURRENCY.ETH, fiatCurrency);
+      priceSellETH = offerPrice.price * (1 + eth?.sellPercentage / 100) || 0;
+    }
+
+    return {
+      priceBuyBTC, priceSellBTC, priceBuyETH, priceSellETH,
+    };
+  }
+
+  isEmptyBalance = (item) => {
+    const { buyBalance, sellBalance } = item;
+    return !(buyBalance > 0 || sellBalance > 0);
+  }
+
+  getCoinList = () => {
+    const { offer } = this;
+    const { fiatCurrency: currency } = this.props;
+    const coins = [];
+    const {
+      priceBuyBTC, priceSellBTC, priceBuyETH, priceSellETH,
+    } = this.getPrices();
+
+    if (offer.itemFlags.ETH) {
+      const eth = offer.items.ETH;
+      if (!this.isEmptyBalance(eth)) {
+        const coin = {};
+
+        coin.name = CRYPTO_CURRENCY.ETH;
+        coin.color = 'linear-gradient(-135deg, #D772FF 0%, #9B10F2 45%, #9E53E1 100%)';
+        coin.icon = iconEth;
+        const priceBuy = eth.buyBalance > 0 ? formatMoneyByLocale(priceBuyETH, currency) : '-';
+        const priceSell = eth.sellBalance > 0 ? formatMoneyByLocale(priceSellETH, currency) : '-';
+        coin.txtBuy = `${priceBuy} ${priceBuy !== '-' ? currency : ''} ${priceBuy !== '-' ? `- ${formatAmountCurrency(eth.buyBalance)} ${CRYPTO_CURRENCY.ETH}` : ''}`;
+        coin.txtSell = `${priceSell} ${priceSell !== '-' ? currency : ''} ${priceSell !== '-' ? `- ${formatAmountCurrency(eth.sellBalance)} ${CRYPTO_CURRENCY.ETH}` : ''}`;
+
+        const status = HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[eth.status];
+        if (status === HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.ACTIVE) {
+          coin.onClose = this.onHandleDeleteOfferItem;
+        }
+
+        coins.push(coin);
+      }
+    }
+
+    if (offer.itemFlags.BTC) {
+      const btc = offer.items.BTC;
+      if (!this.isEmptyBalance(btc)) {
+        const coin = {};
+
+        coin.name = CRYPTO_CURRENCY.BTC;
+        coin.color = 'linear-gradient(45deg, #FF8006 0%, #FFA733 51%, #FFC349 100%)';
+        coin.icon = iconBtc;
+        const priceBuy = btc.buyBalance > 0 ? formatMoneyByLocale(priceBuyBTC, currency) : '-';
+        const priceSell = btc.sellBalance > 0 ? formatMoneyByLocale(priceSellBTC, currency) : '-';
+        coin.txtBuy = `${priceBuy} ${priceBuy !== '-' ? currency : ''} ${priceBuy !== '-' ? `- ${formatAmountCurrency(btc.buyBalance)} ${CRYPTO_CURRENCY.BTC}` : ''}`;
+        coin.txtSell = `${priceSell} ${priceSell !== '-' ? currency : ''} ${priceSell !== '-' ? `- ${formatAmountCurrency(btc.sellBalance)} ${CRYPTO_CURRENCY.BTC}` : ''}`;
+
+        const status = HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[btc.status];
+        if (status === HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.ACTIVE) {
+          coin.onClose = this.onHandleDeleteOfferItem;
+        }
+
+        coins.push(coin);
+      }
+    }
+
+    return coins;
+  }
+
+  onHandleDeleteOfferItem = (currency) => {
+    const { offer } = this;
+
+    for (const item of Object.values(offer.items)) {
+      if (item.currency === currency) {
+        this.confirmDeleteOfferItem(item);
+        break;
+      }
+    }
+  }
+
   confirmDeleteOfferItem = (item) => {
     this.deleteItem = item;
     const { confirmOfferAction } = this.props;
@@ -340,6 +443,8 @@ class FeedMeOfferStoreContainer extends React.PureComponent {
     const offer = OfferShop.offerShop(JSON.parse(extraData));
     this.offer = offer;
 
+    const coins = this.getCoinList();
+
     const from = <FormattedMessage id="ex.me.label.from" />;
     // const email = this.getEmail();
     const statusValue = HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[offer.status];
@@ -360,7 +465,7 @@ class FeedMeOfferStoreContainer extends React.PureComponent {
       nameShop,
       messageMovingCoin,
       // actionButtons,
-      confirmDeleteOfferItem: this.confirmDeleteOfferItem,
+      coins,
     };
 
     return (

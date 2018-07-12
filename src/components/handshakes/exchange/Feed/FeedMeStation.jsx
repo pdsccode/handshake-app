@@ -2,32 +2,17 @@ import React from 'react';
 import './FeedMe.scss';
 import './FeedMeStation.scss';
 import {
-  CRYPTO_CURRENCY,
-  EXCHANGE_ACTION,
   FIAT_CURRENCY,
   HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS,
   HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE,
-  URL,
 } from '@/constants';
-import { daysBetween, formatAmountCurrency, formatMoneyByLocale, getOfferPrice } from '@/services/offer-util';
+import { daysBetween, formatAmountCurrency, formatMoneyByLocale } from '@/services/offer-util';
 import iconSpinner from '@/assets/images/icon/icons8-spinner.gif';
 import iconAvatar from '@/assets/images/icon/avatar.svg';
 import StarsRating from '@/components/core/presentation/StarsRating';
 import CoinCards from '@/components/handshakes/exchange/components/CoinCards';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import { showAlert } from '@/reducers/app/action';
-
-import iconBtc from '@/assets/images/icon/coin/icon-btc.svg';
-import iconEth from '@/assets/images/icon/coin/icon-eth.svg';
-
-window.Clipboard = (function (window, document, navigator) {
-  let textArea,
-    copy; function isOS() { return navigator.userAgent.match(/ipad|iphone/i); } function createTextArea(text) { textArea = document.createElement('textArea'); textArea.value = text; document.body.appendChild(textArea); } function selectText() {
-    let range,
-      selection; if (isOS()) { range = document.createRange(); range.selectNodeContents(textArea); selection = window.getSelection(); selection.removeAllRanges(); selection.addRange(range); textArea.setSelectionRange(0, 999999); } else { textArea.select(); }
-  } function copyToClipboard() { document.execCommand('copy'); document.body.removeChild(textArea); } copy = function (text) { createTextArea(text); selectText(); copyToClipboard(); }; return { copy };
-}(window, document, navigator));
 
 class FeedMeStation extends React.PureComponent {
   constructor(props) {
@@ -35,15 +20,12 @@ class FeedMeStation extends React.PureComponent {
 
     this.state = {
       timePassing: '',
-      coins: [],
       isShowTimer: false,
     };
   }
 
   componentDidMount() {
     const { messageMovingCoin, offer } = this.props;
-
-    this.getCoinList();
 
     const eth = offer.items.ETH;
     const btc = offer.items.BTC;
@@ -86,122 +68,7 @@ class FeedMeStation extends React.PureComponent {
     }
   }
 
-  handleFocus = (e) => {
-    e.currentTarget.select();
-  }
-
-  showToast(mst) {
-    this.showAlert(mst, 'primary', 2000);
-  }
-
-  updateRestoreWalletValue = (evt) => {
-    this.setState({
-      inputRestoreWalletValue: evt.target.value,
-    });
-  }
-
-  getPrices = () => {
-    const { offer, listOfferPrice, fiatCurrency } = this.props;
-
-    let priceBuyBTC;
-    let priceSellBTC;
-    let priceBuyETH;
-    let priceSellETH;
-
-    const eth = offer.items.ETH;
-    const btc = offer.items.BTC;
-
-    if (listOfferPrice) {
-      let offerPrice = getOfferPrice(listOfferPrice, EXCHANGE_ACTION.BUY, CRYPTO_CURRENCY.BTC, fiatCurrency);
-      priceBuyBTC = offerPrice.price * (1 + btc?.buyPercentage / 100) || 0;
-
-      offerPrice = getOfferPrice(listOfferPrice, EXCHANGE_ACTION.SELL, CRYPTO_CURRENCY.BTC, fiatCurrency);
-      priceSellBTC = offerPrice.price * (1 + btc?.sellPercentage / 100) || 0;
-
-      offerPrice = getOfferPrice(listOfferPrice, EXCHANGE_ACTION.BUY, CRYPTO_CURRENCY.ETH, fiatCurrency);
-      priceBuyETH = offerPrice.price * (1 + eth?.buyPercentage / 100) || 0;
-
-      offerPrice = getOfferPrice(listOfferPrice, EXCHANGE_ACTION.SELL, CRYPTO_CURRENCY.ETH, fiatCurrency);
-      priceSellETH = offerPrice.price * (1 + eth?.sellPercentage / 100) || 0;
-    }
-
-    return {
-      priceBuyBTC, priceSellBTC, priceBuyETH, priceSellETH,
-    };
-  }
-
-  isEmptyBalance = (item) => {
-    const { buyBalance, sellBalance } = item;
-    return !(buyBalance > 0 || sellBalance > 0);
-  }
-
-  getCoinList = () => {
-    const { offer, fiatCurrency: currency } = this.props;
-    const coins = [];
-    const {
-      priceBuyBTC, priceSellBTC, priceBuyETH, priceSellETH,
-    } = this.getPrices();
-
-    if (offer.itemFlags.ETH) {
-      const eth = offer.items.ETH;
-      if (!this.isEmptyBalance(eth)) {
-        const coin = {};
-
-        coin.name = CRYPTO_CURRENCY.ETH;
-        coin.color = 'linear-gradient(-135deg, #D772FF 0%, #9B10F2 45%, #9E53E1 100%)';
-        coin.icon = iconEth;
-        const priceBuy = eth.buyBalance > 0 ? formatMoneyByLocale(priceBuyETH, currency) : '-';
-        const priceSell = eth.sellBalance > 0 ? formatMoneyByLocale(priceSellETH, currency) : '-';
-        coin.txtBuy = `${priceBuy} ${priceBuy !== '-' ? currency : ''} ${priceBuy !== '-' ? `- ${formatAmountCurrency(eth.buyBalance)} ${CRYPTO_CURRENCY.ETH}` : ''}`;
-        coin.txtSell = `${priceSell} ${priceSell !== '-' ? currency : ''} ${priceSell !== '-' ? `- ${formatAmountCurrency(eth.sellBalance)} ${CRYPTO_CURRENCY.ETH}` : ''}`;
-
-        const status = HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[eth.status];
-        if (status === HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.ACTIVE) {
-          coin.onClose = this.deleteOfferItem;
-        }
-
-        coins.push(coin);
-      }
-    }
-
-    if (offer.itemFlags.BTC) {
-      const btc = offer.items.BTC;
-      if (!this.isEmptyBalance(btc)) {
-        const coin = {};
-
-        coin.name = CRYPTO_CURRENCY.BTC;
-        coin.color = 'linear-gradient(45deg, #FF8006 0%, #FFA733 51%, #FFC349 100%)';
-        coin.icon = iconBtc;
-        const priceBuy = btc.buyBalance > 0 ? formatMoneyByLocale(priceBuyBTC, currency) : '-';
-        const priceSell = btc.sellBalance > 0 ? formatMoneyByLocale(priceSellBTC, currency) : '-';
-        coin.txtBuy = `${priceBuy} ${priceBuy !== '-' ? currency : ''} ${priceBuy !== '-' ? `- ${formatAmountCurrency(btc.buyBalance)} ${CRYPTO_CURRENCY.BTC}` : ''}`;
-        coin.txtSell = `${priceSell} ${priceSell !== '-' ? currency : ''} ${priceSell !== '-' ? `- ${formatAmountCurrency(btc.sellBalance)} ${CRYPTO_CURRENCY.BTC}` : ''}`;
-
-        const status = HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[btc.status];
-        if (status === HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.ACTIVE) {
-          coin.onClose = this.deleteOfferItem;
-        }
-
-        coins.push(coin);
-      }
-    }
-
-    this.setState({ coins });
-  }
-
-  deleteOfferItem = (currency) => {
-    const { offer, confirmDeleteOfferItem } = this.props;
-
-    for (const item of Object.values(offer.items)) {
-      if (item.currency === currency) {
-        confirmDeleteOfferItem(item);
-        break;
-      }
-    }
-  }
-
   render() {
-    const { messages } = this.props.intl;
     const {
       statusText, nameShop, messageMovingCoin,
       review, reviewCount, fiatCurrency,
@@ -210,8 +77,9 @@ class FeedMeStation extends React.PureComponent {
       transactionPending,
       transactionRevenue,
       transactionTotal,
+      coins,
     } = this.props;
-    const { coins, isShowTimer } = this.state;
+    const { isShowTimer } = this.state;
 
     // console.log('thisss', this.props);
     return (
@@ -269,7 +137,6 @@ class FeedMeStation extends React.PureComponent {
 
 const mapState = (state) => {
   const dashboardInfo = state.exchange.dashboardInfo;
-  const listOfferPrice = state.exchange.listOfferPrice;
 
   let transactionSuccessful = 0;
   let transactionFailed = 0;
@@ -304,7 +171,6 @@ const mapState = (state) => {
 
   return {
     dashboardInfo,
-    listOfferPrice,
     transactionSuccessful,
     transactionFailed,
     transactionPending,
@@ -314,7 +180,6 @@ const mapState = (state) => {
 };
 
 const mapDispatch = ({
-  showAlert,
 });
 
 export default injectIntl(connect(mapState, mapDispatch)(FeedMeStation));
