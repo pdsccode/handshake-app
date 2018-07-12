@@ -612,6 +612,10 @@ class BettingFilter extends React.Component {
               this.modalLuckyRealRef.open();
               }
             }
+            onCancelClick={() => {
+                this.closeShakePopup();
+              }
+            }
           />
         </ModalDialog>
         <ModalDialog className="modal" onRef={(modal) => { this.modalBetFreeRef = modal; return null; }}>
@@ -631,6 +635,10 @@ class BettingFilter extends React.Component {
               this.modalLuckyFreeRef.open();
               }
             }
+            onCancelClick={() => {
+              this.closeShakePopup();
+            }
+          }
           />
         </ModalDialog>
         <ModalDialog className="modal" onRef={(modal) => { this.modalLuckyRealRef = modal; return null; }}>

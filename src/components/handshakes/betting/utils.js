@@ -3,7 +3,7 @@ import { BettingHandshake } from '@/services/neuron';
 import local from '@/services/localStore';
 import moment from 'moment';
 import { APP } from '@/constants';
-import { BET_TYPE, MESSAGE_SERVER } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
+import { BET_TYPE, MESSAGE_SERVER, MESSAGE } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
 import {BigNumber} from 'bignumber.js';
 import _ from 'lodash';
 export const parseBigNumber = (value)=>{
@@ -109,13 +109,7 @@ export const foundShakeList = (item, offchain) => {
     const shakedList = shakersArr.filter(element => element.shaker_id === profile.id);
     console.log('foundShakedList:', shakedList);
     return shakedList;
-    /*
-      if (shakedList) {
-        foundShakedItem.outcome_id = outcome_id;
-        foundShakedItem.from_address = from_address;
-        return foundShakedItem;
-      }
-      */
+
   }
 
   return [];
@@ -123,13 +117,7 @@ export const foundShakeList = (item, offchain) => {
 export const isExistMatchBet = (list) => {
   for (let i = 0; i < list.length; i += 1) {
     const element = list[i];
-    /*
-      const { offchain } = element;
-      const shakeItem = foundShakeItem(element, offchain);
-      if(shakeItem){
-        return true;
-      }
-      */
+
     const { type } = element;
     console.log('Sa element:', element);
 
@@ -141,21 +129,53 @@ export const isExistMatchBet = (list) => {
 };
 
 export const isInitBet = (dict) => {
-  /*
-    const { shakers } = dict;
-    if (shakers.length == 0) {
-      const profile = local.get(APP.AUTH_PROFILE);
-      console.log('User Profile Id:', profile.id);
-      const { user_id } = dict;
-      if (user_id && profile.id === user_id) {
-        return true;
-      }
-    }
-    return false;
-    */
+
   const { type } = dict;
   if (type === BET_TYPE.INIT) {
     return true;
   }
   return false;
+};
+
+export const validateBet = async (amount = 0, odds = 0, closingDate, matchName = '', matchOutcome = '', freeBet=false) => {
+  const balance = await getBalance();
+  const estimateGas = await getEstimateGas();
+  const estimatedGasBN = parseBigNumber(estimateGas.toString()||0);
+  const total = amount.plus(estimatedGasBN).toNumber()||0;
+  let result = { status: true, message: '' };
+  if (!isRightNetwork()) {
+    result.message = MESSAGE.RIGHT_NETWORK;
+    result.status = false;
+    return result;
+  }
+
+  if (matchName.length === 0 || matchOutcome.length === 0) {
+    result.message = MESSAGE.CHOOSE_MATCH;
+    result.status = false;
+    return result;
+  }
+
+  if (isExpiredDate(closingDate)) {
+    result.message = MESSAGE.MATCH_OVER;
+    result.status = false;
+    return result;
+  }
+  if (amount <= 0) {
+    result.message = MESSAGE.AMOUNT_VALID;
+    result.status = false;
+    return result;
+  }
+
+  if (total > balance && !freeBet) {
+    result.message = MESSAGE.NOT_ENOUGH_BALANCE;
+    result.status = false;
+    return result;
+  }
+
+  if (odds <= 1 || odds >= 12) {
+    result.message = MESSAGE.ODD_LARGE_THAN;
+    result.status = false;
+    return result;
+  }
+  return result;
 };

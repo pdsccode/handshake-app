@@ -19,8 +19,8 @@ import Button from '@/components/core/controls/Button';
 
 import { showAlert } from '@/reducers/app/action';
 import {
-  getMessageWithCode, isExpiredDate, getChainIdDefaultWallet, getBalance,
-  getEstimateGas, getAddress, isRightNetwork,
+  getMessageWithCode, getChainIdDefaultWallet,
+  getEstimateGas, getAddress, validateBet,
 } from '@/components/handshakes/betting/utils';
 import { BetHandshakeHandler, MESSAGE, SIDE } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
 
@@ -106,7 +106,7 @@ class BetingShakeFree extends React.Component {
     this.setState({
       disable: true,
     });
-    const { isShowOdds, isChangeOdds, estimateGas } = this.state;
+    const { estimateGas } = this.state;
     const {
       matchName, matchOutcome, amount, marketAgainstOdds, marketSupportOdds, closingDate, reportTime,
     } = this.props;
@@ -114,13 +114,14 @@ class BetingShakeFree extends React.Component {
     // const amount = parseFloat(values.amount.value);
     const side = parseInt(this.toggleRef.value, 10);
 
-    const marketOdds = side === SIDE.SUPPORT ? marketSupportOdds : marketAgainstOdds;
+    //const marketOdds = side === SIDE.SUPPORT ? marketSupportOdds : marketAgainstOdds;
 
-    const balance = new BigNumber(await getBalance());
+    //const balance = new BigNumber(await getBalance());
     const estimatedGas = new BigNumber(estimateGas);
     const odds = new BigNumber(this.refs.odds.value);
     const total = amountS.plus(estimatedGas);
 
+    /*
     let message = null;
     if (!isRightNetwork()) {
       message = MESSAGE.RIGHT_NETWORK;
@@ -147,6 +148,27 @@ class BetingShakeFree extends React.Component {
       });
       this.setState({ disable: false });
     }
+    */
+   const validate = await validateBet(amountS, odds, closingDate, matchName, matchOutcome, true);
+   const { status, message } = validate;
+   if(status){
+    this.initHandshake(amountS, odds);
+    this.props.onSubmitClick();
+
+   }else {
+    if (message) {
+      this.props.showAlert({
+        message: <div className="text-center">{message}</div>,
+        timeOut: 3000,
+        type: 'danger',
+        callBack: () => {
+        },
+      });
+      this.setState({ disable: false });
+    }
+   }
+
+
   }
 
   onCancel() {
@@ -169,7 +191,7 @@ class BetingShakeFree extends React.Component {
     */
 
     this.setState({
-      oddValue: marketOdds.toFixed(2,1),
+      oddValue: Math.floor(marketOdds * ROUND_ODD) / ROUND_ODD,
     }, () => this.updateTotal());
 
 
