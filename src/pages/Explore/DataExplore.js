@@ -214,7 +214,6 @@ class DataExplore extends React.Component {
   render() {
     return (
       <Visibility once={true} onUpdate={this.handleUpdate}>
-<<<<<<< HEAD
         <Segment vertical >  
             <Card.Group centered style={{marginTop: '-2em'}}>
                   <Card  className="my-card" style={{background:'#21c364' ,    marginBottom: '12px'}}> 
@@ -226,10 +225,6 @@ class DataExplore extends React.Component {
                       </Card.Content>
                     </Link> 
                   </Card>
-=======
-        <Segment vertical>
-            <Card.Group centered   >
->>>>>>> 6b81097cfb49b435f191e7fda0d9a7e95b46ac0e
                   {this.state.categories.map((cat, i) => {
                     return (
                       <Card key={i} className="my-card">
