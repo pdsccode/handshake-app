@@ -1,5 +1,5 @@
 import React from 'react';
-import {Grid, Image, Container, Card, Header,  Form,Divider, Segment, Dropdown, Visibility, Modal, List, Button, Icon} from 'semantic-ui-react'
+import {Grid, Image, Container, Card, Header,  Form,Divider, Segment, Dropdown, Visibility, Modal, List, Button, Icon, Confirm} from 'semantic-ui-react'
 // import {AuthConsumer} from './AuthContext'
 import {Route, Redirect} from 'react-router'
 import agent from '../../services/agent'
@@ -9,8 +9,11 @@ import {Link} from 'react-router-dom'
 import {iosHeartOutline, iosCopyOutline,androidDone, iosHeart, iosCheckmarkOutline,  iosPlusOutline} from 'react-icons-kit/ionicons'
 import { withBaseIcon } from 'react-icons-kit'
 const SideIconContainer =  withBaseIcon({ size:28, color:'black'})
- 
+
 import {blockchainNetworks } from '@/constants';
+
+import {MasterWallet} from '@/services/Wallets/MasterWallet';
+import {Dataset} from '@/services/Wallets/Tokens/Dataset';
 
 import activity_active_icon from '@/assets/icons/activityactive.svg';
 import activity_icon from '@/assets/icons/activity.svg';
@@ -36,7 +39,7 @@ function LikedIcon(props) {
   );
 }
 
-function ClassifiedIcon(props) { 
+function ClassifiedIcon(props) {
   if (props.classified) {
     return <a href='javascript:void(0);' style={{color:'#333'}}>
         <img class="my-icon" src={plus_active_icon}/>
@@ -47,6 +50,21 @@ function ClassifiedIcon(props) {
        <img class="my-icon" src={plus_icon}/>
     </a>
   );
+}
+
+function ConfirmModal() {
+  return (
+    <div class='content'>
+      <h3>You want to buy this dataset?</h3>
+      <p>Confirm text</p>
+    </div>
+  )
+}
+
+function ConfirmButton() {
+  return (
+    <Button positive>OK</Button>
+  )
 }
 
 class DataDetail extends React.Component {
@@ -71,7 +89,8 @@ class DataDetail extends React.Component {
         classifyId: null,
         searchableClassfies: []
       },
-      category: null
+      category: null,
+      open: false
     };
     this.handleLikeImage = this.handleLikeImage.bind(this);
     this.handleClassifyImage = this.handleClassifyImage.bind(this);
@@ -319,15 +338,46 @@ class DataDetail extends React.Component {
     );
   }
 
+  showConfirm(){
+    console.log('here')
+    this.setState({ open: true })
+  }
+
+  async handleConfirmBuy() {
+    let tx;
+    try {
+      const dataset = new Dataset();
+      dataset.createFromWallet(MasterWallet.getWalletDefault('ETH'));
+      tx = await dataset.buy(this.state.category.id, 1);
+    } catch (e) {
+      console.log(e);
+      this.setState({ open: false });
+    }
+
+    const data = {
+      category: this.state.category.id,
+      tx: tx?.transactionHash||''
+    };
+    agent.req.post(agent.API_ROOT + '/api/buy/', data).set('authorization', `JWT ${this.props.token}`).type('form')
+      .then((response) => {
+        console.log(response);
+        this.setState({ open: false });
+      })
+      .catch((e) => {
+        console.log(e);
+        this.setState({ open: false });
+      });
+  }
+
   render() {
     let self = this;
     return (
-      <Visibility once={true} onUpdate={this.handleUpdate}>  
-        <Segment vertical  style={{float: 'left',marginTop:'-5em',background:'white',zIndex:'55555'}}>   
-           {/* <h2 className="my-card-header" 
-              style={{padding: '0em 15px', marginBottom:'25px', float:'left'}}> 
+      <Visibility once={true} onUpdate={this.handleUpdate}>
+        <Segment vertical  style={{float: 'left',marginTop:'-5em',background:'white',zIndex:'55555'}}>
+           {/* <h2 className="my-card-header"
+              style={{padding: '0em 15px', marginBottom:'25px', float:'left'}}>
                 <Image style={{marginLeft:'-20px',float:'left'}} src={"https://chart.googleapis.com/chart?chs=100x100&cht=qr&chl="+(this.state.category ? this.state.category.contract_address : '')+"&choe=UTF-8"}/>
-                
+
                 <div style={{float:'left', marginTop:'8px!important'}}>
                   <div class="row" style={{fontSize:'16px'}} >{this.state.category ? this.state.category.name :''}</div>
                   <div class="row" style={{fontSize:'12px'}}>{this.state.category ? this.state.category.desc :''}</div>
@@ -336,14 +386,14 @@ class DataDetail extends React.Component {
                 <div className='ui three button' style={{padding:'0', background:'none', float:'left',width:'100%', textAlign:'left'}}>
                     <Button basic size="mini" color='grey' content={'Follow'} ></Button>
                     <Button basic size="mini"color='grey' content={this.state.category && this.state.category.total_images ? `Img ${this.state.category.total_images}` : 'Images 0'} ></Button>
-                    <Button basic size="mini" color='teal' content='BUY NOW' ></Button>
+                    <Button basic size="mini" color='teal' content='BUY NOW' onClick={() => this.showConfirm()} ></Button>
                 </div>
             </h2> */}
             <h2 className="my-h2-dataset-new">
                   Explore / {this.state.category ? this.state.category.name :''}
                   <Link to={'/explore'}><Image src={closeTop} className="btn-Close-Top"/></Link>
-              </h2> 
-           <Container style={{marginLeft:'-20px',float:'left'}}> 
+              </h2>
+           <Container style={{marginLeft:'-20px',float:'left'}}>
                 <Card.Group centered >
                   <Card className="my-card" style={{ marginBottom: '1em', paddingBottom: '1em'}}>
                     <Card.Content>
@@ -355,26 +405,26 @@ class DataDetail extends React.Component {
                             <List>
                             <List.Item style={{fontSize:'14px', fontWeight:'700',marginTop:'-5px', paddingTop:'5px',background:'white' }}>{this.state.category ? this.state.category.name :''} </List.Item>
                             { (this.state.category!=null && this.state.category.desc !=null) ?
-                              <List.Item>{this.state.category ? this.state.category.desc :''}</List.Item> 
+                              <List.Item>{this.state.category ? this.state.category.desc :''}</List.Item>
                               :""
                             }
                             <List.Item><span style={{fontWeight:'700'}}>Quantity: </span> {this.state.category && this.state.category.total_images ? `${this.state.category.total_images} Images` : '0 Image'} </List.Item>
-                            <List.Item style={{ marginRight: '15px',overflow: 'hidden',display: 'flex'}}> 
-                                    <span style={{fontWeight:'700'}} >Address: </span> 
+                            <List.Item style={{ marginRight: '15px',overflow: 'hidden',display: 'flex'}}>
+                                    <span style={{fontWeight:'700'}} >Address: </span>
                                     <span style={{ float: 'left',marginTop: '0px',marginLeft: '6px'}}>{blockchainNetworks.ethereum.contracts.dadsetTokenAddress}</span>
                                     <Image src={copyTop} className="btn-Close-Top" style={{ bottom: '40px',top: 'initial',right: '14px'}}/>
                               </List.Item>
-                            <List.Item style={{ marginTop: '10px', marginLeft: '-20px'}} ><Button basic size="mini" basic color='black' className="my-btn-buy-eth" content='Buy Now' ></Button></List.Item>
+                            <List.Item style={{ marginTop: '10px', marginLeft: '-20px'}} ><Button basic size="mini" basic color='black' className="my-btn-buy-eth" content='Buy Now' onClick={() => this.showConfirm()} ></Button></List.Item>
                             </List>
-                        </Grid.Column> 
+                        </Grid.Column>
                       </Grid>
                     </Card.Content>
                   </Card>
-                  {this.state.images.length ==0 ? 
+                  {this.state.images.length ==0 ?
                     <Card  className="my-card">
                           <Link className="ui image" to={"/upload"}>
                             <Image src={UPLOAD_EARN}/>
-                          </Link> 
+                          </Link>
                     </Card>
                     : ""
                   }
@@ -383,11 +433,11 @@ class DataDetail extends React.Component {
                       <Card key={i} className="my-card">
                           <Link className="ui image" to={"/explore/" + item.category.id}>
                               <Image src={item.link}/>
-                            </Link> 
+                            </Link>
                       </Card>
                     )
-                  })}  
-                </Card.Group> 
+                  })}
+                </Card.Group>
                 </Container>
               <Modal size='large'closeOnEscape closeIcon open={this.state.modal.open} onClose={this.closeModal} style={{height: '90%'}}>
                 <Modal.Header>Choose classify</Modal.Header>
@@ -401,10 +451,17 @@ class DataDetail extends React.Component {
               </Modal>
         </Segment>
         <Segment vertical loading={this.state.isLoading}/>
+        <Confirm
+          content={ConfirmModal()}
+          open={this.state.open}
+          onCancel={this.close}
+          onConfirm={() => this.handleConfirmBuy()}
+          confirmButton={ConfirmButton()}
+        />
       </Visibility>
 
     )
   }
 }
 export default DataDetail;
- 
+
