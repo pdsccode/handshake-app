@@ -23,8 +23,7 @@ class DataSetNew extends React.Component {
       Amount:"",
       classifiy:'',
       messageForm:'',
-      isLoading:false,
-      submitting: false
+      isLoading:false
     };
   }
 
@@ -136,9 +135,12 @@ class DataSetNew extends React.Component {
     agent.req.post(agent.API_ROOT + '/api/category/',datafrom ).set('authorization', `JWT ${this.props.token}`).type('form').then(async (response) => {
       let resBody = response.body;
 
-      const dataset = new Dataset();
-      dataset.createFromWallet(MasterWallet.getWalletDefault('ETH'));
-      const requestTx = dataset.request(resBody.id, resBody.tx, 1);
+      let requestTx;
+      if (this.state.datasettype ==="buyer"){
+        const dataset = new Dataset();
+        dataset.createFromWallet(MasterWallet.getWalletDefault('ETH'));
+        requestTx = dataset.request(resBody.id, resBody.tx, 1);
+      }
 
       let category = resBody.id;
       for (let i = 0; i < self.state.values.length; i++) {
@@ -153,10 +155,24 @@ class DataSetNew extends React.Component {
           })
         }
       }
-      const tx = await requestTx;
-      console.log(tx);
+
+      if (requestTx) {
+        const tx = await requestTx;
+        const data = {
+          category: resBody.id,
+          tx: tx.transactionHash
+        };
+        agent.req.post(agent.API_ROOT + '/api/buy/', data).set('authorization', `JWT ${this.props.token}`).type('form')
+          .then((response) => {
+            console.log('buy resp', response);
+          })
+          .catch((e) => {
+            console.log(e);
+          });
+      }
       this.setState({isLoading: false, datasetName:'', description:'',values:[], Quantity:'',Amount:'',messageForm:"Create dataset successfully." })
     }).catch((e) => {
+      console.log("creating dataset failed", e);
       let message = '';
       if (e.message.indexOf('insufficient funds') > -1) {
         message = 'You have insufficient coin to make the transfer. Please top up and try again.';
@@ -232,7 +248,7 @@ class DataSetNew extends React.Component {
             </Form.Field>
 
             <Form.Button fluid primary content='Submit' size='large'
-                style={{background:'#21c364',marginTop:'30px'}} loading={this.state.isLoading} onClick={this.handleSubmit} />
+                style={{background:'#21c364',marginTop:'30px'}} onClick={this.handleSubmit} />
           </Form>
         </Container>
       </Segment>
