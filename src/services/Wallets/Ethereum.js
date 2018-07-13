@@ -220,22 +220,26 @@ export class Ethereum extends Wallet {
 
   cook(data){
     let value = 0, transaction_date = new Date(), addresses = [],
-      is_sent = true, is_error = false, transaction_no = "", token = {}, coin_name = "ETH";
+      is_sent = 0, is_error = false, transaction_no = "", token = {}, coin_name = "ETH";
 
     if(data){
       try{
         value = Number(data.value / 1000000000000000000);
         transaction_date = new Date(data.timeStamp*1000);
-        is_sent = String(data.from).toLowerCase() == this.address.toLowerCase();
         is_error = Boolean(data.isError == "1");
         transaction_no = data.hash;
+
+        if(String(data.from).toLowerCase() == this.address.toLowerCase() && String(data.to).toLowerCase() != this.address.toLowerCase())
+          is_sent = 1;
+        else if (String(data.from).toLowerCase() != this.address.toLowerCase() && String(data.to).toLowerCase() == this.address.toLowerCase())
+          is_sent = 2;
       }
       catch(e){
         console.error(e);
       }
 
       let addr = data.from;
-      if(is_sent) addr = data.to;
+      if(is_sent == 1) addr = data.to;
 
       token = this.checkToken(addr);
       if(token.result){
