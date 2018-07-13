@@ -552,7 +552,8 @@ class Component extends React.Component {
   }
 
   render() {
-    const { currency, listOfferPrice, ipInfo: { currency: fiatCurrency }, customizePriceBuy, customizePriceSell, amountBuy, amountSell, freeStartInfo, isChooseFreeStart} = this.props;
+    const { currency, listOfferPrice, stationCurrency, customizePriceBuy, customizePriceSell, amountBuy, amountSell, freeStartInfo, isChooseFreeStart} = this.props;
+    const fiatCurrency = stationCurrency?.id;
     const modalContent = this.state.modalContent;
     const allowInitiate = this.offer ? (!this.offer.itemFlags.ETH || !this.offer.itemFlags.BTC) : true;
     const showChooseFiatCurrency = this.offer ? (!this.offer.itemFlags.ETH && !this.offer.itemFlags.BTC) : true;
@@ -781,11 +782,12 @@ const mapStateToProps = (state) => {
   const nameShop = selectorFormExchangeCreate(state, "nameShop");
   const phone = selectorFormExchangeCreate(state, "phone");
   const address = selectorFormExchangeCreate(state, "address");
+  const stationCurrency = selectorFormExchangeCreate(state, "stationCurrency");
 
   return {
     currency, amountBuy, amountSell,
     customizePriceBuy, customizePriceSell,
-    nameShop, phone, address,
+    nameShop, phone, address, stationCurrency,
     ipInfo: state.app.ipInfo,
     authProfile: state.auth.profile,
     offerStores: state.exchange.offerStores,
