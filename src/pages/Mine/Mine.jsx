@@ -1,8 +1,8 @@
 import React from 'react';
-import { compose } from 'redux';
+// import { compose } from 'redux';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { withFirebase } from 'react-redux-firebase';
+// import { withFirebase } from 'react-redux-firebase';
 // action, mock
 import { fireBaseExchangeDataChange, loadMyHandshakeList, fireBaseBettingChange } from '@/reducers/me/action';
 import { API_URL, APP, HANDSHAKE_ID } from '@/constants';

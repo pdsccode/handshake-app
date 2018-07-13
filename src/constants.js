@@ -467,6 +467,7 @@ export const URL = {
   DATA_SET_FEED_MINE_INDEX: '/mine',
 
   DATA_SET_DISCOVER: '/explore',
+  
   DATA_SET_DISCOVER_INDEX: '/explore',
   DATA_SET_DISCOVER_CREATE:'/explore/create',
   DATA_SET_DISCOVER_DETAIL: '/explore/:slug',
@@ -474,8 +475,8 @@ export const URL = {
   DATA_SET_UPLOAD: '/upload',
   DATA_SET_UPLOAD_INDEX: '/upload',
 
-  DATA_SET_HISTORY: '/hist',
-  DATA_SET_HISTORY_INDEX: '/hist',
+  DATA_SET_HISTORY: '/history',
+  DATA_SET_HISTORY_INDEX: '/history',
 
   HANDSHAKE_ME: '/me',
   HANDSHAKE_ME_INDEX: '/me',
