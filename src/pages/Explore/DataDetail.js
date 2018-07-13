@@ -320,20 +320,24 @@ class DataDetail extends React.Component {
   render() {
     let self = this;
     return (
-      <Visibility once={true} onUpdate={this.handleUpdate}> 
-        <h2 className="header my-card-header">
-                <Image style={{marginLeft:'-20px'}} src={"https://chart.googleapis.com/chart?chs=100x100&cht=qr&chl="+(this.state.category ? this.state.category.contract_address : '')+"&choe=UTF-8"}/>
-                <span style={{float:'left',marginTop:'-50px',marginLeft: '80px'}}> {this.state.category ? this.state.category.name :''} </span>
-                <Header.Subheader>
-                  </Header.Subheader>
-                <div className='ui three'>
-                    <Button basic color='grey' content={this.state.category && this.state.category.total_followers ? `F ${this.state.category.total_followers}` : 'Followers 0'} ></Button>
-                    <Button basic color='grey' content={this.state.category && this.state.category.total_images ? `Img ${this.state.category.total_images}` : 'Images 0'} ></Button>
-                    <Button basic color='grey' content='BUY NOW' ></Button>
+      <Visibility once={true} onUpdate={this.handleUpdate}>  
+        <Segment vertical>   
+          <h2 className="my-card-header" 
+              style={{padding: '0em 15px', marginBottom:'25px', float:'left'}}> 
+                <Image style={{marginLeft:'-20px',float:'left'}} src={"https://chart.googleapis.com/chart?chs=100x100&cht=qr&chl="+(this.state.category ? this.state.category.contract_address : '')+"&choe=UTF-8"}/>
+                
+                <div style={{float:'left', marginTop:'8px!important'}}>
+                  <div class="row" style={{fontSize:'16px'}} >{this.state.category ? this.state.category.name :''}</div>
+                  <div class="row" style={{fontSize:'12px'}}>{this.state.category ? this.state.category.desc :''}</div>
+                </div>
+
+                <div className='ui three button' style={{padding:'0', background:'none', float:'left',width:'100%', textAlign:'left'}}>
+                    <Button basic size="mini" color='grey' content={'Follow'} ></Button>
+                    <Button basic size="mini"color='grey' content={this.state.category && this.state.category.total_images ? `Img ${this.state.category.total_images}` : 'Images 0'} ></Button>
+                    <Button basic size="mini" color='teal' content='BUY NOW' ></Button>
                 </div>
             </h2>
-        <Segment vertical>   
-           <Container> 
+           <Container style={{marginLeft:'-20px',float:'left'}}> 
                 <Card.Group centered >
                   {this.state.images.map((item, i) => {
                     return (

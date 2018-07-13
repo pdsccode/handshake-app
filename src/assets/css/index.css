@@ -4,16 +4,9 @@
 
 .ui.container .button{
     margin-top: -9px;
-}
-:root{
-    --font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-    --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-    font-family: Roboto;
-}
-
+} 
 body{
     background-color: #FFF;
-    font-family: Roboto!important;
 }
 
 .ui.inverted.menu { 
@@ -396,8 +389,7 @@ line-height: 32px; */
     height: 30px!important;
     margin-right: 0px!important;
     text-transform: uppercase!important;
-    padding: 0em 2em!important;
-    font-family: Roboto!important;
+    padding: 0em 2em!important; 
 }
 .ui.fluid.search .results{
     text-align: left;
@@ -407,7 +399,7 @@ line-height: 32px; */
     justify-content: left;
     text-align: left;
     padding: 0em 0.6em;
-    margin-top: -18px!important;
+    margin-top: -43px!important; 
 }
 
 .footer ul{
@@ -452,20 +444,18 @@ line-height: 32px; */
 }
 .ui.form .field .ui.input input, .ui.form .fields .field .ui.input input {
     width: auto;
-    font-family: Roboto;
     border: none;
     box-shadow: none;
-    border-bottom: 1px solid #bdbdbd;
+    border-bottom: 1px solid rgba(232,232,232,0.5);
     border-radius: 0px;
-    padding: 5px 0px;
+    padding: 8px 0px 8px 0px;
 }
 
-.my-h2-dataset-new{
-    font-family: Roboto;
+.my-h2-dataset-new{ 
     font-size: 18px;
-    border-bottom: 1px solid #bdbdbd;
+    border-bottom: 1px solid rgba(232,232,232,0.5);
     margin-bottom: 30px;
-    padding-bottom: 10px;
+    padding-bottom: 14px;
     margin-top: -5px!important;
     color:#000000;
 }
@@ -483,12 +473,18 @@ line-height: 32px; */
 
 .ui.basic.teal.label {
     background-color: #fff!important;
-    color: #00b5ad!important;
-    border-color: #00b5ad!important;
+    color: #262628!important;
+    border: 1px solid #21c364!important;
     margin-bottom: 10px;
     margin-left: 6px;
+    border-radius: 30px;
+    padding: 8px 18px;
 }
-
 .loading{
     display: block;
+}
+
+.ui.form .field>label{
+    text-align: left;
+    font-size: 14px;
 }

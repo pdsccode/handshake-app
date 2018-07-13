@@ -159,13 +159,13 @@ class DataSetNew extends React.Component {
         <Container>
           <Form onSubmit={()=>console.log("D")}>
             <Form.Group widths='equal'>
-              <Form.Input required fluid placeholder='Dataset name' name='datasetName' value={this.state.datasetName}
+              <Form.Input label ="Dataset name" fluid placeholder='Dataset name' name='datasetName' value={this.state.datasetName}
                           onChange={this.handleChangeInput}/>
 
-              <Form.Input required fluid placeholder='Description' name='description' value={this.state.description}
+              <Form.Input label ="Description" fluid placeholder='Description' name='description' value={this.state.description}
                           onChange={this.handleChangeInput}/>
               
-              <Form.Input fluid placeholder='Classification' 
+              <Form.Input label ="Classification" fluid placeholder='Classification' 
                           name='classifiy' value={this.state.classifiy}
                           onChange={this.handleChangeInput}
                           />    
@@ -178,7 +178,7 @@ class DataSetNew extends React.Component {
                 {this.createUI2()}
             </Form.Group>
 
-            <Form.Group inline>
+            <Form.Group inline style={{marginTop:'10px'}}>
               <label>You're a ? </label>
               <Form.Radio 
                 label='Buyer'
@@ -198,11 +198,14 @@ class DataSetNew extends React.Component {
               <div style={{display: this.state.datasettype==="buyer" ? "block":"none"}}>
              
               <Form.Input
+               label ="Request quantity" 
                type='number' pattern="[0-9]*"
                fluid placeholder='Request quantity' name='Quantity' value={this.state.Quantity}
                           onChange={this.handleChangeInput}/> 
 
-              <Form.Input  type='number' pattern="[0-9.]*"
+              <Form.Input 
+              label ="Amount" 
+              type='number' pattern="[0-9.]*"
               fluid placeholder='I will pay for (ETH)' name='Amount' value={this.state.Amount}
                           onChange={this.handleChangeInput}/>
               </div>
@@ -212,7 +215,7 @@ class DataSetNew extends React.Component {
             </Form.Field>
 
             <Form.Button fluid primary content='Submit' size='large' 
-                style={{background:'#21c364',marginTop:'1em'}} onClick={this.handleSubmit} />
+                style={{background:'#21c364',marginTop:'30px'}} onClick={this.handleSubmit} />
           </Form>
         </Container>
       </Segment>
