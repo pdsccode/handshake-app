@@ -176,6 +176,7 @@ class Me extends React.Component {
     if (nextProps.me.list.length === 0 && nextProps.me.list.updateAt !== prevState.me.list.updateAt
       && prevState.handshakeIdActive === HANDSHAKE_ID.BETTING && prevState.firstTime) {
       rfChange(nameFormFilterFeeds, 'feedType', HANDSHAKE_ID.EXCHANGE);
+      rfChange(nameFormFilterFeeds, 'cash-show-type', CASH_TAB.TRANSACTION);
       return { handshakeIdActive: HANDSHAKE_ID.EXCHANGE, firstTime: false };
     }
 
