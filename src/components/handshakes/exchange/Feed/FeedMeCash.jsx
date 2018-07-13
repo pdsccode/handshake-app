@@ -97,8 +97,6 @@ class FeedMeCash extends React.PureComponent {
       fiatAmount,
       currency,
       fiatCurrency,
-      type,
-      userType,
     } = this.props;
     // console.log('thisss', this.props);
     return (
@@ -116,33 +114,16 @@ class FeedMeCash extends React.PureComponent {
           }
         </div>
         <div className="order-type">{message}</div>
-
-        {
-          (type === EXCHANGE_ACTION.SELL && userType === HANDSHAKE_USER.OWNER) || (type === EXCHANGE_ACTION.BUY && userType === HANDSHAKE_USER.SHAKED) ? (
-            <div>
-              <div className="info-wrapper">
-                <div className="label">{coinTitle}</div>
-                <div className="price">{`${formatAmountCurrency(amount)} ${currency}`}</div>
-              </div>
-              <div className="info-wrapper">
-                <div className="label">{cashTitle}</div>
-                <div className="price">{`${formatMoneyByLocale(fiatAmount, fiatCurrency)} ${fiatCurrency}`}</div>
-              </div>
-
-            </div>
-          ) : (
-            <div>
-              <div className="info-wrapper">
-                <div className="label">{cashTitle}</div>
-                <div className="price">{`${formatMoneyByLocale(fiatAmount, fiatCurrency)} ${fiatCurrency}`}</div>
-              </div>
-              <div className="info-wrapper">
-                <div className="label">{coinTitle}</div>
-                <div className="price">{`${formatAmountCurrency(amount)} ${currency}`}</div>
-              </div>
-            </div>
-          )
-        }
+        <div>
+          <div className="info-wrapper">
+            <div className="label">{coinTitle}</div>
+            <div className="price">{`${formatAmountCurrency(amount)} ${currency}`}</div>
+          </div>
+          <div className="info-wrapper">
+            <div className="label">{cashTitle}</div>
+            <div className="price">{`${formatMoneyByLocale(fiatAmount, fiatCurrency)} ${fiatCurrency}`}</div>
+          </div>
+        </div>
         <hr className="hrLine" />
         <div className="d-table w-100">
           <div className="d-table-cell align-middle" style={{ width: '42px' }}>

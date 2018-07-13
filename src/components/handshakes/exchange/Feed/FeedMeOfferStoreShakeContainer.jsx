@@ -159,23 +159,23 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
       case HANDSHAKE_USER.OWNER: {
         message = EXCHANGE_ACTION_ORDER[offer.type];
         if (offer.type === EXCHANGE_ACTION.BUY) {
-          cashTitle = <FormattedMessage id="ex.label.buying" />;
-          coinTitle = <FormattedMessage id="ex.label.receiving" />;
+          coinTitle = <FormattedMessage id="ex.label.buying" />;
+          cashTitle = <FormattedMessage id="ex.label.cost" />;
         } else if (offer.type === EXCHANGE_ACTION.SELL) {
-          cashTitle = <FormattedMessage id="ex.label.receiving" />;
           coinTitle = <FormattedMessage id="ex.label.selling" />;
+          cashTitle = <FormattedMessage id="ex.label.receiving" />;
         }
         break;
       }
       case HANDSHAKE_USER.SHAKED: {
         if (offer.type === EXCHANGE_ACTION.BUY) {
           message = EXCHANGE_ACTION_ORDER[EXCHANGE_ACTION.SELL];
-          cashTitle = <FormattedMessage id="ex.label.receiving" />;
           coinTitle = <FormattedMessage id="ex.label.selling" />;
+          cashTitle = <FormattedMessage id="ex.label.receiving" />;
         } else if (offer.type === EXCHANGE_ACTION.SELL) {
           message = EXCHANGE_ACTION_ORDER[EXCHANGE_ACTION.BUY];
-          cashTitle = <FormattedMessage id="ex.label.buying" />;
-          coinTitle = <FormattedMessage id="ex.label.receiving" />;
+          coinTitle = <FormattedMessage id="ex.label.buying" />;
+          cashTitle = <FormattedMessage id="ex.label.cost" />;
         }
         break;
       }
@@ -940,8 +940,6 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
       fiatAmount,
       currency: offer.currency,
       fiatCurrency: offer.fiatCurrency,
-      type: offer.type,
-      userType: this.userType,
     };
 
     return (

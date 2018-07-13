@@ -118,6 +118,7 @@ export default {
   'ex.label.seller': 'Seller',
   'ex.label.sale': 'Sale',
   'ex.label.purchase': 'Purchase',
+  'ex.label.cost': 'Cost',
 
   'ex.exchange.status.created': 'Verifying',
   'ex.exchange.status.active': 'Active',
@@ -142,8 +143,8 @@ export default {
   'ex.shop.explanation.shake': 'Accepted. You will receive coin in a few minutes.',
   'ex.shop.explanation.completing': 'Accepted. You will receive coin in a few minutes.',
   'ex.shop.explanation.completed': '',
-  'ex.shop.explanation.pre_shaking': 'Waiting for the other party to accept your offer.',
-  'ex.shop.explanation.pre_shake': 'Waiting for the other party to accept your offer.',
+  'ex.shop.explanation.pre_shaking': 'Waiting for the station to accept your offer.',
+  'ex.shop.explanation.pre_shake': 'Waiting for the station to accept your offer.',
   'ex.shop.explanation.rejecting': 'Rejecting the offer. Please wait a few minutes.',
   'ex.shop.explanation.rejected': '',
   'ex.shop.explanation.cancelling': 'Cancelling your offer. Please wait a few minutes.',
