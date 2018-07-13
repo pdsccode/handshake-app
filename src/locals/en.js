@@ -519,7 +519,7 @@ export default {
       shopDescription: 'Open for business',
       shopNoDataDescription: 'None yet. Set one up?',
       noDataMessage: 'Start a mission.',
-      filterBy: 'Filter buy:',
+      filterBy: 'Filter by:',
       cash: {
         predition: 'Prediction',
         cash: 'Cash',

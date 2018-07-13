@@ -109,13 +109,11 @@ class Me extends React.Component {
       },
       cashTab: CASH_TAB.TRANSACTION,
       handshakeIdActive: handshakeDefault,
+      firstTime: true,
     };
   }
 
   getDefaultHandShakeId() {
-    if (window.location.pathname.indexOf(URL.HANDSHAKE_CASH) >= 0) {
-      return HANDSHAKE_ID.EXCHANGE;
-    }
     let seletedId = HANDSHAKE_ID_DEFAULT;
     let { id } = Helper.getQueryStrings(window.location.search);
     id = parseInt(id, 10);
@@ -126,9 +124,18 @@ class Me extends React.Component {
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
+    const { rfChange } = nextProps;
     console.log(TAG, ' getDerivedStateFromProps begin ');
     if (nextProps.exchange.listOfferPrice.updatedAt !== prevState.exchange.listOfferPrice.updatedAt) {
-      nextProps.loadMyHandshakeList({ PATH_URL: API_URL.ME.BASE });
+      const qs = { };
+      const {
+        handshakeIdActive,
+      } = prevState;
+
+      if (handshakeIdActive) {
+        qs.type = handshakeIdActive;
+      }
+      nextProps.loadMyHandshakeList({ PATH_URL: API_URL.ME.BASE, qs });
       return { exchange: nextProps.exchange };
     }
     console.log(TAG, ' getDerivedStateFromProps begin firebaseUser = ', nextProps.firebaseUser);
@@ -164,6 +171,12 @@ class Me extends React.Component {
         return { offerStores: nextProps.offerStores };
       }
     }
+
+    // if (nextProps.me.list.length === 0 && prevState.handshakeIdActive === HANDSHAKE_ID.BETTING) {
+    //   rfChange(nameFormFilterFeeds, 'feedType', HANDSHAKE_ID.EXCHANGE);
+    //   return { handshakeIdActive: HANDSHAKE_ID.EXCHANGE, firstTime: false };
+    // }
+
     return null;
   }
 
@@ -178,7 +191,7 @@ class Me extends React.Component {
 
     this.loadMyHandshakeList();
     this.getOfferStore();
-    this.getDashboardInfo();
+    // this.getDashboardInfo();
   }
 
   setOfflineStatus = (online) => {
@@ -213,6 +226,8 @@ class Me extends React.Component {
     const {
       handshakeIdActive,
     } = this.state;
+
+    console.log('loadMyHandshakeList',this.state);
 
     if (handshakeIdActive) {
       qs.type = handshakeIdActive;
@@ -351,7 +366,7 @@ class Me extends React.Component {
         <div className="my-3">
           <FormFilterFeeds>
             <div className="d-table w-100">
-              <div className="d-table-cell"><label className="label-filter-by">Filter by:</label></div>
+              <div className="d-table-cell"><label className="label-filter-by">{messages.me.feed.filterBy}</label></div>
               <div className="d-table-cell">
                 <Field
                   name="feedType"
