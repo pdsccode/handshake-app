@@ -1,5 +1,5 @@
 import React from 'react';
-import {Grid, Image, Container, Card, Header, Form,Divider, Segment, Dropdown, Visibility, Modal, List, Button, Icon} from 'semantic-ui-react'
+import {Grid, Image, Container, Card, Header,  Form,Divider, Segment, Dropdown, Visibility, Modal, List, Button, Icon} from 'semantic-ui-react'
 // import {AuthConsumer} from './AuthContext'
 import {Route, Redirect} from 'react-router'
 import agent from '../../services/agent'
@@ -9,16 +9,17 @@ import {Link} from 'react-router-dom'
 import {iosHeartOutline, iosCopyOutline,androidDone, iosHeart, iosCheckmarkOutline,  iosPlusOutline} from 'react-icons-kit/ionicons'
 import { withBaseIcon } from 'react-icons-kit'
 const SideIconContainer =  withBaseIcon({ size:28, color:'black'})
-
  
+import {blockchainNetworks } from '@/constants';
+
 import activity_active_icon from '@/assets/icons/activityactive.svg';
 import activity_icon from '@/assets/icons/activity.svg';
 
 import plus_active_icon from '@/assets/icons/pluscheck.svg';
 import plus_icon from '@/assets/icons/plus.svg';
- 
-
-//{activeItem === 'history' ? <img class="my-menu-bar" src="/icons/activityactive.svg"/>: <img class="my-menu-bar" src="/icons/activity.svg"/> }
+import copyTop from '@/assets/icons/copy.svg';
+import closeTop from '@/assets/icons/closeTop.svg';
+import UPLOAD_EARN from '@/assets/icons/UPLOAD_EARN.jpg';
 
 function LikedIcon(props) {
   if (props.liked) {
@@ -111,7 +112,7 @@ class DataDetail extends React.Component {
 
   componentDidMount() {
     this.setState({isLoading: true})
-    console.log("DatasetDetail ", this.props.token)
+    //console.log("DatasetDetail ", this.props.token)
     // agent.req.get(agent.API_ROOT + '/api/classify/?category=' + this.props.match.params.categoryId).set('authorization', `JWT ${this.props.token}`).then((response) => {
     //   let resBody = response.body;
     //   let temp = [];
@@ -123,7 +124,7 @@ class DataDetail extends React.Component {
     // });
     agent.req.get(agent.API_ROOT + '/api/category/' + this.props.match.params.slug).set('authorization', `JWT ${this.props.token}`).then((response) => {
       this.setState({category: response.body})
-      console.log(response.body);
+      console.log("DatasetDetail", response);
     }).catch((e) => {
     })
 
@@ -263,6 +264,7 @@ class DataDetail extends React.Component {
     const searchableClassfies = [];
     agent.req.get(agent.API_ROOT + `/api/classify/?category=${this.state.images[i].category.id}&limit=50`).set('authorization', `JWT ${this.props.token}`).then((response) => {
       const resBody = response.body;
+      console.log(response);
       for (let i = 0; i < resBody.results.length; i++) {
         searchableClassfies.push({
           content: <List.Content>{resBody.results[i].name}</List.Content>,
@@ -321,8 +323,8 @@ class DataDetail extends React.Component {
     let self = this;
     return (
       <Visibility once={true} onUpdate={this.handleUpdate}>  
-        <Segment vertical>   
-          <h2 className="my-card-header" 
+        <Segment vertical  style={{float: 'left',marginTop:'-5em',background:'white',zIndex:'55555'}}>   
+           {/* <h2 className="my-card-header" 
               style={{padding: '0em 15px', marginBottom:'25px', float:'left'}}> 
                 <Image style={{marginLeft:'-20px',float:'left'}} src={"https://chart.googleapis.com/chart?chs=100x100&cht=qr&chl="+(this.state.category ? this.state.category.contract_address : '')+"&choe=UTF-8"}/>
                 
@@ -336,27 +338,52 @@ class DataDetail extends React.Component {
                     <Button basic size="mini"color='grey' content={this.state.category && this.state.category.total_images ? `Img ${this.state.category.total_images}` : 'Images 0'} ></Button>
                     <Button basic size="mini" color='teal' content='BUY NOW' ></Button>
                 </div>
-            </h2>
+            </h2> */}
+            <h2 className="my-h2-dataset-new">
+                  Explore / {this.state.category ? this.state.category.name :''}
+                  <Link to={'/explore'}><Image src={closeTop} className="btn-Close-Top"/></Link>
+              </h2> 
            <Container style={{marginLeft:'-20px',float:'left'}}> 
                 <Card.Group centered >
+                  <Card className="my-card" style={{ marginBottom: '1em', paddingBottom: '1em'}}>
+                    <Card.Content>
+                     <Grid  style={{paddingBottom:'1em', boxShadow: '0 1px 3px 0 #d4d4d5, 0 0 0 1px #d4d4d5',    marginLeft:'-17px'}} >
+                        <Grid.Column width={4}>
+                        <Image style={{float:'left',  marginTop: '-18px'}} src={"https://chart.googleapis.com/chart?chs=100x100&cht=qr&chl="+(blockchainNetworks.ethereum.contracts.dadsetTokenAddress )+"&choe=UTF-8"}/>
+                        </Grid.Column>
+                        <Grid.Column width={12} style={{textAlign:'left'}}>
+                            <List>
+                            <List.Item style={{fontSize:'14px', fontWeight:'700',marginTop:'-5px', paddingTop:'5px',background:'white' }}>{this.state.category ? this.state.category.name :''} </List.Item>
+                            { (this.state.category!=null && this.state.category.desc !=null) ?
+                              <List.Item>{this.state.category ? this.state.category.desc :''}</List.Item> 
+                              :""
+                            }
+                            <List.Item><span style={{fontWeight:'700'}}>Quantity: </span> {this.state.category && this.state.category.total_images ? `${this.state.category.total_images} Images` : '0 Image'} </List.Item>
+                            <List.Item style={{ marginRight: '15px',overflow: 'hidden',display: 'flex'}}> 
+                                    <span style={{fontWeight:'700'}} >Address: </span> 
+                                    <span style={{ float: 'left',marginTop: '0px',marginLeft: '6px'}}>{blockchainNetworks.ethereum.contracts.dadsetTokenAddress}</span>
+                                    <Image src={copyTop} className="btn-Close-Top" style={{ bottom: '40px',top: 'initial',right: '14px'}}/>
+                              </List.Item>
+                            <List.Item style={{ marginTop: '10px', marginLeft: '-20px'}} ><Button basic size="mini" basic color='black' className="my-btn-buy-eth" content='Buy Now' ></Button></List.Item>
+                            </List>
+                        </Grid.Column> 
+                      </Grid>
+                    </Card.Content>
+                  </Card>
+                  {this.state.images.length ==0 ? 
+                    <Card  className="my-card">
+                          <Link className="ui image" to={"/upload"}>
+                            <Image src={UPLOAD_EARN}/>
+                          </Link> 
+                    </Card>
+                    : ""
+                  }
                   {this.state.images.map((item, i) => {
                     return (
                       <Card key={i} className="my-card">
                           <Link className="ui image" to={"/explore/" + item.category.id}>
                               <Image src={item.link}/>
-                            </Link>
-                        <Card.Content>
-                          <div style={{float: 'left',marginTop:'-8px'}}>  
-                          </div>
-                          <div style={{float: 'right', marginTop:'-10px'}}>
-                            <div style={{display: 'inline', marginRight: '2em'}}>
-                              {this.renderLikedIcon(i)}
-                            </div>
-                            <div style={{display: 'inline'}}>
-                              {this.renderClassifiedIcon(i)}
-                            </div>
-                          </div>
-                        </Card.Content>
+                            </Link> 
                       </Card>
                     )
                   })}  
