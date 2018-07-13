@@ -32,7 +32,7 @@ import Rate from '@/components/core/controls/Rate/Rate';
 
 import './Classify.scss'; 
 import DataExplore from '@/pages/Explore/DataExplore';
-
+const TAG = "Explore";
 const maps = {
   [HANDSHAKE_ID.PROMISE]: FeedPromise,
   [HANDSHAKE_ID.BETTING]: FeedBetting,
@@ -48,18 +48,18 @@ class Explore extends React.Component {
     me: PropTypes.object.isRequired,
     loadMyHandshakeList: PropTypes.func.isRequired,
     getListOfferPrice: PropTypes.func.isRequired,
-    firebaseUser: PropTypes.any.isRequired,
+    firebaseUser: PropTypes.any,
     history: PropTypes.object.isRequired,
-    fireBaseExchangeDataChange: PropTypes.func.isRequired,
-    fireBaseBettingChange: PropTypes.func.isRequired,
-    exchange: PropTypes.object.isRequired,
+    fireBaseExchangeDataChange: PropTypes.func,
+    fireBaseBettingChange: PropTypes.func,
+    exchange: PropTypes.object,
     setOfflineStatus: PropTypes.func.isRequired,
   }
 
   constructor(props) {
     super(props);
 
-    console.log('me - contructor - init');
+    console.log(TAG, ' - contructor - init');
 
     const { s, sh } = Helper.getQueryStrings(window.location.search);
 
@@ -69,15 +69,15 @@ class Explore extends React.Component {
     this.state = {
       initUserId,
       offerId,
-      exchange: this.props.exchange,
-      auth: this.props.auth,
-      firebaseUser: this.props.firebaseUser,
+      exchange: props.exchange||{},
+      auth: props.auth,
+      firebaseUser: props.firebaseUser||{},
       numStars: 0,
     };
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    if (nextProps.exchange.listOfferPrice.updatedAt !== prevState.exchange.listOfferPrice.updatedAt) {
+    if (nextProps.exchange?.listOfferPrice?.updatedAt !== prevState.exchange?.listOfferPrice?.updatedAt) {
       nextProps.loadMyHandshakeList({ PATH_URL: API_URL.ME.BASE });
       return { exchange: nextProps.exchange };
     }
@@ -100,7 +100,7 @@ class Explore extends React.Component {
         return { firebaseUser: nextProps.firebaseUser };
       }
     }
-    if (nextProps.auth.updatedAt !== prevState.auth.updatedAt) {
+    if (nextProps.auth?.updatedAt !== prevState.auth?.updatedAt) {
       return { auth: nextProps.auth };
     }
     return null;
@@ -112,7 +112,7 @@ class Explore extends React.Component {
     if (initUserId && offerId) {
       this.rateRef.open();
     }
-    this.loadMyHandshakeList();
+    // this.loadMyHandshakeList();
 
   }
 
@@ -165,12 +165,12 @@ class Explore extends React.Component {
   }
 
   render() {
-    const { list } = this.props.me;
-    const { messages } = this.props.intl;
-    const online = !this.props.auth.offline;
+    // const { list } = this.props.me;
+    // const { messages } = this.props.intl;
+    // const online = !this.props.auth.offline;
 
-    console.log('this.props.intl', this.props.intl);
-    console.log('messages.me.feed', messages.me.feed);
+    // console.log('this.props.intl', this.props.intl);
+    // console.log('messages.me.feed', messages.me.feed);
 
     return ( 
          <DataExplore    {...this.props} token={this.props.auth?.dataset_profile?.token||''} />
@@ -182,9 +182,9 @@ const mapState = state => ({
   me: state.me,
   app: state.app,
   auth: state.auth,
-  firebaseUser: state.firebase.data,
-  firebaseApp: state.firebase,
-  exchange: state.exchange,
+  // firebaseUser: state.firebase.data,
+  // firebaseApp: state.firebase,
+  // exchange: state.exchange,
 });
 
 const mapDispatch = ({
@@ -196,4 +196,5 @@ const mapDispatch = ({
   reviewOffer,
 });
 
-export default injectIntl(compose(withFirebase, connect(mapState, mapDispatch))(Explore));
+// export default injectIntl(compose(withFirebase, connect(mapState, mapDispatch))(Explore));
+export default injectIntl(connect(mapState, mapDispatch)(Explore));

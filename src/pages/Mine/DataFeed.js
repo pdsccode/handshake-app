@@ -147,9 +147,10 @@ class DataFeed extends React.Component {
       });
   }
 
-  clickTagItem = (imageId,itemId)=>{
-    console.log(TAG,' clickTagItem - - begin token = ',this.token());
-    if(imageId && itemId){
+  clickTagItem = (item,itemId)=>{
+    // console.log(TAG,' clickTagItem - - begin token = ',this.token());
+    if(item && itemId){
+      const imageId = item?.id||-1;
       const data = new FormData();
       data.append('image',imageId);
       data.append('classify',itemId);
@@ -161,10 +162,19 @@ class DataFeed extends React.Component {
         data,
         successFn: (res) => {
           const id = res?.image || -1;
-          const images = this.state.images;
-          console.log(TAG,' clickTagItem - - success - ', res);
-          const itemList = images.filter(item => item.id !== id);
-          this.setState({images:itemList});
+          if(String(imageId) === String(id)){
+            const images = this.state.images;
+            const classifies =  item?.category?.classifies||[];
+            console.log(TAG,' clickTagItem - - success - ', res);
+            console.log(TAG,' clickTagItem - - success - classifies ', classifies);
+            const indexClassify  = classifies?.findIndex(item=>item.id ==res.classify);
+            console.log(TAG,' clickTagItem - - success - index ', indexClassify);
+            classifies[indexClassify]['checked'] = true;
+            // const itemList = classifies.findIndex(item);
+            images[id] = item;
+            this.setState({images});
+            
+          }
         },
         errorFn: (e) => {
           console.log(TAG,' clickTagItem - error - ', e);
@@ -317,12 +327,12 @@ class DataFeed extends React.Component {
     );
   }
 
-  renderHashTag = (item,index)=>{
-    const classifies  = item?.category?.classifies||[];
-    const imageId = item?.id||-1;
+  renderHashTag = (value,index)=>{
+    const classifies  = value?.category?.classifies||[];
+    
     const listTagView  = classifies.map(item=>{
       // console.log(TAG," renderHashTag item = ",item);
-      return (<Label key={String(item.id)||'-1'} as='a' style={{marginTop:2,marginBottom:2}} size='small' onClick={()=>this.clickTagItem(imageId,item.id)}>
+      return (<Label color={item.checked?'yellow':undefined} key={String(item.id)||'-1'} as='a' style={{marginTop:2,marginBottom:2}} size='small' onClick={()=>this.clickTagItem(value,item.id)}>
         {item?.name||''}
       </Label>);
     });
