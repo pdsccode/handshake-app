@@ -3,6 +3,9 @@ import {Grid, Image, Container, Form, Card, Icon, Segment, Item,
   Radio, Button, Label, List,Input, Transition} from 'semantic-ui-react'
 import {Route, Redirect} from 'react-router'
 import agent from '../../services/agent'
+import {Link} from 'react-router-dom'
+import closeTop from '@/assets/icons/closeTop.svg';
+import addPlus from '@/assets/icons/addplus.svg';
 
 class DataSetNew extends React.Component {
   constructor(props) {
@@ -155,7 +158,10 @@ class DataSetNew extends React.Component {
     let self = this;
     return (
       <Segment loading={this.state.isLoading} vertical style={{marginTop:'-5em',background:'white',zIndex:'55555'}}>
-       <h2 className="my-h2-dataset-new">Create new Dataset</h2>
+       <h2 className="my-h2-dataset-new">
+          Create new Dataset 
+          <Link to={'/explore'}><Image src={closeTop} className="btn-Close-Top"/></Link>
+       </h2>
         <Container>
           <Form onSubmit={()=>console.log("D")}>
             <Form.Group widths='equal'>
@@ -167,12 +173,10 @@ class DataSetNew extends React.Component {
               
               <Form.Input label ="Classification" fluid placeholder='Classification' 
                           name='classifiy' value={this.state.classifiy}
-                          onChange={this.handleChangeInput}
+                          onChange={this.handleChangeInput} 
                           />    
-              <Button icon className="my-icon-add">
-                <Icon name='add circle ' style={{color:'#21c364'}} onClick={()=>this.handleChangeClass()} />
-              </Button> 
-
+                <Image src={addPlus} className="btn-add-class" onClick={()=>this.handleChangeClass()} /> 
+                
             </Form.Group>
             <Form.Group >
                 {this.createUI2()}
@@ -200,13 +204,13 @@ class DataSetNew extends React.Component {
               <Form.Input
                label ="Request quantity" 
                type='number' pattern="[0-9]*"
-               fluid placeholder='Request quantity' name='Quantity' value={this.state.Quantity}
+               fluid placeholder='00' name='Quantity' value={this.state.Quantity}
                           onChange={this.handleChangeInput}/> 
 
               <Form.Input 
               label ="Amount" 
               type='number' pattern="[0-9.]*"
-              fluid placeholder='I will pay for (ETH)' name='Amount' value={this.state.Amount}
+              fluid placeholder='0,000 ETH' name='Amount' value={this.state.Amount}
                           onChange={this.handleChangeInput}/>
               </div>
 

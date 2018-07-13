@@ -189,6 +189,7 @@ body{
     -webkit-backdrop-filter: blur(8px);
     backdrop-filter: blur(8px);
     background-color:rgba(255, 255, 255, 0.9)!important;
+    z-index: 600000;
 
 
 }  
@@ -487,4 +488,19 @@ line-height: 32px; */
 .ui.form .field>label{
     text-align: left;
     font-size: 14px;
+}
+
+.btn-Close-Top {
+    width: 18px;
+    height: 18px; 
+    position: absolute!important;
+    right: 15px;
+    top: 12px;
+}
+.btn-add-class{
+    position: absolute!important;
+    top: 170px;
+    width: 20px;
+    height: 20px;
+    right: 0px;
 }
