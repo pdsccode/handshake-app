@@ -1,6 +1,8 @@
 
 import localStore from '@/services/localStore';
 import { Bitcoin } from '@/services/Wallets/Bitcoin.js';
+import { BitcoinCash } from '@/services/Wallets/BitcoinCash.js';
+import { BitcoinCashTestnet } from '@/services/Wallets/BitcoinCashTestnet.js';
 import { BitcoinTestnet } from '@/services/Wallets/BitcoinTestnet.js';
 import { Ethereum } from '@/services/Wallets/Ethereum.js';
 import { Wallet } from '@/services/Wallets/Wallet.js';
@@ -42,11 +44,11 @@ const bip39 = require('bip39');
 export class MasterWallet {
     // list coin is supported, can add some more Ripple ...
     static ListDefaultCoin = {
-      Ethereum, Shuriken, Bitcoin, BitcoinTestnet,
+      Ethereum, Shuriken, Bitcoin, BitcoinTestnet, BitcoinCash, BitcoinCashTestnet
     };
 
     static ListCoin = {
-      Ethereum, Bitcoin, BitcoinTestnet, Shuriken, TokenERC20, TokenERC721,
+      Ethereum, Bitcoin, BitcoinTestnet, BitcoinCash, BitcoinCashTestnet, Shuriken, TokenERC20, TokenERC721,
       CryptoStrikers, CryptoPunks, CryptoKitties, Axie, BlockchainCuties,
       ChibiFighters, CryptoClown, CryptoCrystal, Cryptogs, CryptoHorse,
       CryptoSoccr, CryptoZodiacs, CSCPreSaleFactory, DopeRaider, Etherbots,

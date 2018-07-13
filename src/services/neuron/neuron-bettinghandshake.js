@@ -219,4 +219,25 @@ export default class BettingHandshake extends BaseHandshake {
 
     return dataBlockChain;
   };
+  createMarket = async (fee, source, closingWindow, reportWindow, disputeWindow, offchain) => {
+    console.log(fee, source, closingWindow, reportWindow, disputeWindow, offchain);
+    const bytesOffchain = this.web3.utils.asciiToHex(`cryptosign_createMarket${offchain}`);
+    const sourceBytes = this.web3.utils.asciiToHex(source);
+    const payloadData = this.handshakeInstance.methods
+      .createMarket(fee, sourceBytes, closingWindow, reportWindow, disputeWindow, bytesOffchain)
+      .encodeABI();
+    console.log('Payload Data:', payloadData);
+
+    const dataBlockChain = await this.neuron.sendRawTransaction(
+      this.address,
+      this.privateKey,
+      payloadData,
+      {
+        gasPrice: this.gasPrice,
+        toAddress: this.contractAddress,
+      },
+    );
+    console.log('Data Blockchain:', dataBlockChain);
+    return dataBlockChain;
+  }
 }

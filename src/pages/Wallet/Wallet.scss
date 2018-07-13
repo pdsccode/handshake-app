@@ -32,7 +32,7 @@
     border-color: #0BE200;
     border-width: 2px;
     border-style: solid;
-    border-radius: 10px;
+    border-radius: 10px;    
   }
 
   .name {
@@ -41,6 +41,10 @@
     margin-bottom: 0;
     font-weight: bold;
     margin-top: 10px;
+    width: 90%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
   }
   .balance {
     font-size: rem-calc(16px);

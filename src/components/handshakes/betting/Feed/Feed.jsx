@@ -21,9 +21,12 @@ import Feed from '@/components/core/presentation/Feed';
 import BettingShake from './Shake';
 import { showAlert } from '@/reducers/app/action';
 import {
-  getMessageWithCode, isRightNetwork, getId,
-  getShakeOffchain, getBalance, getEstimateGas, isSameAddress, foundShakeList, parseBigNumber,
+  getMessageWithCode, getId,
+  getShakeOffchain, getBalance, getEstimateGas, foundShakeList, parseBigNumber,
 } from '@/components/handshakes/betting/utils.js';
+
+import { isSameAddress } from '@/components/handshakes/betting/validation.js';
+
 
 
 // css, icons
@@ -465,12 +468,11 @@ class FeedBetting extends React.Component {
   }
   async refundOnChain(offchain, hid) {
     const { itemInfo } = this.state;
-    const { side, amount, odds } = itemInfo;
     this.setState({
       isLoading: true,
     });
     betHandshakeHandler.setItemOnChain(offchain, true);
-    const result = await betHandshakeHandler.refund(hid, side, amount, odds, offchain);
+    const result = await betHandshakeHandler.refund(hid, offchain);
     const { hash } = result;
     if (hash) {
       betHandshakeHandler.setItemOnChain(offchain, false);
