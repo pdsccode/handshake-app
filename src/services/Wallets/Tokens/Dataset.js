@@ -35,36 +35,86 @@ export class Dataset extends Ethereum {
       this.privateKey = wallet.privateKey;
       this.protected = wallet.protected;
       this.mnemonic = wallet.mnemonic;
+      this.balance = wallet.balance;
+      this.wallet = wallet;
     }
 
-    async getContractInfo(contractAddress){
-      this.contractAddress = contractAddress;
-      try{
-        const web3 = this.getWeb3();
-        let instance = new web3.eth.Contract(
-            erc20Abi,
-            this.contractAddress,
-        );
-        this.title = await instance.methods.name().call();
-        this.name = await instance.methods.symbol().call();
-        try{
-          this.decimals = await instance.methods.decimals().call();
-        }
-        catch (e){
-          console.log("error: ", e);
-          this.decimals = "0";
-        }
-        return true;
+    getTransactionReceipt(hash) {
+      return new Promise((resolve, reject) => {
+        const interval = setInterval(async () => {
+          try {
+            const status = await this.wallet.getTransactionReceipt(hash);
+            if (status) {
+              clearInterval(interval);
+              resolve(status);
+            }
+          } catch (e) {
+            reject(e);
+          }
+        }, 5000);
+      })
+    }
 
+    async request(datasetId, createdDatasetTxHash, value) {
+      try {
+        if (this.balance < value) {
+          throw new Error('You have insufficient coin to make the transfer. Please top up and try again.');
+        }
+
+        const receipt = await this.getTransactionReceipt(createdDatasetTxHash);
+        if (!receipt.status) {
+          console.log(receipt);
+          throw new Error('${receipt.transactionHash} failed');
+        }
+
+        console.log(`sending ${value} to dataset ${datasetId} from address: ${this.address}`);
+
+        const web3 = this.getWeb3();
+        const contract = new web3.eth.Contract(
+          compiled,
+          CONTRACT_ADDRESS,
+        );
+
+        const data = web3.eth.abi.encodeFunctionCall({
+          name: 'request',
+          type: 'function',
+          inputs: [
+            {
+              type: 'uint32',
+              name: 'dsId'
+            }
+          ]
+        }, [datasetId])
+
+        const nonce = await web3.eth.getTransactionCount(this.address);
+        // const gasPrice = web3.utils.toHex(web3.eth.gasPrice);
+
+        const rawTx = {
+          nonce,
+          gasLimit: web3.utils.toHex(150000),
+          gasPrice: web3.utils.toHex(10e9),
+          from: this.address,
+          to: CONTRACT_ADDRESS,
+          value: web3.utils.toHex(web3.utils.toWei(value.toString())),
+          data
+        };
+        const tx = new Tx(rawTx);
+        const privateKey = new Buffer(this.privateKey, 'hex');
+        tx.sign(privateKey);
+
+        const serializedTx = tx.serialize().toString('hex');
+        return await web3.eth.sendSignedTransaction('0x' + serializedTx);
+      } catch (e) {
+        throw e;
       }
-      catch (e){
-        console.log("error: ", e);
-      }
-      return false;
     }
 
     async buy(datasetId, value) {
       try {
+        if (this.balance < value) {
+          throw new Error('You have insufficient coin to make the transfer. Please top up and try again.');
+        }
+
         console.log(`buying dataset ${datasetId} from address: ${this.address}`);
 
         const web3 = this.getWeb3();
@@ -93,7 +143,7 @@ export class Dataset extends Ethereum {
           gasPrice: web3.utils.toHex(10e9),
           from: this.address,
           to: CONTRACT_ADDRESS,
-          value: web3.utils.toHex(web3.utils.toWei('1')),
+          value: web3.utils.toHex(web3.utils.toWei(value.toString())),
           data
         };
         const tx = new Tx(rawTx);
