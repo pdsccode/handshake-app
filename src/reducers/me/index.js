@@ -65,9 +65,12 @@ const handleDashboardPayload = (payload) => {
 
 const handleDetailPayload = payload => Handshake.handshake(payload.data);
 
+const initList = [];
+initList.updateAt = Date.now();
+
 const meReducter = (
   state = {
-    list: [],
+    list: initList,
     detail: {},
     isFetching: false,
   },
@@ -81,10 +84,12 @@ const meReducter = (
         isFetching: true,
       };
     case `${ACTIONS.LOAD_MY_HANDSHAKE}_SUCCESS`:
+      const list = handleListPayload(action.payload.data.handshakes);
+      list.updatedAt = Date.now();
       return {
         ...state,
         isFetching: false,
-        list: handleListPayload(action.payload.data.handshakes),
+        list,
         listDashboard: handleDashboardPayload(action.payload.data.handshakes),
       };
     case `${ACTIONS.LOAD_MY_HANDSHAKE}_FAILED`:
