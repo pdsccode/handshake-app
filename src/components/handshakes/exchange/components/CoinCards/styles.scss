@@ -17,6 +17,12 @@
       position: absolute;
       right: 0;
       top: 0;
+      background: none;
+      border: none;
+      padding: 0 6px;
+      -webkit-appearance: none;
+      -moz-appearance:    none;
+      appearance:         none;
     }
     .name {
       font-size: 12px;
