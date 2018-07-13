@@ -45,6 +45,7 @@ class BetingShakeFree extends React.Component {
     onSubmitClick: PropTypes.func,
     onCancelClick: PropTypes.func,
     showAlert: PropTypes.func.isRequired,
+    onCreateBetSuccess: PropTypes.func,
   }
 
   static defaultProps = {
@@ -286,6 +287,7 @@ class BetingShakeFree extends React.Component {
         callBack: () => {
         },
       });
+      this.props.onCreateBetSuccess();
     }
     // this.props.onSubmitClick();
   }

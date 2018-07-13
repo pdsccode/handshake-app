@@ -39,6 +39,7 @@ class BetingShake extends React.Component {
     reportTime: PropTypes.any,
     onSubmitClick: PropTypes.func,
     onCancelClick: PropTypes.func,
+    onCreateBetSuccess: PropTypes.func,
   }
 
   tamButton = false;
@@ -345,6 +346,7 @@ class BetingShake extends React.Component {
         const {matchName, matchOutcome, side} = this.props;
         GA.createBetSuccess(matchName, matchOutcome, side);
       } catch (err) {}
+      this.props.onCreateBetSuccess();
     }
     //this.props.onSubmitClick();
 

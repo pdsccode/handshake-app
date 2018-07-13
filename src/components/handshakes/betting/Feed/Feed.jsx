@@ -25,7 +25,7 @@ import {
   getShakeOffchain, getBalance, getEstimateGas, foundShakeList, parseBigNumber,
 } from '@/components/handshakes/betting/utils.js';
 
-import { isSameAddress } from '@/components/handshakes/betting/validation.js';
+import { isSameAddress, isRightNetwork } from '@/components/handshakes/betting/validation.js';
 
 
 
