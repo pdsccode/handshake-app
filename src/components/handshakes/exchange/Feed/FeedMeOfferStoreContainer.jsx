@@ -1,5 +1,5 @@
 import React from "react";
-import FeedMePresentation from './FeedMePresentation';
+import FeedMeStation from './FeedMeStation';
 import {
   API_URL,
   CRYPTO_CURRENCY,
@@ -350,7 +350,7 @@ class FeedMeOfferStoreContainer extends React.PureComponent {
     };
 
     return (
-      <FeedMePresentation {...this.props} {...feedProps} />
+      <FeedMeStation {...this.props} {...feedProps} />
     );
   }
 }
