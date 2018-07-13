@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51 (57462) - http://www.bohemiancoding.com/sketch -->
+    <title>icons8-plus</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="2.1" transform="translate(-340.000000, -186.000000)" fill-rule="nonzero">
+            <g id="icons8-plus" transform="translate(340.000000, 186.000000)">
+                <path d="M10,0 C4.48230217,0 0,4.48230217 0,10 C0,15.5176978 4.48230217,20 10,20 C15.5176978,20 20,15.5176978 20,10 C20,4.48230217 15.5176978,0 10,0 Z" id="Shape" fill="#21C364"></path>
+                <polygon id="Path" stroke="#FFFFFF" stroke-width="0.2" fill="#FFFFFF" points="9.56521739 4.7826087 9.56521739 9.56521739 4.7826087 9.56521739 4.7826087 10.4347826 9.56521739 10.4347826 9.56521739 15.2173913 10.4347826 15.2173913 10.4347826 10.4347826 15.2173913 10.4347826 15.2173913 9.56521739 10.4347826 9.56521739 10.4347826 4.7826087"></polygon>
+            </g>
+        </g>
+    </g>
+</svg>

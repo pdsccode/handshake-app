@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="15px" height="15px" viewBox="0 0 15 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51 (57462) - http://www.bohemiancoding.com/sketch -->
+    <title>Combined Shape</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M10,8 L17.0066023,8 C17.5552407,8 18,8.44386482 18,9 C18,9.55228475 17.5550537,10 17.0066023,10 L10,10 L10,17.0066023 C10,17.5552407 9.55613518,18 9,18 C8.44771525,18 8,17.5550537 8,17.0066023 L8,10 L0.993397683,10 C0.444759292,10 0,9.55613518 0,9 C0,8.44771525 0.444946289,8 0.993397683,8 L8,8 L8,0.993397683 C8,0.444759292 8.44386482,0 9,0 C9.55228475,0 10,0.444946289 10,0.993397683 L10,8 Z" id="path-1"></path>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="2.1" transform="translate(-348.000000, -34.000000)">
+            <g id="navbar">
+                <g id="Icons/instagram-Copy-2" transform="translate(355.500000, 41.500000) rotate(-45.000000) translate(-355.500000, -41.500000) translate(346.500000, 32.500000)">
+                    <mask id="mask-2" fill="white">
+                        <use xlink:href="#path-1"></use>
+                    </mask>
+                    <use id="Combined-Shape" fill="#262628" xlink:href="#path-1"></use>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
