@@ -56,16 +56,8 @@ function ImageGrid(props) {
   );
 }
 
-function LikedIcon(props) {
-  if (!props.isAuth) {
-    return (
-      <Link to="/login" style={{color:'#333'}}>
-          <img className="my-icon" src={activity_icon}/>
-          {/* <SideIconContainer icon={androidDone}/> */}
-      </Link>
-    );
-  }
-  if (props.liked) {
+function LikedIcon(props) { 
+  if (props.followed) {
     return (
       <a href='javascript:void(0);' style={{color:'#333'}} onClick={props.onUnfollow}>
          <img className="my-icon" src={activity_active_icon}/>
@@ -91,6 +83,11 @@ function ConfirmModal() {
 function ConfirmButton() {
   return (
     <Button positive>OK</Button>
+  )
+}
+function cancelButton() {
+  return (
+    <Button positive style={{background: 'none',color:'#333',fontWeight:'500'}}>Cancel</Button>
   )
 }
 
@@ -161,9 +158,9 @@ class DataExplore extends React.Component {
     this.setState({isLoading: true})
 
     const req = agent.req.get(agent.API_ROOT + '/api/explore-category/');
-    if (this.props.isAuth) {
-      req.set('authorization', `JWT ${this.props.token}`);
-    }
+    
+    req.set('authorization', `JWT ${this.props.token}`);
+    
     req.then((response) => {
       const body = response.body;
       console.log(body);
@@ -194,10 +191,7 @@ class DataExplore extends React.Component {
   }
 
   handleFollowCategory(e, i) {
-    if (!this.props.isAuth) {
-      return;
-    }
-
+    
     e.preventDefault();
     const id = this.state.categories[i].id;
 
@@ -215,10 +209,7 @@ class DataExplore extends React.Component {
   }
 
   handleUnfollowCategory(e, i) {
-    if (!this.props.isAuth) {
-      return;
-    }
-
+    
     e.preventDefault();
     const id = this.state.categories[i].id;
 
@@ -238,7 +229,6 @@ class DataExplore extends React.Component {
   renderLikedIcon(i) {
     return (
       <LikedIcon
-        isAuth={this.props.isAuth}
         followed={this.state.categories[i].followed}
         onFollow={e => this.handleFollowCategory(e, i)}
         onUnfollow={e => this.handleUnfollowCategory(e, i)}
@@ -293,6 +283,7 @@ class DataExplore extends React.Component {
           onCancel={this.close}
           onConfirm={() => this.handleConfirmBuy()}
           confirmButton={ConfirmButton()}
+          cancelButton={cancelButton()}
         />
       </Visibility>
     )
