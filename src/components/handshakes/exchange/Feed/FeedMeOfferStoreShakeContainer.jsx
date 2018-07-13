@@ -12,6 +12,7 @@ import {
   HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS,
   HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS_NAME,
   HANDSHAKE_USER,
+  EXCHANGE_ACTION_ORDER,
 } from '@/constants';
 import { MasterWallet } from '@/services/Wallets/MasterWallet';
 import { ExchangeShopHandshake } from '@/services/neuron';
@@ -148,19 +149,33 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
     const { offer } = this;
 
     let message = '';
+    let cashTitle = '';
+    let coinTitle = '';
+
     switch (this.userType) {
       case HANDSHAKE_USER.NORMAL: {
         break;
       }
       case HANDSHAKE_USER.OWNER: {
-        message = EXCHANGE_ACTION_PERSON[offer.type];
+        message = EXCHANGE_ACTION_ORDER[offer.type];
+        if (offer.type === EXCHANGE_ACTION.BUY) {
+          cashTitle = <FormattedMessage id="ex.label.buying" />;
+          coinTitle = <FormattedMessage id="ex.label.receiving" />;
+        } else if (offer.type === EXCHANGE_ACTION.SELL) {
+          cashTitle = <FormattedMessage id="ex.label.receiving" />;
+          coinTitle = <FormattedMessage id="ex.label.selling" />;
+        }
         break;
       }
       case HANDSHAKE_USER.SHAKED: {
         if (offer.type === EXCHANGE_ACTION.BUY) {
-          message = EXCHANGE_ACTION_PERSON[EXCHANGE_ACTION.SELL];
+          message = EXCHANGE_ACTION_ORDER[EXCHANGE_ACTION.SELL];
+          cashTitle = <FormattedMessage id="ex.label.receiving" />;
+          coinTitle = <FormattedMessage id="ex.label.selling" />;
         } else if (offer.type === EXCHANGE_ACTION.SELL) {
-          message = EXCHANGE_ACTION_PERSON[EXCHANGE_ACTION.BUY];
+          message = EXCHANGE_ACTION_ORDER[EXCHANGE_ACTION.BUY];
+          cashTitle = <FormattedMessage id="ex.label.buying" />;
+          coinTitle = <FormattedMessage id="ex.label.receiving" />;
         }
         break;
       }
@@ -172,7 +187,7 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
       }}/>
     }
 
-    return message;
+    return { message, cashTitle, coinTitle };
   }
 
   // getMessageContent = (fiatAmount) => {
@@ -905,7 +920,7 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
     const nameShop = getNameShopDisplayed();
     const fiatAmount = this.calculateFiatAmount();
     // const message = this.getMessageContent(fiatAmount);
-    const message = this.getBuyerSeller();
+    const { message, cashTitle, coinTitle } = this.getBuyerSeller();
     const actionButtons = this.getActionButtons();
     const messageMovingCoin = this.getMessageMovingCoin();
 
@@ -914,6 +929,8 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
       email,
       statusText,
       message,
+      cashTitle,
+      coinTitle,
       showChat,
       chatUsername,
       nameShop,
@@ -923,6 +940,8 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
       fiatAmount,
       currency: offer.currency,
       fiatCurrency: offer.fiatCurrency,
+      type: offer.type,
+      userType: this.userType,
     };
 
     return (

@@ -11,7 +11,7 @@ import iconStar from '@/assets/images/icon/icon-star.svg';
 import './FeedMe.scss';
 import './FeedMeCash.scss';
 import { Link } from 'react-router-dom';
-import { URL } from '@/constants';
+import { EXCHANGE_ACTION, HANDSHAKE_USER, URL } from '@/constants';
 import { daysBetween, formatAmountCurrency, formatMoneyByLocale } from '@/services/offer-util';
 import { FormattedMessage } from 'react-intl';
 
@@ -86,7 +86,9 @@ class FeedMeCash extends React.PureComponent {
 
   render() {
     const {
-      statusText, message, isCreditCard,
+      statusText, message,
+      cashTitle, coinTitle,
+      isCreditCard,
       showChat, chatUsername,
       nameShop,
       address, messageMovingCoin,
@@ -95,6 +97,8 @@ class FeedMeCash extends React.PureComponent {
       fiatAmount,
       currency,
       fiatCurrency,
+      type,
+      userType,
     } = this.props;
     // console.log('thisss', this.props);
     return (
@@ -112,14 +116,33 @@ class FeedMeCash extends React.PureComponent {
           }
         </div>
         <div className="order-type">{message}</div>
-        <div className="info-wrapper">
-          <div className="label"><FormattedMessage id="ex.shop.shake.label.cash.inventory" /></div>
-          <div className="price">{`${formatMoneyByLocale(fiatAmount, fiatCurrency)} ${fiatCurrency}`}</div>
-        </div>
-        <div className="info-wrapper">
-          <div className="label"><FormattedMessage id="ex.shop.shake.label.coin.inventory" /></div>
-          <div className="price">{`${formatAmountCurrency(amount)} ${currency}`}</div>
-        </div>
+
+        {
+          (type === EXCHANGE_ACTION.SELL && userType === HANDSHAKE_USER.OWNER) || (type === EXCHANGE_ACTION.BUY && userType === HANDSHAKE_USER.SHAKED) ? (
+            <div>
+              <div className="info-wrapper">
+                <div className="label">{coinTitle}</div>
+                <div className="price">{`${formatAmountCurrency(amount)} ${currency}`}</div>
+              </div>
+              <div className="info-wrapper">
+                <div className="label">{cashTitle}</div>
+                <div className="price">{`${formatMoneyByLocale(fiatAmount, fiatCurrency)} ${fiatCurrency}`}</div>
+              </div>
+
+            </div>
+          ) : (
+            <div>
+              <div className="info-wrapper">
+                <div className="label">{cashTitle}</div>
+                <div className="price">{`${formatMoneyByLocale(fiatAmount, fiatCurrency)} ${fiatCurrency}`}</div>
+              </div>
+              <div className="info-wrapper">
+                <div className="label">{coinTitle}</div>
+                <div className="price">{`${formatAmountCurrency(amount)} ${currency}`}</div>
+              </div>
+            </div>
+          )
+        }
         <hr className="hrLine" />
         <div className="d-table w-100">
           <div className="d-table-cell align-middle" style={{ width: '42px' }}>

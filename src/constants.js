@@ -123,6 +123,11 @@ export const EXCHANGE_ACTION_PERSON = {
   [EXCHANGE_ACTION.SELL]: <FormattedMessage id="ex.label.seller" />,
 };
 
+export const EXCHANGE_ACTION_ORDER = {
+  [EXCHANGE_ACTION.BUY]: <FormattedMessage id="ex.label.purchase" />,
+  [EXCHANGE_ACTION.SELL]: <FormattedMessage id="ex.label.sale" />,
+};
+
 export const EXCHANGE_ACTION_LIST = [
   { value: EXCHANGE_ACTION.BUY, text: EXCHANGE_ACTION_NAME[EXCHANGE_ACTION.BUY] },
   { value: EXCHANGE_ACTION.SELL, text: EXCHANGE_ACTION_NAME[EXCHANGE_ACTION.SELL] },

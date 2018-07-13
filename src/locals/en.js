@@ -113,8 +113,11 @@ export default {
   'ex.label.sold': 'Sold',
   'ex.label.buying': 'Buying',
   'ex.label.selling': 'Selling',
+  'ex.label.receiving': 'Receiving',
   'ex.label.buyer': 'Buyer',
   'ex.label.seller': 'Seller',
+  'ex.label.sale': 'Sale',
+  'ex.label.purchase': 'Purchase',
 
   'ex.exchange.status.created': 'Verifying',
   'ex.exchange.status.active': 'Active',
