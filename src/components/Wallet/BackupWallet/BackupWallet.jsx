@@ -14,6 +14,8 @@ import QrReader from 'react-qr-reader';
 import { StringHelper } from '@/services/helper';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from "redux";
+import local from '@/services/localStore';
+import {APP} from '@/constants';
 
 import './BackupWallet.scss';
 import Dropdown from '@/components/core/controls/Dropdown';
@@ -54,9 +56,9 @@ class BackupWallet extends React.Component {
   }
 
   componentDidMount() {    
-    if (!this.state.walletData){
+    if (!this.state.walletData){      
       let walletData = MasterWallet.getMasterWallet();
-      this.setState({walletData: walletData});
+      this.setState({walletData: {"auth_token": local.get(APP.AUTH_TOKEN) ,"wallets": walletData }});
     }
   }
 
