@@ -1,40 +1,15 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<!-- Generator: Adobe Illustrator 19.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg width="78px" height="78px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve">
-<circle style="fill:#D75A4A;" cx="25" cy="25" r="25"/>
-<polyline style="fill:none;stroke:#FFFFFF;stroke-width:2;stroke-linecap:round;stroke-miterlimit:10;" points="16,34 25,25 34,16
-	"/>
-<polyline style="fill:none;stroke:#FFFFFF;stroke-width:2;stroke-linecap:round;stroke-miterlimit:10;" points="16,16 25,25 34,34
-	"/>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
-<g>
-</g>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="25px" height="25px" viewBox="0 0 25 25" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+    <title>Group 5</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Lucky-dip-page" transform="translate(-378.000000, -91.000000)">
+            <g id="Group-5" transform="translate(379.000000, 92.000000)">
+                <circle id="Oval-3" stroke="#EBEBEB" stroke-width="1.5" fill="#FFFFFF" cx="11.5" cy="11.5" r="11.5"></circle>
+                <path d="M8.88753791,7 C8.66521919,7 8.44290047,7.09031743 8.26574001,7.26747699 C7.91142,7.62179789 7.91142,8.15675187 8.26574001,8.51107278 L10.7529307,11.001737 L8.26574001,13.4924012 C7.91142,13.8467221 7.91142,14.3816761 8.26574001,14.735997 C8.44290047,14.9131574 8.71037745,15.003474 8.88753791,15.003474 C9.06469836,15.003474 9.33217535,14.9131574 9.5093358,14.735997 L12,12.2488063 L14.4906642,14.735997 C14.6678247,14.9131574 14.9353016,15.003474 15.1124621,15.003474 C15.2896225,15.003474 15.5570995,14.9131574 15.73426,14.735997 C16.08858,14.3816761 16.08858,13.8467221 15.73426,13.4924012 L13.2470693,11.001737 L15.73426,8.51107278 C16.08858,8.15675187 16.08858,7.62179789 15.73426,7.26747699 C15.3799391,6.91315697 14.8449851,6.91315697 14.4906642,7.26747699 L12,9.75466768 L9.5093358,7.26747699 C9.33217535,7.09031743 9.10985663,7 8.88753791,7 Z" id="Path" fill="#A7A7A7" opacity="0.915066964"></path>
+            </g>
+        </g>
+    </g>
 </svg>

@@ -771,7 +771,11 @@ export default {
           confirmations: 'confirmations',
           success: 'success',
           detail_etherscan: 'View detail on etherscan.io',
-          view_all_etherscan: 'View all on etherscan.io'
+          view_all_etherscan: 'View all on etherscan.io',
+          self: "Self",
+          sent: "Sent",
+          received: "Received"
+
         },
       },
     },
@@ -779,6 +783,16 @@ export default {
   bitcoin: {
     error: {
       invalid_address: 'You can only send tokens to Bitcoin address',
+      invalid_address2: 'Please enter a valid receiving address.',
+      insufficient: 'You have insufficient coin to make the transfer.',
+    },
+    success: {
+      transaction: 'Your transaction will appear on blockchain in about 30 seconds.',
+    },
+  },
+  bitcoin_cash: {
+    error: {
+      invalid_address: 'You can only send tokens to BitcoinCash address',
       invalid_address2: 'Please enter a valid receiving address.',
       insufficient: 'You have insufficient coin to make the transfer.',
     },
