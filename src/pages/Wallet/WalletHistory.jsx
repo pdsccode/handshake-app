@@ -69,7 +69,7 @@ class WalletHistory extends React.Component {
         return <div key={tran.transaction_no} className="row" onClick={() =>{this.show_transaction(res)}}>
             <div className="col3">
               <div className="time">{tran.transaction_relative_time}</div>
-              <div className={cssValue}>{tran.is_sent == 1 ? "-" : ""} {Number(tran.value)} {tran.coin_name}</div>
+              <div className={cssValue}>{tran.is_sent == 1 ? "-" : ""}{Number(tran.value)} {tran.coin_name}</div>
               {tran.confirmations <= 0 ? <div className="unconfirmation">{messages.wallet.action.history.label.unconfirmed}</div> : ""}
               {tran.is_error ? <div className="unconfirmation">{messages.wallet.action.history.label.failed}</div> : ""}
             </div>
@@ -122,19 +122,17 @@ class WalletHistory extends React.Component {
   get load_balance(){
     const wallet = this.props.wallet;
     const { messages } = this.props.intl;
-
     return wallet ?
     (
       <div>
         <div className="history-balance">
-          {wallet.name == "ETH" ?
-            <div className="float-right"><a target="_blank" href={"https://etherscan.io/address/"+wallet.address}>{messages.wallet.action.history.label.view_all_etherscan}</a></div>
+        {messages.wallet.action.history.label.balance}: {wallet.balance} {wallet.name}
+          <br/>
+          {messages.wallet.action.history.label.transactions}: {wallet.transaction_count}<br/>
+          {wallet && wallet.name == "ETH" ?
+            <a target="_blank" href={""+wallet.getAPIUrlAddress()}>{messages.wallet.action.history.label.view_all_etherscan}</a>
             : ""
           }
-          {messages.wallet.action.history.label.transactions}: {wallet.transaction_count}
-          <br/>
-          {messages.wallet.action.history.label.balance}: {wallet.balance} {wallet.name}
-
         </div>
       </div>
     ) : "";

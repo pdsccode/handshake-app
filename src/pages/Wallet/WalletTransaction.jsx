@@ -117,6 +117,7 @@ class WalletTransaction extends React.Component {
 
   get detail_transaction() {
     const { messages } = this.props.intl;
+    const { wallet } = this.props;
     let detail = this.cooked_transaction(this.state.transaction_detail);
     let css_status = detail ? "status-" + detail.header.status : "";
     let icon = iconSelf;
@@ -135,16 +136,16 @@ class WalletTransaction extends React.Component {
           {detail.header.value} {detail.header.coin}<br />
           <span>{moment(detail.timeStamp).format('llll')}</span>
         </div>
+        {
+          detail.header.coin == "ETH" ?
+            <div className="url"><a target="_blank" href={""+wallet.getAPIUrlTransaction(detail.body.hash)}>{messages.wallet.action.history.label.detail_etherscan}</a></div>
+          : ""
+        }
         <div className="confirmation">
           {
-            detail.header.status ? <div className={css_status}>{messages.wallet.action.history.label.status} {detail.header.status}</div> : ""
+            detail.header.status ? <div className={css_status.toLowerCase()}>{messages.wallet.action.history.label.status} {detail.header.status}</div> : ""
           }
           <div>{detail.header.confirmations} {messages.wallet.action.history.label.confirmations}</div>
-          {
-            detail.header.coin == "ETH" ?
-              <div><a target="_blank" href={"https://etherscan.io/tx/"+detail.body.hash}>{messages.wallet.action.history.label.detail_etherscan}</a></div>
-            : ""
-          }
         </div>
 
         {
