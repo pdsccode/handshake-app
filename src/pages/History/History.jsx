@@ -3,77 +3,83 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { fireBaseExchangeDataChange, loadMyHandshakeList, fireBaseBettingChange } from '@/reducers/me/action';
-import { API_URL, APP, HANDSHAKE_ID } from '@/constants';
+import { loadDatasetHistory } from '@/reducers/history/action';
 import { injectIntl } from 'react-intl';
-
-// components
-import { Link } from 'react-router-dom';
-import { Grid, Row, Col } from 'react-bootstrap';
-import NoData from '@/components/core/presentation/NoData';
-
-import FeedPromise from '@/components/handshakes/promise/Feed';
-import FeedBetting from '@/components/handshakes/betting/Feed';
-import FeedExchange from '@/components/handshakes/exchange/Feed/FeedMe';
-import FeedSeed from '@/components/handshakes/seed/Feed';
-import Image from '@/components/core/presentation/Image';
-
-import ToggleSwitch from '@/components/core/presentation/ToggleSwitch';
-// style
-import AvatarSVG from '@/assets/images/icon/avatar.svg';
-import ShopSVG from '@/assets/images/icon/icons8-shop_filled.svg';
-import ExpandArrowSVG from '@/assets/images/icon/expand-arrow.svg';
-// import { setOfflineStatus } from '@/reducers/auth/action';
 import local from '@/services/localStore';
-import {Label} from 'semantic-ui-react';
-import Helper from '@/services/helper';
+import { Label } from 'semantic-ui-react';
+
 import './History.scss';
+import { BASE_API } from '@/constants';
 
-
-const TAG = "History";
+const TAG = 'History';
 
 class History extends React.Component {
   static propTypes = {
-    app: PropTypes.object.isRequired,
+    // app: PropTypes.object.isRequired,
     auth: PropTypes.object.isRequired,
-    me: PropTypes.object.isRequired,
-    history: PropTypes.object.isRequired,
-    
-  }
+    // me: PropTypes.object.isRequired,
+    // history: PropTypes.object.isRequired,
+  };
 
   constructor(props) {
     super(props);
-    console.log(TAG ,'- contructor - init');
+    console.log(TAG, '- contructor - init');
     this.state = {
-      auth: props.auth||{},
+      auth: props.auth || {},
     };
   }
 
+  getDataSetProfile = () => this.state.auth?.dataset_profile || {};
+
   static getDerivedStateFromProps(nextProps, prevState) {
-    return {};
+    if (nextProps.auth.updatedAt !== prevState.auth.updatedAt) {
+      return { auth: nextProps.auth };
+    }
+    return null;
   }
 
   componentDidMount() {
-
+    this.fetchData();
   }
 
-  
+  fetchData = () => {
+    const dataset_profile = this.getDataSetProfile();
+    const userId = dataset_profile?.id || -1;
+    console.log(TAG, ' fetchData - - begin - ', dataset_profile);
+    if (userId > 0) {
+      this.props.loadDatasetHistory({
+        BASE_URL: BASE_API.BASE_DATASET_API_URL,
+        PATH_URL: `profile/${userId}/`,
+        METHOD: 'GET',
+        headers: { Authorization: `JWT ${dataset_profile?.token}` },
+
+        successFn: (res) => {
+          console.log(TAG, ' fetchData - - success - ', res);
+        },
+        errorFn: (e) => {
+          console.log(TAG, ' fetchData - error - ', e);
+        },
+      });
+    }
+  };
 
   render() {
-    return ( 
-        <div><Label>History</Label></div>
+    return (
+      <div>
+        <Label>History</Label>
+      </div>
     );
   }
 }
 
 const mapState = state => ({
-  me: state.me,
-  app: state.app,
+  // me: state.me,
+  // app: state.app,
   auth: state.auth,
 });
 
-const mapDispatch = ({
-  // loadDataset,
-});
+const mapDispatch = {
+  loadDatasetHistory,
+};
 
 export default injectIntl(connect(mapState, mapDispatch)(History));

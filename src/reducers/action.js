@@ -33,13 +33,14 @@ export const createAPI = INIT => ({
     method: METHOD,
   })
     .then((response) => {
-      console.log(`app - api - called - response = `, response);
+      // console.log(`app - api - called - response = `, response);
       dispatch({ type: APP_ACTION.CALLED });
 
       if (
         response.data.status === 1 ||
         response.data.status === 200 ||
-        response.status === 201
+        response.status === 201 ||
+        response.status === 200
       ) {
         dispatch({
           type: `${INIT}_SUCCESS`,
@@ -48,6 +49,7 @@ export const createAPI = INIT => ({
         });
         if (successFn) successFn(response.data || response);
       } else {
+        console.log(`app - api - called - error `, response.status);
         dispatch({ type: `${INIT}_FAILED`, payload: response.data });
         if (errorFn) errorFn(response.data);
       }

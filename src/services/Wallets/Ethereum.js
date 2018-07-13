@@ -81,8 +81,7 @@ export class Ethereum extends Wallet {
 
     const web3 = new Web3(new Web3.providers.HttpProvider(this.network));
     const receipt = await web3.eth.getTransactionReceipt(hash);
-    console.log(receipt);
-    return null;
+    return receipt;
   }
 
 

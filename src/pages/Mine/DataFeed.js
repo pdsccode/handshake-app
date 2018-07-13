@@ -85,8 +85,8 @@ class DataFeed extends React.Component {
     req.then((response) => {
       const body = response?.body||{};
       console.log(TAG," init_data body = ",body);
-      this.setState({isLoading: false});
-      this.setState({images: body?.results, nextURL: body?.next});
+      // this.setState({isLoading: false});
+      this.setState({images: body?.results, nextURL: body?.next,isLoading: false});
     }).catch((e) => {
     })
   }
@@ -329,10 +329,10 @@ class DataFeed extends React.Component {
 
   renderHashTag = (value,index)=>{
     const classifies  = value?.category?.classifies||[];
-    
+    let isNeedClick = classifies.filter(item=> item.checked === true).length === 0 ;
     const listTagView  = classifies.map(item=>{
       // console.log(TAG," renderHashTag item = ",item);
-      return (<Label color={item.checked?'yellow':undefined} key={String(item.id)||'-1'} as='a' style={{marginTop:2,marginBottom:2}} size='small' onClick={()=>this.clickTagItem(value,item.id)}>
+      return (<Label color={item.checked?'yellow':undefined} key={String(item.id)||'-1'} as='a' style={{marginTop:2,marginBottom:2}} size='small' onClick={isNeedClick?()=>this.clickTagItem(value,item.id):undefined}>
         {item?.name||''}
       </Label>);
     });
