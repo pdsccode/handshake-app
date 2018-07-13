@@ -2,25 +2,35 @@
  * StarsRating Component.
 */
 @import './src/styles/style';
-$blue: #2456fb;
+$color: #F0BC38;
 
 .stars-rating {
   span {
     margin-right: rem-calc(4.2px);
+    color: $color;
     &:last-child {
       margin-right: 0;
     }
+    //&:before {
+    //  content: "\2605";
+    //  position: absolute;
+    //}
+  }
+  .half:before {
+    //color: $color;
+    width: 6px;
+    overflow: hidden;
+    content: "\2605";
+    position: absolute;
+  }
+  .full {
+    //color: $color;
     &:before {
       content: "\2605";
       position: absolute;
     }
   }
-  .half:before {
-    color: $blue;
-    width: 8px;
-    overflow: hidden;
-  }
-  .full {
-    color: $blue;
+  .empty {
+    //color: $color;
   }
 }
