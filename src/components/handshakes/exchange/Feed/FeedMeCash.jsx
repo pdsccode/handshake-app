@@ -117,7 +117,7 @@ class FeedMeCash extends React.PureComponent {
           <div className="price">{`${formatMoneyByLocale(fiatAmount, fiatCurrency)} ${fiatCurrency}`}</div>
         </div>
         <div className="info-wrapper">
-          <div className="label"><FormattedMessage id="ex.shop.shake.label.cash.inventory" /></div>
+          <div className="label"><FormattedMessage id="ex.shop.shake.label.coin.inventory" /></div>
           <div className="price">{`${formatAmountCurrency(amount)} ${currency}`}</div>
         </div>
         <hr className="hrLine" />
