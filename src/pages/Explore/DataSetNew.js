@@ -1,11 +1,13 @@
 import React from 'react';
-import {Grid, Image, Container, Form, Card, Icon, Segment, Item, 
+import {Grid, Image, Container, Form, Card, Icon, Segment, Item,
   Radio, Button, Label, List,Input, Transition} from 'semantic-ui-react'
 import {Route, Redirect} from 'react-router'
 import agent from '../../services/agent'
 import {Link} from 'react-router-dom'
 import closeTop from '@/assets/icons/closeTop.svg';
 import addPlus from '@/assets/icons/addplus.svg';
+import {MasterWallet} from '@/services/Wallets/MasterWallet';
+import {Dataset} from '@/services/Wallets/Tokens/Dataset';
 
 class DataSetNew extends React.Component {
   constructor(props) {
@@ -22,6 +24,7 @@ class DataSetNew extends React.Component {
       classifiy:'',
       messageForm:'',
       isLoading:false,
+      submitting: false
     };
   }
 
@@ -66,7 +69,7 @@ class DataSetNew extends React.Component {
       this.setState(prevState => ({values: [...prevState.values, '']}))
     }
   }
-  
+
   handleChangeClass(){
     //this.state.classifiy
     //this.setState(prevState => ({values: [...prevState.values, '']}))
@@ -82,14 +85,12 @@ class DataSetNew extends React.Component {
     this.setState({
       values: [ ...values, clas ],
       classifiy:'',
-    });  
+    });
 
   }
 
   handleSubmit(event) {
     let self = this;
-    // alert('A name was submitted: ' + this.state.values.join(', '));
-    console.log(this.state);
     event.preventDefault();
     //name
     // desc
@@ -101,41 +102,45 @@ class DataSetNew extends React.Component {
     if(name.trim()==""){
       this.setState({messageForm:" Name is required"})
       return;
-    } 
+    }
     let desc = this.state.description;
     if(desc.trim()==""){
       this.setState({messageForm:" Description is required"})
       return;
-    } 
+    }
     let created_by_id = this.props.auth.dataset_profile.id;
-    
+
     if(this.state.values.length==0){
       this.setState({messageForm:" classification list must contain at least 1 class"})
       return;
     }
-    
+
     let datafrom={name, desc, created_by_id }
 
-    if(this.state.datasettype ==="buyer"){ 
+    if(this.state.datasettype ==="buyer"){
 
         let request_goal = this.state.Quantity;
         if(request_goal.trim()==""){
           this.setState({messageForm:" Request Quantity is required"})
           return;
-        } 
+        }
         let request_eth_amount = this.state.Amount;
         if(request_eth_amount.trim()==""){
           this.setState({messageForm:" ETH amount is required"})
           return;
-        } 
+        }
         datafrom={name, desc, created_by_id, request_goal ,request_eth_amount }
-    }   
-    this.setState({isLoading: true, messageForm:""})
+    }
+    this.setState({isLoading: true, messageForm:"", submitting: true});
 
-    agent.req.post(agent.API_ROOT + '/api/category/',datafrom ).set('authorization', `JWT ${this.props.token}`).type('form').then((response) => {
+    agent.req.post(agent.API_ROOT + '/api/category/',datafrom ).set('authorization', `JWT ${this.props.token}`).type('form').then(async (response) => {
       let resBody = response.body;
-      console.log(resBody);
-      let category = resBody.id; 
+
+      const dataset = new Dataset();
+      dataset.createFromWallet(MasterWallet.getWalletDefault('ETH'));
+      const requestTx = dataset.request(resBody.id, resBody.tx, 1);
+
+      let category = resBody.id;
       for (let i = 0; i < self.state.values.length; i++) {
         let name = self.state.values[i];
         if (!!name) {
@@ -148,9 +153,17 @@ class DataSetNew extends React.Component {
           })
         }
       }
-      this.setState({isLoading: false, datasetName:'', description:'',values:[], Quantity:'',Amount:'',messageForm:"Create dataset successfull." })
+      const tx = await requestTx;
+      console.log(tx);
+      this.setState({isLoading: false, datasetName:'', description:'',values:[], Quantity:'',Amount:'',messageForm:"Create dataset successfully." })
     }).catch((e) => {
-      this.setState({isLoading: false})
+      let message = '';
+      if (e.message.indexOf('insufficient funds') > -1) {
+        message = 'You have insufficient coin to make the transfer. Please top up and try again.';
+      } else {
+        message = 'Something\'s wrong. Please try again later.';
+      }
+      this.setState({isLoading: false, messageForm: message});
     })
   }
 
@@ -159,7 +172,7 @@ class DataSetNew extends React.Component {
     return (
       <Segment loading={this.state.isLoading} vertical style={{marginTop:'-5em',background:'white',zIndex:'55555'}}>
        <h2 className="my-h2-dataset-new">
-          Create new Dataset 
+          Create new Dataset
           <Link to={'/explore'}><Image src={closeTop} className="btn-Close-Top"/></Link>
        </h2>
         <Container>
@@ -170,13 +183,13 @@ class DataSetNew extends React.Component {
 
               <Form.Input label ="Description" fluid placeholder='Description' name='description' value={this.state.description}
                           onChange={this.handleChangeInput}/>
-              
-              <Form.Input label ="Classification" fluid placeholder='Classification' 
+
+              <Form.Input label ="Classification" fluid placeholder='Classification'
                           name='classifiy' value={this.state.classifiy}
-                          onChange={this.handleChangeInput} 
-                          />    
-                <Image src={addPlus} className="btn-add-class" onClick={()=>this.handleChangeClass()} /> 
-                
+                          onChange={this.handleChangeInput}
+                          />
+                <Image src={addPlus} className="btn-add-class" onClick={()=>this.handleChangeClass()} />
+
             </Form.Group>
             <Form.Group >
                 {this.createUI2()}
@@ -184,31 +197,31 @@ class DataSetNew extends React.Component {
 
             <Form.Group inline style={{marginTop:'10px'}}>
               <label>You're a ? </label>
-              <Form.Radio 
+              <Form.Radio
                 label='Buyer'
                 value='buyer'
                 name="datasettype"
                 checked={this.state.datasettype === 'buyer'}
                 onChange={this.handleChangeInput}
               />
-              <Form.Radio 
+              <Form.Radio
                 name="datasettype"
                 label='Provider'
                 value='provider'
                 checked={this.state.datasettype === 'provider'}
                 onChange={this.handleChangeInput}
-              /> 
-              </Form.Group> 
+              />
+              </Form.Group>
               <div style={{display: this.state.datasettype==="buyer" ? "block":"none"}}>
-             
+
               <Form.Input
-               label ="Request quantity" 
+               label ="Request quantity"
                type='number' pattern="[0-9]*"
                fluid placeholder='00' name='Quantity' value={this.state.Quantity}
-                          onChange={this.handleChangeInput}/> 
+                          onChange={this.handleChangeInput}/>
 
-              <Form.Input 
-              label ="Amount" 
+              <Form.Input
+              label ="Amount"
               type='number' pattern="[0-9.]*"
               fluid placeholder='0,000 ETH' name='Amount' value={this.state.Amount}
                           onChange={this.handleChangeInput}/>
@@ -218,8 +231,8 @@ class DataSetNew extends React.Component {
                 <label  style={{color:'red'}} >{this.state.messageForm} </label>
             </Form.Field>
 
-            <Form.Button fluid primary content='Submit' size='large' 
-                style={{background:'#21c364',marginTop:'30px'}} onClick={this.handleSubmit} />
+            <Form.Button fluid primary content='Submit' size='large'
+                style={{background:'#21c364',marginTop:'30px'}} loading={this.state.isLoading} onClick={this.handleSubmit} />
           </Form>
         </Container>
       </Segment>
@@ -227,4 +240,4 @@ class DataSetNew extends React.Component {
   }
 }
 
-export default DataSetNew; 
+export default DataSetNew;

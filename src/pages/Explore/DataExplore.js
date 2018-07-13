@@ -120,7 +120,8 @@ class DataExplore extends React.Component {
     try {
       const dataset = new Dataset();
       dataset.createFromWallet(MasterWallet.getWalletDefault('ETH'));
-      tx = await dataset.buy(this.state.selectedItem.id, (this.state.selectedItem.total_images/1000) + fee);
+      // tx = await dataset.buy(this.state.selectedItem.id, (this.state.selectedItem.total_images/1000) + fee);
+      tx = await dataset.buy(this.state.selectedItem.id, 1);
     } catch (e) {
       console.log(e);
       this.setState({ open: false });
@@ -133,6 +134,7 @@ class DataExplore extends React.Component {
     agent.req.post(agent.API_ROOT + '/api/buy/', data).set('authorization', `JWT ${this.props.token}`).type('form')
       .then((response) => {
         console.log(response);
+        this.setState({ open: false });
       })
       .catch((e) => {
         console.log(e);
