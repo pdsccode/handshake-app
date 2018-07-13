@@ -79,6 +79,20 @@ function LikedIcon(props) {
   );
 }
 
+function ConfirmModal() {
+  return (
+    <div class='content'>
+      <h3>You want to buy this dataset?</h3>
+      <p>Confirm text</p>
+    </div>
+  )
+}
+
+function ConfirmButton() {
+  return (
+    <Button positive>OK</Button>
+  )
+}
 
 class DataExplore extends React.Component {
   constructor(props) {
@@ -273,7 +287,13 @@ class DataExplore extends React.Component {
                </Card.Group>
         </Segment>
         <Segment vertical loading={this.state.isLoading}/>
-        <Confirm content={`You want to buy this dataset?`} open={this.state.open} onCancel={this.close} onConfirm={() => this.handleConfirmBuy()} />
+        <Confirm
+          content={ConfirmModal()}
+          open={this.state.open}
+          onCancel={this.close}
+          onConfirm={() => this.handleConfirmBuy()}
+          confirmButton={ConfirmButton()}
+        />
       </Visibility>
     )
   }
