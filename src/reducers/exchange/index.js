@@ -6,6 +6,7 @@ import OfferPrice from '@/models/OfferPrice';
 import OfferShop from '@/models/OfferShop';
 import { EXCHANGE_ACTIONS } from './action';
 import { EXCHANGE_ACTION } from '@/constants';
+import Dashboard from "@/models/Dashboard";
 
 const initListOfferPrice = [];
 initListOfferPrice.updatedAt = Date.now();
@@ -59,6 +60,9 @@ function exchangeReducter(state = {
     }
     case `${EXCHANGE_ACTIONS.SET_FREE_START}`: {
       return { ...state, isChooseFreeStart: action.payload.data };
+    }
+    case `${EXCHANGE_ACTIONS.GET_DASHBOARD_INFO}_SUCCESS`: {
+      return { ...state, dashboardInfo: Dashboard.dashboard(action.payload.data) };
     }
     default:
       return state;

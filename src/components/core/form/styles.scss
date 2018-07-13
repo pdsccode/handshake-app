@@ -182,6 +182,61 @@
     }
   }
 
+  &.tab-5 {
+    text-align: center;
+    input {
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+      &:checked ~ button {
+        background: #000000;
+        color: #FFFFFF;
+      }
+      & ~ button {
+        background: #FFFFFF;
+        box-shadow: 0 2px 4px 0 rgba(201,201,201,0.50);
+        border-radius: 4px;
+        font-weight: 500;
+        font-size: 14px;
+        color: #6F6F6F;
+        letter-spacing: 0;
+        width: 100%;
+      }
+    }
+    &:first-of-type {
+      padding-right: 2px;
+    }
+    &:not(:first-of-type) {
+      padding-left: 2px;
+    }
+  }
+
+  &.tab-6 {
+    text-align: center;
+    input {
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+      &:checked ~ button {
+        color: #2456fb;
+      }
+      & ~ button {
+        font-weight: 500;
+        font-size: 16px;
+        color: #000000;
+        letter-spacing: 0;
+        background: none;
+        box-shadow: none;
+      }
+    }
+    &:first-of-type {
+      padding-right: 2px;
+    }
+    &:not(:first-of-type) {
+      padding-left: 2px;
+    }
+  }
+
   &.big {
     input {
       position: absolute;

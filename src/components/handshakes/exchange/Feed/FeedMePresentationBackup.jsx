@@ -2,6 +2,7 @@ import React from "react";
 import Feed from '@/components/core/presentation/Feed/Feed';
 import {Link} from "react-router-dom";
 import Rate from '@/components/core/controls/Rate';
+import { URL, } from '@/constants';
 
 import iconLocation from '@/assets/images/icon/icons8-geo_fence.svg';
 import iconChat from '@/assets/images/icon/icons8-chat.svg';
