@@ -304,7 +304,7 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
             message = <FormattedMessage id="acceptOfferConfirm" values={{ }} />;
             actionButtons = (
               <div className="mt-3">
-                <span className="d-inline-block w-50 pr-1">
+                <span className="d-inline-block auto-width">
                   <button
                     className="btn btn-block btn-confirm"
                     onClick={() => confirmOfferAction(message, this.handleAcceptShakedOffer)}
@@ -322,7 +322,7 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
             actionButtons = (
               <div className="mt-3">
                 {offer.type === EXCHANGE_ACTION.SELL &&
-                <span className="d-inline-block w-50 pr-1">
+                <span className="d-inline-block auto-width">
                   <button
                     className="btn btn-block btn-confirm"
                     onClick={() => confirmOfferAction(message2, this.handleCompleteShakedOffer)}
@@ -330,7 +330,7 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
                   </button>
                 </span>
                 }
-                <span className="d-inline-block w-50 pl-1">
+                <span className="d-inline-block auto-width">
                   <button
                     className="btn btn-block btn-cancel"
                     onClick={() => confirmOfferAction(message, this.handleRejectShakedOffer)}
@@ -350,7 +350,7 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
             message = <FormattedMessage id="cancelOfferConfirm" values={{ }} />;
             actionButtons = (
               <div className="mt-3">
-                <span className="d-inline-block w-50 pl-1">
+                <span className="d-inline-block auto-width">
                   <button
                     className="btn btn-block btn-cancel"
                     onClick={() => confirmOfferAction(message, this.handleCancelShakeOffer)}
@@ -368,7 +368,7 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
             actionButtons = (
               <div className="mt-3">
                 {offer.type === EXCHANGE_ACTION.BUY &&
-                <span className="d-inline-block w-50 pr-1">
+                <span className="d-inline-block auto-width">
                   <button
                     className="btn btn-block btn-confirm"
                     onClick={() => confirmOfferAction(message2, this.handleCompleteShakedOffer)}
@@ -376,7 +376,7 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
                   </button>
                 </span>
                 }
-                <span className="d-inline-block w-50 pl-1">
+                <span className="d-inline-block auto-width">
                   <button
                     className="btn btn-block btn-cancel"
                     onClick={() => confirmOfferAction(message, this.handleRejectShakedOffer)}
