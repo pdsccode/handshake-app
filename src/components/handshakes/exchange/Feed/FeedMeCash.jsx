@@ -42,7 +42,7 @@ class FeedMeCash extends React.PureComponent {
       show: true,
       modalContent: (
         <div className="modal-more-info-content">
-          <button className="button-close" onClick={() => onShowModalDialog({ show: false })}>&times;</button>
+          <span className="button-close" onClick={() => onShowModalDialog({ show: false })}>&times;</span>
           <div className="d-table w-100">
             <div className="d-table-cell align-middle" style={{ width: '50px' }}><img src={iconLogoWhite} width="35px" /></div>
             <div className="d-table-cell align-middle"><span className="heading-text"><FormattedMessage id="ex.shop.shake.label.information" /></span></div>
@@ -142,12 +142,12 @@ class FeedMeCash extends React.PureComponent {
             className="d-table-cell text-right align-middle"
             style={{ width: '35px' }}
           >
-            <button
+            <span
               className="d-inline-block p-0"
               onClick={this.handleClickMoreInfo}
             >
               <img src={iconInfo} width="35px" />
-            </button>
+            </span>
           </div>
 
           {
@@ -156,11 +156,11 @@ class FeedMeCash extends React.PureComponent {
                 className="d-table-cell text-right align-middle"
                 style={{ width: '50px' }}
               >
-                <button className="d-inline-block p-0">
+                <span className="d-inline-block p-0">
                   <Link to={`${URL.HANDSHAKE_CHAT_INDEX}/${chatUsername}`}>
                     <img src={iconChat} width="35px" />
                   </Link>
-                </button>
+                </span>
               </div>
             )
           }
