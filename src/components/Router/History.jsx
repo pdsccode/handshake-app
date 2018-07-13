@@ -14,7 +14,10 @@ import {
 } from '@/reducers/app/action';
 
 const History = props => (
-  <DynamicImport loading={Loading} load={() => import('@/pages/History/History')}>
+  <DynamicImport
+    loading={Loading}
+    load={() => import('@/pages/History/History')}
+  >
     {Component => <Component {...props} />}
   </DynamicImport>
 );
@@ -29,7 +32,7 @@ const Page404 = props => (
   </DynamicImport>
 );
 
-const routerMap = [{ path: URL.DATA_SET_UPLOAD, component: History }];
+const routerMap = [{ path: URL.DATA_SET_HISTORY, component: History }];
 
 class HistoryRouter extends React.Component {
   static propTypes = {
@@ -72,4 +75,4 @@ export default connect(null, {
   clearHeaderLeft,
   showHeader,
   hideSearchBar,
-})(History);
+})(HistoryRouter);

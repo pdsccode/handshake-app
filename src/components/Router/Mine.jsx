@@ -59,7 +59,7 @@ class MineRouter extends React.Component {
   }
 
   render() {
-    console.log('HANDSHAKE_CLASSIFY_INDEX');
+    // console.log('HANDSHAKE_CLASSIFY_INDEX');
     return (
       <Switch>
         {routerMap.map(route => (
