@@ -172,10 +172,10 @@ class Me extends React.Component {
       }
     }
 
-    // if (nextProps.me.list.length === 0 && prevState.handshakeIdActive === HANDSHAKE_ID.BETTING) {
-    //   rfChange(nameFormFilterFeeds, 'feedType', HANDSHAKE_ID.EXCHANGE);
-    //   return { handshakeIdActive: HANDSHAKE_ID.EXCHANGE, firstTime: false };
-    // }
+    if (nextProps.me.list.length === 0 && prevState.handshakeIdActive === HANDSHAKE_ID.BETTING && prevState.firstTime) {
+      rfChange(nameFormFilterFeeds, 'feedType', HANDSHAKE_ID.EXCHANGE);
+      return { handshakeIdActive: HANDSHAKE_ID.EXCHANGE, firstTime: false };
+    }
 
     return null;
   }
