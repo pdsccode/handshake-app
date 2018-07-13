@@ -51,13 +51,18 @@ export class Bitcoin extends Wallet {
   async getBalance() {
     this.setDefaultNetwork();
 
-    const url = `${this.network}/addr/${this.address}/balance`;    
+    const url = `${this.network}/addr/${this.address}/balance`;
     const response = await axios.get(url);
 
     if (response.status == 200) {
       return await satoshi.toBitcoin(response.data);
     }
     return false;
+  }
+
+  getAPIUrlAddress() {
+    let url = bitcore.Networks.defaultNetwork == bitcore.Networks.livenet ? "https://bitpay.com/api/txs/?address="+this.address : "https://test-insight.bitpay.com/address/"+this.address;
+    return url;
   }
 
   checkAddressValid(toAddress) {
@@ -215,6 +220,22 @@ export class Bitcoin extends Wallet {
     return result;
   }
 
+  formatNumber(value){
+    let result = value, count = 0;
+    try {
+      if (Math.floor(value) !== value)
+          count = value.toString().split(".")[1].length || 0;
+
+      if(count > 6)
+        result = value.toFixed(6);
+    }
+    catch(e) {
+
+    }
+
+    return result;
+  }
+
   cook(data){
     let vin = {}, vout = {}, coin_name = this.name,
         is_sent = 2, value = 0,
@@ -267,6 +288,8 @@ export class Bitcoin extends Wallet {
       catch(e){
         console.error(e);
       }
+
+      value = this.formatNumber(value);
     }
 
     return {

@@ -150,7 +150,8 @@ export const BETTING_STATUS_LABEL =
       ROLLBACK_INIT: 'There is something wrong with blockchain. The bet is cancelled',
       ROLLBACK_SHAKE: 'There is something wrong with blockchain. The bet is cancelled',
       COLLECT_FAILED: 'There is something wrong with withdraw. Please cancel to get back money',
-      SHOULD_CANCEL: 'There is something wrong. Please cancel to get back money',
+      SHOULD_CANCEL: 'There is no bet matched. Please cancel to get back money',
+      MATCH_POSTPONSE: 'Event is postponsed',
       ACTION_FAILED: `There is something wrong with blockchain. Your action is cancelled`,
       INIT_FAILED: `There is something wrong with blockchain. Your bet is cancelled`,
       SOLVE: 'Please retry to solve problem',
@@ -202,16 +203,22 @@ export class BetHandshakeHandler {
     console.log('getStatusLabel Role:', role);
     console.log('getStatusLabel isMatch:', isMatch);
     console.log('getStatusLabel Blockchain status:', blockchainStatus);
+    console.log('getStatusLabel result:', resultStatus);
+
     if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_INIT_FAILED) {
       strStatus = BETTING_STATUS_LABEL.INIT_FAILED;
       isAction = false;
     } else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_FAILED) {
       label = BETTING_STATUS_LABEL.CANCEL;
-      strStatus = BETTING_STATUS_LABEL.SHOULD_CANCEL;
+      strStatus = BETTING_STATUS_LABEL.COLLECT_FAILED;
       isAction = true;
+    } else if (isMatch && resultStatus === BETTING_STATUS.DRAW) {
+      //label = BETTING_STATUS_LABEL.CANCEL;
+      strStatus = BETTING_STATUS_LABEL.MATCH_POSTPONSE;
+      isAction = false;
     } else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_MAKER_SHOULD_UNINIT) {
       label = BETTING_STATUS_LABEL.CANCEL;
-      strStatus = BETTING_STATUS_LABEL.COLLECT_FAILED;
+      strStatus = BETTING_STATUS_LABEL.SHOULD_CANCEL;
       isAction = true;
     } else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINIT_PENDING) {
       strStatus = BETTING_STATUS_LABEL.PROGRESSING;
@@ -247,8 +254,7 @@ export class BetHandshakeHandler {
       label = BETTING_STATUS_LABEL.CANCEL;
       strStatus = BETTING_STATUS_LABEL.BET_WAIT_MATCHING;
       isAction = true;
-    } else if ((isMatch && resultStatus === BETTING_STATUS.DRAW)
-              || (isMatch && resultStatus === BETTING_STATUS.INITED && isExpiredDate(reportTime))) {
+    } else if (isMatch && resultStatus === BETTING_STATUS.INITED && isExpiredDate(reportTime)) {
       label = BETTING_STATUS_LABEL.REFUND;
       strStatus = BETTING_STATUS_LABEL.REFUNDING;
       isAction = true;
