@@ -125,6 +125,7 @@ class FeedBetting extends React.Component {
     let winMatch = 0;
     let itemInfo = props;
     let idCryptosign = id;
+    let { side } = itemInfo;
     if (isMatch) {
       amountMatch = amount - remainingAmount;
       winMatch = amountMatch * odds;
@@ -153,7 +154,7 @@ class FeedBetting extends React.Component {
 
 
     let status = itemInfo.status;
-    const side = itemInfo.side;
+    side = itemInfo.side;
 
     const role = isUserShake ? ROLE.SHAKER : ROLE.INITER;
     // const blockchainStatusHardcode = 5;
