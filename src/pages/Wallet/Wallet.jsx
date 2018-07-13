@@ -200,7 +200,7 @@ class Wallet extends React.Component {
         }
         else{
           listMainWallet.push(wallet);
-        }        
+        }
       } else {
         // is Testnet
         listTestWallet.push(wallet);
@@ -338,10 +338,10 @@ class Wallet extends React.Component {
       obj.push({
         title: messages.wallet.action.transfer.title,
         handler: () => {
-          this.toggleBottomSheet();          
+          this.toggleBottomSheet();
           this.setState({ walletSelected: wallet, activeTransfer: true }, ()=>{
             this.modalSendRef.open();
-          });                  
+          });
         }
       })
     }
@@ -351,7 +351,7 @@ class Wallet extends React.Component {
         this.setState({walletSelected: wallet, activeReceive: true}, ()=>{
           this.toggleBottomSheet();
           this.modalShareAddressRef.open();
-        });        
+        });
       }
     })
 
@@ -568,16 +568,16 @@ class Wallet extends React.Component {
   // Menu for Right header bar
   showModalAddCoin = () =>{
     this.setState({ isRestoreLoading: false, countCheckCoinToCreate: 1, listCoinTempToCreate: MasterWallet.getListCoinTemp() });
-    this.modalCreateWalletRef.open();    
+    this.modalCreateWalletRef.open();
   }
   showModalAddToken = () =>{
       this.setState({formAddTokenIsActive: true}, () => {
-        this.modalAddNewTokenRef.open();        
+        this.modalAddNewTokenRef.open();
     });
   }
   showModalAddCollectible = () =>{
     this.setState({formAddCollectibleIsActive: true}, () => {
-      this.modalAddNewCollectibleRef.open();      
+      this.modalAddNewCollectibleRef.open();
     });
   }
   creatSheetMenuHeaderMore() {
@@ -594,7 +594,7 @@ class Wallet extends React.Component {
     // obj.push({
     //   title: messages.wallet.action.add_token.title,
     //   handler: () => {
-    //     this.showModalAddToken();       
+    //     this.showModalAddToken();
     //   },
     // });
     // obj.push({
@@ -723,10 +723,10 @@ class Wallet extends React.Component {
     }
   }
 
-  onAddressClick = (wallet) => {    
-    this.setState({walletSelected: wallet, activeReceive: true}, ()=>{      
+  onAddressClick = (wallet) => {
+    this.setState({walletSelected: wallet, activeReceive: true}, ()=>{
       this.modalShareAddressRef.open();
-    });        
+    });
   }
 
   handleFocus = (e) => {
@@ -770,6 +770,10 @@ class Wallet extends React.Component {
 
   closeTransfer = () => {
     this.setState({ activeTransfer: false });
+  }
+
+  closeCreate = () => {
+    this.setState({input12PhraseValue: "", walletKeyDefaultToCreate: 1});
   }
 
   successTransfer = () => {
@@ -910,7 +914,7 @@ class Wallet extends React.Component {
 
 
           <Modal title={messages.wallet.action.transfer.header} onRef={modal => this.modalSendRef = modal}  onClose={this.closeTransfer}>
-            <TransferCoin active={this.state.activeTransfer} wallet={this.state.walletSelected} onFinish={() => { this.successTransfer() }} />            
+            <TransferCoin active={this.state.activeTransfer} wallet={this.state.walletSelected} onFinish={() => { this.successTransfer() }} />
           </Modal>
 
           {/* <Modal title="Buy coins" onRef={modal => this.modalFillRef = modal}>
@@ -980,7 +984,7 @@ class Wallet extends React.Component {
           </Modal>
 
           {/* Modal for Create/Import wallet : */}
-          <Modal title={messages.wallet.action.create.header} onRef={modal => this.modalCreateWalletRef = modal}>
+          <Modal title={messages.wallet.action.create.header} onRef={modal => this.modalCreateWalletRef = modal} onClose={this.closeCreate}>
             <Row className="list">
               <Header title={messages.wallet.action.create.label.select_coins} hasLink={false} />
             </Row>
@@ -1045,7 +1049,7 @@ class Wallet extends React.Component {
             <Header title={messages.wallet.action.create.label.header_coins}hasLink={true} linkTitle={messages.wallet.action.create.button.add_new} onLinkClick={this.showModalAddCoin} />
           </Row>
           <Row className="list">
-            {this.listMainWalletBalance}            
+            {this.listMainWalletBalance}
           </Row>
 
           {/* Tokens */}
