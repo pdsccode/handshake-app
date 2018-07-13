@@ -475,6 +475,12 @@
     border-radius: 6px;
   }
 
+  .label-self{
+    color:purple;
+    font-size: 16px;
+    padding-bottom: 7px;
+  }
+
   .label-sent{
     color:#1E4EFF;
     font-size: 16px;
@@ -496,6 +502,11 @@
     color:#8A8A8F;
     font-size: 14px;
     padding-bottom: 7px;
+  }
+
+  .value-self{
+    font-size: 16px;
+    color:purple;
   }
 
   .value-sent{

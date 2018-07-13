@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import iconSelf from '@/assets/images/icon/icon-self.svg';
 import iconSent from '@/assets/images/icon/icon-sent.svg';
 import iconReceived from '@/assets/images/icon/icon-received.svg';
 import PropTypes from 'prop-types';
@@ -71,7 +72,7 @@ class WalletTransaction extends React.Component {
         };
       }
       else{
-        let result = {}, is_sent = false, value = 0;
+        let result = {}, is_sent = 0, value = 0;
 
         try{
           result = {
@@ -118,11 +119,18 @@ class WalletTransaction extends React.Component {
     const { messages } = this.props.intl;
     let detail = this.cooked_transaction(this.state.transaction_detail);
     let css_status = detail ? "status-" + detail.header.status : "";
+    let icon = iconSelf;
+    if(detail && detail.header.is_sent == 1) {
+      icon = iconSent;
+    }
+    else if (detail && detail.header.is_sent == 2) {
+      icon = iconReceived;
+    }
 
     return detail ?
     (
       <div className="transaction-detail-wrapper" >
-        <div className="col1"><img className="iconDollar" src={detail.header.is_sent ? iconSent : iconReceived} /></div>
+        <div className="col1"><img className="iconDollar" src={icon} /></div>
         <div className="col2">
           {detail.header.value} {detail.header.coin}<br />
           <span>{moment(detail.timeStamp).format('llll')}</span>

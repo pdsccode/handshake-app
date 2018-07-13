@@ -744,7 +744,11 @@ export default {
           confirmations: 'confirmations',
           success: 'success',
           detail_etherscan: 'View detail on etherscan.io',
-          view_all_etherscan: 'View all on etherscan.io'
+          view_all_etherscan: 'View all on etherscan.io',
+          self: "Self",
+          sent: "Sent",
+          received: "Received"
+
         },
       },
     },
