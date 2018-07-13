@@ -1,53 +1,47 @@
 import axios from 'axios';
 import satoshi from 'satoshi-bitcoin';
 import { StringHelper } from '@/services/helper';
-import { Wallet } from '@/services/Wallets/Wallet';
+import { Bitcoin } from '@/services/Wallets/Bitcoin';
 import { NB_BLOCKS } from '@/constants';
 
-const bitcore = require('bitcore-lib');
+const bitcore = require('bitcore-lib-cash');
 const BigNumber = require('bignumber.js');
 const moment = require('moment');
 
-export class Bitcoin extends Wallet {
-  static Network = { Mainnet: 'https://insight.bitpay.com/api' }
+export class BitcoinCash extends Bitcoin {
+  static Network = { Mainnet: 'https://bch-insight.bitpay.com/api' }
 
   constructor() {
     super();
 
     this.coinType = 0;
-    this.name = 'BTC';
-    this.title = 'Bitcoin';
-    this.className = 'Bitcoin';
-  }
-
-  getShortAddress() {
-    return this.address.replace(this.address.substr(4, 26), '...');
+    this.name = 'BCH';
+    this.title = 'Bitcoin Cash';
+    this.className = 'BitcoinCash';
   }
 
   setDefaultNetwork() {
-    bitcore.Networks.defaultNetwork = bitcore.Networks.livenet;
+    bitcore.Networks.defaultNetwork = bitcore.Networks.testnet;
+  }
+
+  getShortAddress() {
+    return this.address.replace(this.address.substr(4, 34), '...');
+  }
+
+  checkAddressValid(toAddress) {
+    if (!bitcore.Address.isValid(toAddress)) {
+      return 'messages.bitcoin_cash.error.invalid_address';
+    }
+    return true;
   }
 
   createAddressPrivatekey() {
-    this.setDefaultNetwork();
-
-    const Mnemonic = require('bitcore-mnemonic');
-
-    let code = null;
-
-    if (this.mnemonic == '') {
-      code = new Mnemonic();
-      this.mnemonic = code.phrase;
-    } else { code = new Mnemonic(this.mnemonic); }
-
-    const xpriv = code.toHDPrivateKey();
-
-    const hdPrivateKey = new bitcore.HDPrivateKey(xpriv);
-    const derived = hdPrivateKey.derive(StringHelper.format('m/44\'/{0}\'/0\'/0/0', this.coinType));
-    this.address = derived.privateKey.toAddress().toString();
-    this.privateKey = derived.privateKey.toString();
+    super.createAddressPrivatekey();
+    this.setDefaultNetwork();    
+    // get Cashaddr
+    var address = new bitcore.PrivateKey(this.privateKey).toAddress();
+    this.address = address.toString().split(':')[1];
   }
-
   async getBalance() {
     this.setDefaultNetwork();
 
@@ -55,18 +49,10 @@ export class Bitcoin extends Wallet {
     const response = await axios.get(url);
 
     if (response.status == 200) {
-      return await satoshi.toBitcoin(response.data);
+      return response.data;
     }
     return false;
   }
-
-  checkAddressValid(toAddress) {
-    if (!bitcore.Address.isValid(toAddress)) {
-      return 'messages.bitcoin.error.invalid_address';
-    }
-    return true;
-  }
-
 
   async transfer(toAddress, amountToSend, blocks = NB_BLOCKS) {
     try {
@@ -81,7 +67,7 @@ export class Bitcoin extends Wallet {
 
       console.log('bitcore.Networks.defaultNetwork', bitcore.Networks.defaultNetwork);
       console.log('server', this.network);
-      console.log(StringHelper.format('Your wallet balance is currently {0} ETH', balance));
+      console.log(StringHelper.format('Your wallet balance is currently {0} BHC', balance));
 
       if (!balance || balance == 0 || balance <= amountToSend) {
         return { status: 0, message: 'messages.bitcoin.error.insufficient' };
@@ -239,12 +225,10 @@ export class Bitcoin extends Wallet {
                 let tout_addresses = tout.scriptPubKey.addresses.join(" ").toLowerCase();
                 if(tout_addresses.indexOf(this.address.toLowerCase()) < 0){
                   value += Number(tout.value);
-                  addresses.push(tout_addresses.replace(tout_addresses.substr(4, 26), '...'));
+                  addresses.push(tout_addresses.replace(tout_addresses.substr(4, 34), '...'));
                 }
               }
-
             }
-
             break;
           }
         }
@@ -258,7 +242,7 @@ export class Bitcoin extends Wallet {
                 value += tout.value;
               }
               else{
-                addresses.push(tout_addresses.replace(tout_addresses.substr(4, 26), '...'));
+                addresses.push(tout_addresses.replace(tout_addresses.substr(4, 34), '...'));
               }
             }
           }
@@ -280,6 +264,7 @@ export class Bitcoin extends Wallet {
       is_sent: is_sent
     };
   }
+  
 }
 
-export default { Bitcoin };
+export default { BitcoinCash };
