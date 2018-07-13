@@ -25,7 +25,7 @@ import {
   getShakeOffchain, getBalance, getEstimateGas, foundShakeList, parseBigNumber,
 } from '@/components/handshakes/betting/utils.js';
 
-import { isSameAddress } from '@/components/handshakes/betting/validation.js';
+import { isSameAddress, isRightNetwork } from '@/components/handshakes/betting/validation.js';
 
 
 
@@ -125,6 +125,7 @@ class FeedBetting extends React.Component {
     let winMatch = 0;
     let itemInfo = props;
     let idCryptosign = id;
+    let { side } = itemInfo;
     if (isMatch) {
       amountMatch = amount - remainingAmount;
       winMatch = amountMatch * odds;
@@ -153,7 +154,7 @@ class FeedBetting extends React.Component {
 
 
     let status = itemInfo.status;
-    const side = itemInfo.side;
+    side = itemInfo.side;
 
     const role = isUserShake ? ROLE.SHAKER : ROLE.INITER;
     // const blockchainStatusHardcode = 5;
