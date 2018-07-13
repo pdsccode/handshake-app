@@ -327,9 +327,9 @@ class DataFeed extends React.Component {
     );
   }
 
-  renderHashTag = (value,index,isNeedClick = false)=>{
+  renderHashTag = (value,index)=>{
     const classifies  = value?.category?.classifies||[];
-    
+    let isNeedClick = classifies.filter(item=> item.checked === true).length === 0 ;
     const listTagView  = classifies.map(item=>{
       // console.log(TAG," renderHashTag item = ",item);
       return (<Label color={item.checked?'yellow':undefined} key={String(item.id)||'-1'} as='a' style={{marginTop:2,marginBottom:2}} size='small' onClick={isNeedClick?()=>this.clickTagItem(value,item.id):undefined}>
@@ -342,7 +342,6 @@ class DataFeed extends React.Component {
   }
 
   render() {
-    let isNeedCheck = false;
     return (
       <Visibility once={true} onUpdate={this.handleUpdate}>
         <Segment vertical >
