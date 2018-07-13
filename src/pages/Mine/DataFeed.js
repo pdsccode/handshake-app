@@ -349,7 +349,7 @@ class DataFeed extends React.Component {
               {this.state.images.map((item, i) => {
                 return (
                   <Card key={i} className="my-card">
-                      <Link className="ui image" to={"/cat/" + item.category.id}>
+                      <Link className="ui image" to={"/explore/" + item.category.id}>
                         <Image src={item.link}/>
                       </Link>
                     <Card.Content>
