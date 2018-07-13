@@ -126,7 +126,7 @@ class FeedMeCash extends React.PureComponent {
             <img src={iconAvatar} width="35px" alt="" />
           </div>
           <div className="d-table-cell align-middle address-info">
-            <div>{nameShop}</div>
+            <div className="name-shop">{nameShop}</div>
             <div
               className="d-inline-block"
               // style={{ maxWidth: '120px' }}
