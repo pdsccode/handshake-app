@@ -1,5 +1,5 @@
 import React from 'react';
-import FeedMePresentation from './FeedMePresentation';
+import FeedMeCash from './FeedMeCash';
 import {APP_USER_NAME, HANDSHAKE_EXCHANGE_CC_STATUS, HANDSHAKE_EXCHANGE_CC_STATUS_NAME,} from '@/constants';
 import {FormattedMessage} from 'react-intl';
 import {connect} from 'react-redux';
@@ -116,7 +116,7 @@ class FeedMeInstantContainer extends React.PureComponent {
     };
 
     return (
-      <FeedMePresentation {...this.props} {...feedProps} />
+      <FeedMeCash {...this.props} {...feedProps} />
     );
   }
 }

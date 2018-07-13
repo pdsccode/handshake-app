@@ -24,6 +24,8 @@ class OfferShop {
       } : {},
       chatUsername: data.chat_username || '',
       toChatUsername: data.to_chat_username || '',
+      review: data.review || 0,
+      reviewCount: data.review_count || 0,
     };
   }
 }

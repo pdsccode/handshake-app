@@ -1,12 +1,11 @@
 import React from "react";
-import {injectIntl} from "react-intl";
+import { FormattedMessage, injectIntl } from "react-intl";
 import Feed from "@/components/core/presentation/Feed";
 import Button from "@/components/core/controls/Button";
 import './styles.scss'
 import createForm from "@/components/core/form/createForm";
 import {formatMoneyByLocale, getOfferPrice} from "@/services/offer-util";
 import axios from 'axios';
-import {FormattedMessage} from 'react-intl';
 import {
   fieldCleave,
   fieldDropdown,
@@ -15,31 +14,32 @@ import {
   fieldPhoneInput,
   fieldRadioButton
 } from "@/components/core/form/customField";
-import {maxValue, minValue, required, number} from "@/components/core/form/validation";
-import {change, Field, formValueSelector, clearFields} from "redux-form";
+import { maxValue, minValue, number, required } from "@/components/core/form/validation";
+import { change, clearFields, Field, formValueSelector } from "redux-form";
 import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
+// import {MasterWallet} from '@/services/Wallets/MasterWallet';
 import {
   API_URL,
   CRYPTO_CURRENCY,
   CRYPTO_CURRENCY_DEFAULT,
+  CRYPTO_CURRENCY_NAME,
   DEFAULT_FEE,
   EXCHANGE_ACTION,
   EXCHANGE_ACTION_DEFAULT,
   EXCHANGE_ACTION_LIST,
   EXCHANGE_ACTION_NAME,
-  FIAT_CURRENCY,
+  FIAT_CURRENCY_LIST,
   FIAT_CURRENCY_SYMBOL,
   MIN_AMOUNT,
+  NB_BLOCKS,
   SELL_PRICE_TYPE_DEFAULT,
-  CRYPTO_CURRENCY_NAME,
+  URL,
 } from "@/constants";
 
-import { validate } from './validation';
+import {validate} from './validation';
 import "../styles.scss";
 import ModalDialog from "@/components/core/controls/ModalDialog/ModalDialog";
-// import {MasterWallet} from '@/services/Wallets/MasterWallet';
-import {URL,NB_BLOCKS} from "@/constants";
 import {hideLoading, showAlert, showLoading} from "@/reducers/app/action";
 import {MasterWallet} from "@/services/Wallets/MasterWallet";
 import {ExchangeShopHandshake} from "@/services/neuron";
@@ -133,6 +133,10 @@ class Component extends React.Component {
     rfChange(nameFormExchangeCreate, 'phone', authProfile.phone || `${detectedCountryCode}-`);
     rfChange(nameFormExchangeCreate, 'nameShop', authProfile.name || '');
     rfChange(nameFormExchangeCreate, 'address', authProfile.address || '');
+    const fiatCurrency = {
+      id: ipInfo?.currency, text: ipInfo?.currency
+    }
+    rfChange(nameFormExchangeCreate, 'stationCurrency', fiatCurrency);
 
     if (freeStartInfo?.reward !== '' && isChooseFreeStart) {
       rfChange(nameFormExchangeCreate, 'amountSell', freeStartInfo?.reward);
@@ -173,6 +177,12 @@ class Component extends React.Component {
       } else if (!haveOfferBTC) {
         rfChange(nameFormExchangeCreate, 'currency', CRYPTO_CURRENCY.BTC);
       }
+
+      const fiatCurrency = {
+        id: this.offer.fiatCurrency, text: this.offer.fiatCurrency
+      }
+
+      rfChange(nameFormExchangeCreate, 'stationCurrency', fiatCurrency);
 
       if (haveOfferETH && haveOfferBTC) {
         const message = <FormattedMessage id="offerStoresAlreadyCreated"/>;
@@ -293,7 +303,7 @@ class Component extends React.Component {
     console.log('handleSubmit', values);
     const {
       currency, amountBuy, amountSell, customizePriceBuy,
-      customizePriceSell, nameShop, phone, address,
+      customizePriceSell, nameShop, phone, address, stationCurrency,
     } = values;
 
     const wallet = MasterWallet.getWalletDefault(currency);
@@ -336,7 +346,7 @@ class Component extends React.Component {
       contact_info: address,
       latitude: lat,
       longitude: lng,
-      fiat_currency: ipInfo.currency,
+      fiat_currency: stationCurrency.id,
       chat_username: authProfile?.username,
     };
 
@@ -545,6 +555,7 @@ class Component extends React.Component {
     const { currency, listOfferPrice, ipInfo: { currency: fiatCurrency }, customizePriceBuy, customizePriceSell, amountBuy, amountSell, freeStartInfo, isChooseFreeStart} = this.props;
     const modalContent = this.state.modalContent;
     const allowInitiate = this.offer ? (!this.offer.itemFlags.ETH || !this.offer.itemFlags.BTC) : true;
+    const showChooseFiatCurrency = this.offer ? (!this.offer.itemFlags.ETH && !this.offer.itemFlags.BTC) : true;
 
     const { price: priceBuy } = getOfferPrice(listOfferPrice, EXCHANGE_ACTION.BUY, currency, fiatCurrency);
     const { price: priceSell } = getOfferPrice(listOfferPrice, EXCHANGE_ACTION.SELL, currency, fiatCurrency);
@@ -556,7 +567,7 @@ class Component extends React.Component {
     const wantToBuy = amountBuy && amountBuy > 0
     const wantToSell = amountSell && amountSell > 0
 
-    const listCurrency = [{ id: 'usd', text: 'USD' }, { id: 'eur', text: 'EUR' }]
+    const listCurrency = FIAT_CURRENCY_LIST;
     return (
       <div className="create-exchange">
         <FormExchangeCreate onSubmit={this.handleSubmit} validate={this.handleValidate}>
@@ -698,20 +709,24 @@ class Component extends React.Component {
               </div>
               <hr className="hrLine"/>*/}
 
-              {/*<div className="d-flex mt-2">*/}
-                {/*<label className="col-form-label mr-auto label-create"><span className="align-middle"><FormattedMessage id="ex.create.label.stationCurrency"/></span></label>*/}
-                {/*<div className="input-group w-100">*/}
-                  {/*<Field*/}
-                    {/*name="stationCurrency"*/}
-                    {/*classNameWrapper=""*/}
-                    {/*defaultText={<FormattedMessage id="ex.create.placeholder.stationCurrency" />}*/}
-                    {/*classNameDropdownToggle="dropdown-button"*/}
-                    {/*list={listCurrency}*/}
-                    {/*component={fieldDropdown}*/}
-                  {/*/>*/}
-                {/*</div>*/}
-              {/*</div>*/}
-              {/*<hr className="hrLine"/>*/}
+              {showChooseFiatCurrency && (
+                <div>
+                <div className="d-flex mt-2">
+                  <label className="col-form-label mr-auto label-create"><span className="align-middle"><FormattedMessage id="ex.create.label.stationCurrency"/></span></label>
+                  <div className="input-group w-100">
+                    <Field
+                      name="stationCurrency"
+                      classNameWrapper=""
+                      defaultText={<FormattedMessage id="ex.create.placeholder.stationCurrency" />}
+                      classNameDropdownToggle="dropdown-button"
+                      list={listCurrency}
+                      component={fieldDropdown}
+                    />
+                  </div>
+                </div>
+                <hr className="hrLine"/>
+              </div>)
+              }
 
               <div className="d-flex mt-2">
                 <label className="col-form-label mr-auto label-create"><span className="align-middle"><FormattedMessage id="ex.create.label.phone"/></span></label>
