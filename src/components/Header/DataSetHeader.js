@@ -114,7 +114,7 @@ class DesktopContainer extends React.Component {
                   </Menu.Item>
                 </Link>
                   <Menu.Item position='right'/>
-                  {this.props.app.showSearchBar? 
+                  {this.props.app?.showSearchBar? 
                     <Search fluid
                         loading={this.state.isLoading}
                         onResultSelect={this.handleResultSelect}

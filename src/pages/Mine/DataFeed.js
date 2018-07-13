@@ -331,7 +331,7 @@ class DataFeed extends React.Component {
     const classifies  = value?.category?.classifies||[];
     
     const listTagView  = classifies.map(item=>{
-      console.log(TAG," renderHashTag item = ",item);
+      // console.log(TAG," renderHashTag item = ",item);
       return (<Label color={item.checked?'yellow':undefined} key={String(item.id)||'-1'} as='a' style={{marginTop:2,marginBottom:2}} size='small' onClick={()=>this.clickTagItem(value,item.id)}>
         {item?.name||''}
       </Label>);

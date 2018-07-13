@@ -60,7 +60,7 @@ function LikedIcon(props) {
   if (!props.isAuth) {
     return (
       <Link to="/login" style={{color:'#333'}}>
-          <img class="my-icon" src={activity_icon}/>
+          <img className="my-icon" src={activity_icon}/>
           {/* <SideIconContainer icon={androidDone}/> */}
       </Link>
     );
@@ -68,13 +68,13 @@ function LikedIcon(props) {
   if (props.liked) {
     return (
       <a href='javascript:void(0);' style={{color:'#333'}} onClick={props.onUnfollow}>
-         <img class="my-icon" src={activity_active_icon}/>
+         <img className="my-icon" src={activity_active_icon}/>
       </a>
     );
   }
   return (
     <a href='javascript:void(0);'style={{color:'#333'}} onClick={props.onFollow}>
-        <img class="my-icon"  src={activity_icon}/>
+        <img className="my-icon"  src={activity_icon}/>
     </a>
   );
 }
@@ -116,10 +116,11 @@ class DataExplore extends React.Component {
   }
 
   async handleConfirmBuy() {
+    let tx;
     try {
       const dataset = new Dataset();
       dataset.createFromWallet(MasterWallet.getWalletDefault('ETH'));
-      const tx = await dataset.buy(this.state.selectedItem.id, (this.state.selectedItem.total_images/1000) + fee);
+      tx = await dataset.buy(this.state.selectedItem.id, (this.state.selectedItem.total_images/1000) + fee);
     } catch (e) {
       console.log(e);
       this.setState({ open: false });
@@ -127,7 +128,7 @@ class DataExplore extends React.Component {
 
     const data = {
       category: this.state.selectedItem.id,
-      tx: tx.transactionHash
+      tx: tx?.transactionHash||''
     };
     agent.req.post(agent.API_ROOT + '/api/buy/', data).set('authorization', `JWT ${this.props.token}`).type('form')
       .then((response) => {
