@@ -56,6 +56,11 @@ const RouterUpload = createDynamicImport(
   () => import('@/components/Router/Upload'),
   Loading,
 );
+
+const RouterHistory = createDynamicImport(
+  () => import('@/components/Router/History'),
+  Loading,
+);
 const RouterMine = createDynamicImport(
   () => import('@/components/Router/Mine'),
   Loading,
@@ -69,6 +74,7 @@ const rootRouterMap = [
   { path: URL.DATA_SET_FEED_MINE, component: RouterMine },
   { path: URL.DATA_SET_UPLOAD, component: RouterUpload },
   { path: URL.DATA_SET_DISCOVER, component: RouterExplore },
+  { path: URL.DATA_SET_HISTORY, component: RouterHistory },
 
   { path: URL.HANDSHAKE_ME, component: RouterMe },
   { path: URL.HANDSHAKE_DISCOVER, component: RouterDiscover },
