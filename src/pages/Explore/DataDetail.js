@@ -10,13 +10,13 @@ import {iosHeartOutline, iosCopyOutline,androidDone, iosHeart, iosCheckmarkOutli
 import { withBaseIcon } from 'react-icons-kit'
 const SideIconContainer =  withBaseIcon({ size:28, color:'black'})
 
- 
+
 import activity_active_icon from '@/assets/icons/activityactive.svg';
 import activity_icon from '@/assets/icons/activity.svg';
 
 import plus_active_icon from '@/assets/icons/pluscheck.svg';
 import plus_icon from '@/assets/icons/plus.svg';
- 
+
 
 //{activeItem === 'history' ? <img class="my-menu-bar" src="/icons/activityactive.svg"/>: <img class="my-menu-bar" src="/icons/activity.svg"/> }
 
@@ -35,7 +35,7 @@ function LikedIcon(props) {
   );
 }
 
-function ClassifiedIcon(props) { 
+function ClassifiedIcon(props) {
   if (props.classified) {
     return <a href='javascript:void(0);' style={{color:'#333'}}>
         <img class="my-icon" src={plus_active_icon}/>
@@ -130,7 +130,7 @@ class DataDetail extends React.Component {
     agent.req.get(agent.API_ROOT + '/api/image/?category=' + this.props.match.params.slug).set('authorization', `JWT ${this.props.token}`).then((response) => {
       let resBody = response.body;
       this.setState({isLoading: false})
-      this.setState({images: resBody.results, nextURL: resBody.next})
+      this.setState({images: resBody.results, nextURL: resBody.next});
     }).catch((e) => {
     })
   }
@@ -318,26 +318,28 @@ class DataDetail extends React.Component {
   }
 
   render() {
-    let self = this;
+    
+    const {name = '',desc = '',total_images = 0,contract_address = ''} =  this.state.category;
     return (
-      <Visibility once={true} onUpdate={this.handleUpdate}>  
-        <Segment vertical>   
-          <h2 className="my-card-header" 
-              style={{padding: '0em 15px', marginBottom:'25px', float:'left'}}> 
-                <Image style={{marginLeft:'-20px',float:'left'}} src={"https://chart.googleapis.com/chart?chs=100x100&cht=qr&chl="+(this.state.category ? this.state.category.contract_address : '')+"&choe=UTF-8"}/>
-                
-                <div style={{float:'left', marginTop:'8px!important'}}>
-                  <div class="row" style={{fontSize:'16px'}} >{this.state.category ? this.state.category.name :''}</div>
-                  <div class="row" style={{fontSize:'12px'}}>{this.state.category ? this.state.category.desc :''}</div>
-                </div>
+      <Visibility once={true} onUpdate={this.handleUpdate}>
+        <Segment vertical>
+          <h2 className="my-card-header"
+              style={{display:'flex', padding: '0em 15px', marginBottom:'25px', float:'left'}}>
+                <Image style={{marginLeft:'-20px',float:'left'}} src={"https://chart.googleapis.com/chart?chs=100x100&cht=qr&chl="+(contract_address)+"&choe=UTF-8"}/>
+                <div style={{backgroundColor:'#f10'}}>
+                  <div style={{backgroundColor:'#f00'}}>
+                    <div class="row" style={{fontSize:'16px'}} >{name}</div>
+                    <div class="row" style={{fontSize:'12px'}}>{desc}</div>
+                    <div class="row" style={{fontSize:'12px'}}>{String(total_images)}</div>
+                  </div>
 
-                <div className='ui three button' style={{padding:'0', background:'none', float:'left',width:'100%', textAlign:'left'}}>
-                    <Button basic size="mini" color='grey' content={'Follow'} ></Button>
-                    <Button basic size="mini"color='grey' content={this.state.category && this.state.category.total_images ? `Img ${this.state.category.total_images}` : 'Images 0'} ></Button>
-                    <Button basic size="mini" color='teal' content='BUY NOW' ></Button>
+                  <div className='ui three button' style={{padding:'0', background:'none', float:'left',width:'100%', textAlign:'left'}}>
+                      <Button basic size="mini" color='grey' content={'Follow'} ></Button>
+                      <Button basic size="mini" color='teal' content='BUY NOW' ></Button>
+                  </div>
                 </div>
             </h2>
-           <Container style={{marginLeft:'-20px',float:'left'}}> 
+           <Container style={{marginLeft:'-20px',float:'left'}}>
                 <Card.Group centered >
                   {this.state.images.map((item, i) => {
                     return (
@@ -346,7 +348,7 @@ class DataDetail extends React.Component {
                               <Image src={item.link}/>
                             </Link>
                         <Card.Content>
-                          <div style={{float: 'left',marginTop:'-8px'}}>  
+                          <div style={{float: 'left',marginTop:'-8px'}}>
                           </div>
                           <div style={{float: 'right', marginTop:'-10px'}}>
                             <div style={{display: 'inline', marginRight: '2em'}}>
@@ -359,8 +361,8 @@ class DataDetail extends React.Component {
                         </Card.Content>
                       </Card>
                     )
-                  })}  
-                </Card.Group> 
+                  })}
+                </Card.Group>
                 </Container>
               <Modal size='large'closeOnEscape closeIcon open={this.state.modal.open} onClose={this.closeModal} style={{height: '90%'}}>
                 <Modal.Header>Choose classify</Modal.Header>
@@ -380,4 +382,3 @@ class DataDetail extends React.Component {
   }
 }
 export default DataDetail;
- 
