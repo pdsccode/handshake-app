@@ -353,6 +353,7 @@ class FeedBetting extends React.Component {
         const {
           amount = 0, odds = 0, side, remainingAmount,status
         } = item;
+        console.log('Shake Items Display:', item);
         remainingValue = remainingAmount || 0;
         colorBySide = side === 1 ? `support` : 'oppose';
         const oddsBN = parseBigNumber(odds);

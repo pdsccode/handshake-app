@@ -213,6 +213,7 @@ export class BetHandshakeHandler {
       strStatus = BETTING_STATUS_LABEL.COLLECT_FAILED;
       isAction = true;
     } else if (isMatch && resultStatus === BETTING_STATUS.DRAW) {
+      //label = BETTING_STATUS_LABEL.CANCEL;
       strStatus = BETTING_STATUS_LABEL.MATCH_POSTPONSE;
       isAction = false;
     } else if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_MAKER_SHOULD_UNINIT) {
