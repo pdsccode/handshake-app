@@ -774,8 +774,10 @@ export default {
           view_all_etherscan: 'View all on etherscan.io',
           self: "Self",
           sent: "Sent",
-          received: "Received"
-
+          received: "Received",
+          transfer: "transfer",
+          from: "from",
+          to: "to"
         },
       },
     },
