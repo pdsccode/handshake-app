@@ -218,8 +218,7 @@ export class Ethereum extends Wallet {
   async getInternalTransactions(hash) {
     let result = [];
     const API_KEY = configs.network[4].apikeyEtherscan;
-    const url = `https://api.etherscan.io/api?module=account&action=txlistinternal&txhash=${hash}&apikey=AVBIHJUF3G4ZY2CHZI6F4RVBFWC3A3EIVB`;
-    //`${this.constructor.API[this.getNetworkName()]}?module=account&action=txlistinternal&txhash=${hash}&apikey=${API_KEY}`;
+    const url = `${this.constructor.API[this.getNetworkName()]}?module=account&action=txlistinternal&txhash=${hash}&apikey=${API_KEY}`;
     const response = await axios.get(url);
     if (response.status == 200) {
       let arr = response.data.result;
