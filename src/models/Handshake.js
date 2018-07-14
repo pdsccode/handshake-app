@@ -24,7 +24,7 @@ class Handshake {
       side: data.side || '',
       remainingAmount: data.remaining_amount || '',
       location: data.location,
-      result: data.result || '',
+      result: data.result || 0,
       shakers: data.shakers,
       amount: data.amount || '',
       winValue: data.win_value || '',
