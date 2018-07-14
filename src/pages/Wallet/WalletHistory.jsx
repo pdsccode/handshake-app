@@ -101,6 +101,12 @@ class WalletHistory extends React.Component {
   async show_transaction(data){
     const wallet = this.props.wallet;
     if(wallet && data){
+
+      if(wallet.name == "ETH") {
+        let it = await wallet.getInternalTransactions(data.hash);
+        if(it && it.length > 0) data["internal_transactions"] = it;
+      }
+
       this.modalTransactionRef.open();
       this.showLoading();
       this.setState({transaction_detail: data});

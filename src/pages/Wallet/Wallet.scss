@@ -607,6 +607,12 @@
       min-height: 30px;
       word-wrap: break-word;
       font-size: 14px;
+
+      .value-it{
+        margin-left: 120px;
+        padding-bottom: 10px;
+        display:list-item;
+      }
     }
 
     .key{
