@@ -181,7 +181,7 @@ class DataDetail extends React.Component {
     agent.req.get(agent.API_ROOT + '/api/image/?category=' + this.props.match.params.slug).set('authorization', `JWT ${this.props.token}`).then((response) => {
       let resBody = response.body;
       this.setState({isLoading: false})
-      this.setState({images: resBody.results, nextURL: resBody.next});
+      this.setState({images: resBody.results, nextURL: resBody.next})
     }).catch((e) => {
     })
   }
@@ -419,7 +419,9 @@ class DataDetail extends React.Component {
     console.log('here')
     this.setState({ open: true })
   }
-
+  close = ()=>{
+    this.setState({ open: false });
+  }
   async handleConfirmBuy() {
     let tx;
     try {
@@ -447,8 +449,7 @@ class DataDetail extends React.Component {
   }
 
   render() {
-    
-    const {name = '',desc = '',total_images = 0,contract_address = ''} =  this.state.category;
+    let self = this;
     return (
       <Visibility once={true} onUpdate={this.handleUpdate}>  
         <Segment vertical  style={{marginTop:'-5em',background:'white',zIndex:'55555'}}>   
@@ -530,4 +531,3 @@ class DataDetail extends React.Component {
   }
 }
 export default DataDetail;
-
