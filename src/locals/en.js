@@ -1,8 +1,8 @@
 export default {
   app: {
     name: 'DAD',
-    fullname: 'DAD:Data provided by humans',
-    description: 'Data provided by humans',
+    fullname: 'DAD:Decentralized Autonomous Dataset',
+    description: 'Decentralized Autonomous Dataset',
     loading: 'Loading...',
     navigation: {
       me: 'Me',
@@ -11,6 +11,7 @@ export default {
       wallet: 'Wallet',
       mine:'Mine',
       discover:'Discover',
+      explore:'Explore',
       history:'History',
       
     },

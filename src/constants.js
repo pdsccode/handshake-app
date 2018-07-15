@@ -539,6 +539,7 @@ export const blockchainNetworks = {
       exchangeHandshakeAddress: '0x6d86cf435978cb75aecc43d0a4e3a379af7667d8',
       exchangeShopAddress: '0xa849f62cacb770dd1aac0dceb9fc7ec53cffde84',
       shurikenTokenAddress: '0xc2f227834af7b44a11a9286f1771cade7ecd316c',
+      dadsetTokenAddress: '0x9da37ab3541c2b47ca67378723c9221e6f416a42',
     },
     contractFiles: {
       basic: 'BasicHandshake',
@@ -559,6 +560,7 @@ export const blockchainNetworks = {
       exchangeHandshakeAddress: '0x5fa2e0d96dbe664beb502407bf46ea85b131fb86',
       exchangeShopAddress: '0x05914192cbbaae87a910f79e012b4091a39cc85c',
       shurikenTokenAddress: '0xca0fed76b5807557ce38e65cab83be3373cc2e7d',
+      dadsetTokenAddress: '0x9da37ab3541c2b47ca67378723c9221e6f416a42',
     },
     contractFiles: {
       basic: 'BasicHandshake',
