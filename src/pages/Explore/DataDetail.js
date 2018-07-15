@@ -419,7 +419,9 @@ class DataDetail extends React.Component {
     console.log('here')
     this.setState({ open: true })
   }
-
+  close = ()=>{
+    this.setState({ open: false });
+  }
   async handleConfirmBuy() {
     let tx;
     try {
@@ -529,4 +531,3 @@ class DataDetail extends React.Component {
   }
 }
 export default DataDetail;
-
