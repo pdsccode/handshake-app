@@ -23,6 +23,7 @@ import plus_icon from '@/assets/icons/plus.svg';
 import copyTop from '@/assets/icons/copy.svg';
 import closeTop from '@/assets/icons/closeTop.svg';
 import UPLOAD_EARN from '@/assets/icons/UPLOAD_EARN.jpg';
+import Input from '@/components/core/forms/Input/Input';
  
 function LikedIcon(props) {
   if (props.liked) {
@@ -42,19 +43,7 @@ function LikedIcon(props) {
 
 
 function FollowIcon(props) {
-  // if (props.followed) {
-  //   return (
-  //     <a href='javascript:void(0);' onClick={props.onUnlike} style={{color:'#333'}}>
-  //        <img class="my-icon" src={activity_active_icon}/>
-  //     </a>
-  //   );
-  // }
-  // return (
-  //   <a href='javascript:void(0);' onClick={props.onLike} style={{color:'#333'}} >
-  //       <Button basic size="mini" basic color='black' className="my-btn-buy-eth" content=''/>
-  //   </a>
-    
-  // );
+ 
   if (props.followed) {
     return (
       <a href='javascript:void(0);' style={{color:'#333'}} onClick={props.onUnfollow}>
@@ -83,18 +72,15 @@ function ClassifiedIcon(props) {
   );
 }
 
-function ConfirmModal() {
-  return (
-    <div class='content'>
-      <h3>You want to buy this dataset?</h3>
-      <p>By click OK you will send ETH in your wallet to the DAD SmartContract address.</p>
-    </div>
-  )
-}
 
 function ConfirmButton() {
   return (
     <Button positive>OK</Button>
+  )
+}
+function cancelButton() {
+  return (
+    <Button positive style={{background: 'none',color:'#333',fontWeight:'500'}}>Cancel</Button>
   )
 }
 
@@ -361,16 +347,17 @@ class DataDetail extends React.Component {
   handleFollowCategory(e, i) {
     
     e.preventDefault();
-    const id = this.state.categories[i].id;
+    const id = this.state.category.id;
 
     agent.req.post(agent.API_ROOT + '/api/profile-category/follow/')
       .send({ category: id })
       .set('authorization', `JWT ${this.props.token}`)
       .set('accept', 'application/json')
       .then((resp) => {
-        const categories = this.state.categories.slice();
-        categories[i].followed = true;
-        this.setState({categories});
+        //const categories = this.state.categories.slice();
+        //categories[i].followed = true;
+        i.followed = true;
+        this.setState({category: i});
       })
       .catch((err) => {
       });
@@ -379,16 +366,16 @@ class DataDetail extends React.Component {
   handleUnfollowCategory(e, i) {
     
     e.preventDefault();
-    const id = this.state.categories[i].id;
+    const id = i.id;
 
     agent.req.del(agent.API_ROOT + '/api/profile-category/unfollow/')
       .send({ category: id })
       .set('authorization', `JWT ${this.props.token}`)
       .set('accept', 'application/json')
       .then((resp) => {
-        const categories = this.state.categories.slice();
-        categories[i].followed = false;
-        this.setState({categories});
+        //const categories = this.state.categories.slice();
+        i.followed = false;
+        this.setState({category: i});
       })
       .catch((err) => {
       });
@@ -397,9 +384,10 @@ class DataDetail extends React.Component {
   renderFollowIcon(i) {
     return (
       <FollowIcon
-        followed={this.state.category}
+        followed={ i ? i.followed : false }
         onFollow={e => this.handleFollowCategory(e, i)}
         onUnfollow={e => this.handleUnfollowCategory(e, i)}
+        
       />
     );
   }
@@ -448,6 +436,17 @@ class DataDetail extends React.Component {
       });
   }
 
+
+ ConfirmModal() {
+  return (
+    <div class='content'>
+      <h3>You want to buy this dataset?</h3>
+      <p>By click OK you will send ETH in your wallet to the DAD SmartContract address.</p>
+      <Input />
+    </div>
+  )
+}
+
   render() {
     let self = this;
     return (
@@ -480,7 +479,7 @@ class DataDetail extends React.Component {
                                     <Image src={copyTop} className="btn-Close-Top" style={{ bottom: '40px',top: 'initial',right: '14px'}}/>
                               </List.Item>
                             <List.Item style={{ marginTop: '10px', marginLeft: '-20px'}} >
-                            {this.renderFollowIcon(this.state.category)}
+                            {this.renderFollowIcon(this.state.category  )}
                             <Button basic size="mini" basic color='black' className="my-btn-buy-eth" content='Buy Now' onClick={() => this.showConfirm()} ></Button></List.Item>
                             </List>
                         </Grid.Column>
@@ -519,11 +518,12 @@ class DataDetail extends React.Component {
         </Segment>
         <Segment vertical loading={this.state.isLoading}/>
         <Confirm
-          content={ConfirmModal()}
+          content={this.ConfirmModal()}
           open={this.state.open}
           onCancel={this.close}
           onConfirm={() => this.handleConfirmBuy()}
           confirmButton={ConfirmButton()}
+          cancelButton={cancelButton()}
         />
       </Visibility>
 

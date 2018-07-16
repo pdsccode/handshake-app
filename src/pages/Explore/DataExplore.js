@@ -75,7 +75,7 @@ function ConfirmModal() {
   return (
     <div class='content'>
       <h3>You want to buy this dataset?</h3>
-      <p>Confirm text</p>
+      <p>By click OK you will send ETH in your wallet to the DAD SmartContract address.</p>
     </div>
   )
 }
