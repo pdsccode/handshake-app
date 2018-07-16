@@ -25,10 +25,10 @@ class Loading extends React.PureComponent {
     } = this.props;
     return (
       <div className={`loading ${className}`} style={style}>
-        <Image src={loadingImg} alt="loading" />
+        {/* <Image src={loadingImg} alt="loading" />
         {
           message && (<p className="text">{message}</p>)
-        }
+        } */}
       </div>
     );
   }

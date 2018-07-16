@@ -79,7 +79,7 @@ class DataFeed extends React.Component {
     this.setState({isLoading: true})
 
     const req = agent.req.get(agent.API_ROOT + '/api/feed/');
-    if (this.props.isAuth && token) {
+    if (token) {
       req.set('authorization', `JWT ${token}`);
     }
     req.then((response) => {

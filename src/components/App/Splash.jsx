@@ -36,12 +36,12 @@ class Splash extends React.Component {
 
   render() {
     return (
-      <div className="splash">
-        <div className="splash-content">
+      <div >
+        {/* <div className="splash-content">
           <img src={logo2} alt="DAD" />
           <p className="splash-loading-text">{this.state.loading}</p>
           <p className="splash-title">{this.state.name}: {this.state.description}</p>
-        </div>
+        </div> */}
       </div>
     );
   }
