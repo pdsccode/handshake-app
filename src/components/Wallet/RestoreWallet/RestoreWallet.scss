@@ -25,11 +25,11 @@
             width: 100%;
             height: 100px;
             color: #6b6b6b;
-            border: 1px solid #ced4da;
+            border: 1px solid #ced4da;            
+          }
+          textarea.error {
+            border-color: #d0021b;
           }
       
-      }
-      .error {
-        border-color: #d0021b;
-      }
+      }      
 }
