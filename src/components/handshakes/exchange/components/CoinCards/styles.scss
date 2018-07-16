@@ -18,7 +18,10 @@
       right: 0;
       top: 0;
       background: none;
-      border: none;
+      border: 1px solid white;
+      border-right: 0;
+      border-top: 0;
+      border-bottom-left-radius: 6px;
       padding: 0 6px;
       -webkit-appearance: none;
       -moz-appearance:    none;
