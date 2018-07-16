@@ -42,7 +42,7 @@ import "../styles.scss";
 import ModalDialog from "@/components/core/controls/ModalDialog/ModalDialog";
 import {hideLoading, showAlert, showLoading} from "@/reducers/app/action";
 import {MasterWallet} from "@/services/Wallets/MasterWallet";
-import {ExchangeShopHandshake} from "@/services/neuron";
+import {ExchangeCashHandshake} from "@/services/neuron";
 // import phoneCountryCodes from '@/components/core/form/country-calling-codes.min.json';
 import COUNTRIES from "@/data/country-dial-codes.js";
 import {feedBackgroundColors} from "@/components/handshakes/exchange/config";
@@ -444,10 +444,10 @@ class Component extends React.Component {
     } else if (currency === CRYPTO_CURRENCY.ETH) {
       if (amountSell > 0 && offer.items.ETH.freeStart === '') {
         try {
-          const exchangeHandshake = new ExchangeShopHandshake(wallet.chainId);
+          const cashHandshake = new ExchangeCashHandshake(wallet.chainId);
 
           let result = null;
-          result = await exchangeHandshake.initByShopOwner(offer.items.ETH.sellTotalAmount, offer.id);
+          result = await cashHandshake.initByStationOwner(offer.items.ETH.sellTotalAmount, offer.id);
           console.log('handleCreateOfferSuccess', result);
 
           this.trackingOnchain(offer.id, '', result.hash, offer.items.ETH.status, '', currency);

@@ -15,7 +15,7 @@ import {
   EXCHANGE_ACTION_ORDER,
 } from '@/constants';
 import { MasterWallet } from '@/services/Wallets/MasterWallet';
-import { ExchangeShopHandshake } from '@/services/neuron';
+import { ExchangeCashHandshake } from '@/services/neuron';
 import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -447,9 +447,9 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
         try {
           const wallet = MasterWallet.getWalletDefault(currency);
 
-          const exchangeHandshake = new ExchangeShopHandshake(wallet.chainId);
+          const cashHandshake = new ExchangeCashHandshake(wallet.chainId);
 
-          const result = await exchangeHandshake.shake(hid, offChainId);
+          const result = await cashHandshake.shake(hid, offChainId);
 
           console.log('handleAcceptShakedOfferSuccess', result);
 
@@ -534,13 +534,13 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
         (type === EXCHANGE_ACTION.BUY && this.userType === HANDSHAKE_USER.SHAKED)) {
         try {
           const wallet = MasterWallet.getWalletDefault(currency);
-          const exchangeHandshake = new ExchangeShopHandshake(wallet.chainId);
+          const cashHandshake = new ExchangeCashHandshake(wallet.chainId);
           let result = null;
 
           if (type === EXCHANGE_ACTION.SELL && this.userType === HANDSHAKE_USER.OWNER) {
-            result = await exchangeHandshake.releasePartialFund(hid, offer.userAddress, amount, initUserId, offChainId);
+            result = await cashHandshake.releasePartialFund(hid, offer.userAddress, amount, initUserId, offChainId);
           } else if (type === EXCHANGE_ACTION.BUY && this.userType === HANDSHAKE_USER.SHAKED) {
-            result = await exchangeHandshake.finish(hid, offChainId);
+            result = await cashHandshake.finish(hid, offChainId);
           }
 
           console.log('handleCompleteShakedOfferSuccess', result);
@@ -624,11 +624,11 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
         try {
           const wallet = MasterWallet.getWalletDefault(currency);
 
-          const exchangeHandshake = new ExchangeShopHandshake(wallet.chainId);
+          const cashHandshake = new ExchangeCashHandshake(wallet.chainId);
 
           let result = null;
 
-          result = await exchangeHandshake.reject(hid, offChainId);
+          result = await cashHandshake.reject(hid, offChainId);
 
           console.log('handleRejectShakedOfferSuccess', result);
 
@@ -707,11 +707,11 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
         try {
           const wallet = MasterWallet.getWalletDefault(currency);
 
-          const exchangeHandshake = new ExchangeShopHandshake(wallet.chainId);
+          const cashHandshake = new ExchangeCashHandshake(wallet.chainId);
 
           let result = null;
 
-          result = await exchangeHandshake.cancel(hid, offChainId);
+          result = await cashHandshake.cancel(hid, offChainId);
 
           console.log('handleCancelShakeOfferSuccess', result);
 

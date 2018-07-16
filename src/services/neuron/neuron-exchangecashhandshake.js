@@ -7,14 +7,14 @@ import { MasterWallet } from '@/services/Wallets/MasterWallet';
 // const privateKey = wallet.privateKey;
 // console.log('Address, PrivateKey:', address, privateKey);
 
-const TAG = 'ExchangeShopHandshake';
-export default class ExchangeShopHandshake extends BaseHandshake {
+const TAG = 'ExchangeCashHandshake';
+export default class ExchangeCashHandshake extends BaseHandshake {
   constructor(chainId) {
     super(chainId);
   }
 
   get contractFileNameWithoutExtension() {
-    return 'ExchangeShop';
+    return 'ExchangeCash';
   }
 
   checkBalance = () => {
@@ -36,22 +36,22 @@ export default class ExchangeShopHandshake extends BaseHandshake {
   }
 
   /**
-   * @dev Initiate handshake by shopOwner
+   * @dev Initiate handshake by stationOwner
    * @param value funds required for this handshake
    * @param offchain record ID in offchain backend database
    */
-  initByShopOwner = async (value, offchain) => {
-    console.log(TAG, ' initByShopOwner = ', value, offchain);
+  initByStationOwner = async (value, offchain) => {
+    console.log(TAG, ' initByStationOwner = ', value, offchain);
 
     // const payoutValue = Web3.utils.toHex(this.web3.utils.toWei(value.toString(), 'ether'));
     const bytesOffchain = this.web3.utils.fromAscii(offchain);
 
     // let balance = await wallet.getBalance();
 
-    // console.log('initByShopOwner balance', balance);
+    // console.log('initByStationOwner balance', balance);
 
     const payloadData = this.handshakeInstance.methods
-      .initByShopOwner(
+      .initByStationOwner(
         // payoutValue,
         bytesOffchain)
       .encodeABI();
@@ -71,13 +71,13 @@ export default class ExchangeShopHandshake extends BaseHandshake {
   }
 
   // CoinOwner close the transaction after init
-  closeByShopOwner = (hid, offchain) => {
-    console.log(TAG, ' closeByShopOwner = ', hid, offchain);
+  closeByStationOwner = (hid, offchain) => {
+    console.log(TAG, ' closeByStationOwner = ', hid, offchain);
 
     const bytesOffchain = this.web3.utils.fromAscii(offchain);
 
     const payloadData = this.handshakeInstance.methods
-      .closeByShopOwner(
+      .closeByStationOwner(
         hid,
         bytesOffchain,
       )
@@ -113,15 +113,15 @@ export default class ExchangeShopHandshake extends BaseHandshake {
     });
   }
 
-  initByCustomer = (shopOwner, value, offchain) => {
-    console.log(TAG, ' initByCustomer = ', shopOwner, value, offchain);
+  initByCustomer = (stationOwner, value, offchain) => {
+    console.log(TAG, ' initByCustomer = ', stationOwner, value, offchain);
 
     // const payoutValue = Web3.utils.toHex(this.web3.utils.toWei(value.toString(), 'ether'));
     const bytesOffchain = this.web3.utils.fromAscii(offchain);
 
     const payloadData = this.handshakeInstance.methods
       .initByCustomer(
-        shopOwner,
+        stationOwner,
         // payoutValue,
         bytesOffchain,
       )
@@ -156,7 +156,7 @@ export default class ExchangeShopHandshake extends BaseHandshake {
     });
   }
 
-  // shopOwner agree and make a handshake
+  // stationOwner agree and make a handshake
   shake = (hid, offchain) => {
     console.log(TAG, ' shake = ', hid, offchain);
 
@@ -194,7 +194,7 @@ export default class ExchangeShopHandshake extends BaseHandshake {
     });
   }
 
-  // customer finish transaction for sending the coin to shopOwner
+  // customer finish transaction for sending the coin to stationOwner
   finish = (hid, offchain) => {
     console.log(TAG, ' finish = ', hid, offchain);
 
