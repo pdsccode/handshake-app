@@ -96,7 +96,6 @@ export class Ethereum extends Wallet {
 
     const web3 = new Web3(new Web3.providers.HttpProvider(this.network));
     const receipt = await web3.eth.getTransactionReceipt(hash);
-    console.log(receipt);
     return null;
   }
 
@@ -216,6 +215,34 @@ export class Ethereum extends Wallet {
     return result;
   }
 
+  async getInternalTransactions(hash) {
+    let result = [];
+    const API_KEY = configs.network[4].apikeyEtherscan;
+    const url = `${this.constructor.API[this.getNetworkName()]}?module=account&action=txlistinternal&txhash=${hash}&apikey=${API_KEY}`;
+    const response = await axios.get(url);
+    if (response.status == 200) {
+      let arr = response.data.result;
+      if(arr && arr.length > 0) {
+        const w = new Ethereum();
+        arr.forEach((e) => {
+          let from = e.from;
+          w.address = from;
+          from = w.getShortAddress();
+
+          let to = e.to;
+          w.address = to;
+          to = w.getShortAddress();
+
+          let amount = e.value;
+          amount = Number(amount / 1000000000000000000);
+
+          result.push({from: from, to: to, amount: amount})
+        });
+      }
+    }
+    return result;
+  }
+
   async getTransactionCount() {
     let result = [];
     const API_KEY = configs.network[4].apikeyEtherscan;
@@ -229,8 +256,10 @@ export class Ethereum extends Wallet {
   }
 
   formatNumber(value){
-    let result = value, count = 0;
+    let result = 0, count = 0;
     try {
+      if(!isNaN(value)) result = Number(value);
+
       if (Math.floor(value) !== value)
           count = value.toString().split(".")[1].length || 0;
 
@@ -238,7 +267,7 @@ export class Ethereum extends Wallet {
         result = value.toFixed(6);
     }
     catch(e) {
-
+      result = 0;
     }
 
     return result;
@@ -252,7 +281,6 @@ export class Ethereum extends Wallet {
       try{
         value = Number(data.value / 1000000000000000000);
         value = this.formatNumber(value);
-
         transaction_date = new Date(data.timeStamp*1000);
         is_error = Boolean(data.isError == "1");
         transaction_no = data.hash;
