@@ -204,7 +204,7 @@ export default {
   'ex.earlyBird.btn': 'Open Station',
 
   'ex.seo.title': 'Ninja: the anonymous exchange of anything.',
-  'ex.seo.meta.description': 'Trade predictions for the FIFA World Cup. Exchange coin for cash in your local neighborhood. No downloads, no sign ups. 100% anonymous.',
+  'ex.seo.meta.description': 'Swap coin for cash in your local neighborhood. Trade predictions on anything, anywhere, with anyone. No downloads, no sign ups. 100% anonymous.',
 
   'error.required': 'Required',
   'error.requiredOne': 'You need to fill in one of these!',
