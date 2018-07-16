@@ -53,13 +53,6 @@ class RestoreWallet extends React.Component {
     this.props.hideLoading();
   }
 
-  componentDidMount() {    
-    if (!this.state.walletData){
-      let walletData = MasterWallet.getMasterWallet();
-      this.setState({walletData: walletData});
-    }
-  }
-
   componentWillUnmount() {
     
   }
