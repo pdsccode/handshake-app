@@ -329,7 +329,7 @@ class DataFeed extends React.Component {
 
   renderHashTag = (value,index)=>{
     const classifies  = value?.category?.classifies||[];
-    let isNeedClick = classifies.filter(item=> item.checked === true).length === 0 ;
+    const isNeedClick = classifies.filter(item=> item.checked === true).length === 0 ;
     const listTagView  = classifies.map(item=>{
       // console.log(TAG," renderHashTag item = ",item);
       // return (
@@ -338,7 +338,7 @@ class DataFeed extends React.Component {
       //   {item?.name||''}
       // </Label>);
       return (
-        <Label as='a' basic  color={item.checked?'teal':'black'} key={String(item.id)||'-1'}   onClick={isNeedClick?()=>this.clickTagItem(value,item.id):undefined} >{item?.name||''}</Label>
+        <Label basic color={item.checked?'teal':'black'} key={String(item.id)||'-1'}   onClick={isNeedClick?()=>this.clickTagItem(value,item.id):undefined}>{item?.name||''}</Label>
       );
 
     });
