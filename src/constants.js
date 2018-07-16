@@ -16,6 +16,7 @@ export const APP = {
   EMAIL_NEED_VERIFY: 'email_need_verify',
   PHONE_NEED_VERIFY: 'phone_need_verify',
   COUNTRY_PHONE_NEED_VERIFY: 'country_phone_need_verify',
+  CHAT_ENCRYPTION_KEYPAIR:'chat_encryption_keypair',
   REFERS: 'refers',
   OFFLINE_STATUS: 'offline_status',
   isSupportedLanguages: ['en', 'zh', 'fr', 'de', 'ja', 'ko', 'ru', 'es'],
