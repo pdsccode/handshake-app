@@ -56,6 +56,16 @@ export class Ethereum extends Wallet {
     return new Web3(new Web3.providers.HttpProvider(this.network));
   }
 
+  getAPIUrlAddress() {
+    let url = this.network == Ethereum.Network.Mainnet ? "https://etherscan.io/address/"+this.address : "https://rinkeby.etherscan.io/address/"+this.address;
+    return url;
+  }
+
+  getAPIUrlTransaction(hash) {
+    let url = this.network == Ethereum.Network.Mainnet ? "https://etherscan.io/tx/"+hash : "https://rinkeby.etherscan.io/tx/"+hash;
+    return url;
+  }
+
   async getBalance() {
     try {
       const web3 = this.getWeb3();
@@ -218,6 +228,22 @@ export class Ethereum extends Wallet {
     return result;
   }
 
+  formatNumber(value){
+    let result = value, count = 0;
+    try {
+      if (Math.floor(value) !== value)
+          count = value.toString().split(".")[1].length || 0;
+
+      if(count > 6)
+        result = value.toFixed(6);
+    }
+    catch(e) {
+
+    }
+
+    return result;
+  }
+
   cook(data){
     let value = 0, transaction_date = new Date(), addresses = [],
       is_sent = 0, is_error = false, transaction_no = "", token = {}, coin_name = "ETH";
@@ -225,6 +251,8 @@ export class Ethereum extends Wallet {
     if(data){
       try{
         value = Number(data.value / 1000000000000000000);
+        value = this.formatNumber(value);
+
         transaction_date = new Date(data.timeStamp*1000);
         is_error = Boolean(data.isError == "1");
         transaction_no = data.hash;
