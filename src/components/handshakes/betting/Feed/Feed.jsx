@@ -335,7 +335,7 @@ class FeedBetting extends React.Component {
         const oddsBN = parseBigNumber(odds);
         const amountBN = parseBigNumber(amount);
         let amountMatch = parseBigNumber(amount);
-        if(status === BET_BLOCKCHAIN_STATUS.STATUS_PENDING){
+        if(status === BET_BLOCKCHAIN_STATUS.STATUS_INIT_PENDING){
           amountMatch = parseBigNumber(0);
         }
         const winMatch = amountMatch.times(oddsBN).toNumber() || 0;
