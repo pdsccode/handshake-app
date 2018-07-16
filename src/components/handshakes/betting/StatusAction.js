@@ -8,7 +8,7 @@ export const getStatusLabel = (blockchainStatus, resultStatus, role, side, isMat
   let label = null;
   let strStatus = null;
   let isAction = false;
-  console.log(TAG, ' blockchainStatus:', blockchainStatus,
+  console.log(TAG,'getStatusLabel', ' blockchainStatus:', blockchainStatus,
                   ' resultStatus:', resultStatus,
                   ' role:', role,
                   ' side:', side,
@@ -48,8 +48,9 @@ export const getStatusLabel = (blockchainStatus, resultStatus, role, side, isMat
       return refundAction(blockchainStatus);
   }
 
-  if (isMatch && blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_INITED //marker
-     || blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_SHAKER_SHAKED) { //shaker
+  if (resultStatus === BETTING_RESULT.INITED && // hasn't has result
+      ((isMatch && blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_INITED) //marker
+     || (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_SHAKER_SHAKED))) { //shaker
 
       //MATCHED WAITING RESULT
       return matchAction();
