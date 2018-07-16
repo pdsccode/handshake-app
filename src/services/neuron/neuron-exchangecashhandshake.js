@@ -89,6 +89,25 @@ export default class ExchangeCashHandshake extends BaseHandshake {
     });
   }
 
+  addInventory = async (value, hid, offchain) => {
+    console.log(TAG, ' addInventory = ', value, hid, offchain);
+
+    const bytesOffchain = this.web3.utils.fromAscii(offchain);
+
+    const payloadData = this.handshakeInstance.methods
+      .addInventory(
+        hid,
+        bytesOffchain)
+      .encodeABI();
+
+
+    return this.neuron.makeRawTransaction(this.address, this.privateKey, payloadData, {
+      amount: value,
+      gasPrice: this.gasPrice,
+      toAddress: this.contractAddress,
+    });
+  }
+
   // CoinOwner releaseFundByShopOwner transaction
   releasePartialFund = (hid, customer, value, offchainP, offchainC) => {
     console.log(TAG, ' releasePartialFund = ', hid, customer, value, offchainP, offchainC);
