@@ -17,9 +17,10 @@ import {
   getEstimateGas, getAddress, parseBigNumber
 } from '@/components/handshakes/betting/utils';
 import { validateBet } from '@/components/handshakes/betting/validation.js';
+import { MESSAGE } from '@/components/handshakes/betting/message.js';
 
 
-import { BetHandshakeHandler, MESSAGE, SIDE } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
+import { BetHandshakeHandler, SIDE } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
 
 import './ShakeFree.scss';
 import Toggle from './../Toggle';
