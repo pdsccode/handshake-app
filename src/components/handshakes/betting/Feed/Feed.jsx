@@ -12,7 +12,7 @@ import { API_URL, APP } from '@/constants';
 import { uninitItem, collect, refund, collectFree, rollback, uninitItemFree } from '@/reducers/handshake/action';
 import { loadMyHandshakeList, updateBettingChange } from '@/reducers/me/action';
 import { MESSAGE, BETTING_STATUS_LABEL } from '@/components/handshakes/betting/message.js';
-
+import { getStatusLabel} from '@/components/handshakes/betting/StatusAction.js';
 
 // components
 import Button from '@/components/core/controls/Button';
@@ -162,7 +162,7 @@ class FeedBetting extends React.Component {
       }
     }
 
-    const statusResult = BetHandshakeHandler.getStatusLabel(status, result, role, side, isMatch, reportTime, disputeTime);
+    const statusResult = getStatusLabel(status, result, role, side, isMatch, reportTime, disputeTime);
     const { title, isAction } = statusResult;
     const matchDone = status === BET_BLOCKCHAIN_STATUS.STATUS_DONE;
 
