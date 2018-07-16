@@ -378,13 +378,13 @@ class Checkout extends React.Component {
           </ModalDialog>
 
 
-          <SendWalletForm className="sendwallet-wrapper" onSubmit={this.sendCoin} validate={this.invalidateTransferCoins}>
+          <SendWalletForm className="checkout-wrapper" onSubmit={this.sendCoin} validate={this.invalidateTransferCoins}>
 
           {/* Box: */}
             <div className="bgBox">
               <p className="labelText">{messages.wallet.action.payment.label.to_address}</p>
               <div className="toAddress">
-                <p>{this.state.toAddress}</p>
+                <p className="address">{this.state.toAddress}</p>
                 { this.state.isShowQRCode ?
                   <div className="div-qr-code">
                     <QRCode size={250} value={this.state.toAddress} />

@@ -1,12 +1,12 @@
 @import './src/styles/style';
 
-.sendwallet-wrapper{
+.checkout-wrapper{
   padding-bottom: 30px;
 
   .bgBox {
     margin-bottom: 10px;
     margin-top: 10px;
-    padding: 12px;
+    padding: 12px 0px;
 
     .div-qr-code {
       text-align: center;
@@ -22,15 +22,17 @@
       margin-bottom: 20px;
       border-radius: 6px;
       background: #fdf4e4;
-      p {
+
+      p.address {
         text-align: center;
-        font-size: 14px;
+        font-size: 13px;
         margin: 0px;
       }
-      .qrLink{
+
+      p.qrLink{
         text-align: center;
         font-size: 16px;
-        margin: 0px;
+        margin: 10px 0px 0px 0px;
       }
     }
   }
@@ -96,9 +98,6 @@
     border-radius: 6px;
     // color: #fff;
     font-weight: 300;
-    ::placeholder{
-      // color: #ffffff;
-    }
   }
 
   .button-wallet-cpn{
