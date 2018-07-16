@@ -2,8 +2,8 @@ import { MasterWallet } from '@/services/Wallets/MasterWallet';
 import { BettingHandshake } from '@/services/neuron';
 import local from '@/services/localStore';
 import { APP } from '@/constants';
-import { BET_TYPE } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
 import { MESSAGE_SERVER } from '@/components/handshakes/betting/message.js';
+import { BET_TYPE } from '@/components/handshakes/betting/constants.js';
 
 import {BigNumber} from 'bignumber.js';
 import _ from 'lodash';

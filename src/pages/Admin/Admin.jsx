@@ -53,6 +53,8 @@ class Admin extends React.Component {
   }
 
   fetchMatches() {
+    console.log('fetchMatches');
+
     this.props.loadMatches({
       PATH_URL: `${API_URL.CRYPTOSIGN.LOAD_MATCHES}?report=1`,
       successFn: (res) => {
@@ -214,13 +216,15 @@ class Admin extends React.Component {
       submit.then((response) => {
         response.data.status === 1 && this.setState({
           disable: true,
-        }, this.disablePage);
+        },() => this.disablePage);
+
         response.data.status === 1 && this.props.showAlert({
           message: <div className="text-center">Success!</div>,
           timeOut: 3000,
           type: 'success',
           callBack: () => {},
         });
+
         response.data.status === 0 && this.props.showAlert({
           message: <div className="text-center">{response.data.message}</div>,
           timeOut: 3000,
