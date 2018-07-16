@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Button, Form, FormGroup, Label, Input, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { loadMatches } from '@/reducers/betting/action';
+import { BETTING_RESULT } from '@/components/handshakes/betting/constants.js';
+
 import { BASE_API, API_URL } from '@/constants';
 import md5 from 'md5';
 import { Alert } from 'reactstrap';
@@ -279,51 +281,29 @@ class Admin extends React.Component {
           <Label for="outcomeSelect">Outcomes</Label><br />
           {/* <FormGroup id="outcomeSelect" onChange={(event) => { this.onChangeOutcome(event, 'selectedOutcome'); }} disabled={this.state.disable}> */}
           {this.state.outcomes && this.state.outcomes.length > 0 && this.state.outcomes.map(item => (<Label check key={item.id} style={{}}>{`${item.name},id:${item.id}`}<br />
-            {/* side: 0 (unknown), 1 (support), 2 (against) */}
+            {/* side: 1 (support), 2 (against), 3 (draw) */}
+
             <FormGroup check>
               <Label check>
-                <Input type="radio" name={`selectedOption-${item.id}`} onChange={() => { this.onChangeFinal(item, 0); }} required value="0" />{' '}
-              Unknown
+                <Input type="radio" name={`selectedOption-${item.id}`} onChange={() => { this.onChangeFinal(item, BETTING_RESULT.DRAW); }} required value="0" />{' '}
+              Draw
               </Label>
             </FormGroup>
             <FormGroup check>
               <Label check>
-                <Input type="radio" name={`selectedOption-${item.id}`} onChange={() => { this.onChangeFinal(item, 1); }} value="1" />{' '}
+                <Input type="radio" name={`selectedOption-${item.id}`} onChange={() => { this.onChangeFinal(item, BETTING_RESULT.SUPPORT_WIN); }} value="1" />{' '}
               Support
               </Label>
             </FormGroup>
             <FormGroup check>
               <Label check>
-                <Input type="radio" name={`selectedOption-${item.id}`} onChange={() => { this.onChangeFinal(item, 2); }} value="2" />{' '}
+                <Input type="radio" name={`selectedOption-${item.id}`} onChange={() => { this.onChangeFinal(item, BETTING_RESULT.AGAINST_WIN); }} value="2" />{' '}
               Against
               </Label>
             </FormGroup><br /><br />
           </Label>))}
           <br /> <br />
-          {/* <FormGroup>
-            <Label for="homescore">Home Score</Label>
-            <Input
-              type="number"
-              name="homeScore"
-              id="homescore"
-              placeholder="Home Score"
-              value={this.state.activeMatchData.homeScore || ''}
-              onChange={(event) => { this.onChangeScore(event, 'homeScore'); }}
-              disabled={this.state.disable}
-            />
-          </FormGroup>
-          <FormGroup>
-            <Label for="awayscore">Away Score</Label>
-            <Input
-              type="number"
-              name="awayScore"
-              id="awayscore"
-              placeholder="Away Score"
-              value={this.state.activeMatchData.awayScore || ''}
-              disabled={this.state.disable}
-              onChange={(event) => { this.onChangeScore(event, 'awayScore'); }}
-            />
-          </FormGroup> */}
+
           <Button disabled={this.state.disable} onClick={this.onSubmit}>Submit</Button>
 
         </Form>
