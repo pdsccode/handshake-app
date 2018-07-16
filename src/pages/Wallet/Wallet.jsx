@@ -613,7 +613,7 @@ class Wallet extends React.Component {
       handler: () => {
         this.modalBackupRef.open();
 
-        this.setState({ walletsData: {"auth_token": local.get(APP.AUTH_TOKEN) ,"wallets": this.getAllWallet() }});
+        this.setState({ walletsData: {"auth_token": local.get(APP.AUTH_TOKEN), "chat_encryption_keypair": local.get(APP.CHAT_ENCRYPTION_KEYPAIR) ,"wallets": this.getAllWallet() }});
         this.toggleBottomSheet();
       },
     });

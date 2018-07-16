@@ -58,7 +58,9 @@ class BackupWallet extends React.Component {
   componentDidMount() {    
     if (!this.state.walletData){      
       let walletData = MasterWallet.getMasterWallet();
-      this.setState({walletData: {"auth_token": local.get(APP.AUTH_TOKEN) ,"wallets": walletData }});
+      let chat_encryption_keypair = local.get(APP.CHAT_ENCRYPTION_KEYPAIR);
+      let auth_token = local.get(APP.AUTH_TOKEN);
+      this.setState({walletData: {"auth_token": auth_token, "chat_encryption_keypair": chat_encryption_keypair ,"wallets": walletData }});
     }
   }
 

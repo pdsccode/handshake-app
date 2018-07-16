@@ -433,23 +433,26 @@ export class MasterWallet {
         const jsonData = MasterWallet.IsJsonString(dataString);
         let auth_token = false;
         let wallets = false;
-        console.log('jsonData', jsonData);
+        let chat_encryption_keypair = false;
+      
         if (jsonData !== false) {
           if (jsonData.hasOwnProperty('auth_token')) {
             auth_token = jsonData.auth_token;
           }
+          if (jsonData.hasOwnProperty('chat_encryption_keypair')) {
+            chat_encryption_keypair = jsonData.chat_encryption_keypair;
+          }
           if (jsonData.hasOwnProperty('wallets')) {
             wallets = jsonData.wallets;
           } else {
+            // for old user without keys auth_token + chat_encryption_keypair
             wallets = jsonData;
           }
 
-          if (Array.isArray(wallets)) {
-            console.log('isArray');
+          if (Array.isArray(wallets)) {            
             const listWallet = [];
             wallets.forEach((walletJson) => {
-              const wallet = MasterWallet.convertObject(walletJson);
-              console.log('wallet=>', wallet);
+              const wallet = MasterWallet.convertObject(walletJson);              
               if (wallet === false) {
                 throw BreakException;
               }
@@ -458,6 +461,9 @@ export class MasterWallet {
             MasterWallet.UpdateLocalStore(listWallet);
             if (auth_token !== false) {
               localStore.save(APP.AUTH_TOKEN, auth_token);
+            }
+            if (chat_encryption_keypair !== false){
+              localStore.save(APP.CHAT_ENCRYPTION_KEYPAIR, chat_encryption_keypair);
             }
             return listWallet;
           }
