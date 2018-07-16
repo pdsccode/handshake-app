@@ -155,6 +155,7 @@ class Admin extends React.Component {
   }
 
   disablePage() {
+    console.log('Disable Page');
     localStorage.setItem('disable', true);
     setTimeout(() => {
       localStorage.setItem('disable', false);
@@ -204,6 +205,8 @@ class Admin extends React.Component {
       });
     } else {
       const tokenValue = token || this.checkToken();
+      console.log('Final State:', this.state.final);
+
       const url = `${BASE_API.BASE_URL}/cryptosign/match/report/${this.state.activeMatchData.id}`;
       const submit = $http({
         url,
@@ -213,26 +216,40 @@ class Admin extends React.Component {
         headers: { Authorization: `Bearer ${tokenValue}`, 'Content-Type': 'application/json' },
         method: 'post',
       });
+
       submit.then((response) => {
         response.data.status === 1 && this.setState({
           disable: true,
-        },() => this.disablePage);
-
-        response.data.status === 1 && this.props.showAlert({
-          message: <div className="text-center">Success!</div>,
-          timeOut: 3000,
-          type: 'success',
-          callBack: () => {},
         });
 
-        response.data.status === 0 && this.props.showAlert({
-          message: <div className="text-center">{response.data.message}</div>,
-          timeOut: 3000,
-          type: 'danger',
-          callBack: () => {},
-        });
+        response.data.status === 1 && this.onReportSuccess(response);
+
+        response.data.status === 0 && this.onReportFailed(response);
       });
+
     }
+  }
+  onReportSuccess = (response) => {
+    this.disablePage();
+
+    this.props.showAlert({
+      message: <div className="text-center">Success!</div>,
+      timeOut: 3000,
+      type: 'success',
+      callBack: () => {},
+    });
+
+  }
+  onReportFailed = (response) => {
+    this.disablePage();
+
+    this.props.showAlert({
+      message: <div className="text-center">{response.data.message}</div>,
+      timeOut: 3000,
+      type: 'danger',
+      callBack: () => {},
+    });
+
   }
   onChangeFinal=(item, result) => {
     console.log(item, result);

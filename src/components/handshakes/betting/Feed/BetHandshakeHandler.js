@@ -6,6 +6,7 @@ import { MESSAGE } from '@/components/handshakes/betting/message.js';
 import GA from '@/services/googleAnalytics';
 
 import { rollback, saveTransaction } from '@/reducers/handshake/action';
+import { CONTRACT_METHOD } from '@/components/handshakes/betting/constants.js';
 
 import store from '@/stores';
 
