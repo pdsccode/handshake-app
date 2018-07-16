@@ -135,7 +135,7 @@ class FeedCreditCard extends React.Component {
         amount: cryptoPrice.amount.trim(),
         currency: cryptoPrice.currency.trim(),
         fiat_amount: cryptoPrice.fiatAmount.trim(),
-        fiat_currency: FIAT_CURRENCY,
+        fiat_currency: FIAT_CURRENCY.USD,
         address: address,
         email: authProfile ? authProfile.email : "",
         payment_method_data: params
@@ -436,7 +436,7 @@ class FeedCreditCard extends React.Component {
                 </div>
                 <div className="pb-2">
                   <h4 className="headline"><FormattedMessage id="askUsingCreditCard" values={{
-                    fiatCurrency: FIAT_CURRENCY,
+                    fiatCurrency: FIAT_CURRENCY.USD,
                     total: formatMoney(total)
                   }}/></h4>
                 </div>

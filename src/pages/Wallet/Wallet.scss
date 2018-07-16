@@ -32,7 +32,7 @@
     border-color: #0BE200;
     border-width: 2px;
     border-style: solid;
-    border-radius: 10px;    
+    border-radius: 10px;
   }
 
   .name {
@@ -475,6 +475,12 @@
     border-radius: 6px;
   }
 
+  .label-self{
+    color:purple;
+    font-size: 16px;
+    padding-bottom: 7px;
+  }
+
   .label-sent{
     color:#1E4EFF;
     font-size: 16px;
@@ -498,6 +504,11 @@
     padding-bottom: 7px;
   }
 
+  .value-self{
+    font-size: 16px;
+    color:purple;
+  }
+
   .value-sent{
     font-size: 16px;
     color:#FF2D55;
@@ -519,6 +530,10 @@
     width:60px;
     padding: 10px 10px 20px 15px;
     float: left;
+  }
+  .url {
+    padding-left: 60px;
+    padding-top: 5px;
   }
   .history-no-trans{
     text-align: center;
@@ -569,6 +584,7 @@
     padding-top: 15px;
     padding-bottom: 15px;
     border-bottom:solid 1px #ECECEC;
+    font-size: 14px;
 
     .status-failed{
       float: right;
@@ -591,6 +607,12 @@
       min-height: 30px;
       word-wrap: break-word;
       font-size: 14px;
+
+      .value-it{
+        margin-left: 120px;
+        padding-bottom: 10px;
+        display:list-item;
+      }
     }
 
     .key{

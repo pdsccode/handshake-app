@@ -1,5 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import {Ethereum} from '@/services/Wallets/Ethereum.js'
+import iconSelf from '@/assets/images/icon/icon-self.svg';
 import iconSent from '@/assets/images/icon/icon-sent.svg';
 import iconReceived from '@/assets/images/icon/icon-received.svg';
 import PropTypes from 'prop-types';
@@ -43,23 +45,37 @@ class WalletHistory extends React.Component {
         let tran = wallet.cook(res);
         if(arr.indexOf(tran.transaction_no) < 0)
           arr.push(tran.transaction_no);
-        else
-          tran.is_sent = true;
+        else {
+          tran.is_sent = 1;
+          return "";
+        }
 
-        let cssLabel = `label-${tran.is_sent ? "sent" : "received"}`,
-          cssValue = `value-${tran.is_sent ? "sent" : "received"}`;
+        let cssLabel = "label-self", cssValue = "value-self", icon = iconSelf, label = messages.wallet.action.history.label.self;
+        if(tran.is_sent == 1) {
+          cssLabel = "label-sent";
+          cssValue = "value-sent";
+          label = messages.wallet.action.history.label.sent;
+          icon = iconSent;
+        }
+        else if (tran.is_sent == 2) {
+          cssLabel = "label-received";
+          cssValue = "value-received";
+          label = messages.wallet.action.history.label.received;
+          icon = iconReceived;
+        }
+
         res.is_sent = tran.is_sent;
 
         return <div key={tran.transaction_no} className="row" onClick={() =>{this.show_transaction(res)}}>
             <div className="col3">
               <div className="time">{tran.transaction_relative_time}</div>
-              <div className={cssValue}>{tran.is_sent ? "-" : ""} {Number(tran.value)} {tran.coin_name}</div>
+              <div className={cssValue}>{tran.is_sent == 1 ? "-" : ""}{Number(tran.value)} {tran.coin_name}</div>
               {tran.confirmations <= 0 ? <div className="unconfirmation">{messages.wallet.action.history.label.unconfirmed}</div> : ""}
               {tran.is_error ? <div className="unconfirmation">{messages.wallet.action.history.label.failed}</div> : ""}
             </div>
-            <div className="col1"><img className="iconDollar" src={tran.is_sent ? iconSent : iconReceived} /></div>
+            <div className="col1"><img className="iconDollar" src={icon} /></div>
             <div className="col2 address">
-              <div className={cssLabel}>{tran.is_sent ? "Sent" : "Received"}</div>
+              <div className={cssLabel}>{label}</div>
               {
                 tran.addresses.map((addr) => {
                   return <div key={addr}>{addr}</div>
@@ -85,6 +101,12 @@ class WalletHistory extends React.Component {
   async show_transaction(data){
     const wallet = this.props.wallet;
     if(wallet && data){
+
+      if(wallet.name == "ETH") {
+        let it = await wallet.getInternalTransactions(data.hash);
+        if(it && it.length > 0) data["internal_transactions"] = it;
+      }
+
       this.modalTransactionRef.open();
       this.showLoading();
       this.setState({transaction_detail: data});
@@ -106,19 +128,17 @@ class WalletHistory extends React.Component {
   get load_balance(){
     const wallet = this.props.wallet;
     const { messages } = this.props.intl;
-
     return wallet ?
     (
       <div>
         <div className="history-balance">
-          {wallet.name == "ETH" ?
-            <div className="float-right"><a target="_blank" href={"https://etherscan.io/address/"+wallet.address}>{messages.wallet.action.history.label.view_all_etherscan}</a></div>
+        {messages.wallet.action.history.label.balance}: {wallet.balance} {wallet.name}
+          <br/>
+          {messages.wallet.action.history.label.transactions}: {wallet.transaction_count}<br/>
+          {wallet && wallet.name == "ETH" ?
+            <a target="_blank" href={""+wallet.getAPIUrlAddress()}>{messages.wallet.action.history.label.view_all_etherscan}</a>
             : ""
           }
-          {messages.wallet.action.history.label.transactions}: {wallet.transaction_count}
-          <br/>
-          {messages.wallet.action.history.label.balance}: {wallet.balance} {wallet.name}
-
         </div>
       </div>
     ) : "";

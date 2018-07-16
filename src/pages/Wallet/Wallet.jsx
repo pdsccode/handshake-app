@@ -772,6 +772,10 @@ class Wallet extends React.Component {
     this.setState({ activeTransfer: false });
   }
 
+  closeCreate = () => {
+    this.setState({input12PhraseValue: "", walletKeyDefaultToCreate: 1});
+  }
+
   successTransfer = () => {
     this.modalSendRef.close();
     this.autoCheckBalance(this.state.walletSelected.address, this.state.inputAddressAmountValue);
@@ -980,7 +984,7 @@ class Wallet extends React.Component {
           </Modal>
 
           {/* Modal for Create/Import wallet : */}
-          <Modal title={messages.wallet.action.create.header} onRef={modal => this.modalCreateWalletRef = modal}>
+          <Modal title={messages.wallet.action.create.header} onRef={modal => this.modalCreateWalletRef = modal} onClose={this.closeCreate}>
             <Row className="list">
               <Header title={messages.wallet.action.create.label.select_coins} hasLink={false} />
             </Row>

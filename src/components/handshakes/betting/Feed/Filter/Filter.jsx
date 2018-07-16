@@ -362,6 +362,7 @@ class BettingFilter extends React.Component {
   }
 
   callGetHandshakes(item) {
+    console.log('Sa test callGetHandshakes:', item);
     if (item) {
       const params = {
         outcome_id: item.id,
@@ -389,13 +390,17 @@ class BettingFilter extends React.Component {
       errorFn: this.getCheckFirstFreeFailed,
     });
   }
+  refreshHanshakeTable() {
+    const { selectedOutcome } = this.state;
+    this.callGetHandshakes(selectedOutcome);
+  }
 
   closeShakePopup() {
-    const { selectedOutcome } = this.state;
+
+
     this.setState({
       bettingShakeIsOpen: false,
     });
-    this.callGetHandshakes(selectedOutcome);
     this.modalBetRef.close();
   }
 
@@ -616,6 +621,9 @@ class BettingFilter extends React.Component {
                 this.closeShakePopup();
               }
             }
+            onCreateBetSuccess={() => {
+              this.refreshHanshakeTable();
+            }}
           />
         </ModalDialog>
         <ModalDialog className="modal" onRef={(modal) => { this.modalBetFreeRef = modal; return null; }}>
@@ -637,8 +645,11 @@ class BettingFilter extends React.Component {
             }
             onCancelClick={() => {
               this.closeShakePopup();
+              }
             }
-          }
+            onCreateBetSuccess={() => {
+              this.refreshHanshakeTable();
+            }}
           />
         </ModalDialog>
         <ModalDialog className="modal" onRef={(modal) => { this.modalLuckyRealRef = modal; return null; }}>

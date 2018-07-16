@@ -56,6 +56,16 @@ export class Ethereum extends Wallet {
     return new Web3(new Web3.providers.HttpProvider(this.network));
   }
 
+  getAPIUrlAddress() {
+    let url = this.network == Ethereum.Network.Mainnet ? "https://etherscan.io/address/"+this.address : "https://rinkeby.etherscan.io/address/"+this.address;
+    return url;
+  }
+
+  getAPIUrlTransaction(hash) {
+    let url = this.network == Ethereum.Network.Mainnet ? "https://etherscan.io/tx/"+hash : "https://rinkeby.etherscan.io/tx/"+hash;
+    return url;
+  }
+
   async getBalance() {
     try {
       const web3 = this.getWeb3();
@@ -86,7 +96,6 @@ export class Ethereum extends Wallet {
 
     const web3 = new Web3(new Web3.providers.HttpProvider(this.network));
     const receipt = await web3.eth.getTransactionReceipt(hash);
-    console.log(receipt);
     return null;
   }
 
@@ -206,6 +215,34 @@ export class Ethereum extends Wallet {
     return result;
   }
 
+  async getInternalTransactions(hash) {
+    let result = [];
+    const API_KEY = configs.network[4].apikeyEtherscan;
+    const url = `${this.constructor.API[this.getNetworkName()]}?module=account&action=txlistinternal&txhash=${hash}&apikey=${API_KEY}`;
+    const response = await axios.get(url);
+    if (response.status == 200) {
+      let arr = response.data.result;
+      if(arr && arr.length > 0) {
+        const w = new Ethereum();
+        arr.forEach((e) => {
+          let from = e.from;
+          w.address = from;
+          from = w.getShortAddress();
+
+          let to = e.to;
+          w.address = to;
+          to = w.getShortAddress();
+
+          let amount = e.value;
+          amount = Number(amount / 1000000000000000000);
+
+          result.push({from: from, to: to, amount: amount})
+        });
+      }
+    }
+    return result;
+  }
+
   async getTransactionCount() {
     let result = [];
     const API_KEY = configs.network[4].apikeyEtherscan;
@@ -218,24 +255,47 @@ export class Ethereum extends Wallet {
     return result;
   }
 
+  formatNumber(value){
+    let result = 0, count = 0;
+    try {
+      if(!isNaN(value)) result = Number(value);
+
+      if (Math.floor(value) !== value)
+          count = value.toString().split(".")[1].length || 0;
+
+      if(count > 6)
+        result = value.toFixed(6);
+    }
+    catch(e) {
+      result = 0;
+    }
+
+    return result;
+  }
+
   cook(data){
     let value = 0, transaction_date = new Date(), addresses = [],
-      is_sent = true, is_error = false, transaction_no = "", token = {}, coin_name = "ETH";
+      is_sent = 0, is_error = false, transaction_no = "", token = {}, coin_name = "ETH";
 
     if(data){
       try{
         value = Number(data.value / 1000000000000000000);
+        value = this.formatNumber(value);
         transaction_date = new Date(data.timeStamp*1000);
-        is_sent = String(data.from).toLowerCase() == this.address.toLowerCase();
         is_error = Boolean(data.isError == "1");
         transaction_no = data.hash;
+
+        if(String(data.from).toLowerCase() == this.address.toLowerCase() && String(data.to).toLowerCase() != this.address.toLowerCase())
+          is_sent = 1;
+        else if (String(data.from).toLowerCase() != this.address.toLowerCase() && String(data.to).toLowerCase() == this.address.toLowerCase())
+          is_sent = 2;
       }
       catch(e){
         console.error(e);
       }
 
       let addr = data.from;
-      if(is_sent) addr = data.to;
+      if(is_sent == 1) addr = data.to;
 
       token = this.checkToken(addr);
       if(token.result){

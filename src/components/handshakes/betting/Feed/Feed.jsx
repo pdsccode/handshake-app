@@ -25,7 +25,7 @@ import {
   getShakeOffchain, getBalance, getEstimateGas, foundShakeList, parseBigNumber,
 } from '@/components/handshakes/betting/utils.js';
 
-import { isSameAddress } from '@/components/handshakes/betting/validation.js';
+import { isSameAddress, isRightNetwork } from '@/components/handshakes/betting/validation.js';
 
 
 
@@ -117,7 +117,6 @@ class FeedBetting extends React.Component {
       result, shakeUserIds, id, amount, remainingAmount, odds,
       closingTime, reportTime, disputeTime, initUserId,
     } = props; // new state
-
     const profile = local.get(APP.AUTH_PROFILE);
     let isUserShake = this.isShakeUser(shakeUserIds, profile.id);
     const isMatch = this.isMatch;
@@ -125,6 +124,7 @@ class FeedBetting extends React.Component {
     let winMatch = 0;
     let itemInfo = props;
     let idCryptosign = id;
+    let { side } = itemInfo;
     if (isMatch) {
       amountMatch = amount - remainingAmount;
       winMatch = amountMatch * odds;
@@ -153,7 +153,7 @@ class FeedBetting extends React.Component {
 
 
     let status = itemInfo.status;
-    const side = itemInfo.side;
+    side = itemInfo.side;
 
     const role = isUserShake ? ROLE.SHAKER : ROLE.INITER;
     // const blockchainStatusHardcode = 5;
@@ -165,11 +165,23 @@ class FeedBetting extends React.Component {
     console.log('handleStatus idCryptosign:', idCryptosign, ' status = ', status);
     if (isLoadingObj) {
       console.log('handleStatus  isLoadingObj:', isLoadingObj);
+      /*
       if (status === BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINITED || status === BET_BLOCKCHAIN_STATUS.STATUS_DONE) {
         betHandshakeHandler.setItemOnChain(idCryptosign, null);
         isLoading = false;
       } else {
         status = isLoadingObj.status || status;
+        isLoading = true;
+      }
+      */
+      if (status === BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINITED || status === BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINIT_FAILED
+          || status === BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_FAILED || status === BET_BLOCKCHAIN_STATUS.STATUS_REFUND_FAILED
+          || status === BET_BLOCKCHAIN_STATUS.STATUS_DONE || status === BET_BLOCKCHAIN_STATUS.STATUS_REFUND) {
+        betHandshakeHandler.setItemOnChain(idCryptosign, null);
+        isLoading = false;
+      } else {
+        const { itemOnChain } = isLoadingObj;
+        status = itemOnChain.status || status;
         isLoading = true;
       }
     }
@@ -341,6 +353,7 @@ class FeedBetting extends React.Component {
         const {
           amount = 0, odds = 0, side, remainingAmount,status
         } = item;
+        console.log('Shake Items Display:', item);
         remainingValue = remainingAmount || 0;
         colorBySide = side === 1 ? `support` : 'oppose';
         const oddsBN = parseBigNumber(odds);
@@ -454,15 +467,15 @@ class FeedBetting extends React.Component {
     this.setState({
       isLoading: true,
     });
-    betHandshakeHandler.setItemOnChain(offchain, true);
+    betHandshakeHandler.setItemOnChain(offchain, itemInfo);
     const result = await betHandshakeHandler.withdraw(hid, offchain);
     const { hash } = result;
     console.log('Sa test:', result);
     if (hash) {
       console.log('Sa test Update Withdraw UI');
-      betHandshakeHandler.setItemOnChain(offchain, false);
       const updateInfo = Object.assign({}, itemInfo);
       updateInfo.status = BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_PENDING;
+      betHandshakeHandler.setItemOnChain(offchain, updateInfo);
       this.props.updateBettingChange(updateInfo);
     }
   }
@@ -471,13 +484,13 @@ class FeedBetting extends React.Component {
     this.setState({
       isLoading: true,
     });
-    betHandshakeHandler.setItemOnChain(offchain, true);
+    betHandshakeHandler.setItemOnChain(offchain, itemInfo);
     const result = await betHandshakeHandler.refund(hid, offchain);
     const { hash } = result;
     if (hash) {
-      betHandshakeHandler.setItemOnChain(offchain, false);
       const updateInfo = Object.assign({}, itemInfo);
       updateInfo.status = BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINIT_PENDING;
+      betHandshakeHandler.setItemOnChain(offchain, updateInfo);
       this.props.updateBettingChange(updateInfo);
     }
   }
@@ -548,9 +561,10 @@ class FeedBetting extends React.Component {
     const { status } = successData;
     if (status) {
       const { itemInfo } = this.state;
-
+      const { id } = itemInfo;
       const updateInfo = Object.assign({}, itemInfo);
       updateInfo.status = BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINIT_PENDING;
+      betHandshakeHandler.setItemOnChain(id, updateInfo);
       this.props.updateBettingChange(updateInfo);
     }
   }
@@ -594,9 +608,11 @@ class FeedBetting extends React.Component {
         },
       });
       const { itemInfo } = this.state;
+      const { id } = itemInfo;
 
       const updateInfo = Object.assign({}, itemInfo);
       updateInfo.status = BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_PENDING;
+      betHandshakeHandler.setItemOnChain(id, updateInfo);
       this.props.updateBettingChange(updateInfo);
     }
   }
