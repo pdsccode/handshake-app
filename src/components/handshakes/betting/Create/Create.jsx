@@ -8,7 +8,9 @@ import { required } from '@/components/core/form/validation';
 import { initHandshake } from '@/reducers/handshake/action';
 import { loadMatches } from '@/reducers/betting/action';
 import { HANDSHAKE_ID, API_URL, APP, URL } from '@/constants';
-import { BetHandshakeHandler, SIDE, MESSAGE } from '@/components/handshakes/betting/Feed/BetHandshakeHandler.js';
+import { BetHandshakeHandler  } from '@/components/handshakes/betting/Feed/BetHandshakeHandler.js';
+import { MESSAGE } from '@/components/handshakes/betting/message.js';
+
 import GA from '@/services/googleAnalytics';
 
 // components

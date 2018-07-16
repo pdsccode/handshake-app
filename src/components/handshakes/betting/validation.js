@@ -1,5 +1,5 @@
 import { MasterWallet } from '@/services/Wallets/MasterWallet';
-import { MESSAGE } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
+import { MESSAGE } from '@/components/handshakes/betting/message.js';
 
 import moment from 'moment';
 
