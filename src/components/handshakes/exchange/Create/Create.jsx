@@ -480,7 +480,7 @@ class Component extends React.Component {
       this.props.updateOfferStores({
         PATH_URL: `${API_URL.EXCHANGE.OFFER_STORES}/${offer.id}`,
         data: offerStore,
-        METHOD: 'POST',
+        METHOD: 'PUT',
         // successFn: this.handleCreateOfferSuccess,
         // errorFn: this.handleCreateOfferFailed,
       });
