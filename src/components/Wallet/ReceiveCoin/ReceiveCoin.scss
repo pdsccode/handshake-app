@@ -4,22 +4,70 @@
 }
 
 .receive-coins{
-  margin-top: 20px;
+  margin-top: 5px;
   padding: 0 15px;
 
   form.receivewallet-wrapper {
     margin-top: 10px;
     margin-bottom: 10px;
-}
+  }
 
-  .div-amount {
-    padding-bottom: 10px;
+  .box-qr-code{
+    border: 1px solid #ced4da;
+    border-radius: 10px;
+    margin: auto;
+    width: 220px;
+    height: 220px;
+    padding: 10px;
+  }
+
+  .div-amount {    
+    position: relative;    
+    margin-top: 15px;
 
     .prepend{
-      padding-top: 11px;
+      padding: 3px;
       position: absolute;
-      right: 50px;
+      right: 8px;
       color: #7b7b7b;
+      border: #ced4da 1px solid;
+      top: 8px;
+      font-size: 14px;
+      background-color: #f4f6ff;
+      border-radius: 2px;
+      cursor: pointer;
+
+      -moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
+      -webkit-box-shadow:inset 0px 1px 0px 0px #ffffff;
+      box-shadow:inset 0px 1px 0px 0px #ffffff;
+      background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ededed), color-stop(1, #dfdfdf) );
+      background:-moz-linear-gradient( center top, #ededed 5%, #dfdfdf 100% );
+      filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ededed', endColorstr='#dfdfdf');
+      background-color:#ededed;
+      -webkit-border-top-left-radius:5px;
+      -moz-border-radius-topleft:5px;
+      border-top-left-radius:5px;
+      -webkit-border-top-right-radius:5px;
+      -moz-border-radius-topright:5px;
+      border-top-right-radius:5px;
+      -webkit-border-bottom-right-radius:5px;
+      -moz-border-radius-bottomright:5px;
+      border-bottom-right-radius:5px;
+      -webkit-border-bottom-left-radius:5px;
+      -moz-border-radius-bottomleft:5px;
+      border-bottom-left-radius:5px;
+      text-indent:0px;
+      border:1px solid #dcdcdc;      
+      color:#777777;      
+      text-decoration:none;
+      text-align:center;
+      text-shadow:1px 1px 0px #ffffff;
+
+
+    }
+    .switch-value{
+      margin-top: 5px;
+      font-size: 12px;
     }
 
     input[type=text], input[type=tel], input[type=number]{
@@ -61,9 +109,9 @@
     margin-top: 20px!important;
   }
   .addressDivPopup {
-    margin-top: 20px;
+    margin-top: 15px;
     margin-bottom: 10px;
-    font-size: 13px;
+    font-size: 11px;
   }
   .link-request-custom-amount {
     cursor: pointer;

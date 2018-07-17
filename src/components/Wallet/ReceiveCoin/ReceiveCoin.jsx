@@ -49,11 +49,12 @@ class ReceiveCoin extends React.Component {
       wallets: [],
       walletDefault: false,
       walletSelected: false,
-      rateBTC: 0,
-      rateETH: 0,
+      rates: [],
       active: this.props.active,
       inputSendAmountValue: 0,
-      inputSendMoneyValue: 0
+      inputSendMoneyValue: 0,
+      isCurrency: false,      
+      switchValue: 0,
     }
   }
 
@@ -86,21 +87,22 @@ class ReceiveCoin extends React.Component {
     if(!this.state.walletSelected.isToken){
       this.getRate("BTC");
       this.getRate("ETH");
+      this.getRate("BCH");
     }
   }
 
   getRate = (currency) => {
     var data = {amount: 1, currency: currency};
+    let rates = this.state.rates;
     this.props.getCryptoPrice({
       PATH_URL: API_URL.EXCHANGE.GET_CRYPTO_PRICE,
       qs: data,
       successFn: (res) => {
         const cryptoPrice = CryptoPrice.cryptoPrice(res.data);
-        const price = new BigNumber(cryptoPrice.fiatAmount).toNumber();
-        if(currency == "BTC")
-          this.setState({rateBTC: price});
-        else
-          this.setState({rateETH: price});
+        const price = new BigNumber(cryptoPrice.price).toNumber();
+
+        rates.push({[currency]: price});
+        this.setState({rates: rates});             
       },
       errorFn: (err) => {
         console.error("Error", err);
@@ -110,7 +112,7 @@ class ReceiveCoin extends React.Component {
 
   componentDidUpdate(){
     if (this.props.active && this.props.active != this.state.active){      
-      this.setState({active: this.props.active, inputSendAmountValue: 0, inputSendMoneyValue: 0});
+      this.setState({active: this.props.active, inputSendAmountValue: 0, inputSendMoneyValue: 0, switchValue: 0, isCurrency: false});
       this.resetForm();
       this.getWalletDefault();      
     }
@@ -200,24 +202,7 @@ class ReceiveCoin extends React.Component {
 
   }
 
-  updateAddressAmountValue = (evt) => {
-    let amount = evt.target.value, rate = 0, money = 0;
-    if(this.state.walletSelected && this.state.walletSelected.name == "BTC")
-      rate = this.state.rateBTC;
-    else
-      rate = this.state.rateETH;
-
-    if(!isNaN(amount)){
-      money = amount * rate;
-      this.setState({
-        inputSendAmountValue: amount,
-        inputSendMoneyValue: money.toFixed(0)
-      });
-
-      this.props.rfChange(nameFormReceiveWallet, 'amountCoin', amount);
-      this.props.rfChange(nameFormReceiveWallet, 'amountMoney', money);
-    }
-  }
+  
 
   getMessage(str){
     const { messages } = this.props.intl;
@@ -236,23 +221,57 @@ class ReceiveCoin extends React.Component {
     this.resetForm();
   }
 
-  updateAddressMoneyValue = (evt) => {
-    let money = evt.target.value, rate = 0, amount = 0;
-    if(this.state.walletSelected && this.state.walletSelected.name == "BTC")
-      rate = this.state.rateBTC;
-    else
-      rate = this.state.rateETH;
+  updateAddressAmountValue = (evt) => {
+    this.canculator(evt.target.value); 
+  }
 
-    if(!isNaN(money)){
-      amount = money/rate;
-      this.setState({
-        inputSendAmountValue: amount,
-        inputSendMoneyValue: money
+  switchValue = (showDivAmount) => {
+    if (showDivAmount){
+      let isCurrency = !this.state.isCurrency;
+      this.setState({isCurrency: isCurrency}, () =>{
+        this.canculator(this.state.inputSendAmountValue);
       });
-
-      this.props.rfChange(nameFormReceiveWallet, 'amountCoin', amount);
-      this.props.rfChange(nameFormReceiveWallet, 'amountMoney', money);
+      
     }
+    
+  }
+
+  canculator(value){
+    console.log("value", value);
+    let isCurrency = this.state.isCurrency;
+    if (isCurrency){
+      let money = value, rate = 0, amount = 0;
+      let rates = this.state.rates.filter(rate => rate.hasOwnProperty(this.state.walletSelected.name));
+
+      if (rates.length > 0){
+        rate = rates[0][this.state.walletSelected.name];
+        if(!isNaN(money)){
+          amount = money/rate;
+          this.setState({
+            inputSendAmountValue: money,            
+            switchValue: amount
+          });
+
+          // this.props.rfChange(nameFormReceiveWallet, 'amountCoin', amount);          
+        }
+      }
+    }
+    else{
+      let amount = value, rate = 0, money = 0;
+      let rates = this.state.rates.filter(rate => rate.hasOwnProperty(this.state.walletSelected.name));
+
+      if (rates.length > 0){
+        rate = rates[0][this.state.walletSelected.name];
+        if(!isNaN(amount)){
+          money = amount * rate;
+          this.setState({
+            inputSendAmountValue: amount,            
+            switchValue: money
+          });      
+        }
+        // this.props.rfChange(nameFormReceiveWallet, 'amountCoin', amount);        
+      }  
+    }    
   }
 
   onItemSelectedWallet = (item) =>{
@@ -262,16 +281,14 @@ class ReceiveCoin extends React.Component {
 
   render() {
     const { messages } = this.props.intl;    
+    let showDivAmount = (( this.state.walletSelected && ( !this.state.walletSelected.isToken && this.state.rates.filter(rate => rate.hasOwnProperty(this.state.walletSelected.name).length > 0) ) ) ) ? true : false;
 
     return (
       <div className="receive-coins">
-          <div className="bodyTitle"><span>{messages.wallet.action.receive.message} { this.state.walletSelected ? this.state.walletSelected.name : ''} </span></div>
+          {/* <div className="bodyTitle"><span>{messages.wallet.action.receive.message} { this.state.walletSelected ? this.state.walletSelected.name : ''} </span></div> */}
           <div className={['bodyBackup bodyShareAddress']}>
 
-            <QRCode size={250} value={this.state.walletSelected ? this.state.walletSelected.address : ''} />
-            {/* <div className="addressDivPopup">{ this.state.walletSelected ? this.state.walletSelected.address : ''}</div>           */}
-
-            <ShowAddressWalletForm className="receivewallet-wrapper">
+          <ShowAddressWalletForm className="receivewallet-wrapper">
               { this.state.walletSelected ?
                               
                 <Field
@@ -288,24 +305,18 @@ class ReceiveCoin extends React.Component {
               
               :""}
               </ShowAddressWalletForm>
-
-            <div className="link-request-custom-amount" onClick={() => { this.modalCustomAmountRef.open(); this.setState({ inputSendAmountValue: '' }); }}>{messages.wallet.action.receive.button.request_amount}</div>
-
-            <Button className="button" cssType="primary" onClick={() => { Clipboard.copy(this.state.walletSelected.address); this.showToast(messages.wallet.action.receive.success.share); this.onFinish() }} >
-              {messages.wallet.action.receive.button.share}
-            </Button>
-          </div>
-
-          {/* Modal for Custom amount : */}
-          <Modal title={messages.wallet.action.receive.header2} onRef={modal => this.modalCustomAmountRef = modal} onClose={() => this.onCloseReceive()} >
-            <div className={['bodyBackup bodyShareAddress']}>
-
-              <QRCode size={250} value={(this.state.walletSelected ? this.state.walletSelected.address : '') + (this.state.inputSendAmountValue != '' ? `,${this.state.inputSendAmountValue}` : '')} />
-              <div className="addressDivPopup">{ this.state.walletSelected ? this.state.walletSelected.address : ''}</div>
+            
+            <div className="box-qr-code">
+              <QRCode onClick={() => { Clipboard.copy(this.state.walletSelected.address); this.showToast(messages.wallet.action.receive.success.share);}} size={200} value={this.state.walletSelected ? this.state.walletSelected.address : ''} />
             </div>
+            <div onClick={() => { Clipboard.copy(this.state.walletSelected.address); this.showToast(messages.wallet.action.receive.success.share);}} className="addressDivPopup">{ this.state.walletSelected ? this.state.walletSelected.address : ''}</div>                      
+
             <ReceiveWalletForm className="receivewallet-wrapper">
               <div className="div-amount">
-                <div className="prepend">{ this.state.walletSelected ? StringHelper.format("{0}", this.state.walletSelected.name) : ''}</div>
+                <div onClick={() => {this.switchValue(showDivAmount)}} className="prepend">
+                  {this.state.isCurrency ? messages.wallet.action.receive.label.usd : (this.state.walletSelected ? StringHelper.format("{0}", this.state.walletSelected.name) : '')}
+                  {/* ⋮  */}
+                </div>
                 <Field
                   key="2"
                   name="amountCoin"
@@ -318,28 +329,58 @@ class ReceiveCoin extends React.Component {
                   validate={[amountValid]}
                   autoComplete="off"
                 />
-              </div>
-              { this.state.walletSelected.isToken ? "" :
-                <div className="div-amount">
-                  <div className="prepend">{messages.wallet.action.receive.label.usd}</div>
-                  <Field
-                    key="1"
-                    name="amountMoney"
-                    placeholder={"0.0"}
-                    type="text"
-                    className="form-control"
-                    component={fieldInput}
-                    value={this.state.inputSendMoneyValue}
-                    onChange={evt => this.updateAddressMoneyValue(evt)}
-                    autoComplete="off"
-                  />
+              { !showDivAmount ? "" :
+                <div className="switch-value">
+                    ≈ {this.state.switchValue}&nbsp;<b>{!this.state.isCurrency ? messages.wallet.action.receive.label.usd : (this.state.walletSelected ? StringHelper.format("{0}", this.state.walletSelected.name) : '') } </b>
                 </div>
-              }
+              }  
+              </div>
+              
+            </ReceiveWalletForm>
+
+            {/* <div className="link-request-custom-amount" onClick={() => { this.modalCustomAmountRef.open(); this.setState({ inputSendAmountValue: '' }); }}>{messages.wallet.action.receive.button.request_amount}</div> */}
+
+            {/* <Button className="button" cssType="primary" onClick={() => { Clipboard.copy(this.state.walletSelected.address); this.showToast(messages.wallet.action.receive.success.share); this.onFinish() }} >
+              {messages.wallet.action.receive.button.share}
+            </Button> */}
+          </div>
+
+          {/* Modal for Custom amount : */}
+          {/* <Modal title={messages.wallet.action.receive.header2} onRef={modal => this.modalCustomAmountRef = modal} onClose={() => this.onCloseReceive()} >
+            <div className={['bodyBackup bodyShareAddress']}>
+
+              <QRCode size={250} value={(this.state.walletSelected ? this.state.walletSelected.address : '') + (this.state.inputSendAmountValue != '' ? `,${this.state.inputSendAmountValue}` : '')} />
+              <div className="addressDivPopup">{ this.state.walletSelected ? this.state.walletSelected.address : ''}</div>
+            </div>
+            <ReceiveWalletForm className="receivewallet-wrapper">
+              <div className="div-amount">
+                <div onClick={() => {this.switchValue(showDivAmount)}} className="prepend">
+                  {this.state.isCurrency ? messages.wallet.action.receive.label.usd : (this.state.walletSelected ? StringHelper.format("{0}", this.state.walletSelected.name) : '') } 
+                </div>
+                <Field
+                  key="2"
+                  name="amountCoin"
+                  placeholder={"0.0"}
+                  type="text"
+                  className="form-control"
+                  component={fieldInput}
+                  value={this.state.inputSendAmountValue}
+                  onChange={evt => this.updateAddressAmountValue(evt)}
+                  validate={[amountValid]}
+                  autoComplete="off"
+                />
+              { !showDivAmount ? "" :
+                <div className="switch-value">
+                    ≈ {this.state.switchValue}&nbsp;<b>{!this.state.isCurrency ? messages.wallet.action.receive.label.usd : (this.state.walletSelected ? StringHelper.format("{0}", this.state.walletSelected.name) : '') } </b>
+                </div>
+              }  
+              </div>
+              
             </ReceiveWalletForm>
             <Button className="button" cssType="primary" onClick={() => { this.modalCustomAmountRef.close(); this.onFinish() }} >
               {messages.wallet.action.receive.button.done}
             </Button>
-          </Modal>
+          </Modal> */}
       </div>
     )
   }
