@@ -54,6 +54,7 @@ module.exports = function webpackConfig(env, argv) {
             'style-loader',
             'css-loader',
             'postcss-loader',
+            'resolve-url-loader',
           ],
         },
         {
@@ -62,6 +63,7 @@ module.exports = function webpackConfig(env, argv) {
             'style-loader',
             'css-loader',
             'postcss-loader',
+            'resolve-url-loader',
             'sass-loader',
           ],
         },
@@ -96,6 +98,7 @@ module.exports = function webpackConfig(env, argv) {
             'style-loader',
             'css-loader',
             'postcss-loader',
+            'resolve-url-loader',
           ],
         },
         {
@@ -105,6 +108,7 @@ module.exports = function webpackConfig(env, argv) {
             'style-loader',
             'css-loader',
             'postcss-loader',
+            'resolve-url-loader',
             'sass-loader',
           ],
         },

@@ -141,6 +141,9 @@
     "webpack-pwa-manifest": "^3.6.2"
   },
   "engines": {
-    "node": "10.4.0"
+    "node": ">=8.10.0"
+  },
+  "devDependencies": {
+    "resolve-url-loader": "^2.3.0"
   }
 }
