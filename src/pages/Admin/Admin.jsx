@@ -44,12 +44,21 @@ class Admin extends React.Component {
   }
 
   setInitials(matches) {
-    matches.length > 0 && this.setState({
-      matches,
-      outcomes: matches[0].outcomes,
-      activeMatchData: matches[0],
-      selectedMatch: matches[0].name,
-    });
+    if (matches.length > 0) {
+      this.setState({
+        matches,
+        outcomes: matches[0].outcomes,
+        activeMatchData: matches[0],
+        selectedMatch: matches[0].name,
+      });
+    } else {
+      this.setState({
+        matches,
+        outcomes: [],
+        activeMatchData: {},
+        selectedMatch: 1,
+      });
+    }
   }
 
   fetchMatches() {
