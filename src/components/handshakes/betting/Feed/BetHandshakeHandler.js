@@ -26,6 +26,18 @@ export class BetHandshakeHandler {
     this.listOnChainLoading = {};
   }
 
+  getLoadingOnChain = (offchain) => {
+
+    return this.listOnChainLoading[offchain];
+  }
+  setItemOnChain = (offchain, itemOnChain) => {
+    if (this.listOnChainLoading) {
+        this.listOnChainLoading[offchain] = {
+          itemOnChain:itemOnChain
+      }
+    }
+  }
+
   addContract = async (item) => {
     console.log('initContract', item);
 
@@ -200,17 +212,7 @@ export class BetHandshakeHandler {
 
     return result;
   }
-  getLoadingOnChain = (offchain) => {
 
-    return this.listOnChainLoading[offchain];
-  }
-  setItemOnChain = (offchain, itemOnChain) => {
-    if (this.listOnChainLoading) {
-        this.listOnChainLoading[offchain] = {
-          itemOnChain:itemOnChain
-      }
-    }
-  }
   async withdraw(hid, offchain) {
     const chainId = getChainIdDefaultWallet();
 
