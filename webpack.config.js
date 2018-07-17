@@ -52,8 +52,8 @@ module.exports = function webpackConfig(env, argv) {
           test: /\.css$/,
           use: [
             'style-loader',
-            'resolve-url-loader',
             'css-loader',
+            'resolve-url-loader',
             'postcss-loader',
           ],
         },
@@ -61,8 +61,8 @@ module.exports = function webpackConfig(env, argv) {
           test: /\.scss$/,
           use: [
             'style-loader',
-            'resolve-url-loader',
             'css-loader',
+            'resolve-url-loader',
             'postcss-loader',
             'sass-loader',
           ],
@@ -96,8 +96,8 @@ module.exports = function webpackConfig(env, argv) {
           use: [
             // MiniCssExtractPlugin.loader, TO-DO
             'style-loader',
-            'resolve-url-loader',
             'css-loader',
+            'resolve-url-loader',
             'postcss-loader',
           ],
         },
@@ -106,8 +106,8 @@ module.exports = function webpackConfig(env, argv) {
           use: [
             // MiniCssExtractPlugin.loader, TO-DO
             'style-loader',
-            'resolve-url-loader',
             'css-loader',
+            'resolve-url-loader',
             'postcss-loader',
             'sass-loader',
           ],
