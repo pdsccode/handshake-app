@@ -13,6 +13,7 @@ import BrowserDetect from '@/services/browser-detect';
 
 // styles
 import '@/styles/main';
+import '@/styles/custom-icons/styles.scss';
 
 // pages
 const LandingPage = createDynamicImport(() => import('@/pages/LandingPage/LandingPage'), Splash);
