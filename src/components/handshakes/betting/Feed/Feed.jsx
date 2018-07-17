@@ -94,7 +94,8 @@ class FeedBetting extends React.Component {
   handleStatus(props) {
 
     const itemInfo = findUserBet(props);
-
+    const { status } = itemInfo;
+    /*
     let isLoading = false;
     const isLoadingObj = betHandshakeHandler?.getLoadingOnChain(itemInfo.id);
     if (isLoadingObj) {
@@ -110,6 +111,7 @@ class FeedBetting extends React.Component {
         isLoading = true;
       }
     }
+    */
 
     const statusResult = getStatusLabel(itemInfo);
     const { title, isAction } = statusResult;
@@ -121,12 +123,10 @@ class FeedBetting extends React.Component {
       isAction,
       itemInfo,
       shakedItemList: foundShakeList(props),
-      isLoading,
+      //isLoading,
       matchDone,
     });
   }
-
-
 
   async clickActionButton(title) {
     const balance = await getBalance();
