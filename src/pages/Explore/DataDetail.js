@@ -24,7 +24,7 @@ import copyTop from '@/assets/icons/copy.svg';
 import closeTop from '@/assets/icons/closeTop.svg';
 import UPLOAD_EARN from '@/assets/icons/UPLOAD_EARN.jpg';
 import Input from '@/components/core/forms/Input/Input';
- 
+
 function LikedIcon(props) {
   if (props.liked) {
     return (
@@ -37,13 +37,13 @@ function LikedIcon(props) {
     <a href='javascript:void(0);' onClick={props.onLike} style={{color:'#333'}} >
         <img class="my-icon"  src={activity_icon}/>
     </a>
-    
+
   );
 }
 
 
 function FollowIcon(props) {
- 
+
   if (props.followed) {
     return (
       <a href='javascript:void(0);' style={{color:'#333'}} onClick={props.onUnfollow}>
@@ -72,17 +72,6 @@ function ClassifiedIcon(props) {
   );
 }
 
-
-function ConfirmButton() {
-  return (
-    <Button positive>OK</Button>
-  )
-}
-function cancelButton() {
-  return (
-    <Button positive style={{background: 'none',color:'#333',fontWeight:'500'}}>Cancel</Button>
-  )
-}
 
 class DataDetail extends React.Component {
   constructor(props) {
@@ -336,7 +325,7 @@ class DataDetail extends React.Component {
 
   renderLikedIcon(i) {
     return (
-      <LikedIcon 
+      <LikedIcon
         liked={this.state.images[i].liked}
         onLike={e => this.handleLikeImage(e, i)}
         onUnlike={e => this.handleUnlikeImage(e, i)}
@@ -345,7 +334,7 @@ class DataDetail extends React.Component {
   }
 
   handleFollowCategory(e, i) {
-    
+
     e.preventDefault();
     const id = this.state.category.id;
 
@@ -364,7 +353,7 @@ class DataDetail extends React.Component {
   }
 
   handleUnfollowCategory(e, i) {
-    
+
     e.preventDefault();
     const id = i.id;
 
@@ -387,7 +376,7 @@ class DataDetail extends React.Component {
         followed={ i ? i.followed : false }
         onFollow={e => this.handleFollowCategory(e, i)}
         onUnfollow={e => this.handleUnfollowCategory(e, i)}
-        
+
       />
     );
   }
@@ -411,6 +400,8 @@ class DataDetail extends React.Component {
     this.setState({ open: false });
   }
   async handleConfirmBuy() {
+    this.setState({ isLoading: true });
+
     let tx;
     try {
       const dataset = new Dataset();
@@ -419,6 +410,7 @@ class DataDetail extends React.Component {
     } catch (e) {
       console.log(e);
       this.setState({ open: false });
+      return;
     }
 
     const data = {
@@ -428,36 +420,25 @@ class DataDetail extends React.Component {
     agent.req.post(agent.API_ROOT + '/api/buy/', data).set('authorization', `JWT ${this.props.token}`).type('form')
       .then((response) => {
         console.log(response);
-        this.setState({ open: false });
+        this.setState({ isLoading: false, open: false });
       })
       .catch((e) => {
         console.log(e);
-        this.setState({ open: false });
+        this.setState({ isLoading: false, open: false });
       });
   }
-
-
- ConfirmModal() {
-  return (
-    <div class='content'>
-      <h3>You want to buy this dataset?</h3>
-      <p>By click OK you will send ETH in your wallet to the DAD SmartContract address.</p>
-      <Input />
-    </div>
-  )
-}
 
   render() {
     let self = this;
     return (
-      <Visibility once={true} onUpdate={this.handleUpdate}>  
-        <Segment vertical  style={{marginTop:'-5em',background:'white',zIndex:'55555'}}>   
-         
+      <Visibility once={true} onUpdate={this.handleUpdate}>
+        <Segment vertical  style={{marginTop:'-5em',background:'white',zIndex:'55555'}}>
+
             <h2 className="my-h2-dataset-new">
                   Explore / {this.state.category ? this.state.category.name :''}
                   <Link to={'/explore'}><Image src={closeTop} className="btn-Close-Top"/></Link>
-              </h2> 
-           <Container style={{marginLeft:'-20px',float:'left',background:'white' }}> 
+              </h2>
+           <Container style={{marginLeft:'-20px',float:'left',background:'white' }}>
                 <Card.Group centered >
                   <Card className="my-card" style={{ marginBottom: '1em', paddingBottom: '1em'}}>
                     <Card.Content>
@@ -517,14 +498,21 @@ class DataDetail extends React.Component {
               </Modal>
         </Segment>
         <Segment vertical loading={this.state.isLoading}/>
-        <Confirm
-          content={this.ConfirmModal()}
-          open={this.state.open}
-          onCancel={this.close}
-          onConfirm={() => this.handleConfirmBuy()}
-          confirmButton={ConfirmButton()}
-          cancelButton={cancelButton()}
-        />
+        <Segment vertical loading={this.state.isLoading}>
+          <Confirm
+            content={
+              <div class='content'>
+                <h3>You want to buy this dataset?</h3>
+                <p>By click OK you will send ETH in your wallet to the DAD SmartContract address.</p>
+              </div>
+            }
+            open={this.state.open}
+            onCancel={this.close}
+            onConfirm={() => this.handleConfirmBuy()}
+            confirmButton={<Button positive>OK</Button>}
+            cancelButton={<Button positive style={{background: 'none',color:'#333',fontWeight:'500'}}>Cancel</Button>}
+          />
+        </Segment>
       </Visibility>
 
     )

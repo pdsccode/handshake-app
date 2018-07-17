@@ -1,5 +1,5 @@
 import React from 'react';
-import {Grid, Menu, Modal,List, Image, Container, Transition, Card, Icon, Segment, Item, Visibility, Button, Confirm} from 'semantic-ui-react'
+import {Grid, Menu, Modal,List, Image, Container, Transition, Card, Icon, Segment, Item, Visibility, Button, Confirm, Input} from 'semantic-ui-react'
 // import {AuthConsumer} from './AuthContext'
 import {Route, Redirect} from 'react-router'
 import agent from '../../services/agent'
@@ -56,7 +56,7 @@ function ImageGrid(props) {
   );
 }
 
-function LikedIcon(props) { 
+function LikedIcon(props) {
   if (props.followed) {
     return (
       <a href='javascript:void(0);' style={{color:'#333'}} onClick={props.onUnfollow}>
@@ -69,26 +69,6 @@ function LikedIcon(props) {
         <img className="my-icon"  src={activity_icon}/>
     </a>
   );
-}
-
-function ConfirmModal() {
-  return (
-    <div class='content'>
-      <h3>You want to buy this dataset?</h3>
-      <p>By click OK you will send ETH in your wallet to the DAD SmartContract address.</p>
-    </div>
-  )
-}
-
-function ConfirmButton() {
-  return (
-    <Button positive>OK</Button>
-  )
-}
-function cancelButton() {
-  return (
-    <Button positive style={{background: 'none',color:'#333',fontWeight:'500'}}>Cancel</Button>
-  )
 }
 
 class DataExplore extends React.Component {
@@ -127,6 +107,8 @@ class DataExplore extends React.Component {
   }
 
   async handleConfirmBuy() {
+    this.setState({ isLoading: true });
+
     let tx;
     try {
       const dataset = new Dataset();
@@ -135,7 +117,8 @@ class DataExplore extends React.Component {
       tx = await dataset.buy(this.state.selectedItem.id, 1);
     } catch (e) {
       console.log(e);
-      this.setState({ open: false });
+      this.setState({ isLoading: false, open: false });
+      return;
     }
 
     const data = {
@@ -145,11 +128,11 @@ class DataExplore extends React.Component {
     agent.req.post(agent.API_ROOT + '/api/buy/', data).set('authorization', `JWT ${this.props.token}`).type('form')
       .then((response) => {
         console.log(response);
-        this.setState({ open: false });
+        this.setState({ isLoading: false, open: false });
       })
       .catch((e) => {
         console.log(e);
-        this.setState({ open: false });
+        this.setState({ isLoading: false, open: false });
       });
   }
 
@@ -158,9 +141,9 @@ class DataExplore extends React.Component {
     this.setState({isLoading: true})
 
     const req = agent.req.get(agent.API_ROOT + '/api/explore-category/');
-    
+
     req.set('authorization', `JWT ${this.props.token}`);
-    
+
     req.then((response) => {
       const body = response.body;
       console.log(body);
@@ -191,7 +174,7 @@ class DataExplore extends React.Component {
   }
 
   handleFollowCategory(e, i) {
-    
+
     e.preventDefault();
     const id = this.state.categories[i].id;
 
@@ -209,7 +192,7 @@ class DataExplore extends React.Component {
   }
 
   handleUnfollowCategory(e, i) {
-    
+
     e.preventDefault();
     const id = this.state.categories[i].id;
 
@@ -276,15 +259,22 @@ class DataExplore extends React.Component {
                   })}
                </Card.Group>
         </Segment>
+        <Segment vertical loading={this.state.isLoading}>
+          <Confirm
+            content={
+              <div class='content'>
+                <h3>You want to buy this dataset?</h3>
+                <p>By click OK you will send ETH in your wallet to the DAD SmartContract address.</p>
+              </div>
+            }
+            open={this.state.open}
+            onCancel={this.close}
+            onConfirm={() => this.handleConfirmBuy()}
+            confirmButton={<Button positive>OK</Button>}
+            cancelButton={<Button positive style={{background: 'none',color:'#333',fontWeight:'500'}}>Cancel</Button>}
+          />
+        </Segment>
         <Segment vertical loading={this.state.isLoading}/>
-        <Confirm
-          content={ConfirmModal()}
-          open={this.state.open}
-          onCancel={this.close}
-          onConfirm={() => this.handleConfirmBuy()}
-          confirmButton={ConfirmButton()}
-          cancelButton={cancelButton()}
-        />
       </Visibility>
     )
   }
