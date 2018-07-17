@@ -2,75 +2,108 @@ import { BET_BLOCKCHAIN_STATUS, ROLE, SIDE, BETTING_RESULT } from '@/components/
 import { isExpiredDate } from '@/components/handshakes/betting/validation.js';
 import { BETTING_STATUS_LABEL } from '@/components/handshakes/betting/message.js';
 
+import { BetHandshakeHandler } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
+
 const TAG = 'STATUSACTION';
 
-export const getStatusLabel = (blockchainStatus, resultStatus, role, side, isMatch, reportTime, disputeTime) => {
+const betHandshakeHandler = BetHandshakeHandler.getShareManager();
+
+export const getStatusLabel = (item) => {
+
+  const {id, result, role, side, matched, reportTime, disputeTime} = item;
+  let {status} = item;
+
   let label = null;
   let strStatus = null;
   let isAction = false;
-  console.log(TAG,'getStatusLabel', ' blockchainStatus:', blockchainStatus,
-                  ' resultStatus:', resultStatus,
+
+  const itemLoading = keepCurrentLoading(item);
+  status = itemLoading && itemLoading.status || status;
+
+  console.log(TAG,'getStatusLabel', ' id:', id,
+                  ' blockchainStatus:', status,
+                  ' resultStatus:', result,
                   ' role:', role,
                   ' side:', side,
-                  ' isMatch:', isMatch,
+                  ' isMatch:', matched,
                   ' reportTime:', reportTime,
                   ' disputeTime:', disputeTime);
 
-  if(blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_INIT_FAILED
-    || blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_FAILED
-    || blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINIT_FAILED
-    || blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_REFUND_FAILED
-    || blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_DISPUTE_FAILED){
+
+
+  if(status === BET_BLOCKCHAIN_STATUS.STATUS_INIT_FAILED
+    || status === BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_FAILED
+    || status === BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINIT_FAILED
+    || status === BET_BLOCKCHAIN_STATUS.STATUS_REFUND_FAILED
+    || status === BET_BLOCKCHAIN_STATUS.STATUS_DISPUTE_FAILED){
       //FAILED ACTION
-      return failedAction(blockchainStatus);
+      return failedAction(status);
 
   }
 
-  if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_INIT_PENDING
-    || blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINIT_PENDING
-    || blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_PENDING){
+  if (status === BET_BLOCKCHAIN_STATUS.STATUS_INIT_PENDING
+    || status === BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINIT_PENDING
+    || status === BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_PENDING){
       //PENDING ACTION
-      return pendingAction(blockchainStatus);
+      return pendingAction(status);
 
   }
 
-  if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_MAKER_SHOULD_UNINIT
-    || blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINITED
-    || (!isMatch && role === ROLE.INITER && blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_INITED)){
+  if (status === BET_BLOCKCHAIN_STATUS.STATUS_MAKER_SHOULD_UNINIT
+    || status === BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINITED
+    || (!matched && role === ROLE.INITER && status === BET_BLOCKCHAIN_STATUS.STATUS_INITED)){
       //CANCEL ACTION
-      return cancelAction(blockchainStatus);
+      return cancelAction(status);
   }
 
-  if ((isMatch && resultStatus === BETTING_RESULT.DRAW)
-      || (isMatch && resultStatus === BETTING_RESULT.INITED && isExpiredDate(reportTime))
-      || blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_REFUND) {
+  if ((matched && result === BETTING_RESULT.DRAW)
+      || (matched && result === BETTING_RESULT.INITED && isExpiredDate(reportTime))
+      || status === BET_BLOCKCHAIN_STATUS.STATUS_REFUND) {
         //REFUND ACTION
-      return refundAction(blockchainStatus);
+      return refundAction(status);
   }
 
-  if (resultStatus === BETTING_RESULT.INITED && // hasn't has result
-      ((isMatch && blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_INITED) //marker
-     || (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_SHAKER_SHAKED))) { //shaker
+  if (result === BETTING_RESULT.INITED && // hasn't has result
+      ((matched && status === BET_BLOCKCHAIN_STATUS.STATUS_INITED) //marker
+     || (status === BET_BLOCKCHAIN_STATUS.STATUS_SHAKER_SHAKED))) { //shaker
 
       //MATCHED WAITING RESULT
       return matchAction();
   }
 
-  if (isMatch && resultStatus > BETTING_RESULT.INITED && resultStatus < BETTING_RESULT.DRAW
-    && blockchainStatus !== BET_BLOCKCHAIN_STATUS.STATUS_DONE) { //Has result and matched
-      return winOrLose(resultStatus, side, disputeTime);
+  if (matched && result > BETTING_RESULT.INITED && result < BETTING_RESULT.DRAW
+    && status !== BET_BLOCKCHAIN_STATUS.STATUS_DONE) { //Has result and matched
+      return winOrLose(result, side, disputeTime);
   }
 
-  if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_DONE) {
+  if (status === BET_BLOCKCHAIN_STATUS.STATUS_DONE) {
       return doneAction();
   }
 
-  if (blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_MAKER_INIT_ROLLBACK
-    || blockchainStatus === BET_BLOCKCHAIN_STATUS.STATUS_SHAKER_ROLLBACK) {
+  if (status === BET_BLOCKCHAIN_STATUS.STATUS_MAKER_INIT_ROLLBACK
+    || status === BET_BLOCKCHAIN_STATUS.STATUS_SHAKER_ROLLBACK) {
       return rollbackAction();
     }
 
   return { title: label, isAction, status: strStatus };
+}
+
+const keepCurrentLoading = (item) => {
+  const { id, status } = item;
+  const isLoadingObj = betHandshakeHandler?.getLoadingOnChain(item.id);
+  if (isLoadingObj) {
+
+    if (status === BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINITED || status === BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINIT_FAILED
+        || status === BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_FAILED || status === BET_BLOCKCHAIN_STATUS.STATUS_REFUND_FAILED
+        || status === BET_BLOCKCHAIN_STATUS.STATUS_DONE || status === BET_BLOCKCHAIN_STATUS.STATUS_REFUND) {
+      betHandshakeHandler.setItemOnChain(id, null);
+      return null;
+    }
+
+    const { itemOnChain } = isLoadingObj;
+    return itemOnChain;
+  }
+  return null;
 }
 
 const failedAction = (blockchainStatus) => {
