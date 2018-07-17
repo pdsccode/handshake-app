@@ -27,7 +27,7 @@ const config = {
       predictionHandshakeAddress: '0x3a5c2cd3d2e3ab2a7f5d5c1850a39bd65aa76bce',
       predictionHandshakeDevAddress: '0x3a5c2cd3d2e3ab2a7f5d5c1850a39bd65aa76bce',
       exchangeHandshakeAddress: '0x6d86cf435978cb75aecc43d0a4e3a379af7667d8',
-      exchangeCashAddress: '0xecec3f2e2a44c02e61488102c3e1886bd26c4651',
+      exchangeCashAddress: '0x8b52cf985f6814662acdc07ecdfadd1a41afd8b8',
       cryptosignOwnerAddress: '',
       cryptosignOwnerPrivateKey: '',
       blockchainNetwork: 'https://rinkeby.infura.io/LLJy74SjotuIMxZJMUvf',
