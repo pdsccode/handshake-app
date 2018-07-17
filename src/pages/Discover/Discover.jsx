@@ -37,6 +37,9 @@ import loadingSVG from '@/assets/images/icon/loading.gif';
 import ninjaLogoSVG from '@/assets/images/logo.png';
 //
 import DiscoverBetting from '@/components/handshakes/betting/Discover/Discover';
+import LuckyLanding from '@/pages/LuckyLanding/LuckyLanding';
+
+
 // style
 import '@/components/handshakes/exchange/Feed/FeedExchange.scss';
 import './Discover.scss';
@@ -51,6 +54,7 @@ const maps = {
   [HANDSHAKE_ID.SEED]: FeedSeed,
 };
 
+const TAG = 'DISCOVER_PAGE';
 class DiscoverPage extends React.Component {
   static propTypes = {
     discover: PropTypes.object.isRequired,
@@ -92,6 +96,7 @@ class DiscoverPage extends React.Component {
       isBannedPrediction: this.props.isBannedPrediction,
       utm,
       program,
+      isLuckyPool: true,
     };
 
     if (this.state.handshakeIdActive === HANDSHAKE_ID.EXCHANGE) {
@@ -107,10 +112,15 @@ class DiscoverPage extends React.Component {
     this.getUtm = this.getUtm.bind(this);
     this.getProgram = this.getProgram.bind(this);
     this.onFreeStartClick = this.onFreeStartClick.bind(this);
+    this.handleScroll = this.handleScroll.bind(this);
   }
 
   componentDidMount() {
     const { ipInfo } = this.props;
+
+    //Listen event scroll down
+    window.addEventListener('scroll', this.handleScroll);
+
     this.setAddressFromLatLng(ipInfo?.latitude, ipInfo?.longitude); // fallback
 
     let url = '';
@@ -150,6 +160,12 @@ class DiscoverPage extends React.Component {
       });
     }
   }
+
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this.handleScroll);
+  }
+
+
 
   onFreeStartClick() {
     this.modalRef.close();
@@ -236,6 +252,8 @@ class DiscoverPage extends React.Component {
     return null;
   }
 
+
+
   getHandshakeList() {
     const { messages } = this.props.intl;
     const { list } = this.props.discover;
@@ -256,6 +274,7 @@ class DiscoverPage extends React.Component {
                 longitude={lng}
                 modalRef={this.modalRef}
               />
+
             </Col>
           );
         }
@@ -281,6 +300,14 @@ class DiscoverPage extends React.Component {
 
   setLoading = (loadingState) => {
     this.setState({ isLoading: loadingState });
+  }
+
+  handleScroll() {
+    const { isLuckyPool } = this.state;
+    setTimeout(() => {
+      isLuckyPool && this.modalLuckyPoolRef.open();
+
+    }, 2 * 1000);
   }
 
   searchChange(query) {
@@ -514,6 +541,15 @@ class DiscoverPage extends React.Component {
         </Grid>
         <ModalDialog onRef={(modal) => { this.modalRef = modal; return null; }} {...propsModal}>
           {modalContent}
+        </ModalDialog>
+        <ModalDialog className="modal" onRef={(modal) => { this.modalLuckyPoolRef = modal; return null; }}>
+          <LuckyLanding onButtonClick={() => {
+            this.setState({
+              isLuckyPool: false,
+            });
+            this.modalLuckyPoolRef.close();
+          }}
+          />
         </ModalDialog>
       </React.Fragment>
     );
