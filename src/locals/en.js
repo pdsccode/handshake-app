@@ -45,6 +45,7 @@ export default {
   closeOfferConfirm: 'Do you want to delete your offer?',
   acceptOfferConfirm: 'Accept the order?',
   createOfferSuccessMessage: 'Success! You have created an offer on Ninja.',
+  updateOfferSuccessMessage: 'Success! You have updated the offer on Ninja.',
   shakeOfferSuccessMessage: 'Success! A ninja has shaked on your order.',
   closeOfferSuccessMessage: 'Success! Your order is now closed.',
   completeShakedfferSuccessMessage: 'You have successfully shaked on Ninja',
@@ -81,7 +82,9 @@ export default {
   'ex.create.label.phone': 'Phone',
   'ex.create.label.address': 'Meet-up place',
   'ex.create.label.beASeller': 'Be a seller',
+  'ex.create.label.beASeller.update': 'Update sale inventory',
   'ex.create.label.beABuyer': 'You can also be a buyer',
+  'ex.create.label.beABuyer.update': 'Update buy request',
   'ex.create.label.stationInfo': 'Station information',
 
   'ex.createLocal.label.iWantTo': 'I want to',

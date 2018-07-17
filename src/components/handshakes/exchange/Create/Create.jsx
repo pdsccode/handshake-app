@@ -155,6 +155,11 @@ class Component extends React.Component {
       rfChange(nameFormExchangeCreate, 'amountSell', freeStartInfo?.reward);
     }
 
+    this.getOfferStores(authProfile);
+  }
+
+  getOfferStores() {
+    const { authProfile } = this.props;
     this.props.getOfferStores({
       PATH_URL: `${API_URL.EXCHANGE.OFFER_STORES}/${authProfile.id}`,
       successFn: this.handleGetOfferStoresSuccess,
@@ -495,8 +500,7 @@ class Component extends React.Component {
   handleCreateOfferSuccess = async (responseData) => {
     console.log('handleCreateOfferSuccess', responseData);
     const { rfChange, currency, amountSell } = this.props;
-    const data = responseData.data;
-    const offer = OfferShop.offerShop(data);
+    const offer = OfferShop.offerShop(responseData.data);
     this.offer = offer;
 
     // console.log('handleCreateOfferSuccess', data);
@@ -535,7 +539,7 @@ class Component extends React.Component {
       timeOut: 2000,
       type: 'success',
       callBack: () => {
-
+        this.getOfferStores();
       },
     });
 
@@ -567,8 +571,7 @@ class Component extends React.Component {
   handleRefillOfferSuccess = async (responseData) => {
     console.log('handleRefillOfferSuccess', responseData);
     const { rfChange, currency, amountSell } = this.props;
-    const data = responseData.data;
-    const offer = OfferShop.offerShop(data);
+    const offer = OfferShop.offerShop(responseData.data);
     this.offer = offer;
 
     // console.log('handleCreateOfferSuccess', data);
@@ -600,14 +603,14 @@ class Component extends React.Component {
     }
 
     this.hideLoading();
-    const message = <FormattedMessage id="createOfferSuccessMessage" />;
+    const message = <FormattedMessage id="updateOfferSuccessMessage" />;
 
     this.props.showAlert({
       message: <div className="text-center">{message}</div>,
       timeOut: 2000,
       type: 'success',
       callBack: () => {
-
+        this.getOfferStores();
       },
     });
 
@@ -730,7 +733,7 @@ class Component extends React.Component {
             </div>
           </div>
 
-          <div className="label"><FormattedMessage id="ex.create.label.beASeller" /></div>
+          <div className="label">{isUpdate ? (<FormattedMessage id="ex.create.label.beASeller.update" />) : (<FormattedMessage id="ex.create.label.beASeller" />)}</div>
           <div className="section">
             <div className="d-flex">
               <label className="col-form-label mr-auto label-create"><span className="align-middle"><FormattedMessage id="ex.create.label.amountSell" /></span></label>
@@ -788,7 +791,7 @@ class Component extends React.Component {
             */}
           </div>
 
-          <div className="label"><FormattedMessage id="ex.create.label.beABuyer" /></div>
+          <div className="label">{isUpdate ? (<FormattedMessage id="ex.create.label.beABuyer.update" />) : (<FormattedMessage id="ex.create.label.beABuyer" />)}</div>
           <div className="section">
             <div className="d-flex">
               <label className="col-form-label mr-auto label-create"><span className="align-middle"><FormattedMessage id="ex.create.label.amountBuy" /></span></label>
