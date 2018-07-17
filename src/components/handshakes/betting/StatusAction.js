@@ -10,7 +10,7 @@ const betHandshakeHandler = BetHandshakeHandler.getShareManager();
 
 export const getStatusLabel = (item) => {
 
-  const {result, role, side, matched, reportTime, disputeTime} = item;
+  const {id, result, role, side, matched, reportTime, disputeTime} = item;
   let {status} = item;
 
   let label = null;
@@ -20,7 +20,8 @@ export const getStatusLabel = (item) => {
   const itemLoading = keepCurrentLoading(item);
   status = itemLoading && itemLoading.status || status;
 
-  console.log(TAG,'getStatusLabel', ' blockchainStatus:', status,
+  console.log(TAG,'getStatusLabel', ' id:', id,
+                  ' blockchainStatus:', status,
                   ' resultStatus:', result,
                   ' role:', role,
                   ' side:', side,
@@ -62,7 +63,7 @@ export const getStatusLabel = (item) => {
       return refundAction(status);
   }
 
-  if (status === BETTING_RESULT.INITED && // hasn't has result
+  if (result === BETTING_RESULT.INITED && // hasn't has result
       ((matched && status === BET_BLOCKCHAIN_STATUS.STATUS_INITED) //marker
      || (status === BET_BLOCKCHAIN_STATUS.STATUS_SHAKER_SHAKED))) { //shaker
 
