@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="26px" height="26px" viewBox="0 0 26 26" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+    <title>icons8-telegram_app</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="99.635%" id="linearGradient-1">
+            <stop stop-color="#42BCE8" offset="0%"></stop>
+            <stop stop-color="#23A7DC" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Trong---Exchange-" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="banner-home-page" transform="translate(-287.000000, -460.000000)" fill-rule="nonzero">
+            <g id="Group" transform="translate(272.000000, 448.000000)">
+                <g id="icons8-telegram_app" transform="translate(15.000000, 12.000000)">
+                    <circle id="Oval" fill="url(#linearGradient-1)" cx="13" cy="13" r="13"></circle>
+                    <path d="M19.6144,7.02715 L17.13335,19.69695 C17.13335,19.69695 16.78625,20.57575 15.83205,20.1539 L10.1062,15.7079 L8.02425,14.6887 L4.51945,13.494 C4.51945,13.494 3.98125,13.30095 3.92925,12.8791 C3.87725,12.45725 4.53635,12.2291 4.53635,12.2291 L18.46975,6.6937 C18.4691,6.69305 19.6144,6.18345 19.6144,7.02715 Z" id="Shape" fill="#FFFFFF"></path>
+                    <path d="M9.6655,19.55395 C9.6655,19.55395 9.49845,19.53835 9.2898,18.87015 C9.0818,18.2026 8.02295,14.68805 8.02295,14.68805 L16.4385,9.2755 C16.4385,9.2755 16.92405,8.9765 16.90715,9.2755 C16.90715,9.2755 16.9936,9.32815 16.7336,9.5745 C16.4736,9.82085 10.12245,15.60195 10.12245,15.60195" id="Shape" fill="#D2E5F1"></path>
+                    <path d="M12.30125,17.4122 L10.03665,19.50325 C10.03665,19.50325 9.85985,19.6391 9.66615,19.55395 L10.0997,15.66955" id="Shape" fill="#B5CFE4"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

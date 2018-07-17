@@ -30,6 +30,9 @@ module.exports = {
     "jsx-a11y/anchor-is-valid": "off",
     "jsx-a11y/click-events-have-key-events": "off",
     "jsx-a11y/no-static-element-interactions": "off",
+    "import/no-extraneous-dependencies": 0,
+    "arrow-body-style": 0,
+    "arrow-parens": 0,
     "import/no-unresolved": "off", // TODO[1]:
     "import/extensions": "off" // TODO[1]:
   },
