@@ -19,6 +19,7 @@ module.exports = {
     googleAnalyticId: '',
     facebookPixelId: '',
     facebookAppId: '',
+    googleTagmanagerId: '',
   },
   PredictionHandshakeFileName: '',
   dropConsole: true,

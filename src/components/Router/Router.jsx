@@ -62,7 +62,7 @@ class Router extends React.Component {
       firebaseApp: initFirebaseApp,
     };
 
-    console.log('root-router - contructor - init');
+    //console.log('root-router - contructor - init');
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -101,10 +101,12 @@ class Router extends React.Component {
                           <Route
                             exact
                             path={URL.INDEX}
-                            render={() => (
-                              <Redirect to={{ pathname: URL.LUCKY_POOL }} />
-
-                            )}
+                            render={() => {
+                              if (process.env.isDojo) {
+                                return <Redirect to={{ pathname: URL.HANDSHAKE_CASH }} />
+                              }
+                              return <Redirect to={{ pathname: URL.HANDSHAKE_DISCOVER }} />
+                            }}
                           />
                           {routers}
                           <Route component={Page404} />

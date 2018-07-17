@@ -24,9 +24,9 @@ function getGasPrice() {
     }`)
     .then((res) => {
       const gasPrice = Number(res.data.result).toString();
-      console.log('gasPrice', gasPrice);
+      //console.log('gasPrice', gasPrice);
       window.gasPrice = Web3.utils.fromWei(gasPrice, 'gwei');
-      console.log('gasPrice gwei', window.gasPrice);
+      //console.log('gasPrice gwei', window.gasPrice);
     });
 }
 

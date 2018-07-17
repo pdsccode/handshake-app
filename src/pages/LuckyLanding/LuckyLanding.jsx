@@ -4,6 +4,7 @@ import Button from '@/components/core/controls/Button';
 import PropTypes from 'prop-types';
 import Image from '@/components/core/presentation/Image';
 import LuckyLogoSVG from '@/assets/images/luckypool/lucky-landing-logo.svg';
+import CloseIcon from '@/assets/images/icon/close.svg';
 import { Link } from 'react-router-dom';
 import { URL } from '@/constants';
 
@@ -17,6 +18,15 @@ class LuckyLanding extends React.Component {
     return (
       <div className="wrapperLuckyLanding">
         <div className="luckyLandingTop">
+          <div
+            className="luckyLandingClose"
+            //to={URL.HANDSHAKE_DISCOVER}
+            onClick={() => {
+              this.props.onButtonClick();
+            }}
+          >
+            <Image src={CloseIcon} alt="CloseIcon" />
+          </div>
           <Image className="luckyLandingLogo" src={LuckyLogoSVG} alt="luckyfree" />
           <div className="luckyTopContent">
             <div className="luckyLandingTitle">WANNA WIN</div>
@@ -25,12 +35,15 @@ class LuckyLanding extends React.Component {
           </div>
         </div>
 
-        <Link
+        <Button
           className="luckyLandingButton"
-          to={URL.HANDSHAKE_DISCOVER}
+          onClick={() => {
+              this.props.onButtonClick();
+          }}
+          //to={URL.HANDSHAKE_DISCOVER}
         >
           Bet now
-        </Link>
+        </Button>
 
         <div className="luckyLandingSmallDes">*Draw closes after 1000 bets.<br />Free bets do not count.</div>
 

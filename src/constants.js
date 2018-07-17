@@ -16,6 +16,7 @@ export const APP = {
   EMAIL_NEED_VERIFY: 'email_need_verify',
   PHONE_NEED_VERIFY: 'phone_need_verify',
   COUNTRY_PHONE_NEED_VERIFY: 'country_phone_need_verify',
+  CHAT_ENCRYPTION_KEYPAIR:'chat_encryption_keypair',
   REFERS: 'refers',
   OFFLINE_STATUS: 'offline_status',
   isSupportedLanguages: ['en', 'zh', 'fr', 'de', 'ja', 'ko', 'ru', 'es'],
@@ -65,6 +66,34 @@ export const CRYPTO_CURRENCY_LIST = [
   { value: CRYPTO_CURRENCY.ETH, text: CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.ETH] },
   { value: CRYPTO_CURRENCY.BTC, text: CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.BTC] },
 ];
+
+export const FIAT_CURRENCY = {
+  RUB: 'RUB',
+  VND: 'VND',
+  PHP: 'PHP',
+  CAD: 'CAD',
+  USD: 'USD',
+  EUR: 'EUR',
+}
+
+export const FIAT_CURRENCY_NAME = {
+  [FIAT_CURRENCY.RUB]: 'RUB',
+  [FIAT_CURRENCY.VND]: 'VND',
+  [FIAT_CURRENCY.PHP]: 'PHP',
+  [FIAT_CURRENCY.CAD]: 'CAD',
+  [FIAT_CURRENCY.USD]: 'USD',
+  [FIAT_CURRENCY.EUR]: 'EUR',
+};
+
+export const FIAT_CURRENCY_LIST = [
+  { id: FIAT_CURRENCY.RUB, text: FIAT_CURRENCY_NAME[FIAT_CURRENCY.RUB] },
+  { id: FIAT_CURRENCY.VND, text: FIAT_CURRENCY_NAME[FIAT_CURRENCY.VND] },
+  { id: FIAT_CURRENCY.PHP, text: FIAT_CURRENCY_NAME[FIAT_CURRENCY.PHP] },
+  { id: FIAT_CURRENCY.CAD, text: FIAT_CURRENCY_NAME[FIAT_CURRENCY.CAD] },
+  { id: FIAT_CURRENCY.USD, text: FIAT_CURRENCY_NAME[FIAT_CURRENCY.USD] },
+  { id: FIAT_CURRENCY.EUR, text: FIAT_CURRENCY_NAME[FIAT_CURRENCY.EUR] },
+];
+
 export const FIREBASE_PATH = {
   USERS: '/users',
 };
@@ -95,6 +124,11 @@ export const EXCHANGE_ACTION_PERSON = {
   [EXCHANGE_ACTION.SELL]: <FormattedMessage id="ex.label.seller" />,
 };
 
+export const EXCHANGE_ACTION_ORDER = {
+  [EXCHANGE_ACTION.BUY]: <FormattedMessage id="ex.label.purchase" />,
+  [EXCHANGE_ACTION.SELL]: <FormattedMessage id="ex.label.sale" />,
+};
+
 export const EXCHANGE_ACTION_LIST = [
   { value: EXCHANGE_ACTION.BUY, text: EXCHANGE_ACTION_NAME[EXCHANGE_ACTION.BUY] },
   { value: EXCHANGE_ACTION.SELL, text: EXCHANGE_ACTION_NAME[EXCHANGE_ACTION.SELL] },
@@ -102,7 +136,6 @@ export const EXCHANGE_ACTION_LIST = [
 
 export const EXCHANGE_ACTION_DEFAULT = EXCHANGE_ACTION.BUY;
 
-export const FIAT_CURRENCY = 'USD';
 export const FIAT_CURRENCY_SYMBOL = '$';
 
 export const SELL_PRICE_TYPE_DEFAULT = 'fix';
@@ -147,6 +180,7 @@ export const API_URL = {
     OFFER_STORES: 'exchange/offer-stores',
     SHAKES: 'shakes',
     REVIEWS: 'reviews',
+    GET_DASHBOARD_INFO: 'exchange/user/transaction-counts',
   },
   SEED: {
     BASE: 'seed',

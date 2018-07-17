@@ -7,7 +7,8 @@ import { BigNumber } from 'bignumber.js';
 import local from '@/services/localStore';
 import { APP, API_URL } from '@/constants';
 import { loadMatches, loadHandshakes, checkFreeAvailable } from '@/reducers/betting/action';
-import { SIDE } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
+import { SIDE } from '@/components/handshakes/betting/constants.js';
+
 import { getBalance, parseBigNumber } from '@/components/handshakes/betting/utils';
 import GA from '@/services/googleAnalytics';
 // components
@@ -333,6 +334,7 @@ class BettingFilter extends React.Component {
   }
 
   callGetHandshakes(item) {
+    console.log('Sa test callGetHandshakes:', item);
     if (item) {
       const params = {
         outcome_id: item.id,
@@ -381,13 +383,17 @@ class BettingFilter extends React.Component {
       errorFn: this.getCheckFirstFreeFailed,
     });
   }
+  refreshHanshakeTable() {
+    const { selectedOutcome } = this.state;
+    this.callGetHandshakes(selectedOutcome);
+  }
 
   closeShakePopup() {
-    const { selectedOutcome } = this.state;
+
+
     this.setState({
       bettingShakeIsOpen: false,
     });
-    this.callGetHandshakes(selectedOutcome);
     this.modalBetRef.close();
   }
 
@@ -608,11 +614,38 @@ class BettingFilter extends React.Component {
         <Button
           block
           onClick={() => {
-
           }}
         >
                 PLACE SUPPORT ORDER
         </Button>
+        <ModalDialog className="modal" onRef={(modal) => { this.modalBetRef = modal; return null; }}>
+          <BettingShake
+            side={this.state.side}
+            amountSupport={this.defaultSupportAmount}
+            amountAgainst={this.defaultAgainstAmount}
+            matchName={matchName}
+            isOpen={this.state.bettingShakeIsOpen}
+            matchOutcome={matchOutcome}
+            outcomeId={parseInt(outcomeId, 10)}
+            outcomeHid={parseInt(outcomeHid, 10)}
+            marketSupportOdds={parseFloat(this.defaultSupportOdds)}
+            marketAgainstOdds={parseFloat(this.defaultAgainstOdds)}
+            closingDate={closingDate}
+            reportTime={reportTime}
+            onSubmitClick={() => {
+              this.closeShakePopup();
+              this.modalLuckyRealRef.open();
+              }
+            }
+            onCancelClick={() => {
+                this.closeShakePopup();
+              }
+            }
+            onCreateBetSuccess={() => {
+              this.refreshHanshakeTable();
+            }}
+          />
+        </ModalDialog>
         <ModalDialog className="modal" onRef={(modal) => { this.modalBetFreeRef = modal; return null; }}>
           <BettingShakeFree
             amount={freeAmount}
@@ -630,6 +663,13 @@ class BettingFilter extends React.Component {
               this.modalLuckyFreeRef.open();
               }
             }
+            onCancelClick={() => {
+              this.closeShakePopup();
+              }
+            }
+            onCreateBetSuccess={() => {
+              this.refreshHanshakeTable();
+            }}
           />
         </ModalDialog>
         <ModalDialog className="modal" onRef={(modal) => { this.modalLuckyRealRef = modal; return null; }}>

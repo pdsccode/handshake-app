@@ -62,6 +62,7 @@ import iconBitcoin from '@/assets/images/icon/coin/btc.svg';
 import iconEthereum from '@/assets/images/icon/coin/eth.svg';
 
 import { nameFormShakeDetail } from '@/components/handshakes/exchange/components/ShakeDetail';
+import CoinCards from '@/components/handshakes/exchange/components/CoinCards';
 import { change, clearFields } from 'redux-form';
 import { bindActionCreators } from 'redux';
 
@@ -100,7 +101,11 @@ class FeedExchange extends React.PureComponent {
 
   handleOnShake = (name) => {
     const { offer } = this;
-    const { onFeedClick } = this.props;
+    const { initUserId, authProfile, onFeedClick } = this.props;
+
+    if (initUserId === authProfile?.id) {
+      return;
+    }
 
     this.setState({
       CRYPTO_CURRENCY_LIST: [
@@ -466,8 +471,10 @@ id="offerDistanceContent"
         coin.name = CRYPTO_CURRENCY.ETH;
         coin.color = 'linear-gradient(-135deg, #D772FF 0%, #9B10F2 45%, #9E53E1 100%)';
         coin.icon = iconEth;
-        coin.priceBuy = offer.items.ETH.buyBalance > 0 ? formatMoneyByLocale(priceBuyETH, currency) : '-';
-        coin.priceSell = offer.items.ETH.sellBalance > 0 ? formatMoneyByLocale(priceSellETH, currency) : '-';
+        const priceBuy = offer.items.ETH.buyBalance > 0 ? formatMoneyByLocale(priceBuyETH, currency) : '-';
+        const priceSell = offer.items.ETH.sellBalance > 0 ? formatMoneyByLocale(priceSellETH, currency) : '-';
+        coin.txtBuy = `${priceBuy} ${priceBuy !== '-' ? currency : ''}`;
+        coin.txtSell = `${priceSell} ${priceSell !== '-' ? currency : ''}`;
 
         coins.push(coin);
       }
@@ -480,8 +487,10 @@ id="offerDistanceContent"
         coin.name = CRYPTO_CURRENCY.BTC;
         coin.color = 'linear-gradient(45deg, #FF8006 0%, #FFA733 51%, #FFC349 100%)';
         coin.icon = iconBtc;
-        coin.priceBuy = offer.items.BTC.buyBalance > 0 ? formatMoneyByLocale(priceBuyBTC, currency) : '-';
-        coin.priceSell = offer.items.BTC.sellBalance > 0 ? formatMoneyByLocale(priceSellBTC, currency) : '-';
+        const priceBuy = offer.items.BTC.buyBalance > 0 ? formatMoneyByLocale(priceBuyBTC, currency) : '-';
+        const priceSell = offer.items.BTC.sellBalance > 0 ? formatMoneyByLocale(priceSellBTC, currency) : '-';
+        coin.txtBuy = `${priceBuy} ${priceBuy !== '-' ? currency : ''}`;
+        coin.txtSell = `${priceSell} ${priceSell !== '-' ? currency : ''}`;
 
         coins.push(coin);
       }
@@ -495,23 +504,7 @@ id="offerDistanceContent"
       <div>
         <div className="feed-exchange" onClick={() => this.handleOnShake()}>
           <div>
-            <div className="coins-wrapper">
-              {
-                coins.map((coin, index) => {
-                  const {
- name, priceBuy, priceSell, color, icon,
-} = coin;
-                  return (
-                    <span key={index} className="coin-item" style={{ background: color }} onClick={e => this.handleClickCoin(e, name)}>
-                      {/* <div className="icon-coin"><img src={icon}/></div> */}
-                      <div className="name mb-1">{name}</div>
-                      <div className="price-wrapper"><label><FormattedMessage id="ex.discover.label.priceBuy" /></label>&nbsp;<span className="price">{priceBuy} {priceBuy !== '-' && currency}</span></div>
-                      <div className="price-wrapper"><label><FormattedMessage id="ex.discover.label.priceSell" /></label>&nbsp;<span className="price">{priceSell} {priceSell !== '-' && currency}</span></div>
-                    </span>
-                  );
-                })
-              }
-            </div>
+            <CoinCards coins={coins} currency={currency} handleClickCoin={this.handleClickCoin} />
             <div className="info-ex">
               <div>
                 <div className="address">{address}</div>

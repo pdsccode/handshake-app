@@ -1,6 +1,8 @@
+import React from "react";
 import local from '@/services/localStore';
 import { AMOUNT_DECIMAL, APP, HANDSHAKE_USER, PRICE_DECIMAL } from '@/constants';
 import { BigNumber } from 'bignumber.js';
+import { FormattedMessage } from 'react-intl';
 
 export function getOfferPrice(listOfferPrice = [], type = '', currency = '', fiatCurrency = '') {
   let result = {};
@@ -57,6 +59,31 @@ export function roundNumberByLocale(price = 0, locale = 'USD') {
 export function formatAmountCurrency(amount = 0) {
   return amount.toString();
   // return new BigNumber(amount).toFormat(AMOUNT_DECIMAL);
+}
+
+export function daysBetween(date1 = new Date(), date2 = new Date()) {
+  // Get 1 day in milliseconds
+  const one_day = 1000 * 60 * 60 * 24;
+
+  // Convert both dates to milliseconds
+  const date1_ms = date1.getTime();
+  const date2_ms = date2.getTime();
+
+  // Calculate the difference in milliseconds
+  let difference_ms = date2_ms - date1_ms;
+  // take out milliseconds
+  difference_ms /= 1000;
+  const seconds = Math.floor(difference_ms % 60);
+  difference_ms /= 60;
+  const minutes = Math.floor(difference_ms % 60);
+  difference_ms /= 60;
+  const hours = Math.floor(difference_ms % 24);
+  const days = Math.floor(difference_ms / 24);
+
+  // const textDays = <FormattedMessage id="ex.shop.shake.label.days" />;
+  const textDays = ' days';
+
+  return `${days > 0 ? days + textDays : ''} ${hours > 10 ? hours : `0${hours}`}:${minutes > 10 ? minutes : `0${minutes}`}:${seconds > 10 ? seconds : `0${seconds}`}`;
 }
 
 export default { getOfferPrice };

@@ -4,26 +4,25 @@ import { connect } from 'react-redux';
 import moment from 'moment';
 import history from '@/services/history';
 // service, constant
-import createForm from '@/components/core/form/createForm';
 import { required } from '@/components/core/form/validation';
-import { Field } from 'redux-form';
 import { initHandshake } from '@/reducers/handshake/action';
 import { loadMatches } from '@/reducers/betting/action';
 import { HANDSHAKE_ID, API_URL, APP, URL } from '@/constants';
-import { BetHandshakeHandler, SIDE, MESSAGE } from '@/components/handshakes/betting/Feed/BetHandshakeHandler.js';
-import local from '@/services/localStore';
+import { BetHandshakeHandler  } from '@/components/handshakes/betting/Feed/BetHandshakeHandler.js';
+import { MESSAGE } from '@/components/handshakes/betting/message.js';
+
 import GA from '@/services/googleAnalytics';
 
 // components
 import Button from '@/components/core/controls/Button';
-import Input from '@/components/core/forms/Input/Input';
 import DatePicker from '@/components/handshakes/betting/Create/DatePicker';
-import { MasterWallet } from '@/services/Wallets/MasterWallet';
 import Dropdown from '@/components/core/controls/Dropdown';
 import Toggle from '@/components/handshakes/betting/Feed/Toggle';
 import { showAlert } from '@/reducers/app/action';
-import {isRightNetwork, isExpiredDate, getChainIdDefaultWallet, 
-  getBalance, getEstimateGas, isExistMatchBet, getAddress} from '@/components/handshakes/betting/utils.js';
+import { getChainIdDefaultWallet,
+  getBalance, getEstimateGas, isExistMatchBet, getAddress, parseBigNumber} from '@/components/handshakes/betting/utils.js';
+
+import { validateBet } from '@/components/handshakes/betting/validation.js';
 
 // self
 import { InputField } from '../form/customField';
@@ -34,12 +33,6 @@ const ROUND = 1000000;
 const ROUND_ODD = 10;
 const betHandshakeHandler = BetHandshakeHandler.getShareManager();
 
-const nameFormBettingCreate = 'bettingCreate';
-// const BettingCreateForm = createForm({
-//   propsReduxForm: {
-//     form: nameFormBettingCreate,
-//   },
-// });
 
 const regex = /\[.*?\]/g;
 const regexReplace = /\[|\]/g;
@@ -210,7 +203,7 @@ class BettingCreate extends React.Component {
     e.preventDefault();
     const dict = this.refs;
     const {
-      address, privateKey, values, selectedMatch, selectedOutcome, isChangeOdds,
+      values, selectedMatch, selectedOutcome, isChangeOdds,
     } = this.state;
     console.log('values', values);
 
@@ -247,17 +240,23 @@ class BettingCreate extends React.Component {
     console.log('Estimate Gas:', estimatedGas);
     const eventBet = parseFloat(values.event_bet);
     let odds = parseFloat(values.event_odds);
+
+    const amountBN = parseBigNumber(eventBet);
+    const oddsBN = parseBigNumber(odds);
+
     if (!isChangeOdds) {
       odds = selectedOutcome.marketOdds;
     }
+
     const total = eventBet + parseFloat(estimatedGas);
     console.log('Event Bet, Odds, Estimate, Total:', eventBet, odds, estimatedGas, total);
 
     const fromAddress = getAddress();
     console.log('Match, Outcome:', selectedMatch, selectedOutcome);
 
-    let message = null;
-   
+    //let message = null;
+
+    /*
     if (!isRightNetwork()) {
       message = MESSAGE.RIGHT_NETWORK;
     }
@@ -294,6 +293,25 @@ class BettingCreate extends React.Component {
         },
       });
     }
+    */
+
+   const closingTime = selectedMatch.date;
+   const validate = await validateBet(amountBN, oddsBN, closingTime, selectedMatch.value, selectedOutcome.value);
+   const { status, message } = validate;
+   if (status) {
+    this.initHandshake(amountBN, oddsBN, extraParams, fromAddress);
+   }else {
+    if (message) {
+      this.props.showAlert({
+        message: <div className="text-center">{message}</div>,
+        timeOut: 3000,
+        type: 'danger',
+        callBack: () => {
+        },
+      });
+    }
+   }
+
 
 
     // if(selectedMatch && selectedOutcome && eventBet > 0 && eventBet <= balance){
@@ -556,7 +574,7 @@ display: 'flex', flexDirection: 'column', flex: 1, marginBottom: 10,
   }
 
   // Service
-  initHandshake(fields, fromAddress) {
+  initHandshake(amount, odds, fields, fromAddress) {
     const { selectedOutcome } = this.state;
     const side = this.toggleRef.value;
     //const chainId = betHandshakeHandler;
@@ -572,8 +590,8 @@ display: 'flex', flexDirection: 'column', flex: 1, marginBottom: 10,
       outcome_id: selectedOutcome.id,
       // outcome_id: selectedOutcome.hid,
       // outcome_id: 10,
-      odds: `${fields.event_odds}`,
-      amount: `${fields.event_bet}`,
+      odds: `${odds}`,
+      amount: `${amount}`,
       extra_data: JSON.stringify(fields),
       currency: 'ETH',
       side: parseInt(side),
@@ -581,7 +599,7 @@ display: 'flex', flexDirection: 'column', flex: 1, marginBottom: 10,
       chain_id: getChainIdDefaultWallet(),
     };
     console.log('Go to Params:', params);
-    const hid = selectedOutcome.hid;
+    //const hid = selectedOutcome.hid;
 
     this.props.initHandshake({
       PATH_URL: API_URL.CRYPTOSIGN.INIT_HANDSHAKE,

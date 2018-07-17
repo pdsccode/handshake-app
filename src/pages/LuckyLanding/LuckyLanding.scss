@@ -1,11 +1,14 @@
 @import './src/styles/style';
 
 .wrapperLuckyLanding {
+  position: relative;
   background:white;
   font-family: $font-family-base;
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  margin: 0 -15px;
+
+  //height: 100vh;
   .luckyLandingTop {
     background: url('../../assets/images/luckypool/lucky-landing-bg.svg') no-repeat;
     background-size: cover;
@@ -54,8 +57,16 @@
     font-size: rem-calc(12px);
     text-align: center;
     margin-top: rem-calc(20px);
+    margin-bottom: rem-calc(20px);
   }
   .luckyLandingLogo {
     margin-right: rem-calc(20px);
+  }
+  .luckyLandingClose {
+    position: absolute;
+    top: .5rem;
+    right: .5rem;
+    width: 25px;
+    height: 25px;
   }
 }

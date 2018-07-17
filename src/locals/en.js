@@ -113,8 +113,12 @@ export default {
   'ex.label.sold': 'Sold',
   'ex.label.buying': 'Buying',
   'ex.label.selling': 'Selling',
-  'ex.label.buyer': 'buyer',
-  'ex.label.seller': 'seller',
+  'ex.label.receiving': 'Receiving',
+  'ex.label.buyer': 'Buyer',
+  'ex.label.seller': 'Seller',
+  'ex.label.sale': 'Sale',
+  'ex.label.purchase': 'Purchase',
+  'ex.label.cost': 'Cost',
 
   'ex.exchange.status.created': 'Verifying',
   'ex.exchange.status.active': 'Active',
@@ -139,8 +143,8 @@ export default {
   'ex.shop.explanation.shake': 'Accepted. You will receive coin in a few minutes.',
   'ex.shop.explanation.completing': 'Accepted. You will receive coin in a few minutes.',
   'ex.shop.explanation.completed': '',
-  'ex.shop.explanation.pre_shaking': 'Waiting for the other party to accept your offer.',
-  'ex.shop.explanation.pre_shake': 'Waiting for the other party to accept your offer.',
+  'ex.shop.explanation.pre_shaking': 'Waiting for the station to accept your offer.',
+  'ex.shop.explanation.pre_shake': 'Waiting for the station to accept your offer.',
   'ex.shop.explanation.rejecting': 'Rejecting the offer. Please wait a few minutes.',
   'ex.shop.explanation.rejected': '',
   'ex.shop.explanation.cancelling': 'Cancelling your offer. Please wait a few minutes.',
@@ -166,6 +170,20 @@ export default {
   'ex.shop.shake.status.cancelling': 'Processing',
   'ex.shop.shake.status.cancelled': 'Cancelled',
 
+  'ex.shop.shake.buyer.seller': '{buyerSeller} order',
+  'ex.shop.shake.label.information': 'Information',
+  'ex.shop.shake.label.phone': 'Phone',
+  'ex.shop.shake.label.reviews': 'Reviews',
+  'ex.shop.shake.label.reviews.count': '({reviewCount} reviews)',
+  'ex.shop.shake.label.cash.inventory': 'Cash',
+  'ex.shop.shake.label.coin.inventory': 'Coin',
+  'ex.shop.shake.label.days': 'days',
+
+  'ex.shop.dashboard.label.transaction.successfull.failed': 'Transactions successful/failed',
+  'ex.shop.dashboard.label.transaction.pending': 'Transactions pending',
+  'ex.shop.dashboard.label.revenue': 'Bought/sold revenue',
+  'ex.shop.dashboard.label.transaction.total': 'Total bought/sold',
+
   'ex.error.systemError': 'Sorry Ninja. Something went wrong. Come back soon.',
   'ex.error.312': 'Oh no! You cancelled your offer. You will not be able to make orders for 4 hours. Sorry',
   'ex.error.313': 'You already have a listing! To change your rates, please cancel your current listing.',
@@ -186,7 +204,7 @@ export default {
   'ex.earlyBird.btn': 'Open Station',
 
   'ex.seo.title': 'Ninja: the anonymous exchange of anything.',
-  'ex.seo.meta.description': 'Trade predictions for the FIFA World Cup. Exchange coin for cash in your local neighborhood. No downloads, no sign ups. 100% anonymous.',
+  'ex.seo.meta.description': 'Swap coin for cash in your local neighborhood. Trade predictions on anything, anywhere, with anyone. No downloads, no sign ups. 100% anonymous.',
 
   'error.required': 'Required',
   'error.requiredOne': 'You need to fill in one of these!',
@@ -505,6 +523,15 @@ export default {
       shopDescription: 'Open for business',
       shopNoDataDescription: 'None yet. Set one up?',
       noDataMessage: 'Start a mission.',
+      filterBy: 'Filter by:',
+      cash: {
+        predition: 'Prediction',
+        cash: 'Cash',
+        restoreStation: 'Restore station',
+        backupStation: 'Backup station',
+        transactions: 'Transactions',
+        dashboard: 'Dashboard',
+      }
     },
   },
 
@@ -743,6 +770,14 @@ export default {
           status: 'Status',
           confirmations: 'confirmations',
           success: 'success',
+          detail_etherscan: 'View detail on etherscan.io',
+          view_all_etherscan: 'View all on etherscan.io',
+          self: "Self",
+          sent: "Sent",
+          received: "Received",
+          transfer: "transfer",
+          from: "from",
+          to: "to"
         },
       },
     },
@@ -750,6 +785,16 @@ export default {
   bitcoin: {
     error: {
       invalid_address: 'You can only send tokens to Bitcoin address',
+      invalid_address2: 'Please enter a valid receiving address.',
+      insufficient: 'You have insufficient coin to make the transfer.',
+    },
+    success: {
+      transaction: 'Your transaction will appear on blockchain in about 30 seconds.',
+    },
+  },
+  bitcoin_cash: {
+    error: {
+      invalid_address: 'You can only send tokens to BitcoinCash address',
       invalid_address2: 'Please enter a valid receiving address.',
       insufficient: 'You have insufficient coin to make the transfer.',
     },

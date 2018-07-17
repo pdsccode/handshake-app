@@ -1,15 +1,25 @@
+import React from 'react';
 import { MasterWallet } from '@/services/Wallets/MasterWallet';
 import { BettingHandshake } from '@/services/neuron';
+import Handshake from '@/models/Handshake.js';
 import local from '@/services/localStore';
-import moment from 'moment';
 import { APP } from '@/constants';
-import { BET_TYPE, MESSAGE_SERVER } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
-import {BigNumber} from 'bignumber.js';
+import { MESSAGE_SERVER } from '@/components/handshakes/betting/message.js';
+import { BET_TYPE, ROLE } from '@/components/handshakes/betting/constants.js';
+
+import { BigNumber } from 'bignumber.js';
 import _ from 'lodash';
+
+
+const ROUND = 1000000;
+const ROUND_ODD = 10;
+const TAG = 'BETTING_UTIL';
+
+
 export const parseBigNumber = (value)=>{
   return new BigNumber(value);
 }
-export const getMessageWithCode= (code)=> {
+export const getMessageWithCode = (code)=> {
     const keys = Object.keys(MESSAGE_SERVER).filter(k => k == code); // ["A", "B"]
     console.log('Keys:', keys);
     const value = keys.map(k => MESSAGE_SERVER[k]); // [0, 1]
@@ -26,48 +36,6 @@ export const getAddress = () => {
   const chainId = getChainIdDefaultWallet();
   const bettinghandshake = new BettingHandshake(chainId);
   return bettinghandshake.address;
-};
-
-
-export const isSameAddress = (address) => {
-  const currentAddress = getAddress();
-  if (address !== currentAddress) {
-    return false;
-  }
-  return true;
-};
-
-export const isRightNetwork = () => {
-  const wallet = MasterWallet.getWalletDefault('ETH');
-  MasterWallet.log(MasterWallet.getWalletDefault('ETH'));
-
-  if (process.env.isStaging) {
-    return true;
-  }
-  if (process.env.isProduction) {
-    if (wallet.network === MasterWallet.ListCoin[wallet.className].Network.Mainnet) {
-      return true;
-    }
-    return false;
-  }
-  return true;
-};
-
-export const isExpiredDate = (reportTime) => {
-  // const newClosingDate = moment.unix(closingDate).add(90, 'minutes');
-  console.log('Report Time:', reportTime);
-  const newClosingDate = moment.unix(reportTime);
-  const dayUnit = newClosingDate.utc();
-  const today = moment();
-  const todayUnit = today.utc();
-  // console.log('Closing Unix:', closingDateUnit.format());
-  console.log('New Date Unix:', dayUnit.format());
-  console.log('Today Unix:', todayUnit.format());
-  if (!todayUnit.isSameOrBefore(dayUnit, 'miliseconds') && today) {
-    console.log('Expired Date');
-    return true;
-  }
-  return false;
 };
 
 export const getId = (idOffchain) => {
@@ -97,25 +65,19 @@ export const getEstimateGas = async () => {
   return result;
 };
 
-export const foundShakeList = (item, offchain) => {
+export const foundShakeList = (item) => {
   // const shakerList = [];
   const profile = local.get(APP.AUTH_PROFILE);
-  const { shakers, outcome_id, from_address } = item;
+  const { shakers } = item;
 
-  const idOffchain = getId(offchain);
-  console.log('Id Offchain:', idOffchain);
+  //const idOffchain = getId(offchain);
+  //console.log('Id Offchain:', idOffchain);
   if (!_.isEmpty(shakers)) {
     const shakersArr = JSON.parse(shakers);
     const shakedList = shakersArr.filter(element => element.shaker_id === profile.id);
     console.log('foundShakedList:', shakedList);
     return shakedList;
-    /*
-      if (shakedList) {
-        foundShakedItem.outcome_id = outcome_id;
-        foundShakedItem.from_address = from_address;
-        return foundShakedItem;
-      }
-      */
+
   }
 
   return [];
@@ -123,13 +85,7 @@ export const foundShakeList = (item, offchain) => {
 export const isExistMatchBet = (list) => {
   for (let i = 0; i < list.length; i += 1) {
     const element = list[i];
-    /*
-      const { offchain } = element;
-      const shakeItem = foundShakeItem(element, offchain);
-      if(shakeItem){
-        return true;
-      }
-      */
+
     const { type } = element;
     console.log('Sa element:', element);
 
@@ -140,22 +96,101 @@ export const isExistMatchBet = (list) => {
   return false;
 };
 
-export const isInitBet = (dict) => {
-  /*
-    const { shakers } = dict;
-    if (shakers.length == 0) {
-      const profile = local.get(APP.AUTH_PROFILE);
-      console.log('User Profile Id:', profile.id);
-      const { user_id } = dict;
-      if (user_id && profile.id === user_id) {
-        return true;
-      }
-    }
-    return false;
-    */
+export const isInitBet = (dict) =>{
+
   const { type } = dict;
   if (type === BET_TYPE.INIT) {
     return true;
   }
   return false;
 };
+
+export const isShakeUser = (shakeIds) => {
+  const profile = local.get(APP.AUTH_PROFILE);
+
+  if (shakeIds) {
+    if (shakeIds.indexOf(profile.id) > -1) {
+      return true;
+    }
+  }
+  return false;
+};
+
+export const isMakerShakerSameUser = (initUserId, shakeIds) => {
+  const profile = local.get(APP.AUTH_PROFILE);
+
+  const userId = profile.id ;
+  if (userId === initUserId && isShakeUser(shakeIds, userId)) {
+    return true;
+  }
+  return false;
+};
+
+export const isMatch = (shakeUserIds) => {
+  if (shakeUserIds) {
+    return shakeUserIds.length > 0;
+  }
+  return false;
+};
+
+export const formatAmount = (amount) => {
+  return Math.floor(amount * ROUND) / ROUND;
+};
+
+export const formatOdds = (odds) => {
+  return Math.floor(odds * ROUND_ODD) / ROUND_ODD;
+};
+
+export const parseJsonString = (extraData) => {
+    try {
+      return JSON.parse(extraData);
+    } catch (e) {
+      console.log(e);
+      return {};
+    }
+}
+
+export const findUserBet = (handshake) => {
+  const {
+    result, shakeUserIds, closingTime,
+    reportTime, disputeTime, initUserId, side,
+  } = handshake;
+
+  let findItem = handshake;
+  let isUserShake = isShakeUser(shakeUserIds);
+  const matched = isMatch(shakeUserIds);
+
+  //Maker and shaker is same user
+  const isSameUser = isMakerShakerSameUser(initUserId, shakeUserIds);
+  if (isSameUser && matched && result === side) {
+    isUserShake = false;
+  }
+
+  if (isUserShake) {
+    const shakedItemList = foundShakeList(handshake);
+
+    if (shakedItemList.length > 0) {
+      const firstItem = Handshake.handshake(shakedItemList[0]);
+
+      findItem = Object.assign(firstItem, {
+        id: getShakeOffchain(firstItem.id),
+        result,
+        closingTime,
+        reportTime,
+        disputeTime,
+      });
+    }
+  }
+
+  const cloneItem = Object.assign({}, findItem);
+  const newItem = Object.assign(cloneItem, {
+    role: isUserShake ? ROLE.SHAKER : ROLE.INITER,
+    matched,
+  });
+
+
+  console.log(TAG, 'findUserBet:', newItem);
+
+  return newItem;
+
+}

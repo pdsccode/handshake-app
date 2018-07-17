@@ -60,6 +60,11 @@ export class Bitcoin extends Wallet {
     return false;
   }
 
+  getAPIUrlAddress() {
+    let url = bitcore.Networks.defaultNetwork == bitcore.Networks.livenet ? "https://bitpay.com/api/txs/?address="+this.address : "https://test-insight.bitpay.com/address/"+this.address;
+    return url;
+  }
+
   checkAddressValid(toAddress) {
     if (!bitcore.Address.isValid(toAddress)) {
       return 'messages.bitcoin.error.invalid_address';
@@ -215,9 +220,25 @@ export class Bitcoin extends Wallet {
     return result;
   }
 
+  formatNumber(value){
+    let result = value, count = 0;
+    try {
+      if (Math.floor(value) !== value)
+          count = value.toString().split(".")[1].length || 0;
+
+      if(count > 6)
+        result = value.toFixed(6);
+    }
+    catch(e) {
+
+    }
+
+    return result;
+  }
+
   cook(data){
-    let vin = {}, vout = {}, coin_name = "BTC",
-        is_sent = false, value = 0,
+    let vin = {}, vout = {}, coin_name = this.name,
+        is_sent = 2, value = 0,
         addresses = [], confirmations = 0, transaction_no = "",
         transaction_date = new Date();
 
@@ -232,7 +253,7 @@ export class Bitcoin extends Wallet {
         //check transactions are send
         for(let tin of vin){
           if(tin.addr.toLowerCase() == this.address.toLowerCase()){
-            is_sent = true;
+            is_sent = 1;
 
             for(let tout of vout){
               if(tout.scriptPubKey.addresses){
@@ -250,7 +271,7 @@ export class Bitcoin extends Wallet {
         }
 
         //check transactions are receive
-        if(!is_sent && vout){
+        if(is_sent != 1 && vout){
           for(let tout of vout){
             if(tout.scriptPubKey.addresses){
               let tout_addresses = tout.scriptPubKey.addresses.join(" ").toLowerCase();
@@ -267,6 +288,8 @@ export class Bitcoin extends Wallet {
       catch(e){
         console.error(e);
       }
+
+      value = this.formatNumber(value);
     }
 
     return {

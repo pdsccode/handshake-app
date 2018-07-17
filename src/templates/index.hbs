@@ -8,10 +8,10 @@
   <meta name="mobile-web-app-capable" content="yes">
   {{!-- todo: https://developer.chrome.com/multidevice/android/installtohomescreen#icon --}}
   <!-- SEO -->
-  <meta name="description" content="Trade predictions for the FIFA World Cup. Exchange coin for cash in your local neighborhood. No downloads, no sign ups. 100% anonymous." data-react-helmet="true" />
+  <meta name="description" content="Swap coin for cash in your local neighborhood. Trade predictions on anything, anywhere, with anyone. No downloads, no sign ups. 100% anonymous." data-react-helmet="true" />
   <meta name="keywords" content="" />
   <meta property="og:title" content="" />
-  <meta property="og:description" content="Trade predictions for the FIFA World Cup. Exchange coin for cash in your local neighborhood. No downloads, no sign ups. 100% anonymous." />
+  <meta property="og:description" content="Swap coin for cash in your local neighborhood. Trade predictions on anything, anywhere, with anyone. No downloads, no sign ups. 100% anonymous." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="" />
   <meta property="og:image" content="" />
@@ -36,9 +36,22 @@
     ga('create', '{{ htmlWebpackPlugin.options.env.social.googleAnalyticId }}', 'auto');
     ga('send', 'pageview');
   </script>
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','{{ htmlWebpackPlugin.options.env.social.googleTagmanagerId }}');</script>
+  <!-- End Google Tag Manager -->
+
   {{/if}}
 </head>
 <body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{ htmlWebpackPlugin.options.env.social.googleTagmanagerId }}"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
   <div id="app"></div>
   <noscript>Your browser does not support JavaScript!</noscript>
 </body>

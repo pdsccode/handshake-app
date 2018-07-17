@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Button, Form, FormGroup, Label, Input, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { loadMatches } from '@/reducers/betting/action';
+import { BETTING_RESULT } from '@/components/handshakes/betting/constants.js';
+
 import { BASE_API, API_URL } from '@/constants';
 import md5 from 'md5';
 import { Alert } from 'reactstrap';
@@ -42,15 +44,26 @@ class Admin extends React.Component {
   }
 
   setInitials(matches) {
-    matches.length > 0 && this.setState({
-      matches,
-      outcomes: matches[0].outcomes,
-      activeMatchData: matches[0],
-      selectedMatch: matches[0].name,
-    });
+    if (matches.length > 0) {
+      this.setState({
+        matches,
+        outcomes: matches[0].outcomes,
+        activeMatchData: matches[0],
+        selectedMatch: matches[0].name,
+      });
+    } else {
+      this.setState({
+        matches,
+        outcomes: [],
+        activeMatchData: {},
+        selectedMatch: 1,
+      });
+    }
   }
 
   fetchMatches() {
+    console.log('fetchMatches');
+
     this.props.loadMatches({
       PATH_URL: `${API_URL.CRYPTOSIGN.LOAD_MATCHES}?report=1`,
       successFn: (res) => {
@@ -151,6 +164,7 @@ class Admin extends React.Component {
   }
 
   disablePage() {
+    console.log('Disable Page');
     localStorage.setItem('disable', true);
     setTimeout(() => {
       localStorage.setItem('disable', false);
@@ -200,6 +214,8 @@ class Admin extends React.Component {
       });
     } else {
       const tokenValue = token || this.checkToken();
+      console.log('Final State:', this.state.final);
+
       const url = `${BASE_API.BASE_URL}/cryptosign/match/report/${this.state.activeMatchData.id}`;
       const submit = $http({
         url,
@@ -209,31 +225,48 @@ class Admin extends React.Component {
         headers: { Authorization: `Bearer ${tokenValue}`, 'Content-Type': 'application/json' },
         method: 'post',
       });
+
       submit.then((response) => {
         response.data.status === 1 && this.setState({
           disable: true,
-        }, this.disablePage);
-        response.data.status === 1 && this.props.showAlert({
-          message: <div className="text-center">Success!</div>,
-          timeOut: 3000,
-          type: 'success',
-          callBack: () => {},
         });
-        response.data.status === 0 && this.props.showAlert({
-          message: <div className="text-center">{response.data.message}</div>,
-          timeOut: 3000,
-          type: 'danger',
-          callBack: () => {},
-        });
+
+        response.data.status === 1 && this.onReportSuccess(response);
+
+        response.data.status === 0 && this.onReportFailed(response);
       });
+
     }
+  }
+  onReportSuccess = (response) => {
+    this.disablePage();
+
+    this.props.showAlert({
+      message: <div className="text-center">Success!</div>,
+      timeOut: 3000,
+      type: 'success',
+      callBack: () => {},
+    });
+
+  }
+  onReportFailed = (response) => {
+    this.disablePage();
+
+    this.props.showAlert({
+      message: <div className="text-center">{response.data.message}</div>,
+      timeOut: 3000,
+      type: 'danger',
+      callBack: () => {},
+    });
+
   }
   onChangeFinal=(item, result) => {
     console.log(item, result);
     const finalCopy = [...this.state.outcomes];
     finalCopy.map((outcomeItem) => {
-      if (outcomeItem.outcome_id === item.id) {
+      if (outcomeItem.id === item.id) {
         outcomeItem.side = result;
+        outcomeItem.outcome_id = item.id;
       }
       return outcomeItem;
     });
@@ -278,51 +311,29 @@ class Admin extends React.Component {
           <Label for="outcomeSelect">Outcomes</Label><br />
           {/* <FormGroup id="outcomeSelect" onChange={(event) => { this.onChangeOutcome(event, 'selectedOutcome'); }} disabled={this.state.disable}> */}
           {this.state.outcomes && this.state.outcomes.length > 0 && this.state.outcomes.map(item => (<Label check key={item.id} style={{}}>{`${item.name},id:${item.id}`}<br />
-            {/* side: 0 (unknown), 1 (support), 2 (against) */}
+            {/* side: 1 (support), 2 (against), 3 (draw) */}
+
             <FormGroup check>
               <Label check>
-                <Input type="radio" name={`selectedOption-${item.id}`} onChange={() => { this.onChangeFinal(item, 0); }} required value="0" />{' '}
-              Unknown
+                <Input type="radio" name={`selectedOption-${item.id}`} onChange={() => { this.onChangeFinal(item, BETTING_RESULT.DRAW); }} required value="0" />{' '}
+              Draw
               </Label>
             </FormGroup>
             <FormGroup check>
               <Label check>
-                <Input type="radio" name={`selectedOption-${item.id}`} onChange={() => { this.onChangeFinal(item, 1); }} value="1" />{' '}
+                <Input type="radio" name={`selectedOption-${item.id}`} onChange={() => { this.onChangeFinal(item, BETTING_RESULT.SUPPORT_WIN); }} value="1" />{' '}
               Support
               </Label>
             </FormGroup>
             <FormGroup check>
               <Label check>
-                <Input type="radio" name={`selectedOption-${item.id}`} onChange={() => { this.onChangeFinal(item, 2); }} value="2" />{' '}
+                <Input type="radio" name={`selectedOption-${item.id}`} onChange={() => { this.onChangeFinal(item, BETTING_RESULT.AGAINST_WIN); }} value="2" />{' '}
               Against
               </Label>
             </FormGroup><br /><br />
           </Label>))}
           <br /> <br />
-          {/* <FormGroup>
-            <Label for="homescore">Home Score</Label>
-            <Input
-              type="number"
-              name="homeScore"
-              id="homescore"
-              placeholder="Home Score"
-              value={this.state.activeMatchData.homeScore || ''}
-              onChange={(event) => { this.onChangeScore(event, 'homeScore'); }}
-              disabled={this.state.disable}
-            />
-          </FormGroup>
-          <FormGroup>
-            <Label for="awayscore">Away Score</Label>
-            <Input
-              type="number"
-              name="awayScore"
-              id="awayscore"
-              placeholder="Away Score"
-              value={this.state.activeMatchData.awayScore || ''}
-              disabled={this.state.disable}
-              onChange={(event) => { this.onChangeScore(event, 'awayScore'); }}
-            />
-          </FormGroup> */}
+
           <Button disabled={this.state.disable} onClick={this.onSubmit}>Submit</Button>
 
         </Form>
