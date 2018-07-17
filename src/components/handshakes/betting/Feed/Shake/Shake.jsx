@@ -15,8 +15,11 @@ import {showAlert} from '@/reducers/app/action';
 import {getMessageWithCode, getChainIdDefaultWallet,
      getEstimateGas, getAddress, isExistMatchBet, parseBigNumber , } from '@/components/handshakes/betting/utils.js';
 import { validateBet } from '@/components/handshakes/betting/validation.js';
+import { MESSAGE } from '@/components/handshakes/betting/message.js';
+import { BetHandshakeHandler } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
+import { SIDE } from '@/components/handshakes/betting/constants.js';
+
 import './Shake.scss';
-import { BetHandshakeHandler, MESSAGE, SIDE } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
 
 
 const betHandshakeHandler = BetHandshakeHandler.getShareManager();
