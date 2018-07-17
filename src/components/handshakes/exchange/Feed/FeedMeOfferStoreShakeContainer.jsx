@@ -405,21 +405,21 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
     const { offer } = this;
     const { initUserId } = this.props;
 
-    if (offer.currency === CRYPTO_CURRENCY.ETH) {
-      if (offer.type === EXCHANGE_ACTION.BUY) {
-        const wallet = MasterWallet.getWalletDefault(offer.currency);
-        const balance = await wallet.getBalance();
-        const fee = await wallet.getFee();
-
-        if (!this.checkMainNetDefaultWallet(wallet)) {
-          return;
-        }
-
-        if (this.showNotEnoughCoinAlert(balance, 0, fee, offer.currency)) {
-          return;
-        }
-      }
-    }
+    // if (offer.currency === CRYPTO_CURRENCY.ETH) {
+    //   if (offer.type === EXCHANGE_ACTION.BUY) {
+    //     const wallet = MasterWallet.getWalletDefault(offer.currency);
+    //     const balance = await wallet.getBalance();
+    //     const fee = await wallet.getFee();
+    //
+    //     if (!this.checkMainNetDefaultWallet(wallet)) {
+    //       return;
+    //     }
+    //
+    //     if (this.showNotEnoughCoinAlert(balance, 0, fee, offer.currency)) {
+    //       return;
+    //     }
+    //   }
+    // }
 
     this.props.showLoading({ message: '' });
     this.props.acceptOfferItem({
@@ -442,24 +442,24 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
     // Update status to redux
     this.responseExchangeDataChange(offerShake);
 
-    if (currency === CRYPTO_CURRENCY.ETH) {
-      if (type === EXCHANGE_ACTION.BUY) {
-        try {
-          const wallet = MasterWallet.getWalletDefault(currency);
-
-          const cashHandshake = new ExchangeCashHandshake(wallet.chainId);
-
-          const result = await cashHandshake.shake(hid, offChainId);
-
-          console.log('handleAcceptShakedOfferSuccess', result);
-
-          this.trackingOnchain(initUserId, offerShake.id, result.hash, status, '', currency);
-        } catch (e) {
-          this.trackingOnchain(initUserId, offerShake.id, '', status, e.toString(), currency);
-          console.log('handleAcceptShakedOfferSuccess', e.toString());
-        }
-      }
-    }
+    // if (currency === CRYPTO_CURRENCY.ETH) {
+    //   if (type === EXCHANGE_ACTION.BUY) {
+    //     try {
+    //       const wallet = MasterWallet.getWalletDefault(currency);
+    //
+    //       const cashHandshake = new ExchangeCashHandshake(wallet.chainId);
+    //
+    //       const result = await cashHandshake.shake(hid, offChainId);
+    //
+    //       console.log('handleAcceptShakedOfferSuccess', result);
+    //
+    //       this.trackingOnchain(initUserId, offerShake.id, result.hash, status, '', currency);
+    //     } catch (e) {
+    //       this.trackingOnchain(initUserId, offerShake.id, '', status, e.toString(), currency);
+    //       console.log('handleAcceptShakedOfferSuccess', e.toString());
+    //     }
+    //   }
+    // }
 
     // console.log('data', data);
     this.props.hideLoading();
