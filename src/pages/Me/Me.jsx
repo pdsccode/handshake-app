@@ -128,15 +128,10 @@ class Me extends React.Component {
     const { rfChange } = nextProps;
     console.log(TAG, ' getDerivedStateFromProps begin ');
     if (nextProps.exchange.listOfferPrice.updatedAt !== prevState.exchange.listOfferPrice.updatedAt) {
-      const qs = { };
       const {
         handshakeIdActive,
       } = prevState;
-
-      if (handshakeIdActive) {
-        qs.type = handshakeIdActive;
-      }
-      nextProps.loadMyHandshakeList({ PATH_URL: API_URL.ME.BASE, qs });
+      Me.loadMyHandshakeListStatic(nextProps, handshakeIdActive);
       return { exchange: nextProps.exchange };
     }
     console.log(TAG, ' getDerivedStateFromProps begin firebaseUser = ', nextProps.firebaseUser);
@@ -173,14 +168,24 @@ class Me extends React.Component {
       }
     }
 
-    if (nextProps.me.list.length === 0 && nextProps.me.list.updateAt !== prevState.me.list.updateAt
+    if (nextProps.me.list.length === 0 && nextProps.me.list.updatedAt !== prevState.me.list.updatedAt
       && prevState.handshakeIdActive === HANDSHAKE_ID.BETTING && prevState.firstTime) {
       rfChange(nameFormFilterFeeds, 'feedType', HANDSHAKE_ID.EXCHANGE);
       rfChange(nameFormFilterFeeds, 'cash-show-type', CASH_TAB.TRANSACTION);
+      Me.loadMyHandshakeListStatic(nextProps, HANDSHAKE_ID.EXCHANGE);
       return { handshakeIdActive: HANDSHAKE_ID.EXCHANGE, firstTime: false };
     }
 
     return null;
+  }
+
+  static loadMyHandshakeListStatic(nextProps, handshakeIdActive) {
+    const qs = {};
+
+    if (handshakeIdActive) {
+      qs.type = handshakeIdActive;
+    }
+    nextProps.loadMyHandshakeList({ PATH_URL: API_URL.ME.BASE, qs });
   }
 
   componentDidMount() {
@@ -195,6 +200,13 @@ class Me extends React.Component {
     this.loadMyHandshakeList();
     this.getOfferStore();
     // this.getDashboardInfo();
+  }
+
+  componentWillUnmount() {
+    const handshakeDefault = this.getDefaultHandShakeId();
+    this.setState({ cashTab: CASH_TAB.TRANSACTION,
+      handshakeIdActive: handshakeDefault,
+      firstTime: true });
   }
 
   setOfflineStatus = (online) => {
