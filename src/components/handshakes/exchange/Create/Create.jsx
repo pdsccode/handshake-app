@@ -473,16 +473,18 @@ class Component extends React.Component {
         PATH_URL: `${API_URL.EXCHANGE.OFFER_STORES}/${offer.id}/refill`,
         METHOD: 'POST',
         data: offerItem,
-        successFn: this.handleRefillOfferSuccess,
-        errorFn: this.handleCreateOfferFailed,
-      });
+        successFn: (res) => {
+          this.handleRefillOfferSuccess(res);
 
-      this.props.updateOfferStores({
-        PATH_URL: `${API_URL.EXCHANGE.OFFER_STORES}/${offer.id}`,
-        data: offerStore,
-        METHOD: 'PUT',
-        // successFn: this.handleCreateOfferSuccess,
-        // errorFn: this.handleCreateOfferFailed,
+          this.props.updateOfferStores({
+            PATH_URL: `${API_URL.EXCHANGE.OFFER_STORES}/${offer.id}`,
+            data: offerStore,
+            METHOD: 'PUT',
+            // successFn: this.handleCreateOfferSuccess,
+            // errorFn: this.handleCreateOfferFailed,
+          });
+        },
+        errorFn: this.handleCreateOfferFailed,
       });
     } else {
       this.props.addOfferItem({
