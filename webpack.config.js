@@ -54,7 +54,12 @@ module.exports = function webpackConfig(env, argv) {
             'style-loader',
             'css-loader',
             'postcss-loader',
-            'resolve-url-loader',
+            {
+              loader: 'resolve-url-loader',
+              options: {
+                keepQuery: true,
+              },
+            },
           ],
         },
         {
@@ -63,7 +68,12 @@ module.exports = function webpackConfig(env, argv) {
             'style-loader',
             'css-loader',
             'postcss-loader',
-            'resolve-url-loader',
+            {
+              loader: 'resolve-url-loader',
+              options: {
+                keepQuery: true,
+              },
+            },
             'sass-loader',
           ],
         },
@@ -98,7 +108,12 @@ module.exports = function webpackConfig(env, argv) {
             'style-loader',
             'css-loader',
             'postcss-loader',
-            'resolve-url-loader',
+            {
+              loader: 'resolve-url-loader',
+              options: {
+                keepQuery: true,
+              },
+            },
           ],
         },
         {
@@ -108,7 +123,12 @@ module.exports = function webpackConfig(env, argv) {
             'style-loader',
             'css-loader',
             'postcss-loader',
-            'resolve-url-loader',
+            {
+              loader: 'resolve-url-loader',
+              options: {
+                keepQuery: true,
+              },
+            },
             'sass-loader',
           ],
         },
