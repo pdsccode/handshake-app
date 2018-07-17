@@ -110,7 +110,7 @@ class Component extends React.Component {
       lat: 0,
       lng: 0,
       isUpdate: false,
-      enableAction: false,
+      enableAction: true,
     };
     // this.mainColor = _sample(feedBackgroundColors)
     this.mainColor = '#1F2B34';
