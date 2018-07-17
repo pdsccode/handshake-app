@@ -105,7 +105,7 @@ class Router extends React.Component {
                               if (process.env.isDojo) {
                                 return <Redirect to={{ pathname: URL.HANDSHAKE_CASH }} />
                               }
-                              return <Redirect to={{ pathname: URL.LUCKY_POOL }} />
+                              return <Redirect to={{ pathname: URL.HANDSHAKE_DISCOVER }} />
                             }}
                           />
                           {routers}
