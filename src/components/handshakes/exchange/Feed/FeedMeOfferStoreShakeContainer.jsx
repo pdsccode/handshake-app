@@ -819,31 +819,31 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
       //     }
       //   }
       // }
-      // case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.COMPLETING: {
-      //   switch (this.userType) {
-      //     case HANDSHAKE_USER.NORMAL: {
-      //       break;
-      //     }
-      //     case HANDSHAKE_USER.SHAKED: { // user shake
-      //       if (offer.type === EXCHANGE_ACTION.SELL) { // shop sell
-      //         idMessage = 'ex.exchange.explanation.completing';
-      //       }
-      //       break;
-      //     }
-      //     case HANDSHAKE_USER.OWNER: { // shop
-      //       if (offer.type === EXCHANGE_ACTION.BUY) { // shop buy
-      //         idMessage = 'ex.exchange.explanation.completing';
-      //       }
-      //       break;
-      //     }
-      //     default: {
-      //       // code
-      //       break;
-      //     }
-      //   }
-      //
-      //   break;
-      // }
+      case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.COMPLETING: {
+        switch (this.userType) {
+          case HANDSHAKE_USER.NORMAL: {
+            break;
+          }
+          case HANDSHAKE_USER.OWNER: { // shop
+            if (offer.type === EXCHANGE_ACTION.BUY) { // shop buy
+              idMessage = 'ex.shop.explanation.completing';
+            }
+            break;
+          }
+          case HANDSHAKE_USER.SHAKED: { // user shake
+            if (offer.type === EXCHANGE_ACTION.SELL) { // shop sell
+              idMessage = 'ex.shop.explanation.completing';
+            }
+            break;
+          }
+          default: {
+            // code
+            break;
+          }
+        }
+
+        break;
+      }
       // case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.REJECTED:
       // case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.CANCELLED:
       // case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.COMPLETED: {
