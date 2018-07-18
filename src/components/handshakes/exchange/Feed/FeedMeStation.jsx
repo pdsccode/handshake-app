@@ -25,41 +25,37 @@ class FeedMeStation extends React.PureComponent {
   }
 
   componentDidMount() {
-    const { messageMovingCoin, offer } = this.props;
+    this.intervalCountdown = setInterval(() => {
+      const { offer } = this.props;
 
-    const eth = offer.items.ETH;
-    const btc = offer.items.BTC;
+      const eth = offer.items.ETH;
+      const btc = offer.items.BTC;
 
-    let isShowTimer = false;
-    let lastUpdateAt = '';
+      let isShowTimer = false;
+      let lastUpdateAt = '';
 
-    if (eth) {
-      const status = HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[eth.status];
-      isShowTimer = status === HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CREATED || status === HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSING;
-
-      if (isShowTimer) {
-        lastUpdateAt = eth.updatedAt;
-      }
-    }
-
-    if (btc) {
-      if (!isShowTimer) {
-        const status = HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[btc.status];
+      if (eth) {
+        const status = HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[eth.status];
         isShowTimer = status === HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CREATED || status === HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSING;
 
         if (isShowTimer) {
           lastUpdateAt = eth.updatedAt;
         }
       }
-    }
 
-    this.setState({ isShowTimer });
+      if (btc) {
+        if (!isShowTimer) {
+          const status = HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[btc.status];
+          isShowTimer = status === HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CREATED || status === HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSING;
 
-    if (messageMovingCoin && isShowTimer) {
-      this.intervalCountdown = setInterval(() => {
-        this.setState({ timePassing: daysBetween(new Date(lastUpdateAt * 1000), new Date()) });
-      }, 1000);
-    }
+          if (isShowTimer) {
+            lastUpdateAt = btc.updatedAt;
+          }
+        }
+      }
+
+      this.setState({ timePassing: daysBetween(new Date(lastUpdateAt * 1000), new Date()), isShowTimer });
+    }, 1000);
   }
 
   componentWillUnmount() {
