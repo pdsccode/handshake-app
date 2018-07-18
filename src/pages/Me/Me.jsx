@@ -5,7 +5,15 @@ import PropTypes from 'prop-types';
 import { withFirebase } from 'react-redux-firebase';
 // action, mock
 import { fireBaseBettingChange, fireBaseExchangeDataChange, loadMyHandshakeList } from '@/reducers/me/action';
-import { API_URL, APP, HANDSHAKE_ID, HANDSHAKE_ID_DEFAULT, URL } from '@/constants';
+import {
+  API_URL,
+  APP,
+  EXCHANGE_FEED_TYPE,
+  HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS,
+  HANDSHAKE_ID,
+  HANDSHAKE_ID_DEFAULT,
+  URL,
+} from '@/constants';
 import { injectIntl } from 'react-intl';
 // components
 import { Link } from 'react-router-dom';
@@ -204,9 +212,11 @@ class Me extends React.Component {
 
   componentWillUnmount() {
     const handshakeDefault = this.getDefaultHandShakeId();
-    this.setState({ cashTab: CASH_TAB.TRANSACTION,
+    this.setState({
+      cashTab: CASH_TAB.TRANSACTION,
       handshakeIdActive: handshakeDefault,
-      firstTime: true });
+      firstTime: true,
+    });
   }
 
   setOfflineStatus = (online) => {
@@ -242,7 +252,7 @@ class Me extends React.Component {
       handshakeIdActive,
     } = this.state;
 
-    console.log('loadMyHandshakeList',this.state);
+    console.log('loadMyHandshakeList', this.state);
 
     if (handshakeIdActive) {
       qs.type = handshakeIdActive;
@@ -342,6 +352,7 @@ class Me extends React.Component {
     const { offerStores, propsModal, modalContent } = this.state;
     const online = !this.props.auth.offline;
     const haveOffer = offerStores ? (offerStores.itemFlags.ETH || offerStores.itemFlags.BTC) : false;
+    const { authProfile } = this.props;
 
     return (
       <Grid className="me">
@@ -424,6 +435,12 @@ class Me extends React.Component {
               listFeed.map((handshake) => {
                   const FeedComponent = maps[handshake.type];
                   if (FeedComponent) {
+                    if (handshake.offerFeedType === EXCHANGE_FEED_TYPE.OFFER_STORE_SHAKE &&
+                      handshake.status === HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.PRE_SHAKING &&
+                      handshake.initUserId === authProfile?.id
+                    ) {
+                      return null;
+                    }
                     return (
                       <Col key={handshake.id} className="feed-wrapper">
                         <FeedComponent

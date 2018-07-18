@@ -784,12 +784,12 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
         }
         break;
       }
-      case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.PRE_SHAKE: {
-        if (this.userType === HANDSHAKE_USER.SHAKED) {
-          idMessage = 'ex.shop.explanation.pre_shake';
-        }
-        break;
-      }
+      // case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.PRE_SHAKE: {
+      //   if (this.userType === HANDSHAKE_USER.SHAKED) {
+      //     idMessage = 'ex.shop.explanation.pre_shake';
+      //   }
+      //   break;
+      // }
       // case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.SHAKING: {
       //   if (this.userType === HANDSHAKE_USER.SHAKED) {
       //     idMessage = 'ex.shop.explanation.shaking';
