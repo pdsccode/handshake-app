@@ -145,6 +145,7 @@ const meReducter = (
             handledHandshake.status !== status
           ) {
             handledHandshake.status = status;
+            handledHandshake.lastUpdateAt = Date.now() / 1000;
           }
           return handledHandshake;
         });
@@ -196,6 +197,7 @@ const meReducter = (
             handledHandshake.status !== status
           ) {
             handledHandshake.status = status;
+            handledHandshake.lastUpdateAt = Date.now() / 1000;
           }
           return handledHandshake;
         });
@@ -222,6 +224,7 @@ const meReducter = (
               for (let item of Object.values(offerStore.items)) {
                 if (item.currency === currency) {
                   item.status = status;
+                  item.updateAt = Date.now() / 1000;
                   handledHandshake.extraData = JSON.stringify(offerStore);
                   break;
                 }
