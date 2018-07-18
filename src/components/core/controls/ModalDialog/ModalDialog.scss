@@ -24,6 +24,8 @@
     margin: 0 auto;
     background-color: $white;
     border-radius: 6px;
+    max-height: 95vh;
+    overflow: auto;
     .modal-custom-header {
       display: flex;
       padding: 10px 15px;
