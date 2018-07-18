@@ -24,6 +24,8 @@ import GroupBook from './../GroupBook';
 import TopInfo from './../TopInfo';
 import BettingShake from './../Shake';
 import BettingShakeFree from './../ShakeFree';
+
+import OrderPlace from './../OrderPlace';
 // style
 import './Filter.scss';
 
@@ -45,11 +47,12 @@ class BettingFilter extends React.Component {
     loadHandshakes: PropTypes.func.isRequired,
     loadMatches: PropTypes.func.isRequired,
     checkFreeAvailable: PropTypes.func.isRequired,
+    setLoading: PropTypes.func.isRequired,
     matchId: PropTypes.number,
     outComeId: PropTypes.number,
     isPrivate: PropTypes.any,
-    setLoading: PropTypes.func.isRequired,
     bettingShakeIsOpen: PropTypes.bool,
+    buttonClass: PropTypes.string,
   }
 
   static defaultProps = {
@@ -68,10 +71,10 @@ class BettingFilter extends React.Component {
       side: SIDE.SUPPORT,
       isError: false,
       errorMessage: '',
+      placeOrderRender: false,
     };
 
     this.onToggleChange = ::this.onToggleChange;
-
   }
 
   componentDidMount() {
@@ -88,7 +91,7 @@ class BettingFilter extends React.Component {
       matches.forEach((element) => {
         const { outcomes } = element;
         if (outcomes.length > 0) {
-          const privateOutcomeArr = outcomes.filter(item => item.public == 0 && item.id == outComeId);
+          const privateOutcomeArr = outcomes.filter(item => item.public === 0 && item.id === outComeId);
           if (privateOutcomeArr.length > 0) {
             filterMatches.push(element);
           }
@@ -113,6 +116,11 @@ class BettingFilter extends React.Component {
       against,
     });
     this.checkShowFreeBanner();
+  }
+
+  onToggleChange(id) {
+    const side = this.toggleRef.value;
+    this.setState({ buttonClass: `btnOK ${id === 1 ? 'btnBlue' : 'btnRed'}`, side });
   }
 
   get defaultSupportAmount() {
@@ -160,7 +168,7 @@ class BettingFilter extends React.Component {
       const oneBN = parseBigNumber(1);
       const againstOdds = odds.div(odds.minus(oneBN));
       console.log(TAG, ' defaultSupportOdds = ', againstOdds.toNumber());
-      return againstOdds?.toNumber() || 0;
+      return againstOdds ?.toNumber() || 0;
     }
     return 0;
   }
@@ -314,6 +322,25 @@ class BettingFilter extends React.Component {
     const { status, data } = successData;
   }
 
+  getHandshakeFailed = (error) => {
+    this.props.setLoading(false);
+    console.log('getHandshakeFailed', error);
+  }
+
+  getHandshakeSuccess = async (successData) => {
+    this.props.setLoading(false);
+    console.log('getHandshakeSuccess', successData);
+    const { status, data } = successData;
+    if (status && data) {
+      const { support, against } = data;
+      const filterSupport = support.filter(item => item.amount >= CRYPTOSIGN_MINIMUM_MONEY);
+      const filterAgainst = against.filter(item => item.amount >= CRYPTOSIGN_MINIMUM_MONEY);
+      this.setState({
+        support: filterSupport,
+        against: filterAgainst,
+      });
+    }
+  }
 
   loadMatches() {
     this.props.loadMatches({
@@ -351,29 +378,6 @@ class BettingFilter extends React.Component {
       }
     }
   }
-
-  getHandshakeFailed = (error) => {
-    this.props.setLoading(false);
-    console.log('getHandshakeFailed', error);
-  }
-
-  getHandshakeSuccess = async (successData) => {
-    this.props.setLoading(false);
-    console.log('getHandshakeSuccess', successData);
-    const { status, data } = successData;
-    if (status && data) {
-      const { support, against } = data;
-      const filterSupport = support.filter(item => item.amount >= CRYPTOSIGN_MINIMUM_MONEY);
-      const filterAgainst = against.filter(item => item.amount >= CRYPTOSIGN_MINIMUM_MONEY);
-      this.setState({
-        support: filterSupport,
-        against: filterAgainst,
-      });
-    }
-  }
-
-
-
   callCheckFirstFree() {
     console.log('Call API check first free');
     this.props.checkFreeAvailable({
@@ -405,12 +409,6 @@ class BettingFilter extends React.Component {
     this.modalBetFreeRef.close();
   }
 
-  onToggleChange(id) {
-    const side = this.toggleRef.value;
-
-    this.setState({ buttonClass: `btnOK ${id === 1 ? 'btnBlue' : 'btnRed'}`, side });
-  }
-
   async checkShowFreeBanner() {
     const balance = await getBalance();
     console.log('checkShowFreeBanner', balance, typeof balance);
@@ -418,6 +416,11 @@ class BettingFilter extends React.Component {
       // Call API check if show free
       this.callCheckFirstFree();
     }
+  }
+
+  testClick = () => {
+    this.modalPlaceOrder.open();
+    this.setState({ placeOrderRender: true });
   }
 
   render() {
@@ -440,6 +443,31 @@ class BettingFilter extends React.Component {
     const marketFee = (selectedMatch && selectedMatch.marketFee >= 0) ? selectedMatch.marketFee : null;
     const closingDate = (selectedMatch && selectedMatch.date) ? selectedMatch.date : null;
     const reportTime = (selectedMatch && selectedMatch.reportTime) ? selectedMatch.reportTime : null;
+
+    // new code 
+    const bettingShake = {
+      side: this.state.side,
+      amountSupport: this.defaultSupportAmount,
+      amountAgainst: this.defaultAgainstAmount,
+      matchName,
+      isOpen: this.state.bettingShakeIsOpen,
+      matchOutcome,
+      outcomeId: parseInt(outcomeId, 10),
+      outcomeHid: parseInt(outcomeHid, 10),
+      marketSupportOdds: parseFloat(this.defaultSupportOdds),
+      marketAgainstOdds: parseFloat(this.defaultAgainstOdds),
+      closingDate,
+      reportTime,
+      onSubmitClick: (() => {
+        this.closeShakePopup();
+        this.modalLuckyRealRef.open();
+      }),
+    };
+
+    const { support, against } = this.state;
+
+    const orderBook = { support, against };
+
     return (
       <div className="wrapperBettingFilter">
         {/*this.state.matches && this.state.matches.length > 0 &&
@@ -453,12 +481,12 @@ class BettingFilter extends React.Component {
         </div>*/}
         {
           this.state.isError
-          ? (
-            <div className="text-center" style={{ marginBottom: '10px' }}>
-              <p>{this.state.errorMessage}</p>
-              <Button onClick={() => window.location.reload()}>Try again</Button>
-            </div>
-          ) : ''
+            ? (
+              <div className="text-center" style={{ marginBottom: '10px' }}>
+                <p>{this.state.errorMessage}</p>
+                <Button onClick={() => window.location.reload()}>Try again</Button>
+              </div>
+            ) : ''
         }
         <div className={`${this.state.isError ? 'betting-disabled' : ''}`}>
           <div className="dropDown">
@@ -473,7 +501,7 @@ class BettingFilter extends React.Component {
                 // send event tracking
                 try {
                   GA.clickChooseAnEvent(item.value);
-                } catch (err) {}
+                } catch (err) { }
               }}
               hasSearch
             />
@@ -485,73 +513,83 @@ class BettingFilter extends React.Component {
               defaultId={defaultOutcomeId}
               source={this.matchOutcomes}
               afterSetDefault={item => this.setState({
-              selectedOutcome: item,
-            }, () => this.callGetHandshakes(item))}
-              onItemSelected={(item) => {
-              /* this.callGetHandshakes(item) */
-              this.setState({
                 selectedOutcome: item,
-              }, () => this.callGetHandshakes(item));
-              try {
-                // send event tracking
-                GA.clickChooseAnOutcome(item.value);
-              } catch (err) {}
-            }
-            }
+              }, () => this.callGetHandshakes(item))}
+              onItemSelected={(item) => {
+                /* this.callGetHandshakes(item) */
+                this.setState({
+                  selectedOutcome: item,
+                }, () => this.callGetHandshakes(item));
+                try {
+                  // send event tracking
+                  GA.clickChooseAnOutcome(item.value);
+                } catch (err) { }
+              }
+              }
             />
           </div>
           {
-          isFirstFree
-          ? (
-            <div
-              className="freeBox"
-              onClick={() => {
-                this.setState({
-                  bettingShakeIsOpen: true,
-                }, () => {
-                  this.modalBetFreeRef.open();
-                });
-            }}
-            >
-              <div className="contentFree">Unlock your <span>FREE ETH</span> to play</div>
-              <Button className="buttonBet">Bet now</Button>
-            </div>
+            isFirstFree
+              ? (
+                <div
+                  className="freeBox"
+                  onClick={() => {
+                    this.setState({
+                      bettingShakeIsOpen: true,
+                    }, () => {
+                      this.modalBetFreeRef.open();
+                    });
+                  }}
+                >
+                  <div className="contentFree">Unlock your <span>FREE ETH</span> to play</div>
+                  <Button className="buttonBet">Bet now</Button>
+                </div>
 
-          )
-          : ''
-        }
+              )
+              : ''
+          }
 
           {/*<TopInfo
             marketTotal={parseFloat(tradedVolum)}
             percentFee={marketFee}
             objectId={outcomeId}
           />*/}
+          
+          <div onClick={this.testClick}>Test modal</div>
+          <ModalDialog className="modal" onRef={(modal) => { this.modalPlaceOrder = modal; }}>
+            <OrderPlace
+              render={this.state.placeOrderRender}
+              bettingShake={bettingShake}
+              orderBook={orderBook}
+            />
+          </ModalDialog>
+
           <Toggle ref={(component) => { this.toggleRef = component; }} onChange={this.onToggleChange} />
           <div>
-          <div onClick={() => this.modalBetFreeRef.open()}>SIMPLE</div>
-          <div>ADVANCED</div>
+            <div onClick={() => this.modalBetFreeRef.open()}>SIMPLE</div>
+            <div>ADVANCED</div>
           </div>
           <BettingShake
-          side={this.state.side}
-          amountSupport={this.defaultSupportAmount}
-          amountAgainst={this.defaultAgainstAmount}
-          matchName={matchName}
-          isOpen={this.state.bettingShakeIsOpen}
-          matchOutcome={matchOutcome}
-          outcomeId={parseInt(outcomeId, 10)}
-          outcomeHid={parseInt(outcomeHid, 10)}
-          marketSupportOdds={parseFloat(this.defaultSupportOdds)}
-          marketAgainstOdds={parseFloat(this.defaultAgainstOdds)}
-          closingDate={closingDate}
-          reportTime={reportTime}
-          onSubmitClick={() => {
-            this.closeShakePopup();
-            this.modalLuckyRealRef.open();
+            side={this.state.side}
+            amountSupport={this.defaultSupportAmount}
+            amountAgainst={this.defaultAgainstAmount}
+            matchName={matchName}
+            isOpen={this.state.bettingShakeIsOpen}
+            matchOutcome={matchOutcome}
+            outcomeId={parseInt(outcomeId, 10)}
+            outcomeHid={parseInt(outcomeHid, 10)}
+            marketSupportOdds={parseFloat(this.defaultSupportOdds)}
+            marketAgainstOdds={parseFloat(this.defaultAgainstOdds)}
+            closingDate={closingDate}
+            reportTime={reportTime}
+            onSubmitClick={() => {
+              this.closeShakePopup();
+              this.modalLuckyRealRef.open();
             }
-          }
-        />
+            }
+          />
 
-        <div>ORDER BOOK</div>
+          <div>ORDER BOOK</div>
           <div className="wrapperContainer">
             <div className="item">
               <div className="titleBox opacity65">
@@ -616,7 +654,7 @@ class BettingFilter extends React.Component {
           onClick={() => {
           }}
         >
-                PLACE SUPPORT ORDER
+          PLACE SUPPORT ORDER
         </Button>
         <ModalDialog className="modal" onRef={(modal) => { this.modalBetRef = modal; return null; }}>
           <BettingShake
@@ -661,7 +699,7 @@ class BettingFilter extends React.Component {
             onSubmitClick={() => {
               this.closeShakeFreePopup();
               this.modalLuckyFreeRef.open();
-              }
+            }
             }
             onCancelClick={() => {
               this.closeShakePopup();
