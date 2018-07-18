@@ -440,7 +440,9 @@ class Me extends React.Component {
                   return null;
                 })
               ) : this.state.handshakeIdActive === HANDSHAKE_ID.EXCHANGE && this.state.cashTab === CASH_TAB.DASHBOARD ? (
-                <div >
+                <div className="text" >
+                  <p>{messages.me.feed.cash.stationExplain}</p>
+                  <p>{messages.me.feed.cash.stationCreateSuggest}</p>
                   <button className="btn btn-primary btn-block" onClick={this.showRestoreWallet}>{messages.me.feed.cash.restoreStation}</button>
                 </div>
               ) :

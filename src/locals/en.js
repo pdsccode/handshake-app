@@ -561,6 +561,8 @@ export default {
       cash: {
         predition: 'Prediction',
         cash: 'Cash',
+        stationExplain: 'A station is where you can buy or sell cryptocurrency.',
+        stationCreateSuggest: 'Got crypto? Create station to turn it into money making machine NOW!',
         restoreStation: 'Restore station',
         backupStation: 'Backup station',
         transactions: 'Transactions',
