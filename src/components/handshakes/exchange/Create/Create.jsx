@@ -227,18 +227,22 @@ class Component extends React.Component {
   }
 
   calculateAction(currency) {
+    const { rfChange } = this.props;
     let isExist = false;
-    for (const item of Object.values(this.offer.items)) {
-      console.log('item', item);
-      if (item.currency === currency) {
-        isExist = true;
-        console.log('haha');
-        this.setState({
-          isUpdate: HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[item.status] === HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.ACTIVE,
-          enableAction: (HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[item.status] !== HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CREATED &&
-          HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[item.status] !== HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSING),
-        });
-        break;
+    if (this.offer) {
+      for (const item of Object.values(this.offer.items)) {
+        console.log('item', item);
+        if (item.currency === currency) {
+          isExist = true;
+          this.setState({
+            isUpdate: HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[item.status] === HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.ACTIVE,
+            enableAction: (HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[item.status] !== HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CREATED &&
+              HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[item.status] !== HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSING),
+          });
+          rfChange(nameFormExchangeCreate, 'customizePriceBuy', item.buyPercentage * 100);
+          rfChange(nameFormExchangeCreate, 'customizePriceSell', item.sellPercentage * 100);
+          break;
+        }
       }
     }
 
@@ -247,6 +251,8 @@ class Component extends React.Component {
         isUpdate: false,
         enableAction: true,
       });
+      rfChange(nameFormExchangeCreate, 'customizePriceBuy', -0.25);
+      rfChange(nameFormExchangeCreate, 'customizePriceSell', 0.25);
     }
   }
 
@@ -703,9 +709,18 @@ class Component extends React.Component {
     const fiatCurrency = stationCurrency?.id;
     const modalContent = this.state.modalContent;
     // const allowInitiate = this.offer ? (!this.offer.itemFlags.ETH || !this.offer.itemFlags.BTC) : true;
-    const enableChooseFiatCurrency = this.offer ? (!this.offer.itemFlags.ETH && !this.offer.itemFlags.BTC) : true;
+
+    let enableChooseFiatCurrency = true;
+    if (this.offer) {
+      for (const value of Object.values(this.offer.itemFlags)) {
+        if (value) {
+          enableChooseFiatCurrency = false;
+          break;
+        }
+      }
+    }
     console.log('this.offer', this.offer);
-    console.log('this.state', this.state);
+    // console.log('this.state', this.state);
 
     const { price: priceBuy } = getOfferPrice(listOfferPrice, EXCHANGE_ACTION.BUY, currency, fiatCurrency);
     const { price: priceSell } = getOfferPrice(listOfferPrice, EXCHANGE_ACTION.SELL, currency, fiatCurrency);
