@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
 // service, constant
@@ -32,6 +33,7 @@ import MultiLanguage from '@/components/core/controls/MultiLanguage';
 // import Tabs from '@/components/handshakes/exchange/components/Tabs';
 import NoData from '@/components/core/presentation/NoData';
 import { getFreeStartInfo, getListOfferPrice, setFreeStart } from '@/reducers/exchange/action';
+import { updateShowedLuckyPool } from '@/reducers/betting/action';
 import Image from '@/components/core/presentation/Image';
 import loadingSVG from '@/assets/images/icon/loading.gif';
 import ninjaLogoSVG from '@/assets/images/logo.png';
@@ -302,13 +304,27 @@ class DiscoverPage extends React.Component {
     this.setState({ isLoading: loadingState });
   }
 
-  handleScroll() {
-    const { isLuckyPool } = this.state;
-    setTimeout(() => {
-      isLuckyPool && this.modalLuckyPoolRef.open();
+  showLuckyPool () {
+    const { handshakeIdActive } = this.state;
+    const { showedLuckyPool } = this.props;
+    if (handshakeIdActive === HANDSHAKE_ID.BETTING) {
 
-    }, 2 * 1000);
+      if (showedLuckyPool === false) {
+        console.log('Action Lucky Pool:', showedLuckyPool);
+        this.props.updateShowedLuckyPool(true);
+        setTimeout(() => {
+          this.modalLuckyPoolRef.open();
+
+        }, 2 * 1000);
+      }
+    }
   }
+
+  handleScroll() {
+    this.showLuckyPool();
+
+  }
+
 
   searchChange(query) {
     clearTimeout(this.searchTimeOut);
@@ -565,13 +581,15 @@ const mapState = state => ({
   isBannedPrediction: state.app.isBannedPrediction,
   firebaseApp: state.firebase.data,
   freeStartInfo: state.exchange.freeStartInfo,
+  showedLuckyPool: state.betting.showedLuckyPool,
 });
 
-const mapDispatch = ({
+const mapDispatch = dispatch => ({
   loadDiscoverList,
   getListOfferPrice,
   setFreeStart,
   getFreeStartInfo,
+  updateShowedLuckyPool: bindActionCreators(updateShowedLuckyPool, dispatch),
 });
 
 export default injectIntl(connect(mapState, mapDispatch)(DiscoverPage));
