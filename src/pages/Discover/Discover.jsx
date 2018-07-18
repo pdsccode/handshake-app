@@ -585,10 +585,10 @@ const mapState = state => ({
 });
 
 const mapDispatch = dispatch => ({
-  loadDiscoverList,
-  getListOfferPrice,
-  setFreeStart,
-  getFreeStartInfo,
+  loadDiscoverList: bindActionCreators(loadDiscoverList, dispatch),
+  getListOfferPrice: bindActionCreators(getListOfferPrice, dispatch),
+  setFreeStart: bindActionCreators(setFreeStart, dispatch),
+  getFreeStartInfo: bindActionCreators(getFreeStartInfo, dispatch),
   updateShowedLuckyPool: bindActionCreators(updateShowedLuckyPool, dispatch),
 });
 
