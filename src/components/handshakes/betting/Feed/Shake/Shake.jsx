@@ -287,7 +287,7 @@ class BetingShake extends React.Component {
     return this.renderForm();
   }
 
-  initHandshake(amount, odds){
+  initHandshake(amount, odds) {
 
     const {outcomeId, matchName, matchOutcome, side} = this.props;
     const {extraData} = this.state;

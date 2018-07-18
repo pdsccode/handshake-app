@@ -101,6 +101,7 @@ export const BETTING_STATUS_LABEL =
       REFUND: 'Refund your bet',
       CANCELLED: 'Your bet was cancelled.',
       REFUNDING: 'Your coin is being refunded to you.',
+      REFUND_WAIT: `<br/> It's not time to refund. Please wait..`,
       REFUNDED: 'Your coin has been refunded.',
       COLLECT_PENDING: 'The blockchain is processing your withdrawal. Please wait.',
       COLLECT_DONE: 'Your winnings have been withdrawn to your wallet!',
