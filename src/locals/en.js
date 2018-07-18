@@ -371,7 +371,7 @@ export default {
   ],
 
   // landing page --> /coin-exchange
-  COIN_EXCHANGE_LP_FAQ_TITLE: 'Have any questions?',
+  COIN_EXCHANGE_LP_FAQ_TITLE: 'Frequently asked questions',
   COIN_EXCHANGE_LP_FAQ: [
     {
       question: 'What is Ninja Cash?',

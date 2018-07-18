@@ -389,7 +389,7 @@ class Me extends React.Component {
           </Col>
         </Row>
 
-        <div className="my-3">
+        <div className="mt-2 mb-1">
           <FormFilterFeeds>
             <div className="d-table w-100">
               <div className="d-table-cell"><label className="label-filter-by">{messages.me.feed.filterBy}</label></div>
@@ -407,7 +407,7 @@ class Me extends React.Component {
 
             { this.state.handshakeIdActive === HANDSHAKE_ID.EXCHANGE && (
               <div>
-                <hr />
+                <hr style={{ margin: '10px 0 5px' }} />
                 <div>
                   <Field
                     name="cash-show-type"
