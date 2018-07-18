@@ -108,7 +108,7 @@ class FeedMeCash extends React.PureComponent {
           </div>
           { messageMovingCoin && (
             <div className="countdown d-table-cell text-right">
-              <img src={iconSpinner} width="14px" />
+              <img src={iconSpinner} width="14px" style={{ marginTop: '-2px' }} />
               <span className="ml-1">{this.state.timePassing}</span>
             </div>)
           }
