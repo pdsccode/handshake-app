@@ -706,6 +706,7 @@ export default {
         header: 'Wallet address',
         header2: 'Custom Amount',
         message: 'Share your public wallet address to receive',
+        title2: 'MY DESPOSIT ADDRESS',
         label: {
           address: 'Address',
           amount: 'Amount',
