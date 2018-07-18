@@ -503,7 +503,7 @@ export const blockchainNetworks = {
       predictionHandshakeAddress: '0x2730da6188a35a5a384f4a3127036bb90f3721b5',
       predictionHandshakeDevAddress: '0x6f25814d49bcf8345f8afd2a3bf9d5fd95079f84',
       exchangeHandshakeAddress: '0x5fa2e0d96dbe664beb502407bf46ea85b131fb86',
-      exchangeCashAddress: '0x62e74552221663b90fc64465434ecd6d91e03197',
+      exchangeCashAddress: '0x72b0ba8b3e039153b557e4e15fa11fd6a79b7498',
       shurikenTokenAddress: '0xca0fed76b5807557ce38e65cab83be3373cc2e7d',
     },
     contractFiles: {
