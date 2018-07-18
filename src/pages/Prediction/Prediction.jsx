@@ -35,10 +35,21 @@ class Prediction extends React.Component {
     );
   }
 
+  renderShareToWin = () => {
+    return (
+      <div className="ShareToWin">
+        <div className="ShareToWinTitle">
+          SHARE TO <span>WIN 10 ETH</span>
+        </div>
+      </div>
+    );
+  }
+
   renderComponent = (props) => {
     return (
       <div className={Prediction.displayName}>
         <NavigationBar />
+        {this.renderShareToWin()}
         {this.renderEventList(props)}
       </div>
     );
