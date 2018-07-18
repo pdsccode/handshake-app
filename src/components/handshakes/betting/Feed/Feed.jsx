@@ -7,7 +7,7 @@ import { BetHandshakeHandler } from '@/components/handshakes/betting/Feed/BetHan
 import { BET_BLOCKCHAIN_STATUS, ROLE } from '@/components/handshakes/betting/constants.js';
 
 import { API_URL } from '@/constants';
-import { uninitItem, collect, collectFree, uninitItemFree } from '@/reducers/handshake/action';
+import { uninitItem, collect, collectFree, uninitItemFree, refundFree } from '@/reducers/handshake/action';
 import { loadMyHandshakeList, updateBettingChange } from '@/reducers/me/action';
 import { MESSAGE, BETTING_STATUS_LABEL } from '@/components/handshakes/betting/message.js';
 import { getStatusLabel } from '@/components/handshakes/betting/StatusAction.js';
@@ -141,6 +141,7 @@ class FeedBetting extends React.Component {
     );
 
 
+
     if (!isRightNetwork()) {
       message = MESSAGE.RIGHT_NETWORK;
     } else if (!isSameAddress(fromAddress)) {
@@ -162,6 +163,8 @@ class FeedBetting extends React.Component {
       });
     }
 
+
+
   }
 
   handleActionFree(title, offchain) {
@@ -169,11 +172,13 @@ class FeedBetting extends React.Component {
 
     switch (title) {
       case BETTING_STATUS_LABEL.CANCEL:
-        // TO DO: CLOSE BET
         this.uninitItemFree(realId);
         break;
       case BETTING_STATUS_LABEL.WITHDRAW:
         this.collectFree(offchain);
+        break;
+      case BETTING_STATUS_LABEL.REFUND:
+        this.refundFree(offchain);
         break;
       default:
         break;
@@ -325,7 +330,7 @@ class FeedBetting extends React.Component {
   collectFreeFailed = (error) => {
     console.log('collectFreeFailed', error);
     const { status, code } = error;
-    if (status == 0) {
+    if (status === 0) {
       const message = getMessageWithCode(code);
       this.props.showAlert({
         message: <div className="text-center">{message}</div>,
@@ -336,6 +341,48 @@ class FeedBetting extends React.Component {
       });
     }
   }
+
+  refundFree(id) {
+    const params = {
+      offchain: id,
+    };
+    this.props.refundFree({
+      PATH_URL: API_URL.CRYPTOSIGN.REFUND_FREE,
+      METHOD: 'POST',
+      data: params,
+      successFn: this.refundFreeSuccess,
+      errorFn: this.refundFreeFailed,
+    });
+  }
+
+  refundFreeSuccess = async (successData) => {
+    console.log(TAG, 'refundFreeSuccess');
+    const { status } = successData;
+    if (status) {
+      const { itemInfo } = this.state;
+      const { id } = itemInfo;
+      const updateInfo = Object.assign({}, itemInfo);
+      updateInfo.status = BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINIT_PENDING;
+      betHandshakeHandler.setItemOnChain(id, updateInfo);
+      this.props.updateBettingChange(updateInfo);
+    }
+  }
+
+  refundFreeFailed = (error) => {
+    console.log(TAG, 'refundFreeFailed', error);
+    const { status, code } = error;
+    if (status === 0) {
+      const message = getMessageWithCode(code);
+      this.props.showAlert({
+        message: <div className="text-center">{message}</div>,
+        timeOut: 3000,
+        type: 'danger',
+        callBack: () => {
+        },
+      });
+    }
+  }
+
 
   renderStatus = () => {
     const { statusTitle } = this.state;
@@ -515,5 +562,6 @@ const mapDispatch = ({
   collectFree,
   showAlert,
   uninitItemFree,
+  refundFree,
 });
 export default connect(mapState, mapDispatch)(FeedBetting);

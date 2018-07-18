@@ -155,6 +155,7 @@ export const API_URL = {
     COLLECT_FREE: 'cryptosign/handshake/collect_free_bet',
     ROLLBACK: 'cryptosign/handshake/rollback',
     REFUND: 'cryptosign/handshake/refund',
+    REFUND_FREE: 'cryptosign/handshake/refund_free_bet',
     ADD_MATCH: 'cryptosign/match/add',
     ADD_OUTCOME: 'cryptosign/outcome/add',
     SAVE_TRANSACTION: 'cryptosign/tx/add',
