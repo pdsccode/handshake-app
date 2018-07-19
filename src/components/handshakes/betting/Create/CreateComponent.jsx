@@ -19,6 +19,7 @@ import {
   getChainIdDefaultWallet,
   isExistMatchBet, getAddress, parseBigNumber,
   calculateBetDefault,
+  formatAmount,
 } from '@/components/handshakes/betting/utils.js';
 
 import { getKeyByValue } from '@/utils/object';
@@ -27,13 +28,10 @@ import { getKeyByValue } from '@/utils/object';
 import { InputField } from '../form/customField';
 import './Create.scss';
 
-const ROUND = 1000000;
-const ROUND_ODD = 10;
 const betHandshakeHandler = BetHandshakeHandler.getShareManager();
 
 const regex = /\[.*?\]/g;
 const regexReplace = /\[|\]/g;
-const regexReplacePlaceholder = /\[.*?\]/;
 
 const TAG = 'BETTING_CREATE';
 
@@ -43,9 +41,6 @@ const item = {
 
 class BettingCreate extends React.Component {
   static propTypes = {
-    item: PropTypes.object.isRequired,
-    toAddress: PropTypes.string.isRequired,
-    isPublic: PropTypes.bool.isRequired,
     industryId: PropTypes.number.isRequired,
     onClickSend: PropTypes.func,
     initHandshake: PropTypes.func.isRequired,
@@ -57,23 +52,28 @@ class BettingCreate extends React.Component {
 
   constructor(props) {
     super(props);
+
+    const { bettingShake } = props;
+    const { side, amountSupport, amountAgainst, marketSupportOdds, marketAgainstOdds } = bettingShake;
+
+    const values = {};
+    const defaultValue = calculateBetDefault(side, marketSupportOdds, marketAgainstOdds, amountSupport, amountAgainst);
+
+    values.event_odds = defaultValue.marketOdds;
+    values.event_bet = defaultValue.marketAmount;
+
     this.state = {
-      values: {},
-      address: null,
-      privateKey: null,
+      values,
       isChangeOdds: false,
-      oddValue: 0,
-      winValue: 0,
-      selectedMatch: null,
-      selectedOutcome: null,
-      buttonClass: 'btnBlue',
+      winValue: defaultValue.winValue,
     };
     this.onSubmit = ::this.onSubmit;
     this.renderInput = ::this.renderInput;
-    //this.renderDate = ::this.renderDate;
     this.renderForm = ::this.renderForm;
     this.renderNumber = ::this.renderNumber;
-    this.onToggleChange = ::this.onToggleChange;
+
+    console.log(TAG, 'constructor', 'bettingShake', bettingShake);
+
   }
   componentDidMount() {
   }
@@ -88,34 +88,9 @@ class BettingCreate extends React.Component {
 
   async onSubmit(e) {
     e.preventDefault();
-    const dict = this.refs;
     const {
-      address, privateKey, values, selectedMatch, selectedOutcome, isChangeOdds,
+      values
     } = this.state;
-    console.log('values', values);
-
-    let content = this.content;
-    const inputList = this.inputList;
-    const extraParams = values;
-    console.log('Before Content:', content);
-
-    // send event tracking
-    try {
-      GA.clickGoButtonCreatePage(selectedMatch, selectedOutcome, this.toggleRef.sideName);
-    } catch (err) {}
-
-    inputList.forEach((element) => {
-      const item = JSON.parse(element.replace(regexReplace, ''));
-      console.log('Element:', item);
-      const { key, placeholder, type } = item;
-      const valueInputItem = key === 'event_date' ? this.datePickerRef.value : values[key];
-      content = content.replace(
-        regexReplacePlaceholder,
-        valueInputItem || '',
-      );
-    });
-    console.log('After Content:', content);
-
 
     const { bettingShake } = this.props;
     const { closingDate, matchName, matchOutcome } = bettingShake;
@@ -127,7 +102,7 @@ class BettingCreate extends React.Component {
     const validate = await validateBet(amount, odds, closingDate, matchName, matchOutcome);
     const { status, message } = validate;
     if (status) {
-      this.initHandshake(extraParams, fromAddress);
+      this.initHandshake(values, fromAddress);
 
     } else {
       if (message){
@@ -160,25 +135,31 @@ class BettingCreate extends React.Component {
     if (key === 'event_odds') {
       console.log('Change Odds');
       this.setState({
-        oddValue: text,
         isChangeOdds: true,
       });
     }
-    const amount = values.event_bet;
-    const odds = values.event_odds;
-    const total = amount * odds;
+    const amountBN = parseBigNumber(values.event_bet);
+    const oddsBN = parseBigNumber(values.event_odds);
+    const total = amountBN.times(oddsBN).toNumber();
     this.setState({
-      winValue: Math.floor(total * ROUND) / ROUND || 0,
+      winValue: formatAmount(total) || 0,
     });
   }
 
-  onToggleChange(id) {
-    // send event tracking
-    try {
-      GA.clickChooseASideCreatePage(id === 1 ? 'Support' : 'Oppose');
-    } catch (err) {}
-    this.setState({ buttonClass: `${id === 2 ? 'btnRed' : 'btnBlue'}` });
+  updateDefaultValues = (bettingShake) => {
+    const { values } = this.state;
+    const { side, amountSupport, amountAgainst, marketSupportOdds, marketAgainstOdds } = bettingShake;
+
+    const defaultValue = calculateBetDefault(side, marketSupportOdds, marketAgainstOdds, amountSupport, amountAgainst);
+
+    values.event_odds = defaultValue.marketOdds;
+    values.event_bet = defaultValue.marketAmount;
+
+    const { winValue } = defaultValue;
+
+    this.setState({ values, winValue });
   }
+
 
   renderInput(item, index, style = {}) {
     const {
@@ -189,17 +170,14 @@ class BettingCreate extends React.Component {
     console.log('Item:', item);
     return (
       <input
-        // style={style}
         ref={key}
         component={InputField}
         type="text"
         placeholder={placeholder}
-        // className={className}
         className={cn('form-control-custom input', className || '')}
         name={key}
         value={values[key]}
         validate={[required]}
-        // ErrorBox={ErrorBox}
         onChange={(evt) => {
           this.changeText(key, evt.target.value);
         }}
@@ -229,20 +207,6 @@ class BettingCreate extends React.Component {
     );
   }
 
-  updateDefaultValues = (bettingShake) => {
-    const { values } = this.state;
-    const { side, amountSupport, amountAgainst, marketSupportOdds, marketAgainstOdds } = bettingShake;
-
-    const defaultValue = calculateBetDefault(side, marketSupportOdds, marketAgainstOdds, amountSupport, amountAgainst);
-
-    values.event_odds = defaultValue.oddValue;
-    values.event_bet = defaultValue.marketAmount;
-
-    const { winValue } = defaultValue;
-    console.log('Win Value:', winValue);
-
-    this.setState({ values, winValue });
-  }
 
   renderLabelForItem=(text, { marginLeft, marginRight }) => text && (<label
     className="itemLabel"
@@ -303,24 +267,6 @@ class BettingCreate extends React.Component {
     );
   }
 
-  /*
-  selectOutcomeClick(item) {
-    const { values } = this.state;
-    values.event_predict = item.value;
-    values.event_odds = Math.floor(parseFloat(item.marketOdds) * ROUND_ODD) / ROUND_ODD;
-    values.event_bet = Math.floor(parseFloat(item.marketAmount) * ROUND) / ROUND;
-    const roundWin = item.marketAmount * item.marketOdds;
-    console.log('roundWin Value:', roundWin);
-
-    const winValue = Math.floor(roundWin * ROUND) / ROUND;
-    console.log('Win Value:', winValue);
-
-    this.setState({ selectedOutcome: item, values, winValue });
-    // send event tracking
-    GA.clickChooseAnOutcomeCreatePage(item.value);
-  }
-  */
-
   render() {
     return (
       <div>
@@ -375,7 +321,6 @@ class BettingCreate extends React.Component {
         timeOut: 3000,
         type: 'success',
         callBack: () => {
-          //this.props.history.push(URL.HANDSHAKE_ME);
         },
       });
       // send ga event
@@ -393,7 +338,6 @@ const mapState = state => ({
 });
 const mapDispatch = ({
   initHandshake,
-  //loadMatches,
   showAlert,
 
 });

@@ -57,15 +57,25 @@ class BetingShake extends React.Component {
   constructor(props) {
     super(props);
 
+    const {
+      marketSupportOdds,
+      marketAgainstOdds,
+      side,
+      amountSupport,
+      amountAgainst,
+    } = props;
+    const defaultValue = calculateBetDefault(side, marketSupportOdds, marketAgainstOdds, amountSupport, amountAgainst);
+
+
     this.state = {
       buttonClass: 'btnOK btnBlue',
       isShowOdds: true,
       extraData: {},
       isChangeOdds: false,
       marketOdds: 0,
-      oddValue: 0,
-      amountValue: 0,
-      winValue: 0,
+      oddValue: defaultValue.marketOdds,
+      amountValue: defaultValue.marketAmount,
+      winValue: defaultValue.winValue,
       disable: false,
       estimateGas: 0,
     };
@@ -108,6 +118,7 @@ class BetingShake extends React.Component {
       disable: !isOpen,
       estimateGas,
     });
+
 
     /*
     if (nextProps.orderClick) {
@@ -325,7 +336,7 @@ class BetingShake extends React.Component {
       ...newProps
     } = props;
     const { oddValue, amountValue } = this.state;
-    console.log('Label Default Value:', label, defaultValue);
+    //console.log('Label Default Value:', label, defaultValue);
     return (
       <div className="rowWrapper">
         <label className="label" htmlFor={id}>{label}</label>

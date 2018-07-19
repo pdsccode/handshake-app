@@ -14,7 +14,8 @@ import Button from '@/components/core/controls/Button';
 import { showAlert } from '@/reducers/app/action';
 import {
   getMessageWithCode, getChainIdDefaultWallet,
-  getEstimateGas, getAddress, parseBigNumber
+  getEstimateGas, getAddress, parseBigNumber,
+  calculateBetDefault,
 } from '@/components/handshakes/betting/utils';
 import { validateBet } from '@/components/handshakes/betting/validation.js';
 import { MESSAGE } from '@/components/handshakes/betting/message.js';
@@ -83,16 +84,21 @@ class BetingShakeFree extends React.Component {
   async componentWillReceiveProps(nextProps) {
     const { marketSupportOdds, marketAgainstOdds } = this.props;
     const { amount } = this.props;
+    /*
     const marketOdds = this.toggleRef.value === SIDE.SUPPORT ? marketSupportOdds : marketAgainstOdds;
     const winValue = amount * marketOdds;
     const roundWinValue = Math.floor(winValue * ROUND) / ROUND;
+    */
+   const side = this.toggleRef.value;
+   const defaultValue = calculateBetDefault(side, marketSupportOdds, marketAgainstOdds, amountSupport, amountAgainst);
+
     const estimateGas = await getEstimateGas();
     console.log('Next props: amount, marketOdds, winValue, roundWinValue: ', amount, marketOdds, winValue, roundWinValue);
 
     this.setState({
-      oddValue: Math.floor(marketOdds * ROUND_ODD) / ROUND_ODD,
-      amountValue: amount,
-      winValue: roundWinValue,
+      oddValue: defaultValue.marketOdds,
+      amountValue: defaultValue.marketAmount,
+      winValue: defaultValue.winValue,
       estimateGas,
     });
   }
@@ -323,7 +329,7 @@ class BetingShakeFree extends React.Component {
       ...newProps
     } = props;
     const { oddValue, amountValue } = this.state;
-    console.log('Label Default Value:', label, defaultValue);
+    //console.log('Label Default Value:', label, defaultValue);
     return (
       <div className="rowWrapper">
         <label className="label" htmlFor={id}>{label}</label>
