@@ -1,5 +1,7 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
+import iconBtc from '@/assets/images/icon/coin/icon-btc.svg';
+import iconEth from '@/assets/images/icon/coin/icon-eth.svg';
 
 export const APP = {
   HEADER_DEFAULT: 'Handshake',
@@ -62,10 +64,14 @@ export const CRYPTO_CURRENCY_NAME = {
   [CRYPTO_CURRENCY.BTC]: 'BTC',
 };
 
-export const CRYPTO_CURRENCY_LIST = [
-  { value: CRYPTO_CURRENCY.ETH, text: CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.ETH] },
-  { value: CRYPTO_CURRENCY.BTC, text: CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.BTC] },
-];
+export const CRYPTO_CURRENCY_LIST = Object.values(CRYPTO_CURRENCY).map((item) => {
+  return { value: item, text: CRYPTO_CURRENCY_NAME[item] };
+});
+
+export const CRYPTO_CURRENCY_COLORS = {
+  [CRYPTO_CURRENCY.ETH]: { color: 'linear-gradient(-135deg, #D772FF 0%, #9B10F2 45%, #9E53E1 100%)', icon: iconEth },
+  [CRYPTO_CURRENCY.BTC]: { color: 'linear-gradient(45deg, #FF8006 0%, #FFA733 51%, #FFC349 100%)', icon: iconBtc },
+};
 
 export const FIAT_CURRENCY = {
   RUB: 'RUB',
@@ -74,6 +80,7 @@ export const FIAT_CURRENCY = {
   CAD: 'CAD',
   USD: 'USD',
   EUR: 'EUR',
+  HKD: 'HKD',
 }
 
 export const FIAT_CURRENCY_NAME = {
@@ -83,6 +90,7 @@ export const FIAT_CURRENCY_NAME = {
   [FIAT_CURRENCY.CAD]: 'CAD',
   [FIAT_CURRENCY.USD]: 'USD',
   [FIAT_CURRENCY.EUR]: 'EUR',
+  [FIAT_CURRENCY.HKD]: 'HKD',
 };
 
 export const FIAT_CURRENCY_LIST = [
@@ -92,6 +100,7 @@ export const FIAT_CURRENCY_LIST = [
   { id: FIAT_CURRENCY.CAD, text: FIAT_CURRENCY_NAME[FIAT_CURRENCY.CAD] },
   { id: FIAT_CURRENCY.USD, text: FIAT_CURRENCY_NAME[FIAT_CURRENCY.USD] },
   { id: FIAT_CURRENCY.EUR, text: FIAT_CURRENCY_NAME[FIAT_CURRENCY.EUR] },
+  { id: FIAT_CURRENCY.HKD, text: FIAT_CURRENCY_NAME[FIAT_CURRENCY.HKD] },
 ];
 
 export const FIREBASE_PATH = {
