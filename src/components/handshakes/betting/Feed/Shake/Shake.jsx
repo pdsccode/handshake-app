@@ -12,7 +12,8 @@ import GA from '@/services/googleAnalytics';
 import Button from '@/components/core/controls/Button';
 import {showAlert} from '@/reducers/app/action';
 import {getMessageWithCode, getChainIdDefaultWallet,
-     getEstimateGas, getAddress, isExistMatchBet, parseBigNumber , } from '@/components/handshakes/betting/utils.js';
+     getEstimateGas, getAddress, isExistMatchBet, parseBigNumber ,
+     calculateBetDefault, } from '@/components/handshakes/betting/utils.js';
 import { validateBet } from '@/components/handshakes/betting/validation.js';
 import { MESSAGE } from '@/components/handshakes/betting/message.js';
 import { BetHandshakeHandler } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
@@ -90,16 +91,20 @@ class BetingShake extends React.Component {
       amountAgainst,
       isOpen,
     } = nextProps;
+    /*
     const marketOdds = (side === SIDE.SUPPORT) ? marketSupportOdds : marketAgainstOdds;
     const marketAmount = (side === SIDE.SUPPORT) ? amountSupport : amountAgainst;
     const winValue = parseBigNumber(marketAmount).times(parseBigNumber(marketOdds)).toNumber() || 0;
     const roundMarketAmount = Math.floor(marketAmount * ROUND) / ROUND;
+    */
+    const defaultValue = calculateBetDefault(side, marketSupportOdds, marketAgainstOdds, amountSupport, amountAgainst);
+
     const estimateGas = await getEstimateGas();
 
     this.setState({
-      oddValue: Math.floor(marketOdds * ROUND_ODD) / ROUND_ODD,
-      amountValue: roundMarketAmount,
-      winValue: Math.floor(winValue * ROUND) / ROUND,
+      oddValue: defaultValue.marketOdds,
+      amountValue: defaultValue.marketAmount,
+      winValue: defaultValue.winValue,
       disable: !isOpen,
       estimateGas,
     });

@@ -18,6 +18,7 @@ import { showAlert } from '@/reducers/app/action';
 import {
   getChainIdDefaultWallet,
   isExistMatchBet, getAddress, parseBigNumber,
+  calculateBetDefault,
 } from '@/components/handshakes/betting/utils.js';
 
 import { getKeyByValue } from '@/utils/object';
@@ -78,114 +79,11 @@ class BettingCreate extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    // console.log('Receive Props: ', nextProps);
-    /*
-    const { matches } = nextProps;
-    let filterMatches = [];
-    matches.forEach(element => {
-      const {outcomes} = element;
-      const publicOutcomeArr = outcomes.filter(item => item.public == 1);
-      if(publicOutcomeArr.length > 0){
-        filterMatches.push(element);
-      }
-    });
-    this.setState({
-      matches: filterMatches,
-    });
-    */
+
     const { bettingShake } = nextProps;
     console.log(TAG, 'componentWillReceiveProps', 'bettingShake', bettingShake);
     this.updateDefaultValues(bettingShake);
   }
-  /*
-  loadMatches(){
-    let params = {
-      public: 1,
-    }
-    this.props.loadMatches({ PATH_URL: API_URL.CRYPTOSIGN.LOAD_MATCHES});
-
-  }
-
-  getStringDate(date) {
-    const formattedDate = moment.unix(date).format('MMM DD');
-    return formattedDate;
-  }
-  get foundMatch() {
-    const { selectedMatch, matches } = this.state;
-    if (selectedMatch) {
-      return matches.find(element => element.id === selectedMatch.id);
-    }
-    return null;
-  }
-
-  get matchNames() {
-    const { matches } = this.state;
-    // return matches.map((item) => ({ id: item.id, value: `${item.homeTeamName} - ${item.awayTeamName} (${this.getStringDate(item.date)})` }));
-    const mathNamesList = matches.map(item => ({
-      id: item.id,
-      value: `Event: ${item.name} (${this.getStringDate(item.date)})`,
-      marketFee: item.market_fee,
-      date: item.date,
-      reportTime: item.reportTime,
-    }));
-    return [
-      ...mathNamesList,
-      {
-        id: -1,
-        value: 'COMING SOON: Create your own event',
-        className: 'disable',
-        disableClick: true,
-      },
-    ];
-  }
-  get matchOutcomes() {
-    const { selectedMatch, matches } = this.state;
-    if (selectedMatch) {
-      const foundMatch = this.foundMatch;
-      if (foundMatch) {
-        const { outcomes } = foundMatch;
-        let filterOutcome = outcomes.filter(item => item.public == 1);
-
-        if (filterOutcome) {
-          // return outcomes.map((item) => ({ id: item.id, value: item.name, hid: item.hid}));
-          return filterOutcome.map(item => ({
-            id: item.id, value: `Outcome: ${item.name}`, hid: item.hid, marketOdds: item.market_odds, marketAmount: item.market_amount,
-          }));
-        }
-      }
-    }
-
-
-    return [];
-  }
-  get defaultMatch() {
-    const matchNames = this.matchNames;
-    const { matchId } = this.props;
-    if (matchNames && matchNames.length > 0) {
-      const itemDefault = matchNames.find(item => item.id === matchId);
-      return itemDefault || matchNames[0];
-      // if (itemDefault) {
-      //     return itemDefault;
-      // } else {
-      //     return matchNames[0];
-      // }
-    }
-    return null;
-  }
-
-  get defaultOutcome() {
-    const matchOutcomes = this.matchOutcomes;
-    // console.log('defaultOutcome matchOutcomes: ', matchOutcomes);
-    const sortedMatch = matchOutcomes.sort((a, b) => b.id > a.id);
-
-    const { outComeId } = this.props;
-    if (matchOutcomes && matchOutcomes.length > 0) {
-      const itemDefault = matchOutcomes.find(item => item.id === outComeId);
-      return itemDefault || matchOutcomes[0];
-    }
-    return null;
-  }
-  */
 
 
   async onSubmit(e) {
@@ -218,62 +116,7 @@ class BettingCreate extends React.Component {
     });
     console.log('After Content:', content);
 
-    /*
-    let balance = await getBalance();
-    balance = parseFloat(balance);
-    const estimatedGas = await getEstimateGas();
-    // const estimatedGas = 0.00001;
-    console.log('Estimate Gas:', estimatedGas);
-    const eventBet = parseFloat(values.event_bet);
-    let odds = parseFloat(values.event_odds);
-    if (!isChangeOdds) {
-      odds = selectedOutcome.marketOdds;
-    }
-    const total = eventBet + parseFloat(estimatedGas);
-    console.log('Event Bet, Odds, Estimate, Total:', eventBet, odds, estimatedGas, total);
 
-    const fromAddress = getAddress();
-    console.log('Match, Outcome:', selectedMatch, selectedOutcome);
-
-    let message = null;
-
-    if (!isRightNetwork()) {
-      message = MESSAGE.RIGHT_NETWORK;
-    }
-
-    if (selectedMatch && selectedOutcome) {
-      const date = selectedMatch.date;
-      //const reportTime = selectedMatch.reportTime;
-      const closingTime = selectedMatch.date;
-      if (isExpiredDate(closingTime)) {
-        message = MESSAGE.MATCH_OVER;
-      } else if (eventBet > 0) {
-        if (total <= balance) {
-          if (odds > 1) {
-            this.initHandshake(extraParams, fromAddress);
-          } else {
-            message = MESSAGE.ODD_LARGE_THAN;
-          }
-        } else {
-          message = MESSAGE.NOT_ENOUGH_BALANCE;
-        }
-      } else {
-        message = MESSAGE.AMOUNT_VALID;
-      }
-    } else {
-      message = MESSAGE.CHOOSE_MATCH;
-    }
-
-    if (message) {
-      this.props.showAlert({
-        message: <div className="text-center">{message}</div>,
-        timeOut: 3000,
-        type: 'danger',
-        callBack: () => {
-        },
-      });
-    }
-    */
     const { bettingShake } = this.props;
     const { closingDate, matchName, matchOutcome } = bettingShake;
     const amount = parseBigNumber(values.event_bet);
@@ -298,13 +141,6 @@ class BettingCreate extends React.Component {
       }
     }
 
-
-    // if(selectedMatch && selectedOutcome && eventBet > 0 && eventBet <= balance){
-    //   this.initHandshake(extraParams, fromAddress);
-
-    // }else {
-
-    // }
   }
 
   get inputList() {
@@ -371,33 +207,6 @@ class BettingCreate extends React.Component {
     );
   }
 
-  /*
-  renderDate(item) {
-    const { key, placeholder, type } = item;
-
-    return (
-      <DatePicker
-        onChange={(selectedDate) => {
-          console.log('SelectedDate', selectedDate);
-          console.log('Key:', key);
-          const { values } = this.state;
-          values[key] = selectedDate.format();
-          this.setState({ values }, () => console.log(values));
-        }}
-        inputProps={{
-          readOnly: true,
-          className: 'form-control-custom input',
-          name: key,
-        }}
-        defaultValue={new Date()}
-        dateFormat="D/M/YYYY"
-        timeFormat="HH:mm"
-        closeOnSelect
-        ref={(component) => { this.datePickerRef = component; }}
-      />
-    );
-  }
-*/
   renderNumber(item, style = {}) {
     const { key, placeholder } = item;
     const { values } = this.state;
@@ -423,13 +232,13 @@ class BettingCreate extends React.Component {
   updateDefaultValues = (bettingShake) => {
     const { values } = this.state;
     const { side, amountSupport, amountAgainst, marketSupportOdds, marketAgainstOdds } = bettingShake;
-    //values.event_predict = side === SIDE.SUPPORT ? amountSupport : amountAgainst;
-    values.event_odds = side === SIDE.SUPPORT ? marketSupportOdds : marketAgainstOdds;
-    values.event_bet = side === SIDE.SUPPORT ? amountSupport : amountAgainst;
-    const roundWin = values.event_bet * values.event_odds;
-    console.log('roundWin Value:', roundWin);
 
-    const winValue = Math.floor(roundWin * ROUND) / ROUND;
+    const defaultValue = calculateBetDefault(side, marketSupportOdds, marketAgainstOdds, amountSupport, amountAgainst);
+
+    values.event_odds = defaultValue.oddValue;
+    values.event_bet = defaultValue.marketAmount;
+
+    const { winValue } = defaultValue;
     console.log('Win Value:', winValue);
 
     this.setState({ values, winValue });
@@ -494,6 +303,7 @@ class BettingCreate extends React.Component {
     );
   }
 
+  /*
   selectOutcomeClick(item) {
     const { values } = this.state;
     values.event_predict = item.value;
@@ -509,6 +319,7 @@ class BettingCreate extends React.Component {
     // send event tracking
     GA.clickChooseAnOutcomeCreatePage(item.value);
   }
+  */
 
   render() {
     return (
@@ -549,9 +360,7 @@ class BettingCreate extends React.Component {
     const { status, data } = successData;
     const { outcomeHid, matchName, matchOutcome, side } = this.props;
     const hid = outcomeHid;
-    //const { selectedOutcome, selectedMatch } = this.state;
 
-    //const hid = selectedOutcome.hid;
 
     if (status && data) {
       const isExist = isExistMatchBet(data);
@@ -580,7 +389,7 @@ class BettingCreate extends React.Component {
   }
 }
 const mapState = state => ({
-  matches: state.betting.matches,
+  //matches: state.betting.matches,
 });
 const mapDispatch = ({
   initHandshake,

@@ -5,7 +5,7 @@ import Handshake from '@/models/Handshake.js';
 import local from '@/services/localStore';
 import { APP } from '@/constants';
 import { MESSAGE_SERVER } from '@/components/handshakes/betting/message.js';
-import { BET_TYPE, ROLE } from '@/components/handshakes/betting/constants.js';
+import { BET_TYPE, ROLE, SIDE } from '@/components/handshakes/betting/constants.js';
 
 import { BigNumber } from 'bignumber.js';
 import _ from 'lodash';
@@ -188,9 +188,20 @@ export const findUserBet = (handshake) => {
     matched,
   });
 
-
   console.log(TAG, 'findUserBet:', newItem);
 
   return newItem;
 
+}
+
+export const calculateBetDefault = ( side, marketSupportOdds, marketAgainstOdds, amountSupport, amountAgainst) => {
+  const marketOdds = (side === SIDE.SUPPORT) ? marketSupportOdds : marketAgainstOdds;
+  const marketAmount = (side === SIDE.SUPPORT) ? amountSupport : amountAgainst;
+  const winValue = parseBigNumber(marketAmount).times(parseBigNumber(marketOdds)).toNumber() || 0;
+  const defaultValues = {
+    marketOdds:formatOdds(marketOdds),
+    marketAmount: formatAmount(marketAmount),
+    winValue: formatAmount(winValue),
+  }
+  return defaultValues;
 }
