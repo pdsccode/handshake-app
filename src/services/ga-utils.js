@@ -1,9 +1,10 @@
 // https://developers.google.com/analytics/devguides/collection/gtagjs/pages
-// export const pageview = url => {
-//   window.gtag('config', GA_TRACKING_ID, {
-//     page_location: url,
-//   })
-// }
+export const pageview = (pathname) => {
+  window.gtag('config', process.env.social.googleAnalyticId, {
+    // page_location: url,
+    page_path: pathname
+  })
+}
 
 // https://developers.google.com/analytics/devguides/collection/gtagjs/events
 export const event = ({ action, category, label, value }) => {
