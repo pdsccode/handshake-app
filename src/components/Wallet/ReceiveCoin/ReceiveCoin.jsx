@@ -333,7 +333,7 @@ class ReceiveCoin extends React.Component {
             </div>
 
             <div className="box-qr-code">
-            <QRCode size={250} value={qrCodeValue} onClick={() => { Clipboard.copy(this.state.walletSelected.address); this.showToast(messages.wallet.action.receive.success.share);}} />              
+            <QRCode size={230} value={qrCodeValue} onClick={() => { Clipboard.copy(this.state.walletSelected.address); this.showToast(messages.wallet.action.receive.success.share);}} />              
             </div>
 
             {/* <div className="box-link">
