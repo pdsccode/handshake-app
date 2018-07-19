@@ -458,7 +458,7 @@ class Me extends React.Component {
                   return null;
                 })
               ) : this.state.handshakeIdActive === HANDSHAKE_ID.EXCHANGE && this.state.cashTab === CASH_TAB.DASHBOARD ? (
-                <div className="text" >
+                <div className="text-center">
                   <p>{messages.me.feed.cash.stationExplain}</p>
                   <p>{messages.me.feed.cash.stationCreateSuggest}</p>
                   <button className="btn btn-primary btn-block" onClick={this.showRestoreWallet}>{messages.me.feed.cash.restoreStation}</button>
@@ -470,12 +470,12 @@ class Me extends React.Component {
             }
             {
               listFeed && listFeed.length > 0 && this.state.handshakeIdActive === HANDSHAKE_ID.EXCHANGE && this.state.cashTab === CASH_TAB.DASHBOARD && (
-                <button className="btn btn-primary btn-block" onClick={this.showBackupWallet}>{messages.me.feed.cash.backupStation}</button>
+                <div className="text-center">
+                  <button className="btn btn-primary btn-block" onClick={this.showBackupWallet}>{messages.me.feed.cash.backupStation}</button>
+                  <button className="btn btn-link text-underline" onClick={this.handleCreateExchange}><FormattedMessage id="ex.shop.dashboard.button.updateInventory" /></button>
+                </div>
               )
             }
-            <div className="text-center">
-              <button className="btn btn-link text-underline"><FormattedMessage id="ex.shop.dashboard.button.updateInventory" /></button>
-            </div>
           </Col>
         </Row>
         <Rate onRef={e => this.rateRef = e} startNum={5} onSubmit={this.handleSubmitRating} ratingOnClick={this.handleOnClickRating} />
