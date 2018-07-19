@@ -24,17 +24,6 @@
     letter-spacing: -0.24px;
     line-height: 12px;
   }
-  .order-type {
-    display: inline-block;
-    background: #08C480;
-    border-radius: 2px;
-    font-weight: 500;
-    font-size: 10px;
-    color: #FFFFFF;
-    letter-spacing: -0.2px;
-    padding: 2px 5px;
-    margin-top: 5px;
-  }
   .info-wrapper {
     display: table;
     width: 100%;
@@ -76,6 +65,18 @@
     border: 1px solid #DEDEDE;
     border-radius: 3px;
   }
+}
+
+.order-type {
+  display: inline-block;
+  background: #08C480;
+  border-radius: 2px;
+  font-weight: 500;
+  font-size: 10px;
+  color: #FFFFFF;
+  letter-spacing: -0.2px;
+  padding: 2px 5px;
+  margin-top: 5px;
 }
 
 .modal-me-cash-more-info {

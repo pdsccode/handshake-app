@@ -107,6 +107,9 @@ class FeedMeStation extends React.PureComponent {
                 <span className="ml-2"><FormattedMessage id="ex.shop.shake.label.reviews.count" values={{ reviewCount }} /></span>
               </div>
             </div>
+            <div className="d-table-cell align-middle text-right">
+              <div className="order-type"><FormattedMessage id="ex.shop.dashboard.label.trial" /></div>
+            </div>
           </div>
 
           <div className="mt-3 d-table w-100 station-info">

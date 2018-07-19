@@ -189,6 +189,9 @@ export default {
   'ex.shop.dashboard.label.revenue': 'Bought/sold revenue',
   'ex.shop.dashboard.label.transaction.total': 'Total bought/sold',
 
+  'ex.shop.dashboard.button.updateInventory': 'Update inventory',
+  'ex.shop.dashboard.label.trial': 'Trial',
+
   'ex.error.systemError': 'Sorry Ninja. Something went wrong. Come back soon.',
   'ex.error.312': 'Oh no! You cancelled your offer. You will not be able to make orders for 4 hours. Sorry',
   'ex.error.313': 'You already have a listing! To change your rates, please cancel your current listing.',

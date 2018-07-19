@@ -45,6 +45,7 @@ import { change, Field } from 'redux-form';
 import Modal from '@/components/core/controls/Modal/Modal';
 import BackupWallet from '@/components/Wallet/BackupWallet/BackupWallet';
 import RestoreWallet from '@/components/Wallet/RestoreWallet/RestoreWallet';
+import { FormattedMessage } from 'react-intl';
 
 const TAG = 'Me';
 const maps = {
@@ -472,6 +473,9 @@ class Me extends React.Component {
                 <button className="btn btn-primary btn-block" onClick={this.showBackupWallet}>{messages.me.feed.cash.backupStation}</button>
               )
             }
+            <div className="text-center">
+              <button className="btn btn-link text-underline"><FormattedMessage id="ex.shop.dashboard.button.updateInventory" /></button>
+            </div>
           </Col>
         </Row>
         <Rate onRef={e => this.rateRef = e} startNum={5} onSubmit={this.handleSubmitRating} ratingOnClick={this.handleOnClickRating} />
