@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import Swipeable from 'react-swipeable';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import MultiLanguage from '@/components/core/controls/MultiLanguage';
 import Image from '@/components/core/presentation/Image';
+import { URL } from '@/constants';
 
 import predictionIcon from '@/assets/images/categories/chip.svg';
 import cashIcon from '@/assets/images/categories/exchange.svg';
@@ -14,11 +15,10 @@ import './NavigationBar.scss';
 export default class NavigationBar extends Component {
   static displayName = 'NavigationBar';
   static propTypes = {
-    className: PropTypes.string,
+    classNames: PropTypes.string,
   };
-
-  constructor(props) {
-    super(props);
+  static defaultProps = {
+    classNames: '',
   }
 
   buildMenuData = () => {
@@ -27,21 +27,21 @@ export default class NavigationBar extends Component {
         id: 'prediction',
         name: 'prediction',
         icon: predictionIcon,
-        url: 'prediction',
+        url: URL.HANDSHAKE_EXCHANGE,
         isActive: true,
       },
       {
         id: 'cash',
         name: 'cash',
         icon: cashIcon,
-        url: '',
+        url: URL.HANDSHAKE_CASH,
         isActive: true,
       },
       {
         id: 'swap',
         name: 'swap',
         icon: null,
-        url: '',
+        url: 'swap',
         isActive: true,
       },
     ];
@@ -49,7 +49,7 @@ export default class NavigationBar extends Component {
 
   renderLanguageDropDown = () => {
     return (
-      <div className="multilanguage-block">
+      <div className="LanguageSelector">
         <MultiLanguage />
       </div>
     );
@@ -58,10 +58,10 @@ export default class NavigationBar extends Component {
   renderMenuItem = (item) => {
     return (
       <div className="NavigationBarItem" key={item.id}>
-        <Link to={item.url} activeClassName="Active">
+        <NavLink to={item.url} activeClassName="Active">
           {item.icon && <Image src={item.icon} alt={item.name} />}
           <span>{item.name}</span>
-        </Link>
+        </NavLink>
       </div>
     );
   }

@@ -1,3 +1,5 @@
+@import './src/styles/style';
+
 .Prediction {
   .modal {
     background-color: #1F2B34;
@@ -7,6 +9,24 @@
     .modal-custom-body {
       padding: 20px;
       background-color: #000B35;
+    }
+  }
+
+  .ShareToWin {
+    background-image: url('../../assets/images/share/share-to-win.png');
+    display: flex;
+    height: rem-calc(110px);
+    position: relative;
+
+    .ShareToWinTitle {
+      position: absolute;
+      top: 40%;
+      right: rem-calc(30px);
+      color: #364164;
+      font-size: 25px;
+      span {
+        color: #2456FB;
+      }
     }
   }
 }
