@@ -25,9 +25,12 @@ class AdvancedOrderMode extends React.Component {
   }
 
   handleClick = () => {
+    /*
     this.setState({
       orderClick: true,
     });
+    */
+    this.onButtonSubmit();
   }
 
   render() {
@@ -37,7 +40,9 @@ class AdvancedOrderMode extends React.Component {
     const sideText = getKeyByValue(SIDE, side);
     return (
       <React.Fragment>
-        <BettingShake {...bettingShake} orderClick={this.state.orderClick} />
+        <BettingShake {...bettingShake}
+        //orderClick={this.state.orderClick}
+          onClickSubmit={(click) =>{ this.onButtonSubmit = click; }}/>
         <OrderBook {...orderBook} />
         <Button block className={buttonClass} onClick={this.handleClick}>Place {sideText} Order</Button>
       </React.Fragment>

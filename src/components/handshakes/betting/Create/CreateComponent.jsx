@@ -520,12 +520,12 @@ class BettingCreate extends React.Component {
 
   // Service
   initHandshake(fields, fromAddress) {
-    const { selectedOutcome } = this.state;
-    const { side } = this.props.bettingShake;
+    //const { selectedOutcome } = this.state;
+    const { side, outcomeId } = this.props.bettingShake;
     //const chainId = betHandshakeHandler;
     const params = {
       type: HANDSHAKE_ID.BETTING,
-      outcome_id: selectedOutcome.id,
+      outcome_id: outcomeId,
       odds: `${fields.event_odds}`,
       amount: `${fields.event_bet}`,
       extra_data: JSON.stringify(fields),

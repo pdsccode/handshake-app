@@ -28,6 +28,7 @@ const betHandshakeHandler = BetHandshakeHandler.getShareManager();
 const titleBySide = { 1: 'Bet for the outcome', 2: 'Bet against the outcome' };
 const ROUND = 1000000;
 const ROUND_ODD = 10;
+const TAG = 'BETTING_SHAKE';
 class BetingShake extends React.Component {
   static propTypes = {
     side: PropTypes.number.isRequired,
@@ -76,6 +77,9 @@ class BetingShake extends React.Component {
       estimateGas,
     });
   }
+  componentDidMount(){
+    this.props.onClickSubmit(this.onSubmit);
+  }
 
   async componentWillReceiveProps(nextProps) {
     const {
@@ -100,23 +104,29 @@ class BetingShake extends React.Component {
       estimateGas,
     });
 
+    /*
     if (nextProps.orderClick) {
       this.onSubmit();
     }
+    */
   }
 
   onSubmit = async (e) => {
     console.log("Submit");
-    e.preventDefault();
-    const values = this.refs;
-    console.log('Values:', values);
+    //e.preventDefault();
+    //const values = this.refs;
+    //console.log('Values:', values);
     this.setState({
       disable: true,
     });
+    const { oddValue, amountValue } = this.state;
 
-    const {matchName, matchOutcome, side, closingDate} = this.props;
-    const amount = parseBigNumber(values.amount.value);
-    const odds = parseBigNumber(values.odds.value);
+    const { matchName, matchOutcome, side, closingDate } = this.props;
+    //const amount = parseBigNumber(values.amount.value);
+    //const odds = parseBigNumber(values.odds.value);
+
+    const amount = parseBigNumber(amountValue);
+    const odds = parseBigNumber(oddValue);
 
     console.log("Amount, Side, Odds", amount?.toNumber(), side, odds?.toNumber());
 
@@ -130,7 +140,7 @@ class BetingShake extends React.Component {
     const { status, message } = validate;
     if (status) {
       this.initHandshake(amount, odds);
-      this.props.onSubmitClick();
+      //this.props.onSubmitClick();
 
     } else {
       if(message){
@@ -144,7 +154,6 @@ class BetingShake extends React.Component {
 
 
       }
-      this.props.onCancelClick();
     }
   }
 
@@ -417,7 +426,7 @@ class BetingShake extends React.Component {
         const {matchName, matchOutcome, side} = this.props;
         GA.createBetSuccess(matchName, matchOutcome, side);
       } catch (err) {}
-      this.props.onCreateBetSuccess();
+      //this.props.onCreateBetSuccess();
     }
     //this.props.onSubmitClick();
 
