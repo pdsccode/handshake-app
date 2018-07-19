@@ -246,8 +246,8 @@ class Component extends React.Component {
             enableAction: (HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[item.status] !== HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CREATED &&
               HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[item.status] !== HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSING) && !isFreeStart,
           });
-          rfChange(nameFormExchangeCreate, 'customizePriceBuy', item.buyPercentage);
-          rfChange(nameFormExchangeCreate, 'customizePriceSell', item.sellPercentage);
+          rfChange(nameFormExchangeCreate, 'customizePriceBuy', item.buyPercentage * 100);
+          rfChange(nameFormExchangeCreate, 'customizePriceSell', item.sellPercentage * 100);
           break;
         }
       }
