@@ -139,7 +139,7 @@ class Component extends React.Component {
       detectedCountryCode = foundCountryPhone.dialCode;
     }
     rfChange(nameFormExchangeCreate, 'phone', authProfile.phone || `${detectedCountryCode}-`);
-    rfChange(nameFormExchangeCreate, 'nameShop', authProfile.name || '');
+    // rfChange(nameFormExchangeCreate, 'nameShop', authProfile.name || '');
     rfChange(nameFormExchangeCreate, 'address', authProfile.address || '');
 
     let fiatCurrency = { id: FIAT_CURRENCY.USD, text: FIAT_CURRENCY.USD };
@@ -201,6 +201,12 @@ class Component extends React.Component {
       };
 
       rfChange(nameFormExchangeCreate, 'stationCurrency', fiatCurrency);
+      if (this.offer.contactPhone) {
+        rfChange(nameFormExchangeCreate, 'phone', this.offer.contactPhone);
+      }
+      if (this.offer.contactInfo) {
+        rfChange(nameFormExchangeCreate, 'address', this.offer.contactInfo);
+      }
 
       this.calculateAction(currency);
 
@@ -240,8 +246,8 @@ class Component extends React.Component {
             enableAction: (HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[item.status] !== HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CREATED &&
               HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[item.status] !== HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSING) || !isFreeStart,
           });
-          rfChange(nameFormExchangeCreate, 'customizePriceBuy', item.buyPercentage * 100);
-          rfChange(nameFormExchangeCreate, 'customizePriceSell', item.sellPercentage * 100);
+          rfChange(nameFormExchangeCreate, 'customizePriceBuy', item.buyPercentage);
+          rfChange(nameFormExchangeCreate, 'customizePriceSell', item.sellPercentage);
           break;
         }
       }
@@ -958,7 +964,7 @@ const mapStateToProps = (state) => {
   const customizePriceBuy = selectorFormExchangeCreate(state, 'customizePriceBuy') || 0;
   const customizePriceSell = selectorFormExchangeCreate(state, 'customizePriceSell') || 0;
 
-  const nameShop = selectorFormExchangeCreate(state, 'nameShop');
+  // const nameShop = selectorFormExchangeCreate(state, 'nameShop');
   const phone = selectorFormExchangeCreate(state, 'phone');
   const address = selectorFormExchangeCreate(state, 'address');
   const stationCurrency = selectorFormExchangeCreate(state, 'stationCurrency');
@@ -969,7 +975,7 @@ const mapStateToProps = (state) => {
     amountSell,
     customizePriceBuy,
     customizePriceSell,
-    nameShop,
+    // nameShop,
     phone,
     address,
     stationCurrency,
