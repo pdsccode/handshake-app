@@ -3,8 +3,8 @@ import FeedMeStation from './FeedMeStation';
 import {
   API_URL,
   CRYPTO_CURRENCY,
+  CRYPTO_CURRENCY_COLORS,
   EXCHANGE_ACTION,
-  EXCHANGE_ACTION_NAME,
   HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS,
   HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_NAME,
   HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE,
@@ -17,18 +17,8 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { hideLoading, showAlert, showLoading } from '@/reducers/app/action';
 import { responseExchangeDataChange } from '@/reducers/me/action';
-import { Ethereum } from '@/services/Wallets/Ethereum.js';
-import { Bitcoin } from '@/services/Wallets/Bitcoin';
 import { formatAmountCurrency, formatMoneyByLocale, getHandshakeUserType, getOfferPrice } from '@/services/offer-util';
 import { deleteOfferItem } from '@/reducers/exchange/action';
-
-import iconBtc from '@/assets/images/icon/coin/icon-btc.svg';
-import iconEth from '@/assets/images/icon/coin/icon-eth.svg';
-
-const COLORS = {
-  [CRYPTO_CURRENCY.ETH]: { color: 'linear-gradient(-135deg, #D772FF 0%, #9B10F2 45%, #9E53E1 100%)', icon: iconEth },
-  [CRYPTO_CURRENCY.BTC]: { color: 'linear-gradient(45deg, #FF8006 0%, #FFA733 51%, #FFC349 100%)', icon: iconBtc },
-};
 
 class FeedMeOfferStoreContainer extends React.PureComponent {
   constructor(props) {
@@ -91,7 +81,9 @@ class FeedMeOfferStoreContainer extends React.PureComponent {
   }
 
   isEmptyBalance = (item) => {
-    const { buyBalance, sellBalance, buyAmount, sellAmount, status } = item;
+    const {
+      buyBalance, sellBalance, buyAmount, sellAmount, status,
+    } = item;
     const statusValue = HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[status];
     if (statusValue === HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CREATED) {
       return !(buyAmount > 0 || sellAmount > 0);
@@ -105,7 +97,9 @@ class FeedMeOfferStoreContainer extends React.PureComponent {
     const coins = [];
 
     for (const item of Object.values(offer.items)) {
-      const { buyBalance, sellBalance, buyAmount, sellAmount, status, currency } = item;
+      const {
+        buyBalance, sellBalance, buyAmount, sellAmount, status, currency,
+      } = item;
       if (offer.itemFlags[currency] && !this.isEmptyBalance(item)) {
         const { priceBuy: priceBuyValue, priceSell: priceSellValue } = this.getPrices(currency);
         const statusValue = HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[status];
@@ -115,8 +109,8 @@ class FeedMeOfferStoreContainer extends React.PureComponent {
         const coin = {};
 
         coin.name = currency;
-        coin.color = COLORS[currency].color;
-        coin.icon = COLORS[currency].icon;
+        coin.color = CRYPTO_CURRENCY_COLORS[currency].color;
+        coin.icon = CRYPTO_CURRENCY_COLORS[currency].icon;
         const priceBuy = amountBuy > 0 ? formatMoneyByLocale(priceBuyValue, fiatCurrency) : '-';
         const priceSell = amountSell > 0 ? formatMoneyByLocale(priceSellValue, fiatCurrency) : '-';
         coin.txtBuy = `${priceBuy} ${priceBuy !== '-' ? fiatCurrency : ''} ${priceBuy !== '-' ? `- ${formatAmountCurrency(amountBuy)} ${currency}` : ''}`;
