@@ -2,6 +2,7 @@ import React from 'react';
 import './FeedMe.scss';
 import './FeedMeStation.scss';
 import {
+  CRYPTO_CURRENCY,
   FIAT_CURRENCY,
   HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS,
   HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE,
@@ -21,13 +22,14 @@ class FeedMeStation extends React.PureComponent {
     this.state = {
       timePassing: '',
       isShowTimer: false,
+      isFreeStart: false,
     };
   }
 
   componentDidMount() {
-    this.intervalCountdown = setInterval(() => {
-      const { offer } = this.props;
+    const { offer } = this.props;
 
+    this.intervalCountdown = setInterval(() => {
       const eth = offer.items.ETH;
       const btc = offer.items.BTC;
 
@@ -56,6 +58,15 @@ class FeedMeStation extends React.PureComponent {
 
       this.setState({ timePassing: daysBetween(new Date(lastUpdateAt * 1000), new Date()), isShowTimer });
     }, 1000);
+
+
+    // Check free start -> show trial
+    for (const item of Object.values(offer.items)) {
+      if (item.currency === CRYPTO_CURRENCY.ETH) {
+        this.setState({ isFreeStart: item.freeStart !== '' });
+        break;
+      }
+    }
   }
 
   componentWillUnmount() {
@@ -75,7 +86,7 @@ class FeedMeStation extends React.PureComponent {
       transactionTotal,
       coins,
     } = this.props;
-    const { isShowTimer } = this.state;
+    const { isShowTimer, isFreeStart } = this.state;
 
     // console.log('thisss', this.props);
     return (
@@ -107,6 +118,13 @@ class FeedMeStation extends React.PureComponent {
                 <span className="ml-2"><FormattedMessage id="ex.shop.shake.label.reviews.count" values={{ reviewCount }} /></span>
               </div>
             </div>
+            {
+              isFreeStart && (
+                <div className="d-table-cell align-middle text-right">
+                  <div className="order-type"><FormattedMessage id="ex.shop.dashboard.label.trial" /></div>
+                </div>
+              )
+            }
           </div>
 
           <div className="mt-3 d-table w-100 station-info">

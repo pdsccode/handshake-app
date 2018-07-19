@@ -24,18 +24,13 @@ import {
   CRYPTO_CURRENCY,
   CRYPTO_CURRENCY_DEFAULT,
   CRYPTO_CURRENCY_NAME,
-  DEFAULT_FEE,
   EXCHANGE_ACTION,
-  EXCHANGE_ACTION_DEFAULT,
-  EXCHANGE_ACTION_LIST,
-  EXCHANGE_ACTION_NAME,
+  FIAT_CURRENCY,
   FIAT_CURRENCY_LIST,
-  FIAT_CURRENCY_SYMBOL,
   HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS,
   HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE,
   MIN_AMOUNT,
   NB_BLOCKS,
-  SELL_PRICE_TYPE_DEFAULT,
   URL,
 } from '@/constants';
 
@@ -144,11 +139,16 @@ class Component extends React.Component {
       detectedCountryCode = foundCountryPhone.dialCode;
     }
     rfChange(nameFormExchangeCreate, 'phone', authProfile.phone || `${detectedCountryCode}-`);
-    rfChange(nameFormExchangeCreate, 'nameShop', authProfile.name || '');
+    // rfChange(nameFormExchangeCreate, 'nameShop', authProfile.name || '');
     rfChange(nameFormExchangeCreate, 'address', authProfile.address || '');
-    const fiatCurrency = {
-      id: ipInfo?.currency, text: ipInfo?.currency,
-    };
+
+    let fiatCurrency = { id: FIAT_CURRENCY.USD, text: FIAT_CURRENCY.USD };
+    if (FIAT_CURRENCY[ipInfo?.currency]) {
+      fiatCurrency = {
+        id: ipInfo?.currency, text: ipInfo?.currency,
+      };
+    }
+
     rfChange(nameFormExchangeCreate, 'stationCurrency', fiatCurrency);
 
     if (freeStartInfo?.reward !== '' && isChooseFreeStart) {
@@ -201,6 +201,12 @@ class Component extends React.Component {
       };
 
       rfChange(nameFormExchangeCreate, 'stationCurrency', fiatCurrency);
+      if (this.offer.contactPhone) {
+        rfChange(nameFormExchangeCreate, 'phone', this.offer.contactPhone);
+      }
+      if (this.offer.contactInfo) {
+        rfChange(nameFormExchangeCreate, 'address', this.offer.contactInfo);
+      }
 
       this.calculateAction(currency);
 
@@ -234,13 +240,14 @@ class Component extends React.Component {
         console.log('item', item);
         if (item.currency === currency) {
           isExist = true;
+          const isFreeStart = currency === CRYPTO_CURRENCY.ETH && item.freeStart !== '';
           this.setState({
             isUpdate: HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[item.status] === HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.ACTIVE,
             enableAction: (HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[item.status] !== HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CREATED &&
-              HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[item.status] !== HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSING),
+              HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[item.status] !== HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSING) && !isFreeStart,
           });
-          rfChange(nameFormExchangeCreate, 'customizePriceBuy', item.buyPercentage * 100);
-          rfChange(nameFormExchangeCreate, 'customizePriceSell', item.sellPercentage * 100);
+          rfChange(nameFormExchangeCreate, 'customizePriceBuy', item.buyPercentage);
+          rfChange(nameFormExchangeCreate, 'customizePriceSell', item.sellPercentage);
           break;
         }
       }
@@ -710,15 +717,15 @@ class Component extends React.Component {
     const modalContent = this.state.modalContent;
     // const allowInitiate = this.offer ? (!this.offer.itemFlags.ETH || !this.offer.itemFlags.BTC) : true;
 
-    let enableChooseFiatCurrency = true;
-    if (this.offer) {
-      for (const value of Object.values(this.offer.itemFlags)) {
-        if (value) {
-          enableChooseFiatCurrency = false;
-          break;
-        }
-      }
-    }
+    // let enableChooseFiatCurrency = true;
+    // if (this.offer) {
+    //   for (const value of Object.values(this.offer.itemFlags)) {
+    //     if (value) {
+    //       enableChooseFiatCurrency = false;
+    //       break;
+    //     }
+    //   }
+    // }
     console.log('this.offer', this.offer);
     // console.log('this.state', this.state);
 
@@ -859,24 +866,28 @@ class Component extends React.Component {
             <div className="label"><FormattedMessage id="ex.create.label.stationInfo" /></div>
             <div className="section">
               {/*
-              <div className="d-flex">
-                <label className="col-form-label mr-auto label-create"><span className="align-middle"><FormattedMessage id="ex.create.label.nameStation"/></span></label>
-                <div className='input-group'>
-                  <Field
-                    name="nameShop"
-                    className="form-control-custom form-control-custom-ex w-100 input-no-border"
-                    component={fieldInput}
-                    placeholder={'Apple store'}
-                    // onChange={this.onAmountChange}
-                    // validate={[required]}
-                  />
-                </div>
+            <div className="d-flex">
+              <label className="col-form-label mr-auto label-create"><span className="align-middle"><FormattedMessage id="ex.create.label.nameStation"/></span></label>
+              <div className='input-group'>
+                <Field
+                  name="nameShop"
+                  className="form-control-custom form-control-custom-ex w-100 input-no-border"
+                  component={fieldInput}
+                  placeholder={'Apple store'}
+                  // onChange={this.onAmountChange}
+                  // validate={[required]}
+                />
               </div>
-              <hr className="hrLine"/> */}
+            </div>
+            <hr className="hrLine"/> */}
 
               <div>
                 <div className="d-flex mt-2">
-                  <label className="col-form-label mr-auto label-create"><span className="align-middle"><FormattedMessage id="ex.create.label.stationCurrency" /></span></label>
+                  <label className="col-form-label mr-auto label-create"><span
+                    className="align-middle"
+                  ><FormattedMessage id="ex.create.label.stationCurrency" />
+                  </span>
+                  </label>
                   <div className="input-group w-100">
                     <Field
                       name="stationCurrency"
@@ -885,7 +896,7 @@ class Component extends React.Component {
                       classNameDropdownToggle="dropdown-button"
                       list={listCurrency}
                       component={fieldDropdown}
-                      disabled={!enableChooseFiatCurrency}
+                      // disabled={!enableChooseFiatCurrency}
                     />
                   </div>
                 </div>
@@ -893,7 +904,11 @@ class Component extends React.Component {
               </div>
 
               <div className="d-flex mt-2">
-                <label className="col-form-label mr-auto label-create"><span className="align-middle"><FormattedMessage id="ex.create.label.phone" /></span></label>
+                <label className="col-form-label mr-auto label-create"><span
+                  className="align-middle"
+                ><FormattedMessage id="ex.create.label.phone" />
+                </span>
+                </label>
                 <div className="input-group w-100">
                   <Field
                     name="phone"
@@ -909,7 +924,11 @@ class Component extends React.Component {
               <hr className="hrLine" />
 
               <div className="d-flex mt-2">
-                <label className="col-form-label mr-auto label-create"><span className="align-middle"><FormattedMessage id="ex.create.label.address" /></span></label>
+                <label className="col-form-label mr-auto label-create"><span
+                  className="align-middle"
+                ><FormattedMessage id="ex.create.label.address" />
+                </span>
+                </label>
                 <div className="w-100">
                   <Field
                     name="address"
@@ -945,7 +964,7 @@ const mapStateToProps = (state) => {
   const customizePriceBuy = selectorFormExchangeCreate(state, 'customizePriceBuy') || 0;
   const customizePriceSell = selectorFormExchangeCreate(state, 'customizePriceSell') || 0;
 
-  const nameShop = selectorFormExchangeCreate(state, 'nameShop');
+  // const nameShop = selectorFormExchangeCreate(state, 'nameShop');
   const phone = selectorFormExchangeCreate(state, 'phone');
   const address = selectorFormExchangeCreate(state, 'address');
   const stationCurrency = selectorFormExchangeCreate(state, 'stationCurrency');
@@ -956,7 +975,7 @@ const mapStateToProps = (state) => {
     amountSell,
     customizePriceBuy,
     customizePriceSell,
-    nameShop,
+    // nameShop,
     phone,
     address,
     stationCurrency,
