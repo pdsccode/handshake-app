@@ -1,0 +1,73 @@
+@import './src/styles/style';
+.EventItem {
+  padding: rem-calc(20px);
+  font-family: $font-family-base;
+  margin-bottom: rem-calc(10px);
+  box-shadow: rem-calc(0 2px 4px 0) rgba(203, 203, 203, 0.50);
+
+
+  .EventDetails {
+    display: flex;
+    justify-content: space-between;
+    margin-top: rem-calc(20px);
+  }
+
+  .EvenFirstGroup {
+    flex: 1;
+    margin-right: rem-calc(40px);
+    align-items: center;
+  }
+  .EventMessage {
+    display: flex;
+    justify-content: space-between;
+    padding: rem-calc(5px 10px);
+    border-radius: rem-calc(6px);
+    height: rem-calc(50px);
+    text-align: center;
+    vertical-align: middle;
+    border: 1px solid #DEDEDE;
+
+    .EventMessageIcon {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+  }
+  .NumberContainer {
+    margin-left: rem-calc(10px);
+    .EventMessageNumber {
+      font-size: rem-calc(16px);
+    }
+    .EventMessageText {
+      font-size: rem-calc(12px);
+
+    }
+  }
+
+  .EventName, .EventTotalBetValue{
+    font-size: rem-calc(18px);
+
+  }
+  .EventNumberOfPlayer, .EventTimeLeftText, .EventTotalBetText {
+    font-size: rem-calc(14px);
+
+  }
+
+  .EventName {
+    margin-top: rem-calc(20px);
+  }
+  .EventTimeLeft, .EventTotalBet  {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  .EventTimeLeftText, .EventTotalBetText, .EventMessageText {
+    color: #8A8A8F;
+
+  }
+  .EventTotalBetValue {
+    color: #D0021B;
+  }
+}

@@ -4,6 +4,7 @@ import Countdown from '@/components/Countdown/Countdown';
 import Image from '@/components/core/presentation/Image';
 import telegramIcon from '@/assets/images/icon/telegram.svg';
 import OutcomeList from './OutcomeList';
+import './EventItem.scss';
 
 function renderEventName(event) {
   return (
@@ -47,8 +48,11 @@ function renderEventMessages(event) {
       <span className="EventMessageIcon">
         <Image src={telegramIcon} />
       </span>
-      <span className="EventMessageNumber">40,371</span>
-      <span className="EventMessageText">messages</span>
+      <div className="NumberContainer">
+        <div className="EventMessageNumber">40,371</div>
+        <div className="EventMessageText">messages</div>
+      </div>
+
     </div>
   );
 }
@@ -59,15 +63,25 @@ function renderOutcomeList(event, onClick) {
   );
 }
 
-function EventItem({ event, onClick }) {
+function renderDetails(event) {
+  return (
+    <div className="EventDetails">
+      <div className="EvenFirstGroup">
+        {renderEvenTimeLeft(event)}
+        {renderEventTotalBets(event)}
+      </div>
+      {renderEventMessages(event)}
+    </div>
+  );
+}
+
+function EventItem({ event,onClick }) {
   return (
     <div className="EventItem">
       {renderOutcomeList(event, onClick)}
       {renderEventName(event)}
       {renderEventNumberOfPlayers(event)}
-      {renderEvenTimeLeft(event)}
-      {renderEventTotalBets(event)}
-      {renderEventMessages(event)}
+      {renderDetails(event)}
     </div>
   );
 }
