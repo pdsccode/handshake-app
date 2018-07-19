@@ -32,6 +32,10 @@
       text-transform: capitalize;
     }
 
+    a:hover, a:visited, a:link, a:active {
+      text-decoration: none;
+    }
+
     .Active {
       border: 1px solid #FFFFFF;
       color: #FFFFFF;
@@ -40,7 +44,7 @@
   }
 
   .LanguageSelector {
-    padding: rem-calc(7px) rem-calc(14px) rem-calc(16px);
+    padding: rem-calc(7px) rem-calc(14px);
     position: absolute;
     top: 10px;
     right: 0;

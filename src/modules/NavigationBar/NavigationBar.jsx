@@ -28,23 +28,23 @@ export default class NavigationBar extends Component {
         name: 'prediction',
         icon: predictionIcon,
         url: URL.HANDSHAKE_EXCHANGE,
-        isActive: true,
+        position: 1,
       },
       {
         id: 'cash',
         name: 'cash',
         icon: cashIcon,
         url: URL.HANDSHAKE_CASH,
-        isActive: true,
+        position: 2,
       },
       {
         id: 'swap',
         name: 'swap',
         icon: null,
         url: 'swap',
-        isActive: true,
+        position: 3,
       },
-    ];
+    ].sort((a, b) => a.position - b.position);
   }
 
   renderLanguageDropDown = () => {
