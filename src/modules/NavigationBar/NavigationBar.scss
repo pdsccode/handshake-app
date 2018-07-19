@@ -1,7 +1,50 @@
+@import './src/styles/style';
+
 .NavigationBar {
   display: flex;
+  justify-content: space-between;
+  margin-top: -10px;
+  overflow: scroll;
+  padding: rem-calc(12px) rem-calc(5px);
+  background-color: #2B2C39;
 
   .NavigationBarList {
     display: flex;
+    padding-right: rem-calc(90px);
+  }
+
+  .NavigationBarItem {
+    margin: 0 rem-calc(5px);
+    width: rem-calc(120px);
+    background-color: #474853;
+    border-radius: rem-calc(5px);
+
+    img {
+      padding-right: rem-calc(5px);
+    }
+
+    a {
+      display: block;
+      padding: rem-calc(5px);
+      color: #D8D8D8;
+      text-align: center;
+      border-radius: rem-calc(5px);
+      text-transform: capitalize;
+    }
+
+    .Active {
+      border: 1px solid #FFFFFF;
+      color: #FFFFFF;
+      background-color: #000000;
+    }
+  }
+
+  .LanguageSelector {
+    padding: rem-calc(7px) rem-calc(14px) rem-calc(16px);
+    position: absolute;
+    top: 10px;
+    right: 0;
+    color: #FFFFFF;
+    background-color: #2B2C39;
   }
 }

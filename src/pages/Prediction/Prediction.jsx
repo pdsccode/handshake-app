@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import BettingFilter from '@/components/handshakes/betting/Feed/Filter';
 import ModalDialog from '@/components/core/controls/ModalDialog';
-import NavigationBar from '@/modules/NavigationBar/NavigationBar';
-import { eventSelector } from './selector';
+import Loading from '@/components/Loading';
+import { eventSelector, isLoading } from './selector';
 import { loadMatches } from './action';
 import EventItem from './EventItem';
 
@@ -81,7 +81,7 @@ class Prediction extends React.Component {
   renderComponent = (props, state) => {
     return (
       <div className={Prediction.displayName}>
-        <NavigationBar />
+        <Loading isLoading={props.isLoading} />
         {this.renderShareToWin()}
         {this.renderEventList(props)}
         <ModalDialog onRef={(modal) => { this.modalOrderPlace = modal; }}>
@@ -105,6 +105,7 @@ export default connect(
   (state) => {
     return {
       eventList: eventSelector(state),
+      isLoading: isLoading(state),
     };
   },
 )(Prediction);

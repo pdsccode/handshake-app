@@ -20,7 +20,6 @@ const RouterChat = createDynamicImport(() => import('@/components/Router/Chat'),
 const RouterCreate = createDynamicImport(() => import('@/components/Router/Create'), Loading);
 const RouterWallet = createDynamicImport(() => import('@/components/Router/Wallet'), Loading);
 const RouterExchange = createDynamicImport(() => import('@/components/Router/Exchange'), Loading);
-const RouterTransaction = createDynamicImport(() => import('@/components/Router/Transaction'), Loading);
 const RouterComment = createDynamicImport(() => import('@/components/Router/Comment'), Loading);
 const RouterAdmin = createDynamicImport(() => import('@/components/Router/Admin'), Loading);
 const RouterLuckyPool = createDynamicImport(() => import('@/pages/LuckyLanding/LuckyLanding'), Loading);
@@ -35,7 +34,6 @@ const rootRouterMap = [
   { path: URL.HANDSHAKE_WALLET, component: RouterWallet },
   { path: URL.HANDSHAKE_CREATE, component: RouterCreate },
   { path: URL.HANDSHAKE_EXCHANGE, component: RouterExchange },
-  { path: URL.TRANSACTION_LIST, component: RouterTransaction },
   { path: URL.COMMENTS_BY_SHAKE, component: RouterComment },
   { path: URL.ADMIN, component: RouterAdmin },
 ];

@@ -33,6 +33,8 @@ module.exports = {
     "import/no-extraneous-dependencies": 0,
     "arrow-body-style": 0,
     "arrow-parens": 0,
+    "no-underscore-dangle": 0,
+    "function-paren-newline": 0,
     "import/no-unresolved": "off", // TODO[1]:
     "import/extensions": "off" // TODO[1]:
   },
