@@ -76,18 +76,19 @@ class BettingFilter extends React.Component {
     };
 
     this.onToggleChange = ::this.onToggleChange;
+    this.callGetHandshakes = this.callGetHandshakes.bind(this);
   }
 
   componentDidMount() {
     // this.loadMatches();
     // this.checkShowFreeBanner();
-    this.handShakes = setInterval(() => {
-      this.callGetHandshakes(this.props.selectedOutcome);
-    }, 1000);
+
+   this.props.getHanshakeList(this.callGetHandshakes);
+
   }
 
   componentWillReceiveProps(nextProps) {
-    clearInterval(this.handShakes);
+    //clearInterval(this.handShakes);
     const { matches, support, against } = nextProps;
     const { isPrivate, outComeId } = this.props;
 
@@ -370,14 +371,19 @@ class BettingFilter extends React.Component {
     if (item) {
       const params = {
         //outcome_id: item.id,
-        outcome_id: item,
+        outcome_id: item.id,
       };
       this.props.loadHandshakes({
         PATH_URL: API_URL.CRYPTOSIGN.LOAD_HANDSHAKES,
         METHOD: 'POST',
         data: params,
-        successFn: this.getHandshakeSuccess,
-        errorFn: this.getHandshakeFailed,
+        successFn: (response) => {
+          console.log('Sa test success');
+        },
+        errorFn: (error) => {
+          console.log('Sa test failed');
+
+        },
       });
       if (typeof window !== 'undefined') {
         window.isGotDefaultOutCome = true;
@@ -452,7 +458,7 @@ class BettingFilter extends React.Component {
     const closingDate = (selectedMatch && selectedMatch.date) ? selectedMatch.date : null;
     const reportTime = (selectedMatch && selectedMatch.reportTime) ? selectedMatch.reportTime : null;
 
-    // new code 
+    // new code
     const bettingShake = {
       side: this.state.side,
       amountSupport: this.defaultSupportAmount,

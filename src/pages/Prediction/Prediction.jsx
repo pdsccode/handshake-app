@@ -46,6 +46,10 @@ class Prediction extends React.Component {
       value: event.name,
     };
     this.modalOrderPlace.open();
+    //console.log('SA TEST:', this.modalOrderPlace);
+    //console.log('Sa TEST:', this.modalOrderPlace.getWrappedInstance());
+    //this.modalOrderPlace.callGetHandshakes(selectedOutcome);
+    this.callHanshake(selectedOutcome);
     this.setState({
       isShowOrder: true,
       selectedOutcome,
@@ -85,6 +89,7 @@ class Prediction extends React.Component {
             selectedOutcome={state.selectedOutcome}
             selectedMatch={state.selectedMatch}
             render={state.isShowOrder}
+            getHanshakeList={(click) =>{ this.callHanshake = click; }}
           />
         </ModalDialog>
       </div>
