@@ -1,55 +1,44 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import moment from 'moment';
-import history from '@/services/history';
 // service, constant
-import createForm from '@/components/core/form/createForm';
 import { required } from '@/components/core/form/validation';
-import { Field } from 'redux-form';
 import { initHandshake } from '@/reducers/handshake/action';
-import { loadMatches } from '@/reducers/betting/action';
-import { HANDSHAKE_ID, API_URL, APP, URL } from '@/constants';
+import { HANDSHAKE_ID, API_URL, URL } from '@/constants';
 import { MESSAGE } from '@/components/handshakes/betting/message.js';
 import { BetHandshakeHandler } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
 import { SIDE } from '@/components/handshakes/betting/constants.js';
+import { validateBet } from '@/components/handshakes/betting/validation.js';
 
-import local from '@/services/localStore';
 import GA from '@/services/googleAnalytics';
 
 // components
 import Button from '@/components/core/controls/Button';
-import Input from '@/components/core/forms/Input/Input';
-import DatePicker from '@/components/handshakes/betting/Create/DatePicker';
-import { MasterWallet } from '@/services/Wallets/MasterWallet';
-import Dropdown from '@/components/core/controls/Dropdown';
-import Toggle from '@/components/handshakes/betting/Feed/Toggle';
 import { showAlert } from '@/reducers/app/action';
 import {
   getChainIdDefaultWallet,
-  getBalance, getEstimateGas,
-  isExistMatchBet, getAddress,
+  isExistMatchBet, getAddress, parseBigNumber,
 } from '@/components/handshakes/betting/utils.js';
 
 import { getKeyByValue } from '@/utils/object';
-import { isRightNetwork, isExpiredDate } from '@/components/handshakes/betting/validation.js';
 
 // self
 import { InputField } from '../form/customField';
-import ErrorBox from './ErrorBox';
 import './Create.scss';
 
 const ROUND = 1000000;
 const ROUND_ODD = 10;
 const betHandshakeHandler = BetHandshakeHandler.getShareManager();
 
-const nameFormBettingCreate = 'bettingCreate';
-
 const regex = /\[.*?\]/g;
 const regexReplace = /\[|\]/g;
 const regexReplacePlaceholder = /\[.*?\]/;
 
 const TAG = 'BETTING_CREATE';
+
+const item = {
+  desc: '[{"key": "event_bet","suffix": "ETH","label": "Amount", "placeholder": "0.00", "type": "number", "className": "amount"}] [{"key": "event_odds", "label": "Odds", "placeholder": "2.0","prefix": "1 -", "className": "atOdds", "type": "number"}]',
+};
 
 class BettingCreate extends React.Component {
   static propTypes = {
@@ -62,18 +51,7 @@ class BettingCreate extends React.Component {
   }
 
   static defaultProps = {
-    item: {
-      backgroundColor: '#332F94',
-      desc: '[{"key": "event_bet","suffix": "ETH","label": "Amount", "placeholder": "0.00", "type": "number", "className": "amount"}] [{"key": "event_odds", "label": "Odds", "placeholder": "2.0","prefix": "1 -", "className": "atOdds", "type": "number"}]',
-      id: 18,
-      message: null,
-      name: 'Bet',
-      order_id: 5,
-      public: 1,
-    },
-    toAddress: 'sa@autonomous.nyc',
-    isPublic: true,
-    industryId: 18,
+
   }
 
   constructor(props) {
@@ -82,7 +60,6 @@ class BettingCreate extends React.Component {
       values: {},
       address: null,
       privateKey: null,
-      matches: [],
       isChangeOdds: false,
       oddValue: 0,
       winValue: 0,
@@ -92,17 +69,17 @@ class BettingCreate extends React.Component {
     };
     this.onSubmit = ::this.onSubmit;
     this.renderInput = ::this.renderInput;
-    this.renderDate = ::this.renderDate;
+    //this.renderDate = ::this.renderDate;
     this.renderForm = ::this.renderForm;
     this.renderNumber = ::this.renderNumber;
     this.onToggleChange = ::this.onToggleChange;
   }
   componentDidMount() {
-    this.loadMatches();
   }
 
   componentWillReceiveProps(nextProps) {
     // console.log('Receive Props: ', nextProps);
+    /*
     const { matches } = nextProps;
     let filterMatches = [];
     matches.forEach(element => {
@@ -115,7 +92,12 @@ class BettingCreate extends React.Component {
     this.setState({
       matches: filterMatches,
     });
+    */
+    const { bettingShake } = nextProps;
+    console.log(TAG, 'componentWillReceiveProps', 'bettingShake', bettingShake);
+    this.updateDefaultValues(bettingShake);
   }
+  /*
   loadMatches(){
     let params = {
       public: 1,
@@ -203,6 +185,7 @@ class BettingCreate extends React.Component {
     }
     return null;
   }
+  */
 
 
   async onSubmit(e) {
@@ -234,11 +217,8 @@ class BettingCreate extends React.Component {
       );
     });
     console.log('After Content:', content);
-    // console.log("this", this.datePickerRef.value);
 
-    // const {toAddress, isPublic, industryId} = this.props;
-
-    // const fromAddress = "0x54CD16578564b9952d645E92b9fa254f1feffee9";
+    /*
     let balance = await getBalance();
     balance = parseFloat(balance);
     const estimatedGas = await getEstimateGas();
@@ -256,7 +236,7 @@ class BettingCreate extends React.Component {
     console.log('Match, Outcome:', selectedMatch, selectedOutcome);
 
     let message = null;
-   
+
     if (!isRightNetwork()) {
       message = MESSAGE.RIGHT_NETWORK;
     }
@@ -293,6 +273,30 @@ class BettingCreate extends React.Component {
         },
       });
     }
+    */
+    const { bettingShake } = this.props;
+    const { closingDate, matchName, matchOutcome } = bettingShake;
+    const amount = parseBigNumber(values.event_bet);
+    const odds = parseBigNumber(values.event_odds);
+    const fromAddress = getAddress();
+
+
+    const validate = await validateBet(amount, odds, closingDate, matchName, matchOutcome);
+    const { status, message } = validate;
+    if (status) {
+      this.initHandshake(extraParams, fromAddress);
+
+    } else {
+      if (message){
+        this.props.showAlert({
+          message: <div className="text-center">{message}</div>,
+          timeOut: 3000,
+          type: 'danger',
+          callBack: () => {
+          }
+        });
+      }
+    }
 
 
     // if(selectedMatch && selectedOutcome && eventBet > 0 && eventBet <= balance){
@@ -309,7 +313,7 @@ class BettingCreate extends React.Component {
   }
 
   get content() {
-    const { desc } = this.props.item;
+    const { desc } = item;
     return desc || '';
   }
 
@@ -367,6 +371,7 @@ class BettingCreate extends React.Component {
     );
   }
 
+  /*
   renderDate(item) {
     const { key, placeholder, type } = item;
 
@@ -392,7 +397,7 @@ class BettingCreate extends React.Component {
       />
     );
   }
-
+*/
   renderNumber(item, style = {}) {
     const { key, placeholder } = item;
     const { values } = this.state;
@@ -403,20 +408,31 @@ class BettingCreate extends React.Component {
         className="form-control-custom input"
         name={key}
         style={style}
-        // component={InputField}
         type="text"
-        // min="0.0001"
-        // step="0.0002"
         placeholder={placeholder}
         value={values[key]}
         validate={[required]}
-        // ErrorBox={ErrorBox}
         onChange={(evt) => {
           this.changeText(key, evt.target.value);
         }}
         onClick={(event) => { event.target.setSelectionRange(0, event.target.value.length); }}
       />
     );
+  }
+
+  updateDefaultValues = (bettingShake) => {
+    const { values } = this.state;
+    const { side, amountSupport, amountAgainst, marketSupportOdds, marketAgainstOdds } = bettingShake;
+    //values.event_predict = side === SIDE.SUPPORT ? amountSupport : amountAgainst;
+    values.event_odds = side === SIDE.SUPPORT ? marketSupportOdds : marketAgainstOdds;
+    values.event_bet = side === SIDE.SUPPORT ? amountSupport : amountAgainst;
+    const roundWin = values.event_bet * values.event_odds;
+    console.log('roundWin Value:', roundWin);
+
+    const winValue = Math.floor(roundWin * ROUND) / ROUND;
+    console.log('Win Value:', winValue);
+
+    this.setState({ values, winValue });
   }
 
   renderLabelForItem=(text, { marginLeft, marginRight }) => text && (<label
@@ -439,9 +455,9 @@ class BettingCreate extends React.Component {
     }
 
     switch (type) {
-      case 'date':
-        itemRender = this.renderDate(item, index);
-        break;
+      // case 'date':
+      //   itemRender = this.renderDate(item, index);
+      //   break;
       case 'number':
         itemRender = this.renderNumber(item);
         break;
@@ -508,17 +524,8 @@ class BettingCreate extends React.Component {
     const { side } = this.props.bettingShake;
     //const chainId = betHandshakeHandler;
     const params = {
-      // to_address: toAddress ? toAddress.trim() : '',
-      // public: isPublic,
-      // description: content,
-      // description: JSON.stringify(extraParams),
-      // industries_type: industryId,
       type: HANDSHAKE_ID.BETTING,
-      // type: 3,
-      // extra_data: JSON.stringify(fields),
       outcome_id: selectedOutcome.id,
-      // outcome_id: selectedOutcome.hid,
-      // outcome_id: 10,
       odds: `${fields.event_odds}`,
       amount: `${fields.event_bet}`,
       extra_data: JSON.stringify(fields),
@@ -527,8 +534,6 @@ class BettingCreate extends React.Component {
       from_address: fromAddress,
       chain_id: getChainIdDefaultWallet(),
     };
-    console.log('Go to Params:', params);
-    const hid = selectedOutcome.hid;
 
     this.props.initHandshake({
       PATH_URL: API_URL.CRYPTOSIGN.INIT_HANDSHAKE,
@@ -542,12 +547,11 @@ class BettingCreate extends React.Component {
     console.log('initHandshakeSuccess', successData);
 
     const { status, data } = successData;
-    const { values, selectedOutcome, selectedMatch } = this.state;
-    // const stake = values['event_bet'];
-    // const event_odds = values['event_odds'];
-    // const payout = stake * event_odds;
-    // const hid = selectedOutcome.id;
-    const hid = selectedOutcome.hid;
+    const { outcomeHid, matchName, matchOutcome, side } = this.props;
+    const hid = outcomeHid;
+    //const { selectedOutcome, selectedMatch } = this.state;
+
+    //const hid = selectedOutcome.hid;
 
     if (status && data) {
       const isExist = isExistMatchBet(data);
@@ -562,12 +566,12 @@ class BettingCreate extends React.Component {
         timeOut: 3000,
         type: 'success',
         callBack: () => {
-          this.props.history.push(URL.HANDSHAKE_ME);
+          //this.props.history.push(URL.HANDSHAKE_ME);
         },
       });
       // send ga event
       try {
-        GA.createBetSuccessCreatePage(selectedMatch, selectedOutcome, this.toggleRef.sideName);
+        GA.createBetSuccessCreatePage(matchName, matchOutcome, side);
       } catch (err) {}
     }
   }
@@ -580,7 +584,7 @@ const mapState = state => ({
 });
 const mapDispatch = ({
   initHandshake,
-  loadMatches,
+  //loadMatches,
   showAlert,
 
 });

@@ -9,6 +9,7 @@ import OrderMode from './OrderMode';
 
 import './OrderPlace.scss';
 
+const TAG = 'ORDER_PLACE';
 class OrderPlace extends React.Component {
   static propTypes = {
     render: PropTypes.bool,
@@ -28,6 +29,7 @@ class OrderPlace extends React.Component {
 
   afterTabChanges = (tab) => {
     const tabType = tab.toUpperCase();
+    console.log(TAG, 'afterTabChanges', 'tabType:', tabType);
     this.setState({
       side: SIDE[`${tabType}`],
     });
@@ -37,6 +39,7 @@ class OrderPlace extends React.Component {
 
   render() {
     const { bettingShake, orderBook } = this.props;
+    console.log(TAG, 'render', 'side: ', this.state.side);
     const orderMode = {
       bettingShake: {
         ...bettingShake,
