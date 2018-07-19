@@ -24,18 +24,13 @@ import {
   CRYPTO_CURRENCY,
   CRYPTO_CURRENCY_DEFAULT,
   CRYPTO_CURRENCY_NAME,
-  DEFAULT_FEE,
   EXCHANGE_ACTION,
-  EXCHANGE_ACTION_DEFAULT,
-  EXCHANGE_ACTION_LIST,
-  EXCHANGE_ACTION_NAME,
+  FIAT_CURRENCY,
   FIAT_CURRENCY_LIST,
-  FIAT_CURRENCY_SYMBOL,
   HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS,
   HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE,
   MIN_AMOUNT,
   NB_BLOCKS,
-  SELL_PRICE_TYPE_DEFAULT,
   URL,
 } from '@/constants';
 
@@ -146,9 +141,14 @@ class Component extends React.Component {
     rfChange(nameFormExchangeCreate, 'phone', authProfile.phone || `${detectedCountryCode}-`);
     rfChange(nameFormExchangeCreate, 'nameShop', authProfile.name || '');
     rfChange(nameFormExchangeCreate, 'address', authProfile.address || '');
-    const fiatCurrency = {
-      id: ipInfo?.currency, text: ipInfo?.currency,
-    };
+
+    let fiatCurrency = { id: FIAT_CURRENCY.USD, text: FIAT_CURRENCY.USD };
+    if (FIAT_CURRENCY[ipInfo?.currency]) {
+      fiatCurrency = {
+        id: ipInfo?.currency, text: ipInfo?.currency,
+      };
+    }
+
     rfChange(nameFormExchangeCreate, 'stationCurrency', fiatCurrency);
 
     if (freeStartInfo?.reward !== '' && isChooseFreeStart) {
@@ -857,7 +857,7 @@ class Component extends React.Component {
 
           {!this.offer && (
             <div>
-              <div className="label"><FormattedMessage id="ex.create.label.stationInfo"/></div>
+              <div className="label"><FormattedMessage id="ex.create.label.stationInfo" /></div>
               <div className="section">
                 {/*
               <div className="d-flex">
@@ -878,12 +878,15 @@ class Component extends React.Component {
                 <div>
                   <div className="d-flex mt-2">
                     <label className="col-form-label mr-auto label-create"><span
-                      className="align-middle"><FormattedMessage id="ex.create.label.stationCurrency"/></span></label>
+                      className="align-middle"
+                    ><FormattedMessage id="ex.create.label.stationCurrency" />
+                    </span>
+                    </label>
                     <div className="input-group w-100">
                       <Field
                         name="stationCurrency"
                         classNameWrapper=""
-                        defaultText={<FormattedMessage id="ex.create.placeholder.stationCurrency"/>}
+                        defaultText={<FormattedMessage id="ex.create.placeholder.stationCurrency" />}
                         classNameDropdownToggle="dropdown-button"
                         list={listCurrency}
                         component={fieldDropdown}
@@ -891,12 +894,15 @@ class Component extends React.Component {
                       />
                     </div>
                   </div>
-                  <hr className="hrLine"/>
+                  <hr className="hrLine" />
                 </div>
 
                 <div className="d-flex mt-2">
                   <label className="col-form-label mr-auto label-create"><span
-                    className="align-middle"><FormattedMessage id="ex.create.label.phone"/></span></label>
+                    className="align-middle"
+                  ><FormattedMessage id="ex.create.label.phone" />
+                  </span>
+                  </label>
                   <div className="input-group w-100">
                     <Field
                       name="phone"
@@ -909,11 +915,14 @@ class Component extends React.Component {
                     />
                   </div>
                 </div>
-                <hr className="hrLine"/>
+                <hr className="hrLine" />
 
                 <div className="d-flex mt-2">
                   <label className="col-form-label mr-auto label-create"><span
-                    className="align-middle"><FormattedMessage id="ex.create.label.address"/></span></label>
+                    className="align-middle"
+                  ><FormattedMessage id="ex.create.label.address" />
+                  </span>
+                  </label>
                   <div className="w-100">
                     <Field
                       name="address"
