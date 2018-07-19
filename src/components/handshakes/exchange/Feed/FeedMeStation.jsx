@@ -30,29 +30,17 @@ class FeedMeStation extends React.PureComponent {
     const { offer } = this.props;
 
     this.intervalCountdown = setInterval(() => {
-      const eth = offer.items.ETH;
-      const btc = offer.items.BTC;
-
       let isShowTimer = false;
       let lastUpdateAt = '';
 
-      if (eth) {
-        const status = HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[eth.status];
+      for (const item of Object.values(offer.items)) {
+        const status = HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[item.status];
         isShowTimer = status === HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CREATED || status === HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSING;
 
         if (isShowTimer) {
-          lastUpdateAt = eth.updatedAt;
-        }
-      }
+          lastUpdateAt = item.updatedAt;
 
-      if (btc) {
-        if (!isShowTimer) {
-          const status = HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[btc.status];
-          isShowTimer = status === HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CREATED || status === HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSING;
-
-          if (isShowTimer) {
-            lastUpdateAt = btc.updatedAt;
-          }
+          break;
         }
       }
 
