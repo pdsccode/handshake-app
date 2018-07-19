@@ -39,7 +39,7 @@ const bettingReducter = (state = {
       return {
         ...state,
         isFetching: true,
-        supports: action.payload.data.support,
+        support: action.payload.data.support,
         against: action.payload.data.against,
         tradedVolum: action.payload.data.traded_volumn,
       };

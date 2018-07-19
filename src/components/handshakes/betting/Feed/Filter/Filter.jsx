@@ -77,6 +77,8 @@ class BettingFilter extends React.Component {
 
     this.onToggleChange = ::this.onToggleChange;
     this.callGetHandshakes = this.callGetHandshakes.bind(this);
+    // this.getHandshakeSuccess = this.getHandshakeSuccess.bind(this);
+    // this.getHandshakeFailed = this.getHandshakeFailed.bind(this);
   }
 
   componentDidMount() {
@@ -90,8 +92,22 @@ class BettingFilter extends React.Component {
   componentWillReceiveProps(nextProps) {
     //clearInterval(this.handShakes);
     const { matches, support, against } = nextProps;
-    const { isPrivate, outComeId } = this.props;
+    console.log(TAG, 'componentWillReceiveProps', 'support:', support, 'against:', against);
+    const filterMatches = this.getFilterMatches(matches);
+    const filterSupport = support && support.length > 0 && support.filter(item => item.amount >= CRYPTOSIGN_MINIMUM_MONEY);
+    const filterAgainst = against && against.length > 0 && against.filter(item => item.amount >= CRYPTOSIGN_MINIMUM_MONEY);
+    this.setState({
+      matches: filterMatches,
+      // selectedMatch,
+      // selectedOutcome,
+      support: filterSupport,
+      against: filterAgainst,
+    });
+    this.checkShowFreeBanner();
+  }
 
+  getFilterMatches(matches) {
+    const { isPrivate, outComeId } = this.props;
     const filterMatches = [];
     if (isPrivate && outComeId) {
       matches.forEach((element) => {
@@ -103,7 +119,8 @@ class BettingFilter extends React.Component {
           }
         }
       });
-    } else {
+    }
+    else {
       matches.forEach((element) => {
         const { outcomes } = element;
         if (outcomes.length > 0) {
@@ -114,14 +131,7 @@ class BettingFilter extends React.Component {
         }
       });
     }
-    this.setState({
-      matches: filterMatches,
-      // selectedMatch,
-      // selectedOutcome,
-      support,
-      against,
-    });
-    this.checkShowFreeBanner();
+    return filterMatches;
   }
 
   onToggleChange(id) {
@@ -328,6 +338,7 @@ class BettingFilter extends React.Component {
     const { status, data } = successData;
   }
 
+  /*
   getHandshakeFailed = (error) => {
     this.props.setLoading(false);
     console.log('getHandshakeFailed', error);
@@ -347,6 +358,7 @@ class BettingFilter extends React.Component {
       });
     }
   }
+  */
 
   loadMatches() {
     this.props.loadMatches({
@@ -377,13 +389,14 @@ class BettingFilter extends React.Component {
         PATH_URL: API_URL.CRYPTOSIGN.LOAD_HANDSHAKES,
         METHOD: 'POST',
         data: params,
-        successFn: (response) => {
-          console.log('Sa test success');
-        },
-        errorFn: (error) => {
-          console.log('Sa test failed');
-
-        },
+        // successFn: (response) => {
+        //   console.log('Sa test success');
+        //   this.getHandshakeSuccess;
+        // },
+        // errorFn: (error) => {
+        //   console.log('Sa test failed');
+        //   this.getHandshakeFailed;
+        // },
       });
       if (typeof window !== 'undefined') {
         window.isGotDefaultOutCome = true;
@@ -493,7 +506,7 @@ class BettingFilter extends React.Component {
 
 const mapState = state => ({
   matches: state.betting.matches,
-  supports: state.betting.supports,
+  support: state.betting.support,
   against: state.betting.against,
   tradedVolum: state.betting.tradedVolum,
   isFirstFree: state.betting.isFirstFree,
