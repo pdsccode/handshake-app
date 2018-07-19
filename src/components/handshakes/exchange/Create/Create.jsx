@@ -855,10 +855,11 @@ class Component extends React.Component {
             </div>
           </div>
 
-          <div>
-            <div className="label"><FormattedMessage id="ex.create.label.stationInfo" /></div>
-            <div className="section">
-              {/*
+          {!this.offer && (
+            <div>
+              <div className="label"><FormattedMessage id="ex.create.label.stationInfo"/></div>
+              <div className="section">
+                {/*
               <div className="d-flex">
                 <label className="col-form-label mr-auto label-create"><span className="align-middle"><FormattedMessage id="ex.create.label.nameStation"/></span></label>
                 <div className='input-group'>
@@ -874,54 +875,58 @@ class Component extends React.Component {
               </div>
               <hr className="hrLine"/> */}
 
-              <div>
+                <div>
+                  <div className="d-flex mt-2">
+                    <label className="col-form-label mr-auto label-create"><span
+                      className="align-middle"><FormattedMessage id="ex.create.label.stationCurrency"/></span></label>
+                    <div className="input-group w-100">
+                      <Field
+                        name="stationCurrency"
+                        classNameWrapper=""
+                        defaultText={<FormattedMessage id="ex.create.placeholder.stationCurrency"/>}
+                        classNameDropdownToggle="dropdown-button"
+                        list={listCurrency}
+                        component={fieldDropdown}
+                        disabled={!enableChooseFiatCurrency}
+                      />
+                    </div>
+                  </div>
+                  <hr className="hrLine"/>
+                </div>
+
                 <div className="d-flex mt-2">
-                  <label className="col-form-label mr-auto label-create"><span className="align-middle"><FormattedMessage id="ex.create.label.stationCurrency" /></span></label>
+                  <label className="col-form-label mr-auto label-create"><span
+                    className="align-middle"><FormattedMessage id="ex.create.label.phone"/></span></label>
                   <div className="input-group w-100">
                     <Field
-                      name="stationCurrency"
-                      classNameWrapper=""
-                      defaultText={<FormattedMessage id="ex.create.placeholder.stationCurrency" />}
-                      classNameDropdownToggle="dropdown-button"
-                      list={listCurrency}
-                      component={fieldDropdown}
-                      disabled={!enableChooseFiatCurrency}
+                      name="phone"
+                      className="form-control-custom form-control-custom-ex w-100 input-no-border"
+                      component={fieldPhoneInput}
+                      color={textColor}
+                      type="tel"
+                      placeholder="4995926433"
+                      // validate={[required, currency === 'BTC' ? minValue001 : minValue01]}
                     />
                   </div>
                 </div>
-                <hr className="hrLine" />
-              </div>
+                <hr className="hrLine"/>
 
-              <div className="d-flex mt-2">
-                <label className="col-form-label mr-auto label-create"><span className="align-middle"><FormattedMessage id="ex.create.label.phone" /></span></label>
-                <div className="input-group w-100">
-                  <Field
-                    name="phone"
-                    className="form-control-custom form-control-custom-ex w-100 input-no-border"
-                    component={fieldPhoneInput}
-                    color={textColor}
-                    type="tel"
-                    placeholder="4995926433"
-                    // validate={[required, currency === 'BTC' ? minValue001 : minValue01]}
-                  />
+                <div className="d-flex mt-2">
+                  <label className="col-form-label mr-auto label-create"><span
+                    className="align-middle"><FormattedMessage id="ex.create.label.address"/></span></label>
+                  <div className="w-100">
+                    <Field
+                      name="address"
+                      className="form-control-custom form-control-custom-ex w-100 input-no-border"
+                      component={fieldInput}
+                      validate={[required]}
+                      placeholder="81 E. Augusta Ave. Salinas"
+                    />
+                  </div>
                 </div>
               </div>
-              <hr className="hrLine" />
-
-              <div className="d-flex mt-2">
-                <label className="col-form-label mr-auto label-create"><span className="align-middle"><FormattedMessage id="ex.create.label.address" /></span></label>
-                <div className="w-100">
-                  <Field
-                    name="address"
-                    className="form-control-custom form-control-custom-ex w-100 input-no-border"
-                    component={fieldInput}
-                    validate={[required]}
-                    placeholder="81 E. Augusta Ave. Salinas"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
+            </div>)
+          }
 
           <Button block type="submit" disabled={!enableAction} className="mt-3"> {
             isUpdate ? (<FormattedMessage id="btn.update" />) : (<FormattedMessage id="btn.initiate" />)
