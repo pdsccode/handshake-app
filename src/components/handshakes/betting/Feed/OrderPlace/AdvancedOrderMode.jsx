@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { SIDE } from '@/components/handshakes/betting/constants.js';
-import { objectKeyByValue } from '@/components/handshakes/betting/utils.js';
+import { getKeyByValue } from '@/utils/object';
 import Button from '@/components/core/controls/Button';
 import BettingShake from './../Shake';
 import OrderBook from './OrderBook';
@@ -34,7 +34,7 @@ class AdvancedOrderMode extends React.Component {
     const { bettingShake, orderBook, theme } = this.props;
     const { side } = bettingShake;
     const buttonClass = theme;
-    const sideText = objectKeyByValue(SIDE, side);
+    const sideText = getKeyByValue(SIDE, side);
     return (
       <React.Fragment>
         <BettingShake {...bettingShake} orderClick={this.state.orderClick} />

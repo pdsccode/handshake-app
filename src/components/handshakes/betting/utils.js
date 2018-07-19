@@ -194,12 +194,3 @@ export const findUserBet = (handshake) => {
   return newItem;
 
 }
-
-/**
- * Get Object key by value
- * @param {Object} obj
- * @param {Object Value} val
- */
-export function objectKeyByValue(obj, val) {
-  return Object.keys(obj)[Object.values(obj).indexOf(val)];
-}

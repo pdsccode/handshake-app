@@ -8,18 +8,29 @@ function buildOutcomeItem(outcome) {
   );
 }
 
-export default function OutcomeList(props) {
-  const { outcomeList } = props;
+function OutcomeList(props) {
+  const { event, onClick } = props;
+  const { outcomes } = event;
   return (
     <div className="OutcomeList">
       <SwipeableList
-        data={outcomeList}
+        event={event}
+        data={outcomes}
         buildItem={buildOutcomeItem}
+        onClick={onClick}
       />
     </div>
   );
 }
 
-OutcomeList.propsType = {
-  outcomeList: propTypes.array,
+OutcomeList.propTypes = {
+  event: propTypes.object,
+  onClick: propTypes.func,
 };
+
+OutcomeList.defaultProps = {
+  event: null,
+  onClick: undefined,
+};
+
+export default OutcomeList;

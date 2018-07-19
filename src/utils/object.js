@@ -8,3 +8,12 @@ export function removeItems(obj, keys) {
     };
   }, {});
 }
+
+/**
+ * Get Object key by value
+ * @param {Object} obj
+ * @param {Object Value} val
+ */
+export function getKeyByValue(obj, val) {
+  return Object.keys(obj)[Object.values(obj).indexOf(val)];
+}

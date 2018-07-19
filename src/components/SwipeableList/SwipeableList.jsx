@@ -10,6 +10,7 @@ export default class SwipeableList extends Component {
   static propTypes = {
     className: PropTypes.string,
     data: PropTypes.array.isRequired,
+    event: PropTypes.object,
     onClick: PropTypes.func,
     buildItem: PropTypes.func,
     selectedID: PropTypes.number,
@@ -22,12 +23,12 @@ export default class SwipeableList extends Component {
     };
   }
 
-  onClickItem = (id, e, props) => {
+  onClickItem = (id, e, props, itemData) => {
     this.setState({
       selectedID: id,
     });
     if (props.onClick) {
-      props.onClick(id, e);
+      props.onClick(id, e, props, itemData);
     }
   }
 
@@ -43,7 +44,7 @@ export default class SwipeableList extends Component {
       <div
         className={cls}
         key={itemData.id}
-        onClick={(e) => this.onClickItem(itemData.id, e, props)}
+        onClick={(e) => this.onClickItem(itemData.id, e, props, itemData)}
       >
         {props.buildItem(itemData)}
       </div>

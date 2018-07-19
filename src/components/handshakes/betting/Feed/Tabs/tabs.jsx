@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import className from 'classnames';
 
@@ -6,7 +6,7 @@ import Tab from './tab';
 
 import './tabs.scss';
 
-class Tabs extends Component {
+class Tabs extends React.Component {
   static propTypes = {
     children: PropTypes.instanceOf(Array).isRequired,
     htmlClassName: PropTypes.string,

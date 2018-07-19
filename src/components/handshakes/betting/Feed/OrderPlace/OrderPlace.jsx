@@ -36,7 +36,7 @@ class OrderPlace extends React.Component {
   }
 
   render() {
-    const { render, bettingShake, orderBook } = this.props;
+    const { bettingShake, orderBook } = this.props;
     const orderMode = {
       bettingShake: {
         ...bettingShake,
@@ -44,7 +44,6 @@ class OrderPlace extends React.Component {
       },
       orderBook,
     };
-    if (!render) return null;
     return (
       <React.Fragment>
         <Tabs htmlClassName="OrderPlace" afterClick={this.afterTabChanges}>

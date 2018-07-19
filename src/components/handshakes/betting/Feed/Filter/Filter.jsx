@@ -47,12 +47,14 @@ class BettingFilter extends React.Component {
     loadHandshakes: PropTypes.func.isRequired,
     loadMatches: PropTypes.func.isRequired,
     checkFreeAvailable: PropTypes.func.isRequired,
-    setLoading: PropTypes.func.isRequired,
+    setLoading: PropTypes.func,
     matchId: PropTypes.number,
     outComeId: PropTypes.number,
     isPrivate: PropTypes.any,
     bettingShakeIsOpen: PropTypes.bool,
     buttonClass: PropTypes.string,
+    selectedOutcome: PropTypes.object,
+    selectedMatch: PropTypes.object,
   }
 
   static defaultProps = {
@@ -71,18 +73,21 @@ class BettingFilter extends React.Component {
       side: SIDE.SUPPORT,
       isError: false,
       errorMessage: '',
-      placeOrderRender: false,
     };
 
     this.onToggleChange = ::this.onToggleChange;
   }
 
   componentDidMount() {
-    this.loadMatches();
-    this.checkShowFreeBanner();
+    // this.loadMatches();
+    // this.checkShowFreeBanner();
+    this.handShakes = setInterval(() => {
+      this.callGetHandshakes(this.props.selectedOutcome);
+    }, 1000);
   }
 
   componentWillReceiveProps(nextProps) {
+    clearInterval(this.handShakes);
     const { matches, support, against } = nextProps;
     const { isPrivate, outComeId } = this.props;
 
@@ -364,7 +369,8 @@ class BettingFilter extends React.Component {
     console.log('Sa test callGetHandshakes:', item);
     if (item) {
       const params = {
-        outcome_id: item.id,
+        //outcome_id: item.id,
+        outcome_id: item,
       };
       this.props.loadHandshakes({
         PATH_URL: API_URL.CRYPTOSIGN.LOAD_HANDSHAKES,
@@ -394,7 +400,6 @@ class BettingFilter extends React.Component {
 
   closeShakePopup() {
 
-
     this.setState({
       bettingShakeIsOpen: false,
     });
@@ -418,29 +423,32 @@ class BettingFilter extends React.Component {
     }
   }
 
-  testClick = () => {
-    this.modalPlaceOrder.open();
-    this.setState({ placeOrderRender: true });
-  }
-
   render() {
+    //if (!this.props.selectedOutcome && !this.props.selectedMatch) return null;
     const { isFirstFree } = this.state;
     const { tradedVolum } = this.props;
-    const selectedOutcome = this.outcomeDropDown ? this.outcomeDropDown.itemSelecting : SELECTING_DEFAULT;
-    const selectedMatch = this.outcomeDropDown ? this.matchDropDown.itemSelecting : SELECTING_DEFAULT;
+
+    // const selectedOutcome = this.outcomeDropDown ? this.outcomeDropDown.itemSelecting : SELECTING_DEFAULT;
+    // const selectedMatch = this.outcomeDropDown ? this.matchDropDown.itemSelecting : SELECTING_DEFAULT;
+
+    const selectedOutcome = this.props.selectedOutcome ? this.props.selectedOutcome : SELECTING_DEFAULT;
+    const selectedMatch = this.props.selectedMatch ? this.props.selectedMatch : SELECTING_DEFAULT;
+
     console.log('Selected Outcome:', selectedOutcome);
     console.log('Selected Match:', selectedMatch);
 
-
     const outcomeId = (selectedOutcome && selectedOutcome.id >= 0) ? selectedOutcome.id : null;
     const outcomeHid = (selectedOutcome && selectedOutcome.hid >= 0) ? selectedOutcome.hid : null;
+
     const matchName = (selectedMatch && selectedMatch.value) ? selectedMatch.value : null;
     const matchOutcome = (selectedOutcome && selectedOutcome.value) ? selectedOutcome.value : null;
 
     const defaultMatchId = this.defaultMatch ? this.defaultMatch.id : null;
     const defaultOutcomeId = this.defaultOutcome ? this.defaultOutcome.id : null;
+
     const shareInfo = this.getInfoShare(selectedMatch, selectedOutcome);
     const marketFee = (selectedMatch && selectedMatch.marketFee >= 0) ? selectedMatch.marketFee : null;
+
     const closingDate = (selectedMatch && selectedMatch.date) ? selectedMatch.date : null;
     const reportTime = (selectedMatch && selectedMatch.reportTime) ? selectedMatch.reportTime : null;
 
@@ -469,260 +477,10 @@ class BettingFilter extends React.Component {
     const orderBook = { support, against };
 
     return (
-      <div className="wrapperBettingFilter">
-        {/*this.state.matches && this.state.matches.length > 0 &&
-        <div className="share-block">
-          <p className="text">Share to get 20 free coins</p>
-          <ShareSocial
-            className="share"
-            title={shareInfo.title}
-            shareUrl={shareInfo.shareUrl}
-          />
-        </div>*/}
-        {
-          this.state.isError
-            ? (
-              <div className="text-center" style={{ marginBottom: '10px' }}>
-                <p>{this.state.errorMessage}</p>
-                <Button onClick={() => window.location.reload()}>Try again</Button>
-              </div>
-            ) : ''
-        }
-        <div className={`${this.state.isError ? 'betting-disabled' : ''}`}>
-          <div className="dropDown">
-            <Dropdown
-              placeholder="Select an event"
-              onRef={(match) => { this.matchDropDown = match; return null; }}
-              defaultId={defaultMatchId}
-              source={this.matchNames}
-              afterSetDefault={item => this.setState({ selectedMatch: item })}
-              onItemSelected={(item) => {
-                this.setState({ selectedMatch: item });
-                // send event tracking
-                try {
-                  GA.clickChooseAnEvent(item.value);
-                } catch (err) { }
-              }}
-              hasSearch
-            />
-          </div>
-          <div className="dropDown">
-            <Dropdown
-              placeholder="Select an outcome"
-              onRef={(match) => { this.outcomeDropDown = match; return null; }}
-              defaultId={defaultOutcomeId}
-              source={this.matchOutcomes}
-              afterSetDefault={item => this.setState({
-                selectedOutcome: item,
-              }, () => this.callGetHandshakes(item))}
-              onItemSelected={(item) => {
-                /* this.callGetHandshakes(item) */
-                this.setState({
-                  selectedOutcome: item,
-                }, () => this.callGetHandshakes(item));
-                try {
-                  // send event tracking
-                  GA.clickChooseAnOutcome(item.value);
-                } catch (err) { }
-              }
-              }
-            />
-          </div>
-          {
-            isFirstFree
-              ? (
-                <div
-                  className="freeBox"
-                  onClick={() => {
-                    this.setState({
-                      bettingShakeIsOpen: true,
-                    }, () => {
-                      this.modalBetFreeRef.open();
-                    });
-                  }}
-                >
-                  <div className="contentFree">Unlock your <span>FREE ETH</span> to play</div>
-                  <Button className="buttonBet">Bet now</Button>
-                </div>
-
-              )
-              : ''
-          }
-
-          {/*<TopInfo
-            marketTotal={parseFloat(tradedVolum)}
-            percentFee={marketFee}
-            objectId={outcomeId}
-          />*/}
-          
-          <div onClick={this.testClick}>Test modal</div>
-          <ModalDialog className="modal" onRef={(modal) => { this.modalPlaceOrder = modal; }}>
-            <OrderPlace
-              render={this.state.placeOrderRender}
-              bettingShake={bettingShake}
-              orderBook={orderBook}
-            />
-          </ModalDialog>
-
-          <Toggle ref={(component) => { this.toggleRef = component; }} onChange={this.onToggleChange} />
-          <div>
-            <div onClick={() => this.modalBetFreeRef.open()}>SIMPLE</div>
-            <div>ADVANCED</div>
-          </div>
-          <BettingShake
-            side={this.state.side}
-            amountSupport={this.defaultSupportAmount}
-            amountAgainst={this.defaultAgainstAmount}
-            matchName={matchName}
-            isOpen={this.state.bettingShakeIsOpen}
-            matchOutcome={matchOutcome}
-            outcomeId={parseInt(outcomeId, 10)}
-            outcomeHid={parseInt(outcomeHid, 10)}
-            marketSupportOdds={parseFloat(this.defaultSupportOdds)}
-            marketAgainstOdds={parseFloat(this.defaultAgainstOdds)}
-            closingDate={closingDate}
-            reportTime={reportTime}
-            onSubmitClick={() => {
-              this.closeShakePopup();
-              this.modalLuckyRealRef.open();
-            }
-            }
-          />
-
-          <div>ORDER BOOK</div>
-          <div className="wrapperContainer">
-            <div className="item">
-              <div className="titleBox opacity65">
-                <div>Market size (ETH)</div>
-                <div className="supportOdds">Support (ODDS)</div>
-              </div>
-              {<GroupBook amountColor="#0BDD91" bookList={this.bookListSupport} />}
-              <div className="marketBox">
-                <div>Market odds</div>
-                <div>{Math.floor(this.defaultSupportOdds * ROUND_ODD) / ROUND_ODD}</div>
-              </div>
-              {/*<Button
-                className="buttonSupport"
-                block
-                onClick={() => {
-                  this.setState({
-                    side: SIDE.SUPPORT,
-                    bettingShakeIsOpen: true,
-                  }, () => {
-                    this.modalBetRef.open();
-                  });
-                  // send event tracking
-                  GA.clickChooseASide('Support');
-                }}
-              >
-                SUPPORT
-              </Button>*/}
-            </div>
-            <div className="item">
-              <div className="titleBox opacity65">
-                <div>Market size (ETH)</div>
-                <div className="supportOdds">Oppose (ODDS)</div>
-              </div>
-
-              {<GroupBook amountColor="#FA6B49" bookList={this.bookListAgainst} />}
-              <div className="titleBox">
-                <div className="itemTitle">Market odds</div>
-                <div className="itemTitle">{Math.floor(this.defaultAgainstOdds * ROUND_ODD) / ROUND_ODD}</div>
-              </div>
-              {/*<Button
-                className="buttonAgainst"
-                block
-                onClick={() => {
-                  console.log('click oppose');
-                  this.setState({
-                    side: SIDE.AGAINST,
-                    bettingShakeIsOpen: true,
-                  }, () => {
-                    this.modalBetRef.open();
-                  });
-                  // send event tracking
-                  GA.clickChooseASide('Oppose');
-                }}
-              >
-                OPPOSE
-              </Button>*/}
-            </div>
-          </div>
-        </div>
-        <Button
-          block
-          onClick={() => {
-          }}
-        >
-          PLACE SUPPORT ORDER
-        </Button>
-        <ModalDialog className="modal" onRef={(modal) => { this.modalBetRef = modal; return null; }}>
-          <BettingShake
-            side={this.state.side}
-            amountSupport={this.defaultSupportAmount}
-            amountAgainst={this.defaultAgainstAmount}
-            matchName={matchName}
-            isOpen={this.state.bettingShakeIsOpen}
-            matchOutcome={matchOutcome}
-            outcomeId={parseInt(outcomeId, 10)}
-            outcomeHid={parseInt(outcomeHid, 10)}
-            marketSupportOdds={parseFloat(this.defaultSupportOdds)}
-            marketAgainstOdds={parseFloat(this.defaultAgainstOdds)}
-            closingDate={closingDate}
-            reportTime={reportTime}
-            onSubmitClick={() => {
-              this.closeShakePopup();
-              this.modalLuckyRealRef.open();
-              }
-            }
-            onCancelClick={() => {
-                this.closeShakePopup();
-              }
-            }
-            onCreateBetSuccess={() => {
-              this.refreshHanshakeTable();
-            }}
-          />
-        </ModalDialog>
-        <ModalDialog className="modal" onRef={(modal) => { this.modalBetFreeRef = modal; return null; }}>
-          <BettingShakeFree
-            amount={freeAmount}
-            matchName={matchName}
-            matchOutcome={matchOutcome}
-            isOpen={this.state.bettingShakeIsOpen}
-            outcomeId={parseInt(outcomeId, 10)}
-            outcomeHid={parseInt(outcomeHid, 10)}
-            marketSupportOdds={parseFloat(this.defaultSupportOdds)}
-            marketAgainstOdds={parseFloat(this.defaultAgainstOdds)}
-            closingDate={closingDate}
-            reportTime={reportTime}
-            onSubmitClick={() => {
-              this.closeShakeFreePopup();
-              this.modalLuckyFreeRef.open();
-            }
-            }
-            onCancelClick={() => {
-              this.closeShakePopup();
-              }
-            }
-            onCreateBetSuccess={() => {
-              this.refreshHanshakeTable();
-            }}
-          />
-        </ModalDialog>
-        <ModalDialog className="modal" onRef={(modal) => { this.modalLuckyRealRef = modal; return null; }}>
-          <LuckyReal
-            onButtonClick={() => this.modalLuckyRealRef.close()}
-          />
-        </ModalDialog>
-
-        <ModalDialog className="modal" onRef={(modal) => { this.modalLuckyFreeRef = modal; return null; }}>
-          <LuckyFree
-            onButtonClick={() => this.modalLuckyFreeRef.close()}
-          />
-        </ModalDialog>
-
-      </div>
+      <OrderPlace
+        bettingShake={bettingShake}
+        orderBook={orderBook}
+      />
     );
   }
 }

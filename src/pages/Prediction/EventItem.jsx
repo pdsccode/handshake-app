@@ -53,16 +53,16 @@ function renderEventMessages(event) {
   );
 }
 
-function renderOutcomeList(event) {
+function renderOutcomeList(event, onClick) {
   return (
-    <OutcomeList outcomeList={event.outcomes} />
+    <OutcomeList event={event} onClick={onClick} />
   );
 }
 
-function EventItem({ event }) {
+function EventItem({ event, onClick }) {
   return (
     <div className="EventItem">
-      {renderOutcomeList(event)}
+      {renderOutcomeList(event, onClick)}
       {renderEventName(event)}
       {renderEventNumberOfPlayers(event)}
       {renderEvenTimeLeft(event)}
@@ -74,6 +74,11 @@ function EventItem({ event }) {
 
 EventItem.propTypes = {
   event: PropTypes.object.isRequired,
+  onClick: PropTypes.func,
+};
+
+EventItem.defaultProps = {
+  onClick: undefined,
 };
 
 export default EventItem;

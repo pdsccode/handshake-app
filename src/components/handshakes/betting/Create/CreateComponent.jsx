@@ -29,9 +29,9 @@ import {
   getChainIdDefaultWallet,
   getBalance, getEstimateGas,
   isExistMatchBet, getAddress,
-  objectKeyByValue,
 } from '@/components/handshakes/betting/utils.js';
 
+import { getKeyByValue } from '@/utils/object';
 import { isRightNetwork, isExpiredDate } from '@/components/handshakes/betting/validation.js';
 
 // self
@@ -463,7 +463,7 @@ class BettingCreate extends React.Component {
     const { theme } = this.props;
     const { side } = this.props.bettingShake;
     const buttonClass = theme;
-    const sideText = objectKeyByValue(SIDE, side);
+    const sideText = getKeyByValue(SIDE, side);
     return (
       <form className="wrapperBetting" onSubmit={this.onSubmit}>
         <div className="formInput">

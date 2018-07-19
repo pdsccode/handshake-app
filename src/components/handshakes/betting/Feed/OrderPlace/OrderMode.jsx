@@ -5,7 +5,7 @@ import Tabs from './../Tabs';
 import SimpleOrderMode from './SimpleOrderMode';
 import AdvancedOrderMode from './AdvancedOrderMode';
 
-class OrderMode extends React.Component {
+class OrderMode extends React.PureComponent {
   render() {
     return (
       <React.Fragment>

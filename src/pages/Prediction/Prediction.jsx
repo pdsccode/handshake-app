@@ -1,6 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import BettingFilter from '@/components/handshakes/betting/Feed/Filter';
+import ModalDialog from '@/components/core/controls/ModalDialog';
 import NavigationBar from '@/modules/NavigationBar/NavigationBar';
 import { eventSelector } from './selector';
 import { loadMatches } from './action';
@@ -18,34 +20,68 @@ class Prediction extends React.Component {
   static defaultProps = {
     eventList: [],
   };
+  state = {
+    isShowOrder: false,
+    selectedOutcome: null,
+  };
 
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch(loadMatches());
   }
 
+  handleClickEventItem = (id, e, props, itemData) => {
+    const { event } = props;
+    const selectedOutcome = {
+      hid: itemData.hid,
+      id: itemData.id,
+      marketOdds: itemData.market_odds,
+      value: itemData.name,
+    };
+    const selectedMatch = {
+      date: event.date,
+      id: event.id,
+      marketFee: event.market_fee,
+      reportTime: event.reportTime,
+      value: event.name,
+    };
+    this.modalOrderPlace.open();
+    this.setState({
+      isShowOrder: true,
+      selectedOutcome,
+      selectedMatch,
+    });
+  };
+
   renderEventList = (props) => {
     if (!props.eventList || !props.eventList.length) return null;
     return (
       <div className="EventList">
         {props.eventList.map((event) => {
-          return <EventItem key={event.id} event={event} />;
+          return <EventItem key={event.id} event={event} onClick={this.handleClickEventItem} />;
         })}
       </div>
     );
-  }
+  };
 
-  renderComponent = (props) => {
+  renderComponent = (props, state) => {
     return (
       <div className={Prediction.displayName}>
         <NavigationBar />
         {this.renderEventList(props)}
+        <ModalDialog onRef={(modal) => { this.modalOrderPlace = modal; }}>
+          <BettingFilter
+            selectedOutcome={state.selectedOutcome}
+            selectedMatch={state.selectedMatch}
+            render={state.isShowOrder}
+          />
+        </ModalDialog>
       </div>
     );
-  }
+  };
 
   render() {
-    return this.renderComponent(this.props);
+    return this.renderComponent(this.props, this.state);
   }
 }
 
