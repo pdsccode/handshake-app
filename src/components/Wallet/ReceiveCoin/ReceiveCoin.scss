@@ -4,11 +4,16 @@
 }
 
 .receive-coins{
-  margin-top: 5px;
-  padding: 0 15px;
+  margin-top: 20px;
+  padding: 0 5px;
 
   .modal{
     background-color: #f8f9fa;
+  }
+
+  .dropdown-item{
+    border-bottom: 1px solid #ededed;
+    padding: 0.5rem 1.5rem;
   }
 
   .box-addresses{
@@ -36,6 +41,12 @@
       border: none;
       box-shadow: none;
     }
+    .btn-group > .btn:last-child{
+      border-bottom-width: 0;
+    }
+    .btn-group .dropdown-menu{
+      width: 100%;
+    }
   }
 
   form.receivewallet-wrapper {
@@ -51,12 +62,41 @@
     height: 270px;
     padding: 10px;    
   }
-  .link-download{
-    color: #10bac5 !important;
+
+  .button-download{    
+    width: 100%;
+    padding: 12px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    font-weight: 100;
+    display: block;    
+    text-decoration: none;
+    color: #fff !important;
+    // background-color: #007bff;
+    // border-color: #007bff;   
+    background-color: #0BDD91 !important;     
+    font-size: 1rem;
+  }
+
+  .box-link{
+    overflow: hidden;
+    padding: 0 25px 0 25px;
+    a {
+      color: #059fb3 !important;
       font-size: 14px;
       display: block;
       margin-top: 10px;
+      text-decoration: none;
+    }
+    .link-download{
+      float: left;
+    }
+    .link-copy-address{
+      float: right;
+    }
   }
+  
 
   .div-amount {    
     position: relative;    
@@ -140,13 +180,18 @@
     margin-bottom: 5px;
 
     border: 1px solid #ced4da;
-    border-radius: 10px;
+    border-radius: 4px;
     background-color: #fff;
 
     .button {
       width: 100%;
-      padding: 10px;
-      margin-top: 15px;
+      padding: 12px;
+      margin-top: 10px;
+      margin-bottom: 10px;
+      border-radius: 4px;
+      font-weight: 100;
+      background-color: #fa6b49;
+      border-color: #fa6b49;
     }
   }
   .dropdown-custom-item{
@@ -165,8 +210,10 @@
     margin-bottom: 0;
     font-size: 14px;
     word-wrap:break-word;
-    color: #10bac5;
+    color: #059fb3;
     font-weight: 400;
+    font-family: monospace;
+    letter-spacing: 1px;
   }
   .link-request-custom-amount {
     cursor: pointer;

@@ -19,6 +19,7 @@ import CryptoPrice from "@/models/CryptoPrice";
 import './ReceiveCoin.scss';
 import Dropdown from '@/components/core/controls/Dropdown';
 import { BigNumber } from "bignumber.js";
+import ExpandArrowSVG from '@/assets/images/icon/expand-arrow-green.svg';
 
 const QRCode = require('qrcode.react');
 
@@ -301,7 +302,9 @@ class ReceiveCoin extends React.Component {
           <div className="box-addresses">
                           
               <div className="box-address">
-                  <div onClick={() => { Clipboard.copy(this.state.walletSelected.address); this.showToast(messages.wallet.action.receive.success.share);}} className="addressDivPopup">{ this.state.walletSelected ? this.state.walletSelected.address : ''} ▼</div>
+                  <div className="addressDivPopup">{ this.state.walletSelected ? this.state.walletSelected.address : ''}&nbsp;
+                  <img className="expand-arrow" src={ExpandArrowSVG} alt="expand" />
+                  </div>
               </div>
 
               <div className="box-hide-wallet">
@@ -333,9 +336,12 @@ class ReceiveCoin extends React.Component {
             <QRCode size={250} value={qrCodeValue} onClick={() => { Clipboard.copy(this.state.walletSelected.address); this.showToast(messages.wallet.action.receive.success.share);}} />              
             </div>
 
-            <a className="link-download" ref={(ref) => this.downloadRef = ref} onClick={()=> {this.download(value);}}>
-                Download QR Code
+            {/* <div className="box-link">
+              <a className="link-copy-address" onClick={() => { Clipboard.copy(this.state.walletSelected.address); this.showToast(messages.wallet.action.receive.success.share);}}>{messages.wallet.action.receive.link.copy_address}</a>
+              <a className="link-download" ref={(ref) => this.downloadRef = ref} onClick={()=> {this.download(value);}}>
+                {messages.wallet.action.receive.link.download_qrcode}
               </a>
+            </div> */}
           
             <ReceiveWalletForm className="receivewallet-wrapper">
               <div className="div-amount">
@@ -365,10 +371,14 @@ class ReceiveCoin extends React.Component {
             </ReceiveWalletForm>
 
             {/* <div className="link-request-custom-amount" onClick={() => { this.modalCustomAmountRef.open(); this.setState({ inputSendAmountValue: '' }); }}>{messages.wallet.action.receive.button.request_amount}</div> */}
+            
+            <a className="button-download" ref={(ref) => this.downloadRef = ref} onClick={()=> {this.download(value);}}>
+                {messages.wallet.action.receive.link.download_qrcode}
+            </a>
 
-            {/* <Button className="button" cssType="primary" onClick={() => { Clipboard.copy(this.state.walletSelected.address); this.showToast(messages.wallet.action.receive.success.share); this.onFinish() }} >
-              {messages.wallet.action.receive.button.share}
-            </Button> */}
+            <Button className="button" cssType="primary" onClick={() => { Clipboard.copy(this.state.walletSelected.address); this.showToast(messages.wallet.action.receive.success.share);}} >
+              {messages.wallet.action.receive.button.text}
+            </Button>
           </div>
          
       </div>
