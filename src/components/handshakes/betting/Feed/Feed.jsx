@@ -4,24 +4,24 @@ import { connect } from 'react-redux';
 
 // services, constants
 import { BetHandshakeHandler } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
-import { BET_BLOCKCHAIN_STATUS, ROLE, SIDE, BETTING_RESULT } from '@/components/handshakes/betting/constants.js';
+import { BET_BLOCKCHAIN_STATUS, ROLE } from '@/components/handshakes/betting/constants.js';
 
-
-import local from '@/services/localStore';
-import { API_URL, APP } from '@/constants';
-import { uninitItem, collect, refund, collectFree, rollback, uninitItemFree } from '@/reducers/handshake/action';
+import { API_URL } from '@/constants';
+import { uninitItem, collect, collectFree, uninitItemFree, refundFree } from '@/reducers/handshake/action';
 import { loadMyHandshakeList, updateBettingChange } from '@/reducers/me/action';
 import { MESSAGE, BETTING_STATUS_LABEL } from '@/components/handshakes/betting/message.js';
-import { getStatusLabel} from '@/components/handshakes/betting/StatusAction.js';
+import { getStatusLabel } from '@/components/handshakes/betting/StatusAction.js';
+import {
+  getMessageWithCode, getId,
+  getBalance, getEstimateGas, foundShakeList, parseBigNumber,
+  formatAmount, findUserBet, parseJsonString,
+} from '@/components/handshakes/betting/utils.js';
 
 // components
 import Button from '@/components/core/controls/Button';
 import Feed from '@/components/core/presentation/Feed';
 import { showAlert } from '@/reducers/app/action';
-import {
-  getMessageWithCode, getId,
-  getShakeOffchain, getBalance, getEstimateGas, foundShakeList, parseBigNumber,
-} from '@/components/handshakes/betting/utils.js';
+
 
 import { isSameAddress, isRightNetwork } from '@/components/handshakes/betting/validation.js';
 
@@ -29,13 +29,10 @@ import { isSameAddress, isRightNetwork } from '@/components/handshakes/betting/v
 import './Feed.scss';
 
 const betHandshakeHandler = BetHandshakeHandler.getShareManager();
-const ROUND = 1000000;
-const ROUND_ODD = 10;
+
+const TAG = "FEED_BETTING";
 
 class FeedBetting extends React.Component {
-  backgroundCss(background) {
-    return background || this.BACKGROUND_COLORS[Math.floor(Math.random() * this.BACKGROUND_COLORS.length)];
-  }
 
   static propTypes = {
 
@@ -53,157 +50,20 @@ class FeedBetting extends React.Component {
       statusTitle: null,
       isLoading: false,
       isAction: false,
-      role: ROLE.INITER,
       itemInfo: props,
-      amountMatch: 0,
-      winMatch: 0,
-      isUserShake: false,
       shakedItemList: [],
       matchDone: false,
     };
   }
 
-  get isMatch() {
-    const { shakeUserIds } = this.props;
-    if (shakeUserIds) {
-      return shakeUserIds.length > 0;
-    }
-    return false;
-  }
-
-  isShakeUser(shakeIds, userId) {
-    // console.log('User Id:', userId);
-    // console.log('ShakeIds:', shakeIds);
-
-    if (shakeIds) {
-      if (shakeIds.indexOf(userId) > -1) {
-        return true;
-      }
-    }
-  }
-  isMakerShakerSameUser(userId, initUserId, shakeIds) {
-    if (userId == initUserId && this.isShakeUser(shakeIds, userId)) {
-      return true;
-    }
-    return false;
-  }
-
-  handleStatus(props) {
-    const {
-      result, shakeUserIds, id, amount, remainingAmount, odds,
-      closingTime, reportTime, disputeTime, initUserId,
-    } = props; // new state
-    const profile = local.get(APP.AUTH_PROFILE);
-    let isUserShake = this.isShakeUser(shakeUserIds, profile.id);
-    const isMatch = this.isMatch;
-    let amountMatch = 0;
-    let winMatch = 0;
-    let itemInfo = props;
-    let idCryptosign = id;
-    let { side } = itemInfo;
-    if (isMatch) {
-      amountMatch = amount - remainingAmount;
-      winMatch = amountMatch * odds;
-    }
-    let shakedItemList = [];
-    const isMakerShakerSameUser = this.isMakerShakerSameUser(profile.id, initUserId, shakeUserIds);
-    console.log('Amount,RemainingAmount, AmountMatch:', amount, remainingAmount, amountMatch);
-
-    if (isMakerShakerSameUser) {
-      // Is Maker win ?
-      if ((isMatch && result === BETTING_RESULT.SUPPORT_WIN && side === SIDE.SUPPORT)
-          || (isMatch && result === BETTING_RESULT.AGAINST_WIN && side === SIDE.AGAINST)) {
-        isUserShake = false;
-      }
-    }
-
-    if (isUserShake) {
-      shakedItemList = foundShakeList(props, id);
-      if (shakedItemList.length > 0) {
-        itemInfo = shakedItemList[0];
-        idCryptosign = getShakeOffchain(itemInfo.id);
-        amountMatch = itemInfo.amount;
-        winMatch = amountMatch * itemInfo.odds;
-      }
-    }
-
-
-    let status = itemInfo.status;
-    side = itemInfo.side;
-
-    const role = isUserShake ? ROLE.SHAKER : ROLE.INITER;
-    // const blockchainStatusHardcode = 5;
-    // const isMatch = true;
-    // const hardCodeResult = 2;
-
-    let isLoading = false;
-    const isLoadingObj = betHandshakeHandler?.getLoadingOnChain(idCryptosign);
-    console.log('handleStatus idCryptosign:', idCryptosign, ' status = ', status);
-    if (isLoadingObj) {
-      console.log('handleStatus  isLoadingObj:', isLoadingObj);
-      /*
-      if (status === BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINITED || status === BET_BLOCKCHAIN_STATUS.STATUS_DONE) {
-        betHandshakeHandler.setItemOnChain(idCryptosign, null);
-        isLoading = false;
-      } else {
-        status = isLoadingObj.status || status;
-        isLoading = true;
-      }
-      */
-      if (status === BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINITED || status === BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINIT_FAILED
-          || status === BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_FAILED || status === BET_BLOCKCHAIN_STATUS.STATUS_REFUND_FAILED
-          || status === BET_BLOCKCHAIN_STATUS.STATUS_DONE || status === BET_BLOCKCHAIN_STATUS.STATUS_REFUND) {
-        betHandshakeHandler.setItemOnChain(idCryptosign, null);
-        isLoading = false;
-      } else {
-        const { itemOnChain } = isLoadingObj;
-        status = itemOnChain.status || status;
-        isLoading = true;
-      }
-    }
-
-    const statusResult = getStatusLabel(status, result, role, side, isMatch, reportTime, disputeTime);
-    const { title, isAction } = statusResult;
-    const matchDone = status === BET_BLOCKCHAIN_STATUS.STATUS_DONE;
-
-    this.setState({
-      actionTitle: title,
-      statusTitle: statusResult.status,
-      isAction,
-      role,
-      itemInfo,
-      amountMatch,
-      winMatch,
-      isUserShake,
-      shakedItemList,
-      isLoading,
-      matchDone,
-    });
-  }
-
-  randomItemInList(list) {
-    return list[Math.floor(Math.random() * list.length)];
-  }
 
   componentDidMount() {
-    console.log("Feed componentDidMount");
     this.handleStatus(this.props);
   }
 
   componentWillReceiveProps(nextProps) {
-    // console.log('Feeding Next Props:', nextProps);
     if (nextProps && JSON.stringify(nextProps) !== JSON.stringify(this.props)) {
       this.handleStatus(nextProps);
-    }
-  }
-
-  get extraData() {
-    const { extraData } = this.props;
-    try {
-      return JSON.parse(extraData);
-    } catch (e) {
-      console.log(e);
-      return {};
     }
   }
 
@@ -227,183 +87,104 @@ class FeedBetting extends React.Component {
     return buttonClassName;
   }
 
-  renderStatus = () => {
-    const { statusTitle } = this.state;
-    return <div className="statusBetting" dangerouslySetInnerHTML={{ __html: statusTitle }} />;
-  }
-
-  render() {
-    const {
-      actionTitle, isAction, itemInfo, role, isLoading,
-    } = this.state;
-
-    const { side, odds, status } = itemInfo;
-    const { event_name, event_predict } = this.extraData;
-
-    // const styleEventName = {
-    //   background: this.randomItemInList(BACKGROUND_COLORS),
-    // };
-    const colorBySide = side === 1 ? `support` : 'oppose';
-
-    let eventName = event_name || '';
+  formatEventName(eventName) {
+    let name = eventName || '';
     if (eventName.indexOf('Event') === -1) {
-      eventName = `Event: ${eventName}`;
+      name = `Event: ${name}`;
     }
-    let predictName = event_predict || '';
+    return name;
+  }
+
+  formatPredictName(eventPredict) {
+    let predictName = eventPredict || '';
     if (predictName.indexOf('Outcome') !== -1) {
-      predictName = event_predict.slice(8);
+      predictName = eventPredict.slice(8);
     }
-    const buttonClassName = this.getButtonClassName(actionTitle);
-    console.log('Sa Role:', role);
-    return (
-      <div>
-        {/* Feed */}
-        <Feed
-          className="wrapperBettingFeedMe"
-          handshakeId={this.props.id}
-          onClick={this.props.onFeedClick}
-          background="white"
-        >
-          <div className={`eventTitle event-done-${this.state.matchDone}`}>
-            {eventName}
-          </div>
-
-          <div className="predictRow">
-            <div className="predictName predictTitle">
-              <span className={colorBySide}>{side === 1 ? `Support` : 'Oppose'}</span>{predictName}
-            </div>
-            <div className="predictName"><span className="odds-text-feed">Odds</span> <span className={`odds-value-feed-${colorBySide}`}>{odds}</span></div>
-          </div>
-          <div className="clearfix">
-            <div className="bettingInfo">
-              <div className="description">Matched</div>
-              <div className="description">You could win</div>
-            </div>
-            {role == ROLE.INITER ? this.renderMaker() : this.renderShaker()}
-          </div>
-          <div className="bottomDiv">
-            {this.renderStatus()}
-            {actionTitle && <Button isLoading={isLoading} block className={buttonClassName} disabled={!isAction} onClick={() => { this.clickActionButton(actionTitle); }}>{actionTitle}</Button>}
-          </div>
-        </Feed>
-      </div>
-    );
+    return predictName;
   }
-  renderItem(matchedAmount, amount, colorBySide, odds, winMatch, remaining, winValue) {
-    return (
-      <div className="bettingInfoValues">
-        <div>
-          {/* <div className="description">Matched bet (ETH)</div> */}
-          {/* <div className="value">{matchedAmount}/{amount}</div> */}
-          {/* {<div className="value">{amount} ETH</div>} */}
 
-        </div>
-        <div>
-          {/* <div className="description">On odds</div> */}
-          {/* <div className={`value ${colorBySide}`}> {Math.floor(odds*ROUND_ODD)/ROUND_ODD}</div> */}
-          {<div className="value">{matchedAmount}/{amount} ETH</div>}
 
-        </div>
-        <div>
-          {/* <div className="description">You could win</div> */}
-          <div className="value">{winMatch}/{winValue} ETH</div>
-          {/* winMatch > 0 && <div className="value">{Math.floor(winMatch * ROUND) / ROUND} ETH matched</div> */}
-        </div>
-        {/* remaining > 0 && <div className="bettingInfo">
-        <div className="value"> Remaining {remaining} ETH</div>
-    </div> */}
-      </div>
-    );
+  handleStatus(props) {
+
+    const itemInfo = findUserBet(props);
+    const { status } = itemInfo;
+
+    const statusResult = getStatusLabel(itemInfo);
+    const { title, isAction } = statusResult;
+    const matchDone = status === BET_BLOCKCHAIN_STATUS.STATUS_DONE;
+
+    this.setState({
+      actionTitle: title,
+      statusTitle: statusResult.status,
+      isAction,
+      itemInfo,
+      shakedItemList: foundShakeList(props),
+      matchDone,
+    });
   }
-  renderItemShake(shakerList) {
-    let displayWinMatch = 0;
-    let displayAmount = 0;
-    let colorBySide = `support`;
-    let displayMatchedAmount = 0;
-    let displayRemaining = 0;
-    let displayWinValue = 0;
-    const oddsItem = 0;
-    let remainingValue = 0;
-    if (shakerList) {
-      shakerList.forEach((item) => {
-        const {
-          amount = 0, odds = 0, side, remainingAmount,status
-        } = item;
-        console.log('Shake Items Display:', item);
-        remainingValue = remainingAmount || 0;
-        colorBySide = side === 1 ? `support` : 'oppose';
-        const oddsBN = parseBigNumber(odds);
-        const amountBN = parseBigNumber(amount);
-        let amountMatch = parseBigNumber(amount);
-        if(status === BET_BLOCKCHAIN_STATUS.STATUS_INIT_PENDING){
-          amountMatch = parseBigNumber(0);
-        }
-        const winMatch = amountMatch.times(oddsBN).toNumber() || 0;
-        const winValue = amountBN.times(oddsBN).toNumber() || 0;
-        displayWinMatch = Math.floor((Number(displayWinMatch) + winMatch)*ROUND)/ROUND;
-        displayAmount = Math.floor((Number(displayAmount) + amountBN.toNumber())*ROUND)/ROUND;
-        displayMatchedAmount = Math.floor((Number(displayMatchedAmount) + amountMatch.toNumber())*ROUND)/ROUND;
-        //displayRemaining = (Number(displayRemaining) + remainingValue).toFixed();
-        displayWinValue = Math.floor((Number(displayWinValue) + winValue)*ROUND)/ROUND;
 
+  async clickActionButton(title) {
+    const balance = await getBalance();
+    const estimatedGas = await getEstimateGas();
+    let message = null;
+    const {
+      hid,
+    } = this.props; // new state
+
+    const { itemInfo } = this.state;
+    const { id, freeBet, fromAddress } = itemInfo;
+
+    console.log(TAG, 'clickActionButton',
+      ' idCryptosign:', id,
+      ' isFreeBet:', freeBet,
+      ' fromAddress: ', fromAddress,
+    );
+
+
+
+    if (!isRightNetwork()) {
+      message = MESSAGE.RIGHT_NETWORK;
+    } else if (!isSameAddress(fromAddress)) {
+      message = MESSAGE.DIFFERENCE_ADDRESS;
+    } else if (freeBet) {
+      this.handleActionFree(title, id);
+    } else if (estimatedGas > balance) {
+      message = MESSAGE.NOT_ENOUGH_GAS;
+    } else {
+      this.handleActionReal(title, id, hid);
+    }
+    if (message) {
+      this.props.showAlert({
+        message: <div className="text-center">{message}</div>,
+        timeOut: 3000,
+        type: 'danger',
+        callBack: () => {
+        },
       });
     }
 
 
-    return (this.renderItem(displayMatchedAmount, displayAmount, colorBySide, oddsItem, displayWinMatch, displayRemaining, displayWinValue));
-  }
-  renderMaker() {
-    // console.log('Render Maker');
-    const { itemInfo, amountMatch, winMatch } = this.state;
 
-    const {
-      amount = 0, odds = 0, side, remainingAmount,
-    } = itemInfo;
-    const remainingValue = remainingAmount || 0;
-    const winValue = parseBigNumber(amount).times(parseBigNumber(odds)).toNumber() || 0;
-    const displayAmount = Math.floor(amount * ROUND) / ROUND;
-    const displayMatchedAmount = Math.floor(amountMatch * ROUND) / ROUND;
-    const displayRemaining = Math.floor(remainingValue * ROUND) / ROUND;
-    const displayWinMatch = Math.floor(winMatch * ROUND) / ROUND;
-    const displayWinValue = Math.floor(winValue * ROUND) / ROUND;
-    const colorBySide = side === 1 ? `support` : 'oppose';
-
-    return (
-      this.renderItem(displayMatchedAmount, displayAmount, colorBySide, odds, displayWinMatch, displayRemaining, displayWinValue)
-    );
   }
-  renderShaker() {
-    // console.log('Render Maker');
 
-    const { shakedItemList } = this.state;
-
-    return (
-      <div>
-        {this.renderItemShake(shakedItemList)}
-      </div>
-    );
-  }
-  changeOption(value) {
-    // console.log('Choose option:', value)
-    // TO DO: Choose an option
-  }
   handleActionFree(title, offchain) {
     const realId = getId(offchain);
 
     switch (title) {
       case BETTING_STATUS_LABEL.CANCEL:
-        // TO DO: CLOSE BET
-        // this.uninitItem(realId);
         this.uninitItemFree(realId);
         break;
       case BETTING_STATUS_LABEL.WITHDRAW:
         this.collectFree(offchain);
         break;
+      case BETTING_STATUS_LABEL.REFUND:
+        this.refundFree(offchain);
+        break;
+      default:
+        break;
     }
   }
   async handleActionReal(title, offchain, hid) {
-    const realId = getId(offchain);
-    const { itemInfo } = this.state;
 
     switch (title) {
       case BETTING_STATUS_LABEL.CANCEL:
@@ -419,8 +200,12 @@ class FeedBetting extends React.Component {
       case BETTING_STATUS_LABEL.REFUND:
         this.refundOnChain(offchain, hid);
         break;
+      default:
+        break;
     }
   }
+
+
   async cancelOnChain(offchain, hid) {
     const { itemInfo } = this.state;
     const { side, amount, odds } = itemInfo;
@@ -431,7 +216,6 @@ class FeedBetting extends React.Component {
     const result = await betHandshakeHandler.cancelBet(hid, side, amount, odds, offchain);
     const { hash } = result;
     if (hash) {
-      // betHandshakeHandler.setItemOnChain(offchain, false);
       const updateInfo = Object.assign({}, itemInfo);
       updateInfo.status = BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINIT_PENDING;
       betHandshakeHandler.setItemOnChain(offchain, updateInfo);
@@ -446,9 +230,7 @@ class FeedBetting extends React.Component {
     betHandshakeHandler.setItemOnChain(offchain, itemInfo);
     const result = await betHandshakeHandler.withdraw(hid, offchain);
     const { hash } = result;
-    console.log('Sa test:', result);
     if (hash) {
-      console.log('Sa test Update Withdraw UI');
       const updateInfo = Object.assign({}, itemInfo);
       updateInfo.status = BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_PENDING;
       betHandshakeHandler.setItemOnChain(offchain, updateInfo);
@@ -470,53 +252,7 @@ class FeedBetting extends React.Component {
       this.props.updateBettingChange(updateInfo);
     }
   }
-  async clickActionButton(title) {
-    const balance = await getBalance();
-    const estimatedGas = await getEstimateGas();
-    let message = null;
-    const {
-      id, shakeUserIds, freeBet, fromAddress, hid,
-    } = this.props; // new state
-    let idCryptosign = id;
-    let isFreeBet = freeBet;
-    let userFromAddress = fromAddress;
-    const profile = local.get(APP.AUTH_PROFILE);
-    const isUserShake = this.isShakeUser(shakeUserIds, profile.id);
-    if (isUserShake) {
-      const shakedItemList = foundShakeList(this.props, id);
-      if (shakedItemList.length > 0) {
-        const shakeItem = shakedItemList[0];
-        idCryptosign = getShakeOffchain(shakeItem.id);
-        isFreeBet = shakeItem.free_bet;
-        userFromAddress = shakeItem.from_address;
-      }
-    }
-    console.log(
-      'idCryptosign, isFreeBet, isUserShaker, fromAddress: ', idCryptosign,
-      isFreeBet, isUserShake, userFromAddress,
-    );
-    // userFromAddress = "abc";
-    if (!isRightNetwork()) {
-      message = MESSAGE.RIGHT_NETWORK;
-    } else if (!isSameAddress(userFromAddress)) {
-      message = MESSAGE.DIFFERENCE_ADDRESS;
-    } else if (isFreeBet) {
-      this.handleActionFree(title, idCryptosign);
-    } else if (estimatedGas > balance) {
-      message = MESSAGE.NOT_ENOUGH_GAS;
-    } else {
-      this.handleActionReal(title, idCryptosign, hid);
-    }
-    if (message) {
-      this.props.showAlert({
-        message: <div className="text-center">{message}</div>,
-        timeOut: 3000,
-        type: 'danger',
-        callBack: () => {
-        },
-      });
-    }
-  }
+
   loadMyHandshakeList = () => {
     this.props.loadMyHandshakeList({ PATH_URL: API_URL.ME.BASE });
   }
@@ -559,7 +295,6 @@ class FeedBetting extends React.Component {
     }
   }
   collectFree(id) {
-    console.log('Call Collect Free');
     const params = {
       offchain: id,
     };
@@ -595,7 +330,7 @@ class FeedBetting extends React.Component {
   collectFreeFailed = (error) => {
     console.log('collectFreeFailed', error);
     const { status, code } = error;
-    if (status == 0) {
+    if (status === 0) {
       const message = getMessageWithCode(code);
       this.props.showAlert({
         message: <div className="text-center">{message}</div>,
@@ -607,69 +342,36 @@ class FeedBetting extends React.Component {
     }
   }
 
-  refund(id) {
-    const url = API_URL.CRYPTOSIGN.REFUND.concat(`/${id}`);
-    this.props.refund({
-      PATH_URL: API_URL.CRYPTOSIGN.REFUND,
-      METHOD: 'POST',
-      successFn: this.refundSuccess,
-      errorFn: this.refundFailed,
-    });
-  }
-
-  refundSuccess = async (successData) => {
-    console.log('refundSuccess', successData);
-    const { status } = successData;
-    if (status) {
-      const { hid, id, status } = this.props;
-      const { itemInfo } = this.state;
-      const updateInfo = Object.assign({}, itemInfo);
-      updateInfo.bkStatus = itemInfo.status;
-      updateInfo.status = status;
-
-      this.props.updateBettingChange(updateInfo);
-
-
-      const offchain = id;
-      const result = await betHandshakeHandler.refund(hid, offchain);
-    }
-  }
-  refundFailed = (error) => {
-    console.log('refundFailed', error);
-    const { status, code } = error;
-    if (status == 0) {
-      const message = getMessageWithCode(code);
-      this.props.showAlert({
-        message: <div className="text-center">{message}</div>,
-        timeOut: 3000,
-        type: 'danger',
-        callBack: () => {
-        },
-      });
-    }
-  }
-
-
-  rollback(offchain) {
+  refundFree(id) {
     const params = {
-      offchain,
+      offchain: id,
     };
-    this.props.rollback({
-      PATH_URL: API_URL.CRYPTOSIGN.ROLLBACK,
+    this.props.refundFree({
+      PATH_URL: API_URL.CRYPTOSIGN.REFUND_FREE,
       METHOD: 'POST',
       data: params,
-      successFn: this.rollbackSuccess,
-      errorFn: this.rollbackFailed,
+      successFn: this.refundFreeSuccess,
+      errorFn: this.refundFreeFailed,
     });
   }
-  rollbackSuccess = async (successData) => {
-    console.log('rollbackSuccess', successData);
-  }
-  rollbackFailed = (error) => {
-    console.log('rollbackFailed', error);
-    const { status, code } = error;
 
-    if (status == 0) {
+  refundFreeSuccess = async (successData) => {
+    console.log(TAG, 'refundFreeSuccess');
+    const { status } = successData;
+    if (status) {
+      const { itemInfo } = this.state;
+      const { id } = itemInfo;
+      const updateInfo = Object.assign({}, itemInfo);
+      updateInfo.status = BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINIT_PENDING;
+      betHandshakeHandler.setItemOnChain(id, updateInfo);
+      this.props.updateBettingChange(updateInfo);
+    }
+  }
+
+  refundFreeFailed = (error) => {
+    console.log(TAG, 'refundFreeFailed', error);
+    const { status, code } = error;
+    if (status === 0) {
       const message = getMessageWithCode(code);
       this.props.showAlert({
         message: <div className="text-center">{message}</div>,
@@ -680,6 +382,173 @@ class FeedBetting extends React.Component {
       });
     }
   }
+
+
+  renderStatus = () => {
+    const { statusTitle } = this.state;
+    return <div className="statusBetting" dangerouslySetInnerHTML={{ __html: statusTitle }} />;
+  }
+
+
+  renderItem(matchedAmount, amount, winMatch, winValue) {
+    return (
+      <div className="bettingInfoValues">
+        <div>
+          {<div className="value">{matchedAmount}/{amount} ETH</div>}
+        </div>
+        <div>
+          <div className="value">{winMatch}/{winValue} ETH</div>
+        </div>
+      </div>
+    );
+  }
+  renderItemShake(shakerList) {
+    let displayWinMatch = 0;
+    let displayAmount = 0;
+    let displayMatchedAmount = 0;
+    let displayWinValue = 0;
+    if (shakerList) {
+      shakerList.forEach((item) => {
+        const {
+          amount = 0, odds = 0, status
+        } = item;
+        const oddsBN = parseBigNumber(odds);
+        const amountBN = parseBigNumber(amount);
+        let amountMatchBN = amountBN;
+
+        const winValue = amountBN.times(oddsBN).toNumber() || 0;
+        let winMatch = winValue;
+
+        if (status === BET_BLOCKCHAIN_STATUS.STATUS_INIT_PENDING) {
+          amountMatchBN = parseBigNumber(0);
+          winMatch = 0;
+        }
+        displayWinMatch += winMatch;
+        displayAmount += amountBN.toNumber();
+        displayMatchedAmount += amountMatchBN.toNumber();
+        displayWinValue += winValue;
+      });
+
+      displayMatchedAmount = formatAmount(displayMatchedAmount);
+      displayWinMatch = formatAmount(displayWinMatch);
+      displayAmount = formatAmount(displayAmount);
+      displayWinValue = formatAmount(displayWinValue);
+
+      // console.log(TAG, ' renderShaker',
+      //                   ' displayMatchedAmount:', displayMatchedAmount,
+      //                   ' displayWinMatch:', displayWinMatch,
+      //                   ' displayAmount:', displayAmount,
+      //                   ' displayWinValue:', displayWinValue,
+      //                 );
+
+      return (this.renderItem(displayMatchedAmount, displayAmount, displayWinMatch, displayWinValue));
+    }
+    return null;
+  }
+
+  renderShaker() {
+
+    const { shakedItemList } = this.state;
+
+    return (
+      <div>
+        {this.renderItemShake(shakedItemList)}
+      </div>
+    );
+  }
+
+  renderMaker() {
+    const { itemInfo } = this.state;
+    const {
+      amount, odds, remainingAmount, matched,
+    } = itemInfo;
+    const amountBN = parseBigNumber(amount);
+    const zeroBN = parseBigNumber(0);
+    const remainingAmountBN = parseBigNumber(remainingAmount) || zeroBN;
+    const oddsBN = parseBigNumber(odds);
+
+    const amountMatchBN = matched ? amountBN.minus(remainingAmountBN) : zeroBN;
+    const winMatchBN = matched ? amountMatchBN.times(oddsBN) : zeroBN;
+
+    const amountMatch = amountMatchBN.toNumber() || 0;
+    const winMatch = winMatchBN.toNumber() || 0;
+
+    // console.log(TAG, ' renderMaker', ' Matched:', matched,
+    //                     ' Amount:', amountBN.toNumber(),
+    //                     ' Remaining Amount:', remainingAmount,
+    //                     ' Remaining:', remainingAmountBN.toNumber(),
+    //                     ' AmountMatch:', amountMatchBN.toNumber(),
+    //                     ' WinMatch:', winMatchBN.toNumber());
+    const winValue = amountBN.times(oddsBN).toNumber() || 0;
+    const displayAmount = formatAmount(amount);
+
+    const displayMatchedAmount = formatAmount(amountMatch);
+    const displayWinMatch = formatAmount(winMatch);
+    const displayWinValue = formatAmount(winValue);
+
+    return (
+      this.renderItem(displayMatchedAmount, displayAmount, displayWinMatch, displayWinValue)
+    );
+  }
+
+  render() {
+    const {
+      actionTitle, isAction, itemInfo, isLoading,
+    } = this.state;
+
+    const {extraData} = this.props;
+
+    const { side, odds, role } = itemInfo;
+    const { event_name, event_predict } = parseJsonString(extraData);
+
+    const colorBySide = side === 1 ? `support` : 'oppose';
+
+    /*
+    let eventName = event_name || '';
+    if (eventName.indexOf('Event') === -1) {
+      eventName = `Event: ${eventName}`;
+    }
+    */
+    const eventName = this.formatEventName(event_name);
+    const predictName = this.formatPredictName(event_predict);
+
+    const buttonClassName = this.getButtonClassName(actionTitle);
+    return (
+      <div>
+        {/* Feed */}
+        <Feed
+          className="wrapperBettingFeedMe"
+          handshakeId={this.props.id}
+          onClick={this.props.onFeedClick}
+          background="white"
+        >
+          <div className={`eventTitle event-done-${this.state.matchDone}`}>
+            {eventName}
+          </div>
+
+          <div className="predictRow">
+            <div className="predictName predictTitle">
+              <span className={colorBySide}>{side === 1 ? `Support` : 'Oppose'}</span>{predictName}
+            </div>
+            <div className="predictName"><span className="odds-text-feed">Odds</span> <span className={`odds-value-feed-${colorBySide}`}>{odds}</span></div>
+          </div>
+          <div className="clearfix">
+            <div className="bettingInfo">
+              <div className="description">Matched</div>
+              <div className="description">You could win</div>
+            </div>
+            {role == ROLE.INITER ? this.renderMaker() : this.renderShaker()}
+          </div>
+          <div className="bottomDiv">
+            {this.renderStatus()}
+            {actionTitle && <Button isLoading={isLoading} block className={buttonClassName} disabled={!isAction} onClick={() => { this.clickActionButton(actionTitle); }}>{actionTitle}</Button>}
+          </div>
+        </Feed>
+      </div>
+    );
+  }
+
+
 }
 
 const mapState = state => ({
@@ -691,9 +560,8 @@ const mapDispatch = ({
   uninitItem,
   collect,
   collectFree,
-  refund,
-  rollback,
   showAlert,
   uninitItemFree,
+  refundFree,
 });
 export default connect(mapState, mapDispatch)(FeedBetting);

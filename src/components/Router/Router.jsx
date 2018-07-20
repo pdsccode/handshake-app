@@ -64,6 +64,8 @@ class Router extends React.Component {
 
     //console.log('root-router - contructor - init');
   }
+  componentDidMount() {
+  }
 
   static getDerivedStateFromProps(nextProps, prevState) {
     if (nextProps.firebaseApp.config) {
@@ -105,7 +107,7 @@ class Router extends React.Component {
                               if (process.env.isDojo) {
                                 return <Redirect to={{ pathname: URL.HANDSHAKE_CASH }} />
                               }
-                              return <Redirect to={{ pathname: URL.LUCKY_POOL }} />
+                              return <Redirect to={{ pathname: URL.HANDSHAKE_DISCOVER }} />
                             }}
                           />
                           {routers}

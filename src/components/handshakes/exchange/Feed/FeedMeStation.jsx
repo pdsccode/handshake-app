@@ -2,6 +2,7 @@ import React from 'react';
 import './FeedMe.scss';
 import './FeedMeStation.scss';
 import {
+  CRYPTO_CURRENCY,
   FIAT_CURRENCY,
   HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS,
   HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE,
@@ -21,44 +22,38 @@ class FeedMeStation extends React.PureComponent {
     this.state = {
       timePassing: '',
       isShowTimer: false,
+      isFreeStart: false,
     };
   }
 
   componentDidMount() {
-    const { messageMovingCoin, offer } = this.props;
+    const { offer } = this.props;
 
-    const eth = offer.items.ETH;
-    const btc = offer.items.BTC;
+    this.intervalCountdown = setInterval(() => {
+      let isShowTimer = false;
+      let lastUpdateAt = '';
 
-    let isShowTimer = false;
-    let lastUpdateAt = '';
-
-    if (eth) {
-      const status = HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[eth.status];
-      isShowTimer = status === HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CREATED || status === HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSING;
-
-      if (isShowTimer) {
-        lastUpdateAt = eth.updatedAt;
-      }
-    }
-
-    if (btc) {
-      if (!isShowTimer) {
-        const status = HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[btc.status];
+      for (const item of Object.values(offer.items)) {
+        const status = HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[item.status];
         isShowTimer = status === HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CREATED || status === HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSING;
 
         if (isShowTimer) {
-          lastUpdateAt = eth.updatedAt;
+          lastUpdateAt = item.updatedAt;
+
+          break;
         }
       }
-    }
 
-    this.setState({ isShowTimer });
+      this.setState({ timePassing: daysBetween(new Date(lastUpdateAt * 1000), new Date()), isShowTimer });
+    }, 1000);
 
-    if (messageMovingCoin && isShowTimer) {
-      this.intervalCountdown = setInterval(() => {
-        this.setState({ timePassing: daysBetween(new Date(lastUpdateAt * 1000), new Date()) });
-      }, 1000);
+
+    // Check free start -> show trial
+    for (const item of Object.values(offer.items)) {
+      if (item.currency === CRYPTO_CURRENCY.ETH) {
+        this.setState({ isFreeStart: item.freeStart !== '' });
+        break;
+      }
     }
   }
 
@@ -79,7 +74,7 @@ class FeedMeStation extends React.PureComponent {
       transactionTotal,
       coins,
     } = this.props;
-    const { isShowTimer } = this.state;
+    const { isShowTimer, isFreeStart } = this.state;
 
     // console.log('thisss', this.props);
     return (
@@ -111,6 +106,13 @@ class FeedMeStation extends React.PureComponent {
                 <span className="ml-2"><FormattedMessage id="ex.shop.shake.label.reviews.count" values={{ reviewCount }} /></span>
               </div>
             </div>
+            {
+              isFreeStart && (
+                <div className="d-table-cell align-middle text-right">
+                  <div className="order-type"><FormattedMessage id="ex.shop.dashboard.label.trial" /></div>
+                </div>
+              )
+            }
           </div>
 
           <div className="mt-3 d-table w-100 station-info">

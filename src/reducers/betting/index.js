@@ -11,6 +11,7 @@ const bettingReducter = (state = {
   against: [],
   tradedVolum: 0,
   isFetching: false,
+  showedLuckyPool: false,
 }, action) => {
   switch (action.type) {
     // Initial Handshake
@@ -82,6 +83,12 @@ const bettingReducter = (state = {
         isFetching: true,
 
       };
+    case BETTING_ACTIONS.UPDATE_SHOW_LUCKY_POOL:
+      return {
+        ...state,
+        showedLuckyPool: action.value,
+      };
+
     default:
       return state;
   }
