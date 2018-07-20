@@ -55,14 +55,12 @@ class BettingFilter extends React.Component {
       side: SIDE.SUPPORT,
     };
 
-    this.callGetHandshakes = this.callGetHandshakes.bind(this);
-    this.checkShowFreeBanner = this.checkShowFreeBanner.bind(this);
+    this.openPopup = this.openPopup.bind(this);
   }
 
   componentDidMount() {
 
-    this.props.getHanshakeList(this.callGetHandshakes);
-    this.props.checkFree(this.checkShowFreeBanner);
+    this.props.openPopup(this.openPopup);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -75,7 +73,7 @@ class BettingFilter extends React.Component {
       against: filterAgainst,
       isFirstFree,
     });
-    this.checkShowFreeBanner();
+    //this.checkShowFreeBanner();
   }
 
   getInfoShare(selectedMatch, selectedOutcome) {
@@ -85,6 +83,14 @@ class BettingFilter extends React.Component {
       title: `I put a bet on ${selectedMatch.value}. ${selectedOutcome.value}! Put your coin where your mouth is.`,
       shareUrl: `${window.location.origin}/discover/${encodeURI(selectedMatch.value)}?match=${selectedMatch.id}&out_come=${selectedOutcome.id}${ref}?is_private=0`,
     };
+  }
+  async openPopup(item) {
+
+    this.callGetHandshakes(item);
+    await this.checkShowFreeBanner();
+    this.setState({
+      bettingShakeIsOpen: true,
+    });
   }
 
   callGetHandshakes(item) {
@@ -117,7 +123,7 @@ class BettingFilter extends React.Component {
     this.callGetHandshakes(selectedOutcome);
   }
   */
-
+/*
   closeShakePopup() {
 
     this.setState({
@@ -133,7 +139,7 @@ class BettingFilter extends React.Component {
     });
     this.modalBetFreeRef.close();
   }
-
+*/
   async checkShowFreeBanner() {
     const balance = await getBalance();
     console.log(TAG, 'checkShowFreeBanner', balance, typeof balance);
@@ -176,12 +182,18 @@ class BettingFilter extends React.Component {
       marketAgainstOdds: defaultOdds(support),
       closingDate,
       reportTime,
-      // onSubmitClick: (() => {
-      //   this.closeShakePopup();
-      //   this.modalLuckyRealRef.open();
-      // }),
-      onSubmitClick: this.props.onSubmitClick,
-      onCancelClick: this.props.onCancelClick,
+      onSubmitClick: (() => {
+        this.setState({
+          bettingShakeIsOpen: false,
+        });
+        this.props.onSubmitClick();
+      }),
+      onCancelClick: (() => {
+        this.setState({
+          bettingShakeIsOpen: false,
+        });
+        this.props.onCancelClick();
+      }),
     };
 
     const orderBook = { support, against };

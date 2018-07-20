@@ -33,16 +33,11 @@ class Prediction extends React.Component {
   }
 
   openOrderPlace(selectedOutcome) {
+    this.openFilter(selectedOutcome);
     this.modalOrderPlace.open();
-    this.callHanshake(selectedOutcome);
-    this.callCheckFree();
   }
 
   closeOrderPlace() {
-
-    this.setState({
-      bettingShakeIsOpen: false,
-    });
     this.modalOrderPlace.close();
   }
 
@@ -102,8 +97,7 @@ class Prediction extends React.Component {
             selectedOutcome={state.selectedOutcome}
             selectedMatch={state.selectedMatch}
             render={state.isShowOrder}
-            getHanshakeList={(click) =>{ this.callHanshake = click; }}
-            checkFree={ (click) => { this.callCheckFree = click; }}
+            openPopup={(click)=> {this.openFilter = click}}
             onSubmitClick={()=> {
               this.closeOrderPlace();
               this.modalLuckyReal.open();

@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 // service, constant
 import { required } from '@/components/core/form/validation';
 import { initHandshake } from '@/reducers/handshake/action';
-import { HANDSHAKE_ID, API_URL, URL } from '@/constants';
+import { HANDSHAKE_ID, API_URL } from '@/constants';
 import { MESSAGE } from '@/components/handshakes/betting/message.js';
 import { BetHandshakeHandler } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
 import { SIDE } from '@/components/handshakes/betting/constants.js';
@@ -58,6 +58,7 @@ class BettingCreate extends React.Component {
       values: [],
       isChangeOdds: false,
       winValue: 0,
+      disable: false
     };
     this.onSubmit = ::this.onSubmit;
     this.renderInput = ::this.renderInput;
@@ -84,8 +85,11 @@ class BettingCreate extends React.Component {
   async onSubmit(e) {
     e.preventDefault();
     const {
-      values
+      values,
     } = this.state;
+    this.setState({
+      disable: true,
+    });
 
     const { bettingShake } = this.props;
     const { closingDate, matchName, matchOutcome, onSubmitClick } = bettingShake;
@@ -142,7 +146,7 @@ class BettingCreate extends React.Component {
 
   updateDefaultValues = (bettingShake) => {
     const { values } = this.state;
-    const { side, amountSupport, amountAgainst, marketSupportOdds, marketAgainstOdds } = bettingShake;
+    const { side, amountSupport, amountAgainst, marketSupportOdds, marketAgainstOdds, isOpen } = bettingShake;
 
     const defaultValue = calculateBetDefault(side, marketSupportOdds, marketAgainstOdds, amountSupport, amountAgainst);
 
@@ -151,7 +155,11 @@ class BettingCreate extends React.Component {
 
     const { winValue } = defaultValue;
 
-    this.setState({ values, winValue });
+    this.setState({
+      values,
+      winValue,
+      disable: !isOpen,
+    });
   }
 
 
@@ -251,7 +259,7 @@ class BettingCreate extends React.Component {
       amount: `${fields.event_bet}`,
       extra_data: JSON.stringify(fields),
       currency: 'ETH',
-      side: side,
+      side,
       from_address: fromAddress,
       chain_id: getChainIdDefaultWallet(),
     };
@@ -300,6 +308,7 @@ class BettingCreate extends React.Component {
   renderForm() {
     const { inputList } = this;
     const { theme } = this.props;
+    const { disable } = this.state;
     const { side } = this.props.bettingShake;
     const buttonClass = theme;
     const sideText = getKeyByValue(SIDE, side);
@@ -312,7 +321,7 @@ class BettingCreate extends React.Component {
             <span className="amountValue">{this.state.winValue}</span>
           </div>
         </div>
-        <Button type="submit" block className={buttonClass}>Place {sideText} order</Button>
+        <Button type="submit" disabled={disable} block className={buttonClass}>Place {sideText} order</Button>
       </form>
     );
   }
@@ -326,7 +335,6 @@ class BettingCreate extends React.Component {
   }
 }
 const mapState = state => ({
-  //matches: state.betting.matches,
 });
 const mapDispatch = ({
   initHandshake,

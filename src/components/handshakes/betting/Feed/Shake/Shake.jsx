@@ -39,11 +39,9 @@ class BetingShake extends React.Component {
     reportTime: PropTypes.any.isRequired,
     onSubmitClick: PropTypes.func,
     onCancelClick: PropTypes.func,
-    onCreateBetSuccess: PropTypes.func,
   }
 
   static defaultProps = {
-    outcomeId: -1,
     onSubmitClick: undefined,
     onCancelClick: undefined,
   };
@@ -59,7 +57,6 @@ class BetingShake extends React.Component {
       oddValue: 0,
       amountValue: 0,
       winValue: 0,
-      disable: false,
       estimateGas: 0,
     };
     this.onSubmit = this.onSubmit.bind(this);
@@ -74,42 +71,22 @@ class BetingShake extends React.Component {
   componentDidMount() {
     this.props.onClickSubmit(this.onSubmit);
 
-    const {
-      marketSupportOdds,
-      marketAgainstOdds,
-      side,
-      amountSupport,
-      amountAgainst,
-    } = this.props;
-
-    this.updateDefautValues(side, marketSupportOdds, marketAgainstOdds, amountSupport, amountAgainst);
+    this.updateDefautValues();
   }
 
   async componentWillReceiveProps(nextProps) {
-    const {
-      marketSupportOdds,
-      marketAgainstOdds,
-      side,
-      amountSupport,
-      amountAgainst,
-      isOpen,
-    } = nextProps;
 
-    this.updateDefautValues(side, marketSupportOdds, marketAgainstOdds, amountSupport, amountAgainst);
+    this.updateDefautValues();
 
     const estimateGas = await getEstimateGas();
     this.setState({
       estimateGas,
-      disable: !isOpen,
-
     });
   }
 
   onSubmit = async (e) => {
     console.log("Submit");
-    this.setState({
-      disable: true,
-    });
+
     const { oddValue, amountValue } = this.state;
 
     const { matchName, matchOutcome, side, closingDate, onSubmitClick } = this.props;
@@ -160,13 +137,13 @@ class BetingShake extends React.Component {
     });
   }
 
-  updateDefautValues(side, marketSupportOdds, marketAgainstOdds, amountSupport, amountAgainst) {
+  updateDefautValues() {
+    const { side, marketSupportOdds, marketAgainstOdds, amountSupport, amountAgainst } = this.props;
     const defaultValue = calculateBetDefault(side, marketSupportOdds, marketAgainstOdds, amountSupport, amountAgainst);
     this.setState({
       oddValue: defaultValue.marketOdds,
       amountValue: defaultValue.marketAmount,
       winValue: defaultValue.winValue,
-
     });
   }
 

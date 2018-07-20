@@ -21,30 +21,38 @@ class AdvancedOrderMode extends React.Component {
   }
 
   state = {
-    orderClick: false,
+    disable: false,
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { bettingShake } = nextProps;
+    const { isOpen } = bettingShake;
+    this.setState({
+      disable: !isOpen,
+    });
   }
 
   handleClick = () => {
-    /*
     this.setState({
-      orderClick: true,
+      disable: true,
     });
-    */
     this.onButtonSubmit();
   }
+
 
   render() {
     const { bettingShake, orderBook, theme } = this.props;
     const { side } = bettingShake;
+    const { disable } = this.state;
     const buttonClass = theme;
     const sideText = getKeyByValue(SIDE, side);
     return (
       <React.Fragment>
-        <BettingShake {...bettingShake}
-        //orderClick={this.state.orderClick}
+        <BettingShake
+          {...bettingShake}
           onClickSubmit={(click) =>{ this.onButtonSubmit = click; }}/>
         <OrderBook {...orderBook} />
-        <Button block className={buttonClass} onClick={this.handleClick}>Place {sideText} Order</Button>
+        <Button block disabled={disable} className={buttonClass} onClick={this.handleClick}>Place {sideText} Order</Button>
       </React.Fragment>
     );
   }
