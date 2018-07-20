@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import BettingFilter from '@/components/handshakes/betting/Feed/Filter';
+import BetMode from '@/components/handshakes/betting/Feed/OrderPlace/BetMode';
 import ModalDialog from '@/components/core/controls/ModalDialog';
 import Loading from '@/components/Loading';
 import LuckyReal from '@/components/handshakes/betting/LuckyPool/LuckyReal/LuckyReal';
@@ -23,10 +23,13 @@ class Prediction extends React.Component {
   static defaultProps = {
     eventList: [],
   };
-  state = {
-    isShowOrder: false,
-    selectedOutcome: null,
-  };
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      selectedOutcome: null,
+    };
+  }
 
   componentDidMount() {
     const { dispatch } = this.props;
@@ -57,9 +60,9 @@ class Prediction extends React.Component {
       reportTime: event.reportTime,
       value: event.name,
     };
-    this.openOrderPlace(selectedOutcome);
+    // this.openOrderPlace(selectedOutcome);
+    this.modalOrderPlace.open();
     this.setState({
-      isShowOrder: true,
       selectedOutcome,
       selectedMatch,
     });
@@ -99,7 +102,7 @@ class Prediction extends React.Component {
         {this.renderShareToWin()}
         {this.renderEventList(props)}
         <ModalDialog onRef={(modal) => { this.modalOrderPlace = modal; }}>
-          <BettingFilter
+          <BetMode
             selectedOutcome={state.selectedOutcome}
             selectedMatch={state.selectedMatch}
             render={state.isShowOrder}

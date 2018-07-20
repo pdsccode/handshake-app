@@ -5,7 +5,15 @@ import PropTypes from 'prop-types';
 import { withFirebase } from 'react-redux-firebase';
 // action, mock
 import { fireBaseBettingChange, fireBaseExchangeDataChange, loadMyHandshakeList } from '@/reducers/me/action';
-import { API_URL, APP, HANDSHAKE_ID, HANDSHAKE_ID_DEFAULT, URL } from '@/constants';
+import {
+  API_URL,
+  APP,
+  EXCHANGE_FEED_TYPE,
+  HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS,
+  HANDSHAKE_ID,
+  HANDSHAKE_ID_DEFAULT,
+  URL,
+} from '@/constants';
 import { injectIntl } from 'react-intl';
 // components
 import { Link } from 'react-router-dom';
@@ -37,6 +45,7 @@ import { change, Field } from 'redux-form';
 import Modal from '@/components/core/controls/Modal/Modal';
 import BackupWallet from '@/components/Wallet/BackupWallet/BackupWallet';
 import RestoreWallet from '@/components/Wallet/RestoreWallet/RestoreWallet';
+import { FormattedMessage } from 'react-intl';
 
 const TAG = 'Me';
 const maps = {
@@ -204,9 +213,11 @@ class Me extends React.Component {
 
   componentWillUnmount() {
     const handshakeDefault = this.getDefaultHandShakeId();
-    this.setState({ cashTab: CASH_TAB.TRANSACTION,
+    this.setState({
+      cashTab: CASH_TAB.TRANSACTION,
       handshakeIdActive: handshakeDefault,
-      firstTime: true });
+      firstTime: true,
+    });
   }
 
   setOfflineStatus = (online) => {
@@ -236,13 +247,17 @@ class Me extends React.Component {
     this.props.history.push(`${URL.HANDSHAKE_CREATE}?id=${HANDSHAKE_ID.EXCHANGE}`);
   }
 
+  handleUpdateExchange = () => {
+    this.props.history.push(`${URL.HANDSHAKE_CREATE}?id=${HANDSHAKE_ID.EXCHANGE}&update=true`);
+  }
+
   loadMyHandshakeList = () => {
     const qs = { };
     const {
       handshakeIdActive,
     } = this.state;
 
-    console.log('loadMyHandshakeList',this.state);
+    console.log('loadMyHandshakeList', this.state);
 
     if (handshakeIdActive) {
       qs.type = handshakeIdActive;
@@ -316,7 +331,7 @@ class Me extends React.Component {
     this.setState({ cashTab: newValue }, () => {
       this.loadMyHandshakeList();
       if (newValue === CASH_TAB.DASHBOARD) {
-        // this.getOfferStore();
+        this.getOfferStore();
         this.getDashboardInfo();
       }
     });
@@ -341,7 +356,18 @@ class Me extends React.Component {
     const { messages } = this.props.intl;
     const { offerStores, propsModal, modalContent } = this.state;
     const online = !this.props.auth.offline;
-    const haveOffer = offerStores ? (offerStores.itemFlags.ETH || offerStores.itemFlags.BTC) : false;
+    let haveOffer = false;
+
+    if (offerStores) {
+      for (const value of Object.values(offerStores.itemFlags)) {
+        if (value) {
+          haveOffer = true;
+          break;
+        }
+      }
+    }
+
+    const { authProfile } = this.props;
 
     return (
       <Grid className="me">
@@ -378,7 +404,7 @@ class Me extends React.Component {
           </Col>
         </Row>
 
-        <div className="my-3">
+        <div className="mt-2 mb-1">
           <FormFilterFeeds>
             <div className="d-table w-100">
               <div className="d-table-cell"><label className="label-filter-by">{messages.me.feed.filterBy}</label></div>
@@ -396,7 +422,7 @@ class Me extends React.Component {
 
             { this.state.handshakeIdActive === HANDSHAKE_ID.EXCHANGE && (
               <div>
-                <hr />
+                <hr style={{ margin: '10px 0 5px' }} />
                 <div>
                   <Field
                     name="cash-show-type"
@@ -424,6 +450,12 @@ class Me extends React.Component {
               listFeed.map((handshake) => {
                   const FeedComponent = maps[handshake.type];
                   if (FeedComponent) {
+                    if (handshake.offerFeedType === EXCHANGE_FEED_TYPE.OFFER_STORE_SHAKE &&
+                      handshake.status === HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.PRE_SHAKING &&
+                      handshake.initUserId === authProfile?.id
+                    ) {
+                      return null;
+                    }
                     return (
                       <Col key={handshake.id} className="feed-wrapper">
                         <FeedComponent
@@ -440,7 +472,9 @@ class Me extends React.Component {
                   return null;
                 })
               ) : this.state.handshakeIdActive === HANDSHAKE_ID.EXCHANGE && this.state.cashTab === CASH_TAB.DASHBOARD ? (
-                <div >
+                <div className="text-center">
+                  <p>{messages.me.feed.cash.stationExplain}</p>
+                  <p>{messages.me.feed.cash.stationCreateSuggest}</p>
                   <button className="btn btn-primary btn-block" onClick={this.showRestoreWallet}>{messages.me.feed.cash.restoreStation}</button>
                 </div>
               ) :
@@ -450,7 +484,10 @@ class Me extends React.Component {
             }
             {
               listFeed && listFeed.length > 0 && this.state.handshakeIdActive === HANDSHAKE_ID.EXCHANGE && this.state.cashTab === CASH_TAB.DASHBOARD && (
-                <button className="btn btn-primary btn-block" onClick={this.showBackupWallet}>{messages.me.feed.cash.backupStation}</button>
+                <div className="text-center">
+                  <button className="btn btn-primary btn-block" onClick={this.showBackupWallet}>{messages.me.feed.cash.backupStation}</button>
+                  {haveOffer && (<button className="btn btn-link text-underline" onClick={this.handleUpdateExchange}><FormattedMessage id="ex.shop.dashboard.button.updateInventory" /></button>)}
+                </div>
               )
             }
           </Col>
