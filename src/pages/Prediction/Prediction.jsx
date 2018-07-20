@@ -5,6 +5,7 @@ import BettingFilter from '@/components/handshakes/betting/Feed/Filter';
 import ModalDialog from '@/components/core/controls/ModalDialog';
 import Loading from '@/components/Loading';
 import LuckyReal from '@/components/handshakes/betting/LuckyPool/LuckyReal/LuckyReal';
+import GA from '@/services/googleAnalytics';
 
 import { eventSelector, isLoading } from './selector';
 import { loadMatches } from './action';
@@ -62,6 +63,11 @@ class Prediction extends React.Component {
       selectedOutcome,
       selectedMatch,
     });
+
+    // send event tracking
+    try {
+      GA.clickChooseAnEvent(event.name, itemData.name);
+    } catch (err) {}
   };
 
   renderEventList = (props) => {

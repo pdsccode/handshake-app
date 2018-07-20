@@ -117,29 +117,6 @@ class BettingFilter extends React.Component {
     });
   }
 
-  /*
-  refreshHanshakeTable() {
-    const { selectedOutcome } = this.state;
-    this.callGetHandshakes(selectedOutcome);
-  }
-  */
-/*
-  closeShakePopup() {
-
-    this.setState({
-      bettingShakeIsOpen: false,
-    });
-    this.modalBetRef.close();
-  }
-
-  closeShakeFreePopup() {
-    this.setState({
-      isFirstFree: false,
-      bettingShakeIsOpen: false,
-    });
-    this.modalBetFreeRef.close();
-  }
-*/
   async checkShowFreeBanner() {
     const balance = await getBalance();
     console.log(TAG, 'checkShowFreeBanner', balance, typeof balance);

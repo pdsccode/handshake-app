@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import { SIDE } from '@/components/handshakes/betting/constants.js';
 import { getKeyByValue } from '@/utils/object';
 import Button from '@/components/core/controls/Button';
+import GA from '@/services/googleAnalytics';
+
 import BettingShake from './../Shake';
 import OrderBook from './OrderBook';
 
@@ -33,10 +35,17 @@ class AdvancedOrderMode extends React.Component {
   }
 
   handleClick = () => {
+    const { bettingShake } = this.props;
+    const { matchName, matchOutcome, side } = bettingShake;
+
     this.setState({
       disable: true,
     });
     this.onButtonSubmit();
+    // send event tracking
+    try {
+      GA.clickGoButtonAdvanced(matchName, matchOutcome, side);
+    } catch (err) {}
   }
 
 

@@ -96,7 +96,7 @@ class BettingCreate extends React.Component {
 
     // send event tracking
     try {
-      GA.clickGoButtonCreatePage(matchName, matchOutcome, side);
+      GA.clickGoButtonSimpleMode(matchName, matchOutcome, side);
     } catch (err) {}
 
 
