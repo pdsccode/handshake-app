@@ -4,7 +4,7 @@ import Feed from '@/components/core/presentation/Feed';
 import Button from '@/components/core/controls/Button';
 import './styles.scss';
 import createForm from '@/components/core/form/createForm';
-import { formatMoneyByLocale, getOfferPrice } from '@/services/offer-util';
+import { formatAmountCurrency, formatMoneyByLocale, getOfferPrice } from '@/services/offer-util';
 import axios from 'axios';
 import {
   fieldCleave,
@@ -107,6 +107,8 @@ class Component extends React.Component {
       lng: 0,
       isUpdate,
       enableAction: true,
+      buyBalance: 0,
+      sellBalance: 0,
     };
     // this.mainColor = _sample(feedBackgroundColors)
     this.mainColor = '#1F2B34';
@@ -205,7 +207,7 @@ class Component extends React.Component {
       }
 
       if (!isUpdate && isAllInitiate) {
-        const message = <FormattedMessage id="offerStoresAlreadyCreated"/>;
+        const message = <FormattedMessage id="offerStoresAlreadyCreated" />;
 
         this.setState({
           modalContent:
@@ -238,25 +240,28 @@ class Component extends React.Component {
             nextCurrency = item;
           }
         }
-        return {value: item,
-          text: <div className="currency-selector"><img src={CRYPTO_CURRENCY_COLORS[item].icon}/>
-            <span>{CRYPTO_CURRENCY_NAME[item]}</span></div>,
-          hide: !this.offer.itemFlags[item]
-        };
-      } else {
-        if (!this.offer.itemFlags[item] || this.offer.itemFlags[item] === undefined) {
-          isAllInitiate = false;
-
-          if (!nextCurrency) {
-            nextCurrency = item;
-          }
-        }
-        return {value: item,
-          text: <div className="currency-selector"><img src={CRYPTO_CURRENCY_COLORS[item].icon}/>
-            <span>{CRYPTO_CURRENCY_NAME[item]}</span></div>,
-          hide: this.offer.itemFlags[item]
+        return {
+          value: item,
+          text: <div className="currency-selector"><img src={CRYPTO_CURRENCY_COLORS[item].icon} />
+            <span>{CRYPTO_CURRENCY_NAME[item]}</span>
+                </div>,
+          hide: !this.offer.itemFlags[item],
         };
       }
+      if (!this.offer.itemFlags[item] || this.offer.itemFlags[item] === undefined) {
+        isAllInitiate = false;
+
+        if (!nextCurrency) {
+          nextCurrency = item;
+        }
+      }
+      return {
+        value: item,
+        text: <div className="currency-selector"><img src={CRYPTO_CURRENCY_COLORS[item].icon} />
+          <span>{CRYPTO_CURRENCY_NAME[item]}</span>
+              </div>,
+        hide: this.offer.itemFlags[item],
+      };
     });
 
     if (nextCurrency) {
@@ -277,7 +282,6 @@ class Component extends React.Component {
           isExist = true;
           const isFreeStart = currency === CRYPTO_CURRENCY.ETH && item.freeStart !== '';
           this.setState({
-            // isUpdate: HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[item.status] === HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.ACTIVE,
             enableAction: (HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[item.status] !== HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CREATED &&
               HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[item.status] !== HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSING) && !isFreeStart,
           });
@@ -285,6 +289,7 @@ class Component extends React.Component {
           if (isUpdate) {
             rfChange(nameFormExchangeCreate, 'customizePriceBuy', item.buyPercentage * 100);
             rfChange(nameFormExchangeCreate, 'customizePriceSell', item.sellPercentage * 100);
+            this.setState({ buyBalance: item.buyBalance, sellBalance: item.sellBalance });
           }
 
           break;
@@ -294,11 +299,8 @@ class Component extends React.Component {
 
     if (!isExist) {
       this.setState({
-        // isUpdate: false,
         enableAction: true,
       });
-      // rfChange(nameFormExchangeCreate, 'customizePriceBuy', -0.25);
-      // rfChange(nameFormExchangeCreate, 'customizePriceSell', 0.25);
     }
   }
 
@@ -745,7 +747,9 @@ class Component extends React.Component {
     const {
       currency, listOfferPrice, stationCurrency, customizePriceBuy, customizePriceSell, amountBuy, amountSell, freeStartInfo, isChooseFreeStart,
     } = this.props;
-    const { isUpdate, enableAction } = this.state;
+    const {
+      isUpdate, enableAction, buyBalance, sellBalance,
+    } = this.state;
     const fiatCurrency = stationCurrency?.id;
     const modalContent = this.state.modalContent;
     // const allowInitiate = this.offer ? (!this.offer.itemFlags.ETH || !this.offer.itemFlags.BTC) : true;
@@ -792,8 +796,23 @@ class Component extends React.Component {
 
           <div className="label">{isUpdate ? (<FormattedMessage id="ex.create.label.beASeller.update" />) : (<FormattedMessage id="ex.create.label.beASeller" />)}</div>
           <div className="section">
+            {
+              isUpdate && (
+                <div>
+                  <div className="d-flex">
+                    <label className="col-form-label mr-auto label-create"><span className="align-middle"><FormattedMessage id="ex.create.label.currentBalance" /></span></label>
+                    <div className="input-group">
+                      <div><span className="form-text">{formatAmountCurrency(sellBalance)}</span></div>
+                    </div>
+                  </div>
+
+                  <hr className="hrLine" />
+                </div>
+              )
+            }
+
             <div className="d-flex">
-              <label className="col-form-label mr-auto label-create"><span className="align-middle"><FormattedMessage id="ex.create.label.amountSell" /></span></label>
+              <label className="col-form-label mr-auto label-create"><span className="align-middle">{isUpdate ? (<FormattedMessage id="ex.create.label.amountSell.update" />) : (<FormattedMessage id="ex.create.label.amountSell" />)}</span></label>
               <div className="input-group">
                 <Field
                   name="amountSell"
@@ -850,8 +869,22 @@ class Component extends React.Component {
 
           <div className="label">{isUpdate ? (<FormattedMessage id="ex.create.label.beABuyer.update" />) : (<FormattedMessage id="ex.create.label.beABuyer" />)}</div>
           <div className="section">
+            {
+              isUpdate && (
+                <div>
+                  <div className="d-flex">
+                    <label className="col-form-label mr-auto label-create"><span className="align-middle"><FormattedMessage id="ex.create.label.currentBalance" /></span></label>
+                    <div className="input-group">
+                      <div><span className="form-text">{formatAmountCurrency(buyBalance)}</span></div>
+                    </div>
+                  </div>
+
+                  <hr className="hrLine" />
+                </div>
+              )
+            }
             <div className="d-flex">
-              <label className="col-form-label mr-auto label-create"><span className="align-middle"><FormattedMessage id="ex.create.label.amountBuy" /></span></label>
+              <label className="col-form-label mr-auto label-create"><span className="align-middle">{isUpdate ? (<FormattedMessage id="ex.create.label.amountBuy.update" />) : (<FormattedMessage id="ex.create.label.amountBuy" />)}</span></label>
               <div className="input-group">
                 <Field
                   name="amountBuy"
