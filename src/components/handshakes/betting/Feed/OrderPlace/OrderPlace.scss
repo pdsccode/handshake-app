@@ -14,6 +14,7 @@
     background-color: transparent;
     padding: rem-calc(7px);
     border: 1px solid #979797;
+    text-transform: uppercase;
     @media (max-width: 350px) {
       font-size: rem-calc(10px);
     }
@@ -36,6 +37,7 @@
       justify-content: flex-start;
       .TabItem {
         margin-right: 20px;
+        text-transform: uppercase;
       }
     }
   }
@@ -123,5 +125,46 @@
   }
   .btn.Orange {
     background-color: #fa6b49;
+  }
+}
+
+// Betting Mode
+.BetModeContainer {
+  > .TabList {
+    display: flex;
+    padding: 10px 20px;
+    justify-content: space-around;
+    background: #0C1B51;
+    .BetModeItem {
+      position: relative;
+      padding: 2px 0 2px 30px;
+      &:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        background: rgba(216,216,216,0.14);
+        border: 2px solid #434B6B;
+        border-radius: 50%;
+      }
+      &.Active {
+        &:after {
+          content: '';
+          position: absolute;
+          top: 7px;
+          left: 7px;
+          width: 6px;
+          height: 6px;
+          background: #ffffff;
+          border-radius: 50%;
+        }
+      }
+    }
+  }
+  > .TabPanel {
+    padding: 20px 20px 20px;
   }
 }

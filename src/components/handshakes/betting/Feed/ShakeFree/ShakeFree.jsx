@@ -19,7 +19,7 @@ import {
 import { validateBet } from '@/components/handshakes/betting/validation.js';
 import { MESSAGE } from '@/components/handshakes/betting/message.js';
 import { calculateBetDefault } from '@/components/handshakes/betting/calculation';
-
+import { getKeyByValue } from '@/utils/object';
 
 import { BetHandshakeHandler } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
 import { SIDE } from '@/components/handshakes/betting/constants.js';
@@ -69,7 +69,7 @@ class BetingShakeFree extends React.Component {
       amountValue: 0,
       winValue: 0,
       disable: false,
-
+      side: 1,
     };
 
 
@@ -150,7 +150,10 @@ class BetingShakeFree extends React.Component {
     }, () => this.updateTotal());
 
 
-    this.setState({ buttonClass: `btnOK ${id === 1 ? 'btnBlue' : 'btnRed'}` });
+    this.setState({
+      side: id,
+      buttonClass: `btnOK ${id === 1 ? 'btnBlue' : 'btnRed'}`,
+    });
   }
 
   updateTotal() {
@@ -387,6 +390,8 @@ class BetingShakeFree extends React.Component {
       type: 'text',
     };
 
+    const sideText = getKeyByValue(SIDE, this.state.side);
+
     return (
       <form className="wrapperBettingShakeFree" onSubmit={this.onSubmit}>
         <p className="titleForm text-center">BET FREE ON THE OUTCOME</p>
@@ -403,7 +408,7 @@ class BetingShakeFree extends React.Component {
           <div className="possibleWinningsValue">{estimateGas}</div>
         </div>
         <Button type="submit" disabled={disable} block className={buttonClass}>
-          Go
+          Place {sideText} Order
         </Button>
       </form>
     );
