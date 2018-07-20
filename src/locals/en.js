@@ -616,6 +616,14 @@ export default {
           to_address: 'Wallet address...',
           select_wallet: 'Select a wallet',
         },
+        error: {
+          insufficient: 'You have insufficient coin to make the transfer.'
+        },
+        menu: {
+          developer_docs: "Developer Docs",
+          payment_buttons: "Payment Buttons",
+          help: "Help & Support"
+        }
       },
       remove: {
         title: 'Remove',

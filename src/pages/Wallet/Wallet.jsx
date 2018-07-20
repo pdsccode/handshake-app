@@ -63,6 +63,7 @@ import AddCollectible from '@/components/Wallet/AddCollectible/AddCollectible';
 
 // style
 import './Wallet.scss';
+import './BottomSheet.scss';
 import CoinTemp from '@/pages/Wallet/CoinTemp';
 
 const QRCode = require('qrcode.react');

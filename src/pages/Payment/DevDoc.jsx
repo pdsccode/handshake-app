@@ -7,10 +7,9 @@ import {bindActionCreators} from 'redux';
 import local from '@/services/localStore';
 import {APP} from '@/constants';
 import { StringHelper } from '@/services/helper';
-import "./Overview.scss"
 
 
-class PaymentOverview extends React.Component {
+class DevDoc extends React.Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
   }
@@ -27,11 +26,9 @@ class PaymentOverview extends React.Component {
 
   }
 
-  Overview() {
+  code1() {
     return (
       <div className="content">
-        <h3>Why apply Ninja Payment?</h3>
-        <div><iframe width="100%" height="315" src="https://www.youtube.com/embed/8d4Of_17lP4" frameBorder="0" allow="autoplay; encrypted-media" allowFullScreen></iframe></div>
         <div className="title">
           <img src="https://bitpay.com/images/no-fees.fa98ab81.svg" width="50px" /><br/>
           Keep more of your money.
@@ -57,10 +54,10 @@ class PaymentOverview extends React.Component {
     )
   }
 
-  Features() {
+  code2() {
     return (
       <div className="content text-left">
-        <h3 className="text-center mt-5 mb-0">Platform</h3>
+        <h5 className="text-center mt-5 mb-0">Platform</h5>
         <div className="title">Direct Bank Deposit </div>
         <p>Receive settlement directly to your bank account in 33 countries.</p>
 
@@ -73,23 +70,10 @@ class PaymentOverview extends React.Component {
     )
   }
 
-  SellingInPerson() {
+  code3() {
     return (
       <div className="content text-left">
-        <h3 className="text-center mt-5 mb-0">Retail</h3>
-        <div className="title">Payment Buttons and Hosted Checkout</div>
-        <p>Add a Bitcoin and Bitcoin Cash payment option to your website - just copy and paste a few lines of script.</p>
-
-        <div className="title">Shopping Cart Plugins</div>
-        <p>Use one of our popular ecommerce plug-ins to seamlessly enable blockchain payments on your website.</p>
-
-        <div className="title">Hosted Integrations</div>
-        <p>Activate blockchain payments through your ecommerce platform provider.</p>
-
-        <div className="title">Custom Checkout Forms and Browser Redirect URLs</div>
-        <p>Direct your customers through the checkout experience and return traffic to your website after payment.</p>
-
-        <h3 className="text-center mt-5 mb-0">In app purchase</h3>
+        <h5 className="text-center mt-5 mb-0">In app purchase</h5>
         <div className="title">Mobile Point of Sale App</div>
         <p>Accept Bitcoin and Bitcoin Cash on phones or tablets with BitPay Checkout for iOS and Android.</p>
 
@@ -102,10 +86,10 @@ class PaymentOverview extends React.Component {
     )
   }
 
-  SellingOnline() {
+  code4() {
     return (
       <div className="content text-left">
-        <h3 className="text-center mt-5 mb-0">E-Commerce</h3>
+        <h5 className="text-center mt-5 mb-0">E-Commerce</h5>
         <div className="title">Payment Buttons and Hosted Checkout</div>
         <p>Add a Bitcoin and Bitcoin Cash payment option to your website - just copy and paste a few lines of script.</p>
 
@@ -117,16 +101,6 @@ class PaymentOverview extends React.Component {
 
         <div className="title">Custom Checkout Forms and Browser Redirect URLs</div>
         <p>Direct your customers through the checkout experience and return traffic to your website after payment.</p>
-
-        <h3 className="text-center mt-5 mb-0">In app purchase</h3>
-        <div className="title">Mobile Point of Sale App</div>
-        <p>Accept Bitcoin and Bitcoin Cash on phones or tablets with BitPay Checkout for iOS and Android.</p>
-
-        <div className="title">Multiple User Capability</div>
-        <p>Add multiple users to BitPay Checkout or enable your cashiers and servers to accept Bitcoin and Bitcoin Cash to your account on their own phones.</p>
-
-        <div className="title">Web-Based Checkout</div>
-        <p>No app, no problem. Access responsive retail invoices via the web browser on laptops, phones, and desktops.</p>
       </div>
     )
   }
@@ -136,13 +110,13 @@ class PaymentOverview extends React.Component {
     if(this.state.menu) {
       switch (this.state.menu) {
         case 2:
-          return this.Features();
+          return this.code2();
         case 3:
-          return this.SellingOnline();
+          return this.code3();
         case 4:
-          return this.SellingInPerson();
+          return this.code4();
         default:
-          return this.Overview();
+          return this.code1();
       }
     }
 
@@ -154,10 +128,10 @@ class PaymentOverview extends React.Component {
     return (
       <div className="overview-wrapper">
         <ul className="inline-list subnav">
-          <li className={this.state.menu == 1 ? "active" : ""}><a onClick={() => this.setState({menu:1})}>Overview</a></li>
-          <li className={this.state.menu == 2 ? "active" : ""}><a  onClick={() => this.setState({menu:2})}>Features</a></li>
-          <li className={this.state.menu == 3 ? "active" : ""}><a onClick={() => this.setState({menu:3})}>Selling Online</a></li>
-          <li className={this.state.menu == 4 ? "active" : ""}><a onClick={() => this.setState({menu:4})}>Selling In Person</a></li>
+          <li><a className={this.state.menu == 1 ? "active" : ""} onClick={() => this.setState({menu:1})}>Code 1</a></li>
+          <li><a className={this.state.menu == 2 ? "active" : ""} onClick={() => this.setState({menu:2})}>Code 2</a></li>
+          <li><a className={this.state.menu == 3 ? "active" : ""} onClick={() => this.setState({menu:3})}>Code 3</a></li>
+          <li><a className={this.state.menu == 4 ? "active" : ""} onClick={() => this.setState({menu:4})}>Code 4</a></li>
         </ul>
         {
           this.showMenu()
@@ -174,5 +148,5 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
 });
 
-export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(PaymentOverview));
+export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(DevDoc));
 

@@ -2,16 +2,23 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
+// service, constant
+import { Grid, Row, Col } from 'react-bootstrap';
+
 import Modal from '@/components/core/controls/Modal';
 import Checkout from './Checkout';
 import Overview from './Overview';
+import DevDoc from './DevDoc';
 import { setHeaderRight } from '@/reducers/app/action';
 import { showAlert } from '@/reducers/app/action';
 import { showLoading, hideLoading } from '@/reducers/app/action';
+import ReactBottomsheet from 'react-bottomsheet';
+import HeaderMore from './HeaderMore';
 import qs from 'querystring';
 
 // style
 import './Payment.scss';
+import '../Wallet/BottomSheet.scss';
 
 class Payment extends React.Component {
   static propTypes = {
@@ -30,11 +37,14 @@ class Payment extends React.Component {
       coinName: "",
       amount: 0,
       fee: 0,
+      total: 0,
       active: false,
       orderID: "",
       confirmURL: "",
+      bottomSheet: false,
+      listMenu: [],
     };
-
+    this.props.setHeaderRight(this.headerRight());
   }
 
   showAlert(msg, type = 'success', timeOut = 5000, icon = '') {
@@ -70,8 +80,8 @@ class Payment extends React.Component {
     this.querystringParsed = qs.parse(querystring);
     const { order_id, amount, coin, ca, sa, confirm_url } = this.querystringParsed;
     if (order_id && amount && sa && coin) {
-      //let fee = await wallet.getFee();
-      this.setState({active: true, fee: 0, toAddress: sa, fromAddress: ca, amount: !isNaN(amount) ? amount : 0,
+
+      this.setState({active: true, toAddress: sa, fromAddress: ca, amount: !isNaN(amount) ? amount : 0,
         coinName: coin.toUpperCase(), orderID: order_id, confirmURL: confirm_url}, () => {
           this.modalSendRef.open();
         }
@@ -79,16 +89,71 @@ class Payment extends React.Component {
     }
   }
 
+  onIconRightHeaderClick = () => {
+    let listMenu = this.creatSheetMenuHeaderMore();
+    console.log(listMenu);
+    this.setState({ listMenu: listMenu }, () => {
+      console.log(this.state.listMenu);
+      this.toggleBottomSheet();
+    });
+
+  }
+
+  toggleBottomSheet() {
+    const obj = (this.state.bottomSheet) ? { bottomSheet: false } : { bottomSheet: true };
+    this.setState(obj);
+  }
+
+  creatSheetMenuHeaderMore() {
+    const { messages } = this.props.intl;
+    const obj = [];
+
+    obj.push({
+      title: messages.wallet.action.payment.menu.developer_docs,
+      handler: () => {
+        this.toggleBottomSheet();
+        this.modalDevDocRef.open();
+      },
+    });
+    obj.push({
+      title: messages.wallet.action.payment.menu.payment_buttons,
+      handler: () => {
+        this.toggleBottomSheet();
+        alert('not ready');
+      },
+    });
+    obj.push({
+      title: messages.wallet.action.payment.menu.help,
+      handler: () => {
+        this.toggleBottomSheet();
+        alert('not ready');
+      },
+    });
+    return obj;
+  }
+
+  chooseWallet = async (wallet) => {
+    let fee = 0, total = 0;
+    if(wallet) {
+      fee = await wallet.getFee();
+      total = wallet.formatNumber(Number(this.state.amount) + Number(fee), 6);
+      this.setState({active: true, fee: fee, total: total});
+    }
+  }
+
   closePayNinja = () => {
     this.setState({ isShowWallets: false });
   }
 
-  successPayNinja = () => {
+  successPayNinja = (data) => {
     this.modalSendRef.close();
     this.setState({isShowSuccess: true});
 
-    let fullBackUrl = `${this.state.confirmURL}?order_id=${this.state.orderID}&status=0&hash=`;
-    setTimeout(() => {window.location.href = fullBackUrl}, 3000);
+    //console.log(data);
+    if(data) {
+      let fullBackUrl = `${this.state.confirmURL}?order_id=${this.state.orderID}&hash=${data.hash}`;
+      setTimeout(() => {window.location.href = fullBackUrl}, 3000);
+    }
   }
 
   // To address those who want the "root domain," use this function:
@@ -120,12 +185,20 @@ class Payment extends React.Component {
           domain = splitArr[arrLen - 3] + '.' + domain;
       }
     }
+
+    if(!domain) domain = "{shop}"
+
     return domain;
+  }
+
+  headerRight() {
+    return (<HeaderMore onHeaderMoreClick={() => this.onIconRightHeaderClick()} />);
   }
 
   showPayNinja = () => {
     const { messages } = this.props.intl;
     return (
+      <div className="checkout-wrapper">
       <Modal title="Pay with Ninja" onRef={modal => this.modalSendRef = modal}  onClose={this.closePayNinja}>
         <div className="shop-info">
           <div className="order">Order # {this.state.orderID}</div>
@@ -136,14 +209,22 @@ class Payment extends React.Component {
           <div className="label">Payment Amount</div>
           <div className="key">{this.state.amount} {this.state.coinName}</div>
           <div className="clearfix"></div>
-          <div className="label">Network Cost</div>
+          <div className="label">Transaction Fee</div>
           <div className="key">{this.state.fee} {this.state.coinName}</div>
           <div className="clearfix"></div>
           <div className="label bold">Total</div>
-          <div className="key bold">{this.state.amount} {this.state.coinName}</div>
+          <div className="key bold">{this.state.total} {this.state.coinName}</div>
         </div>
-        <Checkout isShowWallets={true} active={this.state.active}  toAddress={this.state.toAddress} fromAddress={this.state.fromAddress} amount={this.state.amount} coinName={this.state.coinName} onFinish={() => { this.successPayNinja() }} />
-      </Modal>);
+        <Checkout active={this.state.active}
+          toAddress={this.state.toAddress}
+          fromAddress={this.state.fromAddress}
+          amount={this.state.amount}
+          coinName={this.state.coinName}
+          chooseWallet={(result) => { this.chooseWallet(result);}}
+          onFinish={(result) => { this.successPayNinja(result); }
+        } />
+      </Modal>
+      </div>);
   }
 
   showOverview = () => {
@@ -155,7 +236,7 @@ class Payment extends React.Component {
   showSuccess = () => {
     return(
       <div>
-        <div className="payment-success">Ninja get back to webshop {this.state.confirmURL}... please wait!</div>
+        <div className="payment-success">Ninja get back to webshop <u>{this.state.confirmURL}</u>... please wait!</div>
         {/* {
           this.state.confirmURL ? <Redirect to={{ pathname: this.state.confirmURL }} /> : ""
         } */}
@@ -169,13 +250,27 @@ class Payment extends React.Component {
 
       <div>
         {
-          this.showPayNinja()
-        }
-        {
           !this.state.isShowWallets && !this.state.isShowSuccess ? this.showOverview() : ""
         }
         {
           this.state.isShowSuccess ? this.showSuccess() : ""
+        }
+
+        <Grid>
+          <ReactBottomsheet
+            visible={this.state.bottomSheet}
+            appendCancelBtn={false}
+            onClose={this.toggleBottomSheet.bind(this)}
+            list={this.state.listMenu}
+          />
+        </Grid>
+
+        <Modal title="Developer Documents" onRef={modal => this.modalDevDocRef = modal}>
+          <DevDoc />
+        </Modal>
+
+        {
+          this.showPayNinja()
         }
       </div>
     );

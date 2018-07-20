@@ -1,8 +1,11 @@
 @import './src/styles/style';
 
-.modal-custom-header {
-  background: #292929 !important;
-  color:#f8dba8 !important;
+
+.checkout-wrapper {
+  .modal-custom-header {
+    background: #434343ff !important;
+    color:#057aff !important
+  }
 }
 
 .shop-info{
@@ -50,7 +53,7 @@
 
   .h5-border{
     width: 100px;
-    border-bottom: solid 3px orange;
+    border-bottom: solid 3px #1e4eff;
     margin-left: calc(50% - 50px);
   }
   .content{

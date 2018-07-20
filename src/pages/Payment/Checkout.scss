@@ -21,18 +21,30 @@
       padding: 10px 0px;
       margin-bottom: 20px;
       border-radius: 6px;
-      background: #fdf4e4;
+      background: #e4f1fd;
 
       p.address {
         text-align: center;
-        font-size: 13px;
+        font-size: 15px;
         margin: 0px;
+        padding-bottom: 10px;
       }
 
-      p.qrLink{
-        text-align: center;
-        font-size: 16px;
+      p.copyAddress{
+        font-size: 15px;
         margin: 10px 0px 0px 0px;
+        width: 50%;
+        text-align: center;
+        cursor: pointer;
+      }
+
+      p.qrCode{
+        float: right;
+        font-size: 15px;
+        margin: 10px 0px 0px 0px;
+        text-align: center;
+        width: 50%;
+        cursor: pointer;
       }
     }
   }
@@ -107,5 +119,38 @@
     // left: 0;
     // border-radius: 0;
     padding: 0.9625rem 0;
+  }
+}
+
+
+.bodyConfirm .left{
+  float: left;
+  width: auto;
+  padding-left: 30px;
+  padding-right: 30px;
+  min-width: 125px;
+}
+.bodyConfirm .right{
+  float: right;
+  width: auto;
+  padding-left: 30px;
+  padding-right: 30px;
+  min-width: 125px;
+}
+.bodyConfirm{
+  padding: 15px;
+  overflow: hidden;
+  margin: auto;
+  width: 100%;
+  margin-bottom: 5px;
+  padding-left: 0;
+  padding-right: 0;
+
+}
+
+.messageBox{
+  background-color: #2ED573;
+  span{
+    color: #fff;
   }
 }

@@ -75,21 +75,17 @@ export class Ethereum extends Wallet {
   }
 
   async getFee() {
-    const wallet = MasterWallet.getWalletDefault('ETH');
-    const neuron = wallet.chainId === 4 ? MasterWallet.neutronTestNet : MasterWallet.neutronMainNet; // new Neuron(chainId);
-    return neuron.caculateLimitGasWithEthUnit(neuron.gasPrice);
+    const web3 = this.getWeb3();
+    const gasPrice = new BN(await web3.eth.getGasPrice());
+    //const estimateGas = new BN(balance).div(gasPrice);
+    const limitedGas = 210000;
+    //const estimatedGas = await BN.min(estimateGas, limitedGas);
 
-    // const web3 = new Web3(new Web3.providers.HttpProvider(this.network));
-    // const gasPrice = new BN(await web3.eth.getGasPrice());
-    //
-    // const limitedGas = new BN(150000);
-    //
-    // const estimatedGas = limitedGas.mul(gasPrice);
+    console.log('transfer gasPrice->', parseInt(gasPrice));
+    //console.log('transfer estimatedGas->', String(estimatedGas));
+    console.log('transfer limitedGas->', String(limitedGas));
 
-    // console.log('getFee, gasPrice', gasPrice.toString());
-    // console.log('getFee, estimateGas', estimatedGas.toString());
-
-    // return Web3.utils.fromWei(estimatedGas);
+    return Number(web3.utils.fromWei(String(limitedGas * gasPrice)));
   }
 
   async getTransactionReceipt(hash) {
@@ -120,7 +116,7 @@ export class Ethereum extends Wallet {
 
       let balance = await web3.eth.getBalance(this.address);
       balance = await Web3.utils.fromWei(balance.toString());
-
+      console.log("balance", balance);
       if (balance == 0 || balance <= amountToSend) {
         return { status: 0, message: 'messages.ethereum.error.insufficient' };
       }
@@ -207,7 +203,7 @@ export class Ethereum extends Wallet {
   async getTransactionHistory(pageno) {
     let result = [];
     const API_KEY = configs.network[4].apikeyEtherscan;
-    const url = `${this.constructor.API[this.getNetworkName()]}?module=account&action=txlist&address=0x56627819B7622aC4b2F248D6C45c9C71f4865730&startblock=0&endblock=99999999&page=${pageno}&offset=20&sort=desc&apikey=${API_KEY}`;
+    const url = `${this.constructor.API[this.getNetworkName()]}?module=account&action=txlist&address=${this.address}&startblock=0&endblock=99999999&page=${pageno}&offset=20&sort=desc&apikey=${API_KEY}`;
     const response = await axios.get(url);
     if (response.status == 200) {
       result = response.data.result;
@@ -255,7 +251,7 @@ export class Ethereum extends Wallet {
     return result;
   }
 
-  formatNumber(value){
+  formatNumber(value, decimal=6){
     let result = 0, count = 0;
     try {
       if(!isNaN(value)) result = Number(value);
@@ -263,8 +259,8 @@ export class Ethereum extends Wallet {
       if (Math.floor(value) !== value)
           count = value.toString().split(".")[1].length || 0;
 
-      if(count > 6)
-        result = value.toFixed(6);
+      if(count > decimal)
+        result = Number(value).toFixed(decimal);
     }
     catch(e) {
       result = 0;
