@@ -30,6 +30,7 @@ import {
   FIAT_CURRENCY_LIST,
   HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS,
   HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE,
+  HANDSHAKE_EXCHANGE_SHOP_OFFER_SUB_STATUS,
   MIN_AMOUNT,
   NB_BLOCKS,
   URL,
@@ -283,7 +284,8 @@ class Component extends React.Component {
           const isFreeStart = currency === CRYPTO_CURRENCY.ETH && item.freeStart !== '';
           this.setState({
             enableAction: (HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[item.status] !== HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CREATED &&
-              HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[item.status] !== HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSING) && !isFreeStart,
+              HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[item.status] !== HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSING &&
+              HANDSHAKE_EXCHANGE_SHOP_OFFER_SUB_STATUS.refilling !== item.subStatus) && !isFreeStart,
           });
 
           if (isUpdate) {
