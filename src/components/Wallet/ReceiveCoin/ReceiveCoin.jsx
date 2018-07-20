@@ -242,7 +242,7 @@ class ReceiveCoin extends React.Component {
     this.setState({ inputSendAmountValue: value});
     
     let symbol = this.state.isCurrency ? messages.wallet.action.receive.label.usd : (this.state.walletSelected ? StringHelper.format("{0}", this.state.walletSelected.name) : '');
-    let placeholder = (value == 0 || value.toString() == '') ? "" : value.toString() + " " + symbol
+    let placeholder = value.toString() == '' ? "" : value.toString() + " " + symbol
 
     this.props.rfChange(nameFormReceiveWallet, 'amountCoinTemp', placeholder);
     let isCurrency = this.state.isCurrency;
