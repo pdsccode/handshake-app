@@ -92,7 +92,14 @@ class BettingCreate extends React.Component {
     });
 
     const { bettingShake } = this.props;
-    const { closingDate, matchName, matchOutcome, onSubmitClick } = bettingShake;
+    const { closingDate, matchName, matchOutcome, onSubmitClick, side } = bettingShake;
+
+    // send event tracking
+    try {
+      GA.clickGoButtonCreatePage(matchName, matchOutcome, side);
+    } catch (err) {}
+
+
     const amount = parseBigNumber(values.event_bet);
     const odds = parseBigNumber(values.event_odds);
     const fromAddress = getAddress();
