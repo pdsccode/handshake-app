@@ -379,7 +379,8 @@ class ReceiveCoin extends React.Component {
                   className={["form-control", "amountCoin"]}
                   component={fieldInput}
                   value={this.state.inputSendAmountValue}
-                  onChange={evt => this.updateAddressAmountValue(evt)}                  
+                  onChange={evt => this.updateAddressAmountValue(evt)}
+                  validate={[amountValid]}
                   autoComplete="off"
                 />               
               </div>
