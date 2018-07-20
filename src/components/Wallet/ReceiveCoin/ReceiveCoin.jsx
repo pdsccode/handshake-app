@@ -131,7 +131,7 @@ class ReceiveCoin extends React.Component {
   }
 
   resetForm(){
-    this.props.clearFields(nameFormReceiveWallet, false, false, "amountCoin");
+    this.props.clearFields(nameFormReceiveWallet, false, false, "amountCoin", "amountCoinTemp");
   }
 
   showLoading = () => {
@@ -238,7 +238,13 @@ class ReceiveCoin extends React.Component {
   }
 
   canculator(value){
+    const { messages } = this.props.intl;    
     this.setState({ inputSendAmountValue: value});
+    
+    let symbol = this.state.isCurrency ? messages.wallet.action.receive.label.usd : (this.state.walletSelected ? StringHelper.format("{0}", this.state.walletSelected.name) : '');
+    let placeholder = (value == 0 || value.toString() == '') ? "" : value.toString() + " " + symbol
+
+    this.props.rfChange(nameFormReceiveWallet, 'amountCoinTemp', placeholder);
     let isCurrency = this.state.isCurrency;
     if (isCurrency){
       let money = value, rate = 0, amount = 0;
