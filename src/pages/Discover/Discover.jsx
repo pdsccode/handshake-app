@@ -40,6 +40,7 @@ import ninjaLogoSVG from '@/assets/images/logo.png';
 //
 import DiscoverBetting from '@/components/handshakes/betting/Discover/Discover';
 import LuckyLanding from '@/pages/LuckyLanding/LuckyLanding';
+import * as gtag from '@/services/ga-utils';
 
 
 // style
@@ -47,7 +48,6 @@ import '@/components/handshakes/exchange/Feed/FeedExchange.scss';
 import './Discover.scss';
 // import { Helmet } from "react-helmet";
 // import icon2KuNinja from '@/assets/images/icon/2_ku_ninja.svg';
-
 const maps = {
   [HANDSHAKE_ID.PROMISE]: FeedPromise,
   [HANDSHAKE_ID.BETTING]: FeedBetting,
@@ -339,6 +339,11 @@ class DiscoverPage extends React.Component {
     const { type } = handshake;
     switch (type) {
       case HANDSHAKE_ID.EXCHANGE: {
+        gtag.event({
+          category: 'Cash',
+          action: 'click_feed',
+          // label: ''
+        })
         const { modalContent, modalClassName } = extraData;
         if (modalContent) {
           this.setState({ modalContent, propsModal: { className: modalClassName } }, () => {
