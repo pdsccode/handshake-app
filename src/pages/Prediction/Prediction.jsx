@@ -46,9 +46,6 @@ class Prediction extends React.Component {
       value: event.name,
     };
     this.modalOrderPlace.open();
-    //console.log('SA TEST:', this.modalOrderPlace);
-    //console.log('Sa TEST:', this.modalOrderPlace.getWrappedInstance());
-    //this.modalOrderPlace.callGetHandshakes(selectedOutcome);
     this.callHanshake(selectedOutcome);
     this.setState({
       isShowOrder: true,

@@ -18,9 +18,10 @@ import { showAlert } from '@/reducers/app/action';
 import {
   getChainIdDefaultWallet,
   isExistMatchBet, getAddress, parseBigNumber,
-  calculateBetDefault,
   formatAmount,
 } from '@/components/handshakes/betting/utils.js';
+import { calculateBetDefault, calculateWinValues } from '@/components/handshakes/betting/calculation';
+
 
 import { getKeyByValue } from '@/utils/object';
 
@@ -41,41 +42,35 @@ const item = {
 
 class BettingCreate extends React.Component {
   static propTypes = {
-    industryId: PropTypes.number.isRequired,
+    bettingShake: PropTypes.object,
     onClickSend: PropTypes.func,
     initHandshake: PropTypes.func.isRequired,
   }
 
   static defaultProps = {
-
+    bettingShake: {}
   }
 
   constructor(props) {
     super(props);
 
-    const { bettingShake } = props;
-    const { side, amountSupport, amountAgainst, marketSupportOdds, marketAgainstOdds } = bettingShake;
-
-    const values = {};
-    const defaultValue = calculateBetDefault(side, marketSupportOdds, marketAgainstOdds, amountSupport, amountAgainst);
-
-    values.event_odds = defaultValue.marketOdds;
-    values.event_bet = defaultValue.marketAmount;
-
     this.state = {
-      values,
+      values: [],
       isChangeOdds: false,
-      winValue: defaultValue.winValue,
+      winValue: 0,
     };
     this.onSubmit = ::this.onSubmit;
     this.renderInput = ::this.renderInput;
     this.renderForm = ::this.renderForm;
     this.renderNumber = ::this.renderNumber;
 
-    console.log(TAG, 'constructor', 'bettingShake', bettingShake);
 
   }
   componentDidMount() {
+    const { bettingShake } = this.props;
+
+    console.log(TAG, 'componentDidMount', 'bettingShake', bettingShake);
+    this.updateDefaultValues(bettingShake);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -138,11 +133,10 @@ class BettingCreate extends React.Component {
         isChangeOdds: true,
       });
     }
-    const amountBN = parseBigNumber(values.event_bet);
-    const oddsBN = parseBigNumber(values.event_odds);
-    const total = amountBN.times(oddsBN).toNumber();
+
+    const total = calculateWinValues(values.event_bet, values.event_odds);
     this.setState({
-      winValue: formatAmount(total) || 0,
+      winValue: formatAmount(total),
     });
   }
 

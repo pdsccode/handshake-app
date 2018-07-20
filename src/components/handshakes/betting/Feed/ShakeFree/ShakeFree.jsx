@@ -15,10 +15,10 @@ import { showAlert } from '@/reducers/app/action';
 import {
   getMessageWithCode, getChainIdDefaultWallet,
   getEstimateGas, getAddress, parseBigNumber,
-  calculateBetDefault,
 } from '@/components/handshakes/betting/utils';
 import { validateBet } from '@/components/handshakes/betting/validation.js';
 import { MESSAGE } from '@/components/handshakes/betting/message.js';
+import { calculateBetDefault } from '@/components/handshakes/betting/calculation';
 
 
 import { BetHandshakeHandler } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
