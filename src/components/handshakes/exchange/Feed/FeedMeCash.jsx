@@ -18,13 +18,10 @@ import { FormattedMessage } from 'react-intl';
 class FeedMeCash extends React.PureComponent {
   state = { timePassing: '' };
   componentDidMount() {
-    const { messageMovingCoin, lastUpdateAt } = this.props;
-
-    if (messageMovingCoin) {
-      this.intervalCountdown = setInterval(() => {
-        this.setState({ timePassing: daysBetween(new Date(lastUpdateAt * 1000), new Date()) });
-      }, 1000);
-    }
+    this.intervalCountdown = setInterval(() => {
+      const { lastUpdateAt } = this.props;
+      this.setState({ timePassing: daysBetween(new Date(lastUpdateAt * 1000), new Date()) });
+    }, 1000);
   }
 
   componentWillUnmount() {
@@ -108,7 +105,7 @@ class FeedMeCash extends React.PureComponent {
           </div>
           { messageMovingCoin && (
             <div className="countdown d-table-cell text-right">
-              <img src={iconSpinner} width="14px" />
+              <img src={iconSpinner} width="14px" style={{ marginTop: '-2px' }} />
               <span className="ml-1">{this.state.timePassing}</span>
             </div>)
           }

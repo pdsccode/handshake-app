@@ -60,7 +60,7 @@ export const getStatusLabel = (item) => {
       || (matched && result === BETTING_RESULT.INITED && isExpiredDate(reportTime))
       || status === BET_BLOCKCHAIN_STATUS.STATUS_REFUND) {
         //REFUND ACTION
-      return refundAction(status);
+      return refundAction(status, reportTime);
   }
 
   if (result === BETTING_RESULT.INITED && // hasn't has result
@@ -173,18 +173,25 @@ const cancelAction = (blockchainStatus) => {
   return { title: label, isAction, status: strStatus };
 }
 
-const refundAction = (blockchainStatus) => {
+const refundAction = (blockchainStatus, reportTime) => {
   let label = null;
   let strStatus = null;
   let isAction = false;
+
+
   switch (blockchainStatus) {
     case BET_BLOCKCHAIN_STATUS.STATUS_REFUND:
       strStatus = BETTING_STATUS_LABEL.REFUNDED;
       break;
     default:
-      label = BETTING_STATUS_LABEL.REFUND;
-      strStatus = BETTING_STATUS_LABEL.REFUNDING;
-      isAction = true;
+      if (!isExpiredDate(reportTime)) {
+        strStatus = BETTING_STATUS_LABEL.REFUNDING + BETTING_STATUS_LABEL.REFUND_WAIT;
+      } else {
+        label = BETTING_STATUS_LABEL.REFUND;
+        strStatus = BETTING_STATUS_LABEL.REFUNDING;
+        isAction = true;
+      }
+
       break;
   }
 
