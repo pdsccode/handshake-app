@@ -88,7 +88,7 @@ class BettingCreate extends React.Component {
     } = this.state;
 
     const { bettingShake } = this.props;
-    const { closingDate, matchName, matchOutcome } = bettingShake;
+    const { closingDate, matchName, matchOutcome, onSubmitClick } = bettingShake;
     const amount = parseBigNumber(values.event_bet);
     const odds = parseBigNumber(values.event_odds);
     const fromAddress = getAddress();
@@ -98,7 +98,7 @@ class BettingCreate extends React.Component {
     const { status, message } = validate;
     if (status) {
       this.initHandshake(values, fromAddress);
-
+      onSubmitClick();
     } else {
       if (message){
         this.props.showAlert({
@@ -241,39 +241,9 @@ class BettingCreate extends React.Component {
     );
   }
 
-  renderForm() {
-    const { inputList } = this;
-    const { theme } = this.props;
-    const { side } = this.props.bettingShake;
-    const buttonClass = theme;
-    const sideText = getKeyByValue(SIDE, side);
-    return (
-      <form className="wrapperBetting" onSubmit={this.onSubmit}>
-        <div className="formInput">
-          {inputList.map((field, index) => this.renderItem(field, index))}
-          <div className="rowWrapper">
-            <span className="amountLabel">Amount you could win</span>
-            <span className="amountValue">{this.state.winValue}</span>
-          </div>
-        </div>
-        <Button type="submit" block className={buttonClass}>Place {sideText} order</Button>
-      </form>
-    );
-  }
-
-  render() {
-    return (
-      <div>
-        {this.renderForm()}
-      </div>
-    );
-  }
-
   // Service
   initHandshake(fields, fromAddress) {
-    //const { selectedOutcome } = this.state;
     const { side, outcomeId } = this.props.bettingShake;
-    //const chainId = betHandshakeHandler;
     const params = {
       type: HANDSHAKE_ID.BETTING,
       outcome_id: outcomeId,
@@ -281,7 +251,7 @@ class BettingCreate extends React.Component {
       amount: `${fields.event_bet}`,
       extra_data: JSON.stringify(fields),
       currency: 'ETH',
-      side: parseInt(side),
+      side: side,
       from_address: fromAddress,
       chain_id: getChainIdDefaultWallet(),
     };
@@ -325,6 +295,34 @@ class BettingCreate extends React.Component {
   }
   initHandshakeFailed = (error) => {
     console.log('initHandshakeFailed', error);
+  }
+
+  renderForm() {
+    const { inputList } = this;
+    const { theme } = this.props;
+    const { side } = this.props.bettingShake;
+    const buttonClass = theme;
+    const sideText = getKeyByValue(SIDE, side);
+    return (
+      <form className="wrapperBetting" onSubmit={this.onSubmit}>
+        <div className="formInput">
+          {inputList.map((field, index) => this.renderItem(field, index))}
+          <div className="rowWrapper">
+            <span className="amountLabel">Amount you could win</span>
+            <span className="amountValue">{this.state.winValue}</span>
+          </div>
+        </div>
+        <Button type="submit" block className={buttonClass}>Place {sideText} order</Button>
+      </form>
+    );
+  }
+
+  render() {
+    return (
+      <div>
+        {this.renderForm()}
+      </div>
+    );
   }
 }
 const mapState = state => ({

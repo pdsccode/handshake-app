@@ -112,7 +112,7 @@ class BetingShake extends React.Component {
     });
     const { oddValue, amountValue } = this.state;
 
-    const { matchName, matchOutcome, side, closingDate } = this.props;
+    const { matchName, matchOutcome, side, closingDate, onSubmitClick } = this.props;
 
     const amount = parseBigNumber(amountValue);
     const odds = parseBigNumber(oddValue);
@@ -129,7 +129,7 @@ class BetingShake extends React.Component {
     const { status, message } = validate;
     if (status) {
       this.initHandshake(amount, odds);
-      //this.props.onSubmitClick();
+      onSubmitClick();
 
     } else {
       if(message){

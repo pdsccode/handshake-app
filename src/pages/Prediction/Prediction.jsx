@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import BettingFilter from '@/components/handshakes/betting/Feed/Filter';
 import ModalDialog from '@/components/core/controls/ModalDialog';
 import Loading from '@/components/Loading';
+import LuckyReal from '@/components/handshakes/betting/LuckyPool/LuckyReal/LuckyReal';
+
 import { eventSelector, isLoading } from './selector';
 import { loadMatches } from './action';
 import EventItem from './EventItem';
@@ -30,6 +32,20 @@ class Prediction extends React.Component {
     dispatch(loadMatches());
   }
 
+  openOrderPlace(selectedOutcome) {
+    this.modalOrderPlace.open();
+    this.callHanshake(selectedOutcome);
+    this.callCheckFree();
+  }
+
+  closeOrderPlace() {
+
+    this.setState({
+      bettingShakeIsOpen: false,
+    });
+    this.modalOrderPlace.close();
+  }
+
   handleClickEventItem = (id, e, props, itemData) => {
     const { event } = props;
     const selectedOutcome = {
@@ -45,8 +61,7 @@ class Prediction extends React.Component {
       reportTime: event.reportTime,
       value: event.name,
     };
-    this.modalOrderPlace.open();
-    this.callHanshake(selectedOutcome);
+    this.openOrderPlace(selectedOutcome);
     this.setState({
       isShowOrder: true,
       selectedOutcome,
@@ -75,6 +90,7 @@ class Prediction extends React.Component {
     );
   }
 
+
   renderComponent = (props, state) => {
     return (
       <div className={Prediction.displayName}>
@@ -87,8 +103,20 @@ class Prediction extends React.Component {
             selectedMatch={state.selectedMatch}
             render={state.isShowOrder}
             getHanshakeList={(click) =>{ this.callHanshake = click; }}
+            checkFree={ (click) => { this.callCheckFree = click; }}
+            onSubmitClick={()=> {
+              this.closeOrderPlace();
+              this.modalLuckyReal.open();
+            }}
+            onCancelClick={()=>{
+              this.closeOrderPlace();
+            }}
           />
         </ModalDialog>
+        <ModalDialog onRef={(modal) => { this.modalLuckyReal = modal; }}>
+          <LuckyReal onButtonClick={() => this.modalLuckyReal.close() } />
+        </ModalDialog>
+
       </div>
     );
   };
