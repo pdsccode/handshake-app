@@ -64,6 +64,8 @@ class Router extends React.Component {
 
     //console.log('root-router - contructor - init');
   }
+  componentDidMount() {
+  }
 
   static getDerivedStateFromProps(nextProps, prevState) {
     if (nextProps.firebaseApp.config) {

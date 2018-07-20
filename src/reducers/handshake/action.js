@@ -11,6 +11,7 @@ export const ACTIONS = {
   COLLECT: 'COLLECT',
   COLLECT_FREE: 'COLLECT_FREE',
   REFUND: 'REFUND',
+  REFUND_FREE: 'REFUND_FREE',
   ROLLBACK: 'ROLLBACK',
   SAVE_TRANSACTION: 'SAVE_TRANSACTION',
 };
@@ -22,6 +23,7 @@ export const uninitItem = createAPI(ACTIONS.UNINIT);
 export const uninitItemFree = createAPI(ACTIONS.UNINIT_FREE);
 export const collect = createAPI(ACTIONS.COLLECT);
 export const collectFree = createAPI(ACTIONS.COLLECT_FREE);
+export const refundFree = createAPI(ACTIONS.REFUND_FREE);
 export const refund = createAPI(ACTIONS.REFUND);
 export const rollback = createAPI(ACTIONS.ROLLBACK);
 export const saveTransaction = createAPI(ACTIONS.SAVE_TRANSACTION);
