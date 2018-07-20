@@ -247,6 +247,10 @@ class Me extends React.Component {
     this.props.history.push(`${URL.HANDSHAKE_CREATE}?id=${HANDSHAKE_ID.EXCHANGE}`);
   }
 
+  handleUpdateExchange = () => {
+    this.props.history.push(`${URL.HANDSHAKE_CREATE}?id=${HANDSHAKE_ID.EXCHANGE}&update=true`);
+  }
+
   loadMyHandshakeList = () => {
     const qs = { };
     const {
@@ -327,7 +331,7 @@ class Me extends React.Component {
     this.setState({ cashTab: newValue }, () => {
       this.loadMyHandshakeList();
       if (newValue === CASH_TAB.DASHBOARD) {
-        // this.getOfferStore();
+        this.getOfferStore();
         this.getDashboardInfo();
       }
     });
@@ -352,7 +356,17 @@ class Me extends React.Component {
     const { messages } = this.props.intl;
     const { offerStores, propsModal, modalContent } = this.state;
     const online = !this.props.auth.offline;
-    const haveOffer = offerStores ? (offerStores.itemFlags.ETH || offerStores.itemFlags.BTC) : false;
+    let haveOffer = false;
+
+    if (offerStores) {
+      for (const value of Object.values(offerStores.itemFlags)) {
+        if (value) {
+          haveOffer = true;
+          break;
+        }
+      }
+    }
+
     const { authProfile } = this.props;
 
     return (
@@ -472,7 +486,7 @@ class Me extends React.Component {
               listFeed && listFeed.length > 0 && this.state.handshakeIdActive === HANDSHAKE_ID.EXCHANGE && this.state.cashTab === CASH_TAB.DASHBOARD && (
                 <div className="text-center">
                   <button className="btn btn-primary btn-block" onClick={this.showBackupWallet}>{messages.me.feed.cash.backupStation}</button>
-                  <button className="btn btn-link text-underline" onClick={this.handleCreateExchange}><FormattedMessage id="ex.shop.dashboard.button.updateInventory" /></button>
+                  {haveOffer && (<button className="btn btn-link text-underline" onClick={this.handleUpdateExchange}><FormattedMessage id="ex.shop.dashboard.button.updateInventory" /></button>)}
                 </div>
               )
             }

@@ -4,7 +4,7 @@ import Feed from '@/components/core/presentation/Feed';
 import Button from '@/components/core/controls/Button';
 import './styles.scss';
 import createForm from '@/components/core/form/createForm';
-import { formatMoneyByLocale, getOfferPrice } from '@/services/offer-util';
+import { formatAmountCurrency, formatMoneyByLocale, getOfferPrice } from '@/services/offer-util';
 import axios from 'axios';
 import {
   fieldCleave,
@@ -22,6 +22,7 @@ import { connect } from 'react-redux';
 import {
   API_URL,
   CRYPTO_CURRENCY,
+  CRYPTO_CURRENCY_COLORS,
   CRYPTO_CURRENCY_DEFAULT,
   CRYPTO_CURRENCY_NAME,
   EXCHANGE_ACTION,
@@ -29,6 +30,7 @@ import {
   FIAT_CURRENCY_LIST,
   HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS,
   HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE,
+  HANDSHAKE_EXCHANGE_SHOP_OFFER_SUB_STATUS,
   MIN_AMOUNT,
   NB_BLOCKS,
   URL,
@@ -55,10 +57,7 @@ import { BigNumber } from 'bignumber.js/bignumber';
 import { authUpdate } from '@/reducers/auth/action';
 import OfferShop from '@/models/OfferShop';
 import { getErrorMessageFromCode } from '../utils';
-
-
-import iconBtc from '@/assets/images/icon/coin/icon-btc.svg';
-import iconEth from '@/assets/images/icon/coin/icon-eth.svg';
+import Helper from '@/services/helper';
 
 const nameFormExchangeCreate = 'exchangeCreate';
 const FormExchangeCreate = createForm({
@@ -91,21 +90,26 @@ const validateFee = [
 ];
 
 class Component extends React.Component {
-  CRYPTO_CURRENCY_LIST = [
-    { value: CRYPTO_CURRENCY.ETH, text: <div className="currency-selector"><img src={iconEth} /> <span>{CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.ETH]}</span></div>, hide: false },
-    { value: CRYPTO_CURRENCY.BTC, text: <div className="currency-selector"><img src={iconBtc} /> <span>{CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.BTC]}</span></div>, hide: false },
-  ];
+  CRYPTO_CURRENCY_LIST = Object.values(CRYPTO_CURRENCY).map(item => ({ value: item, text: <div className="currency-selector"><img src={CRYPTO_CURRENCY_COLORS[item].icon} /> <span>{CRYPTO_CURRENCY_NAME[item]}</span></div>, hide: false }));
 
   constructor(props) {
     super(props);
+
+    const { update } = Helper.getQueryStrings(window.location.search);
+    let isUpdate = false;
+    if (update && update === 'true') {
+      isUpdate = true;
+    }
 
     this.state = {
       modalContent: '',
       currency: CRYPTO_CURRENCY_DEFAULT,
       lat: 0,
       lng: 0,
-      isUpdate: false,
+      isUpdate,
       enableAction: true,
+      buyBalance: 0,
+      sellBalance: 0,
     };
     // this.mainColor = _sample(feedBackgroundColors)
     this.mainColor = '#1F2B34';
@@ -177,30 +181,17 @@ class Component extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     const { rfChange, currency } = this.props;
+    const { isUpdate } = this.state;
     console.log('componentWillReceiveProps', nextProps);
     if (nextProps.offerStores && nextProps.offerStores !== this.props.offerStores) {
       console.log('componentWillReceiveProps inside', nextProps.offerStores);
       this.offer = nextProps.offerStores;
 
-      // let haveOfferETH = this.offer.itemFlags.ETH || false;
-      // let haveOfferBTC = this.offer.itemFlags.BTC || false;
-      //
-      // this.CRYPTO_CURRENCY_LIST = [
-      //   { value: CRYPTO_CURRENCY.ETH, text: CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.ETH], hide: haveOfferETH },
-      //   { value: CRYPTO_CURRENCY.BTC, text: CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.BTC], hide: haveOfferBTC },
-      // ];
-      //
-      // if (!haveOfferETH) {
-      //   rfChange(nameFormExchangeCreate, 'currency', CRYPTO_CURRENCY.ETH);
-      // } else if (!haveOfferBTC) {
-      //   rfChange(nameFormExchangeCreate, 'currency', CRYPTO_CURRENCY.BTC);
-      // }
-
       const fiatCurrency = {
         id: this.offer.fiatCurrency, text: this.offer.fiatCurrency,
       };
-
       rfChange(nameFormExchangeCreate, 'stationCurrency', fiatCurrency);
+
       if (this.offer.contactPhone) {
         rfChange(nameFormExchangeCreate, 'phone', this.offer.contactPhone);
       }
@@ -208,32 +199,82 @@ class Component extends React.Component {
         rfChange(nameFormExchangeCreate, 'address', this.offer.contactInfo);
       }
 
-      this.calculateAction(currency);
+      const { nextCurrency, isAllInitiate } = this.calculateCurrencyList();
 
-      // if (haveOfferETH && haveOfferBTC) {
-      //   const message = <FormattedMessage id="offerStoresAlreadyCreated"/>;
-      //
-      //   this.setState({
-      //     modalContent:
-      //       (
-      //         <div className="py-2">
-      //           <Feed className="feed p-2" background="#259B24">
-      //             <div className="text-white d-flex align-items-center" style={{ minHeight: '50px' }}>
-      //               <div>{message}</div>
-      //             </div>
-      //           </Feed>
-      //           <Button block className="btn btn-secondary" onClick={this.handleOfferStoreAlreadyCreated}><FormattedMessage id="ex.btn.OK" /></Button>
-      //         </div>
-      //       ),
-      //   }, () => {
-      //     this.modalRef.open();
-      //   });
-      // }
+      if (nextCurrency) {
+        this.calculateAction(nextCurrency);
+      } else {
+        this.calculateAction(currency);
+      }
+
+      if (!isUpdate && isAllInitiate) {
+        const message = <FormattedMessage id="offerStoresAlreadyCreated" />;
+
+        this.setState({
+          modalContent:
+            (
+              <div className="py-2">
+                <Feed className="feed p-2" background="#259B24">
+                  <div className="text-white d-flex align-items-center" style={{ minHeight: '50px' }}>
+                    <div>{message}</div>
+                  </div>
+                </Feed>
+                <Button block className="mt-2 btn btn-secondary" onClick={this.handleOfferStoreAlreadyCreated}><FormattedMessage id="ex.btn.OK" /></Button>
+              </div>
+            ),
+        }, () => {
+          this.modalRef.open();
+        });
+      }
     }
+  }
+
+  calculateCurrencyList = () => {
+    const { isUpdate } = this.state;
+    const { rfChange } = this.props;
+    let isAllInitiate = true;
+    let nextCurrency = '';
+    this.CRYPTO_CURRENCY_LIST = Object.values(CRYPTO_CURRENCY).map((item) => {
+      if (isUpdate) {
+        if (this.offer.itemFlags[item]) {
+          if (!nextCurrency) {
+            nextCurrency = item;
+          }
+        }
+        return {
+          value: item,
+          text: <div className="currency-selector"><img src={CRYPTO_CURRENCY_COLORS[item].icon} />
+            <span>{CRYPTO_CURRENCY_NAME[item]}</span>
+                </div>,
+          hide: !this.offer.itemFlags[item],
+        };
+      }
+      if (!this.offer.itemFlags[item] || this.offer.itemFlags[item] === undefined) {
+        isAllInitiate = false;
+
+        if (!nextCurrency) {
+          nextCurrency = item;
+        }
+      }
+      return {
+        value: item,
+        text: <div className="currency-selector"><img src={CRYPTO_CURRENCY_COLORS[item].icon} />
+          <span>{CRYPTO_CURRENCY_NAME[item]}</span>
+              </div>,
+        hide: this.offer.itemFlags[item],
+      };
+    });
+
+    if (nextCurrency) {
+      rfChange(nameFormExchangeCreate, 'currency', nextCurrency);
+    }
+
+    return { nextCurrency, isAllInitiate };
   }
 
   calculateAction(currency) {
     const { rfChange } = this.props;
+    const { isUpdate } = this.state;
     let isExist = false;
     if (this.offer) {
       for (const item of Object.values(this.offer.items)) {
@@ -242,12 +283,17 @@ class Component extends React.Component {
           isExist = true;
           const isFreeStart = currency === CRYPTO_CURRENCY.ETH && item.freeStart !== '';
           this.setState({
-            isUpdate: HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[item.status] === HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.ACTIVE,
             enableAction: (HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[item.status] !== HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CREATED &&
-              HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[item.status] !== HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSING) && !isFreeStart,
+              HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[item.status] !== HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSING &&
+              HANDSHAKE_EXCHANGE_SHOP_OFFER_SUB_STATUS.refilling !== item.subStatus) && !isFreeStart,
           });
-          rfChange(nameFormExchangeCreate, 'customizePriceBuy', item.buyPercentage * 100);
-          rfChange(nameFormExchangeCreate, 'customizePriceSell', item.sellPercentage * 100);
+
+          if (isUpdate) {
+            rfChange(nameFormExchangeCreate, 'customizePriceBuy', item.buyPercentage * 100);
+            rfChange(nameFormExchangeCreate, 'customizePriceSell', item.sellPercentage * 100);
+            this.setState({ buyBalance: item.buyBalance, sellBalance: item.sellBalance });
+          }
+
           break;
         }
       }
@@ -255,11 +301,8 @@ class Component extends React.Component {
 
     if (!isExist) {
       this.setState({
-        isUpdate: false,
         enableAction: true,
       });
-      rfChange(nameFormExchangeCreate, 'customizePriceBuy', -0.25);
-      rfChange(nameFormExchangeCreate, 'customizePriceSell', 0.25);
     }
   }
 
@@ -560,23 +603,17 @@ class Component extends React.Component {
 
     this.resetFormValue();
 
-    // let haveOfferETH = offer.itemFlags.ETH;
-    // let haveOfferBTC = offer.itemFlags.BTC;
-    //
-    // this.CRYPTO_CURRENCY_LIST = [
-    //   { value: CRYPTO_CURRENCY.ETH, text: CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.ETH], hide: haveOfferETH },
-    //   { value: CRYPTO_CURRENCY.BTC, text: CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.BTC], hide: haveOfferBTC },
-    // ];
-    //
-    // if (haveOfferETH && haveOfferBTC) {
-    //   this.props.history.push(URL.HANDSHAKE_ME);
-    // }
-    //
-    // if (currency === CRYPTO_CURRENCY.ETH) {
-    //   rfChange(nameFormExchangeCreate, 'currency', CRYPTO_CURRENCY.BTC);
-    // } else {
-    //   rfChange(nameFormExchangeCreate, 'currency', CRYPTO_CURRENCY.ETH);
-    // }
+    const { nextCurrency, isAllInitiate } = this.calculateCurrencyList();
+
+    if (nextCurrency) {
+      this.calculateAction(nextCurrency);
+    } else {
+      this.calculateAction(currency);
+    }
+
+    if (isAllInitiate) {
+      this.props.history.push(URL.HANDSHAKE_ME);
+    }
 
     this.updateUserProfile(offer);
   }
@@ -606,7 +643,12 @@ class Component extends React.Component {
           const cashHandshake = new ExchangeCashHandshake(wallet.chainId);
 
           let result = null;
-          result = await cashHandshake.addInventory(offer.items.ETH.sellTotalAmount, offer.hid, offer.id);
+          if (offer.hid) {
+            result = await cashHandshake.addInventory(offer.items.ETH.sellTotalAmount, offer.hid, offer.id);
+          } else {
+            result = await cashHandshake.initByStationOwner(offer.items.ETH.sellTotalAmount, offer.id);
+          }
+
           console.log('handleRefillOfferSuccess', result);
 
           this.trackingOnchainRefill(offer.id, '', result.hash, offer.items.ETH.subStatus, '', currency);
@@ -712,7 +754,9 @@ class Component extends React.Component {
     const {
       currency, listOfferPrice, stationCurrency, customizePriceBuy, customizePriceSell, amountBuy, amountSell, freeStartInfo, isChooseFreeStart,
     } = this.props;
-    const { isUpdate, enableAction } = this.state;
+    const {
+      isUpdate, enableAction, buyBalance, sellBalance,
+    } = this.state;
     const fiatCurrency = stationCurrency?.id;
     const modalContent = this.state.modalContent;
     // const allowInitiate = this.offer ? (!this.offer.itemFlags.ETH || !this.offer.itemFlags.BTC) : true;
@@ -759,8 +803,23 @@ class Component extends React.Component {
 
           <div className="label">{isUpdate ? (<FormattedMessage id="ex.create.label.beASeller.update" />) : (<FormattedMessage id="ex.create.label.beASeller" />)}</div>
           <div className="section">
+            {
+              isUpdate && (
+                <div>
+                  <div className="d-flex">
+                    <label className="col-form-label mr-auto label-create"><span className="align-middle"><FormattedMessage id="ex.create.label.currentBalance" /></span></label>
+                    <div className="input-group">
+                      <div><span className="form-text">{formatAmountCurrency(sellBalance)}</span></div>
+                    </div>
+                  </div>
+
+                  <hr className="hrLine" />
+                </div>
+              )
+            }
+
             <div className="d-flex">
-              <label className="col-form-label mr-auto label-create"><span className="align-middle"><FormattedMessage id="ex.create.label.amountSell" /></span></label>
+              <label className="col-form-label mr-auto label-create"><span className="align-middle">{isUpdate ? (<FormattedMessage id="ex.create.label.amountSell.update" />) : (<FormattedMessage id="ex.create.label.amountSell" />)}</span></label>
               <div className="input-group">
                 <Field
                   name="amountSell"
@@ -817,8 +876,22 @@ class Component extends React.Component {
 
           <div className="label">{isUpdate ? (<FormattedMessage id="ex.create.label.beABuyer.update" />) : (<FormattedMessage id="ex.create.label.beABuyer" />)}</div>
           <div className="section">
+            {
+              isUpdate && (
+                <div>
+                  <div className="d-flex">
+                    <label className="col-form-label mr-auto label-create"><span className="align-middle"><FormattedMessage id="ex.create.label.currentBalance" /></span></label>
+                    <div className="input-group">
+                      <div><span className="form-text">{formatAmountCurrency(buyBalance)}</span></div>
+                    </div>
+                  </div>
+
+                  <hr className="hrLine" />
+                </div>
+              )
+            }
             <div className="d-flex">
-              <label className="col-form-label mr-auto label-create"><span className="align-middle"><FormattedMessage id="ex.create.label.amountBuy" /></span></label>
+              <label className="col-form-label mr-auto label-create"><span className="align-middle">{isUpdate ? (<FormattedMessage id="ex.create.label.amountBuy.update" />) : (<FormattedMessage id="ex.create.label.amountBuy" />)}</span></label>
               <div className="input-group">
                 <Field
                   name="amountBuy"

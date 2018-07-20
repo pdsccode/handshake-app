@@ -6,6 +6,7 @@ import {
   FIAT_CURRENCY,
   HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS,
   HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE,
+  HANDSHAKE_EXCHANGE_SHOP_OFFER_SUB_STATUS,
 } from '@/constants';
 import { daysBetween, formatAmountCurrency, formatMoneyByLocale } from '@/services/offer-util';
 import iconSpinner from '@/assets/images/icon/icons8-spinner.gif';
@@ -35,7 +36,9 @@ class FeedMeStation extends React.PureComponent {
 
       for (const item of Object.values(offer.items)) {
         const status = HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[item.status];
-        isShowTimer = status === HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CREATED || status === HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSING;
+        isShowTimer = status === HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CREATED ||
+          status === HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSING ||
+          HANDSHAKE_EXCHANGE_SHOP_OFFER_SUB_STATUS.refilling === item.subStatus;
 
         if (isShowTimer) {
           lastUpdateAt = item.updatedAt;

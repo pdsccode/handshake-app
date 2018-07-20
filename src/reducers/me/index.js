@@ -159,7 +159,8 @@ const meReducter = (
           const { id } = offer;
           const handledHandshake = handshake;
 
-          if (offer.type === EXCHANGE_FEED_TYPE.OFFER_STORE) {
+          if (offer.type === EXCHANGE_FEED_TYPE.OFFER_STORE
+            || offer.type === EXCHANGE_FEED_TYPE.OFFER_STORE_ITEM) {
             const values = offer.status.split('_');
             // id = `${id}_${values[0].toUpperCase()}`;
             const currency = values[0].toUpperCase();
@@ -169,7 +170,12 @@ const meReducter = (
             if (handledHandshake.id.includes(id)) {
               for (let item of Object.values(offerStore.items)) {
                 if (item.currency === currency) {
-                  item.status = status;
+                  if (offer.type === EXCHANGE_FEED_TYPE.OFFER_STORE) {
+                    item.status = status;
+                  } else if (offer.type === EXCHANGE_FEED_TYPE.OFFER_STORE_ITEM) {
+                    item.subStatus = status;
+                  }
+
                   item.updateAt = Date.now() / 1000;
                   handledHandshake.extraData = JSON.stringify(offerStore);
                   break;
@@ -208,20 +214,6 @@ const meReducter = (
           } else if (offer.type === EXCHANGE_FEED_TYPE.OFFER_STORE_SHAKE) {
             status =
               HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS_VALUE[offer.status];
-          // } else if (offer.type === EXCHANGE_FEED_TYPE.OFFER_STORE) {
-          //   const values = offer.status.split('_');
-          //   id = `${id}_${values[0].toUpperCase()}`;
-          //   status = values[1];
-          //
-          //   const extraData = JSON.parse(handledHandshake.extraData);
-          //   if (
-          //     handledHandshake.id.includes(id) &&
-          //     extraData.status !== status
-          //   ) {
-          //     extraData.status = status;
-          //     handledHandshake.extraData = JSON.stringify(extraData);
-          //     return handledHandshake;
-          //   }
           }
 
           if (
@@ -245,7 +237,8 @@ const meReducter = (
           const { id } = offer;
           const handledHandshake = handshake;
 
-          if (offer.type === EXCHANGE_FEED_TYPE.OFFER_STORE) {
+          if (offer.type === EXCHANGE_FEED_TYPE.OFFER_STORE
+            || offer.type === EXCHANGE_FEED_TYPE.OFFER_STORE_ITEM) {
             const values = offer.status.split('_');
             // id = `${id}_${values[0].toUpperCase()}`;
             const currency = values[0].toUpperCase();
@@ -255,7 +248,11 @@ const meReducter = (
             if (handledHandshake.id.includes(id)) {
               for (let item of Object.values(offerStore.items)) {
                 if (item.currency === currency) {
-                  item.status = status;
+                  if (offer.type === EXCHANGE_FEED_TYPE.OFFER_STORE) {
+                    item.status = status;
+                  } else if (offer.type === EXCHANGE_FEED_TYPE.OFFER_STORE_ITEM) {
+                    item.subStatus = status;
+                  }
                   item.updateAt = Date.now() / 1000;
                   handledHandshake.extraData = JSON.stringify(offerStore);
                   break;
