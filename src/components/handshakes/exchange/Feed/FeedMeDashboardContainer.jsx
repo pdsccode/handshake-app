@@ -8,6 +8,7 @@ import {
   HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS,
   HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_NAME,
   HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE,
+  HANDSHAKE_EXCHANGE_SHOP_OFFER_SUB_STATUS,
 } from '@/constants';
 import { MasterWallet } from '@/services/Wallets/MasterWallet';
 import OfferShop from '@/models/OfferShop';
@@ -98,7 +99,7 @@ class FeedMeOfferStoreContainer extends React.PureComponent {
 
     for (const item of Object.values(offer.items)) {
       const {
-        buyBalance, sellBalance, buyAmount, sellAmount, status, currency,
+        buyBalance, sellBalance, buyAmount, sellAmount, status, currency, subStatus,
       } = item;
       if (offer.itemFlags[currency] && !this.isEmptyBalance(item)) {
         const { priceBuy: priceBuyValue, priceSell: priceSellValue } = this.getPrices(currency);
@@ -116,7 +117,7 @@ class FeedMeOfferStoreContainer extends React.PureComponent {
         coin.txtBuy = `${priceBuy} ${priceBuy !== '-' ? fiatCurrency : ''} ${priceBuy !== '-' ? `- ${formatAmountCurrency(amountBuy)} ${currency}` : ''}`;
         coin.txtSell = `${priceSell} ${priceSell !== '-' ? fiatCurrency : ''} ${priceSell !== '-' ? `- ${formatAmountCurrency(amountSell)} ${currency}` : ''}`;
 
-        if (statusValue === HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.ACTIVE) {
+        if (statusValue === HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.ACTIVE && subStatus !== HANDSHAKE_EXCHANGE_SHOP_OFFER_SUB_STATUS.refilling) {
           coin.onClose = this.onHandleDeleteOfferItem;
         }
 

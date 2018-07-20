@@ -643,7 +643,12 @@ class Component extends React.Component {
           const cashHandshake = new ExchangeCashHandshake(wallet.chainId);
 
           let result = null;
-          result = await cashHandshake.addInventory(offer.items.ETH.sellTotalAmount, offer.hid, offer.id);
+          if (offer.hid) {
+            result = await cashHandshake.addInventory(offer.items.ETH.sellTotalAmount, offer.hid, offer.id);
+          } else {
+            result = await cashHandshake.initByStationOwner(offer.items.ETH.sellTotalAmount, offer.id);
+          }
+
           console.log('handleRefillOfferSuccess', result);
 
           this.trackingOnchainRefill(offer.id, '', result.hash, offer.items.ETH.subStatus, '', currency);
