@@ -745,6 +745,7 @@ export default {
         header: 'Wallet address',
         header2: 'Custom Amount',
         message: 'Share your public wallet address to receive',
+        title2: 'MY DESPOSIT ADDRESS',
         label: {
           address: 'Address',
           amount: 'Amount',
@@ -754,10 +755,15 @@ export default {
           amount: 'Specify amount ...',
           choose_wallet: 'Choose a wallet ...',
         },
+        link: {
+          copy_address: "Copy address",
+          download_qrcode: "Download QR code",
+        },
         button: {
           share: 'Copy to share',
           request_amount: 'Request Specific amount ➔',
           done: 'Done',
+          text: 'Copy address'
         },
         success: {
           share: 'Wallet address copied to clipboard.',
