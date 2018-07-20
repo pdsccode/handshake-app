@@ -75,9 +75,12 @@ export class MasterWallet {
 
       const masterWallet = [];
 
-      let defaultWallet = [1, 3];
-      if (process.env.isLive) {
+      let defaultWallet = [1, 3];// eth main, eth test, btc main, btc test => local web
+      if (process.env.isLive) { // // eth main, eth test, btc main, btc test => live web
         defaultWallet = [0, 1];
+      }
+      if (process.env.isDojo) { // eth test, shuri test, btc test => dojo web
+        defaultWallet = [0, 2];
       }
 
       for (const k1 in MasterWallet.ListDefaultCoin) {
@@ -85,6 +88,9 @@ export class MasterWallet {
           // check production, only get mainnet:
           if (process.env.isLive && k2 != 'Mainnet') {
             break;
+          }
+          if (!process.env.isLive && process.env.isDojo && k2 == 'Mainnet') {
+            continue;
           }
           // init a wallet:
           const wallet = new MasterWallet.ListDefaultCoin[k1]();
@@ -459,23 +465,26 @@ export class MasterWallet {
         const jsonData = MasterWallet.IsJsonString(dataString);
         let auth_token = false;
         let wallets = false;
-        //console.log('jsonData', jsonData);
+        let chat_encryption_keypair = false;
+
         if (jsonData !== false) {
           if (jsonData.hasOwnProperty('auth_token')) {
             auth_token = jsonData.auth_token;
           }
+          if (jsonData.hasOwnProperty('chat_encryption_keypair')) {
+            chat_encryption_keypair = jsonData.chat_encryption_keypair;
+          }
           if (jsonData.hasOwnProperty('wallets')) {
             wallets = jsonData.wallets;
           } else {
+            // for old user without keys auth_token + chat_encryption_keypair
             wallets = jsonData;
           }
 
           if (Array.isArray(wallets)) {
-            //console.log('isArray');
             const listWallet = [];
             wallets.forEach((walletJson) => {
               const wallet = MasterWallet.convertObject(walletJson);
-              //console.log('wallet=>', wallet);
               if (wallet === false) {
                 throw BreakException;
               }
@@ -484,6 +493,9 @@ export class MasterWallet {
             MasterWallet.UpdateLocalStore(listWallet);
             if (auth_token !== false) {
               localStore.save(APP.AUTH_TOKEN, auth_token);
+            }
+            if (chat_encryption_keypair !== false){
+              localStore.save(APP.CHAT_ENCRYPTION_KEYPAIR, chat_encryption_keypair);
             }
             return listWallet;
           }

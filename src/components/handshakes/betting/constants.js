@@ -1,0 +1,52 @@
+export const BET_BLOCKCHAIN_STATUS = {
+  STATUS_MAKER_SHOULD_UNINIT: -12,
+  STATUS_INIT_FAILED: -10,
+  STATUS_COLLECT_FAILED: -9,
+  STATUS_COLLECT_PENDING: -8,
+  STATUS_DISPUTE_FAILED: -7,
+  STATUS_REFUND_FAILED: -6,
+  STATUS_MAKER_UNINIT_FAILED: -5,
+  STATUS_MAKER_UNINIT_PENDING: -4,
+
+  STATUS_SHAKER_ROLLBACK: -3,
+  STATUS_MAKER_INIT_ROLLBACK: -2,
+
+
+  STATUS_INIT_PENDING: -1,
+  STATUS_INITED: 0,
+  STATUS_MAKER_UNINITED: 1,
+  STATUS_SHAKER_SHAKED: 2,
+  STATUS_REFUND: 3,
+  STATUS_DISPUTE: 4,
+  STATUS_RESOLVE: 5,
+  STATUS_DONE: 6,
+};
+
+export const ROLE = {
+  INITER: 1,
+  SHAKER: 2,
+};
+
+export const SIDE = {
+  SUPPORT: 1,
+  AGAINST: 2,
+};
+export const BET_TYPE = {
+  INIT: 'init',
+  SHAKE: 'shake',
+};
+export const BETTING_RESULT = {
+  INITED: -1,
+  DRAW: 3,
+  SUPPORT_WIN: 1,
+  AGAINST_WIN: 2,
+};
+
+export const CONTRACT_METHOD = {
+  INIT: 'init',
+  SHAKE: 'shake',
+  CANCEL: 'uninit',
+  REFUND: 'refund',
+  COLLECT: 'collect',
+  CREATE_MARKET: 'createMarket',
+};

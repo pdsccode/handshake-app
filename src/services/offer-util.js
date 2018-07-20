@@ -83,7 +83,7 @@ export function daysBetween(date1 = new Date(), date2 = new Date()) {
   // const textDays = <FormattedMessage id="ex.shop.shake.label.days" />;
   const textDays = ' days';
 
-  return `${days > 0 ? days + textDays : ''} ${hours > 10 ? hours : `0${hours}`}:${minutes > 10 ? minutes : `0${minutes}`}:${seconds > 10 ? seconds : `0${seconds}`}`;
+  return `${days > 0 ? days + textDays : ''} ${hours >= 10 ? hours : `0${hours}`}:${minutes >= 10 ? minutes : `0${minutes}`}:${seconds >= 10 ? seconds : `0${seconds}`}`;
 }
 
 export default { getOfferPrice };

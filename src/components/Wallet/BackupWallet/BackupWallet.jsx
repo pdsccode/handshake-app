@@ -27,7 +27,7 @@ class BackupWallet extends React.Component {
     super(props);
 
     this.state = {
-      walletData: this.props.walletData,                    
+      walletData: false
     }    
   }
 
@@ -56,9 +56,14 @@ class BackupWallet extends React.Component {
   }
 
   componentDidMount() {    
-    if (!this.state.walletData){      
+    if (this.props.walletData){            
+      this.setState({walletData: this.props.walletData});
+    }
+    else{      
       let walletData = MasterWallet.getMasterWallet();
-      this.setState({walletData: {"auth_token": local.get(APP.AUTH_TOKEN) ,"wallets": walletData }});
+      let chat_encryption_keypair = local.get(APP.CHAT_ENCRYPTION_KEYPAIR);
+      let auth_token = local.get(APP.AUTH_TOKEN);
+      this.setState({walletData: {"auth_token": auth_token, "chat_encryption_keypair": chat_encryption_keypair ,"wallets": walletData }});      
     }
   }
 
@@ -66,7 +71,9 @@ class BackupWallet extends React.Component {
     
   }
   componentDidUpdate (){
-  
+    if (this.props.walletData && this.props.walletData != this.state.walletData){      
+      this.setState({walletData: this.props.walletData});
+    }
   }
   componentWillReceiveProps() {       
     

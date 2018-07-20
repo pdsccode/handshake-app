@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
 // service, constant
@@ -32,17 +33,21 @@ import MultiLanguage from '@/components/core/controls/MultiLanguage';
 // import Tabs from '@/components/handshakes/exchange/components/Tabs';
 import NoData from '@/components/core/presentation/NoData';
 import { getFreeStartInfo, getListOfferPrice, setFreeStart } from '@/reducers/exchange/action';
+import { updateShowedLuckyPool } from '@/reducers/betting/action';
 import Image from '@/components/core/presentation/Image';
 import loadingSVG from '@/assets/images/icon/loading.gif';
 import ninjaLogoSVG from '@/assets/images/logo.png';
 //
 import DiscoverBetting from '@/components/handshakes/betting/Discover/Discover';
+import LuckyLanding from '@/pages/LuckyLanding/LuckyLanding';
+import * as gtag from '@/services/ga-utils';
+
+
 // style
 import '@/components/handshakes/exchange/Feed/FeedExchange.scss';
 import './Discover.scss';
 // import { Helmet } from "react-helmet";
 // import icon2KuNinja from '@/assets/images/icon/2_ku_ninja.svg';
-
 const maps = {
   [HANDSHAKE_ID.PROMISE]: FeedPromise,
   [HANDSHAKE_ID.BETTING]: FeedBetting,
@@ -51,6 +56,7 @@ const maps = {
   [HANDSHAKE_ID.SEED]: FeedSeed,
 };
 
+const TAG = 'DISCOVER_PAGE';
 class DiscoverPage extends React.Component {
   static propTypes = {
     discover: PropTypes.object.isRequired,
@@ -92,6 +98,7 @@ class DiscoverPage extends React.Component {
       isBannedPrediction: this.props.isBannedPrediction,
       utm,
       program,
+      isLuckyPool: true,
     };
 
     if (this.state.handshakeIdActive === HANDSHAKE_ID.EXCHANGE) {
@@ -107,10 +114,15 @@ class DiscoverPage extends React.Component {
     this.getUtm = this.getUtm.bind(this);
     this.getProgram = this.getProgram.bind(this);
     this.onFreeStartClick = this.onFreeStartClick.bind(this);
+    this.handleScroll = this.handleScroll.bind(this);
   }
 
   componentDidMount() {
     const { ipInfo } = this.props;
+
+    //Listen event scroll down
+    window.addEventListener('scroll', this.handleScroll);
+
     this.setAddressFromLatLng(ipInfo?.latitude, ipInfo?.longitude); // fallback
 
     let url = '';
@@ -150,6 +162,12 @@ class DiscoverPage extends React.Component {
       });
     }
   }
+
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this.handleScroll);
+  }
+
+
 
   onFreeStartClick() {
     this.modalRef.close();
@@ -236,6 +254,8 @@ class DiscoverPage extends React.Component {
     return null;
   }
 
+
+
   getHandshakeList() {
     const { messages } = this.props.intl;
     const { list } = this.props.discover;
@@ -256,6 +276,7 @@ class DiscoverPage extends React.Component {
                 longitude={lng}
                 modalRef={this.modalRef}
               />
+
             </Col>
           );
         }
@@ -283,6 +304,28 @@ class DiscoverPage extends React.Component {
     this.setState({ isLoading: loadingState });
   }
 
+  showLuckyPool () {
+    const { handshakeIdActive } = this.state;
+    const { showedLuckyPool } = this.props;
+    if (handshakeIdActive === HANDSHAKE_ID.BETTING) {
+
+      if (showedLuckyPool === false) {
+        console.log('Action Lucky Pool:', showedLuckyPool);
+        this.props.updateShowedLuckyPool(true);
+        setTimeout(() => {
+          this.modalLuckyPoolRef.open();
+
+        }, 2 * 1000);
+      }
+    }
+  }
+
+  handleScroll() {
+    this.showLuckyPool();
+
+  }
+
+
   searchChange(query) {
     clearTimeout(this.searchTimeOut);
     this.searchTimeOut = setTimeout(() => {
@@ -296,6 +339,11 @@ class DiscoverPage extends React.Component {
     const { type } = handshake;
     switch (type) {
       case HANDSHAKE_ID.EXCHANGE: {
+        gtag.event({
+          category: 'Cash',
+          action: 'click_feed',
+          // label: ''
+        })
         const { modalContent, modalClassName } = extraData;
         if (modalContent) {
           this.setState({ modalContent, propsModal: { className: modalClassName } }, () => {
@@ -515,6 +563,15 @@ class DiscoverPage extends React.Component {
         <ModalDialog onRef={(modal) => { this.modalRef = modal; return null; }} {...propsModal}>
           {modalContent}
         </ModalDialog>
+        <ModalDialog className="modal" onRef={(modal) => { this.modalLuckyPoolRef = modal; return null; }}>
+          <LuckyLanding onButtonClick={() => {
+            this.setState({
+              isLuckyPool: false,
+            });
+            this.modalLuckyPoolRef.close();
+          }}
+          />
+        </ModalDialog>
       </React.Fragment>
     );
   }
@@ -529,13 +586,15 @@ const mapState = state => ({
   isBannedPrediction: state.app.isBannedPrediction,
   firebaseApp: state.firebase.data,
   freeStartInfo: state.exchange.freeStartInfo,
+  showedLuckyPool: state.betting.showedLuckyPool,
 });
 
-const mapDispatch = ({
-  loadDiscoverList,
-  getListOfferPrice,
-  setFreeStart,
-  getFreeStartInfo,
+const mapDispatch = dispatch => ({
+  loadDiscoverList: bindActionCreators(loadDiscoverList, dispatch),
+  getListOfferPrice: bindActionCreators(getListOfferPrice, dispatch),
+  setFreeStart: bindActionCreators(setFreeStart, dispatch),
+  getFreeStartInfo: bindActionCreators(getFreeStartInfo, dispatch),
+  updateShowedLuckyPool: bindActionCreators(updateShowedLuckyPool, dispatch),
 });
 
 export default injectIntl(connect(mapState, mapDispatch)(DiscoverPage));

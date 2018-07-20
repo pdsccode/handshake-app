@@ -8,10 +8,10 @@
   <meta name="mobile-web-app-capable" content="yes">
   {{!-- todo: https://developer.chrome.com/multidevice/android/installtohomescreen#icon --}}
   <!-- SEO -->
-  <meta name="description" content="Trade predictions for the FIFA World Cup. Exchange coin for cash in your local neighborhood. No downloads, no sign ups. 100% anonymous." data-react-helmet="true" />
+  <meta name="description" content="Swap coin for cash in your local neighborhood. Trade predictions on anything, anywhere, with anyone. No downloads, no sign ups. 100% anonymous." data-react-helmet="true" />
   <meta name="keywords" content="" />
   <meta property="og:title" content="" />
-  <meta property="og:description" content="Trade predictions for the FIFA World Cup. Exchange coin for cash in your local neighborhood. No downloads, no sign ups. 100% anonymous." />
+  <meta property="og:description" content="Swap coin for cash in your local neighborhood. Trade predictions on anything, anywhere, with anyone. No downloads, no sign ups. 100% anonymous." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="" />
   <meta property="og:image" content="" />
@@ -46,6 +46,18 @@
   <!-- End Google Tag Manager -->
 
   {{/if}}
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id={{htmlWebpackPlugin.options.env.social.googleAnalyticId}}"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', '{{htmlWebpackPlugin.options.env.social.googleAnalyticId}}');
+  </script>
+  <!-- End Google Analytics -->
+
 </head>
 <body>
   <!-- Google Tag Manager (noscript) -->

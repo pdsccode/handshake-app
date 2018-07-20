@@ -1,5 +1,7 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
+import iconBtc from '@/assets/images/icon/coin/icon-btc.svg';
+import iconEth from '@/assets/images/icon/coin/icon-eth.svg';
 
 export const APP = {
   HEADER_DEFAULT: 'Handshake',
@@ -16,6 +18,7 @@ export const APP = {
   EMAIL_NEED_VERIFY: 'email_need_verify',
   PHONE_NEED_VERIFY: 'phone_need_verify',
   COUNTRY_PHONE_NEED_VERIFY: 'country_phone_need_verify',
+  CHAT_ENCRYPTION_KEYPAIR:'chat_encryption_keypair',
   REFERS: 'refers',
   OFFLINE_STATUS: 'offline_status',
   isSupportedLanguages: ['en', 'zh', 'fr', 'de', 'ja', 'ko', 'ru', 'es'],
@@ -61,10 +64,14 @@ export const CRYPTO_CURRENCY_NAME = {
   [CRYPTO_CURRENCY.BTC]: 'BTC',
 };
 
-export const CRYPTO_CURRENCY_LIST = [
-  { value: CRYPTO_CURRENCY.ETH, text: CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.ETH] },
-  { value: CRYPTO_CURRENCY.BTC, text: CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.BTC] },
-];
+export const CRYPTO_CURRENCY_LIST = Object.values(CRYPTO_CURRENCY).map((item) => {
+  return { value: item, text: CRYPTO_CURRENCY_NAME[item] };
+});
+
+export const CRYPTO_CURRENCY_COLORS = {
+  [CRYPTO_CURRENCY.ETH]: { color: 'linear-gradient(-135deg, #D772FF 0%, #9B10F2 45%, #9E53E1 100%)', icon: iconEth },
+  [CRYPTO_CURRENCY.BTC]: { color: 'linear-gradient(45deg, #FF8006 0%, #FFA733 51%, #FFC349 100%)', icon: iconBtc },
+};
 
 export const FIAT_CURRENCY = {
   RUB: 'RUB',
@@ -73,6 +80,7 @@ export const FIAT_CURRENCY = {
   CAD: 'CAD',
   USD: 'USD',
   EUR: 'EUR',
+  HKD: 'HKD',
 }
 
 export const FIAT_CURRENCY_NAME = {
@@ -82,6 +90,7 @@ export const FIAT_CURRENCY_NAME = {
   [FIAT_CURRENCY.CAD]: 'CAD',
   [FIAT_CURRENCY.USD]: 'USD',
   [FIAT_CURRENCY.EUR]: 'EUR',
+  [FIAT_CURRENCY.HKD]: 'HKD',
 };
 
 export const FIAT_CURRENCY_LIST = [
@@ -91,6 +100,7 @@ export const FIAT_CURRENCY_LIST = [
   { id: FIAT_CURRENCY.CAD, text: FIAT_CURRENCY_NAME[FIAT_CURRENCY.CAD] },
   { id: FIAT_CURRENCY.USD, text: FIAT_CURRENCY_NAME[FIAT_CURRENCY.USD] },
   { id: FIAT_CURRENCY.EUR, text: FIAT_CURRENCY_NAME[FIAT_CURRENCY.EUR] },
+  { id: FIAT_CURRENCY.HKD, text: FIAT_CURRENCY_NAME[FIAT_CURRENCY.HKD] },
 ];
 
 export const FIREBASE_PATH = {
@@ -154,6 +164,7 @@ export const API_URL = {
     COLLECT_FREE: 'cryptosign/handshake/collect_free_bet',
     ROLLBACK: 'cryptosign/handshake/rollback',
     REFUND: 'cryptosign/handshake/refund',
+    REFUND_FREE: 'cryptosign/handshake/refund_free_bet',
     ADD_MATCH: 'cryptosign/match/add',
     ADD_OUTCOME: 'cryptosign/outcome/add',
     SAVE_TRANSACTION: 'cryptosign/tx/add',
@@ -485,7 +496,7 @@ export const blockchainNetworks = {
       predictionHandshakeAddress: '0x6f25814d49bcf8345f8afd2a3bf9d5fd95079f84',
       predictionHandshakeDevAddress: '0x6f25814d49bcf8345f8afd2a3bf9d5fd95079f84',
       exchangeHandshakeAddress: '0x6d86cf435978cb75aecc43d0a4e3a379af7667d8',
-      exchangeShopAddress: '0xa849f62cacb770dd1aac0dceb9fc7ec53cffde84',
+      exchangeCashAddress: '0x8b52cf985f6814662acdc07ecdfadd1a41afd8b8',
       shurikenTokenAddress: '0xc2f227834af7b44a11a9286f1771cade7ecd316c',
     },
     contractFiles: {
@@ -505,7 +516,7 @@ export const blockchainNetworks = {
       predictionHandshakeAddress: '0x2730da6188a35a5a384f4a3127036bb90f3721b5',
       predictionHandshakeDevAddress: '0x6f25814d49bcf8345f8afd2a3bf9d5fd95079f84',
       exchangeHandshakeAddress: '0x5fa2e0d96dbe664beb502407bf46ea85b131fb86',
-      exchangeShopAddress: '0x05914192cbbaae87a910f79e012b4091a39cc85c',
+      exchangeCashAddress: '0x72b0ba8b3e039153b557e4e15fa11fd6a79b7498',
       shurikenTokenAddress: '0xca0fed76b5807557ce38e65cab83be3373cc2e7d',
     },
     contractFiles: {

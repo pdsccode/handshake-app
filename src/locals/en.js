@@ -1,4 +1,5 @@
 import { URL } from '@/constants';
+import React from 'react';
 
 export default {
   app: {
@@ -39,12 +40,13 @@ export default {
   handshakeOfferConfirm: 'You are about to {type} {something} for {amount} {currency}',
   rejectOfferConfirm: 'Do you want to Reject this handshake? You will not be able to make transactions for 4 hours.',
   rejectOfferConfirmForShop: 'Do you want to Reject this handshake?',
-  completeOfferConfirm: 'Finish shaking?',
+  completeOfferConfirm: 'Complete the transaction? Your buyer will receive coin in a few minutes.',
   withdrawOfferConfirm: 'Are you sure you want to withdraw?',
   cancelOfferConfirm: 'Cancel this order?',
   closeOfferConfirm: 'Do you want to delete your offer?',
-  acceptOfferConfirm: 'Accept the order?',
+  acceptOfferConfirm: 'Accept to continue transaction?',
   createOfferSuccessMessage: 'Success! You have created an offer on Ninja.',
+  updateOfferSuccessMessage: 'Success! You have updated the offer on Ninja.',
   shakeOfferSuccessMessage: 'Success! A ninja has shaked on your order.',
   closeOfferSuccessMessage: 'Success! Your order is now closed.',
   completeShakedfferSuccessMessage: 'You have successfully shaked on Ninja',
@@ -54,6 +56,7 @@ export default {
   notEnoughCoinInWallet: 'You don\'t have enough coin right now. Please top up your wallet.',
 
   createOfferStoreConfirm: 'Do you want to set up an offer to {intentMsg}?',
+  updateOfferStoreConfirm: 'Do you want to update an offer to {intentMsg}?',
   notEnoughCoinInWalletStores: 'You don\'t have enough coin right now. Please top up your wallet.',
   addOfferItemSuccessMassage: 'Success! Your order is now listed on Ninja',
   deleteOfferItemSuccessMassage: 'You have successfully deleted your order.',
@@ -80,7 +83,9 @@ export default {
   'ex.create.label.phone': 'Phone',
   'ex.create.label.address': 'Meet-up place',
   'ex.create.label.beASeller': 'Be a seller',
+  'ex.create.label.beASeller.update': 'Update sale inventory',
   'ex.create.label.beABuyer': 'You can also be a buyer',
+  'ex.create.label.beABuyer.update': 'Update buy request',
   'ex.create.label.stationInfo': 'Station information',
 
   'ex.createLocal.label.iWantTo': 'I want to',
@@ -184,6 +189,9 @@ export default {
   'ex.shop.dashboard.label.revenue': 'Bought/sold revenue',
   'ex.shop.dashboard.label.transaction.total': 'Total bought/sold',
 
+  'ex.shop.dashboard.button.updateInventory': 'Update inventory',
+  'ex.shop.dashboard.label.trial': 'Trial',
+
   'ex.error.systemError': 'Sorry Ninja. Something went wrong. Come back soon.',
   'ex.error.312': 'Oh no! You cancelled your offer. You will not be able to make orders for 4 hours. Sorry',
   'ex.error.313': 'You already have a listing! To change your rates, please cancel your current listing.',
@@ -204,7 +212,7 @@ export default {
   'ex.earlyBird.btn': 'Open Station',
 
   'ex.seo.title': 'Ninja: the anonymous exchange of anything.',
-  'ex.seo.meta.description': 'Trade predictions for the FIFA World Cup. Exchange coin for cash in your local neighborhood. No downloads, no sign ups. 100% anonymous.',
+  'ex.seo.meta.description': 'Swap coin for cash in your local neighborhood. Trade predictions on anything, anywhere, with anyone. No downloads, no sign ups. 100% anonymous.',
 
   'error.required': 'Required',
   'error.requiredOne': 'You need to fill in one of these!',
@@ -221,6 +229,7 @@ export default {
   'btn.close': 'Close',
   'btn.accept': 'Accept',
   'btn.delete': 'Delete',
+  'btn.update': 'Update',
 
   'ex.landing.menu.about': 'ABOUT',
   'ex.landing.menu.blog': 'BLOG',
@@ -365,44 +374,72 @@ export default {
   ],
 
   // landing page --> /coin-exchange
-  COIN_EXCHANGE_LP_FAQ_TITLE: 'Have any questions?',
+  COIN_EXCHANGE_LP_FAQ_TITLE: 'Frequently asked questions',
   COIN_EXCHANGE_LP_FAQ: [
     {
-      question: 'What ID do I need as a seller or a buyer?',
-      answer: 'We do not need ID verification. If you verify your phone number, you will have the chance to get 1 free ETH to make transactions on Shake Ninja',
+      question: 'What is Ninja Cash?',
+      answer: 'Ninja Cash is a peer-to-peer decentralized exchange in which people can easily exchange cryptocurrency for cash. We want to make sure that traders are able to set up their own stations and make their own prices - not having to rely on market prices to buy and sell cryptocurrency.',
     },
     {
-      question: 'Are credit cards accepted?',
-      answer: 'Yes. We accept Visa, Mastercard, Amex and Discover',
+      question: 'Is it easy to set up a station?',
+      answer: <span>It is really simple to set up a station on Ninja Cash. We have written some step by step instructions for you <a target="__blank" href="https://medium.com/@ninja_org/a-step-by-step-guide-on-how-to-sell-btc-eth-for-cash-on-ninja-5b30a87e42c2">here</a>.</span>,
     },
     {
-      question: 'What currencies can people exchange?',
-      answer: 'We accept all types of currencies',
+      question: 'Where is Ninja Cash available?',
+      answer: 'Ninja’s are constantly joining us from all over the world. Anyone anywhere can set up a station. Just check out ninja.org and see if there is a station near you.',
     },
     {
-      question: 'Is there a system to track the trading history?',
-      answer: 'Yes. We count the successful and failed transactions with clear report for each seller and buyer',
+      question: 'What documents do I need to provide to make an account on Ninja Cash?',
+      answer: 'Nothing. We don’t want any of your personal information, an account is automatically created on your phone the first time you go to ninja.org.',
     },
     {
-      question: 'Is there any country restricted for this platform?',
-      answer: 'We are available for all countries',
+      question: 'Will I be truly anonymous on Ninja Cash?',
+      answer: 'Yes. We don\'t ask for your real name, the only way people will know it\'s you is if you tell them!',
     },
     {
-      question: 'Is there decentralized exchange?',
-      answer: 'Yes. Therefore the transaction is 100% safe and secured',
+      question: 'Is Ninja Cash secure?',
+      answer: 'Yes, keeping your money safe and your identity private is our top priority. All of the transactions conducted on Ninja Cash are secured through the use of smart contracts written on Ethereum’s blockchain.',
     },
     {
-      question: 'Can I use paypal?',
-      answer: 'We are not available on Paypal at the moment',
+      question: 'How do I buy cryptocurrency from Ninja Cash?',
+      answer: 'Ninja Cash will connect you to other users in your area who are selling cryptocurrency. All you need to do is find someone who is selling for a price you like and you can then arrange the trade.',
     },
     {
-      question: 'Will the funds be held in Escrow?',
-      answer: 'Yes, in either Escrow on smart contract or ethereum blockchain',
+      question: 'What currencies can I use on Ninja Cash?',
+      answer: 'Ninja Cash is global, so it depends on where your station is set up. Usually, your trade will be made in the local currency.',
     },
     {
-      question: 'How will the Smart Contract execute when physical cash is involved and there is a lag in transaction time?',
-      answer: 'After receiving the physical cash, the seller will click on the accept button, the coin will be automatically transferred to the buyer. The process takes about 10 minutes to 20 minutes',
+      question: 'How do I keep my wallet safe?',
+      answer: <span>Each wallet is provided a series of words arranged in a specific order. No one can withdraw your coins without these words in the right order. We suggest that you don’t keep this password in your phone, but that you make a hard copy of it and keep it in a safe place.<br /><a target="__blank" href="https://medium.com/@ninja_org/how-to-back-up-your-ninja-wallet-its-really-quite-easy-d98a5ec1a671">Make sure you backup your wallet.</a></span>,
     },
+    {
+      question: 'How do I pay for coins?',
+      answer: 'After you have connected with a fellow ninja, you will arrange a place to meet to make the trade. You buy your cryptocurrency with cash, the seller will finalize the deal on NinjaCash simultaneously. The coins will then be transferred to your wallet.',
+    },
+    {
+      question: 'Are there any fees?',
+      answer: 'Station owners pay a 1% transaction fee.',
+    },
+    {
+      question: 'How long does it take to complete a transaction?',
+      answer: 'It really depends on what is happening on the Ethereums blockchain at that moment. We expect that transactions will take roughly 10-20 mins to go through. It may be longer if the blockchain is experiencing unusually high traffic - most likely due to the latest dApp sensation.',
+    },
+    {
+      question: 'What happens if the transaction fails?',
+      answer: 'You can always track your transaction history and if something goes wrong, don’t hesitate to contact us. We will figure out the problem as soon as we can and get back to you.',
+    },
+    {
+      question: 'Can I buy coins on Ninja Cash using a credit card?',
+      answer: 'Unfortunately, we don’t accept any credit card payments. We are looking to introduce that feature in the future.',
+    },
+    {
+      question: 'Where is the coin held?',
+      answer: 'The coin is kept in the Ninja wallet which is completely under your control.',
+    },
+    {
+      question: 'How can I make sure my coin is transferred to me after I give the other ninja cash?',
+      answer: 'Once a seller approves the transaction under the buyer\'s eagle eye, the cryptocurrency will be released from Escrow and into your wallet.',
+    }
   ],
   COIN_EXCHANGE_LP_TRADE_EASY_TRADE_SAFE: {
     title: 'Trade Easy. Stay Safe',
@@ -527,6 +564,8 @@ export default {
       cash: {
         predition: 'Prediction',
         cash: 'Cash',
+        stationExplain: 'A station is where you can buy or sell cryptocurrency.',
+        stationCreateSuggest: 'Got crypto? Create station to turn it into money making machine NOW!',
         restoreStation: 'Restore station',
         backupStation: 'Backup station',
         transactions: 'Transactions',
