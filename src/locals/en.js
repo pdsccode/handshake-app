@@ -809,14 +809,17 @@ export default {
           status: 'Status',
           confirmations: 'confirmations',
           success: 'success',
+          error: "Error",
           detail_etherscan: 'View detail on etherscan.io',
           view_all_etherscan: 'View all on etherscan.io',
           self: "Self",
           sent: "Sent",
           received: "Received",
+          create: "Create",
           transfer: "transfer",
           from: "from",
-          to: "to"
+          to: "to",
+          internal_transactions: "Internal Transaction"
         },
       },
     },
