@@ -72,7 +72,10 @@ export default {
   movingCoinToEscrow: 'Moving your coin to escrow. This may take a few minutes.',
   movingCoinFromEscrow: 'Moving your coin from escrow. This may take a few minutes.',
   'ex.create.label.amountBuy': 'I want to buy',
+  'ex.create.label.amountBuy.update': 'I want to buy more',
   'ex.create.label.amountSell': 'I want to sell',
+  'ex.create.label.amountSell.update': 'I want to sell more',
+  'ex.create.label.currentBalance': 'Current balance',
   'ex.create.label.marketPrice': 'Current market price',
   'ex.create.label.premiumBuy': 'My price',
   'ex.create.label.premiumSell': 'My price',
@@ -745,6 +748,7 @@ export default {
         header: 'Wallet address',
         header2: 'Custom Amount',
         message: 'Share your public wallet address to receive',
+        title2: 'MY DESPOSIT ADDRESS',
         label: {
           address: 'Address',
           amount: 'Amount',
@@ -754,10 +758,15 @@ export default {
           amount: 'Specify amount ...',
           choose_wallet: 'Choose a wallet ...',
         },
+        link: {
+          copy_address: "Copy address",
+          download_qrcode: "Download QR code",
+        },
         button: {
           share: 'Copy to share',
           request_amount: 'Request Specific amount ➔',
           done: 'Done',
+          text: 'Copy address'
         },
         success: {
           share: 'Wallet address copied to clipboard.',

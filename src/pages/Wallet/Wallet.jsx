@@ -933,8 +933,8 @@ class Wallet extends React.Component {
 
 
           {/* Modal for Copy address : */}
-          <Modal title={messages.wallet.action.receive.header} onRef={modal => this.modalShareAddressRef = modal} onClose={()=> {this.setState({activeReceive: false})}}>
-            <ReceiveCoin active={this.state.activeReceive} wallet={this.state.walletSelected} onFinish={() => { this.successReceive() }} />
+          <Modal title={messages.wallet.action.receive.title} onRef={modal => this.modalShareAddressRef = modal} onClose={()=> {this.setState({activeReceive: false})}}>
+            <ReceiveCoin active={this.state.activeReceive} wallet={this.state.walletSelected} onFinish={() => { this.successReceive() }} />           
           </Modal>
 
           {/* Modal for Create/Import wallet : */}
