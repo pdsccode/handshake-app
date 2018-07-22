@@ -63,10 +63,12 @@ class BetingShake extends React.Component {
   }
 
   async componentWillMount() {
+    /*
     const estimateGas = await getEstimateGas();
     this.setState({
       estimateGas,
     });
+    */
   }
   componentDidMount() {
     this.props.onClickSubmit(this.onSubmit);
@@ -123,10 +125,12 @@ class BetingShake extends React.Component {
     }
   }
 
+  /*
   onCancel = () => {
     console.log('Cancel')
     this.props.onCancelClick();
   }
+  */
 
 
   updateTotal = () => {

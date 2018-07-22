@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import moment from 'moment';
-import { BigNumber } from 'bignumber.js';
 // service, constant
 import local from '@/services/localStore';
 import { APP, API_URL } from '@/constants';
@@ -11,18 +10,6 @@ import { SIDE } from '@/components/handshakes/betting/constants.js';
 
 import { getBalance, parseBigNumber } from '@/components/handshakes/betting/utils';
 import GA from '@/services/googleAnalytics';
-// components
-import Dropdown from '@/components/core/controls/Dropdown';
-import ShareSocial from '@/components/core/presentation/ShareSocial';
-import LuckyReal from '@/components/handshakes/betting/LuckyPool/LuckyReal';
-import LuckyFree from '@/components/handshakes/betting/LuckyPool/LuckyFree';
-
-// import FeedComponent from '@/components/Comment/FeedComment';
-import Button from '@/components/core/controls/Button';
-import ModalDialog from '@/components/core/controls/ModalDialog';
-import GroupBook from './../GroupBook';
-import TopInfo from './../TopInfo';
-import BettingShake from './../Shake';
 import BettingShakeFree from './../ShakeFree';
 // style
 import './Filter.scss';

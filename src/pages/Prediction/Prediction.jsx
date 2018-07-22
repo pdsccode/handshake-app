@@ -60,7 +60,7 @@ class Prediction extends React.Component {
       reportTime: event.reportTime,
       value: event.name,
     };
-    // this.openOrderPlace(selectedOutcome);
+    this.openOrderPlace(selectedOutcome);
     this.modalOrderPlace.open();
     this.setState({
       selectedOutcome,
@@ -106,7 +106,7 @@ class Prediction extends React.Component {
             selectedOutcome={state.selectedOutcome}
             selectedMatch={state.selectedMatch}
             render={state.isShowOrder}
-            openPopup={(click)=> {this.openFilter = click}}
+            openPopup={(click)=> {this.openOrderPlace = click}}
             onSubmitClick={()=> {
               this.closeOrderPlace();
               this.modalLuckyReal.open();
