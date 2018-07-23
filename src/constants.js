@@ -385,6 +385,12 @@ export const HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS_VALUE = {
   cancelled: HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.CANCELLED,
 };
 
+export const HANDSHAKE_EXCHANGE_SHOP_OFFER_SUB_STATUS = {
+  refilling: 'refilling',
+  refilled: 'refilled',
+  undo_refill: 'undo_refill',
+};
+
 export const DEFAULT_FEE = {
   ETH: 0,
   BTC: 0,
@@ -395,6 +401,7 @@ export const EXCHANGE_FEED_TYPE = {
   INSTANT: 'instant',
   OFFER_STORE: 'offer_store',
   OFFER_STORE_SHAKE: 'offer_store_shake',
+  OFFER_STORE_ITEM: 'offer_store_item',
 };
 
 export const EXCHANGE_METHOD_PAYMENT = {

@@ -72,7 +72,10 @@ export default {
   movingCoinToEscrow: 'Moving your coin to escrow. This may take a few minutes.',
   movingCoinFromEscrow: 'Moving your coin from escrow. This may take a few minutes.',
   'ex.create.label.amountBuy': 'I want to buy',
+  'ex.create.label.amountBuy.update': 'I want to buy more',
   'ex.create.label.amountSell': 'I want to sell',
+  'ex.create.label.amountSell.update': 'I want to sell more',
+  'ex.create.label.currentBalance': 'Current balance',
   'ex.create.label.marketPrice': 'Current market price',
   'ex.create.label.premiumBuy': 'My price',
   'ex.create.label.premiumSell': 'My price',
@@ -148,7 +151,7 @@ export default {
   'ex.shop.explanation.shake': 'Accepted. You will receive coin in a few minutes.',
   'ex.shop.explanation.completing': 'Accepted. You will receive coin in a few minutes.',
   'ex.shop.explanation.completed': '',
-  'ex.shop.explanation.pre_shaking': 'Waiting for the station to accept your offer.',
+  'ex.shop.explanation.pre_shaking': 'Be patient - it can take a couple of minutes for your coin to be sent to escrow.',
   'ex.shop.explanation.pre_shake': 'Waiting for the station to accept your offer.',
   'ex.shop.explanation.rejecting': 'Rejecting the offer. Please wait a few minutes.',
   'ex.shop.explanation.rejected': '',
@@ -767,6 +770,7 @@ export default {
         header: 'Wallet address',
         header2: 'Custom Amount',
         message: 'Share your public wallet address to receive',
+        title2: 'MY DESPOSIT ADDRESS',
         label: {
           address: 'Address',
           amount: 'Amount',
@@ -776,10 +780,15 @@ export default {
           amount: 'Specify amount ...',
           choose_wallet: 'Choose a wallet ...',
         },
+        link: {
+          copy_address: "Copy address",
+          download_qrcode: "Download QR code",
+        },
         button: {
           share: 'Copy to share',
           request_amount: 'Request Specific amount ➔',
           done: 'Done',
+          text: 'Copy address'
         },
         success: {
           share: 'Wallet address copied to clipboard.',
@@ -831,14 +840,17 @@ export default {
           status: 'Status',
           confirmations: 'confirmations',
           success: 'success',
+          error: "Error",
           detail_etherscan: 'View detail on etherscan.io',
           view_all_etherscan: 'View all on etherscan.io',
           self: "Self",
           sent: "Sent",
           received: "Received",
+          create: "Create",
           transfer: "transfer",
           from: "from",
-          to: "to"
+          to: "to",
+          internal_transactions: "Internal Transaction"
         },
       },
     },

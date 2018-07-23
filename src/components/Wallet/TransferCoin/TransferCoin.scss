@@ -4,6 +4,15 @@
 }
 .sendwallet-wrapper{
 
+    padding: 15px;    
+    margin: auto;
+    width: 100%;
+    margin-bottom: 5px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    background-color: #fff;
+    margin-top: 15px!important;
+
     .bgBox{
       // background-image: url('../../../assets/images/pages/wallet/bg-box-wallet-coin.svg');
       // background-repeat: no-repeat;
@@ -127,6 +136,12 @@
 .dropdown-wallet-tranfer{
   margin: 0!important;
   margin-bottom: 10px!important;
+
+  .btn-group > .btn:first-child, .btn-light:not(:disabled):not(.disabled):active, .btn-light:not(:disabled):not(.disabled).active, .show > .btn-light.dropdown-toggle{
+    background: transparent;
+    border: none;
+  }
+
   .btn{
     padding-left: 10px;
     text-align: left;
@@ -149,11 +164,11 @@
     padding-left: 1px;
     button{
       background-color:transparent;
-      border: none;
+      // border: none;
     }
     button:hover{
       background-color:transparent;
-      border: none;
+      // border: none;
     }
   }
   .dropdown-custom-item{

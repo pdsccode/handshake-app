@@ -124,7 +124,7 @@ class Wallet extends React.Component {
       listMenu: [],
       walletSelected: null,
       inputSendValue: '',
-      isRestoreLoading: false,      
+      isRestoreLoading: false,
       // tranfer:
       listCoinTempToCreate: [],
       countCheckCoinToCreate: 1,
@@ -140,8 +140,10 @@ class Wallet extends React.Component {
       formAddTokenIsActive: false,
       formAddCollectibleIsActive: false,
       isHistory: false,
-      pagenoHistory: 1,
+      pagenoTran: 1,
+      pagenoIT: 1,
       transactions: [],
+      internalTransactions: [],
       isLoadMore: false,
       activeReceive: false,
     };
@@ -221,23 +223,23 @@ class Wallet extends React.Component {
       offset = this.props.offset || defaultOffset,
       scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
 
-    let {walletSelected, pagenoHistory, isHistory, isLoadMore } = this.state;
+    let {walletSelected, pagenoTran, isHistory, isLoadMore } = this.state;
     let calcTop = topOfElement(el) + el.offsetHeight - scrollTop - window.innerHeight ;
 
-    if (isHistory && isLoadMore == false && pagenoHistory > 0 && calcTop < offset) {
-      pagenoHistory++;
+    if (isHistory && isLoadMore == false && pagenoTran > 0 && calcTop < offset) {
+      pagenoTran++;
 
       this.setState({ isLoadMore: true});
 
       let list = this.state.transactions;
-      let data = await walletSelected.getTransactionHistory(pagenoHistory);
+      let data = await walletSelected.getTransactionHistory(pagenoTran);
 
       if(data.length > 0){
         let final_list = list.concat(data);
-        this.setState({ transactions: final_list, pagenoHistory: data.length < 20 ? 0 : pagenoHistory, isLoadMore: false});
+        this.setState({ transactions: final_list, pagenoTran: data.length < 20 ? 0 : pagenoTran, isLoadMore: false});
       }
       else{
-        this.setState({ pagenoHistory: 0, isLoadMore: false});
+        this.setState({ pagenoTran: 0, isLoadMore: false});
       }
     }
   }
@@ -373,8 +375,8 @@ class Wallet extends React.Component {
       obj.push({
         title: messages.wallet.action.history.title,
         handler: async () => {
-          let pagenoHistory = 1;
-          this.setState({ walletSelected: wallet, transactions: [], isHistory: true, pagenoHistory: pagenoHistory });
+          let pagenoTran = 1, pagenoIT = 1;
+          this.setState({ walletSelected: wallet, transactions: [], isHistory: true, pagenoTran: pagenoTran });
           this.toggleBottomSheet();
           this.modalHistoryRef.open();
           this.showLoading();
@@ -382,11 +384,16 @@ class Wallet extends React.Component {
           wallet.balance = await wallet.getBalance();
           wallet.transaction_count = await wallet.getTransactionCount();
 
-          let data = await wallet.getTransactionHistory(pagenoHistory);
-          if(Number(data.length) < 20) pagenoHistory = 0;
-          if(data.length > wallet.transaction_count) wallet.transaction_count = data.length;
+          let transactions = await wallet.getTransactionHistory(pagenoTran);
 
-          this.setState({ transactions: data, pagenoHistory: pagenoHistory, walletSelected: wallet });
+          if(Number(transactions.length) < 20) pagenoTran = 0;
+          if(transactions.length > wallet.transaction_count) wallet.transaction_count = transactions.length;
+
+          let internalTransactions = await wallet.listInternalTransactions(pagenoIT);
+          if(Number(internalTransactions.length) < 20) pagenoIT = 0;
+          if(internalTransactions.length > wallet.transaction_count) wallet.transaction_count = transactions.length;
+
+          this.setState({ transactions: transactions, internalTransactions: internalTransactions, pagenoTran: pagenoTran, pagenoIT: pagenoIT, walletSelected: wallet });
           this.hideLoading();
         }
       });
@@ -454,7 +461,7 @@ class Wallet extends React.Component {
       }
     }
     this.modalBetRef.close();
-  }  
+  }
 
   sendCoin = () => {
     this.modalConfirmSendRef.open();
@@ -585,9 +592,9 @@ class Wallet extends React.Component {
 
     obj.push({
       title: messages.wallet.action.backup.title,
-      handler: () => {        
+      handler: () => {
         this.setState({activeBackup: true, walletsData: {
-          "auth_token": local.get(APP.AUTH_TOKEN), 
+          "auth_token": local.get(APP.AUTH_TOKEN),
           "chat_encryption_keypair": local.get(APP.CHAT_ENCRYPTION_KEYPAIR) ,
           "wallets": this.getAllWallet() }});
         this.toggleBottomSheet();
@@ -596,7 +603,7 @@ class Wallet extends React.Component {
     });
     obj.push({
       title: messages.wallet.action.restore.title,
-      handler: () => {        
+      handler: () => {
         this.toggleBottomSheet();
         this.setState({ activeRestore: true});
         this.modalRestoreRef.open();
@@ -911,7 +918,7 @@ class Wallet extends React.Component {
           </Modal>
 
           <Modal title={messages.wallet.action.history.header} onRef={modal => this.modalHistoryRef = modal} onClose={this.closeHistory}>
-            <WalletHistory wallet={this.state.walletSelected} transactions={this.state.transactions} />
+            <WalletHistory wallet={this.state.walletSelected} transactions={this.state.transactions} internalTransactions={this.state.internalTransactions} />
           </Modal>
 
 
@@ -927,7 +934,7 @@ class Wallet extends React.Component {
 
 
           {/* Modal for Copy address : */}
-          <Modal title={messages.wallet.action.receive.header} onRef={modal => this.modalShareAddressRef = modal} onClose={()=> {this.setState({activeReceive: false})}}>
+          <Modal title={messages.wallet.action.receive.title} onRef={modal => this.modalShareAddressRef = modal} onClose={()=> {this.setState({activeReceive: false})}}>
             <ReceiveCoin active={this.state.activeReceive} wallet={this.state.walletSelected} onFinish={() => { this.successReceive() }} />           
           </Modal>
 

@@ -56,8 +56,9 @@ export class Ethereum extends Wallet {
     return new Web3(new Web3.providers.HttpProvider(this.network));
   }
 
-  getAPIUrlAddress() {
+  getAPIUrlAddress(tab) {
     let url = this.network == Ethereum.Network.Mainnet ? "https://etherscan.io/address/"+this.address : "https://rinkeby.etherscan.io/address/"+this.address;
+    if(tab == 1) url += "#internaltx";
     return url;
   }
 
@@ -163,7 +164,6 @@ export class Ethereum extends Wallet {
             .sendSignedTransaction(rawTxHex)
             .on('transactionHash', (hash) => {
 
-              console.log("hash", hash);
               resolve({ status: 1, message: 'messages.ethereum.success.transaction',
                 data: {hash: hash}
               });
@@ -204,6 +204,17 @@ export class Ethereum extends Wallet {
     let result = [];
     const API_KEY = configs.network[4].apikeyEtherscan;
     const url = `${this.constructor.API[this.getNetworkName()]}?module=account&action=txlist&address=${this.address}&startblock=0&endblock=99999999&page=${pageno}&offset=20&sort=desc&apikey=${API_KEY}`;
+    const response = await axios.get(url);
+    if (response.status == 200) {
+      result = response.data.result;
+    }
+    return result;
+  }
+
+  async listInternalTransactions() {
+    let result = [];
+    const API_KEY = configs.network[4].apikeyEtherscan;
+    const url = `${this.constructor.API[this.getNetworkName()]}?module=account&action=txlistinternal&address=${this.address}&startblock=0&endblock=99999999&sort=desc&apikey=${API_KEY}`;
     const response = await axios.get(url);
     if (response.status == 200) {
       result = response.data.result;
@@ -296,7 +307,7 @@ export class Ethereum extends Wallet {
       token = this.checkToken(addr);
       if(token.result){
         coin_name = token.name
-        let a = this.getTransactionReceipt(transaction_no);
+        //let a = this.getTransactionReceipt(transaction_no);
       }
 
       addresses.push(addr.replace(addr.substr(4, 34), '...'));
@@ -313,6 +324,51 @@ export class Ethereum extends Wallet {
       is_error: is_error
     };
   }
+
+  cookIT(data){
+    let value = 0, transaction_date = new Date(), toAddress = "", is_error = false,
+    transaction_no = "", is_sent = 0, addresses = [];
+
+    if(data){
+      try{
+        value = Number(data.value / 1000000000000000000);
+        value = this.formatNumber(value);
+        transaction_date = new Date(data.timeStamp*1000);
+        is_error = Boolean(data.isError == "1");
+        transaction_no = data.hash;
+
+        if(data.type == "create")
+          is_sent = 3;
+        else if(String(data.from).toLowerCase() == this.address.toLowerCase() && String(data.to).toLowerCase() != this.address.toLowerCase())
+          is_sent = 1;
+        else if (String(data.from).toLowerCase() != this.address.toLowerCase() && String(data.to).toLowerCase() == this.address.toLowerCase())
+          is_sent = 2;
+
+        const w = new Ethereum();
+        w.address = data.to;
+        toAddress = w.getShortAddress();
+      }
+      catch(e){
+        console.error(e);
+      }
+
+      let addr = data.from;
+      if(is_sent == 1) addr = data.to;
+
+      addresses.push(addr.replace(addr.substr(4, 34), '...'));
+    }
+
+    return {
+      value: value,
+      transaction_no: transaction_no,
+      transaction_date: transaction_date,
+      transaction_relative_time:  moment(transaction_date).fromNow(),
+      addresses: addresses,
+      is_error: is_error,
+      is_sent: is_sent
+    };
+  }
+
 
   checkToken(addr){
     return {result: addr == "0xc2f227834af7b44a11a9286f1771cade7ecd316c", name: "SHURI"}
