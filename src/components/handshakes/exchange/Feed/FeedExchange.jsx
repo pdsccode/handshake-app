@@ -16,16 +16,13 @@ import {
 } from '@/constants';
 import { connect } from 'react-redux';
 import ShakeDetail from '../components/ShakeDetail';
-import {
-  shakeOfferItem,
-  trackingOnchain,
-} from '@/reducers/exchange/action';
+import { shakeOfferItem, trackingLocation, trackingOnchain } from '@/reducers/exchange/action';
 import { Ethereum } from '@/services/Wallets/Ethereum.js';
 import { Bitcoin } from '@/services/Wallets/Bitcoin';
 import Offer from '@/models/Offer';
 import { MasterWallet } from '@/services/Wallets/MasterWallet';
-import { formatAmountCurrency, formatMoneyByLocale, getOfferPrice } from '@/services/offer-util';
-import { hideLoading, showAlert, showLoading } from '@/reducers/app/action';
+import { formatAmountCurrency, formatMoneyByLocale, getLatLongHash, getOfferPrice } from '@/services/offer-util';
+import { getUserLocation, hideLoading, showAlert, showLoading } from '@/reducers/app/action';
 import { getDistanceFromLatLonInKm, getErrorMessageFromCode } from '../utils';
 import { ExchangeCashHandshake } from '@/services/neuron';
 import OfferShop from '@/models/OfferShop';
@@ -57,11 +54,9 @@ class FeedExchange extends React.PureComponent {
 
     // console.log('offer', this.offer);
 
-    const cryptoCurrencyList = Object.values(CRYPTO_CURRENCY).map((item) => {
-      return {
-        value: item, text: item, icon: <img src={ICONS[item]} width={22} />, hide: false,
-      };
-    });
+    const cryptoCurrencyList = Object.values(CRYPTO_CURRENCY).map(item => ({
+      value: item, text: item, icon: <img src={ICONS[item]} width={22} />, hide: false,
+    }));
 
     this.state = {
       modalContent: '',
@@ -87,11 +82,9 @@ class FeedExchange extends React.PureComponent {
       return;
     }
 
-    const cryptoCurrencyList = Object.values(CRYPTO_CURRENCY).map((currency) => {
-      return {
-        value: currency, text: currency, icon: <img src={ICONS[currency]} width={22} />, hide: !offer.itemFlags[currency] || this.isEmptyBalance(offer.items[currency]),
-      };
-    });
+    const cryptoCurrencyList = Object.values(CRYPTO_CURRENCY).map(currency => ({
+      value: currency, text: currency, icon: <img src={ICONS[currency]} width={22} />, hide: !offer.itemFlags[currency] || this.isEmptyBalance(offer.items[currency]),
+    }));
 
     this.setState({
       CRYPTO_CURRENCY_LIST: cryptoCurrencyList,
@@ -276,6 +269,7 @@ class FeedExchange extends React.PureComponent {
       }
     }
 
+    this.trackingLocation(offer.id, offerShake.id, status);
     this.hideLoading();
     const message = <FormattedMessage id="shakeOfferItemSuccessMassage" />;
 
@@ -324,6 +318,24 @@ class FeedExchange extends React.PureComponent {
       },
       errorFn: () => {
 
+      },
+    });
+  }
+
+  trackingLocation = (offerStoreId, offerStoreShakeId, action) => {
+    const { trackingLocation, getUserLocation } = this.props;
+    getUserLocation({
+      successFn: (ipInfo) => {
+        const data = {
+          data: getLatLongHash(ipInfo?.locationMethod, ipInfo.latitude, ipInfo.longitude),
+          ip: ipInfo?.ip,
+          action,
+        };
+        trackingLocation({
+          PATH_URL: `exchange/offer-stores/${offerStoreId}/shakes/${offerStoreShakeId}/7tHCLp8XpajPJaVh`,
+          METHOD: 'POST',
+          data,
+        });
       },
     });
   }
@@ -505,6 +517,8 @@ const mapDispatch = dispatch => ({
   rfChange: bindActionCreators(change, dispatch),
   clearFields: bindActionCreators(clearFields, dispatch),
   trackingOnchain: bindActionCreators(trackingOnchain, dispatch),
+  trackingLocation: bindActionCreators(trackingLocation, dispatch),
+  getUserLocation: bindActionCreators(getUserLocation, dispatch),
 });
 
 export default injectIntl(connect(mapState, mapDispatch)(FeedExchange));
