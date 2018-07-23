@@ -127,12 +127,12 @@
 }
 
 .me {
-  .feed-wrapper:first-of-type {
-    margin-top: 3rem !important;
-  }
+  //.feed-wrapper:first-of-type {
+  //  margin-top: 3rem !important;
+  //}
   .feed-wrapper{
-    margin-top: rem-calc(8px);
-    margin-bottom:-4px;
+    margin-top: 15px;
+    margin-bottom: 15px;
   }
 }
 .event-done-true{
@@ -140,6 +140,7 @@
 }
 .me-main-container{
   background-color: #f7f7f7;
+  padding-bottom: 40px;
 }
 .odds-text-feed{
   color:#8a8a8f;

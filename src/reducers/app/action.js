@@ -5,7 +5,7 @@ import { APP, API_URL, Country } from '@/constants';
 import local from '@/services/localStore';
 import COUNTRIES_BLACKLIST_PREDICTION from '@/data/country-blacklist-betting';
 import COUNTRIES_BLACKLIST_CASH from '@/data/country-blacklist-exchange';
-import { signUp, fetchProfile, authUpdate } from '@/reducers/auth/action';
+import { signUp, fetchProfile, authUpdate, getFreeETH } from '@/reducers/auth/action';
 import { getListOfferPrice, getUserProfile } from '@/reducers/exchange/action';
 import { MasterWallet } from '@/services/Wallets/MasterWallet';
 
@@ -143,6 +143,7 @@ const tokenHandle = ({
           const listWallet = MasterWallet.getMasterWallet();
           if (listWallet === false) {
             MasterWallet.createMasterWallets();
+            console.log("create wallet success");
           } else {
             const shuriWallet = MasterWallet.getShuriWallet();
             if (shuriWallet === false) {
@@ -159,6 +160,19 @@ const tokenHandle = ({
             METHOD: 'POST',
             successFn: (res) => {
               // console.log('app - handle - wallet - success - ', res);
+              if (isSignup && process.env.isDojo && !process.env.isLive){
+                // console.log('call request free eth ...');
+                dispatch(getFreeETH({
+                  PATH_URL: '/user/free-rinkeby-eth?address=' + shuriWallet.address,          
+                  METHOD: 'POST',
+                  successFn(e) {
+                    console.log('request free eth success', e);
+                  },
+                  errorFn: (e) => {
+                    // console.log('app - handle - getFreeETH - wallet - error - ', e);
+                  },
+                }));
+              }
             },
             errorFn: (e) => {
               // console.log('app - handle - wallet - error - ', e);

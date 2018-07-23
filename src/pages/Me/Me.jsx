@@ -1,22 +1,30 @@
 import React from 'react';
-import { compose } from 'redux';
+import { bindActionCreators, compose } from 'redux';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { withFirebase } from 'react-redux-firebase';
 // action, mock
-import { fireBaseExchangeDataChange, loadMyHandshakeList, fireBaseBettingChange } from '@/reducers/me/action';
-import { API_URL, APP, HANDSHAKE_ID, URL } from '@/constants';
+import { fireBaseBettingChange, fireBaseExchangeDataChange, loadMyHandshakeList } from '@/reducers/me/action';
+import {
+  API_URL,
+  APP,
+  EXCHANGE_FEED_TYPE,
+  HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS,
+  HANDSHAKE_ID,
+  HANDSHAKE_ID_DEFAULT,
+  URL,
+} from '@/constants';
 import { injectIntl } from 'react-intl';
-
 // components
 import { Link } from 'react-router-dom';
-import { Grid, Row, Col } from 'react-bootstrap';
+import { Col, Grid, Row } from 'react-bootstrap';
 import NoData from '@/components/core/presentation/NoData';
-import { getListOfferPrice, getOfferStores, reviewOffer } from '@/reducers/exchange/action';
+import { getDashboardInfo, getListOfferPrice, getOfferStores, reviewOffer } from '@/reducers/exchange/action';
 import FeedPromise from '@/components/handshakes/promise/Feed';
 import FeedBetting from '@/components/handshakes/betting/Feed';
 import FeedExchange from '@/components/handshakes/exchange/Feed/FeedMe';
 import FeedSeed from '@/components/handshakes/seed/Feed';
+import ModalDialog from '@/components/core/controls/ModalDialog';
 import Image from '@/components/core/presentation/Image';
 
 import ToggleSwitch from '@/components/core/presentation/ToggleSwitch';
@@ -26,11 +34,18 @@ import ShopSVG from '@/assets/images/icon/icons8-shop_filled.svg';
 import ExpandArrowSVG from '@/assets/images/icon/expand-arrow.svg';
 import { setOfflineStatus } from '@/reducers/auth/action';
 import local from '@/services/localStore';
+import { fieldRadioButton } from '@/components/core/form/customField';
+import createForm from '@/components/core/form/createForm';
 
 import Helper from '@/services/helper';
 import Rate from '@/components/core/controls/Rate/Rate';
 
 import './Me.scss';
+import { change, Field } from 'redux-form';
+import Modal from '@/components/core/controls/Modal/Modal';
+import BackupWallet from '@/components/Wallet/BackupWallet/BackupWallet';
+import RestoreWallet from '@/components/Wallet/RestoreWallet/RestoreWallet';
+import { FormattedMessage } from 'react-intl';
 
 const TAG = 'Me';
 const maps = {
@@ -40,6 +55,30 @@ const maps = {
   [HANDSHAKE_ID.EXCHANGE_LOCAL]: FeedExchange,
   [HANDSHAKE_ID.SEED]: FeedSeed,
 };
+
+const CASH_TAB = {
+  TRANSACTION: 'TRANSACTION',
+  DASHBOARD: 'DASHBOARD',
+};
+
+const CATEGORIES = [{
+  value: HANDSHAKE_ID.BETTING,
+  text: 'Prediction',
+  priority: 0,
+},
+{
+  value: HANDSHAKE_ID.EXCHANGE,
+  text: 'Cash',
+  priority: 2,
+},
+];
+
+const nameFormFilterFeeds = 'formFilterFeeds';
+const FormFilterFeeds = createForm({
+  propsReduxForm: {
+    form: nameFormFilterFeeds,
+  },
+});
 
 class Me extends React.Component {
   static propTypes = {
@@ -59,6 +98,7 @@ class Me extends React.Component {
   constructor(props) {
     super(props);
     const { s, sh } = Helper.getQueryStrings(window.location.search);
+    const handshakeDefault = this.getDefaultHandShakeId();
 
     const initUserId = s;
     const offerId = sh;
@@ -71,13 +111,36 @@ class Me extends React.Component {
       firebaseUser: this.props.firebaseUser,
       numStars: 0,
       offerStores: this.props.offerStores,
+      modalContent: <div />, // type is node
+      propsModal: {
+        // className: "discover-popup",
+        // isDismiss: false
+      },
+      cashTab: CASH_TAB.TRANSACTION,
+      handshakeIdActive: handshakeDefault,
+      firstTime: true,
+      me: this.props.me,
     };
   }
 
+  getDefaultHandShakeId() {
+    let seletedId = HANDSHAKE_ID_DEFAULT;
+    let { id } = Helper.getQueryStrings(window.location.search);
+    id = parseInt(id, 10);
+    if (id && Object.values(HANDSHAKE_ID).indexOf(id) !== -1) {
+      seletedId = id;
+    }
+    return seletedId;
+  }
+
   static getDerivedStateFromProps(nextProps, prevState) {
+    const { rfChange } = nextProps;
     console.log(TAG, ' getDerivedStateFromProps begin ');
     if (nextProps.exchange.listOfferPrice.updatedAt !== prevState.exchange.listOfferPrice.updatedAt) {
-      nextProps.loadMyHandshakeList({ PATH_URL: API_URL.ME.BASE });
+      const {
+        handshakeIdActive,
+      } = prevState;
+      Me.loadMyHandshakeListStatic(nextProps, handshakeIdActive);
       return { exchange: nextProps.exchange };
     }
     console.log(TAG, ' getDerivedStateFromProps begin firebaseUser = ', nextProps.firebaseUser);
@@ -95,7 +158,7 @@ class Me extends React.Component {
           }
           console.log(TAG, ' getDerivedStateFromProps begin 04');
           if (JSON.stringify(nextUser?.betting) !== JSON.stringify(prevUser?.betting)) {
-            console.log(TAG, ' getDerivedStateFromProps betting ',nextUser?.betting);
+            console.log(TAG, ' getDerivedStateFromProps betting ', nextUser?.betting);
             nextProps.fireBaseBettingChange(nextUser?.betting);
             nextProps.firebase.remove(`/users/${nextProps.auth.profile.id}/betting`);
           }
@@ -113,16 +176,48 @@ class Me extends React.Component {
         return { offerStores: nextProps.offerStores };
       }
     }
+
+    if (nextProps.me.list.length === 0 && nextProps.me.list.updatedAt !== prevState.me.list.updatedAt
+      && prevState.handshakeIdActive === HANDSHAKE_ID.BETTING && prevState.firstTime) {
+      rfChange(nameFormFilterFeeds, 'feedType', HANDSHAKE_ID.EXCHANGE);
+      rfChange(nameFormFilterFeeds, 'cash-show-type', CASH_TAB.TRANSACTION);
+      Me.loadMyHandshakeListStatic(nextProps, HANDSHAKE_ID.EXCHANGE);
+      return { handshakeIdActive: HANDSHAKE_ID.EXCHANGE, firstTime: false };
+    }
+
     return null;
   }
 
+  static loadMyHandshakeListStatic(nextProps, handshakeIdActive) {
+    const qs = {};
+
+    if (handshakeIdActive) {
+      qs.type = handshakeIdActive;
+    }
+    nextProps.loadMyHandshakeList({ PATH_URL: API_URL.ME.BASE, qs });
+  }
+
   componentDidMount() {
-    const { initUserId, offerId } = this.state;
+    const { initUserId, offerId, handshakeIdActive } = this.state;
+    const { rfChange } = this.props;
     if (initUserId && offerId) {
       this.rateRef.open();
     }
+
+    rfChange(nameFormFilterFeeds, 'feedType', handshakeIdActive);
+
     this.loadMyHandshakeList();
     this.getOfferStore();
+    // this.getDashboardInfo();
+  }
+
+  componentWillUnmount() {
+    const handshakeDefault = this.getDefaultHandShakeId();
+    this.setState({
+      cashTab: CASH_TAB.TRANSACTION,
+      handshakeIdActive: handshakeDefault,
+      firstTime: true,
+    });
   }
 
   setOfflineStatus = (online) => {
@@ -142,12 +237,32 @@ class Me extends React.Component {
     });
   }
 
+  getDashboardInfo = () => {
+    this.props.getDashboardInfo({
+      PATH_URL: `${API_URL.EXCHANGE.GET_DASHBOARD_INFO}`,
+    });
+  }
+
   handleCreateExchange = () => {
     this.props.history.push(`${URL.HANDSHAKE_CREATE}?id=${HANDSHAKE_ID.EXCHANGE}`);
   }
 
+  handleUpdateExchange = () => {
+    this.props.history.push(`${URL.HANDSHAKE_CREATE}?id=${HANDSHAKE_ID.EXCHANGE}&update=true`);
+  }
+
   loadMyHandshakeList = () => {
-    this.props.loadMyHandshakeList({ PATH_URL: API_URL.ME.BASE });
+    const qs = { };
+    const {
+      handshakeIdActive,
+    } = this.state;
+
+    console.log('loadMyHandshakeList', this.state);
+
+    if (handshakeIdActive) {
+      qs.type = handshakeIdActive;
+    }
+    this.props.loadMyHandshakeList({ PATH_URL: API_URL.ME.BASE, qs });
   }
 
   handleSetOfflineStatusSuccess = () => {
@@ -184,15 +299,75 @@ class Me extends React.Component {
   handleReviewOfferFailed = (e) => {
   }
 
-  render() {
-    const { list } = this.props.me;
-    const { messages } = this.props.intl;
-    const { offerStores } = this.state;
-    const online = !this.props.auth.offline;
-    const haveOffer = offerStores ? (offerStores.itemFlags.ETH || offerStores.itemFlags.BTC) : false;
+  handleShowModalDialog = (modalProps) => {
+    const { show, propsModal, modalContent = <div /> } = modalProps;
+    this.setState({
+      modalContent,
+      propsModal,
+    }, () => {
+      if (show) {
+        this.modalRef.open();
+      } else {
+        this.modalRef.close();
+      }
+    });
+  }
 
-    // console.log('this.props.intl', this.props.intl);
-    // console.log('messages.me.feed', messages.me.feed);
+  onCategoryChange = (e, newValue) => {
+    const { rfChange } = this.props;
+    console.log('onCategoryChange', newValue);
+    this.setState({ handshakeIdActive: newValue }, () => {
+      if (this.state.handshakeIdActive === HANDSHAKE_ID.EXCHANGE) {
+        this.setState({ cashTab: CASH_TAB.TRANSACTION }, () => {
+          rfChange(nameFormFilterFeeds, 'cash-show-type', CASH_TAB.TRANSACTION);
+        });
+      }
+      this.loadMyHandshakeList();
+    });
+  }
+
+  onCashTabChange = (e, newValue) => {
+    console.log('onTypeChange', newValue);
+    this.setState({ cashTab: newValue }, () => {
+      this.loadMyHandshakeList();
+      if (newValue === CASH_TAB.DASHBOARD) {
+        this.getOfferStore();
+        this.getDashboardInfo();
+      }
+    });
+  }
+
+  showRestoreWallet = () => {
+    this.modalRestoreRef.open();
+  }
+
+  showBackupWallet = () => {
+    this.modalBackupRef.open();
+  }
+
+  render() {
+    const { list, listDashboard } = this.props.me;
+    let listFeed = [];
+    if (this.state.handshakeIdActive === HANDSHAKE_ID.EXCHANGE && this.state.cashTab === CASH_TAB.DASHBOARD) {
+      listFeed = listDashboard;
+    } else {
+      listFeed = list;
+    }
+    const { messages } = this.props.intl;
+    const { offerStores, propsModal, modalContent } = this.state;
+    const online = !this.props.auth.offline;
+    let haveOffer = false;
+
+    if (offerStores) {
+      for (const value of Object.values(offerStores.itemFlags)) {
+        if (value) {
+          haveOffer = true;
+          break;
+        }
+      }
+    }
+
+    const { authProfile } = this.props;
 
     return (
       <Grid className="me">
@@ -222,25 +397,72 @@ class Me extends React.Component {
                 }
               </div>
               {haveOffer && (<div className="arrow">
-                <ToggleSwitch defaultChecked={online} onChange={flag => this.setOfflineStatus(flag)}/>
+                <ToggleSwitch defaultChecked={online} onChange={flag => this.setOfflineStatus(flag)} />
               </div>)
               }
             </div>
           </Col>
         </Row>
+
+        <div className="mt-2 mb-1">
+          <FormFilterFeeds>
+            <div className="d-table w-100">
+              <div className="d-table-cell"><label className="label-filter-by">{messages.me.feed.filterBy}</label></div>
+              <div className="d-table-cell">
+                <Field
+                  name="feedType"
+                  component={fieldRadioButton}
+                  type="tab-5"
+                  list={CATEGORIES}
+                  // validate={[required]}
+                  onChange={this.onCategoryChange}
+                />
+              </div>
+            </div>
+
+            { this.state.handshakeIdActive === HANDSHAKE_ID.EXCHANGE && (
+              <div>
+                <hr style={{ margin: '10px 0 5px' }} />
+                <div>
+                  <Field
+                    name="cash-show-type"
+                    component={fieldRadioButton}
+                    type="tab-6"
+                    list={[
+                      { value: CASH_TAB.TRANSACTION, text: messages.me.feed.cash.transactions, icon: <span className="icon-transactions align-middle" /> },
+                      { value: CASH_TAB.DASHBOARD, text: messages.me.feed.cash.dashboard, icon: <span className="icon-dashboard align-middle" /> },
+                    ]}
+                    // validate={[required]}
+                    onChange={this.onCashTabChange}
+                  />
+                </div>
+              </div>
+              )
+            }
+
+          </FormFilterFeeds>
+        </div>
+
         <Row>
           <Col md={12} className="me-main-container">
             {
-              list && list.length > 0 ? (
-                list.map((handshake) => {
+            listFeed && listFeed.length > 0 ? (
+              listFeed.map((handshake) => {
                   const FeedComponent = maps[handshake.type];
                   if (FeedComponent) {
+                    if (handshake.offerFeedType === EXCHANGE_FEED_TYPE.OFFER_STORE_SHAKE &&
+                      handshake.status === HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.PRE_SHAKING &&
+                      handshake.initUserId === authProfile?.id
+                    ) {
+                      return null;
+                    }
                     return (
                       <Col key={handshake.id} className="feed-wrapper">
                         <FeedComponent
                           {...handshake}
                           history={this.props.history}
                           onFeedClick={() => {}}
+                          onShowModalDialog={this.handleShowModalDialog}
                           mode="me"
                           refreshPage={this.loadMyHandshakeList}
                         />
@@ -249,13 +471,39 @@ class Me extends React.Component {
                   }
                   return null;
                 })
-              ) : (
+              ) : this.state.handshakeIdActive === HANDSHAKE_ID.EXCHANGE && this.state.cashTab === CASH_TAB.DASHBOARD ? (
+                <div className="text-center">
+                  <p>{messages.me.feed.cash.stationExplain}</p>
+                  <p>{messages.me.feed.cash.stationCreateSuggest}</p>
+                  <button className="btn btn-primary btn-block" onClick={this.showRestoreWallet}>{messages.me.feed.cash.restoreStation}</button>
+                </div>
+              ) :
+              (
                 <NoData message={messages.me.feed.noDataMessage} isShowArrowDown />
+              )
+            }
+            {
+              listFeed && listFeed.length > 0 && this.state.handshakeIdActive === HANDSHAKE_ID.EXCHANGE && this.state.cashTab === CASH_TAB.DASHBOARD && (
+                <div className="text-center">
+                  <button className="btn btn-primary btn-block" onClick={this.showBackupWallet}>{messages.me.feed.cash.backupStation}</button>
+                  {haveOffer && (<button className="btn btn-link text-underline" onClick={this.handleUpdateExchange}><FormattedMessage id="ex.shop.dashboard.button.updateInventory" /></button>)}
+                </div>
               )
             }
           </Col>
         </Row>
         <Rate onRef={e => this.rateRef = e} startNum={5} onSubmit={this.handleSubmitRating} ratingOnClick={this.handleOnClickRating} />
+        <ModalDialog onRef={(modal) => { this.modalRef = modal; return null; }} {...propsModal}>
+          {modalContent}
+        </ModalDialog>
+        {/* Modal for Backup wallets : */}
+        <Modal title={messages.wallet.action.backup.header} onRef={modal => this.modalBackupRef = modal}>
+          <BackupWallet onFinish={() => { this.modalBackupRef.close(); }} />
+        </Modal>
+        {/* Modal for Backup wallets : */}
+        <Modal title={messages.wallet.action.restore.header} onRef={modal => this.modalRestoreRef = modal}>
+          <RestoreWallet />
+        </Modal>
       </Grid>
     );
   }
@@ -272,14 +520,16 @@ const mapState = state => ({
   offerStores: state.exchange.offerStores,
 });
 
-const mapDispatch = ({
-  loadMyHandshakeList,
-  getListOfferPrice,
-  fireBaseExchangeDataChange,
-  fireBaseBettingChange,
-  setOfflineStatus,
-  reviewOffer,
-  getOfferStores,
+const mapDispatch = dispatch => ({
+  rfChange: bindActionCreators(change, dispatch),
+  loadMyHandshakeList: bindActionCreators(loadMyHandshakeList, dispatch),
+  getListOfferPrice: bindActionCreators(getListOfferPrice, dispatch),
+  fireBaseExchangeDataChange: bindActionCreators(fireBaseExchangeDataChange, dispatch),
+  fireBaseBettingChange: bindActionCreators(fireBaseBettingChange, dispatch),
+  setOfflineStatus: bindActionCreators(setOfflineStatus, dispatch),
+  reviewOffer: bindActionCreators(reviewOffer, dispatch),
+  getOfferStores: bindActionCreators(getOfferStores, dispatch),
+  getDashboardInfo: bindActionCreators(getDashboardInfo, dispatch),
 });
 
 export default injectIntl(compose(withFirebase, connect(mapState, mapDispatch))(Me));

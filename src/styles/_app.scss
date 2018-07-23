@@ -176,3 +176,22 @@
 .hide-scroll {
   overflow: hidden !important;
 }
+
+.auto-width {
+  &:first-child:nth-last-child(1) {
+    width: 100%;
+  }
+
+  &:first-child:nth-last-child(2) {
+    width: 50%;
+    padding-right: 4px;
+  }
+  &:first-child:nth-last-child(2) ~ & {
+    width: 50%;
+    padding-left: 4px;
+  }
+}
+
+.text-underline {
+  text-decoration: underline !important;
+}

@@ -35,7 +35,7 @@ const customField = element => ({
 
 export const fieldInput = customField('input');
 export const fieldDropdown = customField(({
-  onChange, value, list, defaultText = 'Select an item', classNameWrapper = 'btn-block', classNameDropdownToggle = '',
+  onChange, value, list, defaultText = 'Select an item', classNameWrapper = 'btn-block', classNameDropdownToggle = '', disabled = false,
 }) => {
   let txtSelectedItem = defaultText;
   const selectedItem = list.find(i => i.id === value.id);
@@ -45,7 +45,7 @@ export const fieldDropdown = customField(({
   }
   return (
     <UncontrolledButtonDropdown className={classNameWrapper}>
-      <DropdownToggle caret color="light" block className={classNameDropdownToggle}>
+      <DropdownToggle caret color="light" block className={classNameDropdownToggle} disabled={disabled}>
         {txtSelectedItem}
       </DropdownToggle>
       <DropdownMenu>
@@ -97,6 +97,16 @@ export const fieldRadioButton = customField(({
       fullWidth = true;
       hasPrefixIcon = true;
       break;
+    case 'tab-5':
+      containerClass = 'tab-5';
+      fullWidth = true;
+      hasPrefixIcon = false;
+      break;
+    case 'tab-6':
+      containerClass = 'tab-6';
+      fullWidth = true;
+      hasPrefixIcon = true;
+      break;
     case 'radio-big':
       containerClass = 'big';
       hasPrefixIcon = false;
@@ -130,7 +140,7 @@ export const fieldRadioButton = customField(({
             >
               {/* <span style={{ fontSize: '28px' }}>&sdot;</span> */}
               {
-                hasPrefixIcon && (<span>{icon || <span>&#x25cf;</span>}&nbsp;</span>)
+                hasPrefixIcon && (<span className="align-middle">{icon || <span>&#x25cf;</span>}&nbsp;</span>)
               }
               {text}
             </button>

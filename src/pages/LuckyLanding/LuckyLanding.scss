@@ -1,0 +1,72 @@
+@import './src/styles/style';
+
+.wrapperLuckyLanding {
+  position: relative;
+  background:white;
+  font-family: $font-family-base;
+  display: flex;
+  flex-direction: column;
+  margin: 0 -15px;
+
+  //height: 100vh;
+  .luckyLandingTop {
+    background: url('../../assets/images/luckypool/lucky-landing-bg.svg') no-repeat;
+    background-size: cover;
+    display: flex;
+    padding-top: 9.5rem;
+  }
+  .luckyTopContent {
+    margin-right: rem-calc(20px);
+    margin-left: rem-calc(10px);
+  }
+  .luckyLandingTitle {
+    font-size: rem-calc(26px);
+
+  }
+  .luckyTitleEth {
+    font-size: rem-calc(40px);
+    font-weight: 500;
+    color: #2456FB;
+
+  }
+  .luckyTopText {
+    font-size: rem-calc(16px);
+    margin-top: 2.25rem;
+  }
+  .luckyLandingButton {
+    background: #2456FB;
+    border-radius: rem-calc(2px);
+    font-size: rem-calc(16px);
+    color: #FFFFFF;
+    height: rem-calc(50px);
+
+
+    //display: inline-block;
+    font-weight: 400;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+
+    //user-select: none;
+    padding: 0.75rem 0.75rem;
+    margin: 2.5rem 2.5rem 0 2.5rem;
+    //transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+
+  }
+  .luckyLandingSmallDes {
+    font-size: rem-calc(12px);
+    text-align: center;
+    margin-top: rem-calc(20px);
+    margin-bottom: rem-calc(20px);
+  }
+  .luckyLandingLogo {
+    margin-right: rem-calc(20px);
+  }
+  .luckyLandingClose {
+    position: absolute;
+    top: .5rem;
+    right: .5rem;
+    width: 25px;
+    height: 25px;
+  }
+}

@@ -41,6 +41,10 @@
     margin-bottom: 0;
     font-weight: bold;
     margin-top: 10px;
+    width: 90%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
   }
   .balance {
     font-size: rem-calc(16px);
@@ -455,11 +459,35 @@
   padding-bottom: 40px;
   font-weight: 300;
 
+  ul.history-tab {
+    margin: 10px 0px 0px 0px;
+    padding: 0px;
+    border-bottom:solid 2px #007bff;
+    overflow: hidden;
+
+    li {
+      list-style: none;
+      float: left;
+      border-top-left-radius: 5px;
+      border-top-right-radius: 5px;
+      margin-right: 5px;
+      color: Gray;
+      background: #ECECEC;
+      padding: 5px 10px;
+      font-size: 14px;
+    }
+
+    li.active {
+      background: #007bff;
+      color: white;
+    }
+  }
+
   .history-balance{
     padding-top: 10px;
     padding-bottom: 10px;
     font-size: 14px;
-    border-bottom:solid 2px #1E4EFF;
+
   }
 
   .row{
@@ -469,6 +497,12 @@
     margin: 10px 0px;
     padding: 20px 0px;
     border-radius: 6px;
+  }
+
+  .label-self{
+    color:purple;
+    font-size: 16px;
+    padding-bottom: 7px;
   }
 
   .label-sent{
@@ -483,6 +517,12 @@
     padding-bottom: 7px;
   }
 
+  .label-create{
+    color:palevioletred;
+    font-size: 16px;
+    padding-bottom: 7px;
+  }
+
   .address{
     color:#8A8A8F;
     font-size: 14px;
@@ -492,6 +532,11 @@
     color:#8A8A8F;
     font-size: 14px;
     padding-bottom: 7px;
+  }
+
+  .value-self{
+    font-size: 16px;
+    color:purple;
   }
 
   .value-sent{
@@ -515,6 +560,10 @@
     width:60px;
     padding: 10px 10px 20px 15px;
     float: left;
+  }
+  .url {
+    padding-left: 60px;
+    padding-top: 5px;
   }
   .history-no-trans{
     text-align: center;
@@ -565,8 +614,10 @@
     padding-top: 15px;
     padding-bottom: 15px;
     border-bottom:solid 1px #ECECEC;
+    font-size: 14px;
+    overflow: hidden;
 
-    .status-failed{
+    .status-failed, .status-error{
       float: right;
       color:#FF2D55;
     }
@@ -587,6 +638,12 @@
       min-height: 30px;
       word-wrap: break-word;
       font-size: 14px;
+
+      .value-it{
+        margin-left: 120px;
+        padding-bottom: 10px;
+        display:list-item;
+      }
     }
 
     .key{

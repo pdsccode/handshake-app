@@ -1,6 +1,8 @@
 
 import localStore from '@/services/localStore';
 import { Bitcoin } from '@/services/Wallets/Bitcoin.js';
+import { BitcoinCash } from '@/services/Wallets/BitcoinCash.js';
+import { BitcoinCashTestnet } from '@/services/Wallets/BitcoinCashTestnet.js';
 import { BitcoinTestnet } from '@/services/Wallets/BitcoinTestnet.js';
 import { Ethereum } from '@/services/Wallets/Ethereum.js';
 import { Wallet } from '@/services/Wallets/Wallet.js';
@@ -42,11 +44,11 @@ const bip39 = require('bip39');
 export class MasterWallet {
     // list coin is supported, can add some more Ripple ...
     static ListDefaultCoin = {
-      Ethereum, Shuriken, Bitcoin, BitcoinTestnet,
+      Ethereum, Shuriken, Bitcoin, BitcoinTestnet, BitcoinCash, BitcoinCashTestnet
     };
 
     static ListCoin = {
-      Ethereum, Bitcoin, BitcoinTestnet, Shuriken, TokenERC20, TokenERC721,
+      Ethereum, Bitcoin, BitcoinTestnet, BitcoinCash, BitcoinCashTestnet, Shuriken, TokenERC20, TokenERC721,
       CryptoStrikers, CryptoPunks, CryptoKitties, Axie, BlockchainCuties,
       ChibiFighters, CryptoClown, CryptoCrystal, Cryptogs, CryptoHorse,
       CryptoSoccr, CryptoZodiacs, CSCPreSaleFactory, DopeRaider, Etherbots,
@@ -73,9 +75,12 @@ export class MasterWallet {
 
       const masterWallet = [];
 
-      let defaultWallet = [1, 3];
-      if (process.env.isLive) {
+      let defaultWallet = [1, 3];// eth main, eth test, btc main, btc test => local web
+      if (process.env.isLive) { // // eth main, eth test, btc main, btc test => live web
         defaultWallet = [0, 1];
+      }
+      if (process.env.isDojo) { // eth test, shuri test, btc test => dojo web
+        defaultWallet = [0, 2];
       }
 
       for (const k1 in MasterWallet.ListDefaultCoin) {
@@ -83,6 +88,9 @@ export class MasterWallet {
           // check production, only get mainnet:
           if (process.env.isLive && k2 != 'Mainnet') {
             break;
+          }
+          if (!process.env.isLive && process.env.isDojo && k2 == 'Mainnet') {
+            continue;
           }
           // init a wallet:
           const wallet = new MasterWallet.ListDefaultCoin[k1]();
@@ -425,23 +433,26 @@ export class MasterWallet {
         const jsonData = MasterWallet.IsJsonString(dataString);
         let auth_token = false;
         let wallets = false;
-        console.log('jsonData', jsonData);
+        let chat_encryption_keypair = false;
+      
         if (jsonData !== false) {
           if (jsonData.hasOwnProperty('auth_token')) {
             auth_token = jsonData.auth_token;
           }
+          if (jsonData.hasOwnProperty('chat_encryption_keypair')) {
+            chat_encryption_keypair = jsonData.chat_encryption_keypair;
+          }
           if (jsonData.hasOwnProperty('wallets')) {
             wallets = jsonData.wallets;
           } else {
+            // for old user without keys auth_token + chat_encryption_keypair
             wallets = jsonData;
           }
 
-          if (Array.isArray(wallets)) {
-            console.log('isArray');
+          if (Array.isArray(wallets)) {            
             const listWallet = [];
             wallets.forEach((walletJson) => {
-              const wallet = MasterWallet.convertObject(walletJson);
-              console.log('wallet=>', wallet);
+              const wallet = MasterWallet.convertObject(walletJson);              
               if (wallet === false) {
                 throw BreakException;
               }
@@ -450,6 +461,9 @@ export class MasterWallet {
             MasterWallet.UpdateLocalStore(listWallet);
             if (auth_token !== false) {
               localStore.save(APP.AUTH_TOKEN, auth_token);
+            }
+            if (chat_encryption_keypair !== false){
+              localStore.save(APP.CHAT_ENCRYPTION_KEYPAIR, chat_encryption_keypair);
             }
             return listWallet;
           }

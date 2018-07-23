@@ -6,19 +6,20 @@ import { connect } from 'react-redux';
 // service, constant
 import { shakeItem, initHandshake, } from '@/reducers/handshake/action';
 import {HANDSHAKE_ID, API_URL, APP } from '@/constants';
-import {MasterWallet} from '@/services/Wallets/MasterWallet';
-import local from '@/services/localStore';
-import moment from 'moment';
+
 import GA from '@/services/googleAnalytics';
 
 // components
 import Button from '@/components/core/controls/Button';
 import {showAlert} from '@/reducers/app/action';
-import {getMessageWithCode, isExpiredDate, getChainIdDefaultWallet,
-  getBalance, getEstimateGas, getAddress, isExistMatchBet, isRightNetwork, parseBigNumber} from '@/components/handshakes/betting/utils.js';
+import {getMessageWithCode, getChainIdDefaultWallet,
+     getEstimateGas, getAddress, isExistMatchBet, parseBigNumber , } from '@/components/handshakes/betting/utils.js';
+import { validateBet } from '@/components/handshakes/betting/validation.js';
+import { MESSAGE } from '@/components/handshakes/betting/message.js';
+import { BetHandshakeHandler } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
+import { SIDE } from '@/components/handshakes/betting/constants.js';
 
 import './Shake.scss';
-import { BetHandshakeHandler, MESSAGE, SIDE } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
 
 
 const betHandshakeHandler = BetHandshakeHandler.getShareManager();
@@ -41,6 +42,7 @@ class BetingShake extends React.Component {
     reportTime: PropTypes.any,
     onSubmitClick: PropTypes.func,
     onCancelClick: PropTypes.func,
+    onCreateBetSuccess: PropTypes.func,
   }
 
   tamButton = false;
@@ -114,72 +116,37 @@ class BetingShake extends React.Component {
     this.setState({
       disable: true,
     });
-    const {isShowOdds, isChangeOdds, estimateGas} = this.state;
-    const {matchName, matchOutcome, side, marketAgainstOdds, marketSupportOdds, closingDate, reportTime} = this.props;
+    const {matchName, matchOutcome, side, closingDate} = this.props;
     const amount = parseBigNumber(values.amount.value);
     const odds = parseBigNumber(values.odds.value);
 
-    // const marketOdds = side === SIDE.SUPPORT ? marketSupportOdds : marketAgainstOdds;
-
     console.log("Amount, Side, Odds", amount?.toNumber(), side, odds?.toNumber());
-    const balance = await getBalance();
-    const estimatedGas = parseBigNumber(estimateGas.toString()||0);
 
-    // const total = amount + parseFloat(estimatedGas);
-    const total = amount.plus(estimatedGas).toNumber()||0;
-    console.log('Balance, estimate gas, total, date:', balance, estimateGas, total, closingDate);
-
-    var message = null;
-    console.log
     // send event tracking
     try {
       GA.clickGoButton(matchName, matchOutcome, side);
     } catch (err) {}
 
+    const validate = await validateBet(amount, odds, closingDate, matchName, matchOutcome);
+    const { status, message } = validate;
+    if (status) {
+      this.initHandshake(amount, odds);
+      this.props.onSubmitClick();
 
-    if(!isRightNetwork()){
-      message = MESSAGE.RIGHT_NETWORK;
-
-    }
-
-    else if(matchName && matchOutcome){
-      if (isExpiredDate(closingDate)){
-        message = MESSAGE.MATCH_OVER;
-      }else if(amount > 0){
-          if(total <= parseFloat(balance)){
-            if(isShowOdds){
-              if(odds >1){
-                this.initHandshake(amount, odds);
-              }else {
-                message = MESSAGE.ODD_LARGE_THAN;
-              }
-            }else {
-              //LOGIC new nerver use shake item
-              //this.shakeItem(amount, side);
-
-            }
-          }else {
-            message = MESSAGE.NOT_ENOUGH_BALANCE;
+    } else {
+      if(message){
+        this.props.showAlert({
+          message: <div className="text-center">{message}</div>,
+          timeOut: 3000,
+          type: 'danger',
+          callBack: () => {
           }
-        }else {
-          message = MESSAGE.AMOUNT_VALID;
-        }
-    }else {
-      message = MESSAGE.CHOOSE_MATCH;
+        });
+
+      }
+      this.props.onCancelClick();
     }
 
-
-    if(message){
-      this.props.showAlert({
-        message: <div className="text-center">{message}</div>,
-        timeOut: 3000,
-        type: 'danger',
-        callBack: () => {
-        }
-      });
-
-    }
-    this.props.onSubmitClick();
 
 
   }
@@ -320,7 +287,7 @@ class BetingShake extends React.Component {
     return this.renderForm();
   }
 
-  initHandshake(amount, odds){
+  initHandshake(amount, odds) {
 
     const {outcomeId, matchName, matchOutcome, side} = this.props;
     const {extraData} = this.state;
@@ -382,7 +349,10 @@ class BetingShake extends React.Component {
         const {matchName, matchOutcome, side} = this.props;
         GA.createBetSuccess(matchName, matchOutcome, side);
       } catch (err) {}
+      this.props.onCreateBetSuccess();
     }
+    //this.props.onSubmitClick();
+
 
   }
   initHandshakeFailed = (error) => {
@@ -399,7 +369,7 @@ class BetingShake extends React.Component {
         }
       });
     }
-    this.props.onSubmitClick();
+    //this.props.onCancelClick();
 
   }
 }

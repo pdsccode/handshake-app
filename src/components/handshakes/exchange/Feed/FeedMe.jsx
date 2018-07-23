@@ -26,6 +26,7 @@ import FeedMeOfferStoreShakeContainer from "./FeedMeOfferStoreShakeContainer";
 import FeedMeSwapContainer from "./FeedMeSwapContainer";
 import FeedMeInstantContainer from "./FeedMeInstantContainer";
 import {trackingOnchain,} from "@/reducers/exchange/action";
+import FeedMeDashboardContainer from "./FeedMeDashboardContainer";
 
 class FeedMe extends React.PureComponent {
   constructor(props) {
@@ -190,7 +191,7 @@ class FeedMe extends React.PureComponent {
 
   render() {
     const {
-      initUserId, shakeUserIds, extraData, location, state, status, mode = 'discover', ipInfo: { latitude, longitude, country }, initAt, review, reviewCount, ...props
+      initUserId, shakeUserIds, extraData, location, state, status, mode = 'discover', ipInfo: { latitude, longitude, country }, initAt, lastUpdateAt, review, reviewCount, ...props
     } = this.props;
 
     const offer = Offer.offer(JSON.parse(extraData));
@@ -207,6 +208,7 @@ class FeedMe extends React.PureComponent {
 
 
     const feedProps = {
+      lastUpdateAt,
       isCreditCard,
       phone , phoneDisplayed,
       address,
@@ -227,7 +229,7 @@ class FeedMe extends React.PureComponent {
         break;
       }
       case EXCHANGE_FEED_TYPE.OFFER_STORE: {
-        feed = <FeedMeOfferStoreContainer {...this.props} {...feedProps} />;
+        feed = <FeedMeDashboardContainer {...this.props} {...feedProps} />;
 
         break;
       }

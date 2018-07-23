@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 import Feed from '@/components/core/presentation/Feed'
 import Button from '@/components/core/controls/Button'
 import createForm from '@/components/core/form/createForm'
-import { ExchangeHandshake, ExchangeShopHandshake } from '@/services/neuron'
+import { ExchangeHandshake } from '@/services/neuron'
 import {
   formatAmountCurrency,
   formatMoney,
@@ -38,7 +38,6 @@ import {
   EXCHANGE_ACTION_DEFAULT,
   EXCHANGE_ACTION_LIST,
   EXCHANGE_ACTION_NAME,
-  FIAT_CURRENCY,
   FIAT_CURRENCY_SYMBOL,
   MIN_AMOUNT,
   NB_BLOCKS,
