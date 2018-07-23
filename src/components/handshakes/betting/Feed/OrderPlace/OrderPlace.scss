@@ -24,7 +24,7 @@
     }
     &.Active.Orange {
       border: none;
-      background: #fa6b49; 
+      background: #fa6b49;
     }
   }
   .OrderMode {
@@ -39,6 +39,10 @@
         margin-right: 20px;
         text-transform: uppercase;
       }
+    }
+    .TabPanel {
+      max-height: 60vh;
+      overflow: auto;
     }
   }
   .OrderModeType {

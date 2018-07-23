@@ -100,7 +100,7 @@ class Prediction extends React.Component {
         <Loading isLoading={props.isLoading} />
         {this.renderShareToWin()}
         {this.renderEventList(props)}
-        <ModalDialog onRef={(modal) => { this.modalOrderPlace = modal; }}>
+        <ModalDialog close={true} onRef={(modal) => { this.modalOrderPlace = modal; }}>
           <BetMode
             selectedOutcome={state.selectedOutcome}
             selectedMatch={state.selectedMatch}

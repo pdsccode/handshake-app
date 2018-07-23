@@ -108,7 +108,7 @@ class BettingFilter extends React.Component {
     const orderBook = { support, against };
 
     return (
-      <div>
+      <React.Fragment>
         {isFree ?
           <BettingShakeFree
             amount={freeAmount}
@@ -118,7 +118,7 @@ class BettingFilter extends React.Component {
             bettingShake={bettingShake}
             orderBook={orderBook}
           />}
-      </div>
+      </React.Fragment>
 
     );
   }

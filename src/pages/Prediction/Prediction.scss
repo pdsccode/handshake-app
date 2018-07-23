@@ -4,11 +4,24 @@
   .modal {
     background-color: #1F2B34;
     .modal-dialog-content {
+      position: relative;
       border-radius: 0;
     }
     .modal-custom-body {
-      padding: 0;
+      max-height: 85vh;
+      overflow: auto;
+      padding: 20px;
       background-color: #000B35;
+    }
+    .close {
+      position: absolute;
+      top: -35px;
+      left: 0;
+      z-index: 20;
+      opacity: 0.7;
+      color: #FFFFFF;
+      font-size: 35px;
+      font-weight: 100;
     }
   }
 
