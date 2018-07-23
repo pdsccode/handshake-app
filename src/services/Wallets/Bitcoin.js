@@ -307,6 +307,10 @@ export class Bitcoin extends Wallet {
       is_sent: is_sent
     };
   }
+
+  cookIT(data) {
+    return false;
+  }
 }
 
 export default { Bitcoin };

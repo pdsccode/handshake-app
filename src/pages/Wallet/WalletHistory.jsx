@@ -115,6 +115,8 @@ class WalletHistory extends React.Component {
 
       return this.state.internalTransactions.map((res) => {
         let tran = wallet.cookIT(res);
+        if(!tran) return "";
+
         if(arr.indexOf(tran.transaction_no) < 0)
           arr.push(tran.transaction_no);
         else {
