@@ -468,20 +468,26 @@ class DataDetail extends React.Component {
                     </Card.Content>
                   </Card>
                   {this.state.images.length ==0 ?
-                    <Card  className="my-card">
-                          <Link className="ui image" to={"/upload"}>
-                            <Image src={UPLOAD_EARN}/>
+                    <Card  className="my-card wrap-upload">
+                      <Card.Content className="row wrap-upload">
+                         <Link className="ui image" to={"/upload"}>
+                          <label className="uploader" style={{width:'330px'}} >
+                            <Icon name="cloud upload" style={{fontSize:'24px'}}/>
+                            <p style={{marginTop: '60px',color:'#c1c1c1'}}>go to upload</p>
+                          </label>
                           </Link>
-                    </Card>
+                        </Card.Content>
+                      </Card>
                     : ""
                   }
                   {this.state.images.map((item, i) => {
                     return (
                       <Card key={i} className="my-card"  style={{ marginBottom: '1em'}}>
                           <Link className="ui image" to={"/explore/" + item.category.id}>
-                              <Image src={item.link}/>
+                          <Image src={item.link}/>
                             </Link>
                       </Card>
+
                     )
                   })}
                 </Card.Group>
