@@ -350,9 +350,42 @@ export default {
     },
   ],
 
+  // Landing Page
+  'landing_page.btn.joinOurTeam': 'Join our team',
+
+  'landing_page.header.product': 'PRODUCT',
+  'landing_page.subHeader.product': 'Ninja builds applications and protocols for the new decentralized Internet.',
+
+  'landing_page.products.cash.title': 'Cash',
+  'landing_page.products.cash.subTitle': 'Decentralized and P2P platform to trade ETH/BTC with cash and vice versa. Anonymously.',
+  'landing_page.products.prediction.title': 'Prediction',
+  'landing_page.products.prediction.subTitle': 'At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas',
+  'landing_page.products.dad.title': 'Decentralized Autonomous Dataset',
+  'landing_page.products.dad.subTitle': 'At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas',
+  'landing_page.products.wallet.title': 'Wallet',
+  'landing_page.products.wallet.subTitle': 'At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas',
+  'landing_page.products.whisper.title': 'Whisper',
+  'landing_page.products.whisper.subTitle': 'At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas',
+  'landing_page.products.dao.title': 'Decentralized Autonomous Organizations',
+  'landing_page.products.dao.subTitle': 'At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas',
+
+  'landing_page.header.research': 'RESEARCH',
+  'landing_page.subHeader.research': 'Ninja conducts fundamental research toward the creation of the new internet.',
+
+  'landing_page.researches.blockchainPrivacy.title': 'Blockchain privacy',
+  'landing_page.researches.blockchainPrivacy.subTitle': 'At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas',
+
+  'landing_page.researches.internetCash.title': 'Internet Cash',
+  'landing_page.researches.internetCash.subTitle': 'Cash is the most important asset in the world. While Bitcoin emerges as a powerful currency, it fails to replace cash as the everyday currency. Bitcoin will never be the currency that you can use to pay for coffee or buy a t-shirt.  This project aims to build a new kind of cryptocurrency that behaves like cash.',
+
+  'landing_page.label.onlyMobile': 'The Ninja network is only accessible via mobile.',
+  'landing_page.label.openOn': `Open <a href="#" class="landing-link">www.ninja.org</a> on your mobile browser to gain anonymous entry.`,
+  'landing_page.label.joinTelegram': `Join the dojo on <a href="#" class="landing-link">Telegram</a>`,
+  'landing_page.label.airdrop': `Jump in for <a href="#" class="landing-link">Airdrop</a>`,
+  'landing_page.label.whitepaper': `Jump in for <a href="#" class="landing-link">Whitepaper</a>`,
+
   // MobileOrTablet components
   MOT_TITLE: 'The anonymous exchange of anything',
-  MOT_CONTENT_0: 'The Ninja network is only accessible via mobile.',
   MOT_CONTENT_1: 'Open',
   MOT_CONTENT_2: 'on your mobile browser to gain anonymous entry.',
   MOT_CONTENT_3: 'No download needed. No sign up required.',

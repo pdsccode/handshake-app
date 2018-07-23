@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl'
 
 import { setLanguage } from '@/reducers/app/action';
 import VideoYoutube from '@/components/core/controls/VideoYoutube';
@@ -14,43 +14,6 @@ import videoLeftCover from '@/assets/images/ninja/video-left-cover.jpg';
 import videoRightCover from '@/assets/images/ninja/video-right-cover.jpg';
 import phoneIcon from '@/assets/images/ninja/phone-icon.svg';
 import './MobileOrTablet.scss';
-
-const countryList = [
-  {
-    code: 'en',
-    title: 'EN',
-  },
-  {
-    code: 'zh',
-    title: 'CN',
-  },
-  {
-    code: 'fr',
-    title: 'FR',
-  },
-  {
-    code: 'de',
-    title: 'DE',
-  },
-  {
-    code: 'ja',
-    title: 'JP',
-  },
-  {
-    code: 'ko',
-    title: 'KR',
-  },
-  {
-    code: 'ru',
-    title: 'RU',
-  },
-  {
-    code: 'es',
-    title: 'ES',
-  },
-];
-
-const languagesWhitePaper = ['zh', 'fr', 'de', 'ru', 'ja', 'ko', 'es'];
 
 class MobileOrTablet extends React.PureComponent {
   static propTypes = {
@@ -74,88 +37,20 @@ class MobileOrTablet extends React.PureComponent {
   render() {
     const { messages, locale } = this.props.intl;
     return (
-      <div className="container mobile-tablet">
-        <div className="row firstSection">
-          <div className="col-lg-12 chooseLanguage">
-            {
-              countryList.map((item, index) => (
-                <div
-                  key={index}
-                  className={`countryName ${locale === item.code ? 'countryActive' : ''}`}
-                  onClick={() => this.changeCountry(item.code)}
-                >
-                  <span>{item.title}</span>
-                </div>
-              ))
-            }
+      <div className="landing-page">
+        <div className="container">
+          <div className="row">
+            <div className="col">
+              <img src={onlyMobileTabletSVG} width="100" />
+              <button className="btn btn-join float-right"><FormattedMessage id="landing_page.btn.joinOurTeam" /></button>
+            </div>
           </div>
-          <div className="col-lg-12 text-center">
-            <img className="img-fluid imageHeader" src={onlyMobileTabletSVG} alt="ninja"/>
-            <h1>{messages.MOT_TITLE}</h1>
-          </div>
-        </div>
 
-        <div className="row secondSection">
-          <div className="col-lg-5 offset-lg-1">
-            <VideoYoutube
-              playButtonIcon={playVideoButton}
-              imageUrl={videoLeftCover}
-              imageAlt="ninja place prediction"
-              videoUrl="https://youtu.be/YYZJlLDzeEs"
-              autoPlayVideo
-              mute
-            />
-          </div>
-          <div className="col-lg-5">
-            <VideoYoutube
-              playButtonIcon={playVideoButton}
-              imageUrl={videoRightCover}
-              imageAlt="prediction exchange walk thru"
-              videoUrl="https://youtu.be/6bd6-XtO3Wk"
-              mute
-            />
-          </div>
-        </div>
-
-        <div className="row thirdSection">
-          <div className="col-lg-5 offset-lg-1">
-            <p>
-              {messages.MOT_CONTENT_0}
-              <br/>
-              {messages.MOT_CONTENT_1} <a className="website" href="/">www.ninja.org</a> {messages.MOT_CONTENT_2}
-              <br/>
-              <span>{messages.MOT_CONTENT_3}</span>
-            </p>
-          </div>
-          <div className="col-lg-5">
-            <ul>
-              {
-                locale === 'en' && (
-                  <li>
-                    Jump in for <a href="/shuriken" target="_blank" rel="noopener noreferrer">Airdrop</a>
-                  </li>
-                )
-              }
-              {
-                messages.MOT_LIST_CONTENT.map((item, index) => {
-                  let {link} = item;
-                  if (index === 0 && locale !== 'en' && languagesWhitePaper.indexOf(locale) !== -1) {
-                    link = '/whitepaper';
-                  }
-                  return (
-                    <li key={index}>
-                      {item.mainContent || ''} <a
-                        href={link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        {item.placeHolderLink}
-                      </a> {item.mainContent1 || ''}
-                    </li>
-                  );
-                })
-              }
-            </ul>
+          <div className="row mt-5">
+            <div className="col">
+              <div className="landing-header">Product</div>
+              <div className="landing-sub-header">Produfeafewct</div>
+            </div>
           </div>
         </div>
       </div>
