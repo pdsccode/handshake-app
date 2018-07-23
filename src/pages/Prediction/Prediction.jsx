@@ -5,10 +5,12 @@ import BetMode from '@/components/handshakes/betting/Feed/OrderPlace/BetMode';
 import ModalDialog from '@/components/core/controls/ModalDialog';
 import Loading from '@/components/Loading';
 import LuckyReal from '@/components/handshakes/betting/LuckyPool/LuckyReal/LuckyReal';
+import LuckyLanding from '@/pages/LuckyLanding/LuckyLanding';
+
 import GA from '@/services/googleAnalytics';
 
-import { eventSelector, isLoading } from './selector';
-import { loadMatches } from './action';
+import { eventSelector, isLoading, showedLuckyPoolSelector } from './selector';
+import { loadMatches, updateShowedLuckyPool } from './action';
 import EventItem from './EventItem';
 
 import './Prediction.scss';
@@ -18,6 +20,7 @@ class Prediction extends React.Component {
   static displayName = 'Prediction';
   static propTypes = {
     eventList: PropTypes.array,
+    showedLuckyPool: PropTypes.bool,
     dispatch: PropTypes.func.isRequired,
   };
 
@@ -29,12 +32,19 @@ class Prediction extends React.Component {
     super(props);
     this.state = {
       selectedOutcome: null,
+      isLuckyPool: true,
     };
+    //this.handleScroll = this.handleScroll;
   }
 
   componentDidMount() {
     const { dispatch } = this.props;
+    window.addEventListener('scroll', this.handleScroll);
     dispatch(loadMatches());
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this.handleScroll);
   }
 
   openOrderPlace(selectedOutcome) {
@@ -44,6 +54,23 @@ class Prediction extends React.Component {
 
   closeOrderPlace() {
     this.modalOrderPlace.close();
+  }
+
+  showLuckyPool() {
+    const { showedLuckyPool } = this.props;
+
+    if (showedLuckyPool === false) {
+      console.log('Action Lucky Pool:', showedLuckyPool);
+      this.props.dispatch(updateShowedLuckyPool());
+      setTimeout(() => {
+        this.modalLuckyPoolRef.open();
+
+      }, 2 * 1000);
+    }
+  }
+
+  handleScroll = () => {
+    //this.showLuckyPool();
   }
 
   handleClickEventItem = (id, e, props, itemData) => {
@@ -120,7 +147,13 @@ class Prediction extends React.Component {
           <LuckyReal onButtonClick={() => this.modalLuckyReal.close() } />
         </ModalDialog>
         <ModalDialog onRef={(modal) => { this.modalLuckyFree = modal; }}>
-        <LuckyFree onButtonClick={() => this.modalLuckyFree.close() } />
+          <LuckyFree onButtonClick={() => this.modalLuckyFree.close() } />
+        </ModalDialog>
+        <ModalDialog className="modal" onRef={(modal) => { this.modalLuckyPoolRef = modal; return null; }}>
+          <LuckyLanding onButtonClick={() => {
+            this.modalLuckyPoolRef.close();
+          }}
+          />
         </ModalDialog>
 
       </div>
@@ -137,6 +170,7 @@ export default connect(
     return {
       eventList: eventSelector(state),
       isLoading: isLoading(state),
+      showedLuckyPool: showedLuckyPoolSelector(state),
     };
   },
 )(Prediction);

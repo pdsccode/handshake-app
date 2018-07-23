@@ -569,9 +569,7 @@ class DiscoverPage extends React.Component {
         </ModalDialog>
         <ModalDialog className="modal" onRef={(modal) => { this.modalLuckyPoolRef = modal; return null; }}>
           <LuckyLanding onButtonClick={() => {
-            this.setState({
-              isLuckyPool: false,
-            });
+
             this.modalLuckyPoolRef.close();
           }}
           />
