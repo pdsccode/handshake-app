@@ -45,7 +45,7 @@ function renderEventTotalBets(event) {
 }
 
 function renderEventMessages(event) {
-  const commentLink = `${URL.COMMENTS_BY_SHAKE_INDEX}?objectId=${event.id}`;
+  const commentLink = `${URL.COMMENTS_BY_SHAKE_INDEX}?objectId=event_${event.id}`;
   return (
     <Link className="EventMessage" to={commentLink}>
       <span className="EventMessageIcon"><Image src={commentIcon} /></span>
