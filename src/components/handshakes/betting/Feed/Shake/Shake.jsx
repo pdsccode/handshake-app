@@ -63,12 +63,7 @@ class BetingShake extends React.Component {
   }
 
   async componentWillMount() {
-    /*
-    const estimateGas = await getEstimateGas();
-    this.setState({
-      estimateGas,
-    });
-    */
+
   }
   componentDidMount() {
     this.props.onClickSubmit(this.onSubmit);
@@ -149,8 +144,6 @@ class BetingShake extends React.Component {
     const fromAddress = getAddress();
     extraData.event_name = matchName;
     extraData.event_predict = matchOutcome;
-    extraData.event_odds = odds;
-    extraData.event_bet = amount;
     const params = {
       type: HANDSHAKE_ID.BETTING,
       outcome_id: outcomeId,
@@ -162,7 +155,6 @@ class BetingShake extends React.Component {
       from_address: fromAddress,
       chain_id: getChainIdDefaultWallet(),
     };
-    console.log(TAG, "Params:", params, this);
     this.props.initHandshake({
       PATH_URL: API_URL.CRYPTOSIGN.INIT_HANDSHAKE,
       METHOD: 'POST',

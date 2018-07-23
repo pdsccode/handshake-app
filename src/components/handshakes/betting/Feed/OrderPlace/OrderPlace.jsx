@@ -34,7 +34,7 @@ class OrderPlace extends React.Component {
       side: SIDE[`${tabType}`],
     });
     // Event tracking
-    GA.clickChooseASide(tab);
+    GA.clickChooseASide(SIDE[`${tabType}`]);
   }
 
   render() {
