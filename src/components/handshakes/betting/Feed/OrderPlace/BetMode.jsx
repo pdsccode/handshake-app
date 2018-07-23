@@ -28,6 +28,7 @@ class BetMode extends React.PureComponent {
       support: null,
       against: null,
       isFirstFree: false,
+      bettingShakeIsOpen: true,
     };
     this.openPopup = this.openPopup.bind(this);
   }
@@ -38,7 +39,7 @@ class BetMode extends React.PureComponent {
 
   componentWillReceiveProps(nextProps) {
     const { selectedOutcome, support, against, isFirstFree } = nextProps;
-    console.log(TAG, 'componentWillReceiveProps', 'support:', support, 'against:', against);
+    console.log(TAG, 'componentWillReceiveProps', 'support:', support, 'against:', against, 'isFirstFree', isFirstFree);
     const filterSupport = support && support.length > 0 && support.filter(item => item.amount >= CRYPTOSIGN_MINIMUM_MONEY);
     const filterAgainst = against && against.length > 0 && against.filter(item => item.amount >= CRYPTOSIGN_MINIMUM_MONEY);
     this.setState({
@@ -53,7 +54,9 @@ class BetMode extends React.PureComponent {
     console.log('BETMODE', tabType);
   }
   async openPopup(selectedOutcome) {
-
+    this.setState({
+      bettingShakeIsOpen: true,
+    });
     this.callGetHandshakes(selectedOutcome);
     await this.checkShowFreeBanner();
   }
@@ -123,12 +126,25 @@ class BetMode extends React.PureComponent {
 
   render() {
     const { selectedOutcome, selectedMatch } = this.props;
-    const { support, against, isFirstFree } = this.state;
+    const { support, against, isFirstFree, bettingShakeIsOpen } = this.state;
     const filterProps = {
       selectedOutcome,
       selectedMatch,
       support,
       against,
+      isOpen: bettingShakeIsOpen,
+      onSubmitClick: ((isFree) => {
+        this.setState({
+          bettingShakeIsOpen: false,
+        });
+        this.props.onSubmitClick(isFree);
+      }),
+      onCancelClick: (() => {
+        this.setState({
+          bettingShakeIsOpen: false,
+        });
+        this.props.onCancelClick();
+      }),
     };
     return (
       <React.Fragment>

@@ -120,17 +120,9 @@ class BetingShake extends React.Component {
           }
         });
 
-
       }
     }
   }
-
-  /*
-  onCancel = () => {
-    console.log('Cancel')
-    this.props.onCancelClick();
-  }
-  */
 
 
   updateTotal = () => {

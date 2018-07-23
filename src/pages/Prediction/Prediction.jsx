@@ -12,6 +12,7 @@ import { loadMatches } from './action';
 import EventItem from './EventItem';
 
 import './Prediction.scss';
+import LuckyFree from '@/components/handshakes/betting/LuckyPool/LuckyFree/LuckyFree';
 
 class Prediction extends React.Component {
   static displayName = 'Prediction';
@@ -107,9 +108,9 @@ class Prediction extends React.Component {
             selectedMatch={state.selectedMatch}
             render={state.isShowOrder}
             openPopup={(click)=> {this.openOrderPlace = click}}
-            onSubmitClick={()=> {
+            onSubmitClick={(isFree)=> {
               this.closeOrderPlace();
-              this.modalLuckyReal.open();
+              isFree ? this.modalLuckyFree.open() : this.modalLuckyReal.open();
             }}
             onCancelClick={()=>{
               this.closeOrderPlace();
@@ -118,6 +119,9 @@ class Prediction extends React.Component {
         </ModalDialog>
         <ModalDialog onRef={(modal) => { this.modalLuckyReal = modal; }}>
           <LuckyReal onButtonClick={() => this.modalLuckyReal.close() } />
+        </ModalDialog>
+        <ModalDialog onRef={(modal) => { this.modalLuckyFree = modal; }}>
+        <LuckyFree onButtonClick={() => this.modalLuckyFree.close() } />
         </ModalDialog>
 
       </div>

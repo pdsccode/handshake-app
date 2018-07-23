@@ -12,6 +12,7 @@ const bettingReducter = (state = {
   tradedVolum: 0,
   isFetching: false,
   showedLuckyPool: false,
+  isFirstFree: false,
 }, action) => {
   switch (action.type) {
     // Initial Handshake
@@ -57,11 +58,13 @@ const bettingReducter = (state = {
     case `${BETTING_ACTIONS.CHECK_FREE_AVAILABLE}_SUCCESS`:
       return {
         ...state,
+        isFirstFree: true,
         isFetching: true,
       };
     case `${BETTING_ACTIONS.CHECK_FREE_AVAILABLE}_FAILED`:
       return {
         ...state,
+        isFirstFree: false,
         isFetching: true,
 
       };

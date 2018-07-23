@@ -120,6 +120,9 @@ class BettingCreate extends React.Component {
           }
         });
       }
+      this.setState({
+        disable: false,
+      });
     }
 
   }

@@ -39,6 +39,7 @@ class BettingFilter extends React.Component {
 
   constructor(props) {
     super(props);
+
   }
 
   componentDidMount() {
@@ -61,7 +62,7 @@ class BettingFilter extends React.Component {
 
   render() {
     const { support, against } = this.props;
-    const { isFree } = this.props;
+    const { isFree, isOpen } = this.props;
 
     const selectedOutcome = this.props.selectedOutcome ? this.props.selectedOutcome : SELECTING_DEFAULT;
     const selectedMatch = this.props.selectedMatch ? this.props.selectedMatch : SELECTING_DEFAULT;
@@ -83,7 +84,7 @@ class BettingFilter extends React.Component {
       amountSupport: defaultAmount(against),
       amountAgainst: defaultAmount(support),
       matchName,
-      //isOpen: this.state.bettingShakeIsOpen,
+      isOpen,
       matchOutcome,
       outcomeId,
       outcomeHid,
@@ -91,18 +92,10 @@ class BettingFilter extends React.Component {
       marketAgainstOdds: defaultOdds(support),
       closingDate,
       reportTime,
-      onSubmitClick: (() => {
-        this.setState({
-          bettingShakeIsOpen: false,
-        });
-        this.props.onSubmitClick();
+      onSubmitClick: (()=>{
+        this.props.onSubmitClick(isFree);
       }),
-      onCancelClick: (() => {
-        this.setState({
-          bettingShakeIsOpen: false,
-        });
-        this.props.onCancelClick();
-      }),
+      onCancelClick: this.props.onCancelClick,
     };
 
     const orderBook = { support, against };
