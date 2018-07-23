@@ -60,25 +60,27 @@ export class Component extends React.PureComponent { // eslint-disable-line reac
       offer, type, rfChange, fiatAmount,
     } = this.props;
 
-    const eth = offer.items.ETH;
-    const btc = offer.items.BTC;
+    for (const item of Object.values(offer.items)) {
+      if (item.currency === newValue) {
+        const { buyBalance, sellBalance } = item;
 
-    const buyBalance = newValue === CRYPTO_CURRENCY.BTC ? btc.buyBalance : eth.buyBalance;
-    const sellBalance = newValue === CRYPTO_CURRENCY.BTC ? btc.sellBalance : eth.sellBalance;
+        let newType = type;
 
-    let newType = type;
+        if (type === EXCHANGE_ACTION.BUY && sellBalance <= 0) {
+          newType = EXCHANGE_ACTION.SELL;
+        } else if (type === EXCHANGE_ACTION.SELL && buyBalance <= 0) {
+          newType = EXCHANGE_ACTION.BUY;
+        }
 
-    if (type === EXCHANGE_ACTION.BUY && sellBalance <= 0) {
-      newType = EXCHANGE_ACTION.SELL;
-    } else if (type === EXCHANGE_ACTION.SELL && buyBalance <= 0) {
-      newType = EXCHANGE_ACTION.BUY;
+        rfChange(nameFormShakeDetail, 'type', newType);
+
+        this.setState({ currency: newValue }, () => {
+          this.onFiatAmountChange(e, fiatAmount);
+        });
+
+        break;
+      }
     }
-
-    rfChange(nameFormShakeDetail, 'type', newType);
-
-    this.setState({ currency: newValue }, () => {
-      this.onFiatAmountChange(e, fiatAmount);
-    });
   }
 
   onAmountChange = (e, amount) => {
@@ -87,45 +89,39 @@ export class Component extends React.PureComponent { // eslint-disable-line reac
       offer, listOfferPrice, currency, type, rfChange,
     } = this.props;
 
-    const eth = offer.items.ETH;
-    const btc = offer.items.BTC;
+    for (const item of Object.values(offer.items)) {
+      const { buyPercentage, buyBalance, sellPercentage, sellBalance } = item;
+      if (item.currency === currency) {
+        // Calculate fiatAmount
+        let fiatAmount = 0;
+        const shopType = type === EXCHANGE_ACTION.BUY ? EXCHANGE_ACTION.SELL : EXCHANGE_ACTION.BUY;
+        if (listOfferPrice && type && currency) {
+          const offerPrice = getOfferPrice(listOfferPrice, shopType, currency, offer.fiatCurrency);
+          fiatAmount = amount * offerPrice?.price || 0;
+        }
 
-    // Calculate fiatAmount
-    let fiatAmount = 0;
+        let percentage = 0;
+        let balance = 0;
 
-    const shopType = type === EXCHANGE_ACTION.BUY ? EXCHANGE_ACTION.SELL : EXCHANGE_ACTION.BUY;
-    if (listOfferPrice && type && currency) {
-      const offerPrice = getOfferPrice(listOfferPrice, shopType, CRYPTO_CURRENCY_NAME[currency], offer.fiatCurrency);
-      fiatAmount = amount * offerPrice?.price || 0;
-    }
+        if (shopType === EXCHANGE_ACTION.BUY) {
+          percentage = buyPercentage;
+          balance = buyBalance;
+        } else {
+          percentage = sellPercentage;
+          balance = sellBalance;
+        }
 
-    let percentage = 0;
-    let balance = 0;
-    if (currency === CRYPTO_CURRENCY.ETH) {
-      if (shopType === EXCHANGE_ACTION.BUY) {
-        percentage = eth?.buyPercentage;
-        balance = eth?.buyBalance;
-      } else {
-        percentage = eth?.sellPercentage;
-        balance = eth?.sellBalance;
+        const enableShake = +balance >= +amount;
+        this.setState({ enableShake });
+
+        fiatAmount += fiatAmount * percentage / 100;
+        fiatAmount = roundNumberByLocale(fiatAmount, offer.fiatCurrency);
+        console.log('onAmountChange', fiatAmount);
+        rfChange(nameFormShakeDetail, 'amountFiat', fiatAmount);
+
+        break;
       }
-    } else if (currency === CRYPTO_CURRENCY.BTC) {
-      if (shopType === EXCHANGE_ACTION.BUY) {
-        percentage = btc?.buyPercentage;
-        balance = btc?.buyBalance;
-      } else {
-        percentage = btc?.sellPercentage;
-        balance = btc?.sellBalance;
-      }
     }
-
-    const enableShake = +balance >= +amount;
-    this.setState({ enableShake });
-
-    fiatAmount += fiatAmount * percentage / 100;
-    fiatAmount = roundNumberByLocale(fiatAmount, offer.fiatCurrency);
-    console.log('onAmountChange', fiatAmount);
-    rfChange(nameFormShakeDetail, 'amountFiat', fiatAmount);
   }
 
   onFiatAmountChange = (e, amount) => {
@@ -135,69 +131,61 @@ export class Component extends React.PureComponent { // eslint-disable-line reac
       offer, listOfferPrice, currency, type, rfChange,
     } = this.props;
 
-    const eth = offer.items.ETH;
-    const btc = offer.items.BTC;
+    for (const item of Object.values(offer.items)) {
+      const { buyPercentage, buyBalance, sellPercentage, sellBalance } = item;
+      if (item.currency === currency) {
+        // Calculate fiatAmount
+        let fiatAmount = 0;
 
-    // Calculate fiatAmount
-    let fiatAmount = 0;
+        let percentage = 0;
+        let balance = 0;
+        const shopType = type === EXCHANGE_ACTION.BUY ? EXCHANGE_ACTION.SELL : EXCHANGE_ACTION.BUY;
 
-    let percentage = 0;
-    let balance = 0;
-    const shopType = type === EXCHANGE_ACTION.BUY ? EXCHANGE_ACTION.SELL : EXCHANGE_ACTION.BUY;
-    if (currency === CRYPTO_CURRENCY.ETH) {
-      if (shopType === EXCHANGE_ACTION.BUY) {
-        percentage = eth?.buyPercentage;
-        balance = eth?.buyBalance;
-      } else {
-        percentage = eth?.sellPercentage;
-        balance = eth?.sellBalance;
-      }
-    } else if (currency === CRYPTO_CURRENCY.BTC) {
-      if (shopType === EXCHANGE_ACTION.BUY) {
-        percentage = btc?.buyPercentage;
-        balance = btc?.buyBalance;
-      } else {
-        percentage = btc?.sellPercentage;
-        balance = btc?.sellBalance;
+        if (shopType === EXCHANGE_ACTION.BUY) {
+          percentage = buyPercentage;
+          balance = buyBalance;
+        } else {
+          percentage = sellPercentage;
+          balance = sellBalance;
+        }
+
+        fiatAmount = amount / (1 + percentage / 100);
+
+        let newAmount = 0;
+        if (listOfferPrice && type && currency) {
+          const offerPrice = getOfferPrice(listOfferPrice, shopType, currency, offer.fiatCurrency);
+          newAmount = fiatAmount / offerPrice?.price || 0;
+        }
+
+        newAmount = new BigNumber(newAmount).decimalPlaces(6).toNumber();
+
+        const enableShake = +balance >= +newAmount;
+
+        this.setState({ enableShake });
+
+        rfChange(nameFormShakeDetail, 'amount', newAmount);
+
+        break;
       }
     }
-
-    fiatAmount = amount / (1 + percentage / 100);
-
-    let newAmount = 0;
-    if (listOfferPrice && type && currency) {
-      const offerPrice = getOfferPrice(listOfferPrice, shopType, CRYPTO_CURRENCY_NAME[currency], offer.fiatCurrency);
-      newAmount = fiatAmount / offerPrice?.price || 0;
-    }
-
-    newAmount = new BigNumber(newAmount).decimalPlaces(6).toNumber();
-
-    const enableShake = +balance >= +newAmount;
-
-    this.setState({ enableShake });
-
-    rfChange(nameFormShakeDetail, 'amount', newAmount);
   }
 
   getBalance = () => {
     const { offer, type, currency } = this.props;
-
-    const eth = offer.items.ETH;
-    const btc = offer.items.BTC;
-
     let balance = 0;
 
-    if (currency === CRYPTO_CURRENCY.ETH) {
-      if (type === EXCHANGE_ACTION.SELL) {
-        balance = eth?.buyBalance;
-      } else {
-        balance = eth?.sellBalance;
-      }
-    } else if (currency === CRYPTO_CURRENCY.BTC) {
-      if (type === EXCHANGE_ACTION.SELL) {
-        balance = btc?.buyBalance;
-      } else {
-        balance = btc?.sellBalance;
+    for (const item of Object.values(offer.items)) {
+      if (item.currency === currency) {
+        const { buyBalance, sellBalance } = item;
+        const shopType = type === EXCHANGE_ACTION.BUY ? EXCHANGE_ACTION.SELL : EXCHANGE_ACTION.BUY;
+
+        if (shopType === EXCHANGE_ACTION.BUY) {
+          balance = buyBalance;
+        } else {
+          balance = sellBalance;
+        }
+
+        break;
       }
     }
 
@@ -206,7 +194,7 @@ export class Component extends React.PureComponent { // eslint-disable-line reac
 
   render() {
     const {
-      offer, currency, fiatAmount, enableShake, EXCHANGE_ACTION_LIST, CRYPTO_CURRENCY_LIST, type,
+      offer, currency, fiatAmount, EXCHANGE_ACTION_LIST, CRYPTO_CURRENCY_LIST, type,
     } = this.props;
 
     const fiat = offer.fiatCurrency;
@@ -305,61 +293,23 @@ const mapState = (state, prevProps) => {
   const amount = selectorFormShakeDetail(state, 'amount');
   const fiatAmount = selectorFormShakeDetail(state, 'amountFiat');
 
-
-  // Calculate fiatAmount
-  // let fiatAmount = 0;
-
-  // if (listOfferPrice && type && currency) {
-  //   const offerPrice = getOfferPrice(listOfferPrice, type, CRYPTO_CURRENCY_NAME[currency]);
-  //   fiatAmount = amount * offerPrice?.price || 0;
-  // }
-
-  // let percentage = 0;
-  // let balance = 0;
   const { offer } = prevProps;
 
-  const eth = offer.items.ETH;
-  const btc = offer.items.BTC;
-  //
-  // if (currency === CRYPTO_CURRENCY.ETH) {
-  //   if (type === EXCHANGE_ACTION.SELL) {
-  //     // percentage = eth?.buyPercentage;
-  //     balance = eth?.buyBalance;
-  //   } else {
-  //     // percentage = eth?.sellPercentage;
-  //     balance = eth?.sellBalance;
-  //   }
-  // } else if (currency === CRYPTO_CURRENCY.BTC) {
-  //   if (type === EXCHANGE_ACTION.SELL) {
-  //     // percentage = btc?.buyPercentage;
-  //     balance = btc?.buyBalance;
-  //   } else {
-  //     // percentage = btc?.sellPercentage;
-  //     balance = btc?.sellBalance;
-  //   }
-  // }
+  const EXCHANGE_ACTION_LIST = Object.values(EXCHANGE_ACTION).map((item) => {
+    let balance = 0;
+    if (item === EXCHANGE_ACTION.BUY) {
+      balance = offer.items[currency]?.sellBalance || 0;
+    } else {
+      balance = offer.items[currency]?.buyBalance || 0;
+    }
 
-  // console.log('mapState',fiatAmount);
+    return { value: item, text: EXCHANGE_ACTION_NAME[item], hide: balance <= 0 };
+  });
 
-  // fiatAmount += fiatAmount * percentage / 100;
-
-  // console.log('offer', offer);
-
-  // Enable Shake or not
-  // console.log('currency',currency);
-  // console.log('type',type);
-  // console.log('check', balance, amount, balance > amount);
-  // const enableShake = +balance > +amount;
-
-  const EXCHANGE_ACTION_LIST = [
-    { value: EXCHANGE_ACTION.BUY, text: EXCHANGE_ACTION_NAME[EXCHANGE_ACTION.BUY], hide: currency === CRYPTO_CURRENCY.BTC ? btc.sellBalance <= 0 : eth.sellBalance <= 0 },
-    { value: EXCHANGE_ACTION.SELL, text: EXCHANGE_ACTION_NAME[EXCHANGE_ACTION.SELL], hide: currency === CRYPTO_CURRENCY.BTC ? btc.buyBalance <= 0 : eth.buyBalance <= 0 },
-  ];
 
   return {
     listOfferPrice,
     fiatAmount: fiatAmount || 0,
-    // enableShake,
     EXCHANGE_ACTION_LIST,
     type,
     currency,
