@@ -14,10 +14,14 @@ const SideIconContainer =  withBaseIcon({ size:20})
 
 
 import activity_active_icon from '@/assets/icons/activityactive.svg';
+
 import activity_icon from '@/assets/icons/activity.svg';
 
 import plus_active_icon from '@/assets/icons/pluscheck.svg';
+
 import plus_icon from '@/assets/icons/plus.svg';
+
+import newboard from '@/assets/icons/newboard.svg';
 
 const fee = 0.005; // eth
 
@@ -75,7 +79,7 @@ function ConfirmModal() {
   return (
     <div class='content'>
       <h3>You want to buy this dataset?</h3>
-      <p>By click OK you will send ETH in your wallet to the DAD SmartContract address.</p>
+      <p style={{lineHeight:'1.7em'}}>By click OK you will send ETH in your wallet to the DAD SmartContract address.</p>
     </div>
   )
 }
@@ -244,9 +248,10 @@ class DataExplore extends React.Component {
                   <Card  className="my-card" style={{background:'#21c364' ,    marginBottom: '12px'}}>
                     <Link className="ui image" to={'/explore/create'}>
                       <Card.Content style={{textAlign:'left'}}>
-                          <Icon size="large" name='newspaper outline'
-                           style={{color: 'white',margin: '0.7em',float:'left' }}  />
-                          <span style={{color: 'white',fontSize: '16px', float:'left', marginTop:'8px'}} >Create new Dataset</span>
+                          {/* <Icon size="large" name='newspaper outline'
+                           style={{color: 'white',margin: '0.7em',float:'left' }}  /> */}
+                           <Image src={newboard} style={{ borderRadius:'0!important', margin:'15px',float:'left' }} />
+                           <span style={{color: 'white',fontSize: '16px', float:'left', marginTop:'8px'}} >Create new Dataset</span>
                       </Card.Content>
                     </Link>
                   </Card>

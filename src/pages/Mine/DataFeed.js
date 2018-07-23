@@ -15,6 +15,7 @@ import { submitHashTag } from '@/reducers/me/action';
 import plus_active_icon from '@/assets/icons/pluscheck.svg';
 import plus_icon from '@/assets/icons/plus.svg';
 import { BASE_API } from '@/constants';
+import addPlus from '@/assets/icons/addplus.svg';
 
 // const SideIconContainer =  withBaseIcon({ size:28, color:'black'});
 //{activeItem === 'history' ? <img class="my-menu-bar" src="/icons/activityactive.svg"/>: <img class="my-menu-bar" src="/icons/activity.svg"/> }
@@ -338,12 +339,13 @@ class DataFeed extends React.Component {
       //   {item?.name||''}
       // </Label>);
       return (
-        <Label basic color={item.checked?'teal':'black'} key={String(item.id)||'-1'}   onClick={isNeedClick?()=>this.clickTagItem(value,item.id):undefined}>{item?.name||''}</Label>
+        <Label basic color={item.checked?'tealqn':'black'} key={String(item.id)||'-1'}   onClick={isNeedClick?()=>this.clickTagItem(value,item.id):undefined}>{item?.name||''}</Label>
       );
 
     });
     return (<div style={{display:'flex',flex:1,flexWrap:'wrap'}}>
-      {listTagView}
+        <Image src={addPlus} style={{ width:'30px',marginTop:'-10px'}}/>
+        {listTagView}
     </div>);
   }
 

@@ -295,7 +295,7 @@ class Upload extends React.Component {
          <Segment vertical loading={this.state.isLoading}  style={{marginTop:'-5em'}}>
           <h2 className="my-h2-dataset-new">Upload Image</h2>
           <div className="ui center aligned grid container" style={{padding:'15px', paddingTop:'5px'}}>
-            <div className="row">
+            <div className="row wrap-upload">
               <label
                 className={labelClass}
                 onDragEnter={this.onDragEnter}

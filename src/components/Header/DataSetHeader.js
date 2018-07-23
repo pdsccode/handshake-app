@@ -68,7 +68,7 @@ class DesktopContainer extends React.Component {
 
   handleResultSelect = (e, { result }) => {
     this.setState({ value: result.title })
-    window.location.href = '/cat/' + result.id
+    window.location.href = '/explore/' + result.id
   }
 
   handleSearchDebounced = _.debounce((value) => {
@@ -205,6 +205,9 @@ class MobileContainer extends React.Component {
   handleResultSelect = (e, { result }) => {
     this.setState({ value: result.title })
     //window.location.href = '/cat/' + result.id
+    //this.props.history.push("/explore/"+result.id)
+    history.push("/explore/"+result.id);
+    //this.props.history.push(URL.HANDSHAKE_ME);
   }
 
   handleSearchDebounced = _.debounce((value) => {
@@ -285,7 +288,7 @@ class MobileContainer extends React.Component {
             <Menu  icon  className="ui fluid five item menu fixed" id="head-searchbox">
             
                <Search
-                      input={{ icon: 'search', iconPosition: 'left', placeholder:'search' }}
+                      input={{ icon: 'search', iconPosition: 'left', placeholder:'Search dataset you want to explore' }}
                       fluid
                       aligned='left'
                       loading={this.state.isLoading}

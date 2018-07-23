@@ -441,8 +441,8 @@ class DataDetail extends React.Component {
   return (
     <div class='content'>
       <h3>You want to buy this dataset?</h3>
-      <p>By click OK you will send ETH in your wallet to the DAD SmartContract address.</p>
-      <Input />
+      <p style={{lineHeight:'1.7em'}}>By click OK you will send ETH in your wallet to the DAD SmartContract address.</p>
+     
     </div>
   )
 }
@@ -486,21 +486,27 @@ class DataDetail extends React.Component {
                       </Grid>
                     </Card.Content>
                   </Card>
-                  {this.state.images.length ==0 ?
-                    <Card  className="my-card">
-                          <Link className="ui image" to={"/upload"}>
-                            <Image src={UPLOAD_EARN}/>
+                  {this.state.images.length ==0 ? 
+                    <Card  className="my-card wrap-upload">
+                      <Card.Content className="row wrap-upload">
+                         <Link className="ui image" to={"/upload"}>
+                          <label className="uploader" style={{width:'330px'}} >
+                            <Icon name="cloud upload" style={{fontSize:'24px'}}/> 
+                            <p style={{marginTop: '60px',color:'#c1c1c1'}}>go to upload</p>
+                          </label>
                           </Link>
-                    </Card>
+                        </Card.Content>
+                      </Card>
                     : ""
                   }
                   {this.state.images.map((item, i) => {
                     return (
                       <Card key={i} className="my-card"  style={{ marginBottom: '1em'}}>
                           <Link className="ui image" to={"/explore/" + item.category.id}>
-                              <Image src={item.link}/>
+                          <Image src={item.link}/>
                             </Link>
                       </Card>
+                      
                     )
                   })}
                 </Card.Group>
