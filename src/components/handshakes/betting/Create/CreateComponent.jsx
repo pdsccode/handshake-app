@@ -261,18 +261,24 @@ class BettingCreate extends React.Component {
 
   // Service
   initHandshake(fields, fromAddress) {
-    const { side, outcomeId } = this.props.bettingShake;
+    const { side, outcomeId, matchName, matchOutcome } = this.props.bettingShake;
+
+    const extraData = {
+      event_name: matchName,
+      event_predit: matchOutcome,
+    };
     const params = {
       type: HANDSHAKE_ID.BETTING,
       outcome_id: outcomeId,
       odds: `${fields.event_odds}`,
       amount: `${fields.event_bet}`,
-      extra_data: JSON.stringify(fields),
+      extra_data: JSON.stringify(extraData),
       currency: 'ETH',
       side,
       from_address: fromAddress,
       chain_id: getChainIdDefaultWallet(),
     };
+
 
     this.props.initHandshake({
       PATH_URL: API_URL.CRYPTOSIGN.INIT_HANDSHAKE,
@@ -281,6 +287,8 @@ class BettingCreate extends React.Component {
       successFn: this.initHandshakeSuccess,
       errorFn: this.handleGetCryptoPriceFailed,
     });
+
+
   }
   initHandshakeSuccess = async (successData) => {
     console.log('initHandshakeSuccess', successData);
@@ -306,9 +314,8 @@ class BettingCreate extends React.Component {
         },
       });
       // send ga event
-      try {
-        GA.createBetSuccessCreatePage(matchName, matchOutcome, side);
-      } catch (err) {}
+      GA.createBetSuccess(matchName, matchOutcome, side);
+
     }
   }
   initHandshakeFailed = (error) => {

@@ -23,6 +23,7 @@ import { calculateBetDefault, calculateWinValues } from '@/components/handshakes
 import { getKeyByValue } from '@/utils/object';
 
 import { SIDE } from '@/components/handshakes/betting/constants.js';
+import GA from '@/services/googleAnalytics';
 
 import './ShakeFree.scss';
 import Toggle from './../Toggle';
@@ -98,7 +99,11 @@ class BetingShakeFree extends React.Component {
 
     const amountBN = parseBigNumber(amountValue);
     const odds = parseBigNumber(oddValue);
-
+    // send event tracking
+    const side = this.toggleRef.value;
+    try {
+      GA.clickGoButton(matchName, matchOutcome, side);
+    } catch (err) { }
 
     const validate = await validateBet(amountBN, odds, closingDate, matchName, matchOutcome, true);
     const { status, message } = validate;
@@ -133,6 +138,9 @@ class BetingShakeFree extends React.Component {
       side: id,
       buttonClass: `btnOK ${id === 1 ? 'btnBlue' : 'btnRed'}`,
     });
+
+    // Event tracking
+    GA.clickChooseASide(id);
   }
 
   updateDefautValues() {
@@ -209,6 +217,12 @@ class BetingShakeFree extends React.Component {
         },
       });
       this.props.onCreateBetSuccess();
+      // send ga event
+      try {
+        const { matchName, matchOutcome } = this.props;
+        const side = this.toggleRef.value;
+        GA.createBetSuccess(matchName, matchOutcome, side);
+      } catch (err) { }
     }
   }
 
