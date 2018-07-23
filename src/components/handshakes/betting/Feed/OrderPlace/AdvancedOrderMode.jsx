@@ -5,6 +5,7 @@ import { SIDE } from '@/components/handshakes/betting/constants.js';
 import { getKeyByValue } from '@/utils/object';
 import Button from '@/components/core/controls/Button';
 import GA from '@/services/googleAnalytics';
+import EstimateGas from '@/modules/EstimateGas';
 
 import BettingShake from './../Shake';
 import OrderBook from './OrderBook';
@@ -24,6 +25,10 @@ class AdvancedOrderMode extends React.Component {
 
   state = {
     disable: false,
+
+  }
+  async componentDidMount() {
+
   }
 
   componentWillReceiveProps(nextProps) {
@@ -59,9 +64,11 @@ class AdvancedOrderMode extends React.Component {
       <React.Fragment>
         <BettingShake
           {...bettingShake}
-          onClickSubmit={(click) =>{ this.onButtonSubmit = click; }}/>
+          onClickSubmit={(click) =>{ this.onButtonSubmit = click; }}
+        />
         <OrderBook {...orderBook} />
         <Button block disabled={disable} className={buttonClass} onClick={this.handleClick}>Place {sideText} Order</Button>
+        <EstimateGas />
       </React.Fragment>
     );
   }

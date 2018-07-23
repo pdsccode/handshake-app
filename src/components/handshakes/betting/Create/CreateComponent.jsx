@@ -21,6 +21,7 @@ import {
   formatAmount,
 } from '@/components/handshakes/betting/utils.js';
 import { calculateBetDefault, calculateWinValues } from '@/components/handshakes/betting/calculation';
+import EstimateGas from '@/modules/EstimateGas';
 
 
 import { getKeyByValue } from '@/utils/object';
@@ -339,6 +340,7 @@ class BettingCreate extends React.Component {
           </div>
         </div>
         <Button type="submit" disabled={disable} block className={buttonClass}>Place {sideText} order</Button>
+        <EstimateGas />
       </form>
     );
   }

@@ -10,6 +10,7 @@ import { HANDSHAKE_ID, API_URL, APP } from '@/constants';
 
 // components
 import Button from '@/components/core/controls/Button';
+import EstimateGas from '@/modules/EstimateGas';
 
 import { showAlert } from '@/reducers/app/action';
 import {
@@ -333,6 +334,7 @@ class BetingShakeFree extends React.Component {
         <Button type="submit" disabled={disable} block className={buttonClass}>
           Place {sideText} Order
         </Button>
+        <EstimateGas />
       </form>
     );
   }

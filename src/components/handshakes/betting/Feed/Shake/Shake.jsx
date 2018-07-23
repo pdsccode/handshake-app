@@ -57,7 +57,6 @@ class BetingShake extends React.Component {
       oddValue: 0,
       amountValue: 0,
       winValue: 0,
-      estimateGas: 0,
     };
     this.onSubmit = this.onSubmit.bind(this);
   }
@@ -75,10 +74,6 @@ class BetingShake extends React.Component {
 
     this.updateDefautValues();
 
-    const estimateGas = await getEstimateGas();
-    this.setState({
-      estimateGas,
-    });
   }
 
   onSubmit = async (e) => {
@@ -128,9 +123,10 @@ class BetingShake extends React.Component {
     });
   }
 
-  updateDefautValues() {
+  async updateDefautValues() {
     const { side, marketSupportOdds, marketAgainstOdds, amountSupport, amountAgainst } = this.props;
     const defaultValue = calculateBetDefault(side, marketSupportOdds, marketAgainstOdds, amountSupport, amountAgainst);
+
     this.setState({
       oddValue: defaultValue.marketOdds,
       amountValue: defaultValue.marketAmount,
@@ -240,11 +236,6 @@ class BetingShake extends React.Component {
           <div>Possible winnings</div>
           <div className="possibleWinningsValue">{this.state.winValue}</div>
         </div>
-        <div className="rowWrapper">
-          <div className="gasPriceTitle">Current gas price per transaction (ETH)</div>
-          <div className="possibleWinningsValue">{estimateGas}</div>
-        </div>
-
       </form>
     );
   }
