@@ -37,13 +37,13 @@ export default class NavigationBar extends Component {
         url: URL.HANDSHAKE_CASH,
         position: 2,
       },
-      {
-        id: 'swap',
-        name: 'swap',
-        icon: null,
-        url: 'swap',
-        position: 3,
-      },
+      // {
+      //   id: 'swap',
+      //   name: 'swap',
+      //   icon: null,
+      //   url: 'swap',
+      //   position: 3,
+      // },
     ].sort((a, b) => a.position - b.position);
   }
 

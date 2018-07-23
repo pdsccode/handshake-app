@@ -5,6 +5,7 @@
   margin-top: -10px;
   padding: rem-calc(12px) rem-calc(5px) rem-calc(10px);
   background-color: #2B2C39;
+  justify-content: space-between;
 
   .NavigationBarItem {
     margin: 0 rem-calc(5px);
@@ -37,8 +38,9 @@
   }
 
   .LanguageSelector {
-    padding: rem-calc(7px) rem-calc(14px);
+    padding: rem-calc(7px) rem-calc(5px);
     color: #FFFFFF;
+    text-align: right;
 
     .multi-language {
       width: rem-calc(70px);

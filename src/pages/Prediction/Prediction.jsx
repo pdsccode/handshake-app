@@ -88,7 +88,7 @@ class Prediction extends React.Component {
     return (
       <div className="ShareToWin">
         <div className="ShareToWinTitle">
-          SHARE TO <span>WIN 10 ETH</span>
+          PLAY TO <span>WIN 10 ETH</span>
         </div>
       </div>
     );

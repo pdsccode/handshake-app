@@ -74,10 +74,12 @@
       display: flex;
       justify-content: space-between;
       padding: rem-calc(5px 10px);
-      border-radius: rem-calc(6px);
       height: rem-calc(50px);
-      border: 1px solid #DEDEDE;
       align-items: center;
+
+      background-image: linear-gradient(-180deg, #FFFFFF 0%, #F9FAFB 99%);
+      border: 1px solid #DEDEDE;
+      border-radius: rem-calc(6px);
 
       .EventMessageIcon {
         padding-right: rem-calc(5px);

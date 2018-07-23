@@ -14,9 +14,10 @@ function renderEventName(event) {
 }
 
 function renderEventNumberOfPlayers(event) {
+  const s = event.total_users > 1 ? 'ninjas are' : 'ninja is';
   return (
     <div className="EventNumberOfPlayer">
-      {`${event.total_users} Ninja are playing`}
+      {`${event.total_users} ${s} playing`}
     </div>
   );
 }
