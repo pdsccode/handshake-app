@@ -384,16 +384,23 @@ class Component extends React.Component {
   }
 
   checkMainNetDefaultWallet = (wallet) => {
-    let result = true;
+    let result = false;
 
-    if (process.env.isLive) {
-      if (wallet.network === MasterWallet.ListCoin[wallet.className].Network.Mainnet) {
-        result = true;
-      } else {
-        const message = <FormattedMessage id="requireDefaultWalletOnMainNet" />;
-        this.showAlert(message);
-        result = false;
+    try {
+      if (process.env.isLive) {
+        if (wallet.network === MasterWallet.ListCoin[wallet.className].Network.Mainnet) {
+          result = true;
+        } else {
+          result = false;
+        }
       }
+    } catch (e) {
+      result = false;
+    }
+
+    if (!result) {
+      const message = <FormattedMessage id="requireDefaultWalletOnMainNet" />;
+      this.showAlert(message);
     }
 
     return result;
