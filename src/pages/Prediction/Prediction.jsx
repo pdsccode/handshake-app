@@ -89,12 +89,11 @@ class Prediction extends React.Component {
     return (
       <div className="ShareToWin">
         <div className="ShareToWinTitle">
-          SHARE TO <span>WIN 10 ETH</span>
+          PLAY TO <span>WIN 10 ETH</span>
         </div>
       </div>
     );
   }
-
 
   renderComponent = (props, state) => {
     return (
@@ -102,7 +101,7 @@ class Prediction extends React.Component {
         <Loading isLoading={props.isLoading} />
         {this.renderShareToWin()}
         {this.renderEventList(props)}
-        <ModalDialog onRef={(modal) => { this.modalOrderPlace = modal; }}>
+        <ModalDialog close={true} onRef={(modal) => { this.modalOrderPlace = modal; }}>
           <BetMode
             selectedOutcome={state.selectedOutcome}
             selectedMatch={state.selectedMatch}

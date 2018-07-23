@@ -115,12 +115,10 @@ class BetMode extends React.PureComponent {
   }
   renderSingleMode(props) {
     return (
-      <div className="BetModeItem" label="Paid bet">
-        <BettingFilter
-          {...props}
-          isFree={false}
-        />
-      </div>
+      <BettingFilter
+        {...props}
+        isFree={false}
+      />
     );
   }
 
