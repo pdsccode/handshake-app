@@ -1,0 +1,23 @@
+.ScrollableList {
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+
+  -ms-overflow-style: none;  // IE 10+
+  overflow: -moz-scrollbars-none;  // Firefox
+
+  &::-webkit-scrollbar {
+    display: none;  // Safari and Chrome
+  }
+}
+
+.axis-x {
+  > div {
+    white-space: nowrap;
+  }
+
+  .ScrollableItem {
+    display: inline-block;
+    padding: 0;
+    text-align: center;
+  }
+}
