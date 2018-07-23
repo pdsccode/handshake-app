@@ -217,12 +217,12 @@ class WalletHistory extends React.Component {
           }
         </div>
 
-          {wallet && wallet.name == "ETH" ?
+          {wallet && wallet.name == "ETH" && (this.state.internalTransactions && this.state.internalTransactions.length > 0) ?
             <ul className="history-tab">
               <li className={this.state.tabActive == 0 ? "active" : ""} onClick={() => this.setState({tabActive: 0})}>{messages.wallet.action.history.label.transactions}</li>
               <li className={this.state.tabActive == 1 ? "active" : ""} onClick={() => this.setState({tabActive: 1})}>{messages.wallet.action.history.label.internal_transactions}</li>
             </ul>
-            : ""
+            : <ul className="history-tab"></ul>
           }
       </div>
     ) : "";
