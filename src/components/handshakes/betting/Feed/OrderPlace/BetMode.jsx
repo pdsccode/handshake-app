@@ -90,10 +90,40 @@ class BetMode extends React.PureComponent {
       this.callCheckFirstFree();
     }
   }
+  renderTab(props) {
+    return (
+      <Tabs htmlClassName="BetModeContainer" afterClick={this.afterTabChanges}>
+        <div className="BetModeItem" label="Paid bet">
+          <BettingFilter
+            {...props}
+            isFree={false}
+
+          />
+        </div>
+        <div className="BetModeItem" label="Free bet">
+          <BettingFilter
+            {...props}
+            isFree={true}
+
+          />
+        </div>
+      </Tabs>
+    );
+  }
+  renderSingleMode(props) {
+    return (
+      <div className="BetModeItem" label="Paid bet">
+        <BettingFilter
+          {...props}
+          isFree={false}
+        />
+      </div>
+    );
+  }
 
   render() {
     const { selectedOutcome, selectedMatch } = this.props;
-    const { support, against } = this.state;
+    const { support, against, isFirstFree } = this.state;
     const filterProps = {
       selectedOutcome,
       selectedMatch,
@@ -102,22 +132,7 @@ class BetMode extends React.PureComponent {
     };
     return (
       <React.Fragment>
-        <Tabs htmlClassName="BetModeContainer" afterClick={this.afterTabChanges}>
-          <div className="BetModeItem" label="Paid bet">
-            <BettingFilter
-              {...filterProps}
-              isFree={false}
-
-            />
-          </div>
-          <div className="BetModeItem" label="Free bet">
-            <BettingFilter
-              {...filterProps}
-              isFree={true}
-
-            />
-          </div>
-        </Tabs>
+        { isFirstFree ? this.renderTab(filterProps) : this.renderSingleMode(filterProps)}
       </React.Fragment>
     );
   }

@@ -26,8 +26,8 @@ const SELECTING_DEFAULT = {
 
 class BettingFilter extends React.Component {
   static propTypes = {
-    loadHandshakes: PropTypes.func.isRequired,
-    checkFreeAvailable: PropTypes.func.isRequired,
+    //loadHandshakes: PropTypes.func.isRequired,
+    //checkFreeAvailable: PropTypes.func.isRequired,
     setLoading: PropTypes.func,
     bettingShakeIsOpen: PropTypes.bool,
     selectedOutcome: PropTypes.object,
