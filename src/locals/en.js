@@ -151,7 +151,7 @@ export default {
   'ex.shop.explanation.shake': 'Accepted. You will receive coin in a few minutes.',
   'ex.shop.explanation.completing': 'Accepted. You will receive coin in a few minutes.',
   'ex.shop.explanation.completed': '',
-  'ex.shop.explanation.pre_shaking': 'Waiting for the station to accept your offer.',
+  'ex.shop.explanation.pre_shaking': 'Be patient - it can take a couple of minutes for your coin to be sent to escrow.',
   'ex.shop.explanation.pre_shake': 'Waiting for the station to accept your offer.',
   'ex.shop.explanation.rejecting': 'Rejecting the offer. Please wait a few minutes.',
   'ex.shop.explanation.rejected': '',
