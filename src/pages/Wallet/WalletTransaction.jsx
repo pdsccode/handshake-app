@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import iconSelf from '@/assets/images/icon/icon-self.svg';
 import iconSent from '@/assets/images/icon/icon-sent.svg';
+import iconCreate from '@/assets/images/icon/icon-create.svg';
 import iconReceived from '@/assets/images/icon/icon-received.svg';
 import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
@@ -34,22 +35,39 @@ class WalletTransaction extends React.Component {
   cooked_transaction(data){
     const wallet = this.props.wallet;
     const { messages } = this.props.intl;
+    let result = {};
 
     if(wallet && data){
       if(wallet.name == "ETH"){
-        let gas_gwei = 0, gas_price = 0, tx_fee = 0;
+        let gas_gwei = 0, gas_price = 0, tx_fee = 0, status = "";
         try{
-          gas_gwei = Number(data.gasPrice) / 1000000000;
-          gas_price = Number(gas_gwei / 1000000000).toFixed(10- gas_gwei.toString().length);
-          tx_fee = Number(Number(data.gasUsed) * gas_gwei / 1000000000);
 
-          return {
+          if(data.gasPrice){
+            gas_gwei = Number(data.gasPrice) / 1000000000;
+            gas_price = Number(gas_gwei / 1000000000).toFixed(10- gas_gwei.toString().length);
+            tx_fee = Number(Number(data.gasUsed) * gas_gwei / 1000000000);
+          }
+
+          if(data.txreceipt_status) {
+            status = Number(data.txreceipt_status) > 0 ? messages.wallet.action.history.label.success : messages.wallet.action.history.label.failed;
+          }
+          else {
+            if(data.txreceipt_status == undefined) {
+              if(data.isError == "1") {
+                status = messages.wallet.action.history.label.error;
+              }
+              else {
+                status = messages.wallet.action.history.label.success;
+              }
+            }
+          }
+
+          result = {
             header: {
               value: Number(data.value / 1000000000000000000),
               coin: wallet.name,
               confirmations: data.confirmations,
-              is_sent: data.is_sent,
-              status: Number(data.txreceipt_status) > 0 ? messages.wallet.action.history.label.success : messages.wallet.action.history.label.failed
+              status: status
             },
             body: {
               hash: data.hash,
@@ -58,21 +76,40 @@ class WalletTransaction extends React.Component {
               to: data.to,
               internal_transactions: data.internal_transactions,
               gas: data.gas,
-              gas_price: `${gas_price} Ether (${gas_gwei} Gwei)` ,
-              tx_fee: tx_fee + " Ether",
-              gas_used: data.gasUsed,
-              nouce: data.nouce,
-              transaction_index: data.transactionIndex,
-              input: data.input
             }
           };
+
+          if(data.is_sent != undefined) {
+            result.header['is_sent'] = data.is_sent;
+          }
+          else {
+            let is_sent = 3;
+            if(data.from == data.to) {
+              is_sent = 0;
+            }
+            else if(data.from == wallet.address.toLowerCase()) {
+              is_sent = 1;
+            }
+            else if(data.to == wallet.address.toLowerCase()) {
+              is_sent = 2;
+            }
+
+            result.header['is_sent'] = is_sent;
+          }
+
+          if(gas_price) result.body['gas_price'] = `${gas_price} Ether (${gas_gwei} Gwei)`;
+          if(tx_fee) result.body['tx_fee'] = tx_fee + " Ether";
+          result.body['gas_used'] = data.gasUsed;
+          if(data.nonce != undefined) result.body['nonce'] = data.nonce;
+          if(data.transactionIndex) result.body['transaction_index'] = data.transactionIndex;
+          if(data.input) result.body['input'] = data.input;
         }
         catch(e){
           console.error(e);
         }
       }
       else{
-        let result = {}, is_sent = 0, value = 0;
+        let is_sent = 0, value = 0;
 
         try{
           result = {
@@ -107,9 +144,9 @@ class WalletTransaction extends React.Component {
         catch(e){
           console.error(e);
         }
-
-        return result;
       }
+
+      return result;
     }
 
     return false;
@@ -127,6 +164,11 @@ class WalletTransaction extends React.Component {
     else if (detail && detail.header && detail.header.is_sent == 2) {
       icon = iconReceived;
     }
+    else if (detail && detail.header && detail.header.is_sent == 3) {
+      icon = iconCreate;
+    }
+
+
 
     return detail ?
     (
@@ -145,7 +187,10 @@ class WalletTransaction extends React.Component {
           {
             detail.header.status ? <div className={css_status.toLowerCase()}>{messages.wallet.action.history.label.status} {detail.header.status}</div> : ""
           }
-          <div>{detail.header.confirmations} {messages.wallet.action.history.label.confirmations}</div>
+          {
+            detail.header.confirmations || detail.header.confirmations == 0 ? <div>{detail.header.confirmations} {messages.wallet.action.history.label.confirmations}</div>
+            : ""
+          }
         </div>
 
         {

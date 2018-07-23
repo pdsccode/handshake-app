@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import {Ethereum} from '@/services/Wallets/Ethereum.js'
 import iconSelf from '@/assets/images/icon/icon-self.svg';
 import iconSent from '@/assets/images/icon/icon-sent.svg';
+import iconCreate from '@/assets/images/icon/icon-create.svg';
 import iconReceived from '@/assets/images/icon/icon-received.svg';
 import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
@@ -21,14 +22,24 @@ class WalletHistory extends React.Component {
     super(props);
     this.state = {
       transactions: this.props.transactions,
-      transaction_detail: null
+      internalTransactions: this.props.internalTransactions,
+      transaction_detail: null,
+      tabActive: 0,
     };
   }
 
+  componentWillReceiveProps(){
+    //this.setState({tabActive:0});
+  }
+
   componentDidUpdate(){
-    const {transactions} = this.props
+    const {transactions, internalTransactions} = this.props
     if (transactions != this.state.transactions){
       this.setState({transactions: transactions});
+    }
+
+    if (internalTransactions != this.state.internalTransactions){
+      this.setState({internalTransactions: internalTransactions, tabActive : 0});
     }
   }
 
@@ -63,14 +74,77 @@ class WalletHistory extends React.Component {
           label = messages.wallet.action.history.label.received;
           icon = iconReceived;
         }
+        else if (tran.is_sent == 3) {
+          cssLabel = "label-create";
+          cssValue = "value-create";
+          label = messages.wallet.action.history.label.create;
+          icon = iconCreate;
+        }
 
         res.is_sent = tran.is_sent;
 
-        return <div key={tran.transaction_no} className="row" onClick={() =>{this.show_transaction(res)}}>
+        return <div key={tran.transaction_no} className="row" onClick={() =>{this.detailTransaction(res)}}>
             <div className="col3">
               <div className="time">{tran.transaction_relative_time}</div>
               <div className={cssValue}>{tran.is_sent == 1 ? "-" : ""}{Number(tran.value)} {tran.coin_name}</div>
               {tran.confirmations <= 0 ? <div className="unconfirmation">{messages.wallet.action.history.label.unconfirmed}</div> : ""}
+              {tran.is_error ? <div className="unconfirmation">{messages.wallet.action.history.label.failed}</div> : ""}
+            </div>
+            <div className="col1"><img className="iconDollar" src={icon} /></div>
+            <div className="col2 address">
+              <div className={cssLabel}>{label}</div>
+              {
+                tran.addresses.map((addr) => {
+                  return <div key={addr}>{addr}</div>
+                })
+              }
+            </div>
+          </div>
+      });
+    }
+  }
+
+  get list_internalTransaction() {
+    const wallet = this.props.wallet;
+    const { messages } = this.props.intl;
+
+    if (wallet && this.state.internalTransactions.length==0)
+      return <div className="history-no-trans">No internal transactions yet</div>;
+    else if(wallet){
+      let arr = [];
+
+      return this.state.internalTransactions.map((res) => {
+        let tran = wallet.cookIT(res);
+        if(arr.indexOf(tran.transaction_no) < 0)
+          arr.push(tran.transaction_no);
+        else {
+          return "";
+        }
+
+        let cssLabel = "label-self", cssValue = "value-self", icon = iconSelf, label = messages.wallet.action.history.label.self;
+        if(tran.is_sent == 1) {
+          cssLabel = "label-sent";
+          cssValue = "value-sent";
+          label = messages.wallet.action.history.label.sent;
+          icon = iconSent;
+        }
+        else if (tran.is_sent == 2) {
+          cssLabel = "label-received";
+          cssValue = "value-received";
+          label = messages.wallet.action.history.label.received;
+          icon = iconReceived;
+        }
+        else if (tran.is_sent == 3) {
+          cssLabel = "label-create";
+          cssValue = "value-create";
+          label = messages.wallet.action.history.label.create;
+          icon = iconCreate;
+        }
+
+        return <div key={tran.transaction_no} className="row" onClick={() =>{this.detailTransaction(res)}}>
+            <div className="col3">
+              <div className="time">{tran.transaction_relative_time}</div>
+              <div className={cssValue}>{tran.is_sent == 1 ? "-" : ""}{Number(tran.value)} ETH</div>
               {tran.is_error ? <div className="unconfirmation">{messages.wallet.action.history.label.failed}</div> : ""}
             </div>
             <div className="col1"><img className="iconDollar" src={icon} /></div>
@@ -98,10 +172,9 @@ class WalletHistory extends React.Component {
     this.props.hideLoading();
   }
 
-  async show_transaction(data){
+  async detailTransaction(data){
     const wallet = this.props.wallet;
     if(wallet && data){
-
       if(wallet.name == "ETH") {
         let it = await wallet.getInternalTransactions(data.hash);
         if(it && it.length > 0) data["internal_transactions"] = it;
@@ -130,16 +203,25 @@ class WalletHistory extends React.Component {
     const { messages } = this.props.intl;
     return wallet ?
     (
-      <div>
+      <div className="clear-fix">
         <div className="history-balance">
         {messages.wallet.action.history.label.balance}: {wallet.balance} {wallet.name}
           <br/>
           {messages.wallet.action.history.label.transactions}: {wallet.transaction_count}<br/>
-          {wallet && wallet.name == "ETH" ?
-            <a target="_blank" href={""+wallet.getAPIUrlAddress()}>{messages.wallet.action.history.label.view_all_etherscan}</a>
+          {wallet && wallet.name == "ETH" && (this.state.internalTransactions && this.state.internalTransactions.length > 0) ?
+
+            <a target="_blank" href={""+wallet.getAPIUrlAddress(this.state.tabActive)}>{messages.wallet.action.history.label.view_all_etherscan}</a>
             : ""
           }
         </div>
+
+          {wallet && wallet.name == "ETH" ?
+            <ul className="history-tab">
+              <li className={this.state.tabActive == 0 ? "active" : ""} onClick={() => this.setState({tabActive: 0})}>{messages.wallet.action.history.label.transactions}</li>
+              <li className={this.state.tabActive == 1 ? "active" : ""} onClick={() => this.setState({tabActive: 1})}>{messages.wallet.action.history.label.internal_transactions}</li>
+            </ul>
+            : ""
+          }
       </div>
     ) : "";
   }
@@ -149,7 +231,7 @@ class WalletHistory extends React.Component {
     <div>
       <div className="historywallet-wrapper">
         {this.load_balance}
-        {this.list_transaction}
+        { this.state.tabActive == 1 ? this.list_internalTransaction : this.list_transaction }
       </div>
       <div className="historywallet-wrapper">
         {this.detail_transaction}

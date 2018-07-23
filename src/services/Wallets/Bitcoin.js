@@ -192,6 +192,10 @@ export class Bitcoin extends Wallet {
     return false;
   }
 
+  async listInternalTransactions() {
+    return [];
+  }
+
   async getTransactionHistory(pageno) {
     const from = (pageno - 1) * 20;
     const to = from + 20;
