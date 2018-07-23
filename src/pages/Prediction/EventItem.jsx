@@ -1,8 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import Countdown from '@/components/Countdown/Countdown';
 import Image from '@/components/core/presentation/Image';
 import commentIcon from '@/assets/images/icon/comment.svg';
+import { URL } from '@/constants';
 import OutcomeList from './OutcomeList';
 
 function renderEventName(event) {
@@ -42,12 +44,13 @@ function renderEventTotalBets(event) {
   );
 }
 
-function renderEventMessages() {
+function renderEventMessages(event) {
+  const commentLink = `${URL.COMMENTS_BY_SHAKE_INDEX}?objectId=${event.id}`;
   return (
-    <div className="EventMessage">
+    <Link className="EventMessage" to={commentLink}>
       <span className="EventMessageIcon"><Image src={commentIcon} /></span>
       <div className="EventMessageText">Comments</div>
-    </div>
+    </Link>
   );
 }
 
@@ -64,7 +67,7 @@ function renderDetails(event) {
         {renderEvenTimeLeft(event)}
         {renderEventTotalBets(event)}
       </div>
-      {renderEventMessages()}
+      {renderEventMessages(event)}
     </div>
   );
 }
