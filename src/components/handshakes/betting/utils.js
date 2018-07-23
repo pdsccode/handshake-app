@@ -63,6 +63,10 @@ export const getEstimateGas = async () => {
   const result = await bettinghandshake.getEstimateGas();
   return result;
 };
+export const getGasPrice = () => {
+  const chainId = getChainIdDefaultWallet();
+  return chainId === 4 ? window.gasPrice || 20 : window.gasPrice || 20;
+};
 
 export const foundShakeList = (item) => {
   // const shakerList = [];
