@@ -449,6 +449,8 @@ export const URL = {
   HANDSHAKE_DISCOVER_INDEX: '/discover',
   HANDSHAKE_DISCOVER_DETAIL: '/discover/:slug',
 
+  HANDSHAKE_PREDICTION: '/prediction',
+
   HANDSHAKE_CASH: '/cash',
   HANDSHAKE_CASH_INDEX: '/cash',
   HANDSHAKE_CASH_DETAIL: '/cash/:slug',

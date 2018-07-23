@@ -29,6 +29,7 @@ import FeedExchangeLocal from '@/components/handshakes/exchange/Feed/FeedExchang
 import FeedSeed from '@/components/handshakes/seed/Feed';
 import BlockCountry from '@/components/core/presentation/BlockCountry';
 import Maintain from '@/components/core/presentation/Maintain';
+import NavigationBar from '@/modules/NavigationBar/NavigationBar';
 import MultiLanguage from '@/components/core/controls/MultiLanguage';
 // import Tabs from '@/components/handshakes/exchange/components/Tabs';
 import NoData from '@/components/core/presentation/NoData';
@@ -516,16 +517,19 @@ class DiscoverPage extends React.Component {
         <Grid className="discover">
           {/* Discover header */}
           <Row className="category-wrapper">
-            <Col className="col-9">
-              <Category
-                idActive={handshakeIdActive}
-                onRef={(category) => { this.categoryRef = category; return null; }}
-                onItemClick={this.clickCategoryItem}
-              />
-            </Col>
-            <Col className="col-3 multilanguage-block">
-              <MultiLanguage />
-            </Col>
+            <NavigationBar />
+            {/*
+              <Col className="col-9">
+                <Category
+                  idActive={handshakeIdActive}
+                  onRef={(category) => { this.categoryRef = category; return null; }}
+                  onItemClick={this.clickCategoryItem}
+                />
+              </Col>
+              <Col className="col-3 multilanguage-block">
+                <MultiLanguage />
+              </Col>
+            */}
           </Row>
           {/* exchange */}
           {
@@ -571,9 +575,7 @@ class DiscoverPage extends React.Component {
         </ModalDialog>
         <ModalDialog className="modal" onRef={(modal) => { this.modalLuckyPoolRef = modal; return null; }}>
           <LuckyLanding onButtonClick={() => {
-            this.setState({
-              isLuckyPool: false,
-            });
+
             this.modalLuckyPoolRef.close();
           }}
           />

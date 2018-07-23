@@ -1,8 +1,10 @@
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 import { routerReducer, routerMiddleware } from 'react-router-redux';
 import { firebaseReducer, reactReduxFirebase } from 'react-redux-firebase';
+import createSagaMiddleware from 'redux-saga';
 import thunk from 'redux-thunk';
 import firebase from 'firebase/app';
+import dataReducer from '@/stores/data-reducer';
 import 'firebase/auth';
 import 'firebase/database';
 import 'firebase/messaging';
@@ -13,8 +15,24 @@ import history from '@/services/history';
 import appReducer from '@/reducers/app';
 import authReducer from '@/reducers/auth';
 import reducers from '@/reducers';
+import rootSaga from '@/stores/root-saga';
+import defaultStore from '@/stores/default-store';
 
 firebase.initializeApp(process.env.firebase);
+
+/*
+ * Reduce multiple reducers into a single reducer from left to right.
+ * make sure that the first reducer in the list defines the initial state
+ */
+export function reduceReducers(...reducersList) {
+  return (store, action) => {
+    return reducersList.reduce((result, reducer) => reducer(result, action), store);
+  };
+}
+
+const newReducers = Object.keys(defaultStore).reduce((result, key) => {
+  return Object.assign({}, result, { [key]: (s = {}) => s });
+}, {});
 
 const AppReducers = combineReducers({
   app: appReducer,
@@ -22,13 +40,19 @@ const AppReducers = combineReducers({
   firebase: firebaseReducer,
   router: routerReducer,
   ...reducers,
+  ...newReducers,
 });
+
+const sagaMiddleware = createSagaMiddleware();
 
 const createStoreWithFirebase = compose(
   reactReduxFirebase(firebase, process.env.firebase),
-  composeWithDevTools(applyMiddleware(routerMiddleware(history), thunk)),
+  composeWithDevTools(applyMiddleware(routerMiddleware(history), thunk, sagaMiddleware)),
 )(createStore);
 
-const store = createStoreWithFirebase(AppReducers);
+const rootReducer = reduceReducers(AppReducers, dataReducer);
+const store = createStoreWithFirebase(rootReducer);
+
+sagaMiddleware.run(rootSaga);
 
 export default store;

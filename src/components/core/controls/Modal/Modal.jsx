@@ -14,15 +14,6 @@ class Modal extends React.Component {
     this.close = this.close.bind(this);
   }
 
-  open() {
-    this.modalRef && this.modalRef.classList.add('modal-custom-show');
-  }
-
-  close() {
-    this.modalRef && this.modalRef.classList.remove('modal-custom-show');
-    if (this.props.hasOwnProperty('onClose')) this.props.onClose();    
-  }
-
   componentDidMount() {
     this.props.hasOwnProperty('onRef') && this.props.onRef(this);
   }
@@ -31,6 +22,14 @@ class Modal extends React.Component {
     this.props.hasOwnProperty('onRef') && this.props.onRef(undefined);
   }
 
+  open() {
+    this.modalRef && this.modalRef.classList.add('modal-custom-show');
+  }
+
+  close() {
+    this.modalRef && this.modalRef.classList.remove('modal-custom-show');
+    if (this.props.hasOwnProperty('onClose')) this.props.onClose();    
+  }
 
   render() {
     const { title, children } = this.props;

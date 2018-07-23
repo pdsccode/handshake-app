@@ -1,4 +1,3 @@
-import React from 'react';
 import { MasterWallet } from '@/services/Wallets/MasterWallet';
 import { BettingHandshake } from '@/services/neuron';
 import Handshake from '@/models/Handshake.js';
@@ -16,16 +15,16 @@ const ROUND_ODD = 10;
 const TAG = 'BETTING_UTIL';
 
 
-export const parseBigNumber = (value)=>{
+export const parseBigNumber = (value) => {
   return new BigNumber(value);
 }
-export const getMessageWithCode = (code)=> {
-    const keys = Object.keys(MESSAGE_SERVER).filter(k => k == code); // ["A", "B"]
-    console.log('Keys:', keys);
-    const value = keys.map(k => MESSAGE_SERVER[k]); // [0, 1]
-    console.log('Message:', value);
-    return value;
-  }
+export const getMessageWithCode = (code) => {
+  const keys = Object.keys(MESSAGE_SERVER).filter(k => k == code); // ["A", "B"]
+  console.log('Keys:', keys);
+  const value = keys.map(k => MESSAGE_SERVER[k]); // [0, 1]
+  console.log('Message:', value);
+  return value;
+}
 export const getChainIdDefaultWallet = () => {
   const wallet = MasterWallet.getWalletDefault('ETH');
   const { chainId } = wallet;
@@ -64,6 +63,10 @@ export const getEstimateGas = async () => {
   const result = await bettinghandshake.getEstimateGas();
   return result;
 };
+export const getGasPrice = () => {
+  const chainId = getChainIdDefaultWallet();
+  return chainId === 4 ? window.gasPrice || 20 : window.gasPrice || 20;
+};
 
 export const foundShakeList = (item) => {
   // const shakerList = [];
@@ -96,7 +99,7 @@ export const isExistMatchBet = (list) => {
   return false;
 };
 
-export const isInitBet = (dict) =>{
+export const isInitBet = (dict) => {
 
   const { type } = dict;
   if (type === BET_TYPE.INIT) {
@@ -119,7 +122,7 @@ export const isShakeUser = (shakeIds) => {
 export const isMakerShakerSameUser = (initUserId, shakeIds) => {
   const profile = local.get(APP.AUTH_PROFILE);
 
-  const userId = profile.id ;
+  const userId = profile.id;
   if (userId === initUserId && isShakeUser(shakeIds, userId)) {
     return true;
   }
@@ -142,12 +145,12 @@ export const formatOdds = (odds) => {
 };
 
 export const parseJsonString = (extraData) => {
-    try {
-      return JSON.parse(extraData);
-    } catch (e) {
-      console.log(e);
-      return {};
-    }
+  try {
+    return JSON.parse(extraData);
+  } catch (e) {
+    console.log(e);
+    return {};
+  }
 }
 
 export const findUserBet = (handshake) => {
@@ -188,9 +191,9 @@ export const findUserBet = (handshake) => {
     matched,
   });
 
-
   console.log(TAG, 'findUserBet:', newItem);
 
   return newItem;
 
 }
+
