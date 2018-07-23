@@ -2,9 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Countdown from '@/components/Countdown/Countdown';
 import Image from '@/components/core/presentation/Image';
-import telegramIcon from '@/assets/images/icon/telegram.svg';
+import commentIcon from '@/assets/images/icon/comment.svg';
 import OutcomeList from './OutcomeList';
-import './EventItem.scss';
 
 function renderEventName(event) {
   return (
@@ -42,17 +41,11 @@ function renderEventTotalBets(event) {
   );
 }
 
-function renderEventMessages(event) {
+function renderEventMessages() {
   return (
     <div className="EventMessage">
-      <span className="EventMessageIcon">
-        <Image src={telegramIcon} />
-      </span>
-      <div className="NumberContainer">
-        <div className="EventMessageNumber">40,371</div>
-        <div className="EventMessageText">messages</div>
-      </div>
-
+      <span className="EventMessageIcon"><Image src={commentIcon} /></span>
+      <div className="EventMessageText">Comments</div>
     </div>
   );
 }
@@ -70,7 +63,7 @@ function renderDetails(event) {
         {renderEvenTimeLeft(event)}
         {renderEventTotalBets(event)}
       </div>
-      {renderEventMessages(event)}
+      {renderEventMessages()}
     </div>
   );
 }
@@ -78,9 +71,9 @@ function renderDetails(event) {
 function EventItem({ event,onClick }) {
   return (
     <div className="EventItem">
-      {renderOutcomeList(event, onClick)}
       {renderEventName(event)}
       {renderEventNumberOfPlayers(event)}
+      {renderOutcomeList(event, onClick)}
       {renderDetails(event)}
     </div>
   );

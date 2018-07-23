@@ -1,9 +1,8 @@
 import React from 'react';
 import propTypes from 'prop-types';
-import SwipeableList from '@/components/SwipeableList/SwipeableList';
+import ScrollableList from '@/components/ScrollableList/ScrollableList';
 import { generatedBackgroundCss } from '@/utils/css.js';
-import './OutcomeList.scss';
-
+import { smartTrim } from '@/utils/string';
 
 const BACKGROUND_COLORS = [
   '#000000',
@@ -22,8 +21,12 @@ function buildOutcomeItem(outcome) {
   const styleCss = {
     background: generatedBackgroundCss(null, BACKGROUND_COLORS),
   };
+  const handledStr = smartTrim(outcome.name, outcome.name.length / 2);
   return (
-    <div className="OutcomeItem" style={styleCss}>{outcome.name}</div>
+    <div className="OutcomeItem" style={styleCss}>
+      <span>{handledStr[0]}</span>
+      <span>{handledStr[1]}</span>
+    </div>
   );
 }
 
@@ -32,11 +35,11 @@ function OutcomeList(props) {
   const { outcomes } = event;
   return (
     <div className="OutcomeList">
-      <SwipeableList
-        event={event}
+      <ScrollableList
         data={outcomes}
-        buildItem={buildOutcomeItem}
-        onClick={onClick}
+        event={event}
+        itemRenderer={(outcome) => buildOutcomeItem(outcome, event)}
+        onClickItem={onClick}
       />
     </div>
   );

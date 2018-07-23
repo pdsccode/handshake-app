@@ -19,14 +19,99 @@
     position: relative;
 
     .ShareToWinTitle {
+      font-family: $font-family-base;
+      font-size: rem-calc(22px);
+      color: #364164;
+      letter-spacing: 0;
+      font-weight: bold;
+
       position: absolute;
       top: 40%;
       right: rem-calc(30px);
-      color: #364164;
-      font-size: 25px;
       span {
         color: #2456FB;
       }
+    }
+  }
+
+  .OutcomeList {
+    margin: rem-calc(15px) 0;
+
+    .OutcomeItem {
+      font-family: $font-family-base;
+      font-size: rem-calc(20px);
+      color: white;
+      border-radius: rem-calc(6px);
+      padding: rem-calc(15px 15px);
+      height: rem-calc(85px);
+      margin-right: rem-calc(5px);
+
+      span {
+        display: block;
+      }
+    }
+  }
+
+  .EventItem {
+    padding: rem-calc(20px);
+    font-family: $font-family-base;
+    margin-bottom: rem-calc(10px);
+    box-shadow: rem-calc(0 2px 4px 0) rgba(203, 203, 203, 0.50);
+
+
+    .EventDetails {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .EvenFirstGroup {
+      flex: 1;
+      margin-right: rem-calc(40px);
+      align-items: center;
+    }
+
+    .EventMessage {
+      display: flex;
+      justify-content: space-between;
+      padding: rem-calc(5px 10px);
+      border-radius: rem-calc(6px);
+      height: rem-calc(50px);
+      border: 1px solid #DEDEDE;
+      align-items: center;
+
+      .EventMessageIcon {
+        padding-right: rem-calc(5px);
+      }
+    }
+
+    .EventName {
+      font-size: rem-calc(20px);
+      color: #000000;
+      letter-spacing: 0;
+      line-height: 24px;
+    }
+
+    .EventName, .EventTotalBetValue{
+      font-size: rem-calc(18px);
+      font-weight: bolder;
+
+    }
+    .EventNumberOfPlayer, .EventTimeLeftText, .EventTotalBetText {
+      font-size: rem-calc(14px);
+
+    }
+    .EventTimeLeft, .EventTotalBet  {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .EventTimeLeftText, .EventTotalBetText, .EventMessageText {
+      color: #8A8A8F;
+
+    }
+    .EventTotalBetValue {
+      color: #D0021B;
     }
   }
 }

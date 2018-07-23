@@ -94,7 +94,6 @@ class Prediction extends React.Component {
     );
   }
 
-
   renderComponent = (props, state) => {
     return (
       <div className={Prediction.displayName}>
