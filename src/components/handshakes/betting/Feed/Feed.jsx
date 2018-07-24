@@ -145,7 +145,7 @@ class FeedBetting extends React.Component {
     } else if (!isSameAddress(fromAddress)) {
       message = MESSAGE.DIFFERENCE_ADDRESS;
     } else if (freeBet) {
-      //this.handleActionFree(title, id);
+      this.handleActionFree(title, id);
     } else if (estimatedGas > balance) {
       message = MESSAGE.NOT_ENOUGH_GAS;
     } else {
@@ -162,7 +162,7 @@ class FeedBetting extends React.Component {
     }
   }
 
-  handleActionFree(title, offchain) {
+  handleActionFree(title, offchain, hid) {
     const realId = getId(offchain);
     this.setState({
       isLoading: true,
@@ -176,6 +176,9 @@ class FeedBetting extends React.Component {
         break;
       case BETTING_STATUS_LABEL.REFUND:
         this.refundFree(offchain);
+        break;
+      case BETTING_STATUS_LABEL.DISPUTE:
+        this.disputeOnChain(offchain, hid);
         break;
       default:
         break;
