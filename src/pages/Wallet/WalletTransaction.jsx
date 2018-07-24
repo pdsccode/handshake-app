@@ -130,13 +130,13 @@ class WalletTransaction extends React.Component {
           for(let i in data.vin){
 
             let no = Number(i) + 1;
-            result.body["from_addr_"+no] = data.vin[i].addr + " " + data.vin[i].value + " BTC";
+            result.body["from_addr_"+no] = (data.vin[i].addr ? data.vin[i].addr : "Unparsed address")+ " " + data.vin[i].value + " BTC";
             value += Number(data.vin[i].value);
           }
 
           for(let i in data.vout){
             let no = Number(i) + 1;
-            result.body["to_addr_"+no] = (data.vout[i].scriptPubKey.addresses ? data.vout[i].scriptPubKey.addresses.join(" ") : "") + " " + data.vout[i].value + " BTC";
+            result.body["to_addr_"+no] = (data.vout[i].scriptPubKey.addresses ? data.vout[i].scriptPubKey.addresses.join(" ") : "Unparsed address") + " " + data.vout[i].value + " BTC";
           }
 
           result.header.value = value;
