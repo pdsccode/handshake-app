@@ -93,7 +93,7 @@ export const BETTING_STATUS_LABEL =
       DONE: ` The bet is done.`,
       WITHDRAW: 'Withdraw winnings',
       CANCELLING: 'Your bet is being cancelled.',
-      PROGRESSING: 'Your bet is progressing a transaction. Please wait..',
+      CANCEL_PROGRESSING: 'The blockchain is processing your cancelling. Please wait.',
       BET_WAIT_MATCHING: 'Bet placed. Matching..',
       BET_MACHED_WAIT_RESULT: 'Bet matched. Waiting for result..',
       REFUND: 'Refund your bet',
@@ -103,5 +103,7 @@ export const BETTING_STATUS_LABEL =
       REFUNDED: 'Your coin has been refunded.',
       COLLECT_PENDING: 'The blockchain is processing your withdrawal. Please wait.',
       COLLECT_DONE: 'Your winnings have been withdrawn to your wallet!',
+      REFUND_PENDING: 'The blockchain is processing your refund. Please wait.',
+
     };
 
