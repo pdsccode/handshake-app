@@ -500,12 +500,6 @@ class FeedBetting extends React.Component {
 
     const colorBySide = side === 1 ? `support` : 'oppose';
 
-    /*
-    let eventName = event_name || '';
-    if (eventName.indexOf('Event') === -1) {
-      eventName = `Event: ${eventName}`;
-    }
-    */
     const eventName = event_name && this.formatEventName(event_name);
     const predictName = event_predict && this.formatPredictName(event_predict);
 
@@ -524,8 +518,9 @@ class FeedBetting extends React.Component {
           </div>
 
           <div className="predictRow">
-            <div className="predictName predictTitle">
-              <span className={colorBySide}>{side === 1 ? `Support` : 'Oppose'}</span>{predictName}
+            <div className="predictTitle">
+              <div className={`sideLabel ${colorBySide}`}>{side === 1 ? `Support` : 'Oppose'}</div>
+              <div className="predictName">{predictName}</div>
             </div>
             <div className="predictName"><span className="odds-text-feed">Odds</span> <span className={`odds-value-feed-${colorBySide}`}>{odds}</span></div>
           </div>
