@@ -53,7 +53,9 @@
   }
 
   .OutcomeList {
-    margin: rem-calc(15px) 0;
+    height: 74px;
+    overflow: hidden;
+    margin: rem-calc(15px) rem-calc(-10px);
 
     .OutcomeItem {
       font-family: $font-family-base;
@@ -66,6 +68,18 @@
 
       span {
         display: block;
+      }
+    }
+
+    .ScrollableList {
+      height: 80px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      .ScrollableItem:first-child {
+        margin-left: rem-calc(10px);
+      }
+      .ScrollableItem:last-child {
+        margin-right: rem-calc(6px);
       }
     }
   }

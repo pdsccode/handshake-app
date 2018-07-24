@@ -106,7 +106,7 @@ class BetMode extends React.PureComponent {
         <div className="BetModeItem" label="Free bet">
           <BettingFilter
             {...props}
-            isFree={true}
+            isFree
           />
         </div>
       </Tabs>
@@ -123,7 +123,12 @@ class BetMode extends React.PureComponent {
 
   render() {
     const { selectedOutcome, selectedMatch } = this.props;
-    const { support, against, isFirstFree, bettingShakeIsOpen } = this.state;
+    const {
+      support,
+      against,
+      isFirstFree,
+      bettingShakeIsOpen,
+    } = this.state;
     const filterProps = {
       selectedOutcome,
       selectedMatch,
