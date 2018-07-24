@@ -102,49 +102,51 @@ class MobileOrTablet extends React.PureComponent {
             </div>
           </div>
 
-          <div className="row mt-5">
-            <div className="col">
-              <div className="landing-header"><FormattedMessage id="landing_page.header.product" /></div>
-              <div className="landing-subHeader"><FormattedMessage id="landing_page.subHeader.product" /></div>
+          <React.Fragment>
+            <div className="row mt-5">
+              <div className="col">
+                <div className="landing-header"><FormattedMessage id="landing_page.header.product" /></div>
+                <div className="landing-subHeader"><FormattedMessage id="landing_page.subHeader.product" /></div>
+              </div>
             </div>
-          </div>
 
-          <div className="row">
-            {
-              products.map((product, index) => {
-                const { title, subTitle, img } = product
-                return (
-                  <div className="col-4 product" key={index}>
-                    <div><img src={img} className="img-fluid" /></div>
-                    <div className="landing-title mt-1">{title}</div>
-                    <div className="landing-sub-title">{subTitle}</div>
-                  </div>
-                )
-              })
-            }
-          </div>
-
-          <div className="row mt-5">
-            <div className="col">
-              <div className="landing-header"><FormattedMessage id="landing_page.header.research" /></div>
-              <div className="landing-subHeader"><FormattedMessage id="landing_page.subHeader.research" /></div>
+            <div className="row">
+              {
+                products.map((product, index) => {
+                  const { title, subTitle, img } = product
+                  return (
+                    <div className="col-4 product" key={index}>
+                      <div><img src={img} className="img-fluid" /></div>
+                      <div className="landing-title mt-1">{title}</div>
+                      <div className="landing-sub-title">{subTitle}</div>
+                    </div>
+                  )
+                })
+              }
             </div>
-          </div>
 
-          <div className="row">
-            {
-              researches.map((product, index) => {
-                const { title, subTitle, img } = product
-                return (
-                  <div className="col-6 product" key={index}>
-                    <div><img src={img} className="img-fluid" /></div>
-                    <div className="landing-title mt-1">{title}</div>
-                    <div className="landing-sub-title">{subTitle}</div>
-                  </div>
-                )
-              })
-            }
-          </div>
+            <div className="row mt-5">
+              <div className="col">
+                <div className="landing-header"><FormattedMessage id="landing_page.header.research" /></div>
+                <div className="landing-subHeader"><FormattedMessage id="landing_page.subHeader.research" /></div>
+              </div>
+            </div>
+
+            <div className="row">
+              {
+                researches.map((product, index) => {
+                  const { title, subTitle, img } = product
+                  return (
+                    <div className="col-6 product" key={index}>
+                      <div><img src={img} className="img-fluid" /></div>
+                      <div className="landing-title mt-1">{title}</div>
+                      <div className="landing-sub-title">{subTitle}</div>
+                    </div>
+                  )
+                })
+              }
+            </div>
+          </React.Fragment>
 
           <hr className="landing-hr" />
 
