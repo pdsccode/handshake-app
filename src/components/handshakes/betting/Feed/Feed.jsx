@@ -219,7 +219,7 @@ class FeedBetting extends React.Component {
     const result = await betHandshakeHandler.cancelBet(hid, side, amount, odds, offchain);
     const { hash } = result;
     if (hash) {
-      //this.uninitItemReal(offchain);
+      this.uninitItemReal(offchain);
     } else {
       this.props.updateBettingChange(oldInfo);
     }
@@ -235,7 +235,7 @@ class FeedBetting extends React.Component {
     const result = await betHandshakeHandler.withdraw(hid, offchain);
     const { hash } = result;
     if (hash) {
-      //this.collectReal(offchain);
+      this.collectReal(offchain);
     } else {
       this.props.updateBettingChange(oldInfo);
     }
@@ -251,7 +251,7 @@ class FeedBetting extends React.Component {
     const result = await betHandshakeHandler.refund(hid, offchain);
     const { hash } = result;
     if (hash) {
-      //this.refundReal(offchain);
+      this.refundReal(offchain);
     } else {
       this.props.updateBettingChange(oldInfo);
     }
