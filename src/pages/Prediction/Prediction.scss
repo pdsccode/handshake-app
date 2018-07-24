@@ -30,6 +30,27 @@
     }
   }
 
+  .matchOutCome {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    padding: 20px 20px 0;
+    .label {
+      font-size: 14px;
+      color: #FFFFFF;
+    }
+    .name {
+      font-size: 18px;
+      color: #FFFFFF;
+    }
+  }
+
+  .BetModeContainer {
+    .matchOutCome {
+      padding: 0 0 20px 0;
+    }
+  }
+
   .ShareToWin {
     background-image: url('../../assets/images/share/share-to-win.png');
     display: flex;

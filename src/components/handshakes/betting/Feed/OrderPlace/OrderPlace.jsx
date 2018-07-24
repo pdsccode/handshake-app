@@ -14,12 +14,14 @@ class OrderPlace extends React.Component {
     render: PropTypes.bool,
     bettingShake: PropTypes.object,
     orderBook: PropTypes.object,
+    changeMode: PropTypes.func,
   };
 
   static defaultProps = {
     render: false,
     bettingShake: null,
     orderBook: null,
+    changeMode: undefined,
   };
 
   state = {

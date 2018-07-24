@@ -318,7 +318,7 @@ class BetingShakeFree extends React.Component {
 
     return (
       <form className="wrapperBettingShakeFree" onSubmit={this.onSubmit}>
-        <p className="titleForm text-center">BET FREE ON THE OUTCOME</p>
+        {/* <p className="titleForm text-center">BET FREE ON THE OUTCOME</p> */}
         {<Toggle ref={(component) => { this.toggleRef = component; }} onChange={this.onToggleChange} />}
         {/* this.renderInputField(amountField) */}
         <div className="freeAmount">You have {amount} ETH FREE to bet!</div>
@@ -328,7 +328,6 @@ class BetingShakeFree extends React.Component {
           <div className="possibleWinningsValue">{winValue}</div>
         </div>
         <div className="rowWrapper">
-          <div className="gasPriceTitle">Current gas price per transaction (ETH)</div>
           <div className="possibleWinningsValue">{estimateGas}</div>
         </div>
         <Button type="submit" disabled={disable} block className={buttonClass}>

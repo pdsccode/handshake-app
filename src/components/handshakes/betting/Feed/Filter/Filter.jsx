@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import local from '@/services/localStore';
 import { APP} from '@/constants';
 import { defaultOdds, defaultAmount } from '@/components/handshakes/betting/calculation';
-
+import { getKeyByValue } from '@/utils/object';
 import GA from '@/services/googleAnalytics';
 import BettingShakeFree from '@/components/handshakes/betting/Feed/ShakeFree';
 
@@ -39,7 +39,6 @@ class BettingFilter extends React.Component {
 
   constructor(props) {
     super(props);
-
   }
 
   componentDidMount() {
@@ -99,9 +98,12 @@ class BettingFilter extends React.Component {
     };
 
     const orderBook = { support, against };
-
     return (
       <React.Fragment>
+        <div className="matchOutCome">
+          <span className="label">Outcome:</span>
+          <span className="name">{matchOutcome}</span>
+        </div>
         {isFree ?
           <BettingShakeFree
             amount={freeAmount}
@@ -110,6 +112,7 @@ class BettingFilter extends React.Component {
           <OrderPlace
             bettingShake={bettingShake}
             orderBook={orderBook}
+            changeMode={this.changeMode}
           />}
       </React.Fragment>
 
