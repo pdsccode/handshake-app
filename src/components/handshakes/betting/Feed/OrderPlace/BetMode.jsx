@@ -107,7 +107,6 @@ class BetMode extends React.PureComponent {
           <BettingFilter
             {...props}
             isFree={true}
-
           />
         </div>
       </Tabs>

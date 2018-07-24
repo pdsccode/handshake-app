@@ -53,7 +53,7 @@ class OrderPlace extends React.Component {
           <div className="OrderPlaceType Green" label="Support">
             <OrderMode {...orderMode} theme="Green" />
           </div>
-          <div className="OrderPlaceType Orange" label="Against">
+          <div className="OrderPlaceType Orange" label="Oppose">
             <OrderMode {...orderMode} theme="Orange" />
           </div>
         </Tabs>

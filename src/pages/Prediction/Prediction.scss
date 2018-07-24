@@ -8,10 +8,15 @@
       border-radius: 0;
     }
     .modal-custom-body {
-      max-height: 85vh;
-      overflow: auto;
-      padding: 20px;
+      max-height: 80vh;
+      padding: 0;
       background-color: #000B35;
+      > .Tabs {
+        padding: 20px;
+      }
+      > .Tabs.BetModeContainer {
+        padding: 0;
+      }
     }
     .close {
       position: absolute;
