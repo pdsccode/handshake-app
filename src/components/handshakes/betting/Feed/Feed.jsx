@@ -145,7 +145,7 @@ class FeedBetting extends React.Component {
     } else if (!isSameAddress(fromAddress)) {
       message = MESSAGE.DIFFERENCE_ADDRESS;
     } else if (freeBet) {
-      //this.handleActionFree(title, id);
+      this.handleActionFree(title, id);
     } else if (estimatedGas > balance) {
       message = MESSAGE.NOT_ENOUGH_GAS;
     } else {
