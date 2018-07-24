@@ -13,40 +13,47 @@
     padding: 28px 0.9375rem 18px 0.9375rem;
     border-radius: 6px 6px 0 0;
   }
-  .predictName {
-    font-weight: 400;
-    color: $black;
-    letter-spacing: rem-calc(0.29px);
-  }
-  .predictTitle{
-    margin-right: 5px;
-  }
+
+
   .predictRow {
     display: flex;
     justify-content: space-between;
     margin: rem-calc(0 15px 33px 19px);
     font-size: 14px;
-  }
-  .support {
-    background-color: $caribbean-green !important;
-    color:#fff;
-    font-weight: 400;
-    padding:0 6px;
-    margin-right: 5px;
-    border-radius: 3px;
-    margin-bottom: 4px;
+    .predictTitle{
+      margin-right: 5px;
+      width: 80%;
+      display: flex;
+      align-items: center;
+    }
+    .predictName {
+      font-weight: 400;
+      color: $black;
+      letter-spacing: rem-calc(0.29px);
+    }
 
-  }
-  .oppose {
-    background-color: $radical-red !important;
-    color:#fff;
-    font-weight: 400;
-    padding:0 6px;
-    margin-right: 5px;
-    border-radius: 3px;
-    margin-bottom: 4px;
+    .sideLabel {
+      color:#fff;
+      font-weight: 400;
+      padding:0 6px;
+      margin-right: 5px;
+      border-radius: 3px;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      height: 27px;
+    }
 
+    .support {
+      background-color: $caribbean-green !important;
+
+    }
+    .oppose {
+      background-color: $radical-red !important;
+
+    }
   }
+
   .bettingInfoValues{
     padding: rem-calc(0 15px 10px);
     float: right;
