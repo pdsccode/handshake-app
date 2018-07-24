@@ -77,9 +77,8 @@ export const MESSAGE = {
 
 export const BETTING_STATUS_LABEL =
     {
+      //LABEL
       INITING: 'Placing a bet..',
-      CANCEL: 'Cancel this bet',
-      RETRY: 'Retry',
       ROLLBACK: 'There is something wrong with blockchain. The bet is cancelled',
       COLLECT_FAILED: 'There is something wrong with withdraw. Please cancel to get back money',
       SHOULD_CANCEL: 'There is no bet matched. Please cancel to get back money',
@@ -91,17 +90,21 @@ export const BETTING_STATUS_LABEL =
       WIN: `You're a winner!`,
       WIN_WAIT: `<br/> It's not time to withdraw. Please wait..`,
       DONE: ` The bet is done.`,
-      WITHDRAW: 'Withdraw winnings',
       CANCELLING: 'Your bet is being cancelled.',
       PROGRESSING: 'Your bet is progressing a transaction. Please wait..',
       BET_WAIT_MATCHING: 'Bet placed. Matching..',
       BET_MACHED_WAIT_RESULT: 'Bet matched. Waiting for result..',
-      REFUND: 'Refund your bet',
       CANCELLED: 'Your bet was cancelled.',
       REFUNDING: 'Your coin is being refunded to you.',
       REFUND_WAIT: `<br/> It's not time to refund. Please wait..`,
       REFUNDED: 'Your coin has been refunded.',
       COLLECT_PENDING: 'The blockchain is processing your withdrawal. Please wait.',
       COLLECT_DONE: 'Your winnings have been withdrawn to your wallet!',
+      //BUTTON
+      REFUND: 'Refund your bet',
+      WITHDRAW: 'Withdraw winnings',
+      CANCEL: 'Cancel this bet',
+      RETRY: 'Retry',
+      DISPUTE: 'Dispute',
     };
 

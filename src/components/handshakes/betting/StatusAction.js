@@ -43,7 +43,7 @@ export const getStatusLabel = (item) => {
 
   if (status === BET_BLOCKCHAIN_STATUS.STATUS_INIT_PENDING
     || status === BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINIT_PENDING
-    || status === BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_PENDING){
+    || status === BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_PENDING) {
       //PENDING ACTION
       return pendingAction(status);
 
@@ -51,16 +51,20 @@ export const getStatusLabel = (item) => {
 
   if (status === BET_BLOCKCHAIN_STATUS.STATUS_MAKER_SHOULD_UNINIT
     || status === BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINITED
-    || (!matched && role === ROLE.INITER && status === BET_BLOCKCHAIN_STATUS.STATUS_INITED)){
+    || (!matched && role === ROLE.INITER && status === BET_BLOCKCHAIN_STATUS.STATUS_INITED)) {
       //CANCEL ACTION
       return cancelAction(status);
   }
 
-  if ((matched && result === BETTING_RESULT.DRAW)
+  if ((matched && result === BETTING_RESULT.DRAW && isExpiredDate(disputeTime))
       || (matched && result === BETTING_RESULT.INITED && isExpiredDate(reportTime))
       || status === BET_BLOCKCHAIN_STATUS.STATUS_REFUND) {
         //REFUND ACTION
       return refundAction(status, reportTime);
+  }
+
+  if (result > BETTING_RESULT.INITED && isExpiredDate(reportTime) && !isExpiredDate(disputeTime)) {
+    return disputeAction(status);
   }
 
   if (result === BETTING_RESULT.INITED && // hasn't has result
@@ -230,10 +234,10 @@ const winOrLose = (resultStatus, side = SIDE.SUPPORT, disputeTime) => {
 }
 
 const doneAction = () => {
-    const strStatus = BETTING_STATUS_LABEL.COLLECT_DONE;
-    const isAction = false;
+  const strStatus = BETTING_STATUS_LABEL.COLLECT_DONE;
+  const isAction = false;
 
-    return { title: null, isAction, status: strStatus };
+  return { title: null, isAction, status: strStatus };
 
 }
 
@@ -241,5 +245,24 @@ const rollbackAction = () => {
   const strStatus = BETTING_STATUS_LABEL.ROLLBACK;
   const isAction = false;
   return { title: null, isAction, status: strStatus };
+}
+
+const disputeAction = (blockchainStatus) => {
+  let strStatus = null;
+  let isAction = false;
+
+  switch (blockchainStatus) {
+    case BET_BLOCKCHAIN_STATUS.STATUS_DISPUTE_FAILED:
+      break;
+    case BET_BLOCKCHAIN_STATUS.STATUS_DISPUTE:
+      break;
+    default:
+      strStatus = BETTING_STATUS_LABEL.DISPUTE;
+      isAction = true;
+      break;
+  }
+
+  return { title: null, isAction, status: strStatus };
+
 }
 
