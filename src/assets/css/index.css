@@ -571,3 +571,23 @@ img.ui.image.btn-add-class{
 .ui.label>.close.icon, .ui.label>.delete.icon{
     margin-left: 1em;
 }
+
+.h2-header-datasetslist{
+    margin-top: 10px!important;
+    border-bottom: none;
+    text-align: left;
+    font-weight: normal!important;
+    margin-bottom: 10px;
+}
+
+.my-btn-buy-eth2{
+    border: 0.7px solid #262628!important;
+    margin-left: 0px!important;
+    font-size: 11px!important;
+    font-weight: 1000!important;
+    height: 30px!important;
+    margin-right: 0px!important;
+    text-transform: uppercase!important;
+    padding: 0em 1em!important; 
+    margin-top: 8px!important; 
+}

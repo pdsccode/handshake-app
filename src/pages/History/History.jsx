@@ -69,29 +69,39 @@ class History extends React.Component {
   };
 
   render() {
-    const color1 = "linear-gradient(62deg, #f56b96, #f69372 100%, #f69372)";
-    const color2 = "radial-gradient(circle at 95% 4%, #a241e2, #534dfd)"; 
-
+    const color1 = "linear-gradient(62deg, rgb(208, 208, 208), rgb(243, 243, 243) 100%, rgb(255, 255, 255))";
+    //const color2 = "radial-gradient(circle at 95% 4%, #a241e2, #534dfd)"; 
+    const color2 = "linear-gradient(62deg, rgb(208, 208, 208), rgb(243, 243, 243) 100%, rgb(255, 255, 255))";
     return (
       <Visibility once={true}>  
       <Segment vertical  style={{marginTop:'-5em',background:'white',zIndex:'55555'}}>    
-          <h2 className="my-h2-dataset-new">
-                History
+        <h2 className="my-h2-dataset-new">
+                My Datasets
                 <Link to={'/mine'}><Image src={closeTop} className="btn-Close-Top"/></Link>
-            </h2> 
+        </h2> 
          <Container style={{marginLeft:'-20px',float:'left',background:'white' }}> 
-              <Card.Group centered >  
+              <Card.Group centered > 
+
+                <Card className="my-card"  style={{ marginBottom: '1em'}}> 
+                          <div style={{ padding:'10px', textAlign:'left', backgroundImage: color1 }}>
+                              <h4 style={{ margin:'5px 0px', color:'black'}}>Avaliable for withdraw</h4>  
+                              <p  style={{ marginBottom:'0px'}}>Balance: 0.0</p>
+                              <Button basic size="mini" basic color='black' className="my-btn-buy-eth2"  content='Withdraw'  ></Button>
+                           </div>   
+                </Card>
+              </Card.Group>
+        </Container> 
+        
+        <Container style={{marginLeft:'-20px',float:'left',background:'white' }}> 
+            <h2 className="my-h2-dataset-new h2-header-datasetslist"> Datasets </h2> 
+              <Card.Group centered > 
                 {this.state.datasets.map((item, i) => {
                   return (
-                    <Card key={i} className="my-card"  style={{ marginBottom: '1em'}}>
-                        {/* <Link className="ui image" to={"/explore/" + item.category_id}> */}
-                           
+                    <Card key={i} className="my-card"  style={{ marginBottom: '1em'}}> 
                           <div style={{ padding:'10px', textAlign:'left', backgroundImage: (i%2==0 ? color1 : color2) }}>
-                              <h4 style={{ marginTop: '10px',color:'black'}}>{item.name}</h4>  
-                              <p>Balance: {item.balance}</p>
-                              <Button basic size="mini" basic color='black' className="my-btn-buy-eth" style={{   position: 'absolute',top: '30px',right: '10px', color:'black'}} content='WITHDRAW'/>
-                           </div>  
-                        {/* </Link> */}
+                              <h4 style={{ margin:'5px 0px', color:'black'}}>{item.name}</h4>  
+                              <p  style={{ marginBottom:'0px'}}>{item.balance} DADI</p>
+                           </div>   
                     </Card>
                     
                   )

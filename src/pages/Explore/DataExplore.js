@@ -141,7 +141,7 @@ class DataExplore extends React.Component {
   }
 
   componentDidMount() {
-    document.title = 'Data oscar'
+    //document.title = 'Data oscar'
     this.setState({isLoading: true})
 
     const req = agent.req.get(agent.API_ROOT + '/api/explore-category/');

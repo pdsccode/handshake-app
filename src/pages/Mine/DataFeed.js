@@ -1,5 +1,5 @@
 import React from 'react';
-import {Grid, Image, Container, Card, Icon, Segment, Item, Visibility, Button, Modal, List, Input,Label} from 'semantic-ui-react';
+import {Grid, Image, Form, Confirm, Container, Card, Icon, Segment, Item, Visibility, Button, Modal, List, Input,Label} from 'semantic-ui-react';
 // import {AuthConsumer} from './AuthContext';
 // import {Route, Redirect} from 'react-router';
 import agent from '../../services/agent';
@@ -60,6 +60,9 @@ class DataFeed extends React.Component {
       calculations: {
         bottomVisible: false,
       },
+      open:false,
+      nameclassified:'',
+      selectcategory: null,
       modal: {
         open: false,
         imageIndex: null,
@@ -75,6 +78,9 @@ class DataFeed extends React.Component {
     this.handleSelectedClassify = this.handleSelectedClassify.bind(this);
     this.submitClassify = this.submitClassify.bind(this);
   }
+
+  close = () => this.setState({ open: false })
+  show = category => () => this.setState({ selectcategory:category, nameclassified:'', open: true })
 
   init_data(token){
     this.setState({isLoading: true})
@@ -93,7 +99,7 @@ class DataFeed extends React.Component {
   }
   
   componentDidMount() {
-    document.title = 'Data oscar';
+    //document.title = 'DAD: Decentralized Autonomous Dataset';
     console.log("AHIHI ==== ",this.props.token);
     this.init_data(this.props.token);
   }
@@ -339,15 +345,38 @@ class DataFeed extends React.Component {
       //   {item?.name||''}
       // </Label>);
       return (
-        <Label basic color={item.checked?'tealqn':'black'} key={String(item.id)||'-1'}   onClick={isNeedClick?()=>this.clickTagItem(value,item.id):undefined}>{item?.name||''}</Label>
+        <Label basic color={item.checked?'tealqn':'black'} key={String(item.id)||'-1'} 
+          onClick={isNeedClick?()=>this.clickTagItem(value,item.id):undefined}>{item?.name||''}</Label>
       );
 
     });
+    //console.log(value.category);
+    value.category.id
     return (<div style={{display:'flex',flex:1,flexWrap:'wrap'}}>
-        <Image src={addPlus} style={{ width:'30px',marginTop:'-10px'}}/>
+        <Image onClick={()=>this.show()} src={addPlus} style={{ width:'30px',marginTop:'-10px'}}/>
         {listTagView}
     </div>);
   }
+
+  handleAddClass(){
+    console.log(this.state.nameclassified);
+    console.log(this.state.selectcategory);
+    id = this.state.selectcategory;
+    name = this.state.selectcategory;
+
+    agent.req.post(agent.API_ROOT + '/api/classify/', {
+      id,
+      name
+    }).set('authorization', `JWT ${this.props.token}`).type('form').then((response) => {
+      let resBody = response.body;
+      
+    }).catch((e) => {
+    
+    })
+
+  }
+
+  handleChangeInput = (e, {name, value}) => this.setState({[name]: value})
 
   render() {
     return (
@@ -392,6 +421,26 @@ class DataFeed extends React.Component {
                 </Modal.Actions>
               </Modal>
         </Segment>
+
+        <Segment vertical loading={this.state.isLoading}>
+          <Confirm
+            content={
+              <div class='content'>
+                <h3>Enter name classified</h3>
+                <Form.Input 
+                  type='text'
+                  fluid placeholder='Name Classified' name='nameclassified' value={this.state.nameclassified}
+                              onChange={this.handleChangeInput}/>
+              </div>
+            }
+            open={this.state.open}
+            onCancel={this.close}
+            onConfirm={() => this.handleAddClass()}
+            confirmButton={<Button positive>OK</Button>}
+            cancelButton={<Button positive style={{background: 'none',color:'#333',fontWeight:'500'}}>Cancel</Button>}
+          />
+        </Segment>
+
         <Segment vertical loading={this.state.isLoading}/>
 
       </Visibility>
