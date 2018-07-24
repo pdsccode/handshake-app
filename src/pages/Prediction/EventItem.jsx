@@ -5,6 +5,7 @@ import Countdown from '@/components/Countdown/Countdown';
 import Image from '@/components/core/presentation/Image';
 import commentIcon from '@/assets/images/icon/comment.svg';
 import { URL } from '@/constants';
+import { formatAmount } from '@/utils/number';
 import OutcomeList from './OutcomeList';
 
 function renderEventName(event) {
@@ -36,10 +37,11 @@ function renderEvenTimeLeft(event) {
 }
 
 function renderEventTotalBets(event) {
+  const totalBets = !event.total_bets ? 0 : formatAmount(event.total_bets);
   return (
     <div className="EventTotalBet">
       <span className="EventTotalBetText">Total bets</span>
-      <span className="EventTotalBetValue">{`${event.total_bets} ETH`}</span>
+      <span className="EventTotalBetValue">{`${totalBets} ETH`}</span>
     </div>
   );
 }
