@@ -253,8 +253,10 @@ const disputeAction = (blockchainStatus) => {
 
   switch (blockchainStatus) {
     case BET_BLOCKCHAIN_STATUS.STATUS_DISPUTE_FAILED:
+      strStatus = BETTING_STATUS_LABEL.DISPUTE_FAILED;
       break;
     case BET_BLOCKCHAIN_STATUS.STATUS_DISPUTE:
+      strStatus = BETTING_STATUS_LABEL.DISPUTE_WAIT;
       break;
     default:
       strStatus = BETTING_STATUS_LABEL.DISPUTE;
