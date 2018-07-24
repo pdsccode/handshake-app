@@ -34,7 +34,7 @@ class DevDoc extends React.Component {
           Keep more of your money.
         </div>
         <p>Credit cards take up to 3% in processing fees on every transaction.
-          Accept Bitcoin and Bitcoin Cash with BitPay and get direct bank deposits
+          Accept Bitcoin and Bitcoin Cash with Ninja Payment and get direct bank deposits
           in your own currency for a simple, flat 1% settlement charge.</p>
 
         <div className="title">
@@ -75,10 +75,10 @@ class DevDoc extends React.Component {
       <div className="content text-left">
         <h5 className="text-center mt-5 mb-0">In app purchase</h5>
         <div className="title">Mobile Point of Sale App</div>
-        <p>Accept Bitcoin and Bitcoin Cash on phones or tablets with BitPay Checkout for iOS and Android.</p>
+        <p>Accept Bitcoin and Bitcoin Cash on phones or tablets with Ninja Payment for iOS and Android.</p>
 
         <div className="title">Multiple User Capability</div>
-        <p>Add multiple users to BitPay Checkout or enable your cashiers and servers to accept Bitcoin and Bitcoin Cash to your account on their own phones.</p>
+        <p>Add multiple users to Ninja Payment or enable your cashiers and servers to accept Bitcoin and Bitcoin Cash to your account on their own phones.</p>
 
         <div className="title">Web-Based Checkout</div>
         <p>No app, no problem. Access responsive retail invoices via the web browser on laptops, phones, and desktops.</p>

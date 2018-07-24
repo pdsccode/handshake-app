@@ -31,7 +31,7 @@ class PaymentOverview extends React.Component {
     return (
       <div className="content">
         <h3>Why apply Ninja Payment?</h3>
-        <div><iframe width="100%" height="315" src="https://www.youtube.com/embed/8d4Of_17lP4" frameBorder="0" allow="autoplay; encrypted-media" allowFullScreen></iframe></div>
+        <div><iframe width="100%" height="315" src="https://www.youtube.com/embed/6bd6-XtO3Wk" frameBorder="0" allow="autoplay; encrypted-media" allowFullScreen></iframe></div>
         <div className="title">
           <img src="https://bitpay.com/images/no-fees.fa98ab81.svg" width="50px" /><br/>
           Keep more of your money.
@@ -91,10 +91,10 @@ class PaymentOverview extends React.Component {
 
         <h3 className="text-center mt-5 mb-0">In app purchase</h3>
         <div className="title">Mobile Point of Sale App</div>
-        <p>Accept Bitcoin and Bitcoin Cash on phones or tablets with BitPay Checkout for iOS and Android.</p>
+        <p>Accept Bitcoin and Bitcoin Cash on phones or tablets with Ninja Payment for iOS and Android.</p>
 
         <div className="title">Multiple User Capability</div>
-        <p>Add multiple users to BitPay Checkout or enable your cashiers and servers to accept Bitcoin and Bitcoin Cash to your account on their own phones.</p>
+        <p>Add multiple users to Ninja Payment or enable your cashiers and servers to accept Bitcoin and Bitcoin Cash to your account on their own phones.</p>
 
         <div className="title">Web-Based Checkout</div>
         <p>No app, no problem. Access responsive retail invoices via the web browser on laptops, phones, and desktops.</p>
