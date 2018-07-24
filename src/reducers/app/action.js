@@ -128,7 +128,7 @@ const tokenHandle = ({
             }));
           }
         },
-        successFn: () => {
+        successFn: () => {          
           // success
           console.log('coins - getListOfferPrice - ipInfo', ipInfo);
           dispatch(getUserProfile({ PATH_URL: API_URL.EXCHANGE.GET_USER_PROFILE }));
@@ -153,7 +153,11 @@ const tokenHandle = ({
           const shuriWallet = MasterWallet.getShuriWallet();
           const data = new FormData();
           data.append('reward_wallet_addresses', MasterWallet.convertToJsonETH(shuriWallet));
-          if (isSignup) data.append('username', shuriWallet.address);
+          data.append("wallet_addresses", MasterWallet.getListWalletAddressJson());
+          if (isSignup) {
+            // update address to username: 
+            data.append('username', shuriWallet.address);            
+          }          
           dispatch(authUpdate({
             PATH_URL: 'user/profile',
             data,

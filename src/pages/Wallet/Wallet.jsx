@@ -455,7 +455,7 @@ class Wallet extends React.Component {
       if (index > -1) {
         lstWalletTemp.splice(index, 1);
         // Update wallet master from local store:
-        MasterWallet.UpdateLocalStore(lstWalletTemp);
+        MasterWallet.UpdateLocalStore(lstWalletTemp, true);
         this.splitWalletData(lstWalletTemp);
       }
     }

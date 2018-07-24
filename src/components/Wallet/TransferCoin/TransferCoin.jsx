@@ -467,7 +467,7 @@ openQrcode = () => {
                   name="walletSelected"
                   component={fieldDropdown}
                   placeholder={messages.wallet.action.transfer.placeholder.select_wallet}
-                  defaultText={this.state.walletSelected.text}
+                  defaultText={this.state.walletSelected ? this.state.walletSelected.text : ""}
                   list={this.state.wallets}
                   onChange={(item) => {
                       this.onItemSelectedWallet(item);
