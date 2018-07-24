@@ -41,7 +41,7 @@ export const HANDSHAKE_ID_DEFAULT = 3;
 
 export const HANDSHAKE_NAME = {
   // [HANDSHAKE_ID.PROMISE]: { name: 'Promise', priority: 3 },
-  [HANDSHAKE_ID.BETTING]: { name: 'Predict an outcome', priority: 1 },
+  //[HANDSHAKE_ID.BETTING]: { name: 'Predict an outcome', priority: 1 },
   // [HANDSHAKE_ID.BETTING_EVENT]: { name: 'Design a betting market', priority: 2 },
   // [HANDSHAKE_ID.SEED]: 'Seed',
   [HANDSHAKE_ID.WALLET_TRANSFER]: { name: 'Transfer coins', priority: 4 },
@@ -423,6 +423,10 @@ export const MIN_AMOUNT = {
   [CRYPTO_CURRENCY.BTC]: 0.001,
 };
 
+export const LOCATION_METHODS = {
+  GPS: 'G',
+  IP: 'I',
+};
 
 // API
 
@@ -444,6 +448,8 @@ export const URL = {
   HANDSHAKE_DISCOVER: '/discover',
   HANDSHAKE_DISCOVER_INDEX: '/discover',
   HANDSHAKE_DISCOVER_DETAIL: '/discover/:slug',
+
+  HANDSHAKE_PREDICTION: '/prediction',
 
   HANDSHAKE_CASH: '/cash',
   HANDSHAKE_CASH_INDEX: '/cash',

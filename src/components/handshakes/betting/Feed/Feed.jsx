@@ -162,9 +162,6 @@ class FeedBetting extends React.Component {
         },
       });
     }
-
-
-
   }
 
   handleActionFree(title, offchain) {
@@ -509,8 +506,8 @@ class FeedBetting extends React.Component {
       eventName = `Event: ${eventName}`;
     }
     */
-    const eventName = this.formatEventName(event_name);
-    const predictName = this.formatPredictName(event_predict);
+    const eventName = event_name && this.formatEventName(event_name);
+    const predictName = event_predict && this.formatPredictName(event_predict);
 
     const buttonClassName = this.getButtonClassName(actionTitle);
     return (
