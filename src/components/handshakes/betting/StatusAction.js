@@ -43,7 +43,8 @@ export const getStatusLabel = (item) => {
 
   if (status === BET_BLOCKCHAIN_STATUS.STATUS_INIT_PENDING
     || status === BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINIT_PENDING
-    || status === BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_PENDING) {
+    || status === BET_BLOCKCHAIN_STATUS.STATUS_REFUND_PENDING
+    || status === BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_PENDING){
       //PENDING ACTION
       return pendingAction(status);
 
@@ -58,7 +59,7 @@ export const getStatusLabel = (item) => {
 
   if ((matched && result === BETTING_RESULT.DRAW && isExpiredDate(disputeTime))
       || (matched && result === BETTING_RESULT.INITED && isExpiredDate(reportTime))
-      || status === BET_BLOCKCHAIN_STATUS.STATUS_REFUND) {
+      || status === BET_BLOCKCHAIN_STATUS.STATUS_REFUNDED) {
         //REFUND ACTION
       return refundAction(status, reportTime);
   }
@@ -99,7 +100,7 @@ const keepCurrentLoading = (item) => {
 
     if (status === BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINITED || status === BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINIT_FAILED
         || status === BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_FAILED || status === BET_BLOCKCHAIN_STATUS.STATUS_REFUND_FAILED
-        || status === BET_BLOCKCHAIN_STATUS.STATUS_DONE || status === BET_BLOCKCHAIN_STATUS.STATUS_REFUND) {
+        || status === BET_BLOCKCHAIN_STATUS.STATUS_DONE || status === BET_BLOCKCHAIN_STATUS.STATUS_REFUNDED) {
       betHandshakeHandler.setItemOnChain(id, null);
       return null;
     }
@@ -138,13 +139,16 @@ const pendingAction = (blockchainStatus) => {
   let isAction = false;
 
   switch (blockchainStatus) {
-    case BET_BLOCKCHAIN_STATUS.STATUS_INIT_PENDING :
+    case BET_BLOCKCHAIN_STATUS.STATUS_INIT_PENDING:
       strStatus = BETTING_STATUS_LABEL.INITING;
       break;
-    case BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINIT_PENDING :
-      strStatus = BETTING_STATUS_LABEL.PROGRESSING;
+    case BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINIT_PENDING:
+      strStatus = BETTING_STATUS_LABEL.CANCEL_PROGRESSING;
       break;
-    case BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_PENDING :
+    case BET_BLOCKCHAIN_STATUS.STATUS_REFUND_PENDING:
+      strStatus = BETTING_STATUS_LABEL.REFUND_PENDING;
+      break;
+    case BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_PENDING:
       strStatus = BETTING_STATUS_LABEL.COLLECT_PENDING;
       break;
     default:

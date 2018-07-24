@@ -256,6 +256,8 @@ export class Bitcoin extends Wallet {
       try{
         //check transactions are send
         for(let tin of vin){
+          if(!tin.addr) tin.addr = "";
+
           if(tin.addr.toLowerCase() == this.address.toLowerCase()){
             is_sent = 1;
 
@@ -279,6 +281,7 @@ export class Bitcoin extends Wallet {
           for(let tout of vout){
             if(tout.scriptPubKey.addresses){
               let tout_addresses = tout.scriptPubKey.addresses.join(" ").toLowerCase();
+
               if(tout_addresses.indexOf(this.address.toLowerCase()) >= 0){
                 value += tout.value;
               }
@@ -294,6 +297,7 @@ export class Bitcoin extends Wallet {
       }
 
       value = this.formatNumber(value);
+      if(addresses.length < 1) addresses.push("Unparsed address");
     }
 
     return {

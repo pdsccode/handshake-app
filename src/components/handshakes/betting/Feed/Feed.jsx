@@ -249,7 +249,7 @@ class FeedBetting extends React.Component {
     const { itemInfo } = this.state;
     const oldInfo = Object.assign({}, itemInfo);
     const updateInfo = Object.assign({}, itemInfo);
-    updateInfo.status = BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINIT_PENDING;
+    updateInfo.status = BET_BLOCKCHAIN_STATUS.STATUS_REFUND_PENDING;
     betHandshakeHandler.setItemOnChain(offchain, updateInfo);
     this.props.updateBettingChange(updateInfo);
 
@@ -374,7 +374,7 @@ class FeedBetting extends React.Component {
 
     const { itemInfo } = this.state;
     const updateInfo = Object.assign({}, itemInfo);
-    updateInfo.status = BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINIT_PENDING;
+    updateInfo.status = BET_BLOCKCHAIN_STATUS.STATUS_REFUND_PENDING;
     betHandshakeHandler.setItemOnChain(id, updateInfo);
     this.props.updateBettingChange(updateInfo);
 
