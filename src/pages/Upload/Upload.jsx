@@ -97,7 +97,7 @@ class Upload extends React.Component {
     this.setState({ isLoading: true });
 
     agent.req
-      .get(`${agent.API_ROOT}/api/category/`)
+      .get(`${agent.API_ROOT}/api/category/?limit=10000`)
       .set('authorization', `JWT ${this.token()}`)
       .then((response) => {
         const body = response.body || {};
@@ -217,7 +217,7 @@ class Upload extends React.Component {
         form.append('classify', this.state.selectedClassify);
       }
       this.setState({ uploading: true, messageForm:"" });
-      
+
       agent.req
         .post(`${agent.API_ROOT}/api/image/`, form)
         .set('authorization', `JWT ${this.token()}`)
@@ -338,10 +338,10 @@ class Upload extends React.Component {
               />
             </div>
             {
-              this.state.messageForm !=""? 
+              this.state.messageForm !=""?
               <div className="row" style={{ padding: '0px', justifyContent:'left', color:'red'}}>
                   <label  style={{color:'red'}} >{this.state.messageForm} </label>
-              </div> 
+              </div>
               :""
             }
 
