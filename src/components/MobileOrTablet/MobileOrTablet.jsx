@@ -4,10 +4,53 @@ import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl } from 'react-intl'
 
 import { setLanguage } from '@/reducers/app/action';
-import VideoYoutube from '@/components/core/controls/VideoYoutube';
+// import VideoYoutube from '@/components/core/controls/VideoYoutube';
 
 // style
 import onlyMobileTabletSVG from '@/assets/images/ninja/ninja-header.svg';
+import imgCash from '@/assets/images/landing/home/cash.jpg';
+import imgBlockchainPrivacy from '@/assets/images/landing/home/blockchain-privacy.jpg';
+import imgDad from '@/assets/images/landing/home/dad.jpg';
+import imgDao from '@/assets/images/landing/home/dao.jpg';
+import imgInternetCash from '@/assets/images/landing/home/internet-cash.jpg';
+import imgPrediction from '@/assets/images/landing/home/prediction.jpg';
+import imgWallet from '@/assets/images/landing/home/wallet.jpg';
+import imgWhisper from '@/assets/images/landing/home/whisper.jpg';
+
+const products = [
+  {
+    title: <FormattedMessage id="landing_page.products.cash.title" />,
+    subTitle: <FormattedMessage id="landing_page.products.cash.subTitle" />,
+    img: imgCash
+  },
+  {
+    title: <FormattedMessage id="landing_page.products.prediction.title" />,
+    subTitle: <FormattedMessage id="landing_page.products.prediction.subTitle" />,
+    img: imgPrediction
+  },
+  {
+    title: <FormattedMessage id="landing_page.products.dad.title" />,
+    subTitle: <FormattedMessage id="landing_page.products.dad.subTitle" />,
+    img: imgDad
+  },
+  {
+    title: <FormattedMessage id="landing_page.products.wallet.title" />,
+    subTitle: <FormattedMessage id="landing_page.products.wallet.subTitle" />,
+    img: imgWallet
+  },
+  {
+    title: <FormattedMessage id="landing_page.products.whisper.title" />,
+    subTitle: <FormattedMessage id="landing_page.products.whisper.subTitle" />,
+    img: imgWhisper
+  },
+  {
+    title: <FormattedMessage id="landing_page.products.dao.title" />,
+    subTitle: <FormattedMessage id="landing_page.products.dao.subTitle" />,
+    img: imgDao
+  }
+]
+
+
 import shurikenIcon from '@/assets/images/ninja/shuriken-icon.svg';
 import playVideoButton from '@/assets/images/ninja/play-video-button.svg';
 import videoLeftCover from '@/assets/images/ninja/video-left-cover.jpg';
@@ -47,10 +90,18 @@ class MobileOrTablet extends React.PureComponent {
           </div>
 
           <div className="row mt-5">
-            <div className="col">
-              <div className="landing-header">Product</div>
-              <div className="landing-sub-header">Produfeafewct</div>
-            </div>
+            {
+              products.map((product, index) => {
+                const { title, subTitle, img } = product
+                return (
+                  <div className="col-4 product" key={index}>
+                    <div><img src={img} className="img-fluid" /></div>
+                    <div className="landing-header mt-1">{title}</div>
+                    <div className="landing-sub-header">{subTitle}</div>
+                  </div>
+                )
+              })
+            }
           </div>
         </div>
       </div>

@@ -13,16 +13,18 @@
   }
   .landing-header {
     font-family: AzoSans-Bold;
-    font-size: 26px;
+    font-size: 20px;
     color: #F5EA16;
     letter-spacing: 0.5px;
   }
   .landing-sub-header {
     opacity: 0.8;
     font-family: AzoSans-Light;
-    font-size: 24px;
+    font-size: 18px;
     color: #FFFFFF;
     letter-spacing: 0;
-    line-height: 35px;
+  }
+  .product {
+    min-height: 450px;
   }
 }
