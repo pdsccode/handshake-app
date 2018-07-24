@@ -13,6 +13,7 @@ import store from '@/stores';
 
 const myManager = null;
 
+const TAG = 'BET_HANDLER';
 export class BetHandshakeHandler {
   static getShareManager() {
     if (this.myManager == null) {
@@ -37,6 +38,26 @@ export class BetHandshakeHandler {
       }
     }
   }
+
+  handleContract(element, i) {
+    setTimeout(() => {
+      const isInit = isInitBet(element);
+      console.log('Is Init Bet:', isInit);
+      if (isInit) {
+        this.addContract(element);
+      } else {
+        this.shakeContract(element);
+      }
+    }, 3000 * i);
+  }
+  controlShake = async (list) => {
+    for (let i = 0; i < list.length; i++) {
+      const element = list[i];
+      console.log('Element:', element);
+
+      this.handleContract(element, i);
+    }
+  };
 
   addContract = async (item) => {
     console.log('initContract', item);
@@ -153,27 +174,6 @@ export class BetHandshakeHandler {
   }
 
 
-  handleContract(element, i) {
-    setTimeout(() => {
-      const isInit = isInitBet(element);
-      console.log('Is Init Bet:', isInit);
-      if (isInit) {
-        this.addContract(element);
-      } else {
-        this.shakeContract(element);
-      }
-    }, 3000 * i);
-  }
-  controlShake = async (list) => {
-    for (let i = 0; i < list.length; i++) {
-      const element = list[i];
-      console.log('Element:', element);
-
-      this.handleContract(element, i);
-    }
-  };
-
-
   async cancelBet(hid, side, stake, odds, offchain) {
     const chainId = getChainIdDefaultWallet();
 
@@ -186,24 +186,11 @@ export class BetHandshakeHandler {
     try {
       result = await bettinghandshake.cancelBet(hid, side, stake, odds, offchain);
       const {
-         hash, error, payload,
+         hash, payload,
       } = result;
 
       logJson = payload;
       realBlockHash = hash;
-      if (hash == -1) {
-        realBlockHash = '-1';
-        logJson = error.message;
-        store.dispatch(showAlert({
-          message: MESSAGE.ROLLBACK,
-          timeOut: 3000,
-          type: 'danger',
-          callBack: () => {
-          },
-        }));
-      } else {
-
-      }
     } catch (err) {
       realBlockHash = '-1';
       logJson = err.message;
@@ -226,21 +213,11 @@ export class BetHandshakeHandler {
     try {
       result = await bettinghandshake.withdraw(hid, offchain);
       const {
-        hash, error, payload,
+        hash, payload,
       } = result;
       logJson = payload;
       realBlockHash = hash;
-      if (hash == -1) {
-        realBlockHash = '-1';
-        logJson = error.message;
-        store.dispatch(showAlert({
-          message: MESSAGE.ROLLBACK,
-          timeOut: 3000,
-          type: 'danger',
-          callBack: () => {
-          },
-        }));
-      } else {
+      if (hash) {
         store.dispatch(showAlert({
           message: MESSAGE.WITHDRAW_SUCCESS,
           timeOut: 3000,
@@ -272,24 +249,11 @@ export class BetHandshakeHandler {
     try {
       result = await bettinghandshake.refund(hid, offchain);
       const {
-        hash, error, payload,
+        hash, payload,
       } = result;
 
       logJson = payload;
       realBlockHash = hash;
-      if (hash == -1) {
-        realBlockHash = '-1';
-        logJson = error.message;
-        store.dispatch(showAlert({
-          message: MESSAGE.ROLLBACK,
-          timeOut: 3000,
-          type: 'danger',
-          callBack: () => {
-          },
-        }));
-      } else {
-
-      }
     } catch (err) {
       realBlockHash = '-1';
       logJson = err.message;
@@ -299,92 +263,46 @@ export class BetHandshakeHandler {
     return result;
   }
 
-  saveTransaction(offchain, contractMethod, chainId, hash, contractAddress, payload) {
-    console.log('saveTransaction:', offchain);
-    const arrayParams = [];
-    const params = {
-      offchain,
-      contract_address: contractAddress,
-      contract_method: contractMethod,
-      chain_id: chainId,
-      hash,
-      payload,
-    };
-    arrayParams.push(params);
-    console.log('saveTransaction Params:', arrayParams);
-    store.dispatch(saveTransaction({
-      PATH_URL: API_URL.CRYPTOSIGN.SAVE_TRANSACTION,
-      METHOD: 'POST',
-      data: arrayParams,
-      successFn: this.saveTransactionSuccess,
-      errorFn: this.saveTransactionFailed,
-    }));
-  }
-  saveTransactionSuccess = async (successData) => {
-    console.log('saveTransactionSuccess', successData);
-  }
-  saveTransactionFailed = (error) => {
-    console.log('saveTransactionSuccess', error);
-    const { status, code } = error;
-    if (status == 0) {
-      const message = getMessageWithCode(code);
-      store.dispatch(showAlert({
-        message,
-        timeOut: 5000,
-        type: 'danger',
+  async dispute(hid, offchain) {
 
-      }));
+    const chainId = getChainIdDefaultWallet();
+
+    const bettinghandshake = new BettingHandshake(chainId);
+    const { contractAddress } = bettinghandshake;
+
+    let logJson = '';
+    let realBlockHash = '';
+    let result = null;
+    try {
+      result = await bettinghandshake.dispute(hid, offchain);
+      const {
+        hash, payload,
+      } = result;
+
+      logJson = payload;
+      realBlockHash = hash;
+    } catch (err) {
+      realBlockHash = '-1';
+      logJson = err.message;
     }
+    this.saveTransaction(offchain, CONTRACT_METHOD.REFUND, chainId, realBlockHash, contractAddress, logJson);
+
+    return result;
   }
 
-  rollback(offchain) {
-    console.log('Rollback:', offchain);
-    const params = {
-      offchain,
-    };
-    store.dispatch(rollback({
-      PATH_URL: API_URL.CRYPTOSIGN.ROLLBACK,
-      METHOD: 'POST',
-      data: params,
-      successFn: this.rollbackSuccess,
-      errorFn: this.rollbackFailed,
-    }));
-  }
-  rollbackSuccess = async (successData) => {
-    console.log('rollbackSuccess', successData);
-    store.dispatch(showAlert({
-      message: MESSAGE.ROLLBACK,
-      timeOut: 5000,
-      type: 'danger',
-
-    }));
-  }
-  rollbackFailed = (error) => {
-    console.log('rollbackFailed', error);
-    const { status, code } = error;
-    if (status == 0) {
-      const message = getMessageWithCode(code);
-      store.dispatch(showAlert({
-        message,
-        timeOut: 5000,
-        type: 'danger',
-
-      }));
-    }
-  }
   async createMarket(fee, source, closingWindow, reportWindow, disputeWindow, offchain) {
     console.log(fee, source, closingWindow, reportWindow, disputeWindow, offchain);
     const chainId = getChainIdDefaultWallet();
     const bettinghandshake = new BettingHandshake(chainId);
     //const predictionhandshake = new PredictionHandshake(chainId);
 
-    const contractAddress = predictionhandshake.contractAddress;
+    const contractAddress = bettinghandshake.contractAddress;
     let realBlockHash = '';
     let logJson = '';
     let result = '';
     const offchainString = `cryptosign_createMarket${offchain}`;
     try {
-      result = await predictionhandshake.createMarket(fee, source, closingWindow, reportWindow, disputeWindow, offchain);
+      result = await bettinghandshake.createMarket(fee, source, closingWindow, reportWindow, disputeWindow, offchain);
       const {
         logs, hash, error, transactionHash, payload,
       } = result;
@@ -408,6 +326,62 @@ export class BetHandshakeHandler {
     }
     this.saveTransaction(offchainString, CONTRACT_METHOD.CREATE_MARKET, chainId, realBlockHash, contractAddress, logJson);
     return result;
+  }
+
+  /*** API */
+  saveTransaction(offchain, contractMethod, chainId, hash, contractAddress, payload) {
+    console.log('saveTransaction:', offchain);
+    const arrayParams = [];
+    const params = {
+      offchain,
+      contract_address: contractAddress,
+      contract_method: contractMethod,
+      chain_id: chainId,
+      hash,
+      payload,
+    };
+    arrayParams.push(params);
+    console.log('saveTransaction Params:', arrayParams);
+    store.dispatch(saveTransaction({
+      PATH_URL: API_URL.CRYPTOSIGN.SAVE_TRANSACTION,
+      METHOD: 'POST',
+      data: arrayParams,
+      successFn: this.saveTransactionSuccess,
+      errorFn: this.saveTransactionFailed,
+    }));
+  }
+  saveTransactionSuccess = async (successData) => {
+    console.log(TAG, 'saveTransactionSuccess', successData);
+  }
+  saveTransactionFailed = (error) => {
+    console.log(TAG, 'saveTransactionSuccess', error);
+  }
+
+  rollback(offchain) {
+    console.log('Rollback:', offchain);
+    const params = {
+      offchain,
+    };
+    store.dispatch(rollback({
+      PATH_URL: API_URL.CRYPTOSIGN.ROLLBACK,
+      METHOD: 'POST',
+      data: params,
+      successFn: this.rollbackSuccess,
+      errorFn: this.rollbackFailed,
+    }));
+  }
+  rollbackSuccess = async (successData) => {
+    console.log(TAG, 'rollbackSuccess', successData);
+    store.dispatch(showAlert({
+      message: MESSAGE.ROLLBACK,
+      timeOut: 5000,
+      type: 'danger',
+
+    }));
+  }
+  rollbackFailed = (error) => {
+    console.log(TAG, 'rollbackFailed', error);
+
   }
 }
 

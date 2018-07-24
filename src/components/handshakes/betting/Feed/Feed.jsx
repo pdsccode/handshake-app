@@ -200,10 +200,12 @@ class FeedBetting extends React.Component {
       case BETTING_STATUS_LABEL.REFUND:
         this.refundOnChain(offchain, hid);
         break;
+      case BETTING_STATUS_LABEL.DISPUTE:
+        this.disputeOnChain(offchain, hid);
+        break;
       default:
         break;
     }
-
   }
 
 
@@ -256,6 +258,22 @@ class FeedBetting extends React.Component {
       this.props.updateBettingChange(oldInfo);
     }
   }
+  async disputeOnChain(offchain, hid) {
+    const { itemInfo } = this.state;
+    const oldInfo = Object.assign({}, itemInfo);
+    const updateInfo = Object.assign({}, itemInfo);
+    updateInfo.status = BET_BLOCKCHAIN_STATUS.STATUS_DISPUTE_PENDING;
+    betHandshakeHandler.setItemOnChain(offchain, updateInfo);
+    this.props.updateBettingChange(updateInfo);
+
+    const result = await betHandshakeHandler.dispute(hid, offchain);
+    const { hash } = result;
+    if (hash) {
+      this.disputeReal(offchain);
+    } else {
+      this.props.updateBettingChange(oldInfo);
+    }
+  }
 
   loadMyHandshakeList = () => {
     this.props.loadMyHandshakeList({ PATH_URL: API_URL.ME.BASE });
@@ -281,16 +299,7 @@ class FeedBetting extends React.Component {
   uninitHandshakeFreeSuccess= async (successData) => {
     console.log('uninitHandshakeFreeSuccess', successData);
     const { status } = successData;
-    if (status) {
-      /*
-      const { itemInfo } = this.state;
-      const { id } = itemInfo;
-      const updateInfo = Object.assign({}, itemInfo);
-      updateInfo.status = BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINIT_PENDING;
-      betHandshakeHandler.setItemOnChain(id, updateInfo);
-      this.props.updateBettingChange(updateInfo);
-      */
-    }
+
   }
   uninitHandshakeFreeFailed = (error) => {
     console.log('uninitHandshakeFreeFailed', error);
@@ -419,6 +428,16 @@ class FeedBetting extends React.Component {
   }
 
   refundReal(id) {
+    const params = {
+      offchain: id,
+    };
+    this.props.refundFree({
+      PATH_URL: API_URL.CRYPTOSIGN.REFUND,
+      METHOD: 'POST',
+      data: params,
+    });
+  }
+  disputeReal(id) {
     const params = {
       offchain: id,
     };
