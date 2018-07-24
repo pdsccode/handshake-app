@@ -1,30 +1,64 @@
 @import './src/styles/style';
 
 .landing-page {
-  background: #161616;
+  background: #fff;
   padding: 15px 0;
   .btn-join {
-    background: #F5EA16;
-    border-radius: 4px;
     font-family: AzoSans-Medium;
     font-size: 18px;
     color: #000000;
     letter-spacing: 0;
+    border: 1px solid #F5D516;
+    background: #FFF988;
+    border-radius: 4px;
   }
   .landing-header {
     font-family: AzoSans-Bold;
-    font-size: 20px;
+    font-size: 26px;
     color: #F5EA16;
     letter-spacing: 0.5px;
   }
-  .landing-sub-header {
+  .landing-subHeader {
     opacity: 0.8;
-    font-family: AzoSans-Light;
+    font-family: AzoSans-Regular;
+    font-size: 24px;
+    color: #484848;
+    letter-spacing: 0;
+    margin-bottom: 15px;
+  }
+  .landing-title {
+    font-family: AzoSans-Bold;
     font-size: 18px;
-    color: #FFFFFF;
+    color: #484848;
     letter-spacing: 0;
   }
+  .landing-sub-title {
+    opacity: 0.7;
+    font-family: AzoSans-Regular;
+    font-size: 16px;
+    color: #484848;
+    letter-spacing: 0;
+    line-height: 18px;
+  }
   .product {
-    min-height: 450px;
+    min-height: 370px;
+  }
+
+  .landing-hr {
+    background: #383838;
+  }
+
+  .landing-footer {
+    font-family: AzoSans-Regular;
+    font-size: 14px;
+    color: #484848;
+    letter-spacing: 0;
+    line-height: 24px;
+  }
+  .landing-link {
+    font-size: 14px;
+    font-weight: bold;
+    text-decoration: underline;
+    color: #484848;
   }
 }

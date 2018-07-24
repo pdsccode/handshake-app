@@ -383,6 +383,7 @@ export default {
   'landing_page.label.joinTelegram': `Join the dojo on <a href="#" class="landing-link">Telegram</a>`,
   'landing_page.label.airdrop': `Jump in for <a href="#" class="landing-link">Airdrop</a>`,
   'landing_page.label.whitepaper': `Jump in for <a href="#" class="landing-link">Whitepaper</a>`,
+  'landing_page.label.faq': `We answered your <a href="#" class="landing-link">FAQ</a>`,
 
   // MobileOrTablet components
   MOT_TITLE: 'The anonymous exchange of anything',
