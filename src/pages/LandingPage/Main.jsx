@@ -36,7 +36,7 @@ const products = [
     title: <FormattedMessage id="landing_page.products.prediction.title" />,
     subTitle: <FormattedMessage id="landing_page.products.prediction.subTitle" />,
     img: imgPrediction,
-    // to: URL.PROJECT,
+    to: URL.PRODUCT_PREDICTION_URL,
   },
   {
     title: <FormattedMessage id="landing_page.products.dad.title" />,
@@ -48,17 +48,19 @@ const products = [
     title: <FormattedMessage id="landing_page.products.wallet.title" />,
     subTitle: <FormattedMessage id="landing_page.products.wallet.subTitle" />,
     img: imgWallet,
-    // to: URL.PROJECT
+    to: URL.PRODUCT_WALLET_URL
   },
   {
     title: <FormattedMessage id="landing_page.products.whisper.title" />,
     subTitle: <FormattedMessage id="landing_page.products.whisper.subTitle" />,
-    img: imgWhisper
+    img: imgWhisper,
+    to: URL.PRODUCT_WHISPER_URL,
   },
   {
     title: <FormattedMessage id="landing_page.products.dao.title" />,
     subTitle: <FormattedMessage id="landing_page.products.dao.subTitle" />,
-    img: imgDao
+    img: imgDao,
+    to: URL.PRODUCT_DAO_URL,
   }
 ]
 
@@ -66,12 +68,14 @@ const researches = [
   {
     title: <FormattedMessage id="landing_page.researches.blockchainPrivacy.title" />,
     subTitle: <FormattedMessage id="landing_page.researches.blockchainPrivacy.subTitle" />,
-    img: imgBlockchainPrivacy
+    img: imgBlockchainPrivacy,
+    to: URL.RESEARCH_BLOCKCHAIN_PRIVACY_URL,
   },
   {
     title: <FormattedMessage id="landing_page.researches.internetCash.title" />,
     subTitle: <FormattedMessage id="landing_page.researches.internetCash.subTitle" />,
-    img: imgInternetCash
+    img: imgInternetCash,
+    to: URL.RESEARCH_INTERNET_CASH_URL,
   }
 ]
 

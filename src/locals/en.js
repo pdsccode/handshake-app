@@ -396,7 +396,7 @@ export default {
   'landing_page.cash.youtubeUrl': 'https://www.youtube.com/watch?v=xCU5puuwros',
 
   'landing_page.prediction.breadcrumb': 'Prediction',
-  'landing_page.prediction.heading': '',
+  'landing_page.prediction.heading': 'To be defined',
   'landing_page.prediction.subHeading': 'Ninja is an anonymous peer-to-peer decentralized prediction exchange running on top of the Ethereum blockchain. PEX is a purely peer-to-peer version of electronic prediction that allows parties to bet directly against each other without going through a central authority or bookmaker.',
   'landing_page.prediction.cta1': 'Trade with your nearest station now!',
   'landing_page.prediction.cta2': 'Join our dojo!',

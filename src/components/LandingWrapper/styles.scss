@@ -40,6 +40,7 @@ $button-color: #484848;
       transform: translateY(-1px);
       box-shadow: 0 7px 14px rgba(50,50,93,.1), 0 3px 6px rgba(0,0,0,.08);
     }
+    margin-bottom: 10px;
   }
 
   .btn-secondary-landing {
@@ -54,6 +55,7 @@ $button-color: #484848;
     height: 48px;
     padding: 8px 35px;
     margin-right: 10px;
+    margin-bottom: 10px;
     &:hover {
       border: 2px solid #D8B900;
     }

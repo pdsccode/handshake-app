@@ -493,8 +493,11 @@ export const URL = {
   PRODUCT_PAYMENT_STORE_URL: '/product/payment-store',
   PRODUCT_PAYMENT_GATEWAY_URL: '/product/payment-gateway',
   PRODUCT_DAD_URL: '/product/dad',
-  RESEARCH_INTERNET_CASH_URL: '/research/internet-cash',
+  PRODUCT_WHISPER_URL: '/product/whisper',
   PRODUCT_ODD_BALL_URL: '/product/odd-ball',
+  PRODUCT_DAO_URL: '/product/dao',
+  RESEARCH_INTERNET_CASH_URL: '/research/internet-cash',
+  RESEARCH_BLOCKCHAIN_PRIVACY_URL: '/research/blockchain-privacy',
 };
 
 export const NB_BLOCKS = 20;

@@ -16,13 +16,13 @@ class Index extends React.PureComponent {
 
   render() {
     const { messages, locale } = this.props.intl;
-    const { name } = this.props;
+    const { name, img } = this.props;
     return (
       <LandingWrapper>
         <div className="project-detail">
           <div className="row mt-5">
             <div className="col">
-              <div className="pd-breadcrumb"><a href="/"><FormattedMessage id="landing_page.breadcrumb.home" /></a><span className="mx-2">/</span><span><FormattedMessage id="landing_page.dad.breadcrumb" /></span></div>
+              <div className="pd-breadcrumb"><a href="/"><FormattedMessage id="landing_page.breadcrumb.home" /></a><span className="mx-2">/</span><span><FormattedMessage id={`landing_page.${name}.breadcrumb`} /></span></div>
             </div>
           </div>
           <div className="row mt-4">
@@ -37,13 +37,13 @@ class Index extends React.PureComponent {
                 }
                 {
                   messages[`landing_page.${name}.cta2`] && (
-                    <button className="btn btn-secondary-landing"><FormattedMessage id={`landing_page.${name}.cta1`} /></button>
+                    <button className="btn btn-secondary-landing"><FormattedMessage id={`landing_page.${name}.cta2`} /></button>
                   )
                 }
               </div>
             </div>
             <div className="col-6">
-              <img src={imgDad} className="w-100" />
+              <img src={img} className="w-100" />
               {/*<iframe*/}
                 {/*width="560"*/}
                 {/*height="315"*/}

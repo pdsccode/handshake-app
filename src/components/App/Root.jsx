@@ -26,6 +26,15 @@ const LandingPageFAQ = createDynamicImport(() => import('@/pages/FAQ/FAQ'), Spla
 const LandingPageMain = createDynamicImport(() => import('@/pages/LandingPage/Main'), Splash);
 
 const ProjectDetail = createDynamicImport(() => import('@/components/ProjectDetail'), Splash);
+
+import imgCash from '@/assets/images/landing/home/cash.jpg';
+import imgBlockchainPrivacy from '@/assets/images/landing/home/blockchain-privacy.jpg';
+import imgDad from '@/assets/images/landing/home/dad.jpg';
+import imgDao from '@/assets/images/landing/home/dao.jpg';
+import imgInternetCash from '@/assets/images/landing/home/internet-cash.jpg';
+import imgPrediction from '@/assets/images/landing/home/prediction.jpg';
+import imgWallet from '@/assets/images/landing/home/wallet.jpg';
+import imgWhisper from '@/assets/images/landing/home/whisper.jpg';
 // const ProjectInternetCash = createDynamicImport(() => import('@/components/MobileOrTablet/ProjectInternetCash'), Splash);
 // const ProjectCash = createDynamicImport(() => import('@/components/MobileOrTablet/ProjectCash'), Splash);
 // const ProjectOddBall = createDynamicImport(() => import('@/components/MobileOrTablet/ProjectOddBall'), Splash);
@@ -82,10 +91,20 @@ class Root extends React.Component {
       case URL.RESEARCH_URL:
         return <LandingPageMain type="research" />;
 
-      case URL.PRODUCT_DAD_URL:
-        return <ProjectDetail name="dad" />;
+      case URL.PRODUCT_CASH_URL:
+        return <ProjectDetail name="cash" img={imgCash} />;
+      case URL.PRODUCT_PREDICTION_URL:
+        return <ProjectDetail name="prediction" img={imgPrediction} />;
+      case URL.PRODUCT_WALLET_URL:
+        return <ProjectDetail name="wallet" img={imgWallet} />;
+      case URL.PRODUCT_PAYMENT_STORE_URL:
+        return <ProjectDetail name="payment-store" img={imgInternetCash} />;
+      case URL.PRODUCT_PAYMENT_GATEWAY_URL:
+        return <ProjectDetail name="payment-gateway" img={imgCash} />;
       case URL.RESEARCH_INTERNET_CASH_URL:
-        return <ProjectDetail name="internet_cash" />;
+        return <ProjectDetail name="internet_cash" img={imgInternetCash} />;
+      case URL.PRODUCT_DAD_URL:
+        return <ProjectDetail name="dad" img={imgDad} />;
       // case URL.PROJECT_CASH:
       //   return <ProjectCash />;
       // case URL.PROJECT_ODD_BALL:
