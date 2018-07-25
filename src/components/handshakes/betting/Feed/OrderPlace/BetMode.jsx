@@ -10,7 +10,7 @@ import { getBalance } from '@/components/handshakes/betting/utils';
 import Tabs from './../Tabs';
 
 const TAG = 'BET_MODE';
-class BetMode extends React.PureComponent {
+class BetMode extends React.Component {
   static propTypes = {
     selectedOutcome: PropTypes.object,
     selectedMatch: PropTypes.object,
@@ -106,8 +106,7 @@ class BetMode extends React.PureComponent {
         <div className="BetModeItem" label="Free bet">
           <BettingFilter
             {...props}
-            isFree={true}
-
+            isFree
           />
         </div>
       </Tabs>
@@ -124,7 +123,12 @@ class BetMode extends React.PureComponent {
 
   render() {
     const { selectedOutcome, selectedMatch } = this.props;
-    const { support, against, isFirstFree, bettingShakeIsOpen } = this.state;
+    const {
+      support,
+      against,
+      isFirstFree,
+      bettingShakeIsOpen,
+    } = this.state;
     const filterProps = {
       selectedOutcome,
       selectedMatch,

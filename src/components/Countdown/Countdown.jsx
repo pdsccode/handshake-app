@@ -62,10 +62,8 @@ export default class Countdown extends Component {
       this.stop();
     }
 
-    const days = showDays ? this.addLeadingZeros(Math.floor(seconds / (3600 * 24))) : 0;
-
     return {
-      days,
+      days: this.addLeadingZeros(Math.floor(seconds / (3600 * 24))),
       hours: this.addLeadingZeros(Math.floor((seconds / 3600) % 24)),
       minutes: this.addLeadingZeros(Math.floor((seconds / 60) % 60)),
       seconds: this.addLeadingZeros(Math.floor(seconds % 60)),
@@ -78,8 +76,10 @@ export default class Countdown extends Component {
     return (<span className="CountdownItem Days">{days}</span>);
   }
 
-  renderHours = (hours) => {
-    return (<span className="CountdownItem Hours">{hours}</span>);
+  renderHours = (props, state) => {
+    const { days, hours } = state;
+    const totalHours = props.showDays ? hours : (!days ? hours : (days * 24) + parseInt(hours, 10));
+    return (<span className="CountdownItem Hours">{totalHours}</span>);
   }
 
   renderMinutes = (minutes) => {
@@ -112,7 +112,7 @@ export default class Countdown extends Component {
     return (
       <div className={cls}>
         {props.showDays && this.renderDays(state.days)}
-        {this.renderHours(state.hours)}
+        {this.renderHours(props, state)}
         {state.minutes && this.renderSeparator(props.separator)}
         {this.renderMinutes(state.minutes)}
         {state.seconds && this.renderSeparator(props.separator)}
