@@ -23,7 +23,12 @@ const LandingPageWhitePaper = createDynamicImport(() => import('@/pages/LandingP
 const IntroNjnjaCash = createDynamicImport(() => import('@/pages/LandingPage/IntroducingNinjaCash'), Splash);
 const AboutNjnjaCash = createDynamicImport(() => import('@/pages/LandingPage/AboutNinjaCash'), Splash);
 const LandingPageFAQ = createDynamicImport(() => import('@/pages/FAQ/FAQ'), Splash);
-const MobileOrTablet = createDynamicImport(() => import('@/components/MobileOrTablet'), Splash);
+const LandingPageMain = createDynamicImport(() => import('@/pages/LandingPage/Main'), Splash);
+
+const ProjectDad = createDynamicImport(() => import('@/pages/LandingPage/Project/Dad'), Splash);
+// const ProjectInternetCash = createDynamicImport(() => import('@/components/MobileOrTablet/ProjectInternetCash'), Splash);
+// const ProjectCash = createDynamicImport(() => import('@/components/MobileOrTablet/ProjectCash'), Splash);
+// const ProjectOddBall = createDynamicImport(() => import('@/components/MobileOrTablet/ProjectOddBall'), Splash);
 
 class Root extends React.Component {
   static propTypes = {
@@ -56,7 +61,7 @@ class Root extends React.Component {
 
   preRender() {
     if (BrowserDetect.isBot) {
-      return <MobileOrTablet />;
+      return <LandingPageMain />;
     }
     switch (window.location.pathname) {
       case URL.LANDING_PAGE_SHURIKEN:
@@ -71,6 +76,14 @@ class Root extends React.Component {
         return <IntroNjnjaCash />;
       case URL.ABOUT_NINJA_CASH:
         return <AboutNjnjaCash />;
+      case URL.PROJECT_DAD_URL:
+        return <ProjectDad />;
+      // case URL.PROJECT_INTERNET_CASH:
+      //   return <ProjectInternetCash />;
+      // case URL.PROJECT_CASH:
+      //   return <ProjectCash />;
+      // case URL.PROJECT_ODD_BALL:
+      //   return <ProjectOddBall />;
       default:
         // code
     }
@@ -80,7 +93,7 @@ class Root extends React.Component {
           return <LandingPageCash />;
         default:
       }
-      return <MobileOrTablet />;
+      return <LandingPageMain />;
     }
     return <Handle setLanguage={this.setLanguage} refer={this.refer} />;
   }

@@ -1,0 +1,35 @@
+@import './src/styles/style';
+
+.landing-page {
+  background: #fff;
+  padding: 15px 0;
+  .btn-join {
+    font-family: AzoSans-Medium;
+    font-size: 18px;
+    color: #000000;
+    letter-spacing: 0;
+    border: 1px solid #F5D516;
+    background: #FFF988;
+    border-radius: 4px;
+  }
+
+  .landing-hr {
+    background: #383838;
+    margin-top: 30px;
+    margin-bottom: 15px;
+  }
+
+  .landing-footer {
+    font-family: AzoSans-Regular;
+    font-size: 14px;
+    color: #484848;
+    letter-spacing: 0;
+    line-height: 24px;
+  }
+  .landing-link {
+    font-size: 14px;
+    font-weight: bold;
+    text-decoration: underline;
+    color: #484848;
+  }
+}
