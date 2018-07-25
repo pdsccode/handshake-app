@@ -53,11 +53,16 @@ class FeedBetting extends React.Component {
       itemInfo: props,
       shakedItemList: [],
       matchDone: false,
+      estimatedGas: 0,
     };
   }
 
 
-  componentDidMount() {
+  async componentDidMount() {
+    const estimatedGas = await getEstimateGas();
+    this.setState({
+      estimatedGas,
+    });
     this.handleStatus(this.props);
   }
 
@@ -124,14 +129,17 @@ class FeedBetting extends React.Component {
   }
 
   async clickActionButton(title) {
+    this.setState({
+      isLoading: true,
+    });
     const balance = await getBalance();
-    const estimatedGas = await getEstimateGas();
+
     let message = null;
     const {
       hid,
     } = this.props; // new state
 
-    const { itemInfo } = this.state;
+    const { itemInfo, estimatedGas } = this.state;
     const { id, freeBet, fromAddress } = itemInfo;
 
     console.log(TAG, 'clickActionButton',
@@ -164,9 +172,6 @@ class FeedBetting extends React.Component {
 
   handleActionFree(title, offchain, hid) {
     const realId = getId(offchain);
-    this.setState({
-      isLoading: true,
-    });
     switch (title) {
       case BETTING_STATUS_LABEL.CANCEL:
         this.uninitItemFree(realId);
@@ -185,9 +190,7 @@ class FeedBetting extends React.Component {
     }
   }
   async handleActionReal(title, offchain, hid) {
-    this.setState({
-      isLoading: true,
-    });
+
 
     switch (title) {
       case BETTING_STATUS_LABEL.CANCEL:
@@ -215,51 +218,42 @@ class FeedBetting extends React.Component {
   async cancelOnChain(offchain, hid) {
     const { itemInfo } = this.state;
     const { side, amount, odds } = itemInfo;
-    const oldInfo = Object.assign({}, itemInfo);
     const updateInfo = Object.assign({}, itemInfo);
     updateInfo.status = BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINIT_PENDING;
     betHandshakeHandler.setItemOnChain(offchain, updateInfo);
     this.props.updateBettingChange(updateInfo);
 
-    const result = await betHandshakeHandler.cancelBet(hid, side, amount, odds, offchain);
-    const { hash } = result;
-    if (hash) {
-      this.uninitItemReal(offchain);
-    } else {
-      this.props.updateBettingChange(oldInfo);
-    }
+    betHandshakeHandler.cancelBet(hid, side, amount, odds, offchain);
+    this.uninitItemReal(offchain);
   }
   async withdrawOnChain(offchain, hid) {
     const { itemInfo } = this.state;
-    const oldInfo = Object.assign({}, itemInfo);
     const updateInfo = Object.assign({}, itemInfo);
     updateInfo.status = BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_PENDING;
     betHandshakeHandler.setItemOnChain(offchain, updateInfo);
     this.props.updateBettingChange(updateInfo);
 
-    const result = await betHandshakeHandler.withdraw(hid, offchain);
-    const { hash } = result;
-    if (hash) {
-      this.collectReal(offchain);
-    } else {
-      this.props.updateBettingChange(oldInfo);
-    }
+    betHandshakeHandler.withdraw(hid, offchain);
+    this.collectReal(offchain);
   }
   async refundOnChain(offchain, hid) {
     const { itemInfo } = this.state;
-    const oldInfo = Object.assign({}, itemInfo);
     const updateInfo = Object.assign({}, itemInfo);
     updateInfo.status = BET_BLOCKCHAIN_STATUS.STATUS_REFUND_PENDING;
     betHandshakeHandler.setItemOnChain(offchain, updateInfo);
     this.props.updateBettingChange(updateInfo);
 
-    const result = await betHandshakeHandler.refund(hid, offchain);
+    betHandshakeHandler.refund(hid, offchain);
+    this.refundReal(offchain);
+
+    /*
     const { hash } = result;
     if (hash) {
       this.refundReal(offchain);
     } else {
       this.props.updateBettingChange(oldInfo);
     }
+    */
   }
   async disputeOnChain(offchain, hid) {
     const { itemInfo } = this.state;
@@ -300,12 +294,10 @@ class FeedBetting extends React.Component {
     });
   }
   uninitHandshakeFreeSuccess= async (successData) => {
-    console.log('uninitHandshakeFreeSuccess', successData);
-    const { status } = successData;
-
+    console.log(TAG, 'uninitHandshakeFreeSuccess', successData);
   }
   uninitHandshakeFreeFailed = (error) => {
-    console.log('uninitHandshakeFreeFailed', error);
+    console.log(TAG, 'uninitHandshakeFreeFailed', error);
     const { status, code } = error;
     if (status === 0) {
       const message = getMessageWithCode(code);
@@ -340,7 +332,7 @@ class FeedBetting extends React.Component {
   }
 
   collectFreeSuccess = async (successData) => {
-    console.log('collectFreeSuccess', successData);
+    console.log(TAG, 'collectFreeSuccess', successData);
     const { status } = successData;
     if (status) {
       this.props.showAlert({
@@ -353,7 +345,7 @@ class FeedBetting extends React.Component {
     }
   }
   collectFreeFailed = (error) => {
-    console.log('collectFreeFailed', error);
+    console.log(TAG, 'collectFreeFailed', error);
     const { status, code } = error;
     if (status === 0) {
       const message = getMessageWithCode(code);
@@ -557,6 +549,18 @@ class FeedBetting extends React.Component {
       this.renderItem(displayMatchedAmount, displayAmount, displayWinMatch, displayWinValue)
     );
   }
+  renderButton(buttonClassName) {
+    const {
+      actionTitle, isLoading,
+    } = this.state;
+    const title = isLoading ? 'Loading...' : actionTitle;
+    return (
+      <div>
+        {actionTitle && <Button disabled={isLoading} block className={buttonClassName} onClick={() => { this.clickActionButton(actionTitle); }}>{title}</Button>}
+      </div>
+
+    );
+  }
 
   render() {
     const {
@@ -604,7 +608,7 @@ class FeedBetting extends React.Component {
           </div>
           <div className="bottomDiv">
             {this.renderStatus()}
-            {actionTitle && <Button disabled={isLoading} block className={buttonClassName} onClick={() => { this.clickActionButton(actionTitle); }}>{actionTitle}</Button>}
+            {this.renderButton(buttonClassName)}
           </div>
         </Feed>
       </div>
