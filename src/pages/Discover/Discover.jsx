@@ -528,6 +528,9 @@ class DiscoverPage extends React.Component {
         if (sortIndexActive === CASH_SORTING_CRITERIA.PRICE) {
           qs.c_sort = sortPriceIndexActive;
           qs.t_sort = sortOrder;
+        } else if (sortIndexActive === CASH_SORTING_CRITERIA.RATING) {
+          qs.c_sort = 'review_d';
+          qs.t_sort = SORT_ORDER.DESC;
         }
       }
     }
