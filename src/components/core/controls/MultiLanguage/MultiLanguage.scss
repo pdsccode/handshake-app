@@ -8,7 +8,7 @@
     font-size: rem-calc(14px);
   }
   .expand-arrow {
-    margin-left: rem-calc(5px);
+    margin-left: rem-calc(10px);
     width: rem-calc(10px);
   }
   .country-block {
@@ -42,6 +42,7 @@
         font-weight: $normal;
         font-size: rem-calc(18px);
         color: $black;
+        text-align: left;
       }
       .tick {
         width: 15px;

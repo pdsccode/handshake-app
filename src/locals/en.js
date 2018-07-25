@@ -104,7 +104,7 @@ export default {
   'ex.discover.label.priceSell': 'SELL',
   'ex.discover.label.reviews': '({reviewCount})',
   'ex.discover.banner.text': 'Got coins? Turn them into a money-making machine.',
-  'ex.discover.banner.btnText': 'BECOME A LOCAL EXCHANGE',
+  'ex.discover.banner.btnText': 'BECOME A STATION',
   'ex.discover.shakeDetail.label.amount': 'Amount',
   'ex.discover.shakeDetail.label.total': 'Total',
   'ex.discover.shakeDetail.label.maximum': 'Maximum:',
@@ -261,6 +261,14 @@ export default {
   'ex.about.label.medium': 'Medium',
   'ex.about.label.github': 'Github',
   'ex.about.label.twitter': 'Twitter',
+  'ex.discover.label.sortby': 'Sort by:',
+  'ex.sort.distance': 'Distance',
+  'ex.sort.price': 'Best Price',
+  'ex.sort.rating': 'Rating',
+  'ex.sort.price.buy.btc': 'Buy BTC',
+  'ex.sort.price.sell.btc': 'Sell BTC',
+  'ex.sort.price.buy.eth': 'Buy ETH',
+  'ex.sort.price.sell.eth': 'Sell ETH',
   product_info: 'Ninja is open-source, decentralized software that never holds your funds. By freely choosing to use Ninja, the user accepts sole responsibility for their behavior and agrees to abide by the legalities of their governing jurisdiction. Ninja cannot be liable for legal, monetary or psychological damages should you do something stupid. Never invest more than you are willing to lose. Play safe!',
 
   // FAQ
@@ -580,6 +588,11 @@ export default {
   discover: {
     noDataMessageCash: 'No stations near you yet. Be the first.',
     noDataMessageSwap: 'No vendors near you yet. Be the first',
+    feed: {
+      cash: {
+
+      }
+    }
   },
 
   wallet: {

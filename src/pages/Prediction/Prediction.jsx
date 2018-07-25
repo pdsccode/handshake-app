@@ -8,13 +8,13 @@ import LuckyReal from '@/components/handshakes/betting/LuckyPool/LuckyReal/Lucky
 import LuckyLanding from '@/pages/LuckyLanding/LuckyLanding';
 
 import GA from '@/services/googleAnalytics';
+import LuckyFree from '@/components/handshakes/betting/LuckyPool/LuckyFree/LuckyFree';
 
 import { eventSelector, isLoading, showedLuckyPoolSelector } from './selector';
 import { loadMatches, updateShowedLuckyPool } from './action';
 import EventItem from './EventItem';
 
 import './Prediction.scss';
-import LuckyFree from '@/components/handshakes/betting/LuckyPool/LuckyFree/LuckyFree';
 
 class Prediction extends React.Component {
   static displayName = 'Prediction';
@@ -34,7 +34,6 @@ class Prediction extends React.Component {
       selectedOutcome: null,
       isLuckyPool: true,
     };
-    //this.handleScroll = this.handleScroll;
   }
 
   componentDidMount() {

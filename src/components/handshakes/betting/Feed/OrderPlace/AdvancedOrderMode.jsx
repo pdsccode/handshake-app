@@ -25,10 +25,6 @@ class AdvancedOrderMode extends React.Component {
 
   state = {
     disable: false,
-
-  }
-  async componentDidMount() {
-
   }
 
   componentWillReceiveProps(nextProps) {
