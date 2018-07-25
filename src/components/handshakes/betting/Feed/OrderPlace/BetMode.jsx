@@ -10,7 +10,7 @@ import { getBalance } from '@/components/handshakes/betting/utils';
 import Tabs from './../Tabs';
 
 const TAG = 'BET_MODE';
-class BetMode extends React.PureComponent {
+class BetMode extends React.Component {
   static propTypes = {
     selectedOutcome: PropTypes.object,
     selectedMatch: PropTypes.object,

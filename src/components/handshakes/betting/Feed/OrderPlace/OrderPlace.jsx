@@ -1,8 +1,10 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import { SIDE } from '@/components/handshakes/betting/constants.js';
 import GA from '@/services/googleAnalytics';
+import { updateSide } from './action';
 
 import Tabs from './../Tabs';
 import OrderMode from './OrderMode';
@@ -14,14 +16,14 @@ class OrderPlace extends React.Component {
     render: PropTypes.bool,
     bettingShake: PropTypes.object,
     orderBook: PropTypes.object,
-    changeMode: PropTypes.func,
+    dispatch: PropTypes.func,
   };
 
   static defaultProps = {
     render: false,
     bettingShake: null,
     orderBook: null,
-    changeMode: undefined,
+    dispatch: undefined,
   };
 
   state = {
@@ -33,6 +35,7 @@ class OrderPlace extends React.Component {
     this.setState({
       side: SIDE[`${tabType}`],
     });
+    this.props.dispatch(updateSide(tab.toLowerCase()));
     // Event tracking
     GA.clickChooseASide(SIDE[`${tabType}`]);
   }
@@ -61,4 +64,10 @@ class OrderPlace extends React.Component {
   }
 }
 
-export default OrderPlace;
+export default connect(
+  (state) => {
+    return {
+      side: updateSide(state),
+    };
+  },
+)(OrderPlace);

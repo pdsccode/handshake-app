@@ -42,6 +42,12 @@
     .name {
       font-size: 18px;
       color: #FFFFFF;
+      &.support {
+        color: $caribbean-green;
+      }
+      &.oppose {
+        color: #fa6b49;
+      }
     }
   }
 

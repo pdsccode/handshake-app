@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 // service, constant
 import local from '@/services/localStore';
@@ -7,8 +8,10 @@ import { defaultOdds, defaultAmount } from '@/components/handshakes/betting/calc
 import { getKeyByValue } from '@/utils/object';
 import GA from '@/services/googleAnalytics';
 import BettingShakeFree from '@/components/handshakes/betting/Feed/ShakeFree';
-
+import { SIDE } from '@/components/handshakes/betting/constants.js';
 import OrderPlace from './../OrderPlace';
+import { updateSide } from './../OrderPlace/action';
+import { updateSideSelector } from './../OrderPlace/selector';
 
 // style
 import './Filter.scss';
@@ -32,22 +35,17 @@ class BettingFilter extends React.Component {
     bettingShakeIsOpen: PropTypes.bool,
     selectedOutcome: PropTypes.object,
     selectedMatch: PropTypes.object,
+    side: PropTypes.string,
+    dispatch: PropTypes.func.isRequired,
   }
 
   static defaultProps = {
-  }
-
-  constructor(props) {
-    super(props);
+    side: 'support',
   }
 
   componentDidMount() {
-
-    //this.props.openPopup(this.openPopup);
-  }
-
-  componentWillReceiveProps(nextProps) {
-
+    const { dispatch } = this.props;
+    dispatch(updateSide('support'));
   }
 
   getInfoShare(selectedMatch, selectedOutcome) {
@@ -98,16 +96,18 @@ class BettingFilter extends React.Component {
     };
 
     const orderBook = { support, against };
+    const { side, dispatch } = this.props;
     return (
       <React.Fragment>
         <div className="matchOutCome">
           <span className="label">Outcome:</span>
-          <span className="name">{matchOutcome}</span>
+          <span className={`name ${side}`}>{matchOutcome}</span>
         </div>
         {isFree ?
           <BettingShakeFree
             amount={freeAmount}
             {...bettingShake}
+            dispatch={dispatch}
           /> :
           <OrderPlace
             bettingShake={bettingShake}
@@ -120,4 +120,11 @@ class BettingFilter extends React.Component {
   }
 }
 
-export default (BettingFilter);
+export default connect(
+  (state) => {
+    return {
+      side: updateSideSelector(state),
+    };
+  },
+)(BettingFilter);
+
