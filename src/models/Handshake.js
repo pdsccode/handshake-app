@@ -37,6 +37,8 @@ class Handshake {
       closingTime: data.closing_time,
       reportTime: data.reporting_time,
       disputeTime: data.disputing_time,
+      totalAmount: data.total_amount,
+      totalDisputeAmount: data.total_dispute_amount,
       fiatCurrency: data.fiat_currency,
     };
   }

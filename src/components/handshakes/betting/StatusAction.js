@@ -1,16 +1,16 @@
 import { BET_BLOCKCHAIN_STATUS, ROLE, SIDE, BETTING_RESULT } from '@/components/handshakes/betting/constants.js';
-import { isExpiredDate } from '@/components/handshakes/betting/validation.js';
-import { BETTING_STATUS_LABEL } from '@/components/handshakes/betting/message.js';
-
+import { isExpiredDate } from '@/components/handshakes/betting/validation';
+import { BETTING_STATUS_LABEL } from '@/components/handshakes/betting/message';
+import { PERCENT_DISPUTE } from '@/components/handshakes/betting/constants';
 import { BetHandshakeHandler } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
 
-const TAG = 'STATUSACTION';
+const TAG = 'STATUS_ACTION';
 
 const betHandshakeHandler = BetHandshakeHandler.getShareManager();
 
 export const getStatusLabel = (item) => {
 
-  const {id, result, role, side, matched, reportTime, disputeTime} = item;
+  let {id, result, role, side, matched, reportTime, disputeTime, totalAmount, totalDisputeAmount} = item;
   let {status} = item;
 
   let label = null;
@@ -29,7 +29,23 @@ export const getStatusLabel = (item) => {
                   ' reportTime:', reportTime,
                   ' disputeTime:', disputeTime);
 
+  // totalAmount = 100;
+  // totalDisputeAmount = 5;
+  // status = BET_BLOCKCHAIN_STATUS.STATUS_RESOLVED;
 
+  reportTime = 1532502000; //2h
+  disputeTime = 1532505600; //3h
+
+  if (totalAmount > 0 && totalDisputeAmount > 0
+     && status !== BET_BLOCKCHAIN_STATUS.STATUS_RESOLVED) {
+
+    const percent = totalDisputeAmount / totalAmount;
+    console.log(TAG, 'getStatusLabel', 'percent:', percent);
+
+    if(percent >= PERCENT_DISPUTE){
+      return resolvingAction(status);
+    }
+  }
 
   if(status === BET_BLOCKCHAIN_STATUS.STATUS_INIT_FAILED
     || status === BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_FAILED
@@ -44,7 +60,8 @@ export const getStatusLabel = (item) => {
   if (status === BET_BLOCKCHAIN_STATUS.STATUS_INIT_PENDING
     || status === BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINIT_PENDING
     || status === BET_BLOCKCHAIN_STATUS.STATUS_REFUND_PENDING
-    || status === BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_PENDING){
+    || status === BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_PENDING
+    || status === BET_BLOCKCHAIN_STATUS.STATUS_USER_DISPUTED){
       //PENDING ACTION
       return pendingAction(status);
 
@@ -57,14 +74,15 @@ export const getStatusLabel = (item) => {
       return cancelAction(status);
   }
 
-  if ((matched && result === BETTING_RESULT.DRAW && isExpiredDate(disputeTime))
-      || (matched && result === BETTING_RESULT.INITED && isExpiredDate(reportTime))
+  if ((matched && result === BETTING_RESULT.DRAW && isExpiredDate(disputeTime)) //Draw and over dispute time
+    //  || (matched && result === BETTING_RESULT.DRAW && status === BET_BLOCKCHAIN_STATUS.STATUS_RESOLVED) //Resolve dispute, result DRAW
+      || (matched && result === BETTING_RESULT.INITED && isExpiredDate(reportTime)) // Over report time but there is no result
       || status === BET_BLOCKCHAIN_STATUS.STATUS_REFUNDED) {
         //REFUND ACTION
       return refundAction(status, reportTime);
   }
 
-  if (result > BETTING_RESULT.INITED && isExpiredDate(reportTime) && !isExpiredDate(disputeTime)) {
+  if (matched && result > BETTING_RESULT.INITED && isExpiredDate(reportTime) && !isExpiredDate(disputeTime)) {
     return disputeAction(status);
   }
 
@@ -112,18 +130,22 @@ const keepCurrentLoading = (item) => {
 }
 
 const failedAction = (blockchainStatus) => {
+  console.log(TAG, 'failedAction');
   let label = null;
   let strStatus = null;
   let isAction = false;
 
   switch (blockchainStatus) {
-    case BET_BLOCKCHAIN_STATUS.STATUS_INIT_FAILED :
-      strStatus = BETTING_STATUS_LABEL.INIT_FAILED ;
+    case BET_BLOCKCHAIN_STATUS.STATUS_INIT_FAILED:
+      strStatus = BETTING_STATUS_LABEL.INIT_FAILED;
       break;
-    case BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_FAILED :
+    case BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_FAILED:
       label = BETTING_STATUS_LABEL.CANCEL;
       strStatus = BETTING_STATUS_LABEL.COLLECT_FAILED;
       isAction = true;
+      break;
+    case BET_BLOCKCHAIN_STATUS.STATUS_DISPUTE_FAILED:
+      strStatus = BETTING_STATUS_LABEL.DISPUTE_FAILED;
       break;
     default:
       strStatus = BETTING_STATUS_LABEL.ACTION_FAILED;
@@ -131,9 +153,11 @@ const failedAction = (blockchainStatus) => {
       break;
   }
   return { title: label, isAction, status: strStatus };
-}
+};
 
 const pendingAction = (blockchainStatus) => {
+  console.log(TAG, 'pendingAction');
+
   let label = null;
   let strStatus = null;
   let isAction = false;
@@ -151,14 +175,19 @@ const pendingAction = (blockchainStatus) => {
     case BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_PENDING:
       strStatus = BETTING_STATUS_LABEL.COLLECT_PENDING;
       break;
+    case BET_BLOCKCHAIN_STATUS.STATUS_USER_DISPUTED:
+      strStatus = BETTING_STATUS_LABEL.DISPUTE_WAIT;
+      break;
     default:
       break;
   }
 
   return { title: label, isAction, status: strStatus };
-}
+};
 
 const cancelAction = (blockchainStatus) => {
+  console.log(TAG, 'cancelAction');
+
   let label = null;
   let strStatus = null;
   let isAction = false;
@@ -179,9 +208,11 @@ const cancelAction = (blockchainStatus) => {
       break;
   }
   return { title: label, isAction, status: strStatus };
-}
+};
 
 const refundAction = (blockchainStatus, reportTime) => {
+  console.log(TAG, 'refundAction');
+
   let label = null;
   let strStatus = null;
   let isAction = false;
@@ -204,18 +235,21 @@ const refundAction = (blockchainStatus, reportTime) => {
   }
 
   return { title: label, isAction, status: strStatus };
-}
+};
 
 
 const matchAction = () => {
+  console.log(TAG, 'matchAction');
+
 
   const strStatus = BETTING_STATUS_LABEL.BET_MACHED_WAIT_RESULT;
   const isAction = false;
 
   return { title: null, isAction, status: strStatus };
-}
+};
 
 const winOrLose = (resultStatus, side = SIDE.SUPPORT, disputeTime) => {
+  console.log(TAG, 'winOrLose');
 
   let label = null;
   let strStatus = null;
@@ -228,47 +262,50 @@ const winOrLose = (resultStatus, side = SIDE.SUPPORT, disputeTime) => {
       isAction = true;
     } else {
       strStatus = BETTING_STATUS_LABEL.WIN + BETTING_STATUS_LABEL.WIN_WAIT;
-      isAction = true;
+      isAction = false;
     }
   } else { // LOSE
     strStatus = BETTING_STATUS_LABEL.LOSE;
   }
 
   return { title: label, isAction, status: strStatus };
-}
+};
 
 const doneAction = () => {
+  console.log(TAG, 'doneAction');
+
   const strStatus = BETTING_STATUS_LABEL.COLLECT_DONE;
   const isAction = false;
 
   return { title: null, isAction, status: strStatus };
 
-}
+};
 
 const rollbackAction = () => {
+  console.log(TAG, 'rollbackAction');
+
   const strStatus = BETTING_STATUS_LABEL.ROLLBACK;
   const isAction = false;
   return { title: null, isAction, status: strStatus };
-}
+};
 
-const disputeAction = (blockchainStatus) => {
-  let strStatus = null;
-  let isAction = false;
+const disputeAction = (result) => {
+  console.log(TAG, 'disputeAction');
+  if (result === BETTING_RESULT.DRAW) {
 
-  switch (blockchainStatus) {
-    case BET_BLOCKCHAIN_STATUS.STATUS_DISPUTE_FAILED:
-      strStatus = BETTING_STATUS_LABEL.DISPUTE_FAILED;
-      break;
-    case BET_BLOCKCHAIN_STATUS.STATUS_DISPUTE:
-      strStatus = BETTING_STATUS_LABEL.DISPUTE_WAIT;
-      break;
-    default:
-      strStatus = BETTING_STATUS_LABEL.DISPUTE;
-      isAction = true;
-      break;
   }
+  const label = BETTING_STATUS_LABEL.DISPUTE;
+  const isAction = false;
+
+  return { title: label, isAction, status: strStatus };
+
+};
+const resolvingAction = () => {
+  console.log(TAG, 'disputeAction');
+
+  const isAction = false;
+  const strStatus = BETTING_STATUS_LABEL.DISPUTE_RESOVING;
 
   return { title: null, isAction, status: strStatus };
 
-}
-
+};
