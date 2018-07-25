@@ -77,7 +77,7 @@ export const getStatusLabel = (item) => {
 
   if (matched
     && result > BETTING_RESULT.INITED
-    && isExpiredDate(reportTime) && !isExpiredDate(disputeTime)) {
+    && !isExpiredDate(disputeTime)) {
     return disputeAction(result, side);
   }
 
