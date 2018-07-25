@@ -261,6 +261,9 @@ export default {
   'ex.about.label.medium': 'Medium',
   'ex.about.label.github': 'Github',
   'ex.about.label.twitter': 'Twitter',
+  'ex.discover.label.sortby': 'Sort by:',
+  'ex.sort.distance': 'Distance',
+  'ex.sort.price': 'Price',
   product_info: 'Ninja is open-source, decentralized software that never holds your funds. By freely choosing to use Ninja, the user accepts sole responsibility for their behavior and agrees to abide by the legalities of their governing jurisdiction. Ninja cannot be liable for legal, monetary or psychological damages should you do something stupid. Never invest more than you are willing to lose. Play safe!',
 
   // FAQ
@@ -580,6 +583,11 @@ export default {
   discover: {
     noDataMessageCash: 'No stations near you yet. Be the first.',
     noDataMessageSwap: 'No vendors near you yet. Be the first',
+    feed: {
+      cash: {
+
+      }
+    }
   },
 
   wallet: {
