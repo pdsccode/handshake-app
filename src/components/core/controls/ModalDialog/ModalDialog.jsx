@@ -12,24 +12,6 @@ class ModalDialog extends React.Component {
     this.onClosePanel = ::this.onClosePanel;
   }
 
-  open() {
-    this.modalRef && this.modalRef.classList.add('modal-custom-show');
-    this.contentRef && this.contentRef.classList.add('zoomIn');
-    document.body.classList.add('hide-scroll');
-  }
-
-  close() {
-    this.modalRef && this.modalRef.classList.remove('modal-custom-show');
-    this.contentRef && this.contentRef.classList.remove('zoomIn');
-    document.body.classList.remove('hide-scroll');
-  }
-
-  onClosePanel() {
-    if (this.props.isDismiss) {
-      this.close();
-    }
-  }
-
   componentDidMount() {
     this.props.hasOwnProperty('onRef') && this.props.onRef(this);
   }
@@ -38,6 +20,26 @@ class ModalDialog extends React.Component {
     this.props.hasOwnProperty('onRef') && this.props.onRef(undefined);
   }
 
+  onClosePanel() {
+    if (this.props.isDismiss) {
+      this.close();
+    }
+  }
+
+  open() {
+    this.modalRef && this.modalRef.classList.add('modal-custom-show');
+    this.contentRef && this.contentRef.classList.add('zoomIn');
+    document.body.classList.add('hide-scroll');
+    const freezeStyle = `height: 100%; position: fixed`;
+    document.body.setAttribute('style', freezeStyle);
+  }
+
+  close() {
+    this.modalRef && this.modalRef.classList.remove('modal-custom-show');
+    this.contentRef && this.contentRef.classList.remove('zoomIn');
+    document.body.classList.remove('hide-scroll');
+    document.body.removeAttribute('style');
+  }
 
   render() {
     const { title, children, className, close } = this.props;

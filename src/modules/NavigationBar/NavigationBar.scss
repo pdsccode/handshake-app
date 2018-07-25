@@ -6,6 +6,7 @@
   padding: rem-calc(12px) rem-calc(5px) rem-calc(10px);
   background-color: #2B2C39;
   justify-content: space-between;
+  flex-basis: 100%;
 
   .NavigationBarItem {
     margin: 0 rem-calc(5px);

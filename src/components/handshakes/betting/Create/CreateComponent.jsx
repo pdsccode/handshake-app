@@ -71,14 +71,14 @@ class BettingCreate extends React.Component {
   componentDidMount() {
     const { bettingShake } = this.props;
 
-    console.log(TAG, 'componentDidMount', 'bettingShake', bettingShake);
+    // console.log(TAG, 'componentDidMount', 'bettingShake', bettingShake);
     this.updateDefaultValues(bettingShake);
   }
 
   componentWillReceiveProps(nextProps) {
 
     const { bettingShake } = nextProps;
-    console.log(TAG, 'componentWillReceiveProps', 'bettingShake', bettingShake);
+    // console.log(TAG, 'componentWillReceiveProps', 'bettingShake', bettingShake);
     this.updateDefaultValues(bettingShake);
   }
 

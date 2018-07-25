@@ -140,8 +140,6 @@ class FeedBetting extends React.Component {
       ' fromAddress: ', fromAddress,
     );
 
-
-
     if (!isRightNetwork()) {
       message = MESSAGE.RIGHT_NETWORK;
     } else if (!isSameAddress(fromAddress)) {
@@ -166,7 +164,9 @@ class FeedBetting extends React.Component {
 
   handleActionFree(title, offchain) {
     const realId = getId(offchain);
-
+    this.setState({
+      isLoading: true,
+    });
     switch (title) {
       case BETTING_STATUS_LABEL.CANCEL:
         this.uninitItemFree(realId);
@@ -182,6 +182,9 @@ class FeedBetting extends React.Component {
     }
   }
   async handleActionReal(title, offchain, hid) {
+    this.setState({
+      isLoading: true,
+    });
 
     switch (title) {
       case BETTING_STATUS_LABEL.CANCEL:
@@ -200,53 +203,57 @@ class FeedBetting extends React.Component {
       default:
         break;
     }
+
   }
 
 
   async cancelOnChain(offchain, hid) {
     const { itemInfo } = this.state;
     const { side, amount, odds } = itemInfo;
-    this.setState({
-      isLoading: true,
-    });
-    betHandshakeHandler.setItemOnChain(offchain, itemInfo);
+    const oldInfo = Object.assign({}, itemInfo);
+    const updateInfo = Object.assign({}, itemInfo);
+    updateInfo.status = BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINIT_PENDING;
+    betHandshakeHandler.setItemOnChain(offchain, updateInfo);
+    this.props.updateBettingChange(updateInfo);
+
     const result = await betHandshakeHandler.cancelBet(hid, side, amount, odds, offchain);
     const { hash } = result;
     if (hash) {
-      const updateInfo = Object.assign({}, itemInfo);
-      updateInfo.status = BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINIT_PENDING;
-      betHandshakeHandler.setItemOnChain(offchain, updateInfo);
-      this.props.updateBettingChange(updateInfo);
+      //this.uninitItemReal(offchain);
+    } else {
+      this.props.updateBettingChange(oldInfo);
     }
   }
   async withdrawOnChain(offchain, hid) {
     const { itemInfo } = this.state;
-    this.setState({
-      isLoading: true,
-    });
-    betHandshakeHandler.setItemOnChain(offchain, itemInfo);
+    const oldInfo = Object.assign({}, itemInfo);
+    const updateInfo = Object.assign({}, itemInfo);
+    updateInfo.status = BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_PENDING;
+    betHandshakeHandler.setItemOnChain(offchain, updateInfo);
+    this.props.updateBettingChange(updateInfo);
+
     const result = await betHandshakeHandler.withdraw(hid, offchain);
     const { hash } = result;
     if (hash) {
-      const updateInfo = Object.assign({}, itemInfo);
-      updateInfo.status = BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_PENDING;
-      betHandshakeHandler.setItemOnChain(offchain, updateInfo);
-      this.props.updateBettingChange(updateInfo);
+      //this.collectReal(offchain);
+    } else {
+      this.props.updateBettingChange(oldInfo);
     }
   }
   async refundOnChain(offchain, hid) {
     const { itemInfo } = this.state;
-    this.setState({
-      isLoading: true,
-    });
-    betHandshakeHandler.setItemOnChain(offchain, itemInfo);
+    const oldInfo = Object.assign({}, itemInfo);
+    const updateInfo = Object.assign({}, itemInfo);
+    updateInfo.status = BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINIT_PENDING;
+    betHandshakeHandler.setItemOnChain(offchain, updateInfo);
+    this.props.updateBettingChange(updateInfo);
+
     const result = await betHandshakeHandler.refund(hid, offchain);
     const { hash } = result;
     if (hash) {
-      const updateInfo = Object.assign({}, itemInfo);
-      updateInfo.status = BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINIT_PENDING;
-      betHandshakeHandler.setItemOnChain(offchain, updateInfo);
-      this.props.updateBettingChange(updateInfo);
+      //this.refundReal(offchain);
+    } else {
+      this.props.updateBettingChange(oldInfo);
     }
   }
 
@@ -254,10 +261,16 @@ class FeedBetting extends React.Component {
     this.props.loadMyHandshakeList({ PATH_URL: API_URL.ME.BASE });
   }
 
+  /*** API FREE BET ***/
   async uninitItemFree(id) {
-    const balance = await getBalance();
-    console.log('Balance:', balance);
     const url = API_URL.CRYPTOSIGN.UNINIT_HANDSHAKE_FREE.concat(`/${id}`);
+    const { itemInfo } = this.state;
+
+    const updateInfo = Object.assign({}, itemInfo);
+    updateInfo.status = BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINIT_PENDING;
+    betHandshakeHandler.setItemOnChain(id, updateInfo);
+    this.props.updateBettingChange(updateInfo);
+
     this.props.uninitItemFree({
       PATH_URL: url,
       METHOD: 'POST',
@@ -269,18 +282,20 @@ class FeedBetting extends React.Component {
     console.log('uninitHandshakeFreeSuccess', successData);
     const { status } = successData;
     if (status) {
+      /*
       const { itemInfo } = this.state;
       const { id } = itemInfo;
       const updateInfo = Object.assign({}, itemInfo);
       updateInfo.status = BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINIT_PENDING;
       betHandshakeHandler.setItemOnChain(id, updateInfo);
       this.props.updateBettingChange(updateInfo);
+      */
     }
   }
   uninitHandshakeFreeFailed = (error) => {
     console.log('uninitHandshakeFreeFailed', error);
     const { status, code } = error;
-    if (status == 0) {
+    if (status === 0) {
       const message = getMessageWithCode(code);
       this.props.showAlert({
         message: <div className="text-center">{message}</div>,
@@ -295,6 +310,14 @@ class FeedBetting extends React.Component {
     const params = {
       offchain: id,
     };
+
+    const { itemInfo } = this.state;
+
+    const updateInfo = Object.assign({}, itemInfo);
+    updateInfo.status = BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_PENDING;
+    betHandshakeHandler.setItemOnChain(id, updateInfo);
+    this.props.updateBettingChange(updateInfo);
+
     this.props.collectFree({
       PATH_URL: API_URL.CRYPTOSIGN.COLLECT_FREE,
       METHOD: 'POST',
@@ -315,13 +338,6 @@ class FeedBetting extends React.Component {
         callBack: () => {
         },
       });
-      const { itemInfo } = this.state;
-      const { id } = itemInfo;
-
-      const updateInfo = Object.assign({}, itemInfo);
-      updateInfo.status = BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_PENDING;
-      betHandshakeHandler.setItemOnChain(id, updateInfo);
-      this.props.updateBettingChange(updateInfo);
     }
   }
   collectFreeFailed = (error) => {
@@ -343,6 +359,13 @@ class FeedBetting extends React.Component {
     const params = {
       offchain: id,
     };
+
+    const { itemInfo } = this.state;
+    const updateInfo = Object.assign({}, itemInfo);
+    updateInfo.status = BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINIT_PENDING;
+    betHandshakeHandler.setItemOnChain(id, updateInfo);
+    this.props.updateBettingChange(updateInfo);
+
     this.props.refundFree({
       PATH_URL: API_URL.CRYPTOSIGN.REFUND_FREE,
       METHOD: 'POST',
@@ -355,14 +378,6 @@ class FeedBetting extends React.Component {
   refundFreeSuccess = async (successData) => {
     console.log(TAG, 'refundFreeSuccess');
     const { status } = successData;
-    if (status) {
-      const { itemInfo } = this.state;
-      const { id } = itemInfo;
-      const updateInfo = Object.assign({}, itemInfo);
-      updateInfo.status = BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINIT_PENDING;
-      betHandshakeHandler.setItemOnChain(id, updateInfo);
-      this.props.updateBettingChange(updateInfo);
-    }
   }
 
   refundFreeFailed = (error) => {
@@ -379,7 +394,40 @@ class FeedBetting extends React.Component {
       });
     }
   }
+  /*** API REAL BET */
+  uninitItemReal(id) {
+    const url = API_URL.CRYPTOSIGN.UNINIT_HANDSHAKE;
+    const params = {
+      offchain: id,
+    };
+    this.props.uninitItem({
+      PATH_URL: url,
+      METHOD: 'POST',
+      data: params,
+    });
+  }
 
+  collectReal(id) {
+    const params = {
+      offchain: id,
+    };
+    this.props.collect({
+      PATH_URL: API_URL.CRYPTOSIGN.COLLECT,
+      METHOD: 'POST',
+      data: params,
+    });
+  }
+
+  refundReal(id) {
+    const params = {
+      offchain: id,
+    };
+    this.props.refundFree({
+      PATH_URL: API_URL.CRYPTOSIGN.REFUND,
+      METHOD: 'POST',
+      data: params,
+    });
+  }
 
   renderStatus = () => {
     const { statusTitle } = this.state;
@@ -500,16 +548,11 @@ class FeedBetting extends React.Component {
 
     const colorBySide = side === 1 ? `support` : 'oppose';
 
-    /*
-    let eventName = event_name || '';
-    if (eventName.indexOf('Event') === -1) {
-      eventName = `Event: ${eventName}`;
-    }
-    */
     const eventName = event_name && this.formatEventName(event_name);
     const predictName = event_predict && this.formatPredictName(event_predict);
 
     const buttonClassName = this.getButtonClassName(actionTitle);
+    console.log(TAG, 'render', isLoading);
     return (
       <div>
         {/* Feed */}
@@ -524,21 +567,22 @@ class FeedBetting extends React.Component {
           </div>
 
           <div className="predictRow">
-            <div className="predictName predictTitle">
-              <span className={colorBySide}>{side === 1 ? `Support` : 'Oppose'}</span>{predictName}
+            <div className="predictTitle">
+              <div className={`sideLabel ${colorBySide}`}>{side === 1 ? `Support` : 'Oppose'}</div>
+              <div className="predictName">{predictName}</div>
             </div>
-            <div className="predictName"><span className="odds-text-feed">Odds</span> <span className={`odds-value-feed-${colorBySide}`}>{odds}</span></div>
+            <div className="oddName"><span className="odds-text-feed">Odds</span> <span className={`odds-value-feed-${colorBySide}`}>{odds}</span></div>
           </div>
           <div className="clearfix">
             <div className="bettingInfo">
               <div className="description">Matched</div>
               <div className="description">You could win</div>
             </div>
-            {role == ROLE.INITER ? this.renderMaker() : this.renderShaker()}
+            {role === ROLE.INITER ? this.renderMaker() : this.renderShaker()}
           </div>
           <div className="bottomDiv">
             {this.renderStatus()}
-            {actionTitle && <Button isLoading={isLoading} block className={buttonClassName} disabled={!isAction} onClick={() => { this.clickActionButton(actionTitle); }}>{actionTitle}</Button>}
+            {actionTitle && <Button disabled={isLoading} block className={buttonClassName} onClick={() => { this.clickActionButton(actionTitle); }}>{actionTitle}</Button>}
           </div>
         </Feed>
       </div>
