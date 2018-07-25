@@ -16,6 +16,7 @@ class Index extends React.PureComponent {
   render() {
     const { messages, locale } = this.props.intl;
     const { name } = this.props;
+    console.log('messages', messages)
     return (
       <LandingWrapper>
         <div className="project-detail">
@@ -28,15 +29,35 @@ class Index extends React.PureComponent {
             <div className="col-6">
               <div className="pd-heading"><FormattedMessage id={`landing_page.${name}.heading`} /></div>
               <div className="pd-subHeading"><FormattedMessage id={`landing_page.${name}.subHeading`} /></div>
-              <button className="btn btn-primary-landing" style={{ marginTop: '34px' }}><FormattedMessage id="landing_page.btn.goToLandingPage" /></button>
+              <div className="mt-3">
+                {
+                  messages[`landing_page.${name}.cta1`] && (
+                    <button className="btn btn-primary-landing"><FormattedMessage id={`landing_page.${name}.cta1`} /></button>
+                  )
+                }
+                {
+                  messages[`landing_page.${name}.cta2`] && (
+                    <button className="btn btn-secondary-landing"><FormattedMessage id={`landing_page.${name}.cta1`} /></button>
+                  )
+                }
+              </div>
             </div>
             <div className="col-6">
               <img src={imgDad} className="w-100" />
+              {/*<iframe*/}
+                {/*width="560"*/}
+                {/*height="315"*/}
+                {/*src="https://www.youtube.com/embed/021EEUIfy9w?rel=0&amp;showinfo=0"*/}
+                {/*frameBorder="0"*/}
+                {/*allow="autoplay; encrypted-media"*/}
+                {/*allowFullScreen*/}
+              {/*/>*/}
             </div>
           </div>
+
           <div className="row mt-5">
             <div className="col">
-              <div className="pd-content"><FormattedHTMLMessage id={`landing_page.${name}.content`} /></div>
+              <div className="pd-content">{messages[`landing_page.${name}.content`]}</div>
             </div>
           </div>
         </div>

@@ -388,31 +388,51 @@ export default {
 
   'landing_page.breadcrumb.home': 'Home',
 
+  'landing_page.cash.breadcrumb': 'Cash',
+  'landing_page.cash.heading': 'Buy Crypto With Cash. Securely & Anonymously.',
+  'landing_page.cash.subHeading': 'Ninja Cash is a decentralized peer to peer (P2P) cryptocurrency exchange that allows users to trade ETH and BTC for cash. You can join us anonymously: no signup, no ID verification, no fraud',
+  'landing_page.cash.cta1': 'Trade with your nearest station now!',
+  'landing_page.cash.cta2': 'Join our Telegram for gifts',
+  'landing_page.cash.youtubeUrl': 'https://www.youtube.com/watch?v=xCU5puuwros',
+
+  'landing_page.prediction.breadcrumb': 'Prediction',
+  'landing_page.prediction.heading': '',
+  'landing_page.prediction.subHeading': 'Ninja is an anonymous peer-to-peer decentralized prediction exchange running on top of the Ethereum blockchain. PEX is a purely peer-to-peer version of electronic prediction that allows parties to bet directly against each other without going through a central authority or bookmaker.',
+  'landing_page.prediction.cta1': 'Trade with your nearest station now!',
+  'landing_page.prediction.cta2': 'Join our dojo!',
+  'landing_page.prediction.youtubeUrl': 'https://www.youtube.com/watch?v=-YYp9yW4RDQ',
+
+  'landing_page.wallet.breadcrumb': 'Wallet',
+  'landing_page.wallet.heading': 'A decentralized cryptocurrency wallet. No downloads. No sign ups',
+  'landing_page.wallet.subHeading': 'A decentralized cryptocurrency wallet and payment gateway that will allow businesses and users alike to easily store and use cryptocurrency for payments.',
+  'landing_page.wallet.cta1': '',
+  'landing_page.wallet.cta2': '',
+  'landing_page.wallet.youtubeUrl': '',
+
+  'landing_page.payment_store.breadcrumb': 'Payment Store',
+  'landing_page.payment_store.heading': 'Seamlessly integrate cryptocurrency payments into your business.',
+  'landing_page.payment_store.subHeading': 'Store payment has been created to allow offline retailers to accept cryptocurrency payments. Your customers will be able to easily pay for goods and services using cryptocurrency simply by scanning a QR code.',
+  'landing_page.payment_store.cta1': '',
+  'landing_page.payment_store.cta2': '',
+  'landing_page.payment_store.youtubeUrl': '',
+
+  'landing_page.payment_gateway.breadcrumb': 'Payment Gateway',
+  'landing_page.payment_gateway.heading': 'Connect your e-commerce business with a truly borderless payment network.',
+  'landing_page.payment_gateway.subHeading': 'We want the millions of people around the world who are holding cryptocurrency to be able to use it in their everyday lives. With more people accepting cryptocurrency as a payment method, we feel that Ninja Store Payment is one step closer to helping it reach mass adoption.',
+  'landing_page.payment_gateway.cta1': 'For Mobile App',
+  'landing_page.payment_gateway.cta2': 'For Web-based',
+  'landing_page.payment_gateway.youtubeUrl': '',
+
+  'landing_page.internet_cash.breadcrumb': 'Internet Cash',
+  'landing_page.internet_cash.heading': 'The Internet deserves to have its own native currency.',
+  'landing_page.internet_cash.subHeading': 'While Bitcoin emerges as a powerful currency, it fails to be the everyday currency.  Bitcoin will never be the currency that you can use to pay for coffee or buy a t-shirt.  This project aims to build a new kind of cryptocurrency that behaves like cash in everyday life.',
+  'landing_page.internet_cash.cta1': 'Be the first to know when we launch',
+
   'landing_page.dad.breadcrumb': 'Decentralized Autonomous Dataset',
-  'landing_page.dad.heading': 'Decentralized Autonomous Dataset',
-  'landing_page.dad.subHeading': 'If data is the new oil, then AI is the machine it’s powering.',
-  'landing_page.dad.content': `
-    AI needs data to learn and grow.<br />
-    DAD enables the creation of decentralized autonomous datasets to create and collate the data needed to develop AI.<br />
-    Unlike currently available datasets that harness big data, DAD is actually affordable and easy to access.<br /><br />
-    
-    The AI Protocol runs on top of the Ethereum blockchain and has 2 components: the Decentralized Autonomous Dataset (DAD) and the Decentralized Autonomous Computation (DAC).<br /><br />
-    
-    Each and everyday people upload their data onto free platforms, effectively providing a few big corporations with a wealth of content from which they can derive billions of dollars of revenue, while these people see no profit.<br /><br />
+  'landing_page.dad.heading': 'Building decentralized datasets to advance AI.',
+  'landing_page.dad.subHeading': 'Today big data is controlled by a handful of corporations - limiting access to people who need it to develop AI, while the people who contribute the data are seeing no rewards. DAD will enable anyone who wants to build AI programs access to big data and reward the users that contribute.',
+  'landing_page.dad.cta1': 'I want to buy big data',
 
-    We think they should.<br /><br />
-
-    Everytime data you contributed is sold, you will share in the profit.
-  `,
-
-  'landing_page.internet_cash.breadcrumb': 'Decentralized Autonomous Dataset',
-  'landing_page.internet_cash.heading': 'Decentralized Autonomous Dataset',
-  'landing_page.internet_cash.subHeading': 'If data is the new oil, then AI is the machine it’s powering.',
-  'landing_page.internet_cash.content': `
-    Cash is the most important asset in the world.  Its total addressable market (TAM) is 90 trillion dollars.  While Bitcoin emerges as a powerful currency, it fails to be the everyday currency.  Bitcoin will never be the currency that you can use to pay for coffee or buy a t-shirt.  Bitcoin lacks one fundamental property of cash: price stability.<br /><br />
-    This project aims to build a new kind of cryptocurrency that behaves like cash.  The goal of the cryptocurrency is to replace all money in the world in all forms, including paper money (as in your wallets) or digital money (as in your bank account) and that it can be used both online and in person.<br /><br />
-    We’ll call it Internet Cash for now, because the Internet deserves to have its own native currency.
-  `,
 
   // MobileOrTablet components
   MOT_TITLE: 'The anonymous exchange of anything',
