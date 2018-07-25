@@ -173,7 +173,8 @@ const tokenHandle = ({
              }));
 
           if(!_.isEmpty(responseProfile)){
-            const email = `${responseProfile?.data?.username}_${shuriWallet?.address}`||'';
+            /* const email = `${responseProfile?.data?.username}_${shuriWallet?.address}`||''; */
+            const email = `${shuriWallet?.address}`||'';
             const password = new Buffer(email)?.toString('base64')||'';
             const datasetData = new FormData();
             datasetData.append('email',email);

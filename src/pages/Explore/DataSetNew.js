@@ -241,7 +241,7 @@ class DataSetNew extends React.Component {
               <Form.Input
               label ="Amount"
               type='number' pattern="[0-9.]*"
-              fluid placeholder='0,000 ETH' name='Amount' value={this.state.Amount}
+              fluid placeholder='1 ETH' name='Amount' value={this.state.Amount}
                           onChange={this.handleChangeInput}/>
               </div>
 
