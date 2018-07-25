@@ -30,7 +30,7 @@ const products = [
     title: <FormattedMessage id="landing_page.products.cash.title" />,
     subTitle: <FormattedMessage id="landing_page.products.cash.subTitle" />,
     img: imgCash,
-    to: URL.PROJECT_CASH_URL,
+    to: URL.PRODUCT_CASH_URL,
   },
   {
     title: <FormattedMessage id="landing_page.products.prediction.title" />,
@@ -42,7 +42,7 @@ const products = [
     title: <FormattedMessage id="landing_page.products.dad.title" />,
     subTitle: <FormattedMessage id="landing_page.products.dad.subTitle" />,
     img: imgDad,
-    to: URL.PROJECT_DAD_URL
+    to: URL.PRODUCT_DAD_URL
   },
   {
     title: <FormattedMessage id="landing_page.products.wallet.title" />,

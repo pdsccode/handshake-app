@@ -82,9 +82,9 @@ class Root extends React.Component {
       case URL.RESEARCH_URL:
         return <LandingPageMain type="research" />;
 
-      case URL.PROJECT_DAD_URL:
+      case URL.PRODUCT_DAD_URL:
         return <ProjectDetail name="dad" />;
-      case URL.PROJECT_INTERNET_CASH_URL:
+      case URL.RESEARCH_INTERNET_CASH_URL:
         return <ProjectDetail name="internet_cash" />;
       // case URL.PROJECT_CASH:
       //   return <ProjectCash />;

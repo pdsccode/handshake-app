@@ -487,10 +487,14 @@ export const URL = {
   PRODUCT_URL: '/product',
   RESEARCH_URL: '/research',
 
-  PROJECT_DAD_URL: '/project/dad',
-  PROJECT_INTERNET_CASH_URL: '/project/internet-cash',
-  PROJECT_CASH_URL: '/project/cash',
-  PROJECT_ODD_BALL_URL: '/project/odd-ball',
+  PRODUCT_CASH_URL: '/product/cash',
+  PRODUCT_PREDICTION_URL: '/product/prediction',
+  PRODUCT_WALLET_URL: '/product/wallet',
+  PRODUCT_PAYMENT_STORE_URL: '/product/payment-store',
+  PRODUCT_PAYMENT_GATEWAY_URL: '/product/payment-gateway',
+  PRODUCT_DAD_URL: '/product/dad',
+  RESEARCH_INTERNET_CASH_URL: '/research/internet-cash',
+  PRODUCT_ODD_BALL_URL: '/product/odd-ball',
 };
 
 export const NB_BLOCKS = 20;

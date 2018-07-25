@@ -29,7 +29,7 @@ class Index extends React.PureComponent {
             <div className="col-6">
               <div className="pd-heading"><FormattedMessage id={`landing_page.${name}.heading`} /></div>
               <div className="pd-subHeading"><FormattedMessage id={`landing_page.${name}.subHeading`} /></div>
-              <div className="mt-3">
+              <div className="mt-5">
                 {
                   messages[`landing_page.${name}.cta1`] && (
                     <button className="btn btn-primary-landing"><FormattedMessage id={`landing_page.${name}.cta1`} /></button>

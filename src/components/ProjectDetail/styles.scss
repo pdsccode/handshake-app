@@ -1,6 +1,7 @@
 @import './src/styles/style';
 
 .project-detail {
+  font-family: AzoSans-Regular;
   .pd-breadcrumb {
     font-family: AzoSans-Regular;
     font-size: 16px;
@@ -32,7 +33,6 @@
   }
   .pd-content {
     opacity: 0.85;
-    font-family: AzoSans-Regular;
     font-size: 18px;
     color: #484848;
     letter-spacing: 0;
