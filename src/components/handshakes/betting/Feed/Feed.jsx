@@ -7,7 +7,7 @@ import { BetHandshakeHandler } from '@/components/handshakes/betting/Feed/BetHan
 import { BET_BLOCKCHAIN_STATUS, ROLE } from '@/components/handshakes/betting/constants.js';
 
 import { API_URL } from '@/constants';
-import { uninitItem, collect, collectFree, uninitItemFree, refundFree } from '@/reducers/handshake/action';
+import { uninitItem, collect, collectFree, uninitItemFree, refundFree, refund } from '@/reducers/handshake/action';
 import { loadMyHandshakeList, updateBettingChange } from '@/reducers/me/action';
 import { MESSAGE, BETTING_STATUS_LABEL } from '@/components/handshakes/betting/message.js';
 import { getStatusLabel } from '@/components/handshakes/betting/StatusAction.js';
@@ -430,7 +430,7 @@ class FeedBetting extends React.Component {
     const params = {
       offchain: id,
     };
-    this.props.refundFree({
+    this.props.refund({
       PATH_URL: API_URL.CRYPTOSIGN.REFUND,
       METHOD: 'POST',
       data: params,
@@ -440,8 +440,8 @@ class FeedBetting extends React.Component {
     const params = {
       offchain: id,
     };
-    this.props.refundFree({
-      PATH_URL: API_URL.CRYPTOSIGN.REFUND,
+    this.props.dispute({
+      PATH_URL: API_URL.CRYPTOSIGN.DISPUTE,
       METHOD: 'POST',
       data: params,
     });
@@ -633,6 +633,7 @@ const mapDispatch = ({
   collectFree,
   showAlert,
   uninitItemFree,
+  refund,
   refundFree,
 });
 export default connect(mapState, mapDispatch)(FeedBetting);
