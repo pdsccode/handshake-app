@@ -11,8 +11,6 @@ const BigNumber = require('bignumber.js');
 const EthereumTx = require('ethereumjs-tx');
 
 const compiled = require('@/contracts/Dataset.json');
-// var erc20Abi = compiled.abi;
-console.log(compiled)
 
 const CONTRACT_ADDRESS = process.env.DATASET_CONTRACT_ADDRESS;
 
@@ -62,6 +60,7 @@ export class Dataset extends Ethereum {
         }
 
         const receipt = await this.getTransactionReceipt(createdDatasetTxHash);
+        console.log('created dataset tx receipt', receipt);
         if (!receipt.status) {
           console.log(receipt);
           throw new Error('${receipt.transactionHash} failed');
@@ -159,6 +158,21 @@ export class Dataset extends Ethereum {
       }
     }
 
+    async getDatasetBalance() {
+      try {
+        const web3 = this.getWeb3();
+        const contract = new web3.eth.Contract(
+          compiled,
+          CONTRACT_ADDRESS,
+        );
+
+        const balance = await contract.methods.balance().call({from: this.address});
+        return web3.utils.fromWei(balance, 'ether');
+      } catch (e) {
+        throw e;
+      }
+    }
+
     async withdraw() {
       try {
         console.log(`withdraw to this address: ${this.address}`);
@@ -172,10 +186,10 @@ export class Dataset extends Ethereum {
         const data = web3.eth.abi.encodeFunctionCall({
           name: 'withdraw',
           type: 'function',
-        })
+          inputs: []
+        }, [])
 
         const nonce = await web3.eth.getTransactionCount(this.address);
-        // const gasPrice = web3.utils.toHex(web3.eth.gasPrice);
 
         const rawTx = {
           nonce,
@@ -191,7 +205,9 @@ export class Dataset extends Ethereum {
         tx.sign(privateKey);
 
         const serializedTx = tx.serialize().toString('hex');
-        return await web3.eth.sendSignedTransaction('0x' + serializedTx);
+        const txHash = await web3.eth.sendSignedTransaction('0x' + serializedTx);
+        console.log(txHash);
+        return txHash;
       } catch (e) {
         throw e;
       }

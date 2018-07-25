@@ -11,6 +11,8 @@ import {Link} from 'react-router-dom'
 import './History.scss';
 import { BASE_API } from '@/constants';
 import {Grid, Image, Container, Card, Header,  Form,Divider, Segment, Dropdown, Visibility, Modal, List, Button, Icon, Confirm} from 'semantic-ui-react'
+import {MasterWallet} from '@/services/Wallets/MasterWallet';
+import {Dataset} from '@/services/Wallets/Tokens/Dataset';
 
 import closeTop from '@/assets/icons/closeTop.svg';
 const TAG = 'History';
@@ -30,7 +32,12 @@ class History extends React.Component {
       auth: props.auth || {},
       isLoading: false,
       datasets: [],
+      balance: 0
     };
+    this.dataset = new Dataset();
+    this.dataset.createFromWallet(MasterWallet.getWalletDefault('ETH'));
+    this.withdraw = this.withdraw.bind(this);
+    this.getBalance = this.getBalance.bind(this);
   }
 
   getDataSetProfile = () => this.state.auth?.dataset_profile || {};
@@ -44,6 +51,27 @@ class History extends React.Component {
 
   componentDidMount() {
     this.fetchData();
+    this.getBalance();
+  }
+
+  async getBalance() {
+    try {
+      const balance = await this.dataset.getDatasetBalance();
+      this.setState({balance});
+    } catch (e) {
+      console.log('cannot get balance', e);
+    }
+  }
+
+  async withdraw() {
+    this.setState({isLoading: true});
+    try {
+      await this.dataset.withdraw();
+      this.setState({isLoading: false});
+    } catch (e) {
+      console.log('cannot withdraw', e);
+      this.setState({isLoading: false});
+    }
   }
 
   fetchData = () => {
@@ -82,8 +110,8 @@ class History extends React.Component {
                 <Card className="my-card"  style={{ marginBottom: '1em'}}>
                           <div style={{ padding:'10px', textAlign:'left', backgroundImage: color1 }}>
                               <h4 style={{ margin:'5px 0px', color:'black'}}>Avaliable for withdraw</h4>
-                              <p  style={{ marginBottom:'0px'}}>Balance: 0.0</p>
-                              <Button basic size="mini" basic color='black' className="my-btn-buy-eth2"  content='Withdraw'  ></Button>
+                              <p  style={{ marginBottom:'0px'}}>Balance: {this.state.balance}</p>
+                              <Button basic size="mini" basic color='black' className="my-btn-buy-eth2"  content='Withdraw' onClick={this.withdraw}  ></Button>
                            </div>
                 </Card>
               </Card.Group>
