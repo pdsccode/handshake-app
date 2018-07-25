@@ -1,0 +1,51 @@
+@import './src/styles/style';
+
+.collapse-custom {
+  border-bottom: 0.5px outset #f7f7f7;
+  font-weight: $normal;
+  .head {
+    padding: rem-calc(21px);
+    display: flex;
+    flex-wrap: wrap;
+    &:hover {
+      cursor: pointer;
+    }
+    .label {
+      width: 94%;
+      display: flex;
+      margin: 0;
+      font-size: rem-calc(20px);
+      color: #FFFFFF;
+      letter-spacing: 0;
+      font-weight: $light;
+      line-height: rem-calc(35px);
+      .index {
+        flex-basis: 4%;
+      }
+    }
+    .extend {
+      width: 6%;
+      text-align: right;
+      img {
+        transform: rotate(90deg);
+      }
+      .rotate {
+        transform: rotate(0);
+      }
+    }
+  }
+  .noList {
+    opacity: 0.6;
+  }
+  .content {
+    margin-bottom: rem-calc(40px);
+    margin-top: rem-calc(-11px);
+    padding-right: rem-calc(40px);
+    padding-left: rem-calc(21px);
+    font-size: rem-calc(20px);
+    color: #FFFFFF;
+    letter-spacing: 0;
+    line-height: rem-calc(35px);
+    font-weight: $light;
+  }
+}

@@ -16,7 +16,6 @@ class Index extends React.PureComponent {
   render() {
     const { messages, locale } = this.props.intl;
     const { name } = this.props;
-    console.log('messages', messages)
     return (
       <LandingWrapper>
         <div className="project-detail">
@@ -58,6 +57,23 @@ class Index extends React.PureComponent {
           <div className="row mt-5">
             <div className="col">
               <div className="pd-content">{messages[`landing_page.${name}.content`]}</div>
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="col">
+              <p className="subTitle">{messages.COIN_EXCHANGE_LP_FAQ_TITLE}</p>
+              <div>
+                {messages.COIN_EXCHANGE_LP_FAQ.map((item, index) => (
+                  <Collapse
+                    label={item.question}
+                    content={item.answer}
+                    isList={item.isList}
+                    key={index}
+                    index={index + 1}
+                  />
+                ))}
+              </div>
             </div>
           </div>
         </div>
