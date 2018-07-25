@@ -566,14 +566,14 @@ class FeedBetting extends React.Component {
               <div className={`sideLabel ${colorBySide}`}>{side === 1 ? `Support` : 'Oppose'}</div>
               <div className="predictName">{predictName}</div>
             </div>
-            <div className="predictName"><span className="odds-text-feed">Odds</span> <span className={`odds-value-feed-${colorBySide}`}>{odds}</span></div>
+            <div className="oddName"><span className="odds-text-feed">Odds</span> <span className={`odds-value-feed-${colorBySide}`}>{odds}</span></div>
           </div>
           <div className="clearfix">
             <div className="bettingInfo">
               <div className="description">Matched</div>
               <div className="description">You could win</div>
             </div>
-            {role == ROLE.INITER ? this.renderMaker() : this.renderShaker()}
+            {role === ROLE.INITER ? this.renderMaker() : this.renderShaker()}
           </div>
           <div className="bottomDiv">
             {this.renderStatus()}
