@@ -104,7 +104,7 @@ export default {
   'ex.discover.label.priceSell': 'SELL',
   'ex.discover.label.reviews': '({reviewCount})',
   'ex.discover.banner.text': 'Got coins? Turn them into a money-making machine.',
-  'ex.discover.banner.btnText': 'BECOME A LOCAL EXCHANGE',
+  'ex.discover.banner.btnText': 'BECOME A STATION',
   'ex.discover.shakeDetail.label.amount': 'Amount',
   'ex.discover.shakeDetail.label.total': 'Total',
   'ex.discover.shakeDetail.label.maximum': 'Maximum:',
