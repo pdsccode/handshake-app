@@ -47,7 +47,7 @@ class Index extends React.PureComponent {
               <div className="float-right">
                 <span><a className={`${type === 'product' ? 'active' : ''} landing-nav-link`} href={URL.PRODUCT_URL}>Product</a></span>
                 <span><a className={`${type === 'research' ? 'active' : ''} landing-nav-link`} href={URL.RESEARCH_URL}>Research</a></span>
-                <button className="btn btn-primary-landing" style={{ marginLeft: '45px' }}><FormattedMessage id="landing_page.btn.joinOurTeam" /></button>
+                <a className="btn btn-primary-landing" style={{ marginLeft: '45px' }} href="https://www.autonomous.ai/talents"><FormattedMessage id="landing_page.btn.joinOurTeam" /></a>
               </div>
             </div>
           </div>
