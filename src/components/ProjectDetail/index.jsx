@@ -21,7 +21,7 @@ class Index extends React.PureComponent {
         <div className="project-detail">
           <div className="row mt-5">
             <div className="col">
-              <div className="pd-breadcrumb"><a href="/"><FormattedMessage id="landing_page.breadcrumb.home" /></a> / <span><FormattedMessage id="landing_page.dad.breadcrumb" /></span></div>
+              <div className="pd-breadcrumb"><a href="/"><FormattedMessage id="landing_page.breadcrumb.home" /></a><span className="mx-2">/</span><span><FormattedMessage id="landing_page.dad.breadcrumb" /></span></div>
             </div>
           </div>
           <div className="row mt-4">
