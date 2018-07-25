@@ -381,9 +381,9 @@ export default {
 
   'landing_page.label.onlyMobile': 'The Ninja network is only accessible via mobile.',
   'landing_page.label.openOn': `Open <a href="#" class="landing-link">www.ninja.org</a> on your mobile browser to gain anonymous entry.`,
-  'landing_page.label.joinTelegram': `Join the dojo on <a href="#" class="landing-link">Telegram</a>`,
+  'landing_page.label.joinTelegram': `Join the dojo on <a href="https://t.me/ninja_org" class="landing-link">Telegram</a>`,
   'landing_page.label.airdrop': `Jump in for <a href="#" class="landing-link">Airdrop</a>`,
-  'landing_page.label.whitepaper': `Jump in for <a href="#" class="landing-link">Whitepaper</a>`,
+  'landing_page.label.whitepaper': `Jump in for <a href="https://medium.com/@ninjadotorg/shakeninja-bex-1c938f18b3e8" class="landing-link">Whitepaper</a>`,
   'landing_page.label.faq': `We answered your <a href="#" class="landing-link">FAQ</a>`,
 
   'landing_page.breadcrumb.home': 'Home',

@@ -49,7 +49,7 @@ class Index extends React.PureComponent {
                 <span><a className={`${type === 'research' ? 'active' : ''} landing-nav-link`} href={URL.RESEARCH_URL}>Research</a></span>
                 <button className="btn btn-primary-landing" style={{ marginLeft: '45px' }}><FormattedMessage id="landing_page.btn.joinOurTeam" /></button>
               </div>
-              </div>
+            </div>
           </div>
 
           {children}
