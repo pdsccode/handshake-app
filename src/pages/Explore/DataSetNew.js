@@ -186,8 +186,10 @@ class DataSetNew extends React.Component {
   render() {
     let self = this;
     return (
-      <Segment loading={this.state.isLoading} vertical style={{marginTop:'-5em',background:'white',zIndex:'55555'}}>
-       <h2 className="my-h2-dataset-new">
+      // <Segment loading={this.state.isLoading} vertical style={{marginTop:'-5em',background:'white',zIndex:'55555'}}>
+      //  <h2 className="my-h2-dataset-new">
+      <Segment vertical  loading={this.state.isLoading}  id="segment-detail"> 
+          <h2 className="my-h2-dataset-new" >
           Create new Dataset
           <Link to={'/explore'}><Image src={closeTop} className="btn-Close-Top"/></Link>
        </h2>

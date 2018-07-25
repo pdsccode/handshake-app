@@ -74,14 +74,13 @@ class History extends React.Component {
     const color2 = "linear-gradient(62deg, rgb(208, 208, 208), rgb(243, 243, 243) 100%, rgb(255, 255, 255))";
     return (
       <Visibility once={true}>  
-      <Segment vertical  style={{marginTop:'-5em',background:'white',zIndex:'55555'}}>    
-        <h2 className="my-h2-dataset-new">
+       <Segment vertical  id="segment-detail"> 
+              <h2 className="my-h2-dataset-new" style={{    marginBottom:'0px'}}>
                 My Datasets
                 <Link to={'/mine'}><Image src={closeTop} className="btn-Close-Top"/></Link>
         </h2> 
-         <Container style={{marginLeft:'-20px',float:'left',background:'white' }}> 
-              <Card.Group centered > 
-
+         
+              <Card.Group centered >  
                 <Card className="my-card"  style={{ marginBottom: '1em'}}> 
                           <div style={{ padding:'10px', textAlign:'left', backgroundImage: color1 }}>
                               <h4 style={{ margin:'5px 0px', color:'black'}}>Avaliable for withdraw</h4>  
@@ -89,12 +88,9 @@ class History extends React.Component {
                               <Button basic size="mini" basic color='black' className="my-btn-buy-eth2"  content='Withdraw'  ></Button>
                            </div>   
                 </Card>
-              </Card.Group>
-        </Container> 
-        
-        <Container style={{marginLeft:'-20px',float:'left',background:'white' }}> 
+              </Card.Group> 
             <h2 className="my-h2-dataset-new h2-header-datasetslist"> Datasets </h2> 
-              <Card.Group centered > 
+              <Card.Group centered   style={{ marginTop:'-5px'}}> 
                 {this.state.datasets.map((item, i) => {
                   return (
                     <Card key={i} className="my-card"  style={{ marginBottom: '1em'}}> 
@@ -106,8 +102,7 @@ class History extends React.Component {
                     
                   )
                 })}
-              </Card.Group>
-              </Container> 
+              </Card.Group> 
       </Segment>
       <Segment vertical loading={this.state.isLoading}/> 
     </Visibility>

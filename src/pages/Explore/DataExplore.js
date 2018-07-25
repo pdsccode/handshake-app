@@ -227,7 +227,7 @@ class DataExplore extends React.Component {
     return (
       <Visibility once={true} onUpdate={this.handleUpdate}>
         <Segment vertical >
-            <Card.Group centered style={{marginTop: '-2em'}}>
+            <Card.Group centered  >
                   <Card  className="my-card" style={{background:'#21c364' ,    marginBottom: '12px'}}>
                     <Link className="ui image" to={'/explore/create'}>
                       <Card.Content style={{textAlign:'left'}}>

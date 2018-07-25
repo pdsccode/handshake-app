@@ -14,6 +14,7 @@ body{
 }
 .ui.vertical.segment{
     border-bottom: 0;
+    padding:0!important;
 }
 .ui.loading.segment:before{
     background: rgba(255, 255, 255, 0);
@@ -29,7 +30,7 @@ body{
 }
 .ui.search {
     font-size: 1em;
-    margin: 0.5em 0.8em 0 1em;
+    margin: 0.5em 12px 0em 12px;
 }
 
 .ui.menu.five.item a {
@@ -188,10 +189,19 @@ body{
 	opacity: 0.4;
 }
 
+.ui.centered.cards {
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    /* margin: -1.5em 12px 0em 13px; */
+    margin: 0.5em 12px 0em 12px;
+    padding-top: 15px;
+}
+
 .ui.card, .ui.cards>.card{
     /* width:   348px; */
-    width: 330px;
-    margin: 0em 0.5em 6px 0.5em; /*0em 0.5em 1em 0.5em;*/
+    width: 348px;
+    margin: 0em 0em 1em 0em;
 
 }
 
@@ -445,6 +455,9 @@ line-height: 32px; */
     text-align: left;
 
 }
+.wallet-page{
+    padding-top:26px!important;
+}
 
 .ui.form .inline.fields>label{
     margin-top: -0.4em;
@@ -573,11 +586,18 @@ img.ui.image.btn-add-class{
 }
 
 .h2-header-datasetslist{
-    margin-top: 10px!important;
+    /* margin-top: 10px!important;
     border-bottom: none;
     text-align: left;
     font-weight: normal!important;
-    margin-bottom: 10px;
+    margin-bottom: 10px; */
+    margin-top: 0px!important;
+    border-bottom: none;
+    text-align: left;
+    font-weight: normal!important;
+    margin-bottom: 0px;
+    margin-left: 14px;
+    padding-bottom: 0px;
 }
 
 .my-btn-buy-eth2{
@@ -591,3 +611,11 @@ img.ui.image.btn-add-class{
     padding: 0em 1em!important; 
     margin-top: 8px!important; 
 }
+
+#segment-detail {
+    background: white!important;
+    z-index: 55555;
+    padding-top: 14px!important;
+    margin-top: -3em;
+}
+

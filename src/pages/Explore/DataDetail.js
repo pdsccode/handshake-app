@@ -432,13 +432,11 @@ class DataDetail extends React.Component {
     let self = this;
     return (
       <Visibility once={true} onUpdate={this.handleUpdate}>
-        <Segment vertical  style={{marginTop:'-5em',background:'white',zIndex:'55555'}}>
-
-            <h2 className="my-h2-dataset-new">
+        <Segment vertical  id="segment-detail"> 
+              <h2 className="my-h2-dataset-new" style={{    marginBottom:'0px'}}>
                   Explore / {this.state.category ? this.state.category.name :''}
                   <Link to={'/explore'}><Image src={closeTop} className="btn-Close-Top"/></Link>
               </h2>
-           <Container style={{marginLeft:'-20px',float:'left',background:'white' }}>
                 <Card.Group centered >
                   <Card className="my-card" style={{ marginBottom: '1em', paddingBottom: '1em'}}>
                     <Card.Content>
@@ -454,6 +452,7 @@ class DataDetail extends React.Component {
                               :""
                             }
                             <List.Item><span style={{fontWeight:'700'}}>Quantity: </span> {this.state.category && this.state.category.total_images ? `${this.state.category.total_images} Images` : '0 Image'} </List.Item>
+                            
                             <List.Item style={{ marginRight: '15px',overflow: 'hidden',display: 'flex'}}>
                                     <span style={{fontWeight:'700'}} >Address: </span>
                                     <span style={{ float: 'left',marginTop: '0px',marginLeft: '6px'}}>{blockchainNetworks.ethereum.contracts.dadsetTokenAddress}</span>
@@ -491,7 +490,7 @@ class DataDetail extends React.Component {
                     )
                   })}
                 </Card.Group>
-                </Container>
+               
               <Modal size='large'closeOnEscape closeIcon open={this.state.modal.open} onClose={this.closeModal} style={{height: '90%'}}>
                 <Modal.Header>Choose classify</Modal.Header>
                 <Modal.Content style={{height: '80%', overflowY: 'scroll'}}>

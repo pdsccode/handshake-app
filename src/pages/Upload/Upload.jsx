@@ -292,8 +292,9 @@ class Upload extends React.Component {
 
     return (
       <Visibility once>
-         <Segment vertical loading={this.state.isLoading}  style={{marginTop:'-5em'}}>
-          <h2 className="my-h2-dataset-new">Upload Image</h2>
+        <Segment vertical  loading={this.state.isLoading}  id="segment-detail"> 
+          <h2 className="my-h2-dataset-new" >
+          Upload Image</h2>
           <div className="ui center aligned grid container" style={{padding:'15px', paddingTop:'5px'}}>
             <div className="row wrap-upload">
               <label

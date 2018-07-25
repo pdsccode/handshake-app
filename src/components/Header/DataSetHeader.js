@@ -304,30 +304,7 @@ class MobileContainer extends React.Component {
             <Segment textAlign='center' style={{marginTop:'7.5em', padding: '1em 0em',bottom:'4em'}} vertical>
               {this.props.children}
               {/* <UploadModal isAuth={this.props.isAuth} open={this.state.uploadModalOpen} handleClose={this.closeModal}/> */}
-            </Segment>
-
-            {/* <Menu icon  className="ui fluid five item menu footer" id="footer">
-              <Menu.Item  name='home' active={activeItem === 'home'} onClick={this.handleItemClick} >
-                  {activeItem === 'home' ? <img class="my-menu-bar" src={home_icon_active}/>: <img class="my-menu-bar" src={home_icon}/> }
-                </Menu.Item>
-
-              <Menu.Item  name='explore' active={activeItem === 'explore'} onClick={this.handleItemClick} >
-                {activeItem === 'explore' ? <img class="my-menu-bar" src="/icons/compassactive.svg"/>: <img class="my-menu-bar" src="/icons/Compass.svg"/> }
-
-              </Menu.Item>
-
-              <Menu.Item  name='upload' active={activeItem === 'upload'} onClick={this.handleItemClick}>
-                 <img class="my-menu-bar-center" src="/icons/qa.png"/>
-              </Menu.Item>
-
-              <Menu.Item  name='history' active={activeItem === 'history'} onClick={this.handleItemClick} >
-                 {activeItem === 'history' ? <img class="my-menu-bar" src="/icons/activityactive.svg"/>: <img class="my-menu-bar" src="/icons/activity.svg"/> }
-              </Menu.Item>
-
-              <Menu.Item  name='wallet' active={activeItem === 'wallet'} onClick={this.handleItemClick}>
-                <img class="my-menu-bar" src="/icons/user.svg"/>
-              </Menu.Item>
-            </Menu> */}
+            </Segment> 
            
         </Visibility>
       </Responsive>
