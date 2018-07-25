@@ -67,6 +67,25 @@ const FormFilterFeeds = createForm({
   },
 });
 
+const PRICE_SORTS = [
+  {
+    id: 'buy_btc_d',
+    text: 'Buy BTC',
+  },
+  {
+    id: 'sell_btc_d',
+    text: 'Sell BTC',
+  },
+  {
+    id: 'buy_eth_d',
+    text: 'Buy ETH',
+  },
+  {
+    id: 'sell_eth_d',
+    text: 'Sell ETH',
+  },
+];
+
 const TAG = 'DISCOVER_PAGE';
 class DiscoverPage extends React.Component {
   static propTypes = {
@@ -111,7 +130,8 @@ class DiscoverPage extends React.Component {
       program,
       isLuckyPool: true,
       sortIndexActive: CASH_SORTING_CRITERIA.DISTANCE,
-      sortOrder: SORT_ORDER.ASC,
+      sortPriceIndexActive: '',
+      sortOrder: '',
     };
 
     if (this.state.handshakeIdActive === HANDSHAKE_ID.EXCHANGE) {
@@ -131,7 +151,7 @@ class DiscoverPage extends React.Component {
   }
 
   componentDidMount() {
-    const { ipInfo } = this.props;
+    const { ipInfo, rfChange } = this.props;
 
     // Listen event scroll down
     window.addEventListener('scroll', this.handleScroll);
@@ -174,6 +194,9 @@ class DiscoverPage extends React.Component {
         errorFn: () => { },
       });
     }
+
+    rfChange(nameFormFilterFeeds, 'sortType', CASH_SORTING_CRITERIA.DISTANCE);
+    this.setState({ sortIndexActive: CASH_SORTING_CRITERIA.DISTANCE });
   }
 
   componentWillUnmount() {
@@ -227,6 +250,9 @@ class DiscoverPage extends React.Component {
         const {
           handshakeIdActive,
           query,
+          sortIndexActive,
+          sortPriceIndexActive,
+          sortOrder,
         } = prevState;
         const { ipInfo } = nextProps;
         const qs = { };
@@ -243,6 +269,11 @@ class DiscoverPage extends React.Component {
 
           if (handshakeIdActive === HANDSHAKE_ID.EXCHANGE) {
             qs.custom_query = ` -offline_i:1 `;
+
+            if (sortIndexActive === CASH_SORTING_CRITERIA.PRICE) {
+              qs.c_sort = sortPriceIndexActive;
+              qs.t_sort = sortOrder;
+            }
           }
         }
 
@@ -477,6 +508,7 @@ class DiscoverPage extends React.Component {
       handshakeIdActive,
       query,
       sortIndexActive,
+      sortPriceIndexActive,
       sortOrder,
     } = this.state;
     const qs = { };
@@ -494,7 +526,7 @@ class DiscoverPage extends React.Component {
         qs.custom_query = ` -offline_i:1 `;
 
         if (sortIndexActive === CASH_SORTING_CRITERIA.PRICE) {
-          qs.c_sort = 'buy_btc_d';
+          qs.c_sort = sortPriceIndexActive;
           qs.t_sort = sortOrder;
         }
       }
@@ -518,13 +550,25 @@ class DiscoverPage extends React.Component {
 
   onSortChange = (e, newValue) => {
     const { rfChange } = this.props;
+    const { sortIndexActive } = this.state;
     console.log('onFilterChange', newValue);
-    this.setState(prevState => {
-      const sortOrder = prevState.sortIndexActive === newValue ? (prevState.sortOrder === SORT_ORDER.ASC ? SORT_ORDER.DESC : SORT_ORDER.ASC) : SORT_ORDER.ASC;
-      return { sortIndexActive: newValue, sortOrder };
-    }, () => {
-      this.loadDiscoverList();
-    });
+    if (sortIndexActive !== newValue) {
+      this.setState({ sortIndexActive: newValue }, () => {
+        this.loadDiscoverList();
+      });
+    }
+  }
+
+  onSortPriceChange = (e, item) => {
+    const { sortPriceIndexActive } = this.state;
+    console.log('onSortPriceChange', item);
+
+    if (sortPriceIndexActive !== item.id) {
+      const sortOrder = item.id.includes('buy') ? SORT_ORDER.ASC : SORT_ORDER.DESC;
+      this.setState({ sortIndexActive: CASH_SORTING_CRITERIA.PRICE, sortPriceIndexActive: item.id, sortOrder }, () => {
+        this.loadDiscoverList();
+      });
+    }
   }
 
   render() {
@@ -588,9 +632,10 @@ class DiscoverPage extends React.Component {
                           name="sortType"
                           component={fieldDropdown}
                           classNameWrapper=""
-                          defaultText={<FormattedMessage id="ex.create.placeholder.stationCurrency" />}
+                          defaultText={<FormattedMessage id="ex.sort.price" />}
                           classNameDropdownToggle="dropdown-sort bg-white"
-                          list={[]}
+                          list={PRICE_SORTS}
+                          onChange={this.onSortPriceChange}
                         />
                       </div>
                     </div>
