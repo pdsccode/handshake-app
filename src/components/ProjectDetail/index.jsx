@@ -28,9 +28,9 @@ class Index extends React.PureComponent {
             <div className="col-6">
               <div className="pd-heading"><FormattedMessage id={`landing_page.${name}.heading`} /></div>
               <div className="pd-subHeading"><FormattedMessage id={`landing_page.${name}.subHeading`} /></div>
-              <button className="btn btn-primary-landing" style={{ marginTop: '45px' }}><FormattedMessage id="landing_page.btn.goToLandingPage" /></button>
+              <button className="btn btn-primary-landing" style={{ marginTop: '34px' }}><FormattedMessage id="landing_page.btn.goToLandingPage" /></button>
             </div>
-            <div className="col-5 offset-1">
+            <div className="col-6">
               <img src={imgDad} className="w-100" />
             </div>
           </div>
