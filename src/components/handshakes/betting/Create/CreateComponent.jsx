@@ -266,7 +266,7 @@ class BettingCreate extends React.Component {
 
     const extraData = {
       event_name: matchName,
-      event_predit: matchOutcome,
+      event_predict: matchOutcome,
     };
     const params = {
       type: HANDSHAKE_ID.BETTING,
