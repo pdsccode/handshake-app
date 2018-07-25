@@ -8,6 +8,7 @@ import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
 
 import LandingWrapper from '@/components/LandingWrapper';
 import imgDad from '@/assets/images/landing/home/dad.jpg';
+import Collapse from '@/components/Collapse';
 
 import './styles.scss';
 
@@ -62,13 +63,14 @@ class Index extends React.PureComponent {
 
           <div className="row">
             <div className="col">
-              <p className="subTitle">{messages.COIN_EXCHANGE_LP_FAQ_TITLE}</p>
+              <div className="pd-faq">{messages.COIN_EXCHANGE_LP_FAQ_TITLE}</div>
               <div>
                 {messages.COIN_EXCHANGE_LP_FAQ.map((item, index) => (
                   <Collapse
                     label={item.question}
                     content={item.answer}
                     isList={item.isList}
+                    theme="white"
                     key={index}
                     index={index + 1}
                   />

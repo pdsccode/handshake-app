@@ -16,9 +16,10 @@ class Collapse extends React.PureComponent {
 
   render() {
     const { isCollapsed } = this.state;
-    const { label, content, isList, index } = this.props;
+    const { label, content, isList, index, theme = 'black' } = this.props;
+    const classWrapper = theme === 'black' ? 'collapse-custom-black' : 'collapse-custom-white';
     return (
-      <div className="collapse-custom">
+      <div className={classWrapper}>
         <div className="head" onClick={this.toggle}>
           <div className="label">
             <div className="index">
