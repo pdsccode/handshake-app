@@ -76,8 +76,8 @@ class ReceiveCoin extends React.Component {
       walletSelected: false,
       rates: [],
       active: this.props.active,
-      inputSendAmountValue: 0,
-      inputSendMoneyValue: 0,
+      inputSendAmountValue: '',
+      inputSendMoneyValue: '',
       isCurrency: false,      
       switchValue: 0,
     }
@@ -137,7 +137,7 @@ class ReceiveCoin extends React.Component {
 
   componentDidUpdate(){
     if (this.props.active && this.props.active != this.state.active){      
-      this.setState({active: this.props.active, inputSendAmountValue: 0, inputSendMoneyValue: 0, switchValue: 0, isCurrency: false});
+      this.setState({active: this.props.active, inputSendAmountValue: '', inputSendMoneyValue: '', switchValue: 0, isCurrency: false});
       this.resetForm();
       this.getWalletDefault();      
     }

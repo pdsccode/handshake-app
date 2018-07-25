@@ -21,12 +21,13 @@ const RouterCreate = createDynamicImport(() => import('@/components/Router/Creat
 const RouterWallet = createDynamicImport(() => import('@/components/Router/Wallet'), Loading);
 const RouterPayment = createDynamicImport(() => import('@/components/Router/Payment'), Loading);
 const RouterExchange = createDynamicImport(() => import('@/components/Router/Exchange'), Loading);
-const RouterTransaction = createDynamicImport(() => import('@/components/Router/Transaction'), Loading);
 const RouterComment = createDynamicImport(() => import('@/components/Router/Comment'), Loading);
 const RouterAdmin = createDynamicImport(() => import('@/components/Router/Admin'), Loading);
 const RouterLuckyPool = createDynamicImport(() => import('@/pages/LuckyLanding/LuckyLanding'), Loading);
+const RouterPrediction = createDynamicImport(() => import('@/pages/Prediction/Prediction'), Loading);
 
 const rootRouterMap = [
+  { path: URL.HANDSHAKE_PREDICTION, component: RouterPrediction },
   { path: URL.HANDSHAKE_ME, component: RouterMe },
   { path: URL.HANDSHAKE_DISCOVER, component: RouterDiscover },
   { path: URL.HANDSHAKE_CASH, component: RouterDiscover },
@@ -35,7 +36,6 @@ const rootRouterMap = [
   { path: URL.HANDSHAKE_PAYMENT, component: RouterPayment },
   { path: URL.HANDSHAKE_CREATE, component: RouterCreate },
   { path: URL.HANDSHAKE_EXCHANGE, component: RouterExchange },
-  { path: URL.TRANSACTION_LIST, component: RouterTransaction },
   { path: URL.COMMENTS_BY_SHAKE, component: RouterComment },
   { path: URL.ADMIN, component: RouterAdmin },
 ];
@@ -109,7 +109,7 @@ class Router extends React.Component {
                               if (process.env.isDojo) {
                                 return <Redirect to={{ pathname: URL.HANDSHAKE_CASH }} />
                               }
-                              return <Redirect to={{ pathname: URL.HANDSHAKE_DISCOVER }} />
+                              return <Redirect to={{ pathname: URL.HANDSHAKE_EXCHANGE }} />
                             }}
                           />
                           {routers}

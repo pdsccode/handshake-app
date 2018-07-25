@@ -29,6 +29,7 @@ import FeedExchangeLocal from '@/components/handshakes/exchange/Feed/FeedExchang
 import FeedSeed from '@/components/handshakes/seed/Feed';
 import BlockCountry from '@/components/core/presentation/BlockCountry';
 import Maintain from '@/components/core/presentation/Maintain';
+import NavigationBar from '@/modules/NavigationBar/NavigationBar';
 import MultiLanguage from '@/components/core/controls/MultiLanguage';
 // import Tabs from '@/components/handshakes/exchange/components/Tabs';
 import NoData from '@/components/core/presentation/NoData';
@@ -41,6 +42,7 @@ import ninjaLogoSVG from '@/assets/images/logo.png';
 import DiscoverBetting from '@/components/handshakes/betting/Discover/Discover';
 import LuckyLanding from '@/pages/LuckyLanding/LuckyLanding';
 import * as gtag from '@/services/ga-utils';
+import taggingConfig from '@/services/tagging-config';
 
 
 // style
@@ -339,12 +341,12 @@ class DiscoverPage extends React.Component {
     const { type } = handshake;
     switch (type) {
       case HANDSHAKE_ID.EXCHANGE: {
-        gtag.event({
-          category: 'Cash',
-          action: 'click_feed',
-          // label: ''
-        })
         const { modalContent, modalClassName } = extraData;
+        gtag.event({
+          category: taggingConfig.cash.category,
+          action: taggingConfig.cash.action.clickFeed,
+          label: handshake.id
+        })
         if (modalContent) {
           this.setState({ modalContent, propsModal: { className: modalClassName } }, () => {
             this.modalRef.open();
@@ -403,6 +405,11 @@ class DiscoverPage extends React.Component {
 
   clickCategoryItem(category) {
     const { id } = category;
+    gtag.event({
+      category: taggingConfig.common.category,
+      action: taggingConfig.common.action.chooseCategory,
+      label: id
+    })
     if (this.state.handshakeIdActive !== id) {
       this.setLoading(true);
     }
@@ -510,16 +517,19 @@ class DiscoverPage extends React.Component {
         <Grid className="discover">
           {/* Discover header */}
           <Row className="category-wrapper">
-            <Col className="col-9">
-              <Category
-                idActive={handshakeIdActive}
-                onRef={(category) => { this.categoryRef = category; return null; }}
-                onItemClick={this.clickCategoryItem}
-              />
-            </Col>
-            <Col className="col-3 multilanguage-block">
-              <MultiLanguage />
-            </Col>
+            <NavigationBar />
+            {/*
+              <Col className="col-9">
+                <Category
+                  idActive={handshakeIdActive}
+                  onRef={(category) => { this.categoryRef = category; return null; }}
+                  onItemClick={this.clickCategoryItem}
+                />
+              </Col>
+              <Col className="col-3 multilanguage-block">
+                <MultiLanguage />
+              </Col>
+            */}
           </Row>
           {/* exchange */}
           {
@@ -565,9 +575,7 @@ class DiscoverPage extends React.Component {
         </ModalDialog>
         <ModalDialog className="modal" onRef={(modal) => { this.modalLuckyPoolRef = modal; return null; }}>
           <LuckyLanding onButtonClick={() => {
-            this.setState({
-              isLuckyPool: false,
-            });
+
             this.modalLuckyPoolRef.close();
           }}
           />

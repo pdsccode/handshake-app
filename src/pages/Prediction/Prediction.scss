@@ -1,0 +1,193 @@
+@import './src/styles/style';
+
+.Prediction {
+  .modal {
+    background-color: #1F2B34;
+    .modal-dialog-content {
+      position: relative;
+      border-radius: 0;
+    }
+    .modal-custom-body {
+      max-height: 80vh;
+      padding: 0;
+      background-color: #000B35;
+      > .Tabs {
+        padding: 20px;
+      }
+      > .Tabs.BetModeContainer {
+        padding: 0;
+      }
+    }
+    .close {
+      position: absolute;
+      top: -35px;
+      left: 0;
+      z-index: 20;
+      opacity: 0.7;
+      color: #FFFFFF;
+      font-size: 35px;
+      font-weight: 100;
+    }
+  }
+
+  .matchOutCome {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    padding: 20px 20px 0;
+    .label {
+      font-size: 14px;
+      color: #FFFFFF;
+    }
+    .name {
+      font-size: 18px;
+      color: #FFFFFF;
+      &.support {
+        color: $caribbean-green;
+      }
+      &.oppose {
+        color: #fa6b49;
+      }
+    }
+  }
+
+  .BetModeContainer {
+    .matchOutCome {
+      padding: 0 0 20px 0;
+    }
+  }
+
+  .ShareToWin {
+    background-image: url('../../assets/images/share/share-to-win.png');
+    display: flex;
+    height: rem-calc(110px);
+    position: relative;
+
+    .ShareToWinTitle {
+      font-family: $font-family-base;
+      font-size: rem-calc(22px);
+      color: #364164;
+      letter-spacing: 0;
+      font-weight: bold;
+
+      position: absolute;
+      top: 40%;
+      right: rem-calc(30px);
+      span {
+        color: #2456FB;
+      }
+    }
+  }
+
+  .OutcomeList {
+    height: 74px;
+    overflow: hidden;
+    margin: rem-calc(15px) rem-calc(-10px);
+
+    .OutcomeItem {
+      font-family: $font-family-base;
+      font-size: rem-calc(20px);
+      color: white;
+      border-radius: rem-calc(6px);
+      padding: rem-calc(10px 15px);
+      margin-right: rem-calc(5px);
+      line-height: rem-calc(27px);
+      font-weight: $medium;
+
+      span {
+        display: block;
+      }
+    }
+
+    .ScrollableList {
+      height: 80px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      .ScrollableItem:first-child {
+        margin-left: rem-calc(10px);
+      }
+      .ScrollableItem:last-child {
+        margin-right: rem-calc(6px);
+      }
+    }
+  }
+
+  .EventItem {
+    padding: rem-calc(20px 10px);
+    font-family: $font-family-base;
+    margin-bottom: rem-calc(10px);
+    box-shadow: rem-calc(0 2px 10px 0) rgba(203, 203, 203, 0.50);
+
+    .EventName {
+      font-size: rem-calc(20px);
+      color: #000000;
+      letter-spacing: 0;
+      line-height: rem-calc(24px);
+      font-weight: $medium;
+      margin-bottom: rem-calc(2px);
+    }
+
+    .EventNumberOfPlayer {
+      font-size: rem-calc(14px);
+    }
+
+    .EventDetails {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .EventMessage {
+      display: flex;
+      justify-content: space-between;
+      padding: rem-calc(0px 10px);
+      height: rem-calc(44px);
+      align-items: center;
+
+      background-image: linear-gradient(-180deg, #FFFFFF 0%, #F9FAFB 99%);
+      border: 1px solid #DEDEDE;
+      border-radius: rem-calc(6px);
+
+      &:hover {
+        text-decoration: none;
+      }
+
+      .EventMessageText {
+        font-size: rem-calc(15px);
+        color: #030303;
+        letter-spacing: 0;
+      }
+
+      .EventMessageIcon {
+        padding-right: rem-calc(5px);
+        img {
+          min-width: rem-calc(15px);
+        }
+      }
+    }
+
+    .EventTotalBetValue {
+      color: #D0021B;
+    }
+
+    .EventTimeLeftText, .EventTotalBetText {
+      color: #8A8A8F;
+      width: rem-calc(70px);
+      font-size: rem-calc(14px);
+    }
+
+    .EventTimeLeftValue, .EventTotalBetValue {
+      font-size: rem-calc(16px);
+      font-weight: $normal;
+    }
+
+    .EventTimeLeft, .EventTotalBet {
+      display: flex;
+      align-items: center;
+    }
+
+    .EventTotalBetValue {
+      color: #D0021B;
+    }
+  }
+}

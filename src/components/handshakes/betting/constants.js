@@ -1,3 +1,4 @@
+export const CRYPTOSIGN_MINIMUM_MONEY = 0.00002;
 export const BET_BLOCKCHAIN_STATUS = {
   STATUS_MAKER_SHOULD_UNINIT: -12,
   STATUS_INIT_FAILED: -10,
@@ -29,7 +30,8 @@ export const ROLE = {
 
 export const SIDE = {
   SUPPORT: 1,
-  AGAINST: 2,
+  // AGAINST: 2,
+  OPPOSE: 2,
 };
 export const BET_TYPE = {
   INIT: 'init',

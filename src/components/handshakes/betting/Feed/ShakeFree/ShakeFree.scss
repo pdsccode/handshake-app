@@ -1,16 +1,18 @@
 @import './src/styles/style';
 
 .wrapperBettingShakeFree {
-  padding: rem-calc(30px 30px 30px 30px);
-  background: #3A444C;
+  // padding: rem-calc(30px 30px 30px 30px);
+  // background: #3A444C;
   //box-shadow: 0 2px 4px 0 rgba(203,203,203,0.50);
   font-family: $font-family-base;
   height: 100%;
   .rowWrapper {
+    position: relative;
     display: flex;
     flex-wrap: wrap;
     width: 100%;
     margin-top: rem-calc(10px);
+    justify-content: space-between;
     .btn-block + .btn-block {
       margin-top: 0;
     }
@@ -35,7 +37,7 @@
     line-height: rem-calc(22px);
   }
   .input {
-    flex-basis: 100%;
+    flex-basis: 48%;
     background: rgba(216,216,216,0.14);
     border: 2px solid rgba(255,255,255,0.15);
     font-size: rem-calc(14px);
@@ -43,48 +45,42 @@
     letter-spacing: 0;
     padding: rem-calc(10px 11px);
     width: 100%;
+    &[name="odds"] {
+      padding-right: 94px;
+    }
   }
   .amount {
     margin-bottom: -35px;
   }
   .amount + .cryptoCurrency {
     font-size: rem-calc(14px);
-    font-weight: $medium;
+    font-weight: 400;
     color: #FFFFFF;
     letter-spacing: 0;
-    position: relative;
+    position: relative; 
     top: 6px;
     left: 86%;
     @media (max-width: 330px) {
       left: 84%;
     }
   }
-  .odds + .cryptoCurrency {
-    font-size: rem-calc(14px);
-    font-weight: $medium;
-    color: #FFFFFF;
-    letter-spacing: 0;
-    position: relative;
-    bottom: 26px;
-    left: 70%;
-    @media (max-width: 375px) {
-      left: 67%;
-    }
-    @media (max-width: 330px) {
-      left: 60%;
-    }
+  .odds + .cryptoCurrency,
+  .yourOdds +  .cryptoCurrency, {
+    font-size: rem-calc(12px);
+    font-weight: lighter;
+    color: #C8C7CC;
+    position: absolute;
+    bottom: 4px;
+    right: 10px;
+    // @media (max-width: 375px) {
+    //   left: 67%;
+    // }
+    // @media (max-width: 330px) {
+    //   left: 60%;
+    // }
   }
   .gasPriceTitle {
-    width: 50%;
-  }
-  .yourOdds +  .cryptoCurrency {
-    left: 75%;
-    @media (max-width: 375px) {
-      left: 73%;
-    }
-    @media (max-width: 330px) {
-      left: 67%;
-    }
+    // width: 50%;
   }
   .input[readOnly] {
     border-bottom: none;
@@ -94,13 +90,13 @@
   }
   .label {
     flex-shrink: 0;
-    flex-basis: 100%;
+    flex-basis: 50%;
     font-size: rem-calc(12px);
     color: #fff;
     letter-spacing: 0;
     line-height: rem-calc(22px);
-    margin: 0;
-    opacity: 0.66;
+    margin: 7px 0 0 0;
+    //opacity: 0.66;
   }
   .value {
     //flex-basis: 20%;
@@ -126,14 +122,22 @@
     }
   }
   .btnOK {
-    background: $caribbean-green;
-    border-radius: rem-calc(2px);
-    font-size: rem-calc(16px);
-    color: #FFFFFF;
-    letter-spacing: 0;
-    margin-top: rem-calc(20px);
+    // background: $caribbean-green;
+    // border-radius: rem-calc(2px);
+    // font-size: rem-calc(16px);
+    // color: #FFFFFF;
+    // letter-spacing: 0;
+    // margin-top: rem-calc(20px);
+    // border: none;
+    // font-weight: $medium;
+
+    margin-top: 15px;
     border: none;
-    font-weight: $medium;
+    border-radius: 0;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    line-height: 1.375rem;
+    font-weight: normal;
   }
   .btnRed {
     background: #FA6B49;
@@ -147,7 +151,7 @@
     color: #FFFFFF;
     letter-spacing: 0;
     font-weight: bold;
-    margin-bottom: rem-calc(20px);
+    margin-bottom: rem-calc(15px);
   }
 
   .freeAmount {
@@ -155,7 +159,30 @@
     margin-top: rem-calc(20px);
   }
   .possibleWinningsValue {
-    font-weight: $medium;
+    font-weight: 400;
     font-size: rem-calc(14px);
+  }
+
+  .toggleShakeBetting {
+    justify-content: space-between;
+    margin-top: 0;
+    .itemToggle {
+      &.btnBlue {
+        border: none;
+        background: #0BDD91;
+      }
+      &.btnRed {
+        border: none;
+        background: #fa6b49;
+      }
+      flex: none;
+      width: 48%;
+      text-align: center;
+      line-height: 1.375rem;
+      background-color: transparent;
+      padding: 0.4375rem;
+      border: 1px solid #979797;
+      font-weight: 400;
+    }
   }
 }
