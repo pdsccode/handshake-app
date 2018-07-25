@@ -60,10 +60,10 @@ export const CASH_SORTING_LIST = [{
   value: CASH_SORTING_CRITERIA.DISTANCE,
   text: <FormattedMessage id="ex.sort.distance" />,
 },
-{
-  value: CASH_SORTING_CRITERIA.PRICE,
-  text: <FormattedMessage id="ex.sort.price" />,
-},
+// {
+//   value: CASH_SORTING_CRITERIA.PRICE,
+//   text: <FormattedMessage id="ex.sort.price" />,
+// },
 ];
 
 export const SORT_ORDER = {

@@ -16,6 +16,11 @@
       justify-content: flex-end;
       align-items: center;
     }
+
+  }
+  .dropdown-sort {
+    box-shadow: 0 2px 4px 0 rgba(201, 201, 201, 0.5);
+    height: 35px;
   }
   .buy-sell-wrapper {
     margin-bottom: rem-calc(15px);

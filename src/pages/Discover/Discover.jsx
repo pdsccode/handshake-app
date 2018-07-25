@@ -45,7 +45,7 @@ import LuckyLanding from '@/pages/LuckyLanding/LuckyLanding';
 import * as gtag from '@/services/ga-utils';
 import taggingConfig from '@/services/tagging-config';
 import createForm from '@/components/core/form/createForm';
-import { fieldRadioButton } from '@/components/core/form/customField';
+import { fieldRadioButton, fieldDropdown } from '@/components/core/form/customField';
 import { change, Field } from 'redux-form';
 // style
 import '@/components/handshakes/exchange/Feed/FeedExchange.scss';
@@ -579,9 +579,18 @@ class DiscoverPage extends React.Component {
                           name="sortType"
                           component={fieldRadioButton}
                           type="tab-5"
+                          fullWidth={false}
                           list={CASH_SORTING_LIST}
                           // validate={[required]}
                           onChange={this.onSortChange}
+                        />
+                        <Field
+                          name="sortType"
+                          component={fieldDropdown}
+                          classNameWrapper=""
+                          defaultText={<FormattedMessage id="ex.create.placeholder.stationCurrency" />}
+                          classNameDropdownToggle="dropdown-sort bg-white"
+                          list={[]}
                         />
                       </div>
                     </div>

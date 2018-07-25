@@ -66,45 +66,45 @@ export const fieldDropdown = customField(({
 
 // type = tab|radio-big|default
 export const fieldRadioButton = customField(({
-  onChange, value, list, name, color = '', styleButton = {}, type,
+  onChange, value, list, name, color = '', styleButton = {}, type, fullWidth,
 }) => {
   let containerClass = '';
-  let fullWidth = false;
+  let _fullWidth = false;
   let hasPrefixIcon = false;
   switch (type) {
     case 'tab':
       containerClass = 'tab';
-      fullWidth = true;
+      _fullWidth = true;
       hasPrefixIcon = false;
       break;
     case 'tab-1':
       containerClass = 'tab-1';
       hasPrefixIcon = false;
-      fullWidth = true;
+      _fullWidth = true;
       break;
     case 'tab-2':
       containerClass = 'tab-2';
-      fullWidth = true;
+      _fullWidth = true;
       hasPrefixIcon = true;
       break;
     case 'tab-3':
       containerClass = 'tab-3';
-      fullWidth = true;
+      _fullWidth = true;
       hasPrefixIcon = false;
       break;
     case 'tab-4':
       containerClass = 'tab-4';
-      fullWidth = true;
+      _fullWidth = true;
       hasPrefixIcon = true;
       break;
     case 'tab-5':
       containerClass = 'tab-5';
-      fullWidth = true;
+      _fullWidth = true;
       hasPrefixIcon = false;
       break;
     case 'tab-6':
       containerClass = 'tab-6';
-      fullWidth = true;
+      _fullWidth = true;
       hasPrefixIcon = true;
       break;
     case 'radio-big':
@@ -115,8 +115,11 @@ export const fieldRadioButton = customField(({
       hasPrefixIcon = true;
       containerClass = 'default';
   }
+  if (typeof fullWidth !== 'undefined') {
+    _fullWidth = fullWidth;
+  }
   return (
-    <span style={{ width: fullWidth ? '100%' : '' }}>
+    <span style={{ width: _fullWidth ? '100%' : '' }}>
       {
       list.map((item, index) => {
         const {
@@ -125,7 +128,7 @@ export const fieldRadioButton = customField(({
         if (hide) return null;
         const isChecked = itemValue === value;
         return (
-          <div key={index} className={cx('radio-container', containerClass)} style={fullWidth ? { width: `${100 / list.length}%` } : {}}>
+          <div key={index} className={cx('radio-container', containerClass)} style={_fullWidth ? { width: `${100 / list.length}%` } : {}}>
             <input
               type="radio"
               name={name}
