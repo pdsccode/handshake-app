@@ -54,6 +54,7 @@ export const HANDSHAKE_NAME = {
 export const CASH_SORTING_CRITERIA = {
   DISTANCE: 0,
   PRICE: 1,
+  RATING: 2,
 };
 
 export const CASH_SORTING_LIST = [{
@@ -64,6 +65,10 @@ export const CASH_SORTING_LIST = [{
 //   value: CASH_SORTING_CRITERIA.PRICE,
 //   text: <FormattedMessage id="ex.sort.price" />,
 // },
+{
+  value: CASH_SORTING_CRITERIA.RATING,
+  text: <FormattedMessage id="ex.sort.rating" />,
+},
 ];
 
 export const SORT_ORDER = {

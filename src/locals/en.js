@@ -263,7 +263,12 @@ export default {
   'ex.about.label.twitter': 'Twitter',
   'ex.discover.label.sortby': 'Sort by:',
   'ex.sort.distance': 'Distance',
-  'ex.sort.price': 'Price',
+  'ex.sort.price': 'Best Price',
+  'ex.sort.rating': 'Rating',
+  'ex.sort.price.buy.btc': 'Buy BTC',
+  'ex.sort.price.sell.btc': 'Sell BTC',
+  'ex.sort.price.buy.eth': 'Buy ETH',
+  'ex.sort.price.sell.eth': 'Sell ETH',
   product_info: 'Ninja is open-source, decentralized software that never holds your funds. By freely choosing to use Ninja, the user accepts sole responsibility for their behavior and agrees to abide by the legalities of their governing jurisdiction. Ninja cannot be liable for legal, monetary or psychological damages should you do something stupid. Never invest more than you are willing to lose. Play safe!',
 
   // FAQ
