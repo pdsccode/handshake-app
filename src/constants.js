@@ -51,6 +51,26 @@ export const HANDSHAKE_NAME = {
   // UNSELECTED: { name: 'Create a prediction market', priority: 100 },
 };
 
+export const CASH_SORTING_CRITERIA = {
+  DISTANCE: 0,
+  PRICE: 1,
+};
+
+export const CASH_SORTING_LIST = [{
+  value: CASH_SORTING_CRITERIA.DISTANCE,
+  text: <FormattedMessage id="ex.sort.distance" />,
+},
+{
+  value: CASH_SORTING_CRITERIA.PRICE,
+  text: <FormattedMessage id="ex.sort.price" />,
+},
+];
+
+export const SORT_ORDER = {
+  ASC: 'asc',
+  DESC: 'desc',
+};
+
 export const PRICE_DECIMAL = 0;
 export const AMOUNT_DECIMAL = 6;
 
