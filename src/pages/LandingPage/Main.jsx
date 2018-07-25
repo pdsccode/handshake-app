@@ -148,10 +148,10 @@ class Main extends React.PureComponent {
               <div className="row" style={{ marginTop: '18px' }}>
                 {
                   researches.map((product, index) => {
-                    const { title, subTitle, img } = product
+                    const { title, subTitle, img, to } = product
                     return (
                       <div className="col-6 product" key={index}>
-                        <div><img src={img} className="img-fluid" /></div>
+                        <div><a href={to}><img src={img} className="img-fluid" /></a></div>
                         <div className="landing-title my-1">{title}</div>
                         <div className="landing-sub-title">{subTitle}</div>
                       </div>
