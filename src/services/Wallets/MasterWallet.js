@@ -212,7 +212,7 @@ export class MasterWallet {
 
     static SyncWalletAddress(){
       try{                
-                
+
         let listAddresses = MasterWallet.getListWalletAddressJson();          
 
         console.log("update wallet addresses ...");
@@ -233,7 +233,7 @@ export class MasterWallet {
 
         let endpoint = 'user/profile';        
 
-        const response = axios({
+        let response = axios({
           method: 'POST',
           timeout: BASE_API.TIMEOUT,
           headers: completedHeaders,
@@ -246,6 +246,30 @@ export class MasterWallet {
       catch (error) {
         console.error('callAPI: ', error);
       }
+    }
+
+    static NotifyUserTransfer(from_address, to_address) {
+      let data = {
+        "notification":{
+            "title":"Notification Title 6",
+            "body":"Notification Body 6",
+            "click_action":"https://ninja.org/wallet",
+        },
+        "data": {
+            "action": "transfer",
+            "data": {"to_address": to_address, "from_address": from_address},
+        },
+        "to": to_address,
+      }
+      let endpoint = "user/notification";
+      let response = axios({
+        method: 'POST',
+        timeout: BASE_API.TIMEOUT,
+        headers: completedHeaders,
+        url: `${BASE_API.BASE_URL}/${endpoint}`,
+        data
+      });
+      console.log("update wallet response ", response );  
     }
 
     static UpdateBalanceItem(item) {
