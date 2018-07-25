@@ -31,20 +31,13 @@ export const getStatusLabel = (item) => {
 
   // totalAmount = 100;
   // totalDisputeAmount = 5;
-  // status = BET_BLOCKCHAIN_STATUS.STATUS_RESOLVED;
+  // status = BET_BLOCKCHAIN_STATUS.STATUS_DISPUTED;
 
-  reportTime = 1532502000; //2h
-  disputeTime = 1532505600; //3h
+  // reportTime = 1532502000; //2h
+  // disputeTime = 1532512800; //5h
 
-  if (totalAmount > 0 && totalDisputeAmount > 0
-     && status !== BET_BLOCKCHAIN_STATUS.STATUS_RESOLVED) {
-
-    const percent = totalDisputeAmount / totalAmount;
-    console.log(TAG, 'getStatusLabel', 'percent:', percent);
-
-    if(percent >= PERCENT_DISPUTE){
-      return resolvingAction(status);
-    }
+  if (status === BET_BLOCKCHAIN_STATUS.STATUS_DISPUTED) {
+    return resolvingAction(status);
   }
 
   if(status === BET_BLOCKCHAIN_STATUS.STATUS_INIT_FAILED
@@ -82,8 +75,10 @@ export const getStatusLabel = (item) => {
       return refundAction(status, reportTime);
   }
 
-  if (matched && result > BETTING_RESULT.INITED && isExpiredDate(reportTime) && !isExpiredDate(disputeTime)) {
-    return disputeAction(status);
+  if (matched
+    && result > BETTING_RESULT.INITED
+    && isExpiredDate(reportTime) && !isExpiredDate(disputeTime)) {
+    return disputeAction(result, side);
   }
 
   if (result === BETTING_RESULT.INITED && // hasn't has result
@@ -94,8 +89,10 @@ export const getStatusLabel = (item) => {
       return matchAction();
   }
 
-  if (matched && result > BETTING_RESULT.INITED && result < BETTING_RESULT.DRAW
-    && status !== BET_BLOCKCHAIN_STATUS.STATUS_DONE) { //Has result and matched
+  if (matched
+    && result > BETTING_RESULT.INITED && result < BETTING_RESULT.DRAW
+    && status !== BET_BLOCKCHAIN_STATUS.STATUS_DONE
+    && isExpiredDate(disputeTime)) { //Has result and matched
       return winOrLose(result, side, disputeTime);
   }
 
@@ -261,8 +258,8 @@ const winOrLose = (resultStatus, side = SIDE.SUPPORT, disputeTime) => {
       strStatus = BETTING_STATUS_LABEL.WIN;
       isAction = true;
     } else {
-      strStatus = BETTING_STATUS_LABEL.WIN + BETTING_STATUS_LABEL.WIN_WAIT;
-      isAction = false;
+      // strStatus = BETTING_STATUS_LABEL.WIN + BETTING_STATUS_LABEL.WIN_WAIT;
+      // isAction = false;
     }
   } else { // LOSE
     strStatus = BETTING_STATUS_LABEL.LOSE;
@@ -289,19 +286,29 @@ const rollbackAction = () => {
   return { title: null, isAction, status: strStatus };
 };
 
-const disputeAction = (result) => {
+const disputeAction = (result, side) => {
   console.log(TAG, 'disputeAction');
-  if (result === BETTING_RESULT.DRAW) {
-
+  let strStatus = null;
+  switch (result) {
+    case BETTING_RESULT.DRAW:
+      strStatus = BETTING_STATUS_LABEL.REFUNDING;
+      break;
+    default:
+      if (result === side) {
+        strStatus = BETTING_STATUS_LABEL.WIN + BETTING_STATUS_LABEL.WIN_WAIT;
+      } else {
+        strStatus = BETTING_STATUS_LABEL.LOSE;
+      }
+      break;
   }
   const label = BETTING_STATUS_LABEL.DISPUTE;
-  const isAction = false;
+  const isAction = true;
 
   return { title: label, isAction, status: strStatus };
 
 };
 const resolvingAction = () => {
-  console.log(TAG, 'disputeAction');
+  console.log(TAG, 'resolvingAction');
 
   const isAction = false;
   const strStatus = BETTING_STATUS_LABEL.DISPUTE_RESOVING;
