@@ -1,0 +1,174 @@
+@import './src/styles/style';
+
+.OrderPlace {
+  .TabList {
+    justify-content: space-between;
+  }
+  .TabItem.OrderPlaceType {
+    &:hover {
+      cursor: pointer;
+    }
+    width: 48%;
+    text-align: center;
+    line-height: rem-calc(22px);
+    background-color: transparent;
+    padding: rem-calc(7px);
+    border: 1px solid #979797;
+    text-transform: uppercase;
+    @media (max-width: 350px) {
+      font-size: rem-calc(10px);
+    }
+    &.Active.Green {
+      border: none;
+      background: $caribbean-green;
+    }
+    &.Active.Orange {
+      border: none;
+      background: #fa6b49;
+    }
+  }
+  .OrderMode {
+    .TabList {
+      margin: 15px 0;
+      padding: 10px 0;
+      border: 1px solid #979797;
+      border-left: none;
+      border-right: none;
+      justify-content: flex-start;
+      .TabItem {
+        margin-right: 20px;
+        text-transform: uppercase;
+      }
+    }
+    .TabPanel {
+      max-height: 60vh;
+      overflow: auto;
+    }
+  }
+  .OrderModeType {
+    &.TabItem {
+      color: rgba(255, 255, 255, 0.4);
+    }
+    &.Active {
+      color: #ffffff;
+    }
+  }
+  .wrapperBetting {
+    padding: 0;
+    .formInput {
+      padding: 0;
+      background: transparent;
+    }
+    .rowWrapper {
+      position: relative;
+      color: #ffffff;
+      font-size: 13px;
+      flex-wrap: nowrap;
+      flex-direction: row;
+      justify-content: space-between;
+      margin-bottom: 15px;
+      label,
+      .form-control-custom,
+      .amountLabel, .amountValue {
+        width: 48%;
+      }
+      .amountLabel, .amountValue {
+        display: block;
+      }
+      label {
+        margin-top: 7px;
+      }
+      .label {
+        flex-basis: 48%;
+      }
+      .form-control-custom {
+        color: #ffffff;
+        flex-basis: auto;
+        font-size: 14px;
+      }
+      .amountValue {
+        text-align: right;
+      }
+    }
+    .cryptoCurrency,
+    .cryptoCurrencyamount,
+    .cryptoCurrencyatOdds {
+      position: absolute;
+      right: 7px;
+      top: 7px;
+      left: auto;
+      z-index: 5;
+    }
+  }
+  .orderBookContainer {
+    border-top: 1px solid #979797;
+    padding: 15px 0;
+    .orderBookTitle {
+      color: #ffffff;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .item,
+    .titleBox,
+    .marketBox,
+    .wrapperGroupBook {
+      background-color: #121C43;
+    }
+  }
+  .btn {
+    border: none;
+    border-radius: 0;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    line-height: rem-calc(22px);
+    font-weight: normal;
+  }
+  .btn.Green {
+    background-color: $caribbean-green;
+  }
+  .btn.Orange {
+    background-color: #fa6b49;
+  }
+}
+
+// Betting Mode
+.BetModeContainer {
+  > .TabList {
+    display: flex;
+    padding: 10px 20px;
+    justify-content: space-around;
+    background: #0C1B51;
+    .BetModeItem {
+      position: relative;
+      padding: 2px 0 2px 30px;
+      &:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        background: rgba(216,216,216,0.14);
+        border: 2px solid #434B6B;
+        border-radius: 50%;
+      }
+      &.Active {
+        &:after {
+          content: '';
+          position: absolute;
+          top: 7px;
+          left: 7px;
+          width: 6px;
+          height: 6px;
+          background: #ffffff;
+          border-radius: 50%;
+        }
+      }
+    }
+  }
+  > .TabPanel {
+    padding: 20px 20px 20px;
+  }
+}

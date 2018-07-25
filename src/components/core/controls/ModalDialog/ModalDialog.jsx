@@ -40,16 +40,23 @@ class ModalDialog extends React.Component {
 
 
   render() {
-    const { title, children, className } = this.props;
+    const { title, children, className, close } = this.props;
     return (
       <div className={`modal modal-dialog-custom ${className || ''}`} ref={modal => this.modalRef = modal}>
         <div className="modal-backdrop show"/>
         <div className="position" onClick={this.onClosePanel}>
-          <div 
+          <div
             className="modal-dialog-content animated"
             onClick={e => e.stopPropagation()}
             ref={content => this.contentRef = content}
           >
+            {
+              close && (
+                <div className="close" onClick={this.onClosePanel}>
+                  <span className="closeIcon">×</span>
+                </div>
+              )
+            }
             {
               title && (
               <div className="modal-custom-header">
@@ -73,10 +80,12 @@ ModalDialog.propTypes = {
   children: PropTypes.node.isRequired,
   onRef: PropTypes.func,
   isDismiss: PropTypes.bool,
+  close: PropTypes.bool,
 };
 
 ModalDialog.defaultProps = {
   isDismiss: true,
+  close: false,
 };
 
 export default ModalDialog;
