@@ -168,6 +168,7 @@
 
     .EventTotalBetValue {
       color: #D0021B;
+      font-weight: $normal;
     }
 
     .EventTimeLeftText, .EventTotalBetText {
@@ -178,7 +179,6 @@
 
     .EventTimeLeftValue, .EventTotalBetValue {
       font-size: rem-calc(16px);
-      font-weight: $normal;
     }
 
     .EventTimeLeft, .EventTotalBet {
