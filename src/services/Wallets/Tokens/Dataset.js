@@ -159,6 +159,44 @@ export class Dataset extends Ethereum {
       }
     }
 
+    async withdraw() {
+      try {
+        console.log(`withdraw to this address: ${this.address}`);
+
+        const web3 = this.getWeb3();
+        const contract = new web3.eth.Contract(
+          compiled,
+          CONTRACT_ADDRESS,
+        );
+
+        const data = web3.eth.abi.encodeFunctionCall({
+          name: 'withdraw',
+          type: 'function',
+        })
+
+        const nonce = await web3.eth.getTransactionCount(this.address);
+        // const gasPrice = web3.utils.toHex(web3.eth.gasPrice);
+
+        const rawTx = {
+          nonce,
+          gasLimit: web3.utils.toHex(150000),
+          gasPrice: web3.utils.toHex(10e9),
+          from: this.address,
+          to: CONTRACT_ADDRESS,
+          value: 0,
+          data
+        };
+        const tx = new Tx(rawTx);
+        const privateKey = new Buffer(this.privateKey, 'hex');
+        tx.sign(privateKey);
+
+        const serializedTx = tx.serialize().toString('hex');
+        return await web3.eth.sendSignedTransaction('0x' + serializedTx);
+      } catch (e) {
+        throw e;
+      }
+    }
+
     async getBalance(){
       const web3 = this.getWeb3();
       let contract = new web3.eth.Contract(
