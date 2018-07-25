@@ -1,0 +1,41 @@
+@import './src/styles/style';
+
+.project-detail {
+  .pd-breadcrumb {
+    font-family: AzoSans-Regular;
+    font-size: 16px;
+    color: #484848;
+    letter-spacing: 0;
+    span {
+      opacity: 1;
+    }
+    a {
+      color: #484848;
+      opacity: 0.6;
+    }
+  }
+  .pd-heading {
+    font-family: AzoSans-Bold;
+    font-size: 48px;
+    color: #484848;
+    letter-spacing: 0;
+    line-height: 50px;
+  }
+  .pd-subHeading {
+    opacity: 0.7;
+    font-family: AzoSans-Regular;
+    font-size: 24px;
+    color: #484848;
+    letter-spacing: 0;
+    line-height: 34px;
+    margin-top: 20px;
+  }
+  .pd-content {
+    opacity: 0.85;
+    font-family: AzoSans-Regular;
+    font-size: 18px;
+    color: #484848;
+    letter-spacing: 0;
+    line-height: 33px;
+  }
+}

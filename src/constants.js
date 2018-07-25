@@ -484,6 +484,9 @@ export const URL = {
   INTRODUCING_NINJA_CASH: '/introducing-ninja-cash',
   ABOUT_NINJA_CASH: '/about-ninja-cash',
 
+  PRODUCT_URL: '/product',
+  RESEARCH_URL: '/research',
+
   PROJECT_DAD_URL: '/project/dad',
   PROJECT_INTERNET_CASH_URL: '/project/internet-cash',
   PROJECT_CASH_URL: '/project/cash',

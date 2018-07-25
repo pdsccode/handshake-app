@@ -25,7 +25,7 @@ const AboutNjnjaCash = createDynamicImport(() => import('@/pages/LandingPage/Abo
 const LandingPageFAQ = createDynamicImport(() => import('@/pages/FAQ/FAQ'), Splash);
 const LandingPageMain = createDynamicImport(() => import('@/pages/LandingPage/Main'), Splash);
 
-const ProjectDad = createDynamicImport(() => import('@/pages/LandingPage/Project/Dad'), Splash);
+const ProjectDetail = createDynamicImport(() => import('@/components/ProjectDetail'), Splash);
 // const ProjectInternetCash = createDynamicImport(() => import('@/components/MobileOrTablet/ProjectInternetCash'), Splash);
 // const ProjectCash = createDynamicImport(() => import('@/components/MobileOrTablet/ProjectCash'), Splash);
 // const ProjectOddBall = createDynamicImport(() => import('@/components/MobileOrTablet/ProjectOddBall'), Splash);
@@ -76,10 +76,16 @@ class Root extends React.Component {
         return <IntroNjnjaCash />;
       case URL.ABOUT_NINJA_CASH:
         return <AboutNjnjaCash />;
+
+      case URL.PRODUCT_URL:
+        return <LandingPageMain type="product" />;
+      case URL.RESEARCH_URL:
+        return <LandingPageMain type="research" />;
+
       case URL.PROJECT_DAD_URL:
-        return <ProjectDad />;
-      // case URL.PROJECT_INTERNET_CASH:
-      //   return <ProjectInternetCash />;
+        return <ProjectDetail name="dad" />;
+      case URL.PROJECT_INTERNET_CASH_URL:
+        return <ProjectDetail name="internet_cash" />;
       // case URL.PROJECT_CASH:
       //   return <ProjectCash />;
       // case URL.PROJECT_ODD_BALL:

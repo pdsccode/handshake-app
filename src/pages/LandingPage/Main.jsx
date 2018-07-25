@@ -29,12 +29,14 @@ const products = [
   {
     title: <FormattedMessage id="landing_page.products.cash.title" />,
     subTitle: <FormattedMessage id="landing_page.products.cash.subTitle" />,
-    img: imgCash
+    img: imgCash,
+    to: URL.PROJECT_CASH_URL,
   },
   {
     title: <FormattedMessage id="landing_page.products.prediction.title" />,
     subTitle: <FormattedMessage id="landing_page.products.prediction.subTitle" />,
-    img: imgPrediction
+    img: imgPrediction,
+    // to: URL.PROJECT,
   },
   {
     title: <FormattedMessage id="landing_page.products.dad.title" />,
@@ -45,7 +47,8 @@ const products = [
   {
     title: <FormattedMessage id="landing_page.products.wallet.title" />,
     subTitle: <FormattedMessage id="landing_page.products.wallet.subTitle" />,
-    img: imgWallet
+    img: imgWallet,
+    // to: URL.PROJECT
   },
   {
     title: <FormattedMessage id="landing_page.products.whisper.title" />,
@@ -101,51 +104,60 @@ class Main extends React.PureComponent {
 
   render() {
     const { messages, locale } = this.props.intl;
+    const { type = 'product' } = this.props;
     return (
-      <LandingWrapper>
-        <div className="row mt-5">
-          <div className="col">
-            <div className="landing-header"><FormattedMessage id="landing_page.header.product" /></div>
-            <div className="landing-subHeader"><FormattedMessage id="landing_page.subHeader.product" /></div>
-          </div>
-        </div>
-
-        <div className="row">
-          {
-            products.map((product, index) => {
-              const { title, subTitle, img, to } = product
-              return (
-                <div className="col-4 product" key={index}>
-                  <div><a href={to}><img src={img} className="img-fluid" /></a></div>
-                  <div className="landing-title mt-1">{title}</div>
-                  <div className="landing-sub-title">{subTitle}</div>
+      <LandingWrapper type={type}>
+        {
+          type === 'product' ? (
+            <div>
+              <div className="row" style={{ marginTop: '90px' }}>
+                <div className="col">
+                  <div className="landing-header"><FormattedMessage id="landing_page.header.product" /></div>
+                  <div className="landing-subHeader"><FormattedMessage id="landing_page.subHeader.product" /></div>
                 </div>
-              )
-            })
-          }
-        </div>
+              </div>
 
-        <div className="row mt-5">
-          <div className="col">
-            <div className="landing-header"><FormattedMessage id="landing_page.header.research" /></div>
-            <div className="landing-subHeader"><FormattedMessage id="landing_page.subHeader.research" /></div>
-          </div>
-        </div>
-
-        <div className="row">
-          {
-            researches.map((product, index) => {
-              const { title, subTitle, img } = product
-              return (
-                <div className="col-6 product" key={index}>
-                  <div><img src={img} className="img-fluid" /></div>
-                  <div className="landing-title mt-1">{title}</div>
-                  <div className="landing-sub-title">{subTitle}</div>
+              <div className="row" style={{ marginTop: '18px' }}>
+                {
+                  products.map((product, index) => {
+                    const { title, subTitle, img, to } = product
+                    return (
+                      <div className="col-4 product" key={index}>
+                        <div><a href={to}><img src={img} className="img-fluid" /></a></div>
+                        <div className="landing-title my-1">{title}</div>
+                        <div className="landing-sub-title">{subTitle}</div>
+                      </div>
+                    )
+                  })
+                }
+              </div>
+            </div>
+          ) : (
+            <div>
+              <div className="row mt-5">
+                <div className="col">
+                  <div className="landing-header"><FormattedMessage id="landing_page.header.research" /></div>
+                  <div className="landing-subHeader"><FormattedMessage id="landing_page.subHeader.research" /></div>
                 </div>
-              )
-            })
-          }
-        </div>
+              </div>
+
+              <div className="row" style={{ marginTop: '18px' }}>
+                {
+                  researches.map((product, index) => {
+                    const { title, subTitle, img } = product
+                    return (
+                      <div className="col-6 product" key={index}>
+                        <div><img src={img} className="img-fluid" /></div>
+                        <div className="landing-title my-1">{title}</div>
+                        <div className="landing-sub-title">{subTitle}</div>
+                      </div>
+                    )
+                  })
+                }
+              </div>
+            </div>
+          )
+        }
       </LandingWrapper>
     )
   }

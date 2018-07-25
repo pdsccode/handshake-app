@@ -352,6 +352,7 @@ export default {
 
   // Landing Page
   'landing_page.btn.joinOurTeam': 'Join our team',
+  'landing_page.btn.goToLandingPage': 'Go to landing page',
 
   'landing_page.header.product': 'PRODUCT',
   'landing_page.subHeader.product': 'Ninja builds applications and protocols for the new decentralized Internet.',
@@ -359,15 +360,15 @@ export default {
   'landing_page.products.cash.title': 'Cash',
   'landing_page.products.cash.subTitle': 'Decentralized and P2P platform to trade ETH/BTC with cash and vice versa. Anonymously.',
   'landing_page.products.prediction.title': 'Prediction',
-  'landing_page.products.prediction.subTitle': 'At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas',
+  'landing_page.products.prediction.subTitle': 'At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum',
   'landing_page.products.dad.title': 'Decentralized Autonomous Dataset',
-  'landing_page.products.dad.subTitle': 'At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas',
+  'landing_page.products.dad.subTitle': 'At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti',
   'landing_page.products.wallet.title': 'Wallet',
-  'landing_page.products.wallet.subTitle': 'At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas',
+  'landing_page.products.wallet.subTitle': 'At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti',
   'landing_page.products.whisper.title': 'Whisper',
-  'landing_page.products.whisper.subTitle': 'At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas',
+  'landing_page.products.whisper.subTitle': 'At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti ',
   'landing_page.products.dao.title': 'Decentralized Autonomous Organizations',
-  'landing_page.products.dao.subTitle': 'At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas',
+  'landing_page.products.dao.subTitle': 'At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque',
 
   'landing_page.header.research': 'RESEARCH',
   'landing_page.subHeader.research': 'Ninja conducts fundamental research toward the creation of the new internet.',
@@ -384,6 +385,34 @@ export default {
   'landing_page.label.airdrop': `Jump in for <a href="#" class="landing-link">Airdrop</a>`,
   'landing_page.label.whitepaper': `Jump in for <a href="#" class="landing-link">Whitepaper</a>`,
   'landing_page.label.faq': `We answered your <a href="#" class="landing-link">FAQ</a>`,
+
+  'landing_page.breadcrumb.home': 'Home',
+
+  'landing_page.dad.breadcrumb': 'Decentralized Autonomous Dataset',
+  'landing_page.dad.heading': 'Decentralized Autonomous Dataset',
+  'landing_page.dad.subHeading': 'If data is the new oil, then AI is the machine it’s powering.',
+  'landing_page.dad.content': `
+    AI needs data to learn and grow.<br />
+    DAD enables the creation of decentralized autonomous datasets to create and collate the data needed to develop AI.<br />
+    Unlike currently available datasets that harness big data, DAD is actually affordable and easy to access.<br /><br />
+    
+    The AI Protocol runs on top of the Ethereum blockchain and has 2 components: the Decentralized Autonomous Dataset (DAD) and the Decentralized Autonomous Computation (DAC).<br /><br />
+    
+    Each and everyday people upload their data onto free platforms, effectively providing a few big corporations with a wealth of content from which they can derive billions of dollars of revenue, while these people see no profit.<br /><br />
+
+    We think they should.<br /><br />
+
+    Everytime data you contributed is sold, you will share in the profit.
+  `,
+
+  'landing_page.internet_cash.breadcrumb': 'Decentralized Autonomous Dataset',
+  'landing_page.internet_cash.heading': 'Decentralized Autonomous Dataset',
+  'landing_page.internet_cash.subHeading': 'If data is the new oil, then AI is the machine it’s powering.',
+  'landing_page.internet_cash.content': `
+    Cash is the most important asset in the world.  Its total addressable market (TAM) is 90 trillion dollars.  While Bitcoin emerges as a powerful currency, it fails to be the everyday currency.  Bitcoin will never be the currency that you can use to pay for coffee or buy a t-shirt.  Bitcoin lacks one fundamental property of cash: price stability.<br /><br />
+    This project aims to build a new kind of cryptocurrency that behaves like cash.  The goal of the cryptocurrency is to replace all money in the world in all forms, including paper money (as in your wallets) or digital money (as in your bank account) and that it can be used both online and in person.<br /><br />
+    We’ll call it Internet Cash for now, because the Internet deserves to have its own native currency.
+  `,
 
   // MobileOrTablet components
   MOT_TITLE: 'The anonymous exchange of anything',

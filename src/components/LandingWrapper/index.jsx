@@ -6,6 +6,7 @@ import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl'
 import { setLanguage } from '@/reducers/app/action';
 // import VideoYoutube from '@/components/core/controls/VideoYoutube';
 import { Link } from 'react-router-dom';
+import { URL } from '@/constants';
 
 // style
 import imgNinja from '@/assets/images/ninja/ninja-header-black.svg';
@@ -36,15 +37,19 @@ class Index extends React.PureComponent {
 
   render() {
     const { messages, locale } = this.props.intl;
-    const { children } = this.props;
+    const { children, type } = this.props;
     return (
       <div className="landing-page">
         <div className="container">
           <div className="row">
             <div className="col">
-              <img src={imgNinja} width="100" />
-              <button className="btn btn-join float-right"><FormattedMessage id="landing_page.btn.joinOurTeam" /></button>
-            </div>
+              <a href="/"><img src={imgNinja} width="100" /></a>
+              <div className="float-right">
+                <span><a className={`${type === 'product' ? 'active' : ''} landing-nav-link`} href={URL.PRODUCT_URL}>Product</a></span>
+                <span><a className={`${type === 'research' ? 'active' : ''} landing-nav-link`} href={URL.RESEARCH_URL}>Research</a></span>
+                <button className="btn btn-primary-landing" style={{ marginLeft: '45px' }}><FormattedMessage id="landing_page.btn.joinOurTeam" /></button>
+              </div>
+              </div>
           </div>
 
           {children}
@@ -52,10 +57,10 @@ class Index extends React.PureComponent {
           <hr className="landing-hr" />
 
           <div className="row landing-footer">
-            <div className="col">
+            <div className="col-8">
               <div className="d-table w-100">
                 <div className="d-table-cell align-middle p-2">
-                  <img src={imgLogo} width="100" />
+                  <img src={imgLogo} width="54" />
                 </div>
                 <div className="d-table-cell align-middle">
                   <div><FormattedHTMLMessage id="landing_page.label.onlyMobile" /></div>
@@ -63,13 +68,13 @@ class Index extends React.PureComponent {
                 </div>
               </div>
             </div>
-            <div className="col">
+            <div className="col-4">
               <div className="d-table w-100">
                 <div className="d-table-cell align-middle">
                   <div><FormattedHTMLMessage id="landing_page.label.joinTelegram" /></div>
                   <div><FormattedHTMLMessage id="landing_page.label.airdrop" /></div>
                 </div>
-                <div className="d-table-cell align-middle">
+                <div className="d-table-cell align-middle text-right">
                   <div><FormattedHTMLMessage id="landing_page.label.faq" /></div>
                   <div><FormattedHTMLMessage id="landing_page.label.whitepaper" /></div>
                 </div>
