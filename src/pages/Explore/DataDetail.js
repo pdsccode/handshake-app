@@ -440,18 +440,20 @@ class DataDetail extends React.Component {
                 <Card.Group centered >
                   <Card className="my-card" style={{ marginBottom: '1em', paddingBottom: '1em'}}>
                     <Card.Content>
-                     <Grid  style={{paddingBottom:'1em', boxShadow: '0 1px 3px 0 #d4d4d5, 0 0 0 1px #d4d4d5',    marginLeft:'-17px'}} >
-                        <Grid.Column width={4}>
+                     <Grid id="grid-detail-header" >
+                        {/* <Grid.Column width={4}>
                         <Image style={{float:'left',  marginTop: '-18px'}} src={"https://chart.googleapis.com/chart?chs=100x100&cht=qr&chl="+(blockchainNetworks.ethereum.contracts.dadsetTokenAddress )+"&choe=UTF-8"}/>
-                        </Grid.Column>
-                        <Grid.Column width={12} style={{textAlign:'left'}}>
+                        </Grid.Column> */}
+                        <Grid.Column width={16} style={{textAlign:'left'}}>
                             <List>
-                            <List.Item style={{fontSize:'14px', fontWeight:'700',marginTop:'-5px', paddingTop:'5px',background:'white' }}>{this.state.category ? this.state.category.name :''} </List.Item>
+                            <List.Item className="list-item-name">{this.state.category ? this.state.category.name :''} </List.Item>
                             { (this.state.category!=null && this.state.category.desc !=null) ?
                               <List.Item>{this.state.category ? this.state.category.desc :''}</List.Item>
                               :""
                             }
-                            <List.Item><span style={{fontWeight:'700'}}>Quantity: </span> {this.state.category && this.state.category.total_images ? `${this.state.category.total_images} Images` : '0 Image'} </List.Item>
+                            <List.Item>
+                              <span style={{fontWeight:'700'}}>Quantity: </span> {this.state.category && this.state.category.total_images ? `${this.state.category.total_images} Images` : '0 Image'} 
+                            </List.Item>
                             
                             <List.Item style={{ marginRight: '15px',overflow: 'hidden',display: 'flex'}}>
                                     <span style={{fontWeight:'700'}} >Address: </span>

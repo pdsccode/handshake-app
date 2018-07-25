@@ -455,8 +455,11 @@ line-height: 32px; */
     text-align: left;
 
 }
-.wallet-page{
-    padding-top:26px!important;
+.wallet-page{ 
+    padding-top: 26px!important;
+    background: white;
+    z-index: 555;
+    position: relative;
 }
 
 .ui.form .inline.fields>label{
@@ -619,3 +622,18 @@ img.ui.image.btn-add-class{
     margin-top: -3em;
 }
 
+#grid-detail-header{
+    padding-bottom: 1em;
+    box-shadow: rgb(212, 212, 213) 0px 1px 3px 0px, rgb(212, 212, 213) 0px 0px 0px 1px;
+    margin-left: -17px;
+    padding-left: 16px;
+}
+.list-item-name{
+    font-size: 14px;
+    font-weight: 700;
+    margin-top: -5px;
+    padding-top: 5px;
+    background: white;
+    margin-left: -12px;
+    padding-left: 12px!important;
+}

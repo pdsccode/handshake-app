@@ -255,7 +255,7 @@ class DataExplore extends React.Component {
                                {this.renderLikedIcon(i)}
                               </div>
                             <div style={{display: 'inline'}}>
-                               <Button onClick={()=>this.showConfirm(cat)}  size="mini" basic color='black' className="my-btn-buy-eth"> {"Buy "+ (cat.total_images/1000 + 0.005)+ " ETH"}</Button>
+                               <Button onClick={()=>this.showConfirm(cat)}  size="mini" basic color='black' className="my-btn-buy-eth"> {"Buy "+ ( Math.round((cat.total_images/10000 + 0.005) * 10000) /10000  )+ " ETH"}</Button>
                             </div>
                           </div>
                         </Card.Content>
