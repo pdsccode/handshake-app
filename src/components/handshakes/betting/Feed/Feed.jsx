@@ -84,8 +84,12 @@ class FeedBetting extends React.Component {
         break;
       case BETTING_STATUS_LABEL.REFUND:
         buttonClassName = 'refund';
-
         break;
+
+      case BETTING_STATUS_LABEL.DISPUTE:
+        buttonClassName = 'dispute';
+        break;
+
       default:
         break;
     }
