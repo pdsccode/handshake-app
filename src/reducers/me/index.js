@@ -65,7 +65,9 @@ const foundCancelHanshake = (handshake, item) => {
 
 
   }*/
-  const handledHandshake = findUserBet(handshake);
+  const handledHandshake = findUserBet(handshake) || handshake;
+  //console.log(TAG, 'foundCancelHanshake:','findUserBet', findUserBet(handshake));
+
   if (handledHandshake.id === item.id) {
     console.log(TAG, 'foundCancelHanshake:', handledHandshake);
     handledHandshake.status = item.status;
@@ -73,7 +75,7 @@ const foundCancelHanshake = (handshake, item) => {
   return handledHandshake;
 };
 const foundRefundHanshake = (handshake, item) => {
-  const handledHandshake = findUserBet(handshake);
+  const handledHandshake = findUserBet(handshake) || handshake;
   if (handledHandshake.hid === item.hid) {
     console.log(TAG, 'foundRefundHanshake:', handledHandshake);
     handledHandshake.status = item.status;
@@ -82,7 +84,7 @@ const foundRefundHanshake = (handshake, item) => {
 };
 
 const foundWithdrawHanshake = (handshake, item) => {
-  const handledHandshake = findUserBet(handshake);
+  const handledHandshake = findUserBet(handshake) || handshake;
   if (handledHandshake.hid === item.hid
       && handledHandshake.side === item.side) {
     console.log(TAG, 'foundWithdrawHanshake:', handledHandshake);
@@ -372,17 +374,24 @@ const meReducter = (
       const { status } = item;
       const myList = state.list;
       const handledMylist = myList.map((handshake) => {
+        let handleHandshake = handshake;
         switch (status) {
           case BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINIT_PENDING:
-            return foundCancelHanshake(handshake, item);
+            handleHandshake = foundCancelHanshake(handleHandshake, item);
+            break;
           case BET_BLOCKCHAIN_STATUS.STATUS_REFUND_PENDING:
-            return foundRefundHanshake(handshake, item);
+            handleHandshake = foundRefundHanshake(handleHandshake, item);
+            break;
           case BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_PENDING:
-            return foundWithdrawHanshake(handshake, item);
+            handleHandshake = foundWithdrawHanshake(handleHandshake, item);
+            break;
           default:
             break;
         }
+        console.log(TAG, 'handleHandshake:', handleHandshake);
+        return handleHandshake;
       });
+      console.log(TAG, 'handledMylist:', handledMylist.length);
 
       return {
         ...state,
