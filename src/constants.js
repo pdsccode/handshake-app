@@ -41,7 +41,7 @@ export const HANDSHAKE_ID_DEFAULT = 3;
 
 export const HANDSHAKE_NAME = {
   // [HANDSHAKE_ID.PROMISE]: { name: 'Promise', priority: 3 },
-  [HANDSHAKE_ID.BETTING]: { name: 'Predict an outcome', priority: 1 },
+  //[HANDSHAKE_ID.BETTING]: { name: 'Predict an outcome', priority: 1 },
   // [HANDSHAKE_ID.BETTING_EVENT]: { name: 'Design a betting market', priority: 2 },
   // [HANDSHAKE_ID.SEED]: 'Seed',
   [HANDSHAKE_ID.WALLET_TRANSFER]: { name: 'Transfer coins', priority: 4 },
@@ -49,6 +49,31 @@ export const HANDSHAKE_NAME = {
   [HANDSHAKE_ID.EXCHANGE]: { name: 'Manage your station', priority: 6 },
   // [HANDSHAKE_ID.EXCHANGE_LOCAL]: { name: 'Make swaps', priority: 7 },
   // UNSELECTED: { name: 'Create a prediction market', priority: 100 },
+};
+
+export const CASH_SORTING_CRITERIA = {
+  DISTANCE: 0,
+  PRICE: 1,
+  RATING: 2,
+};
+
+export const CASH_SORTING_LIST = [{
+  value: CASH_SORTING_CRITERIA.DISTANCE,
+  text: <FormattedMessage id="ex.sort.distance" />,
+},
+// {
+//   value: CASH_SORTING_CRITERIA.PRICE,
+//   text: <FormattedMessage id="ex.sort.price" />,
+// },
+{
+  value: CASH_SORTING_CRITERIA.RATING,
+  text: <FormattedMessage id="ex.sort.rating" />,
+},
+];
+
+export const SORT_ORDER = {
+  ASC: 'asc',
+  DESC: 'desc',
 };
 
 export const PRICE_DECIMAL = 0;
@@ -423,6 +448,10 @@ export const MIN_AMOUNT = {
   [CRYPTO_CURRENCY.BTC]: 0.001,
 };
 
+export const LOCATION_METHODS = {
+  GPS: 'G',
+  IP: 'I',
+};
 
 // API
 
@@ -444,6 +473,8 @@ export const URL = {
   HANDSHAKE_DISCOVER: '/discover',
   HANDSHAKE_DISCOVER_INDEX: '/discover',
   HANDSHAKE_DISCOVER_DETAIL: '/discover/:slug',
+
+  HANDSHAKE_PREDICTION: '/prediction',
 
   HANDSHAKE_CASH: '/cash',
   HANDSHAKE_CASH_INDEX: '/cash',

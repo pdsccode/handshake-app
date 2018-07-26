@@ -9,7 +9,7 @@ import { setLanguage } from '@/reducers/app/action';
 // components
 import ModalDialog from '@/components/core/controls/ModalDialog';
 
-import ExpandArrowSVG from '@/assets/images/icon/expand-arrow.svg';
+import ExpandArrowSVG from '@/assets/images/icon/arrow-white.svg';
 import TickSVG from '@/assets/images/icon/tick.svg';
 // style
 import './MultiLanguage.scss';

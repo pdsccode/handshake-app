@@ -4,6 +4,7 @@ import {
   API_URL,
   CRYPTO_CURRENCY,
   EXCHANGE_ACTION,
+  EXCHANGE_ACTION_ORDER,
   EXCHANGE_ACTION_PAST_NAME,
   EXCHANGE_ACTION_PERSON,
   EXCHANGE_ACTION_PRESENT_NAME,
@@ -12,18 +13,23 @@ import {
   HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS,
   HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS_NAME,
   HANDSHAKE_USER,
-  EXCHANGE_ACTION_ORDER,
 } from '@/constants';
 import { MasterWallet } from '@/services/Wallets/MasterWallet';
 import { ExchangeCashHandshake } from '@/services/neuron';
 import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { hideLoading, showAlert, showLoading } from '@/reducers/app/action';
+import { getUserLocation, hideLoading, showAlert, showLoading } from '@/reducers/app/action';
 import { responseExchangeDataChange } from '@/reducers/me/action';
 import { Ethereum } from '@/services/Wallets/Ethereum.js';
 import { Bitcoin } from '@/services/Wallets/Bitcoin';
-import { formatAmountCurrency, formatMoneyByLocale, getHandshakeUserType, getOfferPrice } from '@/services/offer-util';
+import {
+  formatAmountCurrency,
+  formatMoneyByLocale,
+  getHandshakeUserType,
+  getLatLongHash,
+  getOfferPrice,
+} from '@/services/offer-util';
 import Offer from '@/models/Offer';
 import {
   acceptOfferItem,
@@ -31,6 +37,7 @@ import {
   completeOfferItem,
   rejectOfferItem,
   reviewOffer,
+  trackingLocation,
 } from '@/reducers/exchange/action';
 import Rate from '@/components/core/controls/Rate/Rate';
 
@@ -73,6 +80,24 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
     if (showNotEnoughCoinAlert) {
       return showNotEnoughCoinAlert(balance, amount, fee, currency);
     }
+  }
+
+  trackingLocation = (offerStoreId, offerStoreShakeId, action) => {
+    const { trackingLocation, getUserLocation } = this.props;
+    getUserLocation({
+      successFn: (ipInfo) => {
+        const data = {
+          data: getLatLongHash(ipInfo?.locationMethod, ipInfo?.latitude, ipInfo?.longitude),
+          ip: ipInfo?.ip,
+          action,
+        };
+        trackingLocation({
+          PATH_URL: `exchange/offer-stores/${offerStoreId}/shakes/${offerStoreShakeId}/7tHCLp8XpajPJaVh`,
+          METHOD: 'POST',
+          data,
+        });
+      },
+    });
   }
 
   calculateFiatAmount = () => {
@@ -462,6 +487,7 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
     // }
 
     // console.log('data', data);
+    this.trackingLocation(initUserId, offerShake.id, status);
     this.props.hideLoading();
     this.props.showAlert({
       message: <div className="text-center"><FormattedMessage id="acceptOfferItemSuccessMassage" /></div>,
@@ -553,6 +579,7 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
     }
 
     // console.log('data', data);
+    this.trackingLocation(initUserId, offerShake.id, status);
     this.props.hideLoading();
     this.props.showAlert({
       message: <div className="text-center"><FormattedMessage id="completeOfferItemSuccessMassage" /></div>,
@@ -640,6 +667,7 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
       }
     }
 
+    this.trackingLocation(initUserId, offerShake.id, status);
     this.props.hideLoading();
     this.props.showAlert({
       message: <div className="text-center"><FormattedMessage id="rejectOfferItemSuccessMassage" /></div>,
@@ -723,6 +751,7 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
       }
     }
 
+    this.trackingLocation(initUserId, offerShake.id, status);
     this.props.hideLoading();
     this.props.showAlert({
       message: <div className="text-center"><FormattedMessage id="cancelOfferItemSuccessMassage" /></div>,
@@ -764,32 +793,37 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
     const { offer } = this;
 
     let idMessage = '';
+    let showClock = false;
 
     switch (status) {
       case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.CANCELLING: {
         if (this.userType === HANDSHAKE_USER.OWNER) {
           idMessage = 'ex.shop.explanation.cancelling';
+          showClock = true;
         }
         break;
       }
       case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.REJECTING: {
         if (this.userType === HANDSHAKE_USER.OWNER) {
           idMessage = 'ex.shop.explanation.rejecting';
+          showClock = true;
         }
         break;
       }
       case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.PRE_SHAKING: {
         if (this.userType === HANDSHAKE_USER.SHAKED) {
           idMessage = 'ex.shop.explanation.pre_shaking';
+          showClock = true;
         }
         break;
       }
-      // case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.PRE_SHAKE: {
-      //   if (this.userType === HANDSHAKE_USER.SHAKED) {
-      //     idMessage = 'ex.shop.explanation.pre_shake';
-      //   }
-      //   break;
-      // }
+      case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.PRE_SHAKE: {
+        if (this.userType === HANDSHAKE_USER.SHAKED) {
+          idMessage = 'ex.shop.explanation.pre_shake';
+          showClock = false;
+        }
+        break;
+      }
       // case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.SHAKING: {
       //   if (this.userType === HANDSHAKE_USER.SHAKED) {
       //     idMessage = 'ex.shop.explanation.shaking';
@@ -827,12 +861,14 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
           case HANDSHAKE_USER.OWNER: { // shop
             if (offer.type === EXCHANGE_ACTION.BUY) { // shop buy
               idMessage = 'ex.shop.explanation.completing';
+              showClock = true;
             }
             break;
           }
           case HANDSHAKE_USER.SHAKED: { // user shake
             if (offer.type === EXCHANGE_ACTION.SELL) { // shop sell
               idMessage = 'ex.shop.explanation.completing';
+              showClock = true;
             }
             break;
           }
@@ -860,7 +896,7 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
       message = <FormattedMessage id={idMessage} values={{}} />;
     }
 
-    return message;
+    return { message, showClock };
   }
 
   // //////////////////////
@@ -926,7 +962,7 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
     // const message = this.getMessageContent(fiatAmount);
     const { message, cashTitle, coinTitle } = this.getBuyerSeller();
     const actionButtons = this.getActionButtons();
-    const messageMovingCoin = this.getMessageMovingCoin();
+    const { message: messageMovingCoin, showClock } = this.getMessageMovingCoin();
 
     const feedProps = {
       from,
@@ -944,6 +980,7 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
       fiatAmount,
       currency: offer.currency,
       fiatCurrency: offer.fiatCurrency,
+      showClock,
     };
 
     return (
@@ -977,6 +1014,8 @@ const mapDispatch = ({
   cancelOfferItem,
 
   responseExchangeDataChange,
+  trackingLocation,
+  getUserLocation,
 });
 
 export default connect(mapState, mapDispatch)(FeedMeOfferStoreShakeContainer);

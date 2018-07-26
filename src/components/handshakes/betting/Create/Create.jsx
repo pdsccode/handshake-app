@@ -562,7 +562,7 @@ display: 'flex', flexDirection: 'column', flex: 1, marginBottom: 10,
 
     this.setState({ selectedOutcome: item, values, winValue });
     // send event tracking
-    GA.clickChooseAnOutcomeCreatePage(item.value);
+    //GA.clickChooseAnOutcomeCreatePage(item.value);
   }
 
   render() {
