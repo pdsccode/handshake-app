@@ -89,6 +89,15 @@ const CreateWalletReceive = props => (
   </DynamicImport>
 );
 
+const CreateYourOwnMarket = props => (
+  <DynamicImport
+    loading={Loading}
+    load={() => import('@/pages/CreateMarket/CreateMarket')}
+  >
+    {Component => <Component {...props} />}
+  </DynamicImport>
+);
+
 const maps = {
   [HANDSHAKE_ID.PROMISE]: CreatePromise,
   [HANDSHAKE_ID.BETTING]: CreateBetting,
@@ -98,6 +107,7 @@ const maps = {
   [HANDSHAKE_ID.SEED]: CreateSeed,
   [HANDSHAKE_ID.WALLET_TRANSFER]: CreateWalletTransfer,
   [HANDSHAKE_ID.WALLET_RECEIVE]: CreateWalletReceive,
+  [HANDSHAKE_ID.CREATE_EVENT]: CreateYourOwnMarket,
 };
 
 class Create extends React.Component {
@@ -166,12 +176,12 @@ class Create extends React.Component {
     }
     return [
       ...handshakes.sort((x, y) => x.priority > y.priority),
-      {
-        id: -1,
-        value: 'COMING SOON: Create a prediction market',
-        className: 'disable',
-        disableClick: true,
-      },
+      // {
+      //   id: -1,
+      //   value: 'COMING SOON: Create a prediction market',
+      //   className: 'disable',
+      //   disableClick: true,
+      // },
     ];
   }
 
