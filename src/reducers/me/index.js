@@ -7,6 +7,8 @@ import {
   HANDSHAKE_EXCHANGE_STATUS_VALUE,
 } from '@/constants';
 import { ACTIONS } from './action';
+import { BET_BLOCKCHAIN_STATUS } from '@/components/handshakes/betting/constants';
+import { findUserBet } from '@/components/handshakes/betting/utils.js';
 
 const TAG = 'MeReducer';
 // function handlePreProcessForOfferStore(handshake) {
@@ -36,6 +38,60 @@ const TAG = 'MeReducer';
 //
 //   return result;
 // }
+
+const foundCancelHanshake = (handshake, item) => {
+
+  //const handledHandshake = handshake;
+  /*
+  if (handledHandshake.id === item.id) {
+    handledHandshake.status = item.status;
+    // handledHandshake.result = resultI;
+  }
+  else {
+    const { shakers = '[]' } = handshake;
+    const shakerArr = JSON.parse(shakers) || [];
+    if (shakerArr && shakerArr.length > 0) {
+      const newShakers = shakerArr.map((shakerItem) => {
+        const handleShaker = shakerItem;
+        if (handleShaker.id === item.id) {
+          handleShaker.status = item.status;
+          console.log('Found Item shakers:', handleShaker);
+        }
+        return handleShaker;
+      });
+      handledHandshake.shakers = JSON.stringify(newShakers);
+      console.log('New Shakers:', newShakers);
+    }
+
+
+  }*/
+  const handledHandshake = findUserBet(handshake);
+  if (handledHandshake.id === item.id) {
+    console.log(TAG, 'foundCancelHanshake:', handledHandshake);
+    handledHandshake.status = item.status;
+  }
+  return handledHandshake;
+};
+const foundRefundHanshake = (handshake, item) => {
+  const handledHandshake = findUserBet(handshake);
+  if (handledHandshake.hid === item.hid) {
+    console.log(TAG, 'foundRefundHanshake:', handledHandshake);
+    handledHandshake.status = item.status;
+  }
+  return handledHandshake;
+};
+
+const foundWithdrawHanshake = (handshake, item) => {
+  const handledHandshake = findUserBet(handshake);
+  if (handledHandshake.hid === item.hid
+      && handledHandshake.side === item.side) {
+    console.log(TAG, 'foundWithdrawHanshake:', handledHandshake);
+
+    handledHandshake.status = item.status;
+  }
+  return handledHandshake;
+};
+
 
 const handleListPayload = (payload) => {
   const result = [];
@@ -307,38 +363,25 @@ const meReducter = (
       };
     }
     case ACTIONS.UPDATE_BETTING_DATA_CHANGE: {
+      //STATUS_MAKER_UNINIT_PENDING
+      //STATUS_REFUND_PENDING
+      //STATUS_COLLECT_PENDING
+
       const item = action.payload;
       console.log('Item changed:', item);
+      const { status } = item;
       const myList = state.list;
-      let handledMylist;
-      handledMylist = myList.map((handshake) => {
-        const handledHandshake = handshake;
-
-        if (handledHandshake.id === item.id) {
-          handledHandshake.status = item.status;
-          // handledHandshake.result = resultI;
-        } else {
-          console.log('Item changed else ---');
-          const { shakers = '[]' } = handshake;
-          console.log('Item changed else --- shaker = ', shakers);
-          const shakerArr = JSON.parse(shakers) || [];
-          console.log('Item changed else --- 1111 shakerArr ', shakerArr);
-          if (shakerArr && shakerArr.length > 0) {
-            console.log('Shakers List:', shakers);
-
-            const newShakers = shakerArr.map((shakerItem) => {
-              const handleShaker = shakerItem;
-              if (handleShaker.id === item.id) {
-                handleShaker.status = item.status;
-                console.log('Found Item shakers:', handleShaker);
-              }
-              return handleShaker;
-            });
-            handledHandshake.shakers = JSON.stringify(newShakers);
-            console.log('New Shakers:', newShakers);
-          }
+      const handledMylist = myList.map((handshake) => {
+        switch (status) {
+          case BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINIT_PENDING:
+            return foundCancelHanshake(handshake, item);
+          case BET_BLOCKCHAIN_STATUS.STATUS_REFUND_PENDING:
+            return foundRefundHanshake(handshake, item);
+          case BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_PENDING:
+            return foundWithdrawHanshake(handshake, item);
+          default:
+            break;
         }
-        return handledHandshake;
       });
 
       return {
@@ -353,3 +396,4 @@ const meReducter = (
 };
 
 export default meReducter;
+
