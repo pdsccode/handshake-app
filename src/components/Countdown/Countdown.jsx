@@ -10,11 +10,13 @@ export default class Countdown extends Component {
     endTime: PropTypes.number.isRequired, // milliseconds
     renderer: PropTypes.func,
     separator: PropTypes.string,
+    onComplete: PropTypes.func,
   };
 
   static defaultProps = {
     classNames: null,
     separator: ':',
+    onComplete: undefined,
   };
 
   constructor(props) {
@@ -25,12 +27,14 @@ export default class Countdown extends Component {
       minutes: null,
       seconds: null,
     };
+    this.mounted = false;
   }
 
   componentDidMount() {
+    this.mounted = true;
     this.interval = setInterval(() => {
       const date = this.calculateCountdown(this.props);
-      if (date) {
+      if (date && this.mounted) {
         this.setState(date);
       } else {
         this.stop();
@@ -43,7 +47,9 @@ export default class Countdown extends Component {
   }
 
   stop = () => {
+    this.mounted = false;
     clearInterval(this.interval);
+    delete this.interval;
   }
 
   addLeadingZeros = (value, size = 2) => {
@@ -52,12 +58,15 @@ export default class Countdown extends Component {
     return s;
   }
 
-  calculateCountdown = ({ endTime }) => {
+  calculateCountdown = ({ endTime, onComplete }) => {
     const end = (endTime.toString().length === 10) ? endTime * 1000 : endTime;
     const seconds = parseInt((Math.max(0, end - Date.now()) / 1000).toFixed(0), 10);
 
     if (seconds <= 0) {
       this.stop();
+      if (onComplete) {
+        onComplete();
+      }
     }
 
     return {
