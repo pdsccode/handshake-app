@@ -39,7 +39,7 @@ class BetMode extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     const { selectedOutcome, support, against, isFirstFree } = nextProps;
-    console.log(TAG, 'componentWillReceiveProps', 'support:', support, 'against:', against, 'isFirstFree', isFirstFree);
+    // console.log(TAG, 'componentWillReceiveProps', 'support:', support, 'against:', against, 'isFirstFree', isFirstFree);
     const filterSupport = support && support.length > 0 && support.filter(item => item.amount >= CRYPTOSIGN_MINIMUM_MONEY);
     const filterAgainst = against && against.length > 0 && against.filter(item => item.amount >= CRYPTOSIGN_MINIMUM_MONEY);
     this.setState({

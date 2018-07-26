@@ -51,6 +51,31 @@ export const HANDSHAKE_NAME = {
   // UNSELECTED: { name: 'Create a prediction market', priority: 100 },
 };
 
+export const CASH_SORTING_CRITERIA = {
+  DISTANCE: 0,
+  PRICE: 1,
+  RATING: 2,
+};
+
+export const CASH_SORTING_LIST = [{
+  value: CASH_SORTING_CRITERIA.DISTANCE,
+  text: <FormattedMessage id="ex.sort.distance" />,
+},
+// {
+//   value: CASH_SORTING_CRITERIA.PRICE,
+//   text: <FormattedMessage id="ex.sort.price" />,
+// },
+{
+  value: CASH_SORTING_CRITERIA.RATING,
+  text: <FormattedMessage id="ex.sort.rating" />,
+},
+];
+
+export const SORT_ORDER = {
+  ASC: 'asc',
+  DESC: 'desc',
+};
+
 export const PRICE_DECIMAL = 0;
 export const AMOUNT_DECIMAL = 6;
 
@@ -158,12 +183,12 @@ export const API_URL = {
     LOAD_MATCHES: 'cryptosign/match',
     LOAD_HANDSHAKES: 'cryptosign/handshake',
     CHECK_FREE_AVAILABLE: 'cryptosign/handshake/check_free_bet',
-    UNINIT_HANDSHAKE: 'cryptosign/handshake/feed/uninit',
+    UNINIT_HANDSHAKE: 'cryptosign/handshake/uninit',
     UNINIT_HANDSHAKE_FREE: 'cryptosign/handshake/uninit_free_bet',
-    COLLECT: 'cryptosign/handshake/feed/withdraw',
+    COLLECT: 'cryptosign/handshake/collect',
     COLLECT_FREE: 'cryptosign/handshake/collect_free_bet',
     ROLLBACK: 'cryptosign/handshake/rollback',
-    REFUND: 'cryptosign/handshake/feed/refund',
+    REFUND: 'cryptosign/handshake/refund',
     REFUND_FREE: 'cryptosign/handshake/refund_free_bet',
     ADD_MATCH: 'cryptosign/match/add',
     ADD_OUTCOME: 'cryptosign/outcome/add',
