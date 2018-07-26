@@ -184,7 +184,7 @@ const refundAction = (blockchainStatus, reportTime) => {
 
 
   switch (blockchainStatus) {
-    case BET_BLOCKCHAIN_STATUS.STATUS_REFUND:
+    case BET_BLOCKCHAIN_STATUS.STATUS_REFUNDED:
       strStatus = BETTING_STATUS_LABEL.REFUNDED;
       break;
     default:
