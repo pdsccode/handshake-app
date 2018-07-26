@@ -17,6 +17,9 @@ class Index extends React.PureComponent {
   render() {
     const { messages, locale } = this.props.intl;
     const { name, img } = this.props;
+    const cta1 = messages[`landing_page.${name}.cta1`];
+    const cta2 = messages[`landing_page.${name}.cta2`];
+    const youtubeVideoId = messages[`landing_page.${name}.youtubeVideoId`];
     return (
       <LandingWrapper>
         <div className="project-detail">
@@ -31,27 +34,32 @@ class Index extends React.PureComponent {
               <div className="pd-subHeading"><FormattedMessage id={`landing_page.${name}.subHeading`} /></div>
               <div className="mt-5">
                 {
-                  messages[`landing_page.${name}.cta1`] && (
-                    <button className="btn btn-primary-landing"><FormattedMessage id={`landing_page.${name}.cta1`} /></button>
+                  cta1 && (
+                    <button className="btn btn-primary-landing">{cta1}</button>
                   )
                 }
                 {
-                  messages[`landing_page.${name}.cta2`] && (
-                    <button className="btn btn-secondary-landing"><FormattedMessage id={`landing_page.${name}.cta2`} /></button>
+                  cta2 && (
+                    <button className="btn btn-secondary-landing">{cta2}</button>
                   )
                 }
               </div>
             </div>
             <div className="col-6">
-              <img src={img} className="w-100" />
-              {/*<iframe*/}
-                {/*width="560"*/}
-                {/*height="315"*/}
-                {/*src="https://www.youtube.com/embed/021EEUIfy9w?rel=0&amp;showinfo=0"*/}
-                {/*frameBorder="0"*/}
-                {/*allow="autoplay; encrypted-media"*/}
-                {/*allowFullScreen*/}
-              {/*/>*/}
+              {
+                youtubeVideoId ? (
+                  <iframe
+                    width="560"
+                    height="315"
+                    src={`https://www.youtube.com/embed/${youtubeVideoId}?rel=0&amp;showinfo=0`}
+                    frameBorder="0"
+                    allow="autoplay; encrypted-media"
+                    allowFullScreen
+                  />
+                ) : (
+                  <img src={img} className="w-100" />
+                )
+              }
             </div>
           </div>
 
