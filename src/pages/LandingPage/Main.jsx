@@ -11,11 +11,10 @@ import { Link } from 'react-router-dom';
 import imgNinja from '@/assets/images/ninja/ninja-header-black.svg';
 import imgLogo from '@/assets/images/logo.png';
 import imgCash from '@/assets/images/landing/home/cash.jpg';
-import imgBlockchainPrivacy from '@/assets/images/landing/home/blockchain-privacy.jpg';
+import imgPrediction from '@/assets/images/landing/home/prediction.jpg';
 import imgDad from '@/assets/images/landing/home/dad.jpg';
 import imgDao from '@/assets/images/landing/home/dao.jpg';
 import imgInternetCash from '@/assets/images/landing/home/internet-cash.jpg';
-import imgPrediction from '@/assets/images/landing/home/prediction.jpg';
 import imgWallet from '@/assets/images/landing/home/wallet.jpg';
 import imgWhisper from '@/assets/images/landing/home/whisper.jpg';
 
@@ -65,12 +64,6 @@ const products = [
 ]
 
 const researches = [
-  {
-    title: <FormattedMessage id="landing_page.researches.blockchainPrivacy.title" />,
-    subTitle: <FormattedMessage id="landing_page.researches.blockchainPrivacy.subTitle" />,
-    img: imgBlockchainPrivacy,
-    to: URL.RESEARCH_BLOCKCHAIN_PRIVACY_URL,
-  },
   {
     title: <FormattedMessage id="landing_page.researches.internetCash.title" />,
     subTitle: <FormattedMessage id="landing_page.researches.internetCash.subTitle" />,
