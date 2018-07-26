@@ -114,7 +114,7 @@ class Main extends React.PureComponent {
         {
           type === 'product' ? (
             <div>
-              <div className="row" style={{ marginTop: '90px' }}>
+              <div className="row" style={{ marginTop: '45px' }}>
                 <div className="col">
                   <div className="landing-header"><FormattedMessage id="landing_page.header.product" /></div>
                   <div className="landing-subHeader"><FormattedMessage id="landing_page.subHeader.product" /></div>
@@ -126,7 +126,7 @@ class Main extends React.PureComponent {
                   products.map((product, index) => {
                     const { title, subTitle, img, to } = product
                     return (
-                      <div className="col-4 product" key={index}>
+                      <div className="col-12 col-sm-6 col-md-4 product" key={index}>
                         <div><a href={to}><img src={img} className="img-fluid" /></a></div>
                         <div className="landing-title my-1">{title}</div>
                         <div className="landing-sub-title">{subTitle}</div>
@@ -150,7 +150,7 @@ class Main extends React.PureComponent {
                   researches.map((product, index) => {
                     const { title, subTitle, img, to } = product
                     return (
-                      <div className="col-6 product" key={index}>
+                      <div className="col-12 col-sm-6 product" key={index}>
                         <div><a href={to}><img src={img} className="img-fluid" /></a></div>
                         <div className="landing-title my-1">{title}</div>
                         <div className="landing-sub-title">{subTitle}</div>
