@@ -487,17 +487,15 @@ export const URL = {
   PRODUCT_URL: '/product',
   RESEARCH_URL: '/research',
 
-  PRODUCT_CASH_URL: '/product/cash',
-  PRODUCT_PREDICTION_URL: '/product/prediction',
-  PRODUCT_WALLET_URL: '/product/wallet',
-  PRODUCT_PAYMENT_STORE_URL: '/product/payment-store',
-  PRODUCT_PAYMENT_GATEWAY_URL: '/product/payment-gateway',
-  PRODUCT_DAD_URL: '/product/dad',
-  PRODUCT_WHISPER_URL: '/product/whisper',
-  PRODUCT_ODD_BALL_URL: '/product/odd-ball',
-  PRODUCT_DAO_URL: '/product/dao',
-  RESEARCH_INTERNET_CASH_URL: '/research/internet-cash',
-  RESEARCH_BLOCKCHAIN_PRIVACY_URL: '/research/blockchain-privacy',
+  PRODUCT_CASH_URL: '/cash',
+  PRODUCT_PREDICTION_URL: '/prediction',
+  PRODUCT_WALLET_URL: '/wallet',
+  PRODUCT_PAYMENT_STORE_URL: '/payment-store',
+  PRODUCT_PAYMENT_GATEWAY_URL: '/payment-gateway',
+  RESEARCH_INTERNET_CASH_URL: '/internet-cash',
+  PRODUCT_DAD_URL: '/dad',
+  RESEARCH_UNCOMMONS_URL: '/uncommons',
+  PRODUCT_WHISPER_URL: '/whisper',
 };
 
 export const NB_BLOCKS = 20;
