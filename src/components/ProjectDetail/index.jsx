@@ -82,7 +82,7 @@ class Index extends React.PureComponent {
             </div>
           </div>
           <div className="row mt-4">
-            <div className="col-6">
+            <div className="col-12 col-md-6">
               <div className="pd-heading">
                 <FormattedMessage id={`landing_page.${name}.heading`} />
               </div>
@@ -133,7 +133,7 @@ class Index extends React.PureComponent {
                 )}
               </div>
             </div>
-            <div className="col-6">
+            <div className="col-12 col-md-6">
               {youtubeVideoId ? (
                 <iframe
                   width="100%"
