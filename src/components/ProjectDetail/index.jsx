@@ -56,7 +56,10 @@ class Index extends React.PureComponent {
     } = this.props;
     const { hasSubscribed } = this.state;
     const cta1 = messages[`landing_page.${name}.cta1`];
+    const cta1Url = messages[`landing_page.${name}.cta1_url`];
     const cta2 = messages[`landing_page.${name}.cta2`];
+    const cta2Url = messages[`landing_page.${name}.cta2_url`];
+
     const textEmail = messages[`landing_page.${name}.textEmail`];
     const btnSubmitEmail =
       messages[`landing_page.${name}.btnSubmitEmail`] || 'Submit';
@@ -91,6 +94,7 @@ class Index extends React.PureComponent {
                   <span>
                     {!hasSubscribed ? (
                       <FormSubscribeEmail onSubmit={this.handleSubmit}>
+                        <div className="text-email">{textEmail}</div>
                         <div className="d-table w-100">
                           <div className="d-table-cell align-top">
                             <Field
@@ -122,10 +126,10 @@ class Index extends React.PureComponent {
                   </span>
                 )}
                 {cta1 && (
-                  <button className="btn btn-primary-landing">{cta1}</button>
+                  <a href={cta1Url} className="btn btn-primary-landing">{cta1}</a>
                 )}
                 {cta2 && (
-                  <button className="btn btn-secondary-landing">{cta2}</button>
+                  <a href={cta2Url} className="btn btn-secondary-landing">{cta2}</a>
                 )}
               </div>
             </div>

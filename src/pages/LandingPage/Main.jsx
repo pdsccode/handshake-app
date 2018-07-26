@@ -13,10 +13,12 @@ import imgLogo from '@/assets/images/logo.png';
 import imgCash from '@/assets/images/landing/home/cash.jpg';
 import imgPrediction from '@/assets/images/landing/home/prediction.jpg';
 import imgDad from '@/assets/images/landing/home/dad.jpg';
-import imgDao from '@/assets/images/landing/home/dao.jpg';
-import imgInternetCash from '@/assets/images/landing/home/internet-cash.jpg';
 import imgWallet from '@/assets/images/landing/home/wallet.jpg';
 import imgWhisper from '@/assets/images/landing/home/whisper.jpg';
+import imgHivepayOnline from '@/assets/images/landing/home/hivepay-online.jpg';
+import imgHivepayOffline from '@/assets/images/landing/home/hivepay-offline.jpg';
+import imgInternetCash from '@/assets/images/landing/home/internet-cash.jpg';
+import imgUncommons from '@/assets/images/landing/home/uncommons.jpg';
 
 import {
   URL,
@@ -56,14 +58,26 @@ const products = [
     to: URL.PRODUCT_WHISPER_URL,
   },
   {
-    title: <FormattedMessage id="landing_page.products.dao.title" />,
-    subTitle: <FormattedMessage id="landing_page.products.dao.subTitle" />,
-    img: imgDao,
-    to: URL.PRODUCT_DAO_URL,
+    title: <FormattedMessage id="landing_page.products.hivepay-online.title" />,
+    subTitle: <FormattedMessage id="landing_page.products.hivepay-online.subTitle" />,
+    img: imgHivepayOnline,
+    to: URL.PRODUCT_HIVEPAY_ONLINE_URL,
+  },
+  {
+    title: <FormattedMessage id="landing_page.products.hivepay-offline.title" />,
+    subTitle: <FormattedMessage id="landing_page.products.hivepay-offline.subTitle" />,
+    img: imgHivepayOffline,
+    to: URL.PRODUCT_HIVEPAY_OFFLINE_URL,
   }
 ]
 
 const researches = [
+  {
+    title: <FormattedMessage id="landing_page.researches.uncommons.title" />,
+    subTitle: <FormattedMessage id="landing_page.researches.uncommons.subTitle" />,
+    img: imgUncommons,
+    to: URL.RESEARCH_UNCOMMONS_URL,
+  },
   {
     title: <FormattedMessage id="landing_page.researches.internetCash.title" />,
     subTitle: <FormattedMessage id="landing_page.researches.internetCash.subTitle" />,

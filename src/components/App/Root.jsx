@@ -32,7 +32,7 @@ import imgCashContent from '@/assets/images/landing/cash/fake-content.svg';
 import imgDadContent from '@/assets/images/landing/dad/fake-content.svg';
 // import imgBlockchainPrivacy from '@/assets/images/landing/home/blockchain-privacy.jpg';
 import imgDad from '@/assets/images/landing/home/dad.jpg';
-import imgDao from '@/assets/images/landing/home/dao.jpg';
+// import imgDao from '@/assets/images/landing/home/dao.jpg';
 import imgInternetCash from '@/assets/images/landing/home/internet-cash.jpg';
 import imgPrediction from '@/assets/images/landing/home/prediction.jpg';
 import imgWallet from '@/assets/images/landing/home/wallet.jpg';
@@ -94,7 +94,7 @@ class Root extends React.Component {
         case URL.PRODUCT_HIVEPAY_ONLINE_URL:
           return <ProjectDetail name="hivepay-online" img={imgCash} />;
         case URL.RESEARCH_INTERNET_CASH_URL:
-          return <ProjectDetail name="internet_cash" img={imgInternetCash} />;
+          return <ProjectDetail name="internet-cash" img={imgInternetCash} />;
         case URL.PRODUCT_DAD_URL:
           return <ProjectDetail name="dad" img={imgDad} imgContent={imgDadContent} />;
         case URL.RESEARCH_UNCOMMONS_URL:
