@@ -13,7 +13,6 @@ import { fieldInput } from '@/components/core/form/customField'
 import { email, required } from '@/components/core/form/validation'
 import $http from '@/services/api'
 import { BASE_API } from '@/constants'
-
 import './styles.scss'
 
 const nameFormSubscribeEmail = 'subscribeEmail'
