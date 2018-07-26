@@ -29,6 +29,7 @@ const ProjectDetail = createDynamicImport(() => import('@/components/ProjectDeta
 
 import imgCash from '@/assets/images/landing/home/cash.jpg';
 import imgCashContent from '@/assets/images/landing/cash/fake-content.svg';
+import imgDadContent from '@/assets/images/landing/dad/fake-content.svg';
 import imgBlockchainPrivacy from '@/assets/images/landing/home/blockchain-privacy.jpg';
 import imgDad from '@/assets/images/landing/home/dad.jpg';
 import imgDao from '@/assets/images/landing/home/dao.jpg';
@@ -95,7 +96,7 @@ class Root extends React.Component {
         case URL.RESEARCH_INTERNET_CASH_URL:
           return <ProjectDetail name="internet_cash" img={imgInternetCash} />;
         case URL.PRODUCT_DAD_URL:
-          return <ProjectDetail name="dad" img={imgDad} />;
+          return <ProjectDetail name="dad" img={imgDad} imgContent={imgDadContent} />;
         case URL.RESEARCH_UNCOMMONS_URL:
           return <ProjectDetail name="uncommons" img={imgDad} />;
         case URL.PRODUCT_WHISPER_URL:
