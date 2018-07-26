@@ -150,10 +150,10 @@ class FeedMeOfferStoreContainer extends React.PureComponent {
 
   deleteOfferItem = async () => {
     const { offer } = this;
-    const { currency, sellAmount, freeStart } = this.deleteItem;
+    const { currency, sellBalance, freeStart } = this.deleteItem;
 
     if (currency === CRYPTO_CURRENCY.ETH) {
-      if (sellAmount > 0 && freeStart === '') {
+      if (sellBalance > 0 && freeStart === '') {
         const wallet = MasterWallet.getWalletDefault(currency);
         const balance = await wallet.getBalance();
         const fee = await wallet.getFee();
@@ -182,7 +182,7 @@ class FeedMeOfferStoreContainer extends React.PureComponent {
     const { refreshPage } = this.props;
     const { offer } = this;
     const { data } = responseData;
-    const { currency, sellAmount, freeStart } = this.deleteItem;
+    const { currency, sellBalance, freeStart } = this.deleteItem;
 
     console.log('handleDeleteOfferItemSuccess', responseData);
 
@@ -194,7 +194,7 @@ class FeedMeOfferStoreContainer extends React.PureComponent {
     for (const item of Object.values(offerStore.items)) {
       if (currency === item.currency) {
         if (currency === CRYPTO_CURRENCY.ETH) {
-          if (sellAmount > 0 && freeStart === '' && item.status !== 'closed') {
+          if (sellBalance > 0 && freeStart === '' && item.status !== 'closed') {
             try {
               const wallet = MasterWallet.getWalletDefault(currency);
 
