@@ -470,7 +470,7 @@ export default {
 
   // landing page --> /coin-exchange
   COIN_EXCHANGE_LP_FAQ_TITLE: 'Frequently asked questions',
-  COIN_EXCHANGE_LP_FAQ: [
+  'landing_page.cash.faq': [
     {
       question: 'What is Ninja Cash?',
       answer: 'Ninja Cash is a peer-to-peer decentralized exchange in which people can easily exchange cryptocurrency for cash. We want to make sure that traders are able to set up their own stations and make their own prices - not having to rely on market prices to buy and sell cryptocurrency.',
