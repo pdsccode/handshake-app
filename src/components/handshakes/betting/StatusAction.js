@@ -258,8 +258,8 @@ const winOrLose = (resultStatus, side = SIDE.SUPPORT, disputeTime) => {
       strStatus = BETTING_STATUS_LABEL.WIN;
       isAction = true;
     } else {
-      // strStatus = BETTING_STATUS_LABEL.WIN + BETTING_STATUS_LABEL.WIN_WAIT;
-      // isAction = false;
+      strStatus = BETTING_STATUS_LABEL.WIN + BETTING_STATUS_LABEL.WIN_WAIT;
+      isAction = false;
     }
   } else { // LOSE
     strStatus = BETTING_STATUS_LABEL.LOSE;

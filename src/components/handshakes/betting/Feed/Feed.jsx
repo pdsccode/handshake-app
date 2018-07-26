@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { ProgressBar } from 'react-bootstrap';
+
 
 // services, constants
 import { BetHandshakeHandler } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
@@ -565,15 +567,45 @@ class FeedBetting extends React.Component {
 
     );
   }
+  renderProgressBar(itemInfo) {
+    let { totalAmount, totalDisputeAmount } = itemInfo;
+    totalDisputeAmount = 50;
+    totalAmount = 100;
+    const progress = totalDisputeAmount / totalAmount * 100;
+    const pgText = `${totalDisputeAmount} ETH of ${progress}% outcome pool`;
+    console.log(TAG, 'renderProgressBar');
+    return (
+      <div>
+        <ProgressBar className="progressBar" striped bsStyle="info" now={progress} />
+        <div className="progressText">{pgText}</div>
+      </div>
+    );
+  }
+  renderBottom(itemInfo) {
+    const { status } = itemInfo;
+    const { actionTitle } = this.state;
+    const buttonClassName = this.getButtonClassName(actionTitle);
+
+    return (
+      <div className="bottomDiv">
+        {status === BET_BLOCKCHAIN_STATUS.STATUS_DISPUTED && this.renderProgressBar(itemInfo)}
+        <div className="bottomStatus">
+          {this.renderStatus()}
+          {this.renderButton(buttonClassName)}
+        </div>
+      </div>
+
+    );
+  }
 
   render() {
     const {
-      actionTitle, isAction, itemInfo, isLoading,
+      itemInfo, isLoading,
     } = this.state;
 
     const {extraData} = this.props;
 
-    const { side, odds, role } = itemInfo;
+    const { side, odds, role, status } = itemInfo;
     const { event_name, event_predict } = parseJsonString(extraData);
 
     const colorBySide = side === 1 ? `support` : 'oppose';
@@ -581,7 +613,6 @@ class FeedBetting extends React.Component {
     const eventName = event_name && this.formatEventName(event_name);
     const predictName = event_predict && this.formatPredictName(event_predict);
 
-    const buttonClassName = this.getButtonClassName(actionTitle);
     console.log(TAG, 'render', isLoading);
     return (
       <div>
@@ -610,16 +641,11 @@ class FeedBetting extends React.Component {
             </div>
             {role === ROLE.INITER ? this.renderMaker() : this.renderShaker()}
           </div>
-          <div className="bottomDiv">
-            {this.renderStatus()}
-            {this.renderButton(buttonClassName)}
-          </div>
+          {this.renderBottom(itemInfo)}
         </Feed>
       </div>
     );
   }
-
-
 }
 
 const mapState = state => ({
@@ -635,6 +661,5 @@ const mapDispatch = ({
   uninitItemFree,
   refund,
   refundFree,
-  refund,
 });
 export default connect(mapState, mapDispatch)(FeedBetting);

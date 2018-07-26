@@ -91,7 +91,7 @@ export const BETTING_STATUS_LABEL =
       WIN: `You're a winner!`,
       WIN_WAIT: `<br/> It's not time to withdraw. Please wait..`,
       DISPUTE_WAIT: `<br/> You disputed the bet. Please wait resolving`,
-      DISPUTE_RESOVING: `<br/> There are many people disputed result. Please wait resolving`,
+      DISPUTE_RESOVING: `There are many people disputed result. Please wait resolving`,
       DONE: ` The bet is done.`,
       CANCELLING: 'Your bet is being cancelled.',
       CANCEL_PROGRESSING: 'The blockchain is processing your cancelling. Please wait.',
