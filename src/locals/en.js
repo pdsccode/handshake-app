@@ -356,6 +356,7 @@ export default {
 
   'landing_page.header.product': 'PRODUCT',
   'landing_page.subHeader.product': 'Ninja builds applications and protocols for the new decentralized Internet.',
+  'landing_page.detail.thanksForSubscribing': 'Thank you for subscribing!',
 
   'landing_page.products.cash.title': 'Cash',
   'landing_page.products.cash.subTitle': 'Decentralized and P2P platform to trade ETH/BTC with cash and vice versa. Anonymously.',
@@ -426,7 +427,7 @@ export default {
   'landing_page.internet_cash.breadcrumb': 'Internet Cash',
   'landing_page.internet_cash.heading': 'The Internet deserves to have its own native currency.',
   'landing_page.internet_cash.subHeading': 'While Bitcoin emerges as a powerful currency, it fails to be the everyday currency.  Bitcoin will never be the currency that you can use to pay for coffee or buy a t-shirt.  This project aims to build a new kind of cryptocurrency that behaves like cash in everyday life.',
-  'landing_page.internet_cash.cta1': 'Be the first to know when we launch',
+  'landing_page.internet_cash.textEmail': 'Be the first to know when we launch',
 
   'landing_page.dad.breadcrumb': 'Decentralized Autonomous Dataset',
   'landing_page.dad.heading': 'Building decentralized datasets to advance AI.',
