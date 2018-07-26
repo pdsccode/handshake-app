@@ -5,13 +5,15 @@ import { connect } from 'react-redux';
 
 // service, constant
 import { shakeItem, initHandshake } from '@/reducers/handshake/action';
-import {HANDSHAKE_ID, API_URL } from '@/constants';
+import { HANDSHAKE_ID, API_URL } from '@/constants';
 import GA from '@/services/googleAnalytics';
 
 // components
 import { showAlert } from '@/reducers/app/action';
-import { getMessageWithCode, getChainIdDefaultWallet,
-          getEstimateGas, getAddress, isExistMatchBet, parseBigNumber, formatAmount } from '@/components/handshakes/betting/utils.js';
+import {
+  getMessageWithCode, getChainIdDefaultWallet,
+  getEstimateGas, getAddress, isExistMatchBet, parseBigNumber, formatAmount
+} from '@/components/handshakes/betting/utils.js';
 import { validateBet } from '@/components/handshakes/betting/validation.js';
 import { MESSAGE } from '@/components/handshakes/betting/message.js';
 import { BetHandshakeHandler } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
@@ -66,14 +68,11 @@ class BetingShake extends React.Component {
   }
   componentDidMount() {
     this.props.onClickSubmit(this.onSubmit);
-
-    this.updateDefautValues();
+    this.updateDefautValues(this.props);
   }
 
-  async componentWillReceiveProps(nextProps) {
-
-    this.updateDefautValues();
-
+  componentWillReceiveProps(nextProps) {
+    this.updateDefautValues(nextProps);
   }
 
   onSubmit = async (e) => {
@@ -86,7 +85,7 @@ class BetingShake extends React.Component {
     const amount = parseBigNumber(amountValue);
     const odds = parseBigNumber(oddValue);
 
-    console.log(TAG, "Amount, Side, Odds", amount?.toNumber(), side, odds?.toNumber());
+    console.log(TAG, "Amount, Side, Odds", amount ?.toNumber(), side, odds ?.toNumber());
 
 
     // send event tracking
@@ -101,7 +100,7 @@ class BetingShake extends React.Component {
       onSubmitClick();
 
     } else {
-      if(message){
+      if (message) {
         this.props.showAlert({
           message: <div className="text-center">{message}</div>,
           timeOut: 3000,
@@ -123,8 +122,8 @@ class BetingShake extends React.Component {
     });
   }
 
-  async updateDefautValues() {
-    const { side, marketSupportOdds, marketAgainstOdds, amountSupport, amountAgainst } = this.props;
+  updateDefautValues = (props) => {
+    const { side, marketSupportOdds, marketAgainstOdds, amountSupport, amountAgainst } = props;
     const defaultValue = calculateBetDefault(side, marketSupportOdds, marketAgainstOdds, amountSupport, amountAgainst);
 
     this.setState({

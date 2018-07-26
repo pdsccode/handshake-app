@@ -793,32 +793,37 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
     const { offer } = this;
 
     let idMessage = '';
+    let showClock = false;
 
     switch (status) {
       case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.CANCELLING: {
         if (this.userType === HANDSHAKE_USER.OWNER) {
           idMessage = 'ex.shop.explanation.cancelling';
+          showClock = true;
         }
         break;
       }
       case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.REJECTING: {
         if (this.userType === HANDSHAKE_USER.OWNER) {
           idMessage = 'ex.shop.explanation.rejecting';
+          showClock = true;
         }
         break;
       }
       case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.PRE_SHAKING: {
         if (this.userType === HANDSHAKE_USER.SHAKED) {
           idMessage = 'ex.shop.explanation.pre_shaking';
+          showClock = true;
         }
         break;
       }
-      // case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.PRE_SHAKE: {
-      //   if (this.userType === HANDSHAKE_USER.SHAKED) {
-      //     idMessage = 'ex.shop.explanation.pre_shake';
-      //   }
-      //   break;
-      // }
+      case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.PRE_SHAKE: {
+        if (this.userType === HANDSHAKE_USER.SHAKED) {
+          idMessage = 'ex.shop.explanation.pre_shake';
+          showClock = false;
+        }
+        break;
+      }
       // case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.SHAKING: {
       //   if (this.userType === HANDSHAKE_USER.SHAKED) {
       //     idMessage = 'ex.shop.explanation.shaking';
@@ -856,12 +861,14 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
           case HANDSHAKE_USER.OWNER: { // shop
             if (offer.type === EXCHANGE_ACTION.BUY) { // shop buy
               idMessage = 'ex.shop.explanation.completing';
+              showClock = true;
             }
             break;
           }
           case HANDSHAKE_USER.SHAKED: { // user shake
             if (offer.type === EXCHANGE_ACTION.SELL) { // shop sell
               idMessage = 'ex.shop.explanation.completing';
+              showClock = true;
             }
             break;
           }
@@ -889,7 +896,7 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
       message = <FormattedMessage id={idMessage} values={{}} />;
     }
 
-    return message;
+    return { message, showClock };
   }
 
   // //////////////////////
@@ -955,7 +962,7 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
     // const message = this.getMessageContent(fiatAmount);
     const { message, cashTitle, coinTitle } = this.getBuyerSeller();
     const actionButtons = this.getActionButtons();
-    const messageMovingCoin = this.getMessageMovingCoin();
+    const { message: messageMovingCoin, showClock } = this.getMessageMovingCoin();
 
     const feedProps = {
       from,
@@ -973,6 +980,7 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
       fiatAmount,
       currency: offer.currency,
       fiatCurrency: offer.fiatCurrency,
+      showClock,
     };
 
     return (
