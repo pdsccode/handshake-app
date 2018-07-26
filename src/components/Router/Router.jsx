@@ -34,6 +34,7 @@ const rootRouterMap = [
   { path: URL.HANDSHAKE_WALLET, component: RouterWallet },
   { path: URL.HANDSHAKE_CREATE, component: RouterCreate },
   // { path: URL.HANDSHAKE_EXCHANGE, component: RouterExchange },
+  { path: URL.HANDSHAKE_EXCHANGE, component: RouterPrediction },
   { path: URL.COMMENTS_BY_SHAKE, component: RouterComment },
   { path: URL.ADMIN, component: RouterAdmin },
 ];
