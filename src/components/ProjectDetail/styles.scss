@@ -1,0 +1,55 @@
+@import './src/styles/style';
+
+.project-detail {
+  font-family: AzoSans-Regular;
+  .pd-breadcrumb {
+    font-family: AzoSans-Regular;
+    font-size: 16px;
+    color: #484848;
+    letter-spacing: 0;
+    span {
+      opacity: 1;
+    }
+    a {
+      color: #484848;
+      opacity: 0.6;
+    }
+  }
+  .pd-heading {
+    font-family: AzoSans-Bold;
+    font-size: 36px;
+    color: #484848;
+    letter-spacing: 0;
+    line-height: 44px;
+  }
+  .pd-subHeading {
+    opacity: 0.7;
+    font-family: AzoSans-Regular;
+    font-size: 20px;
+    color: #484848;
+    letter-spacing: 0;
+    line-height: 32px;
+    margin-top: 18px;
+  }
+  .pd-content {
+    opacity: 0.85;
+    font-size: 18px;
+    color: #484848;
+    letter-spacing: 0;
+    line-height: 33px;
+  }
+  .pd-faq {
+    font-weight: 600;
+    font-size: 30px;
+    text-align: center;
+    margin-top: 120px;
+  }
+  .control-subscribe-email {
+    height: 48px;
+  }
+  .text-email {
+    color: #484848;
+    font-size: 23px;
+    margin-bottom: 5px;
+  }
+}
