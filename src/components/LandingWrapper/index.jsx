@@ -93,15 +93,9 @@ class Index extends React.PureComponent {
                 <div><FormattedHTMLMessage id="landing_page.label.openOn" /></div>
               </div>
             </div>
-            <div className="col-12 col-md-3">
+            <div className="col-12 col-md-6 text-left text-md-right">
               <div>
                 <div><FormattedHTMLMessage id="landing_page.label.joinTelegram" /></div>
-                <div><FormattedHTMLMessage id="landing_page.label.airdrop" /></div>
-              </div>
-            </div>
-            <div className="col-12 col-md-3">
-              <div className="align-middle">
-                <div><FormattedHTMLMessage id="landing_page.label.faq" /></div>
                 <div><FormattedHTMLMessage id="landing_page.label.whitepaper" /></div>
               </div>
             </div>
