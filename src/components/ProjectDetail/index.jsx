@@ -16,7 +16,7 @@ class Index extends React.PureComponent {
 
   render() {
     const { messages, locale } = this.props.intl;
-    const { name, img } = this.props;
+    const { name, img, imgContent } = this.props;
     const cta1 = messages[`landing_page.${name}.cta1`];
     const cta2 = messages[`landing_page.${name}.cta2`];
     const youtubeVideoId = messages[`landing_page.${name}.youtubeVideoId`];
@@ -68,6 +68,15 @@ class Index extends React.PureComponent {
               <div className="pd-content">{messages[`landing_page.${name}.content`]}</div>
             </div>
           </div>
+          {
+            imgContent && (
+              <div className="row">
+                <div className="col">
+                  <img src={imgContent} className="w-100" />
+                </div>
+              </div>
+            )
+          }
 
           <div className="row">
             <div className="col">

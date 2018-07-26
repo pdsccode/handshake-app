@@ -28,6 +28,7 @@ const LandingPageMain = createDynamicImport(() => import('@/pages/LandingPage/Ma
 const ProjectDetail = createDynamicImport(() => import('@/components/ProjectDetail'), Splash);
 
 import imgCash from '@/assets/images/landing/home/cash.jpg';
+import imgCashContent from '@/assets/images/landing/cash/fake-content.svg';
 import imgBlockchainPrivacy from '@/assets/images/landing/home/blockchain-privacy.jpg';
 import imgDad from '@/assets/images/landing/home/dad.jpg';
 import imgDao from '@/assets/images/landing/home/dao.jpg';
@@ -82,7 +83,7 @@ class Root extends React.Component {
           return <LandingPageMain type="research" />;
 
         case URL.PRODUCT_CASH_URL:
-          return <ProjectDetail name="cash" img={imgCash} />;
+          return <ProjectDetail name="cash" img={imgCash} imgContent={imgCashContent} />;
         case URL.PRODUCT_PREDICTION_URL:
           return <ProjectDetail name="prediction" img={imgPrediction} />;
         case URL.PRODUCT_WALLET_URL:
