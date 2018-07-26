@@ -49,7 +49,7 @@ class Index extends React.PureComponent {
               {
                 youtubeVideoId ? (
                   <iframe
-                    width="560"
+                    width="100%"
                     height="315"
                     src={`https://www.youtube.com/embed/${youtubeVideoId}?rel=0&amp;showinfo=0`}
                     frameBorder="0"

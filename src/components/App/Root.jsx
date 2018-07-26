@@ -18,7 +18,7 @@ import '@/styles/custom-icons/styles.css';
 // pages
 const LandingPage = createDynamicImport(() => import('@/pages/LandingPage/LandingPage'), Splash);
 const LandingPageTrade = createDynamicImport(() => import('@/pages/LandingPage/Trade'), Splash);
-const LandingPageCash = createDynamicImport(() => import('@/pages/LandingPage/Cash'), Splash);
+// const LandingPageCash = createDynamicImport(() => import('@/pages/LandingPage/Cash'), Splash);
 const LandingPageWhitePaper = createDynamicImport(() => import('@/pages/LandingPage/WhitePaper'), Splash);
 const IntroNjnjaCash = createDynamicImport(() => import('@/pages/LandingPage/IntroducingNinjaCash'), Splash);
 const AboutNjnjaCash = createDynamicImport(() => import('@/pages/LandingPage/AboutNinjaCash'), Splash);
@@ -72,6 +72,33 @@ class Root extends React.Component {
     if (BrowserDetect.isBot) {
       return <LandingPageMain />;
     }
+    if (BrowserDetect.isDesktop) {
+      switch (window.location.pathname) {
+        // case URL.HANDSHAKE_CASH:
+        //   return <LandingPageCash />;
+        case URL.PRODUCT_URL:
+          return <LandingPageMain type="product" />;
+        case URL.RESEARCH_URL:
+          return <LandingPageMain type="research" />;
+
+        case URL.PRODUCT_CASH_URL:
+          return <ProjectDetail name="cash" img={imgCash} />;
+        case URL.PRODUCT_PREDICTION_URL:
+          return <ProjectDetail name="prediction" img={imgPrediction} />;
+        case URL.PRODUCT_WALLET_URL:
+          return <ProjectDetail name="wallet" img={imgWallet} />;
+        case URL.PRODUCT_PAYMENT_STORE_URL:
+          return <ProjectDetail name="payment-store" img={imgInternetCash} />;
+        case URL.PRODUCT_PAYMENT_GATEWAY_URL:
+          return <ProjectDetail name="payment-gateway" img={imgCash} />;
+        case URL.RESEARCH_INTERNET_CASH_URL:
+          return <ProjectDetail name="internet_cash" img={imgInternetCash} />;
+        case URL.PRODUCT_DAD_URL:
+          return <ProjectDetail name="dad" img={imgDad} />;
+        default:
+      }
+      return <LandingPageMain />;
+    }
     switch (window.location.pathname) {
       case URL.LANDING_PAGE_SHURIKEN:
         return <LandingPage />;
@@ -85,40 +112,12 @@ class Root extends React.Component {
         return <IntroNjnjaCash />;
       case URL.ABOUT_NINJA_CASH:
         return <AboutNjnjaCash />;
-
-      case URL.PRODUCT_URL:
-        return <LandingPageMain type="product" />;
-      case URL.RESEARCH_URL:
-        return <LandingPageMain type="research" />;
-
-      case URL.PRODUCT_CASH_URL:
-        return <ProjectDetail name="cash" img={imgCash} />;
-      case URL.PRODUCT_PREDICTION_URL:
-        return <ProjectDetail name="prediction" img={imgPrediction} />;
-      case URL.PRODUCT_WALLET_URL:
-        return <ProjectDetail name="wallet" img={imgWallet} />;
-      case URL.PRODUCT_PAYMENT_STORE_URL:
-        return <ProjectDetail name="payment-store" img={imgInternetCash} />;
-      case URL.PRODUCT_PAYMENT_GATEWAY_URL:
-        return <ProjectDetail name="payment-gateway" img={imgCash} />;
-      case URL.RESEARCH_INTERNET_CASH_URL:
-        return <ProjectDetail name="internet_cash" img={imgInternetCash} />;
-      case URL.PRODUCT_DAD_URL:
-        return <ProjectDetail name="dad" img={imgDad} />;
       // case URL.PROJECT_CASH:
       //   return <ProjectCash />;
       // case URL.PROJECT_ODD_BALL:
       //   return <ProjectOddBall />;
       default:
         // code
-    }
-    if (BrowserDetect.isDesktop) {
-      switch (window.location.pathname) {
-        case URL.HANDSHAKE_CASH:
-          return <LandingPageCash />;
-        default:
-      }
-      return <LandingPageMain />;
     }
     return <Handle setLanguage={this.setLanguage} refer={this.refer} />;
   }
