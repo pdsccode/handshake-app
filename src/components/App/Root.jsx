@@ -88,14 +88,18 @@ class Root extends React.Component {
           return <ProjectDetail name="prediction" img={imgPrediction} />;
         case URL.PRODUCT_WALLET_URL:
           return <ProjectDetail name="wallet" img={imgWallet} />;
-        case URL.PRODUCT_PAYMENT_STORE_URL:
-          return <ProjectDetail name="payment-store" img={imgInternetCash} />;
-        case URL.PRODUCT_PAYMENT_GATEWAY_URL:
-          return <ProjectDetail name="payment-gateway" img={imgCash} />;
+        case URL.PRODUCT_HIVEPAY_OFFLINE_URL:
+          return <ProjectDetail name="hivepay-offline" img={imgInternetCash} />;
+        case URL.PRODUCT_HIVEPAY_ONLINE_URL:
+          return <ProjectDetail name="hivepay-online" img={imgCash} />;
         case URL.RESEARCH_INTERNET_CASH_URL:
           return <ProjectDetail name="internet_cash" img={imgInternetCash} />;
         case URL.PRODUCT_DAD_URL:
           return <ProjectDetail name="dad" img={imgDad} />;
+        case URL.RESEARCH_UNCOMMONS_URL:
+          return <ProjectDetail name="uncommons" img={imgDad} />;
+        case URL.PRODUCT_WHISPER_URL:
+          return <ProjectDetail name="whisper" img={imgDad} />;
         default:
       }
       return <LandingPageMain />;
