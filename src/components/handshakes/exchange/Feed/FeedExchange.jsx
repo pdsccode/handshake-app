@@ -48,9 +48,9 @@ class FeedExchange extends React.PureComponent {
   constructor(props) {
     super(props);
 
-    const { extraData } = props;
+    const { offer } = props;
 
-    this.offer = OfferShop.offerShop(JSON.parse(extraData));
+    this.offer = offer;
 
     // console.log('offer', this.offer);
 

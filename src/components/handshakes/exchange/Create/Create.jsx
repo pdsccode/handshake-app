@@ -68,16 +68,6 @@ const FormExchangeCreate = createForm({
       customizePriceBuy: -0.25,
       customizePriceSell: 0.25,
     },
-    // initialValues: {
-    //   currency: CRYPTO_CURRENCY_DEFAULT,
-    //   customizePriceBuy: 0.25,
-    //   customizePriceSell: -0.25,
-    //   amountBuy: 0.1,
-    //   amountSell: 0.2,
-    //   nameShop: 'Apple store',
-    //   phone: '1234567',
-    //   address: '139 Hong Ha',
-    // }
   },
 });
 const selectorFormExchangeCreate = formValueSelector(nameFormExchangeCreate);
