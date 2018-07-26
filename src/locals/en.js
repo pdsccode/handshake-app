@@ -536,6 +536,125 @@ export default {
       answer: 'Once a seller approves the transaction under the buyer\'s eagle eye, the cryptocurrency will be released from Escrow and into your wallet.',
     }
   ],
+  'landing_page.prediction.faq': [
+    {
+      question: 'What is Ninja PEX?',
+      answer: 'Ninja is an anonymous peer-to-peer decentralized prediction exchange running on top of the Ethereum blockchain.',
+    },
+    {
+      question: 'What’s special about PEX? Why should i bet on one?',
+      answer: 'It allows parties to directly bet against each other without going through a central authority or bookmaker. This makes it 100% anonymous, no signs up no downloads required. The management of bets and the settlement of winnings are carried out collectively by the blockchain network, protecting users from any single point of failure. You can also create your own prediction markets.',
+    },
+    {
+      question: 'Do I need Ether? Does it support other cryptocurrencies?',
+      answer: 'Yes. Ninja only accepts ETH for now, but support will be added for other currencies very soon.',
+    },
+    {
+      question: 'How do I start with Ninja?',
+      answer: (
+        <div>
+          <div>– Get Ether:</div>
+          <div>You can either buy ETH directly in PEX with your credit cards or from popular coin exchanges like Coinbase or Binance.</div>
+          <br />
+          <div>– Top up your PEX Wallet: </div>
+          <div>Transfer the ETH into the PEX Wallet. PEX Wallet is completely decentralized, the private key is held on your phone, only you can transfer and receive ETH.</div>
+          <br />
+          <div>– Place a bet: </div>
+          <div>Pick the market you want to bet (i.e. Brazil - Spain), the outcomes (i.e. Brazil wins) and the site (i.e. support or bet against the outcome)</div>
+          <div>Enter the stake you want to bet (i.e. 1 ETH) and the odds (i.e. 1/ 2.25)</div>
+          <div>The BEX Matching Engine will then find another order that bets against the odds you set.</div>
+          <br />
+          <div>– Wait for the report: if you win, your winnings will be automatically transferred from the escrow smart contract to your account.</div>
+        </div>
+      ),
+    },
+    {
+      question: 'Can I set my own preferred odds? How?',
+      answer: 'Yes! When creating your own bet, you’ll enter the event you’re interested in and the outcome you want to bet on. Then, simply enter your stake and the odds you want. Then the PEX Engine will automatically find and match you with anyone that has an interest in the same event, and who accepts your odds.',
+    },
+    {
+      question: 'How do you police unsavory/illegal bets?',
+      answer: 'We are currently building a system of checks and balances to flag up inappropriate behaviour in the dojo.',
+    },
+    {
+      question: 'How does the system know the result of bets between people? Who acts as arbitrator and verifies one outcome vs. another at conclusion of contract?',
+      answer: 'Ninja will soon have a completely decentralized solution for verifying the outcome and incentivizing truth telling (a DAO of reporters!). In the meantime, as we will launch just in time for the FIFA world cup, our team will use a public source (livescore.com) and act as the reporter.',
+    },
+    {
+      question: 'Where is the coin held?',
+      answer: 'No one holds the funds. All the funds are kept safe in escrow until a resolution is reached.',
+    },
+    {
+      question: 'Why should I bet on blockchain instead of using traditional methods?',
+      answer: 'A decentralized prediction exchange will provide you the freedom to create your own odds and bet directly with anyone, offer you 100% ninja anonymity and guaranteed payouts.',
+    },
+    {
+      question: 'How about privacy and anonymity?',
+      answer: 'Ninja requires no downloads, and no sign ups. That means no passwords, no phone numbers and no emails. 100% anonymity.',
+    },
+    {
+      question: 'Do I need to pay any fees?',
+      answer: 'There are two main types of fees: creator fees (for the ninja that creates the bet) and the network fee (a percentage of the creator fee, that goes towards maintaining the platform).',
+    },
+    {
+      question: 'What do I need to do when the outcome is finalized?',
+      answer: 'Nothing. If you win, your winnings will be automatically transferred to your account. If you lose, it will be someone else’s account.',
+    },
+    {
+      question: 'Where can I find a match to bet on?',
+      answer: 'On the homepage, you’ll be able to browse ongoing bets and markets. If you can’t find any you like, create your own!',
+    },
+    {
+      question: 'Other than sports, can I bet on anything else? How does it work?',
+      answer: 'Very soon, Ninja will apply to everything under the sun. The only limitation will be your creativity. You can easily create any market on any future event, be it sports, politics, science, markets, climate… you name it.',
+    },
+    {
+      question: 'What’s gonna happen to the Handshake mobile app?',
+      answer: 'We will be integrating Handshake (and your favourite features like promises, IOUs, contract upload, etc.) into the Ninja mobile website.',
+    }
+  ],
+  'landing_page.dad.faq': [
+    {
+      question: 'What is the DAD?',
+      answer: 'The DAD or the Decentralized Autonomous Dataset is a crowdsourcing initiative, with the aim to collect data and reward users through blockchain incentives. We believe that this will be a positive step towards advancing AI, breaking barriers when it comes to Big Data.',
+    },
+    {
+      question: 'How does it work?',
+      answer: <span>Anyone can contribute their images to the DAD. <br/>All you need to do is join the platform, upload your photos, and any tags that will help to identify what they are, location etc.<br /><br />If you see a photo and you know where it was taken, or can add more information then just tag the image.</span>,
+    },
+    {
+      question: 'Can anyone buy datasets from DAD?',
+      answer: 'Yes, our datasets are available to everyone.',
+    },
+    {
+      question: 'How are the profits distributed to the people who contribute?',
+      answer: '10% of all profits will be kept for further development of the DAD platform. The remaining 90% of the profits will be evenly distributed to all the users that contributed to the dataset.',
+    },
+    {
+      question: 'Can I track who has purchased my data?',
+      answer: 'The DAD is built on top of Ethereum’s blockchain, this means that all transactions are public. You will be able to track your own data, and see who has purchased the datasets.',
+    },
+    {
+      question: 'How can I contribute data to the DAD?',
+      answer: 'All you need to do is go to our app and start contributing which every data you like, the more information (location, colour, etc) the better. We want to create decentralized datasets that are constantly growing and evolving.',
+    },
+    {
+      question: 'How will the DAD benefit AI technology?',
+      answer: 'AI needs data. Currently, there are only a few corporations that have access to the kind of big data that is needed for AI technology to learn and grow. We aim to solve this global issue by creating decentralized autonomous datasets that anyone will have access too.',
+    },
+    {
+      question: 'How do I receive my payout from contributing data?',
+      answer: 'You will automatically receive payout via your ETH address.',
+    },
+    {
+      question: 'You don’t have the dataset I need, can you create one?',
+      answer: 'Yes, all you need to do is put in a request for a specific dataset and we will begin to curate that dataset.',
+    },
+    {
+      question: 'Once you have my data, do you have it forever?',
+      answer: 'Yes all of the data that you contribute will be stored on the blockchain, this means it cannot be deleted. It also means that you will continue to receive payouts on DAD as long as your data is being sold.',
+    }
+  ],
   COIN_EXCHANGE_LP_TRADE_EASY_TRADE_SAFE: {
     title: 'Trade Easy. Stay Safe',
     info: [
