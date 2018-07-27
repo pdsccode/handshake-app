@@ -45,11 +45,12 @@ import LuckyLanding from '@/pages/LuckyLanding/LuckyLanding';
 import * as gtag from '@/services/ga-utils';
 import taggingConfig from '@/services/tagging-config';
 import createForm from '@/components/core/form/createForm';
-import { fieldRadioButton, fieldDropdown } from '@/components/core/form/customField';
+import { fieldDropdown, fieldRadioButton } from '@/components/core/form/customField';
 import { change, Field } from 'redux-form';
 // style
 import '@/components/handshakes/exchange/Feed/FeedExchange.scss';
 import './Discover.scss';
+import OfferShop from '@/models/OfferShop';
 // import { Helmet } from "react-helmet";
 // import icon2KuNinja from '@/assets/images/icon/2_ku_ninja.svg';
 const maps = {
@@ -301,12 +302,17 @@ class DiscoverPage extends React.Component {
   getHandshakeList() {
     const { messages } = this.props.intl;
     const { list } = this.props.discover;
-    const { handshakeIdActive, lat, lng } = this.state;
+    const {
+      handshakeIdActive, lat, lng, sortIndexActive, sortPriceIndexActive,
+    } = this.state;
+    const sortPriceIndexArr = sortPriceIndexActive.split('_');
 
     if (list && list.length > 0) {
       return list.map((handshake) => {
         const FeedComponent = maps[handshake.type];
-        if (FeedComponent) {
+        const offer = OfferShop.offerShop(JSON.parse(handshake.extraData));
+        const allowRender = sortIndexActive === CASH_SORTING_CRITERIA.PRICE ? offer.itemFlags[sortPriceIndexArr[1].toUpperCase()] : true;
+        if (FeedComponent && allowRender) {
           return (
             <Col key={handshake.id} className="col-12 feed-wrapper px-0">
               <FeedComponent
@@ -317,6 +323,7 @@ class DiscoverPage extends React.Component {
                 latitude={lat}
                 longitude={lng}
                 modalRef={this.modalRef}
+                offer={offer}
               />
 
             </Col>
