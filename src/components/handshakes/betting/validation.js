@@ -80,7 +80,7 @@ export const validateBet = async (amount = 0, odds = 0, closingDate, matchName =
     return result;
   }
 
-  if (odds <= 1 || odds >= 12) {
+  if (odds <= 1 || odds > 11.5) {
     result.message = MESSAGE.ODD_LARGE_THAN;
     result.status = false;
     return result;
