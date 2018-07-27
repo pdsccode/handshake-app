@@ -465,6 +465,7 @@ export const URL = {
 
   ADMIN: '/admin',
   REPORT: '/report',
+  RESOLVE: '/admin/resolve',
   LUCKY_POOL: '/lucky',
   HANDSHAKE_ME: '/me',
   HANDSHAKE_ME_INDEX: '/me',

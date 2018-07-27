@@ -24,6 +24,7 @@ const RouterAdmin = createDynamicImport(() => import('@/components/Router/Admin'
 const RouterLuckyPool = createDynamicImport(() => import('@/pages/LuckyLanding/LuckyLanding'), Loading);
 // const RouterExchange = createDynamicImport(() => import('@/components/Router/Exchange'), Loading);
 const RouterPrediction = createDynamicImport(() => import('@/pages/Exchange/Exchange'), Loading);
+const RouterResolve = createDynamicImport(() => import('@/pages/Resolve/Resolve'), Loading);
 
 const rootRouterMap = [
   { path: URL.HANDSHAKE_PREDICTION, component: RouterPrediction },
@@ -38,6 +39,8 @@ const rootRouterMap = [
   { path: URL.COMMENTS_BY_SHAKE, component: RouterComment },
   { path: URL.ADMIN, component: RouterAdmin },
   { path: URL.REPORT, component: RouterAdmin },
+  { path: URL.RESOLVE, component: RouterResolve },
+
 ];
 
 const routers = rootRouterMap.map(router => (
