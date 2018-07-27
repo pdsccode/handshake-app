@@ -51,21 +51,12 @@ body{
 
 .wrap-upload{
     border-radius: 4px;
-    background-color: #f7fefa;
-    box-shadow: 0 10px 14px -10px rgba(51, 63, 56, 0.5);
+    /* background-color: #f7fefa;
+    box-shadow: 0 10px 14px -10px rgba(51, 63, 56, 0.5); */
+    
 }
-.uploader {
-    /* align-items: center;
-    background-color: rgba(0, 0, 0, 0.02);
-    cursor: pointer;
-    display: flex;
-    height: 200px;
-    justify-content: center;
-    outline: 1px solid #ccc;
-    outline-offset: 15px;
-    position: relative;
-    width: 310px; */
-    border-radius: 4px;
+.uploader { 
+    /* border-radius: 4px;
     align-items: center;
     background-color: #f7fefa;
     cursor: pointer;
@@ -76,7 +67,19 @@ body{
     position: relative;
     width: 310px;
     padding: 15px;
+    border: dashed 0.5px #838383; */
+    border-radius: 4px;
+    align-items: center;
+    background-color: #f7fefa;
+    cursor: pointer;
+    display: flex;
+    height: 198px;
+    justify-content: center;
+    position: relative;
+    width: 100%;
+    padding: 0px;
     border: dashed 0.5px #838383;
+    margin: 0px;
 }
 
 .uploader input { 
@@ -695,4 +698,7 @@ img.ui.image.btn-add-class{
     margin-left: 65px!important;
     margin-top: 24px!important;
     margin-bottom: 0px!important;
+}
+.ui.search.dropdown>.text{
+    white-space: nowrap;
 }

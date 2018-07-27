@@ -56,6 +56,7 @@ class Upload extends React.Component {
       selectedCategory: null,
       selectedClassify: null,
       messageForm:'',
+      upfile:'',
     };
 
     this.onDragEnter = this.onDragEnter.bind(this);
@@ -149,6 +150,7 @@ class Upload extends React.Component {
         this.setState({
           classifies,
           selectedCategory: catId,
+          selectedClassify:'',
           isLoading: false,
         });
       })
@@ -231,6 +233,11 @@ class Upload extends React.Component {
         .then((response) => {
           this.setState({ uploading: false });
           // this.props.handleClose();
+          this.setState({
+            imageSrc: '',
+            loaded: false, 
+          }); 
+          this.refs.input.value="";
         })
         .catch((e) => {
           console.log(TAG, ' handleUpload catch ', e);
@@ -250,13 +257,14 @@ class Upload extends React.Component {
       return;
     }
 
-    this.setState({ loaded: false });
+    this.setState({ loaded: false});
 
     reader.onload = (e) => {
       console.log(reader);
       this.setState({
         imageSrc: reader.result,
         loaded: true,
+         
       });
     };
 
@@ -302,8 +310,31 @@ class Upload extends React.Component {
         <Segment vertical  loading={this.state.isLoading}  id="segment-detail"> 
           <h2 className="my-h2-dataset-new" >
           Upload Image</h2>
-          <div className="ui center aligned grid container" style={{padding:'15px', paddingTop:'5px'}}>
-            
+          <div className="ui center aligned grid container" style={{padding:'14px', paddingTop:'5px'}}>
+          <div className="row" style={{paddingTop:'0px',marginTop:'-20px',padding:'0px', }}>
+              <Grid columns={2}  padded='vertically' style={{margin:'0px',padding:'0px'}}>
+                        <Grid.Column  >
+                            <Dropdown
+                                  fluid
+                                  placeholder="Select dataset"
+                                  selection
+                                  search
+                                  onChange={(e, data) => this.handleSelectCategory(data.value)}
+                                  options={this.state.categories}
+                                />
+                        </Grid.Column>
+                        <Grid.Column style={{width: '46%',marginLeft:'10px'}}> 
+                                  <Dropdown
+                              fluid
+                              placeholder="Select classify"
+                              selection
+                              search
+                              onChange={(e, data) => this.handleSelectClassify(data.value)}
+                              options={this.state.classifies}
+                            /> 
+                        </Grid.Column>
+              </Grid> 
+            </div>
             <div className="row wrap-upload">
               <label
                 className={labelClass}
@@ -323,29 +354,10 @@ class Upload extends React.Component {
                   type="file"
                   accept="image/*"
                   onChange={this.onFileChange}
-                  ref="input"
+                  ref="input" 
                 />
               </label>
-            </div>
-
-            <div className="row" style={{paddingTop:'0px',marginTop:'-4px'}}>
-              <Dropdown
-                fluid
-                placeholder="Select dataset"
-                selection
-                search
-                onChange={(e, data) => this.handleSelectCategory(data.value)}
-                options={this.state.categories}
-              />
-              <Dropdown
-                fluid
-                placeholder="Select classify"
-                selection
-                search
-                onChange={(e, data) => this.handleSelectClassify(data.value)}
-                options={this.state.classifies}
-              />
-            </div>
+            </div> 
             {
               this.state.messageForm !=""?
               <div className="row" style={{ padding: '0px', justifyContent:'left', color:'red'}}>
