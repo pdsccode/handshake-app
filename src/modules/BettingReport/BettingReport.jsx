@@ -33,13 +33,21 @@ class BettingReport extends React.Component {
   }
 
   componentDidMount() {
+
     console.log("Test Report");
     if (this.checkToken() != null) {
       this.setState({
         login: true,
       });
     }
-    this.fetchMatches();
+
+    //this.fetchMatches();
+
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { matches } = nextProps;
+    this.setInitials(matches);
   }
 
   setInitials(matches) {
@@ -60,6 +68,7 @@ class BettingReport extends React.Component {
     }
   }
 
+  /*
   fetchMatches() {
     console.log('fetchMatches');
 
@@ -75,6 +84,7 @@ class BettingReport extends React.Component {
       },
     });
   }
+  */
 
   toggle() {
     this.setState({
@@ -350,11 +360,11 @@ class BettingReport extends React.Component {
 }
 
 const mapState = state => ({
-  matches: state.betting.matches,
+  //matches: state.betting.matches,
 });
 
 const mapDispatch = ({
-  loadMatches,
+  //loadMatches,
   showAlert,
 });
 
