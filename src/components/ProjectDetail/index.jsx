@@ -13,6 +13,7 @@ import { fieldInput } from '@/components/core/form/customField';
 import { email, required } from '@/components/core/form/validation';
 import $http from '@/services/api';
 import { BASE_API } from '@/constants';
+import { Link } from 'react-router-dom';
 
 import './styles.scss';
 
@@ -71,9 +72,9 @@ class Index extends React.PureComponent {
           <div className="row mt-5">
             <div className="col">
               <div className="pd-breadcrumb">
-                <a href="/">
+                <Link to="/">
                   <FormattedMessage id="landing_page.breadcrumb.home" />
-                </a>
+                </Link>
                 <span className="mx-2">/</span>
                 <span>
                   <FormattedMessage id={`landing_page.${name}.breadcrumb`} />
