@@ -1,50 +1,99 @@
 import React from 'react';
-import { Field, FieldArray, reduxForm } from 'redux-form';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { Field } from 'redux-form';
+import createForm from '@/components/core/form/createForm';
+import { eventSelector } from './selector';
+import MarketForm from './MarketForm';
 
-import validate from './validate';
-import classNames from "classnames";
+const EventForm = createForm({
+  propsReduxForm: {
+    form: 'eventForm',
+    enableReinitialize: true,
+    clearSubmitErrors: true,
+  },
+});
 
-const renderField = ({ input, label, type, placeholder, className, meta: { touched, error, warning } }) => {
-  const cls = classNames(className, {
-    'has-error': error,
-    'has-warning': warning,
-  });
+class CreateEventForm extends React.Component {
+  static displayName = 'CreateEventForm';
+  static propTypes = {
+    eventList: PropTypes.instanceOf(Array),
+    onSubmit: PropTypes.func,
+    dispatch: PropTypes.func.isRequired,
+  };
 
-  return (
-    <div className={cls}>
-      {label && <label>{label}</label>}
-      <div>
-        <input {...input} type={type} placeholder={placeholder} />
-        {touched && error && <span className="ErrorMsg">{error}</span>}
-        {touched && warning && <span className="WarningMsg">{warning}</span>}
+  static defaultProps = {
+    eventList: [],
+  }
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      isCreate: false,
+    };
+  }
+
+  handleEventChange = (event) => {
+    const value = event.target.value;
+  }
+
+  handleCreateClick = () => {
+    this.setState({ isCreate: true });
+  }
+
+  handleSubmit = () => {
+
+  }
+
+  renderUpdateOption = (props) => {
+    const { onSubmit } = props;
+    return (
+      <EventForm className="EventForm" onSubmit={onSubmit}>
+        <Field name="event" component="select" onChange={this.handleEventChange}>
+          <option value="">Select an event</option>
+          {props.eventList.map((event) => {
+            return (<option key={event.id} value={event.name}>{event.name}</option>);
+          })}
+        </Field>
+      </EventForm>
+    );
+  }
+
+  renderCreateOption = () => {
+    const { handleCreateClick } = this;
+    const buttonText = 'Create a new event';
+    return (<button className="btn btn-primary btn-block" onClick={handleCreateClick}>{buttonText}</button>);
+  }
+
+  renderOptions = (props) => (
+    <React.Fragment>
+      {this.renderUpdateOption(props)}
+      <span className="CreateEventOption">Or</span>
+      {this.renderCreateOption()}
+    </React.Fragment>
+  );
+
+  renderTitle = () => (<div className="CreateEventTitle">Event</div>);
+
+  renderForm = (props) => {
+    const { handleSubmit } = this;
+    return (
+      <MarketForm handleSubmit={handleSubmit} />
+    );
+  }
+
+  renderComponent = (props, state) => {
+    const { isCreate } = state;
+    const renderComponent = isCreate ? this.renderForm(props) : this.renderOptions(props);
+    return (
+      <div className="CreatEventContainer">
+        <div className="CreateEventBlock">
+          {this.renderTitle()}
+          {renderComponent}
+        </div>
       </div>
-    </div>
-  );
-};
+    );
+  };
+}
 
-const CreateEventForm = props => {
-  const { handleSubmit, pristine, reset, submitting } = props;
-  return (
-    <form onSubmit={handleSubmit}>
-      <Field
-        name="clubName"
-        type="text"
-        component={renderField}
-        label="Club Name"
-        className="ClubName"
-      />
-      {/*<FieldArray name="members" component={renderMembers} />*/}
-      {/*<div>*/}
-        {/*<button type="submit" disabled={submitting}>Submit</button>*/}
-        {/*<button type="button" disabled={pristine || submitting} onClick={reset}>*/}
-          {/*Clear Values*/}
-        {/*</button>*/}
-      {/*</div>*/}
-    </form>
-  );
-};
-
-export default reduxForm({
-  form: 'createOwnEvents', // a unique identifier for this form
-  // validate,
-})(CreateEventForm);
+export default CreateEventForm;
