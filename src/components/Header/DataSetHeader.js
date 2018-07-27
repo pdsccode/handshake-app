@@ -12,7 +12,7 @@ import {Route, Link,Redirect} from 'react-router-dom'
 import UploadModal from '../datasets/UploadModal'
 import agent from '../../services/agent'
 
-import {iosTimer, iosTimerOutline,iosCloudUploadOutline,iosPlusOutline, 
+import {iosTimer, iosTimerOutline,iosCloudUploadOutline,iosPlusOutline, iosSearch, 
   iosNavigateOutline , iosAnalytics, iosPersonOutline ,iosCameraOutline} from 'react-icons-kit/ionicons'
 import { withBaseIcon } from 'react-icons-kit'
 import {
@@ -37,7 +37,9 @@ import logo2 from '@/assets/icons/logo2.png';
 
 //lets say the icons on your side navigation are all color red style: {color: '#EF233C'}
 const SideIconContainer =  withBaseIcon({ size:32})
-const SideIconTopContainer =  withBaseIcon({ size:32, color:'#333'})
+const SideIconTopContainer =  withBaseIcon({ size:32, color:'#333'}) 
+const WrapIconSearch =  withBaseIcon({ size:16, style:{position:'absolute', top:'8px', left:'8px',color:'#333' }})
+
 
 const SideIconCenterContainer =  withBaseIcon({ size:64, style:{marginTop:'-18px', color:'#54c8ff'}})
 
@@ -288,7 +290,7 @@ class MobileContainer extends React.Component {
             <Menu  icon  className="ui fluid five item menu fixed" id="head-searchbox">
             
                <Search
-                      input={{ icon: 'search', iconPosition: 'left', placeholder:'Search dataset you want to explore' }}
+                      input={{ icon: <WrapIconSearch icon={iosSearch}/>, iconPosition: 'left', placeholder:'Search dataset you want to explore' }}
                       fluid
                       aligned='left'
                       loading={this.state.isLoading}

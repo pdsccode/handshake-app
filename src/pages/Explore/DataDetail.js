@@ -1,5 +1,5 @@
 import React from 'react';
-import {Grid, Image, Container, Card, Header,  Form,Divider, Segment, Dropdown, Visibility, Modal, List, Button, Icon, Confirm} from 'semantic-ui-react'
+import {Grid, Image, Container, Card, Header,  Form,Divider, Segment, Dropdown, Visibility, Modal, List,Label, Button, Icon, Confirm} from 'semantic-ui-react'
 // import {AuthConsumer} from './AuthContext'
 import {Route, Redirect} from 'react-router'
 import agent from '../../services/agent'
@@ -434,13 +434,13 @@ class DataDetail extends React.Component {
       <Visibility once={true} onUpdate={this.handleUpdate}>
         <Segment vertical  id="segment-detail"> 
               <h2 className="my-h2-dataset-new" style={{    marginBottom:'0px'}}>
-                  Explore / {this.state.category ? this.state.category.name :''}
+                  Datasets / {this.state.category ? this.state.category.name :''}
                   <Link to={'/explore'}><Image src={closeTop} className="btn-Close-Top"/></Link>
               </h2>
                 <Card.Group centered >
                   <Card className="my-card" style={{ marginBottom: '1em', paddingBottom: '1em'}}>
                     <Card.Content>
-                     <Grid id="grid-detail-header" >
+                     <Grid id="grid-detail-header" style={{ marginBottom:'0px'}}>
                         {/* <Grid.Column width={4}>
                         <Image style={{float:'left',  marginTop: '-18px'}} src={"https://chart.googleapis.com/chart?chs=100x100&cht=qr&chl="+(blockchainNetworks.ethereum.contracts.dadsetTokenAddress )+"&choe=UTF-8"}/>
                         </Grid.Column> */}
@@ -451,8 +451,18 @@ class DataDetail extends React.Component {
                               <List.Item><span style={{fontWeight:'700'}}>Desc: </span>{this.state.category ? this.state.category.desc :''}</List.Item>
                               :""
                             }
+                            { (this.state.category!=null && this.state.category.classifies !=null) ?
+                              <List.Item style={{    paddingRight: '12px'}}>
+                                <span style={{fontWeight:'700'}}>Classifies: </span>
+                                {this.state.category.classifies.map((item, i) => {
+                                  return <span basic color="black" key={String(item.id)||'-1'}>{item?.name||''}, </span>
+                                })}
+                              </List.Item>
+                              :""
+                            }
+
                             <List.Item>
-                              <span style={{fontWeight:'700'}}>Quantity: </span> {this.state.category && this.state.category.total_images ? `${this.state.category.total_images} Images` : '0 Image'} 
+                              <span style={{fontWeight:'700'}}>Quantity: </span> {this.state.category && this.state.category.total_images > 1 ? `${this.state.category.total_images} Images` : '1 Image'} 
                             </List.Item>
                             <List.Item style={{ marginTop: '10px', marginLeft: '-20px'}} >
                             {this.renderFollowIcon(this.state.category  )}
@@ -466,7 +476,7 @@ class DataDetail extends React.Component {
                     <Card  className="my-card wrap-upload">
                       <Card.Content className="row wrap-upload">
                          <Link className="ui image" to={"/upload"}>
-                          <label className="uploader" style={{width:'330px'}} >
+                          <label className="uploader" style={{width:'346px'}} >
                             <Icon name="cloud upload" style={{fontSize:'24px'}}/>
                             <p style={{marginTop: '60px',color:'#c1c1c1'}}>go to upload</p>
                           </label>
@@ -477,7 +487,7 @@ class DataDetail extends React.Component {
                   }
                   {this.state.images.map((item, i) => {
                     return (
-                      <Card key={i} className="my-card"  style={{ marginBottom: '1em'}}>
+                      <Card key={i} className="my-card2"  style={{ marginBottom: '1em'}}>
                           <Link className="ui image" to={"/explore/" + item.category.id}>
                           <Image src={item.link}/>
                             </Link>
@@ -503,14 +513,14 @@ class DataDetail extends React.Component {
           <Confirm
             content={
               <div class='content'>
-                <h3>Do you want to purchase this dataset?</h3>
-                <p>Please make sure you have enough ETH in your wallet to make the payment.</p>
+                <h3 style={{letterSpacing:'-0.24'}}>Do you want to purchase this dataset?</h3>
+                <p style={{lineHeight:'1.6em'}}>Please make sure you have enough ETH in your wallet to make the payment.</p>
               </div>
             }
             open={this.state.open}
             onCancel={this.close}
             onConfirm={() => this.handleConfirmBuy()}
-            confirmButton={<Button positive>OK</Button>}
+            confirmButton={<Button positive style={{padding: '10px 32px'}}>OK</Button>}
             cancelButton={<Button positive style={{background: 'none',color:'#333',fontWeight:'500'}}>Cancel</Button>}
           />
         </Segment>

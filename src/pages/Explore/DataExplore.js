@@ -228,12 +228,12 @@ class DataExplore extends React.Component {
       <Visibility once={true} onUpdate={this.handleUpdate}>
         <Segment vertical >
             <Card.Group centered  >
-                  <Card  className="my-card" style={{background:'#21c364' ,    marginBottom: '12px'}}>
+                  <Card  className="my-card" style={{background:'#21c364', marginBottom: '24px'}}>
                     <Link className="ui image" to={'/explore/create'}>
                       <Card.Content style={{textAlign:'left'}}>
                           {/* <Icon size="large" name='newspaper outline'
                            style={{color: 'white',margin: '0.7em',float:'left' }}  /> */}
-                           <Image src={newboard} style={{ borderRadius:'0!important', margin:'15px',float:'left' }} />
+                           <img src={newboard} style={{ borderRadius:'0!important', margin:'15px',float:'left' }} />
                            <span style={{color: 'white',fontSize: '16px', float:'left', marginTop:'8px'}} >Create new Dataset</span>
                       </Card.Content>
                     </Link>
@@ -246,11 +246,11 @@ class DataExplore extends React.Component {
                             <Image src={cat.display_images[0]}/>
                         </Link>
                         <Card.Content style={{marginBottom: '10px'}}>
-                          <div style={{float: 'left', marginTop:'-8px'}}>
+                          <div style={{float: 'left', marginTop:'-6px'}}>
                             <p  className="title">{cat.name}</p>
-                            <p  style={{color:'#232323' , opacity:'0.4',     fontSize:'12px'}}>{cat.total_images} img</p>
+                            <p  style={{color:'#232323' , opacity:'0.4',     fontSize:'12px'}}>{cat.total_images } {cat.total_images == 1 ? ' img' : ' imgs'}</p>
                           </div>
-                          <div style={{float: 'right',marginTop:'-8px' }}>
+                          <div style={{float: 'right',marginTop:'-6px' }}>
                               <div style={{display: 'inline'}}>
                                {this.renderLikedIcon(i)}
                               </div>
@@ -268,14 +268,14 @@ class DataExplore extends React.Component {
           <Confirm
             content={
               <div class='content'>
-                <h3>Do you want to purchase this dataset?</h3>
-                <p>Please make sure you have enough ETH in your wallet to make the payment.</p>
+                <h3 style={{letterSpacing:'-0.24'}}>Do you want to purchase this dataset?</h3>
+                <p style={{lineHeight:'1.6em'}}>Please make sure you have enough ETH in your wallet to make the payment.</p>
               </div>
             }
             open={this.state.open}
             onCancel={this.close}
             onConfirm={() => this.handleConfirmBuy()}
-            confirmButton={<Button positive loading={this.state.isLoading} style={{width: 'auto', height: 'auto'}}>OK</Button>}
+            confirmButton={<Button positive loading={this.state.isLoading} style={{padding: '10px 32px',width: 'auto', height: 'auto' }}>OK</Button>}
             cancelButton={<Button positive style={{background: 'none',color:'#333',fontWeight:'500'}} disabled={this.state.isLoading}>Cancel</Button>}
           />
         </Segment>

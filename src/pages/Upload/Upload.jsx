@@ -204,11 +204,18 @@ class Upload extends React.Component {
   }
 
   handleUpload() {
-    if (!this.state.selectedCategory) {
-      //alert('Category is required');
-      this.setState({messageForm:"Category is required"});
+    
+    console.log(this.refs.input.files);
+    if (this.refs.input.files.length==0) {
+      this.setState({messageForm:"File is required"});
       return;
     }
+    if (!this.state.selectedCategory) {
+      //alert('Category is required');
+      this.setState({messageForm:"Dataset is required"});
+      return;
+    }
+
     if (!this.state.uploading) {
       const form = new FormData();
       form.append('link', this.refs.input.files[0]);
@@ -296,6 +303,7 @@ class Upload extends React.Component {
           <h2 className="my-h2-dataset-new" >
           Upload Image</h2>
           <div className="ui center aligned grid container" style={{padding:'15px', paddingTop:'5px'}}>
+            
             <div className="row wrap-upload">
               <label
                 className={labelClass}
@@ -357,6 +365,7 @@ class Upload extends React.Component {
                 size="medium"
               />
             </div>
+             
           </div>
         </Segment>
       </Visibility>
