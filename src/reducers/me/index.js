@@ -71,6 +71,16 @@ const foundWithdrawHanshake = (handshake, item) => {
   return handledHandshake;
 };
 
+const foundDisputeHandshake = (handshake, item) => {
+  console.log(TAG, 'foundDisputeHandshake');
+  const handledHandshake = handshake;
+  if (handledHandshake.hid === item.hid) {
+    console.log(TAG, 'foundDisputeHandshake:','handledHandshake', handledHandshake);
+    handledHandshake.status = item.status;
+  }
+  return handledHandshake;
+};
+
 
 const handleListPayload = (payload) => {
   const result = [];
@@ -345,6 +355,7 @@ const meReducter = (
       //STATUS_MAKER_UNINIT_PENDING
       //STATUS_REFUND_PENDING
       //STATUS_COLLECT_PENDING
+      //STATUS_DISPUTE_PENDING
 
       const item = action.payload;
       console.log('Item changed:', item);
@@ -365,6 +376,9 @@ const meReducter = (
             case BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_PENDING:
               handledHandshake = foundWithdrawHanshake(handledHandshake, item);
               break;
+            case BET_BLOCKCHAIN_STATUS.STATUS_DISPUTE_PENDING:
+              handledHandshake = foundDisputeHandshake(handledHandshake, item);
+              break;
             default:
               break;
           }
@@ -382,6 +396,9 @@ const meReducter = (
                   break;
                 case BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_PENDING:
                   handleShaker = foundWithdrawHanshake(handleShaker, item);
+                  break;
+                case BET_BLOCKCHAIN_STATUS.STATUS_DISPUTE_PENDING:
+                  handledHandshake = foundDisputeHandshake(handleShaker, item);
                   break;
                 default:
                   break;

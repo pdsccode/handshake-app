@@ -294,13 +294,13 @@ const disputeAction = (result, side) => {
   let strStatus = null;
   switch (result) {
     case BETTING_RESULT.DRAW:
-      strStatus = BETTING_STATUS_LABEL.REFUNDING;
+      strStatus = BETTING_STATUS_LABEL.REFUNDING + BETTING_STATUS_LABEL.DISPUTE_CLICK;
       break;
     default:
       if (result === side) {
-        strStatus = BETTING_STATUS_LABEL.WIN + BETTING_STATUS_LABEL.WIN_WAIT;
+        strStatus = BETTING_STATUS_LABEL.WIN + BETTING_STATUS_LABEL.DISPUTE_CLICK;
       } else {
-        strStatus = BETTING_STATUS_LABEL.LOSE;
+        strStatus = BETTING_STATUS_LABEL.LOSE + BETTING_STATUS_LABEL.DISPUTE_CLICK;
       }
       break;
   }

@@ -90,6 +90,7 @@ export const BETTING_STATUS_LABEL =
       LOSE: 'Better luck next time.',
       WIN: `You're a winner!`,
       WIN_WAIT: `<br/> It's not time to withdraw. Please wait..`,
+      DISPUTE_CLICK: `<br/>Don't agree the result? Dispute it.`,
       DISPUTE_WAIT: `<br/> You disputed the bet. Please wait resolving`,
       DISPUTE_RESOVING: `There are many people disputed result. Please wait resolving`,
       DONE: ` The bet is done.`,
