@@ -41,8 +41,8 @@ class Index extends React.PureComponent {
     const logo = <a href="/" className="d-inline-block mt-1"><img src={imgNinja} width="100" /></a>;
     const navLinks = (
       <span>
-        <span><a className={`${type === 'product' ? 'active' : ''} landing-nav-link`} href={URL.PRODUCT_URL}>Product</a></span>
-        <span><a className={`${type === 'research' ? 'active' : ''} landing-nav-link`} href={URL.RESEARCH_URL}>Research</a></span>
+        <span><Link className={`${type === 'product' ? 'active' : ''} landing-nav-link`} to={URL.PRODUCT_URL}>Product</Link></span>
+        <span><Link className={`${type === 'research' ? 'active' : ''} landing-nav-link`} to={URL.RESEARCH_URL}>Research</Link></span>
       </span>
     )
     const btnJoin = <a className="btn btn-primary-landing" href="https://www.autonomous.ai/talents"><FormattedMessage id="landing_page.btn.joinOurTeam" /></a>
