@@ -110,7 +110,7 @@ class History extends React.Component {
                 <Card className="my-card"  style={{ marginBottom: '1em'}}> 
                           <div style={{ padding:'10px', textAlign:'left', backgroundImage: color1 }}>
                               <h4 style={{ margin:'5px 0px', color:'black'}}>Avaliable for withdraw</h4>
-                              <p  style={{ marginBottom:'0px'}}>Balance: {this.state.balance}</p>
+                              <p style={{ marginBottom:'0px'}}>Balance: { (Math.round(this.state.balance * 10000) /10000 ) } ETH</p>
                               <Button basic size="mini" basic color='black' className="my-btn-buy-eth2"  content='Withdraw' onClick={this.withdraw}  ></Button>
                            </div>
                 </Card>

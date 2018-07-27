@@ -406,7 +406,7 @@ class DataDetail extends React.Component {
     try {
       const dataset = new Dataset();
       dataset.createFromWallet(MasterWallet.getWalletDefault('ETH'));
-      tx = await dataset.buy(this.state.category.id, 1);
+      tx = await dataset.buy(this.state.category.id,   ( Math.round((this.state.category.total_images/10000 + 0.005) * 10000) /10000  ) );
     } catch (e) {
       console.log(e);
       this.setState({ open: false });
@@ -446,23 +446,17 @@ class DataDetail extends React.Component {
                         </Grid.Column> */}
                         <Grid.Column width={16} style={{textAlign:'left'}}>
                             <List>
-                            <List.Item className="list-item-name">{this.state.category ? this.state.category.name :''} </List.Item>
+                            <List.Item className="list-item-name">Name: {this.state.category ? this.state.category.name :''} </List.Item>
                             { (this.state.category!=null && this.state.category.desc !=null) ?
-                              <List.Item>{this.state.category ? this.state.category.desc :''}</List.Item>
+                              <List.Item><span style={{fontWeight:'700'}}>Desc: </span>{this.state.category ? this.state.category.desc :''}</List.Item>
                               :""
                             }
                             <List.Item>
                               <span style={{fontWeight:'700'}}>Quantity: </span> {this.state.category && this.state.category.total_images ? `${this.state.category.total_images} Images` : '0 Image'} 
                             </List.Item>
-                            
-                            <List.Item style={{ marginRight: '15px',overflow: 'hidden',display: 'flex'}}>
-                                    <span style={{fontWeight:'700'}} >Address: </span>
-                                    <span style={{ float: 'left',marginTop: '0px',marginLeft: '6px'}}>{blockchainNetworks.ethereum.contracts.dadsetTokenAddress}</span>
-                                    <Image src={copyTop} className="btn-Close-Top" style={{ bottom: '40px',top: 'initial',right: '14px'}}/>
-                              </List.Item>
                             <List.Item style={{ marginTop: '10px', marginLeft: '-20px'}} >
                             {this.renderFollowIcon(this.state.category  )}
-                            <Button basic size="mini" basic color='black' className="my-btn-buy-eth" content='Buy Now' onClick={() => this.showConfirm()} ></Button></List.Item>
+                            <Button basic size="mini" basic color='black' className="my-btn-buy-eth" onClick={() => this.showConfirm()} >Buy now { this.state.category && this.state.category.total_images ? ( Math.round((  this.state.category.total_images/10000 + 0.005) * 10000) /10000  ): ''} ETH</Button></List.Item>
                             </List>
                         </Grid.Column>
                       </Grid>
@@ -509,8 +503,8 @@ class DataDetail extends React.Component {
           <Confirm
             content={
               <div class='content'>
-                <h3>You want to buy this dataset?</h3>
-                <p>By click OK you will send ETH in your wallet to the DAD SmartContract address.</p>
+                <h3>Do you want to purchase this dataset?</h3>
+                <p>Please make sure you have enough ETH in your wallet to make the payment.</p>
               </div>
             }
             open={this.state.open}
