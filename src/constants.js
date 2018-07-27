@@ -504,12 +504,6 @@ export const URL = {
   LANDING_PAGE_SHURIKEN: '/shuriken',
   LANDING_PAGE_SHURIKEN_INDEX: '/shuriken',
 
-  LANDING_PAGE_TRADE: '/coin-exchange',
-  LANDING_PAGE_TRADE_INDEX: '/coin-exchange',
-
-  FAQ: '/faq',
-  FAQ_INDEX: '/faq',
-
   WHITE_PAPER: '/whitepaper',
   WHITE_PAPER_INDEX: '/whitepaper',
 

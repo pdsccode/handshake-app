@@ -17,12 +17,10 @@ import '@/styles/custom-icons/styles.css';
 
 // pages
 const LandingPage = createDynamicImport(() => import('@/pages/LandingPage/LandingPage'), Splash);
-const LandingPageTrade = createDynamicImport(() => import('@/pages/LandingPage/Trade'), Splash);
 // const LandingPageCash = createDynamicImport(() => import('@/pages/LandingPage/Cash'), Splash);
 const LandingPageWhitePaper = createDynamicImport(() => import('@/pages/LandingPage/WhitePaper'), Splash);
 const IntroNjnjaCash = createDynamicImport(() => import('@/pages/LandingPage/IntroducingNinjaCash'), Splash);
 const AboutNjnjaCash = createDynamicImport(() => import('@/pages/LandingPage/AboutNinjaCash'), Splash);
-const LandingPageFAQ = createDynamicImport(() => import('@/pages/FAQ/FAQ'), Splash);
 const LandingPageMain = createDynamicImport(() => import('@/pages/LandingPage/Main'), Splash);
 
 const ProjectDetail = createDynamicImport(() => import('@/components/ProjectDetail'), Splash);
@@ -37,6 +35,7 @@ import imgInternetCash from '@/assets/images/landing/home/internet-cash.jpg';
 import imgPrediction from '@/assets/images/landing/home/prediction.jpg';
 import imgWallet from '@/assets/images/landing/home/wallet.jpg';
 import imgWhisper from '@/assets/images/landing/home/whisper.jpg';
+import imgUncommons from '@/assets/images/landing/home/uncommons.jpg';
 // const ProjectInternetCash = createDynamicImport(() => import('@/components/MobileOrTablet/ProjectInternetCash'), Splash);
 // const ProjectCash = createDynamicImport(() => import('@/components/MobileOrTablet/ProjectCash'), Splash);
 // const ProjectOddBall = createDynamicImport(() => import('@/components/MobileOrTablet/ProjectOddBall'), Splash);
@@ -98,7 +97,7 @@ class Root extends React.Component {
         case URL.PRODUCT_DAD_URL:
           return <ProjectDetail name="dad" img={imgDad} imgContent={imgDadContent} />;
         case URL.RESEARCH_UNCOMMONS_URL:
-          return <ProjectDetail name="uncommons" img={imgDad} />;
+          return <ProjectDetail name="uncommons" img={imgUncommons} />;
         case URL.PRODUCT_WHISPER_URL:
           return <ProjectDetail name="whisper" img={imgDad} />;
         default:
@@ -108,10 +107,6 @@ class Root extends React.Component {
     switch (window.location.pathname) {
       case URL.LANDING_PAGE_SHURIKEN:
         return <LandingPage />;
-      case URL.LANDING_PAGE_TRADE:
-        return <LandingPageTrade />;
-      case URL.FAQ:
-        return <LandingPageFAQ />;
       case URL.WHITE_PAPER:
         return <LandingPageWhitePaper />;
       case URL.INTRODUCING_NINJA_CASH:
