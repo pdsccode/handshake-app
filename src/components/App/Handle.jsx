@@ -33,14 +33,14 @@ class Handle extends React.Component {
 
     this.state = {
       auth: this.props.auth,
-      isLoading: true,
+      isLoading: false,
     };
   }
 
   componentDidMount() {
-    this.firebase();
-    this.firechat();
-    this.notification();
+    // this.firebase();
+    // this.firechat();
+    // this.notification();
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {

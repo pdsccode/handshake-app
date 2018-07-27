@@ -193,7 +193,7 @@ export class Dataset extends Ethereum {
 
         const rawTx = {
           nonce,
-          gasLimit: web3.utils.toHex(150000),
+          gasLimit: web3.utils.toHex(210000),
           gasPrice: web3.utils.toHex(10e9),
           from: this.address,
           to: CONTRACT_ADDRESS,

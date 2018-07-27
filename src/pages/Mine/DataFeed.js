@@ -177,7 +177,7 @@ class DataFeed extends React.Component {
             const indexClassify  = classifies?.findIndex(item=>item.id ==res.classify);
             console.log(TAG,' clickTagItem - - success - index ', indexClassify);
             classifies[indexClassify]['checked'] = true;
-            // const itemList = classifies.findIndex(item);
+            const itemList = classifies.findIndex(item);
             images[id] = item;
             this.setState({images});
             

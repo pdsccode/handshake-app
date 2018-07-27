@@ -37,11 +37,11 @@ class Splash extends React.Component {
   render() {
     return (
       <div >
-        {/* <div className="splash-content">
-          <img src={logo2} alt="DAD" />
+        <div className="splash-content">
+          <img src={Logo} alt="DAD" />
           <p className="splash-loading-text">{this.state.loading}</p>
           <p className="splash-title">{this.state.name}: {this.state.description}</p>
-        </div> */}
+        </div>
       </div>
     );
   }

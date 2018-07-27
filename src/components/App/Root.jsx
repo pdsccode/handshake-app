@@ -70,7 +70,7 @@ class Root extends React.Component {
         // code
     }
     if (BrowserDetect.isDesktop) {
-      //return <MobileOrTablet />;
+       //return <MobileOrTablet />;
     }
     return <Handle setLanguage={this.setLanguage} refer={this.refer} />;
   }
@@ -79,7 +79,7 @@ class Root extends React.Component {
     return (
       <I18n>
         <div className="root">
-          {
+          {/* {
             this.state.rootLoading
             ? <Splash />
             : null
@@ -88,7 +88,8 @@ class Root extends React.Component {
             !this.state.rootLoading
             ? this.preRender()
             : null
-          }
+          } */}
+          {this.preRender()}
         </div>
       </I18n>
     );

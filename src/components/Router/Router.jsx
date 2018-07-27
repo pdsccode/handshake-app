@@ -18,27 +18,31 @@ const RouterMe = createDynamicImport(
   () => import('@/components/Router/Me'),
   Loading,
 );
-const RouterDiscover = createDynamicImport(
-  () => import('@/components/Router/Discover'),
-  Loading,
-);
 
-const RouterChat = createDynamicImport(
-  () => import('@/components/Router/Chat'),
-  Loading,
-);
-const RouterCreate = createDynamicImport(
-  () => import('@/components/Router/Create'),
-  Loading,
-);
+// const RouterDiscover = createDynamicImport(
+//   () => import('@/components/Router/Discover'),
+//   Loading,
+// );
+
+// const RouterChat = createDynamicImport(
+//   () => import('@/components/Router/Chat'),
+//   Loading,
+// );
+
+// const RouterCreate = createDynamicImport(
+//   () => import('@/components/Router/Create'),
+//   Loading,
+// );
+
 const RouterWallet = createDynamicImport(
   () => import('@/components/Router/Wallet'),
   Loading,
 );
-const RouterExchange = createDynamicImport(
-  () => import('@/components/Router/Exchange'),
-  Loading,
-);
+// const RouterExchange = createDynamicImport(
+//   () => import('@/components/Router/Exchange'),
+//   Loading,
+// );
+
 const RouterTransaction = createDynamicImport(
   () => import('@/components/Router/Transaction'),
   Loading,
@@ -77,14 +81,14 @@ const rootRouterMap = [
   { path: URL.DATA_SET_HISTORY, component: RouterHistory },
 
   { path: URL.HANDSHAKE_ME, component: RouterMe },
-  { path: URL.HANDSHAKE_DISCOVER, component: RouterDiscover },
-  { path: URL.HANDSHAKE_CHAT, component: RouterChat },
+  // { path: URL.HANDSHAKE_DISCOVER, component: RouterDiscover },
+  // { path: URL.HANDSHAKE_CHAT, component: RouterChat },
   { path: URL.HANDSHAKE_WALLET, component: RouterWallet },
-  { path: URL.HANDSHAKE_CREATE, component: RouterCreate },
-  { path: URL.HANDSHAKE_EXCHANGE, component: RouterExchange },
-  { path: URL.TRANSACTION_LIST, component: RouterTransaction },
-  { path: URL.COMMENTS_BY_SHAKE, component: RouterComment },
-  { path: URL.ADMIN, component: RouterAdmin },
+  // { path: URL.HANDSHAKE_CREATE, component: RouterCreate },
+  // { path: URL.HANDSHAKE_EXCHANGE, component: RouterExchange },
+  // { path: URL.TRANSACTION_LIST, component: RouterTransaction },
+  // { path: URL.COMMENTS_BY_SHAKE, component: RouterComment },
+  // { path: URL.ADMIN, component: RouterAdmin },
 ];
 
 const routers = rootRouterMap.map(router => (

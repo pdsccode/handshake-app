@@ -24,6 +24,7 @@ class Loading extends React.PureComponent {
         {
           message && (<p className="text">{message}</p>)
         } */}
+         <Image src={loadingImg} alt="loading" />
       </div>
     );
   }

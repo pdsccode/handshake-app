@@ -174,7 +174,8 @@ body{
 		-webkit-column-count: 4;
 		-moz-column-count: 4;
 		column-count: 4;
-	}
+    }
+     
 }
 
 @media (min-width: 1100px) {
@@ -184,6 +185,7 @@ body{
 		column-count: 5;
 	}
 }
+
 
 #columns:hover .pin:not(:hover) {
 	opacity: 0.4;
@@ -636,4 +638,18 @@ img.ui.image.btn-add-class{
     background: white;
     margin-left: -12px;
     padding-left: 12px!important;
+}
+
+/* .container{
+        padding-right: 0px; 
+        padding-left: 0px;
+} */
+
+
+@media (min-width: 960px) { 
+    .ui.card, .ui.cards>.card{
+        /* width:   348px; */
+        width: 348px;
+        margin: 1em; 
+    }
 }

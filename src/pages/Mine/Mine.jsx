@@ -170,6 +170,7 @@ class Mine extends React.Component {
 
     // console.log('this.props.intl', this.props.intl);
     // console.log('messages.me.feed', messages.me.feed);
+    console.log(this.props.auth);
 
     return ( 
         <DataFeed {...this.props} login={false} isAuth={false} isLoading={true} token={this.props.auth?.dataset_profile?.token||''} /> 

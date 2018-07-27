@@ -179,7 +179,7 @@ const tokenHandle = ({
             const datasetData = new FormData();
             datasetData.append('email',email);
             datasetData.append('password',password);
-            console.log(TAG,' tokenHandle - successFn01 email - ', email,' -- pass = ',password);
+            //console.log(TAG,' tokenHandle - successFn01 email - ', email,' -- pass = ',password);
             if(email&&password){
               dispatch(datasetSignUp({
                 BASE_URL: BASE_API.BASE_DATASET_API_URL,
