@@ -466,6 +466,7 @@ export const URL = {
   INDEX: '/',
 
   ADMIN: '/admin',
+  REPORT: '/report',
   LUCKY_POOL: '/lucky',
   HANDSHAKE_ME: '/me',
   HANDSHAKE_ME_INDEX: '/me',
@@ -516,6 +517,19 @@ export const URL = {
 
   INTRODUCING_NINJA_CASH: '/introducing-ninja-cash',
   ABOUT_NINJA_CASH: '/about-ninja-cash',
+
+  PRODUCT_URL: '/product',
+  RESEARCH_URL: '/research',
+
+  PRODUCT_CASH_URL: '/cash',
+  PRODUCT_PREDICTION_URL: '/prediction',
+  PRODUCT_WALLET_URL: '/wallet',
+  PRODUCT_HIVEPAY_OFFLINE_URL: '/hivepay-offline',
+  PRODUCT_HIVEPAY_ONLINE_URL: '/hivepay-online',
+  RESEARCH_INTERNET_CASH_URL: '/internet-cash',
+  PRODUCT_DAD_URL: '/dad',
+  RESEARCH_UNCOMMONS_URL: '/uncommons',
+  PRODUCT_WHISPER_URL: '/whisper',
 };
 
 export const NB_BLOCKS = 20;

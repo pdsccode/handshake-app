@@ -97,7 +97,7 @@ export const getStatusLabel = (item) => {
   }
 
   if (status === BET_BLOCKCHAIN_STATUS.STATUS_DONE) {
-      return doneAction();
+      return doneAction(result, side);
   }
 
   if (status === BET_BLOCKCHAIN_STATUS.STATUS_MAKER_INIT_ROLLBACK
@@ -268,15 +268,18 @@ const winOrLose = (resultStatus, side = SIDE.SUPPORT, disputeTime) => {
   return { title: label, isAction, status: strStatus };
 };
 
-const doneAction = () => {
-  console.log(TAG, 'doneAction');
+const doneAction = (resultStatus, side) => {
+  let strStatus = null;
+  let isAction = false;
+  if (resultStatus === side) {
+    strStatus = BETTING_STATUS_LABEL.COLLECT_DONE; //Win and withdraw
+  } else {
+    strStatus = BETTING_STATUS_LABEL.LOSE;
 
-  const strStatus = BETTING_STATUS_LABEL.COLLECT_DONE;
-  const isAction = false;
+  }
 
   return { title: null, isAction, status: strStatus };
-
-};
+}
 
 const rollbackAction = () => {
   console.log(TAG, 'rollbackAction');

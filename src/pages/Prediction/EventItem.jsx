@@ -25,12 +25,12 @@ function renderEventNumberOfPlayers(event) {
   );
 }
 
-function renderEvenTimeLeft(event) {
+function renderEvenTimeLeft(event, onCountdownComplete) {
   return (
     <div className="EventTimeLeft">
       <span className="EventTimeLeftText">Time left</span>
       <span className="EventTimeLeftValue">
-        <Countdown endTime={event.date} />
+        <Countdown endTime={event.date} onComplete={onCountdownComplete} />
       </span>
     </div>
   );
@@ -56,42 +56,38 @@ function renderEventMessages(event) {
   );
 }
 
-function renderOutcomeList(event, onClick) {
+function renderOutcomeList(event, onClickOutcome) {
   return (
-    <OutcomeList event={event} onClick={onClick} />
+    <OutcomeList event={event} onClick={onClickOutcome} />
   );
 }
 
-function renderDetails(event) {
-  return (
-    <div className="EventDetails">
-      <div className="EvenFirstGroup">
-        {renderEvenTimeLeft(event)}
-        {renderEventTotalBets(event)}
-      </div>
-      {renderEventMessages(event)}
-    </div>
-  );
-}
-
-function EventItem({ event,onClick }) {
+function EventItem({ event, onClickOutcome, onCountdownComplete }) {
   return (
     <div className="EventItem">
       {renderEventName(event)}
       {renderEventNumberOfPlayers(event)}
-      {renderOutcomeList(event, onClick)}
-      {renderDetails(event)}
+      {renderOutcomeList(event, onClickOutcome)}
+      <div className="EventDetails">
+        <div className="EvenFirstGroup">
+          {renderEvenTimeLeft(event, onCountdownComplete)}
+          {renderEventTotalBets(event)}
+        </div>
+        {renderEventMessages(event)}
+      </div>
     </div>
   );
 }
 
 EventItem.propTypes = {
   event: PropTypes.object.isRequired,
-  onClick: PropTypes.func,
+  onClickOutcome: PropTypes.func,
+  onCountdownComplete: PropTypes.func,
 };
 
 EventItem.defaultProps = {
-  onClick: undefined,
+  onClickOutcome: undefined,
+  onCountdownComplete: undefined,
 };
 
 export default EventItem;

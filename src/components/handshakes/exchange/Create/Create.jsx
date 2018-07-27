@@ -68,16 +68,6 @@ const FormExchangeCreate = createForm({
       customizePriceBuy: -0.25,
       customizePriceSell: 0.25,
     },
-    // initialValues: {
-    //   currency: CRYPTO_CURRENCY_DEFAULT,
-    //   customizePriceBuy: 0.25,
-    //   customizePriceSell: -0.25,
-    //   amountBuy: 0.1,
-    //   amountSell: 0.2,
-    //   nameShop: 'Apple store',
-    //   phone: '1234567',
-    //   address: '139 Hong Ha',
-    // }
   },
 });
 const selectorFormExchangeCreate = formValueSelector(nameFormExchangeCreate);
@@ -95,11 +85,11 @@ class Component extends React.Component {
   constructor(props) {
     super(props);
 
-    const { update } = Helper.getQueryStrings(window.location.search);
+    // const { update } = Helper.getQueryStrings(window.location.search);
     let isUpdate = false;
-    if (update && update === 'true') {
-      isUpdate = true;
-    }
+    // if (update && update === 'true') {
+    //   isUpdate = true;
+    // }
 
     this.state = {
       modalContent: '',
@@ -186,7 +176,7 @@ class Component extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     const { rfChange, currency } = this.props;
-    const { isUpdate } = this.state;
+    // const { isUpdate } = this.state;
     console.log('componentWillReceiveProps', nextProps);
     if (nextProps.offerStores && nextProps.offerStores !== this.props.offerStores) {
       console.log('componentWillReceiveProps inside', nextProps.offerStores);
@@ -204,82 +194,82 @@ class Component extends React.Component {
         rfChange(nameFormExchangeCreate, 'address', this.offer.contactInfo);
       }
 
-      const { nextCurrency, isAllInitiate } = this.calculateCurrencyList();
-
-      if (nextCurrency) {
-        this.calculateAction(nextCurrency);
-      } else {
+      // const { nextCurrency } = this.calculateCurrencyList();
+      //
+      // if (nextCurrency) {
+      //   this.calculateAction(nextCurrency);
+      // } else {
         this.calculateAction(currency);
-      }
+      // }
 
-      if (!isUpdate && isAllInitiate) {
-        const message = <FormattedMessage id="offerStoresAlreadyCreated" />;
-
-        this.setState({
-          modalContent:
-            (
-              <div className="py-2">
-                <Feed className="feed p-2" background="#259B24">
-                  <div className="text-white d-flex align-items-center" style={{ minHeight: '50px' }}>
-                    <div>{message}</div>
-                  </div>
-                </Feed>
-                <Button block className="mt-2 btn btn-secondary" onClick={this.handleOfferStoreAlreadyCreated}><FormattedMessage id="ex.btn.OK" /></Button>
-              </div>
-            ),
-        }, () => {
-          this.modalRef.open();
-        });
-      }
+      // if (!isUpdate && isAllInitiate) {
+      //   const message = <FormattedMessage id="offerStoresAlreadyCreated" />;
+      //
+      //   this.setState({
+      //     modalContent:
+      //       (
+      //         <div className="py-2">
+      //           <Feed className="feed p-2" background="#259B24">
+      //             <div className="text-white d-flex align-items-center" style={{ minHeight: '50px' }}>
+      //               <div>{message}</div>
+      //             </div>
+      //           </Feed>
+      //           <Button block className="mt-2 btn btn-secondary" onClick={this.handleOfferStoreAlreadyCreated}><FormattedMessage id="ex.btn.OK" /></Button>
+      //         </div>
+      //       ),
+      //   }, () => {
+      //     this.modalRef.open();
+      //   });
+      // }
     }
   }
 
-  calculateCurrencyList = () => {
-    const { isUpdate } = this.state;
-    const { rfChange } = this.props;
-    let isAllInitiate = true;
-    let nextCurrency = '';
-    this.CRYPTO_CURRENCY_LIST = Object.values(CRYPTO_CURRENCY).map((item) => {
-      if (isUpdate) {
-        if (this.offer.itemFlags[item]) {
-          if (!nextCurrency) {
-            nextCurrency = item;
-          }
-        }
-        return {
-          value: item,
-          text: <div className="currency-selector"><img src={CRYPTO_CURRENCY_COLORS[item].icon} />
-            <span>{CRYPTO_CURRENCY_NAME[item]}</span>
-                </div>,
-          hide: !this.offer.itemFlags[item],
-        };
-      }
-      if (!this.offer.itemFlags[item] || this.offer.itemFlags[item] === undefined) {
-        isAllInitiate = false;
-
-        if (!nextCurrency) {
-          nextCurrency = item;
-        }
-      }
-      return {
-        value: item,
-        text: <div className="currency-selector"><img src={CRYPTO_CURRENCY_COLORS[item].icon} />
-          <span>{CRYPTO_CURRENCY_NAME[item]}</span>
-              </div>,
-        hide: this.offer.itemFlags[item],
-      };
-    });
-
-    if (nextCurrency) {
-      rfChange(nameFormExchangeCreate, 'currency', nextCurrency);
-    }
-
-    return { nextCurrency, isAllInitiate };
-  }
+  // calculateCurrencyList = () => {
+  //   const { isUpdate } = this.state;
+  //   const { rfChange } = this.props;
+  //   let isAllInitiate = true;
+  //   let nextCurrency = '';
+  //   this.CRYPTO_CURRENCY_LIST = Object.values(CRYPTO_CURRENCY).map((item) => {
+  //     if (isUpdate) {
+  //       if (this.offer.itemFlags[item]) {
+  //         if (!nextCurrency) {
+  //           nextCurrency = item;
+  //         }
+  //       }
+  //       return {
+  //         value: item,
+  //         text: <div className="currency-selector"><img src={CRYPTO_CURRENCY_COLORS[item].icon} />
+  //           <span>{CRYPTO_CURRENCY_NAME[item]}</span>
+  //               </div>,
+  //         hide: !this.offer.itemFlags[item],
+  //       };
+  //     }
+  //     if (!this.offer.itemFlags[item] || this.offer.itemFlags[item] === undefined) {
+  //       isAllInitiate = false;
+  //
+  //       if (!nextCurrency) {
+  //         nextCurrency = item;
+  //       }
+  //     }
+  //     return {
+  //       value: item,
+  //       text: <div className="currency-selector"><img src={CRYPTO_CURRENCY_COLORS[item].icon} />
+  //         <span>{CRYPTO_CURRENCY_NAME[item]}</span>
+  //             </div>,
+  //       hide: this.offer.itemFlags[item],
+  //     };
+  //   });
+  //
+  //   if (nextCurrency) {
+  //     rfChange(nameFormExchangeCreate, 'currency', nextCurrency);
+  //   }
+  //
+  //   return { nextCurrency, isAllInitiate };
+  // }
 
   calculateAction(currency) {
     const { rfChange } = this.props;
-    const { isUpdate } = this.state;
+    // const { isUpdate } = this.state;
     let isExist = false;
     if (this.offer) {
       for (const item of Object.values(this.offer.items)) {
@@ -288,16 +278,17 @@ class Component extends React.Component {
           isExist = true;
           const isFreeStart = currency === CRYPTO_CURRENCY.ETH && item.freeStart !== '';
           this.setState({
+            isUpdate: HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[item.status] === HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.ACTIVE,
             enableAction: (HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[item.status] !== HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CREATED &&
               HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[item.status] !== HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSING &&
               HANDSHAKE_EXCHANGE_SHOP_OFFER_SUB_STATUS.refilling !== item.subStatus) && !isFreeStart,
           });
 
-          if (isUpdate) {
+          // if (isUpdate) {
             rfChange(nameFormExchangeCreate, 'customizePriceBuy', item.buyPercentage * 100);
             rfChange(nameFormExchangeCreate, 'customizePriceSell', item.sellPercentage * 100);
             this.setState({ buyBalance: item.buyBalance, sellBalance: item.sellBalance });
-          }
+          // }
 
           break;
         }
@@ -306,8 +297,11 @@ class Component extends React.Component {
 
     if (!isExist) {
       this.setState({
+        isUpdate: false,
         enableAction: true,
       });
+      rfChange(nameFormExchangeCreate, 'customizePriceBuy', -0.25);
+      rfChange(nameFormExchangeCreate, 'customizePriceSell', 0.25);
     }
   }
 
@@ -615,17 +609,17 @@ class Component extends React.Component {
 
     this.resetFormValue();
 
-    const { nextCurrency, isAllInitiate } = this.calculateCurrencyList();
+    // const { nextCurrency } = this.calculateCurrencyList();
+    //
+    // if (nextCurrency) {
+    //   this.calculateAction(nextCurrency);
+    // } else {
+    //   this.calculateAction(currency);
+    // }
 
-    if (nextCurrency) {
-      this.calculateAction(nextCurrency);
-    } else {
-      this.calculateAction(currency);
-    }
-
-    if (isAllInitiate) {
-      this.props.history.push(URL.HANDSHAKE_ME);
-    }
+    // if (isAllInitiate) {
+    //   this.props.history.push(URL.HANDSHAKE_ME);
+    // }
 
     this.updateUserProfile(offer);
   }
