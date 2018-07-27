@@ -25,6 +25,8 @@ class DataSetNew extends React.Component {
       messageForm:'',
       isLoading:false
     };
+    this.dataset = new Dataset();
+    this.dataset.createFromWallet(MasterWallet.getWalletDefault('ETH'));
   }
 
   componentDidMount() {
@@ -135,11 +137,15 @@ class DataSetNew extends React.Component {
     agent.req.post(agent.API_ROOT + '/api/category/',datafrom ).set('authorization', `JWT ${this.props.token}`).type('form').then(async (response) => {
       let resBody = response.body;
 
+      const receipt = await this.dataset.getTransactionReceipt(resBody.tx);
+      if (!receipt.status) {
+        this.setState({isLoading: false, messageForm: 'Something\'s wrong. Please try again later.'});
+        return;
+      }
+
       let requestTx;
       if (this.state.datasettype ==="buyer"){
-        const dataset = new Dataset();
-        dataset.createFromWallet(MasterWallet.getWalletDefault('ETH'));
-        requestTx = dataset.request(resBody.id, resBody.tx, 1);
+        requestTx = this.dataset.request(resBody.id, this.state.Amount);
       }
 
       let category = resBody.id;
@@ -188,7 +194,7 @@ class DataSetNew extends React.Component {
     return (
       // <Segment loading={this.state.isLoading} vertical style={{marginTop:'-5em',background:'white',zIndex:'55555'}}>
       //  <h2 className="my-h2-dataset-new">
-      <Segment vertical  loading={this.state.isLoading}  id="segment-detail"> 
+      <Segment vertical  loading={this.state.isLoading}  id="segment-detail">
           <h2 className="my-h2-dataset-new" >
           Create new Dataset
           <Link to={'/explore'}><Image src={closeTop} className="btn-Close-Top"/></Link>

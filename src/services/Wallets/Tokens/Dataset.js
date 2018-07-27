@@ -53,18 +53,18 @@ export class Dataset extends Ethereum {
       })
     }
 
-    async request(datasetId, createdDatasetTxHash, value) {
+    async request(datasetId, value) {
       try {
-        if (this.balance < value) {
+        if (this.balance < parseFloat(value)) {
           throw new Error('You have insufficient coin to make the transfer. Please top up and try again.');
         }
 
-        const receipt = await this.getTransactionReceipt(createdDatasetTxHash);
-        console.log('created dataset tx receipt', receipt);
-        if (!receipt.status) {
-          console.log(receipt);
-          throw new Error('${receipt.transactionHash} failed');
-        }
+        /* const receipt = await this.getTransactionReceipt(createdDatasetTxHash); */
+        /* console.log('created dataset tx receipt', receipt); */
+        /* if (!receipt.status) { */
+        /*   console.log(receipt); */
+        /*   throw new Error('${receipt.transactionHash} failed'); */
+        /* } */
 
         console.log(`sending ${value} to dataset ${datasetId} from address: ${this.address}`);
 
