@@ -5,12 +5,11 @@ import { connect } from 'react-redux';
 import './CreateMarket.scss';
 import { hasEmail } from './selector';
 import EmailForm from './EmailForm';
-import CreateEventForm from './CreateEventForm';
+import CreateEventContainer from './CreateEventContainer';
 
 class CreateMarket extends React.Component {
   static displayName = 'CreateMarket';
   static propTypes = {
-    dispatch: PropTypes.func,
     hasEmail: PropTypes.bool,
   };
 
@@ -18,14 +17,8 @@ class CreateMarket extends React.Component {
     hasEmail: false,
   };
 
-  // constructor(props) {
-  //   super(props);
-  //   this.state = {
-  //   };
-  // }
-
-  renderComponent = (props, state) => {
-    return (!props.hasEmail) ? <EmailForm /> : <CreateEventForm />;
+  renderComponent = (props) => {
+    return (!props.hasEmail) ? <EmailForm /> : <CreateEventContainer />;
   };
 
   render() {

@@ -37,13 +37,7 @@ class Prediction extends React.Component {
   }
 
   componentDidMount() {
-    const { dispatch } = this.props;
-    window.addEventListener('scroll', this.handleScroll);
-    dispatch(loadMatches());
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('scroll', this.handleScroll);
+    this.props.dispatch(loadMatches());
   }
 
   openOrderPlace(selectedOutcome) {
@@ -63,13 +57,8 @@ class Prediction extends React.Component {
       this.props.dispatch(updateShowedLuckyPool());
       setTimeout(() => {
         this.modalLuckyPoolRef.open();
-
       }, 2 * 1000);
     }
-  }
-
-  handleScroll = () => {
-    //this.showLuckyPool();
   }
 
   handleClickEventItem = (id, e, props, itemData) => {
@@ -97,15 +86,29 @@ class Prediction extends React.Component {
     // send event tracking
     try {
       GA.clickChooseAnEvent(event.name, itemData.name);
-    } catch (err) {}
+    } catch (err) {
+      console.error(err);
+    }
   };
+
+  onCountdownComplete = () => {
+    this.props.dispatch(loadMatches());
+    this.closeOrderPlace();
+  }
 
   renderEventList = (props) => {
     if (!props.eventList || !props.eventList.length) return null;
     return (
       <div className="EventList">
         {props.eventList.map((event) => {
-          return <EventItem key={event.id} event={event} onClick={this.handleClickEventItem} />;
+          return (
+            <EventItem
+              key={event.id}
+              event={event}
+              onClickOutcome={this.handleClickEventItem}
+              onCountdownComplete={this.onCountdownComplete}
+            />
+          );
         })}
       </div>
     );
@@ -121,27 +124,32 @@ class Prediction extends React.Component {
     );
   }
 
+  renderBetMode = (props, state) => {
+    return (
+      <ModalDialog close={true} onRef={(modal) => { this.modalOrderPlace = modal; }}>
+        <BetMode
+          selectedOutcome={state.selectedOutcome}
+          selectedMatch={state.selectedMatch}
+          openPopup={(click) => { this.openOrderPlace = click }}
+          onSubmitClick={(isFree) => {
+            this.closeOrderPlace();
+            isFree ? this.modalLuckyFree.open() : this.modalLuckyReal.open();
+          }}
+          onCancelClick={() => {
+            this.closeOrderPlace();
+          }}
+        />
+      </ModalDialog>
+    );
+  }
+
   renderComponent = (props, state) => {
     return (
       <div className={Prediction.displayName}>
         <Loading isLoading={props.isLoading} />
         {this.renderShareToWin()}
         {this.renderEventList(props)}
-        <ModalDialog close={true} onRef={(modal) => { this.modalOrderPlace = modal; }}>
-          <BetMode
-            selectedOutcome={state.selectedOutcome}
-            selectedMatch={state.selectedMatch}
-            render={state.isShowOrder}
-            openPopup={(click)=> {this.openOrderPlace = click}}
-            onSubmitClick={(isFree)=> {
-              this.closeOrderPlace();
-              isFree ? this.modalLuckyFree.open() : this.modalLuckyReal.open();
-            }}
-            onCancelClick={()=>{
-              this.closeOrderPlace();
-            }}
-          />
-        </ModalDialog>
+        {this.renderBetMode(props, state)}
         <ModalDialog onRef={(modal) => { this.modalLuckyReal = modal; }}>
           <LuckyReal onButtonClick={() => this.modalLuckyReal.close() } />
         </ModalDialog>

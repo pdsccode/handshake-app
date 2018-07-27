@@ -1,25 +1,50 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { Field, FieldArray, reduxForm } from 'redux-form';
 
-class CreateEventForm extends React.Component {
-  static displayName = 'CreateEventForm';
-  static propTypes = {
-    dispatch: PropTypes.func,
-  };
+import validate from './validate';
+import classNames from "classnames";
 
-  renderComponent = (props, state) => {
-    return (
-      <div>CreateEventForm form</div>
-    );
-  };
+const renderField = ({ input, label, type, placeholder, className, meta: { touched, error, warning } }) => {
+  const cls = classNames(className, {
+    'has-error': error,
+    'has-warning': warning,
+  });
 
-  render() {
-    return (
-      <div className={CreateEventForm.displayName}>
-        {this.renderComponent(this.props, this.state)}
+  return (
+    <div className={cls}>
+      {label && <label>{label}</label>}
+      <div>
+        <input {...input} type={type} placeholder={placeholder} />
+        {touched && error && <span className="ErrorMsg">{error}</span>}
+        {touched && warning && <span className="WarningMsg">{warning}</span>}
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
-export default CreateEventForm;
+const CreateEventForm = props => {
+  const { handleSubmit, pristine, reset, submitting } = props;
+  return (
+    <form onSubmit={handleSubmit}>
+      <Field
+        name="clubName"
+        type="text"
+        component={renderField}
+        label="Club Name"
+        className="ClubName"
+      />
+      {/*<FieldArray name="members" component={renderMembers} />*/}
+      {/*<div>*/}
+        {/*<button type="submit" disabled={submitting}>Submit</button>*/}
+        {/*<button type="button" disabled={pristine || submitting} onClick={reset}>*/}
+          {/*Clear Values*/}
+        {/*</button>*/}
+      {/*</div>*/}
+    </form>
+  );
+};
+
+export default reduxForm({
+  form: 'createOwnEvents', // a unique identifier for this form
+  // validate,
+})(CreateEventForm);

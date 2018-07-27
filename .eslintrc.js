@@ -35,6 +35,7 @@ module.exports = {
     "arrow-parens": 0,
     "no-underscore-dangle": 0,
     "function-paren-newline": 0,
+    "jsx-a11y/label-has-for": 0,
     "import/no-unresolved": "off", // TODO[1]:
     "import/extensions": "off" // TODO[1]:
   },

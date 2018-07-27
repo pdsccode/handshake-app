@@ -1,1 +1,1 @@
-export const hasEmail = (state) => state.auth.profile.email;
+export const hasEmail = (state) => !!state.auth.profile.email;
