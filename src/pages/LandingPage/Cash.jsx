@@ -5,6 +5,7 @@ import { showAlert } from "@/reducers/app/action";
 import { URL } from '@/constants';
 import { FormattedHTMLMessage, FormattedMessage, injectIntl } from "react-intl";
 // import VideoYoutube from '@/components/core/controls/VideoYoutube';
+import Collapse from '@/components/Collapse';
 //
 // import playVideoButton from '@/assets/images/ninja/play-video-button.svg';
 // import videoLeftCover from '@/assets/images/ninja/video-left-cover.jpg';
@@ -12,67 +13,12 @@ import { FormattedHTMLMessage, FormattedMessage, injectIntl } from "react-intl";
 import "./Cash.scss";
 import tradeCoinExchangeRussia from "@/assets/images/icon/landingpage/trade-coin-exchange-russia.svg";
 import tradeThirdContainer from "@/assets/images/icon/landingpage/trade-third-container.svg";
-import ExpandArrowSVG from "@/assets/images/icon/expand-arrow-white.svg";
 import iconLogo from "@/assets/images/landing/cash/logo.svg";
 import iconBox from "@/assets/images/landing/cash/icon-box.svg";
 import iconChart from "@/assets/images/landing/cash/icon-chart.svg";
 import iconLock from "@/assets/images/landing/cash/icon-lock.svg";
 import iconStar from "@/assets/images/landing/cash/icon-star.svg";
 
-class Collapse extends React.PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isCollapsed: true
-    };
-    this.toggle = ::this.toggle;
-  }
-
-  toggle() {
-    this.setState(state => ({ isCollapsed: !state.isCollapsed }));
-  }
-
-  render() {
-    const { isCollapsed } = this.state;
-    const { label, content, isList, index } = this.props;
-    return (
-      <div className="collapse-custom">
-        <div className="head" onClick={this.toggle}>
-          <div className="label">
-            <div className="index">
-              {index}
-              {index > 9 ? "." : ". "}
-            </div>
-            <div>{label}</div>
-          </div>
-          <div className="extend">
-            <img
-              className={isCollapsed ? "rotate" : ""}
-              src={ExpandArrowSVG}
-              alt="arrow"
-            />
-          </div>
-        </div>
-        <div
-          className={`content ${isList ? "" : "noList"} ${
-            !isCollapsed ? "" : "d-none"
-          }`}
-        >
-          {isList ? (
-            <dl>
-              {content.map((item, index) => [
-                <dt>{item.title}</dt>,
-                <dd>{item.content}</dd>
-              ])}
-            </dl>
-          ) : (
-            content
-          )}
-        </div>
-      </div>
-    );
-  }
-}
 
 // import background from '@/assets/images/landing/cash/bg.svg';
 const features = [

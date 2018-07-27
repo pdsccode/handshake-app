@@ -31,10 +31,11 @@ class FeedMeStation extends React.PureComponent {
     const { offer } = this.props;
 
     this.intervalCountdown = setInterval(() => {
+      const { offer: newOffer } = this.props;
       let isShowTimer = false;
       let lastUpdateAt = '';
 
-      for (const item of Object.values(offer.items)) {
+      for (const item of Object.values(newOffer.items)) {
         const status = HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[item.status];
         isShowTimer = status === HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CREATED ||
           status === HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CLOSING ||

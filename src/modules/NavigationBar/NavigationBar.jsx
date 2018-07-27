@@ -27,7 +27,7 @@ export default class NavigationBar extends Component {
         id: 'prediction',
         name: 'prediction',
         icon: predictionIcon,
-        url: URL.HANDSHAKE_EXCHANGE,
+        url: URL.HANDSHAKE_PREDICTION,
         position: 1,
       },
       {
