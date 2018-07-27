@@ -89,30 +89,30 @@
   }
 }
 
-.discover-overlay {
-  width: 100vw;
-  height: 100vh;
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 1000;
-  background-color: rgba($color: $black, $alpha: 0.3);
-  display: none;
-  &.show {
-    display: block;
-  }
-  img {
-    display: block;
-    position: absolute;
-    width:  rem-calc(50px);
-    height: rem-calc(50px);
-    background: $white;
-    border-radius: 50%;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
-}
+//.discover-overlay {
+//  width: 100vw;
+//  height: 100vh;
+//  position: fixed;
+//  top: 0;
+//  left: 0;
+//  z-index: 1000;
+//  background-color: rgba($color: $black, $alpha: 0.3);
+//  display: none;
+//  &.show {
+//    display: block;
+//  }
+//  img {
+//    display: block;
+//    position: absolute;
+//    width:  rem-calc(50px);
+//    height: rem-calc(50px);
+//    background: $white;
+//    border-radius: 50%;
+//    top: 50%;
+//    left: 50%;
+//    transform: translate(-50%, -50%);
+//  }
+//}
 
 .exchange-popup-intro {
   font-weight: 400;
