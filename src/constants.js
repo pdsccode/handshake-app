@@ -464,6 +464,7 @@ export const URL = {
   INDEX: '/',
 
   ADMIN: '/admin',
+  REPORT: '/report',
   LUCKY_POOL: '/lucky',
   HANDSHAKE_ME: '/me',
   HANDSHAKE_ME_INDEX: '/me',
