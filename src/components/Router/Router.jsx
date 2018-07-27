@@ -36,6 +36,7 @@ const rootRouterMap = [
   { path: URL.HANDSHAKE_EXCHANGE, component: RouterExchange },
   { path: URL.COMMENTS_BY_SHAKE, component: RouterComment },
   { path: URL.ADMIN, component: RouterAdmin },
+  { path: URL.REPORT, component: RouterAdmin },
 ];
 
 const routers = rootRouterMap.map(router => (
