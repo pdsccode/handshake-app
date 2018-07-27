@@ -300,6 +300,7 @@ class DiscoverPage extends React.Component {
 
 
   getHandshakeList() {
+    const { authProfile } = this.props;
     const { messages } = this.props.intl;
     const { list } = this.props.discover;
     const {
@@ -308,7 +309,13 @@ class DiscoverPage extends React.Component {
     const sortPriceIndexArr = sortPriceIndexActive.split('_');
 
     if (list && list.length > 0) {
-      return list.map((handshake) => {
+      let myHandShake;
+      let resultList = list.map((handshake) => {
+        if (handshake.id.includes(authProfile?.id)) {
+          myHandShake = handshake;
+
+          return null;
+        }
         const FeedComponent = maps[handshake.type];
         const offer = OfferShop.offerShop(JSON.parse(handshake.extraData));
         const allowRender = sortIndexActive === CASH_SORTING_CRITERIA.PRICE ? offer.itemFlags[sortPriceIndexArr[1].toUpperCase()] : true;
@@ -324,6 +331,7 @@ class DiscoverPage extends React.Component {
                 longitude={lng}
                 modalRef={this.modalRef}
                 offer={offer}
+                setLoading={this.setLoading}
               />
 
             </Col>
@@ -331,6 +339,32 @@ class DiscoverPage extends React.Component {
         }
         return null;
       });
+
+      // Handle my handshake
+      if (myHandShake) {
+        const FeedComponent = maps[myHandShake.type];
+
+        const offer = OfferShop.offerShop(JSON.parse(myHandShake.extraData));
+        if (FeedComponent) {
+          resultList.unshift(
+            <Col key={myHandShake.id} className="col-12 feed-wrapper px-0">
+              <FeedComponent
+                {...myHandShake}
+                history={this.props.history}
+                onFeedClick={extraData => this.clickFeedDetail(myHandShake, extraData)}
+                refreshPage={this.loadDiscoverList}
+                latitude={lat}
+                longitude={lng}
+                modalRef={this.modalRef}
+                offer={offer}
+              />
+
+            </Col>
+          );
+        }
+      }
+
+      return resultList;
     }
 
     let message = '';
@@ -448,7 +482,7 @@ class DiscoverPage extends React.Component {
   }
 
   clickCategoryItem(category) {
-    console.log('clickCategoryItem',);
+    console.log('clickCategoryItem');
     const { rfChange } = this.props;
     const { id } = category;
     gtag.event({
@@ -563,6 +597,7 @@ class DiscoverPage extends React.Component {
     const { sortIndexActive } = this.state;
     console.log('onFilterChange', newValue);
     if (sortIndexActive !== newValue) {
+      this.setLoading(true);
       this.setState({ sortIndexActive: newValue }, () => {
         this.loadDiscoverList();
       });
@@ -574,6 +609,7 @@ class DiscoverPage extends React.Component {
     console.log('onSortPriceChange', item);
 
     if (sortPriceIndexActive !== item.id) {
+      this.setLoading(true);
       const sortOrder = item.id.includes('buy') ? SORT_ORDER.ASC : SORT_ORDER.DESC;
       this.setState({ sortIndexActive: CASH_SORTING_CRITERIA.PRICE, sortPriceIndexActive: item.id, sortOrder }, () => {
         this.loadDiscoverList();
@@ -587,7 +623,7 @@ class DiscoverPage extends React.Component {
       // tabIndexActive,
       propsModal,
       modalContent,
-
+      sortIndexActive,
     } = this.state;
     const { messages } = this.props.intl;
     const { intl } = this.props;
@@ -643,7 +679,7 @@ class DiscoverPage extends React.Component {
                           component={fieldDropdown}
                           classNameWrapper=""
                           defaultText={<FormattedMessage id="ex.sort.price" />}
-                          classNameDropdownToggle="dropdown-sort bg-white"
+                          classNameDropdownToggle={`dropdown-sort bg-white ${sortIndexActive === CASH_SORTING_CRITERIA.PRICE ? 'dropdown-sort-selected' : ''}  `}
                           list={PRICE_SORTS}
                           onChange={this.onSortPriceChange}
                         />
@@ -705,6 +741,7 @@ const mapState = state => ({
   firebaseApp: state.firebase.data,
   freeStartInfo: state.exchange.freeStartInfo,
   showedLuckyPool: state.betting.showedLuckyPool,
+  authProfile: state.auth.profile,
 });
 
 const mapDispatch = dispatch => ({

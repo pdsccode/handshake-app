@@ -12,6 +12,8 @@ const Page404 = props => (<DynamicImport isNotFound loading={Loading} load={() =
 
 const routerMap = [
   { path: URL.ADMIN, component: Admin },
+  { path: URL.REPORT, component: Admin },
+
 ];
 
 class AdminRouter extends React.Component {
