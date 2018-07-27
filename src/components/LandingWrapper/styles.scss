@@ -5,6 +5,7 @@ $button-color: #484848;
   background: #fff;
   padding: 36px 0;
   .landing-nav-link {
+    font-family: azo-sans-web, sans-serif;
     font-size: 16px;
     color: $button-color;
     margin-right: 30px;
@@ -25,7 +26,8 @@ $button-color: #484848;
     }
   }
   .btn-primary-landing {
-    font-family: AzoSans-Medium;
+    font-family: azo-sans-web, sans-serif;
+    font-weight: 500;
     font-size: 18px;
     color: #000000;
     letter-spacing: 0;
@@ -47,7 +49,8 @@ $button-color: #484848;
 
     border: 2px solid #F5D516;
     border-radius: 4px;
-    font-family: AzoSans-Medium;
+    font-family: azo-sans-web, sans-serif;
+    font-weight: 500;
     font-size: 18px;
     color: #000000;
     letter-spacing: 0;
@@ -69,7 +72,8 @@ $button-color: #484848;
   }
 
   .landing-footer {
-    font-family: AzoSans-Regular;
+    font-family: azo-sans-web, sans-serif;
+    font-weight: 400;
     font-size: 14px;
     color: #484848;
     letter-spacing: 0;
