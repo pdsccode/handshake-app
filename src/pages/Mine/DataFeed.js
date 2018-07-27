@@ -61,7 +61,7 @@ class DataFeed extends React.Component {
         bottomVisible: false,
       },
       open:false,
-      nameclassified:'',
+      classifyName:'',
       selectcategory: null,
       modal: {
         open: false,
@@ -71,16 +71,62 @@ class DataFeed extends React.Component {
         searchableClassfies: []
       },
       token: props?.token||'',
+      confirmCategory: null,
+      confirmImage: null
     };
     this.handleLikeImage = this.handleLikeImage.bind(this);
     this.handleClassifyImage = this.handleClassifyImage.bind(this);
     this.closeModal = this.closeModal.bind(this);
     this.handleSelectedClassify = this.handleSelectedClassify.bind(this);
     this.submitClassify = this.submitClassify.bind(this);
+    this.showConfirm = this.showConfirm.bind(this);
   }
 
-  close = () => this.setState({ open: false })
-  show = category => () => this.setState({ selectcategory:category, nameclassified:'', open: true })
+  closeConfirm = () => this.setState({ openConfirmAddClassify: false, confirmCategory: null })
+  /* show = category => () => this.setState({ selectcategory:category, nameclassified:'', open: true }) */
+  showConfirm(image, category) {
+    this.setState({openConfirmAddClassify: true, confirmCategory: category, confirmImage: image});
+  }
+
+  handleAddClassify = () => {
+    console.log(this.state)
+    const category = this.state.confirmCategory;
+    if (!category) {
+      this.setState({openConfirmAddClassify: false});
+      return;
+    }
+
+    const classifyName = this.state.classifyName;
+    if (!classifyName) {
+      this.setState({openConfirmAddClassify: false});
+      return;
+    }
+
+    this.setState({isLoading: true});
+    agent.req.post(agent.API_ROOT + '/api/classify/', {
+      category: category.id,
+      name: classifyName
+    }).set('authorization', `JWT ${this.props.token}`).type('form').then((response) => {
+      agent.req.post(agent.API_ROOT + '/api/image-profile/', {image: this.state.confirmImage.id, classify: response.body.id})
+        .set('authorization', `JWT ${this.props.token}`).type('form').then(() => {
+          const images = this.state.images;
+          images.forEach((i) => {
+            if (i.id == this.state.confirmImage.id) {
+              i.category.classifies.push({
+                id: response.body.id,
+                name: response.body.name,
+                checked: true
+              });
+              i.classified = true;
+            }
+          });
+          this.setState({isLoading: false, openConfirmAddClassify: false, classifyName: '', images})
+        });
+    }).catch((e) => {
+      console.log(e);
+      this.setState({isLoading: false, openConfirmAddClassify: false, classifyName: ''});
+    });
+  }
 
   init_data(token){
     this.setState({isLoading: true})
@@ -97,7 +143,7 @@ class DataFeed extends React.Component {
     }).catch((e) => {
     })
   }
-  
+
   componentDidMount() {
     //document.title = 'DAD: Decentralized Autonomous Dataset';
     console.log("AHIHI ==== ",this.props.token);
@@ -180,7 +226,7 @@ class DataFeed extends React.Component {
             const itemList = classifies.findIndex(item);
             images[id] = item;
             this.setState({images});
-            
+
           }
         },
         errorFn: (e) => {
@@ -345,38 +391,18 @@ class DataFeed extends React.Component {
       //   {item?.name||''}
       // </Label>);
       return (
-        <Label basic color={item.checked?'tealqn':'black'} key={String(item.id)||'-1'} 
+        <Label basic color={item.checked?'tealqn':'black'} key={String(item.id)||'-1'}
           onClick={isNeedClick?()=>this.clickTagItem(value,item.id):undefined}>{item?.name||''}</Label>
       );
-
     });
     //console.log(value.category);
-    value.category.id
     return (<div style={{display:'flex',flex:1,flexWrap:'wrap'}}>
-        <Image onClick={()=>this.show()} src={addPlus} style={{ width:'30px',marginTop:'-10px'}}/>
+        <Image onClick={()=>this.showConfirm(value, value.category)} src={addPlus} style={{ width:'30px',marginTop:'-10px'}}/>
         {listTagView}
     </div>);
   }
 
-  handleAddClass(){
-    console.log(this.state.nameclassified);
-    console.log(this.state.selectcategory);
-    id = this.state.selectcategory;
-    name = this.state.selectcategory;
-
-    agent.req.post(agent.API_ROOT + '/api/classify/', {
-      id,
-      name
-    }).set('authorization', `JWT ${this.props.token}`).type('form').then((response) => {
-      let resBody = response.body;
-      
-    }).catch((e) => {
-    
-    })
-
-  }
-
-  handleChangeInput = (e, {name, value}) => this.setState({[name]: value})
+  handleClassifyNameInput = (e, {name, value}) => this.setState({classifyName: value})
 
   render() {
     return (
@@ -427,17 +453,17 @@ class DataFeed extends React.Component {
             content={
               <div class='content'>
                 <h3>Enter name classified</h3>
-                <Form.Input 
+                <Form.Input
                   type='text'
-                  fluid placeholder='Name Classified' name='nameclassified' value={this.state.nameclassified}
-                              onChange={this.handleChangeInput}/>
+                  fluid placeholder='Name Classified' name='classifyName' value={this.state.classifyName}
+                              onChange={this.handleClassifyNameInput}/>
               </div>
             }
-            open={this.state.open}
-            onCancel={this.close}
-            onConfirm={() => this.handleAddClass()}
-            confirmButton={<Button positive>OK</Button>}
-            cancelButton={<Button positive style={{background: 'none',color:'#333',fontWeight:'500'}}>Cancel</Button>}
+            open={this.state.openConfirmAddClassify}
+            onCancel={this.closeConfirm}
+            onConfirm={() => this.handleAddClassify()}
+            confirmButton={<Button positive loading={this.state.isLoading} style={{width: 'auto', height: 'auto'}}>OK</Button>}
+            cancelButton={<Button positive style={{background: 'none',color:'#333',fontWeight:'500'}} disabled={this.state.isLoading}>Cancel</Button>}
           />
         </Segment>
 
@@ -456,7 +482,7 @@ class DataFeed extends React.Component {
 //   </AuthConsumer>
 // )
 const mapState = state => ({
-  
+
 });
 
 const mapDispatch = ({
