@@ -112,7 +112,7 @@ class DataSetNew extends React.Component {
     let created_by_id = this.props.auth.dataset_profile.id;
 
     if(this.state.values.length==0){
-      this.setState({messageForm:" classification list must contain at least 1 class"})
+      this.setState({messageForm:" Classification list must contain at least 1 class"})
       return;
     }
 
@@ -121,13 +121,13 @@ class DataSetNew extends React.Component {
     if(this.state.datasettype ==="buyer"){
 
         let request_goal = this.state.Quantity;
-        if(request_goal.trim()==""){
-          this.setState({messageForm:" Request Quantity is required"})
+        if(request_goal.trim()=="" ||  parseFloat(request_goal) < 0){
+          this.setState({messageForm:" Request quantity is invalid"})
           return;
         }
         let request_eth_amount = this.state.Amount;
-        if(request_eth_amount.trim()==""){
-          this.setState({messageForm:" ETH amount is required"})
+        if(request_eth_amount.trim()=="" || parseFloat(request_eth_amount) < 0){
+          this.setState({messageForm:" ETH amount is invalid"})
           return;
         }
         datafrom={name, desc, created_by_id, request_goal ,request_eth_amount }

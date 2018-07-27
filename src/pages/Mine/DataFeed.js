@@ -452,7 +452,7 @@ class DataFeed extends React.Component {
           <Confirm
             content={
               <div class='content'>
-                <h3>Enter name classified</h3>
+                <h3 style={{letterSpacing:'-0.24'}}>Enter name classified</h3>
                 <Form.Input
                   type='text'
                   fluid placeholder='Name Classified' name='classifyName' value={this.state.classifyName}
@@ -462,7 +462,7 @@ class DataFeed extends React.Component {
             open={this.state.openConfirmAddClassify}
             onCancel={this.closeConfirm}
             onConfirm={() => this.handleAddClassify()}
-            confirmButton={<Button positive loading={this.state.isLoading} style={{width: 'auto', height: 'auto'}}>OK</Button>}
+            confirmButton={<Button positive loading={this.state.isLoading} style={{padding: '10px 32px', width: 'auto', height: 'auto'}}>OK</Button>}
             cancelButton={<Button positive style={{background: 'none',color:'#333',fontWeight:'500'}} disabled={this.state.isLoading}>Cancel</Button>}
           />
         </Segment>

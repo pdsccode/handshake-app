@@ -15,6 +15,7 @@ import {MasterWallet} from '@/services/Wallets/MasterWallet';
 import {Dataset} from '@/services/Wallets/Tokens/Dataset';
 
 import closeTop from '@/assets/icons/closeTop.svg';
+import albumSVG from '@/assets/icons/album.svg';
 const TAG = 'History';
 
 class History extends React.Component {
@@ -95,9 +96,7 @@ class History extends React.Component {
     }
   };
   render() {
-    const color1 = "linear-gradient(62deg, rgb(208, 208, 208), rgb(243, 243, 243) 100%, rgb(255, 255, 255))";
-    //const color2 = "radial-gradient(circle at 95% 4%, #a241e2, #534dfd)";
-    const color2 = "linear-gradient(62deg, rgb(208, 208, 208), rgb(243, 243, 243) 100%, rgb(255, 255, 255))";
+     
     return (
       <Visibility once={true}>  
        <Segment vertical  id="segment-detail"> 
@@ -106,23 +105,37 @@ class History extends React.Component {
         </h2> 
          
               <Card.Group centered >  
-                <Card className="my-card"  style={{ marginBottom: '1em'}}> 
-                          <div style={{ padding:'10px', textAlign:'left', backgroundImage: color1 }}>
-                              <h4 style={{ margin:'5px 0px', color:'black'}}>Avaliable for withdraw</h4>
-                              <p style={{ marginBottom:'0px'}}>Balance: { (Math.round(this.state.balance * 10000) /10000 ) } ETH</p>
-                              <Button basic size="mini" basic color='black' className="my-btn-buy-eth2"  content='Withdraw' onClick={this.withdraw}  ></Button>
-                           </div>
-                </Card>
-              </Card.Group> 
-            <h2 className="my-h2-dataset-new h2-header-datasetslist"> Datasets </h2> 
-              <Card.Group centered   style={{ marginTop:'-5px'}}> 
+                <Card className="my-card"  style={{ marginBottom: '1em', marginTop:'-10px'}}> 
+                  <Grid container columns={2}>
+                    <Grid.Column width={3}>
+                      <img src={albumSVG} />
+                    </Grid.Column>
+                    <Grid.Column width={9}>
+                    <div style={{  textAlign:'left'  }}>
+                                <h4 style={{ margin:'5px 0px', color:'black'}}>Avaliable for withdraw</h4>
+                                <p>Balance: <span style={{fontWeight:'700' }}>{ (Math.round(this.state.balance * 10000) /10000 ) } ETH</span></p> 
+                            </div>
+                    </Grid.Column>
+                    <Grid.Column width={3}>
+                    <Button size="mini" color='green' content='Withdraw' style={{ marginTop:'16px',marginLeft:'4px'}} onClick={this.withdraw}  ></Button>
+                    </Grid.Column>
+                  </Grid>
+                  <hr className="history-hr"/>  
+                </Card> 
                 {this.state.datasets.map((item, i) => {
                   return (
-                    <Card key={i} className="my-card"  style={{ marginBottom: '1.8em'}}>
-                          <div style={{ padding:'10px', textAlign:'left', backgroundImage: (i%2==0 ? color1 : color2) }}>
-                              <h4 style={{ margin:'5px 0px', color:'black'}}>{item.name}</h4>
-                              <p  style={{ marginBottom:'0px'}}>{item.balance} DADI</p>
-                           </div>
+                    <Card key={i} className="my-card"  style={{ marginBottom: '1.8em',marginTop:'12px'}}>
+                          <Grid container columns={2}>
+                              <Grid.Column width={3}>
+                                  <img src={albumSVG} />
+                              </Grid.Column>
+                              <Grid.Column width={13}>
+                                  <div style={{textAlign:'left'   }}>
+                                      <h4 className="history-h3">{item.name}</h4> 
+                                      <p className="history-p3" >Balance: <span style={{fontWeight:'700' }}>{ item.balance } DADI</span></p> 
+                                  </div>
+                              </Grid.Column>
+                        </Grid>  
                     </Card>
 
                   )
