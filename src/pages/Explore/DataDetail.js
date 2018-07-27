@@ -508,8 +508,9 @@ class DataDetail extends React.Component {
                 </Modal.Actions>
               </Modal>
         </Segment>
-        <Segment vertical loading={this.state.isLoading}/>
+       
         <Segment vertical loading={this.state.isLoading}>
+        
           <Confirm
             content={
               <div class='content'>
@@ -520,10 +521,11 @@ class DataDetail extends React.Component {
             open={this.state.open}
             onCancel={this.close}
             onConfirm={() => this.handleConfirmBuy()}
-            confirmButton={<Button positive style={{padding: '10px 32px'}}>OK</Button>}
+            confirmButton={<Button positive  loading={this.state.isLoading} style={{padding: '10px 32px' ,width: 'auto', height: 'auto' }}>OK</Button>}
             cancelButton={<Button positive style={{background: 'none',color:'#333',fontWeight:'500'}}>Cancel</Button>}
           />
         </Segment>
+        <Segment vertical loading={this.state.isLoading}/>
       </Visibility>
 
     )
