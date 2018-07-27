@@ -46,10 +46,6 @@
   }
 }
 
-.CreatEventContainer {
-  padding: 20px;
-}
-
 .CreateEventTitle {
   text-transform: uppercase;
   font-size: rem-calc(16px);
@@ -57,7 +53,7 @@
   margin-bottom: 10px;
 }
 
-.EventForm {
+.EventDropdown {
   select[name="event"] {
     // -webkit-appearance: none;
     // -moz-appearance: none;

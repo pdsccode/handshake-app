@@ -24,7 +24,7 @@ class CreateMarket extends React.Component {
     this.props.dispatch(updateEmail(email));
   }
 
-  renderComponent = (props, state) => {
+  renderComponent = (props) => {
     return (!props.hasEmail) ? <EmailForm onSubmit={this.handleSubmit} /> : <CreateEventContainer />;
   };
 

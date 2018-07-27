@@ -4,11 +4,13 @@ import { API_URL } from '@/constants';
 import { loadMatches } from './action';
 import { eventSelector } from './selector';
 
-function* handleLoadMachesSaga() {
+function* handleLoadMachesSaga({ cache = true }) {
   try {
-    const events = yield select(eventSelector);
-    if (events && events.length) {
-      return events;
+    if (cache) {
+      const events = yield select(eventSelector);
+      if (events && events.length) {
+        return events;
+      }
     }
 
     return yield call(apiGet, {

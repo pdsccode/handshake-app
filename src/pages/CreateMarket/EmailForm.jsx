@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import { Field } from 'redux-form';
 import createForm from '@/components/core/form/createForm';
 import IconEmail from '@/assets/images/icon/icon-email.svg';
-import { renderField, required, email } from '@/utils/form';
+import { renderField } from './form';
+import { required, email } from './validate';
 
 class EmailForm extends React.Component {
   static displayName = 'EmailForm';

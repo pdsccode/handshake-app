@@ -1,99 +1,127 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Field } from 'redux-form';
-import createForm from '@/components/core/form/createForm';
-import { eventSelector } from './selector';
-import MarketForm from './MarketForm';
-
-const EventForm = createForm({
-  propsReduxForm: {
-    form: 'eventForm',
-    enableReinitialize: true,
-    clearSubmitErrors: true,
-  },
-});
+import { renderField } from './form';
+import { required } from './validate';
 
 class CreateEventForm extends React.Component {
-  static displayName = 'CreateEventForm';
   static propTypes = {
-    eventList: PropTypes.instanceOf(Array),
-    onSubmit: PropTypes.func,
+    handleSubmit: PropTypes.func,
     dispatch: PropTypes.func.isRequired,
   };
 
-  static defaultProps = {
-    eventList: [],
-  }
+  renderGroupTitle = (title) => (<div className="CreateEventFormGroupTitle">{title}</div>);
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      isCreate: false,
+  renderEventGroup = () => {
+    const title = 'Create an event';
+    const fieldProps = {
+      name: 'eventName',
+      type: 'text',
+      fieldClass: 'form-control',
+      groupClass: 'form-group',
+      errorClass: 'form-error',
+      component: renderField,
+      placeholder: 'Event name',
+      validate: [required],
     };
-  }
 
-  handleEventChange = (event) => {
-    const value = event.target.value;
-  }
-
-  handleCreateClick = () => {
-    this.setState({ isCreate: true });
-  }
-
-  handleSubmit = () => {
-
-  }
-
-  renderUpdateOption = (props) => {
-    const { onSubmit } = props;
     return (
-      <EventForm className="EventForm" onSubmit={onSubmit}>
-        <Field name="event" component="select" onChange={this.handleEventChange}>
-          <option value="">Select an event</option>
-          {props.eventList.map((event) => {
-            return (<option key={event.id} value={event.name}>{event.name}</option>);
-          })}
-        </Field>
-      </EventForm>
+      <div className="CreateEventFormGroup">
+        {this.renderGroupTitle(title)}
+        <Field {...fieldProps} />
+      </div>
     );
   }
 
-  renderCreateOption = () => {
-    const { handleCreateClick } = this;
-    const buttonText = 'Create a new event';
-    return (<button className="btn btn-primary btn-block" onClick={handleCreateClick}>{buttonText}</button>);
-  }
+  renderOutComeGroup = () => {
+    const title = 'Outcome';
+    const buttonTxt = 'Add more outcomes';
+    const fieldProps = {
+      name: 'outcome',
+      type: 'text',
+      fieldClass: 'form-control',
+      groupClass: 'form-group',
+      errorClass: 'form-error',
+      component: renderField,
+      placeholder: 'outcome',
+      validate: [required],
+    };
 
-  renderOptions = (props) => (
-    <React.Fragment>
-      {this.renderUpdateOption(props)}
-      <span className="CreateEventOption">Or</span>
-      {this.renderCreateOption()}
-    </React.Fragment>
-  );
-
-  renderTitle = () => (<div className="CreateEventTitle">Event</div>);
-
-  renderForm = (props) => {
-    const { handleSubmit } = this;
     return (
-      <MarketForm handleSubmit={handleSubmit} />
+      <div className="CreateEventFormGroup">
+        {this.renderGroupTitle(title)}
+        <Field {...fieldProps} />
+        <button type="button">{buttonTxt}</button>
+      </div>
     );
   }
 
-  renderComponent = (props, state) => {
-    const { isCreate } = state;
-    const renderComponent = isCreate ? this.renderForm(props) : this.renderOptions(props);
+  renderFeeGroup = () => {
+    const title = 'Create fee';
+    const note = 'The creator fee is a percentage of the total winnings of the market.';
+    const fieldProps = {
+      name: 'fee',
+      type: 'text',
+      fieldClass: 'form-control',
+      groupClass: 'form-group',
+      errorClass: 'form-error',
+      component: renderField,
+      placeholder: 'fee',
+      validate: [required],
+    };
     return (
-      <div className="CreatEventContainer">
-        <div className="CreateEventBlock">
-          {this.renderTitle()}
-          {renderComponent}
+      <div className="CreateEventFormGroup">
+        {this.renderGroupTitle(title)}
+        <Field {...fieldProps} />
+        <div className="CreateEventFormGroupNote">{note}</div>
+      </div>
+    );
+  }
+
+  renderReportGroup = () => {
+    const title = 'Report';
+    const note = 'We will review your source and get back to you within 24 hours.';
+    return (
+      <div className="CreateEventFormGroup">
+        {this.renderGroupTitle(title)}
+        <Field name="report" type="text" component="select" />
+        <div className="CreateEventFormGroupSplit">Or</div>
+        <Field name="report" type="text" component={renderField} validate={[required]} />
+        <div className="CreateEventFormGroupNote">{note}</div>
+      </div>
+    );
+  }
+
+  renderTimeGroup = () => {
+    return (
+      <div className="CreateEventFormGroup">
+        <Field name="eventName" type="text" component={renderField} validate={[required]} />
+        <Field name="eventName" type="text" component={renderField} validate={[required]} />
+        <div className="CreateEventFormGroupNotice">
+          <div className="MarketFromGroupNoticeTitle">Dispute time</div>
+          <div className="MarketFromGroupNoticeTimeCount">7 days after report</div>
+          <div className="MarketFromGroupNoticeTime">
+            <span className="TimeLabel">From</span>
+            <span className="TimeUTC">23 Oct, 2:20pm +UTC</span>
+            <span className="TimeLabel">To</span>
+            <span className="TimeUTC">23 Oct, 4:00pm +UTC</span>
+          </div>
         </div>
       </div>
     );
-  };
+  }
+
+  render() {
+    return (
+      <Form className="CreateEventForm" onSubmit={this.props.handleSubmit}>
+        {this.renderEventGroup()}
+        {this.renderOutComeGroup()}
+        {this.renderFeeGroup()}
+        {this.renderReportGroup()}
+        {this.renderTimeGroup()}
+      </Form>
+    );
+  }
 }
 
 export default CreateEventForm;

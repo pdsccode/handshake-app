@@ -92,7 +92,7 @@ class Prediction extends React.Component {
   };
 
   onCountdownComplete = () => {
-    this.props.dispatch(loadMatches());
+    this.props.dispatch(loadMatches({ cache: false }));
     this.closeOrderPlace();
   }
 
