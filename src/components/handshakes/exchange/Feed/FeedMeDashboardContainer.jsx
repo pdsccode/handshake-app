@@ -16,7 +16,7 @@ import { ExchangeCashHandshake } from '@/services/neuron';
 import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { hideLoading, showAlert, showLoading } from '@/reducers/app/action';
+import { showAlert } from '@/reducers/app/action';
 import { responseExchangeDataChange } from '@/reducers/me/action';
 import { formatAmountCurrency, formatMoneyByLocale, getHandshakeUserType, getOfferPrice } from '@/services/offer-util';
 import { deleteOfferItem } from '@/reducers/exchange/action';
@@ -152,6 +152,8 @@ class FeedMeOfferStoreContainer extends React.PureComponent {
     const { offer } = this;
     const { currency, sellBalance, freeStart } = this.deleteItem;
 
+    this.props.showLoading();
+
     if (currency === CRYPTO_CURRENCY.ETH) {
       if (sellBalance > 0 && freeStart === '') {
         const wallet = MasterWallet.getWalletDefault(currency);
@@ -159,16 +161,17 @@ class FeedMeOfferStoreContainer extends React.PureComponent {
         const fee = await wallet.getFee();
 
         if (!this.checkMainNetDefaultWallet(wallet)) {
+          this.props.hideLoading();
           return;
         }
 
         if (this.showNotEnoughCoinAlert(balance, 0, fee, currency)) {
+          this.props.hideLoading();
           return;
         }
       }
     }
 
-    this.props.showLoading({ message: '' });
     this.props.deleteOfferItem({
       PATH_URL: `${API_URL.EXCHANGE.OFFER_STORES}/${offer.id}`,
       METHOD: 'DELETE',
@@ -340,8 +343,6 @@ const mapState = state => ({
 
 const mapDispatch = ({
   showAlert,
-  showLoading,
-  hideLoading,
   deleteOfferItem,
 
   responseExchangeDataChange,
