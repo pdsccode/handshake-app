@@ -17,44 +17,89 @@ class CreateEventContainer extends React.Component {
     eventList: [],
   };
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      selectedEvent: undefined,
+      isCreateNew: false,
+    };
+  }
+
   componentDidMount() {
     this.props.dispatch(loadMatches());
   }
 
   onSelectEvent = (item) => {
-    console.log('item', item);
+    this.setState({
+      selectedEvent: item.id ? item : undefined,
+    });
+  }
+
+  onClickCreateNewEvent = () => {
+    this.setState({
+      isCreateNew: true,
+    });
   }
 
   buildEventSelectorData = (props) => {
     return props.eventList.map((event) => {
       return {
-        id: event.id,
+        ...event,
         value: event.name,
-        priority: event.id,
       };
-    });
+    }).concat({
+      id: 0,
+      value: 'Select an event',
+    }).sort((a, b) => a.id - b.id);
   }
 
-  onClickCreateNewEvent = () => {
-    // set state isCreateNew
-  }
-
-  renderComponent = (props) => {
+  renderEventDropdownList = (props, state) => {
+    if (state.isCreateNew) return null;
     return (
-      <div>
+      <React.Fragment>
         <label>EVENT</label>
         <Dropdown
           placeholder="Select an event"
           className="EventDropdown"
+          defaultId={state.selectedEvent}
           source={this.buildEventSelectorData(props)}
           onItemSelected={this.onSelectEvent}
           hasSearch
         />
+      </React.Fragment>
+    );
+  }
+
+  renderOrCreateButton = (props, state) => {
+    if (state.selectedEvent || state.isCreateNew) return null;
+    return (
+      <React.Fragment>
         <p className="CreateEventOption">Or</p>
-        <button className="btn btn-primary btn-block" onClick={this.onClickCreateNewEvent}>
+        <button
+          className="btn btn-primary btn-block"
+          onClick={this.onClickCreateNewEvent}
+        >
           Create a new event
         </button>
-      </div>
+      </React.Fragment>
+    );
+  }
+
+  renderCreateEventForm = (props, state) => {
+    if (!state.isCreateNew && !state.selectedEvent) return null;
+    console.log('selectedEvent', state.selectedEvent);
+    return (
+      <CreateEventForm selectedEvent={state.selectedEvent} />
+    );
+  }
+
+  renderComponent = (props, state) => {
+    return (
+      <React.Fragment>
+        {this.renderEventDropdownList(props, state)}
+        {this.renderOrCreateButton(props, state)}
+        {this.renderCreateEventForm(props, state)}
+      </React.Fragment>
     );
   };
 

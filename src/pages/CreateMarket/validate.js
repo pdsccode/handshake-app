@@ -2,7 +2,7 @@ import isEmail from 'validator/lib/isEmail';
 
 /**
  * Validator empty value of control
- * @param {Value of control} value
+ * @param value
  */
 export const required = (value) => {
   return (!value) ? 'Required' : null;
@@ -10,7 +10,7 @@ export const required = (value) => {
 
 /**
  * Validator email address
- * @param {Email string} value
+ * @param value
  */
 export const email = (value) => {
   return !isEmail(value) ? ('Invalid email address') : null;
