@@ -26,6 +26,13 @@
     color: #6F6F6F;
     margin-left: 4px !important;
   }
+
+  .dropdown-sort-selected {
+    background: #000000 !important;
+    color: #FFFFFF !important;
+    border-color: #000000;
+  }
+
   .buy-sell-wrapper {
     margin-bottom: rem-calc(15px);
   }
