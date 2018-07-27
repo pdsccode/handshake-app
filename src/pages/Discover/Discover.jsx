@@ -596,6 +596,7 @@ class DiscoverPage extends React.Component {
     const { sortIndexActive } = this.state;
     console.log('onFilterChange', newValue);
     if (sortIndexActive !== newValue) {
+      this.setLoading(true);
       this.setState({ sortIndexActive: newValue }, () => {
         this.loadDiscoverList();
       });
@@ -607,6 +608,7 @@ class DiscoverPage extends React.Component {
     console.log('onSortPriceChange', item);
 
     if (sortPriceIndexActive !== item.id) {
+      this.setLoading(true);
       const sortOrder = item.id.includes('buy') ? SORT_ORDER.ASC : SORT_ORDER.DESC;
       this.setState({ sortIndexActive: CASH_SORTING_CRITERIA.PRICE, sortPriceIndexActive: item.id, sortOrder }, () => {
         this.loadDiscoverList();
