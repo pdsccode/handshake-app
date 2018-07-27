@@ -174,7 +174,7 @@ class DataSetNew extends React.Component {
     }).catch((e) => {
       console.log("creating dataset failed", e);
       let message = '';
-      if (e.message.indexOf('insufficient funds') > -1) {
+      if (e.message.indexOf('insufficient funds') > -1 || e.message.indexOf('insufficient coin') > -1) {
         message = 'You have insufficient coin to make the transfer. Please top up and try again.';
       } else {
         message = 'Something\'s wrong. Please try again later.';
