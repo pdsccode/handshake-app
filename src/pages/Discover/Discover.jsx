@@ -620,7 +620,7 @@ class DiscoverPage extends React.Component {
       // tabIndexActive,
       propsModal,
       modalContent,
-
+      sortIndexActive,
     } = this.state;
     const { messages } = this.props.intl;
     const { intl } = this.props;
@@ -676,7 +676,7 @@ class DiscoverPage extends React.Component {
                           component={fieldDropdown}
                           classNameWrapper=""
                           defaultText={<FormattedMessage id="ex.sort.price" />}
-                          classNameDropdownToggle="dropdown-sort bg-white"
+                          classNameDropdownToggle={`dropdown-sort bg-white ${sortIndexActive === CASH_SORTING_CRITERIA.PRICE ? 'dropdown-sort-selected' : ''}  `}
                           list={PRICE_SORTS}
                           onChange={this.onSortPriceChange}
                         />
