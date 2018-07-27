@@ -331,6 +331,7 @@ class DiscoverPage extends React.Component {
                 longitude={lng}
                 modalRef={this.modalRef}
                 offer={offer}
+                setLoading={this.setLoading}
               />
 
             </Col>
