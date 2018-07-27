@@ -101,9 +101,8 @@ class History extends React.Component {
     return (
       <Visibility once={true}>  
        <Segment vertical  id="segment-detail"> 
-              <h2 className="my-h2-dataset-new" style={{    marginBottom:'0px'}}>
-                My Datasets
-                <Link to={'/mine'}><Image src={closeTop} className="btn-Close-Top"/></Link>
+              <h2 className="my-h2-dataset-new" style={{marginBottom:'0px'}}>
+                My Datasets 
         </h2> 
          
               <Card.Group centered >  
@@ -119,7 +118,7 @@ class History extends React.Component {
               <Card.Group centered   style={{ marginTop:'-5px'}}> 
                 {this.state.datasets.map((item, i) => {
                   return (
-                    <Card key={i} className="my-card"  style={{ marginBottom: '1em'}}>
+                    <Card key={i} className="my-card"  style={{ marginBottom: '1.8em'}}>
                           <div style={{ padding:'10px', textAlign:'left', backgroundImage: (i%2==0 ? color1 : color2) }}>
                               <h4 style={{ margin:'5px 0px', color:'black'}}>{item.name}</h4>
                               <p  style={{ marginBottom:'0px'}}>{item.balance} DADI</p>
