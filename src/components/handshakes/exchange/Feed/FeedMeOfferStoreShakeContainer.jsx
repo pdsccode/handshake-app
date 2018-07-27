@@ -19,7 +19,7 @@ import { ExchangeCashHandshake } from '@/services/neuron';
 import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { getUserLocation, hideLoading, showAlert, showLoading } from '@/reducers/app/action';
+import { getUserLocation, showAlert } from '@/reducers/app/action';
 import { responseExchangeDataChange } from '@/reducers/me/action';
 import { Ethereum } from '@/services/Wallets/Ethereum.js';
 import { Bitcoin } from '@/services/Wallets/Bitcoin';
@@ -1012,8 +1012,6 @@ const mapState = state => ({
 
 const mapDispatch = ({
   showAlert,
-  showLoading,
-  hideLoading,
 
   reviewOffer,
 
