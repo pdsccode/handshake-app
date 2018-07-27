@@ -323,7 +323,7 @@ class Upload extends React.Component {
             <div className="row" style={{paddingTop:'0px',marginTop:'-4px'}}>
               <Dropdown
                 fluid
-                placeholder="Select category"
+                placeholder="Select dataset"
                 selection
                 search
                 onChange={(e, data) => this.handleSelectCategory(data.value)}

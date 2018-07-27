@@ -118,7 +118,7 @@ class DataExplore extends React.Component {
       const dataset = new Dataset();
       dataset.createFromWallet(MasterWallet.getWalletDefault('ETH'));
       // tx = await dataset.buy(this.state.selectedItem.id, (this.state.selectedItem.total_images/1000) + fee);
-      tx = await dataset.buy(this.state.selectedItem.id, 1);
+      tx = await dataset.buy(this.state.selectedItem.id,  ( Math.round((this.state.selectedItem.total_images/10000 + 0.005) * 10000) /10000  ) );
     } catch (e) {
       console.log(e);
       this.setState({ isLoading: false, open: false });
@@ -268,8 +268,8 @@ class DataExplore extends React.Component {
           <Confirm
             content={
               <div class='content'>
-                <h3>You want to buy this dataset?</h3>
-                <p>By click OK you will send ETH in your wallet to the DAD SmartContract address.</p>
+                <h3>Do you want to purchase this dataset?</h3>
+                <p>Please make sure you have enough ETH in your wallet to make the payment.</p>
               </div>
             }
             open={this.state.open}
