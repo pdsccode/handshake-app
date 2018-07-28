@@ -134,9 +134,11 @@ class Main extends React.PureComponent {
                     const { title, subTitle, img, to } = product
                     return (
                       <div className="col-12 col-sm-6 col-md-4 product" key={index}>
-                        <div><Link to={to}><img src={img} className="img-fluid" /></Link></div>
-                        <div className="landing-title my-1">{title}</div>
-                        <div className="landing-sub-title">{subTitle}</div>
+                        <Link to={to}>
+                          <div><img src={img} className="img-fluid" /></div>
+                          <div className="landing-title my-1">{title}</div>
+                          <div className="landing-sub-title">{subTitle}</div>
+                        </Link>
                       </div>
                     )
                   })
@@ -158,9 +160,11 @@ class Main extends React.PureComponent {
                     const { title, subTitle, img, to } = product
                     return (
                       <div className="col-12 col-sm-6 product" key={index}>
-                        <div><Link to={to}><img src={img} className="img-fluid" /></Link></div>
-                        <div className="landing-title my-1">{title}</div>
-                        <div className="landing-sub-title">{subTitle}</div>
+                        <Link to={to}>
+                          <div><img src={img} className="img-fluid" /></div>
+                          <div className="landing-title my-1">{title}</div>
+                          <div className="landing-sub-title">{subTitle}</div>
+                        </Link>
                       </div>
                     )
                   })

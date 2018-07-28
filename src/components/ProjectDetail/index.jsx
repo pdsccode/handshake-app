@@ -53,7 +53,7 @@ class Index extends React.PureComponent {
   render() {
     const { messages, locale } = this.props.intl;
     const {
-      name, img, imgContent, getEmail,
+      name, img, imgContent, getEmail, intl
     } = this.props;
     const { hasSubscribed } = this.state;
     const cta1 = messages[`landing_page.${name}.cta1`];
@@ -101,7 +101,7 @@ class Index extends React.PureComponent {
                             <Field
                               name="email"
                               className="form-control control-subscribe-email"
-                              placeholder="youremail@somecompany.com"
+                              placeholder={intl.formatMessage({ id: 'landing_page.detail.email_placeholder' })}
                               type="text"
                               validate={[required, email]}
                               component={fieldInput}
