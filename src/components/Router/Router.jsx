@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Switch, BrowserRouter, Route, Redirect } from 'react-router-dom';
 // constants
-import { URL } from '@/constants';
+import { URL, LANDING_PAGE_TYPE } from '@/constants';
 // services
 import BrowserDetect from '@/services/browser-detect';
 import { createDynamicImport } from '@/services/app';
@@ -70,15 +70,15 @@ let routesUsingDesktopLayout = null;
 if (BrowserDetect.isDesktop) {
   const configRoutesUsingDesktopLayout = [
     { path: URL.LUCKY_POOL, component: RouterLuckyPool },
-    { path: URL.PRODUCT_CASH_URL, render: () => <ProjectDetail name="cash" img={imgCash} imgContent={imgCashContent} /> },
-    { path: URL.PRODUCT_PREDICTION_URL, render: () => <ProjectDetail name="prediction" img={imgPrediction} /> },
-    { path: URL.PRODUCT_WALLET_URL, render: () => <ProjectDetail name="wallet" img={imgWallet} /> },
-    { path: URL.PRODUCT_HIVEPAY_OFFLINE_URL, render: () => <ProjectDetail name="hivepay-offline" img={imgInternetCash} /> },
-    { path: URL.PRODUCT_HIVEPAY_ONLINE_URL, render: () => <ProjectDetail name="hivepay-online" img={imgCash} /> },
-    { path: URL.RESEARCH_INTERNET_CASH_URL, render: () => <ProjectDetail name="internet-cash" img={imgInternetCash} /> },
-    { path: URL.PRODUCT_DAD_URL, render: () => <ProjectDetail name="dad" img={imgDad} imgContent={imgDadContent} /> },
-    { path: URL.RESEARCH_UNCOMMONS_URL, render: () => <ProjectDetail name="uncommons" img={imgUncommons} /> },
-    { path: URL.PRODUCT_WHISPER_URL, render: () => <ProjectDetail name="whisper" img={imgDad} /> },
+    { path: URL.PRODUCT_CASH_URL, render: () => <ProjectDetail type="product" name="cash" img={imgCash} imgContent={imgCashContent} /> },
+    { path: URL.PRODUCT_PREDICTION_URL, render: () => <ProjectDetail type="product" name="prediction" img={imgPrediction} /> },
+    { path: URL.PRODUCT_WALLET_URL, render: () => <ProjectDetail type="product" name="wallet" img={imgWallet} /> },
+    { path: URL.PRODUCT_HIVEPAY_OFFLINE_URL, render: () => <ProjectDetail type="product" name="hivepay-offline" img={imgInternetCash} /> },
+    { path: URL.PRODUCT_HIVEPAY_ONLINE_URL, render: () => <ProjectDetail type="product" name="hivepay-online" img={imgCash} /> },
+    { path: URL.RESEARCH_INTERNET_CASH_URL, render: () => <ProjectDetail type="research" name="internet-cash" img={imgInternetCash} /> },
+    { path: URL.PRODUCT_DAD_URL, render: () => <ProjectDetail type="product" name="dad" img={imgDad} imgContent={imgDadContent} /> },
+    { path: URL.RESEARCH_UNCOMMONS_URL, render: () => <ProjectDetail type="research" name="uncommons" img={imgUncommons} /> },
+    { path: URL.PRODUCT_WHISPER_URL, render: () => <ProjectDetail type="product" name="whisper" img={imgDad} /> },
   ];
   routesUsingDesktopLayout = configRoutesUsingDesktopLayout.map(route => (
     <Route
@@ -126,8 +126,8 @@ class Router extends React.Component {
       <BrowserRouter>
         <Switch>
           <Route exact path={URL.INDEX} component={RouterLandingPageMain} />
-          <Route path={URL.PRODUCT_URL} render={() => <LandingPageMain type="product" />} />
-          <Route path={URL.RESEARCH_URL} render={() => <LandingPageMain type="research" />} />
+          <Route path={LANDING_PAGE_TYPE.product.url} render={() => <LandingPageMain type="product" />} />
+          <Route path={LANDING_PAGE_TYPE.research.url} render={() => <LandingPageMain type="research" />} />
           {routesUsingDesktopLayout}
           <Route
             path={URL.INDEX}

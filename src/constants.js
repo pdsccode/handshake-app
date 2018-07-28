@@ -507,11 +507,11 @@ export const URL = {
   WHITE_PAPER: '/whitepaper',
   WHITE_PAPER_INDEX: '/whitepaper',
 
-  INTRODUCING_NINJA_CASH: '/introducing-ninja-cash',
-  ABOUT_NINJA_CASH: '/about-ninja-cash',
+  // INTRODUCING_NINJA_CASH: '/introducing-ninja-cash',
+  // ABOUT_NINJA_CASH: '/about-ninja-cash',
 
-  PRODUCT_URL: '/product',
-  RESEARCH_URL: '/research',
+  // PRODUCT_URL: '/product',
+  // RESEARCH_URL: '/research',
 
   PRODUCT_CASH_URL: '/cash',
   PRODUCT_PREDICTION_URL: '/prediction',
@@ -523,6 +523,18 @@ export const URL = {
   RESEARCH_UNCOMMONS_URL: '/uncommons',
   PRODUCT_WHISPER_URL: '/whisper',
 };
+
+export const LANDING_PAGE_TYPE = {
+  product: {
+    text: 'Product',
+    url: '/product',
+  },
+  research: {
+    text: 'Research',
+    url: '/research',
+  },
+}
+
 
 export const NB_BLOCKS = 20;
 

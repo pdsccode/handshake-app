@@ -6,7 +6,7 @@ import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl'
 import { setLanguage } from '@/reducers/app/action';
 // import VideoYoutube from '@/components/core/controls/VideoYoutube';
 import { Link } from 'react-router-dom';
-import { URL } from '@/constants';
+import { LANDING_PAGE_TYPE } from '@/constants';
 
 // style
 import imgNinja from '@/assets/images/ninja/ninja-header-black.svg';
@@ -41,8 +41,8 @@ class Index extends React.PureComponent {
     const logo = <a href="/" className="d-inline-block mt-1"><img src={imgNinja} width="100" /></a>;
     const navLinks = (
       <span>
-        <span><Link className={`${type === 'product' ? 'active' : ''} landing-nav-link`} to={URL.PRODUCT_URL}>Product</Link></span>
-        <span><Link className={`${type === 'research' ? 'active' : ''} landing-nav-link`} to={URL.RESEARCH_URL}>Research</Link></span>
+        <span><Link className={`${type === 'product' ? 'active' : ''} landing-nav-link`} to={LANDING_PAGE_TYPE.product.url}>Product</Link></span>
+        <span><Link className={`${type === 'research' ? 'active' : ''} landing-nav-link`} to={LANDING_PAGE_TYPE.research.url}>Research</Link></span>
       </span>
     )
     const btnJoin = <a className="btn btn-primary-landing" href="https://www.autonomous.ai/talents"><FormattedMessage id="landing_page.btn.joinOurTeam" /></a>
