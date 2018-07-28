@@ -35,5 +35,10 @@
   }
   .product {
     min-height: 394px;
+    a {
+      &:hover {
+        text-decoration: none;
+      }
+    }
   }
 }
