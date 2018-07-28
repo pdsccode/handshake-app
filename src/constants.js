@@ -522,6 +522,8 @@ export const URL = {
   PRODUCT_DAD_URL: '/dad',
   RESEARCH_UNCOMMONS_URL: '/uncommons',
   PRODUCT_WHISPER_URL: '/whisper',
+
+  RECRUITING: '/recruiting',
 };
 
 export const LANDING_PAGE_TYPE = {
