@@ -524,8 +524,7 @@ class DataDetail extends React.Component {
             confirmButton={<Button positive  loading={this.state.isLoading} style={{padding: '10px 32px' ,width: 'auto', height: 'auto' }}>OK</Button>}
             cancelButton={<Button positive style={{background: 'none',color:'#333',fontWeight:'500'}}>Cancel</Button>}
           />
-        </Segment>
-        <Segment vertical loading={this.state.isLoading}/>
+        </Segment> 
       </Visibility>
 
     )

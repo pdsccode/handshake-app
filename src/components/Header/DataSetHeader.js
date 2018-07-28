@@ -192,7 +192,7 @@ class MobileContainer extends React.Component {
       calculations: {
         direction: 'none',
       },
-      go_url:"",
+      go_url:null,
       uploadModalOpen:false,
       isLoading: false,
       results:[],
@@ -205,11 +205,23 @@ class MobileContainer extends React.Component {
   resetComponent = () => this.setState({ isLoading: false, results: [], value: '' })
 
   handleResultSelect = (e, { result }) => {
-    this.setState({ value: result.title })
+    this.setState({ value:''})
     //window.location.href = '/cat/' + result.id
     //this.props.history.push("/explore/"+result.id)
-    history.push("/explore/"+result.id);
+    //history.push("/explore/"+result.id);
     //this.props.history.push(URL.HANDSHAKE_ME);
+    //this.props.history.push('/path')  
+    var temp = "/explore/"+result.id;
+    setTimeout(
+      function() {
+        this.setState({ go_url: null }) ;
+      }
+      .bind(this),200
+     );
+    if(this.props.location.pathname != temp ){ 
+       this.setState({ go_url: temp  })
+       this.resetComponent();
+    } 
   }
 
   handleSearchDebounced = _.debounce((value) => {
@@ -273,6 +285,10 @@ class MobileContainer extends React.Component {
   }
   componentDidMount() {
     console.log(this.props);
+    if(this.state.go_url !=null && this.props.location.pathname ==this.state.go_url ){  
+      this.setState({ go_url: null })
+    }
+
   }
   //handleItemClick = (e, {name}) => this.setState({activeItem: name})
 
@@ -286,9 +302,12 @@ class MobileContainer extends React.Component {
     return (
       <Responsive {...Responsive.onlyMobile}>
         <Visibility onUpdate={this.handleUpdate} once={false}  >
+        
         {this.props.app.showSearchBar? 
             <Menu  icon  className="ui fluid five item menu fixed" id="head-searchbox">
-            
+               {this.state.go_url ? 
+                <Redirect to={this.state.go_url}  />: ''
+               }
                <Search
                       input={{ icon: <WrapIconSearch icon={iosSearch}/>, iconPosition: 'left', placeholder:'Search dataset you want to explore' }}
                       fluid

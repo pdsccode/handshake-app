@@ -159,17 +159,18 @@ class DataExplore extends React.Component {
   }
 
   handleUpdate = (e, {calculations}) => {
-    let self = this;
-    this.setState({calculations})
-    if (calculations.direction === "down" & calculations.percentagePassed > 0.3) {
+    this.setState({calculations});
+
+    let self = this; 
+    if (calculations.direction === "down" && calculations.percentagePassed > 0.3) {
       if (!!this.state.nextURL && this.state.isLoading == false) {
         this.setState({isLoading: true})
         agent.req.get(this.state.nextURL).then((response) => {
           let resBody = response.body;
           this.setState({isLoading: false})
           if (resBody.next != self.state.nextURL) {
-            let newData = this.state.images.concat(resBody.results)
-            this.setState({images: newData, nextURL: resBody.next})
+            let newData = this.state.categories.concat(resBody.results)
+            this.setState({categories: newData, nextURL: resBody.next})
           }
         }).catch((e) => {
         })

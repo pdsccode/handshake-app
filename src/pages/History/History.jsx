@@ -32,14 +32,19 @@ class History extends React.Component {
     this.state = {
       auth: props.auth || {},
       isLoading: false,
+      isLoadingbtn:false,
       datasets: [],
-      balance: 0
+      balance: 0,
+      open:false,
     };
     this.dataset = new Dataset();
     this.dataset.createFromWallet(MasterWallet.getWalletDefault('ETH'));
     this.withdraw = this.withdraw.bind(this);
     this.getBalance = this.getBalance.bind(this);
   }
+
+  show = () => () => this.setState({ open: true })
+  close = () => this.setState({ open: false })
 
   getDataSetProfile = () => this.state.auth?.dataset_profile || {};
 
@@ -65,13 +70,19 @@ class History extends React.Component {
   }
 
   async withdraw() {
-    this.setState({isLoading: true});
+
+    //Thanks! ... Minimum Ethereum withdrawal amount is 0.1006 ETH
+    if(this.state.balance < 0.05){
+      this.setState({ open: true })
+      return;
+    }
+    this.setState({isLoading: true,isLoadingbtn:true});
     try {
       await this.dataset.withdraw();
-      this.setState({isLoading: false});
+      this.setState({isLoading: false,isLoadingbtn:false});
     } catch (e) {
       console.log('cannot withdraw', e);
-      this.setState({isLoading: false});
+      this.setState({isLoading: false,isLoadingbtn:false});
     }
   }
 
@@ -117,7 +128,7 @@ class History extends React.Component {
                             </div>
                     </Grid.Column>
                     <Grid.Column width={3}>
-                    <Button size="mini" color='green' content='Withdraw' style={{ marginTop:'16px',marginLeft:'4px'}} onClick={this.withdraw}  ></Button>
+                    <Button size="mini" color='green'  loading={this.state.isLoadingbtn}  content='Withdraw' style={{ marginTop:'16px',marginLeft:'4px',width: 'auto', height: 'auto' }} onClick={this.withdraw}  ></Button>
                     </Grid.Column>
                   </Grid>
                   <hr className="history-hr"/>  
@@ -141,8 +152,22 @@ class History extends React.Component {
                   )
                 })}
               </Card.Group> 
-      </Segment>
-      <Segment vertical loading={this.state.isLoading}/>
+      </Segment> 
+      <Segment vertical loading={this.state.isLoading}>
+          <Confirm
+            content={
+              <div class='content'> 
+                <p style={{lineHeight:'1.6em'}}>Thanks! ...</p>
+                <p style={{lineHeight:'1.6em'}}>Minimum Ethereum withdrawal amount is 0.05 ETH</p>
+              </div>
+            }
+            open={this.state.open} 
+            onConfirm={this.close}
+            confirmButton={<Button positive loading={this.state.isLoading} style={{padding: '10px 32px',width: 'auto', height: 'auto' }}>OK</Button>}
+            cancelButton={null}
+          />
+        </Segment>
+
     </Visibility>
     );
   }
