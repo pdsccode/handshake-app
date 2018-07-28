@@ -1,0 +1,13 @@
+.recruiting {
+  .recruiting-category-item {
+    padding: 8px;
+    margin-bottom: 5px;
+    font-weight: 400;
+    font-size: 16px;
+    cursor: pointer;
+    &.active {
+      background: url('https://d2q7nqismduvva.cloudfront.net/static/images/icon-png-jpg/arrow-active.png') no-repeat center top;
+      background-size: 100% 100%;
+    }
+  }
+}
