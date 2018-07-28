@@ -104,7 +104,7 @@ export default {
   'ex.discover.label.priceSell': 'SELL',
   'ex.discover.label.reviews': '({reviewCount})',
   'ex.discover.banner.text': 'Got coins? Turn them into a money-making machine.',
-  'ex.discover.banner.btnText': 'BECOME A LOCAL EXCHANGE',
+  'ex.discover.banner.btnText': 'BECOME A STATION',
   'ex.discover.shakeDetail.label.amount': 'Amount',
   'ex.discover.shakeDetail.label.total': 'Total',
   'ex.discover.shakeDetail.label.maximum': 'Maximum:',
@@ -214,8 +214,8 @@ export default {
   'ex.earlyBird.label.2': 'Create your station with <br /><span class="intro-amount">{freeETH} ETH</span> free now!',
   'ex.earlyBird.btn': 'Open Station',
 
-  'ex.seo.title': 'Ninja: the anonymous exchange of anything.',
-  'ex.seo.meta.description': 'Swap coin for cash in your local neighborhood. Trade predictions on anything, anywhere, with anyone. No downloads, no sign ups. 100% anonymous.',
+  // 'ex.seo.title': 'Ninja: the anonymous exchange of anything.',
+  // 'ex.seo.meta.description': 'Swap coin for cash in your local neighborhood. Trade predictions on anything, anywhere, with anyone. No downloads, no sign ups. 100% anonymous.',
 
   'error.required': 'Required',
   'error.requiredOne': 'You need to fill in one of these!',
@@ -261,6 +261,14 @@ export default {
   'ex.about.label.medium': 'Medium',
   'ex.about.label.github': 'Github',
   'ex.about.label.twitter': 'Twitter',
+  'ex.discover.label.sortby': 'Sort by:',
+  'ex.sort.distance': 'Distance',
+  'ex.sort.price': 'Best Price',
+  'ex.sort.rating': 'Rating',
+  'ex.sort.price.buy.btc': 'Buy BTC',
+  'ex.sort.price.sell.btc': 'Sell BTC',
+  'ex.sort.price.buy.eth': 'Buy ETH',
+  'ex.sort.price.sell.eth': 'Sell ETH',
   product_info: 'Ninja is open-source, decentralized software that never holds your funds. By freely choosing to use Ninja, the user accepts sole responsibility for their behavior and agrees to abide by the legalities of their governing jurisdiction. Ninja cannot be liable for legal, monetary or psychological damages should you do something stupid. Never invest more than you are willing to lose. Play safe!',
 
   // FAQ
@@ -350,9 +358,111 @@ export default {
     },
   ],
 
+  // Landing Page
+  'landing_page.btn.joinOurTeam': 'Join our team',
+  'landing_page.btn.goToLandingPage': 'Go to landing page',
+
+  'landing_page.header.product': 'PRODUCT',
+  'landing_page.subHeader.product': 'Ninja builds applications and protocols for the new decentralized Internet.',
+  'landing_page.detail.thanksForSubscribing': 'Thank you for subscribing!',
+  'landing_page.detail.email_placeholder': 'Your email address',
+
+  'landing_page.products.cash.title': 'Cash',
+  'landing_page.products.cash.subTitle': 'Buy crypto with cash. Secure, anonymous, easy.',
+  'landing_page.products.prediction.title': 'Prediction',
+  'landing_page.products.prediction.subTitle': 'Bet on anything against anyone, anywhere. Guaranteed payout. Your odds. 100% anonymous.',
+  'landing_page.products.wallet.title': 'Wallet',
+  'landing_page.products.wallet.subTitle': 'A decentralized cryptocurrency wallet. No downloads. No sign ups.',
+  'landing_page.products.hivepay-offline.title': 'Hivepay offline',
+  'landing_page.products.hivepay-offline.subTitle': 'Seamlessly integrate cryptocurrency payments into your offline business.',
+  'landing_page.products.hivepay-online.title': 'Hivepay online',
+  'landing_page.products.hivepay-online.subTitle': 'Connect your e-commerce business with a truly borderless payment network.',
+  'landing_page.products.dad.title': 'Decentralized Autonomous Dataset',
+  'landing_page.products.dad.subTitle': 'Building decentralized datasets to advance AI.',
+  'landing_page.products.whisper.title': 'Whisper',
+  'landing_page.products.whisper.subTitle': 'The new mailbox for the new internet',
+
+  'landing_page.header.research': 'RESEARCH',
+  'landing_page.subHeader.research': 'Ninja conducts fundamental research toward the creation of the new internet.',
+
+  'landing_page.researches.uncommons.title': 'Uncommons',
+  'landing_page.researches.uncommons.subTitle': 'The people\'s blockchain',
+
+  'landing_page.researches.internetCash.title': 'Internet Cash',
+  'landing_page.researches.internetCash.subTitle': 'The Internet deserves to have its own native currency.',
+
+  'landing_page.label.footer': `Building blockchain powered apps, tools and solutions for the new wild west world web. Join the dojo: <a href="https://t.me/ninja_org" class="landing-link">t.me/ninja_org</a>`,
+  'landing_page.label.joinTelegram': `Join the dojo on <a href="https://t.me/ninja_org" class="landing-link">Telegram</a>`,
+  // 'landing_page.label.airdrop': `Jump in for <a href="#" class="landing-link">Airdrop</a>`,
+  'landing_page.label.whitepaper': `Jump in for <a href="https://medium.com/@ninjadotorg/shakeninja-bex-1c938f18b3e8" class="landing-link">Whitepaper</a>`,
+  // 'landing_page.label.faq': `We answered your <a href="#" class="landing-link">FAQ</a>`,
+
+  // 'landing_page.breadcrumb.home': 'Home',
+
+  'landing_page.cash.breadcrumb': 'Cash',
+  'landing_page.cash.heading': 'Buy crypto with cash. Secure, anonymous, easy.',
+  'landing_page.cash.subHeading': 'Ninja Cash is a decentralized peer to peer (P2P) cryptocurrency exchange that allows users to trade ETH and BTC for cash. Anonymous and immediate: no signup, no ID verification. Blockchain secured and fraud proof.',
+  'landing_page.cash.cta1': 'Trade now on your phone',
+  'landing_page.cash.cta1_url': 'https://ninja.org/cash',
+  'landing_page.cash.cta2': 'Get free gifts',
+  'landing_page.cash.cta2_url': 'https://t.me/ninjacash',
+  'landing_page.cash.youtubeVideoId': 'xCU5puuwros',
+
+  'landing_page.prediction.breadcrumb': 'Prediction',
+  'landing_page.prediction.heading': 'Bet on anything against anyone, anywhere. Guaranteed payout. Your odds. 100% anonymous.',
+  'landing_page.prediction.subHeading': 'You create the bets, set the odds, and play directly with other parties. Bet with blockchain technology to bypass the bookies and the books - take down the house and make your own luck.',
+  'landing_page.prediction.cta1': 'Claim your free bet on mobile',
+  'landing_page.prediction.cta1_url': 'https://ninja.org/prediction',
+  'landing_page.prediction.cta2': 'Join our dojo',
+  'landing_page.prediction.cta2_url': 'https://t.me/ninja_org',
+  'landing_page.prediction.youtubeVideoId': '-YYp9yW4RDQ',
+
+  'landing_page.wallet.breadcrumb': 'Wallet',
+  'landing_page.wallet.heading': 'A decentralized cryptocurrency wallet. No downloads. No sign ups.',
+  'landing_page.wallet.subHeading': 'A decentralized cryptocurrency wallet and payment gateway that will allow both businesses and users to easily store and use multiple cryptocurrencies for payments.',
+  'landing_page.wallet.cta1': 'Create your wallet',
+  'landing_page.wallet.cta1_url': 'https://ninja.org/wallet',
+  'landing_page.wallet.youtubeVideoId': '',
+
+  'landing_page.hivepay-offline.breadcrumb': 'Hivepay Offline',
+  'landing_page.hivepay-offline.heading': 'Seamlessly integrate cryptocurrency payments into your offline business.',
+  'landing_page.hivepay-offline.subHeading': 'Allow your offline customers to pay for goods and services in cryptocurrency, just by scanning a QR code. Give the millions of people who own crypto somewhere to spend it.',
+  // 'landing_page.hivepay-offline.cta1': '',
+  // 'landing_page.hivepay-offline.cta2': '',
+  // 'landing_page.hivepay-offline.youtubeVideoId': '',
+
+  'landing_page.hivepay-online.breadcrumb': 'Hivepay Online',
+  'landing_page.hivepay-online.heading': 'Connect your e-commerce business with a truly borderless payment network.',
+  'landing_page.hivepay-online.subHeading': 'Millions of people are looking to spend their cryptocurrency in a secure, convenient way. Bring the currency of the future into your online store today and stop relying on the sluggish banking industry. No wait times, no bank charges, no card fees.',
+  // 'landing_page.hivepay-online.cta1': '',
+  // 'landing_page.hivepay-online.cta2': '',
+  // 'landing_page.hivepay-online.youtubeVideoId': '',
+
+
+  'landing_page.internet-cash.breadcrumb': 'Internet Cash',
+  'landing_page.internet-cash.heading': 'The Internet deserves to have its own native currency.',
+  'landing_page.internet-cash.subHeading': 'While Bitcoin emerges as a powerful currency, it fails to be the everyday currency.  Bitcoin will never be the currency that you can use to pay for coffee or buy a t-shirt.  This project aims to build a new kind of cryptocurrency that behaves like cash in everyday life.',
+  'landing_page.internet-cash.textEmail': 'Be the first to know when we launch',
+
+  'landing_page.dad.breadcrumb': 'Decentralized Autonomous Dataset',
+  'landing_page.dad.heading': 'Building decentralized datasets to advance AI.',
+  'landing_page.dad.subHeading': 'Today big data is controlled by a handful of corporations - limiting access to people who need it to develop AI, while the people who contribute the data see no rewards. DAD will enable anyone who wants to build AI programs access to big data and reward the users who contribute.',
+  'landing_page.dad.textEmail': 'I want to buy big data',
+
+  'landing_page.uncommons.breadcrumb': 'Uncommons',
+  'landing_page.uncommons.heading': 'The people\'s blockchain',
+  'landing_page.uncommons.subHeading': 'No token tricks, no gas fees and no exclusive parties. Help build a blockchain where anyone can develop, use and explore for free. The new internet should belong to you.',
+  'landing_page.uncommons.textEmail': 'Be an uncommoner.',
+  'landing_page.uncommons.btnSubmitEmail': 'Show me how',
+
+  'landing_page.whisper.breadcrumb': 'Whisper',
+  'landing_page.whisper.heading': 'The new mailbox for the new internet',
+  'landing_page.whisper.subHeading': 'An alternative messaging system in this era of surveillance. End-to-end encrypted, anonymous conversations between you and your world. No downloads, sign ups, or subscriptions. Now you can control who\'s listening.',
+  'landing_page.whisper.cta1': 'Check it out',
+  'landing_page.whisper.cta1_url': 'https://ninja.org/whisper',
+
   // MobileOrTablet components
   MOT_TITLE: 'The anonymous exchange of anything',
-  MOT_CONTENT_0: 'The Ninja network is only accessible via mobile.',
   MOT_CONTENT_1: 'Open',
   MOT_CONTENT_2: 'on your mobile browser to gain anonymous entry.',
   MOT_CONTENT_3: 'No download needed. No sign up required.',
@@ -378,7 +488,7 @@ export default {
 
   // landing page --> /coin-exchange
   COIN_EXCHANGE_LP_FAQ_TITLE: 'Frequently asked questions',
-  COIN_EXCHANGE_LP_FAQ: [
+  'landing_page.cash.faq': [
     {
       question: 'What is Ninja Cash?',
       answer: 'Ninja Cash is a peer-to-peer decentralized exchange in which people can easily exchange cryptocurrency for cash. We want to make sure that traders are able to set up their own stations and make their own prices - not having to rely on market prices to buy and sell cryptocurrency.',
@@ -442,6 +552,125 @@ export default {
     {
       question: 'How can I make sure my coin is transferred to me after I give the other ninja cash?',
       answer: 'Once a seller approves the transaction under the buyer\'s eagle eye, the cryptocurrency will be released from Escrow and into your wallet.',
+    }
+  ],
+  'landing_page.prediction.faq': [
+    {
+      question: 'What is Ninja PEX?',
+      answer: 'Ninja is an anonymous peer-to-peer decentralized prediction exchange running on top of the Ethereum blockchain.',
+    },
+    {
+      question: 'What’s special about PEX? Why should i bet on one?',
+      answer: 'It allows parties to directly bet against each other without going through a central authority or bookmaker. This makes it 100% anonymous, no signs up no downloads required. The management of bets and the settlement of winnings are carried out collectively by the blockchain network, protecting users from any single point of failure. You can also create your own prediction markets.',
+    },
+    {
+      question: 'Do I need Ether? Does it support other cryptocurrencies?',
+      answer: 'Yes. Ninja only accepts ETH for now, but support will be added for other currencies very soon.',
+    },
+    {
+      question: 'How do I start with Ninja?',
+      answer: (
+        <div>
+          <div>– Get Ether:</div>
+          <div>You can either buy ETH directly in PEX with your credit cards or from popular coin exchanges like Coinbase or Binance.</div>
+          <br />
+          <div>– Top up your PEX Wallet: </div>
+          <div>Transfer the ETH into the PEX Wallet. PEX Wallet is completely decentralized, the private key is held on your phone, only you can transfer and receive ETH.</div>
+          <br />
+          <div>– Place a bet: </div>
+          <div>Pick the market you want to bet (i.e. Brazil - Spain), the outcomes (i.e. Brazil wins) and the site (i.e. support or bet against the outcome)</div>
+          <div>Enter the stake you want to bet (i.e. 1 ETH) and the odds (i.e. 1/ 2.25)</div>
+          <div>The BEX Matching Engine will then find another order that bets against the odds you set.</div>
+          <br />
+          <div>– Wait for the report: if you win, your winnings will be automatically transferred from the escrow smart contract to your account.</div>
+        </div>
+      ),
+    },
+    {
+      question: 'Can I set my own preferred odds? How?',
+      answer: 'Yes! When creating your own bet, you’ll enter the event you’re interested in and the outcome you want to bet on. Then, simply enter your stake and the odds you want. Then the PEX Engine will automatically find and match you with anyone that has an interest in the same event, and who accepts your odds.',
+    },
+    {
+      question: 'How do you police unsavory/illegal bets?',
+      answer: 'We are currently building a system of checks and balances to flag up inappropriate behaviour in the dojo.',
+    },
+    {
+      question: 'How does the system know the result of bets between people? Who acts as arbitrator and verifies one outcome vs. another at conclusion of contract?',
+      answer: 'Ninja will soon have a completely decentralized solution for verifying the outcome and incentivizing truth telling (a DAO of reporters!). In the meantime, as we will launch just in time for the FIFA world cup, our team will use a public source (livescore.com) and act as the reporter.',
+    },
+    {
+      question: 'Where is the coin held?',
+      answer: 'No one holds the funds. All the funds are kept safe in escrow until a resolution is reached.',
+    },
+    {
+      question: 'Why should I bet on blockchain instead of using traditional methods?',
+      answer: 'A decentralized prediction exchange will provide you the freedom to create your own odds and bet directly with anyone, offer you 100% ninja anonymity and guaranteed payouts.',
+    },
+    {
+      question: 'How about privacy and anonymity?',
+      answer: 'Ninja requires no downloads, and no sign ups. That means no passwords, no phone numbers and no emails. 100% anonymity.',
+    },
+    {
+      question: 'Do I need to pay any fees?',
+      answer: 'There are two main types of fees: creator fees (for the ninja that creates the bet) and the network fee (a percentage of the creator fee, that goes towards maintaining the platform).',
+    },
+    {
+      question: 'What do I need to do when the outcome is finalized?',
+      answer: 'Nothing. If you win, your winnings will be automatically transferred to your account. If you lose, it will be someone else’s account.',
+    },
+    {
+      question: 'Where can I find a match to bet on?',
+      answer: 'On the homepage, you’ll be able to browse ongoing bets and markets. If you can’t find any you like, create your own!',
+    },
+    {
+      question: 'Other than sports, can I bet on anything else? How does it work?',
+      answer: 'Very soon, Ninja will apply to everything under the sun. The only limitation will be your creativity. You can easily create any market on any future event, be it sports, politics, science, markets, climate… you name it.',
+    },
+    {
+      question: 'What’s gonna happen to the Handshake mobile app?',
+      answer: 'We will be integrating Handshake (and your favourite features like promises, IOUs, contract upload, etc.) into the Ninja mobile website.',
+    }
+  ],
+  'landing_page.dad.faq': [
+    {
+      question: 'What is the DAD?',
+      answer: 'The DAD or the Decentralized Autonomous Dataset is a crowdsourcing initiative, with the aim to collect data and reward users through blockchain incentives. We believe that this will be a positive step towards advancing AI, breaking barriers when it comes to Big Data.',
+    },
+    {
+      question: 'How does it work?',
+      answer: <span>Anyone can contribute their images to the DAD. <br/>All you need to do is join the platform, upload your photos, and any tags that will help to identify what they are, location etc.<br /><br />If you see a photo and you know where it was taken, or can add more information then just tag the image.</span>,
+    },
+    {
+      question: 'Can anyone buy datasets from DAD?',
+      answer: 'Yes, our datasets are available to everyone.',
+    },
+    {
+      question: 'How are the profits distributed to the people who contribute?',
+      answer: '10% of all profits will be kept for further development of the DAD platform. The remaining 90% of the profits will be evenly distributed to all the users that contributed to the dataset.',
+    },
+    {
+      question: 'Can I track who has purchased my data?',
+      answer: 'The DAD is built on top of Ethereum’s blockchain, this means that all transactions are public. You will be able to track your own data, and see who has purchased the datasets.',
+    },
+    {
+      question: 'How can I contribute data to the DAD?',
+      answer: 'All you need to do is go to our app and start contributing which every data you like, the more information (location, colour, etc) the better. We want to create decentralized datasets that are constantly growing and evolving.',
+    },
+    {
+      question: 'How will the DAD benefit AI technology?',
+      answer: 'AI needs data. Currently, there are only a few corporations that have access to the kind of big data that is needed for AI technology to learn and grow. We aim to solve this global issue by creating decentralized autonomous datasets that anyone will have access too.',
+    },
+    {
+      question: 'How do I receive my payout from contributing data?',
+      answer: 'You will automatically receive payout via your ETH address.',
+    },
+    {
+      question: 'You don’t have the dataset I need, can you create one?',
+      answer: 'Yes, all you need to do is put in a request for a specific dataset and we will begin to curate that dataset.',
+    },
+    {
+      question: 'Once you have my data, do you have it forever?',
+      answer: 'Yes all of the data that you contribute will be stored on the blockchain, this means it cannot be deleted. It also means that you will continue to receive payouts on DAD as long as your data is being sold.',
     }
   ],
   COIN_EXCHANGE_LP_TRADE_EASY_TRADE_SAFE: {
@@ -580,6 +809,11 @@ export default {
   discover: {
     noDataMessageCash: 'No stations near you yet. Be the first.',
     noDataMessageSwap: 'No vendors near you yet. Be the first',
+    feed: {
+      cash: {
+
+      }
+    }
   },
 
   wallet: {

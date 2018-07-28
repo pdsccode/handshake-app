@@ -46,6 +46,7 @@ import Modal from '@/components/core/controls/Modal/Modal';
 import BackupWallet from '@/components/Wallet/BackupWallet/BackupWallet';
 import RestoreWallet from '@/components/Wallet/RestoreWallet/RestoreWallet';
 import { FormattedMessage } from 'react-intl';
+import loadingSVG from '@/assets/images/icon/loading.gif';
 
 const TAG = 'Me';
 const maps = {
@@ -120,6 +121,7 @@ class Me extends React.Component {
       handshakeIdActive: handshakeDefault,
       firstTime: true,
       me: this.props.me,
+      isLoading: false,
     };
   }
 
@@ -218,6 +220,10 @@ class Me extends React.Component {
       handshakeIdActive: handshakeDefault,
       firstTime: true,
     });
+  }
+
+  setLoading = (loadingState) => {
+    this.setState({ isLoading: loadingState });
   }
 
   setOfflineStatus = (online) => {
@@ -370,128 +376,134 @@ class Me extends React.Component {
     const { authProfile } = this.props;
 
     return (
-      <Grid className="me">
-        <Row>
-          <Col md={12}>
-            <Link className="update-profile" to={URL.HANDSHAKE_ME_PROFILE} title="profile">
-              <Image className="avatar" src={AvatarSVG} alt="avatar" />
-              <div className="text">
-                <strong>{messages.me.feed.profileTitle}</strong>
-                <p>{messages.me.feed.profileDescription}</p>
-              </div>
-              <div className="arrow">
-                <Image src={ExpandArrowSVG} alt="arrow" />
-              </div>
-            </Link>
-          </Col>
-        </Row>
-        <Row onClick={!haveOffer ? this.handleCreateExchange : undefined}>
-          <Col md={12}>
-            <div className="update-profile pt-2">
-              <Image className="avatar" src={ShopSVG} alt="shop" />
-              <div className="text" style={{ width: '69%' }}>
-                <strong>{messages.me.feed.shopTitle}</strong>
-                {haveOffer ?
-                  (<p>{messages.me.feed.shopDescription}</p>) :
-                  (<p>{messages.me.feed.shopNoDataDescription}</p>)
+      <React.Fragment>
+        <div className={`discover-overlay ${this.state.isLoading ? 'show' : ''}`}>
+          <Image src={loadingSVG} alt="loading" width="100" />
+        </div>
+        <Grid className="me">
+          <Row>
+            <Col md={12}>
+              <Link className="update-profile" to={URL.HANDSHAKE_ME_PROFILE} title="profile">
+                <Image className="avatar" src={AvatarSVG} alt="avatar" />
+                <div className="text">
+                  <strong>{messages.me.feed.profileTitle}</strong>
+                  <p>{messages.me.feed.profileDescription}</p>
+                </div>
+                <div className="arrow">
+                  <Image src={ExpandArrowSVG} alt="arrow" />
+                </div>
+              </Link>
+            </Col>
+          </Row>
+          <Row onClick={!haveOffer ? this.handleCreateExchange : undefined}>
+            <Col md={12}>
+              <div className="update-profile pt-2">
+                <Image className="avatar" src={ShopSVG} alt="shop" />
+                <div className="text" style={{ width: '69%' }}>
+                  <strong>{messages.me.feed.shopTitle}</strong>
+                  {haveOffer ?
+                    (<p>{messages.me.feed.shopDescription}</p>) :
+                    (<p>{messages.me.feed.shopNoDataDescription}</p>)
+                  }
+                </div>
+                {haveOffer && (<div className="arrow">
+                  <ToggleSwitch defaultChecked={online} onChange={flag => this.setOfflineStatus(flag)} />
+                </div>)
                 }
               </div>
-              {haveOffer && (<div className="arrow">
-                <ToggleSwitch defaultChecked={online} onChange={flag => this.setOfflineStatus(flag)} />
-              </div>)
-              }
-            </div>
-          </Col>
-        </Row>
+            </Col>
+          </Row>
 
-        <div className="mt-2 mb-1">
-          <FormFilterFeeds>
-            <div className="d-table w-100">
-              <div className="d-table-cell"><label className="label-filter-by">{messages.me.feed.filterBy}</label></div>
-              <div className="d-table-cell">
-                <Field
-                  name="feedType"
-                  component={fieldRadioButton}
-                  type="tab-5"
-                  list={CATEGORIES}
-                  // validate={[required]}
-                  onChange={this.onCategoryChange}
-                />
-              </div>
-            </div>
-
-            { this.state.handshakeIdActive === HANDSHAKE_ID.EXCHANGE && (
-              <div>
-                <hr style={{ margin: '10px 0 5px' }} />
-                <div>
+          <div className="mt-2 mb-1">
+            <FormFilterFeeds>
+              <div className="d-table w-100">
+                <div className="d-table-cell"><label className="label-filter-by">{messages.me.feed.filterBy}</label></div>
+                <div className="d-table-cell">
                   <Field
-                    name="cash-show-type"
+                    name="feedType"
                     component={fieldRadioButton}
-                    type="tab-6"
-                    list={[
-                      { value: CASH_TAB.TRANSACTION, text: messages.me.feed.cash.transactions, icon: <span className="icon-transactions align-middle" /> },
-                      { value: CASH_TAB.DASHBOARD, text: messages.me.feed.cash.dashboard, icon: <span className="icon-dashboard align-middle" /> },
-                    ]}
+                    type="tab-5"
+                    list={CATEGORIES}
                     // validate={[required]}
-                    onChange={this.onCashTabChange}
+                    onChange={this.onCategoryChange}
                   />
                 </div>
               </div>
-              )
-            }
 
-          </FormFilterFeeds>
-        </div>
+              { this.state.handshakeIdActive === HANDSHAKE_ID.EXCHANGE && (
+                <div>
+                  <hr style={{ margin: '10px 0 5px' }} />
+                  <div>
+                    <Field
+                      name="cash-show-type"
+                      component={fieldRadioButton}
+                      type="tab-6"
+                      list={[
+                        { value: CASH_TAB.TRANSACTION, text: messages.me.feed.cash.transactions, icon: <span className="icon-transactions align-middle" /> },
+                        { value: CASH_TAB.DASHBOARD, text: messages.me.feed.cash.dashboard, icon: <span className="icon-dashboard align-middle" /> },
+                      ]}
+                      // validate={[required]}
+                      onChange={this.onCashTabChange}
+                    />
+                  </div>
+                </div>
+                )
+              }
 
-        <Row>
-          <Col md={12} className="me-main-container">
-            {
-            listFeed && listFeed.length > 0 ? (
-              listFeed.map((handshake) => {
-                  const FeedComponent = maps[handshake.type];
-                  if (FeedComponent) {
-                    if (handshake.offerFeedType === EXCHANGE_FEED_TYPE.OFFER_STORE_SHAKE &&
-                      handshake.status === HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.PRE_SHAKING &&
-                      handshake.initUserId === authProfile?.id
-                    ) {
-                      return null;
+            </FormFilterFeeds>
+          </div>
+
+          <Row>
+            <Col md={12} className="me-main-container">
+              {
+              listFeed && listFeed.length > 0 ? (
+                listFeed.map((handshake) => {
+                    const FeedComponent = maps[handshake.type];
+                    if (FeedComponent) {
+                      if (handshake.offerFeedType === EXCHANGE_FEED_TYPE.OFFER_STORE_SHAKE &&
+                        handshake.status === HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.PRE_SHAKING &&
+                        handshake.initUserId === authProfile?.id
+                      ) {
+                        return null;
+                      }
+                      return (
+                        <Col key={handshake.id} className="feed-wrapper">
+                          <FeedComponent
+                            {...handshake}
+                            history={this.props.history}
+                            onFeedClick={() => {}}
+                            onShowModalDialog={this.handleShowModalDialog}
+                            mode="me"
+                            refreshPage={this.loadMyHandshakeList}
+                            setLoading={this.setLoading}
+                          />
+                        </Col>
+                      );
                     }
-                    return (
-                      <Col key={handshake.id} className="feed-wrapper">
-                        <FeedComponent
-                          {...handshake}
-                          history={this.props.history}
-                          onFeedClick={() => {}}
-                          onShowModalDialog={this.handleShowModalDialog}
-                          mode="me"
-                          refreshPage={this.loadMyHandshakeList}
-                        />
-                      </Col>
-                    );
-                  }
-                  return null;
-                })
-              ) : this.state.handshakeIdActive === HANDSHAKE_ID.EXCHANGE && this.state.cashTab === CASH_TAB.DASHBOARD ? (
-                <div className="text-center">
-                  <p>{messages.me.feed.cash.stationExplain}</p>
-                  <p>{messages.me.feed.cash.stationCreateSuggest}</p>
-                  <button className="btn btn-primary btn-block" onClick={this.showRestoreWallet}>{messages.me.feed.cash.restoreStation}</button>
-                </div>
-              ) :
-              (
-                <NoData message={messages.me.feed.noDataMessage} isShowArrowDown />
-              )
-            }
-            {
-              listFeed && listFeed.length > 0 && this.state.handshakeIdActive === HANDSHAKE_ID.EXCHANGE && this.state.cashTab === CASH_TAB.DASHBOARD && (
-                <div className="text-center">
-                  <button className="btn btn-primary btn-block" onClick={this.showBackupWallet}>{messages.me.feed.cash.backupStation}</button>
-                  {haveOffer && (<button className="btn btn-link text-underline" onClick={this.handleUpdateExchange}><FormattedMessage id="ex.shop.dashboard.button.updateInventory" /></button>)}
-                </div>
-              )
-            }
-          </Col>
-        </Row>
+                    return null;
+                  })
+                ) : this.state.handshakeIdActive === HANDSHAKE_ID.EXCHANGE && this.state.cashTab === CASH_TAB.DASHBOARD ? (
+                  <div className="text-center">
+                    <p>{messages.me.feed.cash.stationExplain}</p>
+                    <p>{messages.me.feed.cash.stationCreateSuggest}</p>
+                    <button className="btn btn-primary btn-block" onClick={this.showRestoreWallet}>{messages.me.feed.cash.restoreStation}</button>
+                  </div>
+                ) :
+                (
+                  <NoData message={messages.me.feed.noDataMessage} isShowArrowDown />
+                )
+              }
+              {
+                listFeed && listFeed.length > 0 && this.state.handshakeIdActive === HANDSHAKE_ID.EXCHANGE && this.state.cashTab === CASH_TAB.DASHBOARD && (
+                  <div className="text-center">
+                    <button className="btn btn-primary btn-block" onClick={this.showBackupWallet}>{messages.me.feed.cash.backupStation}</button>
+                    {haveOffer && (<button className="btn btn-link text-underline" onClick={this.handleUpdateExchange}><FormattedMessage id="ex.shop.dashboard.button.updateInventory" /></button>)}
+                  </div>
+                )
+              }
+            </Col>
+          </Row>
+        </Grid>
         <Rate onRef={e => this.rateRef = e} startNum={5} onSubmit={this.handleSubmitRating} ratingOnClick={this.handleOnClickRating} />
         <ModalDialog onRef={(modal) => { this.modalRef = modal; return null; }} {...propsModal}>
           {modalContent}
@@ -504,7 +516,7 @@ class Me extends React.Component {
         <Modal title={messages.wallet.action.restore.header} onRef={modal => this.modalRestoreRef = modal}>
           <RestoreWallet />
         </Modal>
-      </Grid>
+      </React.Fragment>
     );
   }
 }

@@ -41,7 +41,7 @@ export const HANDSHAKE_ID_DEFAULT = 3;
 
 export const HANDSHAKE_NAME = {
   // [HANDSHAKE_ID.PROMISE]: { name: 'Promise', priority: 3 },
-  [HANDSHAKE_ID.BETTING]: { name: 'Predict an outcome', priority: 1 },
+  //[HANDSHAKE_ID.BETTING]: { name: 'Predict an outcome', priority: 1 },
   // [HANDSHAKE_ID.BETTING_EVENT]: { name: 'Design a betting market', priority: 2 },
   // [HANDSHAKE_ID.SEED]: 'Seed',
   [HANDSHAKE_ID.WALLET_TRANSFER]: { name: 'Transfer coins', priority: 4 },
@@ -49,6 +49,31 @@ export const HANDSHAKE_NAME = {
   [HANDSHAKE_ID.EXCHANGE]: { name: 'Manage your station', priority: 6 },
   // [HANDSHAKE_ID.EXCHANGE_LOCAL]: { name: 'Make swaps', priority: 7 },
   // UNSELECTED: { name: 'Create a prediction market', priority: 100 },
+};
+
+export const CASH_SORTING_CRITERIA = {
+  DISTANCE: 0,
+  PRICE: 1,
+  RATING: 2,
+};
+
+export const CASH_SORTING_LIST = [{
+  value: CASH_SORTING_CRITERIA.DISTANCE,
+  text: <FormattedMessage id="ex.sort.distance" />,
+},
+// {
+//   value: CASH_SORTING_CRITERIA.PRICE,
+//   text: <FormattedMessage id="ex.sort.price" />,
+// },
+{
+  value: CASH_SORTING_CRITERIA.RATING,
+  text: <FormattedMessage id="ex.sort.rating" />,
+},
+];
+
+export const SORT_ORDER = {
+  ASC: 'asc',
+  DESC: 'desc',
 };
 
 export const PRICE_DECIMAL = 0;
@@ -423,6 +448,10 @@ export const MIN_AMOUNT = {
   [CRYPTO_CURRENCY.BTC]: 0.001,
 };
 
+export const LOCATION_METHODS = {
+  GPS: 'G',
+  IP: 'I',
+};
 
 // API
 
@@ -435,6 +464,7 @@ export const URL = {
   INDEX: '/',
 
   ADMIN: '/admin',
+  REPORT: '/report',
   LUCKY_POOL: '/lucky',
   HANDSHAKE_ME: '/me',
   HANDSHAKE_ME_INDEX: '/me',
@@ -444,6 +474,8 @@ export const URL = {
   HANDSHAKE_DISCOVER: '/discover',
   HANDSHAKE_DISCOVER_INDEX: '/discover',
   HANDSHAKE_DISCOVER_DETAIL: '/discover/:slug',
+
+  HANDSHAKE_PREDICTION: '/prediction',
 
   HANDSHAKE_CASH: '/cash',
   HANDSHAKE_CASH_INDEX: '/cash',
@@ -472,18 +504,37 @@ export const URL = {
   LANDING_PAGE_SHURIKEN: '/shuriken',
   LANDING_PAGE_SHURIKEN_INDEX: '/shuriken',
 
-  LANDING_PAGE_TRADE: '/coin-exchange',
-  LANDING_PAGE_TRADE_INDEX: '/coin-exchange',
-
-  FAQ: '/faq',
-  FAQ_INDEX: '/faq',
-
   WHITE_PAPER: '/whitepaper',
   WHITE_PAPER_INDEX: '/whitepaper',
 
-  INTRODUCING_NINJA_CASH: '/introducing-ninja-cash',
-  ABOUT_NINJA_CASH: '/about-ninja-cash',
+  // INTRODUCING_NINJA_CASH: '/introducing-ninja-cash',
+  // ABOUT_NINJA_CASH: '/about-ninja-cash',
+
+  // PRODUCT_URL: '/product',
+  // RESEARCH_URL: '/research',
+
+  PRODUCT_CASH_URL: '/cash',
+  PRODUCT_PREDICTION_URL: '/prediction',
+  PRODUCT_WALLET_URL: '/wallet',
+  PRODUCT_HIVEPAY_OFFLINE_URL: '/hivepay-offline',
+  PRODUCT_HIVEPAY_ONLINE_URL: '/hivepay-online',
+  RESEARCH_INTERNET_CASH_URL: '/internet-cash',
+  PRODUCT_DAD_URL: '/dad',
+  RESEARCH_UNCOMMONS_URL: '/uncommons',
+  PRODUCT_WHISPER_URL: '/whisper',
 };
+
+export const LANDING_PAGE_TYPE = {
+  product: {
+    text: 'Product',
+    url: '/product',
+  },
+  research: {
+    text: 'Research',
+    url: '/research',
+  },
+}
+
 
 export const NB_BLOCKS = 20;
 

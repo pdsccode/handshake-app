@@ -13,6 +13,7 @@ import Router from '@/components/Router/Router';
 // chat
 import md5 from 'md5';
 import Firechat from '@/pages/Chat/Firechat';
+import _ from 'lodash';
 
 class Handle extends React.Component {
   static propTypes = {
@@ -78,20 +79,31 @@ class Handle extends React.Component {
 
   signInFirebase(cb) {
     const { profile, token } = this.props.auth;
+    if (_.isEmpty(profile) || _.isEmpty(token)) {
+      setTimeout(() => {
+        this.signInFirebase(cb);
+      }, 100);
+      return;
+    }
+    console.log('token', token, 'profile_id', profile.id);
     const username = `${md5(`${token}_${profile.id}`)}@handshake.autonomous.nyc`;
     const password = md5(token);
-    this.props.firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        if (cb) {
-          cb(user);
+
+    this.props.firebase.auth().signOut().then(() => {
+      this.props.firebase.auth().onAuthStateChanged((user) => {
+        console.log('auth change', user);
+        if (user) {
+          if (cb) {
+            cb(user);
+          }
         }
-      }
-    });
-    this.props.firebase.auth()
-      .signInWithEmailAndPassword(username, password)
-      .catch(() => {
-        this.props.firebase.auth().createUserWithEmailAndPassword(username, password);
       });
+      this.props.firebase.auth()
+        .signInWithEmailAndPassword(username, password)
+        .catch(() => {
+          this.props.firebase.auth().createUserWithEmailAndPassword(username, password);
+        });
+    });
   }
 
   notification() {
