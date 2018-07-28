@@ -12,7 +12,7 @@ import createForm from '@/components/core/form/createForm';
 import { fieldInput } from '@/components/core/form/customField';
 import { email, required } from '@/components/core/form/validation';
 import $http from '@/services/api';
-import { BASE_API } from '@/constants';
+import { BASE_API, LANDING_PAGE_TYPE } from '@/constants';
 import { Link } from 'react-router-dom';
 
 import './styles.scss';
@@ -53,7 +53,7 @@ class Index extends React.PureComponent {
   render() {
     const { messages, locale } = this.props.intl;
     const {
-      name, img, imgContent, getEmail, intl
+      name, img, imgContent, getEmail, intl, type,
     } = this.props;
     const { hasSubscribed } = this.state;
     const cta1 = messages[`landing_page.${name}.cta1`];
@@ -66,6 +66,8 @@ class Index extends React.PureComponent {
       messages[`landing_page.${name}.btnSubmitEmail`] || 'Submit';
     const youtubeVideoId = messages[`landing_page.${name}.youtubeVideoId`];
     const faq = messages[`landing_page.${name}.faq`];
+
+    const { url: categoryUrl, text: categoryText } = LANDING_PAGE_TYPE[type];
     return (
       <LandingWrapper>
         <div className="project-detail">
@@ -74,6 +76,10 @@ class Index extends React.PureComponent {
               <div className="pd-breadcrumb">
                 <Link to="/">
                   <FormattedMessage id="landing_page.breadcrumb.home" />
+                </Link>
+                <span className="mx-2">/</span>
+                <Link to={categoryUrl}>
+                  {categoryText}
                 </Link>
                 <span className="mx-2">/</span>
                 <span>
