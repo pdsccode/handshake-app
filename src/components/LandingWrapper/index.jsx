@@ -84,17 +84,16 @@ class Index extends React.PureComponent {
           <hr className="landing-hr" />
 
           <div className="row landing-footer no-gutters">
-            <div className="col-12 col-md-1">
+            <div className="col-12 col-md-1 d-none d-md-block">
               <img src={imgLogo} width="54" />
             </div>
-            <div className="col-12 col-md-5">
-              <div className="align-middle">
-                <div><FormattedHTMLMessage id="landing_page.label.onlyMobile" /></div>
-                <div><FormattedHTMLMessage id="landing_page.label.openOn" /></div>
+            <div className="col-12 col-md-8">
+              <div className="align-middle px-1 pt-1">
+                <div><FormattedHTMLMessage id="landing_page.label.footer" /></div>
               </div>
             </div>
-            <div className="col-12 col-md-6 text-left text-md-right">
-              <div>
+            <div className="col-12 col-md-3 text-left text-md-right">
+              <div className="pl-1 pt-1">
                 <div><FormattedHTMLMessage id="landing_page.label.joinTelegram" /></div>
                 <div><FormattedHTMLMessage id="landing_page.label.whitepaper" /></div>
               </div>
