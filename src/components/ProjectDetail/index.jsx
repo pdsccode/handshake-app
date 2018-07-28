@@ -74,10 +74,6 @@ class Index extends React.PureComponent {
           <div className="row mt-5">
             <div className="col">
               <div className="pd-breadcrumb">
-                <Link to="/">
-                  <FormattedMessage id="landing_page.breadcrumb.home" />
-                </Link>
-                <span className="mx-2">/</span>
                 <Link to={categoryUrl}>
                   {categoryText}
                 </Link>

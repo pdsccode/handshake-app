@@ -214,8 +214,8 @@ export default {
   'ex.earlyBird.label.2': 'Create your station with <br /><span class="intro-amount">{freeETH} ETH</span> free now!',
   'ex.earlyBird.btn': 'Open Station',
 
-  'ex.seo.title': 'Ninja: the anonymous exchange of anything.',
-  'ex.seo.meta.description': 'Swap coin for cash in your local neighborhood. Trade predictions on anything, anywhere, with anyone. No downloads, no sign ups. 100% anonymous.',
+  // 'ex.seo.title': 'Ninja: the anonymous exchange of anything.',
+  // 'ex.seo.meta.description': 'Swap coin for cash in your local neighborhood. Trade predictions on anything, anywhere, with anyone. No downloads, no sign ups. 100% anonymous.',
 
   'error.required': 'Required',
   'error.requiredOne': 'You need to fill in one of these!',
@@ -391,14 +391,13 @@ export default {
   'landing_page.researches.internetCash.title': 'Internet Cash',
   'landing_page.researches.internetCash.subTitle': 'The Internet deserves to have its own native currency.',
 
-  'landing_page.label.onlyMobile': 'The Ninja network is only accessible via mobile.',
-  'landing_page.label.openOn': `Open <a href="/" class="landing-link">www.ninja.org</a> on your mobile browser to gain anonymous entry.`,
+  'landing_page.label.footer': `Building blockchain powered apps, tools and solutions for the new wild west world web. Join the dojo: <a href="https://t.me/ninja_org" class="landing-link">t.me/ninja_org</a>`,
   'landing_page.label.joinTelegram': `Join the dojo on <a href="https://t.me/ninja_org" class="landing-link">Telegram</a>`,
   // 'landing_page.label.airdrop': `Jump in for <a href="#" class="landing-link">Airdrop</a>`,
   'landing_page.label.whitepaper': `Jump in for <a href="https://medium.com/@ninjadotorg/shakeninja-bex-1c938f18b3e8" class="landing-link">Whitepaper</a>`,
   // 'landing_page.label.faq': `We answered your <a href="#" class="landing-link">FAQ</a>`,
 
-  'landing_page.breadcrumb.home': 'Home',
+  // 'landing_page.breadcrumb.home': 'Home',
 
   'landing_page.cash.breadcrumb': 'Cash',
   'landing_page.cash.heading': 'Buy crypto with cash. Secure, anonymous, easy.',
