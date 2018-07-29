@@ -85,7 +85,7 @@ class Index extends React.PureComponent {
           <hr className="landing-hr" />
 
           <div className="row landing-footer no-gutters">
-            <div className="col-12 col-md-1 d-none d-md-block">
+            <div className="col-12 col-md-1">
               <img src={imgLogo} width="54" />
             </div>
             <div className="col-12 col-md-8">
