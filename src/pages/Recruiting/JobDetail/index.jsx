@@ -12,6 +12,17 @@ import SocialButtons from '../Components/SocialButtons'
 import './styles.scss';
 import '../styles.scss'
 
+const BackToListing = (
+  <div className="row mt-5">
+    <div className="col">
+      <Link to={URL.RECRUITING}>
+        <img src="https://d2q7nqismduvva.cloudfront.net/static/images/icon-svg/common/back.svg" />
+        &nbsp;<FormattedMessage id="landing_page.recruiting.label.backToListing" />
+      </Link>
+    </div>
+  </div>
+)
+
 class JobDetail extends React.Component {
   state = {
     job: {}
@@ -32,14 +43,7 @@ class JobDetail extends React.Component {
     return (
       <LandingWrapper>
         <div className="job-detail">
-          <div className="row mt-5">
-            <div className="col">
-              <Link to={URL.RECRUITING}>
-                <img src="https://d2q7nqismduvva.cloudfront.net/static/images/icon-svg/common/back.svg" />
-                &nbsp;<FormattedMessage id="landing_page.recruiting.label.backToListing" />
-              </Link>
-            </div>
-          </div>
+          {BackToListing}
           <div className="row mt-3">
             <div className="col-12 col-md-9">
               <div className="jd-name">{name}</div>
@@ -53,6 +57,25 @@ class JobDetail extends React.Component {
               <button className="btn btn-outline-primary btn-lg btn-block mt-2"><FormattedMessage id="landing_page.recruiting.button.referFriend" /></button>
             </div>
           </div>
+
+          <hr />
+
+          <div className="row">
+            <div className="col">
+              <img className="img-fluid" src={image} />
+            </div>
+          </div>
+          <div className="row mt-4">
+            <div className="col">
+              <div dangerouslySetInnerHTML={{ __html: content }} />
+            </div>
+          </div>
+          <div className="row">
+            <div className="col">
+              <ButtonApplyNow className="btn-block" />
+            </div>
+          </div>
+          {BackToListing}
         </div>
       </LandingWrapper>
     );
