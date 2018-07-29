@@ -27,9 +27,9 @@ const CategoryItem = (props) => {
           <button className="btn btn-primary btn-lg" onClick={ (e) => { e.preventDefault(); onClickApplyNow(id); }}>Apply now</button>
           <div className="job-text-pr mt-2"><FormattedMessage id="landing_page.recruiting.label.getTheWordOut" /></div>
           <div className="job-social mt-2">
-            <a><img src="https://d2q7nqismduvva.cloudfront.net/static/images/icon-svg/common/share/facebook.svg" /></a>
-            <a><img src="https://d2q7nqismduvva.cloudfront.net/static/images/icon-svg/common/share/twitter.svg" /></a>
-            <a><img src="https://d2q7nqismduvva.cloudfront.net/static/images/icon-svg/common/share/linkedin.svg" /></a>
+            <span><img src="https://d2q7nqismduvva.cloudfront.net/static/images/icon-svg/common/share/facebook.svg" /></span>
+            <span><img src="https://d2q7nqismduvva.cloudfront.net/static/images/icon-svg/common/share/twitter.svg" /></span>
+            <span><img src="https://d2q7nqismduvva.cloudfront.net/static/images/icon-svg/common/share/linkedin.svg" /></span>
           </div>
         </div>
       </div>
