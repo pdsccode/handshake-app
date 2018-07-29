@@ -6,7 +6,7 @@ import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl'
 import { setLanguage } from '@/reducers/app/action';
 // import VideoYoutube from '@/components/core/controls/VideoYoutube';
 import { Link } from 'react-router-dom';
-import { LANDING_PAGE_TYPE } from '@/constants';
+import { LANDING_PAGE_TYPE, URL } from '@/constants';
 
 // style
 import imgNinja from '@/assets/images/ninja/ninja-header-black.svg';
@@ -45,7 +45,7 @@ class Index extends React.PureComponent {
         <span><Link className={`${type === 'research' ? 'active' : ''} landing-nav-link`} to={LANDING_PAGE_TYPE.research.url}>Research</Link></span>
       </span>
     )
-    const btnJoin = <a className="btn btn-primary-landing" href="https://www.autonomous.ai/talents"><FormattedMessage id="landing_page.btn.joinOurTeam" /></a>
+    const btnJoin = <Link className="btn btn-primary-landing" to={URL.RECRUITING}><FormattedMessage id="landing_page.btn.joinOurTeam" /></Link>
 
     return (
       <div className="landing-page">
