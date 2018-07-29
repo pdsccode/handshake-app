@@ -1,48 +1,83 @@
 import React from 'react';
-import { bindActionCreators, compose } from 'redux';
 import { connect } from 'react-redux';
-import { injectIntl } from 'react-intl';
 import LandingWrapper from '@/components/LandingWrapper';
 import axios from 'axios';
-
 // import PropTypes from 'prop-types';
 import './styles.scss';
 import CategoryItem from './Components/CategoryItem';
+import Job from './Components/Job';
+import { FormattedMessage, injectIntl } from 'react-intl';
 
 const idAllCategories = 0;
+
 class Recruiting extends React.Component {
   state = {
-    selectedCategory: idAllCategories,
-    categories: []
-  }
+    selectedCategoryId: idAllCategories,
+    categories: [],
+    jobs: [],
+  };
   componentDidMount() {
-    axios.get('https://www.autonomous.ai/api-v2/job-api/categories')
+    const { selectedCategoryId } = this.state;
+    axios
+      .get('https://www.autonomous.ai/api-v2/job-api/categories')
       .then(res => {
-        this.setState({ categories: res.data.data })
+        this.setState({ categories: res.data.data });
       })
-      .catch(err => console.log('err get categories', err))
+      .catch(err => console.log('err get categories', err));
+
+    this.getJobs(selectedCategoryId);
   }
-  handleClickCategoryItem = (id) => {
-    this.setState({ selectedCategory: id })
-  }
+  getJobs = id => {
+    let qs = '';
+    if (id !== idAllCategories) {
+      qs = `?category_id=${id}`;
+    }
+    axios
+      .get(`https://www.autonomous.ai/api-v2/job-api/jobs${qs}`)
+      .then(res => {
+        this.setState({ jobs: res.data.data.items });
+      })
+      .catch(err => console.log('err get jobs', err));
+  };
+  handleClickCategoryItem = id => {
+    this.setState({ selectedCategoryId: id });
+    this.getJobs(id);
+  };
+
+
   render() {
-    const { categories, selectedCategory } = this.state;
+    const { categories, selectedCategoryId, jobs } = this.state;
     return (
       <LandingWrapper>
         <div className="row mt-5 recruiting">
           <div className="col-md-4">
-            <CategoryItem id={idAllCategories} active={selectedCategory===idAllCategories} name={'All'} onClick={() => this.handleClickCategoryItem(idAllCategories)} />
-            {
-              categories.map((category) => {
-                const { id, name, seo_url, priority } = category;
-                return (
-                  <CategoryItem id={id} active={selectedCategory === id} name={name} onClick={() => this.handleClickCategoryItem(id)} />
-                )
-              })
-            }
+            <CategoryItem
+              id={idAllCategories}
+              active={selectedCategoryId === idAllCategories}
+              name="All"
+              onClick={() => this.handleClickCategoryItem(idAllCategories)}
+            />
+            {categories.map(category => {
+              const {
+                id, name, seo_url, priority,
+              } = category;
+              return (
+                <CategoryItem
+                  key={id}
+                  active={selectedCategoryId === id}
+                  name={name}
+                  onClick={() => this.handleClickCategoryItem(id)}
+                />
+              );
+            })}
           </div>
           <div className="col-md-8">
-            Jobs
+            {
+              jobs && jobs.length > 0 ?
+                jobs.map(job => {
+                  return <Job {...job} key={job.id} />;
+                }) : <div><FormattedMessage id="landing_page.recruiting.label.noJobs" /></div>
+            }
           </div>
         </div>
       </LandingWrapper>

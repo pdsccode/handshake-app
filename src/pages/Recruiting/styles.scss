@@ -10,4 +10,50 @@
       background-size: 100% 100%;
     }
   }
+  .recruiting-job {
+    border: 1px solid #ebeef0;
+    padding: 10px 15px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    .job-name {
+      font-weight: 600;
+      font-size: 24px;
+      color: #3a9bfb;
+    }
+    .job-project {
+      font-weight: 400;
+      font-size: 16px;
+      color: #333;
+    }
+    .job-location {
+      font-weight: 400;
+      font-size: 14px;
+      color: #333;
+    }
+    .job-summary {
+      font-weight: 400;
+      font-size: 16px;
+      color: #828282;
+    }
+    .job-skill {
+      display: inline-block;
+      border: 1px solid #282a2d;
+      border-radius: 4px;
+      padding: 7px 15px;
+      color: #484848;
+      margin-right: 10px;
+      margin-bottom: 10px;
+    }
+    .job-text-pr {
+      font-weight: 700;
+      font-size: 16px;
+      color: #111;
+    }
+    .job-social {
+      img {
+        width: 40px;
+        margin-right: 4px;
+      }
+    }
+  }
 }

@@ -366,6 +366,8 @@ export default {
   'landing_page.subHeader.product': 'Ninja builds applications and protocols for the new decentralized Internet.',
   'landing_page.detail.thanksForSubscribing': 'Thank you for subscribing!',
   'landing_page.detail.email_placeholder': 'Your email address',
+  'landing_page.recruiting.label.noJobs': 'No jobs available',
+  'landing_page.recruiting.label.getTheWordOut': 'Get the word out. Earn ETH',
 
   'landing_page.products.cash.title': 'Cash',
   'landing_page.products.cash.subTitle': 'Buy crypto with cash. Secure, anonymous, easy.',
