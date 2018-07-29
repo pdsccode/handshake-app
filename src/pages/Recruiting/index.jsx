@@ -4,8 +4,11 @@ import LandingWrapper from '@/components/LandingWrapper';
 import axios from 'axios';
 // import PropTypes from 'prop-types';
 import './styles.scss';
+import { bindActionCreators } from 'redux';
+import { updateModal } from '@/reducers/app/action';
 import CategoryItem from './Components/CategoryItem';
 import Job from './Components/Job';
+import ContentApplyNow from './Components/ContentApplyNow';
 import { FormattedMessage, injectIntl } from 'react-intl';
 
 import { Link } from 'react-router-dom';
@@ -48,7 +51,13 @@ class Recruiting extends React.Component {
   };
 
   handleClickApplyNow = (id) => {
-    console.log('id', id)
+    this.props.updateModal({
+      show: true,
+      title: (
+        <div><FormattedMessage id="landing_page.recruiting.applyNow.title" /></div>
+      ),
+      body: <ContentApplyNow />
+    })
   }
 
   handleToggleFilter = () => {
@@ -141,6 +150,7 @@ const mapState = state => ({});
 
 const mapDispatch = dispatch => ({
   // rfChange: bindActionCreators(change, dispatch),
+  updateModal: bindActionCreators(updateModal, dispatch),
 });
 
 export default injectIntl(connect(mapState, mapDispatch)(Recruiting));

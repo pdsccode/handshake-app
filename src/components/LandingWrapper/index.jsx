@@ -3,10 +3,11 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl'
 
-import { setLanguage } from '@/reducers/app/action';
+import { setLanguage, updateModal } from '@/reducers/app/action';
 // import VideoYoutube from '@/components/core/controls/VideoYoutube';
 import { Link } from 'react-router-dom';
 import { LANDING_PAGE_TYPE, URL } from '@/constants';
+import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
 // style
 import imgNinja from '@/assets/images/ninja/ninja-header-black.svg';
@@ -35,9 +36,13 @@ class Index extends React.PureComponent {
     this.props.setLanguage(countryCode);
   }
 
+  handleToggleModal = () => {
+    this.props.updateModal({ show: false })
+  }
+
   render() {
     const { messages, locale } = this.props.intl;
-    const { children, type, btnToggleLeftMenu } = this.props;
+    const { children, type, btnToggleLeftMenu, modal: { className, show, body, title, centered } } = this.props;
     const logo = <a href="/" className="d-inline-block mt-1"><img src={imgNinja} width="100" /></a>;
     const navLinks = (
       <span>
@@ -102,13 +107,23 @@ class Index extends React.PureComponent {
           </div>
 
         </div>
+        <Modal isOpen={show} toggle={this.handleToggleModal} className={className} centered={centered}>
+          {title && <ModalHeader toggle={this.handleToggleModal}>{title}</ModalHeader>}
+          <ModalBody>
+            {body}
+          </ModalBody>
+        </Modal>
       </div>
     );
   }
 }
+const mapState = (state) => ({
+  modal: state.app.modal,
+});
 
 const mapDispatch = ({
   setLanguage,
+  updateModal
 });
 
-export default injectIntl(connect(null, mapDispatch)(Index));
+export default injectIntl(connect(mapState, mapDispatch)(Index));

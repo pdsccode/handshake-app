@@ -3,11 +3,14 @@ import { connect } from 'react-redux';
 import LandingWrapper from '@/components/LandingWrapper';
 import axios from 'axios';
 // import PropTypes from 'prop-types';
+import { bindActionCreators } from 'redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Link } from 'react-router-dom';
+import { updateModal } from '@/reducers/app/action';
 import { URL } from '@/constants';
 import ButtonApplyNow from '../Components/ButtonApplyNow'
 import SocialButtons from '../Components/SocialButtons'
+import ContentApplyNow from '../Components/ContentApplyNow'
 
 import './styles.scss';
 import '../styles.scss'
@@ -36,6 +39,16 @@ class JobDetail extends React.Component {
       })
       .catch(err => console.log('err get job detail', err));
   }
+
+  handleClickApplyNow = () => {
+    this.props.updateModal({
+      show: true,
+      title: (
+        <div><FormattedMessage id="landing_page.recruiting.applyNow.title" /></div>
+      ),
+      body: <ContentApplyNow />
+    })
+  }
   render() {
     const { job } = this.state;
     const { name, project, skill, summary, image, content } = job;
@@ -52,7 +65,7 @@ class JobDetail extends React.Component {
               </div>
             </div>
             <div className="col-12 text-right col-md-3 mt-2">
-              <ButtonApplyNow className="btn-block" />
+              <ButtonApplyNow className="btn-block" onClick={this.handleClickApplyNow} />
               <button className="btn btn-outline-primary btn-lg btn-block mt-2"><FormattedMessage id="landing_page.recruiting.button.referFriend" /></button>
             </div>
           </div>
@@ -71,7 +84,7 @@ class JobDetail extends React.Component {
           </div>
           <div className="row">
             <div className="col">
-              <ButtonApplyNow className="btn-block" />
+              <ButtonApplyNow className="btn-block" onClick={this.handleClickApplyNow} />
             </div>
           </div>
           {BackToListing}
@@ -84,7 +97,7 @@ class JobDetail extends React.Component {
 const mapState = state => ({});
 
 const mapDispatch = dispatch => ({
-  // rfChange: bindActionCreators(change, dispatch),
+  updateModal: bindActionCreators(updateModal, dispatch),
 });
 
 export default injectIntl(connect(mapState, mapDispatch)(JobDetail));
