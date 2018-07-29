@@ -86,7 +86,7 @@ class Recruiting extends React.Component {
                     </Link>
                   )
                 }) : (
-                  <div className="alert alert-danger" role="alert">
+                  <div>
                     <FormattedMessage id="landing_page.recruiting.label.noJobs" />
                   </div>
                 )
