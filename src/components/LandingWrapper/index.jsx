@@ -37,7 +37,7 @@ class Index extends React.PureComponent {
 
   render() {
     const { messages, locale } = this.props.intl;
-    const { children, type } = this.props;
+    const { children, type, btnToggleLeftMenu } = this.props;
     const logo = <a href="/" className="d-inline-block mt-1"><img src={imgNinja} width="100" /></a>;
     const navLinks = (
       <span>
@@ -62,7 +62,8 @@ class Index extends React.PureComponent {
             </div>
           </div>
           <div className="row d-md-none">
-            <div className="col">{navLinks}</div>
+            <div className="col">{btnToggleLeftMenu}</div>
+            <div className="col text-right">{navLinks}</div>
           </div>
 
           {/* desktop */}
@@ -72,7 +73,7 @@ class Index extends React.PureComponent {
             </div>
             <div className="col-10">
               <div className="text-right">
-                {navLinks}
+                <span className="mr-4">{navLinks}</span>
                 {btnJoin}
               </div>
              </div>

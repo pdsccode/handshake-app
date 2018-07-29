@@ -13,7 +13,7 @@ import './styles.scss';
 import '../styles.scss'
 
 const BackToListing = (
-  <div className="row mt-5">
+  <div className="row mt-3">
     <div className="col">
       <Link to={URL.RECRUITING}>
         <img src="https://d2q7nqismduvva.cloudfront.net/static/images/icon-svg/common/back.svg" />
@@ -38,14 +38,13 @@ class JobDetail extends React.Component {
   }
   render() {
     const { job } = this.state;
-    console.log('jobbbb', job)
     const { name, project, skill, summary, image, content } = job;
     return (
       <LandingWrapper>
         <div className="job-detail">
           {BackToListing}
           <div className="row mt-3">
-            <div className="col-12 col-md-9">
+            <div className="col-12 col-md-9 text-center text-md-left">
               <div className="jd-name">{name}</div>
               <div className="job-text-pr mt-2">
                 <span className="mr-2"><FormattedMessage id="landing_page.recruiting.label.getTheWordOut" /></span>

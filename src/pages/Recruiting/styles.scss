@@ -1,3 +1,9 @@
+@import "~bootstrap/scss/bootstrap";
+
+.btn-menu {
+  border: 1px solid lightgrey;
+  color: #484848;
+}
 .recruiting {
   a {
     &:hover {
@@ -16,10 +22,11 @@
     }
   }
   .recruiting-job {
-    border: 1px solid #ebeef0;
+    border: 1px solid #cdcdcd;
     padding: 10px 15px;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
     border-radius: 5px;
+    box-shadow: 0 2px 4px 0 rgba(201, 201, 201, 0.5);
     .job-name {
       font-weight: 600;
       font-size: 24px;
@@ -50,6 +57,42 @@
       margin-bottom: 10px;
     }
   }
+  //@media (min-width: 992px) {
+  //
+  //}
+  .backdrop {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    background: black;
+    opacity: 0.6;
+    z-index: 1;
+  }
+  .left-menu {
+    //d-none d-md-block
+    //display: block;
+    //border: 1px solid lightgrey;
+    .category-items {
+      height: 90%;
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    background: white;
+    width: 280px;
+    z-index: 111;
+    @include media-breakpoint-up(md) {
+      //display: block;
+      position: relative;
+      width: 100%;
+    }
+  }
+
 }
 .job-social {
   display: inline-block;

@@ -17,6 +17,7 @@ class Recruiting extends React.Component {
     selectedCategoryId: idAllCategories,
     categories: [],
     jobs: [],
+    showFilters: false,
   };
   componentDidMount() {
     const { selectedCategoryId } = this.state;
@@ -42,7 +43,7 @@ class Recruiting extends React.Component {
       .catch(err => console.log('err get jobs', err));
   };
   handleClickCategoryItem = id => {
-    this.setState({ selectedCategoryId: id });
+    this.setState({ selectedCategoryId: id, showFilters: false });
     this.getJobs(id);
   };
 
@@ -50,33 +51,71 @@ class Recruiting extends React.Component {
     console.log('id', id)
   }
 
+  handleToggleFilter = () => {
+    this.setState({ showFilters: !this.state.showFilters })
+  }
+
   render() {
-    const { categories, selectedCategoryId, jobs } = this.state;
-    return (
-      <LandingWrapper>
-        <div className="row mt-5 recruiting">
-          <div className="col-md-4">
+    const { categories, selectedCategoryId, jobs, showFilters } = this.state;
+
+    const allCategories = (
+      <div>
+        <CategoryItem
+          id={idAllCategories}
+          active={selectedCategoryId === idAllCategories}
+          name="All"
+          onClick={() => this.handleClickCategoryItem(idAllCategories)}
+        />
+        {categories.map(category => {
+          const {
+            id, name, seo_url, priority,
+          } = category;
+          return (
             <CategoryItem
-              id={idAllCategories}
-              active={selectedCategoryId === idAllCategories}
-              name="All"
-              onClick={() => this.handleClickCategoryItem(idAllCategories)}
+              key={id}
+              active={selectedCategoryId === id}
+              name={name}
+              onClick={() => this.handleClickCategoryItem(id)}
             />
-            {categories.map(category => {
-              const {
-                id, name, seo_url, priority,
-              } = category;
-              return (
-                <CategoryItem
-                  key={id}
-                  active={selectedCategoryId === id}
-                  name={name}
-                  onClick={() => this.handleClickCategoryItem(id)}
-                />
-              );
-            })}
+          );
+        })}
+      </div>
+    )
+    return (
+      <LandingWrapper
+        btnToggleLeftMenu={(
+          <div className="d-md-none">
+            <button onClick={this.handleToggleFilter} className="btn-lg bg-transparent btn-menu">☰</button>
           </div>
-          <div className="col-md-8">
+        )}
+      >
+        <div className="row mt-3 recruiting">
+
+          {/* ========== MOBILE ========== */}
+          {
+            showFilters && (
+              <div className="d-md-none">
+                <div className="backdrop" onClick={this.handleToggleFilter} />
+                <div className="left-menu">
+                  <div className="text-right mb-1">
+                    <button onClick={this.handleToggleFilter} className="btn btn-lg bg-transparent">&times;</button>
+                  </div>
+                  <div className="category-items">
+                    {allCategories}
+                  </div>
+                </div>
+              </div>
+            )
+          }
+          {/* ============================= */}
+
+          {/* ========== DESKTOP ========== */}
+          <div className="d-none d-md-block col-md-4">
+            {allCategories}
+          </div>
+          {/* ============================= */}
+
+          <div className="col-12 col-md-8">
             {
               jobs && jobs.length > 0 ?
                 jobs.map(job => {
