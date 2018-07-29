@@ -1,6 +1,7 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
-
+import ButtonApplyNow from './ButtonApplyNow'
+import SocialButtons from './SocialButtons'
 
 
 const CategoryItem = (props) => {
@@ -24,13 +25,9 @@ const CategoryItem = (props) => {
           </div>
         </div>
         <div className="col-12 col-lg-4 text-center">
-          <button className="btn btn-primary btn-lg" onClick={ (e) => { e.preventDefault(); onClickApplyNow(id); }}>Apply now</button>
+          <ButtonApplyNow onClick={(e) => { e.preventDefault(); onClickApplyNow(id); }} />
           <div className="job-text-pr mt-2"><FormattedMessage id="landing_page.recruiting.label.getTheWordOut" /></div>
-          <div className="job-social mt-2">
-            <span><img src="https://d2q7nqismduvva.cloudfront.net/static/images/icon-svg/common/share/facebook.svg" /></span>
-            <span><img src="https://d2q7nqismduvva.cloudfront.net/static/images/icon-svg/common/share/twitter.svg" /></span>
-            <span><img src="https://d2q7nqismduvva.cloudfront.net/static/images/icon-svg/common/share/linkedin.svg" /></span>
-          </div>
+          <SocialButtons />
         </div>
       </div>
     </div>

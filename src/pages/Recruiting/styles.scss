@@ -49,16 +49,17 @@
       margin-right: 10px;
       margin-bottom: 10px;
     }
-    .job-text-pr {
-      font-weight: 700;
-      font-size: 16px;
-      color: #111;
-    }
-    .job-social {
-      img {
-        width: 40px;
-        margin-right: 4px;
-      }
-    }
   }
+}
+.job-social {
+  display: inline-block;
+  img {
+    width: 40px;
+    margin-right: 4px;
+  }
+}
+.job-text-pr {
+  font-weight: 700;
+  font-size: 16px;
+  color: #111;
 }

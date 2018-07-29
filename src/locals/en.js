@@ -369,6 +369,8 @@ export default {
   'landing_page.recruiting.label.noJobs': 'No jobs available',
   'landing_page.recruiting.label.getTheWordOut': 'Get the word out. Earn ETH',
   'landing_page.recruiting.label.backToListing': 'Back to listing',
+  'landing_page.recruiting.button.applyNow': 'Apply now',
+  'landing_page.recruiting.button.referFriend': 'Refer a friend',
 
   'landing_page.products.cash.title': 'Cash',
   'landing_page.products.cash.subTitle': 'Buy crypto with cash. Secure, anonymous, easy.',
