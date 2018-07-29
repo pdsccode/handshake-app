@@ -1,4 +1,9 @@
 .recruiting {
+  a {
+    &:hover {
+      text-decoration: none;
+    }
+  }
   .recruiting-category-item {
     padding: 8px;
     margin-bottom: 5px;

@@ -1,11 +1,10 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
 
-
-
 const CategoryItem = (props) => {
   // const { id, active, name, onClick } = props;
-  const { id, name, seo_url, project, job_location, skill, summary, onClickApplyNow } = props;
+  const { id, name, seo_url, project, job_location, skill, summary } = props;
+  console.log('skill ', skill)
   const normalizedSkills = skill.split(', ')
   return (
     <div key={id} className={`recruiting-job`}>
@@ -24,7 +23,7 @@ const CategoryItem = (props) => {
           </div>
         </div>
         <div className="col-12 col-lg-4 text-center">
-          <button className="btn btn-primary btn-lg" onClick={ (e) => { e.preventDefault(); onClickApplyNow(id); }}>Apply now</button>
+          <button className="btn btn-primary btn-lg">Apply now</button>
           <div className="job-text-pr mt-2"><FormattedMessage id="landing_page.recruiting.label.getTheWordOut" /></div>
           <div className="job-social mt-2">
             <a><img src="https://d2q7nqismduvva.cloudfront.net/static/images/icon-svg/common/share/facebook.svg" /></a>

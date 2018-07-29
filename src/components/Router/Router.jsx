@@ -41,6 +41,7 @@ const RouterLandingPageMain = createDynamicImport(() => import('@/pages/LandingP
 const LandingPageMain = createDynamicImport(() => import('@/pages/LandingPage/Main'), Loading);
 const ProjectDetail = createDynamicImport(() => import('@/components/ProjectDetail'), Loading);
 const Recruiting = createDynamicImport(() => import('@/pages/Recruiting'), Loading);
+const JobDetail = createDynamicImport(() => import('@/pages/JobDetail'), Loading);
 
 /* ======================== FOR MOBILE ======================== */
 const configRoutesUsingMobileLayout = [
@@ -129,7 +130,8 @@ class Router extends React.Component {
           <Route exact path={URL.INDEX} component={RouterLandingPageMain} />
           <Route path={LANDING_PAGE_TYPE.product.url} render={() => <LandingPageMain type="product" />} />
           <Route path={LANDING_PAGE_TYPE.research.url} render={() => <LandingPageMain type="research" />} />
-          <Route path={URL.RECRUITING} component={Recruiting} />
+          <Route exact path={URL.RECRUITING} component={Recruiting} />
+          <Route path={URL.RECRUITING_JOB_DETAIL} component={JobDetail} />
           {routesUsingDesktopLayout}
           <Route
             path={URL.INDEX}

@@ -8,6 +8,8 @@ import CategoryItem from './Components/CategoryItem';
 import Job from './Components/Job';
 import { FormattedMessage, injectIntl } from 'react-intl';
 
+import { Link } from 'react-router-dom';
+import { URL } from '@/constants';
 const idAllCategories = 0;
 
 class Recruiting extends React.Component {
@@ -44,6 +46,9 @@ class Recruiting extends React.Component {
     this.getJobs(id);
   };
 
+  handleClickApplyNow = (id) => {
+    console.log('id', id)
+  }
 
   render() {
     const { categories, selectedCategoryId, jobs } = this.state;
@@ -75,7 +80,11 @@ class Recruiting extends React.Component {
             {
               jobs && jobs.length > 0 ?
                 jobs.map(job => {
-                  return <Job {...job} key={job.id} />;
+                  return (
+                    <Link key={job.id} to={`${URL.RECRUITING}/${job.seo_url}`}>
+                      <Job {...job} onClickApplyNow={this.handleClickApplyNow} />
+                    </Link>
+                  )
                 }) : <div><FormattedMessage id="landing_page.recruiting.label.noJobs" /></div>
             }
           </div>

@@ -524,6 +524,7 @@ export const URL = {
   PRODUCT_WHISPER_URL: '/whisper',
 
   RECRUITING: '/recruiting',
+  RECRUITING_JOB_DETAIL: '/recruiting/:slug',
 };
 
 export const LANDING_PAGE_TYPE = {
