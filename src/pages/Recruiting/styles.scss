@@ -1,4 +1,3 @@
-@import "~bootstrap/scss/bootstrap";
 
 .btn-menu {
   border: 1px solid lightgrey;
@@ -57,9 +56,6 @@
       margin-bottom: 10px;
     }
   }
-  //@media (min-width: 992px) {
-  //
-  //}
   .backdrop {
     position: fixed;
     width: 100vw;
@@ -86,11 +82,6 @@
     background: white;
     width: 280px;
     z-index: 111;
-    @include media-breakpoint-up(md) {
-      //display: block;
-      position: relative;
-      width: 100%;
-    }
   }
 
 }
