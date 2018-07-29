@@ -85,7 +85,11 @@ class Recruiting extends React.Component {
                       <Job {...job} onClickApplyNow={this.handleClickApplyNow} />
                     </Link>
                   )
-                }) : <div><FormattedMessage id="landing_page.recruiting.label.noJobs" /></div>
+                }) : (
+                  <div className="alert alert-danger" role="alert">
+                    <FormattedMessage id="landing_page.recruiting.label.noJobs" />
+                  </div>
+                )
             }
           </div>
         </div>

@@ -41,7 +41,7 @@ const RouterLandingPageMain = createDynamicImport(() => import('@/pages/LandingP
 const LandingPageMain = createDynamicImport(() => import('@/pages/LandingPage/Main'), Loading);
 const ProjectDetail = createDynamicImport(() => import('@/components/ProjectDetail'), Loading);
 const Recruiting = createDynamicImport(() => import('@/pages/Recruiting'), Loading);
-const JobDetail = createDynamicImport(() => import('@/pages/JobDetail'), Loading);
+const JobDetail = createDynamicImport(() => import('@/pages/Recruiting/JobDetail'), Loading);
 
 /* ======================== FOR MOBILE ======================== */
 const configRoutesUsingMobileLayout = [
