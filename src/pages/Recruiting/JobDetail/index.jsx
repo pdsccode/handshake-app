@@ -3,13 +3,14 @@ import { connect } from 'react-redux';
 import LandingWrapper from '@/components/LandingWrapper';
 import axios from 'axios';
 // import PropTypes from 'prop-types';
+import ShareSocial from '@/components/core/presentation/ShareSocial';
 import { bindActionCreators } from 'redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Link } from 'react-router-dom';
 import { updateModal } from '@/reducers/app/action';
 import { URL } from '@/constants';
 import ButtonApplyNow from '../Components/ButtonApplyNow'
-import SocialButtons from '../Components/SocialButtons'
+// import SocialButtons from '../Components/SocialButtons'
 import ContentApplyNow from '../Components/ContentApplyNow'
 import ContentReferFriend from '../Components/ContentReferFriend'
 
@@ -63,7 +64,7 @@ class JobDetail extends React.Component {
 
   render() {
     const { job } = this.state;
-    const { name, project, skill, summary, image, content } = job;
+    const { name, project, skill, summary, image, content, seo_url } = job;
     return (
       <LandingWrapper>
         <div className="job-detail">
@@ -73,7 +74,12 @@ class JobDetail extends React.Component {
               <div className="jd-name">{name}</div>
               <div className="job-text-pr mt-2">
                 <span className="mr-2"><FormattedMessage id="landing_page.recruiting.label.getTheWordOut" /></span>
-                <SocialButtons />
+                {/*<SocialButtons />*/}
+                <ShareSocial
+                  title={name}
+                  className="center-block"
+                  shareUrl={`${window.location.origin}${URL.RECRUITING}/${seo_url}`}
+                />
               </div>
             </div>
             <div className="col-12 text-right col-md-3 mt-2">

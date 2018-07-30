@@ -376,7 +376,7 @@ export default {
   'landing_page.recruiting.applyNow.label.weAccept': 'We accept .doc, .pdf and .png files, up to 2 MB.',
   'landing_page.recruiting.applyNow.label.or': 'Or',
   'landing_page.recruiting.applyNow.label.submit': 'Submit',
-  'landing_page.recruiting.applyNow.label.connectToLinkedIn': 'Connect with Autonomous LinkedIn',
+  'landing_page.recruiting.applyNow.label.connectToLinkedIn': 'Connect with Ninja LinkedIn',
   'landing_page.recruiting.applyNow.label.thankYou': 'Thank you for your application!',
   'landing_page.recruiting.applyNow.label.weReview': 'We\'ll review your application and contact you for an interview within 3 days if your skills are a match.',
   'landing_page.recruiting.referFriend.title': 'Refer a friend',

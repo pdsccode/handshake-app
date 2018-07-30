@@ -1,8 +1,9 @@
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
+import ShareSocial from '@/components/core/presentation/ShareSocial';
 import ButtonApplyNow from './ButtonApplyNow'
-import SocialButtons from './SocialButtons'
-
+// import SocialButtons from './SocialButtons'
+import { URL } from '@/constants';
 
 const CategoryItem = (props) => {
   // const { id, active, name, onClick } = props;
@@ -27,7 +28,12 @@ const CategoryItem = (props) => {
         <div className="col-12 col-lg-4 text-center">
           <ButtonApplyNow className="btn-block" onClick={(e) => { e.preventDefault(); onClickApplyNow(id); }} />
           <div className="job-text-pr mt-2"><FormattedMessage id="landing_page.recruiting.label.getTheWordOut" /></div>
-          <SocialButtons />
+          {/*<SocialButtons />*/}
+          <ShareSocial
+            title={name}
+            className="center-block"
+            shareUrl={`${window.location.origin}${URL.RECRUITING}/${seo_url}`}
+          />
         </div>
       </div>
     </div>
