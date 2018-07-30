@@ -31,6 +31,7 @@ import {
   HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS,
   HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE,
   HANDSHAKE_EXCHANGE_SHOP_OFFER_SUB_STATUS,
+  HANDSHAKE_ID,
   MIN_AMOUNT,
   NB_BLOCKS,
   URL,
@@ -57,8 +58,7 @@ import { BigNumber } from 'bignumber.js/bignumber';
 import { authUpdate } from '@/reducers/auth/action';
 import OfferShop from '@/models/OfferShop';
 import { getErrorMessageFromCode } from '../utils';
-import Helper from '@/services/helper';
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types';
 
 const nameFormExchangeCreate = 'exchangeCreate';
 const FormExchangeCreate = createForm({
@@ -610,7 +610,7 @@ class Component extends React.Component {
       timeOut: 2000,
       type: 'success',
       callBack: () => {
-        this.getOfferStores();
+        this.gotoUserDashBoard();
       },
     });
 
@@ -680,7 +680,7 @@ class Component extends React.Component {
       timeOut: 2000,
       type: 'success',
       callBack: () => {
-        this.getOfferStores();
+        this.gotoUserDashBoard();
       },
     });
 
@@ -761,7 +761,11 @@ class Component extends React.Component {
 
   // /////////////////////
 
-  handleValidate = values => validate(values)
+  handleValidate = values => validate(values);
+
+  gotoUserDashBoard = () => {
+    this.props.history.push(`${URL.HANDSHAKE_ME}?id=${HANDSHAKE_ID.EXCHANGE}&tab=dashboard`);
+  }
 
   render() {
     const {
