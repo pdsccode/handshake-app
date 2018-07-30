@@ -10,7 +10,8 @@ import CategoryItem from './Components/CategoryItem';
 import Job from './Components/Job';
 import FBChat from './Components/FBChat';
 import ContentApplyNow from './Components/ContentApplyNow';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import ButtonApplyNow from './Components/ButtonApplyNow';
+import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
 
 import { Link } from 'react-router-dom';
 import { URL } from '@/constants';
@@ -99,6 +100,15 @@ class Recruiting extends React.Component {
           </div>
         )}
       >
+
+        <div className="row text-center">
+          <div className="col">
+            <div className="recruiting-intro">
+              <div><div className="intro-text w-75 d-inline-block"><FormattedHTMLMessage id="landing_page.recruiting.intro.label" /></div></div>
+              <ButtonApplyNow className="mt-4" text={<FormattedMessage id="landing_page.recruiting.intro.btn" />} onClick={(e) => { e.preventDefault(); this.handleClickApplyNow(); }} />
+            </div>
+          </div>
+        </div>
         <div className="row mt-3 recruiting">
 
           {/* ========== MOBILE ========== */}

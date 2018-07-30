@@ -3,6 +3,23 @@
   border: 1px solid lightgrey;
   color: #484848;
 }
+.recruiting-intro {
+  .intro-text {
+    margin-top: 21px;
+    color: white;
+  }
+  .intro-text-2 {
+    //line-height: 39px;
+    font-size: 26px;
+  }
+  .intro-text-3 {
+    line-height: 39px;
+    font-size: 21px;
+  }
+  height: 305px;
+  background: url('https://d81hjzk5ckbe4.cloudfront.net/t2Tf4m0pqHzg2JGLE4dqOpjcqEQ=/1440x300/filters:quality(100)/https://d2q7nqismduvva.cloudfront.net/static/images/talents/hero-talents.png') no-repeat center top;
+}
+
 .recruiting {
   a {
     &:hover {

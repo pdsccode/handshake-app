@@ -366,6 +366,8 @@ export default {
   'landing_page.subHeader.product': 'Ninja builds applications and protocols for the new decentralized Internet.',
   'landing_page.detail.thanksForSubscribing': 'Thank you for subscribing!',
   'landing_page.detail.email_placeholder': 'Your email address',
+  'landing_page.recruiting.intro.label': `<h1 class="mt-2"><strong>Hey Ninja</strong></h1><div class="intro-text-2">Come join the dojo.</div><span class="intro-text-3">We build decentralized apps, protocols and moonshot ideas for the new wild west world web.  Reinvent the Internet with us.</span>`,
+  'landing_page.recruiting.intro.btn': 'Become a Ninja',
   'landing_page.recruiting.label.noJobs': 'No jobs available',
   'landing_page.recruiting.label.getTheWordOut': 'Get the word out. Earn ETH',
   'landing_page.recruiting.label.backToListing': 'Back to listing',
