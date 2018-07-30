@@ -481,10 +481,10 @@ export const URL = {
   HANDSHAKE_CASH_INDEX: '/cash',
   HANDSHAKE_CASH_DETAIL: '/cash/:slug',
 
-  HANDSHAKE_CHAT: '/chat',
-  HANDSHAKE_CHAT_INDEX: '/chat',
-  HANDSHAKE_CHAT_DETAIL: '/chat/:userId',
-  HANDSHAKE_CHAT_ROOM_DETAIL: '/chat/room/:roomId',
+  HANDSHAKE_CHAT: '/whisper',
+  HANDSHAKE_CHAT_INDEX: '/whisper',
+  HANDSHAKE_CHAT_DETAIL: '/whisper/:userId',
+  HANDSHAKE_CHAT_ROOM_DETAIL: '/whisper/room/:roomId',
 
   HANDSHAKE_WALLET: '/wallet',
   HANDSHAKE_WALLET_INDEX: '/wallet',
