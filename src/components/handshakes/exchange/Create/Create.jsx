@@ -14,7 +14,7 @@ import {
   fieldPhoneInput,
   fieldRadioButton,
 } from '@/components/core/form/customField';
-import { maxValue, minValue, number, required } from '@/components/core/form/validation';
+import { maxValue, minValue, number, required, requiredPhone } from '@/components/core/form/validation';
 import { change, clearFields, Field, formValueSelector } from 'redux-form';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -1008,6 +1008,7 @@ class Component extends React.Component {
                     type="tel"
                     placeholder="4995926433"
                     // validate={[required, currency === 'BTC' ? minValue001 : minValue01]}
+                    validate={[requiredPhone]}
                   />
                 </div>
               </div>
