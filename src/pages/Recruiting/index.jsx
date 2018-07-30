@@ -8,6 +8,7 @@ import { bindActionCreators } from 'redux';
 import { updateModal } from '@/reducers/app/action';
 import CategoryItem from './Components/CategoryItem';
 import Job from './Components/Job';
+import FBChat from './Components/FBChat';
 import ContentApplyNow from './Components/ContentApplyNow';
 import { FormattedMessage, injectIntl } from 'react-intl';
 
@@ -34,9 +35,9 @@ class Recruiting extends React.Component {
     this.getJobs(selectedCategoryId);
   }
   getJobs = id => {
-    let qs = '';
+    let qs = '?group_id=1';
     if (id !== idAllCategories) {
-      qs = `?category_id=${id}`;
+      qs += `&category_id=${id}`;
     }
     axios
       .get(`https://www.autonomous.ai/api-v2/job-api/jobs${qs}`)
@@ -141,6 +142,7 @@ class Recruiting extends React.Component {
             }
           </div>
         </div>
+        <FBChat />
       </LandingWrapper>
     );
   }

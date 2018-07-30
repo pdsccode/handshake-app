@@ -13,6 +13,7 @@ import ButtonApplyNow from '../Components/ButtonApplyNow'
 // import SocialButtons from '../Components/SocialButtons'
 import ContentApplyNow from '../Components/ContentApplyNow'
 import ContentReferFriend from '../Components/ContentReferFriend'
+import FBChat from '../Components/FBChat'
 
 import './styles.scss';
 import '../styles.scss'
@@ -109,6 +110,7 @@ class JobDetail extends React.Component {
           </div>
           {BackToListing}
         </div>
+        <FBChat />
       </LandingWrapper>
     );
   }
