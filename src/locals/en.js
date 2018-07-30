@@ -421,6 +421,8 @@ export default {
   'landing_page.label.joinTelegram': `Join the dojo on <a href="https://t.me/ninja_org" class="landing-link">Telegram</a>`,
   // 'landing_page.label.airdrop': `Jump in for <a href="#" class="landing-link">Airdrop</a>`,
   'landing_page.label.whitepaper': `Jump in for <a href="https://medium.com/@ninjadotorg/shakeninja-bex-1c938f18b3e8" class="landing-link">Whitepaper</a>`,
+  'landing_page.label.sendLinkToEmail': `Send link to your email:`,
+  'landing_page.label.btnSubmitEmail': 'Go',
   // 'landing_page.label.faq': `We answered your <a href="#" class="landing-link">FAQ</a>`,
 
   // 'landing_page.breadcrumb.home': 'Home',
@@ -428,10 +430,13 @@ export default {
   'landing_page.cash.breadcrumb': 'Cash',
   'landing_page.cash.heading': 'Buy crypto with cash. Secure, anonymous, easy.',
   'landing_page.cash.subHeading': 'Ninja Cash is a decentralized peer to peer (P2P) cryptocurrency exchange that allows users to trade ETH and BTC for cash. Anonymous and immediate: no signup, no ID verification. Blockchain secured and fraud proof.',
-  'landing_page.cash.cta1': 'Trade now on your phone',
-  'landing_page.cash.cta1_url': 'https://ninja.org/cash',
-  'landing_page.cash.cta2': 'Get free gifts',
-  'landing_page.cash.cta2_url': 'https://t.me/ninjacash',
+  'landing_page.cash.textEmail': 'Please open ninja.org/cash on your mobile browser to start trading now.',
+  'landing_page.cash.btnSubmitEmail': 'Go',
+
+  // 'landing_page.cash.cta1': 'Trade now on your phone',
+  // 'landing_page.cash.cta1_url': 'https://ninja.org/cash',
+  // 'landing_page.cash.cta2': 'Get free gifts',
+  // 'landing_page.cash.cta2_url': 'https://t.me/ninjacash',
   'landing_page.cash.youtubeVideoId': 'xCU5puuwros',
 
   'landing_page.prediction.breadcrumb': 'Prediction',
