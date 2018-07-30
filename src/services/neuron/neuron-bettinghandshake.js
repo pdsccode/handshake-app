@@ -25,27 +25,11 @@ export default class BettingHandshake extends BaseHandshake {
     return wallet.privateKey;
   }
   get gasPrice() {
-    // const wallet = MasterWallet.getWalletDefault('ETH');
-    // return this.chainId === 4 ? window.gasPrice || 20 : window.gasPrice || 20;
     return this.chainId === 4 ? window.gasPrice || 20 : window.gasPrice || 20;
-    // return this.chainId === 4 ? 64 : 64;
   }
-  async getEstimateGas(hid = 0, side = 1, odds = 3) {
-    const oddsValue = odds * 100;
-    // const payoutValue = Web3.utils.toWei(payout, 'ether');
-    const bytesOffchain = this.web3.utils.asciiToHex('cryptosign_m562');
-    // const bytesOffchain = this.web3.utils.asciiToHex(offchain);
-    const payloadData = this.handshakeInstance.methods
-      .init(hid, side, oddsValue, bytesOffchain)
-      .encodeABI();
-    /*
-    const estimateGas = await this.neuron.caculateEstimatGasWithEthUnit(
-      payloadData,
-      this.address,
-      this.gasPrice,
-    );
-    */
+  async getEstimateGas() {
     const estimateGas = await this.neuron.caculateLimitGasWithEthUnit(this.gasPrice);
+    console.log(TAG, 'estimateGas', estimateGas);
     return estimateGas;
   }
   initBet = async (hid, side, stake, odds, offchain) => {
