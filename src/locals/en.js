@@ -417,7 +417,7 @@ export default {
   'landing_page.researches.internetCash.title': 'Internet Cash',
   'landing_page.researches.internetCash.subTitle': 'The Internet deserves to have its own native currency.',
 
-  'landing_page.label.footer': `Building blockchain powered apps, tools and solutions for the new wild west world web. Join the dojo: <a href="https://t.me/ninja_org" class="landing-link">t.me/ninja_org</a>`,
+  'landing_page.label.footer': `Building blockchain powered apps, tools and solutions for the new wild west world web.<br />Join the dojo: <a href="https://t.me/ninja_org" class="landing-link">t.me/ninja_org</a>`,
   'landing_page.label.joinTelegram': `Join the dojo on <a href="https://t.me/ninja_org" class="landing-link">Telegram</a>`,
   // 'landing_page.label.airdrop': `Jump in for <a href="#" class="landing-link">Airdrop</a>`,
   'landing_page.label.whitepaper': `Jump in for <a href="https://medium.com/@ninjadotorg/shakeninja-bex-1c938f18b3e8" class="landing-link">Whitepaper</a>`,
@@ -432,6 +432,8 @@ export default {
   'landing_page.cash.subHeading': 'Ninja Cash is a decentralized peer to peer (P2P) cryptocurrency exchange that allows users to trade ETH and BTC for cash. Anonymous and immediate: no signup, no ID verification. Blockchain secured and fraud proof.',
   'landing_page.cash.textEmail': 'Please open ninja.org/cash on your mobile browser to start trading now.',
   'landing_page.cash.btnSubmitEmail': 'Go',
+  'landing_page.cash.joinTelegram': `Join the dojo on <a href="https://t.me/ninjacash" class="landing-link">Telegram</a>`,
+  'landing_page.cash.whitepaper': `Jump in for <a href="https://medium.com/@ninja_org/introducing-ninja-cash-b0d51a9f4e1b" class="landing-link">Whitepaper</a>`,
 
   // 'landing_page.cash.cta1': 'Trade now on your phone',
   // 'landing_page.cash.cta1_url': 'https://ninja.org/cash',

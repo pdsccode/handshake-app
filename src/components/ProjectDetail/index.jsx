@@ -69,7 +69,7 @@ class Index extends React.PureComponent {
 
     const { url: categoryUrl, text: categoryText } = LANDING_PAGE_TYPE[type];
     return (
-      <LandingWrapper>
+      <LandingWrapper name={name}>
         <div className="project-detail">
           <div className="row mt-5">
             <div className="col">
