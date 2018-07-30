@@ -11,6 +11,7 @@ import { URL } from '@/constants';
 import ButtonApplyNow from '../Components/ButtonApplyNow'
 import SocialButtons from '../Components/SocialButtons'
 import ContentApplyNow from '../Components/ContentApplyNow'
+import ContentReferFriend from '../Components/ContentReferFriend'
 
 import './styles.scss';
 import '../styles.scss'
@@ -49,6 +50,17 @@ class JobDetail extends React.Component {
       body: <ContentApplyNow />
     })
   }
+
+  handleClickReferFriend = () => {
+    this.props.updateModal({
+      show: true,
+      title: (
+        <div><FormattedMessage id="landing_page.recruiting.referFriend.title" /></div>
+      ),
+      body: <ContentReferFriend />
+    })
+  }
+
   render() {
     const { job } = this.state;
     const { name, project, skill, summary, image, content } = job;
@@ -66,7 +78,9 @@ class JobDetail extends React.Component {
             </div>
             <div className="col-12 text-right col-md-3 mt-2">
               <ButtonApplyNow className="btn-block" onClick={this.handleClickApplyNow} />
-              <button className="btn btn-outline-primary btn-lg btn-block mt-2"><FormattedMessage id="landing_page.recruiting.button.referFriend" /></button>
+              <button className="btn btn-outline-primary btn-lg btn-block mt-2" onClick={this.handleClickReferFriend}>
+                <FormattedMessage id="landing_page.recruiting.button.referFriend" />
+              </button>
             </div>
           </div>
 
