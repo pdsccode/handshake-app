@@ -430,7 +430,7 @@ export default {
   'landing_page.cash.breadcrumb': 'Cash',
   'landing_page.cash.heading': 'Buy crypto with cash. Secure, anonymous, easy.',
   'landing_page.cash.subHeading': 'Ninja Cash is a decentralized peer to peer (P2P) cryptocurrency exchange that allows users to trade ETH and BTC for cash. Anonymous and immediate: no signup, no ID verification. Blockchain secured and fraud proof.',
-  'landing_page.cash.textEmail': 'Please open ninja.org/cash on your mobile browser to start trading now.',
+  'landing_page.cash.textEmail': `Please open <a href="https://ninja.org/">ninja.org/cash</a> on your mobile browser to start trading now.`,
   'landing_page.cash.btnSubmitEmail': 'Go',
   'landing_page.cash.joinTelegram': `Join the dojo on <a href="https://t.me/ninjacash" class="landing-link">Telegram</a>`,
   'landing_page.cash.whitepaper': `Jump in for <a href="https://medium.com/@ninja_org/introducing-ninja-cash-b0d51a9f4e1b" class="landing-link">Whitepaper</a>`,

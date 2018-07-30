@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import { setLanguage } from '@/reducers/app/action';
 
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
 import { Field, formValueSelector } from 'redux-form';
 
 import LandingWrapper from '@/components/LandingWrapper';
@@ -97,7 +97,9 @@ class Index extends React.PureComponent {
                   <span>
                     {!hasSubscribed ? (
                       <FormSubscribeEmail onSubmit={this.handleSubmit}>
-                        <div className="text-email">{textEmail}</div>
+                        <div className="text-email">
+                          <FormattedHTMLMessage id={`landing_page.${name}.textEmail`} />
+                        </div>
                         <div className="d-table w-100">
                           <div className="d-table-cell align-top text-send-link">
                             <FormattedMessage id="landing_page.label.sendLinkToEmail" />
