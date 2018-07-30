@@ -172,23 +172,6 @@ export const fieldNumericInput = customField(({
   );
 });
 
-export const fieldNumericInput2 = customField(({
-  onChange, onBlur, onFocus, value, list, name, color = '', step = 0.25, suffix, btnBg = '',
-}) => {
-  const valueFloat = parseFloat(value || 0, 10);
-  return (
-    <span className="btn-group" role="group" style={{ color }}>
-      <button type="button" className="btn numeric-input" style={{ color }} onClick={() => onChange(valueFloat - step)} onBlur={() => onBlur()} onFocus={() => onFocus()}>–</button>
-
-      {/*<span className="text-center" style={{ minWidth: '70px', lineHeight: '36px' }}>*/}
-        <input type="text" value={value} />{ suffix && <span>{suffix}</span>}
-      {/*</span>*/}
-
-      <button type="button" className="btn numeric-input" style={{ color }} onClick={() => onChange(valueFloat + step)} onBlur={() => onBlur()} onFocus={() => onFocus()}>+</button>
-    </span>
-  );
-});
-
 export const fieldCleave = customField(({
   onChange, onBlur, onFocus, value, propsCleave, className,
 }) => (
