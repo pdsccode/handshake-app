@@ -10,6 +10,7 @@ export const renderField = (props) => {
     type,
     placeholder,
     className,
+    disabled,
     meta: { touched, error, warning },
   } = props;
 
@@ -26,6 +27,7 @@ export const renderField = (props) => {
         className={className}
         placeholder={placeholder}
         type={type}
+        disabled={disabled}
       />
       {touched && ((error && <span className="ErrorMsg">{error}</span>) || (warning && <span className="WarningMsg">{warning}</span>))}
     </div>

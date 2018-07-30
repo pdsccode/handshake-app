@@ -1,13 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import { connect } from 'react-redux';
 import { reduxForm, Field, FieldArray } from 'redux-form';
 import { renderField } from './form';
 import { required } from './validate';
 
-function renderEvent(props) {
-  // if (props.selectedEvent) return null;
+function renderEvent({ isNew }) {
+  if (!isNew) return null;
   return (
     <Field
       name="eventName"
@@ -20,7 +19,7 @@ function renderEvent(props) {
   );
 }
 
-function renderOutComes({ fields, meta: { error } }) {
+function renderOutComes({ fields, meta: { error }, isNew }) {
   return (
     <React.Fragment>
       <label>OUTCOME</label>
@@ -33,24 +32,27 @@ function renderOutComes({ fields, meta: { error } }) {
                 name={`${outcome}.name`}
                 type="text"
                 component={renderField}
+                disabled={!isNew && fields.get(index).id}
               />
+              {isNew && !!index &&
               <button
                 type="button"
                 title=""
                 onClick={() => fields.remove(index)}
               >
                 Remove
-              </button>
+              </button>}
             </li>
           );
         })}
+        <button type="button" onClick={() => fields.push({})}>Add more outcomes</button>
         {error && <li className="error">{error}</li>}
       </ul>
     </React.Fragment>
   );
 }
 
-function renderFee() {
+function renderFee({ isNew }) {
   return (
     <React.Fragment>
       <Field
@@ -59,37 +61,22 @@ function renderFee() {
         component={renderField}
         label="CREATOR FEE"
         validate={[required]}
+        disabled={!isNew}
       />
       <span>The creator fee is a percentage of the total winnings of the market.</span>
     </React.Fragment>
   );
 }
 
-function renderReport2() {
-  return (
-    <React.Fragment>
-      <label>Favorite Color</label>
-      <div>
-        <Field name="favoriteColor" component="select">
-          <option value="">Select a color...</option>
-          {colors.map(colorOption =>
-            <option value={colorOption} key={colorOption}>{colorOption}</option>)}
-        </Field>
-      </div>
-    </React.Fragment>
-  );
-}
-
-function renderReport({ fields, meta: { error } }) {
-  console.log('report', fields);
+function renderReport({ reportList }) {
   return (
     <React.Fragment>
       <label>REPORT</label>
-      <Field name="favoriteColor" component="select">
+      <Field name="reports" component="select">
         <option value="">Please select a verified source</option>
-        {fields.map(item => <option value={1} key={1}>{2}</option>)}
+        {reportList.map(r => <option value={r.id} key={r.id}>{`${r.name} - ${r.url}`}</option>)}
       </Field>
-      {error && <li className="error">{error}</li>}
+      {/*{error && <li className="error">{error}</li>}*/}
     </React.Fragment>
   );
 }
@@ -102,13 +89,16 @@ let CreateEventForm = (props) => {
   const cls = classNames(CreateEventForm.displayName, {
     [props.className]: !!props.className,
   });
-  console.log('props.initialValues', props.initialValues);
   return (
     <form className={cls}>
       {renderEvent(props)}
-      <FieldArray name="outcomes" component={renderOutComes} />
-      {renderFee()}
-      <FieldArray name="reports" component={renderReport} />
+      <FieldArray
+        name="outcomes"
+        isNew={props.isNew}
+        component={renderOutComes}
+      />
+      {renderFee(props)}
+      {renderReport(props)}
       {renderTime()}
     </form>
   );
@@ -116,36 +106,18 @@ let CreateEventForm = (props) => {
 
 CreateEventForm.propTypes = {
   className: PropTypes.string,
-  selectedEvent: PropTypes.object,
+  reportList: PropTypes.array,
+  isNew: PropTypes.bool,
 };
 
 CreateEventForm.defaultProps = {
   className: '',
-  selectedEvent: undefined,
+  reportList: undefined,
+  isNew: true,
 };
 
 CreateEventForm.displayName = 'CreateEventForm';
 
-CreateEventForm = reduxForm({
+export default reduxForm({
   form: 'CreateEventForm',
 })(CreateEventForm);
-
-CreateEventForm = connect(
-  (state, props) => {
-    console.log('props', props);
-    return {
-      initialValues: {
-        eventName: props.selectedEvent.name,
-        outcomes: props.selectedEvent.outcomes,
-        creatorFee: props.selectedEvent.market_fee,
-      },
-    };
-  },
-  // (state, props) => ({
-  //   initialValues: {
-  //     eventName: props.selectedEvent.name,
-  //   },
-  // }),
-)(CreateEventForm);
-
-export default CreateEventForm;

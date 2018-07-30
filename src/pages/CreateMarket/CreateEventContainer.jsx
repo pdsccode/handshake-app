@@ -5,6 +5,8 @@ import { loadMatches } from '@/pages/Prediction/action';
 import { eventSelector, isLoading } from '@/pages/Prediction/selector';
 import Dropdown from '@/components/core/controls/Dropdown';
 import CreateEventForm from './CreateEventForm';
+import { loadReports } from './action';
+import { reportSelector } from './selector';
 
 class CreateEventContainer extends React.Component {
   static displayName = 'CreateEventContainer';
@@ -27,6 +29,7 @@ class CreateEventContainer extends React.Component {
 
   componentDidMount() {
     this.props.dispatch(loadMatches());
+    this.props.dispatch(loadReports());
   }
 
   onSelectEvent = (item) => {
@@ -86,10 +89,21 @@ class CreateEventContainer extends React.Component {
   }
 
   renderCreateEventForm = (props, state) => {
-    if (!state.isCreateNew && !state.selectedEvent) return null;
-    console.log('selectedEvent', state.selectedEvent);
+    const { isCreateNew, selectedEvent } = state;
+    if (!isCreateNew && !selectedEvent) return null;
+    const initialValues = isCreateNew ? {
+      outcomes: [{}],
+    } : {
+      eventName: selectedEvent.name,
+      outcomes: selectedEvent.outcomes,
+      creatorFee: selectedEvent.market_fee,
+    };
     return (
-      <CreateEventForm selectedEvent={state.selectedEvent} />
+      <CreateEventForm
+        initialValues={initialValues}
+        reportList={props.reportList || []}
+        isNew={isCreateNew}
+      />
     );
   }
 
@@ -117,6 +131,7 @@ export default connect(
     return {
       eventList: eventSelector(state),
       isLoading: isLoading(state),
+      reportList: reportSelector(state),
     };
   },
 )(CreateEventContainer);
