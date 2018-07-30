@@ -33,6 +33,7 @@ import StarsRating from '@/components/core/presentation/StarsRating';
 import iconChat from '@/assets/images/icon/chat-icon.svg';
 import iconBitcoin from '@/assets/images/icon/coin/btc.svg';
 import iconEthereum from '@/assets/images/icon/coin/eth.svg';
+import iconStation from '@/assets/images/icon/own-key.svg';
 
 import { nameFormShakeDetail } from '@/components/handshakes/exchange/components/ShakeDetail';
 import CoinCards from '@/components/handshakes/exchange/components/CoinCards';
@@ -472,7 +473,7 @@ class FeedExchange extends React.PureComponent {
 
   render() {
     const { offer } = this;
-    const { review, reviewCount } = this.props;
+    const { review, reviewCount, ownerStation } = this.props;
     const { modalContent } = this.state;
     const currency = offer.fiatCurrency;
 
@@ -490,7 +491,7 @@ class FeedExchange extends React.PureComponent {
             <CoinCards coins={coins} currency={currency} handleClickCoin={this.handleClickCoin} />
             <div className="info-ex">
               <div>
-                <div className="address">{address}</div>
+                <div className="address">{ownerStation && <img className="owner-station" src={iconStation} /> } {address}</div>
                 <div className="review"><StarsRating className="d-inline-block" starPoint={review} startNum={5} /> <FormattedMessage id="ex.discover.label.reviews" values={{ reviewCount }} /></div>
                 <div className="distance">{distance}</div>
               </div>
