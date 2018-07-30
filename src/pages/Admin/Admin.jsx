@@ -32,7 +32,7 @@ class Admin extends React.Component {
     console.log('fetchMatches');
 
     this.props.loadMatches({
-      PATH_URL: `${API_URL.CRYPTOSIGN.LOAD_MATCHES}?report=1`,
+      PATH_URL: `${API_URL.CRYPTOSIGN.MATCHES_REPORT}?report=1`,
     });
   }
   render() {

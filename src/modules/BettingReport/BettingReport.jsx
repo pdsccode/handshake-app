@@ -68,23 +68,6 @@ class BettingReport extends React.Component {
     }
   }
 
-  /*
-  fetchMatches() {
-    console.log('fetchMatches');
-
-    this.props.loadMatches({
-      PATH_URL: `${API_URL.CRYPTOSIGN.LOAD_MATCHES}?report=1`,
-      successFn: (res) => {
-        const { data } = res;
-        this.setInitials(data);
-        console.log('loadMatches success', data);
-      },
-      errorFn: (e) => {
-        console.log('loadMatches failed', e);
-      },
-    });
-  }
-  */
 
   toggle() {
     this.setState({
