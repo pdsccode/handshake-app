@@ -178,6 +178,7 @@ body{
 		-moz-column-count: 4;
 		column-count: 4;
     }
+    
      
 }
 
@@ -701,4 +702,20 @@ img.ui.image.btn-add-class{
 }
 .ui.search.dropdown>.text{
     white-space: nowrap;
+}
+
+@media (min-width:800px) {
+	 
+    .ui.card>.image, .ui.cards>.card>.image{
+        background: #e8dada78;
+        height: 200px;
+    }
+    .ui.card>.image>img, .ui.cards>.card>.image>img {
+        display: block;
+        width: auto;
+        height: 100%;
+        border-radius: inherit;
+        margin: auto;
+    }
+     
 }

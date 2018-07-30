@@ -72,7 +72,7 @@ class History extends React.Component {
   async withdraw() {
 
     //Thanks! ... Minimum Ethereum withdrawal amount is 0.1006 ETH
-    if(this.state.balance < 0.05){
+    if(this.state.balance < 0.005){
       this.setState({ open: true })
       return;
     }
@@ -158,7 +158,7 @@ class History extends React.Component {
             content={
               <div class='content'> 
                 <p style={{lineHeight:'1.6em'}}>Thanks! ...</p>
-                <p style={{lineHeight:'1.6em'}}>Minimum Ethereum withdrawal amount is 0.05 ETH</p>
+                <p style={{lineHeight:'1.6em'}}>Minimum Ethereum withdrawal amount is 0.005 ETH</p>
               </div>
             }
             open={this.state.open} 
