@@ -3,15 +3,15 @@ import { connect } from 'react-redux';
 import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
 import { loadMatches } from '@/reducers/betting/action';
 import { BETTING_RESULT } from '@/components/handshakes/betting/constants.js';
-
 import { BASE_API, API_URL } from '@/constants';
 import { Alert } from 'reactstrap';
 import $http from '@/services/api';
 import { showAlert } from '@/reducers/app/action';
-
+import Login from '@/components/handshakes/betting-event/Login';
 import './BettingReport.scss';
 
 let token = null;
+const TAG = 'BETTING_REPORT';
 class BettingReport extends React.Component {
   constructor(props) {
     super(props);
@@ -41,12 +41,16 @@ class BettingReport extends React.Component {
       });
     }
 
-    //this.fetchMatches();
+    this.fetchMatches();
 
   }
 
   componentWillReceiveProps(nextProps) {
-    const { matches } = nextProps;
+    const { matches, login } = nextProps;
+    console.log(TAG, 'next props:', nextProps);
+    this.setState({
+      login,
+    });
     this.setInitials(matches);
   }
 
@@ -66,6 +70,17 @@ class BettingReport extends React.Component {
         selectedMatch: 1,
       });
     }
+  }
+
+  fetchMatches() {
+    console.log('fetchMatches');
+    const tokenValue = this.checkToken();
+    const headers = tokenValue ? { Authorization: `Bearer ${tokenValue}`, 'Content-Type': 'application/json' } : null;
+
+    this.props.loadMatches({
+      PATH_URL: `${API_URL.CRYPTOSIGN.MATCHES_REPORT}`,
+      headers,
+    });
   }
 
 
@@ -127,33 +142,6 @@ class BettingReport extends React.Component {
     });
   }
 
-  loginUser=(event) => {
-    event.preventDefault();
-    const data = new FormData(event.target);
-
-    const email = data.get('email');
-    const password = data.get('password');
-
-    const auth = $http({
-      url: `${BASE_API.BASE_URL}/cryptosign/auth`,
-      data: {
-        email,
-        password,
-      },
-      headers: { 'Content-Type': 'application/json' },
-      method: 'post',
-    });
-    auth.then((response) => {
-      if (response.data.status === 1) {
-        token = response.data.data.access_token;
-        localStorage.setItem('Token', token);
-        localStorage.setItem('TokenInit', new Date());
-        this.setState({
-          login: true,
-        });
-      }
-    });
-  }
 
   disablePage() {
     console.log('Disable Page');
@@ -269,28 +257,7 @@ class BettingReport extends React.Component {
 
   render() {
     return (!this.state.login ?
-      <Form style={{ margin: '1em', WebkitAppearance: 'menulist' }} onSubmit={this.loginUser}>
-        <FormGroup>
-          <Label for="login">Login</Label>
-          <Input
-            type="email"
-            name="email"
-            id="email"
-            placeholder="Enter Email"
-            required
-          />
-          <br />
-          <Input
-            type="password"
-            name="password"
-            id="password"
-            placeholder="Enter Password"
-          />
-          <br />
-          <Button type="submit">Submit</Button>
-          <br />
-        </FormGroup>
-      </Form>
+      <div />
       :
       <div className="form-admin">
         <Form style={{ margin: '1em', WebkitAppearance: 'menulist' }}>
@@ -343,11 +310,12 @@ class BettingReport extends React.Component {
 }
 
 const mapState = state => ({
-  //matches: state.betting.matches,
+  matches: state.betting.matches,
+  login: state.admin.login,
 });
 
 const mapDispatch = ({
-  //loadMatches,
+  loadMatches,
   showAlert,
 });
 
