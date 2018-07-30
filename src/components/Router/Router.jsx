@@ -3,13 +3,26 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Switch, BrowserRouter, Route, Redirect } from 'react-router-dom';
 // constants
-import { URL } from '@/constants';
+import { URL, LANDING_PAGE_TYPE } from '@/constants';
 // services
+import BrowserDetect from '@/services/browser-detect';
 import { createDynamicImport } from '@/services/app';
 // components
 import Loading from '@/components/core/presentation/Loading';
 import ScrollToTop from '@/components/App/ScrollToTop';
 import Layout from '@/components/Layout/Main';
+
+import imgCash from '@/assets/images/landing/home/cash.jpg';
+import imgCashContent from '@/assets/images/landing/cash/fake-content.svg';
+import imgDadContent from '@/assets/images/landing/dad/fake-content.svg';
+// import imgBlockchainPrivacy from '@/assets/images/landing/home/blockchain-privacy.jpg';
+import imgDad from '@/assets/images/landing/home/dad.jpg';
+// import imgDao from '@/assets/images/landing/home/dao.jpg';
+import imgInternetCash from '@/assets/images/landing/home/internet-cash.jpg';
+import imgPrediction from '@/assets/images/landing/home/prediction.jpg';
+import imgWallet from '@/assets/images/landing/home/wallet.jpg';
+import imgWhisper from '@/assets/images/landing/home/whisper.jpg';
+import imgUncommons from '@/assets/images/landing/home/uncommons.jpg';
 
 // import NetworkError from '@/components/Router/NetworkError';
 import Maintain from '@/components/Router/Maintain';
@@ -22,31 +35,60 @@ const RouterWallet = createDynamicImport(() => import('@/components/Router/Walle
 const RouterComment = createDynamicImport(() => import('@/components/Router/Comment'), Loading);
 const RouterAdmin = createDynamicImport(() => import('@/components/Router/Admin'), Loading);
 const RouterLuckyPool = createDynamicImport(() => import('@/pages/LuckyLanding/LuckyLanding'), Loading);
-// const RouterExchange = createDynamicImport(() => import('@/components/Router/Exchange'), Loading);
+const RouterExchange = createDynamicImport(() => import('@/components/Router/Exchange'), Loading);
 const RouterPrediction = createDynamicImport(() => import('@/pages/Exchange/Exchange'), Loading);
+const RouterLandingPageMain = createDynamicImport(() => import('@/pages/LandingPage/Main'), Loading);
+const LandingPageMain = createDynamicImport(() => import('@/pages/LandingPage/Main'), Loading);
+const ProjectDetail = createDynamicImport(() => import('@/components/ProjectDetail'), Loading);
+const Recruiting = createDynamicImport(() => import('@/pages/Recruiting'), Loading);
+const JobDetail = createDynamicImport(() => import('@/pages/Recruiting/JobDetail'), Loading);
 
-const rootRouterMap = [
+/* ======================== FOR MOBILE ======================== */
+const configRoutesUsingMobileLayout = [
   { path: URL.HANDSHAKE_PREDICTION, component: RouterPrediction },
   { path: URL.HANDSHAKE_ME, component: RouterMe },
-  { path: URL.HANDSHAKE_DISCOVER, component: RouterDiscover },
+  // { path: URL.HANDSHAKE_DISCOVER, component: RouterDiscover },
   { path: URL.HANDSHAKE_CASH, component: RouterDiscover },
   { path: URL.HANDSHAKE_CHAT, component: RouterChat },
   { path: URL.HANDSHAKE_WALLET, component: RouterWallet },
   { path: URL.HANDSHAKE_CREATE, component: RouterCreate },
-  // { path: URL.HANDSHAKE_EXCHANGE, component: RouterExchange },
-  { path: URL.HANDSHAKE_EXCHANGE, component: RouterPrediction },
+  { path: URL.HANDSHAKE_EXCHANGE, component: RouterExchange },
+  // { path: URL.HANDSHAKE_EXCHANGE, component: RouterPrediction },
   { path: URL.COMMENTS_BY_SHAKE, component: RouterComment },
   { path: URL.ADMIN, component: RouterAdmin },
   { path: URL.REPORT, component: RouterAdmin },
+  { path: URL.REPORT, component: RouterAdmin },
 ];
-
-const routers = rootRouterMap.map(router => (
+const routesUsingMobileLayout = configRoutesUsingMobileLayout.map(route => (
   <Route
     key={Date.now()}
-    path={router.path}
-    component={router.component}
+    {...route}
   />
 ));
+
+/* ======================== FOR DESKTOP ======================== */
+
+let routesUsingDesktopLayout = null;
+if (BrowserDetect.isDesktop) {
+  const configRoutesUsingDesktopLayout = [
+    { path: URL.LUCKY_POOL, component: RouterLuckyPool },
+    { path: URL.PRODUCT_CASH_URL, render: () => <ProjectDetail type="product" name="cash" img={imgCash} imgContent={imgCashContent} /> },
+    { path: URL.PRODUCT_PREDICTION_URL, render: () => <ProjectDetail type="product" name="prediction" img={imgPrediction} /> },
+    { path: URL.PRODUCT_WALLET_URL, render: () => <ProjectDetail type="product" name="wallet" img={imgWallet} /> },
+    { path: URL.PRODUCT_HIVEPAY_OFFLINE_URL, render: () => <ProjectDetail type="product" name="hivepay-offline" img={imgInternetCash} /> },
+    { path: URL.PRODUCT_HIVEPAY_ONLINE_URL, render: () => <ProjectDetail type="product" name="hivepay-online" img={imgCash} /> },
+    { path: URL.RESEARCH_INTERNET_CASH_URL, render: () => <ProjectDetail type="research" name="internet-cash" img={imgInternetCash} /> },
+    { path: URL.PRODUCT_DAD_URL, render: () => <ProjectDetail type="product" name="dad" img={imgDad} imgContent={imgDadContent} /> },
+    { path: URL.RESEARCH_UNCOMMONS_URL, render: () => <ProjectDetail type="research" name="uncommons" img={imgUncommons} /> },
+    { path: URL.PRODUCT_WHISPER_URL, render: () => <ProjectDetail type="product" name="whisper" img={imgDad} /> },
+  ];
+  routesUsingDesktopLayout = configRoutesUsingDesktopLayout.map(route => (
+    <Route
+      key={Date.now()}
+      {...route}
+    />
+  ));
+}
 
 const Page404 = createDynamicImport(() => import('@/pages/Error/Page404'), Loading, true);
 
@@ -85,12 +127,12 @@ class Router extends React.Component {
     return (
       <BrowserRouter>
         <Switch>
-          <Route
-            exact
-            key={Date.now()}
-            path={URL.LUCKY_POOL}
-            component={RouterLuckyPool}
-          />
+          <Route exact path={URL.INDEX} component={RouterLandingPageMain} />
+          <Route path={LANDING_PAGE_TYPE.product.url} render={() => <LandingPageMain type="product" />} />
+          <Route path={LANDING_PAGE_TYPE.research.url} render={() => <LandingPageMain type="research" />} />
+          <Route exact path={URL.RECRUITING} component={Recruiting} />
+          <Route path={URL.RECRUITING_JOB_DETAIL} component={JobDetail} />
+          {routesUsingDesktopLayout}
           <Route
             path={URL.INDEX}
             render={props =>
@@ -102,17 +144,17 @@ class Router extends React.Component {
                     : (
                       <ScrollToTop>
                         <Switch>
-                          <Route
-                            exact
-                            path={URL.INDEX}
-                            render={() => {
-                              if (process.env.isDojo) {
-                                return <Redirect to={{ pathname: URL.HANDSHAKE_CASH }} />
-                              }
-                              return <Redirect to={{ pathname: URL.HANDSHAKE_PREDICTION }} />
-                            }}
-                          />
-                          {routers}
+                          {/*<Route*/}
+                            {/*exact*/}
+                            {/*path={URL.INDEX}*/}
+                            {/*render={() => {*/}
+                              {/*if (process.env.isDojo) {*/}
+                                {/*return <Redirect to={{ pathname: URL.HANDSHAKE_CASH }} />*/}
+                              {/*}*/}
+                              {/*return <Redirect to={{ pathname: URL.HANDSHAKE_PREDICTION }} />*/}
+                            {/*}}*/}
+                          {/*/>*/}
+                          {routesUsingMobileLayout}
                           <Route component={Page404} />
                         </Switch>
                       </ScrollToTop>

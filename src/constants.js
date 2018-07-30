@@ -504,20 +504,14 @@ export const URL = {
   LANDING_PAGE_SHURIKEN: '/shuriken',
   LANDING_PAGE_SHURIKEN_INDEX: '/shuriken',
 
-  LANDING_PAGE_TRADE: '/coin-exchange',
-  LANDING_PAGE_TRADE_INDEX: '/coin-exchange',
-
-  FAQ: '/faq',
-  FAQ_INDEX: '/faq',
-
   WHITE_PAPER: '/whitepaper',
   WHITE_PAPER_INDEX: '/whitepaper',
 
-  INTRODUCING_NINJA_CASH: '/introducing-ninja-cash',
-  ABOUT_NINJA_CASH: '/about-ninja-cash',
+  // INTRODUCING_NINJA_CASH: '/introducing-ninja-cash',
+  // ABOUT_NINJA_CASH: '/about-ninja-cash',
 
-  PRODUCT_URL: '/product',
-  RESEARCH_URL: '/research',
+  // PRODUCT_URL: '/product',
+  // RESEARCH_URL: '/research',
 
   PRODUCT_CASH_URL: '/cash',
   PRODUCT_PREDICTION_URL: '/prediction',
@@ -528,7 +522,22 @@ export const URL = {
   PRODUCT_DAD_URL: '/dad',
   RESEARCH_UNCOMMONS_URL: '/uncommons',
   PRODUCT_WHISPER_URL: '/whisper',
+
+  RECRUITING: '/recruiting',
+  RECRUITING_JOB_DETAIL: '/recruiting/:slug',
 };
+
+export const LANDING_PAGE_TYPE = {
+  product: {
+    text: 'Product',
+    url: '/product',
+  },
+  research: {
+    text: 'Research',
+    url: '/research',
+  },
+}
+
 
 export const NB_BLOCKS = 20;
 
