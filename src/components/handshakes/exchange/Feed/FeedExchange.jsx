@@ -11,6 +11,7 @@ import {
   EXCHANGE_ACTION,
   HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS,
   HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE,
+  HANDSHAKE_ID,
   NB_BLOCKS,
   URL,
 } from '@/constants';
@@ -25,7 +26,6 @@ import { formatAmountCurrency, formatMoneyByLocale, getLatLongHash, getOfferPric
 import { getUserLocation, showAlert } from '@/reducers/app/action';
 import { getDistanceFromLatLonInKm, getErrorMessageFromCode } from '../utils';
 import { ExchangeCashHandshake } from '@/services/neuron';
-import OfferShop from '@/models/OfferShop';
 import { getLocalizedDistance } from '@/services/util';
 import { BigNumber } from 'bignumber.js';
 import StarsRating from '@/components/core/presentation/StarsRating';
@@ -292,7 +292,7 @@ class FeedExchange extends React.PureComponent {
       timeOut: 2000,
       type: 'success',
       callBack: () => {
-        this.props.history.push(`${URL.HANDSHAKE_ME}`);
+        this.props.history.push(`${URL.HANDSHAKE_ME}?id=${HANDSHAKE_ID.EXCHANGE}`);
       },
     });
   }
