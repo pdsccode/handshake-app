@@ -39,7 +39,7 @@ import {
 import { validate } from './validation';
 import '../styles.scss';
 import ModalDialog from '@/components/core/controls/ModalDialog/ModalDialog';
-import { getUserLocation, hideLoading, showAlert, showLoading } from '@/reducers/app/action';
+import { getUserLocation, showAlert } from '@/reducers/app/action';
 import { MasterWallet } from '@/services/Wallets/MasterWallet';
 import { ExchangeCashHandshake } from '@/services/neuron';
 // import phoneCountryCodes from '@/components/core/form/country-calling-codes.min.json';
@@ -58,6 +58,7 @@ import { authUpdate } from '@/reducers/auth/action';
 import OfferShop from '@/models/OfferShop';
 import { getErrorMessageFromCode } from '../utils';
 import Helper from '@/services/helper';
+import PropTypes from "prop-types";
 
 const nameFormExchangeCreate = 'exchangeCreate';
 const FormExchangeCreate = createForm({
@@ -80,13 +81,17 @@ const validateFee = [
 ];
 
 class Component extends React.Component {
+  static propTypes = {
+    setLoading: PropTypes.func.isRequired,
+  };
+
   CRYPTO_CURRENCY_LIST = Object.values(CRYPTO_CURRENCY).map(item => ({ value: item, text: <div className="currency-selector"><img src={CRYPTO_CURRENCY_COLORS[item].icon} /> <span>{CRYPTO_CURRENCY_NAME[item]}</span></div>, hide: false }));
 
   constructor(props) {
     super(props);
 
     // const { update } = Helper.getQueryStrings(window.location.search);
-    let isUpdate = false;
+    const isUpdate = false;
     // if (update && update === 'true') {
     //   isUpdate = true;
     // }
@@ -199,7 +204,7 @@ class Component extends React.Component {
       // if (nextCurrency) {
       //   this.calculateAction(nextCurrency);
       // } else {
-        this.calculateAction(currency);
+      this.calculateAction(currency);
       // }
 
       // if (!isUpdate && isAllInitiate) {
@@ -285,9 +290,9 @@ class Component extends React.Component {
           });
 
           // if (isUpdate) {
-            rfChange(nameFormExchangeCreate, 'customizePriceBuy', item.buyPercentage * 100);
-            rfChange(nameFormExchangeCreate, 'customizePriceSell', item.sellPercentage * 100);
-            this.setState({ buyBalance: item.buyBalance, sellBalance: item.sellBalance });
+          rfChange(nameFormExchangeCreate, 'customizePriceBuy', item.buyPercentage * 100);
+          rfChange(nameFormExchangeCreate, 'customizePriceSell', item.sellPercentage * 100);
+          this.setState({ buyBalance: item.buyBalance, sellBalance: item.sellBalance });
           // }
 
           break;
@@ -310,11 +315,11 @@ class Component extends React.Component {
   }
 
   showLoading = () => {
-    this.props.showLoading({ message: '' });
+    this.props.setLoading(true);
   }
 
   hideLoading = () => {
-    this.props.hideLoading();
+    this.props.setLoading(false);
   }
 
   showAlert = (message) => {
@@ -419,9 +424,12 @@ class Component extends React.Component {
       customizePriceSell, nameShop, phone, address, stationCurrency,
     } = values;
 
+    this.showLoading();
+
     const wallet = MasterWallet.getWalletDefault(currency);
 
     if (!this.checkMainNetDefaultWallet(wallet)) {
+      this.hideLoading();
       return;
     }
 
@@ -432,6 +440,7 @@ class Component extends React.Component {
       const condition = this.showNotEnoughCoinAlert(balance, amountBuy, amountSell, fee, currency);
 
       if (condition) {
+        this.hideLoading();
         return;
       }
     }
@@ -501,6 +510,7 @@ class Component extends React.Component {
   }
 
   cancelCreateOffer = () => {
+    this.hideLoading();
     this.modalRef.close();
   }
 
@@ -510,7 +520,6 @@ class Component extends React.Component {
     this.modalRef.close();
     console.log('createOffer', offer);
 
-    this.showLoading();
     this.props.createOfferStores({
       PATH_URL: API_URL.EXCHANGE.OFFER_STORES,
       data: offer,
@@ -527,8 +536,6 @@ class Component extends React.Component {
     console.log('addOfferItem', offerItem, this.offer);
     const { offer } = this;
     const { isUpdate } = this.state;
-
-    this.showLoading();
 
     if (isUpdate) {
       this.props.offerItemRefill({
@@ -1071,8 +1078,6 @@ const mapDispatchToProps = dispatch => ({
   showAlert: bindActionCreators(showAlert, dispatch),
   rfChange: bindActionCreators(change, dispatch),
   clearFields: bindActionCreators(clearFields, dispatch),
-  showLoading: bindActionCreators(showLoading, dispatch),
-  hideLoading: bindActionCreators(hideLoading, dispatch),
   authUpdate: bindActionCreators(authUpdate, dispatch),
 
   createOfferStores: bindActionCreators(createOfferStores, dispatch),

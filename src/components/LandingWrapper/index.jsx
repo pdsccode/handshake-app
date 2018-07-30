@@ -3,10 +3,11 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl'
 
-import { setLanguage } from '@/reducers/app/action';
+import { setLanguage, updateModal } from '@/reducers/app/action';
 // import VideoYoutube from '@/components/core/controls/VideoYoutube';
 import { Link } from 'react-router-dom';
-import { URL } from '@/constants';
+import { LANDING_PAGE_TYPE, URL } from '@/constants';
+import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
 // style
 import imgNinja from '@/assets/images/ninja/ninja-header-black.svg';
@@ -35,17 +36,21 @@ class Index extends React.PureComponent {
     this.props.setLanguage(countryCode);
   }
 
+  handleToggleModal = () => {
+    this.props.updateModal({ show: false })
+  }
+
   render() {
     const { messages, locale } = this.props.intl;
-    const { children, type } = this.props;
+    const { children, type, btnToggleLeftMenu, modal: { className, show, body, title, centered } } = this.props;
     const logo = <a href="/" className="d-inline-block mt-1"><img src={imgNinja} width="100" /></a>;
     const navLinks = (
       <span>
-        <span><a className={`${type === 'product' ? 'active' : ''} landing-nav-link`} href={URL.PRODUCT_URL}>Product</a></span>
-        <span><a className={`${type === 'research' ? 'active' : ''} landing-nav-link`} href={URL.RESEARCH_URL}>Research</a></span>
+        <span><Link className={`${type === 'product' ? 'active' : ''} landing-nav-link`} to={LANDING_PAGE_TYPE.product.url}>Product</Link></span>
+        <span><Link className={`${type === 'research' ? 'active' : ''} landing-nav-link`} to={LANDING_PAGE_TYPE.research.url}>Research</Link></span>
       </span>
     )
-    const btnJoin = <a className="btn btn-primary-landing" href="https://www.autonomous.ai/talents"><FormattedMessage id="landing_page.btn.joinOurTeam" /></a>
+    const btnJoin = <Link className="btn btn-primary-landing" to={URL.RECRUITING}><FormattedMessage id="landing_page.btn.joinOurTeam" /></Link>
 
     return (
       <div className="landing-page">
@@ -62,7 +67,8 @@ class Index extends React.PureComponent {
             </div>
           </div>
           <div className="row d-md-none">
-            <div className="col">{navLinks}</div>
+            <div className="col">{btnToggleLeftMenu}</div>
+            <div className="col text-right">{navLinks}</div>
           </div>
 
           {/* desktop */}
@@ -72,7 +78,7 @@ class Index extends React.PureComponent {
             </div>
             <div className="col-10">
               <div className="text-right">
-                {navLinks}
+                <span className="mr-4">{navLinks}</span>
                 {btnJoin}
               </div>
              </div>
@@ -87,14 +93,13 @@ class Index extends React.PureComponent {
             <div className="col-12 col-md-1">
               <img src={imgLogo} width="54" />
             </div>
-            <div className="col-12 col-md-5">
-              <div className="align-middle">
-                <div><FormattedHTMLMessage id="landing_page.label.onlyMobile" /></div>
-                <div><FormattedHTMLMessage id="landing_page.label.openOn" /></div>
+            <div className="col-12 col-md-8">
+              <div className="align-middle px-1 pt-1">
+                <div><FormattedHTMLMessage id="landing_page.label.footer" /></div>
               </div>
             </div>
-            <div className="col-12 col-md-6 text-left text-md-right">
-              <div>
+            <div className="col-12 col-md-3 text-left text-md-right">
+              <div className="pl-1 pt-1">
                 <div><FormattedHTMLMessage id="landing_page.label.joinTelegram" /></div>
                 <div><FormattedHTMLMessage id="landing_page.label.whitepaper" /></div>
               </div>
@@ -102,13 +107,23 @@ class Index extends React.PureComponent {
           </div>
 
         </div>
+        <Modal isOpen={show} toggle={this.handleToggleModal} className={className} centered={centered}>
+          {title && <ModalHeader toggle={this.handleToggleModal}>{title}</ModalHeader>}
+          <ModalBody>
+            {body}
+          </ModalBody>
+        </Modal>
       </div>
     );
   }
 }
+const mapState = (state) => ({
+  modal: state.app.modal,
+});
 
 const mapDispatch = ({
   setLanguage,
+  updateModal
 });
 
-export default injectIntl(connect(null, mapDispatch)(Index));
+export default injectIntl(connect(mapState, mapDispatch)(Index));

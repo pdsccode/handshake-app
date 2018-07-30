@@ -22,7 +22,7 @@ import { Bitcoin } from '@/services/Wallets/Bitcoin';
 import Offer from '@/models/Offer';
 import { MasterWallet } from '@/services/Wallets/MasterWallet';
 import { formatAmountCurrency, formatMoneyByLocale, getLatLongHash, getOfferPrice } from '@/services/offer-util';
-import { getUserLocation, hideLoading, showAlert, showLoading } from '@/reducers/app/action';
+import { getUserLocation, showAlert } from '@/reducers/app/action';
 import { getDistanceFromLatLonInKm, getErrorMessageFromCode } from '../utils';
 import { ExchangeCashHandshake } from '@/services/neuron';
 import OfferShop from '@/models/OfferShop';
@@ -45,6 +45,10 @@ const ICONS = {
 };
 
 class FeedExchange extends React.PureComponent {
+  static propTypes = {
+    setLoading: PropTypes.func.isRequired,
+  };
+
   constructor(props) {
     super(props);
 
@@ -67,11 +71,11 @@ class FeedExchange extends React.PureComponent {
   }
 
   showLoading = () => {
-    this.props.showLoading({ message: '' });
+    this.props.setLoading(true);
   }
 
   hideLoading = () => {
-    this.props.hideLoading();
+    this.props.setLoading(false);
   }
 
   handleOnShake = (name) => {
@@ -203,11 +207,14 @@ class FeedExchange extends React.PureComponent {
     const { authProfile } = this.props;
     const { offer } = this;
 
+    this.showLoading();
+
     const shopType = values.type === EXCHANGE_ACTION.BUY ? EXCHANGE_ACTION.SELL : EXCHANGE_ACTION.BUY;
 
     const wallet = MasterWallet.getWalletDefault(values.currency);
 
     if (!this.checkMainNetDefaultWallet(wallet)) {
+      this.hideLoading();
       return;
     }
 
@@ -215,6 +222,7 @@ class FeedExchange extends React.PureComponent {
       const balance = await wallet.getBalance();
       const fee = await wallet.getFee(NB_BLOCKS, true);
       if (this.showNotEnoughCoinAlert(balance, values.amount, fee, values.currency)) {
+        this.hideLoading();
         return;
       }
     }
@@ -231,7 +239,6 @@ class FeedExchange extends React.PureComponent {
       chat_username: authProfile?.username,
     };
 
-    this.showLoading();
     this.props.shakeOfferItem({
       PATH_URL: `${API_URL.EXCHANGE.OFFER_STORES}/${offer.id}/${API_URL.EXCHANGE.SHAKES}`,
       METHOD: 'POST',
@@ -519,8 +526,6 @@ const mapState = state => ({
 const mapDispatch = dispatch => ({
   shakeOfferItem: bindActionCreators(shakeOfferItem, dispatch),
   showAlert: bindActionCreators(showAlert, dispatch),
-  showLoading: bindActionCreators(showLoading, dispatch),
-  hideLoading: bindActionCreators(hideLoading, dispatch),
   rfChange: bindActionCreators(change, dispatch),
   clearFields: bindActionCreators(clearFields, dispatch),
   trackingOnchain: bindActionCreators(trackingOnchain, dispatch),
