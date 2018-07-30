@@ -28,6 +28,7 @@ export const APP_ACTION = {
 
   MODAL: 'MODAL',
   CLOSE_MODAL: 'CLOSE_MODAL',
+  UPDATE_MODAL: 'UPDATE_MODAL',
 
   NOT_FOUND_SET: 'NOT_FOUND_SET',
   NOT_FOUND_REMOVE: 'NOT_FOUND_REMOVE',
@@ -59,6 +60,7 @@ export const hideLoading = () => ({ type: APP_ACTION.LOADED });
 // Modal
 export const showModal = modalContent => ({ type: APP_ACTION.MODAL, modalContent });
 export const hideModal = () => ({ type: APP_ACTION.CLOSE_MODAL });
+export const updateModal = (payload) => ({ type: APP_ACTION.UPDATE_MODAL, payload });
 
 // Alert
 export const showAlert = config => ({ type: APP_ACTION.SHOW_ALERT, payload: { isShow: true, ...config } });

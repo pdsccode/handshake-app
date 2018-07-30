@@ -51,6 +51,31 @@ export const HANDSHAKE_NAME = {
   // UNSELECTED: { name: 'Create a prediction market', priority: 100 },
 };
 
+export const CASH_SORTING_CRITERIA = {
+  DISTANCE: 0,
+  PRICE: 1,
+  RATING: 2,
+};
+
+export const CASH_SORTING_LIST = [{
+  value: CASH_SORTING_CRITERIA.DISTANCE,
+  text: <FormattedMessage id="ex.sort.distance" />,
+},
+// {
+//   value: CASH_SORTING_CRITERIA.PRICE,
+//   text: <FormattedMessage id="ex.sort.price" />,
+// },
+{
+  value: CASH_SORTING_CRITERIA.RATING,
+  text: <FormattedMessage id="ex.sort.rating" />,
+},
+];
+
+export const SORT_ORDER = {
+  ASC: 'asc',
+  DESC: 'desc',
+};
+
 export const PRICE_DECIMAL = 0;
 export const AMOUNT_DECIMAL = 6;
 
@@ -158,12 +183,12 @@ export const API_URL = {
     LOAD_MATCHES: 'cryptosign/match',
     LOAD_HANDSHAKES: 'cryptosign/handshake',
     CHECK_FREE_AVAILABLE: 'cryptosign/handshake/check_free_bet',
-    UNINIT_HANDSHAKE: 'cryptosign/handshake/feed/uninit',
+    UNINIT_HANDSHAKE: 'cryptosign/handshake/uninit',
     UNINIT_HANDSHAKE_FREE: 'cryptosign/handshake/uninit_free_bet',
-    COLLECT: 'cryptosign/handshake/feed/withdraw',
+    COLLECT: 'cryptosign/handshake/collect',
     COLLECT_FREE: 'cryptosign/handshake/collect_free_bet',
     ROLLBACK: 'cryptosign/handshake/rollback',
-    REFUND: 'cryptosign/handshake/feed/refund',
+    REFUND: 'cryptosign/handshake/refund',
     REFUND_FREE: 'cryptosign/handshake/refund_free_bet',
     ADD_MATCH: 'cryptosign/match/add',
     ADD_OUTCOME: 'cryptosign/outcome/add',
@@ -439,6 +464,7 @@ export const URL = {
   INDEX: '/',
 
   ADMIN: '/admin',
+  REPORT: '/report',
   LUCKY_POOL: '/lucky',
   HANDSHAKE_ME: '/me',
   HANDSHAKE_ME_INDEX: '/me',
@@ -481,18 +507,40 @@ export const URL = {
   LANDING_PAGE_SHURIKEN: '/shuriken',
   LANDING_PAGE_SHURIKEN_INDEX: '/shuriken',
 
-  LANDING_PAGE_TRADE: '/coin-exchange',
-  LANDING_PAGE_TRADE_INDEX: '/coin-exchange',
-
-  FAQ: '/faq',
-  FAQ_INDEX: '/faq',
-
   WHITE_PAPER: '/whitepaper',
   WHITE_PAPER_INDEX: '/whitepaper',
 
-  INTRODUCING_NINJA_CASH: '/introducing-ninja-cash',
-  ABOUT_NINJA_CASH: '/about-ninja-cash',
+  // INTRODUCING_NINJA_CASH: '/introducing-ninja-cash',
+  // ABOUT_NINJA_CASH: '/about-ninja-cash',
+
+  // PRODUCT_URL: '/product',
+  // RESEARCH_URL: '/research',
+
+  PRODUCT_CASH_URL: '/cash',
+  PRODUCT_PREDICTION_URL: '/prediction',
+  PRODUCT_WALLET_URL: '/wallet',
+  PRODUCT_HIVEPAY_OFFLINE_URL: '/hivepay-offline',
+  PRODUCT_HIVEPAY_ONLINE_URL: '/hivepay-online',
+  RESEARCH_INTERNET_CASH_URL: '/internet-cash',
+  PRODUCT_DAD_URL: '/dad',
+  RESEARCH_UNCOMMONS_URL: '/uncommons',
+  PRODUCT_WHISPER_URL: '/whisper',
+
+  RECRUITING: '/recruiting',
+  RECRUITING_JOB_DETAIL: '/recruiting/:slug',
 };
+
+export const LANDING_PAGE_TYPE = {
+  product: {
+    text: 'Product',
+    url: '/product',
+  },
+  research: {
+    text: 'Research',
+    url: '/research',
+  },
+}
+
 
 export const NB_BLOCKS = 20;
 

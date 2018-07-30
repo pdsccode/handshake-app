@@ -66,7 +66,7 @@ export const MESSAGE = {
   NOT_ENOUGH_BALANCE: 'Too rich for your blood. Please top up your wallet.',
   NOT_ENOUGH_GAS: `Not enough gas. Your balance should larger than 0.007eth gas + value. Please top up your wallet.`,
   CHOOSE_MATCH: 'Please choose event and outcome',
-  ODD_LARGE_THAN: 'Please enter odds greater than 1 and smaller 12',
+  ODD_LARGE_THAN: 'Please enter odds greater than 1 and smaller 11.5',
   AMOUNT_VALID: 'Please place a bet larger than 0.',
   MATCH_OVER: 'Time travel is hard. Please bet on a future or ongoing match.',
   RIGHT_NETWORK: 'You must set your wallet on Mainnet',
@@ -93,7 +93,7 @@ export const BETTING_STATUS_LABEL =
       DONE: ` The bet is done.`,
       WITHDRAW: 'Withdraw winnings',
       CANCELLING: 'Your bet is being cancelled.',
-      PROGRESSING: 'Your bet is progressing a transaction. Please wait..',
+      CANCEL_PROGRESSING: 'The blockchain is processing your cancelling. Please wait.',
       BET_WAIT_MATCHING: 'Bet placed. Matching..',
       BET_MACHED_WAIT_RESULT: 'Bet matched. Waiting for result..',
       REFUND: 'Refund your bet',
@@ -103,5 +103,7 @@ export const BETTING_STATUS_LABEL =
       REFUNDED: 'Your coin has been refunded.',
       COLLECT_PENDING: 'The blockchain is processing your withdrawal. Please wait.',
       COLLECT_DONE: 'Your winnings have been withdrawn to your wallet!',
+      REFUND_PENDING: 'The blockchain is processing your refund. Please wait.',
+
     };
 
