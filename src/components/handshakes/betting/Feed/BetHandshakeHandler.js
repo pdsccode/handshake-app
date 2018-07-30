@@ -174,7 +174,7 @@ export class BetHandshakeHandler {
   };
 
 
-  async cancelBet(hid, side, stake, odds, offchain) {
+  async cancelBet(hid, side, stake, odds, offchain, eventName, outcome) {
     const chainId = getChainIdDefaultWallet();
 
     const bettinghandshake = new BettingHandshake(chainId);
@@ -204,6 +204,9 @@ export class BetHandshakeHandler {
       } else {
 
       }
+
+      GA.createClickCancel(eventName, outcome, hash);
+
     } catch (err) {
       realBlockHash = '-1';
       logJson = err.message;
@@ -213,7 +216,7 @@ export class BetHandshakeHandler {
     return result;
   }
 
-  async withdraw(hid, offchain) {
+  async withdraw(hid, offchain, eventName, outcome) {
     const chainId = getChainIdDefaultWallet();
 
     const bettinghandshake = new BettingHandshake(chainId);
@@ -230,6 +233,7 @@ export class BetHandshakeHandler {
       } = result;
       logJson = payload;
       realBlockHash = hash;
+      GA.createClickWithdraw(eventName, outcome, hash);
       if (hash == -1) {
         realBlockHash = '-1';
         logJson = error.message;
@@ -259,7 +263,7 @@ export class BetHandshakeHandler {
 
     return result;
   }
-  async refund(hid, offchain) {
+  async refund(hid, offchain, eventName, outcome) {
 
     const chainId = getChainIdDefaultWallet();
 
@@ -277,6 +281,7 @@ export class BetHandshakeHandler {
 
       logJson = payload;
       realBlockHash = hash;
+      GA.createClickRefund(eventName, outcome);
       if (hash == -1) {
         realBlockHash = '-1';
         logJson = error.message;

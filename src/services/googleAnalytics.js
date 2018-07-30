@@ -18,6 +18,9 @@ const EVENT_ACTION = {
   CLICK_GO_BUTTON: 'Click go button',
   CLICK_COMMENTS_BOX: 'Click comments box',
   CLICK_SHARE_BUTTON: 'Click share button',
+  CLICK_ME_CANCEL_BUTTON: 'Click me cancel button',
+  CLICK_ME_WITHDRAW_BUTTON: 'Click me withdraw button',
+  CLICK_ME_REFUND_BUTTON: 'Click me refund button',
   CREATE_BET_SUCCESSFUL: 'Create bet successful',
   CREATE_SHARE_BUTTON: 'Create share button',
   CREATE_BET_NOT_MATCH_FAIL: 'Create bet not match - fail',
@@ -47,7 +50,7 @@ class GoogleAnalyticsService {
     try {
       const pathName = window.location.pathname;
       const categoryByPathName = {
-        '/exchange': EVENT_CATEGORY.DISCOVER_BETTING,
+        '/prediction': EVENT_CATEGORY.DISCOVER_BETTING,
         //'/create': EVENT_CATEGORY.CREATE,
       };
       return categoryByPathName[pathName];
@@ -333,6 +336,55 @@ class GoogleAnalyticsService {
         category: category || EVENT_CATEGORY.DISCOVER_BETTING,
         action: `${EVENT_ACTION.CLICK_SHARE_BUTTON}: ${shareType}`,
         label: `${title} - (${shareUrl})`,
+      });
+    } catch (err) {}
+  }
+
+  /**
+   *
+   * @param event
+   * @param outcome
+   */
+  createClickCancel(event, outcome, txHash) {
+    const category = this.eventCategory;
+
+    try {
+      this.sendGAEvent({
+        category,
+        action: EVENT_ACTION.CLICK_ME_CANCEL_BUTTON,
+        label: `${event} - (${outcome})-${txHash}`,
+      });
+    } catch (err) {}
+  }
+  /**
+   *
+   * @param event
+   * @param outcome
+   */
+  createClickWithdraw(event, outcome, txHash) {
+    const category = this.eventCategory;
+
+    try {
+      this.sendGAEvent({
+        category,
+        action: EVENT_ACTION.CLICK_ME_WITHDRAW_BUTTON,
+        label: `${event} - (${outcome})-${txHash}`,
+      });
+    } catch (err) {}
+  }
+  /**
+   *
+   * @param event
+   * @param outcome
+   */
+  createClickRefund(event, outcome, txHash) {
+    const category = this.eventCategory;
+
+    try {
+      this.sendGAEvent({
+        category,
+        action: EVENT_ACTION.CLICK_ME_REFUND_BUTTON,
+        label: `${event} - (${outcome})-${txHash}`,
       });
     } catch (err) {}
   }
