@@ -101,7 +101,7 @@ class Recruiting extends React.Component {
         )}
       >
 
-        <div className="row text-center">
+        <div className="row text-center d-none d-md-block">
           <div className="col">
             <div className="recruiting-intro">
               <div><div className="intro-text w-75 d-inline-block"><FormattedHTMLMessage id="landing_page.recruiting.intro.label" /></div></div>
