@@ -15,18 +15,30 @@ class CreateEventForm extends Component {
     className: PropTypes.string,
     reportList: PropTypes.array,
     isNew: PropTypes.bool,
+    initialValues: PropTypes.object,
   };
 
   static defaultProps = {
     className: '',
     reportList: undefined,
     isNew: true,
+    initialValues: {},
   };
 
   constructor(props) {
     super(props);
     this.state = {
+      closingTime: props.initialValues.closingTime,
+      reportingTime: props.initialValues.reportingTime,
+      disputeTime: props.initialValues.disputeTime,
+      selectedReportSource: undefined,
     };
+  }
+
+  setFieldValueToState = (fieldName, value) => {
+    this.setState({
+      [fieldName]: value,
+    });
   }
 
   renderGroupTitle = (title) => {
@@ -37,7 +49,7 @@ class CreateEventForm extends Component {
     return (<div className="CreateEventFormGroupNote">{text}</div>);
   }
 
-  renderEvent = ({ isNew}) => {
+  renderEvent = ({ isNew }) => {
     if (!isNew) return null;
     const title = 'CREATE AN EVENT';
     return (
@@ -56,7 +68,7 @@ class CreateEventForm extends Component {
     );
   }
 
-  renderOutComes = ({ fields, meta: { error }, isNew}) => {
+  renderOutComes = ({ fields, meta: { error }, isNew }) => {
     const title = 'OUTCOME';
     const textNote = '2.0 : Bet 1 ETH, win 1 ETH. You can adjust these odds.';
     return (
@@ -96,7 +108,7 @@ class CreateEventForm extends Component {
     );
   }
 
-  renderFee = ({ isNew}) => {
+  renderFee = ({ isNew }) => {
     const title = 'CREATOR FEE';
     const textNote = 'The creator fee is a percentage of the total winnings of the market.';
     return (
@@ -116,34 +128,93 @@ class CreateEventForm extends Component {
     );
   }
 
-  renderReport = ({ reportList}) => {
+  renderReport = (props, state) => {
     const title = 'REPORT';
     return (
       <React.Fragment>
         {this.renderGroupTitle(title)}
-        <Field name="reports" component="select">
+        <Field name="reports" component="select" onChange={(e, newValue) => this.setFieldValueToState('selectedReportSource', newValue)}>
           <option value="">Please select a verified source</option>
-          {reportList.map(r => <option value={r.id} key={r.id}>{`${r.name} - ${r.url}`}</option>)}
+          {props.reportList.map(r => <option value={r.id} key={r.id}>{`${r.name} - ${r.url}`}</option>)}
         </Field>
-        {/*{error && <li className="error">{error}</li>}*/}
+        {
+          props.isNew && !state.selectedReportSource &&
+          <React.Fragment>
+            <div className="CreateEventOption">Or</div>
+            <Field
+              name="ownReport"
+              type="text"
+              className="form-group"
+              fieldClass="form-control"
+              component={renderField}
+              placeholder="Enter your own source URL"
+              validate={[required]}
+            />
+            {this.renderGroupNote('We will review your source and get back to you within 24 hours.')}
+          </React.Fragment>
+        }
       </React.Fragment>
     );
   }
 
-  renderTime = ({ input, isNew}) => {
-    console.log('input', input);
-    // console.log('moment.unix(input.value)', moment.unix(input.value));
+  renderDateTime = ({ input, isNew, label, ...props }) => {
+    const { value, name, ...inputData } = input;
+    const newValue = value ? { value: moment.unix(value) } : {};
     return (
-      <DatePicker
-        onChange={(date) => { this.setFieldValueToState(date, 'closingTime'); }}
-        className="form-control input-field"
-        placeholder="Closing Time"
-        dateFormat="DD MMMM YYYY"
-        name="closingTime"
-        required
-        value={moment.unix(1533930785)}
-        // disabled={!isNew}
-      />
+      <React.Fragment>
+        {this.renderGroupTitle(label)}
+        <DatePicker
+          onChange={(date) => { this.setFieldValueToState(name, date); }}
+          className="form-control input-field"
+          dateFormat="DD MMMM YYYY"
+          name={name}
+          required
+          {...props}
+          {...inputData}
+          {...newValue}
+          disabled={!isNew}
+        />
+      </React.Fragment>
+    );
+  }
+
+  renderTimeGroup = (props, state) => {
+    return (
+      <React.Fragment>
+        <Field
+          name="closingTime"
+          type="text"
+          component={this.renderDateTime}
+          label="Closing Time"
+          placeholder="Closing Time"
+          timePlaceholder="Local timezone"
+          validate={[required]}
+          isNew={props.isNew}
+          value={state.closingTime}
+        />
+        <Field
+          name="reportingTime"
+          type="text"
+          component={this.renderDateTime}
+          label="Reporting Time"
+          placeholder="Reporting Time"
+          timePlaceholder="Local timezone"
+          validate={[required]}
+          isNew={props.isNew}
+          value={state.reportingTime}
+        />
+        <Field
+          name="disputeTime"
+          type="text"
+          component={this.renderDateTime}
+          label="Dispute Time"
+          placeholder="Dispute Time"
+          timePlaceholder="Local timezone"
+          validate={[required]}
+          isNew={props.isNew}
+          value={state.disputeTime}
+        />
+      </React.Fragment>
     );
   }
 
@@ -160,18 +231,10 @@ class CreateEventForm extends Component {
           component={this.renderOutComes}
         />
         {this.renderFee(props)}
-        {this.renderReport(props)}
-        {/*{renderTime()}*/}
-        <Field
-          name="closingTime"
-          type="text"
-          component={this.renderTime}
-          label="Closing Time"
-          validate={[required]}
-          isNew={props.isNew}
-        />
+        {this.renderReport(props, state)}
+        {this.renderTimeGroup(props, state)}
         <button type="submit" disabled={props.pristine || props.submitting}>
-          Submit
+          {props.isNew ? 'Create a new event' : 'Add new outcomes'}
         </button>
       </form>
     );

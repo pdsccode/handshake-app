@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import moment from 'moment';
 import { loadMatches } from '@/pages/Prediction/action';
 import { eventSelector, isLoading } from '@/pages/Prediction/selector';
 import Dropdown from '@/components/core/controls/Dropdown';
@@ -102,8 +103,9 @@ class CreateEventContainer extends React.Component {
       creatorFee: selectedEvent.market_fee,
       reports: selectedEvent.source_id,
       closingTime: selectedEvent.date,
+      reportingTime: selectedEvent.reportTime,
+      disputeTime: selectedEvent.disputeTime,
     };
-    console.log('initialValues', initialValues);
     return (
       <CreateEventForm
         initialValues={initialValues}

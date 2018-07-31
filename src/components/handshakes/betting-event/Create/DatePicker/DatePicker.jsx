@@ -97,6 +97,11 @@ class DatePicker extends React.PureComponent {
         <TimePickerComponent
           disabled={this.props.disabled}
           onChangeTime={this.onChangeTime}
+          value={props.value}
+          inputProps={{
+            placeholder: this.props.timePlaceholder,
+            required: this.props.required,
+          }}
         />
       </div>);
   }
