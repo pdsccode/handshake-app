@@ -161,7 +161,12 @@ class DataFeed extends React.Component {
     if (calculations.direction === "down" && calculations.percentagePassed > 0.3) {
       if (this.state.nextURL && !this.state.isLoading) {
         this.setState({isLoading: true});
-        const req  = agent.req.get(this.state.nextURL);
+
+        var  request_url_tmp = this.state.nextURL;
+        if (process.env.BASE_DATASET_PORT =="443" ){
+           request_url_tmp = request_url_tmp.replace("http", "https");;
+        }
+        const req  = agent.req.get(request_url_tmp);
         if (this.props.isAuth && this.state.token !=undefined) {
           req.set('authorization', `JWT ${this.props.token}`);
         }

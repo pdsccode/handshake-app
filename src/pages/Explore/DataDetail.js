@@ -169,7 +169,13 @@ class DataDetail extends React.Component {
     if (calculations.direction === "down" & calculations.percentagePassed > 0.3) {
       if (!!this.state.nextURL && this.state.isLoading == false) {
         this.setState({isLoading: true})
-        agent.req.get(this.state.nextURL).set('authorization', `JWT ${this.props.token}`).then((response) => {
+
+        var  request_url_tmp = this.state.nextURL;
+        if (process.env.BASE_DATASET_PORT =="443" ){
+           request_url_tmp = request_url_tmp.replace("http", "https");;
+        } 
+
+        agent.req.get(request_url_tmp).set('authorization', `JWT ${this.props.token}`).then((response) => {
           let resBody = response.body;
           this.setState({isLoading: false})
           if (resBody.next != self.state.nextURL) {
