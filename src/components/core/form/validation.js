@@ -4,6 +4,15 @@ import { FormattedMessage } from 'react-intl';
 export const required = value =>
   (value ? undefined : <FormattedMessage id="error.required" />);
 
+export const requiredPhone = value => {
+  if (value) {
+    const phones = value.trim().split('-');
+    return phones.length > 1 && phones[1].length > 0 ? undefined : <FormattedMessage id="error.required" />;
+  } else {
+    return <FormattedMessage id="error.required" />;
+  }
+}
+
 export const requiredOne = fieldNames => (value, allValues) => {
   for (let i = 0; i < fieldNames.length; ++i) {
     const fieldName = fieldNames[i];

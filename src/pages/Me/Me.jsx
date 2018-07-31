@@ -98,8 +98,10 @@ class Me extends React.Component {
 
   constructor(props) {
     super(props);
-    const { s, sh } = Helper.getQueryStrings(window.location.search);
+    const { s, sh, tab } = Helper.getQueryStrings(window.location.search);
     const handshakeDefault = this.getDefaultHandShakeId();
+
+    const cashTabDefault = tab ? tab.toUpperCase() : CASH_TAB.TRANSACTION;
 
     const initUserId = s;
     const offerId = sh;
@@ -117,7 +119,7 @@ class Me extends React.Component {
         // className: "discover-popup",
         // isDismiss: false
       },
-      cashTab: CASH_TAB.TRANSACTION,
+      cashTab: cashTabDefault,
       handshakeIdActive: handshakeDefault,
       firstTime: true,
       me: this.props.me,
@@ -200,13 +202,14 @@ class Me extends React.Component {
   }
 
   componentDidMount() {
-    const { initUserId, offerId, handshakeIdActive } = this.state;
+    const { initUserId, offerId, handshakeIdActive, cashTab } = this.state;
     const { rfChange } = this.props;
     if (initUserId && offerId) {
       this.rateRef.open();
     }
 
     rfChange(nameFormFilterFeeds, 'feedType', handshakeIdActive);
+    rfChange(nameFormFilterFeeds, 'cash-show-type', cashTab);
 
     this.loadMyHandshakeList();
     this.getOfferStore();
