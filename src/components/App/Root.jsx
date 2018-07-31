@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import {Redirect} from 'react-router-dom'
 import qs from 'querystring';
 
 import { URL } from '@/constants';
@@ -70,7 +71,8 @@ class Root extends React.Component {
         // code
     }
     if (BrowserDetect.isDesktop) {
-       //return <MobileOrTablet />;
+      //return <Redirect to="https://ninja.org/dad" />;
+        window.location ="https://ninja.org/dad"
     }
     return <Handle setLanguage={this.setLanguage} refer={this.refer} />;
   }
