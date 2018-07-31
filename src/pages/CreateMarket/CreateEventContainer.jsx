@@ -100,7 +100,10 @@ class CreateEventContainer extends React.Component {
       eventName: selectedEvent.name,
       outcomes: selectedEvent.outcomes,
       creatorFee: selectedEvent.market_fee,
+      reports: selectedEvent.source_id,
+      closingTime: selectedEvent.date,
     };
+    console.log('initialValues', initialValues);
     return (
       <CreateEventForm
         initialValues={initialValues}
