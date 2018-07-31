@@ -24,13 +24,13 @@
     line-height: 44px;
   }
   .pd-subHeading {
-    opacity: 0.7;
+    opacity: 1;
     font-family: azo-sans-web, sans-serif;
     font-weight: 400;
-    font-size: 20px;
+    font-size: 19px;
     color: #484848;
     letter-spacing: 0;
-    line-height: 32px;
+    line-height: 29px;
     margin-top: 18px;
   }
   .pd-content {
@@ -51,7 +51,8 @@
   }
   .text-email {
     color: #484848;
-    font-size: 23px;
+    font-size: 18px;
+    font-weight: 500;
     margin-bottom: 5px;
   }
   .text-send-link {
