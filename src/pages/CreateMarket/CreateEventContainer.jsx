@@ -98,6 +98,7 @@ class CreateEventContainer extends React.Component {
     const initialValues = isCreateNew ? {
       outcomes: [{}],
     } : {
+      eventId: selectedEvent.id,
       eventName: selectedEvent.name,
       outcomes: selectedEvent.outcomes,
       creatorFee: selectedEvent.market_fee,

@@ -14,3 +14,11 @@ export const loadReports = (payload = {}) => {
     ...payload,
   };
 }
+
+export const addOutcomes = (payload = {}) => {
+  return {
+    type: 'CREATE_MARKET:ADD_OUTCOMES',
+    ...payload,
+  };
+}
+

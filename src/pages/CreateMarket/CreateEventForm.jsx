@@ -8,6 +8,7 @@ import moment from 'moment';
 import DatePicker from '@/components/handshakes/betting-event/Create/DatePicker/DatePicker';
 import { renderField } from './form';
 import { required } from './validate';
+import { addOutcomes } from './action';
 
 class CreateEventForm extends Component {
   static displayName = 'CreateEventForm';
@@ -35,10 +36,29 @@ class CreateEventForm extends Component {
     };
   }
 
+  onCreateNewEvent = (values, dispatch, props) => {
+    if (!props.isNew) {
+      // Add new outcomes
+      const newOutcomeList = values.outcomes.filter(o => !o.id).map(i => Object.assign({}, i, { public: 0 }));
+      dispatch(addOutcomes({
+        eventId: values.eventId,
+        newOutcomeList,
+        successFn: this.handleAddOutcomeSuccess,
+      }));
+    } else {
+      // Add new event
+      console.log('values', values);
+    }
+  }
+
   setFieldValueToState = (fieldName, value) => {
     this.setState({
       [fieldName]: value,
     });
+  }
+
+  handleAddOutcomeSuccess = (data) => {
+    console.log('data', data);
   }
 
   renderGroupTitle = (title) => {
@@ -64,6 +84,7 @@ class CreateEventForm extends Component {
           placeholder="Event name"
           validate={[required]}
         />
+        <Field name="eventId" type="hidden" component={renderField} />
       </React.Fragment>
     );
   }
@@ -99,7 +120,7 @@ class CreateEventForm extends Component {
             );
           })
         }
-        <button className="AddMoreOutCome" type="button" onClick={() => fields.push = ({})}>
+        <button className="AddMoreOutCome" type="button" onClick={() => fields.push({})}>
           <img src={IconPlus} alt="" className="IconPlus" />
           <span>Add more outcomes</span>
         </button>
@@ -223,7 +244,7 @@ class CreateEventForm extends Component {
       [props.className]: !!props.className,
     });
     return (
-      <form className={cls}>
+      <form className={cls} onSubmit={props.handleSubmit(this.onCreateNewEvent)}>
         {this.renderEvent(props)}
         <FieldArray
           name="outcomes"
