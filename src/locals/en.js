@@ -657,6 +657,32 @@ export default {
       answer: 'We will be integrating Handshake (and your favourite features like promises, IOUs, contract upload, etc.) into the Ninja mobile website.',
     }
   ],
+  'landing_page.wallet.faq': [
+    {
+      question: 'What is Ninja Wallet?',
+      answer: 'Ninja Wallet is a decentralized cryptocurrency wallet, that allows you to hold multiple cryptocurrencies. There are no downloads,  no sign ups and no fees.',
+    },
+    {
+      question: 'How many cryptocurrencies can I use with Ninja Wallet?',
+      answer: 'You can use BTC, BCH, ETH, ZEC, LTC, XRP, ERC20 Tokens and ERC721 Collectables.',
+    },
+    {
+      question: 'How much does it cost to use?',
+      answer: 'Ninja Wallet is open source and free for all users.',
+    },
+    {
+      question: 'How do I create an account?',
+      answer: `<span>You simply go to our website <a href="https://ninja.org/wallet">www.ninja.org/wallet</a>. It will auto creates your wallet BTC, ETH etc on your device. Or you can import/restore you have.</span>`,
+    },
+    {
+      question: 'What countries can I use Ninja Wallet in?',
+      answer: 'Ninja Wallet is available globally - all you need is access to a mobile device and the internet.',
+    },
+    {
+      question: 'What happens if I swap/lose my phone? Will I lose my wallet?',
+      answer: `We recommend all users backup their wallets as soon as they start using Ninja. We have explained how to backup your Ninja Wallet <a target="__blank" href="https://medium.com/@ninja_org/how-to-back-up-your-ninja-wallet-its-really-quite-easy-d98a5ec1a671">here</a>.`,
+    }
+  ],
   'landing_page.dad.faq': [
     {
       question: 'What is the DAD?',
