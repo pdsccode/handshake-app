@@ -84,7 +84,6 @@ class Index extends React.PureComponent {
              </div>
           </div>
 
-
           {children}
 
           <hr className="landing-hr" />

@@ -34,6 +34,7 @@ const customField = element => ({
 };
 
 export const fieldInput = customField('input');
+export const fieldTextArea = customField('textarea');
 export const fieldDropdown = customField(({
   onChange, value, list, defaultText = 'Select an item', classNameWrapper = 'btn-block', classNameDropdownToggle = '', disabled = false,
 }) => {
