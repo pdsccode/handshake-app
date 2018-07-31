@@ -441,7 +441,7 @@ class DataDetail extends React.Component {
         <Segment vertical  id="segment-detail"> 
               <h2 className="my-h2-dataset-new" style={{    marginBottom:'0px'}}>
                   Datasets / {this.state.category ? this.state.category.name :''}
-                  <Link to={'/explore'}><Image src={closeTop} className="btn-Close-Top"/></Link>
+                  <Link to={'/datasets'}><Image src={closeTop} className="btn-Close-Top"/></Link>
               </h2>
                 <Card.Group centered >
                   <Card className="my-card" style={{ marginBottom: '1em', paddingBottom: '1em'}}>
