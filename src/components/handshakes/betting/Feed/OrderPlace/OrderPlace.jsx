@@ -37,7 +37,14 @@ class OrderPlace extends React.Component {
     });
     this.props.dispatch(updateSide(tab.toLowerCase()));
     // Event tracking
-    GA.clickChooseASide(SIDE[`${tabType}`]);
+    //GA.clickChooseASide(SIDE[`${tabType}`]);
+    const { bettingShake } = this.props;
+    const { matchOutcome } = bettingShake;
+    if (SIDE[`${tabType}`] === SIDE.SUPPORT) {
+      GA.clickSupport(matchOutcome);
+    } else {
+      GA.clickOppose(matchOutcome);
+    }
   }
 
   render() {

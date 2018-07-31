@@ -6,6 +6,7 @@ import { API_URL } from '@/constants';
 import { loadHandshakes, checkFreeAvailable } from '@/reducers/betting/action';
 import { CRYPTOSIGN_MINIMUM_MONEY } from '@/components/handshakes/betting/constants.js';
 import { getBalance } from '@/components/handshakes/betting/utils';
+import GA from '@/services/googleAnalytics';
 
 import Tabs from './../Tabs';
 
@@ -52,6 +53,12 @@ class BetMode extends React.Component {
   afterTabChanges = (tab) => {
     const tabType = tab.toLowerCase();
     console.log('BETMODE', tabType);
+    const { selectedOutcome } = this.props;
+    if (tabType === 'paid bet') {
+      GA.clickPaid(selectedOutcome.value);
+    } else {
+      GA.clickFree(selectedOutcome.value);
+    }
   }
   async openPopup(selectedOutcome) {
     this.setState({
