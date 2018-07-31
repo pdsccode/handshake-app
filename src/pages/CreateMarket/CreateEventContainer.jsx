@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import moment from 'moment';
 import { loadMatches } from '@/pages/Prediction/action';
 import { eventSelector, isLoading } from '@/pages/Prediction/selector';
 import Dropdown from '@/components/core/controls/Dropdown';

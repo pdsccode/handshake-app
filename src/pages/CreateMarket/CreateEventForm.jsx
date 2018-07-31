@@ -8,7 +8,7 @@ import moment from 'moment';
 import DatePicker from '@/components/handshakes/betting-event/Create/DatePicker/DatePicker';
 import { renderField } from './form';
 import { required } from './validate';
-import { addOutcomes } from './action';
+import { addOutcomes, createNewEvent } from './action';
 
 class CreateEventForm extends Component {
   static displayName = 'CreateEventForm';
@@ -47,7 +47,34 @@ class CreateEventForm extends Component {
       }));
     } else {
       // Add new event
-      console.log('values', values);
+      const { selectedReportSource } = this.state;
+      const reportSource = {
+        source_id: selectedReportSource,
+        source: selectedReportSource ? undefined : {
+          name: values.ownReportName,
+          url: values.ownReportUrl,
+        },
+      };
+      Object.keys(reportSource).forEach((k) => !reportSource[k] && delete reportSource[k]);
+      const newEventData = {
+        homeTeamName: values.homeTeamName || '',
+        awayTeamName: values.awayTeamName || '',
+        homeTeamCode: values.homeTeamCode || '',
+        awayTeamCode: values.awayTeamCode || '',
+        homeTeamFlag: values.homeTeamFlag || '',
+        awayTeamFlag: values.awayTeamFlag || '',
+        name: values.eventName,
+        date: values.closingTime,
+        reportTime: values.reportingTime,
+        disputeTime: values.disputeTime,
+        market_fee: values.creatorFee,
+        outcomes: values.outcomes,
+        ...reportSource,
+      };
+      dispatch(createNewEvent({
+        data: [newEventData],
+        successFn: this.handleCreateNewEventSuccess,
+      }));
     }
   }
 
@@ -58,7 +85,11 @@ class CreateEventForm extends Component {
   }
 
   handleAddOutcomeSuccess = (data) => {
-    console.log('data', data);
+    console.log('handleAddOutcomeSuccess', data);
+  }
+
+  handleCreateNewEventSuccess = (data) => {
+    console.log('handleCreateNewEventSuccess', data);
   }
 
   renderGroupTitle = (title) => {
@@ -106,6 +137,7 @@ class CreateEventForm extends Component {
                   className="form-group"
                   fieldClass="form-control"
                   component={renderField}
+                  validate={[required]}
                   disabled={!isNew && fields.get(index).id}
                 />
                 {isNew && !!index &&
@@ -163,7 +195,16 @@ class CreateEventForm extends Component {
           <React.Fragment>
             <div className="CreateEventOption">Or</div>
             <Field
-              name="ownReport"
+              name="ownReportName"
+              type="text"
+              className="form-group"
+              fieldClass="form-control"
+              component={renderField}
+              placeholder="Enter your own source name"
+              validate={[required]}
+            />
+            <Field
+              name="ownReportUrl"
               type="text"
               className="form-group"
               fieldClass="form-control"

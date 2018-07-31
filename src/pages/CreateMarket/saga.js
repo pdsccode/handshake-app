@@ -1,7 +1,7 @@
 import { takeLatest, call, select } from 'redux-saga/effects';
 import { apiGet, apiPost } from '@/stores/api-saga';
 import { API_URL } from '@/constants';
-import { loadReports, addOutcomes } from './action';
+import { loadReports, addOutcomes, createNewEvent } from './action';
 import { reportSelector } from './selector';
 
 function* handleLoadReportsSaga({ cache = true }) {
@@ -27,7 +27,7 @@ function* handleAddOutcomesSaga({ eventId, newOutcomeList, ...payload }) {
   try {
     return yield call(apiPost, {
       PATH_URL: `${API_URL.CRYPTOSIGN.ADD_OUTCOME}\\${eventId}`,
-      type: 'ADD_OUTCOMES_API',
+      type: 'ADD_OUTCOMES_API', // @TODO: review name
       data: newOutcomeList,
       ...payload,
     });
@@ -36,7 +36,20 @@ function* handleAddOutcomesSaga({ eventId, newOutcomeList, ...payload }) {
   }
 }
 
+function* handleCreateNewEventSaga(payload) {
+  try {
+    return yield call(apiPost, {
+      PATH_URL: `${API_URL.CRYPTOSIGN.ADD_MATCH}`,
+      type: 'ADD_EVENT_API',
+      ...payload,
+    });
+  } catch (e) {
+    return console.error('handleCreateNewEventSaga', e);
+  }
+}
+
 export default function* createMarketSaga() {
   yield takeLatest(loadReports().type, handleLoadReportsSaga);
   yield takeLatest(addOutcomes().type, handleAddOutcomesSaga);
+  yield takeLatest(createNewEvent().type, handleCreateNewEventSaga);
 }

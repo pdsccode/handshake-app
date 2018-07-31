@@ -22,3 +22,10 @@ export const addOutcomes = (payload = {}) => {
   };
 }
 
+export const createNewEvent = (payload = {}) => {
+  return {
+    type: 'CREATE_MARKET:CREATE_NEW_EVENT',
+    ...payload,
+  };
+}
+
