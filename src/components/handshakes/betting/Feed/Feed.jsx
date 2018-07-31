@@ -9,7 +9,7 @@ import { BetHandshakeHandler } from '@/components/handshakes/betting/Feed/BetHan
 import { BET_BLOCKCHAIN_STATUS, ROLE } from '@/components/handshakes/betting/constants.js';
 
 import { API_URL } from '@/constants';
-import { uninitItem, collect, collectFree, uninitItemFree, refundFree, refund } from '@/reducers/handshake/action';
+import { uninitItem, collect, collectFree, uninitItemFree, refundFree, refund, dispute } from '@/reducers/handshake/action';
 import { loadMyHandshakeList, updateBettingChange } from '@/reducers/me/action';
 import { MESSAGE, BETTING_STATUS_LABEL } from '@/components/handshakes/betting/message.js';
 import { getStatusLabel } from '@/components/handshakes/betting/StatusAction.js';
@@ -167,8 +167,8 @@ class FeedBetting extends React.Component {
       message = MESSAGE.RIGHT_NETWORK;
     } else if (!isSameAddress(fromAddress)) {
       message = MESSAGE.DIFFERENCE_ADDRESS;
-    } else if (freeBet) {
-      this.handleActionFree(title, id);
+    } else if (freeBet && title !== BETTING_STATUS_LABEL.DISPUTE) {
+      this.handleActionFree(title, id, hid);
     } else if (estimatedGas > balance) {
       message = MESSAGE.NOT_ENOUGH_GAS;
     } else {
@@ -576,9 +576,9 @@ class FeedBetting extends React.Component {
     );
   }
   renderProgressBar(itemInfo) {
-    let { totalAmount, totalDisputeAmount } = itemInfo;
-    totalDisputeAmount = 50;
-    totalAmount = 100;
+    const { totalAmount, totalDisputeAmount } = itemInfo;
+    //totalDisputeAmount = 50;
+    //totalAmount = 100;
     const progress = totalDisputeAmount / totalAmount * 100;
     const pgText = `${totalDisputeAmount} ETH of ${progress}% outcome pool`;
     console.log(TAG, 'renderProgressBar');
@@ -669,5 +669,6 @@ const mapDispatch = ({
   uninitItemFree,
   refund,
   refundFree,
+  dispute,
 });
 export default connect(mapState, mapDispatch)(FeedBetting);

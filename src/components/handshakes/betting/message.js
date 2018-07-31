@@ -105,7 +105,7 @@ export const BETTING_STATUS_LABEL =
       COLLECT_PENDING: 'The blockchain is processing your withdrawal. Please wait.',
       COLLECT_DONE: 'Your winnings have been withdrawn to your wallet!',
       REFUND_PENDING: 'The blockchain is processing your refund. Please wait.',
-
+      DISPUTE_PENDING: 'The blockchain is processing your dispute. Please wait.',
       //BUTTON
       REFUND: 'Refund your bet',
       WITHDRAW: 'Withdraw winnings',

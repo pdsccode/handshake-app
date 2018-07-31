@@ -54,7 +54,8 @@ export const getStatusLabel = (item) => {
     || status === BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINIT_PENDING
     || status === BET_BLOCKCHAIN_STATUS.STATUS_REFUND_PENDING
     || status === BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_PENDING
-    || status === BET_BLOCKCHAIN_STATUS.STATUS_USER_DISPUTED){
+    || status === BET_BLOCKCHAIN_STATUS.STATUS_USER_DISPUTED
+    || status === BET_BLOCKCHAIN_STATUS.STATUS_DISPUTE_PENDING){
       //PENDING ACTION
       return pendingAction(status);
 
@@ -174,6 +175,9 @@ const pendingAction = (blockchainStatus) => {
       break;
     case BET_BLOCKCHAIN_STATUS.STATUS_USER_DISPUTED:
       strStatus = BETTING_STATUS_LABEL.DISPUTE_WAIT;
+      break;
+    case BET_BLOCKCHAIN_STATUS.STATUS_DISPUTE_PENDING:
+      strStatus = BETTING_STATUS_LABEL.DISPUTE_PENDING;
       break;
     default:
       break;
