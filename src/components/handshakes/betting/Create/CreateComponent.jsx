@@ -196,6 +196,7 @@ class BettingCreate extends React.Component {
         placeholder={placeholder}
         className={cn('form-control-custom input', className || '')}
         name={key}
+        autoComplete="off"
         value={values[key]}
         validate={[required]}
         onChange={(evt) => {
@@ -217,6 +218,7 @@ class BettingCreate extends React.Component {
         style={style}
         type="text"
         placeholder={placeholder}
+        autoComplete="off"
         value={values[key]}
         validate={[required]}
         onChange={(evt) => {
