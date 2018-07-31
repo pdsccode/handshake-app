@@ -93,7 +93,7 @@ class Prediction extends React.Component {
 
     // send event tracking
     try {
-      GA.clickChooseAnEvent(event.name, itemData.name);
+      GA.clickChooseAnOutcome(event.name, itemData.name);
     } catch (err) {
       console.error(err);
     }
@@ -124,7 +124,11 @@ class Prediction extends React.Component {
 
   renderShareToWin = () => {
     return (
-      <div className="ShareToWin">
+      <div className="ShareToWin"
+        onClick={() => {
+          GA.clickBannerWin();
+        }}
+      >
         <div className="ShareToWinTitle">
           PLAY TO <span>WIN 10 ETH</span>
         </div>

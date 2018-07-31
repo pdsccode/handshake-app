@@ -56,6 +56,8 @@ class FeedBetting extends React.Component {
       shakedItemList: [],
       matchDone: false,
       estimatedGas: 0,
+      eventName:'',
+      predictName:'',
     };
   }
 
@@ -124,6 +126,11 @@ class FeedBetting extends React.Component {
     const { title, isAction } = statusResult;
     const matchDone = status === BET_BLOCKCHAIN_STATUS.STATUS_DONE;
 
+    const {extraData} = props;
+    const { event_name, event_predict } = parseJsonString(extraData);
+    const eventName = event_name && this.formatEventName(event_name);
+    const predictName = event_predict && this.formatPredictName(event_predict);
+
     this.setState({
       actionTitle: title,
       statusTitle: statusResult.status,
@@ -131,6 +138,8 @@ class FeedBetting extends React.Component {
       itemInfo,
       shakedItemList: foundShakeList(props),
       matchDone,
+      eventName,
+      predictName
     });
   }
 
@@ -197,7 +206,6 @@ class FeedBetting extends React.Component {
   }
   async handleActionReal(title, offchain, hid) {
 
-
     switch (title) {
       case BETTING_STATUS_LABEL.CANCEL:
         // TO DO: CLOSE BET
@@ -222,34 +230,34 @@ class FeedBetting extends React.Component {
 
 
   async cancelOnChain(offchain, hid) {
-    const { itemInfo } = this.state;
+    const { itemInfo, eventName, predictName } = this.state;
     const { side, amount, odds } = itemInfo;
     const updateInfo = Object.assign({}, itemInfo);
     updateInfo.status = BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINIT_PENDING;
     betHandshakeHandler.setItemOnChain(offchain, updateInfo);
     this.props.updateBettingChange(updateInfo);
 
-    betHandshakeHandler.cancelBet(hid, side, amount, odds, offchain);
+    betHandshakeHandler.cancelBet(hid, side, amount, odds, offchain, eventName, predictName);
     this.uninitItemReal(offchain);
   }
   async withdrawOnChain(offchain, hid) {
-    const { itemInfo } = this.state;
+    const { itemInfo, eventName, predictName } = this.state;
     const updateInfo = Object.assign({}, itemInfo);
     updateInfo.status = BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_PENDING;
     betHandshakeHandler.setItemOnChain(offchain, updateInfo);
     this.props.updateBettingChange(updateInfo);
 
-    betHandshakeHandler.withdraw(hid, offchain);
+    betHandshakeHandler.withdraw(hid, offchain, eventName, predictName);
     this.collectReal(offchain);
   }
   async refundOnChain(offchain, hid) {
-    const { itemInfo } = this.state;
+    const { itemInfo, eventName, predictName } = this.state;
     const updateInfo = Object.assign({}, itemInfo);
     updateInfo.status = BET_BLOCKCHAIN_STATUS.STATUS_REFUND_PENDING;
     betHandshakeHandler.setItemOnChain(offchain, updateInfo);
     this.props.updateBettingChange(updateInfo);
 
-    betHandshakeHandler.refund(hid, offchain);
+    betHandshakeHandler.refund(hid, offchain, eventName, predictName);
     this.refundReal(offchain);
 
     /*
@@ -600,18 +608,18 @@ class FeedBetting extends React.Component {
 
   render() {
     const {
-      itemInfo, isLoading,
+      actionTitle, isAction, itemInfo, isLoading, eventName, predictName
     } = this.state;
 
-    const {extraData} = this.props;
+    //const {extraData} = this.props;
 
-    const { side, odds, role, status } = itemInfo;
-    const { event_name, event_predict } = parseJsonString(extraData);
+    const { side, odds, role } = itemInfo;
+    //const { event_name, event_predict } = parseJsonString(extraData);
 
     const colorBySide = side === 1 ? `support` : 'oppose';
 
-    const eventName = event_name && this.formatEventName(event_name);
-    const predictName = event_predict && this.formatPredictName(event_predict);
+    //const eventName = event_name && this.formatEventName(event_name);
+    //const predictName = event_predict && this.formatPredictName(event_predict);
 
     console.log(TAG, 'render', isLoading);
     return (

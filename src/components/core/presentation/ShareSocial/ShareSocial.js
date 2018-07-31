@@ -8,9 +8,9 @@ import { showAlert } from '@/reducers/app/action';
 import GA from '@/services/googleAnalytics';
 
 // style
-import CopyLink from '@/assets/images/share/link.svg';
-import FacebookSVG from '@/assets/images/share/facebook.svg';
-import TwitterSVG from '@/assets/images/share/twitter.svg';
+// import CopyLink from '@/assets/images/share/link.svg';
+// import FacebookSVG from '@/assets/images/share/facebook.svg';
+// import TwitterSVG from '@/assets/images/share/twitter.svg';
 import './ShareSocial.scss';
 
 const Clipboard = (function (window, document, navigator) {
@@ -62,15 +62,15 @@ class ShareSocial extends PureComponent {
     super(props);
     this.clickShare = ::this.clickShare;
     this.socialList = [{
-      img: FacebookSVG,
+      img: 'https://d2q7nqismduvva.cloudfront.net/static/images/icon-svg/common/share/facebook.svg',
       title: 'FACEBOOK',
     }, {
-      img: TwitterSVG,
+      img: 'https://d2q7nqismduvva.cloudfront.net/static/images/icon-svg/common/share/twitter.svg',
       title: 'TWITTER',
     },
     {
-      img: CopyLink,
-      title: 'COPY',
+      img: 'https://d2q7nqismduvva.cloudfront.net/static/images/icon-svg/common/share/linkedin.svg',
+      title: 'LINKEDIN',
     },
     ];
   }
@@ -109,6 +109,10 @@ class ShareSocial extends PureComponent {
         }
         rawUrlShare = `http://twitter.com/intent/tweet?status=${title}+${shortLink}`;
         break;
+
+      case 'LINKEDIN':
+        rawUrlShare = `https://www.linkedin.com/shareArticle?mini=true&url=${shortLink}&summary=${title}&source=LinkedIn`;
+        break;
       case 'COPY':
         // copy to clip board
         const resultCopy = Clipboard.copy(shortLink);
@@ -142,7 +146,7 @@ class ShareSocial extends PureComponent {
       <div className={`share-social ${className}`}>
         {
           this.socialList.map((social, index) => (
-            <img key={index + 1} src={social.img} alt={social.title} onClick={(e) => { this.clickShare(e, social.title); }} />
+            <img key={index + 1} src={social.img} alt={social.title} onClick={(e) => { e.preventDefault(); this.clickShare(e, social.title); }} />
           ))
         }
       </div>

@@ -173,8 +173,28 @@ export class BetHandshakeHandler {
     return result;
   }
 
+  handleContract(element, i) {
+    setTimeout(() => {
+      const isInit = isInitBet(element);
+      console.log('Is Init Bet:', isInit);
+      if (isInit) {
+        this.addContract(element);
+      } else {
+        this.shakeContract(element);
+      }
+    }, 3000 * i);
+  }
+  controlShake = async (list) => {
+    for (let i = 0; i < list.length; i++) {
+      const element = list[i];
+      console.log('Element:', element);
 
-  async cancelBet(hid, side, stake, odds, offchain) {
+      this.handleContract(element, i);
+    }
+  };
+
+
+  async cancelBet(hid, side, stake, odds, offchain, eventName, outcome) {
     const chainId = getChainIdDefaultWallet();
 
     const bettinghandshake = new BettingHandshake(chainId);
@@ -191,6 +211,22 @@ export class BetHandshakeHandler {
 
       logJson = payload;
       realBlockHash = hash;
+      if (hash == -1) {
+        realBlockHash = '-1';
+        logJson = error.message;
+        store.dispatch(showAlert({
+          message: MESSAGE.ROLLBACK,
+          timeOut: 3000,
+          type: 'danger',
+          callBack: () => {
+          },
+        }));
+      } else {
+
+      }
+
+      GA.createClickCancel(eventName, outcome, hash);
+
     } catch (err) {
       realBlockHash = '-1';
       logJson = err.message;
@@ -200,7 +236,7 @@ export class BetHandshakeHandler {
     return result;
   }
 
-  async withdraw(hid, offchain) {
+  async withdraw(hid, offchain, eventName, outcome) {
     const chainId = getChainIdDefaultWallet();
 
     const bettinghandshake = new BettingHandshake(chainId);
@@ -217,7 +253,18 @@ export class BetHandshakeHandler {
       } = result;
       logJson = payload;
       realBlockHash = hash;
-      if (hash) {
+      GA.createClickWithdraw(eventName, outcome, hash);
+      if (hash == -1) {
+        realBlockHash = '-1';
+        logJson = error.message;
+        store.dispatch(showAlert({
+          message: MESSAGE.ROLLBACK,
+          timeOut: 3000,
+          type: 'danger',
+          callBack: () => {
+          },
+        }));
+      } else {
         store.dispatch(showAlert({
           message: MESSAGE.WITHDRAW_SUCCESS,
           timeOut: 3000,
@@ -236,7 +283,7 @@ export class BetHandshakeHandler {
 
     return result;
   }
-  async refund(hid, offchain) {
+  async refund(hid, offchain, eventName, outcome) {
 
     const chainId = getChainIdDefaultWallet();
 
@@ -309,6 +356,7 @@ export class BetHandshakeHandler {
 
       logJson = payload;
       realBlockHash = hash;
+      GA.createClickRefund(eventName, outcome);
       if (hash == -1) {
         realBlockHash = '-1';
         logJson = error.message;

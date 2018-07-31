@@ -19,7 +19,6 @@ import iconChart from "@/assets/images/landing/cash/icon-chart.svg";
 import iconLock from "@/assets/images/landing/cash/icon-lock.svg";
 import iconStar from "@/assets/images/landing/cash/icon-star.svg";
 
-
 // import background from '@/assets/images/landing/cash/bg.svg';
 const features = [
   {

@@ -329,7 +329,7 @@ const mapState = (state, prevProps) => {
 
   return {
     listOfferPrice,
-    fiatAmount: fiatAmount || 0,
+    fiatAmount: isNaN(fiatAmount) ? 0 : fiatAmount,
     EXCHANGE_ACTION_LIST,
     type,
     currency,

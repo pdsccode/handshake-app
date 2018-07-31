@@ -51,13 +51,13 @@
 }
 
 .collapse-custom-white {
-  font-family: AzoSans-Regular;
+  font-family: azo-sans-web, sans-serif;
   &:not(:last-of-type) {
     border-bottom: 1px solid #efefef;
   }
   font-weight: $normal;
   .head {
-    font-family: AzoSans-Bold;
+    font-weight: 700;
     padding: rem-calc(21px);
     display: flex;
     flex-wrap: wrap;
@@ -92,7 +92,8 @@
     //opacity: 0.6;
   }
   .content {
-    font-family: AzoSans-Regular;
+    font-family: azo-sans-web, sans-serif;
+    font-weight: 400;
     margin-bottom: rem-calc(40px);
     margin-top: rem-calc(-11px);
     padding-right: rem-calc(40px);

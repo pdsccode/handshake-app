@@ -43,16 +43,17 @@ const foundCancelHanshake = (handshake, item) => {
 
   const handledHandshake = handshake;
   if (handledHandshake.id === item.id) {
+    console.log(TAG, 'foundCancelHanshake:','handledHandshake', handledHandshake);
     handledHandshake.status = item.status;
   }
   return handledHandshake;
 
 
 };
-const foundRefundHanshake = (handshake, item) => {
-  console.log(TAG, 'foundRefundHanshake');
+const foundRefundHanshake = (handshake, item, hid) => {
+  console.log(TAG, 'foundRefundHanshake', 'hid:', hid, 'item hid', item.hid);
   const handledHandshake = handshake;
-  if (handledHandshake.hid === item.hid) {
+  if (hid === item.hid) {
     console.log(TAG, 'foundRefundHanshake:','handledHandshake', handledHandshake);
     handledHandshake.status = item.status;
   }
@@ -60,11 +61,12 @@ const foundRefundHanshake = (handshake, item) => {
 
 };
 
-const foundWithdrawHanshake = (handshake, item) => {
-  console.log(TAG, 'foundWithdrawHanshake');
-
+const foundWithdrawHanshake = (handshake, item, hid) => {
   const handledHandshake = handshake;
-  if (handledHandshake.hid === item.hid && handledHandshake.side === item.side) {
+
+  console.log(TAG, 'foundWithdrawHanshake', 'hid:', hid, 'item hid', item.hid, 'side', handledHandshake.side, 'item side', item.side);
+
+  if (hid === item.hid && handledHandshake.side === item.side) {
     console.log(TAG, 'foundWithdrawHanshake:','handledHandshake', handledHandshake);
     handledHandshake.status = item.status;
   }
@@ -362,7 +364,7 @@ const meReducter = (
       const { status } = item;
       const myList = state.list;
       const handledMylist = myList.map((handshake) => {
-        const { shakeUserIds, shakers = '[]'  } = handshake;
+        const { shakeUserIds, shakers = '[]', hid  } = handshake;
         let handledHandshake = handshake;
         const isUserShake = isShakeUser(shakeUserIds);
         if (!isUserShake) {
@@ -371,10 +373,10 @@ const meReducter = (
               handledHandshake = foundCancelHanshake(handledHandshake, item);
               break;
             case BET_BLOCKCHAIN_STATUS.STATUS_REFUND_PENDING:
-              handledHandshake = foundRefundHanshake(handledHandshake, item);
+              handledHandshake = foundRefundHanshake(handledHandshake, item, hid);
               break;
             case BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_PENDING:
-              handledHandshake = foundWithdrawHanshake(handledHandshake, item);
+              handledHandshake = foundWithdrawHanshake(handledHandshake, item, hid);
               break;
             case BET_BLOCKCHAIN_STATUS.STATUS_DISPUTE_PENDING:
               handledHandshake = foundDisputeHandshake(handledHandshake, item);
@@ -392,10 +394,10 @@ const meReducter = (
                   handleShaker = foundCancelHanshake(handleShaker, item);
                   break;
                 case BET_BLOCKCHAIN_STATUS.STATUS_REFUND_PENDING:
-                  handleShaker = foundRefundHanshake(handleShaker, item);
+                  handleShaker = foundRefundHanshake(handleShaker, item, hid);
                   break;
                 case BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_PENDING:
-                  handleShaker = foundWithdrawHanshake(handleShaker, item);
+                  handleShaker = foundWithdrawHanshake(handleShaker, item, hid);
                   break;
                 case BET_BLOCKCHAIN_STATUS.STATUS_DISPUTE_PENDING:
                   handledHandshake = foundDisputeHandshake(handleShaker, item);
@@ -408,7 +410,6 @@ const meReducter = (
             handledHandshake.shakers = JSON.stringify(newShakers);
           }
         }
-        console.log(TAG, 'handleHandshake:', handledHandshake);
         return handledHandshake;
       });
       console.log(TAG, 'handledMylist:', handledMylist.length);

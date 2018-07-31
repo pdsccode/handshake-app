@@ -214,8 +214,8 @@ export default {
   'ex.earlyBird.label.2': 'Create your station with <br /><span class="intro-amount">{freeETH} ETH</span> free now!',
   'ex.earlyBird.btn': 'Open Station',
 
-  'ex.seo.title': 'Ninja: the anonymous exchange of anything.',
-  'ex.seo.meta.description': 'Swap coin for cash in your local neighborhood. Trade predictions on anything, anywhere, with anyone. No downloads, no sign ups. 100% anonymous.',
+  // 'ex.seo.title': 'Ninja: the anonymous exchange of anything.',
+  // 'ex.seo.meta.description': 'Swap coin for cash in your local neighborhood. Trade predictions on anything, anywhere, with anyone. No downloads, no sign ups. 100% anonymous.',
 
   'error.required': 'Required',
   'error.requiredOne': 'You need to fill in one of these!',
@@ -365,6 +365,33 @@ export default {
   'landing_page.header.product': 'PRODUCT',
   'landing_page.subHeader.product': 'Ninja builds applications and protocols for the new decentralized Internet.',
   'landing_page.detail.thanksForSubscribing': 'Thank you for subscribing!',
+  'landing_page.detail.email_placeholder': 'Your email address',
+  'landing_page.recruiting.intro.label': `<h1 class="mt-2"><strong>Hey Ninja</strong></h1><div class="intro-text-2">Come join the dojo.</div><span class="intro-text-3">We build decentralized apps, protocols and moonshot ideas for the new wild west world web.  Reinvent the Internet with us.</span>`,
+  'landing_page.recruiting.intro.btn': 'Become a Ninja',
+  'landing_page.recruiting.label.noJobs': 'No jobs available',
+  'landing_page.recruiting.label.getTheWordOut': 'Get the word out. Earn ETH',
+  'landing_page.recruiting.label.backToListing': 'Back to listing',
+  'landing_page.recruiting.button.applyNow': 'Apply now',
+  'landing_page.recruiting.button.referFriend': 'Refer a friend',
+  'landing_page.recruiting.applyNow.title': 'Import your profile',
+  'landing_page.recruiting.applyNow.label.uploadDocs': 'Upload document',
+  'landing_page.recruiting.applyNow.label.weAccept': 'We accept .doc, .pdf and .png files, up to 2 MB.',
+  'landing_page.recruiting.applyNow.label.or': 'Or',
+  'landing_page.recruiting.applyNow.label.submit': 'Submit',
+  'landing_page.recruiting.applyNow.label.connectToLinkedIn': 'Connect with Ninja LinkedIn',
+  'landing_page.recruiting.applyNow.label.thankYou': 'Thank you for your application!',
+  'landing_page.recruiting.applyNow.label.weReview': 'We\'ll review your application and contact you for an interview within 3 days if your skills are a match.',
+  'landing_page.recruiting.referFriend.title': 'Refer a friend',
+  'landing_page.recruiting.referFriend.label.yourPhone': 'Your phone',
+  'landing_page.recruiting.referFriend.label.yourEmail': 'Your email',
+  'landing_page.recruiting.referFriend.label.jobPosition': 'Choose applied job',
+  'landing_page.recruiting.referFriend.placeholder.phone': 'Enter your phone',
+  'landing_page.recruiting.referFriend.placeholder.email': 'Enter your email',
+  'landing_page.recruiting.referFriend.placeholder.saySomething': 'Say something about your friend (optional)...',
+  'landing_page.recruiting.referFriend.label.uploadCV': 'Upload your friend\'s CV',
+  'landing_page.recruiting.referFriend.label.thankYou': 'Thank you for referral!',
+  'landing_page.recruiting.referFriend.label.weReview': 'We\'ll review your friend\'s CV and contact him/her for an interview within 3 days if your skills are a match.',
+
 
   'landing_page.products.cash.title': 'Cash',
   'landing_page.products.cash.subTitle': 'Buy crypto with cash. Secure, anonymous, easy.',
@@ -372,9 +399,9 @@ export default {
   'landing_page.products.prediction.subTitle': 'Bet on anything against anyone, anywhere. Guaranteed payout. Your odds. 100% anonymous.',
   'landing_page.products.wallet.title': 'Wallet',
   'landing_page.products.wallet.subTitle': 'A decentralized cryptocurrency wallet. No downloads. No sign ups.',
-  'landing_page.products.hivepay-offline.title': 'Hivepay offline',
+  'landing_page.products.hivepay-offline.title': 'Pay for stores',
   'landing_page.products.hivepay-offline.subTitle': 'Seamlessly integrate cryptocurrency payments into your offline business.',
-  'landing_page.products.hivepay-online.title': 'Hivepay online',
+  'landing_page.products.hivepay-online.title': 'Pay for devs',
   'landing_page.products.hivepay-online.subTitle': 'Connect your e-commerce business with a truly borderless payment network.',
   'landing_page.products.dad.title': 'Decentralized Autonomous Dataset',
   'landing_page.products.dad.subTitle': 'Building decentralized datasets to advance AI.',
@@ -390,53 +417,52 @@ export default {
   'landing_page.researches.internetCash.title': 'Internet Cash',
   'landing_page.researches.internetCash.subTitle': 'The Internet deserves to have its own native currency.',
 
-  'landing_page.label.onlyMobile': 'The Ninja network is only accessible via mobile.',
-  'landing_page.label.openOn': `Open <a href="/" class="landing-link">www.ninja.org</a> on your mobile browser to gain anonymous entry.`,
+  'landing_page.label.footer': `Building blockchain powered apps, tools and solutions for the new wild west world web.<br />Join the dojo: <a href="https://t.me/ninja_org" class="landing-link">t.me/ninja_org</a>`,
   'landing_page.label.joinTelegram': `Join the dojo on <a href="https://t.me/ninja_org" class="landing-link">Telegram</a>`,
   // 'landing_page.label.airdrop': `Jump in for <a href="#" class="landing-link">Airdrop</a>`,
   'landing_page.label.whitepaper': `Jump in for <a href="https://medium.com/@ninjadotorg/shakeninja-bex-1c938f18b3e8" class="landing-link">Whitepaper</a>`,
+  'landing_page.label.sendLinkToEmail': `Send link to your email:`,
+  'landing_page.label.btnSubmitEmail': 'Go',
   // 'landing_page.label.faq': `We answered your <a href="#" class="landing-link">FAQ</a>`,
 
-  'landing_page.breadcrumb.home': 'Home',
+  // 'landing_page.breadcrumb.home': 'Home',
 
   'landing_page.cash.breadcrumb': 'Cash',
   'landing_page.cash.heading': 'Buy crypto with cash. Secure, anonymous, easy.',
   'landing_page.cash.subHeading': 'Ninja Cash is a decentralized peer to peer (P2P) cryptocurrency exchange that allows users to trade ETH and BTC for cash. Anonymous and immediate: no signup, no ID verification. Blockchain secured and fraud proof.',
-  'landing_page.cash.cta1': 'Trade now on your phone',
-  'landing_page.cash.cta1_url': 'https://ninja.org/cash',
-  'landing_page.cash.cta2': 'Get free gifts',
-  'landing_page.cash.cta2_url': 'https://t.me/ninjacash',
+  'landing_page.cash.textEmail': `Please open <a href="https://ninja.org/cash">ninja.org/cash</a> on your mobile browser to start trading now.`,
+  'landing_page.cash.btnSubmitEmail': 'Go',
+  'landing_page.cash.joinTelegram': `Join the dojo on <a href="https://t.me/ninjacash" class="landing-link">Telegram</a>`,
+  'landing_page.cash.whitepaper': `Jump in for <a href="https://medium.com/@ninja_org/introducing-ninja-cash-b0d51a9f4e1b" class="landing-link">Whitepaper</a>`,
+  // 'landing_page.cash.cta1': 'Trade now on your phone',
+  // 'landing_page.cash.cta1_url': 'https://ninja.org/cash',
+  // 'landing_page.cash.cta2': 'Get free gifts',
+  // 'landing_page.cash.cta2_url': 'https://t.me/ninjacash',
   'landing_page.cash.youtubeVideoId': 'xCU5puuwros',
 
   'landing_page.prediction.breadcrumb': 'Prediction',
   'landing_page.prediction.heading': 'Bet on anything against anyone, anywhere. Guaranteed payout. Your odds. 100% anonymous.',
   'landing_page.prediction.subHeading': 'You create the bets, set the odds, and play directly with other parties. Bet with blockchain technology to bypass the bookies and the books - take down the house and make your own luck.',
-  'landing_page.prediction.cta1': 'Claim your free bet on mobile',
-  'landing_page.prediction.cta1_url': 'https://ninja.org/prediction',
-  'landing_page.prediction.cta2': 'Join our dojo',
-  'landing_page.prediction.cta2_url': 'https://t.me/ninja_org',
+  'landing_page.prediction.textEmail': `Please open <a href="https://ninja.org/prediction">ninja.org/prediction</a> on your mobile browser to start playing.`,
+  'landing_page.prediction.btnSubmitEmail': 'Go',
+  'landing_page.prediction.joinTelegram': `Join the dojo on <a href="https://t.me/ninja_org" class="landing-link">Telegram</a>`,
+  'landing_page.prediction.whitepaper': `Jump in for <a href="https://medium.com/@ninja_org/shakeninja-bex-1c938f18b3e8" class="landing-link">Whitepaper</a>`,
   'landing_page.prediction.youtubeVideoId': '-YYp9yW4RDQ',
 
   'landing_page.wallet.breadcrumb': 'Wallet',
   'landing_page.wallet.heading': 'A decentralized cryptocurrency wallet. No downloads. No sign ups.',
   'landing_page.wallet.subHeading': 'A decentralized cryptocurrency wallet and payment gateway that will allow both businesses and users to easily store and use multiple cryptocurrencies for payments.',
-  'landing_page.wallet.cta1': 'Create your wallet',
-  'landing_page.wallet.cta1_url': 'https://ninja.org/wallet',
+  'landing_page.wallet.textEmail': `Please open <a href="https://ninja.org/wallet">ninja.org/wallet</a> on your mobile browser to create your wallet.`,
+  'landing_page.wallet.btnSubmitEmail': 'Go',
   'landing_page.wallet.youtubeVideoId': '',
 
-  'landing_page.hivepay-offline.breadcrumb': 'Hivepay Offline',
-  'landing_page.hivepay-offline.heading': 'Seamlessly integrate cryptocurrency payments into your offline business.',
-  'landing_page.hivepay-offline.subHeading': 'Allow your offline customers to pay for goods and services in cryptocurrency, just by scanning a QR code. Give the millions of people who own crypto somewhere to spend it.',
-  // 'landing_page.hivepay-offline.cta1': '',
-  // 'landing_page.hivepay-offline.cta2': '',
-  // 'landing_page.hivepay-offline.youtubeVideoId': '',
+  'landing_page.pay-for-stores.breadcrumb': 'Pay For Stores',
+  'landing_page.pay-for-stores.heading': 'Seamlessly integrate cryptocurrency payments into your offline business.',
+  'landing_page.pay-for-stores.subHeading': 'Allow your offline customers to pay for goods and services in cryptocurrency, just by scanning a QR code. Give the millions of people who own crypto somewhere to spend it.',
 
-  'landing_page.hivepay-online.breadcrumb': 'Hivepay Online',
-  'landing_page.hivepay-online.heading': 'Connect your e-commerce business with a truly borderless payment network.',
-  'landing_page.hivepay-online.subHeading': 'Millions of people are looking to spend their cryptocurrency in a secure, convenient way. Bring the currency of the future into your online store today and stop relying on the sluggish banking industry. No wait times, no bank charges, no card fees.',
-  // 'landing_page.hivepay-online.cta1': '',
-  // 'landing_page.hivepay-online.cta2': '',
-  // 'landing_page.hivepay-online.youtubeVideoId': '',
+  'landing_page.pay-for-devs.breadcrumb': 'Pay For Devs',
+  'landing_page.pay-for-devs.heading': 'Connect your e-commerce business with a truly borderless payment network.',
+  'landing_page.pay-for-devs.subHeading': 'Millions of people are looking to spend their cryptocurrency in a secure, convenient way. Bring the currency of the future into your online store today and stop relying on the sluggish banking industry. No wait times, no bank charges, no card fees.',
 
 
   'landing_page.internet-cash.breadcrumb': 'Internet Cash',
@@ -447,7 +473,7 @@ export default {
   'landing_page.dad.breadcrumb': 'Decentralized Autonomous Dataset',
   'landing_page.dad.heading': 'Building decentralized datasets to advance AI.',
   'landing_page.dad.subHeading': 'Today big data is controlled by a handful of corporations - limiting access to people who need it to develop AI, while the people who contribute the data see no rewards. DAD will enable anyone who wants to build AI programs access to big data and reward the users who contribute.',
-  'landing_page.dad.textEmail': 'I want to buy big data',
+  'landing_page.dad.textEmail': 'I want to buy data',
 
   'landing_page.uncommons.breadcrumb': 'Uncommons',
   'landing_page.uncommons.heading': 'The people\'s blockchain',
@@ -458,8 +484,8 @@ export default {
   'landing_page.whisper.breadcrumb': 'Whisper',
   'landing_page.whisper.heading': 'The new mailbox for the new internet',
   'landing_page.whisper.subHeading': 'An alternative messaging system in this era of surveillance. End-to-end encrypted, anonymous conversations between you and your world. No downloads, sign ups, or subscriptions. Now you can control who\'s listening.',
-  'landing_page.whisper.cta1': 'Check it out',
-  'landing_page.whisper.cta1_url': 'https://ninja.org/whisper',
+  'landing_page.whisper.textEmail': `Please open <a href="https://ninja.org/whisper">ninja.org/whisper</a> on your mobile browser to start chatting.`,
+  'landing_page.whisper.btnSubmitEmail': 'Go',
 
   // MobileOrTablet components
   MOT_TITLE: 'The anonymous exchange of anything',
@@ -491,7 +517,7 @@ export default {
   'landing_page.cash.faq': [
     {
       question: 'What is Ninja Cash?',
-      answer: 'Ninja Cash is a peer-to-peer decentralized exchange in which people can easily exchange cryptocurrency for cash. We want to make sure that traders are able to set up their own stations and make their own prices - not having to rely on market prices to buy and sell cryptocurrency.',
+      answer: 'Ninja Cash is a peer-to-peer decentralized exchange where people can easily exchange cryptocurrency for cash. We want to make sure that traders are able to set up their own stations and set their own prices - not have to rely on market prices to buy and sell cryptocurrency.',
     },
     {
       question: 'Is it easy to set up a station?',
@@ -499,11 +525,11 @@ export default {
     },
     {
       question: 'Where is Ninja Cash available?',
-      answer: 'Ninja’s are constantly joining us from all over the world. Anyone anywhere can set up a station. Just check out ninja.org and see if there is a station near you.',
+      answer: 'Ninjas are constantly joining us from all over the world. Anyone anywhere can set up a station. Just check out ninja.org and see if there is a station near you.',
     },
     {
       question: 'What documents do I need to provide to make an account on Ninja Cash?',
-      answer: 'Nothing. We don’t want any of your personal information, an account is automatically created on your phone the first time you go to ninja.org.',
+      answer: 'Nothing. We don’t need any of your personal information. An account is automatically created on your phone the first time you visit ninja.org.',
     },
     {
       question: 'Will I be truly anonymous on Ninja Cash?',
@@ -511,7 +537,7 @@ export default {
     },
     {
       question: 'Is Ninja Cash secure?',
-      answer: 'Yes, keeping your money safe and your identity private is our top priority. All of the transactions conducted on Ninja Cash are secured through the use of smart contracts written on Ethereum’s blockchain.',
+      answer: 'Yes, keeping your money safe and your identity private is our top priority. All of the transactions conducted on Ninja Cash are secured through the use of smart contracts written on the Ethereum blockchain.',
     },
     {
       question: 'How do I buy cryptocurrency from Ninja Cash?',
@@ -523,11 +549,11 @@ export default {
     },
     {
       question: 'How do I keep my wallet safe?',
-      answer: <span>Each wallet is provided a series of words arranged in a specific order. No one can withdraw your coins without these words in the right order. We suggest that you don’t keep this password in your phone, but that you make a hard copy of it and keep it in a safe place.<br /><a target="__blank" href="https://medium.com/@ninja_org/how-to-back-up-your-ninja-wallet-its-really-quite-easy-d98a5ec1a671">Make sure you backup your wallet.</a></span>,
+      answer: <span>Secure your wallet with the provided series of words. No one can withdraw your coins without these words in the right order. We suggest that you don’t keep this password in your phone, but that you make a hard copy of it and keep it in a safe place.<br /><a target="__blank" href="https://medium.com/@ninja_org/how-to-back-up-your-ninja-wallet-its-really-quite-easy-d98a5ec1a671">Make sure you backup your wallet.</a></span>,
     },
     {
       question: 'How do I pay for coins?',
-      answer: 'After you have connected with a fellow ninja, you will arrange a place to meet to make the trade. You buy your cryptocurrency with cash, the seller will finalize the deal on NinjaCash simultaneously. The coins will then be transferred to your wallet.',
+      answer: 'After you have connected with a fellow ninja, you will arrange a place to make the trade. Once you hand over your cash, the seller will confirm the deal on NinjaCash. At that moment, your newly-purchased cryptocurrency will be automatically transferred to your wallet out of escrow.',
     },
     {
       question: 'Are there any fees?',
@@ -535,7 +561,7 @@ export default {
     },
     {
       question: 'How long does it take to complete a transaction?',
-      answer: 'It really depends on what is happening on the Ethereums blockchain at that moment. We expect that transactions will take roughly 10-20 mins to go through. It may be longer if the blockchain is experiencing unusually high traffic - most likely due to the latest dApp sensation.',
+      answer: 'It really depends on what is happening on the Ethereum blockchain at that moment. We expect that transactions will take roughly 10-20 mins to go through. It may be longer if the blockchain is experiencing unusually high traffic - most likely due to the latest dApp sensation.',
     },
     {
       question: 'What happens if the transaction fails?',
@@ -551,7 +577,7 @@ export default {
     },
     {
       question: 'How can I make sure my coin is transferred to me after I give the other ninja cash?',
-      answer: 'Once a seller approves the transaction under the buyer\'s eagle eye, the cryptocurrency will be released from Escrow and into your wallet.',
+      answer: 'As a buyer, you’ll be able to observe the seller approving the transaction. Once that happens, the cryptocurrency will be released from escrow and into your wallet.',
     }
   ],
   'landing_page.prediction.faq': [
@@ -629,6 +655,32 @@ export default {
     {
       question: 'What’s gonna happen to the Handshake mobile app?',
       answer: 'We will be integrating Handshake (and your favourite features like promises, IOUs, contract upload, etc.) into the Ninja mobile website.',
+    }
+  ],
+  'landing_page.wallet.faq': [
+    {
+      question: 'What is Ninja Wallet?',
+      answer: 'Ninja Wallet is a decentralized cryptocurrency wallet, that allows you to hold multiple cryptocurrencies. There are no downloads,  no sign ups and no fees.',
+    },
+    {
+      question: 'How many cryptocurrencies can I use with Ninja Wallet?',
+      answer: 'You can use BTC, BCH, ETH, ZEC, LTC, XRP, ERC20 Tokens and ERC721 Collectables.',
+    },
+    {
+      question: 'How much does it cost to use?',
+      answer: 'Ninja Wallet is open source and free for all users.',
+    },
+    {
+      question: 'How do I create an account?',
+      answer: <span>You simply go to our website <a href="https://ninja.org/wallet">www.ninja.org/wallet</a>. It will auto creates your wallet BTC, ETH etc on your device. Or you can import/restore you have.</span>,
+    },
+    {
+      question: 'What countries can I use Ninja Wallet in?',
+      answer: 'Ninja Wallet is available globally - all you need is access to a mobile device and the internet.',
+    },
+    {
+      question: 'What happens if I swap/lose my phone? Will I lose my wallet?',
+      answer: <span>We recommend all users backup their wallets as soon as they start using Ninja. We have explained how to backup your Ninja Wallet <a target="__blank" href="https://medium.com/@ninja_org/how-to-back-up-your-ninja-wallet-its-really-quite-easy-d98a5ec1a671">here</a>.</span>,
     }
   ],
   'landing_page.dad.faq': [

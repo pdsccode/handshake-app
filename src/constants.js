@@ -483,10 +483,10 @@ export const URL = {
   HANDSHAKE_CASH_INDEX: '/cash',
   HANDSHAKE_CASH_DETAIL: '/cash/:slug',
 
-  HANDSHAKE_CHAT: '/chat',
-  HANDSHAKE_CHAT_INDEX: '/chat',
-  HANDSHAKE_CHAT_DETAIL: '/chat/:userId',
-  HANDSHAKE_CHAT_ROOM_DETAIL: '/chat/room/:roomId',
+  HANDSHAKE_CHAT: '/whisper',
+  HANDSHAKE_CHAT_INDEX: '/whisper',
+  HANDSHAKE_CHAT_DETAIL: '/whisper/:userId',
+  HANDSHAKE_CHAT_ROOM_DETAIL: '/whisper/room/:roomId',
 
   HANDSHAKE_WALLET: '/wallet',
   HANDSHAKE_WALLET_INDEX: '/wallet',
@@ -506,31 +506,40 @@ export const URL = {
   LANDING_PAGE_SHURIKEN: '/shuriken',
   LANDING_PAGE_SHURIKEN_INDEX: '/shuriken',
 
-  LANDING_PAGE_TRADE: '/coin-exchange',
-  LANDING_PAGE_TRADE_INDEX: '/coin-exchange',
-
-  FAQ: '/faq',
-  FAQ_INDEX: '/faq',
-
   WHITE_PAPER: '/whitepaper',
   WHITE_PAPER_INDEX: '/whitepaper',
 
-  INTRODUCING_NINJA_CASH: '/introducing-ninja-cash',
-  ABOUT_NINJA_CASH: '/about-ninja-cash',
+  // INTRODUCING_NINJA_CASH: '/introducing-ninja-cash',
+  // ABOUT_NINJA_CASH: '/about-ninja-cash',
 
-  PRODUCT_URL: '/product',
-  RESEARCH_URL: '/research',
+  // PRODUCT_URL: '/product',
+  // RESEARCH_URL: '/research',
 
   PRODUCT_CASH_URL: '/cash',
   PRODUCT_PREDICTION_URL: '/prediction',
   PRODUCT_WALLET_URL: '/wallet',
-  PRODUCT_HIVEPAY_OFFLINE_URL: '/hivepay-offline',
-  PRODUCT_HIVEPAY_ONLINE_URL: '/hivepay-online',
+  PRODUCT_HIVEPAY_OFFLINE_URL: '/pay-for-stores',
+  PRODUCT_HIVEPAY_ONLINE_URL: '/pay-for-devs',
   RESEARCH_INTERNET_CASH_URL: '/internet-cash',
   PRODUCT_DAD_URL: '/dad',
   RESEARCH_UNCOMMONS_URL: '/uncommons',
   PRODUCT_WHISPER_URL: '/whisper',
+
+  RECRUITING: '/recruiting',
+  RECRUITING_JOB_DETAIL: '/recruiting/:slug',
 };
+
+export const LANDING_PAGE_TYPE = {
+  product: {
+    text: 'Product',
+    url: '/product',
+  },
+  research: {
+    text: 'Research',
+    url: '/research',
+  },
+}
+
 
 export const NB_BLOCKS = 20;
 

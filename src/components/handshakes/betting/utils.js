@@ -156,7 +156,7 @@ export const parseJsonString = (extraData) => {
 export const findUserBet = (handshake) => {
   const {
     result, shakeUserIds, closingTime,
-    reportTime, disputeTime, initUserId, side,
+    reportTime, disputeTime, initUserId, side, hid,
   } = handshake;
 
   let findItem = handshake;
@@ -177,6 +177,7 @@ export const findUserBet = (handshake) => {
 
       findItem = Object.assign(firstItem, {
         id: getShakeOffchain(firstItem.id),
+        hid,
         result,
         closingTime,
         reportTime,

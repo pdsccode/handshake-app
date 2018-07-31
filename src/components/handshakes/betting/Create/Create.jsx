@@ -618,15 +618,13 @@ display: 'flex', flexDirection: 'column', flex: 1, marginBottom: 10,
     // const event_odds = values['event_odds'];
     // const payout = stake * event_odds;
     // const hid = selectedOutcome.id;
-    const hid = selectedOutcome.hid;
-
     if (status && data) {
       const isExist = isExistMatchBet(data);
       let message = MESSAGE.CREATE_BET_NOT_MATCH;
       if (isExist) {
         message = MESSAGE.CREATE_BET_MATCHED;
       }
-      betHandshakeHandler.controlShake(data, hid);
+      betHandshakeHandler.controlShake(data);
 
       this.props.showAlert({
         message: <div className="text-center">{message}</div>,
@@ -638,7 +636,7 @@ display: 'flex', flexDirection: 'column', flex: 1, marginBottom: 10,
       });
       // send ga event
       try {
-        GA.createBetSuccessCreatePage(selectedMatch, selectedOutcome, this.toggleRef.sideName);
+        //GA.createBetSuccessCreatePage(selectedMatch, selectedOutcome, this.toggleRef.sideName);
       } catch (err) {}
     }
   }
