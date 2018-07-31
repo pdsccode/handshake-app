@@ -517,7 +517,7 @@ export default {
   'landing_page.cash.faq': [
     {
       question: 'What is Ninja Cash?',
-      answer: 'Ninja Cash is a peer-to-peer decentralized exchange in which people can easily exchange cryptocurrency for cash. We want to make sure that traders are able to set up their own stations and make their own prices - not having to rely on market prices to buy and sell cryptocurrency.',
+      answer: 'Ninja Cash is a peer-to-peer decentralized exchange where people can easily exchange cryptocurrency for cash. We want to make sure that traders are able to set up their own stations and set their own prices - not have to rely on market prices to buy and sell cryptocurrency.',
     },
     {
       question: 'Is it easy to set up a station?',
@@ -525,11 +525,11 @@ export default {
     },
     {
       question: 'Where is Ninja Cash available?',
-      answer: 'Ninja’s are constantly joining us from all over the world. Anyone anywhere can set up a station. Just check out ninja.org and see if there is a station near you.',
+      answer: 'Ninjas are constantly joining us from all over the world. Anyone anywhere can set up a station. Just check out ninja.org and see if there is a station near you.',
     },
     {
       question: 'What documents do I need to provide to make an account on Ninja Cash?',
-      answer: 'Nothing. We don’t want any of your personal information, an account is automatically created on your phone the first time you go to ninja.org.',
+      answer: 'Nothing. We don’t need any of your personal information. An account is automatically created on your phone the first time you visit ninja.org.',
     },
     {
       question: 'Will I be truly anonymous on Ninja Cash?',
@@ -537,7 +537,7 @@ export default {
     },
     {
       question: 'Is Ninja Cash secure?',
-      answer: 'Yes, keeping your money safe and your identity private is our top priority. All of the transactions conducted on Ninja Cash are secured through the use of smart contracts written on Ethereum’s blockchain.',
+      answer: 'Yes, keeping your money safe and your identity private is our top priority. All of the transactions conducted on Ninja Cash are secured through the use of smart contracts written on the Ethereum blockchain.',
     },
     {
       question: 'How do I buy cryptocurrency from Ninja Cash?',
@@ -549,11 +549,11 @@ export default {
     },
     {
       question: 'How do I keep my wallet safe?',
-      answer: <span>Each wallet is provided a series of words arranged in a specific order. No one can withdraw your coins without these words in the right order. We suggest that you don’t keep this password in your phone, but that you make a hard copy of it and keep it in a safe place.<br /><a target="__blank" href="https://medium.com/@ninja_org/how-to-back-up-your-ninja-wallet-its-really-quite-easy-d98a5ec1a671">Make sure you backup your wallet.</a></span>,
+      answer: <span>Secure your wallet with the provided series of words. No one can withdraw your coins without these words in the right order. We suggest that you don’t keep this password in your phone, but that you make a hard copy of it and keep it in a safe place.<br /><a target="__blank" href="https://medium.com/@ninja_org/how-to-back-up-your-ninja-wallet-its-really-quite-easy-d98a5ec1a671">Make sure you backup your wallet.</a></span>,
     },
     {
       question: 'How do I pay for coins?',
-      answer: 'After you have connected with a fellow ninja, you will arrange a place to meet to make the trade. You buy your cryptocurrency with cash, the seller will finalize the deal on NinjaCash simultaneously. The coins will then be transferred to your wallet.',
+      answer: 'After you have connected with a fellow ninja, you will arrange a place to make the trade. Once you hand over your cash, the seller will confirm the deal on NinjaCash. At that moment, your newly-purchased cryptocurrency will be automatically transferred to your wallet out of escrow.',
     },
     {
       question: 'Are there any fees?',
@@ -561,7 +561,7 @@ export default {
     },
     {
       question: 'How long does it take to complete a transaction?',
-      answer: 'It really depends on what is happening on the Ethereums blockchain at that moment. We expect that transactions will take roughly 10-20 mins to go through. It may be longer if the blockchain is experiencing unusually high traffic - most likely due to the latest dApp sensation.',
+      answer: 'It really depends on what is happening on the Ethereum blockchain at that moment. We expect that transactions will take roughly 10-20 mins to go through. It may be longer if the blockchain is experiencing unusually high traffic - most likely due to the latest dApp sensation.',
     },
     {
       question: 'What happens if the transaction fails?',
@@ -577,7 +577,7 @@ export default {
     },
     {
       question: 'How can I make sure my coin is transferred to me after I give the other ninja cash?',
-      answer: 'Once a seller approves the transaction under the buyer\'s eagle eye, the cryptocurrency will be released from Escrow and into your wallet.',
+      answer: 'As a buyer, you’ll be able to observe the seller approving the transaction. Once that happens, the cryptocurrency will be released from escrow and into your wallet.',
     }
   ],
   'landing_page.prediction.faq': [
