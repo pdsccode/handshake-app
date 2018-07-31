@@ -4,12 +4,16 @@ import { API_URL } from '@/constants';
 import { loadMatches } from './action';
 
 function* handleLoadMachesSaga() {
-  const data = yield call(apiGet, {
-    PATH_URL: API_URL.CRYPTOSIGN.LOAD_MATCHES,
-    type: 'LOAD_MATCHES',
-    _key: 'events',
-    _path: 'prediction',
-  });
+  try {
+    yield call(apiGet, {
+      PATH_URL: API_URL.CRYPTOSIGN.LOAD_MATCHES,
+      type: 'LOAD_MATCHES',
+      _key: 'events',
+      _path: 'prediction',
+    });
+  } catch (e) {
+    console.error('handleLoadMachesSaga', e);
+  }
 }
 
 

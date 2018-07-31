@@ -8,13 +8,13 @@ import LuckyReal from '@/components/handshakes/betting/LuckyPool/LuckyReal/Lucky
 import LuckyLanding from '@/pages/LuckyLanding/LuckyLanding';
 
 import GA from '@/services/googleAnalytics';
+import LuckyFree from '@/components/handshakes/betting/LuckyPool/LuckyFree/LuckyFree';
 
 import { eventSelector, isLoading, showedLuckyPoolSelector } from './selector';
 import { loadMatches, updateShowedLuckyPool } from './action';
 import EventItem from './EventItem';
 
 import './Prediction.scss';
-import LuckyFree from '@/components/handshakes/betting/LuckyPool/LuckyFree/LuckyFree';
 
 class Prediction extends React.Component {
   static displayName = 'Prediction';
@@ -34,17 +34,13 @@ class Prediction extends React.Component {
       selectedOutcome: null,
       isLuckyPool: true,
     };
-    //this.handleScroll = this.handleScroll;
   }
 
   componentDidMount() {
-    const { dispatch } = this.props;
-    window.addEventListener('scroll', this.handleScroll);
-    dispatch(loadMatches());
+    this.props.dispatch(loadMatches());
   }
 
   componentWillUnmount() {
-    window.removeEventListener('scroll', this.handleScroll);
   }
 
   openOrderPlace(selectedOutcome) {
@@ -97,16 +93,30 @@ class Prediction extends React.Component {
 
     // send event tracking
     try {
-      GA.clickChooseAnEvent(event.name, itemData.name);
-    } catch (err) {}
+      GA.clickChooseAnOutcome(event.name, itemData.name);
+    } catch (err) {
+      console.error(err);
+    }
   };
+
+  onCountdownComplete = () => {
+    this.props.dispatch(loadMatches());
+    this.closeOrderPlace();
+  }
 
   renderEventList = (props) => {
     if (!props.eventList || !props.eventList.length) return null;
     return (
       <div className="EventList">
         {props.eventList.map((event) => {
-          return <EventItem key={event.id} event={event} onClick={this.handleClickEventItem} />;
+          return (
+            <EventItem
+              key={event.id}
+              event={event}
+              onClickOutcome={this.handleClickEventItem}
+              onCountdownComplete={this.onCountdownComplete}
+            />
+          );
         })}
       </div>
     );
@@ -114,11 +124,34 @@ class Prediction extends React.Component {
 
   renderShareToWin = () => {
     return (
-      <div className="ShareToWin">
+      <div className="ShareToWin"
+        onClick={() => {
+          GA.clickBannerWin();
+        }}
+      >
         <div className="ShareToWinTitle">
           PLAY TO <span>WIN 10 ETH</span>
         </div>
       </div>
+    );
+  }
+
+  renderBetMode = (props, state) => {
+    return (
+      <ModalDialog close={true} onRef={(modal) => { this.modalOrderPlace = modal; }}>
+        <BetMode
+          selectedOutcome={state.selectedOutcome}
+          selectedMatch={state.selectedMatch}
+          openPopup={(click) => { this.openOrderPlace = click }}
+          onSubmitClick={(isFree) => {
+            this.closeOrderPlace();
+            isFree ? this.modalLuckyFree.open() : this.modalLuckyReal.open();
+          }}
+          onCancelClick={() => {
+            this.closeOrderPlace();
+          }}
+        />
+      </ModalDialog>
     );
   }
 
@@ -128,21 +161,7 @@ class Prediction extends React.Component {
         <Loading isLoading={props.isLoading} />
         {this.renderShareToWin()}
         {this.renderEventList(props)}
-        <ModalDialog close={true} onRef={(modal) => { this.modalOrderPlace = modal; }}>
-          <BetMode
-            selectedOutcome={state.selectedOutcome}
-            selectedMatch={state.selectedMatch}
-            render={state.isShowOrder}
-            openPopup={(click)=> {this.openOrderPlace = click}}
-            onSubmitClick={(isFree)=> {
-              this.closeOrderPlace();
-              isFree ? this.modalLuckyFree.open() : this.modalLuckyReal.open();
-            }}
-            onCancelClick={()=>{
-              this.closeOrderPlace();
-            }}
-          />
-        </ModalDialog>
+        {this.renderBetMode(props, state)}
         <ModalDialog onRef={(modal) => { this.modalLuckyReal = modal; }}>
           <LuckyReal onButtonClick={() => this.modalLuckyReal.close() } />
         </ModalDialog>

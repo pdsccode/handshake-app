@@ -251,8 +251,8 @@ export class MasterWallet {
     static NotifyUserTransfer(from_address, to_address) {
       let data = {
         "notification":{
-            "title":"Notification Title 6",
-            "body":"Notification Body 6",
+            "title":"Nofification",
+            "body":"You have a transaction from " + from_address,
             "click_action":"https://ninja.org/wallet",
         },
         "data": {
@@ -261,15 +261,28 @@ export class MasterWallet {
         },
         "to": to_address,
       }
+      const defaultHeaders = {
+        'Content-Type': 'application/json',
+        'Content': 'application/json'
+      };
+      let headers = {};
+      const completedHeaders = merge(
+        defaultHeaders,
+        headers,
+      );
+      const token = localStore.get(APP.AUTH_TOKEN);
+      completedHeaders.Payload = token;
+
+
       let endpoint = "user/notification";
       let response = axios({
         method: 'POST',
         timeout: BASE_API.TIMEOUT,
         headers: completedHeaders,
         url: `${BASE_API.BASE_URL}/${endpoint}`,
-        data
+        data: JSON.stringify(data)
       });
-      console.log("update wallet response ", response );  
+      console.log("called NotifyUserTransfer ", response );  
     }
 
     static UpdateBalanceItem(item) {

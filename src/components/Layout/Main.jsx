@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import BrowserDetect from '@/services/browser-detect';
 // components
 import MainHeader from '@/components/Header/MainHeader';
 import Navigation from '@/components/core/controls/Navigation/Navigation';
@@ -30,13 +31,14 @@ class MainLayout extends React.Component {
   }
 
   render() {
+    const isDesktop = BrowserDetect.isDesktop;
     return (
-      <div className={`app ${this.state.app.showHeader ? 'show-header' : 'hide-header'}`}>
+      <div className={`${isDesktop ? '' : 'app'} ${this.state.app.showHeader ? 'show-header' : 'hide-header'}`}>
         <MainHeader />
         <div className="content">
           {this.props.children}
         </div>
-        <Navigation location={this.props.location} />
+        { !isDesktop && <Navigation location={this.props.location} />}
         <Alert />
         <Loading />
       </div>

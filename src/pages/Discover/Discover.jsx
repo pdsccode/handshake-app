@@ -2,16 +2,19 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
+import { FormattedHTMLMessage, FormattedMessage, injectIntl } from 'react-intl';
 // service, constant
 import { loadDiscoverList } from '@/reducers/discover/action';
 import {
   API_URL,
+  CASH_SORTING_CRITERIA,
+  CASH_SORTING_LIST,
   DISCOVER_GET_HANDSHAKE_RADIUS,
   EXCHANGE_COOKIE_READ_INSTRUCTION,
   HANDSHAKE_ID,
-  URL,
   HANDSHAKE_ID_DEFAULT,
+  SORT_ORDER,
+  URL,
 } from '@/constants';
 import { Link } from 'react-router-dom';
 import Cookies from 'js-cookie';
@@ -20,7 +23,6 @@ import Helper from '@/services/helper';
 import { Col, Grid, Row } from 'react-bootstrap';
 // import SearchBar from '@/components/core/controls/SearchBar';
 import ModalDialog from '@/components/core/controls/ModalDialog';
-import Category from '@/components/core/controls/Category';
 
 import FeedPromise from '@/components/handshakes/promise/Feed';
 import FeedBetting from '@/components/handshakes/betting/Feed';
@@ -30,7 +32,6 @@ import FeedSeed from '@/components/handshakes/seed/Feed';
 import BlockCountry from '@/components/core/presentation/BlockCountry';
 import Maintain from '@/components/core/presentation/Maintain';
 import NavigationBar from '@/modules/NavigationBar/NavigationBar';
-import MultiLanguage from '@/components/core/controls/MultiLanguage';
 // import Tabs from '@/components/handshakes/exchange/components/Tabs';
 import NoData from '@/components/core/presentation/NoData';
 import { getFreeStartInfo, getListOfferPrice, setFreeStart } from '@/reducers/exchange/action';
@@ -43,11 +44,13 @@ import DiscoverBetting from '@/components/handshakes/betting/Discover/Discover';
 import LuckyLanding from '@/pages/LuckyLanding/LuckyLanding';
 import * as gtag from '@/services/ga-utils';
 import taggingConfig from '@/services/tagging-config';
-
-
+import createForm from '@/components/core/form/createForm';
+import { fieldDropdown, fieldRadioButton } from '@/components/core/form/customField';
+import { change, Field } from 'redux-form';
 // style
 import '@/components/handshakes/exchange/Feed/FeedExchange.scss';
 import './Discover.scss';
+import OfferShop from '@/models/OfferShop';
 // import { Helmet } from "react-helmet";
 // import icon2KuNinja from '@/assets/images/icon/2_ku_ninja.svg';
 const maps = {
@@ -57,6 +60,32 @@ const maps = {
   [HANDSHAKE_ID.EXCHANGE_LOCAL]: FeedExchangeLocal,
   [HANDSHAKE_ID.SEED]: FeedSeed,
 };
+
+const nameFormFilterFeeds = 'formFilterFeeds';
+const FormFilterFeeds = createForm({
+  propsReduxForm: {
+    form: nameFormFilterFeeds,
+  },
+});
+
+const PRICE_SORTS = [
+  {
+    id: 'buy_btc_d',
+    text: <FormattedMessage id="ex.sort.price.buy.btc" />,
+  },
+  {
+    id: 'sell_btc_d',
+    text: <FormattedMessage id="ex.sort.price.sell.btc" />,
+  },
+  {
+    id: 'buy_eth_d',
+    text: <FormattedMessage id="ex.sort.price.buy.eth" />,
+  },
+  {
+    id: 'sell_eth_d',
+    text: <FormattedMessage id="ex.sort.price.sell.eth" />,
+  },
+];
 
 const TAG = 'DISCOVER_PAGE';
 class DiscoverPage extends React.Component {
@@ -101,6 +130,9 @@ class DiscoverPage extends React.Component {
       utm,
       program,
       isLuckyPool: true,
+      sortIndexActive: CASH_SORTING_CRITERIA.DISTANCE,
+      sortPriceIndexActive: '',
+      sortOrder: '',
     };
 
     if (this.state.handshakeIdActive === HANDSHAKE_ID.EXCHANGE) {
@@ -120,9 +152,9 @@ class DiscoverPage extends React.Component {
   }
 
   componentDidMount() {
-    const { ipInfo } = this.props;
+    const { ipInfo, rfChange } = this.props;
 
-    //Listen event scroll down
+    // Listen event scroll down
     window.addEventListener('scroll', this.handleScroll);
 
     this.setAddressFromLatLng(ipInfo?.latitude, ipInfo?.longitude); // fallback
@@ -163,12 +195,14 @@ class DiscoverPage extends React.Component {
         errorFn: () => { },
       });
     }
+
+    rfChange(nameFormFilterFeeds, 'sortType', CASH_SORTING_CRITERIA.DISTANCE);
+    this.setState({ sortIndexActive: CASH_SORTING_CRITERIA.DISTANCE });
   }
 
   componentWillUnmount() {
     window.removeEventListener('scroll', this.handleScroll);
   }
-
 
 
   onFreeStartClick() {
@@ -217,6 +251,9 @@ class DiscoverPage extends React.Component {
         const {
           handshakeIdActive,
           query,
+          sortIndexActive,
+          sortPriceIndexActive,
+          sortOrder,
         } = prevState;
         const { ipInfo } = nextProps;
         const qs = { };
@@ -233,6 +270,11 @@ class DiscoverPage extends React.Component {
 
           if (handshakeIdActive === HANDSHAKE_ID.EXCHANGE) {
             qs.custom_query = ` -offline_i:1 `;
+
+            if (sortIndexActive === CASH_SORTING_CRITERIA.PRICE) {
+              qs.c_sort = sortPriceIndexActive;
+              qs.t_sort = sortOrder;
+            }
           }
         }
 
@@ -257,16 +299,27 @@ class DiscoverPage extends React.Component {
   }
 
 
-
   getHandshakeList() {
+    const { authProfile } = this.props;
     const { messages } = this.props.intl;
     const { list } = this.props.discover;
-    const { handshakeIdActive, lat, lng } = this.state;
+    const {
+      handshakeIdActive, lat, lng, sortIndexActive, sortPriceIndexActive,
+    } = this.state;
+    const sortPriceIndexArr = sortPriceIndexActive.split('_');
 
     if (list && list.length > 0) {
-      return list.map((handshake) => {
+      let myHandShake;
+      let resultList = list.map((handshake) => {
+        if (handshake.id.includes(authProfile?.id)) {
+          myHandShake = handshake;
+
+          return null;
+        }
         const FeedComponent = maps[handshake.type];
-        if (FeedComponent) {
+        const offer = OfferShop.offerShop(JSON.parse(handshake.extraData));
+        const allowRender = sortIndexActive === CASH_SORTING_CRITERIA.PRICE ? offer.itemFlags[sortPriceIndexArr[1].toUpperCase()] : true;
+        if (FeedComponent && allowRender) {
           return (
             <Col key={handshake.id} className="col-12 feed-wrapper px-0">
               <FeedComponent
@@ -277,6 +330,8 @@ class DiscoverPage extends React.Component {
                 latitude={lat}
                 longitude={lng}
                 modalRef={this.modalRef}
+                offer={offer}
+                setLoading={this.setLoading}
               />
 
             </Col>
@@ -284,6 +339,33 @@ class DiscoverPage extends React.Component {
         }
         return null;
       });
+
+      // Handle my handshake
+      if (myHandShake) {
+        const FeedComponent = maps[myHandShake.type];
+
+        const offer = OfferShop.offerShop(JSON.parse(myHandShake.extraData));
+        if (FeedComponent) {
+          resultList.unshift(
+            <Col key={myHandShake.id} className="col-12 feed-wrapper px-0">
+              <FeedComponent
+                {...myHandShake}
+                history={this.props.history}
+                onFeedClick={extraData => this.clickFeedDetail(myHandShake, extraData)}
+                refreshPage={this.loadDiscoverList}
+                latitude={lat}
+                longitude={lng}
+                modalRef={this.modalRef}
+                offer={offer}
+                ownerStation
+              />
+
+            </Col>
+          );
+        }
+      }
+
+      return resultList;
     }
 
     let message = '';
@@ -306,17 +388,15 @@ class DiscoverPage extends React.Component {
     this.setState({ isLoading: loadingState });
   }
 
-  showLuckyPool () {
+  showLuckyPool() {
     const { handshakeIdActive } = this.state;
     const { showedLuckyPool } = this.props;
     if (handshakeIdActive === HANDSHAKE_ID.BETTING) {
-
       if (showedLuckyPool === false) {
         console.log('Action Lucky Pool:', showedLuckyPool);
         this.props.updateShowedLuckyPool(true);
         setTimeout(() => {
           this.modalLuckyPoolRef.open();
-
         }, 2 * 1000);
       }
     }
@@ -324,7 +404,6 @@ class DiscoverPage extends React.Component {
 
   handleScroll() {
     this.showLuckyPool();
-
   }
 
 
@@ -345,8 +424,8 @@ class DiscoverPage extends React.Component {
         gtag.event({
           category: taggingConfig.cash.category,
           action: taggingConfig.cash.action.clickFeed,
-          label: handshake.id
-        })
+          label: handshake.id,
+        });
         if (modalContent) {
           this.setState({ modalContent, propsModal: { className: modalClassName } }, () => {
             this.modalRef.open();
@@ -404,12 +483,14 @@ class DiscoverPage extends React.Component {
   }
 
   clickCategoryItem(category) {
+    console.log('clickCategoryItem');
+    const { rfChange } = this.props;
     const { id } = category;
     gtag.event({
       category: taggingConfig.common.category,
       action: taggingConfig.common.action.chooseCategory,
-      label: id
-    })
+      label: id,
+    });
     if (this.state.handshakeIdActive !== id) {
       this.setLoading(true);
     }
@@ -422,6 +503,8 @@ class DiscoverPage extends React.Component {
         // do something
         break;
       case HANDSHAKE_ID.EXCHANGE:
+        rfChange(nameFormFilterFeeds, 'sortType', CASH_SORTING_CRITERIA.DISTANCE);
+        this.setState({ sortIndexActive: CASH_SORTING_CRITERIA.DISTANCE });
         // do something
         // tabIndexActive = 1;
         // this.showWelcomePopup();
@@ -466,6 +549,9 @@ class DiscoverPage extends React.Component {
     const {
       handshakeIdActive,
       query,
+      sortIndexActive,
+      sortPriceIndexActive,
+      sortOrder,
     } = this.state;
     const qs = { };
 
@@ -480,6 +566,14 @@ class DiscoverPage extends React.Component {
 
       if (handshakeIdActive === HANDSHAKE_ID.EXCHANGE) {
         qs.custom_query = ` -offline_i:1 `;
+
+        if (sortIndexActive === CASH_SORTING_CRITERIA.PRICE) {
+          qs.c_sort = sortPriceIndexActive;
+          qs.t_sort = sortOrder;
+        } else if (sortIndexActive === CASH_SORTING_CRITERIA.RATING) {
+          qs.c_sort = 'review_d';
+          qs.t_sort = SORT_ORDER.DESC;
+        }
       }
     }
 
@@ -499,12 +593,38 @@ class DiscoverPage extends React.Component {
     });
   }
 
+  onSortChange = (e, newValue) => {
+    const { rfChange } = this.props;
+    const { sortIndexActive } = this.state;
+    console.log('onFilterChange', newValue);
+    if (sortIndexActive !== newValue) {
+      this.setLoading(true);
+      this.setState({ sortIndexActive: newValue }, () => {
+        this.loadDiscoverList();
+      });
+    }
+  }
+
+  onSortPriceChange = (e, item) => {
+    const { sortPriceIndexActive } = this.state;
+    console.log('onSortPriceChange', item);
+
+    if (sortPriceIndexActive !== item.id) {
+      this.setLoading(true);
+      const sortOrder = item.id.includes('buy') ? SORT_ORDER.ASC : SORT_ORDER.DESC;
+      this.setState({ sortIndexActive: CASH_SORTING_CRITERIA.PRICE, sortPriceIndexActive: item.id, sortOrder }, () => {
+        this.loadDiscoverList();
+      });
+    }
+  }
+
   render() {
     const {
       handshakeIdActive,
       // tabIndexActive,
       propsModal,
       modalContent,
+      sortIndexActive,
     } = this.state;
     const { messages } = this.props.intl;
     const { intl } = this.props;
@@ -541,6 +661,34 @@ class DiscoverPage extends React.Component {
                   <meta name="description" content={intl.formatMessage({ id: 'ex.seo.meta.description' })} />
                 </Helmet>
                 */}
+                <div className="mt-2 mb-1">
+                  <FormFilterFeeds>
+                    <div className="d-table w-100">
+                      <div className="d-table-cell"><label className="label-filter-by"><FormattedMessage id="ex.discover.label.sortby" /></label></div>
+                      <div className="d-table-cell">
+                        <Field
+                          name="sortType"
+                          component={fieldRadioButton}
+                          type="tab-5"
+                          fullWidth={false}
+                          list={CASH_SORTING_LIST}
+                          // validate={[required]}
+                          onChange={this.onSortChange}
+                        />
+                        <Field
+                          name="sortType"
+                          component={fieldDropdown}
+                          classNameWrapper=""
+                          defaultText={<FormattedMessage id="ex.sort.price" />}
+                          classNameDropdownToggle={`dropdown-sort bg-white ${sortIndexActive === CASH_SORTING_CRITERIA.PRICE ? 'dropdown-sort-selected' : ''}  `}
+                          list={PRICE_SORTS}
+                          onChange={this.onSortPriceChange}
+                        />
+                      </div>
+                    </div>
+
+                  </FormFilterFeeds>
+                </div>
                 <div>
                   <div className="ex-sticky-note">
                     <div className="mb-2"><FormattedMessage id="ex.discover.banner.text" /></div>
@@ -575,7 +723,6 @@ class DiscoverPage extends React.Component {
         </ModalDialog>
         <ModalDialog className="modal" onRef={(modal) => { this.modalLuckyPoolRef = modal; return null; }}>
           <LuckyLanding onButtonClick={() => {
-
             this.modalLuckyPoolRef.close();
           }}
           />
@@ -595,9 +742,11 @@ const mapState = state => ({
   firebaseApp: state.firebase.data,
   freeStartInfo: state.exchange.freeStartInfo,
   showedLuckyPool: state.betting.showedLuckyPool,
+  authProfile: state.auth.profile,
 });
 
 const mapDispatch = dispatch => ({
+  rfChange: bindActionCreators(change, dispatch),
   loadDiscoverList: bindActionCreators(loadDiscoverList, dispatch),
   getListOfferPrice: bindActionCreators(getListOfferPrice, dispatch),
   setFreeStart: bindActionCreators(setFreeStart, dispatch),

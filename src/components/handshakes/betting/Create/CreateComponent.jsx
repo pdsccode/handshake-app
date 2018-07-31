@@ -71,14 +71,14 @@ class BettingCreate extends React.Component {
   componentDidMount() {
     const { bettingShake } = this.props;
 
-    console.log(TAG, 'componentDidMount', 'bettingShake', bettingShake);
+    // console.log(TAG, 'componentDidMount', 'bettingShake', bettingShake);
     this.updateDefaultValues(bettingShake);
   }
 
   componentWillReceiveProps(nextProps) {
 
     const { bettingShake } = nextProps;
-    console.log(TAG, 'componentWillReceiveProps', 'bettingShake', bettingShake);
+    // console.log(TAG, 'componentWillReceiveProps', 'bettingShake', bettingShake);
     this.updateDefaultValues(bettingShake);
   }
 
@@ -96,9 +96,16 @@ class BettingCreate extends React.Component {
     const { closingDate, matchName, matchOutcome, onSubmitClick, side } = bettingShake;
 
     // send event tracking
+    /*
     try {
       GA.clickGoButtonSimpleMode(matchName, matchOutcome, side);
     } catch (err) {}
+    */
+    if (side === SIDE.SUPPORT) {
+      GA.clickPlaceSupportOrder(matchOutcome);
+    } else {
+      GA.clickPlaceOpposeOrder(matchOutcome);
+    }
 
 
     const amount = parseBigNumber(values.event_bet);
@@ -266,7 +273,7 @@ class BettingCreate extends React.Component {
 
     const extraData = {
       event_name: matchName,
-      event_predit: matchOutcome,
+      event_predict: matchOutcome,
     };
     const params = {
       type: HANDSHAKE_ID.BETTING,
@@ -295,9 +302,8 @@ class BettingCreate extends React.Component {
     console.log('initHandshakeSuccess', successData);
 
     const { status, data } = successData;
-    const { outcomeHid, matchName, matchOutcome, side } = this.props;
-    const hid = outcomeHid;
-
+    const { bettingShake } = this.props;
+    const { matchName, matchOutcome, side } = bettingShake;
 
     if (status && data) {
       const isExist = isExistMatchBet(data);
@@ -305,7 +311,7 @@ class BettingCreate extends React.Component {
       if (isExist) {
         message = MESSAGE.CREATE_BET_MATCHED;
       }
-      betHandshakeHandler.controlShake(data, hid);
+      betHandshakeHandler.controlShake(data);
 
       this.props.showAlert({
         message: <div className="text-center">{message}</div>,

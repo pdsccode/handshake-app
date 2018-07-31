@@ -25,6 +25,7 @@ import { getKeyByValue } from '@/utils/object';
 
 import { SIDE } from '@/components/handshakes/betting/constants.js';
 import GA from '@/services/googleAnalytics';
+import { updateSide } from './../OrderPlace/action';
 
 import './ShakeFree.scss';
 import Toggle from './../Toggle';
@@ -44,6 +45,7 @@ class BetingShakeFree extends React.Component {
     onSubmitClick: PropTypes.func,
     onCancelClick: PropTypes.func,
     showAlert: PropTypes.func.isRequired,
+    dispatch: PropTypes.func.isRequired,
   }
 
   static defaultProps = {
@@ -102,9 +104,15 @@ class BetingShakeFree extends React.Component {
     const odds = parseBigNumber(oddValue);
     // send event tracking
     const side = this.toggleRef.value;
-    try {
-      GA.clickGoButton(matchName, matchOutcome, side);
-    } catch (err) { }
+    // try {
+    //   GA.clickGoButton(matchName, matchOutcome, side);
+    // } catch (err) { }
+
+    if (side === SIDE.SUPPORT) {
+      GA.clickPlaceSupportOrder(matchOutcome);
+    } else {
+      GA.clickPlaceOpposeOrder(matchOutcome);
+    }
 
     const validate = await validateBet(amountBN, odds, closingDate, matchName, matchOutcome, true);
     const { status, message } = validate;
@@ -126,22 +134,27 @@ class BetingShakeFree extends React.Component {
   }
 
   onToggleChange(id) {
-    const { marketAgainstOdds, marketSupportOdds } = this.props;
+    const { marketAgainstOdds, marketSupportOdds, matchOutcome } = this.props;
     const side = this.toggleRef.value;
     const marketOdds = side === SIDE.SUPPORT ? marketSupportOdds : marketAgainstOdds;
+    const tabSide = getKeyByValue(SIDE, side);
+
+    this.props.dispatch(updateSide(tabSide.toLowerCase()));
 
     this.setState({
       oddValue: formatOdds(marketOdds),
-    }, () => this.updateTotal());
-
-
-    this.setState({
       side: id,
       buttonClass: `btnOK ${id === 1 ? 'btnBlue' : 'btnRed'}`,
-    });
+    }, () => this.updateTotal());
 
     // Event tracking
-    GA.clickChooseASide(id);
+    //GA.clickChooseASide(id);
+    if (side === SIDE.SUPPORT) {
+      GA.clickSupport(matchOutcome);
+    } else {
+      GA.clickOppose(matchOutcome);
+    }
+
   }
 
   updateDefautValues() {
@@ -318,7 +331,7 @@ class BetingShakeFree extends React.Component {
 
     return (
       <form className="wrapperBettingShakeFree" onSubmit={this.onSubmit}>
-        <p className="titleForm text-center">BET FREE ON THE OUTCOME</p>
+        {/* <p className="titleForm text-center">BET FREE ON THE OUTCOME</p> */}
         {<Toggle ref={(component) => { this.toggleRef = component; }} onChange={this.onToggleChange} />}
         {/* this.renderInputField(amountField) */}
         <div className="freeAmount">You have {amount} ETH FREE to bet!</div>
@@ -327,10 +340,9 @@ class BetingShakeFree extends React.Component {
           <div>Possible winnings</div>
           <div className="possibleWinningsValue">{winValue}</div>
         </div>
-        <div className="rowWrapper">
-          <div className="gasPriceTitle">Current gas price per transaction (ETH)</div>
+        {/*<div className="rowWrapper">
           <div className="possibleWinningsValue">{estimateGas}</div>
-        </div>
+    </div>*/}
         <Button type="submit" disabled={disable} block className={buttonClass}>
           Place {sideText} Order
         </Button>
@@ -344,9 +356,12 @@ class BetingShakeFree extends React.Component {
     return this.renderForm();
   }
 }
+
 const mapDispatch = ({
   initFreeHandshake,
   shakeItem,
   showAlert,
 });
+
 export default connect(null, mapDispatch)(BetingShakeFree);
+

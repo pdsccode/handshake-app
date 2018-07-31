@@ -9,14 +9,14 @@ export default class Countdown extends Component {
     classNames: PropTypes.string,
     endTime: PropTypes.number.isRequired, // milliseconds
     renderer: PropTypes.func,
-    showDays: PropTypes.bool,
     separator: PropTypes.string,
+    onComplete: PropTypes.func,
   };
 
   static defaultProps = {
     classNames: null,
-    showDays: false,
     separator: ':',
+    onComplete: undefined,
   };
 
   constructor(props) {
@@ -27,12 +27,14 @@ export default class Countdown extends Component {
       minutes: null,
       seconds: null,
     };
+    this.mounted = false;
   }
 
   componentDidMount() {
+    this.mounted = true;
     this.interval = setInterval(() => {
       const date = this.calculateCountdown(this.props);
-      if (date) {
+      if (date && this.mounted) {
         this.setState(date);
       } else {
         this.stop();
@@ -45,7 +47,9 @@ export default class Countdown extends Component {
   }
 
   stop = () => {
+    this.mounted = false;
     clearInterval(this.interval);
+    delete this.interval;
   }
 
   addLeadingZeros = (value, size = 2) => {
@@ -54,18 +58,19 @@ export default class Countdown extends Component {
     return s;
   }
 
-  calculateCountdown = ({ endTime, showDays }) => {
+  calculateCountdown = ({ endTime, onComplete }) => {
     const end = (endTime.toString().length === 10) ? endTime * 1000 : endTime;
     const seconds = parseInt((Math.max(0, end - Date.now()) / 1000).toFixed(0), 10);
 
     if (seconds <= 0) {
       this.stop();
+      if (onComplete) {
+        onComplete();
+      }
     }
 
-    const days = showDays ? this.addLeadingZeros(Math.floor(seconds / (3600 * 24))) : 0;
-
     return {
-      days,
+      days: Number(this.addLeadingZeros(Math.floor(seconds / (3600 * 24)))),
       hours: this.addLeadingZeros(Math.floor((seconds / 3600) % 24)),
       minutes: this.addLeadingZeros(Math.floor((seconds / 60) % 60)),
       seconds: this.addLeadingZeros(Math.floor(seconds % 60)),
@@ -75,7 +80,9 @@ export default class Countdown extends Component {
   };
 
   renderDays = (days) => {
-    return (<span className="CountdownItem Days">{days}</span>);
+    if (days <= 0) return null;
+    const pl = (days > 1) ? 'days' : 'day';
+    return (<span className="CountdownItem Days">{`${days} ${pl} left`}</span>);
   }
 
   renderHours = (hours) => {
@@ -96,6 +103,19 @@ export default class Countdown extends Component {
     );
   }
 
+  renderTime = (props, state) => {
+    if (state.days > 0) return null;
+    return (
+      <div className="CountdownTime">
+        {this.renderHours(state.hours)}
+        {state.minutes && this.renderSeparator(props.separator)}
+        {this.renderMinutes(state.minutes)}
+        {state.seconds && this.renderSeparator(props.separator)}
+        {this.renderSeconds(state.seconds)}
+      </div>
+    );
+  }
+
   renderComponent = (props, state) => {
     const cls = classNames(Countdown.displayName, {
       [props.classNames]: !!props.classNames,
@@ -111,12 +131,8 @@ export default class Countdown extends Component {
 
     return (
       <div className={cls}>
-        {props.showDays && this.renderDays(state.days)}
-        {this.renderHours(state.hours)}
-        {state.minutes && this.renderSeparator(props.separator)}
-        {this.renderMinutes(state.minutes)}
-        {state.seconds && this.renderSeparator(props.separator)}
-        {this.renderSeconds(state.seconds)}
+        {this.renderDays(state.days)}
+        {this.renderTime(props, state)}
       </div>
     );
   }

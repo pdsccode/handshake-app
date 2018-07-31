@@ -12,7 +12,7 @@ import ModalDialog from '@/components/core/controls/ModalDialog';
 import Offer from '@/models/Offer';
 import {MasterWallet} from '@/services/Wallets/MasterWallet';
 import {formatAmountCurrency, getHandshakeUserType} from '@/services/offer-util';
-import {hideLoading, showAlert, showLoading} from '@/reducers/app/action';
+import {showAlert} from '@/reducers/app/action';
 
 import {feedBackgroundColors} from '@/components/handshakes/exchange/config';
 import {Ethereum} from '@/services/Wallets/Ethereum.js';
@@ -29,6 +29,10 @@ import {trackingOnchain,} from "@/reducers/exchange/action";
 import FeedMeDashboardContainer from "./FeedMeDashboardContainer";
 
 class FeedMe extends React.PureComponent {
+  static propTypes = {
+    setLoading: PropTypes.func.isRequired,
+  };
+
   constructor(props) {
     super(props);
 
@@ -46,11 +50,11 @@ class FeedMe extends React.PureComponent {
   }
 
   showLoading = () => {
-    this.props.showLoading({ message: '' });
+    this.props.setLoading(true);
   }
 
   hideLoading = () => {
-    this.props.hideLoading();
+    this.props.setLoading(false);
   }
 
   confirmOfferAction = (message, actionConfirm) => {
@@ -225,6 +229,8 @@ class FeedMe extends React.PureComponent {
       showNotEnoughCoinAlert: this.showNotEnoughCoinAlert,
       getNameShopDisplayed: this.getNameShopDisplayed,
       trackingOnchain: this.trackingOnchain,
+      showLoading: this.showLoading,
+      hideLoading: this.hideLoading,
     };
 
     let feed = null;
@@ -281,8 +287,6 @@ const mapState = state => ({
 
 const mapDispatch = ({
   showAlert,
-  showLoading,
-  hideLoading,
   trackingOnchain,
 });
 

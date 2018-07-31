@@ -57,6 +57,13 @@ function appReducter(state = {
 
   firechat: {},
 
+  modal: {
+    className: '',
+    show: false,
+    body: null,
+    title: null,
+    centered: false,
+  }
 }, action) {
   switch (action.type) {
     case APP_ACTION.SET_ROOT_LOADING:
@@ -156,6 +163,14 @@ function appReducter(state = {
         ...close,
       };
 
+    case APP_ACTION.UPDATE_MODAL:
+      return {
+        ...state,
+        modal: {
+          ...state.modal,
+          ...action.payload,
+        },
+      };
 
     case APP_ACTION.NOT_FOUND_SET:
       return {

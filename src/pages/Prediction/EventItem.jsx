@@ -5,7 +5,9 @@ import Countdown from '@/components/Countdown/Countdown';
 import Image from '@/components/core/presentation/Image';
 import commentIcon from '@/assets/images/icon/comment.svg';
 import { URL } from '@/constants';
+import { formatAmount } from '@/utils/number';
 import OutcomeList from './OutcomeList';
+import GA from '@/services/googleAnalytics';
 
 function renderEventName(event) {
   return (
@@ -24,22 +26,23 @@ function renderEventNumberOfPlayers(event) {
   );
 }
 
-function renderEvenTimeLeft(event) {
+function renderEvenTimeLeft(event, onCountdownComplete) {
   return (
     <div className="EventTimeLeft">
       <span className="EventTimeLeftText">Time left</span>
       <span className="EventTimeLeftValue">
-        <Countdown endTime={event.date} />
+        <Countdown endTime={event.date} onComplete={onCountdownComplete} />
       </span>
     </div>
   );
 }
 
 function renderEventTotalBets(event) {
+  const totalBets = !event.total_bets ? 0 : formatAmount(event.total_bets);
   return (
     <div className="EventTotalBet">
       <span className="EventTotalBetText">Total bets</span>
-      <span className="EventTotalBetValue">{`${event.total_bets} ETH`}</span>
+      <span className="EventTotalBetValue">{`${totalBets} ETH`}</span>
     </div>
   );
 }
@@ -47,49 +50,49 @@ function renderEventTotalBets(event) {
 function renderEventMessages(event) {
   const commentLink = `${URL.COMMENTS_BY_SHAKE_INDEX}?objectId=event_${event.id}`;
   return (
-    <Link className="EventMessage" to={commentLink}>
+    <Link className="EventMessage" to={commentLink}
+      onClick={() => {
+        GA.clickComment(event.name);
+      }}
+    >
       <span className="EventMessageIcon"><Image src={commentIcon} /></span>
       <div className="EventMessageText">Comments</div>
     </Link>
   );
 }
 
-function renderOutcomeList(event, onClick) {
+function renderOutcomeList(event, onClickOutcome) {
   return (
-    <OutcomeList event={event} onClick={onClick} />
+    <OutcomeList event={event} onClick={onClickOutcome} />
   );
 }
 
-function renderDetails(event) {
-  return (
-    <div className="EventDetails">
-      <div className="EvenFirstGroup">
-        {renderEvenTimeLeft(event)}
-        {renderEventTotalBets(event)}
-      </div>
-      {renderEventMessages(event)}
-    </div>
-  );
-}
-
-function EventItem({ event,onClick }) {
+function EventItem({ event, onClickOutcome, onCountdownComplete }) {
   return (
     <div className="EventItem">
       {renderEventName(event)}
       {renderEventNumberOfPlayers(event)}
-      {renderOutcomeList(event, onClick)}
-      {renderDetails(event)}
+      {renderOutcomeList(event, onClickOutcome)}
+      <div className="EventDetails">
+        <div className="EvenFirstGroup">
+          {renderEvenTimeLeft(event, onCountdownComplete)}
+          {renderEventTotalBets(event)}
+        </div>
+        {renderEventMessages(event)}
+      </div>
     </div>
   );
 }
 
 EventItem.propTypes = {
   event: PropTypes.object.isRequired,
-  onClick: PropTypes.func,
+  onClickOutcome: PropTypes.func,
+  onCountdownComplete: PropTypes.func,
 };
 
 EventItem.defaultProps = {
-  onClick: undefined,
+  onClickOutcome: undefined,
+  onCountdownComplete: undefined,
 };
 
 export default EventItem;

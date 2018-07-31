@@ -11,6 +11,7 @@ import {
   EXCHANGE_ACTION,
   HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS,
   HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE,
+  HANDSHAKE_ID,
   NB_BLOCKS,
   URL,
 } from '@/constants';
@@ -22,10 +23,9 @@ import { Bitcoin } from '@/services/Wallets/Bitcoin';
 import Offer from '@/models/Offer';
 import { MasterWallet } from '@/services/Wallets/MasterWallet';
 import { formatAmountCurrency, formatMoneyByLocale, getLatLongHash, getOfferPrice } from '@/services/offer-util';
-import { getUserLocation, hideLoading, showAlert, showLoading } from '@/reducers/app/action';
+import { getUserLocation, showAlert } from '@/reducers/app/action';
 import { getDistanceFromLatLonInKm, getErrorMessageFromCode } from '../utils';
 import { ExchangeCashHandshake } from '@/services/neuron';
-import OfferShop from '@/models/OfferShop';
 import { getLocalizedDistance } from '@/services/util';
 import { BigNumber } from 'bignumber.js';
 import StarsRating from '@/components/core/presentation/StarsRating';
@@ -33,6 +33,7 @@ import StarsRating from '@/components/core/presentation/StarsRating';
 import iconChat from '@/assets/images/icon/chat-icon.svg';
 import iconBitcoin from '@/assets/images/icon/coin/btc.svg';
 import iconEthereum from '@/assets/images/icon/coin/eth.svg';
+import iconStation from '@/assets/images/icon/own-key.svg';
 
 import { nameFormShakeDetail } from '@/components/handshakes/exchange/components/ShakeDetail';
 import CoinCards from '@/components/handshakes/exchange/components/CoinCards';
@@ -45,12 +46,16 @@ const ICONS = {
 };
 
 class FeedExchange extends React.PureComponent {
+  static propTypes = {
+    setLoading: PropTypes.func.isRequired,
+  };
+
   constructor(props) {
     super(props);
 
-    const { extraData } = props;
+    const { offer } = props;
 
-    this.offer = OfferShop.offerShop(JSON.parse(extraData));
+    this.offer = offer;
 
     // console.log('offer', this.offer);
 
@@ -67,11 +72,11 @@ class FeedExchange extends React.PureComponent {
   }
 
   showLoading = () => {
-    this.props.showLoading({ message: '' });
+    this.props.setLoading(true);
   }
 
   hideLoading = () => {
-    this.props.hideLoading();
+    this.props.setLoading(false);
   }
 
   handleOnShake = (name) => {
@@ -203,11 +208,14 @@ class FeedExchange extends React.PureComponent {
     const { authProfile } = this.props;
     const { offer } = this;
 
+    this.showLoading();
+
     const shopType = values.type === EXCHANGE_ACTION.BUY ? EXCHANGE_ACTION.SELL : EXCHANGE_ACTION.BUY;
 
     const wallet = MasterWallet.getWalletDefault(values.currency);
 
     if (!this.checkMainNetDefaultWallet(wallet)) {
+      this.hideLoading();
       return;
     }
 
@@ -215,6 +223,7 @@ class FeedExchange extends React.PureComponent {
       const balance = await wallet.getBalance();
       const fee = await wallet.getFee(NB_BLOCKS, true);
       if (this.showNotEnoughCoinAlert(balance, values.amount, fee, values.currency)) {
+        this.hideLoading();
         return;
       }
     }
@@ -231,7 +240,6 @@ class FeedExchange extends React.PureComponent {
       chat_username: authProfile?.username,
     };
 
-    this.showLoading();
     this.props.shakeOfferItem({
       PATH_URL: `${API_URL.EXCHANGE.OFFER_STORES}/${offer.id}/${API_URL.EXCHANGE.SHAKES}`,
       METHOD: 'POST',
@@ -285,7 +293,7 @@ class FeedExchange extends React.PureComponent {
       timeOut: 2000,
       type: 'success',
       callBack: () => {
-        this.props.history.push(`${URL.HANDSHAKE_ME}`);
+        this.props.history.push(`${URL.HANDSHAKE_ME}?id=${HANDSHAKE_ID.EXCHANGE}`);
       },
     });
   }
@@ -465,7 +473,7 @@ class FeedExchange extends React.PureComponent {
 
   render() {
     const { offer } = this;
-    const { review, reviewCount } = this.props;
+    const { review, reviewCount, ownerStation } = this.props;
     const { modalContent } = this.state;
     const currency = offer.fiatCurrency;
 
@@ -483,7 +491,7 @@ class FeedExchange extends React.PureComponent {
             <CoinCards coins={coins} currency={currency} handleClickCoin={this.handleClickCoin} />
             <div className="info-ex">
               <div>
-                <div className="address">{address}</div>
+                <div className="address">{ownerStation && <img className="owner-station" src={iconStation} /> } {address}</div>
                 <div className="review"><StarsRating className="d-inline-block" starPoint={review} startNum={5} /> <FormattedMessage id="ex.discover.label.reviews" values={{ reviewCount }} /></div>
                 <div className="distance">{distance}</div>
               </div>
@@ -519,8 +527,6 @@ const mapState = state => ({
 const mapDispatch = dispatch => ({
   shakeOfferItem: bindActionCreators(shakeOfferItem, dispatch),
   showAlert: bindActionCreators(showAlert, dispatch),
-  showLoading: bindActionCreators(showLoading, dispatch),
-  hideLoading: bindActionCreators(hideLoading, dispatch),
   rfChange: bindActionCreators(change, dispatch),
   clearFields: bindActionCreators(clearFields, dispatch),
   trackingOnchain: bindActionCreators(trackingOnchain, dispatch),

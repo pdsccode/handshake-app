@@ -712,6 +712,7 @@ class Wallet extends React.Component {
   onAddressClick = (wallet) => {
     this.setState({walletSelected: wallet, activeReceive: true}, ()=>{
       this.modalShareAddressRef.open();
+      MasterWallet.NotifyUserTransfer();
     });
   }
 
@@ -793,7 +794,7 @@ class Wallet extends React.Component {
     this.showSuccess(messages.wallet.action.protect.success);
   }
 
-  getETHFree() {
+  getETHFree() {    
     window.open('https://www.rinkeby.io/#faucet', '_blank');
   }
 
