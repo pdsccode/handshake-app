@@ -27,9 +27,8 @@ class EmailForm extends React.Component {
         <Field
           name="email"
           type="email"
-          groupClass="form-group"
+          className="form-group"
           fieldClass="form-control"
-          errorClass="form-error"
           component={renderField}
           placeholder="Your email address"
           validate={[required, email]}

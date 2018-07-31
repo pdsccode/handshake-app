@@ -133,7 +133,7 @@ class CreateEventForm extends Component {
     const title = 'CREATOR FEE';
     const textNote = 'The creator fee is a percentage of the total winnings of the market.';
     return (
-      <React.Fragment>
+      <div className="CreateEventFormBlock">
         {this.renderGroupTitle(title)}
         <Field
           name="creatorFee"
@@ -145,7 +145,7 @@ class CreateEventForm extends Component {
           disabled={!isNew}
         />
         {this.renderGroupNote(textNote)}
-      </React.Fragment>
+      </div>
     );
   }
 
@@ -183,7 +183,6 @@ class CreateEventForm extends Component {
     const newValue = value ? { value: moment.unix(value) } : {};
     return (
       <React.Fragment>
-        {this.renderGroupTitle(label)}
         <DatePicker
           onChange={(date) => { this.setFieldValueToState(name, date); }}
           className="form-control input-field"
@@ -206,7 +205,6 @@ class CreateEventForm extends Component {
           name="closingTime"
           type="text"
           component={this.renderDateTime}
-          label="Closing Time"
           placeholder="Closing Time"
           timePlaceholder="Local timezone"
           validate={[required]}
@@ -217,7 +215,6 @@ class CreateEventForm extends Component {
           name="reportingTime"
           type="text"
           component={this.renderDateTime}
-          label="Reporting Time"
           placeholder="Reporting Time"
           timePlaceholder="Local timezone"
           validate={[required]}
@@ -228,7 +225,6 @@ class CreateEventForm extends Component {
           name="disputeTime"
           type="text"
           component={this.renderDateTime}
-          label="Dispute Time"
           placeholder="Dispute Time"
           timePlaceholder="Local timezone"
           validate={[required]}
@@ -252,11 +248,13 @@ class CreateEventForm extends Component {
           component={this.renderOutComes}
         />
         {this.renderFee(props)}
-        {this.renderReport(props, state)}
-        {this.renderTimeGroup(props, state)}
-        <button type="submit" disabled={props.pristine || props.submitting}>
-          {props.isNew ? 'Create a new event' : 'Add new outcomes'}
-        </button>
+        <div className="CreateEventFormBlock">
+          {this.renderReport(props, state)}
+          {this.renderTimeGroup(props, state)}
+          <button type="submit" className="btn btn-primary btn-block" disabled={props.pristine || props.submitting}>
+            {props.isNew ? 'Create a new event' : 'Add new outcomes'}
+          </button>
+        </div>
       </form>
     );
   };
