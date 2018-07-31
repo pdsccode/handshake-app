@@ -6,21 +6,35 @@ const TAG = 'GOOGLE_ANALYTIC';
 
 let instance = null;
 const EVENT_CATEGORY = {
-  DISCOVER_BETTING: 'Prediction',
-  SIMPLE: 'SimpleMode',
-  ADVANCE: 'AdvanceMode',
-  ME: 'Me',
+  PREDICTION: 'Prediction',
+  ORDER_BOOK: 'OrderBook',
+  ME: 'Me/Prediction',
 };
 const EVENT_ACTION = {
-  CLICK_CHOOSE_EVENT: 'Click choose an event',
+  //PREDICTION
   CLICK_CHOOSE_OUTCOME: 'Click choose an outcome',
-  CLICK_CHOOSE_SIDE: 'Click choose a side',
-  CLICK_GO_BUTTON: 'Click go button',
-  CLICK_COMMENTS_BOX: 'Click comments box',
-  CLICK_SHARE_BUTTON: 'Click share button',
+  CLICK_BANNER: 'Click banner',
+  CLICK_COMMENT: 'Click comments',
+
+  //ORDER BOOK
+  CLICK_SUPPORT: 'Click support',
+  CLICK_OPPOSE: 'Click oppose',
+  CLICK_SIMPLE: 'Click simple',
+  CLICK_ADVANCE: 'Click advance',
+  CLICK_PLACE_SUPPORT_ORDER: 'Click place support order',
+  CLICK_PLACE_OPPOSE_ORDER: 'Click place oppose order',
+  CLICK_FREE_BET: 'Click free bet',
+  CLICK_PAID_BET: 'Click paid bet',
+  CLICK_CLOSE: 'Click close',
+
+  //ME PREDICTION
   CLICK_ME_CANCEL_BUTTON: 'Click me cancel button',
   CLICK_ME_WITHDRAW_BUTTON: 'Click me withdraw button',
   CLICK_ME_REFUND_BUTTON: 'Click me refund button',
+
+  CLICK_GO_BUTTON: 'Click go button',
+  CLICK_COMMENTS_BOX: 'Click comments box',
+  CLICK_SHARE_BUTTON: 'Click share button',
   CREATE_BET_SUCCESSFUL: 'Create bet successful',
   CREATE_SHARE_BUTTON: 'Create share button',
   CREATE_BET_NOT_MATCH_FAIL: 'Create bet not match - fail',
@@ -50,8 +64,9 @@ class GoogleAnalyticsService {
     try {
       const pathName = window.location.pathname;
       const categoryByPathName = {
-        '/prediction': EVENT_CATEGORY.DISCOVER_BETTING,
-        //'/create': EVENT_CATEGORY.CREATE,
+        '/prediction': EVENT_CATEGORY.PREDICTION,
+        '/orderbook': EVENT_CATEGORY.ORDER_BOOK,
+        '/me/prediction': EVENT_CATEGORY.ME,
       };
       return categoryByPathName[pathName];
     } catch (err) {
@@ -76,134 +91,192 @@ class GoogleAnalyticsService {
     }
   }
 
-
-  /**
-   *
-   * @param eventName
-   */
-  /*
-  clickChooseAnEvent(eventName) {
-    this.sendGAEvent({
-      category: EVENT_CATEGORY.DISCOVER_BETTING,
-      action: EVENT_ACTION.CLICK_CHOOSE_EVENT,
-      label: eventName,
-    });
-  }
-  */
-
+  //PREDICTION
   /**
    *
    * @param outcomeName
    */
-  /*
-  clickChooseAnOutcome(outcomeName) {
-    this.sendGAEvent({
-      category: EVENT_CATEGORY.DISCOVER_BETTING,
-      action: EVENT_ACTION.CLICK_CHOOSE_OUTCOME,
-      label: outcomeName,
-    });
-  }
-  */
 
-  /**
-   *
-   * @param eventName outcomeName
-   */
-  clickChooseAnEvent(eventName, outcomeName) {
-    this.sendGAEvent({
-      category: EVENT_CATEGORY.DISCOVER_BETTING,
-      action: EVENT_ACTION.CLICK_CHOOSE_EVENT,
+  clickChooseAnOutcome(eventName, outcomeName) {
+    const params = {
+      category: EVENT_CATEGORY.PREDICTION,
+      action: EVENT_ACTION.CLICK_CHOOSE_OUTCOME,
       label: `${eventName}-${outcomeName}`,
-    });
+    };
+
+    console.log(TAG, 'clickChooseAnOutcome', params);
+    this.sendGAEvent(params);
   }
 
   /**
    *
-   * @param sideName
+   *
    */
-  clickChooseASide(sideName) {
-    this.sendGAEvent({
-      category: EVENT_CATEGORY.DISCOVER_BETTING,
-      action: EVENT_ACTION.CLICK_CHOOSE_SIDE,
-      label: sideName,
-    });
+  clickBannerWin() {
+    const params = {
+      category: EVENT_CATEGORY.PREDICTION,
+      action: EVENT_ACTION.CLICK_BANNER,
+    };
+    console.log(TAG, 'clickBannerWin', params);
+
+    this.sendGAEvent(params);
   }
 
   /**
    *
-   * @param eventName
+   *
    */
-  /*
-  clickChooseAnEventCreatePage(eventName) {
-    this.sendGAEvent({
-      category: EVENT_CATEGORY.CREATE,
-      action: EVENT_ACTION.CLICK_CHOOSE_EVENT,
-      label: eventName,
-    });
-  }
-  */
+  clickComment(eventName) {
+    const params = {
+      category: EVENT_CATEGORY.PREDICTION,
+      action: EVENT_ACTION.CLICK_COMMENT,
+      label: `${eventName}`,
+    };
+    console.log(TAG, 'clickComment', params);
 
+    this.sendGAEvent(params);
+  }
+
+  //ORDER BOOK
   /**
    *
-   * @param outcomeName
    */
-  /*
-  clickChooseAnOutcomeCreatePage(outcomeName) {
-    this.sendGAEvent({
-      category: EVENT_CATEGORY.CREATE,
-      action: EVENT_ACTION.CLICK_CHOOSE_OUTCOME,
-      label: outcomeName,
-    });
-  }
-  */
+  clickSupport(outcome) {
+    const params = {
+      category: EVENT_CATEGORY.ORDER_BOOK,
+      action: EVENT_ACTION.CLICK_SUPPORT,
+      label: `${outcome}`,
+    };
+    console.log(TAG, 'clickSupport', params);
 
-  /**
-   *
-   * @param sideName
-   */
-  /*
-  clickChooseASideCreatePage(sideName) {
-    this.sendGAEvent({
-      category: EVENT_CATEGORY.CREATE,
-      action: EVENT_ACTION.CLICK_CHOOSE_SIDE,
-      label: sideName,
-    });
-  }
-  */
-
-  /**
-   *
-   * @param selectedMatch
-   * @param selectedOutcome
-   * @param sideName
-   */
-  clickGoButtonSimpleMode(selectedMatch, selectedOutcome, sideName) {
-    try {
-      console.log(TAG, 'clickGoButtonSimpleMode', selectedMatch, selectedOutcome);
-      this.sendGAEvent({
-        category: EVENT_CATEGORY.SIMPLE,
-        action: EVENT_ACTION.CLICK_GO_BUTTON,
-        label: `${sideName}: ${selectedMatch.value} -  ${selectedOutcome.value}`,
-      });
-    } catch (err) {}
+    this.sendGAEvent(params);
   }
 
   /**
    *
-   * @param matchName
-   * @param matchOutCome
-   * @param sideName
    */
-  clickGoButtonAdvanced(matchName, matchOutCome, sideName) {
-    try {
-      console.log('matchName', matchName, matchOutCome, sideName);
-      this.sendGAEvent({
-        category: EVENT_CATEGORY.ADVANCE,
-        action: EVENT_ACTION.CLICK_GO_BUTTON,
-        label: `${sideName === 1 ? 'Support' : 'Oppose'}: ${matchName} - ${matchOutCome}`,
-      });
-    } catch (err) {}
+  clickOppose(outcome) {
+    const params = {
+      category: EVENT_CATEGORY.ORDER_BOOK,
+      action: EVENT_ACTION.CLICK_OPPOSE,
+      label: `${outcome}`,
+    };
+    console.log(TAG, 'clickOppose', params);
+
+    this.sendGAEvent(params);
   }
+
+  /**
+   *
+   */
+  clickSimple(outcome) {
+    const params = {
+      category: EVENT_CATEGORY.ORDER_BOOK,
+      action: EVENT_ACTION.CLICK_SIMPLE,
+      label: `${outcome}`,
+    };
+    console.log(TAG, 'clickSimple', params);
+
+    this.sendGAEvent(params);
+  }
+  /**
+   *
+   */
+  clickAdvance(outcome) {
+    const params = {
+      category: EVENT_CATEGORY.ORDER_BOOK,
+      action: EVENT_ACTION.CLICK_ADVANCE,
+      label: `${outcome}`,
+    };
+    console.log(TAG, 'clickAdvance', params);
+
+    this.sendGAEvent(params);
+  }
+
+  /**
+   *
+   */
+  clickPlaceSupportOrder(outcome) {
+    const params = {
+      category: EVENT_CATEGORY.ORDER_BOOK,
+      action: EVENT_ACTION.CLICK_PLACE_SUPPORT_ORDER,
+      label: `${outcome}`,
+    };
+    console.log(TAG, 'clickPlaceSupportOrder', params);
+
+    this.sendGAEvent(params);
+  }
+
+  /**
+   *
+   */
+  clickPlaceOpposeOrder(outcome) {
+    const params = {
+      category: EVENT_CATEGORY.ORDER_BOOK,
+      action: EVENT_ACTION.CLICK_PLACE_OPPOSE_ORDER,
+      label: `${outcome}`,
+    };
+    console.log(TAG, 'clickPlaceOpposeOrder', params);
+
+    this.sendGAEvent(params);
+  }
+
+  /**
+   *
+   */
+  clickPlaceOpposeOrder(outcome) {
+    const params = {
+      category: EVENT_CATEGORY.ORDER_BOOK,
+      action: EVENT_ACTION.CLICK_PLACE_OPPOSE_ORDER,
+      label: `${outcome}`,
+    };
+    console.log(TAG, 'clickPlaceOpposeOrder', params);
+
+    this.sendGAEvent(params);
+  }
+
+  /**
+   *
+   */
+  clickFree(outcome) {
+    const params = {
+      category: EVENT_CATEGORY.ORDER_BOOK,
+      action: EVENT_ACTION.CLICK_FREE_BET,
+      label: `${outcome}`,
+    };
+    console.log(TAG, 'clickFree', params);
+
+    this.sendGAEvent(params);
+  }
+
+  /**
+   *
+   */
+  clickPaid(outcome) {
+    const params = {
+      category: EVENT_CATEGORY.ORDER_BOOK,
+      action: EVENT_ACTION.CLICK_PAID_BET,
+      label: `${outcome}`,
+    };
+    console.log(TAG, 'clickPaid', params);
+
+    this.sendGAEvent(params);
+  }
+
+  /**
+   *
+   */
+  clickClose(outcome) {
+    const params = {
+      category: EVENT_CATEGORY.ORDER_BOOK,
+      action: EVENT_ACTION.CLICK_CLOSE,
+      label: `${outcome}`,
+    };
+    console.log(TAG, 'clickClose', params);
+
+    this.sendGAEvent(params);
+  }
+
 
   /**
    *
@@ -212,32 +285,18 @@ class GoogleAnalyticsService {
    * @param sideName
    */
   createBetSuccess(matchName, matchOutCome, sideName) {
+    const params = {
+      category: EVENT_CATEGORY.ORDER_BOOK,
+      action: EVENT_ACTION.CREATE_BET_SUCCESSFUL,
+      label: `${sideName === 1 ? 'Support' : 'Oppose'}: ${matchName} - ${matchOutCome}`,
+    };
+    console.log(TAG, 'createBetSuccess', params);
     try {
-      this.sendGAEvent({
-        category: EVENT_CATEGORY.DISCOVER_BETTING,
-        action: EVENT_ACTION.CREATE_BET_SUCCESSFUL,
-        label: `${sideName === 1 ? 'Support' : 'Oppose'}: ${matchName} - ${matchOutCome}`,
-      });
+      this.sendGAEvent(params);
     } catch (err) {}
   }
 
-  /**
-   *
-   * @param selectedMatch
-   * @param selectedOutcome
-   * @param sideName
-   */
-  /*
-  createBetSuccessCreatePage(selectedMatch, selectedOutcome, sideName) {
-    try {
-      this.sendGAEvent({
-        category: EVENT_CATEGORY.CREATE,
-        action: EVENT_ACTION.CREATE_BET_SUCCESSFUL,
-        label: `${sideName}: ${selectedMatch.value} -  ${selectedOutcome.value}`,
-      });
-    } catch (err) {}
-  }
-  */
+
 
   /**
    *
@@ -268,14 +327,17 @@ class GoogleAnalyticsService {
    * @param amount
    */
   createBetNotMatchSuccess({ side, odds, amount }) {
+    const params = {
+      category: EVENT_CATEGORY.ORDER_BOOK,
+      action: EVENT_ACTION.CREATE_BET_NOT_MATCH_SUCCESS,
+      label: `${BETTING_SIDE_NAME[side]} - Odds: ${odds} - Amount: ${amount}`,
+    };
+    console.log(TAG, 'createBetNotMatchSuccess', params);
+
     try {
       const category = this.eventCategory;
       if (category) {
-        this.sendGAEvent({
-          category,
-          action: EVENT_CATEGORY.CREATE_BET_NOT_MATCH_SUCCESS,
-          label: `${BETTING_SIDE_NAME[side]} - Odds: ${odds} - Amount: ${amount}`,
-        });
+        this.sendGAEvent(params);
       }
     } catch (err) {}
   }
@@ -309,34 +371,16 @@ class GoogleAnalyticsService {
    * @param amount
    */
   createBetMatchedSuccess({ side, odds, amount }) {
+    const params = {
+      category: EVENT_CATEGORY.ORDER_BOOK,
+      action: EVENT_ACTION.CREATE_BET_MATCHED_SUCCESS,
+      label: `${BETTING_SIDE_NAME[side]} - Odds: ${odds} - Amount: ${amount}`,
+    };
+    console.log(TAG, 'createBetMatchedSuccess', params);
     try {
-      const category = this.eventCategory;
       if (category) {
-        this.sendGAEvent({
-          category,
-          action: EVENT_CATEGORY.CREATE_BET_MATCHED_SUCCESS,
-          label: `${BETTING_SIDE_NAME[side]} - Odds: ${odds} - Amount: ${amount}`,
-        });
+        this.sendGAEvent(params);
       }
-    } catch (err) {}
-  }
-
-  /**
-   *
-   * @param category
-   * @param shareType
-   * @param title
-   * @param shareUrl
-   */
-  createShareButton({
-    category = EVENT_CATEGORY.DISCOVER_BETTING, shareType, title, shareUrl,
-  }) {
-    try {
-      this.sendGAEvent({
-        category: category || EVENT_CATEGORY.DISCOVER_BETTING,
-        action: `${EVENT_ACTION.CLICK_SHARE_BUTTON}: ${shareType}`,
-        label: `${title} - (${shareUrl})`,
-      });
     } catch (err) {}
   }
 
@@ -346,14 +390,14 @@ class GoogleAnalyticsService {
    * @param outcome
    */
   createClickCancel(event, outcome, txHash) {
-    const category = this.eventCategory;
-
+    const params = {
+      category: EVENT_CATEGORY.ME,
+      action: EVENT_ACTION.CLICK_ME_CANCEL_BUTTON,
+      label: `${outcome})-${txHash}`,
+    };
+    console.log(TAG, 'createClickCancel', params);
     try {
-      this.sendGAEvent({
-        category,
-        action: EVENT_ACTION.CLICK_ME_CANCEL_BUTTON,
-        label: `${event} - (${outcome})-${txHash}`,
-      });
+      this.sendGAEvent(params);
     } catch (err) {}
   }
   /**
@@ -362,14 +406,15 @@ class GoogleAnalyticsService {
    * @param outcome
    */
   createClickWithdraw(event, outcome, txHash) {
-    const category = this.eventCategory;
+    const params = {
+      category: EVENT_CATEGORY.ME,
+      action: EVENT_ACTION.CLICK_ME_WITHDRAW_BUTTON,
+      label: `${outcome})-${txHash}`,
+    };
+    console.log(TAG, 'createClickWithdraw', params);
 
     try {
-      this.sendGAEvent({
-        category,
-        action: EVENT_ACTION.CLICK_ME_WITHDRAW_BUTTON,
-        label: `${event} - (${outcome})-${txHash}`,
-      });
+      this.sendGAEvent(params);
     } catch (err) {}
   }
   /**
@@ -378,14 +423,15 @@ class GoogleAnalyticsService {
    * @param outcome
    */
   createClickRefund(event, outcome, txHash) {
-    const category = this.eventCategory;
+    const params = {
+      category: EVENT_CATEGORY.ME,
+      action: EVENT_ACTION.CLICK_ME_WITHDRAW_BUTTON,
+      label: `${outcome})-${txHash}`,
+    };
+    console.log(TAG, 'createClickRefund', params);
 
     try {
-      this.sendGAEvent({
-        category,
-        action: EVENT_ACTION.CLICK_ME_REFUND_BUTTON,
-        label: `${event} - (${outcome})-${txHash}`,
-      });
+      this.sendGAEvent(params);
     } catch (err) {}
   }
 }
