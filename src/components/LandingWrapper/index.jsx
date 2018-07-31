@@ -42,7 +42,9 @@ class Index extends React.PureComponent {
 
   render() {
     const { messages, locale } = this.props.intl;
-    const { children, type, btnToggleLeftMenu, modal: { className, show, body, title, centered } } = this.props;
+    const { name, children, type, btnToggleLeftMenu,
+      modal: { className, show, body, title, centered },
+    } = this.props;
     const logo = <a href="/" className="d-inline-block mt-1"><img src={imgNinja} width="100" /></a>;
     const navLinks = (
       <span>
@@ -97,12 +99,28 @@ class Index extends React.PureComponent {
                 <div><FormattedHTMLMessage id="landing_page.label.footer" /></div>
               </div>
             </div>
-            <div className="col-12 col-md-3 text-left text-md-right">
-              <div className="pl-1 pt-1">
-                <div><FormattedHTMLMessage id="landing_page.label.joinTelegram" /></div>
-                <div><FormattedHTMLMessage id="landing_page.label.whitepaper" /></div>
-              </div>
-            </div>
+            {
+              name && (
+                <div className="col-12 col-md-3 text-left text-md-right">
+                  <div className="pl-1 pt-1">
+                    {
+                      messages[`landing_page.${name}.joinTelegram`] && (
+                        <div>
+                          <FormattedHTMLMessage id={`landing_page.${name}.joinTelegram`} />
+                        </div>
+                      )
+                    }
+                    {
+                      messages[`landing_page.${name}.whitepaper`] && (
+                        <div>
+                          <FormattedHTMLMessage id={`landing_page.${name}.whitepaper`} />
+                        </div>
+                      )
+                    }
+                  </div>
+                </div>
+              )
+            }
           </div>
 
         </div>

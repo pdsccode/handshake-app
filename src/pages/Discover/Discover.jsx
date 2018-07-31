@@ -357,6 +357,7 @@ class DiscoverPage extends React.Component {
                 longitude={lng}
                 modalRef={this.modalRef}
                 offer={offer}
+                ownerStation
               />
 
             </Col>

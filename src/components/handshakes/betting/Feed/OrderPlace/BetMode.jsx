@@ -86,12 +86,15 @@ class BetMode extends React.Component {
   }
 
   async checkShowFreeBanner() {
+    /*
     const balance = await getBalance();
     console.log(TAG, 'checkShowFreeBanner', balance, typeof balance);
     if (balance === '0') {
       // Call API check if show free
       this.callCheckFirstFree();
     }
+    */
+    this.callCheckFirstFree();
   }
   renderTab(props) {
     return (
