@@ -14,7 +14,7 @@ import Layout from '@/components/Layout/Main';
 
 import imgCash from '@/assets/images/landing/home/cash.jpg';
 import imgCashContent from '@/assets/images/landing/cash/fake-content.svg';
-import imgDadContent from '@/assets/images/landing/dad/fake-content.svg';
+import imgDadContent from '@/assets/images/landing/dad/fake-content.jpg';
 // import imgBlockchainPrivacy from '@/assets/images/landing/home/blockchain-privacy.jpg';
 import imgDad from '@/assets/images/landing/home/dad.jpg';
 // import imgDao from '@/assets/images/landing/home/dao.jpg';
