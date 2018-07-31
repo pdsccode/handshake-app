@@ -434,7 +434,6 @@ export default {
   'landing_page.cash.btnSubmitEmail': 'Go',
   'landing_page.cash.joinTelegram': `Join the dojo on <a href="https://t.me/ninjacash" class="landing-link">Telegram</a>`,
   'landing_page.cash.whitepaper': `Jump in for <a href="https://medium.com/@ninja_org/introducing-ninja-cash-b0d51a9f4e1b" class="landing-link">Whitepaper</a>`,
-
   // 'landing_page.cash.cta1': 'Trade now on your phone',
   // 'landing_page.cash.cta1_url': 'https://ninja.org/cash',
   // 'landing_page.cash.cta2': 'Get free gifts',
@@ -453,23 +452,17 @@ export default {
   'landing_page.wallet.breadcrumb': 'Wallet',
   'landing_page.wallet.heading': 'A decentralized cryptocurrency wallet. No downloads. No sign ups.',
   'landing_page.wallet.subHeading': 'A decentralized cryptocurrency wallet and payment gateway that will allow both businesses and users to easily store and use multiple cryptocurrencies for payments.',
-  'landing_page.wallet.cta1': 'Create your wallet',
-  'landing_page.wallet.cta1_url': 'https://ninja.org/wallet',
+  'landing_page.wallet.textEmail': `Please open <a href="https://ninja.org/wallet">ninja.org/wallet</a> on your mobile browser to create your wallet.`,
+  'landing_page.wallet.btnSubmitEmail': 'Go',
   'landing_page.wallet.youtubeVideoId': '',
 
   'landing_page.pay-for-stores.breadcrumb': 'Pay For Stores',
   'landing_page.pay-for-stores.heading': 'Seamlessly integrate cryptocurrency payments into your offline business.',
   'landing_page.pay-for-stores.subHeading': 'Allow your offline customers to pay for goods and services in cryptocurrency, just by scanning a QR code. Give the millions of people who own crypto somewhere to spend it.',
-  // 'landing_page.hivepay-offline.cta1': '',
-  // 'landing_page.hivepay-offline.cta2': '',
-  // 'landing_page.hivepay-offline.youtubeVideoId': '',
 
   'landing_page.pay-for-devs.breadcrumb': 'Pay For Devs',
   'landing_page.pay-for-devs.heading': 'Connect your e-commerce business with a truly borderless payment network.',
   'landing_page.pay-for-devs.subHeading': 'Millions of people are looking to spend their cryptocurrency in a secure, convenient way. Bring the currency of the future into your online store today and stop relying on the sluggish banking industry. No wait times, no bank charges, no card fees.',
-  // 'landing_page.hivepay-online.cta1': '',
-  // 'landing_page.hivepay-online.cta2': '',
-  // 'landing_page.hivepay-online.youtubeVideoId': '',
 
 
   'landing_page.internet-cash.breadcrumb': 'Internet Cash',
@@ -491,8 +484,6 @@ export default {
   'landing_page.whisper.breadcrumb': 'Whisper',
   'landing_page.whisper.heading': 'The new mailbox for the new internet',
   'landing_page.whisper.subHeading': 'An alternative messaging system in this era of surveillance. End-to-end encrypted, anonymous conversations between you and your world. No downloads, sign ups, or subscriptions. Now you can control who\'s listening.',
-  // 'landing_page.whisper.cta1': 'Check it out',
-  // 'landing_page.whisper.cta1_url': 'https://ninja.org/whisper',
   'landing_page.whisper.textEmail': `Please open <a href="https://ninja.org/whisper">ninja.org/whisper</a> on your mobile browser to start chatting.`,
   'landing_page.whisper.btnSubmitEmail': 'Go',
 
