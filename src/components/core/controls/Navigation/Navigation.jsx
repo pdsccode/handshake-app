@@ -86,14 +86,14 @@ class Navigation extends React.Component {
               this.props.location.pathname === URL.DATA_SET_UPLOAD_INDEX
               ? (
                 <a>
-                  {<div className="create" dangerouslySetInnerHTML={{ __html: uploadmain_icon }} />}
+                  {<div className="create"  style={{marginTop:'-2px'}} dangerouslySetInnerHTML={{ __html: uploadmain_icon }} />}
                   {/* <div className="create" dangerouslySetInnerHTML={{ __html: cambtn }} /> */}
                   {/* <Image  className="create" src={uploadmain_icon} /> */}
                 </a>
               )
               : (
                 <Link to={URL.DATA_SET_UPLOAD_INDEX}>
-                  {<div className="create" dangerouslySetInnerHTML={{ __html: uploadmain_icon }} />}
+                  {<div className="create" style={{marginTop:'-2px'}} dangerouslySetInnerHTML={{ __html: uploadmain_icon }} />}
                   {/* <Image  className="create" src={uploadmain_icon} /> */}
                 </Link>
               )
