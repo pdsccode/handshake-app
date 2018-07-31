@@ -60,6 +60,13 @@ const configRoutesUsingMobileLayout = [
   { path: URL.ADMIN, component: RouterAdmin },
   { path: URL.REPORT, component: RouterAdmin },
   { path: URL.REPORT, component: RouterAdmin },
+  {
+    path: URL.PRODUCT_DAD_URL,
+    render: () => {
+      window.location.href = URL.PRODUCT_DAD_URL_SUBDOMAIN;
+      return null;
+    }
+  },
 ];
 const routesUsingMobileLayout = configRoutesUsingMobileLayout.map(route => (
   <Route
