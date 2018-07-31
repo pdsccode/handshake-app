@@ -11,6 +11,7 @@ import {
   EXCHANGE_ACTION,
   HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS,
   HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE,
+  HANDSHAKE_ID,
   NB_BLOCKS,
   URL,
 } from '@/constants';
@@ -25,7 +26,6 @@ import { formatAmountCurrency, formatMoneyByLocale, getLatLongHash, getOfferPric
 import { getUserLocation, showAlert } from '@/reducers/app/action';
 import { getDistanceFromLatLonInKm, getErrorMessageFromCode } from '../utils';
 import { ExchangeCashHandshake } from '@/services/neuron';
-import OfferShop from '@/models/OfferShop';
 import { getLocalizedDistance } from '@/services/util';
 import { BigNumber } from 'bignumber.js';
 import StarsRating from '@/components/core/presentation/StarsRating';
@@ -33,6 +33,7 @@ import StarsRating from '@/components/core/presentation/StarsRating';
 import iconChat from '@/assets/images/icon/chat-icon.svg';
 import iconBitcoin from '@/assets/images/icon/coin/btc.svg';
 import iconEthereum from '@/assets/images/icon/coin/eth.svg';
+import iconStation from '@/assets/images/icon/own-key.svg';
 
 import { nameFormShakeDetail } from '@/components/handshakes/exchange/components/ShakeDetail';
 import CoinCards from '@/components/handshakes/exchange/components/CoinCards';
@@ -292,7 +293,7 @@ class FeedExchange extends React.PureComponent {
       timeOut: 2000,
       type: 'success',
       callBack: () => {
-        this.props.history.push(`${URL.HANDSHAKE_ME}`);
+        this.props.history.push(`${URL.HANDSHAKE_ME}?id=${HANDSHAKE_ID.EXCHANGE}`);
       },
     });
   }
@@ -472,7 +473,7 @@ class FeedExchange extends React.PureComponent {
 
   render() {
     const { offer } = this;
-    const { review, reviewCount } = this.props;
+    const { review, reviewCount, ownerStation } = this.props;
     const { modalContent } = this.state;
     const currency = offer.fiatCurrency;
 
@@ -490,7 +491,7 @@ class FeedExchange extends React.PureComponent {
             <CoinCards coins={coins} currency={currency} handleClickCoin={this.handleClickCoin} />
             <div className="info-ex">
               <div>
-                <div className="address">{address}</div>
+                <div className="address">{ownerStation && <img className="owner-station" src={iconStation} /> } {address}</div>
                 <div className="review"><StarsRating className="d-inline-block" starPoint={review} startNum={5} /> <FormattedMessage id="ex.discover.label.reviews" values={{ reviewCount }} /></div>
                 <div className="distance">{distance}</div>
               </div>
