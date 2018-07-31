@@ -412,7 +412,7 @@ export default {
   'landing_page.subHeader.research': 'Ninja conducts fundamental research toward the creation of the new internet.',
 
   'landing_page.researches.uncommons.title': 'Uncommons',
-  'landing_page.researches.uncommons.subTitle': 'The people\'s blockchain',
+  'landing_page.researches.uncommons.subTitle': 'The people\'s blockchain.',
 
   'landing_page.researches.internetCash.title': 'Internet Cash',
   'landing_page.researches.internetCash.subTitle': 'The Internet deserves to have its own native currency.',
