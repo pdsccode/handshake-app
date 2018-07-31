@@ -98,7 +98,9 @@ class Me extends React.Component {
 
   constructor(props) {
     super(props);
-    const { s, sh, tab } = Helper.getQueryStrings(window.location.search);
+    const {
+      s, sh, tab, activeId,
+    } = Helper.getQueryStrings(window.location.search);
     const handshakeDefault = this.getDefaultHandShakeId();
 
     const cashTabDefault = tab ? tab.toUpperCase() : CASH_TAB.TRANSACTION;
@@ -109,6 +111,7 @@ class Me extends React.Component {
     this.state = {
       initUserId,
       offerId,
+      activeId,
       exchange: this.props.exchange,
       auth: this.props.auth,
       firebaseUser: this.props.firebaseUser,
@@ -202,10 +205,22 @@ class Me extends React.Component {
   }
 
   componentDidMount() {
-    const { initUserId, offerId, handshakeIdActive, cashTab } = this.state;
+    const {
+      initUserId, offerId, handshakeIdActive, cashTab, activeId,
+    } = this.state;
     const { rfChange } = this.props;
     if (initUserId && offerId) {
       this.rateRef.open();
+    }
+
+    if (activeId) {
+      setTimeout(() => {
+        const handshakeElement = document.querySelector(`[id$="${activeId}"]`);
+        if (handshakeElement) {
+          this.setState({ activeId: undefined });
+          window.scrollTo(0, handshakeElement.offsetTop - 152);
+        }
+      }, 1500);
     }
 
     rfChange(nameFormFilterFeeds, 'feedType', handshakeIdActive);
@@ -470,7 +485,7 @@ class Me extends React.Component {
                         return null;
                       }
                       return (
-                        <Col key={handshake.id} className="feed-wrapper">
+                        <Col key={handshake.id} className="feed-wrapper" id={handshake.id}>
                           <FeedComponent
                             {...handshake}
                             history={this.props.history}
