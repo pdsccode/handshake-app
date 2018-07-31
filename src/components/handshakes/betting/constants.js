@@ -40,6 +40,7 @@ export const BET_TYPE = {
   SHAKE: 'shake',
 };
 export const BETTING_RESULT = {
+  DISPUTED: -3,
   INITED: -1,
   DRAW: 3,
   SUPPORT_WIN: 1,

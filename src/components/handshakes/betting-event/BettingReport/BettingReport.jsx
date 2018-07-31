@@ -1,18 +1,22 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
-import { loadMatches } from '@/reducers/betting/action';
 import { BETTING_RESULT } from '@/components/handshakes/betting/constants.js';
-import { BASE_API, API_URL } from '@/constants';
+import { BASE_API } from '@/constants';
 import { Alert } from 'reactstrap';
 import $http from '@/services/api';
-import { showAlert } from '@/reducers/app/action';
-import Login from '@/components/handshakes/betting-event/Login';
 import './BettingReport.scss';
 
 let token = null;
 const TAG = 'BETTING_REPORT';
 class BettingReport extends React.Component {
+  static propTypes = {
+    matches: PropTypes.array.isRequired,
+    resolved: PropTypes.bool,
+  }
+  static defaultProps = {
+    resolved: false,
+  };
   constructor(props) {
     super(props);
     this.state = {
@@ -23,7 +27,6 @@ class BettingReport extends React.Component {
       matches: [],
       outcomes: [],
       activeMatchData: {},
-      login: false,
       disable: false,
       final: [],
       errorMessage: '',
@@ -34,31 +37,23 @@ class BettingReport extends React.Component {
 
   componentDidMount() {
 
-    console.log("Test Report");
-    if (this.checkToken() != null) {
-      this.setState({
-        login: true,
-      });
-    }
-
-    this.fetchMatches();
-
   }
 
   componentWillReceiveProps(nextProps) {
-    const { matches, login } = nextProps;
-    console.log(TAG, 'next props:', nextProps);
-    this.setState({
-      login,
-    });
+    const { matches } = nextProps;
+
     this.setInitials(matches);
+
   }
 
   setInitials(matches) {
+    const { resolved } = this.props;
     if (matches.length > 0) {
+      const newOutcome = resolved ? matches[0].outcomes.filter((item) => this.isDisputeOutcome(item.result)) : matches[0].outcomes;
+
       this.setState({
         matches,
-        outcomes: matches[0].outcomes,
+        outcomes: newOutcome,
         activeMatchData: matches[0],
         selectedMatch: matches[0].name,
       });
@@ -72,25 +67,19 @@ class BettingReport extends React.Component {
     }
   }
 
-  fetchMatches() {
-    console.log('fetchMatches');
-    const tokenValue = this.checkToken();
-    const headers = tokenValue ? { Authorization: `Bearer ${tokenValue}`, 'Content-Type': 'application/json' } : null;
-
-    this.props.loadMatches({
-      PATH_URL: `${API_URL.CRYPTOSIGN.MATCHES_REPORT}`,
-      headers,
-    });
-  }
-
 
   toggle() {
     this.setState({
       modal: !this.state.modal,
     });
   }
+  isDisputeOutcome(result) {
+    return result === BETTING_RESULT.DISPUTED;
+  }
 
   fillOutcome() {
+
+    const { resolved } = this.props;
     const updatedMatch = this.state.matches.filter((item) => {
       if (item.id === this.state.selectedMatch) {
         return item;
@@ -106,8 +95,10 @@ class BettingReport extends React.Component {
         final.push(obj);
         return final;
       });
+      const newOutcome = resolved ? updatedMatch[0].outcomes.filter((item) => this.isDisputeOutcome(item.result)) : updatedMatch[0].outcomes;
+      console.log(TAG, 'newOutcome:', newOutcome);
       this.setState({
-        outcomes: updatedMatch[0].outcomes,
+        outcomes: newOutcome,
         activeMatchData: updatedMatch[0],
         selectedOutcome: updatedMatch[0].outcomes[0].id,
         final,
@@ -256,9 +247,7 @@ class BettingReport extends React.Component {
   }
 
   render() {
-    return (!this.state.login ?
-      <div />
-      :
+    return (
       <div className="form-admin">
         <Form style={{ margin: '1em', WebkitAppearance: 'menulist' }}>
           <FormGroup disabled={this.state.disable}>
@@ -309,14 +298,5 @@ class BettingReport extends React.Component {
   }
 }
 
-const mapState = state => ({
-  matches: state.betting.matches,
-  login: state.admin.login,
-});
 
-const mapDispatch = ({
-  loadMatches,
-  showAlert,
-});
-
-export default connect(mapState, mapDispatch)(BettingReport);
+export default BettingReport;

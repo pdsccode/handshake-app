@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
-import { BASE_API, API_URL } from '@/constants';
+import { API_URL } from '@/constants';
 import { connect } from 'react-redux';
 import { userAuthenticate } from '@/reducers/admin/action';
 
@@ -45,13 +45,19 @@ class Login extends React.Component {
     };
 
     this.props.userAuthenticate({
-      PATH_URL: `${BASE_API.BASE_URL}/cryptosign/auth`,
+      PATH_URL: `${API_URL.CRYPTOSIGN.ADMIN_AUTH}`,
       METHOD: 'POST',
       data: params,
+      successFn: ((response) => {
+        const token = response.data.access_token;
+        localStorage.setItem('Token', token);
+        localStorage.setItem('TokenInit', new Date());
+      }),
     });
   }
 
   render() {
+
     return (
       <Form style={{ margin: '1em', WebkitAppearance: 'menulist' }} onSubmit={this.loginUser}>
         <FormGroup>
@@ -76,6 +82,7 @@ class Login extends React.Component {
         </FormGroup>
       </Form>
     );
+
   }
 }
 
