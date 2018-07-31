@@ -51,6 +51,7 @@ body{
 
 .wrap-upload{
     border-radius: 4px;
+    padding: 
     /* background-color: #f7fefa;
     box-shadow: 0 10px 14px -10px rgba(51, 63, 56, 0.5); */
     
@@ -82,8 +83,7 @@ body{
     border: dashed 0.5px #838383;
     margin: 0px; */
     border-radius: 4px;
-    align-items: center;
-    background: url(/images/d921369….svg) no-repeat;
+    align-items: center; 
     cursor: pointer;
     display: flex;
     height: 205px;
@@ -94,6 +94,7 @@ body{
     border: none;
     margin: 0px;
     background-size: 100% 100%;
+    border: 1px dashed #22ba45;
 }
 label.uploader.loaded {
     background: #ecffec5c;
@@ -705,7 +706,7 @@ img.ui.image.btn-add-class{
 }
 .history-p3{
     margin: 5px 0px;
-    color: black;
+    color: #828080;
     border-bottom: 1px solid #8d8d8d33;
     padding-bottom: 10px;
     /* padding-top: 10px;

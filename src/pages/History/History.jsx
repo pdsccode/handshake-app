@@ -112,7 +112,7 @@ class History extends React.Component {
       <Visibility once={true}>  
        <Segment vertical  id="segment-detail"> 
               <h2 className="my-h2-dataset-new" style={{marginBottom:'0px'}}>
-                My Rewards 
+              My Earnings
         </h2> 
          
               <Card.Group centered >  
@@ -123,8 +123,8 @@ class History extends React.Component {
                     </Grid.Column>
                     <Grid.Column width={9}>
                     <div style={{  textAlign:'left'  }}>
-                                <h4 style={{ margin:'5px 0px', color:'black'}}>Withdraw to wallets</h4>
-                                <p>Balance: <span style={{fontWeight:'700' }}>{ (Math.round(this.state.balance * 10000) /10000 ) } ETH</span></p> 
+                                <h4 style={{ margin:'5px 0px', color:'black'}}>Total earnings</h4>
+                                <p><span style={{fontWeight:'700' }}>{ (Math.round(this.state.balance * 10000) /10000 ) } ETH</span></p> 
                             </div>
                     </Grid.Column>
                     <Grid.Column width={3}>
@@ -143,7 +143,7 @@ class History extends React.Component {
                               <Grid.Column width={13}>
                                   <div style={{textAlign:'left'   }}>
                                       <h4 className="history-h3">{item.name}</h4> 
-                                      <p className="history-p3" >Balance: <span style={{fontWeight:'700' }}>{ item.balance } DADI</span></p> 
+                                      <p className="history-p3" >{"Earned " + item.balance +" DADK"} </p> 
                                   </div>
                               </Grid.Column>
                         </Grid>  
@@ -156,9 +156,8 @@ class History extends React.Component {
       <Segment vertical loading={this.state.isLoading}>
           <Confirm
             content={
-              <div class='content'> 
-                <p style={{lineHeight:'1.6em'}}>Thanks! ...</p>
-                <p style={{lineHeight:'1.6em'}}>Minimum Ethereum withdrawal amount is 0.005 ETH</p>
+              <div class='content'>  
+                <p style={{lineHeight:'1.6em'}}>To save on gas, please withdraw at least 0.005 ETH.</p>
               </div>
             }
             open={this.state.open} 

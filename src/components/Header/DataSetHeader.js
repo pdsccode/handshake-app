@@ -70,7 +70,7 @@ class DesktopContainer extends React.Component {
 
   handleResultSelect = (e, { result }) => {
     this.setState({ value: result.title })
-    window.location.href = '/explore/' + result.id
+    window.location.href = '/datasets/' + result.id
   }
 
   handleSearchDebounced = _.debounce((value) => {
@@ -128,7 +128,7 @@ class DesktopContainer extends React.Component {
                   }
                   
 
-                  <Link to="/explore" >
+                  <Link to="/datasets" >
                   <Menu.Item position='right' name='explore' active={activeItem === 'explore'}  onClick={this.handleItemClick}>
                               <SideIconTopContainer icon={iosNavigateOutline}/>
                   </Menu.Item>
@@ -211,7 +211,7 @@ class MobileContainer extends React.Component {
     //history.push("/explore/"+result.id);
     //this.props.history.push(URL.HANDSHAKE_ME);
     //this.props.history.push('/path')  
-    var temp = "/explore/"+result.id;
+    var temp = "/datasets/"+result.id;
     setTimeout(
       function() {
         this.setState({ go_url: null }) ;
@@ -309,7 +309,7 @@ class MobileContainer extends React.Component {
                 <Redirect to={this.state.go_url}  />: ''
                }
                <Search
-                      input={{ icon: <WrapIconSearch icon={iosSearch}/>, iconPosition: 'left', placeholder:'Search dataset you want to explore' }}
+                      input={{ icon: <WrapIconSearch icon={iosSearch}/>, iconPosition: 'left', placeholder:'Enter keywords to find the dataset you need' }}
                       fluid
                       aligned='left'
                       loading={this.state.isLoading}

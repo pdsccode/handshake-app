@@ -521,7 +521,7 @@ class DataDetail extends React.Component {
             content={
               <div class='content'>
                 <h3 style={{letterSpacing:'-0.24'}}>Do you want to purchase this dataset?</h3>
-                <p style={{lineHeight:'1.6em'}}>Please make sure you have enough ETH in your wallet to make the payment.</p>
+                <p style={{lineHeight:'1.6em'}}>Please make sure you have enough ETH in your wallet.</p>
               </div>
             }
             open={this.state.open}

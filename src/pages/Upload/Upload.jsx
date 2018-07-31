@@ -11,6 +11,8 @@ import {
   Button,
   Visibility,
   Icon,
+  Label,
+  Message,
 } from 'semantic-ui-react';
 // import {AuthConsumer} from '@/components/datasets/AuthContext';
 import { Route, Redirect } from 'react-router';
@@ -213,7 +215,7 @@ class Upload extends React.Component {
     
     console.log(this.refs.input.files);
     if (this.refs.input.files.length==0) {
-      this.setState({messageForm:"File is required"});
+      this.setState({messageForm:"Please upload an image to continue"});
       return;
     }
     if (!this.state.selectedCategory) {
@@ -311,7 +313,7 @@ class Upload extends React.Component {
 
     return (
       <Visibility once>
-        <Segment vertical  loading={this.state.isLoading}  id="segment-detail"> 
+        <Segment vertical id="segment-detail"> 
           <h2 className="my-h2-dataset-new" >
           Upload Image</h2>
           <div className="ui center aligned grid container" style={{padding:'14px', paddingTop:'5px'}}>
@@ -330,7 +332,7 @@ class Upload extends React.Component {
                         <Grid.Column style={{width: '46%',marginLeft:'10px'}}> 
                                   <Dropdown
                               fluid
-                              placeholder="Select Label"
+                              placeholder="Classify"
                               selection
                               search
                               onChange={(e, data) => this.handleSelectClassify(data.value)}
@@ -339,7 +341,7 @@ class Upload extends React.Component {
                         </Grid.Column>
               </Grid> 
             </div>
-            <div className="row wrap-upload">
+            <div className="row wrap-upload"  style={{padding: '2px', paddingTop:'16px' }}>
               <label
                 className={labelClass}
                 onDragEnter={this.onDragEnter}
@@ -350,10 +352,17 @@ class Upload extends React.Component {
               >
                 <img
                   id="uploadedImg"
-                  src={ state.loaded ? state.imageSrc : uploadbg}
-                  className={state.loaded ? 'loaded' : 'loaded'}
+                  src={ state.loaded ? state.imageSrc : undefined}
+                  className={state.loaded ? 'loaded' : ''}
                 />
-                
+                {state.loaded ? '' : 
+                  <img style={{ marginTop:'-10px', opacity:'1' }} src={uploadbg} />
+                }
+
+                {state.loaded ? '' : 
+                  <Message style={{background:'none',border:'none', color:"#828282",fontSize: "12px",
+                  boxShadow: 'none',marginTop: '65px'}}>Tap to upload from your gallery</Message>
+                } 
                 <input
                   type="file"
                   accept="image/*"
@@ -364,20 +373,20 @@ class Upload extends React.Component {
             </div> 
             {
               this.state.messageForm !=""?
-              <div className="row" style={{ padding: '0px', justifyContent:'left', color:'red'}}>
+              <div className="row" style={{ padding: '0px', justifyContent:'left', color:'red',paddingTop:'10px'}}>
                   <label  style={{color:'red'}} >{this.state.messageForm} </label>
               </div>
               :""
             }
 
-            <div className="row">
+            <div className="row"  style={{padding: '2px',paddingTop:'21px' }}>
               <Button
                 fluid
                 positive
-                content="Done"
+                content="Upload"
                 onClick={this.handleUpload}
                 loading={this.state.uploading}
-                style={{ maxHeight: 40 }}
+                style={{ maxHeight: 40,    marginRight: '0px', }}
                 size="medium"
               />
             </div>

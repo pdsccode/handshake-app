@@ -463,20 +463,20 @@ export const URL = {
 
   ADMIN: '/admin',
 
-  DATA_SET_FEED_MINE: '/mine',
-  DATA_SET_FEED_MINE_INDEX: '/mine',
+  DATA_SET_FEED_MINE: '/classify',
+  DATA_SET_FEED_MINE_INDEX: '/classify',
 
-  DATA_SET_DISCOVER: '/explore',
+  DATA_SET_DISCOVER: '/datasets',
   
-  DATA_SET_DISCOVER_INDEX: '/explore',
-  DATA_SET_DISCOVER_CREATE:'/explore/create',
-  DATA_SET_DISCOVER_DETAIL: '/explore/:slug',
+  DATA_SET_DISCOVER_INDEX: '/datasets',
+  DATA_SET_DISCOVER_CREATE:'/datasets/create',
+  DATA_SET_DISCOVER_DETAIL: '/datasets/:slug',
 
-  DATA_SET_UPLOAD: '/upload',
-  DATA_SET_UPLOAD_INDEX: '/upload',
+  DATA_SET_UPLOAD: '/uploads',
+  DATA_SET_UPLOAD_INDEX: '/uploads',
 
-  DATA_SET_HISTORY: '/rewards',
-  DATA_SET_HISTORY_INDEX: '/rewards',
+  DATA_SET_HISTORY: '/earnings',
+  DATA_SET_HISTORY_INDEX: '/earnings',
 
   HANDSHAKE_ME: '/me',
   HANDSHAKE_ME_INDEX: '/me',

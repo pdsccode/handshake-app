@@ -9,10 +9,10 @@ export default {
       exchanges: 'Exchanges',
       whisper: 'Whisper',
       wallet: 'Wallet',
-      mine:'Label',
+      mine:'Classify',
       discover:'Datasets',
       explore:'Explore',
-      history:'Rewards',
+      history:'Earnings',
       
     },
   },

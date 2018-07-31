@@ -196,19 +196,20 @@ class DataSetNew extends React.Component {
       //  <h2 className="my-h2-dataset-new">
       <Segment vertical  loading={this.state.isLoading}  id="segment-detail">
           <h2 className="my-h2-dataset-new" >
-          Create new Dataset
-          <Link to={'/explore'}><Image src={closeTop} className="btn-Close-Top"/></Link>
+          Start a new dataset
+          <Link to={'/datasets'}><Image src={closeTop} className="btn-Close-Top"/></Link>
        </h2>
         <Container>
           <Form onSubmit={()=>console.log("D")}>
             <Form.Group widths='equal'>
-              <Form.Input label ="Dataset name" fluid placeholder='Dataset name' name='datasetName' value={this.state.datasetName}
+              <Form.Input label ="Name" fluid placeholder='Enter the name of this dataset' name='datasetName' value={this.state.datasetName}
                           onChange={this.handleChangeInput}/>
 
-              <Form.Input label ="Description" fluid placeholder='Description' name='description' value={this.state.description}
+              <Form.Input label ="Description" fluid 
+              placeholder='Briefly describe the contents of this dataset' name='description' value={this.state.description}
                           onChange={this.handleChangeInput}/>
 
-              <Form.Input label ="Multi-label classification" fluid placeholder='Classification'
+              <Form.Input label ="Classifications" fluid placeholder='Add classifications for this dataset'
                           name='classifiy' value={this.state.classifiy}
                           onChange={this.handleChangeInput}
                           />
@@ -220,7 +221,7 @@ class DataSetNew extends React.Component {
             </Form.Group>
 
             <Form.Group inline style={{marginTop:'10px'}}>
-              <label>You're a ? </label>
+              <label>You’re a </label>
               <Form.Radio
                 label='Buyer'
                 value='buyer'
@@ -239,15 +240,15 @@ class DataSetNew extends React.Component {
               <div style={{display: this.state.datasettype==="buyer" ? "block":"none"}}>
 
               <Form.Input
-               label ="Request quantity"
+               label ="Quantity"
                type='number' pattern="[0-9]*"
-               fluid placeholder='00' name='Quantity' value={this.state.Quantity}
+               fluid placeholder='Enter the minimum number of images for this dataset' name='Quantity' value={this.state.Quantity}
                           onChange={this.handleChangeInput}/>
 
               <Form.Input
               label ="Amount"
               type='number' pattern="[0-9.]*"
-              fluid placeholder='1 ETH' name='Amount' value={this.state.Amount}
+              fluid placeholder='Enter how much you are willing to pay for this dataset' name='Amount' value={this.state.Amount}
                           onChange={this.handleChangeInput}/>
               </div>
 
