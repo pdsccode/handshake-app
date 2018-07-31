@@ -7,6 +7,7 @@ import commentIcon from '@/assets/images/icon/comment.svg';
 import { URL } from '@/constants';
 import { formatAmount } from '@/utils/number';
 import OutcomeList from './OutcomeList';
+import GA from '@/services/googleAnalytics';
 
 function renderEventName(event) {
   return (
@@ -49,7 +50,11 @@ function renderEventTotalBets(event) {
 function renderEventMessages(event) {
   const commentLink = `${URL.COMMENTS_BY_SHAKE_INDEX}?objectId=event_${event.id}`;
   return (
-    <Link className="EventMessage" to={commentLink}>
+    <Link className="EventMessage" to={commentLink}
+      onClick={() => {
+        GA.clickComment(event.name);
+      }}
+    >
       <span className="EventMessageIcon"><Image src={commentIcon} /></span>
       <div className="EventMessageText">Comments</div>
     </Link>

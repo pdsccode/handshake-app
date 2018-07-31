@@ -101,9 +101,13 @@ class Index extends React.PureComponent {
                           <FormattedHTMLMessage id={`landing_page.${name}.textEmail`} />
                         </div>
                         <div className="d-table w-100">
-                          <div className="d-table-cell align-top text-send-link">
-                            <FormattedMessage id="landing_page.label.sendLinkToEmail" />
-                          </div>
+                          {
+                            messages[`landing_page.${name}.label.sendLinkToEmail`] && (
+                              <div className="d-table-cell align-top text-send-link">
+                                <FormattedMessage id={`landing_page.${name}.label.sendLinkToEmail`} />
+                              </div>
+                            )
+                          }
                           <div className="d-table-cell align-top">
                             <Field
                               name="email"
