@@ -7,7 +7,7 @@ import IconTrash from '@/assets/images/icon/icon-trash.svg';
 import moment from 'moment';
 import DatePicker from '@/components/handshakes/betting-event/Create/DatePicker/DatePicker';
 import { renderField } from './form';
-import { required } from './validate';
+import { required, allFieldHasData } from './validate';
 import { addOutcomes, createNewEvent } from './action';
 
 class CreateEventForm extends Component {
@@ -120,7 +120,15 @@ class CreateEventForm extends Component {
     );
   }
 
-  renderOutComes = ({ fields, meta: { error }, isNew }) => {
+  addMoreOutcomes = (fields) => {
+    if (fields.getAll().every(i => Object.keys(i).length > 0)) {
+      fields.push({});
+    }
+  }
+
+  renderOutComes = (props) => {
+    const { fields, meta: { error }, isNew } = props;
+    console.log('meta', props.meta);
     const title = 'OUTCOME';
     const textNote = '2.0 : Bet 1 ETH, win 1 ETH. You can adjust these odds.';
     return (
@@ -152,11 +160,16 @@ class CreateEventForm extends Component {
             );
           })
         }
-        <button className="AddMoreOutCome" type="button" onClick={() => fields.push({})}>
+        {/*{error && <li className="ErrorMsg">{error}</li>}*/}
+        <button
+          className="AddMoreOutCome"
+          type="button"
+          disabled={error}
+          onClick={() => this.addMoreOutcomes(fields)}
+        >
           <img src={IconPlus} alt="" className="IconPlus" />
           <span>Add more outcomes</span>
         </button>
-        {error && <li className="error">{error}</li>}
       </React.Fragment>
     );
   }
@@ -287,6 +300,7 @@ class CreateEventForm extends Component {
           name="outcomes"
           isNew={props.isNew}
           component={this.renderOutComes}
+          validate={allFieldHasData}
         />
         {this.renderFee(props)}
         <div className="CreateEventFormBlock">

@@ -15,3 +15,7 @@ export const required = (value) => {
 export const email = (value) => {
   return !isEmail(value) ? ('Invalid email address') : null;
 };
+
+export const allFieldHasData = (value, allValues) => {
+  return !allValues.outcomes.find(i => Object.keys(i).length > 0) ? 'Required' : null;
+}
