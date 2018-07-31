@@ -406,7 +406,7 @@ export default {
   'landing_page.products.dad.title': 'Decentralized Autonomous Dataset',
   'landing_page.products.dad.subTitle': 'Building decentralized datasets to advance AI.',
   'landing_page.products.whisper.title': 'Whisper',
-  'landing_page.products.whisper.subTitle': 'The new mailbox for the new internet',
+  'landing_page.products.whisper.subTitle': 'The new mailbox for the new internet.',
 
   'landing_page.header.research': 'RESEARCH',
   'landing_page.subHeader.research': 'Ninja conducts fundamental research toward the creation of the new internet.',
@@ -433,7 +433,7 @@ export default {
   'landing_page.cash.textEmail': `Please open <a href="https://ninja.org/cash">ninja.org/cash</a> on your mobile browser to start trading now.`,
   'landing_page.cash.btnSubmitEmail': 'Go',
   'landing_page.cash.joinTelegram': `Join the dojo on <a href="https://t.me/ninjacash" class="landing-link">Telegram</a>`,
-  'landing_page.cash.whitepaper': `Jump in for <a href="https://medium.com/@ninja_org/introducing-ninja-cash-b0d51a9f4e1b" class="landing-link">Whitepaper</a>`,
+  'landing_page.cash.whitepaper': `Read more about <a href="https://medium.com/@ninja_org/introducing-ninja-cash-b0d51a9f4e1b" class="landing-link">Cash</a>`,
   // 'landing_page.cash.cta1': 'Trade now on your phone',
   // 'landing_page.cash.cta1_url': 'https://ninja.org/cash',
   // 'landing_page.cash.cta2': 'Get free gifts',
@@ -446,7 +446,7 @@ export default {
   'landing_page.prediction.textEmail': `Please open <a href="https://ninja.org/prediction">ninja.org/prediction</a> on your mobile browser to start playing.`,
   'landing_page.prediction.btnSubmitEmail': 'Go',
   'landing_page.prediction.joinTelegram': `Join the dojo on <a href="https://t.me/ninja_org" class="landing-link">Telegram</a>`,
-  'landing_page.prediction.whitepaper': `Jump in for <a href="https://medium.com/@ninja_org/shakeninja-bex-1c938f18b3e8" class="landing-link">Whitepaper</a>`,
+  'landing_page.prediction.whitepaper': `Read our <a href="https://medium.com/@ninja_org/shakeninja-bex-1c938f18b3e8" class="landing-link">whitepaper</a>`,
   'landing_page.prediction.youtubeVideoId': '-YYp9yW4RDQ',
 
   'landing_page.wallet.breadcrumb': 'Wallet',
@@ -476,13 +476,13 @@ export default {
   'landing_page.dad.textEmail': 'I want to buy data',
 
   'landing_page.uncommons.breadcrumb': 'Uncommons',
-  'landing_page.uncommons.heading': 'The people\'s blockchain',
+  'landing_page.uncommons.heading': 'The people\'s blockchain.',
   'landing_page.uncommons.subHeading': 'No token tricks, no gas fees and no exclusive parties. Help build a blockchain where anyone can develop, use and explore for free. The new internet should belong to you.',
   'landing_page.uncommons.textEmail': 'Be an uncommoner.',
   'landing_page.uncommons.btnSubmitEmail': 'Show me how',
 
   'landing_page.whisper.breadcrumb': 'Whisper',
-  'landing_page.whisper.heading': 'The new mailbox for the new internet',
+  'landing_page.whisper.heading': 'The new mailbox for the new internet.',
   'landing_page.whisper.subHeading': 'An alternative messaging system in this era of surveillance. End-to-end encrypted, anonymous conversations between you and your world. No downloads, sign ups, or subscriptions. Now you can control who\'s listening.',
   'landing_page.whisper.textEmail': `Please open <a href="https://ninja.org/whisper">ninja.org/whisper</a> on your mobile browser to start chatting.`,
   'landing_page.whisper.btnSubmitEmail': 'Go',
