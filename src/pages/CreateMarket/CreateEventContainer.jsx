@@ -56,11 +56,14 @@ class CreateEventContainer extends React.Component {
     }).sort((a, b) => a.id - b.id);
   }
 
+  renderGroupTitle = (title) => (<div className="CreateEventFormGroupTitle">{title}</div>);
+
   renderEventDropdownList = (props, state) => {
     if (state.isCreateNew) return null;
+    const title = 'EVENT';
     return (
       <React.Fragment>
-        <label>EVENT</label>
+        {this.renderGroupTitle(title)}
         <Dropdown
           placeholder="Select an event"
           className="EventDropdown"
@@ -77,7 +80,7 @@ class CreateEventContainer extends React.Component {
     if (state.selectedEvent || state.isCreateNew) return null;
     return (
       <React.Fragment>
-        <p className="CreateEventOption">Or</p>
+        <div className="CreateEventOption">Or</div>
         <button
           className="btn btn-primary btn-block"
           onClick={this.onClickCreateNewEvent}

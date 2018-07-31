@@ -1,4 +1,5 @@
 /* eslint react/prop-types: 0 */
+/* eslint import/prefer-default-export: 0 */
 
 import React from 'react';
 import classNames from 'classnames';
@@ -10,6 +11,7 @@ export const renderField = (props) => {
     type,
     placeholder,
     className,
+    fieldClass,
     disabled,
     meta: { touched, error, warning },
   } = props;
@@ -24,7 +26,7 @@ export const renderField = (props) => {
       {label && <label>{label}</label>}
       <input
         {...input}
-        className={className}
+        className={fieldClass}
         placeholder={placeholder}
         type={type}
         disabled={disabled}
