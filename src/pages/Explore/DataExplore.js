@@ -252,7 +252,7 @@ class DataExplore extends React.Component {
                             {/* <ImageGrid displayImages={cat.display_images} />  className="fistgridimage"  */}
                             <Image src={cat.display_images[0]}/>
                         </Link>
-                        <Card.Content style={{marginBottom: '8px'}}>
+                        <Card.Content style={{marginBottom: '18px'}}>
                           <div style={{float: 'left', marginTop:'-6px'}}>
                             <p  className="title">{cat.name}</p>
                             <p  style={{color:'#232323' , opacity:'0.4',     fontSize:'12px'}}>{cat.total_images } {cat.total_images == 1 ? ' img' : ' imgs'}</p>

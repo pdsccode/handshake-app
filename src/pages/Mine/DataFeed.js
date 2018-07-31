@@ -387,7 +387,7 @@ class DataFeed extends React.Component {
 
   renderHashTag = (value,index)=>{
     const classifies  = value?.category?.classifies||[];
-    const isNeedClick = classifies.filter(item=> item.checked === true).length === 0 ;
+    const isNeedClick = true;// classifies.filter(item=> item.checked === true).length === 0 ;
     const listTagView  = classifies.map(item=>{
       // console.log(TAG," renderHashTag item = ",item);
       // return (
@@ -416,26 +416,10 @@ class DataFeed extends React.Component {
             <Card.Group centered >
               {this.state.images.map((item, i) => {
                 return (
-                  <Card key={i} className="my-card">
-                      <Link className="ui image" to={"/explore/" + item.category.id}>
-                        <Image src={item.link}/>
-                      </Link>
+                  <Card key={i} className="my-card"> 
+                    <Image src={item.link}/> 
                     <Card.Content>
-                    {this.renderHashTag(item,i)}
-                      {/*<div style={{float: 'left',marginTop:'-8px'}}>
-                        <Link  to={"/cat/" + item.category.id } className="title">
-                            {item.category.name}
-                        </Link>
-                      </div>
-                      <div style={{float: 'right', marginTop:'-10px'}}>
-                        <div style={{display: 'inline', marginRight: '2em'}}>
-                          {this.renderLikedIcon(i)}
-                        </div>
-
-                        <div style={{display: 'inline'}}>
-                          {this.renderClassifiedIcon(i)}
-                        </div>
-                </div>*/}
+                    {this.renderHashTag(item,i)} 
                     </Card.Content>
                   </Card>
                 )
@@ -457,10 +441,11 @@ class DataFeed extends React.Component {
           <Confirm
             content={
               <div class='content'>
-                <h3 style={{letterSpacing:'-0.24'}}>Enter name classified</h3>
+                <h3 style={{letterSpacing:'-0.24'}}>Enter Label</h3>
                 <Form.Input
+                  autoFocus
                   type='text'
-                  fluid placeholder='Name Classified' name='classifyName' value={this.state.classifyName}
+                  fluid placeholder='Label' name='classifyName' value={this.state.classifyName}
                               onChange={this.handleClassifyNameInput}/>
               </div>
             }

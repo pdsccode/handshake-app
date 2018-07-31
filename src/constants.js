@@ -475,8 +475,8 @@ export const URL = {
   DATA_SET_UPLOAD: '/upload',
   DATA_SET_UPLOAD_INDEX: '/upload',
 
-  DATA_SET_HISTORY: '/history',
-  DATA_SET_HISTORY_INDEX: '/history',
+  DATA_SET_HISTORY: '/rewards',
+  DATA_SET_HISTORY_INDEX: '/rewards',
 
   HANDSHAKE_ME: '/me',
   HANDSHAKE_ME_INDEX: '/me',

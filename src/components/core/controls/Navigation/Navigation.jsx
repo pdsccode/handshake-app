@@ -15,6 +15,8 @@ import createIcon from '@/assets/images/navigation/ic_add.svg.raw';
  
 import home_icon from '@/assets/icons/home.svg.raw';
 import cam_icon from '@/assets/icons/qa.png';
+import reward_icon from '@/assets/icons/rewards.svg.raw';
+import uploadmain_icon from '@/assets/icons/uploadmain.svg.raw';
 
 
 import { 
@@ -84,21 +86,22 @@ class Navigation extends React.Component {
               this.props.location.pathname === URL.DATA_SET_UPLOAD_INDEX
               ? (
                 <a>
+                  {<div className="create" dangerouslySetInnerHTML={{ __html: uploadmain_icon }} />}
                   {/* <div className="create" dangerouslySetInnerHTML={{ __html: cambtn }} /> */}
-                  <Image  className="create" src={cam_icon} />
+                  {/* <Image  className="create" src={uploadmain_icon} /> */}
                 </a>
               )
               : (
                 <Link to={URL.DATA_SET_UPLOAD_INDEX}>
-                  {/* <div className="create" dangerouslySetInnerHTML={{ __html: cambtn }} /> */}
-                  <Image  className="create" src={cam_icon} />
+                  {<div className="create" dangerouslySetInnerHTML={{ __html: uploadmain_icon }} />}
+                  {/* <Image  className="create" src={uploadmain_icon} /> */}
                 </Link>
               )
             }
           </li>
           <li className={cn(this.checkSelected(URL.DATA_SET_HISTORY_INDEX))}>
             <Link to={URL.DATA_SET_HISTORY_INDEX} onClick={this.onClickTab}>
-              <div className="chat-icon" dangerouslySetInnerHTML={{ __html: chatIcon }} />
+              <div className="chat-icon" dangerouslySetInnerHTML={{ __html: reward_icon }} />
               <span>{this.props.intl.messages.app.navigation.history}</span>
             </Link>
           </li>

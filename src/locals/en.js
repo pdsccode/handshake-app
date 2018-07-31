@@ -12,7 +12,7 @@ export default {
       mine:'Label',
       discover:'Datasets',
       explore:'Explore',
-      history:'Me',
+      history:'Rewards',
       
     },
   },

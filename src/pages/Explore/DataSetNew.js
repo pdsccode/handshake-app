@@ -112,7 +112,7 @@ class DataSetNew extends React.Component {
     let created_by_id = this.props.auth.dataset_profile.id;
 
     if(this.state.values.length==0){
-      this.setState({messageForm:" Classification list must contain at least 1 class"})
+      this.setState({messageForm:" Label classification list must contain at least 1 class"})
       return;
     }
 
@@ -208,8 +208,8 @@ class DataSetNew extends React.Component {
               <Form.Input label ="Description" fluid placeholder='Description' name='description' value={this.state.description}
                           onChange={this.handleChangeInput}/>
 
-              <Form.Input label ="Classification" fluid placeholder='Classification'
-                          name='classifiy' value={this.state.classifiy}
+              <Form.Input label ="Multi-label classification" fluid placeholder='Classification'
+                          name='Label' value={this.state.classifiy}
                           onChange={this.handleChangeInput}
                           />
                 <Image src={addPlus} className="btn-add-class" onClick={()=>this.handleChangeClass()} />

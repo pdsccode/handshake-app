@@ -20,6 +20,10 @@ import { injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import './Upload.scss';
 
+
+import uploadbg from '@/assets/icons/uploadbg.svg';
+
+
 const TAG = 'Upload';
 const propTypes = {
     baseColor: PropTypes.string,
@@ -326,7 +330,7 @@ class Upload extends React.Component {
                         <Grid.Column style={{width: '46%',marginLeft:'10px'}}> 
                                   <Dropdown
                               fluid
-                              placeholder="Select classify"
+                              placeholder="Select Label"
                               selection
                               search
                               onChange={(e, data) => this.handleSelectClassify(data.value)}
@@ -346,10 +350,10 @@ class Upload extends React.Component {
               >
                 <img
                   id="uploadedImg"
-                  src={state.imageSrc}
-                  className={state.loaded ? 'loaded' : undefined}
+                  src={ state.loaded ? state.imageSrc : uploadbg}
+                  className={state.loaded ? 'loaded' : 'loaded'}
                 />
-                <Icon name="cloud upload" />
+                
                 <input
                   type="file"
                   accept="image/*"

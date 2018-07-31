@@ -112,7 +112,7 @@ class History extends React.Component {
       <Visibility once={true}>  
        <Segment vertical  id="segment-detail"> 
               <h2 className="my-h2-dataset-new" style={{marginBottom:'0px'}}>
-                My Datasets 
+                My Rewards 
         </h2> 
          
               <Card.Group centered >  
@@ -123,7 +123,7 @@ class History extends React.Component {
                     </Grid.Column>
                     <Grid.Column width={9}>
                     <div style={{  textAlign:'left'  }}>
-                                <h4 style={{ margin:'5px 0px', color:'black'}}>Avaliable for withdraw</h4>
+                                <h4 style={{ margin:'5px 0px', color:'black'}}>Withdraw to wallets</h4>
                                 <p>Balance: <span style={{fontWeight:'700' }}>{ (Math.round(this.state.balance * 10000) /10000 ) } ETH</span></p> 
                             </div>
                     </Grid.Column>
