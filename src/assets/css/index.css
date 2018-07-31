@@ -723,6 +723,10 @@ img.ui.image.btn-add-class{
 .ui.card>:first-child, .ui.cards>.card>:first-child{
     border-radius: .28571429rem!important
 }
+.ui.card>.image, .ui.cards>.card>.image{
+        width:  100%;
+        height: auto;
+}
 
 @media (min-width:800px) {
 	 
