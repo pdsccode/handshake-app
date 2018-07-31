@@ -369,7 +369,7 @@ export default {
   'landing_page.recruiting.intro.label': `<h1 class="mt-2"><strong>Hey Ninja</strong></h1><div class="intro-text-2">Come join the dojo.</div><span class="intro-text-3">We build decentralized apps, protocols and moonshot ideas for the new wild west world web.  Reinvent the Internet with us.</span>`,
   'landing_page.recruiting.intro.btn': 'Become a Ninja',
   'landing_page.recruiting.label.noJobs': 'No jobs available',
-  'landing_page.recruiting.label.getTheWordOut': 'Get the word out. Earn ETH',
+  'landing_page.recruiting.label.getTheWordOut': 'Get the word out. Earn ETH.',
   'landing_page.recruiting.label.backToListing': 'Back to listing',
   'landing_page.recruiting.button.applyNow': 'Apply now',
   'landing_page.recruiting.button.referFriend': 'Refer a friend',
@@ -421,7 +421,6 @@ export default {
   'landing_page.label.joinTelegram': `Join the dojo on <a href="https://t.me/ninja_org" class="landing-link">Telegram</a>`,
   // 'landing_page.label.airdrop': `Jump in for <a href="#" class="landing-link">Airdrop</a>`,
   'landing_page.label.whitepaper': `Jump in for <a href="https://medium.com/@ninjadotorg/shakeninja-bex-1c938f18b3e8" class="landing-link">Whitepaper</a>`,
-  'landing_page.label.sendLinkToEmail': `Send link to your email:`,
   'landing_page.label.btnSubmitEmail': 'Go',
   // 'landing_page.label.faq': `We answered your <a href="#" class="landing-link">FAQ</a>`,
 
@@ -431,6 +430,7 @@ export default {
   'landing_page.cash.heading': 'Buy crypto with cash. Secure, anonymous, easy.',
   'landing_page.cash.subHeading': 'Ninja Cash is a decentralized peer to peer (P2P) cryptocurrency exchange that allows users to trade ETH and BTC for cash. Anonymous and immediate: no signup, no ID verification. Blockchain secured and fraud proof.',
   'landing_page.cash.textEmail': `Please open <a href="https://ninja.org/cash">ninja.org/cash</a> on your mobile browser to start trading now.`,
+  'landing_page.cash.label.sendLinkToEmail': `Send link to your email:`,
   'landing_page.cash.btnSubmitEmail': 'Go',
   'landing_page.cash.joinTelegram': `Join the dojo on <a href="https://t.me/ninjacash" class="landing-link">Telegram</a>`,
   'landing_page.cash.whitepaper': `Read more about <a href="https://medium.com/@ninja_org/introducing-ninja-cash-b0d51a9f4e1b" class="landing-link">Cash</a>`,
@@ -444,6 +444,7 @@ export default {
   'landing_page.prediction.heading': 'Bet on anything against anyone, anywhere. Guaranteed payout. Your odds. 100% anonymous.',
   'landing_page.prediction.subHeading': 'You create the bets, set the odds, and play directly with other parties. Bet with blockchain technology to bypass the bookies and the books - take down the house and make your own luck.',
   'landing_page.prediction.textEmail': `Please open <a href="https://ninja.org/prediction">ninja.org/prediction</a> on your mobile browser to start playing.`,
+  'landing_page.prediction.label.sendLinkToEmail': `Send link to your email:`,
   'landing_page.prediction.btnSubmitEmail': 'Go',
   'landing_page.prediction.joinTelegram': `Join the dojo on <a href="https://t.me/ninja_org" class="landing-link">Telegram</a>`,
   'landing_page.prediction.whitepaper': `Read our <a href="https://medium.com/@ninja_org/shakeninja-bex-1c938f18b3e8" class="landing-link">whitepaper</a>`,
@@ -453,17 +454,19 @@ export default {
   'landing_page.wallet.heading': 'A decentralized cryptocurrency wallet. No downloads. No sign ups.',
   'landing_page.wallet.subHeading': 'A decentralized cryptocurrency wallet and payment gateway that will allow both businesses and users to easily store and use multiple cryptocurrencies for payments.',
   'landing_page.wallet.textEmail': `Please open <a href="https://ninja.org/wallet">ninja.org/wallet</a> on your mobile browser to create your wallet.`,
+  'landing_page.wallet.label.sendLinkToEmail': `Send link to your email:`,
   'landing_page.wallet.btnSubmitEmail': 'Go',
   'landing_page.wallet.youtubeVideoId': '',
 
   'landing_page.pay-for-stores.breadcrumb': 'Pay For Stores',
   'landing_page.pay-for-stores.heading': 'Seamlessly integrate cryptocurrency payments into your offline business.',
   'landing_page.pay-for-stores.subHeading': 'Allow your offline customers to pay for goods and services in cryptocurrency, just by scanning a QR code. Give the millions of people who own crypto somewhere to spend it.',
+  'landing_page.pay-for-stores.textEmail': 'Be the first to hear when we launch',
 
   'landing_page.pay-for-devs.breadcrumb': 'Pay For Devs',
   'landing_page.pay-for-devs.heading': 'Connect your e-commerce business with a truly borderless payment network.',
   'landing_page.pay-for-devs.subHeading': 'Millions of people are looking to spend their cryptocurrency in a secure, convenient way. Bring the currency of the future into your online store today and stop relying on the sluggish banking industry. No wait times, no bank charges, no card fees.',
-
+  'landing_page.pay-for-devs.textEmail': 'Be the first to hear when we launch',
 
   'landing_page.internet-cash.breadcrumb': 'Internet Cash',
   'landing_page.internet-cash.heading': 'The Internet deserves to have its own native currency.',
@@ -485,6 +488,7 @@ export default {
   'landing_page.whisper.heading': 'The new mailbox for the new internet.',
   'landing_page.whisper.subHeading': 'An alternative messaging system in this era of surveillance. End-to-end encrypted, anonymous conversations between you and your world. No downloads, sign ups, or subscriptions. Now you can control who\'s listening.',
   'landing_page.whisper.textEmail': `Please open <a href="https://ninja.org/whisper">ninja.org/whisper</a> on your mobile browser to start chatting.`,
+  'landing_page.whisper.label.sendLinkToEmail': `Send link to your email:`,
   'landing_page.whisper.btnSubmitEmail': 'Go',
 
   // MobileOrTablet components
