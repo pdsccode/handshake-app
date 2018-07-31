@@ -476,7 +476,7 @@ export default {
   'landing_page.dad.breadcrumb': 'Decentralized Autonomous Dataset',
   'landing_page.dad.heading': 'Building decentralized datasets to advance AI.',
   'landing_page.dad.subHeading': 'Today big data is controlled by a handful of corporations - limiting access to people who need it to develop AI, while the people who contribute the data see no rewards. DAD will enable anyone who wants to build AI programs access to big data and reward the users who contribute.',
-  'landing_page.dad.textEmail': 'I want to buy data',
+  'landing_page.dad.textEmail': 'Be the first to hear when we launch',
 
   'landing_page.uncommons.breadcrumb': 'Uncommons',
   'landing_page.uncommons.heading': 'The people\'s blockchain.',
