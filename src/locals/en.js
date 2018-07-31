@@ -672,7 +672,7 @@ export default {
     },
     {
       question: 'How do I create an account?',
-      answer: `<span>You simply go to our website <a href="https://ninja.org/wallet">www.ninja.org/wallet</a>. It will auto creates your wallet BTC, ETH etc on your device. Or you can import/restore you have.</span>`,
+      answer: <span>You simply go to our website <a href="https://ninja.org/wallet">www.ninja.org/wallet</a>. It will auto creates your wallet BTC, ETH etc on your device. Or you can import/restore you have.</span>,
     },
     {
       question: 'What countries can I use Ninja Wallet in?',
@@ -680,7 +680,7 @@ export default {
     },
     {
       question: 'What happens if I swap/lose my phone? Will I lose my wallet?',
-      answer: `We recommend all users backup their wallets as soon as they start using Ninja. We have explained how to backup your Ninja Wallet <a target="__blank" href="https://medium.com/@ninja_org/how-to-back-up-your-ninja-wallet-its-really-quite-easy-d98a5ec1a671">here</a>.`,
+      answer: <span>We recommend all users backup their wallets as soon as they start using Ninja. We have explained how to backup your Ninja Wallet <a target="__blank" href="https://medium.com/@ninja_org/how-to-back-up-your-ninja-wallet-its-really-quite-easy-d98a5ec1a671">here</a>.</span>,
     }
   ],
   'landing_page.dad.faq': [
