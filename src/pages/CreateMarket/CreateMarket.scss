@@ -137,5 +137,16 @@
     .ShareEventToBuddiesTitle {
       margin-bottom: 20px;
     }
+    .share-social {
+      display: flex;
+      justify-content: space-around;
+      img {
+        width: auto;
+        margin-right: 0;
+        &:last-child {
+          margin-right: 0;
+        }
+      }
+    }
   }
 }

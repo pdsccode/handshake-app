@@ -11,3 +11,7 @@ export const showedLuckyPoolSelector = (state) => {
   return state.ui.showedLuckyPool;
 };
 
+export const queryStringSelector = (state) => {
+  return state.router.location.search;
+};
+

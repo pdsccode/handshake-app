@@ -61,18 +61,6 @@ class ShareSocial extends PureComponent {
   constructor(props) {
     super(props);
     this.clickShare = ::this.clickShare;
-    this.socialList = [{
-      img: FacebookSVG,
-      title: 'FACEBOOK',
-    }, {
-      img: TwitterSVG,
-      title: 'TWITTER',
-    },
-    {
-      img: CopyLink,
-      title: 'COPY',
-    },
-    ];
   }
 
   converToShortLink(longUrl) {
@@ -136,12 +124,12 @@ class ShareSocial extends PureComponent {
   }
 
   render() {
-    const { className } = this.props;
+    const { socialList, className } = this.props;
 
     return (
       <div className={`share-social ${className}`}>
         {
-          this.socialList.map((social, index) => (
+          socialList.map((social, index) => (
             <img key={index + 1} src={social.img} alt={social.title} onClick={(e) => { this.clickShare(e, social.title); }} />
           ))
         }
@@ -155,10 +143,24 @@ ShareSocial.propTypes = {
   title: PropTypes.string.isRequired,
   showAlert: PropTypes.func.isRequired,
   className: PropTypes.string,
+  socialList: PropTypes.instanceOf(Array),
 };
 
 ShareSocial.defaultProps = {
   className: '',
+  socialList: [
+    {
+      img: FacebookSVG,
+      title: 'FACEBOOK',
+    }, {
+      img: TwitterSVG,
+      title: 'TWITTER',
+    },
+    {
+      img: CopyLink,
+      title: 'COPY',
+    },
+  ],
 };
 
 const mapDispatch = ({

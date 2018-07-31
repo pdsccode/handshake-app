@@ -12,6 +12,7 @@ const EVENT_CATEGORY = {
   ME: 'Me',
 };
 const EVENT_ACTION = {
+  CLICK_CHOOSE_MODE: 'Click choose a mode',
   CLICK_CHOOSE_EVENT: 'Click choose an event',
   CLICK_CHOOSE_OUTCOME: 'Click choose an outcome',
   CLICK_CHOOSE_SIDE: 'Click choose a side',
@@ -123,6 +124,18 @@ class GoogleAnalyticsService {
       category: EVENT_CATEGORY.DISCOVER_BETTING,
       action: EVENT_ACTION.CLICK_CHOOSE_SIDE,
       label: sideName,
+    });
+  }
+
+  /**
+   *
+   * @param modeName
+   */
+  clickChooseAMode(modeName) {
+    this.sendGAEvent({
+      category: EVENT_CATEGORY.DISCOVER_BETTING,
+      action: EVENT_ACTION.CLICK_CHOOSE_MODE,
+      label: modeName,
     });
   }
 
