@@ -271,6 +271,7 @@ class BetingShake extends React.Component {
               id={id}
               type={type}
               value={id === "odds" ? oddValue : amountValue}
+              autoComplete="off"
               {...newProps}
               onChange={(evt) => {
                 if (id === 'odds') {
