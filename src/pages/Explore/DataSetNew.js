@@ -209,7 +209,7 @@ class DataSetNew extends React.Component {
                           onChange={this.handleChangeInput}/>
 
               <Form.Input label ="Multi-label classification" fluid placeholder='Classification'
-                          name='Label' value={this.state.classifiy}
+                          name='classifiy' value={this.state.classifiy}
                           onChange={this.handleChangeInput}
                           />
                 <Image src={addPlus} className="btn-add-class" onClick={()=>this.handleChangeClass()} />

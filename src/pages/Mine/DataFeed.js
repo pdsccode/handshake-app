@@ -416,8 +416,8 @@ class DataFeed extends React.Component {
             <Card.Group centered >
               {this.state.images.map((item, i) => {
                 return (
-                  <Card key={i} className="my-card"> 
-                    <Image src={item.link}/> 
+                  <Card key={i} className="my-card">  
+                      <Image className="ui image" src={item.link}/>  
                     <Card.Content>
                     {this.renderHashTag(item,i)} 
                     </Card.Content>

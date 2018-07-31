@@ -478,7 +478,7 @@ line-height: 32px; */
 }
 
 .footer ul li.selected .chat-icon svg g{
-    stroke: #21c364;
+    stroke: none;
 }
 
 .footer ul li.selected a{
@@ -720,6 +720,10 @@ img.ui.image.btn-add-class{
     white-space: nowrap;
 }
 
+.ui.card>:first-child, .ui.cards>.card>:first-child{
+    border-radius: .28571429rem!important
+}
+
 @media (min-width:800px) {
 	 
     .ui.card>.image, .ui.cards>.card>.image{
@@ -735,3 +739,4 @@ img.ui.image.btn-add-class{
     }
      
 }
+
