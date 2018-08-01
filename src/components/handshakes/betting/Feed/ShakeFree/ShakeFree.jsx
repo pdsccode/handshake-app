@@ -230,7 +230,7 @@ class BetingShakeFree extends React.Component {
         callBack: () => {
         },
       });
-      this.props.onCreateBetSuccess();
+      //this.props.onCreateBetSuccess();
       // send ga event
       try {
         const { matchName, matchOutcome } = this.props;
