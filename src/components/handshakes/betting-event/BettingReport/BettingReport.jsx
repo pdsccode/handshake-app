@@ -1,10 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
 import { BETTING_RESULT } from '@/components/handshakes/betting/constants.js';
 import { BASE_API } from '@/constants';
 import { Alert } from 'reactstrap';
 import $http from '@/services/api';
+import { showAlert } from '@/reducers/app/action';
+
 import './BettingReport.scss';
 
 let token = null;
@@ -298,5 +301,7 @@ class BettingReport extends React.Component {
   }
 }
 
-
-export default BettingReport;
+const mapDispatch = ({
+  showAlert,
+});
+export default connect(null, mapDispatch)(BettingReport);
