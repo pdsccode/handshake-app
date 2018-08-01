@@ -1,6 +1,7 @@
 import React from 'react';
 import { DropdownItem, DropdownMenu, DropdownToggle, UncontrolledButtonDropdown } from 'reactstrap';
 import Cleave from 'cleave.js/react';
+import { BigNumber } from 'bignumber.js';
 import cx from 'classnames';
 import './styles.scss';
 // import phoneCountryCodes from './country-calling-codes.min.json';
@@ -160,12 +161,14 @@ export const fieldNumericInput = customField(({
   onChange, onBlur, onFocus, value, list, name, color = '', step = 0.25, suffix, btnBg = '',
 }) => {
   const valueFloat = parseFloat(value || 0, 10);
+  let _value = new BigNumber(value).toNumber();
+  _value = isNaN(_value) ? '' : _value;
   return (
     <span className="btn-group" role="group" style={{ color }}>
       <button type="button" className="btn numeric-input" style={{ color }} onClick={() => onChange(valueFloat - step)} onBlur={() => onBlur()} onFocus={() => onFocus()}>–</button>
       &nbsp;
       <span className="text-center" style={{ minWidth: '70px', lineHeight: '36px' }}>
-        <input className="form-control text-right" style={{ width: '57px', display: 'inline-block', padding: '0.375rem 0.2rem' }} step="any" type="number" onChange={onChange} value={value} />
+        <input className="form-control text-right" style={{ width: '57px', display: 'inline-block', padding: '0.375rem 0.2rem' }} step="any" type="number" onChange={onChange} value={_value} />
         &nbsp;
         { suffix && <span>{suffix}</span>}
       </span>
