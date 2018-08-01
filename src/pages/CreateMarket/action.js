@@ -8,9 +8,17 @@ export const updateEmail = (value) => {
   });
 };
 
-export const loadReports = (payload = {}) => {
+export const updateCreateEventLoading = (value) => {
+  return SET_DATA({
+    type: 'CREATE_MARKET:LOADING',
+    _path: 'ui.isCreateEventLoading',
+    _value: value,
+  });
+}
+
+export const loadCreateEventData = (payload = {}) => {
   return {
-    type: 'CREATE_MARKET:LOAD_REPORTS',
+    type: 'CREATE_MARKET:HANDLE_CREATE_EVENT_DATA',
     ...payload,
   };
 };

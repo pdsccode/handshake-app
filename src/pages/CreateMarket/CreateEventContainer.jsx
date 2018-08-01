@@ -5,7 +5,7 @@ import { loadMatches } from '@/pages/Prediction/action';
 import { eventSelector, isLoading } from '@/pages/Prediction/selector';
 import Dropdown from '@/components/core/controls/Dropdown';
 import CreateEventForm from './CreateEventForm';
-import { loadReports } from './action';
+import { loadCreateEventData } from './action';
 import { reportSelector } from './selector';
 
 class CreateEventContainer extends React.Component {
@@ -28,9 +28,7 @@ class CreateEventContainer extends React.Component {
   }
 
   componentDidMount() {
-    // @TODO: put to one
-    this.props.dispatch(loadMatches());
-    this.props.dispatch(loadReports());
+    this.props.dispatch(loadCreateEventData());
   }
 
   onSelectEvent = (item) => {
@@ -113,6 +111,7 @@ class CreateEventContainer extends React.Component {
         reportList={props.reportList || []}
         isNew={isCreateNew}
         dispatch={props.dispatch}
+        isLoading={props.isCreateEventLoading}
       />
     );
   }

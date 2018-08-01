@@ -221,8 +221,8 @@ export default class BettingHandshake extends BaseHandshake {
   };
   createMarket = async (fee, source, closingWindow, reportWindow, disputeWindow, offchain) => {
     console.log(fee, source, closingWindow, reportWindow, disputeWindow, offchain);
-    const bytesOffchain = this.web3.utils.asciiToHex(`cryptosign_createMarket${offchain}`);
-    const sourceBytes = this.web3.utils.asciiToHex(source);
+    const bytesOffchain = this.web3.utils.fromUtf8(offchain);
+    const sourceBytes = this.web3.utils.fromUtf8(source || '-');
     const payloadData = this.handshakeInstance.methods
       .createMarket(fee, sourceBytes, closingWindow, reportWindow, disputeWindow, bytesOffchain)
       .encodeABI();

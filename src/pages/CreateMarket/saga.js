@@ -2,10 +2,9 @@ import { takeLatest, call, select } from 'redux-saga/effects';
 import { apiGet, apiPost } from '@/stores/api-saga';
 import { API_URL } from '@/constants';
 import { BetHandshakeHandler } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
-import { loadReports, createEvent, generateShareLink } from './action';
+import { handleLoadMatches } from '@/pages/Prediction/saga';
+import { loadCreateEventData, createEvent, updateCreateEventLoading, generateShareLink } from './action';
 import { reportSelector } from './selector';
-
-const betHandshakeHandler = BetHandshakeHandler.getShareManager();
 
 function* handleLoadReportsSaga({ cache = true }) {
   try {
@@ -23,6 +22,15 @@ function* handleLoadReportsSaga({ cache = true }) {
     });
   } catch (e) {
     return console.error('handleLoadReportsSaga', e);
+  }
+}
+
+function* handleLoadCreateEventData() {
+  try {
+    yield call(handleLoadReportsSaga, {});
+    yield call(handleLoadMatches, {});
+  } catch (e) {
+    console.error(e);
   }
 }
 
@@ -51,12 +59,10 @@ function* handleCreateNewEventSaga({ newEventData }) {
   }
 }
 
-function* handleCallOnChain({}) {
-  return null;
-}
-
 function* handleCreateEventSaga({ values, isNew, selectedSource }) {
   try {
+    yield call(updateCreateEventLoading, true);
+    return null;
     if (!isNew) {
       // Add new outcomes
       const newOutcomeList = values.outcomes.filter(o => !o.id).map(i => Object.assign({}, i, { public: 0 }));
@@ -91,10 +97,22 @@ function* handleCreateEventSaga({ values, isNew, selectedSource }) {
         outcomes: values.outcomes,
         ...reportSource,
       };
+      const betHandshakeHandler = BetHandshakeHandler.getShareManager();
       const { data } = yield call(handleCreateNewEventSaga, { newEventData });
-      console.log('data', data);
       if (data && data.length) {
-        yield call(handleCallOnChain, {});
+        const eventData = data[0];
+        const inputData = eventData.outcomes.map(o => {
+          return {
+            fee: eventData.market_fee,
+            source: eventData.source_name,
+            closingTime: eventData.date,
+            reportTime: eventData.reportTime,
+            disputeTime: eventData.disputeTime,
+            offchain: o.id,
+          };
+        });
+        console.log('inputData', inputData);
+        betHandshakeHandler.createNewEvent(inputData);
       }
     }
   } catch (e) {
@@ -118,6 +136,6 @@ function* handleGenerateShareLinkSaga({ outcomeId, ...payload }) {
 }
 
 export default function* createMarketSaga() {
-  yield takeLatest(loadReports().type, handleLoadReportsSaga);
+  yield takeLatest(loadCreateEventData().type, handleLoadCreateEventData);
   yield takeLatest(createEvent().type, handleCreateEventSaga);
 }

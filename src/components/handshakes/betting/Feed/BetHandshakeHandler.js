@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { BettingHandshake } from '@/services/neuron';
 import { API_URL } from '@/constants';
 import { showAlert } from '@/reducers/app/action';
@@ -377,6 +378,20 @@ export class BetHandshakeHandler {
       }));
     }
   }
+
+  async createNewEvent(input) {
+    try {
+      input.forEach(i => {
+        const closingTime = i.closingTime - Math.floor(+moment.utc() / 1000);
+        const reportTime = i.reportTime - i.closingTime;
+        const disputeTime = i.disputeTime - i.reportTime;
+        this.createMarket(i.fee, i.source, closingTime, reportTime, disputeTime, i.offchain);
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
   async createMarket(fee, source, closingWindow, reportWindow, disputeWindow, offchain) {
     console.log(fee, source, closingWindow, reportWindow, disputeWindow, offchain);
     const chainId = getChainIdDefaultWallet();
@@ -389,7 +404,7 @@ export class BetHandshakeHandler {
     let result = '';
     const offchainString = `cryptosign_createMarket${offchain}`;
     try {
-      result = await bettinghandshake.createMarket(fee, source, closingWindow, reportWindow, disputeWindow, offchain);
+      result = await bettinghandshake.createMarket(fee, source, closingWindow, reportWindow, disputeWindow, offchainString);
       const { logs, hash, error, transactionHash, payload } = result;
 
       logJson = payload;
@@ -408,6 +423,7 @@ export class BetHandshakeHandler {
     } catch (err) {
       realBlockHash = '-1';
       logJson = err.message;
+      console.error(err);
     }
     this.saveTransaction(offchainString, CONTRACT_METHOD.CREATE_MARKET, chainId, realBlockHash, contractAddress, logJson);
     return result;

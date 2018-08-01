@@ -4,7 +4,7 @@ import { API_URL } from '@/constants';
 import { loadMatches } from './action';
 import { eventSelector } from './selector';
 
-function* handleLoadMachesSaga({ cache = true }) {
+export function* handleLoadMatches({ cache = true }) {
   try {
     if (cache) {
       const events = yield select(eventSelector);
@@ -26,5 +26,5 @@ function* handleLoadMachesSaga({ cache = true }) {
 
 
 export default function* predictionSaga() {
-  yield takeLatest(loadMatches().type, handleLoadMachesSaga);
+  yield takeLatest(loadMatches().type, handleLoadMatches);
 }
