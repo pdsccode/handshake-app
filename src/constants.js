@@ -520,6 +520,7 @@ export const URL = {
   PRODUCT_HIVEPAY_ONLINE_URL: '/pay-for-devs',
   RESEARCH_INTERNET_CASH_URL: '/internet-cash',
   PRODUCT_DAD_URL: '/dad',
+  PRODUCT_DAD_URL_SUBDOMAIN: 'https://dad.ninja.org/',
   RESEARCH_UNCOMMONS_URL: '/uncommons',
   PRODUCT_WHISPER_URL: '/whisper',
 

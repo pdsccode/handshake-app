@@ -230,7 +230,7 @@ class BetingShakeFree extends React.Component {
         callBack: () => {
         },
       });
-      this.props.onCreateBetSuccess();
+      //this.props.onCreateBetSuccess();
       // send ga event
       try {
         const { matchName, matchOutcome } = this.props;
@@ -281,6 +281,7 @@ class BetingShakeFree extends React.Component {
               id={id}
               type={type}
               value={id === 'odds' ? oddValue : amountValue}
+              autoComplete="off"
               {...newProps}
               onChange={(evt) => {
                 if (id === 'odds') {
