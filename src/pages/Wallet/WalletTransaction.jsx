@@ -41,10 +41,12 @@ class WalletTransaction extends React.Component {
       if(wallet.name == "ETH"){
         let gas_gwei = 0, gas_price = 0, tx_fee = 0, status = "";
         try{
-
           if(data.gasPrice){
             gas_gwei = Number(data.gasPrice) / 1000000000;
-            gas_price = Number(gas_gwei / 1000000000).toFixed(10- gas_gwei.toString().length);
+            if(10- gas_gwei.toFixed(0).length >= 0)
+              gas_price = Number(gas_gwei / 1000000000).toFixed(10- gas_gwei.toFixed(0).length);
+            else
+              gas_price = Number(gas_gwei / 1000000000);
             tx_fee = Number(Number(data.gasUsed) * gas_gwei / 1000000000);
           }
 
@@ -61,6 +63,8 @@ class WalletTransaction extends React.Component {
               }
             }
           }
+
+
 
           result = {
             header: {
@@ -167,8 +171,6 @@ class WalletTransaction extends React.Component {
     else if (detail && detail.header && detail.header.is_sent == 3) {
       icon = iconCreate;
     }
-
-
 
     return detail ?
     (
