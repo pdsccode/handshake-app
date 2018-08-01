@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import $http from '@/services/api';
 import Helper from '@/services/helper';
 import { showAlert } from '@/reducers/app/action';
-import GA from '@/services/googleAnalytics';
+// import GA from '@/services/googleAnalytics';
 
 // style
 import CopyLink from '@/assets/images/share/link.svg';
@@ -61,7 +61,19 @@ class ShareSocial extends PureComponent {
   constructor(props) {
     super(props);
     this.clickShare = ::this.clickShare;
-  }
+  //   this.socialList = [{
+  //     img: 'https://d2q7nqismduvva.cloudfront.net/static/images/icon-svg/common/share/facebook.svg',
+  //     title: 'FACEBOOK',
+  //   }, {
+  //     img: 'https://d2q7nqismduvva.cloudfront.net/static/images/icon-svg/common/share/twitter.svg',
+  //     title: 'TWITTER',
+  //   },
+  //   {
+  //     img: 'https://d2q7nqismduvva.cloudfront.net/static/images/icon-svg/common/share/linkedin.svg',
+  //     title: 'LINKEDIN',
+  //   },
+  //   ];
+  // }
 
   converToShortLink(longUrl) {
     const url = `https://www.googleapis.com/urlshortener/v1/url?key=${process.env.GOOGLE_API_KEY}`;
@@ -78,12 +90,12 @@ class ShareSocial extends PureComponent {
     let shortLink = shareUrl;
 
     // Send GA
-    GA.createShareButton({
-      category: sharePage,
-      title,
-      shareType,
-      shareUrl,
-    });
+    // GA.createShareButton({
+    //   category: sharePage,
+    //   title,
+    //   shareType,
+    //   shareUrl,
+    // });
 
     switch (shareType) {
       case 'TWITTER':
@@ -96,6 +108,10 @@ class ShareSocial extends PureComponent {
           }
         }
         rawUrlShare = `http://twitter.com/intent/tweet?status=${title}+${shortLink}`;
+        break;
+
+      case 'LINKEDIN':
+        rawUrlShare = `https://www.linkedin.com/shareArticle?mini=true&url=${shortLink}&summary=${title}&source=LinkedIn`;
         break;
       case 'COPY':
         // copy to clip board

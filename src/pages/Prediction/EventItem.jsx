@@ -7,6 +7,7 @@ import commentIcon from '@/assets/images/icon/comment.svg';
 import { URL } from '@/constants';
 import { formatAmount } from '@/utils/number';
 import OutcomeList from './OutcomeList';
+import GA from '@/services/googleAnalytics';
 
 function renderEventName(event) {
   return (
@@ -25,12 +26,12 @@ function renderEventNumberOfPlayers(event) {
   );
 }
 
-function renderEvenTimeLeft(event) {
+function renderEvenTimeLeft(event, onCountdownComplete) {
   return (
     <div className="EventTimeLeft">
       <span className="EventTimeLeftText">Time left</span>
       <span className="EventTimeLeftValue">
-        <Countdown endTime={event.date} />
+        <Countdown endTime={event.date} onComplete={onCountdownComplete} />
       </span>
     </div>
   );
@@ -49,7 +50,11 @@ function renderEventTotalBets(event) {
 function renderEventMessages(event) {
   const commentLink = `${URL.COMMENTS_BY_SHAKE_INDEX}?objectId=event_${event.id}`;
   return (
-    <Link className="EventMessage" to={commentLink}>
+    <Link className="EventMessage" to={commentLink}
+      onClick={() => {
+        GA.clickComment(event.name);
+      }}
+    >
       <span className="EventMessageIcon"><Image src={commentIcon} /></span>
       <div className="EventMessageText">Comments</div>
     </Link>
@@ -62,7 +67,7 @@ function renderOutcomeList(event, onClickOutcome) {
   );
 }
 
-function renderDetails(event) {
+function renderDetails({ event, onClickOutcome, onCountdownComplete }) {
   return (
     <div className="EventDetails">
       <div className="EvenFirstGroup">
@@ -88,10 +93,12 @@ function EventItem({ event, onClickOutcome }) {
 EventItem.propTypes = {
   event: PropTypes.object.isRequired,
   onClickOutcome: PropTypes.func,
+  onCountdownComplete: PropTypes.func,
 };
 
 EventItem.defaultProps = {
   onClickOutcome: undefined,
+  onCountdownComplete: undefined,
 };
 
 export default EventItem;

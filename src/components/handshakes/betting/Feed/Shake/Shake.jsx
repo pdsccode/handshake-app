@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import { shakeItem, initHandshake } from '@/reducers/handshake/action';
 import { HANDSHAKE_ID, API_URL } from '@/constants';
 import GA from '@/services/googleAnalytics';
+import { SIDE } from '@/components/handshakes/betting/constants.js';
 
 // components
 import { showAlert } from '@/reducers/app/action';
@@ -89,9 +90,15 @@ class BetingShake extends React.Component {
 
 
     // send event tracking
-    try {
-      GA.clickGoButton(matchName, matchOutcome, side);
-    } catch (err) { }
+    // try {
+    //   GA.clickGoButton(matchName, matchOutcome, side);
+    // } catch (err) { }
+
+    if (side === SIDE.SUPPORT) {
+      GA.clickPlaceSupportOrder(matchOutcome);
+    } else {
+      GA.clickPlaceOpposeOrder(matchOutcome);
+    }
 
     const validate = await validateBet(amount, odds, closingDate, matchName, matchOutcome);
     const { status, message } = validate;
@@ -264,6 +271,7 @@ class BetingShake extends React.Component {
               id={id}
               type={type}
               value={id === "odds" ? oddValue : amountValue}
+              autoComplete="off"
               {...newProps}
               onChange={(evt) => {
                 if (id === 'odds') {

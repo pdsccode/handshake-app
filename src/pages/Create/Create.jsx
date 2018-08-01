@@ -11,7 +11,8 @@ import Loading from '@/components/core/presentation/Loading';
 import Dropdown from '@/components/core/controls/Dropdown';
 
 import './Create.scss';
-
+import Image from '@/components/core/presentation/Image';
+import loadingSVG from '@/assets/images/icon/loading.gif';
 //
 const CreatePromise = props => (
   <DynamicImport
@@ -128,6 +129,7 @@ class Create extends React.Component {
     }
     this.state = {
       seletedId,
+      isLoading: false,
       isBannedCash: this.props.isBannedCash,
       isBannedPrediction: this.props.isBannedPrediction,
       isBannedChecked: this.props.isBannedChecked,
@@ -189,34 +191,43 @@ class Create extends React.Component {
     this.setState({ seletedId: id });
   }
 
+  setLoading = (loadingState) => {
+    this.setState({ isLoading: loadingState });
+  }
+
   render() {
     const { seletedId } = this.state;
     const CreateComponent = maps[seletedId];
     // console.log('create page - render - seletedId', seletedId);
     return (
-      <Grid className="create-page">
-        <Row>
-          <Col md={12}>
-            <Dropdown
-              placeholder="Select an mission"
-              defaultId={seletedId}
-              source={this.handshakeList}
-              onItemSelected={this.handshakeChange}
-              hasSearch
-            />
-            {/* <SearchBar
-              suggestions={this.handshakeList}
-              onSuggestionSelected={this.handshakeChange}
-              inputSearchDefault={HANDSHAKE_NAME[seletedId].name}
-            /> */}
-          </Col>
-        </Row>
-        <Row>
-          <Col md={12}>
-            <CreateComponent {...this.props} />
-          </Col>
-        </Row>
-      </Grid>
+      <React.Fragment>
+        <div className={`discover-overlay ${this.state.isLoading ? 'show' : ''}`}>
+          <Image src={loadingSVG} alt="loading" width="100" />
+        </div>
+        <Grid className="create-page">
+          <Row>
+            <Col md={12}>
+              <Dropdown
+                placeholder="Select an mission"
+                defaultId={seletedId}
+                source={this.handshakeList}
+                onItemSelected={this.handshakeChange}
+                hasSearch
+              />
+              {/* <SearchBar
+                suggestions={this.handshakeList}
+                onSuggestionSelected={this.handshakeChange}
+                inputSearchDefault={HANDSHAKE_NAME[seletedId].name}
+              /> */}
+            </Col>
+          </Row>
+          <Row>
+            <Col md={12}>
+              <CreateComponent {...this.props} setLoading={this.setLoading} />
+            </Col>
+          </Row>
+        </Grid>
+      </React.Fragment>
     );
   }
 }

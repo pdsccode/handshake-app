@@ -108,11 +108,16 @@ class Prediction extends React.Component {
 
     // send event tracking
     try {
-      GA.clickChooseAnEvent(event.name, itemData.name);
+      GA.clickChooseAnOutcome(event.name, itemData.name);
     } catch (err) {
       console.error(err);
     }
   };
+
+  onCountdownComplete = () => {
+    this.props.dispatch(loadMatches());
+    this.closeOrderPlace();
+  }
 
   renderEventList = (props) => {
     if (!props.eventList || !props.eventList.length) return null;
@@ -134,7 +139,11 @@ class Prediction extends React.Component {
 
   renderShareToWin = () => {
     return (
-      <div className="ShareToWin">
+      <div className="ShareToWin"
+        onClick={() => {
+          GA.clickBannerWin();
+        }}
+      >
         <div className="ShareToWinTitle">
           PLAY TO <span>WIN 10 ETH</span>
         </div>
@@ -144,11 +153,11 @@ class Prediction extends React.Component {
 
   renderBetMode = (props, state) => {
     return (
-      <ModalDialog close onRef={(modal) => { this.modalOrderPlace = modal; }}>
+      <ModalDialog close={true} onRef={(modal) => { this.modalOrderPlace = modal; }}>
         <BetMode
           selectedOutcome={state.selectedOutcome}
           selectedMatch={state.selectedMatch}
-          openPopup={(click) => { this.openOrderPlace = click; }}
+          openPopup={(click) => { this.openOrderPlace = click }}
           onSubmitClick={(isFree) => {
             this.closeOrderPlace();
             isFree ? this.modalLuckyFree.open() : this.modalLuckyReal.open();
@@ -169,10 +178,10 @@ class Prediction extends React.Component {
         {this.renderEventList(props)}
         {this.renderBetMode(props, state)}
         <ModalDialog onRef={(modal) => { this.modalLuckyReal = modal; }}>
-          <LuckyReal onButtonClick={() => this.modalLuckyReal.close()} />
+          <LuckyReal onButtonClick={() => this.modalLuckyReal.close() } />
         </ModalDialog>
         <ModalDialog onRef={(modal) => { this.modalLuckyFree = modal; }}>
-          <LuckyFree onButtonClick={() => this.modalLuckyFree.close()} />
+          <LuckyFree onButtonClick={() => this.modalLuckyFree.close() } />
         </ModalDialog>
         <ModalDialog className="modal" onRef={(modal) => { this.modalLuckyPoolRef = modal; return null; }}>
           <LuckyLanding onButtonClick={() => {

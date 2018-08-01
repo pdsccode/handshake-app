@@ -1,0 +1,14 @@
+.job-detail {
+  a {
+    color: #484848;
+    &:hover {
+      text-decoration: none;
+    }
+  }
+  .jd-name {
+    font-weight: 300;
+    font-size: 36px;
+    line-height: 40px;
+    color: #333;
+  }
+}

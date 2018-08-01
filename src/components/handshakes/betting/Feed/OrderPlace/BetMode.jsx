@@ -52,8 +52,13 @@ class BetMode extends React.Component {
 
   afterTabChanges = (tab) => {
     const tabType = tab.toLowerCase();
-    // Event tracking
-    GA.clickChooseAMode(tabType);
+    console.log('BETMODE', tabType);
+    const { selectedOutcome } = this.props;
+    if (tabType === 'paid bet') {
+      GA.clickPaid(selectedOutcome.value);
+    } else {
+      GA.clickFree(selectedOutcome.value);
+    }
   }
   async openPopup(selectedOutcome) {
     this.setState({
@@ -88,12 +93,15 @@ class BetMode extends React.Component {
   }
 
   async checkShowFreeBanner() {
+    /*
     const balance = await getBalance();
     console.log(TAG, 'checkShowFreeBanner', balance, typeof balance);
     if (balance === '0') {
       // Call API check if show free
       this.callCheckFirstFree();
     }
+    */
+    this.callCheckFirstFree();
   }
   renderTab(props) {
     return (

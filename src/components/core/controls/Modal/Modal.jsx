@@ -28,15 +28,17 @@ class Modal extends React.Component {
 
   close() {
     this.modalRef && this.modalRef.classList.remove('modal-custom-show');
-    if (this.props.hasOwnProperty('onClose')) this.props.onClose();    
+    if (this.props.hasOwnProperty('onClose')) this.props.onClose();
   }
 
   render() {
-    const { title, children } = this.props;
+    const { title, children, hideBackButton } = this.props;
     return (
       <div className="modal" ref={modal => this.modalRef = modal}>
         <div className="modal-custom-header">
-          <Image src={BackChevronSVG} onClick={this.close} alt="back"/>
+          {
+            !hideBackButton && <Image src={BackChevronSVG} onClick={this.close} alt="back"/>
+          }
           {
             title && (<p className="modal-custom-title">{title}</p>)
           }
@@ -53,7 +55,8 @@ Modal.propTypes = {
   title: PropTypes.string,
   children: PropTypes.node.isRequired,
   onRef: PropTypes.func,
-  onClose: PropTypes.func
+  onClose: PropTypes.func,
+  hideBackButton: PropTypes.bool,
 };
 
 export default Modal;

@@ -104,9 +104,15 @@ class BetingShakeFree extends React.Component {
     const odds = parseBigNumber(oddValue);
     // send event tracking
     const side = this.toggleRef.value;
-    try {
-      GA.clickGoButton(matchName, matchOutcome, side);
-    } catch (err) { }
+    // try {
+    //   GA.clickGoButton(matchName, matchOutcome, side);
+    // } catch (err) { }
+
+    if (side === SIDE.SUPPORT) {
+      GA.clickPlaceSupportOrder(matchOutcome);
+    } else {
+      GA.clickPlaceOpposeOrder(matchOutcome);
+    }
 
     const validate = await validateBet(amountBN, odds, closingDate, matchName, matchOutcome, true);
     const { status, message } = validate;
@@ -128,7 +134,7 @@ class BetingShakeFree extends React.Component {
   }
 
   onToggleChange(id) {
-    const { marketAgainstOdds, marketSupportOdds } = this.props;
+    const { marketAgainstOdds, marketSupportOdds, matchOutcome } = this.props;
     const side = this.toggleRef.value;
     const marketOdds = side === SIDE.SUPPORT ? marketSupportOdds : marketAgainstOdds;
     const tabSide = getKeyByValue(SIDE, side);
@@ -142,7 +148,13 @@ class BetingShakeFree extends React.Component {
     }, () => this.updateTotal());
 
     // Event tracking
-    GA.clickChooseASide(id);
+    //GA.clickChooseASide(id);
+    if (side === SIDE.SUPPORT) {
+      GA.clickSupport(matchOutcome);
+    } else {
+      GA.clickOppose(matchOutcome);
+    }
+
   }
 
   updateDefautValues() {
@@ -269,6 +281,7 @@ class BetingShakeFree extends React.Component {
               id={id}
               type={type}
               value={id === 'odds' ? oddValue : amountValue}
+              autoComplete="off"
               {...newProps}
               onChange={(evt) => {
                 if (id === 'odds') {
@@ -328,9 +341,9 @@ class BetingShakeFree extends React.Component {
           <div>Possible winnings</div>
           <div className="possibleWinningsValue">{winValue}</div>
         </div>
-        <div className="rowWrapper">
+        {/*<div className="rowWrapper">
           <div className="possibleWinningsValue">{estimateGas}</div>
-        </div>
+    </div>*/}
         <Button type="submit" disabled={disable} block className={buttonClass}>
           Place {sideText} Order
         </Button>
