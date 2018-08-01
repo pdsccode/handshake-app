@@ -10,7 +10,7 @@ import LuckyLanding from '@/pages/LuckyLanding/LuckyLanding';
 import GA from '@/services/googleAnalytics';
 import LuckyFree from '@/components/handshakes/betting/LuckyPool/LuckyFree/LuckyFree';
 import { strToInt } from '@/utils/string';
-
+import { isEmpty } from '@/utils/object';
 import { eventSelector, isLoading, showedLuckyPoolSelector, queryStringSelector } from './selector';
 import { loadMatches, updateShowedLuckyPool } from './action';
 import EventItem from './EventItem';
@@ -45,8 +45,9 @@ class Prediction extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     const { queryString } = this.props;
+    const { eventList } = nextProps;
     const params = qs.parse(queryString);
-    if (nextProps.eventList && params) {
+    if (eventList.length && isEmpty(params)) {
       this.initializeEventItem(nextProps, params);
     }
   }
