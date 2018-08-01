@@ -324,9 +324,10 @@ submitSendCoin=()=>{
 
         this.setState({isRestoreLoading: false});
         if (success.hasOwnProperty('status')){
-          if (success.status == 1){
+          if (success.status == 1){            
             this.showSuccess(this.getMessage(success.message));
             this.onFinish();
+            MasterWallet.NotifyUserTransfer(this.state.walletSelected.address, this.state.inputAddressAmountValue);
             // start cron get balance auto ...
             // todo hanlde it ...
           }

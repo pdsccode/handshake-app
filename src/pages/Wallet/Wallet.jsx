@@ -711,8 +711,7 @@ class Wallet extends React.Component {
 
   onAddressClick = (wallet) => {
     this.setState({walletSelected: wallet, activeReceive: true}, ()=>{
-      this.modalShareAddressRef.open();
-      MasterWallet.NotifyUserTransfer();
+      this.modalShareAddressRef.open();      
     });
   }
 

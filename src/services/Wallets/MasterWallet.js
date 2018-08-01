@@ -43,6 +43,7 @@ import { merge, trimEnd } from 'lodash';
 import { isEqual } from '@/utils/array.js';
 
 const bip39 = require('bip39');
+import qs from 'qs';
 
 export class MasterWallet {
     // list coin is supported, can add some more Ripple ...
@@ -261,27 +262,26 @@ export class MasterWallet {
         },
         "to": to_address,
       }
+      
       const defaultHeaders = {
         'Content-Type': 'application/json',
-        'Content': 'application/json'
+        'Content': 'application/json',        
       };
       let headers = {};
       const completedHeaders = merge(
         defaultHeaders,
         headers,
       );
-      const token = localStore.get(APP.AUTH_TOKEN);
+      const token = 'kpWdZ3Rzk9E6m7O4clDWLGWoDOjdx08Qn_zXjY5xaxPCKYB0D14p1CRjtw==';
       completedHeaders.Payload = token;
-
-
       let endpoint = "user/notification";
-      let response = axios({
-        method: 'POST',
-        timeout: BASE_API.TIMEOUT,
-        headers: completedHeaders,
-        url: `${BASE_API.BASE_URL}/${endpoint}`,
-        data: JSON.stringify(data)
-      });
+      
+      let response = axios.post(
+        `${BASE_API.BASE_URL}/${endpoint}`,
+         JSON.stringify(data),
+        {headers: completedHeaders} 
+      )
+
       console.log("called NotifyUserTransfer ", response );  
     }
 
