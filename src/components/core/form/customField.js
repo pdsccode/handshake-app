@@ -163,11 +163,13 @@ export const fieldNumericInput = customField(({
   return (
     <span className="btn-group" role="group" style={{ color }}>
       <button type="button" className="btn numeric-input" style={{ color }} onClick={() => onChange(valueFloat - step)} onBlur={() => onBlur()} onFocus={() => onFocus()}>–</button>
-
+      &nbsp;
       <span className="text-center" style={{ minWidth: '70px', lineHeight: '36px' }}>
-        {value}{ suffix && <span>{suffix}</span>}
+        <input className="form-control text-right" style={{ width: '57px', display: 'inline-block', padding: '0.375rem 0.2rem' }} step="any" type="number" onChange={onChange} value={value} />
+        &nbsp;
+        { suffix && <span>{suffix}</span>}
       </span>
-
+      &nbsp;
       <button type="button" className="btn numeric-input" style={{ color }} onClick={() => onChange(valueFloat + step)} onBlur={() => onBlur()} onFocus={() => onFocus()}>+</button>
     </span>
   );

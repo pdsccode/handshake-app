@@ -6,6 +6,7 @@ import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl'
 import { setLanguage } from '@/reducers/app/action';
 // import VideoYoutube from '@/components/core/controls/VideoYoutube';
 import { Link } from 'react-router-dom';
+import BrowserDetect from '@/services/browser-detect';
 
 // style
 import imgNinja from '@/assets/images/ninja/ninja-header-black.svg';
@@ -28,42 +29,50 @@ import LandingWrapper from '@/components/LandingWrapper';
 
 const products = [
   {
+    name: 'cash',
     title: <FormattedMessage id="landing_page.products.cash.title" />,
     subTitle: <FormattedMessage id="landing_page.products.cash.subTitle" />,
     img: imgCash,
     to: URL.PRODUCT_CASH_URL,
   },
   {
+    name: 'prediction',
     title: <FormattedMessage id="landing_page.products.prediction.title" />,
     subTitle: <FormattedMessage id="landing_page.products.prediction.subTitle" />,
     img: imgPrediction,
     to: URL.PRODUCT_PREDICTION_URL,
   },
   {
+    name: 'dad',
     title: <FormattedMessage id="landing_page.products.dad.title" />,
     subTitle: <FormattedMessage id="landing_page.products.dad.subTitle" />,
     img: imgDad,
-    to: URL.PRODUCT_DAD_URL
+    to: URL.PRODUCT_DAD_URL,
+    toSubDomain: URL.PRODUCT_DAD_URL_SUBDOMAIN,
   },
   {
+    name: 'wallet',
     title: <FormattedMessage id="landing_page.products.wallet.title" />,
     subTitle: <FormattedMessage id="landing_page.products.wallet.subTitle" />,
     img: imgWallet,
     to: URL.PRODUCT_WALLET_URL
   },
   {
+    name: 'whisper',
     title: <FormattedMessage id="landing_page.products.whisper.title" />,
     subTitle: <FormattedMessage id="landing_page.products.whisper.subTitle" />,
     img: imgWhisper,
     to: URL.PRODUCT_WHISPER_URL,
   },
   {
+    name: 'hivepay-online',
     title: <FormattedMessage id="landing_page.products.hivepay-online.title" />,
     subTitle: <FormattedMessage id="landing_page.products.hivepay-online.subTitle" />,
     img: imgHivepayOnline,
     to: URL.PRODUCT_HIVEPAY_ONLINE_URL,
   },
   {
+    name: 'hivepay-offline',
     title: <FormattedMessage id="landing_page.products.hivepay-offline.title" />,
     subTitle: <FormattedMessage id="landing_page.products.hivepay-offline.subTitle" />,
     img: imgHivepayOffline,
@@ -131,14 +140,23 @@ class Main extends React.PureComponent {
               <div className="row" style={{ marginTop: '18px' }}>
                 {
                   products.map((product, index) => {
-                    const { title, subTitle, img, to } = product
+                    const { title, subTitle, img, to, toSubDomain, name } = product
+
+                    const content = (
+                      <div>
+                        <div><img src={img} className="img-fluid" /></div>
+                        <div className="landing-title my-1">{title}</div>
+                        <div className="landing-sub-title">{subTitle}</div>
+                      </div>
+                    )
+                    let element = React.cloneElement(<Link to="" />, { to }, content)
+                    if (name === 'dad' && !BrowserDetect.isDesktop) {
+                      element = React.createElement('a', { href: toSubDomain }, content)
+                    }
+
                     return (
                       <div className="col-12 col-sm-6 col-md-4 product" key={index}>
-                        <Link to={to}>
-                          <div><img src={img} className="img-fluid" /></div>
-                          <div className="landing-title my-1">{title}</div>
-                          <div className="landing-sub-title">{subTitle}</div>
-                        </Link>
+                        {element}
                       </div>
                     )
                   })
