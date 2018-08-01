@@ -596,7 +596,7 @@ class FeedBetting extends React.Component {
 
     return (
       <div className="bottomDiv">
-        {status === BET_BLOCKCHAIN_STATUS.STATUS_DISPUTED && this.renderProgressBar(itemInfo)}
+        {status === BET_BLOCKCHAIN_STATUS.STATUS_USER_DISPUTED && this.renderProgressBar(itemInfo)}
         <div className="bottomStatus">
           {this.renderStatus()}
           {this.renderButton(buttonClassName)}

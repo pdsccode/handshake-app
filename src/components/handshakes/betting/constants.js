@@ -43,6 +43,8 @@ export const BET_TYPE = {
 };
 export const BETTING_RESULT = {
   INITED: -1,
+  DISPUTE_PENDING: -4,
+  DISPUTED: -3,
   DRAW: 3,
   SUPPORT_WIN: 1,
   AGAINST_WIN: 2,

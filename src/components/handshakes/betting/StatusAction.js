@@ -55,7 +55,7 @@ export const getStatusLabel = (item) => {
     || status === BET_BLOCKCHAIN_STATUS.STATUS_REFUND_PENDING
     || status === BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_PENDING
     || status === BET_BLOCKCHAIN_STATUS.STATUS_USER_DISPUTED
-    || status === BET_BLOCKCHAIN_STATUS.STATUS_DISPUTE_PENDING){
+    || status === BET_BLOCKCHAIN_STATUS.STATUS_DISPUTE_PENDING) {
       //PENDING ACTION
       return pendingAction(status);
 
@@ -77,7 +77,7 @@ export const getStatusLabel = (item) => {
   }
 
   if (matched
-    && result > BETTING_RESULT.INITED
+    && (result > BETTING_RESULT.INITED || result < BETTING_RESULT.DISPUTED)
     && !isExpiredDate(disputeTime)) {
     return disputeAction(result, side);
   }
