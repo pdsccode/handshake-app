@@ -1,15 +1,16 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { loadMatches } from '@/reducers/betting/action';
-import BettingReport from '@/components/handshakes/betting-event/BettingReport';
 import { API_URL } from '@/constants';
 import Login from '@/components/handshakes/betting-event/Login';
 
-import './Admin.scss';
+import BettingReport from '@/components/handshakes/betting-event/BettingReport';
 
-const TAG = 'ADMIN';
-class Admin extends React.Component {
+import './Resolve.scss';
 
+const TAG = 'RESOLVE';
+
+class Resolve extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -33,6 +34,9 @@ class Admin extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { matches, login } = nextProps;
     const newLogin = login === true ? login : this.state.login;
+    if (login && login !== this.state.login) {
+      this.fetchMatches();
+    }
     this.setState({
       login: newLogin,
       matches,
@@ -56,24 +60,23 @@ class Admin extends React.Component {
       headers: { Authorization: `Bearer ${tokenValue}`, 'Content-Type': 'application/json' },
     });
   }
-
-
   render() {
     const { matches, login } = this.state;
     return (!login ?
       <Login /> :
-      <BettingReport matches={matches} />
+      <BettingReport matches={matches} resolved />
     );
   }
 }
+
 
 const mapState = state => ({
   matches: state.betting.matches,
   login: state.admin.login,
 });
-
 const mapDispatch = ({
   loadMatches,
 });
 
-export default connect(mapState, mapDispatch)(Admin);
+
+export default connect(mapState, mapDispatch)(Resolve);

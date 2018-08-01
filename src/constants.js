@@ -177,10 +177,12 @@ export const SELL_PRICE_TYPE_DEFAULT = 'fix';
 // path
 export const API_URL = {
   CRYPTOSIGN: {
+    ADMIN_AUTH: '/cryptosign/auth',
     INIT_HANDSHAKE: 'cryptosign/handshake/init',
     INIT_HANDSHAKE_FREE: 'cryptosign/handshake/create_free_bet',
     SHAKE: 'cryptosign/handshake/shake',
     LOAD_MATCHES: 'cryptosign/match',
+    MATCHES_REPORT: 'cryptosign/match/list/report',
     LOAD_HANDSHAKES: 'cryptosign/handshake',
     CHECK_FREE_AVAILABLE: 'cryptosign/handshake/check_free_bet',
     UNINIT_HANDSHAKE: 'cryptosign/handshake/uninit',
@@ -467,6 +469,7 @@ export const URL = {
 
   ADMIN: '/admin',
   REPORT: '/report',
+  RESOLVE: '/resolve',
   LUCKY_POOL: '/lucky',
   HANDSHAKE_ME: '/me',
   HANDSHAKE_ME_INDEX: '/me',
