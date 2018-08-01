@@ -73,7 +73,7 @@ class ShareSocial extends PureComponent {
   //     title: 'LINKEDIN',
   //   },
   //   ];
-  // }
+  }
 
   converToShortLink(longUrl) {
     const url = `https://www.googleapis.com/urlshortener/v1/url?key=${process.env.GOOGLE_API_KEY}`;
