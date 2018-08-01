@@ -86,7 +86,7 @@ class FeedMeCash extends React.PureComponent {
       statusText, message,
       cashTitle, coinTitle,
       isCreditCard,
-      showChat, chatUsername,
+      showInfo, showChat, chatUsername,
       nameShop,
       address, messageMovingCoin,
       actionButtons,
@@ -129,24 +129,26 @@ class FeedMeCash extends React.PureComponent {
           </div>
           <div className="d-table-cell align-middle address-info">
             <div className="name-shop">{nameShop}</div>
-            <div
+            {showInfo && (<div
               className="d-inline-block"
               // style={{ maxWidth: '120px' }}
             >
               {address}
-            </div>
+            </div>)
+            }
           </div>
-          <div
+          {showInfo && (<div
             className="d-table-cell text-right align-middle"
-            style={{ width: '35px' }}
+            style={{width: '35px'}}
           >
             <span
               className="d-inline-block p-0"
               onClick={this.handleClickMoreInfo}
             >
-              <img src={iconInfo} width="35px" />
+              <img src={iconInfo} width="35px"/>
             </span>
-          </div>
+          </div>)
+          }
 
           {
             !isCreditCard && showChat && (

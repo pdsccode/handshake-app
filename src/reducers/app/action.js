@@ -288,6 +288,32 @@ export const getUserLocation = ({ successFn, errorFn }) => (dispatch) => {
   });
 };
 
+function processGPS(ipInfo, dispatch) {
+// get currency base on GPS
+  navigator.geolocation.getCurrentPosition((location) => {
+    const {coords: {latitude, longitude}} = location;
+    ipInfo.latitude = latitude;
+    ipInfo.longitude = longitude;
+    console.log(`------------GPS-------------${latitude}`);
+
+    axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&sensor=true`).then((response) => {
+      if (response.data.results[0] && response.data.results[0].address_components) {
+        const country = getCountry(response.data.results[0].address_components);
+
+        ipInfo.addressDefault = response.data.results[0].formatted_address;
+
+        if (country && Country[country]) {
+          ipInfo.currency = Country[country];
+          console.log(`------------GPS-------------${ipInfo.currency}`);
+        }
+      }
+      dispatch(setIpInfo(ipInfo));
+    });
+  }, () => {
+    // console.log('zon')// fallback
+  });
+}
+
 // |-- init
 export const initApp = (language, ref) => (dispatch) => {
   $http({
@@ -298,69 +324,52 @@ export const initApp = (language, ref) => (dispatch) => {
     const ipInfo = IpInfo.ipInfo(data);
 
     // show popup to get GPS permission
-    if (!BrowserDetect.isDesktop && !local.get(APP.ALLOW_LOCATION_ACCESS)) {
-      dispatch(updateModal({
-        show: true,
-        title: null,
-        body: (
-          <div>
-            <div className="d-table w-100">
-              <div className="d-table-cell pr-2 align-top">
-                <span className="icon-location" style={{ fontSize: '42px' }} />
+    if (!BrowserDetect.isDesktop) {
+      if (!local.get(APP.ALLOW_LOCATION_ACCESS)) {
+
+        dispatch(updateModal({
+          show: true,
+          title: null,
+          body: (
+            <div>
+              <div className="d-table w-100">
+                <div className="d-table-cell pr-2 align-top">
+                  <span className="icon-location" style={{ fontSize: '42px' }} />
+                </div>
+                <div className="d-table-cell align-top">
+                  <div><FormattedHTMLMessage id="askLocationPermission.label.1" /></div>
+                  <div className="mt-1"><FormattedHTMLMessage id="askLocationPermission.label.2" /></div>
+                </div>
               </div>
-              <div className="d-table-cell align-top">
-                <div><FormattedHTMLMessage id="askLocationPermission.label.1" /></div>
-                <div className="mt-1"><FormattedHTMLMessage id="askLocationPermission.label.2" /></div>
+              <div className="mt-3 float-right">
+                <button
+                  className="btn btn-outline-primary"
+                  onClick={() => {
+                    local.save(APP.ALLOW_LOCATION_ACCESS, 'deny');
+                    dispatch(updateModal({ show: false }));
+                  }}
+                >
+                  <FormattedMessage id="askLocationPermission.btn.dontAllow" />
+                </button>
+                <button
+                  className="ml-2 btn btn-primary"
+                  style={{ minWidth: '123px' }}
+                  onClick={() => {
+                    local.save(APP.ALLOW_LOCATION_ACCESS, 'allow');
+                    dispatch(updateModal({ show: false }));
+
+                    processGPS(ipInfo, dispatch);
+                  }}
+                >
+                  <FormattedMessage id="askLocationPermission.btn.allow" />
+                </button>
               </div>
             </div>
-            <div className="mt-3 float-right">
-              <button
-                className="btn btn-outline-primary"
-                onClick={() => {
-                  local.save(APP.ALLOW_LOCATION_ACCESS, 'deny');
-                  dispatch(updateModal({ show: false }));
-                }}
-              >
-                <FormattedMessage id="askLocationPermission.btn.dontAllow" />
-              </button>
-              <button
-                className="ml-2 btn btn-primary"
-                style={{ minWidth: '123px' }}
-                onClick={() => {
-                  local.save(APP.ALLOW_LOCATION_ACCESS, 'allow');
-                  dispatch(updateModal({ show: false }));
-
-                  // get currency base on GPS
-                  navigator.geolocation.getCurrentPosition((location) => {
-                    const { coords: { latitude, longitude } } = location;
-                    ipInfo.latitude = latitude;
-                    ipInfo.longitude = longitude;
-                    console.log(`------------GPS-------------${latitude}`);
-
-                    axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&sensor=true`).then((response) => {
-                      if (response.data.results[0] && response.data.results[0].address_components) {
-                        const country = getCountry(response.data.results[0].address_components);
-
-                        ipInfo.addressDefault = response.data.results[0].formatted_address;
-
-                        if (country && Country[country]) {
-                          ipInfo.currency = Country[country];
-                          console.log(`------------GPS-------------${ipInfo.currency}`);
-                        }
-                      }
-                      dispatch(setIpInfo(ipInfo));
-                    });
-                  }, () => {
-                    // console.log('zon')// fallback
-                  });
-                }}
-              >
-                <FormattedMessage id="askLocationPermission.btn.allow" />
-              </button>
-            </div>
-          </div>
-        )
-      }))
+          )
+        }));
+      } else if (local.get(APP.ALLOW_LOCATION_ACCESS) === 'allow') {
+        processGPS(ipInfo, dispatch);
+      }
     }
 
     dispatch(setIpInfo(ipInfo));

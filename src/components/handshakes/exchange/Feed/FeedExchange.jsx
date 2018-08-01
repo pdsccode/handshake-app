@@ -433,7 +433,7 @@ class FeedExchange extends React.PureComponent {
     return coins;
   }
 
-  getNameShopDisplayed = () => {
+  getDisplayName = () => {
     const { username, itemFlags, items } = this.offer;
     if (username) {
       const wallet = new Ethereum();
@@ -481,7 +481,7 @@ class FeedExchange extends React.PureComponent {
 
     if (coins.length === 0) return null;
 
-    const address = this.getNameShopDisplayed();
+    const address = this.getDisplayName();
     const distance = this.getOfferDistance();
 
     return (
