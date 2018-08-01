@@ -140,15 +140,8 @@ class CreateEventForm extends Component {
     );
   }
 
-  addMoreOutcomes = (fields) => {
-    if (fields.getAll().every(i => Object.keys(i).length > 0)) {
-      fields.push({});
-    }
-  }
-
   renderOutComes = (props) => {
     const { fields, meta: { error }, isNew } = props;
-    console.log('meta', props.meta);
     const title = 'OUTCOME';
     const textNote = '2.0 : Bet 1 ETH, win 1 ETH. You can adjust these odds.';
     return (

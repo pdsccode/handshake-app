@@ -390,9 +390,7 @@ export class BetHandshakeHandler {
     const offchainString = `cryptosign_createMarket${offchain}`;
     try {
       result = await bettinghandshake.createMarket(fee, source, closingWindow, reportWindow, disputeWindow, offchain);
-      const {
-        logs, hash, error, transactionHash, payload,
-      } = result;
+      const { logs, hash, error, transactionHash, payload } = result;
 
       logJson = payload;
       realBlockHash = hash;
