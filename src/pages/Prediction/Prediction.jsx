@@ -47,7 +47,7 @@ class Prediction extends React.Component {
     const { queryString } = this.props;
     const params = qs.parse(queryString);
     if (nextProps.eventList && params) {
-      this.initializeEventItem(nextProps, params);
+      // this.initializeEventItem(nextProps, params);
     }
   }
 
@@ -56,7 +56,7 @@ class Prediction extends React.Component {
     this.closeOrderPlace();
   }
 
-  openOrderPlace(selectedOutcome) {
+  openOrderPlace = (selectedOutcome) => {
     this.openFilter(selectedOutcome);
     this.modalOrderPlace.open();
   }
@@ -79,7 +79,7 @@ class Prediction extends React.Component {
   initializeEventItem = (props, params) => {
     const { eventList } = props;
     const { match, out_come } = params;
-    const eventItem = eventList.find(event => (event.id === strToInt(match)));
+    const eventItem = eventList.find(event => (event.id === strToInt(match))) || {};
     const outcomeItem = eventItem.outcomes.find(outcome => (outcome.id === strToInt(out_come)));
     this.handleClickEventItem({ event: eventItem }, outcomeItem);
   }
@@ -139,7 +139,8 @@ class Prediction extends React.Component {
 
   renderShareToWin = () => {
     return (
-      <div className="ShareToWin"
+      <div
+        className="ShareToWin"
         onClick={() => {
           GA.clickBannerWin();
         }}

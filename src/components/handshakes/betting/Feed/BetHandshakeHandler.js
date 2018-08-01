@@ -383,13 +383,13 @@ export class BetHandshakeHandler {
     const bettinghandshake = new BettingHandshake(chainId);
     //const predictionhandshake = new PredictionHandshake(chainId);
 
-    const contractAddress = predictionhandshake.contractAddress;
+    const contractAddress = bettinghandshake.contractAddress;
     let realBlockHash = '';
     let logJson = '';
     let result = '';
     const offchainString = `cryptosign_createMarket${offchain}`;
     try {
-      result = await predictionhandshake.createMarket(fee, source, closingWindow, reportWindow, disputeWindow, offchain);
+      result = await bettinghandshake.createMarket(fee, source, closingWindow, reportWindow, disputeWindow, offchain);
       const {
         logs, hash, error, transactionHash, payload,
       } = result;
