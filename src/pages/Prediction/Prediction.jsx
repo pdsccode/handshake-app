@@ -47,7 +47,7 @@ class Prediction extends React.Component {
     const { queryString } = this.props;
     const params = qs.parse(queryString);
     if (nextProps.eventList && params) {
-      // this.initializeEventItem(nextProps, params);
+      this.initializeEventItem(nextProps, params);
     }
   }
 
@@ -113,11 +113,6 @@ class Prediction extends React.Component {
       console.error(err);
     }
   };
-
-  onCountdownComplete = () => {
-    this.props.dispatch(loadMatches());
-    this.closeOrderPlace();
-  }
 
   renderEventList = (props) => {
     if (!props.eventList || !props.eventList.length) return null;

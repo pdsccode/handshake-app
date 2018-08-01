@@ -1,7 +1,7 @@
 import { takeLatest, call, select } from 'redux-saga/effects';
 import { apiGet, apiPost } from '@/stores/api-saga';
 import { API_URL } from '@/constants';
-import { loadReports, addOutcomes, createNewEvent } from './action';
+import { loadReports, addOutcomes, createNewEvent, generateShareLink } from './action';
 import { reportSelector } from './selector';
 
 function* handleLoadReportsSaga({ cache = true }) {
@@ -48,8 +48,24 @@ function* handleCreateNewEventSaga(payload) {
   }
 }
 
+function* handleGenerateShareLinkSaga({ outcomeId, ...payload }) {
+  try {
+    return yield call(apiPost, {
+      PATH_URL: `${API_URL.CRYPTOSIGN.GENERATE_LINK}`,
+      type: 'GENERATE_SHARE_LINK',
+      data: {
+        outcome_id: outcomeId,
+      },
+      ...payload,
+    });
+  } catch (e) {
+    return console.error('handleGenerateShareLinkSaga', e);
+  }
+}
+
 export default function* createMarketSaga() {
   yield takeLatest(loadReports().type, handleLoadReportsSaga);
   yield takeLatest(addOutcomes().type, handleAddOutcomesSaga);
   yield takeLatest(createNewEvent().type, handleCreateNewEventSaga);
+  yield takeLatest(generateShareLink().type, handleGenerateShareLinkSaga);
 }

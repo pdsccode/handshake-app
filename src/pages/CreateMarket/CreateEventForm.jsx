@@ -8,7 +8,8 @@ import moment from 'moment';
 import DatePicker from '@/components/handshakes/betting-event/Create/DatePicker/DatePicker';
 import { renderField } from './form';
 import { required, allFieldHasData } from './validate';
-import { addOutcomes, createNewEvent } from './action';
+import { addOutcomes, createNewEvent, generateShareLink } from './action';
+import ShareMarket from './ShareMarket';
 
 class CreateEventForm extends Component {
   static displayName = 'CreateEventForm';
@@ -33,6 +34,7 @@ class CreateEventForm extends Component {
       reportingTime: props.initialValues.reportingTime,
       disputeTime: props.initialValues.disputeTime,
       selectedReportSource: undefined,
+      shareLink: null,
     };
   }
 
@@ -86,10 +88,28 @@ class CreateEventForm extends Component {
 
   handleAddOutcomeSuccess = (data) => {
     console.log('handleAddOutcomeSuccess', data);
+    const { dispatch } = this.props;
+    dispatch(generateShareLink({
+      outcomeId: data.data[0].id,
+      successFn: this.handleGenerateShareLink,
+    }));
   }
 
   handleCreateNewEventSuccess = (data) => {
     console.log('handleCreateNewEventSuccess', data);
+  }
+
+  handleGenerateShareLink = (respond) => {
+    console.log('respond', respond);
+    this.setState({
+      shareLink: `${window.location.origin}/${respond.data.slug_short}`,
+    });
+  }
+
+  addMoreOutcomes = (fields) => {
+    if (fields.getAll().every(i => Object.keys(i).length > 0)) {
+      fields.push({});
+    }
   }
 
   renderGroupTitle = (title) => {
@@ -293,6 +313,10 @@ class CreateEventForm extends Component {
     const cls = classNames(CreateEventForm.displayName, {
       [props.className]: !!props.className,
     });
+    const { shareLink } = state;
+    if (shareLink) {
+      return (<ShareMarket shareURL={shareLink} />);
+    }
     return (
       <form className={cls} onSubmit={props.handleSubmit(this.onCreateNewEvent)}>
         {this.renderEvent(props)}

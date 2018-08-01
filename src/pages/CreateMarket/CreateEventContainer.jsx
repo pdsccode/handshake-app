@@ -111,6 +111,7 @@ class CreateEventContainer extends React.Component {
         initialValues={initialValues}
         reportList={props.reportList || []}
         isNew={isCreateNew}
+        dispatch={props.dispatch}
       />
     );
   }

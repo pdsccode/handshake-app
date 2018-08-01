@@ -13,14 +13,21 @@ export const loadReports = (payload = {}) => {
     type: 'CREATE_MARKET:LOAD_REPORTS',
     ...payload,
   };
-}
+};
 
 export const addOutcomes = (payload = {}) => {
   return {
     type: 'CREATE_MARKET:ADD_OUTCOMES',
     ...payload,
   };
-}
+};
+
+export const generateShareLink = (payload = {}) => {
+  return {
+    type: 'CREATE_MARKET:GENERATE_SHARE_LINK',
+    ...payload,
+  };
+};
 
 export const createNewEvent = (payload = {}) => {
   return {
