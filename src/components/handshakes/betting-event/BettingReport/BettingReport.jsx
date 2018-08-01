@@ -188,6 +188,7 @@ class BettingReport extends React.Component {
       });
     } else {
       const tokenValue = token || this.checkToken();
+      const { resolved } = this.props;
       console.log('Final State:', this.state.final);
 
       const url = `${BASE_API.BASE_URL}/cryptosign/match/report/${this.state.activeMatchData.id}`;
@@ -196,6 +197,7 @@ class BettingReport extends React.Component {
         data: {
           result: this.state.final,
         },
+        qs: { dispute: resolved ? 1 : 0 },
         headers: { Authorization: `Bearer ${tokenValue}`, 'Content-Type': 'application/json' },
         method: 'post',
       });
