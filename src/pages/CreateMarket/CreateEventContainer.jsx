@@ -28,6 +28,7 @@ class CreateEventContainer extends React.Component {
   }
 
   componentDidMount() {
+    // @TODO: put to one
     this.props.dispatch(loadMatches());
     this.props.dispatch(loadReports());
   }

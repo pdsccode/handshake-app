@@ -1,8 +1,11 @@
 import { takeLatest, call, select } from 'redux-saga/effects';
 import { apiGet, apiPost } from '@/stores/api-saga';
 import { API_URL } from '@/constants';
-import { loadReports, addOutcomes, createNewEvent, generateShareLink } from './action';
+import { BetHandshakeHandler } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
+import { loadReports, createEvent, generateShareLink } from './action';
 import { reportSelector } from './selector';
+
+const betHandshakeHandler = BetHandshakeHandler.getShareManager();
 
 function* handleLoadReportsSaga({ cache = true }) {
   try {
@@ -36,15 +39,66 @@ function* handleAddOutcomesSaga({ eventId, newOutcomeList, ...payload }) {
   }
 }
 
-function* handleCreateNewEventSaga(payload) {
+function* handleCreateNewEventSaga({ newEventData }) {
   try {
     return yield call(apiPost, {
       PATH_URL: `${API_URL.CRYPTOSIGN.ADD_MATCH}`,
       type: 'ADD_EVENT_API',
-      ...payload,
+      data: [newEventData],
     });
   } catch (e) {
-    return console.error('handleCreateNewEventSaga', e);
+    return console.error(e);
+  }
+}
+
+function* handleCallOnChain({}) {
+  return null;
+}
+
+function* handleCreateEventSaga({ values, isNew, selectedSource }) {
+  try {
+    if (!isNew) {
+      // Add new outcomes
+      const newOutcomeList = values.outcomes.filter(o => !o.id).map(i => Object.assign({}, i, { public: 0 }));
+      const addOutcomeResult = yield call(handleAddOutcomesSaga, {
+        eventId: values.eventId,
+        newOutcomeList,
+      });
+      if (!addOutcomeResult.error) {
+        // yield call(handleGenerateShareLinkSaga, {})
+      }
+    } else {
+      const reportSource = {
+        source_id: selectedSource,
+        source: selectedSource ? undefined : {
+          name: values.ownReportName,
+          url: values.ownReportUrl,
+        },
+      };
+      Object.keys(reportSource).forEach((k) => !reportSource[k] && delete reportSource[k]);
+      const newEventData = {
+        homeTeamName: values.homeTeamName || '',
+        awayTeamName: values.awayTeamName || '',
+        homeTeamCode: values.homeTeamCode || '',
+        awayTeamCode: values.awayTeamCode || '',
+        homeTeamFlag: values.homeTeamFlag || '',
+        awayTeamFlag: values.awayTeamFlag || '',
+        name: values.eventName,
+        date: values.closingTime,
+        reportTime: values.reportingTime,
+        disputeTime: values.disputeTime,
+        market_fee: values.creatorFee,
+        outcomes: values.outcomes,
+        ...reportSource,
+      };
+      const { data } = yield call(handleCreateNewEventSaga, { newEventData });
+      console.log('data', data);
+      if (data && data.length) {
+        yield call(handleCallOnChain, {});
+      }
+    }
+  } catch (e) {
+    console.error('handleCreateNewEventSaga', e);
   }
 }
 
@@ -65,7 +119,5 @@ function* handleGenerateShareLinkSaga({ outcomeId, ...payload }) {
 
 export default function* createMarketSaga() {
   yield takeLatest(loadReports().type, handleLoadReportsSaga);
-  yield takeLatest(addOutcomes().type, handleAddOutcomesSaga);
-  yield takeLatest(createNewEvent().type, handleCreateNewEventSaga);
-  yield takeLatest(generateShareLink().type, handleGenerateShareLinkSaga);
+  yield takeLatest(createEvent().type, handleCreateEventSaga);
 }

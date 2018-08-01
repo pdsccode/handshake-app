@@ -15,13 +15,6 @@ export const loadReports = (payload = {}) => {
   };
 };
 
-export const addOutcomes = (payload = {}) => {
-  return {
-    type: 'CREATE_MARKET:ADD_OUTCOMES',
-    ...payload,
-  };
-};
-
 export const generateShareLink = (payload = {}) => {
   return {
     type: 'CREATE_MARKET:GENERATE_SHARE_LINK',
@@ -29,9 +22,9 @@ export const generateShareLink = (payload = {}) => {
   };
 };
 
-export const createNewEvent = (payload = {}) => {
+export const createEvent = (payload = {}) => {
   return {
-    type: 'CREATE_MARKET:CREATE_NEW_EVENT',
+    type: 'CREATE_MARKET:CREATE_EVENT',
     ...payload,
   };
 }

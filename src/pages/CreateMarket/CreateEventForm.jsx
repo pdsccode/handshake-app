@@ -8,7 +8,7 @@ import moment from 'moment';
 import DatePicker from '@/components/handshakes/betting-event/Create/DatePicker/DatePicker';
 import { renderField } from './form';
 import { required, allFieldHasData } from './validate';
-import { addOutcomes, createNewEvent, generateShareLink } from './action';
+import { createEvent } from './action';
 import ShareMarket from './ShareMarket';
 
 class CreateEventForm extends Component {
@@ -39,45 +39,11 @@ class CreateEventForm extends Component {
   }
 
   onCreateNewEvent = (values, dispatch, props) => {
-    if (!props.isNew) {
-      // Add new outcomes
-      const newOutcomeList = values.outcomes.filter(o => !o.id).map(i => Object.assign({}, i, { public: 0 }));
-      dispatch(addOutcomes({
-        eventId: values.eventId,
-        newOutcomeList,
-        successFn: this.handleAddOutcomeSuccess,
-      }));
-    } else {
-      // Add new event
-      const { selectedReportSource } = this.state;
-      const reportSource = {
-        source_id: selectedReportSource,
-        source: selectedReportSource ? undefined : {
-          name: values.ownReportName,
-          url: values.ownReportUrl,
-        },
-      };
-      Object.keys(reportSource).forEach((k) => !reportSource[k] && delete reportSource[k]);
-      const newEventData = {
-        homeTeamName: values.homeTeamName || '',
-        awayTeamName: values.awayTeamName || '',
-        homeTeamCode: values.homeTeamCode || '',
-        awayTeamCode: values.awayTeamCode || '',
-        homeTeamFlag: values.homeTeamFlag || '',
-        awayTeamFlag: values.awayTeamFlag || '',
-        name: values.eventName,
-        date: values.closingTime,
-        reportTime: values.reportingTime,
-        disputeTime: values.disputeTime,
-        market_fee: values.creatorFee,
-        outcomes: values.outcomes,
-        ...reportSource,
-      };
-      dispatch(createNewEvent({
-        data: [newEventData],
-        successFn: this.handleCreateNewEventSuccess,
-      }));
-    }
+    dispatch(createEvent({
+      values,
+      isNew: props.isNew,
+      selectedSource: this.state.selectedReportSource,
+    }));
   }
 
   setFieldValueToState = (fieldName, value) => {
@@ -86,21 +52,16 @@ class CreateEventForm extends Component {
     });
   }
 
-  handleAddOutcomeSuccess = (data) => {
-    console.log('handleAddOutcomeSuccess', data);
-    const { dispatch } = this.props;
-    dispatch(generateShareLink({
-      outcomeId: data.data[0].id,
-      successFn: this.handleGenerateShareLink,
-    }));
-  }
-
-  handleCreateNewEventSuccess = (data) => {
-    console.log('handleCreateNewEventSuccess', data);
-  }
+  // handleAddOutcomeSuccess = (data) => {
+  //   console.log('handleAddOutcomeSuccess', data);
+  //   const { dispatch } = this.props;
+  //   dispatch(generateShareLink({
+  //     outcomeId: data.data[0].id,
+  //     successFn: this.handleGenerateShareLink,
+  //   }));
+  // }
 
   handleGenerateShareLink = (respond) => {
-    console.log('respond', respond);
     this.setState({
       shareLink: `${window.location.origin}/${respond.data.slug_short}`,
     });
