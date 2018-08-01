@@ -271,6 +271,11 @@ export default {
   'ex.sort.price.sell.eth': 'Sell ETH',
   product_info: 'Ninja is open-source, decentralized software that never holds your funds. By freely choosing to use Ninja, the user accepts sole responsibility for their behavior and agrees to abide by the legalities of their governing jurisdiction. Ninja cannot be liable for legal, monetary or psychological damages should you do something stupid. Never invest more than you are willing to lose. Play safe!',
 
+  'askLocationPermission.label.1': 'We would like to access your location to find nearest stations around you!',
+  'askLocationPermission.label.2': `<span>Please click <strong>"Allow"</strong> to start trading now!</span>`,
+  'askLocationPermission.btn.dontAllow': `Don't Allow`,
+  'askLocationPermission.btn.allow': 'Allow',
+
   // FAQ
   FAQ_TITLE: 'FAQ',
   FAQ_HEADER_YELLOW: 'Decentralized',

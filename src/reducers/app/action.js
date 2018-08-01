@@ -1,3 +1,4 @@
+import React from 'react';
 import $http from '@/services/api';
 import IpInfo from '@/models/IpInfo';
 import axios from 'axios';
@@ -8,6 +9,8 @@ import COUNTRIES_BLACKLIST_CASH from '@/data/country-blacklist-exchange';
 import { authUpdate, fetchProfile, getFreeETH, signUp } from '@/reducers/auth/action';
 import { getListOfferPrice, getUserProfile } from '@/reducers/exchange/action';
 import { MasterWallet } from '@/services/Wallets/MasterWallet';
+import { FormattedMessage, FormattedHTMLMessage } from 'react-intl';
+import BrowserDetect from '@/services/browser-detect';
 
 export const APP_ACTION = {
   NETWORK_ERROR: 'NETWORK_ERROR',
@@ -283,6 +286,48 @@ export const getUserLocation = ({ successFn, errorFn }) => (dispatch) => {
 
 // |-- init
 export const initApp = (language, ref) => (dispatch) => {
+  // show popup to get GPS permission
+  if (!BrowserDetect.isDesktop && !local.get(APP.ALLOW_LOCATION_ACCESS)) {
+    dispatch(updateModal({
+      show: true,
+      title: null,
+      body: (
+        <div>
+          <div className="d-table w-100">
+            <div className="d-table-cell pr-2 align-top">
+              <span className="icon-location" style={{ fontSize: '42px' }} />
+            </div>
+            <div className="d-table-cell align-top">
+              <div><FormattedHTMLMessage id="askLocationPermission.label.1" /></div>
+              <div className="mt-1"><FormattedHTMLMessage id="askLocationPermission.label.2" /></div>
+            </div>
+          </div>
+          <div className="mt-3 float-right">
+            <button
+              className="btn btn-outline-primary"
+              onClick={() => {
+                local.save(APP.ALLOW_LOCATION_ACCESS, 'deny');
+                dispatch(updateModal({ show: false }));
+              }}
+            >
+              <FormattedMessage id="askLocationPermission.btn.dontAllow" />
+            </button>
+            <button
+              className="ml-2 btn btn-primary"
+              style={{ minWidth: '123px' }}
+              onClick={() => {
+                local.save(APP.ALLOW_LOCATION_ACCESS, 'allow');
+                dispatch(updateModal({ show: false }));
+              }}
+            >
+              <FormattedMessage id="askLocationPermission.btn.allow" />
+            </button>
+          </div>
+        </div>
+      )
+    }))
+  }
+
   $http({
     url: 'https://ipapi.co/json',
     qs: { key: process.env.ipapiKey },
