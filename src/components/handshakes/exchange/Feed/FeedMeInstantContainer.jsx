@@ -88,7 +88,7 @@ class FeedMeInstantContainer extends React.PureComponent {
   }
 
   render() {
-    const { extraData, status, getNameShopDisplayed } = this.props;
+    const { extraData, status, getDisplayName } = this.props;
 
     const offer = Offer.offer(JSON.parse(extraData));
     this.offer = offer;
@@ -98,7 +98,7 @@ class FeedMeInstantContainer extends React.PureComponent {
     const statusText = HANDSHAKE_EXCHANGE_CC_STATUS_NAME[status];
     const showChat = false;
     const chatUsername = '';
-    const nameShop = getNameShopDisplayed();
+    const nameShop = getDisplayName();
     const message = this.getMessageContent();
     const actionButtons = this.getActionButtons();
     const messageMovingCoin = this.getMessageMovingCoin();

@@ -14,7 +14,7 @@ import Layout from '@/components/Layout/Main';
 
 import imgCash from '@/assets/images/landing/home/cash.jpg';
 import imgCashContent from '@/assets/images/landing/cash/fake-content.svg';
-import imgDadContent from '@/assets/images/landing/dad/fake-content.svg';
+import imgDadContent from '@/assets/images/landing/dad/fake-content.jpg';
 // import imgBlockchainPrivacy from '@/assets/images/landing/home/blockchain-privacy.jpg';
 import imgDad from '@/assets/images/landing/home/dad.jpg';
 // import imgDao from '@/assets/images/landing/home/dao.jpg';
@@ -23,6 +23,8 @@ import imgPrediction from '@/assets/images/landing/home/prediction.jpg';
 import imgWallet from '@/assets/images/landing/home/wallet.jpg';
 import imgWhisper from '@/assets/images/landing/home/whisper.jpg';
 import imgUncommons from '@/assets/images/landing/home/uncommons.jpg';
+import imgHivepayOnline from '@/assets/images/landing/home/hivepay-online.jpg';
+import imgHivepayOffline from '@/assets/images/landing/home/hivepay-offline.jpg';
 
 // import NetworkError from '@/components/Router/NetworkError';
 import Maintain from '@/components/Router/Maintain';
@@ -60,6 +62,13 @@ const configRoutesUsingMobileLayout = [
   { path: URL.ADMIN, component: RouterAdmin },
   { path: URL.REPORT, component: RouterAdmin },
   { path: URL.REPORT, component: RouterAdmin },
+  {
+    path: URL.PRODUCT_DAD_URL,
+    render: () => {
+      window.location.href = URL.PRODUCT_DAD_URL_SUBDOMAIN;
+      return null;
+    }
+  },
 ];
 const routesUsingMobileLayout = configRoutesUsingMobileLayout.map(route => (
   <Route
@@ -77,12 +86,12 @@ if (BrowserDetect.isDesktop) {
     { path: URL.PRODUCT_CASH_URL, render: () => <ProjectDetail type="product" name="cash" img={imgCash} imgContent={imgCashContent} /> },
     { path: URL.PRODUCT_PREDICTION_URL, render: () => <ProjectDetail type="product" name="prediction" img={imgPrediction} /> },
     { path: URL.PRODUCT_WALLET_URL, render: () => <ProjectDetail type="product" name="wallet" img={imgWallet} /> },
-    { path: URL.PRODUCT_HIVEPAY_OFFLINE_URL, render: () => <ProjectDetail type="product" name="pay-for-stores" img={imgInternetCash} /> },
-    { path: URL.PRODUCT_HIVEPAY_ONLINE_URL, render: () => <ProjectDetail type="product" name="pay-for-devs" img={imgCash} /> },
+    { path: URL.PRODUCT_HIVEPAY_OFFLINE_URL, render: () => <ProjectDetail type="product" name="pay-for-stores" img={imgHivepayOffline} /> },
+    { path: URL.PRODUCT_HIVEPAY_ONLINE_URL, render: () => <ProjectDetail type="product" name="pay-for-devs" img={imgHivepayOnline} /> },
     { path: URL.RESEARCH_INTERNET_CASH_URL, render: () => <ProjectDetail type="research" name="internet-cash" img={imgInternetCash} /> },
     { path: URL.PRODUCT_DAD_URL, render: () => <ProjectDetail type="product" name="dad" img={imgDad} imgContent={imgDadContent} /> },
     { path: URL.RESEARCH_UNCOMMONS_URL, render: () => <ProjectDetail type="research" name="uncommons" img={imgUncommons} /> },
-    { path: URL.PRODUCT_WHISPER_URL, render: () => <ProjectDetail type="product" name="whisper" img={imgDad} /> },
+    { path: URL.PRODUCT_WHISPER_URL, render: () => <ProjectDetail type="product" name="whisper" img={imgWhisper} /> },
   ];
   routesUsingDesktopLayout = configRoutesUsingDesktopLayout.map(route => (
     <Route

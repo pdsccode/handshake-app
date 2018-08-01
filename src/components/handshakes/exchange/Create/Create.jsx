@@ -130,11 +130,11 @@ class Component extends React.Component {
       ipInfo, rfChange, authProfile, freeStartInfo, isChooseFreeStart, getUserLocation,
     } = this.props;
     this.setAddressFromLatLng(ipInfo?.latitude, ipInfo?.longitude, ipInfo?.addressDefault);
-    getUserLocation({
-      successFn: (ipInfo2) => {
-        this.setAddressFromLatLng(ipInfo2?.latitude, ipInfo2?.longitude, ipInfo2?.addressDefault);
-      },
-    });
+    // getUserLocation({
+    //   successFn: (ipInfo2) => {
+    //     this.setAddressFromLatLng(ipInfo2?.latitude, ipInfo2?.longitude, ipInfo2?.addressDefault);
+    //   },
+    // });
 
     // auto fill phone number from user profile
     let detectedCountryCode = '';

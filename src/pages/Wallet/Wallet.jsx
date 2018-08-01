@@ -456,7 +456,7 @@ class Wallet extends React.Component {
       if (index > -1) {
         lstWalletTemp.splice(index, 1);
         // Update wallet master from local store:
-        MasterWallet.UpdateLocalStore(lstWalletTemp);
+        MasterWallet.UpdateLocalStore(lstWalletTemp, true);
         this.splitWalletData(lstWalletTemp);
       }
     }
@@ -712,7 +712,7 @@ class Wallet extends React.Component {
 
   onAddressClick = (wallet) => {
     this.setState({walletSelected: wallet, activeReceive: true}, ()=>{
-      this.modalShareAddressRef.open();
+      this.modalShareAddressRef.open();      
     });
   }
 
@@ -794,7 +794,7 @@ class Wallet extends React.Component {
     this.showSuccess(messages.wallet.action.protect.success);
   }
 
-  getETHFree() {
+  getETHFree() {    
     window.open('https://www.rinkeby.io/#faucet', '_blank');
   }
 

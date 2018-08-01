@@ -19,7 +19,7 @@ import './Filter.scss';
 // //
 
 
-const freeAmount = 0.001;
+const freeAmount = 0.01;
 const TAG = 'BETTING_FILTER';
 
 const SELECTING_DEFAULT = {

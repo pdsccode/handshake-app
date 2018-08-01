@@ -310,7 +310,7 @@ class DiscoverPage extends React.Component {
 
     if (list && list.length > 0) {
       let myHandShake;
-      let resultList = list.map((handshake) => {
+      const resultList = list.map((handshake) => {
         if (handshake.id.includes(authProfile?.id)) {
           myHandShake = handshake;
 
@@ -318,7 +318,7 @@ class DiscoverPage extends React.Component {
         }
         const FeedComponent = maps[handshake.type];
         const offer = OfferShop.offerShop(JSON.parse(handshake.extraData));
-        const allowRender = sortIndexActive === CASH_SORTING_CRITERIA.PRICE ? offer.itemFlags[sortPriceIndexArr[1].toUpperCase()] : true;
+        const allowRender = sortIndexActive === CASH_SORTING_CRITERIA.PRICE ? offer.itemFlags[sortPriceIndexArr[1].toUpperCase()] && !this.isEmptyBalance(offer.items[sortPriceIndexArr[1].toUpperCase()]) : true;
         if (FeedComponent && allowRender) {
           return (
             <Col key={handshake.id} className="col-12 feed-wrapper px-0">
@@ -360,7 +360,7 @@ class DiscoverPage extends React.Component {
                 ownerStation
               />
 
-            </Col>
+            </Col>,
           );
         }
       }
@@ -382,6 +382,15 @@ class DiscoverPage extends React.Component {
     }
 
     return <NoData style={{ height: '50vh' }} message={message} />;
+  }
+
+  isEmptyBalance = (item) => {
+    const { sortPriceIndexActive } = this.state;
+    const { buyBalance, sellBalance } = item;
+    if (sortPriceIndexActive.includes('buy')) {
+      return buyBalance <= 0;
+    }
+    return sellBalance <= 0;
   }
 
   setLoading = (loadingState) => {
