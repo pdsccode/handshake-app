@@ -34,7 +34,7 @@ class ShareMarket extends React.Component {
   }
 
   renderShares = (props) => {
-    const { shareEvent } = props 
+    const { shareEvent } = props;
     const { url } = shareEvent;
     const socialList = [
       {
