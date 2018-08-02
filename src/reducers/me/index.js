@@ -8,7 +8,7 @@ import {
 } from '@/constants';
 import { ACTIONS } from './action';
 import { BET_BLOCKCHAIN_STATUS } from '@/components/handshakes/betting/constants';
-import { findUserBet, isShakeUser, parseJsonString } from '@/components/handshakes/betting/utils.js';
+import { isShakeUser, parseJsonString, isMatch } from '@/components/handshakes/betting/utils.js';
 
 const TAG = 'MeReducer';
 // function handlePreProcessForOfferStore(handshake) {
@@ -62,8 +62,13 @@ const foundRefundHanshake = (handshake, item, hid) => {
 
 const foundWithdrawHanshake = (handshake, item, hid) => {
   const handledHandshake = handshake;
+  const {
+    shakeUserIds,
+  } = handshake;
 
-  if (hid === item.hid && handledHandshake.side === item.side) {
+  const matched = isMatch(shakeUserIds);
+
+  if (hid === item.hid && handledHandshake.side === item.side && matched) {
     console.log(TAG, 'foundWithdrawHanshake:','handledHandshake', handledHandshake);
     handledHandshake.status = item.status;
   }
@@ -339,7 +344,7 @@ const meReducter = (
       console.log(TAG, 'FIREBASE_BETTING_DATA_CHANGE action.payload =', action.payload);
       Object.keys(listBettingStatus).forEach((key) => {
         const element = listBettingStatus[key];
-        const { id, status_i: statusI, result_i: resultI } = element;
+        const { id, status_i: statusI, result_i: resultI, outcome_total_amount_s: amountTotalI, outcome_total_dispute_amount_s: disputedAmountI  } = element;
 
 
         handledMylist = myList.map((handshake) => {
@@ -349,6 +354,8 @@ const meReducter = (
             console.log('Found handshake', handshake);
             handledHandshake.status = statusI;
             handledHandshake.result = resultI;
+            handledHandshake.totalAmount = amountTotalI;
+            handledHandshake.totalDisputeAmount = disputedAmountI;
           }
           return handledHandshake;
         });

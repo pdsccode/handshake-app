@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { ProgressBar } from 'react-bootstrap';
 
-
 // services, constants
 import { BetHandshakeHandler } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
 import { BET_BLOCKCHAIN_STATUS, ROLE } from '@/components/handshakes/betting/constants.js';
@@ -16,7 +15,7 @@ import { getStatusLabel } from '@/components/handshakes/betting/StatusAction.js'
 import {
   getMessageWithCode, getId,
   getBalance, getEstimateGas, foundShakeList, parseBigNumber,
-  formatAmount, findUserBet, parseJsonString,
+  formatAmount, findUserBet, parseJsonString
 } from '@/components/handshakes/betting/utils.js';
 
 // components
@@ -580,7 +579,7 @@ class FeedBetting extends React.Component {
     //totalDisputeAmount = 50;
     //totalAmount = 100;
     const progress = totalDisputeAmount / totalAmount * 100;
-    const pgText = `${totalDisputeAmount} ETH of ${progress}% outcome pool`;
+    const pgText = `${formatAmount(totalDisputeAmount)} ETH of ${formatAmount(totalAmount)} ETH outcome pool`;
     console.log(TAG, 'renderProgressBar');
     return (
       <div>
