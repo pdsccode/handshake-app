@@ -440,7 +440,7 @@ class DataDetail extends React.Component {
       <Visibility once={true} onUpdate={this.handleUpdate}>
         <Segment vertical  id="segment-detail"> 
               <h2 className="my-h2-dataset-new" style={{    marginBottom:'0px'}}>
-                  Datasets / {this.state.category ? this.state.category.name :''}
+                 {this.state.category ? this.state.category.name :''}
                   <Link to={'/datasets'}><Image src={closeTop} className="btn-Close-Top"/></Link>
               </h2>
                 <Card.Group centered >
@@ -454,12 +454,12 @@ class DataDetail extends React.Component {
                             <List>
                             <List.Item className="list-item-name">Name: {this.state.category ? this.state.category.name :''} </List.Item>
                             { (this.state.category!=null && this.state.category.desc !=null) ?
-                              <List.Item><span style={{fontWeight:'700'}}>Desc: </span>{this.state.category ? this.state.category.desc :''}</List.Item>
+                              <List.Item><span style={{fontWeight:'700'}}>Description: </span>{this.state.category ? this.state.category.desc :''}</List.Item>
                               :""
                             }
                             { (this.state.category!=null && this.state.category.classifies !=null) ?
                               <List.Item style={{    paddingRight: '12px'}}>
-                                <span style={{fontWeight:'700'}}>Classifies: </span>
+                                <span style={{fontWeight:'700'}}>Classes: </span>
                                 {this.state.category.classifies.map((item, i) => {
                                   return <span basic color="black" key={String(item.id)||'-1'}>{item?.name||''}, </span>
                                 })}
@@ -468,7 +468,7 @@ class DataDetail extends React.Component {
                             }
 
                             <List.Item>
-                              <span style={{fontWeight:'700'}}>Quantity: </span> {this.state.category && this.state.category.total_images > 1 ? `${this.state.category.total_images} Images` : '1 Image'} 
+                              <span style={{fontWeight:'700'}}>Quantity: </span> {this.state.category && this.state.category.total_images > 1 ? `${this.state.category.total_images} images` : '1 image'} 
                             </List.Item>
                             <List.Item style={{ marginTop: '10px', marginLeft: '-20px'}} >
                             {this.renderFollowIcon(this.state.category  )}

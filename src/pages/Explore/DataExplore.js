@@ -241,7 +241,7 @@ class DataExplore extends React.Component {
                           {/* <Icon size="large" name='newspaper outline'
                            style={{color: 'white',margin: '0.7em',float:'left' }}  /> */}
                            <img src={newboard} style={{ borderRadius:'0!important', margin:'15px',float:'left' }} />
-                           <span style={{color: 'white',fontSize: '16px', float:'left', marginTop:'8px'}} >Start a new dataset</span>
+                           <span style={{color: 'white',fontSize: '16px', float:'left', marginTop:'8px'}} >Start a new DAD</span>
                       </Card.Content>
                     </Link>
                   </Card>
