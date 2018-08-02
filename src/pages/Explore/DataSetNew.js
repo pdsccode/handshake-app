@@ -196,7 +196,7 @@ class DataSetNew extends React.Component {
       //  <h2 className="my-h2-dataset-new">
       <Segment vertical  loading={this.state.isLoading}  id="segment-detail">
           <h2 className="my-h2-dataset-new" >
-          Start a new dataset
+          Start a new DAD
           <Link to={'/datasets'}><Image src={closeTop} className="btn-Close-Top"/></Link>
        </h2>
         <Container>
