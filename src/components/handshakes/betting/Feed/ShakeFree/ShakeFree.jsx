@@ -120,6 +120,7 @@ class BetingShakeFree extends React.Component {
       this.initHandshake(amountBN, odds);
       onSubmitClick();
     } else if (message) {
+      GA.createBetNotSuccess(message);
       this.props.showAlert({
         message: <div className="text-center">{message}</div>,
         timeOut: 3000,
