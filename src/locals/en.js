@@ -928,6 +928,13 @@ export default {
         menu: 'Your clan',
         menu_description: 'Track your referrals and rewards here.',
       },
+      table: {
+        header: {
+          user: 'User',
+          date: 'Date',
+          referalValue: 'Referal Value',
+        },
+      },
     },
     refers_dashboard: {
       header: 'Shuriken Airdrop Mission',

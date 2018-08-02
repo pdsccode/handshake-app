@@ -1,25 +1,59 @@
 import React from 'react';
-import {injectIntl} from 'react-intl';
-import {connect} from "react-redux";
+import { FormattedDate, injectIntl } from 'react-intl';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Input } from 'reactstrap';
-import {bindActionCreators} from 'redux';
-import { showLoading, hideLoading, showAlert } from '@/reducers/app/action';
+import { bindActionCreators } from 'redux';
+import { hideLoading, showAlert, showLoading } from '@/reducers/app/action';
 import Image from '@/components/core/presentation/Image';
 import ExpandArrowSVG from '@/assets/images/icon/expand-arrow.svg';
 import { referredInfo } from '@/reducers/auth/action';
 import { StringHelper } from '@/services/helper';
 import './Refers.scss';
 import local from '@/services/localStore';
-import {APP} from '@/constants';
+import { APP } from '@/constants';
 
 
 window.Clipboard = (function (window, document, navigator) {
   let textArea,
-    copy; function isOS() { return navigator.userAgent.match(/ipad|iphone/i); } function createTextArea(text) { textArea = document.createElement('textArea'); textArea.value = text; document.body.appendChild(textArea); } function selectText() {
+    copy;
+
+  function isOS() {
+    return navigator.userAgent.match(/ipad|iphone/i);
+  }
+
+  function createTextArea(text) {
+    textArea = document.createElement('textArea');
+    textArea.value = text;
+    document.body.appendChild(textArea);
+  }
+
+  function selectText() {
     let range,
-      selection; if (isOS()) { range = document.createRange(); range.selectNodeContents(textArea); selection = window.getSelection(); selection.removeAllRanges(); selection.addRange(range); textArea.setSelectionRange(0, 999999); } else { textArea.select(); }
-  } function copyToClipboard() { document.execCommand('copy'); document.body.removeChild(textArea); } copy = function (text) { createTextArea(text); selectText(); copyToClipboard(); }; return { copy };
+      selection;
+    if (isOS()) {
+      range = document.createRange();
+      range.selectNodeContents(textArea);
+      selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(range);
+      textArea.setSelectionRange(0, 999999);
+    } else {
+      textArea.select();
+    }
+  }
+
+  function copyToClipboard() {
+    document.execCommand('copy');
+    document.body.removeChild(textArea);
+  }
+
+  copy = function (text) {
+    createTextArea(text);
+    selectText();
+    copyToClipboard();
+  };
+  return { copy };
 }(window, document, navigator));
 
 class Refers extends React.Component {
@@ -34,8 +68,8 @@ class Refers extends React.Component {
       referCollapse: false,
       total: 0,
       amount: 0,
-      referLink: ""
-    }
+      referLink: '',
+    };
   }
 
   showAlert(msg, type = 'success', timeOut = 3000, icon = '') {
@@ -43,7 +77,8 @@ class Refers extends React.Component {
       message: <div className="textCenter">{icon}{msg}</div>,
       timeOut,
       type,
-      callBack: () => {},
+      callBack: () => {
+      },
     });
   }
 
@@ -54,12 +89,13 @@ class Refers extends React.Component {
   showLoading(status) {
     this.props.showLoading({ message: '' });
   }
+
   hideLoading() {
     this.props.hideLoading();
   }
 
   showLoading = () => {
-    this.props.showLoading({message: '',});
+    this.props.showLoading({ message: '' });
   }
 
   hideLoading = () => {
@@ -68,37 +104,42 @@ class Refers extends React.Component {
 
   getInfoRefer() {
     return new Promise((resolve, reject) => {
-      let result = false;
+      const result = false;
       this.props.referredInfo({
         PATH_URL: 'user/referred',
         METHOD: 'GET',
         successFn: (res) => {
-          if(res && res.data){
+          if (res && res.data) {
             resolve(res.data);
-          }
-          else{
+          } else {
             resolve(null);
           }
         },
-        errorFn: (e) =>{
+        errorFn: (e) => {
           console.log(e);
           reject(e);
-        }
+        },
       });
     });
   }
 
   showInfo = async () => {
-    this.setState({referCollapse:!this.state.referCollapse});
-    let info = await this.getInfoRefer();
-    if(info && info.firstbet)
-      this.setState({"total" : info.firstbet.total, "amount": info.firstbet.amount});
+    this.setState({ referCollapse: !this.state.referCollapse });
+    const info = await this.getInfoRefer();
+    if (info && info.firstbet) { this.setState({ total: info.firstbet.total, amount: info.firstbet.amount }); }
 
-    //get link
+    // get link
     const profile = local.get(APP.AUTH_PROFILE);
-    let referLink = profile && profile.username ? "https://ninja.org/?ref=" + profile.username : '';
-    this.setState({referLink: referLink});
-    //this.props.rfChange(nameFormStep4, 'refer_link', referLink);
+    const referLink = profile && profile.username ? `https://ninja.org/?ref=${profile.username}` : '';
+    this.setState({ referLink });
+    // this.props.rfChange(nameFormStep4, 'refer_link', referLink);
+  }
+
+  shortenUser = (userName) => {
+    if (userName.length > 12) {
+      return `${userName.substr(0, 4)}...${userName.substr(userName.length - 4)}`;
+    }
+    return userName;
   }
 
   render() {
@@ -112,33 +153,69 @@ class Refers extends React.Component {
             <span>{messages.wallet.refers.label.menu_description}</span>
           </p>
           <div className="extend">
-            <span className="badge badge-success"></span>
+            <span className="badge badge-success" />
             <Image className={this.state.referCollapse ? 'rotate' : ''} src={ExpandArrowSVG} alt="arrow" />
           </div>
         </div>
         <div className={`content ${this.state.referCollapse ? '' : 'd-none'}`}>
-          <p className="text">{this.state.total} {StringHelper.format(messages.wallet.refers.text.menu_total, this.state.total != 1 ? "s" : "")}</p>
+          <p
+            className="text"
+          >{this.state.total} {StringHelper.format(messages.wallet.refers.text.menu_total, this.state.total != 1 ? 's' : '')}
+          </p>
           <p className="text">{this.state.amount} {messages.wallet.refers.text.menu_amount}</p>
           <div className="refer-link">
-      <p>{messages.wallet.refers.text.profile_link}</p>
-      <div className="col100">
-        <Input
-          name="refer_link"
-          value={this.state.referLink}
-          onFocus={() => { Clipboard.copy(this.state.referLink); this.showToast(messages.wallet.refers.success.copy_link); }}
-        />
-      </div>
-    </div>
+            <p>{messages.wallet.refers.text.profile_link}</p>
+            <div className="col100">
+              <Input
+                name="refer_link"
+                value={this.state.referLink}
+                onFocus={() => {
+                  Clipboard.copy(this.state.referLink);
+                  this.showToast(messages.wallet.refers.success.copy_link);
+                }}
+              />
+            </div>
+          </div>
+          {false && <div>
+            <table className="table refer-table">
+              <thead>
+              <tr className="table-active">
+                {/* <th scope="col">#</th> */}
+                <th scope="col" className="user">{messages.wallet.refers.table.header.user}</th>
+                <th scope="col">{messages.wallet.refers.table.header.date}</th>
+                <th scope="col" className="refer-value-header">{messages.wallet.refers.table.header.referalValue}</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr>
+                {/* <th scope="row">1</th> */}
+                <td>{this.shortenUser('PinkFoxPinkFoxPinkFoxPinkFox')}</td>
+                <td>
+                  <FormattedDate
+                    value={new Date(1459832991883)}
+                    year="numeric"
+                    month="long"
+                    day="2-digit"
+                  />
+                </td>
+                <td>
+                  <div className="refer-value">
+                    <div>@mdo</div>
+                    <div>@mdo</div>
+                  </div>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+          }
         </div>
-
       </div>
-    )
+    );
   }
 }
 
-const mapStateToProps = (state) => ({
-
-});
+const mapStateToProps = (state) => ({});
 
 const mapDispatchToProps = (dispatch) => ({
   showAlert: bindActionCreators(showAlert, dispatch),
