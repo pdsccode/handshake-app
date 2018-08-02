@@ -29,9 +29,11 @@ export const urlValidator = (value) => {
 /**
  * Validator Int with min-max
  * @param value
+ * @param min
+ * @param max
  */
 export const intValidator = (value, min, max) => {
-  return isInt(value, { min, max }) ? null : (`Please enter an integer number from ${min} to ${max}`);
+  return isInt(value.toString(), { min, max }) ? null : (`Please enter an integer number from ${min} to ${max}`);
 };
 
 export const allFieldHasData = (value, allValues) => {
