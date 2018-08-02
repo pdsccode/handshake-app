@@ -87,22 +87,8 @@ export class BetHandshakeHandler {
         logJson = error.message;
         this.rollback(offchain);
       }
+      GA.createBetNotMatchSuccess({ side, odds, amount, hash });
 
-      // Send GA event tracking
-      try {
-        if (hash === -1) {
-          GA.createBetNotMatchFail({
-            side,
-            odds,
-            amount,
-            message: logJson,
-          });
-        } else {
-          GA.createBetNotMatchSuccess({ side, odds, amount });
-        }
-      } catch (err) {
-        console.log(err);
-      }
     } catch (e) {
       realBlockHash = '-1';
       logJson = e.message;
@@ -150,20 +136,7 @@ export class BetHandshakeHandler {
         logJson = error.message;
         this.rollback(offchain);
       }
-
-      // Send GA event tracking
-      try {
-        if (hash === -1) {
-          GA.createBetMatchedFail({
-            side,
-            odds,
-            amount,
-            message: logJson,
-          });
-        } else {
-          GA.createBetMatchedSuccess({ side, odds, amount });
-        }
-      } catch (err) {}
+      GA.createBetMatchedSuccess({ side, odds, amount, hash });
     } catch (e) {
 
     }

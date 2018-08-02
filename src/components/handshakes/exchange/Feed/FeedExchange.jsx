@@ -81,7 +81,7 @@ class FeedExchange extends React.PureComponent {
 
   handleOnShake = (name) => {
     const { offer } = this;
-    const { initUserId, authProfile, onFeedClick } = this.props;
+    const { initUserId, authProfile, onFeedClick, sortPriceIndexActive } = this.props;
 
     if (initUserId === authProfile?.id) {
       return;
@@ -117,11 +117,17 @@ class FeedExchange extends React.PureComponent {
 
         for (const item of Object.values(offer.items)) {
           if (item.currency === newCurrency) {
-            const { sellBalance } = item;
             let newType = EXCHANGE_ACTION.BUY;
-
-            if (sellBalance <= 0) {
+            if (sortPriceIndexActive.includes('buy')) {
               newType = EXCHANGE_ACTION.SELL;
+            } else if (sortPriceIndexActive.includes('sell')) {
+              newType = EXCHANGE_ACTION.BUY;
+            } else {
+              const { sellBalance } = item;
+
+              if (sellBalance <= 0) {
+                newType = EXCHANGE_ACTION.SELL;
+              }
             }
 
             this.props.rfChange(nameFormShakeDetail, 'type', newType);
@@ -433,7 +439,7 @@ class FeedExchange extends React.PureComponent {
     return coins;
   }
 
-  getNameShopDisplayed = () => {
+  getDisplayName = () => {
     const { username, itemFlags, items } = this.offer;
     if (username) {
       const wallet = new Ethereum();
@@ -481,7 +487,7 @@ class FeedExchange extends React.PureComponent {
 
     if (coins.length === 0) return null;
 
-    const address = this.getNameShopDisplayed();
+    const address = this.getDisplayName();
     const distance = this.getOfferDistance();
 
     return (
