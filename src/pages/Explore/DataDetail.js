@@ -493,10 +493,8 @@ class DataDetail extends React.Component {
                   }
                   {this.state.images.map((item, i) => {
                     return (
-                      <Card key={i} className="my-card2"  style={{ marginBottom: '1em'}}>
-                          <Link className="ui image" to={"/explore/" + item.category.id}>
-                          <Image src={item.link}/>
-                            </Link>
+                      <Card key={i} className="my-card2"  style={{ marginBottom: '1em'}}> 
+                         <Image src={item.link}  className="ui image"/>
                       </Card>
 
                     )
