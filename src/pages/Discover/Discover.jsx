@@ -332,6 +332,7 @@ class DiscoverPage extends React.Component {
                 modalRef={this.modalRef}
                 offer={offer}
                 setLoading={this.setLoading}
+                sortPriceIndexActive={sortPriceIndexActive}
               />
 
             </Col>
@@ -605,10 +606,10 @@ class DiscoverPage extends React.Component {
   onSortChange = (e, newValue) => {
     const { rfChange } = this.props;
     const { sortIndexActive } = this.state;
-    console.log('onFilterChange', newValue);
+    console.log('onSortChange', newValue);
     if (sortIndexActive !== newValue) {
       this.setLoading(true);
-      this.setState({ sortIndexActive: newValue }, () => {
+      this.setState({ sortIndexActive: newValue, sortPriceIndexActive: '' }, () => {
         this.loadDiscoverList();
       });
     }
@@ -616,7 +617,7 @@ class DiscoverPage extends React.Component {
 
   onSortPriceChange = (e, item) => {
     const { sortPriceIndexActive } = this.state;
-    console.log('onSortPriceChange', item);
+    console.log('onSortPriceChange', sortPriceIndexActive, item);
 
     if (sortPriceIndexActive !== item.id) {
       this.setLoading(true);
