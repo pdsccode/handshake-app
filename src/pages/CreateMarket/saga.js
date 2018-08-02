@@ -59,10 +59,6 @@ function* handleCreateNewEventSaga({ newEventData }) {
   }
 }
 
-function* handleCallOnChain({}) {
-  return null;
-}
-
 function* handleGenerateShareLinkSaga({ outcomeId, ...payload }) {
   try {
     return yield call(apiPost, {
@@ -80,8 +76,6 @@ function* handleGenerateShareLinkSaga({ outcomeId, ...payload }) {
 
 function* handleCreateEventSaga({ values, isNew, selectedSource }) {
   try {
-    yield call(updateCreateEventLoading, true);
-    return null;
     if (!isNew) {
       // Add new outcomes
       const newOutcomeList = values.outcomes.filter(o => !o.id).map(i => Object.assign({}, i, { public: 0 }));

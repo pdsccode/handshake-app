@@ -20,7 +20,7 @@ function* callApi({ _path, _key, type, method, data, BASE_URL = BASE_API.BASE_UR
   if (!type) throw new Error('Action type is required');
   if (_path) yield put(apiAction.preFetch({ _path, type }));
   const url = `${BASE_URL}/${PATH_URL}`;
-  let respondedData; // { status, result, error }
+  let respondedData = {}; // { status, result, error }
   try {
     const response = yield call($http, { url, data, method });
     const { status } = response.data;
