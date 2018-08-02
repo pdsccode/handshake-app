@@ -56,7 +56,7 @@ export default {
   notEnoughCoinInWallet: 'You don\'t have enough coin right now. Please top up your wallet.',
 
   createOfferStoreConfirm: 'Do you want to set up an offer to {intentMsg}?',
-  updateOfferStoreConfirm: 'Do you want to update an offer to {intentMsg}?',
+  updateOfferStoreConfirm: 'Are you sure you want to update your station?',
   notEnoughCoinInWalletStores: 'You don\'t have enough coin right now. Please top up your wallet.',
   addOfferItemSuccessMassage: 'Success! Your order is now listed on Ninja',
   deleteOfferItemSuccessMassage: 'You have successfully deleted your order.',
