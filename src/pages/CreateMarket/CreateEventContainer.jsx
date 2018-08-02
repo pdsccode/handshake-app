@@ -22,8 +22,7 @@ class CreateEventContainer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedEvent: undefined,
-      isCreateNew: false,
+      selectedEvent: 0,
     };
   }
 
@@ -33,13 +32,7 @@ class CreateEventContainer extends React.Component {
 
   onSelectEvent = (item) => {
     this.setState({
-      selectedEvent: item.id ? item : undefined,
-    });
-  }
-
-  onClickCreateNewEvent = () => {
-    this.setState({
-      isCreateNew: true,
+      selectedEvent: item.id ? item : 0,
     });
   }
 
@@ -51,20 +44,19 @@ class CreateEventContainer extends React.Component {
       };
     }).concat({
       id: 0,
-      value: 'Select an event',
+      value: 'Create a new event',
     }).sort((a, b) => a.id - b.id);
   }
 
   renderGroupTitle = (title) => (<div className="CreateEventFormGroupTitle">{title}</div>);
 
   renderEventDropdownList = (props, state) => {
-    if (state.isCreateNew) return null;
     const title = 'EVENT';
     return (
       <React.Fragment>
         {this.renderGroupTitle(title)}
         <Dropdown
-          placeholder="Select an event"
+          placeholder="Create a new event"
           className="EventDropdown"
           defaultId={state.selectedEvent}
           source={this.buildEventSelectorData(props)}
@@ -75,25 +67,9 @@ class CreateEventContainer extends React.Component {
     );
   }
 
-  renderOrCreateButton = (props, state) => {
-    if (state.selectedEvent || state.isCreateNew) return null;
-    return (
-      <React.Fragment>
-        <div className="CreateEventOption">Or</div>
-        <button
-          className="btn btn-primary btn-block"
-          onClick={this.onClickCreateNewEvent}
-        >
-          Create a new event
-        </button>
-      </React.Fragment>
-    );
-  }
-
   renderCreateEventForm = (props, state) => {
-    const { isCreateNew, selectedEvent } = state;
-    if (!isCreateNew && !selectedEvent) return null;
-    const initialValues = isCreateNew ? {
+    const { selectedEvent } = state;
+    const initialValues = !selectedEvent ? {
       outcomes: [{}],
     } : {
       eventId: selectedEvent.id,
@@ -109,10 +85,9 @@ class CreateEventContainer extends React.Component {
       <CreateEventForm
         initialValues={initialValues}
         reportList={props.reportList || []}
-        isNew={isCreateNew}
+        isNew={!selectedEvent}
         shareEvent={props.shareEvent}
         dispatch={props.dispatch}
-        isLoading={props.isCreateEventLoading}
       />
     );
   }
@@ -121,7 +96,6 @@ class CreateEventContainer extends React.Component {
     return (
       <React.Fragment>
         {this.renderEventDropdownList(props, state)}
-        {this.renderOrCreateButton(props, state)}
         {this.renderCreateEventForm(props, state)}
       </React.Fragment>
     );
