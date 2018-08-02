@@ -95,12 +95,6 @@ class BettingCreate extends React.Component {
     const { bettingShake } = this.props;
     const { closingDate, matchName, matchOutcome, onSubmitClick, side } = bettingShake;
 
-    // send event tracking
-    /*
-    try {
-      GA.clickGoButtonSimpleMode(matchName, matchOutcome, side);
-    } catch (err) {}
-    */
     if (side === SIDE.SUPPORT) {
       GA.clickPlaceSupportOrder(matchOutcome);
     } else {
@@ -120,6 +114,7 @@ class BettingCreate extends React.Component {
       onSubmitClick();
     } else {
       if (message){
+        GA.createBetNotSuccess(message);
         this.props.showAlert({
           message: <div className="text-center">{message}</div>,
           timeOut: 3000,
