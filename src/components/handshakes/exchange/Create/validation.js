@@ -15,17 +15,14 @@ export const validate = (values) => {
   const amountSellFloat = parseFloat(amountSell, 10);
   const wantToBuy = amountBuyFloat && amountBuyFloat > 0;
   const wantToSell = amountSellFloat && amountSellFloat > 0;
-  if (!wantToBuy && !wantToSell) {
-    errors.amountBuy = errors.amountSell = 'You need to fill in one of these!';
-  } else {
-    const validateMin = currency === CRYPTO_CURRENCY.BTC ? minValueBTC : minValueETH;
-    if (wantToBuy) {
-      errors.amountBuy = validateMin(amountBuy);
-    }
-    if (wantToSell) {
-      errors.amountSell = validateMin(amountSell);
-    }
+  const validateMin = currency === CRYPTO_CURRENCY.BTC ? minValueBTC : minValueETH;
+  if (wantToBuy) {
+    errors.amountBuy = validateMin(amountBuy);
   }
+  if (wantToSell) {
+    errors.amountSell = validateMin(amountSell);
+  }
+  // }
 
   return errors;
 };

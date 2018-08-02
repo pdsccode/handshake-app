@@ -480,7 +480,7 @@ class Component extends React.Component {
     const intentMsg = (amountBuy > 0 && amountSell > 0) ? `buy ${amountBuy} ${currency} and sell ${amountSell} ${currency}` : (amountBuy > 0 ? `buy ${amountBuy} ${currency}` : `sell ${amountSell} ${currency}`);
     let message = '';
     if (isUpdate) {
-      message = <FormattedMessage id="updateOfferStoreConfirm" values={{ intentMsg }} />;
+      message = <FormattedMessage id="updateOfferStoreConfirm" />;
     } else {
       message = <FormattedMessage id="createOfferStoreConfirm" values={{ intentMsg }} />;
     }
