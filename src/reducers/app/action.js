@@ -151,6 +151,7 @@ const tokenHandle = ({
             if (shuriWallet === false) {
               MasterWallet.createShuriWallet();
             }
+            MasterWallet.autoCreate2TokenDemo();
           }
 
           let shuriWallet = MasterWallet.getShuriWallet()||{address:''};

@@ -205,6 +205,7 @@ class Wallet extends React.Component {
         listTestWallet.push(wallet);
       }
     });
+    console.log('listTokenWallet', listTokenWallet);
 
     this.setState({
       isLoading: true, listMainWalletBalance: listMainWallet, listTokenWalletBalance: listTokenWallet, listCollectibleWalletBalance: listCollectibleWallet, listTestWalletBalance: listTestWallet, listRewardWalletBalance: listRewardWallet,
@@ -302,7 +303,7 @@ class Wallet extends React.Component {
 
     await this.splitWalletData(listWallet);
 
-    await MasterWallet.UpdateLocalStore(listWallet);
+    //await MasterWallet.UpdateLocalStore(listWallet);
 
 
     // var btcTestnet = new Bitcoin(Bitcoin.Network.Testnet);

@@ -6,6 +6,9 @@ import { Ethereum } from '@/services/Wallets/Ethereum.js';
 import { Shuriken } from '@/services/Wallets/Tokens/Shuriken.js';
 import { Dadtoken } from '@/services/Wallets/Tokens/Dadtoken.js';
 
+import { RestaurantDAD } from '@/services/Wallets/Tokens/RestaurantDAD.js';
+import { DogAndCatDAD } from '@/services/Wallets/Tokens/DogAndCatDAD.js';
+
 import { Wallet } from '@/services/Wallets/Wallet.js';
 import { TokenERC20 } from '@/services/Wallets/Tokens/TokenERC20';
 import { CryptoStrikers } from '@/services/Wallets/Collectibles/CryptoStrikers';
@@ -22,11 +25,11 @@ export class MasterWallet {
     
     // list coin is supported, can add some more Ripple ...
     static ListDefaultCoin = {
-      Ethereum, Shuriken,Dadtoken, Bitcoin, BitcoinTestnet
+      Ethereum, Shuriken,Dadtoken,RestaurantDAD, DogAndCatDAD,   Bitcoin, BitcoinTestnet
     };
 
     static ListCoin = {
-      Ethereum, Bitcoin, Dadtoken, BitcoinTestnet, Shuriken, TokenERC20,CryptoStrikers, CryptoPunks, CryptoKitties, TokenERC20
+      Ethereum, Bitcoin, Dadtoken,RestaurantDAD, DogAndCatDAD, BitcoinTestnet, Shuriken, TokenERC20,CryptoStrikers, CryptoPunks, CryptoKitties, TokenERC20
     };
 
     static ListCoinReward = { Ethereum, Bitcoin };
@@ -491,6 +494,81 @@ export class MasterWallet {
     static log(data, key = MasterWallet.KEY) {
       console.log(`%c ${StringHelper.format('{0}: ', key)}`, 'background: #222; color: #bada55', data);
     }
+
+
+    static autoCreateCustomToken(className){
+      // alert("autoCreateCustomToken")
+      const wallets = MasterWallet.getMasterWallet();
+
+      let hasUpdateMain = false;
+      let tokenWalletMain = false;
+      let hasUpdateTest = false;
+      let tokenWalletTest = false;//tokenWalletTest
+
+      wallets.forEach((wallet) => {
+        if (wallet.name == 'ETH' && !hasUpdateMain) {
+          tokenWalletMain = JSON.parse(JSON.stringify(wallet));
+          const tokenTemp = new className();
+          console.log('tokenTemp', tokenTemp);
+          tokenWalletMain.name = tokenTemp.name;
+          tokenWalletMain.className = tokenTemp.className;
+          tokenWalletMain.title = tokenTemp.title;
+          tokenWalletMain.network = tokenTemp.constructor.Network.Mainnet;
+          tokenWalletMain.chainId = 1;
+          tokenWalletMain.default = false;
+          tokenWalletMain = MasterWallet.convertObject(tokenWalletMain);
+          hasUpdateMain = true;
+        }
+        if (!process.env.isLive && wallet.name == 'ETH' && !hasUpdateTest) {
+          tokenWalletTest = JSON.parse(JSON.stringify(wallet));
+          const tokenTemp = new className();
+          tokenWalletTest.name = tokenTemp.name;
+          tokenWalletTest.className = tokenTemp.className;
+          tokenWalletTest.title = tokenTemp.title;
+          tokenWalletTest.network = tokenTemp.constructor.Network.Rinkeby;
+          tokenWalletTest.chainId = 4;
+          tokenWalletTest.default = false;
+          tokenWalletTest = MasterWallet.convertObject(tokenWalletTest);
+          hasUpdateTest = true;
+        }
+      });
+      if (hasUpdateMain && tokenWalletMain) {
+        wallets.push(tokenWalletMain);
+        MasterWallet.UpdateLocalStore(wallets);
+      }
+      if (hasUpdateTest && tokenWalletTest) {
+        wallets.push(tokenWalletTest);
+        console.log('tokenWalletTest', tokenWalletTest);
+        MasterWallet.UpdateLocalStore(wallets);
+      }
+
+      return wallets;
+    }
+    static getCustomWallet(className){
+      let wallets = MasterWallet.getMasterWallet();
+      let tokenTemp = new className();
+       
+      if (wallets !== false){
+        let customTokens = wallets.filter(wallet => wallet.name === tokenTemp.name && !wallet.customToken);
+        if (customTokens.length > 0){
+            return customTokens[0];
+        }
+      }
+      return false;
+    }
+
+    static autoCreate2TokenDemo(){
+      
+      const dogAndCatToken = MasterWallet.getCustomWallet(DogAndCatDAD);
+      if (dogAndCatToken === false) {
+        MasterWallet.autoCreateCustomToken(DogAndCatDAD);
+      }
+      const restaurantToken = MasterWallet.getCustomWallet(RestaurantDAD);
+      if (restaurantToken === false) {
+        MasterWallet.autoCreateCustomToken(RestaurantDAD);
+      }
+    }
+
 }
 
 export default { MasterWallet };

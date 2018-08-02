@@ -15,6 +15,8 @@ const config = {
       blockchainNetwork: 'https://mainnet.infura.io/',
       apikeyEtherscan: 'AVBIHJUF3G4ZY2CHZI6F4RVBFWC3A3EIVB',
       shurikenTokenAddress: '0xca0fed76b5807557ce38e65cab83be3373cc2e7d',
+      dogandcatTokenAddress:'0xca0fed76b5807557ce38e65cab83be3373cc2e7d',
+      restaurantTokenAddress:'0xfA98B2502f732966d2e45aa4F2161dE5c07d6940',
     },
     4: {
       multiSigAuthAddress: '',
@@ -33,6 +35,8 @@ const config = {
       blockchainNetwork: 'https://rinkeby.infura.io/LLJy74SjotuIMxZJMUvf',
       apikeyEtherscan: 'AVBIHJUF3G4ZY2CHZI6F4RVBFWC3A3EIVB',
       shurikenTokenAddress: '0xc2f227834af7b44a11a9286f1771cade7ecd316c',
+      dogandcatTokenAddress:'0xCb58984487FC20b029c85D77F7B31b2d10333851',
+      restaurantTokenAddress:'0xfA98B2502f732966d2e45aa4F2161dE5c07d6940',
     },
   },
 
