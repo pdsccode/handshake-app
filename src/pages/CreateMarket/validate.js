@@ -1,4 +1,6 @@
 import isEmail from 'validator/lib/isEmail';
+import isURL from 'validator/lib/isURL';
+import isInt from 'validator/lib/isInt';
 
 /**
  * Validator empty value of control
@@ -14,6 +16,22 @@ export const required = (value) => {
  */
 export const email = (value) => {
   return !isEmail(value) ? ('Invalid email address') : null;
+};
+
+/**
+ * Validator URL
+ * @param value
+ */
+export const urlValidator = (value) => {
+  return isURL(value) ? null : ('Invalid URL');
+};
+
+/**
+ * Validator Int with min-max
+ * @param value
+ */
+export const intValidator = (value, min, max) => {
+  return isInt(value, { min, max }) ? null : (`Please enter an integer number from ${min} to ${max}`);
 };
 
 export const allFieldHasData = (value, allValues) => {

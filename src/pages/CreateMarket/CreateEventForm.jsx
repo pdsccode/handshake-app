@@ -7,7 +7,7 @@ import IconTrash from '@/assets/images/icon/icon-trash.svg';
 import moment from 'moment';
 import DatePicker from '@/components/handshakes/betting-event/Create/DatePicker/DatePicker';
 import { renderField } from './form';
-import { required, allFieldHasData } from './validate';
+import { required, allFieldHasData, urlValidator, intValidator } from './validate';
 import { createEvent } from './action';
 import ShareMarket from './ShareMarket';
 
@@ -108,7 +108,7 @@ class CreateEventForm extends Component {
                   validate={[required]}
                   disabled={!isNew && fields.get(index).id}
                 />
-                {isNew && !!index &&
+                {!fields.get(index).id && !!index &&
                 <button
                   type="button"
                   className="trash"
@@ -142,11 +142,11 @@ class CreateEventForm extends Component {
         {this.renderGroupTitle(title)}
         <Field
           name="creatorFee"
-          type="text"
+          type="number"
           className="form-group"
           fieldClass="form-control"
           component={renderField}
-          validate={[required]}
+          validate={[required, (n) => intValidator(n, 0, 100)]}
           disabled={!isNew}
         />
         {this.renderGroupNote(textNote)}
@@ -183,7 +183,7 @@ class CreateEventForm extends Component {
               fieldClass="form-control"
               component={renderField}
               placeholder="Enter your own source URL"
-              validate={[required]}
+              validate={[required, urlValidator]}
             />
             {this.renderGroupNote('We will review your source and get back to you within 24 hours.')}
           </React.Fragment>
