@@ -761,7 +761,10 @@ class Component extends React.Component {
 
   // /////////////////////
 
-  handleValidate = values => validate(values);
+  handleValidate = values => {
+    const { isUpdate } = this.state;
+    return validate(values, isUpdate);
+  }
 
   gotoUserDashBoard = () => {
     this.props.history.push(`${URL.HANDSHAKE_ME}?id=${HANDSHAKE_ID.EXCHANGE}&tab=dashboard`);
