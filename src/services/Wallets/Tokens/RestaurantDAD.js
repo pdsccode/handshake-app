@@ -27,7 +27,7 @@ export class RestaurantDAD extends TokenERC20 {
       const web3 = this.getWeb3();      
       let contract = new web3.eth.Contract(   
         erc20Abi,     
-        configs.network[this.chainId].shurikenTokenAddress,
+        configs.network[this.chainId].restaurantTokenAddress,
       );
       
       let balance = await contract.methods.balanceOf(this.address).call();                
