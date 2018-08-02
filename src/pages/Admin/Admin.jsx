@@ -62,7 +62,12 @@ class Admin extends React.Component {
     const { matches, login } = this.state;
     return (!login ?
       <Login /> :
-      <BettingReport matches={matches} />
+      <BettingReport
+        matches={matches}
+        onReportSuccess={()=> {
+          this.fetchMatches();
+        }}
+      />
     );
   }
 }

@@ -16,6 +16,7 @@ class BettingReport extends React.Component {
   static propTypes = {
     matches: PropTypes.array.isRequired,
     resolved: PropTypes.bool,
+    onReportSuccess: PropTypes.func,
   }
   static defaultProps = {
     resolved: false,
@@ -142,7 +143,8 @@ class BettingReport extends React.Component {
     localStorage.setItem('disable', true);
     setTimeout(() => {
       localStorage.setItem('disable', false);
-      this.fetchMatches();
+      //this.fetchMatches();
+      this.props.onReportSuccess();
       this.setState({
         disable: false,
       });
