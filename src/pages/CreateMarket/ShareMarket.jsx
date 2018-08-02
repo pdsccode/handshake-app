@@ -54,7 +54,7 @@ class ShareMarket extends React.Component {
         <div className="ShareEventToBuddiesTitle">
           Invite your buddies to bet
         </div>
-        <ShareSocial shareUrl={url} socialList={socialList} />
+        <ShareSocial title="Ninja" shareUrl={url} socialList={socialList} />
       </div>
     );
   }

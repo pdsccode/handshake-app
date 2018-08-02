@@ -13,8 +13,7 @@ class EmailForm extends React.Component {
   };
 
   onSubmit = (value) => {
-    const { email } = value;
-    this.props.dispatch(updateEmail(email));
+    this.props.dispatch(updateEmail({ newEmail: value }));
   }
 
   renderForm = (props) => {

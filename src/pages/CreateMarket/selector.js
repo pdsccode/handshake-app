@@ -1,4 +1,9 @@
-export const hasEmail = (state) => !!state.auth.profile.email;
+import _ from 'lodash';
+
+export const hasEmail = (state) => {
+  if (_.isEmpty(state.user.profile)) return null;
+  return !!state.user.profile.email;
+};
 
 export const eventSelector = (state) => state.prediction.events;
 

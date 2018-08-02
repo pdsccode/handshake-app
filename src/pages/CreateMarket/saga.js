@@ -3,7 +3,7 @@ import { apiGet, apiPost } from '@/stores/api-saga';
 import { API_URL } from '@/constants';
 import { BetHandshakeHandler } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
 import { handleLoadMatches } from '@/pages/Prediction/saga';
-import { loadCreateEventData, createEvent, updateCreateEventLoading, shareEvent, getUserProfile } from './action';
+import { loadCreateEventData, createEvent, shareEvent, getUserProfile, updateEmail } from './action';
 import { reportSelector } from './selector';
 
 function* handleLoadReportsSaga({ cache = true }) {
@@ -74,6 +74,15 @@ function* handleGenerateShareLinkSaga({ outcomeId, ...payload }) {
   }
 }
 
+function* saveGenerateShareLinkToStore(data) {
+  const { outcomeId, eventName } = data;
+  const generateLink = yield call(handleGenerateShareLinkSaga, { outcomeId });
+  return yield put(shareEvent({
+    url: `${window.location.origin}/${generateLink.data.slug_short}`,
+    name: eventName,
+  }));
+}
+
 function* handleCreateEventSaga({ values, isNew, selectedSource }) {
   try {
     if (!isNew) {
@@ -86,11 +95,8 @@ function* handleCreateEventSaga({ values, isNew, selectedSource }) {
       if (!addOutcomeResult.error) {
         const outcomeId = addOutcomeResult.data[0].id;
         const eventName = addOutcomeResult.data[0].name;
-        const generateLink = yield call(handleGenerateShareLinkSaga, { outcomeId });
-        yield put(shareEvent({
-          url: `${window.location.origin}/${generateLink.data.slug_short}`,
-          name: eventName,
-        }));
+        console.log('OUTCOME', addOutcomeResult);
+        yield saveGenerateShareLinkToStore({ outcomeId, eventName });
       }
     } else {
       const reportSource = {
@@ -120,6 +126,7 @@ function* handleCreateEventSaga({ values, isNew, selectedSource }) {
       const { data } = yield call(handleCreateNewEventSaga, { newEventData });
       if (data && data.length) {
         const eventData = data[0];
+        
         const inputData = eventData.outcomes.map(o => {
           return {
             fee: eventData.market_fee,
@@ -130,12 +137,16 @@ function* handleCreateEventSaga({ values, isNew, selectedSource }) {
             offchain: o.id,
           };
         });
+        console.log('eventData', eventData);
+        const outcomeId = eventData.outcomes[0].id;
+        const eventName = eventData.name;
+        yield saveGenerateShareLinkToStore({ outcomeId, eventName });
         console.log('inputData', inputData);
         betHandshakeHandler.createNewEvent(inputData);
       }
     }
   } catch (e) {
-    console.error('handleCreateNewEventSaga', e);
+    return console.error('handleCreateNewEventSaga', e);
   }
 }
 
@@ -144,11 +155,27 @@ function* handleGetUserProfileSaga() {
     return yield call(apiGet, {
       PATH_URL: API_URL.USER.PROFILE,
       type: 'GET_USER_PROFILE',
-      _key: 'user',
-      _path: 'auth.profile',
+      _key: 'profile',
+      _path: 'user',
     });
   } catch (e) {
     return console.error('handleGetUserProfile', e);
+  }
+}
+
+function* handleUpdateEmail({ newEmail, ...payload }) {
+  try {
+    const respond = yield call(apiPost, {
+      PATH_URL: API_URL.USER.PROFILE,
+      type: 'UPDATE_EMAIL',
+      data: {
+        email: newEmail.email,
+      },
+      ...payload,
+    });
+    console.log('RESPOND', respond);
+  } catch (e) {
+    return console.error('handleUpdateEmail', e);
   }
 }
 
@@ -156,4 +183,5 @@ export default function* createMarketSaga() {
   yield takeLatest(loadCreateEventData().type, handleLoadCreateEventData);
   yield takeLatest(createEvent().type, handleCreateEventSaga);
   yield takeLatest(getUserProfile().type, handleGetUserProfileSaga);
+  // yield takeLatest(updateEmail().type, handleUpdateEmail);
 }
