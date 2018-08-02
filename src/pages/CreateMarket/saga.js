@@ -147,19 +147,6 @@ function* handleCreateEventSaga({ values, isNew, selectedSource }) {
   }
 }
 
-function* handleGetUserProfileSaga() {
-  try {
-    return yield call(apiGet, {
-      PATH_URL: API_URL.USER.PROFILE,
-      type: 'GET_USER_PROFILE',
-      _key: 'profile',
-      _path: 'user',
-    });
-  } catch (e) {
-    return console.error('handleGetUserProfile', e);
-  }
-}
-
 function* handleUpdateEmail({ newEmail, ...payload }) {
   try {
     const userProfile = new FormData();
@@ -180,6 +167,5 @@ function* handleUpdateEmail({ newEmail, ...payload }) {
 export default function* createMarketSaga() {
   yield takeLatest(loadCreateEventData().type, handleLoadCreateEventData);
   yield takeLatest(createEvent().type, handleCreateEventSaga);
-  yield takeLatest(getUserProfile().type, handleGetUserProfileSaga);
   yield takeLatest(updateEmail().type, handleUpdateEmail);
 }

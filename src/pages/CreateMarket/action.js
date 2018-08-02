@@ -3,7 +3,7 @@ import { SET_DATA } from '@/stores/data-action';
 export const updateEmailToStore = (value) => {
   return SET_DATA({
     type: 'CREATE_MARKET:UPDATE_EMAIL_TO_STORE',
-    _path: 'user.profile.email',
+    _path: 'auth.profile.email',
     _value: value,
   });
 };
@@ -29,13 +29,6 @@ export const shareEvent = (value) => {
     _path: 'ui.shareEvent',
     _value: value,
   });
-};
-
-export const getUserProfile = (payload = {}) => {
-  return {
-    type: 'CREATE_MARKET:GET_USER_PROFILE',
-    ...payload,
-  };
 };
 
 export const loadCreateEventData = (payload = {}) => {

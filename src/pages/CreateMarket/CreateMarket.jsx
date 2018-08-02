@@ -6,7 +6,6 @@ import './CreateMarket.scss';
 import { hasEmail } from './selector';
 import EmailForm from './EmailForm';
 import CreateEventContainer from './CreateEventContainer';
-import { getUserProfile } from './action';
 
 class CreateMarket extends React.Component {
   static displayName = 'CreateMarket';
@@ -18,10 +17,6 @@ class CreateMarket extends React.Component {
   static defaultProps = {
     hasEmail: false,
   };
-
-  componentDidMount() {
-    this.props.dispatch(getUserProfile());
-  }
 
   renderComponent = (props) => {
     return (!props.hasEmail) ? <EmailForm /> : <CreateEventContainer />;
