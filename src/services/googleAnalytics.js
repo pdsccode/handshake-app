@@ -36,6 +36,7 @@ const EVENT_ACTION = {
   CLICK_COMMENTS_BOX: 'Click comments box',
   CLICK_SHARE_BUTTON: 'Click share button',
   CREATE_BET_SUCCESSFUL: 'Create bet successful',
+  CANT_CREATE_BET: `Can't create bet`,
   CREATE_SHARE_BUTTON: 'Create share button',
   CREATE_BET_NOT_MATCH_FAIL: 'Create bet not match - fail',
   CREATE_BET_NOT_MATCH_SUCCESS: 'Create bet not match - success',
@@ -296,29 +297,21 @@ class GoogleAnalyticsService {
     } catch (err) {}
   }
 
-
-
   /**
    *
-   * @param side
-   * @param odds
-   * @param amount
-   * @param message
    */
-  createBetNotMatchFail({
-    side, odds, amount, message,
-  }) {
+  createBetNotSuccess(errMessage) {
+    const params = {
+      category: EVENT_CATEGORY.ORDER_BOOK,
+      action: EVENT_ACTION.CANT_CREATE_BET,
+      label: errMessage,
+    };
+    console.log(TAG, 'createBetNotSuccess', params);
     try {
-      const category = this.eventCategory;
-      if (category) {
-        this.sendGAEvent({
-          category,
-          action: EVENT_CATEGORY.CREATE_BET_NOT_MATCH_FAIL,
-          label: `${BETTING_SIDE_NAME[side]} - Odds: ${odds} - Amount: ${amount} - Reason: ${message}`,
-        });
-      }
+      this.sendGAEvent(params);
     } catch (err) {}
   }
+
 
   /** z
    *
@@ -326,11 +319,11 @@ class GoogleAnalyticsService {
    * @param odds
    * @param amount
    */
-  createBetNotMatchSuccess({ side, odds, amount }) {
+  createBetNotMatchSuccess({ side, odds, amount, txHash }) {
     const params = {
       category: EVENT_CATEGORY.ORDER_BOOK,
       action: EVENT_ACTION.CREATE_BET_NOT_MATCH_SUCCESS,
-      label: `${BETTING_SIDE_NAME[side]} - Odds: ${odds} - Amount: ${amount}`,
+      label: `${BETTING_SIDE_NAME[side]} - Odds: ${odds} - Amount: ${amount}-${txHash}`,
     };
     console.log(TAG, 'createBetNotMatchSuccess', params);
 
@@ -342,27 +335,6 @@ class GoogleAnalyticsService {
     } catch (err) {}
   }
 
-  /**
-   *
-   * @param side
-   * @param odds
-   * @param amount
-   * @param message
-   */
-  createBetMatchedFail({
-    side, odds, amount, message,
-  }) {
-    try {
-      const category = this.eventCategory;
-      if (category) {
-        this.sendGAEvent({
-          category,
-          action: EVENT_CATEGORY.CREATE_BET_MATCHED_FAIL,
-          label: `${BETTING_SIDE_NAME[side]} - Odds: ${odds} - Amount: ${amount} - Reason: ${message}`,
-        });
-      }
-    } catch (err) {}
-  }
 
   /**
    *
@@ -370,18 +342,18 @@ class GoogleAnalyticsService {
    * @param odds
    * @param amount
    */
-  createBetMatchedSuccess({ side, odds, amount }) {
+  createBetMatchedSuccess({ side, odds, amount, txHash }) {
     const params = {
       category: EVENT_CATEGORY.ORDER_BOOK,
       action: EVENT_ACTION.CREATE_BET_MATCHED_SUCCESS,
-      label: `${BETTING_SIDE_NAME[side]} - Odds: ${odds} - Amount: ${amount}`,
+      label: `${BETTING_SIDE_NAME[side]} - Odds: ${odds} - Amount: ${amount}-${txHash}`,
     };
     console.log(TAG, 'createBetMatchedSuccess', params);
     try {
-      if (category) {
-        this.sendGAEvent(params);
-      }
-    } catch (err) {}
+      this.sendGAEvent(params);
+    } catch (err) {
+      console.log(TAG, err);
+    }
   }
 
   /**
