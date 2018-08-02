@@ -6,7 +6,7 @@ import './CreateMarket.scss';
 import { hasEmail } from './selector';
 import EmailForm from './EmailForm';
 import CreateEventContainer from './CreateEventContainer';
-import { updateEmail } from './action';
+import { getUserProfile } from './action';
 
 class CreateMarket extends React.Component {
   static displayName = 'CreateMarket';
@@ -19,13 +19,12 @@ class CreateMarket extends React.Component {
     hasEmail: false,
   };
 
-  handleSubmit = (value) => {
-    const { email } = value;
-    this.props.dispatch(updateEmail(email));
+  componentDidMount() {
+    this.props.dispatch(getUserProfile());
   }
 
   renderComponent = (props) => {
-    return (!props.hasEmail) ? <EmailForm onSubmit={this.handleSubmit} /> : <CreateEventContainer />;
+    return (!props.hasEmail) ? <EmailForm /> : <CreateEventContainer />;
   };
 
   render() {

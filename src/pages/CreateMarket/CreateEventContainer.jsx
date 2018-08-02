@@ -1,17 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { loadMatches } from '@/pages/Prediction/action';
 import { eventSelector, isLoading } from '@/pages/Prediction/selector';
 import Dropdown from '@/components/core/controls/Dropdown';
 import CreateEventForm from './CreateEventForm';
 import { loadCreateEventData } from './action';
-import { reportSelector } from './selector';
+import { reportSelector, shareEventSelector } from './selector';
+
 
 class CreateEventContainer extends React.Component {
   static displayName = 'CreateEventContainer';
   static propTypes = {
-    dispatch: PropTypes.func,
+    dispatch: PropTypes.func.isRequired,
     eventList: PropTypes.array,
   };
 
@@ -110,6 +110,7 @@ class CreateEventContainer extends React.Component {
         initialValues={initialValues}
         reportList={props.reportList || []}
         isNew={isCreateNew}
+        shareEvent={props.shareEvent}
         dispatch={props.dispatch}
         isLoading={props.isCreateEventLoading}
       />
@@ -141,6 +142,7 @@ export default connect(
       eventList: eventSelector(state),
       isLoading: isLoading(state),
       reportList: reportSelector(state),
+      shareEvent: shareEventSelector(state),
     };
   },
 )(CreateEventContainer);

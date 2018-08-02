@@ -1,29 +1,27 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Field } from 'redux-form';
-import createForm from '@/components/core/form/createForm';
+import { Field, reduxForm } from 'redux-form';
 import IconEmail from '@/assets/images/icon/icon-email.svg';
 import { renderField } from './form';
 import { required, email } from './validate';
+import { updateEmail } from './action';
 
 class EmailForm extends React.Component {
   static displayName = 'EmailForm';
   static propTypes = {
-    onSubmit: PropTypes.func.isRequired,
-    dispatch: PropTypes.func,
+    dispatch: PropTypes.func.isRequired,
   };
 
+  onSubmit = (value) => {
+    const { email } = value;
+    this.props.dispatch(updateEmail(email));
+  }
+
   renderForm = (props) => {
-    const { onSubmit } = props;
-    const RenderForm = createForm({
-      propsReduxForm: {
-        form: 'emailRequired',
-        enableReinitialize: true,
-        clearSubmitErrors: true,
-      },
-    });
+    const { onSubmit } = this;
+    const { handleSubmit } = props;
     return (
-      <RenderForm className="EmailRequiredForm" onSubmit={onSubmit}>
+      <form className="EmailRequiredForm" onSubmit={handleSubmit(onSubmit)}>
         <Field
           name="email"
           type="email"
@@ -34,11 +32,11 @@ class EmailForm extends React.Component {
           validate={[required, email]}
         />
         <button type="submit" className="btn btn-primary btn-block">Next</button>
-      </RenderForm>
+      </form>
     );
   }
 
-  renderComponent = (props, state) => {
+  renderComponent = (props) => {
     return (
       <div className="EmailRequiredContainer">
         <img src={IconEmail} alt="" className="EmailRequiredIcon" />
@@ -52,10 +50,14 @@ class EmailForm extends React.Component {
   render() {
     return (
       <div className={EmailForm.displayName}>
-        {this.renderComponent(this.props, this.state)}
+        {this.renderComponent(this.props)}
       </div>
     );
   }
 }
 
-export default EmailForm;
+export default reduxForm({
+  form: 'emailForm',
+  enableReinitialize: true,
+  clearSubmitErrors: true,
+})(EmailForm);

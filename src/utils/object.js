@@ -17,11 +17,3 @@ export function removeItems(obj, keys) {
 export function getKeyByValue(obj, val) {
   return Object.keys(obj)[Object.values(obj).indexOf(val)];
 }
-
-/**
- * Check object empty
- * @param {Object} obj
- */
-export function isEmpty(obj) {
-  return Object.keys(obj).length;
-}

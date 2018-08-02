@@ -4,5 +4,6 @@ export default {
   ui: {
     showedLuckyPool: false,
     side: null,
+    shareEvent: null,
   },
 };

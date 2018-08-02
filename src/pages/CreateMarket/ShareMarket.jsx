@@ -8,21 +8,11 @@ import TwitterSVG from '@/assets/images/icon/icon_twitter.svg';
 
 class ShareMarket extends React.Component {
   static propTypes = {
-    event: PropTypes.object,
-    shareURL: PropTypes.string,
+    shareEvent: PropTypes.object,
   };
 
   static defaultProps = {
-    event: {
-      hid: null,
-      id: 135,
-      name: 'Măng non win',
-      public: 0,
-      result: -1,
-      total_amount: null,
-      total_dispute_amount: null,
-    },
-    shareURL: null,
+    shareEvent: null,
   };
 
   renderCheckmark = () => (
@@ -34,8 +24,8 @@ class ShareMarket extends React.Component {
   );
 
   renderMessage = (props) => {
-    const { event } = props;
-    const { name } = event;
+    const { shareEvent } = props;
+    const { name } = shareEvent;
     return (
       <div className="ShareEventMessage">
         Your event <strong>{`"${name}"`}</strong> was successfully created!
@@ -44,7 +34,8 @@ class ShareMarket extends React.Component {
   }
 
   renderShares = (props) => {
-    const { shareURL } = props;
+    const { shareEvent } = props 
+    const { url } = shareEvent;
     const socialList = [
       {
         img: FacebookSVG,
@@ -63,7 +54,7 @@ class ShareMarket extends React.Component {
         <div className="ShareEventToBuddiesTitle">
           Invite your buddies to bet
         </div>
-        <ShareSocial shareUrl={shareURL} socialList={socialList} />
+        <ShareSocial shareUrl={url} socialList={socialList} />
       </div>
     );
   }

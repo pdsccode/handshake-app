@@ -14,7 +14,22 @@ export const updateCreateEventLoading = (value) => {
     _path: 'ui.isCreateEventLoading',
     _value: value,
   });
-}
+};
+
+export const shareEvent = (value) => {
+  return SET_DATA({
+    type: 'CREATE_MARKET:SHARE_EVENT',
+    _path: 'ui.shareEvent',
+    _value: value,
+  });
+};
+
+export const getUserProfile = (payload = {}) => {
+  return {
+    type: 'CREATE_MARKET:GET_USER_PROFILE',
+    ...payload,
+  };
+};
 
 export const loadCreateEventData = (payload = {}) => {
   return {
@@ -35,5 +50,5 @@ export const createEvent = (payload = {}) => {
     type: 'CREATE_MARKET:CREATE_EVENT',
     ...payload,
   };
-}
+};
 

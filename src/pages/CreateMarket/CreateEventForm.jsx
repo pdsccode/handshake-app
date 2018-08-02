@@ -18,6 +18,7 @@ class CreateEventForm extends Component {
     reportList: PropTypes.array,
     isNew: PropTypes.bool,
     initialValues: PropTypes.object,
+    shareEvent: PropTypes.object,
   };
 
   static defaultProps = {
@@ -25,6 +26,7 @@ class CreateEventForm extends Component {
     reportList: undefined,
     isNew: true,
     initialValues: {},
+    shareEvent: null,
   };
 
   constructor(props) {
@@ -34,7 +36,6 @@ class CreateEventForm extends Component {
       reportingTime: props.initialValues.reportingTime,
       disputeTime: props.initialValues.disputeTime,
       selectedReportSource: undefined,
-      shareLink: null,
     };
   }
 
@@ -49,21 +50,6 @@ class CreateEventForm extends Component {
   setFieldValueToState = (fieldName, value) => {
     this.setState({
       [fieldName]: value,
-    });
-  }
-
-  // handleAddOutcomeSuccess = (data) => {
-  //   console.log('handleAddOutcomeSuccess', data);
-  //   const { dispatch } = this.props;
-  //   dispatch(generateShareLink({
-  //     outcomeId: data.data[0].id,
-  //     successFn: this.handleGenerateShareLink,
-  //   }));
-  // }
-
-  handleGenerateShareLink = (respond) => {
-    this.setState({
-      shareLink: `${window.location.origin}/${respond.data.slug_short}`,
     });
   }
 
@@ -267,9 +253,9 @@ class CreateEventForm extends Component {
     const cls = classNames(CreateEventForm.displayName, {
       [props.className]: !!props.className,
     });
-    const { shareLink } = state;
-    if (shareLink) {
-      return (<ShareMarket shareURL={shareLink} />);
+    const { shareEvent } = props;
+    if (shareEvent) {
+      return (<ShareMarket shareEvent={shareEvent} />);
     }
     return (
       <form className={cls} onSubmit={props.handleSubmit(this.onCreateNewEvent)}>

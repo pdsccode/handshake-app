@@ -1,9 +1,9 @@
-import { takeLatest, call, select } from 'redux-saga/effects';
+import { takeLatest, call, put, select } from 'redux-saga/effects';
 import { apiGet, apiPost } from '@/stores/api-saga';
 import { API_URL } from '@/constants';
 import { BetHandshakeHandler } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
 import { handleLoadMatches } from '@/pages/Prediction/saga';
-import { loadCreateEventData, createEvent, updateCreateEventLoading, generateShareLink } from './action';
+import { loadCreateEventData, createEvent, updateCreateEventLoading, shareEvent, getUserProfile } from './action';
 import { reportSelector } from './selector';
 
 function* handleLoadReportsSaga({ cache = true }) {
@@ -59,6 +59,25 @@ function* handleCreateNewEventSaga({ newEventData }) {
   }
 }
 
+function* handleCallOnChain({}) {
+  return null;
+}
+
+function* handleGenerateShareLinkSaga({ outcomeId, ...payload }) {
+  try {
+    return yield call(apiPost, {
+      PATH_URL: `${API_URL.CRYPTOSIGN.GENERATE_LINK}`,
+      type: 'GENERATE_SHARE_LINK',
+      data: {
+        outcome_id: outcomeId,
+      },
+      ...payload,
+    });
+  } catch (e) {
+    return console.error('handleGenerateShareLinkSaga', e);
+  }
+}
+
 function* handleCreateEventSaga({ values, isNew, selectedSource }) {
   try {
     yield call(updateCreateEventLoading, true);
@@ -71,7 +90,13 @@ function* handleCreateEventSaga({ values, isNew, selectedSource }) {
         newOutcomeList,
       });
       if (!addOutcomeResult.error) {
-        // yield call(handleGenerateShareLinkSaga, {})
+        const outcomeId = addOutcomeResult.data[0].id;
+        const eventName = addOutcomeResult.data[0].name;
+        const generateLink = yield call(handleGenerateShareLinkSaga, { outcomeId });
+        yield put(shareEvent({
+          url: `${window.location.origin}/${generateLink.data.slug_short}`,
+          name: eventName,
+        }));
       }
     } else {
       const reportSource = {
@@ -120,22 +145,21 @@ function* handleCreateEventSaga({ values, isNew, selectedSource }) {
   }
 }
 
-function* handleGenerateShareLinkSaga({ outcomeId, ...payload }) {
+function* handleGetUserProfileSaga() {
   try {
-    return yield call(apiPost, {
-      PATH_URL: `${API_URL.CRYPTOSIGN.GENERATE_LINK}`,
-      type: 'GENERATE_SHARE_LINK',
-      data: {
-        outcome_id: outcomeId,
-      },
-      ...payload,
+    return yield call(apiGet, {
+      PATH_URL: API_URL.USER.PROFILE,
+      type: 'GET_USER_PROFILE',
+      _key: 'user',
+      _path: 'auth.profile',
     });
   } catch (e) {
-    return console.error('handleGenerateShareLinkSaga', e);
+    return console.error('handleGetUserProfile', e);
   }
 }
 
 export default function* createMarketSaga() {
   yield takeLatest(loadCreateEventData().type, handleLoadCreateEventData);
   yield takeLatest(createEvent().type, handleCreateEventSaga);
+  yield takeLatest(getUserProfile().type, handleGetUserProfileSaga);
 }

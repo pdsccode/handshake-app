@@ -245,6 +245,9 @@ export const API_URL = {
   CHAT: {
     GET_USER_NAME: 'user/username',
   },
+  USER: {
+    PROFILE: 'user/profile',
+  },
 };
 
 export const HANDSHAKE_STATUS = {

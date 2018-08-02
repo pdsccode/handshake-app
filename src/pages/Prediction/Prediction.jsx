@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import qs from 'query-string';
 import BetMode from '@/components/handshakes/betting/Feed/OrderPlace/BetMode';
 import ModalDialog from '@/components/core/controls/ModalDialog';
 import Loading from '@/components/Loading';
@@ -9,9 +8,7 @@ import LuckyReal from '@/components/handshakes/betting/LuckyPool/LuckyReal/Lucky
 import LuckyLanding from '@/pages/LuckyLanding/LuckyLanding';
 import GA from '@/services/googleAnalytics';
 import LuckyFree from '@/components/handshakes/betting/LuckyPool/LuckyFree/LuckyFree';
-import { strToInt } from '@/utils/string';
-import { isEmpty } from '@/utils/object';
-import { eventSelector, isLoading, showedLuckyPoolSelector, queryStringSelector } from './selector';
+import { eventSelector, isLoading, showedLuckyPoolSelector } from './selector';
 import { loadMatches, updateShowedLuckyPool } from './action';
 import EventItem from './EventItem';
 
@@ -22,13 +19,11 @@ class Prediction extends React.Component {
   static propTypes = {
     eventList: PropTypes.array,
     showedLuckyPool: PropTypes.bool,
-    queryString: PropTypes.string,
     dispatch: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
     eventList: [],
-    queryString: null,
   };
 
   constructor(props) {
@@ -41,15 +36,6 @@ class Prediction extends React.Component {
 
   componentDidMount() {
     this.props.dispatch(loadMatches());
-  }
-
-  componentWillReceiveProps(nextProps) {
-    const { queryString } = this.props;
-    const { eventList } = nextProps;
-    const params = qs.parse(queryString);
-    if (eventList.length && isEmpty(params)) {
-      this.initializeEventItem(nextProps, params);
-    }
   }
 
   onCountdownComplete = () => {
@@ -74,15 +60,6 @@ class Prediction extends React.Component {
     setTimeout(() => {
       this.modalLuckyPoolRef.open();
     }, 2 * 1000);
-  }
-
-  /* eslint camelcase: 0 */
-  initializeEventItem = (props, params) => {
-    const { eventList } = props;
-    const { match, out_come } = params;
-    const eventItem = eventList.find(event => (event.id === strToInt(match))) || {};
-    const outcomeItem = eventItem.outcomes.find(outcome => (outcome.id === strToInt(out_come)));
-    this.handleClickEventItem({ event: eventItem }, outcomeItem);
   }
 
   handleClickEventItem = (props, itemData) => {
@@ -202,7 +179,6 @@ export default connect(
       eventList: eventSelector(state),
       isLoading: isLoading(state),
       showedLuckyPool: showedLuckyPoolSelector(state),
-      queryString: queryStringSelector(state),
     };
   },
 )(Prediction);
