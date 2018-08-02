@@ -21,6 +21,7 @@ export const APP = {
   CHAT_ENCRYPTION_KEYPAIR:'chat_encryption_keypair',
   REFERS: 'refers',
   OFFLINE_STATUS: 'offline_status',
+  ALLOW_LOCATION_ACCESS: 'allow_location_access',
   isSupportedLanguages: ['en', 'zh', 'fr', 'de', 'ja', 'ko', 'ru', 'es'],
 };
 

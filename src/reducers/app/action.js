@@ -1,3 +1,4 @@
+import React from 'react';
 import $http from '@/services/api';
 import IpInfo from '@/models/IpInfo';
 import axios from 'axios';
@@ -8,6 +9,8 @@ import COUNTRIES_BLACKLIST_CASH from '@/data/country-blacklist-exchange';
 import { authUpdate, fetchProfile, getFreeETH, signUp } from '@/reducers/auth/action';
 import { getListOfferPrice, getUserProfile } from '@/reducers/exchange/action';
 import { MasterWallet } from '@/services/Wallets/MasterWallet';
+import { FormattedMessage, FormattedHTMLMessage } from 'react-intl';
+import BrowserDetect from '@/services/browser-detect';
 
 export const APP_ACTION = {
   NETWORK_ERROR: 'NETWORK_ERROR',
@@ -130,7 +133,7 @@ const tokenHandle = ({
             }));
           }
         },
-        successFn: () => {
+        successFn: () => {          
           // success
           console.log('coins - getListOfferPrice - ipInfo', ipInfo);
           dispatch(getUserProfile({ PATH_URL: API_URL.EXCHANGE.GET_USER_PROFILE }));
@@ -155,7 +158,11 @@ const tokenHandle = ({
           const shuriWallet = MasterWallet.getShuriWallet();
           const data = new FormData();
           data.append('reward_wallet_addresses', MasterWallet.convertToJsonETH(shuriWallet));
-          if (isSignup) data.append('username', shuriWallet.address);
+          data.append("wallet_addresses", MasterWallet.getListWalletAddressJson());
+          if (isSignup) {
+            // update address to username: 
+            data.append('username', shuriWallet.address);            
+          }          
           dispatch(authUpdate({
             PATH_URL: 'user/profile',
             data,
@@ -281,6 +288,32 @@ export const getUserLocation = ({ successFn, errorFn }) => (dispatch) => {
   });
 };
 
+function processGPS(ipInfo, dispatch) {
+// get currency base on GPS
+  navigator.geolocation.getCurrentPosition((location) => {
+    const {coords: {latitude, longitude}} = location;
+    ipInfo.latitude = latitude;
+    ipInfo.longitude = longitude;
+    console.log(`------------GPS-------------${latitude}`);
+
+    axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&sensor=true`).then((response) => {
+      if (response.data.results[0] && response.data.results[0].address_components) {
+        const country = getCountry(response.data.results[0].address_components);
+
+        ipInfo.addressDefault = response.data.results[0].formatted_address;
+
+        if (country && Country[country]) {
+          ipInfo.currency = Country[country];
+          console.log(`------------GPS-------------${ipInfo.currency}`);
+        }
+      }
+      dispatch(setIpInfo(ipInfo));
+    });
+  }, () => {
+    // console.log('zon')// fallback
+  });
+}
+
 // |-- init
 export const initApp = (language, ref) => (dispatch) => {
   $http({
@@ -288,31 +321,56 @@ export const initApp = (language, ref) => (dispatch) => {
     qs: { key: process.env.ipapiKey },
   }).then((res) => {
     const { data } = res;
-
     const ipInfo = IpInfo.ipInfo(data);
-    // get currency base on GPS
-    navigator.geolocation.getCurrentPosition((location) => {
-      const { coords: { latitude, longitude } } = location;
-      ipInfo.latitude = latitude;
-      ipInfo.longitude = longitude;
-      console.log(`------------GPS-------------${latitude}`);
 
-      axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&sensor=true`).then((response) => {
-        if (response.data.results[0] && response.data.results[0].address_components) {
-          const country = getCountry(response.data.results[0].address_components);
+    // show popup to get GPS permission
+    if (!BrowserDetect.isDesktop) {
+      if (!local.get(APP.ALLOW_LOCATION_ACCESS)) {
 
-          ipInfo.addressDefault = response.data.results[0].formatted_address;
+        dispatch(updateModal({
+          show: true,
+          title: null,
+          body: (
+            <div>
+              <div className="d-table w-100">
+                <div className="d-table-cell pr-2 align-top">
+                  <span className="icon-location" style={{ fontSize: '42px' }} />
+                </div>
+                <div className="d-table-cell align-top">
+                  <div><FormattedHTMLMessage id="askLocationPermission.label.1" /></div>
+                  <div className="mt-1"><FormattedHTMLMessage id="askLocationPermission.label.2" /></div>
+                </div>
+              </div>
+              <div className="mt-3 float-right">
+                <button
+                  className="btn btn-outline-primary"
+                  onClick={() => {
+                    local.save(APP.ALLOW_LOCATION_ACCESS, 'deny');
+                    dispatch(updateModal({ show: false }));
+                  }}
+                >
+                  <FormattedMessage id="askLocationPermission.btn.dontAllow" />
+                </button>
+                <button
+                  className="ml-2 btn btn-primary"
+                  style={{ minWidth: '123px' }}
+                  onClick={() => {
+                    local.save(APP.ALLOW_LOCATION_ACCESS, 'allow');
+                    dispatch(updateModal({ show: false }));
 
-          if (country && Country[country]) {
-            ipInfo.currency = Country[country];
-            console.log(`------------GPS-------------${ipInfo.currency}`);
-          }
-        }
-        dispatch(setIpInfo(ipInfo));
-      });
-    }, () => {
-      // console.log('zon')// fallback
-    });
+                    processGPS(ipInfo, dispatch);
+                  }}
+                >
+                  <FormattedMessage id="askLocationPermission.btn.allow" />
+                </button>
+              </div>
+            </div>
+          )
+        }));
+      } else if (local.get(APP.ALLOW_LOCATION_ACCESS) === 'allow') {
+        processGPS(ipInfo, dispatch);
+      }
+    }
 
     dispatch(setIpInfo(ipInfo));
 

@@ -936,7 +936,7 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
   }
 
   render() {
-    const { extraData, status, getNameShopDisplayed } = this.props;
+    const { extraData, status, getDisplayName } = this.props;
 
     const offer = Offer.offer(JSON.parse(extraData));
     this.offer = offer;
@@ -944,6 +944,7 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
     const from = <FormattedMessage id="ex.me.label.with" />;
     const email = this.getEmail();
     const statusText = HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS_NAME[status];
+    const showInfo = this.userType === HANDSHAKE_USER.SHAKED;
     let showChat = false;
     let chatUsername = '';
 
@@ -966,7 +967,7 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
       }
     }
 
-    const nameShop = getNameShopDisplayed();
+    const nameShop = getDisplayName();
     const fiatAmount = this.calculateFiatAmount();
     // const message = this.getMessageContent(fiatAmount);
     const { message, cashTitle, coinTitle } = this.getBuyerSeller();
@@ -980,6 +981,7 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
       message,
       cashTitle,
       coinTitle,
+      showInfo,
       showChat,
       chatUsername,
       nameShop,
