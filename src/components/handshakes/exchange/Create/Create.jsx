@@ -396,7 +396,6 @@ class Component extends React.Component {
     } catch (e) {
       result = false;
     }
-    result = true;
 
     if (!result) {
       const message = <FormattedMessage id="requireDefaultWalletOnMainNet" />;
