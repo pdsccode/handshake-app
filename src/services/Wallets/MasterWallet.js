@@ -35,11 +35,15 @@ import { PirateKittyToken } from '@/services/Wallets/Collectibles/PirateKittyTok
 import { UnicornGO } from '@/services/Wallets/Collectibles/UnicornGO';
 import { WarToken } from '@/services/Wallets/Collectibles/WarToken';
 
-import { APP } from '@/constants';
+import { APP, BASE_API } from '@/constants';
 import { StringHelper } from '@/services/helper';
 import Neuron from '@/services/neuron/Neutron';
+import axios from 'axios';
+import { merge, trimEnd } from 'lodash';
+import { isEqual } from '@/utils/array.js';
 
 const bip39 = require('bip39');
+import qs from 'qs';
 
 export class MasterWallet {
     // list coin is supported, can add some more Ripple ...
@@ -171,7 +175,7 @@ export class MasterWallet {
           masterWallet.push(wallet);
         }
       });
-      MasterWallet.UpdateLocalStore(masterWallet);
+      MasterWallet.UpdateLocalStore(masterWallet, true);
       return masterWallet;
     }
 
@@ -179,12 +183,106 @@ export class MasterWallet {
       const wallets = localStore.get(MasterWallet.KEY);
       if (wallets === false) return false;
       wallets.push(JSON.parse(JSON.stringify(newToken)));
-      MasterWallet.UpdateLocalStore(wallets);
+      MasterWallet.UpdateLocalStore(wallets, true);
       return true;
     }
 
-    static UpdateLocalStore(masterWallet) {
+    static UpdateLocalStore(masterWallet, sync = false) {
+      
       localStore.save(MasterWallet.KEY, masterWallet);
+
+      // call api update list address:
+      if (sync){
+        MasterWallet.SyncWalletAddress();
+      }
+      
+    }
+
+    static getListWalletAddressJson(){
+      const masterWallet = localStore.get(MasterWallet.KEY);
+        
+        let listAddresses = [];
+
+        masterWallet.forEach((wallet) => {
+          if (listAddresses.indexOf(wallet.address) === -1){
+            listAddresses.push(wallet.address); 
+          }
+        });   
+        return JSON.stringify(listAddresses);
+    }
+
+    static SyncWalletAddress(){
+      try{                
+
+        let listAddresses = MasterWallet.getListWalletAddressJson();          
+
+        console.log("update wallet addresses ...");
+
+        const defaultHeaders = {
+          'Content-Type': 'application/json',
+        };
+        let headers = {};
+        const completedHeaders = merge(
+          defaultHeaders,
+          headers,
+        );
+        const token = localStore.get(APP.AUTH_TOKEN);
+        completedHeaders.Payload = token;
+
+        let data = new FormData();
+        data.append ("wallet_addresses", listAddresses);
+
+        let endpoint = 'user/profile';        
+
+        let response = axios({
+          method: 'POST',
+          timeout: BASE_API.TIMEOUT,
+          headers: completedHeaders,
+          url: `${BASE_API.BASE_URL}/${endpoint}`,        
+          data
+        });
+        console.log("update wallet response ", response );  
+      }                                  
+      
+      catch (error) {
+        console.error('callAPI: ', error);
+      }
+    }
+
+    static NotifyUserTransfer(from_address, to_address) {
+      let data = {
+        "notification":{
+            "title":"Nofification",
+            "body":"You have a transaction from " + from_address,
+            "click_action":"https://ninja.org/wallet",
+        },
+        "data": {
+            "action": "transfer",
+            "data": {"to_address": to_address, "from_address": from_address},
+        },
+        "to": to_address,
+      }
+      
+      const defaultHeaders = {
+        'Content-Type': 'application/json',
+        'Content': 'application/json',        
+      };
+      let headers = {};
+      const completedHeaders = merge(
+        defaultHeaders,
+        headers,
+      );
+      const token = 'kpWdZ3Rzk9E6m7O4clDWLGWoDOjdx08Qn_zXjY5xaxPCKYB0D14p1CRjtw==';
+      completedHeaders.Payload = token;
+      let endpoint = "user/notification";
+      
+      let response = axios.post(
+        `${BASE_API.BASE_URL}/${endpoint}`,
+         JSON.stringify(data),
+        {headers: completedHeaders} 
+      )
+
+      console.log("called NotifyUserTransfer ", response );  
     }
 
     static UpdateBalanceItem(item) {
@@ -478,8 +576,9 @@ export class MasterWallet {
       let wallets = MasterWallet.getMasterWallet();
       if (wallets !== false){
         let shuries = wallets.filter(wallet => wallet.name === 'SHURI' && !wallet.customToken);
-        if (shuries.length > 0)
-            return shuries[0]
+        if (shuries.length > 0){
+            return shuries[0];
+        }
       }
       return false;
     }
@@ -487,11 +586,11 @@ export class MasterWallet {
     static convertToJsonETH(wallet){
       if (wallet !== false) {
         const {
-          address, name, network, chainId,
+          address, name, chainId,
         } = wallet;
         return JSON.stringify({
           ETH: {
-            address, name, network, chainId,
+            address, name, chainId,
           },
         });
       }
@@ -502,11 +601,11 @@ export class MasterWallet {
       let shuries = MasterWallet.getShuriWallet();
       if (shuries !== false) {
         const {
-          address, name, network, chainId,
+          address, name, chainId,
         } = shuries;
         return JSON.stringify({
           ETH: {
-            address, name, network, chainId,
+            address, name, chainId,
           },
         });
       }

@@ -1,32 +1,31 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
-import {FormattedMessage, injectIntl} from 'react-intl';
+import { connect } from 'react-redux';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import _sample from 'lodash/sample';
-import {BigNumber} from 'bignumber.js';
+import { BigNumber } from 'bignumber.js';
 
 import Feed from '@/components/core/presentation/Feed/Feed';
 import Button from '@/components/core/controls/Button/Button';
-import {EXCHANGE_FEED_TYPE, URL,} from '@/constants';
+import { EXCHANGE_FEED_TYPE, HANDSHAKE_USER, URL } from '@/constants';
 import ModalDialog from '@/components/core/controls/ModalDialog';
 import Offer from '@/models/Offer';
-import {MasterWallet} from '@/services/Wallets/MasterWallet';
-import {formatAmountCurrency, getHandshakeUserType} from '@/services/offer-util';
-import {showAlert} from '@/reducers/app/action';
+import { MasterWallet } from '@/services/Wallets/MasterWallet';
+import { formatAmountCurrency, getHandshakeUserType } from '@/services/offer-util';
+import { showAlert } from '@/reducers/app/action';
 
-import {feedBackgroundColors} from '@/components/handshakes/exchange/config';
-import {Ethereum} from '@/services/Wallets/Ethereum.js';
-import {Bitcoin} from '@/services/Wallets/Bitcoin';
+import { feedBackgroundColors } from '@/components/handshakes/exchange/config';
+import { Ethereum } from '@/services/Wallets/Ethereum.js';
+import { Bitcoin } from '@/services/Wallets/Bitcoin';
 
-import {getErrorMessageFromCode} from '../utils';
+import { getErrorMessageFromCode } from '../utils';
 import './FeedExchange.scss';
 import './FeedMe.scss';
-import FeedMeOfferStoreContainer from "./FeedMeOfferStoreContainer";
-import FeedMeOfferStoreShakeContainer from "./FeedMeOfferStoreShakeContainer";
-import FeedMeSwapContainer from "./FeedMeSwapContainer";
-import FeedMeInstantContainer from "./FeedMeInstantContainer";
-import {trackingOnchain,} from "@/reducers/exchange/action";
-import FeedMeDashboardContainer from "./FeedMeDashboardContainer";
+import FeedMeOfferStoreShakeContainer from './FeedMeOfferStoreShakeContainer';
+import FeedMeSwapContainer from './FeedMeSwapContainer';
+import FeedMeInstantContainer from './FeedMeInstantContainer';
+import { trackingOnchain } from '@/reducers/exchange/action';
+import FeedMeDashboardContainer from './FeedMeDashboardContainer';
 
 class FeedMe extends React.PureComponent {
   static propTypes = {
@@ -155,16 +154,30 @@ class FeedMe extends React.PureComponent {
     return condition;
   }
 
-  getNameShopDisplayed = () => {
+  getDisplayName = (isShop) => {
     const { offer } = this;
-    const wallet = new Ethereum();
+    let result = '';
 
-    if (wallet.checkAddressValid(offer.username) === true) {
-      wallet.address = offer.username;
-      return wallet.getShortAddress();
+    if (isShop) {
+      result = offer.username;
+    } else {
+      switch (this.userType) {
+        case HANDSHAKE_USER.SHAKED: {
+          result = offer.username;
+          break;
+        }
+        case HANDSHAKE_USER.OWNER: {
+          result = offer.toUsername;
+          break;
+        }
+        default: {
+          // code
+          break;
+        }
+      }
     }
 
-    return offer.username;
+    return result;
   }
 
   handleActionFailed = (e) => {
@@ -180,7 +193,9 @@ class FeedMe extends React.PureComponent {
   }
 
   trackingOnchain = (offerStoreId, offerStoreShakeId, txHash, action, reason, currency) => {
-    const data = { tx_hash: txHash, action, reason, currency };
+    const data = {
+      tx_hash: txHash, action, reason, currency,
+    };
 
     let url = '';
     if (offerStoreShakeId) {
@@ -221,13 +236,14 @@ class FeedMe extends React.PureComponent {
     const feedProps = {
       lastUpdateAt,
       isCreditCard,
-      phone , phoneDisplayed,
+      phone,
+      phoneDisplayed,
       address,
       confirmOfferAction: this.confirmOfferAction,
       handleActionFailed: this.handleActionFailed,
       checkMainNetDefaultWallet: this.checkMainNetDefaultWallet,
       showNotEnoughCoinAlert: this.showNotEnoughCoinAlert,
-      getNameShopDisplayed: this.getNameShopDisplayed,
+      getDisplayName: this.getDisplayName,
       trackingOnchain: this.trackingOnchain,
       showLoading: this.showLoading,
       hideLoading: this.hideLoading,
