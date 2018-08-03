@@ -89,13 +89,14 @@ function* handleCreateEventSaga({ values, isNew, selectedSource }) {
       yield put(updateCreateEventLoading(true));
       // Add new outcomes
       const newOutcomeList = values.outcomes.filter(o => !o.id).map(i => Object.assign({}, i, { public: 0 }));
-      const { eventId, eventName } = values;
+      const { eventId } = values;
       const addOutcomeResult = yield call(handleAddOutcomesSaga, {
         eventId,
         newOutcomeList,
       });
       if (!addOutcomeResult.error) {
         const outcomeId = addOutcomeResult.data[0].id;
+        const eventName = addOutcomeResult.data[0].name;
         yield saveGenerateShareLinkToStore({ outcomeId, eventName });
         yield put(updateCreateEventLoading(false));
       }

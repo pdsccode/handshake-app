@@ -253,9 +253,9 @@ class CreateEventForm extends Component {
     const cls = classNames(CreateEventForm.displayName, {
       [props.className]: !!props.className,
     });
-    const { shareEvent } = props;
+    const { isNew, shareEvent } = props;
     if (shareEvent) {
-      return (<ShareMarket shareEvent={shareEvent} />);
+      return (<ShareMarket shareEvent={shareEvent} isNew={isNew} />);
     }
     return (
       <form className={cls} onSubmit={props.handleSubmit(this.onCreateNewEvent)}>
