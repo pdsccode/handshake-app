@@ -5,5 +5,6 @@ export default {
     showedLuckyPool: false,
     side: null,
     shareEvent: null,
+    isCreateEventLoading: false,
   },
 };

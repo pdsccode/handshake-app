@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { eventSelector, isLoading } from '@/pages/Prediction/selector';
+import { eventSelector } from '@/pages/Prediction/selector';
+import Loading from '@/components/Loading';
 import Dropdown from '@/components/core/controls/Dropdown';
 import CreateEventForm from './CreateEventForm';
 import { loadCreateEventData } from './action';
-import { reportSelector, shareEventSelector } from './selector';
+import { reportSelector, shareEventSelector, isLoading } from './selector';
 
 
 class CreateEventContainer extends React.Component {
@@ -97,6 +98,7 @@ class CreateEventContainer extends React.Component {
   renderComponent = (props, state) => {
     return (
       <React.Fragment>
+        <Loading isLoading={props.isLoading} />
         {this.renderEventDropdownList(props, state)}
         {this.renderCreateEventForm(props, state)}
       </React.Fragment>

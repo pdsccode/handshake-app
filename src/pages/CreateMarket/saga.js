@@ -3,7 +3,7 @@ import { apiGet, apiPost } from '@/stores/api-saga';
 import { API_URL } from '@/constants';
 import { BetHandshakeHandler } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
 import { handleLoadMatches } from '@/pages/Prediction/saga';
-import { loadCreateEventData, createEvent, shareEvent, updateEmailFetch, updateEmailPut } from './action';
+import { loadCreateEventData, createEvent, shareEvent, updateEmailFetch, updateEmailPut, updateCreateEventLoading } from './action';
 import { reportSelector } from './selector';
 
 function* handleLoadReportsSaga({ cache = true }) {
@@ -86,6 +86,7 @@ function* saveGenerateShareLinkToStore(data) {
 function* handleCreateEventSaga({ values, isNew, selectedSource }) {
   try {
     if (!isNew) {
+      yield put(updateCreateEventLoading(true));
       // Add new outcomes
       const newOutcomeList = values.outcomes.filter(o => !o.id).map(i => Object.assign({}, i, { public: 0 }));
       const { eventId, eventName } = values;
@@ -96,6 +97,7 @@ function* handleCreateEventSaga({ values, isNew, selectedSource }) {
       if (!addOutcomeResult.error) {
         const outcomeId = addOutcomeResult.data[0].id;
         yield saveGenerateShareLinkToStore({ outcomeId, eventName });
+        yield put(updateCreateEventLoading(false));
       }
     } else {
       const reportSource = {
@@ -138,6 +140,7 @@ function* handleCreateEventSaga({ values, isNew, selectedSource }) {
         const outcomeId = eventData.outcomes[0].id;
         const eventName = eventData.name;
         yield saveGenerateShareLinkToStore({ outcomeId, eventName });
+        yield put(updateCreateEventLoading(false));
         console.log('inputData', inputData);
         betHandshakeHandler.createNewEvent(inputData);
       }
