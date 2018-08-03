@@ -54,6 +54,7 @@ class Exchange extends React.Component {
       selectedMenuId = mapComponent[path] ? path : defaultUrl;
     }
     this.setState({ selectedMenuId });
+    local.save(keyLastSelectedExchangeId, selectedMenuId);
   }
 
   render() {
