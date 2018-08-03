@@ -12,6 +12,7 @@ import { StringHelper } from '@/services/helper';
 import './Refers.scss';
 import local from '@/services/localStore';
 import { APP } from '@/constants';
+import { getReferalInfo } from '@/reducers/exchange/action';
 
 
 window.Clipboard = (function (window, document, navigator) {
@@ -133,6 +134,11 @@ class Refers extends React.Component {
     const referLink = profile && profile.username ? `https://ninja.org/?ref=${profile.username}` : '';
     this.setState({ referLink });
     // this.props.rfChange(nameFormStep4, 'refer_link', referLink);
+
+    this.props.getReferalInfo({
+      PATH_URL: 'exchange/user/referral-summary',
+      METHOD: 'GET',
+    });
   }
 
   shortenUser = (userName) => {
@@ -144,6 +150,7 @@ class Refers extends React.Component {
 
   render() {
     const { messages } = this.props.intl;
+    const { referalInfo } = this.props;
 
     return (
       <div className="collapse-custom">
@@ -176,35 +183,45 @@ class Refers extends React.Component {
               />
             </div>
           </div>
-          {false && <div>
+          {referalInfo && referalInfo.length > 0 && <div>
             <table className="table refer-table">
               <thead>
-              <tr className="table-active">
-                {/* <th scope="col">#</th> */}
-                <th scope="col" className="user">{messages.wallet.refers.table.header.user}</th>
-                <th scope="col">{messages.wallet.refers.table.header.date}</th>
-                <th scope="col" className="refer-value-header">{messages.wallet.refers.table.header.referalValue}</th>
-              </tr>
+                <tr className="table-active">
+                  {/* <th scope="col">#</th> */}
+                  <th scope="col" className="user">{messages.wallet.refers.table.header.user}</th>
+                  <th scope="col">{messages.wallet.refers.table.header.date}</th>
+                  <th scope="col" className="refer-value-header">{messages.wallet.refers.table.header.referalValue}</th>
+                </tr>
               </thead>
               <tbody>
-              <tr>
-                {/* <th scope="row">1</th> */}
-                <td>{this.shortenUser('PinkFoxPinkFoxPinkFoxPinkFox')}</td>
-                <td>
-                  <FormattedDate
-                    value={new Date(1459832991883)}
-                    year="numeric"
-                    month="long"
-                    day="2-digit"
-                  />
-                </td>
-                <td>
-                  <div className="refer-value">
-                    <div>@mdo</div>
-                    <div>@mdo</div>
-                  </div>
-                </td>
-              </tr>
+              {
+                referalInfo.map(item => {
+                  return (
+                    <tr key={item.toUid}>
+                      {/* <th scope="row">1</th> */}
+                      <td>{this.shortenUser(item.toUsername)}</td>
+                      <td>
+                        <FormattedDate
+                          value={new Date(item.referralCreatedAt)}
+                          year="numeric"
+                          month="long"
+                          day="2-digit"
+                        />
+                      </td>
+                      <td>
+                        <div className="refer-value">
+                          {
+                            item.referalValues.map(item => {
+                              return (<div key={item.currency}>{`${item.reward} ${item.currency}`}</div>);
+                            })
+                          }
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })
+              }
+
               </tbody>
             </table>
           </div>
@@ -215,13 +232,16 @@ class Refers extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => ({});
+const mapStateToProps = (state) => ({
+  referalInfo: state.exchange.referalInfo,
+});
 
 const mapDispatchToProps = (dispatch) => ({
   showAlert: bindActionCreators(showAlert, dispatch),
   showLoading: bindActionCreators(showLoading, dispatch),
   hideLoading: bindActionCreators(hideLoading, dispatch),
   referredInfo: bindActionCreators(referredInfo, dispatch),
+  getReferalInfo: bindActionCreators(getReferalInfo, dispatch),
 });
 
 export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(Refers));
