@@ -31,7 +31,7 @@ import FeedExchangeLocal from '@/components/handshakes/exchange/Feed/FeedExchang
 import FeedSeed from '@/components/handshakes/seed/Feed';
 import BlockCountry from '@/components/core/presentation/BlockCountry';
 import Maintain from '@/components/core/presentation/Maintain';
-import NavigationBar from '@/modules/NavigationBar/NavigationBar';
+// import NavigationBar from '@/modules/NavigationBar/NavigationBar';
 // import Tabs from '@/components/handshakes/exchange/components/Tabs';
 import NoData from '@/components/core/presentation/NoData';
 import { getFreeStartInfo, getListOfferPrice, setFreeStart } from '@/reducers/exchange/action';
@@ -224,16 +224,18 @@ class DiscoverPage extends React.Component {
   }
 
   getDefaultHandShakeId() {
-    if (window.location.pathname.indexOf(URL.HANDSHAKE_CASH) >= 0) {
-      return HANDSHAKE_ID.EXCHANGE;
-    }
-    let seletedId = HANDSHAKE_ID_DEFAULT;
-    let { id } = Helper.getQueryStrings(window.location.search);
-    id = parseInt(id, 10);
-    if (id && Object.values(HANDSHAKE_ID).indexOf(id) !== -1) {
-      seletedId = id;
-    }
-    return seletedId;
+    return HANDSHAKE_ID.EXCHANGE;
+
+    // if (window.location.pathname.indexOf(URL.HANDSHAKE_CASH) >= 0) {
+    //   return HANDSHAKE_ID.EXCHANGE;
+    // }
+    // let seletedId = HANDSHAKE_ID_DEFAULT;
+    // let { id } = Helper.getQueryStrings(window.location.search);
+    // id = parseInt(id, 10);
+    // if (id && Object.values(HANDSHAKE_ID).indexOf(id) !== -1) {
+    //   seletedId = id;
+    // }
+    // return seletedId;
   }
 
   setAddressFromLatLng = (lat, lng) => {
@@ -637,7 +639,7 @@ class DiscoverPage extends React.Component {
         <Grid className="discover">
           {/* Discover header */}
           <Row className="category-wrapper">
-            <NavigationBar />
+            {/*<NavigationBar />*/}
             {/*
               <Col className="col-9">
                 <Category
