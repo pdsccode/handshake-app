@@ -41,8 +41,10 @@ class Navigation extends React.Component {
   }
 
 
-  checkSelected(_URL) {
-    return this.state.currentPath.startsWith(_URL) && !this.state.isNotFound ? 'selected' : '';
+  checkSelected(URLs) {
+    let _URLs = URLs;
+    if (!Array.isArray(URLs)) { _URLs = [URLs]; }
+    return _URLs.indexOf(this.state.currentPath) >= 0 && !this.state.isNotFound ? 'selected' : '';
   }
 
   render() {
@@ -55,7 +57,7 @@ class Navigation extends React.Component {
               <span>{this.props.intl.messages.app.navigation.me}</span>
             </Link>
           </li>
-          <li className={cn(this.checkSelected(URL.HANDSHAKE_EXCHANGE))}>
+          <li className={cn(this.checkSelected([URL.HANDSHAKE_EXCHANGE, URL.HANDSHAKE_CASH, URL.HANDSHAKE_PREDICTION]))}>
             <Link to={URL.HANDSHAKE_EXCHANGE_INDEX} onClick={this.props.clearHeaderBack}>
               <div dangerouslySetInnerHTML={{ __html: discoverIcon }} />
               <span>{this.props.intl.messages.app.navigation.exchanges}</span>
