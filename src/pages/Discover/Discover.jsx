@@ -16,9 +16,10 @@ import {
   SORT_ORDER,
   URL,
 } from '@/constants';
-// import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 // import Cookies from 'js-cookie';
 import Helper from '@/services/helper';
+
 // components
 import { Col, Grid, Row } from 'react-bootstrap';
 // import SearchBar from '@/components/core/controls/SearchBar';
@@ -539,10 +540,6 @@ class DiscoverPage extends React.Component {
     }
   }
 
-  handleCreateExchange = () => {
-    this.props.history.push(`${URL.HANDSHAKE_CREATE}?id=${HANDSHAKE_ID.EXCHANGE}`);
-  }
-
   loadDiscoverList = () => {
     const { ipInfo } = this.props;
     const {
@@ -672,7 +669,11 @@ class DiscoverPage extends React.Component {
             <div>
               <div className="ex-sticky-note">
                 <div className="mb-2"><FormattedMessage id="ex.discover.banner.text" /></div>
-                <div><button className="btn btn-become" onClick={this.handleCreateExchange}><FormattedMessage id="ex.discover.banner.btnText" /></button></div>
+                <div>
+                  <Link to={{ pathname: URL.HANDSHAKE_CREATE, search: `?id=${HANDSHAKE_ID.EXCHANGE}` }}>
+                    <button className="btn btn-become"><FormattedMessage id="ex.discover.banner.btnText" /></button>
+                  </Link>
+                </div>
               </div>
             </div>
           </React.Fragment>
