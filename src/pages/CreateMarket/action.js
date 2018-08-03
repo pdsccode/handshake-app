@@ -1,16 +1,16 @@
 import { SET_DATA } from '@/stores/data-action';
 
-export const updateEmailToStore = (value) => {
+export const updateEmailPut = (value) => {
   return SET_DATA({
-    type: 'CREATE_MARKET:UPDATE_EMAIL_TO_STORE',
+    type: 'CREATE_MARKET:UPDATE_EMAIL_PUT',
     _path: 'auth.profile.email',
     _value: value,
   });
 };
 
-export const updateEmail = (payload = {}) => {
+export const updateEmailFetch = (payload = {}) => {
   return {
-    type: 'CREATE_MARKET:UPDATE_EMAIL',
+    type: 'CREATE_MARKET:UPDATE_EMAIL_FETCH',
     ...payload,
   };
 };

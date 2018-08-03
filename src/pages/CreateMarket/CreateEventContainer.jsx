@@ -52,6 +52,8 @@ class CreateEventContainer extends React.Component {
 
   renderEventDropdownList = (props, state) => {
     const title = 'EVENT';
+    const { shareEvent } = props;
+    if (shareEvent) return null;
     return (
       <React.Fragment>
         {this.renderGroupTitle(title)}

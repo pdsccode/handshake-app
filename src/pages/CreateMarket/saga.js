@@ -3,7 +3,7 @@ import { apiGet, apiPost } from '@/stores/api-saga';
 import { API_URL } from '@/constants';
 import { BetHandshakeHandler } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
 import { handleLoadMatches } from '@/pages/Prediction/saga';
-import { loadCreateEventData, createEvent, shareEvent, getUserProfile, updateEmail, updateEmailToStore } from './action';
+import { loadCreateEventData, createEvent, shareEvent, updateEmailFetch, updateEmailPut } from './action';
 import { reportSelector } from './selector';
 
 function* handleLoadReportsSaga({ cache = true }) {
@@ -88,13 +88,13 @@ function* handleCreateEventSaga({ values, isNew, selectedSource }) {
     if (!isNew) {
       // Add new outcomes
       const newOutcomeList = values.outcomes.filter(o => !o.id).map(i => Object.assign({}, i, { public: 0 }));
+      const { eventId, eventName } = values;
       const addOutcomeResult = yield call(handleAddOutcomesSaga, {
-        eventId: values.eventId,
+        eventId,
         newOutcomeList,
       });
       if (!addOutcomeResult.error) {
         const outcomeId = addOutcomeResult.data[0].id;
-        const eventName = addOutcomeResult.data[0].name;
         yield saveGenerateShareLinkToStore({ outcomeId, eventName });
       }
     } else {
@@ -153,12 +153,12 @@ function* handleUpdateEmail({ newEmail, ...payload }) {
     userProfile.set('email', newEmail.email);
     const responded = yield call(apiPost, {
       PATH_URL: API_URL.USER.PROFILE,
-      type: 'UPDATE_EMAIL',
+      type: 'UPDATE_EMAIL_FETCH',
       data: userProfile,
       headers: { 'Content-Type': 'multipart/form-data' },
       ...payload,
     });
-    return yield put(updateEmailToStore(responded.data.email));
+    return yield put(updateEmailPut(responded.data.email));
   } catch (e) {
     return console.error('handleUpdateEmail', e);
   }
@@ -167,5 +167,5 @@ function* handleUpdateEmail({ newEmail, ...payload }) {
 export default function* createMarketSaga() {
   yield takeLatest(loadCreateEventData().type, handleLoadCreateEventData);
   yield takeLatest(createEvent().type, handleCreateEventSaga);
-  yield takeLatest(updateEmail().type, handleUpdateEmail);
+  yield takeLatest(updateEmailFetch().type, handleUpdateEmail);
 }

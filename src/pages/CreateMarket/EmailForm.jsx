@@ -4,7 +4,7 @@ import { Field, reduxForm } from 'redux-form';
 import IconEmail from '@/assets/images/icon/icon-email.svg';
 import { renderField } from './form';
 import { required, email } from './validate';
-import { updateEmail } from './action';
+import { updateEmailFetch } from './action';
 
 class EmailForm extends React.Component {
   static displayName = 'EmailForm';
@@ -13,7 +13,7 @@ class EmailForm extends React.Component {
   };
 
   onSubmit = (value) => {
-    this.props.dispatch(updateEmail({ newEmail: value }));
+    this.props.dispatch(updateEmailFetch({ newEmail: value }));
   }
 
   renderForm = (props) => {
