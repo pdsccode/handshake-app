@@ -108,6 +108,7 @@ class BetingShake extends React.Component {
 
     } else {
       if (message) {
+        GA.createBetNotSuccess(message);
         this.props.showAlert({
           message: <div className="text-center">{message}</div>,
           timeOut: 3000,

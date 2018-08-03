@@ -312,7 +312,7 @@ class DiscoverPage extends React.Component {
 
     if (list && list.length > 0) {
       let myHandShake;
-      let resultList = list.map((handshake) => {
+      const resultList = list.map((handshake) => {
         if (handshake.id.includes(authProfile?.id)) {
           myHandShake = handshake;
 
@@ -320,7 +320,7 @@ class DiscoverPage extends React.Component {
         }
         const FeedComponent = maps[handshake.type];
         const offer = OfferShop.offerShop(JSON.parse(handshake.extraData));
-        const allowRender = sortIndexActive === CASH_SORTING_CRITERIA.PRICE ? offer.itemFlags[sortPriceIndexArr[1].toUpperCase()] : true;
+        const allowRender = sortIndexActive === CASH_SORTING_CRITERIA.PRICE ? offer.itemFlags[sortPriceIndexArr[1].toUpperCase()] && !this.isEmptyBalance(offer.items[sortPriceIndexArr[1].toUpperCase()]) : true;
         if (FeedComponent && allowRender) {
           return (
             <Col key={handshake.id} className="col-12 feed-wrapper px-0">
@@ -334,6 +334,7 @@ class DiscoverPage extends React.Component {
                 modalRef={this.modalRef}
                 offer={offer}
                 setLoading={this.setLoading}
+                sortPriceIndexActive={sortPriceIndexActive}
               />
 
             </Col>
@@ -362,7 +363,7 @@ class DiscoverPage extends React.Component {
                 ownerStation
               />
 
-            </Col>
+            </Col>,
           );
         }
       }
@@ -384,6 +385,15 @@ class DiscoverPage extends React.Component {
     }
 
     return <NoData style={{ height: '50vh' }} message={message} />;
+  }
+
+  isEmptyBalance = (item) => {
+    const { sortPriceIndexActive } = this.state;
+    const { buyBalance, sellBalance } = item;
+    if (sortPriceIndexActive.includes('buy')) {
+      return buyBalance <= 0;
+    }
+    return sellBalance <= 0;
   }
 
   setLoading = (loadingState) => {
@@ -598,10 +608,10 @@ class DiscoverPage extends React.Component {
   onSortChange = (e, newValue) => {
     const { rfChange } = this.props;
     const { sortIndexActive } = this.state;
-    console.log('onFilterChange', newValue);
+    console.log('onSortChange', newValue);
     if (sortIndexActive !== newValue) {
       this.setLoading(true);
-      this.setState({ sortIndexActive: newValue }, () => {
+      this.setState({ sortIndexActive: newValue, sortPriceIndexActive: '' }, () => {
         this.loadDiscoverList();
       });
     }
@@ -609,7 +619,7 @@ class DiscoverPage extends React.Component {
 
   onSortPriceChange = (e, item) => {
     const { sortPriceIndexActive } = this.state;
-    console.log('onSortPriceChange', item);
+    console.log('onSortPriceChange', sortPriceIndexActive, item);
 
     if (sortPriceIndexActive !== item.id) {
       this.setLoading(true);

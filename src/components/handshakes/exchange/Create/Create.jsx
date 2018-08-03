@@ -130,11 +130,11 @@ class Component extends React.Component {
       ipInfo, rfChange, authProfile, freeStartInfo, isChooseFreeStart, getUserLocation,
     } = this.props;
     this.setAddressFromLatLng(ipInfo?.latitude, ipInfo?.longitude, ipInfo?.addressDefault);
-    getUserLocation({
-      successFn: (ipInfo2) => {
-        this.setAddressFromLatLng(ipInfo2?.latitude, ipInfo2?.longitude, ipInfo2?.addressDefault);
-      },
-    });
+    // getUserLocation({
+    //   successFn: (ipInfo2) => {
+    //     this.setAddressFromLatLng(ipInfo2?.latitude, ipInfo2?.longitude, ipInfo2?.addressDefault);
+    //   },
+    // });
 
     // auto fill phone number from user profile
     let detectedCountryCode = '';
@@ -480,7 +480,7 @@ class Component extends React.Component {
     const intentMsg = (amountBuy > 0 && amountSell > 0) ? `buy ${amountBuy} ${currency} and sell ${amountSell} ${currency}` : (amountBuy > 0 ? `buy ${amountBuy} ${currency}` : `sell ${amountSell} ${currency}`);
     let message = '';
     if (isUpdate) {
-      message = <FormattedMessage id="updateOfferStoreConfirm" values={{ intentMsg }} />;
+      message = <FormattedMessage id="updateOfferStoreConfirm" />;
     } else {
       message = <FormattedMessage id="createOfferStoreConfirm" values={{ intentMsg }} />;
     }
@@ -761,7 +761,10 @@ class Component extends React.Component {
 
   // /////////////////////
 
-  handleValidate = values => validate(values);
+  handleValidate = values => {
+    const { isUpdate } = this.state;
+    return validate(values, isUpdate);
+  }
 
   gotoUserDashBoard = () => {
     this.props.history.push(`${URL.HANDSHAKE_ME}?id=${HANDSHAKE_ID.EXCHANGE}&tab=dashboard`);
