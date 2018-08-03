@@ -430,8 +430,8 @@ class FeedExchange extends React.PureComponent {
         coin.icon = CRYPTO_CURRENCY_COLORS[currency].icon;
         const priceBuy = amountBuy > 0 ? formatMoneyByLocale(priceBuyValue, fiatCurrency) : '-';
         const priceSell = amountSell > 0 ? formatMoneyByLocale(priceSellValue, fiatCurrency) : '-';
-        coin.txtBuy = `${priceBuy} ${priceBuy !== '-' ? fiatCurrency : ''}`;
-        coin.txtSell = `${priceSell} ${priceSell !== '-' ? fiatCurrency : ''}`;
+        coin.txtBuy = `${priceBuy} ${priceBuy !== '-' ? fiatCurrency : ''} ${priceBuy !== '-' ? `- ${formatAmountCurrency(amountBuy)} ${currency}` : ''}`;
+        coin.txtSell = `${priceSell} ${priceSell !== '-' ? fiatCurrency : ''} ${priceSell !== '-' ? `- ${formatAmountCurrency(amountSell)} ${currency}` : ''}`;
 
         coins.push(coin);
       }
