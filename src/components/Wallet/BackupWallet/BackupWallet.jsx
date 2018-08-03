@@ -28,7 +28,7 @@ class BackupWallet extends React.Component {
 
     this.state = {
       walletData: false
-    }    
+    }
   }
 
   showAlert(msg, type = 'success', timeOut = 3000, icon = '') {
@@ -55,28 +55,30 @@ class BackupWallet extends React.Component {
     this.props.hideLoading();
   }
 
-  componentDidMount() {    
-    if (this.props.walletData){            
+  componentDidMount() {
+    if (this.props.walletData){
       this.setState({walletData: this.props.walletData});
     }
-    else{      
+    else{
       let walletData = MasterWallet.getMasterWallet();
       let chat_encryption_keypair = local.get(APP.CHAT_ENCRYPTION_KEYPAIR);
       let auth_token = local.get(APP.AUTH_TOKEN);
-      this.setState({walletData: {"auth_token": auth_token, "chat_encryption_keypair": chat_encryption_keypair ,"wallets": walletData }});      
+      let refers = local.get(APP.REFERS);
+      refers = refers ? refers : "";
+      this.setState({walletData: {"auth_token": auth_token, "chat_encryption_keypair": chat_encryption_keypair ,"wallets": walletData, "refers": refers }});
     }
   }
 
   componentWillUnmount() {
-    
+
   }
   componentDidUpdate (){
-    if (this.props.walletData && this.props.walletData != this.state.walletData){      
+    if (this.props.walletData && this.props.walletData != this.state.walletData){
       this.setState({walletData: this.props.walletData});
     }
   }
-  componentWillReceiveProps() {       
-    
+  componentWillReceiveProps() {
+
   }
 
   showLoading = () => {
@@ -89,24 +91,24 @@ class BackupWallet extends React.Component {
 
 
   onFinish = () => {
-   
+
     const { onFinish } = this.props;
-    
-    if (onFinish) {      
+
+    if (onFinish) {
       onFinish();
     } else {
-      
+
     }
   }
 
   render() {
     const { messages } = this.props.intl;
-    return ( 
+    return (
         <div className="backupwallet">
           <div className="bodyTitle">{messages.wallet.action.backup.description}</div>
             <div className="bodyBackup">
               <textarea
-                readOnly                
+                readOnly
                 value={this.state.walletData ? JSON.stringify(this.state.walletData) : ''}
               />
               <Button className="button" cssType="danger" onClick={() => { Clipboard.copy(JSON.stringify(this.state.walletData)); this.showToast(messages.wallet.action.backup.success.copied);this.onFinish(); }} >{messages.wallet.action.backup.button.copy}</Button>
@@ -117,19 +119,19 @@ class BackupWallet extends React.Component {
 }
 
 BackupWallet.propTypes = {
-  data: PropTypes.any,  
+  data: PropTypes.any,
 };
 
 const mapStateToProps = (state) => ({
-  
+
 });
 
-const mapDispatchToProps = (dispatch) => ({  
+const mapDispatchToProps = (dispatch) => ({
   showAlert: bindActionCreators(showAlert, dispatch),
   showLoading: bindActionCreators(showLoading, dispatch),
   hideLoading: bindActionCreators(hideLoading, dispatch),
   clearFields: bindActionCreators(clearFields, dispatch),
-  
+
 });
 
 export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(BackupWallet));
