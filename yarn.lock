@@ -5752,7 +5752,7 @@ handlebars@^4.0.11, handlebars@^4.0.3:
 
 "handshake-i18n@github:ninjadotorg/handshake-i18n":
   version "0.0.1533263103"
-  resolved "https://codeload.github.com/ninjadotorg/handshake-i18n/tar.gz/00b305e97105e65f0efc4d1f6ddadd958b9e3bbc"
+  resolved "https://codeload.github.com/ninjadotorg/handshake-i18n/tar.gz/102e8692305e9cfc89b1fcb23e08c397c76fa7f9"
   dependencies:
     "@babel/core" "^7.0.0-beta.51"
     "@babel/node" "^7.0.0-beta.51"
