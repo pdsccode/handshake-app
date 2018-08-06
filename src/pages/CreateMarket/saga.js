@@ -3,7 +3,7 @@ import { apiGet, apiPost } from '@/stores/api-saga';
 import { API_URL } from '@/constants';
 import { BetHandshakeHandler } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
 import { handleLoadMatches } from '@/pages/Prediction/saga';
-import { loadCreateEventData, createEvent, shareEvent, updateEmailFetch, updateEmailPut, updateCreateEventLoading } from './action';
+import { loadCreateEventData, createEvent, shareEvent, sendEmailCode, verifyEmail, updateEmailFetch, updateEmailPut, updateCreateEventLoading } from './action';
 import { reportSelector } from './selector';
 
 function* handleLoadReportsSaga({ cache = true }) {
@@ -152,16 +152,15 @@ function* handleCreateEventSaga({ values, isNew, selectedSource }) {
   }
 }
 
-function* handleUpdateEmail({ newEmail, ...payload }) {
+function* handleUpdateEmail({ email }) {
   try {
     const userProfile = new FormData();
-    userProfile.set('email', newEmail.email);
+    userProfile.set('email', email);
     const responded = yield call(apiPost, {
       PATH_URL: API_URL.USER.PROFILE,
       type: 'UPDATE_EMAIL_FETCH',
       data: userProfile,
       headers: { 'Content-Type': 'multipart/form-data' },
-      ...payload,
     });
     return yield put(updateEmailPut(responded.data.email));
   } catch (e) {
@@ -169,8 +168,34 @@ function* handleUpdateEmail({ newEmail, ...payload }) {
   }
 }
 
+function* handleSendEmailCode({ email }) {
+  try {
+    return yield call(apiPost, {
+      PATH_URL: `user/verification/email/start?email=${email}`,
+      type: 'SEND_EMAIL_CODE',
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+  } catch (e) {
+    return console.error('handleSendEmailCode', e);
+  }
+}
+
+function* handleVerifyEmail({ email, code }) {
+  try {
+    yield call(apiPost, {
+      PATH_URL: `user/verification/email/check?email=${email}&code=${code}`,
+      type: 'VERIFY_EMAIL',
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    yield handleUpdateEmail({ email });
+  } catch (e) {
+    return console.error('handleVerifyEmail', e);
+  }
+}
+
 export default function* createMarketSaga() {
   yield takeLatest(loadCreateEventData().type, handleLoadCreateEventData);
   yield takeLatest(createEvent().type, handleCreateEventSaga);
-  yield takeLatest(updateEmailFetch().type, handleUpdateEmail);
+  yield takeLatest(sendEmailCode().type, handleSendEmailCode);
+  yield takeLatest(verifyEmail().type, handleVerifyEmail);
 }

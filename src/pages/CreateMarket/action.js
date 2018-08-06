@@ -15,6 +15,20 @@ export const updateEmailFetch = (payload = {}) => {
   };
 };
 
+export const sendEmailCode = (payload = {}) => {
+  return {
+    type: 'CREATE_MARKET:SEND_EMAIL_CODE',
+    ...payload,
+  };
+};
+
+export const verifyEmail = (payload = {}) => {
+  return {
+    type: 'CREATE_MARKET:VERIFY_EMAIL',
+    ...payload,
+  };
+};
+
 export const updateCreateEventLoading = (value) => {
   return SET_DATA({
     type: 'CREATE_MARKET:LOADING',
