@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import axios from 'axios';
 import Web3 from 'web3';
+import { BigNumber } from 'bignumber.js';
 
 // components
 import Website from '@/components/App/Basic';
@@ -34,8 +35,12 @@ function getGasPrice() {
     .then((res) => {
       // const gasPrice = Number(res.data.average).toString();
       // console.log('gasPrice', gasPrice);
-      window.gasPrice = (Number(res.data.average) / 10).toString();
+      //window.gasPrice = (Number(res.data.average) / 10).toString();
       // console.log('gasPrice gwei', window.gasPrice);
+
+      const gasBN = new BigNumber(res.data.average);
+      const gasPriceBN = gasBN.div(10);
+      window.gasPrice = gasPriceBN.toNumber().toString();
     });
 }
 
