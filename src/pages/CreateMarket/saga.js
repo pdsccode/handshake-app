@@ -101,6 +101,7 @@ function* handleCreateEventSaga({ values, isNew, selectedSource }) {
         yield put(updateCreateEventLoading(false));
       }
     } else {
+      // Create new event
       const reportSource = {
         source_id: selectedSource,
         source: selectedSource ? undefined : {
@@ -147,7 +148,7 @@ function* handleCreateEventSaga({ values, isNew, selectedSource }) {
       }
     }
   } catch (e) {
-    return console.error('handleCreateNewEventSaga', e);
+    console.error('handleCreateNewEventSaga', e);
   }
 }
 

@@ -6,8 +6,9 @@ import IconPlus from '@/assets/images/icon/icon-plus.svg';
 import IconTrash from '@/assets/images/icon/icon-trash.svg';
 import moment from 'moment';
 import DatePicker from '@/components/handshakes/betting-event/Create/DatePicker/DatePicker';
+import DateTimePicker from '@/components/DateTimePicker/DateTimePicker';
 import { renderField } from './form';
-import { required, allFieldHasData, urlValidator, intValidator } from './validate';
+import { required, urlValidator, intValidator } from './validate';
 import { createEvent } from './action';
 import ShareMarket from './ShareMarket';
 
@@ -54,7 +55,10 @@ class CreateEventForm extends Component {
   }
 
   addMoreOutcomes = (fields) => {
-    if (fields.getAll().every(i => Object.keys(i).length > 0)) {
+    const isValid = fields.getAll().every(o => {
+      return o.name && o.name.trim();
+    });
+    if (isValid) {
       fields.push({});
     }
   }
@@ -192,21 +196,39 @@ class CreateEventForm extends Component {
     );
   }
 
+  unixToDateFormat = (value) => {
+    if (!value) return value;
+    return moment.unix(value).format('DD MMMM YYYY HH:mm');
+  }
+
+  buildPicker = (inputProps) => {
+    return (
+      <input
+        type="text"
+        {...inputProps.inputProps}
+        placeholder={inputProps.placeholder}
+        value={this.unixToDateFormat(inputProps.value)}
+      />
+    );
+  }
+
   renderDateTime = ({ input, isNew, label, ...props }) => {
-    const { value, name, ...inputData } = input;
-    const newValue = value ? { value: moment.unix(value) } : {};
+    const { value, name, ...onEvents } = input;
+    const inputProps = {
+      ...props,
+      ...onEvents,
+      name,
+      disabled: !isNew,
+    };
     return (
       <React.Fragment>
-        <DatePicker
-          onChange={(date) => { this.setFieldValueToState(name, date); }}
-          className="form-control input-field"
-          dateFormat="DD MMMM YYYY"
-          name={name}
-          required
-          {...props}
-          {...inputData}
-          {...newValue}
+        <DateTimePicker
+          onDateChange={(date) => this.setFieldValueToState(name, date)}
+          value={value}
           disabled={!isNew}
+          {...inputProps}
+          {...onEvents}
+          popupTriggerRenderer={this.buildPicker}
         />
       </React.Fragment>
     );
@@ -220,30 +242,31 @@ class CreateEventForm extends Component {
           type="text"
           component={this.renderDateTime}
           placeholder="Closing Time"
-          timePlaceholder="Local timezone"
           validate={[required]}
           isNew={props.isNew}
           value={state.closingTime}
+          startDate={moment().add(30, 'm').unix()}
         />
         <Field
           name="reportingTime"
           type="text"
           component={this.renderDateTime}
           placeholder="Reporting Time"
-          timePlaceholder="Local timezone"
           validate={[required]}
           isNew={props.isNew}
           value={state.reportingTime}
+          startDate={state.closingTime + (30 * 60)}
+          // endDate={state.disputeTime}
         />
         <Field
           name="disputeTime"
           type="text"
           component={this.renderDateTime}
           placeholder="Dispute Time"
-          timePlaceholder="Local timezone"
           validate={[required]}
           isNew={props.isNew}
           value={state.disputeTime}
+          startDate={state.reportingTime + (30 * 60)}
         />
       </React.Fragment>
     );
@@ -264,7 +287,6 @@ class CreateEventForm extends Component {
           name="outcomes"
           isNew={props.isNew}
           component={this.renderOutComes}
-          validate={allFieldHasData}
         />
         {this.renderFee(props)}
         <div className="CreateEventFormBlock">
