@@ -37,8 +37,9 @@ const RouterWallet = createDynamicImport(() => import('@/components/Router/Walle
 const RouterComment = createDynamicImport(() => import('@/components/Router/Comment'), Loading);
 const RouterAdmin = createDynamicImport(() => import('@/components/Router/Admin'), Loading);
 const RouterLuckyPool = createDynamicImport(() => import('@/pages/LuckyLanding/LuckyLanding'), Loading);
-const RouterExchange = createDynamicImport(() => import('@/components/Router/Exchange'), Loading);
 // const RouterExchange = createDynamicImport(() => import('@/pages/Exchange/Exchange'), Loading);
+const RouterPrediction = createDynamicImport(() => import('@/pages/Exchange/Exchange'), Loading);
+const RouterResolve = createDynamicImport(() => import('@/pages/Resolve/Resolve'), Loading);
 const RouterLandingPageMain = createDynamicImport(() => import('@/pages/LandingPage/Main'), Loading);
 const LandingPageMain = createDynamicImport(() => import('@/pages/LandingPage/Main'), Loading);
 const ProjectDetail = createDynamicImport(() => import('@/components/ProjectDetail'), Loading);
@@ -66,6 +67,7 @@ const configRoutesUsingMobileLayout = [
       return null;
     }
   },
+  { path: URL.RESOLVE, component: RouterResolve },
 ];
 const routesUsingMobileLayout = configRoutesUsingMobileLayout.map(route => (
   <Route
