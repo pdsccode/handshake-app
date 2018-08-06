@@ -21,8 +21,12 @@ const EVENT_ACTION = {
   CLICK_OPPOSE: 'Click oppose',
   CLICK_SIMPLE: 'Click simple',
   CLICK_ADVANCE: 'Click advance',
-  CLICK_PLACE_SUPPORT_ORDER: 'Click place support order',
-  CLICK_PLACE_OPPOSE_ORDER: 'Click place oppose order',
+  CLICK_SIMPLE_PLACE_SUPPORT_ORDER: 'Click simple place support order',
+  CLICK_SIMPLE_PLACE_OPPOSE_ORDER: 'Click simple place oppose order',
+  CLICK_ADVANCE_PLACE_SUPPORT_ORDER: 'Click advance place support order',
+  CLICK_ADVANCE_PLACE_OPPOSE_ORDER: 'Click advance place oppose order',
+  CLICK_FREE_PLACE_SUPPORT_ORDER: 'Click free place support order',
+  CLICK_FREE_PLACE_OPPOSE_ORDER: 'Click free place oppose order',
   CLICK_FREE_BET: 'Click free bet',
   CLICK_PAID_BET: 'Click paid bet',
   CLICK_CLOSE: 'Click close',
@@ -197,13 +201,13 @@ class GoogleAnalyticsService {
   /**
    *
    */
-  clickPlaceSupportOrder(outcome) {
+  clickSimplePlaceSupportOrder(outcome) {
     const params = {
       category: EVENT_CATEGORY.ORDER_BOOK,
-      action: EVENT_ACTION.CLICK_PLACE_SUPPORT_ORDER,
+      action: EVENT_ACTION.CLICK_SIMPLE_PLACE_SUPPORT_ORDER,
       label: `${outcome}`,
     };
-    console.log(TAG, 'clickPlaceSupportOrder', params);
+    console.log(TAG, 'clickSimplePlaceSupportOrder', params);
 
     this.sendGAEvent(params);
   }
@@ -211,13 +215,13 @@ class GoogleAnalyticsService {
   /**
    *
    */
-  clickPlaceOpposeOrder(outcome) {
+  clickSimplePlaceOpposeOrder(outcome) {
     const params = {
       category: EVENT_CATEGORY.ORDER_BOOK,
-      action: EVENT_ACTION.CLICK_PLACE_OPPOSE_ORDER,
+      action: EVENT_ACTION.CLICK_SIMPLE_PLACE_OPPOSE_ORDER,
       label: `${outcome}`,
     };
-    console.log(TAG, 'clickPlaceOpposeOrder', params);
+    console.log(TAG, 'clickSimplePlaceOpposeOrder', params);
 
     this.sendGAEvent(params);
   }
@@ -225,16 +229,59 @@ class GoogleAnalyticsService {
   /**
    *
    */
-  clickPlaceOpposeOrder(outcome) {
+  clickAdvancePlaceSupportOrder(outcome) {
     const params = {
       category: EVENT_CATEGORY.ORDER_BOOK,
-      action: EVENT_ACTION.CLICK_PLACE_OPPOSE_ORDER,
+      action: EVENT_ACTION.CLICK_ADVANCE_PLACE_SUPPORT_ORDER,
       label: `${outcome}`,
     };
-    console.log(TAG, 'clickPlaceOpposeOrder', params);
+    console.log(TAG, 'clickAdvancePlaceSupportOrder', params);
 
     this.sendGAEvent(params);
   }
+
+  /**
+   *
+   */
+  clickAdvancePlaceOpposeOrder(outcome) {
+    const params = {
+      category: EVENT_CATEGORY.ORDER_BOOK,
+      action: EVENT_ACTION.CLICK_ADVANCE_PLACE_OPPOSE_ORDER,
+      label: `${outcome}`,
+    };
+    console.log(TAG, 'clickAdvancePlaceOpposeOrder', params);
+
+    this.sendGAEvent(params);
+  }
+
+  /**
+   *
+   */
+  clickFreePlaceSupportOrder(outcome) {
+    const params = {
+      category: EVENT_CATEGORY.ORDER_BOOK,
+      action: EVENT_ACTION.CLICK_FREE_PLACE_SUPPORT_ORDER,
+      label: `${outcome}`,
+    };
+    console.log(TAG, 'clickFreePlaceSupportOrder', params);
+
+    this.sendGAEvent(params);
+  }
+
+  /**
+   *
+   */
+  clickFreePlaceOpposeOrder(outcome) {
+    const params = {
+      category: EVENT_CATEGORY.ORDER_BOOK,
+      action: EVENT_ACTION.CLICK_FREE_PLACE_OPPOSE_ORDER,
+      label: `${outcome}`,
+    };
+    console.log(TAG, 'clickFreePlaceOpposeOrder', params);
+
+    this.sendGAEvent(params);
+  }
+
 
   /**
    *
