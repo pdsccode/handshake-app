@@ -3,12 +3,11 @@ import { apiGet, apiPost } from '@/stores/api-saga';
 import { API_URL } from '@/constants';
 import { BetHandshakeHandler } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
 import { handleLoadMatches } from '@/pages/Prediction/saga';
-import { loadCreateEventData, createEvent, shareEvent, sendEmailCode, verifyEmail, updateEmailFetch, updateEmailPut, updateCreateEventLoading } from './action';
 import { isBalanceValid } from '@/stores/common-saga';
 import { showAlert } from '@/stores/common-action';
-import { BetHandshakeHandler } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
 import { MESSAGE } from '@/components/handshakes/betting/message.js';
 import { reportSelector } from './selector';
+import { loadCreateEventData, createEvent, shareEvent, sendEmailCode, verifyEmail, updateEmailPut, updateCreateEventLoading } from './action';
 
 function* handleLoadReportsSaga({ cache = true }) {
   try {
@@ -48,7 +47,8 @@ function* handleAddOutcomesSaga({ eventId, newOutcomeList, ...payload }) {
       ...payload,
     });
   } catch (e) {
-    return console.error('handleAddOutcomesSaga', e);
+    console.error('handleAddOutcomesSaga', e);
+    return null;
   }
 }
 
@@ -175,7 +175,8 @@ function* handleUpdateEmail({ email }) {
     });
     return yield put(updateEmailPut(responded.data.email));
   } catch (e) {
-    return console.error('handleUpdateEmail', e);
+    console.error('handleUpdateEmail', e);
+    return null;
   }
 }
 
@@ -187,7 +188,8 @@ function* handleSendEmailCode({ email }) {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
   } catch (e) {
-    return console.error('handleSendEmailCode', e);
+    console.error('handleSendEmailCode', e);
+    return null;
   }
 }
 
@@ -200,7 +202,7 @@ function* handleVerifyEmail({ email, code }) {
     });
     yield handleUpdateEmail({ email });
   } catch (e) {
-    return console.error('handleVerifyEmail', e);
+    console.error('handleVerifyEmail', e);
   }
 }
 
