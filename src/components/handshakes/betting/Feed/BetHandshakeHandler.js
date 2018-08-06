@@ -66,8 +66,9 @@ export class BetHandshakeHandler {
     const {
       amount, odds, side, offchain, hid,
     } = item;
-    const stake = Math.floor(amount * 10 ** 18) / 10 ** 18;
+    //const stake = Math.floor(amount * 10 ** 18) / 10 ** 18;
     // hid = 10000;
+    const stake = amount;
     const chainId = getChainIdDefaultWallet();
     const bettinghandshake = new BettingHandshake(chainId);
     const contractAddress = bettinghandshake.contractAddress;
@@ -106,8 +107,8 @@ export class BetHandshakeHandler {
       amount, odds, side, maker_address, maker_odds, offchain, hid,
     } = item;
     // hid = 10000;
-    const stake = Math.floor(amount * 10 ** 18) / 10 ** 18;
-
+    //const stake = Math.floor(amount * 10 ** 18) / 10 ** 18;
+    const stake = amount;
     const maker = maker_address;
     const makerOdds = maker_odds;
     const chainId = getChainIdDefaultWallet();
