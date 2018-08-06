@@ -447,6 +447,17 @@ class Me extends React.Component {
                   />
                 </div>
               </div>
+              { this.state.handshakeIdActive === HANDSHAKE_ID.BETTING &&
+                <div >
+                  <hr style={{ margin: '10px 0 5px' }} />
+                  <div className="report-container">
+                    <Link className="label-filter-by" to={{ pathname: URL.REPORT }}>
+                    Report
+                    </Link>
+                  </div>
+
+                </div>
+              }
 
               { this.state.handshakeIdActive === HANDSHAKE_ID.EXCHANGE && (
                 <div>
@@ -467,6 +478,7 @@ class Me extends React.Component {
                 </div>
                 )
               }
+
 
             </FormFilterFeeds>
           </div>
