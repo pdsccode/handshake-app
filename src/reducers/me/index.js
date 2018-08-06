@@ -50,9 +50,10 @@ const foundCancelHanshake = (handshake, item) => {
 
 
 };
-const foundRefundHanshake = (handshake, item, hid) => {
+const foundRefundHanshake = (handshake, item, hid, matched) => {
   const handledHandshake = handshake;
-  if (hid === item.hid) {
+
+  if (hid === item.hid && matched) {
     console.log(TAG, 'foundRefundHanshake:','handledHandshake', handledHandshake);
     handledHandshake.status = item.status;
   }
@@ -60,13 +61,8 @@ const foundRefundHanshake = (handshake, item, hid) => {
 
 };
 
-const foundWithdrawHanshake = (handshake, item, hid) => {
+const foundWithdrawHanshake = (handshake, item, hid, matched) => {
   const handledHandshake = handshake;
-  const {
-    shakeUserIds,
-  } = handshake;
-
-  const matched = isMatch(shakeUserIds);
 
   if (hid === item.hid && handledHandshake.side === item.side && matched) {
     console.log(TAG, 'foundWithdrawHanshake:','handledHandshake', handledHandshake);
@@ -75,25 +71,25 @@ const foundWithdrawHanshake = (handshake, item, hid) => {
   return handledHandshake;
 };
 
-const foundDisputeHandshake = (handshake, item, hid) => {
+const foundDisputeHandshake = (handshake, item, hid, matched) => {
   const handledHandshake = handshake;
-  if (hid === item.hid) {
+  if (hid === item.hid && matched) {
     console.log(TAG, 'foundDisputeHandshake:','handledHandshake', handledHandshake);
     handledHandshake.status = item.status;
   }
   return handledHandshake;
 };
 
-const foundUpdateHandshake = (status, handshake, item, hid) => {
+const foundUpdateHandshake = (status, handshake, item, hid, matched) => {
   switch (status) {
     case BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINIT_PENDING:
       return foundCancelHanshake(handshake, item);
     case BET_BLOCKCHAIN_STATUS.STATUS_REFUND_PENDING:
-      return foundRefundHanshake(handshake, item, hid);
+      return foundRefundHanshake(handshake, item, hid, matched);
     case BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_PENDING:
-      return foundWithdrawHanshake(handshake, item, hid);
+      return foundWithdrawHanshake(handshake, item, hid, matched);
     case BET_BLOCKCHAIN_STATUS.STATUS_DISPUTE_PENDING:
-      return foundDisputeHandshake(handshake, item, hid);
+      return foundDisputeHandshake(handshake, item, hid, matched);
     default:
       return handshake;
   }
@@ -385,14 +381,16 @@ const meReducter = (
         const { shakeUserIds, shakers = '[]', hid  } = handshake;
         let handledHandshake = handshake;
         const isUserShake = isShakeUser(shakeUserIds);
+
+        const matched = isMatch(shakeUserIds);
         if (!isUserShake) {
-          handledHandshake = foundUpdateHandshake(status, handledHandshake, item, hid);
+          handledHandshake = foundUpdateHandshake(status, handledHandshake, item, hid, matched);
         } else {
           const shakerArr = parseJsonString(shakers) || [];
           if (shakerArr && shakerArr.length > 0) {
             const newShakers = shakerArr.map((shakerItem) => {
               let handleShaker = shakerItem;
-              handleShaker = foundUpdateHandshake(status, handleShaker, item, hid);
+              handleShaker = foundUpdateHandshake(status, handleShaker, item, hid, matched);
               return handleShaker;
             });
             handledHandshake.shakers = JSON.stringify(newShakers);

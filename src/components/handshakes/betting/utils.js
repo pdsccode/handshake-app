@@ -157,6 +157,7 @@ export const findUserBet = (handshake) => {
   const {
     result, shakeUserIds, closingTime,
     reportTime, disputeTime, initUserId, side, hid, type,
+    totalAmount, totalDisputeAmount
   } = handshake;
 
   let findItem = handshake;
@@ -182,6 +183,8 @@ export const findUserBet = (handshake) => {
         closingTime,
         reportTime,
         disputeTime,
+        totalAmount,
+        totalDisputeAmount,
       });
     }
   }

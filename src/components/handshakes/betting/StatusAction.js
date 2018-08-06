@@ -63,7 +63,8 @@ export const getStatusLabel = (item) => {
 
   if (status === BET_BLOCKCHAIN_STATUS.STATUS_MAKER_SHOULD_UNINIT
     || status === BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINITED
-    || (!matched && role === ROLE.INITER && status >= BET_BLOCKCHAIN_STATUS.STATUS_INITED)) {
+    || (!matched && role === ROLE.INITER && status >= BET_BLOCKCHAIN_STATUS.STATUS_INITED)
+    || (matched && status === BET_BLOCKCHAIN_STATUS.DISPUTED && isExpiredDate(disputeTime))) {
       //CANCEL ACTION
       return cancelAction(status);
   }
@@ -95,7 +96,7 @@ export const getStatusLabel = (item) => {
     && result > BETTING_RESULT.INITED && result < BETTING_RESULT.DRAW
     && status !== BET_BLOCKCHAIN_STATUS.STATUS_DONE
     && ((status === BET_BLOCKCHAIN_STATUS.STATUS_RESOLVED && !isExpiredDate(disputeTime))
-        || (status !== BET_BLOCKCHAIN_STATUS.STATUS_RESOLVED && isExpiredDate(disputeTime)))) { //Has result and matched
+        || isExpiredDate(disputeTime))) { //Has result and matched
       return winOrLose(result, side, disputeTime);
   }
 

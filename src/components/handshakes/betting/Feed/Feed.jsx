@@ -578,9 +578,12 @@ class FeedBetting extends React.Component {
     const { totalAmount, totalDisputeAmount } = itemInfo;
     //totalDisputeAmount = 50;
     //totalAmount = 100;
+
     const progress = totalDisputeAmount / totalAmount * 100;
     const pgText = `${formatAmount(totalDisputeAmount)} ETH of ${formatAmount(totalAmount)} ETH outcome pool`;
-    console.log(TAG, 'renderProgressBar');
+    console.log(TAG, 'renderProgressBar', 'totalAmount:', totalAmount,'totalDisputeAmount:', totalDisputeAmount);
+    console.log(TAG, 'renderProgressBar', 'totalAmount:', formatAmount(totalAmount),'totalDisputeAmount:', formatAmount(totalDisputeAmount));
+
     return (
       <div>
         <ProgressBar className="progressBar" striped bsStyle="info" now={progress} />
