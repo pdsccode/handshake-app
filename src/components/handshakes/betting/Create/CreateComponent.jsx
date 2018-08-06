@@ -96,9 +96,9 @@ class BettingCreate extends React.Component {
     const { closingDate, matchName, matchOutcome, onSubmitClick, side } = bettingShake;
 
     if (side === SIDE.SUPPORT) {
-      GA.clickPlaceSupportOrder(matchOutcome);
+      GA.clickSimplePlaceSupportOrder(matchOutcome);
     } else {
-      GA.clickPlaceOpposeOrder(matchOutcome);
+      GA.clickSimplePlaceOpposeOrder(matchOutcome);
     }
 
 

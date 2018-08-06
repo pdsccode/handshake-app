@@ -188,33 +188,33 @@ export class MasterWallet {
     }
 
     static UpdateLocalStore(masterWallet, sync = false) {
-      
+
       localStore.save(MasterWallet.KEY, masterWallet);
 
       // call api update list address:
       if (sync){
         MasterWallet.SyncWalletAddress();
       }
-      
+
     }
 
     static getListWalletAddressJson(){
       const masterWallet = localStore.get(MasterWallet.KEY);
-        
+
         let listAddresses = [];
 
         masterWallet.forEach((wallet) => {
           if (listAddresses.indexOf(wallet.address) === -1){
-            listAddresses.push(wallet.address); 
+            listAddresses.push(wallet.address);
           }
-        });   
+        });
         return JSON.stringify(listAddresses);
     }
 
     static SyncWalletAddress(){
-      try{                
+      try{
 
-        let listAddresses = MasterWallet.getListWalletAddressJson();          
+        let listAddresses = MasterWallet.getListWalletAddressJson();
 
         console.log("update wallet addresses ...");
 
@@ -232,18 +232,18 @@ export class MasterWallet {
         let data = new FormData();
         data.append ("wallet_addresses", listAddresses);
 
-        let endpoint = 'user/profile';        
+        let endpoint = 'user/profile';
 
         let response = axios({
           method: 'POST',
           timeout: BASE_API.TIMEOUT,
           headers: completedHeaders,
-          url: `${BASE_API.BASE_URL}/${endpoint}`,        
+          url: `${BASE_API.BASE_URL}/${endpoint}`,
           data
         });
-        console.log("update wallet response ", response );  
-      }                                  
-      
+        console.log("update wallet response ", response );
+      }
+
       catch (error) {
         console.error('callAPI: ', error);
       }
@@ -262,10 +262,10 @@ export class MasterWallet {
         },
         "to": to_address,
       }
-      
+
       const defaultHeaders = {
         'Content-Type': 'application/json',
-        'Content': 'application/json',        
+        'Content': 'application/json',
       };
       let headers = {};
       const completedHeaders = merge(
@@ -275,14 +275,14 @@ export class MasterWallet {
       const token = 'kpWdZ3Rzk9E6m7O4clDWLGWoDOjdx08Qn_zXjY5xaxPCKYB0D14p1CRjtw==';
       completedHeaders.Payload = token;
       let endpoint = "user/notification";
-      
+
       let response = axios.post(
         `${BASE_API.BASE_URL}/${endpoint}`,
          JSON.stringify(data),
-        {headers: completedHeaders} 
+        {headers: completedHeaders}
       )
 
-      console.log("called NotifyUserTransfer ", response );  
+      console.log("called NotifyUserTransfer ", response );
     }
 
     static UpdateBalanceItem(item) {
@@ -532,13 +532,17 @@ export class MasterWallet {
         let auth_token = false;
         let wallets = false;
         let chat_encryption_keypair = false;
-      
+        let refers = false;
+
         if (jsonData !== false) {
           if (jsonData.hasOwnProperty('auth_token')) {
             auth_token = jsonData.auth_token;
           }
           if (jsonData.hasOwnProperty('chat_encryption_keypair')) {
             chat_encryption_keypair = jsonData.chat_encryption_keypair;
+          }
+          if (jsonData.hasOwnProperty('refers')) {
+            refers = jsonData.refers;
           }
           if (jsonData.hasOwnProperty('wallets')) {
             wallets = jsonData.wallets;
@@ -547,10 +551,10 @@ export class MasterWallet {
             wallets = jsonData;
           }
 
-          if (Array.isArray(wallets)) {            
+          if (Array.isArray(wallets)) {
             const listWallet = [];
             wallets.forEach((walletJson) => {
-              const wallet = MasterWallet.convertObject(walletJson);              
+              const wallet = MasterWallet.convertObject(walletJson);
               if (wallet === false) {
                 throw BreakException;
               }
@@ -562,6 +566,9 @@ export class MasterWallet {
             }
             if (chat_encryption_keypair !== false){
               localStore.save(APP.CHAT_ENCRYPTION_KEYPAIR, chat_encryption_keypair);
+            }
+            if (refers !== false){
+              localStore.save(APP.REFERS, refers);
             }
             return listWallet;
           }
