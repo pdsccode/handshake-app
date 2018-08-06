@@ -21,8 +21,12 @@ const EVENT_ACTION = {
   CLICK_OPPOSE: 'Click oppose',
   CLICK_SIMPLE: 'Click simple',
   CLICK_ADVANCE: 'Click advance',
-  CLICK_PLACE_SUPPORT_ORDER: 'Click place support order',
-  CLICK_PLACE_OPPOSE_ORDER: 'Click place oppose order',
+  CLICK_SIMPLE_PLACE_SUPPORT_ORDER: 'Click simple place support order',
+  CLICK_SIMPLE_PLACE_OPPOSE_ORDER: 'Click simple place oppose order',
+  CLICK_ADVANCE_PLACE_SUPPORT_ORDER: 'Click advance place support order',
+  CLICK_ADVANCE_PLACE_OPPOSE_ORDER: 'Click advance place oppose order',
+  CLICK_FREE_PLACE_SUPPORT_ORDER: 'Click free place support order',
+  CLICK_FREE_PLACE_OPPOSE_ORDER: 'Click free place oppose order',
   CLICK_FREE_BET: 'Click free bet',
   CLICK_PAID_BET: 'Click paid bet',
   CLICK_CLOSE: 'Click close',
@@ -36,6 +40,7 @@ const EVENT_ACTION = {
   CLICK_COMMENTS_BOX: 'Click comments box',
   CLICK_SHARE_BUTTON: 'Click share button',
   CREATE_BET_SUCCESSFUL: 'Create bet successful',
+  CANT_CREATE_BET: `Can't create bet`,
   CREATE_SHARE_BUTTON: 'Create share button',
   CREATE_BET_NOT_MATCH_FAIL: 'Create bet not match - fail',
   CREATE_BET_NOT_MATCH_SUCCESS: 'Create bet not match - success',
@@ -196,13 +201,13 @@ class GoogleAnalyticsService {
   /**
    *
    */
-  clickPlaceSupportOrder(outcome) {
+  clickSimplePlaceSupportOrder(outcome) {
     const params = {
       category: EVENT_CATEGORY.ORDER_BOOK,
-      action: EVENT_ACTION.CLICK_PLACE_SUPPORT_ORDER,
+      action: EVENT_ACTION.CLICK_SIMPLE_PLACE_SUPPORT_ORDER,
       label: `${outcome}`,
     };
-    console.log(TAG, 'clickPlaceSupportOrder', params);
+    console.log(TAG, 'clickSimplePlaceSupportOrder', params);
 
     this.sendGAEvent(params);
   }
@@ -210,13 +215,13 @@ class GoogleAnalyticsService {
   /**
    *
    */
-  clickPlaceOpposeOrder(outcome) {
+  clickSimplePlaceOpposeOrder(outcome) {
     const params = {
       category: EVENT_CATEGORY.ORDER_BOOK,
-      action: EVENT_ACTION.CLICK_PLACE_OPPOSE_ORDER,
+      action: EVENT_ACTION.CLICK_SIMPLE_PLACE_OPPOSE_ORDER,
       label: `${outcome}`,
     };
-    console.log(TAG, 'clickPlaceOpposeOrder', params);
+    console.log(TAG, 'clickSimplePlaceOpposeOrder', params);
 
     this.sendGAEvent(params);
   }
@@ -224,16 +229,59 @@ class GoogleAnalyticsService {
   /**
    *
    */
-  clickPlaceOpposeOrder(outcome) {
+  clickAdvancePlaceSupportOrder(outcome) {
     const params = {
       category: EVENT_CATEGORY.ORDER_BOOK,
-      action: EVENT_ACTION.CLICK_PLACE_OPPOSE_ORDER,
+      action: EVENT_ACTION.CLICK_ADVANCE_PLACE_SUPPORT_ORDER,
       label: `${outcome}`,
     };
-    console.log(TAG, 'clickPlaceOpposeOrder', params);
+    console.log(TAG, 'clickAdvancePlaceSupportOrder', params);
 
     this.sendGAEvent(params);
   }
+
+  /**
+   *
+   */
+  clickAdvancePlaceOpposeOrder(outcome) {
+    const params = {
+      category: EVENT_CATEGORY.ORDER_BOOK,
+      action: EVENT_ACTION.CLICK_ADVANCE_PLACE_OPPOSE_ORDER,
+      label: `${outcome}`,
+    };
+    console.log(TAG, 'clickAdvancePlaceOpposeOrder', params);
+
+    this.sendGAEvent(params);
+  }
+
+  /**
+   *
+   */
+  clickFreePlaceSupportOrder(outcome) {
+    const params = {
+      category: EVENT_CATEGORY.ORDER_BOOK,
+      action: EVENT_ACTION.CLICK_FREE_PLACE_SUPPORT_ORDER,
+      label: `${outcome}`,
+    };
+    console.log(TAG, 'clickFreePlaceSupportOrder', params);
+
+    this.sendGAEvent(params);
+  }
+
+  /**
+   *
+   */
+  clickFreePlaceOpposeOrder(outcome) {
+    const params = {
+      category: EVENT_CATEGORY.ORDER_BOOK,
+      action: EVENT_ACTION.CLICK_FREE_PLACE_OPPOSE_ORDER,
+      label: `${outcome}`,
+    };
+    console.log(TAG, 'clickFreePlaceOpposeOrder', params);
+
+    this.sendGAEvent(params);
+  }
+
 
   /**
    *
@@ -296,29 +344,21 @@ class GoogleAnalyticsService {
     } catch (err) {}
   }
 
-
-
   /**
    *
-   * @param side
-   * @param odds
-   * @param amount
-   * @param message
    */
-  createBetNotMatchFail({
-    side, odds, amount, message,
-  }) {
+  createBetNotSuccess(errMessage) {
+    const params = {
+      category: EVENT_CATEGORY.ORDER_BOOK,
+      action: EVENT_ACTION.CANT_CREATE_BET,
+      label: errMessage,
+    };
+    console.log(TAG, 'createBetNotSuccess', params);
     try {
-      const category = this.eventCategory;
-      if (category) {
-        this.sendGAEvent({
-          category,
-          action: EVENT_CATEGORY.CREATE_BET_NOT_MATCH_FAIL,
-          label: `${BETTING_SIDE_NAME[side]} - Odds: ${odds} - Amount: ${amount} - Reason: ${message}`,
-        });
-      }
+      this.sendGAEvent(params);
     } catch (err) {}
   }
+
 
   /** z
    *
@@ -326,11 +366,11 @@ class GoogleAnalyticsService {
    * @param odds
    * @param amount
    */
-  createBetNotMatchSuccess({ side, odds, amount }) {
+  createBetNotMatchSuccess({ side, odds, amount, txHash }) {
     const params = {
       category: EVENT_CATEGORY.ORDER_BOOK,
       action: EVENT_ACTION.CREATE_BET_NOT_MATCH_SUCCESS,
-      label: `${BETTING_SIDE_NAME[side]} - Odds: ${odds} - Amount: ${amount}`,
+      label: `${BETTING_SIDE_NAME[side]} - Odds: ${odds} - Amount: ${amount}-${txHash}`,
     };
     console.log(TAG, 'createBetNotMatchSuccess', params);
 
@@ -342,27 +382,6 @@ class GoogleAnalyticsService {
     } catch (err) {}
   }
 
-  /**
-   *
-   * @param side
-   * @param odds
-   * @param amount
-   * @param message
-   */
-  createBetMatchedFail({
-    side, odds, amount, message,
-  }) {
-    try {
-      const category = this.eventCategory;
-      if (category) {
-        this.sendGAEvent({
-          category,
-          action: EVENT_CATEGORY.CREATE_BET_MATCHED_FAIL,
-          label: `${BETTING_SIDE_NAME[side]} - Odds: ${odds} - Amount: ${amount} - Reason: ${message}`,
-        });
-      }
-    } catch (err) {}
-  }
 
   /**
    *
@@ -370,18 +389,18 @@ class GoogleAnalyticsService {
    * @param odds
    * @param amount
    */
-  createBetMatchedSuccess({ side, odds, amount }) {
+  createBetMatchedSuccess({ side, odds, amount, txHash }) {
     const params = {
       category: EVENT_CATEGORY.ORDER_BOOK,
       action: EVENT_ACTION.CREATE_BET_MATCHED_SUCCESS,
-      label: `${BETTING_SIDE_NAME[side]} - Odds: ${odds} - Amount: ${amount}`,
+      label: `${BETTING_SIDE_NAME[side]} - Odds: ${odds} - Amount: ${amount}-${txHash}`,
     };
     console.log(TAG, 'createBetMatchedSuccess', params);
     try {
-      if (category) {
-        this.sendGAEvent(params);
-      }
-    } catch (err) {}
+      this.sendGAEvent(params);
+    } catch (err) {
+      console.log(TAG, err);
+    }
   }
 
   /**

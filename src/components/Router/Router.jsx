@@ -39,7 +39,8 @@ const RouterExchange = createDynamicImport(() => import('@/components/Router/Exc
 const RouterComment = createDynamicImport(() => import('@/components/Router/Comment'), Loading);
 const RouterAdmin = createDynamicImport(() => import('@/components/Router/Admin'), Loading);
 const RouterLuckyPool = createDynamicImport(() => import('@/pages/LuckyLanding/LuckyLanding'), Loading);
-const RouterPrediction = createDynamicImport(() => import('@/pages/Exchange/Exchange'), Loading);
+const RouterExchange = createDynamicImport(() => import('@/components/Router/Exchange'), Loading);
+// const RouterExchange = createDynamicImport(() => import('@/pages/Exchange/Exchange'), Loading);
 const RouterLandingPageMain = createDynamicImport(() => import('@/pages/LandingPage/Main'), Loading);
 const LandingPageMain = createDynamicImport(() => import('@/pages/LandingPage/Main'), Loading);
 const ProjectDetail = createDynamicImport(() => import('@/components/ProjectDetail'), Loading);
@@ -48,16 +49,15 @@ const JobDetail = createDynamicImport(() => import('@/pages/Recruiting/JobDetail
 
 /* ======================== FOR MOBILE ======================== */
 const configRoutesUsingMobileLayout = [
-  { path: URL.HANDSHAKE_PREDICTION, component: RouterPrediction },
   { path: URL.HANDSHAKE_ME, component: RouterMe },
+  { path: URL.HANDSHAKE_PREDICTION, component: RouterExchange },
+  { path: URL.HANDSHAKE_EXCHANGE, component: RouterExchange },
   // { path: URL.HANDSHAKE_DISCOVER, component: RouterDiscover },
-  { path: URL.HANDSHAKE_CASH, component: RouterDiscover },
+  { path: URL.HANDSHAKE_CASH, component: RouterExchange },
   { path: URL.HANDSHAKE_CHAT, component: RouterChat },
   { path: URL.HANDSHAKE_WALLET, component: RouterWallet },
   { path: URL.HANDSHAKE_PAYMENT, component: RouterPayment },
   { path: URL.HANDSHAKE_CREATE, component: RouterCreate },
-  { path: URL.HANDSHAKE_EXCHANGE, component: RouterExchange },
-  // { path: URL.HANDSHAKE_EXCHANGE, component: RouterPrediction },
   { path: URL.COMMENTS_BY_SHAKE, component: RouterComment },
   { path: URL.ADMIN, component: RouterAdmin },
   { path: URL.REPORT, component: RouterAdmin },

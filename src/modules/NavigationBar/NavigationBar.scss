@@ -18,7 +18,7 @@
       padding-right: rem-calc(5px);
     }
 
-    a {
+    div {
       display: block;
       padding: rem-calc(5px);
       color: #D8D8D8;
@@ -27,9 +27,9 @@
       text-transform: capitalize;
     }
 
-    a:hover, a:visited, a:link, a:active {
-      text-decoration: none;
-    }
+    //a:hover, a:visited, a:link, a:active {
+    //  text-decoration: none;
+    //}
 
     .Active {
       border: 1px solid #FFFFFF;

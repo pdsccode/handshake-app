@@ -66,13 +66,29 @@ export class Ethereum extends Wallet {
     let url = this.network == Ethereum.Network.Mainnet ? "https://etherscan.io/tx/"+hash : "https://rinkeby.etherscan.io/tx/"+hash;
     return url;
   }
+  
+  async getBalanceEthScan(){
+    try{
+      const API_KEY = configs.network[4].apikeyEtherscan;    
+      const url = `${this.constructor.API[this.getNetworkName()]}?module=account&action=balance&address=${this.address}&tag=latest&apikey=${API_KEY}`;
+      const response = await axios.get(url);
+      if (response.status == 200) {
+        return Web3.utils.fromWei(response.data.result);
+      }
+    }
+    catch (error) {       
+      return this.balance;
+    }
+  }
 
   async getBalance() {
     try {
-      const web3 = this.getWeb3();
-      const balance = await web3.eth.getBalance(this.address);
+      const web3 = this.getWeb3();      
+      const balance = await web3.eth.getBalance(this.address);            
       return Web3.utils.fromWei(balance.toString());
-    } catch (error) { return 0; }
+    } catch (error) {       
+      return this.getBalanceEthScan();
+    }
   }
 
   async getFee() {

@@ -593,10 +593,12 @@ class Wallet extends React.Component {
     obj.push({
       title: messages.wallet.action.backup.title,
       handler: () => {
+        let refers = local.get(APP.REFERS);
         this.setState({activeBackup: true, walletsData: {
           "auth_token": local.get(APP.AUTH_TOKEN),
-          "chat_encryption_keypair": local.get(APP.CHAT_ENCRYPTION_KEYPAIR) ,
-          "wallets": this.getAllWallet() }});
+          "chat_encryption_keypair": local.get(APP.CHAT_ENCRYPTION_KEYPAIR),
+          "wallets": this.getAllWallet(),
+          "refers": refers ? refers : ""}});
         this.toggleBottomSheet();
         this.modalBackupRef.open();
       },
@@ -712,7 +714,7 @@ class Wallet extends React.Component {
 
   onAddressClick = (wallet) => {
     this.setState({walletSelected: wallet, activeReceive: true}, ()=>{
-      this.modalShareAddressRef.open();      
+      this.modalShareAddressRef.open();
     });
   }
 
@@ -794,7 +796,7 @@ class Wallet extends React.Component {
     this.showSuccess(messages.wallet.action.protect.success);
   }
 
-  getETHFree() {    
+  getETHFree() {
     window.open('https://www.rinkeby.io/#faucet', '_blank');
   }
 
@@ -935,7 +937,7 @@ class Wallet extends React.Component {
 
           {/* Modal for Copy address : */}
           <Modal title={messages.wallet.action.receive.title} onRef={modal => this.modalShareAddressRef = modal} onClose={()=> {this.setState({activeReceive: false})}}>
-            <ReceiveCoin active={this.state.activeReceive} wallet={this.state.walletSelected} onFinish={() => { this.successReceive() }} />           
+            <ReceiveCoin active={this.state.activeReceive} wallet={this.state.walletSelected} onFinish={() => { this.successReceive() }} />
           </Modal>
 
           {/* Modal for Create/Import wallet : */}

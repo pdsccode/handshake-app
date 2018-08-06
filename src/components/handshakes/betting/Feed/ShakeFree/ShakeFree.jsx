@@ -109,9 +109,9 @@ class BetingShakeFree extends React.Component {
     // } catch (err) { }
 
     if (side === SIDE.SUPPORT) {
-      GA.clickPlaceSupportOrder(matchOutcome);
+      GA.clickFreePlaceSupportOrder(matchOutcome);
     } else {
-      GA.clickPlaceOpposeOrder(matchOutcome);
+      GA.clickFreePlaceOpposeOrder(matchOutcome);
     }
 
     const validate = await validateBet(amountBN, odds, closingDate, matchName, matchOutcome, true);
@@ -120,6 +120,7 @@ class BetingShakeFree extends React.Component {
       this.initHandshake(amountBN, odds);
       onSubmitClick();
     } else if (message) {
+      GA.createBetNotSuccess(message);
       this.props.showAlert({
         message: <div className="text-center">{message}</div>,
         timeOut: 3000,

@@ -95,9 +95,9 @@ class BetingShake extends React.Component {
     // } catch (err) { }
 
     if (side === SIDE.SUPPORT) {
-      GA.clickPlaceSupportOrder(matchOutcome);
+      GA.clickAdvancePlaceSupportOrder(matchOutcome);
     } else {
-      GA.clickPlaceOpposeOrder(matchOutcome);
+      GA.clickAdvancePlaceOpposeOrder(matchOutcome);
     }
 
     const validate = await validateBet(amount, odds, closingDate, matchName, matchOutcome);
@@ -108,6 +108,7 @@ class BetingShake extends React.Component {
 
     } else {
       if (message) {
+        GA.createBetNotSuccess(message);
         this.props.showAlert({
           message: <div className="text-center">{message}</div>,
           timeOut: 3000,

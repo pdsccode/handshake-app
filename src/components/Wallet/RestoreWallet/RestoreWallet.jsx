@@ -23,10 +23,10 @@ window.Clipboard = (function (window, document, navigator) { let textArea, copy;
 class RestoreWallet extends React.Component {
   constructor(props) {
     super(props);
-    
+
     this.state = {
       erroValueBackup: false, isRestoreLoading: false, inputRestoreWalletValue: ''
-    }    
+    }
   }
 
   showAlert(msg, type = 'success', timeOut = 3000, icon = '') {
@@ -54,13 +54,13 @@ class RestoreWallet extends React.Component {
   }
 
   componentWillUnmount() {
-    
+
   }
   componentDidUpdate (){
-  
+
   }
-  componentWillReceiveProps() {       
-    
+  componentWillReceiveProps() {
+
   }
 
   showLoading = () => {
@@ -73,13 +73,13 @@ class RestoreWallet extends React.Component {
 
 
   onFinish = () => {
-   
+
     const { onFinish } = this.props;
-    
-    if (onFinish) {      
+
+    if (onFinish) {
       onFinish();
     } else {
-      
+
     }
   }
 
@@ -88,7 +88,7 @@ class RestoreWallet extends React.Component {
     this.setState({ isRestoreLoading: true, erroValueBackup: false });
     if (this.state.inputRestoreWalletValue != '') {
       const walletData = MasterWallet.restoreWallets(this.state.inputRestoreWalletValue);
-      if (walletData !== false) {        
+      if (walletData !== false) {
         window.location.reload();
         return;
       }
@@ -102,10 +102,10 @@ class RestoreWallet extends React.Component {
       inputRestoreWalletValue: evt.target.value,
     });
   }
-  
+
   render() {
     const { messages } = this.props.intl;
-    return ( 
+    return (
         <div className="restorewallet">
           <div className="bodyTitle">{messages.wallet.action.restore.description}</div>
             <div className="bodyBackup">
@@ -125,19 +125,19 @@ class RestoreWallet extends React.Component {
 }
 
 RestoreWallet.propTypes = {
-  
+
 };
 
 const mapStateToProps = (state) => ({
-  
+
 });
 
-const mapDispatchToProps = (dispatch) => ({  
+const mapDispatchToProps = (dispatch) => ({
   showAlert: bindActionCreators(showAlert, dispatch),
   showLoading: bindActionCreators(showLoading, dispatch),
   hideLoading: bindActionCreators(hideLoading, dispatch),
   clearFields: bindActionCreators(clearFields, dispatch),
-  
+
 });
 
 export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(RestoreWallet));

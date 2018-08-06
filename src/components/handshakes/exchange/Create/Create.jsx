@@ -480,7 +480,7 @@ class Component extends React.Component {
     const intentMsg = (amountBuy > 0 && amountSell > 0) ? `buy ${amountBuy} ${currency} and sell ${amountSell} ${currency}` : (amountBuy > 0 ? `buy ${amountBuy} ${currency}` : `sell ${amountSell} ${currency}`);
     let message = '';
     if (isUpdate) {
-      message = <FormattedMessage id="updateOfferStoreConfirm" values={{ intentMsg }} />;
+      message = <FormattedMessage id="updateOfferStoreConfirm" />;
     } else {
       message = <FormattedMessage id="createOfferStoreConfirm" values={{ intentMsg }} />;
     }
@@ -761,7 +761,10 @@ class Component extends React.Component {
 
   // /////////////////////
 
-  handleValidate = values => validate(values);
+  handleValidate = values => {
+    const { isUpdate } = this.state;
+    return validate(values, isUpdate);
+  }
 
   gotoUserDashBoard = () => {
     this.props.history.push(`${URL.HANDSHAKE_ME}?id=${HANDSHAKE_ID.EXCHANGE}&tab=dashboard`);
