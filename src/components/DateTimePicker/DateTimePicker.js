@@ -58,7 +58,6 @@ class DateTimePicker extends Component {
   };
 
   onOK = (value, props) => {
-    console.log('value', value);
     props.onChange && props.onChange(this.formatOutput(value, props.outputType));
     props.onDateChange && props.onDateChange(this.formatOutput(value, props.outputType));
   }

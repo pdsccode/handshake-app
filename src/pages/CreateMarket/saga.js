@@ -4,6 +4,10 @@ import { API_URL } from '@/constants';
 import { BetHandshakeHandler } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
 import { handleLoadMatches } from '@/pages/Prediction/saga';
 import { loadCreateEventData, createEvent, shareEvent, sendEmailCode, verifyEmail, updateEmailFetch, updateEmailPut, updateCreateEventLoading } from './action';
+import { isBalanceValid } from '@/stores/common-saga';
+import { showAlert } from '@/stores/common-action';
+import { BetHandshakeHandler } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
+import { MESSAGE } from '@/components/handshakes/betting/message.js';
 import { reportSelector } from './selector';
 
 function* handleLoadReportsSaga({ cache = true }) {
@@ -14,6 +18,7 @@ function* handleLoadReportsSaga({ cache = true }) {
         return events;
       }
     }
+    yield call(isBalanceValid);
 
     return yield call(apiGet, {
       PATH_URL: API_URL.CRYPTOSIGN.LOAD_REPORTS,
@@ -125,26 +130,32 @@ function* handleCreateEventSaga({ values, isNew, selectedSource }) {
         outcomes: values.outcomes,
         ...reportSource,
       };
-      const betHandshakeHandler = BetHandshakeHandler.getShareManager();
-      const { data } = yield call(handleCreateNewEventSaga, { newEventData });
-      if (data && data.length) {
-        const eventData = data[0];
-        const inputData = eventData.outcomes.map(o => {
-          return {
-            fee: eventData.market_fee,
-            source: eventData.source_name,
-            closingTime: eventData.date,
-            reportTime: eventData.reportTime,
-            disputeTime: eventData.disputeTime,
-            offchain: o.id,
-          };
-        });
-        const outcomeId = eventData.outcomes[0].id;
-        const eventName = eventData.name;
-        yield saveGenerateShareLinkToStore({ outcomeId, eventName });
-        yield put(updateCreateEventLoading(false));
-        console.log('inputData', inputData);
-        betHandshakeHandler.createNewEvent(inputData);
+      if (yield call(isBalanceValid)) {
+        const betHandshakeHandler = BetHandshakeHandler.getShareManager();
+        const { data } = yield call(handleCreateNewEventSaga, { newEventData });
+        if (data && data.length) {
+          const eventData = data[0];
+          const inputData = eventData.outcomes.map(o => {
+            return {
+              fee: eventData.market_fee,
+              source: eventData.source_name,
+              closingTime: eventData.date,
+              reportTime: eventData.reportTime,
+              disputeTime: eventData.disputeTime,
+              offchain: o.id,
+            };
+          });
+          const outcomeId = eventData.outcomes[0].id;
+          const eventName = eventData.name;
+          yield saveGenerateShareLinkToStore({ outcomeId, eventName });
+          console.log('inputData', inputData);
+          betHandshakeHandler.createNewEvent(inputData);
+          yield put(updateCreateEventLoading(false));
+        }
+      } else {
+        yield put(showAlert({
+          message: MESSAGE.NOT_ENOUGH_GAS,
+        }));
       }
     }
   } catch (e) {
