@@ -5,7 +5,6 @@ import { reduxForm, Field, FieldArray } from 'redux-form';
 import IconPlus from '@/assets/images/icon/icon-plus.svg';
 import IconTrash from '@/assets/images/icon/icon-trash.svg';
 import moment from 'moment';
-import DatePicker from '@/components/handshakes/betting-event/Create/DatePicker/DatePicker';
 import DateTimePicker from '@/components/DateTimePicker/DateTimePicker';
 import { renderField } from './form';
 import { required, urlValidator, intValidator } from './validate';
@@ -163,7 +162,12 @@ class CreateEventForm extends Component {
     return (
       <React.Fragment>
         {this.renderGroupTitle(title)}
-        <Field name="reports" component="select" onChange={(e, newValue) => this.setFieldValueToState('selectedReportSource', newValue)}>
+        <Field
+          name="reports"
+          component="select"
+          disabled={!props.isNew}
+          onChange={(e, newValue) => this.setFieldValueToState('selectedReportSource', newValue)}
+        >
           <option value="">Please select a verified source</option>
           {props.reportList.map(r => <option value={r.id} key={r.id}>{`${r.name} - ${r.url}`}</option>)}
         </Field>
@@ -212,21 +216,20 @@ class CreateEventForm extends Component {
     );
   }
 
-  renderDateTime = ({ input, isNew, label, ...props }) => {
+  renderDateTime = ({ input, disabled, label, meta, ...props }) => {
     const { value, name, ...onEvents } = input;
     const inputProps = {
       ...props,
       ...onEvents,
       name,
-      disabled: !isNew,
+      disabled,
     };
     return (
       <React.Fragment>
         <DateTimePicker
           onDateChange={(date) => this.setFieldValueToState(name, date)}
           value={value}
-          disabled={!isNew}
-          {...inputProps}
+          inputProps={inputProps}
           {...onEvents}
           popupTriggerRenderer={this.buildPicker}
         />
@@ -243,7 +246,7 @@ class CreateEventForm extends Component {
           component={this.renderDateTime}
           placeholder="Closing Time"
           validate={[required]}
-          isNew={props.isNew}
+          disabled={!props.isNew}
           value={state.closingTime}
           startDate={moment().add(30, 'm').unix()}
         />
@@ -253,7 +256,7 @@ class CreateEventForm extends Component {
           component={this.renderDateTime}
           placeholder="Reporting Time"
           validate={[required]}
-          isNew={props.isNew}
+          disabled={!props.isNew}
           value={state.reportingTime}
           startDate={state.closingTime + (30 * 60)}
           // endDate={state.disputeTime}
@@ -264,7 +267,7 @@ class CreateEventForm extends Component {
           component={this.renderDateTime}
           placeholder="Dispute Time"
           validate={[required]}
-          isNew={props.isNew}
+          disabled={!props.isNew}
           value={state.disputeTime}
           startDate={state.reportingTime + (30 * 60)}
         />
