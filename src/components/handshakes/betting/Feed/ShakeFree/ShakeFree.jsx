@@ -253,6 +253,7 @@ class BetingShakeFree extends React.Component {
         callBack: () => {
         },
       });
+      GA.createBetFailed(message);
     }
   }
 
