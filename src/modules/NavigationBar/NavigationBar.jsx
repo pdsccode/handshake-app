@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 import MultiLanguage from '@/components/core/controls/MultiLanguage';
 import Image from '@/components/core/presentation/Image';
 import { URL } from '@/constants';
@@ -56,12 +56,18 @@ export default class NavigationBar extends Component {
   }
 
   renderMenuItem = (item) => {
+    const { selectedMenuId, onClickMenuItem } = this.props;
     return (
       <div className="NavigationBarItem" key={item.id}>
-        <NavLink to={item.url} activeClassName="Active">
+        <div
+          // to={item.url}
+          // activeClassName="Active"
+          onClick={() => onClickMenuItem(item.url)}
+          className={item.url === selectedMenuId ? 'Active' : ''}
+        >
           {item.icon && <Image src={item.icon} alt={item.name} />}
           <span>{item.name}</span>
-        </NavLink>
+        </div>
       </div>
     );
   }

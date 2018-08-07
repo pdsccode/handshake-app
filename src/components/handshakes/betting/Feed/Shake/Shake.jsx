@@ -95,9 +95,9 @@ class BetingShake extends React.Component {
     // } catch (err) { }
 
     if (side === SIDE.SUPPORT) {
-      GA.clickPlaceSupportOrder(matchOutcome);
+      GA.clickAdvancePlaceSupportOrder(matchOutcome);
     } else {
-      GA.clickPlaceOpposeOrder(matchOutcome);
+      GA.clickAdvancePlaceOpposeOrder(matchOutcome);
     }
 
     const validate = await validateBet(amount, odds, closingDate, matchName, matchOutcome);
