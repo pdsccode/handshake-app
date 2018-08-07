@@ -214,6 +214,7 @@ module.exports = function webpackConfig(env, argv) {
           filename: 'index.html',
           template: xPath('src/templates/index.hbs'),
           favicon: xPath('src/assets/favicon.png'),
+          logo: xPath('src/assets/images/logo.png'),
           env: appEnvConfig,
         }),
       ],
