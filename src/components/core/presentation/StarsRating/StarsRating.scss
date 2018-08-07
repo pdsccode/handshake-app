@@ -4,9 +4,16 @@
 @import './src/styles/style';
 $color: #F0BC38;
 
+@mixin not-full-style {
+  overflow: hidden;
+  content: "\2605";
+  position: absolute;
+}
+
 .stars-rating {
   span {
     margin-right: rem-calc(4.2px);
+    font-size: 14px;
     color: $color;
     &:last-child {
       margin-right: 0;
@@ -16,12 +23,20 @@ $color: #F0BC38;
     //  position: absolute;
     //}
   }
-  .half:before {
+  .quarter:before {
     //color: $color;
     width: 6px;
-    overflow: hidden;
-    content: "\2605";
-    position: absolute;
+    @include not-full-style;
+  }
+  .half:before {
+    //color: $color;
+    width: 7px;
+    @include not-full-style;
+  }
+  .three-fourths:before {
+    //color: $color;
+    width: 9px;
+    @include not-full-style;
   }
   .full {
     //color: $color;

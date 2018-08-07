@@ -17,18 +17,19 @@ import {
   URL,
 } from '@/constants';
 import { Link } from 'react-router-dom';
-import Cookies from 'js-cookie';
+// import Cookies from 'js-cookie';
 import Helper from '@/services/helper';
+
 // components
 import { Col, Grid, Row } from 'react-bootstrap';
 // import SearchBar from '@/components/core/controls/SearchBar';
 import ModalDialog from '@/components/core/controls/ModalDialog';
 
-import FeedPromise from '@/components/handshakes/promise/Feed';
-import FeedBetting from '@/components/handshakes/betting/Feed';
+// import FeedPromise from '@/components/handshakes/promise/Feed';
+// import FeedBetting from '@/components/handshakes/betting/Feed';
 import FeedExchange from '@/components/handshakes/exchange/Feed/FeedExchange';
-import FeedExchangeLocal from '@/components/handshakes/exchange/Feed/FeedExchangeLocal';
-import FeedSeed from '@/components/handshakes/seed/Feed';
+// import FeedExchangeLocal from '@/components/handshakes/exchange/Feed/FeedExchangeLocal';
+// import FeedSeed from '@/components/handshakes/seed/Feed';
 import BlockCountry from '@/components/core/presentation/BlockCountry';
 import Maintain from '@/components/core/presentation/Maintain';
 // import NavigationBar from '@/modules/NavigationBar/NavigationBar';
@@ -38,9 +39,10 @@ import { getFreeStartInfo, getListOfferPrice, setFreeStart } from '@/reducers/ex
 import { updateShowedLuckyPool } from '@/reducers/betting/action';
 import Image from '@/components/core/presentation/Image';
 import loadingSVG from '@/assets/images/icon/loading.gif';
-import ninjaLogoSVG from '@/assets/images/logo.png';
+import OfferShop from '@/models/OfferShop';
+// import ninjaLogoSVG from '@/assets/images/logo.png';
 //
-import DiscoverBetting from '@/components/handshakes/betting/Discover/Discover';
+// import DiscoverBetting from '@/components/handshakes/betting/Discover/Discover';
 import LuckyLanding from '@/pages/LuckyLanding/LuckyLanding';
 import * as gtag from '@/services/ga-utils';
 import taggingConfig from '@/services/tagging-config';
@@ -50,15 +52,14 @@ import { change, Field } from 'redux-form';
 // style
 import '@/components/handshakes/exchange/Feed/FeedExchange.scss';
 import './Discover.scss';
-import OfferShop from '@/models/OfferShop';
 // import { Helmet } from "react-helmet";
 // import icon2KuNinja from '@/assets/images/icon/2_ku_ninja.svg';
 const maps = {
-  [HANDSHAKE_ID.PROMISE]: FeedPromise,
-  [HANDSHAKE_ID.BETTING]: FeedBetting,
+  // [HANDSHAKE_ID.PROMISE]: FeedPromise,
+  // [HANDSHAKE_ID.BETTING]: FeedBetting,
   [HANDSHAKE_ID.EXCHANGE]: FeedExchange,
-  [HANDSHAKE_ID.EXCHANGE_LOCAL]: FeedExchangeLocal,
-  [HANDSHAKE_ID.SEED]: FeedSeed,
+  // [HANDSHAKE_ID.EXCHANGE_LOCAL]: FeedExchangeLocal,
+  // [HANDSHAKE_ID.SEED]: FeedSeed,
 };
 
 const nameFormFilterFeeds = 'formFilterFeeds';
@@ -107,8 +108,7 @@ class DiscoverPage extends React.Component {
 
   constructor(props) {
     super(props);
-    console.log('discover - contructor - init');
-    const handshakeDefault = this.getDefaultHandShakeId();
+    const handshakeDefault = HANDSHAKE_ID.EXCHANGE;
     const utm = this.getUtm();
     const program = this.getProgram();
 
@@ -143,8 +143,7 @@ class DiscoverPage extends React.Component {
     }
 
     this.clickCategoryItem = this.clickCategoryItem.bind(this);
-    this.clickTabItem = this.clickTabItem.bind(this);
-    this.searchChange = this.searchChange.bind(this);
+    // this.searchChange = this.searchChange.bind(this);
     this.getUtm = this.getUtm.bind(this);
     this.getProgram = this.getProgram.bind(this);
     this.onFreeStartClick = this.onFreeStartClick.bind(this);
@@ -223,20 +222,20 @@ class DiscoverPage extends React.Component {
     return program;
   }
 
-  getDefaultHandShakeId() {
-    return HANDSHAKE_ID.EXCHANGE;
-
-    // if (window.location.pathname.indexOf(URL.HANDSHAKE_CASH) >= 0) {
-    //   return HANDSHAKE_ID.EXCHANGE;
-    // }
-    // let seletedId = HANDSHAKE_ID_DEFAULT;
-    // let { id } = Helper.getQueryStrings(window.location.search);
-    // id = parseInt(id, 10);
-    // if (id && Object.values(HANDSHAKE_ID).indexOf(id) !== -1) {
-    //   seletedId = id;
-    // }
-    // return seletedId;
-  }
+  // getDefaultHandShakeId() {
+  //   return HANDSHAKE_ID.EXCHANGE;
+  //
+  //   // if (window.location.pathname.indexOf(URL.HANDSHAKE_CASH) >= 0) {
+  //   //   return HANDSHAKE_ID.EXCHANGE;
+  //   // }
+  //   // let seletedId = HANDSHAKE_ID_DEFAULT;
+  //   // let { id } = Helper.getQueryStrings(window.location.search);
+  //   // id = parseInt(id, 10);
+  //   // if (id && Object.values(HANDSHAKE_ID).indexOf(id) !== -1) {
+  //   //   seletedId = id;
+  //   // }
+  //   // return seletedId;
+  // }
 
   setAddressFromLatLng = (lat, lng) => {
     this.setState({ lat, lng }, () => {
@@ -419,14 +418,14 @@ class DiscoverPage extends React.Component {
   }
 
 
-  searchChange(query) {
-    clearTimeout(this.searchTimeOut);
-    this.searchTimeOut = setTimeout(() => {
-      this.setState({ query }, () => {
-        this.loadDiscoverList();
-      });
-    }, 500);
-  }
+  // searchChange(query) {
+  //   clearTimeout(this.searchTimeOut);
+  //   this.searchTimeOut = setTimeout(() => {
+  //     this.setState({ query }, () => {
+  //       this.loadDiscoverList();
+  //     });
+  //   }, 500);
+  // }
 
   clickFeedDetail(handshake, extraData) {
     const { type } = handshake;
@@ -450,49 +449,49 @@ class DiscoverPage extends React.Component {
     // this.props.history.push(`${URL.HANDSHAKE_DISCOVER}/${id || ''}`);
   }
 
-  handleCloseExchangePopupIntro = () => {
-    Cookies.set(EXCHANGE_COOKIE_READ_INSTRUCTION.name, true, EXCHANGE_COOKIE_READ_INSTRUCTION.option);
-    this.modalRef.close();
-  }
+  // handleCloseExchangePopupIntro = () => {
+  //   Cookies.set(EXCHANGE_COOKIE_READ_INSTRUCTION.name, true, EXCHANGE_COOKIE_READ_INSTRUCTION.option);
+  //   this.modalRef.close();
+  // }
 
-  showWelcomePopup = () => {
-    if (Cookies.get(EXCHANGE_COOKIE_READ_INSTRUCTION.name) !== 'true') {
-      setTimeout(() => {
-        this.setState({
-          modalContent: (
-            <div>
-              <div className="text-right pr-2 pt-1">
-                <a className="d-inline-block" onClick={this.handleCloseExchangePopupIntro}>&times;</a>
-              </div>
-              <div className="exchange-popup-intro">
-                <div className="logo"><img className="w-100" src={ninjaLogoSVG} alt="" /></div>
-                <p className="headline">Ninja, welcomes you to the Dojo!</p>
-                <p>We are the first to offer a completely decentralized platform to buy and sell Bitcoin and Ethereum.</p>
-                <p>We support credit, debit card and cash.</p>
-                <div className="my-3">
-                  <div className="highlight-text">How to use:</div>
-                  <div className="usage">
-                    - (
-                    <Link className="link" to={{ pathname: URL.HANDSHAKE_CREATE_INDEX, search: '?id=2' }}>
-                      Become a shop
-                    </Link>
-                    ) to buy and sell BTC/ETH
-                  </div>
-                  <div className="highlight-text">Or</div>
-                  <div className="usage">- Swipe through all the shops to find <a className="link" onClick={this.handleCloseExchangePopupIntro}>the most suitable price.</a></div>
-                </div>
-                <p>Chat and meet up at the store to fulfill your exchange.</p>
-                <p><strong>Have fun trading!</strong></p>
-                <button className="btn btn-primary btn-block" onClick={this.handleCloseExchangePopupIntro}>Got it!</button>
-              </div>
-            </div>
-          ),
-        }, () => {
-          this.modalRef.open();
-        });
-      }, 1500);
-    }
-  }
+  // showWelcomePopup = () => {
+  //   if (Cookies.get(EXCHANGE_COOKIE_READ_INSTRUCTION.name) !== 'true') {
+  //     setTimeout(() => {
+  //       this.setState({
+  //         modalContent: (
+  //           <div>
+  //             <div className="text-right pr-2 pt-1">
+  //               <a className="d-inline-block" onClick={this.handleCloseExchangePopupIntro}>&times;</a>
+  //             </div>
+  //             <div className="exchange-popup-intro">
+  //               <div className="logo"><img className="w-100" src={ninjaLogoSVG} alt="" /></div>
+  //               <p className="headline">Ninja, welcomes you to the Dojo!</p>
+  //               <p>We are the first to offer a completely decentralized platform to buy and sell Bitcoin and Ethereum.</p>
+  //               <p>We support credit, debit card and cash.</p>
+  //               <div className="my-3">
+  //                 <div className="highlight-text">How to use:</div>
+  //                 <div className="usage">
+  //                   - (
+  //                   <Link className="link" to={{ pathname: URL.HANDSHAKE_CREATE_INDEX, search: '?id=2' }}>
+  //                     Become a shop
+  //                   </Link>
+  //                   ) to buy and sell BTC/ETH
+  //                 </div>
+  //                 <div className="highlight-text">Or</div>
+  //                 <div className="usage">- Swipe through all the shops to find <a className="link" onClick={this.handleCloseExchangePopupIntro}>the most suitable price.</a></div>
+  //               </div>
+  //               <p>Chat and meet up at the store to fulfill your exchange.</p>
+  //               <p><strong>Have fun trading!</strong></p>
+  //               <button className="btn btn-primary btn-block" onClick={this.handleCloseExchangePopupIntro}>Got it!</button>
+  //             </div>
+  //           </div>
+  //         ),
+  //       }, () => {
+  //         this.modalRef.open();
+  //       });
+  //     }, 1500);
+  //   }
+  // }
 
   clickCategoryItem(category) {
     console.log('clickCategoryItem');
@@ -539,21 +538,6 @@ class DiscoverPage extends React.Component {
     if (category.id === 3 && this.state.isBannedPrediction) {
       this.setLoading(false);
     }
-  }
-
-  clickTabItem() {
-    // index
-    this.setState({
-      // tabIndexActive: index
-    }, () => {
-      // if (category.id !== 3) {
-      //   this.loadDiscoverList();
-      // }
-    });
-  }
-
-  handleCreateExchange = () => {
-    this.props.history.push(`${URL.HANDSHAKE_CREATE}?id=${HANDSHAKE_ID.EXCHANGE}`);
   }
 
   loadDiscoverList = () => {
@@ -632,7 +616,7 @@ class DiscoverPage extends React.Component {
 
   render() {
     const {
-      handshakeIdActive,
+      // handshakeIdActive,
       // tabIndexActive,
       propsModal,
       modalContent,
@@ -647,85 +631,62 @@ class DiscoverPage extends React.Component {
           <Image src={loadingSVG} alt="loading" width="100" />
         </div>
         <Grid className="discover">
-          {/* Discover header */}
-          <Row className="category-wrapper">
-            {/*<NavigationBar />*/}
+          <React.Fragment>
             {/*
-              <Col className="col-9">
-                <Category
-                  idActive={handshakeIdActive}
-                  onRef={(category) => { this.categoryRef = category; return null; }}
-                  onItemClick={this.clickCategoryItem}
-                />
-              </Col>
-              <Col className="col-3 multilanguage-block">
-                <MultiLanguage />
-              </Col>
-            */}
-          </Row>
-          {/* exchange */}
-          {
-            handshakeIdActive === HANDSHAKE_ID.EXCHANGE && (
-              <React.Fragment>
-                {/*
                 <Helmet>
                   <title>{intl.formatMessage({ id: 'ex.seo.title' })}</title>
                   <meta name="description" content={intl.formatMessage({ id: 'ex.seo.meta.description' })} />
                 </Helmet>
                 */}
-                <div className="mt-2 mb-1">
-                  <FormFilterFeeds>
-                    <div className="d-table w-100">
-                      <div className="d-table-cell"><label className="label-filter-by"><FormattedMessage id="ex.discover.label.sortby" /></label></div>
-                      <div className="d-table-cell">
-                        <Field
-                          name="sortType"
-                          component={fieldRadioButton}
-                          type="tab-5"
-                          fullWidth={false}
-                          list={CASH_SORTING_LIST}
-                          // validate={[required]}
-                          onChange={this.onSortChange}
-                        />
-                        <Field
-                          name="sortType"
-                          component={fieldDropdown}
-                          classNameWrapper=""
-                          defaultText={<FormattedMessage id="ex.sort.price" />}
-                          classNameDropdownToggle={`dropdown-sort bg-white ${sortIndexActive === CASH_SORTING_CRITERIA.PRICE ? 'dropdown-sort-selected' : ''}  `}
-                          list={PRICE_SORTS}
-                          onChange={this.onSortPriceChange}
-                        />
-                      </div>
-                    </div>
-
-                  </FormFilterFeeds>
-                </div>
-                <div>
-                  <div className="ex-sticky-note">
-                    <div className="mb-2"><FormattedMessage id="ex.discover.banner.text" /></div>
-                    <div><button className="btn btn-become" onClick={this.handleCreateExchange}><FormattedMessage id="ex.discover.banner.btnText" /></button></div>
+            <div className="mt-2 mb-1">
+              <FormFilterFeeds>
+                <div className="d-table w-100">
+                  <div className="d-table-cell"><label className="label-filter-by"><FormattedMessage id="ex.discover.label.sortby" /></label></div>
+                  <div className="d-table-cell">
+                    <Field
+                      name="sortType"
+                      component={fieldRadioButton}
+                      type="tab-5"
+                      fullWidth={false}
+                      list={CASH_SORTING_LIST}
+                      // validate={[required]}
+                      onChange={this.onSortChange}
+                    />
+                    <Field
+                      name="sortType"
+                      component={fieldDropdown}
+                      classNameWrapper=""
+                      defaultText={<FormattedMessage id="ex.sort.price" />}
+                      classNameDropdownToggle={`dropdown-sort bg-white ${sortIndexActive === CASH_SORTING_CRITERIA.PRICE ? 'dropdown-sort-selected' : ''}  `}
+                      list={PRICE_SORTS}
+                      onChange={this.onSortPriceChange}
+                    />
                   </div>
                 </div>
-              </React.Fragment>
-            )
-          }
+
+              </FormFilterFeeds>
+            </div>
+            <div>
+              <div className="ex-sticky-note">
+                <div className="mb-2"><FormattedMessage id="ex.discover.banner.text" /></div>
+                <div>
+                  <Link to={{ pathname: URL.HANDSHAKE_CREATE, search: `?id=${HANDSHAKE_ID.EXCHANGE}` }}>
+                    <button className="btn btn-become"><FormattedMessage id="ex.discover.banner.btnText" /></button>
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </React.Fragment>
           <Row>
-            {[HANDSHAKE_ID.EXCHANGE, HANDSHAKE_ID.EXCHANGE_LOCAL].indexOf(handshakeIdActive) >= 0 && !this.state.isBannedCash && !this.props.firebaseApp.config?.maintainChild?.exchange && this.getHandshakeList()}
+            {!this.state.isBannedCash && !this.props.firebaseApp.config?.maintainChild?.exchange && this.getHandshakeList()}
             {
-              [HANDSHAKE_ID.EXCHANGE, HANDSHAKE_ID.EXCHANGE_LOCAL].indexOf(handshakeIdActive) >= 0 && this.state.isBannedCash
+              this.state.isBannedCash
               ? (
                 <BlockCountry />
               )
-              : [HANDSHAKE_ID.EXCHANGE, HANDSHAKE_ID.EXCHANGE_LOCAL].indexOf(handshakeIdActive) >= 0 && this.props.firebaseApp.config?.maintainChild?.exchange ? <Maintain /> : null
+              : this.props.firebaseApp.config?.maintainChild?.exchange ? <Maintain /> : null
             }
           </Row>
-          {/* betting */}
-          {
-            handshakeIdActive === HANDSHAKE_ID.BETTING
-            ? <DiscoverBetting setLoading={this.setLoading} />
-            : null
-          }
           <Row className="info">
             {messages.product_info}
           </Row>
