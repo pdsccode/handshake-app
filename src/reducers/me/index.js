@@ -77,7 +77,8 @@ const foundWithdrawHanshake = (handshake, item, hid, matched) => {
 
 const foundDisputeHandshake = (handshake, item, hid, matched) => {
   const handledHandshake = handshake;
-  if (hid === item.hid && matched) {
+  console.log(TAG, 'Handshake hid:', hid, 'Item hid:', item.hid, 'Hanshake side:', handledHandshake.side, 'Item side:', item.side );
+  if (hid === item.hid && matched && handledHandshake.side === item.side) {
     console.log(TAG, 'foundDisputeHandshake:','handledHandshake', handledHandshake);
     handledHandshake.status = item.status;
   }
