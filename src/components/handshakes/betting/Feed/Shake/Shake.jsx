@@ -206,6 +206,7 @@ class BetingShake extends React.Component {
         callBack: () => {
         },
       });
+      GA.createBetFailed(message);
     }
     this.props.onSubmitClick();
   }

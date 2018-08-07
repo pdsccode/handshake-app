@@ -5751,8 +5751,8 @@ handlebars@^4.0.11, handlebars@^4.0.3:
     uglify-js "^2.6"
 
 "handshake-i18n@github:ninjadotorg/handshake-i18n":
-  version "0.0.1533522245"
-  resolved "https://codeload.github.com/ninjadotorg/handshake-i18n/tar.gz/38c4c3bd60e59153acb0b9eb76cafa7777d275d6"
+  version "0.0.1533608639"
+  resolved "https://codeload.github.com/ninjadotorg/handshake-i18n/tar.gz/cbb39385df64c67c57560ba27cf27b961f346fb9"
   dependencies:
     "@babel/core" "^7.0.0-beta.51"
     "@babel/node" "^7.0.0-beta.51"
@@ -12844,10 +12844,6 @@ validate-npm-package-license@^3.0.1:
   dependencies:
     spdx-correct "^3.0.0"
     spdx-expression-parse "^3.0.0"
-
-validator@^10.4.0:
-  version "10.5.0"
-  resolved "https://registry.yarnpkg.com/validator/-/validator-10.5.0.tgz#1debbe1e6f5fd0c920ed2af47516f3762033939c"
 
 value-equal@^0.4.0:
   version "0.4.0"

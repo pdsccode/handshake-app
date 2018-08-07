@@ -18,7 +18,7 @@ import { showAlert } from '@/reducers/app/action';
 import {
   getChainIdDefaultWallet,
   isExistMatchBet, getAddress, parseBigNumber,
-  formatAmount,
+  formatAmount, getMessageWithCode,
 } from '@/components/handshakes/betting/utils.js';
 import { calculateBetDefault, calculateWinValues } from '@/components/handshakes/betting/calculation';
 import EstimateGas from '@/modules/EstimateGas';
@@ -324,6 +324,13 @@ class BettingCreate extends React.Component {
   }
   initHandshakeFailed = (error) => {
     console.log('initHandshakeFailed', error);
+    const { status, code } = error;
+    if (status === 0) {
+      const message = getMessageWithCode(code);
+
+      GA.createBetFailed(message);
+
+    }
   }
 
   renderForm() {

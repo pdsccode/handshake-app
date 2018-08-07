@@ -77,6 +77,7 @@ const routesUsingMobileLayout = configRoutesUsingMobileLayout.map(route => (
   />
 ));
 
+
 /* ======================== FOR DESKTOP ======================== */
 
 let routesUsingDesktopLayout = null;
