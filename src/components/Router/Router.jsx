@@ -51,7 +51,7 @@ const JobDetail = createDynamicImport(() => import('@/pages/Recruiting/JobDetail
 const configRoutesUsingMobileLayout = [
   { path: URL.HANDSHAKE_ME, component: RouterMe },
   { path: URL.HANDSHAKE_PREDICTION, component: RouterExchange },
-  { path: URL.HANDSHAKE_EXCHANGE, component: RouterExchange },
+  // { path: URL.HANDSHAKE_EXCHANGE, component: RouterExchange },
   // { path: URL.HANDSHAKE_DISCOVER, component: RouterDiscover },
   { path: URL.HANDSHAKE_CASH, component: RouterExchange },
   { path: URL.HANDSHAKE_CHAT, component: RouterChat },

@@ -233,10 +233,6 @@ class CreateEventForm extends Component {
     );
   }
 
-  requireClosingTime = () => {
-    return this.state.closingTime ? null : 'Please choose closing time first';
-  }
-
   renderTimeGroup = (props, state) => {
     const minStep = 30;
     const secStep = minStep * 60;
@@ -260,8 +256,8 @@ class CreateEventForm extends Component {
           type="text"
           component={this.renderDateTime}
           placeholder="Reporting Time"
-          validate={[required, this.requireClosingTime]}
-          disabled={!props.isNew}
+          validate={[required]}
+          disabled={!props.isNew || !state.closingTime}
           value={state.reportingTime}
           startDate={state.closingTime + secStep}
         />
@@ -271,7 +267,7 @@ class CreateEventForm extends Component {
           component={this.renderDateTime}
           placeholder="Dispute Time"
           validate={[required]}
-          disabled={!props.isNew}
+          disabled={!props.isNew || !state.reportingTime}
           value={state.disputeTime}
           startDate={state.reportingTime + secStep}
         />
