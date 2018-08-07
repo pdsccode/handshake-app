@@ -58,8 +58,9 @@ class DateTimePicker extends Component {
   };
 
   onOK = (value, props) => {
-    props.onChange && props.onChange(this.formatOutput(value, props.outputType));
-    props.onDateChange && props.onDateChange(this.formatOutput(value, props.outputType));
+    const formattedValue = this.formatOutput(value, props.outputType);
+    props.onChange && props.onChange(formattedValue);
+    props.onDateChange && props.onDateChange(formattedValue);
   }
 
   formatMonth = (month, props) => {
@@ -107,12 +108,10 @@ class DateTimePicker extends Component {
   };
 
   renderPopupTrigger = (props) => {
-    console.log('TRIGGER', props);
     return (
       <div className="DatePopupTrigger">
         {props.popupTriggerRenderer ? props.popupTriggerRenderer(props) : (
           <input
-            type="text"
             {...props.inputProps}
             disabled={props.disabled}
             onBlur={this.onOpenPopPicker(props)}
@@ -128,7 +127,7 @@ class DateTimePicker extends Component {
     const cls = classNames(DateTimePicker.displayName, {
       [props.className]: !!props.className,
     });
-    const visible = props.inputProps.disabled ? { visible: false } : {};
+    const visible = (props.inputProps || {}).disabled ? { visible: false } : {};
     return (
       <PopPicker
         datePicker={this.renderDateTimePicker(props)}
