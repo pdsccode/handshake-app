@@ -13,6 +13,8 @@ const bip39 = require('bip39');
 const moment = require('moment');
 const BN = Web3.utils.BN;
 
+var MobileDetect = require('mobile-detect');
+
 export class Ethereum extends Wallet {
   static Network = { Mainnet: 'https://mainnet.infura.io/', Rinkeby: 'https://rinkeby.infura.io/' }
   static API = { Mainnet: 'https://api.etherscan.io/api', Rinkeby: 'https://api-rinkeby.etherscan.io/api' }
@@ -56,38 +58,14 @@ export class Ethereum extends Wallet {
     return new Web3(new Web3.providers.HttpProvider(this.network));
   }
 
-  getAPIUrlAddress(tab) {
-    let url = this.network == Ethereum.Network.Mainnet ? "https://etherscan.io/address/"+this.address : "https://rinkeby.etherscan.io/address/"+this.address;
-    if(tab == 1) url += "#internaltx";
-    return url;
-  }
-
-  getAPIUrlTransaction(hash) {
-    let url = this.network == Ethereum.Network.Mainnet ? "https://etherscan.io/tx/"+hash : "https://rinkeby.etherscan.io/tx/"+hash;
-    return url;
-  }
-
-  async getBalanceEthScan(){
-    try{
-      const API_KEY = configs.network[4].apikeyEtherscan;
-      const url = `${this.constructor.API[this.getNetworkName()]}?module=account&action=balance&address=${this.address}&tag=latest&apikey=${API_KEY}`;
-      const response = await axios.get(url);
-      if (response.status == 200) {
-        return Web3.utils.fromWei(response.data.result);
-      }
-    }
-    catch (error) {
-      return this.balance;
-    }
-  }
-
   async getBalance() {
     try {
       const web3 = this.getWeb3();
       const balance = await web3.eth.getBalance(this.address);
       return Web3.utils.fromWei(balance.toString());
     } catch (error) {
-      return this.getBalanceEthScan();
+      alert(error);
+      return this.balance;
     }
   }
 
@@ -102,19 +80,12 @@ export class Ethereum extends Wallet {
     //console.log('transfer estimatedGas->', String(estimatedGas));
     console.log('transfer limitedGas->', String(limitedGas));
 
-    return Number(web3.utils.fromWei(String(limitedGas * gasPrice)));
-  }
-
-  async getTransactionReceipt(hash) {
-
-    const web3 = new Web3(new Web3.providers.HttpProvider(this.network));
-    const receipt = await web3.eth.getTransactionReceipt(hash);
-    return null;
+    // return Web3.utils.fromWei(estimatedGas);
   }
 
 
   checkAddressValid(toAddress) {
-    const web3 = new Web3(new Web3.providers.HttpProvider(this.network));
+    const web3 = this.getWeb3();
 
     if (!web3.utils.isAddress(toAddress)) {
       return 'messages.ethereum.error.invalid_address';
@@ -217,6 +188,33 @@ export class Ethereum extends Wallet {
       });
     return nonce;
   };
+
+
+  // Transction history....
+  getAPIUrlAddress(tab) {
+    let url = this.network == Ethereum.Network.Mainnet ? "https://etherscan.io/address/"+this.address : "https://rinkeby.etherscan.io/address/"+this.address;
+    if(tab == 1) url += "#internaltx";
+    return url;
+  }
+
+  getAPIUrlTransaction(hash) {
+    let url = this.network == Ethereum.Network.Mainnet ? "https://etherscan.io/tx/"+hash : "https://rinkeby.etherscan.io/tx/"+hash;
+    return url;
+  }
+
+  async getBalanceEthScan(){
+    try{
+      const API_KEY = configs.network[4].apikeyEtherscan;
+      const url = `${this.constructor.API[this.getNetworkName()]}?module=account&action=balance&address=${this.address}&tag=latest&apikey=${API_KEY}`;
+      const response = await axios.get(url);
+      if (response.status == 200) {
+        return Web3.utils.fromWei(response.data.result);
+      }
+    }
+    catch (error) {
+      return this.balance;
+    }
+  }
 
   async getTransactionHistory(pageno) {
     let result = [];
