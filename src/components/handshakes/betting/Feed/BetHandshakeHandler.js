@@ -255,7 +255,7 @@ export class BetHandshakeHandler {
 
       logJson = payload;
       realBlockHash = hash;
-      GA.createClickRefund(eventName, outcome);
+      GA.createClickRefund(eventName, outcome, hash);
       if (hash == -1) {
         realBlockHash = '-1';
         logJson = error.message;
