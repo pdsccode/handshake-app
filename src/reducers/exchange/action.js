@@ -42,6 +42,7 @@ export const EXCHANGE_ACTIONS = {
   OFFER_ITEM_REFILL: 'OFFER_ITEM_REFILL',
   UPDATE_OFFER_STORES: 'UPDATE_OFFER_STORES',
   TRACKING_LOCATION: 'TRACKING_LOCATION',
+  GET_REFERAL_INFO: 'GET_REFERAL_INFO',
 };
 
 export const getCryptoPrice = createAPI(EXCHANGE_ACTIONS.GET_CRYPTO_PRICE);
@@ -98,5 +99,4 @@ export const getDashboardInfo = createAPI(EXCHANGE_ACTIONS.GET_DASHBOARD_INFO);
 export const updateOfferStores = createAPI(EXCHANGE_ACTIONS.UPDATE_OFFER_STORES);
 export const offerItemRefill = createAPI(EXCHANGE_ACTIONS.OFFER_ITEM_REFILL);
 export const trackingLocation = createAPI(EXCHANGE_ACTIONS.TRACKING_LOCATION);
-
-
+export const getReferalInfo = createAPI(EXCHANGE_ACTIONS.GET_REFERAL_INFO);

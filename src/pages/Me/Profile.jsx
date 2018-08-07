@@ -399,7 +399,7 @@ class Profile extends React.Component {
                 </div>
               </div>
               <div className={`content ${this.state.usernameCollapse ? '' : 'd-none'}`}>
-                <p className="text">{messages.me.profile.text.username.desc1}?</p>
+                <p className="text">{messages.me.profile.text.username.desc1}</p>
                 <UsernameForm onSubmit={this.addUsername}>
                   <Field
                     name="username"
