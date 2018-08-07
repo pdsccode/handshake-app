@@ -397,6 +397,10 @@ class Component extends React.Component {
       result = false;
     }
 
+    if (process.env.isDojo) {
+      result = true;
+    }
+
     if (!result) {
       const message = <FormattedMessage id="requireDefaultWalletOnMainNet" />;
       this.showAlert(message);
