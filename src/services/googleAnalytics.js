@@ -35,6 +35,9 @@ const EVENT_ACTION = {
   CLICK_ME_CANCEL_BUTTON: 'Click me cancel button',
   CLICK_ME_WITHDRAW_BUTTON: 'Click me withdraw button',
   CLICK_ME_REFUND_BUTTON: 'Click me refund button',
+  CLICK_FREE_CANCEL_BUTTON: 'Click free cancel button',
+  CLICK_FREE_WITHDRAW_BUTTON: 'Click free withdraw button',
+  CLICK_FREE_REFUND_BUTTON: 'Click free refund button',
 
   CLICK_GO_BUTTON: 'Click go button',
   CLICK_COMMENTS_BOX: 'Click comments box',
@@ -431,7 +434,7 @@ class GoogleAnalyticsService {
     const params = {
       category: EVENT_CATEGORY.ME,
       action: EVENT_ACTION.CLICK_ME_CANCEL_BUTTON,
-      label: `${outcome})-${txHash}`,
+      label: `${outcome}-${txHash}`,
     };
     console.log(TAG, 'createClickCancel', params);
     try {
@@ -447,7 +450,7 @@ class GoogleAnalyticsService {
     const params = {
       category: EVENT_CATEGORY.ME,
       action: EVENT_ACTION.CLICK_ME_WITHDRAW_BUTTON,
-      label: `${outcome})-${txHash}`,
+      label: `${outcome}-${txHash}`,
     };
     console.log(TAG, 'createClickWithdraw', params);
 
@@ -463,10 +466,62 @@ class GoogleAnalyticsService {
   createClickRefund(event, outcome, txHash) {
     const params = {
       category: EVENT_CATEGORY.ME,
-      action: EVENT_ACTION.CLICK_ME_WITHDRAW_BUTTON,
-      label: `${outcome})-${txHash}`,
+      action: EVENT_ACTION.CLICK_ME_REFUND_BUTTON,
+      label: `${outcome}-${txHash}`,
     };
     console.log(TAG, 'createClickRefund', params);
+
+    try {
+      this.sendGAEvent(params);
+    } catch (err) {}
+  }
+
+  /**
+   *
+   * @param event
+   * @param outcome
+   */
+  createFreeClickCancel(outcome) {
+    const params = {
+      category: EVENT_CATEGORY.ME,
+      action: EVENT_ACTION.CLICK_FREE_CANCEL_BUTTON,
+      label: `${outcome}`,
+    };
+    console.log(TAG, 'createFreeClickCancel', params);
+
+    try {
+      this.sendGAEvent(params);
+    } catch (err) {}
+  }
+  /**
+   *
+   * @param event
+   * @param outcome
+   */
+  createFreeClickWithdraw(outcome) {
+    const params = {
+      category: EVENT_CATEGORY.ME,
+      action: EVENT_ACTION.CLICK_FREE_WITHDRAW_BUTTON,
+      label: `${outcome}`,
+    };
+    console.log(TAG, 'createFreeClickWithdraw', params);
+
+    try {
+      this.sendGAEvent(params);
+    } catch (err) {}
+  }
+  /**
+   *
+   * @param event
+   * @param outcome
+   */
+  createFreeClickRefund(outcome) {
+    const params = {
+      category: EVENT_CATEGORY.ME,
+      action: EVENT_ACTION.CLICK_FREE_REFUND_BUTTON,
+      label: `${outcome}`,
+    };
+    console.log(TAG, 'createFreeClickRefund', params);
 
     try {
       this.sendGAEvent(params);
