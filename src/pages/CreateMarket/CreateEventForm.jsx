@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { reduxForm, Field, FieldArray } from 'redux-form';
 import IconPlus from '@/assets/images/icon/icon-plus.svg';
 import IconTrash from '@/assets/images/icon/icon-trash.svg';
+import Dropdown from '@/components/core/controls/Dropdown';
 import moment from 'moment';
 import DateTimePicker from '@/components/DateTimePicker/DateTimePicker';
 import { renderField } from './form';
@@ -19,6 +20,7 @@ class CreateEventForm extends Component {
     isNew: PropTypes.bool,
     initialValues: PropTypes.object,
     shareEvent: PropTypes.object,
+    eventList: PropTypes.array,
   };
 
   static defaultProps = {
@@ -27,6 +29,7 @@ class CreateEventForm extends Component {
     isNew: true,
     initialValues: {},
     shareEvent: null,
+    eventList: [],
   };
 
   constructor(props) {
@@ -62,12 +65,74 @@ class CreateEventForm extends Component {
     }
   }
 
+  unixToDateFormat = (value) => {
+    if (!value) return value;
+    return moment.unix(value).format('DD MMMM YYYY HH:mm');
+  }
+
+  // buildPicker = (inputProps) => {
+  //   return (
+  //     <input
+  //       type="text"
+  //       className="form-control"
+  //       {...inputProps.inputProps}
+  //       disabled={inputProps.disabled}
+  //       placeholder={inputProps.placeholder}
+  //       value={this.unixToDateFormat(inputProps.value)}
+  //     />
+  //   );
+  // }
+
+  buildPicker = ({ inputProps, value }) => {
+    return (
+      <input
+        {...inputProps}
+        value={this.unixToDateFormat(value)}
+      />
+    );
+  }
+
+  buildEventSelectorData = (props) => {
+    return props.eventList.map((event) => {
+      return {
+        ...event,
+        value: event.name,
+      };
+    }).concat({
+      id: 0,
+      value: 'Create a new event',
+    }).sort((a, b) => a.id - b.id);
+  }
+
+  requireClosingTime = () => {
+    return this.state.closingTime ? null : 'Please choose closing time first';
+  }
+
   renderGroupTitle = (title) => {
     return (<div className="CreateEventFormGroupTitle">{title}</div>);
   }
 
   renderGroupNote = (text) => {
     return (<div className="CreateEventFormGroupNote">{text}</div>);
+  }
+
+  renderEventDropdownList = (props, state) => {
+    const title = 'EVENT';
+    const { shareEvent } = props;
+    if (shareEvent) return null;
+    return (
+      <React.Fragment>
+        {this.renderGroupTitle(title)}
+        <Dropdown
+          placeholder="Create a new event"
+          className="EventDropdown"
+          defaultId={state.selectedEvent}
+          source={this.buildEventSelectorData(props)}
+          onItemSelected={props.onSelectEvent}
+          hasSearch
+        />
+      </React.Fragment>
+    );
   }
 
   renderEvent = ({ isNew }) => {
@@ -93,11 +158,9 @@ class CreateEventForm extends Component {
   renderOutComes = (props) => {
     const { fields, meta: { error }, isNew } = props;
     const title = 'OUTCOME';
-    const textNote = '2.0 : Bet 1 ETH, win 1 ETH. You can adjust these odds.';
     return (
       <React.Fragment>
         { this.renderGroupTitle(title) }
-        { this.renderGroupNote(textNote) }
         {
           fields.map((outcome, index) => {
             return (
@@ -162,19 +225,22 @@ class CreateEventForm extends Component {
     return (
       <React.Fragment>
         {this.renderGroupTitle(title)}
-        <Field
-          name="reports"
-          component="select"
-          disabled={!props.isNew}
-          onChange={(e, newValue) => this.setFieldValueToState('selectedReportSource', newValue)}
-        >
-          <option value="">Please select a verified source</option>
-          {props.reportList.map(r => <option value={r.id} key={r.id}>{`${r.name} - ${r.url}`}</option>)}
-        </Field>
+        <div className="form-group">
+          <Field
+            name="reports"
+            component="select"
+            className="form-control custom-select"
+            disabled={!props.isNew}
+            onChange={(e, newValue) => this.setFieldValueToState('selectedReportSource', newValue)}
+          >
+            <option value="">Please select a verified source</option>
+            {props.reportList.map(r => <option value={r.id} key={r.id}>{`${r.name} - ${r.url}`}</option>)}
+          </Field>
+        </div>
         {
           props.isNew && !state.selectedReportSource &&
           <React.Fragment>
-            <div className="CreateEventOption">Or</div>
+            <div className="CreateEventOption"><span>Or</span></div>
             <Field
               name="ownReportName"
               type="text"
@@ -200,20 +266,6 @@ class CreateEventForm extends Component {
     );
   }
 
-  unixToDateFormat = (value) => {
-    if (!value) return value;
-    return moment.unix(value).format('DD MMMM YYYY HH:mm');
-  }
-
-  buildPicker = ({ inputProps, value }) => {
-    return (
-      <input
-        {...inputProps}
-        value={this.unixToDateFormat(value)}
-      />
-    );
-  }
-
   renderDateTime = ({ input, disabled, type, placeholder, startDate, endDate, meta }) => {
     const { value, name, ...onEvents } = input;
     const { touched, dirty, error, warning } = meta;
@@ -223,7 +275,7 @@ class CreateEventForm extends Component {
       placeholder,
       disabled,
     };
-    const cls = classNames({
+    const cls = classNames('form-group', {
       'form-error': error,
       'form-warning': warning,
     });
@@ -296,12 +348,15 @@ class CreateEventForm extends Component {
     }
     return (
       <form className={cls} onSubmit={props.handleSubmit(this.onCreateNewEvent)}>
-        {this.renderEvent(props)}
-        <FieldArray
-          name="outcomes"
-          isNew={props.isNew}
-          component={this.renderOutComes}
-        />
+        <div className="CreateEventFormBlock">
+          {this.renderEventDropdownList(props, state)}
+          {this.renderEvent(props)}
+          <FieldArray
+            name="outcomes"
+            isNew={props.isNew}
+            component={this.renderOutComes}
+          />
+        </div>
         {this.renderFee(props)}
         <div className="CreateEventFormBlock">
           {this.renderReport(props, state)}

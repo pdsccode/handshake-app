@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { eventSelector } from '@/pages/Prediction/selector';
 import Loading from '@/components/Loading';
-import Dropdown from '@/components/core/controls/Dropdown';
 import CreateEventForm from './CreateEventForm';
 import { loadCreateEventData } from './action';
 import { reportSelector, shareEventSelector, isLoading } from './selector';
@@ -37,38 +36,6 @@ class CreateEventContainer extends React.Component {
     });
   }
 
-  buildEventSelectorData = (props) => {
-    return props.eventList.map((event) => {
-      return {
-        ...event,
-        value: event.name,
-      };
-    }).concat({
-      id: 0,
-      value: 'Create a new event',
-    }).sort((a, b) => a.id - b.id);
-  }
-
-  renderGroupTitle = (title) => (<div className="CreateEventFormGroupTitle">{title}</div>);
-
-  renderEventDropdownList = (props, state) => {
-    const title = 'EVENT';
-    if (props.shareEvent) return null;
-    return (
-      <React.Fragment>
-        {this.renderGroupTitle(title)}
-        <Dropdown
-          placeholder="Create a new event"
-          className="EventDropdown"
-          defaultId={state.selectedEvent}
-          source={this.buildEventSelectorData(props)}
-          onItemSelected={this.onSelectEvent}
-          hasSearch
-        />
-      </React.Fragment>
-    );
-  }
-
   renderCreateEventForm = (props, state) => {
     const { selectedEvent } = state;
     const initialValues = !selectedEvent ? {
@@ -88,8 +55,10 @@ class CreateEventContainer extends React.Component {
         initialValues={initialValues}
         reportList={props.reportList || []}
         isNew={!selectedEvent}
+        eventList={props.eventList}
         shareEvent={props.shareEvent}
         dispatch={props.dispatch}
+        onSelectEvent={this.onSelectEvent}
       />
     );
   }
@@ -98,7 +67,6 @@ class CreateEventContainer extends React.Component {
     return (
       <React.Fragment>
         <Loading isLoading={props.isLoading} />
-        {this.renderEventDropdownList(props, state)}
         {this.renderCreateEventForm(props, state)}
       </React.Fragment>
     );
