@@ -39,7 +39,6 @@ const RouterExchange = createDynamicImport(() => import('@/components/Router/Exc
 const RouterComment = createDynamicImport(() => import('@/components/Router/Comment'), Loading);
 const RouterAdmin = createDynamicImport(() => import('@/components/Router/Admin'), Loading);
 const RouterLuckyPool = createDynamicImport(() => import('@/pages/LuckyLanding/LuckyLanding'), Loading);
-const RouterExchange = createDynamicImport(() => import('@/components/Router/Exchange'), Loading);
 // const RouterExchange = createDynamicImport(() => import('@/pages/Exchange/Exchange'), Loading);
 const RouterLandingPageMain = createDynamicImport(() => import('@/pages/LandingPage/Main'), Loading);
 const LandingPageMain = createDynamicImport(() => import('@/pages/LandingPage/Main'), Loading);
