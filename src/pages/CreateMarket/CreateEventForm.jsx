@@ -205,7 +205,16 @@ class CreateEventForm extends Component {
     return moment.unix(value).format('DD MMMM YYYY HH:mm');
   }
 
-  renderDateTime = ({ input, disabled, type, placeholder, startDate, meta }) => {
+  buildPicker = ({ inputProps, value }) => {
+    return (
+      <input
+        {...inputProps}
+        value={this.unixToDateFormat(value)}
+      />
+    );
+  }
+
+  renderDateTime = ({ input, disabled, type, placeholder, startDate, endDate, meta }) => {
     const { value, name, ...onEvents } = input;
     const { touched, dirty, error, warning } = meta;
     const inputProps = {
@@ -226,6 +235,7 @@ class CreateEventForm extends Component {
           inputProps={inputProps}
           {...onEvents}
           startDate={startDate}
+          endDate={endDate}
           popupTriggerRenderer={this.buildPicker}
         />
         {(touched || dirty) && ((error && <span className="ErrorMsg">{error}</span>) || (warning && <span className="WarningMsg">{warning}</span>))}
@@ -260,6 +270,7 @@ class CreateEventForm extends Component {
           disabled={!props.isNew || !state.closingTime}
           value={state.reportingTime}
           startDate={state.closingTime + secStep}
+          endDate={state.disputeTime - secStep}
         />
         <Field
           name="disputeTime"
