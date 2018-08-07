@@ -53,7 +53,7 @@ export class Dataset extends Ethereum {
       })
     }
 
-    async request(datasetId, value) {
+    async request(addr, value) {
       try {
         if (this.balance < parseFloat(value)) {
           throw new Error('You have insufficient coin to make the transfer. Please top up and try again.');
@@ -71,7 +71,7 @@ export class Dataset extends Ethereum {
         const web3 = this.getWeb3();
         const contract = new web3.eth.Contract(
           compiled,
-          CONTRACT_ADDRESS,
+          addr,
         );
 
         const data = web3.eth.abi.encodeFunctionCall({
@@ -108,7 +108,7 @@ export class Dataset extends Ethereum {
       }
     }
 
-    async buy(datasetId, value) {
+    async buy(addr, value) {
       try {
         if (this.balance < value) {
           throw new Error('You have insufficient coin to make the transfer. Please top up and try again.');
@@ -119,7 +119,7 @@ export class Dataset extends Ethereum {
         const web3 = this.getWeb3();
         const contract = new web3.eth.Contract(
           compiled,
-          CONTRACT_ADDRESS,
+          addr,
         );
 
         const data = web3.eth.abi.encodeFunctionCall({

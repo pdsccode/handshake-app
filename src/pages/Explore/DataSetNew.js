@@ -145,7 +145,7 @@ class DataSetNew extends React.Component {
 
       let requestTx;
       if (this.state.datasettype ==="buyer"){
-        requestTx = this.dataset.request(resBody.id, this.state.Amount);
+        requestTx = this.dataset.request(resBody.contract_address, this.state.Amount);
       }
 
       let category = resBody.id;

@@ -118,7 +118,7 @@ class DataExplore extends React.Component {
       const dataset = new Dataset();
       dataset.createFromWallet(MasterWallet.getWalletDefault('ETH'));
       // tx = await dataset.buy(this.state.selectedItem.id, (this.state.selectedItem.total_images/1000) + fee);
-      tx = await dataset.buy(this.state.selectedItem.id,  ( Math.round((this.state.selectedItem.total_images/10000 + 0.005) * 10000) /10000  ) );
+      tx = await dataset.buy(this.state.selectedItem.contract_address, ( Math.round((this.state.selectedItem.total_images/10000 + 0.005) * 10000) /10000  ) );
     } catch (e) {
       console.log(e);
       this.setState({ isLoading: false, open: false });
