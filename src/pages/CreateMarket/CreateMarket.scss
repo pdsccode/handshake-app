@@ -5,7 +5,10 @@
   font-weight: bold;
   color: #d9534f;
 }
-
+.ErrorMsg {
+  display: inline-block;
+  margin-top: 5px;
+}
 .EmailRequiredContainer {
   display: flex;
   padding: 10px 20px;
@@ -47,12 +50,19 @@
 
 .CreateMarket {
   margin: 0 -15px;
-  padding: 30px 15px 0 15px;
+  padding: 0 15px;
   // background-color: #ffffff;
+  .form-control {
+    height: 46px;
+  }
+  button[type="submit"] {
+    height: 46px;
+  }
 }
+
 .CreateEventFormGroupTitle {
   text-transform: uppercase;
-  font-size: rem-calc(16px);
+  font-size: rem-calc(14px);
   font-weight: 700;
   margin: 0 0 5px 0;
 }
@@ -93,12 +103,13 @@
     }
   }
   select {
+    outline: none;
+    height: 46px;
     width: 100%;
     padding: 0.375rem 0.75rem;
     border: 2px solid #E9E9E9;
     border-radius: 6px;
     background-color: #ffffff;
-    margin-bottom: 1rem;
   }
   .date-time-block {
     border: 2px solid #E9E9E9;
@@ -127,7 +138,7 @@
   position: relative;
   button.trash {
     position: absolute;
-    top: 5px;
+    top: 9px;
     right: 5px;
   }
   .form-control {
@@ -136,32 +147,55 @@
 }
 
 .CreateEventOption {
+  position: relative;
   display: block;
   text-align: center;
-  margin: 15px 0;
   font-size: rem-calc(18px);
   font-weight: 700;
   text-transform: uppercase;
-}
-
-.AddMoreOutCome {
-  color: #2456FB;
-  font-size: rem-calc(16px);
-  padding: 1px 0 2px;
-  margin-bottom: 30px;
-  .IconPlus, span {
+  margin-top: -1rem;
+  span {
+    position: relative;
     display: inline-block;
-    vertical-align: middle;
+    padding: 5px 15px;
+    background-color: #ffffff;
+    z-index: 10;
   }
-  .IconPlus {
-    margin-right: 10px;
+  &:after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100px;
+    height: 1px;
+    margin-left: -50px;
+    background-color: #D5D5D5;
+    z-index: 1;
   }
 }
 
 .CreateEventFormBlock {
-  margin: 5px -15px;
+  margin: 0 -15px 5px -15px;
   padding: 15px;
   background-color: #ffffff;
+  > .CreateEventFormGroupTitle:first-child {
+    font-size: rem-calc(16px);
+  }
+  button.AddMoreOutCome {
+    color: #2456FB;
+    font-size: rem-calc(16px);
+    padding: 1px 0 2px;
+    border: none;
+    background: transparent;
+    -webkit-appearance: none;
+    .IconPlus, span {
+      display: inline-block;
+      vertical-align: middle;
+    }
+    .IconPlus {
+      margin-right: 10px;
+    }
+  }
 }
 
 

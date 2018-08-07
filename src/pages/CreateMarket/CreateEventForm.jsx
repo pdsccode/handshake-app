@@ -4,10 +4,11 @@ import PropTypes from 'prop-types';
 import { reduxForm, Field, FieldArray } from 'redux-form';
 import IconPlus from '@/assets/images/icon/icon-plus.svg';
 import IconTrash from '@/assets/images/icon/icon-trash.svg';
+import Dropdown from '@/components/core/controls/Dropdown';
 import moment from 'moment';
-import DatePicker from '@/components/handshakes/betting-event/Create/DatePicker/DatePicker';
+import DateTimePicker from '@/components/DateTimePicker/DateTimePicker';
 import { renderField } from './form';
-import { required, allFieldHasData, urlValidator, intValidator } from './validate';
+import { required, urlValidator, intValidator } from './validate';
 import { createEvent } from './action';
 import ShareMarket from './ShareMarket';
 
@@ -19,6 +20,7 @@ class CreateEventForm extends Component {
     isNew: PropTypes.bool,
     initialValues: PropTypes.object,
     shareEvent: PropTypes.object,
+    eventList: PropTypes.array,
   };
 
   static defaultProps = {
@@ -27,6 +29,7 @@ class CreateEventForm extends Component {
     isNew: true,
     initialValues: {},
     shareEvent: null,
+    eventList: [],
   };
 
   constructor(props) {
@@ -54,9 +57,39 @@ class CreateEventForm extends Component {
   }
 
   addMoreOutcomes = (fields) => {
-    if (fields.getAll().every(i => Object.keys(i).length > 0)) {
+    const isValid = fields.getAll().every(o => {
+      return o.name && o.name.trim();
+    });
+    if (isValid) {
       fields.push({});
     }
+  }
+
+  unixToDateFormat = (value) => {
+    if (!value) return value;
+    return moment.unix(value).format('DD MMMM YYYY HH:mm');
+  }
+
+  buildPicker = ({ inputProps, value }) => {
+    return (
+      <input
+        className="form-control"
+        {...inputProps}
+        value={this.unixToDateFormat(value)}
+      />
+    );
+  }
+
+  buildEventSelectorData = (props) => {
+    return props.eventList.map((event) => {
+      return {
+        ...event,
+        value: event.name,
+      };
+    }).concat({
+      id: 0,
+      value: 'Create a new event',
+    }).sort((a, b) => a.id - b.id);
   }
 
   renderGroupTitle = (title) => {
@@ -65,6 +98,25 @@ class CreateEventForm extends Component {
 
   renderGroupNote = (text) => {
     return (<div className="CreateEventFormGroupNote">{text}</div>);
+  }
+
+  renderEventDropdownList = (props, state) => {
+    const title = 'EVENT';
+    const { shareEvent } = props;
+    if (shareEvent) return null;
+    return (
+      <React.Fragment>
+        {this.renderGroupTitle(title)}
+        <Dropdown
+          placeholder="Create a new event"
+          className="EventDropdown"
+          defaultId={state.selectedEvent}
+          source={this.buildEventSelectorData(props)}
+          onItemSelected={props.onSelectEvent}
+          hasSearch
+        />
+      </React.Fragment>
+    );
   }
 
   renderEvent = ({ isNew }) => {
@@ -90,11 +142,9 @@ class CreateEventForm extends Component {
   renderOutComes = (props) => {
     const { fields, meta: { error }, isNew } = props;
     const title = 'OUTCOME';
-    const textNote = '2.0 : Bet 1 ETH, win 1 ETH. You can adjust these odds.';
     return (
       <React.Fragment>
         { this.renderGroupTitle(title) }
-        { this.renderGroupNote(textNote) }
         {
           fields.map((outcome, index) => {
             return (
@@ -159,14 +209,22 @@ class CreateEventForm extends Component {
     return (
       <React.Fragment>
         {this.renderGroupTitle(title)}
-        <Field name="reports" component="select" onChange={(e, newValue) => this.setFieldValueToState('selectedReportSource', newValue)}>
-          <option value="">Please select a verified source</option>
-          {props.reportList.map(r => <option value={r.id} key={r.id}>{`${r.name} - ${r.url}`}</option>)}
-        </Field>
+        <div className="form-group">
+          <Field
+            name="reports"
+            component="select"
+            className="form-control custom-select"
+            disabled={!props.isNew}
+            onChange={(e, newValue) => this.setFieldValueToState('selectedReportSource', newValue)}
+          >
+            <option value="">Please select a verified source</option>
+            {props.reportList.map(r => <option value={r.id} key={r.id}>{`${r.name} - ${r.url}`}</option>)}
+          </Field>
+        </div>
         {
           props.isNew && !state.selectedReportSource &&
           <React.Fragment>
-            <div className="CreateEventOption">Or</div>
+            <div className="CreateEventOption"><span>Or</span></div>
             <Field
               name="ownReportName"
               type="text"
@@ -192,27 +250,41 @@ class CreateEventForm extends Component {
     );
   }
 
-  renderDateTime = ({ input, isNew, label, ...props }) => {
-    const { value, name, ...inputData } = input;
-    const newValue = value ? { value: moment.unix(value) } : {};
+  renderDateTime = ({ input, disabled, type, placeholder, startDate, endDate, meta }) => {
+    const { value, name, ...onEvents } = input;
+    const { touched, dirty, error, warning } = meta;
+    const inputProps = {
+      name,
+      type,
+      placeholder,
+      disabled,
+    };
+    const cls = classNames('form-group', {
+      'form-error': error,
+      'form-warning': warning,
+    });
     return (
-      <React.Fragment>
-        <DatePicker
-          onChange={(date) => { this.setFieldValueToState(name, date); }}
-          className="form-control input-field"
-          dateFormat="DD MMMM YYYY"
-          name={name}
-          required
-          {...props}
-          {...inputData}
-          {...newValue}
-          disabled={!isNew}
+      <div className={cls}>
+        <DateTimePicker
+          onDateChange={(date) => this.setFieldValueToState(name, date)}
+          value={value}
+          inputProps={inputProps}
+          {...onEvents}
+          startDate={startDate}
+          endDate={endDate}
+          popupTriggerRenderer={this.buildPicker}
         />
-      </React.Fragment>
+        {(touched || dirty) && ((error && <span className="ErrorMsg">{error}</span>) || (warning && <span className="WarningMsg">{warning}</span>))}
+      </div>
     );
   }
 
   renderTimeGroup = (props, state) => {
+    const minStep = 30;
+    const secStep = minStep * 60;
+    const closingStartTime = moment().add(minStep, 'm').unix();
+    // const reportingStartTime = state.closingTime ? state.closingTime + secStep : closingStartTime + secStep;
+    // const disputeStartTime = state.reportingTime ? state.reportingTime + secStep : reportingStartTime + secStep;
     return (
       <React.Fragment>
         <Field
@@ -220,30 +292,31 @@ class CreateEventForm extends Component {
           type="text"
           component={this.renderDateTime}
           placeholder="Closing Time"
-          timePlaceholder="Local timezone"
           validate={[required]}
-          isNew={props.isNew}
+          disabled={!props.isNew}
           value={state.closingTime}
+          startDate={closingStartTime}
         />
         <Field
           name="reportingTime"
           type="text"
           component={this.renderDateTime}
           placeholder="Reporting Time"
-          timePlaceholder="Local timezone"
           validate={[required]}
-          isNew={props.isNew}
+          disabled={!props.isNew || !state.closingTime}
           value={state.reportingTime}
+          startDate={state.closingTime + secStep}
+          endDate={state.disputeTime - secStep}
         />
         <Field
           name="disputeTime"
           type="text"
           component={this.renderDateTime}
           placeholder="Dispute Time"
-          timePlaceholder="Local timezone"
           validate={[required]}
-          isNew={props.isNew}
+          disabled={!props.isNew || !state.reportingTime}
           value={state.disputeTime}
+          startDate={state.reportingTime + secStep}
         />
       </React.Fragment>
     );
@@ -259,13 +332,15 @@ class CreateEventForm extends Component {
     }
     return (
       <form className={cls} onSubmit={props.handleSubmit(this.onCreateNewEvent)}>
-        {this.renderEvent(props)}
-        <FieldArray
-          name="outcomes"
-          isNew={props.isNew}
-          component={this.renderOutComes}
-          validate={allFieldHasData}
-        />
+        <div className="CreateEventFormBlock">
+          {this.renderEventDropdownList(props, state)}
+          {this.renderEvent(props)}
+          <FieldArray
+            name="outcomes"
+            isNew={props.isNew}
+            component={this.renderOutComes}
+          />
+        </div>
         {this.renderFee(props)}
         <div className="CreateEventFormBlock">
           {this.renderReport(props, state)}
