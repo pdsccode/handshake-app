@@ -108,18 +108,13 @@ class DateTimePicker extends Component {
   };
 
   renderPopupTrigger = (props) => {
-    console.log(props);
-    return (
-      <React.Fragment>
-        {props.popupTriggerRenderer ? props.popupTriggerRenderer(props) : (
-          <input
-            {...props.inputProps}
-            onBlur={this.onOpenPopPicker(props)}
-            placeholder={props.placeholder}
-            value={this.unixToLocal(props.value)}
-          />
-        )}
-      </React.Fragment>
+    return props.popupTriggerRenderer ? props.popupTriggerRenderer(props) : (
+      <input
+        {...props.inputProps}
+        onBlur={this.onOpenPopPicker(props)}
+        placeholder={props.placeholder}
+        value={this.unixToLocal(props.value)}
+      />
     );
   }
 
@@ -128,7 +123,6 @@ class DateTimePicker extends Component {
       [props.className]: !!props.className,
     });
     const visible = (props.inputProps || {}).disabled ? { visible: false } : {};
-    console.log('visible:', visible);
     return (
       <PopPicker
         datePicker={this.renderDateTimePicker(props)}

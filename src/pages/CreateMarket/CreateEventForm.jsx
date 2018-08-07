@@ -70,22 +70,10 @@ class CreateEventForm extends Component {
     return moment.unix(value).format('DD MMMM YYYY HH:mm');
   }
 
-  // buildPicker = (inputProps) => {
-  //   return (
-  //     <input
-  //       type="text"
-  //       className="form-control"
-  //       {...inputProps.inputProps}
-  //       disabled={inputProps.disabled}
-  //       placeholder={inputProps.placeholder}
-  //       value={this.unixToDateFormat(inputProps.value)}
-  //     />
-  //   );
-  // }
-
   buildPicker = ({ inputProps, value }) => {
     return (
       <input
+        className="form-control"
         {...inputProps}
         value={this.unixToDateFormat(value)}
       />
@@ -102,10 +90,6 @@ class CreateEventForm extends Component {
       id: 0,
       value: 'Create a new event',
     }).sort((a, b) => a.id - b.id);
-  }
-
-  requireClosingTime = () => {
-    return this.state.closingTime ? null : 'Please choose closing time first';
   }
 
   renderGroupTitle = (title) => {
