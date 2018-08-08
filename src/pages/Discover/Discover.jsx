@@ -24,6 +24,8 @@ import FeedExchange from '@/components/handshakes/exchange/Feed/FeedExchange';
 import { fieldDropdown, fieldRadioButton } from '@/components/core/form/customField';
 import { change, Field } from 'redux-form';
 import Map from './Components/Map';
+import NavBar from './Components/NavBar';
+import Footer from './Components/Footer';
 
 class DiscoverPage extends React.Component {
 
@@ -50,16 +52,18 @@ class DiscoverPage extends React.Component {
 
     return (
       <div>
+        <NavBar />
         <Map
           isMarkerShown={this.state.isMarkerShown}
           onMarkerClick={this.handleMarkerClick}
           // googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places"
           googleMapURL={`https://maps.googleapis.com/maps/api/js?key=${process.env.GOOGLE_API_KEY}`}
           loadingElement={<div style={{ height: `100%` }} />}
-          containerElement={<div style={{ height: `500px` }} />}
+          containerElement={<div style={{ height: `calc(100vh - 48px - 55px)`, marginTop: '48px' }} />}
           mapElement={<div style={{ height: `100%` }} />}
           center={{ lat: 35.929673, lng: -78.948237 }}
         />
+        <Footer />
       </div>
     );
   }
