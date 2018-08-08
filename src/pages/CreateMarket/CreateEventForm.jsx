@@ -12,6 +12,9 @@ import { required, urlValidator, intValidator, smallerThan } from './validate';
 import { createEvent } from './action';
 import ShareMarket from './ShareMarket';
 
+const minStep = 15;
+const secStep = minStep * 60;
+
 class CreateEventForm extends Component {
   static displayName = 'CreateEventForm';
   static propTypes = {
@@ -284,17 +287,17 @@ class CreateEventForm extends Component {
 
   smallerThanReportingTime = (value) => {
     if (!this.state.reportingTime) return null;
-    return value < this.state.reportingTime ? null : 'Closing time must be before Reporting Time';
+    return (value + secStep) <= this.state.reportingTime ? null
+      : `Closing time must be before Reporting Time at least ${minStep}min`;
   }
 
   smallerThanDisputeTime = (value) => {
     if (!this.state.disputeTime) return null;
-    return value < this.state.disputeTime ? null : 'Reporting time must be before Dispute Time';
+    return (value + secStep) <= this.state.disputeTime ? null
+      : `Reporting time must be before Dispute Time at least ${minStep}min`;
   }
 
   renderTimeGroup = (props, state) => {
-    const minStep = 1;
-    const secStep = minStep * 60;
     const closingStartTime = moment().add(minStep, 'm').unix();
     return (
       <React.Fragment>
