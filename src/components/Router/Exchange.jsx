@@ -11,7 +11,7 @@ const Exchange = props => (<DynamicImport loading={Loading} load={() => import('
 const Page404 = props => (<DynamicImport isNotFound loading={Loading} load={() => import('@/pages/Error/Page404')}>{Component => <Component {...props} />}</DynamicImport>);
 
 const routerMap = [
-  { path: URL.HANDSHAKE_CASH, component: Exchange },
+  // { path: URL.HANDSHAKE_CASH, render: (props) => <Exchange {...props} hideNavigationBar /> },
   { path: URL.HANDSHAKE_PREDICTION, component: Exchange },
   { path: URL.HANDSHAKE_EXCHANGE, component: Exchange },
 ];
@@ -36,7 +36,7 @@ class ExchangeRouter extends React.Component {
   render() {
     return (
       <Switch>
-        {routerMap.map(route => <Route key={route.path} exact path={route.path} component={route.component} />)}
+        {routerMap.map(route => <Route key={route.path} exact {...route} />)}
         <Page404 />
       </Switch>
     );

@@ -44,6 +44,8 @@ const LandingPageMain = createDynamicImport(() => import('@/pages/LandingPage/Ma
 const ProjectDetail = createDynamicImport(() => import('@/components/ProjectDetail'), Loading);
 const Recruiting = createDynamicImport(() => import('@/pages/Recruiting'), Loading);
 const JobDetail = createDynamicImport(() => import('@/pages/Recruiting/JobDetail'), Loading);
+const Discover = createDynamicImport(() => import('@/pages/Discover/Discover'), Loading);
+
 
 /* ======================== FOR MOBILE ======================== */
 const configRoutesUsingMobileLayout = [
@@ -51,7 +53,7 @@ const configRoutesUsingMobileLayout = [
   { path: URL.HANDSHAKE_PREDICTION, component: RouterExchange },
   { path: URL.HANDSHAKE_EXCHANGE, component: RouterExchange },
   // { path: URL.HANDSHAKE_DISCOVER, component: RouterDiscover },
-  { path: URL.HANDSHAKE_CASH, component: RouterExchange },
+  // { path: URL.HANDSHAKE_CASH, component: RouterExchange }, // Cash on mobile uses a completely different layout!
   { path: URL.HANDSHAKE_CHAT, component: RouterChat },
   { path: URL.HANDSHAKE_WALLET, component: RouterWallet },
   { path: URL.HANDSHAKE_CREATE, component: RouterCreate },
@@ -142,36 +144,40 @@ class Router extends React.Component {
           <Route exact path={URL.RECRUITING} component={Recruiting} />
           <Route path={URL.RECRUITING_JOB_DETAIL} component={JobDetail} />
           {routesUsingDesktopLayout}
+
+          {/* Cash on mobile uses a completely different layout! */}
+          <Route path={URL.HANDSHAKE_CASH} component={Discover} />
+
           <Route
             path={URL.INDEX}
-            render={props =>
-              (
+            render={props => {
+              return (
                 <Layout {...props}>
                   {
                     this.state.firebaseApp.config.isMaintain
-                    ? <Maintain />
-                    : (
-                      <ScrollToTop>
-                        <Switch>
-                          {/*<Route*/}
+                      ? <Maintain />
+                      : (
+                        <ScrollToTop>
+                          <Switch>
+                            {/*<Route*/}
                             {/*exact*/}
                             {/*path={URL.INDEX}*/}
                             {/*render={() => {*/}
-                              {/*if (process.env.isDojo) {*/}
-                                {/*return <Redirect to={{ pathname: URL.HANDSHAKE_CASH }} />*/}
-                              {/*}*/}
-                              {/*return <Redirect to={{ pathname: URL.HANDSHAKE_PREDICTION }} />*/}
+                            {/*if (process.env.isDojo) {*/}
+                            {/*return <Redirect to={{ pathname: URL.HANDSHAKE_CASH }} />*/}
+                            {/*}*/}
+                            {/*return <Redirect to={{ pathname: URL.HANDSHAKE_PREDICTION }} />*/}
                             {/*}}*/}
-                          {/*/>*/}
-                          {routesUsingMobileLayout}
-                          <Route component={Page404} />
-                        </Switch>
-                      </ScrollToTop>
-                    )
+                            {/*/>*/}
+                            {routesUsingMobileLayout}
+                            <Route component={Page404} />
+                          </Switch>
+                        </ScrollToTop>
+                      )
                   }
                 </Layout>
               )
-            }
+            }}
           />
         </Switch>
       </BrowserRouter>
