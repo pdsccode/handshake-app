@@ -51,12 +51,23 @@
 .CreateMarket {
   margin: 0 -15px;
   padding: 0 15px;
-  // background-color: #ffffff;
   .form-control {
     height: 46px;
   }
   button[type="submit"] {
     height: 46px;
+  }
+  .date-time-picker {
+    position: relative;
+    display: block;
+    &:after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+    }
   }
 }
 

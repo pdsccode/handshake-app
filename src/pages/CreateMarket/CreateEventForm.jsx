@@ -72,11 +72,13 @@ class CreateEventForm extends Component {
 
   buildPicker = ({ inputProps, value }) => {
     return (
-      <input
-        className="form-control"
-        {...inputProps}
-        value={this.unixToDateFormat(value)}
-      />
+      <span className="date-time-picker">
+        <input
+          className="form-control"
+          {...inputProps}
+          value={this.unixToDateFormat(value)}
+        />
+      </span>
     );
   }
 
