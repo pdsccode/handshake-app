@@ -109,12 +109,14 @@ class DateTimePicker extends Component {
 
   renderPopupTrigger = (props) => {
     return props.popupTriggerRenderer ? props.popupTriggerRenderer(props) : (
-      <input
-        {...props.inputProps}
-        onBlur={this.onOpenPopPicker(props)}
-        placeholder={props.placeholder}
-        value={this.unixToLocal(props.value)}
-      />
+      <div className="rmc-picker-date-time">
+        <input
+          {...props.inputProps}
+          onBlur={this.onOpenPopPicker(props)}
+          placeholder={props.placeholder}
+          value={this.unixToLocal(props.value)}
+        />
+      </div>
     );
   }
 
