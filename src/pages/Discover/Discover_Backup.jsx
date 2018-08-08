@@ -71,20 +71,20 @@ const FormFilterFeeds = createForm({
 
 const PRICE_SORTS = [
   {
-    id: 'buy_btc_d',
-    text: <FormattedMessage id="ex.sort.price.buy.btc" />,
-  },
-  {
-    id: 'sell_btc_d',
-    text: <FormattedMessage id="ex.sort.price.sell.btc" />,
-  },
-  {
     id: 'buy_eth_d',
     text: <FormattedMessage id="ex.sort.price.buy.eth" />,
   },
   {
     id: 'sell_eth_d',
     text: <FormattedMessage id="ex.sort.price.sell.eth" />,
+  },
+  {
+    id: 'buy_btc_d',
+    text: <FormattedMessage id="ex.sort.price.buy.btc" />,
+  },
+  {
+    id: 'sell_btc_d',
+    text: <FormattedMessage id="ex.sort.price.sell.btc" />,
   },
 ];
 
@@ -521,7 +521,7 @@ class DiscoverPage extends React.Component {
         // this.showWelcomePopup();
         break;
       default:
-        // is promise
+      // is promise
     }
     // set feed type activate
     this.setState({
@@ -681,10 +681,10 @@ class DiscoverPage extends React.Component {
             {!this.state.isBannedCash && !this.props.firebaseApp.config?.maintainChild?.exchange && this.getHandshakeList()}
             {
               this.state.isBannedCash
-              ? (
-                <BlockCountry />
-              )
-              : this.props.firebaseApp.config?.maintainChild?.exchange ? <Maintain /> : null
+                ? (
+                  <BlockCountry />
+                )
+                : this.props.firebaseApp.config?.maintainChild?.exchange ? <Maintain /> : null
             }
           </Row>
           <Row className="info">
