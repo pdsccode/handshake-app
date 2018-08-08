@@ -71,20 +71,20 @@ const FormFilterFeeds = createForm({
 
 const PRICE_SORTS = [
   {
-    id: 'buy_btc_d',
-    text: <FormattedMessage id="ex.sort.price.buy.btc" />,
-  },
-  {
-    id: 'sell_btc_d',
-    text: <FormattedMessage id="ex.sort.price.sell.btc" />,
-  },
-  {
     id: 'buy_eth_d',
     text: <FormattedMessage id="ex.sort.price.buy.eth" />,
   },
   {
     id: 'sell_eth_d',
     text: <FormattedMessage id="ex.sort.price.sell.eth" />,
+  },
+  {
+    id: 'buy_btc_d',
+    text: <FormattedMessage id="ex.sort.price.buy.btc" />,
+  },
+  {
+    id: 'sell_btc_d',
+    text: <FormattedMessage id="ex.sort.price.sell.btc" />,
   },
 ];
 

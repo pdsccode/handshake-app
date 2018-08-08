@@ -1,13 +1,14 @@
 import isEmail from 'validator/lib/isEmail';
 import isURL from 'validator/lib/isURL';
 import isInt from 'validator/lib/isInt';
+import trim from 'validator/lib/trim';
 
 /**
  * Validator empty value of control
  * @param value
  */
 export const required = (value) => {
-  return (!value) ? 'Required' : null;
+  return (!trim((value || '').toString())) ? 'Required' : null;
 };
 
 /**

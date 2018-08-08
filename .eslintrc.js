@@ -34,6 +34,7 @@ module.exports = {
     "arrow-body-style": 0,
     "arrow-parens": 0,
     "no-underscore-dangle": 0,
+    "no-unused-expressions": 0,
     "function-paren-newline": 0,
     "jsx-a11y/label-has-for": 0,
     "object-curly-newline": 0,

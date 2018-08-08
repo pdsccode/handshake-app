@@ -1,10 +1,13 @@
 import { takeLatest, call, put, select } from 'redux-saga/effects';
 import { apiGet, apiPost } from '@/stores/api-saga';
-import { API_URL } from '@/constants';
+import { API_URL, URL } from '@/constants';
 import { BetHandshakeHandler } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
 import { handleLoadMatches } from '@/pages/Prediction/saga';
-import { loadCreateEventData, createEvent, shareEvent, updateEmailFetch, updateEmailPut, updateCreateEventLoading } from './action';
+import { isBalanceValid } from '@/stores/common-saga';
+import { showAlert } from '@/stores/common-action';
+import { MESSAGE } from '@/components/handshakes/betting/message.js';
 import { reportSelector } from './selector';
+import { loadCreateEventData, createEvent, shareEvent, sendEmailCode, verifyEmail, updateEmailPut, updateCreateEventLoading } from './action';
 
 function* handleLoadReportsSaga({ cache = true }) {
   try {
@@ -14,6 +17,7 @@ function* handleLoadReportsSaga({ cache = true }) {
         return events;
       }
     }
+    yield call(isBalanceValid);
 
     return yield call(apiGet, {
       PATH_URL: API_URL.CRYPTOSIGN.LOAD_REPORTS,
@@ -43,7 +47,8 @@ function* handleAddOutcomesSaga({ eventId, newOutcomeList, ...payload }) {
       ...payload,
     });
   } catch (e) {
-    return console.error('handleAddOutcomesSaga', e);
+    console.error('handleAddOutcomesSaga', e);
+    return null;
   }
 }
 
@@ -78,7 +83,7 @@ function* saveGenerateShareLinkToStore(data) {
   const { outcomeId, eventName } = data;
   const generateLink = yield call(handleGenerateShareLinkSaga, { outcomeId });
   return yield put(shareEvent({
-    url: `${window.location.origin}/${generateLink.data.slug_short}`,
+    url: `${window.location.origin}/${URL.HANDSHAKE_PREDICTION}${generateLink.data.slug_short}`,
     name: eventName,
   }));
 }
@@ -101,6 +106,7 @@ function* handleCreateEventSaga({ values, isNew, selectedSource }) {
         yield put(updateCreateEventLoading(false));
       }
     } else {
+      // Create new event
       const reportSource = {
         source_id: selectedSource,
         source: selectedSource ? undefined : {
@@ -124,52 +130,85 @@ function* handleCreateEventSaga({ values, isNew, selectedSource }) {
         outcomes: values.outcomes,
         ...reportSource,
       };
-      const betHandshakeHandler = BetHandshakeHandler.getShareManager();
-      const { data } = yield call(handleCreateNewEventSaga, { newEventData });
-      if (data && data.length) {
-        const eventData = data[0];
-        const inputData = eventData.outcomes.map(o => {
-          return {
-            fee: eventData.market_fee,
-            source: eventData.source_name,
-            closingTime: eventData.date,
-            reportTime: eventData.reportTime,
-            disputeTime: eventData.disputeTime,
-            offchain: o.id,
-          };
-        });
-        const outcomeId = eventData.outcomes[0].id;
-        const eventName = eventData.name;
-        yield saveGenerateShareLinkToStore({ outcomeId, eventName });
-        yield put(updateCreateEventLoading(false));
-        console.log('inputData', inputData);
-        betHandshakeHandler.createNewEvent(inputData);
+      if (yield call(isBalanceValid)) {
+        const betHandshakeHandler = BetHandshakeHandler.getShareManager();
+        const { data } = yield call(handleCreateNewEventSaga, { newEventData });
+        if (data && data.length) {
+          const eventData = data[0];
+          const inputData = eventData.outcomes.map(o => {
+            return {
+              fee: eventData.market_fee,
+              source: eventData.source_name,
+              closingTime: eventData.date,
+              reportTime: eventData.reportTime,
+              disputeTime: eventData.disputeTime,
+              offchain: o.id,
+            };
+          });
+          const outcomeId = eventData.outcomes[0].id;
+          const eventName = eventData.name;
+          yield saveGenerateShareLinkToStore({ outcomeId, eventName });
+          console.log('inputData', inputData);
+          betHandshakeHandler.createNewEvent(inputData);
+          yield put(updateCreateEventLoading(false));
+        }
+      } else {
+        yield put(showAlert({
+          message: MESSAGE.NOT_ENOUGH_GAS,
+        }));
       }
     }
   } catch (e) {
-    return console.error('handleCreateNewEventSaga', e);
+    console.error('handleCreateNewEventSaga', e);
   }
 }
 
-function* handleUpdateEmail({ newEmail, ...payload }) {
+function* handleUpdateEmail({ email }) {
   try {
     const userProfile = new FormData();
-    userProfile.set('email', newEmail.email);
+    userProfile.set('email', email);
     const responded = yield call(apiPost, {
       PATH_URL: API_URL.USER.PROFILE,
       type: 'UPDATE_EMAIL_FETCH',
       data: userProfile,
       headers: { 'Content-Type': 'multipart/form-data' },
-      ...payload,
     });
     return yield put(updateEmailPut(responded.data.email));
   } catch (e) {
-    return console.error('handleUpdateEmail', e);
+    console.error('handleUpdateEmail', e);
+    return null;
+  }
+}
+
+function* handleSendEmailCode({ email }) {
+  try {
+    return yield call(apiPost, {
+      PATH_URL: `user/verification/email/start?email=${email}`,
+      type: 'SEND_EMAIL_CODE',
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+  } catch (e) {
+    console.error('handleSendEmailCode', e);
+    return null;
+  }
+}
+
+function* handleVerifyEmail({ email, code }) {
+  try {
+    yield call(apiPost, {
+      PATH_URL: `user/verification/email/check?email=${email}&code=${code}`,
+      type: 'VERIFY_EMAIL',
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    yield handleUpdateEmail({ email });
+  } catch (e) {
+    console.error('handleVerifyEmail', e);
   }
 }
 
 export default function* createMarketSaga() {
   yield takeLatest(loadCreateEventData().type, handleLoadCreateEventData);
   yield takeLatest(createEvent().type, handleCreateEventSaga);
-  yield takeLatest(updateEmailFetch().type, handleUpdateEmail);
+  yield takeLatest(sendEmailCode().type, handleSendEmailCode);
+  yield takeLatest(verifyEmail().type, handleVerifyEmail);
 }
