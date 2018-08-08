@@ -55,7 +55,7 @@ import {
   updateOfferStores,
 } from '@/reducers/exchange/action';
 import { BigNumber } from 'bignumber.js/bignumber';
-import { authUpdate } from '@/reducers/auth/action';
+import { authUpdate, checkUsernameExist } from '@/reducers/auth/action';
 import OfferShop from '@/models/OfferShop';
 import { getErrorMessageFromCode } from '../utils';
 import PropTypes from 'prop-types';
@@ -143,7 +143,7 @@ class Component extends React.Component {
       detectedCountryCode = foundCountryPhone.dialCode;
     }
     rfChange(nameFormExchangeCreate, 'phone', authProfile.phone || `${detectedCountryCode}-`);
-    // rfChange(nameFormExchangeCreate, 'nameShop', authProfile.name || '');
+    rfChange(nameFormExchangeCreate, 'username', authProfile.username || '');
     rfChange(nameFormExchangeCreate, 'address', authProfile.address || '');
 
     let fiatCurrency = { id: FIAT_CURRENCY.USD, text: FIAT_CURRENCY.USD };
@@ -397,6 +397,10 @@ class Component extends React.Component {
       result = false;
     }
 
+    if (process.env.isDojo) {
+      result = true;
+    }
+
     if (!result) {
       const message = <FormattedMessage id="requireDefaultWalletOnMainNet" />;
       this.showAlert(message);
@@ -411,6 +415,26 @@ class Component extends React.Component {
     rfChange(nameFormExchangeCreate, 'customizePriceBuy', -0.25);
     rfChange(nameFormExchangeCreate, 'customizePriceSell', 0.25);
     clearFields(nameFormExchangeCreate, false, false, 'amountBuy', 'amountSell');
+  }
+
+  onSubmit = (values) => {
+    const { messages } = this.props.intl;
+
+    if (values.username) {
+      this.props.checkUsernameExist({
+        PATH_URL: 'user/username-exist',
+        qs: { username: values.username },
+        successFn: (res) => {
+          if (!res.data) {
+            this.handleSubmit(values);
+          } else {
+            this.showAlert(messages.me.profile.username.exist);
+          }
+        },
+      });
+    } else {
+      this.showAlert(messages.me.profile.username.required);
+    }
   }
 
   handleSubmit = async (values) => {
@@ -685,6 +709,8 @@ class Component extends React.Component {
     });
 
     this.resetFormValue();
+
+    this.updateUserProfile(offer);
   }
 
   handleCreateOfferFailed = (e) => {
@@ -741,17 +767,21 @@ class Component extends React.Component {
   // //////////////////////
 
   updateUserProfile = (offerShop) => {
+    const { username } = this.props;
     console.log('updateUserProfile offerShop', offerShop);
     const params = new URLSearchParams();
     params.append('name', offerShop.username);
     params.append('address', offerShop.contactInfo);
+    params.append('username', username);
     this.props.authUpdate({
       PATH_URL: 'user/profile',
       data: params,
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       METHOD: 'POST',
       successFn: () => {
-        // this.setState({ haveProfile: true });
+        if (this.props.app.firechat) {
+          this.props.app.firechat.updateUserName(username);
+        }
       },
       errorFn: () => {
         // this.setState({ haveProfile: false });
@@ -771,6 +801,7 @@ class Component extends React.Component {
   }
 
   render() {
+    const { messages } = this.props.intl;
     const {
       currency, listOfferPrice, stationCurrency, customizePriceBuy, customizePriceSell, amountBuy, amountSell, freeStartInfo, isChooseFreeStart,
     } = this.props;
@@ -806,7 +837,7 @@ class Component extends React.Component {
     const listCurrency = FIAT_CURRENCY_LIST;
     return (
       <div className="create-exchange">
-        <FormExchangeCreate onSubmit={this.handleSubmit} validate={this.handleValidate}>
+        <FormExchangeCreate onSubmit={this.onSubmit} validate={this.handleValidate}>
           <div className="d-flex mt-3">
             <div className="input-group">
               <Field
@@ -974,6 +1005,22 @@ class Component extends React.Component {
             </div>
             <hr className="hrLine"/> */}
 
+              <div className="d-flex py-1">
+                <label className="col-form-label mr-auto label-create">
+                  <span className="align-middle">{messages.me.profile.text.username.label}</span>
+                  <div className="explanation">{messages.me.profile.text.username.desc1}</div>
+                </label>
+                <div className="input-group">
+                  <Field
+                    name="username"
+                    className="form-control-custom form-control-custom-ex w-100 input-no-border"
+                    component={fieldInput}
+                    placeholder={messages.me.profile.text.username.label}
+                    validate={[required]}
+                  />
+                </div>
+              </div>
+
               <div>
                 <div className="d-flex mt-2">
                   <label className="col-form-label mr-auto label-create"><span
@@ -1062,6 +1109,7 @@ const mapStateToProps = (state) => {
   const phone = selectorFormExchangeCreate(state, 'phone');
   const address = selectorFormExchangeCreate(state, 'address');
   const stationCurrency = selectorFormExchangeCreate(state, 'stationCurrency');
+  const username = selectorFormExchangeCreate(state, 'username');
 
   return {
     currency,
@@ -1073,12 +1121,14 @@ const mapStateToProps = (state) => {
     phone,
     address,
     stationCurrency,
+    username,
     ipInfo: state.app.ipInfo,
     authProfile: state.auth.profile,
     offerStores: state.exchange.offerStores,
     listOfferPrice: state.exchange.listOfferPrice,
     freeStartInfo: state.exchange.freeStartInfo,
     isChooseFreeStart: state.exchange.isChooseFreeStart,
+    app: state.app,
   };
 };
 
@@ -1095,5 +1145,6 @@ const mapDispatchToProps = dispatch => ({
   updateOfferStores: bindActionCreators(updateOfferStores, dispatch),
   offerItemRefill: bindActionCreators(offerItemRefill, dispatch),
   getUserLocation: bindActionCreators(getUserLocation, dispatch),
+  checkUsernameExist: bindActionCreators(checkUsernameExist, dispatch),
 });
 export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(Component));
