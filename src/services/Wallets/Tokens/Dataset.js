@@ -67,7 +67,7 @@ export class Dataset extends Ethereum {
         /*   throw new Error('${receipt.transactionHash} failed'); */
         /* } */
 
-        console.log(`sending ${value} to dataset ${datasetId} from address: ${this.address}`);
+        console.log(`sending ${value} to dataset ${addr} from address: ${this.address}`);
 
         const web3 = this.getWeb3();
         const contract = new web3.eth.Contract(
@@ -78,13 +78,8 @@ export class Dataset extends Ethereum {
         const data = web3.eth.abi.encodeFunctionCall({
           name: 'request',
           type: 'function',
-          inputs: [
-            {
-              type: 'uint32',
-              name: 'dsId'
-            }
-          ]
-        }, [datasetId])
+          inputs: []
+        }, [])
 
         const nonce = await web3.eth.getTransactionCount(this.address);
         // const gasPrice = web3.utils.toHex(web3.eth.gasPrice);
@@ -116,7 +111,7 @@ export class Dataset extends Ethereum {
           throw new Error('You have insufficient coin to make the transfer. Please top up and try again.');
         }
 
-        console.log(`buying dataset ${datasetId} from address: ${this.address}`);
+        console.log(`buying dataset ${addr} from address: ${this.address}`);
 
         const web3 = this.getWeb3();
         const contract = new web3.eth.Contract(
@@ -127,13 +122,8 @@ export class Dataset extends Ethereum {
         const data = web3.eth.abi.encodeFunctionCall({
           name: 'buy',
           type: 'function',
-          inputs: [
-            {
-              type: 'uint32',
-              name: 'dsId'
-            }
-          ]
-        }, [datasetId])
+          inputs: []
+        }, [])
 
         const nonce = await web3.eth.getTransactionCount(this.address);
         // const gasPrice = web3.utils.toHex(web3.eth.gasPrice);
