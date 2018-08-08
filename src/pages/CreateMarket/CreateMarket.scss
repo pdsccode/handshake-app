@@ -2,8 +2,11 @@
 
 .form-error {
   border: none;
-  font-weight: bold;
+  font-size: rem-calc(13px);
   color: #d9534f;
+  input {
+    border: 1px solid #d9534f;
+  }
 }
 .ErrorMsg {
   display: inline-block;
@@ -51,7 +54,6 @@
 .CreateMarket {
   margin: 0 -15px;
   padding: 0 15px;
-  // background-color: #ffffff;
   .form-control {
     height: 46px;
   }
