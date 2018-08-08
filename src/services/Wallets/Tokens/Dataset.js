@@ -55,7 +55,8 @@ export class Dataset extends Ethereum {
 
     async request(addr, value) {
       try {
-        if (this.balance < parseFloat(value)) {
+        const ethBalance = await this.getEthBalance();
+        if (ethBalance < value) {
           throw new Error('You have insufficient coin to make the transfer. Please top up and try again.');
         }
 
@@ -93,7 +94,7 @@ export class Dataset extends Ethereum {
           gasLimit: web3.utils.toHex(150000),
           gasPrice: web3.utils.toHex(10e9),
           from: this.address,
-          to: CONTRACT_ADDRESS,
+          to: addr,
           value: web3.utils.toHex(web3.utils.toWei(value.toString())),
           data
         };
@@ -110,7 +111,8 @@ export class Dataset extends Ethereum {
 
     async buy(addr, value) {
       try {
-        if (this.balance < value) {
+        const ethBalance = await this.getEthBalance();
+        if (ethBalance < value) {
           throw new Error('You have insufficient coin to make the transfer. Please top up and try again.');
         }
 
@@ -141,7 +143,7 @@ export class Dataset extends Ethereum {
           gasLimit: web3.utils.toHex(150000),
           gasPrice: web3.utils.toHex(10e9),
           from: this.address,
-          to: CONTRACT_ADDRESS,
+          to: addr,
           value: web3.utils.toHex(web3.utils.toWei(value.toString())),
           data
         };
@@ -158,12 +160,12 @@ export class Dataset extends Ethereum {
       }
     }
 
-    async getDatasetBalance() {
+    async getDatasetBalance(addr) {
       try {
         const web3 = this.getWeb3();
         const contract = new web3.eth.Contract(
           compiled,
-          CONTRACT_ADDRESS,
+          addr,
         );
 
         const balance = await contract.methods.balance().call({from: this.address});
@@ -213,19 +215,11 @@ export class Dataset extends Ethereum {
       }
     }
 
-    async getBalance(){
+    async getEthBalance() {
       const web3 = this.getWeb3();
-      let contract = new web3.eth.Contract(
-        erc20Abi,
-        this.contractAddress
-      );
-
-      let balanceOf = await contract.methods.balanceOf(this.address).call();
-
-      let tokenBalance = new BigNumber(balanceOf) / Math.pow(10, this.decimals)
-
-      return tokenBalance;
-
+      const balance = await web3.eth.getBalance(this.address);
+      const balanceInEth = web3.utils.fromWei(balance, 'ether');
+      return balanceInEth;
     }
 
     async transfer(toAddress, amountToSend) {
