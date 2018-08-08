@@ -4,8 +4,10 @@ import { MasterWallet } from '@/services/Wallets/MasterWallet';
 
 const TAG = 'BettingHandshake';
 export default class BettingHandshake extends BaseHandshake {
-  constructor(chainId) {
+  constructor(chainId, ctractName, ctractAddress) {
     super(chainId);
+    this.ctractName = ctractName;
+    this.ctractAddress = ctractAddress;
 
     // / test
     // this.getEstimateGas().then((gas) => {
@@ -14,7 +16,12 @@ export default class BettingHandshake extends BaseHandshake {
   }
   get contractFileNameWithoutExtension() {
     // return process.env.isProduction ? 'PredictionHandshake' : 'PredictionHandshakeDev';
-    return process.env.PredictionHandshakeFileName;
+    //return process.env.PredictionHandshakeFileName;
+    return this.ctractName;
+  }
+
+  get contractAddress() {
+    return this.ctractAddress;
   }
   get address() {
     const wallet = MasterWallet.getWalletDefault('ETH');

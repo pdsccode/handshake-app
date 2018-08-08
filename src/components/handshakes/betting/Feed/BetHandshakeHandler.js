@@ -42,7 +42,7 @@ export class BetHandshakeHandler {
     console.log('initContract', item);
 
     const {
-      amount, odds, side, offchain, hid,
+      amount, odds, side, offchain, hid, contract_address, contract_json
     } = item;
     //const stake = Math.floor(amount * 10 ** 18) / 10 ** 18;
     // hid = 10000;
