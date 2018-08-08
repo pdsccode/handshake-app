@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 // services, constants
 import { BetHandshakeHandler } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
 import { BET_BLOCKCHAIN_STATUS, ROLE } from '@/components/handshakes/betting/constants.js';
+import GA from '@/services/googleAnalytics';
 
 import { API_URL } from '@/constants';
 import { uninitItem, collect, collectFree, uninitItemFree, refundFree, refund } from '@/reducers/handshake/action';
@@ -266,7 +267,7 @@ class FeedBetting extends React.Component {
   /*** API FREE BET ***/
   async uninitItemFree(id) {
     const url = API_URL.CRYPTOSIGN.UNINIT_HANDSHAKE_FREE.concat(`/${id}`);
-    const { itemInfo } = this.state;
+    const { itemInfo, predictName } = this.state;
 
     const updateInfo = Object.assign({}, itemInfo);
     updateInfo.status = BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINIT_PENDING;
@@ -279,6 +280,7 @@ class FeedBetting extends React.Component {
       successFn: this.uninitHandshakeFreeSuccess,
       errorFn: this.uninitHandshakeFreeFailed,
     });
+    GA.createFreeClickCancel(predictName);
   }
   uninitHandshakeFreeSuccess= async (successData) => {
     console.log(TAG, 'uninitHandshakeFreeSuccess', successData);
@@ -302,7 +304,7 @@ class FeedBetting extends React.Component {
       offchain: id,
     };
 
-    const { itemInfo } = this.state;
+    const { itemInfo, predictName } = this.state;
 
     const updateInfo = Object.assign({}, itemInfo);
     updateInfo.status = BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_PENDING;
@@ -316,6 +318,7 @@ class FeedBetting extends React.Component {
       successFn: this.collectFreeSuccess,
       errorFn: this.collectFreeFailed,
     });
+    GA.createFreeClickWithdraw(predictName);
   }
 
   collectFreeSuccess = async (successData) => {
@@ -351,7 +354,7 @@ class FeedBetting extends React.Component {
       offchain: id,
     };
 
-    const { itemInfo } = this.state;
+    const { itemInfo, predictName } = this.state;
     const updateInfo = Object.assign({}, itemInfo);
     updateInfo.status = BET_BLOCKCHAIN_STATUS.STATUS_REFUND_PENDING;
     betHandshakeHandler.setItemOnChain(id, updateInfo);
@@ -364,6 +367,7 @@ class FeedBetting extends React.Component {
       successFn: this.refundFreeSuccess,
       errorFn: this.refundFreeFailed,
     });
+    GA.createFreeClickRefund(predictName);
   }
 
   refundFreeSuccess = async (successData) => {
