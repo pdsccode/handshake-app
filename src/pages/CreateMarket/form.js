@@ -17,8 +17,8 @@ export const renderField = (props) => {
   } = props;
 
   const cls = classNames(className, {
-    'form-error': error,
-    'form-warning': warning,
+    'form-error': touched && error,
+    'form-warning': touched && warning,
   });
 
   return (

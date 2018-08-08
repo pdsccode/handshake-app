@@ -8,7 +8,7 @@ import Dropdown from '@/components/core/controls/Dropdown';
 import moment from 'moment';
 import DateTimePicker from '@/components/DateTimePicker/DateTimePicker';
 import { renderField } from './form';
-import { required, urlValidator, intValidator } from './validate';
+import { required, urlValidator, intValidator, smallerThan } from './validate';
 import { createEvent } from './action';
 import ShareMarket from './ShareMarket';
 
@@ -252,7 +252,7 @@ class CreateEventForm extends Component {
     );
   }
 
-  renderDateTime = ({ input, disabled, type, placeholder, startDate, endDate, meta }) => {
+  renderDateTime = ({ input, disabled, type, title, placeholder, startDate, endDate, meta }) => {
     const { value, name, ...onEvents } = input;
     const { touched, dirty, error, warning } = meta;
     const inputProps = {
@@ -262,14 +262,15 @@ class CreateEventForm extends Component {
       disabled,
     };
     const cls = classNames('form-group', {
-      'form-error': error,
-      'form-warning': warning,
+      'form-error': (touched || dirty) && error,
+      'form-warning': (touched || dirty) && warning,
     });
     return (
       <div className={cls}>
         <DateTimePicker
           onDateChange={(date) => this.setFieldValueToState(name, date)}
           value={value}
+          title={title}
           inputProps={inputProps}
           {...onEvents}
           startDate={startDate}
@@ -281,12 +282,20 @@ class CreateEventForm extends Component {
     );
   }
 
+  smallerThanReportingTime = (value) => {
+    if (!this.state.reportingTime) return null;
+    return value < this.state.reportingTime ? null : 'Closing time must be before Reporting Time';
+  }
+
+  smallerThanDisputeTime = (value) => {
+    if (!this.state.disputeTime) return null;
+    return value < this.state.disputeTime ? null : 'Reporting time must be before Dispute Time';
+  }
+
   renderTimeGroup = (props, state) => {
-    const minStep = 30;
+    const minStep = 1;
     const secStep = minStep * 60;
     const closingStartTime = moment().add(minStep, 'm').unix();
-    // const reportingStartTime = state.closingTime ? state.closingTime + secStep : closingStartTime + secStep;
-    // const disputeStartTime = state.reportingTime ? state.reportingTime + secStep : reportingStartTime + secStep;
     return (
       <React.Fragment>
         <Field
@@ -294,27 +303,31 @@ class CreateEventForm extends Component {
           type="text"
           component={this.renderDateTime}
           placeholder="Closing Time"
-          validate={[required]}
+          title="Closing Time"
+          validate={[required, this.smallerThanReportingTime]}
           disabled={!props.isNew}
           value={state.closingTime}
           startDate={closingStartTime}
+          // endDate={state.reportingTime - secStep}
         />
         <Field
           name="reportingTime"
           type="text"
           component={this.renderDateTime}
           placeholder="Reporting Time"
-          validate={[required]}
+          title="Reporting Time"
+          validate={[required, this.smallerThanDisputeTime]}
           disabled={!props.isNew || !state.closingTime}
           value={state.reportingTime}
           startDate={state.closingTime + secStep}
-          endDate={state.disputeTime - secStep}
+          // endDate={state.disputeTime - secStep}
         />
         <Field
           name="disputeTime"
           type="text"
           component={this.renderDateTime}
           placeholder="Dispute Time"
+          title="Dispute Time"
           validate={[required]}
           disabled={!props.isNew || !state.reportingTime}
           value={state.disputeTime}

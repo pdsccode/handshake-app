@@ -36,7 +36,3 @@ export const urlValidator = (value) => {
 export const intValidator = (value, min, max) => {
   return isInt(value.toString(), { min, max }) ? null : (`Please enter an integer number from ${min} to ${max}`);
 };
-
-export const allFieldHasData = (value, allValues) => {
-  return !allValues.outcomes.find(i => Object.keys(i).length > 0) ? 'Required' : null;
-}
