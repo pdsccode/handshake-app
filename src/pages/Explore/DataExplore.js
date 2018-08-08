@@ -118,7 +118,7 @@ class DataExplore extends React.Component {
       const dataset = new Dataset();
       dataset.createFromWallet(MasterWallet.getWalletDefault('ETH'));
       // tx = await dataset.buy(this.state.selectedItem.id, (this.state.selectedItem.total_images/1000) + fee);
-      tx = await dataset.buy(this.state.selectedItem.contract_address, ( Math.round((this.state.selectedItem.total_images/10000 + 0.005) * 10000) /10000  ) );
+      tx = await dataset.buy(this.state.selectedItem.contract_addr, ( Math.round((this.state.selectedItem.total_images/10000 + 0.005) * 10000) /10000  ) );
     } catch (e) {
       console.log(e);
       this.setState({ isLoading: false, open: false });
@@ -161,15 +161,15 @@ class DataExplore extends React.Component {
   handleUpdate = (e, {calculations}) => {
     this.setState({calculations});
 
-    let self = this; 
+    let self = this;
     if (calculations.direction === "down" && calculations.percentagePassed > 0.3) {
       if (!!this.state.nextURL && this.state.isLoading == false) {
         this.setState({isLoading: true})
-        
+
         var  request_url_tmp = this.state.nextURL;
         if (process.env.BASE_DATASET_PORT =="443" ){
            request_url_tmp = request_url_tmp.replace("http", "https");;
-        } 
+        }
 
         agent.req.get(request_url_tmp).then((response) => {
           let resBody = response.body;

@@ -145,7 +145,7 @@ class DataSetNew extends React.Component {
 
       let requestTx;
       if (this.state.datasettype ==="buyer"){
-        requestTx = this.dataset.request(resBody.contract_address, this.state.Amount);
+        requestTx = this.dataset.request(resBody.contract_addr, this.state.Amount);
       }
 
       let category = resBody.id;
@@ -205,7 +205,7 @@ class DataSetNew extends React.Component {
               <Form.Input label ="Name" fluid placeholder='Enter the name of this dataset' name='datasetName' value={this.state.datasetName}
                           onChange={this.handleChangeInput}/>
 
-              <Form.Input label ="Description" fluid 
+              <Form.Input label ="Description" fluid
               placeholder='Briefly describe the contents of this dataset' name='description' value={this.state.description}
                           onChange={this.handleChangeInput}/>
 
