@@ -53,9 +53,13 @@ const foundCancelHanshake = (handshake, item) => {
 const foundRefundHanshake = (handshake, item, hid, matched) => {
   const handledHandshake = handshake;
 
-  if (hid === item.hid && matched) {
+  if (hid === item.hid
+    && item.status !== BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINITED
+    && item.status !== BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINIT_PENDING
+    && item.status !== BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINIT_FAILED) {
     console.log(TAG, 'foundRefundHanshake:','handledHandshake', handledHandshake);
     handledHandshake.status = item.status;
+
   }
   return handledHandshake;
 
@@ -73,7 +77,8 @@ const foundWithdrawHanshake = (handshake, item, hid, matched) => {
 
 const foundDisputeHandshake = (handshake, item, hid, matched) => {
   const handledHandshake = handshake;
-  if (hid === item.hid && matched) {
+  console.log(TAG, 'Handshake hid:', hid, 'Item hid:', item.hid, 'Hanshake side:', handledHandshake.side, 'Item side:', item.side );
+  if (hid === item.hid && matched && handledHandshake.side === item.side) {
     console.log(TAG, 'foundDisputeHandshake:','handledHandshake', handledHandshake);
     handledHandshake.status = item.status;
   }

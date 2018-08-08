@@ -299,20 +299,23 @@ const rollbackAction = () => {
 const disputeAction = (result, side) => {
   console.log(TAG, 'disputeAction');
   let strStatus = null;
+  let isAction = true;
+  let label = BETTING_STATUS_LABEL.DISPUTE;
+
   switch (result) {
     case BETTING_RESULT.DRAW:
       strStatus = BETTING_STATUS_LABEL.REFUNDING + BETTING_STATUS_LABEL.DISPUTE_CLICK;
       break;
     default:
       if (result === side) {
-        strStatus = BETTING_STATUS_LABEL.WIN + BETTING_STATUS_LABEL.DISPUTE_CLICK;
+        strStatus = BETTING_STATUS_LABEL.WIN + BETTING_STATUS_LABEL.WIN_WAIT;
+        isAction = false;
+        label = null;
       } else {
         strStatus = BETTING_STATUS_LABEL.LOSE + BETTING_STATUS_LABEL.DISPUTE_CLICK;
       }
       break;
   }
-  const label = BETTING_STATUS_LABEL.DISPUTE;
-  const isAction = true;
 
   return { title: label, isAction, status: strStatus };
 
