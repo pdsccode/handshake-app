@@ -140,6 +140,9 @@
     position: absolute;
     top: 9px;
     right: 5px;
+    border: none;
+    background: transparent;
+    -webkit-appearance: none;
   }
   .form-control {
     padding-right: 40px;
@@ -157,9 +160,10 @@
   span {
     position: relative;
     display: inline-block;
-    padding: 5px 15px;
+    padding: 0 15px;
+    margin: 5px 0;
     background-color: #ffffff;
-    z-index: 10;
+    z-index: 2;
   }
   &:after {
     content: '';

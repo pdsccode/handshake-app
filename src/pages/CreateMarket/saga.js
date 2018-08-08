@@ -1,6 +1,6 @@
 import { takeLatest, call, put, select } from 'redux-saga/effects';
 import { apiGet, apiPost } from '@/stores/api-saga';
-import { API_URL } from '@/constants';
+import { API_URL, URL } from '@/constants';
 import { BetHandshakeHandler } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
 import { handleLoadMatches } from '@/pages/Prediction/saga';
 import { isBalanceValid } from '@/stores/common-saga';
@@ -83,7 +83,7 @@ function* saveGenerateShareLinkToStore(data) {
   const { outcomeId, eventName } = data;
   const generateLink = yield call(handleGenerateShareLinkSaga, { outcomeId });
   return yield put(shareEvent({
-    url: `${window.location.origin}/${generateLink.data.slug_short}`,
+    url: `${window.location.origin}/${URL.HANDSHAKE_PREDICTION}${generateLink.data.slug_short}`,
     name: eventName,
   }));
 }
