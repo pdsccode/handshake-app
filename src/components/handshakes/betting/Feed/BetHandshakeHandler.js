@@ -44,15 +44,10 @@ export class BetHandshakeHandler {
     const {
       amount, odds, side, offchain, hid, contract_address, contract_json
     } = item;
-    //const stake = Math.floor(amount * 10 ** 18) / 10 ** 18;
-    // hid = 10000;
     const stake = amount;
     const chainId = getChainIdDefaultWallet();
     const bettinghandshake = new BettingHandshake(chainId);
     bettinghandshake.updateContract(contract_address, contract_json);
-
-    // bettinghandshake.contractFileAddress = contract_address;
-    // bettinghandshake.contractFileName = contract_json;
     const { contractAddress } = bettinghandshake;
     let realBlockHash = '';
     let logJson = '';
@@ -88,15 +83,11 @@ export class BetHandshakeHandler {
     const {
       amount, odds, side, maker_address, maker_odds, offchain, hid, contract_address, contract_json
     } = item;
-    // hid = 10000;
-    //const stake = Math.floor(amount * 10 ** 18) / 10 ** 18;
     const stake = amount;
     const maker = maker_address;
     const makerOdds = maker_odds;
     const chainId = getChainIdDefaultWallet();
     const bettinghandshake = new BettingHandshake(chainId);
-    // bettinghandshake.contractFileAddress = contract_address;
-    // bettinghandshake.contractFileName = contract_json;
     bettinghandshake.updateContract(contract_address, contract_json);
 
 
@@ -161,9 +152,6 @@ export class BetHandshakeHandler {
     const chainId = getChainIdDefaultWallet();
 
     const bettinghandshake = new BettingHandshake(chainId);
-    // bettinghandshake.contractFileAddress = contractAddress;
-    // bettinghandshake.contractFileName = contractName;
-    //const { contractAddress } = bettinghandshake;
     bettinghandshake.updateContract(contractAddress, contractName);
 
 
@@ -208,8 +196,6 @@ export class BetHandshakeHandler {
 
     const bettinghandshake = new BettingHandshake(chainId);
     bettinghandshake.updateContract(contractAddress, contractName);
-    // bettinghandshake.contractFileAddress = contractAddress;
-    // bettinghandshake.contractFileName = contractName;
 
     let result = null;
 
@@ -257,9 +243,6 @@ export class BetHandshakeHandler {
     const chainId = getChainIdDefaultWallet();
 
     const bettinghandshake = new BettingHandshake(chainId);
-    // bettinghandshake.contractFileAddress = contractAddress;
-    // bettinghandshake.contractFileName = contractName;
-    //const contractAddress = bettinghandshake.contractAddress;
     bettinghandshake.updateContract(contractAddress, contractName);
 
 
