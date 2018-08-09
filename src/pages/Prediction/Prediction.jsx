@@ -65,10 +65,6 @@ class Prediction extends React.Component {
     }
   }
 
-  handleScroll = () => {
-    //this.showLuckyPool();
-  }
-
   handleClickEventItem = (id, e, props, itemData) => {
     const { event } = props;
     const selectedOutcome = {
