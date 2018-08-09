@@ -159,6 +159,7 @@ module.exports = function webpackConfig(env, argv) {
       }),
       new CopyWebpackPlugin([
         { from: 'src/assets/images/ninja-star', to: 'ninja-star' },
+        { from: 'src/assets/images/logo.png', to: 'images' },
       ]),
       // new OfflinePlugin({
       //   appShell: '/',
