@@ -4,10 +4,10 @@ import { MasterWallet } from '@/services/Wallets/MasterWallet';
 
 const TAG = 'BettingHandshake';
 export default class BettingHandshake extends BaseHandshake {
-  constructor(chainId, ctractName, ctractAddress) {
+  constructor(chainId) {
     super(chainId);
-    this.ctractName = ctractName;
-    this.ctractAddress = ctractAddress;
+    this.contractFileName = null;
+    this.contractFileAddress = null;
 
     // / test
     // this.getEstimateGas().then((gas) => {
@@ -17,11 +17,14 @@ export default class BettingHandshake extends BaseHandshake {
   get contractFileNameWithoutExtension() {
     // return process.env.isProduction ? 'PredictionHandshake' : 'PredictionHandshakeDev';
     //return process.env.PredictionHandshakeFileName;
-    return this.ctractName;
+    if (this.contractFileName) {
+      return `Prediction/${this.contractFileName}`;
+    }
+    return null;
   }
 
   get contractAddress() {
-    return this.ctractAddress;
+    return this.contractFileAddress;
   }
   get address() {
     const wallet = MasterWallet.getWalletDefault('ETH');
@@ -37,24 +40,17 @@ export default class BettingHandshake extends BaseHandshake {
     return this.chainId === 4 ? window.gasPrice || 20 : window.gasPrice || 20;
     // return this.chainId === 4 ? 64 : 64;
   }
-  async getEstimateGas(hid = 0, side = 1, odds = 3) {
-    const oddsValue = odds * 100;
-    // const payoutValue = Web3.utils.toWei(payout, 'ether');
-    const bytesOffchain = this.web3.utils.asciiToHex('cryptosign_m562');
-    // const bytesOffchain = this.web3.utils.asciiToHex(offchain);
-    const payloadData = this.handshakeInstance.methods
-      .init(hid, side, oddsValue, bytesOffchain)
-      .encodeABI();
-    /*
-    const estimateGas = await this.neuron.caculateEstimatGasWithEthUnit(
-      payloadData,
-      this.address,
-      this.gasPrice,
-    );
-    */
-    const estimateGas = await this.neuron.caculateLimitGasWithEthUnit(this.gasPrice);
-    return estimateGas;
+  updateContract(contractAddress, contractName) {
+    this.contractFileAddress = contractAddress;
+    this.contractFileName = contractName;
+    console.log(TAG, 'updateContract', 'contractFileAddress:', this.contractFileAddress, 'contractFileName:', contractName);
+    this.combine();
   }
+  // async getEstimateGas() {
+
+  //   const estimateGas = await this.neuron.caculateLimitGasWithEthUnit(this.gasPrice);
+  //   return estimateGas;
+  // }
   initBet = async (hid, side, stake, odds, offchain) => {
     console.log(
       TAG,

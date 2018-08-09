@@ -221,33 +221,35 @@ class FeedBetting extends React.Component {
 
   async cancelOnChain(offchain, hid) {
     const { itemInfo, eventName, predictName } = this.state;
-    const { side, amount, odds } = itemInfo;
+    const { side, amount, odds, contractName, contractAddress } = itemInfo;
     const updateInfo = Object.assign({}, itemInfo);
     updateInfo.status = BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINIT_PENDING;
     betHandshakeHandler.setItemOnChain(offchain, updateInfo);
     this.props.updateBettingChange(updateInfo);
 
-    betHandshakeHandler.cancelBet(hid, side, amount, odds, offchain, eventName, predictName);
+    betHandshakeHandler.cancelBet(hid, side, amount, odds, offchain, eventName, predictName, contractName, contractAddress);
     this.uninitItemReal(offchain);
   }
   async withdrawOnChain(offchain, hid) {
     const { itemInfo, eventName, predictName } = this.state;
+    const { contractName, contractAddress } = itemInfo;
     const updateInfo = Object.assign({}, itemInfo);
     updateInfo.status = BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_PENDING;
     betHandshakeHandler.setItemOnChain(offchain, updateInfo);
     this.props.updateBettingChange(updateInfo);
 
-    betHandshakeHandler.withdraw(hid, offchain, eventName, predictName);
+    betHandshakeHandler.withdraw(hid, offchain, eventName, predictName, contractName, contractAddress);
     this.collectReal(offchain);
   }
   async refundOnChain(offchain, hid) {
     const { itemInfo, eventName, predictName } = this.state;
+    const { contractName, contractAddress } = itemInfo;
     const updateInfo = Object.assign({}, itemInfo);
     updateInfo.status = BET_BLOCKCHAIN_STATUS.STATUS_REFUND_PENDING;
     betHandshakeHandler.setItemOnChain(offchain, updateInfo);
     this.props.updateBettingChange(updateInfo);
 
-    betHandshakeHandler.refund(hid, offchain, eventName, predictName);
+    betHandshakeHandler.refund(hid, offchain, eventName, predictName, contractName, contractAddress);
     this.refundReal(offchain);
 
     /*

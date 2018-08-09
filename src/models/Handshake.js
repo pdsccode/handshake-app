@@ -38,6 +38,8 @@ class Handshake {
       reportTime: data.reporting_time,
       disputeTime: data.disputing_time,
       fiatCurrency: data.fiat_currency,
+      contractAddress: data.contract_address,
+      contractName: data.contract_json,
     };
   }
 }

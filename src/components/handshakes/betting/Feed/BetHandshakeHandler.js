@@ -49,7 +49,11 @@ export class BetHandshakeHandler {
     const stake = amount;
     const chainId = getChainIdDefaultWallet();
     const bettinghandshake = new BettingHandshake(chainId);
-    const contractAddress = bettinghandshake.contractAddress;
+    bettinghandshake.updateContract(contract_address, contract_json);
+
+    // bettinghandshake.contractFileAddress = contract_address;
+    // bettinghandshake.contractFileName = contract_json;
+    const { contractAddress } = bettinghandshake;
     let realBlockHash = '';
     let logJson = '';
     let dataBlockchain = '';
@@ -82,7 +86,7 @@ export class BetHandshakeHandler {
     console.log('shakeContract', item);
 
     const {
-      amount, odds, side, maker_address, maker_odds, offchain, hid,
+      amount, odds, side, maker_address, maker_odds, offchain, hid, contract_address, contract_json
     } = item;
     // hid = 10000;
     //const stake = Math.floor(amount * 10 ** 18) / 10 ** 18;
@@ -91,7 +95,12 @@ export class BetHandshakeHandler {
     const makerOdds = maker_odds;
     const chainId = getChainIdDefaultWallet();
     const bettinghandshake = new BettingHandshake(chainId);
-    const contractAddress = bettinghandshake.contractAddress;
+    // bettinghandshake.contractFileAddress = contract_address;
+    // bettinghandshake.contractFileName = contract_json;
+    bettinghandshake.updateContract(contract_address, contract_json);
+
+
+    const { contractAddress } = bettinghandshake;
     let realBlockHash = '';
     let logJson = '';
     let result = '';
@@ -148,11 +157,15 @@ export class BetHandshakeHandler {
   };
 
 
-  async cancelBet(hid, side, stake, odds, offchain, eventName, outcome) {
+  async cancelBet(hid, side, stake, odds, offchain, eventName, outcome, contractName, contractAddress) {
     const chainId = getChainIdDefaultWallet();
 
     const bettinghandshake = new BettingHandshake(chainId);
-    const contractAddress = bettinghandshake.contractAddress;
+    // bettinghandshake.contractFileAddress = contractAddress;
+    // bettinghandshake.contractFileName = contractName;
+    //const { contractAddress } = bettinghandshake;
+    bettinghandshake.updateContract(contractAddress, contractName);
+
 
     let logJson = '';
     let realBlockHash = '';
@@ -190,11 +203,13 @@ export class BetHandshakeHandler {
     return result;
   }
 
-  async withdraw(hid, offchain, eventName, outcome) {
+  async withdraw(hid, offchain, eventName, outcome, contractName, contractAddress) {
     const chainId = getChainIdDefaultWallet();
 
     const bettinghandshake = new BettingHandshake(chainId);
-    const contractAddress = bettinghandshake.contractAddress;
+    bettinghandshake.updateContract(contractAddress, contractName);
+    // bettinghandshake.contractFileAddress = contractAddress;
+    // bettinghandshake.contractFileName = contractName;
 
     let result = null;
 
@@ -237,12 +252,16 @@ export class BetHandshakeHandler {
 
     return result;
   }
-  async refund(hid, offchain, eventName, outcome) {
+  async refund(hid, offchain, eventName, outcome, contractName, contractAddress) {
 
     const chainId = getChainIdDefaultWallet();
 
     const bettinghandshake = new BettingHandshake(chainId);
-    const contractAddress = bettinghandshake.contractAddress;
+    // bettinghandshake.contractFileAddress = contractAddress;
+    // bettinghandshake.contractFileName = contractName;
+    //const contractAddress = bettinghandshake.contractAddress;
+    bettinghandshake.updateContract(contractAddress, contractName);
+
 
     let logJson = '';
     let realBlockHash = '';
@@ -355,6 +374,8 @@ export class BetHandshakeHandler {
     console.log(fee, source, closingWindow, reportWindow, disputeWindow, offchain);
     const chainId = getChainIdDefaultWallet();
     const bettinghandshake = new BettingHandshake(chainId);
+    //bettinghandshake.contractFileAddress = contractAddress;
+    //bettinghandshake.contractFileName = contractName;
     //const predictionhandshake = new PredictionHandshake(chainId);
 
     const contractAddress = predictionhandshake.contractAddress;
