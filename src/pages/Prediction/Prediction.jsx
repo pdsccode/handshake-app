@@ -8,6 +8,8 @@ import LuckyReal from '@/components/handshakes/betting/LuckyPool/LuckyReal/Lucky
 import LuckyLanding from '@/pages/LuckyLanding/LuckyLanding';
 import GA from '@/services/googleAnalytics';
 import LuckyFree from '@/components/handshakes/betting/LuckyPool/LuckyFree/LuckyFree';
+import ReportPopup from '@/components/handshakes/betting/Feed/ReportPopup';
+
 import { eventSelector, isLoading, showedLuckyPoolSelector } from './selector';
 import { loadMatches, updateShowedLuckyPool } from './action';
 import EventItem from './EventItem';
@@ -144,6 +146,12 @@ class Prediction extends React.Component {
     );
   }
 
+  renderReportPopup = () => {
+    return (
+      <ReportPopup />
+    );
+  }
+
   renderComponent = (props, state) => {
     return (
       <div className={Prediction.displayName}>
@@ -163,6 +171,7 @@ class Prediction extends React.Component {
           }}
           />
         </ModalDialog>
+        {this.renderReportPopup()}
 
       </div>
     );
