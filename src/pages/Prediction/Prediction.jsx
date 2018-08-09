@@ -40,7 +40,9 @@ class Prediction extends React.Component {
     this.props.dispatch(loadMatches());
   }
 
-  componentWillUnmount() {
+  onCountdownComplete = () => {
+    this.props.dispatch(loadMatches());
+    this.closeOrderPlace();
   }
 
   openOrderPlace(selectedOutcome) {
@@ -94,11 +96,6 @@ class Prediction extends React.Component {
       console.error(err);
     }
   };
-
-  onCountdownComplete = () => {
-    this.props.dispatch(loadMatches());
-    this.closeOrderPlace();
-  }
 
   renderEventList = (props) => {
     if (!props.eventList || !props.eventList.length) return null;
