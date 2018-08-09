@@ -13,8 +13,10 @@ const nameFormFilterStation = 'formFilterStation';
 const FormFilterStation = createForm({
   propsReduxForm: {
     form: nameFormFilterStation,
-    initialValues: { type: 'buy' },
-
+    initialValues: {
+      type: 'buy',
+      coin: { id: 'btc', text: <span><img src={iconBtc} width={25} /> BTC</span> },
+    },
   },
 });
 
@@ -42,15 +44,15 @@ class NavBar extends React.Component {
           </div>
           <div className="d-inline-block">
             <Field
-              name="currency"
+              name="coin"
               component={fieldDropdown}
               classNameWrapper=""
               defaultText="Coin"
               classNameDropdownToggle="bg-white border-0"
               // classNameDropdownToggle={`dropdown-sort bg-white ${sortIndexActive === CASH_SORTING_CRITERIA.PRICE ? 'dropdown-sort-selected' : ''}  `}
               list={[
-                { id: 1, text: <span><img src={iconBtc} width={25} /> BTC</span> },
-                { id: 2, text: <span><img src={iconEth} width={25} /> ETH</span> },
+                { id: 'btc', text: <span><img src={iconBtc} width={25} /> BTC</span> },
+                { id: 'eth', text: <span><img src={iconEth} width={25} /> ETH</span> },
               ]}
             />
           </div>

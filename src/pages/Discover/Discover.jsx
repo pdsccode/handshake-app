@@ -61,7 +61,7 @@ class DiscoverPage extends React.Component {
           loadingElement={<div style={{ height: `100%` }} />}
           containerElement={<div style={{ height: `calc(100vh - 48px - 55px)`, marginTop: '48px' }} />}
           mapElement={<div style={{ height: `100%` }} />}
-          center={{ lat: 35.929673, lng: -78.948237 }}
+          // center={{ lat: 35.929673, lng: -78.948237 }}
         />
         <Footer />
       </div>
