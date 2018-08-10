@@ -61,6 +61,7 @@ const configRoutesUsingMobileLayout = [
   { path: URL.COMMENTS_BY_SHAKE, component: RouterComment },
   { path: URL.ADMIN, component: RouterAdmin },
   { path: URL.REPORT, component: RouterReport },
+  { path: URL.HANDSHAKE_PEX, component: RouterExchange },
   {
     path: URL.PRODUCT_DAD_URL,
     render: () => {
