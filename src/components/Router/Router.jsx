@@ -44,6 +44,7 @@ const LandingPageMain = createDynamicImport(() => import('@/pages/LandingPage/Ma
 const ProjectDetail = createDynamicImport(() => import('@/components/ProjectDetail'), Loading);
 const Recruiting = createDynamicImport(() => import('@/pages/Recruiting'), Loading);
 const JobDetail = createDynamicImport(() => import('@/pages/Recruiting/JobDetail'), Loading);
+const ContentForCashBusiness = createDynamicImport(() => import('@/pages/LandingPage/ContentForCashBusiness'), Loading);
 
 /* ======================== FOR MOBILE ======================== */
 const configRoutesUsingMobileLayout = [
@@ -141,6 +142,7 @@ class Router extends React.Component {
           <Route path={LANDING_PAGE_TYPE.research.url} render={() => <LandingPageMain type="research" />} />
           <Route exact path={URL.RECRUITING} component={Recruiting} />
           <Route path={URL.RECRUITING_JOB_DETAIL} component={JobDetail} />
+          <Route path={URL.CASH_FOR_BUSINESS} render={() => <ProjectDetail type="landing" name="cash-for-business" img={imgDad} imgContent1={imgDadContent} contentComponent={<ContentForCashBusiness />} />} />
           {routesUsingDesktopLayout}
           <Route
             path={URL.INDEX}
