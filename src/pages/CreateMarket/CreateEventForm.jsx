@@ -286,15 +286,17 @@ class CreateEventForm extends Component {
   }
 
   smallerThanReportingTime = (value) => {
-    if (!this.state.reportingTime) return null;
-    return (value + secStep) <= this.state.reportingTime ? null
-      : `Closing time must be before Reporting Time at least ${minStep}min`;
+    const { reportingTime } = this.state;
+    if (!reportingTime || !this.props.isNew) return null;
+    const isValid = moment.unix(value + secStep).isSameOrBefore(moment.unix(reportingTime), 'minute');
+    return isValid ? null : `Closing time must be before Reporting Time at least ${minStep}min`;
   }
 
   smallerThanDisputeTime = (value) => {
-    if (!this.state.disputeTime) return null;
-    return (value + secStep) <= this.state.disputeTime ? null
-      : `Reporting time must be before Dispute Time at least ${minStep}min`;
+    const { disputeTime } = this.state;
+    if (!disputeTime || !this.props.isNew) return null;
+    const isValid = moment.unix(value + secStep).isSameOrBefore(moment.unix(disputeTime), 'minute');
+    return isValid ? null : `Reporting time must be before Dispute Time at least ${minStep}min`;
   }
 
   renderTimeGroup = (props, state) => {
