@@ -153,7 +153,7 @@ class DataFeed extends React.Component {
       const body = response?.body||{};
       console.log(TAG," init_data body = ",body);
       // this.setState({isLoading: false});
-      this.setState({images: body?.results, nextURL: body?.next,isLoading: false});
+      this.setState({images: body?.results, nextURL: body?.next,isLoading: false, currentImage: 0});
     }).catch((e) => {
     })
   }
@@ -443,7 +443,6 @@ class DataFeed extends React.Component {
     console.log('init data')
 
     this.init_data(this.props.token);
-    this.setState({currentImage: 0});
   }
 
   render() {
