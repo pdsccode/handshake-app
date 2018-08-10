@@ -22,6 +22,7 @@ import iconSuccessChecked from '@/assets/images/icon/icon-checked-green.svg';
 import './TransferCoin.scss';
 import iconQRCodeWhite from '@/assets/images/icon/scan-qr-code.svg';
 import { BigNumber } from "bignumber.js";
+import BrowserDetect from '@/services/browser-detect';
 
 const isIOs = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
 
@@ -427,7 +428,7 @@ openQrcode = () => {
                 onChange={evt => this.updateSendAddressValue(evt)}
                 validate={[required]}
               />
-              {!isIOs ? <img onClick={() => { this.openQrcode() }} className="icon-qr-code-black" src={iconQRCodeWhite} /> : ""}
+              {! (BrowserDetect.isChrome && BrowserDetect.isIphone) ? <img onClick={() => { this.openQrcode() }} className="icon-qr-code-black" src={iconQRCodeWhite} /> : ""}
             </div>
             <p className="labelText">{messages.wallet.action.transfer.label.amount}</p>
               <div className="div-amount">
