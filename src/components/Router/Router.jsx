@@ -50,7 +50,7 @@ const RouterCCConfirm = createDynamicImport(() => import('@/components/Router/CC
 const configRoutesUsingMobileLayout = [
   { path: URL.HANDSHAKE_ME, component: RouterMe },
   { path: URL.HANDSHAKE_PREDICTION, component: RouterExchange },
-  { path: URL.HANDSHAKE_EXCHANGE, component: RouterExchange },
+  // { path: URL.HANDSHAKE_EXCHANGE, component: RouterExchange },
   // { path: URL.HANDSHAKE_DISCOVER, component: RouterDiscover },
   { path: URL.HANDSHAKE_CASH, component: RouterExchange },
   { path: URL.HANDSHAKE_CHAT, component: RouterChat },
@@ -59,6 +59,7 @@ const configRoutesUsingMobileLayout = [
   { path: URL.COMMENTS_BY_SHAKE, component: RouterComment },
   { path: URL.ADMIN, component: RouterAdmin },
   { path: URL.REPORT, component: RouterAdmin },
+  { path: URL.HANDSHAKE_PEX, component: RouterExchange },
   { path: URL.CC_PAYMENT_URL, component: RouterCCConfirm },
   {
     path: URL.PRODUCT_DAD_URL,

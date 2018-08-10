@@ -479,6 +479,7 @@ export const URL = {
   HANDSHAKE_DISCOVER_DETAIL: '/discover/:slug',
 
   HANDSHAKE_PREDICTION: '/prediction',
+  HANDSHAKE_PEX: '/pex',
 
   HANDSHAKE_CASH: '/cash',
   HANDSHAKE_CASH_INDEX: '/cash',

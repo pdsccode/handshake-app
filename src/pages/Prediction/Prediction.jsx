@@ -40,7 +40,9 @@ class Prediction extends React.Component {
     this.props.dispatch(loadMatches());
   }
 
-  componentWillUnmount() {
+  onCountdownComplete = () => {
+    this.props.dispatch(loadMatches());
+    this.closeOrderPlace();
   }
 
   openOrderPlace(selectedOutcome) {
@@ -63,10 +65,6 @@ class Prediction extends React.Component {
 
       }, 2 * 1000);
     }
-  }
-
-  handleScroll = () => {
-    //this.showLuckyPool();
   }
 
   handleClickEventItem = (id, e, props, itemData) => {
@@ -98,11 +96,6 @@ class Prediction extends React.Component {
       console.error(err);
     }
   };
-
-  onCountdownComplete = () => {
-    this.props.dispatch(loadMatches());
-    this.closeOrderPlace();
-  }
 
   renderEventList = (props) => {
     if (!props.eventList || !props.eventList.length) return null;
@@ -155,13 +148,9 @@ class Prediction extends React.Component {
     );
   }
 
-  renderComponent = (props, state) => {
+  renderLucky = () => {
     return (
-      <div className={Prediction.displayName}>
-        <Loading isLoading={props.isLoading} />
-        {this.renderShareToWin()}
-        {this.renderEventList(props)}
-        {this.renderBetMode(props, state)}
+      <React.Fragment>
         <ModalDialog onRef={(modal) => { this.modalLuckyReal = modal; }}>
           <LuckyReal onButtonClick={() => this.modalLuckyReal.close() } />
         </ModalDialog>
@@ -174,7 +163,18 @@ class Prediction extends React.Component {
           }}
           />
         </ModalDialog>
+      </React.Fragment>
+    );
+  }
 
+  renderComponent = (props, state) => {
+    return (
+      <div className={Prediction.displayName}>
+        <Loading isLoading={props.isLoading} />
+        {/* {this.renderShareToWin()} */}
+        {this.renderEventList(props)}
+        {this.renderBetMode(props, state)}
+        {this.renderLucky}
       </div>
     );
   };
