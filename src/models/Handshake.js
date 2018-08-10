@@ -39,6 +39,8 @@ class Handshake {
       totalAmount: data.outcome_total_amount || 0,
       totalDisputeAmount: data.outcome_total_dispute_amount || 0,
       fiatCurrency: data.fiat_currency,
+      contractAddress: data.contract_address,
+      contractName: data.contract_json,
     };
   }
 }

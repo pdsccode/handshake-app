@@ -154,11 +154,7 @@ class Prediction extends React.Component {
 
   renderComponent = (props, state) => {
     return (
-      <div className={Prediction.displayName}>
-        <Loading isLoading={props.isLoading} />
-        {this.renderShareToWin()}
-        {this.renderEventList(props)}
-        {this.renderBetMode(props, state)}
+      <React.Fragment>
         <ModalDialog onRef={(modal) => { this.modalLuckyReal = modal; }}>
           <LuckyReal onButtonClick={() => this.modalLuckyReal.close() } />
         </ModalDialog>
@@ -172,7 +168,18 @@ class Prediction extends React.Component {
           />
         </ModalDialog>
         {this.renderReportPopup()}
+      </React.Fragment>
+    );
+  }
 
+  renderComponent = (props, state) => {
+    return (
+      <div className={Prediction.displayName}>
+        <Loading isLoading={props.isLoading} />
+        {/* {this.renderShareToWin()} */}
+        {this.renderEventList(props)}
+        {this.renderBetMode(props, state)}
+        {this.renderLucky}
       </div>
     );
   };

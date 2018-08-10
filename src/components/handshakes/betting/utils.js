@@ -32,9 +32,13 @@ export const getChainIdDefaultWallet = () => {
 };
 
 export const getAddress = () => {
+  /*
   const chainId = getChainIdDefaultWallet();
   const bettinghandshake = new BettingHandshake(chainId);
   return bettinghandshake.address;
+  */
+  const wallet = MasterWallet.getWalletDefault('ETH');
+  return wallet.address;
 };
 
 export const getId = (idOffchain) => {
@@ -57,15 +61,23 @@ export const getBalance = async () => {
   return balance;
 };
 
-export const getEstimateGas = async () => {
-  const chainId = getChainIdDefaultWallet();
-  const bettinghandshake = new BettingHandshake(chainId);
-  const result = await bettinghandshake.getEstimateGas();
-  return result;
-};
 export const getGasPrice = () => {
   const chainId = getChainIdDefaultWallet();
   return chainId === 4 ? window.gasPrice || 20 : window.gasPrice || 20;
+};
+
+export const getEstimateGas = async () => {
+
+  const chainId = getChainIdDefaultWallet();
+  const neuron =
+  chainId === 4 ? MasterWallet.neutronTestNet : MasterWallet.neutronMainNet;
+  const gasPrice = getGasPrice();
+  const estimateGas = await neuron.caculateLimitGasWithEthUnit(gasPrice);
+  console.log(TAG, 'Estimate Gas:', estimateGas);
+  return estimateGas;
+  // const bettinghandshake = new BettingHandshake(chainId);
+  // const result = await bettinghandshake.getEstimateGas();
+  // return result;
 };
 
 export const foundShakeList = (item) => {
@@ -157,7 +169,7 @@ export const findUserBet = (handshake) => {
   const {
     result, shakeUserIds, closingTime,
     reportTime, disputeTime, initUserId, side, hid, type,
-    totalAmount, totalDisputeAmount
+    totalAmount, totalDisputeAmount, contractName, contractAddress,
   } = handshake;
 
   let findItem = handshake;
@@ -185,6 +197,8 @@ export const findUserBet = (handshake) => {
         disputeTime,
         totalAmount,
         totalDisputeAmount,
+        contractAddress,
+        contractName,
       });
     }
   }

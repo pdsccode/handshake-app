@@ -97,11 +97,12 @@ class FeedMeOfferStoreContainer extends React.PureComponent {
     const { fiatCurrency } = this.props;
     const coins = [];
 
-    for (const item of Object.values(offer.items)) {
-      const {
-        buyBalance, sellBalance, buyAmount, sellAmount, status, currency, subStatus,
-      } = item;
+    Object.values(CRYPTO_CURRENCY).map(currency => {
+      const item = offer.items[currency];
       if (offer.itemFlags[currency] && !this.isEmptyBalance(item)) {
+        const {
+          buyBalance, sellBalance, buyAmount, sellAmount, status, subStatus,
+        } = item;
         const { priceBuy: priceBuyValue, priceSell: priceSellValue } = this.getPrices(currency);
         const statusValue = HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[status];
         const amountBuy = statusValue === HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CREATED ? buyAmount : buyBalance;
@@ -123,7 +124,9 @@ class FeedMeOfferStoreContainer extends React.PureComponent {
 
         coins.push(coin);
       }
-    }
+
+      return null;
+    });
 
     return coins;
   }

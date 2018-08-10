@@ -14,3 +14,6 @@ export function strToInt(str, base) {
   const int = parseInt(str, base || 10);
   return int;
 }
+export function countWords(str) {
+  return str.trim().split(/\s+/).length;
+}
