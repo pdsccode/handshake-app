@@ -9,6 +9,7 @@ import $http from '@/services/api';
 import { showAlert } from '@/reducers/app/action';
 
 import './BettingReport.scss';
+import { auth } from 'firebase';
 
 let token = null;
 const TAG = 'BETTING_REPORT';
@@ -144,7 +145,6 @@ class BettingReport extends React.Component {
     setTimeout(() => {
       localStorage.setItem('disable', false);
       //this.fetchMatches();
-      this.props.onReportSuccess();
       this.setState({
         disable: false,
       });
@@ -190,6 +190,8 @@ class BettingReport extends React.Component {
       });
     } else {
       const tokenValue = token || this.checkToken();
+      const authenticate = { Authorization: `Bearer ${tokenValue}`, 'Content-Type': 'application/json' };
+      const headers = tokenValue ? authenticate : null;
       const { resolved } = this.props;
       console.log('Final State:', this.state.final);
 
@@ -200,7 +202,7 @@ class BettingReport extends React.Component {
           result: this.state.final,
         },
         qs: { dispute: resolved ? 1 : 0 },
-        headers: { Authorization: `Bearer ${tokenValue}`, 'Content-Type': 'application/json' },
+        headers: headers,
         method: 'post',
       });
 
@@ -218,6 +220,8 @@ class BettingReport extends React.Component {
   }
   onReportSuccess = (response) => {
     this.disablePage();
+    this.props.onReportSuccess(this.state.final);
+
 
     this.props.showAlert({
       message: <div className="text-center">Success!</div>,

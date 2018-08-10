@@ -3,9 +3,11 @@ import { connect } from 'react-redux';
 import { loadMatches } from '@/reducers/betting/action';
 import BettingReport from '@/components/handshakes/betting-event/BettingReport';
 import { API_URL } from '@/constants';
-import Login from '@/components/handshakes/betting-event/Login';
+import { BetHandshakeHandler } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
 
 const TAG = 'REPORT';
+const betHandshakeHandler = BetHandshakeHandler.getShareManager();
+
 class Report extends React.Component {
 
   constructor(props) {
@@ -34,6 +36,10 @@ class Report extends React.Component {
       PATH_URL: `${API_URL.CRYPTOSIGN.MATCHES_REPORT}`,
     });
   }
+  report(reponseData) {
+    const { } = reponseData;
+    betHandshakeHandler.report(hid, outcomeId, side, contractName, contractAddress);
+  }
 
 
   render() {
@@ -41,7 +47,7 @@ class Report extends React.Component {
     return (
       <BettingReport
         matches={matches}
-        onReportSuccess={()=> {
+        onReportSuccess={(reponseData)=> {
           this.fetchMatches();
         }}
       />

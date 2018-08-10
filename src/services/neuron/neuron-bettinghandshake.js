@@ -272,4 +272,23 @@ export default class BettingHandshake extends BaseHandshake {
     console.log('Data Blockchain:', dataBlockChain);
     return dataBlockChain;
   }
+  report = async (hid, outcomeId, offchain) => {
+    const bytesOffchain = this.web3.utils.fromUtf8(offchain);
+    const payloadData = this.handshakeInstance.methods
+    .report(hid, outcomeId, bytesOffchain)
+    .encodeABI();
+
+    const dataBlockChain = await this.neuron.sendRawTransaction(
+      this.address,
+      this.privateKey,
+      payloadData,
+      {
+        gasPrice: this.gasPrice,
+        toAddress: this.contractAddress,
+      },
+    );
+    console.log('Data Blockchain:', dataBlockChain);
+    return dataBlockChain;
+  }
+
 }

@@ -433,6 +433,35 @@ export class BetHandshakeHandler {
     this.saveTransaction(offchainString, CONTRACT_METHOD.CREATE_MARKET, chainId, realBlockHash, contractAddress, logJson);
     return result;
   }
+
+  async reportOutcomes(outcomes, contractName, contractAddress) {
+    outcomes.forEach(element => {
+      const { hid, outcomeId, side } = element;
+      this.report(hid, outcomeId, side, contractName, contractAddress);
+    });
+  }
+  async report(hid, outcomeId, side, contractName, contractAddress) {
+    const chainId = getChainIdDefaultWallet();
+    const bettinghandshake = new BettingHandshake(chainId);
+    bettinghandshake.updateContract(contractAddress, contractName);
+    const offchain = `cryptosign_report${outcomeId}_${side}`
+    let logJson = '';
+    let realBlockHash = '';
+    let result = null;
+    try {
+      result = await bettinghandshake.report(hid, outcomeId, offchain);
+      const {
+        hash, payload,
+      } = result;
+
+      logJson = payload;
+      realBlockHash = hash;
+    } catch (err) {
+      realBlockHash = '-1';
+      logJson = err.message;
+    }
+    this.saveTransaction(offchain, CONTRACT_METHOD.REPORT, chainId, realBlockHash, contractAddress, logJson);
+  }
 }
 
 export default BetHandshakeHandler;

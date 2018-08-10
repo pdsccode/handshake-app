@@ -26,7 +26,7 @@ class ReportRouter extends React.Component {
   constructor(props) {
     super(props);
 
-    this.props.setHeaderTitle('Resolve');
+    this.props.setHeaderTitle('Report');
     this.props.clearHeaderRight();
     this.props.clearHeaderLeft();
     this.props.showHeader();

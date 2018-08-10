@@ -56,5 +56,6 @@ export const CONTRACT_METHOD = {
   CANCEL: 'uninit',
   REFUND: 'refund',
   COLLECT: 'collect',
+  REPORT: 'report',
   CREATE_MARKET: 'createMarket',
 };
