@@ -8,8 +8,10 @@ import LuckyReal from '@/components/handshakes/betting/LuckyPool/LuckyReal/Lucky
 import LuckyLanding from '@/pages/LuckyLanding/LuckyLanding';
 import GA from '@/services/googleAnalytics';
 import LuckyFree from '@/components/handshakes/betting/LuckyPool/LuckyFree/LuckyFree';
-import { eventSelector, isLoading, showedLuckyPoolSelector } from './selector';
-import { loadMatches, updateShowedLuckyPool } from './action';
+import { eventSelector, isLoading, showedLuckyPoolSelector, countReportSelector } from './selector';
+import { loadMatches, updateShowedLuckyPool, getReportCount } from './action';
+import { API_URL } from '@/constants';
+
 import EventItem from './EventItem';
 
 import './Prediction.scss';
@@ -20,6 +22,7 @@ class Prediction extends React.Component {
     eventList: PropTypes.array,
     showedLuckyPool: PropTypes.bool,
     dispatch: PropTypes.func.isRequired,
+    countReport: PropTypes.number,
   };
 
   static defaultProps = {
@@ -36,6 +39,7 @@ class Prediction extends React.Component {
 
   componentDidMount() {
     this.props.dispatch(loadMatches());
+    this.props.dispatch(getReportCount());
   }
 
   onCountdownComplete = () => {
@@ -60,6 +64,12 @@ class Prediction extends React.Component {
     setTimeout(() => {
       this.modalLuckyPoolRef.open();
     }, 2 * 1000);
+  }
+
+  checkIsReport() {
+    this.props.countReport({
+      PATH_URL: `${API_URL.CRYPTOSIGN.COUNT_REPORT}`,
+    });
   }
 
   handleClickEventItem = (props, itemData) => {
@@ -164,6 +174,7 @@ class Prediction extends React.Component {
   }
 
   renderComponent = (props, state) => {
+    console.log('countReport', props.countReport);
     return (
       <div className={Prediction.displayName}>
         <Loading isLoading={props.isLoading} />
@@ -195,6 +206,7 @@ class Prediction extends React.Component {
 export default connect(
   (state) => {
     return {
+      countReport: countReportSelector(state),
       eventList: eventSelector(state),
       isLoading: isLoading(state),
       showedLuckyPool: showedLuckyPoolSelector(state),

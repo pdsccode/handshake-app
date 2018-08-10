@@ -17,6 +17,13 @@ export const eventSelector = (state) => {
   return events.filter(event => (event.id === _.toInteger(match)));
 };
 
+export const countReportSelector = (state) => {
+  const { countReport = {} } = state.ui;
+  const { count } = countReport;
+  console.log('countReportSelector','count:', count );
+  return count || 0;
+};
+
 export const isLoading = (state) => {
   if (!state.prediction._meta) return true;
   return state.prediction._meta.isFetching;

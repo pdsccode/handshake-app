@@ -14,6 +14,13 @@ export const loadHandShakes = (payload = {}) => {
   };
 };
 
+export const getReportCount = (payload = {}) => {
+  return {
+    type: 'PREDICTION:COUNT_REPORT',
+    ...payload,
+  };
+};
+
 
 export const updateShowedLuckyPool = () => {
   return SET_DATA({

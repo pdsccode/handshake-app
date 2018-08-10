@@ -1,7 +1,7 @@
 import { takeLatest, call, select } from 'redux-saga/effects';
 import { apiGet } from '@/stores/api-saga';
 import { API_URL } from '@/constants';
-import { loadMatches } from './action';
+import { loadMatches, getReportCount } from './action';
 import { eventSelector } from './selector';
 
 export function* handleLoadMatches({ cache = true }) {
@@ -24,7 +24,22 @@ export function* handleLoadMatches({ cache = true }) {
   }
 }
 
+export function* handleCountReport() {
+  try {
+    return yield call(apiGet, {
+      PATH_URL: API_URL.CRYPTOSIGN.COUNT_REPORT,
+      type: 'COUNT_REPORT',
+      _key: 'countReport',
+      _path: 'ui',
+    });
+  } catch (e) {
+    return console.error('handleCountReport', e);
+  }
+}
+
 
 export default function* predictionSaga() {
   yield takeLatest(loadMatches().type, handleLoadMatches);
+  yield takeLatest(getReportCount().type, handleCountReport);
+
 }
