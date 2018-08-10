@@ -79,7 +79,7 @@ class JobDetail extends React.Component {
                 {/*<SocialButtons />*/}
                 <ShareSocial
                   title={name}
-                  className="center-block"
+                  className="center-block mt-2"
                   shareUrl={`${window.location.origin}${URL.RECRUITING}/${seo_url}`}
                 />
               </div>
