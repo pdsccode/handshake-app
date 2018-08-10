@@ -14,21 +14,38 @@ import { Field } from 'redux-form';
 class JobsDropdown extends React.Component {
 
   state = {
-    jobs: []
+    jobs: [
+      { id: 1, text: 'Buyer Lead' },
+      { id: 2, text: 'Product Designer' },
+      { id: 3, text: 'QC Engineer (Tester)' },
+      { id: 4, text: 'Industrial Designer' },
+      { id: 5, text: 'Product Designer (Furniture)' },
+      { id: 6, text: 'SEO Specialist' },
+      { id: 7, text: 'Business Development Manager for China market' },
+      { id: 8, text: 'Digital Marketing Specialist for Deeprelax' },
+      { id: 9, text: 'Sales Executive (Night-shift)' },
+      { id: 10, text: 'Business Development Manager for Blockchain products' },
+      { id: 11, text: 'Backend Engineer' },
+      { id: 12, text: 'Frontend Engineer' },
+      { id: 13, text: 'Fullstack Engineer' },
+      { id: 14, text: 'Blockchain Engineer' },
+      { id: 15, text: 'Senior Economics Researcher' },
+      { id: 16, text: 'Reinforcement Learning Researcher' },
+    ],
   }
 
-  componentDidMount() {
-    $http({
-      method: 'GET',
-      url: 'https://www.autonomous.ai/api-v2/job-api/categories',
-    })
-      .then(res => {
-        this.setState({
-          jobs: res.data.data.map(item => ({ ...item, text: item.name })),
-        });
-      })
-      .catch(err => console.log('err get categories', err));
-  }
+  // componentDidMount() {
+  //   $http({
+  //     method: 'GET',
+  //     url: 'https://www.autonomous.ai/api-v2/job-api/categories',
+  //   })
+  //     .then(res => {
+  //       this.setState({
+  //         jobs: res.data.data.map(item => ({ ...item, text: item.name })),
+  //       });
+  //     })
+  //     .catch(err => console.log('err get categories', err));
+  // }
 
   render() {
 

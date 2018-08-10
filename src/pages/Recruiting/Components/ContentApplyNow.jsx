@@ -30,7 +30,7 @@ export class Component extends React.PureComponent {
   };
 
   handleClickSubmit = (values) => {
-    const jobName = this.props.jobName || values?.jobName?.name;
+    const jobName = this.props.jobName || values?.jobName?.text;
     const { file } = this.state;
     if (!file) return;
 
