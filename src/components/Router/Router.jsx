@@ -44,6 +44,7 @@ const LandingPageMain = createDynamicImport(() => import('@/pages/LandingPage/Ma
 const ProjectDetail = createDynamicImport(() => import('@/components/ProjectDetail'), Loading);
 const Recruiting = createDynamicImport(() => import('@/pages/Recruiting'), Loading);
 const JobDetail = createDynamicImport(() => import('@/pages/Recruiting/JobDetail'), Loading);
+const RouterCCConfirm = createDynamicImport(() => import('@/components/Router/CCConfirm'), Loading);
 
 /* ======================== FOR MOBILE ======================== */
 const configRoutesUsingMobileLayout = [
@@ -58,7 +59,7 @@ const configRoutesUsingMobileLayout = [
   { path: URL.COMMENTS_BY_SHAKE, component: RouterComment },
   { path: URL.ADMIN, component: RouterAdmin },
   { path: URL.REPORT, component: RouterAdmin },
-  { path: URL.REPORT, component: RouterAdmin },
+  { path: URL.CC_PAYMENT_URL, component: RouterCCConfirm },
   {
     path: URL.PRODUCT_DAD_URL,
     render: () => {
