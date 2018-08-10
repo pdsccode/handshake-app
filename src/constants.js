@@ -23,6 +23,8 @@ export const APP = {
   OFFLINE_STATUS: 'offline_status',
   ALLOW_LOCATION_ACCESS: 'allow_location_access',
   isSupportedLanguages: ['en', 'zh', 'fr', 'de', 'ja', 'ko', 'ru', 'es'],
+  CC_SOURCE: 'cc_source',
+  CC_PRICE: 'cc_price',
 };
 
 export const UNSELECTED = 'UNSELECTED';
@@ -532,6 +534,8 @@ export const URL = {
 
   RECRUITING: '/recruiting',
   RECRUITING_JOB_DETAIL: '/recruiting/:slug',
+
+  CC_PAYMENT_URL: '/payment',
 };
 
 export const LANDING_PAGE_TYPE = {
