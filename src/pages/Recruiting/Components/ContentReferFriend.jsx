@@ -4,8 +4,9 @@ import Dropzone from 'react-dropzone';
 import $http from '@/services/api';
 // import { BASE_API } from '@/constants';
 import { connect } from 'react-redux';
-
+import { RECRUITING_SLACK_CHANNEL } from '@/constants';
 import createForm from '@/components/core/form/createForm';
+import {required} from '@/components/core/form/validation';
 import {
   fieldDropdown,
   fieldInput,
@@ -76,14 +77,29 @@ export class Component extends React.PureComponent {
     })
       .then(res => {
         this.setState({ isUploadSuccessful: true });
-        // const correspondingFile = newFiles.find(item => item.name === file.name);
-        // if (correspondingFile) {
-        //   correspondingFile.url = `https://cdn-handshake-staging.autonomous.ai/${res.data.data}`;
-        //   delete correspondingFile.percent;
-        //   this.setState({ files: newFiles });
-        //   this.forceUpdate();
-        //   onSuccess(newFiles);
-        // }
+        fetch(RECRUITING_SLACK_CHANNEL, {
+          body: JSON.stringify({
+            attachments: [
+              {
+                color: '#db4437',
+                text: `Somebody has just Referral CV with email: ${email} - phone ${phone}`,
+                fields: [
+                  {
+                    title: `Job: ${jobName.text}`,
+                    value: `CV file: ${res.data.data} - description: ${description}`,
+                    short: false
+                  }
+                ]
+              }
+            ]
+          }),
+          cache: 'no-cache',
+          credentials: 'same-origin',
+          method: 'POST',
+          mode: 'cors',
+          redirect: 'follow',
+          referrer: 'no-referrer'
+        })
       })
       .catch(err => {
         console.log('err upload image', err);
@@ -180,6 +196,7 @@ export class Component extends React.PureComponent {
                     classNameDropdownToggle="dropdown-sort w-100 bg-white"
                     classNameWrapper="btn-block d-inline-block"
                     list={jobs}
+                    validate={[required]}
                   />
                 </span>
               </div>

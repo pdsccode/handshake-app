@@ -26,7 +26,7 @@ const CategoryItem = (props) => {
           </div>
         </div>
         <div className="col-12 col-lg-4 text-center">
-          <ButtonApplyNow className="btn-block" onClick={(e) => { e.preventDefault(); onClickApplyNow(id); }} />
+          <ButtonApplyNow className="btn-block" onClick={(e) => { e.preventDefault(); onClickApplyNow(name); }} />
           <div className="job-text-pr mt-2"><FormattedMessage id="landing_page.recruiting.label.getTheWordOut" /></div>
           {/*<SocialButtons />*/}
           <ShareSocial
