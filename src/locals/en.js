@@ -385,7 +385,7 @@ export default {
   'landing_page.recruiting.applyNow.label.submit': 'Submit',
   'landing_page.recruiting.applyNow.label.connectToLinkedIn': 'Connect with Ninja LinkedIn',
   'landing_page.recruiting.applyNow.label.thankYou': 'Thank you for your application!',
-  'landing_page.recruiting.applyNow.label.weReview': 'We\'ll review your application and contact you for an interview within 3 days if your skills are a match.',
+  'landing_page.recruiting.applyNow.label.weReview': 'We\'ll review your application and contact you for an interview within 3 days if your skills are qualified.',
   'landing_page.recruiting.referFriend.title': 'Refer a friend',
   'landing_page.recruiting.referFriend.label.yourPhone': 'Your phone',
   'landing_page.recruiting.referFriend.label.yourEmail': 'Your email',
@@ -395,7 +395,7 @@ export default {
   'landing_page.recruiting.referFriend.placeholder.saySomething': 'Say something about your friend (optional)...',
   'landing_page.recruiting.referFriend.label.uploadCV': 'Upload your friend\'s CV',
   'landing_page.recruiting.referFriend.label.thankYou': 'Thank you for referral!',
-  'landing_page.recruiting.referFriend.label.weReview': 'We\'ll review your friend\'s CV and contact him/her for an interview within 3 days if your skills are a match.',
+  'landing_page.recruiting.referFriend.label.weReview': 'We\'ll review your friend\'s CV and contact him/her for an interview within 3 days if your skills are qualified.',
 
 
   'landing_page.products.cash.title': 'Cash',
