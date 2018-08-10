@@ -44,12 +44,13 @@ class JobDetail extends React.Component {
   }
 
   handleClickApplyNow = () => {
+    const jobName = this.state?.job?.name;
     this.props.updateModal({
       show: true,
       title: (
         <div><FormattedMessage id="landing_page.recruiting.applyNow.title" /></div>
       ),
-      body: <ContentApplyNow />
+      body: <ContentApplyNow jobName={jobName} />
     })
   }
 

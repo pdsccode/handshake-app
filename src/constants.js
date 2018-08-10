@@ -545,6 +545,7 @@ export const LANDING_PAGE_TYPE = {
   },
 }
 
+export const RECRUITING_SLACK_CHANNEL = 'https://hooks.slack.com/services/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';
 
 export const NB_BLOCKS = 20;
 
