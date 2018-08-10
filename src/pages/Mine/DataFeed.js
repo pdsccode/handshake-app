@@ -444,7 +444,6 @@ class DataFeed extends React.Component {
 
     this.init_data(this.props.token);
     this.setState({currentImage: 0});
-    this.renderImage();
   }
 
   render() {
