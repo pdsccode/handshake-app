@@ -170,7 +170,19 @@ class Prediction extends React.Component {
         {/* {this.renderShareToWin()} */}
         {this.renderEventList(props)}
         {this.renderBetMode(props, state)}
-        {this.renderLucky}
+        {/*this.renderLucky*/}
+        <ModalDialog onRef={(modal) => { this.modalLuckyReal = modal; }}>
+          <LuckyReal onButtonClick={() => this.modalLuckyReal.close() } />
+        </ModalDialog>
+        <ModalDialog onRef={(modal) => { this.modalLuckyFree = modal; }}>
+          <LuckyFree onButtonClick={() => this.modalLuckyFree.close() } />
+        </ModalDialog>
+        <ModalDialog className="modal" onRef={(modal) => { this.modalLuckyPoolRef = modal; return null; }}>
+          <LuckyLanding onButtonClick={() => {
+            this.modalLuckyPoolRef.close();
+          }}
+          />
+        </ModalDialog>
       </div>
     );
   };
