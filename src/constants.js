@@ -508,13 +508,13 @@ export const URL = {
   WHITE_PAPER: '/whitepaper',
   WHITE_PAPER_INDEX: '/whitepaper',
 
-  // INTRODUCING_NINJA_CASH: '/introducing-ninja-cash',
   // ABOUT_NINJA_CASH: '/about-ninja-cash',
 
   // PRODUCT_URL: '/product',
   // RESEARCH_URL: '/research',
 
   PRODUCT_CASH_URL: '/cash',
+  CASH_FOR_BUSINESS: '/cash-for-business',
   PRODUCT_PREDICTION_URL: '/prediction',
   PRODUCT_WALLET_URL: '/wallet',
   PRODUCT_HIVEPAY_OFFLINE_URL: '/pay-for-stores',
@@ -537,6 +537,10 @@ export const LANDING_PAGE_TYPE = {
   research: {
     text: 'Research',
     url: '/research',
+  },
+  landing: {
+    text: '',
+    url: '',
   },
 }
 

@@ -53,7 +53,7 @@ class Index extends React.PureComponent {
   render() {
     const { messages, locale } = this.props.intl;
     const {
-      name, img, imgContent, getEmail, intl, type,
+      name, img, imgContent, getEmail, intl, type, contentComponent
     } = this.props;
     const { hasSubscribed } = this.state;
     const cta1 = messages[`landing_page.${name}.cta1`];
@@ -74,10 +74,16 @@ class Index extends React.PureComponent {
           <div className="row mt-5">
             <div className="col">
               <div className="pd-breadcrumb">
-                <Link to={categoryUrl}>
-                  {categoryText}
-                </Link>
-                <span className="mx-2">/</span>
+                {
+                  type !== 'landing' && (
+                    <React.Fragment>
+                      <Link to={categoryUrl}>
+                        {categoryText}
+                      </Link>
+                      <span className="mx-2">/</span>
+                    </React.Fragment>
+                  )
+                }
                 <span>
                   <FormattedMessage id={`landing_page.${name}.breadcrumb`} />
                 </span>
@@ -90,7 +96,7 @@ class Index extends React.PureComponent {
                 <FormattedMessage id={`landing_page.${name}.heading`} />
               </div>
               <div className="pd-subHeading">
-                <FormattedMessage id={`landing_page.${name}.subHeading`} />
+                <FormattedHTMLMessage id={`landing_page.${name}.subHeading`} />
               </div>
               <div className="mt-4">
                 {textEmail && (
@@ -175,6 +181,8 @@ class Index extends React.PureComponent {
               </div>
             </div>
           )}
+
+          {contentComponent}
 
           {
             faq && (
