@@ -455,7 +455,6 @@ export const LOCATION_METHODS = {
 };
 
 // API
-
 export const BASE_API = {
   BASE_URL: process.env.BASE_API_URL,
   TIMEOUT: 10000,
