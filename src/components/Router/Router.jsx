@@ -84,6 +84,7 @@ if (BrowserDetect.isDesktop) {
     { path: URL.LUCKY_POOL, component: RouterLuckyPool },
     { path: URL.PRODUCT_CASH_URL, render: () => <ProjectDetail type="product" name="cash" img={imgCash} imgContent={imgCashContent} /> },
     { path: URL.PRODUCT_PREDICTION_URL, render: () => <ProjectDetail type="product" name="prediction" img={imgPrediction} /> },
+    { path: URL.HANDSHAKE_PEX, render: () => <ProjectDetail type="product" name="prediction" img={imgPrediction} /> },
     { path: URL.PRODUCT_WALLET_URL, render: () => <ProjectDetail type="product" name="wallet" img={imgWallet} /> },
     { path: URL.PRODUCT_HIVEPAY_OFFLINE_URL, render: () => <ProjectDetail type="product" name="pay-for-stores" img={imgHivepayOffline} /> },
     { path: URL.PRODUCT_HIVEPAY_ONLINE_URL, render: () => <ProjectDetail type="product" name="pay-for-devs" img={imgHivepayOnline} /> },
