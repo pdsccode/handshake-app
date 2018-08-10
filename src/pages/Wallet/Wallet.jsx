@@ -919,14 +919,14 @@ class Wallet extends React.Component {
             <TransferCoin active={this.state.activeTransfer} wallet={this.state.walletSelected} onFinish={() => { this.successTransfer() }} />
           </Modal>
 
-          <Modal title="Buy coins" onRef={modal => this.modalFillRef = modal}>
-            <FeedCreditCard
-              buttonTitle="Buy coins"
-              currencyForced={this.state.walletSelected ? this.state.walletSelected.name : ''}
-              callbackSuccess={this.afterWalletFill}
-              addressForced={this.state.walletSelected ? this.state.walletSelected.address : ''}
-            />
-          </Modal>
+          {/*<Modal title="Buy coins" onRef={modal => this.modalFillRef = modal}>*/}
+            {/*<FeedCreditCard*/}
+              {/*buttonTitle="Buy coins"*/}
+              {/*currencyForced={this.state.walletSelected ? this.state.walletSelected.name : ''}*/}
+              {/*callbackSuccess={this.afterWalletFill}*/}
+              {/*addressForced={this.state.walletSelected ? this.state.walletSelected.address : ''}*/}
+            {/*/>*/}
+          {/*</Modal>*/}
 
           <Modal title={messages.wallet.action.protect.header} onClose={this.closeProtected} onRef={modal => this.modalProtectRef = modal}>
             <WalletProtect onCopy={this.onCopyProtected} step={this.state.stepProtected} active={this.state.activeProtected} wallet={this.state.walletSelected} callbackSuccess={() => { this.successWalletProtect(this.state.walletSelected); }} />
