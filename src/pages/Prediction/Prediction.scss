@@ -57,6 +57,11 @@
     }
   }
 
+  .ViewAllEvent {
+    display: flex;
+    justify-content: center;
+  }
+
   .ShareToWin {
     background-image: url('../../assets/images/share/share-to-win.png');
     display: flex;

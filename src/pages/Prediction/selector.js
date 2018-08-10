@@ -6,6 +6,12 @@ export const queryStringSelector = (state) => {
   return state.router.location.search;
 };
 
+export const isSharePage = (state) => {
+  const queryString = queryStringSelector(state);
+  const urlParams = qs.parse(queryString.slice(1));
+  return !!urlParams.match;
+}
+
 export const eventSelector = (state) => {
   const queryString = queryStringSelector(state);
   const urlParams = qs.parse(queryString.slice(1));

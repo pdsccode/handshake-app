@@ -80,8 +80,8 @@ function EventItem({ event, onClickOutcome, onCountdownComplete }) {
       title: 'TWITTER',
     },
     {
-      img: 'https://d2q7nqismduvva.cloudfront.net/static/images/icon-svg/common/share/linkedin.svg',
-      title: 'LINKEDIN',
+      img: CopyLink,
+      title: 'COPY',
     },
   ];
   const shareURL = `${window.location.origin}${URL.HANDSHAKE_PREDICTION}?match=${id}`;
