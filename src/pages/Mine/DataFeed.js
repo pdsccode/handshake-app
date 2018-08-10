@@ -48,6 +48,17 @@ function ClassifiedIcon(props) {
   );
 }
 
+function RenderImage(props) {
+  return (
+    <Card className="my-card">
+        <Image className="ui image" src={props.item.link}/>
+      <Card.Content>
+      {props.renderHashTag(props.item)}
+      </Card.Content>
+    </Card>
+  );
+}
+
 class DataFeed extends React.Component {
   constructor(props) {
     super(props);
@@ -56,6 +67,7 @@ class DataFeed extends React.Component {
       isLoading: false,
       // categories: [],
       images: [],
+      currentImage: 0,
       nextURL: '',
       calculations: {
         bottomVisible: false,
@@ -80,6 +92,8 @@ class DataFeed extends React.Component {
     this.handleSelectedClassify = this.handleSelectedClassify.bind(this);
     this.submitClassify = this.submitClassify.bind(this);
     this.showConfirm = this.showConfirm.bind(this);
+    this.nextImage = this.nextImage.bind(this);
+    this.renderImage = this.renderImage.bind(this);
   }
 
   closeConfirm = () => this.setState({ openConfirmAddClassify: false, confirmCategory: null })
@@ -409,22 +423,39 @@ class DataFeed extends React.Component {
 
   handleClassifyNameInput = (e, {name, value}) => this.setState({classifyName: value})
 
+  renderImage() {
+    return (
+      <RenderImage
+        item={this.state.images[this.state.currentImage]}
+        renderHashTag={this.renderHashTag}
+      />
+    );
+  }
+
+  nextImage() {
+    const currentImage = this.state.currentImage;
+    console.log(currentImage, this.state.images.length - 1)
+    if (currentImage < this.state.images.length - 1) {
+      this.setState({currentImage: currentImage + 1})
+      return;
+    }
+
+    console.log('init data')
+
+    this.init_data(this.props.token);
+    this.setState({currentImage: 0});
+    this.renderImage();
+  }
+
   render() {
     return (
       <Visibility once={true} onUpdate={this.handleUpdate}>
         <Segment vertical >
-            <Card.Group centered >
-              {this.state.images.map((item, i) => {
-                return (
-                  <Card key={i} className="my-card">  
-                      <Image className="ui image" src={item.link}/>  
-                    <Card.Content>
-                    {this.renderHashTag(item,i)} 
-                    </Card.Content>
-                  </Card>
-                )
-              })}
+            <Card.Group centered>
+              {this.state.images.length && this.renderImage()}
             </Card.Group>
+            <Button color='black' style={{width: '45%', fontWeight: 'lighter'}} onClick={() => this.nextImage()}>SKIP</Button>
+            <Button color='black' style={{width: '45%', fontWeight: 'lighter'}} onClick={() => this.nextImage()}>NEXT</Button>
               <Modal size='large'closeOnEscape closeIcon open={this.state.modal.open} onClose={this.closeModal} style={{height: '90%'}}>
                 <Modal.Header>Choose classify</Modal.Header>
                 <Modal.Content style={{height: '80%', overflowY: 'scroll'}}>
