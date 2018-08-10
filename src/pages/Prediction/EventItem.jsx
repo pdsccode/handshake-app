@@ -84,7 +84,7 @@ function EventItem({ event, onClickOutcome, onCountdownComplete }) {
       title: 'COPY',
     },
   ];
-  const shareURL = `${window.location.origin}${URL.HANDSHAKE_PREDICTION}?match=${id}`;
+  const shareURL = `${window.location.origin}${URL.HANDSHAKE_PEX}?match=${id}`;
   return (
     <div className="EventItem">
       {renderEventName(event)}
