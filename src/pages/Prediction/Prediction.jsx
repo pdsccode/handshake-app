@@ -11,7 +11,7 @@ import LuckyFree from '@/components/handshakes/betting/LuckyPool/LuckyFree/Lucky
 import { eventSelector, isLoading, showedLuckyPoolSelector, countReportSelector } from './selector';
 import { loadMatches, updateShowedLuckyPool, getReportCount } from './action';
 import { API_URL } from '@/constants';
-
+import ReportPopup from '@/components/handshakes/betting/Feed/ReportPopup';
 import EventItem from './EventItem';
 
 import './Prediction.scss';
@@ -64,12 +64,6 @@ class Prediction extends React.Component {
     setTimeout(() => {
       this.modalLuckyPoolRef.open();
     }, 2 * 1000);
-  }
-
-  checkIsReport() {
-    this.props.countReport({
-      PATH_URL: `${API_URL.CRYPTOSIGN.COUNT_REPORT}`,
-    });
   }
 
   handleClickEventItem = (props, itemData) => {
@@ -154,7 +148,13 @@ class Prediction extends React.Component {
     );
   }
 
-  renderLucky = () => {
+  renderReportPopup = () => {
+    return (
+      <ReportPopup />
+    );
+  }
+
+  renderComponent = (props, state) => {
     return (
       <React.Fragment>
         <ModalDialog onRef={(modal) => { this.modalLuckyReal = modal; }}>
@@ -194,6 +194,7 @@ class Prediction extends React.Component {
           }}
           />
         </ModalDialog>
+        {props.countReport > 0 && this.renderReportPopup()}
       </div>
     );
   };
