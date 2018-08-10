@@ -143,6 +143,8 @@ function* handleCreateEventSaga({ values, isNew, selectedSource }) {
               reportTime: eventData.reportTime,
               disputeTime: eventData.disputeTime,
               offchain: o.id,
+              contractAddress: eventData.contract_address,
+              contractName: eventData.contract_json,
             };
           });
           const outcomeId = eventData.outcomes[0].id;

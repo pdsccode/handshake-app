@@ -314,44 +314,6 @@ export class BetHandshakeHandler {
     return result;
   }
 
-  async createMarket(fee, source, closingWindow, reportWindow, disputeWindow, offchain) {
-    console.log(fee, source, closingWindow, reportWindow, disputeWindow, offchain);
-    const chainId = getChainIdDefaultWallet();
-    const bettinghandshake = new BettingHandshake(chainId);
-    //const predictionhandshake = new PredictionHandshake(chainId);
-
-    const contractAddress = bettinghandshake.contractAddress;
-    let realBlockHash = '';
-    let logJson = '';
-    let result = '';
-    const offchainString = `cryptosign_createMarket${offchain}`;
-    try {
-      result = await bettinghandshake.createMarket(fee, source, closingWindow, reportWindow, disputeWindow, offchain);
-      const {
-        logs, hash, error, transactionHash, payload,
-      } = result;
-
-      logJson = payload;
-      realBlockHash = hash;
-      GA.createClickRefund(eventName, outcome, hash);
-      if (hash == -1) {
-        realBlockHash = '-1';
-        logJson = error.message;
-        store.dispatch(showAlert({
-          message: MESSAGE.ROLLBACK,
-          timeOut: 3000,
-          type: 'danger',
-          callBack: () => {
-          },
-        }));
-      }
-    } catch (err) {
-      realBlockHash = '-1';
-      logJson = err.message;
-    }
-    this.saveTransaction(offchainString, CONTRACT_METHOD.CREATE_MARKET, chainId, realBlockHash, contractAddress, logJson);
-    return result;
-  }
 
   /*** API */
   saveTransaction(offchain, contractMethod, chainId, hash, contractAddress, payload) {
@@ -424,22 +386,24 @@ export class BetHandshakeHandler {
         const closingTime = i.closingTime - Math.floor(+moment.utc() / 1000);
         const reportTime = i.reportTime - i.closingTime;
         const disputeTime = i.disputeTime - i.reportTime;
-        this.createMarket(i.fee, i.source, closingTime, reportTime, disputeTime, i.offchain);
+        this.createMarket(i.fee, i.source, closingTime, reportTime, disputeTime, i.offchain, i.contractName, i.contractAddress);
       });
     } catch (e) {
       console.error(e);
     }
   }
 
-  async createMarket(fee, source, closingWindow, reportWindow, disputeWindow, offchain) {
+  async createMarket(fee, source, closingWindow, reportWindow, disputeWindow, offchain, contractName, contractAddress) {
     console.log(fee, source, closingWindow, reportWindow, disputeWindow, offchain);
     const chainId = getChainIdDefaultWallet();
     const bettinghandshake = new BettingHandshake(chainId);
+    bettinghandshake.updateContract(contractAddress, contractName);
+
     //bettinghandshake.contractFileAddress = contractAddress;
     //bettinghandshake.contractFileName = contractName;
     //const predictionhandshake = new PredictionHandshake(chainId);
 
-    const contractAddress = bettinghandshake.contractAddress;
+   // const contractAddress = bettinghandshake.contractAddress;
     let realBlockHash = '';
     let logJson = '';
     let result = '';
