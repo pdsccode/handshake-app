@@ -437,8 +437,8 @@ export class BetHandshakeHandler {
   async reportOutcomes(outcomes, contractName, contractAddress) {
     console.log(TAG, 'reportOutcomes:', outcomes);
     outcomes.forEach(element => {
-      const { hid, outcomeId, side } = element;
-      this.report(hid, outcomeId, side, contractName, contractAddress);
+      const { hid, outcome_id, side } = element;
+      this.report(hid, outcome_id, side, contractName, contractAddress);
     });
   }
   async report(hid, outcomeId, side, contractName, contractAddress) {
