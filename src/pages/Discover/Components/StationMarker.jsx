@@ -91,7 +91,7 @@ class StationMarker extends React.Component {
                   <div>
                     <div className="s-label">{messages.discover.feed.cash.marker.label.price}</div>
                     <div className="s-value">
-                      <span className="text-success">{`${formatMoneyByLocale(price, fiatCurrency)} ${fiatCurrency}/`}</span>
+                      <span className={`${actionActive === EXCHANGE_ACTION.BUY ? 'buy-price' : 'sell-price'}`}>{`${formatMoneyByLocale(price, fiatCurrency)} ${fiatCurrency}/`}</span>
                       <span>{currencyActive}</span>
                     </div>
 
@@ -106,7 +106,7 @@ class StationMarker extends React.Component {
                 </React.Fragment>
               ) : (
                 <div className="s-value" onClick={this.handleToggleShowAllDetails}>
-                  <span className="text-success">{`${formatMoneyByLocale(price, fiatCurrency)} ${fiatCurrency}/`}</span>
+                  <span className={`${actionActive === EXCHANGE_ACTION.BUY ? 'buy-price' : 'sell-price'}`}>{`${formatMoneyByLocale(price, fiatCurrency)} ${fiatCurrency}/`}</span>
                   <span>{currencyActive}</span>
                 </div>
               )
