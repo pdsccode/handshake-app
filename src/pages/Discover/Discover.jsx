@@ -259,12 +259,28 @@ class DiscoverPage extends React.Component {
     }
   }
 
+  getStationsList = () => {
+    const { list } = this.props.discover;
+
+    if (list && list.length > 0) {
+      return list;
+    } else {
+      return null;
+    }
+  }
+
   render() {
     const {
       propsModal,
       modalContent,
+      lat,
+      lng,
+      actionActive,
+      currencyActive,
     } = this.state;
     const { messages } = this.props.intl;
+
+    const stations = this.getStationsList();
 
     return (
       <React.Fragment>
@@ -281,6 +297,11 @@ class DiscoverPage extends React.Component {
           containerElement={<div style={{ height: `calc(100vh - 48px - 145px)`, marginTop: '48px' }} />}
           mapElement={<div style={{ height: `100%` }} />}
           // center={{ lat: 35.929673, lng: -78.948237 }}
+          stations={stations}
+          lat={lat}
+          lng={lng}
+          actionActive={actionActive}
+          currencyActive={currencyActive}
         />
         {/* <Footer /> */}
       </React.Fragment>

@@ -872,9 +872,15 @@ export default {
     noDataMessageSwap: 'No vendors near you yet. Be the first',
     feed: {
       cash: {
-
-      }
-    }
+        marker: {
+          label: {
+            price: 'Price',
+            maxVolume: 'Max volume',
+            tradeNow: 'Trade now',
+          },
+        },
+      },
+    },
   },
 
   wallet: {
