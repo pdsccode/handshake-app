@@ -220,7 +220,7 @@ class BettingReport extends React.Component {
   }
   onReportSuccess = (response) => {
     this.disablePage();
-    this.props.onReportSuccess(this.state.final);
+    this.props.onReportSuccess(this.state.final, response.data);
 
 
     this.props.showAlert({

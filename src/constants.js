@@ -203,7 +203,7 @@ export const API_URL = {
     ADD_MATCH: 'cryptosign/match/add',
     ADD_OUTCOME: 'cryptosign/outcome/add',
     SAVE_TRANSACTION: 'cryptosign/tx/add',
-    GENERATE_LINK: 'cryptosign/outcome/generate_link',
+    GENERATE_LINK: 'cryptosign/outcome/generate-link',
   },
   DISCOVER: {
     INDEX: 'handshake/discover',

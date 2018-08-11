@@ -20,7 +20,7 @@ export const eventSelector = (state) => {
 export const countReportSelector = (state) => {
   const { countReport = {} } = state.ui;
   const { count } = countReport;
-  console.log('countReportSelector','count:', count );
+  //console.log('countReportSelector','count:', count );
   return count || 0;
 };
 

@@ -174,7 +174,7 @@ class Prediction extends React.Component {
   }
 
   renderComponent = (props, state) => {
-    console.log('countReport', props.countReport);
+    //console.log('countReport', props.countReport);
     return (
       <div className={Prediction.displayName}>
         <Loading isLoading={props.isLoading} />

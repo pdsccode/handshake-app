@@ -36,19 +36,23 @@ class Report extends React.Component {
       PATH_URL: `${API_URL.CRYPTOSIGN.MATCHES_REPORT}`,
     });
   }
-  report(reponseData) {
-    const { } = reponseData;
-    betHandshakeHandler.report(hid, outcomeId, side, contractName, contractAddress);
-  }
 
+  callContractReport(outcomes, list) {
+    if (list.length > 0) {
+      const firstItem = list[0];
+      const { contract_address, contract_json } = firstItem;
+      betHandshakeHandler.reportOutcomes(outcomes, contract_json, contract_address);
+    }
+  }
 
   render() {
     const { matches } = this.state;
     return (
       <BettingReport
         matches={matches}
-        onReportSuccess={(reponseData)=> {
+        onReportSuccess={(outcomes, list)=> {
           this.fetchMatches();
+          this.callContractReport(outcomes, list);
         }}
       />
     );
