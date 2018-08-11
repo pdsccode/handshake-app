@@ -171,6 +171,11 @@ export const EXCHANGE_ACTION_LIST = [
 
 export const EXCHANGE_ACTION_DEFAULT = EXCHANGE_ACTION.BUY;
 
+export const EXCHANGE_ACTION_COLORS = {
+  [EXCHANGE_ACTION.BUY]: { color: '#4CD964' },
+  [EXCHANGE_ACTION.SELL]: { color: '#F86C4F' },
+};
+
 export const FIAT_CURRENCY_SYMBOL = '$';
 
 export const SELL_PRICE_TYPE_DEFAULT = 'fix';

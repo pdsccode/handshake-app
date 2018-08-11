@@ -1,30 +1,41 @@
 import React from 'react';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { change, Field } from 'redux-form';
+import { Field } from 'redux-form';
 import createForm from '@/components/core/form/createForm';
 import { fieldDropdown, fieldRadioButton } from '@/components/core/form/customField';
-import { FormattedHTMLMessage, FormattedMessage, injectIntl } from 'react-intl';
-import './NavBar.scss'
-import iconBtc from '@/assets/images/icon/coin/icon-btc.svg';
-import iconEth from '@/assets/images/icon/coin/icon-eth.svg';
+import { injectIntl } from 'react-intl';
+import './NavBar.scss';
+import {
+  CRYPTO_CURRENCY,
+  CRYPTO_CURRENCY_COLORS,
+  CRYPTO_CURRENCY_NAME,
+  EXCHANGE_ACTION,
+  EXCHANGE_ACTION_COLORS,
+  EXCHANGE_ACTION_NAME,
+} from '@/constants';
 
 const nameFormFilterStation = 'formFilterStation';
 const FormFilterStation = createForm({
   propsReduxForm: {
     form: nameFormFilterStation,
     initialValues: {
-      type: 'buy',
-      coin: { id: 'btc', text: <span><img src={iconBtc} width={25} /> BTC</span> },
+      type: EXCHANGE_ACTION.BUY,
+      coin: { id: CRYPTO_CURRENCY.ETH, text: <span><img src={CRYPTO_CURRENCY_COLORS[CRYPTO_CURRENCY.ETH].icon} width={25} /> {CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.ETH]}</span> },
     },
   },
 });
 
+const listAction = Object.values(EXCHANGE_ACTION).map((item) => {
+  return { value: item, text: EXCHANGE_ACTION_NAME[item], bgColorActive: EXCHANGE_ACTION_COLORS[item].color };
+});
+
+const listCoin = Object.values(CRYPTO_CURRENCY).map((item) => {
+  return { id: item, text: <span><img src={CRYPTO_CURRENCY_COLORS[item].icon} width={25} /> {CRYPTO_CURRENCY_NAME[item]}</span> };
+});
+
 class NavBar extends React.Component {
-
-
-
   render() {
+    const { onActionChange, onCurrencyChange } = this.props;
     return (
       <div className="cash-nav-bar">
         <FormFilterStation>
@@ -35,11 +46,9 @@ class NavBar extends React.Component {
               name="type"
               component={fieldRadioButton}
               type="tab-7"
-              list={[
-                { value: 'buy', text: 'BUY', bgColorActive: '#4CD964' },
-                { value: 'sell', text: 'SELL', bgColorActive: '#F86C4F' },
-              ]}
+              list={listAction}
               // validate={[required]}
+              onChange={onActionChange}
             />
           </div>
           <div className="d-inline-block">
@@ -50,10 +59,8 @@ class NavBar extends React.Component {
               defaultText="Coin"
               classNameDropdownToggle="bg-white border-0"
               // classNameDropdownToggle={`dropdown-sort bg-white ${sortIndexActive === CASH_SORTING_CRITERIA.PRICE ? 'dropdown-sort-selected' : ''}  `}
-              list={[
-                { id: 'btc', text: <span><img src={iconBtc} width={25} /> BTC</span> },
-                { id: 'eth', text: <span><img src={iconEth} width={25} /> ETH</span> },
-              ]}
+              list={listCoin}
+              onChange={onCurrencyChange}
             />
           </div>
 
