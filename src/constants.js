@@ -548,7 +548,6 @@ export const RECRUITING_SLACK_CHANNEL = 'https://hooks.slack.com/services/T06HPU
 
 export const NB_BLOCKS = 20;
 
-
 export const blockchainNetworks = {
   rinkeby: {
     type: 'ERC20',
