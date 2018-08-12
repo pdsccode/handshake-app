@@ -207,7 +207,7 @@ class DiscoverPage extends React.Component {
       if (handshakeIdActive === HANDSHAKE_ID.EXCHANGE) {
         qs.custom_query = ` -offline_i:1 `;
 
-        const sortPrice = `${actionActive.toLowerCase()}_${currencyActive.toLowerCase()}_d`;
+        const sortPrice = `${actionActive === EXCHANGE_ACTION.BUY ? EXCHANGE_ACTION.SELL : EXCHANGE_ACTION.BUY }_${currencyActive.toLowerCase()}_d`;
         const sortOrder = actionActive.includes('buy') ? SORT_ORDER.ASC : SORT_ORDER.DESC;
 
         qs.c_sort = sortPrice;

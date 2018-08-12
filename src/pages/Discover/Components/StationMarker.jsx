@@ -1,14 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
-import { CRYPTO_CURRENCY, EXCHANGE_ACTION } from '@/constants';
+import { CRYPTO_CURRENCY, EXCHANGE_ACTION, EXCHANGE_ACTION_NAME } from '@/constants';
 import { Marker } from 'react-google-maps';
 import InfoBox from 'react-google-maps/lib/components/addons/InfoBox';
 import StarsRating from '@/components/core/presentation/StarsRating';
 
 import iconCustomMarker from '@/assets/images/icon/custom-marker.svg';
 import './StationMarker.scss';
-import OfferShop from '@/models/OfferShop';
 import { formatMoneyByLocale, getOfferPrice } from '@/services/offer-util';
 import ShakeDetail, { nameFormShakeDetail } from '@/components/handshakes/exchange/components/ShakeDetail';
 import { change, clearFields } from 'redux-form';
@@ -154,7 +153,7 @@ class StationMarker extends React.Component {
                       <button
                         className="btn btn-primary btn-block"
                         onClick={this.handleOnShake}
-                      >{messages.discover.feed.cash.marker.label.tradeNow}
+                      >{EXCHANGE_ACTION_NAME[actionActive]}{` ${messages.discover.feed.cash.marker.label.tradeNow}`}
                       </button>
                     </div>
                   )}

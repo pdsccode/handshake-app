@@ -879,7 +879,7 @@ export default {
           label: {
             price: 'Price',
             maxVolume: 'Max volume',
-            tradeNow: 'Trade now',
+            tradeNow: 'Now',
           },
         },
       },
