@@ -7,6 +7,7 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 
 import iconCurrentLocation from '@/assets/images/icon/current-location.svg';
+import OfferShop from "../../../models/OfferShop";
 
 
 class Map extends React.Component {
@@ -25,6 +26,19 @@ class Map extends React.Component {
     this.setState({ center: { lat, lng } });
   }
 
+  isEmptyBalance = (item) => {
+    if (!item) {
+      return;
+    }
+
+    const { actionActive } = this.props;
+    const { buyAmount, sellAmount } = item;
+    if (actionActive.includes('buy')) {
+      return sellAmount <= 0;
+    }
+    return buyAmount <= 0;
+  }
+
   render() {
     const { isMarkerShown, onMarkerClick, stations, actionActive, currencyActive, onFeedClick } = this.props;
     const { center } = this.state;
@@ -37,14 +51,21 @@ class Map extends React.Component {
         {
           stations && stations.map((station) => {
             const { id, ...rest } = station;
+            const offer = OfferShop.offerShop(JSON.parse(station.extraData));
+            const allowRender = offer.itemFlags[currencyActive] && !this.isEmptyBalance(offer.items[currencyActive]);
 
-            return (
-              <StationMarker key={id} {...rest}
-                             actionActive={actionActive}
-                             currencyActive={currencyActive}
-                             onFeedClick={extraData => onFeedClick(station, extraData)}
-              />
-            );
+            if (!allowRender) {
+              return null;
+            } else {
+              return (
+                <StationMarker key={id} {...rest}
+                               actionActive={actionActive}
+                               currencyActive={currencyActive}
+                               onFeedClick={extraData => onFeedClick(station, extraData)}
+                               offer={offer}
+                />
+              );
+            }
           })
         }
         <button className="btn-current-location" onClick={this.handleGoToCurrentLocation}>

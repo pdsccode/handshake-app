@@ -26,9 +26,9 @@ class StationMarker extends React.Component {
   constructor(props) {
     super(props);
 
-    const { extraData } = this.props;
+    const { offer } = this.props;
 
-    this.offer = OfferShop.offerShop(JSON.parse(extraData));
+    this.offer = offer;
 
     const cryptoCurrencyList = Object.values(CRYPTO_CURRENCY).map(item => ({
       value: item, text: item, icon: <img src={ICONS[item]} width={22} />, hide: false,
