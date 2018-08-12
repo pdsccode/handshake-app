@@ -29,6 +29,9 @@ import { getFreeStartInfo, getListOfferPrice, setFreeStart } from '@/reducers/ex
 import { loadDiscoverList } from '@/reducers/discover/action';
 import Image from '@/components/core/presentation/Image';
 import loadingSVG from '@/assets/images/icon/loading.gif';
+import ModalDialog from '@/components/core/controls/ModalDialog/ModalDialog';
+import * as gtag from '@/services/ga-utils';
+import taggingConfig from '@/services/tagging-config';
 
 class DiscoverPage extends React.Component {
   constructor(props) {
@@ -264,8 +267,28 @@ class DiscoverPage extends React.Component {
 
     if (list && list.length > 0) {
       return list;
-    } else {
-      return null;
+    }
+    return null;
+  }
+
+  clickFeedDetail(handshake, extraData) {
+    const { type } = handshake;
+    switch (type) {
+      case HANDSHAKE_ID.EXCHANGE: {
+        const { modalContent, modalClassName } = extraData;
+        gtag.event({
+          category: taggingConfig.cash.category,
+          action: taggingConfig.cash.action.clickFeed,
+          label: handshake.id,
+        });
+        if (modalContent) {
+          this.setState({ modalContent, propsModal: { className: modalClassName } }, () => {
+            this.modalRef.open();
+          });
+        }
+        break;
+      }
+      default:
     }
   }
 
@@ -302,7 +325,11 @@ class DiscoverPage extends React.Component {
           lng={lng}
           actionActive={actionActive}
           currencyActive={currencyActive}
+          onFeedClick={(station, extraData) => this.clickFeedDetail(station, extraData)}
         />
+        <ModalDialog onRef={(modal) => { this.modalRef = modal; return null; }} {...propsModal}>
+          {modalContent}
+        </ModalDialog>
         {/* <Footer /> */}
       </React.Fragment>
     );

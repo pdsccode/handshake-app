@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
-import { EXCHANGE_ACTION, } from '@/constants';
+import { CRYPTO_CURRENCY, EXCHANGE_ACTION } from '@/constants';
 import { Marker } from 'react-google-maps';
 import InfoBox from 'react-google-maps/lib/components/addons/InfoBox';
 import StarsRating from '@/components/core/presentation/StarsRating';
@@ -10,6 +10,17 @@ import iconCustomMarker from '@/assets/images/icon/custom-marker.svg';
 import './StationMarker.scss';
 import OfferShop from '@/models/OfferShop';
 import { formatMoneyByLocale, getOfferPrice } from '@/services/offer-util';
+import ShakeDetail, { nameFormShakeDetail } from '@/components/handshakes/exchange/components/ShakeDetail';
+import { change, clearFields } from 'redux-form';
+import { bindActionCreators } from 'redux';
+
+import iconBitcoin from '@/assets/images/icon/coin/btc.svg';
+import iconEthereum from '@/assets/images/icon/coin/eth.svg';
+
+const ICONS = {
+  [CRYPTO_CURRENCY.ETH]: iconEthereum,
+  [CRYPTO_CURRENCY.BTC]: iconBitcoin,
+};
 
 class StationMarker extends React.Component {
   constructor(props) {
@@ -19,8 +30,13 @@ class StationMarker extends React.Component {
 
     this.offer = OfferShop.offerShop(JSON.parse(extraData));
 
+    const cryptoCurrencyList = Object.values(CRYPTO_CURRENCY).map(item => ({
+      value: item, text: item, icon: <img src={ICONS[item]} width={22} />, hide: false,
+    }));
+
     this.state = {
       showAllDetails: false,
+      CRYPTO_CURRENCY_LIST: cryptoCurrencyList,
     };
   }
 
@@ -45,9 +61,42 @@ class StationMarker extends React.Component {
     return actionActive === EXCHANGE_ACTION.BUY ? item?.buyAmount || 0 : item?.sellAmount || 0;
   }
 
+  isEmptyBalance = (item) => {
+    const { buyAmount, sellAmount } = item;
+    return !(buyAmount > 0 || sellAmount > 0);
+  }
+
+  handleOnShake = () => {
+    const { offer } = this;
+    const { onFeedClick, actionActive, currencyActive } = this.props;
+
+    const cryptoCurrencyList = Object.values(CRYPTO_CURRENCY).map(currency => ({
+      value: currency, text: currency, icon: <img src={ICONS[currency]} width={22} />, hide: !offer.itemFlags[currency] || this.isEmptyBalance(offer.items[currency]),
+    }));
+
+    this.setState({
+      CRYPTO_CURRENCY_LIST: cryptoCurrencyList,
+    }, () => {
+      onFeedClick({
+        modalClassName: 'dialog-shake-detail',
+        modalContent: (
+          <ShakeDetail offer={this.offer} handleShake={this.shakeOfferItem} CRYPTO_CURRENCY_LIST={this.state.CRYPTO_CURRENCY_LIST} />
+        ),
+      });
+      setTimeout(() => {
+        this.props.rfChange(nameFormShakeDetail, 'currency', currencyActive);
+        this.props.rfChange(nameFormShakeDetail, 'type', actionActive);
+
+        this.props.clearFields(nameFormShakeDetail, false, false, 'amount', 'amountFiat');
+      }, 100);
+    });
+  }
+
   render() {
     const { messages } = this.props.intl;
-    const { actionActive, currencyActive, location } = this.props;
+    const {
+      actionActive, currencyActive, location, initUserId, authProfile,
+    } = this.props;
     const { username, review, fiatCurrency } = this.offer;
     const locationArr = location.split(',');
     const coordinate = { lat: parseFloat(locationArr[0]), lng: parseFloat(locationArr[1]) };
@@ -100,9 +149,15 @@ class StationMarker extends React.Component {
                       <span>{`${maxVolume} ${currencyActive}`}</span>
                     </div>
                   </div>
-                  <div className="mt-2">
-                    <button className="btn btn-primary btn-block" onClick={() => console.log('ahihi')}>{messages.discover.feed.cash.marker.label.tradeNow}</button>
-                  </div>
+                  {initUserId !== authProfile?.id && (
+                    <div className="mt-2">
+                      <button
+                        className="btn btn-primary btn-block"
+                        onClick={this.handleOnShake}
+                      >{messages.discover.feed.cash.marker.label.tradeNow}
+                      </button>
+                    </div>
+                  )}
                 </React.Fragment>
               ) : (
                 <div className="s-value" onClick={this.handleToggleShowAllDetails}>
@@ -120,10 +175,12 @@ class StationMarker extends React.Component {
 
 const mapState = state => ({
   listOfferPrice: state.exchange.listOfferPrice,
+  authProfile: state.auth.profile,
 });
 
 const mapDispatch = dispatch => ({
-  // rfChange: bindActionCreators(change, dispatch),
+  rfChange: bindActionCreators(change, dispatch),
+  clearFields: bindActionCreators(clearFields, dispatch),
 });
 
 export default injectIntl(connect(mapState, mapDispatch)(StationMarker));
