@@ -52,6 +52,7 @@ const configRoutesUsingMobileLayout = [
   { path: URL.HANDSHAKE_ME, component: RouterMe },
   { path: URL.HANDSHAKE_PREDICTION, component: RouterExchange },
   { path: URL.HANDSHAKE_EXCHANGE, component: RouterExchange },
+  { path: URL.HANDSHAKE_CASH, component: RouterDiscover },
   // { path: URL.HANDSHAKE_DISCOVER, component: RouterDiscover },
   // { path: URL.HANDSHAKE_CASH, component: RouterExchange }, // Cash on mobile uses a completely different layout!
   { path: URL.HANDSHAKE_CHAT, component: RouterChat },
@@ -146,7 +147,7 @@ class Router extends React.Component {
           {routesUsingDesktopLayout}
 
           {/* Cash on mobile uses a completely different layout! */}
-          <Route path={URL.HANDSHAKE_CASH} component={Discover} />
+          {/*<Route path={URL.HANDSHAKE_CASH} component={Discover} />*/}
 
           <Route
             path={URL.INDEX}

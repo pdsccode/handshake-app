@@ -32,6 +32,11 @@ import loadingSVG from '@/assets/images/icon/loading.gif';
 import ModalDialog from '@/components/core/controls/ModalDialog/ModalDialog';
 import * as gtag from '@/services/ga-utils';
 import taggingConfig from '@/services/tagging-config';
+import { Grid, Row } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
+import BlockCountry from '@/components/core/presentation/BlockCountry/BlockCountry';
+import Maintain from '@/components/Router/Maintain';
+import './Discover.scss';
 
 class DiscoverPage extends React.Component {
   constructor(props) {
@@ -207,7 +212,7 @@ class DiscoverPage extends React.Component {
       if (handshakeIdActive === HANDSHAKE_ID.EXCHANGE) {
         qs.custom_query = ` -offline_i:1 `;
 
-        const sortPrice = `${actionActive === EXCHANGE_ACTION.BUY ? EXCHANGE_ACTION.SELL : EXCHANGE_ACTION.BUY }_${currencyActive.toLowerCase()}_d`;
+        const sortPrice = `${actionActive === EXCHANGE_ACTION.BUY ? EXCHANGE_ACTION.SELL : EXCHANGE_ACTION.BUY}_${currencyActive.toLowerCase()}_d`;
         const sortOrder = actionActive.includes('buy') ? SORT_ORDER.ASC : SORT_ORDER.DESC;
 
         qs.c_sort = sortPrice;
@@ -292,24 +297,16 @@ class DiscoverPage extends React.Component {
     }
   }
 
-  render() {
+  getMap = () => {
     const {
-      propsModal,
-      modalContent,
       lat,
       lng,
       actionActive,
       currencyActive,
     } = this.state;
-    const { messages } = this.props.intl;
-
     const stations = this.getStationsList();
-
-    return (
-      <React.Fragment>
-        <div className={`discover-overlay ${this.state.isLoading ? 'show' : ''}`}>
-          <Image src={loadingSVG} alt="loading" width="100" />
-        </div>
+    const map = (
+      <div>
         <NavBar onActionChange={this.onActionChange} onCurrencyChange={this.onCurrencyChange} />
         <Map
           isMarkerShown={this.state.isMarkerShown}
@@ -327,6 +324,51 @@ class DiscoverPage extends React.Component {
           currencyActive={currencyActive}
           onFeedClick={(station, extraData) => this.clickFeedDetail(station, extraData)}
         />
+      </div>
+    );
+
+    return map;
+  }
+
+  render() {
+    const {
+      propsModal,
+      modalContent,
+    } = this.state;
+    const { messages } = this.props.intl;
+
+    return (
+      <React.Fragment>
+        <div className={`discover-overlay ${this.state.isLoading ? 'show' : ''}`}>
+          <Image src={loadingSVG} alt="loading" width="100" />
+        </div>
+        <div>
+          {!this.state.isBannedCash && !this.props.firebaseApp.config?.maintainChild?.exchange && this.getMap()}
+          {
+            this.state.isBannedCash
+              ? (
+                <BlockCountry />
+              )
+              : this.props.firebaseApp.config?.maintainChild?.exchange ? <Maintain /> : null
+          }
+        </div>
+        <Grid className="discover">
+          <React.Fragment>
+            <div>
+              <div className="ex-sticky-note">
+                <div className="mb-2"><FormattedMessage id="ex.discover.banner.text" /></div>
+                <div>
+                  <Link to={{ pathname: URL.HANDSHAKE_CREATE, search: `?id=${HANDSHAKE_ID.EXCHANGE}` }}>
+                    <button className="btn btn-become"><FormattedMessage id="ex.discover.banner.btnText" /></button>
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </React.Fragment>
+          <Row className="info">
+            {messages.product_info}
+          </Row>
+        </Grid>
         <ModalDialog onRef={(modal) => { this.modalRef = modal; return null; }} {...propsModal}>
           {modalContent}
         </ModalDialog>
