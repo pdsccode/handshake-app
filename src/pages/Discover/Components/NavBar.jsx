@@ -35,12 +35,13 @@ const listCoin = Object.values(CRYPTO_CURRENCY).map((item) => {
 
 class NavBar extends React.Component {
   render() {
+    const { messages } = this.props.intl;
     const { onActionChange, onCurrencyChange } = this.props;
     return (
       <div className="cash-nav-bar">
         <FormFilterStation>
           <button type="button" className="btn bg-transparent mr-2" onClick={() => console.log('clickmenu')}>☰</button>
-          <span className="mr-2">I WANT TO</span>
+          <span className="mr-2">{messages.discover.feed.cash.menu.actionDescription}</span>
           <div className="d-inline-block mr-1">
             <Field
               name="type"

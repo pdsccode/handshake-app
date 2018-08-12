@@ -872,6 +872,9 @@ export default {
     noDataMessageSwap: 'No vendors near you yet. Be the first',
     feed: {
       cash: {
+        menu: {
+          actionDescription: 'I WANT TO',
+        },
         marker: {
           label: {
             price: 'Price',

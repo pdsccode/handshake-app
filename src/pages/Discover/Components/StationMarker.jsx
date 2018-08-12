@@ -48,8 +48,8 @@ class StationMarker extends React.Component {
     const { listOfferPrice, actionActive, currencyActive } = this.props;
     const { fiatCurrency } = this.offer;
     const item = this.offer.items[currencyActive];
-    const offerPrice = getOfferPrice(listOfferPrice, actionActive, currencyActive, fiatCurrency);
-    const price = offerPrice.price * (1 + (actionActive === EXCHANGE_ACTION.BUY ? item?.buyPercentage : item?.sellPercentage) / 100) || 0;
+    const offerPrice = getOfferPrice(listOfferPrice, actionActive === EXCHANGE_ACTION.BUY ? EXCHANGE_ACTION.SELL : EXCHANGE_ACTION.BUY, currencyActive, fiatCurrency);
+    const price = offerPrice.price * (1 + (actionActive === EXCHANGE_ACTION.BUY ? item?.sellPercentage : item?.buyPercentage) / 100) || 0;
 
     return price;
   }
@@ -58,7 +58,7 @@ class StationMarker extends React.Component {
     const { actionActive, currencyActive } = this.props;
     const item = this.offer.items[currencyActive];
 
-    return actionActive === EXCHANGE_ACTION.BUY ? item?.buyAmount || 0 : item?.sellAmount || 0;
+    return actionActive === EXCHANGE_ACTION.BUY ? item?.sellAmount || 0 : item?.buyAmount || 0;
   }
 
   isEmptyBalance = (item) => {
