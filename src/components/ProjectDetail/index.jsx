@@ -2,10 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { setLanguage } from '@/reducers/app/action';
-
 import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
 import { Field, formValueSelector } from 'redux-form';
-
 import LandingWrapper from '@/components/LandingWrapper';
 import Collapse from '@/components/Collapse';
 import createForm from '@/components/core/form/createForm';
