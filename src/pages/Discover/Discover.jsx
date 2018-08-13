@@ -342,33 +342,14 @@ class DiscoverPage extends React.Component {
         <div className={`discover-overlay ${this.state.isLoading ? 'show' : ''}`}>
           <Image src={loadingSVG} alt="loading" width="100" />
         </div>
-        <Grid className="discover">
-          <React.Fragment>
-            <div>
-              <div className="ex-sticky-note">
-                <div className="mb-2"><FormattedMessage id="ex.discover.banner.text" /></div>
-                <div>
-                  <Link to={{ pathname: URL.HANDSHAKE_CREATE, search: `?id=${HANDSHAKE_ID.EXCHANGE}` }}>
-                    <button className="btn btn-become"><FormattedMessage id="ex.discover.banner.btnText" /></button>
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </React.Fragment>
-        </Grid>
-        <div>
-          {!this.state.isBannedCash && !this.props.firebaseApp.config?.maintainChild?.exchange && this.getMap()}
-          {
-            this.state.isBannedCash
-              ? (
-                <BlockCountry />
-              )
-              : this.props.firebaseApp.config?.maintainChild?.exchange ? <Maintain /> : null
-          }
-        </div>
-        <div className="info">
-          {messages.product_info}
-        </div>
+        {!this.state.isBannedCash && !this.props.firebaseApp.config?.maintainChild?.exchange && this.getMap()}
+        {
+          this.state.isBannedCash
+            ? (
+              <BlockCountry />
+            )
+            : this.props.firebaseApp.config?.maintainChild?.exchange ? <Maintain /> : null
+        }
         <ModalDialog onRef={(modal) => { this.modalRef = modal; return null; }} {...propsModal}>
           {modalContent}
         </ModalDialog>
