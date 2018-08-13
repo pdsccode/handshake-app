@@ -110,9 +110,9 @@ class FeedBetting extends React.Component {
 
   formatPredictName(eventPredict) {
     let predictName = eventPredict || '';
-    if (predictName.indexOf('Outcome') !== -1) {
-      predictName = eventPredict.slice(8);
-    }
+    // if (predictName.indexOf('Outcome') !== -1) {
+    //   predictName = eventPredict.slice(8);
+    // }
     return predictName;
   }
 
