@@ -1004,6 +1004,18 @@ export default {
         },
         description: 'Please enter your top secret recovery data to restore your wallet.',
       },
+      setting: {
+        title: 'Setting',
+        error: 'Invalid wallets',
+        header: 'Setting wallets',
+        success: {
+          restore: 'Your Wallet restore success',
+        },
+        button: {
+          restore: 'Restore now',
+        },
+        description: 'Please enter your top secret recovery data to restore your wallet.',
+      },
       import: {
         title: 'Add new / Import coin',
       },

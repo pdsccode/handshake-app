@@ -46,10 +46,10 @@ class Transfer extends React.Component {
       // Qrcode
       qrCodeOpen: false,
       delay: 300,
-      walletsData: false,      
+      walletsData: false,
       rates: [],
       inputSendAmountValue: 0,
-      inputSendMoneyValue: 0,      
+      inputSendMoneyValue: 0,
     }
   }
 
@@ -106,11 +106,11 @@ class Transfer extends React.Component {
   }
 
   componentDidUpdate() {
-    
-    if (this.props.active && this.props.active != this.state.active){      
-      
+
+    if (this.props.active && this.props.active != this.state.active){
+
       this.setState({active: this.props.active});
-      
+
       this.props.clearFields(nameFormSendWallet, false, false, "to_address", "amountCoin");
       if (this.props.amount){
         this.props.rfChange(nameFormSendWallet, 'amountCoin', this.props.amount);
@@ -122,7 +122,7 @@ class Transfer extends React.Component {
       }
 
       this.getWalletDefault();
-      
+
     }
     else if (this.props.active != this.state.active){
       this.setState({active: this.props.active});
@@ -156,6 +156,7 @@ class Transfer extends React.Component {
   }
 
   getRate = (currency) => {
+
     var data = {amount: 1, currency: currency};
     let rates = this.state.rates;
     this.props.getCryptoPrice({
@@ -164,9 +165,8 @@ class Transfer extends React.Component {
       successFn: (res) => {
         const cryptoPrice = CryptoPrice.cryptoPrice(res.data);
         const price = new BigNumber(cryptoPrice.fiatAmount).toNumber();
-
         rates.push({[currency]: price});
-        this.setState({rates: rates});             
+        this.setState({rates: rates});
       },
       errorFn: (err) => {
         console.error("Error", err);
@@ -186,7 +186,7 @@ class Transfer extends React.Component {
     if (coinName){
       walletDefault = MasterWallet.getWalletDefault(coinName);
     }
-    
+
     // set name + text for list:
     let listWalletCoin = [];
     if (wallets.length > 0){
@@ -199,7 +199,7 @@ class Transfer extends React.Component {
           wal.id = wal.address + "-" + wal.getNetworkName() + wal.name;
           listWalletCoin.push(wal);
         }
-        
+
       });
     }
 
@@ -209,7 +209,7 @@ class Transfer extends React.Component {
       }
     }
 
-    // set name for walletDefault:    
+    // set name for walletDefault:
     if (wallet){
       walletDefault = wallet;
     }
@@ -232,7 +232,7 @@ class Transfer extends React.Component {
     this.setState({wallets: listWalletCoin, walletDefault: walletDefault, walletSelected: walletDefault}, ()=>{
       this.props.rfChange(nameFormSendWallet, 'walletSelected', walletDefault);
     });
-    
+
   }
 
   sendCoin = () => {
@@ -258,25 +258,27 @@ class Transfer extends React.Component {
   }
 
   updateAddressAmountValue = (evt, val) => {
-    let amount = evt ? evt.target.value : null, rate = 0, money = 0;    
-    if(!amount) amount = val;   
-    
-    
+    let alternateRate = this.props.rate;
+    alternateRate = alternateRate ? alternateRate : 1;
+
+    let amount = evt ? evt.target.value : null, rate = 0, money = 0;
+    if(!amount) amount = val;
+
     let rates = this.state.rates.filter(rate => rate.hasOwnProperty(this.state.walletSelected.name));
 
     if (rates.length > 0){
       rate = rates[0][this.state.walletSelected.name];
       if(!isNaN(amount)){
-        money = amount * rate;
+        money = amount * rate * alternateRate;
         this.setState({
           inputSendAmountValue: amount,
           inputSendMoneyValue: money.toFixed(0)
         });
-      
+
       }
       this.props.rfChange(nameFormSendWallet, 'amountCoin', amount);
       this.props.rfChange(nameFormSendWallet, 'amountMoney', money);
-    }    
+    }
   }
 
   getMessage(str){
@@ -293,13 +295,15 @@ class Transfer extends React.Component {
   }
 
   updateAddressMoneyValue = (evt) => {
+    let alternateRate = this.props.rate;
+    alternateRate = alternateRate ? alternateRate : 1;
     let money = evt.target.value, rate = 0, amount = 0;
     let rates = this.state.rates.filter(rate => rate.hasOwnProperty(this.state.walletSelected.name));
 
     if (rates.length > 0){
       rate = rates[0][this.state.walletSelected.name]
       if(!isNaN(money)){
-        amount = money/rate;
+        amount = money/rate/alternateRate;
         this.setState({
           inputSendAmountValue: amount,
           inputSendMoneyValue: money
@@ -324,7 +328,7 @@ submitSendCoin=()=>{
 
         this.setState({isRestoreLoading: false});
         if (success.hasOwnProperty('status')){
-          if (success.status == 1){            
+          if (success.status == 1){
             this.showSuccess(this.getMessage(success.message));
             this.onFinish();
             MasterWallet.NotifyUserTransfer(this.state.walletSelected.address, this.state.inputAddressAmountValue);
@@ -384,10 +388,13 @@ openQrcode = () => {
   this.modalScanQrCodeRef.open();
 }
 
-  render() {    
-    const { messages } = this.props.intl;  
+  render() {
+    const { currency } = this.props;
+    if(!currency) currency = "USD";
+
+    const { messages } = this.props.intl;
     let showDivAmount = (( this.state.walletSelected && ( !this.state.walletSelected.isToken && this.state.rates.filter(rate => rate.hasOwnProperty(this.state.walletSelected.name).length > 0) ) ) ) ? true : false;
-    
+
     return (
       <div>
           {/* Dialog confirm transfer coin */}
@@ -447,7 +454,7 @@ openQrcode = () => {
               </div>
               { !showDivAmount ? "" :
                 <div className="div-amount">
-                  <div className="prepend">{messages.wallet.action.transfer.label.usd}</div>
+                  <div className="prepend">{currency}</div>
                   <Field
                     key="1"
                     name="amountMoney"
@@ -461,7 +468,7 @@ openQrcode = () => {
                   />
                 </div>
               }
-            
+
               <div className ="dropdown-wallet-tranfer">
                 <p className="labelText">{messages.wallet.action.transfer.label.from_wallet}</p>
                 <Field
@@ -475,7 +482,7 @@ openQrcode = () => {
                     }
                   }
                 />
-              </div>              
+              </div>
 
               <label className='label-balance'>{messages.wallet.action.transfer.label.wallet_balance} { this.state.walletSelected ? StringHelper.format("{0} {1}", this.state.walletSelected.balance, this.state.walletSelected.name) : ""}</label>
               </div>
@@ -490,6 +497,8 @@ openQrcode = () => {
 Transfer.propTypes = {
   wallet: PropTypes.any,
   active: PropTypes.bool,
+  currency: PropTypes.string,
+  rate: PropTypes.number
 };
 
 

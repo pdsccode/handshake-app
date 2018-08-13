@@ -14,40 +14,71 @@ import './Wallet.scss';
 
 class WalletItem extends React.Component {
 
-    getShortAddres(address){
-        return address.replace(address.substr(12, 27), '...');
-    }
+  getShortAddres(address){
+      return address.replace(address.substr(12, 27), '...');
+  }
 
-    render(){
-        const {wallet, onMoreClick, onWarningClick, onAddressClick} =  this.props;
-        const iconProtected = !wallet.protected ? iconWarning : iconSafe;
-        let bgImg = bgCollectibles;
-        try{ bgImg = require("@/assets/images/pages/wallet/" + wallet.getBackgroundImg());} catch (e){};
+  get showCryptoAddress(){
+    const {wallet, settingWallet} =  this.props;
 
-        // const itemSelected = wallet.default ? "feed feed-selected" : "feed";
-        return  (
+    let html;
+    if(settingWallet && settingWallet.cryptoAddress == 3)
+      html = ""
+    else if(settingWallet && settingWallet.cryptoAddress == 2)
+      html = wallet.getShortestAddress();
+    else
+      html = wallet.getShortAddress();
 
-            <Col sm={6} md={6} xs={6} className="feed-wrapper-wallet">
-              <div className='feed' style={{backgroundImage: "url('"+bgImg+"')"}}>
 
-                <div className="name">{wallet.title}
-                {wallet.default ? <img className="iconDefault" src={iconChecked}/> : ''}
-                </div>
-                <p className="balance"> {wallet.getShortBalance()} {wallet.name} </p>
-                <div className="more" onClick={onMoreClick}><img src={dontIcon}/></div>
-                <img className="safe" src={wallet.protected ? iconSafe : iconProtected} onClick={onWarningClick}/>
+    return (<div>
+        <img src={iconQRCode} /> {html}
+      </div>)
+  }
 
-                <div className="address" onClick={onAddressClick}><img src={iconQRCode} /> {wallet.getShortAddress()}</div>
-              </div>
-            </Col>
-          );
-    }
+  get showIconSafe(){
+
+    const {wallet, settingWallet, onWarningClick} =  this.props;
+    let html;
+    if(settingWallet && settingWallet.cryptoAddress == 3)
+      html = !wallet.protected ? <div className="warning" onClick={onWarningClick}>Need backup</div> : "";
+    else
+      html = <img className="safe" src={wallet.protected ? iconSafe : iconWarning} onClick={onWarningClick}/>
+
+    return (html)
+  }
+
+  render(){
+      const {wallet, onMoreClick, onAddressClick} =  this.props;
+      //const iconProtected = !wallet.protected ? iconWarning : iconSafe;
+      let bgImg = bgCollectibles;
+      try{ bgImg = require("@/assets/images/pages/wallet/" + wallet.getBackgroundImg());} catch (e){};
+
+      // const itemSelected = wallet.default ? "feed feed-selected" : "feed";
+      return  (
+
+        <Col sm={6} md={6} xs={6} className="feed-wrapper-wallet">
+          <div className='feed' style={{backgroundImage: "url('"+bgImg+"')"}}>
+
+            <div className="name">{wallet.title}
+            {wallet.default ? <img className="iconDefault" src={iconChecked}/> : ''}
+            </div>
+            <p className="balance"> {wallet.getShortBalance()} {wallet.name} </p>
+            <div className="more" onClick={onMoreClick}><img src={dontIcon}/></div>
+            {this.showIconSafe}
+            <div className="address" onClick={onAddressClick}>
+              {this.showCryptoAddress}
+            </div>
+          </div>
+        </Col>
+      );
+  }
 }
 
 WalletItem.propTypes = {
-    wallet: PropTypes.object,
-    onMoreClick: PropTypes.func,
-    onWarningClick: PropTypes.func,
-    onAddressClick: PropTypes.func,
+  settingWallet: PropTypes.object,
+  wallet: PropTypes.object,
+  onMoreClick: PropTypes.func,
+  onWarningClick: PropTypes.func,
+  onAddressClick: PropTypes.func,
 };
 export default WalletItem;

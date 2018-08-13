@@ -57,6 +57,7 @@ import local from '@/services/localStore';
 import {APP} from '@/constants';
 import _ from 'lodash';
 import qs from 'querystring';
+import axios from 'axios';
 
 import AddToken from '@/components/Wallet/AddToken/AddToken';
 import AddCollectible from '@/components/Wallet/AddCollectible/AddCollectible';
@@ -66,6 +67,7 @@ import './Wallet.scss';
 import CoinTemp from '@/pages/Wallet/CoinTemp';
 import BackupWallet from '@/components/Wallet/BackupWallet/BackupWallet';
 import RestoreWallet from '@/components/Wallet/RestoreWallet/RestoreWallet';
+import SettingWallet from '@/components/Wallet/SettingWallet/SettingWallet';
 
 const QRCode = require('qrcode.react');
 
@@ -145,6 +147,9 @@ class Wallet extends React.Component {
       internalTransactions: [],
       isLoadMore: false,
       activeReceive: false,
+      activeSetting: false,
+      alternateCurrency: 'USD',
+      alternateCurrencyRate: 1,
     };
     this.props.setHeaderRight(this.headerRight());
     this.listener = _.throttle(this.scrollListener, 200).bind(this);
@@ -260,7 +265,6 @@ class Wallet extends React.Component {
 
   async componentDidMount() {
 
-
     this.attachScrollListener();
     let listWallet = await MasterWallet.getMasterWallet();
 
@@ -278,6 +282,7 @@ class Wallet extends React.Component {
 
      console.log(tx) */
      this.checkAirDrop();
+     this.getSetting();
   }
 
   checkAirDrop(){
@@ -287,6 +292,37 @@ class Wallet extends React.Component {
     if (ref) this.modalRefersRef.open();
   }
 
+  async getSetting(){
+    console.log('setting');
+    let setting = local.get(APP.SETTING);
+
+    //alternate_currency
+    if(setting && setting.wallet && setting.wallet.alternateCurrency)
+      this.setState({alternateCurrency: setting.wallet.alternateCurrency});
+
+    //rate
+    try{
+      const response = await axios.get("https://bitpay.com/api/rates/btc");
+      if (response.status == 200 && response.data) {
+        let usd = 0, alt = 0;
+        response.data.map(e => {
+          if(e.code == "USD")
+            usd = e.rate;
+          else if(e.code == this.state.alternateCurrency)
+            alt = e.rate;
+        });
+
+        if(usd > 0 && alt > 0){
+          this.state.alternateCurrencyRate = Number(alt/usd);
+        }
+
+        console.log('usd', usd, this.state.alternateCurrency, alt, this.state.alternateCurrencyRate);
+      }
+    }
+    catch (error) {
+      return [];
+    }
+  }
 
   getAllWallet() {
     return this.state.listMainWalletBalance.concat(this.state.listTestWalletBalance).concat(this.state.listRewardWalletBalance).concat(this.state.listTokenWalletBalance).concat(this.state.listCollectibleWalletBalance);
@@ -606,8 +642,16 @@ class Wallet extends React.Component {
       title: messages.wallet.action.restore.title,
       handler: () => {
         this.toggleBottomSheet();
-        this.setState({ activeRestore: true});
         this.modalRestoreRef.open();
+      },
+    });
+    obj.push({
+      title: messages.wallet.action.setting.title,
+      handler: () => {
+        this.setState({activeSetting:true}, ()=> {
+          this.toggleBottomSheet();
+          this.modalSettingRef.open();
+        });
       },
     });
     obj.push({
@@ -726,7 +770,9 @@ class Wallet extends React.Component {
   }
 
   get listMainWalletBalance() {
-    return this.state.listMainWalletBalance.map(wallet => <WalletItem key={Math.random()} wallet={wallet} onMoreClick={() => this.onMoreClick(wallet)} onWarningClick={() => this.onWarningClick(wallet)} onAddressClick={() => this.onAddressClick(wallet)} />);
+    let setting = local.get(APP.SETTING);
+    setting = setting ? setting.wallet : false;
+    return this.state.listMainWalletBalance.map(wallet => <WalletItem key={Math.random()} settingWallet={setting} wallet={wallet} onMoreClick={() => this.onMoreClick(wallet)} onWarningClick={() => this.onWarningClick(wallet)} onAddressClick={() => this.onAddressClick(wallet)} />);
   }
 
   get listTokenWalletBalance() {
@@ -737,7 +783,9 @@ class Wallet extends React.Component {
   }
 
   get listTestWalletBalance() {
-    return this.state.listTestWalletBalance.map(wallet => <WalletItem key={Math.random()} wallet={wallet} onMoreClick={() => this.onMoreClick(wallet)} onWarningClick={() => this.onWarningClick(wallet)} onAddressClick={() => this.onAddressClick(wallet)} />);
+    let setting = local.get(APP.SETTING);
+    setting = setting ? setting.wallet : false;
+    return this.state.listTestWalletBalance.map(wallet => <WalletItem key={Math.random()} settingWallet={setting} wallet={wallet} onMoreClick={() => this.onMoreClick(wallet)} onWarningClick={() => this.onWarningClick(wallet)} onAddressClick={() => this.onAddressClick(wallet)} />);
   }
 
   get listRewardWalletBalance() {
@@ -764,18 +812,28 @@ class Wallet extends React.Component {
     this.setState({input12PhraseValue: "", walletKeyDefaultToCreate: 1});
   }
 
+  closeHistory = () => {
+    this.setState({activeSetting: false});
+    this.setState({ transactions: [], isHistory: false });
+  }
+
   successTransfer = () => {
     this.modalSendRef.close();
     this.autoCheckBalance(this.state.walletSelected.address, this.state.inputAddressAmountValue);
   }
 
+  closeQrCode=() => {
+    this.setState({ qrCodeOpen: false });
+  }
+
+  closeSetting = ()  => {
+    this.setState({activeSetting: false});
+    this.getSetting();
+  }
+
   successReceive = () => {
     this.modalShareAddressRef.close();
     this.autoCheckBalance(this.state.walletSelected.address, this.state.inputAddressAmountValue);
-  }
-
-  closeHistory = () => {
-    this.setState({ transactions: [], isHistory: false });
   }
 
   onCopyProtected = () => {
@@ -822,10 +880,6 @@ class Wallet extends React.Component {
     console.log('error wc', err);
   }
 
-  oncloseQrCode=() => {
-    this.setState({ qrCodeOpen: false });
-  }
-
   openQrcode = () => {
     this.setState({ qrCodeOpen: true });
     this.modalScanQrCodeRef.open();
@@ -841,7 +895,7 @@ class Wallet extends React.Component {
 
   renderScanQRCode = () => {
     const { messages } = this.props.intl;
-    <Modal onClose={() => this.oncloseQrCode()} title={messages.wallet.action.scan_qrcode.header} onRef={modal => this.modalScanQrCodeRef = modal}>
+    <Modal onClose={() => this.closeQrCode()} title={messages.wallet.action.scan_qrcode.header} onRef={modal => this.modalScanQrCodeRef = modal}>
       {this.state.qrCodeOpen ?
         <QrReader
           delay={this.state.delay}
@@ -902,7 +956,13 @@ class Wallet extends React.Component {
 
 
           <Modal title={messages.wallet.action.transfer.header} onRef={modal => this.modalSendRef = modal}  onClose={this.closeTransfer}>
-            <TransferCoin active={this.state.activeTransfer} wallet={this.state.walletSelected} onFinish={() => { this.successTransfer() }} />
+            <TransferCoin
+              active={this.state.activeTransfer}
+              wallet={this.state.walletSelected}
+              onFinish={() => { this.successTransfer() }}
+              currency={this.state.alternateCurrency}
+              rate={this.state.alternateCurrencyRate}
+            />
           </Modal>
 
           {/* <Modal title="Buy coins" onRef={modal => this.modalFillRef = modal}>
@@ -933,10 +993,19 @@ class Wallet extends React.Component {
             <RestoreWallet />
           </Modal>
 
+          {/* Modal for Setting wallets : */}
+          <Modal title={messages.wallet.action.setting.header} onRef={modal => this.modalSettingRef = modal} onClose={this.closeSetting}>
+            <SettingWallet active={this.state.activeSetting}  />
+          </Modal>
 
           {/* Modal for Copy address : */}
           <Modal title={messages.wallet.action.receive.title} onRef={modal => this.modalShareAddressRef = modal} onClose={()=> {this.setState({activeReceive: false})}}>
-            <ReceiveCoin active={this.state.activeReceive} wallet={this.state.walletSelected} onFinish={() => { this.successReceive() }} />
+            <ReceiveCoin active={this.state.activeReceive}
+              wallet={this.state.walletSelected}
+              currency={this.state.alternateCurrency}
+              rate={this.state.alternateCurrencyRate}
+              onFinish={() => { this.successReceive() }}
+            />
           </Modal>
 
           {/* Modal for Create/Import wallet : */}
@@ -988,7 +1057,7 @@ class Wallet extends React.Component {
 
           {/* QR code dialog */}
           {/* {this.renderScanQRCode()} */}
-          <Modal onClose={() => this.oncloseQrCode()} title={messages.wallet.action.scan_qrcode.header} onRef={modal => this.modalScanQrCodeRef = modal}>
+          <Modal onClose={() => this.closeQrCode()} title={messages.wallet.action.scan_qrcode.header} onRef={modal => this.modalScanQrCodeRef = modal}>
             {this.state.qrCodeOpen ?
               <QrReader
                 delay={this.state.delay}
