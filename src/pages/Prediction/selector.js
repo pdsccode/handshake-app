@@ -20,8 +20,13 @@ export const eventSelector = (state) => {
 export const countReportSelector = (state) => {
   const { countReport = {} } = state.ui;
   const { count } = countReport;
-  //console.log('countReportSelector','count:', count );
   return count || 0;
+};
+
+export const isSharePage = (state) => {
+  const queryString = queryStringSelector(state);
+  const urlParams = qs.parse(queryString.slice(1));
+  return !!urlParams.match;
 };
 
 export const isLoading = (state) => {
