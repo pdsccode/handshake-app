@@ -292,7 +292,7 @@ class Component extends React.Component {
           // if (isUpdate) {
           rfChange(nameFormExchangeCreate, 'customizePriceBuy', item.buyPercentage * 100);
           rfChange(nameFormExchangeCreate, 'customizePriceSell', item.sellPercentage * 100);
-          this.setState({ buyBalance: item.buyBalance, sellBalance: item.sellBalance });
+          this.setState({ buyBalance: item.buyAmount, sellBalance: item.sellAmount });
           // }
 
           break;

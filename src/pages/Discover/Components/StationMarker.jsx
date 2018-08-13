@@ -20,6 +20,7 @@ import { showAlert } from '@/reducers/app/action';
 import { shakeOfferItem } from '@/reducers/exchange/action';
 import { getErrorMessageFromCode } from '@/components/handshakes/exchange/utils';
 import PropTypes from 'prop-types';
+import Offer from '@/models/Offer';
 
 const ICONS = {
   [CRYPTO_CURRENCY.ETH]: iconEthereum,
@@ -151,12 +152,12 @@ class StationMarker extends React.Component {
   handleShakeOfferItemSuccess = async (responseData) => {
     console.log('handleShakeOfferItemSuccess', responseData);
 
-    // const { data } = responseData;
-    // const offerShake = Offer.offer(data);
-    // const {
-    //   currency, type, amount, totalAmount, systemAddress, offChainId, status,
-    // } = offerShake;
-    // const { offer } = this;
+    const { data } = responseData;
+    const offerShake = Offer.offer(data);
+    const {
+      currency, type, amount, totalAmount, systemAddress, offChainId, status,
+    } = offerShake;
+    const { offer } = this;
 
     // if (currency === CRYPTO_CURRENCY.ETH) {
     //   if (type === EXCHANGE_ACTION.BUY) { // shop buy
@@ -183,7 +184,7 @@ class StationMarker extends React.Component {
     //   }
     // }
 
-    // this.trackingLocation(offer.id, offerShake.id, status);
+    this.trackingLocation(offer.id, offerShake.id, status);
     this.hideLoading();
     const message = <FormattedMessage id="shakeOfferItemSuccessMassage" />;
 

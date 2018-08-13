@@ -85,11 +85,11 @@ class FeedMeOfferStoreContainer extends React.PureComponent {
     const {
       buyBalance, sellBalance, buyAmount, sellAmount, status,
     } = item;
-    const statusValue = HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[status];
-    if (statusValue === HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CREATED) {
-      return !(buyAmount > 0 || sellAmount > 0);
-    }
-    return !(buyBalance > 0 || sellBalance > 0);
+    // const statusValue = HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[status];
+    // if (statusValue === HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CREATED) {
+    //   return !(buyAmount > 0 || sellAmount > 0);
+    // }
+    return !(buyAmount > 0 || sellAmount > 0);
   }
 
   getCoinList = () => {
@@ -105,8 +105,10 @@ class FeedMeOfferStoreContainer extends React.PureComponent {
         } = item;
         const { priceBuy: priceBuyValue, priceSell: priceSellValue } = this.getPrices(currency);
         const statusValue = HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[status];
-        const amountBuy = statusValue === HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CREATED ? buyAmount : buyBalance;
-        const amountSell = statusValue === HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CREATED ? sellAmount : sellBalance;
+        // const amountBuy = statusValue === HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CREATED ? buyAmount : buyBalance;
+        // const amountSell = statusValue === HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS.CREATED ? sellAmount : sellBalance;
+        const amountBuy = buyAmount;
+        const amountSell = sellAmount;
 
         const coin = {};
 
