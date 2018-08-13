@@ -1,5 +1,5 @@
 import React from 'react';
-import { withScriptjs, withGoogleMap, GoogleMap } from 'react-google-maps';
+import { GoogleMap, withGoogleMap, withScriptjs } from 'react-google-maps';
 
 import StationMarker from './StationMarker';
 import './Map.scss';
@@ -7,7 +7,7 @@ import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 
 import iconCurrentLocation from '@/assets/images/icon/current-location.svg';
-import OfferShop from "../../../models/OfferShop";
+import OfferShop from '@/models/OfferShop';
 
 
 class Map extends React.Component {
@@ -21,10 +21,20 @@ class Map extends React.Component {
       zoomLevel: 6,
     };
   }
+  componentDidMount() {
+    const { ipInfo } = this.props;
+
+    this.setAddressFromLatLng(ipInfo?.latitude, ipInfo?.longitude); // fallback
+  }
+
+  setAddressFromLatLng = (lat, lng) => {
+    this.setState({ center: { lat, lng } }, () => {
+    });
+  }
 
   handleGoToCurrentLocation = () => {
-    const { lat, lng } = this.props;
-    this.setState({ center: { lat, lng }, zoomLevel: 15 });
+    const { ipInfo } = this.props;
+    this.setState({ center: { lat: ipInfo?.latitude, lng: ipInfo?.longitude }, zoomLevel: 15 });
   }
 
   isEmptyBalance = (item) => {
@@ -41,7 +51,9 @@ class Map extends React.Component {
   }
 
   render() {
-    const { isMarkerShown, onMarkerClick, stations, actionActive, currencyActive, onFeedClick, modalRef, setLoading } = this.props;
+    const {
+      isMarkerShown, onMarkerClick, stations, actionActive, currencyActive, onFeedClick, modalRef, setLoading, history,
+    } = this.props;
     const { center, zoomLevel } = this.state;
 
     return (
@@ -57,18 +69,19 @@ class Map extends React.Component {
 
             if (!allowRender) {
               return null;
-            } else {
+            }
               return (
-                <StationMarker key={id} {...rest}
-                               actionActive={actionActive}
-                               currencyActive={currencyActive}
-                               onFeedClick={extraData => onFeedClick(station, extraData)}
-                               offer={offer}
-                               modalRef={modalRef}
-                               setLoading={setLoading}
+                <StationMarker
+                  key={id}
+                  {...rest}
+                  actionActive={actionActive}
+                  currencyActive={currencyActive}
+                  onFeedClick={extraData => onFeedClick(station, extraData)}
+                  offer={offer}
+                  modalRef={modalRef}
+                  setLoading={setLoading}
                 />
               );
-            }
           })
         }
         <button className="btn-current-location" onClick={this.handleGoToCurrentLocation}>
@@ -80,6 +93,7 @@ class Map extends React.Component {
 }
 
 const mapState = state => ({
+  ipInfo: state.app.ipInfo,
 });
 
 const mapDispatch = dispatch => ({
