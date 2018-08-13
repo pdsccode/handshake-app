@@ -81,8 +81,7 @@ class SettingWallet extends React.Component {
 
       //cryptoAddress
       if(this.state.cryptoAddress < 0){
-        let cryptoAddress = setting && setting.wallet && setting.wallet.cryptoAddress == undefined
-          ? 1 : setting.wallet.cryptoAddress;
+        let cryptoAddress = !setting || !setting.wallet || !setting.wallet.cryptoAddress ? 1 : setting.wallet.cryptoAddress;
         this.setState({cryptoAddress: cryptoAddress});
       }
     }
