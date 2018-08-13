@@ -385,7 +385,7 @@ export default {
   'landing_page.recruiting.applyNow.label.submit': 'Submit',
   'landing_page.recruiting.applyNow.label.connectToLinkedIn': 'Connect with Ninja LinkedIn',
   'landing_page.recruiting.applyNow.label.thankYou': 'Thank you for your application!',
-  'landing_page.recruiting.applyNow.label.weReview': 'We\'ll review your application and contact you for an interview within 3 days if your skills are a match.',
+  'landing_page.recruiting.applyNow.label.weReview': 'We\'ll review your application and contact you for an interview within 3 days if your skills are qualified.',
   'landing_page.recruiting.referFriend.title': 'Refer a friend',
   'landing_page.recruiting.referFriend.label.yourPhone': 'Your phone',
   'landing_page.recruiting.referFriend.label.yourEmail': 'Your email',
@@ -395,7 +395,7 @@ export default {
   'landing_page.recruiting.referFriend.placeholder.saySomething': 'Say something about your friend (optional)...',
   'landing_page.recruiting.referFriend.label.uploadCV': 'Upload your friend\'s CV',
   'landing_page.recruiting.referFriend.label.thankYou': 'Thank you for referral!',
-  'landing_page.recruiting.referFriend.label.weReview': 'We\'ll review your friend\'s CV and contact him/her for an interview within 3 days if your skills are a match.',
+  'landing_page.recruiting.referFriend.label.weReview': 'We\'ll review your friend\'s CV and contact him/her for an interview within 3 days if your skills are qualified.',
 
 
   'landing_page.products.cash.title': 'Cash',
@@ -439,11 +439,26 @@ export default {
   'landing_page.cash.btnSubmitEmail': 'Go',
   'landing_page.cash.joinTelegram': `Join the dojo on <a href="https://t.me/ninjacash" class="landing-link">Telegram</a>`,
   'landing_page.cash.whitepaper': `Read more about <a href="https://medium.com/@ninja_org/introducing-ninja-cash-b0d51a9f4e1b" class="landing-link">Cash</a>`,
-  // 'landing_page.cash.cta1': 'Trade now on your phone',
-  // 'landing_page.cash.cta1_url': 'https://ninja.org/cash',
+  'landing_page.cash.youtubeVideoId': 'xCU5puuwros',
+
+  'landing_page.cash-for-business.breadcrumb': 'CRYPTO ATM',
+  'landing_page.cash-for-business.heading': 'A user friendly ATM for Bitcoin, Ethereum, and Litecoin',
+  'landing_page.cash-for-business.subHeading':
+    `<ul>
+      <li>Flexible investment: no fixed term contracts</li>
+      <li>Beat the banks: super low transaction fees</li>
+      <li>Take charge: You set your profit margins</li>
+    </ul>`,
+  'landing_page.cash-for-business.textEmail': `To start trading, please open <a href="https://ninja.org/cash">ninja.org/cash</a> on your mobile browser.`,
+  'landing_page.cash-for-business.label.sendLinkToEmail': `Send link to your email:`,
+  'landing_page.cash-for-business.btnSubmitEmail': 'Go',
+  // 'landing_page.cash-for-business.cta1': 'GET STARTED for FREE',
+  // 'landing_page.cash-for-business.cta1_url': 'https://ninja.org/cash',
   // 'landing_page.cash.cta2': 'Get free gifts',
   // 'landing_page.cash.cta2_url': 'https://t.me/ninjacash',
-  'landing_page.cash.youtubeVideoId': 'xCU5puuwros',
+  'landing_page.cash-for-business.joinTelegram': `Join the dojo on <a href="https://t.me/ninjacash" class="landing-link">Telegram</a>`,
+  'landing_page.cash-for-business.whitepaper': `Read more about <a href="https://medium.com/@ninja_org/introducing-ninja-cash-b0d51a9f4e1b" class="landing-link">Cash</a>`,
+  'landing_page.cash-for-business.youtubeVideoId': 'xCU5puuwros',
 
   'landing_page.prediction.breadcrumb': 'Prediction',
   'landing_page.prediction.heading': 'Bet on anything against anyone, anywhere. Guaranteed payout. Your odds. 100% anonymous.',

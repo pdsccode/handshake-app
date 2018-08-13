@@ -8,10 +8,11 @@ import LuckyReal from '@/components/handshakes/betting/LuckyPool/LuckyReal/Lucky
 import LuckyLanding from '@/pages/LuckyLanding/LuckyLanding';
 import GA from '@/services/googleAnalytics';
 import LuckyFree from '@/components/handshakes/betting/LuckyPool/LuckyFree/LuckyFree';
-import { eventSelector, isLoading, showedLuckyPoolSelector, countReportSelector } from './selector';
-import { loadMatches, updateShowedLuckyPool, getReportCount } from './action';
-import { API_URL } from '@/constants';
 import ReportPopup from '@/components/handshakes/betting/Feed/ReportPopup';
+
+import { URL } from '@/constants';
+import { eventSelector, isLoading, showedLuckyPoolSelector, isSharePage, countReportSelector } from './selector';
+import { loadMatches, updateShowedLuckyPool, getReportCount } from './action';
 import EventItem from './EventItem';
 
 import './Prediction.scss';
@@ -21,6 +22,7 @@ class Prediction extends React.Component {
   static propTypes = {
     eventList: PropTypes.array,
     showedLuckyPool: PropTypes.bool,
+    isSharePage: PropTypes.bool,
     dispatch: PropTypes.func.isRequired,
     countReport: PropTypes.number,
   };
@@ -173,15 +175,23 @@ class Prediction extends React.Component {
     );
   }
 
+  renderViewAllEvent = (props) => {
+    if (!props.isSharePage) return null;
+    return (
+      <a href={URL.HANDSHAKE_PREDICTION} onClick="location.reload()" className="ViewAllEvent">
+        View All Events
+      </a>
+    );
+  }
+
   renderComponent = (props, state) => {
-    //console.log('countReport', props.countReport);
     return (
       <div className={Prediction.displayName}>
         <Loading isLoading={props.isLoading} />
         {/* {this.renderShareToWin()} */}
         {this.renderEventList(props)}
         {this.renderBetMode(props, state)}
-        {/*this.renderLucky*/}
+        {this.renderViewAllEvent(props, state)}
         <ModalDialog onRef={(modal) => { this.modalLuckyReal = modal; }}>
           <LuckyReal onButtonClick={() => this.modalLuckyReal.close() } />
         </ModalDialog>
@@ -209,6 +219,7 @@ export default connect(
     return {
       countReport: countReportSelector(state),
       eventList: eventSelector(state),
+      isSharePage: isSharePage(state),
       isLoading: isLoading(state),
       showedLuckyPool: showedLuckyPoolSelector(state),
     };
