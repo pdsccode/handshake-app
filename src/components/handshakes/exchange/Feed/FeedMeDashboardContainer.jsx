@@ -157,23 +157,23 @@ class FeedMeOfferStoreContainer extends React.PureComponent {
 
     this.props.showLoading();
 
-    if (currency === CRYPTO_CURRENCY.ETH) {
-      if (sellBalance > 0 && freeStart === '') {
-        const wallet = MasterWallet.getWalletDefault(currency);
-        const balance = await wallet.getBalance();
-        const fee = await wallet.getFee();
-
-        if (!this.checkMainNetDefaultWallet(wallet)) {
-          this.props.hideLoading();
-          return;
-        }
-
-        if (this.showNotEnoughCoinAlert(balance, 0, fee, currency)) {
-          this.props.hideLoading();
-          return;
-        }
-      }
-    }
+    // if (currency === CRYPTO_CURRENCY.ETH) {
+    //   if (sellBalance > 0 && freeStart === '') {
+    //     const wallet = MasterWallet.getWalletDefault(currency);
+    //     const balance = await wallet.getBalance();
+    //     const fee = await wallet.getFee();
+    //
+    //     if (!this.checkMainNetDefaultWallet(wallet)) {
+    //       this.props.hideLoading();
+    //       return;
+    //     }
+    //
+    //     if (this.showNotEnoughCoinAlert(balance, 0, fee, currency)) {
+    //       this.props.hideLoading();
+    //       return;
+    //     }
+    //   }
+    // }
 
     this.props.deleteOfferItem({
       PATH_URL: `${API_URL.EXCHANGE.OFFER_STORES}/${offer.id}`,
@@ -197,32 +197,32 @@ class FeedMeOfferStoreContainer extends React.PureComponent {
     // Update status to redux
     this.responseExchangeDataChange(offerStore);
 
-    for (const item of Object.values(offerStore.items)) {
-      if (currency === item.currency) {
-        if (currency === CRYPTO_CURRENCY.ETH) {
-          if (sellBalance > 0 && freeStart === '' && item.status !== 'closed') {
-            try {
-              const wallet = MasterWallet.getWalletDefault(currency);
-
-              const cashHandshake = new ExchangeCashHandshake(wallet.chainId);
-
-              let result = null;
-
-              result = await cashHandshake.closeByStationOwner(data.hid, data.id);
-
-              console.log('handleDeleteOfferItemSuccess', result);
-
-              this.trackingOnchain(offer.id, '', result.hash, item.status, '', currency);
-            } catch (e) {
-              this.trackingOnchain(offer.id, '', '', item.status, e.toString(), currency);
-              console.log('handleDeleteOfferItemSuccess', e.toString());
-            }
-          }
-        }
-
-        break;
-      }
-    }
+    // for (const item of Object.values(offerStore.items)) {
+    //   if (currency === item.currency) {
+    //     if (currency === CRYPTO_CURRENCY.ETH) {
+    //       if (sellBalance > 0 && freeStart === '' && item.status !== 'closed') {
+    //         try {
+    //           const wallet = MasterWallet.getWalletDefault(currency);
+    //
+    //           const cashHandshake = new ExchangeCashHandshake(wallet.chainId);
+    //
+    //           let result = null;
+    //
+    //           result = await cashHandshake.closeByStationOwner(data.hid, data.id);
+    //
+    //           console.log('handleDeleteOfferItemSuccess', result);
+    //
+    //           this.trackingOnchain(offer.id, '', result.hash, item.status, '', currency);
+    //         } catch (e) {
+    //           this.trackingOnchain(offer.id, '', '', item.status, e.toString(), currency);
+    //           console.log('handleDeleteOfferItemSuccess', e.toString());
+    //         }
+    //       }
+    //     }
+    //
+    //     break;
+    //   }
+    // }
 
     this.props.hideLoading();
     const message = <FormattedMessage id="deleteOfferItemSuccessMassage" values={{ }} />;
