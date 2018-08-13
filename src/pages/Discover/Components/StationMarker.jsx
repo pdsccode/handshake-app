@@ -1,14 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import { API_URL, CRYPTO_CURRENCY, EXCHANGE_ACTION, EXCHANGE_ACTION_NAME, HANDSHAKE_ID } from '@/constants';
+import { API_URL, CRYPTO_CURRENCY, EXCHANGE_ACTION, EXCHANGE_ACTION_NAME, HANDSHAKE_ID, URL } from '@/constants';
 import { Marker } from 'react-google-maps';
 import InfoBox from 'react-google-maps/lib/components/addons/InfoBox';
 import StarsRating from '@/components/core/presentation/StarsRating';
 
 import iconCustomMarker from '@/assets/images/icon/custom-marker.svg';
 import './StationMarker.scss';
-import { formatMoneyByLocale, getOfferPrice } from '@/services/offer-util';
+import { formatMoneyByLocale, getLatLongHash, getOfferPrice } from '@/services/offer-util';
 import ShakeDetail, { nameFormShakeDetail } from '@/components/handshakes/exchange/components/ShakeDetail';
 import { change, clearFields } from 'redux-form';
 import { bindActionCreators } from 'redux';
@@ -16,11 +16,12 @@ import { bindActionCreators } from 'redux';
 import iconBitcoin from '@/assets/images/icon/coin/btc.svg';
 import iconEthereum from '@/assets/images/icon/coin/eth.svg';
 import { MasterWallet } from '@/services/Wallets/MasterWallet';
-import { showAlert } from '@/reducers/app/action';
-import { shakeOfferItem } from '@/reducers/exchange/action';
+import { getUserLocation, showAlert } from '@/reducers/app/action';
+import { shakeOfferItem, trackingLocation } from '@/reducers/exchange/action';
 import { getErrorMessageFromCode } from '@/components/handshakes/exchange/utils';
 import PropTypes from 'prop-types';
 import Offer from '@/models/Offer';
+import history from '@/services/history';
 
 const ICONS = {
   [CRYPTO_CURRENCY.ETH]: iconEthereum,
@@ -193,7 +194,7 @@ class StationMarker extends React.Component {
       timeOut: 2000,
       type: 'success',
       callBack: () => {
-        this.props.history.push(`${URL.HANDSHAKE_ME}?id=${HANDSHAKE_ID.EXCHANGE}`);
+        history.push(`${URL.HANDSHAKE_ME}?id=${HANDSHAKE_ID.EXCHANGE}`);
       },
     });
   }
@@ -220,6 +221,24 @@ class StationMarker extends React.Component {
 
   hideLoading = () => {
     this.props.setLoading(false);
+  }
+
+  trackingLocation = (offerStoreId, offerStoreShakeId, action) => {
+    const { trackingLocation, getUserLocation } = this.props;
+    getUserLocation({
+      successFn: (ipInfo) => {
+        const data = {
+          data: getLatLongHash(ipInfo?.locationMethod, ipInfo.latitude, ipInfo.longitude),
+          ip: ipInfo?.ip,
+          action,
+        };
+        trackingLocation({
+          PATH_URL: `exchange/offer-stores/${offerStoreId}/shakes/${offerStoreShakeId}/7tHCLp8XpajPJaVh`,
+          METHOD: 'POST',
+          data,
+        });
+      },
+    });
   }
 
   render() {
@@ -313,6 +332,8 @@ const mapDispatch = dispatch => ({
   clearFields: bindActionCreators(clearFields, dispatch),
   showAlert: bindActionCreators(showAlert, dispatch),
   shakeOfferItem: bindActionCreators(shakeOfferItem, dispatch),
+  trackingLocation: bindActionCreators(trackingLocation, dispatch),
+  getUserLocation: bindActionCreators(getUserLocation, dispatch),
 });
 
 export default injectIntl(connect(mapState, mapDispatch)(StationMarker));
