@@ -75,7 +75,7 @@ class WalletItem extends React.Component {
 }
 
 WalletItem.propTypes = {
-  settingWallet: PropTypes.object,
+  settingWallet: PropTypes.any,
   wallet: PropTypes.object,
   onMoreClick: PropTypes.func,
   onWarningClick: PropTypes.func,
