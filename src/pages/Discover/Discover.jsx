@@ -342,16 +342,6 @@ class DiscoverPage extends React.Component {
         <div className={`discover-overlay ${this.state.isLoading ? 'show' : ''}`}>
           <Image src={loadingSVG} alt="loading" width="100" />
         </div>
-        <div>
-          {!this.state.isBannedCash && !this.props.firebaseApp.config?.maintainChild?.exchange && this.getMap()}
-          {
-            this.state.isBannedCash
-              ? (
-                <BlockCountry />
-              )
-              : this.props.firebaseApp.config?.maintainChild?.exchange ? <Maintain /> : null
-          }
-        </div>
         <Grid className="discover">
           <React.Fragment>
             <div>
@@ -365,10 +355,20 @@ class DiscoverPage extends React.Component {
               </div>
             </div>
           </React.Fragment>
-          <Row className="info">
-            {messages.product_info}
-          </Row>
         </Grid>
+        <div>
+          {!this.state.isBannedCash && !this.props.firebaseApp.config?.maintainChild?.exchange && this.getMap()}
+          {
+            this.state.isBannedCash
+              ? (
+                <BlockCountry />
+              )
+              : this.props.firebaseApp.config?.maintainChild?.exchange ? <Maintain /> : null
+          }
+        </div>
+        <div className="info">
+          {messages.product_info}
+        </div>
         <ModalDialog onRef={(modal) => { this.modalRef = modal; return null; }} {...propsModal}>
           {modalContent}
         </ModalDialog>

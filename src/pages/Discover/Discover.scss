@@ -82,11 +82,6 @@
   .faq-block {
     margin-top: rem-calc(15px);
   }
-  .info {
-    padding: rem-calc(15px);
-    font-size: 13px;
-    font-size: $light;
-  }
 
   .ex-sticky-note {
     font-size: 14px;
@@ -108,6 +103,12 @@
       color: white;
     }
   }
+}
+
+.info {
+  padding: rem-calc(15px);
+  font-size: 13px;
+  font-size: $light;
 }
 
 //.discover-overlay {
