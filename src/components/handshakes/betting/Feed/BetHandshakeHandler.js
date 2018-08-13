@@ -138,6 +138,7 @@ export class BetHandshakeHandler {
         logJson = error.message;
         this.rollback(offchain);
       }
+      console.log('Hash:', hash);
       GA.createBetMatchedSuccess({ side, odds, amount, hash });
     } catch (e) {
 

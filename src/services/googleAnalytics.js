@@ -411,11 +411,13 @@ class GoogleAnalyticsService {
    * @param odds
    * @param amount
    */
-  createBetMatchedSuccess({ side, odds, amount, txHash }) {
+  createBetMatchedSuccess({ side, odds, amount, hash }) {
+    console.log('Hash:', hash);
+
     const params = {
       category: EVENT_CATEGORY.ORDER_BOOK,
       action: EVENT_ACTION.CREATE_BET_MATCHED_SUCCESS,
-      label: `${BETTING_SIDE_NAME[side]} - Odds: ${odds} - Amount: ${amount}-${txHash}`,
+      label: `${BETTING_SIDE_NAME[side]} - Odds: ${odds} - Amount: ${amount}-${hash}`,
     };
     console.log(TAG, 'createBetMatchedSuccess', params);
     try {
