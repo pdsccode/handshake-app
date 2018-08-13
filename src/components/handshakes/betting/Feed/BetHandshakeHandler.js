@@ -287,12 +287,12 @@ export class BetHandshakeHandler {
     return result;
   }
 
-  async dispute(hid, offchain) {
+  async dispute(hid, offchain, contractName, contractAddress) {
 
     const chainId = getChainIdDefaultWallet();
 
     const bettinghandshake = new BettingHandshake(chainId);
-    const { contractAddress } = bettinghandshake;
+    bettinghandshake.updateContract(contractAddress, contractName);
 
     let logJson = '';
     let realBlockHash = '';
@@ -450,7 +450,7 @@ export class BetHandshakeHandler {
     let realBlockHash = '';
     let result = null;
     try {
-      result = await bettinghandshake.report(hid, outcomeId, offchain);
+      result = await bettinghandshake.report(hid, side, offchain);
       const {
         hash, payload,
       } = result;
