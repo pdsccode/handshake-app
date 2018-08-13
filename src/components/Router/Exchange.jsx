@@ -11,7 +11,7 @@ const Exchange = props => (<DynamicImport loading={Loading} load={() => import('
 const Page404 = props => (<DynamicImport isNotFound loading={Loading} load={() => import('@/pages/Error/Page404')}>{Component => <Component {...props} />}</DynamicImport>);
 
 const routerMap = [
-  { path: URL.HANDSHAKE_CASH, render: (props) => <Exchange {...props} /> },
+  { path: URL.HANDSHAKE_CASH, component: Exchange },
   { path: URL.HANDSHAKE_PREDICTION, component: Exchange },
   { path: URL.HANDSHAKE_EXCHANGE, component: Exchange },
   { path: URL.HANDSHAKE_PEX, component: Exchange },

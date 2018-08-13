@@ -24,7 +24,7 @@ class Map extends React.Component {
 
   handleGoToCurrentLocation = () => {
     const { lat, lng } = this.props;
-    this.setState({ center: { lat, lng }, zoomLevel: 18 });
+    this.setState({ center: { lat, lng }, zoomLevel: 15 });
   }
 
   isEmptyBalance = (item) => {
