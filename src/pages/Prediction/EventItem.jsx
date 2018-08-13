@@ -71,7 +71,7 @@ function renderOutcomeList({ event, onClickOutcome }) {
   );
 }
 
-function EventItem(props) {
+function renderShareSocial(props) {
   const { id } = props.event;
   const socialList = [
     {
@@ -87,6 +87,10 @@ function EventItem(props) {
     },
   ];
   const shareURL = `${window.location.origin}${URL.HANDSHAKE_PEX}?match=${id}`;
+  return (<ShareSocial title="Ninja" shareUrl={shareURL} socialList={socialList} />);
+}
+
+function EventItem(props) {
   return (
     <div className="EventItem">
       {renderEventName(props)}
@@ -98,7 +102,7 @@ function EventItem(props) {
           {renderEventTotalBets(props)}
         </div>
         {/* {renderEventMessages(event)} */}
-        <ShareSocial title="Ninja" shareUrl={shareURL} socialList={socialList} />
+        {renderShareSocial(props)}
       </div>
     </div>
   );
