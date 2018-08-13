@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { injectIntl } from 'react-intl';
-import { CRYPTO_CURRENCY, EXCHANGE_ACTION, EXCHANGE_ACTION_NAME } from '@/constants';
+import { FormattedMessage, injectIntl } from 'react-intl';
+import { API_URL, CRYPTO_CURRENCY, EXCHANGE_ACTION, EXCHANGE_ACTION_NAME, HANDSHAKE_ID } from '@/constants';
 import { Marker } from 'react-google-maps';
 import InfoBox from 'react-google-maps/lib/components/addons/InfoBox';
 import StarsRating from '@/components/core/presentation/StarsRating';
@@ -15,6 +15,11 @@ import { bindActionCreators } from 'redux';
 
 import iconBitcoin from '@/assets/images/icon/coin/btc.svg';
 import iconEthereum from '@/assets/images/icon/coin/eth.svg';
+import { MasterWallet } from '@/services/Wallets/MasterWallet';
+import { showAlert } from '@/reducers/app/action';
+import { shakeOfferItem } from '@/reducers/exchange/action';
+import { getErrorMessageFromCode } from '@/components/handshakes/exchange/utils';
+import PropTypes from 'prop-types';
 
 const ICONS = {
   [CRYPTO_CURRENCY.ETH]: iconEthereum,
@@ -22,6 +27,10 @@ const ICONS = {
 };
 
 class StationMarker extends React.Component {
+  static propTypes = {
+    setLoading: PropTypes.func.isRequired,
+  };
+
   constructor(props) {
     super(props);
 
@@ -89,6 +98,127 @@ class StationMarker extends React.Component {
         this.props.clearFields(nameFormShakeDetail, false, false, 'amount', 'amountFiat');
       }, 100);
     });
+  }
+
+  shakeOfferItem = async (values) => {
+    console.log('shakeOfferItem', values);
+    this.props.modalRef.close();
+
+    const { authProfile } = this.props;
+    const { offer } = this;
+
+    this.showLoading();
+
+    const shopType = values.type === EXCHANGE_ACTION.BUY ? EXCHANGE_ACTION.SELL : EXCHANGE_ACTION.BUY;
+
+    const wallet = MasterWallet.getWalletDefault(values.currency);
+    //
+    // if (!this.checkMainNetDefaultWallet(wallet)) {
+    //   this.hideLoading();
+    //   return;
+    // }
+
+    // if (shopType === EXCHANGE_ACTION.BUY) { // shop buy
+    //   const balance = await wallet.getBalance();
+    //   const fee = await wallet.getFee(NB_BLOCKS, true);
+    //   if (this.showNotEnoughCoinAlert(balance, values.amount, fee, values.currency)) {
+    //     this.hideLoading();
+    //     return;
+    //   }
+    // }
+
+    const offerItem = {
+      type: shopType,
+      currency: values.currency,
+      amount: values.amount.toString(),
+      username: authProfile?.name,
+      email: authProfile?.email,
+      contact_phone: authProfile?.phone,
+      contact_info: authProfile?.address,
+      user_address: wallet.address,
+      chat_username: authProfile?.username,
+    };
+
+    this.props.shakeOfferItem({
+      PATH_URL: `${API_URL.EXCHANGE.OFFER_STORES}/${offer.id}/${API_URL.EXCHANGE.SHAKES}`,
+      METHOD: 'POST',
+      data: offerItem,
+      successFn: this.handleShakeOfferItemSuccess,
+      errorFn: this.handleShakeOfferItemFailed,
+    });
+  }
+
+  handleShakeOfferItemSuccess = async (responseData) => {
+    console.log('handleShakeOfferItemSuccess', responseData);
+
+    // const { data } = responseData;
+    // const offerShake = Offer.offer(data);
+    // const {
+    //   currency, type, amount, totalAmount, systemAddress, offChainId, status,
+    // } = offerShake;
+    // const { offer } = this;
+
+    // if (currency === CRYPTO_CURRENCY.ETH) {
+    //   if (type === EXCHANGE_ACTION.BUY) { // shop buy
+    //     // const amount = totalAmount;
+    //     try {
+    //       const wallet = MasterWallet.getWalletDefault(currency);
+    //       const cashHandshake = new ExchangeCashHandshake(wallet.chainId);
+    //       const result = await cashHandshake.initByCustomer(offer.items.ETH.userAddress, amount, offChainId);
+    //
+    //       console.log('handleShakeOfferSuccess', result);
+    //
+    //       this.trackingOnchain(offer.id, offerShake.id, result.hash, status, '', currency);
+    //     } catch (e) {
+    //       this.trackingOnchain(offer.id, offerShake.id, '', status, e.toString(), currency);
+    //       console.log('handleShakeOfferSuccess', e.toString());
+    //     }
+    //   }
+    // } else if (currency === CRYPTO_CURRENCY.BTC) {
+    //   if (type === EXCHANGE_ACTION.BUY) {
+    //     const wallet = MasterWallet.getWalletDefault(currency);
+    //     wallet.transfer(systemAddress, amount, NB_BLOCKS).then((success) => {
+    //       console.log('transfer', success);
+    //     });
+    //   }
+    // }
+
+    // this.trackingLocation(offer.id, offerShake.id, status);
+    this.hideLoading();
+    const message = <FormattedMessage id="shakeOfferItemSuccessMassage" />;
+
+    this.props.showAlert({
+      message: <div className="text-center">{message}</div>,
+      timeOut: 2000,
+      type: 'success',
+      callBack: () => {
+        this.props.history.push(`${URL.HANDSHAKE_ME}?id=${HANDSHAKE_ID.EXCHANGE}`);
+      },
+    });
+  }
+
+  handleShakeOfferItemFailed = (e) => {
+    this.handleActionFailed(e);
+  }
+
+  handleActionFailed = (e) => {
+    this.hideLoading();
+    // console.log('e', e);
+    this.props.showAlert({
+      message: <div className="text-center">{getErrorMessageFromCode(e)}</div>,
+      timeOut: 3000,
+      type: 'danger',
+      callBack: () => {
+      },
+    });
+  }
+
+  showLoading = () => {
+    this.props.setLoading(true);
+  }
+
+  hideLoading = () => {
+    this.props.setLoading(false);
   }
 
   render() {
@@ -180,6 +310,8 @@ const mapState = state => ({
 const mapDispatch = dispatch => ({
   rfChange: bindActionCreators(change, dispatch),
   clearFields: bindActionCreators(clearFields, dispatch),
+  showAlert: bindActionCreators(showAlert, dispatch),
+  shakeOfferItem: bindActionCreators(shakeOfferItem, dispatch),
 });
 
 export default injectIntl(connect(mapState, mapDispatch)(StationMarker));
