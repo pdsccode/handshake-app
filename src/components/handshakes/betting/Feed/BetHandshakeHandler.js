@@ -450,7 +450,7 @@ export class BetHandshakeHandler {
     let realBlockHash = '';
     let result = null;
     try {
-      result = await bettinghandshake.report(hid, outcomeId, offchain);
+      result = await bettinghandshake.report(hid, side, offchain);
       const {
         hash, payload,
       } = result;
