@@ -44,6 +44,7 @@ const LandingPageMain = createDynamicImport(() => import('@/pages/LandingPage/Ma
 const ProjectDetail = createDynamicImport(() => import('@/components/ProjectDetail'), Loading);
 const Recruiting = createDynamicImport(() => import('@/pages/Recruiting'), Loading);
 const JobDetail = createDynamicImport(() => import('@/pages/Recruiting/JobDetail'), Loading);
+const ContentForCashBusiness = createDynamicImport(() => import('@/pages/LandingPage/ContentForCashBusiness'), Loading);
 const Discover = createDynamicImport(() => import('@/pages/Discover/Discover'), Loading);
 
 
@@ -52,16 +53,15 @@ const configRoutesUsingMobileLayout = [
   { path: URL.HANDSHAKE_ME, component: RouterMe },
   { path: URL.HANDSHAKE_PREDICTION, component: RouterExchange },
   { path: URL.HANDSHAKE_EXCHANGE, component: RouterExchange },
-  { path: URL.HANDSHAKE_CASH, component: RouterDiscover },
   // { path: URL.HANDSHAKE_DISCOVER, component: RouterDiscover },
-  // { path: URL.HANDSHAKE_CASH, component: RouterExchange }, // Cash on mobile uses a completely different layout!
+  { path: URL.HANDSHAKE_CASH, component: RouterExchange },
   { path: URL.HANDSHAKE_CHAT, component: RouterChat },
   { path: URL.HANDSHAKE_WALLET, component: RouterWallet },
   { path: URL.HANDSHAKE_CREATE, component: RouterCreate },
   { path: URL.COMMENTS_BY_SHAKE, component: RouterComment },
   { path: URL.ADMIN, component: RouterAdmin },
   { path: URL.REPORT, component: RouterAdmin },
-  { path: URL.REPORT, component: RouterAdmin },
+  { path: URL.HANDSHAKE_PEX, component: RouterExchange },
   {
     path: URL.PRODUCT_DAD_URL,
     render: () => {
@@ -86,6 +86,7 @@ if (BrowserDetect.isDesktop) {
     { path: URL.LUCKY_POOL, component: RouterLuckyPool },
     { path: URL.PRODUCT_CASH_URL, render: () => <ProjectDetail type="product" name="cash" img={imgCash} imgContent={imgCashContent} /> },
     { path: URL.PRODUCT_PREDICTION_URL, render: () => <ProjectDetail type="product" name="prediction" img={imgPrediction} /> },
+    { path: URL.HANDSHAKE_PEX, render: () => <ProjectDetail type="product" name="prediction" img={imgPrediction} /> },
     { path: URL.PRODUCT_WALLET_URL, render: () => <ProjectDetail type="product" name="wallet" img={imgWallet} /> },
     { path: URL.PRODUCT_HIVEPAY_OFFLINE_URL, render: () => <ProjectDetail type="product" name="pay-for-stores" img={imgHivepayOffline} /> },
     { path: URL.PRODUCT_HIVEPAY_ONLINE_URL, render: () => <ProjectDetail type="product" name="pay-for-devs" img={imgHivepayOnline} /> },
@@ -144,6 +145,7 @@ class Router extends React.Component {
           <Route path={LANDING_PAGE_TYPE.research.url} render={() => <LandingPageMain type="research" />} />
           <Route exact path={URL.RECRUITING} component={Recruiting} />
           <Route path={URL.RECRUITING_JOB_DETAIL} component={JobDetail} />
+          <Route path={URL.CASH_FOR_BUSINESS} render={() => <ProjectDetail type="landing" name="cash-for-business" img={imgDad} imgContent1={imgDadContent} contentComponent={<ContentForCashBusiness />} />} />
           {routesUsingDesktopLayout}
 
           {/* Cash on mobile uses a completely different layout! */}

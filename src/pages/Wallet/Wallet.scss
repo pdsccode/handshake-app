@@ -70,10 +70,15 @@
     }
   }
   .more{
-    top: 12px;
-    right: 12px;
+    text-align: right;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    width: 30px;
+    top: 6px;
+    right: 2px;
     position: absolute;
     cursor: pointer;
+    display: table;
   }
   .safe{
     bottom: 13px;
