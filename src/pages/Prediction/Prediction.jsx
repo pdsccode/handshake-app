@@ -12,7 +12,7 @@ import ReportPopup from '@/components/handshakes/betting/Feed/ReportPopup';
 
 import { URL } from '@/constants';
 import { eventSelector, isLoading, showedLuckyPoolSelector, isSharePage, countReportSelector } from './selector';
-import { loadMatches, updateShowedLuckyPool, getReportCount } from './action';
+import { loadMatches, updateShowedLuckyPool, getReportCount, removeExpiredEvent } from './action';
 import EventItem from './EventItem';
 
 import './Prediction.scss';
@@ -44,8 +44,8 @@ class Prediction extends React.Component {
     this.props.dispatch(getReportCount());
   }
 
-  onCountdownComplete = () => {
-    this.props.dispatch(loadMatches({ cache: false }));
+  onCountdownComplete = (eventId) => {
+    this.props.dispatch(removeExpiredEvent({ eventId }));
     this.closeOrderPlace();
   }
 
@@ -108,7 +108,7 @@ class Prediction extends React.Component {
               key={event.id}
               event={event}
               onClickOutcome={this.handleClickEventItem}
-              onCountdownComplete={this.onCountdownComplete}
+              onCountdownComplete={() => this.onCountdownComplete(event.id)}
             />
           );
         })}
