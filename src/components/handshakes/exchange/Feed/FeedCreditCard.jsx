@@ -32,6 +32,7 @@ import { feedBackgroundColors } from '@/components/handshakes/exchange/config';
 import { formatMoney } from '@/services/offer-util';
 import { BigNumber } from 'bignumber.js';
 import axios from 'axios';
+import './FeedCreditCard.scss';
 
 const nameFormCreditCard = 'creditCard';
 const FormCreditCard = createForm({
@@ -501,7 +502,7 @@ class FeedCreditCard extends React.Component {
                 }
               </div>
             </Feed>
-            <Button block type="submit">{buttonTitle && buttonTitle || <FormattedMessage id="shakeNow" />} </Button>
+            <Button block type="submit" className="buy-button">{buttonTitle && buttonTitle || <FormattedMessage id="shakeNow" />} </Button>
           </FormCreditCard>
         </div>
         <ModalDialog onRef={modal => this.modalRef = modal}>
