@@ -21,7 +21,6 @@ const FormSubscribeEmail = createForm({
     form: nameFormSubscribeEmail,
   },
 });
-
 const selectorFormSubscribeEmail = formValueSelector(nameFormSubscribeEmail);
 
 class Index extends React.PureComponent {
