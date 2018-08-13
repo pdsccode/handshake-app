@@ -237,8 +237,11 @@ class FeedBetting extends React.Component {
     betHandshakeHandler.setItemOnChain(offchain, updateInfo);
     this.props.updateBettingChange(updateInfo);
 
-    betHandshakeHandler.cancelBet(hid, side, amount, odds, offchain, eventName, predictName, contractName, contractAddress);
-    this.uninitItemReal(offchain);
+    const result = await betHandshakeHandler.cancelBet(hid, side, amount, odds, offchain, eventName, predictName, contractName, contractAddress);
+    const { hash } = result;
+    if (hash) {
+      this.uninitItemReal(offchain);
+    }
   }
   async withdrawOnChain(offchain, hid) {
     const { itemInfo, eventName, predictName } = this.state;
@@ -248,8 +251,12 @@ class FeedBetting extends React.Component {
     betHandshakeHandler.setItemOnChain(offchain, updateInfo);
     this.props.updateBettingChange(updateInfo);
 
-    betHandshakeHandler.withdraw(hid, offchain, eventName, predictName, contractName, contractAddress);
-    this.collectReal(offchain);
+    const result = await betHandshakeHandler.withdraw(hid, offchain, eventName, predictName, contractName, contractAddress);
+    const { hash } = result;
+    if (hash) {
+      this.collectReal(offchain);
+
+    }
   }
   async refundOnChain(offchain, hid) {
     const { itemInfo, eventName, predictName } = this.state;
@@ -259,8 +266,11 @@ class FeedBetting extends React.Component {
     betHandshakeHandler.setItemOnChain(offchain, updateInfo);
     this.props.updateBettingChange(updateInfo);
 
-    betHandshakeHandler.refund(hid, offchain, eventName, predictName, contractName, contractAddress);
-    this.refundReal(offchain);
+    const result = await betHandshakeHandler.refund(hid, offchain, eventName, predictName, contractName, contractAddress);
+    const { hash } = result;
+    if (hash) {
+      this.refundReal(offchain);
+    }
 
     /*
     const { hash } = result;
@@ -273,19 +283,19 @@ class FeedBetting extends React.Component {
   }
   async disputeOnChain(offchain, hid) {
     const { itemInfo } = this.state;
-    const oldInfo = Object.assign({}, itemInfo);
+    const { contractName, contractAddress } = itemInfo;
     const updateInfo = Object.assign({}, itemInfo);
     updateInfo.status = BET_BLOCKCHAIN_STATUS.STATUS_DISPUTE_PENDING;
     betHandshakeHandler.setItemOnChain(offchain, updateInfo);
     this.props.updateBettingChange(updateInfo);
 
-    const result = await betHandshakeHandler.dispute(hid, offchain);
+    const result = await betHandshakeHandler.dispute(hid, offchain, contractName, contractAddress);
     const { hash } = result;
     if (hash) {
       this.disputeReal(offchain);
-    } else {
-      this.props.updateBettingChange(oldInfo);
+
     }
+
   }
 
   loadMyHandshakeList = () => {
