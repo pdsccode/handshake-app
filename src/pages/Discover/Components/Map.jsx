@@ -18,12 +18,13 @@ class Map extends React.Component {
 
     this.state = {
       center: { lat, lng },
+      zoomLevel: 6,
     };
   }
 
   handleGoToCurrentLocation = () => {
     const { lat, lng } = this.props;
-    this.setState({ center: { lat, lng } });
+    this.setState({ center: { lat, lng }, zoomLevel: 18 });
   }
 
   isEmptyBalance = (item) => {
@@ -41,11 +42,11 @@ class Map extends React.Component {
 
   render() {
     const { isMarkerShown, onMarkerClick, stations, actionActive, currencyActive, onFeedClick } = this.props;
-    const { center } = this.state;
+    const { center, zoomLevel } = this.state;
 
     return (
       <GoogleMap
-        defaultZoom={6}
+        zoom={zoomLevel}
         center={center}
       >
         {
