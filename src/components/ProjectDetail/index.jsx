@@ -175,7 +175,7 @@ class Index extends React.PureComponent {
             </div>
           </div>
           {imgContent && (
-            <div className="row">
+            <div className="row mt-5">
               <div className="col">
                 <img src={imgContent} className="w-100" />
               </div>
