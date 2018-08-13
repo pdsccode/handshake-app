@@ -41,7 +41,7 @@ class Map extends React.Component {
   }
 
   render() {
-    const { isMarkerShown, onMarkerClick, stations, actionActive, currencyActive, onFeedClick } = this.props;
+    const { isMarkerShown, onMarkerClick, stations, actionActive, currencyActive, onFeedClick, modalRef, setLoading } = this.props;
     const { center, zoomLevel } = this.state;
 
     return (
@@ -64,6 +64,8 @@ class Map extends React.Component {
                                currencyActive={currencyActive}
                                onFeedClick={extraData => onFeedClick(station, extraData)}
                                offer={offer}
+                               modalRef={modalRef}
+                               setLoading={setLoading}
                 />
               );
             }

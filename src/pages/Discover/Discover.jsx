@@ -323,6 +323,8 @@ class DiscoverPage extends React.Component {
           actionActive={actionActive}
           currencyActive={currencyActive}
           onFeedClick={(station, extraData) => this.clickFeedDetail(station, extraData)}
+          modalRef={this.modalRef}
+          setLoading={this.setLoading}
         />
       </div>
     );
