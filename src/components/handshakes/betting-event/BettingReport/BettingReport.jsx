@@ -262,14 +262,14 @@ class BettingReport extends React.Component {
       <div className="form-admin">
         <Form style={{ margin: '1em', WebkitAppearance: 'menulist' }}>
           <FormGroup disabled={this.state.disable}>
-            <Label for="matchSelect">Select Match</Label>
+            <Label for="matchSelect">Select Event</Label>
             <Input type="select" name="select" id="matchSelect" onChange={(event) => { this.onChangeEvent(event, 'selectedMatch'); }} disabled={this.state.disable}>
               {this.state.matches && this.state.matches.length > 0 && this.state.matches.map(item => <option key={item.id}>{item.name} id:{item.id}</option>)}
             </Input>
           </FormGroup>
           <Label for="outcomeSelect">Outcomes</Label><br />
           {/* <FormGroup id="outcomeSelect" onChange={(event) => { this.onChangeOutcome(event, 'selectedOutcome'); }} disabled={this.state.disable}> */}
-          {this.state.outcomes && this.state.outcomes.length > 0 && this.state.outcomes.map(item => (<Label check key={item.id} style={{}}>{`${item.name},id:${item.id}`}<br />
+          {this.state.outcomes && this.state.outcomes.length > 0 && this.state.outcomes.map(item => (<Label check key={item.id} style={{}}>{item.name}<br />
             {/* side: 1 (support), 2 (against), 3 (draw) */}
             <div className="result">
               <FormGroup check>
