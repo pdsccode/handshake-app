@@ -102,9 +102,12 @@ class FeedBetting extends React.Component {
 
   formatEventName(eventName) {
     let name = eventName || '';
+    name = `Event: ${name}`;
+    /*
     if (eventName.indexOf('Event') === -1) {
       name = `Event: ${name}`;
     }
+    */
     return name;
   }
 
