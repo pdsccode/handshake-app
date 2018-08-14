@@ -565,6 +565,7 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
     console.log('handleCompleteShakedOfferSuccess', responseData);
 
     // Update status to redux
+    offerShake.subStatus = 'transferring';
     this.responseExchangeDataChange(offerShake);
 
     let transferAmount = '';
@@ -812,12 +813,13 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
   // //////////////////////
 
   responseExchangeDataChange = (offerShake) => {
-    const { id, status } = offerShake;
+    const { id, status, subStatus } = offerShake;
     const data = {};
     const firebaseOffer = {};
 
     firebaseOffer.id = id;
     firebaseOffer.status = status;
+    firebaseOffer.sub_status = subStatus;
     firebaseOffer.type = 'offer_store_shake';
 
     data[`offer_store_shake_${id}`] = firebaseOffer;
@@ -830,6 +832,9 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
   getMessageMovingCoin = () => {
     const { status } = this.props;
     const { offer } = this;
+    const { subStatus } = offer;
+
+    console.log('getMessageMovingCoin', offer);
 
     let idMessage = '';
     let showClock = false;
@@ -921,9 +926,35 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
       }
       // case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.REJECTED:
       // case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.CANCELLED:
-      // case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.COMPLETED: {
-      //   break;
-      // }
+      case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.COMPLETED: {
+        if (subStatus === 'transferring') {
+          switch (this.userType) {
+            case HANDSHAKE_USER.NORMAL: {
+              break;
+            }
+            case HANDSHAKE_USER.OWNER: { // shop
+              if (offer.type === EXCHANGE_ACTION.BUY) { // shop buy
+                idMessage = 'ex.shop.explanation.completing';
+                showClock = true;
+              }
+              break;
+            }
+            case HANDSHAKE_USER.SHAKED: { // user shake
+              if (offer.type === EXCHANGE_ACTION.SELL) { // shop sell
+                idMessage = 'ex.shop.explanation.completing';
+                showClock = true;
+              }
+              break;
+            }
+            default: {
+              // code
+              break;
+            }
+          }
+        }
+
+        break;
+      }
       default: {
         // code
         break;
@@ -1028,6 +1059,7 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
 
     return (
       <div>
+        <div>{offer.id}</div>
         <FeedMeCash {...this.props} {...feedProps} />
         <Rate onRef={e => this.rateRef = e} startNum={5} onSubmit={this.handleSubmitRating} ratingOnClick={this.handleOnClickRating} />
       </div>

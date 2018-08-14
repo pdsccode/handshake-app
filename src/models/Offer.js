@@ -10,6 +10,7 @@ class Offer {
       fiatCurrency: data.fiat_currency || '',
       type: data.type || '',
       status: data.status || '',
+      subStatus: data.sub_status || '',
       uid: data.uid || '',
       username: data.username || '',
       toUid: data.to_uid || '',
