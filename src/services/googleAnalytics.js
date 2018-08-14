@@ -45,6 +45,8 @@ const EVENT_ACTION = {
   CLICK_ME_WITHDRAW_API_FAILED: 'Click me withdraw API failed',
   CLICK_ME_REFUND_API_SUCCESS: 'Click me refund API successful',
   CLICK_ME_REFUND_API_FAILED: 'Click me refund API failed',
+  CLICK_ME_DISPUTE_API_SUCCESS: 'Click me dispute API successful',
+  CLICK_ME_DISPUTE_API_FAILED: 'Click me dispute API failed',
 
 
   CLICK_GO_BUTTON: 'Click go button',
@@ -487,14 +489,14 @@ class GoogleAnalyticsService {
   }
 
   /**
-   *
+   * @param event
    * @param outcome
    */
-  createClickDispute(outcome) {
+  createClickDispute(outcome, txHash) {
     const params = {
       category: EVENT_CATEGORY.ME,
       action: EVENT_ACTION.CLICK_ME_DISPUTE_BUTTON,
-      label: `${outcome}`,
+      label: `${outcome}-${txHash}`,
     };
     console.log(TAG, 'createClickDispute', params);
 
@@ -554,7 +556,107 @@ class GoogleAnalyticsService {
       this.sendGAEvent(params);
     } catch (err) {}
   }
+  clickCancelAPISuccess(offchain) {
+    const params = {
+      category: EVENT_CATEGORY.ME,
+      action: EVENT_ACTION.CLICK_ME_CANCEL_API_SUCCESS,
+      label: `${offchain}`,
+    };
+    console.log(TAG, 'clickCancelAPISuccess', params);
 
+    try {
+      this.sendGAEvent(params);
+    } catch (err) {}
+  }
+
+  clickCancelAPIFailed(offchain, err) {
+    const params = {
+      category: EVENT_CATEGORY.ME,
+      action: EVENT_ACTION.CLICK_ME_CANCEL_API_FAILED,
+      label: `${offchain}-${err}`,
+    };
+    console.log(TAG, 'clickCancelAPIFailed', params);
+
+    try {
+      this.sendGAEvent(params);
+    } catch (err) {}
+  }
+
+  clickWithdrawAPISuccess(offchain) {
+    const params = {
+      category: EVENT_CATEGORY.ME,
+      action: EVENT_ACTION.CLICK_ME_WITHDRAW_API_SUCCESS,
+      label: `${offchain}`,
+    };
+    console.log(TAG, 'clickWithdrawAPISuccess', params);
+
+    try {
+      this.sendGAEvent(params);
+    } catch (err) {}
+  }
+
+  clickWithdrawAPIFailed(offchain, err) {
+    const params = {
+      category: EVENT_CATEGORY.ME,
+      action: EVENT_ACTION.CLICK_ME_WITHDRAW_API_FAILED,
+      label: `${offchain}-${err}`,
+    };
+    console.log(TAG, 'clickWithdrawAPIFailed', params);
+
+    try {
+      this.sendGAEvent(params);
+    } catch (err) {}
+  }
+
+  clickRefundAPISuccess(offchain) {
+    const params = {
+      category: EVENT_CATEGORY.ME,
+      action: EVENT_ACTION.CLICK_ME_REFUND_API_SUCCESS,
+      label: `${offchain}`,
+    };
+    console.log(TAG, 'clickRefundAPISuccess', params);
+
+    try {
+      this.sendGAEvent(params);
+    } catch (err) {}
+  }
+
+  clickRefundAPIFailed(offchain, err) {
+    const params = {
+      category: EVENT_CATEGORY.ME,
+      action: EVENT_ACTION.CLICK_ME_REFUND_API_FAILED,
+      label: `${offchain}-${err}`,
+    };
+    console.log(TAG, 'clickRefundAPIFailed', params);
+
+    try {
+      this.sendGAEvent(params);
+    } catch (err) {}
+  }
+  clickDisputeAPISuccess(offchain) {
+    const params = {
+      category: EVENT_CATEGORY.ME,
+      action: EVENT_ACTION.CLICK_ME_DISPUTE_API_SUCCESS,
+      label: `${offchain}`,
+    };
+    console.log(TAG, 'clickDisputeAPISuccess', params);
+
+    try {
+      this.sendGAEvent(params);
+    } catch (err) {}
+  }
+  clickDisputeAPIFailed(offchain, err) {
+    const params = {
+      category: EVENT_CATEGORY.ME,
+      action: EVENT_ACTION.CLICK_ME_DISPUTE_API_FAILED,
+      label: `${offchain}-${err}`,
+    };
+    console.log(TAG, 'clickDisputeAPIFailed', params);
+
+    try {
+      this.sendGAEvent(params);
+    } catch (err) {}
+  }
 
 }
 

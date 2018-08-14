@@ -276,7 +276,7 @@ export class BetHandshakeHandler {
       const {
         hash, payload,
       } = result;
-
+      GA.createClickRefund(eventName, outcome, hash);
       logJson = payload;
       realBlockHash = hash;
     } catch (err) {
@@ -288,7 +288,7 @@ export class BetHandshakeHandler {
     return result;
   }
 
-  async dispute(hid, offchain, contractName, contractAddress) {
+  async dispute(hid, offchain,outcome, contractName, contractAddress) {
 
     const chainId = getChainIdDefaultWallet();
 
@@ -303,7 +303,7 @@ export class BetHandshakeHandler {
       const {
         hash, payload,
       } = result;
-
+      GA.createClickDispute(outcome, hash);
       logJson = payload;
       realBlockHash = hash;
     } catch (err) {
