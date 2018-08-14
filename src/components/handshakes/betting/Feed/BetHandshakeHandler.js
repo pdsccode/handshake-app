@@ -310,7 +310,7 @@ export class BetHandshakeHandler {
       realBlockHash = '-1';
       logJson = err.message;
     }
-    this.saveTransaction(offchain, CONTRACT_METHOD.REFUND, chainId, realBlockHash, contractAddress, logJson);
+    this.saveTransaction(offchain, CONTRACT_METHOD.DISPUTE, chainId, realBlockHash, contractAddress, logJson);
 
     return result;
   }
