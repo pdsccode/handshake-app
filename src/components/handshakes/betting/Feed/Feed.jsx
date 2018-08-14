@@ -16,7 +16,7 @@ import { getStatusLabel } from '@/components/handshakes/betting/StatusAction.js'
 import {
   getMessageWithCode, getId,
   getBalance, getEstimateGas, foundShakeList, parseBigNumber,
-  formatAmount, findUserBet, parseJsonString
+  formatAmount,formatOdds, findUserBet, parseJsonString,
 } from '@/components/handshakes/betting/utils.js';
 
 // components
@@ -618,7 +618,7 @@ class FeedBetting extends React.Component {
     //totalAmount = 100;
 
     const progress = totalDisputeAmount / totalAmount * 100;
-    const pgText = `${formatAmount(totalDisputeAmount)} ETH of ${formatAmount(totalAmount)} ETH outcome pool`;
+    const pgText = `${formatAmount(totalDisputeAmount)} ETH of ${formatOdds(progress)}% outcome pool`;
     console.log(TAG, 'renderProgressBar', 'totalAmount:', totalAmount,'totalDisputeAmount:', totalDisputeAmount);
     console.log(TAG, 'renderProgressBar', 'totalAmount:', formatAmount(totalAmount),'totalDisputeAmount:', formatAmount(totalDisputeAmount));
 
