@@ -144,26 +144,37 @@ class CreateEventForm extends Component {
     );
   }
 
+  validateOutcomes = (value) => {
+    const lastIndex = value.length - 1;
+    const newItem = value[lastIndex];
+    const oldData = value.slice(0, lastIndex);
+    return oldData.every((i) => i.name !== newItem.name) ? undefined : 'Outcome already exists';
+  }
+
   renderOutComes = (props) => {
     const { fields, meta: { error }, isNew } = props;
-    const title = 'OUTCOME';
+    const allData = fields.getAll();
+    const lastIndex = allData.length - 1;
     return (
       <React.Fragment>
-        { this.renderGroupTitle(title) }
+        { this.renderGroupTitle('OUTCOME') }
         {
           fields.map((outcome, index) => {
+            const { id } = fields.get(index);
+            const isLastIndex = index === lastIndex;
+            const errCls = (error && isLastIndex) ? 'form-error' : '';
             return (
-              <div className="form-group-custom" key={`${outcome}.id`}>
+              <div className={`form-group-custom ${errCls}`} key={`${outcome}.id`}>
                 <Field
                   name={`${outcome}.name`}
                   type="text"
                   className="form-group"
                   fieldClass="form-control"
                   component={renderField}
-                  validate={[required]}
-                  disabled={!isNew && fields.get(index).id}
+                  // validate={[required]}
+                  disabled={!isNew && id}
                 />
-                {!fields.get(index).id && !!index &&
+                {!id && !!index &&
                 <button
                   type="button"
                   className="trash"
@@ -171,11 +182,11 @@ class CreateEventForm extends Component {
                 >
                   <img src={IconTrash} alt="" />
                 </button>}
+                {isLastIndex && error && <span className="ErrorMsg">{error}</span>}
               </div>
             );
           })
         }
-        {/*{error && <li className="ErrorMsg">{error}</li>}*/}
         <button
           className="AddMoreOutCome"
           type="button"
@@ -358,6 +369,7 @@ class CreateEventForm extends Component {
           <FieldArray
             name="outcomes"
             isNew={props.isNew}
+            validate={this.validateOutcomes}
             component={this.renderOutComes}
           />
         </div>
