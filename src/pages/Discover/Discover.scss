@@ -206,7 +206,10 @@
 }
 
 .map-container {
-  *, *::before, *::after {
+  img {
     box-sizing: content-box;
   }
+  //*, *::before, *::after {
+  //  box-sizing: content-box;
+  //}
 }
