@@ -25,6 +25,7 @@ export const APP = {
   isSupportedLanguages: ['en', 'zh', 'fr', 'de', 'ja', 'ko', 'ru', 'es'],
   CC_SOURCE: 'cc_source',
   CC_PRICE: 'cc_price',
+  CC_ADDRESS: 'cc_address',
 };
 
 export const UNSELECTED = 'UNSELECTED';

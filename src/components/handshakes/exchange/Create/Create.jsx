@@ -59,6 +59,8 @@ import { authUpdate, checkUsernameExist } from '@/reducers/auth/action';
 import OfferShop from '@/models/OfferShop';
 import { getErrorMessageFromCode } from '../utils';
 import PropTypes from 'prop-types';
+import FeedCreditCard from '@/components/handshakes/exchange/Feed/FeedCreditCard';
+import Modal from '@/components/core/controls/Modal';
 
 const nameFormExchangeCreate = 'exchangeCreate';
 const FormExchangeCreate = createForm({
@@ -105,6 +107,7 @@ class Component extends React.Component {
       enableAction: true,
       buyBalance: 0,
       sellBalance: 0,
+      modalFillContent: '',
     };
     // this.mainColor = _sample(feedBackgroundColors)
     this.mainColor = '#1F2B34';
@@ -356,6 +359,27 @@ class Component extends React.Component {
     // });
   }
 
+  buyCoinsUsingCreditCard = () => {
+    this.modalRef.close();
+    const { messages } = this.props.intl;
+    const { currency } = this.props;
+    const wallet = MasterWallet.getWalletDefault(currency);
+
+    this.setState({
+      modalFillContent:
+        (
+          <FeedCreditCard
+            buttonTitle={messages.create.cash.credit.title}
+            currencyForced={wallet ? wallet.name : ''}
+            callbackSuccess={this.afterWalletFill}
+            addressForced={wallet ? wallet.address : ''}
+          />
+        ),
+    }, () => {
+      this.modalFillRef.open();
+    });
+  }
+
   showNotEnoughCoinAlert = (balance, amountBuy, amountSell, fee, currency) => {
     console.log('showNotEnoughCoinAlert', balance, amountBuy, amountSell, fee, currency);
     const bnBalance = new BigNumber(balance);
@@ -368,15 +392,32 @@ class Component extends React.Component {
     const conditionSell = bnBalance.isLessThan(bnAmountSell.plus(bnFeeSell));
 
     if (conditionBuy || conditionSell) {
-      this.props.showAlert({
-        message: <div className="text-center">
-          <FormattedMessage id="notEnoughCoinInWalletStores" />
-        </div>,
-        timeOut: 5000,
-        type: 'danger',
-        callBack: () => {
-        },
+      this.setState({
+        modalContent:
+          (
+            <div className="py-2">
+              <Feed className="feed p-2" background="#259B24">
+                <div className="text-white d-flex align-items-center" style={{ minHeight: '50px' }}>
+                  <div><FormattedMessage id="notEnoughCoinInWalletStores" /></div>
+                </div>
+              </Feed>
+              <Button className="mt-2" block onClick={this.buyCoinsUsingCreditCard}><FormattedMessage id="ex.btn.OK" /></Button>
+              <Button block className="btn btn-secondary" onClick={() => this.modalRef.close()}><FormattedMessage id="ex.btn.notNow" /></Button>
+            </div>
+          ),
+      }, () => {
+        this.modalRef.open();
       });
+
+      // this.props.showAlert({
+      //   message: <div className="text-center">
+      //     <FormattedMessage id="notEnoughCoinInWalletStores" />
+      //   </div>,
+      //   timeOut: 5000,
+      //   type: 'danger',
+      //   callBack: () => {
+      //   },
+      // });
     }
 
     return conditionBuy || conditionSell;
@@ -457,17 +498,17 @@ class Component extends React.Component {
       return;
     }
 
-    // const balance = await wallet.getBalance();
-    // const fee = await wallet.getFee(NB_BLOCKS, true);
-    //
-    // if (freeStartInfo?.reward === '' || currency !== CRYPTO_CURRENCY.ETH || !isChooseFreeStart) {
-    //   const condition = this.showNotEnoughCoinAlert(balance, amountBuy, amountSell, fee, currency);
-    //
-    //   if (condition) {
-    //     this.hideLoading();
-    //     return;
-    //   }
-    // }
+    const balance = await wallet.getBalance();
+    const fee = await wallet.getFee(NB_BLOCKS, true);
+
+    if (freeStartInfo?.reward === '' || currency !== CRYPTO_CURRENCY.ETH || !isChooseFreeStart) {
+      const condition = this.showNotEnoughCoinAlert(balance, amountBuy, amountSell, fee, currency);
+
+      if (condition) {
+        this.hideLoading();
+        return;
+      }
+    }
 
     const phones = phone.trim().split('-');
     const phoneNew = phones.length > 1 && phones[1].length > 0 ? phone : '';
@@ -810,16 +851,19 @@ class Component extends React.Component {
     this.props.history.push(`${URL.HANDSHAKE_ME}?id=${HANDSHAKE_ID.EXCHANGE}&tab=dashboard`);
   }
 
+  afterWalletFill = () => {
+    this.modalFillRef.close();
+  }
+
   render() {
     const { messages } = this.props.intl;
     const {
       currency, listOfferPrice, stationCurrency, customizePriceBuy, customizePriceSell, amountBuy, amountSell, freeStartInfo, isChooseFreeStart,
     } = this.props;
     const {
-      isUpdate, enableAction, buyBalance, sellBalance,
+      isUpdate, enableAction, buyBalance, sellBalance, modalContent, modalFillContent,
     } = this.state;
     const fiatCurrency = stationCurrency?.id;
-    const modalContent = this.state.modalContent;
     // const allowInitiate = this.offer ? (!this.offer.itemFlags.ETH || !this.offer.itemFlags.BTC) : true;
 
     // let enableChooseFiatCurrency = true;
@@ -1101,6 +1145,9 @@ class Component extends React.Component {
         <ModalDialog onRef={modal => this.modalRef = modal}>
           {modalContent}
         </ModalDialog>
+        <Modal title={messages.create.cash.credit.title} onRef={modal => this.modalFillRef = modal}>
+          {modalFillContent}
+        </Modal>
       </div>
     );
   }
