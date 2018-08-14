@@ -49,7 +49,7 @@ export const HANDSHAKE_NAME = {
   // [HANDSHAKE_ID.SEED]: 'Seed',
   [HANDSHAKE_ID.WALLET_TRANSFER]: { name: 'Transfer coins', priority: 4 },
   [HANDSHAKE_ID.WALLET_RECEIVE]: { name: 'Receive coins', priority: 5 },
-  [HANDSHAKE_ID.EXCHANGE]: { name: 'Manage your station', priority: 6 },
+  [HANDSHAKE_ID.EXCHANGE]: { name: 'Manage your ATM', priority: 6 },
   // [HANDSHAKE_ID.EXCHANGE_LOCAL]: { name: 'Make swaps', priority: 7 },
   // UNSELECTED: { name: 'Create a prediction market', priority: 100 },
 };
