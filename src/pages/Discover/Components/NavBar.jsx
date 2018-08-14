@@ -40,8 +40,8 @@ class NavBar extends React.Component {
     return (
       <div className="cash-nav-bar">
         <FormFilterStation>
-          <button type="button" className="btn bg-transparent mr-2" onClick={() => console.log('clickmenu')}>☰</button>
-          <span className="mr-2">{messages.discover.feed.cash.menu.actionDescription}</span>
+          {/*<button type="button" className="btn bg-transparent mr-2" onClick={() => console.log('clickmenu')}>☰</button>*/}
+          <span className="mx-2">{messages.discover.feed.cash.menu.actionDescription}</span>
           <div className="d-inline-block mr-1">
             <Field
               name="type"
