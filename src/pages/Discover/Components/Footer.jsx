@@ -13,7 +13,7 @@ class Footer extends React.Component {
       <div className="cash-footer">
         <button className="btn btn-outline-primary">Wallet</button>
         &nbsp;
-        <button className="btn btn-primary">My station</button>
+        <button className="btn btn-primary">My ATM</button>
       </div>
     );
   }
