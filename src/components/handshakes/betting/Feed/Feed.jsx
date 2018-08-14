@@ -271,15 +271,6 @@ class FeedBetting extends React.Component {
     if (hash) {
       this.refundReal(offchain);
     }
-
-    /*
-    const { hash } = result;
-    if (hash) {
-      this.refundReal(offchain);
-    } else {
-      this.props.updateBettingChange(oldInfo);
-    }
-    */
   }
   async disputeOnChain(offchain, hid) {
     const { itemInfo } = this.state;
