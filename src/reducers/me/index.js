@@ -163,7 +163,7 @@ const meReducter = (
           let status = '';
           let { id } = offer;
           const handledHandshake = handshake;
-          const extraData = JSON.parse(handshake.extra_data);
+          const extraData = JSON.parse(handshake.extraData);
 
           if (offer.type === EXCHANGE_FEED_TYPE.INSTANT) {
             status = HANDSHAKE_EXCHANGE_CC_STATUS_VALUE[offer.status];
@@ -178,16 +178,13 @@ const meReducter = (
           //   status = HANDSHAKE_EXCHANGE_SHOP_OFFER_STATUS_VALUE[values[1]];
           }
 
-          // console.log('FIREBASE_EXCHANGE_DATA_CHANGE offer',offer);
-
           if (
             handledHandshake.id.includes(id) &&
-            (handledHandshake.status !== status || extraData.sub_status !== offer.sub_status)
+            (handledHandshake.status !== status || (extraData.sub_status !== offer.sub_status))
           ) {
-            // console.log('haha',);
             handledHandshake.status = status;
             extraData.sub_status = offer.sub_status;
-            handledHandshake.extra_data = JSON.stringify(extraData);
+            handledHandshake.extraData = JSON.stringify(extraData);
             handledHandshake.lastUpdateAt = Date.now() / 1000;
           }
           return handledHandshake;
@@ -249,7 +246,7 @@ const meReducter = (
           let status = '';
           const { id } = offer;
           const handledHandshake = handshake;
-          const extraData = JSON.parse(handshake.extra_data);
+          const extraData = JSON.parse(handshake.extraData);
 
           if (offer.type === EXCHANGE_FEED_TYPE.INSTANT) {
             status = HANDSHAKE_EXCHANGE_CC_STATUS_VALUE[offer.status];
@@ -260,16 +257,13 @@ const meReducter = (
               HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS_VALUE[offer.status];
           }
 
-          // console.log('RESPONSE_EXCHANGE_DATA_CHANGE offer',offer);
-
           if (
             handledHandshake.id.includes(id) &&
-            (handledHandshake.status !== status || extraData.sub_status !== offer.sub_status)
+            (handledHandshake.status !== status || (extraData.sub_status !== offer.sub_status))
           ) {
-            // console.log('hihi',);
             handledHandshake.status = status;
             extraData.sub_status = offer.sub_status;
-            handledHandshake.extra_data = JSON.stringify(extraData);
+            handledHandshake.extraData = JSON.stringify(extraData);
             handledHandshake.lastUpdateAt = Date.now() / 1000;
           }
           return handledHandshake;

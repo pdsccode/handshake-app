@@ -834,7 +834,7 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
     const { offer } = this;
     const { subStatus } = offer;
 
-    console.log('getMessageMovingCoin', offer);
+    // console.log('getMessageMovingCoin', offer);
 
     let idMessage = '';
     let showClock = false;
@@ -935,15 +935,15 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
             case HANDSHAKE_USER.OWNER: { // shop
               if (offer.type === EXCHANGE_ACTION.BUY) { // shop buy
                 idMessage = 'ex.shop.explanation.completing';
-                showClock = true;
               }
+              showClock = true;
               break;
             }
             case HANDSHAKE_USER.SHAKED: { // user shake
               if (offer.type === EXCHANGE_ACTION.SELL) { // shop sell
                 idMessage = 'ex.shop.explanation.completing';
-                showClock = true;
               }
+              showClock = true;
               break;
             }
             default: {
@@ -1059,7 +1059,6 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
 
     return (
       <div>
-        {/*<div>{offer.id}</div>*/}
         <FeedMeCash {...this.props} {...feedProps} />
         <Rate onRef={e => this.rateRef = e} startNum={5} onSubmit={this.handleSubmitRating} ratingOnClick={this.handleOnClickRating} />
       </div>
