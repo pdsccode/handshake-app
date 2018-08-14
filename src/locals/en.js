@@ -58,7 +58,7 @@ export default {
 
   createOfferStoreConfirm: 'Do you want to set up an offer to {intentMsg}?',
   updateOfferStoreConfirm: 'Update your ATM?',
-  notEnoughCoinInWalletStores: 'You don\'t have enough coin right now. Please top up your wallet.',
+  notEnoughCoinInWalletStores: 'You don\'t have enough coin right now. Do you want to topup your wallet now?',
   addOfferItemSuccessMassage: 'Success! Your order is now listed on Ninja',
   deleteOfferItemSuccessMassage: 'You have successfully deleted your order.',
   shakeOfferItemSuccessMassage: 'You have successfully shaked on Ninja',
@@ -898,6 +898,14 @@ export default {
             tradeNow: 'Now',
           },
         },
+
+      },
+    },
+  },
+  create: {
+    cash: {
+      credit: {
+        title: 'Buy coins',
       },
     },
   },

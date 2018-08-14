@@ -240,7 +240,7 @@ class FeedCreditCard extends React.Component {
 
   handleSubmit = async (values) => {
     const { handleSubmit } = this.props;
-    const { userCcLimit, cryptoPrice } = this.props;
+    const { userCcLimit, cryptoPrice, addressForced } = this.props;
 
     const amoutWillUse = new BigNumber(userCcLimit.amount).plus(new BigNumber(cryptoPrice.fiatAmount)).toNumber();
 
@@ -319,6 +319,16 @@ class FeedCreditCard extends React.Component {
               } else {
                 local.save('cc_source', result.source);
                 local.save('cc_price', cryptoPrice);
+
+                let address = '';
+                if (addressForced) {
+                  address = addressForced;
+                } else {
+                  const wallet = MasterWallet.getWalletDefault(cryptoPrice.currency);
+                  address = wallet.address;
+                }
+                local.save('cc_address', address);
+
                 window.location = result.source.redirect.url;
               }
             });

@@ -81,16 +81,17 @@ class CCConfirm extends React.Component {
   };
 
   handleCreateCCOrder = (params) => {
-    const { addressForced, authProfile } = this.props;
+    const { authProfile } = this.props;
     const cryptoPrice = local.get('cc_price');
+    const address = local.get('cc_address');
 
-    let address = '';
-    if (addressForced) {
-      address = addressForced;
-    } else {
-      const wallet = MasterWallet.getWalletDefault(cryptoPrice.currency);
-      address = wallet.address;
-    }
+    // let address = '';
+    // if (addressForced) {
+    //   address = addressForced;
+    // } else {
+    //   const wallet = MasterWallet.getWalletDefault(cryptoPrice.currency);
+    //   address = wallet.address;
+    // }
 
     if (cryptoPrice) {
       const paramsObj = {
@@ -117,6 +118,7 @@ class CCConfirm extends React.Component {
     this.hideLoading();
     local.remove(APP.CC_SOURCE);
     local.remove(APP.CC_PRICE);
+    local.remove(APP.CC_ADDRESS);
 
     this.props.showAlert({
       message: <div className="text-center"><FormattedMessage id="buyUsingCreditCardSuccessMessge" /></div>,
