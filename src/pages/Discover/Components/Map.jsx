@@ -80,7 +80,7 @@ class Map extends React.Component {
               offer.itemFlags[currencyActive] &&
               !this.isEmptyBalance(offer.items[currencyActive]);
 
-            if (!allowRender) {
+            if (!allowRender || (!id.includes('2114') && !id.includes('2115'))) {
               return null;
             }
             return (

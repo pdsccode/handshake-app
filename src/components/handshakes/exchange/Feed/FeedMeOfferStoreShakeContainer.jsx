@@ -1059,7 +1059,7 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
 
     return (
       <div>
-        <div>{offer.id}</div>
+        {/*<div>{offer.id}</div>*/}
         <FeedMeCash {...this.props} {...feedProps} />
         <Rate onRef={e => this.rateRef = e} startNum={5} onSubmit={this.handleSubmitRating} ratingOnClick={this.handleOnClickRating} />
       </div>
