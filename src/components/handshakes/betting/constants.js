@@ -55,6 +55,7 @@ export const CONTRACT_METHOD = {
   SHAKE: 'shake',
   CANCEL: 'uninit',
   REFUND: 'refund',
+  DISPUTE: 'dispute',
   COLLECT: 'collect',
   REPORT: 'report',
   CREATE_MARKET: 'createMarket',

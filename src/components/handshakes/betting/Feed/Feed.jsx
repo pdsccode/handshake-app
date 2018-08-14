@@ -102,9 +102,12 @@ class FeedBetting extends React.Component {
 
   formatEventName(eventName) {
     let name = eventName || '';
+    name = `Event: ${name}`;
+    /*
     if (eventName.indexOf('Event') === -1) {
       name = `Event: ${name}`;
     }
+    */
     return name;
   }
 
@@ -271,15 +274,6 @@ class FeedBetting extends React.Component {
     if (hash) {
       this.refundReal(offchain);
     }
-
-    /*
-    const { hash } = result;
-    if (hash) {
-      this.refundReal(offchain);
-    } else {
-      this.props.updateBettingChange(oldInfo);
-    }
-    */
   }
   async disputeOnChain(offchain, hid) {
     const { itemInfo } = this.state;
