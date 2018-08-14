@@ -4,11 +4,12 @@ import PropTypes from 'prop-types';
 import { reduxForm, Field, FieldArray } from 'redux-form';
 import IconPlus from '@/assets/images/icon/icon-plus.svg';
 import IconTrash from '@/assets/images/icon/icon-trash.svg';
-import Dropdown from '@/components/core/controls/Dropdown';
+import RangeSlider from '@/components/RangeSlider/RangeSlider';
+import AutoSuggestion from '@/components/AutoSuggestion/AutoSuggestion';
 import moment from 'moment';
 import DateTimePicker from '@/components/DateTimePicker/DateTimePicker';
 import { renderField } from './form';
-import { required, urlValidator, intValidator, smallerThan } from './validate';
+import { required, urlValidator } from './validate';
 import { createEvent } from './action';
 import ShareMarket from './ShareMarket';
 
@@ -85,16 +86,25 @@ class CreateEventForm extends Component {
     );
   }
 
-  buildEventSelectorData = (props) => {
-    return props.eventList.map((event) => {
-      return {
-        ...event,
-        value: event.name,
-      };
-    }).concat({
-      id: 0,
-      value: 'Create a new event',
-    }).sort((a, b) => a.id - b.id);
+  smallerThanReportingTime = (value) => {
+    const { reportingTime } = this.state;
+    if (!reportingTime || !this.props.isNew) return null;
+    const isValid = moment.unix(value + secStep).isSameOrBefore(moment.unix(reportingTime), 'minute');
+    return isValid ? null : `Closing time must be before Reporting Time at least ${minStep}min`;
+  }
+
+  smallerThanDisputeTime = (value) => {
+    const { disputeTime } = this.state;
+    if (!disputeTime || !this.props.isNew) return null;
+    const isValid = moment.unix(value + secStep).isSameOrBefore(moment.unix(disputeTime), 'minute');
+    return isValid ? null : `Reporting time must be before Dispute Time at least ${minStep}min`;
+  }
+
+  validateOutcomes = (value) => {
+    const lastIndex = value.length - 1;
+    const newItem = value[lastIndex];
+    const oldData = value.slice(0, lastIndex);
+    return oldData.every((i) => i.name !== newItem.name) ? undefined : 'Outcome already exists';
   }
 
   renderGroupTitle = (title) => {
@@ -105,51 +115,35 @@ class CreateEventForm extends Component {
     return (<div className="CreateEventFormGroupNote">{text}</div>);
   }
 
-  renderEventDropdownList = (props, state) => {
+  renderEventSuggest = (props) => {
     const title = 'EVENT';
-    const { shareEvent } = props;
-    if (shareEvent) return null;
-    return (
-      <React.Fragment>
-        {this.renderGroupTitle(title)}
-        <Dropdown
-          placeholder="Create a new event"
-          className="EventDropdown"
-          defaultId={state.selectedEvent}
-          source={this.buildEventSelectorData(props)}
-          onItemSelected={props.onSelectEvent}
-          hasSearch
-        />
-      </React.Fragment>
-    );
-  }
-
-  renderEvent = ({ isNew }) => {
-    if (!isNew) return null;
-    const title = 'CREATE AN EVENT';
     return (
       <React.Fragment>
         {this.renderGroupTitle(title)}
         <Field
           name="eventName"
-          type="text"
           className="form-group"
           fieldClass="form-control"
-          component={renderField}
-          placeholder="Event name"
-          validate={[required]}
+          onSelectEvent={props.onSelectEvent}
+          source={props.eventList}
+          validate={required}
+          component={this.renderAutoSuggestion}
         />
-        <Field name="eventId" type="hidden" component={renderField} />
       </React.Fragment>
     );
-  }
+  };
 
-  validateOutcomes = (value) => {
-    const lastIndex = value.length - 1;
-    const newItem = value[lastIndex];
-    const oldData = value.slice(0, lastIndex);
-    return oldData.every((i) => i.name !== newItem.name) ? undefined : 'Outcome already exists';
-  }
+  renderAutoSuggestion = (props) => {
+    return (
+      <AutoSuggestion
+        {...props}
+        name="eventName"
+        placeholder="Choose an Event or Create a new"
+        value={props.input.value}
+        onChange={props.input.onChange}
+      />
+    );
+  };
 
   renderOutComes = (props) => {
     const { fields, meta: { error }, isNew } = props;
@@ -201,22 +195,38 @@ class CreateEventForm extends Component {
   }
 
   renderFee = ({ isNew }) => {
-    const title = 'CREATOR FEE';
+    const title = 'MARKET CREATOR FEE';
     const textNote = 'The creator fee is a percentage of the total winnings of the market.';
+    const optionSlider = {
+      min: 0,
+      max: 99,
+      tooltip: false,
+      orientation: 'horizontal',
+    };
     return (
       <div className="CreateEventFormBlock">
         {this.renderGroupTitle(title)}
         <Field
           name="creatorFee"
           type="number"
-          className="form-group"
-          fieldClass="form-control"
-          component={renderField}
-          validate={[required, (n) => intValidator(n, 0, 100)]}
+          unit="%"
+          className="input-value"
           disabled={!isNew}
+          options={optionSlider}
+          component={this.renderRangleSlider}
         />
         {this.renderGroupNote(textNote)}
       </div>
+    );
+  }
+
+  renderRangleSlider = (props) => {
+    return (
+      <RangeSlider
+        {...props}
+        value={props.input.value}
+        onChange={props.input.onChange}
+      />
     );
   }
 
@@ -296,20 +306,6 @@ class CreateEventForm extends Component {
     );
   }
 
-  smallerThanReportingTime = (value) => {
-    const { reportingTime } = this.state;
-    if (!reportingTime || !this.props.isNew) return null;
-    const isValid = moment.unix(value + secStep).isSameOrBefore(moment.unix(reportingTime), 'minute');
-    return isValid ? null : `Closing time must be before Reporting Time at least ${minStep}min`;
-  }
-
-  smallerThanDisputeTime = (value) => {
-    const { disputeTime } = this.state;
-    if (!disputeTime || !this.props.isNew) return null;
-    const isValid = moment.unix(value + secStep).isSameOrBefore(moment.unix(disputeTime), 'minute');
-    return isValid ? null : `Reporting time must be before Dispute Time at least ${minStep}min`;
-  }
-
   renderTimeGroup = (props, state) => {
     const closingStartTime = moment().add(minStep, 'm').unix();
     return (
@@ -364,8 +360,7 @@ class CreateEventForm extends Component {
     return (
       <form className={cls} onSubmit={props.handleSubmit(this.onCreateNewEvent)}>
         <div className="CreateEventFormBlock">
-          {this.renderEventDropdownList(props, state)}
-          {this.renderEvent(props)}
+          {this.renderEventSuggest(props, state)}
           <FieldArray
             name="outcomes"
             isNew={props.isNew}
