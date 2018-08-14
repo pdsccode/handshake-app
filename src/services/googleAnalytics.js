@@ -35,9 +35,17 @@ const EVENT_ACTION = {
   CLICK_ME_CANCEL_BUTTON: 'Click me cancel button',
   CLICK_ME_WITHDRAW_BUTTON: 'Click me withdraw button',
   CLICK_ME_REFUND_BUTTON: 'Click me refund button',
+  CLICK_ME_DISPUTE_BUTTON: 'Click me dispute button',
   CLICK_FREE_CANCEL_BUTTON: 'Click free cancel button',
   CLICK_FREE_WITHDRAW_BUTTON: 'Click free withdraw button',
   CLICK_FREE_REFUND_BUTTON: 'Click free refund button',
+  CLICK_ME_CANCEL_API_SUCCESS: 'Click me cancel API successful',
+  CLICK_ME_CANCEL_API_FAILED: 'Click me cancel API failed',
+  CLICK_ME_WITHDRAW_API_SUCCESS: 'Click me withdraw API successful',
+  CLICK_ME_WITHDRAW_API_FAILED: 'Click me withdraw API failed',
+  CLICK_ME_REFUND_API_SUCCESS: 'Click me refund API successful',
+  CLICK_ME_REFUND_API_FAILED: 'Click me refund API failed',
+
 
   CLICK_GO_BUTTON: 'Click go button',
   CLICK_COMMENTS_BOX: 'Click comments box',
@@ -480,6 +488,23 @@ class GoogleAnalyticsService {
 
   /**
    *
+   * @param outcome
+   */
+  createClickDispute(outcome) {
+    const params = {
+      category: EVENT_CATEGORY.ME,
+      action: EVENT_ACTION.CLICK_ME_DISPUTE_BUTTON,
+      label: `${outcome}`,
+    };
+    console.log(TAG, 'createClickDispute', params);
+
+    try {
+      this.sendGAEvent(params);
+    } catch (err) {}
+  }
+
+  /**
+   *
    * @param event
    * @param outcome
    */
@@ -529,6 +554,8 @@ class GoogleAnalyticsService {
       this.sendGAEvent(params);
     } catch (err) {}
   }
+
+
 }
 
 export default new GoogleAnalyticsService();
