@@ -125,14 +125,18 @@ class SettingWallet extends React.Component {
   }
 
   listCryptoAddress = () => {
+    const { messages } = this.props.intl;
+
     return [
-      { id: 1, value: 'Show short address' },
-      { id: 2, value: 'Show shortest address' },
-      { id: 3, value: 'Hide address' }
+      { id: 1, value: messages.wallet.action.setting.label.short_address },
+      { id: 2, value: messages.wallet.action.setting.label.shortest_address },
+      { id: 3, value: messages.wallet.action.setting.label.hide_address }
     ];
   }
 
   onCurrenciesSelected = (item) =>{
+    const { messages } = this.props.intl;
+
     let setting = local.get(APP.SETTING);
     if(!setting)
       setting = {};
@@ -142,10 +146,12 @@ class SettingWallet extends React.Component {
 
     setting.wallet.alternateCurrency = item.id;
     local.save(APP.SETTING, setting);
-    this.showSuccess("Save alternate currency selected!")
+    this.showSuccess(messages.wallet.action.setting.success.save_alternative_currency);
   }
 
   onAddressSelected = (item) =>{
+    const { messages } = this.props.intl;
+
     let setting = local.get(APP.SETTING);
     if(!setting)
       setting = {};
@@ -155,10 +161,11 @@ class SettingWallet extends React.Component {
 
     setting.wallet.cryptoAddress = item.id;
     local.save(APP.SETTING, setting);
-    this.showSuccess("Save format crypto address seleted!")
+    this.showSuccess(messages.wallet.action.setting.success.save_crypto_address);
   }
 
   render() {
+    const { messages } = this.props.intl;
 
     return (
       <div>
@@ -167,9 +174,9 @@ class SettingWallet extends React.Component {
           <div className="bgBox">
 
             <div className ="dropdown-wallet-tranfer">
-              <p className="labelText">Alternative currency</p>
+              <p className="labelText">{messages.wallet.action.setting.label.alternative_currency}</p>
               <Dropdown
-                placeholder="Select alternative currency"
+                placeholder={messages.wallet.action.setting.label.select_alternative_currency}
                 defaultId={this.state.alternateCurrency}
                 source={this.state.currencies}
                 onItemSelected={this.onCurrenciesSelected}
@@ -178,9 +185,9 @@ class SettingWallet extends React.Component {
             </div>
 
             <div className ="dropdown-setting">
-              <p className="labelText">Cryptocurrency address</p>
+              <p className="labelText">{messages.wallet.action.setting.label.crypto_address}</p>
               <Dropdown
-                placeholder="Select cryptocurrency address"
+                placeholder={messages.wallet.action.setting.label.select_crypto_address}
                 defaultId={this.state.cryptoAddress}
                 source={this.listCryptoAddress()}
                 onItemSelected={this.onAddressSelected}

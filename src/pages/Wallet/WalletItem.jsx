@@ -1,4 +1,6 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import {injectIntl} from 'react-intl';
 import { Col } from 'react-bootstrap';
 import {Bitcoin} from '@/services/Wallets/Bitcoin.js';
 import {Ethereum} from '@/services/Wallets/Ethereum.js';
@@ -8,14 +10,15 @@ import iconWarning from '@/assets/images/icon/icon-warning.svg';
 import iconChecked from '@/assets/images/icon/icon-check-blue.svg';
 import iconQRCode from '@/assets/images/icon/icon-qr-code.svg';
 import bgCollectibles from '@/assets/images/pages/wallet/tokenerc721-mainnet.svg'
-
-import PropTypes from 'prop-types';
 import './Wallet.scss';
 
 class WalletItem extends React.Component {
+  static propTypes = {
+    intl: PropTypes.object.isRequired,
+  }
 
   getShortAddres(address){
-      return address.replace(address.substr(12, 27), '...');
+    return address.replace(address.substr(12, 27), '...');
   }
 
   get showCryptoAddress(){
@@ -36,11 +39,11 @@ class WalletItem extends React.Component {
   }
 
   get showIconSafe(){
-
+    const { messages } = this.props.intl;
     const {wallet, settingWallet, onWarningClick} =  this.props;
     let html;
     if(settingWallet && settingWallet.cryptoAddress == 3)
-      html = !wallet.protected ? <div className="warning" onClick={onWarningClick}>Need backup</div> : "";
+      html = !wallet.protected ? <div className="warning" onClick={onWarningClick}>{messages.wallet.action.protect.text.need_secure}</div> : "";
     else
       html = <img className="safe" src={wallet.protected ? iconSafe : iconWarning} onClick={onWarningClick}/>
 
@@ -81,4 +84,4 @@ WalletItem.propTypes = {
   onWarningClick: PropTypes.func,
   onAddressClick: PropTypes.func,
 };
-export default WalletItem;
+export default injectIntl(WalletItem);

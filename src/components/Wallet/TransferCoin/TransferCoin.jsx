@@ -87,7 +87,8 @@ class Transfer extends React.Component {
   }
 
   componentDidMount() {
-    this.props.clearFields(nameFormSendWallet, false, false, "to_address", "amountCoin");
+    this.props.clearFields(nameFormSendWallet, false, false, "to_address", "amountCoin", "amountMoney");
+
     if (this.props.amount){
       this.props.rfChange(nameFormSendWallet, 'amountCoin', this.props.amount);
     }
@@ -112,7 +113,7 @@ class Transfer extends React.Component {
 
       this.setState({active: this.props.active});
 
-      this.props.clearFields(nameFormSendWallet, false, false, "to_address", "amountCoin");
+      this.props.clearFields(nameFormSendWallet, false, false, "to_address", "amountCoin",  "amountMoney");
       if (this.props.amount){
         this.props.rfChange(nameFormSendWallet, 'amountCoin', this.props.amount);
       }
@@ -131,7 +132,7 @@ class Transfer extends React.Component {
   }
 
   resetForm(){
-    this.props.clearFields(nameFormSendWallet, false, false, "to_address", "amountCoin");
+    this.props.clearFields(nameFormSendWallet, false, false, "to_address", "amountCoin", "amountMoney");
   }
 
   showLoading = () => {

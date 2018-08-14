@@ -1025,6 +1025,17 @@ export default {
         header: 'Setting wallets',
         success: {
           restore: 'Your Wallet restore success',
+          save_alternative_currency: 'Save alternative currency selected!',
+          save_crypto_address: 'Save format crypto address seleted!'
+        },
+        label: {
+          alternative_currency: 'Alternative currency',
+          select_alternative_currency: 'Select alternative currency',
+          crypto_address: 'Cryptocurrency address',
+          select_crypto_address: 'Select cryptocurrency address',
+          short_address: 'Show short address',
+          shortest_address: 'Show shortest address',
+          hide_address: 'Hide address'
         },
         button: {
           restore: 'Restore now',
@@ -1060,6 +1071,7 @@ export default {
           step1_label: 'I understand that if I lose my passphrase, I lose access to my account.',
           step2_msg1: 'Record these words carefully. Don\'t email it or screenshot it.',
           step3_msg1: 'Tap to put these words in the correct order.',
+          need_secure: 'Need secure'
         },
         button: {
           continue: 'Continue',
