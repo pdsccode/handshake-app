@@ -252,6 +252,9 @@ class StationMarker extends React.Component {
     const price = this.getPrice();
     const maxVolume = this.getVolume();
     const { showAllDetails } = this.state;
+    const boxStyle = showAllDetails ? {} : {
+      width: '152px',
+    };
     return (
       <Marker
         defaultIcon={{ url: iconCustomMarker, scaledSize: { width: 40, height: 40 } }}
@@ -263,10 +266,11 @@ class StationMarker extends React.Component {
           options={{
             alignBottom: true,
             pane: 'floatPane',
-            pixelOffset: new google.maps.Size(-103, -46),
+            pixelOffset: showAllDetails ? new google.maps.Size(-86, -46) : new google.maps.Size(-73, -46),
             boxClass: 'stationInfoWrapper',
             boxStyle: {
               zIndex: showAllDetails ? 2 : 1,
+              ...boxStyle,
             },
             closeBoxURL: '',
             enableEventPropagation: true,
@@ -301,7 +305,7 @@ class StationMarker extends React.Component {
                   {initUserId !== authProfile?.id && (
                     <div className="mt-2">
                       <button
-                        className="btn btn-primary btn-block"
+                        className="btn btn-primary btn-block btn-sm"
                         onClick={this.handleOnShake}
                       >{EXCHANGE_ACTION_NAME[actionActive]}{` ${messages.discover.feed.cash.marker.label.tradeNow}`}
                       </button>
