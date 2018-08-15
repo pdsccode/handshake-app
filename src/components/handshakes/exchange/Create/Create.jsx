@@ -380,6 +380,12 @@ class Component extends React.Component {
     });
   }
 
+  cancelTopupNow = () => {
+    this.modalRef.close();
+
+    this.continueSaveOffer();
+  }
+
   showNotEnoughCoinAlert = (balance, amountBuy, amountSell, fee, currency) => {
     console.log('showNotEnoughCoinAlert', balance, amountBuy, amountSell, fee, currency);
     const bnBalance = new BigNumber(balance);
@@ -402,7 +408,7 @@ class Component extends React.Component {
                 </div>
               </Feed>
               <Button className="mt-2" block onClick={this.buyCoinsUsingCreditCard}><FormattedMessage id="ex.btn.OK" /></Button>
-              <Button block className="btn btn-secondary" onClick={() => this.modalRef.close()}><FormattedMessage id="ex.btn.notNow" /></Button>
+              <Button block className="btn btn-secondary" onClick={this.cancelTopupNow}><FormattedMessage id="ex.btn.notNow" /></Button>
             </div>
           ),
       }, () => {
@@ -479,14 +485,12 @@ class Component extends React.Component {
   }
 
   handleSubmit = async (values) => {
-    const {
-      authProfile, ipInfo, freeStartInfo, isChooseFreeStart,
-    } = this.props;
-    const { lat, lng, isUpdate } = this.state;
     console.log('handleSubmit', values);
     const {
-      currency, amountBuy, amountSell, customizePriceBuy,
-      customizePriceSell, nameShop, phone, address, stationCurrency,
+      freeStartInfo, isChooseFreeStart,
+    } = this.props;
+    const {
+      currency, amountBuy, amountSell,
     } = values;
 
     this.showLoading();
@@ -509,6 +513,21 @@ class Component extends React.Component {
         return;
       }
     }
+
+    this.continueSaveOffer();
+  }
+
+  continueSaveOffer = () => {
+    const {
+      authProfile, ipInfo, freeStartInfo, isChooseFreeStart,
+    } = this.props;
+    const { lat, lng, isUpdate } = this.state;
+    const {
+      currency, amountBuy, amountSell, customizePriceBuy,
+      customizePriceSell, phone, address, stationCurrency,
+    } = this.props;
+
+    const wallet = MasterWallet.getWalletDefault(currency);
 
     const phones = phone.trim().split('-');
     const phoneNew = phones.length > 1 && phones[1].length > 0 ? phone : '';
