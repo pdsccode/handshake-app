@@ -117,6 +117,7 @@ export default {
   'ex.btn.notNow': 'Not now',
   'ex.btn.topup.now': 'Top up now ',
   'ex.btn.create.atm': 'Create my ATM first ',
+  'ex.btn.update.atm': 'Update my ATM first ',
   'ex.label.buy': 'Buy',
   'ex.label.sell': 'Sell',
   'ex.label.bought': 'Bought',

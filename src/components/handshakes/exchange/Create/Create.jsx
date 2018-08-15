@@ -387,6 +387,7 @@ class Component extends React.Component {
   }
 
   showNotEnoughCoinAlert = (balance, amountBuy, amountSell, fee, currency) => {
+    const { isUpdate } = this.state;
     console.log('showNotEnoughCoinAlert', balance, amountBuy, amountSell, fee, currency);
     const bnBalance = new BigNumber(balance);
     const bnAmountBuy = new BigNumber(0);
@@ -408,7 +409,7 @@ class Component extends React.Component {
                 </div>
               </Feed>
               <Button className="mt-2" block onClick={this.buyCoinsUsingCreditCard}><FormattedMessage id="ex.btn.topup.now" /></Button>
-              <Button block className="btn btn-secondary" onClick={this.cancelTopupNow}><FormattedMessage id="ex.btn.create.atm" /></Button>
+              <Button block className="btn btn-secondary" onClick={this.cancelTopupNow}>{isUpdate ? <FormattedMessage id="ex.btn.update.atm" /> : <FormattedMessage id="ex.btn.create.atm" />}</Button>
             </div>
           ),
       }, () => {
