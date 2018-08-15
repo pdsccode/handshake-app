@@ -73,10 +73,10 @@ export default {
   movingCoinToEscrow: 'Moving your coin to escrow. This may take a few minutes.',
   movingCoinFromEscrow: 'Moving your coin from escrow. This may take a few minutes.',
   'ex.create.label.amountBuy': 'I want to buy',
-  'ex.create.label.amountBuy.update': 'New limit per buy',
+  'ex.create.label.amountBuy.update': 'New limit per purchase',
   'ex.create.label.amountSell': 'I want to sell',
   'ex.create.label.amountSell.update': 'New limit per sale',
-  'ex.create.label.currentBalance': 'Limit per sale',
+  'ex.create.label.currentBalance': 'Current limit',
   'ex.create.label.marketPrice': 'Current market price',
   'ex.create.label.premiumBuy': 'My price',
   'ex.create.label.premiumSell': 'My price',
@@ -194,7 +194,7 @@ export default {
   'ex.shop.dashboard.label.revenue': 'Bought/sold revenue',
   'ex.shop.dashboard.label.transaction.total': 'Total bought/sold',
 
-  'ex.shop.dashboard.button.updateInventory': 'Update inventory',
+  'ex.shop.dashboard.button.updateInventory': 'Update your ATM',
   'ex.shop.dashboard.label.trial': 'Trial',
 
   'ex.error.systemError': 'Sorry Ninja. Something went wrong. Come back soon.',
