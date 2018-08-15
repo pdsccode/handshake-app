@@ -8,7 +8,7 @@ import Loading from '@/components/Loading';
 import LuckyReal from '@/components/handshakes/betting/LuckyPool/LuckyReal/LuckyReal';
 import LuckyLanding from '@/pages/LuckyLanding/LuckyLanding';
 import { URL } from '@/constants';
-
+import FbPixel from '@/components/FbPixel/FbPixel';
 import GA from '@/services/googleAnalytics';
 import LuckyFree from '@/components/handshakes/betting/LuckyPool/LuckyFree/LuckyFree';
 
@@ -182,6 +182,7 @@ class Prediction extends React.Component {
   renderComponent = (props, state) => {
     return (
       <div className={Prediction.displayName}>
+        <FbPixel />
         <Loading isLoading={props.isLoading} />
         {/* {this.renderShareToWin()} */}
         {this.renderEventList(props)}
