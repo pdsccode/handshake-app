@@ -554,10 +554,10 @@ export class MasterWallet {
             const listWallet = [];
             wallets.forEach((walletJson) => {
               const wallet = MasterWallet.convertObject(walletJson);
-              if (wallet === false) {
-                throw BreakException;
+              if (wallet) {
+                listWallet.push(wallet);
+                //throw BreakException;
               }
-              listWallet.push(wallet);
             });
             MasterWallet.UpdateLocalStore(listWallet);
             if (auth_token !== false) {

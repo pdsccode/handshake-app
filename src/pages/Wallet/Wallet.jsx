@@ -316,8 +316,6 @@ class Wallet extends React.Component {
     }
   }
 
-  }
-
   getAllWallet() {
     return this.state.listMainWalletBalance.concat(this.state.listTestWalletBalance).concat(this.state.listRewardWalletBalance).concat(this.state.listTokenWalletBalance).concat(this.state.listCollectibleWalletBalance);
   }
