@@ -535,7 +535,6 @@ export class MasterWallet {
         let auth_token = false;
         let wallets = false;
         let chat_encryption_keypair = false;
-        let refers = false;
 
         if (jsonData !== false) {
           if (jsonData.hasOwnProperty('auth_token')) {
@@ -543,9 +542,6 @@ export class MasterWallet {
           }
           if (jsonData.hasOwnProperty('chat_encryption_keypair')) {
             chat_encryption_keypair = jsonData.chat_encryption_keypair;
-          }
-          if (jsonData.hasOwnProperty('refers')) {
-            refers = jsonData.refers;
           }
           if (jsonData.hasOwnProperty('wallets')) {
             wallets = jsonData.wallets;
@@ -569,9 +565,6 @@ export class MasterWallet {
             }
             if (chat_encryption_keypair !== false){
               localStore.save(APP.CHAT_ENCRYPTION_KEYPAIR, chat_encryption_keypair);
-            }
-            if (refers !== false){
-              localStore.save(APP.REFERS, refers);
             }
             return listWallet;
           }
