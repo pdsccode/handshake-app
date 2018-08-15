@@ -293,34 +293,35 @@ class Wallet extends React.Component {
   }
 
   async getSetting(){
-    console.log('setting');
-    let setting = local.get(APP.SETTING);
+    let setting = local.get(APP.SETTING), alternateCurrency = "USD";
 
     //alternate_currency
-    if(setting && setting.wallet && setting.wallet.alternateCurrency)
-      this.setState({alternateCurrency: setting.wallet.alternateCurrency});
-
-    //rate
-    try{
-      const response = await axios.get("https://bitpay.com/api/rates/btc");
-      if (response.status == 200 && response.data) {
-        let usd = 0, alt = 0;
-        response.data.map(e => {
-          if(e.code == "USD")
-            usd = e.rate;
-          else if(e.code == this.state.alternateCurrency)
-            alt = e.rate;
-        });
-
-        if(usd > 0 && alt > 0){
-          this.state.alternateCurrencyRate = Number(alt/usd);
-        }
-
-        console.log('usd', usd, this.state.alternateCurrency, alt, this.state.alternateCurrencyRate);
-      }
+    if(setting && setting.wallet && setting.wallet.alternateCurrency) {
+      alternateCurrency = setting.wallet.alternateCurrency;
     }
-    catch (error) {
-      return [];
+
+    if(alternateCurrency != "USD"){
+      this.setState({alternateCurrency: alternateCurrency});
+
+      //rate
+      try{
+        const response = await axios.get("https://bitpay.com/api/rates/btc");
+        if (response.status == 200 && response.data) {
+          let usd = 0, alt = 0;
+          response.data.map(e => {
+            if(e.code == "USD")
+              usd = e.rate;
+            else if(e.code == this.state.alternateCurrency)
+              alt = e.rate;
+          });
+
+          if(usd > 0 && alt > 0){
+            this.setState({alternateCurrencyRate: Number(alt/usd)});
+          }
+        }
+      }
+      catch (error) {
+      }
     }
   }
 
