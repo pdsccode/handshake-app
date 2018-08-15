@@ -798,7 +798,7 @@ export default {
       username: {
         exist: 'Alias already exists',
         success: 'Your alias has been recorded',
-        required: 'Alias required. ?',
+        required: 'Alias required',
       },
       verify: {
         alert: {
