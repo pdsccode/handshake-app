@@ -128,6 +128,7 @@ class FeedMe extends React.PureComponent {
   }
 
   showNotEnoughCoinAlert = (balance, amount, fee, currency) => {
+    const { buyCoinsUsingCreditCard } = this.props;
     const bnBalance = new BigNumber(balance);
     const bnAmount = new BigNumber(amount);
     const bnFee = new BigNumber(fee);
@@ -135,27 +136,49 @@ class FeedMe extends React.PureComponent {
     const condition = bnBalance.isLessThan(bnAmount.plus(bnFee));
 
     if (condition) {
-      this.props.showAlert({
-        message: (
-          <div className="text-center">
-            <FormattedMessage
-              id="notEnoughCoinInWallet"
-              values={{
-              amount: formatAmountCurrency(balance),
-              fee: formatAmountCurrency(fee),
-              currency,
-            }}
-            />
-          </div>
-        ),
-        timeOut: 3000,
-        type: 'danger',
-        callBack: () => {
-        },
+      this.hideLoading();
+      this.setState({
+        modalContent:
+          (
+            <div className="py-2">
+              <Feed className="feed p-2" background="#259B24">
+                <div className="text-white d-flex align-items-center" style={{ minHeight: '50px' }}>
+                  <div><FormattedMessage id="notEnoughCoinInWalletStores" /></div>
+                </div>
+              </Feed>
+              <Button className="mt-2" block onClick={buyCoinsUsingCreditCard}><FormattedMessage id="ex.btn.topup.now" /></Button>
+              <Button block className="btn btn-secondary" onClick={this.cancelTopupNow}><FormattedMessage id="ex.btn.notNow" /></Button>
+            </div>
+          ),
+      }, () => {
+        this.modalRef.open();
       });
+
+      // this.props.showAlert({
+      //   message: (
+      //     <div className="text-center">
+      //       <FormattedMessage
+      //         id="notEnoughCoinInWallet"
+      //         values={{
+      //         amount: formatAmountCurrency(balance),
+      //         fee: formatAmountCurrency(fee),
+      //         currency,
+      //       }}
+      //       />
+      //     </div>
+      //   ),
+      //   timeOut: 3000,
+      //   type: 'danger',
+      //   callBack: () => {
+      //   },
+      // });
     }
 
     return condition;
+  }
+
+  cancelTopupNow = () => {
+    this.modalRef.close();
   }
 
   getDisplayName = (isShop) => {

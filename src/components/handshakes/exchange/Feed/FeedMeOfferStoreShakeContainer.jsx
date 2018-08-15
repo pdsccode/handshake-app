@@ -41,6 +41,7 @@ import {
   trackingLocation,
 } from '@/reducers/exchange/action';
 import Rate from '@/components/core/controls/Rate/Rate';
+import { BigNumber } from 'bignumber.js';
 
 class FeedMeOfferStoreShakeContainer extends React.PureComponent {
   constructor(props) {
@@ -520,12 +521,12 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
     const { offer } = this;
     const { initUserId } = this.props;
     const {
-      id, currency, type, freeStart,
+      id, currency, type, freeStart, amount, totalAmount,
     } = offer;
 
     this.props.showLoading();
 
-    if (currency === CRYPTO_CURRENCY.ETH) {
+    // if (currency === CRYPTO_CURRENCY.ETH) {
       if ((type === EXCHANGE_ACTION.SELL && this.userType === HANDSHAKE_USER.OWNER && freeStart === '') ||
         (type === EXCHANGE_ACTION.BUY && this.userType === HANDSHAKE_USER.SHAKED)) {
         const wallet = MasterWallet.getWalletDefault(currency);
@@ -537,12 +538,14 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
           return;
         }
 
-        if (this.showNotEnoughCoinAlert(balance, 0, fee, currency)) {
+        let transferAmount = new BigNumber(amount).isLessThan(new BigNumber(totalAmount)) ? totalAmount : amount;
+
+        if (this.showNotEnoughCoinAlert(balance, transferAmount, 2 * fee, currency)) {
           this.props.hideLoading();
           return;
         }
       }
-    }
+    // }
 
     this.props.completeOfferItem({
       PATH_URL: `${API_URL.EXCHANGE.OFFER_STORES}/${initUserId}/${API_URL.EXCHANGE.SHAKES}/${id}/complete`,

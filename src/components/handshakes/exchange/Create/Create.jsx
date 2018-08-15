@@ -54,7 +54,7 @@ import {
   trackingOnchain,
   updateOfferStores,
 } from '@/reducers/exchange/action';
-import { BigNumber } from 'bignumber.js/bignumber';
+import { BigNumber } from 'bignumber.js';
 import { authUpdate, checkUsernameExist } from '@/reducers/auth/action';
 import OfferShop from '@/models/OfferShop';
 import { getErrorMessageFromCode } from '@/components/handshakes/exchange/utils';

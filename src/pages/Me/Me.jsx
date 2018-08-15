@@ -517,6 +517,7 @@ class Me extends React.Component {
                             mode="me"
                             refreshPage={this.loadMyHandshakeList}
                             setLoading={this.setLoading}
+                            buyCoinsUsingCreditCard={this.buyCoinsUsingCreditCard}
                           />
                         </Col>
                       );
