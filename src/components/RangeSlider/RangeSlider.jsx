@@ -52,8 +52,7 @@ class RangeSlider extends Component {
             disabled={props.disabled}
             readOnly
             autoComplete="off"
-          />
-          <span>{unit}</span>
+          />{unit}
         </div>
         <div className="RangeSlider">
           <span className="rangeLimit minValue">{props.options.min}{props.unit}</span>
