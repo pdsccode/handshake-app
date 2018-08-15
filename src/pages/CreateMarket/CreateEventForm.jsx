@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import { reduxForm, Field, FieldArray } from 'redux-form';
+import { reduxForm, Field, FieldArray, touch } from 'redux-form';
 import IconPlus from '@/assets/images/icon/icon-plus.svg';
 import IconTrash from '@/assets/images/icon/icon-trash.svg';
 import RangeSlider from '@/components/RangeSlider/RangeSlider';
@@ -12,6 +12,7 @@ import { renderField } from './form';
 import { required, urlValidator } from './validate';
 import { createEvent } from './action';
 import ShareMarket from './ShareMarket';
+import { createEventFormName } from './constants';
 
 const minStep = 15;
 const secStep = minStep * 60;
@@ -25,11 +26,15 @@ class CreateEventForm extends Component {
     initialValues: PropTypes.object,
     shareEvent: PropTypes.object,
     eventList: PropTypes.array,
+    formAction: PropTypes.func,
+    dispatch: PropTypes.func,
   };
 
   static defaultProps = {
     className: '',
     reportList: undefined,
+    formAction: undefined,
+    dispatch: undefined,
     isNew: true,
     initialValues: {},
     shareEvent: null,
@@ -61,11 +66,16 @@ class CreateEventForm extends Component {
   }
 
   addMoreOutcomes = (fields) => {
-    const isValid = fields.getAll().every(o => {
-      return o.name && o.name.trim();
-    });
+    const allData = fields.getAll();
+    const lastIndex = allData.length - 1;
+    const newItem = allData[lastIndex];
+    const isValid = !!(newItem.name && newItem.name.trim());
     if (isValid) {
       fields.push({});
+    } else {
+      const { dispatch, formAction } = this.props;
+      // this.props.dispatch(touch('CreateEventForm', 'outcomes[0].name', ''));
+      dispatch(formAction(touch, `outcomes[${lastIndex}].name`));
     }
   }
 
@@ -165,7 +175,7 @@ class CreateEventForm extends Component {
                   className="form-group"
                   fieldClass="form-control"
                   component={renderField}
-                  // validate={[required]}
+                  validate={[required]}
                   disabled={!isNew && id}
                 />
                 {!id && !!index &&
@@ -385,8 +395,7 @@ class CreateEventForm extends Component {
   }
 }
 
-
 export default reduxForm({
-  form: 'CreateEventForm',
+  form: createEventFormName,
   enableReinitialize: true,
 })(CreateEventForm);
