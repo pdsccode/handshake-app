@@ -59,6 +59,8 @@ import { authUpdate, checkUsernameExist } from '@/reducers/auth/action';
 import OfferShop from '@/models/OfferShop';
 import { getErrorMessageFromCode } from '../utils';
 import PropTypes from 'prop-types';
+import FeedCreditCard from '@/components/handshakes/exchange/Feed/FeedCreditCard';
+import Modal from '@/components/core/controls/Modal';
 
 const nameFormExchangeCreate = 'exchangeCreate';
 const FormExchangeCreate = createForm({
@@ -105,6 +107,7 @@ class Component extends React.Component {
       enableAction: true,
       buyBalance: 0,
       sellBalance: 0,
+      modalFillContent: '',
     };
     // this.mainColor = _sample(feedBackgroundColors)
     this.mainColor = '#1F2B34';
@@ -292,7 +295,7 @@ class Component extends React.Component {
           // if (isUpdate) {
           rfChange(nameFormExchangeCreate, 'customizePriceBuy', item.buyPercentage * 100);
           rfChange(nameFormExchangeCreate, 'customizePriceSell', item.sellPercentage * 100);
-          this.setState({ buyBalance: item.buyBalance, sellBalance: item.sellBalance });
+          this.setState({ buyBalance: item.buyAmount, sellBalance: item.sellAmount });
           // }
 
           break;
@@ -356,6 +359,33 @@ class Component extends React.Component {
     // });
   }
 
+  buyCoinsUsingCreditCard = () => {
+    this.modalRef.close();
+    const { messages } = this.props.intl;
+    const { currency } = this.props;
+    const wallet = MasterWallet.getWalletDefault(currency);
+
+    this.setState({
+      modalFillContent:
+        (
+          <FeedCreditCard
+            buttonTitle={messages.create.cash.credit.title}
+            currencyForced={wallet ? wallet.name : ''}
+            callbackSuccess={this.afterWalletFill}
+            addressForced={wallet ? wallet.address : ''}
+          />
+        ),
+    }, () => {
+      this.modalFillRef.open();
+    });
+  }
+
+  cancelTopupNow = () => {
+    this.modalRef.close();
+
+    this.continueSaveOffer();
+  }
+
   showNotEnoughCoinAlert = (balance, amountBuy, amountSell, fee, currency) => {
     console.log('showNotEnoughCoinAlert', balance, amountBuy, amountSell, fee, currency);
     const bnBalance = new BigNumber(balance);
@@ -368,15 +398,32 @@ class Component extends React.Component {
     const conditionSell = bnBalance.isLessThan(bnAmountSell.plus(bnFeeSell));
 
     if (conditionBuy || conditionSell) {
-      this.props.showAlert({
-        message: <div className="text-center">
-          <FormattedMessage id="notEnoughCoinInWalletStores" />
-        </div>,
-        timeOut: 5000,
-        type: 'danger',
-        callBack: () => {
-        },
+      this.setState({
+        modalContent:
+          (
+            <div className="py-2">
+              <Feed className="feed p-2" background="#259B24">
+                <div className="text-white d-flex align-items-center" style={{ minHeight: '50px' }}>
+                  <div><FormattedMessage id="notEnoughCoinInWalletStores" /></div>
+                </div>
+              </Feed>
+              <Button className="mt-2" block onClick={this.buyCoinsUsingCreditCard}><FormattedMessage id="ex.btn.topup.now" /></Button>
+              <Button block className="btn btn-secondary" onClick={this.cancelTopupNow}><FormattedMessage id="ex.btn.create.atm" /></Button>
+            </div>
+          ),
+      }, () => {
+        this.modalRef.open();
       });
+
+      // this.props.showAlert({
+      //   message: <div className="text-center">
+      //     <FormattedMessage id="notEnoughCoinInWalletStores" />
+      //   </div>,
+      //   timeOut: 5000,
+      //   type: 'danger',
+      //   callBack: () => {
+      //   },
+      // });
     }
 
     return conditionBuy || conditionSell;
@@ -438,14 +485,12 @@ class Component extends React.Component {
   }
 
   handleSubmit = async (values) => {
-    const {
-      authProfile, ipInfo, freeStartInfo, isChooseFreeStart,
-    } = this.props;
-    const { lat, lng, isUpdate } = this.state;
     console.log('handleSubmit', values);
     const {
-      currency, amountBuy, amountSell, customizePriceBuy,
-      customizePriceSell, nameShop, phone, address, stationCurrency,
+      freeStartInfo, isChooseFreeStart,
+    } = this.props;
+    const {
+      currency, amountBuy, amountSell,
     } = values;
 
     this.showLoading();
@@ -469,14 +514,29 @@ class Component extends React.Component {
       }
     }
 
+    this.continueSaveOffer();
+  }
+
+  continueSaveOffer = () => {
+    const {
+      authProfile, ipInfo, freeStartInfo, isChooseFreeStart,
+    } = this.props;
+    const { lat, lng, isUpdate } = this.state;
+    const {
+      currency, amountBuy, amountSell, customizePriceBuy,
+      customizePriceSell, phone, address, stationCurrency,
+    } = this.props;
+
+    const wallet = MasterWallet.getWalletDefault(currency);
+
     const phones = phone.trim().split('-');
     const phoneNew = phones.length > 1 && phones[1].length > 0 ? phone : '';
 
     const data = {
       currency,
-      sell_amount: amountSell && amountSell.toString() || '0',
+      sell_amount: amountSell && amountSell.toString() || '',
       sell_percentage: customizePriceSell.toString(),
-      buy_amount: amountBuy && amountBuy.toString() || '0',
+      buy_amount: amountBuy && amountBuy.toString() || '',
       buy_percentage: customizePriceBuy.toString(),
       user_address: wallet.address,
     };
@@ -562,23 +622,30 @@ class Component extends React.Component {
     const { isUpdate } = this.state;
 
     if (isUpdate) {
-      this.props.offerItemRefill({
-        PATH_URL: `${API_URL.EXCHANGE.OFFER_STORES}/${offer.id}/refill`,
-        METHOD: 'POST',
-        data: offerItem,
-        successFn: (res) => {
-          this.handleRefillOfferSuccess(res);
-
-          this.props.updateOfferStores({
-            PATH_URL: `${API_URL.EXCHANGE.OFFER_STORES}/${offer.id}`,
-            data: offerStore,
-            METHOD: 'PUT',
-            // successFn: this.handleCreateOfferSuccess,
-            // errorFn: this.handleCreateOfferFailed,
-          });
-        },
+      this.props.updateOfferStores({
+        PATH_URL: `${API_URL.EXCHANGE.OFFER_STORES}/${offer.id}`,
+        data: offerStore,
+        METHOD: 'PUT',
+        successFn: this.handleCreateOfferSuccess,
         errorFn: this.handleCreateOfferFailed,
       });
+      // this.props.offerItemRefill({
+      //   PATH_URL: `${API_URL.EXCHANGE.OFFER_STORES}/${offer.id}/refill`,
+      //   METHOD: 'POST',
+      //   data: offerItem,
+      //   successFn: (res) => {
+      //     this.handleRefillOfferSuccess(res);
+      //
+      //     this.props.updateOfferStores({
+      //       PATH_URL: `${API_URL.EXCHANGE.OFFER_STORES}/${offer.id}`,
+      //       data: offerStore,
+      //       METHOD: 'PUT',
+      //       // successFn: this.handleCreateOfferSuccess,
+      //       // errorFn: this.handleCreateOfferFailed,
+      //     });
+      //   },
+      //   errorFn: this.handleCreateOfferFailed,
+      // });
     } else {
       this.props.addOfferItem({
         PATH_URL: `${API_URL.EXCHANGE.OFFER_STORES}/${offer.id}`,
@@ -600,31 +667,34 @@ class Component extends React.Component {
 
     // console.log('handleCreateOfferSuccess', data);
 
-    const wallet = MasterWallet.getWalletDefault(currency);
-
-    if (currency === CRYPTO_CURRENCY.BTC) {
-      console.log('transfer BTC', offer.items.BTC.systemAddress, amountSell);
-      if (amountSell > 0) {
-        wallet.transfer(offer.items.BTC.systemAddress, offer.items.BTC.sellTotalAmount, NB_BLOCKS).then((success) => {
-          console.log('transfer', success);
-        });
-      }
-    } else if (currency === CRYPTO_CURRENCY.ETH) {
-      if (amountSell > 0 && offer.items.ETH.freeStart === '') {
-        try {
-          const cashHandshake = new ExchangeCashHandshake(wallet.chainId);
-
-          let result = null;
-          result = await cashHandshake.initByStationOwner(offer.items.ETH.sellTotalAmount, offer.id);
-          console.log('handleCreateOfferSuccess', result);
-
-          this.trackingOnchain(offer.id, '', result.hash, offer.items.ETH.status, '', currency);
-        } catch (e) {
-          this.trackingOnchain(offer.id, '', '', offer.items.ETH.status, e.toString(), currency);
-          console.log('handleCreateOfferSuccess', e.toString());
-        }
-      }
-    }
+    // const wallet = MasterWallet.getWalletDefault(currency);
+    //
+    // if (currency === CRYPTO_CURRENCY.BTC) {
+    //   console.log('transfer BTC', offer.items.BTC.systemAddress, amountSell);
+    //   if (amountSell > 0) {
+    //     wallet.transfer(offer.items.BTC.systemAddress, offer.items.BTC.sellTotalAmount, NB_BLOCKS).then((success) => {
+    //       console.log('transfer', success);
+    //     });
+    //   }
+    // } else if (currency === CRYPTO_CURRENCY.ETH) {
+    //   if (amountSell > 0 && offer.items.ETH.freeStart === '') {
+    //     wallet.transfer(offer.items.ETH.systemAddress, offer.items.ETH.sellTotalAmount, NB_BLOCKS).then((success) => {
+    //       console.log('transfer', success);
+    //     });
+    //     try {
+    //       const cashHandshake = new ExchangeCashHandshake(wallet.chainId);
+    //
+    //       let result = null;
+    //       result = await cashHandshake.initByStationOwner(offer.items.ETH.sellTotalAmount, offer.id);
+    //       console.log('handleCreateOfferSuccess', result);
+    //
+    //       this.trackingOnchain(offer.id, '', result.hash, offer.items.ETH.status, '', currency);
+    //     } catch (e) {
+    //       this.trackingOnchain(offer.id, '', '', offer.items.ETH.status, e.toString(), currency);
+    //       console.log('handleCreateOfferSuccess', e.toString());
+    //     }
+    //   }
+    // }
 
     this.hideLoading();
     const message = <FormattedMessage id="createOfferSuccessMessage" />;
@@ -665,36 +735,36 @@ class Component extends React.Component {
 
     // console.log('handleCreateOfferSuccess', data);
 
-    const wallet = MasterWallet.getWalletDefault(currency);
-
-    if (currency === CRYPTO_CURRENCY.BTC) {
-      console.log('transfer BTC', offer.items.BTC.systemAddress, amountSell);
-      if (amountSell > 0) {
-        wallet.transfer(offer.items.BTC.systemAddress, offer.items.BTC.sellTotalAmount, NB_BLOCKS).then((success) => {
-          console.log('transfer', success);
-        });
-      }
-    } else if (currency === CRYPTO_CURRENCY.ETH) {
-      if (amountSell > 0 && offer.items.ETH.freeStart === '') {
-        try {
-          const cashHandshake = new ExchangeCashHandshake(wallet.chainId);
-
-          let result = null;
-          if (offer.hid) {
-            result = await cashHandshake.addInventory(offer.items.ETH.sellTotalAmount, offer.hid, offer.id);
-          } else {
-            result = await cashHandshake.initByStationOwner(offer.items.ETH.sellTotalAmount, offer.id);
-          }
-
-          console.log('handleRefillOfferSuccess', result);
-
-          this.trackingOnchainRefill(offer.id, '', result.hash, offer.items.ETH.subStatus, '', currency);
-        } catch (e) {
-          this.trackingOnchainRefill(offer.id, '', '', offer.items.ETH.subStatus, e.toString(), currency);
-          console.log('handleRefillOfferSuccess', e.toString());
-        }
-      }
-    }
+    // const wallet = MasterWallet.getWalletDefault(currency);
+    //
+    // if (currency === CRYPTO_CURRENCY.BTC) {
+    //   console.log('transfer BTC', offer.items.BTC.systemAddress, amountSell);
+    //   if (amountSell > 0) {
+    //     wallet.transfer(offer.items.BTC.systemAddress, offer.items.BTC.sellTotalAmount, NB_BLOCKS).then((success) => {
+    //       console.log('transfer', success);
+    //     });
+    //   }
+    // } else if (currency === CRYPTO_CURRENCY.ETH) {
+    //   if (amountSell > 0 && offer.items.ETH.freeStart === '') {
+    //     try {
+    //       const cashHandshake = new ExchangeCashHandshake(wallet.chainId);
+    //
+    //       let result = null;
+    //       if (offer.hid) {
+    //         result = await cashHandshake.addInventory(offer.items.ETH.sellTotalAmount, offer.hid, offer.id);
+    //       } else {
+    //         result = await cashHandshake.initByStationOwner(offer.items.ETH.sellTotalAmount, offer.id);
+    //       }
+    //
+    //       console.log('handleRefillOfferSuccess', result);
+    //
+    //       this.trackingOnchainRefill(offer.id, '', result.hash, offer.items.ETH.subStatus, '', currency);
+    //     } catch (e) {
+    //       this.trackingOnchainRefill(offer.id, '', '', offer.items.ETH.subStatus, e.toString(), currency);
+    //       console.log('handleRefillOfferSuccess', e.toString());
+    //     }
+    //   }
+    // }
 
     this.hideLoading();
     const message = <FormattedMessage id="updateOfferSuccessMessage" />;
@@ -800,16 +870,19 @@ class Component extends React.Component {
     this.props.history.push(`${URL.HANDSHAKE_ME}?id=${HANDSHAKE_ID.EXCHANGE}&tab=dashboard`);
   }
 
+  afterWalletFill = () => {
+    this.modalFillRef.close();
+  }
+
   render() {
     const { messages } = this.props.intl;
     const {
       currency, listOfferPrice, stationCurrency, customizePriceBuy, customizePriceSell, amountBuy, amountSell, freeStartInfo, isChooseFreeStart,
     } = this.props;
     const {
-      isUpdate, enableAction, buyBalance, sellBalance,
+      isUpdate, enableAction, buyBalance, sellBalance, modalContent, modalFillContent,
     } = this.state;
     const fiatCurrency = stationCurrency?.id;
-    const modalContent = this.state.modalContent;
     // const allowInitiate = this.offer ? (!this.offer.itemFlags.ETH || !this.offer.itemFlags.BTC) : true;
 
     // let enableChooseFiatCurrency = true;
@@ -1091,6 +1164,9 @@ class Component extends React.Component {
         <ModalDialog onRef={modal => this.modalRef = modal}>
           {modalContent}
         </ModalDialog>
+        <Modal title={messages.create.cash.credit.title} onRef={modal => this.modalFillRef = modal}>
+          {modalFillContent}
+        </Modal>
       </div>
     );
   }
