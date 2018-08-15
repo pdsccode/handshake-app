@@ -49,6 +49,7 @@ class Map extends React.Component {
     this.state = {
       center: { lat, lng },
       zoomLevel: defaultZoomLevel,
+      curStationIdShowAllDetails: null
     };
   }
 
@@ -56,6 +57,10 @@ class Map extends React.Component {
     const { ipInfo } = this.props;
 
     this.setAddressFromLatLng(ipInfo?.latitude, ipInfo?.longitude); // fallback
+  }
+
+  handleOnChangeShowAllDetails = (id, newValue) => {
+    this.setState({ curStationIdShowAllDetails: newValue ? id : null })
   }
 
   render() {
@@ -70,7 +75,7 @@ class Map extends React.Component {
       setLoading,
       history,
     } = this.props;
-    const { center, zoomLevel } = this.state;
+    const { center, zoomLevel, curStationIdShowAllDetails } = this.state;
 
     return (
       <GoogleMap zoom={zoomLevel} center={center}>
@@ -95,6 +100,8 @@ class Map extends React.Component {
                 offer={offer}
                 modalRef={modalRef}
                 setLoading={setLoading}
+                showAllDetails={curStationIdShowAllDetails === id}
+                onChangeShowAllDetails={(newValue) => this.handleOnChangeShowAllDetails(id, newValue)}
               />
             );
           })}
@@ -110,6 +117,7 @@ class Map extends React.Component {
             scaledSize: { width: 30, height: 30 },
           }}
           position={center}
+          zIndex={-1111}
         />
       </GoogleMap>
     );

@@ -4,7 +4,6 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import { API_URL, CRYPTO_CURRENCY, EXCHANGE_ACTION, EXCHANGE_ACTION_NAME, HANDSHAKE_ID, URL } from '@/constants';
 import { Marker } from 'react-google-maps';
 import InfoBox from 'react-google-maps/lib/components/addons/InfoBox';
-import StarsRating from '@/components/core/presentation/StarsRating';
 
 import iconCustomMarker from '@/assets/images/icon/custom-marker.svg';
 import './StationMarker.scss';
@@ -22,6 +21,7 @@ import { getErrorMessageFromCode } from '@/components/handshakes/exchange/utils'
 import PropTypes from 'prop-types';
 import Offer from '@/models/Offer';
 import history from '@/services/history';
+import AllStationDetails from './AllStationDetails'
 
 const ICONS = {
   [CRYPTO_CURRENCY.ETH]: iconEthereum,
@@ -45,14 +45,14 @@ class StationMarker extends React.Component {
     }));
 
     this.state = {
-      showAllDetails: false,
+      // showAllDetails: false,
       CRYPTO_CURRENCY_LIST: cryptoCurrencyList,
     };
   }
 
-  handleToggleShowAllDetails = () => {
-    this.setState({ showAllDetails: !this.state.showAllDetails });
-  }
+  // handleToggleShowAllDetails = () => {
+  //   this.setState({ showAllDetails: !this.state.showAllDetails });
+  // }
 
   getPrice = () => {
     const { listOfferPrice, actionActive, currencyActive } = this.props;
@@ -244,14 +244,13 @@ class StationMarker extends React.Component {
   render() {
     const { messages } = this.props.intl;
     const {
-      actionActive, currencyActive, location, initUserId, authProfile,
+      actionActive, currencyActive, location, initUserId, authProfile, showAllDetails, onChangeShowAllDetails
     } = this.props;
     const { username, review, fiatCurrency } = this.offer;
     const locationArr = location.split(',');
     const coordinate = { lat: parseFloat(locationArr[0]), lng: parseFloat(locationArr[1]) };
     const price = this.getPrice();
     const maxVolume = this.getVolume();
-    const { showAllDetails } = this.state;
     const boxStyle = showAllDetails ? {} : {
       width: '152px',
     };
@@ -259,10 +258,10 @@ class StationMarker extends React.Component {
       <Marker
         defaultIcon={{ url: iconCustomMarker, scaledSize: { width: 40, height: 40 } }}
         position={coordinate}
-        onClick={this.handleToggleShowAllDetails}
+        onClick={() => onChangeShowAllDetails(!showAllDetails)}
       >
         <InfoBox
-          onCloseClick={() => this.setState({ showAllDetails: false })}
+          onCloseClick={() => onChangeShowAllDetails(false)}
           options={{
             alignBottom: true,
             pane: 'floatPane',
@@ -279,41 +278,20 @@ class StationMarker extends React.Component {
           <div className="stationInfo">
             {
               showAllDetails ? (
-                <React.Fragment>
-                  <div>
-                    <div className="info-div">
-                      <div className="s-name">{username}</div>
-                      <div><StarsRating className="d-inline-block" starPoint={review} startNum={5} /></div>
-                    </div>
-                    <div>
-                      <button className="btn btn-sm bg-transparent btn-close" onClick={() => this.setState({ showAllDetails: false })}>&times;</button>
-                    </div>
-                  </div>
-                  <hr />
-                  <div>
-                    <div className="s-label">{messages.discover.feed.cash.marker.label.price}</div>
-                    <div className="s-value">
-                      <span className={`${actionActive === EXCHANGE_ACTION.BUY ? 'buy-price' : 'sell-price'}`}>{`${formatMoneyByLocale(price, fiatCurrency)} ${fiatCurrency}/`}</span>
-                      <span>{currencyActive}</span>
-                    </div>
-
-                    <div className="s-label mt-1">{messages.discover.feed.cash.marker.label.maxVolume}</div>
-                    <div className="s-value">
-                      <span>{`${maxVolume} ${currencyActive}`}</span>
-                    </div>
-                  </div>
-                  {initUserId !== authProfile?.id && (
-                    <div className="mt-2">
-                      <button
-                        className="btn btn-primary btn-block btn-sm"
-                        onClick={this.handleOnShake}
-                      >{EXCHANGE_ACTION_NAME[actionActive]}{` ${messages.discover.feed.cash.marker.label.tradeNow}`}
-                      </button>
-                    </div>
-                  )}
-                </React.Fragment>
+                <AllStationDetails
+                  username={username}
+                  review={review}
+                  onChangeShowAllDetails={onChangeShowAllDetails}
+                  actionActive={actionActive}
+                  price={price}
+                  fiatCurrency={fiatCurrency}
+                  currencyActive={currencyActive}
+                  maxVolume={maxVolume}
+                  authProfile={authProfile}
+                  initUserId={initUserId}
+                />
               ) : (
-                <div className="s-value" onClick={this.handleToggleShowAllDetails}>
+                <div className="s-value text-center" onClick={() => onChangeShowAllDetails(true)}>
                   <span className={`${actionActive === EXCHANGE_ACTION.BUY ? 'buy-price' : 'sell-price'}`}>{`${formatMoneyByLocale(price, fiatCurrency)} ${fiatCurrency}/`}</span>
                   <span>{currencyActive}</span>
                 </div>
