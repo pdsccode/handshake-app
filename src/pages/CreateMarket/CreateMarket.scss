@@ -72,8 +72,10 @@
     opacity: 0.65;
   }
   .input-value {
-    width: 23px;
+    width: 24px;
     text-align: right;
+    padding: 0;
+    margin: 0;
     border: none;
     background-color: transparent;
     -webkit-appearance: none;
@@ -82,11 +84,6 @@
   }
   .unit {
     margin-top: 1px;
-  }
-  .RangeValue {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
   }
   .RangeSlider {
     display: flex;
