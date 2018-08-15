@@ -22,7 +22,7 @@ export default {
   ccNumber: 'Number',
   ccExpire: 'Expiry',
   ccCVC: 'CVC',
-  overCCLimit: 'You have reached your credit card limit! You have already used {currency}{amount} in the dojo today. ',
+  overCCLimit: 'You have reached your credit card limit({currency}{limit} per day)! You have already used {currency}{amount} today.',
 
   required: 'Required',
   ccExpireTemplate: 'MM/YY',
@@ -54,10 +54,11 @@ export default {
   withdrawShakedfferSuccessMessage: 'Your offer has been withdrawn.',
   buyUsingCreditCardSuccessMessge: 'Your order using your credit card has gone through.',
   notEnoughCoinInWallet: 'You don\'t have enough coin right now. Please top up your wallet.',
+  threeDSecureNotSupported: 'Not supported this card',
 
   createOfferStoreConfirm: 'Do you want to set up an offer to {intentMsg}?',
-  updateOfferStoreConfirm: 'Update your station?',
-  notEnoughCoinInWalletStores: 'You don\'t have enough coin right now. Please top up your wallet.',
+  updateOfferStoreConfirm: 'Update your ATM?',
+  notEnoughCoinInWalletStores: 'You don\'t have enough coin right now. Do you want to top up your wallet?',
   addOfferItemSuccessMassage: 'Success! Your order is now listed on Ninja',
   deleteOfferItemSuccessMassage: 'You have successfully deleted your order.',
   shakeOfferItemSuccessMassage: 'You have successfully shaked on Ninja',
@@ -72,24 +73,24 @@ export default {
   movingCoinToEscrow: 'Moving your coin to escrow. This may take a few minutes.',
   movingCoinFromEscrow: 'Moving your coin from escrow. This may take a few minutes.',
   'ex.create.label.amountBuy': 'I want to buy',
-  'ex.create.label.amountBuy.update': 'I want to buy more',
+  'ex.create.label.amountBuy.update': 'New limit per purchase',
   'ex.create.label.amountSell': 'I want to sell',
-  'ex.create.label.amountSell.update': 'I want to sell more',
-  'ex.create.label.currentBalance': 'Current balance',
+  'ex.create.label.amountSell.update': 'New limit per sale',
+  'ex.create.label.currentBalance': 'Current limit',
   'ex.create.label.marketPrice': 'Current market price',
   'ex.create.label.premiumBuy': 'My price',
   'ex.create.label.premiumSell': 'My price',
   'ex.create.label.premiumSellExplanation': 'Market price ± percentage',
-  'ex.create.label.nameStation': 'Station name',
-  'ex.create.label.stationCurrency': 'Station currency',
+  'ex.create.label.nameStation': 'ATM name',
+  'ex.create.label.stationCurrency': 'ATM currency',
   'ex.create.placeholder.stationCurrency': 'Select a currency',
   'ex.create.label.phone': 'Phone',
   'ex.create.label.address': 'Meet-up place',
   'ex.create.label.beASeller': 'Be a seller',
-  'ex.create.label.beASeller.update': 'Update sale inventory',
+  'ex.create.label.beASeller.update': 'Update sale information',
   'ex.create.label.beABuyer': 'You can also be a buyer',
   'ex.create.label.beABuyer.update': 'Update buy request',
-  'ex.create.label.stationInfo': 'Station information',
+  'ex.create.label.stationInfo': 'ATM information',
 
   'ex.createLocal.label.iWantTo': 'I want to',
   'ex.createLocal.label.something': 'What is it called?',
@@ -104,7 +105,7 @@ export default {
   'ex.discover.label.priceSell': 'SELL',
   'ex.discover.label.reviews': '({reviewCount})',
   'ex.discover.banner.text': 'Got coins? Turn them into a money-making machine.',
-  'ex.discover.banner.btnText': 'BECOME A STATION',
+  'ex.discover.banner.btnText': 'BECOME AN ATM',
   'ex.discover.shakeDetail.label.amount': 'Amount',
   'ex.discover.shakeDetail.label.total': 'Total',
   'ex.discover.shakeDetail.label.maximum': 'Maximum:',
@@ -114,7 +115,8 @@ export default {
   'ex.btn.confirm': 'Confirm',
   'ex.btn.OK': 'OK',
   'ex.btn.notNow': 'Not now',
-
+  'ex.btn.topup.now': 'Top up now ',
+  'ex.btn.create.atm': 'Create my ATM first ',
   'ex.label.buy': 'Buy',
   'ex.label.sell': 'Sell',
   'ex.label.bought': 'Bought',
@@ -144,7 +146,7 @@ export default {
   'ex.exchange.status.cancelled': 'Cancelled',
 
   'ex.shop.explanation.created': 'This may take a few minutes. Good things come to those who wait.',
-  'ex.shop.explanation.active': 'You can now discover your station in Cash.',
+  'ex.shop.explanation.active': 'You can now discover your ATM in Cash.',
   'ex.shop.explanation.closing': 'Please wait a few minutes.',
   'ex.shop.explanation.closed': '',
   'ex.shop.explanation.shaking': 'Accepting the other party\'s offer...',
@@ -152,7 +154,7 @@ export default {
   'ex.shop.explanation.completing': 'Accepted. You will receive coin in a few minutes.',
   'ex.shop.explanation.completed': '',
   'ex.shop.explanation.pre_shaking': 'Be patient - it can take a couple of minutes for your coin to be sent to escrow.',
-  'ex.shop.explanation.pre_shake': 'Waiting for the station to accept your offer.',
+  'ex.shop.explanation.pre_shake': 'Waiting for the ATM to accept your offer.',
   'ex.shop.explanation.rejecting': 'Rejecting the offer. Please wait a few minutes.',
   'ex.shop.explanation.rejected': '',
   'ex.shop.explanation.cancelling': 'Cancelling your offer. Please wait a few minutes.',
@@ -162,9 +164,9 @@ export default {
   'ex.cc.status.success': 'Done',
   'ex.cc.status.cancelled': 'Failed',
 
-  'ex.shop.status.created': 'Setting up your station',
-  'ex.shop.status.active': 'Station listed',
-  'ex.shop.status.closing': 'Deleting your station',
+  'ex.shop.status.created': 'Setting up your ATM',
+  'ex.shop.status.active': 'ATM listed',
+  'ex.shop.status.closing': 'Deleting your ATM',
   'ex.shop.status.closed': 'Deleted',
 
   'ex.shop.shake.status.pre_shaking': 'Processing',
@@ -192,7 +194,7 @@ export default {
   'ex.shop.dashboard.label.revenue': 'Bought/sold revenue',
   'ex.shop.dashboard.label.transaction.total': 'Total bought/sold',
 
-  'ex.shop.dashboard.button.updateInventory': 'Update inventory',
+  'ex.shop.dashboard.button.updateInventory': 'Update your ATM',
   'ex.shop.dashboard.label.trial': 'Trial',
 
   'ex.error.systemError': 'Sorry Ninja. Something went wrong. Come back soon.',
@@ -211,8 +213,8 @@ export default {
   'ex.error.default': 'Oops! Something went wrong.',
 
   'ex.earlyBird.label.1': 'WELCOME TO OUR <br/> EARLY BIRD PROGRAM!',
-  'ex.earlyBird.label.2': 'Create your station with <br /><span class="intro-amount">{freeETH} ETH</span> free now!',
-  'ex.earlyBird.btn': 'Open Station',
+  'ex.earlyBird.label.2': 'Create your ATM with <br /><span class="intro-amount">{freeETH} ETH</span> free now!',
+  'ex.earlyBird.btn': 'Open ATM',
 
   // 'ex.seo.title': 'Ninja: the anonymous exchange of anything.',
   // 'ex.seo.meta.description': 'Swap coin for cash in your local neighborhood. Trade predictions on anything, anywhere, with anyone. No downloads, no sign ups. 100% anonymous.',
@@ -242,7 +244,7 @@ export default {
   'ex.landing.intro.label.1': 'We are available on mobile only',
   'ex.landing.intro.label.2': 'Switch to your phone now to start making money with us!',
 
-  'ex.landing.description.label.1': 'Set up a station <br/>& make some money',
+  'ex.landing.description.label.1': 'Set up an ATM <br/>& make some money',
   'ex.landing.description.label.2': `Ninja Cash is a decentralized peer to peer (P2P) cryptocurrency exchange that allows users to trade ETH and BTC for cash. You can join us anonymously: no signup, no ID verification, no fraud<br/><a href="${URL.ABOUT_NINJA_CASH}" class="btn-read-more">Read more</a> about us here`,
 
   'ex.landing.features.label.1': 'Your market. Your rates',
@@ -271,7 +273,7 @@ export default {
   'ex.sort.price.sell.eth': 'Sell ETH',
   product_info: 'Ninja is open-source, decentralized software that never holds your funds. By freely choosing to use Ninja, the user accepts sole responsibility for their behavior and agrees to abide by the legalities of their governing jurisdiction. Ninja cannot be liable for legal, monetary or psychological damages should you do something stupid. Never invest more than you are willing to lose. Play safe!',
 
-  'askLocationPermission.label.1': 'We would like to access your location to find nearest stations around you!',
+  'askLocationPermission.label.1': 'We would like to access your location to find nearest ATMs around you!',
   'askLocationPermission.label.2': `<span>Please click <strong>"Allow"</strong> to start trading now!</span>`,
   'askLocationPermission.btn.dontAllow': `Don't Allow`,
   'askLocationPermission.btn.allow': 'Allow',
@@ -541,15 +543,15 @@ export default {
   'landing_page.cash.faq': [
     {
       question: 'What is Ninja Cash?',
-      answer: 'Ninja Cash is a peer-to-peer decentralized exchange where people can easily exchange cryptocurrency for cash. We want to make sure that traders are able to set up their own stations and set their own prices - not have to rely on market prices to buy and sell cryptocurrency.',
+      answer: 'Ninja Cash is a peer-to-peer decentralized exchange where people can easily exchange cryptocurrency for cash. We want to make sure that traders are able to set up their own ATMs and set their own prices - not have to rely on market prices to buy and sell cryptocurrency.',
     },
     {
-      question: 'Is it easy to set up a station?',
-      answer: <span>It is really simple to set up a station on Ninja Cash. We have written some step by step instructions for you <a target="__blank" href="https://medium.com/@ninja_org/a-step-by-step-guide-on-how-to-sell-btc-eth-for-cash-on-ninja-5b30a87e42c2">here</a>.</span>,
+      question: 'Is it easy to set up an ATM?',
+      answer: <span>It is really simple to set up a ATM on Ninja Cash. We have written some step by step instructions for you <a target="__blank" href="https://medium.com/@ninja_org/a-step-by-step-guide-on-how-to-sell-btc-eth-for-cash-on-ninja-5b30a87e42c2">here</a>.</span>,
     },
     {
       question: 'Where is Ninja Cash available?',
-      answer: 'Ninjas are constantly joining us from all over the world. Anyone anywhere can set up a station. Just check out ninja.org and see if there is a station near you.',
+      answer: 'Ninjas are constantly joining us from all over the world. Anyone anywhere can set up an ATM. Just check out ninja.org and see if there is an ATM near you.',
     },
     {
       question: 'What documents do I need to provide to make an account on Ninja Cash?',
@@ -569,7 +571,7 @@ export default {
     },
     {
       question: 'What currencies can I use on Ninja Cash?',
-      answer: 'Ninja Cash is global, so it depends on where your station is set up. Usually, your trade will be made in the local currency.',
+      answer: 'Ninja Cash is global, so it depends on where your ATM is set up. Usually, your trade will be made in the local currency.',
     },
     {
       question: 'How do I keep my wallet safe?',
@@ -581,7 +583,7 @@ export default {
     },
     {
       question: 'Are there any fees?',
-      answer: 'Station owners pay a 1% transaction fee.',
+      answer: 'ATM owners pay a 1% transaction fee.',
     },
     {
       question: 'How long does it take to complete a transaction?',
@@ -796,7 +798,7 @@ export default {
       username: {
         exist: 'Alias already exists',
         success: 'Your alias has been recorded',
-        required: 'Alias required. ?',
+        required: 'Alias required',
       },
       verify: {
         alert: {
@@ -864,7 +866,7 @@ export default {
     feed: {
       profileTitle: 'The face behind the mask',
       profileDescription: 'You, glorious you',
-      shopTitle: 'Your station',
+      shopTitle: 'Your ATM',
       shopDescription: 'Open for business',
       shopNoDataDescription: 'None yet. Set one up?',
       noDataMessage: 'Start a mission.',
@@ -872,24 +874,42 @@ export default {
       cash: {
         predition: 'Prediction',
         cash: 'Cash',
-        stationExplain: 'A station is where you can buy or sell cryptocurrency.',
-        stationCreateSuggest: 'Got crypto? Create station to turn it into money making machine NOW!',
-        restoreStation: 'Restore station',
-        backupStation: 'Backup station',
+        stationExplain: 'An ATM is where you can buy or sell cryptocurrency.',
+        stationCreateSuggest: 'Got crypto? Create ATM to turn it into money making machine NOW!',
+        restoreStation: 'Restore ATM',
+        backupStation: 'Backup ATM',
         transactions: 'Transactions',
         dashboard: 'Dashboard',
+        buyMoreCoin: 'Buy more coins now',
       }
     },
   },
 
   discover: {
-    noDataMessageCash: 'No stations near you yet. Be the first.',
+    noDataMessageCash: 'No ATMs near you yet. Be the first.',
     noDataMessageSwap: 'No vendors near you yet. Be the first',
     feed: {
       cash: {
+        menu: {
+          actionDescription: 'I WANT TO',
+        },
+        marker: {
+          label: {
+            price: 'Price',
+            maxVolume: 'Max volume',
+            tradeNow: 'Now',
+          },
+        },
 
-      }
-    }
+      },
+    },
+  },
+  create: {
+    cash: {
+      credit: {
+        title: 'Buy coins',
+      },
+    },
   },
 
   wallet: {
