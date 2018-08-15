@@ -26,6 +26,7 @@ export const APP = {
   CC_SOURCE: 'cc_source',
   CC_PRICE: 'cc_price',
   CC_ADDRESS: 'cc_address',
+  CC_TOKEN: 'cc_token',
 };
 
 export const UNSELECTED = 'UNSELECTED';
