@@ -196,8 +196,7 @@ class Wallet extends React.Component {
         // listRewardWallet.push(wallet);
       }
       // is Mainnet (coin, token, collectible)
-      else if (wallet.network 
-               MasterWallet.ListCoin[wallet.className].Network.Mainnet) {
+      else if (wallet.network === MasterWallet.ListCoin[wallet.className].Network.Mainnet) {
         if (!process.env.isDojo)
         { // not show for Dojo
           if(wallet.isToken){
