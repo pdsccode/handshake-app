@@ -50,7 +50,7 @@ export function* handleCountReport() {
     return yield call(apiGet, {
       PATH_URL: API_URL.CRYPTOSIGN.COUNT_REPORT,
       type: 'COUNT_REPORT',
-      _key: 'countReport',
+      _key: 'matches',
       _path: 'ui',
     });
   } catch (e) {

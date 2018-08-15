@@ -186,7 +186,7 @@ export const API_URL = {
     SHAKE: 'cryptosign/handshake/shake',
     LOAD_MATCHES: 'cryptosign/match',
     MATCHES_REPORT: 'cryptosign/match/report',
-    COUNT_REPORT: 'cryptosign/match/report/count',
+    COUNT_REPORT: 'cryptosign/match/report',
     ADMIN_MATCHES: 'cryptosign/admin/match/report',
     LOAD_HANDSHAKES: 'cryptosign/handshake',
     LOAD_REPORTS: 'cryptosign/source',

@@ -18,9 +18,9 @@ export const eventSelector = (state) => {
 };
 
 export const countReportSelector = (state) => {
-  const { countReport = {} } = state.ui;
-  const { count } = countReport;
-  return count || 0;
+  const { matches = [] } = state.ui;
+  console.log('Matches:', state.ui.matches);
+  return matches.length || 0;
 };
 
 export const isSharePage = (state) => {
