@@ -880,6 +880,7 @@ export default {
         backupStation: 'Backup ATM',
         transactions: 'Transactions',
         dashboard: 'Dashboard',
+        buyMoreCoin: 'Buy more coins now',
       }
     },
   },
