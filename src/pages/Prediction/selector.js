@@ -19,7 +19,6 @@ export const eventSelector = (state) => {
 
 export const countReportSelector = (state) => {
   const { matches = [] } = state.ui;
-  console.log('Matches:', state.ui.matches);
   return matches.length || 0;
 };
 
