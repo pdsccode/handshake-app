@@ -43,8 +43,6 @@ import HeaderMore from './HeaderMore';
 import WalletItem from './WalletItem';
 import WalletProtect from './WalletProtect';
 import WalletHistory from './WalletHistory';
-import Refers from './Refers';
-import RefersDashboard from './RefersDashboard';
 import TransferCoin from '@/components/Wallet/TransferCoin';
 import ReceiveCoin from '@/components/Wallet/ReceiveCoin';
 import ReactBottomsheet from 'react-bottomsheet';
@@ -278,16 +276,7 @@ class Wallet extends React.Component {
      var tx = await btc.transfer("tprv8ccSMiuz5MfvmYHzdMbz3pjn5uW3G8zxM975sv4MxSGkvAutv54raKHiinLsxW5E4UjyfVhCz6adExCmkt7GjC41cYxbNxt5ZqyJBdJmqPA","mrPJ6rBHpJGnsLK3JGfJQjdm5vkjeAb63M", 0.0001);
 
      console.log(tx) */
-     this.checkAirDrop();
   }
-
-  checkAirDrop(){
-    const querystring = window.location.search.replace('?', '');
-    this.querystringParsed = qs.parse(querystring);
-    const { ref } = this.querystringParsed;
-    if (ref) this.modalRefersRef.open();
-  }
-
 
   getAllWallet() {
     return this.state.listMainWalletBalance.concat(this.state.listTestWalletBalance).concat(this.state.listRewardWalletBalance).concat(this.state.listTokenWalletBalance).concat(this.state.listCollectibleWalletBalance);
@@ -383,7 +372,7 @@ class Wallet extends React.Component {
         },
       });
     }
-    if (wallet.name != "SHURI" && !wallet.isToken)
+    if (!wallet.isToken)
       obj.push({
         title: messages.wallet.action.history.title,
         handler: async () => {
@@ -605,12 +594,10 @@ class Wallet extends React.Component {
     obj.push({
       title: messages.wallet.action.backup.title,
       handler: () => {
-        let refers = local.get(APP.REFERS);
         this.setState({activeBackup: true, walletsData: {
           "auth_token": local.get(APP.AUTH_TOKEN),
           "chat_encryption_keypair": local.get(APP.CHAT_ENCRYPTION_KEYPAIR),
-          "wallets": this.getAllWallet(),
-          "refers": refers ? refers : ""}});
+          "wallets": this.getAllWallet()}});
         this.toggleBottomSheet();
         this.modalBackupRef.open();
       },
@@ -844,14 +831,6 @@ class Wallet extends React.Component {
     this.modalScanQrCodeRef.open();
   }
 
-  openRefers = () => {
-    let refers = local.get(APP.REFERS);
-    if(refers && refers.end)
-      this.modalRefersDashboardRef.open();
-    else
-      this.modalRefersRef.open();
-  }
-
   renderScanQRCode = () => {
     const { messages } = this.props.intl;
     <Modal onClose={() => this.oncloseQrCode()} title={messages.wallet.action.scan_qrcode.header} onRef={modal => this.modalScanQrCodeRef = modal}>
@@ -877,19 +856,6 @@ class Wallet extends React.Component {
 
         <Modal onClose={() => this.setState({formAddCollectibleIsActive: false})} title="Add Collectible" onRef={modal => this.modalAddNewCollectibleRef = modal}>
             <AddCollectible formAddCollectibleIsActive={this.state.formAddCollectibleIsActive} onFinish={() => {this.addedCollectible()}}/>
-        </Modal>
-
-        {/* Header for refers ... */}
-        <div className="headerRefers" >
-          <p className="hTitle">{messages.wallet.top_banner.message}</p>
-          <p className="hLink" onClick={() => this.openRefers()}>{messages.wallet.top_banner.button}</p>
-        </div>
-        <Modal title={messages.wallet.refers.header} onRef={modal => this.modalRefersRef = modal}>
-          <Refers />
-        </Modal>
-
-        <Modal title={messages.wallet.refers_dashboard.header} onRef={modal => this.modalRefersDashboardRef = modal}>
-            <RefersDashboard />
         </Modal>
 
         <Grid>
