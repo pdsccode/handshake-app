@@ -105,7 +105,7 @@ export default {
   'ex.discover.label.priceSell': 'SELL',
   'ex.discover.label.reviews': '({reviewCount})',
   'ex.discover.banner.text': 'Got coins? Turn them into a money-making machine.',
-  'ex.discover.banner.btnText': 'BECOME A ATM',
+  'ex.discover.banner.btnText': 'BECOME AN ATM',
   'ex.discover.shakeDetail.label.amount': 'Amount',
   'ex.discover.shakeDetail.label.total': 'Total',
   'ex.discover.shakeDetail.label.maximum': 'Maximum:',
@@ -243,7 +243,7 @@ export default {
   'ex.landing.intro.label.1': 'We are available on mobile only',
   'ex.landing.intro.label.2': 'Switch to your phone now to start making money with us!',
 
-  'ex.landing.description.label.1': 'Set up a ATM <br/>& make some money',
+  'ex.landing.description.label.1': 'Set up an ATM <br/>& make some money',
   'ex.landing.description.label.2': `Ninja Cash is a decentralized peer to peer (P2P) cryptocurrency exchange that allows users to trade ETH and BTC for cash. You can join us anonymously: no signup, no ID verification, no fraud<br/><a href="${URL.ABOUT_NINJA_CASH}" class="btn-read-more">Read more</a> about us here`,
 
   'ex.landing.features.label.1': 'Your market. Your rates',
@@ -545,12 +545,12 @@ export default {
       answer: 'Ninja Cash is a peer-to-peer decentralized exchange where people can easily exchange cryptocurrency for cash. We want to make sure that traders are able to set up their own ATMs and set their own prices - not have to rely on market prices to buy and sell cryptocurrency.',
     },
     {
-      question: 'Is it easy to set up a ATM?',
+      question: 'Is it easy to set up an ATM?',
       answer: <span>It is really simple to set up a ATM on Ninja Cash. We have written some step by step instructions for you <a target="__blank" href="https://medium.com/@ninja_org/a-step-by-step-guide-on-how-to-sell-btc-eth-for-cash-on-ninja-5b30a87e42c2">here</a>.</span>,
     },
     {
       question: 'Where is Ninja Cash available?',
-      answer: 'Ninjas are constantly joining us from all over the world. Anyone anywhere can set up a ATM. Just check out ninja.org and see if there is a ATM near you.',
+      answer: 'Ninjas are constantly joining us from all over the world. Anyone anywhere can set up an ATM. Just check out ninja.org and see if there is an ATM near you.',
     },
     {
       question: 'What documents do I need to provide to make an account on Ninja Cash?',
@@ -873,7 +873,7 @@ export default {
       cash: {
         predition: 'Prediction',
         cash: 'Cash',
-        stationExplain: 'A ATM is where you can buy or sell cryptocurrency.',
+        stationExplain: 'An ATM is where you can buy or sell cryptocurrency.',
         stationCreateSuggest: 'Got crypto? Create ATM to turn it into money making machine NOW!',
         restoreStation: 'Restore ATM',
         backupStation: 'Backup ATM',
