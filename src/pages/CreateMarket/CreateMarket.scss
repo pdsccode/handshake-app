@@ -77,6 +77,8 @@
     border: none;
     background-color: transparent;
     -webkit-appearance: none;
+    -webkit-user-select: none;
+    -webkit-user-modify: none;
   }
   .unit {
     display: inline-block;
