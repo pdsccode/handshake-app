@@ -27,7 +27,7 @@ class AllStationDetails extends React.Component {
     const {
       username, review, onChangeShowAllDetails,
       actionActive, price, fiatCurrency, currencyActive, maxVolume,
-      authProfile, initUserId,
+      authProfile, initUserId, handleOnShake
     } = this.props;
 
     return (
@@ -65,7 +65,7 @@ class AllStationDetails extends React.Component {
           <div className="mt-2">
             <button
               className="btn btn-primary btn-block btn-sm"
-              onClick={this.handleOnShake}
+              onClick={handleOnShake}
             >{EXCHANGE_ACTION_NAME[actionActive]}{` ${messages.discover.feed.cash.marker.label.tradeNow}`}
             </button>
           </div>

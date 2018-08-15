@@ -289,6 +289,7 @@ class StationMarker extends React.Component {
                   maxVolume={maxVolume}
                   authProfile={authProfile}
                   initUserId={initUserId}
+                  handleOnShake={this.handleOnShake}
                 />
               ) : (
                 <div className="s-value text-center" onClick={() => onChangeShowAllDetails(true)}>

@@ -33,7 +33,7 @@ export default {
   offerHandShakeExchangeContentMe: '{offerType} {something} for {amount} {currency}',
   offerHandShakeContentMeDone: '{offerType} {amount} {currency} for {total} {currency_symbol} ({payment_method})',
   offerHandShakeExchangeContentMeDone: '{offerType} {something} for {amount} {currency}',
-  instantOfferHandShakeContent: 'You{just}{offerType} {amount} {currency} for {total} {currency_symbol} on your card - fee {fee}%',
+  instantOfferHandShakeContent: 'You{just}{offerType} {amount} {currency} for {total} {currency_symbol} on your card',
   offerDistanceContent: '{distance} away',
   transactonOfferInfo: 'Successful ({success}) / Failed ({failed})',
   createOfferConfirm: 'You are about to {type} {something} by {amount} {currency}',
