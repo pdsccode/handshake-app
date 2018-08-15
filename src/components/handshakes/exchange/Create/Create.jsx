@@ -407,8 +407,8 @@ class Component extends React.Component {
                   <div><FormattedMessage id="notEnoughCoinInWalletStores" /></div>
                 </div>
               </Feed>
-              <Button className="mt-2" block onClick={this.buyCoinsUsingCreditCard}><FormattedMessage id="ex.btn.OK" /></Button>
-              <Button block className="btn btn-secondary" onClick={this.cancelTopupNow}><FormattedMessage id="ex.btn.notNow" /></Button>
+              <Button className="mt-2" block onClick={this.buyCoinsUsingCreditCard}><FormattedMessage id="ex.btn.topup.now" /></Button>
+              <Button block className="btn btn-secondary" onClick={this.cancelTopupNow}><FormattedMessage id="ex.btn.create.atm" /></Button>
             </div>
           ),
       }, () => {
