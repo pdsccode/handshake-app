@@ -37,12 +37,9 @@ class Report extends React.Component {
     });
   }
 
-  callContractReport(outcomes, list) {
-    console.log('callContractReport:', list);
-    if (list.length > 0) {
-      const firstItem = list[0];
-      const { contract_address, contract_json } = firstItem;
-      betHandshakeHandler.reportOutcomes(outcomes, contract_json, contract_address);
+  callContractReport(outcomes) {
+    if (outcomes.length > 0) {
+      betHandshakeHandler.reportOutcomes(outcomes);
     }
   }
 
@@ -51,9 +48,9 @@ class Report extends React.Component {
     return (
       <BettingReport
         matches={matches}
-        onReportSuccess={(outcomes, list )=> {
+        onReportSuccess={(outcomes)=> {
           this.fetchMatches();
-          this.callContractReport(outcomes, list);
+          this.callContractReport(outcomes);
         }}
       />
     );

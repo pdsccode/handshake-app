@@ -54,10 +54,11 @@ class BettingReport extends React.Component {
   setInitials(matches) {
     const { resolved } = this.props;
     if (matches.length > 0) {
-      const newOutcome = resolved ? matches[0].outcomes.filter((item) => this.isDisputeOutcome(item.result)) : matches[0].outcomes;
+      const newMatches = resolved ? matches.filter((item) => this.hasDisputeOutcome(item)) : matches;
+      const newOutcome = resolved ? this.filterDisputeOutcome(matches[0].outcomes) : matches[0].outcomes;
 
       this.setState({
-        matches,
+        matches: newMatches,
         outcomes: newOutcome,
         activeMatchData: matches[0],
         selectedMatch: matches[0].name,
@@ -80,6 +81,15 @@ class BettingReport extends React.Component {
   }
   isDisputeOutcome(result) {
     return result === BETTING_RESULT.DISPUTED;
+  }
+  hasDisputeOutcome(match) {
+    const outcomes = this.filterDisputeOutcome(match.outcomes);
+    return outcomes.length > 0;
+  }
+
+  filterDisputeOutcome(outcomes) {
+    const newOutcome = outcomes.filter((item) => this.isDisputeOutcome(item.result));
+    return newOutcome;
   }
 
   fillOutcome() {
@@ -220,7 +230,7 @@ class BettingReport extends React.Component {
   }
   onReportSuccess = (response) => {
     this.disablePage();
-    this.props.onReportSuccess(this.state.final, response.data.data);
+    this.props.onReportSuccess(response.data.data);
 
 
     this.props.showAlert({
