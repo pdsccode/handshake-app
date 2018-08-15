@@ -135,11 +135,11 @@ class Prediction extends React.Component {
 
   renderBetMode = (props, state) => {
     return (
-      <ModalDialog close={true} onRef={(modal) => { this.modalOrderPlace = modal; }}>
+      <ModalDialog close onRef={(modal) => { this.modalOrderPlace = modal; }}>
         <BetMode
           selectedOutcome={state.selectedOutcome}
           selectedMatch={state.selectedMatch}
-          openPopup={(click) => { this.openOrderPlace = click }}
+          openPopup={(click) => { this.openOrderPlace = click; }}
           onSubmitClick={(isFree) => {
             this.closeOrderPlace();
             isFree ? this.modalLuckyFree.open() : this.modalLuckyReal.open();
@@ -158,25 +158,6 @@ class Prediction extends React.Component {
     );
   }
 
-  renderComponent = (props, state) => {
-    return (
-      <React.Fragment>
-        <ModalDialog onRef={(modal) => { this.modalLuckyReal = modal; }}>
-          <LuckyReal onButtonClick={() => this.modalLuckyReal.close() } />
-        </ModalDialog>
-        <ModalDialog onRef={(modal) => { this.modalLuckyFree = modal; }}>
-          <LuckyFree onButtonClick={() => this.modalLuckyFree.close() } />
-        </ModalDialog>
-        <ModalDialog className="modal" onRef={(modal) => { this.modalLuckyPoolRef = modal; return null; }}>
-          <LuckyLanding onButtonClick={() => {
-            this.modalLuckyPoolRef.close();
-          }}
-          />
-        </ModalDialog>
-      </React.Fragment>
-    );
-  }
-
   renderViewAllEvent = (props) => {
     if (!props.isSharePage) return null;
     return (
@@ -186,6 +167,27 @@ class Prediction extends React.Component {
     );
   }
 
+  renderLuckyReal = () => (
+    <ModalDialog onRef={(modal) => { this.modalLuckyReal = modal; }}>
+      <LuckyReal onButtonClick={() => this.modalLuckyReal.close()} />
+    </ModalDialog>
+  )
+
+  renderLuckyFree = () => (
+    <ModalDialog onRef={(modal) => { this.modalLuckyFree = modal; }}>
+      <LuckyFree onButtonClick={() => this.modalLuckyFree.close()} />
+    </ModalDialog>
+  )
+
+  renderLuckyLanding = () => (
+    <ModalDialog className="modal" onRef={(modal) => { this.modalLuckyPoolRef = modal; return null; }}>
+      <LuckyLanding onButtonClick={() => {
+          this.modalLuckyPoolRef.close();
+        }}
+      />
+    </ModalDialog>
+  )
+
   renderComponent = (props, state) => {
     return (
       <div className={Prediction.displayName}>
@@ -194,18 +196,9 @@ class Prediction extends React.Component {
         {this.renderEventList(props)}
         {this.renderBetMode(props, state)}
         {this.renderViewAllEvent(props, state)}
-        <ModalDialog onRef={(modal) => { this.modalLuckyReal = modal; }}>
-          <LuckyReal onButtonClick={() => this.modalLuckyReal.close() } />
-        </ModalDialog>
-        <ModalDialog onRef={(modal) => { this.modalLuckyFree = modal; }}>
-          <LuckyFree onButtonClick={() => this.modalLuckyFree.close() } />
-        </ModalDialog>
-        <ModalDialog className="modal" onRef={(modal) => { this.modalLuckyPoolRef = modal; return null; }}>
-          <LuckyLanding onButtonClick={() => {
-            this.modalLuckyPoolRef.close();
-          }}
-          />
-        </ModalDialog>
+        {this.renderLuckyReal()}
+        {this.renderLuckyFree()}
+        {this.renderLuckyLanding()}
         {props.countReport > 0 && this.renderReportPopup()}
       </div>
     );
