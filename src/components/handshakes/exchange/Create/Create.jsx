@@ -535,9 +535,9 @@ class Component extends React.Component {
 
     const data = {
       currency,
-      sell_amount: amountSell && amountSell.toString() || '',
+      sell_amount: amountSell && amountSell.toString() || '0',
       sell_percentage: customizePriceSell.toString(),
-      buy_amount: amountBuy && amountBuy.toString() || '',
+      buy_amount: amountBuy && amountBuy.toString() || '0',
       buy_percentage: customizePriceBuy.toString(),
       user_address: wallet.address,
     };
