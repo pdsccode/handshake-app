@@ -276,14 +276,14 @@ class FeedBetting extends React.Component {
     }
   }
   async disputeOnChain(offchain, hid) {
-    const { itemInfo } = this.state;
+    const { itemInfo, predictName } = this.state;
     const { contractName, contractAddress } = itemInfo;
     const updateInfo = Object.assign({}, itemInfo);
     updateInfo.status = BET_BLOCKCHAIN_STATUS.STATUS_DISPUTE_PENDING;
     betHandshakeHandler.setItemOnChain(offchain, updateInfo);
     this.props.updateBettingChange(updateInfo);
 
-    const result = await betHandshakeHandler.dispute(hid, offchain, contractName, contractAddress);
+    const result = await betHandshakeHandler.dispute(hid, offchain,predictName, contractName, contractAddress);
     const { hash } = result;
     if (hash) {
       this.disputeReal(offchain);
@@ -431,6 +431,13 @@ class FeedBetting extends React.Component {
       PATH_URL: url,
       METHOD: 'POST',
       data: params,
+      successFn: (() => {
+        GA.clickCancelAPISuccess(id);
+      }),
+      errorFn: ((error) => {
+        const { message } = error;
+        GA.clickCancelAPIFailed(id, message);
+      }),
     });
   }
 
@@ -442,6 +449,13 @@ class FeedBetting extends React.Component {
       PATH_URL: API_URL.CRYPTOSIGN.COLLECT,
       METHOD: 'POST',
       data: params,
+      successFn: (() => {
+        GA.clickWithdrawAPISuccess(id);
+      }),
+      errorFn: ((error) => {
+        const { message } = error;
+        GA.clickWithdrawAPIFailed(id, message);
+      }),
     });
   }
 
@@ -453,6 +467,13 @@ class FeedBetting extends React.Component {
       PATH_URL: API_URL.CRYPTOSIGN.REFUND,
       METHOD: 'POST',
       data: params,
+      successFn: (() => {
+        GA.clickRefundAPISuccess(id);
+      }),
+      errorFn: ((error) => {
+        const { message } = error;
+        GA.clickRefundAPIFailed(id, message);
+      }),
     });
   }
   disputeReal(id) {
@@ -463,6 +484,13 @@ class FeedBetting extends React.Component {
       PATH_URL: API_URL.CRYPTOSIGN.DISPUTE,
       METHOD: 'POST',
       data: params,
+      successFn: (() => {
+        GA.clickDisputeAPISuccess(id);
+      }),
+      errorFn: ((error) => {
+        const { message } = error;
+        GA.clickDisputeAPIFailed(id, message);
+      }),
     });
   }
 
