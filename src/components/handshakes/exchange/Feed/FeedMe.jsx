@@ -127,8 +127,16 @@ class FeedMe extends React.PureComponent {
     return result;
   }
 
-  showNotEnoughCoinAlert = (balance, amount, fee, currency) => {
+  buyCoinsUsingCreditCard = () => {
     const { buyCoinsUsingCreditCard } = this.props;
+
+    this.modalRef.close();
+    if (buyCoinsUsingCreditCard) {
+      buyCoinsUsingCreditCard();
+    }
+  }
+
+  showNotEnoughCoinAlert = (balance, amount, fee, currency) => {
     const bnBalance = new BigNumber(balance);
     const bnAmount = new BigNumber(amount);
     const bnFee = new BigNumber(fee);
@@ -146,7 +154,7 @@ class FeedMe extends React.PureComponent {
                   <div><FormattedMessage id="notEnoughCoinInWalletStores" /></div>
                 </div>
               </Feed>
-              <Button className="mt-2" block onClick={buyCoinsUsingCreditCard}><FormattedMessage id="ex.btn.topup.now" /></Button>
+              <Button className="mt-2" block onClick={this.buyCoinsUsingCreditCard}><FormattedMessage id="ex.btn.topup.now" /></Button>
               <Button block className="btn btn-secondary" onClick={this.cancelTopupNow}><FormattedMessage id="ex.btn.notNow" /></Button>
             </div>
           ),
