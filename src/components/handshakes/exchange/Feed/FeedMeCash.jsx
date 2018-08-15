@@ -111,61 +111,60 @@ class FeedMeCash extends React.PureComponent {
             </div>)
           }
         </div>
-        <div className="order-type">{message}</div>
-        <div>
-          <div className="info-wrapper">
-            <div className="label">{coinTitle}</div>
-            <div className="price">{`${formatAmountCurrency(amount)} ${currency}`}</div>
-          </div>
-          <div className="info-wrapper">
-            <div className="label">{cashTitle}</div>
-            <div className="price">{`${formatMoneyByLocale(fiatAmount, fiatCurrency)} ${fiatCurrency}`}</div>
-          </div>
-        </div>
-        <hr className="hrLine" />
-        <div className="d-table w-100">
-          <div className="d-table-cell align-middle" style={{ width: '42px' }}>
-            <img src={iconAvatar} width="35px" alt="" />
-          </div>
-          <div className="d-table-cell align-middle address-info">
-            <div className="name-shop">{nameShop}</div>
-            {showInfo && (<div
-              className="d-inline-block"
-              // style={{ maxWidth: '120px' }}
-            >
-              {address}
-            </div>)
-            }
-          </div>
-          {showInfo && (<div
-            className="d-table-cell text-right align-middle"
-            style={{width: '35px'}}
-          >
-            <span
-              className="d-inline-block p-0"
-              onClick={this.handleClickMoreInfo}
-            >
-              <img src={iconInfo} width="35px"/>
-            </span>
-          </div>)
-          }
+        <div className={isCreditCard ? 'order-instant' : 'order-type'}>{message}</div>
+        {
+          !isCreditCard && (
+            <div>
+              <div>
+                <div className="info-wrapper">
+                  <div className="label">{coinTitle}</div>
+                  <div className="price">{`${formatAmountCurrency(amount)} ${currency}`}</div>
+                </div>
+                <div className="info-wrapper">
+                  <div className="label">{cashTitle}</div>
+                  <div className="price">{`${formatMoneyByLocale(fiatAmount, fiatCurrency)} ${fiatCurrency}`}</div>
+                </div>
+              </div>
+              <hr className="hrLine" />
+              <div className="d-table w-100">
+                <div className="d-table-cell align-middle" style={{ width: '42px' }}>
+                  <img src={iconAvatar} width="35px" alt="" />
+                </div>
+                <div className="d-table-cell align-middle address-info">
+                  <div className="name-shop">{nameShop}</div>
+                  {
+                    showInfo && (<div className="d-inline-block">{address}</div>)
+                  }
+                </div>
+                {showInfo && (<div
+                  className="d-table-cell text-right align-middle"
+                  style={{width: '35px'}}
+                >
+                  <span className="d-inline-block p-0" onClick={this.handleClickMoreInfo}>
+                    <img src={iconInfo} width="35px"/>
+                  </span>
+                      </div>)
+                }
 
-          {
-            !isCreditCard && showChat && (
-              <div
-                className="d-table-cell text-right align-middle"
-                style={{ width: '50px' }}
-              >
+                {
+                  !isCreditCard && showChat && (
+                    <div
+                      className="d-table-cell text-right align-middle"
+                      style={{ width: '50px' }}
+                    >
                 <span className="d-inline-block p-0">
                   <Link to={`${URL.HANDSHAKE_CHAT_INDEX}/${chatUsername}`}>
                     <img src={iconChat} width="35px" />
                   </Link>
                 </span>
+                    </div>
+                  )
+                }
               </div>
-            )
-          }
-        </div>
-        {actionButtons}
+              {actionButtons}
+            </div>
+          )
+        }
       </div>
     );
   }

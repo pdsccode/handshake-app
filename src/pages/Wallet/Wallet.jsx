@@ -361,18 +361,17 @@ class Wallet extends React.Component {
       }
     })
 
-
     // now hide buy coin:
-    // if (wallet.network === MasterWallet.ListCoin[wallet.className].Network.Mainnet){
-    obj.push({
-      title: 'Buy coins',
-      handler: () => {
-        this.setState({ walletSelected: wallet });
-        this.toggleBottomSheet();
-        this.modalFillRef.open();
-      },
-    });
-    // }
+    if (wallet.network === MasterWallet.ListCoin[wallet.className].Network.Mainnet){
+      obj.push({
+        title: messages.create.cash.credit.title,
+        handler: () => {
+          this.setState({ walletSelected: wallet });
+          this.toggleBottomSheet();
+          this.modalFillRef.open();
+        },
+      });
+    }
 
     if (!wallet.protected) {
       obj.push({
