@@ -15,6 +15,8 @@ import iconCurrentLocation from '@/assets/images/icon/current-location.svg';
 import currentLocationIndicator from '@/assets/images/icon/current-location-indicator.png';
 import OfferShop from '@/models/OfferShop';
 
+const defaultZoomLevel = 13;
+
 class Map extends React.Component {
   setAddressFromLatLng = (lat, lng) => {
     this.setState({ center: { lat, lng } }, () => {});
@@ -23,7 +25,7 @@ class Map extends React.Component {
     const { ipInfo } = this.props;
     this.setState({
       center: { lat: ipInfo?.latitude, lng: ipInfo?.longitude },
-      zoomLevel: 15,
+      zoomLevel: defaultZoomLevel,
     });
   };
   isEmptyBalance = item => {
@@ -46,7 +48,7 @@ class Map extends React.Component {
 
     this.state = {
       center: { lat, lng },
-      zoomLevel: 15,
+      zoomLevel: defaultZoomLevel,
     };
   }
 
