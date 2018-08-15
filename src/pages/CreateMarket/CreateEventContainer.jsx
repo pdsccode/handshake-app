@@ -6,7 +6,7 @@ import Loading from '@/components/Loading';
 import CreateEventForm from './CreateEventForm';
 import { loadCreateEventData } from './action';
 import { reportSelector, shareEventSelector, isLoading } from './selector';
-
+import { createEventFormName } from './constants';
 
 class CreateEventContainer extends React.Component {
   static displayName = 'CreateEventContainer';
@@ -59,6 +59,7 @@ class CreateEventContainer extends React.Component {
         shareEvent={props.shareEvent}
         dispatch={props.dispatch}
         onSelectEvent={this.onSelectEvent}
+        formAction={props.formAction}
       />
     );
   }
@@ -80,7 +81,6 @@ class CreateEventContainer extends React.Component {
     );
   }
 }
-
 export default connect(
   (state) => {
     return {
@@ -90,4 +90,10 @@ export default connect(
       shareEvent: shareEventSelector(state),
     };
   },
+  (dispatch) => ({
+    formAction: (action, fieldName, value) => {
+      return action(createEventFormName, fieldName, value);
+    },
+    dispatch,
+  }),
 )(CreateEventContainer);

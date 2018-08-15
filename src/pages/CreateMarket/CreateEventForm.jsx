@@ -1,16 +1,17 @@
 import React, { Component } from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import { reduxForm, Field, FieldArray } from 'redux-form';
+import { reduxForm, Field, FieldArray, touch } from 'redux-form';
 import IconPlus from '@/assets/images/icon/icon-plus.svg';
 import IconTrash from '@/assets/images/icon/icon-trash.svg';
 import Dropdown from '@/components/core/controls/Dropdown';
 import moment from 'moment';
 import DateTimePicker from '@/components/DateTimePicker/DateTimePicker';
 import { renderField } from './form';
-import { required, urlValidator, intValidator, smallerThan } from './validate';
+import { required, urlValidator, intValidator } from './validate';
 import { createEvent } from './action';
 import ShareMarket from './ShareMarket';
+import { createEventFormName } from './constants';
 
 const minStep = 15;
 const secStep = minStep * 60;
@@ -24,11 +25,15 @@ class CreateEventForm extends Component {
     initialValues: PropTypes.object,
     shareEvent: PropTypes.object,
     eventList: PropTypes.array,
+    formAction: PropTypes.func,
+    dispatch: PropTypes.func,
   };
 
   static defaultProps = {
     className: '',
     reportList: undefined,
+    formAction: undefined,
+    dispatch: undefined,
     isNew: true,
     initialValues: {},
     shareEvent: null,
@@ -60,11 +65,16 @@ class CreateEventForm extends Component {
   }
 
   addMoreOutcomes = (fields) => {
-    const isValid = fields.getAll().every(o => {
-      return o.name && o.name.trim();
-    });
+    const allData = fields.getAll();
+    const lastIndex = allData.length - 1;
+    const newItem = allData[lastIndex];
+    const isValid = !!(newItem.name && newItem.name.trim());
     if (isValid) {
       fields.push({});
+    } else {
+      const { dispatch, formAction } = this.props;
+      // this.props.dispatch(touch('CreateEventForm', 'outcomes[0].name', ''));
+      dispatch(formAction(touch, `outcomes[${lastIndex}].name`));
     }
   }
 
@@ -95,6 +105,27 @@ class CreateEventForm extends Component {
       id: 0,
       value: 'Create a new event',
     }).sort((a, b) => a.id - b.id);
+  }
+
+  validateOutcomes = (value) => {
+    const lastIndex = value.length - 1;
+    const newItem = value[lastIndex];
+    const oldData = value.slice(0, lastIndex);
+    return oldData.every((i) => i.name !== newItem.name) ? undefined : 'Outcome already exists';
+  }
+
+  smallerThanReportingTime = (value) => {
+    const { reportingTime } = this.state;
+    if (!reportingTime || !this.props.isNew) return null;
+    const isValid = moment.unix(value + secStep).isSameOrBefore(moment.unix(reportingTime), 'minute');
+    return isValid ? null : `Closing time must be before Reporting Time at least ${minStep}min`;
+  }
+
+  smallerThanDisputeTime = (value) => {
+    const { disputeTime } = this.state;
+    if (!disputeTime || !this.props.isNew) return null;
+    const isValid = moment.unix(value + secStep).isSameOrBefore(moment.unix(disputeTime), 'minute');
+    return isValid ? null : `Reporting time must be before Dispute Time at least ${minStep}min`;
   }
 
   renderGroupTitle = (title) => {
@@ -144,13 +175,6 @@ class CreateEventForm extends Component {
     );
   }
 
-  validateOutcomes = (value) => {
-    const lastIndex = value.length - 1;
-    const newItem = value[lastIndex];
-    const oldData = value.slice(0, lastIndex);
-    return oldData.every((i) => i.name !== newItem.name) ? undefined : 'Outcome already exists';
-  }
-
   renderOutComes = (props) => {
     const { fields, meta: { error }, isNew } = props;
     const allData = fields.getAll();
@@ -171,7 +195,7 @@ class CreateEventForm extends Component {
                   className="form-group"
                   fieldClass="form-control"
                   component={renderField}
-                  // validate={[required]}
+                  validate={[required]}
                   disabled={!isNew && id}
                 />
                 {!id && !!index &&
@@ -296,20 +320,6 @@ class CreateEventForm extends Component {
     );
   }
 
-  smallerThanReportingTime = (value) => {
-    const { reportingTime } = this.state;
-    if (!reportingTime || !this.props.isNew) return null;
-    const isValid = moment.unix(value + secStep).isSameOrBefore(moment.unix(reportingTime), 'minute');
-    return isValid ? null : `Closing time must be before Reporting Time at least ${minStep}min`;
-  }
-
-  smallerThanDisputeTime = (value) => {
-    const { disputeTime } = this.state;
-    if (!disputeTime || !this.props.isNew) return null;
-    const isValid = moment.unix(value + secStep).isSameOrBefore(moment.unix(disputeTime), 'minute');
-    return isValid ? null : `Reporting time must be before Dispute Time at least ${minStep}min`;
-  }
-
   renderTimeGroup = (props, state) => {
     const closingStartTime = moment().add(minStep, 'm').unix();
     return (
@@ -390,8 +400,7 @@ class CreateEventForm extends Component {
   }
 }
 
-
 export default reduxForm({
-  form: 'CreateEventForm',
+  form: createEventFormName,
   enableReinitialize: true,
 })(CreateEventForm);
