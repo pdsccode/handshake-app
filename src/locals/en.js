@@ -22,7 +22,7 @@ export default {
   ccNumber: 'Number',
   ccExpire: 'Expiry',
   ccCVC: 'CVC',
-  overCCLimit: 'You have reached your credit card limit! You have already used {currency}{amount} in the dojo today. ',
+  overCCLimit: 'You have reached your credit card limit({currency}{limit} per day)! You have already used {currency}{amount} today.',
 
   required: 'Required',
   ccExpireTemplate: 'MM/YY',

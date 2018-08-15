@@ -112,7 +112,7 @@ class FeedCreditCard extends React.Component {
     const amoutWillUse = new BigNumber(userCcLimit.amount).plus(new BigNumber(cryptoPrice.fiatAmount)).toNumber();
 
     if (this.state.amount && userCcLimit && userCcLimit.limit < amoutWillUse) {
-      this.setState({ showCCScheme: true });
+      this.setState({ showCCScheme: false });
     } else {
       this.setState({ showCCScheme: false });
     }
@@ -256,7 +256,7 @@ class FeedCreditCard extends React.Component {
         }}
         />
         </div>,
-        timeOut: 3000,
+        timeOut: 5000,
         type: 'danger',
         // callBack: this.handleBuySuccess
       });
