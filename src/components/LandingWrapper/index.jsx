@@ -95,14 +95,14 @@ class Index extends React.PureComponent {
               <div className="col-12 col-md-1">
                 <img src={imgLogo} width="54" />
               </div>
-              <div className="col-12 col-md-8">
+              <div className="col-12 col-md-7">
                 <div className="align-middle px-1 pt-1">
                   <div><FormattedHTMLMessage id="landing_page.label.footer" /></div>
                 </div>
               </div>
               {
                 name && (
-                  <div className="col-12 col-md-3 text-left text-md-right">
+                  <div className="col-12 col-md-4 text-left text-md-right">
                     <div className="pl-1 pt-1">
                       {
                         messages[`landing_page.${name}.joinTelegram`] && (
