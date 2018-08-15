@@ -4,7 +4,7 @@ import { Field, reduxForm } from 'redux-form';
 import IconEmail from '@/assets/images/icon/icon-email.svg';
 import { renderField } from './form';
 import { required, email } from './validate';
-import { updateEmailFetch, sendEmailCode, verifyEmail } from './action';
+import { sendEmailCode, verifyEmail } from './action';
 
 class EmailForm extends React.Component {
   static displayName = 'EmailForm';
@@ -20,14 +20,13 @@ class EmailForm extends React.Component {
   }
 
   onSubmit = (value) => {
+    const { isPristine } = this.state;
     const { email, code } = value;
-    if (email) {
-      this.setState({
-        isPristine: false,
-      });
+    if (isPristine) {
+      this.setState({ isPristine: false });
       this.props.dispatch(sendEmailCode({ email }));
     }
-    if (code) {
+    if (!isPristine) {
       this.props.dispatch(verifyEmail({ email, code }));
     }
   }
