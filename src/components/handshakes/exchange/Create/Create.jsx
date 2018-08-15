@@ -57,7 +57,7 @@ import {
 import { BigNumber } from 'bignumber.js/bignumber';
 import { authUpdate, checkUsernameExist } from '@/reducers/auth/action';
 import OfferShop from '@/models/OfferShop';
-import { getErrorMessageFromCode } from '../utils';
+import { getErrorMessageFromCode } from '@/components/handshakes/exchange/utils';
 import PropTypes from 'prop-types';
 import FeedCreditCard from '@/components/handshakes/exchange/Feed/FeedCreditCard';
 import Modal from '@/components/core/controls/Modal';

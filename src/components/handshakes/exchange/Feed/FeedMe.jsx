@@ -18,7 +18,7 @@ import { feedBackgroundColors } from '@/components/handshakes/exchange/config';
 import { Ethereum } from '@/services/Wallets/Ethereum.js';
 import { Bitcoin } from '@/services/Wallets/Bitcoin';
 
-import { getErrorMessageFromCode } from '../utils';
+import { getErrorMessageFromCode } from '@/components/handshakes/exchange/utils';
 import './FeedExchange.scss';
 import './FeedMe.scss';
 import FeedMeOfferStoreShakeContainer from './FeedMeOfferStoreShakeContainer';

@@ -34,6 +34,7 @@ import { formatMoney } from '@/services/offer-util';
 import { BigNumber } from 'bignumber.js';
 import axios from 'axios';
 import './FeedCreditCard.scss';
+import { getErrorMessageFromCode } from '@/components/handshakes/exchange/utils';
 
 const nameFormCreditCard = 'creditCard';
 const FormCreditCard = createForm({
@@ -207,7 +208,7 @@ class FeedCreditCard extends React.Component {
 
     // console.log('handleCreateCCOrderFailed', JSON.stringify(e.response));
     this.props.showAlert({
-      message: <div className="text-center">{e.response?.data?.message}</div>,
+      message: <div className="text-center">{getErrorMessageFromCode(e)}</div>,
       timeOut: 3000,
       type: 'danger',
       callBack: this.handleBuyFailed,
