@@ -48,11 +48,11 @@ import qs from 'qs';
 export class MasterWallet {
     // list coin is supported, can add some more Ripple ...
     static ListDefaultCoin = {
-      Ethereum, Shuriken, Bitcoin, BitcoinTestnet, BitcoinCash, BitcoinCashTestnet
+      Ethereum, Bitcoin, BitcoinTestnet, BitcoinCash, BitcoinCashTestnet
     };
 
     static ListCoin = {
-      Ethereum, Bitcoin, BitcoinTestnet, BitcoinCash, BitcoinCashTestnet, Shuriken, TokenERC20, TokenERC721,
+      Ethereum, Bitcoin, BitcoinTestnet, BitcoinCash, BitcoinCashTestnet, TokenERC20, TokenERC721,
       CryptoStrikers, CryptoPunks, CryptoKitties, Axie, BlockchainCuties,
       ChibiFighters, CryptoClown, CryptoCrystal, Cryptogs, CryptoHorse,
       CryptoSoccr, CryptoZodiacs, CSCPreSaleFactory, DopeRaider, Etherbots,
@@ -407,7 +407,10 @@ export class MasterWallet {
           if (wallet.getNetworkName() !== 'Mainnet') {
             hasTestnet = true;
           }
-          listWallet.push(wallet);
+          //remove shuri:
+          if (wallet.name != "SHURI"){
+            listWallet.push(wallet);
+          }
         }
       });
 
