@@ -30,7 +30,7 @@ class CCConfirm extends React.Component {
     if (nextProps.userProfile && nextProps.userProfile !== this.props.userProfile) {
       console.log('componentWillReceiveProps', nextProps);
       const { client_secret, source } = Helper.getQueryStrings(window.location.search);
-      this.source = local.get('cc_source');
+      this.source = local.get(APP.CC_SOURCE);
       const { client_secret: cc_client_secret } = this.source;
 
       if (client_secret && client_secret === cc_client_secret) {
@@ -62,11 +62,12 @@ class CCConfirm extends React.Component {
       // Use existing credit card
       const {
         id: token, three_d_secure: {
-          card, last4, exp_month, exp_year,
+          last4, exp_month, exp_year,
         },
       } = this.source;
       const cc_number = last4;
       const cc_expired = `${exp_month}/${exp_year.toString().substr(2, 2)}`;
+      const card = local.get(APP.CC_TOKEN);
 
       const cc = {
         cc_num: cc_number,
@@ -82,8 +83,8 @@ class CCConfirm extends React.Component {
 
   handleCreateCCOrder = (params) => {
     const { authProfile } = this.props;
-    const cryptoPrice = local.get('cc_price');
-    const address = local.get('cc_address');
+    const cryptoPrice = local.get(APP.CC_PRICE);
+    const address = local.get(APP.CC_ADDRESS);
 
     // let address = '';
     // if (addressForced) {
@@ -119,6 +120,7 @@ class CCConfirm extends React.Component {
     local.remove(APP.CC_SOURCE);
     local.remove(APP.CC_PRICE);
     local.remove(APP.CC_ADDRESS);
+    local.remove(APP.CC_TOKEN);
 
     this.props.showAlert({
       message: <div className="text-center"><FormattedMessage id="buyUsingCreditCardSuccessMessge" /></div>,

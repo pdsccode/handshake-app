@@ -10,6 +10,7 @@ import ModalDialog from '@/components/core/controls/ModalDialog';
 import local from '@/services/localStore';
 import {
   API_URL,
+  APP,
   CRYPTO_CURRENCY_DEFAULT,
   CRYPTO_CURRENCY_LIST,
   FIAT_CURRENCY,
@@ -285,21 +286,22 @@ class FeedCreditCard extends React.Component {
         params.append('card[exp_month]', mmYY[0]);
         params.append('card[exp_year]', mmYY[1]);
         params.append('card[cvc]', cc_cvc);
-        params.append('key', 'pk_test_mZwIvSjXu2X0szFOG9bfffha');
+        params.append('key', process.env.stripeKey);
+        params.append('type', 'card');
 
         axios.post(
-          'https://api.stripe.com/v1/tokens',
+          'https://api.stripe.com/v1/sources',
           params,
           { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
           .then((payload) => {
             console.log('payload', payload);
-            const stripe = Stripe('pk_test_mZwIvSjXu2X0szFOG9bfffha');
+            const stripe = Stripe(process.env.stripeKey);
             stripe.createSource({
               type: 'three_d_secure',
               amount: new BigNumber(cryptoPrice.fiatAmount).multipliedBy(100).toString(),
               currency: FIAT_CURRENCY.USD,
               three_d_secure: {
-                card: payload.data.card.id,
+                card: payload.data.id,
               },
               redirect: {
                 return_url: `${process.env.PUBLIC_URL}/payment`,
@@ -317,8 +319,9 @@ class FeedCreditCard extends React.Component {
                   // callBack: this.handleBuySuccess
                 });
               } else {
-                local.save('cc_source', result.source);
-                local.save('cc_price', cryptoPrice);
+                local.save(APP.CC_SOURCE, result.source);
+                local.save(APP.CC_PRICE, cryptoPrice);
+                local.save(APP.CC_TOKEN, payload.data.id);
 
                 let address = '';
                 if (addressForced) {
@@ -327,7 +330,7 @@ class FeedCreditCard extends React.Component {
                   const wallet = MasterWallet.getWalletDefault(cryptoPrice.currency);
                   address = wallet.address;
                 }
-                local.save('cc_address', address);
+                local.save(APP.CC_ADDRESS, address);
 
                 window.location = result.source.redirect.url;
               }
