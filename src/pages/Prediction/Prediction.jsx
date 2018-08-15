@@ -47,6 +47,8 @@ class Prediction extends React.Component {
   onCountdownComplete = (eventId) => {
     this.props.dispatch(removeExpiredEvent({ eventId }));
     this.closeOrderPlace();
+    this.props.dispatch(getReportCount());
+
   }
 
   openOrderPlace = (selectedOutcome) => {
