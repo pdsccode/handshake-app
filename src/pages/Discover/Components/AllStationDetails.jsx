@@ -7,18 +7,32 @@ import StarsRating from '@/components/core/presentation/StarsRating';
 
 class AllStationDetails extends React.Component {
 
+  flag = null;
+
   componentDidMount() {
-    document.addEventListener('touchstart', this.handleClickOutside);
+    document.addEventListener('touchstart', this.handleTouchStart);
+    document.addEventListener('touchmove', this.handleTouchMove);
+    document.addEventListener('touchend', this.handleTouchEnd);
   }
 
   componentWillUnmount() {
-    document.removeEventListener('touchstart', this.handleClickOutside);
+    document.removeEventListener('touchstart', this.handleTouchStart);
+    document.removeEventListener('touchmove', this.handleTouchMove);
+    document.removeEventListener('touchend', this.handleTouchEnd);
   }
 
-  handleClickOutside = (event) => {
-    const { onChangeShowAllDetails } = this.props;
-    if (this.wrapperRef && !this.wrapperRef.contains(event.target)) {
-      onChangeShowAllDetails(false);
+  handleTouchStart = () => {
+    this.flag = 0;
+  }
+  handleTouchMove = () => {
+    this.flag = 1;
+  }
+  handleTouchEnd = (event) => {
+    if (this.flag === 0) {
+      const { onChangeShowAllDetails } = this.props;
+      if (this.wrapperRef && !this.wrapperRef.contains(event.target)) {
+        onChangeShowAllDetails(false);
+      }
     }
   }
 

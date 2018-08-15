@@ -13,6 +13,7 @@ import { hideLoading, showAlert, showLoading } from '@/reducers/app/action';
 import { createCCOrder } from '@/reducers/exchange/action';
 import Image from '@/components/core/presentation/Image';
 import loadingSVG from '@/assets/images/icon/loading.gif';
+import { getErrorMessageFromCode } from '@/components/handshakes/exchange/utils';
 
 class CCConfirm extends React.Component {
   constructor(props) {
@@ -150,7 +151,7 @@ class CCConfirm extends React.Component {
 
     // console.log('handleCreateCCOrderFailed', JSON.stringify(e.response));
     this.props.showAlert({
-      message: <div className="text-center">{e.response?.data?.message}</div>,
+      message: <div className="text-center">{getErrorMessageFromCode(e)}</div>,
       timeOut: 3000,
       type: 'danger',
       callBack: this.handleBuyFailed,
