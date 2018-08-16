@@ -57,6 +57,7 @@ class CreateEventForm extends Component {
       isNew: props.isNew,
       selectedSource: this.state.selectedReportSource,
     }));
+    console.log('selectSource',this.state.selectedReportSource)
   }
 
   setFieldValueToState = (fieldName, value) => {
