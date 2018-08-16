@@ -205,7 +205,9 @@ class BettingReport extends React.Component {
       const { resolved } = this.props;
       console.log('Final State:', this.state.final);
 
-      const url = `${BASE_API.BASE_URL}/cryptosign/match/report/${this.state.activeMatchData.id}`;
+      const url = tokenValue ? `${BASE_API.BASE_URL}/cryptosign/admin/match/report/${this.state.activeMatchData.id}` :
+                  `${BASE_API.BASE_URL}/cryptosign/match/report/${this.state.activeMatchData.id}`;
+
       const submit = $http({
         url,
         data: {
