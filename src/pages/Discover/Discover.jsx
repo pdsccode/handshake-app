@@ -57,6 +57,7 @@ class DiscoverPage extends React.Component {
         // className: "discover-popup",
         // isDismiss: false
       },
+      curLocation: { lat: 0, lng: 0 },
       lat: 0,
       lng: 0,
       isBannedCash: this.props.isBannedCash,
@@ -75,7 +76,6 @@ class DiscoverPage extends React.Component {
     const { ipInfo, rfChange } = this.props;
 
     this.setAddressFromLatLng(ipInfo?.latitude, ipInfo?.longitude); // fallback
-
     let url = '';
     if (this.state.utm === 'earlybird') {
       url = `exchange/info/offer-store-free-start/${this.state.program}`;
@@ -122,6 +122,7 @@ class DiscoverPage extends React.Component {
   handleGoToCurrentLocation = () => {
     const { ipInfo } = this.props;
     this.setState({
+      curLocation: { lat: ipInfo?.latitude, lng: ipInfo?.longitude },
       lat: ipInfo?.latitude,
       lng: ipInfo?.longitude,
       zoomLevel: defaultZoomLevel,
@@ -199,7 +200,7 @@ class DiscoverPage extends React.Component {
   }
 
   setAddressFromLatLng = (lat, lng) => {
-    this.setState({ lat, lng }, () => {
+    this.setState({ lat, lng, curLocation: { lat, lng } }, () => {
       if (this.state.handshakeIdActive === HANDSHAKE_ID.EXCHANGE) {
         this.loadDiscoverList();
       }
@@ -318,6 +319,7 @@ class DiscoverPage extends React.Component {
       zoomLevel,
       actionActive,
       currencyActive,
+      curLocation
     } = this.state;
     const stations = this.getStationsList();
     const map = (
@@ -334,6 +336,7 @@ class DiscoverPage extends React.Component {
           // center={{ lat: 35.929673, lng: -78.948237 }}
           stations={stations}
           zoomLevel={zoomLevel}
+          curLocation={curLocation}
           lat={lat}
           lng={lng}
           actionActive={actionActive}
@@ -344,6 +347,7 @@ class DiscoverPage extends React.Component {
           onGoToCurrentLocation={this.handleGoToCurrentLocation}
           onMapMounted={e => (this.mapRef = e)}
           onZoomChanged={() => { this.setState({ zoomLevel: this.mapRef.getZoom() }) }}
+          onCenterChanged={() => { const center = this.mapRef.getCenter(); this.setState({ lat: center.lat() || 0, lng: center.lng() || 0 }) }}
         />
       </div>
     );

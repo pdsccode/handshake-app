@@ -60,14 +60,16 @@ class Map extends React.Component {
       zoomLevel,
       lat, lng,
       onZoomChanged,
-      onMapMounted
+      onCenterChanged,
+      onMapMounted,
+      curLocation
     } = this.props;
     const { curStationIdShowAllDetails } = this.state;
 
     const center = { lat, lng }
 
     return (
-      <GoogleMap zoom={zoomLevel} center={center} onZoomChanged={onZoomChanged} ref={onMapMounted}>
+      <GoogleMap zoom={zoomLevel} center={center} onZoomChanged={onZoomChanged} ref={onMapMounted} onCenterChanged={onCenterChanged}>
         {stations &&
           stations.map(station => {
             const { id, ...rest } = station;
@@ -105,7 +107,7 @@ class Map extends React.Component {
             url: currentLocationIndicator,
             scaledSize: { width: 30, height: 30 },
           }}
-          position={center}
+          position={curLocation}
           zIndex={-1111}
         />
       </GoogleMap>
