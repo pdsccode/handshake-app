@@ -15,19 +15,19 @@ import iconCurrentLocation from '@/assets/images/icon/current-location.svg';
 import currentLocationIndicator from '@/assets/images/icon/current-location-indicator.png';
 import OfferShop from '@/models/OfferShop';
 
-const defaultZoomLevel = 13;
 
 class Map extends React.Component {
-  setAddressFromLatLng = (lat, lng) => {
-    this.setState({ center: { lat, lng } }, () => {});
-  };
-  handleGoToCurrentLocation = () => {
-    const { ipInfo } = this.props;
-    this.setState({
-      center: { lat: ipInfo?.latitude, lng: ipInfo?.longitude },
-      zoomLevel: defaultZoomLevel,
-    });
-  };
+
+  constructor(props) {
+    super(props);
+
+    // const { lat, lng } = this.props;
+
+    this.state = {
+      curStationIdShowAllDetails: null
+    };
+  }
+
   isEmptyBalance = item => {
     if (!item) {
       return;
@@ -40,24 +40,6 @@ class Map extends React.Component {
     }
     return buyAmount <= 0;
   };
-
-  constructor(props) {
-    super(props);
-
-    const { lat, lng } = this.props;
-
-    this.state = {
-      center: { lat, lng },
-      zoomLevel: defaultZoomLevel,
-      curStationIdShowAllDetails: null
-    };
-  }
-
-  componentDidMount() {
-    const { ipInfo } = this.props;
-
-    this.setAddressFromLatLng(ipInfo?.latitude, ipInfo?.longitude); // fallback
-  }
 
   handleOnChangeShowAllDetails = (id, newValue) => {
     this.setState({ curStationIdShowAllDetails: newValue ? id : null })
@@ -74,11 +56,18 @@ class Map extends React.Component {
       modalRef,
       setLoading,
       history,
+      onGoToCurrentLocation,
+      zoomLevel,
+      lat, lng,
+      onZoomChanged,
+      onMapMounted
     } = this.props;
-    const { center, zoomLevel, curStationIdShowAllDetails } = this.state;
+    const { curStationIdShowAllDetails } = this.state;
+
+    const center = { lat, lng }
 
     return (
-      <GoogleMap zoom={zoomLevel} center={center}>
+      <GoogleMap zoom={zoomLevel} center={center} onZoomChanged={onZoomChanged} ref={onMapMounted}>
         {stations &&
           stations.map(station => {
             const { id, ...rest } = station;
@@ -107,7 +96,7 @@ class Map extends React.Component {
           })}
         <button
           className="btn-current-location"
-          onClick={this.handleGoToCurrentLocation}
+          onClick={onGoToCurrentLocation}
         >
           <img src={iconCurrentLocation} />
         </button>

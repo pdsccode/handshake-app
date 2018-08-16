@@ -38,6 +38,9 @@ import BlockCountry from '@/components/core/presentation/BlockCountry/BlockCount
 import Maintain from '@/components/Router/Maintain';
 import './Discover.scss';
 
+
+const defaultZoomLevel = 13;
+
 class DiscoverPage extends React.Component {
   constructor(props) {
     super(props);
@@ -63,6 +66,8 @@ class DiscoverPage extends React.Component {
       isMarkerShown: false,
       actionActive: EXCHANGE_ACTION.BUY,
       currencyActive: CRYPTO_CURRENCY.ETH,
+
+      zoomLevel: defaultZoomLevel,
     };
   }
 
@@ -113,6 +118,15 @@ class DiscoverPage extends React.Component {
 
     this.delayedShowMarker();
   }
+
+  handleGoToCurrentLocation = () => {
+    const { ipInfo } = this.props;
+    this.setState({
+      lat: ipInfo?.latitude,
+      lng: ipInfo?.longitude,
+      zoomLevel: defaultZoomLevel,
+    });
+  };
 
   static getDerivedStateFromProps(nextProps, prevState) {
     if (nextProps.exchange.listOfferPrice.updatedAt !== prevState.exchange.listOfferPrice.updatedAt) {
@@ -301,6 +315,7 @@ class DiscoverPage extends React.Component {
     const {
       lat,
       lng,
+      zoomLevel,
       actionActive,
       currencyActive,
     } = this.state;
@@ -318,6 +333,7 @@ class DiscoverPage extends React.Component {
           mapElement={<div style={{ height: `100%` }} />}
           // center={{ lat: 35.929673, lng: -78.948237 }}
           stations={stations}
+          zoomLevel={zoomLevel}
           lat={lat}
           lng={lng}
           actionActive={actionActive}
@@ -325,6 +341,9 @@ class DiscoverPage extends React.Component {
           onFeedClick={(station, extraData) => this.clickFeedDetail(station, extraData)}
           modalRef={this.modalRef}
           setLoading={this.setLoading}
+          onGoToCurrentLocation={this.handleGoToCurrentLocation}
+          onMapMounted={e => (this.mapRef = e)}
+          onZoomChanged={() => { this.setState({ zoomLevel: this.mapRef.getZoom() }) }}
         />
       </div>
     );
