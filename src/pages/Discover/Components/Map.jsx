@@ -11,7 +11,7 @@ import './Map.scss';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 
-import iconCurrentLocation from '@/assets/images/icon/current-location.svg';
+import iconCurLocationButton from '@/assets/images/icon/current-location-button.png';
 import currentLocationIndicator from '@/assets/images/icon/current-location-indicator.png';
 import OfferShop from '@/models/OfferShop';
 
@@ -100,7 +100,7 @@ class Map extends React.Component {
           className="btn-current-location"
           onClick={onGoToCurrentLocation}
         >
-          <img src={iconCurrentLocation} />
+          <img src={iconCurLocationButton} width={30} />
         </button>
         <Marker
           defaultIcon={{
