@@ -293,7 +293,7 @@ class ReceiveCoin extends React.Component {
 
   render() {
     const { messages } = this.props.intl;
-    const { currency } = this.props;
+    let { currency } = this.props;
     if(!currency) currency = "USD";
 
     let showDivAmount = (( this.state.walletSelected && ( !this.state.walletSelected.isToken && this.state.rates.filter(rate => rate.hasOwnProperty(this.state.walletSelected.name).length > 0) ) ) ) ? true : false;

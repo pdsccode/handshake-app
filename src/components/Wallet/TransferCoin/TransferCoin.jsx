@@ -391,7 +391,7 @@ openQrcode = () => {
 }
 
   render() {
-    const { currency } = this.props;
+    let { currency } = this.props;
     if(!currency) currency = "USD";
 
     const { messages } = this.props.intl;
