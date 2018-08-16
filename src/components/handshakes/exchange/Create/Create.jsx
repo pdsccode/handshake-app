@@ -533,11 +533,14 @@ class Component extends React.Component {
     const phones = phone.trim().split('-');
     const phoneNew = phones.length > 1 && phones[1].length > 0 ? phone : '';
 
+    const sellAmount = amountSell ? amountSell.toString() : isUpdate ? '' : '0';
+    const buyAmount = amountBuy ? amountBuy.toString() : isUpdate ? '' : '0';
+
     const data = {
       currency,
-      sell_amount: amountSell && amountSell.toString() || '0',
+      sell_amount: sellAmount,
       sell_percentage: customizePriceSell.toString(),
-      buy_amount: amountBuy && amountBuy.toString() || '0',
+      buy_amount: buyAmount,
       buy_percentage: customizePriceBuy.toString(),
       user_address: wallet.address,
     };
