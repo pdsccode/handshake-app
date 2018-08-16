@@ -38,8 +38,8 @@ export default {
   transactonOfferInfo: 'Successful ({success}) / Failed ({failed})',
   createOfferConfirm: 'You are about to {type} {something} by {amount} {currency}',
   handshakeOfferConfirm: 'You are about to {type} {something} for {amount} {currency}',
-  rejectOfferConfirm: 'Do you want to Reject this handshake? You will not be able to make transactions for 4 hours.',
-  rejectOfferConfirmForShop: 'Do you want to Reject this handshake?',
+  rejectOfferConfirm: 'Do you want to Reject this order? You will not be able to make transactions for 4 hours.',
+  rejectOfferConfirmForShop: 'Do you want to Reject this order?',
   completeOfferConfirm: 'Complete the transaction? Your buyer will receive coin in a few minutes.',
   withdrawOfferConfirm: 'Are you sure you want to withdraw?',
   cancelOfferConfirm: 'Cancel this order?',
@@ -117,6 +117,7 @@ export default {
   'ex.btn.notNow': 'Not now',
   'ex.btn.topup.now': 'Top up now ',
   'ex.btn.create.atm': 'Create my ATM first ',
+  'ex.btn.update.atm': 'Update my ATM first ',
   'ex.label.buy': 'Buy',
   'ex.label.sell': 'Sell',
   'ex.label.bought': 'Bought',
@@ -1039,6 +1040,29 @@ export default {
         },
         description: 'Please enter your top secret recovery data to restore your wallet.',
       },
+      setting: {
+        title: 'Setting',
+        error: 'Invalid wallets',
+        header: 'Setting wallets',
+        success: {
+          restore: 'Your Wallet restore success',
+          save_alternative_currency: 'Save alternative currency selected!',
+          save_crypto_address: 'Save format crypto address seleted!'
+        },
+        label: {
+          alternative_currency: 'Alternative currency',
+          select_alternative_currency: 'Select alternative currency',
+          crypto_address: 'Cryptocurrency address',
+          select_crypto_address: 'Select cryptocurrency address',
+          short_address: 'Show short address',
+          shortest_address: 'Show shortest address',
+          hide_address: 'Hide address'
+        },
+        button: {
+          restore: 'Restore now',
+        },
+        description: 'Please enter your top secret recovery data to restore your wallet.',
+      },
       import: {
         title: 'Add new / Import coin',
       },
@@ -1068,6 +1092,7 @@ export default {
           step1_label: 'I understand that if I lose my passphrase, I lose access to my account.',
           step2_msg1: 'Record these words carefully. Don\'t email it or screenshot it.',
           step3_msg1: 'Tap to put these words in the correct order.',
+          need_secure: 'Need secure'
         },
         button: {
           continue: 'Continue',

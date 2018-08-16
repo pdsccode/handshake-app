@@ -8,7 +8,6 @@ import Loading from '@/components/Loading';
 import LuckyReal from '@/components/handshakes/betting/LuckyPool/LuckyReal/LuckyReal';
 import LuckyLanding from '@/pages/LuckyLanding/LuckyLanding';
 import { URL } from '@/constants';
-
 import GA from '@/services/googleAnalytics';
 import LuckyFree from '@/components/handshakes/betting/LuckyPool/LuckyFree/LuckyFree';
 
