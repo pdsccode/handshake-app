@@ -133,7 +133,7 @@ class StationMarker extends React.Component {
       type: shopType,
       currency: values.currency,
       amount: values.amount.toString(),
-      username: authProfile?.name,
+      username: authProfile?.name || authProfile?.username,
       email: authProfile?.email,
       contact_phone: authProfile?.phone,
       contact_info: authProfile?.address,
