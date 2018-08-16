@@ -190,6 +190,7 @@ export const API_URL = {
     ADMIN_MATCHES: 'cryptosign/admin/match/report',
     LOAD_HANDSHAKES: 'cryptosign/handshake',
     LOAD_REPORTS: 'cryptosign/source',
+    LOAD_ALL_REPORTS: 'cryptosign/source?all=1',
     CHECK_FREE_AVAILABLE: 'cryptosign/handshake/check_free_bet',
     UNINIT_HANDSHAKE: 'cryptosign/handshake/uninit',
     UNINIT_HANDSHAKE_FREE: 'cryptosign/handshake/uninit_free_bet',

@@ -20,8 +20,8 @@ function* handleLoadReportsSaga({ cache = true }) {
     yield call(isBalanceValid);
 
     return yield call(apiGet, {
-      PATH_URL: API_URL.CRYPTOSIGN.LOAD_REPORTS,
-      type: 'LOAD_REPORTS',
+      PATH_URL: API_URL.CRYPTOSIGN.LOAD_ALL_REPORTS,
+      type: 'LOAD_ALL_REPORTS',
       _path: 'reports',
     });
   } catch (e) {
