@@ -244,9 +244,9 @@ class StationMarker extends React.Component {
   render() {
     const { messages } = this.props.intl;
     const {
-      actionActive, currencyActive, location, initUserId, authProfile, showAllDetails, onChangeShowAllDetails
+      actionActive, currencyActive, location, initUserId, authProfile, showAllDetails, onChangeShowAllDetails, review,
     } = this.props;
-    const { username, review, fiatCurrency } = this.offer;
+    const { username, fiatCurrency } = this.offer;
     const locationArr = location.split(',');
     const coordinate = { lat: parseFloat(locationArr[0]), lng: parseFloat(locationArr[1]) };
     const price = this.getPrice();
