@@ -135,6 +135,8 @@ function* handleCreateEventSaga({ values, isNew, selectedSource }) {
         const { data } = yield call(handleCreateNewEventSaga, { newEventData });
         if (data && data.length) {
           const eventData = data[0];
+          const { contract } = eventData;
+          console.log('Contract:', contract);
           const inputData = eventData.outcomes.map(o => {
             return {
               fee: eventData.market_fee,
@@ -143,8 +145,8 @@ function* handleCreateEventSaga({ values, isNew, selectedSource }) {
               reportTime: eventData.reportTime,
               disputeTime: eventData.disputeTime,
               offchain: o.id,
-              contractAddress: eventData.contract_address,
-              contractName: eventData.contract_json,
+              contractAddress: contract.contract_address,
+              contractName: contract.json_name,
             };
           });
           const outcomeId = eventData.outcomes[0].id;

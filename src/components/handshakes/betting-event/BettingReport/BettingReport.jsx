@@ -211,10 +211,11 @@ class BettingReport extends React.Component {
         data: {
           result: this.state.final,
         },
-        qs: { dispute: resolved ? 1 : 0 },
+        //qs: { dispute: resolved ? 1 : 0 },
         headers: headers,
         method: 'post',
       });
+      console.log(TAG, this.state.final);
 
       submit.then((response) => {
         response.data.status === 1 && this.setState({
@@ -226,11 +227,12 @@ class BettingReport extends React.Component {
         response.data.status === 0 && this.onReportFailed(response);
       });
 
+
     }
   }
   onReportSuccess = (response) => {
     this.disablePage();
-    this.props.onReportSuccess(response.data.data);
+    this.props.onReportSuccess(this.state.final);
 
 
     this.props.showAlert({

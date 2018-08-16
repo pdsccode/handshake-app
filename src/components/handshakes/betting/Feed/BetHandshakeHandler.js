@@ -438,15 +438,17 @@ export class BetHandshakeHandler {
   async reportOutcomes(outcomes) {
     console.log(TAG, 'reportOutcomes:', outcomes);
     outcomes.forEach(element => {
-      const { hid, outcome_id: outcomeId, side, contract_json: contractName, contract_address: contractAddress } = element;
-      this.report(hid, outcomeId, side, contractName, contractAddress);
+      const { hid, outcome_id: outcomeId, side, contract = {} } = element;
+      const { json_name: contractJson, contract_address: contractAddress = '' } = contract;
+      this.report(hid, outcomeId, side, contractJson, contractAddress);
     });
   }
   async report(hid, outcomeId, side, contractName, contractAddress) {
+    console.log(TAG, contractName, contractAddress);
     const chainId = getChainIdDefaultWallet();
     const bettinghandshake = new BettingHandshake(chainId);
     bettinghandshake.updateContract(contractAddress, contractName);
-    const offchain = `cryptosign_report${outcomeId}_${side}`
+    const offchain = `cryptosign_report${outcomeId}_${side}`;
     let logJson = '';
     let realBlockHash = '';
     let result = null;
