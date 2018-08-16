@@ -583,8 +583,18 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
     wallet.transfer(userAddress, transferAmount, NB_BLOCKS).then((success) => {
       console.log('transfer', success);
 
-      const { data: { hash: txHash } } = success;
-      this.trackingTransfer(initUserId, offerShake.id, txHash);
+      const { data } = success;
+
+      if (data) {
+        const { hash: txHash } = data;
+        this.trackingTransfer(initUserId, offerShake.id, txHash);
+      } else {
+        this.trackingTransfer(initUserId, offerShake.id, '');
+      }
+    }).catch((e) => {
+      // TO-DO: handle error
+      console.log('transfer', e);
+      this.trackingTransfer(initUserId, offerShake.id, '');
     });
 
     wallet.transfer(process.env.wallets[currency], fee, NB_BLOCKS).then((success) => {
