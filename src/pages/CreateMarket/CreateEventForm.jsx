@@ -149,7 +149,7 @@ class CreateEventForm extends Component {
       <AutoSuggestion
         {...props}
         name="eventName"
-        placeholder="Choose an Event or Create a new"
+        placeholder="Choose an Event or Create a new one"
         value={props.input.value}
         onChange={props.input.onChange}
       />
@@ -268,7 +268,7 @@ class CreateEventForm extends Component {
               className="form-group"
               fieldClass="form-control"
               component={renderField}
-              placeholder="Enter your own source name"
+              placeholder="Enter your prefer source name"
               validate={[required]}
             />
             <Field
@@ -277,7 +277,7 @@ class CreateEventForm extends Component {
               className="form-group"
               fieldClass="form-control"
               component={renderField}
-              placeholder="Enter your own source URL"
+              placeholder="Enter your prefer source URL"
               validate={[required, urlValidator]}
             />
             {this.renderGroupNote('We will review your source and get back to you within 24 hours.')}
