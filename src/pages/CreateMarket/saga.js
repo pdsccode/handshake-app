@@ -20,8 +20,8 @@ function* handleLoadReportsSaga({ cache = true }) {
     yield call(isBalanceValid);
 
     return yield call(apiGet, {
-      PATH_URL: API_URL.CRYPTOSIGN.LOAD_REPORTS,
-      type: 'LOAD_REPORTS',
+      PATH_URL: API_URL.CRYPTOSIGN.LOAD_ALL_REPORTS,
+      type: 'LOAD_ALL_REPORTS',
       _path: 'reports',
     });
   } catch (e) {
@@ -90,6 +90,7 @@ function* saveGenerateShareLinkToStore(data) {
 
 function* handleCreateEventSaga({ values, isNew, selectedSource }) {
   try {
+    const betHandshakeHandler = BetHandshakeHandler.getShareManager();
     if (!isNew) {
       yield put(updateCreateEventLoading(true));
       // Add new outcomes
@@ -100,38 +101,55 @@ function* handleCreateEventSaga({ values, isNew, selectedSource }) {
         newOutcomeList,
       });
       if (!addOutcomeResult.error) {
+        const inputData = addOutcomeResult.data.map(o => {
+          return {
+            fee: values.creatorFee,
+            source: values.reports,
+            closingTime: values.closingTime,
+            reportTime: values.reportingTime,
+            disputeTime: values.disputeTime,
+            offchain: o.id,
+            contractAddress: o.contract.contract_address,
+            contractName: o.contract.json_name,
+          };
+        });
         const outcomeId = addOutcomeResult.data[0].id;
         const eventName = addOutcomeResult.data[0].name;
         yield saveGenerateShareLinkToStore({ outcomeId, eventName });
+        betHandshakeHandler.createNewEvent(inputData);
         yield put(updateCreateEventLoading(false));
       }
     } else {
-      // Create new event
-      const reportSource = {
-        source_id: selectedSource,
-        source: selectedSource ? undefined : {
-          name: values.ownReportName,
-          url: values.ownReportUrl,
-        },
-      };
-      Object.keys(reportSource).forEach((k) => !reportSource[k] && delete reportSource[k]);
-      const newEventData = {
-        homeTeamName: values.homeTeamName || '',
-        awayTeamName: values.awayTeamName || '',
-        homeTeamCode: values.homeTeamCode || '',
-        awayTeamCode: values.awayTeamCode || '',
-        homeTeamFlag: values.homeTeamFlag || '',
-        awayTeamFlag: values.awayTeamFlag || '',
-        name: values.eventName,
-        date: values.closingTime,
-        reportTime: values.reportingTime,
-        disputeTime: values.disputeTime,
-        market_fee: values.creatorFee,
-        outcomes: values.outcomes,
-        ...reportSource,
-      };
-      if (yield call(isBalanceValid)) {
-        const betHandshakeHandler = BetHandshakeHandler.getShareManager();
+      const balanceValid = yield call(isBalanceValid);
+      if (balanceValid.error) {
+        yield put(showAlert({
+          message: MESSAGE.NOT_ENOUGH_GAS,
+        }));
+      } else {
+        // Create new event
+        const reportSource = {
+          source_id: selectedSource,
+          source: selectedSource ? undefined : {
+            name: values.ownReportName,
+            url: values.ownReportUrl,
+          },
+        };
+        Object.keys(reportSource).forEach((k) => !reportSource[k] && delete reportSource[k]);
+        const newEventData = {
+          homeTeamName: values.homeTeamName || '',
+          awayTeamName: values.awayTeamName || '',
+          homeTeamCode: values.homeTeamCode || '',
+          awayTeamCode: values.awayTeamCode || '',
+          homeTeamFlag: values.homeTeamFlag || '',
+          awayTeamFlag: values.awayTeamFlag || '',
+          name: values.eventName,
+          date: values.closingTime,
+          reportTime: values.reportingTime,
+          disputeTime: values.disputeTime,
+          market_fee: values.creatorFee,
+          outcomes: values.outcomes,
+          ...reportSource,
+        };
         const { data } = yield call(handleCreateNewEventSaga, { newEventData });
         if (data && data.length) {
           const eventData = data[0];
@@ -149,17 +167,13 @@ function* handleCreateEventSaga({ values, isNew, selectedSource }) {
               contractName: contract.json_name,
             };
           });
+          console.log('inputData', inputData);
           const outcomeId = eventData.outcomes[0].id;
           const eventName = eventData.name;
           yield saveGenerateShareLinkToStore({ outcomeId, eventName });
-          console.log('inputData', inputData);
           betHandshakeHandler.createNewEvent(inputData);
           yield put(updateCreateEventLoading(false));
         }
-      } else {
-        yield put(showAlert({
-          message: MESSAGE.NOT_ENOUGH_GAS,
-        }));
       }
     }
   } catch (e) {

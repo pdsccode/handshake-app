@@ -30,9 +30,6 @@ export function* handleRemoveEvent({ eventId }) {
     const events = yield select(eventSelector);
     if (events && events.length) {
       const index = events.findIndex((item) => item.id === eventId);
-      console.log('eventId', eventId, typeof eventId);
-      console.log('index', index);
-      console.log('events', events);
       if (index >= 0) {
         yield put(REMOVE_DATA({
           _path: 'prediction.events',
