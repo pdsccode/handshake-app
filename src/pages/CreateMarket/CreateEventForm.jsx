@@ -206,8 +206,8 @@ class CreateEventForm extends Component {
   }
 
   renderFee = ({ isNew }) => {
-    const title = 'MARKET CREATOR FEE';
-    const textNote = 'The creator fee is a percentage of the total winnings of the market.';
+    const title = 'MARKET FEE';
+    const textNote = 'The market fee is a percentage of the total winnings of the market.';
     const optionSlider = {
       min: 0,
       max: 99,
