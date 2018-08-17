@@ -501,12 +501,12 @@ class Me extends React.Component {
                 listFeed.map((handshake) => {
                     const FeedComponent = maps[handshake.type];
                     if (FeedComponent) {
-                      if (handshake.offerFeedType === EXCHANGE_FEED_TYPE.OFFER_STORE_SHAKE &&
-                        handshake.status === HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.PRE_SHAKING &&
-                        handshake.initUserId === authProfile?.id
-                      ) {
-                        return null;
-                      }
+                      // if (handshake.offerFeedType === EXCHANGE_FEED_TYPE.OFFER_STORE_SHAKE &&
+                      //   handshake.status === HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.PRE_SHAKING &&
+                      //   handshake.initUserId === authProfile?.id
+                      // ) {
+                      //   return null;
+                      // }
                       return (
                         <Col key={handshake.id} className="feed-wrapper" id={handshake.id}>
                           <FeedComponent

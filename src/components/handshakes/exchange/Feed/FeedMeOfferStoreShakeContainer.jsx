@@ -444,7 +444,7 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
     //   if (offer.type === EXCHANGE_ACTION.BUY) {
     //     const wallet = MasterWallet.getWalletDefault(offer.currency);
     //     const balance = await wallet.getBalance();
-    //     const fee = await wallet.getFee();
+    //     const fee = await wallet.getFee(NB_BLOCKS, true);
     //
     //     if (!this.checkMainNetDefaultWallet(wallet)) {
     //       return;
@@ -515,6 +515,44 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
     this.props.handleActionFailed(e);
   }
 
+  getPendingBalance = async () => {
+    const { offer } = this;
+    const { list } = this.props.me;
+    const {
+      currency
+    } = offer;
+
+    if (list && list.length > 0) {
+      const wallet = MasterWallet.getWalletDefault(currency);
+      const fee = await wallet.getFee(NB_BLOCKS, true);
+
+      return list.reduce((pendingBalance, item) => {
+        const { initUserId, shakeUserIds, extraData } = item;
+        const itemOffer = Offer.offer(JSON.parse(extraData));
+        const {
+          id, currency: itemCurrency, type, freeStart, amount, totalAmount, status, subStatus,
+        } = itemOffer;
+
+        let transferAmount = 0;
+
+        if (currency === itemCurrency && (status === 'completing' || (status === 'completed' && subStatus === 'transferring'))) {
+          const userType = getHandshakeUserType(initUserId, shakeUserIds);
+
+          if ((type === EXCHANGE_ACTION.SELL && userType === HANDSHAKE_USER.OWNER && freeStart === '') ||
+            (type === EXCHANGE_ACTION.BUY && userType === HANDSHAKE_USER.SHAKED)) {
+            transferAmount = new BigNumber(amount).isLessThan(new BigNumber(totalAmount)) ? totalAmount : amount;
+
+            transferAmount += 2 * fee;
+          }
+        }
+
+        return pendingBalance + transferAmount;
+      });
+    }
+
+    return 0;
+  }
+
   // //////////////////////
 
   handleCompleteShakedOffer = async () => {
@@ -531,7 +569,7 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
         (type === EXCHANGE_ACTION.BUY && this.userType === HANDSHAKE_USER.SHAKED)) {
         const wallet = MasterWallet.getWalletDefault(currency);
         const balance = await wallet.getBalance();
-        const fee = await wallet.getFee();
+        const fee = await wallet.getFee(NB_BLOCKS, true);
 
         if (!this.checkMainNetDefaultWallet(wallet)) {
           this.props.hideLoading();
@@ -661,7 +699,7 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
     //   if (type === EXCHANGE_ACTION.BUY) { // shop buy
     //     const wallet = MasterWallet.getWalletDefault(currency);
     //     const balance = await wallet.getBalance();
-    //     const fee = await wallet.getFee();
+    //     const fee = await wallet.getFee(NB_BLOCKS, true);
     //
     //     if (!this.checkMainNetDefaultWallet(wallet)) {
     //       this.props.hideLoading();
@@ -748,7 +786,7 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
       if (type === EXCHANGE_ACTION.BUY) { // shop buy
         const wallet = MasterWallet.getWalletDefault(currency);
         const balance = await wallet.getBalance();
-        const fee = await wallet.getFee();
+        const fee = await wallet.getFee(NB_BLOCKS, true);
 
         if (!this.checkMainNetDefaultWallet(wallet)) {
           this.props.hideLoading();
@@ -1085,6 +1123,7 @@ FeedMeOfferStoreShakeContainer.propTypes = {
 };
 
 const mapState = state => ({
+  me: state.me,
   listOfferPrice: state.exchange.listOfferPrice,
 });
 
