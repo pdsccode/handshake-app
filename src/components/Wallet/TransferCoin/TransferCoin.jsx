@@ -22,6 +22,7 @@ import iconSuccessChecked from '@/assets/images/icon/icon-checked-green.svg';
 import './TransferCoin.scss';
 import iconQRCodeWhite from '@/assets/images/icon/scan-qr-code.svg';
 import { BigNumber } from "bignumber.js";
+import BrowserDetect from '@/services/browser-detect';
 
 const isIOs = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
 
@@ -86,7 +87,8 @@ class Transfer extends React.Component {
   }
 
   componentDidMount() {
-    this.props.clearFields(nameFormSendWallet, false, false, "to_address", "amountCoin");
+    this.props.clearFields(nameFormSendWallet, false, false, "to_address", "amountCoin", "amountMoney");
+
     if (this.props.amount){
       this.props.rfChange(nameFormSendWallet, 'amountCoin', this.props.amount);
     }
@@ -111,7 +113,7 @@ class Transfer extends React.Component {
 
       this.setState({active: this.props.active});
 
-      this.props.clearFields(nameFormSendWallet, false, false, "to_address", "amountCoin");
+      this.props.clearFields(nameFormSendWallet, false, false, "to_address", "amountCoin",  "amountMoney");
       if (this.props.amount){
         this.props.rfChange(nameFormSendWallet, 'amountCoin', this.props.amount);
       }
@@ -130,7 +132,7 @@ class Transfer extends React.Component {
   }
 
   resetForm(){
-    this.props.clearFields(nameFormSendWallet, false, false, "to_address", "amountCoin");
+    this.props.clearFields(nameFormSendWallet, false, false, "to_address", "amountCoin", "amountMoney");
   }
 
   showLoading = () => {
@@ -156,6 +158,7 @@ class Transfer extends React.Component {
   }
 
   getRate = (currency) => {
+
     var data = {amount: 1, currency: currency};
     let rates = this.state.rates;
     this.props.getCryptoPrice({
@@ -164,7 +167,6 @@ class Transfer extends React.Component {
       successFn: (res) => {
         const cryptoPrice = CryptoPrice.cryptoPrice(res.data);
         const price = new BigNumber(cryptoPrice.fiatAmount).toNumber();
-
         rates.push({[currency]: price});
         this.setState({rates: rates});
       },
@@ -261,13 +263,15 @@ class Transfer extends React.Component {
     let amount = evt ? evt.target.value : null, rate = 0, money = 0;
     if(!amount) amount = val;
 
+    let alternateRate = this.props.rate;
+    alternateRate = alternateRate ? alternateRate : 1;
 
     let rates = this.state.rates.filter(rate => rate.hasOwnProperty(this.state.walletSelected.name));
 
     if (rates.length > 0){
       rate = rates[0][this.state.walletSelected.name];
       if(!isNaN(amount)){
-        money = amount * rate;
+        money = amount * rate * alternateRate;
         this.setState({
           inputSendAmountValue: amount,
           inputSendMoneyValue: money.toFixed(0)
@@ -293,13 +297,15 @@ class Transfer extends React.Component {
   }
 
   updateAddressMoneyValue = (evt) => {
+    let alternateRate = this.props.rate;
+    alternateRate = alternateRate ? alternateRate : 1;
     let money = evt.target.value, rate = 0, amount = 0;
     let rates = this.state.rates.filter(rate => rate.hasOwnProperty(this.state.walletSelected.name));
 
     if (rates.length > 0){
       rate = rates[0][this.state.walletSelected.name]
       if(!isNaN(money)){
-        amount = money/rate;
+        amount = money/rate/alternateRate;
         this.setState({
           inputSendAmountValue: amount,
           inputSendMoneyValue: money
@@ -324,7 +330,7 @@ submitSendCoin=()=>{
 
         this.setState({isRestoreLoading: false});
         if (success.hasOwnProperty('status')){
-          if (success.status == 1){            
+          if (success.status == 1){
             this.showSuccess(this.getMessage(success.message));
             this.onFinish();
             MasterWallet.NotifyUserTransfer(this.state.walletSelected.address, this.state.inputAddressAmountValue);
@@ -385,6 +391,9 @@ openQrcode = () => {
 }
 
   render() {
+    let { currency } = this.props;
+    if(!currency) currency = "USD";
+
     const { messages } = this.props.intl;
     let showDivAmount = (( this.state.walletSelected && ( !this.state.walletSelected.isToken && this.state.rates.filter(rate => rate.hasOwnProperty(this.state.walletSelected.name).length > 0) ) ) ) ? true : false;
 
@@ -427,7 +436,7 @@ openQrcode = () => {
                 onChange={evt => this.updateSendAddressValue(evt)}
                 validate={[required]}
               />
-              {!isIOs ? <img onClick={() => { this.openQrcode() }} className="icon-qr-code-black" src={iconQRCodeWhite} /> : ""}
+              {! (BrowserDetect.isChrome && BrowserDetect.isIphone) ? <img onClick={() => { this.openQrcode() }} className="icon-qr-code-black" src={iconQRCodeWhite} /> : ""}
             </div>
             <p className="labelText">{messages.wallet.action.transfer.label.amount}</p>
               <div className="div-amount">
@@ -447,7 +456,7 @@ openQrcode = () => {
               </div>
               { !showDivAmount ? "" :
                 <div className="div-amount">
-                  <div className="prepend">{messages.wallet.action.transfer.label.usd}</div>
+                  <div className="prepend">{currency}</div>
                   <Field
                     key="1"
                     name="amountMoney"
@@ -490,6 +499,8 @@ openQrcode = () => {
 Transfer.propTypes = {
   wallet: PropTypes.any,
   active: PropTypes.bool,
+  currency: PropTypes.string,
+  rate: PropTypes.number
 };
 
 
