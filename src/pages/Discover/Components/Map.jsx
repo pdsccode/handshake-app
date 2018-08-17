@@ -69,7 +69,14 @@ class Map extends React.Component {
     const center = { lat, lng }
 
     return (
-      <GoogleMap zoom={zoomLevel} center={center} onZoomChanged={onZoomChanged} ref={onMapMounted} onCenterChanged={onCenterChanged}>
+      <GoogleMap
+        zoom={zoomLevel}
+        center={center}
+        onZoomChanged={onZoomChanged}
+        ref={onMapMounted}
+        onCenterChanged={onCenterChanged}
+        options={{ gestureHandling: 'greedy' }}
+      >
         {stations &&
           stations.map(station => {
             const { id, ...rest } = station;
