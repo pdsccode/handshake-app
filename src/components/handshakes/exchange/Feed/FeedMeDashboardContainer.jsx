@@ -163,7 +163,7 @@ class FeedMeOfferStoreContainer extends React.PureComponent {
     //   if (sellBalance > 0 && freeStart === '') {
     //     const wallet = MasterWallet.getWalletDefault(currency);
     //     const balance = await wallet.getBalance();
-    //     const fee = await wallet.getFee();
+    //     const fee = await wallet.getFee(NB_BLOCKS, true);
     //
     //     if (!this.checkMainNetDefaultWallet(wallet)) {
     //       this.props.hideLoading();
