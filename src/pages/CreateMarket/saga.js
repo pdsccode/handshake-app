@@ -105,9 +105,9 @@ function* saveGenerateShareLinkToStore(data) {
 
 function* handleCreateEventSaga({ values, isNew, selectedSource }) {
   try {
+    yield put(updateCreateEventLoading(true));
     const betHandshakeHandler = BetHandshakeHandler.getShareManager();
     if (!isNew) {
-      yield put(updateCreateEventLoading(true));
       // Add new outcomes
       const newOutcomeList = values.outcomes.filter(o => !o.id).map(i => Object.assign({}, i, { public: 0 }));
       const { eventId } = values;

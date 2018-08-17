@@ -8,9 +8,9 @@ class SimpleOrderMode extends React.Component {
     return (
       <div className="matchMarketFee">
         <span>Market Fee</span>
-        <span className="feeValue">{matchMarketFee}%</span>
+        <span className="feeValue">{matchMarketFee || 0}%</span>
       </div>
-    )
+    );
   }
   render() {
     return (

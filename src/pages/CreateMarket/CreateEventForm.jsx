@@ -151,6 +151,7 @@ class CreateEventForm extends Component {
         name="category"
         type="select"
         label="Category"
+        className="form-group"
         disabled={!props.isNew}
         validate={required}
         component={renderField}
