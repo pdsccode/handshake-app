@@ -104,7 +104,7 @@ function* handleCreateEventSaga({ values, isNew, selectedSource }) {
         const inputData = addOutcomeResult.data.map(o => {
           return {
             fee: values.creatorFee,
-            source: values.reports,
+            source: `${values.reports || '-'}`,
             closingTime: values.closingTime,
             reportTime: values.reportingTime,
             disputeTime: values.disputeTime,

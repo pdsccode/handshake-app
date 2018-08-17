@@ -40,6 +40,7 @@ class CreateEventContainer extends React.Component {
     const { selectedEvent } = state;
     const initialValues = !selectedEvent ? {
       outcomes: [{}],
+      creatorFee: 0,
     } : {
       eventId: selectedEvent.id,
       eventName: selectedEvent.name,
