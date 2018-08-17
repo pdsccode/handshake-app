@@ -7,7 +7,7 @@ import InfoBox from 'react-google-maps/lib/components/addons/InfoBox';
 
 import iconCustomMarker from '@/assets/images/icon/custom-marker.svg';
 import './StationMarker.scss';
-import { formatMoneyByLocale, getLatLongHash, getOfferPrice } from '@/services/offer-util';
+import { formatMoneyByLocale, getLatLongHash, getOfferPrice, shortenUser } from '@/services/offer-util';
 import ShakeDetail, { nameFormShakeDetail } from '@/components/handshakes/exchange/components/ShakeDetail';
 import { change, clearFields } from 'redux-form';
 import { bindActionCreators } from 'redux';
@@ -21,7 +21,9 @@ import { getErrorMessageFromCode } from '@/components/handshakes/exchange/utils'
 import PropTypes from 'prop-types';
 import Offer from '@/models/Offer';
 import history from '@/services/history';
-import AllStationDetails from './AllStationDetails'
+import AllStationDetails from './AllStationDetails';
+import { Ethereum } from '@/services/Wallets/Ethereum.js';
+import { Bitcoin } from '@/services/Wallets/Bitcoin';
 
 const ICONS = {
   [CRYPTO_CURRENCY.ETH]: iconEthereum,
@@ -241,12 +243,31 @@ class StationMarker extends React.Component {
     });
   }
 
+  getDisplayName = () => {
+    const { username } = this.offer;
+    if (username) {
+      const walletE = new Ethereum();
+      const walletB = new Bitcoin();
+      if (walletE.checkAddressValid(username) === true) {
+        walletE.address = username;
+        return walletE.getShortAddress();
+      } else if (walletB.checkAddressValid(username) === true) {
+        walletB.address = username;
+        return walletB.getShortAddress();
+      }
+      return shortenUser(username);
+    }
+
+    return '';
+  }
+
   render() {
     const { messages } = this.props.intl;
     const {
       actionActive, currencyActive, location, initUserId, authProfile, showAllDetails, onChangeShowAllDetails, review,
     } = this.props;
-    const { username, fiatCurrency } = this.offer;
+    const { fiatCurrency } = this.offer;
+    const username = this.getDisplayName();
     const locationArr = location.split(',');
     const coordinate = { lat: parseFloat(locationArr[0]), lng: parseFloat(locationArr[1]) };
     const price = this.getPrice();
