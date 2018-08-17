@@ -242,6 +242,10 @@
       margin-right: 10px;
     }
   }
+  .form-group > label {
+    @extend .CreateEventFormGroupTitle;
+    color: #2c2c2c;
+  }
 }
 
 
