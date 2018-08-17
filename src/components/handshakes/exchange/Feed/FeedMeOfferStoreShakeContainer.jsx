@@ -85,6 +85,7 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
   }
 
   showNotEnoughCoinAlert = (balance, amount, fee, currency) => {
+    console.log('showNotEnoughCoinAlert',balance, amount, fee, currency);
     const { showNotEnoughCoinAlert } = this.props;
 
     if (showNotEnoughCoinAlert) {
@@ -585,12 +586,12 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
       }
     // }
 
-    this.props.completeOfferItem({
-      PATH_URL: `${API_URL.EXCHANGE.OFFER_STORES}/${initUserId}/${API_URL.EXCHANGE.SHAKES}/${id}/complete`,
-      METHOD: 'POST',
-      successFn: this.handleCompleteShakedOfferSuccess,
-      errorFn: this.handleCompleteShakedOfferFailed,
-    });
+    // this.props.completeOfferItem({
+    //   PATH_URL: `${API_URL.EXCHANGE.OFFER_STORES}/${initUserId}/${API_URL.EXCHANGE.SHAKES}/${id}/complete`,
+    //   METHOD: 'POST',
+    //   successFn: this.handleCompleteShakedOfferSuccess,
+    //   errorFn: this.handleCompleteShakedOfferFailed,
+    // });
   }
 
   handleCompleteShakedOfferSuccess = async (responseData) => {
