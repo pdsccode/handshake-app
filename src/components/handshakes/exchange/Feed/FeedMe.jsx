@@ -18,13 +18,13 @@ import { feedBackgroundColors } from '@/components/handshakes/exchange/config';
 import { Ethereum } from '@/services/Wallets/Ethereum.js';
 import { Bitcoin } from '@/services/Wallets/Bitcoin';
 
-import { getErrorMessageFromCode } from '../utils';
+import { getErrorMessageFromCode } from '@/components/handshakes/exchange/utils';
 import './FeedExchange.scss';
 import './FeedMe.scss';
 import FeedMeOfferStoreShakeContainer from './FeedMeOfferStoreShakeContainer';
 import FeedMeSwapContainer from './FeedMeSwapContainer';
 import FeedMeInstantContainer from './FeedMeInstantContainer';
-import { trackingOnchain } from '@/reducers/exchange/action';
+import { trackingOnchain, trackingTransfer } from '@/reducers/exchange/action';
 import FeedMeDashboardContainer from './FeedMeDashboardContainer';
 
 class FeedMe extends React.PureComponent {
@@ -127,6 +127,15 @@ class FeedMe extends React.PureComponent {
     return result;
   }
 
+  buyCoinsUsingCreditCard = () => {
+    const { buyCoinsUsingCreditCard } = this.props;
+
+    this.modalRef.close();
+    if (buyCoinsUsingCreditCard) {
+      buyCoinsUsingCreditCard();
+    }
+  }
+
   showNotEnoughCoinAlert = (balance, amount, fee, currency) => {
     const bnBalance = new BigNumber(balance);
     const bnAmount = new BigNumber(amount);
@@ -135,27 +144,51 @@ class FeedMe extends React.PureComponent {
     const condition = bnBalance.isLessThan(bnAmount.plus(bnFee));
 
     if (condition) {
-      this.props.showAlert({
-        message: (
-          <div className="text-center">
-            <FormattedMessage
-              id="notEnoughCoinInWallet"
-              values={{
-              amount: formatAmountCurrency(balance),
-              fee: formatAmountCurrency(fee),
-              currency,
-            }}
-            />
-          </div>
-        ),
-        timeOut: 3000,
-        type: 'danger',
-        callBack: () => {
-        },
+      this.hideLoading();
+      this.setState({
+        modalContent:
+          (
+            <div className="py-2">
+              <Feed className="feed p-2" background="#259B24">
+                <div className="text-white d-flex align-items-center" style={{ minHeight: '50px' }}>
+                  <div><FormattedMessage id="notEnoughCoinInWalletStores" /></div>
+                </div>
+              </Feed>
+              <Button className="mt-2" block onClick={this.buyCoinsUsingCreditCard}><FormattedMessage id="ex.btn.topup.now" /></Button>
+              <Button block className="btn btn-secondary" onClick={this.cancelTopupNow}><FormattedMessage id="ex.btn.notNow" /></Button>
+            </div>
+          ),
+      }, () => {
+        this.modalRef.open();
       });
+
+      // this.props.showAlert({
+      //   message: (
+      //     <div className="text-center">
+      //       <FormattedMessage
+      //         id="notEnoughCoinInWallet"
+      //         values={{
+      //         amount: formatAmountCurrency(balance),
+      //         fee: formatAmountCurrency(fee),
+      //         currency,
+      //       }}
+      //       />
+      //     </div>
+      //   ),
+      //   timeOut: 3000,
+      //   type: 'danger',
+      //   callBack: () => {
+      //   },
+      // });
     }
 
+    console.log('showNotEnoughCoinAlert',condition);
+
     return condition;
+  }
+
+  cancelTopupNow = () => {
+    this.modalRef.close();
   }
 
   getDisplayName = (isShop) => {
@@ -219,6 +252,20 @@ class FeedMe extends React.PureComponent {
     });
   }
 
+  trackingTransfer = (offerStoreId, offerStoreShakeId, txHash) => {
+    const url = `exchange/offer-stores/${offerStoreId}/shakes/${offerStoreShakeId}/transfer?tx=${txHash}`;
+
+    this.props.trackingTransfer({
+      PATH_URL: url,
+      METHOD: 'POST',
+      successFn: () => {
+      },
+      errorFn: () => {
+
+      },
+    });
+  }
+
   render() {
     const {
       initUserId, shakeUserIds, extraData, location, state, status, mode = 'discover', ipInfo: { latitude, longitude, country }, initAt, lastUpdateAt, review, reviewCount, ...props
@@ -249,6 +296,7 @@ class FeedMe extends React.PureComponent {
       showNotEnoughCoinAlert: this.showNotEnoughCoinAlert,
       getDisplayName: this.getDisplayName,
       trackingOnchain: this.trackingOnchain,
+      trackingTransfer: this.trackingTransfer,
       showLoading: this.showLoading,
       hideLoading: this.hideLoading,
     };
@@ -308,6 +356,7 @@ const mapState = state => ({
 const mapDispatch = ({
   showAlert,
   trackingOnchain,
+  trackingTransfer,
 });
 
 export default injectIntl(connect(mapState, mapDispatch)(FeedMe));

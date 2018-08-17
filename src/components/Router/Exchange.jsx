@@ -37,7 +37,7 @@ class ExchangeRouter extends React.Component {
   render() {
     return (
       <Switch>
-        {routerMap.map(route => <Route key={route.path} exact path={route.path} component={route.component} />)}
+        {routerMap.map(route => <Route key={route.path} exact {...route} />)}
         <Page404 />
       </Switch>
     );

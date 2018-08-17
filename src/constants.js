@@ -20,9 +20,14 @@ export const APP = {
   COUNTRY_PHONE_NEED_VERIFY: 'country_phone_need_verify',
   CHAT_ENCRYPTION_KEYPAIR:'chat_encryption_keypair',
   REFERS: 'refers',
+  SETTING: 'setting',
   OFFLINE_STATUS: 'offline_status',
   ALLOW_LOCATION_ACCESS: 'allow_location_access',
   isSupportedLanguages: ['en', 'zh', 'fr', 'de', 'ja', 'ko', 'ru', 'es'],
+  CC_SOURCE: 'cc_source',
+  CC_PRICE: 'cc_price',
+  CC_ADDRESS: 'cc_address',
+  CC_TOKEN: 'cc_token',
 };
 
 export const UNSELECTED = 'UNSELECTED';
@@ -48,7 +53,7 @@ export const HANDSHAKE_NAME = {
   // [HANDSHAKE_ID.SEED]: 'Seed',
   [HANDSHAKE_ID.WALLET_TRANSFER]: { name: 'Transfer coins', priority: 4 },
   [HANDSHAKE_ID.WALLET_RECEIVE]: { name: 'Receive coins', priority: 5 },
-  [HANDSHAKE_ID.EXCHANGE]: { name: 'Manage your station', priority: 6 },
+  [HANDSHAKE_ID.EXCHANGE]: { name: 'Manage your ATM', priority: 6 },
   [HANDSHAKE_ID.CREATE_EVENT]: { name: 'Create your own market', priority: 7 },
   // [HANDSHAKE_ID.EXCHANGE_LOCAL]: { name: 'Make swaps', priority: 7 },
   // UNSELECTED: { name: 'Create a prediction market', priority: 100 },
@@ -172,6 +177,11 @@ export const EXCHANGE_ACTION_LIST = [
 ];
 
 export const EXCHANGE_ACTION_DEFAULT = EXCHANGE_ACTION.BUY;
+
+export const EXCHANGE_ACTION_COLORS = {
+  [EXCHANGE_ACTION.BUY]: { color: '#4CD964' },
+  [EXCHANGE_ACTION.SELL]: { color: '#F86C4F' },
+};
 
 export const FIAT_CURRENCY_SYMBOL = '$';
 
@@ -542,6 +552,8 @@ export const URL = {
 
   RECRUITING: '/recruiting',
   RECRUITING_JOB_DETAIL: '/recruiting/:slug',
+
+  CC_PAYMENT_URL: '/payment',
 };
 
 export const LANDING_PAGE_TYPE = {
