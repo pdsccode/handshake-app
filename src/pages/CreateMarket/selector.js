@@ -8,6 +8,7 @@ export const hasEmail = (state) => {
 export const eventSelector = (state) => state.prediction.events;
 
 export const reportSelector = (state) => state.reports.list || [];
+export const categorySelector = (state) => state.categories.list || [];
 
 export const shareEventSelector = (state) => state.ui.shareEvent;
 

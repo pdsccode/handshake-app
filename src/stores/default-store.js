@@ -1,6 +1,7 @@
 export default {
   prediction: {},
   reports: {},
+  categories: {},
   ui: {
     showedLuckyPool: false,
     side: null,

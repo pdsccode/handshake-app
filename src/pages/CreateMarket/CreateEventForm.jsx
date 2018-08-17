@@ -22,6 +22,7 @@ class CreateEventForm extends Component {
   static propTypes = {
     className: PropTypes.string,
     reportList: PropTypes.array,
+    categoryList: PropTypes.array,
     isNew: PropTypes.bool,
     initialValues: PropTypes.object,
     shareEvent: PropTypes.object,
@@ -33,6 +34,7 @@ class CreateEventForm extends Component {
   static defaultProps = {
     className: '',
     reportList: undefined,
+    categoryList: undefined,
     formAction: undefined,
     dispatch: undefined,
     isNew: true,
@@ -57,7 +59,6 @@ class CreateEventForm extends Component {
       isNew: props.isNew,
       selectedSource: this.state.selectedReportSource,
     }));
-    console.log('selectSource',this.state.selectedReportSource)
   }
 
   setFieldValueToState = (fieldName, value) => {
@@ -143,6 +144,22 @@ class CreateEventForm extends Component {
       </React.Fragment>
     );
   };
+
+  renderCategories = (props) => {
+    return (
+      <Field
+        name="category"
+        type="select"
+        label="Category"
+        disabled={!props.isNew}
+        validate={required}
+        component={renderField}
+      >
+        <option value="">Please select a category</option>
+        {props.categoryList.map(r => <option value={r.id} key={r.id}>{r.name}</option>)}
+      </Field>
+    );
+  }
 
   renderAutoSuggestion = (props) => {
     return (
@@ -372,6 +389,7 @@ class CreateEventForm extends Component {
       <form className={cls} onSubmit={props.handleSubmit(this.onCreateNewEvent)}>
         <div className="CreateEventFormBlock">
           {this.renderEventSuggest(props, state)}
+          {this.renderCategories(props, state)}
           <FieldArray
             name="outcomes"
             isNew={props.isNew}

@@ -1,4 +1,4 @@
-import { takeLatest, call, put, select } from 'redux-saga/effects';
+import { takeLatest, call, put, select, all } from 'redux-saga/effects';
 import { apiGet, apiPost } from '@/stores/api-saga';
 import { API_URL, URL } from '@/constants';
 import { BetHandshakeHandler } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
@@ -17,8 +17,6 @@ function* handleLoadReportsSaga({ cache = true }) {
         return events;
       }
     }
-    yield call(isBalanceValid);
-
     return yield call(apiGet, {
       PATH_URL: API_URL.CRYPTOSIGN.LOAD_REPORTS,
       type: 'LOAD_REPORTS',
@@ -29,10 +27,27 @@ function* handleLoadReportsSaga({ cache = true }) {
   }
 }
 
+function* handleLoadCategories() {
+  try {
+    return yield call(apiGet, {
+      PATH_URL: API_URL.CRYPTOSIGN.LOAD_CATEGORIES,
+      type: 'LOAD_CATEGORIES',
+      _path: 'categories',
+    });
+  } catch (e) {
+    console.error(e);
+  }
+}
+
 function* handleLoadCreateEventData() {
   try {
-    yield call(handleLoadReportsSaga, {});
-    yield call(handleLoadMatches, {});
+    yield put(updateCreateEventLoading(true));
+    yield all([
+      call(handleLoadReportsSaga, {}),
+      call(handleLoadMatches, {}),
+      call(handleLoadCategories, {}),
+    ]);
+    yield put(updateCreateEventLoading(false));
   } catch (e) {
     console.error(e);
   }
@@ -148,6 +163,7 @@ function* handleCreateEventSaga({ values, isNew, selectedSource }) {
           disputeTime: values.disputeTime,
           market_fee: values.creatorFee,
           outcomes: values.outcomes,
+          category_id: values.category,
           ...reportSource,
         };
         const { data } = yield call(handleCreateNewEventSaga, { newEventData });

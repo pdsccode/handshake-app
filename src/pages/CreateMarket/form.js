@@ -4,15 +4,35 @@
 import React from 'react';
 import classNames from 'classnames';
 
+function renderByType(props) {
+  switch (props.type) {
+    case 'select':
+      return (
+        <select
+          {...props.input}
+          disabled={props.disabled}
+          className="form-control custom-select"
+        >
+          {props.children}
+        </select>
+      );
+
+    default:
+      return (
+        <input
+          {...props.input}
+          className={props.fieldClass}
+          placeholder={props.placeholder}
+          type={props.type}
+          disabled={props.disabled}
+        />
+      );
+  }
+}
+
 export const renderField = (props) => {
   const {
-    input,
-    label,
-    type,
-    placeholder,
-    className,
-    fieldClass,
-    disabled,
+    label, className,
     meta: { touched, error, warning },
   } = props;
 
@@ -24,13 +44,7 @@ export const renderField = (props) => {
   return (
     <div className={cls}>
       {label && <label>{label}</label>}
-      <input
-        {...input}
-        className={fieldClass}
-        placeholder={placeholder}
-        type={type}
-        disabled={disabled}
-      />
+      {renderByType(props)}
       {touched && ((error && <span className="ErrorMsg">{error}</span>) || (warning && <span className="WarningMsg">{warning}</span>))}
     </div>
   );

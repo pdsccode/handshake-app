@@ -5,7 +5,7 @@ import { eventSelector } from '@/pages/Prediction/selector';
 import Loading from '@/components/Loading';
 import CreateEventForm from './CreateEventForm';
 import { loadCreateEventData } from './action';
-import { reportSelector, shareEventSelector, isLoading } from './selector';
+import { reportSelector, categorySelector, shareEventSelector, isLoading } from './selector';
 import { createEventFormName } from './constants';
 
 class CreateEventContainer extends React.Component {
@@ -13,10 +13,12 @@ class CreateEventContainer extends React.Component {
   static propTypes = {
     dispatch: PropTypes.func.isRequired,
     eventList: PropTypes.array,
+    categoryList: PropTypes.array,
   };
 
   static defaultProps = {
     eventList: [],
+    categoryList: [],
   };
 
   constructor(props) {
@@ -47,6 +49,7 @@ class CreateEventContainer extends React.Component {
       outcomes: selectedEvent.outcomes,
       creatorFee: selectedEvent.market_fee,
       reports: selectedEvent.source_id,
+      category: selectedEvent.category_id,
       closingTime: selectedEvent.date,
       reportingTime: selectedEvent.reportTime,
       disputeTime: selectedEvent.disputeTime,
@@ -54,7 +57,8 @@ class CreateEventContainer extends React.Component {
     return (
       <CreateEventForm
         initialValues={initialValues}
-        reportList={props.reportList || []}
+        reportList={props.reportList}
+        categoryList={props.categoryList}
         isNew={!selectedEvent}
         eventList={props.eventList}
         shareEvent={props.shareEvent}
@@ -88,6 +92,7 @@ export default connect(
       eventList: eventSelector(state),
       isLoading: isLoading(state),
       reportList: reportSelector(state),
+      categoryList: categorySelector(state),
       shareEvent: shareEventSelector(state),
     };
   },
