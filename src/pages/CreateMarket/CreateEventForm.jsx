@@ -180,6 +180,7 @@ class CreateEventForm extends Component {
     const lastIndex = allData.length - 1;
     return (
       <React.Fragment>
+        { this.renderGroupTitle('OUTCOME') }
         {
           fields.map((outcome, index) => {
             const { id } = fields.get(index);
@@ -190,7 +191,6 @@ class CreateEventForm extends Component {
                 <Field
                   name={`${outcome}.name`}
                   type="text"
-                  label="outcome"
                   className="form-group"
                   fieldClass="form-control"
                   component={renderField}
