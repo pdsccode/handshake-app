@@ -27,6 +27,15 @@
     position: relative;
     border-radius: 6px;
     background-size: cover;
+
+    .warning {
+      color: Red;
+      bottom: 13px;
+      right: 12px;
+      position: absolute;
+      cursor: pointer;
+      font-size: 14px;
+    }
   }
   .feed-selected{
     border-color: #0BE200;
