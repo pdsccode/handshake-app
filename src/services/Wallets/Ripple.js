@@ -16,8 +16,11 @@ export class Ripple extends Wallet {
       this.coinType = 144;
       this.name = 'XRP';
       this.title = 'Ripple';
-      this.className = 'Ripple';
+      this.className = 'Ripple';      
     }
+    getShortAddress() {
+        return this.address.replace(this.address.substr(4, 26), '...');
+      }
     createAddressPrivatekey() {
       const t0 = performance.now();
   
