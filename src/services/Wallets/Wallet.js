@@ -19,6 +19,8 @@ export class Wallet {
     this.customToken = false;
     this.isCollectibles = false;
     this.decimals = 18;
+    this.secret = '';  
+    this.publicKey = ''
   }
 
   getShortAddress() {

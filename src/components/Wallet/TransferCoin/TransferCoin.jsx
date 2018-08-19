@@ -281,36 +281,42 @@ class Transfer extends React.Component {
 
   getMessage(str){
     const { messages } = this.props.intl;
-    let result = "";
+    let result = str
     try{
       result = eval(str);
     }
     catch(e){
-      console.error(e);
+      console.log(e);
     }
 
     return result;
   }
 
-  updateAddressMoneyValue = (evt) => {
-    let money = evt.target.value, rate = 0, amount = 0;
+  updateAddressAmountValue = (evt, val) => {
+    let alternateRate = this.props.rate;
+    alternateRate = alternateRate ? alternateRate : 1;
+
+    let amount = evt ? evt.target.value : null, rate = 0, money = 0;
+    if(!amount) amount = val;
+
     let rates = this.state.rates.filter(rate => rate.hasOwnProperty(this.state.walletSelected.name));
 
     if (rates.length > 0){
-      rate = rates[0][this.state.walletSelected.name]
-      if(!isNaN(money)){
-        amount = money/rate;
-        this.setState({
-          inputSendAmountValue: amount,
-          inputSendMoneyValue: money
-        });
-
-        this.props.rfChange(nameFormSendWallet, 'amountCoin', amount);
-        this.props.rfChange(nameFormSendWallet, 'amountMoney', money);
-      }
+      rate = rates[0][this.state.walletSelected.name];
+      if(!isNaN(amount)){
+        money = amount * rate * alternateRate;        
+      }      
     }
+    this.setState({
+      inputSendAmountValue: amount,
+      inputSendMoneyValue: money.toFixed(0)
+      }, () => {
+      this.props.rfChange(nameFormSendWallet, 'amountCoin', amount);
+      this.props.rfChange(nameFormSendWallet, 'amountMoney', money);
+    });
+    
   }
-
+  
   updateSendAddressValue = (evt) => {
     this.setState({
       inputAddressAmountValue: evt.target.value,
@@ -386,7 +392,7 @@ openQrcode = () => {
 
   render() {    
     const { messages } = this.props.intl;  
-    let showDivAmount = (( this.state.walletSelected && ( !this.state.walletSelected.isToken && this.state.rates.filter(rate => rate.hasOwnProperty(this.state.walletSelected.name).length > 0) ) ) ) ? true : false;
+    let showDivAmount = (( this.state.walletSelected && ( !this.state.walletSelected.isToken && this.state.walletSelected.name != "XRP" && this.state.rates.filter(rate => rate.hasOwnProperty(this.state.walletSelected.name).length > 0) ) ) ) ? true : false;
     
     return (
       <div>
