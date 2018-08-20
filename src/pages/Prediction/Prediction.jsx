@@ -48,7 +48,6 @@ class Prediction extends React.Component {
     this.props.dispatch(removeExpiredEvent({ eventId }));
     this.closeOrderPlace();
     this.props.dispatch(getReportCount());
-
   }
 
   openOrderPlace = (selectedOutcome) => {
@@ -135,7 +134,7 @@ class Prediction extends React.Component {
 
   renderBetMode = (props, state) => {
     return (
-      <ModalDialog close onRef={(modal) => { this.modalOrderPlace = modal; }}>
+      <ModalDialog className="BetSlipContainer" close onRef={(modal) => { this.modalOrderPlace = modal; }}>
         <BetMode
           selectedOutcome={state.selectedOutcome}
           selectedMatch={state.selectedMatch}

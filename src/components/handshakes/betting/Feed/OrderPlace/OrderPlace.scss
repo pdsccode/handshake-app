@@ -1,8 +1,23 @@
 @import './src/styles/style';
 
+.BetModeContainer {
+  .OrderPlace {
+    > .TabPanel > .OrderMode {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      margin-top: -168px;
+      padding: 168px 0 20px 0;
+    }
+  }
+}
 .OrderPlace {
   .TabList {
     justify-content: space-between;
+  }
+  > .TabPanel > .OrderMode {
+    margin-top: -122px;
+    padding-top: 122px;
   }
   .TabItem.OrderPlaceType {
     &:hover {
@@ -34,6 +49,7 @@
       border: 1px solid #979797;
       border-left: none;
       border-right: none;
+      min-height: 42px;
       justify-content: flex-start;
       .TabItem {
         margin-right: 20px;
@@ -41,7 +57,8 @@
       }
     }
     .TabPanel {
-      max-height: 40vh;
+      // max-height: 40vh;
+      flex: 1 1 auto;
       overflow: auto;
     }
   }
