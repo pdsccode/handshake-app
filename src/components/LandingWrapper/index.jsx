@@ -12,7 +12,7 @@ import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 // style
 import imgNinja from '@/assets/images/ninja/ninja-header-black.svg';
 import imgLogo from '@/assets/images/logo.png';
-
+import { SEOHome } from '@/components/SEO';
 
 import './styles.scss';
 
@@ -56,6 +56,7 @@ class Index extends React.PureComponent {
 
     return (
       <div className="landing-page">
+        {SEOHome}
         <div className="landing-background">
           <div className="container">
             {/* mobile */}
