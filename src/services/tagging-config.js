@@ -24,7 +24,6 @@ const taggingConfig = {
       showPopupMeNotEnoughCoin: 'show_popup_me_not_enough_coin',
       showPopupCreateNotEnoughCoin: 'show_popup_create_not_enough_coin',
       buySuccess: 'buy_success',
-      buySuccessRemember: 'buy_success_remember',
     },
   },
 }
