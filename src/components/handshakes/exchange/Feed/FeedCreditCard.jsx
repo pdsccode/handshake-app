@@ -35,6 +35,8 @@ import { BigNumber } from 'bignumber.js';
 import axios from 'axios';
 import './FeedCreditCard.scss';
 import { getErrorMessageFromCode } from '@/components/handshakes/exchange/utils';
+import * as gtag from '@/services/ga-utils';
+import taggingConfig from '@/services/tagging-config';
 
 const nameFormCreditCard = 'creditCard';
 const FormCreditCard = createForm({
@@ -159,7 +161,16 @@ class FeedCreditCard extends React.Component {
 
   handleCreateCCOrderSuccess = (data) => {
     this.hideLoading();
-    // console.log('handleCreateCCOrderSuccess', data);
+
+    console.log('handleCreateCCOrderSuccess', data);
+
+    const { data: { amount, currency, fiat_amount, fiat_currency } } = data;
+
+    gtag.event({
+      category: taggingConfig.creditCard.category,
+      action: taggingConfig.creditCard.action.buySuccess,
+      label: `${amount} ${currency} - ${fiat_amount} ${fiat_currency}`,
+    });
 
     // this.timeoutClosePopup = setTimeout(() => {
     //   this.handleBuySuccess();
@@ -243,6 +254,11 @@ class FeedCreditCard extends React.Component {
   handleSubmit = async (values) => {
     const { handleSubmit } = this.props;
     const { userCcLimit, cryptoPrice, addressForced } = this.props;
+
+    gtag.event({
+      category: taggingConfig.creditCard.category,
+      action: taggingConfig.creditCard.action.clickBuy,
+    });
 
     const amoutWillUse = new BigNumber(userCcLimit.amount).plus(new BigNumber(cryptoPrice.fiatAmount)).toNumber();
 

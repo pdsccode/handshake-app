@@ -14,6 +14,8 @@ import { createCCOrder } from '@/reducers/exchange/action';
 import Image from '@/components/core/presentation/Image';
 import loadingSVG from '@/assets/images/icon/loading.gif';
 import { getErrorMessageFromCode } from '@/components/handshakes/exchange/utils';
+import * as gtag from '@/services/ga-utils';
+import taggingConfig from '@/services/tagging-config';
 
 class CCConfirm extends React.Component {
   constructor(props) {
@@ -117,11 +119,21 @@ class CCConfirm extends React.Component {
   };
 
   handleCreateCCOrderSuccess = (data) => {
+    console.log('handleCreateCCOrderSuccess', data);
+
     this.hideLoading();
     local.remove(APP.CC_SOURCE);
     local.remove(APP.CC_PRICE);
     local.remove(APP.CC_ADDRESS);
     local.remove(APP.CC_TOKEN);
+
+    const { data: { amount, currency, fiat_amount, fiat_currency } } = data;
+
+    gtag.event({
+      category: taggingConfig.creditCard.category,
+      action: taggingConfig.creditCard.action.buySuccess,
+      label: `${amount} ${currency} - ${fiat_amount} ${fiat_currency}`,
+    });
 
     this.props.showAlert({
       message: <div className="text-center"><FormattedMessage id="buyUsingCreditCardSuccessMessge" /></div>,
