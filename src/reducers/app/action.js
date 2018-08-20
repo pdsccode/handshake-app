@@ -322,6 +322,57 @@ function processGPS(ipInfo, dispatch) {
   });
 }
 
+// show popup to get GPS permission
+export const showPopupGetGPSPermission = () => (dispatch) => {
+  const ipInfo = local.get(APP.IP_INFO);
+  if (!BrowserDetect.isDesktop) {
+    if (!local.get(APP.ALLOW_LOCATION_ACCESS)) {
+      dispatch(updateModal({
+        show: true,
+        title: null,
+        body: (
+          <div>
+            <div className="d-table w-100">
+              <div className="d-table-cell pr-2 align-top">
+                <span className="icon-location" style={{ fontSize: '42px' }} />
+              </div>
+              <div className="d-table-cell align-top">
+                <div><FormattedHTMLMessage id="askLocationPermission.label.1" /></div>
+                <div className="mt-1"><FormattedHTMLMessage id="askLocationPermission.label.2" /></div>
+              </div>
+            </div>
+            <div className="mt-3 float-right">
+              <button
+                className="btn btn-outline-primary"
+                onClick={() => {
+                  local.save(APP.ALLOW_LOCATION_ACCESS, 'deny');
+                  dispatch(updateModal({ show: false }));
+                }}
+              >
+                <FormattedMessage id="askLocationPermission.btn.dontAllow" />
+              </button>
+              <button
+                className="ml-2 btn btn-primary"
+                style={{ minWidth: '123px' }}
+                onClick={() => {
+                  local.save(APP.ALLOW_LOCATION_ACCESS, 'allow');
+                  dispatch(updateModal({ show: false }));
+
+                  processGPS(ipInfo, dispatch);
+                }}
+              >
+                <FormattedMessage id="askLocationPermission.btn.allow" />
+              </button>
+            </div>
+          </div>
+        ),
+      }));
+    } else if (local.get(APP.ALLOW_LOCATION_ACCESS) === 'allow') {
+      processGPS(ipInfo, dispatch);
+    }
+  }
+}
+
 // |-- init
 export const initApp = (language, ref) => (dispatch) => {
   $http({
@@ -332,53 +383,53 @@ export const initApp = (language, ref) => (dispatch) => {
     const ipInfo = IpInfo.ipInfo(data);
 
     // show popup to get GPS permission
-    if (!BrowserDetect.isDesktop) {
-      if (!local.get(APP.ALLOW_LOCATION_ACCESS)) {
-
-        dispatch(updateModal({
-          show: true,
-          title: null,
-          body: (
-            <div>
-              <div className="d-table w-100">
-                <div className="d-table-cell pr-2 align-top">
-                  <span className="icon-location" style={{ fontSize: '42px' }} />
-                </div>
-                <div className="d-table-cell align-top">
-                  <div><FormattedHTMLMessage id="askLocationPermission.label.1" /></div>
-                  <div className="mt-1"><FormattedHTMLMessage id="askLocationPermission.label.2" /></div>
-                </div>
-              </div>
-              <div className="mt-3 float-right">
-                <button
-                  className="btn btn-outline-primary"
-                  onClick={() => {
-                    local.save(APP.ALLOW_LOCATION_ACCESS, 'deny');
-                    dispatch(updateModal({ show: false }));
-                  }}
-                >
-                  <FormattedMessage id="askLocationPermission.btn.dontAllow" />
-                </button>
-                <button
-                  className="ml-2 btn btn-primary"
-                  style={{ minWidth: '123px' }}
-                  onClick={() => {
-                    local.save(APP.ALLOW_LOCATION_ACCESS, 'allow');
-                    dispatch(updateModal({ show: false }));
-
-                    processGPS(ipInfo, dispatch);
-                  }}
-                >
-                  <FormattedMessage id="askLocationPermission.btn.allow" />
-                </button>
-              </div>
-            </div>
-          )
-        }));
-      } else if (local.get(APP.ALLOW_LOCATION_ACCESS) === 'allow') {
-        processGPS(ipInfo, dispatch);
-      }
-    }
+    // if (!BrowserDetect.isDesktop) {
+    //   if (!local.get(APP.ALLOW_LOCATION_ACCESS)) {
+    //
+    //     dispatch(updateModal({
+    //       show: true,
+    //       title: null,
+    //       body: (
+    //         <div>
+    //           <div className="d-table w-100">
+    //             <div className="d-table-cell pr-2 align-top">
+    //               <span className="icon-location" style={{ fontSize: '42px' }} />
+    //             </div>
+    //             <div className="d-table-cell align-top">
+    //               <div><FormattedHTMLMessage id="askLocationPermission.label.1" /></div>
+    //               <div className="mt-1"><FormattedHTMLMessage id="askLocationPermission.label.2" /></div>
+    //             </div>
+    //           </div>
+    //           <div className="mt-3 float-right">
+    //             <button
+    //               className="btn btn-outline-primary"
+    //               onClick={() => {
+    //                 local.save(APP.ALLOW_LOCATION_ACCESS, 'deny');
+    //                 dispatch(updateModal({ show: false }));
+    //               }}
+    //             >
+    //               <FormattedMessage id="askLocationPermission.btn.dontAllow" />
+    //             </button>
+    //             <button
+    //               className="ml-2 btn btn-primary"
+    //               style={{ minWidth: '123px' }}
+    //               onClick={() => {
+    //                 local.save(APP.ALLOW_LOCATION_ACCESS, 'allow');
+    //                 dispatch(updateModal({ show: false }));
+    //
+    //                 processGPS(ipInfo, dispatch);
+    //               }}
+    //             >
+    //               <FormattedMessage id="askLocationPermission.btn.allow" />
+    //             </button>
+    //           </div>
+    //         </div>
+    //       )
+    //     }));
+    //   } else if (local.get(APP.ALLOW_LOCATION_ACCESS) === 'allow') {
+    //     processGPS(ipInfo, dispatch);
+    //   }
+    // }
 
     dispatch(setIpInfo(ipInfo));
 

@@ -49,6 +49,8 @@ import { FormattedMessage } from 'react-intl';
 import loadingSVG from '@/assets/images/icon/loading.gif';
 import FeedCreditCard from '@/components/handshakes/exchange/Feed/FeedCreditCard';
 import { MasterWallet } from '@/services/Wallets/MasterWallet';
+import * as gtag from '@/services/ga-utils';
+import taggingConfig from '@/services/tagging-config';
 
 const TAG = 'Me';
 const maps = {
@@ -388,6 +390,15 @@ class Me extends React.Component {
     });
   }
 
+  showPopupBuyByCreditCard = () => {
+    this.buyCoinsUsingCreditCard();
+
+    gtag.event({
+      category: taggingConfig.creditCard.category,
+      action: taggingConfig.creditCard.action.showPopupDashboard,
+    });
+  }
+
   afterWalletFill = () => {
     this.modalFillRef.close();
   }
@@ -529,7 +540,7 @@ class Me extends React.Component {
                     <p>{messages.me.feed.cash.stationExplain}</p>
                     <p>{messages.me.feed.cash.stationCreateSuggest}</p>
                     <button className="btn btn-primary btn-block" onClick={this.showRestoreWallet}>{messages.me.feed.cash.restoreStation}</button>
-                    <button className="btn btn-primary btn-block" onClick={this.buyCoinsUsingCreditCard}>{messages.me.feed.cash.buyMoreCoin}</button>
+                    <button className="btn btn-primary btn-block" onClick={this.showPopupBuyByCreditCard}>{messages.me.feed.cash.buyMoreCoin}</button>
                   </div>
                 ) :
                 (
@@ -540,7 +551,7 @@ class Me extends React.Component {
                 listFeed && listFeed.length > 0 && this.state.handshakeIdActive === HANDSHAKE_ID.EXCHANGE && this.state.cashTab === CASH_TAB.DASHBOARD && (
                   <div className="text-center">
                     <button className="btn btn-primary btn-block" onClick={this.showBackupWallet}>{messages.me.feed.cash.backupStation}</button>
-                    <button className="btn btn-primary btn-block" onClick={this.buyCoinsUsingCreditCard}>{messages.me.feed.cash.buyMoreCoin}</button>
+                    <button className="btn btn-primary btn-block" onClick={this.showPopupBuyByCreditCard}>{messages.me.feed.cash.buyMoreCoin}</button>
                     {haveOffer && (<button className="btn btn-link text-underline" onClick={this.handleUpdateExchange}><FormattedMessage id="ex.shop.dashboard.button.updateInventory" /></button>)}
                   </div>
                 )
