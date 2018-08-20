@@ -67,6 +67,8 @@ import BackupWallet from '@/components/Wallet/BackupWallet/BackupWallet';
 import RestoreWallet from '@/components/Wallet/RestoreWallet/RestoreWallet';
 import SettingWallet from '@/components/Wallet/SettingWallet/SettingWallet';
 import FeedCreditCard from "@/components/handshakes/exchange/Feed/FeedCreditCard";
+import * as gtag from '@/services/ga-utils';
+import taggingConfig from '@/services/tagging-config';
 
 const QRCode = require('qrcode.react');
 
@@ -395,6 +397,7 @@ class Wallet extends React.Component {
       obj.push({
         title: messages.create.cash.credit.title,
         handler: () => {
+          
           this.setState({
             walletSelected: wallet,
             modalFillContent:
@@ -409,6 +412,12 @@ class Wallet extends React.Component {
           }, () => {
             this.toggleBottomSheet();
             this.modalFillRef.open();
+
+            gtag.event({
+              category: taggingConfig.creditCard.category,
+              action: taggingConfig.creditCard.action.showPopupWallet
+            });
+          }
           });
         },
       });
