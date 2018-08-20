@@ -32,12 +32,10 @@ import loadingSVG from '@/assets/images/icon/loading.gif';
 import ModalDialog from '@/components/core/controls/ModalDialog/ModalDialog';
 import * as gtag from '@/services/ga-utils';
 import taggingConfig from '@/services/tagging-config';
-import { Grid, Row } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
 import BlockCountry from '@/components/core/presentation/BlockCountry/BlockCountry';
 import Maintain from '@/components/Router/Maintain';
 import './Discover.scss';
-
+import { showPopupGetGPSPermission } from '@/reducers/app/action';
 
 const defaultZoomLevel = 13;
 
@@ -76,6 +74,10 @@ class DiscoverPage extends React.Component {
     const { ipInfo, rfChange } = this.props;
 
     this.setAddressFromLatLng(ipInfo?.latitude, ipInfo?.longitude); // fallback
+
+    // show popup to get GPS permission
+    this.props.showPopupGetGPSPermission();
+
     let url = '';
     if (this.state.utm === 'earlybird') {
       url = `exchange/info/offer-store-free-start/${this.state.program}`;
@@ -319,7 +321,7 @@ class DiscoverPage extends React.Component {
       zoomLevel,
       actionActive,
       currencyActive,
-      curLocation
+      curLocation,
     } = this.state;
     const stations = this.getStationsList();
     const map = (
@@ -346,8 +348,8 @@ class DiscoverPage extends React.Component {
           setLoading={this.setLoading}
           onGoToCurrentLocation={this.handleGoToCurrentLocation}
           onMapMounted={e => (this.mapRef = e)}
-          onZoomChanged={() => { this.setState({ zoomLevel: this.mapRef.getZoom() }) }}
-          onCenterChanged={() => { const center = this.mapRef.getCenter(); this.setState({ lat: center.lat() || 0, lng: center.lng() || 0 }) }}
+          onZoomChanged={() => { this.setState({ zoomLevel: this.mapRef.getZoom() }); }}
+          onCenterChanged={() => { const center = this.mapRef.getCenter(); this.setState({ lat: center.lat() || 0, lng: center.lng() || 0 }); }}
         />
       </div>
     );
@@ -401,6 +403,7 @@ const mapDispatch = dispatch => ({
   getListOfferPrice: bindActionCreators(getListOfferPrice, dispatch),
   setFreeStart: bindActionCreators(setFreeStart, dispatch),
   getFreeStartInfo: bindActionCreators(getFreeStartInfo, dispatch),
+  showPopupGetGPSPermission: bindActionCreators(showPopupGetGPSPermission, dispatch),
 });
 
 export default injectIntl(connect(mapState, mapDispatch)(DiscoverPage));
