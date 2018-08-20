@@ -3,7 +3,7 @@ const taggingConfig = {
     category: 'Common',
     action: {
       chooseCategory: 'choose_category',
-    }
+    },
   },
   cash: {
     category: 'Cash',
@@ -12,8 +12,21 @@ const taggingConfig = {
       clickBuySell: 'click_buy_sell',
       clickCoin: 'click_coin',
       clickSubmit: 'click_submit',
-    }
-  }
+    },
+  },
+  creditCard: {
+    category: 'Credit Card',
+    action: {
+      clickBuy: 'click_buy',
+      showPopupWallet: 'show_popup_wallet',
+      showPopupCreate: 'show_popup_create',
+      showPopupDashboard: 'show_popup_dashboard',
+      showPopupMeNotEnoughCoin: 'show_popup_me_not_enough_coin',
+      showPopupCreateNotEnoughCoin: 'show_popup_create_not_enough_coin',
+      buySuccess: 'buy_success',
+      buySuccessRemember: 'buy_success_remember',
+    },
+  },
 }
 
-export default taggingConfig
+export default taggingConfig;
