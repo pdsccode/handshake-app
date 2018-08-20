@@ -11,6 +11,7 @@ import { createDynamicImport } from '@/services/app';
 import Loading from '@/components/core/presentation/Loading';
 import ScrollToTop from '@/components/App/ScrollToTop';
 import Layout from '@/components/Layout/Main';
+import { SEOHome, SEOCash, SEOPrediction, SEODad, SEOWallet, SEOWhisper, SEOPayForDevs, SEOPayForStores } from '@/components/SEO';
 
 import imgCash from '@/assets/images/landing/home/cash.jpg';
 import imgCashContent from '@/assets/images/landing/cash/fake-content.svg';
@@ -86,16 +87,16 @@ let routesUsingDesktopLayout = null;
 if (BrowserDetect.isDesktop) {
   const configRoutesUsingDesktopLayout = [
     { path: URL.LUCKY_POOL, component: RouterLuckyPool },
-    { path: URL.PRODUCT_CASH_URL, render: () => <ProjectDetail type="product" name="cash" img={imgCash} imgContent={imgCashContent} /> },
-    { path: URL.PRODUCT_PREDICTION_URL, render: () => <ProjectDetail type="product" name="prediction" img={imgPrediction} imgContent={imgPredictionContent} /> },
-    { path: URL.HANDSHAKE_PEX, render: () => <ProjectDetail type="product" name="prediction" img={imgPrediction} /> },
-    { path: URL.PRODUCT_WALLET_URL, render: () => <ProjectDetail type="product" name="wallet" img={imgWallet} /> },
-    { path: URL.PRODUCT_HIVEPAY_OFFLINE_URL, render: () => <ProjectDetail type="product" name="pay-for-stores" img={imgHivepayOffline} /> },
-    { path: URL.PRODUCT_HIVEPAY_ONLINE_URL, render: () => <ProjectDetail type="product" name="pay-for-devs" img={imgHivepayOnline} /> },
+    { path: URL.PRODUCT_CASH_URL, render: () => <ProjectDetail type="product" name="cash" img={imgCash} imgContent={imgCashContent} reactHelmetElement={SEOCash} /> },
+    { path: URL.PRODUCT_PREDICTION_URL, render: () => <ProjectDetail type="product" name="prediction" img={imgPrediction} imgContent={imgPredictionContent} reactHelmetElement={SEOPrediction} /> },
+    { path: URL.HANDSHAKE_PEX, render: () => <ProjectDetail type="product" name="prediction" img={imgPrediction} reactHelmetElement={SEOPrediction} /> },
+    { path: URL.PRODUCT_WALLET_URL, render: () => <ProjectDetail type="product" name="wallet" img={imgWallet} reactHelmetElement={SEOWallet} /> },
+    { path: URL.PRODUCT_HIVEPAY_OFFLINE_URL, render: () => <ProjectDetail type="product" name="pay-for-stores" img={imgHivepayOffline} reactHelmetElement={SEOPayForStores} /> },
+    { path: URL.PRODUCT_HIVEPAY_ONLINE_URL, render: () => <ProjectDetail type="product" name="pay-for-devs" img={imgHivepayOnline} reactHelmetElement={SEOPayForDevs} /> },
     { path: URL.RESEARCH_INTERNET_CASH_URL, render: () => <ProjectDetail type="research" name="internet-cash" img={imgInternetCash} /> },
-    { path: URL.PRODUCT_DAD_URL, render: () => <ProjectDetail type="product" name="dad" img={imgDad} imgContent={imgDadContent} /> },
+    { path: URL.PRODUCT_DAD_URL, render: () => <ProjectDetail type="product" name="dad" img={imgDad} imgContent={imgDadContent} reactHelmetElement={SEODad} /> },
     { path: URL.RESEARCH_UNCOMMONS_URL, render: () => <ProjectDetail type="research" name="uncommons" img={imgUncommons} /> },
-    { path: URL.PRODUCT_WHISPER_URL, render: () => <ProjectDetail type="product" name="whisper" img={imgWhisper} /> },
+    { path: URL.PRODUCT_WHISPER_URL, render: () => <ProjectDetail type="product" name="whisper" img={imgWhisper} reactHelmetElement={SEOWhisper} /> },
   ];
   routesUsingDesktopLayout = configRoutesUsingDesktopLayout.map(route => (
     <Route
