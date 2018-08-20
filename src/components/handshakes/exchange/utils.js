@@ -82,6 +82,9 @@ export const getErrorMessageFromCode = (error) => {
     case -322:
       result = <FormattedMessage id="ex.error.322" />;
       break;
+    case -323:
+      result = <FormattedMessage id="ex.error.323" />;
+      break;
     default:
       result = messageFromApi || <FormattedMessage id="ex.error.default" />;
   }
