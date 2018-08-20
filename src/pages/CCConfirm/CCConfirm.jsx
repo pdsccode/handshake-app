@@ -14,6 +14,8 @@ import { createCCOrder } from '@/reducers/exchange/action';
 import Image from '@/components/core/presentation/Image';
 import loadingSVG from '@/assets/images/icon/loading.gif';
 import { getErrorMessageFromCode } from '@/components/handshakes/exchange/utils';
+import * as gtag from '@/services/ga-utils';
+import taggingConfig from '@/services/tagging-config';
 
 class CCConfirm extends React.Component {
   constructor(props) {
@@ -30,7 +32,7 @@ class CCConfirm extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.userProfile && nextProps.userProfile !== this.props.userProfile) {
       console.log('componentWillReceiveProps', nextProps);
-      const { client_secret, source } = Helper.getQueryStrings(window.location.search);
+      const { client_secret, } = Helper.getQueryStrings(window.location.search);
       this.source = local.get(APP.CC_SOURCE);
       const { client_secret: cc_client_secret } = this.source;
 
@@ -49,6 +51,7 @@ class CCConfirm extends React.Component {
   };
 
   handleSubmit = (values, userProfile) => {
+    const { client_secret, } = Helper.getQueryStrings(window.location.search);
     console.log('handleSubmit', this.props);
     const { handleSubmit } = this.props;
 
@@ -75,6 +78,7 @@ class CCConfirm extends React.Component {
         cvv: card,
         expiration_date: cc_expired,
         token,
+        client_secret,
       };
 
       console.log('handleSubmit', cc);
@@ -117,11 +121,21 @@ class CCConfirm extends React.Component {
   };
 
   handleCreateCCOrderSuccess = (data) => {
+    console.log('handleCreateCCOrderSuccess', data);
+
     this.hideLoading();
     local.remove(APP.CC_SOURCE);
     local.remove(APP.CC_PRICE);
     local.remove(APP.CC_ADDRESS);
     local.remove(APP.CC_TOKEN);
+
+    const { data: { amount, currency, fiat_amount, fiat_currency } } = data;
+
+    gtag.event({
+      category: taggingConfig.creditCard.category,
+      action: taggingConfig.creditCard.action.buySuccess,
+      label: `${amount} ${currency} - ${fiat_amount} ${fiat_currency}`,
+    });
 
     this.props.showAlert({
       message: <div className="text-center"><FormattedMessage id="buyUsingCreditCardSuccessMessge" /></div>,

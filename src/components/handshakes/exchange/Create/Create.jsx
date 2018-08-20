@@ -61,6 +61,9 @@ import { getErrorMessageFromCode } from '@/components/handshakes/exchange/utils'
 import PropTypes from 'prop-types';
 import FeedCreditCard from '@/components/handshakes/exchange/Feed/FeedCreditCard';
 import Modal from '@/components/core/controls/Modal';
+import * as gtag from '@/services/ga-utils';
+import taggingConfig from '@/services/tagging-config';
+import { showPopupGetGPSPermission } from '@/reducers/app/action';
 
 const nameFormExchangeCreate = 'exchangeCreate';
 const FormExchangeCreate = createForm({
@@ -133,6 +136,10 @@ class Component extends React.Component {
       ipInfo, rfChange, authProfile, freeStartInfo, isChooseFreeStart, getUserLocation,
     } = this.props;
     this.setAddressFromLatLng(ipInfo?.latitude, ipInfo?.longitude, ipInfo?.addressDefault);
+
+    // show popup to get GPS permission
+    this.props.showPopupGetGPSPermission();
+
     // getUserLocation({
     //   successFn: (ipInfo2) => {
     //     this.setAddressFromLatLng(ipInfo2?.latitude, ipInfo2?.longitude, ipInfo2?.addressDefault);
@@ -377,6 +384,11 @@ class Component extends React.Component {
         ),
     }, () => {
       this.modalFillRef.open();
+    });
+
+    gtag.event({
+      category: taggingConfig.creditCard.category,
+      action: taggingConfig.creditCard.action.showPopupCreateNotEnoughCoin,
     });
   }
 
@@ -1226,5 +1238,6 @@ const mapDispatchToProps = dispatch => ({
   offerItemRefill: bindActionCreators(offerItemRefill, dispatch),
   getUserLocation: bindActionCreators(getUserLocation, dispatch),
   checkUsernameExist: bindActionCreators(checkUsernameExist, dispatch),
+  showPopupGetGPSPermission: bindActionCreators(showPopupGetGPSPermission, dispatch),
 });
 export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(Component));
