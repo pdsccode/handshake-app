@@ -152,7 +152,9 @@ class Wallet extends React.Component {
       activeSetting: false,
       alternateCurrency: 'USD',
       alternateCurrencyRate: 1,
+      modalFillContent: ''
     };
+
     this.props.setHeaderRight(this.headerRight());
     this.listener = _.throttle(this.scrollListener, 200).bind(this);
   }
@@ -396,13 +398,26 @@ class Wallet extends React.Component {
       obj.push({
         title: messages.create.cash.credit.title,
         handler: () => {
-          this.setState({ walletSelected: wallet });
-          this.toggleBottomSheet();
-          this.modalFillRef.open();
 
-          gtag.event({
-            category: taggingConfig.creditCard.category,
-            action: taggingConfig.creditCard.action.showPopupWallet,
+          this.setState({
+            walletSelected: wallet,
+            modalFillContent:
+              (
+                <FeedCreditCard
+                  buttonTitle={messages.create.cash.credit.title}
+                  currencyForced={this.state.walletSelected ? this.state.walletSelected.name : ''}
+                  callbackSuccess={this.afterWalletFill}
+                  addressForced={this.state.walletSelected ? this.state.walletSelected.address : ''}
+                />
+              ),
+          }, () => {
+            this.toggleBottomSheet();
+            this.modalFillRef.open();
+
+            gtag.event({
+              category: taggingConfig.creditCard.category,
+              action: taggingConfig.creditCard.action.showPopupWallet
+            });
           });
         },
       });
@@ -912,15 +927,19 @@ class Wallet extends React.Component {
 
   render = () => {
     const { messages } = this.props.intl;
+    const { formAddTokenIsActive, formAddCollectibleIsActive, modalFillContent,
+      activeTransfer, walletSelected, alternateCurrency, alternateCurrencyRate,
+      walletsData, activeSetting, activeReceive} = this.state;
+
     return (
       <div className="wallet-page">
 
         <Modal onClose={() => this.setState({formAddTokenIsActive: false})} title="Add Custom Token" onRef={modal => this.modalAddNewTokenRef = modal}>
-            <AddToken formAddTokenIsActive={this.state.formAddTokenIsActive} onFinish={() => {this.addedCustomToken()}}/>
+            <AddToken formAddTokenIsActive={formAddTokenIsActive} onFinish={() => {this.addedCustomToken()}}/>
         </Modal>
 
         <Modal onClose={() => this.setState({formAddCollectibleIsActive: false})} title="Add Collectible" onRef={modal => this.modalAddNewCollectibleRef = modal}>
-            <AddCollectible formAddCollectibleIsActive={this.state.formAddCollectibleIsActive} onFinish={() => {this.addedCollectible()}}/>
+            <AddCollectible formAddCollectibleIsActive={formAddCollectibleIsActive} onFinish={() => {this.addedCollectible()}}/>
         </Modal>
 
         <Grid>
@@ -947,21 +966,16 @@ class Wallet extends React.Component {
 
           <Modal title={messages.wallet.action.transfer.header} onRef={modal => this.modalSendRef = modal}  onClose={this.closeTransfer}>
             <TransferCoin
-              active={this.state.activeTransfer}
-              wallet={this.state.walletSelected}
+              active={activeTransfer}
+              wallet={walletSelected}
               onFinish={() => { this.successTransfer() }}
-              currency={this.state.alternateCurrency}
-              rate={this.state.alternateCurrencyRate}
+              currency={alternateCurrency}
+              rate={alternateCurrencyRate}
             />
           </Modal>
 
-          <Modal title="Buy coins" onRef={modal => this.modalFillRef = modal}>
-            <FeedCreditCard
-              buttonTitle="Buy coins"
-              currencyForced={this.state.walletSelected ? this.state.walletSelected.name : ''}
-              callbackSuccess={this.afterWalletFill}
-              addressForced={this.state.walletSelected ? this.state.walletSelected.address : ''}
-            />
+          <Modal title={messages.create.cash.credit.title} onRef={modal => this.modalFillRef = modal}>
+            {modalFillContent}
           </Modal>
 
           <Modal title={messages.wallet.action.protect.header} onClose={this.closeProtected} onRef={modal => this.modalProtectRef = modal}>
@@ -975,7 +989,7 @@ class Wallet extends React.Component {
 
           {/* Modal for Backup wallets : */}
           <Modal title={messages.wallet.action.backup.header} onRef={modal => this.modalBackupRef = modal}>
-            <BackupWallet walletData={this.state.walletsData} />
+            <BackupWallet walletData={walletsData} />
           </Modal>
 
           {/* Modal for Restore wallets : */}
@@ -985,15 +999,15 @@ class Wallet extends React.Component {
 
           {/* Modal for Setting wallets : */}
           <Modal title={messages.wallet.action.setting.header} onRef={modal => this.modalSettingRef = modal} onClose={this.closeSetting}>
-            <SettingWallet active={this.state.activeSetting}  />
+            <SettingWallet active={activeSetting}  />
           </Modal>
 
           {/* Modal for Copy address : */}
           <Modal title={messages.wallet.action.receive.title} onRef={modal => this.modalShareAddressRef = modal} onClose={()=> {this.setState({activeReceive: false})}}>
-            <ReceiveCoin active={this.state.activeReceive}
-              wallet={this.state.walletSelected}
-              currency={this.state.alternateCurrency}
-              rate={this.state.alternateCurrencyRate}
+            <ReceiveCoin active={activeReceive}
+              wallet={walletSelected}
+              currency={alternateCurrency}
+              rate={alternateCurrencyRate}
               onFinish={() => { this.successReceive() }}
             />
           </Modal>

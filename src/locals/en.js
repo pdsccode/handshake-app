@@ -208,6 +208,7 @@ export default {
   'ex.error.301': 'You are already a ninja.',
   'ex.error.302': 'Sorry, that ninja does not exist.',
   'ex.error.303': 'It looks like you have reached your credit card limit.',
+  'ex.error.304': 'Credit card is invalid',
   'ex.error.309': 'You already have a listing! To change your rates, please cancel your current listing.',
   'ex.error.319': 'Please type 0.5 ETH only.',
   'ex.error.320': 'The early bird program has ended, please cash in to trade with us.',
