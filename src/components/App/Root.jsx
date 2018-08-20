@@ -120,6 +120,7 @@ class Root extends React.Component {
   // }
 
   render() {
+    if (this.props.app.rootLoading) return null;
     return (
       <I18n>
         <div className="root">
