@@ -44,15 +44,17 @@ import { isEqual } from '@/utils/array.js';
 
 const bip39 = require('bip39');
 import qs from 'qs';
+import { Ripple } from '@/services/Wallets/Ripple.js';
 
 export class MasterWallet {
     // list coin is supported, can add some more Ripple ...
     static ListDefaultCoin = {
-      Ethereum, Bitcoin, BitcoinTestnet, BitcoinCash, BitcoinCashTestnet
+
+      Ethereum, Bitcoin, BitcoinTestnet, BitcoinCash, Ripple, BitcoinCashTestnet
     };
 
     static ListCoin = {
-      Ethereum, Bitcoin, BitcoinTestnet, BitcoinCash, BitcoinCashTestnet, TokenERC20, TokenERC721,
+      Ethereum, Bitcoin, BitcoinTestnet, BitcoinCash, Ripple, BitcoinCashTestnet, TokenERC20, TokenERC721,
       CryptoStrikers, CryptoPunks, CryptoKitties, Axie, BlockchainCuties,
       ChibiFighters, CryptoClown, CryptoCrystal, Cryptogs, CryptoHorse,
       CryptoSoccr, CryptoZodiacs, CSCPreSaleFactory, DopeRaider, Etherbots,
@@ -515,7 +517,10 @@ export class MasterWallet {
         if (walletJson.contractAddress) wallet.contractAddress = walletJson.contractAddress;
         if (walletJson.customToken) wallet.customToken = walletJson.customToken;
         if (walletJson.isCollectibles) wallet.isCollectibles = walletJson.isCollectibles;
-
+        if (walletJson.secret) wallet.secret = walletJson.secret;
+        if (walletJson.publicKey) wallet.publicKey = walletJson.publicKey;
+        
+      
         return wallet;
       } catch (e) {
         return false;

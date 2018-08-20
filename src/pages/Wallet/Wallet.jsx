@@ -410,7 +410,8 @@ class Wallet extends React.Component {
         },
       });
     }
-    if (!wallet.isToken)
+
+    if (wallet.name != "XRP" && !wallet.isToken)
       obj.push({
         title: messages.wallet.action.history.title,
         handler: async () => {
