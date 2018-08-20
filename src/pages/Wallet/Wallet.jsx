@@ -397,7 +397,7 @@ class Wallet extends React.Component {
       obj.push({
         title: messages.create.cash.credit.title,
         handler: () => {
-          
+
           this.setState({
             walletSelected: wallet,
             modalFillContent:
@@ -417,7 +417,6 @@ class Wallet extends React.Component {
               category: taggingConfig.creditCard.category,
               action: taggingConfig.creditCard.action.showPopupWallet
             });
-          }
           });
         },
       });
