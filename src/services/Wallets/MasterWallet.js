@@ -50,7 +50,7 @@ export class MasterWallet {
     // list coin is supported, can add some more Ripple ...
     static ListDefaultCoin = {
 
-      Ethereum, Bitcoin, BitcoinTestnet, BitcoinCash, Ripple, BitcoinCashTestnet
+      Ethereum, Bitcoin, BitcoinTestnet, BitcoinCash, BitcoinCashTestnet
     };
 
     static ListCoin = {
