@@ -56,7 +56,7 @@ export class Ripple extends Wallet {
   
       console.log('mnemonic: ' + this.mnemonic);
     
-      let bip32 = require("@/services/Wallets/libs/ripple-bip32");
+      let bip32 = require("ripple-bip32");
       const m = bip32.fromSeedBuffer(seed);
 
       console.log("m", m);
