@@ -2,9 +2,8 @@ import axios from 'axios';
 import { Wallet } from '@/services/Wallets/Wallet.js';
 import configs from '@/configs';
 import { StringHelper } from '@/services/helper';
-const bip39 = require("bip39");
-const bip32 = require("ripple-bip32");
-var keypairs = require('ripple-keypairs');
+const bip39 = require("bip39");      
+const keypairs = require('ripple-keypairs');
 var RippleAPI = require('ripple-lib').RippleAPI;
 
 
@@ -20,9 +19,35 @@ export class Ripple extends Wallet {
     }
     getShortAddress() {
         return this.address.replace(this.address.substr(4, 26), '...');
-      }
+    }
+
     createAddressPrivatekey() {
-      const t0 = performance.now();
+        const t0 = performance.now();
+
+        const seed = bip39.mnemonicToSeed(this.mnemonic); // creates seed buffer
+  
+        console.log('mnemonic: ' + this.mnemonic);
+
+        var entropy = new Buffer(seed, 'hex');
+        console.log("entropy", entropy);
+        var secret = keypairs.generateSeed({entropy: entropy});
+        var keypair = keypairs.deriveKeypair(secret);
+        var publicKey = keypair.publicKey;
+        var address = keypairs.deriveAddress(publicKey);
+        var privateKey = keypair.privateKey;
+        
+        this.address = address;
+        this.privateKey = privateKey;
+        this.publicKey = publicKey;
+        this.secret = secret;
+
+        const t1 = performance.now();
+        console.log(`Call to createAddressPrivatekey for each Ripple (${address}) took ${t1 - t0} milliseconds.`);
+    }
+
+    // Not work on server live
+    createAddressPrivatekey2() {
+      const t0 = performance.now();      
   
       if (this.mnemonic == '') {
         this.mnemonic = bip39.generateMnemonic(); // generates string
@@ -30,31 +55,28 @@ export class Ripple extends Wallet {
       const seed = bip39.mnemonicToSeed(this.mnemonic); // creates seed buffer
   
       console.log('mnemonic: ' + this.mnemonic);
+    
+      let bip32 = require("@/services/Wallets/libs/ripple-bip32");
+      const m = bip32.fromSeedBuffer(seed);
 
-      // var entropy = new Buffer(seed, 'hex');
-      // console.log("entropy", entropy);
-      // var secret = keypairs.generateSeed({entropy: entropy});
-      // var keypair = keypairs.deriveKeypair(secret);
-      // var address = keypairs.deriveAddress(keypair.publicKey);
-      // var privateKey = keypair.privateKey;
-
-      const m = bip32.fromSeedBuffer(seed)
+      console.log("m", m);
 
       let masterXprv = m.toBase58();
-      console.log(masterXprv)
+      console.log("masterXprv", masterXprv)
 
       let derived = m.derivePath(StringHelper.format('m/44\'/{0}\'/0\'/0/0', this.coinType));//derivePath("m/0'/2147483647'", hexSeed);
 
 
       let xprv = derived.toBase58();
-      console.log(xprv)
+      console.log("xprv", xprv)
       
       // xpub
       let xpub = derived.neutered().toBase58();
-      console.log(xpub);
+      console.log("xpub", xpub);
 
       // ripple address
       let address = derived.getAddress();      
+      console.log("ripple address", address);
 
       // publickey / privatekey      
       const srcpair = derived.keyPair.getKeyPairs();
