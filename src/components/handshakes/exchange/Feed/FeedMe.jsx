@@ -26,6 +26,8 @@ import FeedMeSwapContainer from './FeedMeSwapContainer';
 import FeedMeInstantContainer from './FeedMeInstantContainer';
 import { trackingOnchain, trackingTransfer } from '@/reducers/exchange/action';
 import FeedMeDashboardContainer from './FeedMeDashboardContainer';
+import * as gtag from '@/services/ga-utils';
+import taggingConfig from '@/services/tagging-config';
 
 class FeedMe extends React.PureComponent {
   static propTypes = {
@@ -133,6 +135,11 @@ class FeedMe extends React.PureComponent {
     this.modalRef.close();
     if (buyCoinsUsingCreditCard) {
       buyCoinsUsingCreditCard();
+
+      gtag.event({
+        category: taggingConfig.creditCard.category,
+        action: taggingConfig.creditCard.action.showPopupMeNotEnoughCoin,
+      });
     }
   }
 

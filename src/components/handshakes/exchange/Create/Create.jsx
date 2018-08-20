@@ -61,6 +61,8 @@ import { getErrorMessageFromCode } from '@/components/handshakes/exchange/utils'
 import PropTypes from 'prop-types';
 import FeedCreditCard from '@/components/handshakes/exchange/Feed/FeedCreditCard';
 import Modal from '@/components/core/controls/Modal';
+import * as gtag from '@/services/ga-utils';
+import taggingConfig from '@/services/tagging-config';
 
 const nameFormExchangeCreate = 'exchangeCreate';
 const FormExchangeCreate = createForm({
@@ -377,6 +379,11 @@ class Component extends React.Component {
         ),
     }, () => {
       this.modalFillRef.open();
+    });
+
+    gtag.event({
+      category: taggingConfig.creditCard.category,
+      action: taggingConfig.creditCard.action.showPopupCreateNotEnoughCoin,
     });
   }
 

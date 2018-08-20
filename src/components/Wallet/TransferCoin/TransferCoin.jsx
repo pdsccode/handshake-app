@@ -271,7 +271,7 @@ class Transfer extends React.Component {
     if (rates.length > 0){
       rate = rates[0][this.state.walletSelected.name];
       if(!isNaN(amount)){
-        money = amount * rate * alternateRate;
+        money = amount * rate;
         this.setState({
           inputSendAmountValue: amount,
           inputSendMoneyValue: money.toFixed(0)
@@ -285,12 +285,12 @@ class Transfer extends React.Component {
 
   getMessage(str){
     const { messages } = this.props.intl;
-    let result = "";
+    let result = str
     try{
       result = eval(str);
     }
     catch(e){
-      console.error(e);
+      console.log(e);
     }
 
     return result;
@@ -316,6 +316,7 @@ class Transfer extends React.Component {
       }
     }
   }
+
 
   updateSendAddressValue = (evt) => {
     this.setState({
@@ -395,7 +396,7 @@ openQrcode = () => {
     if(!currency) currency = "USD";
 
     const { messages } = this.props.intl;
-    let showDivAmount = (( this.state.walletSelected && ( !this.state.walletSelected.isToken && this.state.rates.filter(rate => rate.hasOwnProperty(this.state.walletSelected.name).length > 0) ) ) ) ? true : false;
+    let showDivAmount = (( this.state.walletSelected && ( !this.state.walletSelected.isToken && this.state.walletSelected.name != "XRP" && this.state.rates.filter(rate => rate.hasOwnProperty(this.state.walletSelected.name).length > 0) ) ) ) ? true : false;
 
     return (
       <div>
