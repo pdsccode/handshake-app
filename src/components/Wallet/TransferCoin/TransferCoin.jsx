@@ -269,16 +269,16 @@ class Transfer extends React.Component {
     if (rates.length > 0){
       rate = rates[0][this.state.walletSelected.name];
       if(!isNaN(amount)){
-        money = amount * rate;
-        this.setState({
-          inputSendAmountValue: amount,
-          inputSendMoneyValue: money.toFixed(0)
-        });
-      
-      }
+        money = amount * rate;              
+      }      
+    }
+    this.setState({
+      inputSendAmountValue: amount,
+      inputSendMoneyValue: money.toFixed(0)
+    }, ()=>{
       this.props.rfChange(nameFormSendWallet, 'amountCoin', amount);
       this.props.rfChange(nameFormSendWallet, 'amountMoney', money);
-    }    
+    });
   }
 
   getMessage(str){
