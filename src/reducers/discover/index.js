@@ -36,11 +36,16 @@ const handleListPayload = (payload) => {
     return null;
   });
 
+  result.updatedAt = Date.now();
+
   return { list: result, offers };
 };
 
+const initList = [];
+initList.updatedAt = Date.now();
+
 const discoverReducter = (state = {
-  list: [],
+  list: initList,
   detail: {},
   isFetching: false,
 }, action) => {

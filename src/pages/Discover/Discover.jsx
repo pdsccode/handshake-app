@@ -52,12 +52,14 @@ class DiscoverPage extends React.Component {
       handshakeIdActive: handshakeDefault,
       isLoading: true,
       exchange: this.props.exchange,
+      discover: this.props.discover,
       modalContent: <div />, // type is node
       propsModal: {
         // className: "discover-popup",
         // isDismiss: false
       },
       curLocation: { lat: 0, lng: 0 },
+      mapCenter: { lat: 0, lng: 0 },
       lat: 0,
       lng: 0,
       isBannedCash: this.props.isBannedCash,
@@ -130,6 +132,7 @@ class DiscoverPage extends React.Component {
     const { ipInfo } = this.props;
     this.setState({
       curLocation: { lat: ipInfo?.latitude, lng: ipInfo?.longitude },
+      mapCenter: { lat: ipInfo?.latitude, lng: ipInfo?.longitude },
       lat: ipInfo?.latitude,
       lng: ipInfo?.longitude,
       zoomLevel: defaultZoomLevel,
@@ -137,6 +140,8 @@ class DiscoverPage extends React.Component {
   };
 
   static getDerivedStateFromProps(nextProps, prevState) {
+    const { ipInfo } = nextProps;
+
     if (nextProps.exchange.listOfferPrice.updatedAt !== prevState.exchange.listOfferPrice.updatedAt) {
       if (prevState.handshakeIdActive !== 3) {
         //
@@ -145,7 +150,6 @@ class DiscoverPage extends React.Component {
           actionActive,
           currencyActive,
         } = prevState;
-        const { ipInfo } = nextProps;
         const qs = { };
 
         // const pt = `${prevState.lat},${prevState.lng}`;
@@ -170,6 +174,10 @@ class DiscoverPage extends React.Component {
         }
       }
       return { exchange: nextProps.exchange };
+    }
+
+    if (nextProps.discover.list.updatedAt !== prevState.discover.list.updatedAt) {
+      return { discover: nextProps.discover, mapCenter: { lat: ipInfo?.latitude, lng: ipInfo?.longitude } };
     }
 
     return null;
@@ -321,7 +329,12 @@ class DiscoverPage extends React.Component {
     }
   }
 
-  getMap = () => {
+  render() {
+    const {
+      propsModal,
+      modalContent,
+    } = this.state;
+    const { messages } = this.props.intl;
     const {
       lat,
       lng,
@@ -329,11 +342,15 @@ class DiscoverPage extends React.Component {
       actionActive,
       currencyActive,
       curLocation,
+      mapCenter,
     } = this.state;
     const { list: stations, offers } = this.props.discover;
 
-    const map = (
-      <div>
+    return (
+      <React.Fragment>
+        <div className={`discover-overlay ${this.state.isLoading ? 'show' : ''}`}>
+          <Image src={loadingSVG} alt="loading" width="100" />
+        </div>
         <NavBar onActionChange={this.onActionChange} onCurrencyChange={this.onCurrencyChange} />
         <Map
           isMarkerShown={this.state.isMarkerShown}
@@ -348,6 +365,7 @@ class DiscoverPage extends React.Component {
           offers={offers}
           zoomLevel={zoomLevel}
           curLocation={curLocation}
+          mapCenter={mapCenter}
           lat={lat}
           lng={lng}
           actionActive={actionActive}
@@ -358,34 +376,19 @@ class DiscoverPage extends React.Component {
           onGoToCurrentLocation={this.handleGoToCurrentLocation}
           onMapMounted={e => (this.mapRef = e)}
           onZoomChanged={() => { this.setState({ zoomLevel: this.mapRef.getZoom() }); }}
-          onCenterChanged={() => { const center = this.mapRef.getCenter(); this.setState({ lat: center.lat() || 0, lng: center.lng() || 0 }); }}
+          onCenterChanged={() => { const center = this.mapRef.getCenter();
+            // this.setState({mapCenter: { lat: center.lat() || 0, lng: center.lng() || 0 } });
+          }}
         />
-      </div>
-    );
 
-    return map;
-  }
-
-  render() {
-    const {
-      propsModal,
-      modalContent,
-    } = this.state;
-    const { messages } = this.props.intl;
-
-    return (
-      <React.Fragment>
-        <div className={`discover-overlay ${this.state.isLoading ? 'show' : ''}`}>
-          <Image src={loadingSVG} alt="loading" width="100" />
-        </div>
-        {!this.state.isBannedCash && !this.props.firebaseApp.config?.maintainChild?.exchange && this.getMap()}
-        {
-          this.state.isBannedCash
-            ? (
-              <BlockCountry />
-            )
-            : this.props.firebaseApp.config?.maintainChild?.exchange ? <Maintain /> : null
-        }
+        {/*{!this.state.isBannedCash && !this.props.firebaseApp.config?.maintainChild?.exchange && this.getMap()}*/}
+        {/*{*/}
+          {/*this.state.isBannedCash*/}
+            {/*? (*/}
+              {/*<BlockCountry />*/}
+            {/*)*/}
+            {/*: this.props.firebaseApp.config?.maintainChild?.exchange ? <Maintain /> : null*/}
+        {/*}*/}
         <ModalDialog onRef={(modal) => { this.modalRef = modal; return null; }} {...propsModal}>
           {modalContent}
         </ModalDialog>
