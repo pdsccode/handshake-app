@@ -46,9 +46,11 @@ class Map extends React.Component {
       lat, lng,
       onZoomChanged,
       onCenterChanged,
+      onIdle,
       onMapMounted,
       curLocation,
-      mapCenter,
+      mapCenterLat,
+      mapCenterLng,
     } = this.props;
     const { curStationIdShowAllDetails } = this.state;
 
@@ -78,10 +80,11 @@ class Map extends React.Component {
     return (
       <GoogleMap
         zoom={zoomLevel}
-        center={mapCenter}
+        center={{ lat: mapCenterLat, lng: mapCenterLng }}
         onZoomChanged={onZoomChanged}
         ref={onMapMounted}
         onCenterChanged={onCenterChanged}
+        onIdle={onIdle}
         options={{ gestureHandling: 'greedy' }}
       >
         {markers}

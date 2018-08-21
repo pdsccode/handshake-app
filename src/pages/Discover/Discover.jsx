@@ -38,6 +38,7 @@ import Maintain from '@/components/Router/Maintain';
 import './Discover.scss';
 import { showPopupGetGPSPermission } from '@/reducers/app/action';
 import local from '@/services/localStore';
+import _debounce from 'lodash/debounce';
 
 const defaultZoomLevel = 13;
 
@@ -47,6 +48,7 @@ class DiscoverPage extends React.Component {
     const handshakeDefault = HANDSHAKE_ID.EXCHANGE;
     const utm = this.getUtm();
     const program = this.getProgram();
+    this.debounceOnCenterChange = _debounce(this.handleOnCenterChanged, 100);
 
     this.state = {
       handshakeIdActive: handshakeDefault,
@@ -59,7 +61,8 @@ class DiscoverPage extends React.Component {
         // isDismiss: false
       },
       curLocation: { lat: 0, lng: 0 },
-      mapCenter: { lat: 0, lng: 0 },
+      mapCenterLat: 0,
+      mapCenterLng: 0,
       lat: 0,
       lng: 0,
       isBannedCash: this.props.isBannedCash,
@@ -132,9 +135,11 @@ class DiscoverPage extends React.Component {
     const { ipInfo } = this.props;
     this.setState({
       curLocation: { lat: ipInfo?.latitude, lng: ipInfo?.longitude },
-      mapCenter: { lat: ipInfo?.latitude, lng: ipInfo?.longitude },
+      // mapCenter: { lat: ipInfo?.latitude, lng: ipInfo?.longitude },
       lat: ipInfo?.latitude,
       lng: ipInfo?.longitude,
+      mapCenterLat: ipInfo?.latitude,
+      mapCenterLng: ipInfo?.longitude,
       zoomLevel: defaultZoomLevel,
     });
   };
@@ -177,7 +182,7 @@ class DiscoverPage extends React.Component {
     }
 
     if (nextProps.discover.list.updatedAt !== prevState.discover.list.updatedAt) {
-      return { discover: nextProps.discover, mapCenter: { lat: ipInfo?.latitude, lng: ipInfo?.longitude } };
+      return { discover: nextProps.discover };
     }
 
     return null;
@@ -329,6 +334,14 @@ class DiscoverPage extends React.Component {
     }
   }
 
+  handleOnCenterChanged = () => {
+    console.log('deboucne')
+    const center = this.mapRef.getCenter();
+    this.setState({ mapCenterLat: center.lat(), mapCenterLng: center.lng() });
+  }
+
+  handleOnMapMounted = (e) => (this.mapRef = e)
+
   render() {
     const {
       propsModal,
@@ -342,7 +355,8 @@ class DiscoverPage extends React.Component {
       actionActive,
       currencyActive,
       curLocation,
-      mapCenter,
+      mapCenterLat,
+      mapCenterLng,
     } = this.state;
     const { list: stations, offers } = this.props.discover;
 
@@ -365,7 +379,8 @@ class DiscoverPage extends React.Component {
           offers={offers}
           zoomLevel={zoomLevel}
           curLocation={curLocation}
-          mapCenter={mapCenter}
+          mapCenterLat={mapCenterLat}
+          mapCenterLng={mapCenterLng}
           lat={lat}
           lng={lng}
           actionActive={actionActive}
@@ -374,11 +389,13 @@ class DiscoverPage extends React.Component {
           modalRef={this.modalRef}
           setLoading={this.setLoading}
           onGoToCurrentLocation={this.handleGoToCurrentLocation}
-          onMapMounted={e => (this.mapRef = e)}
+          onMapMounted={this.handleOnMapMounted}
           onZoomChanged={() => { this.setState({ zoomLevel: this.mapRef.getZoom() }); }}
-          onCenterChanged={() => { const center = this.mapRef.getCenter();
-            // this.setState({mapCenter: { lat: center.lat() || 0, lng: center.lng() || 0 } });
-          }}
+          onCenterChanged={this.debounceOnCenterChange}
+          // onIdle={() => {
+          //   const center = this.mapRef.getCenter();
+          //   this.setState({mapCenter: { lat: center.lat() || 0, lng: center.lng() || 0 } });
+          // }}
         />
 
         {/*{!this.state.isBannedCash && !this.props.firebaseApp.config?.maintainChild?.exchange && this.getMap()}*/}
