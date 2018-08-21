@@ -13,8 +13,6 @@ import { connect } from 'react-redux';
 
 import iconCurLocationButton from '@/assets/images/icon/current-location-button.png';
 import currentLocationIndicator from '@/assets/images/icon/current-location-indicator.png';
-import OfferShop from '@/models/OfferShop';
-
 
 class Map extends React.Component {
 
@@ -28,19 +26,6 @@ class Map extends React.Component {
     };
   }
 
-  isEmptyBalance = item => {
-    if (!item) {
-      return;
-    }
-
-    const { actionActive } = this.props;
-    const { buyAmount, sellAmount } = item;
-    if (actionActive.includes('buy')) {
-      return sellAmount <= 0;
-    }
-    return buyAmount <= 0;
-  };
-
   handleOnChangeShowAllDetails = (id, newValue) => {
     this.setState({ curStationIdShowAllDetails: newValue ? id : null })
   }
@@ -50,6 +35,7 @@ class Map extends React.Component {
       isMarkerShown,
       onMarkerClick,
       stations,
+      offers,
       actionActive,
       currencyActive,
       onFeedClick,
@@ -78,16 +64,10 @@ class Map extends React.Component {
         options={{ gestureHandling: 'greedy' }}
       >
         {stations &&
-          stations.map(station => {
+          stations.map((station, index) => {
             const { id, ...rest } = station;
-            const offer = OfferShop.offerShop(JSON.parse(station.extraData));
-            const allowRender =
-              offer.itemFlags[currencyActive] &&
-              !this.isEmptyBalance(offer.items[currencyActive]);
+            const offer = offers[index];
 
-            if (!allowRender) {
-              return null;
-            }
             return (
               <StationMarker
                 key={id}

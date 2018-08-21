@@ -6,6 +6,7 @@ import { FormattedHTMLMessage, FormattedMessage, injectIntl } from 'react-intl';
 // import { loadDiscoverList } from '@/reducers/discover/action';
 import {
   API_URL,
+  APP,
   CRYPTO_CURRENCY,
   DISCOVER_GET_HANDSHAKE_RADIUS,
   EXCHANGE_ACTION,
@@ -36,6 +37,7 @@ import BlockCountry from '@/components/core/presentation/BlockCountry/BlockCount
 import Maintain from '@/components/Router/Maintain';
 import './Discover.scss';
 import { showPopupGetGPSPermission } from '@/reducers/app/action';
+import local from '@/services/localStore';
 
 const defaultZoomLevel = 13;
 
@@ -68,6 +70,9 @@ class DiscoverPage extends React.Component {
 
       zoomLevel: defaultZoomLevel,
     };
+
+    local.save(APP.EXCHANGE_ACTION, EXCHANGE_ACTION.BUY);
+    local.save(APP.EXCHANGE_CURRENCY, CRYPTO_CURRENCY.ETH);
   }
 
   componentDidMount() {
@@ -188,14 +193,14 @@ class DiscoverPage extends React.Component {
     this.props.history.push(`${URL.HANDSHAKE_CREATE}?id=${HANDSHAKE_ID.EXCHANGE}`);
   }
 
-  isEmptyBalance = (item) => {
-    const { actionActive } = this.state;
-    const { buyBalance, sellBalance } = item;
-    if (actionActive.includes('buy')) {
-      return buyBalance <= 0;
-    }
-    return sellBalance <= 0;
-  }
+  // isEmptyBalance = (item) => {
+  //   const { actionActive } = this.state;
+  //   const { buyBalance, sellBalance } = item;
+  //   if (actionActive.includes('buy')) {
+  //     return buyBalance <= 0;
+  //   }
+  //   return sellBalance <= 0;
+  // }
 
   setLoading = (loadingState) => {
     this.setState({ isLoading: loadingState });
@@ -265,6 +270,7 @@ class DiscoverPage extends React.Component {
     const { actionActive } = this.state;
 
     if (actionActive !== newValue) {
+      local.save(APP.EXCHANGE_ACTION, newValue);
       this.setLoading(true);
       this.setState({ actionActive: newValue }, () => {
         this.loadDiscoverList();
@@ -277,6 +283,7 @@ class DiscoverPage extends React.Component {
     const { currencyActive } = this.state;
 
     if (currencyActive !== item.id) {
+      local.save(APP.EXCHANGE_CURRENCY, item.id);
       this.setLoading(true);
       this.setState({ currencyActive: item.id }, () => {
         this.loadDiscoverList();
@@ -284,14 +291,14 @@ class DiscoverPage extends React.Component {
     }
   }
 
-  getStationsList = () => {
-    const { list } = this.props.discover;
-
-    if (list && list.length > 0) {
-      return list;
-    }
-    return null;
-  }
+  // getStationsList = () => {
+  //   const { list, offers } = this.props.discover;
+  //
+  //   if (list && list.length > 0) {
+  //     return { list, offers };
+  //   }
+  //   return null;
+  // }
 
   clickFeedDetail(handshake, extraData) {
     const { type } = handshake;
@@ -323,7 +330,8 @@ class DiscoverPage extends React.Component {
       currencyActive,
       curLocation,
     } = this.state;
-    const stations = this.getStationsList();
+    const { list: stations, offers } = this.props.discover;
+
     const map = (
       <div>
         <NavBar onActionChange={this.onActionChange} onCurrencyChange={this.onCurrencyChange} />
@@ -337,6 +345,7 @@ class DiscoverPage extends React.Component {
           mapElement={<div style={{ height: `100%` }} />}
           // center={{ lat: 35.929673, lng: -78.948237 }}
           stations={stations}
+          offers={offers}
           zoomLevel={zoomLevel}
           curLocation={curLocation}
           lat={lat}
@@ -386,16 +395,18 @@ class DiscoverPage extends React.Component {
   }
 }
 
-const mapState = state => ({
-  discover: state.discover,
-  ipInfo: state.app.ipInfo,
-  exchange: state.exchange,
-  isBannedCash: state.app.isBannedCash,
-  isBannedPrediction: state.app.isBannedPrediction,
-  firebaseApp: state.firebase.data,
-  freeStartInfo: state.exchange.freeStartInfo,
-  authProfile: state.auth.profile,
-});
+const mapState = state => {
+  return {
+    discover: state.discover,
+    ipInfo: state.app.ipInfo,
+    exchange: state.exchange,
+    isBannedCash: state.app.isBannedCash,
+    isBannedPrediction: state.app.isBannedPrediction,
+    firebaseApp: state.firebase.data,
+    freeStartInfo: state.exchange.freeStartInfo,
+    authProfile: state.auth.profile,
+  };
+};
 
 const mapDispatch = dispatch => ({
   rfChange: bindActionCreators(change, dispatch),
