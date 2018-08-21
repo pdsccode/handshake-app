@@ -9,7 +9,7 @@ import AutoSuggestion from '@/components/AutoSuggestion/AutoSuggestion';
 import moment from 'moment';
 import DateTimePicker from '@/components/DateTimePicker/DateTimePicker';
 import { renderField } from './form';
-import { required, urlValidator } from './validate';
+import { required, urlValidator, isExists } from './validate';
 import { createEvent } from './action';
 import ShareMarket from './ShareMarket';
 import { createEventFormName } from './constants';
@@ -287,7 +287,7 @@ class CreateEventForm extends Component {
               fieldClass="form-control"
               component={renderField}
               placeholder="Enter your prefer source name"
-              validate={[required]}
+              validate={[required, (value) => isExists(value, 'name', props.reportList)]}
             />
             <Field
               name="ownReportUrl"
@@ -296,7 +296,7 @@ class CreateEventForm extends Component {
               fieldClass="form-control"
               component={renderField}
               placeholder="Enter your prefer source URL"
-              validate={[required, urlValidator]}
+              validate={[required, urlValidator, (value) => isExists(value, 'url', props.reportList)]}
             />
             {this.renderGroupNote('We will review your source and get back to you within 24 hours.')}
           </React.Fragment>
@@ -402,7 +402,7 @@ class CreateEventForm extends Component {
         <div className="CreateEventFormBlock">
           {this.renderReport(props, state)}
           {this.renderTimeGroup(props, state)}
-          <button type="submit" className="btn btn-primary btn-block" disabled={props.pristine || props.submitting}>
+          <button type="submit" className="btn btn-primary btn-block" disabled={!props.valid || props.submitting}>
             {props.isNew ? 'Create a new event' : 'Add new outcomes'}
           </button>
         </div>

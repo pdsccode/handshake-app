@@ -36,3 +36,14 @@ export const urlValidator = (value) => {
 export const intValidator = (value, min, max) => {
   return isInt(value.toString(), { min, max }) ? null : (`Please enter an integer number from ${min} to ${max}`);
 };
+
+/**
+ * Validator isExists in source
+ * @param value
+ * @param name
+ * @param source
+ */
+export const isExists = (value, name, source) => {
+  const isFilter = source.filter(item => item[name] === value);
+  return (isFilter && isFilter.length) ? `The ${name} is taken` : null;
+};
