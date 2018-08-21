@@ -1,4 +1,4 @@
-.credit-card {
+.choose-coin {
   .specific-amount {
     padding: 10px;
     background: linear-gradient(0deg, #85A1F8 0%, #617BFF 100%);
@@ -85,6 +85,41 @@
       font-size: 16px;
       color: #546FF7;
       padding: 10px 15px;
+    }
+  }
+}
+
+.credit-card {
+  background: #F7F8FE;
+  .btn-close {
+    &:focus {
+      box-shadow: none;
+    }
+  }
+  .wrapper {
+    background: white;
+    margin: 0 10px;
+    padding: 20px 15px;
+    border-radius: 5px;
+    height: 700px;
+    .cc-label {
+      font-size: 16px;
+      color: #828AA8;
+      line-height: 19px;
+      margin-bottom: 5px;
+    }
+    .input-custom {
+      border: 2px solid #EBF0F6;
+      border-radius: 6px;
+      height: 54px;
+      padding: 0 10px;
+      color: #252130;
+      &:focus {
+        box-shadow: none;
+      }
+    }
+    .btn-submit-cc {
+      background: #546FF7;
     }
   }
 }

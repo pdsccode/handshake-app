@@ -42,6 +42,7 @@ import iconBitcoin from '@/assets/images/icon/coin/btc.svg';
 import iconEthereum from '@/assets/images/icon/coin/eth.svg';
 import iconUsd from '@/assets/images/icon/coin/icons8-us_dollar.svg';
 import iconLock from '@/assets/images/icon/icons8-lock_filled.svg';
+
 const nameFormSpecificAmount = 'specificAmount';
 const FormSpecificAmount = createForm({
   propsReduxForm: {
@@ -59,9 +60,27 @@ const FormSpecificAmount = createForm({
   },
 });
 
+const nameFormCreditCard = 'creditCard';
+const FormCreditCard = createForm({
+  propsReduxForm: {
+    form: nameFormCreditCard,
+    initialValues: {},
+  },
+});
+
 class FeedCreditCard extends React.Component {
 
+  state = {
+    hasSelectedCoin: false
+  }
+
+  handleSubmitSpecificAmount = (values) => {
+    console.log('valuess', values)
+    this.setState({ hasSelectedCoin: true })
+  }
   render() {
+    const { hasSelectedCoin } = this.state;
+    const { intl } = this.props;
 
     const listCurrency = [
       {
@@ -98,10 +117,10 @@ class FeedCreditCard extends React.Component {
         saving: 20
       }
     ]
-    return (
-      <div className="credit-card">
+    return !hasSelectedCoin ? (
+      <div className="choose-coin">
         <div className="specific-amount">
-          <FormSpecificAmount onSubmit={(values) => console.log('submit', values)}>
+          <FormSpecificAmount onSubmit={this.handleSubmitSpecificAmount}>
             <div className="text-right" style={{ margin: '-10px' }}><button className="btn btn-lg bg-transparent text-white d-inline-block">&times;</button></div>
             <div className="label-1"><FormattedMessage id="cc.label.1" /></div>
             <div className="label-2"><FormattedMessage id="cc.label.2" /></div>
@@ -182,7 +201,106 @@ class FeedCreditCard extends React.Component {
           </div>
         </div>
       </div>
-    );
+    ) : (
+      <div className="credit-card">
+        <div><button className="btn btn-lg bg-transparent d-inline-block btn-close">&times;</button></div>
+        <div className="wrapper">
+          <FormCreditCard>
+            <div>
+              <div className="cc-label"><FormattedMessage id="cc.label.cardNo" /></div>
+              <div>
+                <Field
+                  name="cc_number"
+                  className="form-control input-custom w-100"
+                  component={fieldCleave}
+                  // elementPrepend={
+                  //   <div className="input-group-prepend">
+                  //     <span className="input-group-text bg-white">
+                  //       <img width="26px" height="26px" src={(allCCTypes[ccType] && allCCTypes[ccType].img) || imgCC} />
+                  //     </span>
+                  //   </div>
+                  // }
+                  propsCleave={{
+                    // id: `card-number-${this.lastUniqueId()}`,
+                    placeholder: '4111 1111 1111 1111',
+                    options: {
+                      creditCard: true,
+                      onCreditCardTypeChanged: this.handleCCTypeChanged
+                    },
+                    // type: "tel",
+                    // maxLength: "19",
+                    // htmlRef: input => this.ccNumberRef = input,
+                  }}
+                  // validate={(!isCCExisting || isNewCCOpen) ? [required] : []}
+                />
+              </div>
+            </div>
+
+            <div className="d-table w-100 mt-4">
+              <div className="d-table-cell pr-1">
+                <div className="cc-label"><FormattedMessage id="cc.label.cvv" /></div>
+                <div>
+                  <Field
+                    name="cc_cvc"
+                    className='form-control input-custom w-100'
+                    component={fieldCleave}
+                    propsCleave={{
+                      placeholder: intl.formatMessage({ id: 'securityCode' }),
+                      options: {blocks: [4], numericOnly: true},
+                      // type: "password",
+                      // maxLength: "4",
+                      // minLength: "3",
+                      // id: `cart-cvc-${this.lastUniqueId()}`,
+                      // htmlRef: input => this.ccCvcRef = input,
+                    }}
+                    // validate={(!isCCExisting || isNewCCOpen) ? [required] : []}
+                  />
+                </div>
+              </div>
+
+              <div className="d-table-cell pl-1">
+                <div className="cc-label"><FormattedMessage id="cc.label.expiration" /></div>
+                <div>
+                  <Field
+                    name="cc_expired"
+                    className='form-control input-custom w-100'
+                    component={fieldCleave}
+                    propsCleave={{
+                      placeholder: intl.formatMessage({ id: 'ccExpireTemplate' }),
+                      options: {blocks: [2, 2], delimiter: '/', numericOnly: true},
+                      // type: "tel",
+                      // id: `cart-date-${this.lastUniqueId()}`,
+                      // htmlRef: input => this.ccExpiredRef = input,
+                      // onKeyDown: this.ccExpiredRefKeyDown,
+                    }}
+                    // validate={(!isCCExisting || isNewCCOpen) ? [required] : []}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-4 custom-control custom-checkbox">
+              <Field
+                id="cc-save-card"
+                name="saveCard"
+                type="checkbox"
+                className="custom-control-input"
+                component={fieldInput}
+              />
+              <label htmlFor="cc-save-card" className="custom-control-label"><FormattedMessage id="cc.label.saveCard" /></label>
+            </div>
+
+            <div className="mt-4">
+              <button type="submit" className="btn btn-lg btn-primary btn-block btn-submit-cc">
+                <img src={iconLock} width={18} className="align-top mr-2" /><span><FormattedMessage id="cc.btn.payNow" /></span>
+              </button>
+            </div>
+          </FormCreditCard>
+          <div className="alert alert-danger mt-3">Your credit card has been declined. Please try another card</div>
+          <div className="alert alert-success">You have successfully paid</div>
+        </div>
+      </div>
+    )
   }
 }
 
