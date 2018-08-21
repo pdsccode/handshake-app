@@ -539,6 +539,7 @@ export const URL = {
   RECRUITING_JOB_DETAIL: '/recruiting/:slug',
 
   CC_PAYMENT_URL: '/payment',
+  BUY_BY_CC_URL: '/buy-by-credit-card',
 };
 
 export const LANDING_PAGE_TYPE = {
