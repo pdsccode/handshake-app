@@ -108,6 +108,7 @@ class CCConfirm extends React.Component {
         address,
         email: authProfile ? authProfile.email : '',
         payment_method_data: params,
+        username: authProfile ? authProfile.username : '',
       };
       // console.log('handleCreateCCOrder',paramsObj);
       this.props.createCCOrder({
