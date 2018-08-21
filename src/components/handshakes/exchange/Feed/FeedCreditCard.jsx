@@ -56,7 +56,7 @@ class FeedCreditCard extends React.Component {
     this.state = {
       amount: 0,
       currency: CRYPTO_CURRENCY_DEFAULT,
-      isNewCCOpen: false,
+      isNewCCOpen: true,
       modalContent: '',
       showCCScheme: false,
     };
@@ -524,7 +524,8 @@ class FeedCreditCard extends React.Component {
                 {
                   amount && (
                     <CreditCard
-                      isCCExisting={userProfile && userProfile.creditCard.ccNumber.length > 0}
+                      // isCCExisting={userProfile && userProfile.creditCard.ccNumber.length > 0}
+                      isCCExisting={false}
                       lastDigits={userProfile && userProfile.creditCard.ccNumber}
                       isNewCCOpen={this.state.isNewCCOpen}
                       handleToggleNewCC={this.handleToggleNewCC}
