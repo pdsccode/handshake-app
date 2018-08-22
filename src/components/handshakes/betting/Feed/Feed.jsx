@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { ProgressBar } from 'react-bootstrap';
+import { isExpiredDate } from '@/components/handshakes/betting/validation';
 
 // services, constants
 import { BetHandshakeHandler } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
@@ -519,9 +520,7 @@ class FeedBetting extends React.Component {
     let displayWinValue = 0;
     if (shakerList) {
       shakerList.forEach((item) => {
-        const {
-          amount = 0, odds = 0, status
-        } = item;
+        const { amount = 0, odds = 0, status } = item;
         const oddsBN = parseBigNumber(odds);
         const amountBN = parseBigNumber(amount);
         let amountMatchBN = amountBN;
@@ -569,9 +568,7 @@ class FeedBetting extends React.Component {
 
   renderMaker() {
     const { itemInfo } = this.state;
-    const {
-      amount, odds, remainingAmount, matched,
-    } = itemInfo;
+    const { amount, odds, remainingAmount, matched } = itemInfo;
     const amountBN = parseBigNumber(amount);
     const zeroBN = parseBigNumber(0);
     const remainingAmountBN = parseBigNumber(remainingAmount) || zeroBN;
@@ -636,7 +633,7 @@ class FeedBetting extends React.Component {
 
     return (
       <div className="bottomDiv">
-        {status === BET_BLOCKCHAIN_STATUS.STATUS_USER_DISPUTED && this.renderProgressBar(itemInfo)}
+        {status === BET_BLOCKCHAIN_STATUS.STATUS_USER_DISPUTED && !isExpiredDate(itemInfo.disputeTime) && this.renderProgressBar(itemInfo)}
         <div className="bottomStatus">
           {this.renderStatus()}
           {this.renderButton(buttonClassName)}
