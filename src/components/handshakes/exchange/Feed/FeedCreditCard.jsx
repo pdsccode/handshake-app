@@ -138,16 +138,16 @@ class FeedCreditCard extends React.Component {
     this.props.getCcLimits({ PATH_URL: API_URL.EXCHANGE.GET_CC_LIMITS });
     this.props.getUserCcLimit({ PATH_URL: API_URL.EXCHANGE.GET_USER_CC_LIMIT });
 
-    this.intervalCountdown = setInterval(() => {
-      const { amount } = this.state;
-      this.getCryptoPriceByAmount(amount);
-    }, 30000);
+    // this.intervalCountdown = setInterval(() => {
+    //   const { amount } = this.props;
+    //   this.getCryptoPriceByAmount(amount);
+    // }, 30000);
   }
 
   componentWillUnmount() {
-    if (this.intervalCountdown) {
-      clearInterval(this.intervalCountdown);
-    }
+    // if (this.intervalCountdown) {
+    //   clearInterval(this.intervalCountdown);
+    // }
   }
 
   getCryptoPriceByAmount = (amount) => {
