@@ -339,6 +339,112 @@ class FeedCreditCard extends React.Component {
     }
   };
 
+  handleCreateCCOrder = (params) => {
+    const { cryptoPrice, addressForced, authProfile } = this.props;
+
+
+    let address = '';
+    if (addressForced) {
+      address = addressForced;
+    } else {
+      const wallet = MasterWallet.getWalletDefault(cryptoPrice.currency);
+      address = wallet.address;
+    }
+
+    if (cryptoPrice) {
+      const paramsObj = {
+        amount: cryptoPrice.amount.trim(),
+        currency: cryptoPrice.currency.trim(),
+        fiat_amount: cryptoPrice.fiatAmount.trim(),
+        fiat_currency: FIAT_CURRENCY.USD,
+        address,
+        email: authProfile ? authProfile.email : '',
+        payment_method_data: params,
+      };
+      // console.log('handleCreateCCOrder',paramsObj);
+      this.props.createCCOrder({
+        PATH_URL: API_URL.EXCHANGE.CREATE_CC_ORDER,
+        data: paramsObj,
+        METHOD: 'POST',
+        successFn: this.handleCreateCCOrderSuccess,
+        errorFn: this.handleCreateCCOrderFailed,
+      });
+    }
+  };
+
+  handleCreateCCOrderSuccess = (data) => {
+    this.hideLoading();
+
+    console.log('handleCreateCCOrderSuccess', data);
+
+    const { data: { amount, currency, fiat_amount, fiat_currency } } = data;
+
+    gtag.event({
+      category: taggingConfig.creditCard.category,
+      action: taggingConfig.creditCard.action.buySuccess,
+      value: fiat_amount,
+    });
+
+    this.props.showAlert({
+      message: <div className="text-center"><FormattedMessage id="buyUsingCreditCardSuccessMessge" /></div>,
+      timeOut: 2000,
+      type: 'success',
+      callBack: this.handleBuySuccess,
+    });
+  };
+
+  handleBuySuccess = () => {
+    // if (this.timeoutClosePopup) {
+    //   clearTimeout(this.timeoutClosePopup);
+    // }
+
+    const { callbackSuccess } = this.props;
+    // this.modalRef.close();
+
+    if (callbackSuccess) {
+      callbackSuccess();
+    } else {
+      this.props.history.push(URL.HANDSHAKE_ME);
+    }
+  };
+
+  handleCreateCCOrderFailed = (e) => {
+    this.hideLoading();
+
+    // console.log('handleCreateCCOrderFailed', JSON.stringify(e.response));
+    this.props.showAlert({
+      message: <div className="text-center">{getErrorMessageFromCode(e)}</div>,
+      timeOut: 3000,
+      type: 'danger',
+      callBack: this.handleBuyFailed,
+    });
+
+    // this.setState({modalContent:
+    //     (
+    //       <div className="py-2">
+    //         <Feed className="feed p-2" background="#259B24">
+    //           <div className="text-white d-flex align-items-center" style={{ minHeight: '50px' }}>
+    //             <div>{e.response?.data?.message}</div>
+    //           </div>
+    //         </Feed>
+    //         <Button block className="btn btn-secondary mt-2" onClick={this.handleBuyFailed}>Dismiss</Button>
+    //       </div>
+    //     )
+    // }, () => {
+    //   this.modalRef.open();
+    // });
+  };
+
+  handleBuyFailed = () => {
+    // this.modalRef.close();
+
+    const { callbackFailed } = this.props;
+
+    if (callbackFailed) {
+      callbackFailed();
+    }
+  };
+
   onCurrencyChange = (e, newValue) => {
     const { currency } = this.state;
 
