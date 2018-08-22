@@ -203,6 +203,7 @@ class Prediction extends React.Component {
   };
 
   showPopupCreditCard = () => {
+    this.modalOuttaMoney.close();
     const { messages } = this.props.intl;
     this.setState({
       modalFillContent:
