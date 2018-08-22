@@ -394,7 +394,7 @@ class Wallet extends React.Component {
     })
 
     // now hide buy coin:
-    if (wallet.network === MasterWallet.ListCoin[wallet.className].Network.Mainnet){
+    if (wallet.network === MasterWallet.ListCoin[wallet.className].Network.Mainnet && (wallet.name == "BTC" || wallet.name == "ETH")){
       obj.push({
         title: messages.create.cash.credit.title,
         handler: () => {
