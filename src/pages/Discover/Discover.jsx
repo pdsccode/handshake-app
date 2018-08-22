@@ -85,7 +85,7 @@ class DiscoverPage extends React.Component {
     const { ipInfo, rfChange } = this.props;
 
     this.setAddressFromLatLng(ipInfo?.latitude, ipInfo?.longitude); // fallback
-
+    this.handleGoToCurrentLocation();
     // show popup to get GPS permission
     this.props.showPopupGetGPSPermission();
 
