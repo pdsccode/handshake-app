@@ -102,6 +102,7 @@ class FeedCreditCard extends React.Component {
       fiatAmount: 0,
       fiatCurrency: FIAT_CURRENCY.USD,
       cryptoPrice: this.props.cryptoPrice,
+      packages: [],
     };
   }
 
@@ -160,15 +161,16 @@ class FeedCreditCard extends React.Component {
     // console.log('handleGetCryptoPriceSuccess', data);
     // const { userCcLimit } = this.props;
     const { amount } = this.state;
-    const cryptoPrice = CryptoPrice.cryptoPrice(responseData.data);
-
     const { rfChange } = this.props;
+    const cryptoPrice = CryptoPrice.cryptoPrice(responseData.data);
 
     let fiatAmount = amount * cryptoPrice.fiatAmount / cryptoPrice.amount;
 
     fiatAmount = roundNumberByLocale(fiatAmount, cryptoPrice.fiatCurrency);
     console.log('onAmountChange', fiatAmount);
     rfChange(nameFormSpecificAmount, 'fiatAmount', fiatAmount);
+
+    this.generatePackages(cryptoPrice);
 
     //
     // const amoutWillUse = new BigNumber(userCcLimit.amount).plus(new BigNumber(cryptoPrice.fiatAmount)).toNumber();
@@ -206,9 +208,6 @@ class FeedCreditCard extends React.Component {
     const {
       amount, currency, fiatAmount, fiatCurrency,
     } = this.state;
-
-    console.log('handleSubmit props', this.props);
-    console.log('handleSubmit state', this.state);
 
     gtag.event({
       category: taggingConfig.creditCard.category,
@@ -336,12 +335,6 @@ class FeedCreditCard extends React.Component {
   };
 
   onCurrencyChange = (e, newValue) => {
-    // gtag.event({
-    //   category: taggingConfig.cash.category,
-    //   action: taggingConfig.cash.action.clickCoin,
-    //   label: newValue
-    // });
-
     const { currency } = this.state;
 
     if (currency !== newValue.id) {
@@ -372,48 +365,45 @@ class FeedCreditCard extends React.Component {
     rfChange(nameFormSpecificAmount, 'amount', newAmount);
   }
 
+  generatePackages = (cryptoPrice) => {
+    const { currency } = this.state;
+    const moneyPackages = [{ name: 'basic', fiatAmount: 99 }, { name: 'pro', fiatAmount: 199 }];
+
+    const packages = moneyPackages.map((item) => {
+      const { name, fiatAmount } = item;
+
+      let newAmount = fiatAmount / cryptoPrice.fiatAmount;
+      newAmount = (new BigNumber(newAmount).decimalPlaces(6)).toNumber();
+
+      return {
+        name,
+        price: `$${fiatAmount}`,
+        amountText: `${newAmount} ${currency}`,
+        amount: newAmount.toString(),
+        fiatAmount: fiatAmount.toString(),
+        currency,
+        fiatCurrency: FIAT_CURRENCY.USD,
+      };
+    });
+
+    this.setState({ packages });
+  }
+
+  handleBuyPackage = (item) => {
+    const {
+      amount, fiatAmount, currency, fiatCurrency,
+    } = item;
+    this.setState({
+      hasSelectedCoin: true, amount, fiatAmount, currency, fiatCurrency,
+    });
+  }
+
   render() {
     const { hasSelectedCoin } = this.state;
     const { intl } = this.props;
     const { amount } = this.props;
-    const { currency } = this.state;
-    console.log('state', this.state);
+    const { currency, packages } = this.state;
 
-    // const listCurrency = [
-    //   {
-    //     id: 'eth',
-    //     text: <span><img src={iconEthereum} width={24} /> ETH</span>,
-    //   },
-    //   {
-    //     id: 'btc',
-    //     text: <span><img src={iconBitcoin} width={24} /> BTC</span>,
-    //   },
-    // ]
-    // const listFiatCurrency = [
-    //   {
-    //     id: 'usd',
-    //     text: <span><img src={iconUsd} width={24} /> USD</span>,
-    //   }
-    // ]
-
-    const packages = [
-      {
-        name: 'basic',
-        price: '$99',
-        amount: '0.3434 ETH',
-      },
-      {
-        name: 'pro',
-        price: '$99',
-        amount: '0.3434 ETH',
-      },
-      {
-        name: 'plus',
-        price: '$99',
-        amount: '0.3434 ETH',
-        saving: 20,
-      },
-    ];
     return !hasSelectedCoin ? (
       <div className="choose-coin">
         <div className="specific-amount">
@@ -472,8 +462,8 @@ class FeedCreditCard extends React.Component {
             {
               packages.map((item, index) => {
                 const {
- name, price, amount, saving,
-} = item;
+                  name, price, amountText, saving,
+                } = item;
                 return (
                   <div key={name}>
                     <div className="d-table w-100">
@@ -489,10 +479,10 @@ class FeedCreditCard extends React.Component {
                             )
                           }
                         </div>
-                        <div className="p-amount">{amount}</div>
+                        <div className="p-amount">{amountText}</div>
                       </div>
                       <div className="d-table-cell align-middle text-right">
-                        <button className="btn btn-p-buy-now"><FormattedMessage id="cc.btn.buyNow" /></button>
+                        <button className="btn btn-p-buy-now" onClick={() => this.handleBuyPackage(item)}><FormattedMessage id="cc.btn.buyNow" /></button>
                       </div>
                     </div>
                     { index < packages.length - 1 && <hr /> }
@@ -581,7 +571,7 @@ class FeedCreditCard extends React.Component {
               </div>
             </div>
 
-            <div className="mt-4 custom-control custom-checkbox">
+            {/* <div className="mt-4 custom-control custom-checkbox">
               <Field
                 id="cc-save-card"
                 name="saveCard"
@@ -590,7 +580,7 @@ class FeedCreditCard extends React.Component {
                 component={fieldInput}
               />
               <label htmlFor="cc-save-card" className="custom-control-label"><FormattedMessage id="cc.label.saveCard" /></label>
-            </div>
+            </div> */}
 
             <div className="mt-4">
               <button type="submit" className="btn btn-lg btn-primary btn-block btn-submit-cc">
@@ -598,8 +588,8 @@ class FeedCreditCard extends React.Component {
               </button>
             </div>
           </FormCreditCard>
-          <div className="alert alert-danger mt-3">Your credit card has been declined. Please try another card</div>
-          <div className="alert alert-success">You have successfully paid</div>
+          {/* <div className="alert alert-danger mt-3">Your credit card has been declined. Please try another card</div> */}
+          {/* <div className="alert alert-success">You have successfully paid</div> */}
         </div>
       </div>
     );
