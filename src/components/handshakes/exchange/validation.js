@@ -11,7 +11,7 @@ export const validate = (values, state, props) => {
   const { isNewCCOpen } = state;
   const isCCExisting = userProfile && userProfile.creditCard.ccNumber.length > 0;
 
-  errors.amount = minValue(currency === CRYPTO_CURRENCY.BTC ? MIN_AMOUNT[CRYPTO_CURRENCY.BTC] : MIN_AMOUNT[CRYPTO_CURRENCY.ETH])(amount);
+  // errors.amount = minValue(currency === CRYPTO_CURRENCY.BTC ? MIN_AMOUNT[CRYPTO_CURRENCY.BTC] : MIN_AMOUNT[CRYPTO_CURRENCY.ETH])(amount);
 
   if (!isCCExisting
     || (isNewCCOpen && `${cc_number || ''}${cc_expired || ''}${cc_cvc || ''}`)
