@@ -283,7 +283,7 @@ class FeedCreditCard extends React.Component {
                 card: payload.data.id,
               },
               redirect: {
-                return_url: `${process.env.PUBLIC_URL}/payment`,
+                return_url: `${window.origin}/payment`,
               },
             }).then((result) => {
               console.log('submit result', result);
