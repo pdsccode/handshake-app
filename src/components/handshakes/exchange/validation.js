@@ -25,3 +25,15 @@ export const validate = (values, state, props) => {
 
   return errors;
 };
+
+export const validateSpecificAmount = (values, state, props) => {
+  const {
+    amount,
+  } = values;
+  const { currency } = state;
+  const errors = {};
+
+  errors.amount = minValue(currency === CRYPTO_CURRENCY.BTC ? MIN_AMOUNT[CRYPTO_CURRENCY.BTC] : MIN_AMOUNT[CRYPTO_CURRENCY.ETH])(amount);
+
+  return errors;
+};

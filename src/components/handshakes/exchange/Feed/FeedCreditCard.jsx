@@ -18,7 +18,7 @@ import {
   URL,
 } from '@/constants';
 import '../styles.scss';
-import { validate } from '@/components/handshakes/exchange/validation';
+import { validate, validateSpecificAmount } from '@/components/handshakes/exchange/validation';
 import createForm from '@/components/core/form/createForm';
 import { fieldCleave, fieldDropdown, fieldInput, fieldRadioButton } from '@/components/core/form/customField';
 import { required } from '@/components/core/form/validation';
@@ -203,6 +203,10 @@ class FeedCreditCard extends React.Component {
 
   handleValidate = (values) => {
     return validate(values, this.state, this.props);
+  };
+
+  handleValidateSpecificAmount = (values) => {
+    return validateSpecificAmount(values, this.state, this.props);
   };
 
   handleSubmit = async (values) => {
@@ -518,7 +522,7 @@ class FeedCreditCard extends React.Component {
     return !hasSelectedCoin ? (
       <div className="choose-coin">
         <div className="specific-amount">
-          <FormSpecificAmount onSubmit={this.handleSubmitSpecificAmount}>
+          <FormSpecificAmount onSubmit={this.handleSubmitSpecificAmount} validate={this.handleValidateSpecificAmount}>
             {/*<div className="text-right" style={{ margin: '-10px' }}><button className="btn btn-lg bg-transparent text-white d-inline-block">&times;</button></div>*/}
             <div className="label-1"><FormattedMessage id="cc.label.1" /></div>
             <div className="label-2"><FormattedMessage id="cc.label.2" /></div>
