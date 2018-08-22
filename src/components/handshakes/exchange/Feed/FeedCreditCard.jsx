@@ -1,25 +1,24 @@
 import React from 'react';
-import { FormattedHTMLMessage, FormattedMessage, injectIntl } from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl';
 import { change, Field, formValueSelector } from 'redux-form';
 import { connect } from 'react-redux';
-import CreditCard from '@/components/handshakes/exchange/components/CreditCard';
-import LevelItem from '@/components/handshakes/exchange/components/LevelItem';
-import Feed from '@/components/core/presentation/Feed';
-import Button from '@/components/core/controls/Button';
-import ModalDialog from '@/components/core/controls/ModalDialog';
 import local from '@/services/localStore';
 import {
   API_URL,
   APP,
+  CRYPTO_CURRENCY,
   CRYPTO_CURRENCY_DEFAULT,
   CRYPTO_CURRENCY_LIST,
+  CRYPTO_CURRENCY_NAME,
+  EXCHANGE_ACTION,
+  EXCHANGE_ACTION_NAME,
   FIAT_CURRENCY,
+  FIAT_CURRENCY_NAME,
   FIAT_CURRENCY_SYMBOL,
   URL,
 } from '@/constants';
 import '../styles.scss';
 import { validate } from '@/components/handshakes/exchange/validation';
-import throttle from 'lodash/throttle';
 import createForm from '@/components/core/form/createForm';
 import { fieldCleave, fieldDropdown, fieldInput, fieldRadioButton } from '@/components/core/form/customField';
 import { required } from '@/components/core/form/validation';
@@ -28,9 +27,8 @@ import CryptoPrice from '@/models/CryptoPrice';
 import { MasterWallet } from '@/services/Wallets/MasterWallet';
 import { bindActionCreators } from 'redux';
 import { hideLoading, showAlert, showLoading } from '@/reducers/app/action';
-import _sample from 'lodash/sample';
 import { feedBackgroundColors } from '@/components/handshakes/exchange/config';
-import { formatMoney } from '@/services/offer-util';
+import { formatMoney, formatMoneyByLocale, roundNumberByLocale } from '@/services/offer-util';
 import { BigNumber } from 'bignumber.js';
 import axios from 'axios';
 import './FeedCreditCard.scss';
@@ -40,8 +38,30 @@ import taggingConfig from '@/services/tagging-config';
 
 import iconBitcoin from '@/assets/images/icon/coin/btc.svg';
 import iconEthereum from '@/assets/images/icon/coin/eth.svg';
+import iconBitcoinCash from '@/assets/images/icon/coin/bch.svg';
 import iconUsd from '@/assets/images/icon/coin/icons8-us_dollar.svg';
 import iconLock from '@/assets/images/icon/icons8-lock_filled.svg';
+
+export const CRYPTO_ICONS = {
+  [CRYPTO_CURRENCY.ETH]: iconEthereum,
+  [CRYPTO_CURRENCY.BTC]: iconBitcoin,
+  BCH: iconBitcoinCash,
+};
+
+const CRYPTO_CURRENCY_CREDIT_CARD = {
+  ...CRYPTO_CURRENCY, BCH: 'BCH',
+};
+
+const listCurrency = Object.values(CRYPTO_CURRENCY_CREDIT_CARD).map((item) => {
+  return { id: item, text: <span><img src={CRYPTO_ICONS[item]} width={24} /> {CRYPTO_CURRENCY_NAME[item]}</span> };
+});
+
+const listFiatCurrency = [
+  {
+    id: FIAT_CURRENCY.USD,
+    text: <span><img src={iconUsd} width={24} /> {FIAT_CURRENCY_NAME[FIAT_CURRENCY.USD]}</span>,
+  },
+];
 
 const nameFormSpecificAmount = 'specificAmount';
 const FormSpecificAmount = createForm({
@@ -49,16 +69,17 @@ const FormSpecificAmount = createForm({
     form: nameFormSpecificAmount,
     initialValues: {
       currency: {
-        id: 'eth',
-        text: <span><img src={iconEthereum} width={22} /> ETH</span>,
+        id: CRYPTO_CURRENCY.ETH,
+        text: <span><img src={iconEthereum} width={22} /> {CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.ETH]}</span>,
       },
       fiatCurrency: {
-        id: 'usd',
-        text: <span><img src={iconUsd} width={24} /> USD</span>,
-      }
+        id: FIAT_CURRENCY.USD,
+        text: <span><img src={iconUsd} width={24} /> {FIAT_CURRENCY_NAME[FIAT_CURRENCY.USD]}</span>,
+      },
     },
   },
 });
+const selectorFormSpecificAmount = formValueSelector(nameFormSpecificAmount);
 
 const nameFormCreditCard = 'creditCard';
 const FormCreditCard = createForm({
@@ -67,37 +88,313 @@ const FormCreditCard = createForm({
     initialValues: {},
   },
 });
+const selectorFormCreditCard = formValueSelector(nameFormCreditCard);
 
 class FeedCreditCard extends React.Component {
+  constructor(props) {
+    super(props);
 
-  state = {
-    hasSelectedCoin: false
+    this.state = {
+      hasSelectedCoin: false,
+      isNewCCOpen: true,
+      amount: 0,
+      currency: CRYPTO_CURRENCY.ETH,
+      fiatAmount: 0,
+      fiatCurrency: FIAT_CURRENCY.USD,
+      cryptoPrice: this.props.cryptoPrice,
+    };
   }
+
+  showLoading = () => {
+    this.props.showLoading({ message: '' });
+  };
+
+  hideLoading = () => {
+    this.props.hideLoading();
+  };
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (JSON.stringify(nextProps.cryptoPrice) !== JSON.stringify(prevState.cryptoPrice)) {
+      return { cryptoPrice: nextProps.cryptoPrice };
+    }
+
+    return null;
+  }
+
+  async componentDidMount() {
+    const { currencyForced, rfChange } = this.props;
+    if (currencyForced) {
+      rfChange(nameFormCreditCard, 'currency', currencyForced);
+    }
+
+    this.props.getCcLimits({ PATH_URL: API_URL.EXCHANGE.GET_CC_LIMITS });
+    this.props.getUserCcLimit({ PATH_URL: API_URL.EXCHANGE.GET_USER_CC_LIMIT });
+
+    this.getCryptoPriceByAmount(1);
+
+    this.intervalCountdown = setInterval(() => {
+      this.getCryptoPriceByAmount(1);
+    }, 30000);
+  }
+
+  componentWillUnmount() {
+    if (this.intervalCountdown) {
+      clearInterval(this.intervalCountdown);
+    }
+  }
+
+  getCryptoPriceByAmount = (amount) => {
+    const { currency } = this.state;
+
+    const data = { amount, currency };
+
+    this.props.getCryptoPrice({
+      PATH_URL: API_URL.EXCHANGE.GET_CRYPTO_PRICE,
+      qs: data,
+      successFn: this.handleGetCryptoPriceSuccess,
+      errorFn: this.handleGetCryptoPriceFailed,
+    });
+  };
+
+  handleGetCryptoPriceSuccess = (responseData) => {
+    // console.log('handleGetCryptoPriceSuccess', data);
+    // const { userCcLimit } = this.props;
+    const { amount } = this.state;
+    const cryptoPrice = CryptoPrice.cryptoPrice(responseData.data);
+
+    const { rfChange } = this.props;
+
+    let fiatAmount = amount * cryptoPrice.fiatAmount / cryptoPrice.amount;
+
+    fiatAmount = roundNumberByLocale(fiatAmount, cryptoPrice.fiatCurrency);
+    console.log('onAmountChange', fiatAmount);
+    rfChange(nameFormSpecificAmount, 'fiatAmount', fiatAmount);
+
+    //
+    // const amoutWillUse = new BigNumber(userCcLimit.amount).plus(new BigNumber(cryptoPrice.fiatAmount)).toNumber();
+    //
+    // if (this.state.amount && userCcLimit && userCcLimit.limit < amoutWillUse) {
+    //   this.setState({ showCCScheme: false });
+    // } else {
+    //   this.setState({ showCCScheme: false });
+    // }
+  };
+
+  handleGetCryptoPriceFailed = (e) => {
+    console.log('handleGetCryptoPriceFailed', e);
+  };
 
   handleSubmitSpecificAmount = (values) => {
-    console.log('valuess', values)
-    this.setState({ hasSelectedCoin: true })
+    this.setState({
+      hasSelectedCoin: true, amount: values.amount, fiatAmount: values.fiatAmount, currency: values.currency.id, fiatCurrency: values.fiatCurrency.id,
+    });
   }
+
+  closeInputCreditCard = () => {
+    this.setState({ hasSelectedCoin: false });
+  }
+
+  handleValidate = (values) => {
+    return validate(values, this.state, this.props);
+  };
+
+  handleSubmit = async (values) => {
+    console.log('handleSubmit', values);
+
+    const { handleSubmit } = this.props;
+    const { userCcLimit, addressForced } = this.props;
+    const {
+      amount, currency, fiatAmount, fiatCurrency,
+    } = this.state;
+
+    console.log('handleSubmit props', this.props);
+    console.log('handleSubmit state', this.state);
+
+    gtag.event({
+      category: taggingConfig.creditCard.category,
+      action: taggingConfig.creditCard.action.clickBuy,
+    });
+
+    // const amoutWillUse = new BigNumber(userCcLimit.amount).plus(new BigNumber(fiatAmount)).toNumber();
+    //
+    // if (this.state.amount && userCcLimit && userCcLimit.limit < amoutWillUse) {
+    //   this.props.showAlert({
+    //     message: <div className="text-center"><FormattedMessage
+    //       id="overCCLimit"
+    //       values={{
+    //         currency: FIAT_CURRENCY_SYMBOL,
+    //         limit: formatMoney(userCcLimit.limit),
+    //         amount: formatMoney(userCcLimit.amount),
+    //       }}
+    //     />
+    //     </div>,
+    //     timeOut: 5000,
+    //     type: 'danger',
+    //     // callBack: this.handleBuySuccess
+    //   });
+    //
+    //   return;
+    // }
+
+    this.showLoading();
+
+    if (handleSubmit) {
+      handleSubmit(values);
+    } else {
+      const { userProfile: { creditCard } } = this.props;
+
+      let cc = {};
+
+      // Use existing credit card
+      if (creditCard.ccNumber.length > 0 && !this.state.isNewCCOpen) {
+        cc = { token: 'true' };
+        this.handleCreateCCOrder(cc);
+      } else {
+        const { cc_number, cc_expired, cc_cvc } = values;
+        const mmYY = cc_expired.split('/');
+        const params = new URLSearchParams();
+        params.append('card[number]', cc_number && cc_number.trim().replace(/ /g, ''));
+        params.append('card[exp_month]', mmYY[0]);
+        params.append('card[exp_year]', mmYY[1]);
+        params.append('card[cvc]', cc_cvc);
+        params.append('key', process.env.stripeKey);
+        params.append('type', 'card');
+
+        axios.post(
+          'https://api.stripe.com/v1/sources',
+          params,
+          { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
+          .then((payload) => {
+            console.log('payload', payload);
+            const stripe = Stripe(process.env.stripeKey);
+            stripe.createSource({
+              type: 'three_d_secure',
+              amount: new BigNumber(fiatAmount).multipliedBy(100).toString(),
+              currency: FIAT_CURRENCY.USD,
+              three_d_secure: {
+                card: payload.data.id,
+              },
+              redirect: {
+                return_url: `${process.env.PUBLIC_URL}/payment`,
+              },
+            }).then((result) => {
+              console.log('submit result', result);
+              if (result.source.three_d_secure.three_d_secure === 'not_supported') {
+                this.hideLoading();
+
+                const message = <FormattedMessage id="threeDSecureNotSupported" />;
+                this.props.showAlert({
+                  message: <div className="text-center">{message}</div>,
+                  timeOut: 3000,
+                  type: 'danger',
+                  // callBack: this.handleBuySuccess
+                });
+              } else {
+                local.save(APP.CC_SOURCE, result.source);
+                local.save(APP.CC_PRICE, {
+                  amount: amount.toString(), currency, fiatAmount, fiatCurrency,
+                });
+                local.save(APP.CC_TOKEN, payload.data.id);
+
+                let address = '';
+                if (addressForced) {
+                  address = addressForced;
+                } else {
+                  const wallet = MasterWallet.getWalletDefault(currency);
+                  address = wallet.address;
+                }
+                local.save(APP.CC_ADDRESS, address);
+
+                window.location = result.source.redirect.url;
+              }
+            });
+
+            // const newCCNum = payload.data.id;
+            // cc = {
+            //   cc_num: newCCNum,
+            //   cvv: cc_cvc && cc_cvc.trim().replace(/ /g, ""),
+            //   expiration_date: cc_expired && cc_expired.trim().replace(/ /g, ""),
+            //   token: "",
+            //   save: "true"
+            // };
+            // this.handleCreateCCOrder(cc);
+          }).catch((error) => {
+            console.log('error', error);
+            this.hideLoading();
+
+            const message = error?.response?.data?.errors[0] || 'Something wrong!';
+            this.props.showAlert({
+              message: <div className="text-center">{message}</div>,
+              timeOut: 3000,
+              type: 'danger',
+            // callBack: this.handleBuySuccess
+            });
+          });
+      }
+      // console.log('handleSubmit', cc);
+    }
+  };
+
+  onCurrencyChange = (e, newValue) => {
+    // gtag.event({
+    //   category: taggingConfig.cash.category,
+    //   action: taggingConfig.cash.action.clickCoin,
+    //   label: newValue
+    // });
+
+    const { currency } = this.state;
+
+    if (currency !== newValue.id) {
+      this.setState({ currency: newValue.id }, () => {
+        this.getCryptoPriceByAmount(1);
+      });
+    }
+  }
+
+  onAmountChange = (e, amount) => {
+    console.log('onAmountChange', amount);
+    const { rfChange, cryptoPrice } = this.props;
+
+    let fiatAmount = amount * cryptoPrice.fiatAmount / cryptoPrice.amount;
+
+    fiatAmount = roundNumberByLocale(fiatAmount, cryptoPrice.fiatCurrency);
+    console.log('onAmountChange', fiatAmount);
+    rfChange(nameFormSpecificAmount, 'fiatAmount', fiatAmount);
+  }
+
+  onFiatAmountChange = (e, amount) => {
+    console.log('onFiatAmountChange', amount);
+    const { rfChange, cryptoPrice } = this.props;
+
+    let newAmount = amount / cryptoPrice.fiatAmount;
+    newAmount = (new BigNumber(newAmount).decimalPlaces(6)).toNumber();
+    console.log('onFiatAmountChange', newAmount);
+    rfChange(nameFormSpecificAmount, 'amount', newAmount);
+  }
+
   render() {
     const { hasSelectedCoin } = this.state;
     const { intl } = this.props;
+    const { amount } = this.props;
+    const { currency } = this.state;
+    console.log('state', this.state);
 
-    const listCurrency = [
-      {
-        id: 'eth',
-        text: <span><img src={iconEthereum} width={24} /> ETH</span>,
-      },
-      {
-        id: 'btc',
-        text: <span><img src={iconBitcoin} width={24} /> BTC</span>,
-      },
-    ]
-    const listFiatCurrency = [
-      {
-        id: 'usd',
-        text: <span><img src={iconUsd} width={24} /> USD</span>,
-      }
-    ]
+    // const listCurrency = [
+    //   {
+    //     id: 'eth',
+    //     text: <span><img src={iconEthereum} width={24} /> ETH</span>,
+    //   },
+    //   {
+    //     id: 'btc',
+    //     text: <span><img src={iconBitcoin} width={24} /> BTC</span>,
+    //   },
+    // ]
+    // const listFiatCurrency = [
+    //   {
+    //     id: 'usd',
+    //     text: <span><img src={iconUsd} width={24} /> USD</span>,
+    //   }
+    // ]
 
     const packages = [
       {
@@ -114,9 +411,9 @@ class FeedCreditCard extends React.Component {
         name: 'plus',
         price: '$99',
         amount: '0.3434 ETH',
-        saving: 20
-      }
-    ]
+        saving: 20,
+      },
+    ];
     return !hasSelectedCoin ? (
       <div className="choose-coin">
         <div className="specific-amount">
@@ -130,6 +427,7 @@ class FeedCreditCard extends React.Component {
                 className="form-control form-control-lg border-0 rounded-right form-control-cc"
                 type="text"
                 component={fieldInput}
+                onChange={this.onAmountChange}
               />
               <Field
                 name="currency"
@@ -139,6 +437,7 @@ class FeedCreditCard extends React.Component {
                 list={listCurrency}
                 component={fieldDropdown}
                 // disabled={!enableChooseFiatCurrency}
+                onChange={this.onCurrencyChange}
               />
             </div>
             <div className="input-group mt-2">
@@ -147,6 +446,7 @@ class FeedCreditCard extends React.Component {
                 className="form-control form-control-lg border-0 rounded-right form-control-cc"
                 type="text"
                 component={fieldInput}
+                onChange={this.onFiatAmountChange}
               />
               <Field
                 name="fiatCurrency"
@@ -160,7 +460,7 @@ class FeedCreditCard extends React.Component {
             </div>
             <div className="mt-3 mb-3">
               <button type="submit" className="btn btn-lg btn-primary btn-block btn-submit-specific">
-                <img src={iconLock} width={20} className="align-top mr-2" /><span>Buy 10.02 ETH</span>
+                <img src={iconLock} width={20} className="align-top mr-2" /><span>{EXCHANGE_ACTION_NAME[EXCHANGE_ACTION.BUY]} {amount} {CRYPTO_CURRENCY[currency]}</span>
               </button>
             </div>
           </FormSpecificAmount>
@@ -171,7 +471,9 @@ class FeedCreditCard extends React.Component {
           <div className="mb-5">
             {
               packages.map((item, index) => {
-                const { name, price, amount, saving } = item;
+                const {
+ name, price, amount, saving,
+} = item;
                 return (
                   <div key={name}>
                     <div className="d-table w-100">
@@ -195,7 +497,7 @@ class FeedCreditCard extends React.Component {
                     </div>
                     { index < packages.length - 1 && <hr /> }
                   </div>
-                )
+                );
               })
             }
           </div>
@@ -203,9 +505,9 @@ class FeedCreditCard extends React.Component {
       </div>
     ) : (
       <div className="credit-card">
-        <div><button className="btn btn-lg bg-transparent d-inline-block btn-close">&times;</button></div>
+        <div><button className="btn btn-lg bg-transparent d-inline-block btn-close" onClick={this.closeInputCreditCard}>&times;</button></div>
         <div className="wrapper">
-          <FormCreditCard>
+          <FormCreditCard onSubmit={this.handleSubmit}>
             <div>
               <div className="cc-label"><FormattedMessage id="cc.label.cardNo" /></div>
               <div>
@@ -225,7 +527,7 @@ class FeedCreditCard extends React.Component {
                     placeholder: '4111 1111 1111 1111',
                     options: {
                       creditCard: true,
-                      onCreditCardTypeChanged: this.handleCCTypeChanged
+                      onCreditCardTypeChanged: this.handleCCTypeChanged,
                     },
                     // type: "tel",
                     // maxLength: "19",
@@ -242,11 +544,11 @@ class FeedCreditCard extends React.Component {
                 <div>
                   <Field
                     name="cc_cvc"
-                    className='form-control input-custom w-100'
+                    className="form-control input-custom w-100"
                     component={fieldCleave}
                     propsCleave={{
                       placeholder: intl.formatMessage({ id: 'securityCode' }),
-                      options: {blocks: [4], numericOnly: true},
+                      options: { blocks: [4], numericOnly: true },
                       // type: "password",
                       // maxLength: "4",
                       // minLength: "3",
@@ -263,11 +565,11 @@ class FeedCreditCard extends React.Component {
                 <div>
                   <Field
                     name="cc_expired"
-                    className='form-control input-custom w-100'
+                    className="form-control input-custom w-100"
                     component={fieldCleave}
                     propsCleave={{
                       placeholder: intl.formatMessage({ id: 'ccExpireTemplate' }),
-                      options: {blocks: [2, 2], delimiter: '/', numericOnly: true},
+                      options: { blocks: [2, 2], delimiter: '/', numericOnly: true },
                       // type: "tel",
                       // id: `cart-date-${this.lastUniqueId()}`,
                       // htmlRef: input => this.ccExpiredRef = input,
@@ -300,7 +602,7 @@ class FeedCreditCard extends React.Component {
           <div className="alert alert-success">You have successfully paid</div>
         </div>
       </div>
-    )
+    );
   }
 }
 

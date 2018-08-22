@@ -93,6 +93,7 @@ export const CRYPTO_CURRENCY = {
 export const CRYPTO_CURRENCY_NAME = {
   [CRYPTO_CURRENCY.ETH]: 'ETH',
   [CRYPTO_CURRENCY.BTC]: 'BTC',
+  BCH: 'BCH',
 };
 
 export const CRYPTO_CURRENCY_LIST = Object.values(CRYPTO_CURRENCY).map((item) => {
