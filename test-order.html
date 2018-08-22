@@ -13,11 +13,10 @@
       <h1 class="text-center mt-5 mb-3">AvoChair</h1>
       <div class="text-center">
         <img src="https://d2q7nqismduvva.cloudfront.net/static/upload/images/product/galleries/1473.1707--1524735584990.jpg" style="width:100%" />
-        <p class="text-dark mb-3  mt-3">Price: 399 USD</p>
         <p class="mb-3  mt-3">
           <!-- <button class="btn btn-primary" onclick="window.location.href='http://localhost:8080/payment?order_id=123&amount=0.01&coin=eth&sa=0x7640FEc99F4AEbD75af6D51E0975e9Eb6F5c1991&ca=0x1c0abE5b12257451DDcbe51f53f3F888dde32842&confirm_url=http://localhost:8080/test-confirmation.html'"> -->
           <form action="/payment" method="GET">
-
+            <h2>Basic</h2>
             <div class="input-group mb-1">
               <div class="input-group-prepend">
                 <div class="input-group-text">order_id</div>
@@ -57,20 +56,52 @@
               <div class="input-group-prepend">
                 <div class="input-group-text">confirm_url</div>
               </div>
-              <input type="text" class="form-control" id="confirm_url" name="confirm_url" value="https:///www.myshop.com/confirmation">
+              <input type="text" class="form-control" id="confirm_url" name="confirm_url" value="http://localhost:8080/test-confirmation.html">
+            </div>
+
+            <button type="submit" class="btn btn-primary mb-3">Submit</button>
+          </form>
+
+          <form action="/payment" method="GET">
+            <h2>Registration</h2>
+            <div class="input-group mb-1">
+              <div class="input-group-prepend">
+                <div class="input-group-text">order_id</div>
+              </div>
+              <input type="text" class="form-control" id="order_id" name="order_id" placeholder="order_id" value="123456">
+            </div>
+
+            <div class="input-group mb-1">
+              <div class="input-group-prepend">
+                <div class="input-group-text">amount</div>
+              </div>
+              <input type="text" class="form-control" id="amount" name="amount" value="399">
+            </div>
+
+            <div class="input-group mb-1">
+              <div class="input-group-prepend">
+                <div class="input-group-text">amount_currency</div>
+              </div>
+              <input type="text" class="form-control" id="amount_currency" name="amount_currency" value="USD">
+            </div>
+
+            <div class="input-group mb-1">
+              <div class="input-group-prepend">
+                <div class="input-group-text">to_shop</div>
+              </div>
+              <input type="text" class="form-control" id="to_shop" name="to_shop" value="myshop">
+            </div>
+
+            <div class="input-group mb-1">
+              <div class="input-group-prepend">
+                <div class="input-group-text">confirm_url</div>
+              </div>
+              <input type="text" class="form-control" id="confirm_url" name="confirm_url" value="http://localhost:8080/test-confirmation.html">
             </div>
 
             <button type="submit" class="btn btn-primary">Submit</button>
           </form>
 
-          <div class="list-group">
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-              Basic setting
-              <button class="btn btn-primary" onclick="window.location.href='/payment?order_id=123&amount=0.01&coin=eth&sa=0x7640FEc99F4AEbD75af6D51E0975e9Eb6F5c1991&ca=0x1c0abE5b12257451DDcbe51f53f3F888dde32842&confirm_url=/test-confirmation.html'">
-                Pay
-              </button>
-            </li>
-          </div>
         </p>
       </div>
       <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

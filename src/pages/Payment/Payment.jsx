@@ -7,6 +7,7 @@ import { Grid, Row, Col } from 'react-bootstrap';
 
 import Modal from '@/components/core/controls/Modal';
 import Checkout from './Checkout';
+import ChooseCrypto from './ChooseCrypto';
 import Overview from './Overview';
 import DevDoc from './DevDoc';
 import { setHeaderRight } from '@/reducers/app/action';
@@ -38,11 +39,12 @@ class Payment extends React.Component {
       amount: 0,
       fee: 0,
       total: 0,
-      active: false,
       orderID: "",
       confirmURL: "",
       bottomSheet: false,
       listMenu: [],
+
+      chooseCrypto: ''
     };
     this.props.setHeaderRight(this.headerRight());
   }
@@ -78,14 +80,20 @@ class Payment extends React.Component {
   async checkPayNinja() {
     const querystring = window.location.search.replace('?', '');
     this.querystringParsed = qs.parse(querystring);
-    const { order_id, amount, coin, ca, sa, confirm_url } = this.querystringParsed;
-    if (order_id && amount && sa && coin) {
+    const { order_id, amount, coin, to, to_currency, confirm_url } = this.querystringParsed;
+    if (order_id && amount) {
 
-      this.setState({active: true, toAddress: sa, fromAddress: ca, amount: !isNaN(amount) ? amount : 0,
-        coinName: coin.toUpperCase(), orderID: order_id, confirmURL: confirm_url}, () => {
-          this.modalSendRef.open();
-        }
-      );
+      if(to_currency){
+
+      }
+      else{
+        this.setState({
+          chooseCrypto: <ChooseCrypto />
+          }, () => {
+            this.modalSendRef.open();
+          }
+        );
+      }
     }
   }
 
@@ -197,15 +205,17 @@ class Payment extends React.Component {
 
   showPayNinja = () => {
     const { messages } = this.props.intl;
+    const { chooseCrypto } = this.state;
+
     return (
       <div className="checkout-wrapper">
       <Modal title="Pay with Ninja" onRef={modal => this.modalSendRef = modal}  onClose={this.closePayNinja}>
         <div className="shop-info">
           <div className="order">Order # {this.state.orderID}</div>
           <div className="shop">{this.extractDomain()}</div>
-
         </div>
-        <div className="order-info">
+
+        {/* <div className="order-info">
           <div className="label">Payment Amount</div>
           <div className="key">{this.state.amount} {this.state.coinName}</div>
           <div className="clearfix"></div>
@@ -214,15 +224,9 @@ class Payment extends React.Component {
           <div className="clearfix"></div>
           <div className="label bold">Total</div>
           <div className="key bold">{this.state.total} {this.state.coinName}</div>
-        </div>
-        <Checkout active={this.state.active}
-          toAddress={this.state.toAddress}
-          fromAddress={this.state.fromAddress}
-          amount={this.state.amount}
-          coinName={this.state.coinName}
-          chooseWallet={(result) => { this.chooseWallet(result);}}
-          onFinish={(result) => { this.successPayNinja(result); }
-        } />
+        </div> */}
+        {chooseCrypto}
+
       </Modal>
       </div>);
   }
