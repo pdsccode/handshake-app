@@ -46,7 +46,6 @@ class Map extends React.Component {
       lat, lng,
       onZoomChanged,
       onCenterChanged,
-      onIdle,
       onMapMounted,
       curLocation,
       mapCenterLat,
@@ -84,7 +83,6 @@ class Map extends React.Component {
         onZoomChanged={onZoomChanged}
         ref={onMapMounted}
         onCenterChanged={onCenterChanged}
-        onIdle={onIdle}
         options={{ gestureHandling: 'greedy' }}
       >
         {markers}

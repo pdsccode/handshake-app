@@ -48,7 +48,8 @@ class DiscoverPage extends React.Component {
     const handshakeDefault = HANDSHAKE_ID.EXCHANGE;
     const utm = this.getUtm();
     const program = this.getProgram();
-    this.debounceOnCenterChange = _debounce(this.handleOnCenterChanged, 100);
+    this.debounceOnCenterChange = _debounce(this.handleOnCenterChanged, 150);
+    this.debounceOnZoomChange = _debounce(this.handleOnZoomChanged, 150);
 
     this.state = {
       handshakeIdActive: handshakeDefault,
@@ -292,7 +293,6 @@ class DiscoverPage extends React.Component {
   }
 
   onCurrencyChange = (e, item) => {
-    console.log('onCurrencyChange', item);
     const { currencyActive } = this.state;
 
     if (currencyActive !== item.id) {
@@ -335,12 +335,13 @@ class DiscoverPage extends React.Component {
   }
 
   handleOnCenterChanged = () => {
-    console.log('deboucne')
     const center = this.mapRef.getCenter();
     this.setState({ mapCenterLat: center.lat(), mapCenterLng: center.lng() });
   }
 
-  handleOnMapMounted = (e) => (this.mapRef = e)
+  handleOnZoomChanged = () => {
+    this.setState({ zoomLevel: this.mapRef.getZoom() });
+  }
 
   render() {
     const {
@@ -389,13 +390,9 @@ class DiscoverPage extends React.Component {
           modalRef={this.modalRef}
           setLoading={this.setLoading}
           onGoToCurrentLocation={this.handleGoToCurrentLocation}
-          onMapMounted={this.handleOnMapMounted}
-          onZoomChanged={() => { this.setState({ zoomLevel: this.mapRef.getZoom() }); }}
+          onMapMounted={(e) => (this.mapRef = e)}
+          onZoomChanged={this.debounceOnZoomChange}
           onCenterChanged={this.debounceOnCenterChange}
-          // onIdle={() => {
-          //   const center = this.mapRef.getCenter();
-          //   this.setState({mapCenter: { lat: center.lat() || 0, lng: center.lng() || 0 } });
-          // }}
         />
 
         {/*{!this.state.isBannedCash && !this.props.firebaseApp.config?.maintainChild?.exchange && this.getMap()}*/}
