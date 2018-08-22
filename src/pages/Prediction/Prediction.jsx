@@ -10,12 +10,17 @@ import { URL } from '@/constants';
 import GA from '@/services/googleAnalytics';
 import LuckyFree from '@/components/handshakes/betting/LuckyPool/LuckyFree/LuckyFree';
 import OuttaMoney from '@/assets/images/modal/outtamoney.png';
+import Modal from '@/components/core/controls/Modal';
+import * as gtag from '@/services/ga-utils';
+import taggingConfig from '@/services/tagging-config';
+import FeedCreditCard from "@/components/handshakes/exchange/Feed/FeedCreditCard";
 
 import { eventSelector, isLoading, showedLuckyPoolSelector, isSharePage } from './selector';
 import { loadMatches, updateShowedLuckyPool } from './action';
 import EventItem from './EventItem';
 
 import './Prediction.scss';
+import {injectIntl} from "react-intl";
 
 class Prediction extends React.Component {
   static displayName = 'Prediction';
@@ -35,6 +40,7 @@ class Prediction extends React.Component {
     this.state = {
       selectedOutcome: null,
       isLuckyPool: true,
+      modalFillContent: '',
     };
   }
 
@@ -190,11 +196,45 @@ class Prediction extends React.Component {
           <div className="outtaMoneyMsg">
             To keep forecasting, you’ll need to top-up your wallet.
           </div>
-          <button className="btn btn-block btn-primary">Top up my wallet</button>
+          <button className="btn btn-block btn-primary" onClick={this.showPopupCreditCard}>Top up my wallet</button>
         </div>
       </ModalDialog>
     );
   };
+
+  showPopupCreditCard = () => {
+    const { messages } = this.props.intl;
+    this.setState({
+      modalFillContent:
+        (
+          <FeedCreditCard
+            buttonTitle={messages.create.cash.credit.title}
+            callbackSuccess={this.afterWalletFill}
+          />
+        ),
+    }, () => {
+      this.modalFillRef.open();
+
+      gtag.event({
+        category: taggingConfig.creditCard.category,
+        action: taggingConfig.creditCard.action.showPopupPrediction
+      });
+    });
+  }
+
+  renderCreditCard = () => {
+    const { messages } = this.props.intl;
+    const { modalFillContent } = this.state;
+    return (
+      <Modal title={messages.create.cash.credit.title} onRef={modal => this.modalFillRef = modal} onClose={this.closeFillCoin}>
+        {modalFillContent}
+      </Modal>
+    );
+  }
+
+  closeFillCoin = () => {
+    this.setState({ modalFillContent: '' });
+  }
 
   renderComponent = (props, state) => {
     return (
@@ -206,6 +246,7 @@ class Prediction extends React.Component {
         {this.renderViewAllEvent(props, state)}
         {this.renderLucky}
         {this.renderOuttaMoney()}
+        {this.renderCreditCard()}
       </div>
     );
   };
@@ -215,7 +256,7 @@ class Prediction extends React.Component {
   }
 }
 
-export default connect(
+export default injectIntl(connect(
   (state) => {
     return {
       eventList: eventSelector(state),
@@ -224,4 +265,4 @@ export default connect(
       showedLuckyPool: showedLuckyPoolSelector(state),
     };
   },
-)(Prediction);
+)(Prediction));

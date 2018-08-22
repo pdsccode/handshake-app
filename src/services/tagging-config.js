@@ -19,6 +19,7 @@ const taggingConfig = {
     action: {
       clickBuy: 'click_buy',
       showPopupWallet: 'show_popup_wallet',
+      showPopupPrediction: 'show_popup_prediction',
       showPopupCreate: 'show_popup_create',
       showPopupDashboard: 'show_popup_dashboard',
       showPopupMeNotEnoughCoin: 'show_popup_me_not_enough_coin',
