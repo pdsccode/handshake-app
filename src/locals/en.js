@@ -428,7 +428,7 @@ export default {
   'landing_page.researches.internetCash.title': 'Internet Cash',
   'landing_page.researches.internetCash.subTitle': 'The Internet deserves to have its own native currency.',
 
-  'landing_page.label.footer': `Building blockchain powered apps, tools and solutions for the new wild west world web.<br />Join the dojo: <a href="https://t.me/ninja_org" class="landing-link">t.me/ninja_org</a>`,
+  'landing_page.label.footer': `Building blockchain powered apps, tools and solutions for the new wild west world web.<br />Join the dojo: <a href="https://t.me/ninja_org" class="landing-link">t.me/ninja_org</a><br />Contact us: <a href="mailto:support@ninja.org" class="landing-link" target="_top">support@ninja.org</a>`,
   'landing_page.label.joinTelegram': `Join the dojo on <a href="https://t.me/ninja_org" class="landing-link">Telegram</a>`,
   // 'landing_page.label.airdrop': `Jump in for <a href="#" class="landing-link">Airdrop</a>`,
   'landing_page.label.whitepaper': `Jump in for <a href="https://medium.com/@ninjadotorg/shakeninja-bex-1c938f18b3e8" class="landing-link">Whitepaper</a>`,
