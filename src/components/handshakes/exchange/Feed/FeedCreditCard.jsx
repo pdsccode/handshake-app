@@ -529,6 +529,7 @@ class FeedCreditCard extends React.Component {
                 type="text"
                 component={fieldInput}
                 onChange={this.onAmountChange}
+                validate={[required]}
               />
               <Field
                 name="currency"
@@ -548,6 +549,7 @@ class FeedCreditCard extends React.Component {
                 type="text"
                 component={fieldInput}
                 onChange={this.onFiatAmountChange}
+                validate={[required]}
               />
               <Field
                 name="fiatCurrency"
