@@ -124,9 +124,9 @@ class FeedCreditCard extends React.Component {
 
   async componentDidMount() {
     const { currencyForced, rfChange } = this.props;
-    console.log('componentDidMount currencyForced',currencyForced);
     if (currencyForced) {
-      rfChange(selectorFormSpecificAmount, 'currency', currencyForced);
+      const item = { id: currencyForced, text: <span><img src={CRYPTO_ICONS[currencyForced]} width={24} /> {CRYPTO_CURRENCY_NAME[currencyForced]}</span> };
+      rfChange(nameFormSpecificAmount, 'currency', item);
     }
 
     this.props.getCcLimits({ PATH_URL: API_URL.EXCHANGE.GET_CC_LIMITS });
