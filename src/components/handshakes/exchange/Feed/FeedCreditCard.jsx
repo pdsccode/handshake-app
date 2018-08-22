@@ -124,8 +124,9 @@ class FeedCreditCard extends React.Component {
 
   async componentDidMount() {
     const { currencyForced, rfChange } = this.props;
+    console.log('componentDidMount currencyForced',currencyForced);
     if (currencyForced) {
-      rfChange(nameFormCreditCard, 'currency', currencyForced);
+      rfChange(selectorFormSpecificAmount, 'currency', currencyForced);
     }
 
     this.props.getCcLimits({ PATH_URL: API_URL.EXCHANGE.GET_CC_LIMITS });
@@ -408,7 +409,7 @@ class FeedCreditCard extends React.Component {
       <div className="choose-coin">
         <div className="specific-amount">
           <FormSpecificAmount onSubmit={this.handleSubmitSpecificAmount}>
-            <div className="text-right" style={{ margin: '-10px' }}><button className="btn btn-lg bg-transparent text-white d-inline-block">&times;</button></div>
+            {/*<div className="text-right" style={{ margin: '-10px' }}><button className="btn btn-lg bg-transparent text-white d-inline-block">&times;</button></div>*/}
             <div className="label-1"><FormattedMessage id="cc.label.1" /></div>
             <div className="label-2"><FormattedMessage id="cc.label.2" /></div>
             <div className="input-group mt-4">
