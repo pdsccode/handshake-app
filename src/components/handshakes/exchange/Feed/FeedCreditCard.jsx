@@ -127,12 +127,16 @@ class FeedCreditCard extends React.Component {
     if (currencyForced) {
       const item = { id: currencyForced, text: <span><img src={CRYPTO_ICONS[currencyForced]} width={24} /> {CRYPTO_CURRENCY_NAME[currencyForced]}</span> };
       rfChange(nameFormSpecificAmount, 'currency', item);
+
+      this.setState({ currency: currencyForced }, () => {
+        this.getCryptoPriceByAmount(1);
+      });
+    } else {
+      this.getCryptoPriceByAmount(1);
     }
 
     this.props.getCcLimits({ PATH_URL: API_URL.EXCHANGE.GET_CC_LIMITS });
     this.props.getUserCcLimit({ PATH_URL: API_URL.EXCHANGE.GET_USER_CC_LIMIT });
-
-    this.getCryptoPriceByAmount(1);
 
     this.intervalCountdown = setInterval(() => {
       this.getCryptoPriceByAmount(1);
@@ -451,7 +455,7 @@ class FeedCreditCard extends React.Component {
             </div>
             <div className="mt-3 mb-3">
               <button type="submit" className="btn btn-lg btn-primary btn-block btn-submit-specific">
-                <img src={iconLock} width={20} className="align-top mr-2" /><span>{EXCHANGE_ACTION_NAME[EXCHANGE_ACTION.BUY]} {amount} {CRYPTO_CURRENCY[currency]}</span>
+                <img src={iconLock} width={20} className="align-top mr-2" /><span>{EXCHANGE_ACTION_NAME[EXCHANGE_ACTION.BUY]} {amount} {CRYPTO_CURRENCY_NAME[currency]}</span>
               </button>
             </div>
           </FormSpecificAmount>
