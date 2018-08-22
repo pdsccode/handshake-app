@@ -834,6 +834,10 @@ class Wallet extends React.Component {
     this.setState({ activeTransfer: false });
   }
 
+  closeFillCoin = () => {
+    this.setState({ modalFillContent: '' });
+  }
+
   closeCreate = () => {
     this.setState({input12PhraseValue: "", walletKeyDefaultToCreate: 1});
   }
@@ -974,7 +978,7 @@ class Wallet extends React.Component {
             />
           </Modal>
 
-          <Modal title={messages.create.cash.credit.title} onRef={modal => this.modalFillRef = modal}>
+          <Modal title={messages.create.cash.credit.title} onRef={modal => this.modalFillRef = modal} onClose={this.closeFillCoin}>
             {modalFillContent}
           </Modal>
 
