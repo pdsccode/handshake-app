@@ -165,10 +165,11 @@ class FeedCreditCard extends React.Component {
   handleGetCryptoPriceSuccess = (responseData) => {
     // console.log('handleGetCryptoPriceSuccess', data);
     // const { userCcLimit } = this.props;
-    const { amount } = this.state;
+    const { amount } = this.props;
     const { rfChange } = this.props;
     const cryptoPrice = CryptoPrice.cryptoPrice(responseData.data);
 
+    console.log('handleGetCryptoPriceSuccess amount', amount);
     let fiatAmount = amount * cryptoPrice.fiatAmount / cryptoPrice.amount;
 
     fiatAmount = roundNumberByLocale(fiatAmount, cryptoPrice.fiatCurrency);
