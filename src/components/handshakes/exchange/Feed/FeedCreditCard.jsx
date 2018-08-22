@@ -199,7 +199,15 @@ class FeedCreditCard extends React.Component {
   }
 
   closeInputCreditCard = () => {
-    this.setState({ hasSelectedCoin: false });
+    this.setState({ hasSelectedCoin: false }, () => {
+      const { rfChange } = this.props;
+      const { amount, fiatAmount, currency } = this.state;
+
+      rfChange(nameFormSpecificAmount, 'amount', amount);
+      rfChange(nameFormSpecificAmount, 'fiatAmount', fiatAmount);
+      const item = { id: currency, text: <span><img src={CRYPTO_ICONS[currency]} width={24} /> {CRYPTO_CURRENCY_NAME[currency]}</span> };
+      rfChange(nameFormSpecificAmount, 'currency', item);
+    });
   }
 
   handleValidate = (values) => {
