@@ -530,16 +530,18 @@ class FeedCreditCard extends React.Component {
                 component={fieldInput}
                 onChange={this.onAmountChange}
                 validate={[required]}
-              />
-              <Field
-                name="currency"
-                classNameWrapper=""
-                // defaultText={<FormattedMessage id="ex.create.placeholder.stationCurrency" />}
-                classNameDropdownToggle="dropdown-button"
-                list={listCurrency}
-                component={fieldDropdown}
-                // disabled={!enableChooseFiatCurrency}
-                onChange={this.onCurrencyChange}
+                elementAppend={
+                  <Field
+                    name="currency"
+                    classNameWrapper=""
+                    // defaultText={<FormattedMessage id="ex.create.placeholder.stationCurrency" />}
+                    classNameDropdownToggle="dropdown-button"
+                    list={listCurrency}
+                    component={fieldDropdown}
+                    // disabled={!enableChooseFiatCurrency}
+                    onChange={this.onCurrencyChange}
+                  />
+                }
               />
             </div>
             <div className="input-group mt-2">
@@ -550,15 +552,17 @@ class FeedCreditCard extends React.Component {
                 component={fieldInput}
                 onChange={this.onFiatAmountChange}
                 validate={[required]}
-              />
-              <Field
-                name="fiatCurrency"
-                classNameWrapper=""
-                // defaultText={<FormattedMessage id="ex.create.placeholder.stationCurrency" />}
-                classNameDropdownToggle="dropdown-button"
-                list={listFiatCurrency}
-                component={fieldDropdown}
-                // disabled={!enableChooseFiatCurrency}
+                elementAppend={
+                  <Field
+                    name="fiatCurrency"
+                    classNameWrapper=""
+                    // defaultText={<FormattedMessage id="ex.create.placeholder.stationCurrency" />}
+                    classNameDropdownToggle="dropdown-button"
+                    list={listFiatCurrency}
+                    component={fieldDropdown}
+                    // disabled={!enableChooseFiatCurrency}
+                  />
+                }
               />
             </div>
             <div className="mt-3 mb-3">
