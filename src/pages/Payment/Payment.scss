@@ -3,8 +3,10 @@
 
 .checkout-wrapper {
   .modal-custom-header {
-    background: #434343ff !important;
-    color:#057aff !important
+
+    .modal-custom-title{
+      font-weight: 400 !important;
+    }
   }
 }
 

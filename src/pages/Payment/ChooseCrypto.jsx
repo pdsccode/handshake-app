@@ -232,7 +232,7 @@ class ChooseCrypto extends React.Component {
     return StringHelper.format('{0}-{1}{2}.svg', this.className.toLowerCase(), this.getNetworkName().toLowerCase(), this.isReward ? '-reward' : '');
   }
 
-  get listPickCoin(){
+  get listMainCoin(){
     const main = this.state.mainCoin;
     if(main){
       let arr = [];
@@ -252,11 +252,36 @@ class ChooseCrypto extends React.Component {
     return "";
   }
 
+  get listTestCoin(){
+    const test = this.state.testCoin;
+    if(test){
+      let arr = [];
+      for(var i in test) {
+        arr.push(test[i]);
+      }
+
+      return arr.map(e =>
+        <div className="coinName test" key={e.name} onClick={this.selectCoin} >
+          <div className="icon"><img src={iconBTC} /></div>
+          <div className="balance">{e.balance} {e.name}</div>
+          <div className="name">{e.className}</div>
+        </div>
+      );
+    }
+
+    return "";
+  }
+
+  selectCoin(){
+
+  }
+
   render() {
     const { messages } = this.props.intl;
     return (
       <div>
-        {this.listPickCoin}
+        {this.listMainCoin}
+        {this.listTestCoin}
       </div>
     )
   }

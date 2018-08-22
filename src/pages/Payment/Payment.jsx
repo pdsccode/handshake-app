@@ -209,25 +209,9 @@ class Payment extends React.Component {
 
     return (
       <div className="checkout-wrapper">
-      <Modal title="Pay with Ninja" onRef={modal => this.modalSendRef = modal}  onClose={this.closePayNinja}>
-        <div className="shop-info">
-          <div className="order">Order # {this.state.orderID}</div>
-          <div className="shop">{this.extractDomain()}</div>
-        </div>
-
-        {/* <div className="order-info">
-          <div className="label">Payment Amount</div>
-          <div className="key">{this.state.amount} {this.state.coinName}</div>
-          <div className="clearfix"></div>
-          <div className="label">Transaction Fee</div>
-          <div className="key">{this.state.fee} {this.state.coinName}</div>
-          <div className="clearfix"></div>
-          <div className="label bold">Total</div>
-          <div className="key bold">{this.state.total} {this.state.coinName}</div>
-        </div> */}
-        {chooseCrypto}
-
-      </Modal>
+        <Modal title="Select crypto payment" onRef={modal => this.modalSendRef = modal}  onClose={this.closePayNinja}>
+          {chooseCrypto}
+        </Modal>
       </div>);
   }
 
@@ -272,6 +256,24 @@ class Payment extends React.Component {
         <Modal title="Developer Documents" onRef={modal => this.modalDevDocRef = modal}>
           <DevDoc />
         </Modal>
+
+
+      {/* <div className="shop-info">
+          <div className="order">Order # {this.state.orderID}</div>
+          <div className="shop">{this .extractDomain()}</div>
+        </div>
+
+        <div className="order-info">
+          <div className="label">Payment Amount</div>
+          <div className="key">{this.state.amount} {this.state.coinName}</div>
+          <div className="clearfix"></div>
+          <div className="label">Transaction Fee</div>
+          <div className="key">{this.state.fee} {this.state.coinName}</div>
+          <div className="clearfix"></div>
+          <div className="label bold">Total</div>
+          <div className="key bold">{this.state.total} {this.state.coinName}</div>
+        </div>
+      */}
 
         {
           this.showPayNinja()
