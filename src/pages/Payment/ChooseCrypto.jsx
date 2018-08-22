@@ -16,9 +16,6 @@ import { MasterWallet } from "@/services/Wallets/MasterWallet";
 import { showAlert } from '@/reducers/app/action';
 import { showLoading, hideLoading } from '@/reducers/app/action';
 import { StringHelper } from '@/services/helper';
-import iconBTC from '@/assets/images/icon/pay/btc.svg';
-import iconLTC from '@/assets/images/icon/pay/btc.svg';
-import iconDASH from '@/assets/images/icon/pay/dash.svg';
 import iconSuccessChecked from '@/assets/images/icon/icon-checked-green.svg';
 
 // style
@@ -228,28 +225,27 @@ class ChooseCrypto extends React.Component {
     return result;
   }
 
-  getBackgroundImg() {
-    return StringHelper.format('{0}-{1}{2}.svg', this.className.toLowerCase(), this.getNetworkName().toLowerCase(), this.isReward ? '-reward' : '');
-  }
-
   get listMainCoin(){
     const main = this.state.mainCoin;
     if(main){
-      let arr = [];
+      let arr = [], icon = '';
       for(var i in main) {
         arr.push(main[i]);
       }
 
-      return arr.map(e =>
-        <div className="coinName" key={e.name}>
-          <div className="icon"><img src={iconBTC} /></div>
-          <div className="balance">{e.balance} {e.name}</div>
-          <div className="name">{e.className}</div>
-        </div>
+      return arr.map(e => {
+        let icon = '';
+        try{ icon = require("@/assets/images/icon/wallet/coins/" + e.name.toLowerCase() + '.svg')} catch (ex){console.log(ex)};
+        console.log(icon);
+
+        return <div className="coinName" key={e.name} onClick={this.selectCoin(e)} >
+            <div className="icon"><img src={icon} /></div>
+            <div className="balance">{e.balance} {e.name}</div>
+            <div className="name">{e.className}</div>
+          </div>
+        }
       );
     }
-
-    return "";
   }
 
   get listTestCoin(){
@@ -260,20 +256,24 @@ class ChooseCrypto extends React.Component {
         arr.push(test[i]);
       }
 
-      return arr.map(e =>
-        <div className="coinName test" key={e.name} onClick={this.selectCoin} >
-          <div className="icon"><img src={iconBTC} /></div>
-          <div className="balance">{e.balance} {e.name}</div>
-          <div className="name">{e.className}</div>
-        </div>
+      return arr.map(e => {
+        let icon = '';
+        try{ icon = require("@/assets/images/icon/wallet/coins/" + e.name.toLowerCase() + '.svg')} catch (ex){console.log(ex)};
+
+          return <div className="coinName test" key={e.name} onClick={()=> this.selectCoin(e)} >
+            <div className="icon"><img src={icon} /></div>
+            <div className="balance">{e.balance} {e.name}</div>
+            <div className="name">{e.className}</div>
+          </div>
+        }
       );
     }
 
     return "";
   }
 
-  selectCoin(){
-
+  selectCoin = (wallet) => {
+    console.log(wallet);
   }
 
   render() {

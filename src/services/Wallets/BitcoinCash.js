@@ -17,7 +17,7 @@ export class BitcoinCash extends Bitcoin {
     this.coinType = 0;
     this.name = 'BCH';
     this.title = 'Bitcoin Cash';
-    this.className = 'Bitcoin Cash';
+    this.className = 'BitcoinCash';
   }
 
   setDefaultNetwork() {

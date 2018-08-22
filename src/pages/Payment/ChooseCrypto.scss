@@ -7,15 +7,13 @@
   border: solid 1px #EAEAEC;
   border-radius: 5px;
   padding: 15px;
-  margin-top: 10px;
+  margin-top: 6px;
   -webkit-box-shadow: -1px 2px 10px 1px rgba(0,0,0,0.1);
   -moz-box-shadow: -1px 2px 10px 1px rgba(0,0,0,0.1);
   box-shadow: -1px 2px 10px 1px rgba(0,0,0,0.1);
 
   .icon{
     float:left;
-    width: 50px;
-    height: 50px;
     vertical-align: middle;
     text-align: center;
     margin-right: 10px;
@@ -27,7 +25,6 @@
   }
 
   .balance{
-    font-size: 16px;
+    font-size: 15px;
   }
-
 }
