@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { API_URL, CRYPTO_CURRENCY, EXCHANGE_ACTION, EXCHANGE_ACTION_NAME, HANDSHAKE_ID, URL } from '@/constants';
-import { Marker } from 'react-google-maps';
+import { Marker, InfoWindow } from 'react-google-maps';
 import InfoBox from 'react-google-maps/lib/components/addons/InfoBox';
 
 import iconCustomMarker from '@/assets/images/icon/custom-marker.svg';
@@ -294,6 +294,7 @@ class StationMarker extends React.Component {
             },
             closeBoxURL: '',
             enableEventPropagation: true,
+            disableAutoPan: true,
           }}
         >
           <div className="stationInfo">
