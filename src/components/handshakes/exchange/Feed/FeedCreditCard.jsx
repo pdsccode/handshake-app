@@ -170,7 +170,7 @@ class FeedCreditCard extends React.Component {
     const cryptoPrice = CryptoPrice.cryptoPrice(responseData.data);
 
     console.log('handleGetCryptoPriceSuccess amount', amount);
-    let fiatAmount = amount * cryptoPrice.fiatAmount / cryptoPrice.amount;
+    let fiatAmount = amount * cryptoPrice.fiatAmount / cryptoPrice.amount || 0;
 
     fiatAmount = roundNumberByLocale(fiatAmount, cryptoPrice.fiatCurrency);
     console.log('onAmountChange', fiatAmount);
@@ -331,7 +331,7 @@ class FeedCreditCard extends React.Component {
             console.log('error', error);
             this.hideLoading();
 
-            const message = error?.response?.data?.errors[0] || 'Something wrong!';
+            const message = error?.response?.data?.error?.message || 'Something wrong!';
             this.props.showAlert({
               message: <div className="text-center">{message}</div>,
               timeOut: 3000,
