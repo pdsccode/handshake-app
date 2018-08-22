@@ -139,7 +139,8 @@ class FeedCreditCard extends React.Component {
     this.props.getUserCcLimit({ PATH_URL: API_URL.EXCHANGE.GET_USER_CC_LIMIT });
 
     this.intervalCountdown = setInterval(() => {
-      this.getCryptoPriceByAmount(1);
+      const { amount } = this.state;
+      this.getCryptoPriceByAmount(amount);
     }, 30000);
   }
 
@@ -195,6 +196,8 @@ class FeedCreditCard extends React.Component {
   handleSubmitSpecificAmount = (values) => {
     this.setState({
       hasSelectedCoin: true, amount: values.amount, fiatAmount: values.fiatAmount, currency: values.currency.id, fiatCurrency: values.fiatCurrency.id,
+    }, () => {
+      this.getCryptoPriceByAmount(values.amount);
     });
   }
 
@@ -222,7 +225,7 @@ class FeedCreditCard extends React.Component {
     console.log('handleSubmit', values);
 
     const { handleSubmit } = this.props;
-    const { userCcLimit, addressForced } = this.props;
+    const { userCcLimit, cryptoPrice, addressForced } = this.props;
     const {
       amount, currency, fiatAmount, fiatCurrency,
     } = this.state;
@@ -308,9 +311,7 @@ class FeedCreditCard extends React.Component {
                 });
               } else {
                 local.save(APP.CC_SOURCE, result.source);
-                local.save(APP.CC_PRICE, {
-                  amount: amount.toString(), currency, fiatAmount, fiatCurrency,
-                });
+                local.save(APP.CC_PRICE, cryptoPrice);
                 local.save(APP.CC_TOKEN, payload.data.id);
 
                 let address = '';
@@ -479,11 +480,11 @@ class FeedCreditCard extends React.Component {
     rfChange(nameFormSpecificAmount, 'fiatAmount', fiatAmount);
   }
 
-  onFiatAmountChange = (e, amount) => {
-    console.log('onFiatAmountChange', amount);
+  onFiatAmountChange = (e, fiatAmount) => {
+    console.log('onFiatAmountChange', fiatAmount);
     const { rfChange, cryptoPrice } = this.props;
 
-    let newAmount = amount / cryptoPrice.fiatAmount;
+    let newAmount = fiatAmount * cryptoPrice.amount / cryptoPrice.fiatAmount;
     newAmount = (new BigNumber(newAmount).decimalPlaces(6)).toNumber();
     console.log('onFiatAmountChange', newAmount);
     rfChange(nameFormSpecificAmount, 'amount', newAmount);
@@ -496,7 +497,7 @@ class FeedCreditCard extends React.Component {
     const packages = moneyPackages.map((item) => {
       const { name, fiatAmount } = item;
 
-      let newAmount = fiatAmount / cryptoPrice.fiatAmount;
+      let newAmount = fiatAmount * cryptoPrice.amount / cryptoPrice.fiatAmount;
       newAmount = (new BigNumber(newAmount).decimalPlaces(6)).toNumber();
 
       return {
