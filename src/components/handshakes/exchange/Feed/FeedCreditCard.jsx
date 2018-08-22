@@ -614,7 +614,7 @@ class FeedCreditCard extends React.Component {
       <div className="credit-card">
         <div><button className="btn btn-lg bg-transparent d-inline-block btn-close" onClick={this.closeInputCreditCard}>&times;</button></div>
         <div className="wrapper">
-          <FormCreditCard onSubmit={this.handleSubmit}>
+          <FormCreditCard onSubmit={this.handleSubmit} validate={this.handleValidate}>
             <div>
               <div className="cc-label"><FormattedMessage id="cc.label.cardNo" /></div>
               <div>
@@ -719,6 +719,7 @@ const mapStateToProps = (state) => ({
   userCcLimit: state.exchange.userCcLimit,
   ccLimits: state.exchange.ccLimits || [],
   authProfile: state.auth.profile,
+  amount: selectorFormSpecificAmount(state, 'amount'),
 });
 
 const mapDispatchToProps = (dispatch) => ({
