@@ -251,7 +251,7 @@ class Prediction extends React.Component {
   }
 
   renderComponent = (props, state) => {
-    /*
+
     if (1) {
       return (
 
@@ -262,7 +262,7 @@ class Prediction extends React.Component {
 
       );
     }
-    */
+
     return (
       <div className={Prediction.displayName}>
         <Loading isLoading={props.isLoading} />

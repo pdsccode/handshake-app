@@ -54,7 +54,7 @@ import taggingConfig from '@/services/tagging-config';
 const TAG = 'Me';
 const maps = {
   [HANDSHAKE_ID.PROMISE]: FeedPromise,
-  [HANDSHAKE_ID.BETTING]: FeedBetting, // @TODO: uncomment this line
+  //[HANDSHAKE_ID.BETTING]: FeedBetting, // @TODO: uncomment this line
   [HANDSHAKE_ID.EXCHANGE]: FeedExchange,
   [HANDSHAKE_ID.EXCHANGE_LOCAL]: FeedExchange,
   [HANDSHAKE_ID.SEED]: FeedSeed,
