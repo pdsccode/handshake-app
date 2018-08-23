@@ -400,6 +400,7 @@ class FeedCreditCard extends React.Component {
     gtag.event({
       category: taggingConfig.creditCard.category,
       action: taggingConfig.creditCard.action.buySuccess,
+      label: currency,
       value: new BigNumber(fiat_amount).multipliedBy(100).toNumber(),
     });
 
