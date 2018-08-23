@@ -225,7 +225,7 @@ class FeedCreditCard extends React.Component {
     console.log('handleSubmit', values);
 
     const { handleSubmit } = this.props;
-    const { userCcLimit, cryptoPrice, addressForced } = this.props;
+    const { userCcLimit, cryptoPrice, addressForced, currencyForced } = this.props;
     // const {
     //   amount, currency, fiatAmount, fiatCurrency,
     // } = this.state;
@@ -316,7 +316,7 @@ class FeedCreditCard extends React.Component {
                 local.save(APP.CC_EMAIL, cc_email);
 
                 let address = '';
-                if (addressForced) {
+                if (currencyForced && addressForced && currencyForced === cryptoPrice.currency) {
                   address = addressForced;
                 } else {
                   const wallet = MasterWallet.getWalletDefault(cryptoPrice.currency);
@@ -355,11 +355,10 @@ class FeedCreditCard extends React.Component {
   };
 
   handleCreateCCOrder = (params) => {
-    const { cryptoPrice, addressForced, authProfile } = this.props;
-
+    const { cryptoPrice, addressForced, authProfile, currencyForced } = this.props;
 
     let address = '';
-    if (addressForced) {
+    if (currencyForced && addressForced && currencyForced === cryptoPrice.currency) {
       address = addressForced;
     } else {
       const wallet = MasterWallet.getWalletDefault(cryptoPrice.currency);
