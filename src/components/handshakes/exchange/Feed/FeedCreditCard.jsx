@@ -226,9 +226,9 @@ class FeedCreditCard extends React.Component {
 
     const { handleSubmit } = this.props;
     const { userCcLimit, cryptoPrice, addressForced } = this.props;
-    const {
-      amount, currency, fiatAmount, fiatCurrency,
-    } = this.state;
+    // const {
+    //   amount, currency, fiatAmount, fiatCurrency,
+    // } = this.state;
 
     gtag.event({
       category: taggingConfig.creditCard.category,
@@ -289,7 +289,7 @@ class FeedCreditCard extends React.Component {
             const stripe = Stripe(process.env.stripeKey);
             stripe.createSource({
               type: 'three_d_secure',
-              amount: new BigNumber(fiatAmount).multipliedBy(100).toString(),
+              amount: new BigNumber(cryptoPrice.fiatAmount).multipliedBy(100).toString(),
               currency: FIAT_CURRENCY.USD,
               three_d_secure: {
                 card: payload.data.id,
@@ -318,7 +318,7 @@ class FeedCreditCard extends React.Component {
                 if (addressForced) {
                   address = addressForced;
                 } else {
-                  const wallet = MasterWallet.getWalletDefault(currency);
+                  const wallet = MasterWallet.getWalletDefault(cryptoPrice.currency);
                   address = wallet.address;
                 }
                 local.save(APP.CC_ADDRESS, address);
