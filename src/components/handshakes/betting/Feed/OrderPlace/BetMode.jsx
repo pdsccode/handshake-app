@@ -132,19 +132,15 @@ class BetMode extends React.Component {
   }
 
   render() {
-    const { selectedOutcome, selectedMatch } = this.props;
-    const {
-      support,
-      against,
-      isFirstFree,
-      bettingShakeIsOpen,
-    } = this.state;
+    const { selectedOutcome, selectedMatch, handleBetFail } = this.props;
+    const { support, against, isFirstFree, bettingShakeIsOpen } = this.state;
     const filterProps = {
       selectedOutcome,
       selectedMatch,
       support,
       against,
       isOpen: bettingShakeIsOpen,
+      handleBetFail,
       onSubmitClick: ((isFree) => {
         this.setState({
           bettingShakeIsOpen: false,
