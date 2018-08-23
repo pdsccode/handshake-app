@@ -83,7 +83,7 @@ export class MasterWallet {
 
       let defaultWallet = [1, 3];// eth main, eth test, btc main, btc test => local web
       if (process.env.isLive) { // // eth main, eth test, btc main, btc test => live web
-        defaultWallet = [0, 1];
+        defaultWallet = [0, 1, 2, 3];
       }
       if (process.env.isDojo) { // eth test, shuri test, btc test => dojo web
         defaultWallet = [0, 2];
@@ -111,9 +111,8 @@ export class MasterWallet {
       }
 
       // set default item:
-      if (masterWallet.length > 1) {
-        masterWallet[defaultWallet[0]].default = true;
-        masterWallet[defaultWallet[1]].default = true;
+      for(let i = 0; i < defaultWallet.length; i++){
+        masterWallet[defaultWallet[i]].default = true;
       }
 
       // For Reward wallet:
@@ -519,8 +518,8 @@ export class MasterWallet {
         if (walletJson.isCollectibles) wallet.isCollectibles = walletJson.isCollectibles;
         if (walletJson.secret) wallet.secret = walletJson.secret;
         if (walletJson.publicKey) wallet.publicKey = walletJson.publicKey;
-        
-      
+
+
         return wallet;
       } catch (e) {
         return false;
