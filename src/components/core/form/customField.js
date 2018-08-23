@@ -37,7 +37,7 @@ const customField = element => ({
 export const fieldInput = customField('input');
 export const fieldTextArea = customField('textarea');
 export const fieldDropdown = customField(({
-  onChange, value, list, defaultText = 'Select an item', classNameWrapper = 'btn-block', classNameDropdownToggle = '', disabled = false,
+  onChange, value, list, defaultText = 'Select an item', classNameWrapper = 'btn-block', classNameDropdownToggle = '', disabled = false, caret = true,
 }) => {
   let txtSelectedItem = defaultText;
   const selectedItem = list.find(i => i.id === value.id);
@@ -47,21 +47,25 @@ export const fieldDropdown = customField(({
   }
   return (
     <UncontrolledButtonDropdown className={classNameWrapper}>
-      <DropdownToggle caret color="light" block className={classNameDropdownToggle} disabled={disabled}>
+      <DropdownToggle caret={caret} color="light" block className={classNameDropdownToggle} disabled={disabled}>
         {txtSelectedItem}
       </DropdownToggle>
-      <DropdownMenu>
-        {
-          list.map(item => (
-            <DropdownItem
-              key={item.id}
-              onClick={() => onChange(item)}
-            >
-              {item.text}
-            </DropdownItem>
-            ))
-        }
-      </DropdownMenu>
+      {
+        caret && (
+          <DropdownMenu>
+            {
+              list.map(item => (
+                <DropdownItem
+                  key={item.id}
+                  onClick={() => onChange(item)}
+                >
+                  {item.text}
+                </DropdownItem>
+              ))
+            }
+          </DropdownMenu>
+        )
+      }
     </UncontrolledButtonDropdown>
   );
 });
