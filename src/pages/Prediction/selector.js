@@ -6,12 +6,6 @@ export const queryStringSelector = (state) => {
   return state.router.location.search;
 };
 
-export const isSharePage = (state) => {
-  const queryString = queryStringSelector(state);
-  const urlParams = qs.parse(queryString.slice(1));
-  return !!urlParams.match;
-}
-
 export const eventSelector = (state) => {
   const queryString = queryStringSelector(state);
   const urlParams = qs.parse(queryString.slice(1));
@@ -21,6 +15,17 @@ export const eventSelector = (state) => {
     return state.prediction.events;
   }
   return events.filter(event => (event.id === _.toInteger(match)));
+};
+
+export const countReportSelector = (state) => {
+  const { matches = [] } = state.ui;
+  return matches.length || 0;
+};
+
+export const isSharePage = (state) => {
+  const queryString = queryStringSelector(state);
+  const urlParams = qs.parse(queryString.slice(1));
+  return !!urlParams.match;
 };
 
 export const isLoading = (state) => {

@@ -26,7 +26,6 @@ import FeedExchange from '@/components/handshakes/exchange/Feed/FeedMe';
 import FeedSeed from '@/components/handshakes/seed/Feed';
 import ModalDialog from '@/components/core/controls/ModalDialog';
 import Image from '@/components/core/presentation/Image';
-
 import ToggleSwitch from '@/components/core/presentation/ToggleSwitch';
 // style
 import AvatarSVG from '@/assets/images/icon/avatar.svg';
@@ -408,6 +407,14 @@ class Me extends React.Component {
   }
 
   render() {
+    if (1) {
+      return (
+        <div className="Maintenance">
+          <p>The site is down a bit of maintenance right now.</p>
+          <p>But soon we will be up and the sun will shine again.</p>
+        </div>
+      );
+    }
     const { list, listDashboard } = this.props.me;
     let listFeed = [];
     if (this.state.handshakeIdActive === HANDSHAKE_ID.EXCHANGE && this.state.cashTab === CASH_TAB.DASHBOARD) {
@@ -505,6 +512,7 @@ class Me extends React.Component {
                 </div>
                 )
               }
+
 
             </FormFilterFeeds>
           </div>
