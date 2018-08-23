@@ -579,6 +579,7 @@ class FeedCreditCard extends React.Component {
                     classNameDropdownToggle="dropdown-button"
                     list={listFiatCurrency}
                     component={fieldDropdown}
+                    caret={false}
                     // disabled={!enableChooseFiatCurrency}
                   />
                 }
