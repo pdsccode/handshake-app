@@ -140,7 +140,7 @@ class CCConfirm extends React.Component {
       },
     } = data;
 
-    const value = roundNumberByLocale(new BigNumber(fiat_amount).multipliedBy(100).toNumber(), fiat_currency);
+    const value = roundNumberByLocale(new BigNumber(fiat_amount).multipliedBy(100).toNumber(), fiat_currency).toNumber();
 
     gtag.event({
       category: taggingConfig.creditCard.category,
