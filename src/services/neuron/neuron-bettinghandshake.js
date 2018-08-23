@@ -18,7 +18,7 @@ export default class BettingHandshake extends BaseHandshake {
     // return process.env.isProduction ? 'PredictionHandshake' : 'PredictionHandshakeDev';
     //return process.env.PredictionHandshakeFileName;
     if (this.contractFileName) {
-      const folder = process.env.isStaging ? 'stag' : 'live';
+      const folder = process.env.isLive ? 'live' : 'stag';
       return `Prediction/${folder}/${this.contractFileName}`;
     }
     return null;
