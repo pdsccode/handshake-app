@@ -262,7 +262,6 @@ class Prediction extends React.Component {
     return (
       <div className={Prediction.displayName}>
         <Loading isLoading={props.isLoading} />
-        {/* {this.renderShareToWin()} */}
         {this.renderEventList(props)}
         {this.renderBetMode(props, state)}
         {this.renderViewAllEvent(props, state)}
