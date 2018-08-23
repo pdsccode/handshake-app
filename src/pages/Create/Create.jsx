@@ -108,7 +108,7 @@ const maps = {
   [HANDSHAKE_ID.SEED]: CreateSeed,
   [HANDSHAKE_ID.WALLET_TRANSFER]: CreateWalletTransfer,
   [HANDSHAKE_ID.WALLET_RECEIVE]: CreateWalletReceive,
-  //[HANDSHAKE_ID.CREATE_EVENT]: CreateYourOwnMarket,
+  [HANDSHAKE_ID.CREATE_EVENT]: CreateYourOwnMarket,
 };
 
 class Create extends React.Component {
