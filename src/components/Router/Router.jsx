@@ -38,9 +38,12 @@ const RouterCreate = createDynamicImport(() => import('@/components/Router/Creat
 const RouterWallet = createDynamicImport(() => import('@/components/Router/Wallet'), Loading);
 const RouterComment = createDynamicImport(() => import('@/components/Router/Comment'), Loading);
 const RouterAdmin = createDynamicImport(() => import('@/components/Router/Admin'), Loading);
+const RouterReport = createDynamicImport(() => import('@/components/Router/Report'), Loading);
 const RouterLuckyPool = createDynamicImport(() => import('@/pages/LuckyLanding/LuckyLanding'), Loading);
 const RouterExchange = createDynamicImport(() => import('@/components/Router/Exchange'), Loading);
-// const RouterExchange = createDynamicImport(() => import('@/pages/Exchange/Exchange'), Loading);
+//const RouterExchange = createDynamicImport(() => import('@/pages/Exchange/Exchange'), Loading);
+const RouterPrediction = createDynamicImport(() => import('@/pages/Exchange/Exchange'), Loading);
+const RouterResolve = createDynamicImport(() => import('@/pages/Resolve/Resolve'), Loading);
 const RouterLandingPageMain = createDynamicImport(() => import('@/pages/LandingPage/Main'), Loading);
 const LandingPageMain = createDynamicImport(() => import('@/pages/LandingPage/Main'), Loading);
 const ProjectDetail = createDynamicImport(() => import('@/components/ProjectDetail'), Loading);
@@ -64,7 +67,7 @@ const configRoutesUsingMobileLayout = [
   { path: URL.HANDSHAKE_CREATE, component: RouterCreate },
   { path: URL.COMMENTS_BY_SHAKE, component: RouterComment },
   { path: URL.ADMIN, component: RouterAdmin },
-  { path: URL.REPORT, component: RouterAdmin },
+  { path: URL.REPORT, component: RouterReport },
   { path: URL.HANDSHAKE_PEX, component: RouterExchange },
   { path: URL.CC_PAYMENT_URL, component: RouterCCConfirm },
   { path: URL.BUY_BY_CC_URL, component: RouterBuyCC },
@@ -75,6 +78,7 @@ const configRoutesUsingMobileLayout = [
       return null;
     }
   },
+  { path: URL.RESOLVE, component: RouterResolve },
 ];
 const routesUsingMobileLayout = configRoutesUsingMobileLayout.map(route => (
   <Route

@@ -6,21 +6,21 @@ import ModalDialog from '@/components/core/controls/ModalDialog';
 import Loading from '@/components/Loading';
 import LuckyReal from '@/components/handshakes/betting/LuckyPool/LuckyReal/LuckyReal';
 import LuckyLanding from '@/pages/LuckyLanding/LuckyLanding';
-import { URL } from '@/constants';
 import GA from '@/services/googleAnalytics';
 import LuckyFree from '@/components/handshakes/betting/LuckyPool/LuckyFree/LuckyFree';
 import OuttaMoney from '@/assets/images/modal/outtamoney.png';
 import Modal from '@/components/core/controls/Modal';
 import * as gtag from '@/services/ga-utils';
 import taggingConfig from '@/services/tagging-config';
-import FeedCreditCard from "@/components/handshakes/exchange/Feed/FeedCreditCard";
-
-import { eventSelector, isLoading, showedLuckyPoolSelector, isSharePage } from './selector';
-import { loadMatches, updateShowedLuckyPool } from './action';
+import FeedCreditCard from '@/components/handshakes/exchange/Feed/FeedCreditCard';
+import ReportPopup from '@/components/handshakes/betting/Feed/ReportPopup';
+import { injectIntl } from 'react-intl';
+import { URL } from '@/constants';
+import { eventSelector, isLoading, showedLuckyPoolSelector, isSharePage, countReportSelector } from './selector';
+import { loadMatches, updateShowedLuckyPool, getReportCount, removeExpiredEvent } from './action';
 import EventItem from './EventItem';
 
 import './Prediction.scss';
-import {injectIntl} from "react-intl";
 
 class Prediction extends React.Component {
   static displayName = 'Prediction';
@@ -29,6 +29,7 @@ class Prediction extends React.Component {
     showedLuckyPool: PropTypes.bool,
     isSharePage: PropTypes.bool,
     dispatch: PropTypes.func.isRequired,
+    countReport: PropTypes.number,
   };
 
   static defaultProps = {
@@ -46,14 +47,16 @@ class Prediction extends React.Component {
 
   componentDidMount() {
     this.props.dispatch(loadMatches());
+    this.props.dispatch(getReportCount());
   }
 
-  onCountdownComplete = () => {
-    this.props.dispatch(loadMatches());
+  onCountdownComplete = (eventId) => {
+    this.props.dispatch(removeExpiredEvent({ eventId }));
     this.closeOrderPlace();
+    this.props.dispatch(getReportCount());
   }
 
-  openOrderPlace(selectedOutcome) {
+  openOrderPlace = (selectedOutcome) => {
     this.openFilter(selectedOutcome);
     this.modalOrderPlace.open();
   }
@@ -64,18 +67,15 @@ class Prediction extends React.Component {
 
   showLuckyPool() {
     const { showedLuckyPool } = this.props;
-
-    if (showedLuckyPool === false) {
-      console.log('Action Lucky Pool:', showedLuckyPool);
-      this.props.dispatch(updateShowedLuckyPool());
-      setTimeout(() => {
-        this.modalLuckyPoolRef.open();
-
-      }, 2 * 1000);
-    }
+    if (showedLuckyPool) return;
+    console.log('Action Lucky Pool:', showedLuckyPool);
+    this.props.dispatch(updateShowedLuckyPool());
+    setTimeout(() => {
+      this.modalLuckyPoolRef.open();
+    }, 2 * 1000);
   }
 
-  handleClickEventItem = (id, e, props, itemData) => {
+  handleClickEventItem = (props, itemData) => {
     const { event } = props;
     const selectedOutcome = {
       hid: itemData.hid,
@@ -119,7 +119,7 @@ class Prediction extends React.Component {
               key={event.id}
               event={event}
               onClickOutcome={this.handleClickEventItem}
-              onCountdownComplete={this.onCountdownComplete}
+              onCountdownComplete={() => this.onCountdownComplete(event.id)}
             />
           );
         })}
@@ -129,7 +129,8 @@ class Prediction extends React.Component {
 
   renderShareToWin = () => {
     return (
-      <div className="ShareToWin"
+      <div
+        className="ShareToWin"
         onClick={() => {
           GA.clickBannerWin();
         }}
@@ -143,7 +144,7 @@ class Prediction extends React.Component {
 
   renderBetMode = (props, state) => {
     return (
-      <ModalDialog close onRef={(modal) => { this.modalOrderPlace = modal; }}>
+      <ModalDialog className="BetSlipContainer" close onRef={(modal) => { this.modalOrderPlace = modal; }}>
         <BetMode
           selectedOutcome={state.selectedOutcome}
           selectedMatch={state.selectedMatch}
@@ -159,22 +160,9 @@ class Prediction extends React.Component {
     );
   }
 
-  renderLucky = () => {
+  renderReportPopup = () => {
     return (
-      <React.Fragment>
-        <ModalDialog onRef={(modal) => { this.modalLuckyReal = modal; }}>
-          <LuckyReal onButtonClick={() => this.modalLuckyReal.close() } />
-        </ModalDialog>
-        <ModalDialog onRef={(modal) => { this.modalLuckyFree = modal; }}>
-          <LuckyFree onButtonClick={() => this.modalLuckyFree.close() } />
-        </ModalDialog>
-        <ModalDialog className="modal" onRef={(modal) => { this.modalLuckyPoolRef = modal; return null; }}>
-          <LuckyLanding onButtonClick={() => {
-            this.modalLuckyPoolRef.close();
-          }}
-          />
-        </ModalDialog>
-      </React.Fragment>
+      <ReportPopup />
     );
   }
 
@@ -186,6 +174,27 @@ class Prediction extends React.Component {
       </a>
     );
   }
+
+  renderLuckyReal = () => (
+    <ModalDialog onRef={(modal) => { this.modalLuckyReal = modal; }}>
+      <LuckyReal onButtonClick={() => this.modalLuckyReal.close()} />
+    </ModalDialog>
+  )
+
+  renderLuckyFree = () => (
+    <ModalDialog onRef={(modal) => { this.modalLuckyFree = modal; }}>
+      <LuckyFree onButtonClick={() => this.modalLuckyFree.close()} />
+    </ModalDialog>
+  )
+
+  renderLuckyLanding = () => (
+    <ModalDialog className="modal" onRef={(modal) => { this.modalLuckyPoolRef = modal; return null; }}>
+      <LuckyLanding onButtonClick={() => {
+          this.modalLuckyPoolRef.close();
+        }}
+      />
+    </ModalDialog>
+  )
 
   renderOuttaMoney = () => {
     return (
@@ -242,6 +251,14 @@ class Prediction extends React.Component {
   }
 
   renderComponent = (props, state) => {
+    if (1) {
+      return (
+        <div className="Maintenance">
+          <p>The site is down a bit of maintenance right now.</p>
+          <p>But soon we will be up and the sun will shine again.</p>
+        </div>
+      );
+    }
     return (
       <div className={Prediction.displayName}>
         <Loading isLoading={props.isLoading} />
@@ -249,9 +266,12 @@ class Prediction extends React.Component {
         {this.renderEventList(props)}
         {this.renderBetMode(props, state)}
         {this.renderViewAllEvent(props, state)}
-        {this.renderLucky}
+        {this.renderLuckyReal()}
+        {this.renderLuckyFree()}
+        {this.renderLuckyLanding()}
         {this.renderOuttaMoney()}
         {this.renderCreditCard()}
+        {props.countReport > 0 && this.renderReportPopup()}
       </div>
     );
   };
@@ -264,6 +284,7 @@ class Prediction extends React.Component {
 export default injectIntl(connect(
   (state) => {
     return {
+      countReport: countReportSelector(state),
       eventList: eventSelector(state),
       isSharePage: isSharePage(state),
       isLoading: isLoading(state),

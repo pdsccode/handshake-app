@@ -7,9 +7,23 @@ export const loadMatches = (payload = {}) => {
   };
 };
 
+export const removeExpiredEvent = (payload = {}) => {
+  return {
+    type: 'PREDICTION:REMOVE_EXPIRED_EVENT',
+    ...payload,
+  };
+};
+
 export const loadHandShakes = (payload = {}) => {
   return {
     type: 'PREDICTION:LOAD_HANDSHAKES',
+    ...payload,
+  };
+};
+
+export const getReportCount = (payload = {}) => {
+  return {
+    type: 'PREDICTION:COUNT_REPORT',
     ...payload,
   };
 };

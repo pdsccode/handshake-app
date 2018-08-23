@@ -35,9 +35,19 @@ const EVENT_ACTION = {
   CLICK_ME_CANCEL_BUTTON: 'Click me cancel button',
   CLICK_ME_WITHDRAW_BUTTON: 'Click me withdraw button',
   CLICK_ME_REFUND_BUTTON: 'Click me refund button',
+  CLICK_ME_DISPUTE_BUTTON: 'Click me dispute button',
   CLICK_FREE_CANCEL_BUTTON: 'Click free cancel button',
   CLICK_FREE_WITHDRAW_BUTTON: 'Click free withdraw button',
   CLICK_FREE_REFUND_BUTTON: 'Click free refund button',
+  CLICK_ME_CANCEL_API_SUCCESS: 'Click me cancel API successful',
+  CLICK_ME_CANCEL_API_FAILED: 'Click me cancel API failed',
+  CLICK_ME_WITHDRAW_API_SUCCESS: 'Click me withdraw API successful',
+  CLICK_ME_WITHDRAW_API_FAILED: 'Click me withdraw API failed',
+  CLICK_ME_REFUND_API_SUCCESS: 'Click me refund API successful',
+  CLICK_ME_REFUND_API_FAILED: 'Click me refund API failed',
+  CLICK_ME_DISPUTE_API_SUCCESS: 'Click me dispute API successful',
+  CLICK_ME_DISPUTE_API_FAILED: 'Click me dispute API failed',
+
 
   CLICK_GO_BUTTON: 'Click go button',
   CLICK_COMMENTS_BOX: 'Click comments box',
@@ -411,11 +421,13 @@ class GoogleAnalyticsService {
    * @param odds
    * @param amount
    */
-  createBetMatchedSuccess({ side, odds, amount, txHash }) {
+  createBetMatchedSuccess({ side, odds, amount, hash }) {
+    console.log('Hash:', hash);
+
     const params = {
       category: EVENT_CATEGORY.ORDER_BOOK,
       action: EVENT_ACTION.CREATE_BET_MATCHED_SUCCESS,
-      label: `${BETTING_SIDE_NAME[side]} - Odds: ${odds} - Amount: ${amount}-${txHash}`,
+      label: `${BETTING_SIDE_NAME[side]} - Odds: ${odds} - Amount: ${amount}-${hash}`,
     };
     console.log(TAG, 'createBetMatchedSuccess', params);
     try {
@@ -477,6 +489,23 @@ class GoogleAnalyticsService {
   }
 
   /**
+   * @param event
+   * @param outcome
+   */
+  createClickDispute(outcome, txHash) {
+    const params = {
+      category: EVENT_CATEGORY.ME,
+      action: EVENT_ACTION.CLICK_ME_DISPUTE_BUTTON,
+      label: `${outcome}-${txHash}`,
+    };
+    console.log(TAG, 'createClickDispute', params);
+
+    try {
+      this.sendGAEvent(params);
+    } catch (err) {}
+  }
+
+  /**
    *
    * @param event
    * @param outcome
@@ -527,6 +556,108 @@ class GoogleAnalyticsService {
       this.sendGAEvent(params);
     } catch (err) {}
   }
+  clickCancelAPISuccess(offchain) {
+    const params = {
+      category: EVENT_CATEGORY.ME,
+      action: EVENT_ACTION.CLICK_ME_CANCEL_API_SUCCESS,
+      label: `${offchain}`,
+    };
+    console.log(TAG, 'clickCancelAPISuccess', params);
+
+    try {
+      this.sendGAEvent(params);
+    } catch (err) {}
+  }
+
+  clickCancelAPIFailed(offchain, err) {
+    const params = {
+      category: EVENT_CATEGORY.ME,
+      action: EVENT_ACTION.CLICK_ME_CANCEL_API_FAILED,
+      label: `${offchain}-${err}`,
+    };
+    console.log(TAG, 'clickCancelAPIFailed', params);
+
+    try {
+      this.sendGAEvent(params);
+    } catch (err) {}
+  }
+
+  clickWithdrawAPISuccess(offchain) {
+    const params = {
+      category: EVENT_CATEGORY.ME,
+      action: EVENT_ACTION.CLICK_ME_WITHDRAW_API_SUCCESS,
+      label: `${offchain}`,
+    };
+    console.log(TAG, 'clickWithdrawAPISuccess', params);
+
+    try {
+      this.sendGAEvent(params);
+    } catch (err) {}
+  }
+
+  clickWithdrawAPIFailed(offchain, err) {
+    const params = {
+      category: EVENT_CATEGORY.ME,
+      action: EVENT_ACTION.CLICK_ME_WITHDRAW_API_FAILED,
+      label: `${offchain}-${err}`,
+    };
+    console.log(TAG, 'clickWithdrawAPIFailed', params);
+
+    try {
+      this.sendGAEvent(params);
+    } catch (err) {}
+  }
+
+  clickRefundAPISuccess(offchain) {
+    const params = {
+      category: EVENT_CATEGORY.ME,
+      action: EVENT_ACTION.CLICK_ME_REFUND_API_SUCCESS,
+      label: `${offchain}`,
+    };
+    console.log(TAG, 'clickRefundAPISuccess', params);
+
+    try {
+      this.sendGAEvent(params);
+    } catch (err) {}
+  }
+
+  clickRefundAPIFailed(offchain, err) {
+    const params = {
+      category: EVENT_CATEGORY.ME,
+      action: EVENT_ACTION.CLICK_ME_REFUND_API_FAILED,
+      label: `${offchain}-${err}`,
+    };
+    console.log(TAG, 'clickRefundAPIFailed', params);
+
+    try {
+      this.sendGAEvent(params);
+    } catch (err) {}
+  }
+  clickDisputeAPISuccess(offchain) {
+    const params = {
+      category: EVENT_CATEGORY.ME,
+      action: EVENT_ACTION.CLICK_ME_DISPUTE_API_SUCCESS,
+      label: `${offchain}`,
+    };
+    console.log(TAG, 'clickDisputeAPISuccess', params);
+
+    try {
+      this.sendGAEvent(params);
+    } catch (err) {}
+  }
+  clickDisputeAPIFailed(offchain, err) {
+    const params = {
+      category: EVENT_CATEGORY.ME,
+      action: EVENT_ACTION.CLICK_ME_DISPUTE_API_FAILED,
+      label: `${offchain}-${err}`,
+    };
+    console.log(TAG, 'clickDisputeAPIFailed', params);
+
+    try {
+      this.sendGAEvent(params);
+    } catch (err) {}
+  }
+
 }
 
 export default new GoogleAnalyticsService();

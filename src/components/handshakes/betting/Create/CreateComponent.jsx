@@ -226,7 +226,7 @@ class BettingCreate extends React.Component {
         type="text"
         placeholder={placeholder}
         autoComplete="off"
-        value={values[key]}
+        value={values[key] || ''}
         validate={[required]}
         onChange={(evt) => {
           this.changeText(key, evt.target.value);

@@ -69,7 +69,7 @@ class BettingFilter extends React.Component {
 
     const matchName = (selectedMatch && selectedMatch.value) ? selectedMatch.value : null;
     const matchOutcome = (selectedOutcome && selectedOutcome.value) ? selectedOutcome.value : null;
-
+    const matchMarketFee = (selectedMatch && selectedMatch.marketFee) ? selectedMatch.marketFee : null; 
 
     const shareInfo = this.getInfoShare(selectedMatch, selectedOutcome);
 
@@ -83,6 +83,7 @@ class BettingFilter extends React.Component {
       matchName,
       isOpen,
       matchOutcome,
+      matchMarketFee,
       outcomeId,
       outcomeHid,
       marketSupportOdds: defaultOdds(against),
