@@ -16,6 +16,7 @@ import loadingSVG from '@/assets/images/icon/loading.gif';
 import { getErrorMessageFromCode } from '@/components/handshakes/exchange/utils';
 import * as gtag from '@/services/ga-utils';
 import taggingConfig from '@/services/tagging-config';
+import { BigNumber } from 'bignumber.js';
 
 class CCConfirm extends React.Component {
   constructor(props) {
@@ -32,7 +33,7 @@ class CCConfirm extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.userProfile && nextProps.userProfile !== this.props.userProfile) {
       console.log('componentWillReceiveProps', nextProps);
-      const { client_secret, } = Helper.getQueryStrings(window.location.search);
+      const { client_secret } = Helper.getQueryStrings(window.location.search);
       this.source = local.get(APP.CC_SOURCE);
       const { client_secret: cc_client_secret } = this.source;
 
@@ -51,7 +52,7 @@ class CCConfirm extends React.Component {
   };
 
   handleSubmit = (values, userProfile) => {
-    const { client_secret, } = Helper.getQueryStrings(window.location.search);
+    const { client_secret } = Helper.getQueryStrings(window.location.search);
     console.log('handleSubmit', this.props);
     const { handleSubmit } = this.props;
 
@@ -90,6 +91,7 @@ class CCConfirm extends React.Component {
     const { authProfile } = this.props;
     const cryptoPrice = local.get(APP.CC_PRICE);
     const address = local.get(APP.CC_ADDRESS);
+    const email = local.get(APP.CC_EMAIL);
 
     // let address = '';
     // if (addressForced) {
@@ -106,8 +108,9 @@ class CCConfirm extends React.Component {
         fiat_amount: cryptoPrice.fiatAmount.trim(),
         fiat_currency: FIAT_CURRENCY.USD,
         address,
-        email: authProfile ? authProfile.email : '',
+        email: email,
         payment_method_data: params,
+        username: authProfile ? authProfile.username : '',
       };
       // console.log('handleCreateCCOrder',paramsObj);
       this.props.createCCOrder({
@@ -128,13 +131,18 @@ class CCConfirm extends React.Component {
     local.remove(APP.CC_PRICE);
     local.remove(APP.CC_ADDRESS);
     local.remove(APP.CC_TOKEN);
+    local.remove(APP.CC_EMAIL);
 
-    const { data: { amount, currency, fiat_amount, fiat_currency } } = data;
+    const {
+      data: {
+        amount, currency, fiat_amount, fiat_currency,
+      },
+    } = data;
 
     gtag.event({
       category: taggingConfig.creditCard.category,
       action: taggingConfig.creditCard.action.buySuccess,
-      label: `${amount} ${currency} - ${fiat_amount} ${fiat_currency}`,
+      value: new BigNumber(fiat_amount).multipliedBy(100).toNumber(),
     });
 
     this.props.showAlert({

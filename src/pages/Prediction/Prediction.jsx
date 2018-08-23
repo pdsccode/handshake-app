@@ -8,8 +8,13 @@ import LuckyReal from '@/components/handshakes/betting/LuckyPool/LuckyReal/Lucky
 import LuckyLanding from '@/pages/LuckyLanding/LuckyLanding';
 import GA from '@/services/googleAnalytics';
 import LuckyFree from '@/components/handshakes/betting/LuckyPool/LuckyFree/LuckyFree';
+import OuttaMoney from '@/assets/images/modal/outtamoney.png';
+import Modal from '@/components/core/controls/Modal';
+import * as gtag from '@/services/ga-utils';
+import taggingConfig from '@/services/tagging-config';
+import FeedCreditCard from '@/components/handshakes/exchange/Feed/FeedCreditCard';
 import ReportPopup from '@/components/handshakes/betting/Feed/ReportPopup';
-
+import { injectIntl } from 'react-intl';
 import { URL } from '@/constants';
 import { eventSelector, isLoading, showedLuckyPoolSelector, isSharePage, countReportSelector } from './selector';
 import { loadMatches, updateShowedLuckyPool, getReportCount, removeExpiredEvent } from './action';
@@ -36,6 +41,7 @@ class Prediction extends React.Component {
     this.state = {
       selectedOutcome: null,
       isLuckyPool: true,
+      modalFillContent: '',
     };
   }
 
@@ -55,7 +61,7 @@ class Prediction extends React.Component {
     this.modalOrderPlace.open();
   }
 
-  closeOrderPlace() {
+  closeOrderPlace = () => {
     this.modalOrderPlace.close();
   }
 
@@ -99,6 +105,10 @@ class Prediction extends React.Component {
     }
   };
 
+  handleBetFail = () => {
+    this.modalOuttaMoney.open();
+  }
+
   renderEventList = (props) => {
     if (!props.eventList || !props.eventList.length) return null;
     return (
@@ -139,12 +149,11 @@ class Prediction extends React.Component {
           selectedOutcome={state.selectedOutcome}
           selectedMatch={state.selectedMatch}
           openPopup={(click) => { this.openOrderPlace = click; }}
+          onCancelClick={this.closeOrderPlace}
+          handleBetFail={this.handleBetFail}
           onSubmitClick={(isFree) => {
             this.closeOrderPlace();
             isFree ? this.modalLuckyFree.open() : this.modalLuckyReal.open();
-          }}
-          onCancelClick={() => {
-            this.closeOrderPlace();
           }}
         />
       </ModalDialog>
@@ -187,6 +196,60 @@ class Prediction extends React.Component {
     </ModalDialog>
   )
 
+  renderOuttaMoney = () => {
+    return (
+      <ModalDialog className="outtaMoneyModal" close onRef={(modal) => { this.modalOuttaMoney = modal; }}>
+        <div className="outtaMoneyContainer">
+          <img src={OuttaMoney} alt="" />
+          <div className="outtaMoneyTitle">You're outta… money!</div>
+          <div className="outtaMoneyMsg">
+            To keep forecasting, you’ll need to top-up your wallet.
+          </div>
+          <button className="btn btn-block btn-primary" onClick={this.showPopupCreditCard}>Top up my wallet</button>
+        </div>
+      </ModalDialog>
+    );
+  };
+
+  afterWalletFill = () => {
+    this.modalFillRef.close();
+  }
+
+  showPopupCreditCard = () => {
+    this.modalOuttaMoney.close();
+    const { messages } = this.props.intl;
+    this.setState({
+      modalFillContent:
+        (
+          <FeedCreditCard
+            buttonTitle={messages.create.cash.credit.title}
+            callbackSuccess={this.afterWalletFill}
+          />
+        ),
+    }, () => {
+      this.modalFillRef.open();
+
+      gtag.event({
+        category: taggingConfig.creditCard.category,
+        action: taggingConfig.creditCard.action.showPopupPrediction
+      });
+    });
+  }
+
+  renderCreditCard = () => {
+    const { messages } = this.props.intl;
+    const { modalFillContent } = this.state;
+    return (
+      <Modal title={messages.create.cash.credit.title} onRef={modal => this.modalFillRef = modal} onClose={this.closeFillCoin}>
+        {modalFillContent}
+      </Modal>
+    );
+  }
+
+  closeFillCoin = () => {
+    this.setState({ modalFillContent: '' });
+  }
+
   renderComponent = (props, state) => {
     if (1) {
       return (
@@ -206,6 +269,8 @@ class Prediction extends React.Component {
         {this.renderLuckyReal()}
         {this.renderLuckyFree()}
         {this.renderLuckyLanding()}
+        {this.renderOuttaMoney()}
+        {this.renderCreditCard()}
         {props.countReport > 0 && this.renderReportPopup()}
       </div>
     );
@@ -216,7 +281,7 @@ class Prediction extends React.Component {
   }
 }
 
-export default connect(
+export default injectIntl(connect(
   (state) => {
     return {
       countReport: countReportSelector(state),
@@ -226,4 +291,4 @@ export default connect(
       showedLuckyPool: showedLuckyPoolSelector(state),
     };
   },
-)(Prediction);
+)(Prediction));

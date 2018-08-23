@@ -1,13 +1,51 @@
 import Handshake from '@/models/Handshake';
-import { HANDSHAKE_EXCHANGE_STATUS_VALUE } from '@/constants';
+import { APP, HANDSHAKE_EXCHANGE_STATUS_VALUE } from '@/constants';
 import { handShakeList } from '@/data/shake';
 import { ACTIONS } from './action';
+import local from '@/services/localStore';
+import OfferShop from '@/models/OfferShop';
 
-const handleListPayload = payload => payload.map(handshake => Handshake.handshake(handshake));
+// const handleListPayload = payload => payload.map(handshake => Handshake.handshake(handshake));
 const handleDetailPayload = () => Handshake.handshake(handShakeList.data[1]);
 
+const isEmptyBalance = (item) => {
+  const actionActive = local.get(APP.EXCHANGE_ACTION);
+  const { buyAmount, sellAmount } = item;
+  if (actionActive.includes('buy')) {
+    return sellAmount <= 0;
+  }
+  return buyAmount <= 0;
+};
+
+const handleListPayload = (payload) => {
+  const result = [];
+  const offers = [];
+
+  const currencyActive = local.get(APP.EXCHANGE_CURRENCY);
+  payload.map((handshake) => {
+    const hs = Handshake.handshake(handshake);
+    const offer = OfferShop.offerShop(JSON.parse(hs.extraData));
+
+    const allowRender = offer.itemFlags[currencyActive] && !isEmptyBalance(offer.items[currencyActive]);
+
+    if (allowRender) {
+      result.push(hs);
+      offers.push(offer);
+    }
+
+    return null;
+  });
+
+  result.updatedAt = Date.now();
+
+  return { list: result, offers };
+};
+
+const initList = [];
+initList.updatedAt = Date.now();
+
 const discoverReducter = (state = {
-  list: [],
+  list: initList,
   detail: {},
   isFetching: false,
 }, action) => {
@@ -19,10 +57,12 @@ const discoverReducter = (state = {
         isFetching: true,
       };
     case `${ACTIONS.LOAD_DISCOVER}_SUCCESS`:
+      const { list, offers } = handleListPayload(action.payload.data.handshakes);
       return {
         ...state,
         isFetching: false,
-        list: handleListPayload(action.payload.data.handshakes),
+        list,
+        offers,
       };
     case `${ACTIONS.LOAD_DISCOVER}_FAILED`:
       return {

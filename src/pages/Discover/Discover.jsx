@@ -6,6 +6,7 @@ import { FormattedHTMLMessage, FormattedMessage, injectIntl } from 'react-intl';
 // import { loadDiscoverList } from '@/reducers/discover/action';
 import {
   API_URL,
+  APP,
   CRYPTO_CURRENCY,
   DISCOVER_GET_HANDSHAKE_RADIUS,
   EXCHANGE_ACTION,
@@ -36,6 +37,8 @@ import BlockCountry from '@/components/core/presentation/BlockCountry/BlockCount
 import Maintain from '@/components/Router/Maintain';
 import './Discover.scss';
 import { showPopupGetGPSPermission } from '@/reducers/app/action';
+import local from '@/services/localStore';
+import _debounce from 'lodash/debounce';
 
 const defaultZoomLevel = 13;
 
@@ -45,17 +48,22 @@ class DiscoverPage extends React.Component {
     const handshakeDefault = HANDSHAKE_ID.EXCHANGE;
     const utm = this.getUtm();
     const program = this.getProgram();
+    this.debounceOnCenterChange = _debounce(this.handleOnCenterChanged, 150);
+    this.debounceOnZoomChange = _debounce(this.handleOnZoomChanged, 150);
 
     this.state = {
       handshakeIdActive: handshakeDefault,
       isLoading: true,
       exchange: this.props.exchange,
+      discover: this.props.discover,
       modalContent: <div />, // type is node
       propsModal: {
         // className: "discover-popup",
         // isDismiss: false
       },
       curLocation: { lat: 0, lng: 0 },
+      mapCenterLat: 0,
+      mapCenterLng: 0,
       lat: 0,
       lng: 0,
       isBannedCash: this.props.isBannedCash,
@@ -68,13 +76,16 @@ class DiscoverPage extends React.Component {
 
       zoomLevel: defaultZoomLevel,
     };
+
+    local.save(APP.EXCHANGE_ACTION, EXCHANGE_ACTION.BUY);
+    local.save(APP.EXCHANGE_CURRENCY, CRYPTO_CURRENCY.ETH);
   }
 
   componentDidMount() {
     const { ipInfo, rfChange } = this.props;
 
     this.setAddressFromLatLng(ipInfo?.latitude, ipInfo?.longitude); // fallback
-
+    this.handleGoToCurrentLocation();
     // show popup to get GPS permission
     this.props.showPopupGetGPSPermission();
 
@@ -125,13 +136,18 @@ class DiscoverPage extends React.Component {
     const { ipInfo } = this.props;
     this.setState({
       curLocation: { lat: ipInfo?.latitude, lng: ipInfo?.longitude },
+      // mapCenter: { lat: ipInfo?.latitude, lng: ipInfo?.longitude },
       lat: ipInfo?.latitude,
       lng: ipInfo?.longitude,
+      mapCenterLat: ipInfo?.latitude,
+      mapCenterLng: ipInfo?.longitude,
       zoomLevel: defaultZoomLevel,
     });
   };
 
   static getDerivedStateFromProps(nextProps, prevState) {
+    const { ipInfo } = nextProps;
+
     if (nextProps.exchange.listOfferPrice.updatedAt !== prevState.exchange.listOfferPrice.updatedAt) {
       if (prevState.handshakeIdActive !== 3) {
         //
@@ -140,7 +156,6 @@ class DiscoverPage extends React.Component {
           actionActive,
           currencyActive,
         } = prevState;
-        const { ipInfo } = nextProps;
         const qs = { };
 
         // const pt = `${prevState.lat},${prevState.lng}`;
@@ -167,6 +182,10 @@ class DiscoverPage extends React.Component {
       return { exchange: nextProps.exchange };
     }
 
+    if (nextProps.discover.list.updatedAt !== prevState.discover.list.updatedAt) {
+      return { discover: nextProps.discover };
+    }
+
     return null;
   }
 
@@ -188,14 +207,14 @@ class DiscoverPage extends React.Component {
     this.props.history.push(`${URL.HANDSHAKE_CREATE}?id=${HANDSHAKE_ID.EXCHANGE}`);
   }
 
-  isEmptyBalance = (item) => {
-    const { actionActive } = this.state;
-    const { buyBalance, sellBalance } = item;
-    if (actionActive.includes('buy')) {
-      return buyBalance <= 0;
-    }
-    return sellBalance <= 0;
-  }
+  // isEmptyBalance = (item) => {
+  //   const { actionActive } = this.state;
+  //   const { buyBalance, sellBalance } = item;
+  //   if (actionActive.includes('buy')) {
+  //     return buyBalance <= 0;
+  //   }
+  //   return sellBalance <= 0;
+  // }
 
   setLoading = (loadingState) => {
     this.setState({ isLoading: loadingState });
@@ -265,6 +284,7 @@ class DiscoverPage extends React.Component {
     const { actionActive } = this.state;
 
     if (actionActive !== newValue) {
+      local.save(APP.EXCHANGE_ACTION, newValue);
       this.setLoading(true);
       this.setState({ actionActive: newValue }, () => {
         this.loadDiscoverList();
@@ -273,10 +293,10 @@ class DiscoverPage extends React.Component {
   }
 
   onCurrencyChange = (e, item) => {
-    console.log('onCurrencyChange', item);
     const { currencyActive } = this.state;
 
     if (currencyActive !== item.id) {
+      local.save(APP.EXCHANGE_CURRENCY, item.id);
       this.setLoading(true);
       this.setState({ currencyActive: item.id }, () => {
         this.loadDiscoverList();
@@ -284,14 +304,14 @@ class DiscoverPage extends React.Component {
     }
   }
 
-  getStationsList = () => {
-    const { list } = this.props.discover;
-
-    if (list && list.length > 0) {
-      return list;
-    }
-    return null;
-  }
+  // getStationsList = () => {
+  //   const { list, offers } = this.props.discover;
+  //
+  //   if (list && list.length > 0) {
+  //     return { list, offers };
+  //   }
+  //   return null;
+  // }
 
   clickFeedDetail(handshake, extraData) {
     const { type } = handshake;
@@ -314,7 +334,21 @@ class DiscoverPage extends React.Component {
     }
   }
 
-  getMap = () => {
+  handleOnCenterChanged = () => {
+    const center = this.mapRef.getCenter();
+    this.setState({ mapCenterLat: center.lat(), mapCenterLng: center.lng() });
+  }
+
+  handleOnZoomChanged = () => {
+    this.setState({ zoomLevel: this.mapRef.getZoom() });
+  }
+
+  render() {
+    const {
+      propsModal,
+      modalContent,
+    } = this.state;
+    const { messages } = this.props.intl;
     const {
       lat,
       lng,
@@ -322,10 +356,16 @@ class DiscoverPage extends React.Component {
       actionActive,
       currencyActive,
       curLocation,
+      mapCenterLat,
+      mapCenterLng,
     } = this.state;
-    const stations = this.getStationsList();
-    const map = (
-      <div>
+    const { list: stations, offers } = this.props.discover;
+
+    return (
+      <React.Fragment>
+        <div className={`discover-overlay ${this.state.isLoading ? 'show' : ''}`}>
+          <Image src={loadingSVG} alt="loading" width="100" />
+        </div>
         <NavBar onActionChange={this.onActionChange} onCurrencyChange={this.onCurrencyChange} />
         <Map
           isMarkerShown={this.state.isMarkerShown}
@@ -337,8 +377,11 @@ class DiscoverPage extends React.Component {
           mapElement={<div style={{ height: `100%` }} />}
           // center={{ lat: 35.929673, lng: -78.948237 }}
           stations={stations}
+          offers={offers}
           zoomLevel={zoomLevel}
           curLocation={curLocation}
+          mapCenterLat={mapCenterLat}
+          mapCenterLng={mapCenterLng}
           lat={lat}
           lng={lng}
           actionActive={actionActive}
@@ -347,36 +390,19 @@ class DiscoverPage extends React.Component {
           modalRef={this.modalRef}
           setLoading={this.setLoading}
           onGoToCurrentLocation={this.handleGoToCurrentLocation}
-          onMapMounted={e => (this.mapRef = e)}
-          onZoomChanged={() => { this.setState({ zoomLevel: this.mapRef.getZoom() }); }}
-          onCenterChanged={() => { const center = this.mapRef.getCenter(); this.setState({ lat: center.lat() || 0, lng: center.lng() || 0 }); }}
+          onMapMounted={(e) => (this.mapRef = e)}
+          onZoomChanged={this.debounceOnZoomChange}
+          onCenterChanged={this.debounceOnCenterChange}
         />
-      </div>
-    );
 
-    return map;
-  }
-
-  render() {
-    const {
-      propsModal,
-      modalContent,
-    } = this.state;
-    const { messages } = this.props.intl;
-
-    return (
-      <React.Fragment>
-        <div className={`discover-overlay ${this.state.isLoading ? 'show' : ''}`}>
-          <Image src={loadingSVG} alt="loading" width="100" />
-        </div>
-        {!this.state.isBannedCash && !this.props.firebaseApp.config?.maintainChild?.exchange && this.getMap()}
-        {
-          this.state.isBannedCash
-            ? (
-              <BlockCountry />
-            )
-            : this.props.firebaseApp.config?.maintainChild?.exchange ? <Maintain /> : null
-        }
+        {/*{!this.state.isBannedCash && !this.props.firebaseApp.config?.maintainChild?.exchange && this.getMap()}*/}
+        {/*{*/}
+          {/*this.state.isBannedCash*/}
+            {/*? (*/}
+              {/*<BlockCountry />*/}
+            {/*)*/}
+            {/*: this.props.firebaseApp.config?.maintainChild?.exchange ? <Maintain /> : null*/}
+        {/*}*/}
         <ModalDialog onRef={(modal) => { this.modalRef = modal; return null; }} {...propsModal}>
           {modalContent}
         </ModalDialog>
@@ -386,16 +412,18 @@ class DiscoverPage extends React.Component {
   }
 }
 
-const mapState = state => ({
-  discover: state.discover,
-  ipInfo: state.app.ipInfo,
-  exchange: state.exchange,
-  isBannedCash: state.app.isBannedCash,
-  isBannedPrediction: state.app.isBannedPrediction,
-  firebaseApp: state.firebase.data,
-  freeStartInfo: state.exchange.freeStartInfo,
-  authProfile: state.auth.profile,
-});
+const mapState = state => {
+  return {
+    discover: state.discover,
+    ipInfo: state.app.ipInfo,
+    exchange: state.exchange,
+    isBannedCash: state.app.isBannedCash,
+    isBannedPrediction: state.app.isBannedPrediction,
+    firebaseApp: state.firebase.data,
+    freeStartInfo: state.exchange.freeStartInfo,
+    authProfile: state.auth.profile,
+  };
+};
 
 const mapDispatch = dispatch => ({
   rfChange: bindActionCreators(change, dispatch),
