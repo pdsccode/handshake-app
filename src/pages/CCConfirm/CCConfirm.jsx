@@ -17,6 +17,7 @@ import { getErrorMessageFromCode } from '@/components/handshakes/exchange/utils'
 import * as gtag from '@/services/ga-utils';
 import taggingConfig from '@/services/tagging-config';
 import { BigNumber } from 'bignumber.js';
+import { roundNumberByLocale } from '@/services/offer-util';
 
 class CCConfirm extends React.Component {
   constructor(props) {
@@ -139,11 +140,13 @@ class CCConfirm extends React.Component {
       },
     } = data;
 
+    const value = roundNumberByLocale(new BigNumber(fiat_amount).multipliedBy(100).toNumber(), fiat_currency);
+
     gtag.event({
       category: taggingConfig.creditCard.category,
       action: taggingConfig.creditCard.action.buySuccess,
       label: currency,
-      value: new BigNumber(fiat_amount).multipliedBy(100).toNumber(),
+      value,
     });
 
     this.props.showAlert({

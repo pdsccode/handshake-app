@@ -397,11 +397,13 @@ class FeedCreditCard extends React.Component {
       },
     } = data;
 
+    const value = roundNumberByLocale(new BigNumber(fiat_amount).multipliedBy(100).toNumber(), fiat_currency);
+
     gtag.event({
       category: taggingConfig.creditCard.category,
       action: taggingConfig.creditCard.action.buySuccess,
       label: currency,
-      value: new BigNumber(fiat_amount).multipliedBy(100).toNumber(),
+      value,
     });
 
     this.props.showAlert({
