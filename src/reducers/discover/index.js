@@ -10,11 +10,11 @@ const handleDetailPayload = () => Handshake.handshake(handShakeList.data[1]);
 
 const isEmptyBalance = (item) => {
   const actionActive = local.get(APP.EXCHANGE_ACTION);
-  const { buyBalance, sellBalance } = item;
+  const { buyAmount, sellAmount } = item;
   if (actionActive.includes('buy')) {
-    return buyBalance <= 0;
+    return sellAmount <= 0;
   }
-  return sellBalance <= 0;
+  return buyAmount <= 0;
 };
 
 const handleListPayload = (payload) => {
