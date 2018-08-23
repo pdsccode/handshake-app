@@ -290,6 +290,8 @@ export default {
   'cc.label.expiration': 'Expiration date',
   'cc.label.saveCard': 'Save my card for future top-up',
   'cc.label.saving': 'You save {percentage}%',
+  'cc.label.email': 'Email',
+  'cc.label.email.hint': 'Just for receiving receipt',
 
 
   'askLocationPermission.label.1': 'We would like to access your location to find nearest ATMs around you!',

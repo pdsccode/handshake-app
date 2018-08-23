@@ -91,6 +91,7 @@ class CCConfirm extends React.Component {
     const { authProfile } = this.props;
     const cryptoPrice = local.get(APP.CC_PRICE);
     const address = local.get(APP.CC_ADDRESS);
+    const email = local.get(APP.CC_EMAIL);
 
     // let address = '';
     // if (addressForced) {
@@ -107,7 +108,7 @@ class CCConfirm extends React.Component {
         fiat_amount: cryptoPrice.fiatAmount.trim(),
         fiat_currency: FIAT_CURRENCY.USD,
         address,
-        email: authProfile ? authProfile.email : '',
+        email: email,
         payment_method_data: params,
         username: authProfile ? authProfile.username : '',
       };
@@ -130,6 +131,7 @@ class CCConfirm extends React.Component {
     local.remove(APP.CC_PRICE);
     local.remove(APP.CC_ADDRESS);
     local.remove(APP.CC_TOKEN);
+    local.remove(APP.CC_EMAIL);
 
     const {
       data: {
