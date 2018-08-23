@@ -93,6 +93,7 @@ class BettingFilter extends React.Component {
         this.props.onSubmitClick(isFree);
       }),
       onCancelClick: this.props.onCancelClick,
+      handleBetFail: this.props.handleBetFail,
     };
 
     const orderBook = { support, against };
