@@ -21,7 +21,7 @@ import '../styles.scss';
 import { validate, validateSpecificAmount } from '@/components/handshakes/exchange/validation';
 import createForm from '@/components/core/form/createForm';
 import { fieldCleave, fieldDropdown, fieldInput, fieldRadioButton } from '@/components/core/form/customField';
-import { required } from '@/components/core/form/validation';
+import { required, email } from '@/components/core/form/validation';
 import { createCCOrder, getCcLimits, getCryptoPrice, getUserCcLimit } from '@/reducers/exchange/action';
 import CryptoPrice from '@/models/CryptoPrice';
 import { MasterWallet } from '@/services/Wallets/MasterWallet';
@@ -270,7 +270,7 @@ class FeedCreditCard extends React.Component {
         cc = { token: 'true' };
         this.handleCreateCCOrder(cc);
       } else {
-        const { cc_number, cc_expired, cc_cvc } = values;
+        const { cc_number, cc_expired, cc_cvc, cc_email } = values;
         const mmYY = cc_expired.split('/');
         const params = new URLSearchParams();
         params.append('card[number]', cc_number && cc_number.trim().replace(/ /g, ''));
@@ -313,6 +313,7 @@ class FeedCreditCard extends React.Component {
                 local.save(APP.CC_SOURCE, result.source);
                 local.save(APP.CC_PRICE, cryptoPrice);
                 local.save(APP.CC_TOKEN, payload.data.id);
+                local.save(APP.CC_EMAIL, cc_email);
 
                 let address = '';
                 if (addressForced) {
@@ -391,7 +392,11 @@ class FeedCreditCard extends React.Component {
 
     console.log('handleCreateCCOrderSuccess', data);
 
-    const { data: { amount, currency, fiat_amount, fiat_currency } } = data;
+    const {
+      data: {
+        amount, currency, fiat_amount, fiat_currency,
+      },
+    } = data;
 
     gtag.event({
       category: taggingConfig.creditCard.category,
@@ -533,7 +538,7 @@ class FeedCreditCard extends React.Component {
       <div className="choose-coin">
         <div className="specific-amount">
           <FormSpecificAmount onSubmit={this.handleSubmitSpecificAmount} validate={this.handleValidateSpecificAmount}>
-            {/*<div className="text-right" style={{ margin: '-10px' }}><button className="btn btn-lg bg-transparent text-white d-inline-block">&times;</button></div>*/}
+            {/* <div className="text-right" style={{ margin: '-10px' }}><button className="btn btn-lg bg-transparent text-white d-inline-block">&times;</button></div> */}
             <div className="label-1"><FormattedMessage id="cc.label.1" /></div>
             <div className="label-2"><FormattedMessage id="cc.label.2" /></div>
             <div className="input-group mt-4">
@@ -699,6 +704,19 @@ class FeedCreditCard extends React.Component {
                     // validate={(!isCCExisting || isNewCCOpen) ? [required] : []}
                   />
                 </div>
+              </div>
+            </div>
+
+            <div className="d-table w-100 mt-4">
+              <div className="cc-label"><FormattedMessage id="cc.label.email" /></div>
+              <div>
+                <Field
+                  name="cc_email"
+                  className="form-control input-custom w-100"
+                  component={fieldInput}
+                  validate={[required, email]}
+                  placeholder={intl.formatMessage({ id: 'cc.label.email.hint' })}
+                />
               </div>
             </div>
 

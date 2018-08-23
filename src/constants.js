@@ -28,6 +28,7 @@ export const APP = {
   CC_PRICE: 'cc_price',
   CC_ADDRESS: 'cc_address',
   CC_TOKEN: 'cc_token',
+  CC_EMAIL: 'cc_email',
   EXCHANGE_ACTION: 'exchange_action',
   EXCHANGE_CURRENCY: 'exchange_currency',
 };
