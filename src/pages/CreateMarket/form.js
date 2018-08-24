@@ -2,32 +2,35 @@
 /* eslint import/prefer-default-export: 0 */
 
 import React from 'react';
+import Select from 'react-select';
 import classNames from 'classnames';
 
 function renderByType(props) {
-  switch (props.type) {
-    case 'select':
-      return (
-        <select
-          {...props.input}
-          disabled={props.disabled}
-          className="form-control custom-select"
-        >
-          {props.children}
-        </select>
-      );
-
-    default:
-      return (
-        <input
-          {...props.input}
-          className={props.fieldClass}
-          placeholder={props.placeholder}
-          type={props.type}
-          disabled={props.disabled}
-        />
-      );
+  if (props.type === 'select') {
+    const { name, value, onChange } = props.input;
+    const finalValue = (typeof value === 'string' || typeof value === 'number')
+      ? props.options.find(o => o.value === value) : value;
+    return (
+      <Select
+        classNamePrefix="react-select"
+        name={name}
+        value={finalValue}
+        onChange={onChange}
+        placeholder={props.placeholder}
+        isDisabled={props.disabled}
+        options={props.options}
+      />
+    );
   }
+  return (
+    <input
+      {...props.input}
+      className={props.fieldClass}
+      placeholder={props.placeholder}
+      type={props.type}
+      disabled={props.disabled}
+    />
+  );
 }
 
 export const renderField = (props) => {

@@ -3,7 +3,7 @@ import { apiGet, apiPost } from '@/stores/api-saga';
 import { API_URL, URL } from '@/constants';
 import { BetHandshakeHandler } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
 import { handleLoadMatches } from '@/pages/Prediction/saga';
-import { isBalanceValid } from '@/stores/common-saga';
+import { isBalanceinInvalid } from '@/stores/common-saga';
 import { showAlert } from '@/stores/common-action';
 import { MESSAGE } from '@/components/handshakes/betting/message.js';
 import { reportSelector } from './selector';
@@ -107,16 +107,16 @@ function* saveGenerateShareLinkToStore(data) {
 function* handleCreateEventSaga({ values, isNew, selectedSource }) {
   try {
     yield put(updateCreateEventLoading(true));
-    const balanceValid = yield call(isBalanceValid);
-    if (!balanceValid) {
+    const balanceInvalid = yield call(isBalanceinInvalid);
+    if (balanceInvalid) {
       yield put(showAlert({
-        message: MESSAGE.NOT_ENOUGH_GAS,
+        message: MESSAGE.NOT_ENOUGH_GAS.replace('{{value}}', balanceInvalid),
       }));
     } else {
       const betHandshakeHandler = BetHandshakeHandler.getShareManager();
       if (!isNew) {
         // Add new outcomes
-        const newOutcomeList = values.outcomes.filter(o => !o.id).map(i => Object.assign({}, i, { public: 0 }));
+        const newOutcomeList = values.outcomes.filter(o => !o.id).map(i => Object.assign({}, i, { public: 1 }));
         const { eventId } = values;
         const addOutcomeResult = yield call(handleAddOutcomesSaga, {
           eventId,
@@ -158,12 +158,13 @@ function* handleCreateEventSaga({ values, isNew, selectedSource }) {
           homeTeamFlag: values.homeTeamFlag || '',
           awayTeamFlag: values.awayTeamFlag || '',
           name: values.eventName,
+          public: 1,
           date: values.closingTime,
           reportTime: values.reportingTime,
           disputeTime: values.disputeTime,
           market_fee: values.creatorFee,
           outcomes: values.outcomes,
-          category_id: values.category,
+          category_id: values.category.id,
           ...reportSource,
         };
         const { data } = yield call(handleCreateNewEventSaga, { newEventData });

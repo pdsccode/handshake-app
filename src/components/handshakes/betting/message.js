@@ -64,7 +64,7 @@ export const MESSAGE = {
   CREATE_BET_NOT_MATCH: 'Finding a ninja to bet against you.',
   CREATE_BET_MATCHED: 'Bet matched! Waiting for outcome.',
   NOT_ENOUGH_BALANCE: 'Too rich for your blood. Please top up your wallet.',
-  NOT_ENOUGH_GAS: `Not enough gas. Your balance should larger than 0.007eth gas + value. Please top up your wallet.`,
+  NOT_ENOUGH_GAS: `Not enough gas. Your balance should larger than {{value}}. Please top up your wallet.`,
   CHOOSE_MATCH: 'Please choose event and outcome',
   ODD_LARGE_THAN: 'Please enter odds greater than 1 and smaller 11.5',
   AMOUNT_VALID: 'Please place a bet larger than 0.',
