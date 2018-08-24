@@ -47,8 +47,14 @@ class Prediction extends React.Component {
   }
 
   componentDidMount() {
+    window.addEventListener('scroll', this.handleScroll);
+
     this.props.dispatch(loadMatches());
     this.props.dispatch(getReportCount());
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this.handleScroll);
   }
 
   onCountdownComplete = (eventId) => {
@@ -56,6 +62,10 @@ class Prediction extends React.Component {
     this.closeOrderPlace();
     this.props.dispatch(getReportCount());
   }
+
+  handleScroll = () => {
+    this.showLuckyPool();
+  };
 
   openOrderPlace = (selectedOutcome) => {
     this.openFilter(selectedOutcome);
