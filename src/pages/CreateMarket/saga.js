@@ -98,7 +98,7 @@ function* saveGenerateShareLinkToStore(data) {
   const { outcomeId, eventName } = data;
   const generateLink = yield call(handleGenerateShareLinkSaga, { outcomeId });
   return yield put(shareEvent({
-    url: `${window.location.origin}/${URL.HANDSHAKE_PREDICTION}${generateLink.data.slug_short}`,
+    url: `${window.location.origin}${URL.HANDSHAKE_PREDICTION}${generateLink.data.slug_short}`,
     name: eventName,
   }));
 }
