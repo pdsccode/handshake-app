@@ -1,0 +1,19 @@
+.icon-short {
+    position: relative;
+    top: 1px;
+    display: block;
+    width: 18px;
+    height: 11px;
+    opacity: .25;
+    margin-right: 20px;
+    cursor: row-resize;    
+    background: linear-gradient(180deg,#000,#000 20%,#fff 0,#fff 40%,#000 0,#000 60%,#fff 0,#fff 80%,#000 0,#000);
+}
+.sortable-row{
+    width: 100%;
+}
+.sortable-item{
+    border-bottom: 1px #f4f4f4 solid;
+    margin-bottom: 10px;
+    margin-top: 10px;
+}

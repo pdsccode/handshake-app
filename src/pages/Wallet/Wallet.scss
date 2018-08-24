@@ -5,98 +5,135 @@
   margin-right: 5px;
 }
 
+header{
+  display: none;
+}
+.app{
+  padding-top: 0;
+}
+
+// for item: need use for move:
+.wallet-box{
+  box-shadow: 2px 2px 13px 0 rgba(1,1,0,.1);      
+  padding: 15px;
+  background: #FFFFFF;
+  // box-shadow: 0 15px 11px -8px #F1F1F1;
+  border-radius: 4px;
+  width: 97%;
+  margin: auto;
+}
+// icon wallet item:
+.coin-logo{
+  border-radius: 50%;
+  width: 40px;      
+  display: inline-block;
+  float: left;      
+  margin-right: 15px;
+}    
+.warning {
+  color:#f5a621;          
+  cursor: pointer;
+  font-size: 14px;
+}
+.item-right{
+  display: inline-block;
+  float: right;
+  margin-top: 15px;
+}
+.item-center{
+  display: inline-block;
+  width: 60%;
+}
+.name {
+  font-size: rem-calc(14px);        
+  font-weight: bold;    
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.balance {
+  font-size: rem-calc(16px);    
+  letter-spacing: 0;
+  font-weight: 300;
+}
+
+.address {    
+  font-size: rem-calc(12px);    
+  letter-spacing: 0;
+  text-align: left;    
+  cursor: pointer;
+  text-transform: uppercase;
+  float: left;    
+  margin-right: 15px;
+}
+.more{
+  text-align: center;    
+  width: 20px;    
+  cursor: pointer;   
+  float: right; 
+}
+.safe{        
+  cursor: pointer;
+  opacity: .8;
+}
+.iconDefault{
+  margin-left: 5px;  
+  width: 12px;
+}
+.iconChecked {
+  margin: 10px;
+  margin-top: 12%;
+  margin-left: 35%;
+}
+
 .wallet-page{
+
+  margin-bottom: 7px;
+  padding: rem-calc(10px 5px 10px 0);
+  min-height: 75px;
+  position: relative;
+  border-radius: 6px;    
+  
+  background-image: url('../../assets/images/wallet/images/bg-home-wallet.svg');
+  background-repeat: no-repeat;
+  background-size: auto;
+
+  .header-wallet{
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;    
+    color: #fff;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    position: relative;
+
+    .header-right {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  }
+
+  .logo-wallet{
+    margin: auto;
+  }
+
   button:disabled{
     background: Silver;
     border-color:Silver;
   }
-
-.feed-wrapper-wallet {
-  margin-bottom: 7px;
-  padding-left: 7px;
-  padding-right: 7px;
-  margin-top: 0 !important;
-
-  &:last-child {
-    margin-bottom: 0;
-  }
-  .feed {
-    margin-bottom: 7px;
-    padding: rem-calc(10px 5px 10px 15px);
-    min-height: 120px;
-    position: relative;
-    border-radius: 6px;
-    background-size: cover;
-
-    .warning {
-      color:#dc3545;
-      bottom: 7px;
-      right: 12px;
-      position: absolute;
-      cursor: pointer;
-      font-size: 14px;
-    }
-  }
+  
   .feed-selected{
     border-color: #0BE200;
     border-width: 2px;
     border-style: solid;
     border-radius: 10px;
   }
-
-  .name {
-    font-size: rem-calc(14px);
-    color: $white;
-    margin-bottom: 0;
-    font-weight: bold;
-    margin-top: 10px;
-    width: 90%;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-  }
-  .balance {
-    font-size: rem-calc(16px);
-    color: $white;
-    letter-spacing: 0;
-    font-weight: 300;
-  }
-
-  .address {
-    margin: 0;
-    font-size: rem-calc(12px);
-    color: $white;
-    letter-spacing: 0;
-    text-align: left;
-    bottom: 12px;
-    position: absolute;
-    cursor: pointer;
-    text-transform: uppercase;
-    img{
-      // width: 16px;
-      margin-right: 6px;
-      margin-top: -6px;
-    }
-  }
-  .more{
-    text-align: right;
-    padding-right: 10px;
-    padding-bottom: 10px;
-    width: 30px;
-    top: 6px;
-    right: 2px;
-    position: absolute;
-    cursor: pointer;
-    display: table;
-  }
-  .safe{
-    bottom: 13px;
-    right: 12px;
-    position: absolute;
-    cursor: pointer;
-  }
-}
-
+  
 .addressDivPopup{
   margin-top: 20px;
   margin-bottom: 10px;
@@ -127,17 +164,6 @@
   padding: 3px 10px;
   border-radius: 4px;
 }
-.iconDefault{
-  margin-left: 5px;
-  position: absolute;
-    left: -12px;
-    top: -10px;
-}
-.iconChecked {
-  margin: 10px;
-  margin-top: 12%;
-  margin-left: 35%;
-}
 
 .linkImportWallet{
   text-align: center;
@@ -154,6 +180,7 @@
   margin-right: -7px;
   display: flex;
   flex-wrap: wrap;
+  width: 100%;
 }
 .bodyConfirm .left{
   float: left;

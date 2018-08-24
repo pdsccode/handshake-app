@@ -70,6 +70,11 @@ import FeedCreditCard from "@/components/handshakes/exchange/Feed/FeedCreditCard
 import * as gtag from '@/services/ga-utils';
 import taggingConfig from '@/services/tagging-config';
 
+// new layout:
+import logoWallet from '@/assets/images/wallet/images/logo-wallet.svg';
+import iconMoreSettings from '@/assets/images/wallet/icons/icon-more-settings.svg';
+import SortableComponent from "./SortableComponent";
+
 const QRCode = require('qrcode.react');
 
 window.Clipboard = (function (window, document, navigator) {
@@ -939,9 +944,7 @@ class Wallet extends React.Component {
 
         <Modal onClose={() => this.setState({formAddCollectibleIsActive: false})} title="Add Collectible" onRef={modal => this.modalAddNewCollectibleRef = modal}>
             <AddCollectible formAddCollectibleIsActive={formAddCollectibleIsActive} onFinish={() => {this.addedCollectible()}}/>
-        </Modal>
-
-        <Grid>
+        </Modal>    
 
           {/* Tooltim menu Bottom */ }
           <ReactBottomsheet
@@ -1070,16 +1073,33 @@ class Wallet extends React.Component {
               />
             : ''}
           </Modal>
+          
+          <Grid>
+          
+          {/* Header Wallet */}
+          <div id="header-wallet">
+              <div className="header-wallet"> 
+                  <img className="logo-wallet" src={logoWallet} />
+                  <div onClick={this.onIconRightHeaderClick} class="header-right"><img src={iconMoreSettings} /></div>
+              </div>              
+          </div>
+                  
 
           {/* Render list wallet: */}
+          
           {/* Coin*/}
-          {!process.env.isDojo ?
+          <Row className="wallet-box">
+            {!process.env.isDojo ?
+              <Row className="list">
+                <Header title={messages.wallet.action.create.label.header_coins}hasLink={true} linkTitle={messages.wallet.action.create.button.add_new} onLinkClick={this.showModalAddCoin} />
+              </Row>
+            :""}          
             <Row className="list">
-              <Header title={messages.wallet.action.create.label.header_coins}hasLink={true} linkTitle={messages.wallet.action.create.button.add_new} onLinkClick={this.showModalAddCoin} />
+              {/* {this.listMainWalletBalance} */}
+              { this.state.listMainWalletBalance.length > 0 ?
+                <SortableComponent items={this.state.listMainWalletBalance}/>
+              : ''}
             </Row>
-          :""}
-          <Row className="list">
-            {this.listMainWalletBalance}
           </Row>
 
           {/* Tokens */}
@@ -1089,7 +1109,7 @@ class Wallet extends React.Component {
           </Row>
           : ""}
           <Row className="list">
-            {this.listTokenWalletBalance}
+            {/* {this.listTokenWalletBalance} */}
           </Row>
 
           {/* Collectible */}
@@ -1099,7 +1119,7 @@ class Wallet extends React.Component {
           </Row>
           :""}
           <Row className="list">
-            {this.listCollectibleWalletBalance}
+            {/* {this.listCollectibleWalletBalance} */}
           </Row>
 
           {!process.env.isLive ?
@@ -1113,7 +1133,7 @@ class Wallet extends React.Component {
           : ''}
           {!process.env.isLive ?
           <Row className="list">
-            {this.listTestWalletBalance}
+            {/* {this.listTestWalletBalance} */}
           </Row>
           : ''}
 
