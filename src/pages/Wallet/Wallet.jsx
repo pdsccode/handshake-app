@@ -1104,39 +1104,54 @@ class Wallet extends React.Component {
           </Row>
 
           {/* Tokens */}
-          {!process.env.isDojo ?
-          <Row className="list">
-            <Header icon={iconAddPlus} title={messages.wallet.action.create.label.header_tokens}hasLink={true} linkTitle={messages.wallet.action.create.button.add_new} onLinkClick={this.showModalAddToken} />
-          </Row>
-          : ""}
-          <Row className="list">
-            {this.listTokenWalletBalance}
+          <Row className="wallet-box">
+            {!process.env.isDojo ?
+            <Row className="list">
+              <Header icon={iconAddPlus} title={messages.wallet.action.create.label.header_tokens}hasLink={true} linkTitle={messages.wallet.action.create.button.add_new} onLinkClick={this.showModalAddToken} />
+            </Row>
+            : ""}
+            <Row className="list">
+              {/* {this.listTokenWalletBalance} */}
+              { this.state.listTokenWalletBalance.length > 0 ?
+                  <SortableComponent items={this.state.listTokenWalletBalance}/>
+              : ''}
+            </Row>
           </Row>
 
           {/* Collectible */}
-          {!process.env.isDojo ?
-          <Row className="list">
-            <Header icon={iconAddPlus} title={messages.wallet.action.create.label.header_collectibles}hasLink={true} linkTitle={messages.wallet.action.create.button.add_new} onLinkClick={this.showModalAddCollectible} />
-          </Row>
-          :""}
-          <Row className="list">
-            {this.listCollectibleWalletBalance}
-          </Row>
-
-          {!process.env.isLive ?
-          <Row className="list">
+          <Row className="wallet-box">
             {!process.env.isDojo ?
-            <Header title={messages.wallet.action.create.label.test_net} hasLink linkTitle={messages.wallet.action.create.button.request_free_eth} onLinkClick={this.getETHFree} />
-            :
-            <Header title=""/>
-            }
+            <Row className="list">
+              <Header icon={iconAddPlus} title={messages.wallet.action.create.label.header_collectibles}hasLink={true} linkTitle={messages.wallet.action.create.button.add_new} onLinkClick={this.showModalAddCollectible} />
+            </Row>
+            :""}
+            <Row className="list">
+              {/* {this.listCollectibleWalletBalance} */}
+              { this.state.listCollectibleWalletBalance.length > 0 ?
+                  <SortableComponent items={this.state.listCollectibleWalletBalance}/>
+              : ''}
+            </Row>
           </Row>
-          : ''}
-          {!process.env.isLive ?
-          <Row className="list">
-            {/* {this.listTestWalletBalance} */}
-          </Row>
-          : ''}
+          
+          <Row className="wallet-box">
+            {!process.env.isLive ?
+            <Row className="list">
+              {!process.env.isDojo ?
+              <Header title={messages.wallet.action.create.label.test_net} hasLink linkTitle={messages.wallet.action.create.button.request_free_eth} onLinkClick={this.getETHFree} />
+              :
+              <Header title=""/>
+              }
+            </Row>
+            : ''}
+            {!process.env.isLive ?
+            <Row className="list">
+              {/* {this.listTestWalletBalance} */}
+              { this.state.listTestWalletBalance.length > 0 ?
+                  <SortableComponent items={this.state.listTestWalletBalance}/>
+              : ''}
+            </Row>
+            : ''}
+            </Row>
 
           {/* <Row className="list">
             <Header title="Reward wallets" hasLink={false} />

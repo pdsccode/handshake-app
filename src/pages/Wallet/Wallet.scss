@@ -21,6 +21,7 @@ header{
   border-radius: 4px;
   width: 97%;
   margin: auto;
+  margin-bottom: 25px;
 }
 // icon wallet item:
 .coin-logo{
@@ -100,6 +101,7 @@ header{
   background-image: url('../../assets/images/wallet/images/bg-home-wallet.svg');
   background-repeat: no-repeat;
   background-size: auto;
+  background-color: #f4f4fb;
 
   .header-wallet{
     display: -webkit-box;
@@ -147,6 +149,8 @@ header{
   width: 100%;
   padding: 20px;
   border-bottom: 1px #f4f4f4 solid;
+  padding-bottom: 10px;
+  padding-top: 15px;
   img{
     float: right;
   }
