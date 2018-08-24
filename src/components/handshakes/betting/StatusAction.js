@@ -64,7 +64,7 @@ export const getStatusLabel = (item) => {
   if (status === BET_BLOCKCHAIN_STATUS.STATUS_MAKER_SHOULD_UNINIT
     || status === BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINITED
     || (!matched && role === ROLE.INITER && status >= BET_BLOCKCHAIN_STATUS.STATUS_INITED)
-    || (matched && status === BET_BLOCKCHAIN_STATUS.DISPUTED && isExpiredDate(disputeTime))) {
+    || (!matched && status === BET_BLOCKCHAIN_STATUS.DISPUTED && isExpiredDate(disputeTime))) {
       //CANCEL ACTION
       return cancelAction(status);
   }
