@@ -156,7 +156,7 @@ class ChooseCrypto extends React.Component {
     let listWalletCoin = [];
     if (wallets.length > 0){
       wallets.forEach((wal) => {
-        if(!wal.isCollectibles){
+        if(!wal.isCollectibles && !wal.isToken){
           wal.text = wal.getShortAddress() + " (" + wal.name + "-" + wal.getNetworkName() + ")";
           if (process.env.isLive){
             wal.text = wal.getShortAddress() + " (" + wal.className + " " + wal.name + ")";
