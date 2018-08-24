@@ -20,7 +20,7 @@ class Banner extends React.Component {
           <div className="RollingText">
             ROLLING!
           </div>
-          <Button block className="FollowButton">Follow quick start guide</Button>
+          <Button block className="btnBanner FollowButton">Follow quick start guide</Button>
         </div>
       </div>
     );

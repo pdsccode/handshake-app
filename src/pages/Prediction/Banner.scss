@@ -13,26 +13,27 @@
   color: white;
   letter-spacing: 0;
   font-weight: bold;
-  width: 51%;
+  width: 57%;
   position: absolute;
-  top: 13%;
-  right: 11.3125rem;
+  top: 7%;
+  right: 37%;
+  bottom: 3%;
   span {
     color: #2456FB;
   }
   .RollingText {
     color: #FFEC00;
   }
-  .btn {
+  .btnBanner {
     border: none;
     border-radius: 5px;
     font-size: 0.85rem;
     line-height: rem-calc(22px);
     font-weight: normal;
   }
-  .btn.FollowButton {
+  .btnBanner.FollowButton {
     background-color: #F5A623;
-    margin-top: rem-calc(20px);
+    margin-top: 6%;
     height: rem-calc(40px);
   }
 }
