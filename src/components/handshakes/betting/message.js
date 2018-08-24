@@ -86,6 +86,8 @@ export const BETTING_STATUS_LABEL =
       ACTION_FAILED: `There is something wrong with blockchain. Your action is cancelled`,
       INIT_FAILED: `There is something wrong with blockchain. Your bet is cancelled`,
       DISPUTE_FAILED: `There is something wrong with blockchain. You can't dispute this bet`,
+      SHAKE_FAILED: `There is something wrong with blockchain. You can't shake this bet`,
+
       SOLVE: 'Please retry to solve problem',
       LOSE: 'Better luck next time.',
       WIN: `You're a winner!`,
