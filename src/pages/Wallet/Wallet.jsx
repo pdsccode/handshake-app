@@ -74,6 +74,7 @@ import taggingConfig from '@/services/tagging-config';
 import logoWallet from '@/assets/images/wallet/images/logo-wallet.svg';
 import iconMoreSettings from '@/assets/images/wallet/icons/icon-more-settings.svg';
 import SortableComponent from "./SortableComponent";
+import iconAddPlus from '@/assets/images/wallet/icons/icon-add-plus.svg';
 
 const QRCode = require('qrcode.react');
 
@@ -1091,7 +1092,7 @@ class Wallet extends React.Component {
           <Row className="wallet-box">
             {!process.env.isDojo ?
               <Row className="list">
-                <Header title={messages.wallet.action.create.label.header_coins}hasLink={true} linkTitle={messages.wallet.action.create.button.add_new} onLinkClick={this.showModalAddCoin} />
+                <Header icon={iconAddPlus} title={messages.wallet.action.create.label.header_coins} hasLink={true} linkTitle={messages.wallet.action.create.button.add_new} onLinkClick={this.showModalAddCoin} />
               </Row>
             :""}          
             <Row className="list">
@@ -1105,21 +1106,21 @@ class Wallet extends React.Component {
           {/* Tokens */}
           {!process.env.isDojo ?
           <Row className="list">
-            <Header title={messages.wallet.action.create.label.header_tokens}hasLink={true} linkTitle={messages.wallet.action.create.button.add_new} onLinkClick={this.showModalAddToken} />
+            <Header icon={iconAddPlus} title={messages.wallet.action.create.label.header_tokens}hasLink={true} linkTitle={messages.wallet.action.create.button.add_new} onLinkClick={this.showModalAddToken} />
           </Row>
           : ""}
           <Row className="list">
-            {/* {this.listTokenWalletBalance} */}
+            {this.listTokenWalletBalance}
           </Row>
 
           {/* Collectible */}
           {!process.env.isDojo ?
           <Row className="list">
-            <Header title={messages.wallet.action.create.label.header_collectibles}hasLink={true} linkTitle={messages.wallet.action.create.button.add_new} onLinkClick={this.showModalAddCollectible} />
+            <Header icon={iconAddPlus} title={messages.wallet.action.create.label.header_collectibles}hasLink={true} linkTitle={messages.wallet.action.create.button.add_new} onLinkClick={this.showModalAddCollectible} />
           </Row>
           :""}
           <Row className="list">
-            {/* {this.listCollectibleWalletBalance} */}
+            {this.listCollectibleWalletBalance}
           </Row>
 
           {!process.env.isLive ?

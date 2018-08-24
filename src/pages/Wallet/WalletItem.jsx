@@ -15,6 +15,7 @@ import bgCollectibles from '@/assets/images/pages/wallet/tokenerc721-mainnet.svg
 import dontIcon from '@/assets/images/wallet/icons/3-dot-icon-black.svg';
 import needBackup from '@/assets/images/wallet/icons/need-backup.svg';
 
+
 import './Wallet.scss';
 
 

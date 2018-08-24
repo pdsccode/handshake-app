@@ -15,7 +15,7 @@ header{
 // for item: need use for move:
 .wallet-box{
   box-shadow: 2px 2px 13px 0 rgba(1,1,0,.1);      
-  padding: 20px;
+  // padding: 20px;
   background: #FFFFFF;
   // box-shadow: 0 15px 11px -8px #F1F1F1;
   border-radius: 4px;
@@ -144,8 +144,12 @@ header{
 }
 
 .headerBox{    
-  margin-bottom: 15px;  
   width: 100%;
+  padding: 20px;
+  border-bottom: 1px #f4f4f4 solid;
+  img{
+    float: right;
+  }
 }
 
 .headerText{
