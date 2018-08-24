@@ -630,9 +630,9 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
       if (data) {
         const { hash: txHash } = data;
         this.trackingTransfer(initUserId, offerShake.id, txHash);
-        // alert('data', JSON.stringify(data));
-        // alert('data', data);
-        // alert('txHash', txHash);
+        alert(txHash);
+        alert(data);
+        alert(JSON.stringify(data));
       } else {
         this.trackingTransfer(initUserId, offerShake.id, '');
       }
