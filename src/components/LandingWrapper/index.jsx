@@ -13,7 +13,7 @@ import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import imgNinja from '@/assets/images/ninja/ninja-header-black.svg';
 import imgLogo from '@/assets/images/logo.png';
 import { SEOHome } from '@/components/SEO';
-
+import { PayForDevs } from '@/components/ContentLandingPage';
 import './styles.scss';
 
 class Index extends React.PureComponent {
@@ -90,6 +90,7 @@ class Index extends React.PureComponent {
 
             {children}
 
+            {PayForDevs}
             <hr className="landing-hr" />
 
             <div className="row landing-footer no-gutters">
@@ -126,6 +127,7 @@ class Index extends React.PureComponent {
             </div>
 
           </div>
+
           <Modal isOpen={show} toggle={this.handleToggleModal} className={className} centered={centered}>
             {title && <ModalHeader toggle={this.handleToggleModal}>{title}</ModalHeader>}
             <ModalBody>
