@@ -44,7 +44,8 @@ export const getStatusLabel = (item) => {
     || status === BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_FAILED
     || status === BET_BLOCKCHAIN_STATUS.STATUS_MAKER_UNINIT_FAILED
     || status === BET_BLOCKCHAIN_STATUS.STATUS_REFUND_FAILED
-    || status === BET_BLOCKCHAIN_STATUS.STATUS_DISPUTE_FAILED){
+    || status === BET_BLOCKCHAIN_STATUS.STATUS_DISPUTE_FAILED
+    || status === BET_BLOCKCHAIN_STATUS.STATUS_SHAKE_FAILED){
       //FAILED ACTION
       return failedAction(status);
 
@@ -148,6 +149,8 @@ const failedAction = (blockchainStatus) => {
     case BET_BLOCKCHAIN_STATUS.STATUS_DISPUTE_FAILED:
       strStatus = BETTING_STATUS_LABEL.DISPUTE_FAILED;
       break;
+    case BET_BLOCKCHAIN_STATUS.STATUS_SHAKE_FAILED:
+      strStatus = BETTING_STATUS_LABEL.SHAKE_FAILED;
     default:
       strStatus = BETTING_STATUS_LABEL.ACTION_FAILED;
       isAction = false;
