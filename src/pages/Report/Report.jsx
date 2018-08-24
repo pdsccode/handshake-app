@@ -48,6 +48,7 @@ class Report extends React.Component {
     return (
       <BettingReport
         matches={matches}
+        isAdmin={false}
         onReportSuccess={(outcomes)=> {
           this.fetchMatches();
           this.callContractReport(outcomes);
