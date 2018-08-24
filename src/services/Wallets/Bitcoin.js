@@ -196,7 +196,7 @@ export class Bitcoin extends Wallet {
   }
 
   async sendRawTx(rawTx) {
-    const uri = `https://insight.bitpay.com/api/tx/send`;
+    const uri = `${this.network}/tx/send`;
     const txHash = await axios.post(uri, {
       rawtx: rawTx,
     });
