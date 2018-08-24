@@ -77,15 +77,16 @@
     padding: 0;
     margin: 0;
     border: none;
+    color: #2c2c2c;
     background-color: transparent;
     -webkit-appearance: none;
     -webkit-user-select: none;
     -webkit-user-modify: none;
   }
-  input[type=number]::-webkit-inner-spin-button, 
-  input[type=number]::-webkit-outer-spin-button { 
-    -webkit-appearance: none; 
-    margin: 0; 
+  input[type=number]::-webkit-inner-spin-button,
+  input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
   }
   .unit {
     margin-top: 1px;
