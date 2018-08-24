@@ -1,5 +1,9 @@
 import React from 'react';
 import Button from '@/components/core/controls/Button';
+import Image from '@/components/core/presentation/Image';
+
+import BannerSVG from '@/assets/images/banner/banner_bg.svg';
+
 import './Banner.scss';
 
 class Banner extends React.Component {
@@ -7,11 +11,8 @@ class Banner extends React.Component {
   render() {
     const text = `Let's get this crystal ball`;
     return (
-      <div
-        className="ShareToWin"
-        onClick={() => {
-        }}
-      >
+      <div>
+        <Image className="ShareToWin" src={BannerSVG} alt="banner" />
         <div className="ShareToWinTitle">
           <div >
             {text}
