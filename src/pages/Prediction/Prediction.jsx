@@ -130,7 +130,7 @@ class Prediction extends React.Component {
 
   renderShareToWin = () => {
     return (
-      <Banner/>
+      <Banner />
     );
   }
 

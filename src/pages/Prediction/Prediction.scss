@@ -100,27 +100,6 @@
     justify-content: center;
   }
 
-  .ShareToWin {
-    background-image: url('../../assets/images/share/share-to-win.png');
-    display: flex;
-    height: rem-calc(110px);
-    position: relative;
-
-    .ShareToWinTitle {
-      font-family: $font-family-base;
-      font-size: rem-calc(22px);
-      color: #364164;
-      letter-spacing: 0;
-      font-weight: bold;
-
-      position: absolute;
-      top: 40%;
-      right: rem-calc(30px);
-      span {
-        color: #2456FB;
-      }
-    }
-  }
 
   .OutcomeList {
     height: 74px;
