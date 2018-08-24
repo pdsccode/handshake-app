@@ -36,6 +36,7 @@ function* handleLoadCategories() {
     });
   } catch (e) {
     console.error(e);
+    return null;
   }
 }
 
@@ -98,7 +99,7 @@ function* saveGenerateShareLinkToStore(data) {
   const { outcomeId, eventName } = data;
   const generateLink = yield call(handleGenerateShareLinkSaga, { outcomeId });
   return yield put(shareEvent({
-    url: `${window.location.origin}/${URL.HANDSHAKE_PREDICTION}${generateLink.data.slug_short}`,
+    url: `${window.location.origin}${URL.HANDSHAKE_PREDICTION}${generateLink.data.slug_short}`,
     name: eventName,
   }));
 }
@@ -106,40 +107,39 @@ function* saveGenerateShareLinkToStore(data) {
 function* handleCreateEventSaga({ values, isNew, selectedSource }) {
   try {
     yield put(updateCreateEventLoading(true));
-    const betHandshakeHandler = BetHandshakeHandler.getShareManager();
-    if (!isNew) {
-      // Add new outcomes
-      const newOutcomeList = values.outcomes.filter(o => !o.id).map(i => Object.assign({}, i, { public: 0 }));
-      const { eventId } = values;
-      const addOutcomeResult = yield call(handleAddOutcomesSaga, {
-        eventId,
-        newOutcomeList,
-      });
-      if (!addOutcomeResult.error) {
-        const inputData = addOutcomeResult.data.map(o => {
-          return {
-            fee: values.creatorFee,
-            source: `${values.reports || '-'}`,
-            closingTime: values.closingTime,
-            reportTime: values.reportingTime,
-            disputeTime: values.disputeTime,
-            offchain: o.id,
-            contractAddress: o.contract.contract_address,
-            contractName: o.contract.json_name,
-          };
-        });
-        const outcomeId = addOutcomeResult.data[0].id;
-        const eventName = addOutcomeResult.data[0].name;
-        yield saveGenerateShareLinkToStore({ outcomeId, eventName });
-        betHandshakeHandler.createNewEvent(inputData);
-        yield put(updateCreateEventLoading(false));
-      }
+    const balanceValid = yield call(isBalanceValid);
+    if (!balanceValid) {
+      yield put(showAlert({
+        message: MESSAGE.NOT_ENOUGH_GAS,
+      }));
     } else {
-      const balanceValid = yield call(isBalanceValid);
-      if (balanceValid.error) {
-        yield put(showAlert({
-          message: MESSAGE.NOT_ENOUGH_GAS,
-        }));
+      const betHandshakeHandler = BetHandshakeHandler.getShareManager();
+      if (!isNew) {
+        // Add new outcomes
+        const newOutcomeList = values.outcomes.filter(o => !o.id).map(i => Object.assign({}, i, { public: 0 }));
+        const { eventId } = values;
+        const addOutcomeResult = yield call(handleAddOutcomesSaga, {
+          eventId,
+          newOutcomeList,
+        });
+        if (!addOutcomeResult.error) {
+          const inputData = addOutcomeResult.data.map(o => {
+            return {
+              fee: values.creatorFee,
+              source: `${values.reports || '-'}`,
+              closingTime: values.closingTime,
+              reportTime: values.reportingTime,
+              disputeTime: values.disputeTime,
+              offchain: o.id,
+              contractAddress: o.contract.contract_address,
+              contractName: o.contract.json_name,
+            };
+          });
+          const outcomeId = addOutcomeResult.data[0].id;
+          const eventName = addOutcomeResult.data[0].name;
+          yield saveGenerateShareLinkToStore({ outcomeId, eventName });
+          betHandshakeHandler.createNewEvent(inputData);
+        }
       } else {
         // Create new event
         const reportSource = {
@@ -183,17 +183,17 @@ function* handleCreateEventSaga({ values, isNew, selectedSource }) {
               contractName: contract.json_name,
             };
           });
-          console.log('inputData', inputData);
           const outcomeId = eventData.outcomes[0].id;
           const eventName = eventData.name;
           yield saveGenerateShareLinkToStore({ outcomeId, eventName });
           betHandshakeHandler.createNewEvent(inputData);
-          yield put(updateCreateEventLoading(false));
         }
       }
     }
   } catch (e) {
     console.error('handleCreateNewEventSaga', e);
+  } finally {
+    yield put(updateCreateEventLoading(false));
   }
 }
 
