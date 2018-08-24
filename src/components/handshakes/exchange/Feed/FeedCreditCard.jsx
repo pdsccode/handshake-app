@@ -527,6 +527,8 @@ class FeedCreditCard extends React.Component {
     } = item;
     this.setState({
       hasSelectedCoin: true, amount, fiatAmount, currency, fiatCurrency,
+    }, () => {
+      this.getCryptoPriceByAmount(amount);
     });
   }
 
