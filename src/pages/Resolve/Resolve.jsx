@@ -66,6 +66,7 @@ class Resolve extends React.Component {
       <Login /> :
       <BettingReport
         matches={matches}
+        isAdmin={true}
         resolved
         onReportSuccess={()=> {
           this.fetchMatches();

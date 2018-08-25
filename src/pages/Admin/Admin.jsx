@@ -64,6 +64,7 @@ class Admin extends React.Component {
       <Login /> :
       <BettingReport
         matches={matches}
+        isAdmin={true}
         onReportSuccess={()=> {
           this.fetchMatches();
         }}
