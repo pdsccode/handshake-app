@@ -1159,6 +1159,7 @@ export default {
         button: {
           create: 'Create wallet',
           add_new: '+ Add new',
+          done: "Done",
           request_free_eth: 'Request free ETH',
         },
         error:{

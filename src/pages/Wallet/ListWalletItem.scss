@@ -10,6 +10,15 @@
     z-index: 100;
     top: 20px;
 }
+.iconMove{
+    position: absolute;    
+    display: block;        
+    cursor: row-resize;    
+    right: 0;
+    z-index: 100;
+    top: 14px;
+    width: 25px;
+}
 .sortable-row{
     width: 100%;
     padding: 20px;

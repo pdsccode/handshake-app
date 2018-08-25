@@ -20,7 +20,8 @@ export class Wallet {
     this.isCollectibles = false;
     this.decimals = 18;
     this.secret = '';  
-    this.publicKey = ''
+    this.publicKey = '',
+    this.icon = 'eth.svg'
   }
 
   getShortAddress() {

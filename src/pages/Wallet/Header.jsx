@@ -29,14 +29,19 @@ class Header extends React.Component {
   }
 
   renderLink(){
-    const { hasLink, title, icon, linkTitle, onLinkClick } = this.props;
+    const { hasLink, title, icon, icon2, linkTitle, onLinkClick, onIcon2Click } = this.props;
     if (!hasLink) return "";
+    let html ='';
     if (icon){
-     return  <img onClick={onLinkClick} src={icon} />
+     html = <img onClick={onLinkClick} src={icon} />
     }
-    return (
-      <div onClick={onLinkClick} className="headerLink">{linkTitle}</div>
-    );
+    else    
+      html = <div onClick={onLinkClick} className="headerLink">{linkTitle}</div>
+    if (icon2){
+      html = <div> <img className="header-icon-2" onClick={onIcon2Click} src={icon2} />{html} </div>
+    }
+    return html;
+    
   }
 
   render() {
@@ -55,7 +60,9 @@ Header.propTypes = {
   title: PropTypes.string,
   linkTitle: PropTypes.string,
   icon : PropTypes.any,
+  icon2: PropTypes.any,
   onLinkClick: PropTypes.func,
+  onIcon2Click: PropTypes.func,
 };
 
 export default Header;

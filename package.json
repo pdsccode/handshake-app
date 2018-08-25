@@ -113,7 +113,7 @@
     "react-hot-loader": "^4.3.3",
     "react-intl": "^2.4.0",
     "react-list": "^0.8.10",
-    "react-popper": "^0.10.4",
+    "react-popper": "^0.10.4",    
     "react-qr-reader": "^2.1.0",
     "react-redux": "^5.0.7",
     "react-redux-firebase": "^2.1.4",

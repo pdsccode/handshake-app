@@ -22,6 +22,7 @@ export class TokenERC20 extends Ethereum {
     this.contractAddress = '';
     this.decimals = 18;
     this.customToken = true;
+    this.icon = 'token.svg'
   }
 
   createFromWallet(wallet) {

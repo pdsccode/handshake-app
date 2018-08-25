@@ -68,6 +68,7 @@ header{
   margin-right: 15px;
   img{
     width: 20px;
+    opacity: .7;
   }
 }
 .more{
@@ -102,6 +103,10 @@ header{
   background-repeat: no-repeat;
   background-size: auto;
   background-color: #f4f4fb;
+
+  .header-icon-2{
+    margin-left: 15px;
+  }
 
   .header-wallet{
     display: -webkit-box;
@@ -151,7 +156,7 @@ header{
   border-bottom: 1px #f4f4f4 solid;
   padding-bottom: 10px;
   padding-top: 15px;
-  img{
+  img, div{
     float: right;
   }
 }

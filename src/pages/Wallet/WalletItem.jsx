@@ -54,17 +54,17 @@ class WalletItem extends React.Component {
   }
 
   render(){
-      const {wallet, onMoreClick, onAddressClick} =  this.props;
+      const {wallet, onMoreClick, onAddressClick, isSortable, onItemClick} =  this.props;
       //const iconProtected = !wallet.protected ? iconWarning : iconSafe;
-      let logo = 'eth.svg';      
+      let logo = require("@/assets/images/wallet/icons/coins/" + wallet.icon);
       try{ logo = require("@/assets/images/wallet/icons/coins/" + wallet.getCoinLogo());} catch (e){};
 
       // const itemSelected = wallet.default ? "feed feed-selected" : "feed";
       return  (
 
         <div>
-            <img className="coin-logo" src={logo}/>
-            <div className="item-center">
+            <img onClick={onItemClick} className="coin-logo" src={logo}/>
+            <div className="item-center" onClick={onItemClick}>
               <div className="name">{wallet.title}
               {wallet.default ? <img className="iconDefault" src={iconChecked}/> : ''}
               </div>
@@ -73,14 +73,16 @@ class WalletItem extends React.Component {
                 <span className="balance"> {wallet.getShortBalance()} {wallet.name} </span>
               }
             </div>
-
-            <span className="item-right">
-              <span className="address" onClick={onAddressClick}>
-                  {this.showCryptoAddress}
+            
+            {!isSortable ?
+              <span className="item-right">
+                <span className="address" onClick={onAddressClick}>
+                    {this.showCryptoAddress}
+                </span>
+                <span className="more" onClick={onMoreClick}><img src={dontIcon}/></span>
+                
               </span>
-              <span className="more" onClick={onMoreClick}><img src={dontIcon}/></span>
-              
-            </span>
+            : ""}
             
             
             {/* <div className="address" onClick={onAddressClick}>
@@ -97,5 +99,7 @@ WalletItem.propTypes = {
   onMoreClick: PropTypes.func,
   onWarningClick: PropTypes.func,
   onAddressClick: PropTypes.func,
+  isSortable: PropTypes.any,
+  onItemClick: PropTypes.func,
 };
 export default injectIntl(WalletItem);

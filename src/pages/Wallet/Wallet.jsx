@@ -71,10 +71,12 @@ import * as gtag from '@/services/ga-utils';
 import taggingConfig from '@/services/tagging-config';
 
 // new layout:
+
 import logoWallet from '@/assets/images/wallet/images/logo-wallet.svg';
 import iconMoreSettings from '@/assets/images/wallet/icons/icon-more-settings.svg';
 import SortableComponent from "./SortableComponent";
 import iconAddPlus from '@/assets/images/wallet/icons/icon-add-plus.svg';
+import iconAlignJust from '@/assets/images/wallet/icons/icon-align-just.svg';
 
 const QRCode = require('qrcode.react');
 
@@ -157,7 +159,9 @@ class Wallet extends React.Component {
       activeSetting: false,
       alternateCurrency: 'USD',
       alternateCurrencyRate: 1,
-      modalFillContent: ''
+      modalFillContent: '',
+      // sortable:
+       listSortable: {coin: false, token: false, collectitble: false},
     };
 
     this.props.setHeaderRight(this.headerRight());
@@ -443,26 +447,7 @@ class Wallet extends React.Component {
       obj.push({
         title: messages.wallet.action.history.title,
         handler: async () => {
-          let pagenoTran = 1, pagenoIT = 1;
-          this.setState({ walletSelected: wallet, transactions: [], isHistory: true, pagenoTran: pagenoTran });
-          this.toggleBottomSheet();
-          this.modalHistoryRef.open();
-          this.showLoading();
-
-          wallet.balance = await wallet.getBalance();
-          wallet.transaction_count = await wallet.getTransactionCount();
-
-          let transactions = await wallet.getTransactionHistory(pagenoTran);
-
-          if(Number(transactions.length) < 20) pagenoTran = 0;
-          if(transactions.length > wallet.transaction_count) wallet.transaction_count = transactions.length;
-
-          let internalTransactions = await wallet.listInternalTransactions(pagenoIT);
-          if(Number(internalTransactions.length) < 20) pagenoIT = 0;
-          if(internalTransactions.length > wallet.transaction_count) wallet.transaction_count = transactions.length;
-
-          this.setState({ transactions: transactions, internalTransactions: internalTransactions, pagenoTran: pagenoTran, pagenoIT: pagenoIT, walletSelected: wallet });
-          this.hideLoading();
+          this.showHisotry(wallet);
         }
       });
     obj.push({
@@ -623,6 +608,21 @@ class Wallet extends React.Component {
     this.setState({ isRestoreLoading: false, countCheckCoinToCreate: 1, listCoinTempToCreate: MasterWallet.getListCoinTemp() });
     this.modalCreateWalletRef.open();
   }
+  updateSortableForCoin = () => {
+    let listSortable = this.state.listSortable;
+    listSortable.coin = !this.state.listSortable.coin;
+    this.setState({listSortable: listSortable});
+  }
+  updateSortableForToken = () => {
+    let listSortable = this.state.listSortable;
+    listSortable.token = !this.state.listSortable.token;
+    this.setState({listSortable: listSortable});
+  }
+  updateSortableForCollectible = () => {
+    let listSortable = this.state.listSortable;
+    listSortable.collectitble = !this.state.listSortable.collectitble;
+    this.setState({listSortable: listSortable});
+  }
   showModalAddToken = () =>{
       this.setState({formAddTokenIsActive: true}, () => {
         this.modalAddNewTokenRef.open();
@@ -633,6 +633,30 @@ class Wallet extends React.Component {
       this.modalAddNewCollectibleRef.open();
     });
   }
+
+   async showHisotry(wallet){
+    let pagenoTran = 1, pagenoIT = 1;
+          this.setState({ walletSelected: wallet, transactions: [], isHistory: true, pagenoTran: pagenoTran });
+          this.toggleBottomSheet();
+          this.modalHistoryRef.open();
+          this.showLoading();
+
+          wallet.balance = await wallet.getBalance();
+          wallet.transaction_count = await wallet.getTransactionCount();
+
+          let transactions = await wallet.getTransactionHistory(pagenoTran);
+
+          if(Number(transactions.length) < 20) pagenoTran = 0;
+          if(transactions.length > wallet.transaction_count) wallet.transaction_count = transactions.length;
+
+          let internalTransactions = await wallet.listInternalTransactions(pagenoIT);
+          if(Number(internalTransactions.length) < 20) pagenoIT = 0;
+          if(internalTransactions.length > wallet.transaction_count) wallet.transaction_count = transactions.length;
+
+          this.setState({ transactions: transactions, internalTransactions: internalTransactions, pagenoTran: pagenoTran, pagenoIT: pagenoIT, walletSelected: wallet });
+          this.hideLoading();
+  }
+
   creatSheetMenuHeaderMore() {
     const { messages } = this.props.intl;
     const obj = [];
@@ -784,6 +808,9 @@ class Wallet extends React.Component {
     } else {
 
     }
+  }
+  onWalletItemClick = (wallet) =>{
+    this.showHisotry(wallet);
   }
 
   onAddressClick = (wallet) => {
@@ -1077,7 +1104,7 @@ class Wallet extends React.Component {
           
           <Grid>
           
-          {/* Header Wallet */}
+          {/* 1. Header Wallet ============================================== */}
           <div id="header-wallet">
               <div className="header-wallet"> 
                   <img className="logo-wallet" src={logoWallet} />
@@ -1086,49 +1113,61 @@ class Wallet extends React.Component {
           </div>
                   
 
-          {/* Render list wallet: */}
+          {/* 2. Render list wallet here ===================================== */}
           
-          {/* Coin*/}
+          {/* 2.1 List Coin */}
           <Row className="wallet-box">
             {!process.env.isDojo ?
               <Row className="list">
-                <Header icon={iconAddPlus} title={messages.wallet.action.create.label.header_coins} hasLink={true} linkTitle={messages.wallet.action.create.button.add_new} onLinkClick={this.showModalAddCoin} />
+                {!this.state.listSortable.coin ?
+                <Header icon2={this.state.listMainWalletBalance.length > 1 ? iconAlignJust : null} onIcon2Click={this.updateSortableForCoin} icon={iconAddPlus} title={messages.wallet.action.create.label.header_coins} hasLink={true} linkTitle={messages.wallet.action.create.button.add_new} onLinkClick={this.showModalAddCoin} />
+                :<Header title={messages.wallet.action.create.label.header_coins} hasLink={true} linkTitle={messages.wallet.action.create.button.done} onLinkClick={this.updateSortableForCoin} />
+               }
               </Row>
-            :""}          
+            :""}
             <Row className="list">
               {/* {this.listMainWalletBalance} */}
               { this.state.listMainWalletBalance.length > 0 ?
-                <SortableComponent items={this.state.listMainWalletBalance}/>
+                <SortableComponent onMoreClick={item => this.onMoreClick(item)} onAddressClick={item => this.onAddressClick(item)} onItemClick={item => this.onWalletItemClick(item)}  isSortable={this.state.listSortable.coin} items={this.state.listMainWalletBalance} />
               : ''}
             </Row>
           </Row>
 
-          {/* Tokens */}
+          {/* 2.2 List Tokens */}
           <Row className="wallet-box">
             {!process.env.isDojo ?
             <Row className="list">
-              <Header icon={iconAddPlus} title={messages.wallet.action.create.label.header_tokens}hasLink={true} linkTitle={messages.wallet.action.create.button.add_new} onLinkClick={this.showModalAddToken} />
+              {!this.state.listSortable.token ?
+                <Header icon2={this.state.listTokenWalletBalance.length > 1 ? iconAlignJust : null} onIcon2Click={this.updateSortableForToken} icon={iconAddPlus} title={messages.wallet.action.create.label.header_tokens} hasLink={true} linkTitle={messages.wallet.action.create.button.header_tokens} onLinkClick={this.showModalAddToken} />
+                :<Header title={messages.wallet.action.create.label.header_tokens} hasLink={true} linkTitle={messages.wallet.action.create.button.done} onLinkClick={this.updateSortableForToken} />
+              }
+
             </Row>
             : ""}
             <Row className="list">
               {/* {this.listTokenWalletBalance} */}
               { this.state.listTokenWalletBalance.length > 0 ?
-                  <SortableComponent items={this.state.listTokenWalletBalance}/>
+                  <SortableComponent isSortable={this.state.listSortable.token}  items={this.state.listTokenWalletBalance}/>
               : ''}
             </Row>
           </Row>
 
-          {/* Collectible */}
+          {/* 2.3 Collectible */}
           <Row className="wallet-box">
             {!process.env.isDojo ?
             <Row className="list">
-              <Header icon={iconAddPlus} title={messages.wallet.action.create.label.header_collectibles}hasLink={true} linkTitle={messages.wallet.action.create.button.add_new} onLinkClick={this.showModalAddCollectible} />
+              
+               {!this.state.listSortable.collectitble ?
+                <Header icon2={this.state.listCollectibleWalletBalance.length > 1 ? iconAlignJust : null} onIcon2Click={this.updateSortableForCollectible} icon={iconAddPlus} title={messages.wallet.action.create.label.header_collectibles} hasLink={true} linkTitle={messages.wallet.action.create.button.header_collectibles} onLinkClick={this.showModalAddCollectible} />
+                :<Header title={messages.wallet.action.create.label.header_collectibles} hasLink={true} linkTitle={messages.wallet.action.create.button.done} onLinkClick={this.updateSortableForCollectible} />
+              }
+
             </Row>
             :""}
             <Row className="list">
               {/* {this.listCollectibleWalletBalance} */}
               { this.state.listCollectibleWalletBalance.length > 0 ?
-                  <SortableComponent items={this.state.listCollectibleWalletBalance}/>
+                  <SortableComponent isSortable={this.state.listSortable.collectitble}  items={this.state.listCollectibleWalletBalance}/>
               : ''}
             </Row>
           </Row>
