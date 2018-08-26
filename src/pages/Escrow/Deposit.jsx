@@ -110,7 +110,7 @@ class EscrowDeposit extends React.Component {
                 </div>
               </div>
               <div className="mt-3">
-                <button type="submit" className="btn btn-primary btn-block btn-submit-specific">
+                <button type="submit" className="btn btn-primary btn-block">
                   <img src={iconLock} width={16} className="align-top mr-2" />
                   <FormattedMessage id="escrow.btn.depositNow" />
                 </button>
