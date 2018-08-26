@@ -293,6 +293,13 @@ export default {
   'cc.label.email': 'Email',
   'cc.label.email.hint': 'Just for receiving receipt',
 
+  'escrow.label.depositCoin': 'Deposit coin',
+  'escrow.label.iWantTo': 'I want to deposit',
+  'escrow.label.price': 'Price',
+  'escrow.label.yourSellingPrice': 'Your selling price',
+  'escrow.label.sellingPriceCaption': '= Market price + percentage',
+  'escrow.btn.depositNow': 'Deposit now',
+
 
   'askLocationPermission.label.1': 'We would like to access your location to find nearest ATMs around you!',
   'askLocationPermission.label.2': `<span>Please click <strong>"Allow"</strong> to start trading now!</span>`,
