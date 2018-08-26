@@ -559,6 +559,8 @@ export const URL = {
 
   CC_PAYMENT_URL: '/payment',
   BUY_BY_CC_URL: '/buy-by-credit-card',
+
+  ESCROW_DEPOSIT: '/escrow/deposit',
 };
 
 export const LANDING_PAGE_TYPE = {
