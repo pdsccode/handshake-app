@@ -447,6 +447,7 @@ class Wallet extends React.Component {
       obj.push({
         title: messages.wallet.action.history.title,
         handler: async () => {
+          this.toggleBottomSheet();
           this.showHisotry(wallet);
         }
       });
@@ -636,8 +637,7 @@ class Wallet extends React.Component {
 
    async showHisotry(wallet){
     let pagenoTran = 1, pagenoIT = 1;
-          this.setState({ walletSelected: wallet, transactions: [], isHistory: true, pagenoTran: pagenoTran });
-          this.toggleBottomSheet();
+          this.setState({ walletSelected: wallet, transactions: [], isHistory: true, pagenoTran: pagenoTran });          
           this.modalHistoryRef.open();
           this.showLoading();
 
@@ -809,7 +809,7 @@ class Wallet extends React.Component {
 
     }
   }
-  onWalletItemClick = (wallet) =>{
+  onWalletItemClick = (wallet) =>{    
     this.showHisotry(wallet);
   }
 
