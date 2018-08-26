@@ -818,6 +818,21 @@ class Wallet extends React.Component {
       this.modalShareAddressRef.open();
     });
   }
+  onSortableCoinSuccess = (items)=>{
+    this.setState({listMainWalletBalance: items}, ()=> {            
+      MasterWallet.UpdateLocalStore(this.getAllWallet());
+    });
+  }
+  onSortableTokenSuccess = (items)=>{
+    this.setState({listTokenWalletBalance: items}, ()=> {            
+      MasterWallet.UpdateLocalStore(this.getAllWallet());
+    });
+  }
+  onSortableCollectibleSuccess = (items)=>{
+    this.setState({listCollectibleWalletBalance: items}, ()=> {            
+      MasterWallet.UpdateLocalStore(this.getAllWallet());
+    });
+  }
 
   handleFocus = (e) => {
     e.currentTarget.select();
@@ -1108,7 +1123,7 @@ class Wallet extends React.Component {
           <div id="header-wallet">
               <div className="header-wallet"> 
                   <img className="logo-wallet" src={logoWallet} />
-                  <div onClick={this.onIconRightHeaderClick} class="header-right"><img src={iconMoreSettings} /></div>
+                  <div onClick={this.onIconRightHeaderClick} className="header-right"><img src={iconMoreSettings} /></div>
               </div>              
           </div>
                   
@@ -1128,7 +1143,7 @@ class Wallet extends React.Component {
             <Row className="list">
               {/* {this.listMainWalletBalance} */}
               { this.state.listMainWalletBalance.length > 0 ?
-                <SortableComponent onMoreClick={item => this.onMoreClick(item)} onAddressClick={item => this.onAddressClick(item)} onItemClick={item => this.onWalletItemClick(item)}  isSortable={this.state.listSortable.coin} items={this.state.listMainWalletBalance} />
+                <SortableComponent onSortableSuccess={items => this.onSortableCoinSuccess(items)} onMoreClick={item => this.onMoreClick(item)} onAddressClick={item => this.onAddressClick(item)} onItemClick={item => this.onWalletItemClick(item)}  isSortable={this.state.listSortable.coin} items={this.state.listMainWalletBalance} />
               : ''}
             </Row>
           </Row>
@@ -1147,7 +1162,7 @@ class Wallet extends React.Component {
             <Row className="list">
               {/* {this.listTokenWalletBalance} */}
               { this.state.listTokenWalletBalance.length > 0 ?
-                  <SortableComponent isSortable={this.state.listSortable.token}  items={this.state.listTokenWalletBalance}/>
+                  <SortableComponent onSortableSuccess={items => this.onSortableTokenSuccess(items)} onMoreClick={item => this.onMoreClick(item)} onAddressClick={item => this.onAddressClick(item)} onItemClick={item => this.onWalletItemClick(item)} isSortable={this.state.listSortable.token}  items={this.state.listTokenWalletBalance}/>
               : ''}
             </Row>
           </Row>
@@ -1167,7 +1182,7 @@ class Wallet extends React.Component {
             <Row className="list">
               {/* {this.listCollectibleWalletBalance} */}
               { this.state.listCollectibleWalletBalance.length > 0 ?
-                  <SortableComponent isSortable={this.state.listSortable.collectitble}  items={this.state.listCollectibleWalletBalance}/>
+                  <SortableComponent onSortableSuccess={items => this.onSortableCollectibleSuccess(items)} onMoreClick={item => this.onMoreClick(item)} onAddressClick={item => this.onAddressClick(item)} onItemClick={item => this.onWalletItemClick(item)} isSortable={this.state.listSortable.collectitble}  items={this.state.listCollectibleWalletBalance}/>
               : ''}
             </Row>
           </Row>
@@ -1186,7 +1201,7 @@ class Wallet extends React.Component {
             <Row className="list">
               {/* {this.listTestWalletBalance} */}
               { this.state.listTestWalletBalance.length > 0 ?
-                  <SortableComponent items={this.state.listTestWalletBalance}/>
+                  <SortableComponent onMoreClick={item => this.onMoreClick(item)} onAddressClick={item => this.onAddressClick(item)} onItemClick={item => this.onWalletItemClick(item)} items={this.state.listTestWalletBalance}/>
               : ''}
             </Row>
             : ''}

@@ -48,12 +48,18 @@ class SortableComponent extends Component {
 
     this.setState({
       items: arrayMove(items, oldIndex, newIndex),
+    }, ()=>{
+      // call update list item
+      this.props.onSortableSuccess(this.state.items);
     });
   };
 
   componentDidUpdate(){ 
     if (this.props.isSortable != this.state.isSortable){
       this.setState({isSortable: this.props.isSortable});
+    }
+    if (!this.props.isSortable && this.props.items != this.state.items){
+      this.setState({items: this.props.items});
     }
   }
 
@@ -81,6 +87,7 @@ SortableComponent.propTypes = {
   onWarningClick: PropTypes.func,
   onAddressClick: PropTypes.func,
   onItemClick: PropTypes.func,
+  onSortableSuccess: PropTypes.func,
   
 };
 export default injectIntl(SortableComponent);
