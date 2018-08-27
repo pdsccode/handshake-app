@@ -20,11 +20,20 @@ function renderEventName({ event }) {
 }
 
 function renderEventNumberOfPlayers({ event }) {
-  const s = event.total_users > 1 ? 'ninjas are' : 'ninja is';
+  let msg = '';
+  switch (event.total_users) {
+    case 0:
+      msg = 'Be the first ninja to play';
+      break;
+    case 1:
+      msg = `${event.total_users} ninja is playing`;
+      break;
+    default:
+      msg = `${event.total_users} ninjas are playing`;
+      break;
+  }
   return (
-    <div className="EventNumberOfPlayer">
-      {`${event.total_users} ${s} playing`}
-    </div>
+    <div className="EventNumberOfPlayer">{msg}</div>
   );
 }
 

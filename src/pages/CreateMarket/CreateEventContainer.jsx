@@ -13,11 +13,13 @@ class CreateEventContainer extends React.Component {
   static propTypes = {
     dispatch: PropTypes.func.isRequired,
     eventList: PropTypes.array,
+    reportList: PropTypes.array,
     categoryList: PropTypes.array,
   };
 
   static defaultProps = {
     eventList: [],
+    reportList: [],
     categoryList: [],
   };
 
@@ -86,6 +88,7 @@ class CreateEventContainer extends React.Component {
     );
   }
 }
+
 export default connect(
   (state) => {
     return {

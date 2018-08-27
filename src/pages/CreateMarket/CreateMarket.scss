@@ -1,11 +1,16 @@
 @import './src/styles/style';
 
 .form-error {
-  border: none;
-  font-size: rem-calc(13px);
-  color: #d9534f;
+  .react-select__control {
+    border: 1px solid #d9534f;
+  }
   input {
     border: 1px solid #d9534f;
+  }
+  .ErrorMsg {
+    border: none;
+    font-size: rem-calc(13px);
+    color: #d9534f;
   }
 }
 .ErrorMsg {
@@ -59,6 +64,16 @@
   }
   button[type="submit"] {
     height: 46px;
+  }
+
+  .react-select__menu {
+    z-index: 5;
+  }
+  .react-select__control {
+    background-color: #ffffff;
+  }
+  .react-select__control--is-disabled {
+    background-color: #e9ecef;
   }
 }
 

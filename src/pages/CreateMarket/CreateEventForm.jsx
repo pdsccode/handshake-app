@@ -49,7 +49,7 @@ class CreateEventForm extends Component {
       closingTime: props.initialValues.closingTime,
       reportingTime: props.initialValues.reportingTime,
       disputeTime: props.initialValues.disputeTime,
-      selectedReportSource: undefined,
+      selectedReportSource: {},
     };
   }
 
@@ -57,7 +57,7 @@ class CreateEventForm extends Component {
     dispatch(createEvent({
       values,
       isNew: props.isNew,
-      selectedSource: this.state.selectedReportSource,
+      selectedSource: this.state.selectedReportSource.value,
     }));
   }
 
@@ -151,14 +151,13 @@ class CreateEventForm extends Component {
         name="category"
         type="select"
         label="Category"
+        placeholder="Select a category..."
         className="form-group"
         disabled={!props.isNew}
         validate={required}
         component={renderField}
-      >
-        <option value="">Please select a category</option>
-        {props.categoryList.map(r => <option value={r.id} key={r.id}>{r.name}</option>)}
-      </Field>
+        options={props.categoryList}
+      />
     );
   }
 
@@ -260,24 +259,27 @@ class CreateEventForm extends Component {
   }
 
   renderReport = (props, state) => {
-    const title = 'REPORT';
+    const reports = [{
+      value: '',
+      label: 'Select a verified source...',
+    }].concat(props.reportList);
     return (
       <React.Fragment>
-        {this.renderGroupTitle(title)}
+        {this.renderGroupTitle('REPORT')}
         <div className="form-group">
           <Field
             name="reports"
-            component="select"
-            className="form-control custom-select"
+            type="select"
+            placeholder="Select a verified source..."
             disabled={!props.isNew}
+            validate={required}
             onChange={(e, newValue) => this.setFieldValueToState('selectedReportSource', newValue)}
-          >
-            <option value="">Please select a verified source</option>
-            {props.reportList.map(r => <option value={r.id} key={r.id}>{`${r.name} - ${r.url}`}</option>)}
-          </Field>
+            component={renderField}
+            options={reports}
+          />
         </div>
         {
-          props.isNew && !state.selectedReportSource &&
+          props.isNew && !state.selectedReportSource.value &&
           <React.Fragment>
             <div className="CreateEventOption"><span>Or</span></div>
             <Field
@@ -343,8 +345,8 @@ class CreateEventForm extends Component {
           name="closingTime"
           type="text"
           component={this.renderDateTime}
-          placeholder="Closing Time"
           title="Closing Time"
+          placeholder="Event close"
           validate={[required, this.smallerThanReportingTime]}
           disabled={!props.isNew}
           value={state.closingTime}
@@ -355,8 +357,8 @@ class CreateEventForm extends Component {
           name="reportingTime"
           type="text"
           component={this.renderDateTime}
-          placeholder="Reporting Time"
           title="Reporting Time"
+          placeholder="Report by"
           validate={[required, this.smallerThanDisputeTime]}
           disabled={!props.isNew || !state.closingTime}
           value={state.reportingTime}
@@ -367,8 +369,8 @@ class CreateEventForm extends Component {
           name="disputeTime"
           type="text"
           component={this.renderDateTime}
-          placeholder="Dispute Time"
           title="Dispute Time"
+          placeholder="Dispute by"
           validate={[required]}
           disabled={!props.isNew || !state.reportingTime}
           value={state.disputeTime}
@@ -402,7 +404,7 @@ class CreateEventForm extends Component {
         <div className="CreateEventFormBlock">
           {this.renderReport(props, state)}
           {this.renderTimeGroup(props, state)}
-          <button type="submit" className="btn btn-primary btn-block" disabled={!props.valid || props.submitting}>
+          <button type="submit" className="btn btn-primary btn-block" disabled={props.pristine || props.submitting}>
             {props.isNew ? 'Create a new event' : 'Add new outcomes'}
           </button>
         </div>
