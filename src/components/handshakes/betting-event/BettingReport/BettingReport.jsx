@@ -22,6 +22,7 @@ class BettingReport extends React.Component {
   }
   static defaultProps = {
     resolved: false,
+    isAdmin: true,
   };
   constructor(props) {
     super(props);
