@@ -300,7 +300,7 @@ class Wallet extends React.Component {
 
       //rate
       try{
-        const response = await axios.get("https://bitpay.com/api/rates/btc");
+        const response = await axios.get(`https://ninja.org/api/exchange/info/crypto-price?fiat_currency=${alternateCurrency}&currency=XRP`);
         if (response.status == 200 && response.data) {
           let usd = 0, alt = 0;
           response.data.map(e => {
