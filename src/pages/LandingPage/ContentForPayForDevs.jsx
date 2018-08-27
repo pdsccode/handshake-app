@@ -7,7 +7,8 @@ import imgSaveMoney from '@/assets/images/landing/pay-for-devs/save-money.svg';
 import imgSimpleUse from '@/assets/images/landing/pay-for-devs/simple-use.svg';
 import imgBgWhy from '@/assets/images/landing/pay-for-devs/bg-why.png';
 
-export const PayForDevs = (
+
+const PayForDevs = () => (
   <div className="container project-detail pay-for-devs">
     <div className="row getstart">
       <div className="col-12 col-md-6 pd-subHeading">
@@ -17,7 +18,6 @@ export const PayForDevs = (
       </div>
       <div className="col-12 col-md-6"><iframe width="560" height="315" src="https://www.youtube.com/embed/xCU5puuwros" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>
     </div>
-
 
     <div className="row pb-4 desc">
       <div className="col-12 col-md-6 pd-content">
@@ -77,3 +77,5 @@ export const PayForDevs = (
     </div>
   </div>
 );
+
+export default PayForDevs;
