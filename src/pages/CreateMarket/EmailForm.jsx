@@ -61,11 +61,10 @@ class EmailForm extends React.Component {
 
   renderForm = (props, state) => {
     const { renderEmailField, renderCodeField, onSubmit } = this;
-    const { handleSubmit } = props;
     const { isPristine } = state;
     const buttonText = isPristine ? 'Next' : 'Verify your email';
     return (
-      <form className="EmailRequiredForm" onSubmit={handleSubmit(onSubmit)}>
+      <form className="EmailRequiredForm" onSubmit={props.handleSubmit(onSubmit)}>
         { isPristine ? renderEmailField() : renderCodeField() }
         <button type="submit" className="btn btn-primary btn-block">{buttonText}</button>
       </form>
