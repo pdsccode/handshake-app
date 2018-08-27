@@ -1,0 +1,28 @@
+.escrow-deposit {
+  .btn-close {
+    &:focus {
+      box-shadow: none;
+    }
+  }
+  .wrapper {
+    padding: 0 15px;
+  }
+  .escrow-label {
+    font-size: 16px;
+    color: #828AA8;
+  }
+  .form-deposit-custom {
+    padding-left: 32px;
+  }
+  .icon-deposit {
+    width: 25px;
+    top: 6px;
+    left: 5px;
+    position: absolute;
+  }
+  .percentage-symbol {
+    top: 6px;
+    right: 5px;
+    position: absolute;
+  }
+}

@@ -53,6 +53,7 @@ const ContentForCashBusiness = createDynamicImport(() => import('@/pages/Landing
 const Discover = createDynamicImport(() => import('@/pages/Discover/Discover'), Loading);
 const RouterCCConfirm = createDynamicImport(() => import('@/components/Router/CCConfirm'), Loading);
 const RouterBuyCC = createDynamicImport(() => import('@/components/handshakes/exchange/Feed/FeedCreditCard'), Loading);
+const RouterEscrowDeposit = createDynamicImport(() => import('@/pages/Escrow/Deposit'), Loading);
 
 
 /* ======================== FOR MOBILE ======================== */
@@ -71,6 +72,7 @@ const configRoutesUsingMobileLayout = [
   { path: URL.HANDSHAKE_PEX, component: RouterExchange },
   { path: URL.CC_PAYMENT_URL, component: RouterCCConfirm },
   { path: URL.BUY_BY_CC_URL, component: RouterBuyCC },
+  { path: URL.ESCROW_DEPOSIT, component: RouterEscrowDeposit },
   {
     path: URL.PRODUCT_DAD_URL,
     render: () => {
