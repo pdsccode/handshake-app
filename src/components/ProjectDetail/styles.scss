@@ -171,3 +171,12 @@
     }
   }
 }
+
+@media (max-width: 1024px) {
+  .why-use{
+    .card-deck{
+      .card { flex:auto }
+    }
+  }
+
+}
