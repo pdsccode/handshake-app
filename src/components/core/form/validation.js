@@ -55,3 +55,12 @@ export const email = value =>
 //     value && !/^(0|[1-9][0-9]{9})$/i.test(value)
 //         ? 'Invalid phone number, must be 10 digits'
 //         : undefined
+
+export const isNormalInteger = (str) => {
+  const n = Math.floor(Number(str));
+  if (n !== Infinity && String(n) === str && n >= 0) {
+    return undefined;
+  } else {
+    return <FormattedMessage id="error.mustBeAPositiveInteger" />;
+  }
+}

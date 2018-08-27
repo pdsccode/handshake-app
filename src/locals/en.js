@@ -228,6 +228,7 @@ export default {
   'error.greaterThan': 'Must be greater than {min}',
   'error.lessThan': 'Must be less than {max}',
   'error.mustBeANumber': 'Must be a number',
+  'error.mustBeAPositiveInteger': 'Must be a number greater or equal 0',
 
   'btn.initiate': 'Initiate',
   'btn.shake': 'Shake',
