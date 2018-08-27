@@ -1,19 +1,19 @@
 import React from 'react';
-import {FormattedMessage, injectIntl} from 'react-intl';
-import {connect} from 'react-redux';
-import {URL} from '@/constants';
+import { FormattedMessage, injectIntl } from 'react-intl';
+import { connect } from 'react-redux';
+import { URL } from '@/constants';
 import createForm from '@/components/core/form/createForm';
-import {Field} from 'redux-form';
+import { Field } from 'redux-form';
 import './Deposit.scss';
-import {fieldInput} from '@/components/core/form/customField';
+import { fieldInput } from '@/components/core/form/customField';
 
 import iconBitcoin from '@/assets/images/icon/coin/btc.svg';
 import iconEthereum from '@/assets/images/icon/coin/eth.svg';
 import iconBitcoinCash from '@/assets/images/icon/coin/bch.svg';
 import iconLock from '@/assets/images/icon/icons8-lock_filled.svg';
-import {CRYPTO_CURRENCY, EXCHANGE_ACTION, FIAT_CURRENCY, MIN_AMOUNT} from '../../constants';
-import {formatMoneyByLocale} from '@/services/offer-util';
-import {isNormalInteger, minValue, number, required} from '@/components/core/form/validation';
+import { CRYPTO_CURRENCY, EXCHANGE_ACTION, FIAT_CURRENCY, MIN_AMOUNT } from '../../constants';
+import { formatMoneyByLocale } from '@/services/offer-util';
+import { isNormalInteger, minValue, number, required } from '@/components/core/form/validation';
 
 const nameFormEscrowDeposit = 'escrowDeposit';
 const FormEscrowDeposit = createForm({
@@ -41,9 +41,9 @@ class EscrowDeposit extends React.Component {
     console.log(values);
   }
 
-  validateSpecificAmount = (values, state, props) => {
+  handleValidate = (values) => {
     const { percentage } = values;
-    let errors = {};
+    const errors = {};
 
     let isError = true;
     for (const item of Object.values(CRYPTO_CURRENCY_CREDIT_CARD)) {
@@ -69,11 +69,6 @@ class EscrowDeposit extends React.Component {
     // errors.percentage = isNormalInteger(percentage || 0);
 
     return errors;
-  };
-
-
-  handleValidate = (values) => {
-    return this.validateSpecificAmount(values, this.state, this.props);
   }
 
 
