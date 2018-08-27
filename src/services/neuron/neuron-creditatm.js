@@ -33,7 +33,7 @@ export default class CreditATM extends BaseHandshake {
       ' deposit = ',
       value,
       percentage,
-      offchain
+      offchain,
     );
     const bytesOffchain = this.web3.utils.fromAscii(offchain);
 
