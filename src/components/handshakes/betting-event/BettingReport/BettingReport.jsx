@@ -17,10 +17,12 @@ class BettingReport extends React.Component {
   static propTypes = {
     matches: PropTypes.array.isRequired,
     resolved: PropTypes.bool,
+    isAdmin: PropTypes.bool,
     onReportSuccess: PropTypes.func,
   }
   static defaultProps = {
     resolved: false,
+    isAdmin: true,
   };
   constructor(props) {
     super(props);
@@ -199,13 +201,14 @@ class BettingReport extends React.Component {
         callBack: () => {},
       });
     } else {
+      const { isAdmin } = this.props;
+
       const tokenValue = token || this.checkToken();
       const authenticate = { Authorization: `Bearer ${tokenValue}`, 'Content-Type': 'application/json' };
-      const headers = tokenValue ? authenticate : null;
-      const { resolved } = this.props;
+      const headers = isAdmin ? authenticate : null;
       console.log('Final State:', this.state.final);
 
-      const url = tokenValue ? `${BASE_API.BASE_URL}/cryptosign/admin/match/report/${this.state.activeMatchData.id}` :
+      const url = isAdmin ? `${BASE_API.BASE_URL}/cryptosign/admin/match/report/${this.state.activeMatchData.id}` :
                   `${BASE_API.BASE_URL}/cryptosign/match/report/${this.state.activeMatchData.id}`;
 
       const submit = $http({

@@ -1,11 +1,16 @@
 @import './src/styles/style';
 
 .form-error {
-  border: none;
-  font-size: rem-calc(13px);
-  color: #d9534f;
+  .react-select__control {
+    border: 1px solid #d9534f;
+  }
   input {
     border: 1px solid #d9534f;
+  }
+  .ErrorMsg {
+    border: none;
+    font-size: rem-calc(13px);
+    color: #d9534f;
   }
 }
 .ErrorMsg {
@@ -60,6 +65,16 @@
   button[type="submit"] {
     height: 46px;
   }
+
+  .react-select__menu {
+    z-index: 5;
+  }
+  .react-select__control {
+    background-color: #ffffff;
+  }
+  .react-select__control--is-disabled {
+    background-color: #e9ecef;
+  }
 }
 
 .RangeSliderContainer {
@@ -77,15 +92,16 @@
     padding: 0;
     margin: 0;
     border: none;
+    color: #2c2c2c;
     background-color: transparent;
     -webkit-appearance: none;
     -webkit-user-select: none;
     -webkit-user-modify: none;
   }
-  input[type=number]::-webkit-inner-spin-button, 
-  input[type=number]::-webkit-outer-spin-button { 
-    -webkit-appearance: none; 
-    margin: 0; 
+  input[type=number]::-webkit-inner-spin-button,
+  input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
   }
   .unit {
     margin-top: 1px;

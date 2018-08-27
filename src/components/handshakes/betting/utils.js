@@ -20,9 +20,7 @@ export const parseBigNumber = (value) => {
 }
 export const getMessageWithCode = (code) => {
   const keys = Object.keys(MESSAGE_SERVER).filter(k => k == code); // ["A", "B"]
-  console.log('Keys:', keys);
   const value = keys.map(k => MESSAGE_SERVER[k]); // [0, 1]
-  console.log('Message:', value);
   return value;
 }
 export const getChainIdDefaultWallet = () => {

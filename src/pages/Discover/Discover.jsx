@@ -38,7 +38,7 @@ import Maintain from '@/components/Router/Maintain';
 import './Discover.scss';
 import { showPopupGetGPSPermission } from '@/reducers/app/action';
 import local from '@/services/localStore';
-import _debounce from 'lodash/debounce';
+// import _debounce from 'lodash/debounce';
 
 const defaultZoomLevel = 13;
 
@@ -48,8 +48,8 @@ class DiscoverPage extends React.Component {
     const handshakeDefault = HANDSHAKE_ID.EXCHANGE;
     const utm = this.getUtm();
     const program = this.getProgram();
-    this.debounceOnCenterChange = _debounce(this.handleOnCenterChanged, 150);
-    this.debounceOnZoomChange = _debounce(this.handleOnZoomChanged, 150);
+    // this.debounceOnCenterChange = _debounce(this.handleOnCenterChanged, 150);
+    // this.debounceOnZoomChange = _debounce(this.handleOnZoomChanged, 150);
 
     this.state = {
       handshakeIdActive: handshakeDefault,
@@ -360,6 +360,7 @@ class DiscoverPage extends React.Component {
       mapCenterLng,
     } = this.state;
     const { list: stations, offers } = this.props.discover;
+    const { history } = this.props;
 
     return (
       <React.Fragment>
@@ -376,6 +377,7 @@ class DiscoverPage extends React.Component {
           containerElement={<div className="map-container" style={{ height: `calc(100vh - 48px - 120px)`, marginTop: '48px' }} />}
           mapElement={<div style={{ height: `100%` }} />}
           // center={{ lat: 35.929673, lng: -78.948237 }}
+          history={history}
           stations={stations}
           offers={offers}
           zoomLevel={zoomLevel}
@@ -391,8 +393,8 @@ class DiscoverPage extends React.Component {
           setLoading={this.setLoading}
           onGoToCurrentLocation={this.handleGoToCurrentLocation}
           onMapMounted={(e) => (this.mapRef = e)}
-          onZoomChanged={this.debounceOnZoomChange}
-          onCenterChanged={this.debounceOnCenterChange}
+          onZoomChanged={this.handleOnZoomChanged}
+          onCenterChanged={this.handleOnCenterChanged}
         />
 
         {/*{!this.state.isBannedCash && !this.props.firebaseApp.config?.maintainChild?.exchange && this.getMap()}*/}
