@@ -1,12 +1,5 @@
 @import './src/styles/style';
 
-.Maintenance {
-  font-style: italic;
-  font-size: 15px;
-  margin-top: 20px;
-  text-align: center;
-}
-
 .Prediction {
   .BannerContainer {
     position:  relative;
@@ -36,8 +29,10 @@
     }
     .close {
       position: absolute;
-      top: -35px;
-      right: 0;
+      //top: -35px;
+      //right: 0;
+      top: 6px;
+      right: 6px;
       z-index: 20;
       opacity: 1;
       font-size: 25px;

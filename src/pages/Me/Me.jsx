@@ -54,7 +54,7 @@ import taggingConfig from '@/services/tagging-config';
 const TAG = 'Me';
 const maps = {
   [HANDSHAKE_ID.PROMISE]: FeedPromise,
-  [HANDSHAKE_ID.BETTING]: FeedBetting,
+  [HANDSHAKE_ID.BETTING]: FeedBetting, // @TODO: uncomment this line
   [HANDSHAKE_ID.EXCHANGE]: FeedExchange,
   [HANDSHAKE_ID.EXCHANGE_LOCAL]: FeedExchange,
   [HANDSHAKE_ID.SEED]: FeedSeed,
@@ -407,14 +407,6 @@ class Me extends React.Component {
   }
 
   render() {
-    if (1) {
-      return (
-        <div className="Maintenance">
-          <p>The site is down a bit of maintenance right now.</p>
-          <p>But soon we will be up and the sun will shine again.</p>
-        </div>
-      );
-    }
     const { list, listDashboard } = this.props.me;
     let listFeed = [];
     if (this.state.handshakeIdActive === HANDSHAKE_ID.EXCHANGE && this.state.cashTab === CASH_TAB.DASHBOARD) {

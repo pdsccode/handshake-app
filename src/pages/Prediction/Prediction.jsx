@@ -251,18 +251,9 @@ class Prediction extends React.Component {
   }
 
   renderComponent = (props, state) => {
-    if (1) {
-      return (
-        <div className="Maintenance">
-          <p>The site is down a bit of maintenance right now.</p>
-          <p>But soon we will be up and the sun will shine again.</p>
-        </div>
-      );
-    }
     return (
       <div className={Prediction.displayName}>
         <Loading isLoading={props.isLoading} />
-        {/* {this.renderShareToWin()} */}
         {this.renderEventList(props)}
         {this.renderBetMode(props, state)}
         {this.renderViewAllEvent(props, state)}

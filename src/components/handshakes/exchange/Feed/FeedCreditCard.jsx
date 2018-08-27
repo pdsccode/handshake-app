@@ -344,7 +344,7 @@ class FeedCreditCard extends React.Component {
             const message = error?.response?.data?.error?.message || 'Something wrong!';
             this.props.showAlert({
               message: <div className="text-center">{message}</div>,
-              timeOut: 3000,
+              timeOut: 5000,
               type: 'danger',
             // callBack: this.handleBuySuccess
             });
@@ -397,10 +397,13 @@ class FeedCreditCard extends React.Component {
       },
     } = data;
 
+    const value = roundNumberByLocale(new BigNumber(fiat_amount).multipliedBy(100).toNumber(), fiat_currency).toNumber();
+
     gtag.event({
       category: taggingConfig.creditCard.category,
       action: taggingConfig.creditCard.action.buySuccess,
-      value: new BigNumber(fiat_amount).multipliedBy(100).toNumber(),
+      label: currency,
+      value,
     });
 
     this.props.showAlert({
@@ -524,6 +527,8 @@ class FeedCreditCard extends React.Component {
     } = item;
     this.setState({
       hasSelectedCoin: true, amount, fiatAmount, currency, fiatCurrency,
+    }, () => {
+      this.getCryptoPriceByAmount(amount);
     });
   }
 
@@ -578,6 +583,7 @@ class FeedCreditCard extends React.Component {
                     classNameDropdownToggle="dropdown-button"
                     list={listFiatCurrency}
                     component={fieldDropdown}
+                    caret={false}
                     // disabled={!enableChooseFiatCurrency}
                   />
                 }
