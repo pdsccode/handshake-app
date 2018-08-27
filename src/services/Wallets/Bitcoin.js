@@ -118,9 +118,6 @@ export class Bitcoin extends Wallet {
           const rawTx = transaction.serialize();
           const txHash = await this.sendRawTx(rawTx);
 
-          alert(txHash);
-          alert(JSON.stringify(txHash));
-
           return { status: 1, message: 'messages.bitcoin.success.transaction', data: { hash: txHash.txid } };
         }
 
