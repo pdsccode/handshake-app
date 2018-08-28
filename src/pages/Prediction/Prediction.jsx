@@ -9,6 +9,8 @@ import LuckyLanding from '@/pages/LuckyLanding/LuckyLanding';
 import GA from '@/services/googleAnalytics';
 import LuckyFree from '@/components/handshakes/betting/LuckyPool/LuckyFree/LuckyFree';
 import FreeBetLose from '@/components/handshakes/betting/LuckyPool/FreeBetLose';
+import FreeBetWin from '@/components/handshakes/betting/LuckyPool/FreeBetWin';
+
 import OuttaMoney from '@/assets/images/modal/outtamoney.png';
 import Modal from '@/components/core/controls/Modal';
 import * as gtag from '@/services/ga-utils';
@@ -84,7 +86,8 @@ class Prediction extends React.Component {
     this.props.dispatch(updateShowedLuckyPool());
     setTimeout(() => {
       //this.modalLuckyPoolRef.open();
-      this.modalFreeBetLoseRef.open();
+      //this.modalFreeBetLoseRef.open();
+      this.modalFreeBetWinRef.open();
     }, 2 * 1000);
   }
 
@@ -209,6 +212,15 @@ class Prediction extends React.Component {
     </ModalDialog>
   )
 
+  renderFreeBetWin = () => (
+    <ModalDialog className="modal" onRef={(modal) => { this.modalFreeBetWinRef = modal; return null; }}>
+      <FreeBetWin onButtonClick={() => {
+          this.modalFreeBetWinRef.close();
+      }}
+      />
+    </ModalDialog>
+  )
+
   renderOuttaMoney = () => {
     return (
       <ModalDialog className="outtaMoneyModal" close onRef={(modal) => { this.modalOuttaMoney = modal; }}>
@@ -284,6 +296,7 @@ class Prediction extends React.Component {
         {this.renderLuckyFree()}
         {this.renderLuckyLanding()}
         {this.renderFreeBetLose()}
+        {this.renderFreeBetWin()}
         {this.renderOuttaMoney()}
         {this.renderCreditCard()}
         {props.countReport > 0 && this.renderReportPopup()}
