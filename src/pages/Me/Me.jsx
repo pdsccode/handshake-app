@@ -26,6 +26,7 @@ import './Me.scss'
 import { change } from 'redux-form'
 import Overview from './Tabs/Overview'
 import Transaction from './Tabs/Transaction'
+import ManageAssets from './Tabs/ManageAssets'
 
 const nameFormFilterFeeds = 'formFilterFeeds'
 const FormFilterFeeds = createForm({
@@ -47,14 +48,15 @@ const tabs = [
   },
   {
     id: 'manageAssets',
-    text: <FormattedMessage id="dashboard.label.manageAssets" />
+    text: <FormattedMessage id="dashboard.label.manageAssets" />,
+    component: <ManageAssets />
   },
 ]
 
 class Me extends React.Component {
 
   state = {
-    activeTab: 'transaction',
+    activeTab: 'manageAssets',
   }
 
   render () {
