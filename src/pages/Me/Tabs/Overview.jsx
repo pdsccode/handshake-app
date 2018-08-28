@@ -52,60 +52,62 @@ class Overview extends React.Component {
 
   render () {
     return (
-      <div className="mt-4">
+      <div>
         <FormOverview>
-          <div className="d-table w-100">
-            <div className="d-table-cell font-weight-bold">Stats</div>
-            <div className="d-table-cell text-right">
-              <Field
-                name="currency"
-                component={fieldDropdown}
-                // defaultText={
-                //   <FormattedMessage id="landing_page.recruiting.referFriend.label.jobPosition" />
-                // }
-                classNameDropdownToggle="dropdown-sort bg-white"
-                classNameWrapper="d-inline-block"
-                list={listCurrency}
-              />
-            </div>
-          </div>
-
-          <div className="mt-4">
+          <div className="bg-white" style={{ padding: '15px' }}>
             <div className="d-table w-100">
-              <div className="d-table-cell text-normal">
-                BTC bought
-              </div>
-              <div className="d-table-cell text-right green-color">
-                +124.1234
-              </div>
-            </div>
-
-            <div className="d-table w-100 mt-2">
-              <div className="d-table-cell text-normal">
-                BTC sold
-              </div>
-              <div className="d-table-cell text-right red-color">
-                50.3232
+              <div className="d-table-cell font-weight-bold">Stats</div>
+              <div className="d-table-cell text-right">
+                <Field
+                  name="currency"
+                  component={fieldDropdown}
+                  // defaultText={
+                  //   <FormattedMessage id="landing_page.recruiting.referFriend.label.jobPosition" />
+                  // }
+                  classNameDropdownToggle="dropdown-sort bg-white"
+                  classNameWrapper="d-inline-block"
+                  list={listCurrency}
+                />
               </div>
             </div>
 
-            <div className="d-table w-100 mt-2">
-              <div className="d-table-cell text-normal">
-                Amount left
+            <div className="mt-4">
+              <div className="d-table w-100">
+                <div className="d-table-cell text-normal">
+                  BTC bought
+                </div>
+                <div className="d-table-cell text-right green-color">
+                  +124.1234
+                </div>
               </div>
-              <div className="d-table-cell text-right black-color">
-                75.74334
-              </div>
-            </div>
 
-            <hr />
-
-            <div className="d-table w-100 mt-2">
-              <div className="d-table-cell text-normal">
-                Revenue
+              <div className="d-table w-100 mt-2">
+                <div className="d-table-cell text-normal">
+                  BTC sold
+                </div>
+                <div className="d-table-cell text-right red-color">
+                  50.3232
+                </div>
               </div>
-              <div className="d-table-cell text-right black-color">
-                $1,000,000
+
+              <div className="d-table w-100 mt-2">
+                <div className="d-table-cell text-normal">
+                  Amount left
+                </div>
+                <div className="d-table-cell text-right black-color">
+                  75.74334
+                </div>
+              </div>
+
+              <hr />
+
+              <div className="d-table w-100 mt-2">
+                <div className="d-table-cell text-normal">
+                  Revenue
+                </div>
+                <div className="d-table-cell text-right black-color">
+                  $1,000,000
+                </div>
               </div>
             </div>
           </div>
@@ -124,7 +126,6 @@ class Overview extends React.Component {
               </button>
             </div>
           </div>
-
 
         </FormOverview>
       </div>

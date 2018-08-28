@@ -36,10 +36,15 @@
     box-shadow: 0 2px 4px 0 #D0D0D0;
     border-radius: 5px;
   }
+  .danger-button {
+    color: #FFFFFF;
+    border-radius: 5px;
+    background: #D0021B;
+  }
   .wrapper {
     padding: 0 15px;
+    border-bottom: 2px solid #F1F2F6;
     .tabs {
-      border-bottom: 2px solid #F1F2F6;
       .tab {
         display: inline-block;
         padding-bottom: 5px;
@@ -54,6 +59,28 @@
         }
       }
 
+    }
+  }
+
+  .content {
+    //padding: 0 15px;
+    .transaction {
+      margin: 15px 15px 20px;
+      .transaction-detail {
+        background: #FFFFFF;
+        border-radius: 5px;
+        padding: 15px;
+        .type-order {
+          font-weight: 600;
+          font-size: 15px;
+          color: #484848;
+        }
+        .status {
+          font-size: 15px;
+          color: #F5A623;
+          font-weight: 400;
+        }
+      }
     }
   }
 }
