@@ -12,6 +12,9 @@ export default {
       exchanges: 'Exchanges',
       whisper: 'Whisper',
       wallet: 'Wallet',
+      setting: 'Setting',
+      atm: 'ATM',
+      bet: 'Bet',
     },
   },
   buy: 'Buy',
@@ -228,6 +231,7 @@ export default {
   'error.greaterThan': 'Must be greater than {min}',
   'error.lessThan': 'Must be less than {max}',
   'error.mustBeANumber': 'Must be a number',
+  'error.mustBeAPositiveInteger': 'Must be a integer number greater or equal 0',
 
   'btn.initiate': 'Initiate',
   'btn.shake': 'Shake',
@@ -299,6 +303,7 @@ export default {
   'escrow.label.yourSellingPrice': 'Your selling price',
   'escrow.label.sellingPriceCaption': '= Market price + percentage',
   'escrow.btn.depositNow': 'Deposit now',
+  'escrow.btn.depositSuccessMessage': 'Deposit success',
 
   'dashboard.heading': 'Dashboard',
   'dashboard.label.overview': 'Overview',

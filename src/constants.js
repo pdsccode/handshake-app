@@ -18,7 +18,7 @@ export const APP = {
   EMAIL_NEED_VERIFY: 'email_need_verify',
   PHONE_NEED_VERIFY: 'phone_need_verify',
   COUNTRY_PHONE_NEED_VERIFY: 'country_phone_need_verify',
-  CHAT_ENCRYPTION_KEYPAIR:'chat_encryption_keypair',
+  CHAT_ENCRYPTION_KEYPAIR: 'chat_encryption_keypair',
   REFERS: 'refers',
   SETTING: 'setting',
   OFFLINE_STATUS: 'offline_status',
@@ -118,7 +118,7 @@ export const FIAT_CURRENCY = {
   USD: 'USD',
   EUR: 'EUR',
   HKD: 'HKD',
-}
+};
 
 export const FIAT_CURRENCY_NAME = {
   [FIAT_CURRENCY.RUB]: 'RUB',
@@ -242,6 +242,7 @@ export const API_URL = {
     SHAKES: 'shakes',
     REVIEWS: 'reviews',
     GET_DASHBOARD_INFO: 'exchange/user/transaction-counts',
+    DEPOSIT_COIN_ATM: 'exchange/offer-stores/deposit',
   },
   SEED: {
     BASE: 'seed',
@@ -475,6 +476,7 @@ export const APP_USER_NAME = 'Ninja';
 export const MIN_AMOUNT = {
   [CRYPTO_CURRENCY.ETH]: 0.01,
   [CRYPTO_CURRENCY.BTC]: 0.001,
+  BCH: 0.001,
 };
 
 export const LOCATION_METHODS = {
@@ -576,7 +578,7 @@ export const LANDING_PAGE_TYPE = {
     text: '',
     url: '',
   },
-}
+};
 
 export const RECRUITING_SLACK_CHANNEL = 'https://hooks.slack.com/services/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';
 

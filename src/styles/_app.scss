@@ -120,21 +120,21 @@
         }
       }
       &.selected {
-        svg {
-          path {
-            fill: $deep-blue;
-          }
-        }
+        //svg {
+        //  path {
+        //    //fill: $deep-blue;
+        //  }
+        //}
         a {
           color: $deep-blue;
         }
-        .chat-icon {
-          svg {
-            g {
-              stroke: $deep-blue;
-            }
-          }
-        }
+        //.chat-icon {
+        //  svg {
+        //    g {
+        //      stroke: $deep-blue;
+        //    }
+        //  }
+        //}
       }
     }
   }
