@@ -300,6 +300,18 @@ export default {
   'escrow.label.sellingPriceCaption': '= Market price + percentage',
   'escrow.btn.depositNow': 'Deposit now',
 
+  'dashboard.heading': 'Dashboard',
+  'dashboard.label.overview': 'Overview',
+  'dashboard.label.transaction': 'Transaction',
+  'dashboard.label.manageAssets': 'Manage assets',
+  'dashboard.btn.deactivate': 'Deactivate',
+  'dashboard.btn.reactivate': 'Reactivate',
+  'dashboard.btn.topUpByCC': 'Top up ATM with credit card',
+  'dashboard.btn.scanQRCode': 'Scan QR code',
+  'dashboard.btn.depositEscrow': 'Deposit to escrow',
+  'dashboard.btn.withdrawEscrow': 'Withdraw coin',
+  'dashboard.label.amountLeft': 'Amount left',
+  'dashboard.label.revenue': 'Revenue',
 
   'askLocationPermission.label.1': 'We would like to access your location to find nearest ATMs around you!',
   'askLocationPermission.label.2': `<span>Please click <strong>"Allow"</strong> to start trading now!</span>`,

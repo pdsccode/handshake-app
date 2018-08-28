@@ -13,7 +13,8 @@ import {
   HANDSHAKE_ID_DEFAULT,
   URL
 } from '@/constants'
-import { injectIntl } from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
+import cx from 'classnames';
 // components
 import { getDashboardInfo, getListOfferPrice, getOfferStores, reviewOffer } from '@/reducers/exchange/action'
 // style
@@ -23,7 +24,7 @@ import createForm from '@/components/core/form/createForm'
 
 import './Me.scss'
 import { change } from 'redux-form'
-import { MasterWallet } from '@/services/Wallets/MasterWallet'
+import Overview from './Tabs/Overview'
 
 const nameFormFilterFeeds = 'formFilterFeeds'
 const FormFilterFeeds = createForm({
@@ -32,10 +33,64 @@ const FormFilterFeeds = createForm({
   }
 })
 
+const tabs = [
+  {
+    id: 'overview',
+    text: <FormattedMessage id="dashboard.label.overview" />,
+    component: <Overview />
+  },
+  {
+    id: 'transaction',
+    text: <FormattedMessage id="dashboard.label.transaction" />
+  },
+  {
+    id: 'manageAssets',
+    text: <FormattedMessage id="dashboard.label.manageAssets" />
+  },
+]
+
 class Me extends React.Component {
+
+  state = {
+    activeTab: 'overview',
+  }
+
   render () {
+
+    const { activeTab } = this.state;
+
+    const { component } = tabs.find(i => i.id === activeTab);
+
     return (
-      <div>ahihi</div>
+      <div className="dashboard">
+        <div>
+          <button className="btn btn-lg bg-transparent d-inline-block btn-close">
+            &times;
+          </button>
+          <div className="wrapper">
+            <h4><FormattedMessage id="dashboard.heading" /></h4>
+            <div className="tabs mt-3">
+              {
+                tabs.map(tab => {
+                  const { id, text } = tab;
+                  return (
+                    <div
+                      key={id}
+                      onClick={() => this.setState({ activeTab: id })}
+                      className={cx('tab text-normal', { active: activeTab === id })}
+                    >
+                      {text}
+                    </div>
+                  )
+                })
+              }
+            </div>
+            <div>
+              {component}
+            </div>
+          </div>
+        </div>
+      </div>
     )
   }
 }
