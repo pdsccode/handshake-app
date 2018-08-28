@@ -2,32 +2,60 @@ import React from 'react';
 import Button from '@/components/core/controls/Button';
 import PropTypes from 'prop-types';
 import Image from '@/components/core/presentation/Image';
-import FreeBetWinLogoSVG from '@/assets/images/luckypool/freebet_win_logo.svg';
+import IconOKSVG from '@/assets/images/luckypool/ic_ok.svg';
 
-import './FreeBetWin.scss';
+import './EmailPopup.scss';
 
 class EmailPopup extends React.Component {
   static propTypes = {
     onButtonClick: PropTypes.func,
 
   }
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      email: '',
+    };
+  }
+  onSubmit = async (e) => {
+    const {email} = e.values;
+    console.log('Email:', email);
+  }
+  changeText(text) {
+    this.setState({
+      email: text,
+    });
+  }
 
   render() {
     return (
       <div className="wrapperEmailPopup">
-        <div className="emailPopupBanner">
-          <Image className="bannerIcon"/>
-          <div>Success!</div>
-          <div>Your bet has been placed.</div>
+        <div className="emailPopupContent">
+
+          <Image className="bannerIcon" src={IconOKSVG} alt="iconOK"/>
+          <div className="emailPopupDes">Success!</div>
+          <div className="emailPopupSmallDes">Your bet has been placed.</div>
         </div>
-        <div className="emailPopupDes">Check back here for the<br/>results or we can email them to you :)</div>
+         <div className="contentSmallDes">Check back here for the<br/>results or we can email them to you :)</div>
+        <input
+            className="emailPopupInput"
+            type='text'
+            autoComplete="off"
+            id='email'
+            placeholder="Enter your email"
+            onChange={(evt) => {
+              this.changeText(evt.target.value);
+            }}
+          />
         <Button
           className="emailPopupButton"
-          onClick={() => this.props.onButtonClick()}
-
+          onClick={() => {
+            console.log(this.state.email);
+          }}
         >
-        Here’s a free one on us.
-        </Button>
+        Notify me
+          </Button>
       </div>
     );
   }

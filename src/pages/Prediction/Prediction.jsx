@@ -10,7 +10,7 @@ import GA from '@/services/googleAnalytics';
 import LuckyFree from '@/components/handshakes/betting/LuckyPool/LuckyFree/LuckyFree';
 import FreeBetLose from '@/components/handshakes/betting/LuckyPool/FreeBetLose';
 import FreeBetWin from '@/components/handshakes/betting/LuckyPool/FreeBetWin';
-
+import EmailPopup from '@/components/handshakes/betting/Feed/EmailPopup';
 import OuttaMoney from '@/assets/images/modal/outtamoney.png';
 import Modal from '@/components/core/controls/Modal';
 import * as gtag from '@/services/ga-utils';
@@ -87,7 +87,8 @@ class Prediction extends React.Component {
     setTimeout(() => {
       //this.modalLuckyPoolRef.open();
       //this.modalFreeBetLoseRef.open();
-      this.modalFreeBetWinRef.open();
+      //this.modalFreeBetWinRef.open();
+      this.modalEmailPopupRef.open();
     }, 2 * 1000);
   }
 
@@ -220,6 +221,14 @@ class Prediction extends React.Component {
       />
     </ModalDialog>
   )
+  renderEmailPopup = () => (
+    <ModalDialog className="modal" onRef={(modal) => { this.modalEmailPopupRef = modal; return null; }}>
+      <EmailPopup onButtonClick={() => {
+          this.modalEmailPopupRef.close();
+      }}
+      />
+    </ModalDialog>
+  )
 
   renderOuttaMoney = () => {
     return (
@@ -297,6 +306,7 @@ class Prediction extends React.Component {
         {this.renderLuckyLanding()}
         {this.renderFreeBetLose()}
         {this.renderFreeBetWin()}
+        {this.renderEmailPopup()}
         {this.renderOuttaMoney()}
         {this.renderCreditCard()}
         {props.countReport > 0 && this.renderReportPopup()}
