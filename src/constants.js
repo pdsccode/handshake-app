@@ -242,6 +242,7 @@ export const API_URL = {
     SHAKES: 'shakes',
     REVIEWS: 'reviews',
     GET_DASHBOARD_INFO: 'exchange/user/transaction-counts',
+    DEPOSIT_COIN_ATM: 'exchange/offer-stores/deposit',
   },
   SEED: {
     BASE: 'seed',

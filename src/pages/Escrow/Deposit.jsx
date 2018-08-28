@@ -1,9 +1,9 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import { URL } from '@/constants';
+import { API_URL, CRYPTO_CURRENCY, EXCHANGE_ACTION, FIAT_CURRENCY, MIN_AMOUNT, URL } from '@/constants';
 import createForm from '@/components/core/form/createForm';
-import { Field } from 'redux-form';
+import { change, Field } from 'redux-form';
 import './Deposit.scss';
 import { fieldInput } from '@/components/core/form/customField';
 
@@ -11,9 +11,14 @@ import iconBitcoin from '@/assets/images/icon/coin/btc.svg';
 import iconEthereum from '@/assets/images/icon/coin/eth.svg';
 import iconBitcoinCash from '@/assets/images/icon/coin/bch.svg';
 import iconLock from '@/assets/images/icon/icons8-lock_filled.svg';
-import { CRYPTO_CURRENCY, EXCHANGE_ACTION, FIAT_CURRENCY, MIN_AMOUNT } from '../../constants';
 import { formatMoneyByLocale } from '@/services/offer-util';
 import { isNormalInteger, minValue, number, required } from '@/components/core/form/validation';
+import { bindActionCreators } from 'redux';
+import { depositCoinATM } from '@/reducers/exchange/action';
+import { BigNumber } from 'bignumber.js';
+import { getErrorMessageFromCode } from '@/components/handshakes/exchange/utils';
+import { hideLoading, showAlert, showLoading } from '@/reducers/app/action';
+import taggingConfig from '@/services/tagging-config';
 
 const nameFormEscrowDeposit = 'escrowDeposit';
 const FormEscrowDeposit = createForm({
@@ -37,10 +42,6 @@ const listCurrency = Object.values(CRYPTO_CURRENCY_CREDIT_CARD).map((item) => {
 });
 
 class EscrowDeposit extends React.Component {
-  handleOnSubmit = (values) => {
-    console.log(values);
-  }
-
   handleValidate = (values) => {
     const { percentage } = values;
     const errors = {};
@@ -66,11 +67,102 @@ class EscrowDeposit extends React.Component {
       }
     }
 
-    // errors.percentage = isNormalInteger(percentage || 0);
+    errors.percentage = isNormalInteger(percentage || '0');
 
     return errors;
   }
 
+  handleOnSubmit = (values) => {
+    for (const item of Object.values(CRYPTO_CURRENCY_CREDIT_CARD)) {
+      const itemValue = values[item];
+
+      if (itemValue && itemValue.trim().length > 0) {
+        this.depositCoin(item, itemValue);
+      }
+    }
+  }
+
+  depositCoin = (currency, value) => {
+    const params = {
+      currency,
+      value,
+    };
+
+    this.props.depositCoinATM({
+      PATH_URL: API_URL.EXCHANGE.CREATE_CC_ORDER,
+      data: params,
+      METHOD: 'POST',
+      successFn: this.handleDepositCoinSuccess,
+      errorFn: this.handleDepositCoinFailed,
+    });
+  }
+
+  handleDepositCoinSuccess = (data) => {
+    this.hideLoading();
+
+    console.log('handleDepositCoinSuccess', data);
+
+    const {
+      data: {
+        amount, currency, fiat_amount, fiat_currency,
+      },
+    } = data;
+
+    const value = roundNumberByLocale(new BigNumber(fiat_amount).multipliedBy(100).toNumber(), fiat_currency).toNumber();
+
+    gtag.event({
+      category: taggingConfig.depositATM.category,
+      action: taggingConfig.depositATM.action.depositSuccess,
+      label: currency,
+      value,
+    });
+
+    this.props.showAlert({
+      message: <div className="text-center"><FormattedMessage id="escrow.btn.depositSuccessMessage" /></div>,
+      timeOut: 2000,
+      type: 'success',
+      callBack: this.handleBuySuccess,
+    });
+  };
+
+  handleBuySuccess = () => {
+    const { callbackSuccess } = this.props;
+
+    if (callbackSuccess) {
+      callbackSuccess();
+    } else {
+      this.props.history.push(URL.HANDSHAKE_ME);
+    }
+  };
+
+  handleDepositCoinFailed = (e) => {
+    this.hideLoading();
+
+    this.props.showAlert({
+      message: <div className="text-center">{getErrorMessageFromCode(e)}</div>,
+      timeOut: 3000,
+      type: 'danger',
+      callBack: this.handleBuyFailed,
+    });
+  };
+
+  showLoading = () => {
+    this.props.showLoading({ message: '' });
+  };
+
+  hideLoading = () => {
+    this.props.hideLoading();
+  };
+
+  handleBuyFailed = () => {
+    // this.modalRef.close();
+
+    const { callbackFailed } = this.props;
+
+    if (callbackFailed) {
+      callbackFailed();
+    }
+  };
 
   render() {
     const { messages } = this.props.intl;
@@ -172,7 +264,11 @@ const mapState = state => ({
 });
 
 const mapDispatch = dispatch => ({
-  // rfChange: bindActionCreators(change, dispatch),
+  rfChange: bindActionCreators(change, dispatch),
+  showAlert: bindActionCreators(showAlert, dispatch),
+  showLoading: bindActionCreators(showLoading, dispatch),
+  hideLoading: bindActionCreators(hideLoading, dispatch),
+  depositCoinATM: bindActionCreators(depositCoinATM, dispatch),
 });
 
 export default injectIntl(connect(mapState, mapDispatch)(EscrowDeposit));
