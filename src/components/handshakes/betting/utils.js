@@ -195,8 +195,8 @@ export const findUserBet = (handshake) => {
         disputeTime,
         totalAmount,
         totalDisputeAmount,
-        contractAddress,
-        contractName,
+        //contractAddress,
+        //contractName,
       });
     }
   }
