@@ -23,6 +23,7 @@ import {
 } from '@/components/handshakes/betting/utils.js';
 import { calculateBetDefault, calculateWinValues } from '@/components/handshakes/betting/calculation';
 import EstimateGas from '@/modules/EstimateGas';
+import { getGasPrice } from '@/utils/gasPrice';
 
 
 import { getKeyByValue } from '@/utils/object';
@@ -83,7 +84,6 @@ class BettingCreate extends React.Component {
     this.updateDefaultValues(bettingShake);
   }
 
-
   async onSubmit(e) {
     e.preventDefault();
     const {
@@ -104,6 +104,7 @@ class BettingCreate extends React.Component {
       side,
     } = bettingShake;
 
+    await getGasPrice();
     if (side === SIDE.SUPPORT) {
       GA.clickSimplePlaceSupportOrder(matchOutcome);
     } else {
