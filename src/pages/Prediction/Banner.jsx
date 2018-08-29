@@ -11,7 +11,7 @@ class Banner extends React.Component {
   render() {
     const text = `Let's get this crystal ball`;
     return (
-      <div>
+      <div className="ShareToWinContainer">
         <Image className="ShareToWin" src={BannerSVG} alt="banner" />
         <div className="ShareToWinTitle">
           <div >

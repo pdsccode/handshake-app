@@ -1,10 +1,13 @@
 @import './src/styles/style';
 
+.ShareToWinContainer {
+  position: relative;
+}
 .ShareToWin {
   //background-image: url('../../assets/images/share/share-to-win.png');
   //display: flex;
   //height: rem-calc(110px);
-  position: relative;
+  //position: relative;
 }
 
 .ShareToWinTitle {
@@ -15,7 +18,7 @@
   font-weight: bold;
   width: 57%;
   position: absolute;
-  top: 2%;
+  top: 9%;
   right: 37%;
   bottom: 3%;
   span {
