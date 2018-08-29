@@ -30,6 +30,9 @@ import iconSafeGuard from '@/assets/images/icon/safe-guard.svg';
 import Asset from './Asset';
 
 class ManageAssets extends React.Component {
+  depositCoinATM = () => {
+    this.props.history.push(URL.ESCROW_DEPOSIT);
+  }
 
   render () {
     const assets = [
@@ -66,7 +69,7 @@ class ManageAssets extends React.Component {
           </div>
           <div>
             <div className="d-inline-block w-50 pr-1">
-              <button className="btn primary-button btn-block">
+              <button className="btn primary-button btn-block" onClick={this.depositCoinATM}>
                 <FormattedMessage id="dashboard.btn.depositEscrow" />
               </button>
             </div>

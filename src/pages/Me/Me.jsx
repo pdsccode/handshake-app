@@ -39,17 +39,17 @@ const tabs = [
   {
     id: 'overview',
     text: <FormattedMessage id="dashboard.label.overview" />,
-    component: <Overview />
+    component: Overview,
   },
   {
     id: 'transaction',
     text: <FormattedMessage id="dashboard.label.transaction" />,
-    component: <Transaction />
+    component: Transaction,
   },
   {
     id: 'manageAssets',
     text: <FormattedMessage id="dashboard.label.manageAssets" />,
-    component: <ManageAssets />
+    component: ManageAssets,
   },
 ]
 
@@ -63,7 +63,7 @@ class Me extends React.Component {
 
     const { activeTab } = this.state;
 
-    const { component } = tabs.find(i => i.id === activeTab);
+    const { component: Component } = tabs.find(i => i.id === activeTab);
 
     return (
       <div className="dashboard">
@@ -92,7 +92,7 @@ class Me extends React.Component {
           </div>
         </div>
         <div className="content">
-          {component}
+          {<Component history={this.props.history}></Component>}
         </div>
       </div>
     )
