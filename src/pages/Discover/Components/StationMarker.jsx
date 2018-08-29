@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { API_URL, CRYPTO_CURRENCY, EXCHANGE_ACTION, EXCHANGE_ACTION_NAME, HANDSHAKE_ID, URL } from '@/constants';
-import { Marker } from 'react-google-maps';
+import { Marker, InfoWindow } from 'react-google-maps';
 import InfoBox from 'react-google-maps/lib/components/addons/InfoBox';
 
 import iconCustomMarker from '@/assets/images/icon/custom-marker.svg';
@@ -20,7 +20,6 @@ import { shakeOfferItem, trackingLocation } from '@/reducers/exchange/action';
 import { getErrorMessageFromCode } from '@/components/handshakes/exchange/utils';
 import PropTypes from 'prop-types';
 import Offer from '@/models/Offer';
-import history from '@/services/history';
 import AllStationDetails from './AllStationDetails';
 import { Ethereum } from '@/services/Wallets/Ethereum.js';
 import { Bitcoin } from '@/services/Wallets/Bitcoin';
@@ -196,7 +195,7 @@ class StationMarker extends React.Component {
       timeOut: 2000,
       type: 'success',
       callBack: () => {
-        history.push(`${URL.HANDSHAKE_ME}?id=${HANDSHAKE_ID.EXCHANGE}`);
+        this.props.history.push(`${URL.HANDSHAKE_ME}?id=${HANDSHAKE_ID.EXCHANGE}`);
       },
     });
   }
@@ -294,6 +293,7 @@ class StationMarker extends React.Component {
             },
             closeBoxURL: '',
             enableEventPropagation: true,
+            disableAutoPan: true,
           }}
         >
           <div className="stationInfo">

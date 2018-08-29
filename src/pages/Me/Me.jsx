@@ -26,7 +26,6 @@ import FeedExchange from '@/components/handshakes/exchange/Feed/FeedMe';
 import FeedSeed from '@/components/handshakes/seed/Feed';
 import ModalDialog from '@/components/core/controls/ModalDialog';
 import Image from '@/components/core/presentation/Image';
-
 import ToggleSwitch from '@/components/core/presentation/ToggleSwitch';
 // style
 import AvatarSVG from '@/assets/images/icon/avatar.svg';
@@ -55,7 +54,7 @@ import taggingConfig from '@/services/tagging-config';
 const TAG = 'Me';
 const maps = {
   [HANDSHAKE_ID.PROMISE]: FeedPromise,
-  [HANDSHAKE_ID.BETTING]: FeedBetting,
+  [HANDSHAKE_ID.BETTING]: FeedBetting, // @TODO: uncomment this line
   [HANDSHAKE_ID.EXCHANGE]: FeedExchange,
   [HANDSHAKE_ID.EXCHANGE_LOCAL]: FeedExchange,
   [HANDSHAKE_ID.SEED]: FeedSeed,
@@ -190,7 +189,7 @@ class Me extends React.Component {
     }
 
     if (nextProps.me.list.length === 0 && nextProps.me.list.updatedAt !== prevState.me.list.updatedAt
-      && prevState.handshakeIdActive === HANDSHAKE_ID.BETTING && prevState.firstTime) {
+      && prevState.handshakeIdActive !== HANDSHAKE_ID.EXCHANGE && prevState.firstTime) {
       rfChange(nameFormFilterFeeds, 'feedType', HANDSHAKE_ID.EXCHANGE);
       rfChange(nameFormFilterFeeds, 'cash-show-type', CASH_TAB.TRANSACTION);
       Me.loadMyHandshakeListStatic(nextProps, HANDSHAKE_ID.EXCHANGE);
@@ -403,6 +402,10 @@ class Me extends React.Component {
     this.modalFillRef.close();
   }
 
+  closeFillCoin = () => {
+    this.setState({ modalFillContent: '' });
+  }
+
   render() {
     const { list, listDashboard } = this.props.me;
     let listFeed = [];
@@ -502,6 +505,7 @@ class Me extends React.Component {
                 )
               }
 
+
             </FormFilterFeeds>
           </div>
 
@@ -571,7 +575,7 @@ class Me extends React.Component {
         <Modal title={messages.wallet.action.restore.header} onRef={modal => this.modalRestoreRef = modal}>
           <RestoreWallet />
         </Modal>
-        <Modal title={messages.create.cash.credit.title} onRef={modal => this.modalFillRef = modal}>
+        <Modal title={messages.create.cash.credit.title} onRef={modal => this.modalFillRef = modal} onClose={this.closeFillCoin}>
           {modalFillContent}
         </Modal>
       </React.Fragment>

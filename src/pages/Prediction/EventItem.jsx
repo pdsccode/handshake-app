@@ -11,7 +11,7 @@ import { formatAmount } from '@/utils/number';
 import OutcomeList from './OutcomeList';
 import GA from '@/services/googleAnalytics';
 
-function renderEventName(event) {
+function renderEventName({ event }) {
   return (
     <div className="EventName">
       {event.name}
@@ -19,16 +19,25 @@ function renderEventName(event) {
   );
 }
 
-function renderEventNumberOfPlayers(event) {
-  const s = event.total_users > 1 ? 'ninjas are' : 'ninja is';
+function renderEventNumberOfPlayers({ event }) {
+  let msg = '';
+  switch (event.total_users) {
+    case 0:
+      msg = 'Be the first ninja to play';
+      break;
+    case 1:
+      msg = `${event.total_users} ninja is playing`;
+      break;
+    default:
+      msg = `${event.total_users} ninjas are playing`;
+      break;
+  }
   return (
-    <div className="EventNumberOfPlayer">
-      {`${event.total_users} ${s} playing`}
-    </div>
+    <div className="EventNumberOfPlayer">{msg}</div>
   );
 }
 
-function renderEvenTimeLeft(event, onCountdownComplete) {
+function renderEvenTimeLeft({ event, onCountdownComplete }) {
   return (
     <div className="EventTimeLeft">
       <span className="EventTimeLeftText">Time left</span>
@@ -39,7 +48,7 @@ function renderEvenTimeLeft(event, onCountdownComplete) {
   );
 }
 
-function renderEventTotalBets(event) {
+function renderEventTotalBets({ event }) {
   const totalBets = !event.total_bets ? 0 : formatAmount(event.total_bets);
   return (
     <div className="EventTotalBet">
@@ -49,10 +58,12 @@ function renderEventTotalBets(event) {
   );
 }
 
-function renderEventMessages(event) {
+function renderEventMessages({ event }) {
   const commentLink = `${URL.COMMENTS_BY_SHAKE_INDEX}?objectId=event_${event.id}`;
   return (
-    <Link className="EventMessage" to={commentLink}
+    <Link
+      className="EventMessage"
+      to={commentLink}
       onClick={() => {
         GA.clickComment(event.name);
       }}
@@ -63,14 +74,14 @@ function renderEventMessages(event) {
   );
 }
 
-function renderOutcomeList(event, onClickOutcome) {
+function renderOutcomeList({ event, onClickOutcome }) {
   return (
     <OutcomeList event={event} onClick={onClickOutcome} />
   );
 }
 
-function EventItem({ event, onClickOutcome, onCountdownComplete }) {
-  const { id } = event;
+function renderShareSocial(props) {
+  const { id } = props.event;
   const socialList = [
     {
       img: 'https://d2q7nqismduvva.cloudfront.net/static/images/icon-svg/common/share/facebook.svg',
@@ -85,18 +96,22 @@ function EventItem({ event, onClickOutcome, onCountdownComplete }) {
     },
   ];
   const shareURL = `${window.location.origin}${URL.HANDSHAKE_PEX}?match=${id}`;
+  return (<ShareSocial title="Ninja" shareUrl={shareURL} socialList={socialList} />);
+}
+
+function EventItem(props) {
   return (
     <div className="EventItem">
-      {renderEventName(event)}
-      {renderEventNumberOfPlayers(event)}
-      {renderOutcomeList(event, onClickOutcome)}
+      {renderEventName(props)}
+      {renderEventNumberOfPlayers(props)}
+      {renderOutcomeList(props)}
       <div className="EventDetails">
         <div className="EvenFirstGroup">
-          {renderEvenTimeLeft(event, onCountdownComplete)}
-          {renderEventTotalBets(event)}
+          {renderEvenTimeLeft(props)}
+          {renderEventTotalBets(props)}
         </div>
         {/* {renderEventMessages(event)} */}
-        <ShareSocial title="Ninja" shareUrl={shareURL} socialList={socialList} />
+        {renderShareSocial(props)}
       </div>
     </div>
   );

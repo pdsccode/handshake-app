@@ -49,6 +49,15 @@ class AdvancedOrderMode extends React.Component {
     } catch (err) {}
   }
 
+  renderMarketFee = (props) => {
+    const { matchMarketFee } = props.bettingShake;
+    return (
+      <div className="matchMarketFee">
+        <span>Market Fee</span>
+        <span className="feeValue">{matchMarketFee || 0}%</span>
+      </div>
+    );
+  }
 
   render() {
     const { bettingShake, orderBook, theme } = this.props;
@@ -67,6 +76,7 @@ class AdvancedOrderMode extends React.Component {
         <OrderBook {...orderBook} />
         <Button block isLoading={disable} disabled={disable} className={buttonClass} onClick={this.handleClick}>{buttonText}</Button>
         <EstimateGas />
+        {this.renderMarketFee(this.props)}
       </React.Fragment>
     );
   }

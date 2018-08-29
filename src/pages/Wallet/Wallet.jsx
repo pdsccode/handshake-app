@@ -402,21 +402,22 @@ class Wallet extends React.Component {
       }
     })
 
+    const allowedWallets = ['BTC', 'ETH', 'BCH'];
     // now hide buy coin:
-    if (wallet.network === MasterWallet.ListCoin[wallet.className].Network.Mainnet && (wallet.name == "BTC" || wallet.name == "ETH")){
+    // if (true && allowedWallets.includes(wallet.name)){
+    if (wallet.network === MasterWallet.ListCoin[wallet.className].Network.Mainnet && allowedWallets.includes(wallet.name)){
       obj.push({
         title: messages.create.cash.credit.title,
         handler: () => {
-
           this.setState({
             walletSelected: wallet,
             modalFillContent:
               (
                 <FeedCreditCard
                   buttonTitle={messages.create.cash.credit.title}
-                  currencyForced={this.state.walletSelected ? this.state.walletSelected.name : ''}
+                  currencyForced={wallet ? wallet.name : ''}
                   callbackSuccess={this.afterWalletFill}
-                  addressForced={this.state.walletSelected ? this.state.walletSelected.address : ''}
+                  addressForced={wallet ? wallet.address : ''}
                 />
               ),
           }, () => {
@@ -639,7 +640,7 @@ class Wallet extends React.Component {
     let pagenoTran = 1, pagenoIT = 1;
           this.setState({ walletSelected: wallet, transactions: [], isHistory: true, pagenoTran: pagenoTran });          
           this.modalHistoryRef.open();
-          this.showLoading();
+          // this.showLoading();
 
           wallet.balance = await wallet.getBalance();
           wallet.transaction_count = await wallet.getTransactionCount();
@@ -881,6 +882,10 @@ class Wallet extends React.Component {
     this.setState({ activeTransfer: false });
   }
 
+  closeFillCoin = () => {
+    this.setState({ modalFillContent: '' });
+  }
+
   closeCreate = () => {
     this.setState({input12PhraseValue: "", walletKeyDefaultToCreate: 1});
   }
@@ -1019,7 +1024,7 @@ class Wallet extends React.Component {
             />
           </Modal>
 
-          <Modal title={messages.create.cash.credit.title} onRef={modal => this.modalFillRef = modal}>
+          <Modal title={messages.create.cash.credit.title} onRef={modal => this.modalFillRef = modal} onClose={this.closeFillCoin}>
             {modalFillContent}
           </Modal>
 
@@ -1027,8 +1032,8 @@ class Wallet extends React.Component {
             <WalletProtect onCopy={this.onCopyProtected} step={this.state.stepProtected} active={this.state.activeProtected} wallet={this.state.walletSelected} callbackSuccess={() => { this.successWalletProtect(this.state.walletSelected); }} />
           </Modal>
 
-          <Modal title={messages.wallet.action.history.header} onRef={modal => this.modalHistoryRef = modal} onClose={this.closeHistory}>
-            <WalletHistory wallet={this.state.walletSelected} transactions={this.state.transactions} internalTransactions={this.state.internalTransactions} />
+          <Modal iconGray={false} textColor={"#fff"} backgroundColor={"#546FF7"} title={this.state.walletSelected ? this.state.walletSelected.title : messages.wallet.action.history.header} onRef={modal => this.modalHistoryRef = modal} onClose={this.closeHistory}>
+            <WalletHistory onWarningClick={() => this.onWarningClick(this.state.walletSelected)}  wallet={this.state.walletSelected} transactions={this.state.transactions} internalTransactions={this.state.internalTransactions} />
           </Modal>
 
 

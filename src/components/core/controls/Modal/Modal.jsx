@@ -5,6 +5,7 @@ import Image from '@/components/core/presentation/Image';
 // style
 import './Modal.scss';
 import BackChevronSVG from '@/assets/images/icon/back-chevron.svg';
+import BackChevronSVGWhite from '@/assets/images/icon/back-chevron-white.svg';
 
 class Modal extends React.Component {
   constructor(props) {
@@ -32,12 +33,21 @@ class Modal extends React.Component {
   }
 
   render() {
+    const iconGray = this.props.iconGray ? BackChevronSVG : BackChevronSVGWhite;
+    let styleHeader = {};
+    if (this.props.textColor){
+      styleHeader.color = this.props.textColor;
+    }
+    if (this.props.backgroundColor){
+      styleHeader.background = this.props.backgroundColor;
+    }
+    
     const { title, children, hideBackButton } = this.props;
     return (
       <div className="modal" ref={modal => this.modalRef = modal}>
-        <div className="modal-custom-header">
+        <div className="modal-custom-header" style={styleHeader}>
           {
-            !hideBackButton && <Image src={BackChevronSVG} onClick={this.close} alt="back"/>
+            !hideBackButton && <Image src={iconGray} onClick={this.close} alt="back"/>
           }
           {
             title && (<p className="modal-custom-title">{title}</p>)
@@ -57,6 +67,9 @@ Modal.propTypes = {
   onRef: PropTypes.func,
   onClose: PropTypes.func,
   hideBackButton: PropTypes.bool,
+  iconGray: PropTypes.bool,//default icon gray (gray, white)
+  backgroundColor: PropTypes.string,
+  textColor: PropTypes.string,
 };
 
 export default Modal;

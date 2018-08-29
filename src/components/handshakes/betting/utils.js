@@ -20,9 +20,7 @@ export const parseBigNumber = (value) => {
 }
 export const getMessageWithCode = (code) => {
   const keys = Object.keys(MESSAGE_SERVER).filter(k => k == code); // ["A", "B"]
-  console.log('Keys:', keys);
   const value = keys.map(k => MESSAGE_SERVER[k]); // [0, 1]
-  console.log('Message:', value);
   return value;
 }
 export const getChainIdDefaultWallet = () => {
@@ -32,9 +30,13 @@ export const getChainIdDefaultWallet = () => {
 };
 
 export const getAddress = () => {
+  /*
   const chainId = getChainIdDefaultWallet();
   const bettinghandshake = new BettingHandshake(chainId);
   return bettinghandshake.address;
+  */
+  const wallet = MasterWallet.getWalletDefault('ETH');
+  return wallet.address;
 };
 
 export const getId = (idOffchain) => {
@@ -57,15 +59,23 @@ export const getBalance = async () => {
   return balance;
 };
 
-export const getEstimateGas = async () => {
-  const chainId = getChainIdDefaultWallet();
-  const bettinghandshake = new BettingHandshake(chainId);
-  const result = await bettinghandshake.getEstimateGas();
-  return result;
-};
 export const getGasPrice = () => {
   const chainId = getChainIdDefaultWallet();
   return chainId === 4 ? window.gasPrice || 20 : window.gasPrice || 20;
+};
+
+export const getEstimateGas = async () => {
+
+  const chainId = getChainIdDefaultWallet();
+  const neuron =
+  chainId === 4 ? MasterWallet.neutronTestNet : MasterWallet.neutronMainNet;
+  const gasPrice = getGasPrice();
+  const estimateGas = await neuron.caculateLimitGasWithEthUnit(gasPrice);
+  console.log(TAG, 'Estimate Gas:', estimateGas);
+  return estimateGas;
+  // const bettinghandshake = new BettingHandshake(chainId);
+  // const result = await bettinghandshake.getEstimateGas();
+  // return result;
 };
 
 export const foundShakeList = (item) => {
@@ -156,7 +166,8 @@ export const parseJsonString = (extraData) => {
 export const findUserBet = (handshake) => {
   const {
     result, shakeUserIds, closingTime,
-    reportTime, disputeTime, initUserId, side, hid,
+    reportTime, disputeTime, initUserId, side, hid, type,
+    totalAmount, totalDisputeAmount, contractName, contractAddress,
   } = handshake;
 
   let findItem = handshake;
@@ -182,6 +193,10 @@ export const findUserBet = (handshake) => {
         closingTime,
         reportTime,
         disputeTime,
+        totalAmount,
+        totalDisputeAmount,
+        contractAddress,
+        contractName,
       });
     }
   }
@@ -190,6 +205,8 @@ export const findUserBet = (handshake) => {
   const newItem = Object.assign(cloneItem, {
     role: isUserShake ? ROLE.SHAKER : ROLE.INITER,
     matched,
+    type,
+
   });
 
   console.log(TAG, 'findUserBet:', newItem);

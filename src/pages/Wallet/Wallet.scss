@@ -98,9 +98,9 @@ header{
   min-height: 75px;
   position: relative;  
   
-  background-image: url('../../assets/images/wallet/images/bg-home-wallet.svg');
+  background-image: url('../../assets/images/wallet/images/bg-home-wallet2.svg');
   background-repeat: no-repeat;
-  background-size: auto;
+  background-size: contain;
   background-color: #f4f4fb;
 
   .header-icon-2{
@@ -161,8 +161,7 @@ header{
 }
 
 .headerText{
-  font-size: 14px;
-  font-family: Helvetica;
+  font-size: 14px;  
   color: #090909;
   letter-spacing: 0;
   text-transform: uppercase;
@@ -509,7 +508,9 @@ header{
 .wallet-create-footer{
   padding-bottom: 130px;
 }
-
+.modal-custom-body  {
+  padding: 0;
+}
 .historywallet-wrapper{
   padding-bottom: 40px;
   font-weight: 300;
@@ -538,17 +539,104 @@ header{
     }
   }
 
+
   .history-balance{
     padding-top: 10px;
     padding-bottom: 10px;
     font-size: 14px;
+    text-align: center;
+  }
+  .loader {
+    border-top: 3px solid blue;
+    border-right: 3px solid green;
+    border-bottom: 3px solid red;
+    border-left: 3px solid pink;
+    border-radius: 50%;
+    width: 12px;
+    height: 12px;
+    animation: spin 2s linear infinite;
+    display: inline-block;
+  }
 
+  @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+  }
+  .wallet-detail{    
+    text-align: center;   
+    color: #fff;
+    background-color: #546FF7; 
+    background-image: url('../../assets/images/wallet/images/bg-home-wallet2.svg');
+    background-repeat: no-repeat;
+    background-size: cover;    
+    .logo-detail{
+      width: 45px;      
+      border: #ececec 1px solid;
+      border-radius: 45px; 
+      margin-top: 5px;     
+    }
+    .balance{
+      margin-top: 10px;
+    }
+    .box-warning{
+      background-color: #F5A623;
+      color: #fff;
+      font-size: 16px;
+      padding: 15px;
+      span{
+        font-size: 17px;
+        margin-right: 5px;
+      }
+    }
+  }
+  .header-history-tx{
+    color: #315E9E;
+    font-size: 14px;
+    text-transform: uppercase;
+    text-align: center;    
+    opacity: 0.54;
+    // border-bottom: solid 1px #ECECEC;
+    padding: 10px;
+    margin-top: 10px;
+    a{
+      color: #007bff;
+      text-decoration: none;
+      background-color: transparent;
+      font-size: 14px;
+      text-transform: none;
+    }
+  }
+  .history-content{
+    padding: 15px 0;
+  }
+  .box-button{
+    overflow: hidden;
+    margin-top: 15px;
+    margin-bottom: 20px;
+    .bt1{
+      width: 50%;      
+      float: left;
+    }
+    .bt2{
+      width: 50%;      
+      float: right;
+    }
+    button{
+      border-radius: 4px;
+      width: 140px;
+      background: transparent;
+      border: #c1c1c1 1px solid;
+      color: #fff;
+      font-size: 16px;      
+      line-height: 35px;
+      outline: none;
+    }
   }
 
   .row{
     flex-wrap:nowrap !important;
     display: block;
-    border: solid 1px #ECECEC;
+    border-bottom: solid 1px #ECECEC;
     margin: 10px 0px;
     padding: 20px 0px;
     border-radius: 6px;
@@ -578,7 +666,7 @@ header{
     padding-bottom: 7px;
   }
 
-  .address{
+  .history-address{
     color:#8A8A8F;
     font-size: 14px;
     float: none;

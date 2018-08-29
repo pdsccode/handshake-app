@@ -1,7 +1,10 @@
 export const CRYPTOSIGN_MINIMUM_MONEY = 0.00002;
+export const PERCENT_DISPUTE = 0.05;
 export const BET_BLOCKCHAIN_STATUS = {
+  STATUS_DISPUTE_PENDING: -14,
   STATUS_REFUND_PENDING: -13,
   STATUS_MAKER_SHOULD_UNINIT: -12,
+  STATUS_SHAKE_FAILED: -11,
   STATUS_INIT_FAILED: -10,
   STATUS_COLLECT_FAILED: -9,
   STATUS_COLLECT_PENDING: -8,
@@ -40,7 +43,9 @@ export const BET_TYPE = {
   SHAKE: 'shake',
 };
 export const BETTING_RESULT = {
+  DISPUTED: -3,
   INITED: -1,
+  DISPUTE_PENDING: -4,
   DRAW: 3,
   SUPPORT_WIN: 1,
   AGAINST_WIN: 2,
@@ -51,6 +56,8 @@ export const CONTRACT_METHOD = {
   SHAKE: 'shake',
   CANCEL: 'uninit',
   REFUND: 'refund',
+  DISPUTE: 'dispute',
   COLLECT: 'collect',
+  REPORT: 'report',
   CREATE_MARKET: 'createMarket',
 };

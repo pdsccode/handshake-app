@@ -277,6 +277,23 @@ export default {
   'ex.sort.price.sell.eth': 'Sell ETH',
   product_info: 'Ninja is open-source, decentralized software that never holds your funds. By freely choosing to use Ninja, the user accepts sole responsibility for their behavior and agrees to abide by the legalities of their governing jurisdiction. Ninja cannot be liable for legal, monetary or psychological damages should you do something stupid. Never invest more than you are willing to lose. Play safe!',
 
+  'cc.label.1': 'Buy a specific amount',
+  'cc.label.2': 'We sell coins at a reasonable price',
+  'cc.label.3': 'Or choose one of our packages:',
+  'cc.btn.buyNow': 'Buy now',
+  'cc.btn.payNow': 'Pay now',
+  'cc.label.basic': 'Basic',
+  'cc.label.pro': 'Pro',
+  'cc.label.plus': 'Plus',
+  'cc.label.cardNo': 'Card number',
+  'cc.label.cvv': 'CVV',
+  'cc.label.expiration': 'Expiration date',
+  'cc.label.saveCard': 'Save my card for future top-up',
+  'cc.label.saving': 'You save {percentage}%',
+  'cc.label.email': 'Email',
+  'cc.label.email.hint': 'Just for receiving receipt',
+
+
   'askLocationPermission.label.1': 'We would like to access your location to find nearest ATMs around you!',
   'askLocationPermission.label.2': `<span>Please click <strong>"Allow"</strong> to start trading now!</span>`,
   'askLocationPermission.btn.dontAllow': `Don't Allow`,
@@ -1095,7 +1112,8 @@ export default {
           step1_label: 'I understand that if I lose my passphrase, I lose access to my account.',
           step2_msg1: 'Record these words carefully. Don\'t email it or screenshot it.',
           step3_msg1: 'Tap to put these words in the correct order.',
-          need_secure: 'Need secure'
+          need_secure: 'Need secure',
+          need_backup: 'Need back up'
         },
         button: {
           continue: 'Continue',

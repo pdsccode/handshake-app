@@ -159,10 +159,10 @@ class BetingShakeFree extends React.Component {
   }
 
   updateDefautValues() {
-    const { marketSupportOdds, marketAgainstOdds, amountSupport, amountAgainst, amount } = this.props;
+    const { marketSupportOdds, marketAgainstOdds, amount } = this.props;
     console.log(TAG, 'updateDefautValues', 'Props:', this.props);
     const side = this.toggleRef.value;
-    const defaultValue = calculateBetDefault(side, marketSupportOdds, marketAgainstOdds, amountSupport, amountAgainst);
+    const defaultValue = calculateBetDefault(side, marketSupportOdds, marketAgainstOdds, amount, amount);
     console.log(TAG, 'updateDefautValues','defaultValue:', defaultValue);
     this.setState({
       oddValue: defaultValue.marketOdds,

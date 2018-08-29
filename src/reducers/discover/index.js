@@ -10,11 +10,11 @@ const handleDetailPayload = () => Handshake.handshake(handShakeList.data[1]);
 
 const isEmptyBalance = (item) => {
   const actionActive = local.get(APP.EXCHANGE_ACTION);
-  const { buyBalance, sellBalance } = item;
+  const { buyAmount, sellAmount } = item;
   if (actionActive.includes('buy')) {
-    return buyBalance <= 0;
+    return sellAmount <= 0;
   }
-  return sellBalance <= 0;
+  return buyAmount <= 0;
 };
 
 const handleListPayload = (payload) => {
@@ -36,11 +36,16 @@ const handleListPayload = (payload) => {
     return null;
   });
 
+  result.updatedAt = Date.now();
+
   return { list: result, offers };
 };
 
+const initList = [];
+initList.updatedAt = Date.now();
+
 const discoverReducter = (state = {
-  list: [],
+  list: initList,
   detail: {},
   isFetching: false,
 }, action) => {
