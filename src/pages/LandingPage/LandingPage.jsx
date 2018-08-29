@@ -539,7 +539,7 @@ class Handshake extends React.Component {
 
         <section className="second-page">
           <div className="shuriken-background">
-            <img src={shurikenBackground} ref={imag => this.imageRef = imag}/>
+            <img src={shuriken} ref={imag => this.imageRef = imag}/>
           </div>
           <div className="container">
             <div className="row">

@@ -16,15 +16,10 @@ import { APP } from '@/constants';
 import './SettingWallet.scss';
 import Dropdown from '@/components/core/controls/Dropdown';
 
-import bgBox from '@/assets/images/pages/wallet/bg-box-wallet-coin.svg';
-
 const amountValid = value => (value && isNaN(value) ? 'Invalid amount' : undefined);
 
-const nameFormAddToken = 'addToken';
-const SettingForm = createForm({ propsReduxForm: { form: nameFormAddToken, enableReinitialize: true, clearSubmitErrors: true}});
-
-// suggesion:
-import listToken from '@/data/ethToken.json';
+const nameFormSetting = 'FormSetting';
+const SettingForm = createForm({ propsReduxForm: { form: nameFormSetting, enableReinitialize: true, clearSubmitErrors: true}});
 
 class SettingWallet extends React.Component {
   constructor(props) {
@@ -32,7 +27,6 @@ class SettingWallet extends React.Component {
 
     this.state = {
       currencies: [],
-      active: props.active,
       alternateCurrency: '',
       cryptoAddress: -1
     }
@@ -63,27 +57,27 @@ class SettingWallet extends React.Component {
     this.props.hideLoading();
   }
 
-  componentDidUpdate (){
-    const active = this.props.active;
-    if(active) {
-      let setting = local.get(APP.SETTING);
+  componentDidMount(){
+    let setting = local.get(APP.SETTING);
 
-      //alternateCurrency
-      let currencies = this.state.currencies;
-      if(!currencies || currencies.length < 1){
-        this.listCurrencies().then(result => {
-          this.setState({currencies: result});
+    //alternateCurrency
+    let currencies = this.state.currencies;
+    if(!currencies || currencies.length < 1){
+      this.listCurrencies().then(result => {
+        this.setState({currencies: result});
 
-          if(setting && setting.wallet && setting.wallet.alternateCurrency)
-            this.setState({alternateCurrency: setting.wallet.alternateCurrency});
-        });
-      }
+        let alternateCurrency = 'USD';
+        if(setting && setting.wallet && setting.wallet.alternateCurrency)
+          alternateCurrency = setting.wallet.alternateCurrency
 
-      //cryptoAddress
-      if(this.state.cryptoAddress < 0){
-        let cryptoAddress = !setting || !setting.wallet || !setting.wallet.cryptoAddress ? 1 : setting.wallet.cryptoAddress;
-        this.setState({cryptoAddress: cryptoAddress});
-      }
+        this.setState({alternateCurrency: alternateCurrency});
+      });
+    }
+
+    //cryptoAddress
+    if(this.state.cryptoAddress < 0){
+      let cryptoAddress = !setting || !setting.wallet || !setting.wallet.cryptoAddress ? 1 : setting.wallet.cryptoAddress;
+      this.setState({cryptoAddress: cryptoAddress});
     }
   }
 
@@ -111,16 +105,6 @@ class SettingWallet extends React.Component {
     }
     catch (error) {
       return [];
-    }
-  }
-
-  onFinish = () => {
-    const { onFinish } = this.props;
-
-    if (onFinish) {
-      onFinish({"data": this.state.tokenType});
-    } else {
-
     }
   }
 
@@ -199,11 +183,6 @@ class SettingWallet extends React.Component {
     )
   }
 }
-
-SettingWallet.propTypes = {
-  active: PropTypes.bool
-};
-
 
 const mapStateToProps = (state) => ({
 
