@@ -12,7 +12,7 @@ class ContentForPrediction extends React.Component {
       <div className="row mt-5">
         <div className="col">
           <img src={imgPredictionContent} className="w-100" />
-          <div className="mt-5">For more information: <a target="__blank" href="https://medium.com/@cian_36990/7657761ea2bd">https://medium.com/@cian_36990/7657761ea2bd</a></div>
+          <div className="mt-5">For instructions on how to play: <a target="__blank" href="https://medium.com/@cian_36990/7657761ea2bd">https://medium.com/@cian_36990/7657761ea2bd</a></div>
         </div>
       </div>
     );
