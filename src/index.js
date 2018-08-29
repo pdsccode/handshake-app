@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import axios from 'axios';
 import Web3 from 'web3';
 import { BigNumber } from 'bignumber.js';
-
+import { getGasPrice } from '@/utils/gasPrice.js';
 // components
 import Website from '@/components/App/Basic';
 import LogManage from '@/services/logmanage';
@@ -18,6 +18,7 @@ if (process.env.isStaging) {
 
 window.gasPrice = 64;
 
+/*
 function getGasPrice() {
   // axios
   //   .get(`https://api.etherscan.io/api?module=proxy&action=eth_gasPrice&apikey=${
@@ -42,7 +43,7 @@ function getGasPrice() {
       const gasPriceBN = gasBN.div(10);
       window.gasPrice = gasPriceBN.toNumber().toString();
     });
-}
+}*/
 
 getGasPrice();
 setInterval(getGasPrice, 1000 * 60);

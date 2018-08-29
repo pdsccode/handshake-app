@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 
 import { shakeItem, initFreeHandshake } from '@/reducers/handshake/action';
 import { HANDSHAKE_ID, API_URL, APP } from '@/constants';
+import { getGasPrice } from '@/utils/gasPrice';
 
 // components
 import Button from '@/components/core/controls/Button';
@@ -107,6 +108,7 @@ class BetingShakeFree extends React.Component {
     // try {
     //   GA.clickGoButton(matchName, matchOutcome, side);
     // } catch (err) { }
+    await getGasPrice();
 
     if (side === SIDE.SUPPORT) {
       GA.clickFreePlaceSupportOrder(matchOutcome);
