@@ -205,6 +205,12 @@ class EscrowDeposit extends React.Component {
       },
     } = data;
 
+    // const currency = 'ETH';
+    // const amount = '0.01';
+    // const status = 'success';
+    // const id = '123';
+    // const system_address = '0x446b95a1b02af808fa13711cb7d7469617ae9775';
+
     gtag.event({
       category: taggingConfig.depositATM.category,
       action: taggingConfig.depositATM.action.depositSuccess,
