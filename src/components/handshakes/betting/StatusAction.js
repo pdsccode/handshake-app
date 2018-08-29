@@ -142,9 +142,7 @@ const failedAction = (blockchainStatus) => {
       strStatus = BETTING_STATUS_LABEL.INIT_FAILED;
       break;
     case BET_BLOCKCHAIN_STATUS.STATUS_COLLECT_FAILED:
-      label = BETTING_STATUS_LABEL.CANCEL;
       strStatus = BETTING_STATUS_LABEL.COLLECT_FAILED;
-      isAction = true;
       break;
     case BET_BLOCKCHAIN_STATUS.STATUS_DISPUTE_FAILED:
       strStatus = BETTING_STATUS_LABEL.DISPUTE_FAILED;
@@ -153,7 +151,6 @@ const failedAction = (blockchainStatus) => {
       strStatus = BETTING_STATUS_LABEL.SHAKE_FAILED;
     default:
       strStatus = BETTING_STATUS_LABEL.ACTION_FAILED;
-      isAction = false;
       break;
   }
   return { title: label, isAction, status: strStatus };

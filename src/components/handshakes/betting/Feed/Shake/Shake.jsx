@@ -8,6 +8,7 @@ import { shakeItem, initHandshake } from '@/reducers/handshake/action';
 import { HANDSHAKE_ID, API_URL } from '@/constants';
 import GA from '@/services/googleAnalytics';
 import { SIDE } from '@/components/handshakes/betting/constants.js';
+import { getGasPrice } from '@/utils/gasPrice';
 
 // components
 import { showAlert } from '@/reducers/app/action';
@@ -93,6 +94,9 @@ class BetingShake extends React.Component {
     // try {
     //   GA.clickGoButton(matchName, matchOutcome, side);
     // } catch (err) { }
+
+    await getGasPrice();
+
 
     if (side === SIDE.SUPPORT) {
       GA.clickAdvancePlaceSupportOrder(matchOutcome);
@@ -213,7 +217,7 @@ class BetingShake extends React.Component {
 
   renderForm = () => {
     const { isShowOdds, marketOdds, isChangeOdds, disable, estimateGas } = this.state;
-    console.log('Sa Test disable', disable);
+    //console.log('Sa Test disable', disable);
 
     const amountField = {
       id: 'amount',

@@ -47,7 +47,7 @@ export const HANDSHAKE_ID = { // important
   CREATE_EVENT: 9,
 };
 
-export const HANDSHAKE_ID_DEFAULT = 9;
+export const HANDSHAKE_ID_DEFAULT = 2;
 
 export const HANDSHAKE_NAME = {
   // [HANDSHAKE_ID.PROMISE]: { name: 'Promise', priority: 3 },

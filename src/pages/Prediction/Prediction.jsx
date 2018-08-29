@@ -67,7 +67,7 @@ class Prediction extends React.Component {
   }
 
   handleScroll = () => {
-    this.showLuckyPool();
+    //this.showLuckyPool();
   };
 
   openOrderPlace = (selectedOutcome) => {
@@ -88,7 +88,7 @@ class Prediction extends React.Component {
       //this.modalLuckyPoolRef.open();
       //this.modalFreeBetLoseRef.open();
       //this.modalFreeBetWinRef.open();
-      this.modalEmailPopupRef.open();
+      //this.modalEmailPopupRef.open();
     }, 2 * 1000);
   }
 
