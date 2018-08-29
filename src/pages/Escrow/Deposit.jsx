@@ -1,9 +1,9 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import { API_URL, CRYPTO_CURRENCY, EXCHANGE_ACTION, FIAT_CURRENCY, MIN_AMOUNT, URL } from '@/constants';
+import { API_URL, CRYPTO_CURRENCY, EXCHANGE_ACTION, FIAT_CURRENCY, MIN_AMOUNT, NB_BLOCKS, URL } from '@/constants';
 import createForm from '@/components/core/form/createForm';
-import { change, Field } from 'redux-form';
+import { change, Field, formValueSelector } from 'redux-form';
 import './Deposit.scss';
 import { fieldInput } from '@/components/core/form/customField';
 
@@ -14,13 +14,13 @@ import iconLock from '@/assets/images/icon/icons8-lock_filled.svg';
 import { formatMoneyByLocale } from '@/services/offer-util';
 import { isNormalInteger, minValue, number, required } from '@/components/core/form/validation';
 import { bindActionCreators } from 'redux';
-import { depositCoinATM } from '@/reducers/exchange/action';
-import { BigNumber } from 'bignumber.js';
+import { createCreditATM, depositCoinATM, getCreditATM, trackingDepositCoinATM } from '@/reducers/exchange/action';
 import { getErrorMessageFromCode } from '@/components/handshakes/exchange/utils';
 import { hideLoading, showAlert, showLoading } from '@/reducers/app/action';
-import taggingConfig from '@/services/tagging-config';
-import { createCreditATM, getCreditATM } from '../../reducers/exchange/action';
 import { MasterWallet } from '@/services/Wallets/MasterWallet';
+import * as gtag from '@/services/ga-utils';
+import taggingConfig from '@/services/tagging-config';
+import CreditATM from '@/services/neuron/neuron-creditatm';
 
 const nameFormEscrowDeposit = 'escrowDeposit';
 const FormEscrowDeposit = createForm({
@@ -28,6 +28,8 @@ const FormEscrowDeposit = createForm({
     form: nameFormEscrowDeposit,
   },
 });
+
+const selectorFormEscrowDeposit = formValueSelector(nameFormEscrowDeposit);
 
 export const CRYPTO_ICONS = {
   [CRYPTO_CURRENCY.ETH]: iconEthereum,
@@ -120,8 +122,7 @@ class EscrowDeposit extends React.Component {
     const result = !!wallet;
 
     if (!result) {
-      const message = <FormattedMessage id="escrow.btn.wallet.setDefaultWallet" values={{ currency: currency }} />;
-      console.log('checkMainNetDefaultWallet', message);
+      const message = <FormattedMessage id="escrow.label.wallet.setDefaultWallet" values={{ currency }} />;
       this.props.showAlert({
         message: <div className="text-center">{message}</div>,
         timeOut: 3000,
@@ -129,19 +130,19 @@ class EscrowDeposit extends React.Component {
       });
     }
 
-    console.log('checkMainNetDefaultWallet', result);
-
     return result;
   }
 
   handleOnSubmit = (values) => {
     console.log('handleOnSubmit', values);
+    this.showLoading();
 
     for (const item of Object.values(CRYPTO_CURRENCY_CREDIT_CARD)) {
       const itemValue = values[item];
 
       if (itemValue && itemValue.trim().length > 0) {
         if (!this.checkMainNetDefaultWallet(item)) {
+          this.hideLoading();
           return;
         }
       }
@@ -175,31 +176,79 @@ class EscrowDeposit extends React.Component {
     });
   }
 
-  handleDepositCoinSuccess = (data) => {
+  trackingDeposit = (deposit, tx_hash, currency, action, reason) => {
+    const params = {
+      deposit,
+      tx_hash,
+      currency,
+      action,
+      reason,
+    };
+
+    this.props.trackingDepositCoinATM({
+      PATH_URL: API_URL.EXCHANGE.CREDIT_ATM_TRANSFER,
+      data: params,
+      METHOD: 'POST',
+    });
+  }
+
+  handleDepositCoinSuccess = async (data) => {
     this.hideLoading();
 
     console.log('handleDepositCoinSuccess', data);
 
-    // const {
-    //   data: {
-    //     amount, currency, fiat_amount, fiat_currency,
-    //   },
-    // } = data;
-    //
-    // const value = roundNumberByLocale(new BigNumber(fiat_amount).multipliedBy(100).toNumber(), fiat_currency).toNumber();
+    const { percentage } = this.props;
+
+    const {
+      data: {
+        id, amount, currency, system_address, status,
+      },
+    } = data;
 
     gtag.event({
       category: taggingConfig.depositATM.category,
       action: taggingConfig.depositATM.action.depositSuccess,
       label: currency,
-      value,
+      value: amount,
     });
+
+    const wallet = MasterWallet.getWalletDefault(currency);
+    if (currency === CRYPTO_CURRENCY.ETH) {
+      try {
+        const creditATM = new CreditATM(wallet.chainId);
+
+        const result = await creditATM.deposit(amount, percentage, id);
+        console.log('handleDepositCoinSuccess', result);
+
+        this.trackingDeposit(amount, result.hash, currency, status, '');
+      } catch (e) {
+        this.trackingDeposit(amount, '', currency, status, e.toString());
+        console.log('handleDepositCoinSuccess', e.toString());
+      }
+    } else {
+      wallet.transfer(system_address, amount, NB_BLOCKS).then((success) => {
+        console.log('transfer', success);
+
+        const { data } = success;
+
+        if (data) {
+          const { hash: txHash } = data;
+          this.trackingDeposit(amount, txHash, currency, status, '');
+        } else {
+          this.trackingDeposit(amount, '', currency, status, '');
+        }
+      }).catch((e) => {
+        // TO-DO: handle error
+        console.log('transfer', e);
+        this.trackingDeposit(amount, '', currency, status, e.toString());
+      });
+    }
 
     this.props.showAlert({
       message: <div className="text-center"><FormattedMessage id="escrow.btn.depositSuccessMessage" /></div>,
       timeOut: 2000,
       type: 'success',
-      callBack: this.handleBuySuccess,
+      // callBack: this.handleBuySuccess,
     });
   };
 
@@ -341,6 +390,7 @@ const mapState = state => ({
   listOfferPrice: state.exchange.listOfferPrice,
   authProfile: state.auth.profile,
   app: state.app,
+  percentage: selectorFormEscrowDeposit(state, 'percentage'),
 });
 
 const mapDispatch = dispatch => ({
@@ -351,6 +401,7 @@ const mapDispatch = dispatch => ({
   getCreditATM: bindActionCreators(getCreditATM, dispatch),
   createCreditATM: bindActionCreators(createCreditATM, dispatch),
   depositCoinATM: bindActionCreators(depositCoinATM, dispatch),
+  trackingDepositCoinATM: bindActionCreators(trackingDepositCoinATM, dispatch),
 });
 
 export default injectIntl(connect(mapState, mapDispatch)(EscrowDeposit));

@@ -244,6 +244,7 @@ export const API_URL = {
     GET_DASHBOARD_INFO: 'exchange/user/transaction-counts',
     DEPOSIT_CREDIT_ATM: 'exchange/credit/deposit',
     CREDIT_ATM: 'exchange/credit',
+    CREDIT_ATM_TRANSFER: 'exchange/credit/transfer',
   },
   SEED: {
     BASE: 'seed',
