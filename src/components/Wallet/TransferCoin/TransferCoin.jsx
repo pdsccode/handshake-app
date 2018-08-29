@@ -102,7 +102,7 @@ class Transfer extends React.Component {
     }
 
     await this.getWalletDefault();
-    this.getRate();
+    this.setRate();
   }
 
   resetForm(){
@@ -140,8 +140,8 @@ class Transfer extends React.Component {
     return alternateCurrency;
   }
 
-  getRate = (cryptoCurrency) => {
-    let {wallet, currency} = this.props;
+  setRate = async (cryptoCurrency) => {
+    let {wallet, currency} = this.props, result = 0;
     if(!wallet && !cryptoCurrency){
       wallet = this.state.walletSelected ? this.state.walletSelected : this.state.walletDefault;
     }
@@ -150,20 +150,31 @@ class Transfer extends React.Component {
       currency = this.getSetting();
     }
 
+    let rate = 0;
     if((wallet || cryptoCurrency) && currency){
+      rate = await this.getRate(currency ? currency : 'USD', cryptoCurrency ? cryptoCurrency : wallet.name);
+    }
+
+    this.setState({rate: rate, currency: currency});
+  }
+
+  getRate(fiat_currency, currency){
+    return new Promise((resolve, reject) => {
+
       this.props.getFiatCurrency({
         PATH_URL: API_URL.EXCHANGE.GET_FIAT_CURRENCY,
-        qs: {fiat_currency: currency ? currency : 'USD', currency: cryptoCurrency ? cryptoCurrency : wallet.name},
+        qs: {fiat_currency: fiat_currency, currency: currency},
         successFn: (res) => {
           let data = res.data;
-          let rate = currency == 'USD' ? data.price : data.fiat_amount;
-          this.setState({rate: rate, currency: currency});
+          let result = currency == 'USD' ? data.price : data.fiat_amount;
+          resolve(result);
         },
         errorFn: (err) => {
           console.error("Error", err);
+          resolve(0);
         },
       });
-    }
+    });
   }
 
   getWalletDefault = () =>{
@@ -288,10 +299,14 @@ class Transfer extends React.Component {
 
   updateAddressMoneyValue = (evt) => {
     let money = evt.target.value, rate = 0, amount = 0;
-
+    money = money.replace(/,/g, "");
     rate = this.state.rate;
     if (rate && !isNaN(money)){
-      amount = money/rate;
+      amount = Number(money)/rate;
+      if(amount && amount < 1e-6){
+        amount = Number(amount).toFixed(6);
+      }
+
       this.setState({
         inputSendAmountValue: amount,
         inputSendMoneyValue: money
@@ -330,13 +345,13 @@ submitSendCoin=()=>{
     });
 }
 
-onItemSelectedWallet = (item) =>{
+onItemSelectedWallet = async (item) =>{
 
   let wallet = MasterWallet.convertObject(item);
-  if(wallet.name != this.state.walletSelected.name){
-    this.props.clearFields(nameFormSendWallet, false, false, "amountCoin", "amountMoney");
-    this.setState({rate: 0});
-  }
+  // if(wallet.name != this.state.walletSelected.name){
+  //   this.props.clearFields(nameFormSendWallet, false, false, "amountCoin", "amountMoney");
+  //   this.setState({rate: 0});
+  // }
 
   this.setState({walletSelected: wallet});
 
@@ -344,10 +359,13 @@ onItemSelectedWallet = (item) =>{
     wallet.balance = result;
     this.setState({walletSelected: wallet});
     MasterWallet.UpdateBalanceItem(wallet);
-
-    if(wallet.name != this.state.currency)
-      this.getRate(wallet.name);
   });
+
+  if(wallet.name != this.state.currency){
+    await this.setRate(wallet.name);
+    this.updateAddressAmountValue(null, this.state.inputSendAmountValue);
+  }
+
 }
 
 // For Qrcode:
