@@ -304,6 +304,7 @@ export default {
   'escrow.label.sellingPriceCaption': '= Market price + percentage',
   'escrow.btn.depositNow': 'Deposit now',
   'escrow.btn.depositSuccessMessage': 'Deposit success',
+  'escrow.btn.wallet.setDefaultWallet': 'You must set default wallet {currency}',
 
   'dashboard.heading': 'Dashboard',
   'dashboard.label.overview': 'Overview',

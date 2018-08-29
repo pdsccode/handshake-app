@@ -19,6 +19,8 @@ import { BigNumber } from 'bignumber.js';
 import { getErrorMessageFromCode } from '@/components/handshakes/exchange/utils';
 import { hideLoading, showAlert, showLoading } from '@/reducers/app/action';
 import taggingConfig from '@/services/tagging-config';
+import { createCreditATM, getCreditATM } from '../../reducers/exchange/action';
+import { MasterWallet } from '@/services/Wallets/MasterWallet';
 
 const nameFormEscrowDeposit = 'escrowDeposit';
 const FormEscrowDeposit = createForm({
@@ -42,6 +44,46 @@ const listCurrency = Object.values(CRYPTO_CURRENCY_CREDIT_CARD).map((item) => {
 });
 
 class EscrowDeposit extends React.Component {
+  componentDidMount() {
+    this.getCreditATM();
+    this.createCreditATM();
+  }
+
+  getCreditATM = () => {
+    this.props.getCreditATM({ PATH_URL: API_URL.EXCHANGE.CREDIT_ATM });
+  }
+
+  createCreditATM = () => {
+    const { authProfile, app } = this.props;
+    const params = {
+      username: authProfile?.username,
+      email: authProfile?.email,
+      language: app.locale,
+    };
+
+    this.props.createCreditATM({
+      PATH_URL: API_URL.EXCHANGE.CREDIT_ATM,
+      data: params,
+      METHOD: 'POST',
+      successFn: this.handleCreateCreditATMSuccess,
+      errorFn: this.handleCreateCreditATMFailed,
+    });
+  }
+
+  handleCreateCreditATMSuccess = (data) => {
+    console.log('handleCreateCreditATMSuccess', data);
+  }
+
+  handleCreateCreditATMFailed = (e) => {
+    this.hideLoading();
+
+    this.props.showAlert({
+      message: <div className="text-center">{getErrorMessageFromCode(e)}</div>,
+      timeOut: 3000,
+      type: 'danger',
+    });
+  }
+
   handleValidate = (values) => {
     const { percentage } = values;
     const errors = {};
@@ -72,24 +114,60 @@ class EscrowDeposit extends React.Component {
     return errors;
   }
 
+  checkMainNetDefaultWallet = (currency) => {
+    const wallet = MasterWallet.getWalletDefault(currency);
+
+    const result = !!wallet;
+
+    if (!result) {
+      const message = <FormattedMessage id="escrow.btn.wallet.setDefaultWallet" values={{ currency: currency }} />;
+      console.log('checkMainNetDefaultWallet', message);
+      this.props.showAlert({
+        message: <div className="text-center">{message}</div>,
+        timeOut: 3000,
+        type: 'danger',
+      });
+    }
+
+    console.log('checkMainNetDefaultWallet', result);
+
+    return result;
+  }
+
   handleOnSubmit = (values) => {
+    console.log('handleOnSubmit', values);
+
     for (const item of Object.values(CRYPTO_CURRENCY_CREDIT_CARD)) {
       const itemValue = values[item];
 
       if (itemValue && itemValue.trim().length > 0) {
-        this.depositCoin(item, itemValue);
+        if (!this.checkMainNetDefaultWallet(item)) {
+          return;
+        }
+      }
+    }
+
+    const { percentage } = values;
+    for (const item of Object.values(CRYPTO_CURRENCY_CREDIT_CARD)) {
+      const itemValue = values[item];
+
+      if (itemValue && itemValue.trim().length > 0) {
+        this.depositCoin(item, itemValue, percentage);
       }
     }
   }
 
-  depositCoin = (currency, value) => {
+  depositCoin = (currency, amount, percentage) => {
+    const wallet = MasterWallet.getWalletDefault(currency);
     const params = {
       currency,
-      value,
+      amount,
+      percentage,
+      user_address: wallet.address,
     };
 
     this.props.depositCoinATM({
-      PATH_URL: API_URL.EXCHANGE.CREATE_CC_ORDER,
+      PATH_URL: API_URL.EXCHANGE.DEPOSIT_CREDIT_ATM,
       data: params,
       METHOD: 'POST',
       successFn: this.handleDepositCoinSuccess,
@@ -102,13 +180,13 @@ class EscrowDeposit extends React.Component {
 
     console.log('handleDepositCoinSuccess', data);
 
-    const {
-      data: {
-        amount, currency, fiat_amount, fiat_currency,
-      },
-    } = data;
-
-    const value = roundNumberByLocale(new BigNumber(fiat_amount).multipliedBy(100).toNumber(), fiat_currency).toNumber();
+    // const {
+    //   data: {
+    //     amount, currency, fiat_amount, fiat_currency,
+    //   },
+    // } = data;
+    //
+    // const value = roundNumberByLocale(new BigNumber(fiat_amount).multipliedBy(100).toNumber(), fiat_currency).toNumber();
 
     gtag.event({
       category: taggingConfig.depositATM.category,
@@ -261,6 +339,8 @@ class EscrowDeposit extends React.Component {
 
 const mapState = state => ({
   listOfferPrice: state.exchange.listOfferPrice,
+  authProfile: state.auth.profile,
+  app: state.app,
 });
 
 const mapDispatch = dispatch => ({
@@ -268,6 +348,8 @@ const mapDispatch = dispatch => ({
   showAlert: bindActionCreators(showAlert, dispatch),
   showLoading: bindActionCreators(showLoading, dispatch),
   hideLoading: bindActionCreators(hideLoading, dispatch),
+  getCreditATM: bindActionCreators(getCreditATM, dispatch),
+  createCreditATM: bindActionCreators(createCreditATM, dispatch),
   depositCoinATM: bindActionCreators(depositCoinATM, dispatch),
 });
 
