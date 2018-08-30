@@ -9,6 +9,7 @@ import {
   CRYPTO_CURRENCY,
   CRYPTO_CURRENCY_NAME,
   EXCHANGE_FEED_TYPE,
+  FIAT_CURRENCY,
   HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS,
   HANDSHAKE_ID,
   HANDSHAKE_ID_DEFAULT,
@@ -17,9 +18,7 @@ import {
 import { fieldDropdown, fieldRadioButton } from '@/components/core/form/customField';
 import { FormattedMessage, injectIntl } from 'react-intl';
 // components
-import {
-  getCreditATM,
-} from '@/reducers/exchange/action';
+import { getCreditATM } from '@/reducers/exchange/action';
 // style
 import { setOfflineStatus } from '@/reducers/auth/action';
 import createForm from '@/components/core/form/createForm';
@@ -35,6 +34,7 @@ import taggingConfig from '@/services/tagging-config';
 import FeedCreditCard from '@/components/handshakes/exchange/Feed/FeedCreditCard';
 import { MasterWallet } from '@/services/Wallets/MasterWallet';
 import { formatMoneyByLocale } from '@/services/offer-util';
+import ReceiveCoin from '@/components/Wallet/ReceiveCoin';
 
 const nameFormOverview = 'formOverview';
 const FormOverview = createForm({
@@ -70,6 +70,8 @@ class Overview extends React.Component {
 
     this.state = {
       modalFillContent: '',
+      modalShareAddressContent: '',
+      alternateCurrencyRate: 1,
     };
   }
 
@@ -79,6 +81,15 @@ class Overview extends React.Component {
 
   getCreditATM = () => {
     this.props.getCreditATM({ PATH_URL: API_URL.EXCHANGE.CREDIT_ATM });
+  }
+
+  showPopupBuyByCreditCard = () => {
+    this.buyCoinsUsingCreditCard();
+
+    gtag.event({
+      category: taggingConfig.creditCard.category,
+      action: taggingConfig.creditCard.action.showPopupDashboard,
+    });
   }
 
   buyCoinsUsingCreditCard = () => {
@@ -103,15 +114,6 @@ class Overview extends React.Component {
     });
   }
 
-  showPopupBuyByCreditCard = () => {
-    this.buyCoinsUsingCreditCard();
-
-    gtag.event({
-      category: taggingConfig.creditCard.category,
-      action: taggingConfig.creditCard.action.showPopupDashboard,
-    });
-  }
-
   afterWalletFill = () => {
     this.modalFillRef.close();
   }
@@ -120,15 +122,55 @@ class Overview extends React.Component {
     this.setState({ modalFillContent: '' });
   }
 
+  showPopupReceiveCoin = () => {
+    this.receiveCoin();
+
+    gtag.event({
+      category: taggingConfig.creditCard.category,
+      action: taggingConfig.creditCard.action.showPopupReceiveCoin,
+    });
+  }
+
+  receiveCoin = () => {
+    const { messages } = this.props.intl;
+    const { currency } = this.props;
+    const { alternateCurrencyRate } = this.state;
+    const wallet = MasterWallet.getWalletDefault(currency);
+
+    this.setState({
+      modalShareAddressContent:
+        (
+          <ReceiveCoin
+            wallet={wallet}
+            currency={FIAT_CURRENCY.USD}
+            rate={alternateCurrencyRate}
+            onFinish={() => { this.successReceive(); }}
+          />
+        ),
+    }, () => {
+      this.modalShareAddressRef.open();
+    });
+  }
+
+  successReceive = () => {
+    this.modalShareAddressRef.close();
+  }
+
+  closeReceiveCoin = () => {
+    this.setState({ modalShareAddressContent: '' });
+  }
+
   handleSubmit = (values) => {
     console.log('handleSubmit', values);
   }
 
   render() {
     const { messages } = this.props.intl;
-    const { modalFillContent } = this.state;
+    const { modalFillContent, modalShareAddressContent } = this.state;
     const { currency, depositInfo } = this.props;
     const deposit = depositInfo && depositInfo[currency] || {};
+
+    console.log('deposit', deposit);
 
     return (
       <div>
@@ -200,7 +242,7 @@ class Overview extends React.Component {
             </div>
             <div className="text-normal my-2"><FormattedMessage id="dashboard.label.or" /></div>
             <div className="d-inline-block" style={{ width: '90%' }}>
-              <button type="button" className="btn btn-block secondary-button" onClick={this.showPopupBuyByCreditCard}>
+              <button type="button" className="btn btn-block secondary-button" onClick={this.showPopupReceiveCoin}>
                 <FormattedMessage id="dashboard.btn.scanQRCode" />
               </button>
             </div>
@@ -209,6 +251,9 @@ class Overview extends React.Component {
         </FormOverview>
         <Modal title={messages.create.cash.credit.title} onRef={modal => this.modalFillRef = modal} onClose={this.closeFillCoin}>
           {modalFillContent}
+        </Modal>
+        <Modal title={messages.wallet.action.receive.title} onRef={modal => this.modalShareAddressRef = modal} onClose={this.closeReceiveCoin}>
+          {modalShareAddressContent}
         </Modal>
       </div>
     );

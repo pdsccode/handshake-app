@@ -56,7 +56,7 @@ const tabs = [
 class Me extends React.Component {
 
   state = {
-    activeTab: 'transaction',
+    activeTab: 'overview',
   }
 
   render () {
