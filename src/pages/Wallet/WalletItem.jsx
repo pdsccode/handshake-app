@@ -69,7 +69,7 @@ class WalletItem extends React.Component {
               {wallet.default ? <img className="iconDefault" src={iconChecked}/> : ''}
               </div>
 
-              {!wallet.protect ? this.showBackup :
+              {!wallet.protected ? this.showBackup :
                 <span className="balance"> {wallet.getShortBalance()} {wallet.name} </span>
               }
             </div>

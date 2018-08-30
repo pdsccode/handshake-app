@@ -236,10 +236,11 @@ class WalletHistory extends React.Component {
             <div className="bt1"><button onClick={this.props.onTransferClick}>Send</button></div>
             <div className="bt2"><button onClick={this.props.onReceiveClick}>Receive</button></div>
           </div>
-
-          <div className="box-warning" onClick={this.props.onWarningClick}>
-           <span>⚠</span> {messages.wallet.action.protect.text.need_backup}
-          </div>
+          {!wallet.protected ?
+            <div className="box-warning" onClick={this.props.onWarningClick}>
+            <span>⚠</span> {messages.wallet.action.protect.text.need_backup}
+            </div>
+          : ""}
 
         </div>
 
