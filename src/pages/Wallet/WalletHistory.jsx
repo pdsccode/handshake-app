@@ -16,6 +16,8 @@ import {Tabs} from 'rmc-tabs';
 import 'rmc-tabs/assets/index.css';
 
 import imgNoTrans from '@/assets/images/wallet/images/no-transaction.svg';
+import iconLoadding from '@/assets/images/icon/loading.svg';
+
 
 class WalletHistory extends React.Component {
   static propTypes = {
@@ -49,9 +51,14 @@ class WalletHistory extends React.Component {
   }
 
   getNoTransactionYet(text){
-    return <div className="history-no-trans">
-    <img src={imgNoTrans} />
-      {/* {text} */}
+    const wallet = this.props.wallet;
+    return <div className="history-no-trans">    
+      {wallet && !wallet.isLoading ?
+        <div>
+          <img src={imgNoTrans} />
+          <div className="header-history-tx">{text}</div>
+        </div>
+        : <img className="icon-loading-history" src={iconLoadding} />}
     </div>
   }
 
@@ -226,24 +233,26 @@ class WalletHistory extends React.Component {
           <div className="balance">{wallet.balance} {wallet.name}</div>                  
 
           <div className="box-button">
-            <div className="bt1"><button>Send</button></div>
-            <div className="bt2"><button>Receive</button></div>
+            <div className="bt1"><button onClick={this.props.onTransferClick}>Send</button></div>
+            <div className="bt2"><button onClick={this.props.onReceiveClick}>Receive</button></div>
           </div>
 
           <div className="box-warning" onClick={this.props.onWarningClick}>
-           <span>&#9888;</span> {messages.wallet.action.protect.text.need_backup}
+           <span>⚠</span> {messages.wallet.action.protect.text.need_backup}
           </div>
 
         </div>
 
-        <div className="header-history-tx">        
-          {messages.wallet.action.history.label.transactions} : {wallet.transaction_count != null ? wallet.transaction_count : <span className="loader"></span> } <br/>
-          {/* {messages.wallet.action.history.label.transactions}: {wallet.transaction_count}<br/> */}
-          {wallet && wallet.name == "ETH" ?
-            <a target="_blank" href={""+wallet.getAPIUrlAddress(this.state.tabActive)}>{messages.wallet.action.history.label.view_all_etherscan}</a>
-            : ""
-          }
-        </div>
+        {!wallet.isLoading && wallet.transaction_count > 0 ?
+          <div className="header-history-tx">        
+            {messages.wallet.action.history.label.transactions} : {wallet.transaction_count} <br/>
+            {/* {messages.wallet.action.history.label.transactions}: {wallet.transaction_count}<br/> */}
+            {wallet && wallet.name == "ETH" ?
+              <a target="_blank" href={""+wallet.getAPIUrlAddress(this.state.tabActive)}>{messages.wallet.action.history.label.view_all_etherscan}</a>
+              : ""
+            }
+          </div>
+        :""}
         
         {/* <div className="history-balance">        
           {messages.wallet.action.history.label.transactions}: {wallet.transaction_count}<br/>

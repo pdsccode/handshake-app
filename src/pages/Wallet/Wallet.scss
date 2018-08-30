@@ -508,9 +508,7 @@ header{
 .wallet-create-footer{
   padding-bottom: 130px;
 }
-.modal-custom-body  {
-  padding: 0;
-}
+
 .historywallet-wrapper{
   padding-bottom: 40px;
   font-weight: 300;
@@ -562,6 +560,9 @@ header{
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
   }
+  .icon-loading-history{
+    width: 50px;
+  }
   .wallet-detail{    
     text-align: center;   
     color: #fff;
@@ -605,10 +606,7 @@ header{
       font-size: 14px;
       text-transform: none;
     }
-  }
-  .history-content{
-    padding: 15px 0;
-  }
+  }  
   .box-button{
     overflow: hidden;
     margin-top: 15px;
@@ -634,12 +632,14 @@ header{
   }
 
   .row{
-    flex-wrap:nowrap !important;
+    flex-wrap: nowrap !important;
     display: block;
     border-bottom: solid 1px #ECECEC;
-    margin: 10px 0px;
-    padding: 20px 0px;
+    padding: 15px 0px;
     border-radius: 6px;
+    margin: 0 10px;
+    margin-left: 5px;
+    overflow: hidden;
   }
 
   .label-self{

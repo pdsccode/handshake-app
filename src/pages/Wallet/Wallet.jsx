@@ -638,6 +638,8 @@ class Wallet extends React.Component {
 
    async showHisotry(wallet){
     let pagenoTran = 1, pagenoIT = 1;
+          
+          wallet.isLoading = true;
           this.setState({ walletSelected: wallet, transactions: [], isHistory: true, pagenoTran: pagenoTran });          
           this.modalHistoryRef.open();
           // this.showLoading();
@@ -653,9 +655,9 @@ class Wallet extends React.Component {
           let internalTransactions = await wallet.listInternalTransactions(pagenoIT);
           if(Number(internalTransactions.length) < 20) pagenoIT = 0;
           if(internalTransactions.length > wallet.transaction_count) wallet.transaction_count = transactions.length;
-
-          this.setState({ transactions: transactions, internalTransactions: internalTransactions, pagenoTran: pagenoTran, pagenoIT: pagenoIT, walletSelected: wallet });
-          this.hideLoading();
+          wallet.isLoading = false;
+          this.setState({  transactions: transactions, internalTransactions: internalTransactions, pagenoTran: pagenoTran, pagenoIT: pagenoIT, walletSelected: wallet });
+          // this.hideLoading();
   }
 
   creatSheetMenuHeaderMore() {
@@ -986,6 +988,10 @@ class Wallet extends React.Component {
     return (
       <div className="wallet-page">
 
+        <Modal noPadding={true} iconGray={false} textColor={"#fff"} backgroundColor={"#546FF7"} title={this.state.walletSelected ? this.state.walletSelected.title : messages.wallet.action.history.header} onRef={modal => this.modalHistoryRef = modal} onClose={this.closeHistory}>
+          <WalletHistory onTransferClick={() =>  this.setState({ activeTransfer: true }, ()=>{this.modalSendRef.open();})}  onReceiveClick={() => this.onAddressClick(this.state.walletSelected)} onWarningClick={() => this.onWarningClick(this.state.walletSelected)}  wallet={this.state.walletSelected} transactions={this.state.transactions} internalTransactions={this.state.internalTransactions} />
+        </Modal>
+
         <Modal onClose={() => this.setState({formAddTokenIsActive: false})} title="Add Custom Token" onRef={modal => this.modalAddNewTokenRef = modal}>
             <AddToken formAddTokenIsActive={formAddTokenIsActive} onFinish={() => {this.addedCustomToken()}}/>
         </Modal>
@@ -1031,11 +1037,6 @@ class Wallet extends React.Component {
           <Modal title={messages.wallet.action.protect.header} onClose={this.closeProtected} onRef={modal => this.modalProtectRef = modal}>
             <WalletProtect onCopy={this.onCopyProtected} step={this.state.stepProtected} active={this.state.activeProtected} wallet={this.state.walletSelected} callbackSuccess={() => { this.successWalletProtect(this.state.walletSelected); }} />
           </Modal>
-
-          <Modal iconGray={false} textColor={"#fff"} backgroundColor={"#546FF7"} title={this.state.walletSelected ? this.state.walletSelected.title : messages.wallet.action.history.header} onRef={modal => this.modalHistoryRef = modal} onClose={this.closeHistory}>
-            <WalletHistory onWarningClick={() => this.onWarningClick(this.state.walletSelected)}  wallet={this.state.walletSelected} transactions={this.state.transactions} internalTransactions={this.state.internalTransactions} />
-          </Modal>
-
 
           {/* Modal for Backup wallets : */}
           <Modal title={messages.wallet.action.backup.header} onRef={modal => this.modalBackupRef = modal}>
