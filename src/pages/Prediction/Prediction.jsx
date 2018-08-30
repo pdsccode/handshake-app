@@ -20,9 +20,11 @@ import ReportPopup from '@/components/handshakes/betting/Feed/ReportPopup';
 import Banner from '@/pages/Prediction/Banner';
 import { injectIntl } from 'react-intl';
 import { URL } from '@/constants';
+import { Link } from 'react-router-dom';
 import { eventSelector, isLoading, showedLuckyPoolSelector, isSharePage, countReportSelector, checkFreeBetSelector } from './selector';
 import { loadMatches, updateShowedLuckyPool, getReportCount, removeExpiredEvent, checkFreeBet } from './action';
 import EventItem from './EventItem';
+import PexCreateBtn from './PexCreateBtn';
 
 import './Prediction.scss';
 import { BETTING_RESULT } from '@/components/handshakes/betting/constants';
@@ -190,12 +192,6 @@ class Prediction extends React.Component {
     );
   }
 
-  renderReportPopup = () => {
-    return (
-      <ReportPopup />
-    );
-  }
-
   renderViewAllEvent = (props) => {
     if (!props.isSharePage) return null;
     return (
@@ -329,6 +325,7 @@ class Prediction extends React.Component {
       <div className={Prediction.displayName}>
         <Loading isLoading={props.isLoading} />
         {this.renderShareToWin()}
+        <PexCreateBtn />
         {this.renderEventList(props)}
         {this.renderBetMode(props, state)}
         {this.renderViewAllEvent(props, state)}
@@ -340,7 +337,7 @@ class Prediction extends React.Component {
         {this.renderEmailPopup()}
         {this.renderOuttaMoney()}
         {this.renderCreditCard()}
-        {props.countReport > 0 && this.renderReportPopup()}
+        {props.countReport > 0 && <ReportPopup />}
       </div>
     );
   };
