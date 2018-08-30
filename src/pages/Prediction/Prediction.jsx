@@ -20,8 +20,8 @@ import ReportPopup from '@/components/handshakes/betting/Feed/ReportPopup';
 import Banner from '@/pages/Prediction/Banner';
 import { injectIntl } from 'react-intl';
 import { URL } from '@/constants';
-import { eventSelector, isLoading, showedLuckyPoolSelector, isSharePage, countReportSelector } from './selector';
-import { loadMatches, updateShowedLuckyPool, getReportCount, removeExpiredEvent } from './action';
+import { eventSelector, isLoading, showedLuckyPoolSelector, isSharePage, countReportSelector, checkFreeBetSelector } from './selector';
+import { loadMatches, updateShowedLuckyPool, getReportCount, removeExpiredEvent, checkFreeBet } from './action';
 import EventItem from './EventItem';
 
 import './Prediction.scss';
@@ -34,6 +34,7 @@ class Prediction extends React.Component {
     isSharePage: PropTypes.bool,
     dispatch: PropTypes.func.isRequired,
     countReport: PropTypes.number,
+    freeBet: PropTypes.object
   };
 
   static defaultProps = {
@@ -46,6 +47,7 @@ class Prediction extends React.Component {
       selectedOutcome: null,
       isLuckyPool: true,
       modalFillContent: '',
+      freeBet: {},
     };
   }
 
@@ -54,11 +56,19 @@ class Prediction extends React.Component {
 
     this.props.dispatch(loadMatches());
     this.props.dispatch(getReportCount());
+    this.props.dispatch(checkFreeBet());
   }
 
   componentWillUnmount() {
     window.removeEventListener('scroll', this.handleScroll);
   }
+  componentWillReceiveProps(nextProps) {
+    const { freeBet } = nextProps;
+    this.setState({
+      freeBet,
+    })
+  }
+
 
   onCountdownComplete = (eventId) => {
     this.props.dispatch(removeExpiredEvent({ eventId }));
@@ -67,7 +77,7 @@ class Prediction extends React.Component {
   }
 
   handleScroll = () => {
-    //this.showLuckyPool();
+    this.showLuckyPool();
   };
 
   openOrderPlace = (selectedOutcome) => {
@@ -85,11 +95,21 @@ class Prediction extends React.Component {
     console.log('Action Lucky Pool:', showedLuckyPool);
     this.props.dispatch(updateShowedLuckyPool());
     setTimeout(() => {
-      //this.modalLuckyPoolRef.open();
+      this.modalLuckyPoolRef.open();
       //this.modalFreeBetLoseRef.open();
       //this.modalFreeBetWinRef.open();
       //this.modalEmailPopupRef.open();
     }, 2 * 1000);
+  }
+
+  checkShowFreeBetPopup() {
+    const { freeBet } = this.props;
+    const { is_win: isWin, free_bet_available: freeAvailable } = freeBet;
+    if (!isWin) {
+      this.modalFreeBetLoseRef.open();
+    } else {
+      this.modalFreeBetWinRef.open();
+    }
   }
 
   handleClickEventItem = (props, itemData) => {
@@ -107,6 +127,7 @@ class Prediction extends React.Component {
       reportTime: event.reportTime,
       value: event.name,
     };
+    this.props.dispatch(checkFreeBet());
     this.openOrderPlace(selectedOutcome);
     this.modalOrderPlace.open();
     this.setState({
@@ -151,6 +172,9 @@ class Prediction extends React.Component {
   }
 
   renderBetMode = (props, state) => {
+    const { freeBet } = state;
+    const { free_bet_available: freeAvailable = 0 } = freeBet;
+    const isFreeAvailable = freeAvailable > 0 ? true : false;
     return (
       <ModalDialog className="BetSlipContainer" close onRef={(modal) => { this.modalOrderPlace = modal; }}>
         <BetMode
@@ -159,6 +183,7 @@ class Prediction extends React.Component {
           openPopup={(click) => { this.openOrderPlace = click; }}
           onCancelClick={this.closeOrderPlace}
           handleBetFail={this.handleBetFail}
+          freeAvailable={isFreeAvailable}
           onSubmitClick={(isFree) => {
             this.closeOrderPlace();
             isFree ? this.modalLuckyFree.open() : this.modalLuckyReal.open();
@@ -327,6 +352,7 @@ export default injectIntl(connect(
       isSharePage: isSharePage(state),
       isLoading: isLoading(state),
       showedLuckyPool: showedLuckyPoolSelector(state),
+      freeBet: checkFreeBetSelector(state),
     };
   },
 )(Prediction));

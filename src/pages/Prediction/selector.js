@@ -21,6 +21,14 @@ export const countReportSelector = (state) => {
   const { matches = [] } = state.ui;
   return matches.length || 0;
 };
+export const checkFreeBetSelector = (state) => {
+  /*
+  const { matches = [] } = state.ui;
+  return matches.length || 0;
+  */
+  const { freeBet = {} } = state.ui;
+  return freeBet;
+};
 
 export const isSharePage = (state) => {
   const queryString = queryStringSelector(state);

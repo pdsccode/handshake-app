@@ -28,6 +28,13 @@ export const getReportCount = (payload = {}) => {
   };
 };
 
+export const checkFreeBet = (payload = {}) => {
+  return {
+    type: 'PREDICTION:CHECK_FREE_AVAILABLE',
+    ...payload,
+  };
+};
+
 
 export const updateShowedLuckyPool = () => {
   return SET_DATA({

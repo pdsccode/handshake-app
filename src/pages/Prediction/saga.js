@@ -2,7 +2,7 @@ import { takeLatest, call, select, put } from 'redux-saga/effects';
 import { apiGet } from '@/stores/api-saga';
 import { REMOVE_DATA } from '@/stores/data-action';
 import { API_URL } from '@/constants';
-import { loadMatches, getReportCount, removeExpiredEvent } from './action';
+import { loadMatches, getReportCount, removeExpiredEvent, checkFreeBet } from './action';
 import { eventSelector } from './selector';
 
 export function* handleLoadMatches({ cache = true }) {
@@ -55,10 +55,25 @@ export function* handleCountReport() {
   }
 }
 
+export function* handleFreeBet() {
+  try {
+    return yield call(apiGet, {
+      PATH_URL: API_URL.CRYPTOSIGN.CHECK_FREE_AVAILABLE,
+      type: 'CHECK_FREE_AVAILABLE',
+      _key: 'freeBet',
+      _path: 'ui',
+    });
+  } catch (e) {
+    return console.error('handleFreeBet', e);
+  }
+}
+
 
 export default function* predictionSaga() {
   yield takeLatest(loadMatches().type, handleLoadMatches);
   yield takeLatest(getReportCount().type, handleCountReport);
   yield takeLatest(removeExpiredEvent().type, handleRemoveEvent);
+  yield takeLatest(removeExpiredEvent().type, handleRemoveEvent);
+  yield takeLatest(checkFreeBet().type, handleFreeBet);
 
 }
