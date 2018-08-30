@@ -71,7 +71,6 @@ class Overview extends React.Component {
     this.state = {
       modalFillContent: '',
       modalShareAddressContent: '',
-      alternateCurrencyRate: 1,
     };
   }
 
@@ -134,7 +133,6 @@ class Overview extends React.Component {
   receiveCoin = () => {
     const { messages } = this.props.intl;
     const { currency } = this.props;
-    const { alternateCurrencyRate } = this.state;
     const wallet = MasterWallet.getWalletDefault(currency);
 
     this.setState({
@@ -143,7 +141,6 @@ class Overview extends React.Component {
           <ReceiveCoin
             wallet={wallet}
             currency={FIAT_CURRENCY.USD}
-            rate={alternateCurrencyRate}
             onFinish={() => { this.successReceive(); }}
           />
         ),
