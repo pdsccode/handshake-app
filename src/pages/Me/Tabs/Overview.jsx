@@ -17,7 +17,9 @@ import {
 import { fieldDropdown, fieldRadioButton } from '@/components/core/form/customField';
 import { FormattedMessage, injectIntl } from 'react-intl';
 // components
-import { getDashboardInfo, getListOfferPrice, getOfferStores, reviewOffer } from '@/reducers/exchange/action';
+import {
+  getCreditATM,
+} from '@/reducers/exchange/action';
 // style
 import { setOfflineStatus } from '@/reducers/auth/action';
 import createForm from '@/components/core/form/createForm';
@@ -32,6 +34,7 @@ import * as gtag from '@/services/ga-utils';
 import taggingConfig from '@/services/tagging-config';
 import FeedCreditCard from '@/components/handshakes/exchange/Feed/FeedCreditCard';
 import { MasterWallet } from '@/services/Wallets/MasterWallet';
+import { formatMoneyByLocale } from '@/services/offer-util';
 
 const nameFormOverview = 'formOverview';
 const FormOverview = createForm({
@@ -71,6 +74,11 @@ class Overview extends React.Component {
   }
 
   componentDidMount() {
+    this.getCreditATM();
+  }
+
+  getCreditATM = () => {
+    this.props.getCreditATM({ PATH_URL: API_URL.EXCHANGE.CREDIT_ATM });
   }
 
   buyCoinsUsingCreditCard = () => {
@@ -119,6 +127,8 @@ class Overview extends React.Component {
   render() {
     const { messages } = this.props.intl;
     const { modalFillContent } = this.state;
+    const { currency, depositInfo } = this.props;
+    const deposit = depositInfo && depositInfo[currency] || {};
 
     return (
       <div>
@@ -141,30 +151,30 @@ class Overview extends React.Component {
             </div>
 
             <div className="mt-4">
-              <div className="d-table w-100">
-                <div className="d-table-cell text-normal">
-                  BTC bought
-                </div>
-                <div className="d-table-cell text-right green-color">
-                  +124.1234
-                </div>
-              </div>
+              {/* <div className="d-table w-100"> */}
+              {/* <div className="d-table-cell text-normal"> */}
+              {/* {`${currency} ${messages['ex.label.bought'].toLowerCase()}`} */}
+              {/* </div> */}
+              {/* <div className="d-table-cell text-right green-color"> */}
+              {/* +124.1234 */}
+              {/* </div> */}
+              {/* </div> */}
 
               <div className="d-table w-100 mt-2">
                 <div className="d-table-cell text-normal">
-                  BTC sold
+                  {`${currency} ${messages['ex.label.sold'].toLowerCase()}`}
                 </div>
                 <div className="d-table-cell text-right red-color">
-                  50.3232
+                  {deposit?.sold || 0}
                 </div>
               </div>
 
               <div className="d-table w-100 mt-2">
                 <div className="d-table-cell text-normal">
-                  Amount left
+                  <FormattedMessage id="dashboard.label.amountLeft" />
                 </div>
                 <div className="d-table-cell text-right black-color">
-                  75.74334
+                  {deposit?.balance || 0}
                 </div>
               </div>
 
@@ -172,10 +182,10 @@ class Overview extends React.Component {
 
               <div className="d-table w-100 mt-2">
                 <div className="d-table-cell text-normal">
-                  Revenue
+                  <FormattedMessage id="dashboard.label.revenue" />
                 </div>
                 <div className="d-table-cell text-right black-color">
-                  $1,000,000
+                  ${formatMoneyByLocale(deposit?.revenue || 0)}
                 </div>
               </div>
             </div>
@@ -188,7 +198,7 @@ class Overview extends React.Component {
                 <FormattedMessage id="dashboard.btn.topUpByCC" />
               </button>
             </div>
-            <div className="text-normal my-2">or</div>
+            <div className="text-normal my-2"><FormattedMessage id="dashboard.label.or" /></div>
             <div className="d-inline-block" style={{ width: '90%' }}>
               <button type="button" className="btn btn-block secondary-button" onClick={this.showPopupBuyByCreditCard}>
                 <FormattedMessage id="dashboard.btn.scanQRCode" />
@@ -207,11 +217,13 @@ class Overview extends React.Component {
 
 const mapState = state => ({
   me: state.me,
-  currency: selectorFormOverview(state, 'currency')?.id,
+  currency: selectorFormOverview(state, 'currency')?.id || CRYPTO_CURRENCY.ETH,
+  depositInfo: state.exchange.depositInfo,
 });
 
 const mapDispatch = dispatch => ({
   rfChange: bindActionCreators(change, dispatch),
+  getCreditATM: bindActionCreators(getCreditATM, dispatch),
 });
 
 export default injectIntl(connect(mapState, mapDispatch)(Overview));

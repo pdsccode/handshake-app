@@ -48,7 +48,7 @@ const listCurrency = Object.values(CRYPTO_CURRENCY_CREDIT_CARD).map((item) => {
 class EscrowDeposit extends React.Component {
   componentDidMount() {
     this.getCreditATM();
-    this.createCreditATM();
+    // this.createCreditATM();
   }
 
   getCreditATM = () => {

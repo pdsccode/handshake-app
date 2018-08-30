@@ -8,6 +8,7 @@ import { EXCHANGE_ACTIONS } from './action';
 import { EXCHANGE_ACTION } from '@/constants';
 import Dashboard from '@/models/Dashboard';
 import Referal from '@/models/Referal';
+import Deposit from '@/models/Deposit';
 
 const initListOfferPrice = [];
 initListOfferPrice.updatedAt = Date.now();
@@ -67,6 +68,15 @@ function exchangeReducter(state = {
     }
     case `${EXCHANGE_ACTIONS.GET_REFERAL_INFO}_SUCCESS`: {
       return { ...state, referalInfo: Referal.referal(action.payload.data) };
+    }
+    case `${EXCHANGE_ACTIONS.GET_CREDIT_ATM}_SUCCESS`: {
+      const depositInfo = { };
+
+      Object.entries(action.payload.data.items).forEach(([key, value]) => {
+        console.log('key, value', key, value);
+        depositInfo[key] = Deposit.deposit(value);
+      });
+      return { ...state, depositInfo };
     }
     default:
       return state;
