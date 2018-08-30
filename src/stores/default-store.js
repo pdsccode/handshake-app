@@ -7,5 +7,6 @@ export default {
     side: null,
     shareEvent: null,
     isCreateEventLoading: false,
+    freeBet: null,
   },
 };

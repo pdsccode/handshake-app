@@ -43,3 +43,11 @@ export const updateShowedLuckyPool = () => {
     _value: true,
   });
 };
+
+export const updateFreeBet = (value) => {
+  return SET_DATA({
+    type: 'PREDICTION:UPDATE_FREE_BET',
+    _path: 'ui.lastEventResult',
+    _value: value,
+  });
+};

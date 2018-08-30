@@ -25,6 +25,7 @@ import { loadMatches, updateShowedLuckyPool, getReportCount, removeExpiredEvent,
 import EventItem from './EventItem';
 
 import './Prediction.scss';
+import { BETTING_RESULT } from '@/components/handshakes/betting/constants';
 
 class Prediction extends React.Component {
   static displayName = 'Prediction';
@@ -34,7 +35,7 @@ class Prediction extends React.Component {
     isSharePage: PropTypes.bool,
     dispatch: PropTypes.func.isRequired,
     countReport: PropTypes.number,
-    freeBet: PropTypes.object
+    freeBet: PropTypes.object,
   };
 
   static defaultProps = {
@@ -47,7 +48,6 @@ class Prediction extends React.Component {
       selectedOutcome: null,
       isLuckyPool: true,
       modalFillContent: '',
-      freeBet: {},
     };
   }
 
@@ -61,12 +61,6 @@ class Prediction extends React.Component {
 
   componentWillUnmount() {
     window.removeEventListener('scroll', this.handleScroll);
-  }
-  componentWillReceiveProps(nextProps) {
-    const { freeBet } = nextProps;
-    this.setState({
-      freeBet,
-    })
   }
 
 
@@ -89,25 +83,28 @@ class Prediction extends React.Component {
     this.modalOrderPlace.close();
   }
 
+  checkLuckyPool() {
+    if (localStorage.getItem('showedLuckyPool') !== null) {
+      return localStorage.getItem('showedLuckyPool');
+    }
+    return null;
+  }
+
   showLuckyPool() {
-    const { showedLuckyPool } = this.props;
+    const showedLuckyPool = this.checkLuckyPool();
     if (showedLuckyPool) return;
-    console.log('Action Lucky Pool:', showedLuckyPool);
-    this.props.dispatch(updateShowedLuckyPool());
     setTimeout(() => {
       this.modalLuckyPoolRef.open();
-      //this.modalFreeBetLoseRef.open();
-      //this.modalFreeBetWinRef.open();
-      //this.modalEmailPopupRef.open();
+      localStorage.setItem('showedLuckyPool', true);
     }, 2 * 1000);
   }
 
-  checkShowFreeBetPopup() {
-    const { freeBet } = this.props;
-    const { is_win: isWin, free_bet_available: freeAvailable } = freeBet;
-    if (!isWin) {
+  checkShowFreeBetPopup(props) {
+    const { freeBet } = props;
+    const { last_item_result: lastItemResult } = freeBet;
+    if (lastItemResult === 2 && this.modalFreeBetLoseRef) {
       this.modalFreeBetLoseRef.open();
-    } else {
+    } else if (lastItemResult === 1 && this.modalFreeBetWinRef) {
       this.modalFreeBetWinRef.open();
     }
   }
@@ -172,7 +169,7 @@ class Prediction extends React.Component {
   }
 
   renderBetMode = (props, state) => {
-    const { freeBet } = state;
+    const { freeBet={} } = props;
     const { free_bet_available: freeAvailable = 0 } = freeBet;
     const isFreeAvailable = freeAvailable > 0 ? true : false;
     return (
@@ -319,6 +316,7 @@ class Prediction extends React.Component {
         </div>
       );*/
     }
+    this.checkShowFreeBetPopup(props);
     return (
       <div className={Prediction.displayName}>
         <Loading isLoading={props.isLoading} />
