@@ -56,9 +56,16 @@
   }
 }
 
+.create-page {
+  .CreateMarket {
+    margin: 0 -15px;
+    padding: 0 15px;
+  }
+}
+
 .CreateMarket {
-  margin: 0 -15px;
   padding: 0 15px;
+
   .form-control {
     height: 46px;
   }
