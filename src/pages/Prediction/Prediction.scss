@@ -1,6 +1,21 @@
 @import './src/styles/style';
 
 .Prediction {
+  .PexCreateBtn {
+    opacity: 0.7;
+    padding: 5px 0;
+    font-size: rem-calc(15px);
+
+    .mb-2 {
+      margin-bottom: 2px !important;
+    }
+
+    button {
+      font-size: rem-calc(15px);
+      padding: 3px 10px;
+    }
+  }
+
   .BannerContainer {
     position:  relative;
     .btn-cta {
@@ -95,25 +110,19 @@
     justify-content: center;
   }
 
-  .ShareToWin {
+  .CreateOwnEventBanner {
     background-image: url('../../assets/images/share/share-to-win.png');
     display: flex;
-    height: rem-calc(110px);
-    position: relative;
+    justify-content: center;
+    align-items: center;
+    height: rem-calc(50px);
 
-    .ShareToWinTitle {
+    .CreateOwnEventBannerText {
       font-family: $font-family-base;
-      font-size: rem-calc(22px);
+      font-size: rem-calc(18x);
       color: #364164;
       letter-spacing: 0;
       font-weight: bold;
-
-      position: absolute;
-      top: 40%;
-      right: rem-calc(30px);
-      span {
-        color: #2456FB;
-      }
     }
   }
 
