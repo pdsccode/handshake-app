@@ -24,6 +24,7 @@ import { Link } from 'react-router-dom';
 import { eventSelector, isLoading, showedLuckyPoolSelector, isSharePage, countReportSelector, checkFreeBetSelector } from './selector';
 import { loadMatches, updateShowedLuckyPool, getReportCount, removeExpiredEvent, checkFreeBet } from './action';
 import EventItem from './EventItem';
+import PexCreateBtn from './PexCreateBtn';
 
 import './Prediction.scss';
 import { BETTING_RESULT } from '@/components/handshakes/betting/constants';
@@ -301,19 +302,6 @@ class Prediction extends React.Component {
     this.setState({ modalFillContent: '' });
   }
 
-  renderCreatePexBtn = () => {
-    return (
-      <div className="ex-sticky-report PexCreateBtn">
-        <div className="mb-2">Got an idea?</div>
-        <div>
-          <Link to={{ pathname: URL.HANDSHAKE_PEX_CREATOR }}>
-            <button className="btn btn-report">Create your own bet.</button>
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
   renderComponent = (props, state) => {
     if (1) {
       /*
@@ -329,6 +317,7 @@ class Prediction extends React.Component {
       <div className={Prediction.displayName}>
         <Loading isLoading={props.isLoading} />
         {this.renderShareToWin()}
+        <PexCreateBtn />
         {this.renderEventList(props)}
         {this.renderBetMode(props, state)}
         {this.renderViewAllEvent(props, state)}
@@ -340,7 +329,6 @@ class Prediction extends React.Component {
         {this.renderEmailPopup()}
         {this.renderOuttaMoney()}
         {this.renderCreditCard()}
-        {this.renderCreatePexBtn()}
         {props.countReport > 0 && <ReportPopup />}
       </div>
     );
