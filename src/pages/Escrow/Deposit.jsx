@@ -46,6 +46,13 @@ const listCurrency = Object.values(CRYPTO_CURRENCY_CREDIT_CARD).map((item) => {
 });
 
 class EscrowDeposit extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      values: {},
+    };
+  }
   componentDidMount() {
     this.getCreditATM();
     // this.createCreditATM();
@@ -60,7 +67,6 @@ class EscrowDeposit extends React.Component {
     const params = {
       username: authProfile?.username,
       email: authProfile?.email,
-      language: app.locale,
     };
 
     this.props.createCreditATM({
@@ -74,6 +80,8 @@ class EscrowDeposit extends React.Component {
 
   handleCreateCreditATMSuccess = (data) => {
     console.log('handleCreateCreditATMSuccess', data);
+
+    this.handleDeposit();
   }
 
   handleCreateCreditATMFailed = (e) => {
@@ -135,7 +143,22 @@ class EscrowDeposit extends React.Component {
 
   handleOnSubmit = (values) => {
     console.log('handleOnSubmit', values);
-    this.showLoading();
+
+    this.setState({ values: values }, () => {
+      const { depositInfo } = this.props;
+
+      this.showLoading();
+
+      if (!depositInfo) {
+        this.createCreditATM();
+      } else {
+        this.handleDeposit();
+      }
+    });
+  }
+
+  handleDeposit = () => {
+    const { values } = this.state;
 
     for (const item of Object.values(CRYPTO_CURRENCY_CREDIT_CARD)) {
       const itemValue = values[item];
@@ -181,7 +204,7 @@ class EscrowDeposit extends React.Component {
       deposit,
       tx_hash,
       currency,
-      action,
+      action: 'deposit',
       reason,
     };
 
@@ -226,9 +249,9 @@ class EscrowDeposit extends React.Component {
         const result = await creditATM.deposit(amount, percentage, id);
         console.log('handleDepositCoinSuccess', result);
 
-        this.trackingDeposit(amount, result.hash, currency, status, '');
+        this.trackingDeposit(id, result.hash, currency, status, '');
       } catch (e) {
-        this.trackingDeposit(amount, '', currency, status, e.toString());
+        this.trackingDeposit(id, '', currency, status, e.toString());
         console.log('handleDepositCoinSuccess', e.toString());
       }
     } else {
@@ -239,14 +262,14 @@ class EscrowDeposit extends React.Component {
 
         if (data) {
           const { hash: txHash } = data;
-          this.trackingDeposit(amount, txHash, currency, status, '');
+          this.trackingDeposit(id, txHash, currency, status, '');
         } else {
-          this.trackingDeposit(amount, '', currency, status, '');
+          this.trackingDeposit(id, '', currency, status, '');
         }
       }).catch((e) => {
         // TO-DO: handle error
         console.log('transfer', e);
-        this.trackingDeposit(amount, '', currency, status, e.toString());
+        this.trackingDeposit(id, '', currency, status, e.toString());
       });
     }
 
@@ -397,6 +420,7 @@ const mapState = state => ({
   authProfile: state.auth.profile,
   app: state.app,
   percentage: selectorFormEscrowDeposit(state, 'percentage'),
+  depositInfo: state.exchange.depositInfo,
 });
 
 const mapDispatch = dispatch => ({
