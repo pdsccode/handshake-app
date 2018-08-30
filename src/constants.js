@@ -506,6 +506,7 @@ export const URL = {
 
   HANDSHAKE_PREDICTION: '/prediction',
   HANDSHAKE_PEX: '/pex',
+  HANDSHAKE_PEX_CREATOR: '/create-pex',
 
   HANDSHAKE_CASH: '/cash',
   HANDSHAKE_CASH_INDEX: '/cash',

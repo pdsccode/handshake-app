@@ -41,6 +41,7 @@ const RouterAdmin = createDynamicImport(() => import('@/components/Router/Admin'
 const RouterReport = createDynamicImport(() => import('@/components/Router/Report'), Loading);
 const RouterLuckyPool = createDynamicImport(() => import('@/pages/LuckyLanding/LuckyLanding'), Loading);
 const RouterExchange = createDynamicImport(() => import('@/components/Router/Exchange'), Loading);
+const CreateOwnMarket = createDynamicImport(() => import('@/pages/CreateMarket/CreateMarket'), Loading);
 //const RouterExchange = createDynamicImport(() => import('@/pages/Exchange/Exchange'), Loading);
 const RouterPrediction = createDynamicImport(() => import('@/pages/Exchange/Exchange'), Loading);
 const RouterResolve = createDynamicImport(() => import('@/pages/Resolve/Resolve'), Loading);
@@ -71,6 +72,7 @@ const configRoutesUsingMobileLayout = [
   { path: URL.ADMIN, component: RouterAdmin },
   { path: URL.REPORT, component: RouterReport },
   { path: URL.HANDSHAKE_PEX, component: RouterExchange },
+  { path: URL.HANDSHAKE_PEX_CREATOR, component: CreateOwnMarket },
   { path: URL.CC_PAYMENT_URL, component: RouterCCConfirm },
   { path: URL.BUY_BY_CC_URL, component: RouterBuyCC },
   {
