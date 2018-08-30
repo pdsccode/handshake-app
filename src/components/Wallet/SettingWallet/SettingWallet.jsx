@@ -13,6 +13,9 @@ import PropTypes from 'prop-types';
 import local from '@/services/localStore';
 import { APP } from '@/constants';
 
+import { setLanguage } from '@/reducers/app/action';
+import ModalDialog from '@/components/core/controls/ModalDialog';
+
 import './SettingWallet.scss';
 import Dropdown from '@/components/core/controls/Dropdown';
 
@@ -148,6 +151,16 @@ class SettingWallet extends React.Component {
     this.showSuccess(messages.wallet.action.setting.success.save_crypto_address);
   }
 
+  getCountryName(locale) {
+    const hasSupportLanguage = LANGUAGES.find(language => language.code === locale);
+    return hasSupportLanguage || LANGUAGES[0];
+  }
+
+  changeCountry(countryCode) {
+    this.props.setLanguage(countryCode, false);
+    this.modalLanguageRef.close();
+  }
+
   render() {
     const { messages } = this.props.intl;
 
@@ -177,6 +190,29 @@ class SettingWallet extends React.Component {
                 onItemSelected={this.onAddressSelected}
               />
             </div>
+            {/* <div>
+              <ModalDialog onRef={(modal) => { this.modalLanguageRef = modal; return null; }}>
+                <div className="country-block">
+                  <p className="text">Select your language</p>
+                  {
+                    LANGUAGES.map(language => (
+                      <div
+                        key={language.code}
+                        className={`country ${locale === language.code && 'active'}`}
+                        onClick={() => this.changeCountry(language.code)}
+                      >
+                        <span className="name">{language.name}</span>
+                        {
+                          locale === language.code && (
+                            <img className="tick" src={TickSVG} alt="active" />
+                          )
+                        }
+                      </div>
+                    ))
+                  }
+                </div>
+              </ModalDialog>
+            </div> */}
           </div>
         </SettingForm>
       </div>
