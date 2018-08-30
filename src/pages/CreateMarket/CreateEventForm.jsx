@@ -345,6 +345,7 @@ class CreateEventForm extends Component {
           name="closingTime"
           type="text"
           component={this.renderDateTime}
+          title="Closing Time"
           placeholder="Event close"
           validate={[required, this.smallerThanReportingTime]}
           disabled={!props.isNew}
@@ -356,6 +357,7 @@ class CreateEventForm extends Component {
           name="reportingTime"
           type="text"
           component={this.renderDateTime}
+          title="Reporting Time"
           placeholder="Report by"
           validate={[required, this.smallerThanDisputeTime]}
           disabled={!props.isNew || !state.closingTime}
@@ -367,6 +369,7 @@ class CreateEventForm extends Component {
           name="disputeTime"
           type="text"
           component={this.renderDateTime}
+          title="Dispute Time"
           placeholder="Dispute by"
           validate={[required]}
           disabled={!props.isNew || !state.reportingTime}

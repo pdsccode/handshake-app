@@ -727,6 +727,10 @@ export default {
     {
       question: 'What’s gonna happen to the Handshake mobile app?',
       answer: 'We will be integrating Handshake (and your favourite features like promises, IOUs, contract upload, etc.) into the Ninja mobile website.',
+    },
+    {
+      question: 'How do I start earning ETH/Bitcoin?/How do I put cryptocurrency in my wallet?',
+      answer: <span>For instructions on how to play: <a target="__blank" href="https://medium.com/@cian_36990/7657761ea2bd">https://medium.com/@cian_36990/7657761ea2bd</a></span>,
     }
   ],
   'landing_page.wallet.faq': [
