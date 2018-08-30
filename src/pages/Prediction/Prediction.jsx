@@ -14,10 +14,11 @@ import * as gtag from '@/services/ga-utils';
 import taggingConfig from '@/services/tagging-config';
 import FeedCreditCard from '@/components/handshakes/exchange/Feed/FeedCreditCard';
 import ReportPopup from '@/components/handshakes/betting/Feed/ReportPopup';
-import { injectIntl } from 'react-intl';
 import { URL } from '@/constants';
+import { injectIntl } from 'react-intl';
+import { Link } from 'react-router-dom';
 import { eventSelector, isLoading, showedLuckyPoolSelector, isSharePage, countReportSelector } from './selector';
-import { loadMatches, updateShowedLuckyPool, getReportCount, removeExpiredEvent } from './action';
+import { loadMatches, getReportCount, removeExpiredEvent } from './action';
 import EventItem from './EventItem';
 
 import './Prediction.scss';
@@ -63,16 +64,6 @@ class Prediction extends React.Component {
 
   closeOrderPlace = () => {
     this.modalOrderPlace.close();
-  }
-
-  showLuckyPool() {
-    const { showedLuckyPool } = this.props;
-    if (showedLuckyPool) return;
-    console.log('Action Lucky Pool:', showedLuckyPool);
-    this.props.dispatch(updateShowedLuckyPool());
-    setTimeout(() => {
-      this.modalLuckyPoolRef.open();
-    }, 2 * 1000);
   }
 
   handleClickEventItem = (props, itemData) => {
@@ -127,21 +118,6 @@ class Prediction extends React.Component {
     );
   };
 
-  renderShareToWin = () => {
-    return (
-      <div
-        className="ShareToWin"
-        onClick={() => {
-          GA.clickBannerWin();
-        }}
-      >
-        <div className="ShareToWinTitle">
-          PLAY TO <span>WIN 10 ETH</span>
-        </div>
-      </div>
-    );
-  }
-
   renderBetMode = (props, state) => {
     return (
       <ModalDialog className="BetSlipContainer" close onRef={(modal) => { this.modalOrderPlace = modal; }}>
@@ -157,12 +133,6 @@ class Prediction extends React.Component {
           }}
         />
       </ModalDialog>
-    );
-  }
-
-  renderReportPopup = () => {
-    return (
-      <ReportPopup />
     );
   }
 
@@ -250,6 +220,19 @@ class Prediction extends React.Component {
     this.setState({ modalFillContent: '' });
   }
 
+  renderCreatePexBtn = () => {
+    return (
+      <div className="ex-sticky-report PexCreateBtn">
+        <div className="mb-2">Got an idea?</div>
+        <div>
+          <Link to={{ pathname: URL.HANDSHAKE_PEX_CREATOR }}>
+            <button className="btn btn-report">Create your own bet.</button>
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   renderComponent = (props, state) => {
     return (
       <div className={Prediction.displayName}>
@@ -262,7 +245,8 @@ class Prediction extends React.Component {
         {this.renderLuckyLanding()}
         {this.renderOuttaMoney()}
         {this.renderCreditCard()}
-        {props.countReport > 0 && this.renderReportPopup()}
+        {this.renderCreatePexBtn()}
+        {props.countReport > 0 && <ReportPopup />}
       </div>
     );
   };
