@@ -224,6 +224,7 @@ export const API_URL = {
     INDEX: 'handshake/discover',
   },
   EXCHANGE: {
+    GET_FIAT_CURRENCY: 'exchange/info/crypto-price',
     GET_CRYPTO_PRICE: 'exchange/info/instant-buy/price', // {path: '/info/instant-buy/price', method: 'get'},
     CREATE_CC_ORDER: 'exchange/instant-buys', // {path: '/instant-buys', method: 'post'},
     GET_USER_CC_LIMIT: 'exchange/user/profile/cc-limit', // {path: '/user/profile/cc-limit', method: 'get'},
@@ -510,6 +511,7 @@ export const URL = {
 
   HANDSHAKE_PREDICTION: '/prediction',
   HANDSHAKE_PEX: '/pex',
+  HANDSHAKE_PEX_CREATOR: '/create-pex',
 
   HANDSHAKE_CASH: '/cash',
   HANDSHAKE_CASH_INDEX: '/cash',
