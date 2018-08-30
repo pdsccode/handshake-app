@@ -33,13 +33,17 @@ class Modal extends React.Component {
   }
 
   render() {
-    const iconGray = this.props.iconGray ? BackChevronSVG : BackChevronSVGWhite;
+    const iconGray = (this.props.iconGray != null && this.props.iconGray == false) ?  BackChevronSVGWhite : BackChevronSVG;
     let styleHeader = {};
+    let styleBody = {};
     if (this.props.textColor){
       styleHeader.color = this.props.textColor;
     }
     if (this.props.backgroundColor){
       styleHeader.background = this.props.backgroundColor;
+    }
+    if (this.props.noPadding){
+      styleBody.padding = 0;
     }
     
     const { title, children, hideBackButton } = this.props;
@@ -53,7 +57,7 @@ class Modal extends React.Component {
             title && (<p className="modal-custom-title">{title}</p>)
           }
         </div>
-        <div className="modal-custom-body">
+        <div className="modal-custom-body" style={styleBody}>
           {children}
         </div>
       </div>
@@ -67,9 +71,12 @@ Modal.propTypes = {
   onRef: PropTypes.func,
   onClose: PropTypes.func,
   hideBackButton: PropTypes.bool,
+
   iconGray: PropTypes.bool,//default icon gray (gray, white)
-  backgroundColor: PropTypes.string,
-  textColor: PropTypes.string,
+  backgroundColor: PropTypes.string,//header background color
+  textColor: PropTypes.string,// header text color
+  
+  noPadding: PropTypes.bool, // body padding default if true.
 };
 
 export default Modal;
