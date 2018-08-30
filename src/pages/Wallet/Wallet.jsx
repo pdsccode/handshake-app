@@ -1079,7 +1079,7 @@ class Wallet extends React.Component {
 
           {/* Render list wallet: */}
           {/* Coin*/}
-          {!process.env.isDojo ?
+          {!process.env.isDojo || 1==1 ?
             <Row className="list">
               <Header title={messages.wallet.action.create.label.header_coins}hasLink={true} linkTitle={messages.wallet.action.create.button.add_new} onLinkClick={this.showModalAddCoin} />
             </Row>
@@ -1089,7 +1089,7 @@ class Wallet extends React.Component {
           </Row>
 
           {/* Tokens */}
-          {!process.env.isDojo ?
+          {!process.env.isDojo || 1==1 ?
           <Row className="list">
             <Header title={messages.wallet.action.create.label.header_tokens}hasLink={true} linkTitle={messages.wallet.action.create.button.add_new} onLinkClick={this.showModalAddToken} />
           </Row>
@@ -1099,7 +1099,7 @@ class Wallet extends React.Component {
           </Row>
 
           {/* Collectible */}
-          {!process.env.isDojo ?
+          {!process.env.isDojo || 1==1 ?
           <Row className="list">
             <Header title={messages.wallet.action.create.label.header_collectibles}hasLink={true} linkTitle={messages.wallet.action.create.button.add_new} onLinkClick={this.showModalAddCollectible} />
           </Row>
