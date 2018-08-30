@@ -190,7 +190,10 @@ class SettingWallet extends React.Component {
                 onItemSelected={this.onAddressSelected}
               />
             </div>
-            {/* <div>
+            {/* <div className="row multi-language">
+              <div className="label">Language</div>
+              <div className="value" onClick={() => this.modalLanguageRef.open()}>{countrySelecting.name}</div>
+
               <ModalDialog onRef={(modal) => { this.modalLanguageRef = modal; return null; }}>
                 <div className="country-block">
                   <p className="text">Select your language</p>
@@ -220,11 +223,18 @@ class SettingWallet extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => ({
+SettingWallet.propTypes = {
+  app: PropTypes.object.isRequired,
+  setLanguage: PropTypes.func.isRequired,
+};
 
+
+const mapStateToProps = (state) => ({
+  app: state.app,
 });
 
 const mapDispatchToProps = (dispatch) => ({
+  setLanguage,
   rfChange: bindActionCreators(change, dispatch),
   showAlert: bindActionCreators(showAlert, dispatch),
   showLoading: bindActionCreators(showLoading, dispatch),
