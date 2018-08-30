@@ -84,5 +84,12 @@
     border-right: 20px solid transparent;
     border-top: 20px solid #49D321;
     margin-left: -20px;
-}
+  }
+  .emailPopupClose {
+    position: absolute;
+    top: .5rem;
+    right: .5rem;
+    width: 25px;
+    height: 25px;
+  }
 }

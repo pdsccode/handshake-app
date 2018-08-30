@@ -63,7 +63,7 @@ export function* handleFreeBet() {
       _key: 'freeBet',
       _path: 'ui',
     });
-    yield put(updateFreeBet(freeBet));
+     yield put(updateFreeBet(freeBet));
   } catch (e) {
     return console.error('handleFreeBet', e);
   }

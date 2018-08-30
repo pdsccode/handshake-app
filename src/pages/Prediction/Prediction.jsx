@@ -101,10 +101,10 @@ class Prediction extends React.Component {
 
   checkShowFreeBetPopup(props) {
     const { freeBet } = props;
-    const { last_item_result: lastItemResult } = freeBet;
-    if (lastItemResult === 2 && this.modalFreeBetLoseRef) {
+    const { is_win: isWin } = freeBet;
+    if (isWin === 0 && this.modalFreeBetLoseRef) {
       this.modalFreeBetLoseRef.open();
-    } else if (lastItemResult === 1 && this.modalFreeBetWinRef) {
+    } else if (isWin === 1 && this.modalFreeBetWinRef) {
       this.modalFreeBetWinRef.open();
     }
   }
@@ -207,13 +207,21 @@ class Prediction extends React.Component {
 
   renderLuckyReal = () => (
     <ModalDialog onRef={(modal) => { this.modalLuckyReal = modal; }}>
-      <LuckyReal onButtonClick={() => this.modalLuckyReal.close()} />
+      <LuckyReal onButtonClick={() => {
+        this.modalLuckyReal.close();
+        //this.modalEmailPopupRef.open();
+      }}
+      />
     </ModalDialog>
   )
 
   renderLuckyFree = () => (
     <ModalDialog onRef={(modal) => { this.modalLuckyFree = modal; }}>
-      <LuckyFree onButtonClick={() => this.modalLuckyFree.close()} />
+      <LuckyFree onButtonClick={() => {
+        this.modalLuckyFree.close();
+        //this.modalEmailPopupRef.open();
+      }}
+      />
     </ModalDialog>
   )
 
