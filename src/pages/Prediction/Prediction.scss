@@ -1,18 +1,31 @@
 @import './src/styles/style';
 
 .Prediction {
-  .PexCreateBtn {
+  .Sticky {
+    position: fixed;
+    top: 0;
+    width: 100%;
     opacity: 0.7;
-    padding: 5px 0;
-    font-size: rem-calc(15px);
+  }
 
-    .mb-2 {
-      margin-bottom: 2px !important;
-    }
+  #PexCreateBtn {
+    padding: 7px 0;
+    font-size: rem-calc(15px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: black;
+    z-index: 2;
+    color: white;
 
     button {
-      font-size: rem-calc(15px);
-      padding: 3px 10px;
+      border: 1px solid white;
+      background: black;
+      color: white;
+      padding: 3px 15px;
+      text-transform: uppercase;
+      font-size: 12px;
     }
   }
 
