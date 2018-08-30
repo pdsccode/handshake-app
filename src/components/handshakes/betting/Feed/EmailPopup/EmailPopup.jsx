@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import Image from '@/components/core/presentation/Image';
 import IconOKSVG from '@/assets/images/luckypool/ic_ok.svg';
 import CloseIcon from '@/assets/images/icon/close.svg';
+import isEmail from 'validator/lib/isEmail';
 
 import './EmailPopup.scss';
 
@@ -17,19 +18,36 @@ class EmailPopup extends React.Component {
 
     this.state = {
       email: '',
+      isValidEmail: true,
     };
   }
-  onSubmit = async (e) => {
-    const {email} = e.values;
-    console.log('Email:', email);
-  }
+
   changeText(text) {
     this.setState({
       email: text,
     });
   }
 
+  sendEmail() {
+    const { email } = this.state;
+    console.log(email);
+    if (!isEmail(email)) {
+      this.setState({
+        isValidEmail: false,
+      });
+    }else {
+
+    }
+  }
+
+  renderErrorField() {
+    return (
+      <div className="errorField">*Please enter right email format</div>
+    );
+  }
+
   render() {
+    const { isValidEmail } = this.state;
     return (
       <div className="wrapperEmailPopup">
         <div className="emailPopupContent">
@@ -46,6 +64,7 @@ class EmailPopup extends React.Component {
           <div className="emailPopupSmallDes">Your bet has been placed.</div>
         </div>
          <div className="contentSmallDes">Check back here for the<br/>results or we can email them to you :)</div>
+         {!isValidEmail && this.renderErrorField()}
         <input
             className="emailPopupInput"
             type='text'
@@ -59,7 +78,7 @@ class EmailPopup extends React.Component {
         <Button
           className="emailPopupButton"
           onClick={() => {
-            console.log(this.state.email);
+            this.sendEmail();
           }}
         >
         Notify me

@@ -205,7 +205,7 @@ class Prediction extends React.Component {
     <ModalDialog onRef={(modal) => { this.modalLuckyReal = modal; }}>
       <LuckyReal onButtonClick={() => {
         this.modalLuckyReal.close();
-        //this.modalEmailPopupRef.open();
+        this.modalEmailPopupRef.open();
       }}
       />
     </ModalDialog>
@@ -215,7 +215,7 @@ class Prediction extends React.Component {
     <ModalDialog onRef={(modal) => { this.modalLuckyFree = modal; }}>
       <LuckyFree onButtonClick={() => {
         this.modalLuckyFree.close();
-        //this.modalEmailPopupRef.open();
+        this.modalEmailPopupRef.open();
       }}
       />
     </ModalDialog>
