@@ -18,6 +18,7 @@ import imgWallet from '@/assets/images/landing/home/wallet.jpg';
 import imgWhisper from '@/assets/images/landing/home/whisper.jpg';
 import imgHivepayOnline from '@/assets/images/landing/home/hivepay-online.jpg';
 import imgHivepayOffline from '@/assets/images/landing/home/hivepay-offline.jpg';
+import imgFund from '@/assets/images/landing/home/fund.png';
 import imgInternetCash from '@/assets/images/landing/home/internet-cash.jpg';
 import imgUncommons from '@/assets/images/landing/home/uncommons.jpg';
 
@@ -48,7 +49,7 @@ const products = [
     subTitle: <FormattedMessage id="landing_page.products.dad.subTitle" />,
     img: imgDad,
     to: URL.PRODUCT_DAD_URL,
-    toSubDomain: URL.PRODUCT_DAD_URL_SUBDOMAIN,
+    href: URL.PRODUCT_DAD_URL_SUBDOMAIN,
   },
   {
     name: 'wallet',
@@ -77,7 +78,15 @@ const products = [
     subTitle: <FormattedMessage id="landing_page.products.hivepay-offline.subTitle" />,
     img: imgHivepayOffline,
     to: URL.PRODUCT_HIVEPAY_OFFLINE_URL,
-  }
+  },
+  {
+    name: 'fund',
+    title: <FormattedMessage id="landing_page.products.fund.title" />,
+    subTitle: <FormattedMessage id="landing_page.products.fund.subTitle" />,
+    img: imgFund,
+    // to: URL.PRODUCT_FUND_URL,
+    href: URL.PRODUCT_FUND_URL,
+  },
 ]
 
 const researches = [
@@ -140,7 +149,7 @@ class Main extends React.PureComponent {
               <div className="row" style={{ marginTop: '18px' }}>
                 {
                   products.map((product, index) => {
-                    const { title, subTitle, img, to, toSubDomain, name } = product
+                    const { title, subTitle, img, to, href, name } = product
 
                     const content = (
                       <div>
@@ -150,8 +159,11 @@ class Main extends React.PureComponent {
                       </div>
                     )
                     let element = React.cloneElement(<Link to="" />, { to }, content)
-                    if (name === 'dad' && !BrowserDetect.isDesktop) {
-                      element = React.createElement('a', { href: toSubDomain }, content)
+                    if (href) {
+                      element = React.createElement('a', { href }, content)
+                    }
+                    if (name === 'dad') {
+                      element = !BrowserDetect.isDesktop ? React.createElement('a', { href }, content) : React.cloneElement(<Link to="" />, { to }, content)
                     }
 
                     return (
