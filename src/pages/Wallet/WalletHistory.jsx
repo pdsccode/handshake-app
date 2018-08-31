@@ -16,7 +16,7 @@ import {Tabs} from 'rmc-tabs';
 import 'rmc-tabs/assets/index.css';
 
 import imgNoTrans from '@/assets/images/wallet/images/no-transaction.svg';
-import iconLoadding from '@/assets/images/icon/loading.svg';
+import iconLoadding from '@/assets/images/icon/loading.gif';
 
 
 class WalletHistory extends React.Component {
@@ -212,7 +212,7 @@ class WalletHistory extends React.Component {
     const { messages } = this.props.intl;
 
     return (
-      <Modal title={messages.wallet.action.transaction.header} onRef={modal => this.modalTransactionRef = modal} onClose={this.closeDetail}>
+      <Modal iconBackImage={this.props.iconBackImage} modalHeaderStyle={this.props.modalHeaderStyle} title={messages.wallet.action.transaction.header} onRef={modal => this.modalTransactionRef = modal} onClose={this.closeDetail}>
         <WalletTransaction wallet={wallet} transaction_detail={this.state.transaction_detail}  />
       </Modal>
     );
