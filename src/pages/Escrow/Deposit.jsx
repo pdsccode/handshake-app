@@ -340,10 +340,10 @@ class EscrowDeposit extends React.Component {
           <div>
             <FormEscrowDeposit onSubmit={this.handleOnSubmit} validate={this.handleValidate}>
               <div>
-                <div className="d-inline-block escrow-label" style={{ width: '140px' }}>
+                <div className="d-inline-block escrow-label" style={{ width: '130px' }}>
                   <FormattedMessage id="escrow.label.iWantTo" />
                 </div>
-                <div className="d-inline-block escrow-label" style={{ width: '70px' }}>
+                <div className="d-inline-block escrow-label" style={{ width: '80px' }}>
                   %
                 </div>
                 <div className="d-inline-block escrow-label" style={{ minWidth: '130px' }}>
@@ -362,7 +362,7 @@ class EscrowDeposit extends React.Component {
 
                 return (
                   <div key={name} className="mt-2">
-                    <div className="d-inline-block pr-2" style={{ width: '140px' }}>
+                    <div className="d-inline-block pr-2" style={{ width: '130px' }}>
                       <div style={{ position: 'relative' }}>
                         <Field
                           name={`amount_${name}`}
@@ -376,7 +376,7 @@ class EscrowDeposit extends React.Component {
                         />
                       </div>
                     </div>
-                    <div className="d-inline-block pr-2" style={{ width: '70px' }}>
+                    <div className="d-inline-block pr-2" style={{ width: '80px' }}>
                       <div style={{ position: 'relative' }}>
                         <Field
                           name={`percentage_${name}`}
