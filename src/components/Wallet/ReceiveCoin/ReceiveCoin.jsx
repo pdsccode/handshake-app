@@ -8,17 +8,14 @@ import {connect} from "react-redux";
 import { bindActionCreators } from "redux";
 import Button from '@/components/core/controls/Button';
 import { API_URL } from "@/constants";
-import {getCryptoPrice} from '@/reducers/exchange/action';
+import {getFiatCurrency} from '@/reducers/exchange/action';
 import Modal from '@/components/core/controls/Modal';
 import {MasterWallet} from "@/services/Wallets/MasterWallet";
 
 import { showLoading, hideLoading, showAlert } from '@/reducers/app/action';
 import { StringHelper } from '@/services/helper';
 import createForm from '@/components/core/form/createForm';
-import CryptoPrice from "@/models/CryptoPrice";
 import './ReceiveCoin.scss';
-import Dropdown from '@/components/core/controls/Dropdown';
-import { BigNumber } from "bignumber.js";
 import ExpandArrowSVG from '@/assets/images/icon/expand-arrow-green.svg';
 import iconSwitch from '@/assets/images/icon/icon-switch.png';
 
@@ -52,8 +49,7 @@ class ReceiveCoin extends React.Component {
       wallets: [],
       walletDefault: false,
       walletSelected: false,
-      rates: [],
-      active: this.props.active,
+      rate: 0,
       inputSendAmountValue: '',
       inputSendMoneyValue: '',
       isCurrency: false,
@@ -87,47 +83,36 @@ class ReceiveCoin extends React.Component {
 
   componentDidMount() {
     this.getWalletDefault();
-    if(!this.state.walletSelected.isToken){
-      this.getRate("BTC");
-      this.getRate("ETH");
-      this.getRate("BCH");
-    }
+    this.setRate()
   }
 
-  getRate = (currency) => {
-    var data = {amount: 1, currency: currency};
-    let rates = this.state.rates;
-    this.props.getCryptoPrice({
-      PATH_URL: API_URL.EXCHANGE.GET_CRYPTO_PRICE,
-      qs: data,
-      successFn: (res) => {
-        const cryptoPrice = CryptoPrice.cryptoPrice(res.data);
-        const price = new BigNumber(cryptoPrice.price).toNumber();
+  setRate = async (cryptoCurrency) => {
+    let rate = await this.getRate(cryptoCurrency);
+    this.setState({rate: rate});
+  }
 
-        rates.push({[currency]: price});
-        this.setState({rates: rates});
-      },
-      errorFn: (err) => {
-        console.error("Error", err);
-      },
+  getRate(cryptoCurrency){
+    return new Promise((resolve, reject) => {
+      let {wallet, currency} = this.props, result = 0;
+
+      if(wallet && currency){
+        this.props.getFiatCurrency({
+          PATH_URL: API_URL.EXCHANGE.GET_FIAT_CURRENCY,
+          qs: {fiat_currency: currency ? currency : 'USD', currency: cryptoCurrency ? cryptoCurrency : wallet.name},
+          successFn: (res) => {
+            let data = res.data;
+            result = currency == 'USD' ? data.price : data.fiat_amount;
+            resolve(result);
+          },
+          errorFn: (err) => {
+            resolve(0);
+          },
+        });
+      }
+      else{
+        resolve(0);
+      }
     });
-  }
-
-  componentDidUpdate(){
-    if (this.props.active && this.props.active != this.state.active){
-      this.setState({active: this.props.active, inputSendAmountValue: '', inputSendMoneyValue: '', switchValue: 0, isCurrency: false});
-      this.resetForm();
-      this.getWalletDefault();
-    }
-    else if (this.props.active != this.state.active){
-      this.setState({active: this.props.active});
-    }
-
-
-  }
-
-  componentWillReceiveProps() {
-
   }
 
   resetForm(){
@@ -236,7 +221,6 @@ class ReceiveCoin extends React.Component {
   }
 
   calculator(value){
-    const alternateRate = this.props.rate;
     const alternateCurrency = this.props.currency;
 
     this.setState({ inputSendAmountValue: value});
@@ -247,38 +231,33 @@ class ReceiveCoin extends React.Component {
     this.props.rfChange(nameFormReceiveWallet, 'amountCoinTemp', placeholder);
     let isCurrency = this.state.isCurrency;
     if (isCurrency){
-      let money = value, rate = 0, amount = 0;
-      let rates = this.state.rates.filter(rate => rate.hasOwnProperty(this.state.walletSelected.name));
+      let money = value, amount = 0;
 
-      if (rates.length > 0){
-        rate = rates[0][this.state.walletSelected.name];
-        if(!isNaN(money)){
-          amount = money/rate/alternateRate;
-          this.setState({
-            switchValue: amount
-          });
-        }
+      if (this.state.rate && !isNaN(money)){
+        amount = money/this.state.rate;
+
+        this.setState({
+          switchValue: amount
+        });
       }
     }
     else{
-      let amount = value, rate = 0, money = 0;
-      let rates = this.state.rates.filter(rate => rate.hasOwnProperty(this.state.walletSelected.name));
+      let amount = value, money = 0;
 
-      if (rates.length > 0){
-        rate = rates[0][this.state.walletSelected.name];
-        if(!isNaN(amount)){
-          money = amount * rate * alternateRate;
-          this.setState({
-            switchValue: money
-          });
+      if (this.state.rate && !isNaN(amount)){
+        money = amount * this.state.rate;
+        if(money >= 1000){
+          money = Math.round(money).toLocaleString();
         }
+        else{
+          money = money.toLocaleString();
+        }
+
+        this.setState({
+          switchValue: money
+        });
       }
     }
-  }
-
-  onItemSelectedWallet = (item) =>{
-    let wallet = MasterWallet.convertObject(item);
-    this.setState({walletSelected: wallet});
   }
 
   download = (value) => {
@@ -287,16 +266,29 @@ class ReceiveCoin extends React.Component {
     this.downloadRef.download = this.state.walletSelected.getShortAddress() + "-" + value.toString() + "-" + this.state.walletSelected.name + ".png";
  }
 
- get showCurrency(){
+  onItemSelectedWallet = (item) =>{
+    let wallet = MasterWallet.convertObject(item);
 
- }
+    // if(wallet.name != this.state.walletSelected.name){
+    //   this.resetForm();
+    //   this.setState({rate: 0});
+    // }
+
+    this.setState({ walletSelected: wallet}, async () => {
+      if(wallet.name != this.state.currency)
+        await this.setRate(wallet.name);
+
+      this.calculator(this.state.inputSendAmountValue);
+    });
+  }
 
   render() {
     const { messages } = this.props.intl;
     let { currency } = this.props;
     if(!currency) currency = "USD";
 
-    let showDivAmount = (( this.state.walletSelected && ( !this.state.walletSelected.isToken && this.state.rates.filter(rate => rate.hasOwnProperty(this.state.walletSelected.name).length > 0) ) ) ) ? true : false;
+    let showDivAmount = this.state.walletSelected && this.state.rate;
+
     let value = (this.state.inputSendAmountValue != '' ? `,${this.state.inputSendAmountValue}` : '');
     if (this.state.isCurrency){
       value = (this.state.switchValue != '' ? `,${this.state.switchValue}` : '');
@@ -332,10 +324,7 @@ class ReceiveCoin extends React.Component {
                     defaultText={this.state.walletSelected.text}
                     list={this.state.wallets}
                       onChange={(item) => {
-                        this.setState({ walletSelected: item}, () => {
-                          this.calculator(this.state.inputSendAmountValue);
-                        });
-
+                        this.onItemSelectedWallet(item);
                       }
                     }
                     />
@@ -418,9 +407,7 @@ class ReceiveCoin extends React.Component {
 
 ReceiveCoin.propTypes = {
   wallet: PropTypes.any,
-  active: PropTypes.bool,
   currency: PropTypes.string,
-  rate: PropTypes.number
 };
 
 const mapStateToProps = (state) => ({
@@ -432,7 +419,7 @@ const mapDispatchToProps = (dispatch) => ({
   showAlert: bindActionCreators(showAlert, dispatch),
   showLoading: bindActionCreators(showLoading, dispatch),
   hideLoading: bindActionCreators(hideLoading, dispatch),
-  getCryptoPrice: bindActionCreators(getCryptoPrice, dispatch),
+  getFiatCurrency: bindActionCreators(getFiatCurrency, dispatch),
   clearFields: bindActionCreators(clearFields, dispatch),
 });
 

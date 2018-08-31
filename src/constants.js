@@ -224,6 +224,7 @@ export const API_URL = {
     INDEX: 'handshake/discover',
   },
   EXCHANGE: {
+    GET_FIAT_CURRENCY: 'exchange/info/crypto-price',
     GET_CRYPTO_PRICE: 'exchange/info/instant-buy/price', // {path: '/info/instant-buy/price', method: 'get'},
     CREATE_CC_ORDER: 'exchange/instant-buys', // {path: '/instant-buys', method: 'post'},
     GET_USER_CC_LIMIT: 'exchange/user/profile/cc-limit', // {path: '/user/profile/cc-limit', method: 'get'},
@@ -556,6 +557,7 @@ export const URL = {
   PRODUCT_DAD_URL_SUBDOMAIN: 'https://dad.ninja.org/',
   RESEARCH_UNCOMMONS_URL: '/uncommons',
   PRODUCT_WHISPER_URL: '/whisper',
+  PRODUCT_FUND_URL: 'https://ninja.org/fund/',
 
   RECRUITING: '/recruiting',
   RECRUITING_JOB_DETAIL: '/recruiting/:slug',
