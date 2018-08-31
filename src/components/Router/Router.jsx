@@ -52,6 +52,7 @@ const Recruiting = createDynamicImport(() => import('@/pages/Recruiting'), Loadi
 const JobDetail = createDynamicImport(() => import('@/pages/Recruiting/JobDetail'), Loading);
 const ContentForCashBusiness = createDynamicImport(() => import('@/pages/LandingPage/ContentForCashBusiness'), Loading);
 const ContentForPayForDevs = createDynamicImport(() => import('@/pages/LandingPage/ContentForPayForDevs'), Loading);
+const ContentForWallet = createDynamicImport(() => import('@/pages/LandingPage/ContentForWallet'), Loading);
 const ContentForPrediction = createDynamicImport(() => import('@/pages/LandingPage/ContentForPrediction'), Loading);
 const Discover = createDynamicImport(() => import('@/pages/Discover/Discover'), Loading);
 const RouterCCConfirm = createDynamicImport(() => import('@/components/Router/CCConfirm'), Loading);
@@ -101,7 +102,7 @@ if (BrowserDetect.isDesktop) {
     { path: URL.PRODUCT_CASH_URL, render: () => <ProjectDetail type="product" name="cash" img={imgCash} imgContent={imgCashContent} reactHelmetElement={SEOCash} /> },
     { path: URL.PRODUCT_PREDICTION_URL, render: () => <ProjectDetail type="product" name="prediction" img={imgPrediction} contentComponent={<ContentForPrediction />} reactHelmetElement={SEOPrediction} /> },
     { path: URL.HANDSHAKE_PEX, render: () => <ProjectDetail type="product" name="prediction" img={imgPrediction} contentComponent={<ContentForPrediction />} reactHelmetElement={SEOPrediction} /> },
-    { path: URL.PRODUCT_WALLET_URL, render: () => <ProjectDetail type="product" name="wallet" img={imgWallet} reactHelmetElement={SEOWallet} /> },
+    { path: URL.PRODUCT_WALLET_URL, render: () => <ProjectDetail type="product" name="wallet" img={imgWallet} reactHelmetElement={SEOWallet} entireContentComponent={<ContentForWallet />} /> },
     { path: URL.PRODUCT_HIVEPAY_OFFLINE_URL, render: () => <ProjectDetail type="product" name="pay-for-stores" img={imgHivepayOffline} reactHelmetElement={SEOPayForStores} /> },
     { path: URL.PRODUCT_HIVEPAY_ONLINE_URL, render: () => <ProjectDetail type="product" name="pay-for-devs" reactHelmetElement={SEOPayForDevs} entireContentComponent={<ContentForPayForDevs />} /> },
     { path: URL.RESEARCH_INTERNET_CASH_URL, render: () => <ProjectDetail type="research" name="internet-cash" img={imgInternetCash} /> },
