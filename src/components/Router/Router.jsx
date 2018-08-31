@@ -53,6 +53,7 @@ const JobDetail = createDynamicImport(() => import('@/pages/Recruiting/JobDetail
 const ContentForCashBusiness = createDynamicImport(() => import('@/pages/LandingPage/ContentForCashBusiness'), Loading);
 const ContentForPayForDevs = createDynamicImport(() => import('@/pages/LandingPage/ContentForPayForDevs'), Loading);
 const ContentForPrediction = createDynamicImport(() => import('@/pages/LandingPage/ContentForPrediction'), Loading);
+const ContentForPexInstruction = createDynamicImport(() => import('@/pages/LandingPage/ContentForPexInstruction'), Loading);
 const Discover = createDynamicImport(() => import('@/pages/Discover/Discover'), Loading);
 const RouterCCConfirm = createDynamicImport(() => import('@/components/Router/CCConfirm'), Loading);
 const RouterBuyCC = createDynamicImport(() => import('@/components/handshakes/exchange/Feed/FeedCreditCard'), Loading);
@@ -160,6 +161,7 @@ class Router extends React.Component {
           <Route exact path={URL.RECRUITING} component={Recruiting} />
           <Route path={URL.RECRUITING_JOB_DETAIL} component={JobDetail} />
           <Route path={URL.CASH_FOR_BUSINESS} render={() => <ProjectDetail type="landing" name="cash-for-business" img={imgDad} contentComponent={<ContentForCashBusiness />} />} />
+          <Route path={URL.PEX_INSTRUCTION_URL} render={() => <ProjectDetail type="landing" name="pex-instruction" entireContentComponent={<ContentForPexInstruction />} />} />
           {routesUsingDesktopLayout}
 
           {/* Cash on mobile uses a completely different layout! */}

@@ -1,5 +1,6 @@
 import { URL } from '@/constants';
 import React from 'react';
+import { Link } from 'react-router-dom'
 
 export default {
   app: {
@@ -707,7 +708,7 @@ export default {
     },
     {
       question: 'How do I start earning ETH/Bitcoin?/How do I put cryptocurrency in my wallet?',
-      answer: <span>For instructions on how to play: <a target="__blank" href="https://medium.com/@cian_36990/7657761ea2bd">https://medium.com/@cian_36990/7657761ea2bd</a></span>,
+      answer: <span>For instructions on how to play: <Link to={URL.PEX_INSTRUCTION_URL}>http://ninja.org/pex/prediction</Link></span>,
     }
   ],
   'landing_page.wallet.faq': [
