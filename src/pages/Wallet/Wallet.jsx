@@ -407,7 +407,7 @@ class Wallet extends React.Component {
               ),
           }, () => {
             this.toggleBottomSheet();
-            this.modalFillRef.open();
+            this.modalBuyCoin.open();
 
             gtag.event({
               category: taggingConfig.creditCard.category,
@@ -836,7 +836,7 @@ class Wallet extends React.Component {
   }
 
   afterWalletFill = () => {
-    this.modalFillRef.close();
+    this.modalBuyCoin.close();
   }
 
   closeProtected = () => {
