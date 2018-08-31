@@ -7,6 +7,7 @@ import CloseIcon from '@/assets/images/icon/close.svg';
 import isEmail from 'validator/lib/isEmail';
 import { submitEmailSubcribe } from '@/reducers/auth/action';
 import { API_URL } from '@/constants';
+import { connect } from 'react-redux';
 
 import './EmailPopup.scss';
 
