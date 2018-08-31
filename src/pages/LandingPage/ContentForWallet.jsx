@@ -1,16 +1,17 @@
 import React from "react";
-import imgNinjawallet from '@/assets/images/landing/pay-for-devs/ninja-wallet.png';
-import imgAnywhere from '@/assets/images/landing/pay-for-devs/anywhere.png';
-import imgChargeBack from '@/assets/images/landing/pay-for-devs/chargeback.png';
-import imgFastPayments from '@/assets/images/landing/pay-for-devs/fast-payments.svg';
-import imgSaveMoney from '@/assets/images/landing/pay-for-devs/save-money.svg';
-import imgSimpleUse from '@/assets/images/landing/pay-for-devs/simple-use.svg';
-import imgBgWhy from '@/assets/images/landing/pay-for-devs/bg-why.png';
+import imgBTC from '@/assets/images/landing/wallet/btc.svg';
+import imgLTC from '@/assets/images/landing/wallet/ltc.svg';
+import imgETH from '@/assets/images/landing/wallet/eth.svg';
+import imgXRP from '@/assets/images/landing/wallet/xrp.svg';
+import imgZEC from '@/assets/images/landing/wallet/zec.svg';
+import imgIPHONE from '@/assets/images/landing/wallet/iphone1.png';
+import img1 from '@/assets/images/landing/wallet/1.png';
+import imgPromo1 from '@/assets/images/landing/wallet/promo-1.png';
 
-import './ContentForWallet.scss';
+import './ContentForWallet.css';
 const Wallet = () => (
 
-  <div className="content-for-wallet">
+  <div className="content-for-wallet position-relative">
     <div className="position-relative">
       <section className="section section-lg section-shaped">
         <div className="shape shape-style-1 shape-default">
@@ -33,7 +34,7 @@ const Wallet = () => (
                 </div>
               </div>
               <div className="col-lg-6 main-screen text-center">
-                <img width="300" src="assets/img/brand/iphone1.png" />
+                <img width="300" src={imgIPHONE} />
               </div>
             </div>
           </div>
@@ -51,11 +52,11 @@ const Wallet = () => (
         <div className="row row-grid align-items-center">
           <div className="col-md-6 order-md-2">
             <div className="icons-container mt-5 on-screen" data-toggle="on-screen">
-              <i className="icon floating"><img src="assets/img/icons/btc.svg" /></i>
-              <i className="icon floating"><img src="assets/img/icons/xrp.svg" /></i>
-              <i className="icon floating"><img src="assets/img/icons/eth.svg" /></i>
-              <i className="icon floating"><img src="assets/img/icons/zec.svg" /></i>
-              <i className="icon floating"><img src="assets/img/icons/ltc.svg" /></i>
+              <i className="icon floating"><img src={imgBTC} /></i>
+              <i className="icon floating"><img src={imgXRP} /></i>
+              <i className="icon floating"><img src={imgETH} /></i>
+              <i className="icon floating"><img src={imgZEC} /></i>
+              <i className="icon floating"><img src={imgLTC} /></i>
             </div>
           </div>
           <div className="col-md-6 order-md-1">
@@ -72,7 +73,7 @@ const Wallet = () => (
       <div className="container">
         <div className="row row-grid align-items-center">
           <div className="col-md-7 transform-perspective-left">
-              <img src="assets/img/theme/promo-1.png" className="img-fluid" />
+              <img src={imgPromo1} className="img-fluid" />
           </div>
           <div className="col-md-5">
             <div className="pl-md-5">
@@ -89,7 +90,7 @@ const Wallet = () => (
         <div className="row row-grid align-items-center">
           <div className="col-md-6 order-lg-2 ml-lg-auto">
             <div className="position-relative pl-md-5">
-              <img src="assets/img/theme/1.png" className="img-fluid" />
+              <img src={img1} className="img-fluid" />
             </div>
           </div>
           <div className="col-lg-6 order-lg-1  pb-100">
@@ -292,9 +293,8 @@ const Wallet = () => (
                 </div>
                 <div id="collapseFour" className="collapse" aria-labelledby="headingThree" data-parent="#accordion">
                   <div className="card-body  text-left">
-               You simply go to our website <a href="https://www.ninja.org/wallet">www.ninja.org/wallet</a>
-It will auto creates your wallet BTC, ETH etc on your device. Or you can import/restore you have.
-
+                    You simply go to our website <a href="https://www.ninja.org/wallet">www.ninja.org/wallet</a>
+                    It will auto creates your wallet BTC, ETH etc on your device. Or you can import/restore you have.
                 </div>
                 </div>
               </div>
@@ -310,7 +310,7 @@ It will auto creates your wallet BTC, ETH etc on your device. Or you can import/
                 </div>
                 <div id="collapseFive" className="collapse" aria-labelledby="headingThree" data-parent="#accordion">
                   <div className="card-body  text-left">
-                Ninja Wallet is available globally - all you need is access to a mobile device and the internet.
+                    Ninja Wallet is available globally - all you need is access to a mobile device and the internet.
                 </div>
                 </div>
               </div>
@@ -320,7 +320,6 @@ It will auto creates your wallet BTC, ETH etc on your device. Or you can import/
                   <h5 className="mb-0  text-left">
                     <button className="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix text-left">
                       What happens if I swap/lose my phone? Will I lose my wallet?
-
                     </button>
                   </h5>
                 </div>
@@ -333,7 +332,6 @@ It will auto creates your wallet BTC, ETH etc on your device. Or you can import/
             </div>
           </div>
         </div>
-
       </div>
     </section>
   </div>
