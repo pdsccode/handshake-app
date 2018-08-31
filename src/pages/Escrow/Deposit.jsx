@@ -340,13 +340,13 @@ class EscrowDeposit extends React.Component {
           <div>
             <FormEscrowDeposit onSubmit={this.handleOnSubmit} validate={this.handleValidate}>
               <div>
-                <div className="d-inline-block escrow-label" style={{ width: '130px' }}>
+                <div className="d-inline-block escrow-label amount-label">
                   <FormattedMessage id="escrow.label.iWantTo" />
                 </div>
-                <div className="d-inline-block escrow-label" style={{ width: '80px' }}>
+                <div className="d-inline-block escrow-label percentage-label">
                   %
                 </div>
-                <div className="d-inline-block escrow-label" style={{ minWidth: '130px' }}>
+                <div className="d-inline-block escrow-label price-label">
                   <FormattedMessage id="escrow.label.price" />
                 </div>
               </div>
@@ -362,7 +362,7 @@ class EscrowDeposit extends React.Component {
 
                 return (
                   <div key={name} className="mt-2">
-                    <div className="d-inline-block pr-2" style={{ width: '130px' }}>
+                    <div className="d-inline-block pr-2 amount-input">
                       <div style={{ position: 'relative' }}>
                         <Field
                           name={`amount_${name}`}
@@ -376,7 +376,7 @@ class EscrowDeposit extends React.Component {
                         />
                       </div>
                     </div>
-                    <div className="d-inline-block pr-2" style={{ width: '80px' }}>
+                    <div className="d-inline-block pr-2 percentage-input">
                       <div style={{ position: 'relative' }}>
                         <Field
                           name={`percentage_${name}`}
@@ -390,7 +390,7 @@ class EscrowDeposit extends React.Component {
                         />
                       </div>
                     </div>
-                    <div className="d-inline-block pl-2 bg-light rounded" style={{ minWidth: '130px', lineHeight: '38px' }}>
+                    <div className="d-inline-block pl-2 bg-light rounded price-info">
                       <span className="font-weight-normal">{formatMoneyByLocale(fiatCurrency, FIAT_CURRENCY.USD)}</span>
                       <span className="escrow-label float-right mr-2 font-weight-normal">{`${FIAT_CURRENCY.USD}/${name}`}</span>
                     </div>

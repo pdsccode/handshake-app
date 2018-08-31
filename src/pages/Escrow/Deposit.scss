@@ -25,4 +25,26 @@
     right: 5px;
     position: absolute;
   }
+  .amount-label {
+    width: 130px;
+  }
+  .percentage-label {
+    width: 80px;
+  }
+  .price-label {
+    width: 130px;
+  }
+  .amount-input {
+    width: 130px;
+    vertical-align: top;
+  }
+  .percentage-input {
+    width: 80px;
+    vertical-align: top;
+  }
+  .price-info {
+    width: 130px;
+    line-height: 38px;
+    vertical-align: top;
+  }
 }
