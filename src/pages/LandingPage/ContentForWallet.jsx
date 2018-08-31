@@ -7,13 +7,16 @@ import imgZEC from '@/assets/images/landing/wallet/zec.svg';
 import imgIPHONE from '@/assets/images/landing/wallet/iphone1.png';
 import img1 from '@/assets/images/landing/wallet/1.png';
 import imgPromo1 from '@/assets/images/landing/wallet/promo-1.png';
+import imgLock from '@/assets/images/landing/wallet/lock-solid.svg';
+import imgCheck from '@/assets/images/landing/wallet/check-solid.svg';
 
 import './ContentForWallet.css';
+import './ContentForWallet.scss';
 const Wallet = () => (
 
   <div className="content-for-wallet position-relative">
     <div className="position-relative">
-      <section className="section section-lg section-shaped">
+      <section className="section section-mg section-shaped">
         <div className="shape shape-style-1 shape-default">
           <span></span>
           <span></span>
@@ -108,7 +111,7 @@ const Wallet = () => (
                 <div className="d-flex px-3">
                   <div>
                     <div className="icon icon-shape bg-gradient-warning rounded-circle text-white">
-                      <i className="fa fa-lock" aria-hidden="true"></i>
+                      <img src={imgLock} width="16px" />
                     </div>
                   </div>
                   <div className="pl-4">
@@ -139,7 +142,6 @@ const Wallet = () => (
         </div>
       </div>
     </section>
-
     <section className="section section-lg bg-gradient-warning pt-150 pb-150">
       <div className="container pb-50">
         <div className="row text-center justify-content-center">
@@ -152,7 +154,7 @@ const Wallet = () => (
                   <div className="d-flex align-items-center">
                     <div>
                       <div className="badge badge-circle">
-                        <i className="ni ni-check-bold"></i>
+                        <img src={imgCheck} className="check-features" />
                       </div>
                     </div>
                     <div>
@@ -164,7 +166,7 @@ const Wallet = () => (
                   <div className="d-flex align-items-center">
                     <div>
                       <div className="badge badge-circle">
-                        <i className="ni ni-check-bold"></i>
+                        <img src={imgCheck} className="check-features" />
                       </div>
                     </div>
                     <div>
@@ -176,7 +178,7 @@ const Wallet = () => (
                   <div className="d-flex align-items-center">
                     <div>
                       <div className="badge badge-circle ">
-                        <i className="ni ni-check-bold"></i>
+                        <img src={imgCheck} className="check-features" />
                       </div>
                     </div>
                     <div>
@@ -188,7 +190,7 @@ const Wallet = () => (
                   <div className="d-flex align-items-center">
                     <div>
                       <div className="badge badge-circle ">
-                        <i className="ni ni-check-bold"></i>
+                        <img src={imgCheck} className="check-features" />
                       </div>
                     </div>
                     <div>
@@ -200,7 +202,7 @@ const Wallet = () => (
                   <div className="d-flex align-items-center">
                     <div>
                       <div className="badge badge-circle">
-                        <i className="ni ni-check-bold"></i>
+                        <img src={imgCheck} className="check-features" />
                       </div>
                     </div>
                     <div>
@@ -212,7 +214,7 @@ const Wallet = () => (
                   <div className="d-flex align-items-center">
                     <div>
                       <div className="badge badge-circle">
-                        <i className="ni ni-check-bold"></i>
+                        <img src={imgCheck} className="check-features" />
                       </div>
                     </div>
                     <div>
@@ -228,110 +230,6 @@ const Wallet = () => (
         <svg x="0" y="0" viewBox="0 0 2560 100" preserveAspectRatio="none" version="1.1" xmlns="http://www.w3.org/2000/svg">
           <polygon className="fill-white" points="2560 0 2560 100 0 100"></polygon>
         </svg>
-      </div>
-    </section>
-
-
-    <section className="section section-lg">
-      <div className="container">
-        <div className="row justify-content-center text-center">
-          <div className="col-lg-8">
-            <h2 className="display-3">FAQ</h2>
-            <div id="accordion">
-              <div className="card">
-                <div className="card-header" id="headingOne">
-                  <h5 className="mb-0  text-left">
-                    <button className="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                      What is Ninja Wallet?
-                    </button>
-                  </h5>
-                </div>
-
-                <div id="collapseOne" className="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
-                  <div className="card-body text-left">
-                    Ninja Wallet is a decentralized cryptocurrency wallet, that allows you to hold multiple cryptocurrencies. There are no downloads,  no sign ups and no fees.
-                  </div>
-                </div>
-              </div>
-              <div className="card">
-                <div className="card-header" id="headingTwo">
-                  <h5 className="mb-0  text-left">
-                    <button className="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                      How many cryptocurrencies can I use with Ninja Wallet?
-                    </button>
-                  </h5>
-                </div>
-                <div id="collapseTwo" className="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
-                  <div className="card-body  text-left">
-                    You can use BTC, BCH, ETH, ZEC, LTC, XRP, ERC20 Tokens and ERC721 Collectables
-
-                  </div>
-                </div>
-              </div>
-              <div className="card">
-                <div className="card-header" id="headingThree">
-                  <h5 className="mb-0  text-left">
-                    <button className="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                      How much does it cost to use?
-                    </button>
-                  </h5>
-                </div>
-                <div id="collapseThree" className="collapse" aria-labelledby="headingThree" data-parent="#accordion">
-                  <div className="card-body  text-left">
-                Ninja Wallet is open source and free for all users
-                </div>
-                </div>
-              </div>
-
-              <div className="card">
-                <div className="card-header" id="headingFour">
-                  <h5 className="mb-0  text-left">
-                    <button className="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-                     How do I create an account?
-                    </button>
-                  </h5>
-                </div>
-                <div id="collapseFour" className="collapse" aria-labelledby="headingThree" data-parent="#accordion">
-                  <div className="card-body  text-left">
-                    You simply go to our website <a href="https://www.ninja.org/wallet">www.ninja.org/wallet</a>
-                    It will auto creates your wallet BTC, ETH etc on your device. Or you can import/restore you have.
-                </div>
-                </div>
-              </div>
-
-
-              <div className="card">
-                <div className="card-header" id="headingFive">
-                  <h5 className="mb-0  text-left">
-                    <button className="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
-                      What countries can I use Ninja Wallet in?
-                    </button>
-                  </h5>
-                </div>
-                <div id="collapseFive" className="collapse" aria-labelledby="headingThree" data-parent="#accordion">
-                  <div className="card-body  text-left">
-                    Ninja Wallet is available globally - all you need is access to a mobile device and the internet.
-                </div>
-                </div>
-              </div>
-
-              <div className="card">
-                <div className="card-header" id="headingSix">
-                  <h5 className="mb-0  text-left">
-                    <button className="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix text-left">
-                      What happens if I swap/lose my phone? Will I lose my wallet?
-                    </button>
-                  </h5>
-                </div>
-                <div id="collapseSix" className="collapse" aria-labelledby="headingThree" data-parent="#accordion">
-                  <div className="card-body  text-left">
-                    We recommend all users backup their wallets as soon as they start using Ninja. We have explained how to backup your Ninja Wallet <a target="_blank" href="https://medium.com/@ninja_org/how-to-back-up-your-ninja-wallet-its-really-quite-easy-d98a5ec1a671">here</a>.
-                </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </section>
   </div>
