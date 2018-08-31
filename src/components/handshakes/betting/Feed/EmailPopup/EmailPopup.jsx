@@ -5,6 +5,8 @@ import Image from '@/components/core/presentation/Image';
 import IconOKSVG from '@/assets/images/luckypool/ic_ok.svg';
 import CloseIcon from '@/assets/images/icon/close.svg';
 import isEmail from 'validator/lib/isEmail';
+import { submitEmailSubcribe } from '@/reducers/auth/action';
+import { API_URL } from '@/constants';
 
 import './EmailPopup.scss';
 
@@ -35,9 +37,26 @@ class EmailPopup extends React.Component {
       this.setState({
         isValidEmail: false,
       });
-    }else {
-
+    } else {
+      this.submitEmail(email);
     }
+  }
+  submitEmail(email) {
+
+    const params = {
+      email,
+    };
+    this.props.submitEmailSubcribe({
+      PATH_URL: API_URL.USER.CHECK_SUBCRIBE_PREDICTION,
+      METHOD: 'POST',
+      data: params,
+      successFn: ((successData)=> {
+        this.props.onButtonClick();
+      }),
+      errorFn: ((error)=> {
+        console.log(error);
+      }),
+    });
   }
 
   renderErrorField() {
@@ -77,6 +96,7 @@ class EmailPopup extends React.Component {
           />
         <Button
           className="emailPopupButton"
+          isLoading={this.props.fetching}
           onClick={() => {
             this.sendEmail();
           }}
@@ -87,4 +107,12 @@ class EmailPopup extends React.Component {
     );
   }
 }
-export default EmailPopup;
+const mapState = state => ({
+  fetching: state.auth.fetching,
+});
+const mapDispatch = ({
+  submitEmailSubcribe,
+
+});
+
+export default connect(mapState, mapDispatch)(EmailPopup);

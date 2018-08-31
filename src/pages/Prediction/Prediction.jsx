@@ -25,6 +25,9 @@ import { eventSelector, isLoading, showedLuckyPoolSelector, isSharePage, countRe
 import { loadMatches, updateShowedLuckyPool, getReportCount, removeExpiredEvent, checkFreeBet } from './action';
 import EventItem from './EventItem';
 import PexCreateBtn from './PexCreateBtn';
+import local from '@/services/localStore';
+import { APP } from '@/constants';
+import _ from 'lodash';
 
 import './Prediction.scss';
 import { BETTING_RESULT } from '@/components/handshakes/betting/constants';
@@ -76,6 +79,12 @@ class Prediction extends React.Component {
     this.showLuckyPool();
   };
 
+  hasEmail = () => {
+    const profile = local.get(APP.AUTH_PROFILE);
+    if (_.isEmpty(profile)) return null;
+    return !!profile.email;
+  }
+
   openOrderPlace = (selectedOutcome) => {
     this.openFilter(selectedOutcome);
     this.modalOrderPlace.open();
@@ -109,6 +118,12 @@ class Prediction extends React.Component {
     } else if (isWin === 1 && this.modalFreeBetWinRef) {
       this.modalFreeBetWinRef.open();
     }
+  }
+  openEmailSubcribe() {
+    if (!this.hasEmail()) {
+      this.modalEmailPopupRef.open();
+    }
+
   }
 
   handleClickEventItem = (props, itemData) => {
@@ -205,7 +220,7 @@ class Prediction extends React.Component {
     <ModalDialog onRef={(modal) => { this.modalLuckyReal = modal; }}>
       <LuckyReal onButtonClick={() => {
         this.modalLuckyReal.close();
-        this.modalEmailPopupRef.open();
+        this.openEmailSubcribe();
       }}
       />
     </ModalDialog>
@@ -215,7 +230,7 @@ class Prediction extends React.Component {
     <ModalDialog onRef={(modal) => { this.modalLuckyFree = modal; }}>
       <LuckyFree onButtonClick={() => {
         this.modalLuckyFree.close();
-        this.modalEmailPopupRef.open();
+        this.openEmailSubcribe();
       }}
       />
     </ModalDialog>
