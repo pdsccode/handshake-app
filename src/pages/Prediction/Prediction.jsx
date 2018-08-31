@@ -82,6 +82,12 @@ class Prediction extends React.Component {
     this.showLuckyPool();
   };
 
+  checkFreeAvailabe(props) {
+    const { freeBet={} } = props;
+    const { free_bet_available: freeAvailable = 0, last_item: lastItem } = freeBet;
+    const isFreeAvailable = (lastItem === null && freeAvailable > 0) ? true : false;
+    return isFreeAvailable;
+  }
 
   openOrderPlace = (selectedOutcome) => {
     this.openFilter(selectedOutcome);
@@ -120,7 +126,6 @@ class Prediction extends React.Component {
     }
   }
   openEmailSubcribe() {
-    console.log("This.Props.isExistEmail", this.props.isExistEmail);
     if (!this.props.isExistEmail) {
       this.modalEmailPopupRef.open();
     }
@@ -187,9 +192,7 @@ class Prediction extends React.Component {
   }
 
   renderBetMode = (props, state) => {
-    const { freeBet={} } = props;
-    const { free_bet_available: freeAvailable = 0 } = freeBet;
-    const isFreeAvailable = freeAvailable > 0 ? true : false;
+    const isFreeAvailable = this.checkFreeAvailabe(props);
     return (
       <ModalDialog className="BetSlipContainer" close onRef={(modal) => { this.modalOrderPlace = modal; }}>
         <BetMode
