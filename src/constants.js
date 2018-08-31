@@ -269,7 +269,8 @@ export const API_URL = {
   },
   USER: {
     PROFILE: 'user/profile',
-    CHECK_SUBCRIBE_PREDICTION: 'user/check-subscribe-prediction',
+    SUBCRIBE_EMAIL_PREDICTION: 'user/subscribe-email',
+    CHECK_EXIST_EMAIL: 'user/check-email-exist',
   },
 };
 

@@ -48,7 +48,7 @@ class EmailPopup extends React.Component {
       email,
     };
     this.props.submitEmailSubcribe({
-      PATH_URL: API_URL.USER.CHECK_SUBCRIBE_PREDICTION,
+      PATH_URL: API_URL.USER.SUBCRIBE_EMAIL_PREDICTION,
       METHOD: 'POST',
       data: params,
       successFn: ((successData)=> {

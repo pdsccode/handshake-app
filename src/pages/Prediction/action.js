@@ -47,7 +47,30 @@ export const updateShowedLuckyPool = () => {
 export const updateFreeBet = (value) => {
   return SET_DATA({
     type: 'PREDICTION:UPDATE_FREE_BET',
-    _path: 'ui.lastEventResult',
+    _path: 'ui.freeBet',
+    _value: value,
+  });
+};
+
+export const updateCountReport = (value) => {
+  return SET_DATA({
+    type: 'PREDICTION:CHECK_REPORT',
+    _path: 'ui.countReport',
+    _value: value,
+  });
+};
+export const updateExistEmail = (value) => {
+  return SET_DATA({
+    type: 'PREDICTION:CHECK_EXIST_EMAIL',
+    _path: 'ui.isExistEmail',
+    _value: value,
+  });
+};
+
+export const checkExistSubcribeEmail = (value) => {
+  return SET_DATA({
+    type: 'PREDICTION:CHECK_SUBCRIBE_EMAIL',
+    _path: 'ui.isExistEmail',
     _value: value,
   });
 };

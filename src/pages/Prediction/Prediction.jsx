@@ -21,8 +21,8 @@ import Banner from '@/pages/Prediction/Banner';
 import { injectIntl } from 'react-intl';
 import { URL } from '@/constants';
 import { Link } from 'react-router-dom';
-import { eventSelector, isLoading, showedLuckyPoolSelector, isSharePage, countReportSelector, checkFreeBetSelector } from './selector';
-import { loadMatches, updateShowedLuckyPool, getReportCount, removeExpiredEvent, checkFreeBet } from './action';
+import { eventSelector, isLoading, showedLuckyPoolSelector, isSharePage, countReportSelector, checkFreeBetSelector, checkExistSubcribeEmailSelector } from './selector';
+import { loadMatches, updateShowedLuckyPool, getReportCount, removeExpiredEvent, checkFreeBet, checkExistSubcribeEmail } from './action';
 import EventItem from './EventItem';
 import PexCreateBtn from './PexCreateBtn';
 import local from '@/services/localStore';
@@ -41,10 +41,12 @@ class Prediction extends React.Component {
     dispatch: PropTypes.func.isRequired,
     countReport: PropTypes.number,
     freeBet: PropTypes.object,
+    emailExist: PropTypes.number
   };
 
   static defaultProps = {
     eventList: [],
+    emailExist: 0
   };
 
   constructor(props) {
@@ -62,6 +64,7 @@ class Prediction extends React.Component {
     this.props.dispatch(loadMatches());
     this.props.dispatch(getReportCount());
     this.props.dispatch(checkFreeBet());
+    this.props.dispatch(checkExistSubcribeEmail());
   }
 
   componentWillUnmount() {
@@ -79,11 +82,6 @@ class Prediction extends React.Component {
     this.showLuckyPool();
   };
 
-  hasEmail = () => {
-    const profile = local.get(APP.AUTH_PROFILE);
-    if (_.isEmpty(profile)) return null;
-    return !!profile.email;
-  }
 
   openOrderPlace = (selectedOutcome) => {
     this.openFilter(selectedOutcome);
@@ -112,6 +110,8 @@ class Prediction extends React.Component {
 
   checkShowFreeBetPopup(props) {
     const { freeBet } = props;
+    //console.log('checkShowFreeBetPopup:', freeBet);
+
     const { is_win: isWin } = freeBet;
     if (isWin === 0 && this.modalFreeBetLoseRef) {
       this.modalFreeBetLoseRef.open();
@@ -120,7 +120,8 @@ class Prediction extends React.Component {
     }
   }
   openEmailSubcribe() {
-    if (!this.hasEmail()) {
+    console.log("This.Props.isExistEmail", this.props.isExistEmail);
+    if (!this.props.isExistEmail) {
       this.modalEmailPopupRef.open();
     }
 
@@ -266,7 +267,8 @@ class Prediction extends React.Component {
     <ModalDialog className="modal" onRef={(modal) => { this.modalEmailPopupRef = modal; return null; }}>
       <EmailPopup onButtonClick={() => {
           this.modalEmailPopupRef.close();
-      }}
+          this.props.dispatch(checkExistSubcribeEmail());
+        }}
       />
     </ModalDialog>
   )
@@ -371,6 +373,7 @@ export default injectIntl(connect(
       isLoading: isLoading(state),
       showedLuckyPool: showedLuckyPoolSelector(state),
       freeBet: checkFreeBetSelector(state),
+      isExistEmail: checkExistSubcribeEmailSelector(state),
     };
   },
 )(Prediction));
