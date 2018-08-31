@@ -340,14 +340,14 @@ class EscrowDeposit extends React.Component {
           <div>
             <FormEscrowDeposit onSubmit={this.handleOnSubmit} validate={this.handleValidate}>
               <div>
-                <div className="d-inline-block w-50 escrow-label">
+                <div className="d-inline-block escrow-label" style={{ width: '140px' }}>
                   <FormattedMessage id="escrow.label.iWantTo" />
                 </div>
-                <div className="d-inline-block w-25 escrow-label">
-                  <FormattedMessage id="escrow.label.price" />
+                <div className="d-inline-block escrow-label" style={{ width: '70px' }}>
+                  %
                 </div>
-                <div className="d-inline-block w-25 escrow-label">
-                  <FormattedMessage id="escrow.label.percentage" />
+                <div className="d-inline-block escrow-label" style={{ minWidth: '130px' }}>
+                  <FormattedMessage id="escrow.label.price" />
                 </div>
               </div>
               {listCurrency.map(coin => {
@@ -362,7 +362,7 @@ class EscrowDeposit extends React.Component {
 
                 return (
                   <div key={name} className="mt-2">
-                    <div className="d-inline-block w-50 pr-2">
+                    <div className="d-inline-block pr-2" style={{ width: '140px' }}>
                       <div style={{ position: 'relative' }}>
                         <Field
                           name={`amount_${name}`}
@@ -376,11 +376,7 @@ class EscrowDeposit extends React.Component {
                         />
                       </div>
                     </div>
-                    <div className="d-inline-block w-25 pl-2 bg-light rounded" style={{ lineHeight: '38px' }}>
-                      <span className="font-weight-normal">{formatMoneyByLocale(fiatCurrency, FIAT_CURRENCY.USD)}</span>
-                      <span className="escrow-label float-right mr-2 font-weight-normal">{`${FIAT_CURRENCY.USD}/${name}`}</span>
-                    </div>
-                    <div className="w-25 d-inline-block">
+                    <div className="d-inline-block pr-2" style={{ width: '70px' }}>
                       <div style={{ position: 'relative' }}>
                         <Field
                           name={`percentage_${name}`}
@@ -393,6 +389,10 @@ class EscrowDeposit extends React.Component {
                           validate={[number]}
                         />
                       </div>
+                    </div>
+                    <div className="d-inline-block pl-2 bg-light rounded" style={{ minWidth: '130px', lineHeight: '38px' }}>
+                      <span className="font-weight-normal">{formatMoneyByLocale(fiatCurrency, FIAT_CURRENCY.USD)}</span>
+                      <span className="escrow-label float-right mr-2 font-weight-normal">{`${FIAT_CURRENCY.USD}/${name}`}</span>
                     </div>
                   </div>
                 );
