@@ -547,6 +547,7 @@ export const URL = {
   PRODUCT_CASH_URL: '/cash',
   CASH_FOR_BUSINESS: '/cash-for-business',
   PRODUCT_PREDICTION_URL: '/prediction',
+  PEX_INSTRUCTION_URL: '/pex/instruction',
   PRODUCT_WALLET_URL: '/wallet',
   PRODUCT_HIVEPAY_OFFLINE_URL: '/pay-for-stores',
   PRODUCT_HIVEPAY_ONLINE_URL: '/pay-for-devs',
@@ -555,6 +556,7 @@ export const URL = {
   PRODUCT_DAD_URL_SUBDOMAIN: 'https://dad.ninja.org/',
   RESEARCH_UNCOMMONS_URL: '/uncommons',
   PRODUCT_WHISPER_URL: '/whisper',
+  PRODUCT_FUND_URL: 'https://ninja.org/fund/',
 
   RECRUITING: '/recruiting',
   RECRUITING_JOB_DETAIL: '/recruiting/:slug',

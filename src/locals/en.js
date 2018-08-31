@@ -1,5 +1,6 @@
 import { URL } from '@/constants';
 import React from 'react';
+import { Link } from 'react-router-dom'
 
 export default {
   app: {
@@ -435,6 +436,8 @@ export default {
   'landing_page.products.dad.subTitle': 'Building decentralized datasets to advance AI.',
   'landing_page.products.whisper.title': 'Whisper',
   'landing_page.products.whisper.subTitle': 'The new mailbox for the new internet.',
+  'landing_page.products.fund.title': 'Ninja fund',
+  'landing_page.products.fund.subTitle': 'Ninja Fund is a smart-contract secured investment platform. Connecting skilled traders and savvy investors to intelligently grow cryptocurrencies.',
 
   'landing_page.header.research': 'RESEARCH',
   'landing_page.subHeader.research': 'Ninja conducts fundamental research toward the creation of the new internet.',
@@ -705,7 +708,7 @@ export default {
     },
     {
       question: 'How do I start earning ETH/Bitcoin?/How do I put cryptocurrency in my wallet?',
-      answer: <span>For instructions on how to play: <a target="__blank" href="https://medium.com/@cian_36990/7657761ea2bd">https://medium.com/@cian_36990/7657761ea2bd</a></span>,
+      answer: <span>For instructions on how to play: <Link to={URL.PEX_INSTRUCTION_URL}>http://ninja.org/pex/prediction</Link></span>,
     }
   ],
   'landing_page.wallet.faq': [
