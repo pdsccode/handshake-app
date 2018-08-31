@@ -141,6 +141,10 @@ class Me extends React.Component {
     if (id && Object.values(HANDSHAKE_ID).indexOf(id) !== -1) {
       seletedId = id;
     }
+    // @TODO: chrome-ext
+    if (window.self !== window.top) {
+      seletedId = HANDSHAKE_ID.BETTING;
+    }
     return seletedId;
   }
 
@@ -188,12 +192,15 @@ class Me extends React.Component {
       }
     }
 
-    if (nextProps.me.list.length === 0 && nextProps.me.list.updatedAt !== prevState.me.list.updatedAt
-      && prevState.handshakeIdActive !== HANDSHAKE_ID.EXCHANGE && prevState.firstTime) {
-      rfChange(nameFormFilterFeeds, 'feedType', HANDSHAKE_ID.EXCHANGE);
-      rfChange(nameFormFilterFeeds, 'cash-show-type', CASH_TAB.TRANSACTION);
-      Me.loadMyHandshakeListStatic(nextProps, HANDSHAKE_ID.EXCHANGE);
-      return { handshakeIdActive: HANDSHAKE_ID.EXCHANGE, firstTime: false };
+    // @TODO: chrome-ext
+    if (window.self === window.top) {
+      if (nextProps.me.list.length === 0 && nextProps.me.list.updatedAt !== prevState.me.list.updatedAt
+        && prevState.handshakeIdActive !== HANDSHAKE_ID.EXCHANGE && prevState.firstTime) {
+        rfChange(nameFormFilterFeeds, 'feedType', HANDSHAKE_ID.EXCHANGE);
+        rfChange(nameFormFilterFeeds, 'cash-show-type', CASH_TAB.TRANSACTION);
+        Me.loadMyHandshakeListStatic(nextProps, HANDSHAKE_ID.EXCHANGE);
+        return { handshakeIdActive: HANDSHAKE_ID.EXCHANGE, firstTime: false };
+      }
     }
 
     return null;
@@ -436,79 +443,83 @@ class Me extends React.Component {
           <Image src={loadingSVG} alt="loading" width="100" />
         </div>
         <Grid className="me">
-          <Row>
-            <Col md={12}>
-              <Link className="update-profile" to={URL.HANDSHAKE_ME_PROFILE} title="profile">
-                <Image className="avatar" src={AvatarSVG} alt="avatar" />
-                <div className="text">
-                  <strong>{messages.me.feed.profileTitle}</strong>
-                  <p>{messages.me.feed.profileDescription}</p>
+          {
+            (window.self === window.top) &&
+            (
+              <div>
+                <Row>
+                  <Col md={12}>
+                    <Link className="update-profile" to={URL.HANDSHAKE_ME_PROFILE} title="profile">
+                      <Image className="avatar" src={AvatarSVG} alt="avatar" />
+                      <div className="text">
+                        <strong>{messages.me.feed.profileTitle}</strong>
+                        <p>{messages.me.feed.profileDescription}</p>
+                      </div>
+                      <div className="arrow">
+                        <Image src={ExpandArrowSVG} alt="arrow" />
+                      </div>
+                    </Link>
+                  </Col>
+                </Row>
+                <Row onClick={!haveOffer ? this.handleCreateExchange : undefined}>
+                  <Col md={12}>
+                    <div className="update-profile pt-2">
+                      <Image className="avatar" src={ShopSVG} alt="shop" />
+                      <div className="text" style={{ width: '69%' }}>
+                        <strong>{messages.me.feed.shopTitle}</strong>
+                        {haveOffer ?
+                          (<p>{messages.me.feed.shopDescription}</p>) :
+                          (<p>{messages.me.feed.shopNoDataDescription}</p>)
+                        }
+                      </div>
+                      {haveOffer && (<div className="arrow">
+                        <ToggleSwitch defaultChecked={online} onChange={flag => this.setOfflineStatus(flag)} />
+                      </div>)
+                      }
+                    </div>
+                  </Col>
+                </Row>
+
+                <div className="mt-2 mb-1">
+                  <FormFilterFeeds>
+                    <div className="d-table w-100">
+                      <div className="d-table-cell"><label className="label-filter-by">{messages.me.feed.filterBy}</label></div>
+                      <div className="d-table-cell">
+                        <Field
+                          name="feedType"
+                          component={fieldRadioButton}
+                          type="tab-5"
+                          list={CATEGORIES}
+                          // validate={[required]}
+                          onChange={this.onCategoryChange}
+                        />
+                      </div>
+                    </div>
+
+                    { this.state.handshakeIdActive === HANDSHAKE_ID.EXCHANGE && (
+                      <div>
+                        <hr style={{ margin: '10px 0 5px' }} />
+                        <div>
+                          <Field
+                            name="cash-show-type"
+                            component={fieldRadioButton}
+                            type="tab-6"
+                            list={[
+                              { value: CASH_TAB.TRANSACTION, text: messages.me.feed.cash.transactions, icon: <span className="icon-transactions align-middle" /> },
+                              { value: CASH_TAB.DASHBOARD, text: messages.me.feed.cash.dashboard, icon: <span className="icon-dashboard align-middle" /> },
+                            ]}
+                            // validate={[required]}
+                            onChange={this.onCashTabChange}
+                          />
+                        </div>
+                      </div>
+                      )
+                    }
+                  </FormFilterFeeds>
                 </div>
-                <div className="arrow">
-                  <Image src={ExpandArrowSVG} alt="arrow" />
-                </div>
-              </Link>
-            </Col>
-          </Row>
-          <Row onClick={!haveOffer ? this.handleCreateExchange : undefined}>
-            <Col md={12}>
-              <div className="update-profile pt-2">
-                <Image className="avatar" src={ShopSVG} alt="shop" />
-                <div className="text" style={{ width: '69%' }}>
-                  <strong>{messages.me.feed.shopTitle}</strong>
-                  {haveOffer ?
-                    (<p>{messages.me.feed.shopDescription}</p>) :
-                    (<p>{messages.me.feed.shopNoDataDescription}</p>)
-                  }
-                </div>
-                {haveOffer && (<div className="arrow">
-                  <ToggleSwitch defaultChecked={online} onChange={flag => this.setOfflineStatus(flag)} />
-                </div>)
-                }
               </div>
-            </Col>
-          </Row>
-
-          <div className="mt-2 mb-1">
-            <FormFilterFeeds>
-              <div className="d-table w-100">
-                <div className="d-table-cell"><label className="label-filter-by">{messages.me.feed.filterBy}</label></div>
-                <div className="d-table-cell">
-                  <Field
-                    name="feedType"
-                    component={fieldRadioButton}
-                    type="tab-5"
-                    list={CATEGORIES}
-                    // validate={[required]}
-                    onChange={this.onCategoryChange}
-                  />
-                </div>
-              </div>
-
-              { this.state.handshakeIdActive === HANDSHAKE_ID.EXCHANGE && (
-                <div>
-                  <hr style={{ margin: '10px 0 5px' }} />
-                  <div>
-                    <Field
-                      name="cash-show-type"
-                      component={fieldRadioButton}
-                      type="tab-6"
-                      list={[
-                        { value: CASH_TAB.TRANSACTION, text: messages.me.feed.cash.transactions, icon: <span className="icon-transactions align-middle" /> },
-                        { value: CASH_TAB.DASHBOARD, text: messages.me.feed.cash.dashboard, icon: <span className="icon-dashboard align-middle" /> },
-                      ]}
-                      // validate={[required]}
-                      onChange={this.onCashTabChange}
-                    />
-                  </div>
-                </div>
-                )
-              }
-
-
-            </FormFilterFeeds>
-          </div>
-
+            )
+          }
           <Row>
             <Col md={12} className="me-main-container">
               {
