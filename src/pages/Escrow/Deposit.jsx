@@ -242,7 +242,7 @@ class EscrowDeposit extends React.Component {
     });
 
     const wallet = MasterWallet.getWalletDefault(currency);
-    if (currency === CRYPTO_CURRENCY.ETH) {
+    if (currency === '') {
       try {
         const creditATM = new CreditATM(wallet.chainId);
 
