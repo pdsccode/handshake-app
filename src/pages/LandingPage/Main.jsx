@@ -18,6 +18,7 @@ import imgWallet from '@/assets/images/landing/home/wallet.jpg';
 import imgWhisper from '@/assets/images/landing/home/whisper.jpg';
 import imgHivepayOnline from '@/assets/images/landing/home/hivepay-online.jpg';
 import imgHivepayOffline from '@/assets/images/landing/home/hivepay-offline.jpg';
+import imgFund from '@/assets/images/landing/home/fund.png';
 import imgInternetCash from '@/assets/images/landing/home/internet-cash.jpg';
 import imgUncommons from '@/assets/images/landing/home/uncommons.jpg';
 
@@ -77,7 +78,14 @@ const products = [
     subTitle: <FormattedMessage id="landing_page.products.hivepay-offline.subTitle" />,
     img: imgHivepayOffline,
     to: URL.PRODUCT_HIVEPAY_OFFLINE_URL,
-  }
+  },
+  {
+    name: 'fund',
+    title: <FormattedMessage id="landing_page.products.fund.title" />,
+    subTitle: <FormattedMessage id="landing_page.products.fund.subTitle" />,
+    img: imgFund,
+    to: URL.PRODUCT_FUND_URL,
+  },
 ]
 
 const researches = [
