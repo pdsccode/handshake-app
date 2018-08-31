@@ -49,7 +49,7 @@ const products = [
     subTitle: <FormattedMessage id="landing_page.products.dad.subTitle" />,
     img: imgDad,
     to: URL.PRODUCT_DAD_URL,
-    toSubDomain: URL.PRODUCT_DAD_URL_SUBDOMAIN,
+    href: URL.PRODUCT_DAD_URL_SUBDOMAIN,
   },
   {
     name: 'wallet',
@@ -84,7 +84,8 @@ const products = [
     title: <FormattedMessage id="landing_page.products.fund.title" />,
     subTitle: <FormattedMessage id="landing_page.products.fund.subTitle" />,
     img: imgFund,
-    to: URL.PRODUCT_FUND_URL,
+    // to: URL.PRODUCT_FUND_URL,
+    href: URL.PRODUCT_FUND_URL,
   },
 ]
 
@@ -148,7 +149,7 @@ class Main extends React.PureComponent {
               <div className="row" style={{ marginTop: '18px' }}>
                 {
                   products.map((product, index) => {
-                    const { title, subTitle, img, to, toSubDomain, name } = product
+                    const { title, subTitle, img, to, href, name } = product
 
                     const content = (
                       <div>
@@ -158,8 +159,10 @@ class Main extends React.PureComponent {
                       </div>
                     )
                     let element = React.cloneElement(<Link to="" />, { to }, content)
-                    if (name === 'dad' && !BrowserDetect.isDesktop) {
-                      element = React.createElement('a', { href: toSubDomain }, content)
+                    if (href) {
+                      element = React.createElement('a', { href }, content)
+                    } else if (name === 'dad' && !BrowserDetect.isDesktop) {
+                      element = React.createElement('a', { href }, content)
                     }
 
                     return (
