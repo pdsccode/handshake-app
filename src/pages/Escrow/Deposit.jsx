@@ -95,14 +95,15 @@ class EscrowDeposit extends React.Component {
   }
 
   handleValidate = (values) => {
+    console.log('handleValidate', values);
     const { percentage } = values;
     const errors = {};
 
     let isError = true;
     for (const item of Object.values(CRYPTO_CURRENCY_CREDIT_CARD)) {
-      const itemValue = values[item];
+      const amount = values[`amount_${item}`];
 
-      if (itemValue && itemValue.trim().length > 0) {
+      if (amount && amount.trim().length > 0) {
         isError = false;
 
         break;
@@ -111,11 +112,11 @@ class EscrowDeposit extends React.Component {
 
     if (isError) {
       for (const item of Object.values(CRYPTO_CURRENCY_CREDIT_CARD)) {
-        errors[item] = required(values[item]);
+        errors[`amount_${item}`] = required(values[`amount_${item}`]);
       }
     } else {
       for (const item of Object.values(CRYPTO_CURRENCY_CREDIT_CARD)) {
-        errors[item] = minValue(MIN_AMOUNT[item])(values[item]);
+        errors[`amount_${item}`] = minValue(MIN_AMOUNT[item])(values[`amount_${item}`]);
       }
     }
 
@@ -161,9 +162,9 @@ class EscrowDeposit extends React.Component {
     const { values } = this.state;
 
     for (const item of Object.values(CRYPTO_CURRENCY_CREDIT_CARD)) {
-      const itemValue = values[item];
+      const amount = values[`amount_${item}`];
 
-      if (itemValue && itemValue.trim().length > 0) {
+      if (amount && amount.trim().length > 0) {
         if (!this.checkMainNetDefaultWallet(item)) {
           this.hideLoading();
           return;
@@ -173,10 +174,10 @@ class EscrowDeposit extends React.Component {
 
     const { percentage } = values;
     for (const item of Object.values(CRYPTO_CURRENCY_CREDIT_CARD)) {
-      const itemValue = values[item];
+      const amount = values[`amount_${item}`];
 
-      if (itemValue && itemValue.trim().length > 0) {
-        this.depositCoin(item, itemValue, percentage);
+      if (amount && amount.trim().length > 0) {
+        this.depositCoin(item, amount, percentage);
       }
     }
   }
@@ -361,7 +362,7 @@ class EscrowDeposit extends React.Component {
                     <div className="d-inline-block w-50 pr-2">
                       <div style={{ position: 'relative' }}>
                         <Field
-                          name={name}
+                          name={`amount_${name}`}
                           className="form-control form-deposit-custom"
                           type="text"
                           component={fieldInput}
