@@ -555,6 +555,7 @@ export const URL = {
   PRODUCT_DAD_URL_SUBDOMAIN: 'https://dad.ninja.org/',
   RESEARCH_UNCOMMONS_URL: '/uncommons',
   PRODUCT_WHISPER_URL: '/whisper',
+  PRODUCT_FUND_URL: 'https://ninja.org/fund/',
 
   RECRUITING: '/recruiting',
   RECRUITING_JOB_DETAIL: '/recruiting/:slug',
