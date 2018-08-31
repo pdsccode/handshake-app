@@ -165,8 +165,9 @@ class Transfer extends React.Component {
         PATH_URL: API_URL.EXCHANGE.GET_FIAT_CURRENCY,
         qs: {fiat_currency: fiat_currency, currency: currency},
         successFn: (res) => {
+
           let data = res.data;
-          let result = currency == 'USD' ? data.price : data.fiat_amount;
+          let result = fiat_currency == 'USD' ? data.price : data.fiat_amount;
           resolve(result);
         },
         errorFn: (err) => {
