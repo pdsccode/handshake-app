@@ -106,7 +106,9 @@ class EscrowDeposit extends React.Component {
       if (amount && amount.trim().length > 0) {
         isError = false;
 
-        break;
+        errors[`percentage_${item}`] = required(values[`percentage_${item}`]);
+
+        // break;
       }
     }
 
@@ -119,8 +121,6 @@ class EscrowDeposit extends React.Component {
         errors[`amount_${item}`] = minValue(MIN_AMOUNT[item])(values[`amount_${item}`]);
       }
     }
-
-    errors.percentage = isNormalInteger(percentage || '0');
 
     return errors;
   }
@@ -172,9 +172,9 @@ class EscrowDeposit extends React.Component {
       }
     }
 
-    const { percentage } = values;
     for (const item of Object.values(CRYPTO_CURRENCY_CREDIT_CARD)) {
       const amount = values[`amount_${item}`];
+      const percentage = values[`percentage_${item}`];
 
       if (amount && amount.trim().length > 0) {
         this.depositCoin(item, amount, percentage);
@@ -343,8 +343,11 @@ class EscrowDeposit extends React.Component {
                 <div className="d-inline-block w-50 escrow-label">
                   <FormattedMessage id="escrow.label.iWantTo" />
                 </div>
-                <div className="d-inline-block w-50 escrow-label">
+                <div className="d-inline-block w-25 escrow-label">
                   <FormattedMessage id="escrow.label.price" />
+                </div>
+                <div className="d-inline-block w-25 escrow-label">
+                  <FormattedMessage id="escrow.label.percentage" />
                 </div>
               </div>
               {listCurrency.map(coin => {
@@ -373,9 +376,23 @@ class EscrowDeposit extends React.Component {
                         />
                       </div>
                     </div>
-                    <div className="d-inline-block w-50 pl-2 bg-light rounded" style={{ lineHeight: '38px' }}>
+                    <div className="d-inline-block w-25 pl-2 bg-light rounded" style={{ lineHeight: '38px' }}>
                       <span className="font-weight-normal">{formatMoneyByLocale(fiatCurrency, FIAT_CURRENCY.USD)}</span>
                       <span className="escrow-label float-right mr-2 font-weight-normal">{`${FIAT_CURRENCY.USD}/${name}`}</span>
+                    </div>
+                    <div className="w-25 d-inline-block">
+                      <div style={{ position: 'relative' }}>
+                        <Field
+                          name={`percentage_${name}`}
+                          className="form-control pr-4"
+                          type="tel"
+                          component={fieldInput}
+                          elementAppend={
+                            <span className="percentage-symbol escrow-label font-weight-normal">%</span>
+                          }
+                          validate={[number]}
+                        />
+                      </div>
                     </div>
                   </div>
                 );
@@ -387,20 +404,20 @@ class EscrowDeposit extends React.Component {
                     <FormattedMessage id="escrow.label.sellingPriceCaption" />
                   </div>
                 </div>
-                <div className="w-25 d-inline-block align-middle">
-                  <div style={{ position: 'relative' }}>
-                    <Field
-                      name="percentage"
-                      className="form-control pr-4"
-                      type="tel"
-                      component={fieldInput}
-                      elementAppend={
-                        <span className="percentage-symbol escrow-label font-weight-normal">%</span>
-                      }
-                      validate={[number, required]}
-                    />
-                  </div>
-                </div>
+                {/*<div className="w-25 d-inline-block align-middle">*/}
+                  {/*<div style={{ position: 'relative' }}>*/}
+                    {/*<Field*/}
+                      {/*name="percentage"*/}
+                      {/*className="form-control pr-4"*/}
+                      {/*type="tel"*/}
+                      {/*component={fieldInput}*/}
+                      {/*elementAppend={*/}
+                        {/*<span className="percentage-symbol escrow-label font-weight-normal">%</span>*/}
+                      {/*}*/}
+                      {/*validate={[number, required]}*/}
+                    {/*/>*/}
+                  {/*</div>*/}
+                {/*</div>*/}
               </div>
               <div className="mt-3">
                 <button type="submit" className="btn btn-primary btn-block">

@@ -300,6 +300,7 @@ export default {
   'escrow.label.depositCoin': 'Deposit coin',
   'escrow.label.iWantTo': 'I want to deposit',
   'escrow.label.price': 'Price',
+  'escrow.label.percentage': 'Percentage',
   'escrow.label.yourSellingPrice': 'Your selling price',
   'escrow.label.sellingPriceCaption': '= Market price + percentage',
   'escrow.btn.depositNow': 'Deposit now',
