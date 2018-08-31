@@ -135,7 +135,6 @@ class Router extends React.Component {
       firebaseApp: initFirebaseApp,
     };
 
-    //console.log('root-router - contructor - init');
   }
   componentDidMount() {
   }
