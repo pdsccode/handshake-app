@@ -161,8 +161,9 @@ class Main extends React.PureComponent {
                     let element = React.cloneElement(<Link to="" />, { to }, content)
                     if (href) {
                       element = React.createElement('a', { href }, content)
-                    } else if (name === 'dad' && !BrowserDetect.isDesktop) {
-                      element = React.createElement('a', { href }, content)
+                    }
+                    if (name === 'dad') {
+                      element = !BrowserDetect.isDesktop ? React.createElement('a', { href }, content) : React.cloneElement(<Link to="" />, { to }, content)
                     }
 
                     return (
