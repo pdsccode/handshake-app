@@ -435,6 +435,8 @@ export default {
   'landing_page.products.dad.subTitle': 'Building decentralized datasets to advance AI.',
   'landing_page.products.whisper.title': 'Whisper',
   'landing_page.products.whisper.subTitle': 'The new mailbox for the new internet.',
+  'landing_page.products.fund.title': 'Ninja fund',
+  'landing_page.products.fund.subTitle': 'Ninja Fund is a smart-contract secured investment platform. Connecting skilled traders and savvy investors to intelligently grow cryptocurrencies.',
 
   'landing_page.header.research': 'RESEARCH',
   'landing_page.subHeader.research': 'Ninja conducts fundamental research toward the creation of the new internet.',

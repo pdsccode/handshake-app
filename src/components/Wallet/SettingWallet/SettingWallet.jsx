@@ -13,18 +13,16 @@ import PropTypes from 'prop-types';
 import local from '@/services/localStore';
 import { APP } from '@/constants';
 
+import { setLanguage } from '@/reducers/app/action';
+import ModalDialog from '@/components/core/controls/ModalDialog';
+
 import './SettingWallet.scss';
 import Dropdown from '@/components/core/controls/Dropdown';
 
-import bgBox from '@/assets/images/pages/wallet/bg-box-wallet-coin.svg';
-
 const amountValid = value => (value && isNaN(value) ? 'Invalid amount' : undefined);
 
-const nameFormAddToken = 'addToken';
-const SettingForm = createForm({ propsReduxForm: { form: nameFormAddToken, enableReinitialize: true, clearSubmitErrors: true}});
-
-// suggesion:
-import listToken from '@/data/ethToken.json';
+const nameFormSetting = 'FormSetting';
+const SettingForm = createForm({ propsReduxForm: { form: nameFormSetting, enableReinitialize: true, clearSubmitErrors: true}});
 
 class SettingWallet extends React.Component {
   constructor(props) {
@@ -32,7 +30,6 @@ class SettingWallet extends React.Component {
 
     this.state = {
       currencies: [],
-      active: props.active,
       alternateCurrency: '',
       cryptoAddress: -1
     }
@@ -63,27 +60,27 @@ class SettingWallet extends React.Component {
     this.props.hideLoading();
   }
 
-  componentDidUpdate (){
-    const active = this.props.active;
-    if(active) {
-      let setting = local.get(APP.SETTING);
+  componentDidMount(){
+    let setting = local.get(APP.SETTING);
 
-      //alternateCurrency
-      let currencies = this.state.currencies;
-      if(!currencies || currencies.length < 1){
-        this.listCurrencies().then(result => {
-          this.setState({currencies: result});
+    //alternateCurrency
+    let currencies = this.state.currencies;
+    if(!currencies || currencies.length < 1){
+      this.listCurrencies().then(result => {
+        this.setState({currencies: result});
 
-          if(setting && setting.wallet && setting.wallet.alternateCurrency)
-            this.setState({alternateCurrency: setting.wallet.alternateCurrency});
-        });
-      }
+        let alternateCurrency = 'USD';
+        if(setting && setting.wallet && setting.wallet.alternateCurrency)
+          alternateCurrency = setting.wallet.alternateCurrency
 
-      //cryptoAddress
-      if(this.state.cryptoAddress < 0){
-        let cryptoAddress = !setting || !setting.wallet || !setting.wallet.cryptoAddress ? 1 : setting.wallet.cryptoAddress;
-        this.setState({cryptoAddress: cryptoAddress});
-      }
+        this.setState({alternateCurrency: alternateCurrency});
+      });
+    }
+
+    //cryptoAddress
+    if(this.state.cryptoAddress < 0){
+      let cryptoAddress = !setting || !setting.wallet || !setting.wallet.cryptoAddress ? 1 : setting.wallet.cryptoAddress;
+      this.setState({cryptoAddress: cryptoAddress});
     }
   }
 
@@ -111,16 +108,6 @@ class SettingWallet extends React.Component {
     }
     catch (error) {
       return [];
-    }
-  }
-
-  onFinish = () => {
-    const { onFinish } = this.props;
-
-    if (onFinish) {
-      onFinish({"data": this.state.tokenType});
-    } else {
-
     }
   }
 
@@ -164,6 +151,16 @@ class SettingWallet extends React.Component {
     this.showSuccess(messages.wallet.action.setting.success.save_crypto_address);
   }
 
+  getCountryName(locale) {
+    const hasSupportLanguage = LANGUAGES.find(language => language.code === locale);
+    return hasSupportLanguage || LANGUAGES[0];
+  }
+
+  changeCountry(countryCode) {
+    this.props.setLanguage(countryCode, false);
+    this.modalLanguageRef.close();
+  }
+
   render() {
     const { messages } = this.props.intl;
 
@@ -193,6 +190,32 @@ class SettingWallet extends React.Component {
                 onItemSelected={this.onAddressSelected}
               />
             </div>
+            {/* <div className="row multi-language">
+              <div className="label">Language</div>
+              <div className="value" onClick={() => this.modalLanguageRef.open()}>{countrySelecting.name}</div>
+
+              <ModalDialog onRef={(modal) => { this.modalLanguageRef = modal; return null; }}>
+                <div className="country-block">
+                  <p className="text">Select your language</p>
+                  {
+                    LANGUAGES.map(language => (
+                      <div
+                        key={language.code}
+                        className={`country ${locale === language.code && 'active'}`}
+                        onClick={() => this.changeCountry(language.code)}
+                      >
+                        <span className="name">{language.name}</span>
+                        {
+                          locale === language.code && (
+                            <img className="tick" src={TickSVG} alt="active" />
+                          )
+                        }
+                      </div>
+                    ))
+                  }
+                </div>
+              </ModalDialog>
+            </div> */}
           </div>
         </SettingForm>
       </div>
@@ -201,15 +224,17 @@ class SettingWallet extends React.Component {
 }
 
 SettingWallet.propTypes = {
-  active: PropTypes.bool
+  app: PropTypes.object.isRequired,
+  setLanguage: PropTypes.func.isRequired,
 };
 
 
 const mapStateToProps = (state) => ({
-
+  app: state.app,
 });
 
 const mapDispatchToProps = (dispatch) => ({
+  setLanguage,
   rfChange: bindActionCreators(change, dispatch),
   showAlert: bindActionCreators(showAlert, dispatch),
   showLoading: bindActionCreators(showLoading, dispatch),
