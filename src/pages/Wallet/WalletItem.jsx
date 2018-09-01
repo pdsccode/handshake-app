@@ -48,7 +48,7 @@ class WalletItem extends React.Component {
   get showBackup(){
     const { messages } = this.props.intl;
     const {wallet, settingWallet, onWarningClick} =  this.props;
-    let html = <div><img className="safe" src={needBackup} /> <span className="warning" onClick={onWarningClick}>{messages.wallet.action.protect.text.need_secure}</span></div>;
+    let html = <div><img className="safe" src={needBackup} /> <span className="warning" onClick={onWarningClick}>{messages.wallet.action.protect.text.need_backup}</span></div>;
     
     return (html)
   }

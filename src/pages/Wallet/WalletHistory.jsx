@@ -17,7 +17,7 @@ import 'rmc-tabs/assets/index.css';
 
 import imgNoTrans from '@/assets/images/wallet/images/no-transaction.svg';
 import iconLoadding from '@/assets/images/icon/loading.gif';
-
+import needBackupWhite from '@/assets/images/wallet/icons/icon-need-backup-white.svg';
 
 class WalletHistory extends React.Component {
   static propTypes = {
@@ -67,7 +67,7 @@ class WalletHistory extends React.Component {
     const { messages } = this.props.intl;
 
     if (wallet && this.state.transactions.length==0)
-      return this.getNoTransactionYet("No transactions yet");      
+      return this.getNoTransactionYet(messages.wallet.action.history.label.no_trans);      
     else if(wallet){
       let arr = [];
       return this.state.transactions.map((res) => {
@@ -127,7 +127,7 @@ class WalletHistory extends React.Component {
     const { messages } = this.props.intl;
 
     if (wallet && this.state.internalTransactions.length==0)
-      return this.getNoTransactionYet("No internal transactions yet");
+      return this.getNoTransactionYet(messages.wallet.action.history.label.no_internal_trans);
     else if(wallet){
       let arr = [];
 
@@ -242,7 +242,7 @@ class WalletHistory extends React.Component {
           </div>
           {!wallet.protected ?
             <div className="box-warning" onClick={this.props.onWarningClick}>
-            <span>⚠</span> {messages.wallet.action.protect.text.need_backup}
+            {messages.wallet.action.protect.text.need_backup} <img src={needBackupWhite} />
             </div>
           : ""}
 
@@ -289,7 +289,7 @@ class WalletHistory extends React.Component {
 
         {/* Not support render */}
         {wallet && wallet.isHistorySupport === false ?
-          this.getNoTransactionYet("Coming soon ...")
+          this.getNoTransactionYet(messages.wallet.action.history.label.coming_soon)
         : 
           <div className="history-content">
             {wallet && (wallet.name == "ETH" || wallet.isToken) && (this.state.internalTransactions && this.state.internalTransactions.length > 0) ?

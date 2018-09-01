@@ -1120,7 +1120,7 @@ export default {
           step2_msg1: 'Record these words carefully. Don\'t email it or screenshot it.',
           step3_msg1: 'Tap to put these words in the correct order.',
           need_secure: 'Need secure',
-          need_backup: 'Need back up'
+          need_backup: 'Needs Backup'
         },
         button: {
           continue: 'Continue',
@@ -1219,7 +1219,10 @@ export default {
           transfer: "transfer",
           from: "from",
           to: "to",
-          internal_transactions: "Internal Transaction"
+          internal_transactions: "Internal Transaction",
+          no_trans: "No transactions yet",
+          no_internal_trans: "No internal transactions yet",
+          coming_soon: "Coming soon ...",
         },
       },
     },
