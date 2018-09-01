@@ -195,7 +195,7 @@ class WalletHistory extends React.Component {
   async detailTransaction(data){
     const wallet = this.props.wallet;
     if(wallet && data){
-      if(wallet.name == "ETH") {
+      if(wallet.name == "ETH" || wallet.isToken) {
         let it = await wallet.getInternalTransactions(data.hash);
         if(it && it.length > 0) data["internal_transactions"] = it;
       }
@@ -252,7 +252,7 @@ class WalletHistory extends React.Component {
           <div className="header-history-tx">        
             {messages.wallet.action.history.label.transactions} : {wallet.transaction_count} <br/>
             {/* {messages.wallet.action.history.label.transactions}: {wallet.transaction_count}<br/> */}
-            {wallet && wallet.name == "ETH" ?
+            {wallet && (wallet.name == "ETH" || wallet.isToken) ?
               <a target="_blank" href={""+wallet.getAPIUrlAddress(this.state.tabActive)}>{messages.wallet.action.history.label.view_all_etherscan}</a>
               : ""
             }
