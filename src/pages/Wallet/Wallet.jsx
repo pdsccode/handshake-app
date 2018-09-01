@@ -375,37 +375,15 @@ class Wallet extends React.Component {
         title: messages.wallet.action.transfer.title,
         handler: () => {
           this.toggleBottomSheet();
-          this.setState({ walletSelected: wallet,
-            modalTransferCoin:
-              (
-                <TransferCoin
-                  wallet={wallet}
-                  onFinish={() => { this.successTransfer() }}
-                  currency={this.state.alternateCurrency}
-                />
-              ),
-            }, ()=>{
-            this.modalSendRef.open();
-          });
+          this.showTransfer(wallet);
         }
       })
     }
     obj.push({
       title: messages.wallet.action.receive.title,
       handler: () => {
-        this.setState({walletSelected: wallet,
-          modalReceiveCoin:
-          (
-            <ReceiveCoin
-              wallet={wallet}
-              currency={this.state.alternateCurrency}
-              onFinish={() => { this.successReceive() }}
-            />
-          )
-        }, ()=>{
-          this.toggleBottomSheet();
-          this.modalReceiveCoinRef.open();
-        });
+        this.toggleBottomSheet();
+        this.showReceive(wallet);        
       }
     })
 
@@ -643,6 +621,36 @@ class Wallet extends React.Component {
     });
   }
 
+  showTransfer(wallet){
+    this.setState({ walletSelected: wallet,
+      modalTransferCoin:
+        (
+          <TransferCoin
+            wallet={wallet}
+            onFinish={() => { this.successTransfer() }}
+            currency={this.state.alternateCurrency}
+          />
+        ),
+      }, ()=>{
+      this.modalSendRef.open();
+    });
+  }
+
+  showReceive(wallet){
+    this.setState({walletSelected: wallet,
+      modalReceiveCoin:
+      (
+        <ReceiveCoin
+          wallet={wallet}
+          currency={this.state.alternateCurrency}
+          onFinish={() => { this.successReceive() }}
+        />
+      )
+    }, ()=>{
+      this.modalReceiveCoinRef.open();
+    });
+  }
+
    async showHisotry(wallet){
      
     let pagenoTran = 1, pagenoIT = 1;
@@ -834,18 +842,7 @@ class Wallet extends React.Component {
   }
 
   onAddressClick = (wallet) => {
-    this.setState({walletSelected: wallet,
-      modalReceiveCoin:
-      (
-        <ReceiveCoin
-          wallet={wallet}
-          currency={this.state.alternateCurrency}
-          onFinish={() => { this.successReceive() }}
-        />
-      )
-    }, ()=>{
-      this.modalReceiveCoinRef.open();
-    });
+    this.showReceive(wallet)
   }
   onSortableCoinSuccess = (items)=>{
     this.setState({listMainWalletBalance: items}, ()=> {            
@@ -1021,7 +1018,7 @@ class Wallet extends React.Component {
       <div className="wallet-page">
 
         <Modal iconBackImage={BackChevronSVGWhite} modalBodyStyle={this.modalBodyStyle} modalHeaderStyle={this.modalHeaderStyle} title={this.state.walletSelected ? this.state.walletSelected.title : messages.wallet.action.history.header} onRef={modal => this.modalHistoryRef = modal} onClose={this.closeHistory}>
-          <WalletHistory onTransferClick={() => this.setState({ activeTransfer: true }, ()=>{this.modalSendRef.open();})}  onReceiveClick={() => this.onAddressClick(this.state.walletSelected)} onWarningClick={() => this.onWarningClick(this.state.walletSelected)}  wallet={this.state.walletSelected} transactions={this.state.transactions} internalTransactions={this.state.internalTransactions} iconBackImage={BackChevronSVGWhite} modalHeaderStyle={this.modalHeaderStyle} />
+          <WalletHistory onTransferClick={ () => this.showTransfer(this.state.walletSelected)}  onReceiveClick={() => this.onAddressClick(this.state.walletSelected)} onWarningClick={() => this.onWarningClick(this.state.walletSelected)}  wallet={this.state.walletSelected} transactions={this.state.transactions} internalTransactions={this.state.internalTransactions} iconBackImage={BackChevronSVGWhite} modalHeaderStyle={this.modalHeaderStyle} />
         </Modal>
 
         <Modal iconBackImage={BackChevronSVGWhite} modalHeaderStyle={this.modalHeaderStyle}  onClose={() => this.setState({formAddTokenIsActive: false})} title="Add Custom Token" onRef={modal => this.modalAddNewTokenRef = modal}>
