@@ -233,8 +233,12 @@ class WalletHistory extends React.Component {
           <div className="balance">{wallet.balance} {wallet.name}</div>                  
 
           <div className="box-button">
-            <div className="bt1"><button onClick={this.props.onTransferClick}>Send</button></div>
-            <div className="bt2"><button onClick={this.props.onReceiveClick}>Receive</button></div>
+            {!wallet.isCollectibles ? <div>
+              <div className="bt1"><button onClick={this.props.onTransferClick}>Send</button></div>
+              <div className="bt2"><button onClick={this.props.onReceiveClick}>Receive</button></div>
+            </div>
+            : <div className="bt"><button onClick={this.props.onReceiveClick}>Receive</button></div> 
+            }
           </div>
           {!wallet.protected ?
             <div className="box-warning" onClick={this.props.onWarningClick}>
