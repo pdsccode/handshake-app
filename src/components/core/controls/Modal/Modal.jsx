@@ -11,7 +11,7 @@ class Modal extends React.Component {
     super(props);
     // bind
     this.open = this.open.bind(this);
-    this.close = this.close.bind(this);
+    this.close = this.close.bind(this);    
   }
 
   componentDidMount() {
@@ -32,18 +32,24 @@ class Modal extends React.Component {
   }
 
   render() {
+    
+    let iconBackImage = this.props.iconBackImage || BackChevronSVG;    
+    let modalHeaderStyle = this.props.modalHeaderStyle || {};
+    let modalBodyStyle = this.props.modalBodyStyle || {};
+        
+    
     const { title, children, hideBackButton } = this.props;
     return (
       <div className="modal" ref={modal => this.modalRef = modal}>
-        <div className="modal-custom-header">
+        <div className="modal-custom-header" style={modalHeaderStyle}>
           {
-            !hideBackButton && <Image src={BackChevronSVG} onClick={this.close} alt="back"/>
+            !hideBackButton && <Image src={iconBackImage} onClick={this.close} alt="back"/>
           }
           {
             title && (<p className="modal-custom-title">{title}</p>)
           }
         </div>
-        <div className="modal-custom-body">
+        <div className="modal-custom-body" style={modalBodyStyle}>
           {children}
         </div>
       </div>
@@ -57,6 +63,11 @@ Modal.propTypes = {
   onRef: PropTypes.func,
   onClose: PropTypes.func,
   hideBackButton: PropTypes.bool,
+
+  // custom style:
+  iconBackImage: PropTypes.any,// default gray icon: `BackChevronSVG`
+  modalHeaderStyle: PropTypes.object, // Modal header style:  {color, background, icon:white/gray}
+  modalBodyStyle: PropTypes.object, // Modal Body style.
 };
 
 export default Modal;
