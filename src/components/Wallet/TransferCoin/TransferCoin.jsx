@@ -9,19 +9,19 @@ import Modal from '@/components/core/controls/Modal';
 import createForm from '@/components/core/form/createForm'
 import {fieldDropdown, fieldInput} from '@/components/core/form/customField'
 import { API_URL } from "@/constants";
+import local from '@/services/localStore';
+import {APP} from '@/constants';
 import {required} from '@/components/core/form/validation'
 import {MasterWallet} from "@/services/Wallets/MasterWallet";
 import { bindActionCreators } from "redux";
 import {showAlert} from '@/reducers/app/action';
-import {getCryptoPrice} from '@/reducers/exchange/action';
-import CryptoPrice from "@/models/CryptoPrice";
+import {getFiatCurrency} from '@/reducers/exchange/action';
 import { showLoading, hideLoading } from '@/reducers/app/action';
 import QrReader from 'react-qr-reader';
 import { StringHelper } from '@/services/helper';
 import iconSuccessChecked from '@/assets/images/icon/icon-checked-green.svg';
 import './TransferCoin.scss';
 import iconQRCodeWhite from '@/assets/images/icon/scan-qr-code.svg';
-import { BigNumber } from "bignumber.js";
 import BrowserDetect from '@/services/browser-detect';
 
 const isIOs = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
@@ -43,12 +43,12 @@ class Transfer extends React.Component {
       wallets: [],
       walletDefault: false,
       walletSelected: false,
-      active: this.props.active,
+      currency: this.props.currency,
       // Qrcode
       qrCodeOpen: false,
       delay: 300,
       walletsData: false,
-      rates: [],
+      rate: 0,
       inputSendAmountValue: 0,
       inputSendMoneyValue: 0,
       legacyMode: false
@@ -80,19 +80,17 @@ class Transfer extends React.Component {
   }
 
   componentWillReceiveProps() {
-    const {active} = this.props;
-    if(!active && this.state.active){
-      this.setState({active: active, inputSendAmountValue: 0, inputSendMoneyValue: 0});
-      this.resetForm();
-    }
+    const {currency} = this.props;
+    this.setState({inputSendAmountValue: 0, inputSendMoneyValue: 0, currency: currency ? currency : 'USD'});
+    this.resetForm();
+
   }
 
-  componentDidMount() {
-
+  async componentDidMount() {
     let legacyMode = (BrowserDetect.isChrome && BrowserDetect.isIphone); // show choose file or take photo
     this.setState({legacyMode: legacyMode});
 
-    this.props.clearFields(nameFormSendWallet, false, false, "to_address", "amountCoin", "amountMoney");
+    //this.props.clearFields(nameFormSendWallet, false, false, "to_address", "amountCoin", "amountMoney");
 
     if (this.props.amount){
       this.props.rfChange(nameFormSendWallet, 'amountCoin', this.props.amount);
@@ -103,37 +101,8 @@ class Transfer extends React.Component {
       this.props.rfChange(nameFormSendWallet, 'to_address', this.props.toAddress);
     }
 
-    this.getWalletDefault();
-    // if(!this.state.walletSelected.isToken)
-    {
-      this.getRate("BTC");
-      this.getRate("ETH");
-      this.getRate("BCH");
-    }
-  }
-
-  componentDidUpdate() {
-
-    if (this.props.active && this.props.active != this.state.active){
-
-      this.setState({active: this.props.active});
-
-      this.props.clearFields(nameFormSendWallet, false, false, "to_address", "amountCoin",  "amountMoney");
-      if (this.props.amount){
-        this.props.rfChange(nameFormSendWallet, 'amountCoin', this.props.amount);
-      }
-
-      if (this.props.toAddress){
-        this.setState({inputAddressAmountValue: this.props.toAddress});
-        this.props.rfChange(nameFormSendWallet, 'to_address', this.props.toAddress);
-      }
-
-      this.getWalletDefault();
-
-    }
-    else if (this.props.active != this.state.active){
-      this.setState({active: this.props.active});
-    }
+    await this.getWalletDefault();
+    this.setRate();
   }
 
   resetForm(){
@@ -150,9 +119,7 @@ class Transfer extends React.Component {
 
 
   onFinish = () => {
-
     const { onFinish } = this.props;
-
 
     if (onFinish) {
       let result = {"toAddress": this.state.inputAddressAmountValue, "fromWallet": this.state.walletSelected, "amountCoin": this.state.inputSendAmountValue}
@@ -162,22 +129,50 @@ class Transfer extends React.Component {
     }
   }
 
-  getRate = (currency) => {
+  getSetting(){
+    let setting = local.get(APP.SETTING), alternateCurrency = "USD";
 
-    var data = {amount: 1, currency: currency};
-    let rates = this.state.rates;
-    this.props.getCryptoPrice({
-      PATH_URL: API_URL.EXCHANGE.GET_CRYPTO_PRICE,
-      qs: data,
-      successFn: (res) => {
-        const cryptoPrice = CryptoPrice.cryptoPrice(res.data);
-        const price = new BigNumber(cryptoPrice.fiatAmount).toNumber();
-        rates.push({[currency]: price});
-        this.setState({rates: rates});
-      },
-      errorFn: (err) => {
-        console.error("Error", err);
-      },
+    //alternate_currency
+    if(setting && setting.wallet && setting.wallet.alternateCurrency) {
+      alternateCurrency = setting.wallet.alternateCurrency;
+    }
+
+    return alternateCurrency;
+  }
+
+  setRate = async (cryptoCurrency) => {
+    let {wallet, currency} = this.props, result = 0;
+    if(!wallet && !cryptoCurrency){
+      wallet = this.state.walletSelected ? this.state.walletSelected : this.state.walletDefault;
+    }
+
+    if(!currency){
+      currency = this.getSetting();
+    }
+
+    let rate = 0;
+    if((wallet || cryptoCurrency) && currency){
+      rate = await this.getRate(currency ? currency : 'USD', cryptoCurrency ? cryptoCurrency : wallet.name);
+    }
+    this.setState({rate: rate, currency: currency});
+  }
+
+  getRate(fiat_currency, currency){
+    return new Promise((resolve, reject) => {
+
+      this.props.getFiatCurrency({
+        PATH_URL: API_URL.EXCHANGE.GET_FIAT_CURRENCY,
+        qs: {fiat_currency: fiat_currency, currency: currency},
+        successFn: (res) => {
+          let data = res.data;
+          let result = fiat_currency == 'USD' ? data.price : data.fiat_amount;
+          resolve(result);
+        },
+        errorFn: (err) => {
+          console.error("Error", err);
+          resolve(0);
+        },
+      });
     });
   }
 
@@ -263,23 +258,25 @@ class Transfer extends React.Component {
     }
     return errors
   }
-  
-  updateAddressAmountValue = (evt, val) => {
-    let amount = evt ? evt.target.value : null, rate = 0, money = 0;    
-    if(!amount) amount = val;   
-    
-    
-    let rates = this.state.rates.filter(rate => rate.hasOwnProperty(this.state.walletSelected.name));
 
-    if (rates.length > 0){
-      rate = rates[0][this.state.walletSelected.name];
-      if(!isNaN(amount)){
-        money = amount * rate;              
-      }      
+  updateAddressAmountValue = (evt, val) => {
+    let amount = evt ? evt.target.value : null, rate = 0, money = 0;
+    if(!amount) amount = val;
+
+    rate = this.state.rate;
+    if (rate && !isNaN(amount)){
+      money = amount * rate;
+      if(money >= 1000){
+        money = Math.round(money).toLocaleString();
+      }
+      else{
+        money = money.toLocaleString();
+      }
     }
+
     this.setState({
       inputSendAmountValue: amount,
-      inputSendMoneyValue: money.toFixed(0)
+      inputSendMoneyValue: money
     }, ()=>{
       this.props.rfChange(nameFormSendWallet, 'amountCoin', amount);
       this.props.rfChange(nameFormSendWallet, 'amountMoney', money);
@@ -300,27 +297,26 @@ class Transfer extends React.Component {
   }
 
   updateAddressMoneyValue = (evt) => {
-    let alternateRate = this.props.rate;
-    alternateRate = alternateRate ? alternateRate : 1;
     let money = evt.target.value, rate = 0, amount = 0;
-    let rates = this.state.rates.filter(rate => rate.hasOwnProperty(this.state.walletSelected.name));
-
-    if (rates.length > 0){
-      rate = rates[0][this.state.walletSelected.name]
-      if(!isNaN(money)){
-        amount = money/rate/alternateRate;
-        this.setState({
-          inputSendAmountValue: amount,
-          inputSendMoneyValue: money
-        });
-
-        this.props.rfChange(nameFormSendWallet, 'amountCoin', amount);
-        this.props.rfChange(nameFormSendWallet, 'amountMoney', money);
+    money = money.replace(/,/g, "");
+    rate = this.state.rate;
+    if (rate && !isNaN(money)){
+      amount = Number(money)/rate;
+      if(amount && amount < 1e-6){
+        amount = Number(amount).toFixed(6);
       }
+
+      this.setState({
+        inputSendAmountValue: amount,
+        inputSendMoneyValue: money
+      });
+
+      this.props.rfChange(nameFormSendWallet, 'amountCoin', amount);
+      this.props.rfChange(nameFormSendWallet, 'amountMoney', money);
     }
   }
 
-  
+
   updateSendAddressValue = (evt) => {
     this.setState({
       inputAddressAmountValue: evt.target.value,
@@ -348,9 +344,14 @@ submitSendCoin=()=>{
     });
 }
 
-onItemSelectedWallet = (item) =>{
+onItemSelectedWallet = async (item) =>{
 
   let wallet = MasterWallet.convertObject(item);
+  // if(wallet.name != this.state.walletSelected.name){
+  //   this.props.clearFields(nameFormSendWallet, false, false, "amountCoin", "amountMoney");
+  //   this.setState({rate: 0});
+  // }
+
   this.setState({walletSelected: wallet});
 
   wallet.getBalance().then(result => {
@@ -358,6 +359,12 @@ onItemSelectedWallet = (item) =>{
     this.setState({walletSelected: wallet});
     MasterWallet.UpdateBalanceItem(wallet);
   });
+
+  if(wallet.name != this.state.currency){
+    await this.setRate(wallet.name);
+    this.updateAddressAmountValue(null, this.state.inputSendAmountValue);
+  }
+
 }
 
 // For Qrcode:
@@ -389,12 +396,12 @@ oncloseQrCode=() => {
   this.setState({ qrCodeOpen: false });
 }
 
-openQrcode = () => {  
-  if (!this.state.legacyMode){    
+openQrcode = () => {
+  if (!this.state.legacyMode){
     this.setState({ qrCodeOpen: true });
     this.modalScanQrCodeRef.open();
   }
-  else{    
+  else{
     this.openImageDialog();
   }
 }
@@ -405,9 +412,8 @@ openImageDialog = () => {
 render() {
   let { currency } = this.props;
   if(!currency) currency = "USD";
-
   const { messages } = this.props.intl;
-  let showDivAmount = (( this.state.walletSelected && ( !this.state.walletSelected.isToken && this.state.walletSelected.name != "XRP" && this.state.rates.filter(rate => rate.hasOwnProperty(this.state.walletSelected.name).length > 0) ) ) ) ? true : false;
+  let showDivAmount = this.state.walletSelected && this.state.rate;
 
   return (
     <div>
@@ -513,9 +519,7 @@ render() {
 
 Transfer.propTypes = {
   wallet: PropTypes.any,
-  active: PropTypes.bool,
   currency: PropTypes.string,
-  rate: PropTypes.number
 };
 
 
@@ -529,7 +533,7 @@ const mapDispatchToProps = (dispatch) => ({
   showLoading: bindActionCreators(showLoading, dispatch),
   hideLoading: bindActionCreators(hideLoading, dispatch),
   clearFields: bindActionCreators(clearFields, dispatch),
-  getCryptoPrice: bindActionCreators(getCryptoPrice, dispatch),
+  getFiatCurrency: bindActionCreators(getFiatCurrency, dispatch),
 });
 
 export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(Transfer));

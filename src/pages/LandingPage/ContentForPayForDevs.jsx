@@ -14,9 +14,9 @@ const PayForDevs = () => (
       <div className="col-12 col-md-6 pd-subHeading">
         <p>We wanted to create a platform that would allow businesses to seamlessly integrate cryptocurrency payments into their current business model.</p>
         <p className="pd-content font-normal">Give your customers more choices when paying.</p>
-        <div><button className="btn btn-primary-landing ml-1">Get Started</button></div>
+        <div><button className="btn btn-secondary disable ml-1">Comming soon</button></div>
       </div>
-      <div className="col-12 col-md-6"><iframe width="560" height="315" src="https://www.youtube.com/embed/xCU5puuwros" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>
+      <div className="col-12 col-md-6"></div>
     </div>
 
     <div className="row pb-4 desc">

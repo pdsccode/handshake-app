@@ -224,6 +224,7 @@ export const API_URL = {
     INDEX: 'handshake/discover',
   },
   EXCHANGE: {
+    GET_FIAT_CURRENCY: 'exchange/info/crypto-price',
     GET_CRYPTO_PRICE: 'exchange/info/instant-buy/price', // {path: '/info/instant-buy/price', method: 'get'},
     CREATE_CC_ORDER: 'exchange/instant-buys', // {path: '/instant-buys', method: 'post'},
     GET_USER_CC_LIMIT: 'exchange/user/profile/cc-limit', // {path: '/user/profile/cc-limit', method: 'get'},
@@ -506,6 +507,7 @@ export const URL = {
 
   HANDSHAKE_PREDICTION: '/prediction',
   HANDSHAKE_PEX: '/pex',
+  HANDSHAKE_PEX_CREATOR: '/create-pex',
 
   HANDSHAKE_CASH: '/cash',
   HANDSHAKE_CASH_INDEX: '/cash',
@@ -545,6 +547,7 @@ export const URL = {
   PRODUCT_CASH_URL: '/cash',
   CASH_FOR_BUSINESS: '/cash-for-business',
   PRODUCT_PREDICTION_URL: '/prediction',
+  PEX_INSTRUCTION_URL: '/pex/instruction',
   PRODUCT_WALLET_URL: '/wallet',
   PRODUCT_HIVEPAY_OFFLINE_URL: '/pay-for-stores',
   PRODUCT_HIVEPAY_ONLINE_URL: '/pay-for-devs',
@@ -553,6 +556,7 @@ export const URL = {
   PRODUCT_DAD_URL_SUBDOMAIN: 'https://dad.ninja.org/',
   RESEARCH_UNCOMMONS_URL: '/uncommons',
   PRODUCT_WHISPER_URL: '/whisper',
+  PRODUCT_FUND_URL: 'https://ninja.org/fund/',
 
   RECRUITING: '/recruiting',
   RECRUITING_JOB_DETAIL: '/recruiting/:slug',

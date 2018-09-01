@@ -162,13 +162,14 @@ class Wallet extends React.Component {
       transactions: [],
       internalTransactions: [],
       isLoadMore: false,
-      activeReceive: false,
-      activeSetting: false,
       alternateCurrency: 'USD',
-      alternateCurrencyRate: 1,
-      modalFillContent: '',
+      modalBuyCoin: '',
+      modalTransferCoin: '',
+      modalReceiveCoin: '',
+      modalSetting: '',
+
       // sortable:
-       listSortable: {coin: false, token: false, collectitble: false},
+      listSortable: {coin: false, token: false, collectitble: false},
     };
 
     this.props.setHeaderRight(this.headerRight());
@@ -288,24 +289,21 @@ class Wallet extends React.Component {
   }
 
   async componentDidMount() {
-
+    this.getSetting();
     this.attachScrollListener();
     let listWallet = await MasterWallet.getMasterWallet();
 
     if (listWallet == false) {
       listWallet = await MasterWallet.createMasterWallets();
-      // fill data:
       await this.splitWalletData(listWallet);
     } else {
       this.splitWalletData(listWallet);
-      // console.log('update balance for lst wallet');
       await this.getListBalace(listWallet);
     }
+
     /* var btc = new Bitcoin();
      var tx = await btc.transfer("tprv8ccSMiuz5MfvmYHzdMbz3pjn5uW3G8zxM975sv4MxSGkvAutv54raKHiinLsxW5E4UjyfVhCz6adExCmkt7GjC41cYxbNxt5ZqyJBdJmqPA","mrPJ6rBHpJGnsLK3JGfJQjdm5vkjeAb63M", 0.0001);
-
      console.log(tx) */
-     this.getSetting();
   }
 
   async getSetting(){
@@ -318,26 +316,6 @@ class Wallet extends React.Component {
 
     if(alternateCurrency != "USD"){
       this.setState({alternateCurrency: alternateCurrency});
-
-      //rate
-      try{
-        const response = await axios.get("https://bitpay.com/api/rates/btc");
-        if (response.status == 200 && response.data) {
-          let usd = 0, alt = 0;
-          response.data.map(e => {
-            if(e.code == "USD")
-              usd = e.rate;
-            else if(e.code == this.state.alternateCurrency)
-              alt = e.rate;
-          });
-
-          if(usd > 0 && alt > 0){
-            this.setState({alternateCurrencyRate: Number(alt/usd)});
-          }
-        }
-      }
-      catch (error) {
-      }
     }
   }
 
@@ -397,7 +375,16 @@ class Wallet extends React.Component {
         title: messages.wallet.action.transfer.title,
         handler: () => {
           this.toggleBottomSheet();
-          this.setState({ walletSelected: wallet, activeTransfer: true }, ()=>{
+          this.setState({ walletSelected: wallet,
+            modalTransferCoin:
+              (
+                <TransferCoin
+                  wallet={wallet}
+                  onFinish={() => { this.successTransfer() }}
+                  currency={this.state.alternateCurrency}
+                />
+              ),
+            }, ()=>{
             this.modalSendRef.open();
           });
         }
@@ -406,9 +393,18 @@ class Wallet extends React.Component {
     obj.push({
       title: messages.wallet.action.receive.title,
       handler: () => {
-        this.setState({walletSelected: wallet, activeReceive: true}, ()=>{
+        this.setState({walletSelected: wallet,
+          modalReceiveCoin:
+          (
+            <ReceiveCoin
+              wallet={wallet}
+              currency={this.state.alternateCurrency}
+              onFinish={() => { this.successReceive() }}
+            />
+          )
+        }, ()=>{
           this.toggleBottomSheet();
-          this.modalShareAddressRef.open();
+          this.modalReceiveCoinRef.open();
         });
       }
     })
@@ -422,7 +418,7 @@ class Wallet extends React.Component {
         handler: () => {
           this.setState({
             walletSelected: wallet,
-            modalFillContent:
+            modalBuyCoin:
               (
                 <FeedCreditCard
                   buttonTitle={messages.create.cash.credit.title}
@@ -433,7 +429,7 @@ class Wallet extends React.Component {
               ),
           }, () => {
             this.toggleBottomSheet();
-            this.modalFillRef.open();
+            this.modalBuyCoin.open();
 
             gtag.event({
               category: taggingConfig.creditCard.category,
@@ -725,7 +721,9 @@ class Wallet extends React.Component {
     obj.push({
       title: messages.wallet.action.setting.title,
       handler: () => {
-        this.setState({activeSetting:true}, ()=> {
+        this.setState({
+          modalSetting: (<SettingWallet />)
+        }, ()=> {
           this.toggleBottomSheet();
           this.modalSettingRef.open();
         });
@@ -836,8 +834,17 @@ class Wallet extends React.Component {
   }
 
   onAddressClick = (wallet) => {
-    this.setState({walletSelected: wallet, activeReceive: true}, ()=>{
-      this.modalShareAddressRef.open();
+    this.setState({walletSelected: wallet,
+      modalReceiveCoin:
+      (
+        <ReceiveCoin
+          wallet={wallet}
+          currency={this.state.alternateCurrency}
+          onFinish={() => { this.successReceive() }}
+        />
+      )
+    }, ()=>{
+      this.modalReceiveCoinRef.open();
     });
   }
   onSortableCoinSuccess = (items)=>{
@@ -867,14 +874,21 @@ class Wallet extends React.Component {
   get listMainWalletBalance() {
     let setting = local.get(APP.SETTING);
     setting = setting ? setting.wallet : false;
+
     return this.state.listMainWalletBalance.map(wallet => <WalletItem key={Math.random()} settingWallet={setting} wallet={wallet} onMoreClick={() => this.onMoreClick(wallet)} onWarningClick={() => this.onWarningClick(wallet)} onAddressClick={() => this.onAddressClick(wallet)} />);
   }
 
   get listTokenWalletBalance() {
-    return this.state.listTokenWalletBalance.map(wallet => <WalletItem key={Math.random()} wallet={wallet} onMoreClick={() => this.onMoreClick(wallet)} onWarningClick={() => this.onWarningClick(wallet)} onAddressClick={() => this.onAddressClick(wallet)} />);
+    let setting = local.get(APP.SETTING);
+    setting = setting ? setting.wallet : false;
+
+    return this.state.listTokenWalletBalance.map(wallet => <WalletItem key={Math.random()} settingWallet={setting} wallet={wallet} onMoreClick={() => this.onMoreClick(wallet)} onWarningClick={() => this.onWarningClick(wallet)} onAddressClick={() => this.onAddressClick(wallet)} />);
   }
   get listCollectibleWalletBalance() {
-    return this.state.listCollectibleWalletBalance.map(wallet => <WalletItem key={Math.random()} wallet={wallet} onMoreClick={() => this.onMoreClick(wallet)} onWarningClick={() => this.onWarningClick(wallet)} onAddressClick={() => this.onAddressClick(wallet)} />);
+    let setting = local.get(APP.SETTING);
+    setting = setting ? setting.wallet : false;
+
+    return this.state.listCollectibleWalletBalance.map(wallet => <WalletItem key={Math.random()} settingWallet={setting} wallet={wallet} onMoreClick={() => this.onMoreClick(wallet)} onWarningClick={() => this.onWarningClick(wallet)} onAddressClick={() => this.onAddressClick(wallet)} />);
   }
 
   get listTestWalletBalance() {
@@ -892,7 +906,7 @@ class Wallet extends React.Component {
   }
 
   afterWalletFill = () => {
-    this.modalFillRef.close();
+    this.modalBuyCoin.close();
   }
 
   closeProtected = () => {
@@ -900,11 +914,11 @@ class Wallet extends React.Component {
   }
 
   closeTransfer = () => {
-    this.setState({ activeTransfer: false });
+    this.setState({ modalTransferCoin: '' });
   }
 
-  closeFillCoin = () => {
-    this.setState({ modalFillContent: '' });
+  closeBuyCoin = () => {
+    this.setState({ modalBuyCoin: '' });
   }
 
   closeCreate = () => {
@@ -926,7 +940,7 @@ class Wallet extends React.Component {
   }
 
   closeSetting = ()  => {
-    this.setState({activeSetting: false});
+    this.setState({modalSetting: ''});
     this.getSetting();
   }
 
@@ -1000,9 +1014,8 @@ class Wallet extends React.Component {
 
   render = () => {
     const { messages } = this.props.intl;
-    const { formAddTokenIsActive, formAddCollectibleIsActive, modalFillContent,
-      activeTransfer, walletSelected, alternateCurrency, alternateCurrencyRate,
-      walletsData, activeSetting, activeReceive} = this.state;
+    const { formAddTokenIsActive, formAddCollectibleIsActive, modalBuyCoin, modalTransferCoin, modalSetting,
+      modalReceiveCoin, walletSelected, walletsData} = this.state;
 
     return (
       <div className="wallet-page">
@@ -1040,17 +1053,11 @@ class Wallet extends React.Component {
 
 
           <Modal iconBackImage={BackChevronSVGWhite} modalHeaderStyle={this.modalHeaderStyle}  title={messages.wallet.action.transfer.header} onRef={modal => this.modalSendRef = modal}  onClose={this.closeTransfer}>
-            <TransferCoin
-              active={activeTransfer}
-              wallet={walletSelected}
-              onFinish={() => { this.successTransfer() }}
-              currency={alternateCurrency}
-              rate={alternateCurrencyRate}
-            />
+            {modalTransferCoin}
           </Modal>
 
-          <Modal iconBackImage={BackChevronSVGWhite} modalHeaderStyle={this.modalHeaderStyle}  title={messages.create.cash.credit.title} onRef={modal => this.modalFillRef = modal} onClose={this.closeFillCoin}>
-            {modalFillContent}
+          <Modal iconBackImage={BackChevronSVGWhite} modalHeaderStyle={this.modalHeaderStyle}  title={messages.create.cash.credit.title} onRef={modal => this.modalBuyCoin = modal} onClose={this.closeBuyCoin}>
+            {modalBuyCoin}
           </Modal>
 
           <Modal iconBackImage={BackChevronSVGWhite} modalHeaderStyle={this.modalHeaderStyle}  title={messages.wallet.action.protect.header} onClose={this.closeProtected} onRef={modal => this.modalProtectRef = modal}>
@@ -1068,18 +1075,13 @@ class Wallet extends React.Component {
           </Modal>
 
           {/* Modal for Setting wallets : */}
-          <Modal iconBackImage={BackChevronSVGWhite} modalHeaderStyle={this.modalHeaderStyle}  title={messages.wallet.action.setting.header} onRef={modal => this.modalSettingRef = modal} onClose={this.closeSetting}>
-            <SettingWallet active={activeSetting}  />
+          <Modal iconBackImage={BackChevronSVGWhite} modalHeaderStyle={this.modalHeaderStyle} title={messages.wallet.action.setting.header} onRef={modal => this.modalSettingRef = modal} onClose={this.closeSetting}>
+            {modalSetting}
           </Modal>
 
           {/* Modal for Copy address : */}
-          <Modal iconBackImage={BackChevronSVGWhite} modalHeaderStyle={this.modalHeaderStyle}  title={messages.wallet.action.receive.title} onRef={modal => this.modalShareAddressRef = modal} onClose={()=> {this.setState({activeReceive: false})}}>
-            <ReceiveCoin active={activeReceive}
-              wallet={walletSelected}
-              currency={alternateCurrency}
-              rate={alternateCurrencyRate}
-              onFinish={() => { this.successReceive() }}
-            />
+          <Modal iconBackImage={BackChevronSVGWhite} modalHeaderStyle={this.modalHeaderStyle}   title={messages.wallet.action.receive.title} onRef={modal => this.modalReceiveCoinRef = modal} onClose={()=> {this.setState({modalReceiveCoin: false})}}>
+            {modalReceiveCoin}
           </Modal>
 
           {/* Modal for Create/Import wallet : */}

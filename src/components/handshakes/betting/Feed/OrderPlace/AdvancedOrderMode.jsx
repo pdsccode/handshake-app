@@ -71,12 +71,12 @@ class AdvancedOrderMode extends React.Component {
       <React.Fragment>
         <BettingShake
           {...bettingShake}
-          onClickSubmit={(click) =>{ this.onButtonSubmit = click; }}
+          onClickSubmit={(click) => { this.onButtonSubmit = click; }}
         />
-        <OrderBook {...orderBook} />
         <Button block isLoading={disable} disabled={disable} className={buttonClass} onClick={this.handleClick}>{buttonText}</Button>
         <EstimateGas />
         {this.renderMarketFee(this.props)}
+        <OrderBook {...orderBook} />
       </React.Fragment>
     );
   }
