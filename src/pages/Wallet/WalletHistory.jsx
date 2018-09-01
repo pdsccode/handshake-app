@@ -282,20 +282,27 @@ class WalletHistory extends React.Component {
     <div>
       <div className="historywallet-wrapper">
         {this.load_balance}
-        <div className="history-content">
-        {wallet && wallet.name == "ETH" && (this.state.internalTransactions && this.state.internalTransactions.length > 0) ?
-        <Tabs onChange={(tab, index) => this.setState({tabActive: index})} tabs={[
-            { key: 't1', title: messages.wallet.action.history.label.transactions},
-            { key: 't2', title: messages.wallet.action.history.label.internal_transactions},            
-          ]} initalPage={'t1'}
-          >
-          <div key="t1">{this.list_internalTransaction}</div>
-          <div key="t2">{this.list_transaction}</div>
-        </Tabs>
+
+        {/* Not support render */}
+        {wallet && wallet.isHistorySupport === false ?
+          this.getNoTransactionYet("Coming soon ...")
         : 
-        this.state.tabActive == 1 ? this.list_internalTransaction : this.list_transaction }
+          <div className="history-content">
+            {wallet && (wallet.name == "ETH" || wallet.isToken) && (this.state.internalTransactions && this.state.internalTransactions.length > 0) ?
+            <Tabs onChange={(tab, index) => this.setState({tabActive: index})} tabs={[
+                { key: 't1', title: messages.wallet.action.history.label.transactions},
+                { key: 't2', title: messages.wallet.action.history.label.internal_transactions},            
+              ]} initalPage={'t1'}
+              >
+              <div key="t1">{this.list_internalTransaction}</div>
+              <div key="t2">{this.list_transaction}</div>
+            </Tabs>
+            : 
+            this.state.tabActive == 1 ? this.list_internalTransaction : this.list_transaction }
+          
+          </div>
+        }
         
-        </div>
       </div>
       <div className="historywallet-wrapper">
         {this.detail_transaction}

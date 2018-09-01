@@ -243,6 +243,10 @@ class Wallet extends React.Component {
   }
 
   async scrollListener () {
+    
+    // todo: remove if support xrp.
+    if (this.state.walletSelected &&this.state.walletSelected.name == 'XRP') return;
+    
     let el = ReactDOM.findDOMNode(this),
       offset = this.props.offset || defaultOffset,
       scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
@@ -644,27 +648,35 @@ class Wallet extends React.Component {
   }
 
    async showHisotry(wallet){
+     
     let pagenoTran = 1, pagenoIT = 1;
           
-          wallet.isLoading = true;
-          this.setState({ walletSelected: wallet, transactions: [], isHistory: true, pagenoTran: pagenoTran });          
-          this.modalHistoryRef.open();
-          // this.showLoading();
+    wallet.isLoading = true;
+    this.setState({ walletSelected: wallet, transactions: [], isHistory: true, pagenoTran: pagenoTran });          
+    this.modalHistoryRef.open();
+    
+    // Check support:
+    if (wallet.name == 'XRP'){
+      wallet.isHistorySupport = false; 
+      wallet.isLoading = false;     
+      return false;
+   }
+    // this.showLoading();
 
-          wallet.balance = await wallet.getBalance();
-          wallet.transaction_count = await wallet.getTransactionCount();
+    wallet.balance = await wallet.getBalance();
+    wallet.transaction_count = await wallet.getTransactionCount();
 
-          let transactions = await wallet.getTransactionHistory(pagenoTran);
+    let transactions = await wallet.getTransactionHistory(pagenoTran);
 
-          if(Number(transactions.length) < 20) pagenoTran = 0;
-          if(transactions.length > wallet.transaction_count) wallet.transaction_count = transactions.length;
+    if(Number(transactions.length) < 20) pagenoTran = 0;
+    if(transactions.length > wallet.transaction_count) wallet.transaction_count = transactions.length;
 
-          let internalTransactions = await wallet.listInternalTransactions(pagenoIT);
-          if(Number(internalTransactions.length) < 20) pagenoIT = 0;
-          if(internalTransactions.length > wallet.transaction_count) wallet.transaction_count = transactions.length;
-          wallet.isLoading = false;
-          this.setState({  transactions: transactions, internalTransactions: internalTransactions, pagenoTran: pagenoTran, pagenoIT: pagenoIT, walletSelected: wallet });
-          // this.hideLoading();
+    let internalTransactions = await wallet.listInternalTransactions(pagenoIT);
+    if(Number(internalTransactions.length) < 20) pagenoIT = 0;
+    if(internalTransactions.length > wallet.transaction_count) wallet.transaction_count = transactions.length;
+    wallet.isLoading = false;
+    this.setState({  transactions: transactions, internalTransactions: internalTransactions, pagenoTran: pagenoTran, pagenoIT: pagenoIT, walletSelected: wallet });
+    // this.hideLoading();
   }
 
   creatSheetMenuHeaderMore() {
