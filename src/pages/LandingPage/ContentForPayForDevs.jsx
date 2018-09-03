@@ -5,7 +5,7 @@ import imgChargeBack from '@/assets/images/landing/pay-for-devs/chargeback.png';
 import imgFastPayments from '@/assets/images/landing/pay-for-devs/fast-payments.svg';
 import imgSaveMoney from '@/assets/images/landing/pay-for-devs/save-money.svg';
 import imgSimpleUse from '@/assets/images/landing/pay-for-devs/simple-use.svg';
-import imgBgWhy from '@/assets/images/landing/pay-for-devs/bg-why.png';
+import img1 from '@/assets/images/landing/home/hivepay-online.jpg';
 
 
 const PayForDevs = () => (
@@ -16,7 +16,7 @@ const PayForDevs = () => (
         <p className="pd-content font-normal">Give your customers more choices when paying.</p>
         <div><button className="btn btn-secondary disable ml-1">Comming soon</button></div>
       </div>
-      <div className="col-12 col-md-6"></div>
+      <div className="col-12 col-md-6 text-right"><img src={img1} /></div>
     </div>
 
     <div className="row pb-4 desc">

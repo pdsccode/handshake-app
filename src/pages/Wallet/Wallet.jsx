@@ -1012,7 +1012,7 @@ class Wallet extends React.Component {
             {modalTransferCoin}
           </Modal>
 
-          <Modal iconBackImage={BackChevronSVGWhite} modalHeaderStyle={this.modalHeaderStyle}  title={messages.create.cash.credit.title} onRef={modal => this.modalBuyCoin = modal} onClose={this.closeBuyCoin}>
+          <Modal iconBackImage={BackChevronSVGWhite} modalHeaderStyle={this.modalHeaderStyle} modalBodyStyle={this.modalBodyStyle} title={messages.create.cash.credit.title} onRef={modal => this.modalBuyCoin = modal} onClose={this.closeBuyCoin}>
             {modalBuyCoin}
           </Modal>
 
