@@ -329,15 +329,15 @@ class WalletHistory extends React.Component {
           <div className="history-content">
             {wallet && (wallet.name == "ETH" || wallet.isToken) && (this.state.internalTransactions && this.state.internalTransactions.length > 0) ?
             <Tabs onChange={(tab, index) => this.setState({tabActive: index})} tabs={[
-                { key: 't1', title: messages.wallet.action.history.label.internal_transactions},
-                { key: 't2', title: messages.wallet.action.history.label.transactions},
+                { key: 't1', title: messages.wallet.action.history.label.transactions},
+                { key: 't2', title: messages.wallet.action.history.label.internal_transactions},
               ]} initalPage={'t2'}
               >
               <div key="t1">{this.list_internalTransaction}</div>
               <div key="t2">{this.list_transaction}</div>
             </Tabs>
             :
-            this.state.tabActive == 1 ? this.list_transaction : this.list_internalTransaction }
+            this.state.tabActive == 0 ? this.list_transaction : this.list_internalTransaction }
 
           </div>
         }
