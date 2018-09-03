@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import {Ethereum} from '@/services/Wallets/Ethereum.js'
+import iconExternalLink from '@/assets/images/icon/icon-external-link.svg';
 import iconSelf from '@/assets/images/icon/icon-self.svg';
 import iconSent from '@/assets/images/icon/icon-sent.svg';
 import iconCreate from '@/assets/images/icon/icon-create.svg';
@@ -28,31 +28,61 @@ class WalletHistory extends React.Component {
 
     super(props);
     this.state = {
-      transactions: this.props.transactions,
-      internalTransactions: this.props.internalTransactions,
+      transactions: [],
+      internalTransactions: [],
       transaction_detail: null,
-      tabActive: 0,
+      tabActive: 1,
+      wallet: this.props.wallet,
+      pagenoTran: 1,
+      pagenoIT: 1,
     };
   }
 
-  componentWillReceiveProps(){
-    //this.setState({tabActive:0});
+  componentWillUpdate(){
+    //console.log('componentWillUpdate')
   }
 
-  componentDidUpdate(){
-    const {transactions, internalTransactions} = this.props
-    if (transactions != this.state.transactions){
-      this.setState({transactions: transactions});
+  async componentDidMount(){console.log('componentDidMount');
+    let wallet = this.state.wallet;
+    wallet.isLoading = true;
+    this.setState({wallet: wallet}, () => {
+      this.getNoTransactionYet();
+    });
+
+    let pagenoTran = 0, pagenoIT = 0, transactions = [], internalTransactions = [];
+
+    if(wallet && wallet.name != 'XRP'){
+      wallet.balance = await wallet.getBalance();
+      wallet.transaction_count = await wallet.getTransactionCount();
+
+      transactions = await wallet.getTransactionHistory(pagenoTran);
+      if(Number(transactions.length) < 20) pagenoTran = 0;
+      if(transactions.length > wallet.transaction_count) wallet.transaction_count = transactions.length;
+
+      internalTransactions = await wallet.listInternalTransactions(pagenoIT);
+      if(Number(internalTransactions.length) < 20) pagenoIT = 0;
+      if(internalTransactions.length > wallet.transaction_count) wallet.transaction_count = transactions.length;
+
+      wallet.isLoading = false;
+    }
+    else{
+      wallet.isHistorySupport = false;
+      wallet.isLoading = false;
     }
 
-    if (internalTransactions != this.state.internalTransactions){
-      this.setState({internalTransactions: internalTransactions, tabActive : 0});
-    }
+    this.setState({
+      wallet: wallet,
+      transactions: transactions,
+      internalTransactions: internalTransactions,
+      pagenoTran: pagenoTran,
+      pagenoIT: pagenoIT
+    });
   }
 
   getNoTransactionYet(text){
     const wallet = this.props.wallet;
-    return <div className="history-no-trans">    
+    console.log('getNoTransactionYet', wallet, wallet.isLoading);
+    return <div className="history-no-trans">
       {wallet && !wallet.isLoading ?
         <div>
           <img src={imgNoTrans} />
@@ -66,9 +96,9 @@ class WalletHistory extends React.Component {
     const wallet = this.props.wallet;
     const { messages } = this.props.intl;
 
-    if (wallet && this.state.transactions.length==0)
-      return this.getNoTransactionYet(messages.wallet.action.history.label.no_trans);      
-    else if(wallet){
+    if (wallet && !this.state.transactions.length)
+      return this.getNoTransactionYet(messages.wallet.action.history.label.no_trans);
+    else if(wallet){console.log('list_transaction', this.state.transactions.length);
       let arr = [];
       return this.state.transactions.map((res) => {
         let tran = wallet.cook(res);
@@ -126,9 +156,9 @@ class WalletHistory extends React.Component {
     const wallet = this.props.wallet;
     const { messages } = this.props.intl;
 
-    if (wallet && this.state.internalTransactions.length==0)
+    if (wallet && !this.state.internalTransactions.length)
       return this.getNoTransactionYet(messages.wallet.action.history.label.no_internal_trans);
-    else if(wallet){
+    else if(wallet){console.log('list_internalTransaction', this.state.internalTransactions.length);
       let arr = [];
 
       return this.state.internalTransactions.map((res) => {
@@ -220,46 +250,51 @@ class WalletHistory extends React.Component {
 
   get load_balance(){
     const wallet = this.props.wallet;
-    const { messages } = this.props.intl;    
+    const { messages } = this.props.intl;
     if (wallet){
-      var logo = require("@/assets/images/wallet/icons/coins/" + wallet.icon);      
+      var logo = require("@/assets/images/wallet/icons/coins/" + wallet.icon);
       try { logo = require("@/assets/images/wallet/icons/coins/" + wallet.getCoinLogo());} catch (e){};
     }
+
+    console.log(!wallet.isLoading && wallet.transaction_count,wallet.transaction_count );
     return wallet ?
     (
       <div className="clear-fix">
-        <div className="wallet-detail"> 
+        <div className="wallet-detail">
           <div><img className="logo-detail" src={logo}/></div>
-          <div className="balance">{wallet.balance} {wallet.name}</div>                  
+          <div className="balance">{wallet.balance} {wallet.name}</div>
 
           <div className="box-button">
             {!wallet.isCollectibles ? <div>
               <div className="bt1"><button onClick={this.props.onTransferClick}>Send</button></div>
               <div className="bt2"><button onClick={this.props.onReceiveClick}>Receive</button></div>
             </div>
-            : <div className="bt"><button onClick={this.props.onReceiveClick}>Receive</button></div> 
+            : <div className="bt"><button onClick={this.props.onReceiveClick}>Receive</button></div>
             }
           </div>
-          {!wallet.protected ?
+
+          {wallet.transaction_count > 0 &&
+            <div className="header-history-tx">
+              <div className="float-left">{wallet.transaction_count} {messages.wallet.action.history.label.transactions}</div>
+              {wallet && (wallet.name == "ETH" || wallet.isToken) &&
+                <div className="float-right">
+                  <a target="_blank" href={""+wallet.getAPIUrlAddress(this.state.tabActive)}>{messages.wallet.action.history.label.view_all_etherscan}</a>
+                  <a target="_blank" href={""+wallet.getAPIUrlAddress(this.state.tabActive)} className="ml-1"><img width="18px" src={iconExternalLink} /></a>
+                </div>
+              }
+            </div>
+          }
+
+          {!wallet.protected &&
             <div className="box-warning" onClick={this.props.onWarningClick}>
             {messages.wallet.action.protect.text.need_backup} <img src={needBackupWhite} />
             </div>
-          : ""}
-
+          }
         </div>
 
-        {!wallet.isLoading && wallet.transaction_count > 0 ?
-          <div className="header-history-tx">        
-            {messages.wallet.action.history.label.transactions} : {wallet.transaction_count} <br/>
-            {/* {messages.wallet.action.history.label.transactions}: {wallet.transaction_count}<br/> */}
-            {wallet && (wallet.name == "ETH" || wallet.isToken) ?
-              <a target="_blank" href={""+wallet.getAPIUrlAddress(this.state.tabActive)}>{messages.wallet.action.history.label.view_all_etherscan}</a>
-              : ""
-            }
-          </div>
-        :""}
-        
-        {/* <div className="history-balance">        
+
+
+        {/* <div className="history-balance">
           {messages.wallet.action.history.label.transactions}: {wallet.transaction_count}<br/>
           {wallet && wallet.name == "ETH" ?
             <a target="_blank" href={""+wallet.getAPIUrlAddress(this.state.tabActive)}>{messages.wallet.action.history.label.view_all_etherscan}</a>
@@ -280,8 +315,8 @@ class WalletHistory extends React.Component {
   }
 
 	render(){
-    const wallet = this.props.wallet;
-    const { messages } = this.props.intl;    
+    const wallet = this.state.wallet;
+    const { messages } = this.props.intl;
 		return (
     <div>
       <div className="historywallet-wrapper">
@@ -290,23 +325,23 @@ class WalletHistory extends React.Component {
         {/* Not support render */}
         {wallet && wallet.isHistorySupport === false ?
           this.getNoTransactionYet(messages.wallet.action.history.label.coming_soon)
-        : 
+        :
           <div className="history-content">
             {wallet && (wallet.name == "ETH" || wallet.isToken) && (this.state.internalTransactions && this.state.internalTransactions.length > 0) ?
             <Tabs onChange={(tab, index) => this.setState({tabActive: index})} tabs={[
-                { key: 't1', title: messages.wallet.action.history.label.transactions},
-                { key: 't2', title: messages.wallet.action.history.label.internal_transactions},            
-              ]} initalPage={'t1'}
+                { key: 't1', title: messages.wallet.action.history.label.internal_transactions},
+                { key: 't2', title: messages.wallet.action.history.label.transactions},
+              ]} initalPage={'t2'}
               >
               <div key="t1">{this.list_internalTransaction}</div>
               <div key="t2">{this.list_transaction}</div>
             </Tabs>
-            : 
-            this.state.tabActive == 1 ? this.list_internalTransaction : this.list_transaction }
-          
+            :
+            this.state.tabActive == 1 ? this.list_transaction : this.list_internalTransaction }
+
           </div>
         }
-        
+
       </div>
       <div className="historywallet-wrapper">
         {this.detail_transaction}
