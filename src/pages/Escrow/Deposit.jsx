@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { API_URL, CRYPTO_CURRENCY, EXCHANGE_ACTION, FIAT_CURRENCY, MIN_AMOUNT, NB_BLOCKS, URL } from '@/constants';
 import createForm from '@/components/core/form/createForm';
 import { change, Field, formValueSelector } from 'redux-form';
+import './CommonStyle.scss';
 import './Deposit.scss';
 import { fieldInput } from '@/components/core/form/customField';
 

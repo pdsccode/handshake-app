@@ -569,6 +569,8 @@ export const URL = {
   BUY_BY_CC_URL: '/buy-by-credit-card',
 
   ESCROW_DEPOSIT: '/escrow/deposit',
+  ESCROW_WITHDRAW: '/escrow/withdraw',
+  ESCROW_WITHDRAW_SUCCESS: '/escrow/withdraw/success',
 };
 
 export const LANDING_PAGE_TYPE = {

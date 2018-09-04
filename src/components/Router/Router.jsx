@@ -59,6 +59,8 @@ const Discover = createDynamicImport(() => import('@/pages/Discover/Discover'), 
 const RouterCCConfirm = createDynamicImport(() => import('@/components/Router/CCConfirm'), Loading);
 const RouterBuyCC = createDynamicImport(() => import('@/components/Router/Credit'), Loading);
 const RouterEscrowDeposit = createDynamicImport(() => import('@/pages/Escrow/Deposit'), Loading);
+const RouterEscrowWithdraw = createDynamicImport(() => import('@/pages/Escrow/Withdraw'), Loading);
+const RouterEscrowWithdrawSuccess = createDynamicImport(() => import('@/pages/Escrow/WithdrawSuccess'), Loading);
 
 
 /* ======================== FOR MOBILE ======================== */
@@ -79,6 +81,8 @@ const configRoutesUsingMobileLayout = [
   { path: URL.CC_PAYMENT_URL, component: RouterCCConfirm },
   { path: URL.BUY_BY_CC_URL, component: RouterBuyCC },
   { path: URL.ESCROW_DEPOSIT, component: RouterEscrowDeposit },
+  { path: URL.ESCROW_WITHDRAW, component: RouterEscrowWithdraw, exact: true },
+  { path: URL.ESCROW_WITHDRAW_SUCCESS, component: RouterEscrowWithdrawSuccess },
   {
     path: URL.PRODUCT_DAD_URL,
     render: () => {
