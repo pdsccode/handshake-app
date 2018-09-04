@@ -4,24 +4,27 @@
 import React from 'react';
 import Select from 'react-select';
 import classNames from 'classnames';
+import AutoSuggestion from '@/components/AutoSuggestion/AutoSuggestion';
+import RangeSlider from '@/components/RangeSlider/RangeSlider';
 
-function renderByType(props) {
-  if (props.type === 'select') {
-    const { name, value, onChange } = props.input;
-    const finalValue = (typeof value === 'string' || typeof value === 'number')
-      ? props.options.find(o => o.value === value) : value;
-    return (
-      <Select
-        classNamePrefix="react-select"
-        name={name}
-        value={finalValue}
-        onChange={onChange}
-        placeholder={props.placeholder}
-        isDisabled={props.disabled}
-        options={props.options}
-      />
-    );
-  }
+function selectControl(props) {
+  const { name, value, onChange } = props.input;
+  const finalValue = (typeof value === 'string' || typeof value === 'number')
+    ? props.options.find(o => o.value === value) : value;
+  return (
+    <Select
+      classNamePrefix="react-select"
+      name={name}
+      value={finalValue}
+      onChange={onChange}
+      placeholder={props.placeholder}
+      isDisabled={props.disabled}
+      options={props.options}
+    />
+  );
+}
+
+function inputControl(props) {
   return (
     <input
       {...props.input}
@@ -31,6 +34,41 @@ function renderByType(props) {
       disabled={props.disabled}
     />
   );
+}
+
+function autoSuggestion(props) {
+  return (
+    <AutoSuggestion
+      {...props}
+      name={props.name}
+      placeholder={props.placeholder}
+      value={props.input.value}
+      onChange={props.input.onChange}
+    />
+  );
+}
+
+function rangeSlider(props) {
+  return (
+    <RangeSlider
+      {...props}
+      value={props.input.value}
+      onChange={props.input.onChange}
+    />
+  );
+}
+
+function renderByType(props) {
+  switch (props.type) {
+    case 'select':
+      return selectControl(props);
+    case 'autoSuggestion':
+      return autoSuggestion(props);
+    case 'rangeSlider':
+      return rangeSlider(props);
+    default:
+      return inputControl(props);
+  }
 }
 
 export const renderField = (props) => {

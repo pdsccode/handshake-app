@@ -4,8 +4,6 @@ import PropTypes from 'prop-types';
 import { reduxForm, Field, FieldArray, touch } from 'redux-form';
 import IconPlus from '@/assets/images/icon/icon-plus.svg';
 import IconTrash from '@/assets/images/icon/icon-trash.svg';
-import RangeSlider from '@/components/RangeSlider/RangeSlider';
-import AutoSuggestion from '@/components/AutoSuggestion/AutoSuggestion';
 import moment from 'moment';
 import DateTimePicker from '@/components/DateTimePicker/DateTimePicker';
 import { renderField } from './form';
@@ -133,13 +131,15 @@ class CreateEventForm extends Component {
       <React.Fragment>
         {this.renderGroupTitle(title)}
         <Field
+          type="autoSuggestion"
           name="eventName"
           className="form-group"
           fieldClass="form-control"
-          onSelectEvent={props.onSelectEvent}
+          placeholder="Choose an Event or Create a new one"
+          onSelect={props.onSelectEvent}
           source={props.eventList}
           validate={required}
-          component={this.renderAutoSuggestion}
+          component={renderField}
         />
       </React.Fragment>
     );
@@ -160,18 +160,6 @@ class CreateEventForm extends Component {
       />
     );
   }
-
-  renderAutoSuggestion = (props) => {
-    return (
-      <AutoSuggestion
-        {...props}
-        name="eventName"
-        placeholder="Choose an Event or Create a new one"
-        value={props.input.value}
-        onChange={props.input.onChange}
-      />
-    );
-  };
 
   renderOutComes = (props) => {
     const { fields, meta: { error }, isNew } = props;
@@ -227,7 +215,7 @@ class CreateEventForm extends Component {
     const textNote = 'The market fee is a percentage of the total winnings of the market.';
     const optionSlider = {
       min: 0,
-      max: 99,
+      max: 5,
       tooltip: false,
       orientation: 'horizontal',
     };
@@ -236,25 +224,15 @@ class CreateEventForm extends Component {
         {this.renderGroupTitle(title)}
         <Field
           name="creatorFee"
-          type="number"
+          type="rangeSlider"
           unit="%"
           className="input-value"
           disabled={!isNew}
           options={optionSlider}
-          component={this.renderRangleSlider}
+          component={renderField}
         />
         {this.renderGroupNote(textNote)}
       </div>
-    );
-  }
-
-  renderRangleSlider = (props) => {
-    return (
-      <RangeSlider
-        {...props}
-        value={props.input.value}
-        onChange={props.input.onChange}
-      />
     );
   }
 
@@ -263,10 +241,23 @@ class CreateEventForm extends Component {
       value: '',
       label: 'Select a verified source...',
     }].concat(props.reportList);
+    const reportList = props.reportList.map(item => ({ ...item, name: `${item.name}  - ${item.url}` }));
     return (
       <React.Fragment>
         {this.renderGroupTitle('REPORT')}
-        <div className="form-group">
+        <Field
+          type="autoSuggestion"
+          name="reports"
+          className="form-group"
+          fieldClass="form-control"
+          placeholder="Enter your preferred source name"
+          onSelect={(newValue) => this.setFieldValueToState('selectedReportSource', newValue)}
+          source={reportList}
+          disabled={!props.isNew}
+          validate={required}
+          component={renderField}
+        />
+        {/* <div className="form-group">
           <Field
             name="reports"
             type="select"
@@ -277,27 +268,27 @@ class CreateEventForm extends Component {
             component={renderField}
             options={reports}
           />
-        </div>
+        </div> */}
         {
           props.isNew && !state.selectedReportSource.value &&
           <React.Fragment>
-            <div className="CreateEventOption"><span>Or</span></div>
+            {/* <div className="CreateEventOption"><span>Or</span></div>
             <Field
               name="ownReportName"
               type="text"
               className="form-group"
               fieldClass="form-control"
               component={renderField}
-              placeholder="Enter your prefer source name"
+              placeholder="Enter your preferred source name"
               validate={[required, (value) => isExists(value, 'name', props.reportList)]}
-            />
+            /> */}
             <Field
               name="ownReportUrl"
               type="text"
               className="form-group"
               fieldClass="form-control"
               component={renderField}
-              placeholder="Enter your prefer source URL"
+              placeholder="Enter your preferred source URL"
               validate={[required, urlValidator, (value) => isExists(value, 'url', props.reportList)]}
             />
             {this.renderGroupNote('We will review your source and get back to you within 24 hours.')}
