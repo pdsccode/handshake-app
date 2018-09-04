@@ -102,6 +102,7 @@ class FeedBetting extends React.Component {
   }
 
   formatEventName(eventName) {
+    /*
     let name = eventName || '';
     name = `Event: ${name}`;
     /*
@@ -132,8 +133,8 @@ class FeedBetting extends React.Component {
 
     const {extraData} = props;
     const { event_name, event_predict } = parseJsonString(extraData);
-    const eventName = event_name && this.formatEventName(event_name);
-    const predictName = event_predict && this.formatPredictName(event_predict);
+    const eventName = event_name;
+    const predictName = event_predict;
 
     this.setState({
       actionTitle: title,
@@ -651,12 +652,9 @@ class FeedBetting extends React.Component {
     //const {extraData} = this.props;
 
     const { side, odds, role } = itemInfo;
-    //const { event_name, event_predict } = parseJsonString(extraData);
 
     const colorBySide = side === 1 ? `support` : 'oppose';
 
-    //const eventName = event_name && this.formatEventName(event_name);
-    //const predictName = event_predict && this.formatPredictName(event_predict);
 
     console.log(TAG, 'render', isLoading);
     return (
