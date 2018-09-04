@@ -75,8 +75,13 @@
   float: right; 
 }
 .safe{        
-  cursor: pointer;
-  opacity: .8;
+  position: absolute;  
+  left: 30px;
+  top: -2px;
+  width: 16px;
+  border: #ffffff 1px solid;
+  border-radius: 16px;
+  box-shadow: 1px 0px 2px 1px rgba(9, 4, 21, 0.14);
 }
 .iconDefault{
   margin-left: 5px;  
