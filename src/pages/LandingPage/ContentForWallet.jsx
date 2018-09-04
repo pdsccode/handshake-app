@@ -17,12 +17,12 @@ const Wallet = () => (
   <div className="content-for-wallet position-relative">
     <div className="position-relative">
       <section className="section section-mg section-shaped">
-        {/* <div className="shape shape-style-1 shape-default">
+        <div className="shape shape-style-1 shape-default">
           <span></span>
           <span></span>
           <span></span>
           <span></span>
-        </div> */}
+        </div>
         <div className="container py-lg-md d-flex">
           <div className="col px-0">
             <div className="row">
