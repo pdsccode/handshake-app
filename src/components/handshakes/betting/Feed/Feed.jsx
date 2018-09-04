@@ -101,26 +101,6 @@ class FeedBetting extends React.Component {
     return buttonClassName;
   }
 
-  formatEventName(eventName) {
-    /*
-    let name = eventName || '';
-    name = `Event: ${name}`;
-    /*
-    if (eventName.indexOf('Event') === -1) {
-      name = `Event: ${name}`;
-    }
-    */
-    return name;
-  }
-
-  formatPredictName(eventPredict) {
-    let predictName = eventPredict || '';
-    // if (predictName.indexOf('Outcome') !== -1) {
-    //   predictName = eventPredict.slice(8);
-    // }
-    return predictName;
-  }
-
 
   handleStatus(props) {
 

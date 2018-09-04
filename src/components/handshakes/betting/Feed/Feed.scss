@@ -156,9 +156,11 @@
       background: transparent !important;
     }
     .dispute {
-      background: #FF9500;
+      background: lightgray;
       border: none !important;
       color: #fff !important;
+      width: rem-calc(100px);
+
     }
   }
 }

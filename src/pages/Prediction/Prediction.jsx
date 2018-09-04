@@ -18,7 +18,6 @@ import { URL } from '@/constants';
 import { injectIntl } from 'react-intl';
 import { eventSelector, isLoading, showedLuckyPoolSelector, isSharePage, countReportSelector } from './selector';
 import { loadMatches, getReportCount, removeExpiredEvent } from './action';
-import { VALIDATE_CODE } from '@/components/handshakes/betting/constants.js';
 
 import EventItem from './EventItem';
 import PexCreateBtn from './PexCreateBtn';
