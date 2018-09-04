@@ -235,13 +235,14 @@ class EscrowDeposit extends React.Component {
 
     console.log('handleDepositCoinSuccess', data);
 
-    const { percentage } = this.props;
-
     const {
       data: {
         id, amount, currency, system_address, status,
       },
     } = data;
+
+    const { values } = this.state;
+    const percentage = values[`percentage_${currency}`];
 
     // const currency = 'ETH';
     // const amount = '0.01';
@@ -257,7 +258,7 @@ class EscrowDeposit extends React.Component {
     });
 
     const wallet = MasterWallet.getWalletDefault(currency);
-    if (currency === '') {
+    if (currency === CRYPTO_CURRENCY.ETH) {
       try {
         const creditATM = new CreditATM(wallet.chainId);
 
@@ -451,7 +452,6 @@ const mapState = state => ({
   listOfferPrice: state.exchange.listOfferPrice,
   authProfile: state.auth.profile,
   app: state.app,
-  percentage: selectorFormEscrowDeposit(state, 'percentage'),
   depositInfo: state.exchange.depositInfo,
 });
 

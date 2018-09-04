@@ -8,14 +8,10 @@ import { injectIntl } from 'react-intl';
 import { URL } from '@/constants';
 import { clearHeaderBack } from '@/reducers/app/action';
 import meIcon from '@/assets/images/navigation/ic_setting.svg.raw';
-import meIconNormal from '@/assets/images/navigation/ic_setting_normal.svg.raw';
+import creditIcon from '@/assets/images/navigation/ic_credit.svg.raw';
 import discoverIcon from '@/assets/images/navigation/ic_atm.svg.raw';
-import discoverIconNormal from '@/assets/images/navigation/ic_atm_normal.svg.raw';
 import chatIcon from '@/assets/images/navigation/ic_prediction.svg.raw';
-import chatIconNormal from '@/assets/images/navigation/ic_prediction_normal.svg.raw';
 import walletIcon from '@/assets/images/navigation/ic_wallet.svg.raw';
-import walletIconNormal from '@/assets/images/navigation/ic_wallet_normal.svg.raw';
-import createIcon from '@/assets/images/navigation/ic_add.svg.raw';
 
 class Navigation extends React.Component {
   static propTypes = {
@@ -57,47 +53,32 @@ class Navigation extends React.Component {
         <ul>
           <li className={cn(this.checkSelected(URL.HANDSHAKE_WALLET_INDEX))}>
             <Link to={URL.HANDSHAKE_WALLET_INDEX} onClick={this.props.clearHeaderBack}>
-              <div dangerouslySetInnerHTML={{ __html: this.checkSelected(URL.HANDSHAKE_WALLET_INDEX) ? walletIcon : walletIconNormal }} />
+              <div dangerouslySetInnerHTML={{ __html: walletIcon }} />
               <span>{this.props.intl.messages.app.navigation.wallet.toUpperCase()}</span>
             </Link>
           </li>
           <li className={cn(this.checkSelected(URL.BUY_BY_CC_URL))}>
             <Link to={URL.BUY_BY_CC_URL} onClick={this.props.clearHeaderBack}>
-              <div dangerouslySetInnerHTML={{ __html: this.checkSelected(URL.BUY_BY_CC_URL) ? walletIcon : walletIconNormal }} />
+              <div dangerouslySetInnerHTML={{ __html: creditIcon }} />
               <span>{this.props.intl.messages.app.navigation.credit.toUpperCase()}</span>
             </Link>
           </li>
 
           <li className={cn(this.checkSelected([URL.HANDSHAKE_EXCHANGE, URL.HANDSHAKE_CASH]))}>
             <Link to={URL.HANDSHAKE_CASH} onClick={this.props.clearHeaderBack}>
-              <div dangerouslySetInnerHTML={{ __html: this.checkSelected([URL.HANDSHAKE_EXCHANGE, URL.HANDSHAKE_CASH]) ? discoverIcon : discoverIconNormal }} />
+              <div dangerouslySetInnerHTML={{ __html: discoverIcon }} />
               <span>{this.props.intl.messages.app.navigation.atm.toUpperCase()}</span>
             </Link>
           </li>
-          <li>
-            {
-              this.props.location.pathname === URL.HANDSHAKE_CREATE_INDEX
-              ? (
-                <a>
-                  <div className="create" dangerouslySetInnerHTML={{ __html: createIcon }} />
-                </a>
-              )
-              : (
-                <Link to={URL.HANDSHAKE_CREATE_INDEX}>
-                  <div className="create" dangerouslySetInnerHTML={{ __html: createIcon }} />
-                </Link>
-              )
-            }
-          </li>
           <li className={cn(this.checkSelected(URL.PRODUCT_PREDICTION_URL))}>
             <Link to={URL.PRODUCT_PREDICTION_URL} onClick={this.props.clearHeaderBack}>
-              <div className="chat-icon" dangerouslySetInnerHTML={{ __html: this.checkSelected(URL.PRODUCT_PREDICTION_URL) ? chatIcon : chatIconNormal }} />
+              <div className="chat-icon" dangerouslySetInnerHTML={{ __html: chatIcon }} />
               <span>{this.props.intl.messages.app.navigation.bet.toUpperCase()}</span>
             </Link>
           </li>
           <li className={cn(this.checkSelected(URL.HANDSHAKE_ME_INDEX))}>
             <Link to={URL.HANDSHAKE_ME_INDEX} onClick={this.props.clearHeaderBack}>
-              <div className="me-icon" dangerouslySetInnerHTML={{ __html: this.checkSelected(URL.HANDSHAKE_ME_INDEX) ? meIcon : meIconNormal}} />
+              <div className="me-icon" dangerouslySetInnerHTML={{ __html: meIcon }} />
               <span>{this.props.intl.messages.app.navigation.setting.toUpperCase()}</span>
             </Link>
           </li>
