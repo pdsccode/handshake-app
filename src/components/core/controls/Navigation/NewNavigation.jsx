@@ -89,9 +89,9 @@ class Navigation extends React.Component {
               )
             }
           </li>
-          <li className={cn(this.checkSelected(URL.HANDSHAKE_CHAT_INDEX))}>
-            <Link to={URL.HANDSHAKE_CHAT_INDEX} onClick={this.props.clearHeaderBack}>
-              <div className="chat-icon" dangerouslySetInnerHTML={{ __html: this.checkSelected(URL.HANDSHAKE_CHAT_INDEX) ? chatIcon : chatIconNormal }} />
+          <li className={cn(this.checkSelected(URL.PRODUCT_PREDICTION_URL))}>
+            <Link to={URL.PRODUCT_PREDICTION_URL} onClick={this.props.clearHeaderBack}>
+              <div className="chat-icon" dangerouslySetInnerHTML={{ __html: this.checkSelected(URL.PRODUCT_PREDICTION_URL) ? chatIcon : chatIconNormal }} />
               <span>{this.props.intl.messages.app.navigation.bet.toUpperCase()}</span>
             </Link>
           </li>

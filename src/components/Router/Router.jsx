@@ -43,7 +43,7 @@ const RouterLuckyPool = createDynamicImport(() => import('@/pages/LuckyLanding/L
 const RouterExchange = createDynamicImport(() => import('@/components/Router/Exchange'), Loading);
 const CreateOwnMarket = createDynamicImport(() => import('@/pages/CreateMarket/CreateMarket'), Loading);
 //const RouterExchange = createDynamicImport(() => import('@/pages/Exchange/Exchange'), Loading);
-const RouterPrediction = createDynamicImport(() => import('@/pages/Exchange/Exchange'), Loading);
+const RouterPrediction = createDynamicImport(() => import('@/pages/Prediction/Prediction'), Loading);
 const RouterResolve = createDynamicImport(() => import('@/pages/Resolve/Resolve'), Loading);
 const RouterLandingPageMain = createDynamicImport(() => import('@/pages/LandingPage/Main'), Loading);
 const LandingPageMain = createDynamicImport(() => import('@/pages/LandingPage/Main'), Loading);
@@ -62,8 +62,8 @@ const RouterEscrowDeposit = createDynamicImport(() => import('@/pages/Escrow/Dep
 /* ======================== FOR MOBILE ======================== */
 const configRoutesUsingMobileLayout = [
   { path: URL.HANDSHAKE_ME, component: RouterMe },
-  { path: URL.HANDSHAKE_PREDICTION, component: RouterExchange },
-  { path: URL.HANDSHAKE_EXCHANGE, component: RouterExchange },
+  { path: URL.HANDSHAKE_PREDICTION, component: RouterPrediction },
+  // { path: URL.HANDSHAKE_EXCHANGE, component: RouterExchange },
   // { path: URL.HANDSHAKE_DISCOVER, component: RouterDiscover },
   { path: URL.HANDSHAKE_CASH, component: RouterDiscover },
   { path: URL.HANDSHAKE_CHAT, component: RouterChat },
