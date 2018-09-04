@@ -81,6 +81,15 @@ class Prediction extends React.Component {
   handleScroll = () => {
     this.showLuckyPool();
   };
+  didPlaceOrder = ()=> {
+    this.closeOrderPlace();
+    if (!this.props.isExistEmail) {
+      this.modalEmailPopupRef.open();
+    }else {
+      isFree ? this.modalLuckyFree.open() : this.modalLuckyReal.open();
+
+    }
+  }
 
   checkFreeAvailabe(props) {
     const { freeBet={} } = props;
@@ -124,12 +133,6 @@ class Prediction extends React.Component {
     } else if (isWin === 1 && this.modalFreeBetWinRef) {
       this.modalFreeBetWinRef.open();
     }
-  }
-  openEmailSubcribe() {
-    if (!this.props.isExistEmail) {
-      this.modalEmailPopupRef.open();
-    }
-
   }
 
   handleClickEventItem = (props, itemData) => {
@@ -203,8 +206,7 @@ class Prediction extends React.Component {
           handleBetFail={this.handleBetFail}
           freeAvailable={isFreeAvailable}
           onSubmitClick={(isFree) => {
-            this.closeOrderPlace();
-            isFree ? this.modalLuckyFree.open() : this.modalLuckyReal.open();
+            this.didPlaceOrder();
           }}
         />
       </ModalDialog>
@@ -224,7 +226,6 @@ class Prediction extends React.Component {
     <ModalDialog onRef={(modal) => { this.modalLuckyReal = modal; }}>
       <LuckyReal onButtonClick={() => {
         this.modalLuckyReal.close();
-        this.openEmailSubcribe();
       }}
       />
     </ModalDialog>
@@ -234,7 +235,6 @@ class Prediction extends React.Component {
     <ModalDialog onRef={(modal) => { this.modalLuckyFree = modal; }}>
       <LuckyFree onButtonClick={() => {
         this.modalLuckyFree.close();
-        this.openEmailSubcribe();
       }}
       />
     </ModalDialog>
