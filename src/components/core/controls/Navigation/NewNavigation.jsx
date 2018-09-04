@@ -61,6 +61,12 @@ class Navigation extends React.Component {
               <span>{this.props.intl.messages.app.navigation.wallet.toUpperCase()}</span>
             </Link>
           </li>
+          <li className={cn(this.checkSelected(URL.BUY_BY_CC_URL))}>
+            <Link to={URL.BUY_BY_CC_URL} onClick={this.props.clearHeaderBack}>
+              <div dangerouslySetInnerHTML={{ __html: this.checkSelected(URL.BUY_BY_CC_URL) ? walletIcon : walletIconNormal }} />
+              <span>{this.props.intl.messages.app.navigation.credit.toUpperCase()}</span>
+            </Link>
+          </li>
 
           <li className={cn(this.checkSelected([URL.HANDSHAKE_EXCHANGE, URL.HANDSHAKE_CASH, URL.HANDSHAKE_PREDICTION]))}>
             <Link to={URL.HANDSHAKE_EXCHANGE} onClick={this.props.clearHeaderBack}>
