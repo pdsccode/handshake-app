@@ -19,6 +19,11 @@ import imgNoTrans from '@/assets/images/wallet/images/no-transaction.svg';
 import iconLoadding from '@/assets/images/icon/loading.gif';
 import needBackupWhite from '@/assets/images/wallet/icons/icon-need-backup-white.svg';
 
+const TAB = {
+  Transaction: 0,
+  Internal: 1
+}
+
 class WalletHistory extends React.Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
@@ -31,35 +36,72 @@ class WalletHistory extends React.Component {
       transactions: [],
       internalTransactions: [],
       transaction_detail: null,
-      tabActive: 1,
+      tabActive: TAB.Transaction,
       wallet: this.props.wallet,
       pagenoTran: 1,
       pagenoIT: 1,
     };
   }
 
-  componentWillUpdate(){
-    //console.log('componentWillUpdate')
+  getSessionStore(wallet, tab){
+    let result = false;
+    if(wallet){
+      let key = `${wallet.name}_${tab}_${wallet.address}`;
+      let data = window.sessionStorage.getItem(key);
+
+      try{
+        if(data){
+          result = JSON.parse(data);
+        }
+      }
+      catch(e){
+
+      }
+    }
+
+    return result;
   }
 
-  async componentDidMount(){console.log('componentDidMount');
+  setSessionStore(wallet, tab, data){
+    let result = false;
+    if(wallet && data){
+      let key = `${wallet.name}_${tab}_${wallet.address}`;
+      window.sessionStorage.setItem(key, JSON.stringify(data));
+    }
+  }
+
+  async componentDidMount(){
     let wallet = this.state.wallet;
-    wallet.isLoading = true;
-    this.setState({wallet: wallet}, () => {
+    let pagenoTran = 0, pagenoIT = 0, transactions = [], internalTransactions = [];
+
+    let cTransaction = this.getSessionStore(wallet, TAB.Transaction),
+      cInternalTransactions = this.getSessionStore(wallet, TAB.Internal);
+
+    if(cTransaction && cInternalTransactions){
+      internalTransactions = cInternalTransactions && cInternalTransactions.length > 0 ? cInternalTransactions : [];
+      transactions = cTransaction && cTransaction.length > 0 ? cTransaction : [];
+    }
+    else{
+      wallet.isLoading = true;
+    }
+
+    this.setState({wallet: wallet, transactions: transactions, internalTransactions: internalTransactions}, () => {
       this.getNoTransactionYet();
     });
-
-    let pagenoTran = 0, pagenoIT = 0, transactions = [], internalTransactions = [];
 
     if(wallet && wallet.name != 'XRP'){
       wallet.balance = await wallet.getBalance();
       wallet.transaction_count = await wallet.getTransactionCount();
 
       transactions = await wallet.getTransactionHistory(pagenoTran);
+      this.setSessionStore(wallet, TAB.Transaction, transactions);
+
       if(Number(transactions.length) < 20) pagenoTran = 0;
       if(transactions.length > wallet.transaction_count) wallet.transaction_count = transactions.length;
 
       internalTransactions = await wallet.listInternalTransactions(pagenoIT);
+      this.setSessionStore(wallet, TAB.Internal, internalTransactions);
+
       if(Number(internalTransactions.length) < 20) pagenoIT = 0;
       if(internalTransactions.length > wallet.transaction_count) wallet.transaction_count = transactions.length;
 
@@ -81,7 +123,7 @@ class WalletHistory extends React.Component {
 
   getNoTransactionYet(text){
     const wallet = this.props.wallet;
-    console.log('getNoTransactionYet', wallet, wallet.isLoading);
+
     return <div className="history-no-trans">
       {wallet && !wallet.isLoading ?
         <div>
@@ -98,7 +140,7 @@ class WalletHistory extends React.Component {
 
     if (wallet && !this.state.transactions.length)
       return this.getNoTransactionYet(messages.wallet.action.history.label.no_trans);
-    else if(wallet){console.log('list_transaction', this.state.transactions.length);
+    else if(wallet){
       let arr = [];
       return this.state.transactions.map((res) => {
         let tran = wallet.cook(res);
@@ -158,7 +200,7 @@ class WalletHistory extends React.Component {
 
     if (wallet && !this.state.internalTransactions.length)
       return this.getNoTransactionYet(messages.wallet.action.history.label.no_internal_trans);
-    else if(wallet){console.log('list_internalTransaction', this.state.internalTransactions.length);
+    else if(wallet){
       let arr = [];
 
       return this.state.internalTransactions.map((res) => {
@@ -256,7 +298,6 @@ class WalletHistory extends React.Component {
       try { logo = require("@/assets/images/wallet/icons/coins/" + wallet.getCoinLogo());} catch (e){};
     }
 
-    console.log(!wallet.isLoading && wallet.transaction_count,wallet.transaction_count );
     return wallet ?
     (
       <div className="clear-fix">
@@ -333,8 +374,8 @@ class WalletHistory extends React.Component {
                 { key: 't2', title: messages.wallet.action.history.label.internal_transactions},
               ]} initalPage={'t1'}
               >
-              <div key="t1">{this.list_transaction}</div>
-              <div key="t2">{this.list_internalTransaction}</div>
+              <div key="t1">{this.list_internalTransaction}</div>
+              <div key="t2">{this.list_transaction}</div>
             </Tabs>
             :
             this.state.tabActive == 0 ? this.list_transaction : this.list_internalTransaction }
