@@ -9,14 +9,9 @@ import { URL } from '@/constants';
 import { clearHeaderBack } from '@/reducers/app/action';
 import meIcon from '@/assets/images/navigation/ic_setting.svg.raw';
 import creditIcon from '@/assets/images/navigation/ic_credit.svg.raw';
-import meIconNormal from '@/assets/images/navigation/ic_setting_normal.svg.raw';
 import discoverIcon from '@/assets/images/navigation/ic_atm.svg.raw';
-import discoverIconNormal from '@/assets/images/navigation/ic_atm_normal.svg.raw';
 import chatIcon from '@/assets/images/navigation/ic_prediction.svg.raw';
-import chatIconNormal from '@/assets/images/navigation/ic_prediction_normal.svg.raw';
 import walletIcon from '@/assets/images/navigation/ic_wallet.svg.raw';
-import walletIconNormal from '@/assets/images/navigation/ic_wallet_normal.svg.raw';
-import createIcon from '@/assets/images/navigation/ic_add.svg.raw';
 
 class Navigation extends React.Component {
   static propTypes = {
