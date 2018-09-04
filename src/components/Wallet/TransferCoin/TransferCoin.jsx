@@ -154,7 +154,6 @@ class Transfer extends React.Component {
     if((wallet || cryptoCurrency) && currency){
       rate = await this.getRate(currency ? currency : 'USD', cryptoCurrency ? cryptoCurrency : wallet.name);
     }
-
     this.setState({rate: rate, currency: currency});
   }
 
@@ -166,7 +165,7 @@ class Transfer extends React.Component {
         qs: {fiat_currency: fiat_currency, currency: currency},
         successFn: (res) => {
           let data = res.data;
-          let result = currency == 'USD' ? data.price : data.fiat_amount;
+          let result = fiat_currency == 'USD' ? data.price : data.fiat_amount;
           resolve(result);
         },
         errorFn: (err) => {

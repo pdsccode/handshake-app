@@ -5,97 +5,145 @@
   margin-right: 5px;
 }
 
+.app{
+  padding-top: 0;
+}
+
+// for item: need use for move:
+.wallet-box{
+  box-shadow: 2px 2px 13px 0 rgba(1,1,0,.1);
+  // padding: 20px;
+  background: #FFFFFF;
+  // box-shadow: 0 15px 11px -8px #F1F1F1;
+  border-radius: 4px;
+  width: 97%;
+  margin: auto;
+  margin-bottom: 25px;
+}
+// icon wallet item:
+.coin-logo{
+  border-radius: 50%;
+  width: 40px;
+  display: inline-block;
+  float: left;
+  margin-right: 15px;
+}
+.warning {
+  color:#f5a621;
+  cursor: pointer;
+  font-size: 14px;
+}
+.item-right{
+  display: inline-block;
+  float: right;
+  margin-top: 15px;
+}
+.item-center{
+  display: inline-block;
+  width: 60%;
+}
+.name {
+  font-size: rem-calc(15px);
+  font-weight: 400;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.balance {
+  font-size: rem-calc(16px);
+  letter-spacing: 0;
+  font-weight: 300;
+}
+
+.address {
+  font-size: rem-calc(12px);
+  letter-spacing: 0;
+  text-align: left;
+  cursor: pointer;
+  text-transform: uppercase;
+  float: left;
+  margin-right: 15px;
+  img{
+    width: 20px;
+    opacity: .7;
+  }
+}
+.more{
+  text-align: right;
+  width: 20px;
+  cursor: pointer;
+  float: right;
+}
+.safe{        
+  position: absolute;  
+  left: 30px;
+  top: -2px;
+  width: 16px;
+  border: #ffffff 1px solid;
+  border-radius: 16px;
+  box-shadow: 1px 0px 2px 1px rgba(9, 4, 21, 0.14);
+}
+.iconDefault{
+  margin-left: 5px;
+  width: 12px;
+}
+.iconChecked {
+  margin: 10px;
+  margin-top: 12%;
+  margin-left: 35%;
+}
+
 .wallet-page{
+
+  margin-bottom: 7px;
+  padding: rem-calc(10px 5px 10px 0);
+  min-height: 75px;
+  position: relative;
+
+  background-image: url('../../assets/images/wallet/images/bg-home-wallet2.svg');
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-color: #f4f4fb;
+
+  .header-icon-2{
+    margin-left: 15px;
+  }
+
+  .header-wallet{
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    color: #fff;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    position: relative;
+
+    .header-right {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  }
+
+  .logo-wallet{
+    margin: auto;
+  }
+
   button:disabled{
     background: Silver;
     border-color:Silver;
   }
 
-.feed-wrapper-wallet {
-  margin-bottom: 7px;
-  padding-left: 7px;
-  padding-right: 7px;
-  margin-top: 0 !important;
-
-  &:last-child {
-    margin-bottom: 0;
-  }
-  .feed {
-    margin-bottom: 7px;
-    padding: rem-calc(10px 5px 10px 15px);
-    min-height: 120px;
-    position: relative;
-    border-radius: 6px;
-    background-size: cover;
-
-    .warning {
-      color:#dc3545;
-      bottom: 7px;
-      right: 12px;
-      position: absolute;
-      cursor: pointer;
-      font-size: 14px;
-    }
-  }
   .feed-selected{
     border-color: #0BE200;
     border-width: 2px;
     border-style: solid;
     border-radius: 10px;
   }
-
-  .name {
-    font-size: rem-calc(14px);
-    color: $white;
-    margin-bottom: 0;
-    font-weight: bold;
-    margin-top: 10px;
-    width: 90%;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-  }
-  .balance {
-    font-size: rem-calc(16px);
-    color: $white;
-    letter-spacing: 0;
-    font-weight: 300;
-  }
-
-  .address {
-    margin: 0;
-    font-size: rem-calc(12px);
-    color: $white;
-    letter-spacing: 0;
-    text-align: left;
-    bottom: 12px;
-    position: absolute;
-    cursor: pointer;
-    text-transform: uppercase;
-    img{
-      // width: 16px;
-      margin-right: 6px;
-      margin-top: -6px;
-    }
-  }
-  .more{
-    text-align: right;
-    padding-right: 10px;
-    padding-bottom: 10px;
-    width: 30px;
-    top: 6px;
-    right: 2px;
-    position: absolute;
-    cursor: pointer;
-    display: table;
-  }
-  .safe{
-    bottom: 13px;
-    right: 12px;
-    position: absolute;
-    cursor: pointer;
-  }
-}
 
 .addressDivPopup{
   margin-top: 20px;
@@ -104,18 +152,22 @@
 }
 
 .headerBox{
-  margin-top: 15px;
-  margin-left: 8px;
-  margin-bottom: 10px;
-  margin-right: 10px;
   width: 100%;
+  padding: 20px;
+  border-bottom: 1px #f4f4f4 solid;
+  padding-bottom: 10px;
+  padding-top: 15px;
+  img, div{
+    float: right;
+  }
 }
 
 .headerText{
-  font-size: 20px;
-  font-family: Helvetica;
+  font-size: 14px;
   color: #090909;
   letter-spacing: 0;
+  text-transform: uppercase;
+  color: #315E9E;
 }
 .headerLink{
   font-size: 13px;
@@ -126,17 +178,6 @@
   color: white;
   padding: 3px 10px;
   border-radius: 4px;
-}
-.iconDefault{
-  margin-left: 5px;
-  position: absolute;
-    left: -12px;
-    top: -10px;
-}
-.iconChecked {
-  margin: 10px;
-  margin-top: 12%;
-  margin-left: 35%;
 }
 
 .linkImportWallet{
@@ -150,10 +191,11 @@
   margin-bottom: rem-calc(42px);
 }
 .list{
-  margin-left: -7px;
-  margin-right: -7px;
+  margin-left: 0;
+  margin-right: 0;
   display: flex;
   flex-wrap: wrap;
+  width: 100%;
 }
 .bodyConfirm .left{
   float: left;
@@ -473,6 +515,19 @@
   padding-bottom: 40px;
   font-weight: 300;
 
+  .history-content{
+    margin-top: 10px;
+    .rmc-tabs-tab-bar-tab{
+      font-size: 16px;
+      color: Gray;
+      margin-bottom: 10px;
+    }
+
+    .rmc-tabs-tab-bar-tab-active{
+      color:#108ee9;
+    }
+  }
+
   ul.history-tab {
     margin: 10px 0px 0px 0px;
     padding: 0px;
@@ -497,20 +552,113 @@
     }
   }
 
+
   .history-balance{
     padding-top: 10px;
     padding-bottom: 10px;
     font-size: 14px;
+    text-align: center;
+  }
+  .loader {
+    border-top: 3px solid blue;
+    border-right: 3px solid green;
+    border-bottom: 3px solid red;
+    border-left: 3px solid pink;
+    border-radius: 50%;
+    width: 12px;
+    height: 12px;
+    animation: spin 2s linear infinite;
+    display: inline-block;
+  }
 
+  @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+  }
+  .icon-loading-history{
+    width: 50px;
+  }
+  .wallet-detail{
+    text-align: center;
+    color: #fff;
+    background-color: #546FF7;
+    background-image: url('../../assets/images/wallet/images/bg-home-wallet2.svg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    .logo-detail{
+      width: 45px;
+      border: #ececec 1px solid;
+      border-radius: 45px;
+      margin-top: 15px;
+    }
+    .balance{
+      margin-top: 10px;
+    }
+    .box-warning{
+      background-color: #F5A623;
+      color: #fff;
+      font-size: 16px;
+      padding: 15px;
+      img{
+        width: 3.8px;
+        margin-right: 5px;
+      }
+    }
+  }
+  .header-history-tx{
+    color:Black;
+    font-size: 14px;
+    text-align: center;
+    padding: 10px;
+    overflow: hidden;
+
+    a{
+      text-decoration: underline;
+      font-size: 14px;
+      text-transform: none;
+      color: Black;
+    }
+  }
+  .box-button{
+    overflow: hidden;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    height: 50px;
+    .bt1{
+      width: 50%;
+      float: left;
+    }
+    .bt2{
+      width: 50%;
+      float: right;
+    }
+    .bt{
+      width: 100%;
+      button{
+        width: 60%;
+      }
+    }
+    button{
+      border-radius: 4px;
+      width: 140px;
+      background: transparent;
+      border: #c1c1c1 1px solid;
+      color: #fff;
+      font-size: 16px;
+      line-height: 35px;
+      outline: none;
+    }
   }
 
   .row{
-    flex-wrap:nowrap !important;
+    flex-wrap: nowrap !important;
     display: block;
-    border: solid 1px #ECECEC;
-    margin: 10px 0px;
-    padding: 20px 0px;
+    border-bottom: solid 1px #ECECEC;
+    padding: 15px 0px;
     border-radius: 6px;
+    margin: 0 10px;
+    margin-left: 5px;
+    overflow: hidden;
   }
 
   .label-self{
@@ -537,9 +685,10 @@
     padding-bottom: 7px;
   }
 
-  .address{
+  .history-address{
     color:#8A8A8F;
     font-size: 14px;
+    float: none;
   }
 
   .time{
@@ -696,6 +845,23 @@
       font-size: 13px;
       width: 33%;
       text-align: center;
+    }
+  }
+  .wallet-box-add-new{
+    margin-bottom: 7px;
+    padding-left: 7px;
+    padding-right: 7px;
+    margin-top: 0 !important;
+    .feed {
+      margin-bottom: 7px;
+      padding: 0.625rem 0.3125rem 0.625rem 0.9375rem;
+      min-height: 120px;
+      position: relative;
+      border-radius: 6px;
+      background-size: cover;
+    }
+    .name{
+      color: $white;
     }
   }
 }

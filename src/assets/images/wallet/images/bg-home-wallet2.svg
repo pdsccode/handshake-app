@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="414px" height="259px" viewBox="0 0 414 259" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.3 (51167) - http://www.bohemiancoding.com/sketch -->
+    <title>Group 3</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="100%" y1="50%" x2="0%" y2="50%" id="linearGradient-1">
+            <stop stop-color="#546FF7" offset="0%"></stop>
+            <stop stop-color="#6D54F7" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="10.8364503%" x2="50%" y2="100%" id="linearGradient-2">
+            <stop stop-color="#546FF7" offset="0%"></stop>
+            <stop stop-color="#6D54F7" offset="100%"></stop>
+        </linearGradient>
+        <rect id="path-3" x="0" y="0" width="414" height="259"></rect>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group-3">
+            <g id="Group-2">
+                <g id="bg_home_wallet">
+                    <g id="Mask" fill="url(#linearGradient-2)" fill-rule="nonzero">
+                        <rect id="path-2" x="0" y="0" width="414" height="259"></rect>
+                    </g>
+                    <g id="Clipped">
+                        <mask id="mask-4" fill="white">
+                            <use xlink:href="#path-3"></use>
+                        </mask>
+                        <g id="path-2"></g>
+                        <g id="Group" opacity="0.199999988" mask="url(#mask-4)">
+                            <g transform="translate(-289.000000, -8.000000)">
+                                <g>
+                                    <rect id="Rectangle-54" fill="#FFFFFF" fill-rule="nonzero" style="mix-blend-mode: soft-light;" transform="translate(808.677650, 167.356786) rotate(20.000000) translate(-808.677650, -167.356786) " x="653.17765" y="45.8567857" width="311" height="243" rx="28"></rect>
+                                    <rect id="Rectangle-54-Copy-2" fill="#FFFFFF" fill-rule="nonzero" style="mix-blend-mode: soft-light;" transform="translate(190.677650, 167.356786) scale(-1, 1) rotate(20.000000) translate(-190.677650, -167.356786) " x="35.1776499" y="45.8567857" width="311" height="243" rx="28"></rect>
+                                    <rect id="Rectangle-54-Copy" fill="#FFFFFF" fill-rule="nonzero" style="mix-blend-mode: soft-light;" transform="translate(808.677650, 311.356786) rotate(20.000000) translate(-808.677650, -311.356786) " x="653.17765" y="189.856786" width="311" height="243" rx="28"></rect>
+                                    <rect id="Rectangle-54-Copy-3" fill="#FFFFFF" fill-rule="nonzero" style="mix-blend-mode: soft-light;" transform="translate(188.500000, 311.356786) scale(-1, 1) rotate(20.000000) translate(-188.500000, -311.356786) " x="33" y="189.856786" width="311" height="243" rx="28"></rect>
+                                </g>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
