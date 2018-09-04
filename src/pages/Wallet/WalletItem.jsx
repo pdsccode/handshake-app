@@ -63,15 +63,13 @@ class WalletItem extends React.Component {
       return  (
 
         <div>
+            {!wallet.protected && <img className="safe" src={needBackup} /> }              
             <img onClick={onItemClick} className="coin-logo" src={logo}/>
             <div className="item-center" onClick={onItemClick}>
               <div className="name">{wallet.title}
               {wallet.default ? <img className="iconDefault" src={iconChecked}/> : ''}
-              </div>
-
-              {!wallet.protected ? this.showBackup :
-                <span className="balance"> {wallet.getShortBalance()} {wallet.name} </span>
-              }
+              </div>  
+                <span className="balance"> {wallet.getShortBalance()} {wallet.name} </span>                
             </div>
             
             {!isSortable ?

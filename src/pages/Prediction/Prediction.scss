@@ -4,28 +4,37 @@
   .Sticky {
     position: fixed;
     top: 0;
+    left: 0;
+    right: 0;
     width: 100%;
-    opacity: 0.7;
+    opacity: 0.9;
   }
 
   #PexCreateBtn {
-    padding: 7px 0;
+    padding: rem-calc(7px) 0;
     font-size: rem-calc(15px);
+    font-weight: 400;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
-    background-color: black;
     z-index: 2;
     color: white;
 
+    background-image: linear-gradient(-90deg, rgba(77,218,255,0.95) 5%, #21C4FF 54%, #47D4ED 100%);
+
+    .IconIdea {
+      padding-right: rem-calc(5px);
+    }
+
     button {
-      border: 1px solid white;
-      background: black;
-      color: white;
-      padding: 3px 15px;
-      text-transform: uppercase;
-      font-size: 12px;
+      color: #000000;
+      background-color: #FDEE4B;
+      width: rem-calc(120px);
+      height: rem-calc(35px);
+      font-size: rem-calc(16px);
+      font-weight: 400;
+      border-radius: rem-calc(20px);
+      box-shadow: 0 6px 0 0 #D9CB34;
     }
   }
 
