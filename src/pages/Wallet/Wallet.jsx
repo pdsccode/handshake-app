@@ -127,7 +127,7 @@ class Wallet extends React.Component {
     this.props.hideHeader();
     this.modalHeaderStyle = {color: "#fff", background: "#546FF7"};
     this.modalBodyStyle = {padding: 0};
-    
+
     this.state = {
       data: {},
       isLoading: false,
@@ -167,6 +167,7 @@ class Wallet extends React.Component {
       modalTransferCoin: '',
       modalReceiveCoin: '',
       modalSetting: '',
+      modalHistory: '',
 
       // sortable:
       listSortable: {coin: false, token: false, collectitble: false},
@@ -244,10 +245,10 @@ class Wallet extends React.Component {
   }
 
   async scrollListener () {
-    
+
     // todo: remove if support xrp.
     if (this.state.walletSelected &&this.state.walletSelected.name == 'XRP') return;
-    
+
     let el = ReactDOM.findDOMNode(this),
       offset = this.props.offset || defaultOffset,
       scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
@@ -383,7 +384,7 @@ class Wallet extends React.Component {
       title: messages.wallet.action.receive.title,
       handler: () => {
         this.toggleBottomSheet();
-        this.showReceive(wallet);        
+        this.showReceive(wallet);
       }
     })
 
@@ -434,7 +435,7 @@ class Wallet extends React.Component {
         title: messages.wallet.action.history.title,
         handler: async () => {
           this.toggleBottomSheet();
-          this.showHisotry(wallet);
+          this.onWalletItemClick(wallet);
         }
       });
     obj.push({
@@ -482,7 +483,6 @@ class Wallet extends React.Component {
 
     return obj;
   }
-
 
   // Remove wallet function:
   removeWallet = () => {
@@ -554,42 +554,6 @@ class Wallet extends React.Component {
     return errors
   }
 
-  submitSendCoin=()=>{
-    this.setState({isRestoreLoading: true});
-    this.modalConfirmSendRef.close();
-      this.state.walletSelected.transfer(this.state.inputAddressAmountValue, this.state.inputSendAmountValue).then(success => {
-          //console.log(success);
-          this.setState({isRestoreLoading: false});
-          if (success.hasOwnProperty('status')){
-            if (success.status == 1){
-              this.showSuccess(success.message);
-              this.modalSendRef.close();
-              // start cron get balance auto ...
-              this.autoCheckBalance(this.state.walletSelected.address, this.state.inputAddressAmountValue);
-            }
-            else{
-              this.showError(success.message);
-            }
-          }
-      });
-  }
-
-  updateSendAmountValue = (evt) => {
-    this.setState({
-      inputSendAmountValue: evt.target.value,
-    });
-  }
-
-  getPathPicture = (evt) => {
-    alert(`evt.target.value${evt.target.value}`);
-  }
-
-  updateSendAddressValue = (evt) => {
-    this.setState({
-      inputAddressAmountValue: evt.target.value,
-    });
-  }
-
   // Menu for Right header bar
   showModalAddCoin = () =>{
     this.setState({ isRestoreLoading: false, countCheckCoinToCreate: 1, listCoinTempToCreate: MasterWallet.getListCoinTemp() });
@@ -649,38 +613,6 @@ class Wallet extends React.Component {
     }, ()=>{
       this.modalReceiveCoinRef.open();
     });
-  }
-
-   async showHisotry(wallet){
-     
-    let pagenoTran = 1, pagenoIT = 1;
-          
-    wallet.isLoading = true;
-    this.setState({ walletSelected: wallet, transactions: [], isHistory: true, pagenoTran: pagenoTran });          
-    this.modalHistoryRef.open();
-    
-    // Check support:
-    if (wallet.name == 'XRP'){
-      wallet.isHistorySupport = false; 
-      wallet.isLoading = false;     
-      return false;
-   }
-    // this.showLoading();
-
-    wallet.balance = await wallet.getBalance();
-    wallet.transaction_count = await wallet.getTransactionCount();
-
-    let transactions = await wallet.getTransactionHistory(pagenoTran);
-
-    if(Number(transactions.length) < 20) pagenoTran = 0;
-    if(transactions.length > wallet.transaction_count) wallet.transaction_count = transactions.length;
-
-    let internalTransactions = await wallet.listInternalTransactions(pagenoIT);
-    if(Number(internalTransactions.length) < 20) pagenoIT = 0;
-    if(internalTransactions.length > wallet.transaction_count) wallet.transaction_count = transactions.length;
-    wallet.isLoading = false;
-    this.setState({  transactions: transactions, internalTransactions: internalTransactions, pagenoTran: pagenoTran, pagenoIT: pagenoIT, walletSelected: wallet });
-    // this.hideLoading();
   }
 
   creatSheetMenuHeaderMore() {
@@ -809,11 +741,6 @@ class Wallet extends React.Component {
       input12PhraseValue: evt.target.value,
     });
   }
-  updateWalletKeyDefaultValue = (evt) => {
-    this.setState({
-      walletKeyDefaultToCreate: evt.target.value,
-    });
-  }
 
   handleToggleNewCC = () => {
     this.setState({ isNewCCOpen: !this.state.isNewCCOpen });
@@ -837,35 +764,41 @@ class Wallet extends React.Component {
 
     }
   }
-  onWalletItemClick = (wallet) =>{    
-    this.showHisotry(wallet);
+  onWalletItemClick = (wallet) =>{
+    this.setState({walletSelected: wallet,
+      modalHistory:
+      (
+        <WalletHistory
+          onTransferClick={ () => this.showTransfer(wallet)}
+          onReceiveClick={() => this.onAddressClick(wallet)}
+          onWarningClick={() => this.onWarningClick(wallet)}
+          wallet={wallet}
+          iconBackImage={BackChevronSVGWhite}
+          modalHeaderStyle={this.modalHeaderStyle}
+        />
+      )
+    }, ()=>{
+      this.modalHistoryRef.open();
+    });
   }
 
   onAddressClick = (wallet) => {
     this.showReceive(wallet)
   }
   onSortableCoinSuccess = (items)=>{
-    this.setState({listMainWalletBalance: items}, ()=> {            
+    this.setState({listMainWalletBalance: items}, ()=> {
       MasterWallet.UpdateLocalStore(this.getAllWallet());
     });
   }
   onSortableTokenSuccess = (items)=>{
-    this.setState({listTokenWalletBalance: items}, ()=> {            
+    this.setState({listTokenWalletBalance: items}, ()=> {
       MasterWallet.UpdateLocalStore(this.getAllWallet());
     });
   }
   onSortableCollectibleSuccess = (items)=>{
-    this.setState({listCollectibleWalletBalance: items}, ()=> {            
+    this.setState({listCollectibleWalletBalance: items}, ()=> {
       MasterWallet.UpdateLocalStore(this.getAllWallet());
     });
-  }
-
-  handleFocus = (e) => {
-    e.currentTarget.select();
-  }
-
-  handleClick = (e) => {
-    this.refs.input.focus();
   }
 
   get listMainWalletBalance() {
@@ -923,8 +856,7 @@ class Wallet extends React.Component {
   }
 
   closeHistory = () => {
-    this.setState({activeSetting: false});
-    this.setState({ transactions: [], isHistory: false });
+    this.setState({modalHistory: ''});
   }
 
   successTransfer = () => {
@@ -990,11 +922,6 @@ class Wallet extends React.Component {
     console.log('error wc', err);
   }
 
-  openQrcode = () => {
-    this.setState({ qrCodeOpen: true });
-    this.modalScanQrCodeRef.open();
-  }
-
   renderScanQRCode = () => {
     const { messages } = this.props.intl;
     <Modal onClose={() => this.closeQrCode()} title={messages.wallet.action.scan_qrcode.header} onRef={modal => this.modalScanQrCodeRef = modal}>
@@ -1012,13 +939,13 @@ class Wallet extends React.Component {
   render = () => {
     const { messages } = this.props.intl;
     const { formAddTokenIsActive, formAddCollectibleIsActive, modalBuyCoin, modalTransferCoin, modalSetting,
-      modalReceiveCoin, walletSelected, walletsData} = this.state;
+      modalHistory, modalReceiveCoin, walletSelected, walletsData} = this.state;
 
     return (
       <div className="wallet-page">
 
         <Modal iconBackImage={BackChevronSVGWhite} modalBodyStyle={this.modalBodyStyle} modalHeaderStyle={this.modalHeaderStyle} title={this.state.walletSelected ? this.state.walletSelected.title : messages.wallet.action.history.header} onRef={modal => this.modalHistoryRef = modal} onClose={this.closeHistory}>
-          <WalletHistory onTransferClick={ () => this.showTransfer(this.state.walletSelected)}  onReceiveClick={() => this.onAddressClick(this.state.walletSelected)} onWarningClick={() => this.onWarningClick(this.state.walletSelected)}  wallet={this.state.walletSelected} transactions={this.state.transactions} internalTransactions={this.state.internalTransactions} iconBackImage={BackChevronSVGWhite} modalHeaderStyle={this.modalHeaderStyle} />
+          {modalHistory}
         </Modal>
 
         <Modal iconBackImage={BackChevronSVGWhite} modalHeaderStyle={this.modalHeaderStyle}  onClose={() => this.setState({formAddTokenIsActive: false})} title="Add Custom Token" onRef={modal => this.modalAddNewTokenRef = modal}>
@@ -1027,7 +954,7 @@ class Wallet extends React.Component {
 
         <Modal iconBackImage={BackChevronSVGWhite} modalHeaderStyle={this.modalHeaderStyle}  onClose={() => this.setState({formAddCollectibleIsActive: false})} title="Add Collectible" onRef={modal => this.modalAddNewCollectibleRef = modal}>
             <AddCollectible formAddCollectibleIsActive={formAddCollectibleIsActive} onFinish={() => {this.addedCollectible()}}/>
-        </Modal>    
+        </Modal>
 
           {/* Tooltim menu Bottom */ }
           <ReactBottomsheet
@@ -1053,7 +980,7 @@ class Wallet extends React.Component {
             {modalTransferCoin}
           </Modal>
 
-          <Modal iconBackImage={BackChevronSVGWhite} modalHeaderStyle={this.modalHeaderStyle}  title={messages.create.cash.credit.title} onRef={modal => this.modalBuyCoin = modal} onClose={this.closeBuyCoin}>
+          <Modal iconBackImage={BackChevronSVGWhite} modalHeaderStyle={this.modalHeaderStyle} modalBodyStyle={this.modalBodyStyle} title={messages.create.cash.credit.title} onRef={modal => this.modalBuyCoin = modal} onClose={this.closeBuyCoin}>
             {modalBuyCoin}
           </Modal>
 
@@ -1131,29 +1058,29 @@ class Wallet extends React.Component {
           {/* QR code dialog */}
           {/* {this.renderScanQRCode()} */}
           <Modal iconBackImage={BackChevronSVGWhite} modalHeaderStyle={this.modalHeaderStyle} onClose={() => this.closeQrCode()} title={messages.wallet.action.scan_qrcode.header} onRef={modal => this.modalScanQrCodeRef = modal}>
-            {this.state.qrCodeOpen ?
+            {this.state.qrCodeOpen &&
               <QrReader
                 delay={this.state.delay}
                 onScan={(data) => { this.handleScan(data); }}
                 onError={this.handleError}
                 style={{ width: '100%', height: '100%' }}
               />
-            : ''}
+            }
           </Modal>
-          
+
           <Grid>
-          
+
           {/* 1. Header Wallet ============================================== */}
           <div id="header-wallet">
-              <div className="header-wallet"> 
+              <div className="header-wallet">
                   <img className="logo-wallet" src={logoWallet} />
                   <div onClick={this.onIconRightHeaderClick} className="header-right"><img src={iconMoreSettings} /></div>
-              </div>              
+              </div>
           </div>
-                  
+
 
           {/* 2. Render list wallet here ===================================== */}
-          
+
           {/* 2.1 List Coin */}
           <Row className="wallet-box">
             {!process.env.isDojo ?
@@ -1195,7 +1122,7 @@ class Wallet extends React.Component {
           <Row className="wallet-box">
             {!process.env.isDojo ?
             <Row className="list">
-              
+
                {!this.state.listSortable.collectitble ?
                 <Header icon2={this.state.listCollectibleWalletBalance.length > 1 ? iconAlignJust : null} onIcon2Click={this.updateSortableForCollectible} icon={iconAddPlus} title={messages.wallet.action.create.label.header_collectibles} hasLink={true} linkTitle={messages.wallet.action.create.button.header_collectibles} onLinkClick={this.showModalAddCollectible} />
                 :<Header title={messages.wallet.action.create.label.header_collectibles} hasLink={true} linkTitle={messages.wallet.action.create.button.done} onLinkClick={this.updateSortableForCollectible} />
@@ -1210,7 +1137,7 @@ class Wallet extends React.Component {
               : ''}
             </Row>
           </Row>
-          
+
           <Row className="wallet-box">
             {!process.env.isLive ?
             <Row className="list">

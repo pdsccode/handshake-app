@@ -11,7 +11,7 @@
 
 // for item: need use for move:
 .wallet-box{
-  box-shadow: 2px 2px 13px 0 rgba(1,1,0,.1);      
+  box-shadow: 2px 2px 13px 0 rgba(1,1,0,.1);
   // padding: 20px;
   background: #FFFFFF;
   // box-shadow: 0 15px 11px -8px #F1F1F1;
@@ -23,13 +23,13 @@
 // icon wallet item:
 .coin-logo{
   border-radius: 50%;
-  width: 40px;      
+  width: 40px;
   display: inline-block;
-  float: left;      
+  float: left;
   margin-right: 15px;
-}    
+}
 .warning {
-  color:#f5a621;          
+  color:#f5a621;
   cursor: pointer;
   font-size: 14px;
 }
@@ -43,25 +43,25 @@
   width: 60%;
 }
 .name {
-  font-size: rem-calc(15px);        
-  font-weight: 400;    
+  font-size: rem-calc(15px);
+  font-weight: 400;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
 }
 .balance {
-  font-size: rem-calc(16px);    
+  font-size: rem-calc(16px);
   letter-spacing: 0;
   font-weight: 300;
 }
 
-.address {    
-  font-size: rem-calc(12px);    
+.address {
+  font-size: rem-calc(12px);
   letter-spacing: 0;
-  text-align: left;    
+  text-align: left;
   cursor: pointer;
   text-transform: uppercase;
-  float: left;    
+  float: left;
   margin-right: 15px;
   img{
     width: 20px;
@@ -69,10 +69,10 @@
   }
 }
 .more{
-  text-align: right;    
-  width: 20px;    
-  cursor: pointer;   
-  float: right; 
+  text-align: right;
+  width: 20px;
+  cursor: pointer;
+  float: right;
 }
 .safe{        
   position: absolute;  
@@ -84,7 +84,7 @@
   box-shadow: 1px 0px 2px 1px rgba(9, 4, 21, 0.14);
 }
 .iconDefault{
-  margin-left: 5px;  
+  margin-left: 5px;
   width: 12px;
 }
 .iconChecked {
@@ -98,8 +98,8 @@
   margin-bottom: 7px;
   padding: rem-calc(10px 5px 10px 0);
   min-height: 75px;
-  position: relative;  
-  
+  position: relative;
+
   background-image: url('../../assets/images/wallet/images/bg-home-wallet2.svg');
   background-repeat: no-repeat;
   background-size: contain;
@@ -115,7 +115,7 @@
     display: flex;
     -webkit-box-pack: justify;
     -ms-flex-pack: justify;
-    justify-content: space-between;    
+    justify-content: space-between;
     color: #fff;
     padding-top: 20px;
     padding-bottom: 20px;
@@ -137,21 +137,21 @@
     background: Silver;
     border-color:Silver;
   }
-  
+
   .feed-selected{
     border-color: #0BE200;
     border-width: 2px;
     border-style: solid;
     border-radius: 10px;
   }
-  
+
 .addressDivPopup{
   margin-top: 20px;
   margin-bottom: 10px;
   font-size: 13px;
 }
 
-.headerBox{    
+.headerBox{
   width: 100%;
   padding: 20px;
   border-bottom: 1px #f4f4f4 solid;
@@ -163,7 +163,7 @@
 }
 
 .headerText{
-  font-size: 14px;  
+  font-size: 14px;
   color: #090909;
   letter-spacing: 0;
   text-transform: uppercase;
@@ -515,6 +515,19 @@
   padding-bottom: 40px;
   font-weight: 300;
 
+  .history-content{
+    margin-top: 10px;
+    .rmc-tabs-tab-bar-tab{
+      font-size: 16px;
+      color: Gray;
+      margin-bottom: 10px;
+    }
+
+    .rmc-tabs-tab-bar-tab-active{
+      color:#108ee9;
+    }
+  }
+
   ul.history-tab {
     margin: 10px 0px 0px 0px;
     padding: 0px;
@@ -565,18 +578,18 @@
   .icon-loading-history{
     width: 50px;
   }
-  .wallet-detail{    
-    text-align: center;   
+  .wallet-detail{
+    text-align: center;
     color: #fff;
-    background-color: #546FF7; 
+    background-color: #546FF7;
     background-image: url('../../assets/images/wallet/images/bg-home-wallet2.svg');
     background-repeat: no-repeat;
-    background-size: cover;    
+    background-size: cover;
     .logo-detail{
-      width: 45px;      
+      width: 45px;
       border: #ececec 1px solid;
-      border-radius: 45px; 
-      margin-top: 5px;     
+      border-radius: 45px;
+      margin-top: 15px;
     }
     .balance{
       margin-top: 10px;
@@ -593,39 +606,37 @@
     }
   }
   .header-history-tx{
-    color: #315E9E;
+    color:Black;
     font-size: 14px;
-    text-transform: uppercase;
-    text-align: center;    
-    opacity: 0.54;
-    // border-bottom: solid 1px #ECECEC;
+    text-align: center;
     padding: 10px;
-    margin-top: 10px;
+    overflow: hidden;
+
     a{
-      color: #007bff;
-      text-decoration: none;
-      background-color: transparent;
+      text-decoration: underline;
       font-size: 14px;
       text-transform: none;
+      color: Black;
     }
-  }  
+  }
   .box-button{
     overflow: hidden;
-    margin-top: 15px;    
-    height: 70px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    height: 50px;
     .bt1{
-      width: 50%;      
+      width: 50%;
       float: left;
     }
     .bt2{
-      width: 50%;      
+      width: 50%;
       float: right;
     }
     .bt{
       width: 100%;
-      button{ 
+      button{
         width: 60%;
-      }  
+      }
     }
     button{
       border-radius: 4px;
@@ -633,7 +644,7 @@
       background: transparent;
       border: #c1c1c1 1px solid;
       color: #fff;
-      font-size: 16px;      
+      font-size: 16px;
       line-height: 35px;
       outline: none;
     }
