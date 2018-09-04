@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { URL } from '@/constants';
+import IconIdea from '@/assets/images/icon/idea.svg';
 
 class PexCreateBtn extends Component {
   static displayName = 'PexCreateBtn';
@@ -39,9 +40,12 @@ class PexCreateBtn extends Component {
   render() {
     return (
       <div id="PexCreateBtn">
-        <div className="Idea">Got an idea?</div>
+        <div className="Idea">
+          <img src={IconIdea} alt="" className="IconIdea" />
+          <span>Got your own idea?</span>
+        </div>
         <Link to={{ pathname: URL.HANDSHAKE_PEX_CREATOR }}>
-          <button className="btn btn-report">Create your own market</button>
+          <button className="btn btn-report">Create now</button>
         </Link>
       </div>
     );
