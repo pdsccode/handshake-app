@@ -37,6 +37,11 @@ export const CRYPTO_ICONS = {
 };
 
 class Asset extends React.Component {
+  depositCoinATM = () => {
+    const { currency } = this.props;
+    this.props.history.push(`${URL.ESCROW_DEPOSIT}?currency=${currency}`);
+  }
+
   render() {
     const { messages } = this.props.intl;
     const { currency, status, sold, balance, revenue, percentage, listOfferPrice } = this.props;
@@ -96,7 +101,7 @@ class Asset extends React.Component {
 
         <button
           className={cx('btn btn-sm btn-activate', isActive ? 'outline-button' : 'primary-button')}
-        >
+          onClick={this.depositCoinATM}>
           {
             isActive ? <FormattedMessage id="dashboard.btn.deactivate" /> : <FormattedMessage id="dashboard.btn.reactivate" />
           }

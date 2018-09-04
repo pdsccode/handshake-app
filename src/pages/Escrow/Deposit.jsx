@@ -21,6 +21,7 @@ import { MasterWallet } from '@/services/Wallets/MasterWallet';
 import * as gtag from '@/services/ga-utils';
 import taggingConfig from '@/services/tagging-config';
 import CreditATM from '@/services/neuron/neuron-creditatm';
+import Helper from '@/services/helper';
 
 const nameFormEscrowDeposit = 'escrowDeposit';
 const FormEscrowDeposit = createForm({
@@ -41,13 +42,21 @@ const CRYPTO_CURRENCY_CREDIT_CARD = {
   ...CRYPTO_CURRENCY, BCH: 'BCH',
 };
 
-const listCurrency = Object.values(CRYPTO_CURRENCY_CREDIT_CARD).map((item) => {
+let listCurrency = Object.values(CRYPTO_CURRENCY_CREDIT_CARD).map((item) => {
   return { name: item, icon: CRYPTO_ICONS[item] };
 });
 
 class EscrowDeposit extends React.Component {
   constructor(props) {
     super(props);
+
+    const {
+      currency,
+    } = Helper.getQueryStrings(window.location.search);
+
+    if (currency) {
+      listCurrency = [{ name: currency, icon: CRYPTO_ICONS[currency] }];
+    }
 
     this.state = {
       values: {},
@@ -96,29 +105,31 @@ class EscrowDeposit extends React.Component {
 
   handleValidate = (values) => {
     console.log('handleValidate', values);
-    const { percentage } = values;
     const errors = {};
 
     let isError = true;
-    for (const item of Object.values(CRYPTO_CURRENCY_CREDIT_CARD)) {
-      const amount = values[`amount_${item}`];
+    for (const item of Object.values(listCurrency)) {
+      const { name: currency } = item;
+      const amount = values[`amount_${currency}`];
 
       if (amount && amount.trim().length > 0) {
         isError = false;
 
-        errors[`percentage_${item}`] = required(values[`percentage_${item}`]);
+        errors[`percentage_${currency}`] = required(values[`percentage_${currency}`]);
 
         // break;
       }
     }
 
     if (isError) {
-      for (const item of Object.values(CRYPTO_CURRENCY_CREDIT_CARD)) {
-        errors[`amount_${item}`] = required(values[`amount_${item}`]);
+      for (const item of Object.values(listCurrency)) {
+        const { name: currency } = item;
+        errors[`amount_${currency}`] = required(values[`amount_${currency}`]);
       }
     } else {
-      for (const item of Object.values(CRYPTO_CURRENCY_CREDIT_CARD)) {
-        errors[`amount_${item}`] = minValue(MIN_AMOUNT[item])(values[`amount_${item}`]);
+      for (const item of Object.values(listCurrency)) {
+        const { name: currency } = item;
+        errors[`amount_${currency}`] = minValue(MIN_AMOUNT[currency])(values[`amount_${currency}`]);
       }
     }
 
@@ -145,7 +156,7 @@ class EscrowDeposit extends React.Component {
   handleOnSubmit = (values) => {
     console.log('handleOnSubmit', values);
 
-    this.setState({ values: values }, () => {
+    this.setState({ values }, () => {
       const { depositInfo } = this.props;
 
       this.showLoading();
@@ -161,23 +172,25 @@ class EscrowDeposit extends React.Component {
   handleDeposit = () => {
     const { values } = this.state;
 
-    for (const item of Object.values(CRYPTO_CURRENCY_CREDIT_CARD)) {
-      const amount = values[`amount_${item}`];
+    for (const item of Object.values(listCurrency)) {
+      const { name: currency } = item;
+      const amount = values[`amount_${currency}`];
 
       if (amount && amount.trim().length > 0) {
-        if (!this.checkMainNetDefaultWallet(item)) {
+        if (!this.checkMainNetDefaultWallet(currency)) {
           this.hideLoading();
           return;
         }
       }
     }
 
-    for (const item of Object.values(CRYPTO_CURRENCY_CREDIT_CARD)) {
-      const amount = values[`amount_${item}`];
-      const percentage = values[`percentage_${item}`];
+    for (const item of Object.values(listCurrency)) {
+      const { name: currency } = item;
+      const amount = values[`amount_${currency}`];
+      const percentage = values[`percentage_${currency}`];
 
       if (amount && amount.trim().length > 0) {
-        this.depositCoin(item, amount, percentage);
+        this.depositCoin(currency, amount, percentage);
       }
     }
   }
@@ -330,7 +343,7 @@ class EscrowDeposit extends React.Component {
       <div className="escrow-deposit">
         <div>
           <button className="btn btn-lg bg-transparent d-inline-block btn-close">
-            &times;
+            {/*&times;*/}
           </button>
         </div>
         <div className="wrapper">

@@ -59,7 +59,7 @@ class ManageAssets extends React.Component {
             assets.map(asset => {
               const { currency: id } = asset;
               return (
-                <Asset key={id} {...asset} />
+                <Asset key={id} {...asset} history={this.props.history} />
               )
             })
           }
