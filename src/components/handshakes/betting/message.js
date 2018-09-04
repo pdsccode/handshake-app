@@ -113,6 +113,6 @@ export const BETTING_STATUS_LABEL =
       WITHDRAW: 'Withdraw winnings',
       CANCEL: 'Cancel this bet',
       RETRY: 'Retry',
-      DISPUTE: 'Dispute',
+      DISPUTE: 'Dispute it',
     };
 
