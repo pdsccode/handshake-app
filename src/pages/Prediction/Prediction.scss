@@ -1,6 +1,52 @@
 @import './src/styles/style';
 
 .Prediction {
+  .Sticky {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    opacity: 0.9;
+  }
+
+  #PexCreateBtn {
+    padding: rem-calc(7px) 0;
+    font-size: rem-calc(15px);
+    font-weight: 400;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 2;
+    color: white;
+
+    background-image: linear-gradient(-90deg, rgba(77,218,255,0.95) 5%, #21C4FF 54%, #47D4ED 100%);
+
+    .IconIdea {
+      padding-right: rem-calc(5px);
+    }
+
+    button {
+      color: #000000;
+      background-color: #FDEE4B;
+      width: rem-calc(120px);
+      height: rem-calc(35px);
+      font-size: rem-calc(16px);
+      font-weight: 400;
+      border-radius: rem-calc(20px);
+      box-shadow: 0 6px 0 0 #D9CB34;
+    }
+  }
+
+  .BannerContainer {
+    position:  relative;
+    .btn-cta {
+      position: absolute;
+      left: rem-calc(20px);
+      bottom: rem-calc(20px);
+      color: #ffffff;
+    }
+  }
   .modal {
     background-color: #1F2B34;
     .modal-dialog-content {
@@ -20,13 +66,37 @@
     }
     .close {
       position: absolute;
-      top: -35px;
-      left: 0;
+      //top: -35px;
+      //right: 0;
+      top: 6px;
+      right: 6px;
       z-index: 20;
-      opacity: 0.7;
-      color: #FFFFFF;
-      font-size: 35px;
+      opacity: 1;
+      font-size: 25px;
       font-weight: 100;
+      border: 1px solid #fff;
+      background-color: #fff;
+      color: #000;
+      border-radius: 50%;
+      height: 30px;
+      width: 30px;
+      text-align: center;
+    }
+    &.BetSlipContainer {
+      .modal-dialog-content {
+        width: 100%;
+        height: 100%;
+      }
+      .modal-custom-body {
+        height: 100%;
+        max-height: none;
+      }
+    }
+    &.FullMode {
+      .close {
+        top: 40px;
+        right: 5px;
+      }
     }
   }
 
@@ -62,25 +132,19 @@
     justify-content: center;
   }
 
-  .ShareToWin {
+  .CreateOwnEventBanner {
     background-image: url('../../assets/images/share/share-to-win.png');
     display: flex;
-    height: rem-calc(110px);
-    position: relative;
+    justify-content: center;
+    align-items: center;
+    height: rem-calc(50px);
 
-    .ShareToWinTitle {
+    .CreateOwnEventBannerText {
       font-family: $font-family-base;
-      font-size: rem-calc(22px);
+      font-size: rem-calc(18x);
       color: #364164;
       letter-spacing: 0;
       font-weight: bold;
-
-      position: absolute;
-      top: 40%;
-      right: rem-calc(30px);
-      span {
-        color: #2456FB;
-      }
     }
   }
 
@@ -210,7 +274,26 @@
     margin-top: 10px;
     img {
       width: 30px;
-      margin-right: 20px;
+      margin-right: 8px;
+    }
+  }
+
+  .outtaMoneyContainer {
+    padding: rem-calc(30px);
+    text-align: center;
+    border-radius: 4px;
+    background-color: #ffffff;
+    .outtaMoneyTitle {
+      color: #000000;
+      font-size: rem-calc(22px);
+      font-weight: bold;
+      margin: rem-calc(20px) 0;
+    }
+    .outtaMoneyMsg {
+      color: #000000;
+      opacity: 0.6;
+      font-size: rem-calc(17px);
+      margin-bottom: rem-calc(30px);
     }
   }
 }

@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 
 import { shakeItem, initFreeHandshake } from '@/reducers/handshake/action';
 import { HANDSHAKE_ID, API_URL, APP } from '@/constants';
+import { getGasPrice } from '@/utils/gasPrice';
 
 // components
 import Button from '@/components/core/controls/Button';
@@ -107,6 +108,7 @@ class BetingShakeFree extends React.Component {
     // try {
     //   GA.clickGoButton(matchName, matchOutcome, side);
     // } catch (err) { }
+    await getGasPrice();
 
     if (side === SIDE.SUPPORT) {
       GA.clickFreePlaceSupportOrder(matchOutcome);
@@ -159,10 +161,10 @@ class BetingShakeFree extends React.Component {
   }
 
   updateDefautValues() {
-    const { marketSupportOdds, marketAgainstOdds, amountSupport, amountAgainst, amount } = this.props;
+    const { marketSupportOdds, marketAgainstOdds, amount } = this.props;
     console.log(TAG, 'updateDefautValues', 'Props:', this.props);
     const side = this.toggleRef.value;
-    const defaultValue = calculateBetDefault(side, marketSupportOdds, marketAgainstOdds, amountSupport, amountAgainst);
+    const defaultValue = calculateBetDefault(side, marketSupportOdds, marketAgainstOdds, amount, amount);
     console.log(TAG, 'updateDefautValues','defaultValue:', defaultValue);
     this.setState({
       oddValue: defaultValue.marketOdds,

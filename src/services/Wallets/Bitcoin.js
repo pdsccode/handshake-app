@@ -128,6 +128,17 @@ export class Bitcoin extends Wallet {
     }
   }
 
+  testSend = async () => {
+    try {
+      const rawTx = `0100000001c9145d3963d7797e082c2d5c8a4fb01be0f43a304c83cc0a5274b37a0c76052f000000008a47304402200153ac0358bbd7f37d5c5f2257171441cf0d7a1fff01b36587c22ea59ea418cc0220252946c129791c49b3b0595a3d941fc6ce5cd86d4546d02d7b61db097fb0f0a9014104e7b9622873c89ed59099a8cee116d8dc0ddcf2d2d621406a915ced195a22d5945f0069912799da727cbcc5df85a9311b9a589e61b7a9edc03625e145920da169ffffffff01e8030000000000001976a9148cfd31aec2e23e54848ede7b8aabce5d52dd12d688ac00000000`;
+      const txHash = await this.sendRawTx(rawTx);
+      return { status: 1, message: 'messages.bitcoin.success.transaction', data: { hash: txHash.txid } };
+    } catch (error) {
+      console.log('testSend', error);
+      return { status: 0, message: 'messages.bitcoin.error.insufficient' };
+    }
+  }
+
   async retrieveUtxos() {
     const url = `${this.network}/addr/${this.address}/utxo`;
 

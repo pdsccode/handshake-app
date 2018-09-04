@@ -51,7 +51,7 @@ class Index extends React.PureComponent {
   render() {
     const { messages, locale } = this.props.intl;
     const {
-      name, img, imgContent, getEmail, intl, type, contentComponent, reactHelmetElement
+      name, img, imgContent, getEmail, intl, type, entireContentComponent, contentComponent, reactHelmetElement, noBreadCrumbs
     } = this.props;
     const { hasSubscribed } = this.state;
     const cta1 = messages[`landing_page.${name}.cta1`];
@@ -70,36 +70,43 @@ class Index extends React.PureComponent {
       <LandingWrapper name={name}>
         {reactHelmetElement}
         <div className="project-detail">
-          <div className="row mt-5">
-            <div className="col">
-              <div className="pd-breadcrumb">
-                {
-                  type !== 'landing' && (
-                    <React.Fragment>
-                      <Link to={categoryUrl}>
-                        {categoryText}
-                      </Link>
-                      <span className="mx-2">/</span>
-                    </React.Fragment>
-                  )
-                }
-                <span>
+          {
+            messages[`landing_page.${name}.breadcrumb`] && (
+              <div className="row mt-5">
+                <div className="col">
+                  <div className="pd-breadcrumb">
+                    {
+                      type !== 'landing' && (
+                        <React.Fragment>
+                          <Link to={categoryUrl}>
+                            {categoryText}
+                          </Link>
+                          <span className="mx-2">/</span>
+                        </React.Fragment>
+                      )
+                    }
+                    <span>
                   <FormattedMessage id={`landing_page.${name}.breadcrumb`} />
                 </span>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-          <div className="row mt-4">
-            <div className="col-12 col-md-6">
-              <div className="pd-heading">
-                <FormattedMessage id={`landing_page.${name}.heading`} />
-              </div>
-              <div className="pd-subHeading">
-                <FormattedHTMLMessage id={`landing_page.${name}.subHeading`} />
-              </div>
-              <div className="mt-4">
-                {textEmail && (
-                  <span>
+            )
+          }
+          {
+            entireContentComponent || (
+              <React.Fragment>
+                <div className="row mt-4">
+                  <div className="col-12 col-md-6">
+                    <div className="pd-heading">
+                      <FormattedMessage id={`landing_page.${name}.heading`} />
+                    </div>
+                    <div className="pd-subHeading">
+                      <FormattedHTMLMessage id={`landing_page.${name}.subHeading`} />
+                    </div>
+                    <div className="mt-4">
+                      {textEmail && (
+                        <span>
                     {!hasSubscribed ? (
                       <FormSubscribeEmail onSubmit={this.handleSubmit}>
                         <div className="text-email">
@@ -141,48 +148,50 @@ class Index extends React.PureComponent {
                       </h5>
                     )}
                   </span>
-                )}
-                {cta1 && (
-                  <a href={cta1Url} className="btn btn-primary-landing">{cta1}</a>
-                )}
-                {cta2 && (
-                  <a href={cta2Url} className="btn btn-secondary-landing">{cta2}</a>
-                )}
-              </div>
-            </div>
-            <div className="col-12 col-md-6">
-              {youtubeVideoId ? (
-                <iframe
-                  width="100%"
-                  height="315"
-                  src={`https://www.youtube.com/embed/${youtubeVideoId}?rel=0&amp;showinfo=0`}
-                  frameBorder="0"
-                  allow="autoplay; encrypted-media"
-                  allowFullScreen
-                />
-              ) : (
-                <img src={img} className="w-100" />
-              )}
-            </div>
-          </div>
+                      )}
+                      {cta1 && (
+                        <a href={cta1Url} className="btn btn-primary-landing">{cta1}</a>
+                      )}
+                      {cta2 && (
+                        <a href={cta2Url} className="btn btn-secondary-landing">{cta2}</a>
+                      )}
+                    </div>
+                  </div>
+                  <div className="col-12 col-md-6">
+                    {youtubeVideoId ? (
+                      <iframe
+                        width="100%"
+                        height="315"
+                        src={`https://www.youtube.com/embed/${youtubeVideoId}?rel=0&amp;showinfo=0`}
+                        frameBorder="0"
+                        allow="autoplay; encrypted-media"
+                        allowFullScreen
+                      />
+                    ) : (
+                      <img src={img} className="w-100" />
+                    )}
+                  </div>
+                </div>
 
-          <div className="row mt-5">
-            <div className="col">
-              <div className="pd-content">
-                {messages[`landing_page.${name}.content`]}
-              </div>
-            </div>
-          </div>
-          {imgContent && (
-            <div className="row mt-5">
-              <div className="col">
-                <img src={imgContent} className="w-100" />
-              </div>
-            </div>
-          )}
+                <div className="row mt-5">
+                  <div className="col">
+                    <div className="pd-content">
+                      {messages[`landing_page.${name}.content`]}
+                    </div>
+                  </div>
+                </div>
+                {imgContent && (
+                  <div className="row mt-5">
+                    <div className="col">
+                      <img src={imgContent} className="w-100" />
+                    </div>
+                  </div>
+                )}
 
-          {contentComponent}
-
+                {contentComponent}
+              </React.Fragment>
+            )
+          }
           {
             faq && (
               <div className="row">

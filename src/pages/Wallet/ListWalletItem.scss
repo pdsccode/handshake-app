@@ -1,0 +1,40 @@
+.icon-short {
+    position: absolute;    
+    display: block;
+    width: 18px;
+    height: 11px;
+    opacity: .25;
+    cursor: row-resize;
+    background: linear-gradient(180deg, #000, #000 20%, #fff 0, #fff 40%, #000 0, #000 60%, #fff 0, #fff 80%, #000 0, #000);
+    right: 5px;
+    z-index: 100;
+    top: 20px;
+}
+.iconMove{
+    position: absolute;    
+    display: block;        
+    cursor: row-resize;    
+    right: 0;
+    z-index: 100;
+    top: 14px;
+    width: 25px;
+}
+.sortable-row{
+    width: 100%;
+    padding: 20px;
+}
+.sortable-item{
+    border-bottom: 1px #f4f4f4 solid;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    position: relative;
+}
+
+.sortable-item:active:hover {
+    box-shadow: 0px 1px 0px 0 rgba(1, 1, 0, 0.1);
+}
+.sortable-item:last-child {
+    border-bottom: 0;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}

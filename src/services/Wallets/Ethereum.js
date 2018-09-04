@@ -64,7 +64,7 @@ export class Ethereum extends Wallet {
       const balance = await web3.eth.getBalance(this.address);
       return Web3.utils.fromWei(balance.toString());
     } catch (error) {
-      alert(error);
+      //alert(error);
       return this.balance;
     }
   }

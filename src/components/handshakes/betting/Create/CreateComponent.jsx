@@ -9,6 +9,7 @@ import { MESSAGE } from '@/components/handshakes/betting/message.js';
 import { BetHandshakeHandler } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
 import { SIDE } from '@/components/handshakes/betting/constants.js';
 import { validateBet } from '@/components/handshakes/betting/validation.js';
+import ModalDialog from '@/components/core/controls/ModalDialog';
 
 import GA from '@/services/googleAnalytics';
 
@@ -22,6 +23,7 @@ import {
 } from '@/components/handshakes/betting/utils.js';
 import { calculateBetDefault, calculateWinValues } from '@/components/handshakes/betting/calculation';
 import EstimateGas from '@/modules/EstimateGas';
+import { getGasPrice } from '@/utils/gasPrice';
 
 
 import { getKeyByValue } from '@/utils/object';
@@ -82,7 +84,6 @@ class BettingCreate extends React.Component {
     this.updateDefaultValues(bettingShake);
   }
 
-
   async onSubmit(e) {
     e.preventDefault();
     const {
@@ -93,8 +94,17 @@ class BettingCreate extends React.Component {
     });
 
     const { bettingShake } = this.props;
-    const { closingDate, matchName, matchOutcome, onSubmitClick, side } = bettingShake;
+    const {
+      closingDate,
+      matchName,
+      matchOutcome,
+      onCancelClick,
+      onSubmitClick,
+      handleBetFail,
+      side,
+    } = bettingShake;
 
+    await getGasPrice();
     if (side === SIDE.SUPPORT) {
       GA.clickSimplePlaceSupportOrder(matchOutcome);
     } else {
@@ -113,15 +123,18 @@ class BettingCreate extends React.Component {
       this.initHandshake(values, fromAddress);
       onSubmitClick();
     } else {
-      if (message){
+      if (message) {
         GA.createBetNotSuccess(message);
-        this.props.showAlert({
-          message: <div className="text-center">{message}</div>,
-          timeOut: 3000,
-          type: 'danger',
-          callBack: () => {
-          }
-        });
+        onCancelClick();
+        handleBetFail();
+
+        // this.props.showAlert({
+        //   message: <div className="text-center">{message}</div>,
+        //   timeOut: 3000,
+        //   type: 'danger',
+        //   callBack: () => {
+        //   }
+        // });
       }
       this.setState({
         disable: false,
@@ -214,7 +227,7 @@ class BettingCreate extends React.Component {
         type="text"
         placeholder={placeholder}
         autoComplete="off"
-        value={values[key]}
+        value={values[key] || ''}
         validate={[required]}
         onChange={(evt) => {
           this.changeText(key, evt.target.value);

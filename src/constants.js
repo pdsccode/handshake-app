@@ -28,6 +28,7 @@ export const APP = {
   CC_PRICE: 'cc_price',
   CC_ADDRESS: 'cc_address',
   CC_TOKEN: 'cc_token',
+  CC_EMAIL: 'cc_email',
   EXCHANGE_ACTION: 'exchange_action',
   EXCHANGE_CURRENCY: 'exchange_currency',
 };
@@ -43,9 +44,10 @@ export const HANDSHAKE_ID = { // important
   EXCHANGE_LOCAL: 6,
   BETTING_EVENT: 7,
   WALLET_RECEIVE: 8,
+  CREATE_EVENT: 9,
 };
 
-export const HANDSHAKE_ID_DEFAULT = 3;
+export const HANDSHAKE_ID_DEFAULT = 2;
 
 export const HANDSHAKE_NAME = {
   // [HANDSHAKE_ID.PROMISE]: { name: 'Promise', priority: 3 },
@@ -55,6 +57,7 @@ export const HANDSHAKE_NAME = {
   [HANDSHAKE_ID.WALLET_TRANSFER]: { name: 'Transfer coins', priority: 4 },
   [HANDSHAKE_ID.WALLET_RECEIVE]: { name: 'Receive coins', priority: 5 },
   [HANDSHAKE_ID.EXCHANGE]: { name: 'Manage your ATM', priority: 6 },
+  [HANDSHAKE_ID.CREATE_EVENT]: { name: 'Create your own market', priority: 7 },
   // [HANDSHAKE_ID.EXCHANGE_LOCAL]: { name: 'Make swaps', priority: 7 },
   // UNSELECTED: { name: 'Create a prediction market', priority: 100 },
 };
@@ -95,6 +98,7 @@ export const CRYPTO_CURRENCY = {
 export const CRYPTO_CURRENCY_NAME = {
   [CRYPTO_CURRENCY.ETH]: 'ETH',
   [CRYPTO_CURRENCY.BTC]: 'BTC',
+  BCH: 'BCH',
 };
 
 export const CRYPTO_CURRENCY_LIST = Object.values(CRYPTO_CURRENCY).map((item) => {
@@ -190,11 +194,17 @@ export const SELL_PRICE_TYPE_DEFAULT = 'fix';
 // path
 export const API_URL = {
   CRYPTOSIGN: {
+    ADMIN_AUTH: '/cryptosign/auth',
     INIT_HANDSHAKE: 'cryptosign/handshake/init',
     INIT_HANDSHAKE_FREE: 'cryptosign/handshake/create_free_bet',
     SHAKE: 'cryptosign/handshake/shake',
     LOAD_MATCHES: 'cryptosign/match',
+    MATCHES_REPORT: 'cryptosign/match/report',
+    COUNT_REPORT: 'cryptosign/match/report',
+    ADMIN_MATCHES: 'cryptosign/admin/match/report',
     LOAD_HANDSHAKES: 'cryptosign/handshake',
+    LOAD_REPORTS: 'cryptosign/source',
+    LOAD_CATEGORIES: 'cryptosign/category',
     CHECK_FREE_AVAILABLE: 'cryptosign/handshake/check_free_bet',
     UNINIT_HANDSHAKE: 'cryptosign/handshake/uninit',
     UNINIT_HANDSHAKE_FREE: 'cryptosign/handshake/uninit_free_bet',
@@ -203,14 +213,18 @@ export const API_URL = {
     ROLLBACK: 'cryptosign/handshake/rollback',
     REFUND: 'cryptosign/handshake/refund',
     REFUND_FREE: 'cryptosign/handshake/refund_free_bet',
+    DISPUTE: 'cryptosign/handshake/dispute',
+    DISPUTE_FREE: 'cryptosign/handshake/dispute_free_bet',
     ADD_MATCH: 'cryptosign/match/add',
     ADD_OUTCOME: 'cryptosign/outcome/add',
     SAVE_TRANSACTION: 'cryptosign/tx/add',
+    GENERATE_LINK: 'cryptosign/outcome/generate-link',
   },
   DISCOVER: {
     INDEX: 'handshake/discover',
   },
   EXCHANGE: {
+    GET_FIAT_CURRENCY: 'exchange/info/crypto-price',
     GET_CRYPTO_PRICE: 'exchange/info/instant-buy/price', // {path: '/info/instant-buy/price', method: 'get'},
     CREATE_CC_ORDER: 'exchange/instant-buys', // {path: '/instant-buys', method: 'post'},
     GET_USER_CC_LIMIT: 'exchange/user/profile/cc-limit', // {path: '/user/profile/cc-limit', method: 'get'},
@@ -253,6 +267,9 @@ export const API_URL = {
   },
   CHAT: {
     GET_USER_NAME: 'user/username',
+  },
+  USER: {
+    PROFILE: 'user/profile',
   },
 };
 
@@ -477,6 +494,7 @@ export const URL = {
 
   ADMIN: '/admin',
   REPORT: '/report',
+  RESOLVE: '/resolve',
   LUCKY_POOL: '/lucky',
   HANDSHAKE_ME: '/me',
   HANDSHAKE_ME_INDEX: '/me',
@@ -489,6 +507,7 @@ export const URL = {
 
   HANDSHAKE_PREDICTION: '/prediction',
   HANDSHAKE_PEX: '/pex',
+  HANDSHAKE_PEX_CREATOR: '/create-pex',
 
   HANDSHAKE_CASH: '/cash',
   HANDSHAKE_CASH_INDEX: '/cash',
@@ -531,6 +550,7 @@ export const URL = {
   PRODUCT_CASH_URL: '/cash',
   CASH_FOR_BUSINESS: '/cash-for-business',
   PRODUCT_PREDICTION_URL: '/prediction',
+  PEX_INSTRUCTION_URL: '/pex/instruction',
   PRODUCT_WALLET_URL: '/wallet',
   PRODUCT_HIVEPAY_OFFLINE_URL: '/pay-for-stores',
   PRODUCT_HIVEPAY_ONLINE_URL: '/pay-for-devs',
@@ -539,11 +559,13 @@ export const URL = {
   PRODUCT_DAD_URL_SUBDOMAIN: 'https://dad.ninja.org/',
   RESEARCH_UNCOMMONS_URL: '/uncommons',
   PRODUCT_WHISPER_URL: '/whisper',
+  PRODUCT_FUND_URL: 'https://ninja.org/fund/',
 
   RECRUITING: '/recruiting',
   RECRUITING_JOB_DETAIL: '/recruiting/:slug',
 
   CC_PAYMENT_URL: '/payment',
+  BUY_BY_CC_URL: '/buy-by-credit-card',
 };
 
 export const LANDING_PAGE_TYPE = {

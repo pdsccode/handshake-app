@@ -1,5 +1,6 @@
 import { URL } from '@/constants';
 import React from 'react';
+import { Link } from 'react-router-dom'
 
 export default {
   app: {
@@ -277,6 +278,23 @@ export default {
   'ex.sort.price.sell.eth': 'Sell ETH',
   product_info: 'Ninja is open-source, decentralized software that never holds your funds. By freely choosing to use Ninja, the user accepts sole responsibility for their behavior and agrees to abide by the legalities of their governing jurisdiction. Ninja cannot be liable for legal, monetary or psychological damages should you do something stupid. Never invest more than you are willing to lose. Play safe!',
 
+  'cc.label.1': 'Buy a specific amount',
+  'cc.label.2': 'We sell coins at a reasonable price',
+  'cc.label.3': 'Or choose one of our packages:',
+  'cc.btn.buyNow': 'Buy now',
+  'cc.btn.payNow': 'Pay now',
+  'cc.label.basic': 'Basic',
+  'cc.label.pro': 'Pro',
+  'cc.label.plus': 'Plus',
+  'cc.label.cardNo': 'Card number',
+  'cc.label.cvv': 'CVV',
+  'cc.label.expiration': 'Expiration date',
+  'cc.label.saveCard': 'Save my card for future top-up',
+  'cc.label.saving': 'You save {percentage}%',
+  'cc.label.email': 'Email',
+  'cc.label.email.hint': 'Just for receiving receipt',
+
+
   'askLocationPermission.label.1': 'We would like to access your location to find nearest ATMs around you!',
   'askLocationPermission.label.2': `<span>Please click <strong>"Allow"</strong> to start trading now!</span>`,
   'askLocationPermission.btn.dontAllow': `Don't Allow`,
@@ -418,6 +436,8 @@ export default {
   'landing_page.products.dad.subTitle': 'Building decentralized datasets to advance AI.',
   'landing_page.products.whisper.title': 'Whisper',
   'landing_page.products.whisper.subTitle': 'The new mailbox for the new internet.',
+  'landing_page.products.fund.title': 'Ninja fund',
+  'landing_page.products.fund.subTitle': 'Ninja Fund is a smart-contract secured investment platform. Connecting skilled traders and savvy investors to intelligently grow cryptocurrencies.',
 
   'landing_page.header.research': 'RESEARCH',
   'landing_page.subHeader.research': 'Ninja conducts fundamental research toward the creation of the new internet.',
@@ -685,6 +705,10 @@ export default {
     {
       question: 'What’s gonna happen to the Handshake mobile app?',
       answer: 'We will be integrating Handshake (and your favourite features like promises, IOUs, contract upload, etc.) into the Ninja mobile website.',
+    },
+    {
+      question: 'How do I start earning ETH/Bitcoin?/How do I put cryptocurrency in my wallet?',
+      answer: <span>For instructions on how to play: <Link to={URL.PEX_INSTRUCTION_URL}>http://ninja.org/pex/prediction</Link></span>,
     }
   ],
   'landing_page.wallet.faq': [
@@ -1117,7 +1141,8 @@ export default {
           step1_label: 'I understand that if I lose my passphrase, I lose access to my account.',
           step2_msg1: 'Record these words carefully. Don\'t email it or screenshot it.',
           step3_msg1: 'Tap to put these words in the correct order.',
-          need_secure: 'Need secure'
+          need_secure: 'Need secure',
+          need_backup: 'Needs Backup'
         },
         button: {
           continue: 'Continue',
@@ -1181,6 +1206,7 @@ export default {
         button: {
           create: 'Create wallet',
           add_new: '+ Add new',
+          done: "Done",
           request_free_eth: 'Request free ETH',
         },
         error:{
@@ -1215,7 +1241,10 @@ export default {
           transfer: "transfer",
           from: "from",
           to: "to",
-          internal_transactions: "Internal Transaction"
+          internal_transactions: "Internal Transaction",
+          no_trans: "No transactions yet",
+          no_internal_trans: "No internal transactions yet",
+          coming_soon: "Coming soon ...",
         },
       },
     },
