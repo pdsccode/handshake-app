@@ -1,5 +1,6 @@
 import { URL } from '@/constants';
 import React from 'react';
+import { Link } from 'react-router-dom'
 
 export default {
   app: {
@@ -737,7 +738,7 @@ export default {
     },
     {
       question: 'How do I start earning ETH/Bitcoin?/How do I put cryptocurrency in my wallet?',
-      answer: <span>For instructions on how to play: <a target="__blank" href="https://medium.com/@cian_36990/7657761ea2bd">https://medium.com/@cian_36990/7657761ea2bd</a></span>,
+      answer: <span>For instructions on how to play: <Link to={URL.PEX_INSTRUCTION_URL}>http://ninja.org/pex/prediction</Link></span>,
     }
   ],
   'landing_page.wallet.faq': [
@@ -1148,7 +1149,8 @@ export default {
           step1_label: 'I understand that if I lose my passphrase, I lose access to my account.',
           step2_msg1: 'Record these words carefully. Don\'t email it or screenshot it.',
           step3_msg1: 'Tap to put these words in the correct order.',
-          need_secure: 'Need secure'
+          need_secure: 'Need secure',
+          need_backup: 'Needs Backup'
         },
         button: {
           continue: 'Continue',
@@ -1212,6 +1214,7 @@ export default {
         button: {
           create: 'Create wallet',
           add_new: '+ Add new',
+          done: "Done",
           request_free_eth: 'Request free ETH',
         },
         error:{
@@ -1238,7 +1241,7 @@ export default {
           success: 'success',
           error: "Error",
           detail_etherscan: 'View detail on etherscan.io',
-          view_all_etherscan: 'View all on etherscan.io',
+          view_all_etherscan: 'Watch etherscan',
           self: "Self",
           sent: "Sent",
           received: "Received",
@@ -1246,7 +1249,10 @@ export default {
           transfer: "transfer",
           from: "from",
           to: "to",
-          internal_transactions: "Internal Transaction"
+          internal_transactions: "Internal",
+          no_trans: "No transactions yet",
+          no_internal_trans: "No internal transactions yet",
+          coming_soon: "Coming soon ...",
         },
       },
     },

@@ -551,6 +551,7 @@ export const URL = {
   PRODUCT_CASH_URL: '/cash',
   CASH_FOR_BUSINESS: '/cash-for-business',
   PRODUCT_PREDICTION_URL: '/prediction',
+  PEX_INSTRUCTION_URL: '/pex/instruction',
   PRODUCT_WALLET_URL: '/wallet',
   PRODUCT_HIVEPAY_OFFLINE_URL: '/pay-for-stores',
   PRODUCT_HIVEPAY_ONLINE_URL: '/pay-for-devs',

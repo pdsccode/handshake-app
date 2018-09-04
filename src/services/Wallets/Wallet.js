@@ -19,8 +19,9 @@ export class Wallet {
     this.customToken = false;
     this.isCollectibles = false;
     this.decimals = 18;
-    this.secret = '';
-    this.publicKey = ''
+    this.secret = '';  
+    this.publicKey = '',
+    this.icon = 'eth.svg'
   }
 
   getShortAddress() {
@@ -45,6 +46,9 @@ export class Wallet {
   }
   getBackgroundImg() {
     return StringHelper.format('{0}-{1}{2}.svg', this.className.toLowerCase(), this.getNetworkName().toLowerCase(), this.isReward ? '-reward' : '');
+  }
+  getCoinLogo(){
+    return StringHelper.format('{0}.svg', this.name.toLowerCase());
   }
 
 }

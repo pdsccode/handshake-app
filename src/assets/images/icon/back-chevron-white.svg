@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="11px" height="20px" viewBox="0 0 11 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.3 (51167) - http://www.bohemiancoding.com/sketch -->
+    <title>back-chevron</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="back-chevron" fill="#FFFFFF" fill-rule="nonzero">
+            <path d="M0.2983955,10.7163341 C-0.0863246,10.3213031 -0.0837778,9.6782163 0.2983955,9.2858003 L9.0398783,0.3100379 C9.4245985,-0.0849931 10.0570941,-0.0947754 10.4513334,0.2869652 L10.6844897,0.5127295 C11.0792946,0.8950178 11.0890057,1.5284151 10.7087824,1.9247491 L2.9607612,10.0010672 L10.7087824,18.0328683 C11.0901709,18.4282255 11.0787289,19.0685279 10.6844897,19.4617634 L10.4513334,19.6943259 C10.0565285,20.0881257 9.4220517,20.0845125 9.0398783,19.6920965 L0.2983955,10.7163341 Z" id="Back-Chevron"></path>
+        </g>
+    </g>
+</svg>
