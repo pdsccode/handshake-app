@@ -374,7 +374,7 @@ class DiscoverPage extends React.Component {
           // googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places"
           googleMapURL={`https://maps.googleapis.com/maps/api/js?key=${process.env.GOOGLE_API_KEY}`}
           loadingElement={<div style={{ height: `100%` }} />}
-          containerElement={<div className="map-container" style={{ height: `calc(100vh - 48px - 120px)`, marginTop: '48px' }} />}
+          containerElement={<div className="map-container" style={{ height: `calc(100vh - 48px - 60px)`, marginTop: '48px' }} />}
           mapElement={<div style={{ height: `100%` }} />}
           // center={{ lat: 35.929673, lng: -78.948237 }}
           history={history}
