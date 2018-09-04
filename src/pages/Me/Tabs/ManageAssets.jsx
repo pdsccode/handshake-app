@@ -28,31 +28,36 @@ import iconLock from '@/assets/images/icon/icons8-lock_filled.svg';
 import iconSafeGuard from '@/assets/images/icon/safe-guard.svg';
 
 import Asset from './Asset';
+import { formatMoneyByLocale } from '@/services/offer-util';
+import { getCreditATM } from '@/reducers/exchange/action';
 
 class ManageAssets extends React.Component {
+  componentDidMount() {
+    this.getCreditATM();
+  }
+
+  getCreditATM = () => {
+    this.props.getCreditATM({ PATH_URL: API_URL.EXCHANGE.CREDIT_ATM });
+  }
+
   depositCoinATM = () => {
     this.props.history.push(URL.ESCROW_DEPOSIT);
   }
 
   render () {
-    const assets = [
-      {
-        id: 1,
-        coin: 'BTC',
-        isActive: false,
-      },
-      {
-        id: 2,
-        coin: 'ETH',
-        isActive: true,
-      },
-    ]
+    const { depositInfo } = this.props;
+    let assets = [];
+
+    if (depositInfo) {
+      assets = Object.values(depositInfo);
+    }
+
     return (
       <div className="manage-assets">
         <div className="bg-white p-3">
           {
             assets.map(asset => {
-              const { id } = asset;
+              const { currency: id } = asset;
               return (
                 <Asset key={id} {...asset} />
               )
@@ -86,11 +91,13 @@ class ManageAssets extends React.Component {
 }
 
 const mapState = state => ({
-  me: state.me
+  me: state.me,
+  depositInfo: state.exchange.depositInfo,
 })
 
 const mapDispatch = dispatch => ({
-  rfChange: bindActionCreators(change, dispatch)
+  rfChange: bindActionCreators(change, dispatch),
+  getCreditATM: bindActionCreators(getCreditATM, dispatch),
 })
 
 export default injectIntl(connect(mapState, mapDispatch)(ManageAssets))

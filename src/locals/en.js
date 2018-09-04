@@ -318,7 +318,9 @@ export default {
   'dashboard.btn.scanQRCode': 'Scan QR code',
   'dashboard.btn.depositEscrow': 'Deposit to escrow',
   'dashboard.btn.withdrawEscrow': 'Withdraw coin',
+  'dashboard.label.amountSold': 'Amount sold',
   'dashboard.label.amountLeft': 'Amount left',
+  'dashboard.label.currentPrice': 'Current price',
   'dashboard.label.revenue': 'Revenue',
   'dashboard.label.or': 'or',
 
