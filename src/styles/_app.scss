@@ -126,7 +126,11 @@
         //  }
         //}
         a {
-          color: $deep-blue;
+          color: rgba(248, 248, 248, 0.95);
+          span {
+            background-color: #1E4EFF;
+            border-radius: 9px;
+          }
         }
         //.chat-icon {
         //  svg {
