@@ -124,15 +124,18 @@ class Prediction extends React.Component {
   }
 
   checkShowFreeBetPopup(props) {
-    const { freeBet } = props;
-    //console.log('checkShowFreeBetPopup:', freeBet);
+    const isFreeAvailable = this.checkFreeAvailabe(props);
 
-    const { is_win: isWin } = freeBet;
-    if (isWin === 0 && this.modalFreeBetLoseRef) {
-      this.modalFreeBetLoseRef.open();
-    } else if (isWin === 1 && this.modalFreeBetWinRef) {
-      this.modalFreeBetWinRef.open();
+    if (isFreeAvailable) {
+      const { freeBet } = props;
+      const { is_win: isWin } = freeBet;
+      if (isWin === 0 && this.modalFreeBetLoseRef) {
+        this.modalFreeBetLoseRef.open();
+      } else if (isWin === 1 && this.modalFreeBetWinRef) {
+        this.modalFreeBetWinRef.open();
+      }
     }
+
   }
 
   handleClickEventItem = (props, itemData) => {
