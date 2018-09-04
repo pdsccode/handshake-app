@@ -345,7 +345,9 @@ class ReceiveCoin extends React.Component {
                 {messages.wallet.action.receive.link.download_qrcode}
               </a>
             </div> */}
-
+            
+            {/* Don't support for Collectibles */}
+            { !this.state.walletSelected.isCollectibles ?
             <ReceiveWalletForm className="receivewallet-wrapper">
               <div className="div-amount">
                { showDivAmount ?
@@ -380,6 +382,7 @@ class ReceiveCoin extends React.Component {
               </div>
 
             </ReceiveWalletForm>
+            : ""}
 
             { !showDivAmount ? "" :
                 <div className="switch-value">
