@@ -4,6 +4,7 @@ import TransferCoin from '@/components/Wallet/TransferCoin';
 
 import history from '@/services/history';
 import { URL } from '@/constants';
+// import ConfirmButton from '@/components/Wallet/ConfirmButton/ConfirmButton';
 // import BackupWallet from '@/components/Wallet/BackupWallet/BackupWallet';
 // import RestoreWallet from '@/components/Wallet/RestoreWallet/RestoreWallet';
 
@@ -14,6 +15,7 @@ class Transfer extends React.Component {
       <TransferCoin onFinish={() => { this.props.history.goBack(); }} />
       // <BackupWallet onFinish={() => { }}/>
       // <RestoreWallet/>
+      // <ConfirmButton icon={} buttonText="Slide to Send" onConfirmed={()=> { alert("confirmed");}}/>
     );
   }
 }

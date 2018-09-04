@@ -1119,7 +1119,8 @@ export default {
           step1_label: 'I understand that if I lose my passphrase, I lose access to my account.',
           step2_msg1: 'Record these words carefully. Don\'t email it or screenshot it.',
           step3_msg1: 'Tap to put these words in the correct order.',
-          need_secure: 'Need secure'
+          need_secure: 'Need secure',
+          need_backup: 'Needs Backup'
         },
         button: {
           continue: 'Continue',
@@ -1183,6 +1184,7 @@ export default {
         button: {
           create: 'Create wallet',
           add_new: '+ Add new',
+          done: "Done",
           request_free_eth: 'Request free ETH',
         },
         error:{
@@ -1217,7 +1219,10 @@ export default {
           transfer: "transfer",
           from: "from",
           to: "to",
-          internal_transactions: "Internal Transaction"
+          internal_transactions: "Internal Transaction",
+          no_trans: "No transactions yet",
+          no_internal_trans: "No internal transactions yet",
+          coming_soon: "Coming soon ...",
         },
       },
     },
