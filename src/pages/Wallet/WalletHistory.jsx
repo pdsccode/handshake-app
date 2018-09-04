@@ -273,7 +273,7 @@ class WalletHistory extends React.Component {
             }
           </div>
 
-          {wallet.transaction_count > 0 &&
+          {/*wallet.transaction_count > 0 &&
             <div className="header-history-tx">
               <div className="float-left">{wallet.transaction_count} {messages.wallet.action.history.label.transactions}</div>
               {wallet && (wallet.name == "ETH" || wallet.isToken) &&
@@ -283,7 +283,7 @@ class WalletHistory extends React.Component {
                 </div>
               }
             </div>
-          }
+          */}
 
           {!wallet.protected &&
             <div className="box-warning" onClick={this.props.onWarningClick}>
@@ -331,10 +331,10 @@ class WalletHistory extends React.Component {
             <Tabs onChange={(tab, index) => this.setState({tabActive: index})} tabs={[
                 { key: 't1', title: messages.wallet.action.history.label.transactions},
                 { key: 't2', title: messages.wallet.action.history.label.internal_transactions},
-              ]} initalPage={'t2'}
+              ]} initalPage={'t1'}
               >
-              <div key="t1">{this.list_internalTransaction}</div>
-              <div key="t2">{this.list_transaction}</div>
+              <div key="t1">{this.list_transaction}</div>
+              <div key="t2">{this.list_internalTransaction}</div>
             </Tabs>
             :
             this.state.tabActive == 0 ? this.list_transaction : this.list_internalTransaction }

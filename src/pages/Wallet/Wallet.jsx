@@ -125,7 +125,7 @@ class Wallet extends React.Component {
     super(props);
 
     this.props.hideHeader();
-    this.modalHeaderStyle = {color: "#fff", background: "#546FF7", borderBottomColor: "#6e86f9", borderBottomWidth: 1,  borderBottomStyle: 'solid'};
+    this.modalHeaderStyle = {color: "#fff", background: "#546FF7"};
     this.modalBodyStyle = {padding: 0};
 
     this.state = {
