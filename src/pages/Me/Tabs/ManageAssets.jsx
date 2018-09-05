@@ -44,6 +44,10 @@ class ManageAssets extends React.Component {
     this.props.history.push(URL.ESCROW_DEPOSIT);
   }
 
+  withdrawCash = () => {
+    this.props.history.push(URL.ESCROW_WITHDRAW);
+  }
+
   render () {
     const { depositInfo } = this.props;
     let assets = [];
@@ -79,7 +83,7 @@ class ManageAssets extends React.Component {
               </button>
             </div>
             <div className="d-inline-block w-50 pl-1">
-              <button className="btn secondary-button btn-block">
+              <button className="btn secondary-button btn-block" onClick={this.withdrawCash}>
                 <FormattedMessage id="dashboard.btn.withdrawEscrow" />
               </button>
             </div>

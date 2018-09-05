@@ -38,6 +38,10 @@ import "./CommonStyle.scss";
 import "./WithdrawSuccess.scss";
 
 class EscrowWithdrawSuccess extends React.Component {
+  backToDashboard = () => {
+    this.props.history.push(URL.HANDSHAKE_ME);
+  }
+
   render() {
     const { messages } = this.props.intl;
     const { intl, hideNavigationBar } = this.props;
@@ -57,7 +61,7 @@ class EscrowWithdrawSuccess extends React.Component {
           </div>
         </div>
         <div className="mt-4">
-          <button className="btn btn-block btn-escrow-primary">
+          <button className="btn btn-block btn-escrow-primary" onClick={this.backToDashboard}>
             <span>&larr; Back to your dashboard</span>
           </button>
         </div>
