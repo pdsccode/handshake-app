@@ -564,7 +564,7 @@ class Me extends React.Component {
                       </div>
                     </div>
                     <div className="content">
-                      {<Component history={this.props.history}></Component>}
+                      {<Component history={this.props.history} setLoading={this.setLoading}></Component>}
                     </div>
                   </div>) : listFeed && listFeed.length > 0 ? (
                     listFeed.map((handshake) => {

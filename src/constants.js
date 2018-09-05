@@ -247,6 +247,7 @@ export const API_URL = {
     DEPOSIT_CREDIT_ATM: 'exchange/credit/deposit',
     CREDIT_ATM: 'exchange/credit',
     CREDIT_ATM_TRANSFER: 'exchange/credit/tracking',
+    WITHDRAW_CASH_DEPOSIT_ATM: 'exchange/credit/withdraw',
   },
   SEED: {
     BASE: 'seed',

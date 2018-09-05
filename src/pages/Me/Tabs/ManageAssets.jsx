@@ -38,7 +38,7 @@ class ManageAssets extends React.Component {
     super(props);
 
     this.state = {
-      modalFillContent: '',
+      modalWithdrawContent: '',
     };
   }
 
@@ -58,23 +58,23 @@ class ManageAssets extends React.Component {
     const { messages } = this.props.intl;
 
     this.setState({
-      modalFillContent:
+      modalWithdrawContent:
         (
-          <Withdraw />
+          <Withdraw setLoading={this.props.setLoading} history={this.props.history}/>
         ),
     }, () => {
-      this.modalFillRef.open();
+      this.modalWithdrawRef.open();
     });
   }
 
-  closeFillCoin = () => {
-    this.setState({ modalFillContent: '' });
+  closeWithdraw = () => {
+    this.setState({ modalWithdrawContent: '' });
   }
 
   render () {
     const { messages } = this.props.intl;
     const { depositInfo } = this.props;
-    const { modalFillContent } = this.state;
+    const { modalWithdrawContent } = this.state;
     let assets = [];
 
     if (depositInfo) {
@@ -114,8 +114,8 @@ class ManageAssets extends React.Component {
             </div>
           </div>
         </div>
-        <Modal title={messages.me.credit.withdraw.title} onRef={modal => this.modalFillRef = modal} onClose={this.closeFillCoin}>
-          {modalFillContent}
+        <Modal title={messages.me.credit.withdraw.title} onRef={modal => this.modalWithdrawRef = modal} onClose={this.closeWithdraw}>
+          {modalWithdrawContent}
         </Modal>
       </div>
     )
