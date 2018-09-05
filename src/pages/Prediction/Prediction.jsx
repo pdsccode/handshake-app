@@ -17,6 +17,8 @@ import * as gtag from '@/services/ga-utils';
 import taggingConfig from '@/services/tagging-config';
 import FeedCreditCard from '@/components/handshakes/exchange/Feed/FeedCreditCard';
 import ReportPopup from '@/components/handshakes/betting/Feed/ReportPopup';
+import { FREE_BET_STATUS } from '@/components/handshakes/betting/constants';
+
 import Banner from '@/pages/Prediction/Banner';
 import { injectIntl } from 'react-intl';
 import { URL } from '@/constants';
@@ -55,12 +57,13 @@ class Prediction extends React.Component {
       selectedOutcome: null,
       isLuckyPool: true,
       modalFillContent: '',
+      isOrderOpening: false,
+      shouldShowFreePopup: true,
     };
   }
 
   componentDidMount() {
     window.addEventListener('scroll', this.handleScroll);
-
     this.props.dispatch(loadMatches());
     this.props.dispatch(getReportCount());
     this.props.dispatch(checkFreeBet());
@@ -93,8 +96,13 @@ class Prediction extends React.Component {
 
   checkFreeAvailabe(props) {
     const { freeBet={} } = props;
-    const { free_bet_available: freeAvailable = 0, last_item: lastItem } = freeBet;
-    const isFreeAvailable = (lastItem === null && freeAvailable > 0) ? true : false;
+    const { free_bet_available: freeAvailable = 0, last_item: lastItem = {} } = freeBet;
+    const { status } = lastItem;
+    let isFreeAvailable = false;
+
+    if ((status !== FREE_BET_STATUS.WAITING || !status) && freeAvailable > 0) {
+      isFreeAvailable = true;
+    }
     return isFreeAvailable;
   }
 
@@ -105,6 +113,9 @@ class Prediction extends React.Component {
 
   closeOrderPlace = () => {
     this.modalOrderPlace.close();
+    this.setState({
+      isOrderOpening: false,
+    });
   }
 
   checkLuckyPool() {
@@ -128,11 +139,18 @@ class Prediction extends React.Component {
 
     if (isFreeAvailable) {
       const { freeBet } = props;
-      const { is_win: isWin } = freeBet;
-      if (isWin === 0 && this.modalFreeBetLoseRef) {
-        this.modalFreeBetLoseRef.open();
-      } else if (isWin === 1 && this.modalFreeBetWinRef) {
-        this.modalFreeBetWinRef.open();
+      const { isOrderOpening, shouldShowFreePopup } = this.state;
+      const { last_item: lastItem = {} } = freeBet;
+      const { is_win: isWin, status } = lastItem;
+      if (status === FREE_BET_STATUS.REPORTED && !isOrderOpening && shouldShowFreePopup) {
+        if (!isWin && this.modalFreeBetLoseRef) {
+          this.modalFreeBetLoseRef.open();
+        } else if (isWin && this.modalFreeBetWinRef) {
+          this.modalFreeBetWinRef.open();
+        }
+        this.setState({
+          shouldShowFreePopup: false,
+        });
       }
     }
 
@@ -159,6 +177,7 @@ class Prediction extends React.Component {
     this.setState({
       selectedOutcome,
       selectedMatch,
+      isOrderOpening: true,
     });
 
     // send event tracking

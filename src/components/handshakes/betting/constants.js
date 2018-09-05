@@ -61,3 +61,9 @@ export const CONTRACT_METHOD = {
   REPORT: 'report',
   CREATE_MARKET: 'createMarket',
 };
+
+export const FREE_BET_STATUS = {
+  REPORTED: 'reported',
+  WAITING: 'waiting',
+  OUT_OF_TIME: 'out_of_time',
+};
