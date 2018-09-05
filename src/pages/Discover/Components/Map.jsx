@@ -109,14 +109,14 @@ class Map extends React.Component {
         />
         <div className="container-button">
           <div className="d-inline-block w-50 pr-1">
-            <button className="btn primary-button btn-block" onClick={this.goToDashboard}>
-              <img src={iconManageDashboard} width={16} className="align-top mr-2" />
+            <button className="btn bg-white btn-block" onClick={this.goToDashboard}>
+              <img src={iconManageDashboard} width={16} className="mr-2" />
               <FormattedMessage id="ex.discover.label.dashboard" />
             </button>
           </div>
           <div className="d-inline-block w-50 pl-1">
-            <button className="btn secondary-button btn-block" onClick={this.goToManageAtm}>
-              <img src={iconManageAtm} width={16} className="align-top mr-2" />
+            <button className="btn bg-white btn-block" onClick={this.goToManageAtm}>
+              <img src={iconManageAtm} width={16} className="mr-2" />
               <FormattedMessage id="ex.discover.label.manage.atm" />
             </button>
           </div>
