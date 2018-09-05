@@ -318,7 +318,7 @@ export default {
   'dashboard.btn.topUpByCC': 'Top up ATM with credit card',
   'dashboard.btn.scanQRCode': 'Scan QR code',
   'dashboard.btn.depositEscrow': 'Deposit to escrow',
-  'dashboard.btn.withdrawEscrow': 'Withdraw coin',
+  'dashboard.btn.withdrawEscrow': 'Withdraw',
   'dashboard.label.amountSold': 'Amount sold',
   'dashboard.label.amountLeft': 'Amount left',
   'dashboard.label.currentPrice': 'Current price',
