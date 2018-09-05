@@ -98,10 +98,11 @@ class ManageAssets extends React.Component {
           <div className="media">
             <img src={iconSafeGuard} className="mr-2" />
             <div className="media-body font-weight-normal">
-              Need even more security? Use Escrow. <span style={{ color: '#526AFB' }}>Fraud-proof. 100% secured. Safety guaranteed.</span>
+              <FormattedMessage id="dashboard.label.deposit.description1" />
+              <span style={{ color: '#526AFB' }}><FormattedMessage id="dashboard.label.deposit.description2" /></span>
             </div>
           </div>
-          <div>
+          <div className="mt-3">
             <div className="d-inline-block w-50 pr-1">
               <button className="btn primary-button btn-block" onClick={this.depositCoinATM}>
                 <FormattedMessage id="dashboard.btn.depositEscrow" />

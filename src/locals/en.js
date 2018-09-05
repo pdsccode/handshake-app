@@ -326,6 +326,8 @@ export default {
   'dashboard.label.currentPrice': 'Current price',
   'dashboard.label.revenue': 'Revenue',
   'dashboard.label.or': 'or',
+  'dashboard.label.deposit.description1': 'Need even more security? Use Escrow. ',
+  'dashboard.label.deposit.description2': 'Fraud-proof. 100% secured. Safety guaranteed.',
 
   'askLocationPermission.label.1': 'We would like to access your location to find nearest ATMs around you!',
   'askLocationPermission.label.2': `<span>Please click <strong>"Allow"</strong> to start trading now!</span>`,
