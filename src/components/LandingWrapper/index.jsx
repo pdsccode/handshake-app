@@ -40,7 +40,7 @@ class Index extends React.PureComponent {
 
   render() {
     const { messages, locale } = this.props.intl;
-    const { name, children, type, btnToggleLeftMenu,
+    const { name, children, type, btnToggleLeftMenu, fullWidthContent,
       modal: { className, show, body, title, centered },
     } = this.props;
     const logo = <a href="/" className="d-inline-block mt-1"><img src={imgNinja} width="100" /></a>;
@@ -56,72 +56,83 @@ class Index extends React.PureComponent {
       <div className="landing-page">
         {SEOHome}
         <div className="landing-background">
-          <div className="container">
+          <div>
             {/* mobile */}
-            <div className="row d-md-none">
-              <div className="col-5">
-                {logo}
-              </div>
-              <div className="col-7">
-                <div className="text-right">
-                  {btnJoin}
+            <div className="container">
+              <div className="row d-md-none">
+                <div className="col-5">
+                  {logo}
                 </div>
-              </div>
-            </div>
-            <div className="row d-md-none">
-              <div className="col">{btnToggleLeftMenu}</div>
-              <div className="col text-right">{navLinks}</div>
-            </div>
-
-            {/* desktop */}
-            <div className="row d-none d-md-flex">
-              <div className="col-2">
-                {logo}
-              </div>
-              <div className="col-10">
-                <div className="text-right">
-                  <span className="mr-4">{navLinks}</span>
-                  {btnJoin}
-                </div>
-              </div>
-            </div>
-
-            {children}
-
-            <hr className="landing-hr" />
-
-            <div className="row landing-footer no-gutters">
-              <div className="col-12 col-md-1">
-                <img src={imgLogo} width="54" />
-              </div>
-              <div className="col-12 col-md-7">
-                <div className="align-middle px-1 pt-1">
-                  <div><FormattedHTMLMessage id="landing_page.label.footer" /></div>
-                </div>
-              </div>
-              {
-                name && (
-                  <div className="col-12 col-md-4 text-left text-md-right">
-                    <div className="pl-1 pt-1">
-                      {
-                        messages[`landing_page.${name}.joinTelegram`] && (
-                          <div>
-                            <FormattedHTMLMessage id={`landing_page.${name}.joinTelegram`} />
-                          </div>
-                        )
-                      }
-                      {
-                        messages[`landing_page.${name}.whitepaper`] && (
-                          <div>
-                            <FormattedHTMLMessage id={`landing_page.${name}.whitepaper`} />
-                          </div>
-                        )
-                      }
-                    </div>
+                <div className="col-7">
+                  <div className="text-right">
+                    {btnJoin}
                   </div>
-                )
-              }
+                </div>
+              </div>
+              <div className="row d-md-none">
+                <div className="col">{btnToggleLeftMenu}</div>
+                <div className="col text-right">{navLinks}</div>
+              </div>
+
+              {/* desktop */}
+              <div className="row d-none d-md-flex">
+                <div className="col-2">
+                  {logo}
+                </div>
+                <div className="col-10">
+                  <div className="text-right">
+                    <span className="mr-4">{navLinks}</span>
+                    {btnJoin}
+                  </div>
+                </div>
+              </div>
             </div>
+
+            {
+              fullWidthContent ? children : (
+                <div className="container">
+                  {children}
+                </div>
+              )
+            }
+
+            <div className="container">
+              <hr className="landing-hr" />
+
+              <div className="row landing-footer no-gutters">
+                <div className="col-12 col-md-1">
+                  <img src={imgLogo} width="54" />
+                </div>
+                <div className="col-12 col-md-7">
+                  <div className="align-middle px-1 pt-1">
+                    <div><FormattedHTMLMessage id="landing_page.label.footer" /></div>
+                  </div>
+                </div>
+                {
+                  name && (
+                    <div className="col-12 col-md-4 text-left text-md-right">
+                      <div className="pl-1 pt-1">
+                        {
+                          messages[`landing_page.${name}.joinTelegram`] && (
+                            <div>
+                              <FormattedHTMLMessage id={`landing_page.${name}.joinTelegram`} />
+                            </div>
+                          )
+                        }
+                        {
+                          messages[`landing_page.${name}.whitepaper`] && (
+                            <div>
+                              <FormattedHTMLMessage id={`landing_page.${name}.whitepaper`} />
+                            </div>
+                          )
+                        }
+                      </div>
+                    </div>
+                  )
+                }
+              </div>
+            </div>
+
 
           </div>
 

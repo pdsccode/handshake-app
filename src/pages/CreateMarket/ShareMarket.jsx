@@ -24,8 +24,7 @@ class ShareMarket extends React.Component {
   );
 
   renderMessage = (props) => {
-    const { isNew } = props;
-    const type = isNew ? 'event' : 'outcome';
+    const type = props.isNew ? 'event' : 'outcome';
     return (
       <div className="ShareEventMessage">
         Your {type}  was successfully created!

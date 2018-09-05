@@ -9,6 +9,7 @@ import { HANDSHAKE_ID, API_URL } from '@/constants';
 import GA from '@/services/googleAnalytics';
 import { SIDE } from '@/components/handshakes/betting/constants.js';
 import { getGasPrice } from '@/utils/gasPrice';
+import { VALIDATE_CODE } from '@/components/handshakes/betting/constants.js';
 
 // components
 import { showAlert } from '@/reducers/app/action';
@@ -82,7 +83,7 @@ class BetingShake extends React.Component {
 
     const { oddValue, amountValue } = this.state;
 
-    const { matchName, matchOutcome, side, closingDate, onSubmitClick } = this.props;
+    const { matchName, matchOutcome, side, closingDate, onSubmitClick, handleBetFail} = this.props;
 
     const amount = parseBigNumber(amountValue);
     const odds = parseBigNumber(oddValue);
@@ -105,7 +106,7 @@ class BetingShake extends React.Component {
     }
 
     const validate = await validateBet(amount, odds, closingDate, matchName, matchOutcome);
-    const { status, message } = validate;
+    const { status, message, code } = validate;
     if (status) {
       this.initHandshake(amount, odds);
       onSubmitClick();
@@ -113,13 +114,21 @@ class BetingShake extends React.Component {
     } else {
       if (message) {
         GA.createBetNotSuccess(message);
-        this.props.showAlert({
-          message: <div className="text-center">{message}</div>,
-          timeOut: 3000,
-          type: 'danger',
-          callBack: () => {
-          }
-        });
+        if (code === VALIDATE_CODE.NOT_ENOUGH_BALANCE) {
+          onCancelClick();
+          handleBetFail();
+
+        }else {
+          this.props.showAlert({
+            message: <div className="text-center">{message}</div>,
+            timeOut: 3000,
+            type: 'danger',
+            callBack: () => {
+            }
+          });
+
+        }
+
 
       }
     }
