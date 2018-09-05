@@ -60,7 +60,7 @@ class AdvancedOrderMode extends React.Component {
   }
 
   render() {
-    const { bettingShake, orderBook, theme } = this.props;
+    const { bettingShake, orderBook, theme, handleBetFail } = this.props;
     const { side } = bettingShake;
     const { disable } = this.state;
     const buttonClass = theme;
@@ -71,12 +71,13 @@ class AdvancedOrderMode extends React.Component {
       <React.Fragment>
         <BettingShake
           {...bettingShake}
-          onClickSubmit={(click) =>{ this.onButtonSubmit = click; }}
+          onClickSubmit={(click) => { this.onButtonSubmit = click }}
+          handleBetFail={ () => { handleBetFail(); }}
         />
-        <OrderBook {...orderBook} />
         <Button block isLoading={disable} disabled={disable} className={buttonClass} onClick={this.handleClick}>{buttonText}</Button>
         <EstimateGas />
         {this.renderMarketFee(this.props)}
+        <OrderBook {...orderBook} />
       </React.Fragment>
     );
   }

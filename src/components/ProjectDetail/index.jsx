@@ -51,7 +51,7 @@ class Index extends React.PureComponent {
   render() {
     const { messages, locale } = this.props.intl;
     const {
-      name, img, imgContent, getEmail, intl, type, entireContentComponent, contentComponent, reactHelmetElement
+      name, img, imgContent, getEmail, intl, type, entireContentComponent, contentComponent, reactHelmetElement, noBreadCrumbs, fullWidthContent = false,
     } = this.props;
     const { hasSubscribed } = this.state;
     const cta1 = messages[`landing_page.${name}.cta1`];
@@ -67,28 +67,32 @@ class Index extends React.PureComponent {
 
     const { url: categoryUrl, text: categoryText } = LANDING_PAGE_TYPE[type];
     return (
-      <LandingWrapper name={name}>
+      <LandingWrapper name={name} fullWidthContent={fullWidthContent}>
         {reactHelmetElement}
         <div className="project-detail">
-          <div className="row mt-5">
-            <div className="col">
-              <div className="pd-breadcrumb">
-                {
-                  type !== 'landing' && (
-                    <React.Fragment>
-                      <Link to={categoryUrl}>
-                        {categoryText}
-                      </Link>
-                      <span className="mx-2">/</span>
-                    </React.Fragment>
-                  )
-                }
-                <span>
+          {
+            messages[`landing_page.${name}.breadcrumb`] && (
+              <div className="row mt-5">
+                <div className="col">
+                  <div className="pd-breadcrumb">
+                    {
+                      type !== 'landing' && (
+                        <React.Fragment>
+                          <Link to={categoryUrl}>
+                            {categoryText}
+                          </Link>
+                          <span className="mx-2">/</span>
+                        </React.Fragment>
+                      )
+                    }
+                    <span>
                   <FormattedMessage id={`landing_page.${name}.breadcrumb`} />
                 </span>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
+            )
+          }
           {
             entireContentComponent || (
               <React.Fragment>

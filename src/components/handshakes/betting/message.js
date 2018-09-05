@@ -92,7 +92,7 @@ export const BETTING_STATUS_LABEL =
       LOSE: 'Better luck next time.',
       WIN: `You're a winner!`,
       WIN_WAIT: `<br/> It's not time to withdraw. Please wait..`,
-      DISPUTE_CLICK: `<br/>Don't agree with the result? Dispute it.`,
+      DISPUTE_CLICK: `<br/>Don't agree? Dispute it`,
       DISPUTE_WAIT: `<br/> You've disputed the result. Please wait while we resolve it.`,
       DISPUTE_RESOVING: `Other players have also disputed this result. Please wait while we resolve it.`,
       DONE: ` The bet is done.`,
@@ -113,6 +113,6 @@ export const BETTING_STATUS_LABEL =
       WITHDRAW: 'Withdraw winnings',
       CANCEL: 'Cancel this bet',
       RETRY: 'Retry',
-      DISPUTE: 'Dispute',
+      DISPUTE: 'Dispute it',
     };
 
