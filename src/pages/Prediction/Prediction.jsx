@@ -81,7 +81,7 @@ class Prediction extends React.Component {
   handleScroll = () => {
     this.showLuckyPool();
   };
-  didPlaceOrder = ()=> {
+  didPlaceOrder = (isFree)=> {
     this.closeOrderPlace();
     if (!this.props.isExistEmail) {
       this.modalEmailPopupRef.open();
@@ -209,7 +209,7 @@ class Prediction extends React.Component {
           handleBetFail={this.handleBetFail}
           freeAvailable={isFreeAvailable}
           onSubmitClick={(isFree) => {
-            this.didPlaceOrder();
+            this.didPlaceOrder(isFree);
           }}
         />
       </ModalDialog>
