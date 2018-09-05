@@ -1,18 +1,16 @@
 import React from 'react';
-import {
-  GoogleMap,
-  Marker,
-  withGoogleMap,
-  withScriptjs,
-} from 'react-google-maps';
+import { GoogleMap, Marker, withGoogleMap, withScriptjs } from 'react-google-maps';
 
 import StationMarker from './StationMarker';
 import './Map.scss';
-import { injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 
 import iconCurLocationButton from '@/assets/images/icon/current-location-button.png';
 import currentLocationIndicator from '@/assets/images/icon/current-location-indicator.png';
+import iconManageAtm from '@/assets/images/cash/ic-manage-atm.svg';
+import iconManageDashboard from '@/assets/images/cash/ic-dashboard.svg';
+import { HANDSHAKE_ID, URL } from '@/constants';
 
 class Map extends React.Component {
   constructor(props) {
@@ -27,6 +25,14 @@ class Map extends React.Component {
 
   handleOnChangeShowAllDetails = (id, newValue) => {
     this.setState({ curStationIdShowAllDetails: newValue ? id : null });
+  }
+
+  goToDashboard = () => {
+    this.props.history.push(URL.HANDSHAKE_ME);
+  }
+
+  goToManageAtm = () => {
+    this.props.history.push(`${URL.HANDSHAKE_CREATE}?id=${HANDSHAKE_ID.EXCHANGE}`);
   }
 
   render() {
@@ -101,6 +107,20 @@ class Map extends React.Component {
           position={curLocation}
           zIndex={-1111}
         />
+        <div className="container-button">
+          <div className="d-inline-block w-50 pr-1">
+            <button className="btn primary-button btn-block" onClick={this.goToDashboard}>
+              <img src={iconManageDashboard} width={16} className="align-top mr-2" />
+              <FormattedMessage id="ex.discover.label.dashboard" />
+            </button>
+          </div>
+          <div className="d-inline-block w-50 pl-1">
+            <button className="btn secondary-button btn-block" onClick={this.goToManageAtm}>
+              <img src={iconManageAtm} width={16} className="align-top mr-2" />
+              <FormattedMessage id="ex.discover.label.manage.atm" />
+            </button>
+          </div>
+        </div>
       </GoogleMap>
     );
   }

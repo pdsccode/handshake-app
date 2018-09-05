@@ -281,6 +281,8 @@ export default {
   'ex.sort.price.sell.btc': 'Sell BTC',
   'ex.sort.price.buy.eth': 'Buy ETH',
   'ex.sort.price.sell.eth': 'Sell ETH',
+  'ex.discover.label.manage.atm': 'Manage ATM',
+  'ex.discover.label.dashboard': 'Dashboard',
   product_info: 'Ninja is open-source, decentralized software that never holds your funds. By freely choosing to use Ninja, the user accepts sole responsibility for their behavior and agrees to abide by the legalities of their governing jurisdiction. Ninja cannot be liable for legal, monetary or psychological damages should you do something stupid. Never invest more than you are willing to lose. Play safe!',
 
   'cc.label.1': 'Buy a specific amount',
