@@ -25,8 +25,6 @@ import { URL } from '@/constants';
 import { Link } from 'react-router-dom';
 import { eventSelector, isLoading, showedLuckyPoolSelector, isSharePage, countReportSelector, checkFreeBetSelector, checkExistSubcribeEmailSelector } from './selector';
 import { loadMatches, updateShowedLuckyPool, getReportCount, removeExpiredEvent, checkFreeBet, checkExistSubcribeEmail } from './action';
-import { eventSelector, isLoading, showedLuckyPoolSelector, isSharePage, countReportSelector } from './selector';
-import { loadMatches, getReportCount, removeExpiredEvent } from './action';
 
 import EventItem from './EventItem';
 import PexCreateBtn from './PexCreateBtn';
