@@ -3,6 +3,11 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
 import { BETTING_RESULT } from '@/components/handshakes/betting/constants.js';
+import {
+  getBalance, getEstimateGas,
+} from '@/components/handshakes/betting/utils';
+import { MESSAGE } from '@/components/handshakes/betting/message.js';
+
 import { BASE_API } from '@/constants';
 import { Alert } from 'reactstrap';
 import $http from '@/services/api';
@@ -163,6 +168,23 @@ class BettingReport extends React.Component {
     }, 1000);
   }
 
+  async validate(outcomes) {
+    const { isAdmin } = this.props;
+    let message = null;
+    let status = true;
+
+    if (!isAdmin) {
+      const balance = await getBalance();
+      const estimatedGas = await getEstimateGas();
+      const totalGas = estimatedGas * outcomes.length;
+      if (totalGas > balance) {
+        message = MESSAGE.NOT_ENOUGH_GAS.replace('{{value}}', totalGas);
+        status = false;
+      }
+    }
+    return { status, message };
+
+  }
   checkToken() {
     if (localStorage.getItem('Token') !== null) {
       return localStorage.getItem('Token');
@@ -221,18 +243,27 @@ class BettingReport extends React.Component {
         method: 'post',
       });
       console.log(TAG, this.state.final);
+      const isValid = this.validate(this.state.final);
+      const { status, message } = isValid;
+      if (status) {
+        submit.then((response) => {
+          response.data.status === 1 && this.setState({
+            disable: true,
+          });
 
-      submit.then((response) => {
-        response.data.status === 1 && this.setState({
-          disable: true,
+          response.data.status === 1 && this.onReportSuccess(response);
+
+          response.data.status === 0 && this.onReportFailed(response);
         });
-
-        response.data.status === 1 && this.onReportSuccess(response);
-
-        response.data.status === 0 && this.onReportFailed(response);
-      });
-
-
+      } else {
+        this.props.showAlert({
+          message: <div className="text-center">{message}</div>,
+          timeOut: 3000,
+          type: 'danger',
+          callBack: () => {
+          },
+        });
+      }
     }
   }
   onReportSuccess = (response) => {

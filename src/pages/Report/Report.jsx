@@ -45,24 +45,7 @@ class Report extends React.Component {
 
   async callContractReport(outcomes) {
     if (outcomes.length > 0) {
-      let message = null;
-      const balance = await getBalance();
-      const estimatedGas = await getEstimateGas();
-      const totalGas = estimatedGas * outcomes.length;
-      if (totalGas > balance) {
-        message = MESSAGE.NOT_ENOUGH_GAS.replace('{{value}}', totalGas);
-
-        this.props.showAlert({
-          message: <div className="text-center">{message}</div>,
-          timeOut: 3000,
-          type: 'danger',
-          callBack: () => {
-          },
-        });
-      }else {
-        betHandshakeHandler.reportOutcomes(outcomes);
-
-      }
+      betHandshakeHandler.reportOutcomes(outcomes);
     }
   }
 
