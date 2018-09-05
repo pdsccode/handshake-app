@@ -39,17 +39,17 @@ const tabs = [
   {
     id: 'overview',
     text: <FormattedMessage id="dashboard.label.overview" />,
-    component: Overview,
+    component: ManageAssets,
   },
+  // {
+  //   id: 'overview',
+  //   text: <FormattedMessage id="dashboard.label.overview" />,
+  //   component: Overview,
+  // },
   {
     id: 'transaction',
     text: <FormattedMessage id="dashboard.label.transaction" />,
     component: Transaction,
-  },
-  {
-    id: 'manageAssets',
-    text: <FormattedMessage id="dashboard.label.manageAssets" />,
-    component: ManageAssets,
   },
 ]
 
