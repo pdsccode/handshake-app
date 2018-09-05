@@ -163,7 +163,10 @@ class Router extends React.Component {
     return (
       <BrowserRouter>
         <Switch>
-          <Route exact path={URL.INDEX} component={RouterLandingPageMain} />
+          {
+            BrowserDetect.isDesktop ? <Route exact path={URL.INDEX} component={RouterLandingPageMain} /> : null
+          }
+
           <Route path={LANDING_PAGE_TYPE.product.url} render={() => <LandingPageMain type="product" />} />
           <Route path={LANDING_PAGE_TYPE.research.url} render={() => <LandingPageMain type="research" />} />
           <Route exact path={URL.RECRUITING} component={Recruiting} />
@@ -186,6 +189,10 @@ class Router extends React.Component {
                       : (
                         <ScrollToTop>
                           <Switch>
+                            <Route exact path={URL.INDEX} render={() => {
+                              return <Redirect to={{ pathname: URL.BUY_BY_CC_URL }} />
+                            }}
+                            />
                             {/*<Route*/}
                             {/*exact*/}
                             {/*path={URL.INDEX}*/}
