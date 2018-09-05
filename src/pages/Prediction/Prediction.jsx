@@ -18,6 +18,7 @@ import { URL } from '@/constants';
 import { injectIntl } from 'react-intl';
 import { eventSelector, isLoading, showedLuckyPoolSelector, isSharePage, countReportSelector } from './selector';
 import { loadMatches, getReportCount, removeExpiredEvent } from './action';
+
 import EventItem from './EventItem';
 import PexCreateBtn from './PexCreateBtn';
 
@@ -97,7 +98,7 @@ class Prediction extends React.Component {
   };
 
   handleBetFail = () => {
-    this.modalOuttaMoney.open();
+      this.modalOuttaMoney.open();
   }
 
   renderEventList = (props) => {
