@@ -37,13 +37,27 @@ function inputControl(props) {
 }
 
 function autoSuggestion(props) {
+  const { placeholder, source } = props;
+  const { name, value, onChange } = props.input;
+  let nextValue = (typeof value === 'string' || typeof value === 'number')
+    ? source.find(o => o.value === value) : value.toString();
+  if (typeof nextValue === 'object') {
+    nextValue = nextValue.name;
+  }
+  const asProps = {
+    ...props,
+    input: {
+      ...props.input,
+      value: nextValue,
+    }
+  };
   return (
     <AutoSuggestion
-      {...props}
-      name={props.name}
-      placeholder={props.placeholder}
-      value={props.input.value}
-      onChange={props.input.onChange}
+      {...asProps}
+      name={name}
+      placeholder={placeholder}
+      value={nextValue}
+      onChange={onChange}
     />
   );
 }

@@ -55,7 +55,7 @@ class CreateEventForm extends Component {
     dispatch(createEvent({
       values,
       isNew: props.isNew,
-      selectedSource: this.state.selectedReportSource.value,
+      selectedSource: this.state.selectedReportSource.value || null,
     }));
   }
 
@@ -136,7 +136,7 @@ class CreateEventForm extends Component {
           className="form-group"
           fieldClass="form-control"
           placeholder="Choose an Event or Create a new one"
-          onSelect={props.onSelectEvent}
+          onSelect={props.onSelect}
           source={props.eventList}
           validate={required}
           component={renderField}
@@ -235,13 +235,16 @@ class CreateEventForm extends Component {
       </div>
     );
   }
+  
+  reportChange = (value) => {
+    if (value.id !== undefined) {
+      this.setFieldValueToState('selectedReportSource', value.id);
+    }
+  }
 
   renderReport = (props, state) => {
-    const reports = [{
-      value: '',
-      label: 'Select a verified source...',
-    }].concat(props.reportList);
-    const reportList = props.reportList.map(item => ({ ...item, name: `${item.name}  - ${item.url}` }));
+    const reportList = props.reportList.map(item => ({ ...item, name: item.url }));
+    const validate = props.isNew ? [required, urlValidator] : [];
     return (
       <React.Fragment>
         {this.renderGroupTitle('REPORT')}
@@ -250,50 +253,13 @@ class CreateEventForm extends Component {
           name="reports"
           className="form-group"
           fieldClass="form-control"
-          placeholder="Enter your preferred source name"
-          onSelect={(newValue) => this.setFieldValueToState('selectedReportSource', newValue)}
+          placeholder="Enter your preferred source URL"
+          onSelect={this.reportChange}
           source={reportList}
           disabled={!props.isNew}
-          validate={required}
+          validate={validate}
           component={renderField}
         />
-        {/* <div className="form-group">
-          <Field
-            name="reports"
-            type="select"
-            placeholder="Select a verified source..."
-            disabled={!props.isNew}
-            validate={required}
-            onChange={(e, newValue) => this.setFieldValueToState('selectedReportSource', newValue)}
-            component={renderField}
-            options={reports}
-          />
-        </div> */}
-        {
-          props.isNew && !state.selectedReportSource.value &&
-          <React.Fragment>
-            {/* <div className="CreateEventOption"><span>Or</span></div>
-            <Field
-              name="ownReportName"
-              type="text"
-              className="form-group"
-              fieldClass="form-control"
-              component={renderField}
-              placeholder="Enter your preferred source name"
-              validate={[required, (value) => isExists(value, 'name', props.reportList)]}
-            /> */}
-            <Field
-              name="ownReportUrl"
-              type="text"
-              className="form-group"
-              fieldClass="form-control"
-              component={renderField}
-              placeholder="Enter your preferred source URL"
-              validate={[required, urlValidator, (value) => isExists(value, 'url', props.reportList)]}
-            />
-            {this.renderGroupNote('We will review your source and get back to you within 24 hours.')}
-          </React.Fragment>
-        }
       </React.Fragment>
     );
   }

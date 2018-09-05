@@ -65,7 +65,7 @@ class CreateEventContainer extends React.Component {
         eventList={props.eventList}
         shareEvent={props.shareEvent}
         dispatch={props.dispatch}
-        onSelect={this.onSelect}
+        onSelect={this.onSelectEvent}
         formAction={props.formAction}
       />
     );

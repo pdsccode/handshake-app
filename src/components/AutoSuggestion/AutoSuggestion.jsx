@@ -20,13 +20,16 @@ class AutoSuggestion extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: '',
+      value: props.value || '',
       suggestions: [],
     };
   }
 
   onSuggestionSelected = (event, { suggestion }) => {
-    this.props.onSelect(suggestion);
+    const { onSelect } = this.props;
+    if (onSelect !== undefined) {
+      onSelect(suggestion);
+    }
   };
 
   onSuggestionChange = (event, { newValue }) => {
@@ -62,7 +65,9 @@ class AutoSuggestion extends Component {
     const suggestion = this.props.source.find(sg => {
       return sg.name === value.trim();
     });
-    this.props.onSelect(suggestion || {});
+    if (this.props.onSelect !== undefined) {
+      this.props.onSelect(suggestion || {});
+    }
     this.props.onChange(value);
   }
 
@@ -72,7 +77,6 @@ class AutoSuggestion extends Component {
     return (
       <span>
         {parts.map((part, index) => {
-          // const className = part.highlight ? 'react-autosuggest__suggestion-match' : null;
           return (
             <span key={`suggest-${index}`}>
               {part.text}
@@ -88,8 +92,9 @@ class AutoSuggestion extends Component {
     const { value, suggestions } = state;
     const inputProps = {
       ...props.input,
-      value,
+      value: props.value || value,
       name: props.name,
+      disabled: props.disabled,
       className: props.fieldClass,
       placeholder: props.placeholder,
       onChange: this.onSuggestionChange,
