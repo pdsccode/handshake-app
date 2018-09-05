@@ -393,7 +393,7 @@ class FeedCreditCard extends React.Component {
 
     const {
       data: {
-        amount, currency, fiat_amount, fiat_currency,
+        currency, fiat_amount, fiat_currency,
       },
     } = data;
 
