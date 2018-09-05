@@ -98,7 +98,7 @@ class ManageAssets extends React.Component {
           <div className="media">
             <img src={iconSafeGuard} className="mr-2" />
             <div className="media-body font-weight-normal">
-              You can always deposit coin to our escrow. <span style={{ color: '#526AFB' }}>100% safe</span>
+              Need even more security? Use Escrow. <span style={{ color: '#526AFB' }}>Fraud-proof. 100% secured. Safety guaranteed.</span>
             </div>
           </div>
           <div>
