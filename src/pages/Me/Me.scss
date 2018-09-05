@@ -1,5 +1,59 @@
 @import './src/styles/style';
 
+.me {
+  .update-profile {
+    display: flex;
+    padding-bottom: rem-calc(11px);
+    flex-wrap: wrap;
+    align-items: center;
+    border-bottom: 1px solid #f0f0f0;
+    &:hover {
+      text-decoration: none;
+    }
+    .avatar {
+      width: 15%;
+    }
+    .text {
+      width: 75%;
+      padding-left: rem-calc(12px);
+      strong {
+        font-weight: $semi-bold;
+        font-size: 1rem;
+        color: $text-black;
+      }
+      p {
+        margin: 0;
+        opacity: 0.4;
+        font-weight: $semi-bold;
+        font-size: rem-calc(14px);
+        color: $text-black;
+      }
+    }
+    .arrow {
+      width: 10%;
+      text-align: right;
+      img {
+        vertical-align: baseline;
+        transform: rotate(-90deg);
+      }
+    }
+  }
+  .feed-wrapper {
+    &:hover {
+      cursor: pointer;
+    }
+  }
+  .label-filter-by {
+    font-weight: 500;
+    font-size: 14px;
+    color: #6F6F6F;
+  }
+  .report-container {
+    display: flex;
+    justify-content: center;
+    padding: 5px 0px;
+  }
+}
 
 .dashboard {
   .btn-close {

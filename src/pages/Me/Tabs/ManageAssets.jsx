@@ -65,7 +65,7 @@ class ManageAssets extends React.Component {
           }
         </div>
 
-        <div className="p-3">
+        <div className="mt-3">
           <div className="media">
             <img src={iconSafeGuard} className="mr-2" />
             <div className="media-body font-weight-normal">
