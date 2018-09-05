@@ -51,19 +51,12 @@ class Navigation extends React.Component {
     return (
       <footer className="footer">
         <ul>
-          <li className={cn(this.checkSelected(URL.HANDSHAKE_WALLET_INDEX))}>
-            <Link to={URL.HANDSHAKE_WALLET_INDEX} onClick={this.props.clearHeaderBack}>
-              <div dangerouslySetInnerHTML={{ __html: walletIcon }} />
-              <span>{this.props.intl.messages.app.navigation.wallet.toUpperCase()}</span>
-            </Link>
-          </li>
           <li className={cn(this.checkSelected(URL.BUY_BY_CC_URL))}>
             <Link to={URL.BUY_BY_CC_URL} onClick={this.props.clearHeaderBack}>
               <div dangerouslySetInnerHTML={{ __html: creditIcon }} />
               <span>{this.props.intl.messages.app.navigation.credit.toUpperCase()}</span>
             </Link>
           </li>
-
           <li className={cn(this.checkSelected([URL.HANDSHAKE_EXCHANGE, URL.HANDSHAKE_CASH]))}>
             <Link to={URL.HANDSHAKE_CASH} onClick={this.props.clearHeaderBack}>
               <div dangerouslySetInnerHTML={{ __html: discoverIcon }} />
@@ -74,6 +67,12 @@ class Navigation extends React.Component {
             <Link to={URL.PRODUCT_PREDICTION_URL} onClick={this.props.clearHeaderBack}>
               <div className="chat-icon" dangerouslySetInnerHTML={{ __html: chatIcon }} />
               <span>{this.props.intl.messages.app.navigation.bet.toUpperCase()}</span>
+            </Link>
+          </li>
+          <li className={cn(this.checkSelected(URL.HANDSHAKE_WALLET_INDEX))}>
+            <Link to={URL.HANDSHAKE_WALLET_INDEX} onClick={this.props.clearHeaderBack}>
+              <div dangerouslySetInnerHTML={{ __html: walletIcon }} />
+              <span>{this.props.intl.messages.app.navigation.wallet.toUpperCase()}</span>
             </Link>
           </li>
           <li className={cn(this.checkSelected(URL.HANDSHAKE_ME_INDEX))}>
