@@ -51,23 +51,23 @@ class EscrowWithdraw extends React.Component {
 
     return (
       <div className="escrow-withdraw">
-        <div>
-          <button className="btn btn-lg bg-transparent d-inline-block btn-close">
-            &times;
-          </button>
-        </div>
+        {/*<div>*/}
+          {/*<button className="btn btn-lg bg-transparent d-inline-block btn-close">*/}
+            {/*&times;*/}
+          {/*</button>*/}
+        {/*</div>*/}
         <div className="wrapper font-weight-normal">
           <FormEscrowWithdraw>
-            <h4 className="font-weight-bold">Withdraw money</h4>
-            <div className="d-table w-100">
-              <div className="d-table-cell escrow-label">Your balance:</div>
+            {/*<h4 className="font-weight-bold">Withdraw money</h4>*/}
+            <div className="d-table w-100 mt-4">
+              <div className="d-table-cell escrow-label">{messages.me.credit.withdraw.yourBalance}</div>
               <div className="d-table-cell text-right">
                 <span className="blue-text font-weight-bold">$</span> 22,567,291
               </div>
             </div>
 
             <div className="mt-4">
-              <div className="escrow-label">Your Paypal username</div>
+              <div className="escrow-label">{messages.me.credit.withdraw.yourPapalName}</div>
               <div>
                 <Field
                   name="paypal-username"
@@ -79,7 +79,7 @@ class EscrowWithdraw extends React.Component {
             </div>
 
             <div className="mt-4">
-              <div className="escrow-label">Amount</div>
+              <div className="escrow-label">{messages.me.credit.withdraw.amount}</div>
               <div>
                 <Field
                   name="amount"
@@ -96,13 +96,12 @@ class EscrowWithdraw extends React.Component {
                 className="btn btn-block btn-escrow-primary"
               >
                 <img src={iconPaypal} className="mr-2" width={20} />
-                <span>Withdraw to your PayPal</span>
+                <span>{messages.me.credit.withdraw.buttonTitle}</span>
               </button>
             </div>
             <div className="text-center mt-2">
               <small className="escrow-label">
-                It will take within a day for us <br /> to transfer money into
-                your account.
+                {messages.me.credit.withdraw.description}
               </small>
             </div>
           </FormEscrowWithdraw>

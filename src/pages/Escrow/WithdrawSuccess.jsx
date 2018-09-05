@@ -51,9 +51,9 @@ class EscrowWithdrawSuccess extends React.Component {
       <div className="escrow-withdraw-success">
         <div>
           <div className="w-50" style={{ paddingTop: '151px', paddingBottom: '100px' }}>
-            <h4 className="font-weight-bold">Withdraw successfully!</h4>
+            <h4 className="font-weight-bold">{messages.me.credit.withdrawSuccess.description}</h4>
             <div className="escrow-label">
-              We will make the transfer very shortly within 24 hours
+              {messages.me.credit.withdrawSuccess.descriptionTransfer}
             </div>
           </div>
           <div className="background">
@@ -62,7 +62,7 @@ class EscrowWithdrawSuccess extends React.Component {
         </div>
         <div className="mt-4">
           <button className="btn btn-block btn-escrow-primary" onClick={this.backToDashboard}>
-            <span>&larr; Back to your dashboard</span>
+            <span>&larr; {messages.me.credit.withdrawSuccess.buttonTitle}</span>
           </button>
         </div>
       </div>

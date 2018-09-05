@@ -30,8 +30,18 @@ import iconSafeGuard from '@/assets/images/icon/safe-guard.svg';
 import Asset from './Asset';
 import { formatMoneyByLocale } from '@/services/offer-util';
 import { getCreditATM } from '@/reducers/exchange/action';
+import Withdraw from '@/pages/Escrow/Withdraw';
+import Modal from '@/components/core/controls/Modal/Modal';
 
 class ManageAssets extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      modalFillContent: '',
+    };
+  }
+
   componentDidMount() {
     this.getCreditATM();
   }
@@ -45,11 +55,26 @@ class ManageAssets extends React.Component {
   }
 
   withdrawCash = () => {
-    this.props.history.push(URL.ESCROW_WITHDRAW);
+    const { messages } = this.props.intl;
+
+    this.setState({
+      modalFillContent:
+        (
+          <Withdraw />
+        ),
+    }, () => {
+      this.modalFillRef.open();
+    });
+  }
+
+  closeFillCoin = () => {
+    this.setState({ modalFillContent: '' });
   }
 
   render () {
+    const { messages } = this.props.intl;
     const { depositInfo } = this.props;
+    const { modalFillContent } = this.state;
     let assets = [];
 
     if (depositInfo) {
@@ -89,6 +114,9 @@ class ManageAssets extends React.Component {
             </div>
           </div>
         </div>
+        <Modal title={messages.me.credit.withdraw.title} onRef={modal => this.modalFillRef = modal} onClose={this.closeFillCoin}>
+          {modalFillContent}
+        </Modal>
       </div>
     )
   }

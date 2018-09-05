@@ -943,6 +943,21 @@ export default {
         buyMoreCoin: 'Buy more coins now',
       }
     },
+    credit: {
+      withdraw: {
+        title: 'Withdraw money',
+        yourBalance: 'Your balance:',
+        yourPapalName: 'Your Paypal username',
+        amount: 'Amount',
+        buttonTitle: 'Withdraw to your PayPal',
+        description: <span>It will take within a day for us <br /> to transfer money into your account.</span>,
+      },
+      withdrawSuccess: {
+        description: 'Withdraw successfully!',
+        descriptionTransfer: 'We will make the transfer very shortly within 24 hours',
+        buttonTitle: 'Back to your dashboard',
+      },
+    },
   },
 
   discover: {
