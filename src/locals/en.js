@@ -954,6 +954,7 @@ export default {
         amount: 'Amount',
         buttonTitle: 'Withdraw to your PayPal',
         description: <span>It will take within a day for us <br /> to transfer money into your account.</span>,
+        askToWithdraw: 'Do you want to withdraw?',
       },
       withdrawSuccess: {
         description: 'Withdraw successfully!',

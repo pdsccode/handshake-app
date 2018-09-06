@@ -76,7 +76,7 @@ function exchangeReducter(state = {
         console.log('key, value', key, value);
         depositInfo[key] = Deposit.deposit(value);
       });
-      return { ...state, depositInfo };
+      return { ...state, depositInfo, creditRevenue: action.payload.data.revenue || '0' };
     }
     default:
       return state;

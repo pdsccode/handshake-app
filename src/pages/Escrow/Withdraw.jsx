@@ -1,5 +1,5 @@
 import React from 'react';
-import { injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { API_URL, CRYPTO_CURRENCY, EXCHANGE_ACTION, FIAT_CURRENCY, MIN_AMOUNT, NB_BLOCKS, URL } from '@/constants';
 import createForm from '@/components/core/form/createForm';
@@ -23,6 +23,9 @@ import { MasterWallet } from '@/services/Wallets/MasterWallet';
 
 import './CommonStyle.scss';
 import './Withdraw.scss';
+import ModalDialog from '@/components/core/controls/ModalDialog/ModalDialog';
+import Feed from '@/components/core/presentation/Feed';
+import Button from '@/components/core/controls/Button';
 
 const nameFormEscrowWithdraw = 'escrowWithdraw';
 const FormEscrowWithdraw = createForm({
@@ -32,6 +35,14 @@ const FormEscrowWithdraw = createForm({
 });
 
 class EscrowWithdraw extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      modalContent: '',
+    };
+  }
+
   showLoading = () => {
     this.props.setLoading(true);
   }
@@ -41,9 +52,33 @@ class EscrowWithdraw extends React.Component {
   }
 
   handleWithdraw = (values) => {
+    const { messages } = this.props.intl;
     console.log('handleWithdraw', values);
+
+    const { amount, username } = values;
+
+    const offer = { amount, information: { username } };
+
+    this.setState({
+      modalContent:
+        (
+          <div className="py-2">
+            <Feed className="feed p-2" background="#259B24">
+              <div className="text-white d-flex align-items-center" style={{ minHeight: '50px' }}>
+                <div>{messages.me.credit.withdraw.askToWithdraw}</div>
+              </div>
+            </Feed>
+            <Button className="mt-2" block onClick={() => this.withdrawCash(offer)}><FormattedMessage id="ex.btn.confirm" /></Button>
+            <Button block className="btn btn-secondary" onClick={this.cancelCreateOffer}><FormattedMessage id="ex.btn.notNow" /></Button>
+          </div>
+        ),
+    }, () => {
+      this.modalRef.open();
+    });
+  }
+
+  withdrawCash = (offer) => {
     this.showLoading();
-    const offer = {};
 
     this.props.withdrawCashDepositATM({
       PATH_URL: API_URL.EXCHANGE.WITHDRAW_CASH_DEPOSIT_ATM,
@@ -52,6 +87,11 @@ class EscrowWithdraw extends React.Component {
       successFn: this.handleWithdrawCashSuccess,
       errorFn: this.handleWithdrawCashFailed,
     });
+  }
+
+  cancelCreateOffer = () => {
+    this.hideLoading();
+    this.modalRef.close();
   }
 
   handleWithdrawCashSuccess = async (res) => {
@@ -77,7 +117,8 @@ class EscrowWithdraw extends React.Component {
   render() {
     const { messages } = this.props.intl;
     const { intl, hideNavigationBar } = this.props;
-    const { listOfferPrice } = this.props;
+    const { creditRevenue } = this.props;
+    const { modalContent } = this.state;
 
     return (
       <div className="escrow-withdraw">
@@ -92,7 +133,7 @@ class EscrowWithdraw extends React.Component {
             <div className="d-table w-100 mt-4">
               <div className="d-table-cell escrow-label">{messages.me.credit.withdraw.yourBalance}</div>
               <div className="d-table-cell text-right">
-                <span className="blue-text font-weight-bold">$</span> 22,567,291
+                <span className="blue-text font-weight-bold">$</span> {formatMoneyByLocale(creditRevenue, FIAT_CURRENCY.USD)}
               </div>
             </div>
 
@@ -100,7 +141,7 @@ class EscrowWithdraw extends React.Component {
               <div className="escrow-label">{messages.me.credit.withdraw.yourPapalName}</div>
               <div>
                 <Field
-                  name="paypal-username"
+                  name="username"
                   className="form-control w-100"
                   type="text"
                   component={fieldInput}
@@ -138,6 +179,9 @@ class EscrowWithdraw extends React.Component {
             </div>
           </FormEscrowWithdraw>
         </div>
+        <ModalDialog onRef={modal => this.modalRef = modal}>
+          {modalContent}
+        </ModalDialog>
       </div>
     );
   }
@@ -145,6 +189,7 @@ class EscrowWithdraw extends React.Component {
 
 const mapState = state => ({
   depositInfo: state.exchange.depositInfo,
+  creditRevenue: state.exchange.creditRevenue,
 });
 
 const mapDispatch = dispatch => ({
