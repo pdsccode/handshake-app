@@ -225,6 +225,7 @@ class BettingReport extends React.Component {
     } else {
       const { isAdmin } = this.props;
 
+      /*
       const tokenValue = token || this.checkToken();
       const authenticate = { Authorization: `Bearer ${tokenValue}`, 'Content-Type': 'application/json' };
       const headers = isAdmin ? authenticate : null;
@@ -242,9 +243,10 @@ class BettingReport extends React.Component {
         headers: headers,
         method: 'post',
       });
+      */
       console.log(TAG, this.state.final);
       const isValid = this.validate(this.state.final);
-      console.log(TAG, isValid);
+      console.log(TAG, 'isValide:', isValid);
       const { status, message } = isValid;
       if (status) {
         /*
