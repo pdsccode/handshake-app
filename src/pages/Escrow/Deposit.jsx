@@ -44,25 +44,59 @@ const CRYPTO_CURRENCY_CREDIT_CARD = {
 };
 
 let listCurrency = Object.values(CRYPTO_CURRENCY_CREDIT_CARD).map((item) => {
-  return { name: item, icon: CRYPTO_ICONS[item] };
+  return { name: item, icon: CRYPTO_ICONS[item], allowPercentage: true };
 });
 
 class EscrowDeposit extends React.Component {
   constructor(props) {
     super(props);
 
-    const {
-      currency,
-    } = Helper.getQueryStrings(window.location.search);
-
-    if (currency) {
-      listCurrency = [{ name: currency, icon: CRYPTO_ICONS[currency] }];
-    }
-
     this.state = {
       values: {},
+      depositInfo: this.props.depositInfo,
     };
   }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (JSON.stringify(nextProps.depositInfo) !== JSON.stringify(prevState.depositInfo)) {
+      console.log('nextProps.depositInfo',nextProps.depositInfo);
+
+      const {
+        currency,
+      } = Helper.getQueryStrings(window.location.search);
+
+      if (currency) {
+        const depositInfo = nextProps.depositInfo[currency];
+        if (!depositInfo || depositInfo.subStatus !== 'transferring') {
+          listCurrency = [{ name: currency, icon: CRYPTO_ICONS[currency], allowPercentage: !depositInfo }];
+          if (depositInfo) {
+            nextProps.rfChange(nameFormEscrowDeposit, `percentage_${currency}`, depositInfo.percentage);
+          }
+
+        } else {
+          listCurrency = [];
+        }
+      } else {
+        if (nextProps.depositInfo) {
+          listCurrency = [];
+          for (const item of Object.values(CRYPTO_CURRENCY_CREDIT_CARD)) {
+            const depositInfo = nextProps.depositInfo[item];
+            if (!depositInfo || depositInfo.subStatus !== 'transferring') {
+              listCurrency.push({ name: item, icon: CRYPTO_ICONS[item], allowPercentage: !depositInfo });
+              if (depositInfo) {
+                nextProps.rfChange(nameFormEscrowDeposit, `percentage_${item}`, depositInfo.percentage);
+              }
+            }
+          }
+        }
+      }
+
+      return { depositInfo: nextProps.depositInfo };
+    }
+
+    return null;
+  }
+
   componentDidMount() {
     this.getCreditATM();
     // this.createCreditATM();
@@ -293,11 +327,11 @@ class EscrowDeposit extends React.Component {
       message: <div className="text-center"><FormattedMessage id="escrow.btn.depositSuccessMessage" /></div>,
       timeOut: 2000,
       type: 'success',
-      // callBack: this.handleBuySuccess,
+      callBack: this.handleDepositSuccess,
     });
   };
 
-  handleBuySuccess = () => {
+  handleDepositSuccess = () => {
     const { callbackSuccess } = this.props;
 
     if (callbackSuccess) {
@@ -340,6 +374,7 @@ class EscrowDeposit extends React.Component {
     const { messages } = this.props.intl;
     const { intl, hideNavigationBar } = this.props;
     const { listOfferPrice } = this.props;
+    console.log('Deposit render',);
 
     return (
       <div className="escrow-deposit">
@@ -366,7 +401,7 @@ class EscrowDeposit extends React.Component {
                 </div>
               </div>
               {listCurrency.map(coin => {
-                const { name, icon } = coin;
+                const { name, icon, allowPercentage } = coin;
 
                 const offerPrice = listOfferPrice && listOfferPrice.find((item) => {
                   const { type, currency, fiatCurrency } = item;
@@ -402,6 +437,7 @@ class EscrowDeposit extends React.Component {
                             <span className="percentage-symbol escrow-label font-weight-normal">%</span>
                           }
                           validate={[number]}
+                          disabled={!allowPercentage}
                         />
                       </div>
                     </div>
