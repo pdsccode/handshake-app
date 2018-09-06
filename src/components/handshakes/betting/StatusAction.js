@@ -267,7 +267,7 @@ const winOrLose = (resultStatus, side = SIDE.SUPPORT, disputeTime) => {
     } else {
       const time = leftTime(disputeTime);
       console.log(TAG, 'TIME:', time);
-      strStatus = BETTING_STATUS_LABEL.WIN + BETTING_STATUS_LABEL.WIN_WAIT + time;
+      strStatus = BETTING_STATUS_LABEL.WIN + BETTING_STATUS_LABEL.WIN_WAIT.replace('{{value}}', time);
       isAction = false;
     }
   } else { // LOSE
@@ -312,7 +312,7 @@ const disputeAction = (result, side, disputeTime) => {
       if (result === side) {
         const time = leftTime(disputeTime);
         console.log(TAG, 'TIME:', time);
-        strStatus = BETTING_STATUS_LABEL.WIN + BETTING_STATUS_LABEL.WIN_WAIT + time;
+        strStatus = BETTING_STATUS_LABEL.WIN + BETTING_STATUS_LABEL.WIN_WAIT.replace('{{value}}', time);
         isAction = false;
         label = null;
       } else {

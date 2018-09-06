@@ -244,8 +244,10 @@ class BettingReport extends React.Component {
       });
       console.log(TAG, this.state.final);
       const isValid = this.validate(this.state.final);
+      console.log(TAG, isValid);
       const { status, message } = isValid;
       if (status) {
+        /*
         submit.then((response) => {
           response.data.status === 1 && this.setState({
             disable: true,
@@ -255,6 +257,7 @@ class BettingReport extends React.Component {
 
           response.data.status === 0 && this.onReportFailed(response);
         });
+        */
       } else {
         this.props.showAlert({
           message: <div className="text-center">{message}</div>,

@@ -105,42 +105,18 @@ export const leftTime = (endTime) => {
   console.log(r);
   let text = "";
   if (r.day > 0) {
-    if(r.day === 1){
-      text += `${r.day}day`;
-
-    }else {
-      text += `${r.day}days`;
-
-    }
+    text += `${r.day}d `;
   }
   if (r.hour > 0) {
-    if (r.hour === 1){
-      text += `${r.hour}hr `;
-
-    }else {
-      text += `${r.hour}hrs `;
-
-    }
+    text += `${r.hour}hr `;
   }
 
   if (r.minute > 0) {
-    if(r.minute === 1){
-      text += `${r.minute}min `;
-
-    }else {
-      text += `${r.minute}mins `;
-
-    }
+    text += `${r.minute}m `;
   }
 
   if (r.second > 0) {
-    if(r.second === 1){
-      text += `${r.second}sec`;
-
-    }else {
-      text += `${r.second}secs`;
-
-    }
+    text += `${r.second}s`;
   }
 
   return text;
