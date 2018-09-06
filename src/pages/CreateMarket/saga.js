@@ -145,8 +145,8 @@ function* handleCreateEventSaga({ values, isNew, selectedSource }) {
         const reportSource = {
           source_id: selectedSource,
           source: selectedSource ? undefined : {
-            name: values.ownReportName || '',
-            url: values.ownReportUrl || values.reports,
+            name: '',
+            url: values.reports,
           },
         };
         Object.keys(reportSource).forEach((k) => !reportSource[k] && delete reportSource[k]);

@@ -236,10 +236,8 @@ class CreateEventForm extends Component {
     );
   }
   
-  reportChange = (value) => {
-    if (value.id !== undefined) {
-      this.setFieldValueToState('selectedReportSource', value.id);
-    }
+  reportSelected = (value) => {
+    this.setFieldValueToState('selectedReportSource', value);
   }
 
   renderReport = (props, state) => {
@@ -254,7 +252,7 @@ class CreateEventForm extends Component {
           className="form-group"
           fieldClass="form-control"
           placeholder="Enter your preferred source URL"
-          onSelect={this.reportChange}
+          onSelect={this.reportSelected}
           source={reportList}
           disabled={!props.isNew}
           validate={validate}
