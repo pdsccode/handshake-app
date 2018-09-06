@@ -76,7 +76,7 @@ const CATEGORIES = [
   },
   {
     value: HANDSHAKE_ID.EXCHANGE,
-    text: 'Cash',
+    text: 'ATM',
     priority: 1,
   },
   {

@@ -35,6 +35,7 @@ import iconBitcoin from '@/assets/images/icon/coin/btc.svg';
 import iconEthereum from '@/assets/images/icon/coin/eth.svg';
 import iconBitcoinCash from '@/assets/images/icon/coin/bch.svg';
 import { formatMoneyByLocale } from '@/services/offer-util';
+import iconSpinner from '@/assets/images/icon/icons8-spinner.gif';
 
 export const CRYPTO_ICONS = {
   [CRYPTO_CURRENCY.ETH]: iconEthereum,
@@ -43,13 +44,21 @@ export const CRYPTO_ICONS = {
 };
 
 class Asset extends React.Component {
+  showLoading = () => {
+    this.props.setLoading(true);
+  }
+
+  hideLoading = () => {
+    this.props.setLoading(false);
+  }
+
   depositCoinATM = () => {
     const { currency } = this.props;
     this.props.history.push(`${URL.ESCROW_DEPOSIT}?currency=${currency}`);
   }
 
   deactiveDeposit = () => {
-    console.log('deactiveDeposit', );
+    console.log('deactiveDeposit');
     this.showLoading();
     const offer = {};
 
@@ -83,8 +92,8 @@ class Asset extends React.Component {
 
   render() {
     const { messages } = this.props.intl;
-    const { currency, status, sold, balance, revenue, percentage, listOfferPrice } = this.props;
-    const isActive = status === 'active';
+    const { currency, status, subStatus, sold, balance, revenue, percentage, listOfferPrice } = this.props;
+    // const isActive = status === 'active';
 
     const offerPrice = listOfferPrice && listOfferPrice.find((item) => {
       const { type, currency: name, fiatCurrency } = item;
@@ -95,8 +104,8 @@ class Asset extends React.Component {
     fiatCurrency *= (1 + percentage / 100);
 
     return (
-      <div className="position-relative">
-        <div style={{ opacity: isActive ? 1 : 0.3 }}>
+      <div className="asset position-relative">
+        <div style={{ opacity: status === 'inactive' ? 0.3 : 1 }}>
           <div>
             <img src={CRYPTO_ICONS[currency]} width={19} />
             <span className="ml-1 text-normal">{CRYPTO_CURRENCY_NAME[currency]}</span>
@@ -120,7 +129,7 @@ class Asset extends React.Component {
             </div>
             <div className="d-table w-100 mt-2">
               <div className="d-table-cell text-normal">
-                <FormattedMessage id="dashboard.label.currentPrice" values={{currency, fiatCurrency: FIAT_CURRENCY.USD }} />
+                <FormattedMessage id="dashboard.label.currentPrice" values={{ currency, fiatCurrency: FIAT_CURRENCY.USD }} />
               </div>
               <div className="d-table-cell text-right black-color">
                 {formatMoneyByLocale(fiatCurrency, FIAT_CURRENCY.USD)}
@@ -137,15 +146,32 @@ class Asset extends React.Component {
           </div>
         </div>
 
+        {
+          status === 'inactive' ? (
+            <button
+              className={cx('btn btn-sm btn-activate', 'primary-button')}
+              onClick={this.depositCoinATM}
+            >
+              <FormattedMessage id="dashboard.btn.reactivate" />
+            </button>
+          ) : subStatus !== 'transferring' ? (
+            <button
+              className={cx('btn btn-sm btn-activate', 'outline-button')}
+              onClick={this.deactiveDeposit}
+            >
+              <FormattedMessage id="dashboard.btn.deactivate" />
+            </button>
+          ) : (
+            <button
+              className={cx('btn btn-sm btn-activate', '')}
+              style={{ backgroundColor: '#00000' }}
+            >
+              <img src={iconSpinner} width="14px" style={{ marginTop: '-2px' }} />
+              <span className="ml-1"><FormattedMessage id="dashboard.btn.depositing" /></span>
+            </button>
+          )
+        }
 
-        <button
-          className={cx('btn btn-sm btn-activate', isActive ? 'outline-button' : 'primary-button')}
-          onClick={this.depositCoinATM}
-        >
-          {
-            isActive ? <FormattedMessage id="dashboard.btn.deactivate" /> : <FormattedMessage id="dashboard.btn.reactivate" />
-          }
-        </button>
         <hr />
       </div>
     );
