@@ -15,13 +15,14 @@ import {
   FIAT_CURRENCY,
   FIAT_CURRENCY_NAME,
   FIAT_CURRENCY_SYMBOL,
+  HANDSHAKE_ID,
   URL,
 } from '@/constants';
 import '../styles.scss';
 import { validate, validateSpecificAmount } from '@/components/handshakes/exchange/validation';
 import createForm from '@/components/core/form/createForm';
 import { fieldCleave, fieldDropdown, fieldInput, fieldRadioButton } from '@/components/core/form/customField';
-import { required, email } from '@/components/core/form/validation';
+import { email, required } from '@/components/core/form/validation';
 import { createCCOrder, getCcLimits, getCryptoPrice, getUserCcLimit } from '@/reducers/exchange/action';
 import CryptoPrice from '@/models/CryptoPrice';
 import { MasterWallet } from '@/services/Wallets/MasterWallet';
@@ -41,6 +42,7 @@ import iconEthereum from '@/assets/images/icon/coin/eth.svg';
 import iconBitcoinCash from '@/assets/images/icon/coin/bch.svg';
 import iconUsd from '@/assets/images/icon/coin/icons8-us_dollar.svg';
 import iconLock from '@/assets/images/icon/icons8-lock_filled.svg';
+import { Link } from 'react-router-dom';
 
 export const CRYPTO_ICONS = {
   [CRYPTO_CURRENCY.ETH]: iconEthereum,
@@ -631,6 +633,16 @@ class FeedCreditCard extends React.Component {
                 );
               })
             }
+          </div>
+        </div>
+        <div>
+          <div className="ex-sticky-note">
+            <div className="mb-2"><FormattedMessage id="ex.discover.banner.text" /></div>
+            <div>
+              <Link to={{ pathname: URL.ESCROW_DEPOSIT, search: `` }}>
+                <button className="btn btn-become"><FormattedMessage id="ex.discover.banner.btnText" /></button>
+              </Link>
+            </div>
           </div>
         </div>
       </div>
