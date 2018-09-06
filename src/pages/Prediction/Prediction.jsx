@@ -83,7 +83,7 @@ class Prediction extends React.Component {
   }
 
   handleScroll = () => {
-    this.showLuckyPool();
+    //this.showLuckyPool();
   };
   didPlaceOrder = (isFree)=> {
     this.closeOrderPlace();
@@ -137,9 +137,14 @@ class Prediction extends React.Component {
 
   checkShowFreeBetPopup(props) {
     const isFreeAvailable = this.checkFreeAvailabe(props);
+    const { freeBet } = props;
+    const { free_bet_available: freeAvailable = 0} = freeBet;
 
-    if (isFreeAvailable) {
-      const { freeBet } = props;
+    const key = `showedFreebet${freeAvailable}`;
+    const isShowed = localStorage.getItem(key);
+
+    if (isFreeAvailable && !isShowed) {
+
       const { isOrderOpening, shouldShowFreePopup } = this.state;
       const { last_item: lastItem = {} } = freeBet;
       const { is_win: isWin, status } = lastItem;
@@ -149,6 +154,8 @@ class Prediction extends React.Component {
         } else if (isWin && this.modalFreeBetWinRef) {
           this.modalFreeBetWinRef.open();
         }
+        localStorage.setItem(key, true);
+
         this.setState({
           shouldShowFreePopup: false,
         });
@@ -367,7 +374,7 @@ class Prediction extends React.Component {
     return (
       <div className={Prediction.displayName}>
         <Loading isLoading={props.isLoading} />
-        {this.renderShareToWin()}
+        {/*this.renderShareToWin()*/}
         <PexCreateBtn />
         {this.renderEventList(props)}
         {this.renderBetMode(props, state)}
