@@ -12,10 +12,13 @@ import Deposit from '@/models/Deposit';
 
 const initListOfferPrice = [];
 initListOfferPrice.updatedAt = Date.now();
+const initDepositInfo = {};
+initDepositInfo.updatedAt = Date.now();
 
 function exchangeReducter(state = {
   listOfferPrice: initListOfferPrice,
   isChooseFreeStart: false,
+  depositInfo: initDepositInfo,
 }, action) {
   // console.log('exchangeReducter', JSON.stringify(action));
   switch (action.type) {
@@ -76,6 +79,7 @@ function exchangeReducter(state = {
         console.log('key, value', key, value);
         depositInfo[key] = Deposit.deposit(value);
       });
+      depositInfo.updatedAt = Date.now();
       return { ...state, depositInfo, creditRevenue: action.payload.data.revenue || '0' };
     }
     default:

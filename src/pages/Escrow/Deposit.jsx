@@ -58,7 +58,7 @@ class EscrowDeposit extends React.Component {
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    if (JSON.stringify(nextProps.depositInfo) !== JSON.stringify(prevState.depositInfo)) {
+    if (nextProps.depositInfo.updatedAt !== prevState.depositInfo.updatedAt) {
       console.log('nextProps.depositInfo',nextProps.depositInfo);
 
       const {
