@@ -12,7 +12,7 @@ import iconBitcoin from '@/assets/images/icon/coin/btc.svg';
 import iconEthereum from '@/assets/images/icon/coin/eth.svg';
 import iconBitcoinCash from '@/assets/images/icon/coin/bch.svg';
 import iconLock from '@/assets/images/icon/icons8-lock_filled.svg';
-import { formatMoneyByLocale } from '@/services/offer-util';
+import { formatAmountCurrency, formatMoneyByLocale } from '@/services/offer-util';
 import { isNormalInteger, minValue, number, required } from '@/components/core/form/validation';
 import { bindActionCreators } from 'redux';
 import { createCreditATM, depositCoinATM, getCreditATM, trackingDepositCoinATM } from '@/reducers/exchange/action';
@@ -24,6 +24,7 @@ import taggingConfig from '@/services/tagging-config';
 import CreditATM from '@/services/neuron/neuron-creditatm';
 import Helper from '@/services/helper';
 import _ from 'lodash';
+import { BigNumber } from 'bignumber.js';
 
 const nameFormEscrowDeposit = 'escrowDeposit';
 const FormEscrowDeposit = createForm({
@@ -60,7 +61,7 @@ class EscrowDeposit extends React.Component {
 
   static getDerivedStateFromProps(nextProps, prevState) {
     if (nextProps.depositInfo?.updatedAt !== prevState.depositInfo?.updatedAt) {
-      console.log('nextProps.depositInfo',nextProps.depositInfo);
+      console.log('nextProps.depositInfo', nextProps.depositInfo);
 
       const {
         currency,
@@ -73,20 +74,17 @@ class EscrowDeposit extends React.Component {
           if (depositInfo) {
             nextProps.rfChange(nameFormEscrowDeposit, `percentage_${currency}`, depositInfo.percentage);
           }
-
         } else {
           listCurrency = [];
         }
-      } else {
-        if (nextProps.depositInfo) {
-          listCurrency = [];
-          for (const item of Object.values(CRYPTO_CURRENCY_CREDIT_CARD)) {
-            const depositInfo = nextProps.depositInfo[item];
-            if (!depositInfo || depositInfo.subStatus !== 'transferring') {
-              listCurrency.push({ name: item, icon: CRYPTO_ICONS[item], allowPercentage: !depositInfo });
-              if (depositInfo) {
-                nextProps.rfChange(nameFormEscrowDeposit, `percentage_${item}`, depositInfo.percentage);
-              }
+      } else if (nextProps.depositInfo) {
+        listCurrency = [];
+        for (const item of Object.values(CRYPTO_CURRENCY_CREDIT_CARD)) {
+          const depositInfo = nextProps.depositInfo[item];
+          if (!depositInfo || depositInfo.subStatus !== 'transferring') {
+            listCurrency.push({ name: item, icon: CRYPTO_ICONS[item], allowPercentage: !depositInfo });
+            if (depositInfo) {
+              nextProps.rfChange(nameFormEscrowDeposit, `percentage_${item}`, depositInfo.percentage);
             }
           }
         }
@@ -189,8 +187,66 @@ class EscrowDeposit extends React.Component {
     return result;
   }
 
-  handleOnSubmit = (values) => {
+  checkBalance = async (values) => {
+    let result = true;
+
+    for (const item of Object.values(listCurrency)) {
+      const { name: currency } = item;
+      const amount = values[`amount_${currency}`];
+
+      if (amount && amount.trim().length > 0) {
+        result = !this.showNotEnoughCoinAlert(amount, currency);
+
+        if (!result) {
+          break;
+        }
+      }
+    }
+
+    return result;
+  }
+
+  showNotEnoughCoinAlert = async (amount, currency) => {
+    const wallet = MasterWallet.getWalletDefault(currency);
+    const balance = await wallet.getBalance();
+    const fee = await wallet.getFee(NB_BLOCKS, true);
+
+    const bnBalance = new BigNumber(balance);
+    const bnAmount = new BigNumber(amount);
+    const bnFee = new BigNumber(fee);
+
+    const condition = bnBalance.isLessThan(bnAmount.plus(bnFee));
+
+    if (condition) {
+      this.props.showAlert({
+        message: <div className="text-center">
+          <FormattedMessage
+            id="notEnoughCoinInWallet"
+            values={{
+            amount: formatAmountCurrency(balance),
+            fee: formatAmountCurrency(fee),
+            currency,
+          }}
+          />
+        </div>,
+        timeOut: 3000,
+        type: 'danger',
+        callBack: () => {
+        },
+      });
+    }
+
+    return condition;
+  }
+
+  handleOnSubmit = async (values) => {
     console.log('handleOnSubmit', values);
+
+    const isEnough = await this.checkBalance(values);
+
+    if (!isEnough) {
+      return;
+    }
 
     this.setState({ values }, () => {
       const { depositInfo } = this.props;
@@ -377,13 +433,13 @@ class EscrowDeposit extends React.Component {
     const { messages } = this.props.intl;
     const { intl, hideNavigationBar } = this.props;
     const { listOfferPrice } = this.props;
-    console.log('Deposit render',);
+    console.log('Deposit render');
 
     return (
       <div className="escrow-deposit">
         <div>
           <button className="btn btn-lg bg-transparent d-inline-block btn-close">
-            {/*&times;*/}
+            {/* &times; */}
           </button>
         </div>
         <div className="wrapper">
