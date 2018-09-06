@@ -344,12 +344,75 @@ class Checkout extends React.Component {
     });
   }
 
+  get showPayment(){
+    const { wallet, amount, fiatCurrency, amountCrypto, cryptoCurrency} = this.props;
+
+    let icon = '';
+    try{ icon = require("@/assets/images/icon/wallet/coins/" + cryptoCurrency.toLowerCase() + '.svg')} catch (ex){console.log(ex)};
+
+    return (
+      <div className="amount-info">
+        <div className="icon"><img src={icon} /></div>
+        <div className="crypto-amount">{amountCrypto} {cryptoCurrency}</div>
+        <div className="amount">{amount} {fiatCurrency}</div>
+      </div>
+    )
+  }
+
+  get showTabs(){
+
+    return (
+      <nav className="nav nav-pills nav-fill">
+        <a className="nav-item nav-link active" href="#">Wallet</a>
+        <a className="nav-item nav-link" href="#">Scan</a>
+        <a className="nav-item nav-link" href="#">Copy</a>
+      </nav>
+    )
+  }
+
+  get showWallet(){
+    const { wallet} = this.props;
+
+    return (
+      <div className="wallet-info">
+        <div className="address">{wallet.getShortAddress()}</div>
+        <div className="label">Wallet: </div>
+
+        <div className="clearfix"></div>
+        <div className="balance">{wallet.balance} {wallet.name}</div>
+        <div className="label">Balance: </div>
+      </div>
+    )
+  }
+
+  get callAction(){
+    const { wallet} = this.props;
+
+    return (
+      <div className="call-action">
+        <Button className="button-wallet-cpn" type="button" block={true} onClick={this.DoCheckout}>Checkout</Button>
+        <div className="help"><div className="badge badge-light">Need support?</div></div>
+      </div>
+    )
+  }
+
+  DoCheckout(){
+    console.log('DoCheckout');
+  }
+
   render() {
     const { messages } = this.props.intl;
-    return (
-      <div>
-          {/* Dialog confirm transfer coin */}
-          <ModalDialog title="Confirmation" onRef={modal => this.modalConfirmTranferRef = modal}>
+    return (<div>
+        {this.showPayment}
+        {this.showTabs}
+        {this.showWallet}
+        {this.callAction}
+      </div>)
+
+  }
+}
+
+ {/* <ModalDialog title="Confirmation" onRef={modal => this.modalConfirmTranferRef = modal}>
           <div className="bodyConfirm"><span>{messages.wallet.action.transfer.text.confirm_transfer} {this.state.inputSendAmountValue} {this.state.walletSelected ? this.state.walletSelected.name : ''}?</span></div>
           <div className="bodyConfirm">
               <Button className="left" cssType="danger" onClick={this.submitSendCoin} >{messages.wallet.action.transfer.button.confirm}</Button>
@@ -357,50 +420,29 @@ class Checkout extends React.Component {
           </div>
           </ModalDialog>
 
+        <SendWalletForm className="checkout-wrapper" onSubmit={this.sendCoin} validate={this.invalidateTransferCoins}>
 
-          <SendWalletForm className="checkout-wrapper" onSubmit={this.sendCoin} validate={this.invalidateTransferCoins}>
+          <div className="bgBox">
+            <p className="labelText">{messages.wallet.action.payment.label.to_address}</p>
+            <div className="toAddress">
+              <p className="address">{this.state.toAddress}</p>
+              { this.state.isShowQRCode ?
+                <div className="div-qr-code">
+                  <QRCode size={250} value={this.state.toAddress} />
+                </div>
+                : ""
+              }
 
-          {/* Box: */}
-            <div className="bgBox">
-              <p className="labelText">{messages.wallet.action.payment.label.to_address}</p>
-              <div className="toAddress">
-                <p className="address">{this.state.toAddress}</p>
-                { this.state.isShowQRCode ?
-                  <div className="div-qr-code">
-                    <QRCode size={250} value={this.state.toAddress} />
-                  </div>
-                  : ""
-                }
+              <p className="qrCode" onClick={this.openQRCode} >{this.state.isShowQRCode ? "Hide" : "Show"} <img src={iconQRCode} /> </p>
+              <p className="copyAddress" onClick={this.copyAddress} >Copy <img src={iconCopy} /> </p>
+            </div>
 
-                <p className="qrCode" onClick={this.openQRCode} >{this.state.isShowQRCode ? "Hide" : "Show"} <img src={iconQRCode} /> </p>
-                <p className="copyAddress" onClick={this.copyAddress} >Copy <img src={iconCopy} /> </p>
-              </div>
+            <label className='label-balance'>{messages.wallet.action.payment.label.wallet_balance} { this.state.walletSelected ? StringHelper.format("{0} {1}", this.state.walletSelected.balance, this.state.walletSelected.name) : ""}</label>
+            </div>
 
-              <div className ="dropdown-wallet-tranfer">
-                <p className="labelText">{messages.wallet.action.payment.label.from_wallet}</p>
-                <Field
-                  name="walletSelected"
-                  component={fieldDropdown}
-                  placeholder={messages.wallet.action.payment.placeholder.select_wallet}
-                  defaultText={this.state.walletSelected.text}
-                  list={this.state.wallets}
-                  onChange={(item) => {
-                      this.onItemSelectedWallet(item);
-                    }
-                  }
-                />
-              </div>
+          <Button className="button-wallet-cpn" isLoading={this.state.isRestoreLoading}  type="submit" block={true}>{messages.wallet.action.payment.button.checkout}</Button>
 
-              <label className='label-balance'>{messages.wallet.action.payment.label.wallet_balance} { this.state.walletSelected ? StringHelper.format("{0} {1}", this.state.walletSelected.balance, this.state.walletSelected.name) : ""}</label>
-              </div>
-
-            <Button className="button-wallet-cpn" isLoading={this.state.isRestoreLoading}  type="submit" block={true}>{messages.wallet.action.payment.button.checkout}</Button>
-
-          </SendWalletForm>
-        </div>
-    )
-  }
-}
+        </SendWalletForm>*/}
 
 const mapState = (state) => ({
 });

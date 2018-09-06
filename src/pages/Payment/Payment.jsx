@@ -4,13 +4,15 @@ import PropTypes from 'prop-types';
 import { injectIntl } from 'react-intl';
 // service, constant
 import { Grid, Row, Col } from 'react-bootstrap';
-
+import { setHeaderRight } from '@/reducers/app/action';
+import {getFiatCurrency} from '@/reducers/exchange/action';
+import { bindActionCreators } from "redux";
 import Modal from '@/components/core/controls/Modal';
 import Checkout from './Checkout';
-import ChooseCrypto from './ChooseCrypto';
+import ChooseWallet from './ChooseWallet';
 import Overview from './Overview';
 import DevDoc from './DevDoc';
-import { setHeaderRight } from '@/reducers/app/action';
+import { API_URL } from "@/constants";
 import { showAlert } from '@/reducers/app/action';
 import { showLoading, hideLoading } from '@/reducers/app/action';
 import ReactBottomsheet from 'react-bottomsheet';
@@ -31,7 +33,6 @@ class Payment extends React.Component {
 
     this.state = {
       isLoading: false,
-      //isShowWallets: false,
       isShowSuccess: false,
       toAddress: "",
       fromAddress: "",
@@ -44,7 +45,8 @@ class Payment extends React.Component {
       bottomSheet: false,
       listMenu: [],
 
-      chooseCrypto: ''
+      modalChooseWallet: '',
+      modalCheckout: ''
     };
     this.props.setHeaderRight(this.headerRight());
   }
@@ -80,21 +82,80 @@ class Payment extends React.Component {
   async checkPayNinja() {
     const querystring = window.location.search.replace('?', '');
     this.querystringParsed = qs.parse(querystring);
-    const { order_id, amount, coin, to, to_currency, confirm_url } = this.querystringParsed;
-    if (order_id && amount) {
-
-      if(to_currency){
-
-      }
-      else{
-        this.setState({
-          chooseCrypto: <ChooseCrypto />
-          }, () => {
-            this.modalSendRef.open();
-          }
-        );
-      }
+    const { order_id, amount, fiat_currency:fiatCurrency, crypto_currency:cryptoCurrency, confirm_url } = this.querystringParsed;
+    if (!order_id && !amount) {
+      //missing parameters
     }
+
+    if(isNaN(amount)){
+      //invalid parameters
+    }
+
+    if(cryptoCurrency){
+
+    }
+    else{
+      this.setState({
+        modalChooseWallet: <ChooseWallet
+          amount={amount}
+          fiatCurrency={fiatCurrency}
+          callbackSuccess={(wallet) => { this.chosenWallet(wallet) }}
+        />
+        }, () => {
+          this.modalChooseWalletRef.open();
+        }
+      );
+    }
+  }
+
+  chosenWallet = async (wallet) => {
+    let { order_id, amount, fiat_currency:fiatCurrency, coin, to, crypto_currency:cryptoCurrency, confirm_url } = this.querystringParsed;
+    let amountCrypto = await this.getCryptoAmount(amount, fiatCurrency, wallet.name);
+
+    if(!cryptoCurrency)
+      cryptoCurrency = wallet.name;
+
+    this.setState({
+      modalCheckout: <Checkout
+        wallet={wallet}
+        amount={amount}
+        fiatCurrency={fiatCurrency}
+        amountCrypto={amountCrypto}
+        cryptoCurrency={cryptoCurrency}
+      />,
+      modalChooseWallet: ''
+      }, () => {
+        this.modalChooseWalletRef.close();
+        this.modalCheckoutRef.open();
+      }
+    );
+  }
+
+  getCryptoAmount = async (amount, fiatCurrency, cryptoCurrency) => {
+    let result = 0;
+    let rate = await this.getRate(fiatCurrency, cryptoCurrency);
+    result = Number(amount)/rate;
+    result = Math.round(result * 10000000) / 10000000; //roundup 7 decimal
+    return result;
+  }
+
+  getRate(fiatCurrency, cryptoCurrency){
+    return new Promise((resolve, reject) => {
+
+      this.props.getFiatCurrency({
+        PATH_URL: API_URL.EXCHANGE.GET_FIAT_CURRENCY,
+        qs: {fiat_currency: fiatCurrency, currency: cryptoCurrency},
+        successFn: (res) => {
+          let data = res.data;
+          let result = fiatCurrency == 'USD' ? data.price : data.fiat_amount;
+          resolve(result);
+        },
+        errorFn: (err) => {
+          console.error("Error", err);
+          resolve(0);
+        },
+      });
+    });
   }
 
   onIconRightHeaderClick = () => {
@@ -205,12 +266,16 @@ class Payment extends React.Component {
 
   showPayNinja = () => {
     const { messages } = this.props.intl;
-    const { chooseCrypto } = this.state;
+    const { modalChooseWallet, modalCheckout } = this.state;
 
     return (
       <div className="checkout-wrapper">
-        <Modal title="Select crypto payment" onRef={modal => this.modalSendRef = modal}  onClose={this.closePayNinja}>
-          {chooseCrypto}
+        <Modal title="Select crypto payment" onRef={modal => this.modalChooseWalletRef = modal}  onClose={this.closePayNinja}>
+          {modalChooseWallet}
+        </Modal>
+
+        <Modal title="Payment" onRef={modal => this.modalCheckoutRef = modal}  onClose={this.closePayNinja}>
+          {modalCheckout}
         </Modal>
       </div>);
   }
@@ -283,11 +348,12 @@ class Payment extends React.Component {
   }
 }
 
-const mapState = (state) => ({
+const mapStateToProps = (state) => ({
 
 });
 
-const mapDispatch = ({
+const mapDispatchToProps = (dispatch) => ({
+  getFiatCurrency: bindActionCreators(getFiatCurrency, dispatch),
   setHeaderRight,
   showAlert,
   showLoading,
@@ -295,4 +361,5 @@ const mapDispatch = ({
 });
 
 
-export default injectIntl(connect(mapState, mapDispatch)(Payment));
+
+export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(Payment));

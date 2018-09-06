@@ -33,23 +33,16 @@
 
             <div class="input-group mb-1">
               <div class="input-group-prepend">
-                <div class="input-group-text">amount_currency</div>
+                <div class="input-group-text">fiat_currency</div>
               </div>
-              <input type="text" class="form-control" id="amount_currency" name="amount_currency" value="USD">
+              <input type="text" class="form-control" id="fiat_currency" name="fiat_currency" value="USD">
             </div>
 
             <div class="input-group mb-1">
               <div class="input-group-prepend">
                 <div class="input-group-text">to</div>
               </div>
-              <input type="text" class="form-control" id="to" name="to" value="0x56627819b7622ac4b2f248d6c45c9c71f4865730">
-            </div>
-
-            <div class="input-group mb-1">
-              <div class="input-group-prepend">
-                <div class="input-group-text">to_currency</div>
-              </div>
-              <input type="text" class="form-control" id="to_currency" name="to_currency" value="ETH">
+              <textarea class="form-control" rows="3" id="to" name="to">ETH:0x56627819b7622ac4b2f248d6c45c9c71f4865730,BTC:1NKEu3PWTgAaNdLXgF2CY31NQYaRuF1htH</textarea>
             </div>
 
             <div class="input-group mb-1">
@@ -80,25 +73,17 @@
 
             <div class="input-group mb-1">
               <div class="input-group-prepend">
-                <div class="input-group-text">amount_currency</div>
+                <div class="input-group-text">fiat_currency</div>
               </div>
-              <input type="text" class="form-control" id="amount_currency" name="amount_currency" value="USD">
+              <input type="text" class="form-control" id="fiat_currency" name="fiat_currency" value="USD">
             </div>
 
             <div class="input-group mb-1">
               <div class="input-group-prepend">
-                <div class="input-group-text">to_shop</div>
+                <div class="input-group-text">shop_id</div>
               </div>
-              <input type="text" class="form-control" id="to_shop" name="to_shop" value="myshop">
+              <input type="text" class="form-control" id="shop_id" name="shop_id" value="myshop">
             </div>
-
-            <div class="input-group mb-1">
-              <div class="input-group-prepend">
-                <div class="input-group-text">confirm_url</div>
-              </div>
-              <input type="text" class="form-control" id="confirm_url" name="confirm_url" value="http://localhost:8080/test-confirmation.html">
-            </div>
-
             <button type="submit" class="btn btn-primary">Submit</button>
           </form>
 
