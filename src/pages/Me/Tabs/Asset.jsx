@@ -213,7 +213,7 @@ class Asset extends React.Component {
               <FormattedMessage id="dashboard.btn.deactivate" />
             </button>
           ) : (
-            <div className="d-table-cell text-right">
+            <div className="d-table-cell btn-activate">
               <img src={iconSpinner} width="14px" style={{ marginTop: '-2px' }} />
               <span className="ml-1"><FormattedMessage id="dashboard.btn.depositing" /></span>
             </div>
