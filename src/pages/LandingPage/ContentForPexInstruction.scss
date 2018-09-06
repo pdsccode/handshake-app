@@ -3,11 +3,15 @@
 .wrapperContentPexInstruction {
   font-family: $font-family-base;
   font-size: 16px;
+  color: #484848;
+
   .wrapperPexIntroducer {
-    border-radius: 10px;
-    box-shadow: 0 4px 15px 0 rgba(7,42,68,0.10);
-    border: 1px solid #FAFAFA;
-    padding: 20px 20px;
+    border-radius: 43px;
+    border: 15px solid #FAFAFA;
+    padding: 20px 30px;
+  }
+  .wrapperPexTopContent {
+    margin-top: 30px;
   }
   .features {
     background: #FFFFFF;
@@ -46,10 +50,9 @@
     color: #484848;
     line-height: 20px;
   }
-  .headline {
-    font-weight: 600;
-    font-size: 36px;
-    color: #484848;
+  .pexHeadline {
+    //font-weight: 600;
+    font-size: 30px;
     letter-spacing: 0;
     line-height: 48px;
   }
