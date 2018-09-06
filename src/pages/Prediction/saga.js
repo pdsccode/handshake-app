@@ -70,12 +70,17 @@ export function* handleFreeBet() {
 
 export function* handleCheckExistEmail() {
   try {
-    const response =  yield call(apiGet, {
+    const response = yield call(apiGet, {
       PATH_URL: API_URL.USER.CHECK_EXIST_EMAIL,
       type: 'CHECK_EXIST_EMAIL',
     });
-    const { email_existed: emailExist=false } = response.data;
-    yield put(updateExistEmail(emailExist));
+    console.log('Response Data:', response.data);
+    if (response.data) {
+      const { email_existed: emailExist } = response.data;
+
+      yield put(updateExistEmail(emailExist));
+    }
+
 
   } catch (e) {
     console.error('handleFreeBet', e);

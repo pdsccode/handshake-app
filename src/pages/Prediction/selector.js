@@ -47,7 +47,8 @@ export const checkExistSubcribeEmailSelector = (state) => {
   const { matches = [] } = state.ui;
   return matches.length || 0;
   */
-  const { isExistEmail = {} } = state.ui;
+  const { isExistEmail = false } = state.ui;
+  console.log('isExistEmail');
   return isExistEmail;
 };
 
