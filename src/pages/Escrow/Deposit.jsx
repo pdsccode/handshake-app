@@ -23,6 +23,7 @@ import * as gtag from '@/services/ga-utils';
 import taggingConfig from '@/services/tagging-config';
 import CreditATM from '@/services/neuron/neuron-creditatm';
 import Helper from '@/services/helper';
+import _ from 'lodash';
 
 const nameFormEscrowDeposit = 'escrowDeposit';
 const FormEscrowDeposit = createForm({
@@ -196,7 +197,9 @@ class EscrowDeposit extends React.Component {
 
       this.showLoading();
 
-      if (!depositInfo) {
+      const { updatedAt, ...rest } = depositInfo;
+
+      if (_.isEmpty(rest)) {
         this.createCreditATM();
       } else {
         this.handleDeposit();
