@@ -948,6 +948,10 @@ export default {
       }
     },
     credit: {
+      overview: {
+        askToDeactive: 'Do you want to deactive?',
+        messageDeactiveSuccess: 'Deactive successfully',
+      },
       withdraw: {
         title: 'Withdraw money',
         yourBalance: 'Your balance:',

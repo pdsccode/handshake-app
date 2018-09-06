@@ -21,6 +21,7 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 // components
 import {
   deactiveDepositCoinATM,
+  getCreditATM,
   getDashboardInfo,
   getListOfferPrice,
   getOfferStores,
@@ -36,6 +37,11 @@ import iconEthereum from '@/assets/images/icon/coin/eth.svg';
 import iconBitcoinCash from '@/assets/images/icon/coin/bch.svg';
 import { formatMoneyByLocale } from '@/services/offer-util';
 import iconSpinner from '@/assets/images/icon/icons8-spinner.gif';
+import { getErrorMessageFromCode } from '@/components/handshakes/exchange/utils';
+import ModalDialog from '@/components/core/controls/ModalDialog/ModalDialog';
+import Feed from '@/components/core/presentation/Feed';
+import Button from '@/components/core/controls/Button';
+import { showAlert } from '@/reducers/app/action';
 
 export const CRYPTO_ICONS = {
   [CRYPTO_CURRENCY.ETH]: iconEthereum,
@@ -44,6 +50,18 @@ export const CRYPTO_ICONS = {
 };
 
 class Asset extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      modalContent: '',
+    };
+  }
+
+  getCreditATM = () => {
+    this.props.getCreditATM({ PATH_URL: API_URL.EXCHANGE.CREDIT_ATM });
+  }
+
   showLoading = () => {
     this.props.setLoading(true);
   }
@@ -59,27 +77,59 @@ class Asset extends React.Component {
 
   deactiveDeposit = () => {
     console.log('deactiveDeposit');
-    this.showLoading();
-    const offer = {};
+    const { messages } = this.props.intl;
 
-    this.props.withdrawCashDepositATM({
-      PATH_URL: API_URL.EXCHANGE.WITHDRAW_CASH_DEPOSIT_ATM,
-      data: offer,
-      METHOD: 'POST',
-      successFn: this.handleWithdrawCashSuccess,
-      errorFn: this.handleWithdrawCashFailed,
+    this.setState({
+      modalContent:
+        (
+          <div className="py-2">
+            <Feed className="feed p-2" background="#259B24">
+              <div className="text-white d-flex align-items-center" style={{ minHeight: '50px' }}>
+                <div>{messages.me.credit.overview.askToDeactive}</div>
+              </div>
+            </Feed>
+            <Button className="mt-2" block onClick={this.handleDeactiveDeposit}><FormattedMessage id="ex.btn.confirm" /></Button>
+            <Button block className="btn btn-secondary" onClick={this.cancelDeactive}><FormattedMessage id="ex.btn.notNow" /></Button>
+          </div>
+        ),
+    }, () => {
+      this.modalRef.open();
     });
   }
 
-  handleWithdrawCashSuccess = async (res) => {
+  handleDeactiveDeposit = () => {
+    this.showLoading();
+    this.modalRef.close();
+    const { currency } = this.props;
+    this.props.deactiveDepositCoinATM({
+      PATH_URL: `${API_URL.EXCHANGE.CREDIT_ATM}?currency=${currency}`,
+      METHOD: 'DELETE',
+      successFn: this.handleDeactiveDepositSuccess,
+      errorFn: this.handleDeactiveDepositFailed,
+    });
+  }
+
+  cancelDeactive = () => {
+    this.modalRef.close();
+  }
+
+  handleDeactiveDepositSuccess = async (res) => {
     console.log('handleWithdrawCashSuccess', res);
+    const { messages } = this.props.intl;
 
     this.hideLoading();
 
-    this.props.history.push(URL.ESCROW_WITHDRAW_SUCCESS);
+    this.props.showAlert({
+      message: <div className="text-center">{messages.me.credit.overview.askToDeactive}</div>,
+      timeOut: 2000,
+      type: 'success',
+      callBack: () => {
+        this.getCreditATM();
+      },
+    });
   }
 
-  handleWithdrawCashFailed = (e) => {
+  handleDeactiveDepositFailed = (e) => {
     console.log('handleWithdrawCashFailed', e);
     this.hideLoading();
 
@@ -93,6 +143,7 @@ class Asset extends React.Component {
   render() {
     const { messages } = this.props.intl;
     const { currency, status, subStatus, sold, balance, revenue, percentage, listOfferPrice } = this.props;
+    const { modalContent } = this.state;
     // const isActive = status === 'active';
 
     const offerPrice = listOfferPrice && listOfferPrice.find((item) => {
@@ -162,8 +213,7 @@ class Asset extends React.Component {
               <FormattedMessage id="dashboard.btn.deactivate" />
             </button>
           ) : (
-            <div className="d-table-cell text-right"
-            >
+            <div className="d-table-cell text-right">
               <img src={iconSpinner} width="14px" style={{ marginTop: '-2px' }} />
               <span className="ml-1"><FormattedMessage id="dashboard.btn.depositing" /></span>
             </div>
@@ -171,6 +221,9 @@ class Asset extends React.Component {
         }
 
         <hr />
+        <ModalDialog onRef={modal => this.modalRef = modal}>
+          {modalContent}
+        </ModalDialog>
       </div>
     );
   }
@@ -182,8 +235,10 @@ const mapState = state => ({
 });
 
 const mapDispatch = dispatch => ({
+  showAlert: bindActionCreators(showAlert, dispatch),
   rfChange: bindActionCreators(change, dispatch),
   deactiveDepositCoinATM: bindActionCreators(deactiveDepositCoinATM, dispatch),
+  getCreditATM: bindActionCreators(getCreditATM, dispatch),
 });
 
 export default injectIntl(connect(mapState, mapDispatch)(Asset));

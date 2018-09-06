@@ -79,6 +79,7 @@ class EscrowWithdraw extends React.Component {
 
   withdrawCash = (offer) => {
     this.showLoading();
+    this.modalRef.close();
 
     this.props.withdrawCashDepositATM({
       PATH_URL: API_URL.EXCHANGE.WITHDRAW_CASH_DEPOSIT_ATM,
@@ -90,7 +91,6 @@ class EscrowWithdraw extends React.Component {
   }
 
   cancelCreateOffer = () => {
-    this.hideLoading();
     this.modalRef.close();
   }
 
