@@ -133,7 +133,7 @@ class EscrowWithdraw extends React.Component {
             <div className="d-table w-100 mt-4">
               <div className="d-table-cell escrow-label">{messages.me.credit.withdraw.yourBalance}</div>
               <div className="d-table-cell text-right">
-                <span className="blue-text font-weight-bold">$</span> {formatMoneyByLocale(creditRevenue, FIAT_CURRENCY.USD)}
+                <span className="blue-text font-weight-bold">$</span> {creditRevenue}
               </div>
             </div>
 
