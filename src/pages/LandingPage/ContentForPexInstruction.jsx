@@ -1,35 +1,44 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
+import Image from '@/components/core/presentation/Image';
 
-import './ContentForCashBusiness.scss';
-
-import iconCard from '@/assets/images/landing/cash-for-business/card.svg';
-import iconEarnMore from '@/assets/images/landing/cash-for-business/earn-more-customers.svg';
-import iconIphone from '@/assets/images/landing/cash-for-business/iphone.svg';
-import iconLine from '@/assets/images/landing/cash-for-business/line.svg';
-import iconMinimumEffort from '@/assets/images/landing/cash-for-business/minimum-effort.svg';
-import iconSteadyIncome from '@/assets/images/landing/cash-for-business/steady-income.svg';
+import './ContentForPexInstruction.scss';
+import AvatarIcon from '@/assets/images/pxinstruction/pex_avatar_ins.svg';
 
 
 class ContentForPexInstruction extends React.Component {
+  renderIntroduce() {
+    return (
+      <div className="wrapperPexIntroducer">
+        <Image src={AvatarIcon} alt="AvatarIcon" />
+        <p className="mt-3">Hello!</p>
+        <p>Cian here from the Prediction team. We’ve built the world a shiny new prediction exchange.</p>
+        <p>If you’re thinking, <i>‘That’s great and all. But, how does it work and where do I start?’</i></p>
+        <p>You’ve landed in the right place.</p>
+        <p>In this piece, we’ll cover everything to help you get started with <strong>Prediction</strong>.</p>
+      </div>
+    );
+  }
+  renderTopContent() {
+    return (
+      <div className="wrapperPexTopContent">
+        <h3 className="pexHeadline">How does the Prediction Exchange work?</h3>
+        <p><strong>Prediction</strong> is a electronic prediction system that allows any two anonymous parties from anywhere in the world to bet directly against each other without the need for a trusted third party.</p>
+        <p>It’s been designed so anyone, anywhere can easily place bets and create their own markets.</p>
+        <p><strong>ICE.</strong></p>
+        <p><strong>BROKEN.</strong></p>
+        <p><strong><i>Now let’s get you up and running.</i></strong></p>
+      </div>
+    );
+  }
   render() {
     const { messages, locale } = this.props.intl;
     return (
-      <div className="content-for-pex-instruction mt-5">
+      <div className="wrapperContentPexInstruction mt-5">
         <div className="row mt-5">
           <div className="col">
-            <h1 className="font-weight-bold">Getting Started with Ninja Prediction Exchange.</h1>
-            <p className="mt-3">Hello!</p>
-            <p>Cian here from the Prediction team. We’ve built the world a shiny new prediction exchange.</p>
-            <p>If you’re thinking, <i>‘That’s great and all. But, how does it work and where do I start?’</i></p>
-            <p>You’ve landed in the right place.</p>
-            <p>In this piece, we’ll cover everything to help you get started with <strong>Prediction</strong>.</p>
-            <h3 className="font-weight-bold">How does the Prediction Exchange work?</h3>
-            <p><strong>Prediction</strong> is a electronic prediction system that allows any two anonymous parties from anywhere in the world to bet directly against each other without the need for a trusted third party.</p>
-            <p>It’s been designed so anyone, anywhere can easily place bets and create their own markets.</p>
-            <p><strong>ICE.</strong></p>
-            <p><strong>BROKEN.</strong></p>
-            <p><strong><i>Now let’s get you up and running.</i></strong></p>
+            {this.renderIntroduce()}
+            {this.renderTopContent()}
             <h3 className="font-weight-bold">Step 1: Play with Ether or Bitcoin</h3>
             <p>If you have already have Ether or Bitcoin, you can just transfer it straight from your wallet into our in-app one.</p>
             <div>
