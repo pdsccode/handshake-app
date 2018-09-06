@@ -24,7 +24,7 @@ export const email = (value) => {
  * @param value
  */
 export const urlValidator = (value) => {
-  return isURL(value) ? null : ('Invalid URL');
+  return isURL(value.toString()) ? null : ('Invalid URL');
 };
 
 /**
