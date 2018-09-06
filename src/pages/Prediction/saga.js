@@ -74,7 +74,7 @@ export function* handleCheckExistEmail() {
       PATH_URL: API_URL.USER.CHECK_EXIST_EMAIL,
       type: 'CHECK_EXIST_EMAIL',
     });
-    const { email_existed: emailExist } = response.data;
+    const { email_existed: emailExist=false } = response.data;
     yield put(updateExistEmail(emailExist));
 
   } catch (e) {
