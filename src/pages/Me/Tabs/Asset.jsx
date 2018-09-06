@@ -162,13 +162,11 @@ class Asset extends React.Component {
               <FormattedMessage id="dashboard.btn.deactivate" />
             </button>
           ) : (
-            <button
-              className={cx('btn btn-sm btn-activate', '')}
-              style={{ backgroundColor: '#00000' }}
+            <div className="d-table-cell text-right"
             >
               <img src={iconSpinner} width="14px" style={{ marginTop: '-2px' }} />
               <span className="ml-1"><FormattedMessage id="dashboard.btn.depositing" /></span>
-            </button>
+            </div>
           )
         }
 
