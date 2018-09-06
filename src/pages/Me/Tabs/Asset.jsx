@@ -120,7 +120,7 @@ class Asset extends React.Component {
     this.hideLoading();
 
     this.props.showAlert({
-      message: <div className="text-center">{messages.me.credit.overview.askToDeactive}</div>,
+      message: <div className="text-center">{messages.me.credit.overview.messageDeactiveSuccess}</div>,
       timeOut: 2000,
       type: 'success',
       callBack: () => {
