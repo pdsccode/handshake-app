@@ -78,7 +78,8 @@ class ManageAssets extends React.Component {
     let assets = [];
 
     if (depositInfo) {
-      assets = Object.values(depositInfo);
+      const { updatedAt, ...rest } = depositInfo;
+      assets = Object.values(rest);
     }
 
     return (
