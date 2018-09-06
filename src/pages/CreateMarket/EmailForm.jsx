@@ -1,10 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Field, reduxForm } from 'redux-form';
+import { connect } from 'react-redux';
+import { Field, reduxForm, SubmissionError } from 'redux-form';
 import IconEmail from '@/assets/images/icon/icon-email.svg';
 import { renderField } from './form';
 import { required, email } from './validate';
 import { sendEmailCode, verifyEmail } from './action';
+import { isValidEmailCode } from './selector';
 
 class EmailForm extends React.Component {
   static displayName = 'EmailForm';
@@ -20,14 +22,25 @@ class EmailForm extends React.Component {
   }
 
   onSubmit = (value) => {
-    const { isPristine } = this.state;
+    const { props, state } = this;
+    const { isPristine } = state;
     const { email, code } = value;
     if (isPristine) {
       this.setState({ isPristine: false });
       this.props.dispatch(sendEmailCode({ email }));
-    }
-    if (!isPristine) {
+    } else {
       this.props.dispatch(verifyEmail({ email, code }));
+      this.validateCode(props);
+    }
+  }
+
+  validateCode = (props) => {
+    const { isValidCode } = props;
+    if (!isValidCode) {
+      throw new SubmissionError({
+        code: 'Code is not valid',
+        _error: 'Email varified failed!',
+      });
     }
   }
 
@@ -61,11 +74,10 @@ class EmailForm extends React.Component {
 
   renderForm = (props, state) => {
     const { renderEmailField, renderCodeField, onSubmit } = this;
-    const { handleSubmit } = props;
     const { isPristine } = state;
     const buttonText = isPristine ? 'Next' : 'Verify your email';
     return (
-      <form className="EmailRequiredForm" onSubmit={handleSubmit(onSubmit)}>
+      <form className="EmailRequiredForm" onSubmit={props.handleSubmit(onSubmit)}>
         { isPristine ? renderEmailField() : renderCodeField() }
         <button type="submit" className="btn btn-primary btn-block">{buttonText}</button>
       </form>
@@ -93,6 +105,15 @@ class EmailForm extends React.Component {
     );
   }
 }
+
+/* eslint no-class-assign:0 */
+EmailForm = connect(
+  (state) => {
+    return {
+      isValidCode: isValidEmailCode(state),
+    };
+  },
+)(EmailForm);
 
 export default reduxForm({
   form: 'emailForm',

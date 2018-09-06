@@ -9,6 +9,8 @@ import { MESSAGE } from '@/components/handshakes/betting/message.js';
 import { BetHandshakeHandler } from '@/components/handshakes/betting/Feed/BetHandshakeHandler';
 import { SIDE } from '@/components/handshakes/betting/constants.js';
 import { validateBet } from '@/components/handshakes/betting/validation.js';
+import { VALIDATE_CODE } from '@/components/handshakes/betting/constants.js';
+
 import ModalDialog from '@/components/core/controls/ModalDialog';
 
 import GA from '@/services/googleAnalytics';
@@ -118,29 +120,30 @@ class BettingCreate extends React.Component {
 
 
     const validate = await validateBet(amount, odds, closingDate, matchName, matchOutcome);
-    const { status, message } = validate;
+    const { status, message, code } = validate;
     if (status) {
       this.initHandshake(values, fromAddress);
       onSubmitClick();
     } else {
       if (message) {
         GA.createBetNotSuccess(message);
-        onCancelClick();
-        handleBetFail();
-
-        // this.props.showAlert({
-        //   message: <div className="text-center">{message}</div>,
-        //   timeOut: 3000,
-        //   type: 'danger',
-        //   callBack: () => {
-        //   }
-        // });
+        if (code === VALIDATE_CODE.NOT_ENOUGH_BALANCE) {
+          onCancelClick();
+          handleBetFail();
+        } else {
+          this.props.showAlert({
+            message: <div className="text-center">{message}</div>,
+            timeOut: 3000,
+            type: 'danger',
+            callBack: () => {
+            }
+          });
+        }
       }
       this.setState({
         disable: false,
       });
     }
-
   }
 
   get inputList() {
