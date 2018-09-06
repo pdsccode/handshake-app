@@ -19,7 +19,13 @@ import {
 import { fieldDropdown, fieldRadioButton } from '@/components/core/form/customField';
 import { FormattedMessage, injectIntl } from 'react-intl';
 // components
-import { getDashboardInfo, getListOfferPrice, getOfferStores, reviewOffer } from '@/reducers/exchange/action';
+import {
+  deactiveDepositCoinATM,
+  getDashboardInfo,
+  getListOfferPrice,
+  getOfferStores,
+  reviewOffer,
+} from '@/reducers/exchange/action';
 // style
 import { setOfflineStatus } from '@/reducers/auth/action';
 import { change } from 'redux-form';
@@ -40,6 +46,39 @@ class Asset extends React.Component {
   depositCoinATM = () => {
     const { currency } = this.props;
     this.props.history.push(`${URL.ESCROW_DEPOSIT}?currency=${currency}`);
+  }
+
+  deactiveDeposit = () => {
+    console.log('deactiveDeposit', );
+    this.showLoading();
+    const offer = {};
+
+    this.props.withdrawCashDepositATM({
+      PATH_URL: API_URL.EXCHANGE.WITHDRAW_CASH_DEPOSIT_ATM,
+      data: offer,
+      METHOD: 'POST',
+      successFn: this.handleWithdrawCashSuccess,
+      errorFn: this.handleWithdrawCashFailed,
+    });
+  }
+
+  handleWithdrawCashSuccess = async (res) => {
+    console.log('handleWithdrawCashSuccess', res);
+
+    this.hideLoading();
+
+    this.props.history.push(URL.ESCROW_WITHDRAW_SUCCESS);
+  }
+
+  handleWithdrawCashFailed = (e) => {
+    console.log('handleWithdrawCashFailed', e);
+    this.hideLoading();
+
+    this.props.showAlert({
+      message: <div className="text-center">{getErrorMessageFromCode(e)}</div>,
+      timeOut: 3000,
+      type: 'danger',
+    });
   }
 
   render() {
@@ -81,10 +120,10 @@ class Asset extends React.Component {
             </div>
             <div className="d-table w-100 mt-2">
               <div className="d-table-cell text-normal">
-                <FormattedMessage id="dashboard.label.currentPrice" />
+                <FormattedMessage id="dashboard.label.currentPrice" values={{currency, fiatCurrency: FIAT_CURRENCY.USD }} />
               </div>
               <div className="d-table-cell text-right black-color">
-                ${formatMoneyByLocale(fiatCurrency, FIAT_CURRENCY.USD)}
+                {formatMoneyByLocale(fiatCurrency, FIAT_CURRENCY.USD)}
               </div>
             </div>
             <div className="d-table w-100 mt-2">
@@ -101,7 +140,8 @@ class Asset extends React.Component {
 
         <button
           className={cx('btn btn-sm btn-activate', isActive ? 'outline-button' : 'primary-button')}
-          onClick={this.depositCoinATM}>
+          onClick={this.depositCoinATM}
+        >
           {
             isActive ? <FormattedMessage id="dashboard.btn.deactivate" /> : <FormattedMessage id="dashboard.btn.reactivate" />
           }
@@ -119,6 +159,7 @@ const mapState = state => ({
 
 const mapDispatch = dispatch => ({
   rfChange: bindActionCreators(change, dispatch),
+  deactiveDepositCoinATM: bindActionCreators(deactiveDepositCoinATM, dispatch),
 });
 
 export default injectIntl(connect(mapState, mapDispatch)(Asset));

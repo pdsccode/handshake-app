@@ -323,7 +323,7 @@ export default {
   'dashboard.btn.withdrawEscrow': 'Withdraw',
   'dashboard.label.amountSold': 'Crypto sold',
   'dashboard.label.amountLeft': 'Crypto remaining',
-  'dashboard.label.currentPrice': 'Current price',
+  'dashboard.label.currentPrice': 'Current price ({currency}/{fiatCurrency})',
   'dashboard.label.revenue': 'Revenue',
   'dashboard.label.or': 'or',
   'dashboard.label.deposit.description1': 'Need even more security? Use Escrow. ',
