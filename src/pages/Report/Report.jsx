@@ -37,7 +37,6 @@ class Report extends React.Component {
   }
 
   fetchMatches() {
-    console.log('fetchMatches');
     this.props.loadMatches({
       PATH_URL: `${API_URL.CRYPTOSIGN.MATCHES_REPORT}`,
     });
