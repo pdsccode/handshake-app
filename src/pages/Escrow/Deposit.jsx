@@ -449,15 +449,15 @@ class EscrowDeposit extends React.Component {
           <div>
             <FormEscrowDeposit onSubmit={this.handleOnSubmit} validate={this.handleValidate}>
               <div>
-                <div className="d-inline-block escrow-label amount-label">
+                <div className="d-inline-block escrow-label">
                   <FormattedMessage id="escrow.label.iWantTo" />
                 </div>
-                <div className="d-inline-block escrow-label percentage-label">
-                  %
-                </div>
-                <div className="d-inline-block escrow-label price-label">
-                  <FormattedMessage id="escrow.label.price" />
-                </div>
+                {/*<div className="d-inline-block escrow-label percentage-label">*/}
+                  {/*%*/}
+                {/*</div>*/}
+                {/*<div className="d-inline-block escrow-label price-label">*/}
+                  {/*<FormattedMessage id="escrow.label.price" />*/}
+                {/*</div>*/}
               </div>
               {listCurrency.map(coin => {
                 const { name, icon, allowPercentage } = coin;
@@ -482,6 +482,7 @@ class EscrowDeposit extends React.Component {
                             <img src={icon} className="icon-deposit" />
                           }
                           validate={[number]}
+                          placeholder="1"
                         />
                       </div>
                     </div>
@@ -508,6 +509,9 @@ class EscrowDeposit extends React.Component {
                 );
               })}
               <div className="mt-3">
+                <div className="w-100 d-inline-block align-middle">
+                  <div className="font-weight-normal"><FormattedMessage id="escrow.label.howToCalculatePrice" /></div>
+                </div>
                 <div className="w-75 d-inline-block align-middle">
                   <div className="font-weight-normal"><FormattedMessage id="escrow.label.yourSellingPrice" /></div>
                   <div className="escrow-label">
