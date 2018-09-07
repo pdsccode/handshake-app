@@ -1,17 +1,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Field, reduxForm, SubmissionError } from 'redux-form';
+import { Field, reduxForm } from 'redux-form';
 import IconEmail from '@/assets/images/icon/icon-email.svg';
 import { renderField } from './form';
-import { required, email } from './validate';
-import { sendEmailCode, verifyEmail } from './action';
+import { required, emailValidator, codeValidator } from './validate';
+import { sendEmailCode, verifyEmail, verifyEmailCodePut } from './action';
 import { isValidEmailCode } from './selector';
 
 class EmailForm extends React.Component {
   static displayName = 'EmailForm';
   static propTypes = {
+    isValidCode: PropTypes.bool,
     dispatch: PropTypes.func.isRequired,
+  };
+
+  static defaultProps = {
+    isValidCode: true,
   };
 
   constructor(props) {
@@ -21,8 +26,12 @@ class EmailForm extends React.Component {
     };
   }
 
+  onChangeCode = () => {
+    this.props.dispatch(verifyEmailCodePut(true));
+  }
+
   onSubmit = (value) => {
-    const { props, state } = this;
+    const { state } = this;
     const { isPristine } = state;
     const { email, code } = value;
     if (isPristine) {
@@ -30,17 +39,6 @@ class EmailForm extends React.Component {
       this.props.dispatch(sendEmailCode({ email }));
     } else {
       this.props.dispatch(verifyEmail({ email, code }));
-      this.validateCode(props);
-    }
-  }
-
-  validateCode = (props) => {
-    const { isValidCode } = props;
-    if (!isValidCode) {
-      throw new SubmissionError({
-        code: 'Code is not valid',
-        _error: 'Email varified failed!',
-      });
     }
   }
 
@@ -53,12 +51,15 @@ class EmailForm extends React.Component {
         fieldClass="form-control"
         component={renderField}
         placeholder="Your email address"
-        validate={[required, email]}
+        validate={[required, emailValidator]}
       />
     );
   }
 
-  renderCodeField = () => {
+  renderCodeField = (props) => {
+    const { onChangeCode } = this;
+    const { isValidCode } = props;
+    const validate = isValidCode ? [required] : [required, codeValidator];
     return (
       <Field
         name="code"
@@ -67,7 +68,8 @@ class EmailForm extends React.Component {
         fieldClass="form-control"
         component={renderField}
         placeholder="Your code"
-        validate={[required]}
+        onChange={onChangeCode}
+        validate={validate}
       />
     );
   }
@@ -78,7 +80,7 @@ class EmailForm extends React.Component {
     const buttonText = isPristine ? 'Next' : 'Verify your email';
     return (
       <form className="EmailRequiredForm" onSubmit={props.handleSubmit(onSubmit)}>
-        { isPristine ? renderEmailField() : renderCodeField() }
+        { isPristine ? renderEmailField() : renderCodeField(props) }
         <button type="submit" className="btn btn-primary btn-block">{buttonText}</button>
       </form>
     );

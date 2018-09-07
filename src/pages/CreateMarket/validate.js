@@ -12,10 +12,10 @@ export const required = (value) => {
 };
 
 /**
- * Validator email address
+ * Validator Email address
  * @param value
  */
-export const email = (value) => {
+export const emailValidator = (value) => {
   return !isEmail(value) ? ('Invalid email address') : null;
 };
 
@@ -47,3 +47,8 @@ export const isExists = (value, name, source) => {
   const isFilter = source.filter(item => item[name] === value);
   return (isFilter && isFilter.length) ? `The ${name} is taken` : null;
 };
+
+/**
+ * Validator Email Code
+ */
+export const codeValidator = () => ('Invalid Code');
