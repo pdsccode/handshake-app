@@ -51,7 +51,7 @@ class Index extends React.PureComponent {
   render() {
     const { messages, locale } = this.props.intl;
     const {
-      name, img, imgContent, getEmail, intl, type, entireContentComponent, contentComponent, reactHelmetElement, noBreadCrumbs
+      name, img, imgContent, getEmail, intl, type, entireContentComponent, contentComponent, reactHelmetElement, noBreadCrumbs, fullWidthContent = false,
     } = this.props;
     const { hasSubscribed } = this.state;
     const cta1 = messages[`landing_page.${name}.cta1`];
@@ -67,7 +67,7 @@ class Index extends React.PureComponent {
 
     const { url: categoryUrl, text: categoryText } = LANDING_PAGE_TYPE[type];
     return (
-      <LandingWrapper name={name}>
+      <LandingWrapper name={name} fullWidthContent={fullWidthContent}>
         {reactHelmetElement}
         <div className="project-detail">
           {

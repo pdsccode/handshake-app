@@ -23,10 +23,10 @@
 // icon wallet item:
 .coin-logo{
   border-radius: 50%;
-  width: 40px;
+  width: 45px;
   display: inline-block;
   float: left;
-  margin-right: 15px;
+  margin-right: 20px;
 }
 .warning {
   color:#f5a621;
@@ -40,7 +40,7 @@
 }
 .item-center{
   display: inline-block;
-  width: 60%;
+  // width: 60%;
 }
 .name {
   font-size: rem-calc(15px);
@@ -53,6 +53,7 @@
   font-size: rem-calc(16px);
   letter-spacing: 0;
   font-weight: 300;
+  opacity: 0.6;
 }
 
 .address {
@@ -76,7 +77,7 @@
 }
 .safe{        
   position: absolute;  
-  left: 30px;
+  left: 34px;
   top: -2px;
   width: 16px;
   border: #ffffff 1px solid;
@@ -84,8 +85,8 @@
   box-shadow: 1px 0px 2px 1px rgba(9, 4, 21, 0.14);
 }
 .iconDefault{
-  margin-left: 5px;
-  width: 12px;
+  margin-left: 8px;
+  width: 8px;
 }
 .iconChecked {
   margin: 10px;
@@ -447,7 +448,7 @@
   font-weight: 300;
 
   .history-content{
-    margin-top: 10px;
+    margin-top: 15px;
     .rmc-tabs-tab-bar-tab{
       font-size: 16px;
       color: Gray;
@@ -516,6 +517,7 @@
     background-image: url('../../assets/images/wallet/images/bg-home-wallet2.svg');
     background-repeat: no-repeat;
     background-size: cover;
+    overflow: hidden;
     .logo-detail{
       width: 45px;
       border: #ececec 1px solid;
@@ -536,12 +538,15 @@
       }
     }
   }
-  .header-history-tx{
-    color:Black;
+  .header-history-tx{    
     font-size: 14px;
     text-align: center;
     padding: 10px;
-    overflow: hidden;
+    overflow: hidden;        
+    letter-spacing: 0;
+    text-transform: uppercase;
+    color: #315E9E;
+    opacity: 0.54;
 
     a{
       text-decoration: underline;
@@ -553,8 +558,10 @@
   .box-button{
     overflow: hidden;
     margin-top: 15px;
-    margin-bottom: 15px;
-    height: 50px;
+    margin-bottom: 25px;    
+    div{
+      overflow: hidden;
+    }
     .bt1{
       width: 50%;
       float: left;
