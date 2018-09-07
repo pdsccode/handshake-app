@@ -8,6 +8,7 @@ import StepOne1 from '@/assets/images/landing/prediction/pex_step1_1.png';
 import StepOne2 from '@/assets/images/landing/prediction/pex_step1_2.png';
 import StepOne3 from '@/assets/images/landing/prediction/pex_step1_3.png';
 import StepOne4 from '@/assets/images/landing/prediction/pex_step1_4.png';
+import StepOne5 from '@/assets/images/landing/prediction/pex_step1_5.png';
 
 import StepTwo1 from '@/assets/images/landing/prediction/pex_step2_1.png';
 import StepTwo2 from '@/assets/images/landing/prediction/pex_step2_2.png';
@@ -58,7 +59,8 @@ class ContentForPexInstruction extends React.Component {
         <br />
         <p>No problem if you don’t, you can buy some directly in-app with your credit card.</p>
         <div>
-          <img src={StepOne4} width="50%" alt="StepOne4" />
+          <img src={StepOne4} width="30%" alt="StepOne4" />
+          <img src={StepOne5} width="30%" alt="StepOne5" />
         </div>
         <p>Or you can also use popular coin exchanges like <a target="__blank" className="landing-link" href="https://www.coinbase.com/">Coinbase</a> or <a className="landing-link" target="__blank" href="https://www.binance.com">Binance</a>.</p>
       </div>
