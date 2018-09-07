@@ -51,6 +51,23 @@ class EscrowWithdraw extends React.Component {
     this.props.setLoading(false);
   }
 
+  handleValidate = (values) => {
+    console.log('handleValidate', values);
+    const { amount, username } = values;
+    const { creditRevenue } = this.props;
+    const { messages } = this.props.intl;
+
+    const errors = {};
+
+    if (amount <= 0) {
+      errors.amount = messages.me.credit.withdraw.validate.amountMustLargerThan0;
+    } else if (amount > creditRevenue) {
+      errors.amount = messages.me.credit.withdraw.validate.amountMustLessThanBalance;
+    }
+
+    return errors;
+  }
+
   handleWithdraw = (values) => {
     const { messages } = this.props.intl;
     console.log('handleWithdraw', values);
@@ -128,12 +145,12 @@ class EscrowWithdraw extends React.Component {
         {/* </button> */}
         {/* </div> */}
         <div className="wrapper font-weight-normal">
-          <FormEscrowWithdraw onSubmit={this.handleWithdraw}>
+          <FormEscrowWithdraw onSubmit={this.handleWithdraw} validate={this.handleValidate}>
             {/* <h4 className="font-weight-bold">Withdraw money</h4> */}
             <div className="d-table w-100 mt-4">
               <div className="d-table-cell escrow-label">{messages.me.credit.withdraw.yourBalance}</div>
               <div className="d-table-cell text-right black-color">
-                {creditRevenue || 0}
+                {creditRevenue}
               </div>
             </div>
 
@@ -189,7 +206,7 @@ class EscrowWithdraw extends React.Component {
 
 const mapState = state => ({
   depositInfo: state.exchange.depositInfo,
-  creditRevenue: state.exchange.creditRevenue,
+  creditRevenue: state.exchange.creditRevenue || 0,
 });
 
 const mapDispatch = dispatch => ({

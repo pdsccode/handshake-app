@@ -101,7 +101,7 @@ class ManageAssets extends React.Component {
                     <FormattedMessage id="dashboard.label.yourBalance" />
                   </div>
                   <div className="d-table-cell text-right black-color">
-                    {creditRevenue || 0}
+                    {creditRevenue}
                   </div>
                 </div>
               </div>
@@ -142,7 +142,7 @@ class ManageAssets extends React.Component {
 const mapState = state => ({
   me: state.me,
   depositInfo: state.exchange.depositInfo,
-  creditRevenue: state.exchange.creditRevenue,
+  creditRevenue: state.exchange.creditRevenue || 0,
 })
 
 const mapDispatch = dispatch => ({
