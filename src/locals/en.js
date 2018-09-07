@@ -318,7 +318,7 @@ export default {
   'dashboard.label.manageAssets': 'Manage assets',
   'dashboard.btn.deactivate': 'Deactivate',
   'dashboard.btn.reactivate': 'Reactivate',
-  'dashboard.btn.depositing': 'Depositing',
+  'dashboard.btn.depositing': 'Depositing...',
   'dashboard.btn.topUpByCC': 'Top up ATM with credit card',
   'dashboard.btn.scanQRCode': 'Scan QR code',
   'dashboard.btn.depositEscrow': 'Deposit to Escrow',
