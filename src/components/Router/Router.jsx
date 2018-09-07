@@ -166,7 +166,7 @@ class Router extends React.Component {
       <BrowserRouter>
         <Switch>
           {
-            BrowserDetect.isDesktop ? <Route exact path={URL.INDEX} component={RouterLandingPageMain} /> : null
+            BrowserDetect.isDesktop && <Route exact path={URL.INDEX} component={RouterLandingPageMain} />
           }
 
           <Route path={LANDING_PAGE_TYPE.product.url} render={() => <LandingPageMain type="product" />} />
