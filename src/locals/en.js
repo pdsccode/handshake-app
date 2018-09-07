@@ -219,6 +219,10 @@ export default {
   'ex.error.320': 'The early bird program has ended, please cash in to trade with us.',
   'ex.error.322': 'Your information is incorrect. Please input again',
   'ex.error.323': 'Exceeding global credit limit. Please try again tomorrow.',
+  'ex.error.324': 'Credit exists',
+  'ex.error.325': 'Credit price changed',
+  'ex.error.326': 'Credit out of stock',
+  'ex.error.327': 'Credit item status is invalid',
   'ex.error.default': 'Oops! Something went wrong.',
 
   'ex.earlyBird.label.1': 'WELCOME TO OUR <br/> EARLY BIRD PROGRAM!',
