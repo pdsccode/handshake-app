@@ -52,17 +52,21 @@ class ContentForPexInstruction extends React.Component {
         <div className="pexHeadline">Play with Ether or Bitcoin</div>
         <p>If you have already have Ether or Bitcoin, you can just transfer it straight from your wallet into our in-app one.</p>
         <div>
-          <img src={StepOne1} width="30%" alt="StepOne1" />
-          <img src={StepOne2} width="30%" alt="StepOne2" />
-          <img src={StepOne3} width="30%" alt="StepOne3" />
+          <img src={StepOne1} width="350" alt="StepOne1" />
+          <img src={StepOne2} width="350" alt="StepOne2" />
+          <img src={StepOne3} width="350" alt="StepOne3" />
         </div>
         <br />
-        <p>No problem if you don’t, you can buy some directly in-app with your credit card.</p>
-        <div>
-          <img src={StepOne4} width="30%" alt="StepOne4" />
-          <img src={StepOne5} width="30%" alt="StepOne5" />
+        <div className="wrapperGuideCenter">
+          <p>No problem if you don’t, you can buy some directly in-app with your credit card.</p>
+          <div className="wrapperImages">
+            <img src={StepOne4} width="350" alt="StepOne4" />
+            <img src={StepOne5} width="350" alt="StepOne5" />
+          </div>
+          <p>Or you can also use popular coin exchanges like <a target="__blank" className="landing-link" href="https://www.coinbase.com/">Coinbase</a> or <a className="landing-link" target="__blank" href="https://www.binance.com">Binance</a>.</p>
+
         </div>
-        <p>Or you can also use popular coin exchanges like <a target="__blank" className="landing-link" href="https://www.coinbase.com/">Coinbase</a> or <a className="landing-link" target="__blank" href="https://www.binance.com">Binance</a>.</p>
+
       </div>
     );
 
@@ -73,9 +77,9 @@ class ContentForPexInstruction extends React.Component {
         <div className="stepNumber">2</div>
         <div className="pexHeadline">Top up your Wallet.</div>
         <p>You can top up funds by transferring your coin into the in-app Wallet. It’s completely decentralized and the private key is held on your phone and only you can access it. Once that’s done, you’re all set to start forecasting.</p>
-        <div>
-          <img src={StepTwo1} width="30%" alt="StepTwo1" />
-          <img src={StepTwo2} width="30%" alt="StepTwo2" />
+        <div className="wrapperGuideCenter wrapperImages">
+          <img src={StepTwo1} width="350" alt="StepTwo1" />
+          <img src={StepTwo2} width="350" alt="StepTwo2" />
         </div>
       </div>
     );
@@ -86,9 +90,9 @@ class ContentForPexInstruction extends React.Component {
         <div className="stepNumber">3</div>
         <div className="pexHeadline">Place a bet.</div>
         <p>First, pick a market (i.e. Man. City— Newcastle), the outcome (Man. City wins) and the side (support or bet against the outcome).</p>
-        <div>
-          <img src={StepThree1} width="30%" alt="StepThree1" />
-          <img src={StepThree2} width="30%" alt="StepThree2" />
+        <div className="wrapperGuideCenter wrapperImages">
+          <img src={StepThree1} width="350" alt="StepThree1" />
+          <img src={StepThree2} width="350" alt="StepThree2" />
         </div>
         <br />
         <p>Then enter the stake you want to bet (i.e. 1 ETH) and the odds (i.e. 3/1).</p>
@@ -104,8 +108,8 @@ class ContentForPexInstruction extends React.Component {
         <div className="stepNumber">4</div>
         <div className="pexHeadline">Wait for the result.</div>
         <p>Once the event ends, the reporter of the market will report the result within the reporting window (set by the market creator).</p>
-        <div>
-          <img src={StepFourth1} width="30%" alt="StepFourth1" />
+        <div className="wrapperGuideCenter wrapperImages">
+          <img src={StepFourth1} width="350" alt="StepFourth1" />
         </div>
         <br />
         <p>Generally, you should expect to have the report within minutes. If you win, your winnings will be automatically transferred from the escrow smart contract to your account.</p>
