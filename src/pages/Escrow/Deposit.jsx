@@ -187,6 +187,25 @@ class EscrowDeposit extends React.Component {
     return result;
   }
 
+  checkDefaultWallet = async (values) => {
+    let result = true;
+
+    for (const item of Object.values(listCurrency)) {
+      const { name: currency } = item;
+      const amount = values[`amount_${currency}`];
+
+      if (amount && amount.trim().length > 0) {
+        result = await this.checkMainNetDefaultWallet(currency);
+
+        if (!result) {
+          break;
+        }
+      }
+    }
+
+    return result;
+  }
+
   checkBalance = async (values) => {
     let result = true;
 
@@ -242,6 +261,11 @@ class EscrowDeposit extends React.Component {
   handleOnSubmit = async (values) => {
     console.log('handleOnSubmit', values);
 
+    const isSetDefault = await this.checkDefaultWallet(values);
+    if (!isSetDefault) {
+      return;
+    }
+
     const isEnough = await this.checkBalance(values);
 
     if (!isEnough) {
@@ -265,18 +289,6 @@ class EscrowDeposit extends React.Component {
 
   handleDeposit = () => {
     const { values } = this.state;
-
-    for (const item of Object.values(listCurrency)) {
-      const { name: currency } = item;
-      const amount = values[`amount_${currency}`];
-
-      if (amount && amount.trim().length > 0) {
-        if (!this.checkMainNetDefaultWallet(currency)) {
-          this.hideLoading();
-          return;
-        }
-      }
-    }
 
     for (const item of Object.values(listCurrency)) {
       const { name: currency } = item;
