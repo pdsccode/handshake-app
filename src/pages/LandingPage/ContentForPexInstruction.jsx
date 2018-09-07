@@ -7,6 +7,7 @@ import AvatarIcon from '@/assets/images/landing/prediction/pex_avatar_ins.svg';
 import StepOne1 from '@/assets/images/landing/prediction/pex_step1_1.png';
 import StepOne2 from '@/assets/images/landing/prediction/pex_step1_2.png';
 import StepOne3 from '@/assets/images/landing/prediction/pex_step1_3.png';
+import StepOne4 from '@/assets/images/landing/prediction/pex_step1_4.png';
 
 
 
@@ -35,6 +36,7 @@ class ContentForPexInstruction extends React.Component {
       </div>
     );
   }
+
   renderStep1() {
     return (
       <div className="wrapperGuideStep">
@@ -49,8 +51,7 @@ class ContentForPexInstruction extends React.Component {
       <br />
       <p>No problem if you don’t, you can buy some directly in-app with your credit card.</p>
       <div>
-        <img src="https://cdn-images-1.medium.com/max/1200/1*GhS52cbUKPpM03rSJQiykQ.png" width="50%" />
-        <img src="https://cdn-images-1.medium.com/max/1200/1*8oWKidEY3Chcd6kaJiU2vg.png" width="50%" />
+        <img src={StepOne4} width="50%" />
       </div>
       <p>Or you can also use popular coin exchanges like <a target="__blank" className="landing-link" href="https://www.coinbase.com/">Coinbase</a> or <a className="landing-link" target="__blank" href="https://www.binance.com">Binance</a>.</p>
       </div>
