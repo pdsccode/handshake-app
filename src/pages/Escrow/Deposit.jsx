@@ -195,7 +195,7 @@ class EscrowDeposit extends React.Component {
       const amount = values[`amount_${currency}`];
 
       if (amount && amount.trim().length > 0) {
-        result = !this.showNotEnoughCoinAlert(amount, currency);
+        result = ! (await this.showNotEnoughCoinAlert(amount, currency));
 
         if (!result) {
           break;
