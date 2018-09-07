@@ -3,12 +3,7 @@ import { injectIntl } from 'react-intl';
 import Image from '@/components/core/presentation/Image';
 
 import './ContentForPexInstruction.scss';
-import AvatarIcon from '@/assets/images/landing/prediction/pex_avatar_ins.svg';
-import StepOne1 from '@/assets/images/landing/prediction/pex_step1_1.png';
-import StepOne2 from '@/assets/images/landing/prediction/pex_step1_2.png';
-import StepOne3 from '@/assets/images/landing/prediction/pex_step1_3.png';
-import StepOne4 from '@/assets/images/landing/prediction/pex_step1_4.png';
-
+import AvatarIcon from '@/assets/images/pxinstruction/pex_avatar_ins.svg';
 
 
 class ContentForPexInstruction extends React.Component {
@@ -27,7 +22,7 @@ class ContentForPexInstruction extends React.Component {
   renderTopContent() {
     return (
       <div className="wrapperPexTopContent">
-        <div className="pexHeadline">How does the Prediction Exchange work?</div>
+        <h3 className="pexHeadline">How does the Prediction Exchange work?</h3>
         <p><strong>Prediction</strong> is a electronic prediction system that allows any two anonymous parties from anywhere in the world to bet directly against each other without the need for a trusted third party.</p>
         <p>It’s been designed so anyone, anywhere can easily place bets and create their own markets.</p>
         <p><strong>ICE.</strong></p>
@@ -35,28 +30,6 @@ class ContentForPexInstruction extends React.Component {
         <p><strong><i>Now let’s get you up and running.</i></strong></p>
       </div>
     );
-  }
-
-  renderStep1() {
-    return (
-      <div className="wrapperGuideStep">
-      <div className="stepNumber">1</div>
-      <div className="pexHeadline">Play with Ether or Bitcoin</div>
-      <p>If you have already have Ether or Bitcoin, you can just transfer it straight from your wallet into our in-app one.</p>
-      <div>
-        <img src={StepOne1} width="30%" />
-        <img src={StepOne2} width="30%" />
-        <img src={StepOne3} width="30%" />
-      </div>
-      <br />
-      <p>No problem if you don’t, you can buy some directly in-app with your credit card.</p>
-      <div>
-        <img src={StepOne4} width="50%" />
-      </div>
-      <p>Or you can also use popular coin exchanges like <a target="__blank" className="landing-link" href="https://www.coinbase.com/">Coinbase</a> or <a className="landing-link" target="__blank" href="https://www.binance.com">Binance</a>.</p>
-      </div>
-    );
-
   }
   render() {
     const { messages, locale } = this.props.intl;
@@ -66,7 +39,20 @@ class ContentForPexInstruction extends React.Component {
           <div className="col">
             {this.renderIntroduce()}
             {this.renderTopContent()}
-            {this.renderStep1()}
+            <h3 className="font-weight-bold">Step 1: Play with Ether or Bitcoin</h3>
+            <p>If you have already have Ether or Bitcoin, you can just transfer it straight from your wallet into our in-app one.</p>
+            <div>
+              <img src="https://cdn-images-1.medium.com/max/800/1*RaVlNRW1a9DPkW9bmEUgSQ.png" width="33%" />
+              <img src="https://cdn-images-1.medium.com/max/800/1*GhS52cbUKPpM03rSJQiykQ.png" width="33%" />
+              <img src="https://cdn-images-1.medium.com/max/800/1*CflUyUVua_LnRgrV3M5Kmg.png" width="33%" />
+            </div>
+            <br />
+            <p>No problem if you don’t, you can buy some directly in-app with your credit card.</p>
+            <div>
+              <img src="https://cdn-images-1.medium.com/max/1200/1*GhS52cbUKPpM03rSJQiykQ.png" width="50%" />
+              <img src="https://cdn-images-1.medium.com/max/1200/1*8oWKidEY3Chcd6kaJiU2vg.png" width="50%" />
+            </div>
+            <p>Or you can also use popular coin exchanges like <a target="__blank" className="landing-link" href="https://www.coinbase.com/">Coinbase</a> or <a className="landing-link" target="__blank" href="https://www.binance.com">Binance</a>.</p>
             <h3 className="font-weight-bold">Step 2: Top up your Wallet.</h3>
             <p>You can top up funds by transferring your coin into the in-app Wallet. It’s completely decentralized and the private key is held on your phone and only you can access it. Once that’s done, you’re all set to start forecasting.</p>
             <div>
