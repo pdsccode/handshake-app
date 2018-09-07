@@ -1,8 +1,8 @@
-import React from 'react'
-import { bindActionCreators, compose } from 'redux'
-import { connect } from 'react-redux'
+import React from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 // action, mock
-import { fireBaseBettingChange, fireBaseExchangeDataChange, loadMyHandshakeList } from '@/reducers/me/action'
+import { fireBaseBettingChange, fireBaseExchangeDataChange, loadMyHandshakeList } from '@/reducers/me/action';
 import {
   API_URL,
   APP,
@@ -10,35 +10,47 @@ import {
   HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS,
   HANDSHAKE_ID,
   HANDSHAKE_ID_DEFAULT,
-  URL
-} from '@/constants'
+  URL,
+} from '@/constants';
 import { fieldDropdown, fieldRadioButton } from '@/components/core/form/customField';
-import { FormattedMessage, injectIntl } from 'react-intl'
+import { injectIntl } from 'react-intl';
 // components
-import { getDashboardInfo, getListOfferPrice, getOfferStores, reviewOffer } from '@/reducers/exchange/action'
+import {
+  getDashboardInfo,
+  getListOfferPrice,
+  getOfferStores,
+  getTransactionCreditATM,
+  reviewOffer,
+} from '@/reducers/exchange/action';
 // style
-import { setOfflineStatus } from '@/reducers/auth/action'
-import createForm from "@/components/core/form/createForm";
-import { change, Field } from 'redux-form';
+import { setOfflineStatus } from '@/reducers/auth/action';
+import createForm from '@/components/core/form/createForm';
+import { change } from 'redux-form';
 
-import iconBitcoin from '@/assets/images/icon/coin/btc.svg';
-import iconEthereum from '@/assets/images/icon/coin/eth.svg';
-import iconBitcoinCash from '@/assets/images/icon/coin/bch.svg';
-import iconLock from '@/assets/images/icon/icons8-lock_filled.svg';
+import TransactionItem from './TransactionItem';
 
-import TransactionItem from './TransactionItem'
-
-const nameFormTransaction = "formTransaction";
+const nameFormTransaction = 'formTransaction';
 const FormTransaction = createForm({
   propsReduxForm: {
-    form: nameFormTransaction
-  }
+    form: nameFormTransaction,
+  },
 });
 
 class Transaction extends React.Component {
+  componentDidMount() {
+    this.getTransactionCreditATM();
+  }
 
-  render () {
+  getTransactionCreditATM = () => {
+    console.log('getTransactionCreditATM',);
+    const qs = {};
 
+    qs.type = HANDSHAKE_ID.CREDIT;
+
+    this.props.getTransactionCreditATM({ PATH_URL: API_URL.ME.BASE, qs });
+  }
+
+  render() {
     const transactions = [
       {
         id: 1,
@@ -47,8 +59,8 @@ class Transaction extends React.Component {
       {
         id: 2,
         date: '24 August, 2017',
-      }
-    ]
+      },
+    ];
     return (
       <div className="mt-4">
         {
@@ -56,20 +68,21 @@ class Transaction extends React.Component {
             const { id } = transaction;
             return (
               <TransactionItem key={id} {...transaction} />
-            )
+            );
           })
         }
       </div>
-    )
+    );
   }
 }
 
 const mapState = state => ({
-  me: state.me
-})
+  me: state.me,
+});
 
 const mapDispatch = dispatch => ({
-  rfChange: bindActionCreators(change, dispatch)
-})
+  rfChange: bindActionCreators(change, dispatch),
+  getTransactionCreditATM: bindActionCreators(getTransactionCreditATM, dispatch),
+});
 
-export default injectIntl(connect(mapState, mapDispatch)(Transaction))
+export default injectIntl(connect(mapState, mapDispatch)(Transaction));

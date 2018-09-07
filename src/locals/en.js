@@ -326,7 +326,8 @@ export default {
   'dashboard.label.amountSold': 'Crypto sold',
   'dashboard.label.amountLeft': 'Crypto remaining',
   'dashboard.label.currentPrice': 'Current price ({currency}/{fiatCurrency})',
-  'dashboard.label.revenue': 'Revenue',
+  'dashboard.label.revenue': 'Revenue (USD)',
+  'dashboard.label.yourBalance': 'Your balance (USD)',
   'dashboard.label.or': 'or',
   'dashboard.label.deposit.description1': 'Need even more security? Use Escrow. ',
   'dashboard.label.deposit.description2': 'Fraud-proof. 100% secured. Safety guaranteed.',
@@ -954,7 +955,7 @@ export default {
       },
       withdraw: {
         title: 'Withdraw money',
-        yourBalance: 'Your balance:',
+        yourBalance: 'Your balance (USD)',
         yourPapalName: 'Your Paypal username',
         amount: 'Amount',
         buttonTitle: 'Withdraw to your PayPal',

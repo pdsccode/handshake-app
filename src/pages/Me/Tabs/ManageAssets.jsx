@@ -73,7 +73,7 @@ class ManageAssets extends React.Component {
 
   render () {
     const { messages } = this.props.intl;
-    const { depositInfo } = this.props;
+    const { depositInfo, creditRevenue } = this.props;
     const { modalWithdrawContent } = this.state;
     let assets = [];
 
@@ -93,6 +93,21 @@ class ManageAssets extends React.Component {
               )
             })
           }
+          <div className="asset position-relative">
+            <div >
+              <div className="mt-4">
+                <div className="d-table w-100 mt-2">
+                  <div className="d-table-cell text-normal">
+                    <FormattedMessage id="dashboard.label.yourBalance" />
+                  </div>
+                  <div className="d-table-cell text-right black-color">
+                    {creditRevenue || 0}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <hr />
+          </div>
         </div>
 
         <div className="mt-3">
@@ -127,6 +142,7 @@ class ManageAssets extends React.Component {
 const mapState = state => ({
   me: state.me,
   depositInfo: state.exchange.depositInfo,
+  creditRevenue: state.exchange.creditRevenue,
 })
 
 const mapDispatch = dispatch => ({

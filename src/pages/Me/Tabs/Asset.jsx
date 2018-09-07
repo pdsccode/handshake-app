@@ -191,7 +191,7 @@ class Asset extends React.Component {
                 <FormattedMessage id="dashboard.label.revenue" />
               </div>
               <div className="d-table-cell text-right black-color">
-                ${revenue || 0}
+                {revenue || 0}
               </div>
             </div>
           </div>
