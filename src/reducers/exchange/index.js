@@ -9,11 +9,21 @@ import { EXCHANGE_ACTION } from '@/constants';
 import Dashboard from '@/models/Dashboard';
 import Referal from '@/models/Referal';
 import Deposit from '@/models/Deposit';
+import Handshake from '@/models/Handshake';
 
 const initListOfferPrice = [];
 initListOfferPrice.updatedAt = Date.now();
 const initDepositInfo = {};
 initDepositInfo.updatedAt = Date.now();
+
+const handleListPayload = (payload) => {
+  const result = [];
+  payload.map((handshake) => {
+    result.push(Handshake.handshake(handshake));
+  });
+
+  return result;
+};
 
 function exchangeReducter(state = {
   listOfferPrice: initListOfferPrice,
@@ -82,6 +92,12 @@ function exchangeReducter(state = {
       depositInfo.updatedAt = Date.now();
       return { ...state, depositInfo, creditRevenue: action.payload.data.revenue || '0' };
     }
+    case `${EXCHANGE_ACTIONS.GET_TRANSACTION_CREDIT_ATM}_SUCCESS`:
+      const list = handleListPayload(action.payload.data.handshakes);
+      return {
+        ...state,
+        creditTransactions: list,
+      };
     default:
       return state;
   }

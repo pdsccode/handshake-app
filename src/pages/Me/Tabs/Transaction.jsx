@@ -42,7 +42,6 @@ class Transaction extends React.Component {
   }
 
   getTransactionCreditATM = () => {
-    console.log('getTransactionCreditATM',);
     const qs = {};
 
     qs.type = HANDSHAKE_ID.CREDIT;
@@ -51,20 +50,12 @@ class Transaction extends React.Component {
   }
 
   render() {
-    const transactions = [
-      {
-        id: 1,
-        date: '23 August, 2017',
-      },
-      {
-        id: 2,
-        date: '24 August, 2017',
-      },
-    ];
+    const { creditTransactions } = this.props;
+
     return (
       <div className="mt-4">
         {
-          transactions.map(transaction => {
+          creditTransactions && creditTransactions.map(transaction => {
             const { id } = transaction;
             return (
               <TransactionItem key={id} {...transaction} />
@@ -78,6 +69,7 @@ class Transaction extends React.Component {
 
 const mapState = state => ({
   me: state.me,
+  creditTransactions: state.exchange.creditTransactions,
 });
 
 const mapDispatch = dispatch => ({

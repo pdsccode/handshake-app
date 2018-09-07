@@ -953,6 +953,23 @@ export default {
         askToDeactive: 'Do you want to deactive?',
         messageDeactiveSuccess: 'Deactive successfully',
       },
+      transaction: {
+        amount: 'Amount',
+        processing: 'Processing...',
+        deposit: {
+          title: 'DEPOSIT',
+          percentage: 'Percentage',
+        },
+        withdraw: {
+          title: 'WITHDRAW',
+          toAccount: 'To Account',
+        },
+        transaction: {
+          title: 'PURCHASE ORDER',
+          selling: 'Selling',
+          receiving: 'Receiving',
+        },
+      },
       withdraw: {
         title: 'Withdraw money',
         yourBalance: 'Your balance (USD)',
