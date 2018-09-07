@@ -10,6 +10,5 @@ export default {
     countReport: 0,
     freeBet: {},
     isExistEmail: false,
-    isValidEmailCode: true,
   },
 };
