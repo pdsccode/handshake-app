@@ -7,7 +7,7 @@ import IconTrash from '@/assets/images/icon/icon-trash.svg';
 import moment from 'moment';
 import DateTimePicker from '@/components/DateTimePicker/DateTimePicker';
 import { renderField } from './form';
-import { required, urlValidator, isExists } from './validate';
+import { required, urlValidator } from './validate';
 import { createEvent } from './action';
 import ShareMarket from './ShareMarket';
 import { createEventFormName } from './constants';
@@ -115,6 +115,10 @@ class CreateEventForm extends Component {
     const newItem = value[lastIndex];
     const oldData = value.slice(0, lastIndex);
     return oldData.every((i) => i.name !== newItem.name) ? undefined : 'Outcome already exists';
+  }
+
+  reportSelected = (value) => {
+    this.setFieldValueToState('selectedReportSource', value);
   }
 
   renderGroupTitle = (title) => {
@@ -235,12 +239,8 @@ class CreateEventForm extends Component {
       </div>
     );
   }
-  
-  reportSelected = (value) => {
-    this.setFieldValueToState('selectedReportSource', value);
-  }
 
-  renderReport = (props, state) => {
+  renderReport = (props) => {
     const reportList = props.reportList.map(item => ({ ...item, name: item.url }));
     const validate = props.isNew ? [required, urlValidator] : [];
     return (
@@ -251,7 +251,7 @@ class CreateEventForm extends Component {
           name="reports"
           className="form-group"
           fieldClass="form-control"
-          placeholder="Enter your preferred source URL"
+          placeholder="Enter result source URL"
           onSelect={this.reportSelected}
           source={reportList}
           disabled={!props.isNew}
@@ -300,8 +300,8 @@ class CreateEventForm extends Component {
           name="closingTime"
           type="text"
           component={this.renderDateTime}
-          title="Closing Time"
-          placeholder="Event close"
+          title="Event closing time"
+          placeholder="Event closing time"
           validate={[required, this.smallerThanReportingTime]}
           disabled={!props.isNew}
           value={state.closingTime}
@@ -312,8 +312,8 @@ class CreateEventForm extends Component {
           name="reportingTime"
           type="text"
           component={this.renderDateTime}
-          title="Reporting Time"
-          placeholder="Report by"
+          title="Report deadline"
+          placeholder="Report deadline"
           validate={[required, this.smallerThanDisputeTime]}
           disabled={!props.isNew || !state.closingTime}
           value={state.reportingTime}
@@ -324,8 +324,8 @@ class CreateEventForm extends Component {
           name="disputeTime"
           type="text"
           component={this.renderDateTime}
-          title="Dispute Time"
-          placeholder="Dispute by"
+          title="Dispute deadline"
+          placeholder="Dispute deadline"
           validate={[required]}
           disabled={!props.isNew || !state.reportingTime}
           value={state.disputeTime}
@@ -357,7 +357,7 @@ class CreateEventForm extends Component {
         </div>
         {this.renderFee(props)}
         <div className="CreateEventFormBlock">
-          {this.renderReport(props, state)}
+          {this.renderReport(props)}
           {this.renderTimeGroup(props, state)}
           <button type="submit" className="btn btn-primary btn-block" disabled={props.pristine || props.submitting}>
             {props.isNew ? 'Create a new event' : 'Add new outcomes'}

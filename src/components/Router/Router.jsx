@@ -80,6 +80,8 @@ const configRoutesUsingMobileLayout = [
   { path: URL.HANDSHAKE_PEX_CREATOR, component: CreateOwnMarket },
   { path: URL.CC_PAYMENT_URL, component: RouterCCConfirm },
   { path: URL.BUY_BY_CC_URL, component: RouterBuyCC },
+  { path: URL.PEX_INSTRUCTION_URL, component: ContentForPexInstruction },
+
   { path: URL.ESCROW_DEPOSIT, component: RouterEscrowDeposit },
   { path: URL.ESCROW_WITHDRAW, component: RouterEscrowWithdraw, exact: true },
   { path: URL.ESCROW_WITHDRAW_SUCCESS, component: RouterEscrowWithdrawSuccess },
