@@ -482,7 +482,7 @@ class EscrowDeposit extends React.Component {
                             <img src={icon} className="icon-deposit" />
                           }
                           validate={[number]}
-                          placeholder="1"
+                          placeholder="0"
                         />
                       </div>
                     </div>
