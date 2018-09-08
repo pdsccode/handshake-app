@@ -171,6 +171,7 @@ class Wallet extends React.Component {
       modalReceiveCoin: '',
       modalSetting: '',
       modalHistory: '',
+      modalWalletPreferences: "",
 
       // sortable:
       listSortable: {coin: false, token: false, collectitble: false},
@@ -489,6 +490,12 @@ class Wallet extends React.Component {
 
   // Remove wallet function:
   removeWallet = () => {
+    try{
+      this.modalHistoryRef.close();
+      this.modalWalletReferencesRef.close();
+    }
+    catch(e){};
+
     const lstWalletTemp = this.getAllWallet();
     let index = -1;
     const walletTmp = this.state.walletSelected;
@@ -503,7 +510,7 @@ class Wallet extends React.Component {
         this.splitWalletData(lstWalletTemp);
       }
     }
-    this.modalBetRef.close();
+    this.modalBetRef.close();    
   }
 
   sendCoin = () => {
@@ -760,12 +767,12 @@ class Wallet extends React.Component {
   }
 
   onWarningClick = (wallet) => {
-    if (!wallet.protected) {
+    // if (!wallet.protected) {
       this.setState({ walletSelected: wallet, stepProtected: 1, activeProtected: true });
       this.modalProtectRef.open();
-    } else {
+    // } else {
 
-    }
+    // }
   }
   onWalletItemClick = (wallet) =>{
     this.setState({walletSelected: wallet,
@@ -777,12 +784,26 @@ class Wallet extends React.Component {
           onWarningClick={() => this.onWarningClick(wallet)}
           wallet={wallet}
           customBackIcon={BackChevronSVGWhite}
-          modalHeaderStyle={this.modalHeaderStyle}
+          modalHeaderStyle={this.modalHeaderStyle}          
         />
       )
     }, ()=>{
       this.modalHistoryRef.open();
     });
+  }
+  onUpdateWalletName = (wallet) => {
+    this.setState({walletSelected: wallet});
+    //update local store.
+    MasterWallet.UpdateLocalStore(this.getAllWallet());
+  }
+
+  onOpenWalletPreferences = (wallet) =>{
+    this.setState({
+      modalWalletPreferences: (<WalletPreferences onDeleteWalletClick={()=>{this.modalBetRef.open();}} onWarningClick={()=>{this.onWarningClick(wallet);}} onUpdateWalletName={(wallet)=> {this.onUpdateWalletName(wallet);}} wallet={wallet} customBackIcon={BackChevronSVGWhite} modalHeaderStyle={this.modalHeaderStyle} />)
+    }, ()=>{
+      this.modalWalletReferencesRef.open();
+    })
+
   }
 
   onAddressClick = (wallet) => {
@@ -860,6 +881,9 @@ class Wallet extends React.Component {
 
   closeHistory = () => {
     this.setState({modalHistory: ''});
+  }
+  closePreferences=()=>{
+    this.setState({modalWalletPreferences: ""});
   }
 
   successTransfer = () => {
@@ -942,18 +966,17 @@ class Wallet extends React.Component {
   render = () => {
     const { messages } = this.props.intl;
     const { formAddTokenIsActive, formAddCollectibleIsActive, modalBuyCoin, modalTransferCoin, modalSetting,
-      modalHistory, modalReceiveCoin, walletSelected, walletsData} = this.state;
+      modalHistory, modalWalletPreferences, modalReceiveCoin, walletSelected, walletsData} = this.state;
 
     return (
       <div className="wallet-page">
 
-      
-        <Modal customBackIcon={BackChevronSVGWhite} modalBodyStyle={this.modalBodyStyle} modalHeaderStyle={this.modalHeaderStyle} title={this.state.walletSelected ? this.state.walletSelected.title : messages.wallet.action.history.header} onRef={modal => this.modalHistoryRef = modal} onClose={this.closeHistory}>
+        <Modal customRightIconClick={()=>{this.onOpenWalletPreferences(this.state.walletSelected);}}  customRightIcon={customRightIcon} customBackIcon={BackChevronSVGWhite} modalBodyStyle={this.modalBodyStyle} modalHeaderStyle={this.modalHeaderStyle} title={this.state.walletSelected ? this.state.walletSelected.title : messages.wallet.action.history.header} onRef={modal => this.modalHistoryRef = modal} onClose={this.closeHistory}>
           {modalHistory}
         </Modal>
 
-        <Modal title="Preferences" onRef={modal => this.modalWalletReferencesRef = modal} customBackIcon={BackChevronSVGWhite} modalHeaderStyle={this.modalHeaderStyle} modalBodyStyle={this.modalBodyStyle}>
-          <WalletPreferences />
+        <Modal title="Preferences" onRef={modal => this.modalWalletReferencesRef = modal} customBackIcon={BackChevronSVGWhite} modalHeaderStyle={this.modalHeaderStyle} modalBodyStyle={this.modalBodyStyle} onClose={this.closePreferences}>
+          {modalWalletPreferences}
         </Modal>
 
         <Modal customBackIcon={BackChevronSVGWhite} modalHeaderStyle={this.modalHeaderStyle}  onClose={() => this.setState({formAddTokenIsActive: false})} title="Add Custom Token" onRef={modal => this.modalAddNewTokenRef = modal}>
@@ -982,8 +1005,6 @@ class Wallet extends React.Component {
           </ModalDialog>
 
           {/* ModalDialog for transfer coin */}
-
-
           <Modal customBackIcon={BackChevronSVGWhite} modalHeaderStyle={this.modalHeaderStyle}  title={messages.wallet.action.transfer.header} onRef={modal => this.modalSendRef = modal}  onClose={this.closeTransfer}>
             {modalTransferCoin}
           </Modal>
