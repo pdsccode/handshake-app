@@ -35,14 +35,14 @@ class LuckyLanding extends React.Component {
           <div className="luckyTitleDesc">Take a look around.</div>
         </div>
 
-        <Button
-          className="btnLuckyLanding guideButton"
-          onClick={() => {
-              this.props.onButtonClick();
-          }}
-        >
-          Quick start guide
-        </Button>
+          <Link
+            className="btnLuckyLanding guideButton"
+
+            to={URL.PEX_INSTRUCTION_URL}
+          >
+              Quick start guide
+
+          </Link>
 
         <Button
           className="btnLuckyLanding gotItButton"
