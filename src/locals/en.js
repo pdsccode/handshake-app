@@ -1218,6 +1218,7 @@ export default {
         title: 'View transaction history',
         header: 'Transaction history',
         label: {
+          balance_hidden: "Balance Hidden",
           failed: 'Failed',
           unconfirmed: 'Unconfirmed',
           balance: 'Balance',

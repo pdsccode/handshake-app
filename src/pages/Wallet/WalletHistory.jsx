@@ -303,7 +303,9 @@ class WalletHistory extends React.Component {
       <div className="clear-fix">
         <div className="wallet-detail">
           <div><img className="logo-detail" src={logo}/></div>
+          {!wallet.hideBalance ?
           <div className="balance">{wallet.balance} {wallet.name}</div>
+          :<div className="balance">[{messages.wallet.action.history.label.balance_hidden}]</div>}
 
           <div className="box-button">
             {!wallet.isCollectibles ? <div>
