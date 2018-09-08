@@ -11,6 +11,7 @@ export default {
     navigation: {
       me: 'Me',
       exchanges: 'Exchanges',
+
       whisper: 'Whisper',
       wallet: 'Wallet',
     },
@@ -1010,6 +1011,21 @@ export default {
       },
     },
     action: {
+      preferecens:{
+        list_item: {
+          wallet_name: "Wallet name",
+          hide_balance: "Hide Balance",
+          backup_wallet: "Backup wallet",
+          delete_wallet: "Delete wallet",
+        },
+        update_name:{
+          title: "Wallet name",
+          label: "What do you call this wallet?",
+          button: {
+            save: "Save",
+          }
+        }
+      },
       remove: {
         title: 'Remove',
         header: 'Are you sure?',
