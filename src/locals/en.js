@@ -1013,10 +1013,10 @@ export default {
     action: {
       preferecens:{
         list_item: {
-          wallet_name: "Wallet name",
+          wallet_name: "Wallet Name",
           hide_balance: "Hide Balance",
-          backup_wallet: "Backup wallet",
-          delete_wallet: "Delete wallet",
+          backup_wallet: "Backup Wallet",
+          delete_wallet: "Delete Wallet",
         },
         update_name:{
           title: "Wallet name",
