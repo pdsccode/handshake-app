@@ -637,10 +637,10 @@ class FeedCreditCard extends React.Component {
         </div>
         <div>
           <div className="ex-sticky-note">
-            <div className="mb-2"><FormattedMessage id="ex.discover.banner.text" /></div>
+            <div className="mb-2"><FormattedMessage id="ex.credit.banner.text" /></div>
             <div>
               <Link to={{ pathname: URL.ESCROW_DEPOSIT, search: `` }}>
-                <button className="btn btn-become"><FormattedMessage id="ex.discover.banner.btnText" /></button>
+                <button className="btn btn-become"><FormattedMessage id="ex.credit.banner.btnText" /></button>
               </Link>
             </div>
           </div>
