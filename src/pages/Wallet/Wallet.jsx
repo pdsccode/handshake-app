@@ -791,10 +791,11 @@ class Wallet extends React.Component {
       this.modalHistoryRef.open();
     });
   }
-  onUpdateWalletName = (wallet) => {
-    this.setState({walletSelected: wallet});
+  onUpdateWalletName = (wallet) => {    
+    this.setState({walletSelected: wallet});    
     //update local store.
-    MasterWallet.UpdateLocalStore(this.getAllWallet());
+    MasterWallet.UpdateLocalStore(this.getAllWallet());    
+    this.onWalletItemClick(wallet);
   }
 
   onOpenWalletPreferences = (wallet) =>{
