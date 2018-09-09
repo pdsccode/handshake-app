@@ -19,12 +19,12 @@ import { StringHelper } from '@/services/helper';
 import iconSuccessChecked from '@/assets/images/icon/icon-checked-green.svg';
 
 // style
-import './ChooseWallet.scss';
+import './ChooseCrypto.scss';
 
 const nameFormSendWallet = 'sendWallet';
 const SendWalletForm = createForm({ propsReduxForm: { form: nameFormSendWallet, enableReinitialize: true, clearSubmitErrors: true}});
 
-class ChooseWallet extends React.Component {
+class ChooseCrypto extends React.Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
   }
@@ -82,11 +82,10 @@ class ChooseWallet extends React.Component {
         listCoin[wallet.name] = {
           name: wallet.name,
           fullName: wallet.className,
-          amount: await this.getCryptoAmount(399, fiatCurrency, wallet.name)}
+          amount: await this.getCryptoAmount(amount, fiatCurrency, wallet.name)}
       }
     }
     this.setState({ listCoin: listCoin });
-    console.log(listCoin);
     this.hideLoading();
 
 
@@ -116,6 +115,18 @@ class ChooseWallet extends React.Component {
 
     //console.log(mainCoin, testCoin);
 
+  }
+
+  isToCrypto = (walletName, toCrypto) => {
+    if(!toCrypto)
+      return true;
+
+    for(let wallet of toCrypto){
+      if(wallet && wallet.name == walletName)
+        return true;
+    }
+
+    return false;
   }
 
   getCryptoAmount = async (amount, fiatCurrency, cryptoCurrency) => {
@@ -149,14 +160,6 @@ class ChooseWallet extends React.Component {
         },
       });
     });
-  }
-
-  showLoading = () => {
-    this.props.showLoading({message: '',});
-  }
-
-  hideLoading = () => {
-    this.props.hideLoading();
   }
 
   getMessage(str){
@@ -197,17 +200,22 @@ class ChooseWallet extends React.Component {
 
   get listCoin(){
     const coins = this.state.listCoin;
+    const {toCrypto} = this.props;
+
     if(coins){
       let arr = [];
       for(var i in coins) {
-        arr.push(coins[i]);
+        let item = coins[i];
+        if(this.isToCrypto(item.name, toCrypto)){
+          arr.push(item);
+        }
       }
 
       return arr.map(crypto => {
         let icon = '';
         try{ icon = require("@/assets/images/icon/wallet/coins/" + crypto.name.toLowerCase() + '.svg')} catch (ex){console.log(ex)};
 
-          return <div className="coin" key={crypto.name} onClick={()=> {this.selectCoin(crypto)}} >
+          return <div className="coin" key={crypto.name} onClick={()=> {this.selectCoin(crypto.name)}} >
             <div className="icon"><img src={icon} /></div>
             <div className="name">{crypto.name}</div>
             <div className="fullName">{crypto.fullName}</div>
@@ -218,11 +226,11 @@ class ChooseWallet extends React.Component {
     }
   }
 
-  selectCoin(wallet){
+  selectCoin(crypto){
     const { callbackSuccess } = this.props;
 
     if (callbackSuccess) {
-      callbackSuccess(wallet);
+      callbackSuccess(crypto);
     }
   }
 
@@ -249,4 +257,4 @@ const mapDispatch = (dispatch) => ({
 });
 
 
-export default injectIntl(connect(mapState, mapDispatch)(ChooseWallet));
+export default injectIntl(connect(mapState, mapDispatch)(ChooseCrypto));

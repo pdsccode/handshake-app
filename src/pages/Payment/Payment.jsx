@@ -8,8 +8,10 @@ import { setHeaderRight } from '@/reducers/app/action';
 import {getFiatCurrency} from '@/reducers/exchange/action';
 import { bindActionCreators } from "redux";
 import Modal from '@/components/core/controls/Modal';
+import ModalDialog from '@/components/core/controls/ModalDialog';
 import Checkout from './Checkout';
-import ChooseWallet from './ChooseWallet';
+import ChooseCrypto from './ChooseCrypto';
+import Complete from './Complete';
 import Overview from './Overview';
 import DevDoc from './DevDoc';
 import { API_URL } from "@/constants";
@@ -33,20 +35,17 @@ class Payment extends React.Component {
 
     this.state = {
       isLoading: false,
-      isShowSuccess: false,
-      toAddress: "",
-      fromAddress: "",
-      coinName: "",
-      amount: 0,
-      fee: 0,
-      total: 0,
       orderID: "",
       confirmURL: "",
       bottomSheet: false,
       listMenu: [],
 
-      modalChooseWallet: '',
-      modalCheckout: ''
+      modalChooseCrypto: '',
+      modalCheckout: '',
+      modalComplete: '',
+      msgError: '',
+      toAddresses: false
+
     };
     this.props.setHeaderRight(this.headerRight());
   }
@@ -77,18 +76,32 @@ class Payment extends React.Component {
 
   componentDidMount() {
     this.checkPayNinja();
+    //this.successPayNinja();
   }
 
   async checkPayNinja() {
     const querystring = window.location.search.replace('?', '');
     this.querystringParsed = qs.parse(querystring);
-    const { order_id, amount, fiat_currency:fiatCurrency, crypto_currency:cryptoCurrency, confirm_url } = this.querystringParsed;
-    if (!order_id && !amount) {
+    const { order_id, to, amount, fiat_currency:fiatCurrency, crypto_currency:cryptoCurrency, confirm_url } = this.querystringParsed;
+
+    if (!order_id && !amount && !confirm_url) {
       //missing parameters
+      this.showModalError("Missing parameters");
+      return;
     }
 
     if(isNaN(amount)){
-      //invalid parameters
+      this.showModalError("Invalid amount");
+      return;
+    }
+
+    let toAddresses = this.getToAdresses(to);
+    if(toAddresses){
+      this.setState({toAddresses: toAddresses});
+    }
+    else{
+      this.showModalError("Not found destination address to checkout");
+      return;
     }
 
     if(cryptoCurrency){
@@ -96,46 +109,102 @@ class Payment extends React.Component {
     }
     else{
       this.setState({
-        modalChooseWallet: <ChooseWallet
+        modalChooseCrypto: <ChooseCrypto
           amount={amount}
           fiatCurrency={fiatCurrency}
-          callbackSuccess={(wallet) => { this.chosenWallet(wallet) }}
+          toCrypto={toAddresses}
+          callbackSuccess={(name) => { this.chosenWallet(name) }}
         />
         }, () => {
-          this.modalChooseWalletRef.open();
+          this.modalChooseCryptoRef.open();
         }
       );
     }
   }
 
-  chosenWallet = async (wallet) => {
-    let { order_id, amount, fiat_currency:fiatCurrency, coin, to, crypto_currency:cryptoCurrency, confirm_url } = this.querystringParsed;
-    let amountCrypto = await this.getCryptoAmount(amount, fiatCurrency, wallet.name);
+  showModalError = (msg) => {
+    this.setState({msgError: msg}, ()=> {
+      this.modalErrorRef.open();
+    });
+  }
+
+  chosenWallet = async (crypto) => {
+    let { order_id, amount, fiat_currency:fiatCurrency, coin, to, crypto_currency:cryptoCurrency } = this.querystringParsed;
+    let amountCrypto = await this.getCryptoAmount(amount, fiatCurrency, crypto);
+
 
     if(!cryptoCurrency)
-      cryptoCurrency = wallet.name;
+      cryptoCurrency = crypto;
 
+    let toAddress = this.getToAddress(cryptoCurrency);
     this.setState({
       modalCheckout: <Checkout
-        wallet={wallet}
         amount={amount}
         fiatCurrency={fiatCurrency}
         amountCrypto={amountCrypto}
+        toAddress={toAddress}
         cryptoCurrency={cryptoCurrency}
+        onFinish={result => { this.successPayNinja(result); }}
       />,
-      modalChooseWallet: ''
+      modalChooseCrypto: ''
       }, () => {
-        this.modalChooseWalletRef.close();
+        this.modalChooseCryptoRef.close();
         this.modalCheckoutRef.open();
       }
     );
+  }
+
+  backChooseCrypto = () => {
+    this.setState({modalCheckout: ''});
+    this.checkPayNinja();
+  }
+
+  tryAgainPayment= () => {
+    this.modalCompleteRef.close();
+    this.setState({modalComplete: ''});
+    this.checkPayNinja();
+  }
+
+  getToAdresses = (to) =>{
+    let arr = false;
+    if(to){
+      arr = [];
+      to.split(',').forEach(item => {
+        let arrItem = item.split(':');
+        if(arrItem && arrItem.length > 1){
+          arr.push({name: arrItem[0].trim(), address: arrItem[1].trim()});
+        }
+      });
+    }
+
+    return arr;
+  }
+
+  getToAddress = (cryptoCurrency) => {
+    const toAddresses = this.state.toAddresses;
+    let result = '';
+    if(toAddresses){
+      for(var item of toAddresses){
+        if(item.name == cryptoCurrency){
+          result = item.address;
+          break;
+        }
+      }
+    }
+
+    return result;
   }
 
   getCryptoAmount = async (amount, fiatCurrency, cryptoCurrency) => {
     let result = 0;
     let rate = await this.getRate(fiatCurrency, cryptoCurrency);
     result = Number(amount)/rate;
-    result = Math.round(result * 10000000) / 10000000; //roundup 7 decimal
+    if(result >= 1000){
+      result = Math.round(result * 100) / 100; //roundup 2 decimal
+    }
+    else{
+      result = Math.round(result * 10000000) / 10000000; //roundup 7 decimal
+    }
     return result;
   }
 
@@ -201,28 +270,24 @@ class Payment extends React.Component {
     return obj;
   }
 
-  chooseWallet = async (wallet) => {
-    let fee = 0, total = 0;
-    if(wallet) {
-      fee = await wallet.getFee();
-      total = wallet.formatNumber(Number(this.state.amount) + Number(fee), 6);
-      this.setState({active: true, fee: fee, total: total});
-    }
-  }
-
   closePayNinja = () => {
     this.setState({ isShowWallets: false });
   }
 
   successPayNinja = (data) => {
-    this.modalSendRef.close();
-    this.setState({isShowSuccess: true});
-
-    //console.log(data);
-    if(data) {
-      let fullBackUrl = `${this.state.confirmURL}?order_id=${this.state.orderID}&hash=${data.hash}`;
-      setTimeout(() => {window.location.href = fullBackUrl}, 3000);
+    if(!data){
+      data = {fromWallet: 'ETH', hash: ""};
     }
+    this.setState({
+      modalComplete: <Complete
+        data={data}
+        tryAgain={() => this.tryAgainPayment()}
+      />,
+      modalCheckout: ''
+      }, () => {
+        this.modalCompleteRef.open();
+      }
+    );
   }
 
   // To address those who want the "root domain," use this function:
@@ -266,17 +331,25 @@ class Payment extends React.Component {
 
   showPayNinja = () => {
     const { messages } = this.props.intl;
-    const { modalChooseWallet, modalCheckout } = this.state;
+    const { modalChooseCrypto, modalCheckout, modalComplete } = this.state;
 
     return (
       <div className="checkout-wrapper">
-        <Modal title="Select crypto payment" onRef={modal => this.modalChooseWalletRef = modal}  onClose={this.closePayNinja}>
-          {modalChooseWallet}
+        <Modal title="Select crypto payment" onRef={modal => this.modalChooseCryptoRef = modal}  onClose={this.closePayNinja}>
+          {modalChooseCrypto}
         </Modal>
 
-        <Modal title="Payment" onRef={modal => this.modalCheckoutRef = modal}  onClose={this.closePayNinja}>
+        <Modal title="Payment" onRef={modal => this.modalCheckoutRef = modal} onClose={this.backChooseCrypto}>
           {modalCheckout}
         </Modal>
+
+        <Modal title="Error" onRef={modal => this.modalErrorRef = modal}>
+          <div className="msg-error">{this.state.msgError}</div>
+        </Modal>
+
+        <ModalDialog className="complete-wrapper" title="Complete crypto payment" onRef={modal => this.modalCompleteRef = modal}>
+          {modalComplete}
+        </ModalDialog>
       </div>);
   }
 
@@ -286,27 +359,13 @@ class Payment extends React.Component {
     )
   }
 
-  showSuccess = () => {
-    return(
-      <div>
-        <div className="payment-success">Ninja get back to webshop <u>{this.state.confirmURL}</u>... please wait!</div>
-        {/* {
-          this.state.confirmURL ? <Redirect to={{ pathname: this.state.confirmURL }} /> : ""
-        } */}
-      </div>
-    )
-  }
-
   render = () => {
     const { messages } = this.props.intl;
     return (
 
       <div>
         {
-          !this.state.isShowWallets && !this.state.isShowSuccess ? this.showOverview() : ""
-        }
-        {
-          this.state.isShowSuccess ? this.showSuccess() : ""
+          !this.state.isShowWallets ? this.showOverview() : ""
         }
 
         <Grid>
@@ -321,24 +380,6 @@ class Payment extends React.Component {
         <Modal title="Developer Documents" onRef={modal => this.modalDevDocRef = modal}>
           <DevDoc />
         </Modal>
-
-
-      {/* <div className="shop-info">
-          <div className="order">Order # {this.state.orderID}</div>
-          <div className="shop">{this .extractDomain()}</div>
-        </div>
-
-        <div className="order-info">
-          <div className="label">Payment Amount</div>
-          <div className="key">{this.state.amount} {this.state.coinName}</div>
-          <div className="clearfix"></div>
-          <div className="label">Transaction Fee</div>
-          <div className="key">{this.state.fee} {this.state.coinName}</div>
-          <div className="clearfix"></div>
-          <div className="label bold">Total</div>
-          <div className="key bold">{this.state.total} {this.state.coinName}</div>
-        </div>
-      */}
 
         {
           this.showPayNinja()

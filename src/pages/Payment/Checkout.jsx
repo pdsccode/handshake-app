@@ -8,25 +8,17 @@ import ModalDialog from '@/components/core/controls/ModalDialog';
 import Modal from '@/components/core/controls/Modal';
 import createForm from '@/components/core/form/createForm';
 import { fieldDropdown, fieldInput } from '@/components/core/form/customField';
-import { API_URL } from "@/constants";
 import { getCryptoPrice } from '@/reducers/exchange/action';
-import CryptoPrice from '@/models/CryptoPrice';
 import { bindActionCreators } from 'redux';
 import { MasterWallet } from "@/services/Wallets/MasterWallet";
 import { showAlert } from '@/reducers/app/action';
 import { showLoading, hideLoading } from '@/reducers/app/action';
 import { StringHelper } from '@/services/helper';
-import iconQRCode from '@/assets/images/icon/icon-qrcode-solid.svg';
-import iconCopy from '@/assets/images/icon/icon-copy.svg';
 import iconSuccessChecked from '@/assets/images/icon/icon-checked-green.svg';
-
-const QRCode = require('qrcode.react');
-import qs from 'querystring';
 
 // style
 import './Checkout.scss';
 
-const amountValid = value => (value && isNaN(value) ? 'Invalid amount' : undefined);
 
 const nameFormSendWallet = 'sendWallet';
 const SendWalletForm = createForm({ propsReduxForm: { form: nameFormSendWallet, enableReinitialize: true, clearSubmitErrors: true}});
@@ -49,14 +41,11 @@ class Checkout extends React.Component {
 
     this.state = {
       wallets: [],
-      //walletDefault: false,
       walletSelected: false,
-      //walletSelectedAddress: "",
-      active: this.props.active,
-      isShowQRCode: false,
-      walletsData: false,
-      inputSendAmountValue: 0,
-      toAddress: this.props.toAddress,
+      amountCrypto: this.props.amountCrypto,
+      toAddress: false,
+      isDisableCheckout: false,
+      isRestoreLoading: false
     }
   }
 
@@ -77,69 +66,17 @@ class Checkout extends React.Component {
   showSuccess(mst) {
     this.showAlert(mst, 'success', 5000, <img className="iconSuccessChecked" src={iconSuccessChecked} />);
   }
-  showLoading(status) {
+  showLoading() {
     this.props.showLoading({ message: '' });
   }
   hideLoading() {
     this.props.hideLoading();
   }
 
-  componentWillReceiveProps() {
-    const { active, fromAddress, toAddress, amount } = this.props;
-
-    if (toAddress) {
-      this.setState({ toAddress: toAddress });
-    }
-
-    // if (fromAddress) {
-    //   this.setState({ walletSelectedAddress: fromAddress });
-    // }
-
-    if (amount) {
-      this.setState({ inputSendAmountValue: amount });
-    }
-  }
-
   componentDidMount() {
-    this.props.clearFields(nameFormSendWallet, false, false, "to_address", "amountCoin");
-    if (this.props.amount){
-      this.props.rfChange(nameFormSendWallet, 'amountCoin', this.props.amount);
-    }
-
-    if (this.props.toAddress){
-      this.setState({inputAddressAmountValue: this.props.toAddress});
-      this.props.rfChange(nameFormSendWallet, 'to_address', this.props.toAddress);
-    }
-  }
-
-  componentDidUpdate() {
-    if (this.props.active && !this.state.active){
-      this.setState({active: this.props.active});
-      this.props.clearFields(nameFormSendWallet, false, false, "to_address", "amountCoin");
-
-      // if (this.props.fromAddress){
-      //   this.setState({walletSelectedAddress: this.props.fromAddress});
-      // }
-
-      if (this.props.toAddress){
-        this.setState({inputAddressAmountValue: this.props.toAddress});
-        this.props.rfChange(nameFormSendWallet, 'to_address', this.props.toAddress);
-      }
-
-      console.log("componentDidUpdate");
-      this.getWalletDefault();
-    }
-    else if (!this.props.active && this.state.active){
-      this.setState({active: this.props.active});
-    }
-  }
-
-  showLoading = () => {
-    this.props.showLoading({message: '',});
-  }
-
-  hideLoading = () => {
-    this.props.hideLoading();
+    this.showLoading();
+    this.getWalletDefault();
+    this.hideLoading();
   }
 
   copyToClipboard =(text) => {
@@ -155,9 +92,8 @@ class Checkout extends React.Component {
     const { onFinish } = this.props;
 
     if (onFinish) {
-      let result = {'toAddress': this.state.inputAddressAmountValue,
+      let result = {
         'fromWallet': this.state.walletSelected,
-        'amountCoin': this.state.inputSendAmountValue,
         'hash': data ? data.hash : ""
       };
 
@@ -168,25 +104,10 @@ class Checkout extends React.Component {
   }
 
   getWalletDefault = async () =>{
-    const { coinName, listWallet, wallet, fromAddress } = this.props;
+    const { cryptoCurrency } = this.props;
 
-    let wallets = listWallet;
-    let walletDefault = false;
-    if (!wallets){
-      wallets = MasterWallet.getWallets(coinName);
-    }
-
-    if(fromAddress && wallets && wallets.length > 0) {
-      wallets.forEach((wal) => {
-        if(fromAddress == wal.address) {
-          walletDefault = wal;
-        }
-      });
-    }
-
-    if (!walletDefault && coinName){
-      walletDefault = await MasterWallet.getWalletDefault(coinName);
-    }
+    let walletDefault = await MasterWallet.getWalletDefault(cryptoCurrency);
+    let wallets = MasterWallet.getWallets(cryptoCurrency);
 
     // set name + text for list:
     let listWalletCoin = [];
@@ -199,11 +120,6 @@ class Checkout extends React.Component {
           }
           wal.id = wal.address + "-" + wal.getNetworkName() + wal.name;
           listWalletCoin.push(wal);
-
-
-          if(!walletDefault && coinName == wal.name) {
-            walletDefault = wal;
-          }
         }
       });
     }
@@ -214,10 +130,7 @@ class Checkout extends React.Component {
       }
     }
 
-    // set name for walletDefault:
-    if (wallet){
-      walletDefault = wallet;
-    }
+
     if (walletDefault){
       walletDefault.text = walletDefault.getShortAddress() + " (" + walletDefault.name + "-" + walletDefault.getNetworkName() + ")";
       if (process.env.isLive){
@@ -233,33 +146,39 @@ class Checkout extends React.Component {
       });
     }
 
-    this.setState({wallets: listWalletCoin, walletSelected: walletDefault}, ()=>{//walletDefault: walletDefault,
-      this.props.rfChange(nameFormSendWallet, 'walletSelected', walletDefault);
+    this.setState({wallets: listWalletCoin, walletSelected: walletDefault}, ()=>{
+      this.checkValid();
     });
-
-    if(walletDefault) {
-      //callback close form
-      const { chooseWallet } = this.props;
-
-      if (chooseWallet) {
-        chooseWallet(walletDefault);
-      }
-    }
   }
 
+  checkValid = () =>{
+    const { amountCrypto, toAddress } = this.props;
+    const wallet = this.state.walletSelected;
+
+    let result = true;
+    if(wallet && toAddress && amountCrypto) {
+      if(amountCrypto <= wallet.balance) {
+        result = false;
+      }
+    }
+    console.log('checkValid', result, amountCrypto, wallet.balance);
+    this.setState({isDisableCheckout: result})
+  }
   sendCoin = () => {
     const { messages } = this.props.intl;
+    const { fiatCurrency, amountCrypto, cryptoCurrency, toAddress} = this.props;
 
-    let wallet = this.state.walletSelected;
-    let amount = this.state.inputSendAmountValue;
-    if(wallet && amount) {
-      if(amount > wallet.balance) {
+    const {walletSelected:wallet} = this.state;
+    if(wallet && toAddress && amountCrypto) {
+      if(amountCrypto > wallet.balance) {
         this.showError(messages.wallet.action.payment.error.insufficient);
         return;
       }
+      else{
+        this.submitSendCoin(wallet, toAddress, amountCrypto);
+      }
     }
 
-    this.modalConfirmTranferRef.open();
   }
 
   invalidateTransferCoins = (value) => {
@@ -294,10 +213,6 @@ class Checkout extends React.Component {
     return result;
   }
 
-  openQRCode=()=>{
-    this.setState({isShowQRCode: !this.state.isShowQRCode});
-  }
-
   copyAddress=()=>{
     const { messages } = this.props.intl;
 
@@ -312,29 +227,22 @@ class Checkout extends React.Component {
 
     wallet.getBalance().then(result => {
       wallet.balance = wallet.formatNumber(result);
-      this.setState({walletSelected: wallet});
-      MasterWallet.UpdateBalanceItem(wallet);
+      this.setState({walletSelected: wallet}, ()=>{
+        MasterWallet.UpdateBalanceItem(wallet);
+        this.checkValid();
+      });
     });
-
-    //callback close form
-    const { chooseWallet } = this.props;
-
-    if (chooseWallet) {
-      chooseWallet(wallet);
-    }
   }
 
-  submitSendCoin=()=>{
+  submitSendCoin=(wallet, toAddress, amountCrypto)=>{
+    const {toCrypto} = this.props;
+
     this.setState({isRestoreLoading: true});
-    this.modalConfirmTranferRef.close();
 
-    this.state.walletSelected.transfer(this.state.inputAddressAmountValue, this.state.inputSendAmountValue).then(success => {
-
+    wallet.transfer(toAddress, amountCrypto).then(success => {
       this.setState({isRestoreLoading: false});
       if (success.hasOwnProperty('status')){
         if (success.status == 1){
-          //console.log(success);
-          this.showSuccess(this.getMessage(success.message));
           this.onFinish(success.data);
         }
         else{
@@ -345,7 +253,7 @@ class Checkout extends React.Component {
   }
 
   get showPayment(){
-    const { wallet, amount, fiatCurrency, amountCrypto, cryptoCurrency} = this.props;
+    const { amount, fiatCurrency, amountCrypto, cryptoCurrency} = this.props;
 
     let icon = '';
     try{ icon = require("@/assets/images/icon/wallet/coins/" + cryptoCurrency.toLowerCase() + '.svg')} catch (ex){console.log(ex)};
@@ -371,33 +279,34 @@ class Checkout extends React.Component {
   }
 
   get showWallet(){
-    const { wallet} = this.props;
+    const { messages } = this.props.intl;
 
     return (
       <div className="wallet-info">
-        <div className="address">{wallet.getShortAddress()}</div>
-        <div className="label">Wallet: </div>
+      <SendWalletForm onSubmit={this.sendCoin} validate={this.invalidateTransferCoins}>
 
-        <div className="clearfix"></div>
-        <div className="balance">{wallet.balance} {wallet.name}</div>
-        <div className="label">Balance: </div>
-      </div>
-    )
-  }
+        <div className ="dropdown-wallet-tranfer">
+          <Field
+            name="walletSelected"
+            component={fieldDropdown}
+            placeholder={messages.wallet.action.payment.placeholder.select_wallet}
+            defaultText={this.state.walletSelected.text}
+            list={this.state.wallets}
+            onChange={(item) => {
+                this.onItemSelectedWallet(item);
+              }
+            }
+          />
+        </div>
 
-  get callAction(){
-    const { wallet} = this.props;
+        <label className='label-balance'>{messages.wallet.action.payment.label.wallet_balance} { this.state.walletSelected ? StringHelper.format("{0} {1}", this.state.walletSelected.balance, this.state.walletSelected.name) : ""}</label>
 
-    return (
-      <div className="call-action">
-        <Button className="button-wallet-cpn" type="button" block={true} onClick={this.DoCheckout}>Checkout</Button>
+        <Button className="button-wallet-cpn" isLoading={this.state.isRestoreLoading} disabled={this.state.isDisableCheckout} type="submit" block={true}>{messages.wallet.action.payment.button.checkout}</Button>
+
         <div className="help"><div className="badge badge-light">Need support?</div></div>
+      </SendWalletForm>
       </div>
     )
-  }
-
-  DoCheckout(){
-    console.log('DoCheckout');
   }
 
   render() {
@@ -406,43 +315,10 @@ class Checkout extends React.Component {
         {this.showPayment}
         {this.showTabs}
         {this.showWallet}
-        {this.callAction}
       </div>)
 
   }
 }
-
- {/* <ModalDialog title="Confirmation" onRef={modal => this.modalConfirmTranferRef = modal}>
-          <div className="bodyConfirm"><span>{messages.wallet.action.transfer.text.confirm_transfer} {this.state.inputSendAmountValue} {this.state.walletSelected ? this.state.walletSelected.name : ''}?</span></div>
-          <div className="bodyConfirm">
-              <Button className="left" cssType="danger" onClick={this.submitSendCoin} >{messages.wallet.action.transfer.button.confirm}</Button>
-              <Button className="right" cssType="secondary" onClick={() => { this.modalConfirmTranferRef.close(); }}>Cancel</Button>
-          </div>
-          </ModalDialog>
-
-        <SendWalletForm className="checkout-wrapper" onSubmit={this.sendCoin} validate={this.invalidateTransferCoins}>
-
-          <div className="bgBox">
-            <p className="labelText">{messages.wallet.action.payment.label.to_address}</p>
-            <div className="toAddress">
-              <p className="address">{this.state.toAddress}</p>
-              { this.state.isShowQRCode ?
-                <div className="div-qr-code">
-                  <QRCode size={250} value={this.state.toAddress} />
-                </div>
-                : ""
-              }
-
-              <p className="qrCode" onClick={this.openQRCode} >{this.state.isShowQRCode ? "Hide" : "Show"} <img src={iconQRCode} /> </p>
-              <p className="copyAddress" onClick={this.copyAddress} >Copy <img src={iconCopy} /> </p>
-            </div>
-
-            <label className='label-balance'>{messages.wallet.action.payment.label.wallet_balance} { this.state.walletSelected ? StringHelper.format("{0} {1}", this.state.walletSelected.balance, this.state.walletSelected.name) : ""}</label>
-            </div>
-
-          <Button className="button-wallet-cpn" isLoading={this.state.isRestoreLoading}  type="submit" block={true}>{messages.wallet.action.payment.button.checkout}</Button>
-
-        </SendWalletForm>*/}
 
 const mapState = (state) => ({
 });

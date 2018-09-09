@@ -3,29 +3,21 @@
 .checkout-wrapper{
   padding-bottom: 30px;
 
-  .call-action{
+  .wallet-info{
     margin-top: 2rem;
-    overflow: hidden;
 
     .help{
       margin-top: 1rem;
       text-align: right;
     }
-  }
 
-  .wallet-info{
-    margin-top: 2rem;
-    overflow: hidden;
-    .label{
-      float: left;
+    .button-wallet-cpn{
+      margin-top: 2rem;
     }
 
-    .address{
-      float: right;
-    }
-
-    .balance{
-      float: right;
+    .disabled{
+      background: silver;
+      border-color: gray;
     }
   }
 
@@ -192,38 +184,5 @@
     // left: 0;
     // border-radius: 0;
     padding: 0.9625rem 0;
-  }
-}
-
-
-.bodyConfirm .left{
-  float: left;
-  width: auto;
-  padding-left: 30px;
-  padding-right: 30px;
-  min-width: 125px;
-}
-.bodyConfirm .right{
-  float: right;
-  width: auto;
-  padding-left: 30px;
-  padding-right: 30px;
-  min-width: 125px;
-}
-.bodyConfirm{
-  padding: 15px;
-  overflow: hidden;
-  margin: auto;
-  width: 100%;
-  margin-bottom: 5px;
-  padding-left: 0;
-  padding-right: 0;
-
-}
-
-.messageBox{
-  background-color: #2ED573;
-  span{
-    color: #fff;
   }
 }
