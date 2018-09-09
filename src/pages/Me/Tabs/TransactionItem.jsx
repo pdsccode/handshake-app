@@ -60,7 +60,7 @@ class TransactionItem extends React.Component {
       <div className="transaction">
         <div className="text-normal" style={{ padding: '0 15px' }}>
           <FormattedDate
-            value={new Date(initAt)}
+            value={new Date(initAt * 1000)}
             year="numeric"
             month="long"
             day="2-digit"
