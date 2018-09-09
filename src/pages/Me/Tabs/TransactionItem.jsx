@@ -15,7 +15,7 @@ import {
   URL,
 } from '@/constants';
 import { fieldDropdown, fieldRadioButton } from '@/components/core/form/customField';
-import {FormattedDate, FormattedMessage, injectIntl} from 'react-intl';
+import { FormattedDate, FormattedMessage, injectIntl } from 'react-intl';
 // components
 import { getDashboardInfo, getListOfferPrice, getOfferStores, reviewOffer } from '@/reducers/exchange/action';
 // style
@@ -26,12 +26,14 @@ import iconBitcoin from '@/assets/images/icon/coin/btc.svg';
 import iconEthereum from '@/assets/images/icon/coin/eth.svg';
 import iconBitcoinCash from '@/assets/images/icon/coin/bch.svg';
 import iconSpinner from '@/assets/images/icon/icons8-spinner.gif';
+import iconUsd from '@/assets/images/icon/coin/icons8-us_dollar.svg';
 import CreditTransaction from '@/models/CreditTransaction';
 
 export const CRYPTO_ICONS = {
   [CRYPTO_CURRENCY.ETH]: iconEthereum,
   [CRYPTO_CURRENCY.BTC]: iconBitcoin,
   BCH: iconBitcoinCash,
+  '': iconUsd,
 };
 
 export const CREDIT_FEED_TYPES = {
@@ -66,33 +68,33 @@ class TransactionItem extends React.Component {
         </div>
         <div className="transaction-detail">
           {
-            (feedType === CREDIT_FEED_TYPES.DEPOSIT || feedType === CREDIT_FEED_TYPES.TRANSACTION) && (
-              <div>
-                <div className="d-table w-100">
-                  <div className="d-table-cell font-weight-bold">
-                    <img src={CRYPTO_ICONS[currency]} width={19} />
-                    <span className="type-order ml-2">{feedType === CREDIT_FEED_TYPES.DEPOSIT ? messages.me.credit.transaction.deposit.title : messages.me.credit.transaction.transaction.title}</span>
-                  </div>
-                  {
-                    subStatus === 'transferring' && (
-                      <div className="d-table-cell text-right">
-                        <img src={iconSpinner} width="14px" />
-                        <span className="status ml-2">{messages.me.credit.transaction.processing}</span>
-                      </div>
-                    )
-                  }
+            <div>
+              <div className="d-table w-100">
+                <div className="d-table-cell font-weight-bold">
+                  <img src={CRYPTO_ICONS[currency]} width={19} />
+                  <span className="type-order ml-2">{feedType === CREDIT_FEED_TYPES.DEPOSIT ? messages.me.credit.transaction.deposit.title :
+                    feedType === CREDIT_FEED_TYPES.TRANSACTION ? messages.me.credit.transaction.transaction.title
+                  : messages.me.credit.transaction.withdraw.title}</span>
                 </div>
-
-                {subStatus === 'transferring' && (
-                  <div className="text-normal mt-2">
-                    <FormattedMessage id="movingCoinToEscrow" values={{}} />
-                  </div>
-                )
+                {
+                  subStatus === 'transferring' && (
+                    <div className="d-table-cell text-right">
+                      <img src={iconSpinner} width="14px" />
+                      <span className="status ml-2">{messages.me.credit.transaction.processing}</span>
+                    </div>
+                  )
                 }
-
-                <hr />
               </div>
-            )
+
+              {feedType === CREDIT_FEED_TYPES.DEPOSIT && subStatus === 'transferring' && (
+                <div className="text-normal mt-2">
+                  <FormattedMessage id="movingCoinToEscrow" values={{}} />
+                </div>
+              )
+              }
+
+              <hr />
+            </div>
           }
 
           {

@@ -9,7 +9,7 @@ class CreditTransaction {
       percentage: data.percentage || '',
       status: data.status || '',
       subStatus: data.sub_status || '',
-      revenue: data.revenue || '',
+      revenue: data.revenue || '0',
       information: data.information || {},
     };
   }
