@@ -865,9 +865,9 @@ export default {
   me: {
     profile: {
       username: {
-        exist: 'Alias already exists',
+        exist: 'Name already exists',
         success: 'Your alias has been recorded',
-        required: 'Alias required',
+        required: 'Name required',
       },
       verify: {
         alert: {
@@ -902,7 +902,7 @@ export default {
       text: {
         verified: 'Verified',
         username: {
-          label: 'Alias',
+          label: 'Name',
           desc1: 'What do they call you?',
           button: {
             submit: 'Save',
