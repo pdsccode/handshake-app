@@ -64,6 +64,8 @@ class TransactionItem extends React.Component {
             year="numeric"
             month="long"
             day="2-digit"
+            hour="2-digit"
+            minute="2-digit"
           />
         </div>
         <div className="transaction-detail">
