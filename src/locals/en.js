@@ -977,8 +977,8 @@ export default {
       withdraw: {
         title: 'Withdraw money',
         yourBalance: 'Your balance (USD)',
-        yourPapalName: 'Your Paypal username',
-        amount: 'Amount',
+        yourPapalName: 'Your Paypal email',
+        amount: 'Amount (USD)',
         buttonTitle: 'Withdraw to your PayPal',
         description: <span>It will take within a day for us <br /> to transfer money into your account.</span>,
         askToWithdraw: 'Do you want to withdraw?',

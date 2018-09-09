@@ -8,7 +8,7 @@ import './Deposit.scss';
 import { fieldInput } from '@/components/core/form/customField';
 import iconPaypal from '@/assets/images/icon/icons8-paypal.svg';
 import { formatMoneyByLocale } from '@/services/offer-util';
-import { isNormalInteger, minValue, number, required } from '@/components/core/form/validation';
+import {email, isNormalInteger, minValue, number, required} from '@/components/core/form/validation';
 import { bindActionCreators } from 'redux';
 import {
   createCreditATM,
@@ -162,7 +162,7 @@ class EscrowWithdraw extends React.Component {
                   className="form-control w-100"
                   type="text"
                   component={fieldInput}
-                  validate={[required]}
+                  validate={[email, required]}
                 />
               </div>
             </div>
@@ -176,6 +176,7 @@ class EscrowWithdraw extends React.Component {
                   type="text"
                   component={fieldInput}
                   validate={[number, required]}
+                  placeholder="0"
                 />
               </div>
             </div>
