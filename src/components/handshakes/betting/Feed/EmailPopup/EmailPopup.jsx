@@ -33,7 +33,6 @@ class EmailPopup extends React.Component {
 
   sendEmail() {
     const { email } = this.state;
-    console.log(email);
     if (!isEmail(email)) {
       this.setState({
         isValidEmail: false,
