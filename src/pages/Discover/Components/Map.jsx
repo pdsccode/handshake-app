@@ -124,7 +124,10 @@ class Map extends React.Component {
           <div className={cx('d-inline-block pl-1', offerStores ? 'w-50' : 'w-100')}>
             <button className="btn btn-block btn-manage-atm" onClick={this.goToManageAtm}>
               <img src={iconManageAtm} width={16} className="mr-2" />
-              <FormattedMessage id="ex.discover.label.manage.atm" />
+              {
+                offerStores ? <FormattedMessage id="ex.discover.label.manage.atm" /> : <FormattedMessage id="ex.discover.label.open.atm" />
+              }
+
             </button>
           </div>
         </div>
