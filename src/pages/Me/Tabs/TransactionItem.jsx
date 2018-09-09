@@ -15,7 +15,7 @@ import {
   URL,
 } from '@/constants';
 import { fieldDropdown, fieldRadioButton } from '@/components/core/form/customField';
-import { FormattedDate, injectIntl } from 'react-intl';
+import {FormattedDate, FormattedMessage, injectIntl} from 'react-intl';
 // components
 import { getDashboardInfo, getListOfferPrice, getOfferStores, reviewOffer } from '@/reducers/exchange/action';
 // style
@@ -85,7 +85,7 @@ class TransactionItem extends React.Component {
 
                 {subStatus === 'transferring' && (
                   <div className="text-normal mt-2">
-                    Be patient - it can take a couple of minutes for your coin to be sent to escrow
+                    <FormattedMessage id="movingCoinToEscrow" values={{}} />
                   </div>
                 )
                 }
