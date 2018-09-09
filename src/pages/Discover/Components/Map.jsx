@@ -11,6 +11,7 @@ import currentLocationIndicator from '@/assets/images/icon/current-location-indi
 import iconManageAtm from '@/assets/images/cash/ic-manage-atm.svg';
 import iconManageDashboard from '@/assets/images/cash/ic-dashboard.svg';
 import { HANDSHAKE_ID, URL } from '@/constants';
+import cx from 'classnames';
 
 class Map extends React.Component {
   constructor(props) {
@@ -56,6 +57,7 @@ class Map extends React.Component {
       curLocation,
       mapCenterLat,
       mapCenterLng,
+      offerStores,
     } = this.props;
     const { curStationIdShowAllDetails } = this.state;
 
@@ -108,13 +110,18 @@ class Map extends React.Component {
           zIndex={-1111}
         />
         <div className="container-button">
-          <div className="d-inline-block w-50 pr-1">
-            <button className="btn bg-white btn-block btn-dashboard" onClick={this.goToDashboard}>
-              <img src={iconManageDashboard} width={16} className="mr-2" />
-              <FormattedMessage id="ex.discover.label.dashboard" />
-            </button>
-          </div>
-          <div className="d-inline-block w-50 pl-1">
+          {
+            offerStores && (
+              <div className="d-inline-block w-50 pr-1">
+                <button className="btn bg-white btn-block btn-dashboard" onClick={this.goToDashboard}>
+                  <img src={iconManageDashboard} width={16} className="mr-2" />
+                  <FormattedMessage id="ex.discover.label.dashboard" />
+                </button>
+              </div>
+            )
+          }
+
+          <div className={cx('d-inline-block pl-1', offerStores ? 'w-50' : 'w-100')}>
             <button className="btn btn-block btn-manage-atm" onClick={this.goToManageAtm}>
               <img src={iconManageAtm} width={16} className="mr-2" />
               <FormattedMessage id="ex.discover.label.manage.atm" />
@@ -128,6 +135,7 @@ class Map extends React.Component {
 
 const mapState = state => ({
   ipInfo: state.app.ipInfo,
+  offerStores: state.exchange.offerStores,
 });
 
 const mapDispatch = dispatch => ({

@@ -26,7 +26,7 @@ import { fieldDropdown, fieldRadioButton } from '@/components/core/form/customFi
 import { change } from 'redux-form';
 import Map from './Components/Map';
 import NavBar from './Components/NavBar';
-import { getFreeStartInfo, getListOfferPrice, setFreeStart } from '@/reducers/exchange/action';
+import {getFreeStartInfo, getListOfferPrice, getOfferStores, setFreeStart} from '@/reducers/exchange/action';
 import { loadDiscoverList } from '@/reducers/discover/action';
 import Image from '@/components/core/presentation/Image';
 import loadingSVG from '@/assets/images/icon/loading.gif';
@@ -130,6 +130,7 @@ class DiscoverPage extends React.Component {
     // this.setState({ sortIndexActive: CASH_SORTING_CRITERIA.DISTANCE });
 
     this.delayedShowMarker();
+    this.getOfferStore();
   }
 
   handleGoToCurrentLocation = () => {
@@ -205,6 +206,13 @@ class DiscoverPage extends React.Component {
     this.modalRef.close();
     this.props.setFreeStart({ data: true });
     this.props.history.push(`${URL.HANDSHAKE_CREATE}?id=${HANDSHAKE_ID.EXCHANGE}`);
+  }
+
+  getOfferStore = () => {
+    const { authProfile } = this.props;
+    this.props.getOfferStores({
+      PATH_URL: `${API_URL.EXCHANGE.OFFER_STORES}/${authProfile.id}`,
+    });
   }
 
   // isEmptyBalance = (item) => {
@@ -434,6 +442,7 @@ const mapDispatch = dispatch => ({
   setFreeStart: bindActionCreators(setFreeStart, dispatch),
   getFreeStartInfo: bindActionCreators(getFreeStartInfo, dispatch),
   showPopupGetGPSPermission: bindActionCreators(showPopupGetGPSPermission, dispatch),
+  getOfferStores: bindActionCreators(getOfferStores, dispatch),
 });
 
 export default injectIntl(connect(mapState, mapDispatch)(DiscoverPage));
