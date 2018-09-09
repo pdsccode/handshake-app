@@ -71,8 +71,8 @@ const FormSpecificAmount = createForm({
     form: nameFormSpecificAmount,
     initialValues: {
       currency: {
-        id: CRYPTO_CURRENCY.ETH,
-        text: <span><img src={iconEthereum} width={22} /> {CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.ETH]}</span>,
+        id: CRYPTO_CURRENCY.BTC,
+        text: <span><img src={iconBitcoin} width={22} /> {CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.BTC]}</span>,
       },
       fiatCurrency: {
         id: FIAT_CURRENCY.USD,
@@ -100,7 +100,7 @@ class FeedCreditCard extends React.Component {
       hasSelectedCoin: false,
       isNewCCOpen: true,
       amount: 0,
-      currency: CRYPTO_CURRENCY.ETH,
+      currency: CRYPTO_CURRENCY.BTC,
       fiatAmount: 0,
       fiatCurrency: FIAT_CURRENCY.USD,
       cryptoPrice: this.props.cryptoPrice,
