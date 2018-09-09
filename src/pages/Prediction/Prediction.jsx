@@ -83,7 +83,7 @@ class Prediction extends React.Component {
   }
 
   handleScroll = () => {
-    //this.showLuckyPool();
+    this.showLuckyPool();
   };
   didPlaceOrder = (isFree)=> {
     this.closeOrderPlace();
@@ -374,7 +374,7 @@ class Prediction extends React.Component {
     return (
       <div className={Prediction.displayName}>
         <Loading isLoading={props.isLoading} />
-        {/*this.renderShareToWin()*/}
+        {this.renderShareToWin()}
         <PexCreateBtn />
         {this.renderEventList(props)}
         {this.renderBetMode(props, state)}
