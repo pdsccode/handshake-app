@@ -71,7 +71,7 @@ const CASH_TAB = {
 const CATEGORIES = [
   {
     value: HANDSHAKE_ID.CREDIT,
-    text: 'Credit',
+    text: 'CC',
     priority: 0,
   },
   {
