@@ -162,6 +162,12 @@ class Asset extends React.Component {
             <span className="ml-1 text-normal">{CRYPTO_CURRENCY_NAME[currency]}</span>
           </div>
           <div className="mt-4">
+            {subStatus === 'transferring' && (
+              <div className="text-normal mt-2">
+                <FormattedMessage id="movingCoinToEscrow" values={{}} />
+              </div>
+            )
+            }
             <div className="d-table w-100 mt-2">
               <div className="d-table-cell text-normal">
                 <FormattedMessage id="dashboard.label.amountSold" />
