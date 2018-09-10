@@ -2,14 +2,23 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { URL } from '@/constants';
-import MultiLanguage from '@/components/core/controls/MultiLanguage';
+// import MultiLanguage from '@/components/core/controls/MultiLanguage';
 import meIcon from '@/assets/images/navigation/ic_private.svg.raw';
+import walletIcon from '@/assets/images/navigation/ic_wallet.svg.raw';
 import predictionIcon from '@/assets/images/categories/chip.svg';
 
 function Me() {
   return (
     <Link to={URL.HANDSHAKE_ME_INDEX} className="me-icon">
       <div dangerouslySetInnerHTML={{ __html: meIcon }} />
+    </Link>
+  );
+}
+
+function Wallet() {
+  return (
+    <Link to={URL.HANDSHAKE_WALLET_INDEX}>
+      <div dangerouslySetInnerHTML={{ __html: walletIcon }} />
     </Link>
   );
 }
@@ -29,7 +38,8 @@ function HeaderBar(props) {
     <div className={className}>
       {Me()}
       {Caption(titleBar)}
-      <MultiLanguage />
+      {/* <MultiLanguage /> */}
+      {Wallet()}
     </div>
   );
 }
