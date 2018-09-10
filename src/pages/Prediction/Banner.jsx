@@ -4,7 +4,7 @@ import Image from '@/components/core/presentation/Image';
 import { URL } from '@/constants';
 import { Link } from 'react-router-dom';
 
-import BannerSVG from '@/assets/images/banner/banner_bg.svg';
+import BannerBG from '@/assets/images/banner/banner_bg.png';
 
 import './Banner.scss';
 
@@ -14,7 +14,7 @@ class Banner extends React.Component {
     const text = `Let's get this crystal ball`;
     return (
       <div className="ShareToWinContainer">
-        <Image className="ShareToWin" src={BannerSVG} alt="banner" />
+        <Image className="ShareToWin" src={BannerBG} alt="banner" />
         <div className="ShareToWinTitle">
           <div >
             {text}
