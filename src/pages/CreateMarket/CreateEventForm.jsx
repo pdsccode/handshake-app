@@ -139,7 +139,7 @@ class CreateEventForm extends Component {
           name="eventName"
           className="form-group"
           fieldClass="form-control"
-          placeholder="Choose an Event or Create a new one"
+          placeholder="Choose an event or create a new one"
           onSelect={props.onSelect}
           source={props.eventList}
           validate={required}
