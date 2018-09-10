@@ -422,6 +422,38 @@ export class MasterWallet {
       return listWallet;
     }
 
+    static getWallets(coinName = '') {
+      const wallets = localStore.get(MasterWallet.KEY);
+
+      if (wallets === false) return false;
+
+      const BreakException = {};
+      let result = [];
+      try {
+        if (coinName !== '') {
+          let wallet = false;
+          wallets.forEach((walletJson) => {
+            if (coinName === walletJson.name) {
+              if (process.env.isLive) {
+                if (walletJson.network === MasterWallet.ListCoin[walletJson.className].Network.Mainnet) {
+                  result.push(MasterWallet.convertObject(walletJson));
+                }
+              } else {
+                result.push(MasterWallet.convertObject(walletJson));
+              }
+            }
+          });
+        }
+        else {
+          result.push(MasterWallet.convertObject(walletJson));
+        }
+      } catch (e) {
+        if (e !== BreakException) throw e;
+      }
+
+      return result;
+    }
+
     // Get list wallet from store local:
     static getWalletDefault(coinName = '') {
       const wallets = localStore.get(MasterWallet.KEY);
@@ -518,7 +550,7 @@ export class MasterWallet {
         if (walletJson.isCollectibles) wallet.isCollectibles = walletJson.isCollectibles;
         if (walletJson.secret) wallet.secret = walletJson.secret;
         if (walletJson.publicKey) wallet.publicKey = walletJson.publicKey;
-
+        if (walletJson.hideBalance) wallet.hideBalance = walletJson.hideBalance;    
 
         return wallet;
       } catch (e) {
@@ -574,7 +606,7 @@ export class MasterWallet {
           }
         }
       } catch (e) {
-        console.log('Wallet is invaild', e);
+        //console.log('Wallet is invaild', e);
       }
       return false;
     }
@@ -633,7 +665,7 @@ export class MasterWallet {
     }
 
     static log(data, key = MasterWallet.KEY) {
-      console.log(`%c ${StringHelper.format('{0}: ', key)}`, 'background: #222; color: #bada55', data);
+      //console.log(`%c ${StringHelper.format('{0}: ', key)}`, 'background: #222; color: #bada55', data);
     }
 }
 
