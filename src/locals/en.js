@@ -1332,6 +1332,8 @@ export default {
           no_trans: "No transactions yet",
           no_internal_trans: "No internal transactions yet",
           coming_soon: "Coming soon ...",
+          send: "Send",
+          receive: "Receive",
         },
       },
     },
