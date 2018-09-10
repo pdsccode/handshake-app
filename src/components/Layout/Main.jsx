@@ -5,7 +5,7 @@ import BrowserDetect from '@/services/browser-detect';
 import { updateModal } from '@/reducers/app/action';
 // components
 import MainHeader from '@/components/Header/MainHeader';
-import Navigation from '@/components/core/controls/Navigation/Navigation';
+import Navigation from '@/components/core/controls/Navigation/NewNavigation';
 import Alert from '@/components/core/presentation/Alert';
 import Loading from '@/components/core/controls/Loading';
 import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';

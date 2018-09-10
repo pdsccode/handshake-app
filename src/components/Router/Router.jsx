@@ -43,7 +43,8 @@ const RouterReport = createDynamicImport(() => import('@/components/Router/Repor
 const RouterLuckyPool = createDynamicImport(() => import('@/pages/LuckyLanding/LuckyLanding'), Loading);
 const RouterExchange = createDynamicImport(() => import('@/components/Router/Exchange'), Loading);
 const CreateOwnMarket = createDynamicImport(() => import('@/pages/CreateMarket/CreateMarket'), Loading);
-const RouterPrediction = createDynamicImport(() => import('@/pages/Exchange/Exchange'), Loading);
+//const RouterExchange = createDynamicImport(() => import('@/pages/Exchange/Exchange'), Loading);
+const RouterPrediction = createDynamicImport(() => import('@/pages/Prediction/Prediction'), Loading);
 const RouterResolve = createDynamicImport(() => import('@/pages/Resolve/Resolve'), Loading);
 const RouterLandingPageMain = createDynamicImport(() => import('@/pages/LandingPage/Main'), Loading);
 const LandingPageMain = createDynamicImport(() => import('@/pages/LandingPage/Main'), Loading);
@@ -57,15 +58,19 @@ const ContentForPrediction = createDynamicImport(() => import('@/pages/LandingPa
 const ContentForPexInstruction = createDynamicImport(() => import('@/pages/LandingPage/ContentForPexInstruction'), Loading);
 const Discover = createDynamicImport(() => import('@/pages/Discover/Discover'), Loading);
 const RouterCCConfirm = createDynamicImport(() => import('@/components/Router/CCConfirm'), Loading);
-const RouterBuyCC = createDynamicImport(() => import('@/components/handshakes/exchange/Feed/FeedCreditCard'), Loading);
+const RouterBuyCC = createDynamicImport(() => import('@/components/Router/Credit'), Loading);
+const RouterEscrowDeposit = createDynamicImport(() => import('@/pages/Escrow/Deposit'), Loading);
+const RouterEscrowWithdraw = createDynamicImport(() => import('@/pages/Escrow/Withdraw'), Loading);
+const RouterEscrowWithdrawSuccess = createDynamicImport(() => import('@/pages/Escrow/WithdrawSuccess'), Loading);
 
 
 /* ======================== FOR MOBILE ======================== */
 const configRoutesUsingMobileLayout = [
   { path: URL.HANDSHAKE_ME, component: RouterMe },
-  { path: URL.HANDSHAKE_PREDICTION, component: RouterExchange },
-  { path: URL.HANDSHAKE_EXCHANGE, component: RouterExchange },
-  { path: URL.HANDSHAKE_CASH, component: RouterExchange },
+  { path: URL.HANDSHAKE_PREDICTION, component: RouterPrediction },
+  // { path: URL.HANDSHAKE_EXCHANGE, component: RouterExchange },
+  // { path: URL.HANDSHAKE_DISCOVER, component: RouterDiscover },
+  { path: URL.HANDSHAKE_CASH, component: RouterDiscover },
   { path: URL.HANDSHAKE_CHAT, component: RouterChat },
   { path: URL.HANDSHAKE_WALLET, component: RouterWallet },
   { path: URL.HANDSHAKE_PAYMENT, component: RouterPayment },
@@ -79,6 +84,9 @@ const configRoutesUsingMobileLayout = [
   { path: URL.BUY_BY_CC_URL, component: RouterBuyCC },
   { path: URL.PEX_INSTRUCTION_URL, component: ContentForPexInstruction },
 
+  { path: URL.ESCROW_DEPOSIT, component: RouterEscrowDeposit },
+  { path: URL.ESCROW_WITHDRAW, component: RouterEscrowWithdraw, exact: true },
+  { path: URL.ESCROW_WITHDRAW_SUCCESS, component: RouterEscrowWithdrawSuccess },
   {
     path: URL.PRODUCT_DAD_URL,
     render: () => {
@@ -159,7 +167,10 @@ class Router extends React.Component {
     return (
       <BrowserRouter>
         <Switch>
-          <Route exact path={URL.INDEX} component={RouterLandingPageMain} />
+          {
+            BrowserDetect.isDesktop && <Route exact path={URL.INDEX} component={RouterLandingPageMain} />
+          }
+
           <Route path={LANDING_PAGE_TYPE.product.url} render={() => <LandingPageMain type="product" />} />
           <Route path={LANDING_PAGE_TYPE.research.url} render={() => <LandingPageMain type="research" />} />
           <Route exact path={URL.RECRUITING} component={Recruiting} />
@@ -182,6 +193,10 @@ class Router extends React.Component {
                       : (
                         <ScrollToTop>
                           <Switch>
+                            <Route exact path={URL.INDEX} render={() => {
+                              return <Redirect to={{ pathname: URL.BUY_BY_CC_URL }} />
+                            }}
+                            />
                             {/*<Route*/}
                             {/*exact*/}
                             {/*path={URL.INDEX}*/}

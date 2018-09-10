@@ -99,7 +99,7 @@ export class BitcoinCash extends Bitcoin {
           const rawTx = transaction.serialize();
           const txHash = await this.sendRawTx(rawTx);
 
-          return { status: 1, message: 'messages.bitcoin.success.transaction' };
+          return { status: 1, message: 'messages.bitcoin.success.transaction', data: { hash: txHash.txid } };
         }
 
         return { status: 0, message: 'messages.bitcoin.error.insufficient' };

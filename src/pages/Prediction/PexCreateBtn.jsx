@@ -28,10 +28,10 @@ class PexCreateBtn extends Component {
       <div id="PexCreateBtn">
         <div className="Idea">
           <img src={IconIdea} alt="" className="IconIdea" />
-          <span>Got your own idea?</span>
+          <span>Got an idea?</span>
         </div>
         <Link to={{ pathname: URL.HANDSHAKE_PEX_CREATOR }}>
-          <button className="btn btn-report">Create now</button>
+          <button className="btn btn-report">Create a bet</button>
         </Link>
       </div>
     );

@@ -18,22 +18,18 @@ import taggingConfig from '@/services/tagging-config';
 import FeedCreditCard from '@/components/handshakes/exchange/Feed/FeedCreditCard';
 import ReportPopup from '@/components/handshakes/betting/Feed/ReportPopup';
 import { FREE_BET_STATUS } from '@/components/handshakes/betting/constants';
+import { predictionStatistics } from '@/components/handshakes/betting/Feed/OrderPlace/action';
 
 import Banner from '@/pages/Prediction/Banner';
 import { injectIntl } from 'react-intl';
 import { URL } from '@/constants';
-import { Link } from 'react-router-dom';
 import { eventSelector, isLoading, showedLuckyPoolSelector, isSharePage, countReportSelector, checkFreeBetSelector, checkExistSubcribeEmailSelector } from './selector';
-import { loadMatches, updateShowedLuckyPool, getReportCount, removeExpiredEvent, checkFreeBet, checkExistSubcribeEmail } from './action';
+import { loadMatches, getReportCount, removeExpiredEvent, checkFreeBet, checkExistSubcribeEmail } from './action';
 
 import EventItem from './EventItem';
 import PexCreateBtn from './PexCreateBtn';
-import local from '@/services/localStore';
-import { APP } from '@/constants';
-import _ from 'lodash';
 
 import './Prediction.scss';
-import { BETTING_RESULT } from '@/components/handshakes/betting/constants';
 
 class Prediction extends React.Component {
   static displayName = 'Prediction';
@@ -49,7 +45,7 @@ class Prediction extends React.Component {
 
   static defaultProps = {
     eventList: [],
-    emailExist: 0
+    emailExist: 0,
   };
 
   constructor(props) {
@@ -85,18 +81,18 @@ class Prediction extends React.Component {
   handleScroll = () => {
     this.showLuckyPool();
   };
-  didPlaceOrder = (isFree)=> {
+
+  didPlaceOrder = (isFree) => {
     this.closeOrderPlace();
     if (!this.props.isExistEmail) {
       this.modalEmailPopupRef.open();
-    }else {
+    } else {
       isFree ? this.modalLuckyFree.open() : this.modalLuckyReal.open();
-
     }
   }
 
   checkFreeAvailabe(props) {
-    const { freeBet={} } = props;
+    const { freeBet = {} } = props;
     const { free_bet_available: freeAvailable = 0, last_item: lastItem = {} } = freeBet;
     const { status } = lastItem;
     let isFreeAvailable = false;
@@ -138,13 +134,12 @@ class Prediction extends React.Component {
   checkShowFreeBetPopup(props) {
     const isFreeAvailable = this.checkFreeAvailabe(props);
     const { freeBet } = props;
-    const { free_bet_available: freeAvailable = 0} = freeBet;
+    const { free_bet_available: freeAvailable = 0 } = freeBet;
 
     const key = `showedFreebet${freeAvailable}`;
     const isShowed = localStorage.getItem(key);
 
     if (isFreeAvailable && !isShowed) {
-
       const { isOrderOpening, shouldShowFreePopup } = this.state;
       const { last_item: lastItem = {} } = freeBet;
       const { is_win: isWin, status } = lastItem;
@@ -161,7 +156,6 @@ class Prediction extends React.Component {
         });
       }
     }
-
   }
 
   handleClickEventItem = (props, itemData) => {
@@ -188,6 +182,11 @@ class Prediction extends React.Component {
       isOrderOpening: true,
     });
 
+    if (selectedOutcome) {
+      const outcomeId = { outcome_id: selectedOutcome.id };
+      this.props.dispatch(predictionStatistics({ outcomeId }));
+    }
+
     // send event tracking
     try {
       GA.clickChooseAnOutcome(event.name, itemData.name);
@@ -197,7 +196,36 @@ class Prediction extends React.Component {
   };
 
   handleBetFail = () => {
-      this.modalOuttaMoney.open();
+    this.modalOuttaMoney.open();
+  }
+
+  closeFillCoin = () => {
+    this.setState({ modalFillContent: '' });
+  }
+
+  afterWalletFill = () => {
+    this.modalFillRef.close();
+  }
+
+  showPopupCreditCard = () => {
+    this.modalOuttaMoney.close();
+    const { messages } = this.props.intl;
+    this.setState({
+      modalFillContent:
+        (
+          <FeedCreditCard
+            buttonTitle={messages.create.cash.credit.title}
+            callbackSuccess={this.afterWalletFill}
+          />
+        ),
+    }, () => {
+      this.modalFillRef.open();
+
+      gtag.event({
+        category: taggingConfig.creditCard.category,
+        action: taggingConfig.creditCard.action.showPopupPrediction,
+      });
+    });
   }
 
   renderEventList = (props) => {
@@ -217,12 +245,6 @@ class Prediction extends React.Component {
       </div>
     );
   };
-
-  renderShareToWin = () => {
-    return (
-      <Banner />
-    );
-  }
 
   renderBetMode = (props, state) => {
     const isFreeAvailable = this.checkFreeAvailabe(props);
@@ -321,31 +343,6 @@ class Prediction extends React.Component {
     );
   };
 
-  afterWalletFill = () => {
-    this.modalFillRef.close();
-  }
-
-  showPopupCreditCard = () => {
-    this.modalOuttaMoney.close();
-    const { messages } = this.props.intl;
-    this.setState({
-      modalFillContent:
-        (
-          <FeedCreditCard
-            buttonTitle={messages.create.cash.credit.title}
-            callbackSuccess={this.afterWalletFill}
-          />
-        ),
-    }, () => {
-      this.modalFillRef.open();
-
-      gtag.event({
-        category: taggingConfig.creditCard.category,
-        action: taggingConfig.creditCard.action.showPopupPrediction
-      });
-    });
-  }
-
   renderCreditCard = () => {
     const { messages } = this.props.intl;
     const { modalFillContent } = this.state;
@@ -356,25 +353,12 @@ class Prediction extends React.Component {
     );
   }
 
-  closeFillCoin = () => {
-    this.setState({ modalFillContent: '' });
-  }
-
   renderComponent = (props, state) => {
-    if (1) {
-      /*
-      return (
-        <div className="Maintenance">
-          <p>The site is down a bit of maintenance right now.</p>
-          <p>But soon we will be up and the sun will shine again.</p>
-        </div>
-      );*/
-    }
     this.checkShowFreeBetPopup(props);
     return (
       <div className={Prediction.displayName}>
         <Loading isLoading={props.isLoading} />
-        {this.renderShareToWin()}
+        {/*<Banner />*/}
         <PexCreateBtn />
         {this.renderEventList(props)}
         {this.renderBetMode(props, state)}
