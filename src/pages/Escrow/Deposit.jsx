@@ -216,25 +216,31 @@ class EscrowDeposit extends React.Component {
       if (amount && amount.trim().length > 0) {
         result = ! (await this.showNotEnoughCoinAlert(amount, currency));
 
+        console.log('checkBalance result  ', currency, result);
+
         if (!result) {
           break;
         }
       }
     }
 
+    console.log('checkBalance result out ', result);
     return result;
   }
 
   showNotEnoughCoinAlert = async (amount, currency) => {
     const wallet = MasterWallet.getWalletDefault(currency);
     const balance = await wallet.getBalance();
-    const fee = await wallet.getFee(NB_BLOCKS, true);
+    const fee = await wallet.getFee(NB_BLOCKS, true) || 0;
 
     const bnBalance = new BigNumber(balance);
     const bnAmount = new BigNumber(amount);
     const bnFee = new BigNumber(fee);
 
     const condition = bnBalance.isLessThan(bnAmount.plus(bnFee));
+    console.log('showNotEnoughCoinAlert wallet', wallet);
+
+    console.log('showNotEnoughCoinAlert ', currency, condition, balance, amount, fee);
 
     if (condition) {
       this.props.showAlert({
@@ -267,6 +273,8 @@ class EscrowDeposit extends React.Component {
     }
 
     const isEnough = await this.checkBalance(values);
+
+    console.log('handleOnSubmit isEnough', isEnough);
 
     if (!isEnough) {
       return;
