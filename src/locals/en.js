@@ -298,7 +298,7 @@ export default {
   'cc.label.1': 'Buy crypto with credit card',
   'cc.label.2': 'Ninja has some of the best prices around',
   'cc.label.3': 'Common packages:',
-  'cc.btn.buyNow': 'Buy now',
+  'cc.btn.buyNow': 'Select',
   'cc.btn.payNow': 'Pay now',
   'cc.label.basic': 'Basic',
   'cc.label.pro': 'Pro',

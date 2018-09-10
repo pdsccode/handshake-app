@@ -59,6 +59,12 @@ const listCurrency = Object.values(CRYPTO_CURRENCY_CREDIT_CARD).map((item) => {
   return { id: item, text: <span><img src={CRYPTO_ICONS[item]} width={24} /> {CRYPTO_CURRENCY_NAME[item]}</span> };
 });
 
+const listPackages = {
+  [CRYPTO_CURRENCY.ETH]: [{ name: 'basic', amount: 0.1 }, { name: 'pro', amount: 0.4 }],
+  [CRYPTO_CURRENCY.BTC]: [{ name: 'basic', amount: 0.01 }, { name: 'pro', amount: 0.015 }],
+  BCH: [{ name: 'basic', amount: 0.1 }, { name: 'pro', amount: 0.15 }],
+};
+
 const listFiatCurrency = [
   {
     id: FIAT_CURRENCY.USD,
@@ -107,7 +113,6 @@ class FeedCreditCard extends React.Component {
       fiatAmount: 0,
       fiatCurrency: FIAT_CURRENCY.USD,
       cryptoPrice: this.props.cryptoPrice,
-      packages: [],
     };
   }
 
@@ -134,10 +139,10 @@ class FeedCreditCard extends React.Component {
       rfChange(nameFormSpecificAmount, 'currency', item);
 
       this.setState({ currency: currencyForced }, () => {
-        this.getCryptoPriceByAmount(1);
+        // this.getCryptoPriceByAmount(1);
       });
     } else {
-      this.getCryptoPriceByAmount(1);
+      // this.getCryptoPriceByAmount(1);
     }
 
     this.props.getCcLimits({ PATH_URL: API_URL.EXCHANGE.GET_CC_LIMITS });
@@ -182,7 +187,7 @@ class FeedCreditCard extends React.Component {
     console.log('onAmountChange', fiatAmount);
     rfChange(nameFormSpecificAmount, 'fiatAmount', fiatAmount);
 
-    this.generatePackages(cryptoPrice);
+    // this.generatePackages(cryptoPrice);
 
     //
     // const amoutWillUse = new BigNumber(userCcLimit.amount).plus(new BigNumber(cryptoPrice.fiatAmount)).toNumber();
@@ -531,37 +536,35 @@ class FeedCreditCard extends React.Component {
     rfChange(nameFormSpecificAmount, 'amount', newAmount);
   }
 
-  generatePackages = (cryptoPrice) => {
-    const { currency } = this.state;
-    const moneyPackages = [{ name: 'basic', fiatAmount: 99 }, { name: 'pro', fiatAmount: 199 }];
-
-    const packages = moneyPackages.map((item) => {
-      const { name, fiatAmount } = item;
-
-      let newAmount = fiatAmount * cryptoPrice.amount / cryptoPrice.fiatAmount;
-      newAmount = (new BigNumber(newAmount).decimalPlaces(6)).toNumber();
-
-      return {
-        name,
-        price: `$${fiatAmount}`,
-        amountText: `${newAmount} ${currency}`,
-        amount: newAmount.toString(),
-        fiatAmount: fiatAmount.toString(),
-        currency,
-        fiatCurrency: FIAT_CURRENCY.USD,
-      };
-    });
-
-    this.setState({ packages });
-  }
+  // generatePackages = (cryptoPrice) => {
+  //   const { currency } = this.state;
+  //   const moneyPackages = [{ name: 'basic', fiatAmount: 99 }, { name: 'pro', fiatAmount: 199 }];
+  //
+  //   const packages = moneyPackages.map((item) => {
+  //     const { name, fiatAmount } = item;
+  //
+  //     let newAmount = fiatAmount * cryptoPrice.amount / cryptoPrice.fiatAmount;
+  //     newAmount = (new BigNumber(newAmount).decimalPlaces(6)).toNumber();
+  //
+  //     return {
+  //       name,
+  //       price: `$${fiatAmount}`,
+  //       amountText: `${newAmount} ${currency}`,
+  //       amount: newAmount.toString(),
+  //       fiatAmount: fiatAmount.toString(),
+  //       currency,
+  //       fiatCurrency: FIAT_CURRENCY.USD,
+  //     };
+  //   });
+  //
+  //   this.setState({ packages });
+  // }
 
   handleBuyPackage = (item) => {
-    const {
-      amount, fiatAmount, currency, fiatCurrency,
-    } = item;
-    this.setState({
-      hasSelectedCoin: true, amount, fiatAmount, currency, fiatCurrency,
-    }, () => {
+    const { rfChange } = this.props;
+    const { amount } = item;
+    rfChange(nameFormSpecificAmount, 'amount', amount);
+    this.setState({ amount }, () => {
       this.getCryptoPriceByAmount(amount);
     });
   }
@@ -570,7 +573,9 @@ class FeedCreditCard extends React.Component {
     const { hasSelectedCoin } = this.state;
     const { intl, isPopup } = this.props;
     const { amount } = this.props;
-    const { currency, packages } = this.state;
+    const { currency } = this.state;
+
+    const packages = listPackages[currency];
 
     return !hasSelectedCoin ? (
       <div className="choose-coin">
@@ -635,9 +640,9 @@ class FeedCreditCard extends React.Component {
           <div className="my-3 p-label-choose"><FormattedMessage id="cc.label.3" /></div>
           <div className="mb-5">
             {
-              packages.map((item, index) => {
+              packages && packages.map((item, index) => {
                 const {
-                  name, price, amountText, saving,
+                  name, amount,
                 } = item;
                 return (
                   <div key={name}>
@@ -646,15 +651,15 @@ class FeedCreditCard extends React.Component {
                         <div className={`package p-${name}`}><FormattedMessage id={`cc.label.${name}`} /></div>
                       </div>
                       <div className="d-table-cell align-middle pl-3">
-                        <div className="p-price">
+                        {/*<div className="p-price">
                           {price}
                           {
                             saving && (
                               <span className="p-saving"><FormattedMessage id="cc.label.saving" values={{ percentage: saving }} /></span>
                             )
                           }
-                        </div>
-                        <div className="p-amount">{amountText}</div>
+                        </div>*/}
+                        <div className="p-price">{amount} {currency}</div>
                       </div>
                       <div className="d-table-cell align-middle text-right">
                         <button className="btn btn-p-buy-now" onClick={() => this.handleBuyPackage(item)}><FormattedMessage id="cc.btn.buyNow" /></button>
