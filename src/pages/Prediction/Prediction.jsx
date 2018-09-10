@@ -246,12 +246,6 @@ class Prediction extends React.Component {
     );
   };
 
-  renderShareToWin = () => {
-    return (
-      <Banner />
-    );
-  }
-
   renderBetMode = (props, state) => {
     const isFreeAvailable = this.checkFreeAvailabe(props);
     return (
@@ -360,20 +354,11 @@ class Prediction extends React.Component {
   }
 
   renderComponent = (props, state) => {
-    if (1) {
-      /*
-      return (
-        <div className="Maintenance">
-          <p>The site is down a bit of maintenance right now.</p>
-          <p>But soon we will be up and the sun will shine again.</p>
-        </div>
-      );*/
-    }
     this.checkShowFreeBetPopup(props);
     return (
       <div className={Prediction.displayName}>
         <Loading isLoading={props.isLoading} />
-        {this.renderShareToWin()}
+        {/*<Banner />*/}
         <PexCreateBtn />
         {this.renderEventList(props)}
         {this.renderBetMode(props, state)}
