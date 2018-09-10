@@ -275,7 +275,7 @@ class Payment extends React.Component {
   }
 
   closeChooseCrypto = () => {
-    if(this.state.fullBackUrl){
+    if(this.state.fullBackUrl && this.state.modalChooseCrypto){
       window.location.href = this.state.fullBackUrl;
     }
     else{
