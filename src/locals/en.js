@@ -13,6 +13,10 @@ export default {
       exchanges: 'Exchanges',
       whisper: 'Whisper',
       wallet: 'Wallet',
+      setting: 'Setting',
+      atm: 'ATM',
+      bet: 'Bet',
+      credit: 'CC'
     },
   },
   buy: 'Buy',
@@ -106,7 +110,9 @@ export default {
   'ex.discover.label.priceSell': 'SELL',
   'ex.discover.label.reviews': '({reviewCount})',
   'ex.discover.banner.text': 'Got coins? Turn them into a money-making machine.',
+  'ex.credit.banner.text': 'Sell crypto quickly online. 100% secure. Set your own rates',
   'ex.discover.banner.btnText': 'BECOME AN ATM',
+  'ex.credit.banner.btnText': 'SELL CRYPTO NOW',
   'ex.discover.shakeDetail.label.amount': 'Amount',
   'ex.discover.shakeDetail.label.total': 'Total',
   'ex.discover.shakeDetail.label.maximum': 'Maximum:',
@@ -215,6 +221,10 @@ export default {
   'ex.error.320': 'The early bird program has ended, please cash in to trade with us.',
   'ex.error.322': 'Your information is incorrect. Please input again',
   'ex.error.323': 'Exceeding global credit limit. Please try again tomorrow.',
+  'ex.error.324': 'Credit exists',
+  'ex.error.325': 'Credit price changed',
+  'ex.error.326': 'Credit out of stock',
+  'ex.error.327': 'Credit item status is invalid',
   'ex.error.default': 'Oops! Something went wrong.',
 
   'ex.earlyBird.label.1': 'WELCOME TO OUR <br/> EARLY BIRD PROGRAM!',
@@ -228,7 +238,10 @@ export default {
   'error.requiredOne': 'You need to fill in one of these!',
   'error.greaterThan': 'Must be greater than {min}',
   'error.lessThan': 'Must be less than {max}',
+  'error.greaterThan.equal': 'Must be equal or greater than {min}',
+  'error.lessThan.equal': 'Must be less than or equal {max}',
   'error.mustBeANumber': 'Must be a number',
+  'error.mustBeAPositiveInteger': 'Must be a integer number greater or equal 0',
 
   'btn.initiate': 'Initiate',
   'btn.shake': 'Shake',
@@ -276,11 +289,14 @@ export default {
   'ex.sort.price.sell.btc': 'Sell BTC',
   'ex.sort.price.buy.eth': 'Buy ETH',
   'ex.sort.price.sell.eth': 'Sell ETH',
+  'ex.discover.label.open.atm': 'Open ATM',
+  'ex.discover.label.manage.atm': 'Manage ATM',
+  'ex.discover.label.dashboard': 'Dashboard',
   product_info: 'Ninja is open-source, decentralized software that never holds your funds. By freely choosing to use Ninja, the user accepts sole responsibility for their behavior and agrees to abide by the legalities of their governing jurisdiction. Ninja cannot be liable for legal, monetary or psychological damages should you do something stupid. Never invest more than you are willing to lose. Play safe!',
 
-  'cc.label.1': 'Buy a specific amount',
-  'cc.label.2': 'We sell coins at a reasonable price',
-  'cc.label.3': 'Or choose one of our packages:',
+  'cc.label.1': 'Buy crypto with credit card',
+  'cc.label.2': 'Ninja has some of the best prices around',
+  'cc.label.3': 'Common packages:',
   'cc.btn.buyNow': 'Buy now',
   'cc.btn.payNow': 'Pay now',
   'cc.label.basic': 'Basic',
@@ -294,6 +310,36 @@ export default {
   'cc.label.email': 'Email',
   'cc.label.email.hint': 'Just for receiving receipt',
 
+  'escrow.label.depositCoin': 'Sell crypto online',
+  'escrow.label.iWantTo': 'Deposit any amount of crypto into escrow and enter your percentage',
+  'escrow.label.price': 'Price',
+  'escrow.label.percentage': 'Percentage',
+  'escrow.label.howToCalculatePrice': 'How do I calculate my percentage?',
+  'escrow.label.yourSellingPrice': 'Your selling price',
+  'escrow.label.sellingPriceCaption': '= Market price + your percentage',
+  'escrow.btn.depositNow': 'Deposit now',
+  'escrow.btn.depositSuccessMessage': 'Deposit success',
+  'escrow.label.wallet.setDefaultWallet': 'You must set default wallet {currency}',
+
+  'dashboard.heading': 'Dashboard',
+  'dashboard.label.overview': 'Overview',
+  'dashboard.label.transaction': 'Transaction',
+  'dashboard.label.manageAssets': 'Manage assets',
+  'dashboard.btn.deactivate': 'Pause',
+  'dashboard.btn.reactivate': 'Activate',
+  'dashboard.btn.depositing': 'Depositing...',
+  'dashboard.btn.topUpByCC': 'Top up ATM with credit card',
+  'dashboard.btn.scanQRCode': 'Scan QR code',
+  'dashboard.btn.depositEscrow': 'Deposit to Escrow',
+  'dashboard.btn.withdrawEscrow': 'Withdraw',
+  'dashboard.label.amountSold': 'Crypto sold',
+  'dashboard.label.amountLeft': 'Crypto remaining',
+  'dashboard.label.currentPrice': 'Current price ({currency}/{fiatCurrency})',
+  'dashboard.label.revenue': 'Revenue (USD)',
+  'dashboard.label.yourBalance': 'Your balance (USD)',
+  'dashboard.label.or': 'or',
+  'dashboard.label.deposit.description1': 'Need even more security? Use Escrow. ',
+  'dashboard.label.deposit.description2': 'Fraud-proof. 100% secured. Safety guaranteed.',
 
   'askLocationPermission.label.1': 'We would like to access your location to find nearest ATMs around you!',
   'askLocationPermission.label.2': `<span>Please click <strong>"Allow"</strong> to start trading now!</span>`,
@@ -824,9 +870,9 @@ export default {
   me: {
     profile: {
       username: {
-        exist: 'Alias already exists',
+        exist: 'Name already exists',
         success: 'Your alias has been recorded',
-        required: 'Alias required',
+        required: 'Name required',
       },
       verify: {
         alert: {
@@ -861,7 +907,7 @@ export default {
       text: {
         verified: 'Verified',
         username: {
-          label: 'Alias',
+          label: 'Name',
           desc1: 'What do they call you?',
           button: {
             submit: 'Save',
@@ -910,6 +956,52 @@ export default {
         dashboard: 'Dashboard',
         buyMoreCoin: 'Buy more coins now',
       }
+    },
+    credit: {
+      overview: {
+        askToDeactive: 'Pause your coin selling?',
+        messageDeactiveSuccess: 'Pause successfully',
+      },
+      transaction: {
+        amount: 'Amount',
+        processing: 'Processing...',
+        deposit: {
+          title: 'DEPOSIT',
+          percentage: 'Percentage',
+        },
+        withdraw: {
+          title: 'WITHDRAW',
+          toAccount: 'To Account',
+        },
+        transaction: {
+          title: 'SELLING ORDER',
+          selling: 'Selling',
+          receiving: 'Receiving',
+        },
+        instant: {
+          title: 'PURCHASE ORDER',
+          buying: 'Buying',
+          cost: 'Cost',
+        },
+      },
+      withdraw: {
+        title: 'Withdraw money',
+        yourBalance: 'Your balance (USD)',
+        yourPapalName: 'Your Paypal email',
+        amount: 'Amount (USD)',
+        buttonTitle: 'Withdraw to your PayPal',
+        description: <span>It will take within a day for us <br /> to transfer money into your account.</span>,
+        askToWithdraw: 'Do you want to withdraw?',
+        validate: {
+          amountMustLargerThan0: 'Amount must larger than 0',
+          amountMustLessThanBalance: 'Amount must not larger than your balance',
+        }
+      },
+      withdrawSuccess: {
+        description: 'Withdraw successfully!',
+        descriptionTransfer: 'We will make the transfer very shortly within 24 hours',
+        buttonTitle: 'Back to your dashboard',
+      },
     },
   },
 
