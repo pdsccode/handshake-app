@@ -332,6 +332,7 @@ submitSendCoin=()=>{
         if (success.hasOwnProperty('status')){
           if (success.status == 1){
             this.showSuccess(this.getMessage(success.message));
+            console.log(success);
             this.onFinish();
             MasterWallet.NotifyUserTransfer(this.state.walletSelected.address, this.state.inputAddressAmountValue);
             // start cron get balance auto ...
@@ -507,9 +508,9 @@ render() {
               />
             </div>
 
-            <label className='label-balance'>{messages.wallet.action.transfer.label.wallet_balance} &nbsp; 
+            <label className='label-balance'>{messages.wallet.action.transfer.label.wallet_balance} &nbsp;
             {
-              this.state.walletSelected ? 
+              this.state.walletSelected ?
               (
                 ( this.state.walletSelected && this.state.walletSelected.hideBalance ? StringHelper.format("[{0}]", messages.wallet.action.history.label.balance_hidden)
                   :

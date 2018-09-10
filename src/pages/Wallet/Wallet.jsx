@@ -510,7 +510,7 @@ class Wallet extends React.Component {
         this.splitWalletData(lstWalletTemp);
       }
     }
-    this.modalBetRef.close();    
+    this.modalBetRef.close();
   }
 
   sendCoin = () => {
@@ -601,7 +601,7 @@ class Wallet extends React.Component {
         (
           <TransferCoin
             wallet={wallet}
-            onFinish={() => { this.successTransfer() }}
+            onFinish={(result) => { this.successTransfer(result) }}
             currency={this.state.alternateCurrency}
           />
         ),
@@ -784,17 +784,17 @@ class Wallet extends React.Component {
           onWarningClick={() => this.onWarningClick(wallet)}
           wallet={wallet}
           customBackIcon={BackChevronSVGWhite}
-          modalHeaderStyle={this.modalHeaderStyle}          
+          modalHeaderStyle={this.modalHeaderStyle}
         />
       )
     }, ()=>{
       this.modalHistoryRef.open();
     });
   }
-  onUpdateWalletName = (wallet) => {    
-    this.setState({walletSelected: wallet});    
+  onUpdateWalletName = (wallet) => {
+    this.setState({walletSelected: wallet});
     //update local store.
-    MasterWallet.UpdateLocalStore(this.getAllWallet());    
+    MasterWallet.UpdateLocalStore(this.getAllWallet());
     this.onWalletItemClick(wallet);
   }
 
@@ -886,9 +886,10 @@ class Wallet extends React.Component {
     this.setState({modalWalletPreferences: ""});
   }
 
-  successTransfer = () => {
+  successTransfer = (result) => {
     this.modalSendRef.close();
     this.autoCheckBalance(this.state.walletSelected.address, this.state.inputAddressAmountValue);
+    console.log(result);
   }
 
   closeQrCode=() => {
