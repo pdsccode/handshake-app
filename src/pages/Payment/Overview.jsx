@@ -152,17 +152,18 @@ class PaymentOverview extends React.Component {
     const { messages } = this.props.intl;
 
     return (
-      <div className="overview-wrapper">
-        <ul className="inline-list subnav">
-          <li className={this.state.menu == 1 ? "active" : ""}><a onClick={() => this.setState({menu:1})}>Overview</a></li>
-          <li className={this.state.menu == 2 ? "active" : ""}><a  onClick={() => this.setState({menu:2})}>Features</a></li>
-          <li className={this.state.menu == 3 ? "active" : ""}><a onClick={() => this.setState({menu:3})}>Selling Online</a></li>
-          <li className={this.state.menu == 4 ? "active" : ""}><a onClick={() => this.setState({menu:4})}>Selling In Person</a></li>
-        </ul>
-        {
-          this.showMenu()
-        }
-      </div>
+      // <div className="overview-wrapper">
+      //   <ul className="inline-list subnav">
+      //     <li className={this.state.menu == 1 ? "active" : ""}><a onClick={() => this.setState({menu:1})}>Overview</a></li>
+      //     <li className={this.state.menu == 2 ? "active" : ""}><a  onClick={() => this.setState({menu:2})}>Features</a></li>
+      //     <li className={this.state.menu == 3 ? "active" : ""}><a onClick={() => this.setState({menu:3})}>Selling Online</a></li>
+      //     <li className={this.state.menu == 4 ? "active" : ""}><a onClick={() => this.setState({menu:4})}>Selling In Person</a></li>
+      //   </ul>
+      //   {
+      //     this.showMenu()
+      //   }
+      // </div>
+      <div className="overview-wrapper"><h3 className="text-center">Coming soon</h3></div>
     )
   }
 }

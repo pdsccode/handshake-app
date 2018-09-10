@@ -84,7 +84,7 @@ class Complete extends React.Component {
         icon = iconSuccess;
         title = 'Payment processed!';
         msg = 'Thank you for your purchase!';
-        fullBackUrl = `${confirm_url}?order_id=${order_id}&hash=${data.hash}`;
+        fullBackUrl = `${confirm_url}?order_id=${order_id}&hash=${data.hash}&status=1`;
         setTimeout(() => {window.location.href = fullBackUrl}, 5000);
       }
       else{
@@ -92,6 +92,7 @@ class Complete extends React.Component {
         title = 'Payment failed!';
         msg = 'Please click Back and try again.';
         success = false;
+        fullBackUrl = `${confirm_url}?order_id=${order_id}&status=2`;
       }
 
       this.setState({icon: icon, title: title, msg: msg, fullBackUrl: fullBackUrl, success: success});
@@ -100,14 +101,6 @@ class Complete extends React.Component {
 
   goRedirect = () => {
     window.location.href = this.state.fullBackUrl;
-  }
-
-  goBack = () => {
-    const { tryAgain } = this.props;
-
-    if (tryAgain) {
-      tryAgain(tryAgain);
-    }
   }
 
   get showPayment(){
@@ -121,12 +114,7 @@ class Complete extends React.Component {
           this.state.success && <div className="redirect">Redirecting you back in 5 seconds.</div>
         }
 
-        {
-          this.state.success ? <button className="btn btn-light" onClick={this.goRedirect}>Close</button> :
-            <button className="btn btn-light" onClick={() => this.goBack()}>Back</button>
-        }
-
-
+        <button className="btn btn-light" onClick={this.goRedirect}>{this.state.success ? "Close" : "Back to shop"}</button>
       </div>
     )
   }

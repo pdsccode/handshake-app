@@ -85,7 +85,10 @@ class Payment extends React.Component {
     const { order_id, to, amount, fiat_currency:fiatCurrency, crypto_currency:cryptoCurrency, confirm_url } = this.querystringParsed;
 
     if (!order_id && !amount && !confirm_url) {
-      //missing parameters
+      return;
+    }
+
+    if (!order_id || !amount && !confirm_url) {
       this.showModalError("Missing parameters");
       return;
     }
@@ -275,9 +278,10 @@ class Payment extends React.Component {
   }
 
   successPayNinja = (data) => {
-    if(!data){
-      data = {fromWallet: 'ETH', hash: ""};
-    }
+    // if(!data){
+    //   data = {fromWallet: 'ETH', hash: ""};
+    // }
+
     this.setState({
       modalComplete: <Complete
         data={data}
