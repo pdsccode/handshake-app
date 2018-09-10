@@ -24,7 +24,7 @@ class ThankYou extends React.Component {
   render() {
     return (
       <div className="ThankYou">
-        <h1>thanks for your order!</h1>
+        <h1>Thanks for your order!</h1>
       </div>
     );
   }
