@@ -22,6 +22,8 @@ export class Wallet {
     this.secret = '';  
     this.publicKey = '',
     this.icon = 'eth.svg'
+    //settings:
+    this.hideBalance=false;
   }
 
   getShortAddress() {
