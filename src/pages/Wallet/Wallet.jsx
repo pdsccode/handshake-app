@@ -408,6 +408,7 @@ class Wallet extends React.Component {
                   currencyForced={wallet ? wallet.name : ''}
                   callbackSuccess={this.afterWalletFill}
                   addressForced={wallet ? wallet.address : ''}
+                  isPopup
                 />
               ),
           }, () => {
@@ -510,7 +511,7 @@ class Wallet extends React.Component {
         this.splitWalletData(lstWalletTemp);
       }
     }
-    this.modalBetRef.close();    
+    this.modalBetRef.close();
   }
 
   sendCoin = () => {
@@ -784,17 +785,17 @@ class Wallet extends React.Component {
           onWarningClick={() => this.onWarningClick(wallet)}
           wallet={wallet}
           customBackIcon={BackChevronSVGWhite}
-          modalHeaderStyle={this.modalHeaderStyle}          
+          modalHeaderStyle={this.modalHeaderStyle}
         />
       )
     }, ()=>{
       this.modalHistoryRef.open();
     });
   }
-  onUpdateWalletName = (wallet) => {    
-    this.setState({walletSelected: wallet});    
+  onUpdateWalletName = (wallet) => {
+    this.setState({walletSelected: wallet});
     //update local store.
-    MasterWallet.UpdateLocalStore(this.getAllWallet());    
+    MasterWallet.UpdateLocalStore(this.getAllWallet());
     this.onWalletItemClick(wallet);
   }
 
