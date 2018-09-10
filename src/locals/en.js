@@ -1104,6 +1104,28 @@ export default {
       },
     },
     action: {
+      payment: {
+        button: {
+          checkout: 'Checkout'
+        },
+        label: {
+          from_wallet: 'From wallet',
+          to_address: 'To address',
+          wallet_balance: 'Wallet balance',
+        },
+        placeholder: {
+          to_address: 'Wallet address...',
+          select_wallet: 'Select a wallet',
+        },
+        error: {
+          insufficient: 'You have insufficient coin to make the transfer.'
+        },
+        menu: {
+          developer_docs: "Developer Docs",
+          payment_buttons: "Payment Buttons",
+          help: "Help & Support"
+        }
+      },
       preferecens:{
         list_item: {
           wallet_name: "Wallet Name",
