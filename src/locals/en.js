@@ -238,6 +238,8 @@ export default {
   'error.requiredOne': 'You need to fill in one of these!',
   'error.greaterThan': 'Must be greater than {min}',
   'error.lessThan': 'Must be less than {max}',
+  'error.greaterThan.equal': 'Must be equal or greater than {min}',
+  'error.lessThan.equal': 'Must be less than or equal {max}',
   'error.mustBeANumber': 'Must be a number',
   'error.mustBeAPositiveInteger': 'Must be a integer number greater or equal 0',
 

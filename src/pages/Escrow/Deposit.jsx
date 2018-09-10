@@ -13,7 +13,7 @@ import iconEthereum from '@/assets/images/icon/coin/eth.svg';
 import iconBitcoinCash from '@/assets/images/icon/coin/bch.svg';
 import iconLock from '@/assets/images/icon/icons8-lock_filled.svg';
 import { formatAmountCurrency, formatMoneyByLocale } from '@/services/offer-util';
-import { isNormalInteger, minValue, number, required } from '@/components/core/form/validation';
+import {isNormalInteger, minValue, minValueEqual, maxValueEqual, number, required} from '@/components/core/form/validation';
 import { bindActionCreators } from 'redux';
 import { createCreditATM, depositCoinATM, getCreditATM, trackingDepositCoinATM } from '@/reducers/exchange/action';
 import { getErrorMessageFromCode } from '@/components/handshakes/exchange/utils';
@@ -508,7 +508,7 @@ class EscrowDeposit extends React.Component {
                           elementAppend={
                             <span className="percentage-symbol escrow-label font-weight-normal">%</span>
                           }
-                          validate={[number]}
+                          validate={[number, minValueEqual(0), maxValueEqual(200)]}
                           disabled={!allowPercentage}
                         />
                       </div>

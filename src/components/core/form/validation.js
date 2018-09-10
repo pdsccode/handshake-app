@@ -42,6 +42,18 @@ export const maxValue = max => value =>
   ) : (
     undefined
   ));
+export const minValueEqual = min => value =>
+  (value && value < min ? (
+    <FormattedMessage id="error.greaterThan.equal" values={{ min }} />
+  ) : (
+    undefined
+  ));
+export const maxValueEqual = max => value =>
+  (value && value > max ? (
+    <FormattedMessage id="error.lessThan.equal" values={{ max }} />
+  ) : (
+    undefined
+  ));
 // const minValue13 = minValue(13)
 export const email = value =>
   (value && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)
