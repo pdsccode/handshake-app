@@ -208,6 +208,9 @@
   > .TabPanel {
     padding: 20px 20px 20px;
   }
+  .ComponentStatistics {
+    padding: 0;
+  }
 }
 
 .matchMarketFee {
@@ -220,5 +223,57 @@
   .feeValue {
     font-size: rem-calc(14px);
     font-weight: 700;
+  }
+}
+
+.ComponentStatistics {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  padding: 20px 20px 0;
+  .Title {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    flex-basis: 50%;
+    color: #FFFFFF;
+    font-size: rem-calc(14px);
+  }
+  .Statistics {
+    display: flex;
+    flex-basis: 50%;
+    .Item {
+      display: flex;
+      flex-direction: column;
+      flex-basis: 50%;
+      text-align: center;
+    }
+    .Name {
+      color: #ffffff;
+      font-size: rem-calc(14px);
+      text-transform: capitalize;
+    }
+    .Percent {
+      font-size: rem-calc(18px);
+      font-weight: 600;
+      &.oppose {
+        color: #fa6b49;
+      }
+      &.support {
+        color: #0BDD91;
+      }
+    }
+  }
+  .Percentages {
+    display: flex;
+    flex-basis: 100%;
+    font-size: 5px;
+    padding-top: 15px;
+    .oppose {
+      background-color: #fa6b49;
+    }
+    .support {
+      background-color: #0BDD91;
+    }
   }
 }

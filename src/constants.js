@@ -219,6 +219,7 @@ export const API_URL = {
     ADD_OUTCOME: 'cryptosign/outcome/add',
     SAVE_TRANSACTION: 'cryptosign/tx/add',
     GENERATE_LINK: 'cryptosign/outcome/generate-link',
+    PREDICTION_STATISTICS: 'cryptosign/outcome/ninja-predict',
   },
   DISCOVER: {
     INDEX: 'handshake/discover',
