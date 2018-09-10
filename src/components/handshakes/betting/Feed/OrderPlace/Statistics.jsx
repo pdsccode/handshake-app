@@ -75,7 +75,7 @@ Statistics.propTypes = {
 };
 
 Statistics.defaultProps = {
-  title: 'Ninjas predicted:',
+  title: 'Ninja predicts:',
   listItems: [],
 };
 
