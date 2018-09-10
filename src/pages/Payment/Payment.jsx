@@ -44,8 +44,8 @@ class Payment extends React.Component {
       modalCheckout: '',
       modalComplete: '',
       msgError: '',
-      toAddresses: false
-
+      toAddresses: false,
+      fullBackUrl: ''
     };
     this.props.setHeaderRight(this.headerRight());
   }
@@ -84,6 +84,7 @@ class Payment extends React.Component {
     this.querystringParsed = qs.parse(querystring);
     const { order_id, to, amount, fiat_currency:fiatCurrency, crypto_currency:cryptoCurrency, confirm_url } = this.querystringParsed;
 
+
     if (!order_id && !amount && !confirm_url) {
       return;
     }
@@ -111,7 +112,9 @@ class Payment extends React.Component {
 
     }
     else{
+      let fullBackUrl = `${confirm_url}?order_id=${order_id}&status=0`;
       this.setState({
+        fullBackUrl: fullBackUrl,
         modalChooseCrypto: <ChooseCrypto
           amount={amount}
           fiatCurrency={fiatCurrency}
@@ -232,9 +235,7 @@ class Payment extends React.Component {
 
   onIconRightHeaderClick = () => {
     let listMenu = this.creatSheetMenuHeaderMore();
-    console.log(listMenu);
     this.setState({ listMenu: listMenu }, () => {
-      console.log(this.state.listMenu);
       this.toggleBottomSheet();
     });
 
@@ -273,14 +274,16 @@ class Payment extends React.Component {
     return obj;
   }
 
-  closePayNinja = () => {
-    this.setState({ isShowWallets: false });
+  closeChooseCrypto = () => {
+    if(this.state.fullBackUrl && this.state.modalChooseCrypto){
+      window.location.href = this.state.fullBackUrl;
+    }
+    else{
+      this.setState({ isShowWallets: false });
+    }
   }
 
   successPayNinja = (data) => {
-    // if(!data){
-    //   data = {fromWallet: 'ETH', hash: ""};
-    // }
 
     this.setState({
       modalComplete: <Complete
@@ -339,7 +342,7 @@ class Payment extends React.Component {
 
     return (
       <div className="checkout-wrapper">
-        <Modal title="Select crypto payment" onRef={modal => this.modalChooseCryptoRef = modal}  onClose={this.closePayNinja}>
+        <Modal title="Select crypto payment" onRef={modal => this.modalChooseCryptoRef = modal}  onClose={() => this.closeChooseCrypto()}>
           {modalChooseCrypto}
         </Modal>
 
