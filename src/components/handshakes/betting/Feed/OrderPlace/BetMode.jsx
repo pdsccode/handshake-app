@@ -61,6 +61,7 @@ class BetMode extends React.Component {
       GA.clickFree(selectedOutcome.value);
     }
   }
+  
   async openPopup(selectedOutcome) {
     this.setState({
       bettingShakeIsOpen: true,
@@ -104,6 +105,7 @@ class BetMode extends React.Component {
     */
     this.callCheckFirstFree();
   }
+
   renderTab(props) {
     return (
       <Tabs htmlClassName="BetModeContainer" afterClick={this.afterTabChanges}>
@@ -111,7 +113,6 @@ class BetMode extends React.Component {
           <BettingFilter
             {...props}
             isFree={false}
-
           />
         </div>
         <div className="BetModeItem" label="Free bet">
@@ -123,6 +124,7 @@ class BetMode extends React.Component {
       </Tabs>
     );
   }
+
   renderSingleMode(props) {
     return (
       <BettingFilter
