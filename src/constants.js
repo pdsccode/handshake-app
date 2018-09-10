@@ -576,6 +576,10 @@ export const URL = {
   ESCROW_DEPOSIT: '/escrow/deposit',
   ESCROW_WITHDRAW: '/escrow/withdraw',
   ESCROW_WITHDRAW_SUCCESS: '/escrow/withdraw/success',
+
+  SHOP_URL: '/shop',
+  SHOP_URL_INDEX: '/shop',
+  SHOP_URL_DETAIL: '/shop/:slug',
 };
 
 export const LANDING_PAGE_TYPE = {
