@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 // component
 import './Switch.scss';
 
-class Switch extends React.Component {
+class Switch extends React.PureComponent {
   constructor(props) {
     super(props);     
     this.state = {
@@ -12,15 +12,13 @@ class Switch extends React.Component {
   }
 
   onChange = () =>{
-    const {onClick} = this.props || null;     
-    this.setState({ isChecked: !this.state.isChecked}, () => {
-      console.log("after click", this.state.isChecked);
-      if (onClick) onChange(this.state.isChecked);
+    const {onChange} = this.props || null;     
+    this.setState({ isChecked: !this.state.isChecked}, () => {      
+      if (onChange) onChange(this.state.isChecked);
     });    
   }
 
-  render() {    
-    
+  render() {        
     return (
       
       <div className="switch-component">
@@ -34,7 +32,7 @@ class Switch extends React.Component {
 }
 
 Switch.propType = {
-  onClick: PropTypes.func,  
+  onChange: PropTypes.func,  
   isChecked: PropTypes.bool,
 }
 
