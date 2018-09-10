@@ -11,6 +11,7 @@ export default {
     navigation: {
       me: 'Me',
       exchanges: 'Exchanges',
+
       whisper: 'Whisper',
       wallet: 'Wallet',
       setting: 'Setting',
@@ -1102,6 +1103,43 @@ export default {
       },
     },
     action: {
+      payment: {
+        button: {
+          checkout: 'Checkout'
+        },
+        label: {
+          from_wallet: 'From wallet',
+          to_address: 'To address',
+          wallet_balance: 'Wallet balance',
+        },
+        placeholder: {
+          to_address: 'Wallet address...',
+          select_wallet: 'Select a wallet',
+        },
+        error: {
+          insufficient: 'You have insufficient coin to make the transfer.'
+        },
+        menu: {
+          developer_docs: "Developer Docs",
+          payment_buttons: "Payment Buttons",
+          help: "Help & Support"
+        }
+      },
+      preferecens:{
+        list_item: {
+          wallet_name: "Wallet Name",
+          hide_balance: "Hide Balance",
+          backup_wallet: "Backup Wallet",
+          delete_wallet: "Delete Wallet",
+        },
+        update_name:{
+          title: "Wallet name",
+          label: "What do you call this wallet?",
+          button: {
+            save: "Save",
+          }
+        }
+      },
       remove: {
         title: 'Remove',
         header: 'Are you sure?',
@@ -1294,6 +1332,7 @@ export default {
         title: 'View transaction history',
         header: 'Transaction history',
         label: {
+          balance_hidden: "Balance Hidden",
           failed: 'Failed',
           unconfirmed: 'Unconfirmed',
           balance: 'Balance',
@@ -1315,6 +1354,8 @@ export default {
           no_trans: "No transactions yet",
           no_internal_trans: "No internal transactions yet",
           coming_soon: "Coming soon ...",
+          send: "Send",
+          receive: "Receive",
         },
       },
     },

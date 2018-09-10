@@ -507,7 +507,17 @@ render() {
               />
             </div>
 
-            <label className='label-balance'>{messages.wallet.action.transfer.label.wallet_balance} { this.state.walletSelected ? StringHelper.format("{0} {1}", this.state.walletSelected.balance, this.state.walletSelected.name) : ""}</label>
+            <label className='label-balance'>{messages.wallet.action.transfer.label.wallet_balance} &nbsp; 
+            {
+              this.state.walletSelected ? 
+              (
+                ( this.state.walletSelected && this.state.walletSelected.hideBalance ? StringHelper.format("[{0}]", messages.wallet.action.history.label.balance_hidden)
+                  :
+                  StringHelper.format("{0} {1}", this.state.walletSelected.balance, this.state.walletSelected.name)
+                )
+              ) : ""
+            }
+            </label>
             </div>
 
           <Button className="button-wallet-cpn" isLoading={this.state.isRestoreLoading}  type="submit" block={true}>{messages.wallet.action.transfer.button.transfer}</Button>
