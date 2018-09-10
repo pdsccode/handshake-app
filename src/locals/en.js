@@ -957,8 +957,8 @@ export default {
     },
     credit: {
       overview: {
-        askToDeactive: 'Do you want to deactive?',
-        messageDeactiveSuccess: 'Deactive successfully',
+        askToDeactive: 'Pause your coin selling?',
+        messageDeactiveSuccess: 'Pause successfully',
       },
       transaction: {
         amount: 'Amount',
