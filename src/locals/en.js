@@ -224,7 +224,7 @@ export default {
   'ex.error.323': 'Exceeding global credit limit. Please try again tomorrow.',
   'ex.error.324': 'Credit exists',
   'ex.error.325': 'Credit price changed',
-  'ex.error.326': 'Credit out of stock',
+  'ex.error.326': 'Busy day for our CC - we don’t have enough coin for your request! Please try with smaller amount.',
   'ex.error.327': 'Credit item status is invalid',
   'ex.error.default': 'Oops! Something went wrong.',
 
