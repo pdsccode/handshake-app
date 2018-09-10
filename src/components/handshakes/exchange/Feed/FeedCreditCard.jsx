@@ -472,11 +472,11 @@ class FeedCreditCard extends React.Component {
   };
 
   onCurrencyChange = (e, newValue) => {
-    const { currency } = this.state;
+    const { currency, amount } = this.state;
 
     if (currency !== newValue.id) {
       this.setState({ currency: newValue.id }, () => {
-        this.getCryptoPriceByAmount(1);
+        this.getCryptoPriceByAmount(amount);
       });
     }
   }
