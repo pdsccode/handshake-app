@@ -54,7 +54,7 @@ class TransactionItem extends React.Component {
   render() {
     const { messages } = this.props.intl;
     const { initAt } = this.props;
-    const { amount, percentage, currency, revenue, feedType, status, subStatus, information, fiatAmount } = this.transaction;
+    const { amount, percentage, currency, revenue, feedType, status, subStatus, information, fiatAmount, fee } = this.transaction;
     console.log('this.transaction', this.transaction);
 
     return (
@@ -175,10 +175,10 @@ class TransactionItem extends React.Component {
                 </div>
                 <div className="d-table w-100">
                   <div className="d-table-cell text-normal">
-                    {messages.me.credit.transaction.deposit.percentage}
+                    {messages.me.credit.transaction.transaction.fee}
                   </div>
                   <div className="d-table-cell text-right">
-                    <span className="font-weight-bold">{percentage}</span>
+                    <span className="font-weight-bold">{fee}</span>
                     &nbsp;
                     <span className="text-normal">%</span>
                   </div>

@@ -978,6 +978,7 @@ export default {
           title: 'SELLING ORDER',
           selling: 'Selling',
           receiving: 'Receiving',
+          fee: 'Fee',
         },
         instant: {
           title: 'PURCHASE ORDER',
