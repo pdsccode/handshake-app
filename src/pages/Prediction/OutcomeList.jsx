@@ -3,6 +3,7 @@ import propTypes from 'prop-types';
 import ScrollableList from '@/components/ScrollableList/ScrollableList';
 import { generatedBackgroundCss } from '@/utils/css.js';
 import { smartTrim, countWords } from '@/utils/string';
+import { URL } from '@/constants';
 
 const BACKGROUND_COLORS = [
   '#000000',
@@ -39,10 +40,11 @@ function buildOutcomeItem(outcome) {
 function OutcomeList(props) {
   const { event, onClick } = props;
   const { outcomes } = event;
+  const data = outcomes.concat({ id: URL.HANDSHAKE_PEX_CREATOR, name: '+' });
   return (
     <div className="OutcomeList">
       <ScrollableList
-        data={outcomes}
+        data={data}
         event={event}
         itemRenderer={(outcome) => buildOutcomeItem(outcome, event)}
         onClickItem={onClick}

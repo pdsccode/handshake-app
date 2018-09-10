@@ -19,6 +19,7 @@ class CreateMarket extends React.Component {
   };
 
   renderComponent = (props) => {
+    console.log('this.props', (this.props.match || {}).params);
     return (!props.hasEmail) ? <EmailForm /> : <CreateEventContainer />;
   };
 
