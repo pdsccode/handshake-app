@@ -85,7 +85,7 @@ class Complete extends React.Component {
         title = 'Payment processed!';
         msg = 'Thank you for your purchase!';
         fullBackUrl = `${confirm_url}?order_id=${order_id}&hash=${data.hash}`;
-        setTimeout(() => {window.location.href = fullBackUrl}, 30000);
+        setTimeout(() => {window.location.href = fullBackUrl}, 5000);
       }
       else{
         icon = iconFailed;

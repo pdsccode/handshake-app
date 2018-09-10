@@ -90,7 +90,7 @@ class Payment extends React.Component {
       return;
     }
 
-    if(isNaN(amount)){
+    if(isNaN(amount) || amount <= 0){
       this.showModalError("Invalid amount");
       return;
     }
