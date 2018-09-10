@@ -518,7 +518,7 @@ export class MasterWallet {
         if (walletJson.isCollectibles) wallet.isCollectibles = walletJson.isCollectibles;
         if (walletJson.secret) wallet.secret = walletJson.secret;
         if (walletJson.publicKey) wallet.publicKey = walletJson.publicKey;
-
+        if (walletJson.hideBalance) wallet.hideBalance = walletJson.hideBalance;    
 
         return wallet;
       } catch (e) {
