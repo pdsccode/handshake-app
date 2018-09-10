@@ -64,8 +64,8 @@ const maps = {
 };
 
 const CASH_TAB = {
-  TRANSACTION: 'TRANSACTION',
   DASHBOARD: 'DASHBOARD',
+  TRANSACTION: 'TRANSACTION',
 };
 
 const CATEGORIES = [
@@ -95,7 +95,7 @@ const FormFilterFeeds = createForm({
 
 const tabs = [
   {
-    id: 'overview',
+    id: CASH_TAB.DASHBOARD,
     text: <FormattedMessage id="dashboard.label.overview" />,
     component: ManageAssets,
   },
@@ -105,7 +105,7 @@ const tabs = [
   //   component: Overview,
   // },
   {
-    id: 'transaction',
+    id: CASH_TAB.TRANSACTION,
     text: <FormattedMessage id="dashboard.label.transaction" />,
     component: Transaction,
   },
@@ -133,7 +133,7 @@ class Me extends React.Component {
     } = Helper.getQueryStrings(window.location.search);
     const handshakeDefault = this.getDefaultHandShakeId();
 
-    const cashTabDefault = tab ? tab.toUpperCase() : CASH_TAB.TRANSACTION;
+    const cashTabDefault = tab ? tab.toUpperCase() : CASH_TAB.DASHBOARD;
 
     const initUserId = s;
     const offerId = sh;
@@ -158,7 +158,6 @@ class Me extends React.Component {
       me: this.props.me,
       isLoading: false,
       modalFillContent: '',
-      activeTab: 'overview',
     };
   }
 
@@ -373,9 +372,14 @@ class Me extends React.Component {
     const { rfChange } = this.props;
     console.log('onCategoryChange', newValue);
     this.setState({ handshakeIdActive: newValue }, () => {
-      if (this.state.handshakeIdActive === HANDSHAKE_ID.EXCHANGE) {
-        this.setState({ cashTab: CASH_TAB.TRANSACTION }, () => {
-          rfChange(nameFormFilterFeeds, 'cash-show-type', CASH_TAB.TRANSACTION);
+      if (this.state.handshakeIdActive === HANDSHAKE_ID.EXCHANGE ||
+        this.state.handshakeIdActive === HANDSHAKE_ID.CREDIT) {
+        this.setState({ cashTab: CASH_TAB.DASHBOARD }, () => {
+          rfChange(nameFormFilterFeeds, 'cash-show-type', CASH_TAB.DASHBOARD);
+          if (this.state.handshakeIdActive === HANDSHAKE_ID.EXCHANGE) {
+            this.getOfferStore();
+            this.getDashboardInfo();
+          }
         });
       }
       this.loadMyHandshakeList();
@@ -386,9 +390,11 @@ class Me extends React.Component {
     console.log('onTypeChange', newValue);
     this.setState({ cashTab: newValue }, () => {
       this.loadMyHandshakeList();
-      if (newValue === CASH_TAB.DASHBOARD) {
-        this.getOfferStore();
-        this.getDashboardInfo();
+      if (this.state.handshakeIdActive === HANDSHAKE_ID.EXCHANGE) {
+        if (newValue === CASH_TAB.DASHBOARD) {
+          this.getOfferStore();
+          this.getDashboardInfo();
+        }
       }
     });
   }
@@ -435,15 +441,15 @@ class Me extends React.Component {
   }
 
   render() {
+    const { handshakeIdActive, cashTab, offerStores, propsModal, modalContent, modalFillContent } = this.state;
     const { list, listDashboard } = this.props.me;
     let listFeed = [];
-    if (this.state.handshakeIdActive === HANDSHAKE_ID.EXCHANGE && this.state.cashTab === CASH_TAB.DASHBOARD) {
+    if (handshakeIdActive === HANDSHAKE_ID.EXCHANGE && cashTab === CASH_TAB.DASHBOARD) {
       listFeed = listDashboard;
     } else {
       listFeed = list;
     }
     const { messages } = this.props.intl;
-    const { offerStores, propsModal, modalContent, modalFillContent } = this.state;
     const online = !this.props.auth.offline;
     let haveOffer = false;
 
@@ -456,10 +462,7 @@ class Me extends React.Component {
       }
     }
 
-    const { authProfile } = this.props;
-    const { activeTab } = this.state;
-
-    const { component: Component } = tabs.find(i => i.id === activeTab);
+    const { component: Component } = tabs.find(i => i.id === cashTab);
 
     return (
       <React.Fragment>
@@ -516,7 +519,7 @@ class Me extends React.Component {
                 </div>
               </div>
 
-              { this.state.handshakeIdActive === HANDSHAKE_ID.EXCHANGE && (
+              { (this.state.handshakeIdActive === HANDSHAKE_ID.EXCHANGE || this.state.handshakeIdActive === HANDSHAKE_ID.CREDIT) && (
                 <div>
                   <hr style={{ margin: '10px 0 5px' }} />
                   <div>
@@ -525,8 +528,8 @@ class Me extends React.Component {
                       component={fieldRadioButton}
                       type="tab-6"
                       list={[
-                        { value: CASH_TAB.TRANSACTION, text: messages.me.feed.cash.transactions, icon: <span className="icon-transactions align-middle" /> },
                         { value: CASH_TAB.DASHBOARD, text: messages.me.feed.cash.dashboard, icon: <span className="icon-dashboard align-middle" /> },
+                        { value: CASH_TAB.TRANSACTION, text: messages.me.feed.cash.transactions, icon: <span className="icon-transactions align-middle" /> },
                       ]}
                       // validate={[required]}
                       onChange={this.onCashTabChange}
@@ -543,7 +546,7 @@ class Me extends React.Component {
               {
                 this.state.handshakeIdActive === HANDSHAKE_ID.CREDIT ? (
                   <div className="dashboard">
-                    <div className="bg-white">
+                    {/*<div className="bg-white">
                       <div className="wrapper">
                         <div className="tabs mt-3">
                           {
@@ -562,7 +565,7 @@ class Me extends React.Component {
                           }
                         </div>
                       </div>
-                    </div>
+                    </div>*/}
                     <div className="content">
                       {<Component history={this.props.history} setLoading={this.setLoading}></Component>}
                     </div>
