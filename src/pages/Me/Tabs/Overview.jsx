@@ -106,6 +106,7 @@ class Overview extends React.Component {
             currencyForced={wallet ? wallet.name : ''}
             callbackSuccess={this.afterWalletFill}
             addressForced={wallet ? wallet.address : ''}
+            isPopup
           />
         ),
     }, () => {

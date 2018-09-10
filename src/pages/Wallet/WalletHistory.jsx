@@ -303,14 +303,16 @@ class WalletHistory extends React.Component {
       <div className="clear-fix">
         <div className="wallet-detail">
           <div><img className="logo-detail" src={logo}/></div>
+          {!wallet.hideBalance ?
           <div className="balance">{wallet.balance} {wallet.name}</div>
+          :<div className="balance">[{messages.wallet.action.history.label.balance_hidden}]</div>}
 
           <div className="box-button">
             {!wallet.isCollectibles ? <div>
-              <div className="bt1"><button onClick={this.props.onTransferClick}>Send</button></div>
-              <div className="bt2"><button onClick={this.props.onReceiveClick}>Receive</button></div>
+              <div className="bt1"><button onClick={this.props.onTransferClick}>{messages.wallet.action.history.label.send}</button></div>
+              <div className="bt2"><button onClick={this.props.onReceiveClick}>{messages.wallet.action.history.label.receive}</button></div>
             </div>
-            : <div className="bt"><button onClick={this.props.onReceiveClick}>Receive</button></div>
+            : <div className="bt"><button onClick={this.props.onReceiveClick}>{messages.wallet.action.history.label.receive}</button></div>
             }
           </div>
 

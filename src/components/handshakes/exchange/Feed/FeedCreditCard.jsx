@@ -43,6 +43,7 @@ import iconBitcoinCash from '@/assets/images/icon/coin/bch.svg';
 import iconUsd from '@/assets/images/icon/coin/icons8-us_dollar.svg';
 import iconLock from '@/assets/images/icon/icons8-lock_filled.svg';
 import { Link } from 'react-router-dom';
+import cx from "classnames";
 
 export const CRYPTO_ICONS = {
   [CRYPTO_CURRENCY.ETH]: iconEthereum,
@@ -538,7 +539,7 @@ class FeedCreditCard extends React.Component {
 
   render() {
     const { hasSelectedCoin } = this.state;
-    const { intl } = this.props;
+    const { intl, isPopup } = this.props;
     const { amount } = this.props;
     const { currency, packages } = this.state;
 
@@ -638,7 +639,7 @@ class FeedCreditCard extends React.Component {
           </div>
         </div>
         <div>
-          <div className="ex-sticky-note">
+          <div className={cx('ex-sticky-note', isPopup ? 'ex-sticky-note-popup' : '') }>
             <div className="mb-2"><FormattedMessage id="ex.credit.banner.text" /></div>
             <div>
               <Link to={{ pathname: URL.ESCROW_DEPOSIT, search: `` }}>
