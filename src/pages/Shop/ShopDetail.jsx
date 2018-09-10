@@ -20,8 +20,10 @@ import './ShopDetail.scss';
 const EthSVG = 'https://d2q7nqismduvva.cloudfront.net/static/images/icon-svg/common/eth-sign.svg';
 const BuyNowForm = createForm({ propsReduxForm: { form: 'BuyNowForm', enableReinitialize: true, clearSubmitErrors: true}});
 const SELLER_CONFIG = {
-
+  ETH_ADDRESS: '0xA8a6d153C3c3F5098eEc885E6c39437dE5cA74Fd',
+  URL_CONFIRM: 'http://localhost:8080/shop/confirm',
 };
+const ETH_GATEWAY_ID = 9;
 
 class ShopDetail extends React.Component {
 
@@ -45,6 +47,8 @@ class ShopDetail extends React.Component {
     };
     // need hide header
     props.hideHeader();
+    // bind
+    this.placeOrder = ::this.placeOrder;
   }
   
   componentDidMount() {
@@ -110,13 +114,49 @@ class ShopDetail extends React.Component {
     }
   }
 
-  onBuyNow() {
-    alert(1111);
+  placeOrder() {
+    // call place order
+    const url = 'https://dev.autonomous.ai/api-v2/order-api/order/cart/checkout?use_wallet=false&promo=0    ';
+    const data = {
+      customer: {
+        billing_address: '',
+        city: 'New York',
+        country: 'US',
+        email: 'tam@autonomous.ai',
+        fullname: 'tam nguyen',
+        phone: '',
+        shipping_address: 'a75/6k/14',
+        state: 'NY',
+        zip: '10001',
+      },
+      payment: {
+        cc: null,
+        credit: 0,
+        gateway_id: ETH_GATEWAY_ID,
+      },
+      product: {
+        options: {
+          option1:1,
+          option2:4,
+          option16:37,
+          option17:41,
+        },
+        product_id:1221,
+        quantity:1,
+      },
+    };
+    const placeOrder = $http({ url, data, method: 'POST' });
+    placeOrder.then(result => {
+      const { data:source } = result;
+      const { order_id } = source.order;
+      // redirect to payment
+      const paymentUrl = `http://localhost:8080/payment?order_id=${order_id}&amount=${99}&fiat_currency=USD&to=ETH%${SELLER_CONFIG.ETH_ADDRESS}&confirm_url=${SELLER_CONFIG.URL_CONFIRM}`;
+      window.location.href = paymentUrl;
+    });
   }
 
   render() {
     const { product, productInfo, productInfoHtml, productSpecs, productFAQ } = this.state;
-    console.log('productFAQ', productFAQ);
     const imageSetting = {
       customPaging: i => <span className="dot" />,
       dots: true,
@@ -188,41 +228,41 @@ class ShopDetail extends React.Component {
         </Tabs>
         {/* modal buy now */}
         <Modal title="Your Information" onRef={modal => this.modalBuyNowRef = modal}>
-          <BuyNowForm>
+          <BuyNowForm onSubmit={this.placeOrder}>
             <div>
               <label htmlFor="">Quantity</label>
               <Field key="0" name="quantity" type="number" className="form-control" component={fieldInput}
-                validate={[required]} autoComplete="off" value={1000} />
+                autoComplete="off" value={1000} />
             </div>
             <div>
               <label htmlFor="">Name</label>
               <Field key="1" name="name" placeholder="Your name" type="text" className="form-control" component={fieldInput}
-                 validate={[required]} autoComplete="off" />
+                autoComplete="off" />
             </div>
             <div>
               <label htmlFor="">Email</label>
               <Field key="2" name="email" placeholder={"Email for order confirmation"} type="text" className="form-control"
-                component={fieldInput}  validate={[required]} autoComplete="off" />
+                component={fieldInput}  autoComplete="off" />
             </div>
             <div>
               <label htmlFor="">Address</label>
               <Field key="3" name="address" placeholder="Shipping address" type="text" className="form-control" component={fieldInput}
-                 validate={[required]} autoComplete="off" />
+                autoComplete="off" />
             </div>
             <div>
               <Field key="4" name="zip" placeholder="Zip code" type="text" className="form-control" component={fieldInput} 
-                validate={[required]} autoComplete="off" />
+                autoComplete="off" />
               <Field key="5" name="city" placeholder="City" type="text" className="form-control" component={fieldInput} 
-                validate={[required]} autoComplete="off" />
+                autoComplete="off" />
               <Field key="6" name="state" placeholder="State" type="text" className="form-control" component={fieldInput} 
-                validate={[required]} autoComplete="off" />
+                autoComplete="off" />
                 <Field key="7" name="country" placeholder="Country" type="text" className="form-control" component={fieldInput} 
-                validate={[required]} autoComplete="off" />
+                autoComplete="off" />
             </div>
             <div>
               <label htmlFor="">Phone</label>
               <Field key="8" name="phone" placeholder="Phone for delivery" type="text" className="form-control" component={fieldInput}
-                 validate={[required]} autoComplete="off" />
+                autoComplete="off" />
             </div>
             <Button block >
               Submit
