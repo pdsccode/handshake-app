@@ -11,6 +11,10 @@ class CreditTransaction {
       subStatus: data.sub_status || '',
       revenue: data.revenue || '0',
       information: data.information || {},
+      fiatAmount: data.fiat_amount || '0',
+      fiatCurrency: data.fiat_currency || '0',
+      feePercentage: data.fee_percentage || '0',
+      email: data.email || '',
     };
   }
 }

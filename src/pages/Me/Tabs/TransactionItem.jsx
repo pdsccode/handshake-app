@@ -40,6 +40,7 @@ export const CREDIT_FEED_TYPES = {
   TRANSACTION: 'credit_transaction',
   DEPOSIT: 'credit_deposit',
   WITHDRAW: 'credit_withdraw',
+  INSTANT: 'instant',
 };
 
 class TransactionItem extends React.Component {
@@ -53,7 +54,7 @@ class TransactionItem extends React.Component {
   render() {
     const { messages } = this.props.intl;
     const { initAt } = this.props;
-    const { amount, percentage, currency, revenue, feedType, status, subStatus, information } = this.transaction;
+    const { amount, percentage, currency, revenue, feedType, status, subStatus, information, fiatAmount } = this.transaction;
     console.log('this.transaction', this.transaction);
 
     return (
@@ -75,8 +76,10 @@ class TransactionItem extends React.Component {
                 <div className="d-table-cell font-weight-bold">
                   <img src={CRYPTO_ICONS[currency]} width={19} />
                   <span className="type-order ml-2">{feedType === CREDIT_FEED_TYPES.DEPOSIT ? messages.me.credit.transaction.deposit.title :
-                    feedType === CREDIT_FEED_TYPES.TRANSACTION ? messages.me.credit.transaction.transaction.title
-                  : messages.me.credit.transaction.withdraw.title}</span>
+                    feedType === CREDIT_FEED_TYPES.TRANSACTION ? messages.me.credit.transaction.transaction.title :
+                      feedType === CREDIT_FEED_TYPES.WITHDRAW ? messages.me.credit.transaction.withdraw.title :
+                        feedType === CREDIT_FEED_TYPES.INSTANT ? messages.me.credit.transaction.instant.title : ''
+                  }</span>
                 </div>
                 {
                   subStatus === 'transferring' && (
@@ -147,7 +150,7 @@ class TransactionItem extends React.Component {
                     </div>
                   </div>
                 </div>
-            ) : (
+            ) : feedType === CREDIT_FEED_TYPES.TRANSACTION ? (
               <div>
                 <div className="d-table w-100">
                   <div className="d-table-cell text-normal">
@@ -171,7 +174,31 @@ class TransactionItem extends React.Component {
                   </div>
                 </div>
               </div>
-            )
+            ) : feedType === CREDIT_FEED_TYPES.INSTANT ? (
+                <div>
+                  <div className="d-table w-100">
+                    <div className="d-table-cell text-normal">
+                      {messages.me.credit.transaction.instant.buying}
+                    </div>
+                    <div className="d-table-cell text-right">
+                      <span className="font-weight-bold">{amount}</span>
+                      &nbsp;
+                      <span className="text-normal">{currency}</span>
+                    </div>
+                  </div>
+
+                  <div className="d-table w-100">
+                    <div className="d-table-cell text-normal">
+                      {messages.me.credit.transaction.instant.cost}
+                    </div>
+                    <div className="d-table-cell text-right">
+                      <span className="font-weight-bold">{fiatAmount}</span>
+                      &nbsp;
+                      <span className="text-normal">{FIAT_CURRENCY.USD}</span>
+                    </div>
+                  </div>
+                </div>
+              ) : <div></div>
           }
 
         </div>

@@ -972,9 +972,14 @@ export default {
           toAccount: 'To Account',
         },
         transaction: {
-          title: 'PURCHASE ORDER',
+          title: 'SELLING ORDER',
           selling: 'Selling',
           receiving: 'Receiving',
+        },
+        instant: {
+          title: 'PURCHASE ORDER',
+          buying: 'Buying',
+          cost: 'Cost',
         },
       },
       withdraw: {
