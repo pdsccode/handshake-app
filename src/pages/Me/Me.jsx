@@ -50,6 +50,9 @@ import FeedCreditCard from '@/components/handshakes/exchange/Feed/FeedCreditCard
 import { MasterWallet } from '@/services/Wallets/MasterWallet';
 import * as gtag from '@/services/ga-utils';
 import taggingConfig from '@/services/tagging-config';
+import ManageAssets from "./Tabs/ManageAssets";
+import Transaction from "./Tabs/Transaction";
+import cx from "classnames";
 
 const TAG = 'Me';
 const maps = {
@@ -61,20 +64,26 @@ const maps = {
 };
 
 const CASH_TAB = {
-  TRANSACTION: 'TRANSACTION',
   DASHBOARD: 'DASHBOARD',
+  TRANSACTION: 'TRANSACTION',
 };
 
-const CATEGORIES = [{
-  value: HANDSHAKE_ID.BETTING,
-  text: 'Prediction',
-  priority: 0,
-},
-{
-  value: HANDSHAKE_ID.EXCHANGE,
-  text: 'Cash',
-  priority: 2,
-},
+const CATEGORIES = [
+  {
+    value: HANDSHAKE_ID.CREDIT,
+    text: 'CC',
+    priority: 0,
+  },
+  {
+    value: HANDSHAKE_ID.EXCHANGE,
+    text: 'ATM',
+    priority: 1,
+  },
+  {
+    value: HANDSHAKE_ID.BETTING,
+    text: 'Bet',
+    priority: 2,
+  },
 ];
 
 const nameFormFilterFeeds = 'formFilterFeeds';
@@ -83,6 +92,24 @@ const FormFilterFeeds = createForm({
     form: nameFormFilterFeeds,
   },
 });
+
+const tabs = [
+  {
+    id: CASH_TAB.DASHBOARD,
+    text: <FormattedMessage id="dashboard.label.overview" />,
+    component: ManageAssets,
+  },
+  // {
+  //   id: 'overview',
+  //   text: <FormattedMessage id="dashboard.label.overview" />,
+  //   component: Overview,
+  // },
+  {
+    id: CASH_TAB.TRANSACTION,
+    text: <FormattedMessage id="dashboard.label.transaction" />,
+    component: Transaction,
+  },
+]
 
 class Me extends React.Component {
   static propTypes = {
@@ -106,7 +133,7 @@ class Me extends React.Component {
     } = Helper.getQueryStrings(window.location.search);
     const handshakeDefault = this.getDefaultHandShakeId();
 
-    const cashTabDefault = tab ? tab.toUpperCase() : CASH_TAB.TRANSACTION;
+    const cashTabDefault = tab ? tab.toUpperCase() : CASH_TAB.DASHBOARD;
 
     const initUserId = s;
     const offerId = sh;
@@ -194,13 +221,13 @@ class Me extends React.Component {
 
     // @TODO: chrome-ext
     if (window.self === window.top) {
-      if (nextProps.me.list.length === 0 && nextProps.me.list.updatedAt !== prevState.me.list.updatedAt
-        && prevState.handshakeIdActive !== HANDSHAKE_ID.EXCHANGE && prevState.firstTime) {
-        rfChange(nameFormFilterFeeds, 'feedType', HANDSHAKE_ID.EXCHANGE);
-        rfChange(nameFormFilterFeeds, 'cash-show-type', CASH_TAB.TRANSACTION);
-        Me.loadMyHandshakeListStatic(nextProps, HANDSHAKE_ID.EXCHANGE);
-        return { handshakeIdActive: HANDSHAKE_ID.EXCHANGE, firstTime: false };
-      }
+      // if (nextProps.me.list.length === 0 && nextProps.me.list.updatedAt !== prevState.me.list.updatedAt
+      //   && prevState.handshakeIdActive !== HANDSHAKE_ID.EXCHANGE && prevState.firstTime) {
+      //   rfChange(nameFormFilterFeeds, 'feedType', HANDSHAKE_ID.EXCHANGE);
+      //   rfChange(nameFormFilterFeeds, 'cash-show-type', CASH_TAB.TRANSACTION);
+      //   Me.loadMyHandshakeListStatic(nextProps, HANDSHAKE_ID.EXCHANGE);
+      //   return { handshakeIdActive: HANDSHAKE_ID.EXCHANGE, firstTime: false };
+      // }
     }
 
     return null;
@@ -352,9 +379,14 @@ class Me extends React.Component {
     const { rfChange } = this.props;
     console.log('onCategoryChange', newValue);
     this.setState({ handshakeIdActive: newValue }, () => {
-      if (this.state.handshakeIdActive === HANDSHAKE_ID.EXCHANGE) {
-        this.setState({ cashTab: CASH_TAB.TRANSACTION }, () => {
-          rfChange(nameFormFilterFeeds, 'cash-show-type', CASH_TAB.TRANSACTION);
+      if (this.state.handshakeIdActive === HANDSHAKE_ID.EXCHANGE ||
+        this.state.handshakeIdActive === HANDSHAKE_ID.CREDIT) {
+        this.setState({ cashTab: CASH_TAB.DASHBOARD }, () => {
+          rfChange(nameFormFilterFeeds, 'cash-show-type', CASH_TAB.DASHBOARD);
+          if (this.state.handshakeIdActive === HANDSHAKE_ID.EXCHANGE) {
+            this.getOfferStore();
+            this.getDashboardInfo();
+          }
         });
       }
       this.loadMyHandshakeList();
@@ -365,9 +397,11 @@ class Me extends React.Component {
     console.log('onTypeChange', newValue);
     this.setState({ cashTab: newValue }, () => {
       this.loadMyHandshakeList();
-      if (newValue === CASH_TAB.DASHBOARD) {
-        this.getOfferStore();
-        this.getDashboardInfo();
+      if (this.state.handshakeIdActive === HANDSHAKE_ID.EXCHANGE) {
+        if (newValue === CASH_TAB.DASHBOARD) {
+          this.getOfferStore();
+          this.getDashboardInfo();
+        }
       }
     });
   }
@@ -414,15 +448,15 @@ class Me extends React.Component {
   }
 
   render() {
+    const { handshakeIdActive, cashTab, offerStores, propsModal, modalContent, modalFillContent } = this.state;
     const { list, listDashboard } = this.props.me;
     let listFeed = [];
-    if (this.state.handshakeIdActive === HANDSHAKE_ID.EXCHANGE && this.state.cashTab === CASH_TAB.DASHBOARD) {
+    if (handshakeIdActive === HANDSHAKE_ID.EXCHANGE && cashTab === CASH_TAB.DASHBOARD) {
       listFeed = listDashboard;
     } else {
       listFeed = list;
     }
     const { messages } = this.props.intl;
-    const { offerStores, propsModal, modalContent, modalFillContent } = this.state;
     const online = !this.props.auth.offline;
     let haveOffer = false;
 
@@ -435,7 +469,7 @@ class Me extends React.Component {
       }
     }
 
-    const { authProfile } = this.props;
+    const { component: Component } = tabs.find(i => i.id === cashTab);
 
     return (
       <React.Fragment>
@@ -483,7 +517,7 @@ class Me extends React.Component {
                 <div className="mt-2 mb-1">
                   <FormFilterFeeds>
                     <div className="d-table w-100">
-                      <div className="d-table-cell"><label className="label-filter-by">{messages.me.feed.filterBy}</label></div>
+                      {/*<div className="d-table-cell"><label className="label-filter-by">{messages.me.feed.filterBy}</label></div>*/}
                       <div className="d-table-cell">
                         <Field
                           name="feedType"
@@ -496,7 +530,7 @@ class Me extends React.Component {
                       </div>
                     </div>
 
-                    { this.state.handshakeIdActive === HANDSHAKE_ID.EXCHANGE && (
+                    { (this.state.handshakeIdActive === HANDSHAKE_ID.EXCHANGE || this.state.handshakeIdActive === HANDSHAKE_ID.CREDIT) && (
                       <div>
                         <hr style={{ margin: '10px 0 5px' }} />
                         <div>
@@ -505,8 +539,8 @@ class Me extends React.Component {
                             component={fieldRadioButton}
                             type="tab-6"
                             list={[
-                              { value: CASH_TAB.TRANSACTION, text: messages.me.feed.cash.transactions, icon: <span className="icon-transactions align-middle" /> },
                               { value: CASH_TAB.DASHBOARD, text: messages.me.feed.cash.dashboard, icon: <span className="icon-dashboard align-middle" /> },
+                              { value: CASH_TAB.TRANSACTION, text: messages.me.feed.cash.transactions, icon: <span className="icon-transactions align-middle" /> },
                             ]}
                             // validate={[required]}
                             onChange={this.onCashTabChange}
@@ -523,8 +557,33 @@ class Me extends React.Component {
           <Row>
             <Col md={12} className="me-main-container">
               {
-              listFeed && listFeed.length > 0 ? (
-                listFeed.map((handshake) => {
+                this.state.handshakeIdActive === HANDSHAKE_ID.CREDIT ? (
+                  <div className="dashboard">
+                    {/*<div className="bg-white">
+                      <div className="wrapper">
+                        <div className="tabs mt-3">
+                          {
+                            tabs.map(tab => {
+                              const { id, text } = tab;
+                              return (
+                                <div
+                                  key={id}
+                                  onClick={() => this.setState({ activeTab: id })}
+                                  className={cx('tab text-normal', { active: activeTab === id })}
+                                >
+                                  {text}
+                                </div>
+                              )
+                            })
+                          }
+                        </div>
+                      </div>
+                    </div>*/}
+                    <div className="content">
+                      {<Component history={this.props.history} setLoading={this.setLoading}></Component>}
+                    </div>
+                  </div>) : listFeed && listFeed.length > 0 ? (
+                    listFeed.map((handshake) => {
                     const FeedComponent = maps[handshake.type];
                     if (FeedComponent) {
                       // if (handshake.offerFeedType === EXCHANGE_FEED_TYPE.OFFER_STORE_SHAKE &&
