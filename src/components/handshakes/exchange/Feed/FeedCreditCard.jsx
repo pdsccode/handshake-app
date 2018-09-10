@@ -15,13 +15,14 @@ import {
   FIAT_CURRENCY,
   FIAT_CURRENCY_NAME,
   FIAT_CURRENCY_SYMBOL,
+  HANDSHAKE_ID,
   URL,
 } from '@/constants';
 import '../styles.scss';
 import { validate, validateSpecificAmount } from '@/components/handshakes/exchange/validation';
 import createForm from '@/components/core/form/createForm';
 import { fieldCleave, fieldDropdown, fieldInput, fieldRadioButton } from '@/components/core/form/customField';
-import { required, email } from '@/components/core/form/validation';
+import { email, required } from '@/components/core/form/validation';
 import { createCCOrder, getCcLimits, getCryptoPrice, getUserCcLimit } from '@/reducers/exchange/action';
 import CryptoPrice from '@/models/CryptoPrice';
 import { MasterWallet } from '@/services/Wallets/MasterWallet';
@@ -41,6 +42,7 @@ import iconEthereum from '@/assets/images/icon/coin/eth.svg';
 import iconBitcoinCash from '@/assets/images/icon/coin/bch.svg';
 import iconUsd from '@/assets/images/icon/coin/icons8-us_dollar.svg';
 import iconLock from '@/assets/images/icon/icons8-lock_filled.svg';
+import { Link } from 'react-router-dom';
 
 export const CRYPTO_ICONS = {
   [CRYPTO_CURRENCY.ETH]: iconEthereum,
@@ -69,8 +71,8 @@ const FormSpecificAmount = createForm({
     form: nameFormSpecificAmount,
     initialValues: {
       currency: {
-        id: CRYPTO_CURRENCY.ETH,
-        text: <span><img src={iconEthereum} width={22} /> {CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.ETH]}</span>,
+        id: CRYPTO_CURRENCY.BTC,
+        text: <span><img src={iconBitcoin} width={22} /> {CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.BTC]}</span>,
       },
       fiatCurrency: {
         id: FIAT_CURRENCY.USD,
@@ -90,6 +92,8 @@ const FormCreditCard = createForm({
 });
 const selectorFormCreditCard = formValueSelector(nameFormCreditCard);
 
+const DECIMAL_NUMBER = 2;
+
 class FeedCreditCard extends React.Component {
   constructor(props) {
     super(props);
@@ -98,7 +102,7 @@ class FeedCreditCard extends React.Component {
       hasSelectedCoin: false,
       isNewCCOpen: true,
       amount: 0,
-      currency: CRYPTO_CURRENCY.ETH,
+      currency: CRYPTO_CURRENCY.BTC,
       fiatAmount: 0,
       fiatCurrency: FIAT_CURRENCY.USD,
       cryptoPrice: this.props.cryptoPrice,
@@ -173,7 +177,7 @@ class FeedCreditCard extends React.Component {
     console.log('handleGetCryptoPriceSuccess amount', amount);
     let fiatAmount = amount * cryptoPrice.fiatAmount / cryptoPrice.amount || 0;
 
-    fiatAmount = roundNumberByLocale(fiatAmount, cryptoPrice.fiatCurrency);
+    fiatAmount = roundNumberByLocale(fiatAmount, cryptoPrice.fiatCurrency, DECIMAL_NUMBER);
     console.log('onAmountChange', fiatAmount);
     rfChange(nameFormSpecificAmount, 'fiatAmount', fiatAmount);
 
@@ -482,7 +486,7 @@ class FeedCreditCard extends React.Component {
 
     let fiatAmount = amount * cryptoPrice.fiatAmount / cryptoPrice.amount;
 
-    fiatAmount = roundNumberByLocale(fiatAmount, cryptoPrice.fiatCurrency);
+    fiatAmount = roundNumberByLocale(fiatAmount, cryptoPrice.fiatCurrency, DECIMAL_NUMBER);
     console.log('onAmountChange', fiatAmount);
     rfChange(nameFormSpecificAmount, 'fiatAmount', fiatAmount);
   }
@@ -631,6 +635,16 @@ class FeedCreditCard extends React.Component {
                 );
               })
             }
+          </div>
+        </div>
+        <div>
+          <div className="ex-sticky-note">
+            <div className="mb-2"><FormattedMessage id="ex.credit.banner.text" /></div>
+            <div>
+              <Link to={{ pathname: URL.ESCROW_DEPOSIT, search: `` }}>
+                <button className="btn btn-become"><FormattedMessage id="ex.credit.banner.btnText" /></button>
+              </Link>
+            </div>
           </div>
         </div>
       </div>

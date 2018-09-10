@@ -8,13 +8,27 @@ import { EXCHANGE_ACTIONS } from './action';
 import { EXCHANGE_ACTION } from '@/constants';
 import Dashboard from '@/models/Dashboard';
 import Referal from '@/models/Referal';
+import Deposit from '@/models/Deposit';
+import Handshake from '@/models/Handshake';
 
 const initListOfferPrice = [];
 initListOfferPrice.updatedAt = Date.now();
+const initDepositInfo = {};
+initDepositInfo.updatedAt = Date.now();
+
+const handleListPayload = (payload) => {
+  const result = [];
+  payload.map((handshake) => {
+    result.push(Handshake.handshake(handshake));
+  });
+
+  return result;
+};
 
 function exchangeReducter(state = {
   listOfferPrice: initListOfferPrice,
   isChooseFreeStart: false,
+  depositInfo: initDepositInfo,
 }, action) {
   // console.log('exchangeReducter', JSON.stringify(action));
   switch (action.type) {
@@ -68,6 +82,22 @@ function exchangeReducter(state = {
     case `${EXCHANGE_ACTIONS.GET_REFERAL_INFO}_SUCCESS`: {
       return { ...state, referalInfo: Referal.referal(action.payload.data) };
     }
+    case `${EXCHANGE_ACTIONS.GET_CREDIT_ATM}_SUCCESS`: {
+      const depositInfo = { };
+
+      Object.entries(action.payload.data.items).forEach(([key, value]) => {
+        console.log('key, value', key, value);
+        depositInfo[key] = Deposit.deposit(value);
+      });
+      depositInfo.updatedAt = Date.now();
+      return { ...state, depositInfo, creditRevenue: action.payload.data.revenue || '0' };
+    }
+    case `${EXCHANGE_ACTIONS.GET_TRANSACTION_CREDIT_ATM}_SUCCESS`:
+      const list = handleListPayload(action.payload.data.handshakes);
+      return {
+        ...state,
+        creditTransactions: list,
+      };
     default:
       return state;
   }
