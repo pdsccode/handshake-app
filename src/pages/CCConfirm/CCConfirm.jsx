@@ -168,7 +168,7 @@ class CCConfirm extends React.Component {
     if (callbackSuccess) {
       callbackSuccess();
     } else {
-      this.props.history.push(`${URL.HANDSHAKE_ME}?id=${HANDSHAKE_ID.EXCHANGE}`);
+      this.props.history.push(`${URL.HANDSHAKE_ME}?id=${HANDSHAKE_ID.CREDIT}`);
     }
   };
 
