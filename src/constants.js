@@ -573,7 +573,7 @@ export const URL = {
   RECRUITING: '/recruiting',
   RECRUITING_JOB_DETAIL: '/recruiting/:slug',
 
-  CC_PAYMENT_URL: '/payment',
+  CC_PAYMENT_URL: '/cc-payment',
   BUY_BY_CC_URL: '/buy-by-credit-card',
 
   ESCROW_DEPOSIT: '/escrow/deposit',
