@@ -2,6 +2,7 @@ export default {
   prediction: {},
   reports: {},
   categories: {},
+  orderPlace: {},
   ui: {
     showedLuckyPool: false,
     side: null,
