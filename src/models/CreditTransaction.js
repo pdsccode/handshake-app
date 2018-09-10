@@ -14,6 +14,7 @@ class CreditTransaction {
       fiatAmount: data.fiat_amount || '0',
       fiatCurrency: data.fiat_currency || '0',
       feePercentage: data.fee_percentage || '0',
+      fee: data.fee || '0',
       email: data.email || '',
     };
   }
