@@ -803,8 +803,7 @@ class Wallet extends React.Component {
       modalWalletPreferences: (<WalletPreferences onDeleteWalletClick={()=>{this.modalBetRef.open();}} onWarningClick={()=>{this.onWarningClick(wallet);}} onUpdateWalletName={(wallet)=> {this.onUpdateWalletName(wallet);}} wallet={wallet} customBackIcon={BackChevronSVGWhite} modalHeaderStyle={this.modalHeaderStyle} />)
     }, ()=>{
       this.modalWalletReferencesRef.open();
-    })
-
+    });
   }
 
   onAddressClick = (wallet) => {
@@ -921,6 +920,10 @@ class Wallet extends React.Component {
     this.modalProtectRef.close();
     this.splitWalletData(lstWalletTemp);
     this.showSuccess(messages.wallet.action.protect.success);
+    // for form wallet detail:
+    if (this.state.modalHistory != ''){
+      this.onWalletItemClick(wallet);
+    }
   }
 
   getETHFree() {
