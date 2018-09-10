@@ -180,7 +180,7 @@ class TransactionItem extends React.Component {
                   <div className="d-table-cell text-right">
                     <span className="font-weight-bold">{fee}</span>
                     &nbsp;
-                    <span className="text-normal">%</span>
+                    <span className="text-normal">{FIAT_CURRENCY.USD}</span>
                   </div>
                 </div>
               </div>
