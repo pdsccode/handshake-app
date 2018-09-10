@@ -92,6 +92,8 @@ const FormCreditCard = createForm({
 });
 const selectorFormCreditCard = formValueSelector(nameFormCreditCard);
 
+const DECIMAL_NUMBER = 2;
+
 class FeedCreditCard extends React.Component {
   constructor(props) {
     super(props);
@@ -175,7 +177,7 @@ class FeedCreditCard extends React.Component {
     console.log('handleGetCryptoPriceSuccess amount', amount);
     let fiatAmount = amount * cryptoPrice.fiatAmount / cryptoPrice.amount || 0;
 
-    fiatAmount = roundNumberByLocale(fiatAmount, cryptoPrice.fiatCurrency);
+    fiatAmount = roundNumberByLocale(fiatAmount, cryptoPrice.fiatCurrency, DECIMAL_NUMBER);
     console.log('onAmountChange', fiatAmount);
     rfChange(nameFormSpecificAmount, 'fiatAmount', fiatAmount);
 
@@ -484,7 +486,7 @@ class FeedCreditCard extends React.Component {
 
     let fiatAmount = amount * cryptoPrice.fiatAmount / cryptoPrice.amount;
 
-    fiatAmount = roundNumberByLocale(fiatAmount, cryptoPrice.fiatCurrency);
+    fiatAmount = roundNumberByLocale(fiatAmount, cryptoPrice.fiatCurrency, DECIMAL_NUMBER);
     console.log('onAmountChange', fiatAmount);
     rfChange(nameFormSpecificAmount, 'fiatAmount', fiatAmount);
   }
