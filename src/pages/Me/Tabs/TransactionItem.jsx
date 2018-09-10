@@ -173,6 +173,16 @@ class TransactionItem extends React.Component {
                     <span className="text-normal">{FIAT_CURRENCY.USD}</span>
                   </div>
                 </div>
+                <div className="d-table w-100">
+                  <div className="d-table-cell text-normal">
+                    {messages.me.credit.transaction.deposit.percentage}
+                  </div>
+                  <div className="d-table-cell text-right">
+                    <span className="font-weight-bold">{percentage}</span>
+                    &nbsp;
+                    <span className="text-normal">%</span>
+                  </div>
+                </div>
               </div>
             ) : feedType === CREDIT_FEED_TYPES.INSTANT ? (
                 <div>

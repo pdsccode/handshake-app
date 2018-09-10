@@ -416,6 +416,7 @@ class Me extends React.Component {
           <FeedCreditCard
             buttonTitle={messages.create.cash.credit.title}
             callbackSuccess={this.afterWalletFill}
+            isPopup
           />
         ),
     }, () => {
