@@ -570,7 +570,7 @@ class EscrowDeposit extends React.Component {
 const mapState = state => {
   const percentageObj = {};
   listCurrency.forEach(({ name }) => {
-    percentageObj[`percentage_${name}`] = selectorFormEscrowDeposit(state, `percentage_${name}`);
+    percentageObj[`percentage_${name}`] = selectorFormEscrowDeposit(state, `percentage_${name}`) || 0;
   });
   return {
     listOfferPrice: state.exchange.listOfferPrice,
