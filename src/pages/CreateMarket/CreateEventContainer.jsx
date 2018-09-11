@@ -53,7 +53,7 @@ class CreateEventContainer extends React.Component {
     } : {
       eventId: selectedEvent.id,
       eventName: selectedEvent.name,
-      outcomes: selectedEvent.outcomes,
+      outcomes: selectedEvent.outcomes.concat({}),
       creatorFee: selectedEvent.market_fee,
       reports: selectedEvent.source_id,
       category: selectedEvent.category_id,
