@@ -8,11 +8,13 @@ import { URL } from '@/constants';
 import { setHeaderTitle, clearHeaderLeft, clearHeaderRight, showHeader } from '@/reducers/app/action';
 
 const Shop = props => (<DynamicImport loading={Loading} load={() => import('@/pages/Shop/Shop')}>{Component => <Component {...props} />}</DynamicImport>);
+const OrderConfirm = props => (<DynamicImport loading={Loading} load={() => import('@/pages/Shop/Confirm')}>{Component => <Component {...props} />}</DynamicImport>);
 const ShopDetail = props => (<DynamicImport loading={Loading} load={() => import('@/pages/Shop/ShopDetail')}>{Component => <Component {...props} />}</DynamicImport>);
 const Page404 = props => (<DynamicImport isNotFound loading={Loading} load={() => import('@/pages/Error/Page404')}>{Component => <Component {...props} />}</DynamicImport>);
 
 const routerMap = [
   { path: URL.SHOP_URL_INDEX, component: Shop },
+  { path: URL.SHOP_URL_CONFIRM, component: OrderConfirm },
   { path: URL.SHOP_URL_DETAIL, component: ShopDetail },
 ];
 

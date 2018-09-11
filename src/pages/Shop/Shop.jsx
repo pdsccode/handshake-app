@@ -30,7 +30,7 @@ class Shop extends React.Component {
   videoOrImage(firstGallery, productName) {
     if (firstGallery.is_video) {
       // video
-      return  <div class="embed-responsive embed-responsive-16by9">
+      return  <div className="embed-responsive embed-responsive-16by9">
                 <iframe className="embed-responsive-item" src={firstGallery.youtube_url}  />
               </div>
     } else {

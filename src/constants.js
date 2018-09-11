@@ -582,6 +582,7 @@ export const URL = {
 
   SHOP_URL: '/shop',
   SHOP_URL_INDEX: '/shop',
+  SHOP_URL_CONFIRM: '/shop/confirm',
   SHOP_URL_DETAIL: '/shop/:slug',
 };
 
@@ -914,3 +915,5 @@ export const Country = {
   CS: 'RSD',
   AN: 'ANG',
 };
+
+export const CUSTOMER_ADDRESS_INFO = 'CUSTOMER_ADDRESS_INFO';
