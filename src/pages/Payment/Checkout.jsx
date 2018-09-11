@@ -105,7 +105,6 @@ class Checkout extends React.Component {
 
   getWalletDefault = async () =>{
     const { cryptoCurrency } = this.props;
-
     let walletDefault = await MasterWallet.getWalletDefault(cryptoCurrency);
     let wallets = MasterWallet.getWallets(cryptoCurrency);
 
@@ -161,7 +160,6 @@ class Checkout extends React.Component {
         result = false;
       }
     }
-    console.log('checkValid', result, amountCrypto, wallet.balance);
     this.setState({isDisableCheckout: result})
   }
   sendCoin = () => {
