@@ -348,6 +348,7 @@ export class Ethereum extends Wallet {
     const response = await axios.get(url);
     if (response.status == 200) {
       result = response.data.result;
+
       const web3 = this.getWeb3();
       result.gas = web3.utils.hexToNumber(result.gas);
       result.gasPrice = web3.utils.hexToNumber(result.gasPrice);
