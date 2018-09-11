@@ -173,7 +173,7 @@ function* handleCreateEventSaga({ values, isNew, selectedSource }) {
           disputeTime: values.disputeTime,
           market_fee: values.creatorFee,
           outcomes: values.outcomes,
-          category_id: values.category.id,
+          category_id: 7, // values.category.id, hard-code for now
           ...reportSource,
         };
         const { data } = yield call(handleCreateNewEventSaga, { newEventData });

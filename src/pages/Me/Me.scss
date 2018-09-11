@@ -129,7 +129,7 @@
   .content {
     //padding: 0 15px;
     .transaction {
-      margin: 15px 15px 20px;
+      margin: 15px 0px 20px;
       .transaction-detail {
         background: #FFFFFF;
         border-radius: 5px;
@@ -151,6 +151,7 @@
       }
     }
     .manage-assets {
+      padding-top: 1rem;
       .btn-activate {
         position: absolute;
         right: 0;

@@ -130,10 +130,9 @@ class CreateEventForm extends Component {
   }
 
   renderEventSuggest = (props) => {
-    const title = 'EVENT';
     return (
       <React.Fragment>
-        {this.renderGroupTitle(title)}
+        {this.renderGroupTitle('EVENT')}
         <Field
           type="autoSuggestion"
           name="eventName"
@@ -347,7 +346,7 @@ class CreateEventForm extends Component {
       <form className={cls} onSubmit={props.handleSubmit(this.onCreateNewEvent)}>
         <div className="CreateEventFormBlock">
           {this.renderEventSuggest(props, state)}
-          {this.renderCategories(props, state)}
+          {/*{this.renderCategories(props, state)}*/}
           <FieldArray
             name="outcomes"
             isNew={props.isNew}

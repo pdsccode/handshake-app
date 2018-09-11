@@ -40,7 +40,7 @@ function autoSuggestion(props) {
   const { placeholder, source } = props;
   const { name, value, onChange } = props.input;
   let nextValue = (typeof value === 'string' || typeof value === 'number')
-    ? source.find(o => o.value === value) : value.toString();
+    ? source.find(o => o.name === value) : value.toString();
   if (typeof nextValue === 'object') {
     nextValue = nextValue.name;
   }
@@ -49,7 +49,7 @@ function autoSuggestion(props) {
     input: {
       ...props.input,
       value: nextValue,
-    }
+    },
   };
   return (
     <AutoSuggestion

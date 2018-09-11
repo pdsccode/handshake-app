@@ -15,18 +15,23 @@ class CreateEventContainer extends React.Component {
     eventList: PropTypes.array,
     reportList: PropTypes.array,
     categoryList: PropTypes.array,
+    eventId: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.number,
+    ]),
   };
 
   static defaultProps = {
     eventList: [],
     reportList: [],
     categoryList: [],
+    eventId: 0,
   };
 
   constructor(props) {
     super(props);
     this.state = {
-      selectedEvent: 0,
+      eventId: props.eventId,
     };
   }
 
@@ -36,12 +41,12 @@ class CreateEventContainer extends React.Component {
 
   onSelectEvent = (item) => {
     this.setState({
-      selectedEvent: item.id ? item : 0,
+      eventId: item.id || 0,
     });
   }
 
   renderCreateEventForm = (props, state) => {
-    const { selectedEvent } = state;
+    const selectedEvent = props.eventList.find(item => item.id.toString() === state.eventId.toString());
     const initialValues = !selectedEvent ? {
       outcomes: [{}],
       creatorFee: 0,

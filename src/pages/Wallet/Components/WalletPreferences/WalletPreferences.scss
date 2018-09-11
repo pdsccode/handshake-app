@@ -6,8 +6,7 @@
     width: 100%;
     .item
     {
-        border-bottom: 1px #f4f4f4 solid;
-        margin-bottom: 13px;        
+        border-bottom: 1px #f4f4f4 solid;        
         position: relative;
         width: 100%;
         padding: 20px;
@@ -24,4 +23,7 @@
             }
         }
     }
+}
+.update-name{
+    padding-top: 20px;
 }

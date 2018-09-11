@@ -36,6 +36,7 @@ const RouterDiscover = createDynamicImport(() => import('@/components/Router/Dis
 const RouterChat = createDynamicImport(() => import('@/components/Router/Chat'), Loading);
 const RouterCreate = createDynamicImport(() => import('@/components/Router/Create'), Loading);
 const RouterWallet = createDynamicImport(() => import('@/components/Router/Wallet'), Loading);
+const RouterPayment = createDynamicImport(() => import('@/components/Router/Payment'), Loading);
 const RouterComment = createDynamicImport(() => import('@/components/Router/Comment'), Loading);
 const RouterAdmin = createDynamicImport(() => import('@/components/Router/Admin'), Loading);
 const RouterReport = createDynamicImport(() => import('@/components/Router/Report'), Loading);
@@ -74,6 +75,7 @@ const configRoutesUsingMobileLayout = [
   { path: URL.HANDSHAKE_CASH, component: RouterDiscover },
   { path: URL.HANDSHAKE_CHAT, component: RouterChat },
   { path: URL.HANDSHAKE_WALLET, component: RouterWallet },
+  { path: URL.HANDSHAKE_PAYMENT, component: RouterPayment },
   { path: URL.HANDSHAKE_CREATE, component: RouterCreate },
   { path: URL.COMMENTS_BY_SHAKE, component: RouterComment },
   { path: URL.ADMIN, component: RouterAdmin },
