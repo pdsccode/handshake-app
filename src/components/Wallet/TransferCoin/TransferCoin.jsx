@@ -118,11 +118,11 @@ class Transfer extends React.Component {
   }
 
 
-  onFinish = () => {
+  onFinish = (data) => {
     const { onFinish } = this.props;
 
     if (onFinish) {
-      let result = {"toAddress": this.state.inputAddressAmountValue, "fromWallet": this.state.walletSelected, "amountCoin": this.state.inputSendAmountValue}
+      let result = {"toAddress": this.state.inputAddressAmountValue, "fromWallet": this.state.walletSelected, "amountCoin": this.state.inputSendAmountValue, data: data}
       onFinish(result);
     } else {
 
@@ -332,8 +332,7 @@ submitSendCoin=()=>{
         if (success.hasOwnProperty('status')){
           if (success.status == 1){
             this.showSuccess(this.getMessage(success.message));
-            console.log(success);
-            this.onFinish();
+            this.onFinish(success.data);
             MasterWallet.NotifyUserTransfer(this.state.walletSelected.address, this.state.inputAddressAmountValue);
             // start cron get balance auto ...
             // todo hanlde it ...

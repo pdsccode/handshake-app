@@ -40,6 +40,7 @@ class WalletHistory extends React.Component {
       wallet: this.props.wallet,
       pagenoTran: 1,
       pagenoIT: 1,
+      callUpdate: false
     };
   }
 
@@ -70,7 +71,51 @@ class WalletHistory extends React.Component {
     }
   }
 
+  componentDidUpdate(){
+    const { callUpdate } = this.props;
+    let { callUpdate:stateCallUpdate, transactions } = this.state;
+    let stateHash = stateCallUpdate ? stateCallUpdate.data.hash : "";console.log('componentDidUpdate', callUpdate, stateHash);
+    if(callUpdate && callUpdate.data.hash != stateHash){
+      console.log('componentDidUpdate 2', transactions.length);
+
+      if(callUpdate.fromWallet.name == "ETH"){
+        let newTran = {
+          blockHash: "",
+          blockNumber: "",
+          confirmations: "0",
+          contractAddress: "",
+          cumulativeGasUsed: "",
+          from: callUpdate.fromWallet.address,
+          gas: "210000",//
+          gasPrice: "",
+          gasUsed: "21000",//
+          hash: callUpdate.data.hash,
+          input: "",
+          isError: "0",
+          is_sent: 1,
+          nonce: "",
+          timeStamp: new Date().getTime(),
+          to: callUpdate.toAddress,//
+          transactionIndex: "",
+          txreceipt_status: "",
+          value: Number(callUpdate.amountCoin * 100000000000000000).toString()
+        };
+
+        transactions.push(newTran);
+        this.setState({transactions:transactions, callUpdate: callUpdate}, ()=>{
+          console.log('componentDidUpdate 3', this.state.transactions.length);
+        });
+
+      }
+    }
+  }
+
+  // componentDidUpdate(){
+  //   console.log('componentDidUpdate');
+  // }
+
   async componentDidMount(){
+    console.log('componentDidMount');
     let wallet = this.state.wallet;
     let pagenoTran = 0, pagenoIT = 0, transactions = [], internalTransactions = [];
 
@@ -137,6 +182,7 @@ class WalletHistory extends React.Component {
   get list_transaction() {
     const wallet = this.props.wallet;
     const { messages } = this.props.intl;
+    console.log('list_transaction', this.state.transactions.length);
 
     if (wallet && !this.state.transactions.length)
       return this.getNoTransactionYet(messages.wallet.action.history.label.no_trans);
@@ -182,7 +228,9 @@ class WalletHistory extends React.Component {
             </div>
             <div className="col1"><img className="iconDollar" src={icon} /></div>
             <div className="col2 history-address">
-              <div className={cssLabel}>{label}</div>
+              <div className={cssLabel}>
+                {label}
+              </div>
               {
                 tran.addresses.map((addr) => {
                   return <div key={addr}>{addr}</div>

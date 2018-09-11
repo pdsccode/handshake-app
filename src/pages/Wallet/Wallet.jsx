@@ -774,7 +774,7 @@ class Wallet extends React.Component {
 
     // }
   }
-  onWalletItemClick = (wallet) =>{
+  onWalletItemClick = (wallet, callUpdate) =>{
     this.setState({walletSelected: wallet,
       modalHistory:
       (
@@ -785,6 +785,7 @@ class Wallet extends React.Component {
           wallet={wallet}
           customBackIcon={BackChevronSVGWhite}
           modalHeaderStyle={this.modalHeaderStyle}
+          callUpdate={callUpdate}
         />
       )
     }, ()=>{
@@ -889,7 +890,10 @@ class Wallet extends React.Component {
   successTransfer = (result) => {
     this.modalSendRef.close();
     this.autoCheckBalance(this.state.walletSelected.address, this.state.inputAddressAmountValue);
-    console.log(result);
+    console.log('successTransfer', result);
+    if(this.state.modalHistory){
+      this.onWalletItemClick(this.state.walletSelected, result);
+    }
   }
 
   closeQrCode=() => {
