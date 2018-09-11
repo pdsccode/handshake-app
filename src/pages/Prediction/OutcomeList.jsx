@@ -1,4 +1,5 @@
 import React from 'react';
+import cx from 'classnames';
 import propTypes from 'prop-types';
 import ScrollableList from '@/components/ScrollableList/ScrollableList';
 import { generatedBackgroundCss } from '@/utils/css.js';
@@ -29,8 +30,11 @@ function buildOutcomeItem(outcome) {
   } else {
     handledStr = smartTrim(name, name.length / 2);
   }
+  const cls = cx('OutcomeItem', {
+    AddMoreOutcome: outcome.id === URL.HANDSHAKE_PEX_CREATOR,
+  });
   return (
-    <div className="OutcomeItem" style={styleCss}>
+    <div className={cls} style={styleCss}>
       {handledStr[0] && <span>{handledStr[0]}</span>}
       {handledStr[1] && <span>{handledStr[1]}</span>}
     </div>

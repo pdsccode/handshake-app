@@ -167,6 +167,13 @@
       justify-content: center;
       height: 100%;
 
+      &.AddMoreOutcome {
+        background-color: transparent !important;
+        border: 2px dashed #CECECE;
+        color: #615c5c;
+        font-size: 30px;
+      }
+
       span {
         display: block;
       }
