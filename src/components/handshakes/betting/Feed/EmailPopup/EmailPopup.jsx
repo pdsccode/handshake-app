@@ -8,6 +8,7 @@ import isEmail from 'validator/lib/isEmail';
 import { submitEmailSubcribe } from '@/reducers/auth/action';
 import { API_URL } from '@/constants';
 import { connect } from 'react-redux';
+import GA from '@/services/googleAnalytics';
 
 import './EmailPopup.scss';
 
@@ -98,6 +99,7 @@ class EmailPopup extends React.Component {
           className="emailPopupButton"
           isLoading={this.props.fetching}
           onClick={() => {
+            GA.clickNotifyMe();
             this.sendEmail();
           }}
         >

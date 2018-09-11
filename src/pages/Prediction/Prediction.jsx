@@ -25,6 +25,7 @@ import { injectIntl } from 'react-intl';
 import { URL } from '@/constants';
 import { eventSelector, isLoading, showedLuckyPoolSelector, isSharePage, countReportSelector, checkFreeBetSelector, checkExistSubcribeEmailSelector } from './selector';
 import { loadMatches, getReportCount, removeExpiredEvent, checkFreeBet, checkExistSubcribeEmail } from './action';
+import { getBalance } from '@/components/handshakes/betting/utils.js';
 
 import EventItem from './EventItem';
 import PexCreateBtn from './PexCreateBtn';
@@ -204,10 +205,14 @@ class Prediction extends React.Component {
   }
 
   afterWalletFill = () => {
+    GA.didFillUpMoney();
     this.modalFillRef.close();
   }
 
-  showPopupCreditCard = () => {
+  showPopupCreditCard = async () => {
+    const balance = await getBalance();
+
+    GA.clickTopupWallet(balance);
     this.modalOuttaMoney.close();
     const { messages } = this.props.intl;
     this.setState({
