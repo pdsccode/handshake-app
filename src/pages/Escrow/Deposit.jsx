@@ -70,7 +70,7 @@ class EscrowDeposit extends React.Component {
       if (currency) {
         const depositInfo = nextProps.depositInfo[currency];
         if (!depositInfo || depositInfo.subStatus !== 'transferring') {
-          listCurrency = [{ name: currency, icon: CRYPTO_ICONS[currency], allowPercentage: !depositInfo }];
+          listCurrency = [{ name: currency, icon: CRYPTO_ICONS[currency], allowPercentage: !depositInfo || depositInfo.subStatus !== 'inactive' }];
           if (depositInfo) {
             nextProps.rfChange(nameFormEscrowDeposit, `percentage_${currency}`, depositInfo.percentage);
           }
@@ -82,7 +82,7 @@ class EscrowDeposit extends React.Component {
         for (const item of Object.values(CRYPTO_CURRENCY_CREDIT_CARD)) {
           const depositInfo = nextProps.depositInfo[item];
           if (!depositInfo || depositInfo.subStatus !== 'transferring') {
-            listCurrency.push({ name: item, icon: CRYPTO_ICONS[item], allowPercentage: !depositInfo });
+            listCurrency.push({ name: item, icon: CRYPTO_ICONS[item], allowPercentage: !depositInfo || depositInfo.subStatus !== 'inactive' });
             if (depositInfo) {
               nextProps.rfChange(nameFormEscrowDeposit, `percentage_${item}`, depositInfo.percentage);
             }
