@@ -74,7 +74,6 @@ class CreateEventForm extends Component {
       fields.push({});
     } else {
       const { dispatch, formAction } = this.props;
-      // this.props.dispatch(touch('CreateEventForm', 'outcomes[0].name', ''));
       dispatch(formAction(touch, `outcomes[${lastIndex}].name`));
     }
   }
