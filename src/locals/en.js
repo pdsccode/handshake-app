@@ -1312,6 +1312,7 @@ export default {
         label: {
           balance_hidden: "Balance Hidden",
           failed: 'Failed',
+          pending: 'Pending',
           unconfirmed: 'Unconfirmed',
           balance: 'Balance',
           transactions: 'Transactions',

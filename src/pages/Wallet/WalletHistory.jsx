@@ -71,51 +71,20 @@ class WalletHistory extends React.Component {
     }
   }
 
-  componentDidUpdate(){
+  async componentDidUpdate(){
     const { callUpdate } = this.props;
     let { callUpdate:stateCallUpdate, transactions } = this.state;
-    let stateHash = stateCallUpdate ? stateCallUpdate.data.hash : "";console.log('componentDidUpdate', callUpdate, stateHash);
+    let stateHash = stateCallUpdate ? stateCallUpdate.data.hash : "";
     if(callUpdate && callUpdate.data.hash != stateHash){
-      console.log('componentDidUpdate 2', transactions.length);
 
       if(callUpdate.fromWallet.name == "ETH"){
-        let newTran = {
-          blockHash: "",
-          blockNumber: "",
-          confirmations: "0",
-          contractAddress: "",
-          cumulativeGasUsed: "",
-          from: callUpdate.fromWallet.address,
-          gas: "210000",//
-          gasPrice: "",
-          gasUsed: "21000",//
-          hash: callUpdate.data.hash,
-          input: "",
-          isError: "0",
-          is_sent: 1,
-          nonce: "",
-          timeStamp: new Date().getTime(),
-          to: callUpdate.toAddress,//
-          transactionIndex: "",
-          txreceipt_status: "",
-          value: Number(callUpdate.amountCoin * 100000000000000000).toString()
-        };
-
-        transactions.push(newTran);
-        this.setState({transactions:transactions, callUpdate: callUpdate}, ()=>{
-          console.log('componentDidUpdate 3', this.state.transactions.length);
-        });
-
+        let transactions = this.getSessionStore(this.state.wallet, TAB.Transaction);
+        this.setState({transactions:transactions, callUpdate: callUpdate});
       }
     }
   }
 
-  // componentDidUpdate(){
-  //   console.log('componentDidUpdate');
-  // }
-
   async componentDidMount(){
-    console.log('componentDidMount');
     let wallet = this.state.wallet;
     let pagenoTran = 0, pagenoIT = 0, transactions = [], internalTransactions = [];
 
@@ -139,13 +108,23 @@ class WalletHistory extends React.Component {
       wallet.transaction_count = await wallet.getTransactionCount();
 
       transactions = await wallet.getTransactionHistory(pagenoTran);
-      this.setSessionStore(wallet, TAB.Transaction, transactions);
+      if(this.checkAPINewest(cTransaction, transactions)){
+        this.setSessionStore(wallet, TAB.Transaction, transactions);
+      }
+      else{
+        transactions = cTransaction;
+      }
 
       if(Number(transactions.length) < 20) pagenoTran = 0;
       if(transactions.length > wallet.transaction_count) wallet.transaction_count = transactions.length;
 
       internalTransactions = await wallet.listInternalTransactions(pagenoIT);
-      this.setSessionStore(wallet, TAB.Internal, internalTransactions);
+      if(this.checkAPINewest(cInternalTransactions, internalTransactions)){
+        this.setSessionStore(wallet, TAB.Internal, internalTransactions);
+      }
+      else{
+        internalTransactions = cInternalTransactions;
+      }
 
       if(Number(internalTransactions.length) < 20) pagenoIT = 0;
       if(internalTransactions.length > wallet.transaction_count) wallet.transaction_count = transactions.length;
@@ -166,6 +145,23 @@ class WalletHistory extends React.Component {
     });
   }
 
+  checkAPINewest(cTransaction, transactions){
+    let result = false;
+    if(cTransaction && transactions && cTransaction.length && transactions.length){
+      let c = cTransaction[0];
+      for(var t of transactions){
+        if(c.hash == t.hash){
+          result = true;
+          break;
+        }
+      }
+    }
+    else{
+      result = true;
+    }
+    return result;
+  }
+
   getNoTransactionYet(text){
     const wallet = this.props.wallet;
 
@@ -182,7 +178,6 @@ class WalletHistory extends React.Component {
   get list_transaction() {
     const wallet = this.props.wallet;
     const { messages } = this.props.intl;
-    console.log('list_transaction', this.state.transactions.length);
 
     if (wallet && !this.state.transactions.length)
       return this.getNoTransactionYet(messages.wallet.action.history.label.no_trans);

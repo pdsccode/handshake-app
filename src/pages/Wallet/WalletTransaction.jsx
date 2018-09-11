@@ -50,21 +50,24 @@ class WalletTransaction extends React.Component {
             tx_fee = Number(Number(data.gasUsed) * gas_gwei / 1000000000);
           }
 
-          if(data.txreceipt_status) {
-            status = Number(data.txreceipt_status) > 0 ? messages.wallet.action.history.label.success : messages.wallet.action.history.label.failed;
+          if(data.pending){
+            status = messages.wallet.action.history.label.pending;
           }
-          else {
-            if(data.txreceipt_status == undefined) {
-              if(data.isError == "1") {
-                status = messages.wallet.action.history.label.error;
-              }
-              else {
-                status = messages.wallet.action.history.label.success;
+          else{
+            if(data.txreceipt_status) {
+              status = Number(data.txreceipt_status) > 0 ? messages.wallet.action.history.label.success : messages.wallet.action.history.label.failed;
+            }
+            else {
+              if(data.txreceipt_status == undefined) {
+                if(data.isError == "1") {
+                  status = messages.wallet.action.history.label.error;
+                }
+                else {
+                  status = messages.wallet.action.history.label.success;
+                }
               }
             }
           }
-
-
 
           result = {
             header: {
