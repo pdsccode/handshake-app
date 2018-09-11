@@ -453,7 +453,6 @@ class EscrowDeposit extends React.Component {
     const { messages } = this.props.intl;
     const { intl, hideNavigationBar } = this.props;
     const { listOfferPrice } = this.props;
-    console.log('Deposit render');
 
     return (
       <div className="escrow-deposit">
@@ -487,7 +486,8 @@ class EscrowDeposit extends React.Component {
                   return type === EXCHANGE_ACTION.SELL && currency === name && fiatCurrency === FIAT_CURRENCY.USD;
                 });
 
-                const fiatCurrency = offerPrice && offerPrice.price || 0;
+                let fiatCurrency = offerPrice && offerPrice.price || 0;
+                fiatCurrency *= (1 + ((+this.props[`percentage_${name}`]) / 100));
 
                 return (
                   <div key={name} className="mt-2">
@@ -567,12 +567,19 @@ class EscrowDeposit extends React.Component {
   }
 }
 
-const mapState = state => ({
-  listOfferPrice: state.exchange.listOfferPrice,
-  authProfile: state.auth.profile,
-  app: state.app,
-  depositInfo: state.exchange.depositInfo,
-});
+const mapState = state => {
+  const percentageObj = {};
+  listCurrency.forEach(({ name }) => {
+    percentageObj[`percentage_${name}`] = selectorFormEscrowDeposit(state, `percentage_${name}`) || 0;
+  });
+  return {
+    listOfferPrice: state.exchange.listOfferPrice,
+    authProfile: state.auth.profile,
+    app: state.app,
+    depositInfo: state.exchange.depositInfo,
+    ...percentageObj,
+  };
+};
 
 const mapDispatch = dispatch => ({
   rfChange: bindActionCreators(change, dispatch),
