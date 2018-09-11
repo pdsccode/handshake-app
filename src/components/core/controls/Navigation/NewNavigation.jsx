@@ -7,7 +7,7 @@ import { injectIntl } from 'react-intl';
 
 import { URL } from '@/constants';
 import { clearHeaderBack } from '@/reducers/app/action';
-import meIcon from '@/assets/images/navigation/ic_setting.svg.raw';
+import meIcon from '@/assets/images/navigation/ic_me.svg.raw';
 import creditIcon from '@/assets/images/navigation/ic_credit.svg.raw';
 import discoverIcon from '@/assets/images/navigation/ic_atm.svg.raw';
 import chatIcon from '@/assets/images/navigation/ic_prediction.svg.raw';
