@@ -524,6 +524,10 @@ export const URL = {
   HANDSHAKE_CASH_INDEX: '/cash',
   HANDSHAKE_CASH_DETAIL: '/cash/:slug',
 
+  HANDSHAKE_ATM: '/atm',
+  HANDSHAKE_ATM_INDEX: '/atm',
+  HANDSHAKE_ATM_DETAIL: '/atm/:slug',
+
   HANDSHAKE_CHAT: '/whisper',
   HANDSHAKE_CHAT_INDEX: '/whisper',
   HANDSHAKE_CHAT_DETAIL: '/whisper/:userId',

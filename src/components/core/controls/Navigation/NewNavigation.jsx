@@ -57,8 +57,8 @@ class Navigation extends React.Component {
               <span>{this.props.intl.messages.app.navigation.credit.toUpperCase()}</span>
             </Link>
           </li>
-          <li className={cn(this.checkSelected([URL.HANDSHAKE_EXCHANGE, URL.HANDSHAKE_CASH]))}>
-            <Link to={URL.HANDSHAKE_CASH} onClick={this.props.clearHeaderBack}>
+          <li className={cn(this.checkSelected([URL.HANDSHAKE_EXCHANGE, URL.HANDSHAKE_CASH, URL.HANDSHAKE_ATM]))}>
+            <Link to={URL.HANDSHAKE_ATM} onClick={this.props.clearHeaderBack}>
               <div dangerouslySetInnerHTML={{ __html: discoverIcon }} />
               <span>{this.props.intl.messages.app.navigation.atm.toUpperCase()}</span>
             </Link>
