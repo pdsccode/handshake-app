@@ -295,6 +295,7 @@ class CreateEventForm extends Component {
     const closingStartTime = moment().add(minStep, 'm').unix();
     return (
       <React.Fragment>
+        {!props.isNew && this.renderGroupTitle('Event closing time')}
         <Field
           name="closingTime"
           type="text"
@@ -307,6 +308,7 @@ class CreateEventForm extends Component {
           startDate={closingStartTime}
           // endDate={state.reportingTime - secStep}
         />
+        {!props.isNew && this.renderGroupTitle('Report deadline')}
         <Field
           name="reportingTime"
           type="text"
@@ -319,6 +321,7 @@ class CreateEventForm extends Component {
           startDate={state.closingTime + secStep}
           // endDate={state.disputeTime - secStep}
         />
+        {!props.isNew && this.renderGroupTitle('Dispute deadline')}
         <Field
           name="disputeTime"
           type="text"
