@@ -266,7 +266,6 @@ const winOrLose = (resultStatus, side = SIDE.SUPPORT, disputeTime) => {
       isAction = true;
     } else {
       const time = leftTime(disputeTime);
-      console.log(TAG, 'TIME:', time);
       strStatus = BETTING_STATUS_LABEL.WIN + BETTING_STATUS_LABEL.WIN_WAIT.replace('{{value}}', time);
       isAction = false;
     }
