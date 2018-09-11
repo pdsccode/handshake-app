@@ -14,10 +14,10 @@ export default {
 
       whisper: 'Whisper',
       wallet: 'Wallet',
-      setting: 'Setting',
+      setting: 'Me',
       atm: 'ATM',
       bet: 'Bet',
-      credit: 'CC'
+      credit: 'CC',
     },
   },
   buy: 'Buy',
@@ -224,7 +224,7 @@ export default {
   'ex.error.323': 'Exceeding global credit limit. Please try again tomorrow.',
   'ex.error.324': 'Credit exists',
   'ex.error.325': 'Credit price changed',
-  'ex.error.326': 'Credit out of stock',
+  'ex.error.326': 'Busy day for our CC - we don’t have enough coin for your request! Please try with smaller amount.',
   'ex.error.327': 'Credit item status is invalid',
   'ex.error.default': 'Oops! Something went wrong.',
 
@@ -298,7 +298,7 @@ export default {
   'cc.label.1': 'Buy crypto with credit card',
   'cc.label.2': 'Ninja has some of the best prices around',
   'cc.label.3': 'Common packages:',
-  'cc.btn.buyNow': 'Buy now',
+  'cc.btn.buyNow': 'Select',
   'cc.btn.payNow': 'Pay now',
   'cc.label.basic': 'Basic',
   'cc.label.pro': 'Pro',
@@ -335,7 +335,7 @@ export default {
   'dashboard.btn.withdrawEscrow': 'Withdraw',
   'dashboard.label.amountSold': 'Crypto sold',
   'dashboard.label.amountLeft': 'Crypto remaining',
-  'dashboard.label.currentPrice': 'Current price ({currency}/{fiatCurrency})',
+  'dashboard.label.currentPrice': 'Your price ({currency}/{fiatCurrency})',
   'dashboard.label.revenue': 'Revenue (USD)',
   'dashboard.label.yourBalance': 'Your balance (USD)',
   'dashboard.label.or': 'or',
@@ -978,6 +978,7 @@ export default {
           title: 'SELLING ORDER',
           selling: 'Selling',
           receiving: 'Receiving',
+          fee: 'Fee',
         },
         instant: {
           title: 'PURCHASE ORDER',
@@ -1103,6 +1104,28 @@ export default {
       },
     },
     action: {
+      payment: {
+        button: {
+          checkout: 'Checkout'
+        },
+        label: {
+          from_wallet: 'From wallet',
+          to_address: 'To address',
+          wallet_balance: 'Wallet balance',
+        },
+        placeholder: {
+          to_address: 'Wallet address...',
+          select_wallet: 'Select a wallet',
+        },
+        error: {
+          insufficient: 'You have insufficient coin to make the transfer.'
+        },
+        menu: {
+          developer_docs: "Developer Docs",
+          payment_buttons: "Payment Buttons",
+          help: "Help & Support"
+        }
+      },
       preferecens:{
         list_item: {
           wallet_name: "Wallet Name",

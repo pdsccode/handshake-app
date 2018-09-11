@@ -416,6 +416,7 @@ class Me extends React.Component {
           <FeedCreditCard
             buttonTitle={messages.create.cash.credit.title}
             callbackSuccess={this.afterWalletFill}
+            isPopup
           />
         ),
     }, () => {
@@ -484,24 +485,24 @@ class Me extends React.Component {
               </Link>
             </Col>
           </Row>
-          <Row onClick={!haveOffer ? this.handleCreateExchange : undefined}>
-            <Col md={12}>
-              <div className="update-profile pt-2">
-                <Image className="avatar" src={ShopSVG} alt="shop" />
-                <div className="text" style={{ width: '69%' }}>
-                  <strong>{messages.me.feed.shopTitle}</strong>
-                  {haveOffer ?
-                    (<p>{messages.me.feed.shopDescription}</p>) :
-                    (<p>{messages.me.feed.shopNoDataDescription}</p>)
-                  }
-                </div>
-                {haveOffer && (<div className="arrow">
-                  <ToggleSwitch defaultChecked={online} onChange={flag => this.setOfflineStatus(flag)} />
-                </div>)
-                }
-              </div>
-            </Col>
-          </Row>
+          {/*<Row onClick={!haveOffer ? this.handleCreateExchange : undefined}>*/}
+            {/*<Col md={12}>*/}
+              {/*<div className="update-profile pt-2">*/}
+                {/*<Image className="avatar" src={ShopSVG} alt="shop" />*/}
+                {/*<div className="text" style={{ width: '69%' }}>*/}
+                  {/*<strong>{messages.me.feed.shopTitle}</strong>*/}
+                  {/*{haveOffer ?*/}
+                    {/*(<p>{messages.me.feed.shopDescription}</p>) :*/}
+                    {/*(<p>{messages.me.feed.shopNoDataDescription}</p>)*/}
+                  {/*}*/}
+                {/*</div>*/}
+                {/*{haveOffer && (<div className="arrow">*/}
+                  {/*<ToggleSwitch defaultChecked={online} onChange={flag => this.setOfflineStatus(flag)} />*/}
+                {/*</div>)*/}
+                {/*}*/}
+              {/*</div>*/}
+            {/*</Col>*/}
+          {/*</Row>*/}
 
           <div className="mt-2 mb-1">
             <FormFilterFeeds>

@@ -112,12 +112,12 @@ export const leftTime = (endTime) => {
   }
 
   if (r.minute > 0) {
-    text += `${r.minute}m `;
+    text += `${r.minute}m`;
   }
 
-  if (r.second > 0) {
-    text += `${r.second}s`;
-  }
+  // if (r.second > 0) {
+  //   text += `${r.second}s`;
+  // }
 
   return text;
 };

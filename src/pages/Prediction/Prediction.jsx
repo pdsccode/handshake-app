@@ -34,18 +34,22 @@ import './Prediction.scss';
 class Prediction extends React.Component {
   static displayName = 'Prediction';
   static propTypes = {
+    dispatch: PropTypes.func.isRequired,
+    history: PropTypes.object.isRequired,
     eventList: PropTypes.array,
     showedLuckyPool: PropTypes.bool,
     isSharePage: PropTypes.bool,
-    dispatch: PropTypes.func.isRequired,
     countReport: PropTypes.number,
     freeBet: PropTypes.object,
-    emailExist: PropTypes.number
+    isExistEmail: PropTypes.oneOfType([
+      PropTypes.bool,
+      PropTypes.number,
+    ]),
   };
 
   static defaultProps = {
     eventList: [],
-    emailExist: 0,
+    isExistEmail: 0,
   };
 
   constructor(props) {
@@ -158,40 +162,44 @@ class Prediction extends React.Component {
     }
   }
 
-  handleClickEventItem = (props, itemData) => {
-    const { event } = props;
-    const selectedOutcome = {
-      hid: itemData.hid,
-      id: itemData.id,
-      marketOdds: itemData.market_odds,
-      value: itemData.name,
-    };
-    const selectedMatch = {
-      date: event.date,
-      id: event.id,
-      marketFee: event.market_fee,
-      reportTime: event.reportTime,
-      value: event.name,
-    };
-    this.props.dispatch(checkFreeBet());
-    this.openOrderPlace(selectedOutcome);
-    this.modalOrderPlace.open();
-    this.setState({
-      selectedOutcome,
-      selectedMatch,
-      isOrderOpening: true,
-    });
+  handleClickEventItem = (itemProps, itemData) => {
+    const { event } = itemProps;
+    if (itemData.id === URL.HANDSHAKE_PEX_CREATOR) {
+      this.props.history.push(`${URL.HANDSHAKE_PEX_CREATOR}/${event.id}`);
+    } else {
+      const selectedOutcome = {
+        hid: itemData.hid,
+        id: itemData.id,
+        marketOdds: itemData.market_odds,
+        value: itemData.name,
+      };
+      const selectedMatch = {
+        date: event.date,
+        id: event.id,
+        marketFee: event.market_fee,
+        reportTime: event.reportTime,
+        value: event.name,
+      };
+      this.props.dispatch(checkFreeBet());
+      this.openOrderPlace(selectedOutcome);
+      this.modalOrderPlace.open();
+      this.setState({
+        selectedOutcome,
+        selectedMatch,
+        isOrderOpening: true,
+      });
 
-    if (selectedOutcome) {
-      const outcomeId = { outcome_id: selectedOutcome.id };
-      this.props.dispatch(predictionStatistics({ outcomeId }));
-    }
+      if (selectedOutcome) {
+        const outcomeId = { outcome_id: selectedOutcome.id };
+        this.props.dispatch(predictionStatistics({ outcomeId }));
+      }
 
-    // send event tracking
-    try {
-      GA.clickChooseAnOutcome(event.name, itemData.name);
-    } catch (err) {
-      console.error(err);
+      // send event tracking
+      try {
+        GA.clickChooseAnOutcome(event.name, itemData.name);
+      } catch (err) {
+        console.error(err);
+      }
     }
   };
 
@@ -216,6 +224,7 @@ class Prediction extends React.Component {
           <FeedCreditCard
             buttonTitle={messages.create.cash.credit.title}
             callbackSuccess={this.afterWalletFill}
+            isPopup
           />
         ),
     }, () => {

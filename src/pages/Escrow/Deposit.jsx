@@ -70,7 +70,7 @@ class EscrowDeposit extends React.Component {
       if (currency) {
         const depositInfo = nextProps.depositInfo[currency];
         if (!depositInfo || depositInfo.subStatus !== 'transferring') {
-          listCurrency = [{ name: currency, icon: CRYPTO_ICONS[currency], allowPercentage: !depositInfo }];
+          listCurrency = [{ name: currency, icon: CRYPTO_ICONS[currency], allowPercentage: !depositInfo || depositInfo.subStatus !== 'inactive' }];
           if (depositInfo) {
             nextProps.rfChange(nameFormEscrowDeposit, `percentage_${currency}`, depositInfo.percentage);
           }
@@ -82,7 +82,7 @@ class EscrowDeposit extends React.Component {
         for (const item of Object.values(CRYPTO_CURRENCY_CREDIT_CARD)) {
           const depositInfo = nextProps.depositInfo[item];
           if (!depositInfo || depositInfo.subStatus !== 'transferring') {
-            listCurrency.push({ name: item, icon: CRYPTO_ICONS[item], allowPercentage: !depositInfo });
+            listCurrency.push({ name: item, icon: CRYPTO_ICONS[item], allowPercentage: !depositInfo || depositInfo.subStatus !== 'inactive' });
             if (depositInfo) {
               nextProps.rfChange(nameFormEscrowDeposit, `percentage_${item}`, depositInfo.percentage);
             }
@@ -216,25 +216,31 @@ class EscrowDeposit extends React.Component {
       if (amount && amount.trim().length > 0) {
         result = ! (await this.showNotEnoughCoinAlert(amount, currency));
 
+        console.log('checkBalance result  ', currency, result);
+
         if (!result) {
           break;
         }
       }
     }
 
+    console.log('checkBalance result out ', result);
     return result;
   }
 
   showNotEnoughCoinAlert = async (amount, currency) => {
     const wallet = MasterWallet.getWalletDefault(currency);
     const balance = await wallet.getBalance();
-    const fee = await wallet.getFee(NB_BLOCKS, true);
+    const fee = await wallet.getFee(NB_BLOCKS, true) || 0;
 
     const bnBalance = new BigNumber(balance);
     const bnAmount = new BigNumber(amount);
     const bnFee = new BigNumber(fee);
 
     const condition = bnBalance.isLessThan(bnAmount.plus(bnFee));
+    console.log('showNotEnoughCoinAlert wallet', wallet);
+
+    console.log('showNotEnoughCoinAlert ', currency, condition, balance, amount, fee);
 
     if (condition) {
       this.props.showAlert({
@@ -267,6 +273,8 @@ class EscrowDeposit extends React.Component {
     }
 
     const isEnough = await this.checkBalance(values);
+
+    console.log('handleOnSubmit isEnough', isEnough);
 
     if (!isEnough) {
       return;
@@ -445,7 +453,6 @@ class EscrowDeposit extends React.Component {
     const { messages } = this.props.intl;
     const { intl, hideNavigationBar } = this.props;
     const { listOfferPrice } = this.props;
-    console.log('Deposit render');
 
     return (
       <div className="escrow-deposit">
@@ -479,7 +486,8 @@ class EscrowDeposit extends React.Component {
                   return type === EXCHANGE_ACTION.SELL && currency === name && fiatCurrency === FIAT_CURRENCY.USD;
                 });
 
-                const fiatCurrency = offerPrice && offerPrice.price || 0;
+                let fiatCurrency = offerPrice && offerPrice.price || 0;
+                fiatCurrency *= (1 + ((+this.props[`percentage_${name}`]) / 100));
 
                 return (
                   <div key={name} className="mt-2">
@@ -559,12 +567,19 @@ class EscrowDeposit extends React.Component {
   }
 }
 
-const mapState = state => ({
-  listOfferPrice: state.exchange.listOfferPrice,
-  authProfile: state.auth.profile,
-  app: state.app,
-  depositInfo: state.exchange.depositInfo,
-});
+const mapState = state => {
+  const percentageObj = {};
+  listCurrency.forEach(({ name }) => {
+    percentageObj[`percentage_${name}`] = selectorFormEscrowDeposit(state, `percentage_${name}`) || 0;
+  });
+  return {
+    listOfferPrice: state.exchange.listOfferPrice,
+    authProfile: state.auth.profile,
+    app: state.app,
+    depositInfo: state.exchange.depositInfo,
+    ...percentageObj,
+  };
+};
 
 const mapDispatch = dispatch => ({
   rfChange: bindActionCreators(change, dispatch),
