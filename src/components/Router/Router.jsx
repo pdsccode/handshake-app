@@ -66,10 +66,12 @@ const RouterEscrowWithdrawSuccess = createDynamicImport(() => import('@/pages/Es
 
 /* ======================== FOR MOBILE ======================== */
 const configRoutesUsingMobileLayout = [
-  { path: URL.HANDSHAKE_ME, component: RouterMe },
   { path: URL.HANDSHAKE_PREDICTION, component: RouterPrediction },
-  // { path: URL.HANDSHAKE_EXCHANGE, component: RouterExchange },
-  // { path: URL.HANDSHAKE_DISCOVER, component: RouterDiscover },
+  { path: URL.HANDSHAKE_PEX, component: RouterExchange },
+  { path: URL.HANDSHAKE_PEX_UPDATER, component: CreateOwnMarket },
+  { path: URL.PEX_INSTRUCTION_URL, component: ContentForPexInstruction },
+
+  { path: URL.HANDSHAKE_ME, component: RouterMe },
   { path: URL.HANDSHAKE_CASH, component: RouterDiscover },
   { path: URL.HANDSHAKE_ATM, component: RouterDiscover },
   { path: URL.HANDSHAKE_CHAT, component: RouterChat },
@@ -79,11 +81,8 @@ const configRoutesUsingMobileLayout = [
   { path: URL.COMMENTS_BY_SHAKE, component: RouterComment },
   { path: URL.ADMIN, component: RouterAdmin },
   { path: URL.REPORT, component: RouterReport },
-  { path: URL.HANDSHAKE_PEX, component: RouterExchange },
-  { path: URL.HANDSHAKE_PEX_CREATOR, component: CreateOwnMarket },
   { path: URL.CC_PAYMENT_URL, component: RouterCCConfirm },
   { path: URL.BUY_BY_CC_URL, component: RouterBuyCC },
-  { path: URL.PEX_INSTRUCTION_URL, component: ContentForPexInstruction },
 
   { path: URL.ESCROW_DEPOSIT, component: RouterEscrowDeposit },
   { path: URL.ESCROW_WITHDRAW, component: RouterEscrowWithdraw, exact: true },
@@ -182,7 +181,6 @@ class Router extends React.Component {
 
           {/* Cash on mobile uses a completely different layout! */}
           {/* <Route path={URL.HANDSHAKE_CASH} component={Discover} /> */}
-
           <Route
             path={URL.INDEX}
             render={props => {

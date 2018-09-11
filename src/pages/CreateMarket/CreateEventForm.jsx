@@ -74,7 +74,6 @@ class CreateEventForm extends Component {
       fields.push({});
     } else {
       const { dispatch, formAction } = this.props;
-      // this.props.dispatch(touch('CreateEventForm', 'outcomes[0].name', ''));
       dispatch(formAction(touch, `outcomes[${lastIndex}].name`));
     }
   }
@@ -130,10 +129,9 @@ class CreateEventForm extends Component {
   }
 
   renderEventSuggest = (props) => {
-    const title = 'EVENT';
     return (
       <React.Fragment>
-        {this.renderGroupTitle(title)}
+        {this.renderGroupTitle('EVENT')}
         <Field
           type="autoSuggestion"
           name="eventName"
@@ -295,7 +293,8 @@ class CreateEventForm extends Component {
   renderTimeGroup = (props, state) => {
     const closingStartTime = moment().add(minStep, 'm').unix();
     return (
-      <React.Fragment>
+      <div className="TimeGroup">
+        {!props.isNew && this.renderGroupTitle('Event closing time')}
         <Field
           name="closingTime"
           type="text"
@@ -308,6 +307,7 @@ class CreateEventForm extends Component {
           startDate={closingStartTime}
           // endDate={state.reportingTime - secStep}
         />
+        {!props.isNew && this.renderGroupTitle('Report deadline')}
         <Field
           name="reportingTime"
           type="text"
@@ -320,6 +320,7 @@ class CreateEventForm extends Component {
           startDate={state.closingTime + secStep}
           // endDate={state.disputeTime - secStep}
         />
+        {!props.isNew && this.renderGroupTitle('Dispute deadline')}
         <Field
           name="disputeTime"
           type="text"
@@ -331,7 +332,7 @@ class CreateEventForm extends Component {
           value={state.disputeTime}
           startDate={state.reportingTime + secStep}
         />
-      </React.Fragment>
+      </div>
     );
   }
 
@@ -347,7 +348,7 @@ class CreateEventForm extends Component {
       <form className={cls} onSubmit={props.handleSubmit(this.onCreateNewEvent)}>
         <div className="CreateEventFormBlock">
           {this.renderEventSuggest(props, state)}
-          {this.renderCategories(props, state)}
+          {/*{this.renderCategories(props, state)}*/}
           <FieldArray
             name="outcomes"
             isNew={props.isNew}
