@@ -14,10 +14,10 @@ export default {
 
       whisper: 'Whisper',
       wallet: 'Wallet',
-      setting: 'Setting',
+      setting: 'Me',
       atm: 'ATM',
       bet: 'Bet',
-      credit: 'CC'
+      credit: 'CC',
     },
   },
   buy: 'Buy',

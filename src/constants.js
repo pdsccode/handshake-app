@@ -48,7 +48,7 @@ export const HANDSHAKE_ID = { // important
   CREDIT: 10,
 };
 
-export const HANDSHAKE_ID_DEFAULT = 10;
+export const HANDSHAKE_ID_DEFAULT = 3;
 
 export const HANDSHAKE_NAME = {
   // [HANDSHAKE_ID.PROMISE]: { name: 'Promise', priority: 3 },
