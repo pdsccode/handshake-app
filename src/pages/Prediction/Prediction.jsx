@@ -57,6 +57,7 @@ class Prediction extends React.Component {
       modalFillContent: '',
       isOrderOpening: false,
       shouldShowFreePopup: true,
+      failedResult: {},
     };
   }
 
@@ -196,7 +197,10 @@ class Prediction extends React.Component {
     }
   };
 
-  handleBetFail = () => {
+  handleBetFail = (value) => {
+    this.setState({
+      failedResult: value,
+    });
     this.modalOuttaMoney.open();
   }
 
@@ -210,9 +214,8 @@ class Prediction extends React.Component {
   }
 
   showPopupCreditCard = async () => {
-    const balance = await getBalance();
-
-    GA.clickTopupWallet(balance);
+    const { failedResult } = this.state;
+    GA.clickTopupWallet(failedResult);
     this.modalOuttaMoney.close();
     const { messages } = this.props.intl;
     this.setState({

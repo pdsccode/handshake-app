@@ -43,6 +43,7 @@ class EmailPopup extends React.Component {
     }
   }
   submitEmail(email) {
+    GA.clickNotifyMe(email);
 
     const params = {
       email,
@@ -99,7 +100,6 @@ class EmailPopup extends React.Component {
           className="emailPopupButton"
           isLoading={this.props.fetching}
           onClick={() => {
-            GA.clickNotifyMe();
             this.sendEmail();
           }}
         >

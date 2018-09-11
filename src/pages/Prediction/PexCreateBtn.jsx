@@ -27,13 +27,15 @@ class PexCreateBtn extends Component {
   render() {
     return (
       <div id="PexCreateBtn">
-        <div className="Idea" onClick={()=>{
-          GA.clickCreateOwnEvent();
-        }}>
+        <div className="Idea">
           <img src={IconIdea} alt="" className="IconIdea" />
           <span>Got an idea?</span>
         </div>
-        <Link to={{ pathname: URL.HANDSHAKE_PEX_CREATOR }}>
+        <Link to={{ pathname: URL.HANDSHAKE_PEX_CREATOR }}
+          onClick={()=> {
+          GA.clickCreateOwnEvent();
+        }}
+        >
           <button className="btn btn-report">Create a bet</button>
         </Link>
       </div>

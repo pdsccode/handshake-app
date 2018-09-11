@@ -220,11 +220,12 @@ class GoogleAnalyticsService {
     }
   }
 
-  clickTopupWallet(balance) {
+  clickTopupWallet(result) {
+    const { balance = 0, total = 0 } = result;
     const params = {
       category: EVENT_CATEGORY.PREDICTION,
       action: EVENT_ACTION.CLICK_TOP_UP_WALLET,
-      label: `Balance ${balance}`,
+      label: `Balance ${balance} - Need Amount ${total}`,
     };
     console.log(TAG, 'clickTopupWallet', params);
     try {

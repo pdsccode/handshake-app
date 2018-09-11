@@ -73,7 +73,7 @@ class AdvancedOrderMode extends React.Component {
         <BettingShake
           {...bettingShake}
           onClickSubmit={(click) => { this.onButtonSubmit = click }}
-          handleBetFail={ () => { handleBetFail(); }}
+          handleBetFail={ (value) => { handleBetFail(value); }}
           onCancelClick={() => { onCancelClick();}}
         />
         <Button block isLoading={disable} disabled={disable} className={buttonClass} onClick={this.handleClick}>{buttonText}</Button>

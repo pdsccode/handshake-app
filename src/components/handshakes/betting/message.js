@@ -81,7 +81,7 @@ export const BETTING_STATUS_LABEL =
       INITING: 'Placing a bet..',
       ROLLBACK: 'There is something wrong with blockchain. The bet is cancelled',
       COLLECT_FAILED: 'There is something wrong with withdraw.',
-      SHOULD_CANCEL: 'There is no bet matched. Please cancel to get back money',
+      SHOULD_CANCEL: 'Your bet was not matched. Please cancel to get a refund.',
       MATCH_POSTPONSE: 'Event is postponsed',
       ACTION_FAILED: `There is something wrong with blockchain. Your action is cancelled`,
       INIT_FAILED: `There is something wrong with blockchain. Your bet is cancelled`,
