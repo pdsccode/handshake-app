@@ -49,6 +49,11 @@ let listCurrency = Object.values(CRYPTO_CURRENCY_CREDIT_CARD).map((item) => {
   return { name: item, icon: CRYPTO_ICONS[item], allowPercentage: true };
 });
 
+const PERCENT = {
+  MIN: 0,
+  MAX: 200,
+};
+
 class EscrowDeposit extends React.Component {
   constructor(props) {
     super(props);
@@ -70,7 +75,7 @@ class EscrowDeposit extends React.Component {
       if (currency) {
         const depositInfo = nextProps.depositInfo[currency];
         if (!depositInfo || depositInfo.subStatus !== 'transferring') {
-          listCurrency = [{ name: currency, icon: CRYPTO_ICONS[currency], allowPercentage: !depositInfo || depositInfo.subStatus !== 'inactive' }];
+          listCurrency = [{ name: currency, icon: CRYPTO_ICONS[currency], allowPercentage: !depositInfo || depositInfo.status === 'inactive' }];
           if (depositInfo) {
             nextProps.rfChange(nameFormEscrowDeposit, `percentage_${currency}`, depositInfo.percentage);
           }
@@ -82,7 +87,7 @@ class EscrowDeposit extends React.Component {
         for (const item of Object.values(CRYPTO_CURRENCY_CREDIT_CARD)) {
           const depositInfo = nextProps.depositInfo[item];
           if (!depositInfo || depositInfo.subStatus !== 'transferring') {
-            listCurrency.push({ name: item, icon: CRYPTO_ICONS[item], allowPercentage: !depositInfo || depositInfo.subStatus !== 'inactive' });
+            listCurrency.push({ name: item, icon: CRYPTO_ICONS[item], allowPercentage: !depositInfo || depositInfo.status === 'inactive' });
             if (depositInfo) {
               nextProps.rfChange(nameFormEscrowDeposit, `percentage_${item}`, depositInfo.percentage);
             }
@@ -516,7 +521,7 @@ class EscrowDeposit extends React.Component {
                           elementAppend={
                             <span className="percentage-symbol escrow-label font-weight-normal">%</span>
                           }
-                          validate={[number, minValueEqual(0), maxValueEqual(200)]}
+                          validate={[number, minValueEqual(PERCENT.MIN), maxValueEqual(PERCENT.MAX)]}
                           disabled={!allowPercentage}
                         />
                       </div>

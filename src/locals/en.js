@@ -1300,7 +1300,7 @@ export default {
           select_coints: 'Select coins',
           wallet_key: 'Wallet key',
           main_net: 'Mainnet wallets',
-          test_net: 'Testnet wallets',
+          test_net: 'Testnet',
           header_coins: "Cryptocurrencies",
           header_tokens: "ERC20 Tokens",
           header_collectibles: "ERC721 Collectibles",
