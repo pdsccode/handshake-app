@@ -55,6 +55,7 @@ class WalletItem extends React.Component {
 
   render(){
       const {wallet, onMoreClick, onAddressClick, isSortable, onItemClick} =  this.props;
+      const { messages } = this.props.intl;
       //const iconProtected = !wallet.protected ? iconWarning : iconSafe;
       let logo = require("@/assets/images/wallet/icons/coins/" + wallet.icon);
       try{ logo = require("@/assets/images/wallet/icons/coins/" + wallet.getCoinLogo());} catch (e){};
@@ -69,7 +70,9 @@ class WalletItem extends React.Component {
               <div className="name">{wallet.title}
               {wallet.default ? <img className="iconDefault" src={iconChecked}/> : ''}
               </div>  
-                <span className="balance"> {wallet.getShortBalance()} {wallet.name} </span>                
+              {!wallet.hideBalance ?
+              <span className="balance"> {wallet.getShortBalance()} {wallet.name} </span>
+              :<span className="balance">[{messages.wallet.action.history.label.balance_hidden}]</span> }
             </div>
             
             {!isSortable ?

@@ -26,7 +26,7 @@ import { fieldDropdown, fieldRadioButton } from '@/components/core/form/customFi
 import { change } from 'redux-form';
 import Map from './Components/Map';
 import NavBar from './Components/NavBar';
-import { getFreeStartInfo, getListOfferPrice, setFreeStart } from '@/reducers/exchange/action';
+import {getFreeStartInfo, getListOfferPrice, getOfferStores, setFreeStart} from '@/reducers/exchange/action';
 import { loadDiscoverList } from '@/reducers/discover/action';
 import Image from '@/components/core/presentation/Image';
 import loadingSVG from '@/assets/images/icon/loading.gif';
@@ -75,6 +75,7 @@ class DiscoverPage extends React.Component {
       currencyActive: CRYPTO_CURRENCY.ETH,
 
       zoomLevel: defaultZoomLevel,
+      browserHeight: window.innerHeight - 108,
     };
 
     local.save(APP.EXCHANGE_ACTION, EXCHANGE_ACTION.BUY);
@@ -130,6 +131,7 @@ class DiscoverPage extends React.Component {
     // this.setState({ sortIndexActive: CASH_SORTING_CRITERIA.DISTANCE });
 
     this.delayedShowMarker();
+    this.getOfferStore();
   }
 
   handleGoToCurrentLocation = () => {
@@ -205,6 +207,13 @@ class DiscoverPage extends React.Component {
     this.modalRef.close();
     this.props.setFreeStart({ data: true });
     this.props.history.push(`${URL.HANDSHAKE_CREATE}?id=${HANDSHAKE_ID.EXCHANGE}`);
+  }
+
+  getOfferStore = () => {
+    const { authProfile } = this.props;
+    this.props.getOfferStores({
+      PATH_URL: `${API_URL.EXCHANGE.OFFER_STORES}/${authProfile.id}`,
+    });
   }
 
   // isEmptyBalance = (item) => {
@@ -347,6 +356,7 @@ class DiscoverPage extends React.Component {
     const {
       propsModal,
       modalContent,
+      browserHeight
     } = this.state;
     const { messages } = this.props.intl;
     const {
@@ -374,7 +384,7 @@ class DiscoverPage extends React.Component {
           // googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places"
           googleMapURL={`https://maps.googleapis.com/maps/api/js?key=${process.env.GOOGLE_API_KEY}`}
           loadingElement={<div style={{ height: `100%` }} />}
-          containerElement={<div className="map-container" style={{ height: `calc(100vh - 48px - 120px)`, marginTop: '48px' }} />}
+          containerElement={<div className="map-container" style={{ height: `${browserHeight}px`, marginTop: '48px', position: 'relative' }} />}
           mapElement={<div style={{ height: `100%` }} />}
           // center={{ lat: 35.929673, lng: -78.948237 }}
           history={history}
@@ -434,6 +444,7 @@ const mapDispatch = dispatch => ({
   setFreeStart: bindActionCreators(setFreeStart, dispatch),
   getFreeStartInfo: bindActionCreators(getFreeStartInfo, dispatch),
   showPopupGetGPSPermission: bindActionCreators(showPopupGetGPSPermission, dispatch),
+  getOfferStores: bindActionCreators(getOfferStores, dispatch),
 });
 
 export default injectIntl(connect(mapState, mapDispatch)(DiscoverPage));

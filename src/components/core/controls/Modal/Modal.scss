@@ -8,7 +8,7 @@
   background-color: $white;
   .modal-custom-header {
     display: flex;
-    padding: 9px 15px;
+    padding: 10px 15px;
     background-color: #f8f8f8;
     img:hover {
       cursor: pointer;
@@ -17,6 +17,11 @@
       margin: 0 auto;
       font-size: 24px;
       font-weight: $medium;
+    }
+    .iconRight{
+      height: 21px;
+      margin-top: 5px;
+      margin-right: 1px;
     }
   }
   .modal-custom-body {

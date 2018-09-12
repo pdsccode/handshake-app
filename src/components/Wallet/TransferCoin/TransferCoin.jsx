@@ -31,6 +31,12 @@ const amountValid = value => (value && isNaN(value) ? 'Invalid amount' : undefin
 const nameFormSendWallet = 'sendWallet';
 const SendWalletForm = createForm({ propsReduxForm: { form: nameFormSendWallet, enableReinitialize: true, clearSubmitErrors: true}});
 
+const TAB = {
+  Transaction: 0,
+  Internal: 1
+}
+
+
 class Transfer extends React.Component {
   static propTypes = {
     intl: PropTypes.object.isRequired,
@@ -118,14 +124,63 @@ class Transfer extends React.Component {
   }
 
 
-  onFinish = () => {
+  onFinish = async (data) => {
     const { onFinish } = this.props;
 
     if (onFinish) {
-      let result = {"toAddress": this.state.inputAddressAmountValue, "fromWallet": this.state.walletSelected, "amountCoin": this.state.inputSendAmountValue}
+      let result = {"toAddress": this.state.inputAddressAmountValue, "fromWallet": this.state.walletSelected, "amountCoin": this.state.inputSendAmountValue, data: data}
+
+      try{
+        if(data && data.hash){
+          let transactions = this.getSessionStore(this.state.walletSelected, TAB.Transaction);
+          if(!transactions)
+            transactions = [];
+
+          let newTran = await this.state.walletSelected.getTransaction(data.hash);
+          newTran.isError = "0";
+          newTran.is_sent =  1;
+          newTran.confirmations = 0;
+          newTran.timeStamp = new Date().getTime()/1000;
+          newTran.gasUsed = newTran.gas;
+          newTran.pending = true;
+          transactions.unshift(newTran);
+          this.setSessionStore(this.state.walletSelected, TAB.Transaction, transactions);
+        }
+      }
+      catch(e){
+      }
+
+
       onFinish(result);
     } else {
 
+    }
+  }
+
+  getSessionStore(wallet, tab){
+    let result = false;
+    if(wallet){
+      let key = `${wallet.name}_${tab}_${wallet.address}`;
+      let data = window.sessionStorage.getItem(key);
+
+      try{
+        if(data){
+          result = JSON.parse(data);
+        }
+      }
+      catch(e){
+
+      }
+    }
+
+    return result;
+  }
+
+  setSessionStore(wallet, tab, data){
+    let result = false;
+    if(wallet && data){
+      let key = `${wallet.name}_${tab}_${wallet.address}`;
+      window.sessionStorage.setItem(key, JSON.stringify(data));
     }
   }
 
@@ -332,7 +387,7 @@ submitSendCoin=()=>{
         if (success.hasOwnProperty('status')){
           if (success.status == 1){
             this.showSuccess(this.getMessage(success.message));
-            this.onFinish();
+            this.onFinish(success.data);
             MasterWallet.NotifyUserTransfer(this.state.walletSelected.address, this.state.inputAddressAmountValue);
             // start cron get balance auto ...
             // todo hanlde it ...
@@ -507,7 +562,17 @@ render() {
               />
             </div>
 
-            <label className='label-balance'>{messages.wallet.action.transfer.label.wallet_balance} { this.state.walletSelected ? StringHelper.format("{0} {1}", this.state.walletSelected.balance, this.state.walletSelected.name) : ""}</label>
+            <label className='label-balance'>{messages.wallet.action.transfer.label.wallet_balance} &nbsp;
+            {
+              this.state.walletSelected ?
+              (
+                ( this.state.walletSelected && this.state.walletSelected.hideBalance ? StringHelper.format("[{0}]", messages.wallet.action.history.label.balance_hidden)
+                  :
+                  StringHelper.format("{0} {1}", this.state.walletSelected.balance, this.state.walletSelected.name)
+                )
+              ) : ""
+            }
+            </label>
             </div>
 
           <Button className="button-wallet-cpn" isLoading={this.state.isRestoreLoading}  type="submit" block={true}>{messages.wallet.action.transfer.button.transfer}</Button>

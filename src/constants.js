@@ -18,7 +18,7 @@ export const APP = {
   EMAIL_NEED_VERIFY: 'email_need_verify',
   PHONE_NEED_VERIFY: 'phone_need_verify',
   COUNTRY_PHONE_NEED_VERIFY: 'country_phone_need_verify',
-  CHAT_ENCRYPTION_KEYPAIR:'chat_encryption_keypair',
+  CHAT_ENCRYPTION_KEYPAIR: 'chat_encryption_keypair',
   REFERS: 'refers',
   SETTING: 'setting',
   OFFLINE_STATUS: 'offline_status',
@@ -45,9 +45,10 @@ export const HANDSHAKE_ID = { // important
   BETTING_EVENT: 7,
   WALLET_RECEIVE: 8,
   CREATE_EVENT: 9,
+  CREDIT: 10,
 };
 
-export const HANDSHAKE_ID_DEFAULT = 2;
+export const HANDSHAKE_ID_DEFAULT = 3;
 
 export const HANDSHAKE_NAME = {
   // [HANDSHAKE_ID.PROMISE]: { name: 'Promise', priority: 3 },
@@ -118,7 +119,7 @@ export const FIAT_CURRENCY = {
   USD: 'USD',
   EUR: 'EUR',
   HKD: 'HKD',
-}
+};
 
 export const FIAT_CURRENCY_NAME = {
   [FIAT_CURRENCY.RUB]: 'RUB',
@@ -202,6 +203,7 @@ export const API_URL = {
     MATCHES_REPORT: 'cryptosign/match/report',
     COUNT_REPORT: 'cryptosign/match/report',
     ADMIN_MATCHES: 'cryptosign/admin/match/report',
+    ADMIN_RESOLVE: 'cryptosign/admin/match/resolve',
     LOAD_HANDSHAKES: 'cryptosign/handshake',
     LOAD_REPORTS: 'cryptosign/source',
     LOAD_CATEGORIES: 'cryptosign/category',
@@ -219,6 +221,7 @@ export const API_URL = {
     ADD_OUTCOME: 'cryptosign/outcome/add',
     SAVE_TRANSACTION: 'cryptosign/tx/add',
     GENERATE_LINK: 'cryptosign/outcome/generate-link',
+    PREDICTION_STATISTICS: 'cryptosign/outcome/ninja-predict',
   },
   DISCOVER: {
     INDEX: 'handshake/discover',
@@ -243,6 +246,10 @@ export const API_URL = {
     SHAKES: 'shakes',
     REVIEWS: 'reviews',
     GET_DASHBOARD_INFO: 'exchange/user/transaction-counts',
+    DEPOSIT_CREDIT_ATM: 'exchange/credit/deposit',
+    CREDIT_ATM: 'exchange/credit',
+    CREDIT_ATM_TRANSFER: 'exchange/credit/tracking',
+    WITHDRAW_CASH_DEPOSIT_ATM: 'exchange/credit/withdraw',
   },
   SEED: {
     BASE: 'seed',
@@ -270,6 +277,8 @@ export const API_URL = {
   },
   USER: {
     PROFILE: 'user/profile',
+    SUBCRIBE_EMAIL_PREDICTION: 'user/subscribe-email',
+    CHECK_EXIST_EMAIL: 'user/check-email-exist',
   },
 };
 
@@ -476,6 +485,7 @@ export const APP_USER_NAME = 'Ninja';
 export const MIN_AMOUNT = {
   [CRYPTO_CURRENCY.ETH]: 0.01,
   [CRYPTO_CURRENCY.BTC]: 0.001,
+  BCH: 0.001,
 };
 
 export const LOCATION_METHODS = {
@@ -508,10 +518,15 @@ export const URL = {
   HANDSHAKE_PREDICTION: '/prediction',
   HANDSHAKE_PEX: '/pex',
   HANDSHAKE_PEX_CREATOR: '/create-pex',
+  HANDSHAKE_PEX_UPDATER: '/create-pex/:eventId?',
 
   HANDSHAKE_CASH: '/cash',
   HANDSHAKE_CASH_INDEX: '/cash',
   HANDSHAKE_CASH_DETAIL: '/cash/:slug',
+
+  HANDSHAKE_ATM: '/atm',
+  HANDSHAKE_ATM_INDEX: '/atm',
+  HANDSHAKE_ATM_DETAIL: '/atm/:slug',
 
   HANDSHAKE_CHAT: '/whisper',
   HANDSHAKE_CHAT_INDEX: '/whisper',
@@ -520,6 +535,9 @@ export const URL = {
 
   HANDSHAKE_WALLET: '/wallet',
   HANDSHAKE_WALLET_INDEX: '/wallet',
+
+  HANDSHAKE_PAYMENT: '/payment',
+  HANDSHAKE_PAYMENT_INDEX: '/payment',
 
   HANDSHAKE_CREATE: '/create',
   HANDSHAKE_CREATE_INDEX: '/create',
@@ -561,8 +579,12 @@ export const URL = {
   RECRUITING: '/recruiting',
   RECRUITING_JOB_DETAIL: '/recruiting/:slug',
 
-  CC_PAYMENT_URL: '/payment',
+  CC_PAYMENT_URL: '/cc-payment',
   BUY_BY_CC_URL: '/buy-by-credit-card',
+
+  ESCROW_DEPOSIT: '/escrow/deposit',
+  ESCROW_WITHDRAW: '/escrow/withdraw',
+  ESCROW_WITHDRAW_SUCCESS: '/escrow/withdraw/success',
 };
 
 export const LANDING_PAGE_TYPE = {
@@ -578,7 +600,7 @@ export const LANDING_PAGE_TYPE = {
     text: '',
     url: '',
   },
-}
+};
 
 export const RECRUITING_SLACK_CHANNEL = 'https://hooks.slack.com/services/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';
 

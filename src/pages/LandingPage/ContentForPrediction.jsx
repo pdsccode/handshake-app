@@ -49,7 +49,7 @@ class ContentForPrediction extends React.Component {
           <div className='mt-5'>
             For instructions on how to play:{' '}
             <Link to={URL.PEX_INSTRUCTION_URL}>
-              http://ninja.org/pex/prediction
+              http://ninja.org/pex/instruction
             </Link>
           </div>
         </div>

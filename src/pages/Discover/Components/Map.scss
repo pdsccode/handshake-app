@@ -1,7 +1,7 @@
 .btn-current-location {
   position: absolute;
   right: 10px;
-  bottom: 250px;
+  bottom: 195px;
 
   box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px;
   border-radius: 2px;
@@ -19,5 +19,24 @@
   appearance:         none;
   &:focus {
     outline: none;
+  }
+}
+
+.container-button {
+  position: absolute;
+  bottom: 23px;
+  left: 8px;
+  width: 308px;
+  button {
+    font-size: 16px;
+    font-family: 'AppleSystemUIFont', sans-serif;
+  }
+  .btn-dashboard {
+    color: rgb(86, 86, 86);
+
+  }
+  .btn-manage-atm {
+    background: #546FF7;
+    color: #FFFFFF;
   }
 }

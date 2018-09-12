@@ -37,7 +37,7 @@ export class BitcoinCash extends Bitcoin {
 
   createAddressPrivatekey() {
     super.createAddressPrivatekey();
-    this.setDefaultNetwork();    
+    this.setDefaultNetwork();
     // get Cashaddr
     var address = new bitcore.PrivateKey(this.privateKey).toAddress();
     this.address = address.toString().split(':')[1];
@@ -45,7 +45,7 @@ export class BitcoinCash extends Bitcoin {
   async getBalance() {
     this.setDefaultNetwork();
 
-    const url = `${this.network}/addr/${this.address}/balance`;    
+    const url = `${this.network}/addr/${this.address}/balance`;
     const response = await axios.get(url);
 
     if (response.status == 200) {
@@ -99,7 +99,7 @@ export class BitcoinCash extends Bitcoin {
           const rawTx = transaction.serialize();
           const txHash = await this.sendRawTx(rawTx);
 
-          return { status: 1, message: 'messages.bitcoin.success.transaction' };
+          return { status: 1, message: 'messages.bitcoin.success.transaction', data: { hash: txHash.txid } };
         }
 
         return { status: 0, message: 'messages.bitcoin.error.insufficient' };
@@ -264,7 +264,7 @@ export class BitcoinCash extends Bitcoin {
       is_sent: is_sent
     };
   }
-  
+
 }
 
 export default { BitcoinCash };

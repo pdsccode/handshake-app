@@ -1,0 +1,58 @@
+@import './src/styles/style';
+
+.wrapperContentPexInstruction {
+  font-family: $font-family-base;
+  font-size: 16px;
+  color: #484848;
+
+  .wrapperPexIntroducer {
+    border-radius: 43px;
+    border: 15px solid #FAFAFA;
+    padding: 20px 30px;
+    line-height: 30px;
+
+
+  }
+  .wrapperPexTopContent {
+    margin-top: 60px;
+    line-height: 30px;
+
+  }
+  .wrapperGuideStep {
+    margin: 80px 0px;
+    .stepNumber {
+      color: #F5D516;
+      font-size: 64px;
+
+    }
+  }
+  .wrapperGuideCenter {
+    text-align: center;
+  }
+  .wrapperImages {
+    //margin-left: 55px;
+  }
+  .content {
+    line-height: 30px;
+
+
+  }
+  .line {
+    background-color: #D8D8D8;
+    height: 1px;
+    width: 50px;
+    margin: 30px 0px;
+  }
+  .icCheckOut {
+    margin-right: 10px;
+  }
+
+
+  .pexHeadline {
+    //font-weight: 600;
+    font-size: 30px;
+    letter-spacing: 0;
+    line-height: 48px;
+    margin-bottom: 15px;
+  }
+}

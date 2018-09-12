@@ -15,6 +15,7 @@ class BetMode extends React.Component {
   static propTypes = {
     selectedOutcome: PropTypes.object,
     selectedMatch: PropTypes.object,
+    freeAvailable: PropTypes.bool,
   }
 
   static defaultProps = {
@@ -28,7 +29,7 @@ class BetMode extends React.Component {
     this.state = {
       support: null,
       against: null,
-      isFirstFree: false,
+      isFirstFree: props.freeAvailable,
       bettingShakeIsOpen: true,
     };
     this.openPopup = this.openPopup.bind(this);
@@ -39,14 +40,14 @@ class BetMode extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { selectedOutcome, support, against, isFirstFree } = nextProps;
+    const { selectedOutcome, support, against, freeAvailable } = nextProps;
     // console.log(TAG, 'componentWillReceiveProps', 'support:', support, 'against:', against, 'isFirstFree', isFirstFree);
     const filterSupport = support && support.length > 0 && support.filter(item => item.amount >= CRYPTOSIGN_MINIMUM_MONEY);
     const filterAgainst = against && against.length > 0 && against.filter(item => item.amount >= CRYPTOSIGN_MINIMUM_MONEY);
     this.setState({
       support: filterSupport,
       against: filterAgainst,
-      isFirstFree,
+      isFirstFree: freeAvailable,
     });
   }
 
@@ -60,12 +61,13 @@ class BetMode extends React.Component {
       GA.clickFree(selectedOutcome.value);
     }
   }
+  
   async openPopup(selectedOutcome) {
     this.setState({
       bettingShakeIsOpen: true,
     });
     this.callGetHandshakes(selectedOutcome);
-    await this.checkShowFreeBanner();
+    //await this.checkShowFreeBanner();
   }
 
   callGetHandshakes(item) {
@@ -103,6 +105,7 @@ class BetMode extends React.Component {
     */
     this.callCheckFirstFree();
   }
+
   renderTab(props) {
     return (
       <Tabs htmlClassName="BetModeContainer" afterClick={this.afterTabChanges}>
@@ -110,7 +113,6 @@ class BetMode extends React.Component {
           <BettingFilter
             {...props}
             isFree={false}
-
           />
         </div>
         <div className="BetModeItem" label="Free bet">
@@ -122,6 +124,7 @@ class BetMode extends React.Component {
       </Tabs>
     );
   }
+
   renderSingleMode(props) {
     return (
       <BettingFilter

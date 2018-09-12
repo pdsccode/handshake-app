@@ -15,13 +15,14 @@ import {
   FIAT_CURRENCY,
   FIAT_CURRENCY_NAME,
   FIAT_CURRENCY_SYMBOL,
+  HANDSHAKE_ID,
   URL,
 } from '@/constants';
 import '../styles.scss';
 import { validate, validateSpecificAmount } from '@/components/handshakes/exchange/validation';
 import createForm from '@/components/core/form/createForm';
 import { fieldCleave, fieldDropdown, fieldInput, fieldRadioButton } from '@/components/core/form/customField';
-import { required, email } from '@/components/core/form/validation';
+import { email, required } from '@/components/core/form/validation';
 import { createCCOrder, getCcLimits, getCryptoPrice, getUserCcLimit } from '@/reducers/exchange/action';
 import CryptoPrice from '@/models/CryptoPrice';
 import { MasterWallet } from '@/services/Wallets/MasterWallet';
@@ -41,6 +42,8 @@ import iconEthereum from '@/assets/images/icon/coin/eth.svg';
 import iconBitcoinCash from '@/assets/images/icon/coin/bch.svg';
 import iconUsd from '@/assets/images/icon/coin/icons8-us_dollar.svg';
 import iconLock from '@/assets/images/icon/icons8-lock_filled.svg';
+import { Link } from 'react-router-dom';
+import cx from 'classnames';
 
 export const CRYPTO_ICONS = {
   [CRYPTO_CURRENCY.ETH]: iconEthereum,
@@ -56,6 +59,12 @@ const listCurrency = Object.values(CRYPTO_CURRENCY_CREDIT_CARD).map((item) => {
   return { id: item, text: <span><img src={CRYPTO_ICONS[item]} width={24} /> {CRYPTO_CURRENCY_NAME[item]}</span> };
 });
 
+const listPackages = {
+  [CRYPTO_CURRENCY.ETH]: [{ name: 'basic', amount: 0.1 }, { name: 'pro', amount: 0.4 }],
+  [CRYPTO_CURRENCY.BTC]: [{ name: 'basic', amount: 0.01 }, { name: 'pro', amount: 0.015 }],
+  BCH: [{ name: 'basic', amount: 0.1 }, { name: 'pro', amount: 0.15 }],
+};
+
 const listFiatCurrency = [
   {
     id: FIAT_CURRENCY.USD,
@@ -69,8 +78,8 @@ const FormSpecificAmount = createForm({
     form: nameFormSpecificAmount,
     initialValues: {
       currency: {
-        id: CRYPTO_CURRENCY.ETH,
-        text: <span><img src={iconEthereum} width={22} /> {CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.ETH]}</span>,
+        id: CRYPTO_CURRENCY.BTC,
+        text: <span><img src={iconBitcoin} width={22} /> {CRYPTO_CURRENCY_NAME[CRYPTO_CURRENCY.BTC]}</span>,
       },
       fiatCurrency: {
         id: FIAT_CURRENCY.USD,
@@ -90,6 +99,8 @@ const FormCreditCard = createForm({
 });
 const selectorFormCreditCard = formValueSelector(nameFormCreditCard);
 
+const DECIMAL_NUMBER = 2;
+
 class FeedCreditCard extends React.Component {
   constructor(props) {
     super(props);
@@ -98,11 +109,10 @@ class FeedCreditCard extends React.Component {
       hasSelectedCoin: false,
       isNewCCOpen: true,
       amount: 0,
-      currency: CRYPTO_CURRENCY.ETH,
+      currency: CRYPTO_CURRENCY.BTC,
       fiatAmount: 0,
       fiatCurrency: FIAT_CURRENCY.USD,
       cryptoPrice: this.props.cryptoPrice,
-      packages: [],
     };
   }
 
@@ -129,10 +139,10 @@ class FeedCreditCard extends React.Component {
       rfChange(nameFormSpecificAmount, 'currency', item);
 
       this.setState({ currency: currencyForced }, () => {
-        this.getCryptoPriceByAmount(1);
+        // this.getCryptoPriceByAmount(1);
       });
     } else {
-      this.getCryptoPriceByAmount(1);
+      // this.getCryptoPriceByAmount(1);
     }
 
     this.props.getCcLimits({ PATH_URL: API_URL.EXCHANGE.GET_CC_LIMITS });
@@ -173,11 +183,11 @@ class FeedCreditCard extends React.Component {
     console.log('handleGetCryptoPriceSuccess amount', amount);
     let fiatAmount = amount * cryptoPrice.fiatAmount / cryptoPrice.amount || 0;
 
-    fiatAmount = roundNumberByLocale(fiatAmount, cryptoPrice.fiatCurrency);
+    fiatAmount = roundNumberByLocale(fiatAmount, cryptoPrice.fiatCurrency, DECIMAL_NUMBER);
     console.log('onAmountChange', fiatAmount);
     rfChange(nameFormSpecificAmount, 'fiatAmount', fiatAmount);
 
-    this.generatePackages(cryptoPrice);
+    // this.generatePackages(cryptoPrice);
 
     //
     // const amoutWillUse = new BigNumber(userCcLimit.amount).plus(new BigNumber(cryptoPrice.fiatAmount)).toNumber();
@@ -191,6 +201,12 @@ class FeedCreditCard extends React.Component {
 
   handleGetCryptoPriceFailed = (e) => {
     console.log('handleGetCryptoPriceFailed', e);
+
+    this.props.showAlert({
+      message: <div className="text-center">{getErrorMessageFromCode(e)}</div>,
+      timeOut: 3000,
+      type: 'danger',
+    });
   };
 
   handleSubmitSpecificAmount = (values) => {
@@ -295,7 +311,7 @@ class FeedCreditCard extends React.Component {
                 card: payload.data.id,
               },
               redirect: {
-                return_url: `${window.origin}/payment`,
+                return_url: `${window.origin}${URL.CC_PAYMENT_URL}`,
               },
             }).then((result) => {
               console.log('submit result', result);
@@ -467,11 +483,11 @@ class FeedCreditCard extends React.Component {
   };
 
   onCurrencyChange = (e, newValue) => {
-    const { currency } = this.state;
+    const { currency, amount } = this.state;
 
     if (currency !== newValue.id) {
       this.setState({ currency: newValue.id }, () => {
-        this.getCryptoPriceByAmount(1);
+        this.getCryptoPriceByAmount(amount);
       });
     }
   }
@@ -480,12 +496,35 @@ class FeedCreditCard extends React.Component {
     console.log('onAmountChange', amount);
     const { rfChange, cryptoPrice } = this.props;
 
-    let fiatAmount = amount * cryptoPrice.fiatAmount / cryptoPrice.amount;
+    // let fiatAmount = amount * cryptoPrice.fiatAmount / cryptoPrice.amount;
+    //
+    // fiatAmount = roundNumberByLocale(fiatAmount, cryptoPrice.fiatCurrency, DECIMAL_NUMBER);
+    // console.log('onAmountChange', fiatAmount);
+    // rfChange(nameFormSpecificAmount, 'fiatAmount', fiatAmount);
 
-    fiatAmount = roundNumberByLocale(fiatAmount, cryptoPrice.fiatCurrency);
-    console.log('onAmountChange', fiatAmount);
-    rfChange(nameFormSpecificAmount, 'fiatAmount', fiatAmount);
+    this.setState({ amount }, () => {
+      if (this.intervalCountdown) {
+        clearTimeout(this.intervalCountdown);
+      }
+
+      this.intervalCountdown = setTimeout(() => {
+        this.getCryptoPriceByAmount(amount);
+      }, 1000);
+    });
   }
+
+  componentWillUnmount() {
+    if (this.intervalCountdown) {
+      clearTimeout(this.intervalCountdown);
+    }
+  }
+
+
+  //   this.setState({
+  //                   hasSelectedCoin: true, amount: values.amount, fiatAmount: values.fiatAmount, currency: values.currency.id, fiatCurrency: values.fiatCurrency.id,
+  // }, () => {
+  //   this.getCryptoPriceByAmount(values.amount);
+  // });
 
   onFiatAmountChange = (e, fiatAmount) => {
     console.log('onFiatAmountChange', fiatAmount);
@@ -497,46 +536,46 @@ class FeedCreditCard extends React.Component {
     rfChange(nameFormSpecificAmount, 'amount', newAmount);
   }
 
-  generatePackages = (cryptoPrice) => {
-    const { currency } = this.state;
-    const moneyPackages = [{ name: 'basic', fiatAmount: 99 }, { name: 'pro', fiatAmount: 199 }];
-
-    const packages = moneyPackages.map((item) => {
-      const { name, fiatAmount } = item;
-
-      let newAmount = fiatAmount * cryptoPrice.amount / cryptoPrice.fiatAmount;
-      newAmount = (new BigNumber(newAmount).decimalPlaces(6)).toNumber();
-
-      return {
-        name,
-        price: `$${fiatAmount}`,
-        amountText: `${newAmount} ${currency}`,
-        amount: newAmount.toString(),
-        fiatAmount: fiatAmount.toString(),
-        currency,
-        fiatCurrency: FIAT_CURRENCY.USD,
-      };
-    });
-
-    this.setState({ packages });
-  }
+  // generatePackages = (cryptoPrice) => {
+  //   const { currency } = this.state;
+  //   const moneyPackages = [{ name: 'basic', fiatAmount: 99 }, { name: 'pro', fiatAmount: 199 }];
+  //
+  //   const packages = moneyPackages.map((item) => {
+  //     const { name, fiatAmount } = item;
+  //
+  //     let newAmount = fiatAmount * cryptoPrice.amount / cryptoPrice.fiatAmount;
+  //     newAmount = (new BigNumber(newAmount).decimalPlaces(6)).toNumber();
+  //
+  //     return {
+  //       name,
+  //       price: `$${fiatAmount}`,
+  //       amountText: `${newAmount} ${currency}`,
+  //       amount: newAmount.toString(),
+  //       fiatAmount: fiatAmount.toString(),
+  //       currency,
+  //       fiatCurrency: FIAT_CURRENCY.USD,
+  //     };
+  //   });
+  //
+  //   this.setState({ packages });
+  // }
 
   handleBuyPackage = (item) => {
-    const {
-      amount, fiatAmount, currency, fiatCurrency,
-    } = item;
-    this.setState({
-      hasSelectedCoin: true, amount, fiatAmount, currency, fiatCurrency,
-    }, () => {
+    const { rfChange } = this.props;
+    const { amount } = item;
+    rfChange(nameFormSpecificAmount, 'amount', amount);
+    this.setState({ amount }, () => {
       this.getCryptoPriceByAmount(amount);
     });
   }
 
   render() {
     const { hasSelectedCoin } = this.state;
-    const { intl } = this.props;
+    const { intl, isPopup } = this.props;
     const { amount } = this.props;
-    const { currency, packages } = this.state;
+    const { currency } = this.state;
+
+    const packages = listPackages[currency];
 
     return !hasSelectedCoin ? (
       <div className="choose-coin">
@@ -573,7 +612,7 @@ class FeedCreditCard extends React.Component {
                 className="form-control form-control-lg border-0 rounded-right form-control-cc"
                 type="text"
                 component={fieldInput}
-                onChange={this.onFiatAmountChange}
+                // onChange={this.onFiatAmountChange}
                 validate={[required]}
                 elementAppend={
                   <Field
@@ -584,9 +623,9 @@ class FeedCreditCard extends React.Component {
                     list={listFiatCurrency}
                     component={fieldDropdown}
                     caret={false}
-                    // disabled={!enableChooseFiatCurrency}
                   />
                 }
+                disabled
               />
             </div>
             <div className="mt-3 mb-3">
@@ -601,9 +640,9 @@ class FeedCreditCard extends React.Component {
           <div className="my-3 p-label-choose"><FormattedMessage id="cc.label.3" /></div>
           <div className="mb-5">
             {
-              packages.map((item, index) => {
+              packages && packages.map((item, index) => {
                 const {
-                  name, price, amountText, saving,
+                  name, amount,
                 } = item;
                 return (
                   <div key={name}>
@@ -612,15 +651,15 @@ class FeedCreditCard extends React.Component {
                         <div className={`package p-${name}`}><FormattedMessage id={`cc.label.${name}`} /></div>
                       </div>
                       <div className="d-table-cell align-middle pl-3">
-                        <div className="p-price">
+                        {/*<div className="p-price">
                           {price}
                           {
                             saving && (
                               <span className="p-saving"><FormattedMessage id="cc.label.saving" values={{ percentage: saving }} /></span>
                             )
                           }
-                        </div>
-                        <div className="p-amount">{amountText}</div>
+                        </div>*/}
+                        <div className="p-price">{amount} {currency}</div>
                       </div>
                       <div className="d-table-cell align-middle text-right">
                         <button className="btn btn-p-buy-now" onClick={() => this.handleBuyPackage(item)}><FormattedMessage id="cc.btn.buyNow" /></button>
@@ -631,6 +670,16 @@ class FeedCreditCard extends React.Component {
                 );
               })
             }
+          </div>
+        </div>
+        <div>
+          <div className={cx('ex-sticky-note', isPopup ? 'ex-sticky-note-popup' : '')}>
+            <div className="mb-2"><FormattedMessage id="ex.credit.banner.text" /></div>
+            <div>
+              <Link to={{ pathname: URL.ESCROW_DEPOSIT, search: `` }}>
+                <button className="btn btn-become"><FormattedMessage id="ex.credit.banner.btnText" /></button>
+              </Link>
+            </div>
           </div>
         </div>
       </div>

@@ -5,7 +5,6 @@ import Web3 from 'web3';
 
 export const getGasPrice = () => {
 
-  console.log('Update Gas Price');
   axios
     .get(`https://ethgasstation.info/json/ethgasAPI.json`)
     .then((res) => {
