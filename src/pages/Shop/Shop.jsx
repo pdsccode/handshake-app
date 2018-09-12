@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import { URL } from '@/constants';
 import { withRouter } from 'react-router-dom';
 import $http from '@/services/api';
+// component
+import VideoYoutube from './Utility/VideoYoutube';
 // style
 import './Shop.scss';
 const EthSVG = 'https://d2q7nqismduvva.cloudfront.net/static/images/icon-svg/common/eth-sign.svg';
@@ -30,9 +32,11 @@ class Shop extends React.Component {
   videoOrImage(firstGallery, productName) {
     if (firstGallery.is_video) {
       // video
-      return  <div className="embed-responsive embed-responsive-16by9">
-                <iframe className="embed-responsive-item" src={firstGallery.youtube_url}  />
-              </div>
+      return  <VideoYoutube 
+                videoUrl={firstGallery.youtube_url}
+                imageUrl={firstGallery.image}
+                imageAlt={productName}
+              />
     } else {
       // image
       return <img src={firstGallery.image} alt={productName} />
@@ -48,6 +52,10 @@ class Shop extends React.Component {
     const { products } = this.state;
     return (
       <div className="Shop">
+        <div className="header-block">
+          <h1>Ninja Shop</h1>
+        </div>
+        <div className="products">
         {
           products.map(product => <div key={product.product_id} className="product" onClick={() => this.onSeeMore(product.product_slug)}>
             {this.videoOrImage(product.galleries[0], product.product_name)}
@@ -60,22 +68,15 @@ class Shop extends React.Component {
                 {product.product_eth_price}
               </div>
               <div className="review">
-                <span>{product.product_review} reviews</span>
+                <span>{product.product_review * 2} reviews</span>
               </div>
             </div>
           </div>)
         }
+        </div>
       </div>
     );
   }
 }
-
-const mapState = state => ({
-  // discover: state.discover,
-});
-
-const mapDispatch = dispatch => ({
-  // rfChange: bindActionCreators(change, dispatch),
-});
 
 export default injectIntl(connect(null, null)(withRouter(Shop)));

@@ -98,4 +98,11 @@
       -webkit-box-pack: justify;
     }
   }
+  .your-information-form {
+    input {
+      &::placeholder {
+        opacity: .5;
+      }
+    }
+  }
 }

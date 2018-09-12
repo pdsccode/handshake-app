@@ -5,7 +5,7 @@ import { Switch, Route } from 'react-router-dom';
 import DynamicImport from '@/components/App/DynamicImport';
 import Loading from '@/components/core/presentation/Loading';
 import { URL } from '@/constants';
-import { setHeaderTitle, clearHeaderLeft, clearHeaderRight, showHeader } from '@/reducers/app/action';
+import { setHeaderTitle, clearHeaderLeft, clearHeaderRight, hideHeader } from '@/reducers/app/action';
 
 const Shop = props => (<DynamicImport loading={Loading} load={() => import('@/pages/Shop/Shop')}>{Component => <Component {...props} />}</DynamicImport>);
 const OrderConfirm = props => (<DynamicImport loading={Loading} load={() => import('@/pages/Shop/Confirm')}>{Component => <Component {...props} />}</DynamicImport>);
@@ -23,16 +23,16 @@ class ShopRouter extends React.Component {
     setHeaderTitle: PropTypes.func.isRequired,
     clearHeaderLeft: PropTypes.func.isRequired,
     clearHeaderRight: PropTypes.func.isRequired,
-    showHeader: PropTypes.func.isRequired,
+    hideHeader: PropTypes.func.isRequired,
   }
 
   constructor(props) {
     super(props);
 
-    this.props.setHeaderTitle('Shop');
+    // this.props.setHeaderTitle('Shop');
     this.props.clearHeaderRight();
     this.props.clearHeaderLeft();
-    this.props.showHeader();
+    this.props.hideHeader();
   }
 
   render() {
@@ -46,5 +46,5 @@ class ShopRouter extends React.Component {
 }
 
 export default connect(null, ({
-  setHeaderTitle, clearHeaderRight, clearHeaderLeft, showHeader,
+  setHeaderTitle, clearHeaderRight, clearHeaderLeft, hideHeader,
 }))(ShopRouter);
