@@ -419,8 +419,8 @@ class WalletHistory extends React.Component {
                 { key: 't2', title: messages.wallet.action.history.label.internal_transactions},
               ]} initalPage={'t1'}
               >
-              <div key="t1">{this.list_internalTransaction}</div>
-              <div key="t2">{this.list_transaction}</div>
+              <div key="t1">{this.list_transaction}</div>
+              <div key="t2">{this.list_internalTransaction}</div>
             </Tabs>
             :
             this.state.tabActive == 0 ? this.list_transaction : this.list_internalTransaction }
