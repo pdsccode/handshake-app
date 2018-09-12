@@ -1,3 +1,5 @@
+@import './src/styles/style';
+
 .ShopDetail {
   padding-top: 10px;
   .header-info {
@@ -92,17 +94,45 @@
     }
   }
   .order-information {
+    margin-top: 20px;
     .field-info {
       display: flex;
       justify-content: space-between;
       -webkit-box-pack: justify;
+      margin-bottom: 5px;
     }
   }
   .your-information-form {
+    padding-top: 10px;
+    .input-group {
+      display: flex;
+      align-items: center;
+      margin: 10px 0;
+      label {
+        width: 20%;
+        margin: 0;
+        margin-right: 10px;
+        font-weight: $medium;
+      }
+    }
     input {
+      border-radius: 0;
       &::placeholder {
+        font-size: 14px;
         opacity: .5;
       }
     }
+    .area {
+      display: flex;
+      input {
+        border-right: 0;
+        &:last-child {
+          border-right: 1px solid #ced4da;
+        }
+      }
+    }
+  }
+  .red {
+    color: #8e3d1d;
   }
 }

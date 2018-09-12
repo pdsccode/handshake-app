@@ -66,6 +66,7 @@ class ShopDetail extends React.Component {
     props.hideHeader();
     // bind
     this.placeOrder = ::this.placeOrder;
+    this.updateQuantity = ::this.updateQuantity;
   }
 
   addOptionTextToObject(object) {
@@ -155,6 +156,10 @@ class ShopDetail extends React.Component {
     }
   }
 
+  updateQuantity(e) {
+    this.setState({ quantity: parseInt(e.target.value) });
+  }
+
   async placeOrder(e) {
     e.preventDefault();
 
@@ -206,7 +211,7 @@ class ShopDetail extends React.Component {
   }
 
   render() {
-    const { product, productInfo, productInfoHtml, productSpecs, productFAQ, productReviews } = this.state;
+    const { product, productInfo, productInfoHtml, productSpecs, productFAQ, productReviews, quantity } = this.state;
     const imageSetting = {
       customPaging: i => <span className="dot" />,
       initialSlide: 1,
@@ -273,7 +278,7 @@ class ShopDetail extends React.Component {
               productFAQ.map((item, index) => <p key={'product-faq' + index} dangerouslySetInnerHTML={{ __html: item.question }} />)
             }
           </div>
-          <div label={`Reviews (${product.review_count})`}>
+          <div label={`Reviews (${product.review_count * 2})`}>
             {
               productReviews.map(item => <div key={item.id}>
                   <p>{item.name}</p>
@@ -287,9 +292,9 @@ class ShopDetail extends React.Component {
         {/* modal buy now */}
         <Modal title="Your Information" onRef={modal => this.modalBuyNowRef = modal}>
           <form onSubmit={this.placeOrder} className="your-information-form">
-            <div>
+            <div className="input-group">
               <label htmlFor="">Quantity</label>
-              <Input type="number" onRef={quantity => this.quantityRef = quantity} />
+              <Input type="number" onRef={quantity => this.quantityRef = quantity} onChange={this.updateQuantity} />
               {/* <Field
                 key="0"
                 name="quantity"
@@ -302,7 +307,7 @@ class ShopDetail extends React.Component {
                 onChange={evt => this.updateFieldForm(evt)}
                 autoComplete="off" /> */}
             </div>
-            <div>
+            <div className="input-group">
               <label htmlFor="">Name</label>
               <Input type="text" onRef={name => this.nameRef = name} placeholder="Your name" />
               {/* <Field
@@ -316,7 +321,7 @@ class ShopDetail extends React.Component {
                 ref={name => this.nameRef = name}
                 autoComplete="off" /> */}
             </div>
-            <div>
+            <div className="input-group">
               <label htmlFor="">Email</label>
               <Input type="email" onRef={email => this.emailRef = email} placeholder={"Email for order confirmation"} />
               {/* <Field 
@@ -330,7 +335,7 @@ class ShopDetail extends React.Component {
                 ref={email => this.emailRef = email}
                 autoComplete="off" /> */}
             </div>
-            <div>
+            <div className="input-group">
               <label htmlFor="">Address</label>
               <Input type="text" onRef={address => this.addressRef = address} placeholder="Shipping address" />
               {/* <Field 
@@ -344,7 +349,7 @@ class ShopDetail extends React.Component {
                 ref={address => this.addressRef = address}
                 autoComplete="off" /> */}
             </div>
-            <div>
+            <div className="area">
               <Input type="text" onRef={zip => this.zipRef = zip} placeholder="Zip code" />
               <Input type="text" onRef={city => this.cityRef = city} placeholder="City" />
               <Input type="text" onRef={state => this.stateRef = state} placeholder="State" />
@@ -358,7 +363,7 @@ class ShopDetail extends React.Component {
               <Field key="7" name="country" placeholder="Country" type="text" className="form-control" component={fieldInput} validate={[required]} ref={country => this.countryRef = country}
               autoComplete="off" /> */}
             </div>
-            <div>
+            <div className="input-group">
               <label htmlFor="">Phone</label>
               <Input type="tel" onRef={phone => this.phoneRef = phone} placeholder="Phone for delivery" />
               {/* <Field key="8" name="phone" placeholder="Phone for delivery" type="text" className="form-control" component={fieldInput} validate={[required]}
@@ -370,9 +375,16 @@ class ShopDetail extends React.Component {
             </Button>
             <div className="order-information">
               <div className="field-info">
-                <div><strong>Shipping:&nbsp;</strong>ETH {this.totalInfo.totalShippingPrice}</div>
-                <div><strong>Tax:&nbsp;</strong>ETH {this.totalInfo.totalTaxPrice}</div>
-                <div>Total:&nbsp;ETH {this.totalInfo.totalAmount}</div>
+                <strong>{product.name}</strong> <span className="red">ETH&nbsp;{productInfo.eth_price}</span>&nbsp;&nbsp;<span>(x{quantity})</span>
+              </div>
+              <div className="field-info">
+                <span>Shipping:&nbsp;</span> <span>ETH&nbsp;{this.totalInfo.totalShippingPrice}</span>
+              </div>
+              <div className="field-info">
+                <span>Tax:&nbsp;</span> <span>ETH&nbsp;{this.totalInfo.totalTaxPrice}</span>
+              </div>
+              <div className="field-info">
+                <strong>Total:&nbsp;</strong> <strong className="red">ETH&nbsp;{this.totalInfo.totalAmount}</strong>
               </div>
             </div>
           </form>

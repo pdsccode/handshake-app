@@ -23,10 +23,10 @@ class Confirm extends React.Component {
     const { status } = this.state;
     if (status === 1) {
       // success
-      return <div>thank you for your order. Order number is {this.orderNum}</div>
+      return <div>Thank you for your order. Order number is {this.orderNum}</div>
     } else if (status === 2 || status === 0) {
       // fail
-      return <div>something wrong!</div>
+      return <div>Sorry! something happened wrong.</div>
     } else {
       // loading
       return <div>loading...</div>;
@@ -65,12 +65,4 @@ class Confirm extends React.Component {
   }
 }
 
-const mapState = state => ({
-  // discover: state.discover,
-});
-
-const mapDispatch = dispatch => ({
-  // rfChange: bindActionCreators(change, dispatch),
-});
-
-export default injectIntl(connect(null, null)(withRouter(Confirm)));
+export default injectIntl(withRouter(Confirm));

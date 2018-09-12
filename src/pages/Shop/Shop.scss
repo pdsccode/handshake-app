@@ -14,7 +14,7 @@
   .product {
     margin-bottom: 20px;
     padding-bottom: 10px;
-    border-bottom: 1px solid rgba(0,0,0,0.4);
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.15);
     &:last-child {
       margin-bottom: 0;
       border-bottom: 0;
@@ -40,6 +40,10 @@
       .review {
         font-weight: 400;
         font-size: 14px;
+        span {
+          position: relative;
+          top: 4px;
+        }
       }
     }
   }

@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import YouTube from 'react-youtube';
 // style
 import './VideoYoutube.scss';
-import PLAY_BUTTON_ICON from '@/assets/images/shop/icon/play-button.svg';
+// import PLAY_BUTTON_ICON from '@/assets/images/shop/icon/play-button.svg';
 
 const SpinnerSVG = 'https://d2q7nqismduvva.cloudfront.net/static/images/icon-svg/common/spinner.svg';
 const VIDEO_ID_REGEXP = /([^/]+)(?=$)/;
@@ -163,7 +163,10 @@ class VideoYoutube extends React.Component {
         <div className="imgCover" ref={(imgCover => this.imgCoverRef = imgCover)}>
           <img className="img-fluid" src={imageUrl} alt={imageAlt} onLoad={this.hiddenLoading} />
           <div className="icon" onClick={this.processPlayVideo}>
-            <img className="img-fluid" onClick={this.playVideo} src={playButtonIcon || PLAY_BUTTON_ICON} alt="play" />
+            {
+              playButtonIcon ? <img className="img-fluid" onClick={this.playVideo} src={playButtonIcon} /> : <span className="play-icon" onClick={this.playVideo} />
+            }
+            {/* <img className="img-fluid" onClick={this.playVideo} src={playButtonIcon || PLAY_BUTTON_ICON} alt="play" /> */}
           </div>
         </div>
         <div className="youTubeContainer embed-responsive embed-responsive-16by9" ref={(youTube => this.youTubeContainerRef = youTube)}>
