@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl'
+import { FormattedMessage, FormattedHTMLMessage, injectIntl } from 'react-intl';
 
 import { setLanguage, updateModal } from '@/reducers/app/action';
 // import VideoYoutube from '@/components/core/controls/VideoYoutube';
@@ -22,7 +22,7 @@ class Index extends React.PureComponent {
   }
   constructor(props) {
     super(props);
-    this.changeCountry = ::this.changeCountry;
+    this.changeCountry = :: this.changeCountry;
   }
 
   componentDidMount() {
@@ -35,7 +35,7 @@ class Index extends React.PureComponent {
   }
 
   handleToggleModal = () => {
-    this.props.updateModal({ show: false })
+    this.props.updateModal({ show: false });
   }
 
   render() {
@@ -43,14 +43,14 @@ class Index extends React.PureComponent {
     const { name, children, type, btnToggleLeftMenu, fullWidthContent,
       modal: { className, show, body, title, centered },
     } = this.props;
-    const logo = <a href="/" className="d-inline-block mt-1"><img src={imgNinja} width="100" /></a>;
+    const logo = <Link to="/" className="d-inline-block mt-1"><img src={imgNinja} width="100" alt="" /></Link>;
     const navLinks = (
       <span>
         <span><Link className={`${type === 'product' ? 'active' : ''} landing-nav-link`} to={LANDING_PAGE_TYPE.product.url}>Product</Link></span>
         <span><Link className={`${type === 'research' ? 'active' : ''} landing-nav-link`} to={LANDING_PAGE_TYPE.research.url}>Research</Link></span>
       </span>
-    )
-    const btnJoin = <Link className="btn btn-primary-landing" to={URL.RECRUITING}><FormattedMessage id="landing_page.btn.joinOurTeam" /></Link>
+    );
+    const btnJoin = <Link className="btn btn-primary-landing" to={URL.RECRUITING}><FormattedMessage id="landing_page.btn.joinOurTeam" /></Link>;
 
     return (
       <div className="landing-page">
@@ -101,7 +101,7 @@ class Index extends React.PureComponent {
 
               <div className="row landing-footer no-gutters">
                 <div className="col-12 col-md-1">
-                  <img src={imgLogo} width="54" />
+                  <img src={imgLogo} width="54" alt="" />
                 </div>
                 <div className="col-12 col-md-7">
                   <div className="align-middle px-1 pt-1">
@@ -153,7 +153,7 @@ const mapState = (state) => ({
 
 const mapDispatch = ({
   setLanguage,
-  updateModal
+  updateModal,
 });
 
 export default injectIntl(connect(mapState, mapDispatch)(Index));

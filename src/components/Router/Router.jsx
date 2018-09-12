@@ -11,7 +11,8 @@ import { createDynamicImport } from '@/services/app';
 import Loading from '@/components/core/presentation/Loading';
 import ScrollToTop from '@/components/App/ScrollToTop';
 import Layout from '@/components/Layout/Main';
-import { SEOHome, SEOCash, SEOPrediction, SEODad, SEOWallet, SEOWhisper, SEOPayForDevs, SEOPayForStores } from '@/components/SEO';
+import { SEOCash, SEOPrediction, SEODad, SEOWallet, SEOWhisper, SEOPayForDevs, SEOPayForStores } from '@/components/SEO';
+// SEOHome
 
 import imgCash from '@/assets/images/landing/home/cash.jpg';
 import imgCashContent from '@/assets/images/landing/cash/fake-content.svg';
@@ -24,8 +25,7 @@ import imgInternetCash from '@/assets/images/landing/home/internet-cash.jpg';
 import imgPrediction from '@/assets/images/landing/home/prediction.jpg';
 import imgWallet from '@/assets/images/landing/home/wallet.jpg';
 import imgWhisper from '@/assets/images/landing/home/whisper.jpg';
-import imgUncommons from '@/assets/images/landing/home/uncommons.jpg';
-import imgHivepayOnline from '@/assets/images/landing/home/hivepay-online.jpg';
+// import imgHivepayOnline from '@/assets/images/landing/home/hivepay-online.jpg';
 import imgHivepayOffline from '@/assets/images/landing/home/hivepay-offline.jpg';
 
 // import NetworkError from '@/components/Router/NetworkError';
@@ -41,9 +41,10 @@ const RouterComment = createDynamicImport(() => import('@/components/Router/Comm
 const RouterAdmin = createDynamicImport(() => import('@/components/Router/Admin'), Loading);
 const RouterReport = createDynamicImport(() => import('@/components/Router/Report'), Loading);
 const RouterLuckyPool = createDynamicImport(() => import('@/pages/LuckyLanding/LuckyLanding'), Loading);
+const RouterUncommons = createDynamicImport(() => import('@/pages/LandingPage/Uncommons'), Loading);
 const RouterExchange = createDynamicImport(() => import('@/components/Router/Exchange'), Loading);
 const CreateOwnMarket = createDynamicImport(() => import('@/pages/CreateMarket/CreateMarket'), Loading);
-//const RouterExchange = createDynamicImport(() => import('@/pages/Exchange/Exchange'), Loading);
+// const RouterExchange = createDynamicImport(() => import('@/pages/Exchange/Exchange'), Loading);
 const RouterPrediction = createDynamicImport(() => import('@/pages/Prediction/Prediction'), Loading);
 const RouterResolve = createDynamicImport(() => import('@/pages/Resolve/Resolve'), Loading);
 const RouterLandingPageMain = createDynamicImport(() => import('@/pages/LandingPage/Main'), Loading);
@@ -56,7 +57,7 @@ const ContentForPayForDevs = createDynamicImport(() => import('@/pages/LandingPa
 const ContentForWallet = createDynamicImport(() => import('@/pages/LandingPage/ContentForWallet'), Loading);
 const ContentForPrediction = createDynamicImport(() => import('@/pages/LandingPage/ContentForPrediction'), Loading);
 const ContentForPexInstruction = createDynamicImport(() => import('@/pages/LandingPage/ContentForPexInstruction'), Loading);
-const Discover = createDynamicImport(() => import('@/pages/Discover/Discover'), Loading);
+// const Discover = createDynamicImport(() => import('@/pages/Discover/Discover'), Loading);
 const RouterCCConfirm = createDynamicImport(() => import('@/components/Router/CCConfirm'), Loading);
 const RouterBuyCC = createDynamicImport(() => import('@/components/Router/Credit'), Loading);
 const RouterEscrowDeposit = createDynamicImport(() => import('@/pages/Escrow/Deposit'), Loading);
@@ -65,6 +66,7 @@ const RouterEscrowWithdrawSuccess = createDynamicImport(() => import('@/pages/Es
 
 
 /* ======================== FOR MOBILE ======================== */
+
 const configRoutesUsingMobileLayout = [
   { path: URL.HANDSHAKE_PREDICTION, component: RouterPrediction },
   { path: URL.HANDSHAKE_PEX, component: RouterExchange },
@@ -92,7 +94,7 @@ const configRoutesUsingMobileLayout = [
     render: () => {
       window.location.href = URL.PRODUCT_DAD_URL_SUBDOMAIN;
       return null;
-    }
+    },
   },
   { path: URL.RESOLVE, component: RouterResolve },
 ];
@@ -102,7 +104,6 @@ const routesUsingMobileLayout = configRoutesUsingMobileLayout.map(route => (
     {...route}
   />
 ));
-
 
 /* ======================== FOR DESKTOP ======================== */
 
@@ -120,7 +121,7 @@ if (BrowserDetect.isDesktop) {
     { path: URL.PRODUCT_HIVEPAY_ONLINE_URL, render: () => <ProjectDetail type="product" name="pay-for-devs" reactHelmetElement={SEOPayForDevs} entireContentComponent={<ContentForPayForDevs />} /> },
     { path: URL.RESEARCH_INTERNET_CASH_URL, render: () => <ProjectDetail type="research" name="internet-cash" img={imgInternetCash} /> },
     { path: URL.PRODUCT_DAD_URL, render: () => <ProjectDetail type="product" name="dad" img={imgDad} imgContent={imgDadContent} reactHelmetElement={SEODad} /> },
-    { path: URL.RESEARCH_UNCOMMONS_URL, render: () => <ProjectDetail type="research" name="uncommons" img={imgUncommons} /> },
+    { path: URL.RESEARCH_UNCOMMONS_URL, component: RouterUncommons },
     { path: URL.PRODUCT_WHISPER_URL, render: () => <ProjectDetail type="product" name="whisper" img={imgWhisper} reactHelmetElement={SEOWhisper} /> },
   ];
   routesUsingDesktopLayout = configRoutesUsingDesktopLayout.map(route => (
@@ -146,8 +147,8 @@ class Router extends React.Component {
     this.state = {
       firebaseApp: initFirebaseApp,
     };
-
   }
+
   componentDidMount() {
   }
 
@@ -192,20 +193,23 @@ class Router extends React.Component {
                       : (
                         <ScrollToTop>
                           <Switch>
-                            <Route exact path={URL.INDEX} render={() => {
-                              return <Redirect to={{ pathname: URL.BUY_BY_CC_URL }} />
+                            <Route
+                              exact
+                              path={URL.INDEX}
+                              render={() => {
+                              return <Redirect to={{ pathname: URL.BUY_BY_CC_URL }} />;
                             }}
                             />
-                            {/*<Route*/}
-                            {/*exact*/}
-                            {/*path={URL.INDEX}*/}
-                            {/*render={() => {*/}
-                            {/*if (process.env.isDojo) {*/}
-                            {/*return <Redirect to={{ pathname: URL.HANDSHAKE_CASH }} />*/}
-                            {/*}*/}
-                            {/*return <Redirect to={{ pathname: URL.HANDSHAKE_PREDICTION }} />*/}
-                            {/*}}*/}
-                            {/*/>*/}
+                            {/* <Route */}
+                            {/* exact */}
+                            {/* path={URL.INDEX} */}
+                            {/* render={() => {* /}
+                            {/* if (process.env.isDojo) { */}
+                            {/* return <Redirect to={{ pathname: URL.HANDSHAKE_CASH }} /> */}
+                            {/* } */}
+                            {/* return <Redirect to={{ pathname: URL.HANDSHAKE_PREDICTION }} /> */}
+                            {/* }} */}
+                            {/* /> */}
                             {routesUsingMobileLayout}
                             <Route component={Page404} />
                           </Switch>
@@ -213,7 +217,7 @@ class Router extends React.Component {
                       )
                   }
                 </Layout>
-              )
+              );
             }}
           />
         </Switch>

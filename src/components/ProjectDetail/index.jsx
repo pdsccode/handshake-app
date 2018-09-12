@@ -21,6 +21,7 @@ const FormSubscribeEmail = createForm({
     form: nameFormSubscribeEmail,
   },
 });
+
 const selectorFormSubscribeEmail = formValueSelector(nameFormSubscribeEmail);
 
 class Index extends React.PureComponent {
@@ -86,8 +87,8 @@ class Index extends React.PureComponent {
                       )
                     }
                     <span>
-                  <FormattedMessage id={`landing_page.${name}.breadcrumb`} />
-                </span>
+                      <FormattedMessage id={`landing_page.${name}.breadcrumb`} />
+                    </span>
                   </div>
                 </div>
               </div>
@@ -107,39 +108,39 @@ class Index extends React.PureComponent {
                     <div className="mt-4">
                       {textEmail && (
                         <span>
-                    {!hasSubscribed ? (
-                      <FormSubscribeEmail onSubmit={this.handleSubmit}>
-                        <div className="text-email">
-                          <FormattedHTMLMessage id={`landing_page.${name}.textEmail`} />
-                        </div>
-                        <div className="d-table w-100">
-                          {
+                          {!hasSubscribed ? (
+                            <FormSubscribeEmail onSubmit={this.handleSubmit}>
+                              <div className="text-email">
+                                <FormattedHTMLMessage id={`landing_page.${name}.textEmail`} />
+                              </div>
+                              <div className="d-table w-100">
+                                {
                             messages[`landing_page.${name}.label.sendLinkToEmail`] && (
                               <div className="d-table-cell align-top text-send-link">
                                 <FormattedMessage id={`landing_page.${name}.label.sendLinkToEmail`} />
                               </div>
                             )
                           }
-                          <div className="d-table-cell align-top">
-                            <Field
-                              name="email"
-                              className="form-control control-subscribe-email"
-                              placeholder={intl.formatMessage({ id: 'landing_page.detail.email_placeholder' })}
-                              type="text"
-                              validate={[required, email]}
-                              component={fieldInput}
-                            />
-                          </div>
-                          <div className="d-table-cell align-top">
-                            <button
-                              type="submit"
-                              className="btn btn-primary-landing w-100 ml-1"
-                            >
-                              {btnSubmitEmail}
-                            </button>
-                          </div>
-                        </div>
-                      </FormSubscribeEmail>
+                                <div className="d-table-cell align-top">
+                                  <Field
+                                    name="email"
+                                    className="form-control control-subscribe-email"
+                                    placeholder={intl.formatMessage({ id: 'landing_page.detail.email_placeholder' })}
+                                    type="text"
+                                    validate={[required, email]}
+                                    component={fieldInput}
+                                  />
+                                </div>
+                                <div className="d-table-cell align-top">
+                                  <button
+                                    type="submit"
+                                    className="btn btn-primary-landing w-100 ml-1"
+                                  >
+                                    {btnSubmitEmail}
+                                  </button>
+                                </div>
+                              </div>
+                            </FormSubscribeEmail>
                     ) : (
                       <h5>
                         <strong className="text-success">
@@ -147,7 +148,7 @@ class Index extends React.PureComponent {
                         </strong>
                       </h5>
                     )}
-                  </span>
+                        </span>
                       )}
                       {cta1 && (
                         <a href={cta1Url} className="btn btn-primary-landing">{cta1}</a>
@@ -168,7 +169,7 @@ class Index extends React.PureComponent {
                         allowFullScreen
                       />
                     ) : (
-                      <img src={img} className="w-100" />
+                      <img src={img} className="w-100" alt="" />
                     )}
                   </div>
                 </div>
@@ -183,7 +184,7 @@ class Index extends React.PureComponent {
                 {imgContent && (
                   <div className="row mt-5">
                     <div className="col">
-                      <img src={imgContent} className="w-100" />
+                      <img src={imgContent} className="w-100" alt="" />
                     </div>
                   </div>
                 )}

@@ -1,6 +1,6 @@
 import { URL } from '@/constants';
 import React from 'react';
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
 
 export default {
   app: {
@@ -379,8 +379,8 @@ export default {
         {
           title: 'Place a bet:',
           content: 'Pick the market you want to bet (i.e. Brazil - Spain), the outcomes (i.e. Brazil wins) and the site (i.e. support or bet against the outcome)\n' +
-          'Enter the stake you want to bet (i.e. 1 ETH) and the odds (i.e. 1/ 2.25)\n' +
-          'The PEX Matching Engine will then find another order that bets against the odds you set.',
+            'Enter the stake you want to bet (i.e. 1 ETH) and the odds (i.e. 1/ 2.25)\n' +
+            'The PEX Matching Engine will then find another order that bets against the odds you set.',
         },
         {
           title: 'Wait for the report:',
@@ -573,9 +573,36 @@ export default {
 
   'landing_page.uncommons.breadcrumb': 'Uncommons',
   'landing_page.uncommons.heading': 'The people\'s blockchain.',
-  'landing_page.uncommons.subHeading': 'No token tricks, no gas fees and no exclusive parties. Help build a blockchain where anyone can develop, use and explore for free. The new internet should belong to you.',
-  'landing_page.uncommons.textEmail': 'Be an uncommoner.',
-  'landing_page.uncommons.btnSubmitEmail': 'Show me how',
+  'landing_page.uncommons.subHeading': 'unCommons builds on the great work being done by the Ethereum Foundation with one important variation. This community donates their computing power to collectively sustain and strengthen the network, so developers can build for free, and so users don’t have to pay fees.',
+  // 'landing_page.uncommons.textEmail': 'Be an uncommoner.',
+  // 'landing_page.uncommons.btnSubmitEmail': 'Show me how',
+  'landing_page.uncommons.cta1': 'See what’ve we built',
+  'landing_page.uncommons.cta1_url': '#',
+
+  'landing_page.uncommons.block.1.header': 'Givers',
+  'landing_page.uncommons.block.1.subheader': 'Shape the new internet just by leaving your computer on.',
+  'landing_page.uncommons.block.1.content.1': 'Givers are the bedrock of unCommons. By running a simple script on their computers, Givers secure and support the blockchain. Unlike miners, they contribute their block creation rewards to erase gas fees for the community of developers and users. As long as there are Givers, the network lives.',
+  'landing_page.uncommons.block.1.content.2': 'Being a giver is simple and inexpensive, contributing energy roughly equivalent to seeding a torrent or downloading a client. Give it a whirl.',
+  'landing_page.uncommons.block.1.button': 'Be A Giver',
+  'landing_page.uncommons.block.1.button_url': '#',
+
+  'landing_page.uncommons.block.2.header': 'Developer',
+  'landing_page.uncommons.block.2.subheader': 'Build on the people’s blockchain and make it a place worth supporting.',
+  'landing_page.uncommons.block.2.content.1': 'unCommons is forked from Ethereum, everyone’s favorite decentralized blockchain app platform that runs smart-contracts. The benefits are multifold.',
+  'landing_page.uncommons.block.2.content.2': 'Easily create your own ERC-20 token, raise funds with a trustless crowdsale, build smart-contract powered dApps for every imaginable industry, tap in to a wealth of frameworks, languages and guides designed just so you can hit the ground running.',
+  'landing_page.uncommons.block.2.button': 'Be a Developer',
+  'landing_page.uncommons.block.2.button_url': '#',
+
+  'landing_page.uncommons.block.3.header': 'User',
+  'landing_page.uncommons.block.3.subheader': 'Explore the blockchain. Discover new dApps, test them for free. ',
+  'landing_page.uncommons.block.3.content.1': 'Currently, this brave new internet is a little unfriendly. Every transaction you make incurs fees - imagine if you had to pay every time you used a search engine!',
+  'landing_page.uncommons.block.3.content.2': 'So we built unCommons. There are no token tricks here, no exclusive parties and no gas fees. The new internet belongs to the people, to real-world applications of this exciting technology, and they created this for you.',
+  'landing_page.uncommons.block.3.button': 'Explore',
+  'landing_page.uncommons.block.3.button_url': '#',
+
+  'landing_page.uncommons.block.4.header': 'The first unCommoners',
+  'landing_page.uncommons.block.4.content.1': 'The first nodes are dApp developers that know first hand how costly both building and user onboarding can be. This wonderful new internet is a hard sell. The hottest dApps, beloved by the media and community alike, see maybe a few dozens of real transactions a day. In a world where people will not pay for 99 cent apps and most projects are bootstrapped, gas fees are a big barrier to the mass adoption of blockchain technology.',
+  'landing_page.uncommons.block.4.content.2': 'Thank you Ethereum for building the infrastructure that supports decentralization, collaboration and vision. Perhaps an alternative to capitalist motivation can exist. When the first Wikipedians set out to create the world’s new encyclopedia, the whole venture seemed dubiously optimistic - naive at best. unCommons is proud to be foolish.',
 
   'landing_page.whisper.breadcrumb': 'Whisper',
   'landing_page.whisper.heading': 'The new mailbox for the new internet.',
@@ -675,7 +702,7 @@ export default {
     {
       question: 'How can I make sure my coin is transferred to me after I give the other ninja cash?',
       answer: 'As a buyer, you’ll be able to observe the seller approving the transaction. Once that happens, the cryptocurrency will be released from escrow and into your wallet.',
-    }
+    },
   ],
   'landing_page.prediction.faq': [
     {
@@ -756,7 +783,7 @@ export default {
     {
       question: 'How do I start earning ETH/Bitcoin?/How do I put cryptocurrency in my wallet?',
       answer: <span>For instructions on how to play: <Link to={URL.PEX_INSTRUCTION_URL}>http://ninja.org/pex/prediction</Link></span>,
-    }
+    },
   ],
   'landing_page.wallet.faq': [
     {
@@ -782,7 +809,7 @@ export default {
     {
       question: 'What happens if I swap/lose my phone? Will I lose my wallet?',
       answer: <span>We recommend all users backup their wallets as soon as they start using Ninja. We have explained how to backup your Ninja Wallet <a target="__blank" href="https://medium.com/@ninja_org/how-to-back-up-your-ninja-wallet-its-really-quite-easy-d98a5ec1a671">here</a>.</span>,
-    }
+    },
   ],
   'landing_page.dad.faq': [
     {
@@ -791,7 +818,7 @@ export default {
     },
     {
       question: 'How does it work?',
-      answer: <span>Anyone can contribute their images to the DAD. <br/>All you need to do is join the platform, upload your photos, and any tags that will help to identify what they are, location etc.<br /><br />If you see a photo and you know where it was taken, or can add more information then just tag the image.</span>,
+      answer: <span>Anyone can contribute their images to the DAD. <br />All you need to do is join the platform, upload your photos, and any tags that will help to identify what they are, location etc.<br /><br />If you see a photo and you know where it was taken, or can add more information then just tag the image.</span>,
     },
     {
       question: 'Can anyone buy datasets from DAD?',
@@ -824,7 +851,7 @@ export default {
     {
       question: 'Once you have my data, do you have it forever?',
       answer: 'Yes all of the data that you contribute will be stored on the blockchain, this means it cannot be deleted. It also means that you will continue to receive payouts on DAD as long as your data is being sold.',
-    }
+    },
   ],
   COIN_EXCHANGE_LP_TRADE_EASY_TRADE_SAFE: {
     title: 'Trade Easy. Stay Safe',
@@ -956,7 +983,7 @@ export default {
         transactions: 'Transactions',
         dashboard: 'Dashboard',
         buyMoreCoin: 'Buy more coins now',
-      }
+      },
     },
     credit: {
       overview: {
@@ -997,7 +1024,7 @@ export default {
         validate: {
           amountMustLargerThan0: 'Amount must larger than 0',
           amountMustLessThanBalance: 'Amount must not larger than your balance',
-        }
+        },
       },
       withdrawSuccess: {
         description: 'Withdraw successfully!',
@@ -1022,7 +1049,6 @@ export default {
             tradeNow: 'Now',
           },
         },
-
       },
     },
   },
@@ -1106,7 +1132,7 @@ export default {
     action: {
       payment: {
         button: {
-          checkout: 'Checkout'
+          checkout: 'Checkout',
         },
         label: {
           from_wallet: 'From wallet',
@@ -1118,28 +1144,28 @@ export default {
           select_wallet: 'Select a wallet',
         },
         error: {
-          insufficient: 'You have insufficient coin to make the transfer.'
+          insufficient: 'You have insufficient coin to make the transfer.',
         },
         menu: {
-          developer_docs: "Developer Docs",
-          payment_buttons: "Payment Buttons",
-          help: "Help & Support"
-        }
-      },
-      preferecens:{
-        list_item: {
-          wallet_name: "Wallet Name",
-          hide_balance: "Hide Balance",
-          backup_wallet: "Backup Wallet",
-          delete_wallet: "Delete Wallet",
+          developer_docs: 'Developer Docs',
+          payment_buttons: 'Payment Buttons',
+          help: 'Help & Support',
         },
-        update_name:{
-          title: "Wallet name",
-          label: "What do you call this wallet?",
+      },
+      preferecens: {
+        list_item: {
+          wallet_name: 'Wallet Name',
+          hide_balance: 'Hide Balance',
+          backup_wallet: 'Backup Wallet',
+          delete_wallet: 'Delete Wallet',
+        },
+        update_name: {
+          title: 'Wallet name',
+          label: 'What do you call this wallet?',
           button: {
-            save: "Save",
-          }
-        }
+            save: 'Save',
+          },
+        },
       },
       remove: {
         title: 'Remove',
@@ -1205,7 +1231,7 @@ export default {
         success: {
           restore: 'Your Wallet restore success',
           save_alternative_currency: 'Save alternative currency selected!',
-          save_crypto_address: 'Save format crypto address seleted!'
+          save_crypto_address: 'Save format crypto address seleted!',
         },
         label: {
           alternative_currency: 'Alternative currency',
@@ -1214,7 +1240,7 @@ export default {
           select_crypto_address: 'Select cryptocurrency address',
           short_address: 'Show short address',
           shortest_address: 'Show shortest address',
-          hide_address: 'Hide address'
+          hide_address: 'Hide address',
         },
         button: {
           restore: 'Restore now',
@@ -1224,7 +1250,7 @@ export default {
       import: {
         title: 'Add new / Import coin',
       },
-      add_token:{
+      add_token: {
         title: 'Add custom token',
       },
       add_collectible: {
@@ -1251,7 +1277,7 @@ export default {
           step2_msg1: 'Record these words carefully. Don\'t email it or screenshot it.',
           step3_msg1: 'Tap to put these words in the correct order.',
           need_secure: 'Need secure',
-          need_backup: 'Needs Backup'
+          need_backup: 'Needs Backup',
         },
         button: {
           continue: 'Continue',
@@ -1280,14 +1306,14 @@ export default {
           choose_wallet: 'Choose a wallet ...',
         },
         link: {
-          copy_address: "Copy address",
-          download_qrcode: "Download QR code",
+          copy_address: 'Copy address',
+          download_qrcode: 'Download QR code',
         },
         button: {
           share: 'Copy to share',
           request_amount: 'Request Specific amount ➔',
           done: 'Done',
-          text: 'Copy address'
+          text: 'Copy address',
         },
         success: {
           share: 'Wallet address copied to clipboard.',
@@ -1300,13 +1326,13 @@ export default {
           wallet_key: 'Wallet key',
           main_net: 'Mainnet wallets',
           test_net: 'Testnet wallets',
-          header_coins: "Cryptocurrencies",
-          header_tokens: "ERC20 Tokens",
-          header_collectibles: "ERC721 Collectibles",
+          header_coins: 'Cryptocurrencies',
+          header_tokens: 'ERC20 Tokens',
+          header_collectibles: 'ERC721 Collectibles',
         },
         text: {
-          random: "Random",
-          specify_phrase: "Specify recovery Phrase"
+          random: 'Random',
+          specify_phrase: 'Specify recovery Phrase',
         },
         placeholder: {
           wallet_key: 'Wallet key',
@@ -1315,13 +1341,13 @@ export default {
         button: {
           create: 'Create wallet',
           add_new: '+ Add new',
-          done: "Done",
+          done: 'Done',
           request_free_eth: 'Request free ETH',
         },
-        error:{
-          recovery_words_invalid: "Cannot create wallet. Recovery words are invalid.",
-          random: "Cannot create wallet. Please reload and try again"
-        }
+        error: {
+          recovery_words_invalid: 'Cannot create wallet. Recovery words are invalid.',
+          random: 'Cannot create wallet. Please reload and try again',
+        },
       },
       scan_qrcode: {
         header: 'Scan QR code',
@@ -1333,7 +1359,7 @@ export default {
         title: 'View transaction history',
         header: 'Transaction history',
         label: {
-          balance_hidden: "Balance Hidden",
+          balance_hidden: 'Balance Hidden',
           failed: 'Failed',
           unconfirmed: 'Unconfirmed',
           balance: 'Balance',
@@ -1341,22 +1367,22 @@ export default {
           status: 'Status',
           confirmations: 'confirmations',
           success: 'success',
-          error: "Error",
+          error: 'Error',
           detail_etherscan: 'View detail on etherscan.io',
           view_all_etherscan: 'Watch etherscan',
-          self: "Self",
-          sent: "Sent",
-          received: "Received",
-          create: "Create",
-          transfer: "transfer",
-          from: "from",
-          to: "to",
-          internal_transactions: "Internal",
-          no_trans: "No transactions yet",
-          no_internal_trans: "No internal transactions yet",
-          coming_soon: "Coming soon ...",
-          send: "Send",
-          receive: "Receive",
+          self: 'Self',
+          sent: 'Sent',
+          received: 'Received',
+          create: 'Create',
+          transfer: 'transfer',
+          from: 'from',
+          to: 'to',
+          internal_transactions: 'Internal',
+          no_trans: 'No transactions yet',
+          no_internal_trans: 'No internal transactions yet',
+          coming_soon: 'Coming soon ...',
+          send: 'Send',
+          receive: 'Receive',
         },
       },
     },
