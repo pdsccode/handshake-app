@@ -6,6 +6,8 @@ import './ContentForCashBusiness.scss';
 import './ContentForPrediction.scss';
 
 import imgPredictionContent from '@/assets/images/landing/prediction/fake-content.svg'
+import imgHowToPlay from '@/assets/images/landing/prediction/pex_how_to_play.png';
+
 import PexRoadMap from '@/pages/LandingPage/PexRoadMap';
 import { Link } from 'react-router-dom'
 
@@ -19,7 +21,7 @@ class ContentForPrediction extends React.Component {
   renderHowToPlay() {
     return (
       <div className="wrapperHowToPlay">
-        <img src={imgPredictionContent} width="" />
+        <img src={imgHowToPlay} width="" />
         <div className="wrapperContentHowToPlay">
           <div>
             <img src={imgPredictionContent} width="" />
