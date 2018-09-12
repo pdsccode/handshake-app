@@ -5,6 +5,7 @@ import Modal from '@/components/core/controls/Modal';
 // import CustomizeOptions from './Utility/CustomizeOptions';
 //
 import { set, getJSON } from 'js-cookie';
+import { showAlert } from '@/reducers/app/action';
 // import createForm from '@/components/core/form/createForm';
 // import { fieldDropdown, fieldInput } from '@/components/core/form/customField';
 // import { required } from '@/components/core/form/validation';
@@ -17,20 +18,11 @@ import { withRouter } from 'react-router-dom';
 import $http from '@/services/api';
 import SimpleSlider from '@/components/core/controls/Slider';
 import Tabs from '@/components/handshakes/betting/Feed/Tabs';
-import { hideHeader, clearNotFound } from '@/reducers/app/action';
+import { hideHeader } from '@/reducers/app/action';
 import { CUSTOMER_ADDRESS_INFO } from '@/constants';
 // style
 import './ShopDetail.scss';
 const EthSVG = 'https://d2q7nqismduvva.cloudfront.net/static/images/icon-svg/common/eth-sign.svg';
-
-// const BuyNowForm = createForm({ 
-//   propsReduxForm: {
-//     form: 'BuyNowForm',
-//     enableReinitialize: true,
-//     clearSubmitErrors: true,
-//     initialValues: {},
-//   },
-// });
 
 const SELLER_CONFIG = {
   ETH_ADDRESS: 'ETH:0xA8a6d153C3c3F5098eEc885E6c39437dE5cA74Fd',
@@ -44,6 +36,7 @@ class ShopDetail extends React.Component {
 
   static propTypes = {
     hideHeader: PropTypes.func.isRequired,
+    showAlert: PropTypes.func.isRequired,
   }
 
   constructor(props) {
@@ -202,7 +195,12 @@ class ShopDetail extends React.Component {
       window.location.href = paymentUrl;
     } else {
       // fail
-      alert(placeOrder.message);
+      this.props.showAlert({
+        message: <div className="text-center">{placeOrder.message}</div>,
+        timeOut: 5000,
+        type: 'danger',
+        callBack: () => {},
+      });
     }
   }
 
@@ -294,81 +292,29 @@ class ShopDetail extends React.Component {
           <form onSubmit={this.placeOrder} className="your-information-form">
             <div className="input-group">
               <label htmlFor="">Quantity</label>
-              <Input type="number" onRef={quantity => this.quantityRef = quantity} onChange={this.updateQuantity} />
-              {/* <Field
-                key="0"
-                name="quantity"
-                type="number"
-                className="form-control"
-                validate={[required]}
-                component={fieldInput}
-                ref={quantity => this.quantityRef = quantity}
-                value={this.state.quantity}
-                onChange={evt => this.updateFieldForm(evt)}
-                autoComplete="off" /> */}
+              <Input type="number" name="quantity" onRef={quantity => this.quantityRef = quantity} onChange={this.updateQuantity} />
             </div>
             <div className="input-group">
               <label htmlFor="">Name</label>
-              <Input type="text" onRef={name => this.nameRef = name} placeholder="Your name" />
-              {/* <Field
-                key="1"
-                name="name"
-                placeholder="Your name"
-                type="text"
-                className="form-control"
-                validate={[required]}
-                component={fieldInput}
-                ref={name => this.nameRef = name}
-                autoComplete="off" /> */}
+              <Input type="text" name="name" onRef={name => this.nameRef = name} placeholder="Your name" />
             </div>
             <div className="input-group">
               <label htmlFor="">Email</label>
-              <Input type="email" onRef={email => this.emailRef = email} placeholder={"Email for order confirmation"} />
-              {/* <Field 
-                key="2"
-                name="email"
-                placeholder={"Email for order confirmation"}
-                type="text"
-                className="form-control"
-                validate={[required]}
-                component={fieldInput}
-                ref={email => this.emailRef = email}
-                autoComplete="off" /> */}
+              <Input name="email" type="email" onRef={email => this.emailRef = email} placeholder={"Email for order confirmation"} />
             </div>
             <div className="input-group">
               <label htmlFor="">Address</label>
-              <Input type="text" onRef={address => this.addressRef = address} placeholder="Shipping address" />
-              {/* <Field 
-                key="3"
-                name="address"
-                placeholder="Shipping address"
-                type="text"
-                className="form-control"
-                validate={[required]}
-                component={fieldInput}
-                ref={address => this.addressRef = address}
-                autoComplete="off" /> */}
+              <Input name="address" type="text" onRef={address => this.addressRef = address} placeholder="Shipping address" />
             </div>
             <div className="area">
-              <Input type="text" onRef={zip => this.zipRef = zip} placeholder="Zip code" />
-              <Input type="text" onRef={city => this.cityRef = city} placeholder="City" />
-              <Input type="text" onRef={state => this.stateRef = state} placeholder="State" />
-              <Input type="text" onRef={country => this.countryRef = country} placeholder="Country" />
-              {/* <Field key="4" name="zip" placeholder="Zip code" type="text" className="form-control" component={fieldInput} validate={[required]} ref={zip => this.zipRef = zip}
-                autoComplete="off" />
-              <Field key="5" name="city" placeholder="City" type="text" className="form-control" component={fieldInput} validate={[required]} ref={city => this.cityRef = city}
-                autoComplete="off" />
-              <Field key="6" name="state" placeholder="State" type="text" className="form-control" component={fieldInput} validate={[required]} ref={state => this.stateRef = state}
-                autoComplete="off" />
-              <Field key="7" name="country" placeholder="Country" type="text" className="form-control" component={fieldInput} validate={[required]} ref={country => this.countryRef = country}
-              autoComplete="off" /> */}
+              <Input type="text" name="zip" onRef={zip => this.zipRef = zip} placeholder="Zip code" />
+              <Input type="text" name="city" onRef={city => this.cityRef = city} placeholder="City" />
+              <Input type="text" name="state" onRef={state => this.stateRef = state} placeholder="State" />
+              <Input type="text" name="country" onRef={country => this.countryRef = country} placeholder="Country" />
             </div>
             <div className="input-group">
               <label htmlFor="">Phone</label>
-              <Input type="tel" onRef={phone => this.phoneRef = phone} placeholder="Phone for delivery" />
-              {/* <Field key="8" name="phone" placeholder="Phone for delivery" type="text" className="form-control" component={fieldInput} validate={[required]}
-                     ref={phone => this.phoneRef = phone}
-                autoComplete="off" /> */}
+              <Input type="tel" name="phone" onRef={phone => this.phoneRef = phone} placeholder="Phone for delivery" />
             </div>
             <Button block >
               Submit
@@ -399,4 +345,9 @@ const mapState = state => ({
   app: state.app,
 });
 
-export default injectIntl(connect(mapState, ({ hideHeader }))(withRouter(ShopDetail)));
+const mapDispatch = ({
+  hideHeader,
+  showAlert,
+});
+
+export default injectIntl(connect(mapState, mapDispatch)(withRouter(ShopDetail)));
