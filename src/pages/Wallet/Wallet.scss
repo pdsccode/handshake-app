@@ -75,8 +75,8 @@
   cursor: pointer;
   float: right;
 }
-.safe{        
-  position: absolute;  
+.safe{
+  position: absolute;
   left: 34px;
   top: -2px;
   width: 16px;
@@ -490,7 +490,7 @@
     padding-bottom: 10px;
     font-size: 14px;
     text-align: center;
-  } 
+  }
   .loader {
     border-top: 3px solid blue;
     border-right: 3px solid green;
@@ -538,11 +538,11 @@
       }
     }
   }
-  .header-history-tx{    
+  .header-history-tx{
     font-size: 14px;
     text-align: center;
     padding: 10px;
-    overflow: hidden;        
+    overflow: hidden;
     letter-spacing: 0;
     text-transform: uppercase;
     color: #315E9E;
@@ -558,7 +558,7 @@
   .box-button{
     overflow: hidden;
     margin-top: 15px;
-    margin-bottom: 25px;    
+    margin-bottom: 25px;
     div{
       overflow: hidden;
     }
@@ -723,6 +723,10 @@
       color:#FF2D55;
     }
 
+    .status-pending{
+      float: right;
+      color:orange;
+    }
     .status-success{
       float: right;
       color:#4CD964;
@@ -821,7 +825,7 @@
 	border-radius:4px;
 	display:inline-block;
 	cursor:pointer;
-	color:#ffffff;	
+	color:#ffffff;
 	font-size:18px;
 	padding:10px 76px;
   text-decoration:none;

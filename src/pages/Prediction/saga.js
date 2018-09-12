@@ -1,6 +1,6 @@
 import { takeLatest, call, select, put } from 'redux-saga/effects';
 import { apiGet } from '@/stores/api-saga';
-import { REMOVE_DATA, SET_DATA } from '@/stores/data-action';
+import { REMOVE_DATA } from '@/stores/data-action';
 import { API_URL } from '@/constants';
 import { loadMatches, getReportCount, removeExpiredEvent, checkFreeBet, updateFreeBet, checkExistSubcribeEmail, updateCountReport, updateExistEmail } from './action';
 import { eventSelector } from './selector';
@@ -74,7 +74,6 @@ export function* handleCheckExistEmail() {
       PATH_URL: API_URL.USER.CHECK_EXIST_EMAIL,
       type: 'CHECK_EXIST_EMAIL',
     });
-    console.log('Response Data:', response.data);
     if (response.data) {
       const { email_existed: emailExist } = response.data;
 

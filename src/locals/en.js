@@ -14,10 +14,10 @@ export default {
 
       whisper: 'Whisper',
       wallet: 'Wallet',
-      setting: 'Setting',
+      setting: 'Me',
       atm: 'ATM',
       bet: 'Bet',
-      credit: 'CC'
+      credit: 'CC',
     },
   },
   buy: 'Buy',
@@ -1335,6 +1335,7 @@ export default {
         label: {
           balance_hidden: "Balance Hidden",
           failed: 'Failed',
+          pending: 'Pending',
           unconfirmed: 'Unconfirmed',
           balance: 'Balance',
           transactions: 'Transactions',

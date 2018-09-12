@@ -48,7 +48,7 @@ export const HANDSHAKE_ID = { // important
   CREDIT: 10,
 };
 
-export const HANDSHAKE_ID_DEFAULT = 10;
+export const HANDSHAKE_ID_DEFAULT = 3;
 
 export const HANDSHAKE_NAME = {
   // [HANDSHAKE_ID.PROMISE]: { name: 'Promise', priority: 3 },
@@ -518,6 +518,7 @@ export const URL = {
   HANDSHAKE_PREDICTION: '/prediction',
   HANDSHAKE_PEX: '/pex',
   HANDSHAKE_PEX_CREATOR: '/create-pex',
+  HANDSHAKE_PEX_UPDATER: '/create-pex/:eventId?',
 
   HANDSHAKE_CASH: '/cash',
   HANDSHAKE_CASH_INDEX: '/cash',
