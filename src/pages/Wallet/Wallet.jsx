@@ -482,12 +482,12 @@ class Wallet extends React.Component {
     //   })
     // }
 
-    obj.push({
-      title: messages.wallet.action.cancel.title,
-      handler: () => {
-        this.toggleBottomSheet();
-      },
-    });
+    // obj.push({
+    //   title: messages.wallet.action.cancel.title,
+    //   handler: () => {
+    //     this.toggleBottomSheet();
+    //   },
+    // });
 
     return obj;
   }
@@ -683,12 +683,12 @@ class Wallet extends React.Component {
         });
       },
     });
-    obj.push({
-      title: messages.wallet.action.cancel.title,
-      handler: () => {
-        this.toggleBottomSheet();
-      },
-    });
+    // obj.push({
+    //   title: messages.wallet.action.cancel.title,
+    //   handler: () => {
+    //     this.toggleBottomSheet();
+    //   },
+    // });
     return obj;
   }
 
@@ -1003,7 +1003,7 @@ class Wallet extends React.Component {
           {/* Tooltim menu Bottom */ }
           <ReactBottomsheet
             visible={this.state.bottomSheet}
-            appendCancelBtn={false}
+            appendCancelBtn={true}
             onClose={this.toggleBottomSheet.bind(this)}
             list={this.state.listMenu}
           />
@@ -1012,8 +1012,8 @@ class Wallet extends React.Component {
           <ModalDialog title={messages.wallet.action.remove.header} onRef={modal => this.modalRemoveRef = modal}>
             <div className="bodyConfirm"><span>{messages.wallet.action.remove.message}</span></div>
             <div className="bodyConfirm">
-              <Button className="left" cssType="danger" onClick={this.removeWallet} >{messages.wallet.action.remove.button_yes}</Button>
-              <Button className="right" cssType="secondary" onClick={() => { this.modalRemoveRef.close(); }}>{messages.wallet.action.remove.button_cancel}</Button>
+              <Button className="left pl-0 pr-0" cssType="danger" onClick={this.removeWallet} >{messages.wallet.action.remove.button_yes}</Button>
+              <Button className="right pl-0 pr-0" cssType="secondary" onClick={() => { this.modalRemoveRef.close(); }}>{messages.wallet.action.remove.button_cancel}</Button>
             </div>
           </ModalDialog>
 
