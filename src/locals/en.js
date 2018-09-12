@@ -310,6 +310,7 @@ export default {
   'cc.label.saving': 'You save {percentage}%',
   'cc.label.email': 'Email',
   'cc.label.email.hint': 'Just for receiving receipt',
+  'cc.label.receive.address': 'RECEIVE ADDRESS',
 
   'escrow.label.depositCoin': 'Sell crypto online',
   'escrow.label.iWantTo': 'Deposit any amount of crypto into escrow and enter your percentage',
