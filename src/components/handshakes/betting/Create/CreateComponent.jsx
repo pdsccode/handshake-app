@@ -355,8 +355,9 @@ class BettingCreate extends React.Component {
     const { disable } = this.state;
     const { side } = this.props.bettingShake;
     const buttonClass = theme;
-    const sideText = getKeyByValue(SIDE, side);
-    const buttonText = disable ? 'Loading...' : `Place ${sideText} order`;
+    // const sideText = getKeyByValue(SIDE, side);
+    // const buttonText = disable ? 'Loading...' : `Place ${sideText} order`;
+    const buttonText = disable ? 'Loading...' : `Bet now`;
     return (
       <form className="wrapperBetting" onSubmit={this.onSubmit}>
         <div className="formInput">
