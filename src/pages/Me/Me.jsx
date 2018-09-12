@@ -215,13 +215,13 @@ class Me extends React.Component {
       }
     }
 
-    // if (nextProps.me.list.length === 0 && nextProps.me.list.updatedAt !== prevState.me.list.updatedAt
-    //   && prevState.handshakeIdActive !== HANDSHAKE_ID.EXCHANGE && prevState.firstTime) {
-    //   rfChange(nameFormFilterFeeds, 'feedType', HANDSHAKE_ID.EXCHANGE);
-    //   rfChange(nameFormFilterFeeds, 'cash-show-type', CASH_TAB.TRANSACTION);
-    //   Me.loadMyHandshakeListStatic(nextProps, HANDSHAKE_ID.EXCHANGE);
-    //   return { handshakeIdActive: HANDSHAKE_ID.EXCHANGE, firstTime: false };
-    // }
+    if (nextProps.me.list.length === 0 && nextProps.me.list.updatedAt !== prevState.me.list.updatedAt
+      && prevState.handshakeIdActive !== HANDSHAKE_ID.CREDIT && prevState.firstTime) {
+      rfChange(nameFormFilterFeeds, 'feedType', HANDSHAKE_ID.CREDIT);
+      rfChange(nameFormFilterFeeds, 'cash-show-type', CASH_TAB.DASHBOARD);
+      Me.loadMyHandshakeListStatic(nextProps, HANDSHAKE_ID.CREDIT);
+      return { handshakeIdActive: HANDSHAKE_ID.CREDIT, firstTime: false };
+    }
 
     return null;
   }
