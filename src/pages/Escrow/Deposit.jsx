@@ -49,6 +49,11 @@ let listCurrency = Object.values(CRYPTO_CURRENCY_CREDIT_CARD).map((item) => {
   return { name: item, icon: CRYPTO_ICONS[item], allowPercentage: true };
 });
 
+const PERCENT = {
+  MIN: 0,
+  MAX: 30,
+};
+
 class EscrowDeposit extends React.Component {
   constructor(props) {
     super(props);
@@ -516,7 +521,7 @@ class EscrowDeposit extends React.Component {
                           elementAppend={
                             <span className="percentage-symbol escrow-label font-weight-normal">%</span>
                           }
-                          validate={[number, minValueEqual(0), maxValueEqual(200)]}
+                          validate={[number, minValueEqual(PERCENT.MIN), maxValueEqual(PERCENT.MAX)]}
                           disabled={!allowPercentage}
                         />
                       </div>
