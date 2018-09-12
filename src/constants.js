@@ -48,7 +48,7 @@ export const HANDSHAKE_ID = { // important
   CREDIT: 10,
 };
 
-export const HANDSHAKE_ID_DEFAULT = 10;
+export const HANDSHAKE_ID_DEFAULT = 3;
 
 export const HANDSHAKE_NAME = {
   // [HANDSHAKE_ID.PROMISE]: { name: 'Promise', priority: 3 },
@@ -203,6 +203,7 @@ export const API_URL = {
     MATCHES_REPORT: 'cryptosign/match/report',
     COUNT_REPORT: 'cryptosign/match/report',
     ADMIN_MATCHES: 'cryptosign/admin/match/report',
+    ADMIN_RESOLVE: 'cryptosign/admin/match/resolve',
     LOAD_HANDSHAKES: 'cryptosign/handshake',
     LOAD_REPORTS: 'cryptosign/source',
     LOAD_CATEGORIES: 'cryptosign/category',
@@ -517,10 +518,15 @@ export const URL = {
   HANDSHAKE_PREDICTION: '/prediction',
   HANDSHAKE_PEX: '/pex',
   HANDSHAKE_PEX_CREATOR: '/create-pex',
+  HANDSHAKE_PEX_UPDATER: '/create-pex/:eventId?',
 
   HANDSHAKE_CASH: '/cash',
   HANDSHAKE_CASH_INDEX: '/cash',
   HANDSHAKE_CASH_DETAIL: '/cash/:slug',
+
+  HANDSHAKE_ATM: '/atm',
+  HANDSHAKE_ATM_INDEX: '/atm',
+  HANDSHAKE_ATM_DETAIL: '/atm/:slug',
 
   HANDSHAKE_CHAT: '/whisper',
   HANDSHAKE_CHAT_INDEX: '/whisper',
@@ -529,6 +535,9 @@ export const URL = {
 
   HANDSHAKE_WALLET: '/wallet',
   HANDSHAKE_WALLET_INDEX: '/wallet',
+
+  HANDSHAKE_PAYMENT: '/payment',
+  HANDSHAKE_PAYMENT_INDEX: '/payment',
 
   HANDSHAKE_CREATE: '/create',
   HANDSHAKE_CREATE_INDEX: '/create',
@@ -570,7 +579,7 @@ export const URL = {
   RECRUITING: '/recruiting',
   RECRUITING_JOB_DETAIL: '/recruiting/:slug',
 
-  CC_PAYMENT_URL: '/payment',
+  CC_PAYMENT_URL: '/cc-payment',
   BUY_BY_CC_URL: '/buy-by-credit-card',
 
   ESCROW_DEPOSIT: '/escrow/deposit',

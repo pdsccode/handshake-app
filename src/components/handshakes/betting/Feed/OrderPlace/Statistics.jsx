@@ -64,7 +64,7 @@ function Statistics(props) {
     <div className="ComponentStatistics">
       {buildTitle(props)}
       {buildList(props)}
-      {buildPercentages(props)}
+      {props.percentBar && buildPercentages(props)}
     </div>
   );
 }
@@ -72,11 +72,13 @@ function Statistics(props) {
 Statistics.propTypes = {
   title: PropTypes.string.isRequired,
   listItems: PropTypes.arrayOf(Object).isRequired,
+  percentBar: PropTypes.bool,
 };
 
 Statistics.defaultProps = {
   title: 'Ninja predicts:',
   listItems: [],
+  percentBar: false,
 };
 
 export default Statistics;

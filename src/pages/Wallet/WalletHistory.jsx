@@ -40,6 +40,7 @@ class WalletHistory extends React.Component {
       wallet: this.props.wallet,
       pagenoTran: 1,
       pagenoIT: 1,
+      callUpdate: false
     };
   }
 
@@ -70,6 +71,19 @@ class WalletHistory extends React.Component {
     }
   }
 
+  async componentDidUpdate(){
+    const { callUpdate } = this.props;
+    let { callUpdate:stateCallUpdate, transactions } = this.state;
+    let stateHash = stateCallUpdate ? stateCallUpdate.data.hash : "";
+    if(callUpdate && callUpdate.data.hash != stateHash){
+
+      if(callUpdate.fromWallet.name == "ETH"){
+        let transactions = this.getSessionStore(this.state.wallet, TAB.Transaction);
+        this.setState({transactions:transactions, callUpdate: callUpdate});
+      }
+    }
+  }
+
   async componentDidMount(){
     let wallet = this.state.wallet;
     let pagenoTran = 0, pagenoIT = 0, transactions = [], internalTransactions = [];
@@ -94,13 +108,23 @@ class WalletHistory extends React.Component {
       wallet.transaction_count = await wallet.getTransactionCount();
 
       transactions = await wallet.getTransactionHistory(pagenoTran);
-      this.setSessionStore(wallet, TAB.Transaction, transactions);
+      if(this.checkAPINewest(cTransaction, transactions)){
+        this.setSessionStore(wallet, TAB.Transaction, transactions);
+      }
+      else{
+        transactions = cTransaction;
+      }
 
       if(Number(transactions.length) < 20) pagenoTran = 0;
       if(transactions.length > wallet.transaction_count) wallet.transaction_count = transactions.length;
 
       internalTransactions = await wallet.listInternalTransactions(pagenoIT);
-      this.setSessionStore(wallet, TAB.Internal, internalTransactions);
+      if(this.checkAPINewest(cInternalTransactions, internalTransactions)){
+        this.setSessionStore(wallet, TAB.Internal, internalTransactions);
+      }
+      else{
+        internalTransactions = cInternalTransactions;
+      }
 
       if(Number(internalTransactions.length) < 20) pagenoIT = 0;
       if(internalTransactions.length > wallet.transaction_count) wallet.transaction_count = transactions.length;
@@ -119,6 +143,23 @@ class WalletHistory extends React.Component {
       pagenoTran: pagenoTran,
       pagenoIT: pagenoIT
     });
+  }
+
+  checkAPINewest(cTransaction, transactions){
+    let result = false;
+    if(cTransaction && transactions && cTransaction.length && transactions.length){
+      let c = cTransaction[0];
+      for(var t of transactions){
+        if(c.hash == t.hash){
+          result = true;
+          break;
+        }
+      }
+    }
+    else{
+      result = true;
+    }
+    return result;
   }
 
   getNoTransactionYet(text){
@@ -182,7 +223,9 @@ class WalletHistory extends React.Component {
             </div>
             <div className="col1"><img className="iconDollar" src={icon} /></div>
             <div className="col2 history-address">
-              <div className={cssLabel}>{label}</div>
+              <div className={cssLabel}>
+                {label}
+              </div>
               {
                 tran.addresses.map((addr) => {
                   return <div key={addr}>{addr}</div>
@@ -303,14 +346,16 @@ class WalletHistory extends React.Component {
       <div className="clear-fix">
         <div className="wallet-detail">
           <div><img className="logo-detail" src={logo}/></div>
+          {!wallet.hideBalance ?
           <div className="balance">{wallet.balance} {wallet.name}</div>
+          :<div className="balance">[{messages.wallet.action.history.label.balance_hidden}]</div>}
 
           <div className="box-button">
             {!wallet.isCollectibles ? <div>
-              <div className="bt1"><button onClick={this.props.onTransferClick}>Send</button></div>
-              <div className="bt2"><button onClick={this.props.onReceiveClick}>Receive</button></div>
+              <div className="bt1"><button onClick={this.props.onTransferClick}>{messages.wallet.action.history.label.send}</button></div>
+              <div className="bt2"><button onClick={this.props.onReceiveClick}>{messages.wallet.action.history.label.receive}</button></div>
             </div>
-            : <div className="bt"><button onClick={this.props.onReceiveClick}>Receive</button></div>
+            : <div className="bt"><button onClick={this.props.onReceiveClick}>{messages.wallet.action.history.label.receive}</button></div>
             }
           </div>
 
