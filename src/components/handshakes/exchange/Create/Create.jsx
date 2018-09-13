@@ -462,8 +462,6 @@ class Component extends React.Component {
       result = true;
     }
 
-    result = true;
-
     if (!result) {
       const message = <FormattedMessage id="requireDefaultWalletOnMainNet" />;
       this.showAlert(message);

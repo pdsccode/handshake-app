@@ -26,11 +26,9 @@ const handleListPayload = (payload) => {
     const hs = Handshake.handshake(handshake);
     const offer = OfferShop.offerShop(JSON.parse(hs.extraData));
 
-    const {id} = hs;
-
     const allowRender = offer.itemFlags[currencyActive] && !isEmptyBalance(offer.items[currencyActive]);
 
-    if (allowRender && (id.includes('2520') || id.includes('2514'))) {
+    if (allowRender) {
       result.push(hs);
       offers.push(offer);
     }
