@@ -361,7 +361,7 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
       // }
       this.modalScanQrCodeRef.close();
 
-      this.confirmUsingScanAddress(value[0]);
+      this.confirmUsingScannedAddress(value[0]);
     }
   }
 
@@ -374,6 +374,8 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
   }
 
   openQrcode = () => {
+    this.modalRef.close();
+
     if (!this.state.legacyMode){
       this.setState({ qrCodeOpen: true });
       this.modalScanQrCodeRef.open();
@@ -387,7 +389,38 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
     this.refs.qrReader1.openImageDialog();
   }
 
-  confirmUsingScanAddress = (scanAddress) => {
+  completeShakedOffer = () => {
+    const { offer } = this;
+    const { currency, userAddress } = offer;
+    const wallet = MasterWallet.getWalletDefault(currency);
+    wallet.address = userAddress;
+
+    this.props.hideLoading();
+
+    this.setState({
+      modalContent:
+        (
+          <div className="py-2">
+            <Feed className="feed p-2" background="#259B24">
+              <div className="text-white d-flex align-items-center" style={{ minHeight: '50px' }}>
+                <div><FormattedMessage id="completeOfferConfirm" values={{ }} /></div>
+              </div>
+            </Feed>
+            <Button className="mt-2" block onClick={() => this.openQrcode()}><FormattedMessage id="ex.shop.shake.button.using.scan.address" /></Button>
+            <Button block className="mt-2" onClick={() => this.handleConfirmUsingAddress(userAddress)}><FormattedMessage id="ex.shop.shake.button.using.default.address" /></Button>
+            <Button block className="btn btn-secondary" onClick={this.cancelAction}><FormattedMessage id="ex.btn.notNow" /></Button>
+          </div>
+        ),
+    }, () => {
+      this.modalRef.open();
+    });
+  }
+
+  cancelAction = () => {
+    this.modalRef.close();
+  }
+
+  confirmUsingScannedAddress = (scanAddress) => {
     const { offer } = this;
     const { currency, userAddress } = offer;
     const wallet = MasterWallet.getWalletDefault(currency);
@@ -405,7 +438,7 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
               </div>
             </Feed>
             <Button className="mt-2" block onClick={() => this.handleConfirmUsingAddress(scanAddress)}><FormattedMessage id="ex.shop.shake.button.using.scan.address" /></Button>
-            <Button block className="btn btn-secondary" onClick={() => this.handleConfirmUsingAddress(userAddress)}><FormattedMessage id="ex.shop.shake.button.using.default.address" /></Button>
+            <Button block className="btn btn-secondary" onClick={() => this.openQrcode()}><FormattedMessage id="ex.shop.shake.button.using.scan.rescan" /></Button>
           </div>
         ),
     }, () => {
@@ -454,14 +487,13 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
           case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.SHAKE: {
             // actionButtons = 'Reject'; // complete: nguoi nhan cash
             message = <FormattedMessage id="rejectOfferConfirmForShop" values={{ }} />;
-            const message2 = <FormattedMessage id="completeOfferConfirm" values={{ }} />;
             actionButtons = (
               <div className="mt-3">
                 {offer.type === EXCHANGE_ACTION.SELL &&
                 <span className="d-inline-block auto-width">
                   <button
                     className="btn btn-block btn-confirm"
-                    onClick={() => confirmOfferAction(message2, this.handleCompleteShakedOffer)}
+                    onClick={() => this.handleCompleteShakedOffer()}
                   ><FormattedMessage id="btn.complete" />
                   </button>
                 </span>
@@ -500,14 +532,13 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
           case HANDSHAKE_EXCHANGE_SHOP_OFFER_SHAKE_STATUS.SHAKE: {
             // actionButtons = 'Reject'; // complete: nguoi nhan cash
             message = <FormattedMessage id="rejectOfferConfirm" values={{ }} />;
-            const message2 = <FormattedMessage id="completeOfferConfirm" values={{ }} />;
             actionButtons = (
               <div className="mt-3">
                 {offer.type === EXCHANGE_ACTION.BUY &&
                 <span className="d-inline-block auto-width">
                   <button
                     className="btn btn-block btn-confirm"
-                    onClick={() => confirmOfferAction(message2, this.handleCompleteShakedOffer)}
+                    onClick={() => this.handleCompleteShakedOffer()}
                   ><FormattedMessage id="btn.complete" />
                   </button>
                 </span>
@@ -689,8 +720,7 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
     }
     // }
 
-    this.props.hideLoading();
-    this.openQrcode();
+    this.completeShakedOffer();
   }
 
   continuteCompleteShakedOffer = async () => {

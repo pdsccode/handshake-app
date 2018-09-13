@@ -199,9 +199,10 @@ export default {
   'ex.shop.shake.label.cash.inventory': 'Cash',
   'ex.shop.shake.label.coin.inventory': 'Coin',
   'ex.shop.shake.label.days': 'days',
-  'ex.shop.shake.message.using.which.address': 'Using scanned address [{scanAddress}] or default address?',
+  'ex.shop.shake.message.using.which.address': 'Using this scanned address [{scanAddress}]?',
   'ex.shop.shake.button.using.scan.address': 'Use scanned address',
-  'ex.shop.shake.button.using.default.address': 'Use default address',
+  'ex.shop.shake.button.using.default.address': 'Use Ninja address',
+  'ex.shop.shake.button.using.scan.rescan': 'Rescan address',
 
   'ex.shop.dashboard.label.transaction.successfull.failed': 'Transactions successful/failed',
   'ex.shop.dashboard.label.transaction.pending': 'Transactions pending',
