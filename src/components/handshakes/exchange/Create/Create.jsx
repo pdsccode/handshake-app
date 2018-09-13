@@ -954,7 +954,7 @@ class Component extends React.Component {
               isUpdate && (
                 <div>
                   <div className="d-flex">
-                    <label className="col-form-label mr-auto label-create"><span className="align-middle"><FormattedMessage id="ex.create.label.currentBalance" /></span></label>
+                    <label className="col-form-label mr-auto label-create"><span className="align-middle"><FormattedMessage id="ex.create.label.sell.currentBalance" /></span></label>
                     <div className="input-group">
                       <div><span className="form-text">{formatAmountCurrency(sellBalance)}</span></div>
                     </div>
@@ -1027,7 +1027,7 @@ class Component extends React.Component {
               isUpdate && (
                 <div>
                   <div className="d-flex">
-                    <label className="col-form-label mr-auto label-create"><span className="align-middle"><FormattedMessage id="ex.create.label.currentBalance" /></span></label>
+                    <label className="col-form-label mr-auto label-create"><span className="align-middle"><FormattedMessage id="ex.create.label.buy.currentBalance" /></span></label>
                     <div className="input-group">
                       <div><span className="form-text">{formatAmountCurrency(buyBalance)}</span></div>
                     </div>
