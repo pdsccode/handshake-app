@@ -129,7 +129,7 @@ class ShopDetail extends React.Component {
     // get product information: price, option name, ...
     const urlProductInfo = `${AUTONOMOUS_END_POINT.BASE}${AUTONOMOUS_END_POINT.PRODUCT_INFO}/${productBuySlug.product.id}`;
     const { data: productInfo } = await $http({ url: urlProductInfo, data: this.addOptionTextToObject(productBuySlug.product.selected_option), method: 'POST' });
-    this.setState({ productInfo: productInfo.product_info, optionSelecting: productBuySlug.product.selected_option });
+    this.setState({ productInfo: productInfo.product_info, optionSelecting: productBuySlug.product.selected_option }, () => this.imagesSliderRef.slider.slickGoTo(0));
     // get product info design
     const urlProductInfoDesign = `${AUTONOMOUS_END_POINT.BASE}${AUTONOMOUS_END_POINT.PRODUCT_SPEC}/${productBuySlug.product.id}?type=1`;
     const { data: productInfoHtml } = await $http({ url: urlProductInfoDesign, method: 'GET' });
@@ -264,7 +264,7 @@ class ShopDetail extends React.Component {
             optionSelecting } = this.state;
     const imageSetting = {
       customPaging: i => <span className="dot" />,
-      initialSlide: 1,
+      initialSlide: 0,
       dots: true,
       infinite: true,
       speed: 500,
