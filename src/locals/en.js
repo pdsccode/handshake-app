@@ -312,8 +312,8 @@ export default {
   'cc.label.email.hint': 'Just for receiving receipt',
   'cc.label.receive.address': 'RECEIVE ADDRESS',
 
-  'escrow.label.depositCoin': 'Sell crypto online',
-  'escrow.label.iWantTo': 'Deposit any amount of crypto into escrow and enter your percentage',
+  'escrow.label.depositCoin': 'Sell crypto safely online',
+  'escrow.label.iWantTo': 'Deposit the amount of crypto you want to sell. Enter your desired commission as a percentage of the selling price',
   'escrow.label.price': 'Price',
   'escrow.label.percentage': 'Percentage',
   'escrow.label.howToCalculatePrice': 'How do I calculate my percentage?',
