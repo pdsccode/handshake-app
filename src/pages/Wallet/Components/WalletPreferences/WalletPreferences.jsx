@@ -115,6 +115,36 @@ class WalletPreferences extends React.Component {
 
 
           </div>
+
+        <div className="passscode">
+          <div className="passscode-title">
+            Enter your passcode:
+          </div>
+          <div className="passscode-items">
+              <span className="passscode-item active"></span>
+              <span className="passscode-item active"></span>
+              <span className="passscode-item"></span>
+              <span className="passscode-item"></span>
+              <span className="passscode-item"></span>
+              <span className="passscode-item"></span>
+          </div>
+          <div className="passscode-keyboard">
+            <span className="passscode-keyboard-item">1</span>
+            <span className="passscode-keyboard-item">2</span>
+            <span className="passscode-keyboard-item">3</span>
+            <span className="passscode-keyboard-item">4</span>
+            <span className="passscode-keyboard-item">5</span>
+            <span className="passscode-keyboard-item">6</span>
+            <span className="passscode-keyboard-item">7</span>
+            <span className="passscode-keyboard-item">8</span>
+            <span className="passscode-keyboard-item">9</span>
+            <span className="passscode-keyboard-item">0</span>
+            <span className="passscode-keyboard-item">DEL</span>            
+          </div>
+
+        </div>
+
+
         </div>
     );
   }
