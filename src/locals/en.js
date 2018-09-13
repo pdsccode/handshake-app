@@ -155,7 +155,7 @@ export default {
   'ex.exchange.status.cancelled': 'Cancelled',
 
   'ex.shop.explanation.created': 'This may take a few minutes. Good things come to those who wait.',
-  'ex.shop.explanation.active': 'You can now discover your ATM in Cash.',
+  'ex.shop.explanation.active': 'Your ATM is now visible on the map!',
   'ex.shop.explanation.closing': 'Please wait a few minutes.',
   'ex.shop.explanation.closed': '',
   'ex.shop.explanation.shaking': 'Accepting the other party\'s offer...',
