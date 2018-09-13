@@ -62,6 +62,7 @@ class ShopDetail extends React.Component {
     // bind
     this.placeOrder = ::this.placeOrder;
     this.updateQuantity = ::this.updateQuantity;
+    this.updateShippingAndTax = ::this.updateShippingAndTax;
   }
 
   addOptionTextToObject(object) {
@@ -88,8 +89,13 @@ class ShopDetail extends React.Component {
     if (!productInfo.cart) {
       return {
         totalPrice: 0,
+        totalPricePretty: 0,
         totalShippingPrice: 0,
+        totalShippingPricePretty: 0,
         totalTaxPrice: 0,
+        totalTaxPricePretty: 0,
+        totalAmount: 0,
+        totalAmountPretty: 0
       };
     }
     const ethRate = productInfo.cart.eth_rate;
@@ -97,7 +103,16 @@ class ShopDetail extends React.Component {
     const totalShippingPrice = (productInfo.cart.total_shipping_price / ethRate) * quantity;
     const totalTaxPrice = (productInfo.cart.total_tax / ethRate) * quantity;
     const totalAmount = totalPrice + totalShippingPrice + totalTaxPrice;
-    return { totalPrice, totalShippingPrice, totalTaxPrice, totalAmount };
+    return {
+            totalPrice,
+            totalPricePretty: totalPrice.toFixed(2),
+            totalShippingPrice,
+            totalShippingPricePretty: totalShippingPrice.toFixed(2),
+            totalTaxPrice,
+            totalTaxPricePretty: totalTaxPrice.toFixed(2),
+            totalAmount,
+            totalAmountPretty: totalAmount.toFixed(2),
+          };
   }
   
   async componentDidMount() {
@@ -167,7 +182,23 @@ class ShopDetail extends React.Component {
   }
 
   updateQuantity(e) {
-    this.setState({ quantity: parseInt(e.target.value) });
+    this.setState({ quantity: parseInt(e.target.value) }, () => {
+      // after set state
+      this.updateShippingAndTax();
+    });
+  }
+
+  get yourInformationForm() {
+    return {
+      city: this.cityRef.value.trim(),
+      country: this.countryRef.itemSelecting.id.trim(),
+      email: this.emailRef.value.trim(),
+      fullname: this.nameRef.value.trim(),
+      phone: this.phoneRef.value.trim(),
+      shipping_address: this.addressRef.value.trim(),
+      state: this.stateRef.value.trim(),
+      zip: this.zipRef.value.trim(),
+    };
   }
 
   async placeOrder(e) {
@@ -179,14 +210,7 @@ class ShopDetail extends React.Component {
     const data = {
       customer: {
         billing_address: '',
-        city: this.cityRef.value.trim(),
-        country: this.countryRef.itemSelecting.id.trim(),
-        email: this.emailRef.value.trim(),
-        fullname: this.nameRef.value.trim(),
-        phone: this.phoneRef.value.trim(),
-        shipping_address: this.addressRef.value.trim(),
-        state: this.stateRef.value.trim(),
-        zip: this.zipRef.value.trim(),
+        ... this.yourInformationForm,
       },
       payment: {
         cc: null,
@@ -220,8 +244,12 @@ class ShopDetail extends React.Component {
     }
   }
 
-  updateFieldForm = e => {
-    console.log('e.target', e.target);
+  async updateShippingAndTax() {
+    const { product, quantity, optionSelecting } = this.state;
+    const customerInformation = this.yourInformationForm;
+    const urlProductInfo = `${AUTONOMOUS_END_POINT.BASE}${AUTONOMOUS_END_POINT.PRODUCT_INFO}/${product.id}?city=${customerInformation.city}&country=${customerInformation.country}&email=${customerInformation.email}&quantity=${quantity}&state=${customerInformation.state}&street=${customerInformation.shipping_address}&zip=${customerInformation.zip}`;
+    const { data: productInfo } = await $http({ url: urlProductInfo, data: this.addOptionTextToObject(optionSelecting), method: 'POST' });
+    this.setState({ productInfo: productInfo.product_info });
   }
 
   render() {
@@ -320,13 +348,12 @@ class ShopDetail extends React.Component {
             </div>
             <div className="input-group">
               <label htmlFor="">Address</label>
-              <Input name="address" type="text" onRef={address => this.addressRef = address} placeholder="Shipping address" />
+              <Input name="address" type="text" onRef={address => this.addressRef = address} onBlur={this.updateShippingAndTax} placeholder="Shipping address" />
             </div>
             <div className="area">
-              <Input type="text" name="zip" onRef={zip => this.zipRef = zip} placeholder="Zip code" />
-              <Input type="text" name="city" onRef={city => this.cityRef = city} placeholder="City" />
-              <Input type="text" name="state" onRef={state => this.stateRef = state} placeholder="State" />
-              {/* <Input type="text" name="country" onRef={country => this.countryRef = country} placeholder="Country" /> */}
+              <Input type="text" name="zip" onRef={zip => this.zipRef = zip} onBlur={this.updateShippingAndTax} placeholder="Zip code" />
+              <Input type="text" name="city" onRef={city => this.cityRef = city} onBlur={this.updateShippingAndTax} placeholder="City" />
+              <Input type="text" name="state" onRef={state => this.stateRef = state} onBlur={this.updateShippingAndTax} placeholder="State" />
             </div>
             <Dropdown
               className="country"
@@ -335,6 +362,7 @@ class ShopDetail extends React.Component {
               defaultId={countryCode}
               source={this.converCountrySource}
               onRef={country => this.countryRef = country}
+              onItemSelected={this.updateShippingAndTax}
             />
             <div className="input-group">
               <label htmlFor="">Phone</label>
@@ -348,13 +376,13 @@ class ShopDetail extends React.Component {
                 <strong>{product.name}</strong> <span className="red">ETH&nbsp;{productInfo.eth_price}</span>&nbsp;&nbsp;<span>(x{quantity})</span>
               </div>
               <div className="field-info">
-                <span>Shipping:&nbsp;</span> <span>ETH&nbsp;{this.totalInfo.totalShippingPrice}</span>
+                <span>Shipping:&nbsp;</span> <span>ETH&nbsp;{this.totalInfo.totalShippingPricePretty}</span>
               </div>
               <div className="field-info">
-                <span>Tax:&nbsp;</span> <span>ETH&nbsp;{this.totalInfo.totalTaxPrice}</span>
+                <span>Tax:&nbsp;</span> <span>ETH&nbsp;{this.totalInfo.totalTaxPricePretty}</span>
               </div>
               <div className="field-info">
-                <strong>Total:&nbsp;</strong> <strong className="red">ETH&nbsp;{this.totalInfo.totalAmount}</strong>
+                <strong>Total:&nbsp;</strong> <strong className="red">ETH&nbsp;{this.totalInfo.totalAmountPretty}</strong>
               </div>
             </div>
           </form>
