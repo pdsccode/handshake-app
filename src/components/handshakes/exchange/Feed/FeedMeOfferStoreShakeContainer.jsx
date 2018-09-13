@@ -1227,6 +1227,7 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
       currency: offer.currency,
       fiatCurrency: offer.fiatCurrency,
       showClock,
+      userAddress: offer.userAddress,
     };
 
     return (
