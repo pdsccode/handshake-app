@@ -1200,7 +1200,7 @@ export default {
         description: 'Please enter your top secret recovery data to restore your wallet.',
       },
       setting: {
-        title: 'Setting',
+        title: 'Settings',
         error: 'Invalid wallets',
         header: 'Setting wallets',
         success: {
