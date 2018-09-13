@@ -422,9 +422,9 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
 
   confirmUsingScannedAddress = (scanAddress) => {
     const { offer } = this;
-    const { currency, userAddress } = offer;
+    const { currency, } = offer;
     const wallet = MasterWallet.getWalletDefault(currency);
-    wallet.address = userAddress;
+    wallet.address = scanAddress;
     const shortenScanAddress = wallet.getShortAddress();
 
     const message = <FormattedMessage id="ex.shop.shake.message.using.which.address" values={{ scanAddress: shortenScanAddress }} />;
