@@ -1,7 +1,7 @@
 import React from 'react';
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import { URL } from '@/constants';
+import { URL, AUTONOMOUS_END_POINT } from '@/constants';
 import { withRouter } from 'react-router-dom';
 import $http from '@/services/api';
 // component
@@ -21,7 +21,7 @@ class Shop extends React.Component {
   
   componentDidMount() {
     // get products
-    const url = 'https://www.autonomous.ai/api-v2/product-api/v2/products?is_marketplace=0&group=1&page_size=12';
+    const url = `${AUTONOMOUS_END_POINT.BASE}${AUTONOMOUS_END_POINT.PRODUCTS}?is_marketplace=0&group=1&page_size=20`;
     const products = $http({ url, method: 'GET' });
     products.then(result =>  {
       const { data:source } = result;
