@@ -135,25 +135,27 @@ class Prediction extends React.Component {
     const isFreeAvailable = this.checkFreeAvailabe(props);
     const { freeBet } = props;
     const { free_bet_available: freeAvailable = 0 } = freeBet;
+    console.log(freeBet);
 
     const key = `showedFreebet${freeAvailable}`;
     const isShowed = localStorage.getItem(key);
 
     if (isFreeAvailable && !isShowed) {
       const { isOrderOpening, shouldShowFreePopup } = this.state;
-      const { last_item: lastItem = {} } = freeBet;
-      const { is_win: isWin, status } = lastItem;
-      if (status === FREE_BET_STATUS.REPORTED && !isOrderOpening && shouldShowFreePopup) {
-        if (!isWin && this.modalFreeBetLoseRef) {
-          this.modalFreeBetLoseRef.open();
-        } else if (isWin && this.modalFreeBetWinRef) {
-          this.modalFreeBetWinRef.open();
-        }
-        localStorage.setItem(key, true);
+      const { is_win: isWin } = freeBet;
+      if (!isOrderOpening && shouldShowFreePopup) {
+        if (isWin !== null) {
+          if (!isWin && this.modalFreeBetLoseRef) {
+            this.modalFreeBetLoseRef.open();
+          } else if (isWin && this.modalFreeBetWinRef) {
+            this.modalFreeBetWinRef.open();
+          }
+          localStorage.setItem(key, true);
 
-        this.setState({
-          shouldShowFreePopup: false,
-        });
+          this.setState({
+            shouldShowFreePopup: false,
+          });
+        }
       }
     }
   }
