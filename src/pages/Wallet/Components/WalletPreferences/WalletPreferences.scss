@@ -41,10 +41,10 @@
             display: inline-block;
             border-radius: 50%;
             margin-right: 15px;
-            background: #9E9E9E;
-            :active{
-                background: #2196F3;
-            }
+            background: #9E9E9E;            
+        }
+        .passscode-item.active{
+            background: #2196F3;
         }
     }
     .passscode-keyboard{
@@ -58,6 +58,9 @@
             font-size: 30px;
             font-weight: 400;
             color: #3e3b3b;
+            :focus, :hover{
+                background: #b9e1f5;
+            }
         }
     }
     
