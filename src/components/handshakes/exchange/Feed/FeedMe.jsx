@@ -121,6 +121,8 @@ class FeedMe extends React.PureComponent {
       result = true;
     }
 
+    result = true;
+
     if (!result) {
       const message = <FormattedMessage id="requireDefaultWalletOnMainNet" />;
       this.showAlert(message);
