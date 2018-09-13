@@ -654,9 +654,38 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
 
   handleCompleteShakedOffer = async () => {
     const { offer } = this;
-    const { userAddress } = offer;
+    const {
+      id, currency, type, freeStart, amount, totalAmount,
+    } = offer;
     console.log('handleCompleteShakedOffer', offer);
-    console.log('handleCompleteShakedOffer', userAddress);
+
+    this.props.showLoading();
+
+    // if (currency === CRYPTO_CURRENCY.ETH) {
+    if ((type === EXCHANGE_ACTION.SELL && this.userType === HANDSHAKE_USER.OWNER && freeStart === '') ||
+      (type === EXCHANGE_ACTION.BUY && this.userType === HANDSHAKE_USER.SHAKED)) {
+      const wallet = MasterWallet.getWalletDefault(currency);
+      const balance = await wallet.getBalance();
+      const fee = await wallet.getFee(NB_BLOCKS, true);
+
+      if (!this.checkMainNetDefaultWallet(wallet)) {
+        this.props.hideLoading();
+        return;
+      }
+
+      let transferAmount = new BigNumber(amount).isLessThan(new BigNumber(totalAmount)) ? new BigNumber(totalAmount) : new BigNumber(amount);
+
+      const pendingBalance = await this.getPendingBalance();
+      console.log('pendingBalance',pendingBalance);
+
+      if (this.showNotEnoughCoinAlert(balance, transferAmount.plus(new BigNumber(pendingBalance)).toNumber(), 2 * fee, currency)) {
+        this.props.hideLoading();
+        return;
+      }
+    }
+    // }
+
+    this.props.hideLoading();
     this.openQrcode();
   }
 
@@ -668,30 +697,6 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
     } = offer;
 
     this.props.showLoading();
-
-    // if (currency === CRYPTO_CURRENCY.ETH) {
-      if ((type === EXCHANGE_ACTION.SELL && this.userType === HANDSHAKE_USER.OWNER && freeStart === '') ||
-        (type === EXCHANGE_ACTION.BUY && this.userType === HANDSHAKE_USER.SHAKED)) {
-        const wallet = MasterWallet.getWalletDefault(currency);
-        const balance = await wallet.getBalance();
-        const fee = await wallet.getFee(NB_BLOCKS, true);
-
-        if (!this.checkMainNetDefaultWallet(wallet)) {
-          this.props.hideLoading();
-          return;
-        }
-
-        let transferAmount = new BigNumber(amount).isLessThan(new BigNumber(totalAmount)) ? new BigNumber(totalAmount) : new BigNumber(amount);
-
-        const pendingBalance = await this.getPendingBalance();
-        console.log('pendingBalance',pendingBalance);
-
-        if (this.showNotEnoughCoinAlert(balance, transferAmount.plus(new BigNumber(pendingBalance)).toNumber(), 2 * fee, currency)) {
-          this.props.hideLoading();
-          return;
-        }
-      }
-    // }
 
     this.props.completeOfferItem({
       PATH_URL: `${API_URL.EXCHANGE.OFFER_STORES}/${initUserId}/${API_URL.EXCHANGE.SHAKES}/${id}/complete`,
