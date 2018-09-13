@@ -74,7 +74,6 @@ class CreateEventForm extends Component {
       fields.push({});
     } else {
       const { dispatch, formAction } = this.props;
-      // this.props.dispatch(touch('CreateEventForm', 'outcomes[0].name', ''));
       dispatch(formAction(touch, `outcomes[${lastIndex}].name`));
     }
   }
@@ -130,16 +129,15 @@ class CreateEventForm extends Component {
   }
 
   renderEventSuggest = (props) => {
-    const title = 'EVENT';
     return (
       <React.Fragment>
-        {this.renderGroupTitle(title)}
+        {this.renderGroupTitle('EVENT')}
         <Field
           type="autoSuggestion"
           name="eventName"
           className="form-group"
           fieldClass="form-control"
-          placeholder="Choose an event or create a new one"
+          placeholder="e.g. UEFA - Spain vs Portugal"
           onSelect={props.onSelect}
           source={props.eventList}
           validate={required}
@@ -184,6 +182,7 @@ class CreateEventForm extends Component {
                   type="text"
                   className="form-group"
                   fieldClass="form-control"
+                  placeholder="e.g. Spain wins"
                   component={renderField}
                   validate={[required]}
                   disabled={!isNew && id}
@@ -215,8 +214,9 @@ class CreateEventForm extends Component {
   }
 
   renderFee = ({ isNew }) => {
-    const title = 'MARKET FEE';
-    const textNote = 'The market fee is a percentage of the total winnings of the market.';
+    const title = 'CREATOR FEE';
+    const textNote = `As a bet creator, you will receive this percentage of the total bets.\n
+      Friendly advice: no one wants to play with a greedy guts!`;
     const optionSlider = {
       min: 0,
       max: 5,
@@ -243,15 +243,17 @@ class CreateEventForm extends Component {
   renderReport = (props) => {
     const reportList = props.reportList.map(item => ({ ...item, name: item.url }));
     const validate = props.isNew ? [required, urlValidator] : [];
+    const textNote = 'You must report the result to close the bet and get your fee.';
     return (
       <React.Fragment>
         {this.renderGroupTitle('REPORT')}
+        {this.renderGroupNote(textNote)}
         <Field
           type="autoSuggestion"
           name="reports"
           className="form-group"
           fieldClass="form-control"
-          placeholder="Enter result source URL"
+          placeholder="Result URL e.g. livescore.com"
           onSelect={this.reportSelected}
           source={reportList}
           disabled={!props.isNew}
@@ -295,7 +297,8 @@ class CreateEventForm extends Component {
   renderTimeGroup = (props, state) => {
     const closingStartTime = moment().add(minStep, 'm').unix();
     return (
-      <React.Fragment>
+      <div className="TimeGroup">
+        {!props.isNew && this.renderGroupTitle('Event closing time')}
         <Field
           name="closingTime"
           type="text"
@@ -308,30 +311,32 @@ class CreateEventForm extends Component {
           startDate={closingStartTime}
           // endDate={state.reportingTime - secStep}
         />
+        {!props.isNew && this.renderGroupTitle('Your deadline to report')}
         <Field
           name="reportingTime"
           type="text"
           component={this.renderDateTime}
-          title="Report deadline"
-          placeholder="Report deadline"
+          title="Your deadline to report"
+          placeholder="Your deadline to report"
           validate={[required, this.smallerThanDisputeTime]}
           disabled={!props.isNew || !state.closingTime}
           value={state.reportingTime}
           startDate={state.closingTime + secStep}
           // endDate={state.disputeTime - secStep}
         />
+        {!props.isNew && this.renderGroupTitle('Ninja deadline to dispute')}
         <Field
           name="disputeTime"
           type="text"
           component={this.renderDateTime}
-          title="Dispute deadline"
-          placeholder="Dispute deadline"
+          title="Ninja deadline to dispute "
+          placeholder="Ninja deadline to dispute "
           validate={[required]}
           disabled={!props.isNew || !state.reportingTime}
           value={state.disputeTime}
           startDate={state.reportingTime + secStep}
         />
-      </React.Fragment>
+      </div>
     );
   }
 
@@ -347,7 +352,7 @@ class CreateEventForm extends Component {
       <form className={cls} onSubmit={props.handleSubmit(this.onCreateNewEvent)}>
         <div className="CreateEventFormBlock">
           {this.renderEventSuggest(props, state)}
-          {this.renderCategories(props, state)}
+          {/*{this.renderCategories(props, state)}*/}
           <FieldArray
             name="outcomes"
             isNew={props.isNew}

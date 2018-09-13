@@ -14,10 +14,11 @@ export default {
 
       whisper: 'Whisper',
       wallet: 'Wallet',
-      setting: 'Setting',
+      setting: 'Me',
       atm: 'ATM',
       bet: 'Bet',
-      credit: 'CC'
+      credit: 'CC',
+      shop: 'Shop',
     },
   },
   buy: 'Buy',
@@ -1199,7 +1200,7 @@ export default {
         description: 'Please enter your top secret recovery data to restore your wallet.',
       },
       setting: {
-        title: 'Setting',
+        title: 'Settings',
         error: 'Invalid wallets',
         header: 'Setting wallets',
         success: {
@@ -1299,7 +1300,7 @@ export default {
           select_coints: 'Select coins',
           wallet_key: 'Wallet key',
           main_net: 'Mainnet wallets',
-          test_net: 'Testnet wallets',
+          test_net: 'Testnet',
           header_coins: "Cryptocurrencies",
           header_tokens: "ERC20 Tokens",
           header_collectibles: "ERC721 Collectibles",
@@ -1335,6 +1336,7 @@ export default {
         label: {
           balance_hidden: "Balance Hidden",
           failed: 'Failed',
+          pending: 'Pending',
           unconfirmed: 'Unconfirmed',
           balance: 'Balance',
           transactions: 'Transactions',

@@ -394,37 +394,37 @@ class Wallet extends React.Component {
       }
     })
 
-    const allowedWallets = ['BTC', 'ETH', 'BCH'];
+    //const allowedWallets = ['BTC', 'ETH', 'BCH'];
     // now hide buy coin:
     // if (true && allowedWallets.includes(wallet.name)){
-    if (wallet.network === MasterWallet.ListCoin[wallet.className].Network.Mainnet && allowedWallets.includes(wallet.name)){
-      obj.push({
-        title: messages.create.cash.credit.title,
-        handler: () => {
-          this.setState({
-            walletSelected: wallet,
-            modalBuyCoin:
-              (
-                <FeedCreditCard
-                  buttonTitle={messages.create.cash.credit.title}
-                  currencyForced={wallet ? wallet.name : ''}
-                  callbackSuccess={this.afterWalletFill}
-                  addressForced={wallet ? wallet.address : ''}
-                  isPopup
-                />
-              ),
-          }, () => {
-            this.toggleBottomSheet();
-            this.modalBuyCoin.open();
+    // if (wallet.network === MasterWallet.ListCoin[wallet.className].Network.Mainnet && allowedWallets.includes(wallet.name)){
+    //   obj.push({
+    //     title: messages.create.cash.credit.title,
+    //     handler: () => {
+    //       this.setState({
+    //         walletSelected: wallet,
+    //         modalBuyCoin:
+    //           (
+    //             <FeedCreditCard
+    //               buttonTitle={messages.create.cash.credit.title}
+    //               currencyForced={wallet ? wallet.name : ''}
+    //               callbackSuccess={this.afterWalletFill}
+    //               addressForced={wallet ? wallet.address : ''}
+    //               isPopup
+    //             />
+    //           ),
+    //       }, () => {
+    //         this.toggleBottomSheet();
+    //         this.modalBuyCoin.open();
 
-            gtag.event({
-              category: taggingConfig.creditCard.category,
-              action: taggingConfig.creditCard.action.showPopupWallet
-            });
-          });
-        },
-      });
-    }
+    //         gtag.event({
+    //           category: taggingConfig.creditCard.category,
+    //           action: taggingConfig.creditCard.action.showPopupWallet
+    //         });
+    //       });
+    //     },
+    //   });
+    // }
 
     if (!wallet.protected) {
       obj.push({
@@ -454,39 +454,41 @@ class Wallet extends React.Component {
       },
     });
 
-    let canRemove = (wallet.isToken &&  wallet.customToken) || !wallet.isReward;
-    let cansetDefault = !wallet.isToken && !wallet.isReward;
 
-    if (cansetDefault && !wallet.default) {
-        obj.push({
-          title: StringHelper.format(messages.wallet.action.default.title, wallet.name) + (wallet.default ? "✓ " : ""),
-          handler: () => {
-            wallet.default = !wallet.default;
-            this.toggleBottomSheet();
-            // reset all wallet default:
-            let lstWalletTemp = this.getAllWallet();
-            if (wallet.default) lstWalletTemp.forEach(wal => {if (wal != wallet && wal.name == wallet.name){wal.default = false;}})
-            // Update wallet master from local store:
-            MasterWallet.UpdateLocalStore(lstWalletTemp);
-          }
-        })
-      }
-      if (canRemove) {
-        obj.push({
-          title: messages.wallet.action.remove.title,
-          handler: () => {
-            this.setState({walletSelected: wallet});
-            this.modalBetRef.open();
-            this.toggleBottomSheet();
-          }
-        })
+    let canSetDefault = !wallet.isToken && !wallet.isReward;
+    if (canSetDefault && !wallet.default) {
+      obj.push({
+        title: StringHelper.format(messages.wallet.action.default.title, wallet.name) + (wallet.default ? "✓ " : ""),
+        handler: () => {
+          wallet.default = !wallet.default;
+          this.toggleBottomSheet();
+          // reset all wallet default:
+          let lstWalletTemp = this.getAllWallet();
+          if (wallet.default) lstWalletTemp.forEach(wal => {if (wal != wallet && wal.name == wallet.name){wal.default = false;}})
+          // Update wallet master from local store:
+          MasterWallet.UpdateLocalStore(lstWalletTemp);
+        }
+      })
     }
-    obj.push({
-      title: messages.wallet.action.cancel.title,
-      handler: () => {
-        this.toggleBottomSheet();
-      },
-    });
+
+    // let canRemove = (wallet.isToken &&  wallet.customToken) || !wallet.isReward;
+    // if (canRemove) {
+    //   obj.push({
+    //     title: messages.wallet.action.remove.title,
+    //     handler: () => {
+    //       this.setState({walletSelected: wallet});
+    //       this.modalRemoveRef.open();
+    //       this.toggleBottomSheet();
+    //     }
+    //   })
+    // }
+
+    // obj.push({
+    //   title: messages.wallet.action.cancel.title,
+    //   handler: () => {
+    //     this.toggleBottomSheet();
+    //   },
+    // });
 
     return obj;
   }
@@ -513,7 +515,7 @@ class Wallet extends React.Component {
         this.splitWalletData(lstWalletTemp);
       }
     }
-    this.modalBetRef.close();
+    this.modalRemoveRef.close();
   }
 
   sendCoin = () => {
@@ -604,7 +606,7 @@ class Wallet extends React.Component {
         (
           <TransferCoin
             wallet={wallet}
-            onFinish={() => { this.successTransfer() }}
+            onFinish={(result) => { this.successTransfer(result) }}
             currency={this.state.alternateCurrency}
           />
         ),
@@ -682,12 +684,12 @@ class Wallet extends React.Component {
         });
       },
     });
-    obj.push({
-      title: messages.wallet.action.cancel.title,
-      handler: () => {
-        this.toggleBottomSheet();
-      },
-    });
+    // obj.push({
+    //   title: messages.wallet.action.cancel.title,
+    //   handler: () => {
+    //     this.toggleBottomSheet();
+    //   },
+    // });
     return obj;
   }
 
@@ -777,7 +779,7 @@ class Wallet extends React.Component {
 
     // }
   }
-  onWalletItemClick = (wallet) =>{
+  onWalletItemClick = (wallet, callUpdate) =>{
     this.setState({walletSelected: wallet,
       modalHistory:
       (
@@ -788,6 +790,7 @@ class Wallet extends React.Component {
           wallet={wallet}
           customBackIcon={BackChevronSVGWhite}
           modalHeaderStyle={this.modalHeaderStyle}
+          callUpdate={callUpdate}
         />
       )
     }, ()=>{
@@ -803,7 +806,7 @@ class Wallet extends React.Component {
 
   onOpenWalletPreferences = (wallet) =>{
     this.setState({
-      modalWalletPreferences: (<WalletPreferences onDeleteWalletClick={()=>{this.modalBetRef.open();}} onWarningClick={()=>{this.onWarningClick(wallet);}} onUpdateWalletName={(wallet)=> {this.onUpdateWalletName(wallet);}} wallet={wallet} customBackIcon={BackChevronSVGWhite} modalHeaderStyle={this.modalHeaderStyle} />)
+      modalWalletPreferences: (<WalletPreferences onDeleteWalletClick={()=>{this.modalRemoveRef.open();}} onWarningClick={()=>{this.onWarningClick(wallet);}} onUpdateWalletName={(wallet)=> {this.onUpdateWalletName(wallet);}} wallet={wallet} customBackIcon={BackChevronSVGWhite} modalHeaderStyle={this.modalHeaderStyle} />)
     }, ()=>{
       this.modalWalletReferencesRef.open();
     });
@@ -889,9 +892,13 @@ class Wallet extends React.Component {
     this.setState({modalWalletPreferences: ""});
   }
 
-  successTransfer = () => {
+  successTransfer = (result) => {
     this.modalSendRef.close();
     this.autoCheckBalance(this.state.walletSelected.address, this.state.inputAddressAmountValue);
+    console.log('successTransfer', result);
+    if(this.state.modalHistory){
+      this.onWalletItemClick(this.state.walletSelected, result);
+    }
   }
 
   closeQrCode=() => {
@@ -999,17 +1006,17 @@ class Wallet extends React.Component {
           {/* Tooltim menu Bottom */ }
           <ReactBottomsheet
             visible={this.state.bottomSheet}
-            appendCancelBtn={false}
+            appendCancelBtn={true}
             onClose={this.toggleBottomSheet.bind(this)}
             list={this.state.listMenu}
           />
 
           {/* ModalDialog for confirm remove wallet */}
-          <ModalDialog title={messages.wallet.action.remove.header} onRef={modal => this.modalBetRef = modal}>
+          <ModalDialog title={messages.wallet.action.remove.header} onRef={modal => this.modalRemoveRef = modal}>
             <div className="bodyConfirm"><span>{messages.wallet.action.remove.message}</span></div>
             <div className="bodyConfirm">
-              <Button className="left" cssType="danger" onClick={this.removeWallet} >{messages.wallet.action.remove.button_yes}</Button>
-              <Button className="right" cssType="secondary" onClick={() => { this.modalBetRef.close(); }}>{messages.wallet.action.remove.button_cancel}</Button>
+              <Button className="left pl-0 pr-0" cssType="danger" onClick={this.removeWallet} >{messages.wallet.action.remove.button_yes}</Button>
+              <Button className="right pl-0 pr-0" cssType="secondary" onClick={() => { this.modalRemoveRef.close(); }}>{messages.wallet.action.remove.button_cancel}</Button>
             </div>
           </ModalDialog>
 

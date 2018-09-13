@@ -12,14 +12,17 @@ class CreateMarket extends React.Component {
   static propTypes = {
     dispatch: PropTypes.func.isRequired,
     hasEmail: PropTypes.bool,
+    match: PropTypes.object,
   };
 
   static defaultProps = {
     hasEmail: false,
+    match: {},
   };
 
   renderComponent = (props) => {
-    return (!props.hasEmail) ? <EmailForm /> : <CreateEventContainer />;
+    const { eventId } = props.match.params;
+    return (!props.hasEmail) ? <EmailForm /> : <CreateEventContainer eventId={eventId} />;
   };
 
   render() {
