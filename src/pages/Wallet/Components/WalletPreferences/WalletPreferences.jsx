@@ -20,14 +20,6 @@ class WalletPreferences extends React.Component {
     this.messages = this.props.intl.messages;
   }
 
-  componentDidMount() {
-
-  }
-
-  componentWillUnmount() {
-
-  }
-
   onHideBalanceChange = (isChecked) => {
     this.props.wallet.hideBalance = isChecked;
     this.props.onUpdateWalletName(this.props.wallet);
@@ -53,7 +45,7 @@ class WalletPreferences extends React.Component {
     this.setState({walletNameContent: (
         <div className="update-name">
           <label>{this.messages.wallet.action.preferecens.update_name.label}</label>
-          <Input required placeholder={this.messages.wallet.action.preferecens.update_name.title} value={this.state.walletName} onChange={(value) => {this.handleWalletNameChange(value)}} />
+          <Input required placeholder={this.messages.wallet.action.preferecens.update_name.title} maxlength="40" value={this.state.walletName} onChange={(value) => {this.handleWalletNameChange(value)}} />
           <button type="button" onClick={()=> {this.handleUpdateNameOnClick();}} disabled={!this.state.walletName} className="button wallet-new-button">{this.messages.wallet.action.preferecens.update_name.button.save}</button>
         </div>
       )

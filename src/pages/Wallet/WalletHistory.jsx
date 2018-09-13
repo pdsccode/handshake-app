@@ -85,8 +85,7 @@ class WalletHistory extends React.Component {
   }
 
   async componentDidMount(){
-    let wallet = this.state.wallet;
-    let pagenoTran = 0, pagenoIT = 0, transactions = [], internalTransactions = [];
+    let {wallet, pagenoTran, pagenoIT, transactions, internalTransactions} = this.state;
 
     let cTransaction = this.getSessionStore(wallet, TAB.Transaction),
       cInternalTransactions = this.getSessionStore(wallet, TAB.Internal);
@@ -118,16 +117,19 @@ class WalletHistory extends React.Component {
       if(Number(transactions.length) < 20) pagenoTran = 0;
       if(transactions.length > wallet.transaction_count) wallet.transaction_count = transactions.length;
 
-      internalTransactions = await wallet.listInternalTransactions(pagenoIT);
-      if(this.checkAPINewest(cInternalTransactions, internalTransactions)){
-        this.setSessionStore(wallet, TAB.Internal, internalTransactions);
-      }
-      else{
-        internalTransactions = cInternalTransactions;
-      }
+      //internalTransactions for ETH only
+      if(wallet.name == "ETH"){
+        internalTransactions = await wallet.listInternalTransactions(pagenoIT);
+        if(this.checkAPINewest(cInternalTransactions, internalTransactions)){
+          this.setSessionStore(wallet, TAB.Internal, internalTransactions);
+        }
+        else{
+          internalTransactions = cInternalTransactions;
+        }
 
-      if(Number(internalTransactions.length) < 20) pagenoIT = 0;
-      if(internalTransactions.length > wallet.transaction_count) wallet.transaction_count = transactions.length;
+        if(Number(internalTransactions.length) < 20) pagenoIT = 0;
+        if(internalTransactions.length > wallet.transaction_count) wallet.transaction_count = transactions.length;
+      }
 
       wallet.isLoading = false;
     }
