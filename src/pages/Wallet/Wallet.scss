@@ -105,6 +105,12 @@
   background-size: contain;
   background-color: #f4f4fb;
 
+  .modal-custom-header{
+    img:first-child {
+      margin-right: 15px;
+    }
+  }
+
   .header-icon-2{
     margin-left: 15px;
   }
@@ -522,8 +528,8 @@
     background-size: cover;
     overflow: hidden;
     .logo-detail{
-      width: 45px;
-      border: #ececec 1px solid;
+      width: 47px;
+      border: #586ad2 2px solid;
       border-radius: 45px;
       margin-top: 15px;
     }
