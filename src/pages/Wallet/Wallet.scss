@@ -40,13 +40,12 @@
 }
 .item-center{
   display: inline-block;
-  // width: 60%;
+  width: calc(100% - 120px);
 }
 .name {
   font-size: rem-calc(15px);
   font-weight: 400;
   text-overflow: ellipsis;
-  white-space: nowrap;
   overflow: hidden;
 }
 .balance {
@@ -128,6 +127,10 @@
       top: 50%;
       transform: translateY(-50%);
     }
+  }
+
+  .cancel{
+    text-transform: capitalize;
   }
 
   .logo-wallet{
@@ -854,4 +857,28 @@
   background :#c0c0c0;
   border-color: #c0c0c0;
   border: none;
+}
+
+@media (max-width: 374px) {
+  .hidden-xss-down	{
+    display: none;
+  }
+  .coin-logo{
+    width: 36px;
+  }
+  .safe{
+    left: 28px;
+  }
+  .balance{
+    font-size: 0.9rem;
+  }
+
+  .wallet-page{
+    padding: 0px;
+    .container
+    {
+      padding-right: 10px;
+      padding-left: 10px;
+    }
+  }
 }
