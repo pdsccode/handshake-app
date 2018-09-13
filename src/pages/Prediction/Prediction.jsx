@@ -93,11 +93,11 @@ class Prediction extends React.Component {
 
   checkFreeAvailabe(props) {
     const { freeBet = {} } = props;
-    const { free_bet_available: freeAvailable = 0, last_item: lastItem = {} } = freeBet;
-    const { status } = lastItem;
+    const { free_bet_available: freeAvailable = 0, can_freebet: canFreeBet = false } = freeBet;
+    //const { status } = lastItem;
     let isFreeAvailable = false;
 
-    if ((status !== FREE_BET_STATUS.WAITING || !status) && freeAvailable > 0) {
+    if (canFreeBet && freeAvailable > 0) {
       isFreeAvailable = true;
     }
     return isFreeAvailable;
