@@ -1,0 +1,42 @@
+@import './src/styles/style';
+
+.wrapperHowToPlay {
+  font-family: $font-family-base;
+  line-height: 30px;
+  //position: relative;
+  //transform: rotate(-30deg);
+  //-color: #F3F8FF;
+
+
+}
+/*
+.wrapperHowToPlay:before {
+  content: '';
+  background-color: #F3F8FF;
+  transform: rotate(-30deg);
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: -50%;
+  left: -50%;
+  z-index: -1;
+}
+*/
+.pexHeadLine {
+  font-size: rem-calc(46px);
+
+}
+.pexSmallTitle {
+  font-size: rem-calc(20px);
+}
+.pexContent {
+  font-size: rem-calc(18px);
+}
+.pexButton {
+  background: #FFF988;
+  border-radius: rem-calc(5px);
+  font-size: rem-calc(16px);
+  letter-spacing: 0;
+  border: 1px solid #F5D516;
+  height: rem-calc(44px);
+}
