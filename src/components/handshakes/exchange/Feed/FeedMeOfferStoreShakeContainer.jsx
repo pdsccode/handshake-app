@@ -389,8 +389,12 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
 
   confirmUsingScanAddress = (scanAddress) => {
     const { offer } = this;
-    const { userAddress } = offer;
-    const message = <FormattedMessage id="ex.shop.shake.message.using.which.address" values={{ scanAddress }} />;
+    const { currency, userAddress } = offer;
+    const wallet = MasterWallet.getWalletDefault(currency);
+    wallet.address = userAddress;
+    const shortenScanAddress = wallet.getShortAddress();
+
+    const message = <FormattedMessage id="ex.shop.shake.message.using.which.address" values={{ scanAddress: shortenScanAddress }} />;
     this.setState({
       modalContent:
         (
