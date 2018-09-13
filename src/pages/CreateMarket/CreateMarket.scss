@@ -85,6 +85,13 @@
   }
 }
 
+.TimeGroup {
+  .CreateEventFormGroupTitle {
+    font-weight: normal;
+    text-transform: capitalize;
+  }
+}
+
 .RangeSliderContainer {
   position: relative;
   display: flex;
