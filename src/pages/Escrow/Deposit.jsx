@@ -108,7 +108,6 @@ class EscrowDeposit extends React.Component {
   componentDidMount() {
     this.getCreditATM();
     // this.createCreditATM();
-    this.getNonce();
   }
 
   getCreditATM = () => {
