@@ -12,6 +12,8 @@ import imgMobileIcon from '@/assets/images/landing/prediction/pex_mobile_icon.pn
 import imgMobileGuide1 from '@/assets/images/landing/prediction/pex_mobile_guide1.png';
 import imgMobileGuide2 from '@/assets/images/landing/prediction/pex_mobile_guide2.png';
 import imgMarket from '@/assets/images/landing/prediction/pex_market.png';
+import imgAnonymous from '@/assets/images/landing/prediction/pex_anonymous.png';
+import imgBottomMenu from '@/assets/images/landing/prediction/pex_bottom_menu.png';
 
 
 import icPlayTime from '@/assets/images/landing/prediction/pex_play_time.svg';
@@ -101,6 +103,9 @@ class ContentForPrediction extends React.Component {
       <div>
         <div className="">Anonymous</div>
         <div>The entire system works without any party revealing their identities. It’s 100% anonymous.</div>
+        <img src={imgAnonymous} alt="imgAnonymous" />
+        <img src={imgBottomMenu} alt="imgBottomMenu" />
+
       </div>
     );
   }
@@ -115,6 +120,7 @@ class ContentForPrediction extends React.Component {
           {this.renderExtension()}
           {this.renderMobileGuide()}
           {this.renderMarket()}
+          {this.renderAnonymous()}
           {this.renderRoadMap()}
           <div className='mt-5'>
             For instructions on how to play:{' '}
