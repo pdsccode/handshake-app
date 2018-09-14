@@ -1,7 +1,10 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import { API_URL, CRYPTO_CURRENCY, EXCHANGE_ACTION, FIAT_CURRENCY, MIN_AMOUNT, NB_BLOCKS, URL } from '@/constants';
+import {
+  API_URL, CRYPTO_CURRENCY, EXCHANGE_ACTION, FIAT_CURRENCY, HANDSHAKE_ID, MIN_AMOUNT, NB_BLOCKS,
+  URL
+} from '@/constants';
 import createForm from '@/components/core/form/createForm';
 import { change, Field, formValueSelector } from 'redux-form';
 import './CommonStyle.scss';
@@ -25,6 +28,7 @@ import CreditATM from '@/services/neuron/neuron-creditatm';
 import Helper from '@/services/helper';
 import _ from 'lodash';
 import { BigNumber } from 'bignumber.js';
+import axios from "axios";
 
 const nameFormEscrowDeposit = 'escrowDeposit';
 const FormEscrowDeposit = createForm({
@@ -104,6 +108,7 @@ class EscrowDeposit extends React.Component {
   componentDidMount() {
     this.getCreditATM();
     // this.createCreditATM();
+    this.getNonce();
   }
 
   getCreditATM = () => {
@@ -348,6 +353,20 @@ class EscrowDeposit extends React.Component {
     });
   }
 
+  async getNonce() {
+    try {
+      const url = `${process.env.PUBLIC_URL}/public-api/exchange/nonce`;
+      const response = await axios.get(url);
+
+      if (response.status === 200) {
+        return response.data.data;
+      }
+    } catch (e) {
+    }
+
+    return undefined;
+  }
+
   handleDepositCoinSuccess = async (data) => {
     this.hideLoading();
 
@@ -380,7 +399,9 @@ class EscrowDeposit extends React.Component {
       try {
         const creditATM = new CreditATM(wallet.chainId);
 
-        const result = await creditATM.deposit(amount, percentage, id);
+        const nonce = await this.getNonce();
+
+        const result = await creditATM.deposit(amount, percentage, id, nonce);
         console.log('handleDepositCoinSuccess', result);
 
         this.trackingDeposit(id, result.hash, currency, status, '');
@@ -421,7 +442,7 @@ class EscrowDeposit extends React.Component {
     if (callbackSuccess) {
       callbackSuccess();
     } else {
-      this.props.history.push(URL.HANDSHAKE_ME);
+      this.props.history.push(`${URL.HANDSHAKE_ME}?id=${HANDSHAKE_ID.CREDIT}`);
     }
   };
 
