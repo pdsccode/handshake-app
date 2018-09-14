@@ -247,7 +247,7 @@ function* handleVerifyEmail({ email, code }) {
       type: 'VERIFY_EMAIL',
       headers: { 'Content-Type': 'multipart/form-data' },
     });
-    if (verify.error) {
+    if (!verify.status) {
       return yield put(verifyEmailCodePut(false));
     }
     yield put(verifyEmailCodePut(true));

@@ -32,6 +32,7 @@ class EmailVerification extends Component {
     super(props);
     this.state = {
       isEmailSent: false,
+      sentCode: null,
     };
   }
 
@@ -49,9 +50,13 @@ class EmailVerification extends Component {
       email: this.props.email,
       code: this.props.emailCode,
     }));
+    this.setState({
+      sentCode: this.props.emailCode,
+    });
   }
 
   renderEmailBox = (props, state) => {
+    const isValid = !emailValidator(props.email || '');
     return (
       <div className="FlexRow">
         <Field
@@ -68,7 +73,7 @@ class EmailVerification extends Component {
           type="button"
           className="btn btn-primary EmailBtn"
           onClick={this.sendEmail}
-          disabled={state.isEmailSent}
+          disabled={!isValid}
         >
           {state.isEmailSent ? 'Sent' : 'Send'}
         </button>
@@ -78,7 +83,10 @@ class EmailVerification extends Component {
 
   renderCodeBox = (props, state) => {
     if (!state.isEmailSent) return null;
-    const validate = props.isValidCode ? [required] : [required, codeValidator];
+    let validate = [required];
+    if (props.isValidCode === false && props.emailCode === state.sentCode) {
+      validate = [required, codeValidator];
+    }
     return (
       <React.Fragment>
         <span>Enter the secret code</span>
@@ -91,13 +99,12 @@ class EmailVerification extends Component {
             component={renderField}
             validate={validate}
             className="EmailCodeField"
-            disabled={props.isValidCode}
           />
           <button
             type="button"
-            className="EmailBtn btn btn-primary'"
+            className="btn btn-primary EmailBtn"
             onClick={this.sendCode}
-            disabled={props.isValidCode}
+            disabled={required(props.emailCode) || props.isValidCode}
           >
             Verify
           </button>
