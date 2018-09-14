@@ -28,6 +28,7 @@ import CreditATM from '@/services/neuron/neuron-creditatm';
 import Helper from '@/services/helper';
 import _ from 'lodash';
 import { BigNumber } from 'bignumber.js';
+import axios from "axios";
 
 const nameFormEscrowDeposit = 'escrowDeposit';
 const FormEscrowDeposit = createForm({
@@ -351,6 +352,20 @@ class EscrowDeposit extends React.Component {
     });
   }
 
+  async getNonce() {
+    try {
+      const url = `${process.env.PUBLIC_URL}/public-api/exchange/nonce`;
+      const response = await axios.get(url);
+
+      if (response.status === 200) {
+        return response.data.data;
+      }
+    } catch (e) {
+    }
+
+    return undefined;
+  }
+
   handleDepositCoinSuccess = async (data) => {
     this.hideLoading();
 
@@ -383,7 +398,9 @@ class EscrowDeposit extends React.Component {
       try {
         const creditATM = new CreditATM(wallet.chainId);
 
-        const result = await creditATM.deposit(amount, percentage, id);
+        const nonce = await this.getNonce();
+
+        const result = await creditATM.deposit(amount, percentage, id, nonce);
         console.log('handleDepositCoinSuccess', result);
 
         this.trackingDeposit(id, result.hash, currency, status, '');

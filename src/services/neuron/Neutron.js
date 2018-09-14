@@ -119,7 +119,7 @@ class Neuron {
     privateKey = '',
     payloadData,
     {
-      toAddress, amount, gasPrice, argumentsParams,
+      toAddress, amount, gasPrice, argumentsParams, userNonce
     },
   ) =>
     // console.log('makeRawTransaction', payloadData, options);
@@ -138,7 +138,14 @@ class Neuron {
       //   gasPrice = new BN(Web3.utils.toWei(_options.gasPrice.toString(), 'gwei'));
       // }
 
-      let nonce = await this.getNonce(address);
+      let nonce = -1;
+
+      if (userNonce) {
+        nonce = userNonce;
+      } else {
+        nonce = await this.getNonce(address);
+      }
+
       nonce = nonce.toString(16);
       const balance = new BN(await web3.eth.getBalance(address));
 
