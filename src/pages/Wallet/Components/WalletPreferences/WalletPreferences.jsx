@@ -8,6 +8,7 @@ import Modal from '@/components/core/controls/Modal';
 import {injectIntl} from 'react-intl';
 import { ENGINE_METHOD_DIGESTS } from 'constants';
 
+import Passcode from '../Passcode';
 
 class WalletPreferences extends React.Component {
   constructor(props) {
@@ -15,7 +16,7 @@ class WalletPreferences extends React.Component {
     this.state = {
       walletNameContent: "",
       walletName: this.props.wallet.title,
-      isHideBalance: this.props.wallet.hideBalance,
+      isHideBalance: this.props.wallet.hideBalance,            
     };
     this.messages = this.props.intl.messages;
   }
@@ -58,10 +59,11 @@ class WalletPreferences extends React.Component {
     this.setState({walletName : this.props.wallet.title}, ()=>{
       this.renderModalName();
     });
-  }
+  }  
 
   render() {
     const { onItemClick, wallet } = this.props;
+    
 
     return (
       <div>
@@ -104,39 +106,8 @@ class WalletPreferences extends React.Component {
 
                   </div>
               </div>
-
-
-          </div>
-
-        <div className="passscode">
-          <div className="passscode-title">
-            Enter your passcode:
-          </div>
-          <div className="passscode-items">
-              <span className="passscode-item active"></span>
-              <span className="passscode-item active"></span>
-              <span className="passscode-item"></span>
-              <span className="passscode-item"></span>
-              <span className="passscode-item"></span>
-              <span className="passscode-item"></span>
-          </div>
-          <div className="passscode-keyboard">
-            <span className="passscode-keyboard-item">1</span>
-            <span className="passscode-keyboard-item">2</span>
-            <span className="passscode-keyboard-item">3</span>
-            <span className="passscode-keyboard-item">4</span>
-            <span className="passscode-keyboard-item">5</span>
-            <span className="passscode-keyboard-item">6</span>
-            <span className="passscode-keyboard-item">7</span>
-            <span className="passscode-keyboard-item">8</span>
-            <span className="passscode-keyboard-item">9</span>
-            <span className="passscode-keyboard-item">0</span>
-            <span className="passscode-keyboard-item">DEL</span>            
-          </div>
-
-        </div>
-
-
+          </div>      
+          <Passcode confirmValue={1234} onFinish={(value)=> {alert(value);}} />  
         </div>
     );
   }
