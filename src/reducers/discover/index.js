@@ -29,7 +29,7 @@ const handleListPayload = (payload) => {
 
     const allowRender = offer.itemFlags[currencyActive] && !isEmptyBalance(offer.items[currencyActive]);
 
-    if (allowRender && (id.includes('2520') || id.includes('2514'))) {
+    if (allowRender) {
       result.push(hs);
       offers.push(offer);
     }
