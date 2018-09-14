@@ -44,6 +44,10 @@ import iconUsd from '@/assets/images/icon/coin/icons8-us_dollar.svg';
 import iconLock from '@/assets/images/icon/icons8-lock_filled.svg';
 import { Link } from 'react-router-dom';
 import cx from 'classnames';
+import ExpandArrowSVG from '@/assets/images/icon/expand-arrow-green.svg';
+
+const nameFormShowAddressWallet = 'showAddressWallet';
+const ShowAddressWalletForm = createForm({ propsReduxForm: { form: nameFormShowAddressWallet } });
 
 export const CRYPTO_ICONS = {
   [CRYPTO_CURRENCY.ETH]: iconEthereum,
@@ -113,6 +117,8 @@ class FeedCreditCard extends React.Component {
       fiatAmount: 0,
       fiatCurrency: FIAT_CURRENCY.USD,
       cryptoPrice: this.props.cryptoPrice,
+      wallets: [],
+      walletSelected: false,
     };
   }
 
@@ -152,6 +158,7 @@ class FeedCreditCard extends React.Component {
     //   const { amount } = this.props;
     //   this.getCryptoPriceByAmount(amount);
     // }, 30000);
+    this.getListWallets();
   }
 
   componentWillUnmount() {
@@ -242,9 +249,7 @@ class FeedCreditCard extends React.Component {
 
     const { handleSubmit } = this.props;
     const { userCcLimit, cryptoPrice, addressForced, currencyForced } = this.props;
-    // const {
-    //   amount, currency, fiatAmount, fiatCurrency,
-    // } = this.state;
+    const { walletSelected } = this.state;
 
     gtag.event({
       category: taggingConfig.creditCard.category,
@@ -335,8 +340,8 @@ class FeedCreditCard extends React.Component {
                 if (currencyForced && addressForced && currencyForced === cryptoPrice.currency) {
                   address = addressForced;
                 } else {
-                  const wallet = MasterWallet.getWalletDefault(cryptoPrice.currency);
-                  address = wallet.address;
+                  // const wallet = MasterWallet.getWalletDefault(cryptoPrice.currency);
+                  address = walletSelected.address;
                 }
                 local.save(APP.CC_ADDRESS, address);
 
@@ -488,6 +493,7 @@ class FeedCreditCard extends React.Component {
     if (currency !== newValue.id) {
       this.setState({ currency: newValue.id }, () => {
         this.getCryptoPriceByAmount(amount);
+        this.getListWallets(newValue.id);
       });
     }
   }
@@ -569,8 +575,62 @@ class FeedCreditCard extends React.Component {
     });
   }
 
+  onItemSelectedWallet = (item) => {
+    const wallet = MasterWallet.convertObject(item);
+
+    this.setState({ walletSelected: wallet });
+  }
+
+  getListWallets = async () => {
+    const { currency } = this.state;
+    let walletDefault = await MasterWallet.getWalletDefault(currency);
+    const wallets = MasterWallet.getWallets(currency);
+
+    // set name + text for list:
+    const listWalletCoin = [];
+    if (wallets.length > 0) {
+      wallets.forEach((wal) => {
+        if (!wal.isCollectibles) {
+          wal.text = `${wal.getShortAddress()} (${wal.name}-${wal.getNetworkName()})`;
+          if (process.env.isLive) {
+            wal.text = `${wal.getShortAddress()} (${wal.className} ${wal.name})`;
+          }
+          wal.id = `${wal.address}-${wal.getNetworkName()}${wal.name}`;
+          listWalletCoin.push(wal);
+        }
+      });
+    }
+
+    if (!walletDefault) {
+      if (listWalletCoin.length > 0) {
+        walletDefault = listWalletCoin[0];
+      }
+    }
+
+
+    if (walletDefault) {
+      walletDefault.text = `${walletDefault.getShortAddress()} (${walletDefault.name}-${walletDefault.getNetworkName()})`;
+      if (process.env.isLive) {
+        walletDefault.text = `${walletDefault.getShortAddress()} (${walletDefault.className} ${walletDefault.name})`;
+      }
+      walletDefault.id = `${walletDefault.address}-${walletDefault.getNetworkName()}${walletDefault.name}`;
+
+      // get balance for first item + update to local store:
+      walletDefault.getBalance().then(result => {
+        walletDefault.balance = walletDefault.formatNumber(result);
+        this.setState({ walletSelected: walletDefault });
+        MasterWallet.UpdateBalanceItem(walletDefault);
+      });
+    }
+
+    this.setState({ wallets: listWalletCoin, walletSelected: walletDefault }, () => {
+      // this.checkValid();
+    });
+  }
+
   render() {
-    const { hasSelectedCoin } = this.state;
+    const { messages } = this.props.intl;
+    const { hasSelectedCoin, wallets, walletSelected } = this.state;
     const { intl, isPopup } = this.props;
     const { amount } = this.props;
     const { currency } = this.state;
@@ -651,14 +711,14 @@ class FeedCreditCard extends React.Component {
                         <div className={`package p-${name}`}><FormattedMessage id={`cc.label.${name}`} /></div>
                       </div>
                       <div className="d-table-cell align-middle pl-3">
-                        {/*<div className="p-price">
+                        {/* <div className="p-price">
                           {price}
                           {
                             saving && (
                               <span className="p-saving"><FormattedMessage id="cc.label.saving" values={{ percentage: saving }} /></span>
                             )
                           }
-                        </div>*/}
+                        </div> */}
                         <div className="p-price">{amount} {currency}</div>
                       </div>
                       <div className="d-table-cell align-middle text-right">
@@ -688,6 +748,40 @@ class FeedCreditCard extends React.Component {
         <div><button className="btn btn-lg bg-transparent d-inline-block btn-close" onClick={this.closeInputCreditCard}>&times;</button></div>
         <div className="wrapper">
           <FormCreditCard onSubmit={this.handleSubmit} validate={this.handleValidate}>
+            <div className={['bodyBackup bodyShareAddress']}>
+
+              <div className="bodyTitle">
+                <span><FormattedMessage id="cc.label.receive.address" /></span>
+              </div>
+
+              <div className="box-addresses">
+                <div className="box-address">
+                  <div className="addressDivPopup">{ walletSelected ? walletSelected.address : ''}&nbsp;
+                    <img className="expand-arrow" src={ExpandArrowSVG} alt="expand" />
+                  </div>
+                </div>
+
+                <div className="box-hide-wallet">
+                  <ShowAddressWalletForm className="receivewallet-wrapper">
+                    { walletSelected &&
+
+                      <Field
+                        name="showWalletSelected"
+                        component={fieldDropdown}
+                        placeholder={messages.wallet.action.receive.placeholder.choose_wallet}
+                        defaultText={currency}
+                        list={wallets}
+                        onChange={(item) => {
+                          this.onItemSelectedWallet(item);
+                        }
+                        }
+                      />
+                    }
+                  </ShowAddressWalletForm>
+                </div>
+              </div>
+            </div>
+
             <div>
               <div className="cc-label"><FormattedMessage id="cc.label.cardNo" /></div>
               <div>
