@@ -1262,7 +1262,7 @@ export default {
         },
         button: {
           continue: 'Continue',
-          verify: 'Verify your passsphrase',
+          verify: 'Verify your passphrase',
           copy_clipboard: 'Copy to clipboard',
           ok: 'OK',
         },
