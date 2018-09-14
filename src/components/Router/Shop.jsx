@@ -5,34 +5,33 @@ import { Switch, Route } from 'react-router-dom';
 import DynamicImport from '@/components/App/DynamicImport';
 import Loading from '@/components/core/presentation/Loading';
 import { URL } from '@/constants';
-import { setHeaderTitle, clearHeaderRight, clearHeaderLeft, showHeader, hideHeader } from '@/reducers/app/action';
+import { setHeaderTitle, clearHeaderLeft, clearHeaderRight, hideHeader } from '@/reducers/app/action';
 
-const Report = props => (<DynamicImport loading={Loading} load={() => import('@/pages/Report/Report')}>{Component => <Component {...props} />}</DynamicImport>);
+const Shop = props => (<DynamicImport loading={Loading} load={() => import('@/pages/Shop/Shop')}>{Component => <Component {...props} />}</DynamicImport>);
+const OrderConfirm = props => (<DynamicImport loading={Loading} load={() => import('@/pages/Shop/Confirm')}>{Component => <Component {...props} />}</DynamicImport>);
+const ShopDetail = props => (<DynamicImport loading={Loading} load={() => import('@/pages/Shop/ShopDetail')}>{Component => <Component {...props} />}</DynamicImport>);
 const Page404 = props => (<DynamicImport isNotFound loading={Loading} load={() => import('@/pages/Error/Page404')}>{Component => <Component {...props} />}</DynamicImport>);
 
 const routerMap = [
-  { path: URL.REPORT, component: Report },
+  { path: URL.SHOP_URL_INDEX, component: Shop },
+  { path: URL.SHOP_URL_CONFIRM, component: OrderConfirm },
+  { path: URL.SHOP_URL_DETAIL, component: ShopDetail },
 ];
 
-class ReportRouter extends React.Component {
+class ShopRouter extends React.Component {
   static propTypes = {
     setHeaderTitle: PropTypes.func.isRequired,
-    clearHeaderRight: PropTypes.func.isRequired,
     clearHeaderLeft: PropTypes.func.isRequired,
-    showHeader: PropTypes.func.isRequired,
+    clearHeaderRight: PropTypes.func.isRequired,
     hideHeader: PropTypes.func.isRequired,
   }
 
   constructor(props) {
     super(props);
 
-    this.props.setHeaderTitle('Report');
+    // this.props.setHeaderTitle('Shop');
     this.props.clearHeaderRight();
     this.props.clearHeaderLeft();
-    this.props.showHeader();
-  }
-
-  componentWillUnmount() {
     this.props.hideHeader();
   }
 
@@ -47,5 +46,5 @@ class ReportRouter extends React.Component {
 }
 
 export default connect(null, ({
-  setHeaderTitle, clearHeaderRight, clearHeaderLeft, showHeader, hideHeader,
-}))(ReportRouter);
+  setHeaderTitle, clearHeaderRight, clearHeaderLeft, hideHeader,
+}))(ShopRouter);
