@@ -52,9 +52,9 @@ class Shop extends React.Component {
     const { products } = this.state;
     return (
       <div className="Shop">
-        <div className="header-block">
+        {/* <div className="header-block">
           <h1>Ninja Shop</h1>
-        </div>
+        </div> */}
         <div className="products">
         {
           products.map(product => <div key={product.product_id} className="product" onClick={() => this.onSeeMore(product.product_slug)}>

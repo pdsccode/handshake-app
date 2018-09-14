@@ -20,7 +20,7 @@ import $http from '@/services/api';
 import SimpleSlider from '@/components/core/controls/Slider';
 import Tabs from '@/components/handshakes/betting/Feed/Tabs';
 import { hideHeader } from '@/reducers/app/action';
-import {  URL, CUSTOMER_ADDRESS_INFO, AUTONOMOUS_END_POINT, COUNTRY_LIST } from '@/constants';
+import { URL, CUSTOMER_ADDRESS_INFO, AUTONOMOUS_END_POINT, COUNTRY_LIST } from '@/constants';
 // style
 import './ShopDetail.scss';
 const EthSVG = 'https://d2q7nqismduvva.cloudfront.net/static/images/icon-svg/common/eth-sign.svg';
@@ -129,7 +129,7 @@ class ShopDetail extends React.Component {
     // get product information: price, option name, ...
     const urlProductInfo = `${AUTONOMOUS_END_POINT.BASE}${AUTONOMOUS_END_POINT.PRODUCT_INFO}/${productBuySlug.product.id}`;
     const { data: productInfo } = await $http({ url: urlProductInfo, data: this.addOptionTextToObject(productBuySlug.product.selected_option), method: 'POST' });
-    this.setState({ productInfo: productInfo.product_info, optionSelecting: productBuySlug.product.selected_option });
+    this.setState({ productInfo: productInfo.product_info, optionSelecting: productBuySlug.product.selected_option }, () => this.imagesSliderRef.slider.slickGoTo(0));
     // get product info design
     const urlProductInfoDesign = `${AUTONOMOUS_END_POINT.BASE}${AUTONOMOUS_END_POINT.PRODUCT_SPEC}/${productBuySlug.product.id}?type=1`;
     const { data: productInfoHtml } = await $http({ url: urlProductInfoDesign, method: 'GET' });
@@ -253,10 +253,18 @@ class ShopDetail extends React.Component {
   }
 
   render() {
-    const { product, productInfo, productInfoHtml, productSpecs, productFAQ, productReviews, quantity, countryCode } = this.state;
+    const { product,
+            productInfo,
+            productInfoHtml,
+            productSpecs,
+            productFAQ,
+            productReviews,
+            quantity,
+            countryCode,
+            optionSelecting } = this.state;
     const imageSetting = {
       customPaging: i => <span className="dot" />,
-      initialSlide: 1,
+      initialSlide: 0,
       dots: true,
       infinite: true,
       speed: 500,
@@ -291,6 +299,11 @@ class ShopDetail extends React.Component {
             {productInfo.shipping_date}
           </span>
         </p>
+        {/* <CustomizeOptions 
+          product={product}
+          optionSelecting={optionSelecting}
+          afterSelectNewOption={() => {}}
+        /> */}
         <div className="buy-now-btn">
           <Button block onClick={() => this.modalBuyNowRef.open()}>
             Buy now
@@ -317,7 +330,10 @@ class ShopDetail extends React.Component {
           </div>
           <div label="FAQ">
             {
-              productFAQ.map((item, index) => <p key={'product-faq' + index} dangerouslySetInnerHTML={{ __html: item.question }} />)
+              productFAQ.map((item, index) => <div key={'product-faq' + index} className="faq">
+                <strong>{item.question}</strong>
+                <p dangerouslySetInnerHTML={{ __html: item.answers[0].answer }} />
+              </div>)
             }
           </div>
           <div label={`Reviews (${product.review_count * 2})`}>
