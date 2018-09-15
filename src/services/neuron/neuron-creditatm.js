@@ -27,7 +27,7 @@ export default class CreditATM extends BaseHandshake {
    * @dev deposit coin to escrow
    * @param offchain record ID in offchain backend database
    */
-  deposit = (value, percentage, offchain, nonce) => {
+  deposit = (value, percentage, offchain) => {
     console.log(
       TAG,
       ' deposit = ',
@@ -46,7 +46,6 @@ export default class CreditATM extends BaseHandshake {
       amount: value,
       gasPrice: this.gasPrice,
       toAddress: this.contractAddress,
-      userNonce: nonce,
     });
   }
 }
