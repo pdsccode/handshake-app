@@ -398,9 +398,9 @@ class EscrowDeposit extends React.Component {
       try {
         const creditATM = new CreditATM(wallet.chainId);
 
-        const nonce = await this.getNonce();
+        // const nonce = await this.getNonce();
 
-        const result = await creditATM.deposit(amount, percentage, id, nonce);
+        const result = await creditATM.deposit(amount, percentage, id);
         console.log('handleDepositCoinSuccess', result);
 
         this.trackingDeposit(id, result.hash, currency, status, '');
