@@ -81,14 +81,14 @@ class Exchange extends React.Component {
 
     return (
       <div className="Exchange">
-        {
-          !hideNavigationBar && (
-            <NavigationBar
-              selectedMenuId={selectedMenuId}
-              onClickMenuItem={this.handleClickMenuItem}
-            />
-          )
-        }
+        {/*{*/}
+          {/*!hideNavigationBar && (*/}
+            {/*<NavigationBar*/}
+              {/*selectedMenuId={selectedMenuId}*/}
+              {/*onClickMenuItem={this.handleClickMenuItem}*/}
+            {/*/>*/}
+          {/*)*/}
+        {/*}*/}
         {this.getPageComponent()}
       </div>
     );
