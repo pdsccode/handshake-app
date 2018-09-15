@@ -93,7 +93,7 @@ class Exchange extends React.Component {
     const { props, state } = this;
     return (
       <div className="Exchange">
-        {this.renderNavigationBar(props, state)}
+        {/* {this.renderNavigationBar(props, state)} */}
         {this.getPageComponent()}
       </div>
     );
