@@ -15,6 +15,8 @@ import { showAlert } from '@/reducers/app/action';
 import { showLoading, hideLoading } from '@/reducers/app/action';
 import { StringHelper } from '@/services/helper';
 import iconSuccessChecked from '@/assets/images/icon/icon-checked-green.svg';
+import iconClock from '@/assets/images/icon/pay/clock.svg';
+import Countdown from '@/components/Countdown/Countdown';
 
 // style
 import './Checkout.scss';
@@ -45,7 +47,9 @@ class Checkout extends React.Component {
       amountCrypto: this.props.amountCrypto,
       toAddress: false,
       isDisableCheckout: false,
-      isRestoreLoading: false
+      isRestoreLoading: false,
+      event: false,
+      isExpired: false
     }
   }
 
@@ -143,7 +147,12 @@ class Checkout extends React.Component {
       MasterWallet.UpdateBalanceItem(walletDefault);
     }
 
-    this.setState({wallets: listWalletCoin, walletSelected: walletDefault}, ()=>{
+    let date = new Date();
+    date.setSeconds(date.getSeconds() + 30);
+    //date.setMinutes(date.getMinutes() + 15);
+
+    let event = date.getTime();
+    this.setState({wallets: listWalletCoin, walletSelected: walletDefault, event:event, isExpired: false}, ()=>{
       this.checkValid();
       this.hideLoading();
     });
@@ -250,24 +259,51 @@ class Checkout extends React.Component {
     });
   }
 
+  renderEvenTimeLeft=({ event}) => {
+    const {rate, fiatCurrency, cryptoCurrency} = this.props;
+
+    return !this.state.isExpired && event && (
+      <div className="ratelock">
+        <div className="timer bg-secondary">
+          <Countdown endTime={event} onComplete={() => this.setState({isExpired: true})} format="{mm:ss}" />
+        </div>
+        <div className="msg">
+          <span className="title">Awaiting Payment...</span>
+          <span className="rate">{rate && fiatCurrency && cryptoCurrency ? `Rate locked 1 ${cryptoCurrency} = ${rate} ${fiatCurrency}` : ""}</span>
+        </div>
+      </div>
+    );
+  }
+
   get showPayment(){
     const { amount, fiatCurrency, amountCrypto, cryptoCurrency} = this.props;
-
     let icon = '';
     try{ icon = require("@/assets/images/icon/wallet/coins/" + cryptoCurrency.toLowerCase() + '.svg')} catch (ex){console.log(ex)};
 
-    return (
+    return !this.state.isExpired && (
       <div className="amount-info">
         <div className="icon"><img src={icon} /></div>
         <div className="crypto-amount">{amountCrypto} {cryptoCurrency}</div>
-        <div className="amount">{amount} {fiatCurrency}</div>
+        {fiatCurrency && <div className="amount">{amount} {fiatCurrency}</div>}
+      </div>
+    )
+  }
+
+  get showExpiredPayment(){
+
+    return this.state.isExpired && (
+      <div className="expired-info">
+        <div className="icon"><img src={iconClock} /></div>
+        <div className="title">Your payment window has expired.</div>
+        <div className="msg">Hit the Refresh button below to lock in a new exchange rate and start again.</div>
+        <Button className="button-wallet-cpn btn" block={true} onClick={()=> window.location.reload() }>Refesh</Button>
       </div>
     )
   }
 
   get showTabs(){
 
-    return (
+    return !this.state.isExpired && (
       <nav className="nav nav-pills nav-fill">
         <a className="nav-item nav-link active" href="#">Wallet</a>
         <a className="nav-item nav-link" href="#">Scan</a>
@@ -279,7 +315,7 @@ class Checkout extends React.Component {
   get showWallet(){
     const { messages } = this.props.intl;
 
-    return (
+    return !this.state.isExpired && (
       <div className="wallet-info">
       <SendWalletForm onSubmit={this.sendCoin} validate={this.invalidateTransferCoins}>
 
@@ -301,7 +337,7 @@ class Checkout extends React.Component {
 
         <Button className="button-wallet-cpn" isLoading={this.state.isRestoreLoading} disabled={this.state.isDisableCheckout} type="submit" block={true}>{messages.wallet.action.payment.button.checkout}</Button>
 
-        <div className="help"><div className="badge badge-light">Need support?</div></div>
+        <div className="help"><div className="badge badge-light" onClick={()=> window.location.href = '/wallet'}>Go to Ninja Wallet</div></div>
       </SendWalletForm>
       </div>
     )
@@ -309,7 +345,9 @@ class Checkout extends React.Component {
 
   render() {
     const { messages } = this.props.intl;
-    return (<div>
+    return (<div className="checkout-container">
+        {this.renderEvenTimeLeft({event:this.state.event})}
+        {this.showExpiredPayment}
         {this.showPayment}
         {this.showTabs}
         {this.showWallet}
@@ -329,6 +367,14 @@ const mapDispatch = (dispatch) => ({
   clearFields: bindActionCreators(clearFields, dispatch),
   getCryptoPrice: bindActionCreators(getCryptoPrice, dispatch),
 });
+
+Checkout.propTypes = {
+  onCountdownComplete: PropTypes.func,
+};
+
+Checkout.defaultProps = {
+  onCountdownComplete: undefined,
+};
 
 
 export default injectIntl(connect(mapState, mapDispatch)(Checkout));

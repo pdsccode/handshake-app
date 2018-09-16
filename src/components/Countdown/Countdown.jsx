@@ -10,6 +10,7 @@ export default class Countdown extends Component {
     endTime: PropTypes.number.isRequired, // milliseconds
     renderer: PropTypes.func,
     separator: PropTypes.string,
+    format: PropTypes.string,
     onComplete: PropTypes.func,
   };
 
@@ -17,6 +18,7 @@ export default class Countdown extends Component {
     classNames: null,
     separator: ':',
     onComplete: undefined,
+    format: null
   };
 
   constructor(props) {
@@ -61,7 +63,6 @@ export default class Countdown extends Component {
   calculateCountdown = ({ endTime, onComplete }) => {
     const end = (endTime.toString().length === 10) ? endTime * 1000 : endTime;
     const seconds = parseInt((Math.max(0, end - Date.now()) / 1000).toFixed(0), 10);
-
     if (seconds <= 0) {
       this.stop();
       if (onComplete) {
@@ -107,8 +108,10 @@ export default class Countdown extends Component {
     if (state.days > 0) return null;
     return (
       <div className="CountdownTime">
-        {this.renderHours(state.hours)}
-        {state.minutes && this.renderSeparator(props.separator)}
+        {
+          !props.format || (props.format && props.format.indexOf("HH") >= 0) &&
+          this.renderHours(state.hours) + state.minutes && this.renderSeparator(props.separator)
+        }
         {this.renderMinutes(state.minutes)}
         {state.seconds && this.renderSeparator(props.separator)}
         {this.renderSeconds(state.seconds)}

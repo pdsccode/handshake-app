@@ -156,7 +156,7 @@ class Payment extends React.Component {
 
   chosenWallet = async (crypto, currency) => {
     let { order_id, amount, coin, to } = this.querystringParsed;
-    let amountCrypto = 0, fiatCurrency = "", cryptoCurrency = "";
+    let amountCrypto = 0, fiatCurrency = "", cryptoCurrency = "", rate = 0;
     if(!currency)
       currency = crypto;
 
@@ -166,6 +166,7 @@ class Payment extends React.Component {
     }
     else{
       amountCrypto = await this.getCryptoAmount(amount, currency, crypto);
+      rate = await this.getRate(currency, crypto);
       cryptoCurrency = crypto;
       fiatCurrency = currency;
     }
@@ -178,6 +179,7 @@ class Payment extends React.Component {
         amountCrypto={amountCrypto}
         toAddress={toAddress}
         cryptoCurrency={cryptoCurrency}
+        rate={rate ? Math.round(rate) : 0}
         onFinish={result => { this.successPayNinja(result); }}
       />,
       modalChooseCrypto: ''
