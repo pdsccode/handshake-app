@@ -109,7 +109,7 @@ class Checkout extends React.Component {
     const { onRefesh } = this.props;
     if (onRefesh && typeof onRefesh === 'function') {
       this.showLoading();
-      this.setState({isExpired: false});
+      this.setState({isExpired: false, isWarning: false});
       onRefesh();
     }
   }
@@ -274,7 +274,7 @@ class Checkout extends React.Component {
 
     return !isExpired && event && (
       <div className={isWarning ? "ratelock warning": "ratelock"}>
-        <div className="timer bg-secondary">
+        <div className="timer">
           <Countdown endTime={event.end} timeLeftToWarning={event.warning}
             onComplete={() => this.setState({isExpired: true})}
             onWarning={() => this.setState({isWarning: true})}
