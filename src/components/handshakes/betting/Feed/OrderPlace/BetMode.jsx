@@ -134,6 +134,18 @@ class BetMode extends React.Component {
     );
   }
 
+  renderOutcome = (props) => {
+    const { selectedOutcome } = props;
+    return (
+      <div className="matchOutCome">
+        <span className="label">Outcome:</span>
+        <span className="name">
+          {selectedOutcome && selectedOutcome.value}
+        </span>
+      </div>
+    );
+  }
+
   render() {
     const { selectedOutcome, selectedMatch, handleBetFail } = this.props;
     const { support, against, isFirstFree, bettingShakeIsOpen } = this.state;
@@ -159,6 +171,7 @@ class BetMode extends React.Component {
     };
     return (
       <React.Fragment>
+        {this.renderOutcome(this.props)}
         { isFirstFree ? this.renderTab(filterProps) : this.renderSingleMode(filterProps)}
       </React.Fragment>
     );
