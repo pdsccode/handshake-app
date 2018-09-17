@@ -29,6 +29,7 @@ class CreateEventForm extends Component {
     eventList: PropTypes.array,
     formAction: PropTypes.func,
     dispatch: PropTypes.func,
+    isValidEmailCode: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -42,6 +43,7 @@ class CreateEventForm extends Component {
     initialValues: {},
     shareEvent: null,
     eventList: [],
+    isValidEmailCode: undefined,
   };
 
   constructor(props) {
@@ -367,8 +369,15 @@ class CreateEventForm extends Component {
         <div className="CreateEventFormBlock">
           {this.renderReport(props)}
           {this.renderTimeGroup(props, state)}
-          <EmailVerification hasEmail={props.hasEmail} />
-          <button type="submit" className="btn btn-primary btn-block" disabled={props.pristine || props.submitting}>
+          <EmailVerification
+            hasEmail={props.hasEmail}
+            isValidEmailCode={props.isValidEmailCode}
+          />
+          <button
+            type="submit"
+            className="btn btn-primary btn-block"
+            disabled={props.pristine || props.submitting || !props.isValidEmailCode}
+          >
             {props.isNew ? 'Create a new event' : 'Add new outcomes'}
           </button>
         </div>

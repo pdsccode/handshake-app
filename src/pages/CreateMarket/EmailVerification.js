@@ -7,7 +7,6 @@ import { codeValidator, emailValidator, required } from '@/pages/CreateMarket/va
 import { Field, formValueSelector } from 'redux-form';
 import { sendEmailCode, verifyEmail } from '@/pages/CreateMarket/action';
 import { createEventFormName } from '@/pages/CreateMarket/constants';
-import { isValidEmailCode } from '@/pages/CreateMarket/selector';
 
 class EmailVerification extends Component {
   static displayName = 'EmailVerification';
@@ -160,7 +159,6 @@ export default connect(
     return {
       email: formSelector(state, 'email'),
       emailCode: formSelector(state, 'emailCode'),
-      isValidCode: isValidEmailCode(state),
     };
   },
 )(EmailVerification);
