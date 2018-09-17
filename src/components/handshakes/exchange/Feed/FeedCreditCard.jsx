@@ -829,7 +829,7 @@ class FeedCreditCard extends React.Component {
                 </div>
 
                 <div className="box-hide-wallet">
-                  <ShowAddressWalletForm className="receivewallet-wrapper">
+                  <div className="receivewallet-wrapper">
                     { walletSelected &&
 
                       <Field
@@ -844,7 +844,7 @@ class FeedCreditCard extends React.Component {
                         }
                       />
                     }
-                  </ShowAddressWalletForm>
+                  </div>
                 </div>
               </div>
             </div>
