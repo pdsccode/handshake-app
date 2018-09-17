@@ -25,6 +25,7 @@ import { injectIntl } from 'react-intl';
 import { URL } from '@/constants';
 import { eventSelector, isLoading, showedLuckyPoolSelector, isSharePage, countReportSelector, checkFreeBetSelector, checkExistSubcribeEmailSelector } from './selector';
 import { loadMatches, getReportCount, removeExpiredEvent, checkFreeBet, checkExistSubcribeEmail } from './action';
+import { getBalance } from '@/components/handshakes/betting/utils.js';
 import { removeShareEvent } from '../CreateMarket/action';
 import { shareEventSelector } from '../CreateMarket/selector';
 
@@ -64,6 +65,7 @@ class Prediction extends React.Component {
       modalFillContent: '',
       isOrderOpening: false,
       shouldShowFreePopup: true,
+      failedResult: {},
     };
   }
 
@@ -212,7 +214,10 @@ class Prediction extends React.Component {
     }
   };
 
-  handleBetFail = () => {
+  handleBetFail = (value) => {
+    this.setState({
+      failedResult: value,
+    });
     this.modalOuttaMoney.open();
   }
 
@@ -221,10 +226,13 @@ class Prediction extends React.Component {
   }
 
   afterWalletFill = () => {
+    GA.didFillUpMoney();
     this.modalFillRef.close();
   }
 
-  showPopupCreditCard = () => {
+  showPopupCreditCard = async () => {
+    const { failedResult } = this.state;
+    GA.clickTopupWallet(failedResult);
     this.modalOuttaMoney.close();
     const { messages } = this.props.intl;
     this.setState({
