@@ -221,6 +221,8 @@ export const API_URL = {
     SAVE_TRANSACTION: 'cryptosign/tx/add',
     GENERATE_LINK: 'cryptosign/outcome/generate-link',
     PREDICTION_STATISTICS: 'cryptosign/outcome/ninja-predict',
+    SUBCRIBE_EMAIL_PREDICTION: 'cryptosign/user/subscribe',
+
   },
   DISCOVER: {
     INDEX: 'handshake/discover',
@@ -276,7 +278,6 @@ export const API_URL = {
   },
   USER: {
     PROFILE: 'user/profile',
-    SUBCRIBE_EMAIL_PREDICTION: 'user/subscribe-email',
     CHECK_EXIST_EMAIL: 'user/check-email-exist',
   },
 };
