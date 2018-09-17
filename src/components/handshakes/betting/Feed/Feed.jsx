@@ -490,7 +490,7 @@ class FeedBetting extends React.Component {
     } = this.props;
 
     const title = `Don't agree with the result?`;
-    const content = `We’ll review the result if 50% or more losers also disagree.`;
+    const content = MESSAGE.DISPUTE_CONFIRM;
     onShowModalDialog({
       show: true,
       modalContent: (<ConfirmPopup
