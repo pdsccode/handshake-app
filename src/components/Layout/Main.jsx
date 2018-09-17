@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import BrowserDetect from '@/services/browser-detect';
 import { updateModal } from '@/reducers/app/action';
 // components
+import HeaderBar from '@/modules/HeaderBar/HeaderBar';
 import MainHeader from '@/components/Header/MainHeader';
 import Navigation from '@/components/core/controls/Navigation/NewNavigation';
 import Alert from '@/components/core/presentation/Alert';
@@ -36,16 +37,39 @@ class MainLayout extends React.Component {
     this.props.updateModal({ show: false });
   }
 
+  renderHeaderBar = () => {
+    const { isDesktop } = BrowserDetect;
+    const { name } = (window.name !== '' && JSON.parse(window.name));
+    const headerBarProps = {
+      className: 'HeaderBarContainer',
+      titleBar: 'Prediction',
+    };
+    if (!name || isDesktop) return null;
+    return (
+      <HeaderBar {...headerBarProps} />
+    );
+  }
+
+  renderNavigation = (props) => {
+    const { isDesktop } = BrowserDetect;
+    const { name } = (window.name !== '' && JSON.parse(window.name));
+    if (isDesktop || name) return null;
+    return (
+      <Navigation location={props.location} />
+    );
+  }
+
   render() {
     const isDesktop = BrowserDetect.isDesktop;
     const { modal: { className, show, body, title, centered } } = this.props;
     return (
       <div className={`${isDesktop ? '' : 'app'} ${this.state.app.showHeader ? 'show-header' : 'hide-header'}`}>
+        {this.renderHeaderBar()}
         <MainHeader />
         <div className="content">
           {this.props.children}
         </div>
-        { !isDesktop && <Navigation location={this.props.location} />}
+        {this.renderNavigation(this.props)}
         <Alert />
         <Loading />
         <Modal isOpen={show} toggle={this.handleToggleModal} className={className} centered={centered}>
