@@ -76,7 +76,7 @@ class Checkout extends React.Component {
   componentDidMount() {
     this.showLoading();
     this.getWalletDefault();
-    this.hideLoading();
+
   }
 
   copyToClipboard =(text) => {
@@ -105,23 +105,24 @@ class Checkout extends React.Component {
 
   getWalletDefault = async () =>{
     const { cryptoCurrency } = this.props;
-
     let walletDefault = await MasterWallet.getWalletDefault(cryptoCurrency);
     let wallets = MasterWallet.getWallets(cryptoCurrency);
 
     // set name + text for list:
     let listWalletCoin = [];
     if (wallets.length > 0){
-      wallets.forEach((wal) => {
+      for(let wal of wallets){
         if(!wal.isCollectibles){
           wal.text = wal.getShortAddress() + " (" + wal.name + "-" + wal.getNetworkName() + ")";
           if (process.env.isLive){
             wal.text = wal.getShortAddress() + " (" + wal.className + " " + wal.name + ")";
           }
           wal.id = wal.address + "-" + wal.getNetworkName() + wal.name;
+
+          wal.balance = wal.formatNumber(await wal.getBalance());
           listWalletCoin.push(wal);
         }
-      });
+      }
     }
 
     if (!walletDefault){
@@ -129,7 +130,6 @@ class Checkout extends React.Component {
         walletDefault = listWalletCoin[0];
       }
     }
-
 
     if (walletDefault){
       walletDefault.text = walletDefault.getShortAddress() + " (" + walletDefault.name + "-" + walletDefault.getNetworkName() + ")";
@@ -139,15 +139,13 @@ class Checkout extends React.Component {
       walletDefault.id = walletDefault.address + "-" + walletDefault.getNetworkName() + walletDefault.name;
 
       // get balance for first item + update to local store:
-      walletDefault.getBalance().then(result => {
-        walletDefault.balance = walletDefault.formatNumber(result);
-        this.setState({walletSelected: walletDefault});
-        MasterWallet.UpdateBalanceItem(walletDefault);
-      });
+      this.setState({walletSelected: walletDefault});
+      MasterWallet.UpdateBalanceItem(walletDefault);
     }
 
     this.setState({wallets: listWalletCoin, walletSelected: walletDefault}, ()=>{
       this.checkValid();
+      this.hideLoading();
     });
   }
 
@@ -161,12 +159,12 @@ class Checkout extends React.Component {
         result = false;
       }
     }
-    console.log('checkValid', result, amountCrypto, wallet.balance);
     this.setState({isDisableCheckout: result})
   }
+
   sendCoin = () => {
     const { messages } = this.props.intl;
-    const { fiatCurrency, amountCrypto, cryptoCurrency, toAddress} = this.props;
+    const { amountCrypto, toAddress} = this.props;
 
     const {walletSelected:wallet} = this.state;
     if(wallet && toAddress && amountCrypto) {

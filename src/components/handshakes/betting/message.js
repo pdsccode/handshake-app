@@ -78,7 +78,7 @@ export const MESSAGE = {
 export const BETTING_STATUS_LABEL =
     {
       //LABEL
-      INITING: 'Placing a bet..',
+      INITING: 'Placing a bet...',
       ROLLBACK: 'There is something wrong with blockchain. The bet is cancelled',
       COLLECT_FAILED: 'There is something wrong with withdraw.',
       SHOULD_CANCEL: 'Your bet was not matched. Please cancel to get a refund.',
@@ -98,7 +98,8 @@ export const BETTING_STATUS_LABEL =
       DONE: ` The bet is done.`,
       CANCELLING: 'Your bet is being cancelled.',
       CANCEL_PROGRESSING: 'The blockchain is processing your cancelling. Please wait.',
-      BET_WAIT_MATCHING: 'Bet placed. Matching..',
+      BET_WAIT_MATCHING: 'Bet placed. Matching...',
+      BET_CANCEL_OVER: 'The event ended. We couldn’t find a match.',
       BET_MACHED_WAIT_RESULT: 'Bet matched. Waiting for result...',
       CANCELLED: 'Your bet was cancelled.',
       REFUNDING: 'Your coin is being refunded to you.',

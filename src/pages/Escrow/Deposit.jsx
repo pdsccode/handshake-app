@@ -1,7 +1,10 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import { API_URL, CRYPTO_CURRENCY, EXCHANGE_ACTION, FIAT_CURRENCY, MIN_AMOUNT, NB_BLOCKS, URL } from '@/constants';
+import {
+  API_URL, CRYPTO_CURRENCY, EXCHANGE_ACTION, FIAT_CURRENCY, HANDSHAKE_ID, MIN_AMOUNT, NB_BLOCKS,
+  URL
+} from '@/constants';
 import createForm from '@/components/core/form/createForm';
 import { change, Field, formValueSelector } from 'redux-form';
 import './CommonStyle.scss';
@@ -25,6 +28,7 @@ import CreditATM from '@/services/neuron/neuron-creditatm';
 import Helper from '@/services/helper';
 import _ from 'lodash';
 import { BigNumber } from 'bignumber.js';
+import axios from "axios";
 
 const nameFormEscrowDeposit = 'escrowDeposit';
 const FormEscrowDeposit = createForm({
@@ -49,6 +53,11 @@ let listCurrency = Object.values(CRYPTO_CURRENCY_CREDIT_CARD).map((item) => {
   return { name: item, icon: CRYPTO_ICONS[item], allowPercentage: true };
 });
 
+const PERCENT = {
+  MIN: 0,
+  MAX: 200,
+};
+
 class EscrowDeposit extends React.Component {
   constructor(props) {
     super(props);
@@ -70,7 +79,7 @@ class EscrowDeposit extends React.Component {
       if (currency) {
         const depositInfo = nextProps.depositInfo[currency];
         if (!depositInfo || depositInfo.subStatus !== 'transferring') {
-          listCurrency = [{ name: currency, icon: CRYPTO_ICONS[currency], allowPercentage: !depositInfo }];
+          listCurrency = [{ name: currency, icon: CRYPTO_ICONS[currency], allowPercentage: !depositInfo || depositInfo.status === 'inactive' }];
           if (depositInfo) {
             nextProps.rfChange(nameFormEscrowDeposit, `percentage_${currency}`, depositInfo.percentage);
           }
@@ -82,7 +91,7 @@ class EscrowDeposit extends React.Component {
         for (const item of Object.values(CRYPTO_CURRENCY_CREDIT_CARD)) {
           const depositInfo = nextProps.depositInfo[item];
           if (!depositInfo || depositInfo.subStatus !== 'transferring') {
-            listCurrency.push({ name: item, icon: CRYPTO_ICONS[item], allowPercentage: !depositInfo });
+            listCurrency.push({ name: item, icon: CRYPTO_ICONS[item], allowPercentage: !depositInfo || depositInfo.status === 'inactive' });
             if (depositInfo) {
               nextProps.rfChange(nameFormEscrowDeposit, `percentage_${item}`, depositInfo.percentage);
             }
@@ -343,6 +352,20 @@ class EscrowDeposit extends React.Component {
     });
   }
 
+  async getNonce() {
+    try {
+      const url = `${process.env.PUBLIC_URL}/public-api/exchange/nonce`;
+      const response = await axios.get(url);
+
+      if (response.status === 200) {
+        return response.data.data;
+      }
+    } catch (e) {
+    }
+
+    return undefined;
+  }
+
   handleDepositCoinSuccess = async (data) => {
     this.hideLoading();
 
@@ -374,6 +397,8 @@ class EscrowDeposit extends React.Component {
     if (currency === CRYPTO_CURRENCY.ETH) {
       try {
         const creditATM = new CreditATM(wallet.chainId);
+
+        // const nonce = await this.getNonce();
 
         const result = await creditATM.deposit(amount, percentage, id);
         console.log('handleDepositCoinSuccess', result);
@@ -416,7 +441,7 @@ class EscrowDeposit extends React.Component {
     if (callbackSuccess) {
       callbackSuccess();
     } else {
-      this.props.history.push(URL.HANDSHAKE_ME);
+      this.props.history.push(`${URL.HANDSHAKE_ME}?id=${HANDSHAKE_ID.CREDIT}`);
     }
   };
 
@@ -516,7 +541,7 @@ class EscrowDeposit extends React.Component {
                           elementAppend={
                             <span className="percentage-symbol escrow-label font-weight-normal">%</span>
                           }
-                          validate={[number, minValueEqual(0), maxValueEqual(200)]}
+                          validate={[number, minValueEqual(PERCENT.MIN), maxValueEqual(PERCENT.MAX)]}
                           disabled={!allowPercentage}
                         />
                       </div>

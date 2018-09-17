@@ -29,7 +29,7 @@ class Map extends React.Component {
   }
 
   goToDashboard = () => {
-    this.props.history.push(URL.HANDSHAKE_ME);
+    this.props.history.push(`${URL.HANDSHAKE_ME}?id=${HANDSHAKE_ID.EXCHANGE}&tab=transaction`);
   }
 
   goToManageAtm = () => {

@@ -1,6 +1,6 @@
 import { takeLatest, call, select, put } from 'redux-saga/effects';
 import { apiGet } from '@/stores/api-saga';
-import { REMOVE_DATA, SET_DATA } from '@/stores/data-action';
+import { REMOVE_DATA } from '@/stores/data-action';
 import { API_URL } from '@/constants';
 import { loadMatches, getReportCount, removeExpiredEvent, checkFreeBet, updateFreeBet, checkExistSubcribeEmail, updateCountReport, updateExistEmail } from './action';
 import { eventSelector } from './selector';
@@ -30,6 +30,7 @@ export function* handleRemoveEvent({ eventId }) {
     const events = yield select(eventSelector);
     if (events && events.length) {
       const index = events.findIndex((item) => item.id === eventId);
+      console.log('blahblah', index);
       if (index >= 0) {
         yield put(REMOVE_DATA({
           _path: 'prediction.events',
@@ -74,7 +75,6 @@ export function* handleCheckExistEmail() {
       PATH_URL: API_URL.USER.CHECK_EXIST_EMAIL,
       type: 'CHECK_EXIST_EMAIL',
     });
-    console.log('Response Data:', response.data);
     if (response.data) {
       const { email_existed: emailExist } = response.data;
 
@@ -92,8 +92,6 @@ export default function* predictionSaga() {
   yield takeLatest(loadMatches().type, handleLoadMatches);
   yield takeLatest(getReportCount().type, handleCountReport);
   yield takeLatest(removeExpiredEvent().type, handleRemoveEvent);
-  yield takeLatest(removeExpiredEvent().type, handleRemoveEvent);
   yield takeLatest(checkFreeBet().type, handleFreeBet);
   yield takeLatest(checkExistSubcribeEmail().type, handleCheckExistEmail);
-
 }

@@ -26,6 +26,8 @@ import { URL } from '@/constants';
 import { eventSelector, isLoading, showedLuckyPoolSelector, isSharePage, countReportSelector, checkFreeBetSelector, checkExistSubcribeEmailSelector } from './selector';
 import { loadMatches, getReportCount, removeExpiredEvent, checkFreeBet, checkExistSubcribeEmail } from './action';
 import { getBalance } from '@/components/handshakes/betting/utils.js';
+import { removeShareEvent } from '../CreateMarket/action';
+import { shareEventSelector } from '../CreateMarket/selector';
 
 import EventItem from './EventItem';
 import PexCreateBtn from './PexCreateBtn';
@@ -35,18 +37,24 @@ import './Prediction.scss';
 class Prediction extends React.Component {
   static displayName = 'Prediction';
   static propTypes = {
+    dispatch: PropTypes.func.isRequired,
+    history: PropTypes.object.isRequired,
     eventList: PropTypes.array,
+    shareEvent: PropTypes.object,
     showedLuckyPool: PropTypes.bool,
     isSharePage: PropTypes.bool,
-    dispatch: PropTypes.func.isRequired,
     countReport: PropTypes.number,
     freeBet: PropTypes.object,
-    emailExist: PropTypes.number
+    isExistEmail: PropTypes.oneOfType([
+      PropTypes.bool,
+      PropTypes.number,
+    ]),
   };
 
   static defaultProps = {
     eventList: [],
-    emailExist: 0,
+    shareEvent: null,
+    isExistEmail: 0,
   };
 
   constructor(props) {
@@ -95,11 +103,11 @@ class Prediction extends React.Component {
 
   checkFreeAvailabe(props) {
     const { freeBet = {} } = props;
-    const { free_bet_available: freeAvailable = 0, last_item: lastItem = {} } = freeBet;
-    const { status } = lastItem;
+    const { free_bet_available: freeAvailable = 0, can_freebet: canFreeBet = false } = freeBet;
+    //const { status } = lastItem;
     let isFreeAvailable = false;
 
-    if ((status !== FREE_BET_STATUS.WAITING || !status) && freeAvailable > 0) {
+    if (canFreeBet && freeAvailable > 0) {
       isFreeAvailable = true;
     }
     return isFreeAvailable;
@@ -137,63 +145,73 @@ class Prediction extends React.Component {
     const isFreeAvailable = this.checkFreeAvailabe(props);
     const { freeBet } = props;
     const { free_bet_available: freeAvailable = 0 } = freeBet;
+    console.log(freeBet);
 
     const key = `showedFreebet${freeAvailable}`;
     const isShowed = localStorage.getItem(key);
 
     if (isFreeAvailable && !isShowed) {
       const { isOrderOpening, shouldShowFreePopup } = this.state;
-      const { last_item: lastItem = {} } = freeBet;
-      const { is_win: isWin, status } = lastItem;
-      if (status === FREE_BET_STATUS.REPORTED && !isOrderOpening && shouldShowFreePopup) {
-        if (!isWin && this.modalFreeBetLoseRef) {
-          this.modalFreeBetLoseRef.open();
-        } else if (isWin && this.modalFreeBetWinRef) {
-          this.modalFreeBetWinRef.open();
-        }
-        localStorage.setItem(key, true);
+      const { is_win: isWin } = freeBet;
+      if (!isOrderOpening && shouldShowFreePopup) {
+        if (isWin !== null) {
+          if (!isWin && this.modalFreeBetLoseRef) {
+            this.modalFreeBetLoseRef.open();
+          } else if (isWin && this.modalFreeBetWinRef) {
+            this.modalFreeBetWinRef.open();
+          }
+          localStorage.setItem(key, true);
 
-        this.setState({
-          shouldShowFreePopup: false,
-        });
+          this.setState({
+            shouldShowFreePopup: false,
+          });
+        }
       }
     }
   }
 
-  handleClickEventItem = (props, itemData) => {
-    const { event } = props;
-    const selectedOutcome = {
-      hid: itemData.hid,
-      id: itemData.id,
-      marketOdds: itemData.market_odds,
-      value: itemData.name,
-    };
-    const selectedMatch = {
-      date: event.date,
-      id: event.id,
-      marketFee: event.market_fee,
-      reportTime: event.reportTime,
-      value: event.name,
-    };
-    this.props.dispatch(checkFreeBet());
-    this.openOrderPlace(selectedOutcome);
-    this.modalOrderPlace.open();
-    this.setState({
-      selectedOutcome,
-      selectedMatch,
-      isOrderOpening: true,
-    });
+  handleClickEventItem = (itemProps, itemData) => {
+    const { event } = itemProps;
+    const { shareEvent } = this.props;
+    if (itemData.id === URL.HANDSHAKE_PEX_CREATOR) {
+      this.props.history.push(`${URL.HANDSHAKE_PEX_CREATOR}/${event.id}`);
+      if (shareEvent) {
+        this.props.dispatch(removeShareEvent(['shareEvent']));
+      }
+    } else {
+      const selectedOutcome = {
+        hid: itemData.hid,
+        id: itemData.id,
+        marketOdds: itemData.market_odds,
+        value: itemData.name,
+      };
+      const selectedMatch = {
+        date: event.date,
+        id: event.id,
+        marketFee: event.market_fee,
+        reportTime: event.reportTime,
+        value: event.name,
+      };
+      this.props.dispatch(checkFreeBet());
+      this.openOrderPlace(selectedOutcome);
+      this.modalOrderPlace.open();
+      this.setState({
+        selectedOutcome,
+        selectedMatch,
+        isOrderOpening: true,
+      });
 
-    if (selectedOutcome) {
-      const outcomeId = { outcome_id: selectedOutcome.id };
-      this.props.dispatch(predictionStatistics({ outcomeId }));
-    }
+      if (selectedOutcome) {
+        const outcomeId = { outcome_id: selectedOutcome.id };
+        this.props.dispatch(predictionStatistics({ outcomeId }));
+      }
 
-    // send event tracking
-    try {
-      GA.clickChooseAnOutcome(event.name, itemData.name);
-    } catch (err) {
-      console.error(err);
+      // send event tracking
+      try {
+        GA.clickChooseAnOutcome(event.name, itemData.name);
+      } catch (err) {
+        console.error(err);
+      }
     }
   };
 
@@ -400,6 +418,7 @@ export default injectIntl(connect(
       showedLuckyPool: showedLuckyPoolSelector(state),
       freeBet: checkFreeBetSelector(state),
       isExistEmail: checkExistSubcribeEmailSelector(state),
+      shareEvent: shareEventSelector(state),
     };
   },
 )(Prediction));

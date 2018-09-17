@@ -215,13 +215,13 @@ class Me extends React.Component {
       }
     }
 
-    // if (nextProps.me.list.length === 0 && nextProps.me.list.updatedAt !== prevState.me.list.updatedAt
-    //   && prevState.handshakeIdActive !== HANDSHAKE_ID.EXCHANGE && prevState.firstTime) {
-    //   rfChange(nameFormFilterFeeds, 'feedType', HANDSHAKE_ID.EXCHANGE);
-    //   rfChange(nameFormFilterFeeds, 'cash-show-type', CASH_TAB.TRANSACTION);
-    //   Me.loadMyHandshakeListStatic(nextProps, HANDSHAKE_ID.EXCHANGE);
-    //   return { handshakeIdActive: HANDSHAKE_ID.EXCHANGE, firstTime: false };
-    // }
+    if (nextProps.me.list.length === 0 && nextProps.me.list.updatedAt !== prevState.me.list.updatedAt
+      && prevState.handshakeIdActive !== HANDSHAKE_ID.CREDIT && prevState.firstTime) {
+      rfChange(nameFormFilterFeeds, 'feedType', HANDSHAKE_ID.CREDIT);
+      rfChange(nameFormFilterFeeds, 'cash-show-type', CASH_TAB.DASHBOARD);
+      Me.loadMyHandshakeListStatic(nextProps, HANDSHAKE_ID.CREDIT);
+      return { handshakeIdActive: HANDSHAKE_ID.CREDIT, firstTime: false };
+    }
 
     return null;
   }
@@ -485,24 +485,24 @@ class Me extends React.Component {
               </Link>
             </Col>
           </Row>
-          <Row onClick={!haveOffer ? this.handleCreateExchange : undefined}>
-            <Col md={12}>
-              <div className="update-profile pt-2">
-                <Image className="avatar" src={ShopSVG} alt="shop" />
-                <div className="text" style={{ width: '69%' }}>
-                  <strong>{messages.me.feed.shopTitle}</strong>
-                  {haveOffer ?
-                    (<p>{messages.me.feed.shopDescription}</p>) :
-                    (<p>{messages.me.feed.shopNoDataDescription}</p>)
-                  }
-                </div>
-                {haveOffer && (<div className="arrow">
-                  <ToggleSwitch defaultChecked={online} onChange={flag => this.setOfflineStatus(flag)} />
-                </div>)
-                }
-              </div>
-            </Col>
-          </Row>
+          {/*<Row onClick={!haveOffer ? this.handleCreateExchange : undefined}>*/}
+            {/*<Col md={12}>*/}
+              {/*<div className="update-profile pt-2">*/}
+                {/*<Image className="avatar" src={ShopSVG} alt="shop" />*/}
+                {/*<div className="text" style={{ width: '69%' }}>*/}
+                  {/*<strong>{messages.me.feed.shopTitle}</strong>*/}
+                  {/*{haveOffer ?*/}
+                    {/*(<p>{messages.me.feed.shopDescription}</p>) :*/}
+                    {/*(<p>{messages.me.feed.shopNoDataDescription}</p>)*/}
+                  {/*}*/}
+                {/*</div>*/}
+                {/*{haveOffer && (<div className="arrow">*/}
+                  {/*<ToggleSwitch defaultChecked={online} onChange={flag => this.setOfflineStatus(flag)} />*/}
+                {/*</div>)*/}
+                {/*}*/}
+              {/*</div>*/}
+            {/*</Col>*/}
+          {/*</Row>*/}
 
           <div className="mt-2 mb-1">
             <FormFilterFeeds>

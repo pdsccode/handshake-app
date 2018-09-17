@@ -33,6 +33,7 @@ const keyLastSelectedExchangeId = 'lastSelectedExchangeId';
 const mapComponent = {
   [URL.HANDSHAKE_PREDICTION]: { url: URL.HANDSHAKE_PREDICTION, component: Prediction },
   [URL.HANDSHAKE_CASH]: { url: URL.HANDSHAKE_CASH, component: Discover },
+  [URL.HANDSHAKE_ATM]: { url: URL.HANDSHAKE_ATM, component: Discover },
 };
 
 const defaultUrl = URL.HANDSHAKE_PREDICTION;
@@ -80,14 +81,14 @@ class Exchange extends React.Component {
 
     return (
       <div className="Exchange">
-        {
-          !hideNavigationBar && (
-            <NavigationBar
-              selectedMenuId={selectedMenuId}
-              onClickMenuItem={this.handleClickMenuItem}
-            />
-          )
-        }
+        {/*{*/}
+          {/*!hideNavigationBar && (*/}
+            {/*<NavigationBar*/}
+              {/*selectedMenuId={selectedMenuId}*/}
+              {/*onClickMenuItem={this.handleClickMenuItem}*/}
+            {/*/>*/}
+          {/*)*/}
+        {/*}*/}
         {this.getPageComponent()}
       </div>
     );
