@@ -1,22 +1,25 @@
+html, body, #app,
+.root, .app {
+  height: 100%;
+}
+
 .app {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  overflow: hidden;
   max-width: $app-width;
   margin: 0 auto;
   background-color: $white;
-  //background-color: #F6F7FE;
-  min-height: 100vh;
-  position: relative;
-  padding-top: $header-height + 10px;
-  padding-bottom: $footer-height;
-  overflow: hidden;
   &.hide-header {
     padding-top: 0;
   }
-  //* {
-  //  user-select: none !important;
-  //  *:focus {
-  //    user-select: none !important;
-  //  }
-  //}
+  .content {
+    flex: 1;
+    overflow: auto;
+  }
 }
 
 .header {
@@ -68,10 +71,6 @@
 
 .footer {
   height: $footer-height;
-  position: fixed;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
   width: 100%;
   max-width: $app-width;
   background: #FFFFFF;
