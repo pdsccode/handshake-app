@@ -7,22 +7,22 @@ import GA from '@/services/googleAnalytics';
 class PexCreateBtn extends Component {
   static displayName = 'PexCreateBtn';
 
-  componentDidMount() {
-    window.addEventListener('scroll', this.onScroll);
-  }
+  // componentDidMount() {
+  //   window.addEventListener('scroll', this.onScroll);
+  // }
 
-  componentWillUnmount() {
-    window.removeEventListener('scroll', this.onScroll);
-  }
+  // componentWillUnmount() {
+  //   window.removeEventListener('scroll', this.onScroll);
+  // }
 
-  onScroll = () => {
-    const createBtn = document.getElementById('PexCreateBtn');
-    if (window.pageYOffset > createBtn.offsetTop) {
-      createBtn.classList.add('Sticky');
-    } else {
-      createBtn.classList.remove('Sticky');
-    }
-  };
+  // onScroll = () => {
+  //   const createBtn = document.getElementById('PexCreateBtn');
+  //   if (window.pageYOffset > createBtn.offsetTop) {
+  //     createBtn.classList.add('Sticky');
+  //   } else {
+  //     createBtn.classList.remove('Sticky');
+  //   }
+  // };
 
   render() {
     return (
@@ -33,9 +33,9 @@ class PexCreateBtn extends Component {
         </div>
         <Link to={{ pathname: URL.HANDSHAKE_PEX_CREATOR }}
           onClick={()=> {
-            GA.clickCreateOwnEvent();
-          }}
-        >
+          GA.clickCreateOwnEvent();
+        }}
+          >
           <button className="btn btn-report">Create now</button>
         </Link>
       </div>
