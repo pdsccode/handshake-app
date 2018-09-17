@@ -133,7 +133,7 @@ class EmailVerification extends Component {
     }
     return (
       <React.Fragment>
-        <span>Ninja needs to send you notifications.</span>
+        <span>Get creator updates on your bet.</span>
         {this.renderEmailBox(props, state)}
         {this.renderCodeBox(props, state)}
       </React.Fragment>
