@@ -49,7 +49,8 @@ class Checkout extends React.Component {
       isDisableCheckout: false,
       isRestoreLoading: false,
       event: false,
-      isExpired: false
+      isExpired: false,
+      isWarning: false
     }
   }
 
@@ -80,7 +81,6 @@ class Checkout extends React.Component {
   componentDidMount() {
     this.showLoading();
     this.getWalletDefault();
-
   }
 
   copyToClipboard =(text) => {
@@ -102,8 +102,15 @@ class Checkout extends React.Component {
       };
 
       onFinish(result);
-    } else {
+    }
+  }
 
+  onRefesh = () => {
+    const { onRefesh } = this.props;
+    if (onRefesh && typeof onRefesh === 'function') {
+      this.showLoading();
+      this.setState({isExpired: false});
+      onRefesh();
     }
   }
 
@@ -147,12 +154,14 @@ class Checkout extends React.Component {
       MasterWallet.UpdateBalanceItem(walletDefault);
     }
 
-    let date = new Date();
-    date.setSeconds(date.getSeconds() + 30);
-    //date.setMinutes(date.getMinutes() + 15);
+    let endDate = new Date(), warningDate = new Date();
+    // endDate.setSeconds(endDate.getSeconds() + 15);
+    // warningDate.setSeconds(warningDate.getSeconds() + 5);
 
-    let event = date.getTime();
-    this.setState({wallets: listWalletCoin, walletSelected: walletDefault, event:event, isExpired: false}, ()=>{
+    endDate.setMinutes(endDate.getMinutes() + 5);
+    warningDate.setMinutes(warningDate.getMinutes() + 1);
+
+    this.setState({wallets: listWalletCoin, walletSelected: walletDefault, event:{end: endDate.getTime(), warning: warningDate.getTime()}, isExpired: false, isWarning: false}, ()=>{
       this.checkValid();
       this.hideLoading();
     });
@@ -259,17 +268,22 @@ class Checkout extends React.Component {
     });
   }
 
-  renderEvenTimeLeft=({ event}) => {
+  renderEvenTimeLeft=(event) => {
     const {rate, fiatCurrency, cryptoCurrency} = this.props;
+    const {isExpired, isWarning} = this.state;
 
-    return !this.state.isExpired && event && (
-      <div className="ratelock">
+    return !isExpired && event && (
+      <div className={isWarning ? "ratelock warning": "ratelock"}>
         <div className="timer bg-secondary">
-          <Countdown endTime={event} onComplete={() => this.setState({isExpired: true})} format="{mm:ss}" />
+          <Countdown endTime={event.end} timeLeftToWarning={event.warning}
+            onComplete={() => this.setState({isExpired: true})}
+            onWarning={() => this.setState({isWarning: true})}
+            format="{mm:ss}"
+          />
         </div>
         <div className="msg">
-          <span className="title">Awaiting Payment...</span>
-          <span className="rate">{rate && fiatCurrency && cryptoCurrency ? `Rate locked 1 ${cryptoCurrency} = ${rate} ${fiatCurrency}` : ""}</span>
+          <span className="title">{isWarning ? "Checkout expiring soon" : "Awaiting Payment..."}</span>
+          <span className="rate">{rate && fiatCurrency && cryptoCurrency ? `Rate locked 1 ${cryptoCurrency} = ${rate} ${fiatCurrency}` : "Crypto amount is requested from shop."}</span>
         </div>
       </div>
     );
@@ -296,7 +310,7 @@ class Checkout extends React.Component {
         <div className="icon"><img src={iconClock} /></div>
         <div className="title">Your payment window has expired.</div>
         <div className="msg">Hit the Refresh button below to lock in a new exchange rate and start again.</div>
-        <Button className="button-wallet-cpn btn" block={true} onClick={()=> window.location.reload() }>Refesh</Button>
+        <Button className="button-wallet-cpn btn" block={true} onClick={()=> this.onRefesh() }>Refesh</Button>
       </div>
     )
   }
@@ -306,8 +320,8 @@ class Checkout extends React.Component {
     return !this.state.isExpired && (
       <nav className="nav nav-pills nav-fill">
         <a className="nav-item nav-link active" href="#">Wallet</a>
-        <a className="nav-item nav-link" href="#">Scan</a>
-        <a className="nav-item nav-link" href="#">Copy</a>
+        {/* <a className="nav-item nav-link" href="#">Scan</a>
+        <a className="nav-item nav-link" href="#">Copy</a> */}
       </nav>
     )
   }
@@ -346,7 +360,7 @@ class Checkout extends React.Component {
   render() {
     const { messages } = this.props.intl;
     return (<div className="checkout-container">
-        {this.renderEvenTimeLeft({event:this.state.event})}
+        {this.renderEvenTimeLeft(this.state.event)}
         {this.showExpiredPayment}
         {this.showPayment}
         {this.showTabs}
@@ -370,6 +384,8 @@ const mapDispatch = (dispatch) => ({
 
 Checkout.propTypes = {
   onCountdownComplete: PropTypes.func,
+  onRefesh: PropTypes.func,
+  onFinish: PropTypes.func
 };
 
 Checkout.defaultProps = {

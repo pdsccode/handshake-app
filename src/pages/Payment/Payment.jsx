@@ -181,6 +181,7 @@ class Payment extends React.Component {
         cryptoCurrency={cryptoCurrency}
         rate={rate ? Math.round(rate) : 0}
         onFinish={result => { this.successPayNinja(result); }}
+        onRefesh={() => {this.refeshCheckout(fiatCurrency, cryptoCurrency); }}
       />,
       modalChooseCrypto: ''
       }, () => {
@@ -244,13 +245,13 @@ class Payment extends React.Component {
     return result;
   }
 
-  getRate(fiatCurrency, cryptoCurrency){
+  getRate(fiatCurrency, cryptoCurrency){console.log('getRate', fiatCurrency, cryptoCurrency);
     return new Promise((resolve, reject) => {
 
       this.props.getFiatCurrency({
         PATH_URL: API_URL.EXCHANGE.GET_FIAT_CURRENCY,
         qs: {fiat_currency: fiatCurrency, currency: cryptoCurrency},
-        successFn: (res) => {
+        successFn: (res) => {console.log('getRate', res);
           let data = res.data;
           let result = fiatCurrency == 'USD' ? data.price : data.fiat_amount;
           resolve(result);
@@ -317,6 +318,7 @@ class Payment extends React.Component {
       }
     }
     else{
+      this.setState({modalCheckout: ''});
       this.checkPayNinja();
     }
   }
@@ -333,6 +335,11 @@ class Payment extends React.Component {
         this.modalCompleteRef.open();
       }
     );
+  }
+
+  refeshCheckout = (fiatCurrency, cryptoCurrency) => {
+    this.setState({modalCheckout: ''});
+    this.chosenWallet(cryptoCurrency, fiatCurrency);
   }
 
   // To address those who want the "root domain," use this function:
