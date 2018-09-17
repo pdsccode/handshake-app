@@ -10,7 +10,6 @@ import CreateEventContainer from './CreateEventContainer';
 class CreateMarket extends React.Component {
   static displayName = 'CreateMarket';
   static propTypes = {
-    dispatch: PropTypes.func.isRequired,
     hasEmail: PropTypes.bool,
     match: PropTypes.object,
   };
