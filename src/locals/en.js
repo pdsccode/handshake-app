@@ -140,6 +140,7 @@ export default {
   'ex.label.sale': 'Sale',
   'ex.label.purchase': 'Purchase',
   'ex.label.cost': 'Cost',
+  'ex.label.amount': 'Amount',
 
   'ex.exchange.status.created': 'Verifying',
   'ex.exchange.status.active': 'Active',
@@ -304,7 +305,7 @@ export default {
   'cc.label.1': 'Buy crypto with credit card',
   'cc.label.2': 'Ninja has some of the best prices around',
   'cc.label.3': 'Common packages:',
-  'cc.btn.buyNow': 'Select',
+  'cc.btn.buyNow': 'Buy now',
   'cc.btn.payNow': 'Pay now',
   'cc.label.basic': 'Basic',
   'cc.label.pro': 'Pro',
@@ -316,7 +317,7 @@ export default {
   'cc.label.saving': 'You save {percentage}%',
   'cc.label.email': 'Email',
   'cc.label.email.hint': 'Just for receiving receipt',
-  'cc.label.receive.address': 'RECEIVE ADDRESS',
+  'cc.label.receive.address': 'RECEIVING ADDRESS',
 
   'escrow.label.depositCoin': 'Sell crypto safely online',
   'escrow.label.iWantTo': 'Deposit the amount of crypto you want to sell. Enter your desired commission as a percentage of the selling price',
