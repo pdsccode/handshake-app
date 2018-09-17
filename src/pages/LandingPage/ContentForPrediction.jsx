@@ -14,6 +14,8 @@ import imgMobileGuide2 from '@/assets/images/landing/prediction/pex_mobile_guide
 import imgMarket from '@/assets/images/landing/prediction/pex_market.png';
 import imgAnonymous from '@/assets/images/landing/prediction/pex_anonymous.png';
 import imgBottomMenu from '@/assets/images/landing/prediction/pex_bottom_menu.png';
+import imgTransparent from '@/assets/images/landing/prediction/pex_transparent.png';
+import imgFeature from '@/assets/images/landing/prediction/pex_feature.png';
 
 
 import icPlayTime from '@/assets/images/landing/prediction/pex_play_time.svg';
@@ -100,7 +102,7 @@ class ContentForPrediction extends React.Component {
 
   renderAnonymous() {
     return (
-      <div>
+      <div className="wrapperAnonymous">
         <div className="">Anonymous</div>
         <div>The entire system works without any party revealing their identities. It’s 100% anonymous.</div>
         <img src={imgAnonymous} alt="imgAnonymous" />
@@ -111,15 +113,21 @@ class ContentForPrediction extends React.Component {
   }
   renderTransparency() {
     return (
-      <div>
-        <div>
+      <div className="row">
+        <div className="col-sm-6">
           <div>Transparency</div>
-          <div></div>
+          <div>Our decentralized, blockchain based approach allows players to benefit from full transparency and total control over their betting experience. We remove the middleman and hand control back to the user.</div>
         </div>
-        <img src={imgBottomMenu} alt="imgBottomMenu" />
-
-
+        <div className="col-md-4">
+          <img src={imgTransparent} alt="imgTransparent" />
+        </div>
       </div>
+    );
+  }
+  renderFeature() {
+    return (
+      <img src={imgFeature} alt="imgFeature" />
+
     );
   }
 
@@ -134,6 +142,8 @@ class ContentForPrediction extends React.Component {
           {this.renderMobileGuide()}
           {this.renderMarket()}
           {this.renderAnonymous()}
+          {this.renderTransparency()}
+          {this.renderFeature()}
           {this.renderRoadMap()}
           <div className='mt-5'>
             For instructions on how to play:{' '}
