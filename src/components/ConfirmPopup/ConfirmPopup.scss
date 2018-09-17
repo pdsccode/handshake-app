@@ -32,11 +32,12 @@
     background: transparent;
     border: 1px solid #7a7a7a !important;
     color: #333;
+    margin-left: rem-calc(10px);
+
     //font-weight: $medium;
   }
   .okButton {
     background: #2456FB;
-    margin-left: rem-calc(10px);
     //font-weight: $medium;
   }
 }

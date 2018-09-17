@@ -187,7 +187,9 @@ class FeedBetting extends React.Component {
         this.refundFree(offchain);
         break;
       case BETTING_STATUS_LABEL.DISPUTE:
-        this.disputeOnChain(offchain, hid);
+        //this.disputeOnChain(offchain, hid);
+        this.handleClickDispute(offchain, hid);
+
         break;
       default:
         break;
@@ -488,13 +490,20 @@ class FeedBetting extends React.Component {
     } = this.props;
 
     const title = `Don't agree with the result?`;
-    const content = `We'll review the result if 50% loser disagree.`;
+    const content = `We’ll review the result if 50% or more losers also disagree.`;
     onShowModalDialog({
       show: true,
       modalContent: (<ConfirmPopup
         title={title}
         content={content}
-        cancelButtonClick={() => onShowModalDialog({ show: false })}
+        cancelButtonTitle="Cancel"
+        okButtonTitle="Dispute"
+        cancelButtonClick={() => {
+          onShowModalDialog({ show: false });
+          this.setState({
+            isLoading: false,
+          });
+        }}
         okButtonClick= {() => {
           this.disputeOnChain(offchain, hid);
           onShowModalDialog({ show: false });

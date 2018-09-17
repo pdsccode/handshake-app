@@ -8,27 +8,29 @@ class ConfirmPopup extends Component {
     okButtonClick: PropTypes.func,
     title: PropTypes.string.isRequired,
     content: PropTypes.string.isRequired,
+    cancelButtonTitle: PropTypes.string.isRequired,
+    okButtonTitle: PropTypes.string.isRequired,
   }
   static defaultProps = {
   }
   render() {
-    const { title, content } = this.props;
+    const { title, content, cancelButtonTitle, okButtonTitle } = this.props;
     return (
       <div className="wrapperConfirm">
         <div className="title">{title}</div>
         <div className="content">{content}</div>
         <div className="wrapperButton">
           <button
-            className="btn cancelButton"
-            onClick={() => this.props.cancelButtonClick()}
-          >
-              Cancel
-          </button>
-          <button
             className="btn okButton"
             onClick={() => this.props.okButtonClick()}
           >
-              OK
+            {okButtonTitle}
+          </button>
+          <button
+            className="btn cancelButton"
+            onClick={() => this.props.cancelButtonClick()}
+          >
+            {cancelButtonTitle}
           </button>
         </div>
       </div>
