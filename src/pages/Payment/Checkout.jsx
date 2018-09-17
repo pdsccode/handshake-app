@@ -278,7 +278,7 @@ class Checkout extends React.Component {
           <Countdown endTime={event.end} timeLeftToWarning={event.warning}
             onComplete={() => this.setState({isExpired: true})}
             onWarning={() => this.setState({isWarning: true})}
-            format="{mm:ss}"
+            hideHours
           />
         </div>
         <div className="msg">
@@ -320,7 +320,7 @@ class Checkout extends React.Component {
     return !this.state.isExpired && (
       <nav className="nav nav-pills nav-fill">
         <a className="nav-item nav-link active" href="#">Wallet</a>
-        {/* <a className="nav-item nav-link" href="#">Scan</a>
+        {/* <a className="nav-item nav-link" href="#">Scan to pay another device</a>
         <a className="nav-item nav-link" href="#">Copy</a> */}
       </nav>
     )

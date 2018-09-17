@@ -13,14 +13,16 @@ export default class Countdown extends Component {
     format: PropTypes.string,
     onComplete: PropTypes.func,
     timeLeftToWarning: PropTypes.number,
-    onWarning: PropTypes.func
+    onWarning: PropTypes.func,
+    hideHours: PropTypes.bool
   };
 
   static defaultProps = {
     classNames: null,
     separator: ':',
     onComplete: undefined,
-    format: null
+    format: null,
+    hideHours: false
   };
 
   constructor(props) {
@@ -40,10 +42,8 @@ export default class Countdown extends Component {
     this.mounted = true;
 
     if(timeLeftToWarning){
-      let warning = (timeLeftToWarning.toString().length === 10) ? timeLeftToWarning * 1000 : timeLeftToWarning;
-      warning = parseInt((Math.max(0, warning - Date.now()) / 1000).toFixed(0), 10);
-
-      this.setState({warning: warning});
+      let warning = this.convertToSeconds(timeLeftToWarning);
+      this.setState({ warning });
     }
 
     this.interval = setInterval(() => {
@@ -60,6 +60,20 @@ export default class Countdown extends Component {
     this.stop();
   }
 
+  convertToSeconds = (date) => {
+    let result = 0;
+
+    if (date.toString().length === 10){
+      result = date * 1000;
+    }
+    else{
+      result = date;
+    }
+
+    result = parseInt((Math.max(0, result - Date.now()) / 1000).toFixed(0), 10);
+    return result;
+  }
+
   stop = () => {
     this.mounted = false;
     clearInterval(this.interval);
@@ -73,8 +87,7 @@ export default class Countdown extends Component {
   }
 
   calculateCountdown = ({ endTime, onComplete, timeLeftToWarning, onWarning }) => {
-    const end = (endTime.toString().length === 10) ? endTime * 1000 : endTime;
-    const seconds = parseInt((Math.max(0, end - Date.now()) / 1000).toFixed(0), 10);
+    const seconds = this.convertToSeconds(endTime);
 
     const { warning } = this.state;
 
@@ -126,12 +139,13 @@ export default class Countdown extends Component {
     if (state.days > 0) return null;
     return (
       <div className="CountdownTime">
-        {
-          !props.format || (props.format && props.format.indexOf("HH") >= 0) &&
-          this.renderHours(state.hours) + state.minutes && this.renderSeparator(props.separator)
-        }
+        {/* {
+          !props.format || (props.format && props.format.indexOf("HH") >= 0) && this.renderHours(state.hours)
+        } */}
+        {!props.hideHours && state.hours && this.renderHours(state.hours)}
+        {!props.hideHours && state.hours && state.minutes && this.renderSeparator(props.separator)}
         {this.renderMinutes(state.minutes)}
-        {state.seconds && this.renderSeparator(props.separator)}
+        {state.minutes && state.seconds && this.renderSeparator(props.separator)}
         {this.renderSeconds(state.seconds)}
       </div>
     );
