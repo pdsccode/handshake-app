@@ -7,6 +7,8 @@ import LuckyLogoSVG from '@/assets/images/luckypool/lucky-landing-logo.svg';
 import CloseIcon from '@/assets/images/icon/close.svg';
 import { Link } from 'react-router-dom';
 import { URL } from '@/constants';
+import GA from '@/services/googleAnalytics';
+
 
 import './LuckyLanding.scss';
 
@@ -22,6 +24,7 @@ class LuckyLanding extends React.Component {
             className="luckyLandingClose"
             //to={URL.HANDSHAKE_DISCOVER}
             onClick={() => {
+              GA.clickInstructionClose();
               this.props.onButtonClick();
             }}
           >
@@ -39,6 +42,10 @@ class LuckyLanding extends React.Component {
             className="btnLuckyLanding guideButton"
 
             to={URL.PEX_INSTRUCTION_URL}
+            onClick={()=>{
+              GA.clickInstructionStartGuide();
+
+            }}
           >
               Quick start guide
 
@@ -47,6 +54,7 @@ class LuckyLanding extends React.Component {
         <Button
           className="btnLuckyLanding gotItButton"
           onClick={() => {
+              GA.clickInstructionGotIt();
               this.props.onButtonClick();
           }}
         >

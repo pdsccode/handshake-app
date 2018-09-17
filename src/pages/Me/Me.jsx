@@ -229,7 +229,7 @@ class Me extends React.Component {
         Me.loadMyHandshakeListStatic(nextProps, HANDSHAKE_ID.CREDIT);
         return { handshakeIdActive: HANDSHAKE_ID.CREDIT, firstTime: false };
       }
-    }
+     }
 
     return null;
   }
@@ -532,7 +532,6 @@ class Me extends React.Component {
                         />
                       </div>
                     </div>
-
                     { (this.state.handshakeIdActive === HANDSHAKE_ID.EXCHANGE || this.state.handshakeIdActive === HANDSHAKE_ID.CREDIT) && (
                       <div>
                         <hr style={{ margin: '10px 0 5px' }} />
