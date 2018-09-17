@@ -316,7 +316,7 @@ export default {
   'cc.label.saveCard': 'Save my card for future top-up',
   'cc.label.saving': 'You save {percentage}%',
   'cc.label.email': 'Email',
-  'cc.label.email.hint': 'Just for receiving receipt',
+  'cc.label.email.hint': 'For receipt',
   'cc.label.receive.address': 'RECEIVING ADDRESS',
 
   'escrow.label.depositCoin': 'Sell crypto safely online',
