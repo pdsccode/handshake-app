@@ -27,6 +27,7 @@ import { eventSelector, isLoading, showedLuckyPoolSelector, isSharePage, countRe
 import { loadMatches, getReportCount, removeExpiredEvent, checkFreeBet, checkExistSubcribeEmail } from './action';
 import { removeShareEvent } from '../CreateMarket/action';
 import { shareEventSelector } from '../CreateMarket/selector';
+import { getBalance } from '@/components/handshakes/betting/utils.js';
 
 import EventItem from './EventItem';
 import PexCreateBtn from './PexCreateBtn';
@@ -64,6 +65,7 @@ class Prediction extends React.Component {
       modalFillContent: '',
       isOrderOpening: false,
       shouldShowFreePopup: true,
+      failedResult: {},
     };
   }
 
@@ -213,7 +215,10 @@ class Prediction extends React.Component {
     }
   };
 
-  handleBetFail = () => {
+  handleBetFail = (value) => {
+    this.setState({
+      failedResult: value,
+    });
     this.modalOuttaMoney.open();
   }
 
@@ -222,10 +227,13 @@ class Prediction extends React.Component {
   }
 
   afterWalletFill = () => {
+    GA.didFillUpMoney();
     this.modalFillRef.close();
   }
 
-  showPopupCreditCard = () => {
+  showPopupCreditCard = async () => {
+    const { failedResult } = this.state;
+    GA.clickTopupWallet(failedResult);
     this.modalOuttaMoney.close();
     const { messages } = this.props.intl;
     this.setState({
