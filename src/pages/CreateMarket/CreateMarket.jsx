@@ -20,7 +20,7 @@ class CreateMarket extends React.Component {
     reportList: PropTypes.array,
     categoryList: PropTypes.array,
     match: PropTypes.object,
-    hasEmail: PropTypes.bool,
+    hasEmail: PropTypes.any,
     insufficientGas: PropTypes.any,
     isValidEmailCode: PropTypes.bool,
   };
