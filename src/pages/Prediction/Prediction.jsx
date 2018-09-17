@@ -28,6 +28,8 @@ import { loadMatches, getReportCount, removeExpiredEvent, checkFreeBet, checkExi
 import { removeShareEvent } from '../CreateMarket/action';
 import { shareEventSelector } from '../CreateMarket/selector';
 import { getBalance } from '@/components/handshakes/betting/utils.js';
+import { removeShareEvent } from '../CreateMarket/action';
+import { shareEventSelector } from '../CreateMarket/selector';
 
 import EventItem from './EventItem';
 import PexCreateBtn from './PexCreateBtn';
