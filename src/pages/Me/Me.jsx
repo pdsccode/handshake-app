@@ -480,6 +480,7 @@ class Me extends React.Component {
         </div>
         <Grid className="me">
           {
+            // @TODO: chrome-ext
             (window.self === window.top) &&
             (
               <div>
