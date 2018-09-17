@@ -4,6 +4,7 @@ import { createAPI } from '@/reducers/action';
 export const EXCHANGE_ACTIONS = {
   GET_FIAT_CURRENCY: 'GET_FIAT_CURRENCY',
   GET_CRYPTO_PRICE: 'GET_CRYPTO_PRICE',
+  GET_CRYPTO_PRICE_FOR_PACKAGE: 'GET_CRYPTO_PRICE_FOR_PACKAGE',
   CREATE_CC_ORDER: 'CREATE_CC_ORDER',
   GET_USER_CC_LIMIT: 'GET_USER_CC_LIMIT',
   GET_CC_LIMITS: 'GET_CC_LIMITS',
@@ -57,6 +58,7 @@ export const EXCHANGE_ACTIONS = {
 export const getFiatCurrency = createAPI(EXCHANGE_ACTIONS.GET_FIAT_CURRENCY);
 
 export const getCryptoPrice = createAPI(EXCHANGE_ACTIONS.GET_CRYPTO_PRICE);
+export const getCryptoPriceForPackage = createAPI(EXCHANGE_ACTIONS.GET_CRYPTO_PRICE_FOR_PACKAGE);
 
 export const createCCOrder = createAPI(EXCHANGE_ACTIONS.CREATE_CC_ORDER);
 
