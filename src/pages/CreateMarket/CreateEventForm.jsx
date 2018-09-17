@@ -376,7 +376,7 @@ class CreateEventForm extends Component {
           <button
             type="submit"
             className="btn btn-primary btn-block"
-            disabled={props.pristine || props.submitting || !props.isValidEmailCode}
+            disabled={props.pristine || props.submitting || (!props.hasEmail && !props.isValidEmailCode)}
           >
             {props.isNew ? 'Create a new event' : 'Add new outcomes'}
           </button>
