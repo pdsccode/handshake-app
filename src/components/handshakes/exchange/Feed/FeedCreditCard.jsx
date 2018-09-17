@@ -23,7 +23,10 @@ import { validate, validateSpecificAmount } from '@/components/handshakes/exchan
 import createForm from '@/components/core/form/createForm';
 import { fieldCleave, fieldDropdown, fieldInput, fieldRadioButton } from '@/components/core/form/customField';
 import { email, required } from '@/components/core/form/validation';
-import { createCCOrder, getCcLimits, getCryptoPrice, getUserCcLimit } from '@/reducers/exchange/action';
+import {
+  createCCOrder, getCcLimits, getCryptoPrice, getCryptoPriceForPackage,
+  getUserCcLimit
+} from '@/reducers/exchange/action';
 import CryptoPrice from '@/models/CryptoPrice';
 import { MasterWallet } from '@/services/Wallets/MasterWallet';
 import { bindActionCreators } from 'redux';
@@ -64,9 +67,9 @@ const listCurrency = Object.values(CRYPTO_CURRENCY_CREDIT_CARD).map((item) => {
 });
 
 const listPackages = {
-  [CRYPTO_CURRENCY.ETH]: [{ name: 'basic', amount: 0.1 }, { name: 'pro', amount: 0.4 }],
-  [CRYPTO_CURRENCY.BTC]: [{ name: 'basic', amount: 0.01 }, { name: 'pro', amount: 0.015 }],
-  BCH: [{ name: 'basic', amount: 0.1 }, { name: 'pro', amount: 0.15 }],
+  [CRYPTO_CURRENCY.ETH]: [{ name: 'basic', amount: 0.1, fiatAmount: 0, show: false }, { name: 'pro', amount: 0.4, fiatAmount: 0, show: false }],
+  [CRYPTO_CURRENCY.BTC]: [{ name: 'basic', amount: 0.01, fiatAmount: 0, show: false }, { name: 'pro', amount: 0.015, fiatAmount: 0, show: false }],
+  BCH: [{ name: 'basic', amount: 0.1, fiatAmount: 0, show: false }, { name: 'pro', amount: 0.15, fiatAmount: 0, show: false }],
 };
 
 const listFiatCurrency = [
@@ -159,6 +162,7 @@ class FeedCreditCard extends React.Component {
     //   this.getCryptoPriceByAmount(amount);
     // }, 30000);
     this.getListWallets();
+    this.calculatePriceForPackages();
   }
 
   componentWillUnmount() {
@@ -166,6 +170,49 @@ class FeedCreditCard extends React.Component {
     //   clearInterval(this.intervalCountdown);
     // }
   }
+
+  calculatePriceForPackages = () => {
+    Object.entries(listPackages).forEach(([currency, items]) => {
+      items.forEach((item) => {
+        const { amount } = item;
+        this.getCryptoPriceForPackageByAmount(amount, currency);
+      });
+    });
+  }
+
+  getCryptoPriceForPackageByAmount = (amount, currency) => {
+    const data = { amount, currency };
+
+    this.props.getCryptoPriceForPackage({
+      PATH_URL: API_URL.EXCHANGE.GET_CRYPTO_PRICE,
+      qs: data,
+      successFn: this.handleGetCryptoPriceForPackageSuccess,
+      errorFn: this.handleGetCryptoPricePackageFailed,
+    });
+  };
+
+  handleGetCryptoPriceForPackageSuccess = (responseData) => {
+    const cryptoPrice = CryptoPrice.cryptoPrice(responseData.data);
+    console.log('handleGetCryptoPriceForPackageSuccess',cryptoPrice);
+
+    Object.entries(listPackages).forEach(([currency, items]) => {
+      for (let item of items) {
+        const { amount } = item;
+        console.log('cryptoPrice.currency  cryptoPrice.amount ', cryptoPrice.currency, cryptoPrice.amount);
+        console.log('currency  amount ', currency, amount);
+        if (cryptoPrice.currency === currency && +cryptoPrice.amount === amount) {
+          console.log('hello',);
+          item.show = true;
+          item.fiatAmount = cryptoPrice.fiatAmount;
+          break;
+        }
+      }
+    });
+  };
+
+  handleGetCryptoPricePackageFailed = (e) => {
+    console.log('handleGetCryptoPriceFailed', e);
+  };
 
   getCryptoPriceByAmount = (amount) => {
     const { currency } = this.state;
@@ -567,10 +614,10 @@ class FeedCreditCard extends React.Component {
   // }
 
   handleBuyPackage = (item) => {
-    const { rfChange } = this.props;
     const { amount } = item;
-    rfChange(nameFormSpecificAmount, 'amount', amount);
-    this.setState({ amount }, () => {
+    this.setState({
+      hasSelectedCoin: true, amount,
+    }, () => {
       this.getCryptoPriceByAmount(amount);
     });
   }
@@ -632,7 +679,7 @@ class FeedCreditCard extends React.Component {
     const { messages } = this.props.intl;
     const { hasSelectedCoin, wallets, walletSelected } = this.state;
     const { intl, isPopup } = this.props;
-    const { amount } = this.props;
+    const { amount, cryptoPrice } = this.props;
     const { currency } = this.state;
 
     const packages = listPackages[currency];
@@ -702,24 +749,25 @@ class FeedCreditCard extends React.Component {
             {
               packages && packages.map((item, index) => {
                 const {
-                  name, amount,
+                  name, amount, fiatAmount, show,
                 } = item;
-                return (
+
+                return show && (
                   <div key={name}>
                     <div className="d-table w-100">
                       <div className="d-table-cell align-middle" style={{ width: '80px' }}>
                         <div className={`package p-${name}`}><FormattedMessage id={`cc.label.${name}`} /></div>
                       </div>
                       <div className="d-table-cell align-middle pl-3">
-                        {/* <div className="p-price">
-                          {price}
-                          {
+                         <div className="p-price">
+                          {fiatAmount} {FIAT_CURRENCY.USD}
+                          {/*{
                             saving && (
                               <span className="p-saving"><FormattedMessage id="cc.label.saving" values={{ percentage: saving }} /></span>
                             )
-                          }
-                        </div> */}
-                        <div className="p-price">{amount} {currency}</div>
+                          }*/}
+                        </div>
+                        <div className="p-amount">{amount} {currency}</div>
                       </div>
                       <div className="d-table-cell align-middle text-right">
                         <button className="btn btn-p-buy-now" onClick={() => this.handleBuyPackage(item)}><FormattedMessage id="cc.btn.buyNow" /></button>
@@ -748,8 +796,27 @@ class FeedCreditCard extends React.Component {
         <div><button className="btn btn-lg bg-transparent d-inline-block btn-close" onClick={this.closeInputCreditCard}>&times;</button></div>
         <div className="wrapper">
           <FormCreditCard onSubmit={this.handleSubmit} validate={this.handleValidate}>
-            <div className={['bodyBackup bodyShareAddress']}>
+            {cryptoPrice && (<div>
+              <div className="d-table w-100">
+                <div className="d-table-cell text-normal">
+                  <span className="text-normal"><FormattedMessage id="ex.label.amount" />:</span>
+                  &nbsp;
+                  <span className="font-weight-bold">{cryptoPrice?.amount}</span>
+                  &nbsp;
+                  <span className="text-normal">{cryptoPrice?.currency}</span>
+                </div>
+                <div className="d-table-cell text-right">
+                  <span className="text-normal"><FormattedMessage id="ex.label.cost" />:</span>
+                  &nbsp;
+                  <span className="font-weight-bold">{cryptoPrice?.fiatAmount}</span>
+                  &nbsp;
+                  <span className="text-normal">{cryptoPrice?.fiatCurrency}</span>
+                </div>
+              </div>
+            </div>
+            )}
 
+            <div className={['bodyBackup bodyShareAddress']}>
               <div className="bodyTitle">
                 <span><FormattedMessage id="cc.label.receive.address" /></span>
               </div>
@@ -904,6 +971,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   getCryptoPrice: bindActionCreators(getCryptoPrice, dispatch),
+  getCryptoPriceForPackage: bindActionCreators(getCryptoPriceForPackage, dispatch),
   createCCOrder: bindActionCreators(createCCOrder, dispatch),
   getUserCcLimit: bindActionCreators(getUserCcLimit, dispatch),
   getCcLimits: bindActionCreators(getCcLimits, dispatch),
