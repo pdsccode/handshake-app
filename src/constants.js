@@ -222,7 +222,7 @@ export const API_URL = {
     SAVE_TRANSACTION: 'cryptosign/tx/add',
     GENERATE_LINK: 'cryptosign/outcome/generate-link',
     PREDICTION_STATISTICS: 'cryptosign/outcome/ninja-predict',
-    SUBCRIBE_EMAIL_PREDICTION: 'cryptosign/user/subscribe',
+    SUBCRIBE_EMAIL_PREDICTION: 'cryptosign/subscribe',
 
   },
   DISCOVER: {
