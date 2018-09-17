@@ -64,6 +64,7 @@ class Prediction extends React.Component {
       modalFillContent: '',
       isOrderOpening: false,
       shouldShowFreePopup: true,
+      failedResult: {},
     };
   }
 
@@ -143,7 +144,7 @@ class Prediction extends React.Component {
     const isFreeAvailable = this.checkFreeAvailabe(props);
     const { freeBet } = props;
     const { free_bet_available: freeAvailable = 0 } = freeBet;
-    console.log(freeBet);
+    //console.log(freeBet);
 
     const key = `showedFreebet${freeAvailable}`;
     const isShowed = localStorage.getItem(key);
@@ -213,7 +214,10 @@ class Prediction extends React.Component {
     }
   };
 
-  handleBetFail = () => {
+  handleBetFail = (value) => {
+    this.setState({
+      failedResult: value,
+    });
     this.modalOuttaMoney.open();
   }
 
@@ -222,10 +226,13 @@ class Prediction extends React.Component {
   }
 
   afterWalletFill = () => {
+    GA.didFillUpMoney();
     this.modalFillRef.close();
   }
 
-  showPopupCreditCard = () => {
+  showPopupCreditCard = async () => {
+    const { failedResult } = this.state;
+    GA.clickTopupWallet(failedResult);
     this.modalOuttaMoney.close();
     const { messages } = this.props.intl;
     this.setState({
