@@ -120,7 +120,7 @@ class BettingCreate extends React.Component {
 
 
     const validate = await validateBet(amount, odds, closingDate, matchName, matchOutcome);
-    const { status, message, code } = validate;
+    const { status, message, code, value } = validate;
     if (status) {
       this.initHandshake(values, fromAddress);
       onSubmitClick();
@@ -129,7 +129,7 @@ class BettingCreate extends React.Component {
         GA.createBetNotSuccess(message);
         if (code === VALIDATE_CODE.NOT_ENOUGH_BALANCE) {
           onCancelClick();
-          handleBetFail();
+          handleBetFail(value);
         } else {
           this.props.showAlert({
             message: <div className="text-center">{message}</div>,
