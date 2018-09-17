@@ -99,6 +99,7 @@ export const BETTING_STATUS_LABEL =
       CANCELLING: 'Your bet is being cancelled.',
       CANCEL_PROGRESSING: 'The blockchain is processing your cancelling. Please wait.',
       BET_WAIT_MATCHING: 'Bet placed. Matching...',
+      BET_CANCEL_OVER: 'The event ended. We couldn’t find a match.',
       BET_MACHED_WAIT_RESULT: 'Bet matched. Waiting for result...',
       CANCELLED: 'Your bet was cancelled.',
       REFUNDING: 'Your coin is being refunded to you.',
