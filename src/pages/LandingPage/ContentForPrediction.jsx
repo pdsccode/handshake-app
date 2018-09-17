@@ -109,6 +109,19 @@ class ContentForPrediction extends React.Component {
       </div>
     );
   }
+  renderTransparency() {
+    return (
+      <div>
+        <div>
+          <div>Transparency</div>
+          <div></div>
+        </div>
+        <img src={imgBottomMenu} alt="imgBottomMenu" />
+
+
+      </div>
+    );
+  }
 
   render() {
     const { messages, locale } = this.props.intl
