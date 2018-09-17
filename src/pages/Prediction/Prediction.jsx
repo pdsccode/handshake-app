@@ -25,7 +25,6 @@ import { injectIntl } from 'react-intl';
 import { URL } from '@/constants';
 import { eventSelector, isLoading, showedLuckyPoolSelector, isSharePage, countReportSelector, checkFreeBetSelector, checkExistSubcribeEmailSelector } from './selector';
 import { loadMatches, getReportCount, removeExpiredEvent, checkFreeBet, checkExistSubcribeEmail } from './action';
-import { getBalance } from '@/components/handshakes/betting/utils.js';
 import { removeShareEvent } from '../CreateMarket/action';
 import { shareEventSelector } from '../CreateMarket/selector';
 
@@ -145,7 +144,7 @@ class Prediction extends React.Component {
     const isFreeAvailable = this.checkFreeAvailabe(props);
     const { freeBet } = props;
     const { free_bet_available: freeAvailable = 0 } = freeBet;
-    console.log(freeBet);
+    //console.log(freeBet);
 
     const key = `showedFreebet${freeAvailable}`;
     const isShowed = localStorage.getItem(key);
