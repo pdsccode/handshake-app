@@ -16,7 +16,7 @@ class EmailVerification extends Component {
     emailCode: PropTypes.string,
     hasEmail: PropTypes.any,
     dispatch: PropTypes.func.isRequired,
-    isValidCode: PropTypes.bool,
+    isValidEmailCode: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -24,7 +24,7 @@ class EmailVerification extends Component {
     email: undefined,
     emailCode: undefined,
     hasEmail: undefined,
-    isValidCode: undefined,
+    isValidEmailCode: undefined,
   };
 
   constructor(props) {
@@ -72,7 +72,7 @@ class EmailVerification extends Component {
           type="button"
           className="btn btn-primary EmailBtn"
           onClick={this.sendEmail}
-          disabled={!isValid}
+          disabled={!isValid || state.isEmailSent}
         >
           {state.isEmailSent ? 'Sent' : 'Send'}
         </button>
@@ -83,7 +83,7 @@ class EmailVerification extends Component {
   renderCodeBox = (props, state) => {
     if (!state.isEmailSent) return null;
     let validate = [required];
-    if (props.isValidCode === false && props.emailCode === state.sentCode) {
+    if (props.isValidEmailCode === false && props.emailCode === state.sentCode) {
       validate = [required, codeValidator];
     }
     return (
@@ -103,7 +103,7 @@ class EmailVerification extends Component {
             type="button"
             className="btn btn-primary EmailBtn"
             onClick={this.sendCode}
-            disabled={required(props.emailCode) || props.isValidCode}
+            disabled={required(props.emailCode) || props.isValidEmailCode}
           >
             Verify
           </button>
