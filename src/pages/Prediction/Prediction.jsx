@@ -25,6 +25,8 @@ import { injectIntl } from 'react-intl';
 import { URL } from '@/constants';
 import { eventSelector, isLoading, showedLuckyPoolSelector, isSharePage, countReportSelector, checkFreeBetSelector, checkExistSubcribeEmailSelector } from './selector';
 import { loadMatches, getReportCount, removeExpiredEvent, checkFreeBet, checkExistSubcribeEmail } from './action';
+import { removeShareEvent } from '../CreateMarket/action';
+import { shareEventSelector } from '../CreateMarket/selector';
 
 import EventItem from './EventItem';
 import PexCreateBtn from './PexCreateBtn';
@@ -37,6 +39,7 @@ class Prediction extends React.Component {
     dispatch: PropTypes.func.isRequired,
     history: PropTypes.object.isRequired,
     eventList: PropTypes.array,
+    shareEvent: PropTypes.object,
     showedLuckyPool: PropTypes.bool,
     isSharePage: PropTypes.bool,
     countReport: PropTypes.number,
@@ -49,6 +52,7 @@ class Prediction extends React.Component {
 
   static defaultProps = {
     eventList: [],
+    shareEvent: null,
     isExistEmail: 0,
   };
 
@@ -166,8 +170,12 @@ class Prediction extends React.Component {
 
   handleClickEventItem = (itemProps, itemData) => {
     const { event } = itemProps;
+    const { shareEvent } = this.props;
     if (itemData.id === URL.HANDSHAKE_PEX_CREATOR) {
       this.props.history.push(`${URL.HANDSHAKE_PEX_CREATOR}/${event.id}`);
+      if (shareEvent) {
+        this.props.dispatch(removeShareEvent(['shareEvent']));
+      }
     } else {
       const selectedOutcome = {
         hid: itemData.hid,
@@ -402,6 +410,7 @@ export default injectIntl(connect(
       showedLuckyPool: showedLuckyPoolSelector(state),
       freeBet: checkFreeBetSelector(state),
       isExistEmail: checkExistSubcribeEmailSelector(state),
+      shareEvent: shareEventSelector(state),
     };
   },
 )(Prediction));
