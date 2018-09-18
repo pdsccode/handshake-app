@@ -21,6 +21,10 @@
 }
 .wrapperHowToPlay {
   position: relative;
+  .imageLeft {
+    margin-top: 5.875rem;
+    margin-left: 4.2rem;
+  }
 }
 
 .wrapperHowToPlay:before {
@@ -137,4 +141,5 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  margin-bottom: 2rem;
 }

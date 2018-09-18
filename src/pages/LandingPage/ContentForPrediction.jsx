@@ -40,7 +40,7 @@ class ContentForPrediction extends React.Component {
     return (
       <div className="wrapperHowToPlay wrapperBlock">
         <div className="column">
-          <img src={imgHowToPlay} alt="imgHowToPlay" width="450" />
+          <img className="imageLeft" src={imgHowToPlay} alt="imgHowToPlay" width="300" />
         </div>
         <div className="column wrapperContentHowToPlay">
           <div className="wrapperSmallBlock">
