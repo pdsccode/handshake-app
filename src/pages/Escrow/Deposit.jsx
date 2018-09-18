@@ -65,6 +65,7 @@ class EscrowDeposit extends React.Component {
     this.state = {
       values: {},
       depositInfo: this.props.depositInfo,
+      balances: {},
     };
   }
 
@@ -105,13 +106,45 @@ class EscrowDeposit extends React.Component {
     return null;
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     this.getCreditATM();
     // this.createCreditATM();
+    const balances = await this.getBalance();
+    this.setState({ balances });
   }
 
   getCreditATM = () => {
     this.props.getCreditATM({ PATH_URL: API_URL.EXCHANGE.CREDIT_ATM });
+  }
+
+  getBalance = async () => {
+    let result = {};
+
+    for (const item of Object.values(listCurrency)) {
+      const { name: currency } = item;
+
+      const wallet = MasterWallet.getWalletDefault(currency);
+      console.log('get Balance currency', currency);
+      console.log('get Balance wallet', wallet);
+      if (wallet) {
+        const balance = await wallet.getBalance();
+        const fee = await wallet.getFee(NB_BLOCKS, true) || 0;
+
+        const bnBalance = new BigNumber(balance);
+        const bnFee = new BigNumber(fee);
+        const bnAmount = bnBalance.minus(bnFee);
+
+        console.log('balance', balance);
+        console.log('fee', fee);
+
+        result[currency] = bnAmount.isGreaterThan(new BigNumber(0)) ? bnAmount.toNumber() : 0;
+      } else {
+        result[currency] = 0;
+      }
+    }
+
+    console.log('checkBalance result out ', result);
+    return result;
   }
 
   createCreditATM = () => {
@@ -478,6 +511,9 @@ class EscrowDeposit extends React.Component {
     const { messages } = this.props.intl;
     const { intl, hideNavigationBar } = this.props;
     const { listOfferPrice } = this.props;
+    const { balances } = this.state;
+
+    console.log('render balances', balances);
 
     return (
       <div className="escrow-deposit">
@@ -513,6 +549,7 @@ class EscrowDeposit extends React.Component {
 
                 let fiatCurrency = offerPrice && offerPrice.price || 0;
                 fiatCurrency *= (1 + ((+this.props[`percentage_${name}`]) / 100));
+                const hint = balances[name] || 0;
 
                 return (
                   <div key={name} className="mt-2">
@@ -527,7 +564,7 @@ class EscrowDeposit extends React.Component {
                             <img src={icon} className="icon-deposit" />
                           }
                           validate={[number]}
-                          placeholder="0"
+                          placeholder={hint}
                         />
                       </div>
                     </div>
