@@ -288,15 +288,16 @@ class EscrowDeposit extends React.Component {
       this.props.showAlert({
         message: <div className="text-center">
           <FormattedMessage
-            id="notEnoughCoinInWallet"
+            id="notEnoughCoinInWalletDeposit"
             values={{
-            amount: formatAmountCurrency(balance),
+            amount: formatAmountCurrency(amount),
             fee: formatAmountCurrency(fee),
+            balance: formatAmountCurrency(balance),
             currency,
           }}
           />
         </div>,
-        timeOut: 3000,
+        timeOut: 5000,
         type: 'danger',
         callBack: () => {
         },
