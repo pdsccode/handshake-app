@@ -19,7 +19,10 @@ import { injectIntl } from 'react-intl';
 import { Link } from 'react-router-dom';
 import { Col, Grid, Row } from 'react-bootstrap';
 import NoData from '@/components/core/presentation/NoData';
-import { getDashboardInfo, getListOfferPrice, getOfferStores, reviewOffer } from '@/reducers/exchange/action';
+import {
+  fireBaseCreditsDataChange, getDashboardInfo, getListOfferPrice, getOfferStores,
+  reviewOffer
+} from '@/reducers/exchange/action';
 import FeedPromise from '@/components/handshakes/promise/Feed';
 import FeedBetting from '@/components/handshakes/betting/Feed';
 import FeedExchange from '@/components/handshakes/exchange/Feed/FeedMe';
@@ -204,6 +207,11 @@ class Me extends React.Component {
             console.log(TAG, ' getDerivedStateFromProps betting ', nextUser?.betting);
             nextProps.fireBaseBettingChange(nextUser?.betting);
             nextProps.firebase.remove(`/users/${nextProps.auth.profile.id}/betting`);
+          }
+          if (JSON.stringify(nextUser?.credits) !== JSON.stringify(prevUser?.credits)) {
+            console.log(TAG, ' getDerivedStateFromProps credits ', nextUser?.credits);
+            nextProps.fireBaseCreditsDataChange(nextUser?.credits);
+            nextProps.firebase.remove(`/users/${nextProps.auth.profile.id}/credits`);
           }
         }
 
@@ -676,6 +684,7 @@ const mapDispatch = dispatch => ({
   reviewOffer: bindActionCreators(reviewOffer, dispatch),
   getOfferStores: bindActionCreators(getOfferStores, dispatch),
   getDashboardInfo: bindActionCreators(getDashboardInfo, dispatch),
+  fireBaseCreditsDataChange: bindActionCreators(fireBaseCreditsDataChange, dispatch),
 });
 
 export default injectIntl(compose(withFirebase, connect(mapState, mapDispatch))(Me));
