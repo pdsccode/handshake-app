@@ -73,6 +73,7 @@ export const MESSAGE = {
   ROLLBACK: `Something did not go according to plan. Please try again.`,
   WITHDRAW_SUCCESS: 'Success! Your winnings have been withdrawn to your wallet.',
   DIFFERENCE_ADDRESS: `Current address isn't same as which you used to create bet`,
+  DISPUTE_CONFIRM: 'Results will be reviewed if over 50% of players dispute it.',
 };
 
 export const BETTING_STATUS_LABEL =

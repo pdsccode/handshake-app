@@ -24,7 +24,7 @@ import {
 import Button from '@/components/core/controls/Button';
 import Feed from '@/components/core/presentation/Feed';
 import { showAlert } from '@/reducers/app/action';
-
+import ConfirmPopup from '@/components/ConfirmPopup';
 
 import { isSameAddress, isRightNetwork } from '@/components/handshakes/betting/validation.js';
 
@@ -187,7 +187,9 @@ class FeedBetting extends React.Component {
         this.refundFree(offchain);
         break;
       case BETTING_STATUS_LABEL.DISPUTE:
-        this.disputeOnChain(offchain, hid);
+        //this.disputeOnChain(offchain, hid);
+        this.handleClickDispute(offchain, hid);
+
         break;
       default:
         break;
@@ -210,7 +212,8 @@ class FeedBetting extends React.Component {
         this.refundOnChain(offchain, hid);
         break;
       case BETTING_STATUS_LABEL.DISPUTE:
-        this.disputeOnChain(offchain, hid);
+        //this.disputeOnChain(offchain, hid);
+        this.handleClickDispute(offchain, hid);
         break;
       default:
         break;
@@ -477,6 +480,38 @@ class FeedBetting extends React.Component {
         const { message } = error;
         GA.clickDisputeAPIFailed(id, message);
       }),
+    });
+  }
+
+  handleClickDispute = (offchain, hid) => {
+    console.log(TAG, 'handleClickDispute');
+    const {
+      onShowModalDialog
+    } = this.props;
+
+    const title = `Don't agree with the result?`;
+    const content = MESSAGE.DISPUTE_CONFIRM;
+    onShowModalDialog({
+      show: true,
+      modalContent: (<ConfirmPopup
+        title={title}
+        content={content}
+        cancelButtonTitle="Cancel"
+        okButtonTitle="Dispute"
+        cancelButtonClick={() => {
+          onShowModalDialog({ show: false });
+          this.setState({
+            isLoading: false,
+          });
+        }}
+        okButtonClick= {() => {
+          this.disputeOnChain(offchain, hid);
+          onShowModalDialog({ show: false });
+        }}
+        />),
+      propsModal: {
+        //className: 'modal-me-cash-more-info',
+      },
     });
   }
 
