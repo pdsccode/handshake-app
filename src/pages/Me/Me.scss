@@ -165,3 +165,18 @@
     }
   }
 }
+
+/** NoData Component **/
+.NoDataContainer {
+  text-align: center;
+  .NoDataTitle {
+    font-size: rem-calc(18px);
+    font-weight: 400;
+    margin-bottom: 15px;
+  }
+  .ShortDescription {
+    font-size: rem-calc(14px);
+    color: #8A8A8F;
+    margin: 15px 0;
+  }
+}
