@@ -53,7 +53,9 @@ class ContentForPrediction extends React.Component {
             <div className="pexSmallTitle">The solution</div>
             <div className="pexContent">Prediction allows you to directly bet against each other without going through a bookmaker. It’s all managed by blockchain technology and secured with smart contracts.</div>
           </div>
-          <button className="pexButton">Instructions on how to play</button>
+          <Link to={URL.PEX_INSTRUCTION_URL}>
+            <button className="pexButton">Instructions on how to play</button>
+          </Link>
         </div>
       </div>
     );
