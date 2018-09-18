@@ -63,6 +63,7 @@ const RouterBuyCC = createDynamicImport(() => import('@/components/Router/Credit
 const RouterEscrowDeposit = createDynamicImport(() => import('@/pages/Escrow/Deposit'), Loading);
 const RouterEscrowWithdraw = createDynamicImport(() => import('@/pages/Escrow/Withdraw'), Loading);
 const RouterEscrowWithdrawSuccess = createDynamicImport(() => import('@/pages/Escrow/WithdrawSuccess'), Loading);
+const RouterShop = createDynamicImport(() => import('@/components/Router/Shop'), Loading);
 
 
 /* ======================== FOR MOBILE ======================== */
@@ -97,6 +98,7 @@ const configRoutesUsingMobileLayout = [
     },
   },
   { path: URL.RESOLVE, component: RouterResolve },
+  { path: URL.SHOP_URL, component: RouterShop },
 ];
 const routesUsingMobileLayout = configRoutesUsingMobileLayout.map(route => (
   <Route
@@ -112,6 +114,7 @@ if (BrowserDetect.isDesktop) {
   const configRoutesUsingDesktopLayout = [
     { path: URL.LUCKY_POOL, component: RouterLuckyPool },
     { path: URL.PRODUCT_CASH_URL, render: () => <ProjectDetail type="product" name="cash" img={imgCash} imgContent={imgCashContent} reactHelmetElement={SEOCash} /> },
+    { path: URL.PRODUCT_ATM_URL, render: () => <ProjectDetail type="product" name="cash" img={imgCash} imgContent={imgCashContent} reactHelmetElement={SEOCash} /> },
     { path: URL.PRODUCT_PREDICTION_URL, render: () => <ProjectDetail type="product" name="prediction" img={imgPrediction} contentComponent={<ContentForPrediction />} reactHelmetElement={SEOPrediction} /> },
     { path: URL.HANDSHAKE_PEX, render: () => <ProjectDetail type="product" name="prediction" img={imgPrediction} contentComponent={<ContentForPrediction />} reactHelmetElement={SEOPrediction} /> },
     { path: URL.PRODUCT_WALLET_URL, render: () => <ProjectDetail type="product" name="wallet" img={imgWallet} reactHelmetElement={SEOWallet} entireContentComponent={<ContentForWallet />} /> },

@@ -142,10 +142,12 @@
       color: #333;
       border: 1px solid #7a7a7a;
       opacity: 1;
-      text-transform: capitalize;
+      //text-transform: capitalize;
     }
     .cancel {
       background: transparent !important;
+      width: rem-calc(145px);
+
     }
     .withdraw {
       background: #2456FB;
@@ -154,11 +156,12 @@
     }
     .refund {
       background: transparent !important;
+      width: rem-calc(150px);
+
     }
     .dispute {
       background: transparent !important;
-      border: none !important;
-      color: #333 !important;
+      //border: none !important;
       width: rem-calc(100px);
 
     }

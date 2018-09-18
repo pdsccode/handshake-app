@@ -5,6 +5,7 @@ import { URL } from '@/constants';
 import { Link } from 'react-router-dom';
 
 import BannerBG from '@/assets/images/banner/banner_bg.png';
+import GA from '@/services/googleAnalytics';
 
 import './Banner.scss';
 
@@ -22,7 +23,11 @@ class Banner extends React.Component {
           <div className="RollingText">
             ROLLING!
           </div>
-          <Link to={URL.PEX_INSTRUCTION_URL}>
+          <Link to={URL.PEX_INSTRUCTION_URL}
+            onClick={()=>{
+              GA.clickInstructionStartGuide();
+            }}
+          >
             <Button className="btnBanner FollowButton">Follow quick start guide</Button>
           </Link>
 

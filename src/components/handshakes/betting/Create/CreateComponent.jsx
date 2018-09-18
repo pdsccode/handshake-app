@@ -120,7 +120,7 @@ class BettingCreate extends React.Component {
 
 
     const validate = await validateBet(amount, odds, closingDate, matchName, matchOutcome);
-    const { status, message, code } = validate;
+    const { status, message, code, value } = validate;
     if (status) {
       this.initHandshake(values, fromAddress);
       onSubmitClick();
@@ -129,7 +129,7 @@ class BettingCreate extends React.Component {
         GA.createBetNotSuccess(message);
         if (code === VALIDATE_CODE.NOT_ENOUGH_BALANCE) {
           onCancelClick();
-          handleBetFail();
+          handleBetFail(value);
         } else {
           this.props.showAlert({
             message: <div className="text-center">{message}</div>,
@@ -355,8 +355,9 @@ class BettingCreate extends React.Component {
     const { disable } = this.state;
     const { side } = this.props.bettingShake;
     const buttonClass = theme;
-    const sideText = getKeyByValue(SIDE, side);
-    const buttonText = disable ? 'Loading...' : `Place ${sideText} order`;
+    // const sideText = getKeyByValue(SIDE, side);
+    // const buttonText = disable ? 'Loading...' : `Place ${sideText} order`;
+    const buttonText = disable ? 'Loading...' : `Bet now`;
     return (
       <form className="wrapperBetting" onSubmit={this.onSubmit}>
         <div className="formInput">
