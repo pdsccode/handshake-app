@@ -427,7 +427,7 @@ export class MasterWallet {
       if (process.env.isLive) 
       {
         wallets.forEach((wallet) => {
-          if (wallet.name =='BCH' && wallet.network.includes('test')){
+          if (wallet.name =='BCH'){
             try {
               console.log("fix bch testnet");
               let newBCHWallet = BitcoinCash();
