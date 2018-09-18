@@ -13,6 +13,9 @@ import { FormattedMessage, FormattedHTMLMessage } from 'react-intl';
 import BrowserDetect from '@/services/browser-detect';
 
 export const APP_ACTION = {
+
+  SHOW_CONFIRM: 'SHOW_CONFIRM',
+
   NETWORK_ERROR: 'NETWORK_ERROR',
 
   SET_LANGUAGE: 'SET_LANGUAGE',
@@ -55,6 +58,9 @@ export const APP_ACTION = {
   SET_FIRECHAT: 'SET_FIRECHAT',
   SET_FIREBASE_USER: 'SET_FIREBASE_USER',
 };
+
+// confirm passcode:
+export const showPasscodeConfirm = config => ({ type: APP_ACTION.SHOW_CONFIRM, payload: { isShow: false, ...config } });
 
 // Loading
 export const showLoading = config => ({ type: APP_ACTION.LOADING, payload: { ...config } });

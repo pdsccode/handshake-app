@@ -4,9 +4,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-// actions
-import { hideAlert } from '@/reducers/app/action';
-// style
+import Modal from '@/components/core/controls/Modal';
 import './WalletPasscode.scss';
 
 import Passcode from '../Passcode';
@@ -24,13 +22,24 @@ class WalletPasscode extends React.PureComponent {
     this.state = {
       isShow: false,
       valueConfirm: 0,    
+      contentPasscode: '',
     };
     // bind
-    this.handleShowConfirm = ::this.handleShowConfirm;
+    // this.handleShowConfirm = ::this.handleShowConfirm;
   }
 
   componentWillReceiveProps(nextProps) {
-    this.handleShowConfirm(nextProps);
+    let props = nextProps.app.passcodeData || {};        
+    console.log('props',props);    
+    if (props.isShow){         
+      let contentPasscode = <Passcode confirmValue={props.valueConfirm} onFinish={(value)=> {}} />;   
+      this.setState({valueConfirm: props.valueConfirm, isShow: props.isShow, contentPasscode: contentPasscode},()=>{        
+        this.modalConfirmPasscodeRef.open();
+      });      
+    }
+    else{
+      this.reset();            
+    }
   }
 
   configDefault = {
@@ -52,20 +61,22 @@ class WalletPasscode extends React.PureComponent {
     this.setState({ ...config });
   }
 
+  reset=()=>{
+    console.log("reset");
+    this.setState({valueConfirm: 0, isShow: false, contentPasscode: ''}); 
+  }
+
   render() {
-    const {
-      isShow, valueConfirm
-    } = this.state;  
-    const { messages } = this.props.intl;  
-    if (!isShow) return null;
+    const { isShow, valueConfirm } = this.state;  
+    // const { messages } = this.props.intl;      
     return (
       
-    <Modal onClose={() => {}} title={"PASSCODE"} onRef={modal => this.modalConfirmPasscodeRef = modal}>
+    <Modal modalBodyStyle={{"padding": 0}} onClose={() => {this.reset();}} title={"PASSCODE"} onRef={modal => this.modalConfirmPasscodeRef = modal}>
       <div className="wallet-passscode">
       {/* <div className="wallet-passscode-title">
         Remember this Password. If you forget it, you can lost wallet
       </div> */}
-      <Passcode confirmValue={valueConfirm} onFinish={(value)=> {this.handleShowConfirm}} />      
+      {this.state.contentPasscode}
 
       </div>        
     </Modal>
@@ -78,7 +89,7 @@ const mapState = state => ({
 });
 
 const mapDispatch = ({
-  hideAlert,
+  
 });
 
 export default connect(mapState, mapDispatch)(WalletPasscode);

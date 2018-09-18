@@ -1,14 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
+import { connect } from 'react-redux';
 import './WalletPreferences.scss';
 import Switch from '../../../../components/core/controls/Switch';
 import Input from '../Input';
 import Modal from '@/components/core/controls/Modal';
 import {injectIntl} from 'react-intl';
 import { ENGINE_METHOD_DIGESTS } from 'constants';
-
-import Passcode from '../Passcode';
+import { showPasscodeConfirm } from '@/reducers/app/action';
 
 class WalletPreferences extends React.Component {
   constructor(props) {
@@ -34,11 +33,18 @@ class WalletPreferences extends React.Component {
   }
 
   handleUpdateNameOnClick = () => {
-    if (this.state.walletName){
-      this.props.wallet.title = this.state.walletName;
-      this.props.onUpdateWalletName(this.props.wallet);
-      this.modalWalletNameRef.close();
-    }
+    // if (this.state.walletName){
+    //   this.props.wallet.title = this.state.walletName;
+    //   this.props.onUpdateWalletName(this.props.wallet);
+    //   this.modalWalletNameRef.close();
+    // }
+    console.log('this.props.showPasscodeConfirm...');
+    this.props.showPasscodeConfirm({
+      valueConfirm: 1234, 
+      isShow: true,           
+      onBack: () => {alert('onBack');},
+      onSuccess: () => {alert("onSuccess");},
+    });
   }
 
   renderModalName=()=>{
@@ -106,8 +112,7 @@ class WalletPreferences extends React.Component {
 
                   </div>
               </div>
-          </div>      
-          <Passcode confirmValue={1234} onFinish={(value)=> {alert(value);}} />  
+          </div>                
         </div>
     );
   }
@@ -118,4 +123,9 @@ WalletPreferences.propTypes = {
   onDeleteWalletClick: PropTypes.func,
 };
 
-export default injectIntl(WalletPreferences);
+const mapDispatch = ({  
+  showPasscodeConfirm,  
+});
+
+
+export default injectIntl(connect(null, mapDispatch)(WalletPreferences));

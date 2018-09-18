@@ -8,6 +8,7 @@ import MainHeader from '@/components/Header/MainHeader';
 import Navigation from '@/components/core/controls/Navigation/NewNavigation';
 import Alert from '@/components/core/presentation/Alert';
 import Loading from '@/components/core/controls/Loading';
+import WalletPasscode from '@/components/Wallet/WalletPasscode'
 import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
 class MainLayout extends React.Component {
@@ -48,6 +49,7 @@ class MainLayout extends React.Component {
         { !isDesktop && <Navigation location={this.props.location} />}
         <Alert />
         <Loading />
+        <WalletPasscode />
         <Modal isOpen={show} toggle={this.handleToggleModal} className={className} centered={centered}>
           {title && <ModalHeader toggle={this.handleToggleModal}>{title}</ModalHeader>}
           <ModalBody>
