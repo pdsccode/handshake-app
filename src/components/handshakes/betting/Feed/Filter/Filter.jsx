@@ -36,18 +36,6 @@ class BettingFilter extends React.Component {
     dispatch(updateSide('support'));
   }
 
-  renderOutcome = (props) => {
-    const { side, selectedOutcome } = props;
-    return (
-      <div className="matchOutCome">
-        <span className="label">Outcome:</span>
-        <span className={`name ${side}`}>
-          {selectedOutcome && selectedOutcome.value}
-        </span>
-      </div>
-    );
-  }
-
   renderStatistics = (props) => {
     const { statistics } = props;
     if (!statistics) return null;
@@ -109,7 +97,6 @@ class BettingFilter extends React.Component {
 
     return (
       <React.Fragment>
-        {this.renderOutcome(this.props)}
         {this.renderStatistics(this.props)}
         {isFree ?
           <BettingShakeFree

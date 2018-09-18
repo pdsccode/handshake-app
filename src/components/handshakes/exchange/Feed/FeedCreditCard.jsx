@@ -68,7 +68,7 @@ const listCurrency = Object.values(CRYPTO_CURRENCY_CREDIT_CARD).map((item) => {
 
 const listPackages = {
   [CRYPTO_CURRENCY.ETH]: [{ name: 'basic', amount: 0.1, fiatAmount: 0, show: false }, { name: 'pro', amount: 0.4, fiatAmount: 0, show: false }],
-  [CRYPTO_CURRENCY.BTC]: [{ name: 'basic', amount: 0.01, fiatAmount: 0, show: false }, { name: 'pro', amount: 0.015, fiatAmount: 0, show: false }],
+  [CRYPTO_CURRENCY.BTC]: [{ name: 'basic', amount: 0.005, fiatAmount: 0, show: false }, { name: 'pro', amount: 0.01, fiatAmount: 0, show: false }],
   BCH: [{ name: 'basic', amount: 0.1, fiatAmount: 0, show: false }, { name: 'pro', amount: 0.15, fiatAmount: 0, show: false }],
 };
 
@@ -829,7 +829,7 @@ class FeedCreditCard extends React.Component {
                 </div>
 
                 <div className="box-hide-wallet">
-                  <ShowAddressWalletForm className="receivewallet-wrapper">
+                  <div className="receivewallet-wrapper">
                     { walletSelected &&
 
                       <Field
@@ -844,7 +844,7 @@ class FeedCreditCard extends React.Component {
                         }
                       />
                     }
-                  </ShowAddressWalletForm>
+                  </div>
                 </div>
               </div>
             </div>
