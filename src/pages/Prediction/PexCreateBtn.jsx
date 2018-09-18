@@ -1,29 +1,10 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { URL } from '@/constants';
 import IconIdea from '@/assets/images/icon/idea.svg';
 import GA from '@/services/googleAnalytics';
 
-class PexCreateBtn extends Component {
-  static displayName = 'PexCreateBtn';
-
-  // componentDidMount() {
-  //   window.addEventListener('scroll', this.onScroll);
-  // }
-
-  // componentWillUnmount() {
-  //   window.removeEventListener('scroll', this.onScroll);
-  // }
-
-  // onScroll = () => {
-  //   const createBtn = document.getElementById('PexCreateBtn');
-  //   if (window.pageYOffset > createBtn.offsetTop) {
-  //     createBtn.classList.add('Sticky');
-  //   } else {
-  //     createBtn.classList.remove('Sticky');
-  //   }
-  // };
-
+class PexCreateBtn extends React.PureComponent {
   render() {
     return (
       <div id="PexCreateBtn">

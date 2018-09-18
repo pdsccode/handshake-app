@@ -59,7 +59,7 @@
     font-weight: 400;
     color: #FFFFFF;
     letter-spacing: 0;
-    position: relative; 
+    position: relative;
     top: 6px;
     left: 86%;
     @media (max-width: 330px) {
@@ -67,7 +67,7 @@
     }
   }
   .odds + .cryptoCurrency,
-  .yourOdds +  .cryptoCurrency, {
+  .yourOdds +  .cryptoCurrency {
     font-size: rem-calc(12px);
     font-weight: lighter;
     position: absolute;
