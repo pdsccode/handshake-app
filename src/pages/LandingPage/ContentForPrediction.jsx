@@ -77,15 +77,14 @@ class ContentForPrediction extends React.Component {
   renderMobileGuide() {
     return (
       <div className="wrapperMobile wrapperBlock">
-        <div className="column">
+        <div className="contentBlock column">
           <div className="pexHeadLine">Mobile only</div>
-          <p className="pexContent">No download or signup required. </p>
-          <p className="pexContent">Simply open up your browser and you’re ready to go.</p>
-          <img src={imgMobileIcon} alt="imgMobileIcon" width="400" />
+          <div className="pexContent">No download or signup required. <br/> Simply open up your browser and you’re ready to go.</div>
+          <img className="imageContent" src={imgMobileIcon} alt="imgMobileIcon" width="400" />
         </div>
         <div className="column">
-          <img src={imgMobileGuide1} alt="imgMobileGuide1" width="350" />
-          <img src={imgMobileGuide2} alt="imgMobileGuide2" width="350" />
+          <img className="rightImageFirst" src={imgMobileGuide1} alt="imgMobileGuide1" width="350" />
+          <img className="rightImageSecond" src={imgMobileGuide2} alt="imgMobileGuide2" width="350" />
         </div>
       </div>
     );
@@ -109,12 +108,13 @@ class ContentForPrediction extends React.Component {
 
   renderAnonymous() {
     return (
-      <div className="wrapperVerticalBlock">
-        <div className="pexHeadLine">Anonymous</div>
-        <div className="pexContent">The entire system works without any party revealing their identities. It’s 100% anonymous.</div>
-        <img src={imgAnonymous} alt="imgAnonymous" width="600" />
-        <img src={imgBottomMenu} alt="imgBottomMenu" width="600" />
-
+      <div className="wrapperAnonymous wrapperVerticalBlock">
+        <div className="contentBlock">
+          <div className="pexHeadLine">Anonymous</div>
+          <div className="pexContent">The entire system works without any party revealing their identities. It’s 100% anonymous.</div>
+          <img src={imgAnonymous} alt="imgAnonymous" width="600" />
+          <img src={imgBottomMenu} alt="imgBottomMenu" width="600" />
+        </div>
       </div>
     );
   }

@@ -11,7 +11,7 @@
 .wrapperBlock {
   font-family: $font-family-base;
   line-height: 30px;
-  margin-bottom: rem-calc(150px);
+  margin: (10vw 0);
   display: flex;
 
   //position: relative;
@@ -36,12 +36,30 @@
 .wrapperMobile {
   position: relative;
   color: white;
+  .contentBlock {
+    padding-top: 8.5rem;
+  }
+  .imageContent {
+    padding-top: 2.25rem;
+  }
+  .rightImageFirst {
+    position: absolute;
+    top: -7vw;
+    left: 0;
+    right: 0;
+  }
+  .rightImageSecond {
+    position: absolute;
+    top: 9vw;
+    left: 16vw;
+    right: 0;
+  }
 }
 .wrapperMobile::before {
   content: '';
-  border-left: 59vw solid #FF8308;
-  border-top: 7vw solid transparent;
-  border-bottom: 7vw solid transparent;
+  border-left: 66vw solid #FF8308;
+  border-top: 5vw solid transparent;
+  border-bottom: 5vw solid transparent;
   width: 0;
   height: 31vw;
   z-index: 0;
@@ -49,11 +67,33 @@
 
 
 }
+.wrapperAnonymous {
+  position: relative;
+  color: white;
+  .contentBlock {
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 7vw;
+  }
+}
+.wrapperAnonymous:before {
+  content: '';
+  border-right: 66vw solid #3023AE;
+  border-top: 7vw solid transparent;
+  border-bottom: 5vw solid transparent;
+  width: 0;
+  height: 35vw;
+  z-index: 0;
+  position: absolute;
+}
 
 .column {
   width: 50%;
   z-index: 1;
   padding: rem-calc(30px 40px);
+  position: relative;
 }
 .wrapperSmallBlock {
   margin-bottom: rem-calc(50px);
