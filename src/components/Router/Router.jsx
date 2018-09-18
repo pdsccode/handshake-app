@@ -117,6 +117,7 @@ if (BrowserDetect.isDesktop) {
     { path: URL.PRODUCT_PREDICTION_URL, render: () => <ProjectDetail type="product" name="prediction" img={imgPrediction} contentComponent={<ContentForPrediction />} reactHelmetElement={SEOPrediction} /> },
     { path: URL.HANDSHAKE_PEX, render: () => <ProjectDetail type="product" name="prediction" img={imgPrediction} contentComponent={<ContentForPrediction />} reactHelmetElement={SEOPrediction} /> },
     { path: URL.PRODUCT_WALLET_URL, render: () => <ProjectDetail type="product" name="wallet" img={imgWallet} reactHelmetElement={SEOWallet} entireContentComponent={<ContentForWallet />} /> },
+    { path: URL.PEX_EXTENSION, render: () => <ProjectDetail type="product" name="prediction" img={imgPrediction} contentComponent={<ContentForPrediction />} reactHelmetElement={SEOPrediction} /> },
     { path: URL.HANDSHAKE_PEX_CREATOR, render: () => <ProjectDetail type="product" name="prediction" img={imgPrediction} contentComponent={<ContentForPrediction />} reactHelmetElement={SEOPrediction} /> },
     { path: URL.HANDSHAKE_EXCHANGE, render: () => <ProjectDetail type="product" name="prediction" img={imgPrediction} contentComponent={<ContentForPrediction />} reactHelmetElement={SEOPrediction} /> },
     { path: URL.PRODUCT_HIVEPAY_OFFLINE_URL, render: () => <ProjectDetail type="product" name="pay-for-stores" img={imgHivepayOffline} reactHelmetElement={SEOPayForStores} /> },
