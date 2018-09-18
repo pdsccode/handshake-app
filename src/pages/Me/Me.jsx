@@ -172,8 +172,7 @@ class Me extends React.Component {
       seletedId = id;
     }
     // @TODO: chrome-ext
-    const { name } = (window.name !== '' && JSON.parse(window.name));
-    if (window.self !== window.top && name) {
+    if (window.self !== window.top) {
       seletedId = HANDSHAKE_ID.BETTING;
     }
     return seletedId;
