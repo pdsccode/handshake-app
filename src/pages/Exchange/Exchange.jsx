@@ -76,11 +76,10 @@ class Exchange extends React.Component {
   }
 
   renderNavigationBar = (props, state) => {
-    const { name } = (window.name !== '' && JSON.parse(window.name));
     const { hideNavigationBar } = props;
     const { selectedMenuId } = state;
 
-    if (hideNavigationBar || name) return null;
+    if (hideNavigationBar) return null;
     return (
       <NavigationBar
         selectedMenuId={selectedMenuId}
