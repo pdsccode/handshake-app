@@ -1,12 +1,62 @@
 @import './src/styles/style';
 
-.wrapperHowToPlay {
+.wrapperVerticalBlock {
   font-family: $font-family-base;
   line-height: 30px;
+  margin-bottom: rem-calc(150px);
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+.wrapperBlock {
+  font-family: $font-family-base;
+  line-height: 30px;
+  margin-bottom: rem-calc(150px);
+  display: flex;
+
   //position: relative;
   //transform: rotate(-30deg);
   //-color: #F3F8FF;
 
+}
+.wrapperHowToPlay {
+  position: relative;
+}
+
+.wrapperHowToPlay:before {
+  content: '';
+  box-sizing: content-box;
+  width: 100%;
+  height: 100%;
+  transform: skewY(-12deg);
+  background: #F3F8FF;
+  position: absolute;
+  z-index: 0;
+}
+.wrapperMobile {
+  position: relative;
+  color: white;
+}
+.wrapperMobile::before {
+  content: '';
+  border-left: 59vw solid #FF8308;
+  border-top: 7vw solid transparent;
+  border-bottom: 7vw solid transparent;
+  width: 0;
+  height: 31vw;
+  z-index: 0;
+  position: absolute;
+
+
+}
+
+.column {
+  width: 50%;
+  z-index: 1;
+  padding: rem-calc(30px 40px);
+}
+.wrapperSmallBlock {
+  margin-bottom: rem-calc(50px);
 
 }
 /*
@@ -28,9 +78,11 @@
 }
 .pexSmallTitle {
   font-size: rem-calc(20px);
+  margin-top: rem-calc(20px);
 }
 .pexContent {
   font-size: rem-calc(18px);
+  margin-top: rem-calc(30px);
 }
 .pexButton {
   background: #FFF988;
@@ -39,4 +91,10 @@
   letter-spacing: 0;
   border: 1px solid #F5D516;
   height: rem-calc(44px);
+  width: rem-calc(250px);
+}
+.wrapperContentHowToPlay {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }

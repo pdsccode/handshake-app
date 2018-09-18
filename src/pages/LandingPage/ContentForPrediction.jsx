@@ -28,23 +28,28 @@ import { Link } from 'react-router-dom'
 class ContentForPrediction extends React.Component {
   renderRoadMap() {
     return (
-      <PexRoadMap />
+      <PexRoadMap className="wrapperBlock" />
+    );
+  }
+  renderShapes() {
+    return (
+      <div className="wrapperMobile" />
     );
   }
   renderHowToPlay() {
     return (
-      <div className="row wrapperHowToPlay">
-        <div className="col-sm-6">
-          <img src={imgHowToPlay} alt="imgHowToPlay" />
+      <div className="wrapperHowToPlay wrapperBlock">
+        <div className="column">
+          <img src={imgHowToPlay} alt="imgHowToPlay" width="450" />
         </div>
-        <div className="col-md-4 wrapperContentHowToPlay">
-          <div>
-            <img src={icPlayTime} alt="icPlayTime" />
+        <div className="column wrapperContentHowToPlay">
+          <div className="wrapperSmallBlock">
+            <img src={icPlayTime} alt="icPlayTime" width="40" />
             <div className="pexSmallTitle">Time to change the game</div>
             <div className="pexContent">The betting industry has a problem, it’s simply not fair. It’s exclusively run by bookmakers with almost everything stacked in their favor.</div>
           </div>
-          <div>
-            <img src={icPlaySolution} alt="icPlaySolution" />
+          <div className="wrapperSmallBlock">
+            <img src={icPlaySolution} alt="icPlaySolution" width="40" />
             <div className="pexSmallTitle">The solution</div>
             <div className="pexContent">Prediction allows you to directly bet against each other without going through a bookmaker. It’s all managed by blockchain technology and secured with smart contracts.</div>
           </div>
@@ -55,45 +60,47 @@ class ContentForPrediction extends React.Component {
   }
   renderExtension() {
     return (
-      <div className="row">
-        <div className="col-sm-6">
-          <div className="pexHeadLine">Extension chrome</div>
-          <div className="pexContent">Our decentralized, blockchain based approach allows players to benefit from full transparency and total control over their betting experience. We remove the middleman and hand control back to the user.</div>
+      <div className="wrapperBlock">
+        <div className="column">
+          <div className="wrapperSmallBlock">
+            <div className="pexHeadLine">Extension chrome</div>
+            <div className="pexContent">Our decentralized, blockchain based approach allows players to benefit from full transparency and total control over their betting experience. We remove the middleman and hand control back to the user.</div>
+          </div>
           <button className="pexButton">Install our extension</button>
         </div>
-        <div className="col-md-4">
-          <img src={imgExtension} alt="imgExtension" />
+        <div className="column">
+          <img src={imgExtension} alt="imgExtension" width="550" />
         </div>
       </div>
     );
   }
   renderMobileGuide() {
     return (
-      <div className="row">
-        <div className="col-md-4">
+      <div className="wrapperMobile wrapperBlock">
+        <div className="column">
           <div className="pexHeadLine">Mobile only</div>
           <p className="pexContent">No download or signup required. </p>
           <p className="pexContent">Simply open up your browser and you’re ready to go.</p>
-          <img src={imgMobileIcon} alt="imgMobileIcon" />
+          <img src={imgMobileIcon} alt="imgMobileIcon" width="400" />
         </div>
-        <div className="col-sm-3">
-          <img src={imgMobileGuide1} alt="imgMobileGuide1" />
-        </div>
-        <div className="col-sm-3">
-          <img src={imgMobileGuide2} alt="imgMobileGuide2" />
+        <div className="column">
+          <img src={imgMobileGuide1} alt="imgMobileGuide1" width="350" />
+          <img src={imgMobileGuide2} alt="imgMobileGuide2" width="350" />
         </div>
       </div>
     );
   }
   renderMarket() {
     return (
-      <div className="row">
-        <div className="col-sm-6">
-          <img src={imgMarket} alt="imgMarket" />
+      <div className="wrapperBlock">
+        <div className="column">
+          <img src={imgMarket} alt="imgMarket" width="400" />
         </div>
-        <div className="col-md-4">
-          <div className="pexHeadLine">Make your market</div>
-          <div className="pexContent">Prediction allows anyone to create a prediction market about any future event — be it in sports, politics, science, or literally any other aspect of modern life. You, as the market creator, can set the market fee, the market closing time, the reporter of the outcome, and the reporting deadline.</div>
+        <div className="column">
+          <div className="wrapperSmallBlock">
+            <div className="pexHeadLine">Make your market</div>
+            <div className="pexContent">Prediction allows anyone to create a prediction market about any future event — be it in sports, politics, science, or literally any other aspect of modern life. You, as the market creator, can set the market fee, the market closing time, the reporter of the outcome, and the reporting deadline.</div>
+          </div>
           <button className="pexButton">Create your own bet</button>
         </div>
       </div>
@@ -102,32 +109,33 @@ class ContentForPrediction extends React.Component {
 
   renderAnonymous() {
     return (
-      <div className="wrapperAnonymous">
-        <div className="">Anonymous</div>
-        <div>The entire system works without any party revealing their identities. It’s 100% anonymous.</div>
-        <img src={imgAnonymous} alt="imgAnonymous" />
-        <img src={imgBottomMenu} alt="imgBottomMenu" />
+      <div className="wrapperVerticalBlock">
+        <div className="pexHeadLine">Anonymous</div>
+        <div className="pexContent">The entire system works without any party revealing their identities. It’s 100% anonymous.</div>
+        <img src={imgAnonymous} alt="imgAnonymous" width="600" />
+        <img src={imgBottomMenu} alt="imgBottomMenu" width="600" />
 
       </div>
     );
   }
   renderTransparency() {
     return (
-      <div className="row">
-        <div className="col-sm-6">
-          <div>Transparency</div>
-          <div>Our decentralized, blockchain based approach allows players to benefit from full transparency and total control over their betting experience. We remove the middleman and hand control back to the user.</div>
+      <div className="wrapperBlock">
+        <div className="column">
+          <div className="pexHeadLine" >Transparency</div>
+          <div className="pexContent">Our decentralized, blockchain based approach allows players to benefit from full transparency and total control over their betting experience. We remove the middleman and hand control back to the user.</div>
         </div>
-        <div className="col-md-4">
-          <img src={imgTransparent} alt="imgTransparent" />
+        <div className="column">
+          <img src={imgTransparent} alt="imgTransparent" width="350" />
         </div>
       </div>
     );
   }
   renderFeature() {
     return (
-      <img src={imgFeature} alt="imgFeature" />
-
+      <div className="wrapperVerticalBlock">
+        <img src={imgFeature} alt="imgFeature" width="100%" />
+      </div>
     );
   }
 
@@ -137,6 +145,7 @@ class ContentForPrediction extends React.Component {
       <div className='row mt-5'>
         <div className='col'>
           {/*<img src={imgPredictionContent} className='w-100' />*/}
+          {/*this.renderShapes()*/}
           {this.renderHowToPlay()}
           {this.renderExtension()}
           {this.renderMobileGuide()}
