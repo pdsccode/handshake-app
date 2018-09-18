@@ -6,6 +6,7 @@ import betting from './betting';
 import me from './me';
 import comment from './comment';
 import admin from './admin';
+import withdraw from './withdraw';
 // import firebase from './firebase';
 
 export default {
@@ -17,5 +18,6 @@ export default {
   betting,
   comment,
   admin,
+  withdraw,
   // firebase,
 };
