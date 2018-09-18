@@ -328,12 +328,20 @@ class Checkout extends React.Component {
 
   get showWallet(){
     const { messages } = this.props.intl;
-
+console.log(this.state.walletSelected);
     return !this.state.isExpired && (
       <div className="wallet-info">
       <SendWalletForm onSubmit={this.sendCoin} validate={this.invalidateTransferCoins}>
 
-        <div className ="dropdown-wallet-tranfer">
+        <div className="wallet">
+          <div className="name">{this.state.walletSelected && this.state.walletSelected.title}</div>
+          <div className="value">{this.state.walletSelected && this.state.walletSelected.getShortAddress()}</div>
+          <div className="clearfix"></div>
+          <div className="name">Balance</div>
+          <div className="value">{this.state.walletSelected && this.state.walletSelected.balance + " " + this.state.walletSelected.name}</div>
+        </div>
+
+        {/* <div className ="dropdown-wallet-tranfer">
           <Field
             name="walletSelected"
             component={fieldDropdown}
@@ -348,6 +356,7 @@ class Checkout extends React.Component {
         </div>
 
         <label className='label-balance'>{messages.wallet.action.payment.label.wallet_balance} { this.state.walletSelected ? StringHelper.format("{0} {1}", this.state.walletSelected.balance, this.state.walletSelected.name) : ""}</label>
+        */}
 
         <Button className="button-wallet-cpn" isLoading={this.state.isRestoreLoading} disabled={this.state.isDisableCheckout} type="submit" block={true}>{messages.wallet.action.payment.button.checkout}</Button>
 
@@ -363,7 +372,7 @@ class Checkout extends React.Component {
         {this.renderEvenTimeLeft(this.state.event)}
         {this.showExpiredPayment}
         {this.showPayment}
-        {this.showTabs}
+        {/* {this.showTabs} */}
         {this.showWallet}
       </div>)
 
