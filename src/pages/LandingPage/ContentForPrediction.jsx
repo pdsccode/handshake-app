@@ -33,6 +33,16 @@ import { Link } from 'react-router-dom'
 //}
 
 class ContentForPrediction extends React.Component {
+  openExtension() {
+    window.open('https://chrome.google.com/webstore/detail/pheabihpgpobcfkhkndnpkaencnjjfof', '_blank');
+  }
+  /*
+  renderIntroduce(){
+    return (
+
+    );
+  }
+  */
   renderRoadMap() {
     return (
       <PexRoadMap className="wrapperBlock" />
@@ -73,9 +83,13 @@ class ContentForPrediction extends React.Component {
         <div className="column">
           <div className="wrapperSmallBlock">
             <div className="pexHeadLine">Extension chrome</div>
-            <div className="pexContent">Our decentralized, blockchain based approach allows players to benefit from full transparency and total control over their betting experience. We remove the middleman and hand control back to the user.</div>
+            <div className="pexContent">Use Ninja Prediction on your desktop, you can browse the web, predict and win ETH with the Chrome Extension.</div>
+            <div className="pexContent">With just a click, you can create bets from (almost) anything you read & see online.</div>
           </div>
-          <button className="pexButton">Install our extension</button>
+          <button className="pexButton"
+            onClick={() => this.openExtension()}
+          >Install our extension
+          </button>
         </div>
         <div className="column">
           <img src={imgExtension} alt="imgExtension" width="550" />
@@ -102,14 +116,20 @@ class ContentForPrediction extends React.Component {
     return (
       <div className="wrapperBlock">
         <div className="column">
-          <img src={imgMarket} alt="imgMarket" width="400" />
+          <img src={imgMarket} alt="imgMarket" width="450" />
         </div>
         <div className="column">
           <div className="wrapperSmallBlock">
             <div className="pexHeadLine">Make your market</div>
             <div className="pexContent">Prediction allows anyone to create a prediction market about any future event — be it in sports, politics, science, or literally any other aspect of modern life. You, as the market creator, can set the market fee, the market closing time, the reporter of the outcome, and the reporting deadline.</div>
+            <div className="pexContent">Create your own market, please open {' '}
+            <Link to={URL.HANDSHAKE_PEX_CREATOR}>
+            https://ninja.org/create-pex
+            </Link>
+            {' '}on your mobile browser.
+            </div>
           </div>
-          <button className="pexButton">Create your own bet</button>
+          {/*<button className="pexButton">Create your own bet</button>*/}
         </div>
       </div>
     );
@@ -147,29 +167,32 @@ class ContentForPrediction extends React.Component {
       </div>
     );
   }
+  renderInstruction(){
+    return(
+      <div className='pexContent'>
+      For instructions on how to play:{' '}
+      <Link to={URL.PEX_INSTRUCTION_URL}>
+        http://ninja.org/pex/instruction
+      </Link>
+    </div>
+    );
+  }
 
   render() {
     const { messages, locale } = this.props.intl
     return (
-      <div className='row mt-5'>
-        <div className='col'>
-          {/*<img src={imgPredictionContent} className='w-100' />*/}
+      <div className=''>
+        {/*<img src={imgPredictionContent} className='w-100' />*/}
           {/*this.renderShapes()*/}
+          {this.renderInstruction()}
           {this.renderHowToPlay()}
           {this.renderExtension()}
           {this.renderMobileGuide()}
           {this.renderMarket()}
           {this.renderAnonymous()}
           {this.renderTransparency()}
-          {this.renderFeature()}
+          {/*this.renderFeature()*/}
           {this.renderRoadMap()}
-          <div className='mt-5'>
-            For instructions on how to play:{' '}
-            <Link to={URL.PEX_INSTRUCTION_URL}>
-              http://ninja.org/pex/instruction
-            </Link>
-          </div>
-        </div>
       </div>
     );
   }
