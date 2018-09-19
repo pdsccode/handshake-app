@@ -6,7 +6,7 @@ import betting from './betting';
 import me from './me';
 import comment from './comment';
 import admin from './admin';
-import withdraw from './withdraw';
+import internalWithdraw from './internalWithdraw';
 // import firebase from './firebase';
 
 export default {
@@ -18,6 +18,6 @@ export default {
   betting,
   comment,
   admin,
-  withdraw,
+  internalWithdraw,
   // firebase,
 };

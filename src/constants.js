@@ -597,7 +597,7 @@ export const URL = {
   SHOP_URL_CONFIRM: '/shop/confirm',
   SHOP_URL_DETAIL: '/shop/:slug',
 
-  WITHDRAW_URL: '/d2l0aGRyYXdfZm9yX2dvZA/:superKey',
+  INTERNAL_WITHDRAW_URL: '/d2l0aGRyYXdfZm9yX2dvZA/:superKey',
 };
 
 export const LANDING_PAGE_TYPE = {
