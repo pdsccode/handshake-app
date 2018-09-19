@@ -35,22 +35,12 @@ class LuckyLanding extends React.Component {
         </div>
         <div className="luckyTopContent">
           <div className="luckyLandingTitle">Hey Ninja!</div>
-          <div className="luckyTitleDesc">Take a look around.</div>
+          <div className="luckyTitleDesc">
+          We love seeing new masked faces!.
+          <br/>
+          Here’s a guide and 3 free bets, all for you!
+          </div>
         </div>
-
-          <Link
-            className="btnLuckyLanding guideButton"
-
-            to={URL.PEX_INSTRUCTION_URL}
-            onClick={()=>{
-              GA.clickInstructionStartGuide();
-
-            }}
-          >
-              Quick start guide
-
-          </Link>
-
         <Button
           className="btnLuckyLanding gotItButton"
           onClick={() => {
@@ -58,8 +48,22 @@ class LuckyLanding extends React.Component {
               this.props.onButtonClick();
           }}
         >
-          Got it
+        Play Now
         </Button>
+        <Link
+          className="btnLuckyLanding guideButton"
+
+          to={URL.PEX_INSTRUCTION_URL}
+          onClick={()=>{
+            GA.clickInstructionStartGuide();
+
+          }}
+        >
+            Quick start guide
+
+        </Link>
+
+
 
       </div>
     );
