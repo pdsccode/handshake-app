@@ -22,6 +22,7 @@ class StatusButton extends Component {
     super();
     this.state = {
       transactionID: '',
+      isValid: false,
     };
     this.modal = null;
     this.onClickOpen = :: this.onClickOpen;
@@ -47,20 +48,31 @@ class StatusButton extends Component {
     });
   }
 
+  validate() {
+    const { transactionID } = this.state;
+    if (transactionID.length < 5) {
+      this.setState({ isValid: false });
+    } else {
+      this.setState({ isValid: true });
+    }
+  }
+
   handleSuccess() {
     this.modal.close();
-    // this.props.updateInternalWithdraw(res?.data);
-    // this.setState({ status: StatusButton.STATUS.SENT });
   }
 
   handleChange(e) {
+    this.validate();
+    let value = String(e?.target?.value);
+    value = value.replace(/ /g, '');
     this.setState({
-      transactionID: e?.target?.value,
+      transactionID: value,
     });
   }
 
   render() {
     const { status } = this.props;
+    const { isValid } = this.state;
     const text = status === StatusButton.STATUS.OPEN ? 'Open' : 'Sent';
     const className = status === StatusButton.STATUS.OPEN ? 'open' : 'sent';
     return (
@@ -77,7 +89,7 @@ class StatusButton extends Component {
             <FormGroup
               controlId="formBasicText"
             >
-              <ControlLabel>Please input Paypal transaction ID</ControlLabel>
+              <ControlLabel>Please input Paypal transaction ID (required)</ControlLabel>
               <FormControl
                 type="text"
                 value={this.state.transactionID}
@@ -85,7 +97,7 @@ class StatusButton extends Component {
                 onChange={this.handleChange}
               />
               <FormControl.Feedback />
-              <Button className="submit-btn" bsStyle="primary" onClick={this.onCompleteWithdraw}>OK</Button>
+              <Button disabled={!isValid} className="submit-btn" bsStyle="primary" onClick={this.onCompleteWithdraw}>OK</Button>
             </FormGroup>
           </form>
         </ModalDialog>

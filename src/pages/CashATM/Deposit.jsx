@@ -2,7 +2,13 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import {
-  API_URL, CRYPTO_CURRENCY, EXCHANGE_ACTION, FIAT_CURRENCY, HANDSHAKE_ID, MIN_AMOUNT, NB_BLOCKS,
+  API_URL,
+  CRYPTO_CURRENCY,
+  EXCHANGE_ACTION,
+  FIAT_CURRENCY,
+  HANDSHAKE_ID,
+  MIN_AMOUNT,
+  NB_BLOCKS,
   URL,
 } from '@/constants';
 import createForm from '@/components/core/form/createForm';
@@ -16,9 +22,9 @@ import iconEthereum from '@/assets/images/icon/coin/eth.svg';
 import iconBitcoinCash from '@/assets/images/icon/coin/bch.svg';
 import iconLock from '@/assets/images/icon/icons8-lock_filled.svg';
 import { formatAmountCurrency, formatMoneyByLocale } from '@/services/offer-util';
-import { isNormalInteger, minValue, minValueEqual, maxValueEqual, number, required } from '@/components/core/form/validation';
+import { maxValueEqual, minValue, minValueEqual, number, required } from '@/components/core/form/validation';
 import { bindActionCreators } from 'redux';
-import { createCreditATM, depositCoinATM, getCreditATM, trackingDepositCoinATM } from '@/reducers/exchange/action';
+import { createCashATM, depositCashATM, getCashATM, trackingDepositCashATM } from '@/reducers/exchange/action';
 import { getErrorMessageFromCode } from '@/components/handshakes/exchange/utils';
 import { hideLoading, showAlert, showLoading } from '@/reducers/app/action';
 import { MasterWallet } from '@/services/Wallets/MasterWallet';
@@ -28,7 +34,6 @@ import CreditATM from '@/services/neuron/neuron-creditatm';
 import Helper from '@/services/helper';
 import _ from 'lodash';
 import { BigNumber } from 'bignumber.js';
-import axios from 'axios';
 
 const nameFormEscrowDeposit = 'escrowDeposit';
 const FormEscrowDeposit = createForm({
@@ -65,7 +70,6 @@ class EscrowDeposit extends React.Component {
     this.state = {
       values: {},
       depositInfo: this.props.depositInfo,
-      balances: {},
     };
   }
 
@@ -106,70 +110,40 @@ class EscrowDeposit extends React.Component {
     return null;
   }
 
-  async componentDidMount() {
-    this.getCreditATM();
+  componentDidMount() {
+    this.getCashATM();
     // this.createCreditATM();
-    const balances = await this.getBalance();
-    this.setState({ balances });
   }
 
-  getCreditATM = () => {
-    this.props.getCreditATM({ PATH_URL: API_URL.EXCHANGE.CREDIT_ATM });
+  // End Cash - ATM
+
+  getCashATM = () => {
+    this.props.getCashATM({ PATH_URL: API_URL.EXCHANGE.CASH_ATM });
   }
 
-  getBalance = async () => {
-    const result = {};
-
-    for (const item of Object.values(listCurrency)) {
-      const { name: currency } = item;
-
-      const wallet = MasterWallet.getWalletDefault(currency);
-      console.log('get Balance currency', currency);
-      console.log('get Balance wallet', wallet);
-      if (wallet) {
-        const balance = await wallet.getBalance();
-        const fee = await wallet.getFee(NB_BLOCKS, true) || 0;
-
-        const bnBalance = new BigNumber(balance);
-        const bnFee = new BigNumber(fee);
-        const bnAmount = bnBalance.minus(bnFee);
-
-        console.log('balance', balance);
-        console.log('fee', fee);
-
-        result[currency] = bnAmount.isGreaterThan(new BigNumber(0)) ? bnAmount.toFormat(4, BigNumber.ROUND_DOWN) : '0';
-      } else {
-        result[currency] = 0;
-      }
-    }
-
-    console.log('checkBalance result out ', result);
-    return result;
-  }
-
-  createCreditATM = () => {
+  createCashATM = () => {
     const { authProfile, app } = this.props;
     const params = {
       username: authProfile?.username,
       email: authProfile?.email,
     };
 
-    this.props.createCreditATM({
-      PATH_URL: API_URL.EXCHANGE.CREDIT_ATM,
+    this.props.createCashATM({
+      PATH_URL: API_URL.EXCHANGE.CASH_ATM,
       data: params,
       METHOD: 'POST',
-      successFn: this.handleCreateCreditATMSuccess,
-      errorFn: this.handleCreateCreditATMFailed,
+      successFn: this.handleCreateCashATMSuccess,
+      errorFn: this.handleCreateCashATMFailed,
     });
   }
 
-  handleCreateCreditATMSuccess = (data) => {
+  handleCreateCashATMSuccess = (data) => {
     console.log('handleCreateCreditATMSuccess', data);
 
     this.handleDeposit();
   }
 
-  handleCreateCreditATMFailed = (e) => {
+  handleCreateCashATMFailed = (e) => {
     this.hideLoading();
 
     this.props.showAlert({
@@ -284,24 +258,19 @@ class EscrowDeposit extends React.Component {
 
     console.log('showNotEnoughCoinAlert ', currency, condition, balance, amount, fee);
 
-    let remainBalance = bnBalance.minus(bnFee);
-    remainBalance = remainBalance.isGreaterThan(new BigNumber(0)) ? remainBalance.toFormat(4, BigNumber.ROUND_DOWN) : '0';
-
     if (condition) {
       this.props.showAlert({
         message: <div className="text-center">
           <FormattedMessage
-            id="notEnoughCoinInWalletDeposit"
+            id="notEnoughCoinInWallet"
             values={{
-            amount: remainBalance,
-            currency,
-            // fee: formatAmountCurrency(fee),
-            // balance: formatAmountCurrency(balance),
+            amount: formatAmountCurrency(balance),
+            fee: formatAmountCurrency(fee),
             currency,
           }}
           />
         </div>,
-        timeOut: 5000,
+        timeOut: 3000,
         type: 'danger',
         callBack: () => {
         },
@@ -335,7 +304,7 @@ class EscrowDeposit extends React.Component {
       const { updatedAt, ...rest } = depositInfo;
 
       if (_.isEmpty(rest)) {
-        this.createCreditATM();
+        this.createCashATM();
       } else {
         this.handleDeposit();
       }
@@ -365,8 +334,8 @@ class EscrowDeposit extends React.Component {
       user_address: wallet.address,
     };
 
-    this.props.depositCoinATM({
-      PATH_URL: API_URL.EXCHANGE.DEPOSIT_CREDIT_ATM,
+    this.props.depositCashATM({
+      PATH_URL: `${API_URL.EXCHANGE.CASH_ATM}/deposit`,
       data: params,
       METHOD: 'POST',
       successFn: this.handleDepositCoinSuccess,
@@ -383,25 +352,11 @@ class EscrowDeposit extends React.Component {
       reason,
     };
 
-    this.props.trackingDepositCoinATM({
-      PATH_URL: API_URL.EXCHANGE.CREDIT_ATM_TRANSFER,
+    this.props.trackingDepositCashATM({
+      PATH_URL: `${API_URL.EXCHANGE.CASH_ATM}/tracking`,
       data: params,
       METHOD: 'POST',
     });
-  }
-
-  async getNonce() {
-    try {
-      const url = `${process.env.PUBLIC_URL}/public-api/exchange/nonce`;
-      const response = await axios.get(url);
-
-      if (response.status === 200) {
-        return response.data.data;
-      }
-    } catch (e) {
-    }
-
-    return undefined;
   }
 
   handleDepositCoinSuccess = async (data) => {
@@ -425,8 +380,8 @@ class EscrowDeposit extends React.Component {
     // const system_address = '0x446b95a1b02af808fa13711cb7d7469617ae9775';
 
     gtag.event({
-      category: taggingConfig.depositATM.category,
-      action: taggingConfig.depositATM.action.depositSuccess,
+      category: taggingConfig.depositCashATM.category,
+      action: taggingConfig.depositCashATM.action.depositSuccess,
       label: currency,
       value: amount,
     });
@@ -479,7 +434,7 @@ class EscrowDeposit extends React.Component {
     if (callbackSuccess) {
       callbackSuccess();
     } else {
-      this.props.history.push(`${URL.HANDSHAKE_ME}?id=${HANDSHAKE_ID.CREDIT}`);
+      this.props.history.push(`${URL.HANDSHAKE_ME}?id=${HANDSHAKE_ID.EXCHANGE}`);
     }
   };
 
@@ -516,9 +471,6 @@ class EscrowDeposit extends React.Component {
     const { messages } = this.props.intl;
     const { intl, hideNavigationBar } = this.props;
     const { listOfferPrice } = this.props;
-    const { balances } = this.state;
-
-    console.log('render balances', balances);
 
     return (
       <div className="escrow-deposit">
@@ -537,12 +489,12 @@ class EscrowDeposit extends React.Component {
                 <div className="d-inline-block escrow-label">
                   <FormattedMessage id="escrow.label.iWantTo" />
                 </div>
-                {/*<div className="d-inline-block escrow-label percentage-label">*/}
-                  {/*%*/}
-                {/*</div>*/}
-                {/*<div className="d-inline-block escrow-label price-label">*/}
-                  {/*<FormattedMessage id="escrow.label.price" />*/}
-                {/*</div>*/}
+                {/* <div className="d-inline-block escrow-label percentage-label"> */}
+                {/* % */}
+                {/* </div> */}
+                {/* <div className="d-inline-block escrow-label price-label"> */}
+                {/* <FormattedMessage id="escrow.label.price" /> */}
+                {/* </div> */}
               </div>
               {listCurrency.map(coin => {
                 const { name, icon, allowPercentage } = coin;
@@ -554,7 +506,6 @@ class EscrowDeposit extends React.Component {
 
                 let fiatCurrency = offerPrice && offerPrice.price || 0;
                 fiatCurrency *= (1 + ((+this.props[`percentage_${name}`]) / 100));
-                const hint = balances[name] || 0;
 
                 return (
                   <div key={name} className="mt-2">
@@ -569,7 +520,7 @@ class EscrowDeposit extends React.Component {
                             <img src={icon} className="icon-deposit" />
                           }
                           validate={[number]}
-                          placeholder={hint}
+                          placeholder="0"
                         />
                       </div>
                     </div>
@@ -605,20 +556,20 @@ class EscrowDeposit extends React.Component {
                     <FormattedMessage id="escrow.label.sellingPriceCaption" />
                   </div>
                 </div>
-                {/*<div className="w-25 d-inline-block align-middle">*/}
-                  {/*<div style={{ position: 'relative' }}>*/}
-                    {/*<Field*/}
-                      {/*name="percentage"*/}
-                      {/*className="form-control pr-4"*/}
-                      {/*type="tel"*/}
-                      {/*component={fieldInput}*/}
-                      {/*elementAppend={*/}
-                        {/*<span className="percentage-symbol escrow-label font-weight-normal">%</span>*/}
-                      {/*}*/}
-                      {/*validate={[number, required]}*/}
-                    {/*/>*/}
-                  {/*</div>*/}
-                {/*</div>*/}
+                {/* <div className="w-25 d-inline-block align-middle"> */}
+                {/* <div style={{ position: 'relative' }}> */}
+                {/* <Field */}
+                {/* name="percentage" */}
+                {/* className="form-control pr-4" */}
+                {/* type="tel" */}
+                {/* component={fieldInput} */}
+                {/* elementAppend={ */}
+                {/* <span className="percentage-symbol escrow-label font-weight-normal">%</span> */}
+                {/* } */}
+                {/* validate={[number, required]} */}
+                {/* /> */}
+                {/* </div> */}
+                {/* </div> */}
               </div>
               <div className="mt-3">
                 <button type="submit" className="btn btn-primary btn-block">
@@ -653,10 +604,11 @@ const mapDispatch = dispatch => ({
   showAlert: bindActionCreators(showAlert, dispatch),
   showLoading: bindActionCreators(showLoading, dispatch),
   hideLoading: bindActionCreators(hideLoading, dispatch),
-  getCreditATM: bindActionCreators(getCreditATM, dispatch),
-  createCreditATM: bindActionCreators(createCreditATM, dispatch),
-  depositCoinATM: bindActionCreators(depositCoinATM, dispatch),
-  trackingDepositCoinATM: bindActionCreators(trackingDepositCoinATM, dispatch),
+
+  getCashATM: bindActionCreators(getCashATM, dispatch),
+  createCashATM: bindActionCreators(createCashATM, dispatch),
+  depositCashATM: bindActionCreators(depositCashATM, dispatch),
+  trackingDepositCashATM: bindActionCreators(trackingDepositCashATM, dispatch),
 });
 
 export default injectIntl(connect(mapState, mapDispatch)(EscrowDeposit));
