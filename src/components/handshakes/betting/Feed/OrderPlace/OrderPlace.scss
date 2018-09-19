@@ -15,7 +15,7 @@
   flex-direction: column;
   justify-content: space-between;
   flex: 1;
-  padding: 20px 0;
+  padding: 20px 0 0;
   .TabList {
     justify-content: space-between;
     min-height: 38px;
@@ -81,7 +81,7 @@
     }
     .TabPanel {
       flex: 1;
-      overflow: auto;
+      overflow-y: auto;
     }
   }
   .OrderModeType {
@@ -161,7 +161,7 @@
   }
   .orderBookContainer {
     border-top: 1px solid #EDF0FA;
-    padding: 15px 0 0 0;
+    padding: 15px 0;
     .orderBookTitle {
       color: #000000;
       font-size: 0.75rem;

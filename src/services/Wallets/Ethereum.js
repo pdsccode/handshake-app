@@ -4,6 +4,7 @@ import configs from '@/configs';
 import { StringHelper } from '@/services/helper';
 import {MasterWallet} from "./MasterWallet";
 import Tx from 'ethereumjs-tx';
+import { getEstimateGas } from "@/components/handshakes/betting/utils";
 
 const Web3 = require('web3');
 const EthereumTx = require('ethereumjs-tx');
@@ -70,15 +71,17 @@ export class Ethereum extends Wallet {
   }
 
   async getFee() {
-    const web3 = this.getWeb3();
-    const gasPrice = new BN(await web3.eth.getGasPrice());
-    //const estimateGas = new BN(balance).div(gasPrice);
-    const limitedGas = 210000;
-    //const estimatedGas = await BN.min(estimateGas, limitedGas);
+    return await getEstimateGas();
 
-    console.log('transfer gasPrice->', parseInt(gasPrice));
-    //console.log('transfer estimatedGas->', String(estimatedGas));
-    console.log('transfer limitedGas->', String(limitedGas));
+    // const web3 = this.getWeb3();
+    // const gasPrice = new BN(await web3.eth.getGasPrice());
+    // //const estimateGas = new BN(balance).div(gasPrice);
+    // const limitedGas = 210000;
+    // //const estimatedGas = await BN.min(estimateGas, limitedGas);
+    //
+    // console.log('transfer gasPrice->', parseInt(gasPrice));
+    // //console.log('transfer estimatedGas->', String(estimatedGas));
+    // console.log('transfer limitedGas->', String(limitedGas));
 
     // return Web3.utils.fromWei(estimatedGas);
   }
