@@ -15,10 +15,16 @@ class InternalWithdraw extends Component {
       return null;
     }
 
-    // load withdraw list
+    // load processing withdraw list
     this.props.loadWithdrawList({
       PATH_URL: API_URL.INTERNAL.GET_WITHDRAW_LIST,
       qs: { status: 'processing' },
+    });
+
+    // load processed withdraw list
+    this.props.loadWithdrawList({
+      PATH_URL: API_URL.INTERNAL.GET_WITHDRAW_LIST,
+      qs: { status: 'processed' },
     });
     return null;
   }
@@ -41,6 +47,7 @@ class InternalWithdraw extends Component {
           <tr>
             <th>Email</th>
             <th>Amount</th>
+            <th>Transaction ID</th>
             <th>Create at</th>
             <th>Status</th>
           </tr>
@@ -56,6 +63,7 @@ class InternalWithdraw extends Component {
               <tr key={withdraw.id}>
                 <td>{withdraw?.information?.username || '---'}</td>
                 <td>{withdraw?.amount || 0}</td>
+                <td>{withdraw.processed_id || '---'}</td>
                 <td>{this.parseHumanTime(withdraw?.created_at)}</td>
                 <td><StatusButton withdrawId={withdraw?.id} status={withdraw?.status} /></td>
               </tr>
