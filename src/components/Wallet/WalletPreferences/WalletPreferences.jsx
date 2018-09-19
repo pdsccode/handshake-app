@@ -2,12 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import './WalletPreferences.scss';
-import Switch from '../../../../components/core/controls/Switch';
+import Switch from '@/components/core/controls/Switch';
 import Input from '../Input';
 import Modal from '@/components/core/controls/Modal';
 import {injectIntl} from 'react-intl';
 import { ENGINE_METHOD_DIGESTS } from 'constants';
-import { showPasscodeConfirm } from '@/reducers/app/action';
+import { newPasscode, requestWalletPasscode,  } from '@/reducers/app/action';
 
 class WalletPreferences extends React.Component {
   constructor(props) {
@@ -38,12 +38,16 @@ class WalletPreferences extends React.Component {
     //   this.props.onUpdateWalletName(this.props.wallet);
     //   this.modalWalletNameRef.close();
     // }
-    console.log('this.props.showPasscodeConfirm...');
-    this.props.showPasscodeConfirm({
-      valueConfirm: 1234, 
-      isShow: true,           
-      onBack: () => {alert('onBack');},
-      onSuccess: () => {alert("onSuccess");},
+    console.log('this.props.newPasscode...');
+    // this.props.newPasscode({      
+    //   onSuccess: () => {
+    //     alert("onSuccess");
+    //   },
+    // });
+    this.props.newPasscode({      
+      onSuccess: () => {
+        alert("onSuccess");
+      },
     });
   }
 
@@ -124,7 +128,7 @@ WalletPreferences.propTypes = {
 };
 
 const mapDispatch = ({  
-  showPasscodeConfirm,  
+  newPasscode, requestWalletPasscode, 
 });
 
 

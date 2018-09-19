@@ -83,7 +83,7 @@ import BackChevronSVGWhite from '@/assets/images/icon/back-chevron-white.svg';
 import customRightIcon from '@/assets/images/wallet/icons/icon-options.svg';
 import floatButtonScanQRCode from '@/assets/images/wallet/icons/float-button-scan.svg';
 
-import WalletPreferences from './Components/WalletPreferences'
+import WalletPreferences from '@/components/Wallet/WalletPreferences'
 
 const QRCode = require('qrcode.react');
 

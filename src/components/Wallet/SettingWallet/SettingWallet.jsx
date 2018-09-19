@@ -19,6 +19,13 @@ import ModalDialog from '@/components/core/controls/ModalDialog';
 import './SettingWallet.scss';
 import Dropdown from '@/components/core/controls/Dropdown';
 
+import '../WalletPreferences/WalletPreferences.scss';
+
+import Switch from '@/components/core/controls/Switch';
+import Input from '../Input';
+import { ENGINE_METHOD_DIGESTS } from 'constants';
+import { newPasscode, requestWalletPasscode,  } from '@/reducers/app/action';
+
 const amountValid = value => (value && isNaN(value) ? 'Invalid amount' : undefined);
 
 const nameFormSetting = 'FormSetting';
@@ -74,13 +81,7 @@ class SettingWallet extends React.Component {
         alternateCurrency = setting.wallet.alternateCurrency
 
       this.setState({alternateCurrency: alternateCurrency});
-    }
-
-    //cryptoAddress
-    // if(this.state.cryptoAddress < 0){
-    //   let cryptoAddress = !setting || !setting.wallet || !setting.wallet.cryptoAddress ? 1 : setting.wallet.cryptoAddress;
-    //   this.setState({cryptoAddress: cryptoAddress});
-    // }
+    }   
   }
 
   showLoading = () => {
@@ -101,16 +102,6 @@ class SettingWallet extends React.Component {
     return currencies;
   }
 
-  // listCryptoAddress = () => {
-  //   const { messages } = this.props.intl;
-
-  //   return [
-  //     { id: 1, value: messages.wallet.action.setting.label.short_address },
-  //     { id: 2, value: messages.wallet.action.setting.label.shortest_address },
-  //     { id: 3, value: messages.wallet.action.setting.label.hide_address }
-  //   ];
-  // }
-
   onCurrenciesSelected = (item) =>{
     const { messages } = this.props.intl;
 
@@ -126,21 +117,6 @@ class SettingWallet extends React.Component {
     this.showSuccess(messages.wallet.action.setting.success.save_alternative_currency);
   }
 
-  // onAddressSelected = (item) =>{
-  //   const { messages } = this.props.intl;
-
-  //   let setting = local.get(APP.SETTING);
-  //   if(!setting)
-  //     setting = {};
-
-  //   if(!setting.wallet)
-  //     setting.wallet = {};
-
-  //   setting.wallet.cryptoAddress = item.id;
-  //   local.save(APP.SETTING, setting);
-  //   this.showSuccess(messages.wallet.action.setting.success.save_crypto_address);
-  // }
-
   getCountryName(locale) {
     const hasSupportLanguage = LANGUAGES.find(language => language.code === locale);
     return hasSupportLanguage || LANGUAGES[0];
@@ -154,61 +130,49 @@ class SettingWallet extends React.Component {
   render() {
     const { messages } = this.props.intl;
 
-    return (
-      <div>
-        <SettingForm className="settingwallet-wrapper" onSubmit={this.saveSetting}>
+    return (      
+        // <div className="settingwallet-wrapper">
 
-          <div className="bgBox">
+        //   <div className="bgBox">
 
-            <div className ="dropdown-wallet-tranfer">
+        //     <div className ="dropdown-wallet-tranfer">
+        //       <p className="labelText">{messages.wallet.action.setting.label.alternative_currency}</p>
+        //       <Dropdown
+        //         placeholder={messages.wallet.action.setting.label.select_alternative_currency}
+        //         defaultId={this.state.alternateCurrency}
+        //         source={this.state.currencies}
+        //         onItemSelected={this.onCurrenciesSelected}
+        //         hasSearch
+        //       />
+        //     </div>            
+        //   </div>
+        // </div>
+
+
+        <div className="box-setting">
+
+            <div className="item" onClick={()=> {this.onOpenModalName();}}>
               <p className="labelText">{messages.wallet.action.setting.label.alternative_currency}</p>
-              <Dropdown
-                placeholder={messages.wallet.action.setting.label.select_alternative_currency}
-                defaultId={this.state.alternateCurrency}
-                source={this.state.currencies}
-                onItemSelected={this.onCurrenciesSelected}
-                hasSearch
-              />
+                <Dropdown
+                  placeholder={messages.wallet.action.setting.label.select_alternative_currency}
+                  defaultId={this.state.alternateCurrency}
+                  source={this.state.currencies}
+                  onItemSelected={this.onCurrenciesSelected}
+                  hasSearch
+                />
             </div>
 
-            {/* <div className ="dropdown-setting">
-              <p className="labelText">{messages.wallet.action.setting.label.crypto_address}</p>
-              <Dropdown
-                placeholder={messages.wallet.action.setting.label.select_crypto_address}
-                defaultId={this.state.cryptoAddress}
-                source={this.listCryptoAddress()}
-                onItemSelected={this.onAddressSelected}
-              />
-            </div> */}
-            {/* <div className="row multi-language">
-              <div className="label">Language</div>
-              <div className="value" onClick={() => this.modalLanguageRef.open()}>{countrySelecting.name}</div>
-
-              <ModalDialog onRef={(modal) => { this.modalLanguageRef = modal; return null; }}>
-                <div className="country-block">
-                  <p className="text">Select your language</p>
-                  {
-                    LANGUAGES.map(language => (
-                      <div
-                        key={language.code}
-                        className={`country ${locale === language.code && 'active'}`}
-                        onClick={() => this.changeCountry(language.code)}
-                      >
-                        <span className="name">{language.name}</span>
-                        {
-                          locale === language.code && (
-                            <img className="tick" src={TickSVG} alt="active" />
-                          )
-                        }
-                      </div>
-                    ))
-                  }
+            <div className="item" onClick={()=> {this.onOpenModalName();}}>
+                <div className="name">
+                    <label>{messages.wallet.action.preferecens.list_item.wallet_name}</label>
                 </div>
-              </ModalDialog>
-            </div> */}
-          </div>
-        </SettingForm>
-      </div>
+                <div className="value">
+                    <span className="text">{wallet.title}</span>
+                </div>
+            </div>
+
+        </div>
+      
     )
   }
 }

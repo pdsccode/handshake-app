@@ -76,6 +76,12 @@ function appReducter(state = {
         ...state,
         passcodeData: action.payload,
       };
+    case APP_ACTION.HIDE_CONFIRM:
+      return {
+        ...state,
+        passcodeData: action.payload,
+      };
+    
     case APP_ACTION.SET_ROOT_LOADING:
       return {
         ...state,

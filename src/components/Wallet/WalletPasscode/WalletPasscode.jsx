@@ -4,16 +4,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import {injectIntl} from 'react-intl';
 import Modal from '@/components/core/controls/Modal';
 import './WalletPasscode.scss';
 
 import Passcode from '../Passcode';
-
+import { hidePasscode } from '@/reducers/app/action';
+import localStore from '@/services/localStore';
+import md5 from 'md5';
+import {APP} from '@/constants';
 
 class WalletPasscode extends React.PureComponent {
   static propTypes = {
-    app: PropTypes.object,
-    onBack: PropTypes.func,
+    app: PropTypes.object,  
     onSuccess: PropTypes.func,
   }
 
@@ -23,47 +26,83 @@ class WalletPasscode extends React.PureComponent {
       isShow: false,
       valueConfirm: 0,    
       contentPasscode: '',
-    };
-    // bind
-    // this.handleShowConfirm = ::this.handleShowConfirm;
+      type: 0,
+    };    
+    this.key = "passcode";
+  }
+
+  onPasscodeCancelClick=()=>{
+    this.modalConfirmPasscodeRef.close();
   }
 
   componentWillReceiveProps(nextProps) {
-    let props = nextProps.app.passcodeData || {};        
-    console.log('props',props);    
-    if (props.isShow){         
-      let contentPasscode = <Passcode confirmValue={props.valueConfirm} onFinish={(value)=> {}} />;   
-      this.setState({valueConfirm: props.valueConfirm, isShow: props.isShow, contentPasscode: contentPasscode},()=>{        
-        this.modalConfirmPasscodeRef.open();
+    let props = nextProps.app.passcodeData || {};
+    // console.log('props', props);
+    
+    let type = props.type || 0;
+    
+    if (type == 1){
+      this.newPasscode(props);
+    }    
+    else if (type == 2){
+      this.requestWalletPasscode(props);
+    }
+  }  
+
+  newPasscode(props){
+    if (props.isShow){      
+      let contentPasscode = <Passcode title={"Set your new PIN Code"} onFinish={(value)=>{this.confirmPasscode(props, value)}} onCancelClick={this.onPasscodeCancelClick} />;
+        this.setState({valueConfirm: props.valueConfirm, isShow: props.isShow, contentPasscode: contentPasscode},()=>{        
+          this.modalConfirmPasscodeRef.open();
       });      
     }
-    else{
-      this.reset();            
+  }
+
+  confirmPasscode(props, value){
+    if (props.isShow){      
+      this.setState({contentPasscode: ""}, ()=>{
+          let contentPasscode = <Passcode title={"Confirm your PIN Code"} confirmValue={value} onFinish={()=> {this.savePasscode(props, value)}} onCancelClick={this.onPasscodeCancelClick}/>;
+          this.setState({valueConfirm: props.valueConfirm, isShow: props.isShow, contentPasscode: contentPasscode},()=>{        
+            this.modalConfirmPasscodeRef.open();
+        });
+      });
+            
+    }
+  }
+  
+  savePasscode=(props, md5Passcode)=>{        
+    localStore.save(this.key, md5Passcode);
+    props.onSuccess();
+    this.modalConfirmPasscodeRef.close();
+  }
+  getPasscode(){
+    let setting = localStore.get(APP.SETTING); 
+    if(setting){
+      return setting["wallet"]['passcode'];
+    }
+    return null;
+  }
+
+  onRequestWalletPasscodeSuccess=(props)=>{
+    props.onSuccess();
+    this.modalConfirmPasscodeRef.close();
+  }
+
+  requestWalletPasscode(props){
+    if (props.isShow){
+      let onSuccess = props.onSuccess;
+      let confirmValue = this.getPasscode();
+      let contentPasscode = <Passcode title={"Unlock your Wallet"} confirmValue={confirmValue} onFinish={()=>{this.onRequestWalletPasscodeSuccess(props);}} onCancelClick={this.onPasscodeCancelClick}/>;
+        this.setState({valueConfirm: props.valueConfirm, isShow: props.isShow, contentPasscode: contentPasscode},()=>{        
+          this.modalConfirmPasscodeRef.open();
+      });      
     }
   }
 
-  configDefault = {
-    isShow: false,
-    valueConfirm: 0,    
-    onSuccess: () => {},
-    onBack: () => {},
-  }
 
-  handleShowConfirm(props) {
-    const { configConfirmPasscode } = props.app;
-    const config = Object.assign({}, this.configDefault, configConfirmPasscode);
-    config.onSuccess();
-    if (config.isShow) {              
-        // call back
-        config.onBack();
-      
-    }
-    this.setState({ ...config });
-  }
-
-  reset=()=>{
-    console.log("reset");
+  hidePasscode=()=>{    
     this.setState({valueConfirm: 0, isShow: false, contentPasscode: ''}); 
+    this.props.hidePasscode();
   }
 
   render() {
@@ -71,7 +110,7 @@ class WalletPasscode extends React.PureComponent {
     // const { messages } = this.props.intl;      
     return (
       
-    <Modal modalBodyStyle={{"padding": 0}} onClose={() => {this.reset();}} title={"PASSCODE"} onRef={modal => this.modalConfirmPasscodeRef = modal}>
+    <Modal modalHeaderStyle={{"display": "none"}} modalBodyStyle={{"padding": 0, "background": "#42399c"}} onClose={() => {this.hidePasscode();}} title={"PASSCODE"} onRef={modal => this.modalConfirmPasscodeRef = modal}>
       <div className="wallet-passscode">
       {/* <div className="wallet-passscode-title">
         Remember this Password. If you forget it, you can lost wallet
@@ -89,7 +128,8 @@ const mapState = state => ({
 });
 
 const mapDispatch = ({
-  
+  hidePasscode,
 });
 
-export default connect(mapState, mapDispatch)(WalletPasscode);
+
+export default injectIntl(connect(mapState, mapDispatch)(WalletPasscode));

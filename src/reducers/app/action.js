@@ -15,6 +15,7 @@ import BrowserDetect from '@/services/browser-detect';
 export const APP_ACTION = {
 
   SHOW_CONFIRM: 'SHOW_CONFIRM',
+  HIDE_CONFIRM: 'SHOW_CONFIRM',
 
   NETWORK_ERROR: 'NETWORK_ERROR',
 
@@ -60,7 +61,9 @@ export const APP_ACTION = {
 };
 
 // confirm passcode:
-export const showPasscodeConfirm = config => ({ type: APP_ACTION.SHOW_CONFIRM, payload: { isShow: false, ...config } });
+export const newPasscode = config => ({ type: APP_ACTION.SHOW_CONFIRM, payload: { isShow: true, type: 1, ...config } });
+export const requestWalletPasscode = config => ({ type: APP_ACTION.SHOW_CONFIRM, payload: { isShow: true, type: 2, ...config } });
+export const hidePasscode = config => ({ type: APP_ACTION.HIDE_CONFIRM, payload: { isShow: false, type: 3, ...config } });
 
 // Loading
 export const showLoading = config => ({ type: APP_ACTION.LOADING, payload: { ...config } });
