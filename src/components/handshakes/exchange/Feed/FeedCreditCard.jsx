@@ -122,6 +122,8 @@ class FeedCreditCard extends React.Component {
       cryptoPrice: this.props.cryptoPrice,
       wallets: [],
       walletSelected: false,
+      allowBuy: true,
+      hasSelectedPackage: false,
     };
   }
 
@@ -230,6 +232,7 @@ class FeedCreditCard extends React.Component {
   handleGetCryptoPriceSuccess = (responseData) => {
     // console.log('handleGetCryptoPriceSuccess', data);
     // const { userCcLimit } = this.props;
+    const { hasSelectedPackage } = this.state;
     const { amount } = this.props;
     const { rfChange } = this.props;
     const cryptoPrice = CryptoPrice.cryptoPrice(responseData.data);
@@ -240,6 +243,12 @@ class FeedCreditCard extends React.Component {
     fiatAmount = roundNumberByLocale(fiatAmount, cryptoPrice.fiatCurrency, DECIMAL_NUMBER);
     console.log('onAmountChange', fiatAmount);
     rfChange(nameFormSpecificAmount, 'fiatAmount', fiatAmount);
+
+    this.setState({ allowBuy: true });
+
+    if (hasSelectedPackage) {
+      this.setState({ hasSelectedCoin: true, hasSelectedPackage: false });
+    }
 
     // this.generatePackages(cryptoPrice);
 
@@ -255,7 +264,7 @@ class FeedCreditCard extends React.Component {
 
   handleGetCryptoPriceFailed = (e) => {
     console.log('handleGetCryptoPriceFailed', e);
-
+    this.setState({ allowBuy: false, hasSelectedPackage: false });
     this.props.showAlert({
       message: <div className="text-center">{getErrorMessageFromCode(e)}</div>,
       timeOut: 3000,
@@ -616,7 +625,7 @@ class FeedCreditCard extends React.Component {
   handleBuyPackage = (item) => {
     const { amount } = item;
     this.setState({
-      hasSelectedCoin: true, amount,
+      hasSelectedPackage: true, amount,
     }, () => {
       this.getCryptoPriceByAmount(amount);
     });
@@ -680,7 +689,7 @@ class FeedCreditCard extends React.Component {
     const { hasSelectedCoin, wallets, walletSelected } = this.state;
     const { intl, isPopup } = this.props;
     const { amount, cryptoPrice } = this.props;
-    const { currency } = this.state;
+    const { currency, allowBuy } = this.state;
 
     const packages = listPackages[currency];
 
@@ -736,7 +745,7 @@ class FeedCreditCard extends React.Component {
               />
             </div>
             <div className="mt-3 mb-3">
-              <button type="submit" className="btn btn-lg btn-primary btn-block btn-submit-specific">
+              <button type="submit" className="btn btn-lg btn-primary btn-block btn-submit-specific" disabled={!allowBuy}>
                 <img src={iconLock} width={20} className="align-top mr-2" /><span>{EXCHANGE_ACTION_NAME[EXCHANGE_ACTION.BUY]} {amount} {CRYPTO_CURRENCY_NAME[currency]}</span>
               </button>
             </div>
