@@ -55,7 +55,7 @@ let listCurrency = Object.values(CRYPTO_CURRENCY_CREDIT_CARD).map((item) => {
 
 const PERCENT = {
   MIN: 0,
-  MAX: 200,
+  MAX: 15,
 };
 
 class EscrowDeposit extends React.Component {
