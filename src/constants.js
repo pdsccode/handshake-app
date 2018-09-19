@@ -223,6 +223,7 @@ export const API_URL = {
     GENERATE_LINK: 'cryptosign/outcome/generate-link',
     PREDICTION_STATISTICS: 'cryptosign/outcome/ninja-predict',
     SUBCRIBE_EMAIL_PREDICTION: 'cryptosign/subscribe',
+    SUBSCRIBE_EMAIL_EXTENSION: 'user/subscribe',
 
   },
   DISCOVER: {

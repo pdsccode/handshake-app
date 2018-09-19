@@ -8,6 +8,7 @@ import commentIcon from '@/assets/images/icon/comment.svg';
 import ShareSocial from '@/components/core/presentation/ShareSocial';
 import { URL } from '@/constants';
 import GA from '@/services/googleAnalytics';
+import { randomArrayItem } from '@/utils/array';
 import { formatAmount } from '@/utils/number';
 import OutcomeList from './OutcomeList';
 
@@ -95,8 +96,24 @@ function renderShareSocial(props) {
       title: 'COPY',
     },
   ];
+  const messages = [
+    'I\'m making a prediction on Ninja.. might win some crypto. Play against me!',
+    'Check out this event. I’ve put some crypto on the outcome. Join me?',
+    'Hey, found a crypto p2p prediction platform. No bookies, 100% anonymous! Check it out.',
+    'Feel good about this result. Placed a prediction on Ninja. You in?',
+    'I’m predicting the future on Ninja. Will probably win ETH as i’m always right. You should try it.',
+    'Hey, I’ve been playing Ninja Predicts - excited to earn crypto for being right. You get a free go - use it!',
+    'Sending you a free go for this crypto prediction platform. Choose a cool event and give it a shot!',
+    'Just tried out Ninja Predicts. Seems pretty cool. You get a free first prediction - nothing to lose. Could win crypto!',
+    'I’ve just put some crypto on this. Wanna play against me? Your first prediction is free!',
+    'Waiting to cash out on Ninja Predicts. Have a go, you might win some crypto. Your first try is free!',
+    'Holly sh!t, it\'s so easy to predict in this game',
+    'Muahaha can\'t believe I can easily create a prediction in the crypto world',
+    'Do you dare to predict this event with me? Don\'t think u can win me.',
+  ];
+  const title = randomArrayItem(messages);
   const shareURL = `${window.location.origin}${URL.HANDSHAKE_PEX}?match=${id}`;
-  return (<ShareSocial title="Ninja" shareUrl={shareURL} socialList={socialList} />);
+  return (<ShareSocial title={title} shareUrl={shareURL} socialList={socialList} />);
 }
 
 function EventItem(props) {
