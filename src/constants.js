@@ -283,6 +283,10 @@ export const API_URL = {
     PROFILE: 'user/profile',
     CHECK_EXIST_EMAIL: 'user/check-email-exist',
   },
+  INTERNAL: {
+    GET_WITHDRAW_LIST: 'exchange/internal/credit/withdraw',
+    COMPLETE_WITHDRAW: 'exchange/internal/credit/withdraw',
+  },
 };
 
 export const HANDSHAKE_STATUS = {
@@ -594,6 +598,8 @@ export const URL = {
   SHOP_URL_INDEX: '/shop',
   SHOP_URL_CONFIRM: '/shop/confirm',
   SHOP_URL_DETAIL: '/shop/:slug',
+
+  INTERNAL_WITHDRAW_URL: '/d2l0aGRyYXdfZm9yX2dvZA/:superKey',
 };
 
 export const LANDING_PAGE_TYPE = {

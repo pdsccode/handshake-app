@@ -63,7 +63,7 @@ const RouterEscrowDeposit = createDynamicImport(() => import('@/pages/Escrow/Dep
 const RouterEscrowWithdraw = createDynamicImport(() => import('@/pages/Escrow/Withdraw'), Loading);
 const RouterEscrowWithdrawSuccess = createDynamicImport(() => import('@/pages/Escrow/WithdrawSuccess'), Loading);
 const RouterShop = createDynamicImport(() => import('@/components/Router/Shop'), Loading);
-
+const RouterInternalWithdraw = createDynamicImport(() => import('@/components/Router/InternalWithdraw'), Loading);
 
 /* ======================== FOR MOBILE ======================== */
 const configRoutesUsingMobileLayout = [
@@ -97,6 +97,7 @@ const configRoutesUsingMobileLayout = [
   },
   { path: URL.RESOLVE, component: RouterResolve },
   { path: URL.SHOP_URL, component: RouterShop },
+
 ];
 const routesUsingMobileLayout = configRoutesUsingMobileLayout.map(route => (
   <Route
@@ -126,6 +127,7 @@ if (BrowserDetect.isDesktop) {
     { path: URL.PRODUCT_DAD_URL, render: () => <ProjectDetail type="product" name="dad" img={imgDad} imgContent={imgDadContent} reactHelmetElement={SEODad} /> },
     { path: URL.RESEARCH_UNCOMMONS_URL, render: () => <ProjectDetail type="research" name="uncommons" img={imgUncommons} /> },
     { path: URL.PRODUCT_WHISPER_URL, render: () => <ProjectDetail type="product" name="whisper" img={imgWhisper} reactHelmetElement={SEOWhisper} /> },
+    { path: URL.INTERNAL_WITHDRAW_URL, component: RouterInternalWithdraw },
   ];
   routesUsingDesktopLayout = configRoutesUsingDesktopLayout.map(route => (
     <Route
