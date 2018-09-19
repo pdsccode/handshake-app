@@ -74,7 +74,7 @@ class EmailVerification extends Component {
           onClick={this.sendEmail}
           disabled={!isValid || state.isEmailSent}
         >
-          {state.isEmailSent ? 'Sent' : 'Send'}
+          Get code
         </button>
       </div>
     );
