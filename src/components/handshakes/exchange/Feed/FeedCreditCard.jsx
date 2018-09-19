@@ -264,7 +264,7 @@ class FeedCreditCard extends React.Component {
 
   handleGetCryptoPriceFailed = (e) => {
     console.log('handleGetCryptoPriceFailed', e);
-    this.setState({ allowBuy: false });
+    this.setState({ allowBuy: false, hasSelectedPackage: false });
     this.props.showAlert({
       message: <div className="text-center">{getErrorMessageFromCode(e)}</div>,
       timeOut: 3000,
