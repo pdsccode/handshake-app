@@ -61,6 +61,7 @@ export default {
   withdrawShakedfferSuccessMessage: 'Your offer has been withdrawn.',
   buyUsingCreditCardSuccessMessge: 'Your order using your credit card has gone through.',
   notEnoughCoinInWallet: 'You don\'t have enough coin right now. Please top up your wallet.',
+  notEnoughCoinInWalletDeposit: 'Your amount: {amount} must equal or less than balance - fee ({balance} - {fee}). Please top up your wallet.',
   threeDSecureNotSupported: 'Not supported this card',
 
   createOfferStoreConfirm: 'Do you want to set up an offer to {intentMsg}?',
