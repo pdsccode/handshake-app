@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Table from 'react-bootstrap/lib/table';
+// import Table from 'react-bootstrap/lib/table';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { API_URL } from '@/constants';
@@ -42,35 +42,7 @@ class InternalWithdraw extends Component {
   render() {
     const { withdraws } = this.props;
     return (
-      <Table striped bordered condensed hover>
-        <thead>
-          <tr>
-            <th>Email</th>
-            <th>Amount</th>
-            <th>Transaction ID</th>
-            <th>Create at</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {withdraws.length === 0 && (
-            <tr>
-              <td colSpan="4"><p>No record</p></td>
-            </tr>
-          )}
-          {
-            withdraws.map(withdraw => (
-              <tr key={withdraw.id}>
-                <td>{withdraw?.information?.username || '---'}</td>
-                <td>{withdraw?.amount || 0}</td>
-                <td>{withdraw.processed_id || '---'}</td>
-                <td>{this.parseHumanTime(withdraw?.created_at)}</td>
-                <td><StatusButton withdrawId={withdraw?.id} status={withdraw?.status} /></td>
-              </tr>
-            ))
-          }
-        </tbody>
-      </Table>
+      <div/>
     );
   }
 }
