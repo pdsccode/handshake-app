@@ -109,17 +109,14 @@ class Index extends React.PureComponent {
                         <span>
                     {!hasSubscribed ? (
                       <FormSubscribeEmail onSubmit={this.handleSubmit}>
-                        <div className="text-email">
-                          <FormattedHTMLMessage id={`landing_page.${name}.textEmail`} />
+                      {messages[`landing_page.${name}.label.sendLinkToEmail`] && (
+                        <div className="d-table-cell align-top text-send-link">
+                          <FormattedMessage id={`landing_page.${name}.label.sendLinkToEmail`} />
                         </div>
+                      )
+                      }
                         <div className="d-table w-100">
-                          {
-                            messages[`landing_page.${name}.label.sendLinkToEmail`] && (
-                              <div className="d-table-cell align-top text-send-link">
-                                <FormattedMessage id={`landing_page.${name}.label.sendLinkToEmail`} />
-                              </div>
-                            )
-                          }
+
                           <div className="d-table-cell align-top">
                             <Field
                               name="email"
@@ -138,6 +135,9 @@ class Index extends React.PureComponent {
                               {btnSubmitEmail}
                             </button>
                           </div>
+                        </div>
+                        <div className="text-email">
+                          <FormattedHTMLMessage id={`landing_page.${name}.textEmail`} />
                         </div>
                       </FormSubscribeEmail>
                     ) : (
