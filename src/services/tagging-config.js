@@ -34,6 +34,12 @@ const taggingConfig = {
       depositSuccess: 'deposit_success',
     },
   },
+  depositCashATM: {
+    category: 'Deposit Cash ATM',
+    action: {
+      depositSuccess: 'deposit_success',
+    },
+  },
 };
 
 export default taggingConfig;
