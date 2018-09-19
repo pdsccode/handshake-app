@@ -11,7 +11,7 @@
 .wrapperBlock {
   font-family: $font-family-base;
   line-height: 30px;
-  margin: (10vw 0);
+  margin: (20vw 0);
   display: flex;
 
   //position: relative;
@@ -61,11 +61,11 @@
 }
 .wrapperMobile::before {
   content: '';
-  border-left: 66vw solid #FF8308;
+  border-left: 78vw solid #FF8308;
   border-top: 5vw solid transparent;
   border-bottom: 5vw solid transparent;
   width: 0;
-  height: 31vw;
+  height: 39vw;
   z-index: 0;
   position: absolute;
 
