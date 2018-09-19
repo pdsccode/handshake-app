@@ -22,7 +22,6 @@ class StatusButton extends Component {
     super();
     this.state = {
       transactionID: '',
-      status: '',
     };
     this.modal = null;
     this.onClickOpen = :: this.onClickOpen;
@@ -31,14 +30,8 @@ class StatusButton extends Component {
     this.handleSuccess = ::this.handleSuccess;
   }
 
-  componentWillMount() {
-    this.setState({
-      status: this.props.status,
-    });
-  }
-
   onClickOpen() {
-    const { status } = this.state;
+    const { status } = this.props;
     if (status === StatusButton.STATUS.OPEN) {
       this.modal.open();
     }
@@ -56,7 +49,8 @@ class StatusButton extends Component {
 
   handleSuccess() {
     this.modal.close();
-    this.setState({ status: StatusButton.STATUS.SENT });
+    // this.props.updateInternalWithdraw(res?.data);
+    // this.setState({ status: StatusButton.STATUS.SENT });
   }
 
   handleChange(e) {
@@ -66,7 +60,7 @@ class StatusButton extends Component {
   }
 
   render() {
-    const { status } = this.state;
+    const { status } = this.props;
     const text = status === StatusButton.STATUS.OPEN ? 'Open' : 'Sent';
     const className = status === StatusButton.STATUS.OPEN ? 'open' : 'sent';
     return (
