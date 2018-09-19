@@ -11,7 +11,7 @@ const Withdraw = props => (<DynamicImport loading={Loading} load={() => import('
 const Page404 = props => (<DynamicImport isNotFound loading={Loading} load={() => import('@/pages/Error/Page404')}>{Component => <Component {...props} />}</DynamicImport>);
 
 const routerMap = [
-  { path: URL.WITHDRAW_URL, component: Withdraw },
+  { path: URL.INTERNAL_WITHDRAW_URL, component: Withdraw },
 ];
 
 class BuyCCRouter extends React.Component {
