@@ -10,6 +10,7 @@ import imgPromo1 from '@/assets/images/landing/wallet/promo-1.png';
 import imgLock from '@/assets/images/landing/wallet/lock-solid.svg';
 import imgCheck from '@/assets/images/landing/wallet/check-solid.svg';
 
+import './animate.css';
 import './ContentForWallet.css';
 import './ContentForWallet.scss';
 const Wallet = () => (
@@ -27,17 +28,19 @@ const Wallet = () => (
           <div className="col px-0">
             <div className="row">
               <div className="col-lg-6">
-                <h1 className="display-3  text-white">Ninja Wallet</h1>
-                <p className="text-white">No downloads. No signups. No fees.<br/>A decentralized cryptocurrency wallet that lets you stay 100% anonymous.</p>
-                <div className="btn-wrapper">
+                <div className="fadeInLeft animated">
+                  <h1 className="display-3 text-white">Ninja Wallet</h1>
+                  <p className="text-white">No downloads. No signups. No fees.<br/>A decentralized cryptocurrency wallet that lets you stay 100% anonymous.</p>
                   <p className="text-white">Access Ninja Wallet on your mobile browser</p>
+                </div>
+                <div className="btn-wrapper">
                   <a href="https://ninja.org/wallet" className="btn btn-white btn-icon mb-3 mb-sm-0">
                     <span className="btn-inner--text">Try now!</span>
                   </a>
                 </div>
               </div>
               <div className="col-lg-6 main-screen text-center">
-                <img width="300" src={imgIPHONE} />
+                <div className="fadeInRight animated"><img width="300" src={imgIPHONE} /></div>
               </div>
             </div>
           </div>
@@ -54,7 +57,7 @@ const Wallet = () => (
       <div className="container">
         <div className="row row-grid align-items-center">
           <div className="col-md-6 order-md-2">
-            <div className="icons-container mt-5 on-screen" data-toggle="on-screen">
+            <div className="icons-container mt-5 on-screen animated fadeInUp" data-toggle="on-screen">
               <i className="icon floating"><img src={imgBTC} /></i>
               <i className="icon floating"><img src={imgXRP} /></i>
               <i className="icon floating"><img src={imgETH} /></i>
