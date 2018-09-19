@@ -1,4 +1,4 @@
-import { uniqBy } from 'lodash';
+import { uniqBy, reverse, sortBy } from 'lodash';
 import { ACTIONS } from './action';
 
 // const TAG = 'InternalWithdrawReducer';
@@ -11,8 +11,9 @@ const internalWithdrawReducter = (
   switch (action.type) {
     case `${ACTIONS.LOAD_INTERNAL_WITHDRAW}_SUCCESS`:
       if (action?.payload?.data) {
-        const newList = [...state?.list, ...action?.payload?.data];
-        uniqBy(newList, item => item.id);
+        let newList = [...state?.list, ...action?.payload?.data];
+        newList = uniqBy(newList, item => item.id);
+        newList = reverse(sortBy(newList, ['status', 'created_at']));
         return {
           ...state,
           list: newList,

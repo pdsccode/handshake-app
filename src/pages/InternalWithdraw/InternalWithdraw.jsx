@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import Table from 'react-bootstrap/lib/table';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { API_URL } from '@/constants';
 import moment from 'moment';
 import { loadWithdrawList } from '@/reducers/internalWithdraw/action';
 import StatusButton from './components/StatusButton';
+import './InternalWithdraw.scss';
 
 class InternalWithdraw extends Component {
   componentDidMount() {
@@ -42,7 +42,7 @@ class InternalWithdraw extends Component {
   render() {
     const { withdraws } = this.props;
     return (
-      <Table striped bordered condensed hover>
+      <table>
         <thead>
           <tr>
             <th>Email</th>
@@ -55,7 +55,7 @@ class InternalWithdraw extends Component {
         <tbody>
           {withdraws.length === 0 && (
             <tr>
-              <td colSpan="4"><p>No record</p></td>
+              <td colSpan="5"><p>No record</p></td>
             </tr>
           )}
           {
@@ -70,7 +70,7 @@ class InternalWithdraw extends Component {
             ))
           }
         </tbody>
-      </Table>
+      </table>
     );
   }
 }
