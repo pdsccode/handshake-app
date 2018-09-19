@@ -1,22 +1,16 @@
 @import './src/styles/style';
 
 .Prediction {
-  // .Sticky {
-  //   position: fixed;
-  //   top: 0;
-  //   left: 0;
-  //   right: 0;
-  //   width: 100%;
-  //   opacity: 0.9;
-  // }
+  .Sticky {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    opacity: 0.9;
+  }
 
   #PexCreateBtn {
-    position: sticky;
-    position: -webkit-sticky;
-    position: -moz-sticky;
-    position: -ms-sticky;
-    position: -o-sticky;
-    top: 0;
     padding: 7px 0 14px 0;
     font-size: 15px;
     font-weight: 400;
