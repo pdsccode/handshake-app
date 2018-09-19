@@ -44,7 +44,7 @@ const RouterReport = createDynamicImport(() => import('@/components/Router/Repor
 const RouterLuckyPool = createDynamicImport(() => import('@/pages/LuckyLanding/LuckyLanding'), Loading);
 const RouterExchange = createDynamicImport(() => import('@/components/Router/Exchange'), Loading);
 const CreateOwnMarket = createDynamicImport(() => import('@/pages/CreateMarket/CreateMarket'), Loading);
-//const RouterExchange = createDynamicImport(() => import('@/pages/Exchange/Exchange'), Loading);
+// const RouterExchange = createDynamicImport(() => import('@/pages/Exchange/Exchange'), Loading);
 const RouterPrediction = createDynamicImport(() => import('@/pages/Prediction/Prediction'), Loading);
 const RouterResolve = createDynamicImport(() => import('@/pages/Resolve/Resolve'), Loading);
 const RouterLandingPageMain = createDynamicImport(() => import('@/pages/LandingPage/Main'), Loading);
@@ -65,9 +65,10 @@ const RouterEscrowWithdraw = createDynamicImport(() => import('@/pages/Escrow/Wi
 const RouterEscrowWithdrawSuccess = createDynamicImport(() => import('@/pages/Escrow/WithdrawSuccess'), Loading);
 const RouterShop = createDynamicImport(() => import('@/components/Router/Shop'), Loading);
 const RouterInternalWithdraw = createDynamicImport(() => import('@/components/Router/InternalWithdraw'), Loading);
-
+const RouterAtmCashTransfer = createDynamicImport(() => import('@/components/Router/AtmCashTransfer'), Loading);
 /* ======================== FOR MOBILE ======================== */
 const configRoutesUsingMobileLayout = [
+  { path: URL.ATM_CASH_TRANSFER, component: RouterAtmCashTransfer },
   { path: URL.HANDSHAKE_PREDICTION, component: RouterPrediction },
   { path: URL.HANDSHAKE_PEX, component: RouterExchange },
   { path: URL.HANDSHAKE_PEX_UPDATER, component: CreateOwnMarket },
@@ -94,11 +95,10 @@ const configRoutesUsingMobileLayout = [
     render: () => {
       window.location.href = URL.PRODUCT_DAD_URL_SUBDOMAIN;
       return null;
-    }
+    },
   },
   { path: URL.RESOLVE, component: RouterResolve },
   { path: URL.SHOP_URL, component: RouterShop },
-
 ];
 const routesUsingMobileLayout = configRoutesUsingMobileLayout.map(route => (
   <Route
