@@ -419,7 +419,41 @@ export class MasterWallet {
         return MasterWallet.forceSetDefaultMainnet(listWallet);
       }
 
-      return listWallet;
+      return MasterWallet.fixBitcoinCashTestnet(listWallet);
+    }
+
+    static fixBitcoinCashTestnet(wallets){
+      let walletTemps = [];
+      if (process.env.isLive) 
+      {
+        wallets.forEach((wallet) => {
+          if (wallet.name =='BCH'){
+            try {              
+              // console.log("fix bch testnet");
+              let newBCHWallet = new BitcoinCash();
+              newBCHWallet.mnemonic = wallet.mnemonic;
+              newBCHWallet.network = BitcoinCash.Network.Mainnet;
+              newBCHWallet.protected = wallet.protected;
+              newBCHWallet.title = wallet.title;
+              newBCHWallet.balance = wallet.balance;
+              // create address, private-key ...
+              newBCHWallet.createAddressPrivatekey();
+
+              walletTemps.push(newBCHWallet);
+              // console.log("success fix bch testnet");
+            }
+            catch (e){
+              console.log(e);
+              walletTemps.push(wallet);
+            }
+          }
+          else{
+            walletTemps.push(wallet);
+          }
+        });
+        return walletTemps;
+      }
+      return wallets;
     }
 
     static getWallets(coinName = '') {

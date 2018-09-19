@@ -62,9 +62,10 @@
 
   <!-- Custome user agent when loaded by iframe -->
   <script>
-    const windowInfo = window.name !== '' && JSON.parse(window.name);
-    const { name, ua } = windowInfo;
-    if (window.self !== window.top && name) {
+    if (window.self !== window.top) {
+      const windowInfo = window.name !== '' && JSON.parse(window.name);
+      const { name, ua } = windowInfo;
+      
       if (window.navigator.userAgent !== ua) {
         const userAgentProp = { configurable: true, get: function () { return ua; } };
         try {

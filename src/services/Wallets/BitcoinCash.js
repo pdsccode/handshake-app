@@ -21,7 +21,7 @@ export class BitcoinCash extends Bitcoin {
   }
 
   setDefaultNetwork() {
-    bitcore.Networks.defaultNetwork = bitcore.Networks.testnet;
+    bitcore.Networks.defaultNetwork = bitcore.Networks.livenet;
   }
 
   getShortAddress() {
