@@ -45,7 +45,39 @@ class ContentForPexInstruction extends React.Component {
       </div>
     );
   }
+  renderStep1() {
+    return (
+      <div className="wrapperGuideStep">
+        <div className="stepNumber">1</div>
+        <div className="pexHeadline">Backup Your Wallet</div>
+        <p className="content"><strong>First the Important stuff!</strong></p>
+        <p className="content">The entire Prediction platform is decentralized (which is awesome) but, that also means that you’re the one responsible for your wallet. Unfortunately, we can’t do anything for you, if something happens. It’s always better to be safe than sorry, so please backup your wallet.</p>
+        <p className="content">On your mobile device, open <a href="https://ninja.org/wallet">ninja.org/wallet</a></p>
+        <div className="wrapperGuideCenter">
+          <img src={StepOne1} width="350" alt="StepOne1" />
+          <p className="content">Tap the settings cog icon  in the top right corner.</p>
+          <img src={StepOne2} width="350" alt="StepOne2" />
+          <p className="content">Tap Backup wallets.</p>
+          <img src={StepOne3} width="350" alt="StepOne3" />
+          <p className="content">You’ll see your private key code. Tap Copy it somewhere safe.</p>
+        </div>
+        <br />
+        <div className="wrapperGuideCenter">
+          <p>No problem if you don’t, you can buy some directly in-app with your credit card.</p>
+          <div className="wrapperImages">
+            <img src={StepOne4} width="350" alt="StepOne4" />
+            <img src={StepOne5} width="350" alt="StepOne5" />
+          </div>
+          <p>Or you can also use popular coin exchanges like <a target="__blank" className="landing-link" href="https://www.coinbase.com/">Coinbase</a> or <a className="landing-link" target="__blank" href="https://www.binance.com">Binance</a>.</p>
 
+        </div>
+
+      </div>
+    );
+
+  }
+
+  /*
   renderStep1() {
     return (
       <div className="wrapperGuideStep">
@@ -72,6 +104,7 @@ class ContentForPexInstruction extends React.Component {
     );
 
   }
+  */
   renderStep2() {
     return (
       <div className="wrapperGuideStep">
