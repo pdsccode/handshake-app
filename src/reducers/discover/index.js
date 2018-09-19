@@ -25,6 +25,7 @@ const handleListPayload = (payload) => {
   payload.map((handshake) => {
     const hs = Handshake.handshake(handshake);
     const offer = OfferShop.offerShop(JSON.parse(hs.extraData));
+    const { id } = hs;
 
     const allowRender = offer.itemFlags[currencyActive] && !isEmptyBalance(offer.items[currencyActive]);
 

@@ -30,6 +30,7 @@ export function* handleRemoveEvent({ eventId }) {
     const events = yield select(eventSelector);
     if (events && events.length) {
       const index = events.findIndex((item) => item.id === eventId);
+      console.log('blahblah', index);
       if (index >= 0) {
         yield put(REMOVE_DATA({
           _path: 'prediction.events',
@@ -91,8 +92,6 @@ export default function* predictionSaga() {
   yield takeLatest(loadMatches().type, handleLoadMatches);
   yield takeLatest(getReportCount().type, handleCountReport);
   yield takeLatest(removeExpiredEvent().type, handleRemoveEvent);
-  yield takeLatest(removeExpiredEvent().type, handleRemoveEvent);
   yield takeLatest(checkFreeBet().type, handleFreeBet);
   yield takeLatest(checkExistSubcribeEmail().type, handleCheckExistEmail);
-
 }

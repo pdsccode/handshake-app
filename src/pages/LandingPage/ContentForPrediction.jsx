@@ -25,6 +25,13 @@ import PexRoadMap from '@/pages/LandingPage/PexRoadMap';
 import { Link } from 'react-router-dom'
 
 
+
+// renderRoadMap() {
+//   return (
+
+//   );
+//}
+
 class ContentForPrediction extends React.Component {
   renderRoadMap() {
     return (
