@@ -108,46 +108,46 @@ class Index extends React.PureComponent {
                     <div className="mt-4">
                       {textEmail && (
                         <span>
-                          {!hasSubscribed ? (
-                            <FormSubscribeEmail onSubmit={this.handleSubmit}>
-                              <div className="text-email">
-                                <FormattedHTMLMessage id={`landing_page.${name}.textEmail`} />
-                              </div>
-                              <div className="d-table w-100">
-                                {
-                            messages[`landing_page.${name}.label.sendLinkToEmail`] && (
-                              <div className="d-table-cell align-top text-send-link">
-                                <FormattedMessage id={`landing_page.${name}.label.sendLinkToEmail`} />
-                              </div>
-                            )
+                        {!hasSubscribed ? (
+                          <FormSubscribeEmail onSubmit={this.handleSubmit}>
+                          {messages[`landing_page.${name}.label.sendLinkToEmail`] && (
+                            <div className="d-table-cell align-top text-send-link">
+                              <FormattedMessage id={`landing_page.${name}.label.sendLinkToEmail`} />
+                            </div>
+                          )
                           }
-                                <div className="d-table-cell align-top">
-                                  <Field
-                                    name="email"
-                                    className="form-control control-subscribe-email"
-                                    placeholder={intl.formatMessage({ id: 'landing_page.detail.email_placeholder' })}
-                                    type="text"
-                                    validate={[required, email]}
-                                    component={fieldInput}
-                                  />
-                                </div>
-                                <div className="d-table-cell align-top">
-                                  <button
-                                    type="submit"
-                                    className="btn btn-primary-landing w-100 ml-1"
-                                  >
-                                    {btnSubmitEmail}
-                                  </button>
-                                </div>
+                            <div className="d-table w-100">
+
+                              <div className="d-table-cell align-top">
+                                <Field
+                                  name="email"
+                                  className="form-control control-subscribe-email"
+                                  placeholder={intl.formatMessage({ id: 'landing_page.detail.email_placeholder' })}
+                                  type="text"
+                                  validate={[required, email]}
+                                  component={fieldInput}
+                                />
                               </div>
-                            </FormSubscribeEmail>
-                    ) : (
-                      <h5>
-                        <strong className="text-success">
-                          <FormattedMessage id="landing_page.detail.thanksForSubscribing" />
-                        </strong>
-                      </h5>
-                    )}
+                              <div className="d-table-cell align-top">
+                                <button
+                                  type="submit"
+                                  className="btn btn-primary-landing w-100 ml-1"
+                                >
+                                  {btnSubmitEmail}
+                                </button>
+                              </div>
+                            </div>
+                            <div className="text-email">
+                              <FormattedHTMLMessage id={`landing_page.${name}.textEmail`} />
+                            </div>
+                          </FormSubscribeEmail>
+                        ) : (
+                          <h5>
+                            <strong className="text-success">
+                              <FormattedMessage id="landing_page.detail.thanksForSubscribing" />
+                            </strong>
+                          </h5>
+                        )}
                         </span>
                       )}
                       {cta1 && (

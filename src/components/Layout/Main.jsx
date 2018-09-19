@@ -39,12 +39,11 @@ class MainLayout extends React.Component {
 
   renderHeaderBar = () => {
     const { isDesktop } = BrowserDetect;
-    const { name } = (window.name !== '' && JSON.parse(window.name));
     const headerBarProps = {
       className: 'HeaderBarContainer',
       titleBar: 'Prediction',
     };
-    if (!name || isDesktop) return null;
+    if (isDesktop) return null;
     return (
       <HeaderBar {...headerBarProps} />
     );
@@ -64,7 +63,7 @@ class MainLayout extends React.Component {
     const { modal: { className, show, body, title, centered } } = this.props;
     return (
       <div className={`${isDesktop ? '' : 'app'} ${this.state.app.showHeader ? 'show-header' : 'hide-header'}`}>
-        {this.renderHeaderBar()}
+        {(window.self !== window.top) && this.renderHeaderBar()}
         <MainHeader />
         <div className="content">
           {this.props.children}

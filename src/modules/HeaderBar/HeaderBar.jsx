@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { URL } from '@/constants';
 // import MultiLanguage from '@/components/core/controls/MultiLanguage';
-import meIcon from '@/assets/images/navigation/ic_private.svg.raw';
-import walletIcon from '@/assets/images/navigation/ic_wallet.svg.raw';
+import meIcon from '@/assets/images/navigation/ic_account.svg.raw';
+import walletIcon from '@/assets/images/navigation/ic_wallet_white.svg.raw';
 import predictionIcon from '@/assets/images/categories/chip.svg';
 
 function Me() {
@@ -26,7 +26,7 @@ function Wallet() {
 function Caption(title) {
   return (
     <Link to={URL.HANDSHAKE_PREDICTION} className="Caption">
-      <img src={predictionIcon} alt="" />
+      {/* <img src={predictionIcon} alt="" /> */}
       <span>{title}</span>
     </Link>
   );

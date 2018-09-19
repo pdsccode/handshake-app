@@ -57,6 +57,8 @@ import ManageAssets from "./Tabs/ManageAssets";
 import Transaction from "./Tabs/Transaction";
 import cx from "classnames";
 
+import NoDataImage from '@/assets/images/pages/Prediction/nodata.svg';
+
 const TAG = 'Me';
 const maps = {
   [HANDSHAKE_ID.PROMISE]: FeedPromise,
@@ -172,8 +174,7 @@ class Me extends React.Component {
       seletedId = id;
     }
     // @TODO: chrome-ext
-    const { name } = (window.name !== '' && JSON.parse(window.name));
-    if (window.self !== window.top && name) {
+    if (window.self !== window.top) {
       seletedId = HANDSHAKE_ID.BETTING;
     }
     return seletedId;
@@ -628,7 +629,16 @@ class Me extends React.Component {
                   </div>
                 ) :
                 (
-                  <NoData message={messages.me.feed.noDataMessage} isShowArrowDown />
+                  <NoData>
+                    <div className="NoDataContainer">
+                      <div className="NoDataTitle">Nothing here</div>
+                      <img src={NoDataImage} alt="Nothing herer" />
+                      <div className="ShortDescription">Don’t leave it blank.<br /> Place some bet, try your luck.</div>
+                      <div className="PlayNow">
+                        <Link to="/prediction" className="btn btn-primary">Play now</Link>
+                      </div>
+                    </div>
+                  </NoData>
                 )
               }
               {
