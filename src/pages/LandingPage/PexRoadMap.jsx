@@ -238,7 +238,7 @@ class PexRoadMap extends React.Component {
 
   renderItemContent(title, content) {
     return (
-      <div>
+      <div key={title}>
         <div className='title'>{title}</div>
         <div className='content'>{content}</div>
       </div>
@@ -247,7 +247,7 @@ class PexRoadMap extends React.Component {
 
   renderRoadMapItem(index, time, items) {
     return (
-      <div>
+      <div key={index}>
         <div
           className={`${
             index % 2 === 0 ? 'text-left' : 'text-right'

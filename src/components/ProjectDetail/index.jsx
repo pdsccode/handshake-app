@@ -12,6 +12,7 @@ import { email, required } from '@/components/core/form/validation';
 import $http from '@/services/api';
 import { BASE_API, LANDING_PAGE_TYPE } from '@/constants';
 import { Link } from 'react-router-dom';
+import iconSubmitEmail from '@/assets/images/icon/landingpage/email_submit.svg';
 
 import './styles.scss';
 
@@ -47,6 +48,9 @@ class Index extends React.PureComponent {
         console.log('err subscribe email', err);
       });
   };
+  openTelegram = () => {
+    window.open('https://t.me/ninja_org', '_blank');
+  }
 
   render() {
     const { messages, locale } = this.props.intl;
@@ -115,9 +119,9 @@ class Index extends React.PureComponent {
                         </div>
                       )
                       }
-                        <div className="d-table w-100">
+                        <div className="wrapperEmail">
 
-                          <div className="d-table-cell align-top">
+                          <div className="emailField">
                             <Field
                               name="email"
                               className="form-control control-subscribe-email"
@@ -126,17 +130,25 @@ class Index extends React.PureComponent {
                               validate={[required, email]}
                               component={fieldInput}
                             />
-                          </div>
-                          <div className="d-table-cell align-top">
+                            <div className="emailSubmit">
                             <button
-                              type="submit"
-                              className="btn btn-primary-landing w-100 ml-1"
-                            >
-                              {btnSubmitEmail}
-                            </button>
+                                type="submit"
+                                className="btn"
+                              >
+                                {/*btnSubmitEmail*/}
+                                <img src={iconSubmitEmail} alt="iconSubmitEmail" />
+                              </button>
                           </div>
+                          </div>
+
+                          <button className="btnTelegram"
+                          onClick={()=> {
+                            this.openTelegram();
+                          }}
+                          >Join the dojo on Telegram</button>
+
                         </div>
-                        <div className="text-email">
+                        <div className="mt-4 text-email">
                           <FormattedHTMLMessage id={`landing_page.${name}.textEmail`} />
                         </div>
                       </FormSubscribeEmail>
@@ -173,13 +185,14 @@ class Index extends React.PureComponent {
                   </div>
                 </div>
 
+                {messages[`landing_page.${name}.content`] &&
                 <div className="row mt-5">
                   <div className="col">
                     <div className="pd-content">
                       {messages[`landing_page.${name}.content`]}
                     </div>
                   </div>
-                </div>
+                </div>}
                 {imgContent && (
                   <div className="row mt-5">
                     <div className="col">
