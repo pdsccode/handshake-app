@@ -18,7 +18,7 @@ const EVENT_ACTION = {
   CLICK_COMMENT: 'Click comments',
   CLICK_CREATE_OWN_EVENT: 'Click create a bet',
   CLICK_INSTRUCTION_START_GUIDE: 'Click instruction quick start guide',
-  CLICK_INSTRUCTION_GOT_IT: 'Click instruction got it button',
+  CLICK_INSTRUCTION_GOT_IT: 'Click instruction play now button',
   CLICK_INSTRUCTION_CLOSE: 'Click instruction close button',
   CLICK_TOP_UP_WALLET: 'Click top up wallet',
   CLICK_CLOSE_TOPUP_WALLET: 'Click close top up wallet ',

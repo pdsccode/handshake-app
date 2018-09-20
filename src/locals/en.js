@@ -61,6 +61,7 @@ export default {
   withdrawShakedfferSuccessMessage: 'Your offer has been withdrawn.',
   buyUsingCreditCardSuccessMessge: 'Your order using your credit card has gone through.',
   notEnoughCoinInWallet: 'You don\'t have enough coin right now. Please top up your wallet.',
+  notEnoughCoinInWalletDeposit: 'Not enough coin. Your maximum amount is {amount} {currency}. Please try again',
   threeDSecureNotSupported: 'Not supported this card',
 
   createOfferStoreConfirm: 'Do you want to set up an offer to {intentMsg}?',
@@ -549,7 +550,7 @@ export default {
   'landing_page.prediction.btnSubmitEmail': 'Go',
   'landing_page.prediction.joinTelegram': `Join the dojo on <a href="https://t.me/ninja_org" class="landing-link">Telegram</a>`,
   'landing_page.prediction.whitepaper': `Read our <a href="https://medium.com/@ninja_org/shakeninja-bex-1c938f18b3e8" class="landing-link">whitepaper</a> | Find us on <a href="https://github.com/ninjadotorg" class="landing-link">Github</a>`,
-  'landing_page.prediction.youtubeVideoId': '-YYp9yW4RDQ',
+  //'landing_page.prediction.youtubeVideoId': '-YYp9yW4RDQ',
 
   'landing_page.wallet.breadcrumb': 'Wallet',
   'landing_page.wallet.heading': 'A decentralized cryptocurrency wallet. No downloads. No sign ups.',

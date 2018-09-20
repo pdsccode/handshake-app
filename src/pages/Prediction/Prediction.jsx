@@ -378,6 +378,12 @@ class Prediction extends React.Component {
     );
   }
 
+  renderReport = (props) => {
+    const { countReport } = props;
+    if (!countReport) return null;
+    return (<ReportPopup />);
+  }
+
   renderComponent = (props, state) => {
     this.checkShowFreeBetPopup(props);
     return (
@@ -385,6 +391,7 @@ class Prediction extends React.Component {
         <Loading isLoading={props.isLoading} />
         {/*<Banner />*/}
         <PexCreateBtn />
+        {this.renderReport(props)}
         {this.renderEventList(props)}
         {this.renderBetMode(props, state)}
         {this.renderViewAllEvent(props, state)}
@@ -396,7 +403,7 @@ class Prediction extends React.Component {
         {this.renderEmailPopup()}
         {this.renderOuttaMoney()}
         {this.renderCreditCard()}
-        {props.countReport > 0 && <ReportPopup />}
+
       </div>
     );
   };
