@@ -81,7 +81,7 @@ class EscrowDeposit extends React.Component {
 
       const {
         currency,
-      } = Helper.getQueryStrings(window.location.search);
+      } = nextProps;
 
       if (currency) {
         const depositInfo = nextProps.depositInfo[currency];

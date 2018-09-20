@@ -590,8 +590,6 @@ export const URL = {
   CC_PAYMENT_URL: '/cc-payment',
   BUY_BY_CC_URL: '/buy-by-credit-card',
 
-  ESCROW_DEPOSIT: '/escrow/deposit',
-  ESCROW_WITHDRAW: '/escrow/withdraw',
   ESCROW_WITHDRAW_SUCCESS: '/escrow/withdraw/success',
 
   SHOP_URL: '/shop',

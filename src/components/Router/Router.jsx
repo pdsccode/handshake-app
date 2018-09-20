@@ -59,8 +59,6 @@ const ContentForPexInstruction = createDynamicImport(() => import('@/pages/Landi
 const Discover = createDynamicImport(() => import('@/pages/Discover/Discover'), Loading);
 const RouterCCConfirm = createDynamicImport(() => import('@/components/Router/CCConfirm'), Loading);
 const RouterBuyCC = createDynamicImport(() => import('@/components/Router/Credit'), Loading);
-const RouterEscrowDeposit = createDynamicImport(() => import('@/pages/Escrow/Deposit'), Loading);
-const RouterEscrowWithdraw = createDynamicImport(() => import('@/pages/Escrow/Withdraw'), Loading);
 const RouterEscrowWithdrawSuccess = createDynamicImport(() => import('@/pages/Escrow/WithdrawSuccess'), Loading);
 const RouterShop = createDynamicImport(() => import('@/components/Router/Shop'), Loading);
 const RouterInternalWithdraw = createDynamicImport(() => import('@/components/Router/InternalWithdraw'), Loading);
@@ -85,8 +83,6 @@ const configRoutesUsingMobileLayout = [
   { path: URL.CC_PAYMENT_URL, component: RouterCCConfirm },
   { path: URL.BUY_BY_CC_URL, component: RouterBuyCC },
 
-  { path: URL.ESCROW_DEPOSIT, component: RouterEscrowDeposit },
-  { path: URL.ESCROW_WITHDRAW, component: RouterEscrowWithdraw, exact: true },
   { path: URL.ESCROW_WITHDRAW_SUCCESS, component: RouterEscrowWithdrawSuccess },
   {
     path: URL.PRODUCT_DAD_URL,
