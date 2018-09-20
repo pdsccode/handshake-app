@@ -7,7 +7,7 @@ import Button from '@/components/core/controls/Button';
 import ModalDialog from '@/components/core/controls/ModalDialog';
 import Modal from '@/components/core/controls/Modal';
 import createForm from '@/components/core/form/createForm';
-import { fieldDropdown, fieldInput } from '@/components/core/form/customField';
+import ListCoin from '@/components/Wallet/ListCoin';
 import { getCryptoPrice } from '@/reducers/exchange/action';
 import { bindActionCreators } from 'redux';
 import { MasterWallet } from "@/services/Wallets/MasterWallet";
@@ -50,7 +50,8 @@ class Checkout extends React.Component {
       isRestoreLoading: false,
       event: false,
       isExpired: false,
-      isWarning: false
+      isWarning: false,
+      modalListCoin: ''
     }
   }
 
@@ -268,6 +269,17 @@ class Checkout extends React.Component {
     });
   }
 
+  openListCoin=()=>{
+    this.setState({modalListCoin:
+      <ListCoin
+        wallets={this.state.wallets}
+        walletSelected={this.state.walletSelected}
+      />
+    }, ()=> {
+      this.modalListCoinRef.open();
+    });
+  }
+
   renderEvenTimeLeft=(event) => {
     const {rate, fiatCurrency, cryptoCurrency} = this.props;
     const {isExpired, isWarning} = this.state;
@@ -328,12 +340,12 @@ class Checkout extends React.Component {
 
   get showWallet(){
     const { messages } = this.props.intl;
-console.log(this.state.walletSelected);
+    const { modalListCoin } = this.state;
     return !this.state.isExpired && (
       <div className="wallet-info">
       <SendWalletForm onSubmit={this.sendCoin} validate={this.invalidateTransferCoins}>
 
-        <div className="wallet">
+        <div className="wallet" onClick={() => {this.openListCoin() }}>
           <div className="name">{this.state.walletSelected && this.state.walletSelected.title}</div>
           <div className="value">{this.state.walletSelected && this.state.walletSelected.getShortAddress()}</div>
           <div className="clearfix"></div>
@@ -341,6 +353,9 @@ console.log(this.state.walletSelected);
           <div className="value">{this.state.walletSelected && this.state.walletSelected.balance + " " + this.state.walletSelected.name}</div>
         </div>
 
+        <ModalDialog className="wallets-wrapper" title="Select wallets" onRef={modal => this.modalListCoinRef = modal}>
+          {modalListCoin}
+        </ModalDialog>
         {/* <div className ="dropdown-wallet-tranfer">
           <Field
             name="walletSelected"
