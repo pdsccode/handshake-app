@@ -49,7 +49,7 @@ const RouterPrediction = createDynamicImport(() => import('@/pages/Prediction/Pr
 const RouterResolve = createDynamicImport(() => import('@/pages/Resolve/Resolve'), Loading);
 const RouterLandingPageMain = createDynamicImport(() => import('@/pages/LandingPage/Main'), Loading);
 const LandingPageMain = createDynamicImport(() => import('@/pages/LandingPage/Main'), Loading);
-const ProjectDfetail = createDynamicImport(() => import('@/components/ProjectDetail'), Loading);
+const ProjectDetail = createDynamicImport(() => import('@/components/ProjectDetail'), Loading);
 const Recruiting = createDynamicImport(() => import('@/pages/Recruiting'), Loading);
 const JobDetail = createDynamicImport(() => import('@/pages/Recruiting/JobDetail'), Loading);
 const ContentForCashBusiness = createDynamicImport(() => import('@/pages/LandingPage/ContentForCashBusiness'), Loading);
