@@ -7,32 +7,30 @@ import {
   API_URL,
   APP,
   CRYPTO_CURRENCY,
-  CRYPTO_CURRENCY_DEFAULT,
-  CRYPTO_CURRENCY_LIST,
   CRYPTO_CURRENCY_NAME,
   EXCHANGE_ACTION,
   EXCHANGE_ACTION_NAME,
   FIAT_CURRENCY,
   FIAT_CURRENCY_NAME,
-  FIAT_CURRENCY_SYMBOL,
-  HANDSHAKE_ID,
   URL,
 } from '@/constants';
 import '../styles.scss';
 import { validate, validateSpecificAmount } from '@/components/handshakes/exchange/validation';
 import createForm from '@/components/core/form/createForm';
-import { fieldCleave, fieldDropdown, fieldInput, fieldRadioButton } from '@/components/core/form/customField';
+import { fieldCleave, fieldDropdown, fieldInput } from '@/components/core/form/customField';
 import { email, required } from '@/components/core/form/validation';
 import {
-  createCCOrder, getCcLimits, getCryptoPrice, getCryptoPriceForPackage,
-  getUserCcLimit
+  createCCOrder,
+  getCcLimits,
+  getCryptoPrice,
+  getCryptoPriceForPackage,
+  getUserCcLimit,
 } from '@/reducers/exchange/action';
 import CryptoPrice from '@/models/CryptoPrice';
 import { MasterWallet } from '@/services/Wallets/MasterWallet';
 import { bindActionCreators } from 'redux';
-import { hideLoading, showAlert, showLoading } from '@/reducers/app/action';
-import { feedBackgroundColors } from '@/components/handshakes/exchange/config';
-import { formatMoney, formatMoneyByLocale, roundNumberByLocale } from '@/services/offer-util';
+import { showAlert } from '@/reducers/app/action';
+import { roundNumberByLocale } from '@/services/offer-util';
 import { BigNumber } from 'bignumber.js';
 import axios from 'axios';
 import './FeedCreditCard.scss';
@@ -45,9 +43,13 @@ import iconEthereum from '@/assets/images/icon/coin/eth.svg';
 import iconBitcoinCash from '@/assets/images/icon/coin/bch.svg';
 import iconUsd from '@/assets/images/icon/coin/icons8-us_dollar.svg';
 import iconLock from '@/assets/images/icon/icons8-lock_filled.svg';
-import { Link } from 'react-router-dom';
 import cx from 'classnames';
 import ExpandArrowSVG from '@/assets/images/icon/expand-arrow-green.svg';
+import Deposit from '@/pages/Escrow/Deposit';
+import Modal from '@/components/core/controls/Modal/Modal';
+import Image from '@/components/core/presentation/Image';
+import loadingSVG from '@/assets/images/icon/loading.gif';
+
 
 const nameFormShowAddressWallet = 'showAddressWallet';
 const ShowAddressWalletForm = createForm({ propsReduxForm: { form: nameFormShowAddressWallet } });
@@ -124,16 +126,23 @@ class FeedCreditCard extends React.Component {
       walletSelected: false,
       allowBuy: true,
       hasSelectedPackage: false,
+      modalContent: '',
+      modalTitle: '',
+      isLoading: false,
     };
   }
 
   showLoading = () => {
-    this.props.showLoading({ message: '' });
+    this.setLoading(true);
   };
 
   hideLoading = () => {
-    this.props.hideLoading();
+    this.setLoading(false);
   };
+
+  setLoading = (loadingState) => {
+    this.setState({ isLoading: loadingState });
+  }
 
   static getDerivedStateFromProps(nextProps, prevState) {
     if (JSON.stringify(nextProps.cryptoPrice) !== JSON.stringify(prevState.cryptoPrice)) {
@@ -195,15 +204,15 @@ class FeedCreditCard extends React.Component {
 
   handleGetCryptoPriceForPackageSuccess = (responseData) => {
     const cryptoPrice = CryptoPrice.cryptoPrice(responseData.data);
-    console.log('handleGetCryptoPriceForPackageSuccess',cryptoPrice);
+    console.log('handleGetCryptoPriceForPackageSuccess', cryptoPrice);
 
     Object.entries(listPackages).forEach(([currency, items]) => {
-      for (let item of items) {
+      for (const item of items) {
         const { amount } = item;
         console.log('cryptoPrice.currency  cryptoPrice.amount ', cryptoPrice.currency, cryptoPrice.amount);
         console.log('currency  amount ', currency, amount);
         if (cryptoPrice.currency === currency && +cryptoPrice.amount === amount) {
-          console.log('hello',);
+          console.log('hello');
           item.show = true;
           item.fiatAmount = cryptoPrice.fiatAmount;
           break;
@@ -684,267 +693,288 @@ class FeedCreditCard extends React.Component {
     });
   }
 
+  depositCoinATM = () => {
+    const { messages } = this.props.intl;
+
+    this.setState({
+      modalTitle: messages.me.credit.deposit.title,
+      modalContent:
+        (
+          <Deposit setLoading={this.setLoading} history={this.props.history} />
+        ),
+    }, () => {
+      this.modalRef.open();
+    });
+  }
+
+  closeModal = () => {
+    this.setState({ modalContent: '' });
+  }
+
   render() {
     const { messages } = this.props.intl;
     const { hasSelectedCoin, wallets, walletSelected } = this.state;
     const { intl, isPopup } = this.props;
     const { amount, cryptoPrice } = this.props;
     const { currency, allowBuy } = this.state;
+    const { modalContent, modalTitle } = this.state;
 
     const packages = listPackages[currency];
-
-    return !hasSelectedCoin ? (
-      <div className="choose-coin">
-        <div className="specific-amount">
-          <FormSpecificAmount onSubmit={this.handleSubmitSpecificAmount} validate={this.handleValidateSpecificAmount}>
-            {/* <div className="text-right" style={{ margin: '-10px' }}><button className="btn btn-lg bg-transparent text-white d-inline-block">&times;</button></div> */}
-            <div className="label-1"><FormattedMessage id="cc.label.1" /></div>
-            <div className="label-2"><FormattedMessage id="cc.label.2" /></div>
-            <div className="input-group mt-4">
-              <Field
-                name="amount"
-                className="form-control form-control-lg border-0 rounded-right form-control-cc"
-                type="text"
-                component={fieldInput}
-                onChange={this.onAmountChange}
-                validate={[required]}
-                elementAppend={
-                  <Field
-                    name="currency"
-                    classNameWrapper=""
-                    // defaultText={<FormattedMessage id="ex.create.placeholder.stationCurrency" />}
-                    classNameDropdownToggle="dropdown-button"
-                    list={listCurrency}
-                    component={fieldDropdown}
-                    // disabled={!enableChooseFiatCurrency}
-                    onChange={this.onCurrencyChange}
-                  />
-                }
-              />
-            </div>
-            <div className="input-group mt-2">
-              <Field
-                name="fiatAmount"
-                className="form-control form-control-lg border-0 rounded-right form-control-cc"
-                type="text"
-                component={fieldInput}
-                // onChange={this.onFiatAmountChange}
-                validate={[required]}
-                elementAppend={
-                  <Field
-                    name="fiatCurrency"
-                    classNameWrapper=""
-                    // defaultText={<FormattedMessage id="ex.create.placeholder.stationCurrency" />}
-                    classNameDropdownToggle="dropdown-button"
-                    list={listFiatCurrency}
-                    component={fieldDropdown}
-                    caret={false}
-                  />
-                }
-                disabled
-              />
-            </div>
-            <div className="mt-3 mb-3">
-              <button type="submit" className="btn btn-lg btn-primary btn-block btn-submit-specific" disabled={!allowBuy}>
-                <img src={iconLock} width={20} className="align-top mr-2" /><span>{EXCHANGE_ACTION_NAME[EXCHANGE_ACTION.BUY]} {amount} {CRYPTO_CURRENCY_NAME[currency]}</span>
-              </button>
-            </div>
-          </FormSpecificAmount>
+    return (<div>
+        <div className={`discover-overlay ${this.state.isLoading ? 'show' : ''}`}>
+          <Image src={loadingSVG} alt="loading" width="100" />
         </div>
+      {
+        !hasSelectedCoin ? (
+          <div className="choose-coin">
+            <div className="specific-amount">
+              <FormSpecificAmount onSubmit={this.handleSubmitSpecificAmount} validate={this.handleValidateSpecificAmount}>
+                {/* <div className="text-right" style={{ margin: '-10px' }}><button className="btn btn-lg bg-transparent text-white d-inline-block">&times;</button></div> */}
+                <div className="label-1"><FormattedMessage id="cc.label.1" /></div>
+                <div className="label-2"><FormattedMessage id="cc.label.2" /></div>
+                <div className="input-group mt-4">
+                  <Field
+                    name="amount"
+                    className="form-control form-control-lg border-0 rounded-right form-control-cc"
+                    type="text"
+                    component={fieldInput}
+                    onChange={this.onAmountChange}
+                    validate={[required]}
+                    elementAppend={
+                      <Field
+                        name="currency"
+                        classNameWrapper=""
+                        // defaultText={<FormattedMessage id="ex.create.placeholder.stationCurrency" />}
+                        classNameDropdownToggle="dropdown-button"
+                        list={listCurrency}
+                        component={fieldDropdown}
+                        // disabled={!enableChooseFiatCurrency}
+                        onChange={this.onCurrencyChange}
+                      />
+                    }
+                  />
+                </div>
+                <div className="input-group mt-2">
+                  <Field
+                    name="fiatAmount"
+                    className="form-control form-control-lg border-0 rounded-right form-control-cc"
+                    type="text"
+                    component={fieldInput}
+                    // onChange={this.onFiatAmountChange}
+                    validate={[required]}
+                    elementAppend={
+                      <Field
+                        name="fiatCurrency"
+                        classNameWrapper=""
+                        // defaultText={<FormattedMessage id="ex.create.placeholder.stationCurrency" />}
+                        classNameDropdownToggle="dropdown-button"
+                        list={listFiatCurrency}
+                        component={fieldDropdown}
+                        caret={false}
+                      />
+                    }
+                    disabled
+                  />
+                </div>
+                <div className="mt-3 mb-3">
+                  <button type="submit" className="btn btn-lg btn-primary btn-block btn-submit-specific" disabled={!allowBuy}>
+                    <img src={iconLock} width={20} className="align-top mr-2" /><span>{EXCHANGE_ACTION_NAME[EXCHANGE_ACTION.BUY]} {amount} {CRYPTO_CURRENCY_NAME[currency]}</span>
+                  </button>
+                </div>
+              </FormSpecificAmount>
+            </div>
 
-        <div className="by-package">
-          <div className="my-3 p-label-choose"><FormattedMessage id="cc.label.3" /></div>
-          <div className="mb-5">
-            {
-              packages && packages.map((item, index) => {
-                const {
-                  name, amount, fiatAmount, show,
-                } = item;
+            <div className="by-package">
+              <div className="my-3 p-label-choose"><FormattedMessage id="cc.label.3" /></div>
+              <div className="mb-5">
+                {
+                  packages && packages.map((item, index) => {
+                    const {
+                      name, amount, fiatAmount, show,
+                    } = item;
 
-                return show && (
-                  <div key={name}>
-                    <div className="d-table w-100">
-                      <div className="d-table-cell align-middle" style={{ width: '80px' }}>
-                        <div className={`package p-${name}`}><FormattedMessage id={`cc.label.${name}`} /></div>
-                      </div>
-                      <div className="d-table-cell align-middle pl-3">
-                         <div className="p-price">
-                          {fiatAmount} {FIAT_CURRENCY.USD}
-                          {/*{
+                    return show && (
+                      <div key={name}>
+                        <div className="d-table w-100">
+                          <div className="d-table-cell align-middle" style={{ width: '80px' }}>
+                            <div className={`package p-${name}`}><FormattedMessage id={`cc.label.${name}`} /></div>
+                          </div>
+                          <div className="d-table-cell align-middle pl-3">
+                            <div className="p-price">
+                              {fiatAmount} {FIAT_CURRENCY.USD}
+                              {/* {
                             saving && (
                               <span className="p-saving"><FormattedMessage id="cc.label.saving" values={{ percentage: saving }} /></span>
                             )
-                          }*/}
+                          } */}
+                            </div>
+                            <div className="p-amount">{amount} {currency}</div>
+                          </div>
+                          <div className="d-table-cell align-middle text-right">
+                            <button className="btn btn-p-buy-now" onClick={() => this.handleBuyPackage(item)}><FormattedMessage id="cc.btn.buyNow" /></button>
+                          </div>
                         </div>
-                        <div className="p-amount">{amount} {currency}</div>
+                        { index < packages.length - 1 && <hr /> }
                       </div>
-                      <div className="d-table-cell align-middle text-right">
-                        <button className="btn btn-p-buy-now" onClick={() => this.handleBuyPackage(item)}><FormattedMessage id="cc.btn.buyNow" /></button>
+                    );
+                  })
+                }
+              </div>
+            </div>
+            <div>
+              <div className={cx('ex-sticky-note', isPopup ? 'ex-sticky-note-popup' : '')}>
+                <div className="mb-2"><FormattedMessage id="ex.credit.banner.text" /></div>
+                <div>
+                  <button className="btn btn-become" onClick={this.depositCoinATM}><FormattedMessage id="ex.credit.banner.btnText" /></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="credit-card">
+            <div><button className="btn btn-lg bg-transparent d-inline-block btn-close" onClick={this.closeInputCreditCard}>&times;</button></div>
+            <div className="wrapper">
+              <FormCreditCard onSubmit={this.handleSubmit} validate={this.handleValidate}>
+                {cryptoPrice && (<div>
+                    <div className="d-table w-100">
+                      <div className="d-table-cell text-normal">
+                        <span className="text-normal"><FormattedMessage id="ex.label.amount" />:</span>
+                        &nbsp;
+                        <span className="font-weight-bold">{cryptoPrice?.amount}</span>
+                        &nbsp;
+                        <span className="text-normal">{cryptoPrice?.currency}</span>
+                      </div>
+                      <div className="d-table-cell text-right">
+                        <span className="text-normal"><FormattedMessage id="ex.label.cost" />:</span>
+                        &nbsp;
+                        <span className="font-weight-bold">{cryptoPrice?.fiatAmount}</span>
+                        &nbsp;
+                        <span className="text-normal">{cryptoPrice?.fiatCurrency}</span>
                       </div>
                     </div>
-                    { index < packages.length - 1 && <hr /> }
                   </div>
-                );
-              })
-            }
-          </div>
-        </div>
-        <div>
-          <div className={cx('ex-sticky-note', isPopup ? 'ex-sticky-note-popup' : '')}>
-            <div className="mb-2"><FormattedMessage id="ex.credit.banner.text" /></div>
-            <div>
-              <Link to={{ pathname: URL.ESCROW_DEPOSIT, search: `` }}>
-                <button className="btn btn-become"><FormattedMessage id="ex.credit.banner.btnText" /></button>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </div>
-    ) : (
-      <div className="credit-card">
-        <div><button className="btn btn-lg bg-transparent d-inline-block btn-close" onClick={this.closeInputCreditCard}>&times;</button></div>
-        <div className="wrapper">
-          <FormCreditCard onSubmit={this.handleSubmit} validate={this.handleValidate}>
-            {cryptoPrice && (<div>
-              <div className="d-table w-100">
-                <div className="d-table-cell text-normal">
-                  <span className="text-normal"><FormattedMessage id="ex.label.amount" />:</span>
-                  &nbsp;
-                  <span className="font-weight-bold">{cryptoPrice?.amount}</span>
-                  &nbsp;
-                  <span className="text-normal">{cryptoPrice?.currency}</span>
-                </div>
-                <div className="d-table-cell text-right">
-                  <span className="text-normal"><FormattedMessage id="ex.label.cost" />:</span>
-                  &nbsp;
-                  <span className="font-weight-bold">{cryptoPrice?.fiatAmount}</span>
-                  &nbsp;
-                  <span className="text-normal">{cryptoPrice?.fiatCurrency}</span>
-                </div>
-              </div>
-            </div>
-            )}
+                )}
 
-            <div className={['bodyBackup bodyShareAddress']}>
-              <div className="bodyTitle">
-                <span><FormattedMessage id="cc.label.receive.address" /></span>
-              </div>
+                <div className={['bodyBackup bodyShareAddress']}>
+                  <div className="bodyTitle">
+                    <span><FormattedMessage id="cc.label.receive.address" /></span>
+                  </div>
 
-              <div className="box-addresses">
-                <div className="box-address">
-                  <div className="addressDivPopup">{ walletSelected ? walletSelected.address : ''}&nbsp;
-                    <img className="expand-arrow" src={ExpandArrowSVG} alt="expand" />
+                  <div className="box-addresses">
+                    <div className="box-address">
+                      <div className="addressDivPopup">{ walletSelected ? walletSelected.address : ''}&nbsp;
+                        <img className="expand-arrow" src={ExpandArrowSVG} alt="expand" />
+                      </div>
+                    </div>
+
+                    <div className="box-hide-wallet">
+                      <div className="receivewallet-wrapper">
+                        { walletSelected &&
+
+                        <Field
+                          name="showWalletSelected"
+                          component={fieldDropdown}
+                          placeholder={messages.wallet.action.receive.placeholder.choose_wallet}
+                          defaultText={currency}
+                          list={wallets}
+                          onChange={(item) => {
+                            this.onItemSelectedWallet(item);
+                          }
+                          }
+                        />
+                        }
+                      </div>
+                    </div>
                   </div>
                 </div>
 
-                <div className="box-hide-wallet">
-                  <div className="receivewallet-wrapper">
-                    { walletSelected &&
+                <div>
+                  <div className="cc-label"><FormattedMessage id="cc.label.cardNo" /></div>
+                  <div>
+                    <Field
+                      name="cc_number"
+                      className="form-control input-custom w-100"
+                      component={fieldCleave}
+                      // elementPrepend={
+                      //   <div className="input-group-prepend">
+                      //     <span className="input-group-text bg-white">
+                      //       <img width="26px" height="26px" src={(allCCTypes[ccType] && allCCTypes[ccType].img) || imgCC} />
+                      //     </span>
+                      //   </div>
+                      // }
+                      propsCleave={{
+                        // id: `card-number-${this.lastUniqueId()}`,
+                        placeholder: '4111 1111 1111 1111',
+                        options: {
+                          creditCard: true,
+                          onCreditCardTypeChanged: this.handleCCTypeChanged,
+                        },
+                        // type: "tel",
+                        // maxLength: "19",
+                        // htmlRef: input => this.ccNumberRef = input,
+                      }}
+                      // validate={(!isCCExisting || isNewCCOpen) ? [required] : []}
+                    />
+                  </div>
+                </div>
 
+                <div className="d-table w-100 mt-4">
+                  <div className="d-table-cell pr-1">
+                    <div className="cc-label"><FormattedMessage id="cc.label.cvv" /></div>
+                    <div>
                       <Field
-                        name="showWalletSelected"
-                        component={fieldDropdown}
-                        placeholder={messages.wallet.action.receive.placeholder.choose_wallet}
-                        defaultText={currency}
-                        list={wallets}
-                        onChange={(item) => {
-                          this.onItemSelectedWallet(item);
-                        }
-                        }
+                        name="cc_cvc"
+                        className="form-control input-custom w-100"
+                        component={fieldCleave}
+                        propsCleave={{
+                          placeholder: intl.formatMessage({ id: 'securityCode' }),
+                          options: { blocks: [4], numericOnly: true },
+                          // type: "password",
+                          // maxLength: "4",
+                          // minLength: "3",
+                          // id: `cart-cvc-${this.lastUniqueId()}`,
+                          // htmlRef: input => this.ccCvcRef = input,
+                        }}
+                        // validate={(!isCCExisting || isNewCCOpen) ? [required] : []}
                       />
-                    }
+                    </div>
+                  </div>
+
+                  <div className="d-table-cell pl-1">
+                    <div className="cc-label"><FormattedMessage id="cc.label.expiration" /></div>
+                    <div>
+                      <Field
+                        name="cc_expired"
+                        className="form-control input-custom w-100"
+                        component={fieldCleave}
+                        propsCleave={{
+                          placeholder: intl.formatMessage({ id: 'ccExpireTemplate' }),
+                          options: { blocks: [2, 2], delimiter: '/', numericOnly: true },
+                          // type: "tel",
+                          // id: `cart-date-${this.lastUniqueId()}`,
+                          // htmlRef: input => this.ccExpiredRef = input,
+                          // onKeyDown: this.ccExpiredRefKeyDown,
+                        }}
+                        // validate={(!isCCExisting || isNewCCOpen) ? [required] : []}
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
 
-            <div>
-              <div className="cc-label"><FormattedMessage id="cc.label.cardNo" /></div>
-              <div>
-                <Field
-                  name="cc_number"
-                  className="form-control input-custom w-100"
-                  component={fieldCleave}
-                  // elementPrepend={
-                  //   <div className="input-group-prepend">
-                  //     <span className="input-group-text bg-white">
-                  //       <img width="26px" height="26px" src={(allCCTypes[ccType] && allCCTypes[ccType].img) || imgCC} />
-                  //     </span>
-                  //   </div>
-                  // }
-                  propsCleave={{
-                    // id: `card-number-${this.lastUniqueId()}`,
-                    placeholder: '4111 1111 1111 1111',
-                    options: {
-                      creditCard: true,
-                      onCreditCardTypeChanged: this.handleCCTypeChanged,
-                    },
-                    // type: "tel",
-                    // maxLength: "19",
-                    // htmlRef: input => this.ccNumberRef = input,
-                  }}
-                  // validate={(!isCCExisting || isNewCCOpen) ? [required] : []}
-                />
-              </div>
-            </div>
-
-            <div className="d-table w-100 mt-4">
-              <div className="d-table-cell pr-1">
-                <div className="cc-label"><FormattedMessage id="cc.label.cvv" /></div>
-                <div>
-                  <Field
-                    name="cc_cvc"
-                    className="form-control input-custom w-100"
-                    component={fieldCleave}
-                    propsCleave={{
-                      placeholder: intl.formatMessage({ id: 'securityCode' }),
-                      options: { blocks: [4], numericOnly: true },
-                      // type: "password",
-                      // maxLength: "4",
-                      // minLength: "3",
-                      // id: `cart-cvc-${this.lastUniqueId()}`,
-                      // htmlRef: input => this.ccCvcRef = input,
-                    }}
-                    // validate={(!isCCExisting || isNewCCOpen) ? [required] : []}
-                  />
+                <div className="d-table w-100 mt-4">
+                  <div className="cc-label"><FormattedMessage id="cc.label.email" /></div>
+                  <div>
+                    <Field
+                      name="cc_email"
+                      className="form-control input-custom w-100"
+                      component={fieldInput}
+                      validate={[required, email]}
+                      placeholder={intl.formatMessage({ id: 'cc.label.email.hint' })}
+                    />
+                  </div>
                 </div>
-              </div>
 
-              <div className="d-table-cell pl-1">
-                <div className="cc-label"><FormattedMessage id="cc.label.expiration" /></div>
-                <div>
-                  <Field
-                    name="cc_expired"
-                    className="form-control input-custom w-100"
-                    component={fieldCleave}
-                    propsCleave={{
-                      placeholder: intl.formatMessage({ id: 'ccExpireTemplate' }),
-                      options: { blocks: [2, 2], delimiter: '/', numericOnly: true },
-                      // type: "tel",
-                      // id: `cart-date-${this.lastUniqueId()}`,
-                      // htmlRef: input => this.ccExpiredRef = input,
-                      // onKeyDown: this.ccExpiredRefKeyDown,
-                    }}
-                    // validate={(!isCCExisting || isNewCCOpen) ? [required] : []}
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="d-table w-100 mt-4">
-              <div className="cc-label"><FormattedMessage id="cc.label.email" /></div>
-              <div>
-                <Field
-                  name="cc_email"
-                  className="form-control input-custom w-100"
-                  component={fieldInput}
-                  validate={[required, email]}
-                  placeholder={intl.formatMessage({ id: 'cc.label.email.hint' })}
-                />
-              </div>
-            </div>
-
-            {/* <div className="mt-4 custom-control custom-checkbox">
+                {/* <div className="mt-4 custom-control custom-checkbox">
               <Field
                 id="cc-save-card"
                 name="saveCard"
@@ -955,15 +985,21 @@ class FeedCreditCard extends React.Component {
               <label htmlFor="cc-save-card" className="custom-control-label"><FormattedMessage id="cc.label.saveCard" /></label>
             </div> */}
 
-            <div className="mt-4">
-              <button type="submit" className="btn btn-lg btn-primary btn-block btn-submit-cc">
-                <img src={iconLock} width={18} className="align-top mr-2" /><span><FormattedMessage id="cc.btn.payNow" /></span>
-              </button>
+                <div className="mt-4">
+                  <button type="submit" className="btn btn-lg btn-primary btn-block btn-submit-cc">
+                    <img src={iconLock} width={18} className="align-top mr-2" /><span><FormattedMessage id="cc.btn.payNow" /></span>
+                  </button>
+                </div>
+              </FormCreditCard>
+              {/* <div className="alert alert-danger mt-3">Your credit card has been declined. Please try another card</div> */}
+              {/* <div className="alert alert-success">You have successfully paid</div> */}
             </div>
-          </FormCreditCard>
-          {/* <div className="alert alert-danger mt-3">Your credit card has been declined. Please try another card</div> */}
-          {/* <div className="alert alert-success">You have successfully paid</div> */}
-        </div>
+          </div>
+        )
+      }
+        <Modal title={modalTitle} onRef={modal => this.modalRef = modal} onClose={this.closeModal}>
+          {modalContent}
+        </Modal>
       </div>
     );
   }
@@ -986,8 +1022,6 @@ const mapDispatchToProps = (dispatch) => ({
   getCcLimits: bindActionCreators(getCcLimits, dispatch),
   rfChange: bindActionCreators(change, dispatch),
   showAlert: bindActionCreators(showAlert, dispatch),
-  showLoading: bindActionCreators(showLoading, dispatch),
-  hideLoading: bindActionCreators(hideLoading, dispatch),
 });
 
 export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(FeedCreditCard));

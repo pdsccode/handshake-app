@@ -2,7 +2,13 @@ import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import {
-  API_URL, CRYPTO_CURRENCY, EXCHANGE_ACTION, FIAT_CURRENCY, HANDSHAKE_ID, MIN_AMOUNT, NB_BLOCKS,
+  API_URL,
+  CRYPTO_CURRENCY,
+  EXCHANGE_ACTION,
+  FIAT_CURRENCY,
+  HANDSHAKE_ID,
+  MIN_AMOUNT,
+  NB_BLOCKS,
   URL,
 } from '@/constants';
 import createForm from '@/components/core/form/createForm';
@@ -15,12 +21,12 @@ import iconBitcoin from '@/assets/images/icon/coin/btc.svg';
 import iconEthereum from '@/assets/images/icon/coin/eth.svg';
 import iconBitcoinCash from '@/assets/images/icon/coin/bch.svg';
 import iconLock from '@/assets/images/icon/icons8-lock_filled.svg';
-import { formatAmountCurrency, formatMoneyByLocale } from '@/services/offer-util';
-import { isNormalInteger, minValue, minValueEqual, maxValueEqual, number, required } from '@/components/core/form/validation';
+import { formatMoneyByLocale } from '@/services/offer-util';
+import { maxValueEqual, minValue, minValueEqual, number, required } from '@/components/core/form/validation';
 import { bindActionCreators } from 'redux';
 import { createCreditATM, depositCoinATM, getCreditATM, trackingDepositCoinATM } from '@/reducers/exchange/action';
 import { getErrorMessageFromCode } from '@/components/handshakes/exchange/utils';
-import { hideLoading, showAlert, showLoading } from '@/reducers/app/action';
+import { showAlert } from '@/reducers/app/action';
 import { MasterWallet } from '@/services/Wallets/MasterWallet';
 import * as gtag from '@/services/ga-utils';
 import taggingConfig from '@/services/tagging-config';
@@ -495,11 +501,11 @@ class EscrowDeposit extends React.Component {
   };
 
   showLoading = () => {
-    this.props.showLoading({ message: '' });
+    this.props.setLoading(true);
   };
 
   hideLoading = () => {
-    this.props.hideLoading();
+    this.props.setLoading(false);
   };
 
   handleBuyFailed = () => {
@@ -651,8 +657,6 @@ const mapState = state => {
 const mapDispatch = dispatch => ({
   rfChange: bindActionCreators(change, dispatch),
   showAlert: bindActionCreators(showAlert, dispatch),
-  showLoading: bindActionCreators(showLoading, dispatch),
-  hideLoading: bindActionCreators(hideLoading, dispatch),
   getCreditATM: bindActionCreators(getCreditATM, dispatch),
   createCreditATM: bindActionCreators(createCreditATM, dispatch),
   depositCoinATM: bindActionCreators(depositCoinATM, dispatch),

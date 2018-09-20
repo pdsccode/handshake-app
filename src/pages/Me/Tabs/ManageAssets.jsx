@@ -31,6 +31,7 @@ import Asset from './Asset';
 import { formatMoneyByLocale } from '@/services/offer-util';
 import { getCreditATM } from '@/reducers/exchange/action';
 import Withdraw from '@/pages/Escrow/Withdraw';
+import Deposit from '@/pages/Escrow/Deposit';
 import Modal from '@/components/core/controls/Modal/Modal';
 
 class ManageAssets extends React.Component {
@@ -38,7 +39,8 @@ class ManageAssets extends React.Component {
     super(props);
 
     this.state = {
-      modalWithdrawContent: '',
+      modalContent: '',
+      modalTitle: '',
     };
   }
 
@@ -51,30 +53,41 @@ class ManageAssets extends React.Component {
   }
 
   depositCoinATM = () => {
-    this.props.history.push(URL.ESCROW_DEPOSIT);
+    const { messages } = this.props.intl;
+
+    this.setState({
+      modalTitle: messages.me.credit.deposit.title,
+      modalContent:
+        (
+          <Deposit setLoading={this.props.setLoading} history={this.props.history}/>
+        ),
+    }, () => {
+      this.modalRef.open();
+    });
   }
 
   withdrawCash = () => {
     const { messages } = this.props.intl;
 
     this.setState({
-      modalWithdrawContent:
+      modalTitle: messages.me.credit.withdraw.title,
+      modalContent:
         (
           <Withdraw setLoading={this.props.setLoading} history={this.props.history}/>
         ),
     }, () => {
-      this.modalWithdrawRef.open();
+      this.modalRef.open();
     });
   }
 
-  closeWithdraw = () => {
-    this.setState({ modalWithdrawContent: '' });
+  closeModal = () => {
+    this.setState({ modalContent: '' });
   }
 
   render () {
     const { messages } = this.props.intl;
     const { depositInfo, creditRevenue } = this.props;
-    const { modalWithdrawContent } = this.state;
+    const { modalContent, modalTitle } = this.state;
     let assets = [];
 
     if (depositInfo) {
@@ -131,8 +144,8 @@ class ManageAssets extends React.Component {
             </div>
           </div>
         </div>
-        <Modal title={messages.me.credit.withdraw.title} onRef={modal => this.modalWithdrawRef = modal} onClose={this.closeWithdraw}>
-          {modalWithdrawContent}
+        <Modal title={modalTitle} onRef={modal => this.modalRef = modal} onClose={this.closeModal}>
+          {modalContent}
         </Modal>
       </div>
     )

@@ -1006,12 +1006,15 @@ export default {
         validate: {
           amountMustLargerThan0: 'Amount must larger than 0',
           amountMustLessThanBalance: 'Amount must not larger than your balance',
-        }
+        },
       },
       withdrawSuccess: {
         description: 'Withdraw successfully!',
         descriptionTransfer: 'We will make the transfer very shortly within 24 hours',
         buttonTitle: 'Back to your dashboard',
+      },
+      deposit: {
+        title: 'Deposit',
       },
     },
   },
