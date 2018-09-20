@@ -81,10 +81,10 @@ class ContentForPrediction extends React.Component {
             <div className="pexContent">Use Ninja Prediction on your desktop, you can browse the web, predict and win ETH with the Chrome Extension.</div>
             <div className="pexContent">With just a click, you can create bets from (almost) anything you read & see online.</div>
           </div>
-          <button className="pexButton"
+          {/*<button className="pexButton"
             onClick={() => this.openExtension()}
           >Install our extension
-          </button>
+    </button>*/}
         </div>
         <div className="column">
           <img src={imgExtension} alt="imgExtension" width="550" />
