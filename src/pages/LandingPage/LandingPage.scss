@@ -5,25 +5,6 @@ body {
 }
 
 .root {
-  .fadeInRight{
-    -webkit-animation-name: fadeInRight;
-    animation-name: fadeInRight;
-  }
-
-  .fadeInLeft{
-    -webkit-animation-name: fadeInLeft;
-    animation-name: fadeInLeft;
-  }
-
-  .fadeInUp {
-    -webkit-animation-name: fadeInUp;
-    animation-name: fadeInUp;
-  }
-
-  .fadeInDown {
-    -webkit-animation-name: fadeInDown;
-    animation-name: fadeInDown;
-  }
 
   font-family: motiva-sans, sans-serif !important;
   padding-bottom: rem-calc(50px);
