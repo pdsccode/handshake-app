@@ -48,8 +48,6 @@ class PexExtension extends React.Component {
     } else if (props.subscribeResult && !props.subscribeResult.status) {
       errMsg = props.subscribeResult.message;
     }
-    console.log('errMsg', errMsg);
-    console.log('props.subscribeResult', props.subscribeResult);
     return (
       <div className="ExtSubscribe">
         <span>Get exclusive launch party goodies</span>
