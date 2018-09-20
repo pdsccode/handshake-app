@@ -42,35 +42,37 @@ class InternalWithdraw extends Component {
   render() {
     const { withdraws } = this.props;
     return (
-      <table>
-        <thead>
-          <tr>
-            <th>Email</th>
-            <th>Amount</th>
-            <th>Transaction ID</th>
-            <th>Create at</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {withdraws.length === 0 && (
+      <div>
+        <table>
+          <thead>
             <tr>
-              <td colSpan="5"><p>No record</p></td>
+              <th>Email</th>
+              <th>Amount</th>
+              <th>Transaction ID</th>
+              <th>Create at</th>
+              <th>Status</th>
             </tr>
-          )}
-          {
-            withdraws.map(withdraw => (
-              <tr key={withdraw.id}>
-                <td>{withdraw?.information?.username || '---'}</td>
-                <td>{withdraw?.amount || 0}</td>
-                <td>{withdraw.processed_id || '---'}</td>
-                <td>{this.parseHumanTime(withdraw?.created_at)}</td>
-                <td><StatusButton withdrawId={withdraw?.id} status={withdraw?.status} /></td>
+          </thead>
+          <tbody>
+            {withdraws.length === 0 && (
+              <tr>
+                <td colSpan="5"><p>No record</p></td>
               </tr>
-            ))
-          }
-        </tbody>
+            )}
+            {
+              withdraws.map(withdraw => (
+                <tr key={withdraw.id}>
+                  <td>{withdraw?.information?.username || '---'}</td>
+                  <td>{withdraw?.amount || 0}</td>
+                  <td>{withdraw.processed_id || '---'}</td>
+                  <td>{this.parseHumanTime(withdraw?.created_at)}</td>
+                  <td><StatusButton withdrawId={withdraw?.id} status={withdraw?.status} /></td>
+                </tr>
+              ))
+            }
+          </tbody>
       </table>
+      </div>
     );
   }
 }
