@@ -48,24 +48,23 @@
   }
   .rightImageFirst {
     position: absolute;
-    top: -7vw;
+    top: -114px;
     left: 0;
     right: 0;
   }
   .rightImageSecond {
     position: absolute;
-    top: 9vw;
-    left: 16vw;
-    right: 0;
+    top: 133px;
+    right: -74px;
   }
 }
 .wrapperMobile::before {
   content: '';
-  border-left: 78vw solid #FF8308;
+  border-left: 1175px solid #FF8308;
   border-top: 5vw solid transparent;
   border-bottom: 5vw solid transparent;
   width: 0;
-  height: 39vw;
+  height: 564px;
   z-index: 0;
   position: absolute;
 
