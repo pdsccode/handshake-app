@@ -29,9 +29,9 @@ class PexExtension extends React.Component {
   renderLeftContainer = () => {
     return (
       <div className="ExtLeftContainer">
-        <div className="LeftSideBar">
+        <a className="LeftSideBar" href="/">
           <img src={ExtLogo} alt="Extension logo" className="ExtLogo" />
-        </div>
+        </a>
         <div className="MacBook">
           <img src={MacBook} alt="MacBook" />
         </div>
