@@ -48,11 +48,6 @@ class ContentForPrediction extends React.Component {
       <PexRoadMap className="wrapperBlock" />
     );
   }
-  renderShapes() {
-    return (
-      <div className="wrapperMobile" />
-    );
-  }
   renderHowToPlay() {
     return (
       <div className="wrapperHowToPlay wrapperBlock">
@@ -167,24 +162,12 @@ class ContentForPrediction extends React.Component {
       </div>
     );
   }
-  renderInstruction(){
-    return(
-      <div className='pexContent'>
-      For instructions on how to play:{' '}
-      <Link to={URL.PEX_INSTRUCTION_URL}>
-        http://ninja.org/pex/instruction
-      </Link>
-    </div>
-    );
-  }
 
   render() {
     const { messages, locale } = this.props.intl
     return (
       <div className=''>
         {/*<img src={imgPredictionContent} className='w-100' />*/}
-          {/*this.renderShapes()*/}
-          {this.renderInstruction()}
           {this.renderHowToPlay()}
           {this.renderExtension()}
           {this.renderMobileGuide()}
