@@ -133,7 +133,7 @@ class Index extends React.PureComponent {
                             <div className="emailSubmit">
                             <button
                                 type="submit"
-                                className="btn"
+                                className="btnEmail"
                               >
                                 {/*btnSubmitEmail*/}
                                 <img src={iconSubmitEmail} alt="iconSubmitEmail" />
