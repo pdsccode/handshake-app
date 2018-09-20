@@ -28,7 +28,7 @@ class Passcode extends React.PureComponent {
   
   onPasscodeClick=(number)=>{
     window.navigator.vibrate(10); 
-    const onFinish = this.props || null;
+    const onFinish = this.props || null;    
     var passcodeResult = this.state.passcodeResult;
     var check = false;
     if (number != -1){

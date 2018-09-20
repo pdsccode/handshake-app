@@ -1215,7 +1215,8 @@ export default {
           select_crypto_address: 'Select cryptocurrency address',
           short_address: 'Show short address',
           shortest_address: 'Show shortest address',
-          hide_address: 'Hide address'
+          hide_address: 'Hide address',
+          passcode: "Passcode"
         },
         button: {
           restore: 'Restore now',

@@ -1,10 +1,7 @@
 import axios from 'axios';
 import React from 'react';
 import {injectIntl} from 'react-intl';
-import {Field, formValueSelector, clearFields} from "redux-form";
 import {connect} from "react-redux";
-import createForm from '@/components/core/form/createForm'
-import { change } from 'redux-form'
 import { bindActionCreators } from "redux";
 import {showAlert} from '@/reducers/app/action';
 import { showLoading, hideLoading } from '@/reducers/app/action';
@@ -24,22 +21,20 @@ import '../WalletPreferences/WalletPreferences.scss';
 import Switch from '@/components/core/controls/Switch';
 import Input from '../Input';
 import { ENGINE_METHOD_DIGESTS } from 'constants';
-import { newPasscode, requestWalletPasscode,  } from '@/reducers/app/action';
+import { newPasscode, requestWalletPasscode, updatePasscode } from '@/reducers/app/action';
 
-const amountValid = value => (value && isNaN(value) ? 'Invalid amount' : undefined);
-
-const nameFormSetting = 'FormSetting';
-const SettingForm = createForm({ propsReduxForm: { form: nameFormSetting, enableReinitialize: true, clearSubmitErrors: true}});
 
 class SettingWallet extends React.Component {
   constructor(props) {
     super(props);
 
+    this.defaultSettings = {"wallet":{"alternateCurrency": "USD", "passcode": {"enable": false, "value": ""}}};//todo: need move this to config.
+    
     this.state = {
       currencies: [],
       alternateCurrency: '',
-      cryptoAddress: -1
-    }
+      settings: this.defaultSettings,
+    }    
   }
 
   showAlert(msg, type = 'success', timeOut = 3000, icon = '') {
@@ -68,20 +63,24 @@ class SettingWallet extends React.Component {
   }
 
   componentDidMount(){
-    let setting = local.get(APP.SETTING);
 
-    //alternateCurrency
+    let settings = local.get(APP.SETTING);
+
     let currencies = this.state.currencies;
     if(!currencies || currencies.length < 1){
-      currencies = this.listCurrencies();
-      this.setState({currencies: currencies});
+      currencies = this.listCurrencies();      
+    }
 
-      let alternateCurrency = 'USD';
-      if(setting && setting.wallet && setting.wallet.alternateCurrency)
-        alternateCurrency = setting.wallet.alternateCurrency
+    if(!(settings && settings.wallet)){
+      settings = this.state.settings;
+    }
+    else{
+      if (!settings.wallet.passcode){
+        settings.wallet.passcode = this.state.settings.wallet.passcode;
+      }
+    }
 
-      this.setState({alternateCurrency: alternateCurrency});
-    }   
+    this.setState({settings: settings, currencies: currencies});       
   }
 
   showLoading = () => {
@@ -127,47 +126,69 @@ class SettingWallet extends React.Component {
     this.modalLanguageRef.close();
   }
 
+  onClickPasscode=()=>{
+    // case update or set new:
+    // if passcode is on enable, show update, else nothing.
+    if (this.state.settings.wallet.passcode.enable){
+      // ask old passcode first + set new passcode:
+      this.props.updatePasscode({
+        onSuccess: () => {
+          console.log("updatePasscode->settings are updated!!!");
+        },
+      });
+    }
+  }
+
+  onEnablePasscode=(isChecked)=>{
+    console.log(this.state.settings.wallet.passcode.value, isChecked);
+    if (isChecked){
+      // if dont set pascode value yet, show new set passcode:
+      if(!this.state.settings.wallet.passcode.value) {
+        console.log("xxxx");
+        this.props.newPasscode({      
+          onSuccess: () => {
+            console.log("set new Passcode -> settings are updated!!!");
+          },
+        });
+      }
+      else{
+        // update enable only
+        let settings = this.state.settings;
+        settings.wallet.passcode.enable = true;
+        this.setState({settings: settings}, () => {
+            local.save(APP.SETTING, setting);
+        });
+      }
+    }
+    
+  }
+
   render() {
     const { messages } = this.props.intl;
 
-    return (      
-        // <div className="settingwallet-wrapper">
+    let settings = this.state.settings;          
 
-        //   <div className="bgBox">
-
-        //     <div className ="dropdown-wallet-tranfer">
-        //       <p className="labelText">{messages.wallet.action.setting.label.alternative_currency}</p>
-        //       <Dropdown
-        //         placeholder={messages.wallet.action.setting.label.select_alternative_currency}
-        //         defaultId={this.state.alternateCurrency}
-        //         source={this.state.currencies}
-        //         onItemSelected={this.onCurrenciesSelected}
-        //         hasSearch
-        //       />
-        //     </div>            
-        //   </div>
-        // </div>
-
+    return (             
 
         <div className="box-setting">
 
-            <div className="item" onClick={()=> {this.onOpenModalName();}}>
+            <div className="item">
               <p className="labelText">{messages.wallet.action.setting.label.alternative_currency}</p>
                 <Dropdown
                   placeholder={messages.wallet.action.setting.label.select_alternative_currency}
-                  defaultId={this.state.alternateCurrency}
+                  defaultId={settings.wallet.alternateCurrency}
                   source={this.state.currencies}
                   onItemSelected={this.onCurrenciesSelected}
                   hasSearch
                 />
             </div>
 
-            <div className="item" onClick={()=> {this.onOpenModalName();}}>
+            <div className="item" onClick={()=> {this.onClickPasscode();}}>
                 <div className="name">
-                    <label>{messages.wallet.action.preferecens.list_item.wallet_name}</label>
+                    <label>{messages.wallet.action.setting.label.passcode}</label>
                 </div>
                 <div className="value">
-                    <span className="text">{wallet.title}</span>
+                  <Switch isChecked={settings.wallet.passcode.enable} onChange={(isChecked)=> {this.onEnablePasscode(isChecked)}} />
                 </div>
             </div>
 
@@ -188,12 +209,11 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  setLanguage,
-  rfChange: bindActionCreators(change, dispatch),
+  newPasscode, requestWalletPasscode, updatePasscode,
+  setLanguage,  
   showAlert: bindActionCreators(showAlert, dispatch),
   showLoading: bindActionCreators(showLoading, dispatch),
-  hideLoading: bindActionCreators(hideLoading, dispatch),
-  clearFields: bindActionCreators(clearFields, dispatch),
+  hideLoading: bindActionCreators(hideLoading, dispatch),  
 
 });
 
