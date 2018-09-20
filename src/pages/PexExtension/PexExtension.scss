@@ -28,8 +28,13 @@
 
     .MacBook {
       position: absolute;
-      top: 20%;
+      top: 15%;
       left: 0;
+      width: 100%;
+
+      img {
+        width: 95%;
+      }
     }
   }
 
