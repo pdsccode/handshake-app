@@ -1,7 +1,10 @@
 import React from 'react';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import { API_URL, CRYPTO_CURRENCY, EXCHANGE_ACTION, FIAT_CURRENCY, MIN_AMOUNT, NB_BLOCKS, URL } from '@/constants';
+import {
+  API_URL, CRYPTO_CURRENCY, EXCHANGE_ACTION, FIAT_CURRENCY, HANDSHAKE_ID, MIN_AMOUNT, NB_BLOCKS,
+  URL,
+} from '@/constants';
 import createForm from '@/components/core/form/createForm';
 import { change, Field, formValueSelector } from 'redux-form';
 import './CommonStyle.scss';
@@ -13,7 +16,7 @@ import iconEthereum from '@/assets/images/icon/coin/eth.svg';
 import iconBitcoinCash from '@/assets/images/icon/coin/bch.svg';
 import iconLock from '@/assets/images/icon/icons8-lock_filled.svg';
 import { formatAmountCurrency, formatMoneyByLocale } from '@/services/offer-util';
-import {isNormalInteger, minValue, minValueEqual, maxValueEqual, number, required} from '@/components/core/form/validation';
+import { isNormalInteger, minValue, minValueEqual, maxValueEqual, number, required } from '@/components/core/form/validation';
 import { bindActionCreators } from 'redux';
 import { createCreditATM, depositCoinATM, getCreditATM, trackingDepositCoinATM } from '@/reducers/exchange/action';
 import { getErrorMessageFromCode } from '@/components/handshakes/exchange/utils';
@@ -25,6 +28,7 @@ import CreditATM from '@/services/neuron/neuron-creditatm';
 import Helper from '@/services/helper';
 import _ from 'lodash';
 import { BigNumber } from 'bignumber.js';
+import axios from 'axios';
 
 const nameFormEscrowDeposit = 'escrowDeposit';
 const FormEscrowDeposit = createForm({
@@ -61,6 +65,7 @@ class EscrowDeposit extends React.Component {
     this.state = {
       values: {},
       depositInfo: this.props.depositInfo,
+      balances: {},
     };
   }
 
@@ -101,13 +106,45 @@ class EscrowDeposit extends React.Component {
     return null;
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     this.getCreditATM();
     // this.createCreditATM();
+    const balances = await this.getBalance();
+    this.setState({ balances });
   }
 
   getCreditATM = () => {
     this.props.getCreditATM({ PATH_URL: API_URL.EXCHANGE.CREDIT_ATM });
+  }
+
+  getBalance = async () => {
+    const result = {};
+
+    for (const item of Object.values(listCurrency)) {
+      const { name: currency } = item;
+
+      const wallet = MasterWallet.getWalletDefault(currency);
+      console.log('get Balance currency', currency);
+      console.log('get Balance wallet', wallet);
+      if (wallet) {
+        const balance = await wallet.getBalance();
+        const fee = await wallet.getFee(NB_BLOCKS, true) || 0;
+
+        const bnBalance = new BigNumber(balance);
+        const bnFee = new BigNumber(fee);
+        const bnAmount = bnBalance.minus(bnFee);
+
+        console.log('balance', balance);
+        console.log('fee', fee);
+
+        result[currency] = bnAmount.isGreaterThan(new BigNumber(0)) ? bnAmount.toFormat(4, BigNumber.ROUND_DOWN) : '0';
+      } else {
+        result[currency] = 0;
+      }
+    }
+
+    console.log('checkBalance result out ', result);
+    return result;
   }
 
   createCreditATM = () => {
@@ -219,7 +256,7 @@ class EscrowDeposit extends React.Component {
       const amount = values[`amount_${currency}`];
 
       if (amount && amount.trim().length > 0) {
-        result = ! (await this.showNotEnoughCoinAlert(amount, currency));
+        result = !(await this.showNotEnoughCoinAlert(amount, currency));
 
         console.log('checkBalance result  ', currency, result);
 
@@ -247,19 +284,24 @@ class EscrowDeposit extends React.Component {
 
     console.log('showNotEnoughCoinAlert ', currency, condition, balance, amount, fee);
 
+    let remainBalance = bnBalance.minus(bnFee);
+    remainBalance = remainBalance.isGreaterThan(new BigNumber(0)) ? remainBalance.toFormat(4, BigNumber.ROUND_DOWN) : '0';
+
     if (condition) {
       this.props.showAlert({
         message: <div className="text-center">
           <FormattedMessage
-            id="notEnoughCoinInWallet"
+            id="notEnoughCoinInWalletDeposit"
             values={{
-            amount: formatAmountCurrency(balance),
-            fee: formatAmountCurrency(fee),
+            amount: remainBalance,
+            currency,
+            // fee: formatAmountCurrency(fee),
+            // balance: formatAmountCurrency(balance),
             currency,
           }}
           />
         </div>,
-        timeOut: 3000,
+        timeOut: 5000,
         type: 'danger',
         callBack: () => {
         },
@@ -348,6 +390,20 @@ class EscrowDeposit extends React.Component {
     });
   }
 
+  async getNonce() {
+    try {
+      const url = `${process.env.PUBLIC_URL}/public-api/exchange/nonce`;
+      const response = await axios.get(url);
+
+      if (response.status === 200) {
+        return response.data.data;
+      }
+    } catch (e) {
+    }
+
+    return undefined;
+  }
+
   handleDepositCoinSuccess = async (data) => {
     this.hideLoading();
 
@@ -379,6 +435,8 @@ class EscrowDeposit extends React.Component {
     if (currency === CRYPTO_CURRENCY.ETH) {
       try {
         const creditATM = new CreditATM(wallet.chainId);
+
+        // const nonce = await this.getNonce();
 
         const result = await creditATM.deposit(amount, percentage, id);
         console.log('handleDepositCoinSuccess', result);
@@ -421,7 +479,7 @@ class EscrowDeposit extends React.Component {
     if (callbackSuccess) {
       callbackSuccess();
     } else {
-      this.props.history.push(URL.HANDSHAKE_ME);
+      this.props.history.push(`${URL.HANDSHAKE_ME}?id=${HANDSHAKE_ID.CREDIT}`);
     }
   };
 
@@ -458,6 +516,9 @@ class EscrowDeposit extends React.Component {
     const { messages } = this.props.intl;
     const { intl, hideNavigationBar } = this.props;
     const { listOfferPrice } = this.props;
+    const { balances } = this.state;
+
+    console.log('render balances', balances);
 
     return (
       <div className="escrow-deposit">
@@ -493,6 +554,7 @@ class EscrowDeposit extends React.Component {
 
                 let fiatCurrency = offerPrice && offerPrice.price || 0;
                 fiatCurrency *= (1 + ((+this.props[`percentage_${name}`]) / 100));
+                const hint = balances[name] || 0;
 
                 return (
                   <div key={name} className="mt-2">
@@ -507,7 +569,7 @@ class EscrowDeposit extends React.Component {
                             <img src={icon} className="icon-deposit" />
                           }
                           validate={[number]}
-                          placeholder="0"
+                          placeholder={hint}
                         />
                       </div>
                     </div>

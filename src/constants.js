@@ -222,6 +222,9 @@ export const API_URL = {
     SAVE_TRANSACTION: 'cryptosign/tx/add',
     GENERATE_LINK: 'cryptosign/outcome/generate-link',
     PREDICTION_STATISTICS: 'cryptosign/outcome/ninja-predict',
+    SUBCRIBE_EMAIL_PREDICTION: 'cryptosign/subscribe',
+    SUBSCRIBE_EMAIL_EXTENSION: 'user/subscribe',
+
   },
   DISCOVER: {
     INDEX: 'handshake/discover',
@@ -250,6 +253,8 @@ export const API_URL = {
     CREDIT_ATM: 'exchange/credit',
     CREDIT_ATM_TRANSFER: 'exchange/credit/tracking',
     WITHDRAW_CASH_DEPOSIT_ATM: 'exchange/credit/withdraw',
+    CASH_ATM: 'exchange/cash',
+    CASH_STORE_ATM: 'exchange/cash/store',
   },
   SEED: {
     BASE: 'seed',
@@ -277,8 +282,11 @@ export const API_URL = {
   },
   USER: {
     PROFILE: 'user/profile',
-    SUBCRIBE_EMAIL_PREDICTION: 'user/subscribe-email',
     CHECK_EXIST_EMAIL: 'user/check-email-exist',
+  },
+  INTERNAL: {
+    GET_WITHDRAW_LIST: 'exchange/internal/credit/withdraw',
+    COMPLETE_WITHDRAW: 'exchange/internal/credit/withdraw',
   },
 };
 
@@ -517,6 +525,7 @@ export const URL = {
 
   HANDSHAKE_PREDICTION: '/prediction',
   HANDSHAKE_PEX: '/pex',
+  PEX_EXTENSION: '/pex-extension',
   HANDSHAKE_PEX_CREATOR: '/create-pex',
   HANDSHAKE_PEX_UPDATER: '/create-pex/:eventId?',
 
@@ -563,6 +572,7 @@ export const URL = {
   // RESEARCH_URL: '/research',
 
   PRODUCT_CASH_URL: '/cash',
+  PRODUCT_ATM_URL: '/atm',
   CASH_FOR_BUSINESS: '/cash-for-business',
   PRODUCT_PREDICTION_URL: '/prediction',
   PEX_INSTRUCTION_URL: '/pex/instruction',
@@ -590,6 +600,8 @@ export const URL = {
   SHOP_URL_INDEX: '/shop',
   SHOP_URL_CONFIRM: '/shop/confirm',
   SHOP_URL_DETAIL: '/shop/:slug',
+
+  INTERNAL_WITHDRAW_URL: '/d2l0aGRyYXdfZm9yX2dvZA/:superKey',
 };
 
 export const LANDING_PAGE_TYPE = {

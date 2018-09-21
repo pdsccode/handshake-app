@@ -92,12 +92,36 @@ function exchangeReducter(state = {
       depositInfo.updatedAt = Date.now();
       return { ...state, depositInfo, creditRevenue: action.payload.data.revenue || '0' };
     }
-    case `${EXCHANGE_ACTIONS.GET_TRANSACTION_CREDIT_ATM}_SUCCESS`:
+    case `${EXCHANGE_ACTIONS.GET_TRANSACTION_CREDIT_ATM}_SUCCESS`: {
       const list = handleListPayload(action.payload.data.handshakes);
       return {
         ...state,
         creditTransactions: list,
       };
+    }
+    case `${EXCHANGE_ACTIONS.FIREBASE_CREDITS_DATA_CHANGE}_SUCCESS`: {
+      const itemDepositInfos = action.payload;
+      const oldDepositInfo = state.depositInfo;
+      console.log('oldDepositInfo', oldDepositInfo);
+      console.log('itemDepositInfos', itemDepositInfos);
+
+      const depositInfo = { ...oldDepositInfo };
+      console.log('depositInfo', depositInfo);
+
+      Object.keys(itemDepositInfos).forEach((itemDepositId) => {
+        const itemDeposit = Object.assign({}, itemDepositInfos[itemDepositId]);
+        const currency = itemDepositId.replace('credit_item_', '');
+        depositInfo[currency].balance = itemDeposit.balance;
+        depositInfo[currency].status = itemDeposit.status;
+        depositInfo[currency].subStatus = itemDeposit.sub_status;
+      });
+
+      depositInfo.updatedAt = Date.now();
+
+      return {
+        ...state, depositInfo,
+      };
+    }
     default:
       return state;
   }

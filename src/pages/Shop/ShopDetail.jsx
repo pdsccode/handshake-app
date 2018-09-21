@@ -3,14 +3,10 @@ import React from 'react';
 import Button from '@/components/core/controls/Button/Button';
 import Modal from '@/components/core/controls/Modal';
 import Dropdown from '@/components/core/controls/Dropdown';
-// import CustomizeOptions from './Utility/CustomizeOptions';
+import CustomizeOptions from './Utility/CustomizeOptions';
 //
 import { set, getJSON } from 'js-cookie';
 import { showAlert } from '@/reducers/app/action';
-// import createForm from '@/components/core/form/createForm';
-// import { fieldDropdown, fieldInput } from '@/components/core/form/customField';
-// import { required } from '@/components/core/form/validation';
-// import { Field, clearFields, change, formValues } from 'redux-form';
 import { connect } from 'react-redux';
 import Input from '@/components/core/forms/Input/Input';
 import PropTypes from 'prop-types';
@@ -20,7 +16,7 @@ import $http from '@/services/api';
 import SimpleSlider from '@/components/core/controls/Slider';
 import Tabs from '@/components/handshakes/betting/Feed/Tabs';
 import { hideHeader } from '@/reducers/app/action';
-import {  URL, CUSTOMER_ADDRESS_INFO, AUTONOMOUS_END_POINT, COUNTRY_LIST } from '@/constants';
+import { URL, CUSTOMER_ADDRESS_INFO, AUTONOMOUS_END_POINT, COUNTRY_LIST } from '@/constants';
 // style
 import './ShopDetail.scss';
 const EthSVG = 'https://d2q7nqismduvva.cloudfront.net/static/images/icon-svg/common/eth-sign.svg';
@@ -63,6 +59,7 @@ class ShopDetail extends React.Component {
     this.placeOrder = ::this.placeOrder;
     this.updateQuantity = ::this.updateQuantity;
     this.updateShippingAndTax = ::this.updateShippingAndTax;
+    this.afterSelectNewOption = ::this.afterSelectNewOption;
   }
 
   addOptionTextToObject(object) {
@@ -129,7 +126,7 @@ class ShopDetail extends React.Component {
     // get product information: price, option name, ...
     const urlProductInfo = `${AUTONOMOUS_END_POINT.BASE}${AUTONOMOUS_END_POINT.PRODUCT_INFO}/${productBuySlug.product.id}`;
     const { data: productInfo } = await $http({ url: urlProductInfo, data: this.addOptionTextToObject(productBuySlug.product.selected_option), method: 'POST' });
-    this.setState({ productInfo: productInfo.product_info, optionSelecting: productBuySlug.product.selected_option });
+    this.setState({ productInfo: productInfo.product_info, optionSelecting: productBuySlug.product.selected_option }, () => this.imagesSliderRef.slider.slickGoTo(0));
     // get product info design
     const urlProductInfoDesign = `${AUTONOMOUS_END_POINT.BASE}${AUTONOMOUS_END_POINT.PRODUCT_SPEC}/${productBuySlug.product.id}?type=1`;
     const { data: productInfoHtml } = await $http({ url: urlProductInfoDesign, method: 'GET' });
@@ -160,25 +157,17 @@ class ShopDetail extends React.Component {
       this.zipRef.value = addressInfo.zip;
       this.cityRef.value = addressInfo.city;
       this.stateRef.value = addressInfo.state;
-      // this.countryRef.value = addressInfo.country;
       countryCode = addressInfo.country;
     } else if (ipInfo) {
       this.cityRef.value = ipInfo.city;
       this.stateRef.value = ipInfo.regionCode;
-      // this.countryRef.value = ipInfo.country;
       countryCode = ipInfo.country;
     }
     this.setState({ countryCode });
   }
 
-  videoOrImage(firstGallery, productName) {
-    if (firstGallery.is_video) {
-      // video
-      return <iframe src={firstGallery.youtube_url} />
-    } else {
-      // image
-      return <img src={firstGallery.image} alt={productName} />
-    }
+  afterSelectNewOption(optionSelecting) {
+    this.setState({ optionSelecting }, () => { this.updateShippingAndTax(); this.imagesSliderRef.slider.slickGoTo(0); });
   }
 
   updateQuantity(e) {
@@ -191,7 +180,7 @@ class ShopDetail extends React.Component {
   get yourInformationForm() {
     return {
       city: this.cityRef.value.trim(),
-      country: this.countryRef.itemSelecting.id.trim(),
+      country: this.countryRef.itemSelecting.id ? this.countryRef.itemSelecting.id.trim() : '',
       email: this.emailRef.value.trim(),
       fullname: this.nameRef.value.trim(),
       phone: this.phoneRef.value.trim(),
@@ -253,10 +242,18 @@ class ShopDetail extends React.Component {
   }
 
   render() {
-    const { product, productInfo, productInfoHtml, productSpecs, productFAQ, productReviews, quantity, countryCode } = this.state;
+    const { product,
+            productInfo,
+            productInfoHtml,
+            productSpecs,
+            productFAQ,
+            productReviews,
+            quantity,
+            countryCode,
+            optionSelecting } = this.state;
     const imageSetting = {
       customPaging: i => <span className="dot" />,
-      initialSlide: 1,
+      initialSlide: 0,
       dots: true,
       infinite: true,
       speed: 500,
@@ -291,6 +288,12 @@ class ShopDetail extends React.Component {
             {productInfo.shipping_date}
           </span>
         </p>
+        <CustomizeOptions
+          className="customize-options"
+          product={product}
+          optionSelecting={optionSelecting}
+          afterSelectNewOption={this.afterSelectNewOption}
+        />
         <div className="buy-now-btn">
           <Button block onClick={() => this.modalBuyNowRef.open()}>
             Buy now
@@ -317,7 +320,10 @@ class ShopDetail extends React.Component {
           </div>
           <div label="FAQ">
             {
-              productFAQ.map((item, index) => <p key={'product-faq' + index} dangerouslySetInnerHTML={{ __html: item.question }} />)
+              productFAQ.map((item, index) => <div key={'product-faq' + index} className="faq">
+                <strong>{item.question}</strong>
+                <p dangerouslySetInnerHTML={{ __html: item.answers[0].answer }} />
+              </div>)
             }
           </div>
           <div label={`Reviews (${product.review_count * 2})`}>

@@ -91,6 +91,12 @@
       video {
         width: 100%;
       }
+      .faq {
+        strong {
+          display: block;
+          margin-bottom: 8px;
+        }
+      }
     }
   }
   .order-information {
@@ -137,5 +143,8 @@
   }
   .red {
     color: #8e3d1d;
+  }
+  .customize-options {
+    padding: 0 15px;
   }
 }
