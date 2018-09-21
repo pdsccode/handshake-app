@@ -83,7 +83,8 @@ import BackChevronSVGWhite from '@/assets/images/icon/back-chevron-white.svg';
 import customRightIcon from '@/assets/images/wallet/icons/icon-options.svg';
 import floatButtonScanQRCode from '@/assets/images/wallet/icons/float-button-scan.svg';
 
-import WalletPreferences from '@/components/Wallet/WalletPreferences'
+import WalletPreferences from '@/components/Wallet/WalletPreferences';
+import { requestWalletPasscode  } from '@/reducers/app/action';
 
 const QRCode = require('qrcode.react');
 
@@ -569,18 +570,23 @@ class Wallet extends React.Component {
   }
 
   showTransfer(wallet){
-    this.setState({ walletSelected: wallet,
-      modalTransferCoin:
-        (
-          <TransferCoin
-            wallet={wallet}
-            onFinish={(result) => { this.successTransfer(result) }}
-            currency={this.state.alternateCurrency}
-          />
-        ),
-      }, ()=>{
-      this.modalSendRef.open();
+    this.props.requestWalletPasscode({      
+      onSuccess: () => {
+          this.setState({ walletSelected: wallet,
+            modalTransferCoin:
+              (
+                <TransferCoin
+                  wallet={wallet}
+                  onFinish={(result) => { this.successTransfer(result) }}
+                  currency={this.state.alternateCurrency}
+                />
+              ),
+            }, ()=>{
+            this.modalSendRef.open();
+          });
+      }
     });
+    
   }
 
   showReceive(wallet){
@@ -1191,7 +1197,8 @@ const mapDispatch = ({
   hideLoading,
   change,
   clearFields,
-  hideHeader
+  hideHeader,
+  requestWalletPasscode
 });
 
 

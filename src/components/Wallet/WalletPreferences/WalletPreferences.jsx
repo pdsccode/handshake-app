@@ -7,7 +7,6 @@ import Input from '../Input';
 import Modal from '@/components/core/controls/Modal';
 import {injectIntl} from 'react-intl';
 import { ENGINE_METHOD_DIGESTS } from 'constants';
-import { newPasscode, requestWalletPasscode,  } from '@/reducers/app/action';
 
 class WalletPreferences extends React.Component {
   constructor(props) {
@@ -33,22 +32,12 @@ class WalletPreferences extends React.Component {
   }
 
   handleUpdateNameOnClick = () => {
-    // if (this.state.walletName){
-    //   this.props.wallet.title = this.state.walletName;
-    //   this.props.onUpdateWalletName(this.props.wallet);
-    //   this.modalWalletNameRef.close();
-    // }
-    console.log('this.props.newPasscode...');
-    // this.props.newPasscode({      
-    //   onSuccess: () => {
-    //     alert("onSuccess");
-    //   },
-    // });
-    this.props.newPasscode({      
-      onSuccess: () => {
-        alert("onSuccess");
-      },
-    });
+    if (this.state.walletName){
+      this.props.wallet.title = this.state.walletName;
+      this.props.onUpdateWalletName(this.props.wallet);
+      this.modalWalletNameRef.close();
+    }
+        
   }
 
   renderModalName=()=>{
@@ -128,7 +117,7 @@ WalletPreferences.propTypes = {
 };
 
 const mapDispatch = ({  
-  newPasscode, requestWalletPasscode, 
+  
 });
 
 
