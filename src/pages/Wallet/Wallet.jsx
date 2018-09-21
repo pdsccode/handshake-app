@@ -953,7 +953,7 @@ class Wallet extends React.Component {
     return (
       <div className="wallet-page">
 
-        <img onClick={()=> {alert('ga');}} className="float-button-scan-qrcode" src={floatButtonScanQRCode} />
+        {/* <img onClick={()=> {alert('ga');}} className="float-button-scan-qrcode" src={floatButtonScanQRCode} /> */}
 
         <Modal customRightIconClick={()=>{this.onOpenWalletPreferences(this.state.walletSelected);}}  customRightIcon={customRightIcon} customBackIcon={BackChevronSVGWhite} modalBodyStyle={this.modalBodyStyle} modalHeaderStyle={this.modalHeaderStyle} title={this.state.walletSelected ? this.state.walletSelected.title : messages.wallet.action.history.header} onRef={modal => this.modalHistoryRef = modal} onClose={this.closeHistory}>
           {modalHistory}
