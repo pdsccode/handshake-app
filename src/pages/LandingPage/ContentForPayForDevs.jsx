@@ -34,7 +34,7 @@ const PayForDevs = () => (
     </div>
 
     <div className="row why-use">
-      <div className="pd-heading">Why use Pay for Devs in your business?</div>
+      <Flip bottom><div className="pd-heading">Why use Pay for Devs in your business?</div></Flip>
       <div className="card-deck">
       <Slide bottom cascade>
         <div className="card">

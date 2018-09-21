@@ -2,6 +2,7 @@
   .modal-dialog-content{
     width: 96%;
     height: 80%;
+    overflow: scroll;
   }
 
   .position{
@@ -44,6 +45,22 @@
         padding: 0 0.5rem;
         line-height: 1.8;
       }
+
+
+      @media (max-width: 330px){
+        .col-5{
+          flex: 0 0 60%;
+          text-align: left !important;
+        }
+
+        .balance{
+          display: contents !important;
+        }
+
+        .qrcode{
+          float: right;
+        }
+      }
     }
 
     .test{
@@ -64,6 +81,29 @@
     }
 
     padding-bottom: 2rem;
+  }
+
+
+  .qr-wrapper{
+    .modal-dialog-content{
+      width: 90%;
+      height: 410px;
+      padding: 0px;
+
+    }
+
+    .qrBox{
+      padding: 1rem 0;
+      text-align: center;
+
+      .address{
+        word-wrap: break-word;
+      }
+      .div-qr-code{
+        padding-bottom: 1rem;
+      }
+
+    }
   }
 
 
