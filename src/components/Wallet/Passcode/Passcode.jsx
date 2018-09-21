@@ -28,7 +28,7 @@ class Passcode extends React.PureComponent {
   
   onPasscodeClick=(number)=>{
     window.navigator.vibrate(10); 
-    const onFinish = this.props || null;    
+    const onFinish = this.props.onFinish || null;    
     var passcodeResult = this.state.passcodeResult;
     var check = false;
     if (number != -1){
@@ -47,11 +47,11 @@ class Passcode extends React.PureComponent {
         console.log(this.props.confirmValue , md5(valueEnter ));
         if (this.props.confirmValue){
           if (this.props.confirmValue === md5(valueEnter )){
-            console.log("pass confirm", valueEnter);
+            // console.log("pass confirm", valueEnter);
             this.setState({passcodeResult: passcodeResult, confirmValueFalse: true, randum: Math.random()},()=>{
               if (onFinish){
                 setTimeout(() => {
-                  this.props.onFinish(md5(valueEnter ));              
+                  onFinish(md5(valueEnter ));              
                 }, 100);                
               }
             });
@@ -62,17 +62,17 @@ class Passcode extends React.PureComponent {
               window.navigator.vibrate(400); 
               setTimeout(() => {
                 this.setState({passcodeResult: [-1, -1, -1, -1], confirmValueFalse: false, randum: Math.random()}, ()=>{
-                  console.log("not match!", this.state.passcodeResult);
+                  // console.log("not match!", this.state.passcodeResult);
                 });
               }, 200);
             });                        
           }
         }
         else{
-          console.log("full check", valueEnter);
+          // console.log("full check", valueEnter);
           if (onFinish){            
             this.setState({passcodeResult: passcodeResult, confirmValueFalse: true, randum: Math.random()});
-            this.props.onFinish(md5(valueEnter ));
+            onFinish(md5(valueEnter ));
           }
           else{
             this.setState({passcodeResult: passcodeResult, confirmValueFalse: null, randum: Math.random()});            

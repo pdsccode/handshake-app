@@ -307,10 +307,6 @@ class Wallet extends React.Component {
       this.splitWalletData(listWallet);
       await this.getListBalace(listWallet);
     }
-
-    /* var btc = new Bitcoin();
-     var tx = await btc.transfer("tprv8ccSMiuz5MfvmYHzdMbz3pjn5uW3G8zxM975sv4MxSGkvAutv54raKHiinLsxW5E4UjyfVhCz6adExCmkt7GjC41cYxbNxt5ZqyJBdJmqPA","mrPJ6rBHpJGnsLK3JGfJQjdm5vkjeAb63M", 0.0001);
-     console.log(tx) */
   }
 
   async getSetting(){
@@ -346,16 +342,7 @@ class Wallet extends React.Component {
 
     await this.splitWalletData(listWallet);
 
-    await MasterWallet.UpdateLocalStore(listWallet);
-
-
-    // var btcTestnet = new Bitcoin(Bitcoin.Network.Testnet);
-    // var balance = await btcTestnet.getBalance("n1MZwXhWs1unyuG6qNbEZRZV4qjzd3ZMyz");
-    // console.log("btcTestnet", balance);
-
-    // var ethRinkeby = new Ethereum (Ethereum.Network.Rinkeby);
-    // balance = await ethRinkeby.getBalance("0xe70adf9aE4d5F68E80A8E2C5EA3B916Dd49C6D87");
-    // console.log("ethRinkeby", balance);
+    await MasterWallet.UpdateLocalStore(listWallet);   
   }
 
   toggleBottomSheet() {
@@ -469,26 +456,7 @@ class Wallet extends React.Component {
           MasterWallet.UpdateLocalStore(lstWalletTemp);
         }
       })
-    }
-
-    // let canRemove = (wallet.isToken &&  wallet.customToken) || !wallet.isReward;
-    // if (canRemove) {
-    //   obj.push({
-    //     title: messages.wallet.action.remove.title,
-    //     handler: () => {
-    //       this.setState({walletSelected: wallet});
-    //       this.modalRemoveRef.open();
-    //       this.toggleBottomSheet();
-    //     }
-    //   })
-    // }
-
-    // obj.push({
-    //   title: messages.wallet.action.cancel.title,
-    //   handler: () => {
-    //     this.toggleBottomSheet();
-    //   },
-    // });
+    }    
 
     return obj;
   }
@@ -683,13 +651,7 @@ class Wallet extends React.Component {
           this.modalSettingRef.open();
         });
       },
-    });
-    // obj.push({
-    //   title: messages.wallet.action.cancel.title,
-    //   handler: () => {
-    //     this.toggleBottomSheet();
-    //   },
-    // });
+    });    
     return obj;
   }
 

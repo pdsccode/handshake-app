@@ -2,7 +2,6 @@ import axios from 'axios';
 import React from 'react';
 import {injectIntl} from 'react-intl';
 import {connect} from "react-redux";
-import { bindActionCreators } from "redux";
 import {showAlert} from '@/reducers/app/action';
 import { showLoading, hideLoading } from '@/reducers/app/action';
 import iconSuccessChecked from '@/assets/images/icon/icon-checked-green.svg';
@@ -34,6 +33,7 @@ class SettingWallet extends React.Component {
       currencies: [],
       alternateCurrency: '',
       settings: this.defaultSettings,
+      switchContent: '',
     }    
   }
 
@@ -79,8 +79,14 @@ class SettingWallet extends React.Component {
         settings.wallet.passcode = this.state.settings.wallet.passcode;
       }
     }
+    
+    this.setState({settings: settings, currencies: currencies, switchContent: this.genSwitchContent(settings)});       
+  }
 
-    this.setState({settings: settings, currencies: currencies});       
+  genSwitchContent(settings){
+    if (!settings)
+      settings = this.state.settings;              
+    return <Switch isChecked={settings.wallet.passcode.enable} onChange={(isChecked)=> {this.onEnablePasscode(isChecked)}} />
   }
 
   showLoading = () => {
@@ -104,16 +110,16 @@ class SettingWallet extends React.Component {
   onCurrenciesSelected = (item) =>{
     const { messages } = this.props.intl;
 
-    let setting = local.get(APP.SETTING);
-    if(!setting)
-      setting = {};
+    let settings = local.get(APP.SETTING);
+    if(!settings)
+    settings = {};
 
-    if(!setting.wallet)
-      setting.wallet = {};
+    if(!settings.wallet)
+    settings.wallet = {};
 
-    setting.wallet.alternateCurrency = item.id;
-    local.save(APP.SETTING, setting);
-    this.showSuccess(messages.wallet.action.setting.success.save_alternative_currency);
+    settings.wallet.alternateCurrency = item.id;
+    local.save(APP.SETTING, settings);
+    // this.showSuccess(messages.wallet.action.setting.success.save_alternative_currency);
   }
 
   getCountryName(locale) {
@@ -130,35 +136,71 @@ class SettingWallet extends React.Component {
     // case update or set new:
     // if passcode is on enable, show update, else nothing.
     if (this.state.settings.wallet.passcode.enable){
-      // ask old passcode first + set new passcode:
+      // ask old passcode first + set new passcode:      
       this.props.updatePasscode({
-        onSuccess: () => {
-          console.log("updatePasscode->settings are updated!!!");
+        onSuccess: (md5Passcode) => {
+          settings.wallet.passcode = {"enable": true, "value": md5Passcode};
+          this.setState({settings: settings}, () => {
+            this.updateSettings(settings);            
+          });
         },
+        onCancel: () => {
+          this.setState({switchContent: ""}, () => {
+            this.setState({switchContent: this.genSwitchContent()});
+          });
+        }
       });
     }
   }
 
+  updateSettings(settings){    
+    if(settings){        
+        local.save(APP.SETTING, settings);        
+        return true;
+    }    
+    return false;
+  }
+
   onEnablePasscode=(isChecked)=>{
-    console.log(this.state.settings.wallet.passcode.value, isChecked);
+    
+    let settings = this.state.settings;
+    
+    // from off => on:
     if (isChecked){
       // if dont set pascode value yet, show new set passcode:
-      if(!this.state.settings.wallet.passcode.value) {
-        console.log("xxxx");
+      if(!this.state.settings.wallet.passcode.value) {        
         this.props.newPasscode({      
-          onSuccess: () => {
-            console.log("set new Passcode -> settings are updated!!!");
+          onSuccess: (md5Passcode) => {
+            settings.wallet.passcode = {"enable": true, "value": md5Passcode};
+            this.setState({settings: settings}, () => {
+              this.updateSettings(settings);            
+            });
           },
         });
       }
       else{
-        // update enable only
-        let settings = this.state.settings;
+        // update enable only        
         settings.wallet.passcode.enable = true;
         this.setState({settings: settings}, () => {
-            local.save(APP.SETTING, setting);
+          this.updateSettings(settings);            
         });
       }
+    }
+    else{
+      // from on -> off:
+      this.props.requestWalletPasscode({      
+        onSuccess: () => {
+          settings.wallet.passcode.enable = false;
+          this.setState({settings: settings}, () => {
+            this.updateSettings(settings);            
+          });
+        },
+        onCancel: () => {          
+          this.setState({switchContent: ""}, () => {
+            this.setState({switchContent: this.genSwitchContent()});
+          });
+        }
+      });
     }
     
   }
@@ -166,7 +208,7 @@ class SettingWallet extends React.Component {
   render() {
     const { messages } = this.props.intl;
 
-    let settings = this.state.settings;          
+    let settings = this.state.settings;      
 
     return (             
 
@@ -183,12 +225,12 @@ class SettingWallet extends React.Component {
                 />
             </div>
 
-            <div className="item" onClick={()=> {this.onClickPasscode();}}>
-                <div className="name">
+            <div className="item">
+                <div className="name" onClick={()=> {this.onClickPasscode();}}>
                     <label>{messages.wallet.action.setting.label.passcode}</label>
                 </div>
                 <div className="value">
-                  <Switch isChecked={settings.wallet.passcode.enable} onChange={(isChecked)=> {this.onEnablePasscode(isChecked)}} />
+                  {this.state.switchContent}
                 </div>
             </div>
 
@@ -208,13 +250,13 @@ const mapStateToProps = (state) => ({
   app: state.app,
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  newPasscode, requestWalletPasscode, updatePasscode,
-  setLanguage,  
-  showAlert: bindActionCreators(showAlert, dispatch),
-  showLoading: bindActionCreators(showLoading, dispatch),
-  hideLoading: bindActionCreators(hideLoading, dispatch),  
-
+const mapDispatch = ({
+  newPasscode, requestWalletPasscode, updatePasscode,  
+  setLanguage,
+  showAlert,
+  showLoading,
+  hideLoading,
 });
 
-export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(SettingWallet));
+
+export default injectIntl(connect(mapStateToProps, mapDispatch)(SettingWallet));
