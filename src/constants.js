@@ -598,6 +598,7 @@ export const URL = {
   SHOP_URL_DETAIL: '/shop/:slug',
 
   INTERNAL_WITHDRAW_URL: '/d2l0aGRyYXdfZm9yX2dvZA/:superKey',
+  CASH_STORE_URL: '/cash_store',
 };
 
 export const LANDING_PAGE_TYPE = {

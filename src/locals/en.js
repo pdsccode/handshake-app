@@ -1044,6 +1044,22 @@ export default {
         title: 'Buy coins',
       },
     },
+    atm: {
+      storeInfo: 'Store Info',
+      transaction: 'Transactions',
+      label: {
+        name: 'Name',
+        open: 'Open',
+        closed: 'Closed',
+        phone: 'Phone',
+        address: 'Address',
+        bankInfo: 'Bank info',
+        ccInfo: 'CC info',
+      },
+      button: {
+        save: 'Save',
+      },
+    },
   },
 
   wallet: {
