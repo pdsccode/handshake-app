@@ -645,7 +645,7 @@ class Wallet extends React.Component {
       title: messages.wallet.action.setting.title,
       handler: () => {
         this.setState({
-          modalSetting: (<SettingWallet />)
+          modalSetting: (<SettingWallet customBackIcon={BackChevronSVGWhite} modalHeaderStyle={this.modalHeaderStyle} />)
         }, ()=> {
           this.toggleBottomSheet();
           this.modalSettingRef.open();

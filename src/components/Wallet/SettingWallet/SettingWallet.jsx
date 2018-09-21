@@ -22,18 +22,30 @@ import Input from '../Input';
 import { ENGINE_METHOD_DIGESTS } from 'constants';
 import { newPasscode, requestWalletPasscode, updatePasscode } from '@/reducers/app/action';
 
+import iconLock from '@/assets/images/wallet/icons/icon-lock.svg';
+import iconCurrentcy from '@/assets/images/wallet/icons/icon-currency.svg';
+import iconNotifications from '@/assets/images/wallet/icons/icon-notifications.svg';
+import iconTwitter from '@/assets/images/wallet/icons/icon-twitter.svg';
+import iconFacebook from '@/assets/images/wallet/icons/icon-facebook.svg';
+import iconTelegram from '@/assets/images/wallet/icons/icon-telegram.svg';
+
+
+import Modal from '@/components/core/controls/Modal';
+
+
 
 class SettingWallet extends React.Component {
   constructor(props) {
     super(props);
 
-    this.defaultSettings = {"wallet":{"alternateCurrency": "USD", "passcode": {"enable": false, "value": ""}}};//todo: need move this to config.
+    this.defaultSettings = {"wallet":{"alternateCurrency": "USD", "passcode": {"enable": false, "value": ""}, "notification": true}};//todo: need move this to config.
     
     this.state = {
       currencies: [],
       alternateCurrency: '',
       settings: this.defaultSettings,
       switchContent: '',
+      listCurrenciesContent: '',
     }    
   }
 
@@ -110,15 +122,17 @@ class SettingWallet extends React.Component {
   onCurrenciesSelected = (item) =>{
     const { messages } = this.props.intl;
 
-    let settings = local.get(APP.SETTING);
-    if(!settings)
-    settings = {};
-
-    if(!settings.wallet)
-    settings.wallet = {};
+    let settings = this.state.settings;
 
     settings.wallet.alternateCurrency = item.id;
-    local.save(APP.SETTING, settings);
+
+    this.setState({settings: settings}, () => {
+      this.updateSettings(settings);            
+    });    
+
+    this.setState({listCurrenciesContent: ''}, ()=> {
+      this.modalSelectCurrencyRef.close();
+    });
     // this.showSuccess(messages.wallet.action.setting.success.save_alternative_currency);
   }
 
@@ -205,6 +219,42 @@ class SettingWallet extends React.Component {
     
   }
 
+  onClickCurrency=()=>{
+    const { messages } = this.props.intl;
+    let settings = this.state.settings;
+    this.setState({
+      listCurrenciesContent: (<Dropdown customResultCss={{"maxHeight": "none"}}
+              placeholder={messages.wallet.action.setting.label.select_alternative_currency}
+              defaultId={settings.wallet.alternateCurrency}
+              source={this.state.currencies}
+              onItemSelected={this.onCurrenciesSelected}
+              hasSearch
+              isShow={true}
+            />)}, ()=>{
+              this.modalSelectCurrencyRef.open();
+            }) 
+  }
+
+  
+
+  onClickNotification=(isChecked)=>{
+    let settings = this.state.settings;
+    settings.wallet.notification = isChecked;
+    this.setState({settings: settings}, () => {
+      this.updateSettings(settings);            
+    });
+  }
+
+  openTelegram=()=>{
+    window.open('https://t.me/ninja_org?ref=ninja-wallet', '_blank');
+  }
+  openFacebook=()=>{
+    window.open('https://www.facebook.com/ninjadotorg/?ref=ninja-wallet', '_blank');
+  }
+  openTwitter=()=>{
+    window.open('https://twitter.com/ninja_org?ref=ninja-wallet', '_blank');
+  }
+
   render() {
     const { messages } = this.props.intl;
 
@@ -214,25 +264,78 @@ class SettingWallet extends React.Component {
 
         <div className="box-setting">
 
-            <div className="item">
-              <p className="labelText">{messages.wallet.action.setting.label.alternative_currency}</p>
-                <Dropdown
-                  placeholder={messages.wallet.action.setting.label.select_alternative_currency}
-                  defaultId={settings.wallet.alternateCurrency}
-                  source={this.state.currencies}
-                  onItemSelected={this.onCurrenciesSelected}
-                  hasSearch
-                />
-            </div>
+            <Modal title={messages.wallet.action.setting.label.select_alternative_currency} onRef={modal => this.modalSelectCurrencyRef = modal} customBackIcon={this.props.customBackIcon} modalHeaderStyle={this.props.modalHeaderStyle}>
+              <div className="list-currency">
+                  {this.state.listCurrenciesContent}              
+              </div>
+            </Modal>
+            
 
             <div className="item">
-                <div className="name" onClick={()=> {this.onClickPasscode();}}>
+                <img className="icon" src={iconLock} />
+                <div className="name" onClick={()=> {this.onClickPasscode();}}>                    
                     <label>{messages.wallet.action.setting.label.passcode}</label>
                 </div>
                 <div className="value">
                   {this.state.switchContent}
                 </div>
             </div>
+
+            <div className="item">
+                <img className="icon" src={iconNotifications} />
+                <div className="name">                    
+                    <label>{messages.wallet.action.setting.label.push_notifications}</label>
+                </div>
+                <div className="value">
+                  <Switch isChecked={settings.wallet.push_notification} onChange={(isChecked)=> {this.onClickNotification(isChecked)}} />
+                </div>
+            </div>
+
+            <div className="item" onClick={()=> {this.onClickCurrency();}}>
+                <img className="icon" src={iconCurrentcy} />
+                <div className="name">                    
+                    <label>{messages.wallet.action.setting.label.alternative_currency}</label>
+                </div>
+                <div className="value">
+                  <span className="text">{settings.wallet.alternateCurrency}</span>
+                </div>
+            </div>
+            
+
+            
+
+            <div className="item header">
+              <label>{messages.wallet.action.setting.label.community}</label>
+            </div>
+
+            <div className="item" onClick={()=> {this.openTwiter();}}>
+                <img className="icon" src={iconTwitter} />
+                <div className="name">                    
+                    <label>Twitter</label>
+                </div>
+                <div className="value">
+                  
+                </div>
+            </div>  
+            <div className="item" onClick={()=> {this.openFacebook();}}>
+                <img className="icon" src={iconFacebook} />
+                <div className="name">                    
+                    <label>Facebook</label>
+                </div>
+                <div className="value">
+                  
+                </div>
+            </div>     
+            <div className="item" onClick={()=> {this.openTelegram();}}>
+                <img className="icon" src={iconTelegram} />
+                <div className="name">                    
+                    <label>Telegram Group</label>
+                </div>
+                <div className="value">
+                  
+                </div>
+            </div>                                              
+            
 
         </div>
       
