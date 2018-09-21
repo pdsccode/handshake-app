@@ -603,6 +603,7 @@ export const URL = {
   SHOP_URL_DETAIL: '/shop/:slug',
 
   INTERNAL_WITHDRAW_URL: '/d2l0aGRyYXdfZm9yX2dvZA/:superKey',
+  LANDING_BECOME_ATM: '/become-atm',
 };
 
 export const LANDING_PAGE_TYPE = {
