@@ -30,6 +30,7 @@ import imgHivepayOffline from '@/assets/images/landing/home/hivepay-offline.jpg'
 
 // import NetworkError from '@/components/Router/NetworkError';
 import Maintain from '@/components/Router/Maintain';
+import PexExtension from '@/pages/PexExtension/PexExtension';
 
 const RouterMe = createDynamicImport(() => import('@/components/Router/Me'), Loading);
 const RouterDiscover = createDynamicImport(() => import('@/components/Router/Discover'), Loading);
@@ -119,6 +120,7 @@ if (BrowserDetect.isDesktop) {
     { path: URL.PRODUCT_PREDICTION_URL, render: () => <ProjectDetail type="product" name="prediction" img={imgPrediction} contentComponent={<ContentForPrediction />} reactHelmetElement={SEOPrediction} /> },
     { path: URL.HANDSHAKE_PEX, render: () => <ProjectDetail type="product" name="prediction" img={imgPrediction} contentComponent={<ContentForPrediction />} reactHelmetElement={SEOPrediction} /> },
     { path: URL.PRODUCT_WALLET_URL, render: () => <ProjectDetail type="product" name="wallet" img={imgWallet} reactHelmetElement={SEOWallet} entireContentComponent={<ContentForWallet />} /> },
+    { path: URL.PEX_EXTENSION, render: () => <PexExtension reactHelmetElement={SEOPrediction} /> },
     { path: URL.HANDSHAKE_PEX_CREATOR, render: () => <ProjectDetail type="product" name="prediction" img={imgPrediction} contentComponent={<ContentForPrediction />} reactHelmetElement={SEOPrediction} /> },
     { path: URL.HANDSHAKE_EXCHANGE, render: () => <ProjectDetail type="product" name="prediction" img={imgPrediction} contentComponent={<ContentForPrediction />} reactHelmetElement={SEOPrediction} /> },
     { path: URL.PRODUCT_HIVEPAY_OFFLINE_URL, render: () => <ProjectDetail type="product" name="pay-for-stores" img={imgHivepayOffline} reactHelmetElement={SEOPayForStores} /> },

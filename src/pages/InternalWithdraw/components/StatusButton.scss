@@ -18,3 +18,13 @@
 .input-form {
   padding: 10px 5px;
 }
+
+.internal-withdraw-modal {
+  max-width: none;
+  .modal-backdrop {
+    max-width: none;
+  }
+  .modal-dialog-content {
+    width: 500px;
+  }
+}
