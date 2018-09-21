@@ -1255,7 +1255,7 @@ export default {
           shortest_address: 'Show shortest address',
           hide_address: 'Hide address',
           passcode: "Passcode",
-          push_notifications: "Put Notifications",
+          push_notifications: "Push Notifications",
           community: "Community",
         },
         button: {

@@ -308,7 +308,7 @@ class SettingWallet extends React.Component {
               <label>{messages.wallet.action.setting.label.community}</label>
             </div>
 
-            <div className="item" onClick={()=> {this.openTwiter();}}>
+            <div className="item" onClick={()=> {this.openTwitter();}}>
                 <img className="icon" src={iconTwitter} />
                 <div className="name">                    
                     <label>Twitter</label>
