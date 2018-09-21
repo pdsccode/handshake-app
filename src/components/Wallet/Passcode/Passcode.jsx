@@ -25,9 +25,16 @@ class Passcode extends React.PureComponent {
   componentWillUnmount() {
     
   }
+
+  vibrate(speed){
+    try{
+      window.navigator.vibrate(speed); 
+    }
+    catch(e){}
+  }
   
   onPasscodeClick=(number)=>{
-    window.navigator.vibrate(10); 
+    this.vibrate(10); 
     const onFinish = this.props.onFinish || null;    
     var passcodeResult = this.state.passcodeResult;
     var check = false;
@@ -59,7 +66,7 @@ class Passcode extends React.PureComponent {
           }
           else{            
             this.setState({passcodeResult: passcodeResult, confirmValueFalse: null, randum: Math.random()},()=>{
-              window.navigator.vibrate(400); 
+              this.vibrate(400); 
               setTimeout(() => {
                 this.setState({passcodeResult: [-1, -1, -1, -1], confirmValueFalse: false, randum: Math.random()}, ()=>{
                   // console.log("not match!", this.state.passcodeResult);

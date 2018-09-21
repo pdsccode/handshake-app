@@ -182,7 +182,8 @@ class SettingWallet extends React.Component {
     // from off => on:
     if (isChecked){
       // if dont set pascode value yet, show new set passcode:
-      if(!this.state.settings.wallet.passcode.value) {        
+      // if(!this.state.settings.wallet.passcode.value) 
+      {        
         this.props.newPasscode({      
           onSuccess: (md5Passcode) => {
             settings.wallet.passcode = {"enable": true, "value": md5Passcode};
@@ -190,15 +191,21 @@ class SettingWallet extends React.Component {
               this.updateSettings(settings);            
             });
           },
+          onCancel: () => {          
+            this.setState({switchContent: ""}, () => {
+              this.setState({switchContent: this.genSwitchContent()});
+            });
+          }
+          
         });
       }
-      else{
-        // update enable only        
-        settings.wallet.passcode.enable = true;
-        this.setState({settings: settings}, () => {
-          this.updateSettings(settings);            
-        });
-      }
+      // else{
+      //   // update enable only        
+      //   settings.wallet.passcode.enable = true;
+      //   this.setState({settings: settings}, () => {
+      //     this.updateSettings(settings);            
+      //   });
+      // }
     }
     else{
       // from on -> off:
