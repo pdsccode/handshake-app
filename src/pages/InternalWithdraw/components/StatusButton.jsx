@@ -35,6 +35,9 @@ class StatusButton extends Component {
     const { status } = this.props;
     if (status === StatusButton.STATUS.OPEN) {
       this.modal.open();
+
+      // set styles
+      document.body.style.position = 'relative';
     }
   }
 
@@ -84,7 +87,7 @@ class StatusButton extends Component {
         >
           {text}
         </button>
-        <ModalDialog onRef={modal => { this.modal = modal; }}>
+        <ModalDialog className="internal-withdraw-modal" onRef={modal => { this.modal = modal; }}>
           <form className="input-form">
             <FormGroup
               controlId="formBasicText"
