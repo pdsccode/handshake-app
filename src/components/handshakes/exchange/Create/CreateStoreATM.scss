@@ -1,3 +1,52 @@
+$highlight-button-color: #546FF7;
+$title-color: #868DAD;
+$input-hint-color: #BAC0DB;
+
+
+
+.create-store-atm {
+  padding: 0 15px;
+
+  .form-control-title {
+    font-size: 14px;
+    color: $title-color;
+    letter-spacing: 0.5px;
+    margin-top: 1rem;
+  }
+
+  .form-control-input {
+    background: #FFFFFF;
+    border: 1px solid #E5EAF8;
+    border-radius: 4px;
+    font-size: 18px;
+    letter-spacing: 0;
+    &::placeholder {
+      color: $input-hint-color;
+    }
+  }
+
+  .atm-status {
+    background: #EDF0FA;
+    border-radius: 4px;
+    margin-top: 1rem;
+    padding: 15px;
+    .title {
+      color: #060E2E;
+      padding: 0;
+    }
+    .value {
+      padding: 0;
+    }
+  }
+
+  .open-button {
+    background: #546FF7;
+    box-shadow: 0 2px 4px 0 #D0D0D0;
+    color: #FFFFFF;
+  }
+}
+
+
 .label-create {
   width: 250px;
   //text-transform: uppercase;

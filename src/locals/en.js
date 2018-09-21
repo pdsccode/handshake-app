@@ -1045,19 +1045,27 @@ export default {
       },
     },
     atm: {
-      storeInfo: 'Store Info',
-      transaction: 'Transactions',
-      label: {
-        name: 'Name',
+      tab: {
+        storeInfo: 'ATM Info',
+        transaction: 'Transactions',
+      },
+      text: {
+        nameTitle: 'Name',
+        nameHint: 'Store\'s name',
         open: 'Open',
         closed: 'Closed',
         phone: 'Phone',
-        address: 'Address',
+        addressTitle: 'Address',
+        addressHint: 'Enter your address...',
         bankInfo: 'Bank info',
         ccInfo: 'CC info',
+        statusTitle: 'Status',
+        personalAtm: 'Personal ATM',
+        storeAtm: 'Store ATM',
       },
       button: {
-        save: 'Save',
+        create: 'Create my ATM',
+        update: 'Update my ATM',
       },
     },
   },

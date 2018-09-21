@@ -3,58 +3,54 @@ import { FormattedMessage, injectIntl } from 'react-intl';
 import Button from '@/components/core/controls/Button';
 import './CreateStoreATM.scss';
 import createForm from '@/components/core/form/createForm';
-import { formatMoneyByLocale, getOfferPrice } from '@/services/offer-util';
-import { fieldDropdown, fieldInput, fieldPhoneInput, fieldRadioButton } from '@/components/core/form/customField';
-import { maxValue, minValue, required, requiredPhone } from '@/components/core/form/validation';
+import { fieldInput, fieldPhoneInput, fieldRadioButton } from '@/components/core/form/customField';
+import { required, requiredPhone } from '@/components/core/form/validation';
 import { change, clearFields, Field, formValueSelector } from 'redux-form';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-// import {MasterWallet} from '@/services/Wallets/MasterWallet';
-import {
-  API_URL,
-  CRYPTO_CURRENCY,
-  CRYPTO_CURRENCY_COLORS,
-  CRYPTO_CURRENCY_DEFAULT,
-  CRYPTO_CURRENCY_NAME,
-  EXCHANGE_ACTION,
-  FIAT_CURRENCY_LIST,
-} from '@/constants';
+import { API_URL } from '@/constants';
 
 import { validate } from './validation';
 import '../styles.scss';
 import ModalDialog from '@/components/core/controls/ModalDialog/ModalDialog';
 import { hideLoading, showAlert, showLoading, showPopupGetGPSPermission } from '@/reducers/app/action';
-// import phoneCountryCodes from '@/components/core/form/country-calling-codes.min.json';
 import { createStoreATM, getStoreATM, updateStoreATM } from '@/reducers/exchange/action';
 import { getErrorMessageFromCode } from '@/components/handshakes/exchange/utils';
 import axios from 'axios';
+import Switch from '@/components/core/controls/Switch/Switch';
+import Checkbox from '@/components/core/forms/Checkbox/Checkbox';
+
+const CASH_ATM_TAB = {
+  INFO: 'INFO',
+  TRANSACTION: 'TRANSACTION',
+};
+
+const nameFormFilterFeeds = 'formFilterFeeds';
+const FormFilterFeeds = createForm({
+  propsReduxForm: {
+    form: nameFormFilterFeeds,
+    initialValues: {
+      'cash-show-type': CASH_ATM_TAB.INFO,
+    },
+  },
+});
 
 const nameFormExchangeCreate = 'exchangeCreate';
 const FormExchangeCreate = createForm({
   propsReduxForm: {
     form: nameFormExchangeCreate,
     initialValues: {
-      currency: CRYPTO_CURRENCY_DEFAULT,
-      customizePriceBuy: -0.25,
-      customizePriceSell: 0.25,
     },
   },
 });
 const selectorFormExchangeCreate = formValueSelector(nameFormExchangeCreate);
 
 const textColor = '#000000';
-const btnBg = 'rgba(29,29,38,0.30)';
-const validateFee = [
-  minValue(-50),
-  maxValue(50),
-];
 
 class Component extends React.Component {
   static propTypes = {
     // setLoading: PropTypes.func.isRequired,
   };
-
-  CRYPTO_CURRENCY_LIST = Object.values(CRYPTO_CURRENCY).map(item => ({ value: item, text: <div className="currency-selector"><img src={CRYPTO_CURRENCY_COLORS[item].icon} /> <span>{CRYPTO_CURRENCY_NAME[item]}</span></div>, hide: false }));
 
   constructor(props) {
     super(props);
@@ -63,14 +59,12 @@ class Component extends React.Component {
 
     this.state = {
       modalContent: '',
-      currency: CRYPTO_CURRENCY_DEFAULT,
       lat: 0,
       lng: 0,
       isUpdate,
-      enableAction: true,
-      buyBalance: 0,
-      sellBalance: 0,
-      modalFillContent: '',
+      cashTab: CASH_ATM_TAB.INFO,
+      atmType: true,
+      atmStatus: false,
     };
   }
 
@@ -131,15 +125,10 @@ class Component extends React.Component {
     });
   }
 
-  resetFormValue = () => {
-    const { rfChange, clearFields } = this.props;
-    rfChange(nameFormExchangeCreate, 'currency', CRYPTO_CURRENCY_DEFAULT);
-    rfChange(nameFormExchangeCreate, 'customizePriceBuy', -0.25);
-    rfChange(nameFormExchangeCreate, 'customizePriceSell', 0.25);
-    clearFields(nameFormExchangeCreate, false, false, 'amountBuy', 'amountSell');
-  }
-
   onSubmit = (values) => {
+    console.log('onSubmit', values);
+    console.log('state', this.state);
+
     const { messages } = this.props.intl;
 
     const data = {
@@ -219,184 +208,127 @@ class Component extends React.Component {
     return validate(values, isUpdate);
   }
 
+  onCashTabChange = (e, newValue) => {
+    console.log('onTypeChange', newValue);
+    this.setState({ cashTab: newValue }, () => {
+    });
+  }
+
+  onChangeTypeAtm = () => {
+    this.setState({ atmType: !this.state.atmType });
+  }
+
+  changeAtmStatus = (isChecked) => {
+    this.setState({ atmStatus: isChecked });
+  }
+
   render() {
     const { messages } = this.props.intl;
     const {
-      currency, listOfferPrice, stationCurrency, customizePriceBuy, customizePriceSell, amountBuy, amountSell, freeStartInfo, isChooseFreeStart,
-    } = this.props;
-    const {
-      isUpdate, enableAction, buyBalance, sellBalance, modalContent, modalFillContent,
+      modalContent, cashTab, atmType,
     } = this.state;
-    const fiatCurrency = stationCurrency?.id;
 
-    console.log('this.offer', this.offer);
-    // console.log('this.state', this.state);
-
-    const { price: priceBuy } = getOfferPrice(listOfferPrice, EXCHANGE_ACTION.BUY, currency, fiatCurrency);
-    const { price: priceSell } = getOfferPrice(listOfferPrice, EXCHANGE_ACTION.SELL, currency, fiatCurrency);
-    const priceBuyDisplayed = formatMoneyByLocale(priceBuy, fiatCurrency);
-    const priceSellDisplayed = formatMoneyByLocale(priceSell, fiatCurrency);
-    const estimatedPriceBuy = formatMoneyByLocale(priceBuy * (1 + parseFloat(customizePriceBuy, 10) / 100), fiatCurrency);
-    const estimatedPriceSell = formatMoneyByLocale(priceSell * (1 + parseFloat(customizePriceSell, 10) / 100), fiatCurrency);
-
-    const wantToBuy = amountBuy && amountBuy > 0;
-    const wantToSell = amountSell && amountSell > 0;
-
-    const listCurrency = FIAT_CURRENCY_LIST;
     return (
-      <div className="create-exchange">
-        <FormExchangeCreate onSubmit={this.onSubmit} validate={this.handleValidate}>
-          <div className="d-flex mt-3">
-            <div className="input-group">
-              <Field
-                name="currency"
-                // containerClass="radio-container-old"
-                component={fieldRadioButton}
-                type="tab-3"
-                list={this.CRYPTO_CURRENCY_LIST}
-                validate={[required]}
-                onChange={this.onCurrencyChange}
-              />
-            </div>
-          </div>
-
-          <div>
-            <div className="label"><FormattedMessage id="ex.create.label.stationInfo" /></div>
-            <div className="section">
-              {/*
-            <div className="d-flex">
-              <label className="col-form-label mr-auto label-create"><span className="align-middle"><FormattedMessage id="ex.create.label.nameStation"/></span></label>
-              <div className='input-group'>
+      <div>
+        <div className="mt-2 mb-1">
+          <FormFilterFeeds>
+            <div>
+              <hr style={{ margin: '10px 0 5px' }} />
+              <div>
                 <Field
-                  name="nameShop"
-                  className="form-control-custom form-control-custom-ex w-100 input-no-border"
-                  component={fieldInput}
-                  placeholder={'Apple store'}
-                  // onChange={this.onAmountChange}
+                  name="cash-show-type"
+                  component={fieldRadioButton}
+                  type="tab-6"
+                  list={[
+                    { value: CASH_ATM_TAB.INFO, text: messages.create.atm.tab.storeInfo, icon: <span className="icon-dashboard align-middle" /> },
+                    { value: CASH_ATM_TAB.TRANSACTION, text: messages.create.atm.tab.transaction, icon: <span className="icon-transactions align-middle" /> },
+                  ]}
                   // validate={[required]}
+                  onChange={this.onCashTabChange}
                 />
               </div>
             </div>
-            <hr className="hrLine"/> */}
+          </FormFilterFeeds>
+        </div>
 
-              <div className="d-flex py-1">
-                <label className="col-form-label mr-auto label-create">
-                  <span className="align-middle">{messages.me.profile.text.username.label}</span>
-                </label>
-                <div className="input-group">
-                  <Field
-                    name="username"
-                    className="form-control-custom form-control-custom-ex w-100 input-no-border"
-                    component={fieldInput}
-                    placeholder={messages.me.profile.text.username.label}
-                    validate={[required]}
-                  />
-                </div>
-              </div>
-
-              <div>
-                <div className="d-flex mt-2">
-                  <label className="col-form-label mr-auto label-create"><span
-                    className="align-middle"
-                  ><FormattedMessage id="ex.create.label.stationCurrency" />
-                  </span>
-                  </label>
-                  <div className="input-group w-100">
+        {
+          cashTab === CASH_ATM_TAB.INFO ? (
+            <FormExchangeCreate onSubmit={this.onSubmit} validate={this.handleValidate}>
+              <div className="create-store-atm">
+                <div>
+                  <label className="form-control-title">{messages.create.atm.text.nameTitle.toUpperCase()}</label>
+                  <div >
                     <Field
-                      name="stationCurrency"
-                      classNameWrapper=""
-                      defaultText={<FormattedMessage id="ex.create.placeholder.stationCurrency" />}
-                      classNameDropdownToggle="dropdown-button"
-                      list={listCurrency}
-                      component={fieldDropdown}
-                      // disabled={!enableChooseFiatCurrency}
+                      name="username"
+                      type="text"
+                      className="form-control form-control-input"
+                      placeholder={messages.create.atm.text.nameHint}
+                      component={fieldInput}
+                      validate={[required]}
                     />
                   </div>
                 </div>
-                <hr className="hrLine" />
-              </div>
 
-              <div className="d-flex mt-2">
-                <label className="col-form-label mr-auto label-create"><span
-                  className="align-middle"
-                ><FormattedMessage id="ex.create.label.phone" />
-                </span>
-                </label>
-                <div className="input-group w-100">
-                  <Field
-                    name="phone"
-                    className="form-control-custom form-control-custom-ex w-100 input-no-border"
-                    component={fieldPhoneInput}
-                    color={textColor}
-                    type="tel"
-                    placeholder="4995926433"
-                    // validate={[required, currency === 'BTC' ? minValue001 : minValue01]}
-                    validate={[requiredPhone]}
-                  />
+                <div>
+                  <label className="form-control-title">{messages.create.atm.text.phone.toUpperCase()}</label>
+                  <div className="input-group w-100">
+                    <Field
+                      name="phone"
+                      className="form-control-custom w-100"
+                      component={fieldPhoneInput}
+                      color={textColor}
+                      type="tel"
+                      placeholder="4995926433"
+                      // validate={[required, currency === 'BTC' ? minValue001 : minValue01]}
+                      validate={[requiredPhone]}
+                    />
+                  </div>
                 </div>
-              </div>
-              <hr className="hrLine" />
 
-              <div className="d-flex mt-2">
-                <label className="col-form-label mr-auto label-create"><span
-                  className="align-middle"
-                >{messages.create.atm.label.bankInfo}
-                </span>
-                </label>
-                <div className="w-100">
-                  <Field
-                    name="address"
-                    className="form-control-custom form-control-custom-ex w-100 input-no-border"
-                    component={fieldInput}
-                    validate={[required]}
-                    placeholder="81 E. Augusta Ave. Salinas"
-                  />
+                <div>
+                  <label className="form-control-title">{messages.create.atm.text.addressTitle.toUpperCase()}</label>
+                  <div >
+                    <Field
+                      name="address"
+                      type="text"
+                      className="form-control form-control-input"
+                      placeholder={messages.create.atm.text.addressHint}
+                      component={fieldInput}
+                      validate={[required]}
+                    />
+                  </div>
                 </div>
-              </div>
-              <hr className="hrLine" />
-
-              <div className="d-flex mt-2">
-                <label className="col-form-label mr-auto label-create"><span
-                  className="align-middle"
-                >{messages.create.atm.label.bankInfo}
-                </span>
-                </label>
-                <div className="w-100">
-                  <Field
-                    name="bankInfo"
-                    className="form-control-custom form-control-custom-ex w-100 input-no-border"
-                    component={fieldInput}
-                    validate={[required]}
-                    placeholder="81 E. Augusta Ave. Salinas"
-                  />
+                <div className="atm-status">
+                  <div className="d-table w-100">
+                    <div className="d-table-cell title">
+                      {messages.create.atm.text.statusTitle}
+                    </div>
+                    <div className="d-table-cell text-right value">
+                      <Switch isChecked={false} onChange={(isChecked) => { this.changeAtmStatus(isChecked); }} />
+                    </div>
+                  </div>
                 </div>
-              </div>
-              <hr className="hrLine" />
 
-              <div className="d-flex mt-2">
-                <label className="col-form-label mr-auto label-create"><span
-                  className="align-middle"
-                >{messages.create.atm.label.ccInfo}
-                </span>
-                </label>
-                <div className="w-100">
-                  <Field
-                    name="ccInfo"
-                    className="form-control-custom form-control-custom-ex w-100 input-no-border"
-                    component={fieldInput}
-                    validate={[required]}
-                    placeholder="81 E. Augusta Ave. Salinas"
-                  />
+                <div className="input-group">
+                  <div className="d-table w-100">
+                    <div className="d-table-cell w-50">
+                      <Checkbox name="personalAtm" checked={atmType} label={messages.create.atm.text.personalAtm} onClick={this.onChangeTypeAtm} />
+                    </div>
+                    <div className="d-table-cell w-50">
+                      <Checkbox name="storeAtm" checked={!atmType} label={messages.create.atm.text.storeAtm} onClick={this.onChangeTypeAtm} />
+                    </div>
+                  </div>
                 </div>
+                <Button block type="submit" className="mt-3 open-button"> {
+                  messages.create.atm.button.save
+                }
+                </Button>
               </div>
-            </div>
-          </div>
-
-          <Button block type="submit" disabled={!enableAction} className="mt-3"> {
-            messages.create.atm.button.save
-          }
-          </Button>
-        </FormExchangeCreate>
+            </FormExchangeCreate>
+          ) : (
+            <div>Transaction</div>
+          )
+        }
         <ModalDialog onRef={modal => this.modalRef = modal}>
           {modalContent}
         </ModalDialog>
@@ -406,38 +338,16 @@ class Component extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  const currency = selectorFormExchangeCreate(state, 'currency');
-
-  const amountBuy = selectorFormExchangeCreate(state, 'amountBuy');
-  const amountSell = selectorFormExchangeCreate(state, 'amountSell');
-
-  const customizePriceBuy = selectorFormExchangeCreate(state, 'customizePriceBuy') || 0;
-  const customizePriceSell = selectorFormExchangeCreate(state, 'customizePriceSell') || 0;
-
-  // const nameShop = selectorFormExchangeCreate(state, 'nameShop');
   const phone = selectorFormExchangeCreate(state, 'phone');
   const address = selectorFormExchangeCreate(state, 'address');
-  const stationCurrency = selectorFormExchangeCreate(state, 'stationCurrency');
   const username = selectorFormExchangeCreate(state, 'username');
 
   return {
-    currency,
-    amountBuy,
-    amountSell,
-    customizePriceBuy,
-    customizePriceSell,
-    // nameShop,
     phone,
     address,
-    stationCurrency,
     username,
     ipInfo: state.app.ipInfo,
-    authProfile: state.auth.profile,
-    offerStores: state.exchange.offerStores,
-    listOfferPrice: state.exchange.listOfferPrice,
-    freeStartInfo: state.exchange.freeStartInfo,
-    isChooseFreeStart: state.exchange.isChooseFreeStart,
-    app: state.app,
+
   };
 };
 
