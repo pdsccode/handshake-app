@@ -5,7 +5,7 @@ import { API_URL, CRYPTO_CURRENCY, EXCHANGE_ACTION, EXCHANGE_ACTION_NAME, HANDSH
 import { Marker, InfoWindow } from 'react-google-maps';
 import InfoBox from 'react-google-maps/lib/components/addons/InfoBox';
 
-import iconCustomMarker from '@/assets/images/icon/custom-marker.svg';
+// import iconCustomMarker from '@/assets/images/icon/custom-marker.svg';
 import './StationMarker.scss';
 import { formatMoneyByLocale, getLatLongHash, getOfferPrice, shortenUser } from '@/services/offer-util';
 import ShakeDetail, { nameFormShakeDetail } from '@/components/handshakes/exchange/components/ShakeDetail';
@@ -28,6 +28,13 @@ const ICONS = {
   [CRYPTO_CURRENCY.ETH]: iconEthereum,
   [CRYPTO_CURRENCY.BTC]: iconBitcoin,
 };
+
+const atmIconMapping = {
+  typeA: iconBitcoin,
+  typeB: iconEthereum,
+}
+
+
 
 class StationMarker extends React.Component {
   static propTypes = {
@@ -271,15 +278,37 @@ class StationMarker extends React.Component {
     const coordinate = { lat: parseFloat(locationArr[0]), lng: parseFloat(locationArr[1]) };
     const price = this.getPrice();
     const maxVolume = this.getVolume();
-    const boxStyle = showAllDetails ? {} : {
-      width: '152px',
-    };
+    // const boxStyle = showAllDetails ? {} : {
+    //   width: '152px',
+    // };
+    const type = 'typeB';
     return (
       <Marker
-        defaultIcon={{ url: iconCustomMarker, scaledSize: { width: 40, height: 40 } }}
+        icon={{ url: atmIconMapping[type], scaledSize: { width: showAllDetails ? 45 : 30, height: showAllDetails ? 45 : 30 } }}
         position={coordinate}
         onClick={() => onChangeShowAllDetails(!showAllDetails)}
       >
+
+        <InfoBox
+          // onCloseClick={() => onChangeShowAllDetails(false)}
+          options={{
+            alignBottom: true,
+            pane: 'floatPane',
+            pixelOffset: new google.maps.Size(3, -22),
+            // boxClass: 'stationInfoWrapper',
+            boxStyle: {
+              zIndex: 1,
+            },
+            closeBoxURL: '',
+            enableEventPropagation: true,
+            disableAutoPan: true,
+          }}
+        >
+          <div>
+            <img src={iconEthereum} width={18} />
+          </div>
+        </InfoBox>
+        {/*
         <InfoBox
           onCloseClick={() => onChangeShowAllDetails(false)}
           options={{
@@ -321,6 +350,7 @@ class StationMarker extends React.Component {
             }
           </div>
         </InfoBox>
+        */}
       </Marker>
     );
   }

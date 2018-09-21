@@ -76,8 +76,6 @@ class DiscoverPage extends React.Component {
 
       zoomLevel: defaultZoomLevel,
       browserHeight: window.innerHeight - 108,
-
-      curStationIdShowAllDetails: null,
     };
 
     local.save(APP.EXCHANGE_ACTION, EXCHANGE_ACTION.BUY);
@@ -354,10 +352,6 @@ class DiscoverPage extends React.Component {
     this.setState({ zoomLevel: this.mapRef.getZoom() });
   }
 
-  handleOnChangeShowAllDetails = (id, newValue) => {
-    this.setState({ curStationIdShowAllDetails: newValue ? id : null });
-  }
-
   render() {
     const {
       propsModal,
@@ -374,7 +368,6 @@ class DiscoverPage extends React.Component {
       curLocation,
       mapCenterLat,
       mapCenterLng,
-      curStationIdShowAllDetails
     } = this.state;
     const { list: stations, offers } = this.props.discover;
     const { history } = this.props;
@@ -412,8 +405,6 @@ class DiscoverPage extends React.Component {
           onMapMounted={(e) => (this.mapRef = e)}
           onZoomChanged={this.handleOnZoomChanged}
           onCenterChanged={this.handleOnCenterChanged}
-          curStationIdShowAllDetails={curStationIdShowAllDetails}
-          onChangeShowAllDetails={this.handleOnChangeShowAllDetails}
         />
 
         {/*{!this.state.isBannedCash && !this.props.firebaseApp.config?.maintainChild?.exchange && this.getMap()}*/}
@@ -424,33 +415,6 @@ class DiscoverPage extends React.Component {
             {/*)*/}
             {/*: this.props.firebaseApp.config?.maintainChild?.exchange ? <Maintain /> : null*/}
         {/*}*/}
-        {
-          curStationIdShowAllDetails && (
-            <div className="popup-all-station-details">
-              <div className="text-center">
-                <div className="line" onClick={() => this.handleOnChangeShowAllDetails(null, null)} />
-              </div>
-              <div className="mt-2">
-                <div className="media">
-                  <img className="mr-3" src={'https://www.gadgetguy.com.au/cms/wp-content/uploads/panasonic-lumix-lx7-sample-04-square.jpg'} width={50} />
-                  <div className="media-body">
-                    <div className="primary-text">The coin shop</div>
-                    <div className="secondary-text">About 1.4 km away</div>
-                  </div>
-                </div>
-                <div className="mt-3">
-                  <div className="d-inline-block w-50 pr-2 align-middle">
-                    <button className="btn button-buy-coin-now btn-block">Buy coin now</button>
-                  </div>
-                  <div className="d-inline-block w-50 pl-2 align-middle">
-                    <div className="success-text">Fast & secured</div>
-                    <div className="secondary-text">100% anonymous</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )
-        }
         <ModalDialog onRef={(modal) => { this.modalRef = modal; return null; }} {...propsModal}>
           {modalContent}
         </ModalDialog>
