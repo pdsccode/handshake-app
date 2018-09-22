@@ -54,6 +54,7 @@ const Recruiting = createDynamicImport(() => import('@/pages/Recruiting'), Loadi
 const JobDetail = createDynamicImport(() => import('@/pages/Recruiting/JobDetail'), Loading);
 const ContentForCashBusiness = createDynamicImport(() => import('@/pages/LandingPage/ContentForCashBusiness'), Loading);
 const ContentForPayForDevs = createDynamicImport(() => import('@/pages/LandingPage/ContentForPayForDevs'), Loading);
+const ContentForPayForDevsGetStarted = createDynamicImport(() => import('@/pages/LandingPage/ContentForPayForDevsGetStarted'), Loading);
 const ContentForWallet = createDynamicImport(() => import('@/pages/LandingPage/ContentForWallet'), Loading);
 const ContentForPrediction = createDynamicImport(() => import('@/pages/LandingPage/ContentForPrediction'), Loading);
 const ContentForPexInstruction = createDynamicImport(() => import('@/pages/LandingPage/ContentForPexInstruction'), Loading);
@@ -124,8 +125,9 @@ if (BrowserDetect.isDesktop) {
     { path: URL.PEX_EXTENSION, render: () => <PexExtension reactHelmetElement={SEOPrediction} /> },
     { path: URL.HANDSHAKE_PEX_CREATOR, render: () => <ProjectDetail type="product" name="prediction" img={imgPrediction} contentComponent={<ContentForPrediction />} reactHelmetElement={SEOPrediction} /> },
     { path: URL.HANDSHAKE_EXCHANGE, render: () => <ProjectDetail type="product" name="prediction" img={imgPrediction} contentComponent={<ContentForPrediction />} reactHelmetElement={SEOPrediction} /> },
-    { path: URL.PRODUCT_HIVEPAY_OFFLINE_URL, render: () => <ProjectDetail type="product" name="pay-for-stores" img={imgHivepayOffline} reactHelmetElement={SEOPayForStores} /> },
-    { path: URL.PRODUCT_HIVEPAY_ONLINE_URL, render: () => <ProjectDetail type="product" name="pay-for-devs" reactHelmetElement={SEOPayForDevs} entireContentComponent={<ContentForPayForDevs />} /> },
+    { path: URL.PRODUCT_PAYFORSTORES_URL, render: () => <ProjectDetail type="product" name="pay-for-stores" img={imgHivepayOffline} reactHelmetElement={SEOPayForStores} /> },
+    { path: URL.PRODUCT_PAYFORDEVS_URL, render: () => <ProjectDetail type="product" name="pay-for-devs" reactHelmetElement={SEOPayForDevs} entireContentComponent={<ContentForPayForDevs />} /> },
+    { path: URL.PRODUCT_PAYFORDEVS_GETSTARTED_URL, render: () => <ProjectDetail type="product" name="pay-for-devs-get-started" reactHelmetElement={SEOPayForDevs} fullWidthContent={true} entireContentComponent={<ContentForPayForDevsGetStarted />} /> },
     { path: URL.RESEARCH_INTERNET_CASH_URL, render: () => <ProjectDetail type="research" name="internet-cash" img={imgInternetCash} /> },
     { path: URL.PRODUCT_DAD_URL, render: () => <ProjectDetail type="product" name="dad" img={imgDad} imgContent={imgDadContent} reactHelmetElement={SEODad} /> },
     { path: URL.RESEARCH_UNCOMMONS_URL, render: () => <ProjectDetail type="research" name="uncommons" img={imgUncommons} /> },
