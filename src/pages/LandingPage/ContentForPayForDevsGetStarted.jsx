@@ -7,6 +7,7 @@ import img2 from '@/assets/images/landing/pay-for-devs/gs-img2.png';
 import img3 from '@/assets/images/landing/pay-for-devs/gs-img3.png';
 
 import './ContentForPayForDevsGetStarted.scss';
+
 const PayForDevsGetStarted = () => (
   <div className="project-detail pay-for-devs-get-started">
 
