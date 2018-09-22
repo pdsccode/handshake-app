@@ -9,8 +9,6 @@ import Handle from '@/components/App/Handle';
 // styles
 import '@/styles/main';
 import '@/styles/custom-icons/styles.css';
-import Loading from "@/components/core/presentation/Loading";
-import DynamicImport from "@/components/App/DynamicImport";
 // import { createDynamicImport } from '@/services/app';
 // import BrowserDetect from '@/services/browser-detect';
 
@@ -38,7 +36,6 @@ import DynamicImport from "@/components/App/DynamicImport";
 // const ProjectInternetCash = createDynamicImport(() => import('@/components/MobileOrTablet/ProjectInternetCash'), Splash);
 // const ProjectCash = createDynamicImport(() => import('@/components/MobileOrTablet/ProjectCash'), Splash);
 // const ProjectOddBall = createDynamicImport(() => import('@/components/MobileOrTablet/ProjectOddBall'), Splash);
-const PageNotSupport = props => (<DynamicImport isNotFound loading={Loading} load={() => import('@/pages/Error/PageNotSupport')}>{Component => <Component {...props} />}</DynamicImport>);
 
 class Root extends React.Component {
   // static propTypes = {
@@ -124,7 +121,6 @@ class Root extends React.Component {
 
   render() {
     if (this.props.app.rootLoading) return null;
-    if (this.props.app.isBannedIp) return <PageNotSupport/>;
     return (
       <I18n>
         <div className="root">
@@ -151,4 +147,4 @@ class Root extends React.Component {
   }
 }
 
-export default connect(state => ({ app: state.app, isBannedIp: state.app.isBannedIp }), { initApp })(Root);
+export default connect(state => ({ app: state.app }), { initApp })(Root);
