@@ -16,7 +16,7 @@ const PayForDevs = () => (
       <div className="col-12 col-md-6 pd-subHeading">
         <p>We wanted to create a platform that would allow businesses to seamlessly integrate cryptocurrency payments into their current business model.</p>
         <p className="pd-content font-normal">Give your customers more choices when paying.</p>
-        <div><button className="btn btn-secondary disable ml-1">Comming soon</button></div>
+        <div><a href="/pay-for-devs-get-started"><button className="btn btn-primary disable ml-1">Get Started</button></a></div>
       </div>
     </Slide>
       <div className="col-12 col-md-6 text-right"><Flip right><img src={img1} /></Flip></div>
