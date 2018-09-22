@@ -1243,17 +1243,20 @@ export default {
         header: 'Setting wallets',
         success: {
           restore: 'Your Wallet restore success',
-          save_alternative_currency: 'Save alternative currency selected!',
+          save_alternative_currency: 'Save currency selected!',
           save_crypto_address: 'Save format crypto address seleted!'
         },
         label: {
-          alternative_currency: 'Alternative currency',
-          select_alternative_currency: 'Select alternative currency',
+          alternative_currency: 'Currency',
+          select_alternative_currency: 'Select currency',
           crypto_address: 'Cryptocurrency address',
           select_crypto_address: 'Select cryptocurrency address',
           short_address: 'Show short address',
           shortest_address: 'Show shortest address',
-          hide_address: 'Hide address'
+          hide_address: 'Hide address',
+          passcode: "Passcode",
+          push_notifications: "Push Notifications",
+          community: "Community",
         },
         button: {
           restore: 'Restore now',

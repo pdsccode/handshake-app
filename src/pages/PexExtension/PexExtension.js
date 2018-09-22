@@ -26,19 +26,6 @@ class PexExtension extends React.Component {
     this.props.dispatch(ExtensionSubscribe(value));
   }
 
-  renderLeftContainer = () => {
-    return (
-      <div className="ExtLeftContainer">
-        <a className="LeftSideBar" href="/">
-          <img src={ExtLogo} alt="Extension logo" className="ExtLogo" />
-        </a>
-        <div className="MacBook">
-          <img src={MacBook} alt="MacBook" />
-        </div>
-      </div>
-    );
-  }
-
   renderSubscribeForm = (props) => {
     let errMsg;
     if (props.subscribeResult && props.subscribeResult.status) {
@@ -50,7 +37,7 @@ class PexExtension extends React.Component {
     }
     return (
       <div className="ExtSubscribe">
-        <span>Get exclusive launch party goodies</span>
+        <span className="EmailLabel">Get Chrome Extension</span>
         <form className="EmailRequiredForm" onSubmit={props.handleSubmit(this.onSubmit)}>
           <Field
             name="email"
@@ -62,7 +49,7 @@ class PexExtension extends React.Component {
             validate={[required, emailValidator]}
           />
           <button type="submit" className="btn btn-primary btn-block">
-            Ready to rock
+            Be the first to know
           </button>
         </form>
         <span className="SubscribeError">{errMsg}</span>
@@ -70,23 +57,35 @@ class PexExtension extends React.Component {
     );
   }
 
-  renderRightContainer = (props) => {
+  renderComponent = (props) => {
     return (
-      <div className="ExtRightContainer">
-        <p className="ExtHeader">
-          <span>
-            The Ninja Predicts playground <br />just got much bigger.
-          </span>
-        </p>
-        <p className="ExtQuestion">
-          Browsing the web and feeling clever?
-        </p>
-        <p className="ExtDescription">
-          Create a bet and get the whole internet to play. <br />
-          Predict the future and win ETH for being right.
-        </p>
-        {this.renderSubscribeForm(props)}
-      </div>
+      <React.Fragment>
+        <div className="LeftSideBar">
+          <a href="/"><img src={ExtLogo} alt="Extension logo" className="ExtLogo" /></a>
+        </div>
+        <div className="MainWrapper">
+          <div className="Main">
+            <div className="MacBook">
+              <img src={MacBook} alt="MacBook" />
+            </div>
+            <div className="Description">
+              <p className="ExtHeader">
+                <span>Ninja Prediction</span>
+              </p>
+              <p className="ExtQuestion">
+                Bet on anything you read online without even leaving the page.
+              </p>
+              <p className="ExtDescription">
+                You use the internet, and you have opinions. <br />
+                Ninja9148 thinks you're wrong.<br />
+                Create a bet in just one click and win ETH for being right. <br />
+                Stay 100% anonymous the entire time.
+              </p>
+              {this.renderSubscribeForm(props)}
+            </div>
+          </div>
+        </div>
+      </React.Fragment>
     );
   }
 
@@ -94,8 +93,7 @@ class PexExtension extends React.Component {
     return (
       <div className={PexExtension.displayName}>
         {this.props.reactHelmetElement}
-        {this.renderLeftContainer(this.props, this.state)}
-        {this.renderRightContainer(this.props, this.state)}
+        {this.renderComponent(this.props, this.state)}
       </div>
     );
   }
@@ -111,6 +109,5 @@ export default connect(
 )(
   reduxForm({
     form: 'ExtLandingForm',
-    // enableReinitialize: true,
   })(PexExtension),
 );
