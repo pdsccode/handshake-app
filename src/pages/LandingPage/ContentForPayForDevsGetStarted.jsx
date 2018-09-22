@@ -1,11 +1,10 @@
 import React from "react";
-import imgNinjawallet from '@/assets/images/landing/pay-for-devs/ninja-wallet.png';
+import { Fade, Flip, Zoom, Slide, LightSpeed } from 'react-reveal';
 import imgAnywhere from '@/assets/images/landing/pay-for-devs/anywhere.png';
 import imgChargeBack from '@/assets/images/landing/pay-for-devs/chargeback.png';
-import imgFastPayments from '@/assets/images/landing/pay-for-devs/fast-payments.svg';
-import imgSaveMoney from '@/assets/images/landing/pay-for-devs/save-money.svg';
-import imgSimpleUse from '@/assets/images/landing/pay-for-devs/simple-use.svg';
 import img1 from '@/assets/images/landing/pay-for-devs/gs-img1.png';
+import img2 from '@/assets/images/landing/pay-for-devs/gs-img2.png';
+import img3 from '@/assets/images/landing/pay-for-devs/gs-img3.png';
 
 import './ContentForPayForDevsGetStarted.scss';
 const PayForDevsGetStarted = () => (
@@ -13,69 +12,165 @@ const PayForDevsGetStarted = () => (
 
     <div className="container">
       <div className="row getstart">
+      <Fade left>
         <div className="col-12 col-md-6 pd-subHeading">
           <p className="pd-heading">Pay for Devs Quickstart</p>
           <p>A crypto payment gateway for developers that is easy to integrate into their mobile app or website.</p>
-          <div><button className="btn btn-warning ml-1">GET STARTED for FREE</button></div>
+          <div className="pt-4"><a href="/payment"><button className="btn btn-warning ml-1">GET STARTED for FREE</button></a></div>
         </div>
-        <div className="col-12 col-md-6 text-right"><img src={img1} /></div>
+        </Fade>
+        <div className="col-12 col-md-6 text-right pt-4"><Flip right><img src={img1} /></Flip></div>
       </div>
 
-      <div className="row pb-4 desc">
+      <div className="row none-register">
+      <Fade bottom><div className="pd-heading">Make an outgoing payment without having to register with Ninja</div></Fade>
+        <Slide bottom>
         <div className="col-12 col-md-6 pd-content">
-
-          <p className="pb-4">Pay for Devs will allow your ecommerce platform to connect to truly borderless payment networks and checkout with plenty of different cryptocurrencies, including BTC, BCH and ETH. This means that you will be able to receive payments instantly, from anywhere in the world.</p>
-          <p className="pb-4">Customers will be able to pay safely and securely without handing over any personal information. All refunds are made through the merchants, meaning there are no chargeback fees.</p>
+          <p className="pb-4">Once an order is created, your server-side code redirects you to Ninja Payment to create a one off payment. </p>
+          <p className="pb-4">This redirect contains the recipient wallet address, cryptocurrency, amount,... from Ninja’s options (edit for clarity) </p>
         </div>
-        <div className="col-12 col-md-6"><img src={imgNinjawallet} /></div>
+        </Slide>
+        <div className="col-12 col-md-6"><Zoom right><img src={img2} /></Zoom></div>
       </div>
 
-      <div className="row why-use">
-        <div className="pd-heading">Make an outgoing payment without having to register with Ninja</div>
-        <div className="card-deck">
-          <div className="card">
-            <img className="card-img-top" src={imgFastPayments} alt="Fast payments" />
+      <div className="code row">
+      <LightSpeed left>
+        <div className="col-lg-6 col-12 mt-4">
+          <div className="card bg-dark">
             <div className="card-body">
-              <h5 className="card-title">Fast payments</h5>
-                <p className="card-text">Traditional payment gateways are slow and inefficient. It can take days for the money to land in your bank account.</p>
-                <p>Pay for Devs uses Ninja Wallet - meaning you only have to wait for as long as it takes a transaction to be verified on the blockchain to see the cryptocurrency in your wallet.</p>
-                <p>Cutting the time it takes to receives funds from days to minutes.</p>
+              <h5 className="card-title text-warning">Request</h5>
+              <h6 className="card-subtitle mb-2 text-muted">https://www.ninja.org/payment</h6>
+              <div className="card-text text-light">
+                <div className="row">
+                  <div className="col-4 label">order_id</div>
+                  <div className="col-8 value">orderId from shop website</div>
+                </div>
+                <div className="row">
+                  <div className="col-4 label">amount</div>
+                  <div className="col-8 value">amount to charge</div>
+                </div>
+                <div className="row">
+                  <div className="col-4 label">currency</div>
+                  <div className="col-8 value">fiat currency or crypto currency. Default is USD</div>
+                </div>
+                <div className="row">
+                  <div className="col-4 label">to</div>
+                  <div className="col-8 value">crypto currencies & addresses (e.g ETH:xxx , BTC:xxx, BCH:xxx)</div>
+                </div>
+                <div className="row">
+                  <div className="col-4 label">confirm_url</div>
+                  <div className="col-8 value">callback url after finishing</div>
+                </div>
+
+              </div>
+              <div className="text-secondary">Sample: <span className="text-primary">
+                https://www.ninja.org/payment?<span className="text-info">order_id</span>=123456&<span className="text-info">amount</span>=99&
+                <span className="text-info">currency</span>=USD&
+                <span className="text-info">to</span>=ETH:0x56xx,BTC:1Kenxx,BCH:1Trixx,XRP:r4fxx&
+                <span className="text-info">confirm_url</span>=https://www.autonomous.ai/confirmation</span>
+              </div>
             </div>
           </div>
-          <div className="card">
-            <img className="card-img-top" src={imgSaveMoney} alt="Save money" />
+        </div>
+        </LightSpeed>
+        <LightSpeed right>
+        <div className="col-lg-6 col-12 mt-4">
+          <div className="card bg-dark" style={{height: '100%'}}>
             <div className="card-body">
-              <h5 className="card-title">Save money</h5>
-              <p className="card-text">We think that high fees and costly payment gateways are unnecessary. </p>
-              <p className="card-text">That is why Pay for Devs is free to use and install. We don’t charge you any transaction fees. </p>
+              <h5 className="card-title text-warning">Response</h5>
+              <h6 className="card-subtitle mb-2 text-muted">{"{confirm_url}"}</h6>
+              <div className="card-text text-light">
+                <div className="row">
+                  <div className="col-4 label">status</div>
+                  <div className="col-8 value">0-incomplete, 1-success, 2-failed</div>
+                </div>
+                <div className="row">
+                  <div className="col-4 label">transaction</div>
+                  <div className="col-8 value">transaction number, e.g hash of ETH, transaction of BTC</div>
+                </div>
+                <div className="row">
+                  <div className="col-4 label">order_id</div>
+                  <div className="col-8 value">outgoing payments wallet address</div>
+                </div>
+              </div>
+              <div className="text-secondary">Sample: <span className="text-primary">https://www.autonomous.ai/confirmation?<span className="text-info">order_id</span>=123456&<span className="text-info">status</span>=1&<span className="text-info">transaction</span>=0x8b77xx</span></div>
             </div>
           </div>
-          <div className="card">
-            <img className="card-img-top" src={imgSimpleUse} alt="Simple to use" />
+        </div>
+        </LightSpeed>
+      </div>
+
+      <div className="row register">
+      <Flip bottom><p className="pd-heading">Register to make regular payments</p></Flip>
+        <Slide top>
+        <div className="col-12 col-md-6 pd-content">
+          <p>Register your username on Ninja Wallet. Then, set your default crypto wallet which you want to use for outgoing and incoming payments. With each order, your server will automatically redirect to Ninja Payment to process the charge. This redirect link will contain the recipient’s wallet address, payment amount, and any additional information you wish you include.</p>
+        </div>
+        </Slide>
+        <div className="col-12 col-md-6"><Zoom right><img src={img3} /></Zoom></div>
+      </div>
+
+      <div className="code row">
+      <LightSpeed left>
+        <div className="col-lg-6 col-12  mt-4">
+          <div className="card bg-dark">
             <div className="card-body">
-              <h5 className="card-title">Simple to use</h5>
-              <p className="card-text">Pay for Devs is quick and easy to set up and easily integrates into your existing online mobile app or web-based stores.</p>
+              <h5 className="card-title text-warning">Request</h5>
+              <h6 className="card-subtitle mb-2 text-muted">https://www.ninja.org/payment</h6>
+              <div className="card-text text-light">
+                <div className="row">
+                  <div className="col-4 label">order_id</div>
+                  <div className="col-8 value">orderId from shop website</div>
+                </div>
+                <div className="row">
+                  <div className="col-4 label">amount</div>
+                  <div className="col-8 value">amount to charge</div>
+                </div>
+                <div className="row">
+                  <div className="col-4 label">currency</div>
+                  <div className="col-8 value">fiat currency or crypto currency. Default is USD</div>
+                </div>
+                <div className="row">
+                  <div className="col-4 label">shop_id</div>
+                  <div className="col-8 value">Shop username</div>
+                </div>
+              </div>
+              <div className="text-secondary">Sample: <span className="text-primary">
+                https://www.ninja.org/payment?<span className="text-info">order_id</span>=123456&<span className="text-info">amount</span>=99&
+                <span className="text-info">currency</span>=USD&
+                <span className="text-info">shop_id</span>=autonomous</span>
+              </div>
             </div>
           </div>
-        </div>
 
-      </div>
-
-      <div className="row anywhere">
-        <div className="col-12 col-md-6 pd-content">
-          <p className="pd-heading">Sell to anyone, anywhere</p>
-          <p>Pay for Devs allows you to connect with the millions of cryptocurrency users all over the world.  </p>
         </div>
-        <div className="col-12 col-md-6"><img src={imgAnywhere} /></div>
-      </div>
+        </LightSpeed>
+        <LightSpeed right>
+        <div className="col-lg-6 col-12 mt-4">
+          <div className="card bg-dark" style={{height: '100%'}}>
+            <div className="card-body">
+              <h5 className="card-title text-warning">Response</h5>
+              <h6 className="card-subtitle mb-2 text-muted">{"{confirm_url}"}</h6>
+              <div className="card-text text-light">
+                <div className="row">
+                  <div className="col-4 label">status</div>
+                  <div className="col-8 value">0-incomplete, 1-success, 2-failed</div>
+                </div>
+                <div className="row">
+                  <div className="col-4 label">transaction</div>
+                  <div className="col-8 value">transaction number, e.g hash of ETH, transaction of BTC</div>
+                </div>
+                <div className="row">
+                  <div className="col-4 label">order_id</div>
+                  <div className="col-8 value">outgoing payments wallet address</div>
+                </div>
+              </div>
+              <div className="text-secondary">Sample: <span className="text-primary">https://www.autonomous.ai/confirmation?<span className="text-info">order_id</span>=123456&<span className="text-info">status</span>=1&<span className="text-info">transaction</span>=0x8b77xx</span></div>
+            </div>
+          </div>
 
-      <div className="row chargeback">
-        <div className="col-12 col-md-6"><img src={imgChargeBack} /></div>
-        <div className="col-12 col-md-6 pd-content">
-          <p className="pd-heading">End chargeback fraud and identity theft.</p>
-          <p>By using cryptocurrency for payments, customers can pay without handing over sensitive personal information reducing the risk of identity theft occurring.</p>
-          <p>All refunds are made through the merchant - meaning no chargebacks.</p>
         </div>
+        </LightSpeed>
       </div>
     </div>
 

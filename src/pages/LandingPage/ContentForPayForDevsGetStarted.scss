@@ -1,8 +1,11 @@
 @import './src/styles/style';
 
+.ct-pay-for-devs-get-started{
+  background: url('../../assets/images/landing/pay-for-devs/bg-getstarted.png') no-repeat top center;
+  background-color: white;
+}
 .pay-for-devs-get-started{
-  background: url('../../assets/images/landing/pay-for-devs/bg-getstarted.png') no-repeat 0px 0px;
-  padding-top: 2rem;
+  padding-top: 3rem;
 
   .pd-heading{
     font-weight: normal ! important;
@@ -18,67 +21,38 @@
     }
   }
 
-  .desc {
-    padding-bottom: 4rem;
-
-    .pd-content{
-      font-weight: 300;
-    }
-  }
-
-  .why-use{
-    background: url('../../assets/images/landing/pay-for-devs/bg-why.png') no-repeat 0px 0px;
-
-    padding-bottom: 8rem;
-    padding-top: 4rem;
+  .none-register{
+    padding: 8rem 0 6rem 0;
+    width: 100%;
 
     .pd-heading{
       text-align: center;
+      padding-bottom: 5rem;
       width: 100%;
-    }
-
-    .card-deck{
-      margin: 50px 1rem 0px 1rem;
-
-      .card{
-        border:none;
-        -webkit-box-shadow: -1px 2px 16px -4px rgba(0,0,0,0.15);
-        -moz-box-shadow: -1px 2px 16px -4px rgba(0,0,0,0.15);
-        box-shadow: -1px 2px 16px -4px rgba(0,0,0,0.15);
-        margin: 0px 1.5rem;
-
-        img.card-img-top {
-          margin-left: 1.25rem;
-          margin-top: 4rem;
-          margin-bottom: 2rem;
-          height: 60px;
-        }
-
-        .card-body{
-          font-weight: 300;
-          color: #484848;
-          line-height: 33px;
-          padding: 2rem;
-
-          p {
-            padding-bottom: 1rem;
-          }
-
-          h5 {
-            font-weight: 400;
-          }
-        }
-      }
     }
 
   }
 
+  .code{
+    .card {
 
-  .anywhere{
-    background: url('../../assets/images/landing/pay-for-devs/bg-anywhere.png') no-repeat top left;
-    padding-bottom: 4rem;
-    padding-top: 2rem;
-    padding-left: 40px;
+      .row{
+        padding: 0.5rem 0;
+        .label {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+  .register{
+    padding: 8rem 0 6rem 0;
+    width: 100%;
+
+    .pd-heading{
+      text-align: center;
+      padding-bottom: 5rem;
+      width: 100%;
+    }
 
     .pd-content{
       background: white;
@@ -88,20 +62,7 @@
       overflow: auto;
       font-weight: 300;
       font-size: 16px;
-
-      p:last-child{padding-bottom: 0px; margin-bottom: 0px;}
     }
   }
 
-  .chargeback{
-    padding-top: 4rem;
-    padding-bottom: 4rem;
-
-    .pd-content{
-      background: url('../../assets/images/landing/pay-for-devs/bg-chargeback.png') no-repeat top left;
-      padding-top: 2rem;
-      font-weight: 300;
-      font-size: 16px;
-    }
-  }
 }
