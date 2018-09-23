@@ -28,7 +28,8 @@ import iconNotifications from '@/assets/images/wallet/icons/icon-notifications.s
 import iconTwitter from '@/assets/images/wallet/icons/icon-twitter.svg';
 import iconFacebook from '@/assets/images/wallet/icons/icon-facebook.svg';
 import iconTelegram from '@/assets/images/wallet/icons/icon-telegram.svg';
-
+import iconBackupWallet from '@/assets/images/wallet/icons/icon-backup.svg';
+import iconRestoreWallet from '@/assets/images/wallet/icons/icon-restore.svg';
 
 import Modal from '@/components/core/controls/Modal';
 
@@ -308,6 +309,28 @@ class SettingWallet extends React.Component {
                 </div>
             </div>
             
+            <div className="item header">
+              <label>{messages.wallet.action.setting.label.wallet_account}</label>
+            </div>
+
+            <div className="item" onClick={this.props.onBackupWalletAccountClick}>
+                <img className="icon" src={iconBackupWallet} />
+                <div className="name">                    
+                    <label>{messages.wallet.action.backup.title}</label>
+                </div>
+                <div className="value">
+                  
+                </div>
+            </div>
+            <div className="item" onClick={this.props.onRestoreWalletAccountClick}>
+                <img className="icon" src={iconRestoreWallet} />
+                <div className="name">                    
+                    <label>{messages.wallet.action.restore.title}</label>
+                </div>
+                <div className="value">
+                  
+                </div>
+            </div>
 
             
 

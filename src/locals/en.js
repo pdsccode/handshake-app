@@ -1257,6 +1257,7 @@ export default {
           passcode: "Passcode",
           push_notifications: "Push Notifications",
           community: "Community",
+          wallet_account: "Wallet Account",
         },
         button: {
           restore: 'Restore now',
