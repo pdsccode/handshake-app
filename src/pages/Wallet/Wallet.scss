@@ -320,8 +320,11 @@
   }
 
   .div-amount {
+    position: relative;
     .prepend{
-      padding-top: 15px;}
+      padding-top: 15px;
+      right: 10px;
+    }
   }
 }
 
