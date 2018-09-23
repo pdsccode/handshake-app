@@ -69,7 +69,7 @@ class ContentForPexInstruction extends React.Component {
           <img src={StepOne3} width="450" alt="StepOne3" />
           <p className="content">You’ll see your private key code. Tap <strong>Copy it somewhere safe.</strong></p>
         </div>
-        ,.
+        <br />
         <p className="content">Congrats, your wallet is now backed up! (You should store your code somewhere super, super safe...like a vault or something).</p>
 
       </div>
