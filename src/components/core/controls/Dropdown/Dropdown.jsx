@@ -13,7 +13,7 @@ class Dropdown extends React.PureComponent {
     super(props);
     this.state = {
       text: props.placeholder,
-      isShow: props.isShow || false,
+      isShow: this.props.isShow || false,
       idActive: -1,
       itemList: props.source,
     };
@@ -156,7 +156,7 @@ Dropdown.propTypes = {
   })).isRequired,
   afterSetDefault: PropTypes.func,
   hasSearch: PropTypes.bool,
-  isShow: PropTypes.isShow,
+  isShow: PropTypes.bool,
   
 };
 
