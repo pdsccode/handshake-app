@@ -417,8 +417,10 @@ export class MasterWallet {
 
     // Get list wallet from store local:
     static getMasterWallet() {
-
+            
       let wallets = MasterWallet.getWalletDataLocalString();
+      
+      if (wallets == false) return false;
       
       const listWallet = [];
       let hasTestnet = false;
@@ -622,7 +624,15 @@ export class MasterWallet {
     }
     static restoreWallets(dataString) {
       try {
-        const jsonData = MasterWallet.IsJsonString(dataString);
+        let jsonData = MasterWallet.IsJsonString(dataString);
+
+        // check encrypt if not json ?
+        if (jsonData === false){          
+          jsonData = MasterWallet.decrypt(dataString);          
+          if (jsonData !== false){          
+            jsonData = MasterWallet.IsJsonString(jsonData);
+          }          
+        }
 
         let auth_token = false;
         let wallets = false;

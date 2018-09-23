@@ -153,8 +153,8 @@ const tokenHandle = ({
               console.log('coins - getListOfferPrice - redux - error', e);
             },
           }));
-          // wallet
-          const listWallet = MasterWallet.getMasterWallet();
+          // wallet          
+          const listWallet = MasterWallet.getMasterWallet();          
           if (listWallet === false) {
             MasterWallet.createMasterWallets();
             console.log('create wallet success');
