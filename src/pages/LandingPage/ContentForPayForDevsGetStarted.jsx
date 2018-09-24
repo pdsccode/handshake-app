@@ -17,16 +17,16 @@ const PayForDevsGetStarted = () => (
         <div className="col-12 col-md-6 pd-subHeading">
           <p className="pd-heading">Pay for Devs Quickstart</p>
           <p>A crypto payment gateway for developers that is easy to integrate into their mobile app or website.</p>
-          <div className="pt-4"><a href="/payment"><button className="btn btn-warning ml-1">GET STARTED for FREE</button></a></div>
+          <div className="pt-4"><a href="/payment"><button className="btn btn-primary-landing ml-1">GET STARTED for FREE</button></a></div>
         </div>
         </Fade>
         <div className="col-12 col-md-6 text-right pt-4"><Flip right><img src={img1} /></Flip></div>
       </div>
 
       <div className="row none-register">
-      <Fade bottom><div className="pd-heading">Make an outgoing payment without having to register with Ninja</div></Fade>
         <Slide bottom>
         <div className="col-12 col-md-6 pd-content">
+          <p className="pd-heading">Make an outgoing payment without having to register with Ninja</p>
           <p className="pb-4">Once an order is created, your server-side code redirects you to Ninja Payment to create a one off payment. </p>
           <p className="pb-4">This redirect contains the recipient wallet address, cryptocurrency, amount,... from Ninja’s options (edit for clarity) </p>
         </div>
@@ -102,9 +102,9 @@ const PayForDevsGetStarted = () => (
       </div>
 
       <div className="row register">
-      <Flip bottom><p className="pd-heading">Register to make regular payments</p></Flip>
         <Slide top>
         <div className="col-12 col-md-6 pd-content">
+          <p className="pd-heading">Register to make regular payments</p>
           <p>Register your username on Ninja Wallet. Then, set your default crypto wallet which you want to use for outgoing and incoming payments. With each order, your server will automatically redirect to Ninja Payment to process the charge. This redirect link will contain the recipient’s wallet address, payment amount, and any additional information you wish you include.</p>
         </div>
         </Slide>
