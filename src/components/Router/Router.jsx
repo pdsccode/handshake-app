@@ -187,7 +187,11 @@ class Router extends React.Component {
           <Route path={LANDING_PAGE_TYPE.research.url} render={() => <LandingPageMain type="research" />} />
           <Route exact path={URL.RECRUITING} component={Recruiting} />
           <Route path={URL.RECRUITING_JOB_DETAIL} component={JobDetail} />
-          <Route path={URL.CASH_FOR_BUSINESS} render={() => <ProjectDetail type="landing" name="cash-for-business" img={imgDad} contentComponent={<ContentForCashBusiness />} />} />
+          <Route path={URL.ATM_FOR_BUSINESS} render={() => <ProjectDetail type="landing" name="cash-for-business" img={imgDad} contentComponent={<ContentForCashBusiness />} />} />
+          <Route exact path={URL.CASH_FOR_BUSINESS} render={() => {
+            return <Redirect to={{ pathname: URL.ATM_FOR_BUSINESS }} />
+          }}
+          />
           <Route path={URL.PEX_INSTRUCTION_URL} render={() => <ProjectDetail type="landing" name="pex-instruction" entireContentComponent={<ContentForPexInstruction />} />} />
           {routesUsingDesktopLayout}
 

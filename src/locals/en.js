@@ -524,14 +524,12 @@ export default {
   'landing_page.cash.youtubeVideoId': '9L1IltkvU9g',
 
   'landing_page.cash-for-business.breadcrumb': 'CRYPTO ATM',
-  'landing_page.cash-for-business.heading': 'A user friendly ATM for Bitcoin, Ethereum, and Litecoin',
+  'landing_page.cash-for-business.heading': 'Earn money effortlessly',
   'landing_page.cash-for-business.subHeading':
     `<ul>
-      <li>Flexible investment: no fixed term contracts</li>
-      <li>Beat the banks: super low transaction fees</li>
-      <li>Take charge: You set your profit margins</li>
+      <li>Set up a virtual crypto ATM to make passive income with zero investment</li>
     </ul>`,
-  'landing_page.cash-for-business.textEmail': `To start trading, please open <a href="https://ninja.org/cash">ninja.org/cash</a> on your mobile browser.`,
+  'landing_page.cash-for-business.textEmail': `To start trading, please open <a href="https://ninja.org/atm">ninja.org/atm</a> on your mobile browser.`,
   'landing_page.cash-for-business.label.sendLinkToEmail': `Send link to your email:`,
   'landing_page.cash-for-business.btnSubmitEmail': 'Go',
   // 'landing_page.cash-for-business.cta1': 'GET STARTED for FREE',
@@ -541,6 +539,7 @@ export default {
   'landing_page.cash-for-business.joinTelegram': `Join the dojo on <a href="https://t.me/ninjacash" class="landing-link">Telegram</a>`,
   'landing_page.cash-for-business.whitepaper': `Read more about <a href="https://medium.com/@ninja_org/introducing-ninja-cash-b0d51a9f4e1b" class="landing-link">Cash</a>`,
   'landing_page.cash-for-business.youtubeVideoId': '9L1IltkvU9g',
+  'landing_page.cash-for-business.alternativeAction': `Become a Ninja ATM`,
 
   'landing_page.prediction.breadcrumb': 'Prediction',
   'landing_page.prediction.heading': 'Bet on anything against anyone, anywhere. Guaranteed payout. Your odds. 100% anonymous.',
@@ -692,6 +691,33 @@ export default {
       answer: <span>You can chat to us on Telegram <a href="https://t.me/ninja_org" class="landing-link">t.me/ninja_org</a> or email <a href="mailto:support@ninja.org" class="landing-link" target="_top">support@ninja.org</a></span>,
     },
   ],
+  'landing_page.cash-for-business.faq': [
+    {
+      question: 'What is Ninja ATM?',
+      answer: 'Ninja ATM is a tool for people to buy crypto with cash easily and anonymously.',
+    },
+    {
+      question: 'How does it work?',
+      answer: 'By becoming an Ninja ATM,  you will set up a virtual ATM to sell crypto and earn profits from the sale commission.',
+    },
+    {
+      question: 'How do I set up my Ninja ATM?',
+      answer: 'You can find detailed step-by-step instruction here.',
+    },
+    {
+      question: 'Is it safe?',
+      answer: 'Yes! Because you only buy crypto from us when there’s a customer, you’re always in control of your money.',
+    },
+    {
+      question: 'Are there any fees?',
+      answer: 'None at all!',
+    },
+    {
+      question: 'Who can I contact if I need help?',
+      answer: <span>You can contact us on through Telegram <a href="https://t.me/ninja_org" class="landing-link">t.me/ninja_org</a> or email <a href="mailto:support@ninja.org" class="landing-link" target="_top">support@ninja.org</a></span>,
+    },
+  ],
+
   'landing_page.prediction.faq': [
     {
       question: 'What is Ninja PEX?',
