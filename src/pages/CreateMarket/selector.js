@@ -4,6 +4,10 @@ export const hasEmail = (state) => {
   if (_.isEmpty(state.auth.profile)) return null;
   return state.auth.profile.email;
 };
+export const uId = (state) => {
+  if (_.isEmpty(state.auth.profile)) return null;
+  return state.auth.profile.id;
+};
 
 export const eventSelector = (state) => state.prediction.events;
 
