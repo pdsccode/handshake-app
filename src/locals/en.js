@@ -61,6 +61,7 @@ export default {
   withdrawShakedfferSuccessMessage: 'Your offer has been withdrawn.',
   buyUsingCreditCardSuccessMessge: 'Your order using your credit card has gone through.',
   notEnoughCoinInWallet: 'You don\'t have enough coin right now. Please top up your wallet.',
+  notEnoughCoinInWalletDeposit: 'Not enough coin. Your maximum amount is {amount} {currency}. Please try again',
   threeDSecureNotSupported: 'Not supported this card',
 
   createOfferStoreConfirm: 'Do you want to set up an offer to {intentMsg}?',
@@ -1534,4 +1535,14 @@ export default {
 
   // betting
 
+  // ATM cash transfer page
+  atm_cash_transfer: {
+    to_wallet_address: 'To walllet address',
+    copy_address_or_scan_qr: 'Copy address or scan QR code',
+    amount: 'Amount',
+    transfer: 'Transfer',
+    scan_qr_code: 'Scan QR code',
+    invalid_address_valid: 'Invalid wallet address',
+    success_msg: 'Success!',
+  },
 };

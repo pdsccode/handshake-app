@@ -17,10 +17,8 @@ import * as gtag from '@/services/ga-utils';
 import taggingConfig from '@/services/tagging-config';
 import FeedCreditCard from '@/components/handshakes/exchange/Feed/FeedCreditCard';
 import ReportPopup from '@/components/handshakes/betting/Feed/ReportPopup';
-import { FREE_BET_STATUS } from '@/components/handshakes/betting/constants';
 import { predictionStatistics } from '@/components/handshakes/betting/Feed/OrderPlace/action';
 
-import Banner from '@/pages/Prediction/Banner';
 import { injectIntl } from 'react-intl';
 import { URL } from '@/constants';
 import { eventSelector, isLoading, showedLuckyPoolSelector, isSharePage, countReportSelector, checkFreeBetSelector, checkExistSubcribeEmailSelector } from './selector';

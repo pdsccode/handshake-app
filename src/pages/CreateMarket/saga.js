@@ -230,7 +230,6 @@ function* handleSendEmailCode({ email }) {
     const sendCode = yield call(apiPost, {
       PATH_URL: `user/verification/email/start?email=${email}`,
       type: 'SEND_EMAIL_CODE',
-      headers: { 'Content-Type': 'multipart/form-data' },
     });
     if (sendCode.error) {
       console.error('Failed to submit email: ', sendCode.error);

@@ -3,6 +3,34 @@
 .project-detail {
   font-family: azo-sans-web, sans-serif;
   font-weight: 400;
+  .emailField {
+    position: relative;
+    width: rem-calc(300px);
+  }
+  .wrapperEmail{
+    display: flex;
+    justify-content: space-between;
+  }
+  .btnEmail {
+    padding: 0px;
+    border: none;
+  }
+  .emailSubmit {
+    position: absolute;
+    top: 3px;
+    right: 3px;
+  }
+  .btnTelegram {
+    background: #FFF988;
+    border-radius: rem-calc(5px);
+    font-size: rem-calc(16px);
+    letter-spacing: 0;
+    border: 1px solid #F5D516;
+    height: rem-calc(44px);
+    width: rem-calc(250px);
+    margin-left: rem-calc(10px);
+  }
+
   .pd-breadcrumb {
     font-size: 16px;
     color: #484848;
@@ -138,7 +166,9 @@
         }
       }
     }
+
   }
+
 
   .anywhere{
     background: url('../../assets/images/landing/pay-for-devs/bg-anywhere.png') no-repeat top left;
