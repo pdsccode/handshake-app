@@ -34,7 +34,6 @@ import PexExtension from '@/pages/PexExtension/PexExtension';
 
 const RouterMe = createDynamicImport(() => import('@/components/Router/Me'), Loading);
 const RouterDiscover = createDynamicImport(() => import('@/components/Router/Discover'), Loading);
-const RouterChat = createDynamicImport(() => import('@/components/Router/Chat'), Loading);
 const RouterCreate = createDynamicImport(() => import('@/components/Router/Create'), Loading);
 const RouterWallet = createDynamicImport(() => import('@/components/Router/Wallet'), Loading);
 const RouterPayment = createDynamicImport(() => import('@/components/Router/Payment'), Loading);
@@ -78,7 +77,6 @@ const configRoutesUsingMobileLayout = [
   { path: URL.HANDSHAKE_ME, component: RouterMe },
   { path: URL.HANDSHAKE_CASH, component: RouterDiscover },
   { path: URL.HANDSHAKE_ATM, component: RouterDiscover },
-  { path: URL.HANDSHAKE_CHAT, component: RouterChat },
   { path: URL.HANDSHAKE_WALLET, component: RouterWallet },
   { path: URL.HANDSHAKE_PAYMENT, component: RouterPayment },
   { path: URL.HANDSHAKE_CREATE, component: RouterCreate },

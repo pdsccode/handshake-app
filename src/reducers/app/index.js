@@ -56,8 +56,6 @@ function appReducter(state = {
 
   isNerworkError: false,
 
-  firechat: {},
-
   modal: {
     className: '',
     show: false,
@@ -283,13 +281,6 @@ function appReducter(state = {
       return {
         ...state,
         isBannedChecked: true,
-      };
-    }
-
-    case APP_ACTION.SET_FIRECHAT: {
-      return {
-        ...state,
-        firechat: action.payload,
       };
     }
 
