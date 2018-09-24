@@ -34,11 +34,6 @@ function appReducter(state = {
     message: '',
   },
 
-  configConfirmPasscode: {
-    isShow: false,
-    valueConfirm: 0,
-  },
-
   isError: false,
   isWarning: false,
 
@@ -81,6 +76,16 @@ function appReducter(state = {
       return {
         ...state,
         passcodeData: action.payload,
+      };
+    case APP_ACTION.SHOW_SCAN_QRCODE:
+      return {
+        ...state,
+        scanQRCodeData: action.payload,
+      };
+    case APP_ACTION.HIDE_SCAN_QRCODE:
+      return {
+        ...state,
+        scanQRCodeData: action.payload,
       };
 
     case APP_ACTION.SET_ROOT_LOADING:
