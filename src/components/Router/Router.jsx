@@ -52,6 +52,7 @@ const ProjectDetail = createDynamicImport(() => import('@/components/ProjectDeta
 const Recruiting = createDynamicImport(() => import('@/pages/Recruiting'), Loading);
 const JobDetail = createDynamicImport(() => import('@/pages/Recruiting/JobDetail'), Loading);
 const ContentForCashBusiness = createDynamicImport(() => import('@/pages/LandingPage/ContentForCashBusiness'), Loading);
+const ContentForAtm = createDynamicImport(() => import('@/pages/LandingPage/ContentForAtm'), Loading);
 const ContentForPayForDevs = createDynamicImport(() => import('@/pages/LandingPage/ContentForPayForDevs'), Loading);
 const ContentForPayForDevsGetStarted = createDynamicImport(() => import('@/pages/LandingPage/ContentForPayForDevsGetStarted'), Loading);
 const ContentForWallet = createDynamicImport(() => import('@/pages/LandingPage/ContentForWallet'), Loading);
@@ -98,7 +99,6 @@ const configRoutesUsingMobileLayout = [
   },
   { path: URL.RESOLVE, component: RouterResolve },
   { path: URL.SHOP_URL, component: RouterShop },
-  { path: URL.LANDING_BECOME_ATM, render: () => <LandingBecomeAtm reactHelmetElement={SEOBecomeAtm} /> },
 ];
 const routesUsingMobileLayout = configRoutesUsingMobileLayout.map(route => (
   <Route
@@ -114,8 +114,8 @@ let routesUsingDesktopLayout = null;
 if (BrowserDetect.isDesktop) {
   const configRoutesUsingDesktopLayout = [
     { path: URL.LUCKY_POOL, component: RouterLuckyPool },
-    { path: URL.PRODUCT_CASH_URL, render: () => <ProjectDetail type="product" name="cash" img={imgCash} imgContent={imgCashContent} reactHelmetElement={SEOCash} /> },
-    { path: URL.PRODUCT_ATM_URL, render: () => <ProjectDetail type="product" name="cash" img={imgCash} imgContent={imgCashContent} reactHelmetElement={SEOCash} /> },
+    { path: URL.PRODUCT_CASH_URL, render: () => <Redirect to={{ pathname: URL.PRODUCT_ATM_URL }} />, exact: true },
+    { path: URL.PRODUCT_ATM_URL, render: () => <ProjectDetail type="product" name="cash" img={imgCash} reactHelmetElement={SEOCash} contentComponent={<ContentForAtm/>} /> },
     { path: URL.BUY_BY_CC_URL, render: () => <ProjectDetail type="product" name="cash" img={imgCash} imgContent={imgCashContent} reactHelmetElement={SEOCash} /> },
     { path: URL.PRODUCT_PREDICTION_URL, render: () => <ProjectDetail type="product" name="prediction" img={imgPrediction} contentComponent={<ContentForPrediction />} reactHelmetElement={SEOPrediction} /> },
     { path: URL.HANDSHAKE_PEX, render: () => <ProjectDetail type="product" name="prediction" img={imgPrediction} contentComponent={<ContentForPrediction />} reactHelmetElement={SEOPrediction} /> },
@@ -130,7 +130,6 @@ if (BrowserDetect.isDesktop) {
     { path: URL.PRODUCT_DAD_URL, render: () => <ProjectDetail type="product" name="dad" img={imgDad} imgContent={imgDadContent} reactHelmetElement={SEODad} /> },
     { path: URL.RESEARCH_UNCOMMONS_URL, render: () => <ProjectDetail type="research" name="uncommons" img={imgUncommons} /> },
     { path: URL.PRODUCT_WHISPER_URL, render: () => <ProjectDetail type="product" name="whisper" img={imgWhisper} reactHelmetElement={SEOWhisper} /> },
-    { path: URL.LANDING_BECOME_ATM, render: () => <LandingBecomeAtm reactHelmetElement={SEOBecomeAtm} /> },
     { path: URL.INTERNAL_WITHDRAW_URL, component: RouterInternalWithdraw },
   ];
   routesUsingDesktopLayout = configRoutesUsingDesktopLayout.map(route => (
@@ -185,8 +184,13 @@ class Router extends React.Component {
           <Route path={LANDING_PAGE_TYPE.research.url} render={() => <LandingPageMain type="research" />} />
           <Route exact path={URL.RECRUITING} component={Recruiting} />
           <Route path={URL.RECRUITING_JOB_DETAIL} component={JobDetail} />
-          <Route path={URL.CASH_FOR_BUSINESS} render={() => <ProjectDetail type="landing" name="cash-for-business" img={imgDad} contentComponent={<ContentForCashBusiness />} />} />
+          <Route path={URL.ATM_FOR_BUSINESS} render={() => <ProjectDetail type="landing" name="cash-for-business" img={imgDad} contentComponent={<ContentForCashBusiness />} />} />
+          <Route exact path={URL.CASH_FOR_BUSINESS} render={() => {
+            return <Redirect to={{ pathname: URL.ATM_FOR_BUSINESS }} />
+          }}
+          />
           <Route path={URL.PEX_INSTRUCTION_URL} render={() => <ProjectDetail type="landing" name="pex-instruction" entireContentComponent={<ContentForPexInstruction />} />} />
+          <Route path={URL.LANDING_BECOME_ATM} render={() => <LandingBecomeAtm reactHelmetElement={SEOBecomeAtm} />} />
           {routesUsingDesktopLayout}
 
           {/* Cash on mobile uses a completely different layout! */}
