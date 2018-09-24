@@ -18,9 +18,9 @@ import { CRYPTO_CURRENCY, CRYPTO_CURRENCY_NAME, API_URL, FIAT_CURRENCY } from '@
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { Field, change } from 'redux-form';
-import { throttle, compact } from 'lodash';
+import { debounce, compact } from 'lodash';
 import { getCashFromCrypto, sendAtmCashTransfer } from '@/reducers/exchange/action';
-import { showAlert } from '@/reducers/app/action';
+import { showAlert, showScanQRCode } from '@/reducers/app/action';
 import { getErrorMessageFromCode } from '@/components/handshakes/exchange/utils';
 import { validateSpecificAmount } from '@/components/handshakes/exchange/validation';
 import { Ethereum } from '@/services/Wallets/Ethereum.js';
@@ -60,16 +60,21 @@ class AtmCashTransfer extends Component {
     this.state = {
       amount: 0,
       currency: null,
-      fiatCurrency: 0,
+      fiatAmount: 0,
       fiatCurrencyUnit: FIAT_CURRENCY.USD,
       isTransferable: false,
       walletAddress: '',
     };
 
     this.qrCodeScanner = null;
+    this.sampleCrypto = {
+      ETH: new Ethereum(),
+      BTC: new Bitcoin(),
+      BCH: new BitcoinCash(),
+    };
+
     // binding
-    this.onAmountChange = :: this.onAmountChange;
-    this.getCashFromCrypto = throttle(::this.getCashFromCrypto, 1000, { leading: true });
+    this.getCashFromCrypto = debounce(::this.getCashFromCrypto, 1000);
     this.onSuccess = :: this.onSuccess;
     this.onError = :: this.onError;
     this.onTransfer = :: this.onTransfer;
@@ -78,6 +83,7 @@ class AtmCashTransfer extends Component {
     this.onQrCodeData = :: this.onQrCodeData;
     this.validateWallet = ::this.validateWallet;
     this.getMessage = :: this.getMessage;
+    this.detectCryptoCurrency = debounce(::this.detectCryptoCurrency, 1000);
   }
 
   static getDerivedStateFromProps(nextProps) {
@@ -85,13 +91,31 @@ class AtmCashTransfer extends Component {
     return {
       currency: values?.currency,
       walletAddress: values?.walletAddress,
+      fiatAmount: values?.fiatAmount,
+      amount: values?.amount,
       isTransferable: compact(Object.values(syncErrors || {})).length === 0,
+      shouldLockWalletChange: !syncErrors?.walletAddress,
     };
   }
 
-  onAmountChange(e) {
-    const amount = e?.target?.value;
-    this.setState({ amount }, this.getCashFromCrypto);
+  getSnapshotBeforeUpdate(prevProps, prevState) {
+    let snapshot = {};
+    if (prevState?.amount !== this.state?.amount) {
+      snapshot = { amount: this.state?.amount };
+    }
+    if (prevState?.walletAddress !== this.state?.walletAddress) {
+      snapshot = { walletAddress: this.state?.walletAddress };
+    }
+    return snapshot;
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (snapshot?.amount) {
+      this.getCashFromCrypto();
+    }
+    if (snapshot?.walletAddress) {
+      this.detectCryptoCurrency();
+    }
   }
 
   onSuccess(res) {
@@ -99,8 +123,9 @@ class AtmCashTransfer extends Component {
     const { data } = res;
 
     if (currency.id === data?.currency) {
+      const fiatAmount = data?.fiat_amount || '';
+      this.props.change(nameFormNewTransaction, 'fiatAmount', fiatAmount);
       this.setState({
-        fiatCurrency: data?.fiat_amount || 0,
         fiatCurrencyUnit: data?.fiat_currency,
       });
     }
@@ -108,7 +133,7 @@ class AtmCashTransfer extends Component {
 
   onError(e) {
     this.setState({ isTransferable: false });
-    this.props.change(nameFormNewTransaction, 'amount', 0);
+    this.props.change(nameFormNewTransaction, 'amount', '');
     this.props.change(nameFormNewTransaction, 'fiatAmount', 0);
     this.props.showAlert({
       message: <div className="text-center">{getErrorMessageFromCode(e)}</div>,
@@ -120,15 +145,14 @@ class AtmCashTransfer extends Component {
   onTransfer() {
     this.showLoading(true);
     const { messages: { atm_cash_transfer } } = this.props.intl;
-    const { walletAddress, amount, currency, fiatCurrency, fiatCurrencyUnit } = this.state;
+    const { walletAddress, amount, currency, fiatAmount, fiatCurrencyUnit } = this.state;
     const data = {
       address: walletAddress,
       amount,
       currency: currency.id,
-      fiat_amount: fiatCurrency,
+      fiat_amount: fiatAmount,
       fiat_currency: fiatCurrencyUnit,
     };
-
     this.props.sendAtmCashTransfer({
       PATH_URL: API_URL.EXCHANGE.SEND_ATM_CASH_TRANSFER,
       METHOD: 'POST',
@@ -171,11 +195,23 @@ class AtmCashTransfer extends Component {
     const { messages } = this.props.intl;
     let result = str;
     try {
-      result = eval(str);
+      result = messages && eval(str);
     } catch (e) {
       console.log(e);
     }
     return result;
+  }
+
+  detectCryptoCurrency() {
+    const { walletAddress } = this.state;
+    Object.keys(this.sampleCrypto)?.forEach(crypto => {
+      if (this.sampleCrypto[crypto]?.checkAddressValid(walletAddress) === true) {
+        const currency = listCurrency?.find(item => item?.id === crypto);
+
+        // update this currency to redux form
+        this.props.change(nameFormNewTransaction, 'currency', currency);
+      }
+    });
   }
 
   validateWallet(walletAddress = '') {
@@ -184,11 +220,11 @@ class AtmCashTransfer extends Component {
     const errors = {};
 
     if (currency?.id === CRYPTO_CURRENCY_CREDIT_CARD?.ETH) {
-      wallet = new Ethereum();
+      wallet = this.sampleCrypto.ETH;
     } else if (currency?.id === CRYPTO_CURRENCY_CREDIT_CARD?.BTC) {
-      wallet = new Bitcoin();
+      wallet = this.sampleCrypto.BTC;
     } else if (currency?.id === CRYPTO_CURRENCY_CREDIT_CARD?.BCH) {
-      wallet = new BitcoinCash();
+      wallet = this.sampleCrypto.BCH;
     }
 
     const error = wallet?.checkAddressValid(walletAddress);
@@ -206,7 +242,15 @@ class AtmCashTransfer extends Component {
 
   openQrScanner() {
     // open qrcode modal
-    this.qrCodeScanner.open();
+    this.props.showScanQRCode({
+      onFinish: (data) => {
+        if (data) {
+          const [address, amount] = data?.split(',');
+          this.props.change(nameFormNewTransaction, 'walletAddress', address);
+          this.props.change(nameFormNewTransaction, 'amount', amount);
+        }
+      },
+    });
   }
 
   handleValidate(values) {
@@ -214,7 +258,7 @@ class AtmCashTransfer extends Component {
   }
 
   render() {
-    const { fiatCurrencyUnit, fiatCurrency, isTransferable } = this.state;
+    const { fiatCurrencyUnit, fiatAmount, isTransferable, shouldLockWalletChange } = this.state;
     const { messages: { atm_cash_transfer } } = this.props.intl;
     return (
       <React.Fragment>
@@ -228,44 +272,44 @@ class AtmCashTransfer extends Component {
               <div className="form-el">
                 <div className="input-with-trailing">
                   <label className="labelText">{atm_cash_transfer.to_wallet_address}</label>
-                  <Field
-                    name="walletAddress"
-                    className="form-control transaction-input"
-                    component={fieldInput}
-                    placeholder={atm_cash_transfer.copy_address_or_scan_qr}
-                    validate={[required]}
-                  />
+                  <div className="input-group">
+                    <Field
+                      name="walletAddress"
+                      className="form-control transaction-input"
+                      component={fieldInput}
+                      placeholder={atm_cash_transfer.copy_address_or_scan_qr}
+                      validate={[required]}
+                      elementAppend={
+                        <Field
+                          name="currency"
+                          classNameWrapper=""
+                          classNameDropdownToggle="dropdown-btn form-control transaction-input"
+                          list={listCurrency}
+                          component={fieldDropdown}
+                          disabled={shouldLockWalletChange}
+                        />
+                      }
+                    />
+                  </div>
                   <img onClick={this.openQrScanner} className="prepend prepend-qrcode" src={qrCodeIcon} alt="" />
                 </div>
               </div>
               <div className="form-el">
                 <label className="labelText">{atm_cash_transfer.amount}</label>
-                <div className="input-group">
-                  <Field
-                    name="amount"
-                    className="form-control transaction-input"
-                    type="text"
-                    placeholder="0.0"
-                    component={fieldInput}
-                    onChange={this.onAmountChange}
-                    validate={[required, number]}
-                    elementAppend={
-                      <Field
-                        name="currency"
-                        classNameWrapper=""
-                        classNameDropdownToggle="dropdown-btn form-control transaction-input"
-                        list={listCurrency}
-                        component={fieldDropdown}
-                      />
-                    }
-                  />
-                </div>
+                <Field
+                  name="amount"
+                  className="form-control transaction-input"
+                  type="text"
+                  placeholder="0.0"
+                  component={fieldInput}
+                  validate={[required, number]}
+                />
                 <div className="input-with-trailing">
                   <div className="prepend">{fiatCurrencyUnit}</div>
                   <Field
                     name="fiatAmount"
                     className="form-control transaction-input fiat-amount"
-                    placeholder={fiatCurrency}
+                    placeholder={fiatAmount}
                     component={fieldInput}
                     disabled
                   />
@@ -297,6 +341,7 @@ AtmCashTransfer.propTypes = {
   change: PropTypes.func.isRequired,
   sendAtmCashTransfer: PropTypes.func.isRequired,
   intl: PropTypes.object.isRequired,
+  showScanQRCode: PropTypes.func.isRequired,
 };
 
-export default injectIntl(connect(mapState, ({ getCashFromCrypto, showAlert, change, sendAtmCashTransfer }))(AtmCashTransfer));
+export default injectIntl(connect(mapState, ({ getCashFromCrypto, showAlert, change, sendAtmCashTransfer, showScanQRCode }))(AtmCashTransfer));
