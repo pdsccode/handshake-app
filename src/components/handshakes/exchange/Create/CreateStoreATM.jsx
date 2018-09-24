@@ -19,6 +19,9 @@ import { getErrorMessageFromCode } from '@/components/handshakes/exchange/utils'
 import axios from 'axios';
 import Switch from '@/components/core/controls/Switch/Switch';
 import Checkbox from '@/components/core/forms/Checkbox/Checkbox';
+import TimePicker from 'rc-time-picker';
+import moment from 'moment';
+import 'rc-time-picker/assets/index.css';
 
 const CASH_ATM_TAB = {
   INFO: 'INFO',
@@ -222,11 +225,21 @@ class Component extends React.Component {
     this.setState({ atmStatus: isChecked });
   }
 
+  onChange = (value) => {
+    const format = 'h:mm a';
+    console.log(value && value.format(format));
+  }
+
   render() {
     const { messages } = this.props.intl;
     const {
       modalContent, cashTab, atmType,
     } = this.state;
+
+    const format = 'h:mm a';
+
+    const now = moment().hour(0).minute(0);
+
 
     return (
       <div>
@@ -316,6 +329,36 @@ class Component extends React.Component {
                     </div>
                     <div className="d-table-cell w-50">
                       <Checkbox name="storeAtm" checked={!atmType} label={messages.create.atm.text.storeAtm} onClick={this.onChangeTypeAtm} />
+                    </div>
+                  </div>
+                </div>
+                <div className="input-group">
+                  <div className="d-table w-100">
+                    <div className="d-table-cell w-50">
+                      <label className="form-control-title">{messages.create.atm.text.addressTitle.toUpperCase()}</label>
+                      <TimePicker
+                        name="startTime"
+                        showSecond={false}
+                        defaultValue={now}
+                        className="xxx"
+                        onChange={this.onChange}
+                        format={format}
+                        use12Hours
+                        inputReadOnly
+                      />
+                    </div>
+                    <div className="d-table-cell w-50">
+                      <label className="form-control-title">{messages.create.atm.text.addressTitle.toUpperCase()}</label>
+                      <TimePicker
+                        name="endTime"
+                        showSecond={false}
+                        defaultValue={now}
+                        className="xxx"
+                        onChange={this.onChange}
+                        format={format}
+                        use12Hours
+                        inputReadOnly
+                      />
                     </div>
                   </div>
                 </div>
