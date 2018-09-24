@@ -255,6 +255,8 @@ export const API_URL = {
     WITHDRAW_CASH_DEPOSIT_ATM: 'exchange/credit/withdraw',
     CASH_ATM: 'exchange/cash',
     CASH_STORE_ATM: 'exchange/cash/store',
+    CRYPTO_TO_CASH: 'exchange/cash/price', // GET /cash/price?amount=1&currency=ETH
+    SEND_ATM_CASH_TRANSFER: 'exchange/cash/order',
   },
   SEED: {
     BASE: 'seed',
@@ -603,6 +605,7 @@ export const URL = {
   INTERNAL_WITHDRAW_URL: '/d2l0aGRyYXdfZm9yX2dvZA/:superKey',
   CASH_STORE_URL: '/cash_store',
   LANDING_BECOME_ATM: '/become-atm',
+  ATM_CASH_TRANSFER: '/atm/cash/transfer',
 };
 
 export const LANDING_PAGE_TYPE = {
