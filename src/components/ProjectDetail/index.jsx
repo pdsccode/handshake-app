@@ -52,7 +52,12 @@ class Index extends React.PureComponent {
     window.open('https://t.me/ninja_org', '_blank');
   }
   becomeAtm = () => {
-    window.location = URL.LANDING_BECOME_ATM;
+    const { name } = this.props;
+    if (name === 'cash') {
+      window.location = URL.ATM_FOR_BUSINESS;
+    } else if (name === 'cash-for-business') {
+      window.location = URL.LANDING_BECOME_ATM;
+    }
   }
 
   render() {

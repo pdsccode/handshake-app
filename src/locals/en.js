@@ -513,15 +513,21 @@ export default {
 
   // 'landing_page.breadcrumb.home': 'Home',
 
-  'landing_page.cash.breadcrumb': 'Cash',
+  'landing_page.cash.breadcrumb': 'Atm',
   'landing_page.cash.heading': 'Buy crypto with cash. Secure, anonymous, easy.',
-  'landing_page.cash.subHeading': 'Ninja Cash is a decentralized peer to peer (P2P) cryptocurrency exchange that allows users to trade ETH and BTC for cash. Anonymous and immediate: no signup, no ID verification. Blockchain secured and fraud proof.',
-  'landing_page.cash.textEmail': `To start trading, please open <a href="https://ninja.org/cash">ninja.org/cash</a> on your mobile browser.`,
+  'landing_page.cash.subHeading':
+    `<ul>
+      <li>No signup, no need for ID verification</li>
+      <li>Blockchain secured and fraud proof</li>
+      <li>Make person to person transactions with our ATM ninjas</li>
+    </ul>`,
+  'landing_page.cash.textEmail': `Open <a href="https://ninja.org/atm">ninja.org/atm</a> on your mobile browser to find an ATM near you!`,
   'landing_page.cash.label.sendLinkToEmail': `Send link to your email:`,
   'landing_page.cash.btnSubmitEmail': 'Go',
   'landing_page.cash.joinTelegram': `Join the dojo on <a href="https://t.me/ninjacash" class="landing-link">Telegram</a>`,
   'landing_page.cash.whitepaper': `Read more about <a href="https://medium.com/@ninja_org/introducing-ninja-cash-b0d51a9f4e1b" class="landing-link">Cash</a>`,
   'landing_page.cash.youtubeVideoId': '9L1IltkvU9g',
+  'landing_page.cash.alternativeAction': `Become a Ninja ATM`,
 
   'landing_page.cash-for-business.breadcrumb': 'CRYPTO ATM',
   'landing_page.cash-for-business.heading': 'Earn money effortlessly',
