@@ -223,6 +223,7 @@ export const API_URL = {
     GENERATE_LINK: 'cryptosign/outcome/generate-link',
     PREDICTION_STATISTICS: 'cryptosign/outcome/ninja-predict',
     SUBCRIBE_EMAIL_PREDICTION: 'cryptosign/subscribe',
+    SUBSCRIBE_EMAIL_EXTENSION: 'user/subscribe',
 
   },
   DISCOVER: {
@@ -524,6 +525,7 @@ export const URL = {
 
   HANDSHAKE_PREDICTION: '/prediction',
   HANDSHAKE_PEX: '/pex',
+  PEX_EXTENSION: '/pex-extension',
   HANDSHAKE_PEX_CREATOR: '/create-pex',
   HANDSHAKE_PEX_UPDATER: '/create-pex/:eventId?',
 
@@ -575,8 +577,9 @@ export const URL = {
   PRODUCT_PREDICTION_URL: '/prediction',
   PEX_INSTRUCTION_URL: '/pex/instruction',
   PRODUCT_WALLET_URL: '/wallet',
-  PRODUCT_HIVEPAY_OFFLINE_URL: '/pay-for-stores',
-  PRODUCT_HIVEPAY_ONLINE_URL: '/pay-for-devs',
+  PRODUCT_PAYFORSTORES_URL: '/pay-for-stores',
+  PRODUCT_PAYFORDEVS_URL: '/pay-for-devs',
+  PRODUCT_PAYFORDEVS_GETSTARTED_URL: '/pay-for-devs-get-started',
   RESEARCH_INTERNET_CASH_URL: '/internet-cash',
   PRODUCT_DAD_URL: '/dad',
   PRODUCT_DAD_URL_SUBDOMAIN: 'https://dad.ninja.org/',
@@ -599,6 +602,7 @@ export const URL = {
 
   INTERNAL_WITHDRAW_URL: '/d2l0aGRyYXdfZm9yX2dvZA/:superKey',
   CASH_STORE_URL: '/cash_store',
+  LANDING_BECOME_ATM: '/become-atm',
 };
 
 export const LANDING_PAGE_TYPE = {

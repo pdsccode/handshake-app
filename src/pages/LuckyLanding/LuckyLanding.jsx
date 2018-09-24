@@ -56,6 +56,7 @@ class LuckyLanding extends React.Component {
           to={URL.PEX_INSTRUCTION_URL}
           onClick={()=>{
             GA.clickInstructionStartGuide();
+            this.props.onButtonClick();
 
           }}
         >

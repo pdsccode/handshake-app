@@ -48,11 +48,6 @@ class ContentForPrediction extends React.Component {
       <PexRoadMap className="wrapperBlock" />
     );
   }
-  renderShapes() {
-    return (
-      <div className="wrapperMobile" />
-    );
-  }
   renderHowToPlay() {
     return (
       <div className="wrapperHowToPlay wrapperBlock">
@@ -86,10 +81,10 @@ class ContentForPrediction extends React.Component {
             <div className="pexContent">Use Ninja Prediction on your desktop, you can browse the web, predict and win ETH with the Chrome Extension.</div>
             <div className="pexContent">With just a click, you can create bets from (almost) anything you read & see online.</div>
           </div>
-          <button className="pexButton"
+          {/*<button className="pexButton"
             onClick={() => this.openExtension()}
           >Install our extension
-          </button>
+    </button>*/}
         </div>
         <div className="column">
           <img src={imgExtension} alt="imgExtension" width="550" />
@@ -167,24 +162,12 @@ class ContentForPrediction extends React.Component {
       </div>
     );
   }
-  renderInstruction(){
-    return(
-      <div className='pexContent'>
-      For instructions on how to play:{' '}
-      <Link to={URL.PEX_INSTRUCTION_URL}>
-        http://ninja.org/pex/instruction
-      </Link>
-    </div>
-    );
-  }
 
   render() {
     const { messages, locale } = this.props.intl
     return (
       <div className=''>
         {/*<img src={imgPredictionContent} className='w-100' />*/}
-          {/*this.renderShapes()*/}
-          {this.renderInstruction()}
           {this.renderHowToPlay()}
           {this.renderExtension()}
           {this.renderMobileGuide()}
