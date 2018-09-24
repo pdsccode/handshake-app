@@ -125,7 +125,7 @@ export class Ripple extends Wallet {
             api.getAccountInfo(this.address).then(data => {
                 api.disconnect();
                 resolve(data);
-            }).catch(err => reject(err));
+            }).catch(err => reject);
         });
     });
 

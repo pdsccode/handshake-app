@@ -285,9 +285,8 @@ class Transfer extends React.Component {
         this.setState({walletSelected: walletDefault});
         MasterWallet.UpdateBalanceItem(walletDefault);
       });
-
     }
-    console.log(listWalletCoin);
+
     this.setState({wallets: listWalletCoin, walletDefault: walletDefault, walletSelected: walletDefault}, ()=>{
       this.props.rfChange(nameFormSendWallet, 'walletSelected', walletDefault);
     });
@@ -299,7 +298,6 @@ class Transfer extends React.Component {
 
   invalidateTransferCoins = (value) => {
     const { messages } = this.props.intl;
-    console.log('invalidateTransferCoins');
     if (!this.state.walletSelected) return {};
     let errors = {};
     if (this.state.walletSelected){
@@ -551,7 +549,7 @@ render() {
               </div>
             }
 
-            <div className ="dropdown-wallet-tranfer">
+            <div className ="dropdown-wallet-tranfer ">
               <p className="labelText">{messages.wallet.action.transfer.label.from_wallet}</p>
               <div className="wallet-listcoin" onClick={() => {this.openListCoin() }}>
                 <div className="name">{this.state.walletSelected && this.state.walletSelected.title}</div>
@@ -561,9 +559,12 @@ render() {
                 <div className="value">{this.state.walletSelected && this.state.walletSelected.balance + " " + this.state.walletSelected.name}</div>
               </div>
 
-              <ModalDialog className="wallets-wrapper" title="Select wallets" onRef={modal => this.modalListCoinRef = modal}>
-                {modalListCoin}
-              </ModalDialog>
+              <div className="wallets-wrapper">
+                <Modal title="Select wallets" onRef={modal => this.modalListCoinRef = modal}>
+                  {modalListCoin}
+                </Modal>
+              </div>
+
 
             </div>
 
