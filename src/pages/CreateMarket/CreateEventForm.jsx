@@ -12,6 +12,7 @@ import { createEvent } from './action';
 import ShareMarket from './ShareMarket';
 import { createEventFormName } from './constants';
 import EmailVerification from './EmailVerification';
+import GA from '@/services/googleAnalytics';
 
 const minStep = 15;
 const secStep = minStep * 60;
@@ -24,6 +25,7 @@ class CreateEventForm extends Component {
     categoryList: PropTypes.array,
     isNew: PropTypes.bool,
     hasEmail: PropTypes.any,
+    uid: PropTypes.any,
     initialValues: PropTypes.object,
     shareEvent: PropTypes.object,
     eventList: PropTypes.array,
@@ -57,6 +59,13 @@ class CreateEventForm extends Component {
   }
 
   onCreateNewEvent = (values, dispatch, props) => {
+    console.log('CreateEventForm values: ', values);
+    const { eventName, creatorFee } = values;
+    if (props.isNew) {
+      GA.clickCreateNewEvent(eventName, props.hasEmail, creatorFee, props.uid);
+    } else {
+      GA.clickCreateNewOutcome(props.hasEmail, creatorFee, props.uid);
+    }
     dispatch(createEvent({
       values,
       isNew: props.isNew,
