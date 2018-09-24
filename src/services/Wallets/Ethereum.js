@@ -4,6 +4,7 @@ import configs from '@/configs';
 import { StringHelper } from '@/services/helper';
 import {MasterWallet} from "./MasterWallet";
 import Tx from 'ethereumjs-tx';
+import { getEstimateGas } from "@/components/handshakes/betting/utils";
 
 const Web3 = require('web3');
 const EthereumTx = require('ethereumjs-tx');
@@ -70,15 +71,17 @@ export class Ethereum extends Wallet {
   }
 
   async getFee() {
-    const web3 = this.getWeb3();
-    const gasPrice = new BN(await web3.eth.getGasPrice());
-    //const estimateGas = new BN(balance).div(gasPrice);
-    const limitedGas = 210000;
-    //const estimatedGas = await BN.min(estimateGas, limitedGas);
+    return await getEstimateGas();
 
-    console.log('transfer gasPrice->', parseInt(gasPrice));
-    //console.log('transfer estimatedGas->', String(estimatedGas));
-    console.log('transfer limitedGas->', String(limitedGas));
+    // const web3 = this.getWeb3();
+    // const gasPrice = new BN(await web3.eth.getGasPrice());
+    // //const estimateGas = new BN(balance).div(gasPrice);
+    // const limitedGas = 210000;
+    // //const estimatedGas = await BN.min(estimateGas, limitedGas);
+    //
+    // console.log('transfer gasPrice->', parseInt(gasPrice));
+    // //console.log('transfer estimatedGas->', String(estimatedGas));
+    // console.log('transfer limitedGas->', String(limitedGas));
 
     // return Web3.utils.fromWei(estimatedGas);
   }
@@ -95,23 +98,20 @@ export class Ethereum extends Wallet {
 
   async transfer(toAddress, amountToSend) {
     const web3 = this.getWeb3();
-    console.log("transfer 0");
     if (!web3.utils.isAddress(toAddress)) {
       return { status: 0, message: 'messages.ethereum.error.invalid_address2' };
     }
-    console.log("transfer 1");
+
     try {
 
-      let balance = 10; //await web3.eth.getBalance(this.address);
-      console.log("transfer balance0 ", balance);
-      balance = 10; //await Web3.utils.fromWei(balance.toString());
-      console.log("transfer balance1", balance);
+      let balance = await web3.eth.getBalance(this.address);
+      balance = await Web3.utils.fromWei(balance.toString());
+
       if (balance == 0 || balance <= amountToSend) {
         return { status: 0, message: 'messages.ethereum.error.insufficient' };
       }
-      console.log("transfer balance 2", balance);
+
       const gasPrice = new BN(await web3.eth.getGasPrice());
-      console.log('transfer gasPrice', gasPrice);
       const estimateGas = new BN(balance).div(gasPrice);
       const limitedGas = 210000;
       const estimatedGas = await BN.min(estimateGas, limitedGas);
@@ -269,7 +269,7 @@ export class Ethereum extends Wallet {
   async getTransactionCount() {
     let result = [];
     const API_KEY = configs.network[4].apikeyEtherscan;
-    const url = `${this.constructor.API[this.getNetworkName()]}?module=proxy&action=eth_getTransactionCount&address=0x56627819B7622aC4b2F248D6C45c9C71f4865730&tag=latest&apikey=${API_KEY}`;
+    const url = `${this.constructor.API[this.getNetworkName()]}?module=proxy&action=eth_getTransactionCount&address=${this.address}&tag=latest&apikey=${API_KEY}`;
     const response = await axios.get(url);
     if (response.status == 200) {
       const web3 = this.getWeb3();

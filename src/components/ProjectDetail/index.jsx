@@ -12,6 +12,7 @@ import { email, required } from '@/components/core/form/validation';
 import $http from '@/services/api';
 import { BASE_API, LANDING_PAGE_TYPE } from '@/constants';
 import { Link } from 'react-router-dom';
+import iconSubmitEmail from '@/assets/images/icon/landingpage/email_submit.svg';
 
 import './styles.scss';
 
@@ -48,6 +49,9 @@ class Index extends React.PureComponent {
         console.log('err subscribe email', err);
       });
   };
+  openTelegram = () => {
+    window.open('https://t.me/ninja_org', '_blank');
+  }
 
   render() {
     const { messages, locale } = this.props.intl;
@@ -108,47 +112,55 @@ class Index extends React.PureComponent {
                     <div className="mt-4">
                       {textEmail && (
                         <span>
-                        {!hasSubscribed ? (
-                          <FormSubscribeEmail onSubmit={this.handleSubmit}>
-                          {messages[`landing_page.${name}.label.sendLinkToEmail`] && (
-                            <div className="d-table-cell align-top text-send-link">
-                              <FormattedMessage id={`landing_page.${name}.label.sendLinkToEmail`} />
-                            </div>
-                          )
-                          }
-                            <div className="d-table w-100">
+                    {!hasSubscribed ? (
+                      <FormSubscribeEmail onSubmit={this.handleSubmit}>
+                      {messages[`landing_page.${name}.label.sendLinkToEmail`] && (
+                        <div className="d-table-cell align-top text-send-link">
+                          <FormattedMessage id={`landing_page.${name}.label.sendLinkToEmail`} />
+                        </div>
+                      )
+                      }
+                        <div className="wrapperEmail">
 
-                              <div className="d-table-cell align-top">
-                                <Field
-                                  name="email"
-                                  className="form-control control-subscribe-email"
-                                  placeholder={intl.formatMessage({ id: 'landing_page.detail.email_placeholder' })}
-                                  type="text"
-                                  validate={[required, email]}
-                                  component={fieldInput}
-                                />
-                              </div>
-                              <div className="d-table-cell align-top">
-                                <button
-                                  type="submit"
-                                  className="btn btn-primary-landing w-100 ml-1"
-                                >
-                                  {btnSubmitEmail}
-                                </button>
-                              </div>
-                            </div>
-                            <div className="text-email">
-                              <FormattedHTMLMessage id={`landing_page.${name}.textEmail`} />
-                            </div>
-                          </FormSubscribeEmail>
-                        ) : (
-                          <h5>
-                            <strong className="text-success">
-                              <FormattedMessage id="landing_page.detail.thanksForSubscribing" />
-                            </strong>
-                          </h5>
-                        )}
-                        </span>
+                          <div className="emailField">
+                            <Field
+                              name="email"
+                              className="form-control control-subscribe-email"
+                              placeholder={intl.formatMessage({ id: 'landing_page.detail.email_placeholder' })}
+                              type="text"
+                              validate={[required, email]}
+                              component={fieldInput}
+                            />
+                            <div className="emailSubmit">
+                            <button
+                                type="submit"
+                                className="btnEmail"
+                              >
+                                {/*btnSubmitEmail*/}
+                                <img src={iconSubmitEmail} alt="iconSubmitEmail" />
+                              </button>
+                          </div>
+                          </div>
+
+                          <button className="btnTelegram"
+                          onClick={()=> {
+                            this.openTelegram();
+                          }}
+                          >Join the dojo on Telegram</button>
+
+                        </div>
+                        <div className="mt-4 text-email">
+                          <FormattedHTMLMessage id={`landing_page.${name}.textEmail`} />
+                        </div>
+                      </FormSubscribeEmail>
+                    ) : (
+                      <h5>
+                        <strong className="text-success">
+                          <FormattedMessage id="landing_page.detail.thanksForSubscribing" />
+                        </strong>
+                      </h5>
+                    )}
+                  </span>
                       )}
                       {cta1 && (
                         <a href={cta1Url} className="btn btn-primary-landing">{cta1}</a>
@@ -174,13 +186,14 @@ class Index extends React.PureComponent {
                   </div>
                 </div>
 
+                {messages[`landing_page.${name}.content`] &&
                 <div className="row mt-5">
                   <div className="col">
                     <div className="pd-content">
                       {messages[`landing_page.${name}.content`]}
                     </div>
                   </div>
-                </div>
+                </div>}
                 {imgContent && (
                   <div className="row mt-5">
                     <div className="col">

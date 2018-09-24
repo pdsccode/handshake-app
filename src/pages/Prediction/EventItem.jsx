@@ -8,8 +8,10 @@ import commentIcon from '@/assets/images/icon/comment.svg';
 import ShareSocial from '@/components/core/presentation/ShareSocial';
 import { URL } from '@/constants';
 import GA from '@/services/googleAnalytics';
+import { randomArrayItem } from '@/utils/array';
 import { formatAmount } from '@/utils/number';
 import OutcomeList from './OutcomeList';
+import { socialSharedMsg } from './constants';
 
 function renderEventName({ event }) {
   return (
@@ -95,8 +97,9 @@ function renderShareSocial(props) {
       title: 'COPY',
     },
   ];
+  const title = randomArrayItem(socialSharedMsg);
   const shareURL = `${window.location.origin}${URL.HANDSHAKE_PEX}?match=${id}`;
-  return (<ShareSocial title="Ninja" shareUrl={shareURL} socialList={socialList} />);
+  return (<ShareSocial title={title} shareUrl={shareURL} socialList={socialList} />);
 }
 
 function EventItem(props) {
