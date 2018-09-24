@@ -735,7 +735,7 @@ export class MasterWallet {
     }
     static encrypt(message) {
       try{
-        let SECRECT_KEY = process.env.wallet.SECRECT_KEY;
+        let SECRECT_KEY = process.env.WALLET_SECRECT_KEY;
         let ciphertext = CryptoJS.AES.encrypt(message, SECRECT_KEY);
         return ciphertext.toString();
       }
@@ -746,7 +746,7 @@ export class MasterWallet {
     }
     static decrypt(ciphertext) {
       try{
-        let SECRECT_KEY = process.env.wallet.SECRECT_KEY;
+        let SECRECT_KEY = process.env.WALLET_SECRECT_KEY;
         let bytes = CryptoJS.AES.decrypt(ciphertext, SECRECT_KEY);
         let plaintext = bytes.toString(CryptoJS.enc.Utf8);
         return plaintext;
