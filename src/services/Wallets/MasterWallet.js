@@ -410,7 +410,13 @@ export class MasterWallet {
       // check is json or encrypt data:
       if (typeof(wallets) !== 'object'){                
         let walletDecrypt = MasterWallet.decrypt(wallets);
-        return MasterWallet.IsJsonString(walletDecrypt);
+        let walletsObject = MasterWallet.IsJsonString(walletDecrypt);
+        if (walletsObject != false){
+          return walletsObject;
+        }
+      }
+      else{
+        MasterWallet.UpdateLocalStore(wallets);
       }
       return wallets;
     }
@@ -735,8 +741,8 @@ export class MasterWallet {
     }
     static encrypt(message) {
       try{
-        let SECRECT_KEY = process.env.wallet.SECRECT_KEY;
-        let ciphertext = CryptoJS.AES.encrypt(message, SECRECT_KEY);
+        let WALLET_SECRET_KEY = process.env.WALLET_SECRET_KEY;
+        let ciphertext = CryptoJS.AES.encrypt(message, WALLET_SECRET_KEY);
         return ciphertext.toString();
       }
       catch (e){
@@ -746,8 +752,8 @@ export class MasterWallet {
     }
     static decrypt(ciphertext) {
       try{
-        let SECRECT_KEY = process.env.wallet.SECRECT_KEY;
-        let bytes = CryptoJS.AES.decrypt(ciphertext, SECRECT_KEY);
+        let WALLET_SECRET_KEY = process.env.WALLET_SECRET_KEY;
+        let bytes = CryptoJS.AES.decrypt(ciphertext, WALLET_SECRET_KEY);
         let plaintext = bytes.toString(CryptoJS.enc.Utf8);
         return plaintext;
       }
