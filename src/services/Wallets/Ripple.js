@@ -97,13 +97,20 @@ export class Ripple extends Wallet {
     }
 
     async getBalance() {
-      let data = await this.accountInfo();
-      console.log('getAccountInfo.....', data);
-      if(data)
-        return data['xrpBalance'];
-      else{
-        return 0;
+      try{        
+        let data = await this.accountInfo();
+        console.log('getAccountInfo.....', data);
+        if(data)
+          return data['xrpBalance'];
+        else{
+          return 0;
+        }
       }
+      catch (e){
+        console.log(e);
+      }
+      return 0;
+      
     }
 
     accountInfo(){
@@ -125,7 +132,7 @@ export class Ripple extends Wallet {
             api.getAccountInfo(this.address).then(data => {
                 api.disconnect();
                 resolve(data);
-            }).catch(err => reject);
+            }).catch(err => reject(err));
         });
     });
 
@@ -198,8 +205,8 @@ export class Ripple extends Wallet {
                 api.disconnect();
                 resolve({ status: 0, message: fail.resultMessage });
               });
-          }).catch(err => reject);;
-        }).catch(err => reject);
+          }).catch(err => reject(err));;
+        }).catch(err => reject(err));
       });
     }
 }
