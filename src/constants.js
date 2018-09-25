@@ -605,6 +605,12 @@ export const URL = {
 
   INTERNAL_WITHDRAW_URL: '/d2l0aGRyYXdfZm9yX2dvZA/:superKey',
   LANDING_BECOME_ATM: '/become-atm',
+
+  INVEST_PROJECT_LIST: '/invest/project',
+  INVEST_TRADER_LIST: '/invest/trader',
+  INVEST_PROJECT_INFO: '/invest/project/:projectID',
+  INVEST_TRADER_INFO: '/invest/trader/:traderID'
+
 };
 
 export const LANDING_PAGE_TYPE = {
