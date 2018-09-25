@@ -156,7 +156,7 @@ class Payment extends React.Component {
 
   chosenWallet = async (crypto, currency) => {
     let { order_id, amount, coin, to } = this.querystringParsed;
-    let amountCrypto = 0, fiatCurrency = "", cryptoCurrency = "";
+    let amountCrypto = 0, fiatCurrency = "", cryptoCurrency = "", rate = 0;
     if(!currency)
       currency = crypto;
 
@@ -166,6 +166,7 @@ class Payment extends React.Component {
     }
     else{
       amountCrypto = await this.getCryptoAmount(amount, currency, crypto);
+      rate = await this.getRate(currency, crypto);
       cryptoCurrency = crypto;
       fiatCurrency = currency;
     }
@@ -178,7 +179,9 @@ class Payment extends React.Component {
         amountCrypto={amountCrypto}
         toAddress={toAddress}
         cryptoCurrency={cryptoCurrency}
+        rate={rate ? Math.round(rate) : 0}
         onFinish={result => { this.successPayNinja(result); }}
+        onRefesh={() => {this.refeshCheckout(fiatCurrency, cryptoCurrency); }}
       />,
       modalChooseCrypto: ''
       }, () => {
@@ -242,13 +245,13 @@ class Payment extends React.Component {
     return result;
   }
 
-  getRate(fiatCurrency, cryptoCurrency){
+  getRate(fiatCurrency, cryptoCurrency){console.log('getRate', fiatCurrency, cryptoCurrency);
     return new Promise((resolve, reject) => {
 
       this.props.getFiatCurrency({
         PATH_URL: API_URL.EXCHANGE.GET_FIAT_CURRENCY,
         qs: {fiat_currency: fiatCurrency, currency: cryptoCurrency},
-        successFn: (res) => {
+        successFn: (res) => {console.log('getRate', res);
           let data = res.data;
           let result = fiatCurrency == 'USD' ? data.price : data.fiat_amount;
           resolve(result);
@@ -315,6 +318,7 @@ class Payment extends React.Component {
       }
     }
     else{
+      this.setState({modalCheckout: ''});
       this.checkPayNinja();
     }
   }
@@ -331,6 +335,11 @@ class Payment extends React.Component {
         this.modalCompleteRef.open();
       }
     );
+  }
+
+  refeshCheckout = (fiatCurrency, cryptoCurrency) => {
+    this.setState({modalCheckout: ''});
+    this.chosenWallet(cryptoCurrency, fiatCurrency);
   }
 
   // To address those who want the "root domain," use this function:
@@ -390,7 +399,7 @@ class Payment extends React.Component {
           <div className="msg-error">{this.state.msgError}</div>
         </Modal>
 
-        <ModalDialog className="complete-wrapper" title="Complete crypto payment" onRef={modal => this.modalCompleteRef = modal}>
+        <ModalDialog className="complete-wrapper" title="Payment complete" onRef={modal => this.modalCompleteRef = modal}>
           {modalComplete}
         </ModalDialog>
       </div>);

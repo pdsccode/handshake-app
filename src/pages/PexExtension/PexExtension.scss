@@ -1,0 +1,139 @@
+.PexExtension {
+  display: flex;
+  height: 100%;
+  background-color: #ffffff;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  .LeftSideBar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 20%;
+    background-color: #000000;
+    border-right: 10px solid #F6DA25;
+    text-align: center;
+
+    img {
+      margin-top: 10%;
+    }
+  }
+
+  .MainWrapper {
+    position: absolute;
+    top: 10%;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+
+    .Main {
+      align-items: start;
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+    }
+
+    .MacBook {
+      flex-basis: 50%;
+      display: flex;
+      position: relative;
+    }
+
+    .Description {
+      flex-basis: 50%;
+      padding-right: 10%;
+
+      .ExtHeader {
+        font-size: 42px;
+        position: relative;
+
+        span {
+          position: relative;
+          z-index: 2;
+        }
+
+        &::after {
+          position: absolute;
+          content: '';
+          height: 20px;
+          width: 300px;
+          background-color: #FFF988;
+          bottom: 25px;
+          left: 0;
+        }
+      }
+
+      .ExtQuestion {
+        font-size: 30px;
+      }
+
+      .ExtDescription {
+        font-size: 24px;
+      }
+
+      p {
+        padding-bottom: 20px;
+      }
+    }
+  }
+
+  .ExtSubscribe {
+    font-size: 18px;
+
+    .EmailLabel {
+      padding-bottom: 10px;
+      display: inline-block;
+      font-weight: 300;
+    }
+
+    .EmailRequiredForm {
+      display: flex;
+
+      .form-group {
+        flex-basis: 60%;
+        padding-right: 30px;
+
+        input {
+          border: 1px solid #ECECEC;
+          height: 54px;
+
+          &::-webkit-input-placeholder {
+            color: #858585;
+          }
+        }
+      }
+
+      button {
+        flex-basis: 25%;
+        max-height: 54px;
+
+        background-color: #FFF988;
+        border: 3px solid #F5D516;
+        color: #000000;
+        min-width: 190px;
+      }
+
+      .ErrorMsg {
+        color: red;
+      }
+    }
+  }
+
+  .SubscribeSuccess {
+    font-weight: bold;
+    font-size: 24px;
+    color: #25bd25;
+  }
+
+  .SubscribeError {
+    color: red;
+  }
+
+}

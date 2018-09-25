@@ -73,6 +73,7 @@ export const MESSAGE = {
   ROLLBACK: `Something did not go according to plan. Please try again.`,
   WITHDRAW_SUCCESS: 'Success! Your winnings have been withdrawn to your wallet.',
   DIFFERENCE_ADDRESS: `Current address isn't same as which you used to create bet`,
+  DISPUTE_CONFIRM: 'Results will be reviewed if over 50% of players dispute it.',
 };
 
 export const BETTING_STATUS_LABEL =
@@ -81,7 +82,7 @@ export const BETTING_STATUS_LABEL =
       INITING: 'Placing a bet...',
       ROLLBACK: 'There is something wrong with blockchain. The bet is cancelled',
       COLLECT_FAILED: 'There is something wrong with withdraw.',
-      SHOULD_CANCEL: 'There is no bet matched. Please cancel to get back money',
+      SHOULD_CANCEL: 'Your bet was not matched. Please cancel to get a refund.',
       MATCH_POSTPONSE: 'Event is postponsed',
       ACTION_FAILED: `There is something wrong with blockchain. Your action is cancelled`,
       INIT_FAILED: `There is something wrong with blockchain. Your bet is cancelled`,
@@ -99,6 +100,7 @@ export const BETTING_STATUS_LABEL =
       CANCELLING: 'Your bet is being cancelled.',
       CANCEL_PROGRESSING: 'The blockchain is processing your cancelling. Please wait.',
       BET_WAIT_MATCHING: 'Bet placed. Matching...',
+      BET_CANCEL_OVER: 'The event ended. We couldn’t find a match.',
       BET_MACHED_WAIT_RESULT: 'Bet matched. Waiting for result...',
       CANCELLED: 'Your bet was cancelled.',
       REFUNDING: 'Your coin is being refunded to you.',

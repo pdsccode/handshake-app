@@ -703,6 +703,8 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
       const balance = await wallet.getBalance();
       const fee = await wallet.getFee(NB_BLOCKS, true);
 
+      console.log(' address balance fee', wallet.address, balance, fee);
+
       if (!this.checkMainNetDefaultWallet(wallet)) {
         this.props.hideLoading();
         return;
@@ -767,11 +769,14 @@ class FeedMeOfferStoreShakeContainer extends React.PureComponent {
 
     const wallet = MasterWallet.getWalletDefault(currency);
     wallet.transfer(userAddress, transferAmount, NB_BLOCKS).then((success) => {
+      console.log('address', wallet.address);
+      console.log('userAddress', userAddress);
+      console.log('transferAmount', transferAmount);
       console.log('transfer', success);
 
-      const { data } = success;
+      const { status, data } = success;
 
-      if (data) {
+      if (status === 1 && data) {
         const { hash: txHash } = data;
         this.trackingTransfer(initUserId, offerShake.id, txHash);
       } else {

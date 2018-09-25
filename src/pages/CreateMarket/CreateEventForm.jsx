@@ -11,6 +11,8 @@ import { required, urlValidator } from './validate';
 import { createEvent } from './action';
 import ShareMarket from './ShareMarket';
 import { createEventFormName } from './constants';
+import EmailVerification from './EmailVerification';
+import GA from '@/services/googleAnalytics';
 
 const minStep = 15;
 const secStep = minStep * 60;
@@ -22,11 +24,14 @@ class CreateEventForm extends Component {
     reportList: PropTypes.array,
     categoryList: PropTypes.array,
     isNew: PropTypes.bool,
+    hasEmail: PropTypes.any,
+    uid: PropTypes.any,
     initialValues: PropTypes.object,
     shareEvent: PropTypes.object,
     eventList: PropTypes.array,
     formAction: PropTypes.func,
     dispatch: PropTypes.func,
+    isValidEmailCode: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -36,9 +41,11 @@ class CreateEventForm extends Component {
     formAction: undefined,
     dispatch: undefined,
     isNew: true,
+    hasEmail: false,
     initialValues: {},
     shareEvent: null,
     eventList: [],
+    isValidEmailCode: undefined,
   };
 
   constructor(props) {
@@ -52,6 +59,13 @@ class CreateEventForm extends Component {
   }
 
   onCreateNewEvent = (values, dispatch, props) => {
+    console.log('CreateEventForm values: ', values);
+    const { eventName, creatorFee } = values;
+    if (props.isNew) {
+      GA.clickCreateNewEvent(eventName, props.hasEmail, creatorFee, props.uid);
+    } else {
+      GA.clickCreateNewOutcome(props.hasEmail, creatorFee, props.uid);
+    }
     dispatch(createEvent({
       values,
       isNew: props.isNew,
@@ -352,7 +366,7 @@ class CreateEventForm extends Component {
       <form className={cls} onSubmit={props.handleSubmit(this.onCreateNewEvent)}>
         <div className="CreateEventFormBlock">
           {this.renderEventSuggest(props, state)}
-          {/*{this.renderCategories(props, state)}*/}
+          {/* {this.renderCategories(props, state)} */}
           <FieldArray
             name="outcomes"
             isNew={props.isNew}
@@ -364,7 +378,15 @@ class CreateEventForm extends Component {
         <div className="CreateEventFormBlock">
           {this.renderReport(props)}
           {this.renderTimeGroup(props, state)}
-          <button type="submit" className="btn btn-primary btn-block" disabled={props.pristine || props.submitting}>
+          <EmailVerification
+            hasEmail={props.hasEmail}
+            isValidEmailCode={props.isValidEmailCode}
+          />
+          <button
+            type="submit"
+            className="btn btn-primary btn-block"
+            disabled={props.pristine || props.submitting || (!props.hasEmail && !props.isValidEmailCode)}
+          >
             {props.isNew ? 'Create a new event' : 'Add new outcomes'}
           </button>
         </div>

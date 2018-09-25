@@ -60,6 +60,25 @@
   </script>
   <!-- End Google Analytics -->
 
+  <!-- Custome user agent when loaded by iframe -->
+  <script>
+    if (window.self !== window.top) {
+      const windowInfo = window.name !== '' && JSON.parse(window.name);
+      const { name, ua } = windowInfo;
+      
+      if (window.navigator.userAgent !== ua) {
+        const userAgentProp = { configurable: true, get: function () { return ua; } };
+        try {
+          Object.defineProperty(window.navigator, 'userAgent', userAgentProp);
+        } catch (e) {
+          window.navigator = Object.create(navigator, {
+            userAgent: userAgentProp
+          });
+        }
+      }
+    }
+  </script>
+  <!-- End custom user agent -->
 </head>
 <body>
   <script>

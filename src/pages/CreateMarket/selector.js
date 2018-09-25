@@ -2,7 +2,11 @@ import _ from 'lodash';
 
 export const hasEmail = (state) => {
   if (_.isEmpty(state.auth.profile)) return null;
-  return !!state.auth.profile.email;
+  return state.auth.profile.email;
+};
+export const uId = (state) => {
+  if (_.isEmpty(state.auth.profile)) return null;
+  return state.auth.profile.id;
 };
 
 export const eventSelector = (state) => state.prediction.events;
@@ -21,6 +25,8 @@ export const categorySelector = (state) => {
     label: c.name,
   }));
 };
+
+export const insufficientGas = (state) => state.blockChain.insufficientGas;
 
 export const shareEventSelector = (state) => state.ui.shareEvent;
 

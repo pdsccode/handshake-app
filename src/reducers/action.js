@@ -29,7 +29,6 @@ export const createAPI = INIT => ({
   }).then((response) => {
     // console.log(`app - api - called - id${requestUuid}`);
     dispatch({ type: APP_ACTION.CALLED });
-
     if (response.data.status === 1 || response.data.status === 200) {
       dispatch({ type: `${INIT}_SUCCESS`, payload: response.data, ...more });
       if (successFn) successFn(response.data);

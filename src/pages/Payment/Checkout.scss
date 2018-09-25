@@ -3,8 +3,54 @@
 .checkout-wrapper{
   padding-bottom: 30px;
 
+  .ratelock{
+    margin:0 -1rem;
+    padding: 0.5rem;
+    background: #ffc107;
+
+    .timer{
+      border-radius: 5px;
+      padding: 0.3rem 0.4rem;
+      background: #343a40;
+      color:white;
+      float: left;
+      font-size:1.4rem;
+      font-weight: 400;
+      text-align: center;
+      margin-right: 1rem;
+      min-width: 90px;
+    }
+    .msg{
+
+      span{
+        display: block;
+      }
+      .title{
+        font-size:1rem;
+        font-weight: 400;
+      }
+      .rate{
+        font-size:0.8rem;
+        color: #6c757d;
+        height: 19px;
+      }
+    }
+  }
+
+  .warning{
+    background: #f78a95 !important;
+
+    .timer{
+      background: #dc3545 !important;
+    }
+  }
+
+  .checkout-container{
+    padding-bottom: 30px;
+  }
+
   .wallet-info{
-    margin-top: 2rem;
+    margin-top: 1rem;
 
     .help{
       margin-top: 1rem;
@@ -18,6 +64,31 @@
     .disabled{
       background: silver;
       border-color: gray;
+    }
+
+    .wallet{
+      border: 1px solid #ececec;
+      padding: 0.6rem 2rem 0.6rem 0.6rem;
+      border-radius: 5px;
+      overflow: hidden;
+      -webkit-box-shadow: 0px 0px 30px rgba(0, 0, 0, .1);
+      -moz-box-shadow: 0px 0px 30px rgba(0, 0, 0, .1);
+      box-shadow: 0px 0px 30px rgba(0, 0, 0, .1);
+      background: url('../../assets/images/icon/pay/arrow-select.svg') no-repeat 99% center;
+      .name{
+        float:left;
+        width: 50%;
+      }
+
+      .value{
+        float:right;
+        font-weight: 400;
+      }
+
+      .clearfix{
+        padding: 0.3rem 0;
+        clear: both;
+      }
     }
   }
 
@@ -37,6 +108,36 @@
     }
   }
 
+  .expired-info {
+    margin-top: 1rem;
+    color: #2d2d2d;
+    letter-spacing: 0;
+    text-align: center;
+    padding: 20px 0;
+    position: relative;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+
+    .icon{
+      img {
+        height: 60px;
+      }
+      margin-bottom: 2rem;
+    }
+    .title {
+      font-weight:400;
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      white-space: nowrap;
+    }
+
+    .msg{
+      margin-bottom: 2rem;
+      font-size: 0.8rem;
+      color: #cdcdcd;
+    }
+  }
+
   .amount-info {
     margin-top: 1rem;
     color: #2d2d2d;
@@ -44,13 +145,13 @@
     line-height: 1.23;
     letter-spacing: 0;
     text-align: center;
-    padding: 24px 0;
+    padding: 20px 0;
     position: relative;
     -ms-flex-negative: 0;
     flex-shrink: 0;
 
     .icon{
-      height: 70px;
+      height: 60px;
       line-height: 45px;
       text-align: center;
       display: -ms-flexbox;
@@ -61,7 +162,7 @@
       justify-content: center;
 
       img{
-        height: 70px;
+        height: 60px;
       }
     }
 

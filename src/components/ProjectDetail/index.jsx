@@ -12,9 +12,10 @@ import { email, required } from '@/components/core/form/validation';
 import $http from '@/services/api';
 import { BASE_API, LANDING_PAGE_TYPE } from '@/constants';
 import { Link } from 'react-router-dom';
+import iconSubmitEmail from '@/assets/images/icon/landingpage/email_submit.svg';
 
 import './styles.scss';
-
+import { URL } from '@/constants';
 const nameFormSubscribeEmail = 'subscribeEmail';
 const FormSubscribeEmail = createForm({
   propsReduxForm: {
@@ -47,6 +48,17 @@ class Index extends React.PureComponent {
         console.log('err subscribe email', err);
       });
   };
+  openTelegram = () => {
+    window.open('https://t.me/ninja_org', '_blank');
+  }
+  becomeAtm = () => {
+    const { name } = this.props;
+    if (name === 'cash') {
+      window.location = URL.ATM_FOR_BUSINESS;
+    } else if (name === 'cash-for-business') {
+      window.location = URL.LANDING_BECOME_ATM;
+    }
+  }
 
   render() {
     const { messages, locale } = this.props.intl;
@@ -64,6 +76,7 @@ class Index extends React.PureComponent {
       messages[`landing_page.${name}.btnSubmitEmail`] || 'Submit';
     const youtubeVideoId = messages[`landing_page.${name}.youtubeVideoId`];
     const faq = messages[`landing_page.${name}.faq`];
+    const alternativeAction = messages[`landing_page.${name}.alternativeAction`];
 
     const { url: categoryUrl, text: categoryText } = LANDING_PAGE_TYPE[type];
     return (
@@ -109,18 +122,15 @@ class Index extends React.PureComponent {
                         <span>
                     {!hasSubscribed ? (
                       <FormSubscribeEmail onSubmit={this.handleSubmit}>
-                        <div className="text-email">
-                          <FormattedHTMLMessage id={`landing_page.${name}.textEmail`} />
+                      {messages[`landing_page.${name}.label.sendLinkToEmail`] && (
+                        <div className="d-table-cell align-top text-send-link">
+                          <FormattedMessage id={`landing_page.${name}.label.sendLinkToEmail`} />
                         </div>
-                        <div className="d-table w-100">
-                          {
-                            messages[`landing_page.${name}.label.sendLinkToEmail`] && (
-                              <div className="d-table-cell align-top text-send-link">
-                                <FormattedMessage id={`landing_page.${name}.label.sendLinkToEmail`} />
-                              </div>
-                            )
-                          }
-                          <div className="d-table-cell align-top">
+                      )
+                      }
+                        <div className="wrapperEmail">
+
+                          <div className="emailField">
                             <Field
                               name="email"
                               className="form-control control-subscribe-email"
@@ -129,15 +139,36 @@ class Index extends React.PureComponent {
                               validate={[required, email]}
                               component={fieldInput}
                             />
-                          </div>
-                          <div className="d-table-cell align-top">
+                            <div className="emailSubmit">
                             <button
-                              type="submit"
-                              className="btn btn-primary-landing w-100 ml-1"
-                            >
-                              {btnSubmitEmail}
-                            </button>
+                                type="submit"
+                                className="btnEmail"
+                              >
+                                {/*btnSubmitEmail*/}
+                                <img src={iconSubmitEmail} alt="iconSubmitEmail" />
+                              </button>
                           </div>
+                          </div>
+
+                          {
+                            alternativeAction ? (
+                              <button className="btnTelegram" type="button"
+                                      onClick={()=> {
+                                        this.becomeAtm();
+                                      }}
+                              ><FormattedHTMLMessage id={`landing_page.${name}.alternativeAction`} /></button>
+                            ) : (
+                              <button className="btnTelegram"
+                                      onClick={()=> {
+                                        this.openTelegram();
+                                      }}
+                              >Join the dojo on Telegram</button>
+                            )
+                          }
+
+                        </div>
+                        <div className="mt-4 text-email">
+                          <FormattedHTMLMessage id={`landing_page.${name}.textEmail`} />
                         </div>
                       </FormSubscribeEmail>
                     ) : (
@@ -173,13 +204,14 @@ class Index extends React.PureComponent {
                   </div>
                 </div>
 
+                {messages[`landing_page.${name}.content`] &&
                 <div className="row mt-5">
                   <div className="col">
                     <div className="pd-content">
                       {messages[`landing_page.${name}.content`]}
                     </div>
                   </div>
-                </div>
+                </div>}
                 {imgContent && (
                   <div className="row mt-5">
                     <div className="col">

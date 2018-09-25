@@ -17,17 +17,18 @@ import * as gtag from '@/services/ga-utils';
 import taggingConfig from '@/services/tagging-config';
 import FeedCreditCard from '@/components/handshakes/exchange/Feed/FeedCreditCard';
 import ReportPopup from '@/components/handshakes/betting/Feed/ReportPopup';
-import { FREE_BET_STATUS } from '@/components/handshakes/betting/constants';
 import { predictionStatistics } from '@/components/handshakes/betting/Feed/OrderPlace/action';
 
-import Banner from '@/pages/Prediction/Banner';
 import { injectIntl } from 'react-intl';
 import { URL } from '@/constants';
 import { eventSelector, isLoading, showedLuckyPoolSelector, isSharePage, countReportSelector, checkFreeBetSelector, checkExistSubcribeEmailSelector } from './selector';
 import { loadMatches, getReportCount, removeExpiredEvent, checkFreeBet, checkExistSubcribeEmail } from './action';
+import { removeShareEvent } from '../CreateMarket/action';
+import { shareEventSelector } from '../CreateMarket/selector';
 
 import EventItem from './EventItem';
 import PexCreateBtn from './PexCreateBtn';
+import Disclaimer from './Disclaimer';
 
 import './Prediction.scss';
 
@@ -37,6 +38,7 @@ class Prediction extends React.Component {
     dispatch: PropTypes.func.isRequired,
     history: PropTypes.object.isRequired,
     eventList: PropTypes.array,
+    shareEvent: PropTypes.object,
     showedLuckyPool: PropTypes.bool,
     isSharePage: PropTypes.bool,
     countReport: PropTypes.number,
@@ -49,6 +51,7 @@ class Prediction extends React.Component {
 
   static defaultProps = {
     eventList: [],
+    shareEvent: null,
     isExistEmail: 0,
   };
 
@@ -60,6 +63,7 @@ class Prediction extends React.Component {
       modalFillContent: '',
       isOrderOpening: false,
       shouldShowFreePopup: true,
+      failedResult: {},
     };
   }
 
@@ -139,7 +143,6 @@ class Prediction extends React.Component {
     const isFreeAvailable = this.checkFreeAvailabe(props);
     const { freeBet } = props;
     const { free_bet_available: freeAvailable = 0 } = freeBet;
-    console.log(freeBet);
 
     const key = `showedFreebet${freeAvailable}`;
     const isShowed = localStorage.getItem(key);
@@ -166,8 +169,12 @@ class Prediction extends React.Component {
 
   handleClickEventItem = (itemProps, itemData) => {
     const { event } = itemProps;
+    const { shareEvent } = this.props;
     if (itemData.id === URL.HANDSHAKE_PEX_CREATOR) {
       this.props.history.push(`${URL.HANDSHAKE_PEX_CREATOR}/${event.id}`);
+      if (shareEvent) {
+        this.props.dispatch(removeShareEvent(['shareEvent']));
+      }
     } else {
       const selectedOutcome = {
         hid: itemData.hid,
@@ -205,7 +212,10 @@ class Prediction extends React.Component {
     }
   };
 
-  handleBetFail = () => {
+  handleBetFail = (value) => {
+    this.setState({
+      failedResult: value,
+    });
     this.modalOuttaMoney.open();
   }
 
@@ -214,10 +224,13 @@ class Prediction extends React.Component {
   }
 
   afterWalletFill = () => {
+    GA.didFillUpMoney();
     this.modalFillRef.close();
   }
 
-  showPopupCreditCard = () => {
+  showPopupCreditCard = async () => {
+    const { failedResult } = this.state;
+    GA.clickTopupWallet(failedResult);
     this.modalOuttaMoney.close();
     const { messages } = this.props.intl;
     this.setState({
@@ -253,6 +266,7 @@ class Prediction extends React.Component {
             />
           );
         })}
+        <Disclaimer />
       </div>
     );
   };
@@ -364,6 +378,12 @@ class Prediction extends React.Component {
     );
   }
 
+  renderReport = (props) => {
+    const { countReport } = props;
+    if (!countReport) return null;
+    return (<ReportPopup />);
+  }
+
   renderComponent = (props, state) => {
     this.checkShowFreeBetPopup(props);
     return (
@@ -371,6 +391,7 @@ class Prediction extends React.Component {
         <Loading isLoading={props.isLoading} />
         {/*<Banner />*/}
         <PexCreateBtn />
+        {this.renderReport(props)}
         {this.renderEventList(props)}
         {this.renderBetMode(props, state)}
         {this.renderViewAllEvent(props, state)}
@@ -382,7 +403,6 @@ class Prediction extends React.Component {
         {this.renderEmailPopup()}
         {this.renderOuttaMoney()}
         {this.renderCreditCard()}
-        {props.countReport > 0 && <ReportPopup />}
       </div>
     );
   };
@@ -402,6 +422,7 @@ export default injectIntl(connect(
       showedLuckyPool: showedLuckyPoolSelector(state),
       freeBet: checkFreeBetSelector(state),
       isExistEmail: checkExistSubcribeEmailSelector(state),
+      shareEvent: shareEventSelector(state),
     };
   },
 )(Prediction));
